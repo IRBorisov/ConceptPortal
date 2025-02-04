@@ -19,14 +19,15 @@ import SelectLocation from './SelectLocation';
 
 interface PickSchemaProps extends CProps.Styling {
   id?: string;
+  value?: LibraryItemID;
+  onChange: (newValue: LibraryItemID) => void;
+
   initialFilter?: string;
   rows?: number;
 
   items: ILibraryItem[];
   itemType: LibraryItemType;
-  value?: LibraryItemID;
   baseFilter?: (target: ILibraryItem) => boolean;
-  onSelectValue: (newValue: LibraryItemID) => void;
 }
 
 const columnHelper = createColumnHelper<ILibraryItem>();
@@ -38,7 +39,7 @@ function PickSchema({
   items,
   itemType,
   value,
-  onSelectValue,
+  onChange,
   baseFilter,
   className,
   ...restProps
@@ -156,7 +157,7 @@ function PickSchema({
             <p>Измените параметры фильтра</p>
           </FlexColumn>
         }
-        onRowClicked={rowData => onSelectValue(rowData.id)}
+        onRowClicked={rowData => onChange(rowData.id)}
       />
     </div>
   );

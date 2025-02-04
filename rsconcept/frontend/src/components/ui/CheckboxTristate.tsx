@@ -6,12 +6,12 @@ import { globals } from '@/utils/constants';
 
 import { CheckboxProps } from './Checkbox';
 
-export interface CheckboxTristateProps extends Omit<CheckboxProps, 'value' | 'setValue'> {
+export interface CheckboxTristateProps extends Omit<CheckboxProps, 'value' | 'onChange'> {
   /** Current value - `null`, `true` or `false`. */
   value: boolean | null;
 
   /** Callback to set the `value`. */
-  setValue?: (newValue: boolean | null) => void;
+  onChange?: (newValue: boolean | null) => void;
 }
 
 /**
@@ -25,23 +25,23 @@ function CheckboxTristate({
   hideTitle,
   className,
   value,
-  setValue,
+  onChange,
   ...restProps
 }: CheckboxTristateProps) {
-  const cursor = disabled ? 'cursor-arrow' : setValue ? 'cursor-pointer' : '';
+  const cursor = disabled ? 'cursor-arrow' : onChange ? 'cursor-pointer' : '';
 
   function handleClick(event: CProps.EventMouse): void {
     event.preventDefault();
     event.stopPropagation();
-    if (disabled || !setValue) {
+    if (disabled || !onChange) {
       return;
     }
     if (value === false) {
-      setValue(null);
+      onChange(null);
     } else if (value === null) {
-      setValue(true);
+      onChange(true);
     } else {
-      setValue(false);
+      onChange(false);
     }
   }
 

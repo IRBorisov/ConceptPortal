@@ -11,7 +11,7 @@ import { matchUser } from '@/models/userAPI';
 
 interface SelectUserProps extends CProps.Styling {
   value?: UserID;
-  onSelectValue: (newValue: UserID) => void;
+  onChange: (newValue: UserID) => void;
   filter?: (userID: UserID) => boolean;
 
   placeholder?: string;
@@ -22,7 +22,7 @@ function SelectUser({
   className,
   filter,
   value,
-  onSelectValue,
+  onChange,
   placeholder = 'Выберите пользователя',
   ...restProps
 }: SelectUserProps) {
@@ -46,7 +46,7 @@ function SelectUser({
       options={options}
       value={value ? { value: value, label: getUserLabel(value) } : null}
       onChange={data => {
-        if (data?.value !== undefined) onSelectValue(data.value);
+        if (data?.value !== undefined) onChange(data.value);
       }}
       // @ts-expect-error: TODO: use type definitions from react-select in filter object
       filterOption={filterLabel}

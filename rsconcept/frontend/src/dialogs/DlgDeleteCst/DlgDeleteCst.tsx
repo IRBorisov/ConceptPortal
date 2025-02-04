@@ -55,7 +55,7 @@ function DlgDeleteCst() {
         label='Удалить зависимые конституенты'
         className='mb-2'
         value={expandOut}
-        setValue={value => setExpandOut(value)}
+        onChange={value => setExpandOut(value)}
       />
       {hasInherited ? (
         <p className='text-sm clr-text-red'>Внимание! Выбранные конституенты имеют наследников в ОСС</p>

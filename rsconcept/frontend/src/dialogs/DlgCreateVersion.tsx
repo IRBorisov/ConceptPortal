@@ -64,7 +64,7 @@ function DlgCreateVersion() {
         id='dlg_only_selected'
         label={`Только выбранные конституенты [${selected.length} из ${totalCount}]`}
         value={onlySelected}
-        setValue={value => setOnlySelected(value)}
+        onChange={value => setOnlySelected(value)}
       />
     </Modal>
   );

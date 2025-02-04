@@ -190,7 +190,7 @@ function TabArguments({ state, schema, partialUpdate }: TabArgumentsProps) {
         id='dlg_argument_picker'
         value={selectedCst}
         data={schema.items}
-        onSelectValue={handleSelectConstituenta}
+        onChange={handleSelectConstituenta}
         prefixID={prefixes.cst_modal_list}
         rows={7}
       />

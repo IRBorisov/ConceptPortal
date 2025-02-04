@@ -19,7 +19,7 @@ interface SelectTreeProps<ItemType> extends CProps.Styling {
   prefix: string;
 
   /** Callback to be called when the value changes. */
-  onChangeValue: (newItem: ItemType) => void;
+  onChange: (newItem: ItemType) => void;
 
   /** Callback providing the parent of the item. */
   getParent: (item: ItemType) => ItemType;
@@ -40,7 +40,7 @@ function SelectTree<ItemType>({
   getParent,
   getLabel,
   getDescription,
-  onChangeValue,
+  onChange,
   prefix,
   ...restProps
 }: SelectTreeProps<ItemType>) {
@@ -75,7 +75,7 @@ function SelectTree<ItemType>({
   function handleSetValue(event: CProps.EventMouse, target: ItemType) {
     event.preventDefault();
     event.stopPropagation();
-    onChangeValue(target);
+    onChange(target);
   }
 
   return (

@@ -61,7 +61,7 @@ function DlgChangeInputSchema() {
         items={sortedItems}
         itemType={LibraryItemType.RSFORM}
         value={selected} // prettier: split-line
-        onSelectValue={handleSelectLocation}
+        onChange={handleSelectLocation}
         rows={14}
         baseFilter={baseFilter}
       />

@@ -22,7 +22,7 @@ function SelectAll<TData>({ table, resetLastSelected }: SelectAllProps<TData>) {
       value={
         !table.getIsAllPageRowsSelected() && table.getIsSomePageRowsSelected() ? null : table.getIsAllPageRowsSelected()
       }
-      setValue={handleChange}
+      onChange={handleChange}
     />
   );
 }

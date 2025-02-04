@@ -25,7 +25,7 @@ function TabSource({ selected, receiver, setSelected }: TabSourceProps) {
         itemType={LibraryItemType.RSFORM}
         rows={14}
         value={selected}
-        onSelectValue={setSelected}
+        onChange={setSelected}
       />
       <div className='flex items-center gap-6 '>
         <span className='select-none'>Выбрана</span>

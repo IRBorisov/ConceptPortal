@@ -12,36 +12,36 @@ import NoData from '@/components/ui/NoData';
 import { IOperation, OperationID } from '@/models/oss';
 
 interface PickMultiOperationProps extends CProps.Styling {
-  rows?: number;
+  value: OperationID[];
+  onChange: React.Dispatch<React.SetStateAction<OperationID[]>>;
 
   items: IOperation[];
-  selected: OperationID[];
-  setSelected: React.Dispatch<React.SetStateAction<OperationID[]>>;
+  rows?: number;
 }
 
 const columnHelper = createColumnHelper<IOperation>();
 
-function PickMultiOperation({ rows, items, selected, setSelected, className, ...restProps }: PickMultiOperationProps) {
-  const selectedItems = selected.map(itemID => items.find(item => item.id === itemID)!);
-  const nonSelectedItems = items.filter(item => !selected.includes(item.id));
+function PickMultiOperation({ rows, items, value, onChange, className, ...restProps }: PickMultiOperationProps) {
+  const selectedItems = value.map(itemID => items.find(item => item.id === itemID)!);
+  const nonSelectedItems = items.filter(item => !value.includes(item.id));
   const [lastSelected, setLastSelected] = useState<IOperation | undefined>(undefined);
 
   function handleDelete(operation: OperationID) {
-    setSelected(prev => prev.filter(item => item !== operation));
+    onChange(prev => prev.filter(item => item !== operation));
   }
 
   function handleSelect(operation?: IOperation) {
     if (operation) {
       setLastSelected(operation);
-      setSelected(prev => [...prev, operation.id]);
+      onChange(prev => [...prev, operation.id]);
       setTimeout(() => setLastSelected(undefined), 1000);
     }
   }
 
   function handleMoveUp(operation: OperationID) {
-    const index = selected.indexOf(operation);
+    const index = value.indexOf(operation);
     if (index > 0) {
-      setSelected(prev => {
+      onChange(prev => {
         const newSelected = [...prev];
         newSelected[index] = newSelected[index - 1];
         newSelected[index - 1] = operation;
@@ -51,9 +51,9 @@ function PickMultiOperation({ rows, items, selected, setSelected, className, ...
   }
 
   function handleMoveDown(operation: OperationID) {
-    const index = selected.indexOf(operation);
-    if (index < selected.length - 1) {
-      setSelected(prev => {
+    const index = value.indexOf(operation);
+    if (index < value.length - 1) {
+      onChange(prev => {
         const newSelected = [...prev];
         newSelected[index] = newSelected[index + 1];
         newSelected[index + 1] = operation;
@@ -118,7 +118,7 @@ function PickMultiOperation({ rows, items, selected, setSelected, className, ...
         noBorder
         items={nonSelectedItems} // prettier: split-line
         value={lastSelected}
-        onSelectValue={handleSelect}
+        onChange={handleSelect}
       />
       <DataTable
         dense

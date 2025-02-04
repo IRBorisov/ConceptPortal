@@ -57,7 +57,7 @@ function TabSynthesisOperation({
 
       <FlexColumn>
         <Label text={`Выбор аргументов: [ ${inputs.length} ]`} />
-        <PickMultiOperation items={oss.items} selected={inputs} setSelected={setInputs} rows={6} />
+        <PickMultiOperation items={oss.items} value={inputs} onChange={setInputs} rows={6} />
       </FlexColumn>
     </div>
   );

@@ -15,6 +15,7 @@ import { describeAccessPolicy, labelAccessPolicy } from '@/utils/labels';
 interface SelectAccessPolicyProps extends CProps.Styling {
   value: AccessPolicy;
   onChange: (value: AccessPolicy) => void;
+
   disabled?: boolean;
   stretchLeft?: boolean;
 }

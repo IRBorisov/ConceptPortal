@@ -127,7 +127,7 @@ function ToolbarSearch({ total, filtered }: ToolbarSearchProps) {
               placeholder='Выберите владельца'
               className='min-w-[15rem] text-sm mx-1 mb-1'
               value={filterUser}
-              onSelectValue={setFilterUser}
+              onChange={setFilterUser}
             />
           </Dropdown>
         </div>

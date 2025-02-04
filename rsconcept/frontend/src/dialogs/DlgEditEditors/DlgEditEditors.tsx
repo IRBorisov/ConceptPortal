@@ -63,7 +63,7 @@ function DlgEditEditors() {
         <SelectUser
           filter={id => !selected.includes(id)}
           value={undefined}
-          onSelectValue={onAddEditor}
+          onChange={onAddEditor}
           className='w-[25rem]'
         />
       </div>

@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 
 import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
-import { ILibraryUpdateDTO } from '@/backend/library/api';
+import { IUpdateLibraryItemDTO } from '@/backend/library/api';
 import { useUpdateItem } from '@/backend/library/useUpdateItem';
 import { useMutatingRSForm } from '@/backend/rsform/useMutatingRSForm';
 import { IconSave } from '@/components/Icons';
@@ -83,7 +83,7 @@ function FormRSForm({ id }: FormRSFormProps) {
     if (!schema) {
       return;
     }
-    const data: ILibraryUpdateDTO = {
+    const data: IUpdateLibraryItemDTO = {
       id: schema.id,
       item_type: LibraryItemType.RSFORM,
       title: title,
@@ -131,7 +131,7 @@ function FormRSForm({ id }: FormRSFormProps) {
             className='select-none'
             value={schema.version} //
             items={schema.versions}
-            onSelectValue={handleSelectVersion}
+            onChange={handleSelectVersion}
           />
         </div>
       </div>

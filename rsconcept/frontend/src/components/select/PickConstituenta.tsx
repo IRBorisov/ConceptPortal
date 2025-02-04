@@ -17,6 +17,9 @@ import { describeConstituenta } from '@/utils/labels';
 
 interface PickConstituentaProps extends CProps.Styling {
   id?: string;
+  value?: IConstituenta;
+  onChange: (newValue: IConstituenta) => void;
+
   prefixID: string;
   data?: IConstituenta[];
   rows?: number;
@@ -25,9 +28,6 @@ interface PickConstituentaProps extends CProps.Styling {
   onBeginFilter?: (cst: IConstituenta) => boolean;
   describeFunc?: (cst: IConstituenta) => string;
   matchFunc?: (cst: IConstituenta, filter: string) => boolean;
-
-  value?: IConstituenta;
-  onSelectValue: (newValue: IConstituenta) => void;
 }
 
 const columnHelper = createColumnHelper<IConstituenta>();
@@ -42,7 +42,7 @@ function PickConstituenta({
   describeFunc = describeConstituenta,
   matchFunc = (cst, filter) => matchConstituenta(cst, filter, CstMatchMode.ALL),
   onBeginFilter,
-  onSelectValue,
+  onChange,
   className,
   ...restProps
 }: PickConstituentaProps) {
@@ -110,7 +110,7 @@ function PickConstituenta({
             <p>Измените параметры фильтра</p>
           </NoData>
         }
-        onRowClicked={onSelectValue}
+        onRowClicked={onChange}
       />
     </div>
   );

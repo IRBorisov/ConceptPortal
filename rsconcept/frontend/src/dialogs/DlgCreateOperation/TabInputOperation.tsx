@@ -98,7 +98,7 @@ function TabInputOperation({
         </div>
         <Checkbox
           value={createSchema}
-          setValue={onChangeCreateSchema}
+          onChange={onChangeCreateSchema}
           label='Создать новую схему'
           titleHtml='Создать пустую схему для загрузки'
         />
@@ -108,7 +108,7 @@ function TabInputOperation({
           items={sortedItems}
           value={attachedID}
           itemType={LibraryItemType.RSFORM}
-          onSelectValue={onChangeAttachedID}
+          onChange={onChangeAttachedID}
           rows={8}
           baseFilter={baseFilter}
         />

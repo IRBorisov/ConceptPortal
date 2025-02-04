@@ -311,8 +311,8 @@ function TGFlow() {
                 ? cstID => !controller.schema.cstByID.get(cstID)?.is_inherited
                 : undefined
             }
-            selected={controller.selected}
-            setSelected={handleSetSelected}
+            value={controller.selected}
+            onChange={handleSetSelected}
             emptySelection={controller.selected.length === 0}
           />
         ) : null}

@@ -11,7 +11,7 @@ import TextInput from '@/components/ui/TextInput';
 import TextURL from '@/components/ui/TextURL';
 
 export function Component() {
-  const { requestPasswordReset, isPending, error, reset } = useRequestPasswordReset();
+  const { requestPasswordReset, isPending, error: serverError, reset: clearServerError } = useRequestPasswordReset();
 
   const [isCompleted, setIsCompleted] = useState(false);
   const [email, setEmail] = useState('');
@@ -24,8 +24,8 @@ export function Component() {
   }
 
   useEffect(() => {
-    reset();
-  }, [email, reset]);
+    clearServerError();
+  }, [email, clearServerError]);
 
   if (isCompleted) {
     return (
@@ -54,14 +54,14 @@ export function Component() {
           loading={isPending}
           disabled={!email}
         />
-        {error ? <ProcessError error={error} /> : null}
+        {serverError ? <ServerError error={serverError} /> : null}
       </form>
     );
   }
 }
 
 // ====== Internals =========
-function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
+function ServerError({ error }: { error: ErrorData }): React.ReactElement {
   if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
     return (
       <div className='mx-auto mt-6 text-sm select-text text-warn-600'>Данный email не используется на Портале.</div>

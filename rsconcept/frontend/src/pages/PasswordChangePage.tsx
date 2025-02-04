@@ -17,9 +17,9 @@ export function Component() {
   const router = useConceptNavigation();
   const token = useQueryStrings().get('token') ?? '';
 
-  const { validateToken, resetPassword, isPending, error } = useResetPassword();
+  const { validateToken, resetPassword, isPending, error: serverError } = useResetPassword();
 
-  const [isValidated, setIsValidated] = useState(false);
+  const [isTokenValidated, setIsTokenValidated] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [newPasswordRepeat, setNewPasswordRepeat] = useState('');
 
@@ -45,11 +45,11 @@ export function Component() {
   }
 
   useEffect(() => {
-    if (!isValidated && !isPending) {
+    if (!isTokenValidated && !isPending) {
       validateToken({ token: token });
-      setIsValidated(true);
+      setIsTokenValidated(true);
     }
-  }, [token, validateToken, isValidated, isPending]);
+  }, [token, validateToken, isTokenValidated, isPending]);
 
   if (isPending) {
     return <Loader />;
@@ -88,13 +88,13 @@ export function Component() {
         loading={isPending}
         disabled={!canSubmit}
       />
-      {error ? <ProcessError error={error} /> : null}
+      {serverError ? <ServerError error={serverError} /> : null}
     </form>
   );
 }
 
 // ====== Internals =========
-function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
+function ServerError({ error }: { error: ErrorData }): React.ReactElement {
   if (axios.isAxiosError(error) && error.response && error.response.status === 404) {
     return <div className='mx-auto mt-6 text-sm select-text text-warn-600'>Данная ссылка не действительна</div>;
   }

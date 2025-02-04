@@ -112,7 +112,7 @@ function EditorLibraryItem({ controller }: EditorLibraryItemProps) {
             <SelectUser
               className='w-[25rem] sm:w-[26rem] text-sm'
               value={controller.schema.owner ?? undefined}
-              onSelectValue={onSelectUser}
+              onChange={onSelectUser}
             />
           ) : null}
         </Overlay>

@@ -10,7 +10,7 @@ import { matchOperation } from '@/models/ossAPI';
 interface SelectOperationProps extends CProps.Styling {
   items?: IOperation[];
   value?: IOperation;
-  onSelectValue: (newValue?: IOperation) => void;
+  onChange: (newValue?: IOperation) => void;
 
   placeholder?: string;
   noBorder?: boolean;
@@ -20,7 +20,7 @@ function SelectOperation({
   className,
   items,
   value,
-  onSelectValue,
+  onChange,
   placeholder = 'Выберите операцию',
   ...restProps
 }: SelectOperationProps) {
@@ -40,7 +40,7 @@ function SelectOperation({
       className={clsx('text-ellipsis', className)}
       options={options}
       value={value ? { value: value.id, label: `${value.alias}: ${value.title}` } : null}
-      onChange={data => onSelectValue(items?.find(cst => cst.id === data?.value))}
+      onChange={data => onChange(items?.find(cst => cst.id === data?.value))}
       // @ts-expect-error: TODO: use type definitions from react-select in filter object
       filterOption={filter}
       placeholder={placeholder}

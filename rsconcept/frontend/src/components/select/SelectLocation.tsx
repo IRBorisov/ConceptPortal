@@ -12,9 +12,10 @@ import { labelFolderNode } from '@/utils/labels';
 
 interface SelectLocationProps extends CProps.Styling {
   value: string;
+  onClick: (event: CProps.EventMouse, target: FolderNode) => void;
+
   prefix: string;
   dense?: boolean;
-  onClick: (event: CProps.EventMouse, target: FolderNode) => void;
 }
 
 function SelectLocation({ value, dense, prefix, onClick, className, style }: SelectLocationProps) {

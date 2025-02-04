@@ -15,8 +15,8 @@ import { describeCstSource, labelCstSource } from '@/utils/labels';
 
 interface SelectGraphFilterProps extends CProps.Styling {
   value: DependencyMode;
-  dense?: boolean;
   onChange: (value: DependencyMode) => void;
+  dense?: boolean;
 }
 
 function SelectGraphFilter({ value, dense, onChange, ...restProps }: SelectGraphFilterProps) {

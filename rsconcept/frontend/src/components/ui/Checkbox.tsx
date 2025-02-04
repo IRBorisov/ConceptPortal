@@ -4,7 +4,7 @@ import { CheckboxChecked } from '@/components/Icons';
 import { CProps } from '@/components/props';
 import { globals } from '@/utils/constants';
 
-export interface CheckboxProps extends Omit<CProps.Button, 'value' | 'onClick'> {
+export interface CheckboxProps extends Omit<CProps.Button, 'value' | 'onClick' | 'onChange'> {
   /** Label to display next to the checkbox. */
   label?: string;
 
@@ -15,7 +15,7 @@ export interface CheckboxProps extends Omit<CProps.Button, 'value' | 'onClick'> 
   value?: boolean;
 
   /** Callback to set the `value`. */
-  setValue?: (newValue: boolean) => void;
+  onChange?: (newValue: boolean) => void;
 }
 
 /**
@@ -29,18 +29,18 @@ function Checkbox({
   hideTitle,
   className,
   value,
-  setValue,
+  onChange,
   ...restProps
 }: CheckboxProps) {
-  const cursor = disabled ? 'cursor-arrow' : setValue ? 'cursor-pointer' : '';
+  const cursor = disabled ? 'cursor-arrow' : onChange ? 'cursor-pointer' : '';
 
   function handleClick(event: CProps.EventMouse): void {
     event.preventDefault();
     event.stopPropagation();
-    if (disabled || !setValue) {
+    if (disabled || !onChange) {
       return;
     }
-    setValue(!value);
+    onChange(!value);
   }
 
   return (

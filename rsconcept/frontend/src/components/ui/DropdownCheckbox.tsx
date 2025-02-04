@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import Checkbox, { CheckboxProps } from './Checkbox';
 
 /** Animated {@link Checkbox} inside a {@link Dropdown} item. */
-function DropdownCheckbox({ setValue, disabled, ...restProps }: CheckboxProps) {
+function DropdownCheckbox({ onChange: setValue, disabled, ...restProps }: CheckboxProps) {
   return (
     <div
       className={clsx(
@@ -13,7 +13,7 @@ function DropdownCheckbox({ setValue, disabled, ...restProps }: CheckboxProps) {
         !!setValue && !disabled && 'clr-hover'
       )}
     >
-      <Checkbox tabIndex={-1} disabled={disabled} setValue={setValue} {...restProps} />
+      <Checkbox tabIndex={-1} disabled={disabled} onChange={setValue} {...restProps} />
     </div>
   );
 }

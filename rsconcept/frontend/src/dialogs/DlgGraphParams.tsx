@@ -31,31 +31,31 @@ function DlgGraphParams() {
           label='Скрыть текст'
           title='Не отображать термины'
           value={params.noText}
-          setValue={value => updateParams({ noText: value })}
+          onChange={value => updateParams({ noText: value })}
         />
         <Checkbox
           label='Скрыть несвязанные'
           title='Неиспользуемые конституенты'
           value={params.noHermits}
-          setValue={value => updateParams({ noHermits: value })}
+          onChange={value => updateParams({ noHermits: value })}
         />
         <Checkbox
           label='Скрыть шаблоны'
           titleHtml='Терм-функции и предикат-функции <br/>с параметризованными аргументами'
           value={params.noTemplates}
-          setValue={value => updateParams({ noTemplates: value })}
+          onChange={value => updateParams({ noTemplates: value })}
         />
         <Checkbox
           label='Транзитивная редукция'
           titleHtml='Удалить связи, образующие <br/>транзитивные пути в графе'
           value={params.noTransitive}
-          setValue={value => updateParams({ noTransitive: value })}
+          onChange={value => updateParams({ noTransitive: value })}
         />
         <Checkbox
           label='Свернуть порожденные'
           title='Не отображать порожденные понятия'
           value={params.foldDerived}
-          setValue={value => updateParams({ foldDerived: value })}
+          onChange={value => updateParams({ foldDerived: value })}
         />
       </div>
       <div className='flex flex-col gap-1'>
@@ -63,42 +63,42 @@ function DlgGraphParams() {
         <Checkbox
           label={labelCstType(CstType.BASE)}
           value={params.allowBase}
-          setValue={value => updateParams({ allowBase: value })}
+          onChange={value => updateParams({ allowBase: value })}
         />
         <Checkbox
           label={labelCstType(CstType.STRUCTURED)}
           value={params.allowStruct}
-          setValue={value => updateParams({ allowStruct: value })}
+          onChange={value => updateParams({ allowStruct: value })}
         />
         <Checkbox
           label={labelCstType(CstType.TERM)}
           value={params.allowTerm}
-          setValue={value => updateParams({ allowTerm: value })}
+          onChange={value => updateParams({ allowTerm: value })}
         />
         <Checkbox
           label={labelCstType(CstType.AXIOM)}
           value={params.allowAxiom}
-          setValue={value => updateParams({ allowAxiom: value })}
+          onChange={value => updateParams({ allowAxiom: value })}
         />
         <Checkbox
           label={labelCstType(CstType.FUNCTION)}
           value={params.allowFunction}
-          setValue={value => updateParams({ allowFunction: value })}
+          onChange={value => updateParams({ allowFunction: value })}
         />
         <Checkbox
           label={labelCstType(CstType.PREDICATE)}
           value={params.allowPredicate}
-          setValue={value => updateParams({ allowPredicate: value })}
+          onChange={value => updateParams({ allowPredicate: value })}
         />
         <Checkbox
           label={labelCstType(CstType.CONSTANT)}
           value={params.allowConstant}
-          setValue={value => updateParams({ allowConstant: value })}
+          onChange={value => updateParams({ allowConstant: value })}
         />
         <Checkbox
           label={labelCstType(CstType.THEOREM)}
           value={params.allowTheorem}
-          setValue={value => updateParams({ allowTheorem: value })}
+          onChange={value => updateParams({ allowTheorem: value })}
         />
       </div>
     </Modal>

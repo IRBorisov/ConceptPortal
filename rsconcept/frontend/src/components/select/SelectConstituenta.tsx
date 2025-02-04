@@ -10,10 +10,10 @@ import { matchConstituenta } from '@/models/rsformAPI';
 import { describeConstituenta, describeConstituentaTerm } from '@/utils/labels';
 
 interface SelectConstituentaProps extends CProps.Styling {
-  items?: IConstituenta[];
   value?: IConstituenta;
-  onSelectValue: (newValue?: IConstituenta) => void;
+  onChange: (newValue?: IConstituenta) => void;
 
+  items?: IConstituenta[];
   placeholder?: string;
   noBorder?: boolean;
 }
@@ -22,7 +22,7 @@ function SelectConstituenta({
   className,
   items,
   value,
-  onSelectValue,
+  onChange,
   placeholder = 'Выберите конституенту',
   ...restProps
 }: SelectConstituentaProps) {
@@ -42,7 +42,7 @@ function SelectConstituenta({
       className={clsx('text-ellipsis', className)}
       options={options}
       value={value ? { value: value.id, label: `${value.alias}: ${describeConstituentaTerm(value)}` } : null}
-      onChange={data => onSelectValue(items?.find(cst => cst.id === data?.value))}
+      onChange={data => onChange(items?.find(cst => cst.id === data?.value))}
       // @ts-expect-error: TODO: use type definitions from react-select in filter object
       filterOption={filter}
       placeholder={placeholder}

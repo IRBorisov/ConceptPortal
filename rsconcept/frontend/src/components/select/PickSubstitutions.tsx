@@ -20,8 +20,9 @@ import { errors } from '@/utils/labels';
 import SelectLibraryItem from './SelectLibraryItem';
 
 interface PickSubstitutionsProps extends CProps.Styling {
-  substitutions: ICstSubstitute[];
-  setSubstitutions: React.Dispatch<React.SetStateAction<ICstSubstitute[]>>;
+  value: ICstSubstitute[];
+  onChange: React.Dispatch<React.SetStateAction<ICstSubstitute[]>>;
+
   suggestions?: ICstSubstitute[];
 
   prefixID: string;
@@ -35,8 +36,8 @@ interface PickSubstitutionsProps extends CProps.Styling {
 const columnHelper = createColumnHelper<IMultiSubstitution>();
 
 function PickSubstitutions({
-  substitutions,
-  setSubstitutions,
+  value,
+  onChange,
   suggestions,
   prefixID,
   rows,
@@ -66,7 +67,7 @@ function PickSubstitutions({
     ) ?? [];
 
   const substitutionData: IMultiSubstitution[] = [
-    ...substitutions.map(item => ({
+    ...value.map(item => ({
       original_source: getSchemaByCst(item.original)!,
       original: getConstituenta(item.original)!,
       substitution: getConstituenta(item.substitution)!,
@@ -110,8 +111,8 @@ function PickSubstitutions({
       original: deleteRight ? rightCst.id : leftCst.id,
       substitution: deleteRight ? leftCst.id : rightCst.id
     };
-    const toDelete = substitutions.map(item => item.original);
-    const replacements = substitutions.map(item => item.substitution);
+    const toDelete = value.map(item => item.original);
+    const replacements = value.map(item => item.substitution);
     if (
       toDelete.includes(newSubstitution.original) ||
       toDelete.includes(newSubstitution.substitution) ||
@@ -126,7 +127,7 @@ function PickSubstitutions({
         return;
       }
     }
-    setSubstitutions(prev => [...prev, newSubstitution]);
+    onChange(prev => [...prev, newSubstitution]);
     setLeftCst(undefined);
     setRightCst(undefined);
   }
@@ -136,12 +137,12 @@ function PickSubstitutions({
   }
 
   function handleAcceptSuggestion(item: IMultiSubstitution) {
-    setSubstitutions(prev => [...prev, { original: item.original.id, substitution: item.substitution.id }]);
+    onChange(prev => [...prev, { original: item.original.id, substitution: item.substitution.id }]);
   }
 
   function handleDeleteSubstitution(target: IMultiSubstitution) {
     handleDeclineSuggestion(target);
-    setSubstitutions(prev => {
+    onChange(prev => {
       const newItems: ICstSubstitute[] = [];
       prev.forEach(item => {
         if (item.original !== target.original.id || item.substitution !== target.substitution.id) {
@@ -230,15 +231,15 @@ function PickSubstitutions({
             placeholder='Выберите аргумент'
             items={allowSelfSubstitution ? schemas : schemas.filter(item => item.id !== rightArgument?.id)}
             value={leftArgument}
-            onSelectValue={setLeftArgument}
+            onChange={setLeftArgument}
           />
           <SelectConstituenta
             noBorder
             items={(leftArgument as IRSForm)?.items.filter(
-              cst => !substitutions.find(item => item.original === cst.id) && (!filter || filter(cst))
+              cst => !value.find(item => item.original === cst.id) && (!filter || filter(cst))
             )}
             value={leftCst}
-            onSelectValue={setLeftCst}
+            onChange={setLeftCst}
           />
         </div>
         <div className='flex flex-col gap-1'>
@@ -268,15 +269,15 @@ function PickSubstitutions({
             placeholder='Выберите аргумент'
             items={allowSelfSubstitution ? schemas : schemas.filter(item => item.id !== leftArgument?.id)}
             value={rightArgument}
-            onSelectValue={setRightArgument}
+            onChange={setRightArgument}
           />
           <SelectConstituenta
             noBorder
             items={(rightArgument as IRSForm)?.items.filter(
-              cst => !substitutions.find(item => item.original === cst.id) && (!filter || filter(cst))
+              cst => !value.find(item => item.original === cst.id) && (!filter || filter(cst))
             )}
             value={rightCst}
-            onSelectValue={setRightCst}
+            onChange={setRightCst}
           />
         </div>
       </div>

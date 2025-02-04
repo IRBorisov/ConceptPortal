@@ -19,7 +19,7 @@ function TabArguments({ oss, inputs, target, setInputs }: TabArgumentsProps) {
     <div className='cc-fade-in cc-column'>
       <FlexColumn>
         <Label text={`Выбор аргументов: [ ${inputs.length} ]`} />
-        <PickMultiOperation items={filtered} selected={inputs} setSelected={setInputs} rows={8} />
+        <PickMultiOperation items={filtered} value={inputs} onChange={setInputs} rows={8} />
       </FlexColumn>
     </div>
   );

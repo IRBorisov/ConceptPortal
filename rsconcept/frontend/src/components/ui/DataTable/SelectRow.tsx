@@ -15,7 +15,7 @@ function SelectRow<TData>({ row, onChangeLastSelected }: SelectRowProps<TData>) 
     row.toggleSelected(value);
   }
 
-  return <Checkbox tabIndex={-1} value={row.getIsSelected()} setValue={handleChange} />;
+  return <Checkbox tabIndex={-1} value={row.getIsSelected()} onChange={handleChange} />;
 }
 
 export default SelectRow;

@@ -40,8 +40,8 @@ function DlgSubstituteCst() {
     >
       <PickSubstitutions
         allowSelfSubstitution
-        substitutions={substitutions}
-        setSubstitutions={setSubstitutions}
+        value={substitutions}
+        onChange={setSubstitutions}
         rows={6}
         prefixID={prefixes.dlg_cst_substitutes_list}
         schemas={[schema]}

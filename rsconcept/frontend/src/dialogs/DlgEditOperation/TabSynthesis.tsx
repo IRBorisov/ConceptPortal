@@ -29,8 +29,8 @@ function TabSynthesis({
         schemas={schemas}
         prefixID={prefixes.dlg_cst_substitutes_list}
         rows={8}
-        substitutions={substitutions}
-        setSubstitutions={setSubstitutions}
+        value={substitutions}
+        onChange={setSubstitutions}
         suggestions={suggestions}
       />
       <TextArea

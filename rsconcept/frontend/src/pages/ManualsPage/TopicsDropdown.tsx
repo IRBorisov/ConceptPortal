@@ -57,7 +57,7 @@ function TopicsDropdown({ activeTopic, onChangeTopic }: TopicsDropdownProps) {
       <SelectTree
         items={Object.values(HelpTopic).map(item => item as HelpTopic)}
         value={activeTopic}
-        onChangeValue={handleSelectTopic}
+        onChange={handleSelectTopic}
         prefix={prefixes.topic_list}
         getParent={item => topicParent.get(item) ?? item}
         getLabel={labelHelpTopic}

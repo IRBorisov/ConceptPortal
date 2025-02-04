@@ -3,7 +3,7 @@
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
-import { ILibraryUpdateDTO } from '@/backend/library/api';
+import { IUpdateLibraryItemDTO } from '@/backend/library/api';
 import { useUpdateItem } from '@/backend/library/useUpdateItem';
 import { useMutatingOss } from '@/backend/oss/useMutatingOss';
 import { IconSave } from '@/components/Icons';
@@ -73,7 +73,7 @@ function FormOSS({ id }: FormOSSProps) {
     if (!schema) {
       return;
     }
-    const data: ILibraryUpdateDTO = {
+    const data: IUpdateLibraryItemDTO = {
       id: schema.id,
       item_type: LibraryItemType.RSFORM,
       title: title,

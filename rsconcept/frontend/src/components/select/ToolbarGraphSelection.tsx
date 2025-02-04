@@ -17,37 +17,37 @@ import MiniButton from '@/components/ui/MiniButton';
 import { Graph } from '@/models/Graph';
 
 interface ToolbarGraphSelectionProps extends CProps.Styling {
+  value: number[];
+  onChange: (newSelection: number[]) => void;
   graph: Graph;
-  selected: number[];
   isCore: (item: number) => boolean;
   isOwned?: (item: number) => boolean;
-  setSelected: (newSelection: number[]) => void;
   emptySelection?: boolean;
 }
 
 function ToolbarGraphSelection({
   className,
   graph,
-  selected,
+  value: selected,
   isCore,
   isOwned,
-  setSelected,
+  onChange,
   emptySelection,
   ...restProps
 }: ToolbarGraphSelectionProps) {
   const handleSelectCore = useCallback(() => {
     const core = [...graph.nodes.keys()].filter(isCore);
-    setSelected([...core, ...graph.expandInputs(core)]);
-  }, [setSelected, graph, isCore]);
+    onChange([...core, ...graph.expandInputs(core)]);
+  }, [onChange, graph, isCore]);
 
   const handleSelectOwned = useCallback(
-    () => (isOwned ? setSelected([...graph.nodes.keys()].filter(isOwned)) : undefined),
-    [setSelected, graph, isOwned]
+    () => (isOwned ? onChange([...graph.nodes.keys()].filter(isOwned)) : undefined),
+    [onChange, graph, isOwned]
   );
 
   const handleInvertSelection = useCallback(
-    () => setSelected([...graph.nodes.keys()].filter(item => !selected.includes(item))),
-    [setSelected, selected, graph]
+    () => onChange([...graph.nodes.keys()].filter(item => !selected.includes(item))),
+    [onChange, selected, graph]
   );
 
   return (
@@ -55,37 +55,37 @@ function ToolbarGraphSelection({
       <MiniButton
         titleHtml='Сбросить выделение'
         icon={<IconReset size='1.25rem' className='icon-primary' />}
-        onClick={() => setSelected([])}
+        onClick={() => onChange([])}
         disabled={emptySelection}
       />
       <MiniButton
         titleHtml='Выделить все влияющие'
         icon={<IconGraphCollapse size='1.25rem' className='icon-primary' />}
-        onClick={() => setSelected([...selected, ...graph.expandAllInputs(selected)])}
+        onClick={() => onChange([...selected, ...graph.expandAllInputs(selected)])}
         disabled={emptySelection}
       />
       <MiniButton
         titleHtml='Выделить все зависимые'
         icon={<IconGraphExpand size='1.25rem' className='icon-primary' />}
-        onClick={() => setSelected([...selected, ...graph.expandAllOutputs(selected)])}
+        onClick={() => onChange([...selected, ...graph.expandAllOutputs(selected)])}
         disabled={emptySelection}
       />
       <MiniButton
         titleHtml='<b>Максимизация</b> <br/>дополнение выделения конституентами, <br/>зависимыми только от выделенных'
         icon={<IconGraphMaximize size='1.25rem' className='icon-primary' />}
-        onClick={() => setSelected(graph.maximizePart(selected))}
+        onClick={() => onChange(graph.maximizePart(selected))}
         disabled={emptySelection}
       />
       <MiniButton
         titleHtml='Выделить поставщиков'
         icon={<IconGraphInputs size='1.25rem' className='icon-primary' />}
-        onClick={() => setSelected([...selected, ...graph.expandInputs(selected)])}
+        onClick={() => onChange([...selected, ...graph.expandInputs(selected)])}
         disabled={emptySelection}
       />
       <MiniButton
         titleHtml='Выделить потребителей'
         icon={<IconGraphOutputs size='1.25rem' className='icon-primary' />}
-        onClick={() => setSelected([...selected, ...graph.expandOutputs(selected)])}
+        onClick={() => onChange([...selected, ...graph.expandOutputs(selected)])}
         disabled={emptySelection}
       />
       <MiniButton

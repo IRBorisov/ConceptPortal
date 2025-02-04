@@ -14,10 +14,9 @@ import SelectLocation from './SelectLocation';
 
 interface SelectLocationContextProps extends CProps.Styling {
   value: string;
+  onChange: (newValue: string) => void;
   title?: string;
   stretchTop?: boolean;
-
-  onChange: (newValue: string) => void;
 }
 
 function SelectLocationContext({

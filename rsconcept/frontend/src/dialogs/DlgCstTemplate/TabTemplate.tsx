@@ -102,7 +102,7 @@ function TabTemplate({ state, partialUpdate, templateSchema }: TabTemplateProps)
         id='dlg_template_picker'
         value={state.prototype}
         data={filteredData}
-        onSelectValue={cst => partialUpdate({ prototype: cst })}
+        onChange={cst => partialUpdate({ prototype: cst })}
         prefixID={prefixes.cst_template_ist}
         className='rounded-t-none'
         rows={8}

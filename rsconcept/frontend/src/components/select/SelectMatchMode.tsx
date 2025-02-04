@@ -15,8 +15,8 @@ import { describeCstMatchMode, labelCstMatchMode } from '@/utils/labels';
 
 interface SelectMatchModeProps extends CProps.Styling {
   value: CstMatchMode;
-  dense?: boolean;
   onChange: (value: CstMatchMode) => void;
+  dense?: boolean;
 }
 
 function SelectMatchMode({ value, dense, onChange, ...restProps }: SelectMatchModeProps) {

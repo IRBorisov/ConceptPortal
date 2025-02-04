@@ -141,11 +141,11 @@ function FormSignup() {
       </div>
 
       <div className='flex gap-1 text-sm'>
-        <Checkbox id='accept_terms' label='Принимаю условия' value={acceptPrivacy} setValue={setAcceptPrivacy} />
+        <Checkbox id='accept_terms' label='Принимаю условия' value={acceptPrivacy} onChange={setAcceptPrivacy} />
         <TextURL text='обработки персональных данных...' href={urls.help_topic(HelpTopic.INFO_PRIVACY)} />
       </div>
       <div className='flex gap-1 text-sm'>
-        <Checkbox id='accept_rules' label='Принимаю ' value={acceptRules} setValue={setAcceptRules} />
+        <Checkbox id='accept_rules' label='Принимаю ' value={acceptRules} onChange={setAcceptRules} />
         <TextURL text='правила поведения на Портале...' href={urls.help_topic(HelpTopic.INFO_RULES)} />
       </div>
 

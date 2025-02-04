@@ -39,7 +39,7 @@ function DlgDeleteOperation() {
         label='Сохранить наследованные конституенты'
         titleHtml='Наследованные конституенты <br/>превратятся в дописанные'
         value={keepConstituents}
-        setValue={setKeepConstituents}
+        onChange={setKeepConstituents}
         disabled={target.result === null}
       />
       <Checkbox
@@ -50,7 +50,7 @@ function DlgDeleteOperation() {
             : 'Удалить схему вместе с операцией'
         }
         value={deleteSchema}
-        setValue={setDeleteSchema}
+        onChange={setDeleteSchema}
         disabled={!target.is_owned || target.result === null}
       />
     </Modal>

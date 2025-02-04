@@ -18,15 +18,15 @@ import ToolbarGraphSelection from './ToolbarGraphSelection';
 
 interface PickMultiConstituentaProps extends CProps.Styling {
   id?: string;
+  value: ConstituentaID[];
+  onChange: React.Dispatch<React.SetStateAction<ConstituentaID[]>>;
+
   schema: IRSForm;
   data: IConstituenta[];
 
   prefixID: string;
   rows?: number;
   noBorder?: boolean;
-
-  selected: ConstituentaID[];
-  setSelected: React.Dispatch<React.SetStateAction<ConstituentaID[]>>;
 }
 
 const columnHelper = createColumnHelper<IConstituenta>();
@@ -38,8 +38,8 @@ function PickMultiConstituenta({
   prefixID,
   rows,
   noBorder,
-  selected,
-  setSelected,
+  value,
+  onChange,
   className,
   ...restProps
 }: PickMultiConstituentaProps) {
@@ -74,10 +74,10 @@ function PickMultiConstituenta({
     }
     const newRowSelection: RowSelectionState = {};
     filtered.forEach((cst, index) => {
-      newRowSelection[String(index)] = selected.includes(cst.id);
+      newRowSelection[String(index)] = value.includes(cst.id);
     });
     setRowSelection(newRowSelection);
-  }, [filtered, setRowSelection, selected]);
+  }, [filtered, setRowSelection, value]);
 
   useEffect(() => {
     if (data.length === 0) {
@@ -91,7 +91,7 @@ function PickMultiConstituenta({
 
   function handleRowSelection(updater: React.SetStateAction<RowSelectionState>) {
     if (!data) {
-      setSelected([]);
+      onChange([]);
     } else {
       const newRowSelection = typeof updater === 'function' ? updater(rowSelection) : updater;
       const newSelection: ConstituentaID[] = [];
@@ -100,7 +100,7 @@ function PickMultiConstituenta({
           newSelection.push(cst.id);
         }
       });
-      setSelected(prev => [...prev.filter(cst_id => !filtered.find(cst => cst.id === cst_id)), ...newSelection]);
+      onChange(prev => [...prev.filter(cst_id => !filtered.find(cst => cst.id === cst_id)), ...newSelection]);
     }
   }
 
@@ -122,7 +122,7 @@ function PickMultiConstituenta({
     <div className={clsx(noBorder ? '' : 'border', className)} {...restProps}>
       <div className={clsx('px-3 flex justify-between items-center', 'clr-input', 'border-b', 'rounded-t-md')}>
         <div className='w-[24ch] select-none whitespace-nowrap'>
-          {data.length > 0 ? `Выбраны ${selected.length} из ${data.length}` : 'Конституенты'}
+          {data.length > 0 ? `Выбраны ${value.length} из ${data.length}` : 'Конституенты'}
         </div>
         <SearchBar
           id='dlg_constituents_search'
@@ -135,9 +135,9 @@ function PickMultiConstituenta({
           graph={foldedGraph}
           isCore={cstID => isBasicConcept(schema.cstByID.get(cstID)?.cst_type)}
           isOwned={cstID => !schema.cstByID.get(cstID)?.is_inherited}
-          selected={selected}
-          setSelected={setSelected}
-          emptySelection={selected.length === 0}
+          value={value}
+          onChange={onChange}
+          emptySelection={value.length === 0}
           className='w-fit'
         />
       </div>

@@ -64,7 +64,7 @@ function TabEntityReference({ initial, schema, onChangeValid, onChangeReference 
         initialFilter={initial.text}
         value={selectedCst}
         data={schema.items}
-        onSelectValue={handleSelectConstituenta}
+        onChange={handleSelectConstituenta}
         prefixID={prefixes.cst_modal_list}
         describeFunc={cst => cst.term_resolved}
         matchFunc={(cst, filter) => matchConstituenta(cst, filter, CstMatchMode.TERM)}
@@ -94,7 +94,7 @@ function TabEntityReference({ initial, schema, onChangeValid, onChangeReference 
         />
       </div>
 
-      <SelectWordForm selected={selectedGrams} setSelected={setSelectedGrams} />
+      <SelectWordForm value={selectedGrams} onChange={setSelectedGrams} />
 
       <div className='flex items-center gap-4'>
         <Label text='Словоформа' />
@@ -104,7 +104,7 @@ function TabEntityReference({ initial, schema, onChangeValid, onChangeReference 
           className='flex-grow'
           menuPlacement='top'
           value={selectedGrams}
-          onChangeValue={setSelectedGrams}
+          onChange={setSelectedGrams}
         />
       </div>
     </div>

@@ -53,7 +53,7 @@ function DlgUploadRSForm() {
         label='Загружать название и комментарий'
         className='py-2'
         value={loadMetadata}
-        setValue={value => setLoadMetadata(value)}
+        onChange={value => setLoadMetadata(value)}
       />
     </Modal>
   );

@@ -10,7 +10,7 @@ import { matchLibraryItem } from '@/models/libraryAPI';
 interface SelectLibraryItemProps extends CProps.Styling {
   items?: ILibraryItem[];
   value?: ILibraryItem;
-  onSelectValue: (newValue?: ILibraryItem) => void;
+  onChange: (newValue?: ILibraryItem) => void;
 
   placeholder?: string;
   noBorder?: boolean;
@@ -20,7 +20,7 @@ function SelectLibraryItem({
   className,
   items,
   value,
-  onSelectValue,
+  onChange,
   placeholder = 'Выберите схему',
   ...restProps
 }: SelectLibraryItemProps) {
@@ -40,7 +40,7 @@ function SelectLibraryItem({
       className={clsx('text-ellipsis', className)}
       options={options}
       value={value ? { value: value.id, label: `${value.alias}: ${value.title}` } : null}
-      onChange={data => onSelectValue(items?.find(cst => cst.id === data?.value))}
+      onChange={data => onChange(items?.find(cst => cst.id === data?.value))}
       // @ts-expect-error: TODO: use type definitions from react-select in filter object
       filterOption={filter}
       placeholder={placeholder}

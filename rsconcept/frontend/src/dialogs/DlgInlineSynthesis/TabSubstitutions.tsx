@@ -22,8 +22,8 @@ function TabSubstitutions({ sourceID, receiver, selected, substitutions, setSubs
 
   return (
     <PickSubstitutions
-      substitutions={substitutions}
-      setSubstitutions={setSubstitutions}
+      value={substitutions}
+      onChange={setSubstitutions}
       rows={10}
       prefixID={prefixes.cst_inline_synth_substitutes}
       schemas={schemas}

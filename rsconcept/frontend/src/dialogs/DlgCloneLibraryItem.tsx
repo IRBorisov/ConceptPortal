@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
 import { useAuthSuspense } from '@/backend/auth/useAuth';
-import { IRSFormCloneDTO } from '@/backend/library/api';
+import { IRCloneLibraryItemDTO } from '@/backend/library/api';
 import { useCloneItem } from '@/backend/library/useCloneItem';
 import { VisibilityIcon } from '@/components/DomainIcons';
 import SelectAccessPolicy from '@/components/select/SelectAccessPolicy';
@@ -59,7 +59,7 @@ function DlgCloneLibraryItem() {
   }
 
   function handleSubmit() {
-    const data: IRSFormCloneDTO = {
+    const data: IRCloneLibraryItemDTO = {
       id: base.id,
       item_type: base.item_type,
       title: title,
@@ -137,7 +137,7 @@ function DlgCloneLibraryItem() {
         id='dlg_only_selected'
         label={`Только выбранные конституенты [${selected.length} из ${totalCount}]`}
         value={onlySelected}
-        setValue={value => setOnlySelected(value)}
+        onChange={value => setOnlySelected(value)}
       />
     </Modal>
   );

@@ -10,16 +10,16 @@ import { prefixes } from '@/utils/constants';
 import { DefaultWordForms, IGrammemeOption, SelectorGrammemes } from '@/utils/selectors';
 
 interface SelectWordFormProps extends CProps.Styling {
-  selected: IGrammemeOption[];
-  setSelected: React.Dispatch<React.SetStateAction<IGrammemeOption[]>>;
+  value: IGrammemeOption[];
+  onChange: React.Dispatch<React.SetStateAction<IGrammemeOption[]>>;
 }
 
-function SelectWordForm({ selected, setSelected, className, ...restProps }: SelectWordFormProps) {
+function SelectWordForm({ value, onChange, className, ...restProps }: SelectWordFormProps) {
   const handleSelect = useCallback(
     (grams: Grammeme[]) => {
-      setSelected(SelectorGrammemes.filter(({ value }) => grams.includes(value as Grammeme)));
+      onChange(SelectorGrammemes.filter(({ value }) => grams.includes(value as Grammeme)));
     },
-    [setSelected]
+    [onChange]
   );
 
   return (
@@ -30,7 +30,7 @@ function SelectWordForm({ selected, setSelected, className, ...restProps }: Sele
           text={data.text}
           example={data.example}
           grams={data.grams}
-          isSelected={data.grams.every(gram => selected.find(item => (item.value as Grammeme) === gram))}
+          isSelected={data.grams.every(gram => value.find(item => (item.value as Grammeme) === gram))}
           onSelectGrams={handleSelect}
         />
       ))}

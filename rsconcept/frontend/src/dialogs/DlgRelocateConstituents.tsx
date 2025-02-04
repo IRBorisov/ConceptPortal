@@ -103,7 +103,7 @@ function DlgRelocateConstituents() {
             placeholder='Выберите исходную схему'
             items={sourceSchemas}
             value={source}
-            onSelectValue={handleSelectSource}
+            onChange={handleSelectSource}
           />
           <MiniButton
             title='Направление перемещения'
@@ -116,7 +116,7 @@ function DlgRelocateConstituents() {
             placeholder='Выберите целевую схему'
             items={destinationSchemas}
             value={destination}
-            onSelectValue={handleSelectDestination}
+            onChange={handleSelectDestination}
           />
         </div>
         {sourceData.isLoading ? <Loader /> : null}
@@ -127,8 +127,8 @@ function DlgRelocateConstituents() {
             data={filteredConstituents}
             rows={12}
             prefixID={prefixes.dlg_cst_constituents_list}
-            selected={selected}
-            setSelected={setSelected}
+            value={selected}
+            onChange={setSelected}
           />
         ) : null}
       </div>

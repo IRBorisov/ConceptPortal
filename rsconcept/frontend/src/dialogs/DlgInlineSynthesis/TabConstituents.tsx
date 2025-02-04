@@ -21,8 +21,8 @@ function TabConstituents({ itemID, selected, setSelected }: TabConstituentsProps
       data={schema.items}
       rows={13}
       prefixID={prefixes.cst_inline_synth_list}
-      selected={selected}
-      setSelected={setSelected}
+      value={selected}
+      onChange={setSelected}
     />
   );
 }
