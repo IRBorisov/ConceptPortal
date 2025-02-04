@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import { useCallback } from 'react';
 
 import {
   IconGraphCollapse,
@@ -35,20 +34,14 @@ function ToolbarGraphSelection({
   emptySelection,
   ...restProps
 }: ToolbarGraphSelectionProps) {
-  const handleSelectCore = useCallback(() => {
+  function handleSelectCore() {
     const core = [...graph.nodes.keys()].filter(isCore);
     onChange([...core, ...graph.expandInputs(core)]);
-  }, [onChange, graph, isCore]);
+  }
 
-  const handleSelectOwned = useCallback(
-    () => (isOwned ? onChange([...graph.nodes.keys()].filter(isOwned)) : undefined),
-    [onChange, graph, isOwned]
-  );
-
-  const handleInvertSelection = useCallback(
-    () => onChange([...graph.nodes.keys()].filter(item => !selected.includes(item))),
-    [onChange, selected, graph]
-  );
+  function handleSelectOwned() {
+    if (isOwned) onChange([...graph.nodes.keys()].filter(isOwned));
+  }
 
   return (
     <div className={clsx('cc-icons', className)} {...restProps}>
@@ -91,7 +84,7 @@ function ToolbarGraphSelection({
       <MiniButton
         titleHtml='Инвертировать'
         icon={<IconGraphInverse size='1.25rem' className='icon-primary' />}
-        onClick={handleInvertSelection}
+        onClick={() => onChange([...graph.nodes.keys()].filter(item => !selected.includes(item)))}
       />
       <MiniButton
         titleHtml='Выделить ядро'

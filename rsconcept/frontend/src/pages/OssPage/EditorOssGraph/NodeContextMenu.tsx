@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { useMutatingOss } from '@/backend/oss/useMutatingOss';
 import {
@@ -75,48 +75,48 @@ function NodeContextMenu({
     return true;
   })();
 
-  const handleHide = useCallback(() => {
+  function handleHide() {
     setIsOpen(false);
     onHide();
-  }, [onHide]);
+  }
 
   useClickedOutside(isOpen, ref, handleHide);
 
   useEffect(() => setIsOpen(true), []);
 
-  const handleOpenSchema = () => {
+  function handleOpenSchema() {
     controller.navigateOperationSchema(operation.id);
-  };
+  }
 
-  const handleEditSchema = () => {
+  function handleEditSchema() {
     handleHide();
     onEditSchema(operation.id);
-  };
+  }
 
-  const handleEditOperation = () => {
+  function handleEditOperation() {
     handleHide();
     onEditOperation(operation.id);
-  };
+  }
 
-  const handleDeleteOperation = () => {
+  function handleDeleteOperation() {
     handleHide();
     onDelete(operation.id);
-  };
+  }
 
-  const handleCreateSchema = () => {
+  function handleCreateSchema() {
     handleHide();
     onCreateInput(operation.id);
-  };
+  }
 
-  const handleRunSynthesis = () => {
+  function handleRunSynthesis() {
     handleHide();
     onExecuteOperation(operation.id);
-  };
+  }
 
-  const handleRelocateConstituents = () => {
+  function handleRelocateConstituents() {
     handleHide();
     onRelocateConstituents(operation.id);
-  };
+  }
 
   return (
     <div ref={ref} className='absolute select-none' style={{ top: cursorY, left: cursorX }}>

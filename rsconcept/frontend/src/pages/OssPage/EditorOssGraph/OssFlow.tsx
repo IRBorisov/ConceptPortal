@@ -1,7 +1,7 @@
 'use client';
 
 import { toPng } from 'html-to-image';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import {
   Background,
@@ -65,16 +65,13 @@ function OssFlow() {
   const [toggleReset, setToggleReset] = useState(false);
   const [menuProps, setMenuProps] = useState<ContextMenuData | undefined>(undefined);
 
-  const onSelectionChange = useCallback(
-    ({ nodes }: { nodes: Node[] }) => {
-      const ids = nodes.map(node => Number(node.id));
-      controller.setSelected(prev => [
-        ...prev.filter(nodeID => ids.includes(nodeID)),
-        ...ids.filter(nodeID => !prev.includes(Number(nodeID)))
-      ]);
-    },
-    [controller]
-  );
+  function onSelectionChange({ nodes }: { nodes: Node[] }) {
+    const ids = nodes.map(node => Number(node.id));
+    controller.setSelected(prev => [
+      ...prev.filter(nodeID => ids.includes(nodeID)),
+      ...ids.filter(nodeID => !prev.includes(Number(nodeID)))
+    ]);
+  }
 
   useOnSelectionChange({
     onChange: onSelectionChange

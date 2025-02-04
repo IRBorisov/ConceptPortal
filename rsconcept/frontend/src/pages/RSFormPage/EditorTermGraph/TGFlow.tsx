@@ -79,17 +79,14 @@ function TGFlow() {
   const [needReset, setNeedReset] = useState(true);
   const [toggleResetView, setToggleResetView] = useState(false);
 
-  const onSelectionChange = useCallback(
-    ({ nodes }: { nodes: Node[] }) => {
-      const ids = nodes.map(node => Number(node.id));
-      if (ids.length === 0) {
-        controller.setSelected([]);
-      } else {
-        controller.setSelected(prev => [...prev.filter(nodeID => !filteredGraph.hasNode(nodeID)), ...ids]);
-      }
-    },
-    [controller, filteredGraph]
-  );
+  function onSelectionChange({ nodes }: { nodes: Node[] }) {
+    const ids = nodes.map(node => Number(node.id));
+    if (ids.length === 0) {
+      controller.setSelected([]);
+    } else {
+      controller.setSelected(prev => [...prev.filter(nodeID => !filteredGraph.hasNode(nodeID)), ...ids]);
+    }
+  }
 
   useOnSelectionChange({
     onChange: onSelectionChange

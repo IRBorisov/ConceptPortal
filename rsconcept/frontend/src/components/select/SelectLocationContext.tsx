@@ -1,7 +1,6 @@
 'use client';
 
 import clsx from 'clsx';
-import { useCallback } from 'react';
 
 import { IconFolderTree } from '@/components/Icons';
 import { CProps } from '@/components/props';
@@ -28,15 +27,12 @@ function SelectLocationContext({
 }: SelectLocationContextProps) {
   const menu = useDropdown();
 
-  const handleClick = useCallback(
-    (event: CProps.EventMouse, newValue: string) => {
-      event.preventDefault();
-      event.stopPropagation();
-      menu.hide();
-      onChange(newValue);
-    },
-    [menu, onChange]
-  );
+  function handleClick(event: CProps.EventMouse, newValue: string) {
+    event.preventDefault();
+    event.stopPropagation();
+    menu.hide();
+    onChange(newValue);
+  }
 
   return (
     <div ref={menu.ref} className='h-full text-right self-start mt-[-0.25rem] ml-[-1.5rem]'>

@@ -1,7 +1,6 @@
 'use client';
 
 import clsx from 'clsx';
-import { useCallback } from 'react';
 
 import { IconMenuFold, IconMenuUnfold } from '@/components/Icons';
 import Button from '@/components/ui/Button';
@@ -22,13 +21,10 @@ function TopicsDropdown({ activeTopic, onChangeTopic }: TopicsDropdownProps) {
   const noNavigation = useAppLayoutStore(state => state.noNavigation);
   const treeHeight = useFitHeight('4rem + 2px');
 
-  const handleSelectTopic = useCallback(
-    (topic: HelpTopic) => {
-      menu.hide();
-      onChangeTopic(topic);
-    },
-    [onChangeTopic, menu]
-  );
+  function handleSelectTopic(topic: HelpTopic) {
+    menu.hide();
+    onChangeTopic(topic);
+  }
 
   return (
     <div

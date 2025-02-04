@@ -1,7 +1,5 @@
 'use client';
 
-import { useCallback } from 'react';
-
 import { PolicyIcon } from '@/components/DomainIcons';
 import { CProps } from '@/components/props';
 import Dropdown from '@/components/ui/Dropdown';
@@ -23,15 +21,12 @@ interface SelectAccessPolicyProps extends CProps.Styling {
 function SelectAccessPolicy({ value, disabled, stretchLeft, onChange, ...restProps }: SelectAccessPolicyProps) {
   const menu = useDropdown();
 
-  const handleChange = useCallback(
-    (newValue: AccessPolicy) => {
-      menu.hide();
-      if (newValue !== value) {
-        onChange(newValue);
-      }
-    },
-    [menu, value, onChange]
-  );
+  function handleChange(newValue: AccessPolicy) {
+    menu.hide();
+    if (newValue !== value) {
+      onChange(newValue);
+    }
+  }
 
   return (
     <div ref={menu.ref} {...restProps}>

@@ -1,7 +1,5 @@
 'use client';
 
-import { useCallback } from 'react';
-
 import { DependencyIcon } from '@/components/DomainIcons';
 import { CProps } from '@/components/props';
 import Dropdown from '@/components/ui/Dropdown';
@@ -23,13 +21,10 @@ function SelectGraphFilter({ value, dense, onChange, ...restProps }: SelectGraph
   const menu = useDropdown();
   const size = useWindowSize();
 
-  const handleChange = useCallback(
-    (newValue: DependencyMode) => {
-      menu.hide();
-      onChange(newValue);
-    },
-    [menu, onChange]
-  );
+  function handleChange(newValue: DependencyMode) {
+    menu.hide();
+    onChange(newValue);
+  }
 
   return (
     <div ref={menu.ref} {...restProps}>

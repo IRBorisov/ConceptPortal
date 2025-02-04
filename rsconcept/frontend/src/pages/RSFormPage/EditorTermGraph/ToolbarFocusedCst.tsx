@@ -1,7 +1,5 @@
 'use client';
 
-import { useCallback } from 'react';
-
 import { IconGraphInputs, IconGraphOutputs, IconReset } from '@/components/Icons';
 import MiniButton from '@/components/ui/MiniButton';
 import { IConstituenta } from '@/models/rsform';
@@ -29,10 +27,10 @@ function ToolbarFocusedCst({
 }: ToolbarFocusedCstProps) {
   const controller = useRSEdit();
 
-  const resetSelection = useCallback(() => {
+  function resetSelection() {
     reset();
     controller.setSelected([]);
-  }, [reset, controller]);
+  }
 
   return (
     <div className='items-center cc-icons'>

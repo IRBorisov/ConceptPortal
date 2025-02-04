@@ -1,7 +1,6 @@
 'use client';
 
 import clsx from 'clsx';
-import { useCallback } from 'react';
 
 import { CProps } from '@/components/props';
 import WordformButton from '@/dialogs/DlgEditReference/WordformButton';
@@ -15,12 +14,9 @@ interface SelectWordFormProps extends CProps.Styling {
 }
 
 function SelectWordForm({ value, onChange, className, ...restProps }: SelectWordFormProps) {
-  const handleSelect = useCallback(
-    (grams: Grammeme[]) => {
-      onChange(SelectorGrammemes.filter(({ value }) => grams.includes(value as Grammeme)));
-    },
-    [onChange]
-  );
+  function handleSelect(grams: Grammeme[]) {
+    onChange(SelectorGrammemes.filter(({ value }) => grams.includes(value as Grammeme)));
+  }
 
   return (
     <div className={clsx('text-xs sm:text-sm', className)} {...restProps}>

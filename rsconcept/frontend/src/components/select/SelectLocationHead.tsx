@@ -1,7 +1,6 @@
 'use client';
 
 import clsx from 'clsx';
-import { useCallback } from 'react';
 
 import { LocationIcon } from '@/components/DomainIcons';
 import { CProps } from '@/components/props';
@@ -22,13 +21,10 @@ interface SelectLocationHeadProps extends CProps.Styling {
 function SelectLocationHead({ value, excluded = [], onChange, className, ...restProps }: SelectLocationHeadProps) {
   const menu = useDropdown();
 
-  const handleChange = useCallback(
-    (newValue: LocationHead) => {
-      menu.hide();
-      onChange(newValue);
-    },
-    [menu, onChange]
-  );
+  function handleChange(newValue: LocationHead) {
+    menu.hide();
+    onChange(newValue);
+  }
 
   return (
     <div ref={menu.ref} className={clsx('h-full text-right', className)} {...restProps}>
