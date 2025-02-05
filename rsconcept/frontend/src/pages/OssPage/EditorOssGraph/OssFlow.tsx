@@ -63,7 +63,8 @@ function OssFlow() {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [toggleReset, setToggleReset] = useState(false);
-  const [menuProps, setMenuProps] = useState<ContextMenuData | undefined>(undefined);
+  const [menuProps, setMenuProps] = useState<ContextMenuData>({ operation: undefined, cursorX: 0, cursorY: 0 });
+  const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
 
   function onSelectionChange({ nodes }: { nodes: Node[] }) {
     const ids = nodes.map(node => Number(node.id));
@@ -243,12 +244,13 @@ function OssFlow() {
       cursorX: event.clientX,
       cursorY: event.clientY
     });
+    setIsContextMenuOpen(true);
     controller.setShowTooltip(false);
   }
 
   function handleContextMenuHide() {
     controller.setShowTooltip(true);
-    setMenuProps(undefined);
+    setIsContextMenuOpen(false);
   }
 
   function handleCanvasClick() {
@@ -308,6 +310,7 @@ function OssFlow() {
       </Overlay>
       {menuProps ? (
         <NodeContextMenu
+          isOpen={isContextMenuOpen}
           onHide={handleContextMenuHide}
           onDelete={handleDeleteOperation}
           onCreateInput={handleInputCreate}

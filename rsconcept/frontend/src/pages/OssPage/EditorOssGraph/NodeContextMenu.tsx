@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 
 import { useMutatingOss } from '@/backend/oss/useMutatingOss';
 import {
@@ -22,12 +22,13 @@ import { prepareTooltip } from '@/utils/labels';
 import { useOssEdit } from '../OssEditContext';
 
 export interface ContextMenuData {
-  operation: IOperation;
+  operation?: IOperation;
   cursorX: number;
   cursorY: number;
 }
 
 interface NodeContextMenuProps extends ContextMenuData {
+  isOpen: boolean;
   onHide: () => void;
   onDelete: (target: OperationID) => void;
   onCreateInput: (target: OperationID) => void;
@@ -38,6 +39,7 @@ interface NodeContextMenuProps extends ContextMenuData {
 }
 
 function NodeContextMenu({
+  isOpen,
   operation,
   cursorX,
   cursorY,
@@ -52,10 +54,9 @@ function NodeContextMenu({
   const controller = useOssEdit();
   const isProcessing = useMutatingOss();
 
-  const [isOpen, setIsOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const readyForSynthesis = (() => {
-    if (operation.operation_type !== OperationType.SYNTHESIS) {
+    if (operation?.operation_type !== OperationType.SYNTHESIS) {
       return false;
     }
     if (operation.result) {
@@ -75,47 +76,40 @@ function NodeContextMenu({
     return true;
   })();
 
-  function handleHide() {
-    setIsOpen(false);
-    onHide();
-  }
-
-  useClickedOutside(isOpen, ref, handleHide);
-
-  useEffect(() => setIsOpen(true), []);
+  useClickedOutside(isOpen, ref, onHide);
 
   function handleOpenSchema() {
-    controller.navigateOperationSchema(operation.id);
+    if (operation) controller.navigateOperationSchema(operation.id);
   }
 
   function handleEditSchema() {
-    handleHide();
-    onEditSchema(operation.id);
+    onHide();
+    if (operation) onEditSchema(operation.id);
   }
 
   function handleEditOperation() {
-    handleHide();
-    onEditOperation(operation.id);
+    onHide();
+    if (operation) onEditOperation(operation.id);
   }
 
   function handleDeleteOperation() {
-    handleHide();
-    onDelete(operation.id);
+    onHide();
+    if (operation) onDelete(operation.id);
   }
 
   function handleCreateSchema() {
-    handleHide();
-    onCreateInput(operation.id);
+    onHide();
+    if (operation) onCreateInput(operation.id);
   }
 
   function handleRunSynthesis() {
-    handleHide();
-    onExecuteOperation(operation.id);
+    onHide();
+    if (operation) onExecuteOperation(operation.id);
   }
 
   function handleRelocateConstituents() {
-    handleHide();
-    onRelocateConstituents(operation.id);
+    onHide();
+    if (operation) onRelocateConstituents(operation.id);
   }
 
   return (
@@ -133,7 +127,7 @@ function NodeContextMenu({
           onClick={handleEditOperation}
         />
 
-        {operation.result ? (
+        {operation?.result ? (
           <DropdownButton
             text='Открыть схему'
             titleHtml={prepareTooltip('Открыть привязанную КС', 'Двойной клик')}
@@ -142,7 +136,7 @@ function NodeContextMenu({
             onClick={handleOpenSchema}
           />
         ) : null}
-        {controller.isMutable && !operation.result && operation.operation_type === OperationType.INPUT ? (
+        {controller.isMutable && !operation?.result && operation?.operation_type === OperationType.INPUT ? (
           <DropdownButton
             text='Создать схему'
             title='Создать пустую схему для загрузки'
@@ -151,16 +145,16 @@ function NodeContextMenu({
             onClick={handleCreateSchema}
           />
         ) : null}
-        {controller.isMutable && operation.operation_type === OperationType.INPUT ? (
+        {controller.isMutable && operation?.operation_type === OperationType.INPUT ? (
           <DropdownButton
-            text={!operation.result ? 'Загрузить схему' : 'Изменить схему'}
+            text={!operation?.result ? 'Загрузить схему' : 'Изменить схему'}
             title='Выбрать схему для загрузки'
             icon={<IconConnect size='1rem' className='icon-primary' />}
             disabled={isProcessing}
             onClick={handleEditSchema}
           />
         ) : null}
-        {controller.isMutable && !operation.result && operation.operation_type === OperationType.SYNTHESIS ? (
+        {controller.isMutable && !operation?.result && operation?.operation_type === OperationType.SYNTHESIS ? (
           <DropdownButton
             text='Активировать синтез'
             titleHtml={
@@ -174,7 +168,7 @@ function NodeContextMenu({
           />
         ) : null}
 
-        {controller.isMutable && operation.result ? (
+        {controller.isMutable && operation?.result ? (
           <DropdownButton
             text='Конституенты'
             titleHtml='Перенос конституент</br>между схемами'
@@ -187,7 +181,7 @@ function NodeContextMenu({
         <DropdownButton
           text='Удалить операцию'
           icon={<IconDestroy size='1rem' className='icon-red' />}
-          disabled={!controller.isMutable || isProcessing || !controller.canDelete(operation.id)}
+          disabled={!controller.isMutable || isProcessing || !operation || !controller.canDelete(operation.id)}
           onClick={handleDeleteOperation}
         />
       </Dropdown>
