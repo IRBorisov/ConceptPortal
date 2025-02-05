@@ -22,7 +22,7 @@ import { TokenID } from '@/models/rslang';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { transformAST } from '@/utils/codemirror';
-import { errors, labelTypification } from '@/utils/labels';
+import { errors } from '@/utils/labels';
 
 import { useRSEdit } from '../RSEditContext';
 import ParsingResult from './ParsingResult';
@@ -32,17 +32,17 @@ import ToolbarRSExpression from './ToolbarRSExpression';
 
 interface EditorRSExpressionProps {
   id?: string;
-  activeCst: IConstituenta;
   value: string;
+  onChange: (newValue: string) => void;
+
+  activeCst: IConstituenta;
+
   label: string;
   placeholder?: string;
-
   disabled?: boolean;
   toggleReset?: boolean;
 
-  onChangeTypification: (typification: string) => void;
   onChangeLocalParse: (typification: IExpressionParse | undefined) => void;
-  onChangeExpression: (newValue: string) => void;
   onOpenEdit?: (cstID: ConstituentaID) => void;
   onShowTypeGraph: (event: CProps.EventMouse) => void;
 }
@@ -52,9 +52,8 @@ function EditorRSExpression({
   disabled,
   value,
   toggleReset,
-  onChangeTypification,
+  onChange,
   onChangeLocalParse,
-  onChangeExpression,
   onOpenEdit,
   onShowTypeGraph,
   ...restProps
@@ -89,7 +88,7 @@ function EditorRSExpression({
   }, [activeCst, toggleReset]);
 
   function handleChange(newValue: string) {
-    onChangeExpression(newValue);
+    onChange(newValue);
     setIsModified(newValue !== activeCst.definition_formal);
   }
 
@@ -102,13 +101,6 @@ function EditorRSExpression({
         rsInput.current?.view?.focus();
       }
       setIsModified(false);
-      onChangeTypification(
-        labelTypification({
-          isValid: parse.parseResult,
-          resultType: parse.typification,
-          args: parse.args
-        })
-      );
       callback?.(parse);
     });
   }

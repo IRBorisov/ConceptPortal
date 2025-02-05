@@ -22,6 +22,7 @@ export const useCstUpdate = () => {
     }
   });
   return {
-    cstUpdate: (data: { itemID: LibraryItemID; data: ICstUpdateDTO }) => mutation.mutate(data)
+    cstUpdate: (data: { itemID: LibraryItemID; data: ICstUpdateDTO }, onSuccess?: () => void) =>
+      mutation.mutate(data, { onSuccess })
   };
 };

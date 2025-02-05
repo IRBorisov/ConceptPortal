@@ -1,4 +1,5 @@
 import { queryOptions } from '@tanstack/react-query';
+import { z } from 'zod';
 
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/apiTransport';
 import { DELAYS } from '@/backend/configuration';
@@ -74,16 +75,21 @@ export interface ICstCreatedResponse {
 /**
  * Represents data, used in updating persistent attributes in {@link IConstituenta}.
  */
-export interface ICstUpdateDTO {
-  target: ConstituentaID;
-  item_data: {
-    convention?: string;
-    definition_formal?: string;
-    definition_raw?: string;
-    term_raw?: string;
-    term_forms?: TermForm[];
-  };
-}
+export const CstUpdateSchema = z.object({
+  target: z.number(),
+  item_data: z.object({
+    convention: z.string().optional(),
+    definition_formal: z.string().optional(),
+    definition_raw: z.string().optional(),
+    term_raw: z.string().optional(),
+    term_forms: z.array(z.object({ text: z.string(), tags: z.string() })).optional()
+  })
+});
+
+/**
+ * Represents data, used in updating persistent attributes in {@link IConstituenta}.
+ */
+export type ICstUpdateDTO = z.infer<typeof CstUpdateSchema>;
 
 /**
  * Represents data, used in renaming {@link IConstituenta}.

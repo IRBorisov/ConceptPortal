@@ -8,7 +8,7 @@ import { ICheckConstituentaDTO, rsformsApi } from './api';
 
 export const useCheckConstituenta = () => {
   const mutation = useMutation({
-    mutationKey: [rsformsApi.baseKey, 'check-constituenta'],
+    mutationKey: ['actions', 'check-constituenta'],
     mutationFn: rsformsApi.checkConstituenta
   });
   return {

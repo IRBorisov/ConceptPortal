@@ -15,6 +15,7 @@ import { promptUnsaved } from '@/utils/utils';
 
 import { useRSEdit } from '../RSEditContext';
 import ViewConstituents from '../ViewConstituents';
+import EditorControls from './EditorControls';
 import FormConstituenta from './FormConstituenta';
 import ToolbarConstituenta from './ToolbarConstituenta';
 
@@ -22,7 +23,7 @@ import ToolbarConstituenta from './ToolbarConstituenta';
 const SIDELIST_LAYOUT_THRESHOLD = 1000; // px
 
 function EditorConstituenta() {
-  const controller = useRSEdit();
+  const { schema, activeCst, isContentEditable, moveUp, moveDown, cloneCst, navigateCst } = useRSEdit();
   const windowSize = useWindowSize();
   const mainHeight = useMainHeight();
 
@@ -34,7 +35,7 @@ function EditorConstituenta() {
   const [toggleReset, setToggleReset] = useState(false);
 
   const isProcessing = useMutatingRSForm();
-  const disabled = !controller.activeCst || !controller.isContentEditable || isProcessing;
+  const disabled = !activeCst || !isContentEditable || isProcessing;
   const isNarrow = !!windowSize.width && windowSize.width <= SIDELIST_LAYOUT_THRESHOLD;
 
   function handleInput(event: React.KeyboardEvent<HTMLDivElement>) {
@@ -58,19 +59,19 @@ function EditorConstituenta() {
   }
 
   function handleEditTermForms() {
-    if (!controller.activeCst) {
+    if (!activeCst) {
       return;
     }
     if (isModified && !promptUnsaved()) {
       return;
     }
     showEditTerm({
-      target: controller.activeCst,
+      target: activeCst,
       onSave: forms =>
         cstUpdate({
-          itemID: controller.schema.id,
+          itemID: schema.id,
           data: {
-            target: controller.activeCst!.id,
+            target: activeCst.id,
             item_data: { term_forms: forms }
           }
         })
@@ -87,9 +88,9 @@ function EditorConstituenta() {
   function processAltKey(code: string): boolean {
     // prettier-ignore
     switch (code) {
-      case 'ArrowUp': controller.moveUp(); return true;
-      case 'ArrowDown': controller.moveDown(); return true;
-      case 'KeyV': controller.cloneCst(); return true;
+      case 'ArrowUp': moveUp(); return true;
+      case 'ArrowDown': moveDown(); return true;
+      case 'KeyV': cloneCst(); return true;
     }
     return false;
   }
@@ -97,7 +98,7 @@ function EditorConstituenta() {
   return (
     <>
       <ToolbarConstituenta
-        activeCst={controller.activeCst}
+        activeCst={activeCst}
         disabled={disabled}
         onSubmit={initiateSubmit}
         onReset={() => setToggleReset(prev => !prev)}
@@ -114,15 +115,28 @@ function EditorConstituenta() {
         style={{ maxHeight: mainHeight }}
         onKeyDown={handleInput}
       >
-        <FormConstituenta
-          id={globals.constituenta_editor}
-          disabled={disabled}
-          toggleReset={toggleReset}
-          onEditTerm={handleEditTermForms}
-        />
+        <div className='mx-0 md:mx-auto pt-[2rem] md:w-[48.8rem] shrink-0 xs:pt-0'>
+          {activeCst ? (
+            <EditorControls
+              disabled={disabled} //
+              constituenta={activeCst}
+              onEditTerm={handleEditTermForms}
+            />
+          ) : null}
+          {activeCst ? (
+            <FormConstituenta
+              id={globals.constituenta_editor} //
+              disabled={disabled}
+              toggleReset={toggleReset}
+              activeCst={activeCst}
+              schema={schema}
+              onOpenEdit={navigateCst}
+            />
+          ) : null}
+        </div>
         <ViewConstituents
-          isMounted={showList}
-          expression={controller.activeCst?.definition_formal ?? ''}
+          isMounted={showList} //
+          expression={activeCst?.definition_formal ?? ''}
           isBottom={isNarrow}
         />
       </div>
