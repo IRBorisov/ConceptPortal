@@ -17,10 +17,11 @@ interface ConstituentsSearchProps {
   dense?: boolean;
   activeID?: ConstituentaID;
   activeExpression: string;
-  setFiltered: React.Dispatch<React.SetStateAction<IConstituenta[]>>;
+
+  onChange: React.Dispatch<React.SetStateAction<IConstituenta[]>>;
 }
 
-function ConstituentsSearch({ schema, activeID, activeExpression, dense, setFiltered }: ConstituentsSearchProps) {
+function ConstituentsSearch({ schema, activeID, activeExpression, dense, onChange }: ConstituentsSearchProps) {
   const query = useCstSearchStore(state => state.query);
   const filterMatch = useCstSearchStore(state => state.match);
   const filterSource = useCstSearchStore(state => state.source);
@@ -32,7 +33,7 @@ function ConstituentsSearch({ schema, activeID, activeExpression, dense, setFilt
 
   useEffect(() => {
     if (schema.items.length === 0) {
-      setFiltered([]);
+      onChange([]);
       return;
     }
     let result: IConstituenta[] = [];
@@ -47,18 +48,8 @@ function ConstituentsSearch({ schema, activeID, activeExpression, dense, setFilt
     if (!includeInherited) {
       result = result.filter(cst => !cst.is_inherited);
     }
-    setFiltered(result);
-  }, [
-    query,
-    setFiltered,
-    filterSource,
-    activeExpression,
-    schema.items,
-    schema,
-    filterMatch,
-    activeID,
-    includeInherited
-  ]);
+    onChange(result);
+  }, [query, onChange, filterSource, activeExpression, schema.items, schema, filterMatch, activeID, includeInherited]);
 
   return (
     <div className='flex border-b clr-input rounded-t-md'>
@@ -69,8 +60,8 @@ function ConstituentsSearch({ schema, activeID, activeExpression, dense, setFilt
         query={query}
         onChangeQuery={setQuery}
       />
-      <SelectMatchMode value={filterMatch} onChange={newValue => setMatch(newValue)} dense={dense} />
-      <SelectGraphFilter value={filterSource} onChange={newValue => setSource(newValue)} dense={dense} />
+      <SelectMatchMode value={filterMatch} onChange={setMatch} dense={dense} />
+      <SelectGraphFilter value={filterSource} onChange={setSource} dense={dense} />
       {schema.stats.count_inherited > 0 ? (
         <MiniButton
           noHover

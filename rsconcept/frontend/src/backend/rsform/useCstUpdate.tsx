@@ -12,23 +12,12 @@ export const useCstUpdate = () => {
   const mutation = useMutation({
     mutationKey: [rsformsApi.baseKey, 'update-cst'],
     mutationFn: rsformsApi.cstUpdate,
-    onSuccess: (newCst, variables) => {
-      client.setQueryData(rsformsApi.getRSFormQueryOptions({ itemID: variables.itemID }).queryKey, prev =>
-        !prev
-          ? undefined
-          : {
-              ...prev,
-              items: prev.items.map(item => (item.id === newCst.id ? { ...item, ...newCst } : item))
-            }
-      );
+    onSuccess: (_, variables) => {
       updateTimestamp(variables.itemID);
 
       return Promise.allSettled([
         client.invalidateQueries({ queryKey: [ossApi.baseKey] }),
-        client.invalidateQueries({
-          queryKey: [rsformsApi.baseKey],
-          predicate: query => query.queryKey.length > 2 && query.queryKey[2] !== variables.itemID
-        })
+        client.invalidateQueries({ queryKey: [rsformsApi.baseKey] })
       ]);
     }
   });

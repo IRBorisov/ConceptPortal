@@ -53,7 +53,7 @@ function ViewConstituents({ expression, isBottom, isMounted }: ViewConstituentsP
         schema={schema}
         activeID={activeCst?.id}
         activeExpression={expression}
-        setFiltered={setFilteredData}
+        onChange={setFilteredData}
       />
       <TableSideConstituents
         maxHeight={listHeight}

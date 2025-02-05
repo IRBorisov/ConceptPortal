@@ -115,8 +115,8 @@ function EditorConstituenta() {
         onKeyDown={handleInput}
       >
         <FormConstituenta
-          disabled={disabled}
           id={globals.constituenta_editor}
+          disabled={disabled}
           toggleReset={toggleReset}
           onEditTerm={handleEditTermForms}
         />
