@@ -57,7 +57,7 @@ function TextArea({
             'resize-none': noResize,
             'border': !noBorder,
             'flex-grow max-w-full': dense,
-            'mt-2': !dense,
+            'mt-2': !dense && !!label,
             'clr-outline': !noOutline
           },
           colors,

@@ -55,7 +55,7 @@ function TextInput({
           {
             'px-3': !noBorder || !disabled,
             'flex-grow max-w-full': dense,
-            'mt-2': !dense,
+            'mt-2': !dense && !!label,
             'border': !noBorder,
             'clr-outline': !noOutline
           },
