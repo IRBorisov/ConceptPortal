@@ -139,9 +139,6 @@ export const RSEditState = ({
   }
 
   function navigateRSForm({ tab, activeID }: { tab: RSTabID; activeID?: ConstituentaID }) {
-    if (!schema) {
-      return;
-    }
     const data = {
       id: schema.id,
       tab: tab,
@@ -170,7 +167,7 @@ export const RSEditState = ({
   }
 
   function deleteSchema() {
-    if (!schema || !window.confirm(prompts.deleteLibraryItem)) {
+    if (!window.confirm(prompts.deleteLibraryItem)) {
       return;
     }
     const ossID = schema.oss.length > 0 ? schema.oss[0].id : undefined;
@@ -227,7 +224,7 @@ export const RSEditState = ({
   }
 
   function moveUp() {
-    if (!schema.items || selected.length === 0) {
+    if (selected.length === 0) {
       return;
     }
     const currentIndex = schema.items.reduce((prev, cst, index) => {
@@ -249,7 +246,7 @@ export const RSEditState = ({
   }
 
   function moveDown() {
-    if (!schema.items || selected.length === 0) {
+    if (selected.length === 0) {
       return;
     }
     let count = 0;

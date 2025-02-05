@@ -48,7 +48,7 @@ function EditorRSFormCard() {
           <EditorLibraryItem controller={controller} />
         </FlexColumn>
 
-        {controller.schema ? <RSFormStats stats={controller.schema.stats} isArchive={controller.isArchive} /> : null}
+        <RSFormStats stats={controller.schema.stats} isArchive={controller.isArchive} />
       </div>
     </>
   );

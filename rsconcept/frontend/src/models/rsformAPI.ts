@@ -242,7 +242,7 @@ export function getDefinitionPrefix(cst: IConstituenta): string {
  */
 export function generateAlias(type: CstType, schema: IRSForm, takenAliases: string[] = []): string {
   const prefix = getCstTypePrefix(type);
-  if (!schema.items || schema.items.length <= 0) {
+  if (schema.items.length <= 0) {
     return `${prefix}1`;
   }
   let index = schema.items.reduce((prev, cst, index) => {

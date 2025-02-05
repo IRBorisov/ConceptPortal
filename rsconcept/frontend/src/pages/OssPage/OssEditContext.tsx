@@ -120,9 +120,6 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
   );
 
   function navigateTab(tab: OssTabID) {
-    if (!schema) {
-      return;
-    }
     const url = urls.oss_props({
       id: schema.id,
       tab: tab

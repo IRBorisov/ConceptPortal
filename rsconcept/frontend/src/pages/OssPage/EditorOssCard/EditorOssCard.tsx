@@ -49,7 +49,7 @@ function EditorOssCard() {
           <EditorLibraryItem controller={controller} />
         </FlexColumn>
 
-        {controller.schema ? <OssStats stats={controller.schema.stats} /> : null}
+        <OssStats stats={controller.schema.stats} />
       </div>
     </>
   );

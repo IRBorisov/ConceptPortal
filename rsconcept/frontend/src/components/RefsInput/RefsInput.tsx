@@ -63,15 +63,16 @@ interface RefsInputInputProps
     | 'onBlur'
     | 'placeholder'
   > {
-  label?: string;
-  onChange?: (newValue: string) => void;
-  schema?: IRSForm;
-  onOpenEdit?: (cstID: ConstituentaID) => void;
-  disabled?: boolean;
-
-  initialValue?: string;
   value?: string;
   resolved?: string;
+  onChange?: (newValue: string) => void;
+
+  schema: IRSForm;
+  onOpenEdit?: (cstID: ConstituentaID) => void;
+
+  label?: string;
+  disabled?: boolean;
+  initialValue?: string;
 }
 
 const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
@@ -130,8 +131,8 @@ const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
       EditorView.lineWrapping,
       EditorView.contentAttributes.of({ spellcheck: 'true' }),
       NaturalLanguage,
-      ...(!schema || !onOpenEdit ? [] : [refsNavigation(schema, onOpenEdit)]),
-      ...(schema ? [refsHoverTooltip(schema, onOpenEdit !== undefined)] : [])
+      ...(!onOpenEdit ? [] : [refsNavigation(schema, onOpenEdit)]),
+      refsHoverTooltip(schema, onOpenEdit !== undefined)
     ];
 
     function handleChange(newValue: string) {
@@ -149,7 +150,7 @@ const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
     }
 
     function handleInput(event: React.KeyboardEvent<HTMLDivElement>) {
-      if (!thisRef.current?.view || !schema) {
+      if (!thisRef.current?.view) {
         event.preventDefault();
         event.stopPropagation();
         return;

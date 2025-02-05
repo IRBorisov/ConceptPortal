@@ -80,9 +80,6 @@ function FormRSForm({ id }: FormRSFormProps) {
     if (event) {
       event.preventDefault();
     }
-    if (!schema) {
-      return;
-    }
     const data: IUpdateLibraryItemDTO = {
       id: schema.id,
       item_type: LibraryItemType.RSFORM,
