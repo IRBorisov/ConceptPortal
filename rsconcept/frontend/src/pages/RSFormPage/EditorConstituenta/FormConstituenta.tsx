@@ -1,7 +1,8 @@
+'use no memo'; // TODO: remove when react hook forms are compliant with react compiler
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
@@ -50,19 +51,26 @@ function FormConstituenta({ disabled, id, toggleReset, schema, activeCst, onOpen
 
   const [localParse, setLocalParse] = useState<IExpressionParse | undefined>(undefined);
 
-  const typification = localParse
-    ? labelTypification({
-        isValid: localParse.parseResult,
-        resultType: localParse.typification,
-        args: localParse.args
-      })
-    : labelCstTypification(activeCst);
+  const typification = useMemo(
+    () =>
+      localParse
+        ? labelTypification({
+            isValid: localParse.parseResult,
+            resultType: localParse.typification,
+            args: localParse.args
+          })
+        : labelCstTypification(activeCst),
+    [localParse, activeCst]
+  );
 
-  const typeInfo = {
-    alias: activeCst.alias,
-    result: localParse ? localParse.typification : activeCst.parse.typification,
-    args: localParse ? localParse.args : activeCst.parse.args
-  };
+  const typeInfo = useMemo(
+    () => ({
+      alias: activeCst.alias,
+      result: localParse ? localParse.typification : activeCst.parse.typification,
+      args: localParse ? localParse.args : activeCst.parse.args
+    }),
+    [activeCst, localParse]
+  );
 
   const [forceComment, setForceComment] = useState(false);
   const isBasic = isBasicConcept(activeCst.cst_type);

@@ -32,6 +32,6 @@ export const useUpdateItem = () => {
     }
   });
   return {
-    updateItem: (data: IUpdateLibraryItemDTO) => mutation.mutate(data)
+    updateItem: (data: IUpdateLibraryItemDTO, onSuccess?: () => void) => mutation.mutate(data, { onSuccess })
   };
 };

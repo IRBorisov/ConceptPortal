@@ -66,12 +66,6 @@ function FormSignup() {
     >
       <h1>
         <span>Новый пользователь</span>
-        <Overlay id={globals.password_tooltip} position='top-[5.4rem] left-[3.5rem]'>
-          <IconHelp size='1.25rem' className='icon-primary' />
-        </Overlay>
-        <Tooltip anchorSelect={`#${globals.password_tooltip}`} offset={6}>
-          используйте уникальный пароль для каждого сайта
-        </Tooltip>
         <Overlay id={globals.email_tooltip} position='top-[0.5rem] right-[1.75rem]'>
           <IconHelp size='1.25rem' className='icon-primary' />
         </Overlay>
@@ -120,7 +114,7 @@ function FormSignup() {
             required
             spellCheck={false}
             label='Электронная почта (email)'
-            title='электронная почта в корректном формате, например: i.petrov@mycompany.ru.com'
+            title='электронная почта в корректном формате'
             error={errors.email}
           />
           <TextInput

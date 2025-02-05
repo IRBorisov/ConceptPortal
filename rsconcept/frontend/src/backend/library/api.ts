@@ -72,8 +72,20 @@ export type ICreateLibraryItemDTO = z.infer<typeof CreateLibraryItemSchema>;
 /**
  * Represents update data for editing {@link ILibraryItem}.
  */
-export interface IUpdateLibraryItemDTO
-  extends Omit<ILibraryItem, 'time_create' | 'time_update' | 'access_policy' | 'location' | 'owner'> {}
+export const UpdateLibraryItemSchema = z.object({
+  id: z.number(),
+  item_type: z.nativeEnum(LibraryItemType),
+  title: z.string().nonempty(errors.requiredField),
+  alias: z.string().nonempty(errors.requiredField),
+  comment: z.string(),
+  visible: z.boolean(),
+  read_only: z.boolean()
+});
+
+/**
+ * Represents update data for editing {@link ILibraryItem}.
+ */
+export type IUpdateLibraryItemDTO = z.infer<typeof UpdateLibraryItemSchema>;
 
 /**
  * Create version metadata in persistent storage.
