@@ -7,7 +7,7 @@ import SelectGraphFilter from '@/components/select/SelectGraphFilter';
 import SelectMatchMode from '@/components/select/SelectMatchMode';
 import MiniButton from '@/components/ui/MiniButton';
 import SearchBar from '@/components/ui/SearchBar';
-import { applyGraphFilter } from '@/models/miscellaneousAPI';
+import { applyGraphQuery } from '@/models/miscellaneousAPI';
 import { ConstituentaID, IConstituenta, IRSForm } from '@/models/rsform';
 import { matchConstituenta } from '@/models/rsformAPI';
 import { useCstSearchStore } from '@/stores/cstSearch';
@@ -40,7 +40,7 @@ function ConstituentsSearch({ schema, activeID, activeExpression, dense, onChang
     if (!activeID) {
       result = schema.items;
     } else {
-      result = applyGraphFilter(schema, activeID, filterSource);
+      result = applyGraphQuery(schema, activeID, filterSource);
     }
     if (query) {
       result = result.filter(cst => matchConstituenta(cst, query, filterMatch));

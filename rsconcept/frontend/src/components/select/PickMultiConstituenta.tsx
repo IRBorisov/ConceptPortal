@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import BadgeConstituenta from '@/components/info/BadgeConstituenta';
 import { CProps } from '@/components/props';
@@ -41,12 +41,13 @@ function PickMultiConstituenta({
   className,
   ...restProps
 }: PickMultiConstituentaProps) {
-  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [filterText, setFilterText] = useState('');
 
-  const [filtered, setFiltered] = useState<IConstituenta[]>(items);
+  const filtered = filterText ? items.filter(cst => matchConstituenta(cst, filterText, CstMatchMode.ALL)) : items;
+  const rowSelection: RowSelectionState = Object.fromEntries(
+    filtered.map((cst, index) => [String(index), value.includes(cst.id)])
+  );
 
-  // TODO: extract graph fold logic to separate function
   const foldedGraph = (() => {
     if (items.length === schema.items.length) {
       return schema.graph;
@@ -65,28 +66,6 @@ function PickMultiConstituenta({
       });
     return newGraph;
   })();
-
-  useEffect(() => {
-    if (filtered.length === 0) {
-      setRowSelection({});
-      return;
-    }
-    const newRowSelection: RowSelectionState = {};
-    filtered.forEach((cst, index) => {
-      newRowSelection[String(index)] = value.includes(cst.id);
-    });
-    setRowSelection(newRowSelection);
-  }, [filtered, setRowSelection, value]);
-
-  useEffect(() => {
-    if (items.length === 0) {
-      setFiltered([]);
-    } else if (filterText) {
-      setFiltered(items.filter(cst => matchConstituenta(cst, filterText, CstMatchMode.ALL)));
-    } else {
-      setFiltered(items);
-    }
-  }, [filterText, items]);
 
   function handleRowSelection(updater: React.SetStateAction<RowSelectionState>) {
     if (!items) {

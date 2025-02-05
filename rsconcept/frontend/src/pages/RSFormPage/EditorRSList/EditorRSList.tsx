@@ -1,7 +1,7 @@
 'use client';
 
 import fileDownload from 'js-file-download';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { useMutatingRSForm } from '@/backend/rsform/useMutatingRSForm';
@@ -11,7 +11,7 @@ import MiniButton from '@/components/ui/MiniButton';
 import Overlay from '@/components/ui/Overlay';
 import SearchBar from '@/components/ui/SearchBar';
 import { CstMatchMode } from '@/models/miscellaneous';
-import { ConstituentaID, CstType, IConstituenta } from '@/models/rsform';
+import { ConstituentaID, CstType } from '@/models/rsform';
 import { matchConstituenta } from '@/models/rsformAPI';
 import { useFitHeight } from '@/stores/appLayout';
 import { information } from '@/utils/labels';
@@ -22,34 +22,18 @@ import TableRSList from './TableRSList';
 import ToolbarRSList from './ToolbarRSList';
 
 function EditorRSList() {
-  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const controller = useRSEdit();
   const isProcessing = useMutatingRSForm();
 
-  const [filtered, setFiltered] = useState<IConstituenta[]>(controller.schema.items);
   const [filterText, setFilterText] = useState('');
 
-  useEffect(() => {
-    if (filtered.length === 0) {
-      setRowSelection({});
-      return;
-    }
-    const newRowSelection: RowSelectionState = {};
-    filtered.forEach((cst, index) => {
-      newRowSelection[String(index)] = controller.selected.includes(cst.id);
-    });
-    setRowSelection(newRowSelection);
-  }, [filtered, setRowSelection, controller.selected]);
+  const filtered = filterText
+    ? controller.schema.items.filter(cst => matchConstituenta(cst, filterText, CstMatchMode.ALL))
+    : controller.schema.items;
 
-  useEffect(() => {
-    if (controller.schema.items.length === 0) {
-      setFiltered([]);
-    } else if (filterText) {
-      setFiltered(controller.schema.items.filter(cst => matchConstituenta(cst, filterText, CstMatchMode.ALL)));
-    } else {
-      setFiltered(controller.schema.items);
-    }
-  }, [filterText, controller.schema.items]);
+  const rowSelection: RowSelectionState = Object.fromEntries(
+    filtered.map((cst, index) => [String(index), controller.selected.includes(cst.id)])
+  );
 
   function handleDownloadCSV() {
     if (filtered.length === 0) {

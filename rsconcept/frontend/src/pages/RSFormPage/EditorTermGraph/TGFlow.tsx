@@ -25,6 +25,7 @@ import SelectedCounter from '@/components/info/SelectedCounter';
 import { CProps } from '@/components/props';
 import ToolbarGraphSelection from '@/components/select/ToolbarGraphSelection';
 import Overlay from '@/components/ui/Overlay';
+import { produceFilteredGraph } from '@/models/miscellaneousAPI';
 import { ConstituentaID, CstType, IConstituenta } from '@/models/rsform';
 import { isBasicConcept } from '@/models/rsformAPI';
 import { useMainHeight } from '@/stores/appLayout';
@@ -42,7 +43,6 @@ import { TGNodeTypes } from './graph/TGNodeTypes';
 import GraphSelectors from './GraphSelectors';
 import ToolbarFocusedCst from './ToolbarFocusedCst';
 import ToolbarTermGraph from './ToolbarTermGraph';
-import useGraphFilter from './useGraphFilter';
 import ViewHidden from './ViewHidden';
 
 const ZOOM_MAX = 3;
@@ -67,7 +67,7 @@ function TGFlow() {
   const [edges, setEdges] = useEdgesState([]);
 
   const [focusCst, setFocusCst] = useState<IConstituenta | undefined>(undefined);
-  const filteredGraph = useGraphFilter(controller.schema, filter, focusCst);
+  const filteredGraph = produceFilteredGraph(controller.schema, filter, focusCst);
   const [hidden, setHidden] = useState<ConstituentaID[]>([]);
 
   const [isDragging, setIsDragging] = useState(false);

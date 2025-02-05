@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react';
-
 import { CProps } from '@/components/props';
 import SelectMulti, { SelectMultiProps } from '@/components/ui/SelectMulti';
 import { Grammeme } from '@/models/language';
@@ -15,14 +13,10 @@ interface SelectMultiGrammemeProps
 }
 
 function SelectMultiGrammeme({ value, onChange, ...restProps }: SelectMultiGrammemeProps) {
-  const [options, setOptions] = useState<IGrammemeOption[]>([]);
-
-  useEffect(() => {
-    const compatible = getCompatibleGrams(
-      value.filter(data => Object.values(Grammeme).includes(data.value as Grammeme)).map(data => data.value as Grammeme)
-    );
-    setOptions(SelectorGrammemes.filter(({ value }) => compatible.includes(value as Grammeme)));
-  }, [value]);
+  const compatible = getCompatibleGrams(
+    value.filter(data => Object.values(Grammeme).includes(data.value as Grammeme)).map(data => data.value as Grammeme)
+  );
+  const options = SelectorGrammemes.filter(({ value }) => compatible.includes(value as Grammeme));
 
   return (
     <SelectMulti

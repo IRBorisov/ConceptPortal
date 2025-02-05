@@ -49,6 +49,7 @@ function FormConstituenta({ disabled, id, toggleReset, schema, activeCst, onOpen
   } = useForm<ICstUpdateDTO>({ resolver: zodResolver(CstUpdateSchema) });
 
   const [localParse, setLocalParse] = useState<IExpressionParse | undefined>(undefined);
+
   const typification = localParse
     ? labelTypification({
         isValid: localParse.parseResult,

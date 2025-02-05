@@ -3,14 +3,14 @@
  */
 import { PARAMETER } from '@/utils/constants';
 
-import { DependencyMode, Position2D } from './miscellaneous';
+import { DependencyMode, GraphFilterParams, Position2D } from './miscellaneous';
 import { IOperationPosition, IOperationSchema, OperationID, OperationType } from './oss';
-import { IConstituenta, IRSForm } from './rsform';
+import { ConstituentaID, CstType, IConstituenta, IRSForm } from './rsform';
 
 /**
  * Filter list of  {@link ILibraryItem} to a given graph query.
  */
-export function applyGraphFilter(target: IRSForm, start: number, mode: DependencyMode): IConstituenta[] {
+export function applyGraphQuery(target: IRSForm, start: number, mode: DependencyMode): IConstituenta[] {
   if (mode === DependencyMode.ALL) {
     return target.items;
   }
@@ -86,4 +86,63 @@ export function calculateInsertPosition(
     }
   } while (flagIntersect);
   return result;
+}
+
+export function produceFilteredGraph(schema: IRSForm, params: GraphFilterParams, focusCst: IConstituenta | undefined) {
+  const filtered = schema.graph.clone();
+  const allowedTypes: CstType[] = (() => {
+    const result: CstType[] = [];
+    if (params.allowBase) result.push(CstType.BASE);
+    if (params.allowStruct) result.push(CstType.STRUCTURED);
+    if (params.allowTerm) result.push(CstType.TERM);
+    if (params.allowAxiom) result.push(CstType.AXIOM);
+    if (params.allowFunction) result.push(CstType.FUNCTION);
+    if (params.allowPredicate) result.push(CstType.PREDICATE);
+    if (params.allowConstant) result.push(CstType.CONSTANT);
+    if (params.allowTheorem) result.push(CstType.THEOREM);
+    return result;
+  })();
+
+  if (params.noHermits) {
+    filtered.removeIsolated();
+  }
+  if (params.noTemplates) {
+    schema.items.forEach(cst => {
+      if (cst !== focusCst && cst.is_template) {
+        filtered.foldNode(cst.id);
+      }
+    });
+  }
+  if (allowedTypes.length < Object.values(CstType).length) {
+    schema.items.forEach(cst => {
+      if (cst !== focusCst && !allowedTypes.includes(cst.cst_type)) {
+        filtered.foldNode(cst.id);
+      }
+    });
+  }
+  if (!focusCst && params.foldDerived) {
+    schema.items.forEach(cst => {
+      if (cst.spawner) {
+        filtered.foldNode(cst.id);
+      }
+    });
+  }
+  if (focusCst) {
+    const includes: ConstituentaID[] = [
+      focusCst.id,
+      ...focusCst.spawn,
+      ...(params.focusShowInputs ? schema.graph.expandInputs([focusCst.id]) : []),
+      ...(params.focusShowOutputs ? schema.graph.expandOutputs([focusCst.id]) : [])
+    ];
+    schema.items.forEach(cst => {
+      if (!includes.includes(cst.id)) {
+        filtered.foldNode(cst.id);
+      }
+    });
+  }
+  if (params.noTransitive) {
+    filtered.transitiveReduction();
+  }
+
+  return filtered;
 }

@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useIntl } from 'react-intl';
 
 import { IconClose, IconFolderTree } from '@/components/Icons';
@@ -45,22 +45,18 @@ function PickSchema({
   ...restProps
 }: PickSchemaProps) {
   const intl = useIntl();
-  const [filterText, setFilterText] = useState(initialFilter);
-  const [filterLocation, setFilterLocation] = useState('');
-  const [filtered, setFiltered] = useState<ILibraryItem[]>([]);
-  const baseFiltered = items.filter(item => item.item_type === itemType && (!baseFilter || baseFilter(item)));
-
   const locationMenu = useDropdown();
 
-  useEffect(() => {
-    let newFiltered = baseFiltered.filter(item => matchLibraryItem(item, filterText));
-    if (filterLocation.length > 0) {
-      newFiltered = newFiltered.filter(
-        item => item.location === filterLocation || item.location.startsWith(`${filterLocation}/`)
-      );
-    }
-    setFiltered(newFiltered);
-  }, [filterText, filterLocation, baseFiltered]);
+  const [filterText, setFilterText] = useState(initialFilter);
+  const [filterLocation, setFilterLocation] = useState('');
+
+  const baseFiltered = items
+    .filter(item => item.item_type === itemType && (!baseFilter || baseFilter(item)))
+    .filter(item => matchLibraryItem(item, filterText));
+  const filtered =
+    filterLocation.length > 0
+      ? baseFiltered.filter(item => item.location === filterLocation || item.location.startsWith(`${filterLocation}/`))
+      : baseFiltered;
 
   const columns = [
     columnHelper.accessor('alias', {
