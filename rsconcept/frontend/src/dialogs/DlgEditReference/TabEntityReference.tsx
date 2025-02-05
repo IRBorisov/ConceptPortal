@@ -12,7 +12,6 @@ import { parseEntityReference, parseGrammemes } from '@/models/languageAPI';
 import { CstMatchMode } from '@/models/miscellaneous';
 import { IConstituenta, IRSForm } from '@/models/rsform';
 import { matchConstituenta } from '@/models/rsformAPI';
-import { prefixes } from '@/utils/constants';
 import { IGrammemeOption, SelectorGrammemes } from '@/utils/selectors';
 
 import { IReferenceInputState } from './DlgEditReference';
@@ -63,9 +62,8 @@ function TabEntityReference({ initial, schema, onChangeValid, onChangeReference 
         id='dlg_reference_entity_picker'
         initialFilter={initial.text}
         value={selectedCst}
-        data={schema.items}
+        items={schema.items}
         onChange={handleSelectConstituenta}
-        prefixID={prefixes.cst_modal_list}
         describeFunc={cst => cst.term_resolved}
         matchFunc={(cst, filter) => matchConstituenta(cst, filter, CstMatchMode.TERM)}
         onBeginFilter={cst => cst.term_resolved !== ''}

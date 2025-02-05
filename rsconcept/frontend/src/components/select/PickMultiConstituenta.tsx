@@ -22,9 +22,8 @@ interface PickMultiConstituentaProps extends CProps.Styling {
   onChange: React.Dispatch<React.SetStateAction<ConstituentaID[]>>;
 
   schema: IRSForm;
-  data: IConstituenta[];
+  items: IConstituenta[];
 
-  prefixID: string;
   rows?: number;
   noBorder?: boolean;
 }
@@ -34,8 +33,7 @@ const columnHelper = createColumnHelper<IConstituenta>();
 function PickMultiConstituenta({
   id,
   schema,
-  data,
-  prefixID,
+  items,
   rows,
   noBorder,
   value,
@@ -44,12 +42,13 @@ function PickMultiConstituenta({
   ...restProps
 }: PickMultiConstituentaProps) {
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
-  const [filtered, setFiltered] = useState<IConstituenta[]>(data);
   const [filterText, setFilterText] = useState('');
+
+  const [filtered, setFiltered] = useState<IConstituenta[]>(items);
 
   // TODO: extract graph fold logic to separate function
   const foldedGraph = (() => {
-    if (data.length === schema.items.length) {
+    if (items.length === schema.items.length) {
       return schema.graph;
     }
     const newGraph = new Graph();
@@ -60,7 +59,7 @@ function PickMultiConstituenta({
       });
     });
     schema.items
-      .filter(item => data.find(cst => cst.id === item.id) === undefined)
+      .filter(item => items.find(cst => cst.id === item.id) === undefined)
       .forEach(item => {
         newGraph.foldNode(item.id);
       });
@@ -80,17 +79,17 @@ function PickMultiConstituenta({
   }, [filtered, setRowSelection, value]);
 
   useEffect(() => {
-    if (data.length === 0) {
+    if (items.length === 0) {
       setFiltered([]);
     } else if (filterText) {
-      setFiltered(data.filter(cst => matchConstituenta(cst, filterText, CstMatchMode.ALL)));
+      setFiltered(items.filter(cst => matchConstituenta(cst, filterText, CstMatchMode.ALL)));
     } else {
-      setFiltered(data);
+      setFiltered(items);
     }
-  }, [filterText, data]);
+  }, [filterText, items]);
 
   function handleRowSelection(updater: React.SetStateAction<RowSelectionState>) {
-    if (!data) {
+    if (!items) {
       onChange([]);
     } else {
       const newRowSelection = typeof updater === 'function' ? updater(rowSelection) : updater;
@@ -109,7 +108,7 @@ function PickMultiConstituenta({
       id: 'alias',
       header: () => <span className='pl-3'>Имя</span>,
       size: 65,
-      cell: props => <BadgeConstituenta value={props.row.original} prefixID={prefixID} />
+      cell: props => <BadgeConstituenta value={props.row.original} />
     }),
     columnHelper.accessor(cst => describeConstituenta(cst), {
       id: 'description',
@@ -122,7 +121,7 @@ function PickMultiConstituenta({
     <div className={clsx(noBorder ? '' : 'border', className)} {...restProps}>
       <div className={clsx('px-3 flex justify-between items-center', 'clr-input', 'border-b', 'rounded-t-md')}>
         <div className='w-[24ch] select-none whitespace-nowrap'>
-          {data.length > 0 ? `Выбраны ${value.length} из ${data.length}` : 'Конституенты'}
+          {items.length > 0 ? `Выбраны ${value.length} из ${items.length}` : 'Конституенты'}
         </div>
         <SearchBar
           id='dlg_constituents_search'

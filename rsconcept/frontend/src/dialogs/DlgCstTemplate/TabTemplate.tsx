@@ -9,7 +9,6 @@ import SelectSingle from '@/components/ui/SelectSingle';
 import TextArea from '@/components/ui/TextArea';
 import { CATEGORY_CST_TYPE, IConstituenta, IRSForm } from '@/models/rsform';
 import { applyFilterCategory } from '@/models/rsformAPI';
-import { prefixes } from '@/utils/constants';
 
 export interface ITemplateState {
   templateID?: number;
@@ -101,9 +100,8 @@ function TabTemplate({ state, partialUpdate, templateSchema }: TabTemplateProps)
       <PickConstituenta
         id='dlg_template_picker'
         value={state.prototype}
-        data={filteredData}
+        items={filteredData}
         onChange={cst => partialUpdate({ prototype: cst })}
-        prefixID={prefixes.cst_template_ist}
         className='rounded-t-none'
         rows={8}
       />

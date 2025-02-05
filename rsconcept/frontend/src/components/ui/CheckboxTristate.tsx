@@ -66,7 +66,7 @@ function CheckboxTristate({
       <div
         className={clsx(
           'w-4 h-4', //
-          'pt-[0.1rem] pl-[0.1rem]',
+          'pt-[0.05rem] pl-[0.05rem]',
           'border rounded-sm',
           'cc-animate-color',
           {

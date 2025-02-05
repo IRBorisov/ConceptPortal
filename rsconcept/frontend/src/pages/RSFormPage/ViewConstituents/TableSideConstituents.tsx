@@ -36,7 +36,7 @@ function TableSideConstituents({
     }
     if (autoScroll) {
       setTimeout(() => {
-        const element = document.getElementById(`${prefixes.cst_side_table}${activeCst.alias}`);
+        const element = document.getElementById(`${prefixes.cst_side_table}${activeCst.id}`);
         if (element) {
           element.scrollIntoView({
             behavior: 'smooth',

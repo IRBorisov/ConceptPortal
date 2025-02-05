@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import BadgeConstituenta from '@/components/info/BadgeConstituenta';
 import { CProps } from '@/components/props';
@@ -12,16 +12,14 @@ import { CstMatchMode } from '@/models/miscellaneous';
 import { IConstituenta } from '@/models/rsform';
 import { matchConstituenta } from '@/models/rsformAPI';
 import { APP_COLORS } from '@/styling/color';
-import { prefixes } from '@/utils/constants';
 import { describeConstituenta } from '@/utils/labels';
 
 interface PickConstituentaProps extends CProps.Styling {
   id?: string;
+  items: IConstituenta[];
   value?: IConstituenta;
   onChange: (newValue: IConstituenta) => void;
 
-  prefixID: string;
-  data?: IConstituenta[];
   rows?: number;
 
   initialFilter?: string;
@@ -34,11 +32,10 @@ const columnHelper = createColumnHelper<IConstituenta>();
 
 function PickConstituenta({
   id,
-  data,
+  items,
   value,
   initialFilter = '',
   rows = 4,
-  prefixID = prefixes.cst_list,
   describeFunc = describeConstituenta,
   matchFunc = (cst, filter) => matchConstituenta(cst, filter, CstMatchMode.ALL),
   onBeginFilter,
@@ -46,21 +43,10 @@ function PickConstituenta({
   className,
   ...restProps
 }: PickConstituentaProps) {
-  const [filteredData, setFilteredData] = useState<IConstituenta[]>([]);
   const [filterText, setFilterText] = useState(initialFilter);
 
-  useEffect(() => {
-    if (!data) {
-      setFilteredData([]);
-    } else {
-      const newData = onBeginFilter ? data.filter(onBeginFilter) : data;
-      if (filterText) {
-        setFilteredData(newData.filter(cst => matchFunc(cst, filterText)));
-      } else {
-        setFilteredData(newData);
-      }
-    }
-  }, [data, filterText, matchFunc, onBeginFilter]);
+  const initialData = onBeginFilter ? items.filter(onBeginFilter) : items;
+  const filteredData = filterText === '' ? initialData : initialData.filter(cst => matchFunc(cst, filterText));
 
   const columns = [
     columnHelper.accessor('alias', {
@@ -68,7 +54,7 @@ function PickConstituenta({
       size: 65,
       minSize: 65,
       maxSize: 65,
-      cell: props => <BadgeConstituenta value={props.row.original} prefixID={prefixID} />
+      cell: props => <BadgeConstituenta value={props.row.original} />
     }),
     columnHelper.accessor(cst => describeFunc(cst), {
       id: 'description',

@@ -4,7 +4,6 @@ import { useRSFormSuspense } from '@/backend/rsform/useRSForm';
 import PickMultiConstituenta from '@/components/select/PickMultiConstituenta';
 import { LibraryItemID } from '@/models/library';
 import { ConstituentaID } from '@/models/rsform';
-import { prefixes } from '@/utils/constants';
 
 interface TabConstituentsProps {
   itemID: LibraryItemID;
@@ -16,14 +15,7 @@ function TabConstituents({ itemID, selected, setSelected }: TabConstituentsProps
   const { schema } = useRSFormSuspense({ itemID });
 
   return (
-    <PickMultiConstituenta
-      schema={schema}
-      data={schema.items}
-      rows={13}
-      prefixID={prefixes.cst_inline_synth_list}
-      value={selected}
-      onChange={setSelected}
-    />
+    <PickMultiConstituenta schema={schema} items={schema.items} rows={13} value={selected} onChange={setSelected} />
   );
 }
 

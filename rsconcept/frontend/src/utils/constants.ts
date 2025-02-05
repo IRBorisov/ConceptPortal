@@ -125,15 +125,9 @@ export const prefixes = {
   page_size: 'page_size_',
   oss_list: 'oss_list_',
   cst_list: 'cst_list_',
-  cst_inline_synth_list: 'cst_inline_synth_list_',
-  cst_inline_synth_substitutes: 'cst_inline_synth_substitutes_',
   cst_side_table: 'cst_side_table_',
   cst_hidden_list: 'cst_hidden_list_',
-  cst_modal_list: 'cst_modal_list_',
-  cst_template_ist: 'cst_template_list_',
-  cst_wordform_list: 'cst_wordform_list_',
   cst_status_list: 'cst_status_list_',
-  cst_match_mode_list: 'cst_match_mode_list_',
   cst_source_list: 'cst_source_list_',
   cst_delete_list: 'cst_delete_list_',
   cst_dependant_list: 'cst_dependant_list_',
@@ -150,7 +144,5 @@ export const prefixes = {
   user_subs: 'user_subs_',
   user_editors: 'user_editors_',
   wordform_list: 'wordform_list_',
-  rsedit_btn: 'rsedit_btn_',
-  dlg_cst_substitutes_list: 'dlg_cst_substitutes_list_',
-  dlg_cst_constituents_list: 'dlg_cst_constituents_list_'
+  rsedit_btn: 'rsedit_btn_'
 };

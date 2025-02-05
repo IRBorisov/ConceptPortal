@@ -1,6 +1,6 @@
 import { queryOptions } from '@tanstack/react-query';
 
-import { axiosDelete, axiosGet, axiosPatch, axiosPost } from '@/backend/apiTransport';
+import { axiosGet, axiosPatch, axiosPost } from '@/backend/apiTransport';
 import { DELAYS } from '@/backend/configuration';
 import { ILibraryItemReference, ILibraryItemVersioned, LibraryItemID, VersionID } from '@/models/library';
 import { ICstSubstitute, ICstSubstitutions } from '@/models/oss';
@@ -182,7 +182,7 @@ export const rsformsApi = {
       }
     }),
   cstDelete: ({ itemID, data }: { itemID: LibraryItemID; data: IConstituentaList }) =>
-    axiosDelete<IConstituentaList, IRSFormDTO>({
+    axiosPatch<IConstituentaList, IRSFormDTO>({
       endpoint: `/api/rsforms/${itemID}/delete-multiple-cst`,
       request: {
         data: data,

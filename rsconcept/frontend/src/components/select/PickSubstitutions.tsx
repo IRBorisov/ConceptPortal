@@ -25,7 +25,6 @@ interface PickSubstitutionsProps extends CProps.Styling {
 
   suggestions?: ICstSubstitute[];
 
-  prefixID: string;
   rows?: number;
   allowSelfSubstitution?: boolean;
 
@@ -39,7 +38,6 @@ function PickSubstitutions({
   value,
   onChange,
   suggestions,
-  prefixID,
   rows,
   schemas,
   filter,
@@ -162,9 +160,7 @@ function PickSubstitutions({
     columnHelper.accessor(item => item.substitution.alias, {
       id: 'left_alias',
       size: 65,
-      cell: props => (
-        <BadgeConstituenta value={props.row.original.substitution} prefixID={`${prefixID}_${props.row.index}_1_`} />
-      )
+      cell: props => <BadgeConstituenta value={props.row.original.substitution} />
     }),
     columnHelper.display({
       id: 'status',
@@ -174,9 +170,7 @@ function PickSubstitutions({
     columnHelper.accessor(item => item.original.alias, {
       id: 'right_alias',
       size: 65,
-      cell: props => (
-        <BadgeConstituenta value={props.row.original.original} prefixID={`${prefixID}_${props.row.index}_2_`} />
-      )
+      cell: props => <BadgeConstituenta value={props.row.original.original} />
     }),
     columnHelper.accessor(item => item.original_source.alias, {
       id: 'right_schema',

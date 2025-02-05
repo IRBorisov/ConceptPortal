@@ -193,7 +193,7 @@ export const RSEditState = ({
       navigateRSForm({ tab: activeTab, activeID: newCst.id });
       if (activeTab === RSTabID.CST_LIST) {
         setTimeout(() => {
-          const element = document.getElementById(`${prefixes.cst_list}${newCst.alias}`);
+          const element = document.getElementById(`${prefixes.cst_list}${newCst.id}`);
           if (element) {
             element.scrollIntoView({
               behavior: 'smooth',

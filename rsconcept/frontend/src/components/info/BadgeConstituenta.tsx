@@ -22,7 +22,7 @@ function BadgeConstituenta({ value, prefixID, className, style }: BadgeConstitue
 
   return (
     <div
-      id={`${prefixID}${value.id}`}
+      id={prefixID ? `${prefixID}${value.id}` : undefined}
       className={clsx(
         'min-w-[3.1rem] max-w-[3.1rem]',
         'px-1',

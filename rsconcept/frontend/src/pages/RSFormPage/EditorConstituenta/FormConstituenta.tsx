@@ -14,7 +14,7 @@ import Indicator from '@/components/ui/Indicator';
 import Overlay from '@/components/ui/Overlay';
 import SubmitButton from '@/components/ui/SubmitButton';
 import TextArea from '@/components/ui/TextArea';
-import { ConstituentaID, CstType } from '@/models/rsform';
+import { CstType } from '@/models/rsform';
 import { isBaseSet, isBasicConcept, isFunctional } from '@/models/rsformAPI';
 import { IExpressionParse, ParsingStatus } from '@/models/rslang';
 import { useDialogsStore } from '@/stores/dialogs';
@@ -31,7 +31,6 @@ interface FormConstituentaProps {
   toggleReset: boolean;
 
   onEditTerm: () => void;
-  onOpenEdit?: (cstID: ConstituentaID) => void;
 }
 
 function FormConstituenta({
@@ -39,11 +38,10 @@ function FormConstituenta({
   id,
 
   toggleReset,
-  onEditTerm,
-  onOpenEdit
+  onEditTerm
 }: FormConstituentaProps) {
   const { cstUpdate } = useCstUpdate();
-  const { schema, activeCst } = useRSEdit();
+  const { schema, activeCst, navigateCst } = useRSEdit();
   const { isModified, setIsModified } = useModificationStore();
   const isProcessing = useMutatingRSForm();
 
@@ -146,7 +144,7 @@ function FormConstituenta({
           maxHeight='8rem'
           placeholder='Обозначение для текстовых определений'
           schema={schema}
-          onOpenEdit={onOpenEdit}
+          onOpenEdit={navigateCst}
           value={term}
           initialValue={activeCst?.term_raw ?? ''}
           resolved={activeCst?.term_resolved ?? 'Конституента не выбрана'}
@@ -191,7 +189,7 @@ function FormConstituenta({
                 onChangeExpression={newValue => setExpression(newValue)}
                 onChangeTypification={setTypification}
                 onChangeLocalParse={setLocalParse}
-                onOpenEdit={onOpenEdit}
+                onOpenEdit={navigateCst}
                 onShowTypeGraph={handleTypeGraph}
               />
             ) : null}
@@ -203,7 +201,7 @@ function FormConstituenta({
                 minHeight='3.75rem'
                 maxHeight='8rem'
                 schema={schema}
-                onOpenEdit={onOpenEdit}
+                onOpenEdit={navigateCst}
                 value={textDefinition}
                 initialValue={activeCst.definition_raw}
                 resolved={activeCst.definition_resolved}

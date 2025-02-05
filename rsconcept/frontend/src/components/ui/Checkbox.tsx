@@ -64,7 +64,7 @@ function Checkbox({
       <div
         className={clsx(
           'max-w-[1rem] min-w-[1rem] h-4', //
-          'pt-[0.1rem] pl-[0.1rem]',
+          'pt-[0.05rem] pl-[0.05rem]',
           'border rounded-sm',
           'cc-animate-color',
           {

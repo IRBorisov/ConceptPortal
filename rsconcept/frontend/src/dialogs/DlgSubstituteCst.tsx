@@ -9,7 +9,6 @@ import { HelpTopic } from '@/models/miscellaneous';
 import { ICstSubstitute, ICstSubstitutions } from '@/models/oss';
 import { IRSForm } from '@/models/rsform';
 import { useDialogsStore } from '@/stores/dialogs';
-import { prefixes } from '@/utils/constants';
 
 export interface DlgSubstituteCstProps {
   schema: IRSForm;
@@ -43,7 +42,6 @@ function DlgSubstituteCst() {
         value={substitutions}
         onChange={setSubstitutions}
         rows={6}
-        prefixID={prefixes.dlg_cst_substitutes_list}
         schemas={[schema]}
       />
     </Modal>

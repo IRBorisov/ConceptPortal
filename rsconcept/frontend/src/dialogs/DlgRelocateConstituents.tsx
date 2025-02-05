@@ -18,7 +18,6 @@ import { IOperation, IOperationSchema } from '@/models/oss';
 import { getRelocateCandidates } from '@/models/ossAPI';
 import { ConstituentaID } from '@/models/rsform';
 import { useDialogsStore } from '@/stores/dialogs';
-import { prefixes } from '@/utils/constants';
 
 export interface DlgRelocateConstituentsProps {
   oss: IOperationSchema;
@@ -124,9 +123,8 @@ function DlgRelocateConstituents() {
           <PickMultiConstituenta
             noBorder
             schema={sourceData.schema}
-            data={filteredConstituents}
+            items={filteredConstituents}
             rows={12}
-            prefixID={prefixes.dlg_cst_constituents_list}
             value={selected}
             onChange={setSelected}
           />

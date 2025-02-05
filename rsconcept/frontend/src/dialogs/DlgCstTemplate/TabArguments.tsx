@@ -13,7 +13,6 @@ import NoData from '@/components/ui/NoData';
 import { IConstituenta, IRSForm } from '@/models/rsform';
 import { IArgumentValue } from '@/models/rslang';
 import { APP_COLORS } from '@/styling/color';
-import { prefixes } from '@/utils/constants';
 
 interface TabArgumentsProps {
   state: IArgumentsState;
@@ -189,9 +188,8 @@ function TabArguments({ state, schema, partialUpdate }: TabArgumentsProps) {
       <PickConstituenta
         id='dlg_argument_picker'
         value={selectedCst}
-        data={schema.items}
+        items={schema.items}
         onChange={handleSelectConstituenta}
-        prefixID={prefixes.cst_modal_list}
         rows={7}
       />
 
