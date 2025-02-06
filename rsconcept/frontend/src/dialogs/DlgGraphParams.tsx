@@ -1,7 +1,7 @@
 'use client';
 
 import Checkbox from '@/components/ui/Checkbox';
-import Modal from '@/components/ui/Modal';
+import { ModalForm } from '@/components/ui/Modal';
 import usePartialUpdate from '@/hooks/usePartialUpdate';
 import { GraphFilterParams } from '@/models/miscellaneous';
 import { CstType } from '@/models/rsform';
@@ -23,7 +23,7 @@ function DlgGraphParams() {
   }
 
   return (
-    <Modal
+    <ModalForm
       canSubmit
       header='Настройки графа термов'
       onSubmit={handleSubmit}
@@ -106,7 +106,7 @@ function DlgGraphParams() {
           onChange={value => updateParams({ allowTheorem: value })}
         />
       </div>
-    </Modal>
+    </ModalForm>
   );
 }
 

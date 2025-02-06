@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useState } from 'react';
 
 import Checkbox from '@/components/ui/Checkbox';
-import Modal from '@/components/ui/Modal';
+import { ModalForm } from '@/components/ui/Modal';
 import TextInput from '@/components/ui/TextInput';
 import { HelpTopic } from '@/models/miscellaneous';
 import { IOperation, OperationID } from '@/models/oss';
@@ -26,7 +26,7 @@ function DlgDeleteOperation() {
   }
 
   return (
-    <Modal
+    <ModalForm
       overflowVisible
       header='Удаление операции'
       submitText='Подтвердить удаление'
@@ -54,7 +54,7 @@ function DlgDeleteOperation() {
         onChange={setDeleteSchema}
         disabled={!target.is_owned || target.result === null}
       />
-    </Modal>
+    </ModalForm>
   );
 }
 

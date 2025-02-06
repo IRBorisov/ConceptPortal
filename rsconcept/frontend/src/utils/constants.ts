@@ -114,8 +114,7 @@ export const globals = {
   main_scroll: 'main_scroll',
   library_item_editor: 'library_item_editor',
   constituenta_editor: 'constituenta_editor',
-  graph_schemas: 'graph_schemas_tooltip',
-  dlg_create_version: 'dlg_create_version'
+  graph_schemas: 'graph_schemas_tooltip'
 };
 
 /**

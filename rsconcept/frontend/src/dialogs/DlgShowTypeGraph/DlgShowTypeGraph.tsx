@@ -3,7 +3,7 @@
 import { toast } from 'react-toastify';
 import { ReactFlowProvider } from 'reactflow';
 
-import Modal from '@/components/ui/Modal';
+import { ModalView } from '@/components/ui/Modal';
 import { HelpTopic } from '@/models/miscellaneous';
 import { ITypeInfo } from '@/models/rslang';
 import { TMGraph } from '@/models/TMGraph';
@@ -32,16 +32,15 @@ function DlgShowTypeGraph() {
   }
 
   return (
-    <Modal
+    <ModalView
       header='Граф ступеней'
-      readonly
       className='flex flex-col justify-stretch w-[calc(100dvw-3rem)] h-[calc(100dvh-6rem)]'
       helpTopic={HelpTopic.UI_TYPE_GRAPH}
     >
       <ReactFlowProvider>
         <MGraphFlow data={graph} />
       </ReactFlowProvider>
-    </Modal>
+    </ModalView>
   );
 }
 

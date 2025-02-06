@@ -11,7 +11,7 @@ import PickMultiConstituenta from '@/components/select/PickMultiConstituenta';
 import SelectLibraryItem from '@/components/select/SelectLibraryItem';
 import Loader from '@/components/ui/Loader';
 import MiniButton from '@/components/ui/MiniButton';
-import Modal from '@/components/ui/Modal';
+import { ModalForm } from '@/components/ui/Modal';
 import { ILibraryItem, LibraryItemID } from '@/models/library';
 import { HelpTopic } from '@/models/miscellaneous';
 import { IOperation, IOperationSchema } from '@/models/oss';
@@ -86,7 +86,7 @@ function DlgRelocateConstituents() {
   }
 
   return (
-    <Modal
+    <ModalForm
       header='Перенос конституент'
       submitText='Переместить'
       canSubmit={isValid}
@@ -130,7 +130,7 @@ function DlgRelocateConstituents() {
           />
         ) : null}
       </div>
-    </Modal>
+    </ModalForm>
   );
 }
 

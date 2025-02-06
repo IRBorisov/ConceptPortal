@@ -11,7 +11,7 @@ import { IconAccept, IconMoveDown, IconMoveLeft, IconMoveRight, IconRemove } fro
 import SelectMultiGrammeme from '@/components/select/SelectMultiGrammeme';
 import Label from '@/components/ui/Label';
 import MiniButton from '@/components/ui/MiniButton';
-import Modal from '@/components/ui/Modal';
+import { ModalForm } from '@/components/ui/Modal';
 import TextArea from '@/components/ui/TextArea';
 import { Grammeme, IWordForm } from '@/models/language';
 import { parseGrammemes, wordFormEquals } from '@/models/languageAPI';
@@ -124,7 +124,7 @@ function DlgEditWordForms() {
   }
 
   return (
-    <Modal
+    <ModalForm
       canSubmit
       header='Редактирование словоформ'
       submitText='Сохранить'
@@ -208,7 +208,7 @@ function DlgEditWordForms() {
       </div>
 
       <TableWordForms forms={forms} setForms={setForms} onFormSelect={handleSelectForm} />
-    </Modal>
+    </ModalForm>
   );
 }
 

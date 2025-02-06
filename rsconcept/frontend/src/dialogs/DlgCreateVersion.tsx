@@ -7,14 +7,14 @@ import { Controller, useForm, useWatch } from 'react-hook-form';
 import { CreateVersionSchema, IVersionCreateDTO } from '@/backend/library/api';
 import { useVersionCreate } from '@/backend/library/useVersionCreate';
 import Checkbox from '@/components/ui/Checkbox';
-import Modal from '@/components/ui/Modal';
+import { ModalForm } from '@/components/ui/Modal';
 import TextArea from '@/components/ui/TextArea';
 import TextInput from '@/components/ui/TextInput';
 import { IVersionInfo, LibraryItemID, VersionID } from '@/models/library';
 import { nextVersion } from '@/models/libraryAPI';
 import { ConstituentaID } from '@/models/rsform';
 import { useDialogsStore } from '@/stores/dialogs';
-import { globals } from '@/utils/constants';
+import { errors } from '@/utils/labels';
 
 export interface DlgCreateVersionProps {
   itemID: LibraryItemID;
@@ -50,30 +50,31 @@ function DlgCreateVersion() {
   }
 
   return (
-    <Modal header='Создание версии' canSubmit={canSubmit} submitText='Создать' formID={globals.dlg_create_version}>
-      <form
-        id={globals.dlg_create_version}
-        className={clsx('cc-column', 'w-[30rem]', 'py-2 px-6')}
-        onSubmit={event => void handleSubmit(onSubmit)(event)}
-      >
-        <TextInput id='dlg_version' {...register('version')} dense label='Версия' className='w-[16rem]' />
-        <TextArea id='dlg_description' {...register('description')} spellCheck label='Описание' rows={3} />
-        {selected.length > 0 ? (
-          <Controller
-            control={control}
-            name='items'
-            render={({ field }) => (
-              <Checkbox
-                id='dlg_only_selected'
-                label={`Только выбранные конституенты [${selected.length} из ${totalCount}]`}
-                value={field.value !== undefined}
-                onChange={value => field.onChange(value ? selected : undefined)}
-              />
-            )}
-          />
-        ) : null}
-      </form>
-    </Modal>
+    <ModalForm
+      header='Создание версии'
+      className={clsx('cc-column', 'w-[30rem]', 'py-2 px-6')}
+      canSubmit={canSubmit}
+      submitInvalidTooltip={errors.versionTaken}
+      submitText='Создать'
+      onSubmit={event => void handleSubmit(onSubmit)(event)}
+    >
+      <TextInput id='dlg_version' {...register('version')} dense label='Версия' className='w-[16rem]' />
+      <TextArea id='dlg_description' {...register('description')} spellCheck label='Описание' rows={3} />
+      {selected.length > 0 ? (
+        <Controller
+          control={control}
+          name='items'
+          render={({ field }) => (
+            <Checkbox
+              id='dlg_only_selected'
+              label={`Только выбранные конституенты [${selected.length} из ${totalCount}]`}
+              value={field.value !== undefined}
+              onChange={value => field.onChange(value ? selected : undefined)}
+            />
+          )}
+        />
+      ) : null}
+    </ModalForm>
   );
 }
 

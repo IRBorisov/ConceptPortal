@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useState } from 'react';
 
 import PickSubstitutions from '@/components/select/PickSubstitutions';
-import Modal from '@/components/ui/Modal';
+import { ModalForm } from '@/components/ui/Modal';
 import { HelpTopic } from '@/models/miscellaneous';
 import { ICstSubstitute, ICstSubstitutions } from '@/models/oss';
 import { IRSForm } from '@/models/rsform';
@@ -26,7 +26,7 @@ function DlgSubstituteCst() {
   }
 
   return (
-    <Modal
+    <ModalForm
       header='Отождествление'
       submitText='Отождествить'
       submitInvalidTooltip='Выберите две различные конституенты'
@@ -42,7 +42,7 @@ function DlgSubstituteCst() {
         rows={6}
         schemas={[schema]}
       />
-    </Modal>
+    </ModalForm>
   );
 }
 

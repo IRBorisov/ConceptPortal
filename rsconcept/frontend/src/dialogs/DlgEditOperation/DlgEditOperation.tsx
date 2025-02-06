@@ -6,7 +6,7 @@ import { TabList, TabPanel, Tabs } from 'react-tabs';
 
 import { IOperationUpdateDTO } from '@/backend/oss/api';
 import { useRSForms } from '@/backend/rsform/useRSForms';
-import Modal from '@/components/ui/Modal';
+import { ModalForm } from '@/components/ui/Modal';
 import TabLabel from '@/components/ui/TabLabel';
 import { LibraryItemID } from '@/models/library';
 import { HelpTopic } from '@/models/miscellaneous';
@@ -123,7 +123,7 @@ function DlgEditOperation() {
   }
 
   return (
-    <Modal
+    <ModalForm
       header='Редактирование операции'
       submitText='Сохранить'
       canSubmit={canSubmit}
@@ -186,7 +186,7 @@ function DlgEditOperation() {
           </TabPanel>
         ) : null}
       </Tabs>
-    </Modal>
+    </ModalForm>
   );
 }
 

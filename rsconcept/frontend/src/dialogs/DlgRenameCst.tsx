@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
 import { ICstRenameDTO } from '@/backend/rsform/api';
-import Modal from '@/components/ui/Modal';
+import { ModalForm } from '@/components/ui/Modal';
 import SelectSingle from '@/components/ui/SelectSingle';
 import TextInput from '@/components/ui/TextInput';
 import usePartialUpdate from '@/hooks/usePartialUpdate';
@@ -43,7 +43,7 @@ function DlgRenameCst() {
   }
 
   return (
-    <Modal
+    <ModalForm
       header='Переименование конституенты'
       submitText='Переименовать'
       submitInvalidTooltip='Введите незанятое имя, соответствующее типу'
@@ -73,7 +73,7 @@ function DlgRenameCst() {
         value={cstData.alias}
         onChange={event => updateData({ alias: event.target.value })}
       />
-    </Modal>
+    </ModalForm>
   );
 }
 

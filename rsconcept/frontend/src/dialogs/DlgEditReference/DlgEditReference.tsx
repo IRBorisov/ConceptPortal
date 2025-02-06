@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useState } from 'react';
 import { TabList, TabPanel, Tabs } from 'react-tabs';
 
-import Modal from '@/components/ui/Modal';
+import { ModalForm } from '@/components/ui/Modal';
 import TabLabel from '@/components/ui/TabLabel';
 import { ReferenceType } from '@/models/language';
 import { HelpTopic } from '@/models/miscellaneous';
@@ -46,7 +46,7 @@ function DlgEditReference() {
   }
 
   return (
-    <Modal
+    <ModalForm
       header='Редактирование ссылки'
       submitText='Сохранить ссылку'
       canSubmit={isValid}
@@ -81,7 +81,7 @@ function DlgEditReference() {
           <TabSyntacticReference initial={initial} onChangeReference={setReference} onChangeValid={setIsValid} />
         </TabPanel>
       </Tabs>
-    </Modal>
+    </ModalForm>
   );
 }
 

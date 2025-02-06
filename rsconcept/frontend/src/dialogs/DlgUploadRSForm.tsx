@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useUploadTRS } from '@/backend/rsform/useUploadTRS';
 import Checkbox from '@/components/ui/Checkbox';
 import FileInput from '@/components/ui/FileInput';
-import Modal from '@/components/ui/Modal';
+import { ModalForm } from '@/components/ui/Modal';
 import { LibraryItemID } from '@/models/library';
 import { useDialogsStore } from '@/stores/dialogs';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';
@@ -41,7 +41,7 @@ function DlgUploadRSForm() {
   };
 
   return (
-    <Modal
+    <ModalForm
       header='Импорт схемы из Экстеора'
       canSubmit={!!file}
       onSubmit={handleSubmit}
@@ -55,7 +55,7 @@ function DlgUploadRSForm() {
         value={loadMetadata}
         onChange={value => setLoadMetadata(value)}
       />
-    </Modal>
+    </ModalForm>
   );
 }
 

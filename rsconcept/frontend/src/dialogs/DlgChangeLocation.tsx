@@ -7,7 +7,7 @@ import { useAuthSuspense } from '@/backend/auth/useAuth';
 import SelectLocationContext from '@/components/select/SelectLocationContext';
 import SelectLocationHead from '@/components/select/SelectLocationHead';
 import Label from '@/components/ui/Label';
-import Modal from '@/components/ui/Modal';
+import { ModalForm } from '@/components/ui/Modal';
 import TextArea from '@/components/ui/TextArea';
 import { LocationHead } from '@/models/library';
 import { combineLocation, validateLocation } from '@/models/libraryAPI';
@@ -39,7 +39,7 @@ function DlgChangeLocation() {
   }
 
   return (
-    <Modal
+    <ModalForm
       overflowVisible
       header='Изменение расположения'
       submitText='Переместить'
@@ -58,7 +58,7 @@ function DlgChangeLocation() {
       </div>
       <SelectLocationContext value={location} onChange={handleSelectLocation} className='max-h-[9.2rem]' />
       <TextArea id='dlg_cst_body' label='Путь' rows={3} value={body} onChange={event => setBody(event.target.value)} />
-    </Modal>
+    </ModalForm>
   );
 }
 

@@ -8,7 +8,7 @@ import { IconReset } from '@/components/Icons';
 import PickSchema from '@/components/select/PickSchema';
 import Label from '@/components/ui/Label';
 import MiniButton from '@/components/ui/MiniButton';
-import Modal from '@/components/ui/Modal';
+import { ModalForm } from '@/components/ui/Modal';
 import { ILibraryItem, LibraryItemID, LibraryItemType } from '@/models/library';
 import { IOperation, IOperationSchema, OperationID } from '@/models/oss';
 import { sortItemsForOSS } from '@/models/ossAPI';
@@ -41,7 +41,7 @@ function DlgChangeInputSchema() {
   }
 
   return (
-    <Modal
+    <ModalForm
       overflowVisible
       header='Выбор концептуальной схемы'
       submitText='Подтвердить выбор'
@@ -70,7 +70,7 @@ function DlgChangeInputSchema() {
         rows={14}
         baseFilter={baseFilter}
       />
-    </Modal>
+    </ModalForm>
   );
 }
 

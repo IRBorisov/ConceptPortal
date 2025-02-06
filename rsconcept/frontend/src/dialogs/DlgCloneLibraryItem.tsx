@@ -15,7 +15,7 @@ import SelectLocationHead from '@/components/select/SelectLocationHead';
 import Checkbox from '@/components/ui/Checkbox';
 import Label from '@/components/ui/Label';
 import MiniButton from '@/components/ui/MiniButton';
-import Modal from '@/components/ui/Modal';
+import { ModalForm } from '@/components/ui/Modal';
 import TextArea from '@/components/ui/TextArea';
 import TextInput from '@/components/ui/TextInput';
 import { AccessPolicy, ILibraryItem, LocationHead } from '@/models/library';
@@ -78,7 +78,7 @@ function DlgCloneLibraryItem() {
   }
 
   return (
-    <Modal
+    <ModalForm
       header='Создание копии концептуальной схемы'
       canSubmit={canSubmit}
       submitText='Создать'
@@ -140,7 +140,7 @@ function DlgCloneLibraryItem() {
         value={onlySelected}
         onChange={value => setOnlySelected(value)}
       />
-    </Modal>
+    </ModalForm>
   );
 }
 

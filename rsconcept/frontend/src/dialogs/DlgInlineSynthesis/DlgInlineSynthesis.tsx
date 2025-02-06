@@ -7,7 +7,7 @@ import { TabList, TabPanel, Tabs } from 'react-tabs';
 import { IInlineSynthesisDTO } from '@/backend/rsform/api';
 import { useRSForm } from '@/backend/rsform/useRSForm';
 import Loader from '@/components/ui/Loader';
-import Modal from '@/components/ui/Modal';
+import { ModalForm } from '@/components/ui/Modal';
 import TabLabel from '@/components/ui/TabLabel';
 import { LibraryItemID } from '@/models/library';
 import { ICstSubstitute } from '@/models/oss';
@@ -67,7 +67,7 @@ function DlgInlineSynthesis() {
   }
 
   return (
-    <Modal
+    <ModalForm
       header='Импорт концептуальной схем'
       submitText='Добавить конституенты'
       className='w-[40rem] h-[33rem] px-6'
@@ -122,7 +122,7 @@ function DlgInlineSynthesis() {
           ) : null}
         </TabPanel>
       </Tabs>
-    </Modal>
+    </ModalForm>
   );
 }
 

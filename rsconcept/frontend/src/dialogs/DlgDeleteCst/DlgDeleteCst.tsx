@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useState } from 'react';
 
 import Checkbox from '@/components/ui/Checkbox';
-import Modal from '@/components/ui/Modal';
+import { ModalForm } from '@/components/ui/Modal';
 import { ConstituentaID, IRSForm } from '@/models/rsform';
 import { useDialogsStore } from '@/stores/dialogs';
 import { prefixes } from '@/utils/constants';
@@ -36,7 +36,7 @@ function DlgDeleteCst() {
   }
 
   return (
-    <Modal
+    <ModalForm
       canSubmit
       header='Удаление конституент'
       submitText={expandOut ? 'Удалить с зависимыми' : 'Удалить'}
@@ -59,7 +59,7 @@ function DlgDeleteCst() {
       {hasInherited ? (
         <p className='text-sm clr-text-red'>Внимание! Выбранные конституенты имеют наследников в ОСС</p>
       ) : null}
-    </Modal>
+    </ModalForm>
   );
 }
 

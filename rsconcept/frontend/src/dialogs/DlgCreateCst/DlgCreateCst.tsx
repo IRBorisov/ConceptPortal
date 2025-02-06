@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 import { ICstCreateDTO } from '@/backend/rsform/api';
-import Modal from '@/components/ui/Modal';
+import { ModalForm } from '@/components/ui/Modal';
 import usePartialUpdate from '@/hooks/usePartialUpdate';
 import { CstType, IRSForm } from '@/models/rsform';
 import { generateAlias } from '@/models/rsformAPI';
@@ -40,7 +40,7 @@ function DlgCreateCst() {
   };
 
   return (
-    <Modal
+    <ModalForm
       header='Создание конституенты'
       canSubmit={validated}
       onSubmit={handleSubmit}
@@ -48,7 +48,7 @@ function DlgCreateCst() {
       className='cc-column w-[35rem] max-h-[30rem] py-2 px-6'
     >
       <FormCreateCst schema={schema} state={cstData} partialUpdate={updateCstData} setValidated={setValidated} />
-    </Modal>
+    </ModalForm>
   );
 }
 

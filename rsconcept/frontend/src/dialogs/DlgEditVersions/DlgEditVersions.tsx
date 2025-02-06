@@ -7,7 +7,7 @@ import { useVersionDelete } from '@/backend/library/useVersionDelete';
 import { useVersionUpdate } from '@/backend/library/useVersionUpdate';
 import { IconReset, IconSave } from '@/components/Icons';
 import MiniButton from '@/components/ui/MiniButton';
-import Modal from '@/components/ui/Modal';
+import { ModalView } from '@/components/ui/Modal';
 import TextArea from '@/components/ui/TextArea';
 import TextInput from '@/components/ui/TextInput';
 import { ILibraryItemVersioned, IVersionInfo, VersionID } from '@/models/library';
@@ -64,7 +64,7 @@ function DlgEditVersions() {
   }, [selected]);
 
   return (
-    <Modal readonly header='Редактирование версий' className='flex flex-col w-[40rem] px-6 gap-3 pb-6'>
+    <ModalView header='Редактирование версий' className='flex flex-col w-[40rem] px-6 gap-3 pb-6'>
       <TableVersions
         processing={processing}
         items={item.versions}
@@ -105,7 +105,7 @@ function DlgEditVersions() {
         value={description}
         onChange={event => setDescription(event.target.value)}
       />
-    </Modal>
+    </ModalView>
   );
 }
 

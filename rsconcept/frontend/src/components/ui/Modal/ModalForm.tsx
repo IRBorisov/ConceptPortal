@@ -5,45 +5,23 @@ import clsx from 'clsx';
 import { IconClose } from '@/components/Icons';
 import BadgeHelp from '@/components/info/BadgeHelp';
 import { CProps } from '@/components/props';
+import Button from '@/components/ui/Button';
+import MiniButton from '@/components/ui/MiniButton';
 import useEscapeKey from '@/hooks/useEscapeKey';
 import { HelpTopic } from '@/models/miscellaneous';
 import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/labels';
 
-import Button from './Button';
-import MiniButton from './MiniButton';
+import SubmitButton from '../SubmitButton';
+import { ModalBackdrop } from './ModalBackdrop';
 
 export interface ModalProps extends CProps.Styling {
   /** Title of the modal window. */
   header?: string;
 
-  /** Text of the submit button. */
-  submitText?: string;
-
-  /** Tooltip for the submit button when the form is invalid. */
-  submitInvalidTooltip?: string;
-
-  /** Indicates that form is readonly. */
-  readonly?: boolean;
-
-  /** Indicates that submit button is enabled. */
-  canSubmit?: boolean;
-
   /** Indicates that the modal window should be scrollable. */
   overflowVisible?: boolean;
-
-  /** ID of the form to be submitted. */
-  formID?: string;
-
-  /** Callback to be called before submit. */
-  beforeSubmit?: () => boolean;
-
-  /** Callback to be called after submit. */
-  onSubmit?: () => boolean;
-
-  /** Callback to be called after cancel. */
-  onCancel?: () => void;
 
   /** Help topic to be displayed in the modal window. */
   helpTopic?: HelpTopic;
@@ -52,67 +30,64 @@ export interface ModalProps extends CProps.Styling {
   hideHelpWhen?: () => boolean;
 }
 
+interface ModalFormProps extends ModalProps {
+  /** Text of the submit button. */
+  submitText?: string;
+
+  /** Tooltip for the submit button when the form is invalid. */
+  submitInvalidTooltip?: string;
+
+  /** Indicates that submit button is enabled. */
+  canSubmit?: boolean;
+
+  /** Callback to be called before submit. */
+  beforeSubmit?: () => boolean;
+
+  /** Callback to be called after submit. */
+  onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+}
+
 /**
- * Displays a customizable modal window.
+ * Displays a customizable modal window with submit form.
  */
-function Modal({
+export function ModalForm({
   children,
 
+  className,
   header,
-  submitText = 'Продолжить',
-  submitInvalidTooltip,
-
-  readonly,
-  canSubmit,
   overflowVisible,
 
+  canSubmit,
+  submitText = 'Продолжить',
+  submitInvalidTooltip,
   beforeSubmit,
-  formID,
   onSubmit,
-  onCancel,
-  className,
 
   helpTopic,
   hideHelpWhen,
   ...restProps
-}: React.PropsWithChildren<ModalProps>) {
+}: React.PropsWithChildren<ModalFormProps>) {
   const hideDialog = useDialogsStore(state => state.hideDialog);
   useEscapeKey(hideDialog);
 
-  const handleCancel = () => {
-    hideDialog();
-    onCancel?.();
-  };
-
-  const handleSubmit = () => {
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     if (beforeSubmit && !beforeSubmit()) {
       return;
     }
-    if (onSubmit && !onSubmit()) {
-      return;
-    }
-    if (formID) {
-      const element = document.getElementById(formID) as HTMLFormElement;
-      if (element) {
-        element.requestSubmit();
-      }
-    }
+    onSubmit(event);
     hideDialog();
-  };
+  }
 
   return (
     <div className='fixed top-0 left-0 w-full h-full z-modal cursor-default'>
-      <div className={clsx('z-navigation', 'fixed top-0 left-0', 'w-full h-full', 'backdrop-blur-[3px] opacity-50')} />
-      <div
-        className={clsx('z-navigation', 'fixed top-0 left-0', 'w-full h-full', 'bg-prim-0 opacity-25')}
-        onClick={hideDialog}
-      />
-      <div
+      <ModalBackdrop onHide={hideDialog} />
+      <form
         className={clsx(
           'cc-animate-modal',
           'z-modal absolute bottom-1/2 left-1/2 -translate-x-1/2 translate-y-1/2',
           'border rounded-xl bg-prim-100'
         )}
+        onSubmit={handleSubmit}
       >
         {helpTopic && !hideHelpWhen?.() ? (
           <div className='float-left mt-2 ml-2'>
@@ -125,7 +100,7 @@ function Modal({
           titleHtml={prepareTooltip('Закрыть диалоговое окно', 'ESC')}
           icon={<IconClose size='1.25rem' />}
           className='float-right mt-2 mr-2'
-          onClick={handleCancel}
+          onClick={hideDialog}
         />
 
         {header ? <h1 className='px-12 py-2 select-none'>{header}</h1> : null}
@@ -145,22 +120,16 @@ function Modal({
         </div>
 
         <div className='z-modalControls my-2 flex gap-12 justify-center text-sm'>
-          {!readonly ? (
-            <Button
-              autoFocus
-              text={submitText}
-              title={!canSubmit ? submitInvalidTooltip : ''}
-              className='min-w-[7rem]'
-              colors='clr-btn-primary'
-              disabled={!canSubmit}
-              onClick={handleSubmit}
-            />
-          ) : null}
-          <Button text={readonly ? 'Закрыть' : 'Отмена'} className='min-w-[7rem]' onClick={handleCancel} />
+          <SubmitButton
+            autoFocus
+            text={submitText}
+            title={!canSubmit ? submitInvalidTooltip : ''}
+            className='min-w-[7rem]'
+            disabled={!canSubmit}
+          />
+          <Button text='Отмена' className='min-w-[7rem]' onClick={hideDialog} />
         </div>
-      </div>
+      </form>
     </div>
   );
 }
-
-export default Modal;

@@ -6,7 +6,7 @@ import { TabList, TabPanel, Tabs } from 'react-tabs';
 
 import { useLibrary } from '@/backend/library/useLibrary';
 import { IOperationCreateDTO } from '@/backend/oss/api';
-import Modal from '@/components/ui/Modal';
+import { ModalForm } from '@/components/ui/Modal';
 import TabLabel from '@/components/ui/TabLabel';
 import { LibraryItemID } from '@/models/library';
 import { HelpTopic } from '@/models/miscellaneous';
@@ -98,7 +98,7 @@ function DlgCreateOperation() {
   }
 
   return (
-    <Modal
+    <ModalForm
       header='Создание операции'
       submitText='Создать'
       canSubmit={isValid}
@@ -155,7 +155,7 @@ function DlgCreateOperation() {
           />
         </TabPanel>
       </Tabs>
-    </Modal>
+    </ModalForm>
   );
 }
 

@@ -8,7 +8,7 @@ import { IconRemove } from '@/components/Icons';
 import SelectUser from '@/components/select/SelectUser';
 import Label from '@/components/ui/Label';
 import MiniButton from '@/components/ui/MiniButton';
-import Modal from '@/components/ui/Modal';
+import { ModalForm } from '@/components/ui/Modal';
 import { UserID } from '@/models/user';
 import { useDialogsStore } from '@/stores/dialogs';
 
@@ -38,7 +38,7 @@ function DlgEditEditors() {
   }
 
   return (
-    <Modal
+    <ModalForm
       canSubmit
       header='Список редакторов'
       submitText='Сохранить список'
@@ -68,7 +68,7 @@ function DlgEditEditors() {
           className='w-[25rem]'
         />
       </div>
-    </Modal>
+    </ModalForm>
   );
 }
 

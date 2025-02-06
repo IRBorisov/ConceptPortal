@@ -7,7 +7,7 @@ import { TabList, TabPanel, Tabs } from 'react-tabs';
 import { ICstCreateDTO } from '@/backend/rsform/api';
 import { useRSForm } from '@/backend/rsform/useRSForm';
 import Loader from '@/components/ui/Loader';
-import Modal from '@/components/ui/Modal';
+import { ModalForm } from '@/components/ui/Modal';
 import TabLabel from '@/components/ui/TabLabel';
 import FormCreateCst from '@/dialogs/DlgCreateCst/FormCreateCst';
 import usePartialUpdate from '@/hooks/usePartialUpdate';
@@ -120,7 +120,7 @@ function DlgCstTemplate() {
   }, [constituenta.alias, constituenta.cst_type, schema, template.prototype]);
 
   return (
-    <Modal
+    <ModalForm
       header='Создание конституенты из шаблона'
       submitText='Создать'
       className='w-[43rem] h-[35rem] px-6'
@@ -157,7 +157,7 @@ function DlgCstTemplate() {
           </div>
         </TabPanel>
       </Tabs>
-    </Modal>
+    </ModalForm>
   );
 }
 

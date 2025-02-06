@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { ReactFlowProvider } from 'reactflow';
 
-import Modal from '@/components/ui/Modal';
+import { ModalView } from '@/components/ui/Modal';
 import Overlay from '@/components/ui/Overlay';
 import { HelpTopic } from '@/models/miscellaneous';
 import { SyntaxTree } from '@/models/rslang';
@@ -24,8 +24,7 @@ function DlgShowAST() {
   const [isDragging, setIsDragging] = useState(false);
 
   return (
-    <Modal
-      readonly
+    <ModalView
       className='flex flex-col justify-stretch w-[calc(100dvw-3rem)] h-[calc(100dvh-6rem)]'
       helpTopic={HelpTopic.UI_FORMULA_TREE}
     >
@@ -50,7 +49,7 @@ function DlgShowAST() {
           onChangeDragging={setIsDragging}
         />
       </ReactFlowProvider>
-    </Modal>
+    </ModalView>
   );
 }
 
