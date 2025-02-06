@@ -26,6 +26,7 @@ function DlgEditEditors() {
 
   function handleSubmit() {
     onChangeEditors(selected);
+    return true;
   }
 
   function onDeleteEditor(target: UserID) {

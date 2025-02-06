@@ -21,15 +21,15 @@ function DlgUploadRSForm() {
   const [file, setFile] = useState<File | undefined>();
 
   const handleSubmit = () => {
-    if (!file) {
-      return;
+    if (file) {
+      upload({
+        itemID: itemID,
+        load_metadata: loadMetadata,
+        file: file,
+        fileName: file.name
+      });
     }
-    upload({
-      itemID: itemID,
-      load_metadata: loadMetadata,
-      file: file,
-      fileName: file.name
-    });
+    return true;
   };
 
   const handleFile = (event: React.ChangeEvent<HTMLInputElement>) => {

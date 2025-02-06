@@ -35,13 +35,18 @@ function DlgChangeInputSchema() {
     setSelected(newValue);
   }
 
+  function handleSubmit() {
+    onSubmit(target.id, selected);
+    return true;
+  }
+
   return (
     <Modal
       overflowVisible
       header='Выбор концептуальной схемы'
       submitText='Подтвердить выбор'
       canSubmit={isValid}
-      onSubmit={() => onSubmit(target.id, selected)}
+      onSubmit={handleSubmit}
       className={clsx('w-[35rem]', 'pb-3 px-6 cc-column')}
     >
       <div className='flex justify-between gap-3 items-center'>

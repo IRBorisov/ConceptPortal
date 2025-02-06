@@ -22,6 +22,7 @@ function DlgDeleteOperation() {
 
   function handleSubmit() {
     onSubmit(target.id, keepConstituents, deleteSchema);
+    return true;
   }
 
   return (

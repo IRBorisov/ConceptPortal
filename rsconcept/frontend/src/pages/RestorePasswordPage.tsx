@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 import clsx from 'clsx';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { useRequestPasswordReset } from '@/backend/auth/useRequestPasswordReset';
 import { ErrorData } from '@/components/info/InfoError';
@@ -23,10 +23,6 @@ export function Component() {
     }
   }
 
-  useEffect(() => {
-    clearServerError();
-  }, [email, clearServerError]);
-
   if (isCompleted) {
     return (
       <div className='cc-fade-in flex flex-col items-center gap-1 mt-3'>
@@ -37,7 +33,11 @@ export function Component() {
     );
   } else {
     return (
-      <form className={clsx('cc-fade-in cc-column', 'w-[24rem] mx-auto', 'px-6 mt-3')} onSubmit={handleSubmit}>
+      <form
+        className={clsx('cc-fade-in cc-column', 'w-[24rem] mx-auto', 'px-6 mt-3')}
+        onSubmit={handleSubmit}
+        onChange={clearServerError}
+      >
         <TextInput
           id='email'
           autoComplete='email'

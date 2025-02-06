@@ -19,16 +19,13 @@ import TextArea from '@/components/ui/TextArea';
 import TextInput from '@/components/ui/TextInput';
 import { LibraryItemType, VersionID } from '@/models/library';
 import { useModificationStore } from '@/stores/modification';
+import { globals } from '@/utils/constants';
 
 import { useRSEdit } from '../RSEditContext';
 import ToolbarItemAccess from './ToolbarItemAccess';
 import ToolbarVersioning from './ToolbarVersioning';
 
-interface FormRSFormProps {
-  id?: string;
-}
-
-function FormRSForm({ id }: FormRSFormProps) {
+function FormRSForm() {
   const controller = useRSEdit();
   const router = useConceptNavigation();
   const { updateItem: updateSchema } = useUpdateItem();
@@ -59,7 +56,7 @@ function FormRSForm({ id }: FormRSFormProps) {
 
   useEffect(() => {
     setIsModified(isDirty);
-  }, [isDirty, controller.schema, setIsModified]);
+  }, [isDirty, setIsModified]);
 
   function handleSelectVersion(version?: VersionID) {
     router.push(urls.schema(controller.schema.id, version));
@@ -71,7 +68,7 @@ function FormRSForm({ id }: FormRSFormProps) {
 
   return (
     <form
-      id={id}
+      id={globals.library_item_editor}
       className={clsx('mt-1 min-w-[22rem] sm:w-[30rem]', 'flex flex-col pt-1')}
       onSubmit={event => void handleSubmit(onSubmit)(event)}
     >

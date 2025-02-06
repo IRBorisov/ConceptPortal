@@ -82,6 +82,7 @@ function DlgCreateOperation() {
       arguments: activeTab === TabID.INPUT ? undefined : inputs.length > 0 ? inputs : undefined,
       create_schema: createSchema
     });
+    return true;
   };
 
   function handleSelectTab(newTab: TabID, last: TabID) {

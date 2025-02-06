@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
 import { useAuthSuspense } from '@/backend/auth/useAuth';
-import { IRCloneLibraryItemDTO } from '@/backend/library/api';
+import { ICloneLibraryItemDTO } from '@/backend/library/api';
 import { useCloneItem } from '@/backend/library/useCloneItem';
 import { VisibilityIcon } from '@/components/DomainIcons';
 import SelectAccessPolicy from '@/components/select/SelectAccessPolicy';
@@ -59,7 +59,7 @@ function DlgCloneLibraryItem() {
   }
 
   function handleSubmit() {
-    const data: IRCloneLibraryItemDTO = {
+    const data: ICloneLibraryItemDTO = {
       id: base.id,
       item_type: base.item_type,
       title: title,
@@ -74,6 +74,7 @@ function DlgCloneLibraryItem() {
       data.items = selected;
     }
     cloneItem(data, newSchema => router.push(urls.schema(newSchema.id)));
+    return true;
   }
 
   return (

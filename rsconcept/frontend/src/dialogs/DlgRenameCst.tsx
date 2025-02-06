@@ -37,13 +37,18 @@ function DlgRenameCst() {
     setValidated(cstData.alias !== initial.alias && validateNewAlias(cstData.alias, cstData.cst_type, schema));
   }, [cstData.cst_type, cstData.alias, initial, schema]);
 
+  function handleSubmit() {
+    onRename(cstData);
+    return true;
+  }
+
   return (
     <Modal
       header='Переименование конституенты'
       submitText='Переименовать'
       submitInvalidTooltip='Введите незанятое имя, соответствующее типу'
       canSubmit={validated}
-      onSubmit={() => onRename(cstData)}
+      onSubmit={handleSubmit}
       className={clsx('w-[30rem]', 'py-6 pr-3 pl-6 flex gap-3 justify-center items-center ')}
       helpTopic={HelpTopic.CC_CONSTITUENTA}
     >

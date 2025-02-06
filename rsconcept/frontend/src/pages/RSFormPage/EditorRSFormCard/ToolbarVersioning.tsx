@@ -1,6 +1,5 @@
 'use client';
 
-import { useVersionCreate } from '@/backend/library/useVersionCreate';
 import { useVersionRestore } from '@/backend/library/useVersionRestore';
 import { IconNewVersion, IconUpload, IconVersions } from '@/components/Icons';
 import BadgeHelp from '@/components/info/BadgeHelp';
@@ -23,7 +22,6 @@ function ToolbarVersioning({ blockReload }: ToolbarVersioningProps) {
   const controller = useRSEdit();
   const { isModified } = useModificationStore();
   const { versionRestore } = useVersionRestore();
-  const { versionCreate } = useVersionCreate();
 
   const showCreateVersion = useDialogsStore(state => state.showCreateVersion);
   const showEditVersions = useDialogsStore(state => state.showEditVersions);
@@ -40,17 +38,11 @@ function ToolbarVersioning({ blockReload }: ToolbarVersioningProps) {
       return;
     }
     showCreateVersion({
+      itemID: controller.schema.id,
       versions: controller.schema.versions,
       selected: controller.selected,
       totalCount: controller.schema.items.length,
-      onCreate: data =>
-        versionCreate(
-          {
-            itemID: controller.schema.id, //
-            data: data
-          },
-          newVersion => controller.navigateVersion(newVersion)
-        )
+      onCreate: newVersion => controller.navigateVersion(newVersion)
     });
   }
 

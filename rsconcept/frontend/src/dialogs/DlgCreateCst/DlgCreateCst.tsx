@@ -19,6 +19,7 @@ export interface DlgCreateCstProps {
 
 function DlgCreateCst() {
   const { initial, schema, onCreate } = useDialogsStore(state => state.props as DlgCreateCstProps);
+
   const [validated, setValidated] = useState(false);
   const [cstData, updateCstData] = usePartialUpdate(
     initial || {
@@ -33,7 +34,10 @@ function DlgCreateCst() {
     }
   );
 
-  const handleSubmit = () => onCreate(cstData);
+  const handleSubmit = () => {
+    onCreate(cstData);
+    return true;
+  };
 
   return (
     <Modal

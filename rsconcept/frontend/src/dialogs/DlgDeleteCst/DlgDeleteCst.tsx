@@ -19,7 +19,6 @@ export interface DlgDeleteCstProps {
 
 function DlgDeleteCst() {
   const { selected, schema, onDelete } = useDialogsStore(state => state.props as DlgDeleteCstProps);
-  const hideDialog = useDialogsStore(state => state.hideDialog);
   const [expandOut, setExpandOut] = useState(false);
   const expansion: ConstituentaID[] = schema.graph.expandAllOutputs(selected);
   const hasInherited = selected.some(
@@ -28,12 +27,12 @@ function DlgDeleteCst() {
   );
 
   function handleSubmit() {
-    hideDialog();
     if (expandOut) {
       onDelete(selected.concat(expansion));
     } else {
       onDelete(selected);
     }
+    return true;
   }
 
   return (

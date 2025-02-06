@@ -1,9 +1,12 @@
+'use no memo'; // TODO: remove when react hook forms are compliant with react compiler
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
 import clsx from 'clsx';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { useForm, useWatch } from 'react-hook-form';
 
-import { IUpdateLibraryItemDTO } from '@/backend/library/api';
+import { IUpdateLibraryItemDTO, UpdateLibraryItemSchema } from '@/backend/library/api';
 import { useUpdateItem } from '@/backend/library/useUpdateItem';
 import { useMutatingOss } from '@/backend/oss/useMutatingOss';
 import { IconSave } from '@/components/Icons';
@@ -13,112 +16,85 @@ import TextInput from '@/components/ui/TextInput';
 import { LibraryItemType } from '@/models/library';
 import ToolbarItemAccess from '@/pages/RSFormPage/EditorRSFormCard/ToolbarItemAccess';
 import { useModificationStore } from '@/stores/modification';
+import { globals } from '@/utils/constants';
 
 import { useOssEdit } from '../OssEditContext';
 
-interface FormOSSProps {
-  id?: string;
-}
-
-function FormOSS({ id }: FormOSSProps) {
-  const { updateItem: update } = useUpdateItem();
+function FormOSS() {
+  const { updateItem: updateOss } = useUpdateItem();
   const controller = useOssEdit();
   const { isModified, setIsModified } = useModificationStore();
   const isProcessing = useMutatingOss();
-  const schema = controller.schema;
 
-  const [title, setTitle] = useState(schema.title);
-  const [alias, setAlias] = useState(schema.alias);
-  const [comment, setComment] = useState(schema.comment);
-  const [visible, setVisible] = useState(schema.visible);
-  const [readOnly, setReadOnly] = useState(schema.read_only);
-
-  useEffect(() => {
-    if (schema) {
-      setTitle(schema.title);
-      setAlias(schema.alias);
-      setComment(schema.comment);
-      setVisible(schema.visible);
-      setReadOnly(schema.read_only);
-    }
-  }, [schema]);
-
-  useEffect(() => {
-    setIsModified(
-      schema.title !== title ||
-        schema.alias !== alias ||
-        schema.comment !== comment ||
-        schema.visible !== visible ||
-        schema.read_only !== readOnly
-    );
-    return () => setIsModified(false);
-  }, [
-    schema.title,
-    schema.alias,
-    schema.comment,
-    schema.visible,
-    schema.read_only,
-    title,
-    alias,
-    comment,
-    visible,
-    readOnly,
-    setIsModified
-  ]);
-
-  const handleSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
-    if (event) {
-      event.preventDefault();
-    }
-    const data: IUpdateLibraryItemDTO = {
-      id: schema.id,
+  const {
+    register,
+    handleSubmit,
+    control,
+    setValue,
+    reset,
+    formState: { isDirty, errors }
+  } = useForm<IUpdateLibraryItemDTO>({
+    resolver: zodResolver(UpdateLibraryItemSchema),
+    defaultValues: {
+      id: controller.schema.id,
       item_type: LibraryItemType.RSFORM,
-      title: title,
-      alias: alias,
-      comment: comment,
-      visible: visible,
-      read_only: readOnly
-    };
-    update(data);
-  };
+      title: controller.schema.title,
+      alias: controller.schema.alias,
+      comment: controller.schema.comment,
+      visible: controller.schema.visible,
+      read_only: controller.schema.read_only
+    }
+  });
+  const visible = useWatch({ control, name: 'visible' });
+  const readOnly = useWatch({ control, name: 'read_only' });
+
+  useEffect(() => {
+    setIsModified(isDirty);
+  }, [isDirty, setIsModified]);
+
+  function onSubmit(data: IUpdateLibraryItemDTO) {
+    updateOss(data, () => reset({ ...data }));
+  }
 
   return (
-    <form id={id} className={clsx('mt-1 min-w-[22rem] sm:w-[30rem]', 'flex flex-col pt-1')} onSubmit={handleSubmit}>
+    <form
+      id={globals.library_item_editor}
+      className={clsx('mt-1 min-w-[22rem] sm:w-[30rem]', 'flex flex-col pt-1')}
+      onSubmit={event => void handleSubmit(onSubmit)(event)}
+    >
       <TextInput
         id='schema_title'
-        required
+        {...register('title')}
         label='Полное название'
         className='mb-3'
-        value={title}
         disabled={!controller.isMutable}
-        onChange={event => setTitle(event.target.value)}
+        error={errors.title}
       />
       <div className='flex justify-between gap-3 mb-3'>
         <TextInput
           id='schema_alias'
-          required
+          {...register('alias')}
           label='Сокращение'
           className='w-[16rem]'
           disabled={!controller.isMutable}
-          value={alias}
-          onChange={event => setAlias(event.target.value)}
+          error={errors.alias}
         />
         <ToolbarItemAccess
           visible={visible}
-          toggleVisible={() => setVisible(prev => !prev)}
+          toggleVisible={() => setValue('visible', !visible, { shouldDirty: true })}
           readOnly={readOnly}
-          toggleReadOnly={() => setReadOnly(prev => !prev)}
+          toggleReadOnly={() => setValue('read_only', !readOnly, { shouldDirty: true })}
           controller={controller}
         />
       </div>
 
       <TextArea
         id='schema_comment'
+        {...register('comment')}
         label='Описание'
         rows={3}
-        value={comment}
         disabled={!controller.isMutable || isProcessing}
-        onChange={event => setComment(event.target.value)}
+        error={errors.comment}
       />
       {controller.isMutable || isModified ? (
         <SubmitButton

@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { DataCallback } from '@/backend/apiTransport';
 
 import { IRSFormDTO } from '../rsform/api';
-import { IRCloneLibraryItemDTO, libraryApi } from './api';
+import { ICloneLibraryItemDTO, libraryApi } from './api';
 
 export const useCloneItem = () => {
   const client = useQueryClient();
@@ -14,7 +14,7 @@ export const useCloneItem = () => {
   });
   return {
     cloneItem: (
-      data: IRCloneLibraryItemDTO, //
+      data: ICloneLibraryItemDTO, //
       onSuccess?: DataCallback<IRSFormDTO>
     ) => mutation.mutate(data, { onSuccess })
   };

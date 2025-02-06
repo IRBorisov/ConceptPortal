@@ -58,6 +58,7 @@ function DlgCstTemplate() {
 
   function handleSubmit() {
     onCreate(constituenta);
+    return true;
   }
 
   function handlePrompt(): boolean {

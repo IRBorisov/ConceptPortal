@@ -40,12 +40,17 @@ function DlgEditReference() {
   const [reference, setReference] = useState('');
   const [isValid, setIsValid] = useState(false);
 
+  function handleSubmit() {
+    onSave(reference);
+    return true;
+  }
+
   return (
     <Modal
       header='Редактирование ссылки'
       submitText='Сохранить ссылку'
       canSubmit={isValid}
-      onSubmit={() => onSave(reference)}
+      onSubmit={handleSubmit}
       className='w-[40rem] px-6 h-[32rem]'
       helpTopic={HelpTopic.TERM_CONTROL}
     >

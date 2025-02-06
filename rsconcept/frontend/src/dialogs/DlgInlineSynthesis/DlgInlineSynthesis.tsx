@@ -43,7 +43,7 @@ function DlgInlineSynthesis() {
 
   function handleSubmit() {
     if (!sourceID || selected.length === 0) {
-      return;
+      return true;
     }
     onInlineSynthesis({
       source: sourceID,
@@ -51,6 +51,7 @@ function DlgInlineSynthesis() {
       items: selected,
       substitutions: substitutions
     });
+    return true;
   }
 
   useEffect(() => {

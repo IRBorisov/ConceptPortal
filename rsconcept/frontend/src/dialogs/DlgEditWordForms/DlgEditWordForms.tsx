@@ -63,6 +63,7 @@ function DlgEditWordForms() {
       })
     );
     onSave(result);
+    return true;
   }
 
   function handleAddForm() {

@@ -17,11 +17,16 @@ function DlgGraphParams() {
   const { initial, onConfirm } = useDialogsStore(state => state.props as DlgGraphParamsProps);
   const [params, updateParams] = usePartialUpdate(initial);
 
+  function handleSubmit() {
+    onConfirm(params);
+    return true;
+  }
+
   return (
     <Modal
       canSubmit
       header='Настройки графа термов'
-      onSubmit={() => onConfirm(params)}
+      onSubmit={handleSubmit}
       submitText='Применить'
       className='flex gap-6 justify-between px-6 pb-3 w-[30rem]'
     >

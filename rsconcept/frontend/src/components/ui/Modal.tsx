@@ -33,11 +33,14 @@ export interface ModalProps extends CProps.Styling {
   /** Indicates that the modal window should be scrollable. */
   overflowVisible?: boolean;
 
+  /** ID of the form to be submitted. */
+  formID?: string;
+
   /** Callback to be called before submit. */
   beforeSubmit?: () => boolean;
 
   /** Callback to be called after submit. */
-  onSubmit?: () => void;
+  onSubmit?: () => boolean;
 
   /** Callback to be called after cancel. */
   onCancel?: () => void;
@@ -64,6 +67,7 @@ function Modal({
   overflowVisible,
 
   beforeSubmit,
+  formID,
   onSubmit,
   onCancel,
   className,
@@ -84,7 +88,15 @@ function Modal({
     if (beforeSubmit && !beforeSubmit()) {
       return;
     }
-    onSubmit?.();
+    if (onSubmit && !onSubmit()) {
+      return;
+    }
+    if (formID) {
+      const element = document.getElementById(formID) as HTMLFormElement;
+      if (element) {
+        element.requestSubmit();
+      }
+    }
     hideDialog();
   };
 

@@ -44,7 +44,7 @@ function EditorRSFormCard() {
         )}
       >
         <FlexColumn className='flex-shrink'>
-          <FormRSForm id={globals.library_item_editor} />
+          <FormRSForm />
           <EditorLibraryItem controller={controller} />
         </FlexColumn>
 

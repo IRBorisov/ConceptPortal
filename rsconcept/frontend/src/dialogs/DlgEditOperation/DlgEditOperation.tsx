@@ -119,6 +119,7 @@ function DlgEditOperation() {
       arguments: target.operation_type !== OperationType.SYNTHESIS ? undefined : inputs,
       substitutions: target.operation_type !== OperationType.SYNTHESIS ? undefined : substitutions
     });
+    return true;
   }
 
   return (

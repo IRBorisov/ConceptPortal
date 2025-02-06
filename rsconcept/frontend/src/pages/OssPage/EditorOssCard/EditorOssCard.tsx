@@ -45,7 +45,7 @@ function EditorOssCard() {
         )}
       >
         <FlexColumn className='px-3'>
-          <FormOSS id={globals.library_item_editor} />
+          <FormOSS />
           <EditorLibraryItem controller={controller} />
         </FlexColumn>
 

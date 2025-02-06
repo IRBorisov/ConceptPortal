@@ -57,7 +57,10 @@ export interface IVersionInfo {
 /**
  * Represents version data, intended to update version metadata in persistent storage.
  */
-export interface IVersionData extends Omit<IVersionInfo, 'id' | 'time_create' | 'item'> {}
+export interface IVersionData {
+  version: string;
+  description: string;
+}
 
 /**
  * Represents library item common data typical for all item types.

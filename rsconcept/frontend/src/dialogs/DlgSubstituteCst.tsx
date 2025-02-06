@@ -21,10 +21,8 @@ function DlgSubstituteCst() {
   const canSubmit = substitutions.length > 0;
 
   function handleSubmit() {
-    const data: ICstSubstitutions = {
-      substitutions: substitutions
-    };
-    onSubstitute(data);
+    onSubstitute({ substitutions: substitutions });
+    return true;
   }
 
   return (

@@ -30,7 +30,7 @@ export interface IRenameLocationDTO {
 /**
  * Represents data, used for cloning {@link IRSForm}.
  */
-export interface IRCloneLibraryItemDTO extends Omit<ILibraryItem, 'time_create' | 'time_update' | 'owner'> {
+export interface ICloneLibraryItemDTO extends Omit<ILibraryItem, 'time_create' | 'time_update' | 'owner'> {
   items?: ConstituentaID[];
 }
 
@@ -90,11 +90,16 @@ export type IUpdateLibraryItemDTO = z.infer<typeof UpdateLibraryItemSchema>;
 /**
  * Create version metadata in persistent storage.
  */
-export interface IVersionCreateDTO {
-  version: string;
-  description: string;
-  items?: ConstituentaID[];
-}
+export const CreateVersionSchema = z.object({
+  version: z.string(),
+  description: z.string(),
+  items: z.array(z.number()).optional()
+});
+
+/**
+ * Create version metadata in persistent storage.
+ */
+export type IVersionCreateDTO = z.infer<typeof CreateVersionSchema>;
 
 /**
  * Represents data response when creating {@link IVersionInfo}.
@@ -197,8 +202,8 @@ export const libraryApi = {
         successMessage: information.itemDestroyed
       }
     }),
-  cloneItem: (data: IRCloneLibraryItemDTO) =>
-    axiosPost<IRCloneLibraryItemDTO, IRSFormDTO>({
+  cloneItem: (data: ICloneLibraryItemDTO) =>
+    axiosPost<ICloneLibraryItemDTO, IRSFormDTO>({
       endpoint: `/api/library/${data.id}/clone`,
       request: {
         data: data,
@@ -214,8 +219,8 @@ export const libraryApi = {
       }
     }),
 
-  versionCreate: ({ itemID, data }: { itemID: LibraryItemID; data: IVersionData }) =>
-    axiosPost<IVersionData, IVersionCreatedResponse>({
+  versionCreate: ({ itemID, data }: { itemID: LibraryItemID; data: IVersionCreateDTO }) =>
+    axiosPost<IVersionCreateDTO, IVersionCreatedResponse>({
       endpoint: `/api/library/${itemID}/create-version`,
       request: {
         data: data,

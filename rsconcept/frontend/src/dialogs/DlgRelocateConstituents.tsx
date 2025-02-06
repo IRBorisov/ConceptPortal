@@ -76,13 +76,13 @@ function DlgRelocateConstituents() {
   }
 
   function handleSubmit() {
-    if (!destination) {
-      return;
+    if (destination) {
+      onSubmit({
+        destination: destination.id,
+        items: selected
+      });
     }
-    onSubmit({
-      destination: destination.id,
-      items: selected
-    });
+    return true;
   }
 
   return (

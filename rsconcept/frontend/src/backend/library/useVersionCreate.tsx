@@ -3,9 +3,9 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { DataCallback } from '@/backend/apiTransport';
 import { useUpdateTimestamp } from '@/backend/library/useUpdateTimestamp';
 import { rsformsApi } from '@/backend/rsform/api';
-import { IVersionData, LibraryItemID, VersionID } from '@/models/library';
+import { LibraryItemID, VersionID } from '@/models/library';
 
-import { libraryApi } from './api';
+import { IVersionCreateDTO, libraryApi } from './api';
 
 export const useVersionCreate = () => {
   const client = useQueryClient();
@@ -22,7 +22,7 @@ export const useVersionCreate = () => {
     versionCreate: (
       data: {
         itemID: LibraryItemID; //
-        data: IVersionData;
+        data: IVersionCreateDTO;
       },
       onSuccess?: DataCallback<VersionID>
     ) => mutation.mutate(data, { onSuccess: response => onSuccess?.(response.version) })
