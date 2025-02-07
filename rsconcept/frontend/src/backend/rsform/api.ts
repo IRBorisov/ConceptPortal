@@ -94,11 +94,16 @@ export type ICstUpdateDTO = z.infer<typeof CstUpdateSchema>;
 /**
  * Represents data, used in renaming {@link IConstituenta}.
  */
-export interface ICstRenameDTO {
-  alias: string;
-  cst_type: CstType;
-  target: ConstituentaID;
-}
+export const CstRenameSchema = z.object({
+  target: z.number(),
+  alias: z.string(),
+  cst_type: z.nativeEnum(CstType)
+});
+
+/**
+ * Represents data, used in renaming {@link IConstituenta}.
+ */
+export type ICstRenameDTO = z.infer<typeof CstRenameSchema>;
 
 /**
  * Represents data, used in ordering a list of {@link IConstituenta}.

@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import clsx from 'clsx';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 
-import { VersionCreateSchema, IVersionCreateDTO } from '@/backend/library/api';
+import { IVersionCreateDTO, VersionCreateSchema } from '@/backend/library/api';
 import { useVersionCreate } from '@/backend/library/useVersionCreate';
 import { Checkbox, TextArea, TextInput } from '@/components/ui/Input';
 import { ModalForm } from '@/components/ui/Modal';

@@ -1,14 +1,15 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
 import clsx from 'clsx';
-import { useEffect, useState } from 'react';
+import { useForm, useWatch } from 'react-hook-form';
 
-import { ICstRenameDTO } from '@/backend/rsform/api';
+import { CstRenameSchema, ICstRenameDTO } from '@/backend/rsform/api';
+import { useCstRename } from '@/backend/rsform/useCstRename';
 import { SelectSingle, TextInput } from '@/components/ui/Input';
 import { ModalForm } from '@/components/ui/Modal';
-import usePartialUpdate from '@/hooks/usePartialUpdate';
 import { HelpTopic } from '@/models/miscellaneous';
-import { CstType, IRSForm } from '@/models/rsform';
+import { CstType, IConstituenta, IRSForm } from '@/models/rsform';
 import { generateAlias, validateNewAlias } from '@/models/rsformAPI';
 import { useDialogsStore } from '@/stores/dialogs';
 import { labelCstType } from '@/utils/labels';
@@ -16,29 +17,35 @@ import { SelectorCstType } from '@/utils/selectors';
 
 export interface DlgRenameCstProps {
   schema: IRSForm;
-  initial: ICstRenameDTO;
-  allowChangeType: boolean;
-  onRename: (data: ICstRenameDTO) => void;
+  target: IConstituenta;
 }
 
 function DlgRenameCst() {
-  const { schema, initial, allowChangeType, onRename } = useDialogsStore(state => state.props as DlgRenameCstProps);
-  const [validated, setValidated] = useState(false);
-  const [cstData, updateData] = usePartialUpdate(initial);
+  const { schema, target } = useDialogsStore(state => state.props as DlgRenameCstProps);
+  const { cstRename } = useCstRename();
 
-  useEffect(() => {
-    if (initial && cstData.cst_type !== initial.cst_type) {
-      updateData({ alias: generateAlias(cstData.cst_type, schema) });
+  const { register, setValue, handleSubmit, control } = useForm<ICstRenameDTO>({
+    resolver: zodResolver(CstRenameSchema),
+    defaultValues: {
+      target: target.id,
+      alias: target.alias,
+      cst_type: target.cst_type
     }
-  }, [initial, cstData.cst_type, updateData, schema]);
+  });
+  const alias = useWatch({ control, name: 'alias' });
+  const cst_type = useWatch({ control, name: 'cst_type' });
 
-  useEffect(() => {
-    setValidated(cstData.alias !== initial.alias && validateNewAlias(cstData.alias, cstData.cst_type, schema));
-  }, [cstData.cst_type, cstData.alias, initial, schema]);
+  // TODO: validate in ZOD
+  const validated = alias !== target.alias && validateNewAlias(alias, cst_type, schema);
 
-  function handleSubmit() {
-    onRename(cstData);
-    return true;
+  function onSubmit(data: ICstRenameDTO) {
+    console.log(data);
+    cstRename({ itemID: schema.id, data: data });
+  }
+
+  function handleChangeType(newType: CstType) {
+    setValue('alias', generateAlias(newType, schema));
+    setValue('cst_type', newType);
   }
 
   return (
@@ -47,7 +54,7 @@ function DlgRenameCst() {
       submitText='Переименовать'
       submitInvalidTooltip='Введите незанятое имя, соответствующее типу'
       canSubmit={validated}
-      onSubmit={handleSubmit}
+      onSubmit={event => void handleSubmit(onSubmit)(event)}
       className={clsx('w-[30rem]', 'py-6 pr-3 pl-6 flex gap-3 justify-center items-center ')}
       helpTopic={HelpTopic.CC_CONSTITUENTA}
     >
@@ -55,22 +62,20 @@ function DlgRenameCst() {
         id='dlg_cst_type'
         placeholder='Выберите тип'
         className='min-w-[16rem]'
-        isDisabled={!allowChangeType}
+        isDisabled={target.is_inherited}
         options={SelectorCstType}
         value={{
-          value: cstData.cst_type,
-          label: labelCstType(cstData.cst_type)
+          value: cst_type,
+          label: labelCstType(cst_type)
         }}
-        onChange={data => updateData({ cst_type: data?.value ?? CstType.BASE })}
+        onChange={data => handleChangeType(data?.value ?? CstType.BASE)}
       />
-
       <TextInput
-        id='dlg_cst_alias'
+        id='dlg_cst_alias' //
+        {...register('alias')}
         dense
         label='Имя'
         className='w-[7rem]'
-        value={cstData.alias}
-        onChange={event => updateData({ alias: event.target.value })}
       />
     </ModalForm>
   );

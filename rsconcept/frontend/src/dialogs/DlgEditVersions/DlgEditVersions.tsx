@@ -16,6 +16,7 @@ import { TextArea, TextInput } from '@/components/ui/Input';
 import { ModalView } from '@/components/ui/Modal';
 import { LibraryItemID, VersionID } from '@/models/library';
 import { useDialogsStore } from '@/stores/dialogs';
+import { errors } from '@/utils/labels';
 
 import TableVersions from './TableVersions';
 
@@ -37,14 +38,15 @@ function DlgEditVersions() {
     handleSubmit,
     control,
     reset,
-    formState: { isDirty }
+    formState: { isDirty, errors: formErrors }
   } = useForm<IVersionUpdateDTO>({
     resolver: zodResolver(VersionUpdateSchema),
     defaultValues: {
       id: schema.versions[0].id,
       version: schema.versions[0].version,
       description: schema.versions[0].description
-    }
+    },
+    context: { schema: schema }
   });
   const versionID = useWatch({ control, name: 'id' });
   const versionName = useWatch({ control, name: 'version' });
@@ -92,11 +94,18 @@ function DlgEditVersions() {
       />
 
       <form className='flex' onSubmit={event => void handleSubmit(onUpdate)(event)}>
-        <TextInput id='dlg_version' {...register('version')} dense label='Версия' className='w-[16rem] mr-3' />
+        <TextInput
+          id='dlg_version'
+          {...register('version')}
+          dense
+          label='Версия'
+          className='w-[16rem] mr-3'
+          error={formErrors.version}
+        />
         <div className='cc-icons'>
           <MiniButton
             type='submit'
-            title='Сохранить изменения'
+            title={isValid ? 'Сохранить изменения' : errors.versionTaken}
             disabled={!isDirty || !isValid || isProcessing}
             icon={<IconSave size='1.25rem' className='icon-primary' />}
           />

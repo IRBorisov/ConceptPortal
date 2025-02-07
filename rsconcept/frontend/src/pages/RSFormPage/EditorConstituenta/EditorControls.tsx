@@ -1,7 +1,5 @@
 import clsx from 'clsx';
 
-import { ICstRenameDTO } from '@/backend/rsform/api';
-import { useCstRename } from '@/backend/rsform/useCstRename';
 import { useMutatingRSForm } from '@/backend/rsform/useMutatingRSForm';
 import { IconEdit } from '@/components/Icons';
 import { Overlay } from '@/components/ui/Container';
@@ -16,7 +14,6 @@ import { useRSEdit } from '../RSEditContext';
 interface EditorControlsProps {
   constituenta: IConstituenta;
   disabled: boolean;
-
   onEditTerm: () => void;
 }
 
@@ -26,20 +23,9 @@ function EditorControls({ constituenta, disabled, onEditTerm }: EditorControlsPr
   const isProcessing = useMutatingRSForm();
 
   const showRenameCst = useDialogsStore(state => state.showRenameCst);
-  const { cstRename } = useCstRename();
 
   function handleRenameCst() {
-    const initialData: ICstRenameDTO = {
-      target: constituenta.id,
-      alias: constituenta.alias,
-      cst_type: constituenta.cst_type
-    };
-    showRenameCst({
-      schema: schema,
-      initial: initialData,
-      allowChangeType: !constituenta.is_inherited,
-      onRename: data => cstRename({ itemID: schema.id, data })
-    });
+    showRenameCst({ schema: schema, target: constituenta });
   }
 
   return (
