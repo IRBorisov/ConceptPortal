@@ -4,6 +4,9 @@ import { CProps } from '@/components/props';
 import { globals } from '@/utils/constants';
 
 interface MiniButtonProps extends CProps.Button {
+  /** Button type. */
+  type?: 'button' | 'submit';
+
   /** Icon to display in the button. */
   icon: React.ReactNode;
 
@@ -25,12 +28,13 @@ export function MiniButton({
   title,
   titleHtml,
   hideTitle,
+  type = 'button',
   className,
   ...restProps
 }: MiniButtonProps) {
   return (
     <button
-      type='button'
+      type={type}
       tabIndex={tabIndex ?? -1}
       className={clsx(
         'rounded-lg',

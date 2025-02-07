@@ -48,7 +48,7 @@ function ToolbarVersioning({ blockReload }: ToolbarVersioningProps) {
 
   function handleEditVersions() {
     showEditVersions({
-      item: controller.schema,
+      itemID: controller.schema.id,
       afterDelete: targetVersion => {
         if (targetVersion === controller.activeVersion) controller.navigateVersion(undefined);
       }

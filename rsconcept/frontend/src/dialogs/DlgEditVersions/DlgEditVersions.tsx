@@ -1,108 +1,119 @@
+'use no memo'; // TODO: remove when react hook forms are compliant with react compiler
 'use client';
 
-import { useEffect, useState } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useMemo } from 'react';
+import { useForm, useWatch } from 'react-hook-form';
 
+import { IVersionUpdateDTO, VersionUpdateSchema } from '@/backend/library/api';
 import { useMutatingLibrary } from '@/backend/library/useMutatingLibrary';
 import { useVersionDelete } from '@/backend/library/useVersionDelete';
 import { useVersionUpdate } from '@/backend/library/useVersionUpdate';
+import { useRSFormSuspense } from '@/backend/rsform/useRSForm';
 import { IconReset, IconSave } from '@/components/Icons';
 import { MiniButton } from '@/components/ui/Control';
 import { TextArea, TextInput } from '@/components/ui/Input';
 import { ModalView } from '@/components/ui/Modal';
-import { ILibraryItemVersioned, IVersionInfo, VersionID } from '@/models/library';
+import { LibraryItemID, VersionID } from '@/models/library';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import TableVersions from './TableVersions';
 
 export interface DlgEditVersionsProps {
-  item: ILibraryItemVersioned;
+  itemID: LibraryItemID;
   afterDelete: (targetVersion: VersionID) => void;
 }
 
 function DlgEditVersions() {
-  const { item, afterDelete } = useDialogsStore(state => state.props as DlgEditVersionsProps);
-  const processing = useMutatingLibrary();
+  const { itemID, afterDelete } = useDialogsStore(state => state.props as DlgEditVersionsProps);
+  const hideDialog = useDialogsStore(state => state.hideDialog);
+  const { schema } = useRSFormSuspense({ itemID });
+  const isProcessing = useMutatingLibrary();
   const { versionDelete } = useVersionDelete();
   const { versionUpdate } = useVersionUpdate();
 
-  const [selected, setSelected] = useState<IVersionInfo | undefined>(undefined);
-  const [version, setVersion] = useState('');
-  const [description, setDescription] = useState('');
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    formState: { isDirty }
+  } = useForm<IVersionUpdateDTO>({
+    resolver: zodResolver(VersionUpdateSchema),
+    defaultValues: {
+      id: schema.versions[0].id,
+      version: schema.versions[0].version,
+      description: schema.versions[0].description
+    }
+  });
+  const versionID = useWatch({ control, name: 'id' });
+  const versionName = useWatch({ control, name: 'version' });
 
-  const isValid = selected && item.versions.every(ver => ver.id === selected.id || ver.version != version);
-  const isModified = selected && (selected.version != version || selected.description != description);
+  const isValid = useMemo(
+    () => schema.versions.every(ver => ver.id === versionID || ver.version != versionName),
+    [schema, versionID, versionName]
+  );
 
-  function handleDeleteVersion(targetVersion: VersionID) {
-    versionDelete({ itemID: item.id, versionID: targetVersion }, () => afterDelete(targetVersion));
-  }
-
-  function handleUpdate() {
-    if (!isModified || !selected || processing || !isValid) {
+  function handleSelectVersion(targetVersion: VersionID) {
+    const ver = schema.versions.find(ver => ver.id === targetVersion);
+    if (!ver) {
       return;
     }
-    versionUpdate({
-      versionID: selected.id,
-      data: {
-        version: version,
-        description: description
+    reset({ ...ver });
+  }
+
+  function handleDeleteVersion(targetVersion: VersionID) {
+    const nextVer = schema.versions.find(ver => ver.id !== targetVersion);
+    versionDelete({ itemID: itemID, versionID: targetVersion }, () => {
+      if (!nextVer) {
+        hideDialog();
+      } else if (targetVersion === versionID) {
+        reset({ id: nextVer.id, version: nextVer.version, description: nextVer.description });
       }
+      afterDelete(targetVersion);
     });
   }
 
-  function handleReset() {
-    if (!selected) {
-      return false;
+  function onUpdate(data: IVersionUpdateDTO) {
+    if (!isDirty || isProcessing || !isValid) {
+      return;
     }
-    setVersion(selected?.version ?? '');
-    setDescription(selected?.description ?? '');
+    versionUpdate(data, () => reset({ ...data }));
   }
-
-  useEffect(() => {
-    setVersion(selected?.version ?? '');
-    setDescription(selected?.description ?? '');
-  }, [selected]);
 
   return (
     <ModalView header='Редактирование версий' className='flex flex-col w-[40rem] px-6 gap-3 pb-6'>
       <TableVersions
-        processing={processing}
-        items={item.versions}
+        processing={isProcessing}
+        items={schema.versions}
         onDelete={handleDeleteVersion}
-        onSelect={versionID => setSelected(item.versions.find(ver => ver.id === versionID))}
-        selected={selected?.id}
+        onSelect={handleSelectVersion}
+        selected={versionID}
       />
 
-      <div className='flex'>
-        <TextInput
-          id='dlg_version'
-          dense
-          label='Версия'
-          className='w-[16rem] mr-3'
-          value={version}
-          onChange={event => setVersion(event.target.value)}
-        />
+      <form className='flex' onSubmit={event => void handleSubmit(onUpdate)(event)}>
+        <TextInput id='dlg_version' {...register('version')} dense label='Версия' className='w-[16rem] mr-3' />
         <div className='cc-icons'>
           <MiniButton
+            type='submit'
             title='Сохранить изменения'
-            disabled={!isModified || !isValid || processing}
+            disabled={!isDirty || !isValid || isProcessing}
             icon={<IconSave size='1.25rem' className='icon-primary' />}
-            onClick={handleUpdate}
           />
           <MiniButton
             title='Сбросить несохраненные изменения'
-            disabled={!isModified}
-            onClick={handleReset}
+            disabled={!isDirty}
+            onClick={() => reset()}
             icon={<IconReset size='1.25rem' className='icon-primary' />}
           />
         </div>
-      </div>
+      </form>
       <TextArea
-        id='dlg_description'
+        id='dlg_description' //
+        {...register('description')}
         spellCheck
         label='Описание'
         rows={3}
-        value={description}
-        onChange={event => setDescription(event.target.value)}
       />
     </ModalView>
   );

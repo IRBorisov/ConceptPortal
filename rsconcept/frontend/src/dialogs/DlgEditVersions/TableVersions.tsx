@@ -21,6 +21,13 @@ const columnHelper = createColumnHelper<IVersionInfo>();
 
 function TableVersions({ processing, items, onDelete, selected, onSelect }: TableVersionsProps) {
   const intl = useIntl();
+
+  function handleDeleteVersion(event: React.MouseEvent, targetVersion: VersionID) {
+    event.preventDefault();
+    event.stopPropagation();
+    onDelete(targetVersion);
+  }
+
   const columns = [
     columnHelper.accessor('version', {
       id: 'version',
@@ -61,7 +68,7 @@ function TableVersions({ processing, items, onDelete, selected, onSelect }: Tabl
             noPadding
             disabled={processing}
             icon={<IconRemove size='1.25rem' className='icon-red' />}
-            onClick={() => onDelete(props.row.original.id)}
+            onClick={event => handleDeleteVersion(event, props.row.original.id)}
           />
         </div>
       )

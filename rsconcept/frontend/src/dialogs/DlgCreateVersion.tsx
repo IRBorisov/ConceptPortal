@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import clsx from 'clsx';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 
-import { CreateVersionSchema, IVersionCreateDTO } from '@/backend/library/api';
+import { VersionCreateSchema, IVersionCreateDTO } from '@/backend/library/api';
 import { useVersionCreate } from '@/backend/library/useVersionCreate';
 import { Checkbox, TextArea, TextInput } from '@/components/ui/Input';
 import { ModalForm } from '@/components/ui/Modal';
@@ -33,7 +33,7 @@ function DlgCreateVersion() {
   const { versionCreate } = useVersionCreate();
 
   const { register, handleSubmit, control } = useForm<IVersionCreateDTO>({
-    resolver: zodResolver(CreateVersionSchema),
+    resolver: zodResolver(VersionCreateSchema),
     defaultValues: {
       version: versions.length > 0 ? nextVersion(versions[0].version) : '1.0.0',
       description: '',

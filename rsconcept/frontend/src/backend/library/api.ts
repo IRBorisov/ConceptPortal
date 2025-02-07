@@ -5,15 +5,7 @@ import { axiosDelete, axiosGet, axiosPatch, axiosPost } from '@/backend/apiTrans
 import { DELAYS } from '@/backend/configuration';
 import { ossApi } from '@/backend/oss/api';
 import { IRSFormDTO, rsformsApi } from '@/backend/rsform/api';
-import {
-  AccessPolicy,
-  ILibraryItem,
-  IVersionData,
-  IVersionInfo,
-  LibraryItemID,
-  LibraryItemType,
-  VersionID
-} from '@/models/library';
+import { AccessPolicy, ILibraryItem, IVersionInfo, LibraryItemID, LibraryItemType, VersionID } from '@/models/library';
 import { validateLocation } from '@/models/libraryAPI';
 import { ConstituentaID } from '@/models/rsform';
 import { UserID } from '@/models/user';
@@ -90,7 +82,7 @@ export type IUpdateLibraryItemDTO = z.infer<typeof UpdateLibraryItemSchema>;
 /**
  * Create version metadata in persistent storage.
  */
-export const CreateVersionSchema = z.object({
+export const VersionCreateSchema = z.object({
   version: z.string(),
   description: z.string(),
   items: z.array(z.number()).optional()
@@ -99,7 +91,7 @@ export const CreateVersionSchema = z.object({
 /**
  * Create version metadata in persistent storage.
  */
-export type IVersionCreateDTO = z.infer<typeof CreateVersionSchema>;
+export type IVersionCreateDTO = z.infer<typeof VersionCreateSchema>;
 
 /**
  * Represents data response when creating {@link IVersionInfo}.
@@ -108,6 +100,20 @@ export interface IVersionCreatedResponse {
   version: number;
   schema: IRSFormDTO;
 }
+
+/**
+ * Represents version data, intended to update version metadata in persistent storage.
+ */
+export const VersionUpdateSchema = z.object({
+  id: z.number(),
+  version: z.string().nonempty(errors.requiredField),
+  description: z.string()
+});
+
+/**
+ * Represents version data, intended to update version metadata in persistent storage.
+ */
+export type IVersionUpdateDTO = z.infer<typeof VersionUpdateSchema>;
 
 export const libraryApi = {
   baseKey: 'library',
@@ -234,9 +240,9 @@ export const libraryApi = {
         successMessage: information.versionRestored
       }
     }),
-  versionUpdate: ({ versionID, data }: { versionID: VersionID; data: IVersionData }) =>
-    axiosPatch<IVersionData, IVersionInfo>({
-      endpoint: `/api/versions/${versionID}`,
+  versionUpdate: (data: IVersionUpdateDTO) =>
+    axiosPatch<IVersionUpdateDTO, IVersionInfo>({
+      endpoint: `/api/versions/${data.id}`,
       request: {
         data: data,
         successMessage: information.changesSaved

@@ -1,9 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { IRSFormDTO, rsformsApi } from '@/backend/rsform/api';
-import { IVersionData, VersionID } from '@/models/library';
 
-import { libraryApi } from './api';
+import { IVersionUpdateDTO, libraryApi } from './api';
 
 export const useVersionUpdate = () => {
   const client = useQueryClient();
@@ -28,6 +27,6 @@ export const useVersionUpdate = () => {
     }
   });
   return {
-    versionUpdate: (data: { versionID: VersionID; data: IVersionData }) => mutation.mutate(data)
+    versionUpdate: (data: IVersionUpdateDTO, onSuccess?: () => void) => mutation.mutate(data, { onSuccess })
   };
 };
