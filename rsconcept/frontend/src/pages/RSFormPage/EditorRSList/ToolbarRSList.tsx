@@ -11,11 +11,9 @@ import {
 } from '@/components/Icons';
 import BadgeHelp from '@/components/info/BadgeHelp';
 import MiniSelectorOSS from '@/components/select/MiniSelectorOSS';
-import Dropdown from '@/components/ui/Dropdown';
-import DropdownButton from '@/components/ui/DropdownButton';
-import MiniButton from '@/components/ui/MiniButton';
-import Overlay from '@/components/ui/Overlay';
-import useDropdown from '@/hooks/useDropdown';
+import { Overlay } from '@/components/ui/Container';
+import { MiniButton } from '@/components/ui/Control';
+import { Dropdown, DropdownButton, useDropdown } from '@/components/ui/Dropdown';
 import { HelpTopic } from '@/models/miscellaneous';
 import { CstType } from '@/models/rsform';
 import { prefixes } from '@/utils/constants';

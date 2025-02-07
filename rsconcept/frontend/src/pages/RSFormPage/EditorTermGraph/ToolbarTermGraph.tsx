@@ -15,7 +15,7 @@ import {
 } from '@/components/Icons';
 import BadgeHelp from '@/components/info/BadgeHelp';
 import MiniSelectorOSS from '@/components/select/MiniSelectorOSS';
-import MiniButton from '@/components/ui/MiniButton';
+import { MiniButton } from '@/components/ui/Control';
 import { HelpTopic } from '@/models/miscellaneous';
 import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER } from '@/utils/constants';

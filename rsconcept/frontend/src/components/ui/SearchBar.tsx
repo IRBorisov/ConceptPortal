@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import { IconSearch } from '@/components/Icons';
 import { CProps } from '@/components/props';
 
-import Overlay from './Overlay';
-import TextInput from './TextInput';
+import { Overlay } from './Container';
+import { TextInput } from './Input';
 
 interface SearchBarProps extends CProps.Styling {
   /** Id of the search bar. */
@@ -29,7 +29,7 @@ interface SearchBarProps extends CProps.Styling {
 /**
  * Displays a search bar with a search icon and text input.
  */
-function SearchBar({
+export function SearchBar({
   id,
   query,
   noIcon,
@@ -58,5 +58,3 @@ function SearchBar({
     </div>
   );
 }
-
-export default SearchBar;

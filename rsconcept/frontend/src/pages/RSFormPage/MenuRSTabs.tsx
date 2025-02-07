@@ -37,11 +37,9 @@ import {
   IconTemplates,
   IconUpload
 } from '@/components/Icons';
-import Button from '@/components/ui/Button';
-import Divider from '@/components/ui/Divider';
-import Dropdown from '@/components/ui/Dropdown';
-import DropdownButton from '@/components/ui/DropdownButton';
-import useDropdown from '@/hooks/useDropdown';
+import { Divider } from '@/components/ui/Container';
+import { Button } from '@/components/ui/Control';
+import { Dropdown, DropdownButton, useDropdown } from '@/components/ui/Dropdown';
 import { AccessPolicy, LocationHead } from '@/models/library';
 import { CstType } from '@/models/rsform';
 import { UserRole } from '@/models/user';

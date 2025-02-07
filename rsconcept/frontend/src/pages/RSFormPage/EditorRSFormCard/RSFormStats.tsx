@@ -19,7 +19,7 @@ import {
   IconStatusProperty,
   IconTerminology
 } from '@/components/Icons';
-import ValueStats from '@/components/ui/ValueStats';
+import { ValueStats } from '@/components/ui/View';
 import { type IRSFormStats } from '@/models/rsform';
 
 interface RSFormStatsProps {

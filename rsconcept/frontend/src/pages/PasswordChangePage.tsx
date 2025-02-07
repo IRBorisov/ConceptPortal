@@ -8,9 +8,9 @@ import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
 import { useResetPassword } from '@/backend/auth/useResetPassword';
 import InfoError, { ErrorData } from '@/components/info/InfoError';
+import { SubmitButton } from '@/components/ui/Control';
+import { TextInput } from '@/components/ui/Input';
 import Loader from '@/components/ui/Loader';
-import SubmitButton from '@/components/ui/SubmitButton';
-import TextInput from '@/components/ui/TextInput';
 import useQueryStrings from '@/hooks/useQueryStrings';
 
 export function Component() {

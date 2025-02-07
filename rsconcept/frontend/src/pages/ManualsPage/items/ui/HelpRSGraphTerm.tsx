@@ -19,8 +19,8 @@ import {
   IconText,
   IconTypeGraph
 } from '@/components/Icons';
-import Divider from '@/components/ui/Divider';
-import LinkTopic from '@/components/ui/LinkTopic';
+import { Divider } from '@/components/ui/Container';
+import { LinkTopic } from '@/components/ui/Control';
 import { HelpTopic } from '@/models/miscellaneous';
 import { APP_COLORS } from '@/styling/color';
 

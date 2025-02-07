@@ -1,8 +1,8 @@
 'use client';
 
 import PickMultiOperation from '@/components/select/PickMultiOperation';
-import FlexColumn from '@/components/ui/FlexColumn';
-import Label from '@/components/ui/Label';
+import { FlexColumn } from '@/components/ui/Container';
+import { Label } from '@/components/ui/Input';
 import { IOperationSchema, OperationID } from '@/models/oss';
 
 interface TabArgumentsProps {

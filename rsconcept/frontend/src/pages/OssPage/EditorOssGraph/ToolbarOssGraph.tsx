@@ -19,7 +19,7 @@ import {
   IconSave
 } from '@/components/Icons';
 import BadgeHelp from '@/components/info/BadgeHelp';
-import MiniButton from '@/components/ui/MiniButton';
+import { MiniButton } from '@/components/ui/Control';
 import { HelpTopic } from '@/models/miscellaneous';
 import { OperationType } from '@/models/oss';
 import { useModificationStore } from '@/stores/modification';

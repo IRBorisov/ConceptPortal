@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import TextURL from '@/components/ui/TextURL';
+import { TextURL } from '@/components/ui/Control';
 import { external_urls } from '@/utils/constants';
 
 function Footer() {

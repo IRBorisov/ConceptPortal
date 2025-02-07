@@ -6,10 +6,10 @@ import { toast } from 'react-toastify';
 
 import { useMutatingRSForm } from '@/backend/rsform/useMutatingRSForm';
 import { IconCSV } from '@/components/Icons';
+import { Overlay } from '@/components/ui/Container';
+import { MiniButton } from '@/components/ui/Control';
 import { type RowSelectionState } from '@/components/ui/DataTable';
-import MiniButton from '@/components/ui/MiniButton';
-import Overlay from '@/components/ui/Overlay';
-import SearchBar from '@/components/ui/SearchBar';
+import { SearchBar } from '@/components/ui/SearchBar';
 import { CstMatchMode } from '@/models/miscellaneous';
 import { ConstituentaID, CstType } from '@/models/rsform';
 import { matchConstituenta } from '@/models/rsformAPI';

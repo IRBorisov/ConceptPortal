@@ -3,7 +3,7 @@
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import Checkbox from '@/components/ui/Checkbox';
+import { Checkbox } from '@/components/ui/Input';
 import { ModalForm } from '@/components/ui/Modal';
 import { ConstituentaID, IRSForm } from '@/models/rsform';
 import { useDialogsStore } from '@/stores/dialogs';

@@ -1,8 +1,6 @@
 import PickMultiOperation from '@/components/select/PickMultiOperation';
-import FlexColumn from '@/components/ui/FlexColumn';
-import Label from '@/components/ui/Label';
-import TextArea from '@/components/ui/TextArea';
-import TextInput from '@/components/ui/TextInput';
+import { FlexColumn } from '@/components/ui/Container';
+import { Label, TextArea, TextInput } from '@/components/ui/Input';
 import { IOperationSchema, OperationID } from '@/models/oss';
 
 interface TabSynthesisOperationProps {

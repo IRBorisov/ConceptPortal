@@ -4,9 +4,8 @@ import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
 import { ICstRenameDTO } from '@/backend/rsform/api';
+import { SelectSingle, TextInput } from '@/components/ui/Input';
 import { ModalForm } from '@/components/ui/Modal';
-import SelectSingle from '@/components/ui/SelectSingle';
-import TextInput from '@/components/ui/TextInput';
 import usePartialUpdate from '@/hooks/usePartialUpdate';
 import { HelpTopic } from '@/models/miscellaneous';
 import { CstType, IRSForm } from '@/models/rsform';

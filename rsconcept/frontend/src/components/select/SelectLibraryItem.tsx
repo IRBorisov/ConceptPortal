@@ -3,7 +3,7 @@
 import clsx from 'clsx';
 
 import { CProps } from '@/components/props';
-import SelectSingle from '@/components/ui/SelectSingle';
+import { SelectSingle } from '@/components/ui/Input';
 import { ILibraryItem, LibraryItemID } from '@/models/library';
 import { matchLibraryItem } from '@/models/libraryAPI';
 

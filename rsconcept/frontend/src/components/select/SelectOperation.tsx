@@ -3,7 +3,7 @@
 import clsx from 'clsx';
 
 import { CProps } from '@/components/props';
-import SelectSingle from '@/components/ui/SelectSingle';
+import { SelectSingle } from '@/components/ui/Input';
 import { IOperation, OperationID } from '@/models/oss';
 import { matchOperation } from '@/models/ossAPI';
 

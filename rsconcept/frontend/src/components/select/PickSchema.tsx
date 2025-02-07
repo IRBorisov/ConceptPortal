@@ -4,12 +4,11 @@ import { useIntl } from 'react-intl';
 
 import { IconClose, IconFolderTree } from '@/components/Icons';
 import { CProps } from '@/components/props';
+import { FlexColumn } from '@/components/ui/Container';
+import { MiniButton } from '@/components/ui/Control';
 import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/ui/DataTable';
-import Dropdown from '@/components/ui/Dropdown';
-import FlexColumn from '@/components/ui/FlexColumn';
-import MiniButton from '@/components/ui/MiniButton';
-import SearchBar from '@/components/ui/SearchBar';
-import useDropdown from '@/hooks/useDropdown';
+import { Dropdown, useDropdown } from '@/components/ui/Dropdown';
+import { SearchBar } from '@/components/ui/SearchBar';
 import { ILibraryItem, LibraryItemID, LibraryItemType } from '@/models/library';
 import { matchLibraryItem } from '@/models/libraryAPI';
 import { APP_COLORS } from '@/styling/color';

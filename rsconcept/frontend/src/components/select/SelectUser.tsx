@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { useLabelUser } from '@/backend/users/useLabelUser';
 import { useUsers } from '@/backend/users/useUsers';
 import { CProps } from '@/components/props';
-import SelectSingle from '@/components/ui/SelectSingle';
+import { SelectSingle } from '@/components/ui/Input';
 import { UserID } from '@/models/user';
 import { matchUser } from '@/models/userAPI';
 

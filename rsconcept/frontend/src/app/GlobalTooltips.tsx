@@ -1,8 +1,8 @@
 'use client';
 
 import InfoConstituenta from '@/components/info/InfoConstituenta';
+import { Tooltip } from '@/components/ui/Container';
 import Loader from '@/components/ui/Loader';
-import Tooltip from '@/components/ui/Tooltip';
 import { useTooltipsStore } from '@/stores/tooltips';
 import { globals } from '@/utils/constants';
 

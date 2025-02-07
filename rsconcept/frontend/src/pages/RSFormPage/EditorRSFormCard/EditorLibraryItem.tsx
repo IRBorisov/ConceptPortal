@@ -19,12 +19,11 @@ import {
 import InfoUsers from '@/components/info/InfoUsers';
 import { CProps } from '@/components/props';
 import SelectUser from '@/components/select/SelectUser';
+import { Overlay, Tooltip } from '@/components/ui/Container';
+import { MiniButton } from '@/components/ui/Control';
+import { useDropdown } from '@/components/ui/Dropdown';
 import Loader from '@/components/ui/Loader';
-import MiniButton from '@/components/ui/MiniButton';
-import Overlay from '@/components/ui/Overlay';
-import Tooltip from '@/components/ui/Tooltip';
-import ValueIcon from '@/components/ui/ValueIcon';
-import useDropdown from '@/hooks/useDropdown';
+import { ValueIcon } from '@/components/ui/View';
 import { ILibraryItemEditor } from '@/models/library';
 import { UserID, UserRole } from '@/models/user';
 import { useDialogsStore } from '@/stores/dialogs';

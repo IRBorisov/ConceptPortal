@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { ReactFlowProvider } from 'reactflow';
 
+import { Overlay } from '@/components/ui/Container';
 import { ModalView } from '@/components/ui/Modal';
-import Overlay from '@/components/ui/Overlay';
 import { HelpTopic } from '@/models/miscellaneous';
 import { SyntaxTree } from '@/models/rslang';
 import { useDialogsStore } from '@/stores/dialogs';

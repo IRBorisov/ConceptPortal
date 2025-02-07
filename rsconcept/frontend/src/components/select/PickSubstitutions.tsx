@@ -8,9 +8,9 @@ import { IconAccept, IconPageLeft, IconPageRight, IconRemove, IconReplace } from
 import BadgeConstituenta from '@/components/info/BadgeConstituenta';
 import { CProps } from '@/components/props';
 import SelectConstituenta from '@/components/select/SelectConstituenta';
+import { MiniButton } from '@/components/ui/Control';
 import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/ui/DataTable';
-import MiniButton from '@/components/ui/MiniButton';
-import NoData from '@/components/ui/NoData';
+import { NoData } from '@/components/ui/View';
 import { ILibraryItem } from '@/models/library';
 import { ICstSubstitute, IMultiSubstitution } from '@/models/oss';
 import { ConstituentaID, IConstituenta, IRSForm } from '@/models/rsform';

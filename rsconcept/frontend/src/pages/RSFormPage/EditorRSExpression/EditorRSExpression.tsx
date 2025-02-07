@@ -13,7 +13,7 @@ import { CProps } from '@/components/props';
 import RSInput from '@/components/RSInput';
 import { parser as rslangParser } from '@/components/RSInput/rslang/parserAST';
 import { RSTextWrapper } from '@/components/RSInput/textEditing';
-import Overlay from '@/components/ui/Overlay';
+import { Overlay } from '@/components/ui/Container';
 import { HelpTopic } from '@/models/miscellaneous';
 import { ConstituentaID, IConstituenta } from '@/models/rsform';
 import { getDefinitionPrefix } from '@/models/rsformAPI';

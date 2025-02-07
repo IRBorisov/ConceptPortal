@@ -2,10 +2,8 @@
 
 import { PolicyIcon } from '@/components/DomainIcons';
 import { CProps } from '@/components/props';
-import Dropdown from '@/components/ui/Dropdown';
-import DropdownButton from '@/components/ui/DropdownButton';
-import MiniButton from '@/components/ui/MiniButton';
-import useDropdown from '@/hooks/useDropdown';
+import { MiniButton } from '@/components/ui/Control';
+import { Dropdown, DropdownButton, useDropdown } from '@/components/ui/Dropdown';
 import { AccessPolicy } from '@/models/library';
 import { prefixes } from '@/utils/constants';
 import { describeAccessPolicy, labelAccessPolicy } from '@/utils/labels';

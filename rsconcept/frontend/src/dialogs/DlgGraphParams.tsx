@@ -1,6 +1,6 @@
 'use client';
 
-import Checkbox from '@/components/ui/Checkbox';
+import { Checkbox } from '@/components/ui/Input';
 import { ModalForm } from '@/components/ui/Modal';
 import usePartialUpdate from '@/hooks/usePartialUpdate';
 import { GraphFilterParams } from '@/models/miscellaneous';

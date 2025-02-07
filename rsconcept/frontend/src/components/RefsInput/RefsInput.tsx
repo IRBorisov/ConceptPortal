@@ -8,7 +8,7 @@ import clsx from 'clsx';
 import { EditorView } from 'codemirror';
 import { forwardRef, useRef, useState } from 'react';
 
-import Label from '@/components/ui/Label';
+import { Label } from '@/components/ui/Input';
 import { ReferenceType } from '@/models/language';
 import { DialogType } from '@/models/miscellaneous';
 import { ConstituentaID, IRSForm } from '@/models/rsform';

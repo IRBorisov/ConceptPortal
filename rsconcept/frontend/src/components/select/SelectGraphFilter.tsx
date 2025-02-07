@@ -2,10 +2,8 @@
 
 import { DependencyIcon } from '@/components/DomainIcons';
 import { CProps } from '@/components/props';
-import Dropdown from '@/components/ui/Dropdown';
-import DropdownButton from '@/components/ui/DropdownButton';
-import SelectorButton from '@/components/ui/SelectorButton';
-import useDropdown from '@/hooks/useDropdown';
+import { SelectorButton } from '@/components/ui/Control';
+import { Dropdown, DropdownButton, useDropdown } from '@/components/ui/Dropdown';
 import useWindowSize from '@/hooks/useWindowSize';
 import { DependencyMode } from '@/models/miscellaneous';
 import { prefixes } from '@/utils/constants';

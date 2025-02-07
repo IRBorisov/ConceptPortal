@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-import TextInput from '@/components/ui/TextInput';
+import { TextInput } from '@/components/ui/Input';
 import { ReferenceType } from '@/models/language';
 import { parseSyntacticReference } from '@/models/languageAPI';
 

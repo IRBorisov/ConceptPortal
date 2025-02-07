@@ -12,9 +12,8 @@ import { useAuthSuspense } from '@/backend/auth/useAuth';
 import { useLogin } from '@/backend/auth/useLogin';
 import ExpectedAnonymous from '@/components/ExpectedAnonymous';
 import { ErrorData } from '@/components/info/InfoError';
-import SubmitButton from '@/components/ui/SubmitButton';
-import TextInput from '@/components/ui/TextInput';
-import TextURL from '@/components/ui/TextURL';
+import { SubmitButton, TextURL } from '@/components/ui/Control';
+import { TextInput } from '@/components/ui/Input';
 import useQueryStrings from '@/hooks/useQueryStrings';
 import { resources } from '@/utils/constants';
 

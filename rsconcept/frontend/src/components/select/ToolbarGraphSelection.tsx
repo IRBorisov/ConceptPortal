@@ -12,7 +12,7 @@ import {
   IconReset
 } from '@/components/Icons';
 import { CProps } from '@/components/props';
-import MiniButton from '@/components/ui/MiniButton';
+import { MiniButton } from '@/components/ui/Control';
 import { Graph } from '@/models/Graph';
 
 interface ToolbarGraphSelectionProps extends CProps.Styling {

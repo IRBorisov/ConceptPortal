@@ -3,9 +3,8 @@
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import Checkbox from '@/components/ui/Checkbox';
+import { Checkbox, TextInput } from '@/components/ui/Input';
 import { ModalForm } from '@/components/ui/Modal';
-import TextInput from '@/components/ui/TextInput';
 import { HelpTopic } from '@/models/miscellaneous';
 import { IOperation, OperationID } from '@/models/oss';
 import { useDialogsStore } from '@/stores/dialogs';

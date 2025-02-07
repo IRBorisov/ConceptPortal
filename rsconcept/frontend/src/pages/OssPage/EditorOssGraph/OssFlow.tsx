@@ -24,7 +24,7 @@ import { useMutatingOss } from '@/backend/oss/useMutatingOss';
 import { useOperationExecute } from '@/backend/oss/useOperationExecute';
 import { useUpdatePositions } from '@/backend/oss/useUpdatePositions';
 import { CProps } from '@/components/props';
-import Overlay from '@/components/ui/Overlay';
+import { Overlay } from '@/components/ui/Container';
 import { OssNode } from '@/models/miscellaneous';
 import { OperationID } from '@/models/oss';
 import { useMainHeight } from '@/stores/appLayout';

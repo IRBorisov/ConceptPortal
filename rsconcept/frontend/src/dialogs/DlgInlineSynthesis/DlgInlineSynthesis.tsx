@@ -2,13 +2,12 @@
 
 import clsx from 'clsx';
 import { Suspense, useEffect, useState } from 'react';
-import { TabList, TabPanel, Tabs } from 'react-tabs';
 
 import { IInlineSynthesisDTO } from '@/backend/rsform/api';
 import { useRSForm } from '@/backend/rsform/useRSForm';
 import Loader from '@/components/ui/Loader';
 import { ModalForm } from '@/components/ui/Modal';
-import TabLabel from '@/components/ui/TabLabel';
+import { TabLabel, TabList, TabPanel, Tabs } from '@/components/ui/Tabs';
 import { LibraryItemID } from '@/models/library';
 import { ICstSubstitute } from '@/models/oss';
 import { ConstituentaID, IRSForm } from '@/models/rsform';

@@ -20,8 +20,8 @@ import {
 } from '@/components/Icons';
 import BadgeHelp from '@/components/info/BadgeHelp';
 import MiniSelectorOSS from '@/components/select/MiniSelectorOSS';
-import MiniButton from '@/components/ui/MiniButton';
-import Overlay from '@/components/ui/Overlay';
+import { Overlay } from '@/components/ui/Container';
+import { MiniButton } from '@/components/ui/Control';
 import { HelpTopic } from '@/models/miscellaneous';
 import { ConstituentaID, IConstituenta } from '@/models/rsform';
 import { useModificationStore } from '@/stores/modification';

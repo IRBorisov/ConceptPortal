@@ -2,8 +2,8 @@
 
 import { IconConsolidation, IconRSForm } from '@/components/Icons';
 import TooltipOperation from '@/components/info/TooltipOperation';
-import Indicator from '@/components/ui/Indicator';
-import Overlay from '@/components/ui/Overlay';
+import { Overlay } from '@/components/ui/Container';
+import { Indicator } from '@/components/ui/View';
 import { OssNodeInternal } from '@/models/miscellaneous';
 import { OperationType } from '@/models/oss';
 import { PARAMETER, prefixes } from '@/utils/constants';

@@ -4,9 +4,8 @@ import clsx from 'clsx';
 
 import { IconFolderTree } from '@/components/Icons';
 import { CProps } from '@/components/props';
-import Dropdown from '@/components/ui/Dropdown';
-import MiniButton from '@/components/ui/MiniButton';
-import useDropdown from '@/hooks/useDropdown';
+import { MiniButton } from '@/components/ui/Control';
+import { Dropdown, useDropdown } from '@/components/ui/Dropdown';
 import { prefixes } from '@/utils/constants';
 
 import SelectLocation from './SelectLocation';

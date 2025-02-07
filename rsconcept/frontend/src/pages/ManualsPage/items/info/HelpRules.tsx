@@ -1,5 +1,5 @@
 import { urls } from '@/app/urls';
-import TextURL from '@/components/ui/TextURL';
+import { TextURL } from '@/components/ui/Control';
 import { external_urls } from '@/utils/constants';
 
 function HelpRules() {

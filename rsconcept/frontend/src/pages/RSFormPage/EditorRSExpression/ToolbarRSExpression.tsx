@@ -1,8 +1,8 @@
 import { useMutatingRSForm } from '@/backend/rsform/useMutatingRSForm';
 import { IconControls, IconTree, IconTypeGraph } from '@/components/Icons';
 import { CProps } from '@/components/props';
-import MiniButton from '@/components/ui/MiniButton';
-import Overlay from '@/components/ui/Overlay';
+import { Overlay } from '@/components/ui/Container';
+import { MiniButton } from '@/components/ui/Control';
 import { usePreferencesStore } from '@/stores/preferences';
 
 interface ToolbarRSExpressionProps {

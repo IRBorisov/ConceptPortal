@@ -10,9 +10,8 @@ import { IUpdateLibraryItemDTO, UpdateLibraryItemSchema } from '@/backend/librar
 import { useUpdateItem } from '@/backend/library/useUpdateItem';
 import { useMutatingOss } from '@/backend/oss/useMutatingOss';
 import { IconSave } from '@/components/Icons';
-import SubmitButton from '@/components/ui/SubmitButton';
-import TextArea from '@/components/ui/TextArea';
-import TextInput from '@/components/ui/TextInput';
+import { SubmitButton } from '@/components/ui/Control';
+import { TextArea, TextInput } from '@/components/ui/Input';
 import { LibraryItemType } from '@/models/library';
 import ToolbarItemAccess from '@/pages/RSFormPage/EditorRSFormCard/ToolbarItemAccess';
 import { useModificationStore } from '@/stores/modification';

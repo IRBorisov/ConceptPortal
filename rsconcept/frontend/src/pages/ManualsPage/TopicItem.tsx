@@ -1,4 +1,4 @@
-import LinkTopic from '@/components/ui/LinkTopic';
+import { LinkTopic } from '@/components/ui/Control';
 import { HelpTopic } from '@/models/miscellaneous';
 import { describeHelpTopic, labelHelpTopic, removeTags } from '@/utils/labels';
 

@@ -4,8 +4,8 @@ import clsx from 'clsx';
 import { useIntl } from 'react-intl';
 
 import { IconRemove } from '@/components/Icons';
+import { MiniButton } from '@/components/ui/Control';
 import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/ui/DataTable';
-import MiniButton from '@/components/ui/MiniButton';
 import { IVersionInfo, VersionID } from '@/models/library';
 import { APP_COLORS } from '@/styling/color';
 

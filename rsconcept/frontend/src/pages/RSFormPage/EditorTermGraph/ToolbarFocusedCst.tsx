@@ -1,7 +1,7 @@
 'use client';
 
 import { IconGraphInputs, IconGraphOutputs, IconReset } from '@/components/Icons';
-import MiniButton from '@/components/ui/MiniButton';
+import { MiniButton } from '@/components/ui/Control';
 import { IConstituenta } from '@/models/rsform';
 import { APP_COLORS } from '@/styling/color';
 

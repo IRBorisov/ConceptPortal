@@ -3,9 +3,9 @@
 import clsx from 'clsx';
 
 import { IconMenuFold, IconMenuUnfold } from '@/components/Icons';
-import Button from '@/components/ui/Button';
-import SelectTree from '@/components/ui/SelectTree';
-import useDropdown from '@/hooks/useDropdown';
+import { Button } from '@/components/ui/Control';
+import { useDropdown } from '@/components/ui/Dropdown';
+import { SelectTree } from '@/components/ui/Input';
 import { HelpTopic, topicParent } from '@/models/miscellaneous';
 import { useAppLayoutStore, useFitHeight } from '@/stores/appLayout';
 import { PARAMETER, prefixes } from '@/utils/constants';

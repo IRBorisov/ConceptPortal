@@ -2,10 +2,9 @@
 
 import clsx from 'clsx';
 import { useState } from 'react';
-import { TabList, TabPanel, Tabs } from 'react-tabs';
 
 import { ModalForm } from '@/components/ui/Modal';
-import TabLabel from '@/components/ui/TabLabel';
+import { TabLabel, TabList, TabPanel, Tabs } from '@/components/ui/Tabs';
 import { ReferenceType } from '@/models/language';
 import { HelpTopic } from '@/models/miscellaneous';
 import { IRSForm } from '@/models/rsform';

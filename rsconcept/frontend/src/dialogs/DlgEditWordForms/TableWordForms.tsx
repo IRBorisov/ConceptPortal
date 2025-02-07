@@ -4,9 +4,9 @@ import clsx from 'clsx';
 
 import { IconRemove } from '@/components/Icons';
 import BadgeWordForm from '@/components/info/BadgeWordForm';
+import { MiniButton } from '@/components/ui/Control';
 import DataTable, { createColumnHelper } from '@/components/ui/DataTable';
-import MiniButton from '@/components/ui/MiniButton';
-import NoData from '@/components/ui/NoData';
+import { NoData } from '@/components/ui/View';
 import { IWordForm } from '@/models/language';
 
 interface TableWordFormsProps {

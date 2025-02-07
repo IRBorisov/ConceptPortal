@@ -2,12 +2,11 @@
 
 import clsx from 'clsx';
 import { useCallback, useEffect, useState } from 'react';
-import { TabList, TabPanel, Tabs } from 'react-tabs';
 
 import { IOperationUpdateDTO } from '@/backend/oss/api';
 import { useRSForms } from '@/backend/rsform/useRSForms';
 import { ModalForm } from '@/components/ui/Modal';
-import TabLabel from '@/components/ui/TabLabel';
+import { TabLabel, TabList, TabPanel, Tabs } from '@/components/ui/Tabs';
 import { LibraryItemID } from '@/models/library';
 import { HelpTopic } from '@/models/miscellaneous';
 import { ICstSubstitute, IOperation, IOperationSchema, OperationID, OperationType } from '@/models/oss';

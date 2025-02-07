@@ -3,8 +3,8 @@
 import { createColumnHelper } from '@tanstack/react-table';
 
 import { IconPageRight } from '@/components/Icons';
+import { Tooltip } from '@/components/ui/Container';
 import DataTable from '@/components/ui/DataTable';
-import Tooltip from '@/components/ui/Tooltip';
 import { OssNodeInternal } from '@/models/miscellaneous';
 import { ICstSubstituteEx, OperationType } from '@/models/oss';
 import { labelOperationType } from '@/utils/labels';

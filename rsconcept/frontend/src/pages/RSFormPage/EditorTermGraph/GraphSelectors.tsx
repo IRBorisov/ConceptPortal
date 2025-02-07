@@ -1,6 +1,6 @@
 import BadgeHelp from '@/components/info/BadgeHelp';
-import Overlay from '@/components/ui/Overlay';
-import SelectSingle from '@/components/ui/SelectSingle';
+import { Overlay } from '@/components/ui/Container';
+import { SelectSingle } from '@/components/ui/Input';
 import { GraphColoring, HelpTopic } from '@/models/miscellaneous';
 import { IRSForm } from '@/models/rsform';
 import { mapLabelColoring } from '@/utils/labels';

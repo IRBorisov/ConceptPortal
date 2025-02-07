@@ -2,9 +2,9 @@ import React, { Suspense } from 'react';
 
 import { IconHelp } from '@/components/Icons';
 import { CProps } from '@/components/props';
+import { PlacesType, Tooltip } from '@/components/ui/Container';
+import { TextURL } from '@/components/ui/Control';
 import Loader from '@/components/ui/Loader';
-import TextURL from '@/components/ui/TextURL';
-import Tooltip, { PlacesType } from '@/components/ui/Tooltip';
 import { HelpTopic } from '@/models/miscellaneous';
 import { usePreferencesStore } from '@/stores/preferences';
 

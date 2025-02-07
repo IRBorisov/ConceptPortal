@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 
 import { IconDownload, IconRSForm, IconRSFormImported, IconRSFormOwned, IconSynthesis } from '@/components/Icons';
-import ValueStats from '@/components/ui/ValueStats';
+import { ValueStats } from '@/components/ui/View';
 import { IOperationSchemaStats } from '@/models/oss';
 
 interface OssStatsProps {

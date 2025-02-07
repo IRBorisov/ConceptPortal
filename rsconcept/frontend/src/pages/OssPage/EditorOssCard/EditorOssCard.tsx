@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 
-import FlexColumn from '@/components/ui/FlexColumn';
+import { FlexColumn } from '@/components/ui/Container';
 import EditorLibraryItem from '@/pages/RSFormPage/EditorRSFormCard/EditorLibraryItem';
 import ToolbarRSFormCard from '@/pages/RSFormPage/EditorRSFormCard/ToolbarRSFormCard';
 import { useModificationStore } from '@/stores/modification';

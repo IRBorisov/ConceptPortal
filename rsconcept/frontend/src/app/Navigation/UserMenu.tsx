@@ -1,8 +1,8 @@
 import { Suspense } from 'react';
 
 import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
+import { useDropdown } from '@/components/ui/Dropdown';
 import Loader from '@/components/ui/Loader';
-import useDropdown from '@/hooks/useDropdown';
 
 import { urls } from '../urls';
 import UserButton from './UserButton';

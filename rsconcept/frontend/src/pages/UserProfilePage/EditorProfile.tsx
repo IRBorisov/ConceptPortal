@@ -9,8 +9,8 @@ import { IUpdateProfileDTO, UpdateProfileSchema } from '@/backend/users/api';
 import { useProfileSuspense } from '@/backend/users/useProfile';
 import { useUpdateProfile } from '@/backend/users/useUpdateProfile';
 import { ErrorData } from '@/components/info/InfoError';
-import SubmitButton from '@/components/ui/SubmitButton';
-import TextInput from '@/components/ui/TextInput';
+import { SubmitButton } from '@/components/ui/Control';
+import { TextInput } from '@/components/ui/Input';
 
 function EditorProfile() {
   const { profile } = useProfileSuspense();

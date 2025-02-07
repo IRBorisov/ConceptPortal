@@ -8,7 +8,7 @@ import { IconFolderEdit, IconFolderTree } from '@/components/Icons';
 import BadgeHelp from '@/components/info/BadgeHelp';
 import { CProps } from '@/components/props';
 import SelectLocation from '@/components/select/SelectLocation';
-import MiniButton from '@/components/ui/MiniButton';
+import { MiniButton } from '@/components/ui/Control';
 import useWindowSize from '@/hooks/useWindowSize';
 import { FolderNode } from '@/models/FolderTree';
 import { HelpTopic } from '@/models/miscellaneous';

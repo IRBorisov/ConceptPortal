@@ -14,12 +14,9 @@ import {
 } from '@/components/Icons';
 import { CProps } from '@/components/props';
 import SelectUser from '@/components/select/SelectUser';
-import Dropdown from '@/components/ui/Dropdown';
-import DropdownButton from '@/components/ui/DropdownButton';
-import MiniButton from '@/components/ui/MiniButton';
-import SearchBar from '@/components/ui/SearchBar';
-import SelectorButton from '@/components/ui/SelectorButton';
-import useDropdown from '@/hooks/useDropdown';
+import { MiniButton, SelectorButton } from '@/components/ui/Control';
+import { Dropdown, DropdownButton, useDropdown } from '@/components/ui/Dropdown';
+import { SearchBar } from '@/components/ui/SearchBar';
 import { LocationHead } from '@/models/library';
 import { useHasCustomFilter, useLibrarySearchStore } from '@/stores/librarySearch';
 import { prefixes } from '@/utils/constants';

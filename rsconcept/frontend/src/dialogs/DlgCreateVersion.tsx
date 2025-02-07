@@ -6,10 +6,8 @@ import { Controller, useForm, useWatch } from 'react-hook-form';
 
 import { CreateVersionSchema, IVersionCreateDTO } from '@/backend/library/api';
 import { useVersionCreate } from '@/backend/library/useVersionCreate';
-import Checkbox from '@/components/ui/Checkbox';
+import { Checkbox, TextArea, TextInput } from '@/components/ui/Input';
 import { ModalForm } from '@/components/ui/Modal';
-import TextArea from '@/components/ui/TextArea';
-import TextInput from '@/components/ui/TextInput';
 import { IVersionInfo, LibraryItemID, VersionID } from '@/models/library';
 import { nextVersion } from '@/models/libraryAPI';
 import { ConstituentaID } from '@/models/rsform';

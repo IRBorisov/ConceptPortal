@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 
-import FlexColumn from '@/components/ui/FlexColumn';
+import { FlexColumn } from '@/components/ui/Container';
 import { useModificationStore } from '@/stores/modification';
 import { globals } from '@/utils/constants';
 

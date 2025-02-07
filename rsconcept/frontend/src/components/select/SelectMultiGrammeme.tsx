@@ -1,5 +1,5 @@
 import { CProps } from '@/components/props';
-import SelectMulti, { SelectMultiProps } from '@/components/ui/SelectMulti';
+import { SelectMulti, SelectMultiProps } from '@/components/ui/Input';
 import { Grammeme } from '@/models/language';
 import { getCompatibleGrams } from '@/models/languageAPI';
 import { compareGrammemeOptions, IGrammemeOption, SelectorGrammemes } from '@/utils/selectors';

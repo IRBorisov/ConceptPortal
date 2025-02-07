@@ -4,8 +4,7 @@ import { useEffect } from 'react';
 
 import BadgeConstituenta from '@/components/info/BadgeConstituenta';
 import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/ui/DataTable';
-import NoData from '@/components/ui/NoData';
-import TextContent from '@/components/ui/TextContent';
+import { NoData, TextContent } from '@/components/ui/View';
 import { ConstituentaID, IConstituenta } from '@/models/rsform';
 import { APP_COLORS } from '@/styling/color';
 import { PARAMETER, prefixes } from '@/utils/constants';

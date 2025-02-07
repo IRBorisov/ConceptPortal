@@ -12,8 +12,7 @@ import {
   IconNewRSForm,
   IconRSForm
 } from '@/components/Icons';
-import Dropdown from '@/components/ui/Dropdown';
-import DropdownButton from '@/components/ui/DropdownButton';
+import { Dropdown, DropdownButton } from '@/components/ui/Dropdown';
 import useClickedOutside from '@/hooks/useClickedOutside';
 import { IOperation, OperationID, OperationType } from '@/models/oss';
 import { PARAMETER } from '@/utils/constants';

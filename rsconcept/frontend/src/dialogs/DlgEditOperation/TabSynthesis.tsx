@@ -1,5 +1,5 @@
 import PickSubstitutions from '@/components/select/PickSubstitutions';
-import TextArea from '@/components/ui/TextArea';
+import { TextArea } from '@/components/ui/Input';
 import { ICstSubstitute } from '@/models/oss';
 import { IRSForm } from '@/models/rsform';
 import { APP_COLORS } from '@/styling/color';

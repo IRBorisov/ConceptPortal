@@ -6,9 +6,9 @@ import { useState } from 'react';
 import { IconMoveDown, IconMoveUp, IconRemove } from '@/components/Icons';
 import { CProps } from '@/components/props';
 import SelectOperation from '@/components/select/SelectOperation';
+import { MiniButton } from '@/components/ui/Control';
 import DataTable, { createColumnHelper } from '@/components/ui/DataTable';
-import MiniButton from '@/components/ui/MiniButton';
-import NoData from '@/components/ui/NoData';
+import { NoData } from '@/components/ui/View';
 import { IOperation, OperationID } from '@/models/oss';
 
 interface PickMultiOperationProps extends CProps.Styling {

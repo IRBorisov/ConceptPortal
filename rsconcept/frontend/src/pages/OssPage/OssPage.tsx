@@ -9,7 +9,7 @@ import { z } from 'zod';
 import { useBlockNavigation, useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
 import { ErrorData } from '@/components/info/InfoError';
-import TextURL from '@/components/ui/TextURL';
+import { TextURL } from '@/components/ui/Control';
 import useQueryStrings from '@/hooks/useQueryStrings';
 import { useModificationStore } from '@/stores/modification';
 

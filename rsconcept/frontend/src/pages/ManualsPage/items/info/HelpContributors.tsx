@@ -1,5 +1,4 @@
-import LinkTopic from '@/components/ui/LinkTopic';
-import TextURL from '@/components/ui/TextURL';
+import { LinkTopic, TextURL } from '@/components/ui/Control';
 import { HelpTopic } from '@/models/miscellaneous';
 import { external_urls } from '@/utils/constants';
 

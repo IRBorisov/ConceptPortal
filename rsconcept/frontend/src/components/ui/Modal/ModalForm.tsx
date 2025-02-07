@@ -5,15 +5,13 @@ import clsx from 'clsx';
 import { IconClose } from '@/components/Icons';
 import BadgeHelp from '@/components/info/BadgeHelp';
 import { CProps } from '@/components/props';
-import Button from '@/components/ui/Button';
-import MiniButton from '@/components/ui/MiniButton';
 import useEscapeKey from '@/hooks/useEscapeKey';
 import { HelpTopic } from '@/models/miscellaneous';
 import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/labels';
 
-import SubmitButton from '../SubmitButton';
+import { Button, MiniButton, SubmitButton } from '../Control';
 import { ModalBackdrop } from './ModalBackdrop';
 
 export interface ModalProps extends CProps.Styling {

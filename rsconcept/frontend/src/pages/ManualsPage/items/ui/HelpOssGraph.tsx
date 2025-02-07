@@ -18,8 +18,8 @@ import {
   IconRSForm,
   IconSave
 } from '@/components/Icons';
-import Divider from '@/components/ui/Divider';
-import LinkTopic from '@/components/ui/LinkTopic';
+import { Divider } from '@/components/ui/Container';
+import { LinkTopic } from '@/components/ui/Control';
 import { HelpTopic } from '@/models/miscellaneous';
 
 function HelpOssGraph() {

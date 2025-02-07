@@ -18,11 +18,9 @@ import {
   IconReader,
   IconShare
 } from '@/components/Icons';
-import Button from '@/components/ui/Button';
-import Divider from '@/components/ui/Divider';
-import Dropdown from '@/components/ui/Dropdown';
-import DropdownButton from '@/components/ui/DropdownButton';
-import useDropdown from '@/hooks/useDropdown';
+import { Divider } from '@/components/ui/Container';
+import { Button } from '@/components/ui/Control';
+import { Dropdown, DropdownButton, useDropdown } from '@/components/ui/Dropdown';
 import { UserRole } from '@/models/user';
 import { useRoleStore } from '@/stores/role';
 import { describeAccessMode as describeUserRole, labelAccessMode as labelUserRole } from '@/utils/labels';

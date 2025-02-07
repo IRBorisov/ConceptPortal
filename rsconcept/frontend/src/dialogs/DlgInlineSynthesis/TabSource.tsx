@@ -2,7 +2,7 @@
 
 import { useLibrary } from '@/backend/library/useLibrary';
 import PickSchema from '@/components/select/PickSchema';
-import TextInput from '@/components/ui/TextInput';
+import { TextInput } from '@/components/ui/Input';
 import { LibraryItemID, LibraryItemType } from '@/models/library';
 import { IRSForm } from '@/models/rsform';
 import { sortItemsForInlineSynthesis } from '@/models/rsformAPI';

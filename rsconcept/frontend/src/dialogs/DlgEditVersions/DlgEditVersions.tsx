@@ -6,10 +6,9 @@ import { useMutatingLibrary } from '@/backend/library/useMutatingLibrary';
 import { useVersionDelete } from '@/backend/library/useVersionDelete';
 import { useVersionUpdate } from '@/backend/library/useVersionUpdate';
 import { IconReset, IconSave } from '@/components/Icons';
-import MiniButton from '@/components/ui/MiniButton';
+import { MiniButton } from '@/components/ui/Control';
+import { TextArea, TextInput } from '@/components/ui/Input';
 import { ModalView } from '@/components/ui/Modal';
-import TextArea from '@/components/ui/TextArea';
-import TextInput from '@/components/ui/TextInput';
 import { ILibraryItemVersioned, IVersionInfo, VersionID } from '@/models/library';
 import { useDialogsStore } from '@/stores/dialogs';
 

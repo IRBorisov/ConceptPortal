@@ -1,8 +1,8 @@
 'use client';
 
 import { IconRemove } from '@/components/Icons';
+import { MiniButton } from '@/components/ui/Control';
 import DataTable, { createColumnHelper } from '@/components/ui/DataTable';
-import MiniButton from '@/components/ui/MiniButton';
 import { IUserInfo, UserID } from '@/models/user';
 
 interface TableUsersProps {

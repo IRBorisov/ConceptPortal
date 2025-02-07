@@ -10,8 +10,8 @@ import {
   IconReset
 } from '@/components/Icons';
 import InfoCstStatus from '@/components/info/InfoCstStatus';
-import Divider from '@/components/ui/Divider';
-import LinkTopic from '@/components/ui/LinkTopic';
+import { Divider } from '@/components/ui/Container';
+import { LinkTopic } from '@/components/ui/Control';
 import { HelpTopic } from '@/models/miscellaneous';
 
 function HelpRSList() {

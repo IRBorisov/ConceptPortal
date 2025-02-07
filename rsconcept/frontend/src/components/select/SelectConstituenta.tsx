@@ -3,7 +3,7 @@
 import clsx from 'clsx';
 
 import { CProps } from '@/components/props';
-import SelectSingle from '@/components/ui/SelectSingle';
+import { SelectSingle } from '@/components/ui/Input';
 import { CstMatchMode } from '@/models/miscellaneous';
 import { ConstituentaID, IConstituenta } from '@/models/rsform';
 import { matchConstituenta } from '@/models/rsformAPI';

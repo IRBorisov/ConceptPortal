@@ -6,9 +6,8 @@ import { useState } from 'react';
 
 import { useRequestPasswordReset } from '@/backend/auth/useRequestPasswordReset';
 import { ErrorData } from '@/components/info/InfoError';
-import SubmitButton from '@/components/ui/SubmitButton';
-import TextInput from '@/components/ui/TextInput';
-import TextURL from '@/components/ui/TextURL';
+import { SubmitButton, TextURL } from '@/components/ui/Control';
+import { TextInput } from '@/components/ui/Input';
 
 export function Component() {
   const { requestPasswordReset, isPending, error: serverError, reset: clearServerError } = useRequestPasswordReset();

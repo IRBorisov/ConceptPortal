@@ -4,8 +4,8 @@ import clsx from 'clsx';
 
 import { IconDropArrow, IconDropArrowUp } from '@/components/Icons';
 import { CProps } from '@/components/props';
-import MiniButton from '@/components/ui/MiniButton';
-import Overlay from '@/components/ui/Overlay';
+import { Overlay } from '@/components/ui/Container';
+import { MiniButton } from '@/components/ui/Control';
 import useWindowSize from '@/hooks/useWindowSize';
 import { GraphColoring } from '@/models/miscellaneous';
 import { ConstituentaID, IRSForm } from '@/models/rsform';

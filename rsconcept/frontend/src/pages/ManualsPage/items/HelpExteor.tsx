@@ -1,4 +1,4 @@
-import TextURL from '@/components/ui/TextURL';
+import { TextURL } from '@/components/ui/Control';
 import { external_urls, PARAMETER } from '@/utils/constants';
 
 function HelpExteor() {

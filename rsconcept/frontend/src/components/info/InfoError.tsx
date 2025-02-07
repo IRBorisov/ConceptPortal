@@ -1,7 +1,7 @@
 import axios, { type AxiosError } from 'axios';
 import clsx from 'clsx';
 
-import PrettyJson from '@/components/ui/PrettyJSON';
+import { PrettyJson } from '@/components/ui/View';
 import { isResponseHtml } from '@/utils/utils';
 
 export type ErrorData = string | Error | AxiosError | undefined | null;

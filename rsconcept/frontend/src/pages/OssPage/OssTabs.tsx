@@ -2,11 +2,10 @@
 
 import clsx from 'clsx';
 import { useEffect } from 'react';
-import { TabList, TabPanel, Tabs } from 'react-tabs';
 
 import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
-import Overlay from '@/components/ui/Overlay';
-import TabLabel from '@/components/ui/TabLabel';
+import { Overlay } from '@/components/ui/Container';
+import { TabLabel, TabList, TabPanel, Tabs } from '@/components/ui/Tabs';
 import { useAppLayoutStore } from '@/stores/appLayout';
 
 import EditorRSForm from './EditorOssCard';

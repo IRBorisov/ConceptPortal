@@ -2,10 +2,8 @@
 
 import { ItemTypeIcon } from '@/components/DomainIcons';
 import { CProps } from '@/components/props';
-import Dropdown from '@/components/ui/Dropdown';
-import DropdownButton from '@/components/ui/DropdownButton';
-import SelectorButton from '@/components/ui/SelectorButton';
-import useDropdown from '@/hooks/useDropdown';
+import { SelectorButton } from '@/components/ui/Control';
+import { Dropdown, DropdownButton, useDropdown } from '@/components/ui/Dropdown';
 import { LibraryItemType } from '@/models/library';
 import { prefixes } from '@/utils/constants';
 import { describeLibraryItemType, labelLibraryItemType } from '@/utils/labels';

@@ -1,5 +1,4 @@
-import TextArea from '@/components/ui/TextArea';
-import TextInput from '@/components/ui/TextInput';
+import { TextArea, TextInput } from '@/components/ui/Input';
 
 interface TabOperationProps {
   alias: string;

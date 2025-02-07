@@ -1,7 +1,8 @@
 'use client';
 
 import { useAuthSuspense } from '@/backend/auth/useAuth';
-import TextURL from '@/components/ui/TextURL';
+
+import { TextURL } from './ui/Control';
 
 function RequireAuth({ children }: React.PropsWithChildren) {
   const { isAnonymous } = useAuthSuspense();

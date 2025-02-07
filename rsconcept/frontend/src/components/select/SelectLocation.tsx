@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { useFolders } from '@/backend/library/useFolders';
 import { IconFolder, IconFolderClosed, IconFolderEmpty, IconFolderOpened } from '@/components/Icons';
 import { CProps } from '@/components/props';
-import MiniButton from '@/components/ui/MiniButton';
+import { MiniButton } from '@/components/ui/Control';
 import { FolderNode } from '@/models/FolderTree';
 import { labelFolderNode } from '@/utils/labels';
 

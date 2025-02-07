@@ -3,8 +3,8 @@
 import { useVersionRestore } from '@/backend/library/useVersionRestore';
 import { IconNewVersion, IconUpload, IconVersions } from '@/components/Icons';
 import BadgeHelp from '@/components/info/BadgeHelp';
-import MiniButton from '@/components/ui/MiniButton';
-import Overlay from '@/components/ui/Overlay';
+import { Overlay } from '@/components/ui/Container';
+import { MiniButton } from '@/components/ui/Control';
 import { HelpTopic } from '@/models/miscellaneous';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';

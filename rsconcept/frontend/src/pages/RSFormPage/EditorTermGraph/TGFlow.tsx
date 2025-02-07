@@ -24,7 +24,7 @@ import InfoConstituenta from '@/components/info/InfoConstituenta';
 import SelectedCounter from '@/components/info/SelectedCounter';
 import { CProps } from '@/components/props';
 import ToolbarGraphSelection from '@/components/select/ToolbarGraphSelection';
-import Overlay from '@/components/ui/Overlay';
+import { Overlay } from '@/components/ui/Container';
 import { produceFilteredGraph } from '@/models/miscellaneousAPI';
 import { ConstituentaID, CstType, IConstituenta } from '@/models/rsform';
 import { isBasicConcept } from '@/models/rsformAPI';

@@ -16,8 +16,7 @@ import {
   IconUser
 } from '@/components/Icons';
 import { CProps } from '@/components/props';
-import Dropdown from '@/components/ui/Dropdown';
-import DropdownButton from '@/components/ui/DropdownButton';
+import { Dropdown, DropdownButton } from '@/components/ui/Dropdown';
 import { usePreferencesStore } from '@/stores/preferences';
 
 import { urls } from '../urls';

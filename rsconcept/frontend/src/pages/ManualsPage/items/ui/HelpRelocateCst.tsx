@@ -1,5 +1,5 @@
 import { IconMoveDown, IconMoveUp, IconOSS, IconPredecessor } from '@/components/Icons';
-import LinkTopic from '@/components/ui/LinkTopic';
+import { LinkTopic } from '@/components/ui/Control';
 import { HelpTopic } from '@/models/miscellaneous';
 
 function HelpRelocateCst() {

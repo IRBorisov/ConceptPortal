@@ -3,8 +3,7 @@
 import { useState } from 'react';
 
 import { useUploadTRS } from '@/backend/rsform/useUploadTRS';
-import Checkbox from '@/components/ui/Checkbox';
-import FileInput from '@/components/ui/FileInput';
+import { Checkbox, FileInput } from '@/components/ui/Input';
 import { ModalForm } from '@/components/ui/Modal';
 import { LibraryItemID } from '@/models/library';
 import { useDialogsStore } from '@/stores/dialogs';

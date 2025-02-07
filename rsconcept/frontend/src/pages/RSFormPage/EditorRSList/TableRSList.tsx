@@ -5,10 +5,9 @@ import { useLayoutEffect, useState } from 'react';
 
 import BadgeConstituenta from '@/components/info/BadgeConstituenta';
 import { CProps } from '@/components/props';
+import { TextURL } from '@/components/ui/Control';
 import DataTable, { createColumnHelper, RowSelectionState, VisibilityState } from '@/components/ui/DataTable';
-import NoData from '@/components/ui/NoData';
-import TextContent from '@/components/ui/TextContent';
-import TextURL from '@/components/ui/TextURL';
+import { NoData, TextContent } from '@/components/ui/View';
 import useWindowSize from '@/hooks/useWindowSize';
 import { ConstituentaID, IConstituenta } from '@/models/rsform';
 import { PARAMETER, prefixes } from '@/utils/constants';

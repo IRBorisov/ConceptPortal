@@ -1,4 +1,4 @@
-import EmbedYoutube from '@/components/ui/EmbedYoutube';
+import { EmbedYoutube } from '@/components/ui/View';
 import useWindowSize from '@/hooks/useWindowSize';
 import { HelpTopic } from '@/models/miscellaneous';
 import { external_urls, youtube } from '@/utils/constants';

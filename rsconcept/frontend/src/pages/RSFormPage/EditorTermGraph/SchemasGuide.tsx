@@ -1,6 +1,6 @@
 import { useLibrary } from '@/backend/library/useLibrary';
 import { IconHelp } from '@/components/Icons';
-import Tooltip from '@/components/ui/Tooltip';
+import { Tooltip } from '@/components/ui/Container';
 import { LibraryItemID } from '@/models/library';
 import { IRSForm } from '@/models/rsform';
 import { colorBgSchemas } from '@/styling/color';

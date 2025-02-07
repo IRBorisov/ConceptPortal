@@ -10,9 +10,9 @@ import { urls } from '@/app/urls';
 import { ChangePasswordSchema, IChangePasswordDTO } from '@/backend/auth/api';
 import { useChangePassword } from '@/backend/auth/useChangePassword';
 import { ErrorData } from '@/components/info/InfoError';
-import FlexColumn from '@/components/ui/FlexColumn';
-import SubmitButton from '@/components/ui/SubmitButton';
-import TextInput from '@/components/ui/TextInput';
+import { FlexColumn } from '@/components/ui/Container';
+import { SubmitButton } from '@/components/ui/Control';
+import { TextInput } from '@/components/ui/Input';
 
 function EditorPassword() {
   const router = useConceptNavigation();
