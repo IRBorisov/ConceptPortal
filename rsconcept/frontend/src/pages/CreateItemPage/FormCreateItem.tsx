@@ -166,12 +166,13 @@ function FormCreateItem() {
           <Label text='Доступ' className='self-center select-none' />
           <div className='ml-auto cc-icons'>
             <Controller
-              control={control} //
+              control={control}
               name='access_policy'
               render={({ field }) => (
                 <SelectAccessPolicy
                   value={field.value} //
                   onChange={field.onChange}
+                  stretchLeft
                 />
               )}
             />
@@ -228,7 +229,7 @@ function FormCreateItem() {
           name='location'
           render={({ field }) => (
             <TextArea
-              id='dlg_cst_body'
+              id='location'
               label='Путь'
               rows={4}
               value={field.value.substring(3)}

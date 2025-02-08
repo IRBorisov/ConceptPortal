@@ -1,12 +1,13 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
 import clsx from 'clsx';
-import { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 
 import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { urls } from '@/app/urls';
 import { useAuthSuspense } from '@/backend/auth/useAuth';
-import { ICloneLibraryItemDTO } from '@/backend/library/api';
+import { CloneLibraryItemSchema, ICloneLibraryItemDTO } from '@/backend/library/api';
 import { useCloneItem } from '@/backend/library/useCloneItem';
 import { VisibilityIcon } from '@/components/DomainIcons';
 import SelectAccessPolicy from '@/components/select/SelectAccessPolicy';
@@ -16,7 +17,7 @@ import { MiniButton } from '@/components/ui/Control';
 import { Checkbox, Label, TextArea, TextInput } from '@/components/ui/Input';
 import { ModalForm } from '@/components/ui/Modal';
 import { AccessPolicy, ILibraryItem, LocationHead } from '@/models/library';
-import { cloneTitle, combineLocation, validateLocation } from '@/models/libraryAPI';
+import { cloneTitle, combineLocation } from '@/models/libraryAPI';
 import { ConstituentaID } from '@/models/rsform';
 import { useDialogsStore } from '@/stores/dialogs';
 
@@ -33,82 +34,81 @@ function DlgCloneLibraryItem() {
   );
   const router = useConceptNavigation();
   const { user } = useAuthSuspense();
-
-  const [title, setTitle] = useState(cloneTitle(base));
-  const [alias, setAlias] = useState(base.alias);
-  const [comment, setComment] = useState(base.comment);
-  const [visible, setVisible] = useState(true);
-  const [policy, setPolicy] = useState(AccessPolicy.PUBLIC);
-
-  const [onlySelected, setOnlySelected] = useState(false);
-
-  const [head, setHead] = useState(initialLocation.substring(0, 2) as LocationHead);
-  const [body, setBody] = useState(initialLocation.substring(3));
-  const location = combineLocation(head, body);
-
   const { cloneItem } = useCloneItem();
 
-  const canSubmit = title !== '' && alias !== '' && validateLocation(location);
-
-  function handleSelectLocation(newValue: string) {
-    setHead(newValue.substring(0, 2) as LocationHead);
-    setBody(newValue.length > 3 ? newValue.substring(3) : '');
-  }
-
-  function handleSubmit() {
-    const data: ICloneLibraryItemDTO = {
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors, isValid }
+  } = useForm<ICloneLibraryItemDTO>({
+    resolver: zodResolver(CloneLibraryItemSchema),
+    defaultValues: {
       id: base.id,
       item_type: base.item_type,
-      title: title,
-      alias: alias,
-      comment: comment,
+      title: cloneTitle(base),
+      alias: base.alias,
+      comment: base.comment,
+      visible: true,
       read_only: false,
-      visible: visible,
-      access_policy: policy,
-      location: location
-    };
-    if (onlySelected) {
-      data.items = selected;
-    }
+      access_policy: AccessPolicy.PUBLIC,
+      location: initialLocation,
+      items: undefined
+    },
+    mode: 'onChange',
+    reValidateMode: 'onChange'
+  });
+
+  function onSubmit(data: ICloneLibraryItemDTO) {
     cloneItem(data, newSchema => router.push(urls.schema(newSchema.id)));
-    return true;
   }
 
   return (
     <ModalForm
       header='Создание копии концептуальной схемы'
-      canSubmit={canSubmit}
       submitText='Создать'
-      onSubmit={handleSubmit}
+      canSubmit={isValid}
+      onSubmit={event => void handleSubmit(onSubmit)(event)}
       className={clsx('px-6 py-2', 'cc-column', 'max-h-full w-[30rem]')}
     >
       <TextInput
-        id='dlg_full_name'
+        id='dlg_full_name' //
         label='Полное название'
-        value={title}
-        onChange={event => setTitle(event.target.value)}
+        {...register('title')}
+        error={errors.title}
       />
       <div className='flex justify-between gap-3'>
         <TextInput
           id='dlg_alias'
           label='Сокращение'
-          value={alias}
-          className='w-[15rem]'
-          onChange={event => setAlias(event.target.value)}
+          className='w-[16rem]'
+          {...register('alias')}
+          error={errors.alias}
         />
         <div className='flex flex-col gap-2'>
           <Label text='Доступ' className='self-center select-none' />
           <div className='ml-auto cc-icons'>
-            <SelectAccessPolicy
-              stretchLeft // prettier: split-lines
-              value={policy}
-              onChange={newPolicy => setPolicy(newPolicy)}
+            <Controller
+              control={control}
+              name='access_policy'
+              render={({ field }) => (
+                <SelectAccessPolicy
+                  value={field.value} //
+                  onChange={field.onChange}
+                  stretchLeft
+                />
+              )}
             />
-
-            <MiniButton
-              title={visible ? 'Библиотека: отображать' : 'Библиотека: скрывать'}
-              icon={<VisibilityIcon value={visible} />}
-              onClick={() => setVisible(prev => !prev)}
+            <Controller
+              control={control}
+              name='visible'
+              render={({ field }) => (
+                <MiniButton
+                  title={field.value ? 'Библиотека: отображать' : 'Библиотека: скрывать'}
+                  icon={<VisibilityIcon value={field.value} />}
+                  onClick={() => field.onChange(!field.value)}
+                />
+              )}
             />
           </div>
         </div>
@@ -117,26 +117,60 @@ function DlgCloneLibraryItem() {
       <div className='flex justify-between gap-3'>
         <div className='flex flex-col gap-2 w-[7rem] h-min'>
           <Label text='Корень' />
-          <SelectLocationHead value={head} onChange={setHead} excluded={!user.is_staff ? [LocationHead.LIBRARY] : []} />
+          <Controller
+            control={control} //
+            name='location'
+            render={({ field }) => (
+              <SelectLocationHead
+                value={field.value.substring(0, 2) as LocationHead}
+                onChange={newValue => field.onChange(combineLocation(newValue, field.value.substring(3)))}
+                excluded={!user.is_staff ? [LocationHead.LIBRARY] : []}
+              />
+            )}
+          />
         </div>
-        <SelectLocationContext value={location} onChange={handleSelectLocation} />
-        <TextArea
-          id='dlg_cst_body'
-          label='Путь'
-          rows={3}
-          value={body}
-          onChange={event => setBody(event.target.value)}
+        <Controller
+          control={control} //
+          name='location'
+          render={({ field }) => (
+            <SelectLocationContext
+              value={field.value} //
+              onChange={field.onChange}
+            />
+          )}
+        />
+        <Controller
+          control={control} //
+          name='location'
+          render={({ field }) => (
+            <TextArea
+              id='dlg_location'
+              label='Путь'
+              rows={3}
+              value={field.value.substring(3)}
+              onChange={event => field.onChange(combineLocation(field.value.substring(0, 2), event.target.value))}
+              error={errors.location}
+            />
+          )}
         />
       </div>
 
-      <TextArea id='dlg_comment' label='Описание' value={comment} onChange={event => setComment(event.target.value)} />
+      <TextArea id='dlg_comment' {...register('comment')} label='Описание' error={errors.comment} />
 
-      <Checkbox
-        id='dlg_only_selected'
-        label={`Только выбранные конституенты [${selected.length} из ${totalCount}]`}
-        value={onlySelected}
-        onChange={value => setOnlySelected(value)}
-      />
+      {selected.length > 0 ? (
+        <Controller
+          control={control}
+          name='items'
+          render={({ field }) => (
+            <Checkbox
+              id='dlg_only_selected'
+              label={`Только выбранные конституенты [${selected.length} из ${totalCount}]`}
+              value={field.value !== undefined}
+              onChange={value => field.onChange(value ? selected : undefined)}
+            />
+          )}
+        />
+      ) : null}
     </ModalForm>
   );
 }

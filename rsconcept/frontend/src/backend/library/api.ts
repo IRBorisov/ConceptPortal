@@ -7,7 +7,6 @@ import { ossApi } from '@/backend/oss/api';
 import { IRSFormDTO, rsformsApi } from '@/backend/rsform/api';
 import { AccessPolicy, ILibraryItem, IVersionInfo, LibraryItemID, LibraryItemType, VersionID } from '@/models/library';
 import { validateLocation } from '@/models/libraryAPI';
-import { ConstituentaID } from '@/models/rsform';
 import { UserID } from '@/models/user';
 import { errors, information } from '@/utils/labels';
 
@@ -22,9 +21,24 @@ export interface IRenameLocationDTO {
 /**
  * Represents data, used for cloning {@link IRSForm}.
  */
-export interface ICloneLibraryItemDTO extends Omit<ILibraryItem, 'time_create' | 'time_update' | 'owner'> {
-  items?: ConstituentaID[];
-}
+export const CloneLibraryItemSchema = z.object({
+  id: z.number(),
+  item_type: z.nativeEnum(LibraryItemType),
+  title: z.string().nonempty(errors.requiredField),
+  alias: z.string().nonempty(errors.requiredField),
+  comment: z.string(),
+  visible: z.boolean(),
+  read_only: z.boolean(),
+  location: z.string().refine(data => validateLocation(data), { message: errors.invalidLocation }),
+  access_policy: z.nativeEnum(AccessPolicy),
+
+  items: z.array(z.number()).optional()
+});
+
+/**
+ * Represents data, used for cloning {@link IRSForm}.
+ */
+export type ICloneLibraryItemDTO = z.infer<typeof CloneLibraryItemSchema>;
 
 /**
  * Represents data, used for creating {@link IRSForm}.
@@ -37,15 +51,11 @@ export const CreateLibraryItemSchema = z
     comment: z.string(),
     visible: z.boolean(),
     read_only: z.boolean(),
-    location: z.string(),
+    location: z.string().refine(data => validateLocation(data), { message: errors.invalidLocation }),
     access_policy: z.nativeEnum(AccessPolicy),
 
     file: z.instanceof(File).optional(),
     fileName: z.string().optional()
-  })
-  .refine(data => validateLocation(data.location), {
-    path: ['location'],
-    message: errors.invalidLocation
   })
   .refine(data => !!data.file || !!data.title, {
     path: ['title'],
