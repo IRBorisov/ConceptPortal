@@ -152,7 +152,7 @@ function TGFlow() {
 
   useEffect(() => {
     setNeedReset(true);
-  }, [controller.schema, filter.noText, focusCst, coloring, flow.viewportInitialized]);
+  }, [controller.schema, focusCst, coloring, filter]);
 
   useEffect(() => {
     if (!needReset || !flow.viewportInitialized) {
@@ -286,7 +286,7 @@ function TGFlow() {
         <ToolbarTermGraph
           noText={filter.noText}
           foldDerived={filter.foldDerived}
-          showParamsDialog={() => showParams({ initial: filter, onConfirm: setFilter })}
+          showParamsDialog={() => showParams()}
           onCreate={handleCreateCst}
           onDelete={handleDeleteCst}
           onFitView={() => setToggleResetView(prev => !prev)}

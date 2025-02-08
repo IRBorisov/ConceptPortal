@@ -14,7 +14,6 @@ import { DlgEditOperationProps } from '@/dialogs/DlgEditOperation/DlgEditOperati
 import { DlgEditReferenceProps } from '@/dialogs/DlgEditReference/DlgEditReference';
 import { DlgEditVersionsProps } from '@/dialogs/DlgEditVersions/DlgEditVersions';
 import { DlgEditWordFormsProps } from '@/dialogs/DlgEditWordForms/DlgEditWordForms';
-import { DlgGraphParamsProps } from '@/dialogs/DlgGraphParams';
 import { DlgInlineSynthesisProps } from '@/dialogs/DlgInlineSynthesis/DlgInlineSynthesis';
 import { DlgRelocateConstituentsProps } from '@/dialogs/DlgRelocateConstituents';
 import { DlgRenameCstProps } from '@/dialogs/DlgRenameCst';
@@ -47,7 +46,7 @@ interface DialogsStore {
   showCloneLibraryItem: (props: DlgCloneLibraryItemProps) => void;
   showCreateVersion: (props: DlgCreateVersionProps) => void;
   showDeleteOperation: (props: DlgDeleteOperationProps) => void;
-  showGraphParams: (props: DlgGraphParamsProps) => void;
+  showGraphParams: () => void;
   showRelocateConstituents: (props: DlgRelocateConstituentsProps) => void;
   showRenameCst: (props: DlgRenameCstProps) => void;
   showQR: (props: DlgShowQRProps) => void;
@@ -77,7 +76,7 @@ export const useDialogsStore = create<DialogsStore>()(set => ({
   showCloneLibraryItem: props => set({ active: DialogType.CLONE_LIBRARY_ITEM, props: props }),
   showCreateVersion: props => set({ active: DialogType.CREATE_VERSION, props: props }),
   showDeleteOperation: props => set({ active: DialogType.DELETE_OPERATION, props: props }),
-  showGraphParams: props => set({ active: DialogType.GRAPH_PARAMETERS, props: props }),
+  showGraphParams: () => set({ active: DialogType.GRAPH_PARAMETERS, props: undefined }),
   showRelocateConstituents: props => set({ active: DialogType.RELOCATE_CONSTITUENTS, props: props }),
   showRenameCst: props => set({ active: DialogType.RENAME_CONSTITUENTA, props: props }),
   showQR: props => set({ active: DialogType.SHOW_QR_CODE, props: props }),
