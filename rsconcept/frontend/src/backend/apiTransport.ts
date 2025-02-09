@@ -1,12 +1,14 @@
 /**
  * Module: generic API for backend REST communications using axios library.
  */
-import axios from 'axios';
-import { AxiosError, AxiosRequestConfig } from 'axios';
+import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import { toast } from 'react-toastify';
 
 import { buildConstants } from '@/utils/buildConstants';
 import { extractErrorMessage } from '@/utils/utils';
+
+export { AxiosError } from 'axios';
+export const isAxiosError = axios.isAxiosError;
 
 const defaultOptions = {
   xsrfCookieName: 'csrftoken',

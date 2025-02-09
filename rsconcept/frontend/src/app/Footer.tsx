@@ -1,9 +1,9 @@
 import clsx from 'clsx';
 
-import { TextURL } from '@/components/ui/Control';
+import { TextURL } from '@/components/Control';
 import { external_urls } from '@/utils/constants';
 
-function Footer() {
+export function Footer() {
   return (
     <footer
       className={clsx(
@@ -25,5 +25,3 @@ function Footer() {
     </footer>
   );
 }
-
-export default Footer;

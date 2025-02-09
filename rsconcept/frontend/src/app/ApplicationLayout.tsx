@@ -1,16 +1,16 @@
 import { Suspense } from 'react';
 import { Outlet } from 'react-router';
 
-import ConceptToaster from '@/app/ConceptToaster';
-import Footer from '@/app/Footer';
-import Navigation from '@/app/Navigation';
-import Loader from '@/components/ui/Loader';
-import { ModalLoader } from '@/components/ui/Modal';
+import { Loader } from '@/components/Loader';
+import { ModalLoader } from '@/components/Modal';
 import { useAppLayoutStore, useMainHeight, useViewportHeight } from '@/stores/appLayout';
 import { globals } from '@/utils/constants';
 
+import { Footer } from './Footer';
 import { GlobalDialogs } from './GlobalDialogs';
+import ConceptToaster from './GlobalToaster';
 import { GlobalTooltips } from './GlobalTooltips';
+import { Navigation } from './Navigation';
 import { NavigationState } from './Navigation/NavigationContext';
 
 function ApplicationLayout() {

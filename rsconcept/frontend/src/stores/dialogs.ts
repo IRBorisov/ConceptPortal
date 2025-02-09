@@ -1,28 +1,56 @@
 import { create } from 'zustand';
 
-import { DlgChangeInputSchemaProps } from '@/dialogs/DlgChangeInputSchema';
-import { DlgChangeLocationProps } from '@/dialogs/DlgChangeLocation';
-import { DlgCloneLibraryItemProps } from '@/dialogs/DlgCloneLibraryItem';
-import { DlgCreateCstProps } from '@/dialogs/DlgCreateCst/DlgCreateCst';
-import { DlgCreateOperationProps } from '@/dialogs/DlgCreateOperation/DlgCreateOperation';
-import { DlgCreateVersionProps } from '@/dialogs/DlgCreateVersion';
-import { DlgCstTemplateProps } from '@/dialogs/DlgCstTemplate/DlgCstTemplate';
-import { DlgDeleteCstProps } from '@/dialogs/DlgDeleteCst/DlgDeleteCst';
-import { DlgDeleteOperationProps } from '@/dialogs/DlgDeleteOperation';
-import { DlgEditEditorsProps } from '@/dialogs/DlgEditEditors/DlgEditEditors';
-import { DlgEditOperationProps } from '@/dialogs/DlgEditOperation/DlgEditOperation';
-import { DlgEditReferenceProps } from '@/dialogs/DlgEditReference/DlgEditReference';
-import { DlgEditVersionsProps } from '@/dialogs/DlgEditVersions/DlgEditVersions';
-import { DlgEditWordFormsProps } from '@/dialogs/DlgEditWordForms/DlgEditWordForms';
-import { DlgInlineSynthesisProps } from '@/dialogs/DlgInlineSynthesis/DlgInlineSynthesis';
-import { DlgRelocateConstituentsProps } from '@/dialogs/DlgRelocateConstituents';
-import { DlgRenameCstProps } from '@/dialogs/DlgRenameCst';
-import { DlgShowASTProps } from '@/dialogs/DlgShowAST/DlgShowAST';
-import { DlgShowQRProps } from '@/dialogs/DlgShowQR';
-import { DlgShowTypeGraphProps } from '@/dialogs/DlgShowTypeGraph/DlgShowTypeGraph';
-import { DlgSubstituteCstProps } from '@/dialogs/DlgSubstituteCst';
-import { DlgUploadRSFormProps } from '@/dialogs/DlgUploadRSForm';
-import { DialogType } from '@/models/miscellaneous';
+import { DlgChangeLocationProps } from '@/features/library/dialogs/DlgChangeLocation';
+import { DlgChangeInputSchemaProps } from '@/features/oss/dialogs/DlgChangeInputSchema';
+import { DlgCreateOperationProps } from '@/features/oss/dialogs/DlgCreateOperation/DlgCreateOperation';
+import { DlgDeleteOperationProps } from '@/features/oss/dialogs/DlgDeleteOperation';
+import { DlgEditOperationProps } from '@/features/oss/dialogs/DlgEditOperation/DlgEditOperation';
+import { DlgRelocateConstituentsProps } from '@/features/oss/dialogs/DlgRelocateConstituents';
+import { DlgCloneLibraryItemProps } from '@/features/rsform/dialogs/DlgCloneLibraryItem';
+import { DlgCreateCstProps } from '@/features/rsform/dialogs/DlgCreateCst/DlgCreateCst';
+import { DlgCreateVersionProps } from '@/features/rsform/dialogs/DlgCreateVersion';
+import { DlgCstTemplateProps } from '@/features/rsform/dialogs/DlgCstTemplate/DlgCstTemplate';
+import { DlgDeleteCstProps } from '@/features/rsform/dialogs/DlgDeleteCst/DlgDeleteCst';
+import { DlgEditEditorsProps } from '@/features/rsform/dialogs/DlgEditEditors/DlgEditEditors';
+import { DlgEditReferenceProps } from '@/features/rsform/dialogs/DlgEditReference/DlgEditReference';
+import { DlgEditVersionsProps } from '@/features/rsform/dialogs/DlgEditVersions/DlgEditVersions';
+import { DlgEditWordFormsProps } from '@/features/rsform/dialogs/DlgEditWordForms/DlgEditWordForms';
+import { DlgInlineSynthesisProps } from '@/features/rsform/dialogs/DlgInlineSynthesis/DlgInlineSynthesis';
+import { DlgRenameCstProps } from '@/features/rsform/dialogs/DlgRenameCst';
+import { DlgShowASTProps } from '@/features/rsform/dialogs/DlgShowAST/DlgShowAST';
+import { DlgShowQRProps } from '@/features/rsform/dialogs/DlgShowQR';
+import { DlgShowTypeGraphProps } from '@/features/rsform/dialogs/DlgShowTypeGraph/DlgShowTypeGraph';
+import { DlgSubstituteCstProps } from '@/features/rsform/dialogs/DlgSubstituteCst';
+import { DlgUploadRSFormProps } from '@/features/rsform/dialogs/DlgUploadRSForm';
+
+/**
+ * Represents global dialog.
+ */
+export enum DialogType {
+  CONSTITUENTA_TEMPLATE = 1,
+  CREATE_CONSTITUENTA,
+  CREATE_OPERATION,
+  DELETE_CONSTITUENTA,
+  EDIT_EDITORS,
+  EDIT_OPERATION,
+  EDIT_REFERENCE,
+  EDIT_VERSIONS,
+  EDIT_WORD_FORMS,
+  INLINE_SYNTHESIS,
+  SHOW_AST,
+  SHOW_TYPE_GRAPH,
+  CHANGE_INPUT_SCHEMA,
+  CHANGE_LOCATION,
+  CLONE_LIBRARY_ITEM,
+  CREATE_VERSION,
+  DELETE_OPERATION,
+  GRAPH_PARAMETERS,
+  RELOCATE_CONSTITUENTS,
+  RENAME_CONSTITUENTA,
+  SHOW_QR_CODE,
+  SUBSTITUTE_CONSTITUENTS,
+  UPLOAD_RSFORM
+}
 
 interface DialogsStore {
   active: DialogType | undefined;

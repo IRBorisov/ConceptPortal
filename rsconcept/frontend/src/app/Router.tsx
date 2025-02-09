@@ -1,19 +1,19 @@
 import { createBrowserRouter } from 'react-router';
 
-import { prefetchAuth } from '@/backend/auth/useAuth';
-import { prefetchLibrary } from '@/backend/library/useLibrary';
-import { prefetchOSS } from '@/backend/oss/useOSS';
-import { prefetchRSForm } from '@/backend/rsform/useRSForm';
-import { prefetchProfile } from '@/backend/users/useProfile';
-import { prefetchUsers } from '@/backend/users/useUsers';
-import Loader from '@/components/ui/Loader';
-import CreateItemPage from '@/pages/CreateItemPage';
-import HomePage from '@/pages/HomePage';
-import LoginPage from '@/pages/LoginPage';
-import NotFoundPage from '@/pages/NotFoundPage';
+import { Loader } from '@/components/Loader';
+import { prefetchAuth } from '@/features/auth/backend/useAuth';
+import LoginPage from '@/features/auth/pages/LoginPage';
+import HomePage from '@/features/home/HomePage';
+import NotFoundPage from '@/features/home/NotFoundPage';
+import { prefetchLibrary } from '@/features/library/backend/useLibrary';
+import CreateItemPage from '@/features/library/pages/CreateItemPage';
+import { prefetchOSS } from '@/features/oss/backend/useOSS';
+import { prefetchRSForm } from '@/features/rsform/backend/useRSForm';
+import { prefetchProfile } from '@/features/users/backend/useProfile';
+import { prefetchUsers } from '@/features/users/backend/useUsers';
 
 import ApplicationLayout from './ApplicationLayout';
-import ErrorFallback from './ErrorFallback';
+import { ErrorFallback } from './ErrorFallback';
 import { routes } from './urls';
 
 export const Router = createBrowserRouter([
@@ -38,25 +38,25 @@ export const Router = createBrowserRouter([
       },
       {
         path: routes.signup,
-        lazy: () => import('@/pages/RegisterPage')
+        lazy: () => import('@/features/users/pages/RegisterPage')
       },
       {
         path: routes.profile,
         loader: prefetchProfile,
-        lazy: () => import('@/pages/UserProfilePage')
+        lazy: () => import('@/features/users/pages/UserProfilePage')
       },
       {
         path: routes.restore_password,
-        lazy: () => import('@/pages/RestorePasswordPage')
+        lazy: () => import('@/features/auth/pages/RestorePasswordPage')
       },
       {
         path: routes.password_change,
-        lazy: () => import('@/pages/PasswordChangePage')
+        lazy: () => import('@/features/auth/pages/PasswordChangePage')
       },
       {
         path: routes.library,
         loader: () => Promise.allSettled([prefetchLibrary(), prefetchUsers()]),
-        lazy: () => import('@/pages/LibraryPage')
+        lazy: () => import('@/features/library/pages/LibraryPage')
       },
       {
         path: routes.create_schema,
@@ -65,24 +65,24 @@ export const Router = createBrowserRouter([
       {
         path: `${routes.rsforms}/:id`,
         loader: data => prefetchRSForm(parseRSFormURL(data.params.id, data.request.url)),
-        lazy: () => import('@/pages/RSFormPage')
+        lazy: () => import('@/features/rsform/pages/RSFormPage')
       },
       {
         path: `${routes.oss}/:id`,
         loader: data => prefetchOSS(parseOssURL(data.params.id)),
-        lazy: () => import('@/pages/OssPage')
+        lazy: () => import('@/features/oss/pages/OssPage')
       },
       {
         path: routes.manuals,
-        lazy: () => import('@/pages/ManualsPage')
+        lazy: () => import('@/features/help/pages/ManualsPage')
       },
       {
         path: `${routes.icons}`,
-        lazy: () => import('@/pages/IconsPage')
+        lazy: () => import('@/features/home/IconsPage')
       },
       {
         path: `${routes.database_schema}`,
-        lazy: () => import('@/pages/DatabaseSchemaPage')
+        lazy: () => import('@/features/home/DatabaseSchemaPage')
       }
     ]
   }

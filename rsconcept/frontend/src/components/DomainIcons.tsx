@@ -1,6 +1,6 @@
-import { AccessPolicy, LibraryItemType, LocationHead } from '@/models/library';
-import { CstMatchMode, DependencyMode } from '@/models/miscellaneous';
-import { CstType, ExpressionStatus } from '@/models/rsform';
+import { AccessPolicy, LibraryItemType, LocationHead } from '@/features/library/models/library';
+import { CstType, ExpressionStatus } from '@/features/rsform/models/rsform';
+import { CstMatchMode, DependencyMode } from '@/features/rsform/stores/cstSearch';
 
 import {
   IconAlias,

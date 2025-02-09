@@ -1,10 +1,10 @@
 import { Suspense } from 'react';
 
-import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
-import { useDropdown } from '@/components/ui/Dropdown';
-import Loader from '@/components/ui/Loader';
+import { useDropdown } from '@/components/Dropdown';
+import { Loader } from '@/components/Loader';
 
 import { urls } from '../urls';
+import { useConceptNavigation } from './NavigationContext';
 import UserButton from './UserButton';
 import UserDropdown from './UserDropdown';
 

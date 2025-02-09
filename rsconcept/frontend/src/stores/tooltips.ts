@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-import { IConstituenta } from '@/models/rsform';
+import { IConstituenta } from '@/features/rsform/models/rsform';
 
 interface TooltipsStore {
   activeCst: IConstituenta | undefined;

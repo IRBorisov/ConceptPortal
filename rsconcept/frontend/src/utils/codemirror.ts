@@ -6,14 +6,14 @@ import { NodeType, Tree, TreeCursor } from '@lezer/common';
 import { EditorState, ReactCodeMirrorRef, SelectionRange, TooltipView } from '@uiw/react-codemirror';
 import clsx from 'clsx';
 
-import { ReferenceTokens } from '@/components/RefsInput/parse';
-import { RefEntity } from '@/components/RefsInput/parse/parser.terms';
-import { GlobalTokens } from '@/components/RSInput/rslang';
-import { IEntityReference, ISyntacticReference } from '@/models/language';
-import { parseEntityReference, parseGrammemes, parseSyntacticReference } from '@/models/languageAPI';
-import { IConstituenta } from '@/models/rsform';
-import { isBasicConcept } from '@/models/rsformAPI';
-import { SyntaxTree } from '@/models/rslang';
+import { ReferenceTokens } from '@/features/rsform/components/RefsInput/parse';
+import { RefEntity } from '@/features/rsform/components/RefsInput/parse/parser.terms';
+import { GlobalTokens } from '@/features/rsform/components/RSInput/rslang';
+import { IEntityReference, ISyntacticReference } from '@/features/rsform/models/language';
+import { parseEntityReference, parseGrammemes, parseSyntacticReference } from '@/features/rsform/models/languageAPI';
+import { IConstituenta } from '@/features/rsform/models/rsform';
+import { isBasicConcept } from '@/features/rsform/models/rsformAPI';
+import { SyntaxTree } from '@/features/rsform/models/rslang';
 import { APP_COLORS, colorFgGrammeme } from '@/styling/color';
 
 import { PARAMETER } from './constants';

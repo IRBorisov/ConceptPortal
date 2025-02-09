@@ -1,5 +1,5 @@
-import { useAuthSuspense } from '@/backend/auth/useAuth';
 import { IconLogin, IconUser2 } from '@/components/Icons';
+import { useAuthSuspense } from '@/features/auth/backend/useAuth';
 import { usePreferencesStore } from '@/stores/preferences';
 
 import NavigationButton from './NavigationButton';

@@ -1,6 +1,5 @@
 import clsx from 'clsx';
 
-import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 import { IconLibrary2, IconManuals, IconNewItem2 } from '@/components/Icons';
 import { CProps } from '@/components/props';
 import useWindowSize from '@/hooks/useWindowSize';
@@ -10,10 +9,11 @@ import { PARAMETER } from '@/utils/constants';
 import { urls } from '../urls';
 import Logo from './Logo';
 import NavigationButton from './NavigationButton';
+import { useConceptNavigation } from './NavigationContext';
 import ToggleNavigation from './ToggleNavigation';
 import UserMenu from './UserMenu';
 
-function Navigation() {
+export function Navigation() {
   const router = useConceptNavigation();
   const size = useWindowSize();
   const noNavigationAnimation = useAppLayoutStore(state => state.noNavigationAnimation);
@@ -65,5 +65,3 @@ function Navigation() {
     </nav>
   );
 }
-
-export default Navigation;

@@ -2,10 +2,8 @@
  * Module: Utility functions.
  */
 
-import axios, { AxiosError, AxiosHeaderValue, AxiosResponse } from 'axios';
+import { AxiosError, AxiosHeaderValue, AxiosResponse, isAxiosError } from 'axios';
 import { toast } from 'react-toastify';
-
-import { AliasMapping } from '@/models/rslang';
 
 import { information, prompts } from './labels';
 
@@ -44,29 +42,6 @@ export class TextMatcher {
       return !!text.match(this.query);
     }
   }
-}
-
-/**
- * Text substitution guided by mapping and regular expression.
- */
-export function applyPattern(text: string, mapping: AliasMapping, pattern: RegExp): string {
-  if (text === '' || pattern === null) {
-    return text;
-  }
-  let posInput = 0;
-  let output = '';
-  const patternMatches = text.matchAll(pattern);
-  for (const segment of patternMatches) {
-    const entity = segment[0];
-    const start = segment.index ?? 0;
-    if (entity in mapping) {
-      output += text.substring(posInput, start);
-      output += mapping[entity];
-      posInput = start + segment[0].length;
-    }
-  }
-  output += text.substring(posInput);
-  return output;
 }
 
 /**
@@ -158,7 +133,7 @@ export function tripleToggleColor(value: boolean | undefined): string {
  * Extract error message from error object.
  */
 export function extractErrorMessage(error: Error | AxiosError): string {
-  if (axios.isAxiosError(error)) {
+  if (isAxiosError(error)) {
     if (error.response && error.response.status === 400) {
       const data = error.response.data as Record<string, unknown>;
       const keys = Object.keys(data);

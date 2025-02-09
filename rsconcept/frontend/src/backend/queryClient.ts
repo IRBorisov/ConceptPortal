@@ -1,6 +1,6 @@
 import { QueryClient } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
 
+import { AxiosError } from './apiTransport';
 import { DELAYS } from './configuration';
 
 declare module '@tanstack/react-query' {

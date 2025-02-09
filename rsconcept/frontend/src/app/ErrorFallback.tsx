@@ -1,9 +1,9 @@
 import { useNavigate, useRouteError } from 'react-router';
 
-import InfoError from '@/components/info/InfoError';
-import { Button } from '@/components/ui/Control';
+import { Button } from '@/components/Control';
+import { InfoError } from '@/components/InfoError';
 
-function ErrorFallback() {
+export function ErrorFallback() {
   const error = useRouteError();
   const router = useNavigate();
 
@@ -18,5 +18,3 @@ function ErrorFallback() {
     </div>
   );
 }
-
-export default ErrorFallback;

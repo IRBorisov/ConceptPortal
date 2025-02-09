@@ -4,13 +4,12 @@
  * Label is a short text used to represent an entity.
  * Description is a long description used in tooltips.
  */
-import { FolderNode } from '@/models/FolderTree';
-import { GramData, Grammeme, ReferenceType } from '@/models/language';
-import { AccessPolicy, LibraryItemType, LocationHead } from '@/models/library';
-import { validateLocation } from '@/models/libraryAPI';
-import { CstMatchMode, DependencyMode, GraphColoring, HelpTopic } from '@/models/miscellaneous';
-import { ISubstitutionErrorDescription, OperationType, SubstitutionErrorType } from '@/models/oss';
-import { CstClass, CstType, ExpressionStatus, IConstituenta, IRSForm } from '@/models/rsform';
+import { HelpTopic } from '@/features/help/models/helpTopic';
+import { AccessPolicy, LibraryItemType, LocationHead } from '@/features/library/models/library';
+import { validateLocation } from '@/features/library/models/libraryAPI';
+import { ISubstitutionErrorDescription, OperationType, SubstitutionErrorType } from '@/features/oss/models/oss';
+import { GramData, Grammeme, ReferenceType } from '@/features/rsform/models/language';
+import { CstClass, CstType, ExpressionStatus, IConstituenta, IRSForm } from '@/features/rsform/models/rsform';
 import {
   IArgumentInfo,
   IRSErrorDescription,
@@ -18,8 +17,11 @@ import {
   ParsingStatus,
   RSErrorType,
   TokenID
-} from '@/models/rslang';
-import { UserRole } from '@/models/user';
+} from '@/features/rsform/models/rslang';
+import { CstMatchMode, DependencyMode } from '@/features/rsform/stores/cstSearch';
+import { GraphColoring } from '@/features/rsform/stores/termGraph';
+import { UserRole } from '@/features/users/models/user';
+import { FolderNode } from '@/models/FolderTree';
 
 import { PARAMETER } from './constants';
 

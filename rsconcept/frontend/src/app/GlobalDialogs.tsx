@@ -2,32 +2,31 @@
 
 import React from 'react';
 
-import { DialogType } from '@/models/miscellaneous';
-import { useDialogsStore } from '@/stores/dialogs';
+import { DialogType, useDialogsStore } from '@/stores/dialogs';
 
-const DlgChangeInputSchema = React.lazy(() => import('@/dialogs/DlgChangeInputSchema'));
-const DlgChangeLocation = React.lazy(() => import('@/dialogs/DlgChangeLocation'));
-const DlgCloneLibraryItem = React.lazy(() => import('@/dialogs/DlgCloneLibraryItem'));
-const DlgCreateCst = React.lazy(() => import('@/dialogs/DlgCreateCst'));
-const DlgCreateOperation = React.lazy(() => import('@/dialogs/DlgCreateOperation'));
-const DlgCreateVersion = React.lazy(() => import('@/dialogs/DlgCreateVersion'));
-const DlgCstTemplate = React.lazy(() => import('@/dialogs/DlgCstTemplate'));
-const DlgDeleteCst = React.lazy(() => import('@/dialogs/DlgDeleteCst'));
-const DlgDeleteOperation = React.lazy(() => import('@/dialogs/DlgDeleteOperation'));
-const DlgEditEditors = React.lazy(() => import('@/dialogs/DlgEditEditors'));
-const DlgEditOperation = React.lazy(() => import('@/dialogs/DlgEditOperation'));
-const DlgEditReference = React.lazy(() => import('@/dialogs/DlgEditReference'));
-const DlgEditVersions = React.lazy(() => import('@/dialogs/DlgEditVersions'));
-const DlgEditWordForms = React.lazy(() => import('@/dialogs/DlgEditWordForms'));
-const DlgGraphParams = React.lazy(() => import('@/dialogs/DlgGraphParams'));
-const DlgInlineSynthesis = React.lazy(() => import('@/dialogs/DlgInlineSynthesis'));
-const DlgRelocateConstituents = React.lazy(() => import('@/dialogs/DlgRelocateConstituents'));
-const DlgRenameCst = React.lazy(() => import('@/dialogs/DlgRenameCst'));
-const DlgShowAST = React.lazy(() => import('@/dialogs/DlgShowAST'));
-const DlgShowQR = React.lazy(() => import('@/dialogs/DlgShowQR'));
-const DlgShowTypeGraph = React.lazy(() => import('@/dialogs/DlgShowTypeGraph'));
-const DlgSubstituteCst = React.lazy(() => import('@/dialogs/DlgSubstituteCst'));
-const DlgUploadRSForm = React.lazy(() => import('@/dialogs/DlgUploadRSForm'));
+const DlgChangeInputSchema = React.lazy(() => import('@/features/oss/dialogs/DlgChangeInputSchema'));
+const DlgChangeLocation = React.lazy(() => import('@/features/library/dialogs/DlgChangeLocation'));
+const DlgCloneLibraryItem = React.lazy(() => import('@/features/rsform/dialogs/DlgCloneLibraryItem'));
+const DlgCreateCst = React.lazy(() => import('@/features/rsform/dialogs/DlgCreateCst'));
+const DlgCreateOperation = React.lazy(() => import('@/features/oss/dialogs/DlgCreateOperation'));
+const DlgCreateVersion = React.lazy(() => import('@/features/rsform/dialogs/DlgCreateVersion'));
+const DlgCstTemplate = React.lazy(() => import('@/features/rsform/dialogs/DlgCstTemplate'));
+const DlgDeleteCst = React.lazy(() => import('@/features/rsform/dialogs/DlgDeleteCst'));
+const DlgDeleteOperation = React.lazy(() => import('@/features/oss/dialogs/DlgDeleteOperation'));
+const DlgEditEditors = React.lazy(() => import('@/features/rsform/dialogs/DlgEditEditors'));
+const DlgEditOperation = React.lazy(() => import('@/features/oss/dialogs/DlgEditOperation'));
+const DlgEditReference = React.lazy(() => import('@/features/rsform/dialogs/DlgEditReference'));
+const DlgEditVersions = React.lazy(() => import('@/features/rsform/dialogs/DlgEditVersions'));
+const DlgEditWordForms = React.lazy(() => import('@/features/rsform/dialogs/DlgEditWordForms'));
+const DlgGraphParams = React.lazy(() => import('@/features/rsform/dialogs/DlgGraphParams'));
+const DlgInlineSynthesis = React.lazy(() => import('@/features/rsform/dialogs/DlgInlineSynthesis'));
+const DlgRelocateConstituents = React.lazy(() => import('@/features/oss/dialogs/DlgRelocateConstituents'));
+const DlgRenameCst = React.lazy(() => import('@/features/rsform/dialogs/DlgRenameCst'));
+const DlgShowAST = React.lazy(() => import('@/features/rsform/dialogs/DlgShowAST'));
+const DlgShowQR = React.lazy(() => import('@/features/rsform/dialogs/DlgShowQR'));
+const DlgShowTypeGraph = React.lazy(() => import('@/features/rsform/dialogs/DlgShowTypeGraph'));
+const DlgSubstituteCst = React.lazy(() => import('@/features/rsform/dialogs/DlgSubstituteCst'));
+const DlgUploadRSForm = React.lazy(() => import('@/features/rsform/dialogs/DlgUploadRSForm'));
 
 export const GlobalDialogs = () => {
   const active = useDialogsStore(state => state.active);

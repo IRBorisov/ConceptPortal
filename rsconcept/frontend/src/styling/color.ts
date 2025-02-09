@@ -2,11 +2,11 @@
  * Module: Single place for all color definitions in code (see index.css for full defs).
  */
 
-import { GramData, Grammeme, NounGrams, PartOfSpeech, VerbGrams } from '@/models/language';
-import { GraphColoring } from '@/models/miscellaneous';
-import { CstClass, ExpressionStatus, IConstituenta } from '@/models/rsform';
-import { ISyntaxTreeNode, TokenID } from '@/models/rslang';
-import { TMGraphNode } from '@/models/TMGraph';
+import { GramData, Grammeme, NounGrams, PartOfSpeech, VerbGrams } from '@/features/rsform/models/language';
+import { CstClass, ExpressionStatus, IConstituenta } from '@/features/rsform/models/rsform';
+import { ISyntaxTreeNode, TokenID } from '@/features/rsform/models/rslang';
+import { TMGraphNode } from '@/features/rsform/models/TMGraph';
+import { GraphColoring } from '@/features/rsform/stores/termGraph';
 import { PARAMETER } from '@/utils/constants';
 
 /** Semantic colors for application. */

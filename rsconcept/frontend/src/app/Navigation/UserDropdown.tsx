@@ -1,6 +1,4 @@
-import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
-import { useAuthSuspense } from '@/backend/auth/useAuth';
-import { useLogout } from '@/backend/auth/useLogout';
+import { Dropdown, DropdownButton } from '@/components/Dropdown';
 import {
   IconAdmin,
   IconAdminOff,
@@ -16,10 +14,12 @@ import {
   IconUser
 } from '@/components/Icons';
 import { CProps } from '@/components/props';
-import { Dropdown, DropdownButton } from '@/components/ui/Dropdown';
+import { useAuthSuspense } from '@/features/auth/backend/useAuth';
+import { useLogout } from '@/features/auth/backend/useLogout';
 import { usePreferencesStore } from '@/stores/preferences';
 
 import { urls } from '../urls';
+import { useConceptNavigation } from './NavigationContext';
 
 interface UserDropdownProps {
   isOpen: boolean;
