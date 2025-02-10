@@ -103,7 +103,7 @@ function TabInputOperation({
       {!createSchema ? (
         <PickSchema
           items={sortedItems}
-          value={attachedID}
+          value={attachedID ?? null}
           itemType={LibraryItemType.RSFORM}
           onChange={onChangeAttachedID}
           rows={8}

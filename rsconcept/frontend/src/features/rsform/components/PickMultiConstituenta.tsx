@@ -19,7 +19,7 @@ import ToolbarGraphSelection from './ToolbarGraphSelection';
 interface PickMultiConstituentaProps extends CProps.Styling {
   id?: string;
   value: ConstituentaID[];
-  onChange: React.Dispatch<React.SetStateAction<ConstituentaID[]>>;
+  onChange: (newValue: ConstituentaID[]) => void;
 
   schema: IRSForm;
   items: IConstituenta[];
@@ -78,7 +78,7 @@ function PickMultiConstituenta({
           newSelection.push(cst.id);
         }
       });
-      onChange(prev => [...prev.filter(cst_id => !filtered.find(cst => cst.id === cst_id)), ...newSelection]);
+      onChange([...value.filter(cst_id => !filtered.find(cst => cst.id === cst_id)), ...newSelection]);
     }
   }
 

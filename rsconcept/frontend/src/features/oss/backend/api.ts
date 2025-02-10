@@ -12,7 +12,7 @@ import {
   OperationID,
   OperationType
 } from '@/features/oss/models/oss';
-import { ConstituentaID, IConstituentaReference, ITargetCst } from '@/features/rsform/models/rsform';
+import { IConstituentaReference, ITargetCst } from '@/features/rsform/models/rsform';
 import { information } from '@/utils/labels';
 
 /**
@@ -130,10 +130,15 @@ export interface IOperationUpdateDTO extends ITargetOperation {
 /**
  * Represents data, used relocating {@link IConstituenta}s between {@link ILibraryItem}s.
  */
-export interface ICstRelocateDTO {
-  destination: LibraryItemID;
-  items: ConstituentaID[];
-}
+export const schemaCstRelocate = z.object({
+  destination: z.number(),
+  items: z.array(z.number()).refine(data => data.length > 0)
+});
+
+/**
+ * Represents data, used relocating {@link IConstituenta}s between {@link ILibraryItem}s.
+ */
+export type ICstRelocateDTO = z.infer<typeof schemaCstRelocate>;
 
 export const ossApi = {
   baseKey: 'oss',
@@ -218,9 +223,9 @@ export const ossApi = {
       }
     }),
 
-  relocateConstituents: ({ itemID, data }: { itemID: LibraryItemID; data: ICstRelocateDTO }) =>
+  relocateConstituents: (data: ICstRelocateDTO) =>
     axiosPost<ICstRelocateDTO, IOperationSchemaDTO>({
-      endpoint: `/api/oss/${itemID}/relocate-constituents`,
+      endpoint: `/api/oss/relocate-constituents`,
       request: {
         data: data,
         successMessage: information.changesSaved

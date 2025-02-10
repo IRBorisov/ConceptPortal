@@ -19,8 +19,6 @@ import { IOperationPosition } from '../../backend/api';
 import { useOperationCreate } from '../../backend/useOperationCreate';
 import { useOperationUpdate } from '../../backend/useOperationUpdate';
 import { useOssSuspense } from '../../backend/useOSS';
-import { useRelocateConstituents } from '../../backend/useRelocateConstituents';
-import { useUpdatePositions } from '../../backend/useUpdatePositions';
 import { IOperationSchema, OperationID, OperationType } from '../../models/oss';
 import { calculateInsertPosition } from '../../models/ossAPI';
 
@@ -100,10 +98,8 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
   const showCreateOperation = useDialogsStore(state => state.showCreateOperation);
 
   const { deleteItem } = useDeleteItem();
-  const { updatePositions } = useUpdatePositions();
   const { operationCreate } = useOperationCreate();
   const { operationUpdate } = useOperationUpdate();
-  const { relocateConstituents } = useRelocateConstituents();
 
   useEffect(
     () =>
@@ -220,25 +216,7 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
     showRelocateConstituents({
       oss: schema,
       initialTarget: operation,
-      onSubmit: data => {
-        if (
-          positions.every(item => {
-            const operation = schema.operationByID.get(item.id)!;
-            return operation.position_x === item.position_x && operation.position_y === item.position_y;
-          })
-        ) {
-          relocateConstituents({ itemID: schema.id, data });
-        } else {
-          updatePositions(
-            {
-              isSilent: true,
-              itemID: schema.id, //
-              positions: positions
-            },
-            () => relocateConstituents({ itemID: schema.id, data })
-          );
-        }
-      }
+      positions: positions
     });
   }
 

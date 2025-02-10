@@ -1,7 +1,9 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
 import clsx from 'clsx';
 import { useState } from 'react';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 
 import { MiniButton } from '@/components/Control';
 import { RelocateUpIcon } from '@/components/DomainIcons';
@@ -11,32 +13,50 @@ import { HelpTopic } from '@/features/help/models/helpTopic';
 import { useLibrary } from '@/features/library/backend/useLibrary';
 import SelectLibraryItem from '@/features/library/components/SelectLibraryItem';
 import { ILibraryItem, LibraryItemID } from '@/features/library/models/library';
-import { ICstRelocateDTO } from '@/features/oss/backend/api';
 import { useRSForm } from '@/features/rsform/backend/useRSForm';
 import PickMultiConstituenta from '@/features/rsform/components/PickMultiConstituenta';
-import { ConstituentaID } from '@/features/rsform/models/rsform';
 import { useDialogsStore } from '@/stores/dialogs';
 
+import { ICstRelocateDTO, IOperationPosition, schemaCstRelocate } from '../backend/api';
+import { useRelocateConstituents } from '../backend/useRelocateConstituents';
+import { useUpdatePositions } from '../backend/useUpdatePositions';
 import { IOperation, IOperationSchema } from '../models/oss';
 import { getRelocateCandidates } from '../models/ossAPI';
 
 export interface DlgRelocateConstituentsProps {
   oss: IOperationSchema;
   initialTarget?: IOperation;
-  onSubmit: (data: ICstRelocateDTO) => void;
+  positions: IOperationPosition[];
 }
 
 function DlgRelocateConstituents() {
-  const { oss, initialTarget, onSubmit } = useDialogsStore(state => state.props as DlgRelocateConstituentsProps);
+  const { oss, initialTarget, positions } = useDialogsStore(state => state.props as DlgRelocateConstituentsProps);
   const { items: libraryItems } = useLibrary();
+  const { updatePositions } = useUpdatePositions();
+  const { relocateConstituents } = useRelocateConstituents();
+
+  const {
+    handleSubmit,
+    control,
+    setValue,
+    resetField,
+    formState: { isValid }
+  } = useForm<ICstRelocateDTO>({
+    resolver: zodResolver(schemaCstRelocate),
+    defaultValues: {
+      items: []
+    },
+    mode: 'onChange'
+  });
+  const destination = useWatch({ control, name: 'destination' });
+  const destinationItem = destination ? libraryItems.find(item => item.id === destination) : undefined;
 
   const [directionUp, setDirectionUp] = useState(true);
-  const [destination, setDestination] = useState<ILibraryItem | undefined>(undefined);
-  const [selected, setSelected] = useState<ConstituentaID[]>([]);
   const [source, setSource] = useState<ILibraryItem | undefined>(
     libraryItems.find(item => item.id === initialTarget?.result)
   );
-  const isValid = !!destination && selected.length > 0;
+
+  console.log(isValid);
 
   const operation = oss.items.find(item => item.result === source?.id);
   const sourceSchemas = libraryItems.filter(item => oss.schemas.includes(item.id));
@@ -53,37 +73,50 @@ function DlgRelocateConstituents() {
 
   const sourceData = useRSForm({ itemID: source?.id });
   const filteredConstituents = (() => {
-    if (!sourceData.schema || !destination || !operation) {
+    if (!sourceData.schema || !destinationItem || !operation) {
       return [];
     }
-    const destinationOperation = oss.items.find(item => item.result === destination.id);
+    const destinationOperation = oss.items.find(item => item.result === destination);
     return getRelocateCandidates(operation.id, destinationOperation!.id, sourceData.schema, oss);
   })();
 
   function toggleDirection() {
     setDirectionUp(prev => !prev);
-    setDestination(undefined);
+    resetField('destination');
   }
 
   function handleSelectSource(newValue: ILibraryItem | undefined) {
     setSource(newValue);
-    setDestination(undefined);
-    setSelected([]);
+    resetField('destination');
+    resetField('items');
   }
 
   function handleSelectDestination(newValue: ILibraryItem | undefined) {
-    setDestination(newValue);
-    setSelected([]);
+    if (newValue) {
+      setValue('destination', newValue.id);
+    } else {
+      resetField('destination');
+    }
+    resetField('items');
   }
 
-  function handleSubmit() {
-    if (destination) {
-      onSubmit({
-        destination: destination.id,
-        items: selected
-      });
+  function onSubmit(data: ICstRelocateDTO) {
+    const positionsUnchanged = positions.every(item => {
+      const operation = oss.operationByID.get(item.id)!;
+      return operation.position_x === item.position_x && operation.position_y === item.position_y;
+    });
+    if (positionsUnchanged) {
+      relocateConstituents(data);
+    } else {
+      updatePositions(
+        {
+          isSilent: true,
+          itemID: oss.id,
+          positions: positions
+        },
+        () => relocateConstituents(data)
+      );
     }
-    return true;
   }
 
   return (
@@ -91,7 +124,7 @@ function DlgRelocateConstituents() {
       header='Перенос конституент'
       submitText='Переместить'
       canSubmit={isValid}
-      onSubmit={handleSubmit}
+      onSubmit={event => void handleSubmit(onSubmit)(event)}
       className={clsx('w-[40rem] h-[33rem]', 'py-3 px-6')}
       helpTopic={HelpTopic.UI_RELOCATE_CST}
     >
@@ -115,19 +148,25 @@ function DlgRelocateConstituents() {
             className='w-1/2'
             placeholder='Выберите целевую схему'
             items={destinationSchemas}
-            value={destination}
+            value={destinationItem}
             onChange={handleSelectDestination}
           />
         </div>
         {sourceData.isLoading ? <Loader /> : null}
         {!sourceData.isLoading && sourceData.schema ? (
-          <PickMultiConstituenta
-            noBorder
-            schema={sourceData.schema}
-            items={filteredConstituents}
-            rows={12}
-            value={selected}
-            onChange={setSelected}
+          <Controller
+            name='items'
+            control={control}
+            render={({ field }) => (
+              <PickMultiConstituenta
+                noBorder
+                schema={sourceData.schema!}
+                items={filteredConstituents}
+                rows={12}
+                value={field.value}
+                onChange={field.onChange}
+              />
+            )}
           />
         ) : null}
       </div>
