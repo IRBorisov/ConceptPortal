@@ -1,4 +1,5 @@
 import { queryOptions } from '@tanstack/react-query';
+import { z } from 'zod';
 
 import { axiosDelete, axiosGet, axiosPatch, axiosPost } from '@/backend/apiTransport';
 import { DELAYS } from '@/backend/configuration';
@@ -8,7 +9,6 @@ import {
   ICstSubstitute,
   ICstSubstituteEx,
   IOperation,
-  IOperationPosition,
   OperationID,
   OperationType
 } from '@/features/oss/models/oss';
@@ -80,11 +80,32 @@ export interface IInputCreatedResponse {
 }
 
 /**
+ * Represents {@link IOperation} position.
+ */
+export const OperationPositionSchema = z.object({
+  id: z.number(),
+  position_x: z.number(),
+  position_y: z.number()
+});
+
+/**
+ * Represents {@link IOperation} position.
+ */
+export type IOperationPosition = z.infer<typeof OperationPositionSchema>;
+
+/**
  * Represents {@link IOperation} data, used in setInput process.
  */
-export interface IInputUpdateDTO extends ITargetOperation {
-  input: LibraryItemID | null;
-}
+export const InputUpdateSchema = z.object({
+  target: z.number(),
+  positions: z.array(OperationPositionSchema),
+  input: z.number().nullable()
+});
+
+/**
+ * Represents {@link IOperation} data, used in setInput process.
+ */
+export type IInputUpdateDTO = z.infer<typeof InputUpdateSchema>;
 
 /**
  * Represents {@link IOperation} data, used in update process.

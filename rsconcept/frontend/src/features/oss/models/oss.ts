@@ -44,18 +44,6 @@ export interface IOperation {
 }
 
 /**
- * Represents {@link IOperation} position.
- */
-export interface IOperationPosition extends Pick<IOperation, 'id' | 'position_x' | 'position_y'> {}
-
-/**
- * Represents all {@link IOperation} positions in {@link IOperationSchema}.
- */
-export interface IPositions {
-  positions: IOperationPosition[];
-}
-
-/**
  * Represents {@link IOperation} Argument.
  */
 export interface IArgument {

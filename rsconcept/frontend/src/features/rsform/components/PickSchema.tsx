@@ -18,7 +18,7 @@ import SelectLocation from '../../library/components/SelectLocation';
 
 interface PickSchemaProps extends CProps.Styling {
   id?: string;
-  value?: LibraryItemID;
+  value: LibraryItemID | null;
   onChange: (newValue: LibraryItemID) => void;
 
   initialFilter?: string;

@@ -34,9 +34,7 @@ function DlgRenameCst() {
   });
   const alias = useWatch({ control, name: 'alias' });
   const cst_type = useWatch({ control, name: 'cst_type' });
-
-  // TODO: validate in ZOD
-  const validated = alias !== target.alias && validateNewAlias(alias, cst_type, schema);
+  const isValid = alias !== target.alias && validateNewAlias(alias, cst_type, schema);
 
   function onSubmit(data: ICstRenameDTO) {
     cstRename({ itemID: schema.id, data: data });
@@ -52,7 +50,7 @@ function DlgRenameCst() {
       header='Переименование конституенты'
       submitText='Переименовать'
       submitInvalidTooltip='Введите незанятое имя, соответствующее типу'
-      canSubmit={validated}
+      canSubmit={isValid}
       onSubmit={event => void handleSubmit(onSubmit)(event)}
       className={clsx('w-[30rem]', 'py-6 pr-3 pl-6 flex gap-3 justify-center items-center ')}
       helpTopic={HelpTopic.CC_CONSTITUENTA}

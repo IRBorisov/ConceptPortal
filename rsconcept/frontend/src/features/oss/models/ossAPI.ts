@@ -16,15 +16,8 @@ import { describeSubstitutionError, information } from '@/utils/labels';
 import { TextMatcher } from '@/utils/utils';
 
 import { Graph } from '../../../models/Graph';
-import {
-  ICstSubstitute,
-  IOperation,
-  IOperationPosition,
-  IOperationSchema,
-  OperationID,
-  OperationType,
-  SubstitutionErrorType
-} from './oss';
+import { IOperationPosition } from '../backend/api';
+import { ICstSubstitute, IOperation, IOperationSchema, OperationID, OperationType, SubstitutionErrorType } from './oss';
 import { Position2D } from './ossLayout';
 
 /**

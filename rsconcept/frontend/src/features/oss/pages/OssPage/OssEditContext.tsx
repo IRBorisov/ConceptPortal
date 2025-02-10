@@ -15,14 +15,14 @@ import { useRoleStore } from '@/stores/role';
 import { PARAMETER } from '@/utils/constants';
 import { prompts } from '@/utils/labels';
 
-import { useInputUpdate } from '../../backend/useInputUpdate';
+import { IOperationPosition } from '../../backend/api';
 import { useOperationCreate } from '../../backend/useOperationCreate';
 import { useOperationDelete } from '../../backend/useOperationDelete';
 import { useOperationUpdate } from '../../backend/useOperationUpdate';
 import { useOssSuspense } from '../../backend/useOSS';
 import { useRelocateConstituents } from '../../backend/useRelocateConstituents';
 import { useUpdatePositions } from '../../backend/useUpdatePositions';
-import { IOperationPosition, IOperationSchema, OperationID, OperationType } from '../../models/oss';
+import { IOperationSchema, OperationID, OperationType } from '../../models/oss';
 import { calculateInsertPosition } from '../../models/ossAPI';
 
 export enum OssTabID {
@@ -106,7 +106,6 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
   const { operationDelete } = useOperationDelete();
   const { operationUpdate } = useOperationUpdate();
   const { relocateConstituents } = useRelocateConstituents();
-  const { inputUpdate } = useInputUpdate();
 
   useEffect(
     () =>
@@ -223,16 +222,7 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
     showEditInput({
       oss: schema,
       target: operation,
-      onSubmit: (target, newInput) => {
-        inputUpdate({
-          itemID: schema.id,
-          data: {
-            target: target,
-            positions: positions,
-            input: newInput ?? null
-          }
-        });
-      }
+      positions: positions
     });
   }
 
