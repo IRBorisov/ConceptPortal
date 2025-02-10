@@ -23,7 +23,6 @@ function DlgGraphParams() {
 
   return (
     <ModalForm
-      canSubmit
       header='Настройки графа термов'
       onSubmit={event => void handleSubmit(onSubmit)(event)}
       submitText='Применить'

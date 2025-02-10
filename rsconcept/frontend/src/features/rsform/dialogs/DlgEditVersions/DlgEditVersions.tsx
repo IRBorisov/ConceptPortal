@@ -9,7 +9,7 @@ import { MiniButton } from '@/components/Control';
 import { IconReset, IconSave } from '@/components/Icons';
 import { TextArea, TextInput } from '@/components/Input';
 import { ModalView } from '@/components/Modal';
-import { IVersionUpdateDTO, VersionUpdateSchema } from '@/features/library/backend/api';
+import { IVersionUpdateDTO, schemaVersionUpdate } from '@/features/library/backend/api';
 import { useMutatingLibrary } from '@/features/library/backend/useMutatingLibrary';
 import { useVersionDelete } from '@/features/library/backend/useVersionDelete';
 import { useVersionUpdate } from '@/features/library/backend/useVersionUpdate';
@@ -40,7 +40,7 @@ function DlgEditVersions() {
     reset,
     formState: { isDirty, errors: formErrors }
   } = useForm<IVersionUpdateDTO>({
-    resolver: zodResolver(VersionUpdateSchema),
+    resolver: zodResolver(schemaVersionUpdate),
     defaultValues: {
       id: schema.versions[0].id,
       version: schema.versions[0].version,

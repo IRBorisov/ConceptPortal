@@ -16,7 +16,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { errors, labelCstTypification, labelTypification } from '@/utils/labels';
 
-import { CstUpdateSchema, ICstUpdateDTO } from '../../../backend/api';
+import { ICstUpdateDTO, schemaCstUpdate } from '../../../backend/api';
 import { useCstUpdate } from '../../../backend/useCstUpdate';
 import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
 import RefsInput from '../../../components/RefsInput';
@@ -47,7 +47,7 @@ function FormConstituenta({ disabled, id, toggleReset, schema, activeCst, onOpen
     control,
     reset,
     formState: { isDirty }
-  } = useForm<ICstUpdateDTO>({ resolver: zodResolver(CstUpdateSchema) });
+  } = useForm<ICstUpdateDTO>({ resolver: zodResolver(schemaCstUpdate) });
 
   const [localParse, setLocalParse] = useState<IExpressionParse | undefined>(undefined);
 

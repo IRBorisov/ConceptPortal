@@ -6,7 +6,7 @@ import { Controller, useForm, useWatch } from 'react-hook-form';
 
 import { Checkbox, TextArea, TextInput } from '@/components/Input';
 import { ModalForm } from '@/components/Modal';
-import { IVersionCreateDTO, VersionCreateSchema } from '@/features/library/backend/api';
+import { IVersionCreateDTO, schemaVersionCreate } from '@/features/library/backend/api';
 import { useVersionCreate } from '@/features/library/backend/useVersionCreate';
 import { IVersionInfo, LibraryItemID, VersionID } from '@/features/library/models/library';
 import { nextVersion } from '@/features/library/models/libraryAPI';
@@ -34,7 +34,7 @@ function DlgCreateVersion() {
   const { versionCreate } = useVersionCreate();
 
   const { register, handleSubmit, control } = useForm<IVersionCreateDTO>({
-    resolver: zodResolver(VersionCreateSchema),
+    resolver: zodResolver(schemaVersionCreate),
     defaultValues: {
       version: versions.length > 0 ? nextVersion(versions[0].version) : '1.0.0',
       description: '',

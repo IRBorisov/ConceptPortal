@@ -9,7 +9,7 @@ import { SubmitButton } from '@/components/Control';
 import { ErrorData } from '@/components/InfoError';
 import { TextInput } from '@/components/Input';
 
-import { IUpdateProfileDTO, UpdateProfileSchema } from '../../backend/api';
+import { IUpdateProfileDTO, schemaUpdateProfile } from '../../backend/api';
 import { useProfileSuspense } from '../../backend/useProfile';
 import { useUpdateProfile } from '../../backend/useUpdateProfile';
 
@@ -24,7 +24,7 @@ function EditorProfile() {
     reset: resetForm,
     formState: { errors, isDirty }
   } = useForm<IUpdateProfileDTO>({
-    resolver: zodResolver(UpdateProfileSchema),
+    resolver: zodResolver(schemaUpdateProfile),
     defaultValues: {
       first_name: profile.first_name,
       last_name: profile.last_name,

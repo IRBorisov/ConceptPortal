@@ -30,6 +30,20 @@ export interface IOperationSchemaDTO extends ILibraryItemData {
 }
 
 /**
+ * Represents {@link IOperation} position.
+ */
+export const schemaOperationPosition = z.object({
+  id: z.number(),
+  position_x: z.number(),
+  position_y: z.number()
+});
+
+/**
+ * Represents {@link IOperation} position.
+ */
+export type IOperationPosition = z.infer<typeof schemaOperationPosition>;
+
+/**
  * Represents {@link IOperation} data, used in creation process.
  */
 export interface IOperationCreateDTO {
@@ -66,10 +80,17 @@ export interface ITargetOperation {
 /**
  * Represents {@link IOperation} data, used in destruction process.
  */
-export interface IOperationDeleteDTO extends ITargetOperation {
-  keep_constituents: boolean;
-  delete_schema: boolean;
-}
+export const schemaOperationDelete = z.object({
+  target: z.number(),
+  positions: z.array(schemaOperationPosition),
+  keep_constituents: z.boolean(),
+  delete_schema: z.boolean()
+});
+
+/**
+ * Represents {@link IOperation} data, used in destruction process.
+ */
+export type IOperationDeleteDTO = z.infer<typeof schemaOperationDelete>;
 
 /**
  * Represents data response when creating {@link IRSForm} for Input {@link IOperation}.
@@ -80,32 +101,18 @@ export interface IInputCreatedResponse {
 }
 
 /**
- * Represents {@link IOperation} position.
- */
-export const OperationPositionSchema = z.object({
-  id: z.number(),
-  position_x: z.number(),
-  position_y: z.number()
-});
-
-/**
- * Represents {@link IOperation} position.
- */
-export type IOperationPosition = z.infer<typeof OperationPositionSchema>;
-
-/**
  * Represents {@link IOperation} data, used in setInput process.
  */
-export const InputUpdateSchema = z.object({
+export const schemaInputUpdate = z.object({
   target: z.number(),
-  positions: z.array(OperationPositionSchema),
+  positions: z.array(schemaOperationPosition),
   input: z.number().nullable()
 });
 
 /**
  * Represents {@link IOperation} data, used in setInput process.
  */
-export type IInputUpdateDTO = z.infer<typeof InputUpdateSchema>;
+export type IInputUpdateDTO = z.infer<typeof schemaInputUpdate>;
 
 /**
  * Represents {@link IOperation} data, used in update process.

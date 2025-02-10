@@ -10,7 +10,7 @@ import { FlexColumn } from '@/components/Container';
 import { SubmitButton } from '@/components/Control';
 import { ErrorData } from '@/components/InfoError';
 import { TextInput } from '@/components/Input';
-import { ChangePasswordSchema, IChangePasswordDTO } from '@/features/auth/backend/api';
+import { IChangePasswordDTO, schemaChangePassword } from '@/features/auth/backend/api';
 import { useChangePassword } from '@/features/auth/backend/useChangePassword';
 
 function EditorPassword() {
@@ -22,7 +22,7 @@ function EditorPassword() {
     clearErrors,
     formState: { errors }
   } = useForm<IChangePasswordDTO>({
-    resolver: zodResolver(ChangePasswordSchema)
+    resolver: zodResolver(schemaChangePassword)
   });
 
   function resetErrors() {

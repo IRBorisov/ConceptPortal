@@ -37,7 +37,6 @@ function DlgDeleteCst() {
 
   return (
     <ModalForm
-      canSubmit
       header='Удаление конституент'
       submitText={expandOut ? 'Удалить с зависимыми' : 'Удалить'}
       onSubmit={handleSubmit}

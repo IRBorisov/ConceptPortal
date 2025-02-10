@@ -81,7 +81,7 @@ export interface ICstCreatedResponse {
 /**
  * Represents data, used in updating persistent attributes in {@link IConstituenta}.
  */
-export const CstUpdateSchema = z.object({
+export const schemaCstUpdate = z.object({
   target: z.number(),
   item_data: z.object({
     convention: z.string().optional(),
@@ -95,12 +95,12 @@ export const CstUpdateSchema = z.object({
 /**
  * Represents data, used in updating persistent attributes in {@link IConstituenta}.
  */
-export type ICstUpdateDTO = z.infer<typeof CstUpdateSchema>;
+export type ICstUpdateDTO = z.infer<typeof schemaCstUpdate>;
 
 /**
  * Represents data, used in renaming {@link IConstituenta}.
  */
-export const CstRenameSchema = z.object({
+export const schemaCstRename = z.object({
   target: z.number(),
   alias: z.string(),
   cst_type: z.nativeEnum(CstType)
@@ -109,7 +109,7 @@ export const CstRenameSchema = z.object({
 /**
  * Represents data, used in renaming {@link IConstituenta}.
  */
-export type ICstRenameDTO = z.infer<typeof CstRenameSchema>;
+export type ICstRenameDTO = z.infer<typeof schemaCstRename>;
 
 /**
  * Represents data, used in ordering a list of {@link IConstituenta}.

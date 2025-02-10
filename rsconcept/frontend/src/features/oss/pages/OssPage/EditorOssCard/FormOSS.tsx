@@ -9,7 +9,7 @@ import { useForm, useWatch } from 'react-hook-form';
 import { SubmitButton } from '@/components/Control';
 import { IconSave } from '@/components/Icons';
 import { TextArea, TextInput } from '@/components/Input';
-import { IUpdateLibraryItemDTO, UpdateLibraryItemSchema } from '@/features/library/backend/api';
+import { IUpdateLibraryItemDTO, schemaUpdateLibraryItem } from '@/features/library/backend/api';
 import { useUpdateItem } from '@/features/library/backend/useUpdateItem';
 import { LibraryItemType } from '@/features/library/models/library';
 import ToolbarItemAccess from '@/features/rsform/pages/RSFormPage/EditorRSFormCard/ToolbarItemAccess';
@@ -33,7 +33,7 @@ function FormOSS() {
     reset,
     formState: { isDirty, errors }
   } = useForm<IUpdateLibraryItemDTO>({
-    resolver: zodResolver(UpdateLibraryItemSchema),
+    resolver: zodResolver(schemaUpdateLibraryItem),
     defaultValues: {
       id: controller.schema.id,
       item_type: LibraryItemType.RSFORM,

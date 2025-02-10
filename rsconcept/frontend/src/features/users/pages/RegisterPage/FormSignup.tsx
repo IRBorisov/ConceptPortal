@@ -16,7 +16,7 @@ import { PrettyJson } from '@/components/View';
 import { HelpTopic } from '@/features/help/models/helpTopic';
 import { globals, patterns } from '@/utils/constants';
 
-import { IUserSignupDTO, UserSignupSchema } from '../../backend/api';
+import { IUserSignupDTO, schemaUserSignup } from '../../backend/api';
 import { useSignup } from '../../backend/useSignup';
 
 function FormSignup() {
@@ -31,7 +31,7 @@ function FormSignup() {
     clearErrors,
     formState: { errors, isDirty }
   } = useForm<IUserSignupDTO>({
-    resolver: zodResolver(UserSignupSchema)
+    resolver: zodResolver(schemaUserSignup)
   });
 
   useBlockNavigation(isDirty);

@@ -55,7 +55,7 @@ export function ModalForm({
   header,
   overflowVisible,
 
-  canSubmit,
+  canSubmit = true,
   submitText = 'Продолжить',
   submitInvalidTooltip,
   beforeSubmit,

@@ -10,7 +10,7 @@ import { VisibilityIcon } from '@/components/DomainIcons';
 import { Checkbox, Label, TextArea, TextInput } from '@/components/Input';
 import { ModalForm } from '@/components/Modal';
 import { useAuthSuspense } from '@/features/auth/backend/useAuth';
-import { CloneLibraryItemSchema, ICloneLibraryItemDTO } from '@/features/library/backend/api';
+import { schemaCloneLibraryItem, ICloneLibraryItemDTO } from '@/features/library/backend/api';
 import { useCloneItem } from '@/features/library/backend/useCloneItem';
 import SelectAccessPolicy from '@/features/library/components/SelectAccessPolicy';
 import SelectLocationContext from '@/features/library/components/SelectLocationContext';
@@ -42,7 +42,7 @@ function DlgCloneLibraryItem() {
     control,
     formState: { errors, isValid }
   } = useForm<ICloneLibraryItemDTO>({
-    resolver: zodResolver(CloneLibraryItemSchema),
+    resolver: zodResolver(schemaCloneLibraryItem),
     defaultValues: {
       id: base.id,
       item_type: base.item_type,

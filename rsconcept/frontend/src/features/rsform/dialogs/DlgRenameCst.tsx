@@ -9,7 +9,7 @@ import { ModalForm } from '@/components/Modal';
 import { HelpTopic } from '@/features/help/models/helpTopic';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { CstRenameSchema, ICstRenameDTO } from '../backend/api';
+import { ICstRenameDTO, schemaCstRename } from '../backend/api';
 import { useCstRename } from '../backend/useCstRename';
 import { SelectCstType } from '../components/SelectCstType';
 import { CstType, IConstituenta, IRSForm } from '../models/rsform';
@@ -25,7 +25,7 @@ function DlgRenameCst() {
   const { cstRename } = useCstRename();
 
   const { register, setValue, handleSubmit, control } = useForm<ICstRenameDTO>({
-    resolver: zodResolver(CstRenameSchema),
+    resolver: zodResolver(schemaCstRename),
     defaultValues: {
       target: target.id,
       alias: target.alias,

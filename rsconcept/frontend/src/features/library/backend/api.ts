@@ -22,7 +22,7 @@ export interface IRenameLocationDTO {
 /**
  * Represents data, used for cloning {@link IRSForm}.
  */
-export const CloneLibraryItemSchema = z.object({
+export const schemaCloneLibraryItem = z.object({
   id: z.number(),
   item_type: z.nativeEnum(LibraryItemType),
   title: z.string().nonempty(errors.requiredField),
@@ -39,12 +39,12 @@ export const CloneLibraryItemSchema = z.object({
 /**
  * Represents data, used for cloning {@link IRSForm}.
  */
-export type ICloneLibraryItemDTO = z.infer<typeof CloneLibraryItemSchema>;
+export type ICloneLibraryItemDTO = z.infer<typeof schemaCloneLibraryItem>;
 
 /**
  * Represents data, used for creating {@link IRSForm}.
  */
-export const CreateLibraryItemSchema = z
+export const schemaCreateLibraryItem = z
   .object({
     item_type: z.nativeEnum(LibraryItemType),
     title: z.string().optional(),
@@ -70,12 +70,12 @@ export const CreateLibraryItemSchema = z
 /**
  * Represents data, used for creating {@link IRSForm}.
  */
-export type ICreateLibraryItemDTO = z.infer<typeof CreateLibraryItemSchema>;
+export type ICreateLibraryItemDTO = z.infer<typeof schemaCreateLibraryItem>;
 
 /**
  * Represents update data for editing {@link ILibraryItem}.
  */
-export const UpdateLibraryItemSchema = z.object({
+export const schemaUpdateLibraryItem = z.object({
   id: z.number(),
   item_type: z.nativeEnum(LibraryItemType),
   title: z.string().nonempty(errors.requiredField),
@@ -88,12 +88,12 @@ export const UpdateLibraryItemSchema = z.object({
 /**
  * Represents update data for editing {@link ILibraryItem}.
  */
-export type IUpdateLibraryItemDTO = z.infer<typeof UpdateLibraryItemSchema>;
+export type IUpdateLibraryItemDTO = z.infer<typeof schemaUpdateLibraryItem>;
 
 /**
  * Create version metadata in persistent storage.
  */
-export const VersionCreateSchema = z.object({
+export const schemaVersionCreate = z.object({
   version: z.string(),
   description: z.string(),
   items: z.array(z.number()).optional()
@@ -102,7 +102,7 @@ export const VersionCreateSchema = z.object({
 /**
  * Create version metadata in persistent storage.
  */
-export type IVersionCreateDTO = z.infer<typeof VersionCreateSchema>;
+export type IVersionCreateDTO = z.infer<typeof schemaVersionCreate>;
 
 /**
  * Represents data response when creating {@link IVersionInfo}.
@@ -115,7 +115,7 @@ export interface IVersionCreatedResponse {
 /**
  * Represents version data, intended to update version metadata in persistent storage.
  */
-export const VersionUpdateSchema = z.object({
+export const schemaVersionUpdate = z.object({
   id: z.number(),
   version: z.string().nonempty(errors.requiredField),
   description: z.string()
@@ -124,7 +124,7 @@ export const VersionUpdateSchema = z.object({
 /**
  * Represents version data, intended to update version metadata in persistent storage.
  */
-export type IVersionUpdateDTO = z.infer<typeof VersionUpdateSchema>;
+export type IVersionUpdateDTO = z.infer<typeof schemaVersionUpdate>;
 
 export const libraryApi = {
   baseKey: 'library',

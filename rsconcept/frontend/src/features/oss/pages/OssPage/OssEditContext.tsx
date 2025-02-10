@@ -17,7 +17,6 @@ import { prompts } from '@/utils/labels';
 
 import { IOperationPosition } from '../../backend/api';
 import { useOperationCreate } from '../../backend/useOperationCreate';
-import { useOperationDelete } from '../../backend/useOperationDelete';
 import { useOperationUpdate } from '../../backend/useOperationUpdate';
 import { useOssSuspense } from '../../backend/useOSS';
 import { useRelocateConstituents } from '../../backend/useRelocateConstituents';
@@ -103,7 +102,6 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
   const { deleteItem } = useDeleteItem();
   const { updatePositions } = useUpdatePositions();
   const { operationCreate } = useOperationCreate();
-  const { operationDelete } = useOperationDelete();
   const { operationUpdate } = useOperationUpdate();
   const { relocateConstituents } = useRelocateConstituents();
 
@@ -199,18 +197,9 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
       return;
     }
     showDeleteOperation({
-      target: operation,
-      onSubmit: (targetID, keepConstituents, deleteSchema) => {
-        operationDelete({
-          itemID: schema.id,
-          data: {
-            target: targetID,
-            positions: positions,
-            keep_constituents: keepConstituents,
-            delete_schema: deleteSchema
-          }
-        });
-      }
+      oss: schema,
+      positions: positions,
+      target: operation
     });
   }
 

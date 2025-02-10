@@ -11,7 +11,7 @@ import { IUserInfo, IUserProfile } from '../models/user';
 /**
  * Represents signup data, used to create new users.
  */
-export const UserSignupSchema = z
+export const schemaUserSignup = z
   .object({
     username: z.string().nonempty(errors.requiredField).regex(RegExp(patterns.login), errors.loginFormat),
     email: z.string().email(errors.emailField),
@@ -26,12 +26,12 @@ export const UserSignupSchema = z
 /**
  * Represents signup data, used to create new users.
  */
-export type IUserSignupDTO = z.infer<typeof UserSignupSchema>;
+export type IUserSignupDTO = z.infer<typeof schemaUserSignup>;
 
 /**
  * Represents user data, intended to update user profile in persistent storage.
  */
-export const UpdateProfileSchema = z.object({
+export const schemaUpdateProfile = z.object({
   email: z.string().email(errors.emailField),
   first_name: z.string(),
   last_name: z.string()
@@ -40,7 +40,7 @@ export const UpdateProfileSchema = z.object({
 /**
  * Represents user data, intended to update user profile in persistent storage.
  */
-export type IUpdateProfileDTO = z.infer<typeof UpdateProfileSchema>;
+export type IUpdateProfileDTO = z.infer<typeof schemaUpdateProfile>;
 
 export const usersApi = {
   baseKey: 'users',

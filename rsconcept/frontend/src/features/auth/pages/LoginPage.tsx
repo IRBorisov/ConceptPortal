@@ -12,7 +12,7 @@ import { TextInput } from '@/components/Input';
 import useQueryStrings from '@/hooks/useQueryStrings';
 import { resources } from '@/utils/constants';
 
-import { IUserLoginDTO, UserLoginSchema } from '../backend/api';
+import { IUserLoginDTO, schemaUserLogin } from '../backend/api';
 import { useAuthSuspense } from '../backend/useAuth';
 import { useLogin } from '../backend/useLogin';
 import ExpectedAnonymous from '../components/ExpectedAnonymous';
@@ -29,7 +29,7 @@ function LoginPage() {
     resetField,
     formState: { errors }
   } = useForm({
-    resolver: zodResolver(UserLoginSchema),
+    resolver: zodResolver(schemaUserLogin),
     defaultValues: { username: initialName, password: '' }
   });
 

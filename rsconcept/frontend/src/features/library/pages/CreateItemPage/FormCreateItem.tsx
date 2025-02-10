@@ -15,7 +15,7 @@ import { Label, TextArea, TextInput } from '@/components/Input';
 import { useAuthSuspense } from '@/features/auth/backend/useAuth';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';
 
-import { CreateLibraryItemSchema, ICreateLibraryItemDTO } from '../../backend/api';
+import { schemaCreateLibraryItem, ICreateLibraryItemDTO } from '../../backend/api';
 import { useCreateItem } from '../../backend/useCreateItem';
 import SelectAccessPolicy from '../../components/SelectAccessPolicy';
 import SelectItemType from '../../components/SelectItemType';
@@ -41,7 +41,7 @@ function FormCreateItem() {
     control,
     formState: { errors }
   } = useForm<ICreateLibraryItemDTO>({
-    resolver: zodResolver(CreateLibraryItemSchema),
+    resolver: zodResolver(schemaCreateLibraryItem),
     defaultValues: {
       item_type: LibraryItemType.RSFORM,
       access_policy: AccessPolicy.PUBLIC,

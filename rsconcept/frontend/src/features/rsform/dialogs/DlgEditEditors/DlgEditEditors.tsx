@@ -39,7 +39,6 @@ function DlgEditEditors() {
 
   return (
     <ModalForm
-      canSubmit
       header='Список редакторов'
       submitText='Сохранить список'
       className='flex flex-col w-[35rem] px-6 gap-3 pb-6'

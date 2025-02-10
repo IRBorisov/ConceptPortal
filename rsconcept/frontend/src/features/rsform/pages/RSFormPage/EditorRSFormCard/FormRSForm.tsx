@@ -10,7 +10,7 @@ import { urls, useConceptNavigation } from '@/app';
 import { SubmitButton } from '@/components/Control';
 import { IconSave } from '@/components/Icons';
 import { Label, TextArea, TextInput } from '@/components/Input';
-import { IUpdateLibraryItemDTO, UpdateLibraryItemSchema } from '@/features/library/backend/api';
+import { IUpdateLibraryItemDTO, schemaUpdateLibraryItem } from '@/features/library/backend/api';
 import { useUpdateItem } from '@/features/library/backend/useUpdateItem';
 import { LibraryItemType, VersionID } from '@/features/library/models/library';
 import { useModificationStore } from '@/stores/modification';
@@ -37,7 +37,7 @@ function FormRSForm() {
     reset,
     formState: { isDirty, errors }
   } = useForm<IUpdateLibraryItemDTO>({
-    resolver: zodResolver(UpdateLibraryItemSchema),
+    resolver: zodResolver(schemaUpdateLibraryItem),
     defaultValues: {
       id: controller.schema.id,
       item_type: LibraryItemType.RSFORM,

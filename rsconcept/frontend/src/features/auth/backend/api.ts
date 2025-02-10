@@ -20,7 +20,7 @@ export interface ICurrentUser {
 /**
  * Represents login data, used to authenticate users.
  */
-export const UserLoginSchema = z.object({
+export const schemaUserLogin = z.object({
   username: z.string().nonempty(errors.requiredField),
   password: z.string().nonempty(errors.requiredField)
 });
@@ -28,12 +28,12 @@ export const UserLoginSchema = z.object({
 /**
  * Represents login data, used to authenticate users.
  */
-export type IUserLoginDTO = z.infer<typeof UserLoginSchema>;
+export type IUserLoginDTO = z.infer<typeof schemaUserLogin>;
 
 /**
  * Represents data needed to update password for current user.
  */
-export const ChangePasswordSchema = z
+export const schemaChangePassword = z
   .object({
     old_password: z.string().nonempty(errors.requiredField),
     new_password: z.string().nonempty(errors.requiredField),
@@ -51,7 +51,7 @@ export const ChangePasswordSchema = z
 /**
  * Represents data needed to update password for current user.
  */
-export type IChangePasswordDTO = z.infer<typeof ChangePasswordSchema>;
+export type IChangePasswordDTO = z.infer<typeof schemaChangePassword>;
 
 /**
  * Represents password reset request data.

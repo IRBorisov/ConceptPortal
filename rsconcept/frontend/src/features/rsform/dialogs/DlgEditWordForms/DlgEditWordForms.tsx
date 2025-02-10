@@ -121,7 +121,6 @@ function DlgEditWordForms() {
 
   return (
     <ModalForm
-      canSubmit
       header='Редактирование словоформ'
       submitText='Сохранить'
       onSubmit={handleSubmit}

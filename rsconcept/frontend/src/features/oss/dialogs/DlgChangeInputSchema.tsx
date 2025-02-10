@@ -13,7 +13,7 @@ import { ILibraryItem, LibraryItemType } from '@/features/library/models/library
 import PickSchema from '@/features/rsform/components/PickSchema';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { IInputUpdateDTO, InputUpdateSchema, IOperationPosition } from '../backend/api';
+import { IInputUpdateDTO, IOperationPosition, schemaInputUpdate } from '../backend/api';
 import { useInputUpdate } from '../backend/useInputUpdate';
 import { IOperation, IOperationSchema } from '../models/oss';
 import { sortItemsForOSS } from '../models/ossAPI';
@@ -29,7 +29,7 @@ function DlgChangeInputSchema() {
   const { inputUpdate } = useInputUpdate();
 
   const { setValue, handleSubmit, control } = useForm<IInputUpdateDTO>({
-    resolver: zodResolver(InputUpdateSchema),
+    resolver: zodResolver(schemaInputUpdate),
     defaultValues: {
       target: target.id,
       positions: positions,
