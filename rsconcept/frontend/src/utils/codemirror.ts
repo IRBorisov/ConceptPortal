@@ -3,26 +3,20 @@
  */
 import { syntaxTree } from '@codemirror/language';
 import { NodeType, Tree, TreeCursor } from '@lezer/common';
-import { EditorState, ReactCodeMirrorRef, SelectionRange, TooltipView } from '@uiw/react-codemirror';
-import clsx from 'clsx';
+import { EditorState, ReactCodeMirrorRef, SelectionRange } from '@uiw/react-codemirror';
 
 import { ReferenceTokens } from '@/features/rsform/components/RefsInput/parse';
 import { RefEntity } from '@/features/rsform/components/RefsInput/parse/parser.terms';
 import { GlobalTokens } from '@/features/rsform/components/RSInput/rslang';
-import { IEntityReference, ISyntacticReference } from '@/features/rsform/models/language';
-import { parseEntityReference, parseGrammemes, parseSyntacticReference } from '@/features/rsform/models/languageAPI';
-import { IConstituenta } from '@/features/rsform/models/rsform';
-import { isBasicConcept } from '@/features/rsform/models/rsformAPI';
+import { parseEntityReference, parseSyntacticReference } from '@/features/rsform/models/languageAPI';
 import { SyntaxTree } from '@/features/rsform/models/rslang';
-import { APP_COLORS, colorFgGrammeme } from '@/styling/color';
 
 import { PARAMETER } from './constants';
-import { describeConstituentaTerm, labelCstTypification, labelGrammeme } from './labels';
 
 /**
  * Represents syntax tree node data.
  */
-export interface SyntaxNode {
+interface SyntaxNode {
   type: NodeType;
   from: number;
   to: number;
@@ -31,7 +25,7 @@ export interface SyntaxNode {
 /**
  * Represents syntax tree cursor data.
  */
-export interface CursorNode extends SyntaxNode {
+interface CursorNode extends SyntaxNode {
   isLeaf: boolean;
 }
 
@@ -212,184 +206,6 @@ export function findReferenceAt(pos: number, state: EditorState) {
   } else {
     return { ref: parseSyntacticReference(text), start, end };
   }
-}
-
-/**
- * Create DOM tooltip for {@link Constituenta}.
- */
-export function domTooltipConstituenta(cst?: IConstituenta, canClick?: boolean): TooltipView {
-  const dom = document.createElement('div');
-  dom.className = clsx(
-    'max-h-[25rem] max-w-[25rem] min-w-[10rem]',
-    'dense',
-    'p-2',
-    'border shadow-md',
-    'cc-scroll-y',
-    'text-sm font-main'
-  );
-
-  if (!cst) {
-    const text = document.createElement('p');
-    text.innerText = 'Конституента не определена';
-    dom.appendChild(text);
-  } else {
-    const alias = document.createElement('p');
-    alias.className = 'font-math';
-    alias.style.overflowWrap = 'anywhere';
-    alias.innerHTML = `<b>${cst.alias}:</b> ${labelCstTypification(cst)}`;
-    dom.appendChild(alias);
-
-    if (cst.term_resolved) {
-      const term = document.createElement('p');
-      term.innerHTML = `<b>Термин:</b> ${cst.term_resolved}`;
-      dom.appendChild(term);
-    }
-
-    if (cst.definition_formal) {
-      const expression = document.createElement('p');
-      expression.innerHTML = `<b>Выражение:</b> ${cst.definition_formal}`;
-      dom.appendChild(expression);
-    }
-
-    if (cst.definition_resolved) {
-      const definition = document.createElement('p');
-      definition.innerHTML = `<b>Определение:</b> ${cst.definition_resolved}`;
-      dom.appendChild(definition);
-    }
-
-    if (cst.convention) {
-      const convention = document.createElement('p');
-      if (isBasicConcept(cst.cst_type)) {
-        convention.innerHTML = `<b>Конвенция:</b> ${cst.convention}`;
-      } else {
-        convention.innerHTML = `<b>Комментарий:</b> ${cst.convention}`;
-      }
-      dom.appendChild(convention);
-    }
-
-    if (cst.spawner_alias) {
-      const derived = document.createElement('p');
-      derived.innerHTML = `<b>Основание:</b> ${cst.spawner_alias}`;
-      dom.appendChild(derived);
-    }
-
-    if (cst.spawn_alias.length > 0) {
-      const children = document.createElement('p');
-      children.innerHTML = `<b>Порождает:</b> ${cst.spawn_alias.join(', ')}`;
-      dom.appendChild(children);
-    }
-
-    if (canClick) {
-      const clickTip = document.createElement('p');
-      clickTip.className = 'text-center text-xs mt-1';
-      clickTip.innerText = 'Ctrl + клик для перехода';
-      dom.appendChild(clickTip);
-    }
-  }
-  return { dom: dom };
-}
-
-/**
- * Create DOM tooltip for {@link IEntityReference}.
- */
-export function domTooltipEntityReference(
-  ref: IEntityReference,
-  cst: IConstituenta | undefined,
-  canClick?: boolean
-): TooltipView {
-  const dom = document.createElement('div');
-  dom.className = clsx(
-    'max-h-[25rem] max-w-[25rem] min-w-[10rem]',
-    'dense',
-    'p-2 flex flex-col',
-    'border shadow-md',
-    'cc-scroll-y',
-    'text-sm',
-    'select-none cursor-auto'
-  );
-
-  const header = document.createElement('p');
-  header.innerHTML = '<b>Ссылка на конституенту</b>';
-  dom.appendChild(header);
-
-  const term = document.createElement('p');
-  term.innerHTML = `<b>${ref.entity}:</b> ${describeConstituentaTerm(cst)}`;
-  dom.appendChild(term);
-
-  const grams = document.createElement('div');
-  grams.className = 'flex flex-wrap gap-1 mt-1';
-  parseGrammemes(ref.form).forEach(gramStr => {
-    const gram = document.createElement('div');
-    gram.id = `tooltip-${gramStr}`;
-    gram.className = clsx(
-      'min-w-[3rem]', //
-      'px-1',
-      'border rounded-md',
-      'text-sm text-center whitespace-nowrap'
-    );
-    gram.style.borderWidth = '1px';
-    gram.style.borderColor = colorFgGrammeme(gramStr);
-    gram.style.color = colorFgGrammeme(gramStr);
-    gram.style.fontWeight = '600';
-    gram.style.backgroundColor = APP_COLORS.bgInput;
-    gram.innerText = labelGrammeme(gramStr);
-    grams.appendChild(gram);
-  });
-  dom.appendChild(grams);
-
-  if (canClick) {
-    const clickTip = document.createElement('p');
-    clickTip.className = 'text-center text-xs mt-1';
-    clickTip.innerHTML = 'Ctrl + клик для перехода</br>Ctrl + пробел для редактирования';
-    dom.appendChild(clickTip);
-  }
-
-  return { dom: dom };
-}
-
-/**
- * Create DOM tooltip for {@link ISyntacticReference}.
- */
-export function domTooltipSyntacticReference(
-  ref: ISyntacticReference,
-  masterRef: string | undefined,
-  canClick?: boolean
-): TooltipView {
-  const dom = document.createElement('div');
-  dom.className = clsx(
-    'max-h-[25rem] max-w-[25rem] min-w-[10rem]',
-    'dense',
-    'p-2 flex flex-col',
-    'border shadow-md',
-    'cc-scroll-y',
-    'text-sm',
-    'select-none cursor-auto'
-  );
-
-  const header = document.createElement('p');
-  header.innerHTML = '<b>Связывание слов</b>';
-  dom.appendChild(header);
-
-  const offset = document.createElement('p');
-  offset.innerHTML = `<b>Смещение:</b> ${ref.offset}`;
-  dom.appendChild(offset);
-
-  const master = document.createElement('p');
-  master.innerHTML = `<b>Основная ссылка: </b> ${masterRef ?? 'не определена'}`;
-  dom.appendChild(master);
-
-  const nominal = document.createElement('p');
-  nominal.innerHTML = `<b>Начальная форма:</b> ${ref.nominal}`;
-  dom.appendChild(nominal);
-
-  if (canClick) {
-    const clickTip = document.createElement('p');
-    clickTip.className = 'text-center text-xs mt-1';
-    clickTip.innerHTML = 'Ctrl + пробел для редактирования';
-    dom.appendChild(clickTip);
-  }
-
-  return { dom: dom };
 }
 
 /**
