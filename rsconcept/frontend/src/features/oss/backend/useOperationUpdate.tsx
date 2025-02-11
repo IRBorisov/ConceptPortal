@@ -30,6 +30,6 @@ export const useOperationUpdate = () => {
     }
   });
   return {
-    operationUpdate: (data: { itemID: LibraryItemID; data: IOperationUpdateDTO }) => mutation.mutate(data)
+    operationUpdate: (data: { itemID: LibraryItemID; data: IOperationUpdateDTO }) => mutation.mutateAsync(data)
   };
 };

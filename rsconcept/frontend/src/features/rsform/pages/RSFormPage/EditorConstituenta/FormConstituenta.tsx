@@ -97,7 +97,7 @@ function FormConstituenta({ disabled, id, toggleReset, schema, activeCst, onOpen
   }, [isDirty, activeCst, setIsModified]);
 
   function onSubmit(data: ICstUpdateDTO) {
-    cstUpdate({ itemID: schema.id, data }, () => reset({ ...data }));
+    return cstUpdate({ itemID: schema.id, data }).then(() => reset({ ...data }));
   }
 
   function handleTypeGraph(event: CProps.EventMouse) {

@@ -1,8 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { DataCallback } from '@/backend/apiTransport';
-
-import { cctextApi, ITextResult } from './api';
+import { cctextApi } from './api';
 
 export const useParseText = () => {
   const mutation = useMutation({
@@ -10,9 +8,6 @@ export const useParseText = () => {
     mutationFn: cctextApi.parseText
   });
   return {
-    parseText: (
-      data: { text: string }, //
-      onSuccess?: DataCallback<ITextResult>
-    ) => mutation.mutate(data, { onSuccess })
+    parseText: (data: { text: string }) => mutation.mutateAsync(data)
   };
 };

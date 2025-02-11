@@ -45,7 +45,7 @@ function DlgChangeInputSchema() {
   }
 
   function onSubmit(data: IInputUpdateDTO) {
-    inputUpdate({ itemID: oss.id, data: data });
+    return inputUpdate({ itemID: oss.id, data: data });
   }
 
   return (

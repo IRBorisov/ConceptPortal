@@ -40,6 +40,6 @@ export const useSetOwner = () => {
   });
 
   return {
-    setOwner: (data: { itemID: LibraryItemID; owner: UserID }) => mutation.mutate(data)
+    setOwner: (data: { itemID: LibraryItemID; owner: UserID }) => mutation.mutateAsync(data)
   };
 };

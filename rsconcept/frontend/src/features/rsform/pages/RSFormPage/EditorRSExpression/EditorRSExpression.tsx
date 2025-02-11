@@ -75,7 +75,7 @@ function EditorRSExpression({
       alias: activeCst.alias,
       cst_type: activeCst.cst_type
     };
-    checkInternal({ itemID: controller.schema.id, data }, parse => {
+    void checkInternal({ itemID: controller.schema.id, data }).then(parse => {
       setParseData(parse);
       onSuccess?.(parse);
     });

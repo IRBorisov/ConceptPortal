@@ -27,6 +27,6 @@ export const useUploadTRS = () => {
     }
   });
   return {
-    upload: (data: IRSFormUploadDTO) => mutation.mutate(data)
+    upload: (data: IRSFormUploadDTO) => mutation.mutateAsync(data)
   };
 };

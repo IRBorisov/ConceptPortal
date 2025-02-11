@@ -10,7 +10,7 @@ function ExpectedAnonymous() {
   const router = useConceptNavigation();
 
   function logoutAndRedirect() {
-    logout(() => router.push(urls.login));
+    void logout().then(() => router.push(urls.login));
   }
 
   return (

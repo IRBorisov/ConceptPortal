@@ -20,6 +20,6 @@ export const useOperationDelete = () => {
     }
   });
   return {
-    operationDelete: (data: { itemID: LibraryItemID; data: IOperationDeleteDTO }) => mutation.mutate(data)
+    operationDelete: (data: { itemID: LibraryItemID; data: IOperationDeleteDTO }) => mutation.mutateAsync(data)
   };
 };

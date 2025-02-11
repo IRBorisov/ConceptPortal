@@ -17,12 +17,6 @@ export const useCstMove = () => {
     }
   });
   return {
-    cstMove: (
-      data: {
-        itemID: LibraryItemID; //
-        data: ICstMoveDTO;
-      },
-      onSuccess?: () => void
-    ) => mutation.mutate(data, { onSuccess })
+    cstMove: (data: { itemID: LibraryItemID; data: ICstMoveDTO }) => mutation.mutateAsync(data)
   };
 };

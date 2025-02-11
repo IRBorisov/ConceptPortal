@@ -50,7 +50,7 @@ function FormSignup() {
   }
 
   function onSubmit(data: IUserSignupDTO) {
-    signup(data, createdUser => router.push(urls.login_hint(createdUser.username)));
+    return signup(data).then(createdUser => router.push(urls.login_hint(createdUser.username)));
   }
 
   return (

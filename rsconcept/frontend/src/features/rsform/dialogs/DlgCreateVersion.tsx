@@ -45,7 +45,7 @@ function DlgCreateVersion() {
   const canSubmit = !versions.find(ver => ver.version === version);
 
   function onSubmit(data: IVersionCreateDTO) {
-    versionCreate({ itemID, data }, onCreate);
+    return versionCreate({ itemID, data }).then(onCreate);
   }
 
   return (

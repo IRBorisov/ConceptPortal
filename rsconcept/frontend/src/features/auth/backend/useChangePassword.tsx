@@ -10,10 +10,7 @@ export const useChangePassword = () => {
     onSettled: () => client.invalidateQueries({ queryKey: [authApi.baseKey] })
   });
   return {
-    changePassword: (
-      data: IChangePasswordDTO, //
-      onSuccess?: () => void
-    ) => mutation.mutate(data, { onSuccess }),
+    changePassword: (data: IChangePasswordDTO) => mutation.mutateAsync(data),
     isPending: mutation.isPending,
     error: mutation.error,
     reset: mutation.reset

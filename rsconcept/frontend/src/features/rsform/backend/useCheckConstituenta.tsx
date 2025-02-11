@@ -1,9 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { DataCallback } from '@/backend/apiTransport';
 import { LibraryItemID } from '@/features/library/models/library';
 
-import { IExpressionParse } from '../models/rslang';
 import { ICheckConstituentaDTO, rsformsApi } from './api';
 
 export const useCheckConstituenta = () => {
@@ -12,13 +10,7 @@ export const useCheckConstituenta = () => {
     mutationFn: rsformsApi.checkConstituenta
   });
   return {
-    checkConstituenta: (
-      data: {
-        itemID: LibraryItemID; //
-        data: ICheckConstituentaDTO;
-      },
-      onSuccess?: DataCallback<IExpressionParse>
-    ) => mutation.mutate(data, { onSuccess }),
+    checkConstituenta: (data: { itemID: LibraryItemID; data: ICheckConstituentaDTO }) => mutation.mutateAsync(data),
     isPending: mutation.isPending,
     error: mutation.error
   };

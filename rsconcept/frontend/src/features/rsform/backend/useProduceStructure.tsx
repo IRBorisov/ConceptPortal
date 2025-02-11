@@ -1,11 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { DataCallback } from '@/backend/apiTransport';
 import { useUpdateTimestamp } from '@/features/library/backend/useUpdateTimestamp';
 import { LibraryItemID } from '@/features/library/models/library';
 import { ossApi } from '@/features/oss/backend/api';
 
-import { ConstituentaID, ITargetCst } from '../models/rsform';
+import { ITargetCst } from '../models/rsform';
 import { rsformsApi } from './api';
 
 export const useProduceStructure = () => {
@@ -28,12 +27,7 @@ export const useProduceStructure = () => {
     }
   });
   return {
-    produceStructure: (
-      data: {
-        itemID: LibraryItemID; //
-        data: ITargetCst;
-      },
-      onSuccess?: DataCallback<ConstituentaID[]>
-    ) => mutation.mutate(data, { onSuccess: response => onSuccess?.(response.cst_list) })
+    produceStructure: (data: { itemID: LibraryItemID; data: ITargetCst }) =>
+      mutation.mutateAsync(data).then(response => response.cst_list)
   };
 };

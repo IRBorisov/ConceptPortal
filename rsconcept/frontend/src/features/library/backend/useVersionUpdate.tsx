@@ -27,6 +27,6 @@ export const useVersionUpdate = () => {
     }
   });
   return {
-    versionUpdate: (data: IVersionUpdateDTO, onSuccess?: () => void) => mutation.mutate(data, { onSuccess })
+    versionUpdate: (data: IVersionUpdateDTO) => mutation.mutateAsync(data)
   };
 };

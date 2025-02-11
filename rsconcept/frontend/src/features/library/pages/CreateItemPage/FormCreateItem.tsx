@@ -86,7 +86,7 @@ function FormCreateItem() {
   }
 
   function onSubmit(data: ICreateLibraryItemDTO) {
-    createItem(data, newItem => {
+    return createItem(data).then(newItem => {
       setSearchLocation(data.location);
       if (newItem.item_type == LibraryItemType.RSFORM) {
         router.push(urls.schema(newItem.id));

@@ -27,12 +27,6 @@ export const useCstSubstitute = () => {
     }
   });
   return {
-    cstSubstitute: (
-      data: {
-        itemID: LibraryItemID; //
-        data: ICstSubstitutions;
-      },
-      onSuccess?: () => void
-    ) => mutation.mutate(data, { onSuccess })
+    cstSubstitute: (data: { itemID: LibraryItemID; data: ICstSubstitutions }) => mutation.mutateAsync(data)
   };
 };

@@ -52,7 +52,7 @@ function FormOSS() {
   }, [isDirty, setIsModified]);
 
   function onSubmit(data: IUpdateLibraryItemDTO) {
-    updateOss(data, () => reset({ ...data }));
+    return updateOss(data).then(() => reset({ ...data }));
   }
 
   return (

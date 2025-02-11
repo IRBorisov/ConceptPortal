@@ -19,7 +19,7 @@ export function Component() {
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!isPending) {
-      requestPasswordReset({ email: email }, () => setIsCompleted(true));
+      void requestPasswordReset({ email: email }).then(() => setIsCompleted(true));
     }
   }
 

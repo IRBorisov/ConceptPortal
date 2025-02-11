@@ -27,12 +27,6 @@ export const useCstDelete = () => {
     }
   });
   return {
-    cstDelete: (
-      data: {
-        itemID: LibraryItemID; //
-        data: IConstituentaList;
-      },
-      onSuccess?: () => void
-    ) => mutation.mutate(data, { onSuccess })
+    cstDelete: (data: { itemID: LibraryItemID; data: IConstituentaList }) => mutation.mutateAsync(data)
   };
 };

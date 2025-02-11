@@ -16,6 +16,6 @@ export const useVersionRestore = () => {
     }
   });
   return {
-    versionRestore: (data: { versionID: VersionID }, onSuccess?: () => void) => mutation.mutate(data, { onSuccess })
+    versionRestore: (data: { versionID: VersionID }) => mutation.mutateAsync(data)
   };
 };

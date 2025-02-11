@@ -17,6 +17,6 @@ export const useRestoreOrder = () => {
     }
   });
   return {
-    restoreOrder: (data: { itemID: LibraryItemID }) => mutation.mutate(data)
+    restoreOrder: (data: { itemID: LibraryItemID }) => mutation.mutateAsync(data)
   };
 };

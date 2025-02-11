@@ -19,6 +19,6 @@ export const useRelocateConstituents = () => {
     }
   });
   return {
-    relocateConstituents: (data: ICstRelocateDTO) => mutation.mutate(data)
+    relocateConstituents: (data: ICstRelocateDTO) => mutation.mutateAsync(data)
   };
 };

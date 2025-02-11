@@ -8,10 +8,7 @@ export const useRequestPasswordReset = () => {
     mutationFn: authApi.requestPasswordReset
   });
   return {
-    requestPasswordReset: (
-      data: IRequestPasswordDTO, //
-      onSuccess?: () => void
-    ) => mutation.mutate(data, { onSuccess }),
+    requestPasswordReset: (data: IRequestPasswordDTO) => mutation.mutateAsync(data),
     isPending: mutation.isPending,
     error: mutation.error,
     reset: mutation.reset

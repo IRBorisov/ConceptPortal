@@ -30,7 +30,7 @@ function ToolbarVersioning({ blockReload }: ToolbarVersioningProps) {
     if (!controller.schema.version || !window.confirm(prompts.restoreArchive)) {
       return;
     }
-    versionRestore({ versionID: controller.schema.version }, () => controller.navigateVersion(undefined));
+    void versionRestore({ versionID: controller.schema.version }).then(() => controller.navigateVersion(undefined));
   }
 
   function handleCreateVersion() {

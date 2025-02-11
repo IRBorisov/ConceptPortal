@@ -60,7 +60,7 @@ function DlgCloneLibraryItem() {
   });
 
   function onSubmit(data: ICloneLibraryItemDTO) {
-    cloneItem(data, newSchema => router.push(urls.schema(newSchema.id)));
+    return cloneItem(data).then(newSchema => router.push(urls.schema(newSchema.id)));
   }
 
   return (

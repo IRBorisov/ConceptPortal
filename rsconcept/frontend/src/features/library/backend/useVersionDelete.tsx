@@ -24,12 +24,6 @@ export const useVersionDelete = () => {
     }
   });
   return {
-    versionDelete: (
-      data: {
-        itemID: LibraryItemID; //
-        versionID: VersionID;
-      },
-      onSuccess?: () => void
-    ) => mutation.mutate(data, { onSuccess })
+    versionDelete: (data: { itemID: LibraryItemID; versionID: VersionID }) => mutation.mutateAsync(data)
   };
 };

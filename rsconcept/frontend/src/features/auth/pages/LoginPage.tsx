@@ -37,7 +37,7 @@ function LoginPage() {
   const { login, isPending, error: serverError, reset: clearServerError } = useLogin();
 
   function onSubmit(data: IUserLoginDTO) {
-    login(data, () => {
+    return login(data).then(() => {
       resetField('password');
       if (router.canBack()) {
         router.back();

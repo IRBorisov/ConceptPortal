@@ -170,7 +170,7 @@ export const RSEditState = ({
       return;
     }
     const ossID = schema.oss.length > 0 ? schema.oss[0].id : undefined;
-    deleteItem(schema.id, () => {
+    void deleteItem(schema.id).then(() => {
       if (ossID) {
         router.push(urls.oss(ossID, OssTabID.GRAPH));
       } else {
@@ -184,7 +184,7 @@ export const RSEditState = ({
 
   function handleCreateCst(data: ICstCreateDTO) {
     data.alias = data.alias || generateAlias(data.cst_type, schema);
-    cstCreate({ itemID: itemID, data }, newCst => {
+    void cstCreate({ itemID: itemID, data }).then(newCst => {
       setSelected([newCst.id]);
       navigateRSForm({ tab: activeTab, activeID: newCst.id });
       if (activeTab === RSTabID.CST_LIST) {
@@ -210,7 +210,7 @@ export const RSEditState = ({
     const isEmpty = deleted.length === schema.items.length;
     const nextActive = isEmpty ? undefined : getNextActiveOnDelete(activeCst?.id, schema.items, deleted);
 
-    cstDelete({ itemID: itemID, data }, () => {
+    void cstDelete({ itemID: itemID, data }).then(() => {
       setSelected(nextActive ? [nextActive] : []);
       if (!nextActive) {
         navigateRSForm({ tab: RSTabID.CST_LIST });
@@ -235,7 +235,7 @@ export const RSEditState = ({
       return Math.min(prev, index);
     }, -1);
     const target = Math.max(0, currentIndex - 1);
-    cstMove({
+    void cstMove({
       itemID: itemID,
       data: {
         items: selected,
@@ -261,7 +261,7 @@ export const RSEditState = ({
       }
     }, -1);
     const target = Math.min(schema.items.length - 1, currentIndex - count + 2);
-    cstMove({
+    void cstMove({
       itemID: itemID,
       data: {
         items: selected,

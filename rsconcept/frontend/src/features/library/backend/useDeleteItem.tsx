@@ -26,10 +26,7 @@ export const useDeleteItem = () => {
     }
   });
   return {
-    deleteItem: (
-      target: LibraryItemID, //
-      onSuccess?: () => void
-    ) => mutation.mutate(target, { onSuccess }),
+    deleteItem: (target: LibraryItemID) => mutation.mutateAsync(target),
     isPending: mutation.isPending
   };
 };

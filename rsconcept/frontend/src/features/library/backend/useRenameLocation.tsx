@@ -18,9 +18,6 @@ export const useRenameLocation = () => {
       ])
   });
   return {
-    renameLocation: (
-      data: IRenameLocationDTO, //
-      onSuccess?: () => void
-    ) => mutation.mutate(data, { onSuccess })
+    renameLocation: (data: IRenameLocationDTO) => mutation.mutateAsync(data)
   };
 };

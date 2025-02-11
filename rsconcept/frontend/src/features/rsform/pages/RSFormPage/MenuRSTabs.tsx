@@ -109,19 +109,16 @@ function MenuRSTabs() {
       return;
     }
     const fileName = (controller.schema.alias ?? 'Schema') + EXTEOR_TRS_FILE;
-    download(
-      {
-        itemID: controller.schema.id, //
-        version: controller.schema.version
-      },
-      (data: Blob) => {
-        try {
-          fileDownload(data, fileName);
-        } catch (error) {
-          console.error(error);
-        }
+    void download({
+      itemID: controller.schema.id,
+      version: controller.schema.version
+    }).then((data: Blob) => {
+      try {
+        fileDownload(data, fileName);
+      } catch (error) {
+        console.error(error);
       }
-    );
+    });
   }
 
   function handleUpload() {
@@ -154,12 +151,12 @@ function MenuRSTabs() {
 
   function handleReindex() {
     editMenu.hide();
-    resetAliases({ itemID: controller.schema.id });
+    void resetAliases({ itemID: controller.schema.id });
   }
 
   function handleRestoreOrder() {
     editMenu.hide();
-    restoreOrder({ itemID: controller.schema.id });
+    void restoreOrder({ itemID: controller.schema.id });
   }
 
   function handleSubstituteCst() {
@@ -170,14 +167,8 @@ function MenuRSTabs() {
     showSubstituteCst({
       schema: controller.schema,
       onSubstitute: data =>
-        cstSubstitute(
-          {
-            itemID: controller.schema.id,
-            data
-          },
-          () => {
-            controller.setSelected(prev => prev.filter(id => !data.substitutions.find(sub => sub.original === id)));
-          }
+        void cstSubstitute({ itemID: controller.schema.id, data }).then(() =>
+          controller.setSelected(prev => prev.filter(id => !data.substitutions.find(sub => sub.original === id)))
         )
     });
   }
@@ -195,17 +186,14 @@ function MenuRSTabs() {
     if (isModified && !promptUnsaved()) {
       return;
     }
-    produceStructure(
-      {
-        itemID: controller.schema.id, //
-        data: { target: controller.activeCst.id }
-      },
-      cstList => {
-        if (cstList.length !== 0) {
-          controller.setSelected(cstList);
-        }
+    void produceStructure({
+      itemID: controller.schema.id,
+      data: { target: controller.activeCst.id }
+    }).then(cstList => {
+      if (cstList.length !== 0) {
+        controller.setSelected(cstList);
       }
-    );
+    });
   }
 
   function handleInlineSynthesis() {
@@ -216,7 +204,7 @@ function MenuRSTabs() {
     showInlineSynthesis({
       receiver: controller.schema,
       onInlineSynthesis: data => {
-        inlineSynthesis({ itemID: controller.schema.id, data }, () => controller.deselectAll());
+        void inlineSynthesis({ itemID: controller.schema.id, data }).then(() => controller.deselectAll());
       }
     });
   }

@@ -13,13 +13,10 @@ export const useUpdatePositions = () => {
     onSuccess: (_, variables) => updateTimestamp(variables.itemID)
   });
   return {
-    updatePositions: (
-      data: {
-        itemID: LibraryItemID; //
-        positions: IOperationPosition[];
-        isSilent?: boolean;
-      },
-      onSuccess?: () => void
-    ) => mutation.mutate(data, { onSuccess })
+    updatePositions: (data: {
+      itemID: LibraryItemID; //
+      positions: IOperationPosition[];
+      isSilent?: boolean;
+    }) => mutation.mutateAsync(data)
   };
 };

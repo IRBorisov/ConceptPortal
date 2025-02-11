@@ -26,6 +26,6 @@ export const useResetAliases = () => {
     }
   });
   return {
-    resetAliases: (data: { itemID: LibraryItemID }) => mutation.mutate(data)
+    resetAliases: (data: { itemID: LibraryItemID }) => mutation.mutateAsync(data)
   };
 };

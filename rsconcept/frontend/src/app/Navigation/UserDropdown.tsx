@@ -45,12 +45,12 @@ function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
 
   function logoutAndRedirect() {
     hideDropdown();
-    logout(() => router.push(urls.login));
+    void logout().then(() => router.push(urls.login));
   }
 
   function gotoAdmin() {
     hideDropdown();
-    logout(() => router.push(urls.admin, true));
+    void logout().then(() => router.push(urls.admin, true));
   }
 
   function gotoIcons(event: CProps.EventMouse) {

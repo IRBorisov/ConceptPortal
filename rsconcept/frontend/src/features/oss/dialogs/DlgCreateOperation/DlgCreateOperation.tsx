@@ -68,9 +68,7 @@ function DlgCreateOperation() {
     });
     data.item_data.position_x = target.x;
     data.item_data.position_y = target.y;
-    operationCreate({ itemID: oss.id, data: data })
-      .then(response => onCreate?.(response.new_operation.id))
-      .catch(console.error);
+    void operationCreate({ itemID: oss.id, data: data }).then(response => onCreate?.(response.new_operation.id));
   }
 
   function handleSelectTab(newTab: TabID, last: TabID) {

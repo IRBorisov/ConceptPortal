@@ -36,6 +36,6 @@ export const useSetEditors = () => {
   });
 
   return {
-    setEditors: (data: { itemID: LibraryItemID; editors: UserID[] }) => mutation.mutate(data)
+    setEditors: (data: { itemID: LibraryItemID; editors: UserID[] }) => mutation.mutateAsync(data)
   };
 };

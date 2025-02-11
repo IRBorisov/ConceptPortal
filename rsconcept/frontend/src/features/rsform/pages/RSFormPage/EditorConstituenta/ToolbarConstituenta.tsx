@@ -55,7 +55,7 @@ function ToolbarConstituenta({
   const isProcessing = useMutatingRSForm();
 
   function viewPredecessor(target: ConstituentaID) {
-    findPredecessor({ target: target }, reference =>
+    void findPredecessor({ target: target }).then(reference =>
       router.push(
         urls.schema_props({
           id: reference.schema,

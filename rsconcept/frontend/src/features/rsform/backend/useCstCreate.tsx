@@ -1,11 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { DataCallback } from '@/backend/apiTransport';
 import { useUpdateTimestamp } from '@/features/library/backend/useUpdateTimestamp';
 import { LibraryItemID } from '@/features/library/models/library';
 import { ossApi } from '@/features/oss/backend/api';
 
-import { IConstituentaMeta } from '../models/rsform';
 import { ICstCreateDTO, rsformsApi } from './api';
 
 export const useCstCreate = () => {
@@ -28,12 +26,7 @@ export const useCstCreate = () => {
     }
   });
   return {
-    cstCreate: (
-      data: {
-        itemID: LibraryItemID; //
-        data: ICstCreateDTO;
-      },
-      onSuccess?: DataCallback<IConstituentaMeta>
-    ) => mutation.mutate(data, { onSuccess: response => onSuccess?.(response.new_cst) })
+    cstCreate: (data: { itemID: LibraryItemID; data: ICstCreateDTO }) =>
+      mutation.mutateAsync(data).then(response => response.new_cst)
   };
 };

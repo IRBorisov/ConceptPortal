@@ -35,13 +35,10 @@ export function LibraryPage() {
   const showChangeLocation = useDialogsStore(state => state.showChangeLocation);
 
   function handleRenameLocation(newLocation: string) {
-    renameLocation(
-      {
-        target: location,
-        new_location: newLocation
-      },
-      () => setLocation(newLocation)
-    );
+    void renameLocation({
+      target: location,
+      new_location: newLocation
+    }).then(() => setLocation(newLocation));
   }
 
   function handleDownloadCSV() {

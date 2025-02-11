@@ -104,16 +104,13 @@ function DlgRelocateConstituents() {
       return operation.position_x === item.position_x && operation.position_y === item.position_y;
     });
     if (positionsUnchanged) {
-      relocateConstituents(data);
+      return relocateConstituents(data);
     } else {
-      updatePositions(
-        {
-          isSilent: true,
-          itemID: oss.id,
-          positions: positions
-        },
-        () => relocateConstituents(data)
-      );
+      return updatePositions({
+        isSilent: true,
+        itemID: oss.id,
+        positions: positions
+      }).then(() => relocateConstituents(data));
     }
   }
 

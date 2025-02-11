@@ -11,7 +11,7 @@ export const useLogin = () => {
     onSuccess: () => client.resetQueries()
   });
   return {
-    login: (data: IUserLoginDTO, onSuccess?: () => void) => mutation.mutate(data, { onSuccess }),
+    login: (data: IUserLoginDTO) => mutation.mutateAsync(data),
     isPending: mutation.isPending,
     error: mutation.error,
     reset: mutation.reset

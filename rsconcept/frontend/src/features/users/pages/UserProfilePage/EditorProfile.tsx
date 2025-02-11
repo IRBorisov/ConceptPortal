@@ -40,7 +40,7 @@ function EditorProfile() {
   }
 
   function onSubmit(data: IUpdateProfileDTO) {
-    updateProfile(data, () => resetForm({ ...data }));
+    return updateProfile(data).then(() => resetForm({ ...data }));
   }
 
   return (

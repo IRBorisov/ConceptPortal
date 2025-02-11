@@ -123,7 +123,7 @@ function OssFlow() {
 
   function handleSavePositions() {
     const positions = getPositions();
-    updatePositions({ itemID: controller.schema.id, positions: positions }, () => {
+    void updatePositions({ itemID: controller.schema.id, positions: positions }).then(() => {
       positions.forEach(item => {
         const operation = controller.schema.operationByID.get(item.id);
         if (operation) {
@@ -170,9 +170,10 @@ function OssFlow() {
       toast.error(errors.inputAlreadyExists);
       return;
     }
-    inputCreate({ itemID: controller.schema.id, data: { target: target, positions: getPositions() } }, new_schema =>
-      router.push(urls.schema(new_schema.id))
-    );
+    void inputCreate({
+      itemID: controller.schema.id,
+      data: { target: target, positions: getPositions() }
+    }).then(new_schema => router.push(urls.schema(new_schema.id)));
   }
 
   function handleEditSchema(target: OperationID) {
@@ -184,7 +185,7 @@ function OssFlow() {
   }
 
   function handleOperationExecute(target: OperationID) {
-    operationExecute({
+    void operationExecute({
       itemID: controller.schema.id, //
       data: { target: target, positions: getPositions() }
     });

@@ -1,7 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { DataCallback } from '@/backend/apiTransport';
-import { IConstituentaReference, ITargetCst } from '@/features/rsform/models/rsform';
+import { ITargetCst } from '@/features/rsform/models/rsform';
 
 import { ossApi } from './api';
 
@@ -11,9 +10,6 @@ export const useFindPredecessor = () => {
     mutationFn: ossApi.getPredecessor
   });
   return {
-    findPredecessor: (
-      data: ITargetCst, //
-      onSuccess?: DataCallback<IConstituentaReference>
-    ) => mutation.mutate(data, { onSuccess })
+    findPredecessor: (data: ITargetCst) => mutation.mutateAsync(data)
   };
 };

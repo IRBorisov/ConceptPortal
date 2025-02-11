@@ -60,7 +60,7 @@ function FormRSForm() {
   }
 
   function onSubmit(data: IUpdateLibraryItemDTO) {
-    updateSchema(data, () => reset({ ...data }));
+    return updateSchema(data).then(() => reset({ ...data }));
   }
 
   return (

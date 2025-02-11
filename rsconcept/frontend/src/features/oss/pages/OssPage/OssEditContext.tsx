@@ -128,7 +128,7 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
     if (!window.confirm(prompts.deleteOSS)) {
       return;
     }
-    deleteItem(schema.id, () => {
+    void deleteItem(schema.id).then(() => {
       if (searchLocation === schema.location) {
         setSearchLocation('');
       }

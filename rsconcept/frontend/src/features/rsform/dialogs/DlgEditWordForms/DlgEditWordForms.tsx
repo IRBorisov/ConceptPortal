@@ -78,17 +78,14 @@ function DlgEditWordForms() {
   }
 
   function handleInflect() {
-    inflectText(
-      {
-        text: term,
-        grams: inputGrams.map(gram => gram.value).join(',')
-      },
-      response => setInputText(response.result)
-    );
+    void inflectText({
+      text: term,
+      grams: inputGrams.map(gram => gram.value).join(',')
+    }).then(response => setInputText(response.result));
   }
 
   function handleParse() {
-    parseText({ text: inputText }, response => {
+    void parseText({ text: inputText }).then(response => {
       const grams = parseGrammemes(response.result);
       setInputGrams(supportedGrammeOptions.filter(gram => grams.find(test => test === gram.value)));
     });
@@ -100,14 +97,17 @@ function DlgEditWordForms() {
         return;
       }
     }
-    generateLexeme({ text: inputText }, response => {
+    void generateLexeme({ text: inputText }).then(response => {
       const lexeme: IWordForm[] = [];
       response.items.forEach(form => {
+        const grams = parseGrammemes(form.grams).filter(gram =>
+          supportedGrammemes.find(item => item === (gram as Grammeme))
+        );
         const newForm: IWordForm = {
           text: form.text,
-          grams: parseGrammemes(form.grams).filter(gram => supportedGrammemes.find(item => item === (gram as Grammeme)))
+          grams: grams
         };
-        if (newForm.grams.length === 2 && !lexeme.some(test => wordFormEquals(test, newForm))) {
+        if (grams.length === 2 && !lexeme.some(test => wordFormEquals(test, newForm))) {
           lexeme.push(newForm);
         }
       });

@@ -20,6 +20,6 @@ export const useInputUpdate = () => {
     }
   });
   return {
-    inputUpdate: (data: { itemID: LibraryItemID; data: IInputUpdateDTO }) => mutation.mutate(data)
+    inputUpdate: (data: { itemID: LibraryItemID; data: IInputUpdateDTO }) => mutation.mutateAsync(data)
   };
 };

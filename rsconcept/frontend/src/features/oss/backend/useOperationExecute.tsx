@@ -20,6 +20,6 @@ export const useOperationExecute = () => {
     }
   });
   return {
-    operationExecute: (data: { itemID: LibraryItemID; data: ITargetOperation }) => mutation.mutate(data)
+    operationExecute: (data: { itemID: LibraryItemID; data: ITargetOperation }) => mutation.mutateAsync(data)
   };
 };

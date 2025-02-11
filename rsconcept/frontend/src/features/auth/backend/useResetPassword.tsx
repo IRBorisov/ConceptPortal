@@ -12,14 +12,8 @@ export const useResetPassword = () => {
     mutationFn: authApi.resetPassword
   });
   return {
-    validateToken: (
-      data: IPasswordTokenDTO, //
-      onSuccess?: () => void
-    ) => validateMutation.mutate(data, { onSuccess }),
-    resetPassword: (
-      data: IResetPasswordDTO, //
-      onSuccess?: () => void
-    ) => resetMutation.mutate(data, { onSuccess }),
+    validateToken: (data: IPasswordTokenDTO) => validateMutation.mutateAsync(data),
+    resetPassword: (data: IResetPasswordDTO) => resetMutation.mutateAsync(data),
     isPending: resetMutation.isPending || validateMutation.isPending,
     error: resetMutation.error ?? validateMutation.error,
     reset: resetMutation.reset

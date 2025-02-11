@@ -34,7 +34,7 @@ function DlgDeleteOperation() {
   });
 
   function onSubmit(data: IOperationDeleteDTO) {
-    operationDelete({ itemID: oss.id, data: data });
+    return operationDelete({ itemID: oss.id, data: data });
   }
 
   return (

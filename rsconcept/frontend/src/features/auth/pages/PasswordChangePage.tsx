@@ -19,7 +19,7 @@ export function Component() {
 
   const { validateToken, resetPassword, isPending, error: serverError } = useResetPassword();
 
-  const [isTokenValidated, setIsTokenValidated] = useState(false);
+  const [isTokenValidating, setIsTokenValidating] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [newPasswordRepeat, setNewPasswordRepeat] = useState('');
 
@@ -31,25 +31,22 @@ export function Component() {
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!isPending) {
-      resetPassword(
-        {
-          password: newPassword,
-          token: token
-        },
-        () => {
-          router.replace(urls.home);
-          router.push(urls.login);
-        }
-      );
+      void resetPassword({
+        password: newPassword,
+        token: token
+      }).then(() => {
+        router.replace(urls.home);
+        router.push(urls.login);
+      });
     }
   }
 
   useEffect(() => {
-    if (!isTokenValidated && !isPending) {
-      validateToken({ token: token });
-      setIsTokenValidated(true);
+    if (!isTokenValidating && !isPending) {
+      void validateToken({ token: token });
+      setIsTokenValidating(true);
     }
-  }, [token, validateToken, isTokenValidated, isPending]);
+  }, [token, validateToken, isTokenValidating, isPending]);
 
   if (isPending) {
     return <Loader />;

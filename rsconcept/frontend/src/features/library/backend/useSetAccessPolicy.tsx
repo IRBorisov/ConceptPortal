@@ -39,6 +39,6 @@ export const useSetAccessPolicy = () => {
   });
 
   return {
-    setAccessPolicy: (data: { itemID: LibraryItemID; policy: AccessPolicy }) => mutation.mutate(data)
+    setAccessPolicy: (data: { itemID: LibraryItemID; policy: AccessPolicy }) => mutation.mutateAsync(data)
   };
 };

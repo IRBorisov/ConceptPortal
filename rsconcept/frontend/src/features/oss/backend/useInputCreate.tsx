@@ -1,8 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { DataCallback } from '@/backend/apiTransport';
 import { libraryApi } from '@/features/library/backend/api';
-import { ILibraryItem, LibraryItemID } from '@/features/library/models/library';
+import { LibraryItemID } from '@/features/library/models/library';
 import { rsformsApi } from '@/features/rsform/backend/api';
 
 import { ITargetOperation, ossApi } from './api';
@@ -21,12 +20,7 @@ export const useInputCreate = () => {
     }
   });
   return {
-    inputCreate: (
-      data: {
-        itemID: LibraryItemID; //
-        data: ITargetOperation;
-      },
-      onSuccess?: DataCallback<ILibraryItem>
-    ) => mutation.mutate(data, { onSuccess: response => onSuccess?.(response.new_schema) })
+    inputCreate: (data: { itemID: LibraryItemID; data: ITargetOperation }) =>
+      mutation.mutateAsync(data).then(response => response.new_schema)
   };
 };

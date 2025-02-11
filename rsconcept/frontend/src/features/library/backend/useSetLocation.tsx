@@ -39,12 +39,6 @@ export const useSetLocation = () => {
   });
 
   return {
-    setLocation: (
-      data: {
-        itemID: LibraryItemID; //
-        location: string;
-      },
-      onSuccess?: () => void
-    ) => mutation.mutate(data, { onSuccess })
+    setLocation: (data: { itemID: LibraryItemID; location: string }) => mutation.mutateAsync(data)
   };
 };

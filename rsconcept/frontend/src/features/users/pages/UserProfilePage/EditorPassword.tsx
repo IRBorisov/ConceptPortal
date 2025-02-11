@@ -31,7 +31,7 @@ function EditorPassword() {
   }
 
   function onSubmit(data: IChangePasswordDTO) {
-    changePassword(data, () => router.push(urls.login));
+    return changePassword(data).then(() => router.push(urls.login));
   }
 
   return (

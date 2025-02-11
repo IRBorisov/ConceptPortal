@@ -26,6 +26,6 @@ export const useCstRename = () => {
     }
   });
   return {
-    cstRename: (data: { itemID: LibraryItemID; data: ICstRenameDTO }) => mutation.mutate(data)
+    cstRename: (data: { itemID: LibraryItemID; data: ICstRenameDTO }) => mutation.mutateAsync(data)
   };
 };

@@ -66,7 +66,7 @@ function DlgEditVersions() {
 
   function handleDeleteVersion(targetVersion: VersionID) {
     const nextVer = schema.versions.find(ver => ver.id !== targetVersion);
-    versionDelete({ itemID: itemID, versionID: targetVersion }, () => {
+    void versionDelete({ itemID: itemID, versionID: targetVersion }).then(() => {
       if (!nextVer) {
         hideDialog();
       } else if (targetVersion === versionID) {
@@ -80,7 +80,7 @@ function DlgEditVersions() {
     if (!isDirty || isProcessing || !isValid) {
       return;
     }
-    versionUpdate(data, () => reset({ ...data }));
+    void versionUpdate(data).then(() => reset({ ...data }));
   }
 
   return (

@@ -9,5 +9,5 @@ export const useLogout = () => {
     mutationFn: authApi.logout,
     onSuccess: () => client.resetQueries()
   });
-  return { logout: (onSuccess?: () => void) => mutation.mutate(undefined, { onSuccess }) };
+  return { logout: () => mutation.mutateAsync() };
 };
