@@ -3,9 +3,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useUpdateTimestamp } from '@/features/library/backend/useUpdateTimestamp';
 import { LibraryItemID } from '@/features/library/models/library';
 import { ossApi } from '@/features/oss/backend/api';
-import { ICstSubstitutions } from '@/features/oss/models/oss';
 
-import { rsformsApi } from './api';
+import { ICstSubstitutionsDTO, rsformsApi } from './api';
 
 export const useCstSubstitute = () => {
   const client = useQueryClient();
@@ -27,6 +26,6 @@ export const useCstSubstitute = () => {
     }
   });
   return {
-    cstSubstitute: (data: { itemID: LibraryItemID; data: ICstSubstitutions }) => mutation.mutateAsync(data)
+    cstSubstitute: (data: { itemID: LibraryItemID; data: ICstSubstitutionsDTO }) => mutation.mutateAsync(data)
   };
 };

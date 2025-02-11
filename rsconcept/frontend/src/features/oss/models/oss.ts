@@ -1,10 +1,8 @@
 /**
  * Module: Schema of Synthesis Operations.
  */
-
-import { z } from 'zod';
-
 import { ILibraryItem, ILibraryItemData, LibraryItemID } from '@/features/library/models/library';
+import { ICstSubstitute } from '@/features/rsform/backend/api';
 import { IConstituenta } from '@/features/rsform/models/rsform';
 
 import { Graph } from '../../../models/Graph';
@@ -51,26 +49,6 @@ export interface IOperation {
 export interface IArgument {
   operation: OperationID;
   argument: OperationID;
-}
-
-/**
- * Represents data, used in merging single {@link IConstituenta}.
- */
-export const schemaCstSubstitute = z.object({
-  original: z.number(),
-  substitution: z.number()
-});
-
-/**
- * Represents data, used in merging single {@link IConstituenta}.
- */
-export type ICstSubstitute = z.infer<typeof schemaCstSubstitute>;
-
-/**
- * Represents data, used in merging multiple {@link IConstituenta}.
- */
-export interface ICstSubstitutions {
-  substitutions: ICstSubstitute[];
 }
 
 /**

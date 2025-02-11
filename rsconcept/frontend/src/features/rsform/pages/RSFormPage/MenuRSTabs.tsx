@@ -42,7 +42,6 @@ import { EXTEOR_TRS_FILE } from '@/utils/constants';
 import { describeAccessMode, labelAccessMode, tooltipText } from '@/utils/labels';
 import { generatePageQR, promptUnsaved, sharePage } from '@/utils/utils';
 
-import { useCstSubstitute } from '../../backend/useCstSubstitute';
 import { useDownloadRSForm } from '../../backend/useDownloadRSForm';
 import { useInlineSynthesis } from '../../backend/useInlineSynthesis';
 import { useMutatingRSForm } from '../../backend/useMutatingRSForm';
@@ -66,7 +65,6 @@ function MenuRSTabs() {
   const { restoreOrder } = useRestoreOrder();
   const { produceStructure } = useProduceStructure();
   const { inlineSynthesis } = useInlineSynthesis();
-  const { cstSubstitute } = useCstSubstitute();
   const { download } = useDownloadRSForm();
 
   const showInlineSynthesis = useDialogsStore(state => state.showInlineSynthesis);
@@ -167,9 +165,7 @@ function MenuRSTabs() {
     showSubstituteCst({
       schema: controller.schema,
       onSubstitute: data =>
-        void cstSubstitute({ itemID: controller.schema.id, data }).then(() =>
-          controller.setSelected(prev => prev.filter(id => !data.substitutions.find(sub => sub.original === id)))
-        )
+        controller.setSelected(prev => prev.filter(id => !data.substitutions.find(sub => sub.original === id)))
     });
   }
 

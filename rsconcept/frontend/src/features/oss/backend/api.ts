@@ -4,14 +4,8 @@ import { z } from 'zod';
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/apiTransport';
 import { DELAYS } from '@/backend/configuration';
 import { ILibraryItem, ILibraryItemData, LibraryItemID } from '@/features/library/models/library';
-import {
-  IArgument,
-  ICstSubstituteEx,
-  IOperation,
-  OperationID,
-  OperationType,
-  schemaCstSubstitute
-} from '@/features/oss/models/oss';
+import { IArgument, ICstSubstituteEx, IOperation, OperationID, OperationType } from '@/features/oss/models/oss';
+import { schemaCstSubstitute } from '@/features/rsform/backend/api';
 import { IConstituentaReference, ITargetCst } from '@/features/rsform/models/rsform';
 import { infoMsg } from '@/utils/labels';
 

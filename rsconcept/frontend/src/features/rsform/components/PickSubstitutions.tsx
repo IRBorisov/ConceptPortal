@@ -11,10 +11,11 @@ import { CProps } from '@/components/props';
 import { NoData } from '@/components/View';
 import SelectLibraryItem from '@/features/library/components/SelectLibraryItem';
 import { ILibraryItem } from '@/features/library/models/library';
-import { ICstSubstitute, IMultiSubstitution } from '@/features/oss/models/oss';
+import { IMultiSubstitution } from '@/features/oss/models/oss';
 import { APP_COLORS } from '@/styling/colors';
 import { errorMsg } from '@/utils/labels';
 
+import { ICstSubstitute } from '../backend/api';
 import { ConstituentaID, IConstituenta, IRSForm } from '../models/rsform';
 import BadgeConstituenta from './BadgeConstituenta';
 import SelectConstituenta from './SelectConstituenta';

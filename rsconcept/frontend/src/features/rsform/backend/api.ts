@@ -9,8 +9,7 @@ import {
   LibraryItemID,
   VersionID
 } from '@/features/library/models/library';
-import { ICstSubstitute, ICstSubstitutions } from '@/features/oss/models/oss';
-import { infoMsg } from '@/utils/labels';
+import { errorMsg, infoMsg } from '@/utils/labels';
 
 import {
   ConstituentaID,
@@ -128,6 +127,19 @@ export interface IProduceStructureResponse {
 }
 
 /**
+ * Represents data, used in merging single {@link IConstituenta}.
+ */
+export const schemaCstSubstitute = z.object({
+  original: z.number(),
+  substitution: z.number()
+});
+
+/**
+ * Represents data, used in merging single {@link IConstituenta}.
+ */
+export type ICstSubstitute = z.infer<typeof schemaCstSubstitute>;
+
+/**
  * Represents input data for inline synthesis.
  */
 export interface IInlineSynthesisDTO {
@@ -145,6 +157,18 @@ export interface ICheckConstituentaDTO {
   cst_type: CstType;
   definition_formal: string;
 }
+
+/**
+ * Represents data, used in renaming {@link IConstituenta}.
+ */
+export const schemaCstSubstitutions = z.object({
+  substitutions: z.array(schemaCstSubstitute).min(1, { message: errorMsg.emptySubstitutions })
+});
+
+/**
+ * Represents data, used in merging multiple {@link IConstituenta}.
+ */
+export type ICstSubstitutionsDTO = z.infer<typeof schemaCstSubstitutions>;
 
 export const rsformsApi = {
   baseKey: 'rsform',
@@ -214,8 +238,8 @@ export const rsformsApi = {
         successMessage: infoMsg.changesSaved
       }
     }),
-  cstSubstitute: ({ itemID, data }: { itemID: LibraryItemID; data: ICstSubstitutions }) =>
-    axiosPatch<ICstSubstitutions, IRSFormDTO>({
+  cstSubstitute: ({ itemID, data }: { itemID: LibraryItemID; data: ICstSubstitutionsDTO }) =>
+    axiosPatch<ICstSubstitutionsDTO, IRSFormDTO>({
       endpoint: `/api/rsforms/${itemID}/substitute`,
       request: {
         data: data,
@@ -229,7 +253,7 @@ export const rsformsApi = {
     }),
 
   produceStructure: ({ itemID, data }: { itemID: LibraryItemID; data: ITargetCst }) =>
-    axiosPost<ITargetCst, IProduceStructureResponse>({
+    axiosPatch<ITargetCst, IProduceStructureResponse>({
       endpoint: `/api/rsforms/${itemID}/produce-structure`,
       request: {
         data: data,

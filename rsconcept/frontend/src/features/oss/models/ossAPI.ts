@@ -3,6 +3,7 @@
  */
 
 import { ILibraryItem, LibraryItemID } from '@/features/library/models/library';
+import { ICstSubstitute } from '@/features/rsform/backend/api';
 import { ConstituentaID, CstClass, CstType, IConstituenta, IRSForm } from '@/features/rsform/models/rsform';
 import { AliasMapping, ParsingStatus } from '@/features/rsform/models/rslang';
 import {
@@ -18,7 +19,7 @@ import { TextMatcher } from '@/utils/utils';
 import { Graph } from '../../../models/Graph';
 import { IOperationPosition } from '../backend/api';
 import { describeSubstitutionError } from '../labels';
-import { ICstSubstitute, IOperation, IOperationSchema, OperationID, OperationType, SubstitutionErrorType } from './oss';
+import { IOperation, IOperationSchema, OperationID, OperationType, SubstitutionErrorType } from './oss';
 import { Position2D } from './ossLayout';
 
 /**

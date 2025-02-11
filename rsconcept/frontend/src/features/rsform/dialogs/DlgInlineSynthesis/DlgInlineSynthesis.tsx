@@ -7,11 +7,10 @@ import { Loader } from '@/components/Loader';
 import { ModalForm } from '@/components/Modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/Tabs';
 import { LibraryItemID } from '@/features/library/models/library';
-import { ICstSubstitute } from '@/features/oss/models/oss';
 import { useRSForm } from '@/features/rsform/backend/useRSForm';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { IInlineSynthesisDTO } from '../../backend/api';
+import { ICstSubstitute, IInlineSynthesisDTO } from '../../backend/api';
 import { ConstituentaID, IRSForm } from '../../models/rsform';
 import TabConstituents from './TabConstituents';
 import TabSource from './TabSource';

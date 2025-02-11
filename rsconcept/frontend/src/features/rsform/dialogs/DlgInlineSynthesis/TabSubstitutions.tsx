@@ -1,8 +1,8 @@
 'use client';
 
 import { LibraryItemID } from '@/features/library/models/library';
-import { ICstSubstitute } from '@/features/oss/models/oss';
 
+import { ICstSubstitute } from '../../backend/api';
 import { useRSFormSuspense } from '../../backend/useRSForm';
 import PickSubstitutions from '../../components/PickSubstitutions';
 import { ConstituentaID, IRSForm } from '../../models/rsform';
