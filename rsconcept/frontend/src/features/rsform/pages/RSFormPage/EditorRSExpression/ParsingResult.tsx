@@ -1,5 +1,4 @@
-import { describeRSError } from '@/utils/labels';
-
+import { describeRSError } from '../../../labels';
 import { IExpressionParse, IRSErrorDescription } from '../../../models/rslang';
 import { getRSErrorPrefix } from '../../../models/rslangAPI';
 

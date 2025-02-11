@@ -23,7 +23,7 @@ import { useSetOwner } from '@/features/library/backend/useSetOwner';
 import { ILibraryItemEditor } from '@/features/library/models/library';
 import { useLibrarySearchStore } from '@/features/library/stores/librarySearch';
 import { useLabelUser } from '@/features/users/backend/useLabelUser';
-import SelectUser from '@/features/users/components/SelectUser';
+import { SelectUser } from '@/features/users/components/SelectUser';
 import { UserID, UserRole } from '@/features/users/models/user';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
@@ -63,7 +63,7 @@ function EditorLibraryItem({ controller }: EditorLibraryItemProps) {
     if (!window.confirm(prompts.ownerChange)) {
       return;
     }
-    setOwner({ itemID: controller.schema.id, owner: newValue });
+    void setOwner({ itemID: controller.schema.id, owner: newValue });
   };
 
   function handleOpenLibrary(event: CProps.EventMouse) {
@@ -74,14 +74,14 @@ function EditorLibraryItem({ controller }: EditorLibraryItemProps) {
   function handleEditLocation() {
     showEditLocation({
       initial: controller.schema.location,
-      onChangeLocation: newLocation => setLocation({ itemID: controller.schema.id, location: newLocation })
+      onChangeLocation: newLocation => void setLocation({ itemID: controller.schema.id, location: newLocation })
     });
   }
 
   function handleEditEditors() {
     showEditEditors({
       editors: controller.schema.editors,
-      onChangeEditors: newEditors => setEditors({ itemID: controller.schema.id, editors: newEditors })
+      onChangeEditors: newEditors => void setEditors({ itemID: controller.schema.id, editors: newEditors })
     });
   }
 

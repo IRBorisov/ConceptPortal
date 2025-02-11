@@ -16,7 +16,7 @@ import { useMutatingOss } from '@/features/oss/backend/useMutatingOss';
 import { IOperation, OperationID, OperationType } from '@/features/oss/models/oss';
 import useClickedOutside from '@/hooks/useClickedOutside';
 import { PARAMETER } from '@/utils/constants';
-import { prepareTooltip } from '@/utils/labels';
+import { prepareTooltip } from '@/utils/utils';
 
 import { useOssEdit } from '../OssEditContext';
 

@@ -8,7 +8,7 @@ import { IconRemove } from '@/components/Icons';
 import { Label } from '@/components/Input';
 import { ModalForm } from '@/components/Modal';
 import { useUsers } from '@/features/users/backend/useUsers';
-import SelectUser from '@/features/users/components/SelectUser';
+import { SelectUser } from '@/features/users/components/SelectUser';
 import { UserID } from '@/features/users/models/user';
 import { useDialogsStore } from '@/stores/dialogs';
 

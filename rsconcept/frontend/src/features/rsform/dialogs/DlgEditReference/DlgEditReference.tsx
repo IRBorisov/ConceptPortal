@@ -7,8 +7,8 @@ import { ModalForm } from '@/components/Modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/Tabs';
 import { HelpTopic } from '@/features/help/models/helpTopic';
 import { useDialogsStore } from '@/stores/dialogs';
-import { labelReferenceType } from '@/utils/labels';
 
+import { labelReferenceType } from '../../labels';
 import { ReferenceType } from '../../models/language';
 import { IRSForm } from '../../models/rsform';
 import TabEntityReference from './TabEntityReference';

@@ -8,8 +8,9 @@ import { IconMenuFold, IconMenuUnfold } from '@/components/Icons';
 import { SelectTree } from '@/components/Input';
 import { useAppLayoutStore, useFitHeight } from '@/stores/appLayout';
 import { PARAMETER, prefixes } from '@/utils/constants';
-import { describeHelpTopic, labelHelpTopic } from '@/utils/labels';
 
+import { describeHelpTopic } from '../../labels';
+import { labelHelpTopic } from '../../labels';
 import { topicParent } from '../../models/helpTopic';
 import { HelpTopic } from '../../models/helpTopic';
 

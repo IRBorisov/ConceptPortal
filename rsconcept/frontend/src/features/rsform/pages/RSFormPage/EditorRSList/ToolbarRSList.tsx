@@ -11,13 +11,14 @@ import {
   IconOpenList,
   IconReset
 } from '@/components/Icons';
-import BadgeHelp from '@/components/shared/BadgeHelp';
+import { BadgeHelp } from '@/components/shared/BadgeHelp';
 import { HelpTopic } from '@/features/help/models/helpTopic';
 import { prefixes } from '@/utils/constants';
-import { getCstTypeShortcut, labelCstType, prepareTooltip } from '@/utils/labels';
+import { prepareTooltip } from '@/utils/utils';
 
 import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
 import MiniSelectorOSS from '../../../components/MiniSelectorOSS';
+import { getCstTypeShortcut, labelCstType } from '../../../labels';
 import { CstType } from '../../../models/rsform';
 import { useRSEdit } from '../RSEditContext';
 

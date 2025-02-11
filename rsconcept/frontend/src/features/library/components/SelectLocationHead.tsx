@@ -7,8 +7,8 @@ import { LocationIcon } from '@/components/DomainIcons';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/Dropdown';
 import { CProps } from '@/components/props';
 import { prefixes } from '@/utils/constants';
-import { describeLocationHead, labelLocationHead } from '@/utils/labels';
 
+import { describeLocationHead, labelLocationHead } from '../labels';
 import { LocationHead } from '../models/library';
 
 interface SelectLocationHeadProps extends CProps.Styling {

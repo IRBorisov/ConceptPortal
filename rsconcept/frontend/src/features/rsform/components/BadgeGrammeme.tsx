@@ -1,8 +1,8 @@
 import clsx from 'clsx';
 
 import { APP_COLORS, colorFgGrammeme } from '@/styling/color';
-import { labelGrammeme } from '@/utils/labels';
 
+import { labelGrammeme } from '../labels';
 import { GramData } from '../models/language';
 
 interface BadgeGrammemeProps {

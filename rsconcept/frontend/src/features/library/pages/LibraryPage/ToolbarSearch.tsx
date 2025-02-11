@@ -16,11 +16,11 @@ import {
 } from '@/components/Icons';
 import { CProps } from '@/components/props';
 import { SearchBar } from '@/components/shared/SearchBar';
-import SelectUser from '@/features/users/components/SelectUser';
+import { SelectUser } from '@/features/users/components/SelectUser';
 import { prefixes } from '@/utils/constants';
-import { describeLocationHead, labelLocationHead } from '@/utils/labels';
 import { tripleToggleColor } from '@/utils/utils';
 
+import { describeLocationHead, labelLocationHead } from '../../labels';
 import { LocationHead } from '../../models/library';
 import { useHasCustomFilter, useLibrarySearchStore } from '../../stores/librarySearch';
 

@@ -1,9 +1,9 @@
 import { Overlay } from '@/components/Container';
 import { SelectSingle } from '@/components/Input';
-import BadgeHelp from '@/components/shared/BadgeHelp';
+import { BadgeHelp } from '@/components/shared/BadgeHelp';
 import { HelpTopic } from '@/features/help/models/helpTopic';
-import { mapLabelColoring } from '@/utils/labels';
 
+import { mapLabelColoring } from '../../../labels';
 import { IRSForm } from '../../../models/rsform';
 import { GraphColoring } from '../../../stores/termGraph';
 import SchemasGuide from './SchemasGuide';

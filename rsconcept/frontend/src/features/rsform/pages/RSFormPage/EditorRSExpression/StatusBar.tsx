@@ -6,8 +6,9 @@ import { StatusIcon } from '@/components/DomainIcons';
 import { Loader } from '@/components/Loader';
 import { APP_COLORS, colorStatusBar } from '@/styling/color';
 import { globals } from '@/utils/constants';
-import { labelExpressionStatus, prepareTooltip } from '@/utils/labels';
+import { prepareTooltip } from '@/utils/utils';
 
+import { labelExpressionStatus } from '../../../labels';
 import { ExpressionStatus, IConstituenta } from '../../../models/rsform';
 import { inferStatus } from '../../../models/rsformAPI';
 import { IExpressionParse, ParsingStatus } from '../../../models/rslang';

@@ -37,7 +37,7 @@ function DlgRenameCst() {
   const isValid = alias !== target.alias && validateNewAlias(alias, cst_type, schema);
 
   function onSubmit(data: ICstRenameDTO) {
-    cstRename({ itemID: schema.id, data: data });
+    return cstRename({ itemID: schema.id, data: data });
   }
 
   function handleChangeType(newType: CstType) {

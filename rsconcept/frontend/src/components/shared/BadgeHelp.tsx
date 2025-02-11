@@ -27,7 +27,7 @@ interface BadgeHelpProps extends CProps.Styling {
 /**
  * Display help icon with a manual page tooltip.
  */
-function BadgeHelp({ topic, padding = 'p-1', ...restProps }: BadgeHelpProps) {
+export function BadgeHelp({ topic, padding = 'p-1', ...restProps }: BadgeHelpProps) {
   const showHelp = usePreferencesStore(state => state.showHelp);
 
   if (!showHelp) {
@@ -49,5 +49,3 @@ function BadgeHelp({ topic, padding = 'p-1', ...restProps }: BadgeHelpProps) {
     </div>
   );
 }
-
-export default BadgeHelp;

@@ -3,8 +3,8 @@
 import { Handle, Position } from 'reactflow';
 
 import { APP_COLORS, colorBgSyntaxTree } from '@/styling/color';
-import { labelSyntaxTree } from '@/utils/labels';
 
+import { labelSyntaxTree } from '../../../labels';
 import { ISyntaxTreeNode } from '../../../models/rslang';
 
 const FONT_SIZE_MAX = 14;

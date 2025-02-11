@@ -19,7 +19,7 @@ interface SelectUserProps extends CProps.Styling {
   noBorder?: boolean;
 }
 
-function SelectUser({
+export function SelectUser({
   className,
   filter,
   value,
@@ -56,5 +56,3 @@ function SelectUser({
     />
   );
 }
-
-export default SelectUser;

@@ -2,8 +2,8 @@ import clsx from 'clsx';
 
 import { IconChild } from '@/components/Icons';
 import { CProps } from '@/components/props';
-import { labelCstTypification } from '@/utils/labels';
 
+import { labelCstTypification } from '../labels';
 import { IConstituenta } from '../models/rsform';
 import { isBasicConcept } from '../models/rsformAPI';
 

@@ -6,10 +6,10 @@ import { useEffect, useState } from 'react';
 import { MiniButton } from '@/components/Control';
 import { IconFolder, IconFolderClosed, IconFolderEmpty, IconFolderOpened } from '@/components/Icons';
 import { CProps } from '@/components/props';
-import { FolderNode } from '@/models/FolderTree';
-import { labelFolderNode } from '@/utils/labels';
+import { FolderNode } from '@/features/library/models/FolderTree';
 
 import { useFolders } from '../backend/useFolders';
+import { labelFolderNode } from '../labels';
 
 interface SelectLocationProps extends CProps.Styling {
   value: string;

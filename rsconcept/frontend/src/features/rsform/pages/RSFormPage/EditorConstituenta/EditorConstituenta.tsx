@@ -68,7 +68,7 @@ function EditorConstituenta() {
     showEditTerm({
       target: activeCst,
       onSave: forms =>
-        cstUpdate({
+        void cstUpdate({
           itemID: schema.id,
           data: {
             target: activeCst.id,

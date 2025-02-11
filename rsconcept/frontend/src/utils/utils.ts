@@ -198,3 +198,20 @@ export function sharePage() {
     .then(() => toast.success(information.linkReady))
     .catch(console.error);
 }
+
+/**
+ * Remove html tags from target string.
+ */
+export function removeTags(target?: string): string {
+  if (!target) {
+    return '';
+  }
+  return target.toString().replace(/(<([^>]+)>)/gi, '');
+}
+
+/**
+ * Generate HTML wrapper for control description including hotkey.
+ */
+export function prepareTooltip(text: string, hotkey?: string) {
+  return hotkey ? `<b>[${hotkey}]</b><br/>${text}` : text;
+}

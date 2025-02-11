@@ -3,10 +3,9 @@ import clsx from 'clsx';
 import { SelectTree } from '@/components/Input';
 import { useFitHeight } from '@/stores/appLayout';
 import { prefixes } from '@/utils/constants';
-import { describeHelpTopic, labelHelpTopic } from '@/utils/labels';
 
-import { topicParent } from '../../models/helpTopic';
-import { HelpTopic } from '../../models/helpTopic';
+import { describeHelpTopic, labelHelpTopic } from '../../labels';
+import { HelpTopic, topicParent } from '../../models/helpTopic';
 
 interface TopicsStaticProps {
   activeTopic: HelpTopic;

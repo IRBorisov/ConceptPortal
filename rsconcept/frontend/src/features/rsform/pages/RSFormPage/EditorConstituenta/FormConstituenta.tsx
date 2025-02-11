@@ -14,12 +14,13 @@ import { CProps } from '@/components/props';
 import { Indicator } from '@/components/View';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
-import { errors, labelCstTypification, labelTypification } from '@/utils/labels';
+import { errors } from '@/utils/labels';
 
 import { ICstUpdateDTO, schemaCstUpdate } from '../../../backend/api';
 import { useCstUpdate } from '../../../backend/useCstUpdate';
 import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
 import RefsInput from '../../../components/RefsInput';
+import { labelCstTypification, labelTypification } from '../../../labels';
 import { ConstituentaID, CstType, IConstituenta, IRSForm } from '../../../models/rsform';
 import { isBaseSet, isBasicConcept, isFunctional } from '../../../models/rsformAPI';
 import { IExpressionParse, ParsingStatus } from '../../../models/rslang';

@@ -9,10 +9,10 @@ import { ModalForm } from '@/components/Modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/Tabs';
 import { HelpTopic } from '@/features/help/models/helpTopic';
 import { useDialogsStore } from '@/stores/dialogs';
-import { describeOperationType, labelOperationType } from '@/utils/labels';
 
 import { IOperationCreateDTO, IOperationPosition, schemaOperationCreate } from '../../backend/api';
 import { useOperationCreate } from '../../backend/useOperationCreate';
+import { describeOperationType, labelOperationType } from '../../labels';
 import { IOperationSchema, OperationID, OperationType } from '../../models/oss';
 import { calculateInsertPosition } from '../../models/ossAPI';
 import TabInputOperation from './TabInputOperation';

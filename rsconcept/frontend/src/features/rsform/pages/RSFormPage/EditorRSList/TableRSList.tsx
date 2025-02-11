@@ -9,10 +9,10 @@ import { CProps } from '@/components/props';
 import { NoData, TextContent } from '@/components/View';
 import useWindowSize from '@/hooks/useWindowSize';
 import { PARAMETER, prefixes } from '@/utils/constants';
-import { labelCstTypification } from '@/utils/labels';
 import { truncateToSymbol } from '@/utils/utils';
 
 import BadgeConstituenta from '../../../components/BadgeConstituenta';
+import { labelCstTypification } from '../../../labels';
 import { ConstituentaID, IConstituenta } from '../../../models/rsform';
 
 interface TableRSListProps {

@@ -5,8 +5,8 @@ import { createColumnHelper } from '@tanstack/react-table';
 import { Tooltip } from '@/components/Container';
 import DataTable from '@/components/DataTable';
 import { IconPageRight } from '@/components/Icons';
-import { labelOperationType } from '@/utils/labels';
 
+import { labelOperationType } from '../labels';
 import { ICstSubstituteEx, OperationType } from '../models/oss';
 import { OssNodeInternal } from '../models/ossLayout';
 

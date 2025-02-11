@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import { DataCallback } from '@/backend/apiTransport';
 import { Overlay } from '@/components/Container';
 import { CProps } from '@/components/props';
-import BadgeHelp from '@/components/shared/BadgeHelp';
+import { BadgeHelp } from '@/components/shared/BadgeHelp';
 import { HelpTopic } from '@/features/help/models/helpTopic';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';

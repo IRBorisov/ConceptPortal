@@ -1,9 +1,9 @@
 import clsx from 'clsx';
 
+import { describeExpressionStatus, labelExpressionStatus } from '@/features/rsform/labels';
 import { ExpressionStatus } from '@/features/rsform/models/rsform';
 import { colorBgCstStatus } from '@/styling/color';
 import { prefixes } from '@/utils/constants';
-import { describeExpressionStatus, labelExpressionStatus } from '@/utils/labels';
 
 interface InfoCstStatusProps {
   title?: string;

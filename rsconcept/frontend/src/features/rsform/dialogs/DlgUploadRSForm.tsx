@@ -21,7 +21,7 @@ function DlgUploadRSForm() {
 
   const handleSubmit = () => {
     if (file) {
-      upload({
+      void upload({
         itemID: itemID,
         load_metadata: loadMetadata,
         file: file,

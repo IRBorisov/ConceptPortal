@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
 import { TextArea, TextInput } from '@/components/Input';
-import BadgeHelp from '@/components/shared/BadgeHelp';
+import { BadgeHelp } from '@/components/shared/BadgeHelp';
 import { HelpTopic } from '@/features/help/models/helpTopic';
 import { PARAMETER } from '@/utils/constants';
 

@@ -3,8 +3,8 @@ import { hoverTooltip, TooltipView } from '@codemirror/view';
 import clsx from 'clsx';
 
 import { findAliasAt } from '@/utils/codemirror';
-import { labelCstTypification } from '@/utils/labels';
 
+import { labelCstTypification } from '../../labels';
 import { IConstituenta, IRSForm } from '../../models/rsform';
 import { isBasicConcept } from '../../models/rsformAPI';
 

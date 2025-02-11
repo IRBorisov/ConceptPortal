@@ -168,7 +168,7 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
       target: operation,
       onSubmit: data => {
         data.positions = positions;
-        operationUpdate({ itemID: schema.id, data });
+        void operationUpdate({ itemID: schema.id, data });
       }
     });
   }

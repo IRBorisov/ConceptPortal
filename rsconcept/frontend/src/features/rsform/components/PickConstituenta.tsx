@@ -8,8 +8,8 @@ import { CProps } from '@/components/props';
 import { SearchBar } from '@/components/shared/SearchBar';
 import { NoData } from '@/components/View';
 import { APP_COLORS } from '@/styling/color';
-import { describeConstituenta } from '@/utils/labels';
 
+import { describeConstituenta } from '../labels';
 import { IConstituenta } from '../models/rsform';
 import { matchConstituenta } from '../models/rsformAPI';
 import { CstMatchMode } from '../stores/cstSearch';

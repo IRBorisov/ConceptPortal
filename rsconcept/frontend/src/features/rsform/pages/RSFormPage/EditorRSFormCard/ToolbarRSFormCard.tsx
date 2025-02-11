@@ -3,7 +3,7 @@
 import { Overlay } from '@/components/Container';
 import { MiniButton } from '@/components/Control';
 import { IconDestroy, IconSave, IconShare } from '@/components/Icons';
-import BadgeHelp from '@/components/shared/BadgeHelp';
+import { BadgeHelp } from '@/components/shared/BadgeHelp';
 import { HelpTopic } from '@/features/help/models/helpTopic';
 import { useMutatingLibrary } from '@/features/library/backend/useMutatingLibrary';
 import { AccessPolicy, ILibraryItemEditor, LibraryItemType } from '@/features/library/models/library';
@@ -11,7 +11,8 @@ import { UserRole } from '@/features/users/models/user';
 import { useModificationStore } from '@/stores/modification';
 import { useRoleStore } from '@/stores/role';
 import { PARAMETER } from '@/utils/constants';
-import { prepareTooltip, tooltips } from '@/utils/labels';
+import { tooltips } from '@/utils/labels';
+import { prepareTooltip } from '@/utils/utils';
 import { sharePage } from '@/utils/utils';
 
 import MiniSelectorOSS from '../../../components/MiniSelectorOSS';

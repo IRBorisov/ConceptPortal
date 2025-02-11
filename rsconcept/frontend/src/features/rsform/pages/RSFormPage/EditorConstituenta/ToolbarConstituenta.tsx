@@ -17,13 +17,14 @@ import {
   IconReset,
   IconSave
 } from '@/components/Icons';
-import BadgeHelp from '@/components/shared/BadgeHelp';
+import { BadgeHelp } from '@/components/shared/BadgeHelp';
 import { HelpTopic } from '@/features/help/models/helpTopic';
 import { useFindPredecessor } from '@/features/oss/backend/useFindPredecessor';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { PARAMETER } from '@/utils/constants';
-import { prepareTooltip, tooltips } from '@/utils/labels';
+import { tooltips } from '@/utils/labels';
+import { prepareTooltip } from '@/utils/utils';
 
 import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
 import MiniSelectorOSS from '../../../components/MiniSelectorOSS';

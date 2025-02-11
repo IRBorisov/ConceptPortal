@@ -5,8 +5,9 @@ import clsx from 'clsx';
 
 import { APP_COLORS, colorFgGrammeme } from '@/styling/color';
 import { findContainedNodes, findReferenceAt } from '@/utils/codemirror';
-import { describeConstituentaTerm, labelGrammeme } from '@/utils/labels';
 
+import { labelGrammeme } from '../../labels';
+import { describeConstituentaTerm } from '../../labels';
 import { IEntityReference, ISyntacticReference } from '../../models/language';
 import { parseGrammemes } from '../../models/languageAPI';
 import { IConstituenta, IRSForm } from '../../models/rsform';

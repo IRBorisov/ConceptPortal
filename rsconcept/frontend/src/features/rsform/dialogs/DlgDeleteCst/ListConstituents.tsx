@@ -1,7 +1,6 @@
 import clsx from 'clsx';
 
-import { labelConstituenta } from '@/utils/labels';
-
+import { labelConstituenta } from '../../labels';
 import { ConstituentaID, IRSForm } from '../../models/rsform';
 
 interface ListConstituentsProps {

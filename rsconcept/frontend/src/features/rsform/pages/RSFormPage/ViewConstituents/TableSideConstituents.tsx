@@ -6,9 +6,9 @@ import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/D
 import { NoData, TextContent } from '@/components/View';
 import { APP_COLORS } from '@/styling/color';
 import { PARAMETER, prefixes } from '@/utils/constants';
-import { describeConstituenta } from '@/utils/labels';
 
 import BadgeConstituenta from '../../../components/BadgeConstituenta';
+import { describeConstituenta } from '../../../labels';
 import { ConstituentaID, IConstituenta } from '../../../models/rsform';
 
 const DESCRIPTION_MAX_SYMBOLS = 280;

@@ -6,8 +6,8 @@ import { Dropdown, DropdownButton, useDropdown } from '@/components/Dropdown';
 import { CProps } from '@/components/props';
 import useWindowSize from '@/hooks/useWindowSize';
 import { prefixes } from '@/utils/constants';
-import { describeCstMatchMode, labelCstMatchMode } from '@/utils/labels';
 
+import { describeCstMatchMode, labelCstMatchMode } from '../../../labels';
 import { CstMatchMode } from '../../../stores/cstSearch';
 
 interface SelectMatchModeProps extends CProps.Styling {

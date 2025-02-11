@@ -8,8 +8,8 @@ import { Overlay } from '@/components/Container';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/Tabs';
 import { useAppLayoutStore } from '@/stores/appLayout';
 import { useModificationStore } from '@/stores/modification';
-import { labelVersion } from '@/utils/labels';
 
+import { labelVersion } from '../../labels';
 import { ConstituentaID } from '../../models/rsform';
 import EditorConstituenta from './EditorConstituenta';
 import EditorRSForm from './EditorRSFormCard';

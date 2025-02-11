@@ -3,7 +3,7 @@ import { MiniButton } from '@/components/Control';
 import { VisibilityIcon } from '@/components/DomainIcons';
 import { IconImmutable, IconMutable } from '@/components/Icons';
 import { Label } from '@/components/Input';
-import BadgeHelp from '@/components/shared/BadgeHelp';
+import { BadgeHelp } from '@/components/shared/BadgeHelp';
 import { HelpTopic } from '@/features/help/models/helpTopic';
 import { useMutatingLibrary } from '@/features/library/backend/useMutatingLibrary';
 import { useSetAccessPolicy } from '@/features/library/backend/useSetAccessPolicy';
@@ -28,7 +28,7 @@ function ToolbarItemAccess({ visible, toggleVisible, readOnly, toggleReadOnly, c
   const { setAccessPolicy } = useSetAccessPolicy();
 
   function handleSetAccessPolicy(newPolicy: AccessPolicy) {
-    setAccessPolicy({ itemID: controller.schema.id, policy: newPolicy });
+    void setAccessPolicy({ itemID: controller.schema.id, policy: newPolicy });
   }
 
   return (

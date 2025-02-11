@@ -8,8 +8,8 @@ import { CProps } from '@/components/props';
 import { SearchBar } from '@/components/shared/SearchBar';
 import { NoData } from '@/components/View';
 import { Graph } from '@/models/Graph';
-import { describeConstituenta } from '@/utils/labels';
 
+import { describeConstituenta } from '../labels';
 import { ConstituentaID, IConstituenta, IRSForm } from '../models/rsform';
 import { isBasicConcept, matchConstituenta } from '../models/rsformAPI';
 import { CstMatchMode } from '../stores/cstSearch';

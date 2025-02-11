@@ -1,7 +1,6 @@
 import { prefixes } from '@/utils/constants';
 
-import { topicParent } from '../models/helpTopic';
-import { HelpTopic } from '../models/helpTopic';
+import { HelpTopic, topicParent } from '../models/helpTopic';
 import { TopicItem } from './TopicItem';
 
 interface SubtopicsProps {

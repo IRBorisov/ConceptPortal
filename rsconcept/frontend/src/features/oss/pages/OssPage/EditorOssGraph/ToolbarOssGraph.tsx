@@ -18,11 +18,11 @@ import {
   IconReset,
   IconSave
 } from '@/components/Icons';
-import BadgeHelp from '@/components/shared/BadgeHelp';
+import { BadgeHelp } from '@/components/shared/BadgeHelp';
 import { HelpTopic } from '@/features/help/models/helpTopic';
 import { useModificationStore } from '@/stores/modification';
 import { PARAMETER } from '@/utils/constants';
-import { prepareTooltip } from '@/utils/labels';
+import { prepareTooltip } from '@/utils/utils';
 
 import { useMutatingOss } from '../../../backend/useMutatingOss';
 import { OperationType } from '../../../models/oss';

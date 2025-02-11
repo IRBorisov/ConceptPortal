@@ -2,8 +2,7 @@
  * Module: Natural language model API.
  */
 
-import { labelGrammeme } from '@/utils/labels';
-
+import { labelGrammeme } from '../labels';
 import {
   GramData,
   Grammeme,

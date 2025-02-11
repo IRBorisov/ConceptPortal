@@ -1,7 +1,7 @@
 import { SelectSingle } from '@/components/Input';
 import { CProps } from '@/components/props';
-import { labelCstType } from '@/utils/labels';
 
+import { labelCstType } from '../labels';
 import { CstType } from '../models/rsform';
 
 const SelectorCstType = Object.values(CstType).map(typeStr => ({

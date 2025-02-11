@@ -5,7 +5,8 @@ import clsx from 'clsx';
 import { SelectSingle } from '@/components/Input';
 import { CProps } from '@/components/props';
 import { IVersionInfo, VersionID } from '@/features/library/models/library';
-import { labelVersion } from '@/utils/labels';
+
+import { labelVersion } from '../labels';
 
 interface SelectVersionProps extends CProps.Styling {
   id?: string;
