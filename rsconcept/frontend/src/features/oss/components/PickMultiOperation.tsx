@@ -21,7 +21,7 @@ interface PickMultiOperationProps extends CProps.Styling {
 
 const columnHelper = createColumnHelper<IOperation>();
 
-function PickMultiOperation({ rows, items, value, onChange, className, ...restProps }: PickMultiOperationProps) {
+export function PickMultiOperation({ rows, items, value, onChange, className, ...restProps }: PickMultiOperationProps) {
   const selectedItems = value.map(itemID => items.find(item => item.id === itemID)!);
   const nonSelectedItems = items.filter(item => !value.includes(item.id));
   const [lastSelected, setLastSelected] = useState<IOperation | undefined>(undefined);
@@ -134,5 +134,3 @@ function PickMultiOperation({ rows, items, value, onChange, className, ...restPr
     </div>
   );
 }
-
-export default PickMultiOperation;

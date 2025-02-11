@@ -115,11 +115,11 @@ function DlgCreateOperation() {
         </TabList>
         <FormProvider {...methods}>
           <TabPanel>
-            <TabInputOperation oss={oss} />
+            <TabInputOperation />
           </TabPanel>
 
           <TabPanel>
-            <TabSynthesisOperation oss={oss} />
+            <TabSynthesisOperation />
           </TabPanel>
         </FormProvider>
       </Tabs>

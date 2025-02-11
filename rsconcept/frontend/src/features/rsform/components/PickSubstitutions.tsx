@@ -21,7 +21,7 @@ import SelectConstituenta from './SelectConstituenta';
 
 interface PickSubstitutionsProps extends CProps.Styling {
   value: ICstSubstitute[];
-  onChange: React.Dispatch<React.SetStateAction<ICstSubstitute[]>>;
+  onChange: (newValue: ICstSubstitute[]) => void;
 
   suggestions?: ICstSubstitute[];
 
@@ -125,30 +125,24 @@ function PickSubstitutions({
         return;
       }
     }
-    onChange(prev => [...prev, newSubstitution]);
+    onChange([...value, newSubstitution]);
     setLeftCst(undefined);
     setRightCst(undefined);
   }
 
   function handleDeclineSuggestion(item: IMultiSubstitution) {
-    setIgnores(prev => [...prev, { original: item.original.id, substitution: item.substitution.id }]);
+    setIgnores([...value, { original: item.original.id, substitution: item.substitution.id }]);
   }
 
   function handleAcceptSuggestion(item: IMultiSubstitution) {
-    onChange(prev => [...prev, { original: item.original.id, substitution: item.substitution.id }]);
+    onChange([...value, { original: item.original.id, substitution: item.substitution.id }]);
   }
 
   function handleDeleteSubstitution(target: IMultiSubstitution) {
     handleDeclineSuggestion(target);
-    onChange(prev => {
-      const newItems: ICstSubstitute[] = [];
-      prev.forEach(item => {
-        if (item.original !== target.original.id || item.substitution !== target.substitution.id) {
-          newItems.push(item);
-        }
-      });
-      return newItems;
-    });
+    onChange(
+      value.filter(item => item.original !== target.original.id || item.substitution !== target.substitution.id)
+    );
   }
 
   const columns = [

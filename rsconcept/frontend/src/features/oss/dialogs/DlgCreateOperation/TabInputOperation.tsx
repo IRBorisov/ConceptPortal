@@ -7,17 +7,15 @@ import { IconReset } from '@/components/Icons';
 import { Checkbox, Label, TextArea, TextInput } from '@/components/Input';
 import { useLibrary } from '@/features/library/backend/useLibrary';
 import { ILibraryItem, LibraryItemID, LibraryItemType } from '@/features/library/models/library';
-import { IOperationSchema } from '@/features/oss/models/oss';
 import { sortItemsForOSS } from '@/features/oss/models/ossAPI';
 import PickSchema from '@/features/rsform/components/PickSchema';
+import { useDialogsStore } from '@/stores/dialogs';
 
 import { IOperationCreateDTO } from '../../backend/api';
+import { DlgCreateOperationProps } from './DlgCreateOperation';
 
-interface TabInputOperationProps {
-  oss: IOperationSchema;
-}
-
-function TabInputOperation({ oss }: TabInputOperationProps) {
+function TabInputOperation() {
+  const { oss } = useDialogsStore(state => state.props as DlgCreateOperationProps);
   const { items: libraryItems } = useLibrary();
   const sortedItems = sortItemsForOSS(oss, libraryItems);
 

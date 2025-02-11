@@ -120,7 +120,6 @@ export class SubstitutionValidator {
     if (!this.checkSubstitutions()) {
       return false;
     }
-
     return this.setValid();
   }
 

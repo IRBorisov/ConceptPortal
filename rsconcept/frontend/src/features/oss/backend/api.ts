@@ -6,11 +6,11 @@ import { DELAYS } from '@/backend/configuration';
 import { ILibraryItem, ILibraryItemData, LibraryItemID } from '@/features/library/models/library';
 import {
   IArgument,
-  ICstSubstitute,
   ICstSubstituteEx,
   IOperation,
   OperationID,
-  OperationType
+  OperationType,
+  schemaCstSubstitute
 } from '@/features/oss/models/oss';
 import { IConstituentaReference, ITargetCst } from '@/features/rsform/models/rsform';
 import { information } from '@/utils/labels';
@@ -122,15 +122,22 @@ export type IInputUpdateDTO = z.infer<typeof schemaInputUpdate>;
 /**
  * Represents {@link IOperation} data, used in update process.
  */
-export interface IOperationUpdateDTO extends ITargetOperation {
-  item_data: {
-    alias: string;
-    title: string;
-    comment: string;
-  };
-  arguments: OperationID[] | undefined;
-  substitutions: ICstSubstitute[] | undefined;
-}
+export const schemaOperationUpdate = z.object({
+  target: z.number(),
+  positions: z.array(schemaOperationPosition),
+  item_data: z.object({
+    alias: z.string().nonempty(),
+    title: z.string(),
+    comment: z.string()
+  }),
+  arguments: z.array(z.number()),
+  substitutions: z.array(schemaCstSubstitute)
+});
+
+/**
+ * Represents {@link IOperation} data, used in update process.
+ */
+export type IOperationUpdateDTO = z.infer<typeof schemaOperationUpdate>;
 
 /**
  * Represents data, used relocating {@link IConstituenta}s between {@link ILibraryItem}s.

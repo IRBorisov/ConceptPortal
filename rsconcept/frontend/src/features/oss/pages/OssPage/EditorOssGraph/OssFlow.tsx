@@ -296,7 +296,10 @@ function OssFlow() {
 
   return (
     <div tabIndex={-1} onKeyDown={handleKeyDown}>
-      <Overlay position='top-[1.9rem] pt-1 right-1/2 translate-x-1/2' className='rounded-b-2xl cc-blur'>
+      <Overlay
+        position='top-[1.9rem] pt-1 right-1/2 translate-x-1/2'
+        className='rounded-b-2xl cc-blur hover:bg-prim-100 hover:bg-opacity-50'
+      >
         <ToolbarOssGraph
           onFitView={() => flow.fitView({ duration: PARAMETER.zoomDuration })}
           onCreate={() => handleCreateOperation(controller.selected)}

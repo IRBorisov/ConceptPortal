@@ -1,25 +1,47 @@
 'use client';
+import { Controller, useFormContext } from 'react-hook-form';
+
 import { FlexColumn } from '@/components/Container';
 import { Label } from '@/components/Input';
+import { LibraryItemID } from '@/features/library/models/library';
+import { useDialogsStore } from '@/stores/dialogs';
 
-import PickMultiOperation from '../../components/PickMultiOperation';
-import { IOperationSchema, OperationID } from '../../models/oss';
+import { IOperationUpdateDTO } from '../../backend/api';
+import { PickMultiOperation } from '../../components/PickMultiOperation';
+import { DlgEditOperationProps } from './DlgEditOperation';
 
-interface TabArgumentsProps {
-  oss: IOperationSchema;
-  target: OperationID;
-  inputs: OperationID[];
-  setInputs: React.Dispatch<React.SetStateAction<OperationID[]>>;
-}
-
-function TabArguments({ oss, inputs, target, setInputs }: TabArgumentsProps) {
-  const potentialCycle = [target, ...oss.graph.expandAllOutputs([target])];
+function TabArguments() {
+  const { control, setValue } = useFormContext<IOperationUpdateDTO>();
+  const { oss, target } = useDialogsStore(state => state.props as DlgEditOperationProps);
+  const potentialCycle = [target.id, ...oss.graph.expandAllOutputs([target.id])];
   const filtered = oss.items.filter(item => !potentialCycle.includes(item.id));
+
+  function handleChangeArguments(prev: LibraryItemID[], newValue: LibraryItemID[]) {
+    setValue('arguments', newValue);
+    if (prev.some(id => !newValue.includes(id))) {
+      setValue('substitutions', []);
+    }
+  }
+
   return (
     <div className='cc-fade-in cc-column'>
       <FlexColumn>
-        <Label text={`Выбор аргументов: [ ${inputs.length} ]`} />
-        <PickMultiOperation items={filtered} value={inputs} onChange={setInputs} rows={8} />
+        <Controller
+          name='arguments'
+          control={control}
+          defaultValue={[]}
+          render={({ field }) => (
+            <>
+              <Label text={`Выбор аргументов: [ ${field.value.length} ]`} />
+              <PickMultiOperation
+                items={filtered}
+                value={field.value}
+                onChange={newValue => handleChangeArguments(field.value, newValue)}
+                rows={8}
+              />
+            </>
+          )}
+        />
       </FlexColumn>
     </div>
   );

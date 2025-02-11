@@ -2,8 +2,10 @@
  * Module: Schema of Synthesis Operations.
  */
 
+import { z } from 'zod';
+
 import { ILibraryItem, ILibraryItemData, LibraryItemID } from '@/features/library/models/library';
-import { ConstituentaID, IConstituenta } from '@/features/rsform/models/rsform';
+import { IConstituenta } from '@/features/rsform/models/rsform';
 
 import { Graph } from '../../../models/Graph';
 
@@ -54,10 +56,15 @@ export interface IArgument {
 /**
  * Represents data, used in merging single {@link IConstituenta}.
  */
-export interface ICstSubstitute {
-  original: ConstituentaID;
-  substitution: ConstituentaID;
-}
+export const schemaCstSubstitute = z.object({
+  original: z.number(),
+  substitution: z.number()
+});
+
+/**
+ * Represents data, used in merging single {@link IConstituenta}.
+ */
+export type ICstSubstitute = z.infer<typeof schemaCstSubstitute>;
 
 /**
  * Represents data, used in merging multiple {@link IConstituenta}.

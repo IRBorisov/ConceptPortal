@@ -2,16 +2,14 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { FlexColumn } from '@/components/Container';
 import { Label, TextArea, TextInput } from '@/components/Input';
+import { useDialogsStore } from '@/stores/dialogs';
 
 import { IOperationCreateDTO } from '../../backend/api';
-import PickMultiOperation from '../../components/PickMultiOperation';
-import { IOperationSchema } from '../../models/oss';
+import { PickMultiOperation } from '../../components/PickMultiOperation';
+import { DlgCreateOperationProps } from './DlgCreateOperation';
 
-interface TabSynthesisOperationProps {
-  oss: IOperationSchema;
-}
-
-function TabSynthesisOperation({ oss }: TabSynthesisOperationProps) {
+function TabSynthesisOperation() {
+  const { oss } = useDialogsStore(state => state.props as DlgCreateOperationProps);
   const {
     register,
     control,

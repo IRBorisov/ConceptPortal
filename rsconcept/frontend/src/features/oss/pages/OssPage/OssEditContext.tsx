@@ -15,7 +15,6 @@ import { useRoleStore } from '@/stores/role';
 import { prompts } from '@/utils/labels';
 
 import { IOperationPosition } from '../../backend/api';
-import { useOperationUpdate } from '../../backend/useOperationUpdate';
 import { useOssSuspense } from '../../backend/useOSS';
 import { IOperationSchema, OperationID, OperationType } from '../../models/oss';
 
@@ -95,7 +94,6 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
   const showCreateOperation = useDialogsStore(state => state.showCreateOperation);
 
   const { deleteItem } = useDeleteItem();
-  const { operationUpdate } = useOperationUpdate();
 
   useEffect(
     () =>
@@ -166,10 +164,7 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
     showEditOperation({
       oss: schema,
       target: operation,
-      onSubmit: data => {
-        data.positions = positions;
-        void operationUpdate({ itemID: schema.id, data });
-      }
+      positions: positions
     });
   }
 
