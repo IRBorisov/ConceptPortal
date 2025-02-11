@@ -1,47 +1,39 @@
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
+
 import { FlexColumn } from '@/components/Container';
 import { Label, TextArea, TextInput } from '@/components/Input';
 
+import { IOperationCreateDTO } from '../../backend/api';
 import PickMultiOperation from '../../components/PickMultiOperation';
-import { IOperationSchema, OperationID } from '../../models/oss';
+import { IOperationSchema } from '../../models/oss';
 
 interface TabSynthesisOperationProps {
   oss: IOperationSchema;
-  alias: string;
-  onChangeAlias: (newValue: string) => void;
-  title: string;
-  onChangeTitle: (newValue: string) => void;
-  comment: string;
-  onChangeComment: (newValue: string) => void;
-  inputs: OperationID[];
-  setInputs: React.Dispatch<React.SetStateAction<OperationID[]>>;
 }
 
-function TabSynthesisOperation({
-  oss,
-  alias,
-  onChangeAlias,
-  title,
-  onChangeTitle,
-  comment,
-  onChangeComment,
-  inputs,
-  setInputs
-}: TabSynthesisOperationProps) {
+function TabSynthesisOperation({ oss }: TabSynthesisOperationProps) {
+  const {
+    register,
+    control,
+    formState: { errors }
+  } = useFormContext<IOperationCreateDTO>();
+  const inputs = useWatch({ control, name: 'arguments' });
+
   return (
     <div className='cc-fade-in cc-column'>
       <TextInput
         id='operation_title'
         label='Полное название'
-        value={title}
-        onChange={event => onChangeTitle(event.target.value)}
+        {...register('item_data.title')}
+        error={errors.item_data?.title}
       />
       <div className='flex gap-6'>
         <TextInput
           id='operation_alias'
           label='Сокращение'
           className='w-[16rem]'
-          value={alias}
-          onChange={event => onChangeAlias(event.target.value)}
+          {...register('item_data.alias')}
+          error={errors.item_data?.alias}
         />
 
         <TextArea
@@ -49,14 +41,21 @@ function TabSynthesisOperation({
           label='Описание'
           noResize
           rows={3}
-          value={comment}
-          onChange={event => onChangeComment(event.target.value)}
+          {...register('item_data.comment')}
+          error={errors.item_data?.comment}
         />
       </div>
 
       <FlexColumn>
         <Label text={`Выбор аргументов: [ ${inputs.length} ]`} />
-        <PickMultiOperation items={oss.items} value={inputs} onChange={setInputs} rows={6} />
+        <Controller
+          name='arguments'
+          control={control}
+          defaultValue={[]}
+          render={({ field }) => (
+            <PickMultiOperation items={oss.items} value={field.value} onChange={field.onChange} rows={6} />
+          )}
+        />
       </FlexColumn>
     </div>
   );

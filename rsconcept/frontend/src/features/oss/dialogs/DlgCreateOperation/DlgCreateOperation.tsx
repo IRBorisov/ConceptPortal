@@ -1,25 +1,30 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
 import clsx from 'clsx';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import { ModalForm } from '@/components/Modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/Tabs';
 import { HelpTopic } from '@/features/help/models/helpTopic';
-import { useLibrary } from '@/features/library/backend/useLibrary';
-import { LibraryItemID } from '@/features/library/models/library';
 import { useDialogsStore } from '@/stores/dialogs';
 import { describeOperationType, labelOperationType } from '@/utils/labels';
 
-import { IOperationCreateDTO } from '../../backend/api';
+import { IOperationCreateDTO, IOperationPosition, schemaOperationCreate } from '../../backend/api';
+import { useOperationCreate } from '../../backend/useOperationCreate';
 import { IOperationSchema, OperationID, OperationType } from '../../models/oss';
+import { calculateInsertPosition } from '../../models/ossAPI';
 import TabInputOperation from './TabInputOperation';
 import TabSynthesisOperation from './TabSynthesisOperation';
 
 export interface DlgCreateOperationProps {
   oss: IOperationSchema;
-  onCreate: (data: IOperationCreateDTO) => void;
+  positions: IOperationPosition[];
   initialInputs: OperationID[];
+  defaultX: number;
+  defaultY: number;
+  onCreate?: (newID: OperationID) => void;
 }
 
 export enum TabID {
@@ -28,70 +33,57 @@ export enum TabID {
 }
 
 function DlgCreateOperation() {
-  const { items: libraryItems } = useLibrary();
+  const { operationCreate } = useOperationCreate();
 
-  const { oss, onCreate, initialInputs } = useDialogsStore(state => state.props as DlgCreateOperationProps);
-  const [activeTab, setActiveTab] = useState(initialInputs.length > 0 ? TabID.SYNTHESIS : TabID.INPUT);
+  const { oss, positions, initialInputs, onCreate, defaultX, defaultY } = useDialogsStore(
+    state => state.props as DlgCreateOperationProps
+  );
 
-  const [alias, setAlias] = useState('');
-  const [title, setTitle] = useState('');
-  const [comment, setComment] = useState('');
-  const [inputs, setInputs] = useState<OperationID[]>(initialInputs);
-  const [attachedID, setAttachedID] = useState<LibraryItemID | undefined>(undefined);
-  const [createSchema, setCreateSchema] = useState(false);
-
-  const isValid = (() => {
-    if (alias === '') {
-      return false;
-    }
-    if (activeTab === TabID.SYNTHESIS && inputs.length === 0) {
-      return false;
-    }
-    if (activeTab === TabID.INPUT && !attachedID) {
-      if (oss.items.some(operation => operation.alias === alias)) {
-        return false;
-      }
-    }
-    return true;
-  })();
-
-  useEffect(() => {
-    if (attachedID) {
-      const schema = libraryItems.find(value => value.id === attachedID);
-      if (schema) {
-        setAlias(schema.alias);
-        setTitle(schema.title);
-        setComment(schema.comment);
-      }
-    }
-  }, [attachedID, libraryItems]);
-
-  const handleSubmit = () => {
-    onCreate({
+  const methods = useForm<IOperationCreateDTO>({
+    resolver: zodResolver(schemaOperationCreate),
+    defaultValues: {
       item_data: {
-        position_x: 0,
-        position_y: 0,
-        alias: alias,
-        title: title,
-        comment: comment,
-        operation_type: activeTab === TabID.INPUT ? OperationType.INPUT : OperationType.SYNTHESIS,
-        result: activeTab === TabID.INPUT ? attachedID ?? null : null
+        operation_type: initialInputs.length === 0 ? OperationType.INPUT : OperationType.SYNTHESIS,
+        result: null,
+        position_x: defaultX,
+        position_y: defaultY,
+        alias: '',
+        title: '',
+        comment: ''
       },
-      positions: [],
-      arguments: activeTab === TabID.INPUT ? undefined : inputs.length > 0 ? inputs : undefined,
-      create_schema: createSchema
+      arguments: initialInputs,
+      create_schema: false,
+      positions: positions
+    },
+    mode: 'onChange'
+  });
+  const alias = useWatch({ control: methods.control, name: 'item_data.alias' });
+  const [activeTab, setActiveTab] = useState(initialInputs.length === 0 ? TabID.INPUT : TabID.SYNTHESIS);
+  const isValid = !!alias && !oss.items.some(operation => operation.alias === alias);
+
+  function onSubmit(data: IOperationCreateDTO) {
+    const target = calculateInsertPosition(oss, data.item_data.operation_type, data.arguments, positions, {
+      x: defaultX,
+      y: defaultY
     });
-    return true;
-  };
+    data.item_data.position_x = target.x;
+    data.item_data.position_y = target.y;
+    operationCreate({ itemID: oss.id, data: data })
+      .then(response => onCreate?.(response.new_operation.id))
+      .catch(console.error);
+  }
 
   function handleSelectTab(newTab: TabID, last: TabID) {
     if (last === newTab) {
       return;
     }
     if (newTab === TabID.INPUT) {
-      setAttachedID(undefined);
+      methods.setValue('item_data.operation_type', OperationType.INPUT);
+      methods.setValue('item_data.result', null);
+      methods.setValue('arguments', []);
     } else {
-      setInputs(initialInputs);
+      methods.setValue('item_data.operation_type', OperationType.SYNTHESIS);
+      methods.setValue('arguments', initialInputs);
     }
     setActiveTab(newTab);
   }
@@ -101,7 +93,7 @@ function DlgCreateOperation() {
       header='Создание операции'
       submitText='Создать'
       canSubmit={isValid}
-      onSubmit={handleSubmit}
+      onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
       className='w-[40rem] px-6 h-[32rem]'
       helpTopic={HelpTopic.CC_OSS}
     >
@@ -123,36 +115,15 @@ function DlgCreateOperation() {
             label={labelOperationType(OperationType.SYNTHESIS)}
           />
         </TabList>
+        <FormProvider {...methods}>
+          <TabPanel>
+            <TabInputOperation oss={oss} />
+          </TabPanel>
 
-        <TabPanel>
-          <TabInputOperation
-            oss={oss}
-            alias={alias}
-            onChangeAlias={setAlias}
-            comment={comment}
-            onChangeComment={setComment}
-            title={title}
-            onChangeTitle={setTitle}
-            attachedID={attachedID}
-            onChangeAttachedID={setAttachedID}
-            createSchema={createSchema}
-            onChangeCreateSchema={setCreateSchema}
-          />
-        </TabPanel>
-
-        <TabPanel>
-          <TabSynthesisOperation
-            oss={oss}
-            alias={alias}
-            onChangeAlias={setAlias}
-            comment={comment}
-            onChangeComment={setComment}
-            title={title}
-            onChangeTitle={setTitle}
-            inputs={inputs}
-            setInputs={setInputs}
-          />
-        </TabPanel>
+          <TabPanel>
+            <TabSynthesisOperation oss={oss} />
+          </TabPanel>
+        </FormProvider>
       </Tabs>
     </ModalForm>
   );

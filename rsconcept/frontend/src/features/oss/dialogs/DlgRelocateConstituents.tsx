@@ -56,8 +56,6 @@ function DlgRelocateConstituents() {
     libraryItems.find(item => item.id === initialTarget?.result)
   );
 
-  console.log(isValid);
-
   const operation = oss.items.find(item => item.result === source?.id);
   const sourceSchemas = libraryItems.filter(item => oss.schemas.includes(item.id));
   const destinationSchemas = (() => {

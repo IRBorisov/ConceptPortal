@@ -143,7 +143,7 @@ function OssFlow() {
       defaultY: target.y,
       inputs: inputs,
       positions: positions,
-      callback: () => flow.fitView({ duration: PARAMETER.zoomDuration })
+      callback: () => setTimeout(() => flow.fitView({ duration: PARAMETER.zoomDuration }), PARAMETER.refreshTimeout)
     });
   }
 

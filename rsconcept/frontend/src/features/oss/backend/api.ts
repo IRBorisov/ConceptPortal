@@ -1,7 +1,7 @@
 import { queryOptions } from '@tanstack/react-query';
 import { z } from 'zod';
 
-import { axiosDelete, axiosGet, axiosPatch, axiosPost } from '@/backend/apiTransport';
+import { axiosGet, axiosPatch, axiosPost } from '@/backend/apiTransport';
 import { DELAYS } from '@/backend/configuration';
 import { ILibraryItem, ILibraryItemData, LibraryItemID } from '@/features/library/models/library';
 import {
@@ -46,20 +46,25 @@ export type IOperationPosition = z.infer<typeof schemaOperationPosition>;
 /**
  * Represents {@link IOperation} data, used in creation process.
  */
-export interface IOperationCreateDTO {
-  positions: IOperationPosition[];
-  item_data: {
-    alias: string;
-    operation_type: OperationType;
-    title: string;
-    comment: string;
-    position_x: number;
-    position_y: number;
-    result: LibraryItemID | null;
-  };
-  arguments: OperationID[] | undefined;
-  create_schema: boolean;
-}
+export const schemaOperationCreate = z.object({
+  positions: z.array(schemaOperationPosition),
+  item_data: z.object({
+    alias: z.string().nonempty(),
+    operation_type: z.nativeEnum(OperationType),
+    title: z.string(),
+    comment: z.string(),
+    position_x: z.number(),
+    position_y: z.number(),
+    result: z.number().nullable()
+  }),
+  arguments: z.array(z.number()),
+  create_schema: z.boolean()
+});
+
+/**
+ * Represents {@link IOperation} data, used in creation process.
+ */
+export type IOperationCreateDTO = z.infer<typeof schemaOperationCreate>;
 
 /**
  * Represents data response when creating {@link IOperation}.
@@ -183,7 +188,7 @@ export const ossApi = {
       }
     }),
   operationDelete: ({ itemID, data }: { itemID: LibraryItemID; data: IOperationDeleteDTO }) =>
-    axiosDelete<IOperationDeleteDTO, IOperationSchemaDTO>({
+    axiosPatch<IOperationDeleteDTO, IOperationSchemaDTO>({
       endpoint: `/api/oss/${itemID}/delete-operation`,
       request: {
         data: data,

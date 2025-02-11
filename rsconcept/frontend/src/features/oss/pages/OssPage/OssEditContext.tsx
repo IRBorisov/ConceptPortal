@@ -12,15 +12,12 @@ import { UserRole } from '@/features/users/models/user';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { useRoleStore } from '@/stores/role';
-import { PARAMETER } from '@/utils/constants';
 import { prompts } from '@/utils/labels';
 
 import { IOperationPosition } from '../../backend/api';
-import { useOperationCreate } from '../../backend/useOperationCreate';
 import { useOperationUpdate } from '../../backend/useOperationUpdate';
 import { useOssSuspense } from '../../backend/useOSS';
 import { IOperationSchema, OperationID, OperationType } from '../../models/oss';
-import { calculateInsertPosition } from '../../models/ossAPI';
 
 export enum OssTabID {
   CARD = 0,
@@ -98,7 +95,6 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
   const showCreateOperation = useDialogsStore(state => state.showCreateOperation);
 
   const { deleteItem } = useDeleteItem();
-  const { operationCreate } = useOperationCreate();
   const { operationUpdate } = useOperationUpdate();
 
   useEffect(
@@ -143,21 +139,11 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
   function promptCreateOperation({ defaultX, defaultY, inputs, positions, callback }: ICreateOperationPrompt) {
     showCreateOperation({
       oss: schema,
-      onCreate: data => {
-        const target = calculateInsertPosition(schema, data.item_data.operation_type, data.arguments ?? [], positions, {
-          x: defaultX,
-          y: defaultY
-        });
-        data.positions = positions;
-        data.item_data.position_x = target.x;
-        data.item_data.position_y = target.y;
-        operationCreate({ itemID: schema.id, data }, operation => {
-          if (callback) {
-            setTimeout(() => callback(operation.id), PARAMETER.refreshTimeout);
-          }
-        });
-      },
-      initialInputs: inputs
+      defaultX: defaultX,
+      defaultY: defaultY,
+      positions: positions,
+      initialInputs: inputs,
+      onCreate: callback
     });
   }
 

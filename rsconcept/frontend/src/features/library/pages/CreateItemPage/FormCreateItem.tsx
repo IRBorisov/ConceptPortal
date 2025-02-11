@@ -15,7 +15,7 @@ import { Label, TextArea, TextInput } from '@/components/Input';
 import { useAuthSuspense } from '@/features/auth/backend/useAuth';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';
 
-import { schemaCreateLibraryItem, ICreateLibraryItemDTO } from '../../backend/api';
+import { ICreateLibraryItemDTO, schemaCreateLibraryItem } from '../../backend/api';
 import { useCreateItem } from '../../backend/useCreateItem';
 import SelectAccessPolicy from '../../components/SelectAccessPolicy';
 import SelectItemType from '../../components/SelectItemType';

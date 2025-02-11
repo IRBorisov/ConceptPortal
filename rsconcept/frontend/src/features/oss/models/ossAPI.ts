@@ -488,7 +488,7 @@ export function calculateInsertPosition(
     return result;
   }
 
-  if (operationType === OperationType.INPUT) {
+  if (operationType === OperationType.INPUT || argumentsOps.length === 0) {
     let inputsNodes = positions.filter(pos =>
       oss.items.find(operation => operation.operation_type === OperationType.INPUT && operation.id === pos.id)
     );

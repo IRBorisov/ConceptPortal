@@ -10,7 +10,7 @@ import { VisibilityIcon } from '@/components/DomainIcons';
 import { Checkbox, Label, TextArea, TextInput } from '@/components/Input';
 import { ModalForm } from '@/components/Modal';
 import { useAuthSuspense } from '@/features/auth/backend/useAuth';
-import { schemaCloneLibraryItem, ICloneLibraryItemDTO } from '@/features/library/backend/api';
+import { ICloneLibraryItemDTO, schemaCloneLibraryItem } from '@/features/library/backend/api';
 import { useCloneItem } from '@/features/library/backend/useCloneItem';
 import SelectAccessPolicy from '@/features/library/components/SelectAccessPolicy';
 import SelectLocationContext from '@/features/library/components/SelectLocationContext';

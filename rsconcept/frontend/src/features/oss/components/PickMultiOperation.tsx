@@ -14,8 +14,7 @@ import SelectOperation from './SelectOperation';
 
 interface PickMultiOperationProps extends CProps.Styling {
   value: OperationID[];
-  onChange: React.Dispatch<React.SetStateAction<OperationID[]>>;
-
+  onChange: (newValue: OperationID[]) => void;
   items: IOperation[];
   rows?: number;
 }
@@ -28,13 +27,13 @@ function PickMultiOperation({ rows, items, value, onChange, className, ...restPr
   const [lastSelected, setLastSelected] = useState<IOperation | undefined>(undefined);
 
   function handleDelete(operation: OperationID) {
-    onChange(prev => prev.filter(item => item !== operation));
+    onChange(value.filter(item => item !== operation));
   }
 
   function handleSelect(operation?: IOperation) {
     if (operation) {
       setLastSelected(operation);
-      onChange(prev => [...prev, operation.id]);
+      onChange([...value, operation.id]);
       setTimeout(() => setLastSelected(undefined), 1000);
     }
   }
@@ -42,24 +41,20 @@ function PickMultiOperation({ rows, items, value, onChange, className, ...restPr
   function handleMoveUp(operation: OperationID) {
     const index = value.indexOf(operation);
     if (index > 0) {
-      onChange(prev => {
-        const newSelected = [...prev];
-        newSelected[index] = newSelected[index - 1];
-        newSelected[index - 1] = operation;
-        return newSelected;
-      });
+      const newSelected = [...value];
+      newSelected[index] = newSelected[index - 1];
+      newSelected[index - 1] = operation;
+      onChange(newSelected);
     }
   }
 
   function handleMoveDown(operation: OperationID) {
     const index = value.indexOf(operation);
     if (index < value.length - 1) {
-      onChange(prev => {
-        const newSelected = [...prev];
-        newSelected[index] = newSelected[index + 1];
-        newSelected[index + 1] = operation;
-        return newSelected;
-      });
+      const newSelected = [...value];
+      newSelected[index] = newSelected[index + 1];
+      newSelected[index + 1] = operation;
+      onChange(newSelected);
     }
   }
 
