@@ -24,7 +24,7 @@ import { useMainHeight } from '@/stores/appLayout';
 import { useModificationStore } from '@/stores/modification';
 import { APP_COLORS } from '@/styling/colors';
 import { PARAMETER } from '@/utils/constants';
-import { errors } from '@/utils/labels';
+import { errorMsg } from '@/utils/labels';
 
 import { useInputCreate } from '../../../backend/useInputCreate';
 import { useMutatingOss } from '../../../backend/useMutatingOss';
@@ -167,7 +167,7 @@ function OssFlow() {
       return;
     }
     if (libraryItems.find(item => item.alias === operation.alias && item.location === controller.schema.location)) {
-      toast.error(errors.inputAlreadyExists);
+      toast.error(errorMsg.inputAlreadyExists);
       return;
     }
     void inputCreate({
@@ -205,7 +205,7 @@ function OssFlow() {
   function handleSaveImage() {
     const canvas: HTMLElement | null = document.querySelector('.react-flow__viewport');
     if (canvas === null) {
-      toast.error(errors.imageFailed);
+      toast.error(errorMsg.imageFailed);
       return;
     }
 
@@ -231,7 +231,7 @@ function OssFlow() {
       })
       .catch(error => {
         console.error(error);
-        toast.error(errors.imageFailed);
+        toast.error(errorMsg.imageFailed);
       });
   }
 

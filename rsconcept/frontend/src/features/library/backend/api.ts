@@ -6,7 +6,7 @@ import { DELAYS } from '@/backend/configuration';
 import { ossApi } from '@/features/oss/backend/api';
 import { IRSFormDTO, rsformsApi } from '@/features/rsform/backend/api';
 import { UserID } from '@/features/users/models/user';
-import { errors, information } from '@/utils/labels';
+import { errorMsg, infoMsg } from '@/utils/labels';
 
 import { AccessPolicy, ILibraryItem, IVersionInfo, LibraryItemID, LibraryItemType, VersionID } from '../models/library';
 import { validateLocation } from '../models/libraryAPI';
@@ -25,12 +25,12 @@ export interface IRenameLocationDTO {
 export const schemaCloneLibraryItem = z.object({
   id: z.number(),
   item_type: z.nativeEnum(LibraryItemType),
-  title: z.string().nonempty(errors.requiredField),
-  alias: z.string().nonempty(errors.requiredField),
+  title: z.string().nonempty(errorMsg.requiredField),
+  alias: z.string().nonempty(errorMsg.requiredField),
   comment: z.string(),
   visible: z.boolean(),
   read_only: z.boolean(),
-  location: z.string().refine(data => validateLocation(data), { message: errors.invalidLocation }),
+  location: z.string().refine(data => validateLocation(data), { message: errorMsg.invalidLocation }),
   access_policy: z.nativeEnum(AccessPolicy),
 
   items: z.array(z.number()).optional()
@@ -52,7 +52,7 @@ export const schemaCreateLibraryItem = z
     comment: z.string(),
     visible: z.boolean(),
     read_only: z.boolean(),
-    location: z.string().refine(data => validateLocation(data), { message: errors.invalidLocation }),
+    location: z.string().refine(data => validateLocation(data), { message: errorMsg.invalidLocation }),
     access_policy: z.nativeEnum(AccessPolicy),
 
     file: z.instanceof(File).optional(),
@@ -60,11 +60,11 @@ export const schemaCreateLibraryItem = z
   })
   .refine(data => !!data.file || !!data.title, {
     path: ['title'],
-    message: errors.requiredField
+    message: errorMsg.requiredField
   })
   .refine(data => !!data.file || !!data.alias, {
     path: ['alias'],
-    message: errors.requiredField
+    message: errorMsg.requiredField
   });
 
 /**
@@ -78,8 +78,8 @@ export type ICreateLibraryItemDTO = z.infer<typeof schemaCreateLibraryItem>;
 export const schemaUpdateLibraryItem = z.object({
   id: z.number(),
   item_type: z.nativeEnum(LibraryItemType),
-  title: z.string().nonempty(errors.requiredField),
-  alias: z.string().nonempty(errors.requiredField),
+  title: z.string().nonempty(errorMsg.requiredField),
+  alias: z.string().nonempty(errorMsg.requiredField),
   comment: z.string(),
   visible: z.boolean(),
   read_only: z.boolean()
@@ -117,7 +117,7 @@ export interface IVersionCreatedResponse {
  */
 export const schemaVersionUpdate = z.object({
   id: z.number(),
-  version: z.string().nonempty(errors.requiredField),
+  version: z.string().nonempty(errorMsg.requiredField),
   description: z.string()
 });
 
@@ -161,7 +161,7 @@ export const libraryApi = {
       endpoint: !data.file ? '/api/library' : '/api/rsforms/create-detailed',
       request: {
         data: data,
-        successMessage: information.newLibraryItem
+        successMessage: infoMsg.newLibraryItem
       },
       options: !data.file
         ? undefined
@@ -176,7 +176,7 @@ export const libraryApi = {
       endpoint: `/api/library/${data.id}`,
       request: {
         data: data,
-        successMessage: information.changesSaved
+        successMessage: infoMsg.changesSaved
       }
     }),
   setOwner: ({ itemID, owner }: { itemID: LibraryItemID; owner: UserID }) =>
@@ -184,7 +184,7 @@ export const libraryApi = {
       endpoint: `/api/library/${itemID}/set-owner`,
       request: {
         data: { user: owner },
-        successMessage: information.changesSaved
+        successMessage: infoMsg.changesSaved
       }
     }),
   setLocation: ({ itemID, location }: { itemID: LibraryItemID; location: string }) =>
@@ -192,7 +192,7 @@ export const libraryApi = {
       endpoint: `/api/library/${itemID}/set-location`,
       request: {
         data: { location: location },
-        successMessage: information.moveComplete
+        successMessage: infoMsg.moveComplete
       }
     }),
   setAccessPolicy: ({ itemID, policy }: { itemID: LibraryItemID; policy: AccessPolicy }) =>
@@ -200,7 +200,7 @@ export const libraryApi = {
       endpoint: `/api/library/${itemID}/set-access-policy`,
       request: {
         data: { access_policy: policy },
-        successMessage: information.changesSaved
+        successMessage: infoMsg.changesSaved
       }
     }),
   setEditors: ({ itemID, editors }: { itemID: LibraryItemID; editors: UserID[] }) =>
@@ -208,7 +208,7 @@ export const libraryApi = {
       endpoint: `/api/library/${itemID}/set-editors`,
       request: {
         data: { users: editors },
-        successMessage: information.changesSaved
+        successMessage: infoMsg.changesSaved
       }
     }),
 
@@ -216,7 +216,7 @@ export const libraryApi = {
     axiosDelete({
       endpoint: `/api/library/${target}`,
       request: {
-        successMessage: information.itemDestroyed
+        successMessage: infoMsg.itemDestroyed
       }
     }),
   cloneItem: (data: ICloneLibraryItemDTO) =>
@@ -224,7 +224,7 @@ export const libraryApi = {
       endpoint: `/api/library/${data.id}/clone`,
       request: {
         data: data,
-        successMessage: newSchema => information.cloneComplete(newSchema.alias)
+        successMessage: newSchema => infoMsg.cloneComplete(newSchema.alias)
       }
     }),
   renameLocation: (data: IRenameLocationDTO) =>
@@ -232,7 +232,7 @@ export const libraryApi = {
       endpoint: '/api/library/rename-location',
       request: {
         data: data,
-        successMessage: information.locationRenamed
+        successMessage: infoMsg.locationRenamed
       }
     }),
 
@@ -241,14 +241,14 @@ export const libraryApi = {
       endpoint: `/api/library/${itemID}/create-version`,
       request: {
         data: data,
-        successMessage: information.newVersion(data.version)
+        successMessage: infoMsg.newVersion(data.version)
       }
     }),
   versionRestore: ({ versionID }: { versionID: VersionID }) =>
     axiosPatch<undefined, IRSFormDTO>({
       endpoint: `/api/versions/${versionID}/restore`,
       request: {
-        successMessage: information.versionRestored
+        successMessage: infoMsg.versionRestored
       }
     }),
   versionUpdate: (data: IVersionUpdateDTO) =>
@@ -256,14 +256,14 @@ export const libraryApi = {
       endpoint: `/api/versions/${data.id}`,
       request: {
         data: data,
-        successMessage: information.changesSaved
+        successMessage: infoMsg.changesSaved
       }
     }),
   versionDelete: (data: { itemID: LibraryItemID; versionID: VersionID }) =>
     axiosDelete({
       endpoint: `/api/versions/${data.versionID}`,
       request: {
-        successMessage: information.versionDestroyed
+        successMessage: infoMsg.versionDestroyed
       }
     })
 };

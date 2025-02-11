@@ -15,7 +15,7 @@ import { useVersionDelete } from '@/features/library/backend/useVersionDelete';
 import { useVersionUpdate } from '@/features/library/backend/useVersionUpdate';
 import { LibraryItemID, VersionID } from '@/features/library/models/library';
 import { useDialogsStore } from '@/stores/dialogs';
-import { errors } from '@/utils/labels';
+import { errorMsg } from '@/utils/labels';
 
 import { useRSFormSuspense } from '../../backend/useRSForm';
 import TableVersions from './TableVersions';
@@ -105,7 +105,7 @@ function DlgEditVersions() {
         <div className='cc-icons'>
           <MiniButton
             type='submit'
-            title={isValid ? 'Сохранить изменения' : errors.versionTaken}
+            title={isValid ? 'Сохранить изменения' : errorMsg.versionTaken}
             disabled={!isDirty || !isValid || isProcessing}
             icon={<IconSave size='1.25rem' className='icon-primary' />}
           />

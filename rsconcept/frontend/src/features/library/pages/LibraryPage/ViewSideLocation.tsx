@@ -12,7 +12,7 @@ import { FolderNode } from '@/features/library/models/FolderTree';
 import useWindowSize from '@/hooks/useWindowSize';
 import { useFitHeight } from '@/stores/appLayout';
 import { PARAMETER, prefixes } from '@/utils/constants';
-import { information } from '@/utils/labels';
+import { infoMsg } from '@/utils/labels';
 
 import { useLibrary } from '../../backend/useLibrary';
 import SelectLocation from '../../components/SelectLocation';
@@ -54,7 +54,7 @@ function ViewSideLocation({ isVisible, onRenameLocation }: ViewSideLocationProps
     if (event.ctrlKey || event.metaKey) {
       navigator.clipboard
         .writeText(target.getPath())
-        .then(() => toast.success(information.pathReady))
+        .then(() => toast.success(infoMsg.pathReady))
         .catch(console.error);
     } else {
       setLocation(target.getPath());

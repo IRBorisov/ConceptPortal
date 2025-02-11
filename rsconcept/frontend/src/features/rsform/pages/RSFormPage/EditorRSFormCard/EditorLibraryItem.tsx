@@ -29,7 +29,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { useRoleStore } from '@/stores/role';
 import { prefixes } from '@/utils/constants';
-import { prompts } from '@/utils/labels';
+import { promptText } from '@/utils/labels';
 
 import InfoUsers from './InfoUsers';
 
@@ -60,7 +60,7 @@ function EditorLibraryItem({ controller }: EditorLibraryItemProps) {
     if (newValue === controller.schema.owner) {
       return;
     }
-    if (!window.confirm(prompts.ownerChange)) {
+    if (!window.confirm(promptText.ownerChange)) {
       return;
     }
     void setOwner({ itemID: controller.schema.id, owner: newValue });

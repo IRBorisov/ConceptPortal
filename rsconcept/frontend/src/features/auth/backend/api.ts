@@ -5,7 +5,7 @@ import { axiosGet, axiosPatch, axiosPost } from '@/backend/apiTransport';
 import { DELAYS } from '@/backend/configuration';
 import { LibraryItemID } from '@/features/library/models/library';
 import { UserID } from '@/features/users/models/user';
-import { errors, information } from '@/utils/labels';
+import { errorMsg, infoMsg } from '@/utils/labels';
 
 /**
  * Represents CurrentUser information.
@@ -21,8 +21,8 @@ export interface ICurrentUser {
  * Represents login data, used to authenticate users.
  */
 export const schemaUserLogin = z.object({
-  username: z.string().nonempty(errors.requiredField),
-  password: z.string().nonempty(errors.requiredField)
+  username: z.string().nonempty(errorMsg.requiredField),
+  password: z.string().nonempty(errorMsg.requiredField)
 });
 
 /**
@@ -35,17 +35,17 @@ export type IUserLoginDTO = z.infer<typeof schemaUserLogin>;
  */
 export const schemaChangePassword = z
   .object({
-    old_password: z.string().nonempty(errors.requiredField),
-    new_password: z.string().nonempty(errors.requiredField),
-    new_password2: z.string().nonempty(errors.requiredField)
+    old_password: z.string().nonempty(errorMsg.requiredField),
+    new_password: z.string().nonempty(errorMsg.requiredField),
+    new_password2: z.string().nonempty(errorMsg.requiredField)
   })
   .refine(schema => schema.new_password === schema.new_password2, {
     path: ['new_password2'],
-    message: errors.passwordsMismatch
+    message: errorMsg.passwordsMismatch
   })
   .refine(schema => schema.old_password !== schema.new_password, {
     path: ['new_password'],
-    message: errors.passwordsSame
+    message: errorMsg.passwordsSame
   });
 
 /**
@@ -105,7 +105,7 @@ export const authApi = {
       endpoint: '/users/api/change-password',
       request: {
         data: data,
-        successMessage: information.changesSaved
+        successMessage: infoMsg.changesSaved
       }
     }),
   requestPasswordReset: (data: IRequestPasswordDTO) =>

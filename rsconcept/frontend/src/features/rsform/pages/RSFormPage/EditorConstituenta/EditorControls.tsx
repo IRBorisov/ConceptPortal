@@ -5,7 +5,7 @@ import { MiniButton } from '@/components/Control';
 import { IconEdit } from '@/components/Icons';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
-import { tooltips } from '@/utils/labels';
+import { tooltipText } from '@/utils/labels';
 
 import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
 import { IConstituenta } from '../../../models/rsform';
@@ -32,7 +32,7 @@ function EditorControls({ constituenta, disabled, onEditTerm }: EditorControlsPr
     <Overlay position='top-1 left-[4.7rem]' className='flex select-none'>
       {!disabled || isProcessing ? (
         <MiniButton
-          title={isModified ? tooltips.unsaved : `Редактировать словоформы термина`}
+          title={isModified ? tooltipText.unsaved : `Редактировать словоформы термина`}
           noHover
           onClick={onEditTerm}
           icon={<IconEdit size='1rem' className='icon-primary' />}
@@ -53,7 +53,7 @@ function EditorControls({ constituenta, disabled, onEditTerm }: EditorControlsPr
       {!disabled || isProcessing ? (
         <MiniButton
           noHover
-          title={isModified ? tooltips.unsaved : 'Переименовать конституенту'}
+          title={isModified ? tooltipText.unsaved : 'Переименовать конституенту'}
           onClick={handleRenameCst}
           icon={<IconEdit size='1rem' className='icon-primary' />}
           disabled={isModified}

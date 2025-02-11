@@ -12,7 +12,7 @@ import { HelpTopic } from '@/features/help/models/helpTopic';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { transformAST } from '@/utils/codemirror';
-import { errors } from '@/utils/labels';
+import { errorMsg } from '@/utils/labels';
 
 import { ICheckConstituentaDTO } from '../../../backend/api';
 import { useCheckConstituenta } from '../../../backend/useCheckConstituenta';
@@ -141,7 +141,7 @@ function EditorRSExpression({
     } else {
       handleCheckExpression(parse => {
         if (!parse.astText) {
-          toast.error(errors.astFailed);
+          toast.error(errorMsg.astFailed);
         } else {
           showAST({ syntaxTree: parse.ast, expression: getDefinitionPrefix(activeCst) + value });
         }

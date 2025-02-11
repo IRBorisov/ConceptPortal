@@ -11,7 +11,7 @@ import { UserRole } from '@/features/users/models/user';
 import { useModificationStore } from '@/stores/modification';
 import { useRoleStore } from '@/stores/role';
 import { PARAMETER } from '@/utils/constants';
-import { tooltips } from '@/utils/labels';
+import { tooltipText } from '@/utils/labels';
 import { prepareTooltip } from '@/utils/utils';
 import { sharePage } from '@/utils/utils';
 
@@ -60,7 +60,7 @@ function ToolbarRSFormCard({ controller, onSubmit }: ToolbarRSFormCardProps) {
         />
       ) : null}
       <MiniButton
-        titleHtml={tooltips.shareItem(controller.schema.access_policy)}
+        titleHtml={tooltipText.shareItem(controller.schema.access_policy)}
         icon={<IconShare size='1.25rem' className='icon-primary' />}
         onClick={sharePage}
         disabled={controller.schema.access_policy !== AccessPolicy.PUBLIC}

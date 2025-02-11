@@ -9,7 +9,7 @@ import { Label, TextArea } from '@/components/Input';
 import { ModalForm } from '@/components/Modal';
 import { HelpTopic } from '@/features/help/models/helpTopic';
 import { useDialogsStore } from '@/stores/dialogs';
-import { prompts } from '@/utils/labels';
+import { promptText } from '@/utils/labels';
 
 import { useGenerateLexeme } from '../../backend/cctext/useGenerateLexeme';
 import { useInflectText } from '../../backend/cctext/useInflectText';
@@ -93,7 +93,7 @@ function DlgEditWordForms() {
 
   function handleGenerateLexeme() {
     if (forms.length > 0) {
-      if (!window.confirm(prompts.generateWordforms)) {
+      if (!window.confirm(promptText.generateWordforms)) {
         return;
       }
     }

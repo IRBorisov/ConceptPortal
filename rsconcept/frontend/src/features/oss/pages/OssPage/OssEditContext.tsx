@@ -12,7 +12,7 @@ import { UserRole } from '@/features/users/models/user';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { useRoleStore } from '@/stores/role';
-import { prompts } from '@/utils/labels';
+import { promptText } from '@/utils/labels';
 
 import { IOperationPosition } from '../../backend/api';
 import { useOssSuspense } from '../../backend/useOSS';
@@ -123,7 +123,7 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
   }
 
   function deleteSchema() {
-    if (!window.confirm(prompts.deleteOSS)) {
+    if (!window.confirm(promptText.deleteOSS)) {
       return;
     }
     void deleteItem(schema.id).then(() => {

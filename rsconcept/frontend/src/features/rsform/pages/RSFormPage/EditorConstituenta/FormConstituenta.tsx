@@ -14,7 +14,7 @@ import { CProps } from '@/components/props';
 import { Indicator } from '@/components/View';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
-import { errors } from '@/utils/labels';
+import { errorMsg } from '@/utils/labels';
 
 import { ICstUpdateDTO, schemaCstUpdate } from '../../../backend/api';
 import { useCstUpdate } from '../../../backend/useCstUpdate';
@@ -103,7 +103,7 @@ function FormConstituenta({ disabled, id, toggleReset, schema, activeCst, onOpen
 
   function handleTypeGraph(event: CProps.EventMouse) {
     if ((localParse && !localParse.parseResult) || activeCst.parse.status !== ParsingStatus.VERIFIED) {
-      toast.error(errors.typeStructureFailed);
+      toast.error(errorMsg.typeStructureFailed);
       return;
     }
     event.stopPropagation();

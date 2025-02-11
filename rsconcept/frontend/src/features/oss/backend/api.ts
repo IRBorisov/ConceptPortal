@@ -13,7 +13,7 @@ import {
   schemaCstSubstitute
 } from '@/features/oss/models/oss';
 import { IConstituentaReference, ITargetCst } from '@/features/rsform/models/rsform';
-import { information } from '@/utils/labels';
+import { infoMsg } from '@/utils/labels';
 
 /**
  * Represents {@link IOperation} data from server.
@@ -182,7 +182,7 @@ export const ossApi = {
       endpoint: `/api/oss/${itemID}/update-positions`,
       request: {
         data: { positions: positions },
-        successMessage: isSilent ? undefined : information.changesSaved
+        successMessage: isSilent ? undefined : infoMsg.changesSaved
       }
     }),
 
@@ -191,7 +191,7 @@ export const ossApi = {
       endpoint: `/api/oss/${itemID}/create-operation`,
       request: {
         data: data,
-        successMessage: response => information.newOperation(response.new_operation.alias)
+        successMessage: response => infoMsg.newOperation(response.new_operation.alias)
       }
     }),
   operationDelete: ({ itemID, data }: { itemID: LibraryItemID; data: IOperationDeleteDTO }) =>
@@ -199,7 +199,7 @@ export const ossApi = {
       endpoint: `/api/oss/${itemID}/delete-operation`,
       request: {
         data: data,
-        successMessage: information.operationDestroyed
+        successMessage: infoMsg.operationDestroyed
       }
     }),
   inputCreate: ({ itemID, data }: { itemID: LibraryItemID; data: ITargetOperation }) =>
@@ -207,7 +207,7 @@ export const ossApi = {
       endpoint: `/api/oss/${itemID}/create-input`,
       request: {
         data: data,
-        successMessage: information.newLibraryItem
+        successMessage: infoMsg.newLibraryItem
       }
     }),
   inputUpdate: ({ itemID, data }: { itemID: LibraryItemID; data: IInputUpdateDTO }) =>
@@ -215,7 +215,7 @@ export const ossApi = {
       endpoint: `/api/oss/${itemID}/set-input`,
       request: {
         data: data,
-        successMessage: information.changesSaved
+        successMessage: infoMsg.changesSaved
       }
     }),
   operationUpdate: ({ itemID, data }: { itemID: LibraryItemID; data: IOperationUpdateDTO }) =>
@@ -223,7 +223,7 @@ export const ossApi = {
       endpoint: `/api/oss/${itemID}/update-operation`,
       request: {
         data: data,
-        successMessage: information.changesSaved
+        successMessage: infoMsg.changesSaved
       }
     }),
   operationExecute: ({ itemID, data }: { itemID: LibraryItemID; data: ITargetOperation }) =>
@@ -231,7 +231,7 @@ export const ossApi = {
       endpoint: `/api/oss/${itemID}/execute-operation`,
       request: {
         data: data,
-        successMessage: information.operationExecuted
+        successMessage: infoMsg.operationExecuted
       }
     }),
 
@@ -240,7 +240,7 @@ export const ossApi = {
       endpoint: `/api/oss/relocate-constituents`,
       request: {
         data: data,
-        successMessage: information.changesSaved
+        successMessage: infoMsg.changesSaved
       }
     }),
   getPredecessor: (data: ITargetCst) =>

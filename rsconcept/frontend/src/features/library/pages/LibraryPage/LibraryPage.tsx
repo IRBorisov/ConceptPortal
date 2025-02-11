@@ -8,7 +8,7 @@ import { MiniButton } from '@/components/Control';
 import { IconCSV } from '@/components/Icons';
 import { useAppLayoutStore } from '@/stores/appLayout';
 import { useDialogsStore } from '@/stores/dialogs';
-import { information } from '@/utils/labels';
+import { infoMsg } from '@/utils/labels';
 import { convertToCSV } from '@/utils/utils';
 
 import { useApplyLibraryFilter } from '../../backend/useApplyLibraryFilter';
@@ -43,7 +43,7 @@ export function LibraryPage() {
 
   function handleDownloadCSV() {
     if (filtered.length === 0) {
-      toast.error(information.noDataToExport);
+      toast.error(infoMsg.noDataToExport);
       return;
     }
     const blob = convertToCSV(filtered);

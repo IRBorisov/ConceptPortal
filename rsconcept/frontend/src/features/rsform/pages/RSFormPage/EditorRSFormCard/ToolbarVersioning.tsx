@@ -9,7 +9,7 @@ import { useVersionRestore } from '@/features/library/backend/useVersionRestore'
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { PARAMETER } from '@/utils/constants';
-import { prompts } from '@/utils/labels';
+import { promptText } from '@/utils/labels';
 import { promptUnsaved } from '@/utils/utils';
 
 import { useRSEdit } from '../RSEditContext';
@@ -27,7 +27,7 @@ function ToolbarVersioning({ blockReload }: ToolbarVersioningProps) {
   const showEditVersions = useDialogsStore(state => state.showEditVersions);
 
   function handleRestoreVersion() {
-    if (!controller.schema.version || !window.confirm(prompts.restoreArchive)) {
+    if (!controller.schema.version || !window.confirm(promptText.restoreArchive)) {
       return;
     }
     void versionRestore({ versionID: controller.schema.version }).then(() => controller.navigateVersion(undefined));

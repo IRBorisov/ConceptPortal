@@ -12,7 +12,7 @@ import {
   isSetTypification
 } from '@/features/rsform/models/rslangAPI';
 import { limits, PARAMETER } from '@/utils/constants';
-import { information } from '@/utils/labels';
+import { infoMsg } from '@/utils/labels';
 import { TextMatcher } from '@/utils/utils';
 
 import { Graph } from '../../../models/Graph';
@@ -416,7 +416,7 @@ export class SubstitutionValidator {
     if (this.msg.length > 0) {
       this.msg += '\n';
     }
-    this.msg += information.substitutionsCorrect;
+    this.msg += infoMsg.substitutionsCorrect;
     return true;
   }
 

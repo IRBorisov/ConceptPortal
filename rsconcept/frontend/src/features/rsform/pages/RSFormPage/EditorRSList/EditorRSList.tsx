@@ -10,7 +10,7 @@ import { type RowSelectionState } from '@/components/DataTable';
 import { IconCSV } from '@/components/Icons';
 import { SearchBar } from '@/components/shared/SearchBar';
 import { useFitHeight } from '@/stores/appLayout';
-import { information } from '@/utils/labels';
+import { infoMsg } from '@/utils/labels';
 import { convertToCSV } from '@/utils/utils';
 
 import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
@@ -37,7 +37,7 @@ function EditorRSList() {
 
   function handleDownloadCSV() {
     if (filtered.length === 0) {
-      toast.error(information.noDataToExport);
+      toast.error(infoMsg.noDataToExport);
       return;
     }
     const blob = convertToCSV(filtered);

@@ -5,7 +5,7 @@
 import { AxiosError, AxiosHeaderValue, AxiosResponse, isAxiosError } from 'axios';
 import { toast } from 'react-toastify';
 
-import { information, prompts } from './labels';
+import { infoMsg, promptText } from './labels';
 
 /**
  * Checks if arguments is Node.
@@ -106,7 +106,7 @@ export function convertBase64ToBlob(base64String: string): Uint8Array {
  * Prompt user of confirming discarding changes before continue.
  */
 export function promptUnsaved(): boolean {
-  return window.confirm(prompts.promptUnsaved);
+  return window.confirm(promptText.promptUnsaved);
 }
 
 /**
@@ -195,7 +195,7 @@ export function sharePage() {
   const url = currentRef.includes('?') ? currentRef + '&share' : currentRef + '?share';
   navigator.clipboard
     .writeText(url)
-    .then(() => toast.success(information.linkReady))
+    .then(() => toast.success(infoMsg.linkReady))
     .catch(console.error);
 }
 

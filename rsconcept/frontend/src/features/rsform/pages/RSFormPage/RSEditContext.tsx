@@ -14,7 +14,7 @@ import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { useRoleStore } from '@/stores/role';
 import { PARAMETER, prefixes } from '@/utils/constants';
-import { prompts } from '@/utils/labels';
+import { promptText } from '@/utils/labels';
 import { promptUnsaved } from '@/utils/utils';
 
 import { ICstCreateDTO } from '../../backend/api';
@@ -166,7 +166,7 @@ export const RSEditState = ({
   }
 
   function deleteSchema() {
-    if (!window.confirm(prompts.deleteLibraryItem)) {
+    if (!window.confirm(promptText.deleteLibraryItem)) {
       return;
     }
     const ossID = schema.oss.length > 0 ? schema.oss[0].id : undefined;

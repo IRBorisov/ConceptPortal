@@ -25,7 +25,7 @@ import { useMainHeight } from '@/stores/appLayout';
 import { useDialogsStore } from '@/stores/dialogs';
 import { APP_COLORS } from '@/styling/colors';
 import { PARAMETER } from '@/utils/constants';
-import { errors } from '@/utils/labels';
+import { errorMsg } from '@/utils/labels';
 
 import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
 import { colorBgGraphNode } from '../../../colors';
@@ -188,7 +188,7 @@ function TGFlow() {
   function handleSaveImage() {
     const canvas: HTMLElement | null = document.querySelector('.react-flow__viewport');
     if (canvas === null) {
-      toast.error(errors.imageFailed);
+      toast.error(errorMsg.imageFailed);
       return;
     }
 
@@ -214,7 +214,7 @@ function TGFlow() {
       })
       .catch(error => {
         console.error(error);
-        toast.error(errors.imageFailed);
+        toast.error(errorMsg.imageFailed);
       });
   }
 

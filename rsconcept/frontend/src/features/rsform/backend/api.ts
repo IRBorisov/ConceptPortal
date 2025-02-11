@@ -10,7 +10,7 @@ import {
   VersionID
 } from '@/features/library/models/library';
 import { ICstSubstitute, ICstSubstitutions } from '@/features/oss/models/oss';
-import { information } from '@/utils/labels';
+import { infoMsg } from '@/utils/labels';
 
 import {
   ConstituentaID,
@@ -173,7 +173,7 @@ export const rsformsApi = {
       endpoint: `/api/rsforms/${data.itemID}/load-trs`,
       request: {
         data: data,
-        successMessage: information.uploadSuccess
+        successMessage: infoMsg.uploadSuccess
       },
       options: {
         headers: {
@@ -187,7 +187,7 @@ export const rsformsApi = {
       endpoint: `/api/rsforms/${itemID}/create-cst`,
       request: {
         data: data,
-        successMessage: response => information.newConstituent(response.new_cst.alias)
+        successMessage: response => infoMsg.newConstituent(response.new_cst.alias)
       }
     }),
   cstUpdate: ({ itemID, data }: { itemID: LibraryItemID; data: ICstUpdateDTO }) =>
@@ -195,7 +195,7 @@ export const rsformsApi = {
       endpoint: `/api/rsforms/${itemID}/update-cst`,
       request: {
         data: data,
-        successMessage: information.changesSaved
+        successMessage: infoMsg.changesSaved
       }
     }),
   cstDelete: ({ itemID, data }: { itemID: LibraryItemID; data: IConstituentaList }) =>
@@ -203,7 +203,7 @@ export const rsformsApi = {
       endpoint: `/api/rsforms/${itemID}/delete-multiple-cst`,
       request: {
         data: data,
-        successMessage: information.constituentsDestroyed(data.items.length)
+        successMessage: infoMsg.constituentsDestroyed(data.items.length)
       }
     }),
   cstRename: ({ itemID, data }: { itemID: LibraryItemID; data: ICstRenameDTO }) =>
@@ -211,7 +211,7 @@ export const rsformsApi = {
       endpoint: `/api/rsforms/${itemID}/rename-cst`,
       request: {
         data: data,
-        successMessage: information.changesSaved
+        successMessage: infoMsg.changesSaved
       }
     }),
   cstSubstitute: ({ itemID, data }: { itemID: LibraryItemID; data: ICstSubstitutions }) =>
@@ -219,7 +219,7 @@ export const rsformsApi = {
       endpoint: `/api/rsforms/${itemID}/substitute`,
       request: {
         data: data,
-        successMessage: information.substituteSingle
+        successMessage: infoMsg.substituteSingle
       }
     }),
   cstMove: ({ itemID, data }: { itemID: LibraryItemID; data: ICstMoveDTO }) =>
@@ -233,7 +233,7 @@ export const rsformsApi = {
       endpoint: `/api/rsforms/${itemID}/produce-structure`,
       request: {
         data: data,
-        successMessage: response => information.addedConstituents(response.cst_list.length)
+        successMessage: response => infoMsg.addedConstituents(response.cst_list.length)
       }
     }),
   inlineSynthesis: ({ itemID, data }: { itemID: LibraryItemID; data: IInlineSynthesisDTO }) =>
@@ -241,18 +241,18 @@ export const rsformsApi = {
       endpoint: `/api/rsforms/${itemID}/inline-synthesis`,
       request: {
         data: data,
-        successMessage: information.inlineSynthesisComplete
+        successMessage: infoMsg.inlineSynthesisComplete
       }
     }),
   restoreOrder: ({ itemID }: { itemID: LibraryItemID }) =>
     axiosPatch<undefined, IRSFormDTO>({
       endpoint: `/api/rsforms/${itemID}/restore-order`,
-      request: { successMessage: information.reorderComplete }
+      request: { successMessage: infoMsg.reorderComplete }
     }),
   resetAliases: ({ itemID }: { itemID: LibraryItemID }) =>
     axiosPatch<undefined, IRSFormDTO>({
       endpoint: `/api/rsforms/${itemID}/reset-aliases`,
-      request: { successMessage: information.reindexComplete }
+      request: { successMessage: infoMsg.reindexComplete }
     }),
 
   checkConstituenta: ({ itemID, data }: { itemID: LibraryItemID; data: ICheckConstituentaDTO }) =>

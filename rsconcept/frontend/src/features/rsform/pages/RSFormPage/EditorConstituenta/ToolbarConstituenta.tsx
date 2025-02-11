@@ -23,7 +23,7 @@ import { useFindPredecessor } from '@/features/oss/backend/useFindPredecessor';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { PARAMETER } from '@/utils/constants';
-import { tooltips } from '@/utils/labels';
+import { tooltipText } from '@/utils/labels';
 import { prepareTooltip } from '@/utils/utils';
 
 import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
@@ -106,7 +106,7 @@ function ToolbarConstituenta({
             onClick={() => controller.createCst(activeCst?.cst_type, false)}
           />
           <MiniButton
-            titleHtml={isModified ? tooltips.unsaved : prepareTooltip('Клонировать конституенту', 'Alt + V')}
+            titleHtml={isModified ? tooltipText.unsaved : prepareTooltip('Клонировать конституенту', 'Alt + V')}
             icon={<IconClone size='1.25rem' className='icon-green' />}
             disabled={disabled || isModified}
             onClick={controller.cloneCst}

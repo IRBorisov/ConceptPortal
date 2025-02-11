@@ -9,7 +9,7 @@ import { TabLabel, TabList, TabPanel, Tabs } from '@/components/Tabs';
 import { HelpTopic } from '@/features/help/models/helpTopic';
 import usePartialUpdate from '@/hooks/usePartialUpdate';
 import { useDialogsStore } from '@/stores/dialogs';
-import { prompts } from '@/utils/labels';
+import { promptText } from '@/utils/labels';
 
 import { ICstCreateDTO } from '../../backend/api';
 import { useRSForm } from '../../backend/useRSForm';
@@ -62,7 +62,7 @@ function DlgCstTemplate() {
 
   function handlePrompt(): boolean {
     const definedSomeArgs = substitutes.arguments.some(arg => !!arg.value);
-    if (!definedSomeArgs && !window.confirm(prompts.templateUndefined)) {
+    if (!definedSomeArgs && !window.confirm(promptText.templateUndefined)) {
       return false;
     }
     return true;

@@ -13,7 +13,7 @@ import SelectLibraryItem from '@/features/library/components/SelectLibraryItem';
 import { ILibraryItem } from '@/features/library/models/library';
 import { ICstSubstitute, IMultiSubstitution } from '@/features/oss/models/oss';
 import { APP_COLORS } from '@/styling/colors';
-import { errors } from '@/utils/labels';
+import { errorMsg } from '@/utils/labels';
 
 import { ConstituentaID, IConstituenta, IRSForm } from '../models/rsform';
 import BadgeConstituenta from './BadgeConstituenta';
@@ -116,12 +116,12 @@ function PickSubstitutions({
       toDelete.includes(newSubstitution.substitution) ||
       replacements.includes(newSubstitution.original)
     ) {
-      toast.error(errors.reuseOriginal);
+      toast.error(errorMsg.reuseOriginal);
       return;
     }
     if (leftArgument === rightArgument) {
       if ((deleteRight && rightCst?.is_inherited) || (!deleteRight && leftCst?.is_inherited)) {
-        toast.error(errors.substituteInherited);
+        toast.error(errorMsg.substituteInherited);
         return;
       }
     }

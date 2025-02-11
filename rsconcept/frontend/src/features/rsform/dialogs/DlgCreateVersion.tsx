@@ -11,7 +11,7 @@ import { useVersionCreate } from '@/features/library/backend/useVersionCreate';
 import { IVersionInfo, LibraryItemID, VersionID } from '@/features/library/models/library';
 import { nextVersion } from '@/features/library/models/libraryAPI';
 import { useDialogsStore } from '@/stores/dialogs';
-import { errors } from '@/utils/labels';
+import { errorMsg } from '@/utils/labels';
 
 import { ConstituentaID } from '../models/rsform';
 
@@ -53,7 +53,7 @@ function DlgCreateVersion() {
       header='Создание версии'
       className={clsx('cc-column', 'w-[30rem]', 'py-2 px-6')}
       canSubmit={canSubmit}
-      submitInvalidTooltip={errors.versionTaken}
+      submitInvalidTooltip={errorMsg.versionTaken}
       submitText='Создать'
       onSubmit={event => void handleSubmit(onSubmit)(event)}
     >

@@ -89,7 +89,7 @@ export function describeLibraryItemType(itemType: LibraryItemType): string {
 /**
  * UI info descriptors.
  */
-export const information = {
+export const infoMsg = {
   changesSaved: 'Изменения сохранены',
 
   pathReady: 'Путь скопирован',
@@ -124,7 +124,7 @@ export const information = {
 /**
  * UI error descriptors.
  */
-export const errors = {
+export const errorMsg = {
   astFailed: 'Невозможно построить дерево разбора',
   typeStructureFailed: 'Структура отсутствует',
   passwordsMismatch: 'Пароли не совпадают',
@@ -145,7 +145,7 @@ export const errors = {
 /**
  * UI tooltip descriptors.
  */
-export const tooltips = {
+export const tooltipText = {
   unsaved: 'Сохраните или отмените изменения',
   shareItem: (policy?: AccessPolicy) =>
     policy === AccessPolicy.PUBLIC ? 'Поделиться схемой' : 'Поделиться можно только <br/>открытой схемой'
@@ -154,7 +154,7 @@ export const tooltips = {
 /**
  * UI prompt messages.
  */
-export const prompts = {
+export const promptText = {
   promptUnsaved: 'Присутствуют несохраненные изменения. Продолжить без их учета?',
   deleteLibraryItem: 'Вы уверены, что хотите удалить данную схему?',
   deleteOSS:

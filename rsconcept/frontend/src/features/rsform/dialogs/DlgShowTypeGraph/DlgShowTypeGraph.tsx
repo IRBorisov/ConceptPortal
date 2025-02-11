@@ -6,7 +6,7 @@ import { ReactFlowProvider } from 'reactflow';
 import { ModalView } from '@/components/Modal';
 import { HelpTopic } from '@/features/help/models/helpTopic';
 import { useDialogsStore } from '@/stores/dialogs';
-import { errors } from '@/utils/labels';
+import { errorMsg } from '@/utils/labels';
 
 import { ITypeInfo } from '../../models/rslang';
 import { TMGraph } from '../../models/TMGraph';
@@ -26,7 +26,7 @@ function DlgShowTypeGraph() {
   })();
 
   if (graph.nodes.length === 0) {
-    toast.error(errors.typeStructureFailed);
+    toast.error(errorMsg.typeStructureFailed);
     hideDialog();
     return null;
   }

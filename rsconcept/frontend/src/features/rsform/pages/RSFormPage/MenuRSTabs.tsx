@@ -39,7 +39,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { useRoleStore } from '@/stores/role';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';
-import { describeAccessMode, labelAccessMode, tooltips } from '@/utils/labels';
+import { describeAccessMode, labelAccessMode, tooltipText } from '@/utils/labels';
 import { generatePageQR, promptUnsaved, sharePage } from '@/utils/utils';
 
 import { useCstSubstitute } from '../../backend/useCstSubstitute';
@@ -239,7 +239,7 @@ function MenuRSTabs() {
         <Dropdown isOpen={schemaMenu.isOpen}>
           <DropdownButton
             text='Поделиться'
-            titleHtml={tooltips.shareItem(controller.schema.access_policy)}
+            titleHtml={tooltipText.shareItem(controller.schema.access_policy)}
             icon={<IconShare size='1rem' className='icon-primary' />}
             onClick={handleShare}
             disabled={controller.schema.access_policy !== AccessPolicy.PUBLIC}
