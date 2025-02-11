@@ -9,9 +9,10 @@ import { CProps } from '@/components/props';
 import useWindowSize from '@/hooks/useWindowSize';
 import { useFitHeight } from '@/stores/appLayout';
 import { useTooltipsStore } from '@/stores/tooltips';
-import { APP_COLORS, colorBgGraphNode } from '@/styling/color';
+import { APP_COLORS } from '@/styling/colors';
 import { globals, PARAMETER, prefixes } from '@/utils/constants';
 
+import { colorBgGraphNode } from '../../../colors';
 import { ConstituentaID, IRSForm } from '../../../models/rsform';
 import { GraphColoring, useTermGraphStore } from '../../../stores/termGraph';
 import { useRSEdit } from '../RSEditContext';

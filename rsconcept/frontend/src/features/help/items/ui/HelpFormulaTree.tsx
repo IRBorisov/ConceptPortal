@@ -1,4 +1,4 @@
-import { APP_COLORS } from '@/styling/color';
+import { APP_COLORS } from '@/styling/colors';
 
 function HelpFormulaTree() {
   return (

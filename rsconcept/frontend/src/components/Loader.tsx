@@ -1,6 +1,6 @@
 'use client';
 
-import { APP_COLORS } from '@/styling/color';
+import { APP_COLORS } from '@/styling/colors';
 
 interface LoaderProps {
   /** Scale of the loader from 1 to 10. */

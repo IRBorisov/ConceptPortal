@@ -22,7 +22,7 @@ import { CProps } from '@/components/props';
 import { useLibrary } from '@/features/library/backend/useLibrary';
 import { useMainHeight } from '@/stores/appLayout';
 import { useModificationStore } from '@/stores/modification';
-import { APP_COLORS } from '@/styling/color';
+import { APP_COLORS } from '@/styling/colors';
 import { PARAMETER } from '@/utils/constants';
 import { errors } from '@/utils/labels';
 

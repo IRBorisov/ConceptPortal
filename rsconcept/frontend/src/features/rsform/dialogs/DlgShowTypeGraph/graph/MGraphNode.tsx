@@ -2,9 +2,11 @@
 
 import { Handle, Position } from 'reactflow';
 
-import { TMGraphNode } from '@/features/rsform/models/TMGraph';
-import { APP_COLORS, colorBgTMGraphNode } from '@/styling/color';
+import { APP_COLORS } from '@/styling/colors';
 import { globals } from '@/utils/constants';
+
+import { colorBgTMGraphNode } from '../../../colors';
+import { TMGraphNode } from '../../../models/TMGraph';
 
 /**
  * Represents graph TMGraph node internal data.

@@ -2,8 +2,9 @@
 
 import { Handle, Position } from 'reactflow';
 
-import { APP_COLORS, colorBgSyntaxTree } from '@/styling/color';
+import { APP_COLORS } from '@/styling/colors';
 
+import { colorBgSyntaxTree } from '../../../colors';
 import { labelSyntaxTree } from '../../../labels';
 import { ISyntaxTreeNode } from '../../../models/rslang';
 

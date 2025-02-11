@@ -1,7 +1,7 @@
 import { bracketMatching, MatchResult } from '@codemirror/language';
 import { Decoration, EditorView } from '@codemirror/view';
 
-import { BRACKETS_THEME } from '@/styling/color';
+import { BRACKETS_THEME } from '../../colors';
 
 const matchingMark = Decoration.mark({ class: 'cc-matchingBracket' });
 const nonMatchingMark = Decoration.mark({ class: 'cc-nonmatchingBracket' });

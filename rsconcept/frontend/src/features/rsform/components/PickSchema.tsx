@@ -11,7 +11,7 @@ import { CProps } from '@/components/props';
 import { SearchBar } from '@/components/shared/SearchBar';
 import { ILibraryItem, LibraryItemID, LibraryItemType } from '@/features/library/models/library';
 import { matchLibraryItem } from '@/features/library/models/libraryAPI';
-import { APP_COLORS } from '@/styling/color';
+import { APP_COLORS } from '@/styling/colors';
 import { prefixes } from '@/utils/constants';
 
 import SelectLocation from '../../library/components/SelectLocation';

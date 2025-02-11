@@ -1,7 +1,8 @@
 import clsx from 'clsx';
 
-import { APP_COLORS, colorFgGrammeme } from '@/styling/color';
+import { APP_COLORS } from '@/styling/colors';
 
+import { colorFgGrammeme } from '../colors';
 import { labelGrammeme } from '../labels';
 import { GramData } from '../models/language';
 

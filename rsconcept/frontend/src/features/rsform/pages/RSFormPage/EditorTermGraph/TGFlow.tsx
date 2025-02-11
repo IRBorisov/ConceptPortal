@@ -23,11 +23,12 @@ import { Overlay } from '@/components/Container';
 import { CProps } from '@/components/props';
 import { useMainHeight } from '@/stores/appLayout';
 import { useDialogsStore } from '@/stores/dialogs';
-import { APP_COLORS, colorBgGraphNode } from '@/styling/color';
+import { APP_COLORS } from '@/styling/colors';
 import { PARAMETER } from '@/utils/constants';
 import { errors } from '@/utils/labels';
 
 import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
+import { colorBgGraphNode } from '../../../colors';
 import InfoConstituenta from '../../../components/InfoConstituenta';
 import ToolbarGraphSelection from '../../../components/ToolbarGraphSelection';
 import { ConstituentaID, CstType, IConstituenta, IRSForm } from '../../../models/rsform';

@@ -12,7 +12,7 @@ import { NoData } from '@/components/View';
 import SelectLibraryItem from '@/features/library/components/SelectLibraryItem';
 import { ILibraryItem } from '@/features/library/models/library';
 import { ICstSubstitute, IMultiSubstitution } from '@/features/oss/models/oss';
-import { APP_COLORS } from '@/styling/color';
+import { APP_COLORS } from '@/styling/colors';
 import { errors } from '@/utils/labels';
 
 import { ConstituentaID, IConstituenta, IRSForm } from '../models/rsform';

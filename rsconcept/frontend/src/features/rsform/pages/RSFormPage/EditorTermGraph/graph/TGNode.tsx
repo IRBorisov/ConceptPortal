@@ -2,7 +2,7 @@
 
 import { Handle, Position } from 'reactflow';
 
-import { APP_COLORS } from '@/styling/color';
+import { APP_COLORS } from '@/styling/colors';
 import { truncateToLastWord } from '@/utils/utils';
 
 const MAX_DESCRIPTION_LENGTH = 65;

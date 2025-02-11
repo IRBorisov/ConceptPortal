@@ -11,7 +11,7 @@ import { forwardRef, useRef, useState } from 'react';
 import { Label } from '@/components/Input';
 import { DialogType, useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
-import { APP_COLORS } from '@/styling/color';
+import { APP_COLORS } from '@/styling/colors';
 import { CodeMirrorWrapper } from '@/utils/codemirror';
 
 import { ReferenceType } from '../../models/language';

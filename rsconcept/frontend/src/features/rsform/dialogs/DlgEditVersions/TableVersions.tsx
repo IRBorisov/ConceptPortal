@@ -7,7 +7,7 @@ import { MiniButton } from '@/components/Control';
 import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/DataTable';
 import { IconRemove } from '@/components/Icons';
 import { IVersionInfo, VersionID } from '@/features/library/models/library';
-import { APP_COLORS } from '@/styling/color';
+import { APP_COLORS } from '@/styling/colors';
 
 interface TableVersionsProps {
   processing: boolean;

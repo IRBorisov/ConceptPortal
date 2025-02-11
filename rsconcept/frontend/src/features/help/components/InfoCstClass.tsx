@@ -1,8 +1,8 @@
 import clsx from 'clsx';
 
+import { colorBgCstClass } from '@/features/rsform/colors';
 import { describeCstClass, labelCstClass } from '@/features/rsform/labels';
 import { CstClass } from '@/features/rsform/models/rsform';
-import { colorBgCstClass } from '@/styling/color';
 import { prefixes } from '@/utils/constants';
 
 interface InfoCstClassProps {

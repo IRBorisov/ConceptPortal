@@ -10,7 +10,7 @@ import { forwardRef, useRef } from 'react';
 
 import { Label } from '@/components/Input';
 import { usePreferencesStore } from '@/stores/preferences';
-import { APP_COLORS } from '@/styling/color';
+import { APP_COLORS } from '@/styling/colors';
 
 import { ConstituentaID, IRSForm } from '../../models/rsform';
 import { generateAlias, getCstTypePrefix, guessCstType } from '../../models/rsformAPI';

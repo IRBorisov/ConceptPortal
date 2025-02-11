@@ -1,6 +1,6 @@
 import { EdgeProps, SimpleBezierEdge } from 'reactflow';
 
-import { APP_COLORS } from '@/styling/color';
+import { APP_COLORS } from '@/styling/colors';
 
 /**
  * Represents graph TMGraph edge internal data.

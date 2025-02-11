@@ -2,9 +2,10 @@ import clsx from 'clsx';
 
 import { CProps } from '@/components/props';
 import { useTooltipsStore } from '@/stores/tooltips';
-import { APP_COLORS, colorFgCstStatus } from '@/styling/color';
+import { APP_COLORS } from '@/styling/colors';
 import { globals } from '@/utils/constants';
 
+import { colorFgCstStatus } from '../colors';
 import { CstClass, IConstituenta } from '../models/rsform';
 
 interface BadgeConstituentaProps extends CProps.Styling {

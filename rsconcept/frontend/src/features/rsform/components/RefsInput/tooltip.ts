@@ -3,9 +3,10 @@ import { Extension } from '@codemirror/state';
 import { hoverTooltip, TooltipView } from '@codemirror/view';
 import clsx from 'clsx';
 
-import { APP_COLORS, colorFgGrammeme } from '@/styling/color';
+import { APP_COLORS } from '@/styling/colors';
 import { findContainedNodes, findReferenceAt } from '@/utils/codemirror';
 
+import { colorFgGrammeme } from '../../colors';
 import { labelGrammeme } from '../../labels';
 import { describeConstituentaTerm } from '../../labels';
 import { IEntityReference, ISyntacticReference } from '../../models/language';

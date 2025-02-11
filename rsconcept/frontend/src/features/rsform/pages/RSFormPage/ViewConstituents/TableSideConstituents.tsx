@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 
 import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/DataTable';
 import { NoData, TextContent } from '@/components/View';
-import { APP_COLORS } from '@/styling/color';
+import { APP_COLORS } from '@/styling/colors';
 import { PARAMETER, prefixes } from '@/utils/constants';
 
 import BadgeConstituenta from '../../../components/BadgeConstituenta';

@@ -1,7 +1,7 @@
 import { TextArea } from '@/components/Input';
 import PickSubstitutions from '@/features/rsform/components/PickSubstitutions';
 import { IRSForm } from '@/features/rsform/models/rsform';
-import { APP_COLORS } from '@/styling/color';
+import { APP_COLORS } from '@/styling/colors';
 
 import { ICstSubstitute } from '../../models/oss';
 

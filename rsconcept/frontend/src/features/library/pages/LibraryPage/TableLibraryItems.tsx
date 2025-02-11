@@ -14,7 +14,7 @@ import { useLabelUser } from '@/features/users/backend/useLabelUser';
 import useWindowSize from '@/hooks/useWindowSize';
 import { useFitHeight } from '@/stores/appLayout';
 import { usePreferencesStore } from '@/stores/preferences';
-import { APP_COLORS } from '@/styling/color';
+import { APP_COLORS } from '@/styling/colors';
 
 import BadgeLocation from '../../components/BadgeLocation';
 import { ILibraryItem, LibraryItemType } from '../../models/library';

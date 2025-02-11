@@ -4,10 +4,11 @@ import clsx from 'clsx';
 
 import { StatusIcon } from '@/components/DomainIcons';
 import { Loader } from '@/components/Loader';
-import { APP_COLORS, colorStatusBar } from '@/styling/color';
+import { APP_COLORS } from '@/styling/colors';
 import { globals } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/utils';
 
+import { colorStatusBar } from '../../../colors';
 import { labelExpressionStatus } from '../../../labels';
 import { ExpressionStatus, IConstituenta } from '../../../models/rsform';
 import { inferStatus } from '../../../models/rsformAPI';

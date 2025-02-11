@@ -16,7 +16,7 @@ import {
   IconSubfolders,
   IconUserSearch
 } from '@/components/Icons';
-import { APP_COLORS } from '@/styling/color';
+import { APP_COLORS } from '@/styling/colors';
 
 import { LinkTopic } from '../../components/LinkTopic';
 import { HelpTopic } from '../../models/helpTopic';
