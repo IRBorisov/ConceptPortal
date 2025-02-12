@@ -16,7 +16,7 @@ import { PrettyJson } from '@/components/View';
 import { HelpTopic } from '@/features/help';
 import { globals, patterns } from '@/utils/constants';
 
-import { IUserSignupDTO, schemaUserSignup } from '../../backend/api';
+import { IUserSignupDTO, schemaUserSignup } from '../../backend/types';
 import { useSignup } from '../../backend/useSignup';
 
 function FormSignup() {

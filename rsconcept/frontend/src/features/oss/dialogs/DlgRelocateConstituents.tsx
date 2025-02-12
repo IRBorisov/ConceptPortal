@@ -11,11 +11,10 @@ import { Loader } from '@/components/Loader';
 import { ModalForm } from '@/components/Modal';
 import { HelpTopic } from '@/features/help';
 import { ILibraryItem, SelectLibraryItem, useLibrary } from '@/features/library';
-import { useRSForm } from '@/features/rsform/backend/useRSForm';
-import PickMultiConstituenta from '@/features/rsform/components/PickMultiConstituenta';
+import { PickMultiConstituenta, useRSForm } from '@/features/rsform';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { ICstRelocateDTO, IOperationPosition, schemaCstRelocate } from '../backend/api';
+import { ICstRelocateDTO, IOperationPosition, schemaCstRelocate } from '../backend/types';
 import { useRelocateConstituents } from '../backend/useRelocateConstituents';
 import { useUpdatePositions } from '../backend/useUpdatePositions';
 import { IOperation, IOperationSchema } from '../models/oss';

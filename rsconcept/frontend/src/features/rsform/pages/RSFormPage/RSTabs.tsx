@@ -10,7 +10,6 @@ import { useAppLayoutStore } from '@/stores/appLayout';
 import { useModificationStore } from '@/stores/modification';
 
 import { labelVersion } from '../../labels';
-import { ConstituentaID } from '../../models/rsform';
 import EditorConstituenta from './EditorConstituenta';
 import EditorRSForm from './EditorRSFormCard';
 import EditorRSList from './EditorRSList';
@@ -19,7 +18,7 @@ import MenuRSTabs from './MenuRSTabs';
 import { RSTabID, useRSEdit } from './RSEditContext';
 
 interface RSTabsProps {
-  activeID?: ConstituentaID;
+  activeID?: number;
   activeTab: RSTabID;
 }
 

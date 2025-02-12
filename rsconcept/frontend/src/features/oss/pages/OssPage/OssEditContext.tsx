@@ -11,7 +11,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { promptText } from '@/utils/labels';
 
-import { IOperationPosition } from '../../backend/api';
+import { IOperationPosition } from '../../backend/types';
 import { useOssSuspense } from '../../backend/useOSS';
 import { IOperationSchema, OperationID, OperationType } from '../../models/oss';
 

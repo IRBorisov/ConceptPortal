@@ -1,11 +1,10 @@
 import { Extension } from '@codemirror/state';
 import { EditorView } from '@uiw/react-codemirror';
 
-import { findAliasAt } from '@/utils/codemirror';
+import { IRSForm } from '../../models/rsform';
+import { findAliasAt } from './utils';
 
-import { ConstituentaID, IRSForm } from '../../models/rsform';
-
-const navigationProducer = (schema: IRSForm, onOpenEdit: (cstID: ConstituentaID) => void) => {
+const navigationProducer = (schema: IRSForm, onOpenEdit: (cstID: number) => void) => {
   return EditorView.domEventHandlers({
     click: (event: MouseEvent, view: EditorView) => {
       if (!event.ctrlKey && !event.metaKey) {
@@ -34,6 +33,6 @@ const navigationProducer = (schema: IRSForm, onOpenEdit: (cstID: ConstituentaID)
   });
 };
 
-export function rsNavigation(schema: IRSForm, onOpenEdit: (cstID: ConstituentaID) => void): Extension {
+export function rsNavigation(schema: IRSForm, onOpenEdit: (cstID: number) => void): Extension {
   return [navigationProducer(schema, onOpenEdit)];
 }

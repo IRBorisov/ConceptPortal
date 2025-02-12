@@ -1,7 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { ossApi } from '@/features/oss/backend/api';
-import { rsformsApi } from '@/features/rsform/backend/api';
+import { KEYS } from '@/backend/configuration';
+import { IOperationSchemaDTO } from '@/features/oss/backend/types';
+import { IRSFormDTO } from '@/features/rsform/backend/types';
 
 import { libraryApi } from './api';
 
@@ -11,8 +12,8 @@ export const useSetEditors = () => {
     mutationKey: [libraryApi.baseKey, 'set-location'],
     mutationFn: libraryApi.setEditors,
     onSuccess: (_, variables) => {
-      const ossKey = ossApi.getOssQueryOptions({ itemID: variables.itemID }).queryKey;
-      const ossData = client.getQueryData(ossKey);
+      const ossKey = KEYS.composite.ossItem({ itemID: variables.itemID });
+      const ossData: IOperationSchemaDTO | undefined = client.getQueryData(ossKey);
       if (ossData) {
         client.setQueryData(ossKey, { ...ossData, editors: variables.editors });
         return Promise.allSettled(
@@ -21,15 +22,17 @@ export const useSetEditors = () => {
               if (!item.result) {
                 return;
               }
-              const itemKey = rsformsApi.getRSFormQueryOptions({ itemID: item.result }).queryKey;
+              const itemKey = KEYS.composite.rsItem({ itemID: item.result });
               return client.invalidateQueries({ queryKey: itemKey });
             })
             .filter(item => !!item)
         );
       }
 
-      const rsKey = rsformsApi.getRSFormQueryOptions({ itemID: variables.itemID }).queryKey;
-      client.setQueryData(rsKey, prev => (!prev ? undefined : { ...prev, editors: variables.editors }));
+      const rsKey = KEYS.composite.rsItem({ itemID: variables.itemID });
+      client.setQueryData(rsKey, (prev: IRSFormDTO | undefined) =>
+        !prev ? undefined : { ...prev, editors: variables.editors }
+      );
     }
   });
 

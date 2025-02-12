@@ -10,7 +10,7 @@ import { TabLabel, TabList, TabPanel, Tabs } from '@/components/Tabs';
 import { HelpTopic } from '@/features/help';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { IOperationCreateDTO, IOperationPosition, schemaOperationCreate } from '../../backend/api';
+import { IOperationCreateDTO, IOperationPosition, schemaOperationCreate } from '../../backend/types';
 import { useOperationCreate } from '../../backend/useOperationCreate';
 import { describeOperationType, labelOperationType } from '../../labels';
 import { IOperationSchema, OperationID, OperationType } from '../../models/oss';

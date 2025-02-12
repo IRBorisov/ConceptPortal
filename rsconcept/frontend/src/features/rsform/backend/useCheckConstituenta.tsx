@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { ICheckConstituentaDTO, rsformsApi } from './api';
+import { rsformsApi } from './api';
+import { ICheckConstituentaDTO } from './types';
 
 export const useCheckConstituenta = () => {
   const mutation = useMutation({

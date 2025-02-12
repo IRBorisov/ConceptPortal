@@ -13,7 +13,7 @@ import { truncateToSymbol } from '@/utils/utils';
 
 import BadgeConstituenta from '../../../components/BadgeConstituenta';
 import { labelCstTypification } from '../../../labels';
-import { ConstituentaID, IConstituenta } from '../../../models/rsform';
+import { IConstituenta } from '../../../models/rsform';
 
 interface TableRSListProps {
   items?: IConstituenta[];
@@ -22,7 +22,7 @@ interface TableRSListProps {
   selected: RowSelectionState;
   setSelected: React.Dispatch<React.SetStateAction<RowSelectionState>>;
 
-  onEdit: (cstID: ConstituentaID) => void;
+  onEdit: (cstID: number) => void;
   onCreateNew: () => void;
 }
 

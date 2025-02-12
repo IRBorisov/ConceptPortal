@@ -1,11 +1,9 @@
 import { useIsMutating } from '@tanstack/react-query';
 
-import { libraryApi } from '@/features/library';
-
-import { ossApi } from './api';
+import { KEYS } from '@/backend/configuration';
 
 export const useMutatingOss = () => {
-  const countLibrary = useIsMutating({ mutationKey: [libraryApi.baseKey] });
-  const countOss = useIsMutating({ mutationKey: [ossApi.baseKey] });
+  const countLibrary = useIsMutating({ mutationKey: [KEYS.library] });
+  const countOss = useIsMutating({ mutationKey: [KEYS.oss] });
   return countLibrary + countOss !== 0;
 };

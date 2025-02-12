@@ -1,10 +1,10 @@
 import clsx from 'clsx';
 
 import { labelConstituenta } from '../../labels';
-import { ConstituentaID, IRSForm } from '../../models/rsform';
+import { IRSForm } from '../../models/rsform';
 
 interface ListConstituentsProps {
-  list: ConstituentaID[];
+  list: number[];
   schema: IRSForm;
   prefix: string;
   title?: string;

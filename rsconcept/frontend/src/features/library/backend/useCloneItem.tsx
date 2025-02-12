@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { ICloneLibraryItemDTO, libraryApi } from './api';
+import { libraryApi } from './api';
+import { ICloneLibraryItemDTO } from './types';
 
 export const useCloneItem = () => {
   const client = useQueryClient();

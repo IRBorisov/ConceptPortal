@@ -2,7 +2,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useUpdateTimestamp } from '@/features/library';
 
-import { ICstMoveDTO, rsformsApi } from './api';
+import { rsformsApi } from './api';
+import { ICstMoveDTO } from './types';
 
 export const useCstMove = () => {
   const client = useQueryClient();

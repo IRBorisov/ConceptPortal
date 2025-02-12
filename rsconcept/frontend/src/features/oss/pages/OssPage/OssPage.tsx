@@ -17,7 +17,7 @@ import OssTabs from './OssTabs';
 
 const paramsSchema = z.object({
   id: z.coerce.number(),
-  tab: z.preprocess(v => (v ? Number(v) : undefined), z.nativeEnum(OssTabID).default(OssTabID.CARD))
+  tab: z.preprocess(v => (v ? Number(v) : undefined), z.nativeEnum(OssTabID).default(OssTabID.GRAPH))
 });
 
 export function OssPage() {

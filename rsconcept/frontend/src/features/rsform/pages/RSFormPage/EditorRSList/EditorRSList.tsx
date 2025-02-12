@@ -14,7 +14,7 @@ import { infoMsg } from '@/utils/labels';
 import { convertToCSV } from '@/utils/utils';
 
 import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
-import { ConstituentaID, CstType } from '../../../models/rsform';
+import { CstType } from '../../../models/rsform';
 import { matchConstituenta } from '../../../models/rsformAPI';
 import { CstMatchMode } from '../../../stores/cstSearch';
 import { useRSEdit } from '../RSEditContext';
@@ -50,7 +50,7 @@ function EditorRSList() {
 
   function handleRowSelection(updater: React.SetStateAction<RowSelectionState>) {
     const newRowSelection = typeof updater === 'function' ? updater(rowSelection) : updater;
-    const newSelection: ConstituentaID[] = [];
+    const newSelection: number[] = [];
     filtered.forEach((cst, index) => {
       if (newRowSelection[String(index)] === true) {
         newSelection.push(cst.id);

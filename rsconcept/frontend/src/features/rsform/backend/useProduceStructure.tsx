@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { KEYS } from '@/backend/configuration';
 import { useUpdateTimestamp } from '@/features/library';
-import { ossApi } from '@/features/oss/backend/api';
 
 import { ITargetCst } from '../models/rsform';
 import { rsformsApi } from './api';
@@ -17,7 +17,7 @@ export const useProduceStructure = () => {
       updateTimestamp(data.schema.id);
 
       return Promise.allSettled([
-        client.invalidateQueries({ queryKey: [ossApi.baseKey] }),
+        client.invalidateQueries({ queryKey: [KEYS.oss] }),
         client.invalidateQueries({
           queryKey: [rsformsApi.baseKey],
           predicate: query => query.queryKey.length > 2 && query.queryKey[2] !== data.schema.id

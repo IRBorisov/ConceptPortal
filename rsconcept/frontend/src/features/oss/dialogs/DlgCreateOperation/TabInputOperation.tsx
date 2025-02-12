@@ -8,7 +8,7 @@ import { Checkbox, Label, TextArea, TextInput } from '@/components/Input';
 import { ILibraryItem, LibraryItemType, PickSchema, useLibrary } from '@/features/library';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { IOperationCreateDTO } from '../../backend/api';
+import { IOperationCreateDTO } from '../../backend/types';
 import { sortItemsForOSS } from '../../models/ossAPI';
 import { DlgCreateOperationProps } from './DlgCreateOperation';
 

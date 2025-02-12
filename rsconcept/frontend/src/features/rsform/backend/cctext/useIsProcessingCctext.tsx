@@ -1,8 +1,8 @@
 import { useIsMutating } from '@tanstack/react-query';
 
-import { cctextApi } from './api';
+import { KEYS } from '@/backend/configuration';
 
 export const useIsProcessingCctext = () => {
-  const countMutations = useIsMutating({ mutationKey: [cctextApi.baseKey] });
+  const countMutations = useIsMutating({ mutationKey: [KEYS.cctext] });
   return countMutations !== 0;
 };

@@ -1,7 +1,7 @@
 import dagre from '@dagrejs/dagre';
 import { Edge, Node } from 'reactflow';
 
-import { TMGraphNode } from '@/features/rsform/models/TMGraph';
+import { TMGraphNode } from '../../../models/TMGraph';
 
 const NODE_WIDTH = 44;
 const NODE_HEIGHT = 44;

@@ -1,11 +1,9 @@
 /**
  * Module: Schema of Synthesis Operations.
  */
-import { ILibraryItem, ILibraryItemData } from '@/features/library/models/library';
-import { ICstSubstitute } from '@/features/rsform/backend/api';
-import { IConstituenta } from '@/features/rsform/models/rsform';
-
-import { Graph } from '../../../models/Graph';
+import { ILibraryItemData } from '@/features/library/models/library';
+import { ICstSubstitute } from '@/features/rsform';
+import { Graph } from '@/models/Graph';
 
 /**
  * Represents {@link IOperation} identifier type.
@@ -49,17 +47,6 @@ export interface IOperation {
 export interface IArgument {
   operation: OperationID;
   argument: OperationID;
-}
-
-/**
- * Represents substitution for multi synthesis table.
- */
-export interface IMultiSubstitution {
-  original_source: ILibraryItem;
-  original: IConstituenta;
-  substitution: IConstituenta;
-  substitution_source: ILibraryItem;
-  is_suggestion: boolean;
 }
 
 /**

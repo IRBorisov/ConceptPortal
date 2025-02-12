@@ -2,7 +2,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useUpdateTimestamp } from '@/features/library';
 
-import { IOperationCreateDTO, ossApi } from './api';
+import { ossApi } from './api';
+import { IOperationCreateDTO } from './types';
 
 export const useOperationCreate = () => {
   const client = useQueryClient();

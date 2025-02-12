@@ -3,12 +3,11 @@
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { TextArea } from '@/components/Input';
-import { useRSForms } from '@/features/rsform/backend/useRSForms';
-import PickSubstitutions from '@/features/rsform/components/PickSubstitutions';
+import { PickSubstitutions, useRSForms } from '@/features/rsform';
 import { useDialogsStore } from '@/stores/dialogs';
 import { APP_COLORS } from '@/styling/colors';
 
-import { IOperationUpdateDTO } from '../../backend/api';
+import { IOperationUpdateDTO } from '../../backend/types';
 import { SubstitutionValidator } from '../../models/ossAPI';
 import { DlgEditOperationProps } from './DlgEditOperation';
 

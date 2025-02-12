@@ -19,11 +19,11 @@ import {
   IconShare
 } from '@/components/Icons';
 import { useAuthSuspense } from '@/features/auth';
-import { useMutatingOss } from '@/features/oss/backend/useMutatingOss';
 import { useRoleStore, UserRole } from '@/features/users';
 import { describeAccessMode as describeUserRole, labelAccessMode as labelUserRole } from '@/utils/labels';
 import { sharePage } from '@/utils/utils';
 
+import { useMutatingOss } from '../../backend/useMutatingOss';
 import { useOssEdit } from './OssEditContext';
 
 function MenuOssTabs() {

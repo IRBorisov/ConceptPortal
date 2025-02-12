@@ -9,7 +9,7 @@ import { SubmitButton } from '@/components/Control';
 import { ErrorData } from '@/components/InfoError';
 import { TextInput } from '@/components/Input';
 
-import { IUpdateProfileDTO, schemaUpdateProfile } from '../../backend/api';
+import { IUpdateProfileDTO, schemaUpdateProfile } from '../../backend/types';
 import { useProfileSuspense } from '../../backend/useProfile';
 import { useUpdateProfile } from '../../backend/useUpdateProfile';
 

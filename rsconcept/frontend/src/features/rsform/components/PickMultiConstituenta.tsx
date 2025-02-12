@@ -10,7 +10,7 @@ import { NoData } from '@/components/View';
 import { Graph } from '@/models/Graph';
 
 import { describeConstituenta } from '../labels';
-import { ConstituentaID, IConstituenta, IRSForm } from '../models/rsform';
+import { IConstituenta, IRSForm } from '../models/rsform';
 import { isBasicConcept, matchConstituenta } from '../models/rsformAPI';
 import { CstMatchMode } from '../stores/cstSearch';
 import BadgeConstituenta from './BadgeConstituenta';
@@ -18,8 +18,8 @@ import ToolbarGraphSelection from './ToolbarGraphSelection';
 
 interface PickMultiConstituentaProps extends CProps.Styling {
   id?: string;
-  value: ConstituentaID[];
-  onChange: (newValue: ConstituentaID[]) => void;
+  value: number[];
+  onChange: (newValue: number[]) => void;
 
   schema: IRSForm;
   items: IConstituenta[];
@@ -30,7 +30,7 @@ interface PickMultiConstituentaProps extends CProps.Styling {
 
 const columnHelper = createColumnHelper<IConstituenta>();
 
-function PickMultiConstituenta({
+export function PickMultiConstituenta({
   id,
   schema,
   items,
@@ -72,7 +72,7 @@ function PickMultiConstituenta({
       onChange([]);
     } else {
       const newRowSelection = typeof updater === 'function' ? updater(rowSelection) : updater;
-      const newSelection: ConstituentaID[] = [];
+      const newSelection: number[] = [];
       filtered.forEach((cst, index) => {
         if (newRowSelection[String(index)] === true) {
           newSelection.push(cst.id);
@@ -141,5 +141,3 @@ function PickMultiConstituenta({
     </div>
   );
 }
-
-export default PickMultiConstituenta;

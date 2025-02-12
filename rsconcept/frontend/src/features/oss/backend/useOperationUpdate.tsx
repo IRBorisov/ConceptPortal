@@ -1,10 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { libraryApi } from '@/features/library';
+import { KEYS } from '@/backend/configuration';
 import { ILibraryItem } from '@/features/library/models/library';
-import { rsformsApi } from '@/features/rsform/backend/api';
 
-import { IOperationUpdateDTO, ossApi } from './api';
+import { ossApi } from './api';
+import { IOperationUpdateDTO } from './types';
 
 export const useOperationUpdate = () => {
   const client = useQueryClient();
@@ -12,12 +12,12 @@ export const useOperationUpdate = () => {
     mutationKey: [ossApi.baseKey, 'operation-update'],
     mutationFn: ossApi.operationUpdate,
     onSuccess: (data, variables) => {
-      client.setQueryData(ossApi.getOssQueryOptions({ itemID: data.id }).queryKey, data);
+      client.setQueryData(KEYS.composite.ossItem({ itemID: data.id }), data);
       const schemaID = data.items.find(item => item.id === variables.data.target)?.result;
       if (!schemaID) {
         return;
       }
-      client.setQueryData(libraryApi.libraryListKey, (prev: ILibraryItem[] | undefined) =>
+      client.setQueryData(KEYS.composite.libraryList, (prev: ILibraryItem[] | undefined) =>
         !prev
           ? undefined
           : prev.map(item =>
@@ -25,7 +25,7 @@ export const useOperationUpdate = () => {
             )
       );
       return client.invalidateQueries({
-        queryKey: rsformsApi.getRSFormQueryOptions({ itemID: schemaID }).queryKey
+        queryKey: KEYS.composite.rsItem({ itemID: schemaID })
       });
     }
   });

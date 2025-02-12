@@ -2,10 +2,9 @@
 
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
-import { IInlineSynthesisDTO } from '../../backend/api';
+import { IInlineSynthesisDTO } from '../../backend/types';
 import { useRSFormSuspense } from '../../backend/useRSForm';
-import PickMultiConstituenta from '../../components/PickMultiConstituenta';
-import { ConstituentaID } from '../../models/rsform';
+import { PickMultiConstituenta } from '../../components/PickMultiConstituenta';
 
 function TabConstituents() {
   const { setValue, control } = useFormContext<IInlineSynthesisDTO>();
@@ -14,7 +13,7 @@ function TabConstituents() {
 
   const { schema } = useRSFormSuspense({ itemID: sourceID! });
 
-  function handleSelectItems(newValue: ConstituentaID[]) {
+  function handleSelectItems(newValue: number[]) {
     setValue('items', newValue);
     const newSubstitutions = substitutions.filter(
       sub => newValue.includes(sub.original) || newValue.includes(sub.substitution)

@@ -1,4 +1,5 @@
 import { axiosPost } from '@/backend/apiTransport';
+import { KEYS } from '@/backend/configuration';
 
 /**
  * Represents API result for text output.
@@ -23,7 +24,7 @@ export interface ILexemeResponse {
 }
 
 export const cctextApi = {
-  baseKey: 'cctext',
+  baseKey: KEYS.cctext,
 
   inflectText: (data: IWordFormDTO) =>
     axiosPost<IWordFormDTO, ITextResult>({

@@ -2,11 +2,10 @@ import { Extension } from '@codemirror/state';
 import { hoverTooltip, TooltipView } from '@codemirror/view';
 import clsx from 'clsx';
 
-import { findAliasAt } from '@/utils/codemirror';
-
 import { labelCstTypification } from '../../labels';
 import { IConstituenta, IRSForm } from '../../models/rsform';
 import { isBasicConcept } from '../../models/rsformAPI';
+import { findAliasAt } from './utils';
 
 const tooltipProducer = (schema: IRSForm, canClick?: boolean) => {
   return hoverTooltip((view, pos) => {

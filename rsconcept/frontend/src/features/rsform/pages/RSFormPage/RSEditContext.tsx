@@ -5,7 +5,6 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { urls, useConceptNavigation } from '@/app';
 import { useAuthSuspense } from '@/features/auth';
 import { ILibraryItemEditor, useDeleteItem, useLibrarySearchStore } from '@/features/library';
-import { OssTabID } from '@/features/oss/pages/OssPage/OssEditContext';
 import { useRoleStore, UserRole } from '@/features/users';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
@@ -14,11 +13,11 @@ import { PARAMETER, prefixes } from '@/utils/constants';
 import { promptText } from '@/utils/labels';
 import { promptUnsaved } from '@/utils/utils';
 
-import { ICstCreateDTO } from '../../backend/api';
+import { ICstCreateDTO } from '../../backend/types';
 import { useCstCreate } from '../../backend/useCstCreate';
 import { useCstMove } from '../../backend/useCstMove';
 import { useRSFormSuspense } from '../../backend/useRSForm';
-import { ConstituentaID, CstType, IConstituenta, IRSForm } from '../../models/rsform';
+import { CstType, IConstituenta, IRSForm } from '../../models/rsform';
 import { generateAlias } from '../../models/rsformAPI';
 
 export enum RSTabID {
@@ -30,7 +29,7 @@ export enum RSTabID {
 
 export interface IRSEditContext extends ILibraryItemEditor {
   schema: IRSForm;
-  selected: ConstituentaID[];
+  selected: number[];
   activeCst?: IConstituenta;
   activeVersion?: number;
 
@@ -42,16 +41,16 @@ export interface IRSEditContext extends ILibraryItemEditor {
   canDeleteSelected: boolean;
 
   navigateVersion: (versionID: number | undefined) => void;
-  navigateRSForm: ({ tab, activeID }: { tab: RSTabID; activeID?: ConstituentaID }) => void;
-  navigateCst: (cstID: ConstituentaID) => void;
+  navigateRSForm: ({ tab, activeID }: { tab: RSTabID; activeID?: number }) => void;
+  navigateCst: (cstID: number) => void;
   navigateOss: (ossID: number, newTab?: boolean) => void;
 
   deleteSchema: () => void;
 
-  setSelected: React.Dispatch<React.SetStateAction<ConstituentaID[]>>;
-  select: (target: ConstituentaID) => void;
-  deselect: (target: ConstituentaID) => void;
-  toggleSelect: (target: ConstituentaID) => void;
+  setSelected: React.Dispatch<React.SetStateAction<number[]>>;
+  select: (target: number) => void;
+  deselect: (target: number) => void;
+  toggleSelect: (target: number) => void;
   deselectAll: () => void;
 
   moveUp: () => void;
@@ -100,7 +99,7 @@ export const RSEditState = ({
   const isContentEditable = isMutable && !isArchive;
   const isAttachedToOSS = schema.oss.length > 0;
 
-  const [selected, setSelected] = useState<ConstituentaID[]>([]);
+  const [selected, setSelected] = useState<number[]>([]);
   const canDeleteSelected = selected.length > 0 && selected.every(id => !schema.cstByID.get(id)?.is_inherited);
 
   const activeCst = selected.length === 0 ? undefined : schema.cstByID.get(selected[selected.length - 1]);
@@ -132,7 +131,7 @@ export const RSEditState = ({
     router.push(urls.oss(ossID), newTab);
   }
 
-  function navigateRSForm({ tab, activeID }: { tab: RSTabID; activeID?: ConstituentaID }) {
+  function navigateRSForm({ tab, activeID }: { tab: RSTabID; activeID?: number }) {
     const data = {
       id: schema.id,
       tab: tab,
@@ -154,7 +153,7 @@ export const RSEditState = ({
     }
   }
 
-  function navigateCst(cstID: ConstituentaID) {
+  function navigateCst(cstID: number) {
     if (cstID !== activeCst?.id || activeTab !== RSTabID.CST_EDIT) {
       navigateRSForm({ tab: RSTabID.CST_EDIT, activeID: cstID });
     }
@@ -167,7 +166,7 @@ export const RSEditState = ({
     const ossID = schema.oss.length > 0 ? schema.oss[0].id : undefined;
     void deleteItem(schema.id).then(() => {
       if (ossID) {
-        router.push(urls.oss(ossID, OssTabID.GRAPH));
+        router.push(urls.oss(ossID));
       } else {
         if (searchLocation === schema.location) {
           setSearchLocation('');
@@ -329,9 +328,9 @@ export const RSEditState = ({
         deleteSchema,
 
         setSelected,
-        select: (target: ConstituentaID) => setSelected(prev => [...prev, target]),
-        deselect: (target: ConstituentaID) => setSelected(prev => prev.filter(id => id !== target)),
-        toggleSelect: (target: ConstituentaID) =>
+        select: (target: number) => setSelected(prev => [...prev, target]),
+        deselect: (target: number) => setSelected(prev => prev.filter(id => id !== target)),
+        toggleSelect: (target: number) =>
           setSelected(prev => (prev.includes(target) ? prev.filter(id => id !== target) : [...prev, target])),
         deselectAll: () => setSelected([]),
 
@@ -351,10 +350,10 @@ export const RSEditState = ({
 
 // ====== Internals =========
 function getNextActiveOnDelete(
-  activeID: ConstituentaID | undefined,
+  activeID: number | undefined,
   items: IConstituenta[],
-  deleted: ConstituentaID[]
-): ConstituentaID | undefined {
+  deleted: number[]
+): number | undefined {
   if (items.length === deleted.length) {
     return undefined;
   }

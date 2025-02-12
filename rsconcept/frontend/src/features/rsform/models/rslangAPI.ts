@@ -2,8 +2,13 @@
  * Module: API for RSLanguage.
  */
 
+import { Tree } from '@lezer/common';
+
+import { cursorNode } from '@/utils/codemirror';
+import { PARAMETER } from '@/utils/constants';
+
 import { CstType } from './rsform';
-import { AliasMapping, IArgumentValue, IRSErrorDescription, RSErrorClass, RSErrorType } from './rslang';
+import { AliasMapping, IArgumentValue, IRSErrorDescription, RSErrorClass, RSErrorType, SyntaxTree } from './rslang';
 
 // cspell:disable
 const LOCALS_REGEXP = /[_a-zα-ω][a-zα-ω]*\d*/g;
@@ -235,5 +240,55 @@ export function applyTypificationMapping(target: string, mapping: AliasMapping):
     }
   }
 
+  return result;
+}
+
+/**
+ * Transform Tree to {@link SyntaxTree}.
+ */
+export function transformAST(tree: Tree): SyntaxTree {
+  const result: SyntaxTree = [];
+  const parents: number[] = [];
+  const cursor = tree.cursor();
+  let finished = false;
+  let leave = true;
+  while (!finished) {
+    let node = cursorNode(cursor);
+    node.isLeaf = !cursor.firstChild();
+
+    leave = true;
+    result.push({
+      uid: result.length,
+      parent: parents.length > 0 ? parents[parents.length - 1] : result.length,
+      typeID: node.type.id,
+      start: node.from,
+      finish: node.to,
+      data: {
+        dataType: 'string',
+        value: node.type.name == '⚠' ? PARAMETER.errorNodeLabel : node.type.name
+      }
+    });
+    parents.push(result.length - 1);
+
+    if (!node.isLeaf) continue;
+
+    for (;;) {
+      node = cursorNode(cursor, node.isLeaf);
+      if (leave) {
+        parents.pop();
+      }
+
+      leave = cursor.type.isAnonymous;
+      node.isLeaf = false;
+      if (cursor.nextSibling()) {
+        break;
+      }
+      if (!cursor.parent()) {
+        finished = true;
+        break;
+      }
+      leave = true;
+    }
+  }
   return result;
 }

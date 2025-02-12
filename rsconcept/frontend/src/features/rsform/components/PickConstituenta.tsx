@@ -31,7 +31,7 @@ interface PickConstituentaProps extends CProps.Styling {
 
 const columnHelper = createColumnHelper<IConstituenta>();
 
-function PickConstituenta({
+export function PickConstituenta({
   id,
   items,
   value,
@@ -102,5 +102,3 @@ function PickConstituenta({
     </div>
   );
 }
-
-export default PickConstituenta;

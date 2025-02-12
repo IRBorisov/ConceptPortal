@@ -16,12 +16,12 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { errorMsg } from '@/utils/labels';
 
-import { ICstUpdateDTO, schemaCstUpdate } from '../../../backend/api';
+import { ICstUpdateDTO, schemaCstUpdate } from '../../../backend/types';
 import { useCstUpdate } from '../../../backend/useCstUpdate';
 import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
 import RefsInput from '../../../components/RefsInput';
 import { labelCstTypification, labelTypification } from '../../../labels';
-import { ConstituentaID, CstType, IConstituenta, IRSForm } from '../../../models/rsform';
+import { CstType, IConstituenta, IRSForm } from '../../../models/rsform';
 import { isBaseSet, isBasicConcept, isFunctional } from '../../../models/rsformAPI';
 import { IExpressionParse, ParsingStatus } from '../../../models/rslang';
 import EditorRSExpression from '../EditorRSExpression';
@@ -33,7 +33,7 @@ interface FormConstituentaProps {
 
   activeCst: IConstituenta;
   schema: IRSForm;
-  onOpenEdit?: (cstID: ConstituentaID) => void;
+  onOpenEdit?: (cstID: number) => void;
 }
 
 function FormConstituenta({ disabled, id, toggleReset, schema, activeCst, onOpenEdit }: FormConstituentaProps) {

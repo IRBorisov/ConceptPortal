@@ -2,7 +2,8 @@ import { useMutation } from '@tanstack/react-query';
 
 import { useUpdateTimestamp } from '@/features/library';
 
-import { IOperationPosition, ossApi } from './api';
+import { ossApi } from './api';
+import { IOperationPosition } from './types';
 
 export const useUpdatePositions = () => {
   const { updateTimestamp } = useUpdateTimestamp();

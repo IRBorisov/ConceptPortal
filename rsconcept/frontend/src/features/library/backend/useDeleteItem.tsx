@@ -1,10 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { ossApi } from '@/features/oss/backend/api';
-import { rsformsApi } from '@/features/rsform/backend/api';
+import { KEYS } from '@/backend/configuration';
 import { PARAMETER } from '@/utils/constants';
 
-import { LibraryItemID } from '../models/library';
 import { libraryApi } from './api';
 
 export const useDeleteItem = () => {
@@ -17,16 +15,16 @@ export const useDeleteItem = () => {
       setTimeout(
         () =>
           void Promise.allSettled([
-            client.invalidateQueries({ queryKey: [ossApi.baseKey] }),
-            client.resetQueries({ queryKey: rsformsApi.getRSFormQueryOptions({ itemID: variables }).queryKey }),
-            client.resetQueries({ queryKey: ossApi.getOssQueryOptions({ itemID: variables }).queryKey })
+            client.invalidateQueries({ queryKey: [KEYS.oss] }),
+            client.resetQueries({ queryKey: KEYS.composite.rsItem({ itemID: variables }) }),
+            client.resetQueries({ queryKey: KEYS.composite.ossItem({ itemID: variables }) })
           ]).catch(console.error),
         PARAMETER.navigationDuration
       );
     }
   });
   return {
-    deleteItem: (target: LibraryItemID) => mutation.mutateAsync(target),
+    deleteItem: (target: number) => mutation.mutateAsync(target),
     isPending: mutation.isPending
   };
 };

@@ -2,7 +2,7 @@ import { useFormContext } from 'react-hook-form';
 
 import { TextArea, TextInput } from '@/components/Input';
 
-import { IOperationUpdateDTO } from '../../backend/api';
+import { IOperationUpdateDTO } from '../../backend/types';
 
 function TabOperation() {
   const {

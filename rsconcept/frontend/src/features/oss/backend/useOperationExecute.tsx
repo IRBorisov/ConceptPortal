@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { libraryApi } from '@/features/library';
-import { rsformsApi } from '@/features/rsform/backend/api';
+import { KEYS } from '@/backend/configuration';
 
-import { ITargetOperation, ossApi } from './api';
+import { ossApi } from './api';
+import { ITargetOperation } from './types';
 
 export const useOperationExecute = () => {
   const client = useQueryClient();
@@ -13,8 +13,8 @@ export const useOperationExecute = () => {
     onSuccess: data => {
       client.setQueryData(ossApi.getOssQueryOptions({ itemID: data.id }).queryKey, data);
       return Promise.allSettled([
-        client.invalidateQueries({ queryKey: libraryApi.libraryListKey }),
-        client.invalidateQueries({ queryKey: [rsformsApi.baseKey] })
+        client.invalidateQueries({ queryKey: KEYS.composite.libraryList }),
+        client.invalidateQueries({ queryKey: [KEYS.rsform] })
       ]);
     }
   });

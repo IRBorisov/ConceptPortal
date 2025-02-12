@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { ICreateLibraryItemDTO, libraryApi } from './api';
+import { libraryApi } from './api';
+import { ICreateLibraryItemDTO } from './types';
 
 export const useCreateItem = () => {
   const client = useQueryClient();

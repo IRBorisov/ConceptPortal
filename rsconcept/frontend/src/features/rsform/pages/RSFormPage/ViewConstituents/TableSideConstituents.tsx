@@ -9,14 +9,14 @@ import { PARAMETER, prefixes } from '@/utils/constants';
 
 import BadgeConstituenta from '../../../components/BadgeConstituenta';
 import { describeConstituenta } from '../../../labels';
-import { ConstituentaID, IConstituenta } from '../../../models/rsform';
+import { IConstituenta } from '../../../models/rsform';
 
 const DESCRIPTION_MAX_SYMBOLS = 280;
 
 interface TableSideConstituentsProps {
   items: IConstituenta[];
   activeCst?: IConstituenta;
-  onOpenEdit: (cstID: ConstituentaID) => void;
+  onOpenEdit: (cstID: number) => void;
   autoScroll?: boolean;
   maxHeight: string;
 }

@@ -4,7 +4,7 @@ import clsx from 'clsx';
 
 import { FlexColumn } from '@/components/Container';
 import { EditorLibraryItem } from '@/features/library';
-import ToolbarRSFormCard from '@/features/rsform/pages/RSFormPage/EditorRSFormCard/ToolbarRSFormCard';
+import { ToolbarRSFormCard } from '@/features/rsform';
 import { useModificationStore } from '@/stores/modification';
 import { globals } from '@/utils/constants';
 

@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { rsformsApi } from '@/features/rsform/backend/api';
+import { KEYS } from '@/backend/configuration';
 
-import { LibraryItemID } from '../models/library';
-import { IVersionCreateDTO, libraryApi } from './api';
+import { libraryApi } from './api';
+import { IVersionCreateDTO } from './types';
 import { useUpdateTimestamp } from './useUpdateTimestamp';
 
 export const useVersionCreate = () => {
@@ -13,12 +13,12 @@ export const useVersionCreate = () => {
     mutationKey: [libraryApi.baseKey, 'create-version'],
     mutationFn: libraryApi.versionCreate,
     onSuccess: data => {
-      client.setQueryData(rsformsApi.getRSFormQueryOptions({ itemID: data.schema.id }).queryKey, data.schema);
+      client.setQueryData(KEYS.composite.rsItem({ itemID: data.schema.id }), data.schema);
       updateTimestamp(data.schema.id);
     }
   });
   return {
-    versionCreate: (data: { itemID: LibraryItemID; data: IVersionCreateDTO }) =>
+    versionCreate: (data: { itemID: number; data: IVersionCreateDTO }) =>
       mutation.mutateAsync(data).then(response => response.version)
   };
 };

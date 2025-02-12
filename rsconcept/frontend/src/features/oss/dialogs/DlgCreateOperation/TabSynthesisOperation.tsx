@@ -4,7 +4,7 @@ import { FlexColumn } from '@/components/Container';
 import { Label, TextArea, TextInput } from '@/components/Input';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { IOperationCreateDTO } from '../../backend/api';
+import { IOperationCreateDTO } from '../../backend/types';
 import { PickMultiOperation } from '../../components/PickMultiOperation';
 import { DlgCreateOperationProps } from './DlgCreateOperation';
 

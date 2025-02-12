@@ -25,11 +25,6 @@ export enum CstType {
 export const CATEGORY_CST_TYPE = CstType.THEOREM;
 
 /**
- * Represents {@link IConstituenta} identifier type.
- */
-export type ConstituentaID = number;
-
-/**
  * Represents Constituenta classification in terms of system of concepts.
  */
 export enum CstClass {
@@ -63,7 +58,7 @@ export interface TermForm {
  * Represents Constituenta basic persistent data.
  */
 export interface IConstituentaMeta {
-  id: ConstituentaID;
+  id: number;
   alias: string;
   convention: string;
   cst_type: CstType;
@@ -79,7 +74,7 @@ export interface IConstituentaMeta {
  * Represents target {@link IConstituenta}.
  */
 export interface ITargetCst {
-  target: ConstituentaID;
+  target: number;
 }
 
 /**
@@ -107,7 +102,7 @@ export interface IConstituenta extends IConstituentaMeta {
   /** Indicates if this {@link IConstituenta} has a simple expression. */
   is_simple_expression: boolean;
 
-  /** Index of {@link LibraryItemID} that contains this cst (or inheritance parent).
+  /** Index of {@link LibraryItem} that contains this cst (or inheritance parent).
    *  0 - not inherited, 1 - inherited by 1st schema, 2 - inherited by 2nd schema, etc.
    */
   parent_schema_index: number;
@@ -119,7 +114,7 @@ export interface IConstituenta extends IConstituentaMeta {
   has_inherited_children: boolean;
 
   /** {@link IConstituenta} that spawned this one. */
-  spawner?: ConstituentaID;
+  spawner?: number;
   /** Alias of {@link IConstituenta} that spawned this one. */
   spawner_alias?: string;
   /** List of {@link IConstituenta} that are spawned by this one. */
@@ -137,7 +132,7 @@ export interface IConstituentaReference extends Pick<IConstituenta, 'id' | 'sche
  * Represents Constituenta list.
  */
 export interface IConstituentaList {
-  items: ConstituentaID[];
+  items: number[];
 }
 
 /**
@@ -168,9 +163,9 @@ export interface IRSFormStats {
  * Represents inheritance data for {@link IRSForm}.
  */
 export interface IInheritanceInfo {
-  child: ConstituentaID;
+  child: number;
   child_source: number;
-  parent: ConstituentaID;
+  parent: number;
   parent_source: number;
 }
 
@@ -185,7 +180,7 @@ export interface IRSForm extends ILibraryItemVersioned {
   stats: IRSFormStats;
   graph: Graph;
   cstByAlias: Map<string, IConstituenta>;
-  cstByID: Map<ConstituentaID, IConstituenta>;
+  cstByID: Map<number, IConstituenta>;
 }
 
 /**

@@ -3,8 +3,8 @@
  */
 
 import { ILibraryItem } from '@/features/library/models/library';
-import { ICstSubstitute } from '@/features/rsform/backend/api';
-import { ConstituentaID, CstClass, CstType, IConstituenta, IRSForm } from '@/features/rsform/models/rsform';
+import { CstClass, CstType, IConstituenta, IRSForm } from '@/features/rsform';
+import { ICstSubstitute } from '@/features/rsform/backend/types';
 import { AliasMapping, ParsingStatus } from '@/features/rsform/models/rslang';
 import {
   applyAliasMapping,
@@ -17,7 +17,7 @@ import { infoMsg } from '@/utils/labels';
 import { TextMatcher } from '@/utils/utils';
 
 import { Graph } from '../../../models/Graph';
-import { IOperationPosition } from '../backend/api';
+import { IOperationPosition } from '../backend/types';
 import { describeSubstitutionError } from '../labels';
 import { IOperation, IOperationSchema, OperationID, OperationType, SubstitutionErrorType } from './oss';
 import { Position2D } from './ossLayout';
@@ -67,13 +67,13 @@ export class SubstitutionValidator {
 
   private schemas: IRSForm[];
   private substitutions: ICstSubstitute[];
-  private constituents = new Set<ConstituentaID>();
-  private originals = new Set<ConstituentaID>();
+  private constituents = new Set<number>();
+  private originals = new Set<number>();
   private mapping: CrossMapping = new Map();
 
-  private cstByID = new Map<ConstituentaID, IConstituenta>();
+  private cstByID = new Map<number, IConstituenta>();
   private schemaByID = new Map<number, IRSForm>();
-  private schemaByCst = new Map<ConstituentaID, IRSForm>();
+  private schemaByCst = new Map<number, IRSForm>();
 
   constructor(schemas: IRSForm[], substitutions: ICstSubstitute[]) {
     this.schemas = schemas;
@@ -125,9 +125,9 @@ export class SubstitutionValidator {
   }
 
   private calculateSuggestions(): void {
-    const candidates = new Map<ConstituentaID, string>();
-    const minors = new Set<ConstituentaID>();
-    const schemaByCst = new Map<ConstituentaID, IRSForm>();
+    const candidates = new Map<number, string>();
+    const minors = new Set<number>();
+    const schemaByCst = new Map<number, IRSForm>();
     for (const schema of this.schemas) {
       for (const cst of schema.items) {
         if (this.originals.has(cst.id)) {
@@ -456,7 +456,7 @@ export function getRelocateCandidates(
     return addedCst;
   }
 
-  const unreachableBases: ConstituentaID[] = [];
+  const unreachableBases: number[] = [];
   for (const cst of schema.items.filter(item => item.is_inherited)) {
     if (cst.parent_schema == destinationSchema) {
       continue;

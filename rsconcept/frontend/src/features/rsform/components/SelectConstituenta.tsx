@@ -7,7 +7,7 @@ import { CProps } from '@/components/props';
 
 import { describeConstituentaTerm } from '../labels';
 import { describeConstituenta } from '../labels';
-import { ConstituentaID, IConstituenta } from '../models/rsform';
+import { IConstituenta } from '../models/rsform';
 import { matchConstituenta } from '../models/rsformAPI';
 import { CstMatchMode } from '../stores/cstSearch';
 
@@ -34,7 +34,7 @@ function SelectConstituenta({
       label: `${cst.alias}${cst.is_inherited ? '*' : ''}: ${describeConstituenta(cst)}`
     })) ?? [];
 
-  function filter(option: { value: ConstituentaID | undefined; label: string }, inputValue: string) {
+  function filter(option: { value: number | undefined; label: string }, inputValue: string) {
     const cst = items?.find(item => item.id === option.value);
     return !cst ? false : matchConstituenta(cst, inputValue, CstMatchMode.ALL);
   }

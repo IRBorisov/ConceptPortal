@@ -7,7 +7,7 @@ import { TextArea, TextInput } from '@/components/Input';
 import { BadgeHelp, HelpTopic } from '@/features/help';
 import { PARAMETER } from '@/utils/constants';
 
-import { ICstCreateDTO } from '../../backend/api';
+import { ICstCreateDTO } from '../../backend/types';
 import RSInput from '../../components/RSInput';
 import { SelectCstType } from '../../components/SelectCstType';
 import { CstType, IRSForm } from '../../models/rsform';

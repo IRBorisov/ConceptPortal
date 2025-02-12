@@ -1,139 +1,25 @@
 import { queryOptions } from '@tanstack/react-query';
-import { z } from 'zod';
 
 import { axiosDelete, axiosGet, axiosPatch, axiosPost } from '@/backend/apiTransport';
-import { DELAYS } from '@/backend/configuration';
-import { ossApi } from '@/features/oss/backend/api';
-import { IRSFormDTO, rsformsApi } from '@/features/rsform/backend/api';
-import { errorMsg, infoMsg } from '@/utils/labels';
+import { DELAYS, KEYS } from '@/backend/configuration';
+import { IRSFormDTO } from '@/features/rsform/backend/types';
+import { infoMsg } from '@/utils/labels';
 
-import { AccessPolicy, ILibraryItem, IVersionInfo, LibraryItemID, LibraryItemType, VersionID } from '../models/library';
-import { validateLocation } from '../models/libraryAPI';
-
-/**
- * Represents update data for renaming Location.
- */
-export interface IRenameLocationDTO {
-  target: string;
-  new_location: string;
-}
-
-/**
- * Represents data, used for cloning {@link IRSForm}.
- */
-export const schemaCloneLibraryItem = z.object({
-  id: z.number(),
-  item_type: z.nativeEnum(LibraryItemType),
-  title: z.string().nonempty(errorMsg.requiredField),
-  alias: z.string().nonempty(errorMsg.requiredField),
-  comment: z.string(),
-  visible: z.boolean(),
-  read_only: z.boolean(),
-  location: z.string().refine(data => validateLocation(data), { message: errorMsg.invalidLocation }),
-  access_policy: z.nativeEnum(AccessPolicy),
-
-  items: z.array(z.number()).optional()
-});
-
-/**
- * Represents data, used for cloning {@link IRSForm}.
- */
-export type ICloneLibraryItemDTO = z.infer<typeof schemaCloneLibraryItem>;
-
-/**
- * Represents data, used for creating {@link IRSForm}.
- */
-export const schemaCreateLibraryItem = z
-  .object({
-    item_type: z.nativeEnum(LibraryItemType),
-    title: z.string().optional(),
-    alias: z.string().optional(),
-    comment: z.string(),
-    visible: z.boolean(),
-    read_only: z.boolean(),
-    location: z.string().refine(data => validateLocation(data), { message: errorMsg.invalidLocation }),
-    access_policy: z.nativeEnum(AccessPolicy),
-
-    file: z.instanceof(File).optional(),
-    fileName: z.string().optional()
-  })
-  .refine(data => !!data.file || !!data.title, {
-    path: ['title'],
-    message: errorMsg.requiredField
-  })
-  .refine(data => !!data.file || !!data.alias, {
-    path: ['alias'],
-    message: errorMsg.requiredField
-  });
-
-/**
- * Represents data, used for creating {@link IRSForm}.
- */
-export type ICreateLibraryItemDTO = z.infer<typeof schemaCreateLibraryItem>;
-
-/**
- * Represents update data for editing {@link ILibraryItem}.
- */
-export const schemaUpdateLibraryItem = z.object({
-  id: z.number(),
-  item_type: z.nativeEnum(LibraryItemType),
-  title: z.string().nonempty(errorMsg.requiredField),
-  alias: z.string().nonempty(errorMsg.requiredField),
-  comment: z.string(),
-  visible: z.boolean(),
-  read_only: z.boolean()
-});
-
-/**
- * Represents update data for editing {@link ILibraryItem}.
- */
-export type IUpdateLibraryItemDTO = z.infer<typeof schemaUpdateLibraryItem>;
-
-/**
- * Create version metadata in persistent storage.
- */
-export const schemaVersionCreate = z.object({
-  version: z.string(),
-  description: z.string(),
-  items: z.array(z.number()).optional()
-});
-
-/**
- * Create version metadata in persistent storage.
- */
-export type IVersionCreateDTO = z.infer<typeof schemaVersionCreate>;
-
-/**
- * Represents data response when creating {@link IVersionInfo}.
- */
-export interface IVersionCreatedResponse {
-  version: number;
-  schema: IRSFormDTO;
-}
-
-/**
- * Represents version data, intended to update version metadata in persistent storage.
- */
-export const schemaVersionUpdate = z.object({
-  id: z.number(),
-  version: z.string().nonempty(errorMsg.requiredField),
-  description: z.string()
-});
-
-/**
- * Represents version data, intended to update version metadata in persistent storage.
- */
-export type IVersionUpdateDTO = z.infer<typeof schemaVersionUpdate>;
+import { AccessPolicy, ILibraryItem, IVersionInfo } from '../models/library';
+import {
+  ICloneLibraryItemDTO,
+  ICreateLibraryItemDTO,
+  IRenameLocationDTO,
+  IUpdateLibraryItemDTO,
+  IVersionCreatedResponse,
+  IVersionCreateDTO,
+  IVersionUpdateDTO
+} from './types';
 
 export const libraryApi = {
-  baseKey: 'library',
-  libraryListKey: ['library', 'list'],
+  baseKey: KEYS.library,
+  libraryListKey: KEYS.composite.libraryList,
 
-  getItemQueryOptions: ({ itemID, itemType }: { itemID: LibraryItemID; itemType: LibraryItemType }) => {
-    return itemType === LibraryItemType.RSFORM
-      ? rsformsApi.getRSFormQueryOptions({ itemID })
-      : ossApi.getOssQueryOptions({ itemID });
-  },
   getLibraryQueryOptions: ({ isAdmin }: { isAdmin: boolean }) =>
     queryOptions({
       queryKey: [...libraryApi.libraryListKey, isAdmin ? 'admin' : 'user'],
@@ -178,7 +64,7 @@ export const libraryApi = {
         successMessage: infoMsg.changesSaved
       }
     }),
-  setOwner: ({ itemID, owner }: { itemID: LibraryItemID; owner: number }) =>
+  setOwner: ({ itemID, owner }: { itemID: number; owner: number }) =>
     axiosPatch({
       endpoint: `/api/library/${itemID}/set-owner`,
       request: {
@@ -186,7 +72,7 @@ export const libraryApi = {
         successMessage: infoMsg.changesSaved
       }
     }),
-  setLocation: ({ itemID, location }: { itemID: LibraryItemID; location: string }) =>
+  setLocation: ({ itemID, location }: { itemID: number; location: string }) =>
     axiosPatch({
       endpoint: `/api/library/${itemID}/set-location`,
       request: {
@@ -194,7 +80,7 @@ export const libraryApi = {
         successMessage: infoMsg.moveComplete
       }
     }),
-  setAccessPolicy: ({ itemID, policy }: { itemID: LibraryItemID; policy: AccessPolicy }) =>
+  setAccessPolicy: ({ itemID, policy }: { itemID: number; policy: AccessPolicy }) =>
     axiosPatch({
       endpoint: `/api/library/${itemID}/set-access-policy`,
       request: {
@@ -202,7 +88,7 @@ export const libraryApi = {
         successMessage: infoMsg.changesSaved
       }
     }),
-  setEditors: ({ itemID, editors }: { itemID: LibraryItemID; editors: number[] }) =>
+  setEditors: ({ itemID, editors }: { itemID: number; editors: number[] }) =>
     axiosPatch({
       endpoint: `/api/library/${itemID}/set-editors`,
       request: {
@@ -211,7 +97,7 @@ export const libraryApi = {
       }
     }),
 
-  deleteItem: (target: LibraryItemID) =>
+  deleteItem: (target: number) =>
     axiosDelete({
       endpoint: `/api/library/${target}`,
       request: {
@@ -235,7 +121,7 @@ export const libraryApi = {
       }
     }),
 
-  versionCreate: ({ itemID, data }: { itemID: LibraryItemID; data: IVersionCreateDTO }) =>
+  versionCreate: ({ itemID, data }: { itemID: number; data: IVersionCreateDTO }) =>
     axiosPost<IVersionCreateDTO, IVersionCreatedResponse>({
       endpoint: `/api/library/${itemID}/create-version`,
       request: {
@@ -243,7 +129,7 @@ export const libraryApi = {
         successMessage: infoMsg.newVersion(data.version)
       }
     }),
-  versionRestore: ({ versionID }: { versionID: VersionID }) =>
+  versionRestore: ({ versionID }: { versionID: number }) =>
     axiosPatch<undefined, IRSFormDTO>({
       endpoint: `/api/versions/${versionID}/restore`,
       request: {
@@ -258,7 +144,7 @@ export const libraryApi = {
         successMessage: infoMsg.changesSaved
       }
     }),
-  versionDelete: (data: { itemID: LibraryItemID; versionID: VersionID }) =>
+  versionDelete: (data: { itemID: number; versionID: number }) =>
     axiosDelete({
       endpoint: `/api/versions/${data.versionID}`,
       request: {

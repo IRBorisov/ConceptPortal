@@ -10,7 +10,7 @@ import { IconAccept, IconRemove, IconReset } from '@/components/Icons';
 import { NoData } from '@/components/View';
 import { APP_COLORS } from '@/styling/colors';
 
-import PickConstituenta from '../../components/PickConstituenta';
+import { PickConstituenta } from '../../components/PickConstituenta';
 import RSInput from '../../components/RSInput';
 import { IConstituenta, IRSForm } from '../../models/rsform';
 import { IArgumentValue } from '../../models/rslang';

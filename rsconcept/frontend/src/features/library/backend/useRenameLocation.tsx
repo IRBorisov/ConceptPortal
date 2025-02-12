@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { ossApi } from '@/features/oss/backend/api';
-import { rsformsApi } from '@/features/rsform/backend/api';
+import { KEYS } from '@/backend/configuration';
 
-import { IRenameLocationDTO, libraryApi } from './api';
+import { libraryApi } from './api';
+import { IRenameLocationDTO } from './types';
 
 export const useRenameLocation = () => {
   const client = useQueryClient();
@@ -12,9 +12,9 @@ export const useRenameLocation = () => {
     mutationFn: libraryApi.renameLocation,
     onSuccess: () =>
       Promise.allSettled([
-        client.invalidateQueries({ queryKey: [libraryApi.baseKey] }),
-        client.invalidateQueries({ queryKey: [rsformsApi.baseKey] }),
-        client.invalidateQueries({ queryKey: [ossApi.baseKey] })
+        client.invalidateQueries({ queryKey: [KEYS.library] }),
+        client.invalidateQueries({ queryKey: [KEYS.rsform] }),
+        client.invalidateQueries({ queryKey: [KEYS.oss] })
       ])
   });
   return {

@@ -1,9 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { KEYS } from '@/backend/configuration';
 import { useUpdateTimestamp } from '@/features/library';
-import { ossApi } from '@/features/oss/backend/api';
 
-import { ICstUpdateDTO, rsformsApi } from './api';
+import { rsformsApi } from './api';
+import { ICstUpdateDTO } from './types';
 
 export const useCstUpdate = () => {
   const client = useQueryClient();
@@ -15,7 +16,7 @@ export const useCstUpdate = () => {
       updateTimestamp(variables.itemID);
 
       return Promise.allSettled([
-        client.invalidateQueries({ queryKey: [ossApi.baseKey] }),
+        client.invalidateQueries({ queryKey: [KEYS.oss] }),
         client.invalidateQueries({ queryKey: [rsformsApi.baseKey] })
       ]);
     }

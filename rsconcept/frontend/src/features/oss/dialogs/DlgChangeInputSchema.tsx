@@ -11,7 +11,7 @@ import { ModalForm } from '@/components/Modal';
 import { ILibraryItem, LibraryItemType, PickSchema, useLibrary } from '@/features/library';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { IInputUpdateDTO, IOperationPosition, schemaInputUpdate } from '../backend/api';
+import { IInputUpdateDTO, IOperationPosition, schemaInputUpdate } from '../backend/types';
 import { useInputUpdate } from '../backend/useInputUpdate';
 import { IOperation, IOperationSchema } from '../models/oss';
 import { sortItemsForOSS } from '../models/ossAPI';

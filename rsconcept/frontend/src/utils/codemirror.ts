@@ -3,15 +3,7 @@
  */
 import { syntaxTree } from '@codemirror/language';
 import { NodeType, Tree, TreeCursor } from '@lezer/common';
-import { EditorState, ReactCodeMirrorRef, SelectionRange } from '@uiw/react-codemirror';
-
-import { ReferenceTokens } from '@/features/rsform/components/RefsInput/parse';
-import { RefEntity } from '@/features/rsform/components/RefsInput/parse/parser.terms';
-import { GlobalTokens } from '@/features/rsform/components/RSInput/rslang';
-import { parseEntityReference, parseSyntacticReference } from '@/features/rsform/models/languageAPI';
-import { SyntaxTree } from '@/features/rsform/models/rslang';
-
-import { PARAMETER } from './constants';
+import { ReactCodeMirrorRef, SelectionRange } from '@uiw/react-codemirror';
 
 /**
  * Represents syntax tree node data.
@@ -29,7 +21,7 @@ interface CursorNode extends SyntaxNode {
   isLeaf: boolean;
 }
 
-function cursorNode({ type, from, to }: TreeCursor, isLeaf = false): CursorNode {
+export function cursorNode({ type, from, to }: TreeCursor, isLeaf = false): CursorNode {
   return { type, from, to, isLeaf };
 }
 
@@ -88,56 +80,6 @@ export function printTree(tree: Tree): string {
 }
 
 /**
- * Transform Tree to {@link SyntaxTree}.
- */
-export function transformAST(tree: Tree): SyntaxTree {
-  const result: SyntaxTree = [];
-  const parents: number[] = [];
-  const cursor = tree.cursor();
-  let finished = false;
-  let leave = true;
-  while (!finished) {
-    let node = cursorNode(cursor);
-    node.isLeaf = !cursor.firstChild();
-
-    leave = true;
-    result.push({
-      uid: result.length,
-      parent: parents.length > 0 ? parents[parents.length - 1] : result.length,
-      typeID: node.type.id,
-      start: node.from,
-      finish: node.to,
-      data: {
-        dataType: 'string',
-        value: node.type.name == '⚠' ? PARAMETER.errorNodeLabel : node.type.name
-      }
-    });
-    parents.push(result.length - 1);
-
-    if (!node.isLeaf) continue;
-
-    for (;;) {
-      node = cursorNode(cursor, node.isLeaf);
-      if (leave) {
-        parents.pop();
-      }
-
-      leave = cursor.type.isAnonymous;
-      node.isLeaf = false;
-      if (cursor.nextSibling()) {
-        break;
-      }
-      if (!cursor.parent()) {
-        finished = true;
-        break;
-      }
-      leave = true;
-    }
-  }
-  return result;
-}
-
-/**
  * Retrieves a list of all nodes, containing given range and corresponding to a filter.
  */
 export function findEnvelopingNodes(start: number, finish: number, tree: Tree, filter?: number[]): SyntaxNode[] {
@@ -169,43 +111,6 @@ export function findContainedNodes(start: number, finish: number, tree: Tree, fi
     }
   });
   return result;
-}
-
-/**
- * Retrieves globalID from position in Editor.
- */
-export function findAliasAt(pos: number, state: EditorState) {
-  const { from: lineStart, to: lineEnd, text } = state.doc.lineAt(pos);
-  const nodes = findEnvelopingNodes(pos, pos, syntaxTree(state), GlobalTokens);
-  let alias = '';
-  let start = 0;
-  let end = 0;
-  nodes.forEach(node => {
-    if (node.to <= lineEnd && node.from >= lineStart) {
-      alias = text.slice(node.from - lineStart, node.to - lineStart);
-      start = node.from;
-      end = node.to;
-    }
-  });
-  return { alias, start, end };
-}
-
-/**
- * Retrieves reference from position in Editor.
- */
-export function findReferenceAt(pos: number, state: EditorState) {
-  const nodes = findEnvelopingNodes(pos, pos, syntaxTree(state), ReferenceTokens);
-  if (nodes.length !== 1) {
-    return undefined;
-  }
-  const start = nodes[0].from;
-  const end = nodes[0].to;
-  const text = state.doc.sliceString(start, end);
-  if (nodes[0].type.id === RefEntity) {
-    return { ref: parseEntityReference(text), start, end };
-  } else {
-    return { ref: parseSyntacticReference(text), start, end };
-  }
 }
 
 /**

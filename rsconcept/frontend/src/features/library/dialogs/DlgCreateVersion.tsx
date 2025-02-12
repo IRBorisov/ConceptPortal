@@ -9,7 +9,7 @@ import { ModalForm } from '@/components/Modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { errorMsg } from '@/utils/labels';
 
-import { IVersionCreateDTO, schemaVersionCreate } from '../backend/api';
+import { IVersionCreateDTO, schemaVersionCreate } from '../backend/types';
 import { useVersionCreate } from '../backend/useVersionCreate';
 import { IVersionInfo } from '../models/library';
 import { nextVersion } from '../models/libraryAPI';

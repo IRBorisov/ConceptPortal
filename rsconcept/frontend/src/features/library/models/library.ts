@@ -32,21 +32,11 @@ export enum LocationHead {
 export const BASIC_SCHEMAS = '/L/Базовые';
 
 /**
- * Represents {@link LibraryItem} identifier type.
- */
-export type LibraryItemID = number;
-
-/**
- * Represents {@link Version} identifier type.
- */
-export type VersionID = number;
-
-/**
  * Represents library item version information.
  */
 export interface IVersionInfo {
-  id: VersionID;
-  item: LibraryItemID;
+  id: number;
+  item: number;
   version: string;
   description: string;
   time_create: string;
@@ -56,7 +46,7 @@ export interface IVersionInfo {
  * Represents library item common data typical for all item types.
  */
 export interface ILibraryItem {
-  id: LibraryItemID;
+  id: number;
   item_type: LibraryItemType;
   title: string;
   alias: string;
@@ -86,7 +76,7 @@ export interface ILibraryItemReference extends Pick<ILibraryItem, 'id' | 'alias'
  * Represents {@link ILibraryItem} extended data with versions.
  */
 export interface ILibraryItemVersioned extends ILibraryItemData {
-  version?: VersionID;
+  version?: number;
   versions: IVersionInfo[];
 }
 

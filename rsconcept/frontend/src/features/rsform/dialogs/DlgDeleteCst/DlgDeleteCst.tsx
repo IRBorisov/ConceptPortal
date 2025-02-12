@@ -9,13 +9,13 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { prefixes } from '@/utils/constants';
 
 import { useCstDelete } from '../../backend/useCstDelete';
-import { ConstituentaID, IRSForm } from '../../models/rsform';
+import { IRSForm } from '../../models/rsform';
 import ListConstituents from './ListConstituents';
 
 export interface DlgDeleteCstProps {
   schema: IRSForm;
-  selected: ConstituentaID[];
-  afterDelete: (initialSchema: IRSForm, deleted: ConstituentaID[]) => void;
+  selected: number[];
+  afterDelete: (initialSchema: IRSForm, deleted: number[]) => void;
 }
 
 function DlgDeleteCst() {
@@ -23,7 +23,7 @@ function DlgDeleteCst() {
   const { cstDelete } = useCstDelete();
 
   const [expandOut, setExpandOut] = useState(false);
-  const expansion: ConstituentaID[] = schema.graph.expandAllOutputs(selected);
+  const expansion: number[] = schema.graph.expandAllOutputs(selected);
   const hasInherited = selected.some(
     id => schema.inheritance.find(item => item.parent === id),
     [selected, schema.inheritance]

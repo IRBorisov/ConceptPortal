@@ -12,12 +12,12 @@ import {
   IconNewRSForm,
   IconRSForm
 } from '@/components/Icons';
-import { useMutatingOss } from '@/features/oss/backend/useMutatingOss';
-import { IOperation, OperationID, OperationType } from '@/features/oss/models/oss';
 import useClickedOutside from '@/hooks/useClickedOutside';
 import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/utils';
 
+import { useMutatingOss } from '../../../backend/useMutatingOss';
+import { IOperation, OperationType } from '../../../models/oss';
 import { useOssEdit } from '../OssEditContext';
 
 export interface ContextMenuData {
@@ -29,12 +29,12 @@ export interface ContextMenuData {
 interface NodeContextMenuProps extends ContextMenuData {
   isOpen: boolean;
   onHide: () => void;
-  onDelete: (target: OperationID) => void;
-  onCreateInput: (target: OperationID) => void;
-  onEditSchema: (target: OperationID) => void;
-  onEditOperation: (target: OperationID) => void;
-  onExecuteOperation: (target: OperationID) => void;
-  onRelocateConstituents: (target: OperationID) => void;
+  onDelete: (target: number) => void;
+  onCreateInput: (target: number) => void;
+  onEditSchema: (target: number) => void;
+  onEditOperation: (target: number) => void;
+  onExecuteOperation: (target: number) => void;
+  onRelocateConstituents: (target: number) => void;
 }
 
 function NodeContextMenu({

@@ -33,7 +33,6 @@ import {
 } from '@/components/Icons';
 import { useAuthSuspense } from '@/features/auth';
 import { AccessPolicy, LocationHead } from '@/features/library/models/library';
-import { OssTabID } from '@/features/oss/pages/OssPage/OssEditContext';
 import { useRoleStore, UserRole } from '@/features/users';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
@@ -284,7 +283,7 @@ function MenuRSTabs() {
             <DropdownButton
               text='Перейти к ОСС'
               icon={<IconOSS size='1rem' className='icon-primary' />}
-              onClick={() => router.push(urls.oss(controller.schema.oss[0].id, OssTabID.GRAPH))}
+              onClick={() => router.push(urls.oss(controller.schema.oss[0].id))}
             />
           ) : null}
           <DropdownButton

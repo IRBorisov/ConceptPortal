@@ -1,9 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { KEYS } from '@/backend/configuration';
 import { useUpdateTimestamp } from '@/features/library';
-import { ossApi } from '@/features/oss/backend/api';
 
-import { ICstRenameDTO, rsformsApi } from './api';
+import { rsformsApi } from './api';
+import { ICstRenameDTO } from './types';
 
 export const useCstRename = () => {
   const client = useQueryClient();
@@ -16,7 +17,7 @@ export const useCstRename = () => {
       updateTimestamp(data.schema.id);
 
       return Promise.allSettled([
-        client.invalidateQueries({ queryKey: [ossApi.baseKey] }),
+        client.invalidateQueries({ queryKey: [KEYS.oss] }),
         client.invalidateQueries({
           queryKey: [rsformsApi.baseKey],
           predicate: query => query.queryKey.length > 2 && query.queryKey[2] !== data.schema.id

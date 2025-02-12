@@ -11,7 +11,7 @@ import usePartialUpdate from '@/hooks/usePartialUpdate';
 import { useDialogsStore } from '@/stores/dialogs';
 import { promptText } from '@/utils/labels';
 
-import { ICstCreateDTO } from '../../backend/api';
+import { ICstCreateDTO } from '../../backend/types';
 import { useRSForm } from '../../backend/useRSForm';
 import { CstType, IRSForm } from '../../models/rsform';
 import { generateAlias, validateNewAlias } from '../../models/rsformAPI';

@@ -6,7 +6,7 @@ import { ModalForm } from '@/components/Modal';
 import usePartialUpdate from '@/hooks/usePartialUpdate';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { ICstCreateDTO } from '../../backend/api';
+import { ICstCreateDTO } from '../../backend/types';
 import { CstType, IRSForm } from '../../models/rsform';
 import { generateAlias } from '../../models/rsformAPI';
 import FormCreateCst from './FormCreateCst';

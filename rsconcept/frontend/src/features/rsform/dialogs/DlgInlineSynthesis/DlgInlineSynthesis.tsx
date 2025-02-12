@@ -10,7 +10,7 @@ import { ModalForm } from '@/components/Modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/Tabs';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { IInlineSynthesisDTO, schemaInlineSynthesis } from '../../backend/api';
+import { IInlineSynthesisDTO, schemaInlineSynthesis } from '../../backend/types';
 import { useInlineSynthesis } from '../../backend/useInlineSynthesis';
 import { IRSForm } from '../../models/rsform';
 import TabConstituents from './TabConstituents';

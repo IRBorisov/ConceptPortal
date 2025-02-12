@@ -12,7 +12,7 @@ import { Label } from '@/components/Input';
 import { usePreferencesStore } from '@/stores/preferences';
 import { APP_COLORS } from '@/styling/colors';
 
-import { ConstituentaID, IRSForm } from '../../models/rsform';
+import { IRSForm } from '../../models/rsform';
 import { generateAlias, getCstTypePrefix, guessCstType } from '../../models/rsformAPI';
 import { extractGlobals } from '../../models/rslangAPI';
 import { ccBracketMatching } from './bracketMatching';
@@ -41,7 +41,7 @@ interface RSInputProps
   onChange?: (newValue: string) => void;
   onAnalyze?: () => void;
   schema?: IRSForm;
-  onOpenEdit?: (cstID: ConstituentaID) => void;
+  onOpenEdit?: (cstID: number) => void;
 }
 
 const RSInput = forwardRef<ReactCodeMirrorRef, RSInputProps>(

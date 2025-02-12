@@ -19,7 +19,7 @@ import {
 } from '@/components/Icons';
 import { BadgeHelp, HelpTopic } from '@/features/help';
 import { MiniSelectorOSS } from '@/features/library';
-import { useFindPredecessor } from '@/features/oss/backend/useFindPredecessor';
+import { useFindPredecessor } from '@/features/oss';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { PARAMETER } from '@/utils/constants';
@@ -27,7 +27,7 @@ import { tooltipText } from '@/utils/labels';
 import { prepareTooltip } from '@/utils/utils';
 
 import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
-import { ConstituentaID, IConstituenta } from '../../../models/rsform';
+import { IConstituenta } from '../../../models/rsform';
 import { RSTabID, useRSEdit } from '../RSEditContext';
 
 interface ToolbarConstituentaProps {
@@ -54,7 +54,7 @@ function ToolbarConstituenta({
   const { isModified } = useModificationStore();
   const isProcessing = useMutatingRSForm();
 
-  function viewPredecessor(target: ConstituentaID) {
+  function viewPredecessor(target: number) {
     void findPredecessor({ target: target }).then(reference =>
       router.push(
         urls.schema_props({

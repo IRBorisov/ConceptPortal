@@ -1,11 +1,9 @@
 import { useIsMutating } from '@tanstack/react-query';
 
-import { libraryApi } from '@/features/library';
-
-import { rsformsApi } from './api';
+import { KEYS } from '@/backend/configuration';
 
 export const useMutatingRSForm = () => {
-  const countLibrary = useIsMutating({ mutationKey: [libraryApi.baseKey] });
-  const countRsform = useIsMutating({ mutationKey: [rsformsApi.baseKey] });
+  const countLibrary = useIsMutating({ mutationKey: [KEYS.library] });
+  const countRsform = useIsMutating({ mutationKey: [KEYS.rsform] });
   return countLibrary + countRsform !== 0;
 };

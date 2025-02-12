@@ -10,7 +10,7 @@ import { SubmitButton } from '@/components/Control';
 import { IconSave } from '@/components/Icons';
 import { TextArea, TextInput } from '@/components/Input';
 import { LibraryItemType, ToolbarItemAccess, useUpdateItem } from '@/features/library';
-import { IUpdateLibraryItemDTO, schemaUpdateLibraryItem } from '@/features/library/backend/api';
+import { IUpdateLibraryItemDTO, schemaUpdateLibraryItem } from '@/features/library/backend/types';
 import { useModificationStore } from '@/stores/modification';
 import { globals } from '@/utils/constants';
 

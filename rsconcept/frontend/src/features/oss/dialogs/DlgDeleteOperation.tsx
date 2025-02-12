@@ -7,11 +7,11 @@ import { Controller, useForm } from 'react-hook-form';
 import { Checkbox, TextInput } from '@/components/Input';
 import { ModalForm } from '@/components/Modal';
 import { HelpTopic } from '@/features/help';
-import { IOperation, IOperationSchema } from '@/features/oss/models/oss';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { IOperationDeleteDTO, IOperationPosition, schemaOperationDelete } from '../backend/api';
+import { IOperationDeleteDTO, IOperationPosition, schemaOperationDelete } from '../backend/types';
 import { useOperationDelete } from '../backend/useOperationDelete';
+import { IOperation, IOperationSchema } from '../models/oss';
 
 export interface DlgDeleteOperationProps {
   oss: IOperationSchema;

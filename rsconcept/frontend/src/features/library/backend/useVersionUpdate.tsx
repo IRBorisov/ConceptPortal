@@ -1,8 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { IRSFormDTO, rsformsApi } from '@/features/rsform/backend/api';
+import { KEYS } from '@/backend/configuration';
+import { IRSFormDTO } from '@/features/rsform/backend/types';
 
-import { IVersionUpdateDTO, libraryApi } from './api';
+import { libraryApi } from './api';
+import { IVersionUpdateDTO } from './types';
 
 export const useVersionUpdate = () => {
   const client = useQueryClient();
@@ -10,19 +12,15 @@ export const useVersionUpdate = () => {
     mutationKey: [libraryApi.baseKey, 'update-version'],
     mutationFn: libraryApi.versionUpdate,
     onSuccess: data => {
-      client.setQueryData(
-        rsformsApi.getRSFormQueryOptions({ itemID: data.item }).queryKey,
-        (prev: IRSFormDTO | undefined) =>
-          !prev
-            ? undefined
-            : {
-                ...prev,
-                versions: prev.versions.map(version =>
-                  version.id === data.id
-                    ? { ...version, description: data.description, version: data.version }
-                    : version
-                )
-              }
+      client.setQueryData(KEYS.composite.rsItem({ itemID: data.item }), (prev: IRSFormDTO | undefined) =>
+        !prev
+          ? undefined
+          : {
+              ...prev,
+              versions: prev.versions.map(version =>
+                version.id === data.id ? { ...version, description: data.description, version: data.version } : version
+              )
+            }
       );
     }
   });

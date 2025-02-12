@@ -9,7 +9,7 @@ import { ModalForm } from '@/components/Modal';
 import { HelpTopic } from '@/features/help';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { ICstRenameDTO, schemaCstRename } from '../backend/api';
+import { ICstRenameDTO, schemaCstRename } from '../backend/types';
 import { useCstRename } from '../backend/useCstRename';
 import { SelectCstType } from '../components/SelectCstType';
 import { CstType, IConstituenta, IRSForm } from '../models/rsform';

@@ -11,7 +11,7 @@ import { TabLabel, TabList, TabPanel, Tabs } from '@/components/Tabs';
 import { HelpTopic } from '@/features/help';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { IOperationPosition, IOperationUpdateDTO, schemaOperationUpdate } from '../../backend/api';
+import { IOperationPosition, IOperationUpdateDTO, schemaOperationUpdate } from '../../backend/types';
 import { useOperationUpdate } from '../../backend/useOperationUpdate';
 import { IOperation, IOperationSchema, OperationType } from '../../models/oss';
 import TabArguments from './TabArguments';

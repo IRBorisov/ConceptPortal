@@ -4,23 +4,28 @@ import { Overlay } from '@/components/Container';
 import { MiniButton } from '@/components/Control';
 import { IconDestroy, IconSave, IconShare } from '@/components/Icons';
 import { BadgeHelp, HelpTopic } from '@/features/help';
-import { ILibraryItemEditor, MiniSelectorOSS, useMutatingLibrary } from '@/features/library';
-import { AccessPolicy, LibraryItemType } from '@/features/library';
+import {
+  AccessPolicy,
+  ILibraryItemEditor,
+  LibraryItemType,
+  MiniSelectorOSS,
+  useMutatingLibrary
+} from '@/features/library';
 import { useRoleStore, UserRole } from '@/features/users';
 import { useModificationStore } from '@/stores/modification';
 import { PARAMETER } from '@/utils/constants';
 import { tooltipText } from '@/utils/labels';
 import { prepareTooltip, sharePage } from '@/utils/utils';
 
-import { IRSForm } from '../../../models/rsform';
-import { IRSEditContext } from '../RSEditContext';
+import { IRSForm } from '../models/rsform';
+import { IRSEditContext } from '../pages/RSFormPage/RSEditContext';
 
 interface ToolbarRSFormCardProps {
   onSubmit: () => void;
   controller: ILibraryItemEditor;
 }
 
-function ToolbarRSFormCard({ controller, onSubmit }: ToolbarRSFormCardProps) {
+export function ToolbarRSFormCard({ controller, onSubmit }: ToolbarRSFormCardProps) {
   const role = useRoleStore(state => state.role);
   const { isModified } = useModificationStore();
   const isProcessing = useMutatingLibrary();
@@ -73,5 +78,3 @@ function ToolbarRSFormCard({ controller, onSubmit }: ToolbarRSFormCardProps) {
     </Overlay>
   );
 }
-
-export default ToolbarRSFormCard;

@@ -11,7 +11,7 @@ import { SubmitButton } from '@/components/Control';
 import { ErrorData } from '@/components/InfoError';
 import { TextInput } from '@/components/Input';
 import { useChangePassword } from '@/features/auth';
-import { IChangePasswordDTO, schemaChangePassword } from '@/features/auth/backend/api';
+import { IChangePasswordDTO, schemaChangePassword } from '@/features/auth/backend/types';
 
 function EditorPassword() {
   const router = useConceptNavigation();

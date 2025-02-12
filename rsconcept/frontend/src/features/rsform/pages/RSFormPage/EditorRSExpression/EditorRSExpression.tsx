@@ -10,18 +10,18 @@ import { CProps } from '@/components/props';
 import { BadgeHelp, HelpTopic } from '@/features/help';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
-import { transformAST } from '@/utils/codemirror';
 import { errorMsg } from '@/utils/labels';
 
-import { ICheckConstituentaDTO } from '../../../backend/api';
+import { ICheckConstituentaDTO } from '../../../backend/types';
 import { useCheckConstituenta } from '../../../backend/useCheckConstituenta';
 import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
 import RSInput from '../../../components/RSInput';
 import { parser as rslangParser } from '../../../components/RSInput/rslang/parserAST';
 import { RSTextWrapper } from '../../../components/RSInput/textEditing';
-import { ConstituentaID, IConstituenta } from '../../../models/rsform';
+import { IConstituenta } from '../../../models/rsform';
 import { getDefinitionPrefix } from '../../../models/rsformAPI';
 import { IExpressionParse, IRSErrorDescription, TokenID } from '../../../models/rslang';
+import { transformAST } from '../../../models/rslangAPI';
 import { useRSEdit } from '../RSEditContext';
 import ParsingResult from './ParsingResult';
 import RSEditorControls from './RSEditControls';
@@ -41,7 +41,7 @@ interface EditorRSExpressionProps {
   toggleReset?: boolean;
 
   onChangeLocalParse: (typification: IExpressionParse | undefined) => void;
-  onOpenEdit?: (cstID: ConstituentaID) => void;
+  onOpenEdit?: (cstID: number) => void;
   onShowTypeGraph: (event: CProps.EventMouse) => void;
 }
 

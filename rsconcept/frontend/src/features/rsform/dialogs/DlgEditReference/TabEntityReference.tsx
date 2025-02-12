@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 
 import { Label, TextInput } from '@/components/Input';
 
-import PickConstituenta from '../../components/PickConstituenta';
+import { PickConstituenta } from '../../components/PickConstituenta';
 import SelectMultiGrammeme from '../../components/SelectMultiGrammeme';
 import SelectWordForm from '../../components/SelectWordForm';
 import { IGrammemeOption, ReferenceType } from '../../models/language';

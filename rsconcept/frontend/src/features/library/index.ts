@@ -1,4 +1,3 @@
-export { libraryApi } from './backend/api';
 export { useDeleteItem } from './backend/useDeleteItem';
 export { useLibrary, useLibrarySuspense } from './backend/useLibrary';
 export { useMutatingLibrary } from './backend/useMutatingLibrary';

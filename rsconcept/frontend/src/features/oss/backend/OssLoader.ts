@@ -3,16 +3,10 @@
  */
 
 import { ILibraryItem } from '@/features/library/models/library';
-import {
-  IOperation,
-  IOperationSchema,
-  IOperationSchemaStats,
-  OperationID,
-  OperationType
-} from '@/features/oss/models/oss';
 import { Graph } from '@/models/Graph';
 
-import { IOperationSchemaDTO } from './api';
+import { IOperation, IOperationSchema, IOperationSchemaStats, OperationType } from '../models/oss';
+import { IOperationSchemaDTO } from './types';
 
 /**
  * Loads data into an {@link IOperationSchema} based on {@link IOperationSchemaDTO}.
@@ -21,7 +15,7 @@ import { IOperationSchemaDTO } from './api';
 export class OssLoader {
   private oss: IOperationSchemaDTO;
   private graph: Graph = new Graph();
-  private operationByID = new Map<OperationID, IOperation>();
+  private operationByID = new Map<number, IOperation>();
   private schemaIDs: number[] = [];
   private items: ILibraryItem[];
 
@@ -72,7 +66,7 @@ export class OssLoader {
     });
   }
 
-  private inferConsolidation(operationID: OperationID): boolean {
+  private inferConsolidation(operationID: number): boolean {
     const inputs = this.graph.expandInputs([operationID]);
     if (inputs.length === 0) {
       return false;

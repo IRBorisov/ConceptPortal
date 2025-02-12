@@ -13,18 +13,18 @@ import { APP_COLORS } from '@/styling/colors';
 import { globals, PARAMETER, prefixes } from '@/utils/constants';
 
 import { colorBgGraphNode } from '../../../colors';
-import { ConstituentaID, IRSForm } from '../../../models/rsform';
+import { IRSForm } from '../../../models/rsform';
 import { GraphColoring, useTermGraphStore } from '../../../stores/termGraph';
 import { useRSEdit } from '../RSEditContext';
 
 interface ViewHiddenProps {
   schema: IRSForm;
-  items: ConstituentaID[];
-  selected: ConstituentaID[];
+  items: number[];
+  selected: number[];
   coloringScheme: GraphColoring;
 
-  toggleSelection: (cstID: ConstituentaID) => void;
-  setFocus: (cstID: ConstituentaID) => void;
+  toggleSelection: (cstID: number) => void;
+  setFocus: (cstID: number) => void;
 }
 
 function ViewHidden({ items, selected, toggleSelection, setFocus, schema, coloringScheme }: ViewHiddenProps) {
@@ -37,7 +37,7 @@ function ViewHidden({ items, selected, toggleSelection, setFocus, schema, colori
   const setActiveCst = useTooltipsStore(state => state.setActiveCst);
   const hiddenHeight = useFitHeight(windowSize.isSmall ? '10.4rem + 2px' : '12.5rem + 2px');
 
-  function handleClick(cstID: ConstituentaID, event: CProps.EventMouse) {
+  function handleClick(cstID: number, event: CProps.EventMouse) {
     if (event.ctrlKey || event.metaKey) {
       setFocus(cstID);
     } else {

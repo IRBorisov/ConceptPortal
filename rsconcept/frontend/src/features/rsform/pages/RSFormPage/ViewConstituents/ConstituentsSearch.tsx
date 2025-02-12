@@ -6,7 +6,7 @@ import { MiniButton } from '@/components/Control';
 import { IconChild } from '@/components/Icons';
 import { SearchBar } from '@/components/Input';
 
-import { ConstituentaID, IConstituenta, IRSForm } from '../../../models/rsform';
+import { IConstituenta, IRSForm } from '../../../models/rsform';
 import { matchConstituenta } from '../../../models/rsformAPI';
 import SelectMatchMode from '../../../pages/RSFormPage/ViewConstituents/SelectMatchMode';
 import { DependencyMode, useCstSearchStore } from '../../../stores/cstSearch';
@@ -15,7 +15,7 @@ import SelectGraphFilter from './SelectGraphFilter';
 interface ConstituentsSearchProps {
   schema: IRSForm;
   dense?: boolean;
-  activeID?: ConstituentaID;
+  activeID?: number;
   activeExpression: string;
 
   onChange: React.Dispatch<React.SetStateAction<IConstituenta[]>>;

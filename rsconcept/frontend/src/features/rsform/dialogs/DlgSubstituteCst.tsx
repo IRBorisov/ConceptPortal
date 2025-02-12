@@ -9,9 +9,9 @@ import { ModalForm } from '@/components/Modal';
 import { HelpTopic } from '@/features/help';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { ICstSubstitutionsDTO, schemaCstSubstitutions } from '../backend/api';
+import { ICstSubstitutionsDTO, schemaCstSubstitutions } from '../backend/types';
 import { useCstSubstitute } from '../backend/useCstSubstitute';
-import PickSubstitutions from '../components/PickSubstitutions';
+import { PickSubstitutions } from '../components/PickSubstitutions';
 import { IRSForm } from '../models/rsform';
 
 export interface DlgSubstituteCstProps {

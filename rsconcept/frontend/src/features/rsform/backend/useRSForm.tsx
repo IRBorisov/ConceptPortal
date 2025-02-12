@@ -1,6 +1,7 @@
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 
-import { queryClient } from '../../../backend/queryClient';
+import { queryClient } from '@/backend/queryClient';
+
 import { rsformsApi } from './api';
 import { RSFormLoader } from './RSFormLoader';
 

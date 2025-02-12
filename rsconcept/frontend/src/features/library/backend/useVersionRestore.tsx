@@ -1,8 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { rsformsApi } from '@/features/rsform/backend/api';
+import { KEYS } from '@/backend/configuration';
 
-import { VersionID } from '../models/library';
 import { libraryApi } from './api';
 
 export const useVersionRestore = () => {
@@ -11,11 +10,11 @@ export const useVersionRestore = () => {
     mutationKey: [libraryApi.baseKey, 'restore-version'],
     mutationFn: libraryApi.versionRestore,
     onSuccess: data => {
-      client.setQueryData(rsformsApi.getRSFormQueryOptions({ itemID: data.id }).queryKey, data);
+      client.setQueryData(KEYS.composite.rsItem({ itemID: data.id }), data);
       return client.invalidateQueries({ queryKey: [libraryApi.baseKey] });
     }
   });
   return {
-    versionRestore: (data: { versionID: VersionID }) => mutation.mutateAsync(data)
+    versionRestore: (data: { versionID: number }) => mutation.mutateAsync(data)
   };
 };

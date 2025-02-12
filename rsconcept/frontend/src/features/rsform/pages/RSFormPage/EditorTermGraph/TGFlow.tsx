@@ -31,7 +31,7 @@ import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
 import { colorBgGraphNode } from '../../../colors';
 import InfoConstituenta from '../../../components/InfoConstituenta';
 import ToolbarGraphSelection from '../../../components/ToolbarGraphSelection';
-import { ConstituentaID, CstType, IConstituenta, IRSForm } from '../../../models/rsform';
+import { CstType, IConstituenta, IRSForm } from '../../../models/rsform';
 import { isBasicConcept } from '../../../models/rsformAPI';
 import { GraphFilterParams, useTermGraphStore } from '../../../stores/termGraph';
 import { useRSEdit } from '../RSEditContext';
@@ -68,10 +68,10 @@ function TGFlow() {
 
   const [focusCst, setFocusCst] = useState<IConstituenta | undefined>(undefined);
   const filteredGraph = produceFilteredGraph(controller.schema, filter, focusCst);
-  const [hidden, setHidden] = useState<ConstituentaID[]>([]);
+  const [hidden, setHidden] = useState<number[]>([]);
 
   const [isDragging, setIsDragging] = useState(false);
-  const [hoverID, setHoverID] = useState<ConstituentaID | undefined>(undefined);
+  const [hoverID, setHoverID] = useState<number | undefined>(undefined);
   const hoverCst = hoverID && controller.schema.cstByID.get(hoverID);
   const [hoverCstDebounced] = useDebounce(hoverCst, PARAMETER.graphPopupDelay);
   const [hoverLeft, setHoverLeft] = useState(true);
@@ -93,7 +93,7 @@ function TGFlow() {
   });
 
   useEffect(() => {
-    const newDismissed: ConstituentaID[] = [];
+    const newDismissed: number[] = [];
     controller.schema.items.forEach(cst => {
       if (!filteredGraph.nodes.has(cst.id)) {
         newDismissed.push(cst.id);
@@ -250,7 +250,7 @@ function TGFlow() {
     }, PARAMETER.graphRefreshDelay);
   }
 
-  function handleSetFocus(cstID: ConstituentaID | undefined) {
+  function handleSetFocus(cstID: number | undefined) {
     const target = cstID !== undefined ? controller.schema.cstByID.get(cstID) : cstID;
     setFocusCst(prev => (prev === target ? undefined : target));
     if (target) {
@@ -258,7 +258,7 @@ function TGFlow() {
     }
   }
 
-  function handleNodeClick(event: CProps.EventMouse, cstID: ConstituentaID) {
+  function handleNodeClick(event: CProps.EventMouse, cstID: number) {
     if (event.altKey) {
       event.preventDefault();
       event.stopPropagation();
@@ -266,13 +266,13 @@ function TGFlow() {
     }
   }
 
-  function handleNodeDoubleClick(event: CProps.EventMouse, cstID: ConstituentaID) {
+  function handleNodeDoubleClick(event: CProps.EventMouse, cstID: number) {
     event.preventDefault();
     event.stopPropagation();
     controller.navigateCst(cstID);
   }
 
-  function handleNodeEnter(event: CProps.EventMouse, cstID: ConstituentaID) {
+  function handleNodeEnter(event: CProps.EventMouse, cstID: number) {
     setHoverID(cstID);
     setHoverLeft(
       event.clientX / window.innerWidth >= PARAMETER.graphHoverXLimit ||
@@ -446,7 +446,7 @@ function produceFilteredGraph(schema: IRSForm, params: GraphFilterParams, focusC
     });
   }
   if (focusCst) {
-    const includes: ConstituentaID[] = [
+    const includes: number[] = [
       focusCst.id,
       ...focusCst.spawn,
       ...(params.focusShowInputs ? schema.graph.expandInputs([focusCst.id]) : []),

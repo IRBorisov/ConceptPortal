@@ -15,7 +15,7 @@ import { APP_COLORS } from '@/styling/colors';
 import { CodeMirrorWrapper } from '@/utils/codemirror';
 
 import { ReferenceType } from '../../models/language';
-import { ConstituentaID, IRSForm } from '../../models/rsform';
+import { IRSForm } from '../../models/rsform';
 import { refsNavigation } from './clickNavigation';
 import { NaturalLanguage, ReferenceTokens } from './parse';
 import { RefEntity } from './parse/parser.terms';
@@ -67,7 +67,7 @@ interface RefsInputInputProps
   onChange?: (newValue: string) => void;
 
   schema: IRSForm;
-  onOpenEdit?: (cstID: ConstituentaID) => void;
+  onOpenEdit?: (cstID: number) => void;
 
   label?: string;
   disabled?: boolean;

@@ -12,7 +12,7 @@ import { TextInput } from '@/components/Input';
 import useQueryStrings from '@/hooks/useQueryStrings';
 import { resources } from '@/utils/constants';
 
-import { IUserLoginDTO, schemaUserLogin } from '../backend/api';
+import { IUserLoginDTO, schemaUserLogin } from '../backend/types';
 import { useAuthSuspense } from '../backend/useAuth';
 import { useLogin } from '../backend/useLogin';
 import { ExpectedAnonymous } from '../components/ExpectedAnonymous';

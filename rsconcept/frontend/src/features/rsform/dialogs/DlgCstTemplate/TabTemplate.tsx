@@ -4,8 +4,8 @@ import { Dispatch, useEffect, useState } from 'react';
 
 import { SelectSingle, TextArea } from '@/components/Input';
 import { useTemplatesSuspense } from '@/features/library';
-import PickConstituenta from '@/features/rsform/components/PickConstituenta';
 
+import { PickConstituenta } from '../../components/PickConstituenta';
 import RSInput from '../../components/RSInput';
 import { CATEGORY_CST_TYPE, IConstituenta, IRSForm } from '../../models/rsform';
 import { applyFilterCategory } from '../../models/rsformAPI';

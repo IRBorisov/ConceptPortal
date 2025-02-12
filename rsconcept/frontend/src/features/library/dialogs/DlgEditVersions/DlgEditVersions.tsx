@@ -9,11 +9,11 @@ import { MiniButton } from '@/components/Control';
 import { IconReset, IconSave } from '@/components/Icons';
 import { TextArea, TextInput } from '@/components/Input';
 import { ModalView } from '@/components/Modal';
-import { useRSFormSuspense } from '@/features/rsform/backend/useRSForm';
+import { useRSFormSuspense } from '@/features/rsform';
 import { useDialogsStore } from '@/stores/dialogs';
 import { errorMsg } from '@/utils/labels';
 
-import { IVersionUpdateDTO, schemaVersionUpdate } from '../../backend/api';
+import { IVersionUpdateDTO, schemaVersionUpdate } from '../../backend/types';
 import { useMutatingLibrary } from '../../backend/useMutatingLibrary';
 import { useVersionDelete } from '../../backend/useVersionDelete';
 import { useVersionUpdate } from '../../backend/useVersionUpdate';

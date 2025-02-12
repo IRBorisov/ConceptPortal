@@ -12,7 +12,7 @@ import { ModalForm } from '@/components/Modal';
 import { useAuthSuspense } from '@/features/auth';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { ICloneLibraryItemDTO, schemaCloneLibraryItem } from '../backend/api';
+import { ICloneLibraryItemDTO, schemaCloneLibraryItem } from '../backend/types';
 import { useCloneItem } from '../backend/useCloneItem';
 import { SelectAccessPolicy } from '../components/SelectAccessPolicy';
 import { SelectLocationContext } from '../components/SelectLocationContext';

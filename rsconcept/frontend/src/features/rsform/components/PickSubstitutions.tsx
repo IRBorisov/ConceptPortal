@@ -10,14 +10,21 @@ import { IconAccept, IconPageLeft, IconPageRight, IconRemove, IconReplace } from
 import { CProps } from '@/components/props';
 import { NoData } from '@/components/View';
 import { ILibraryItem, SelectLibraryItem } from '@/features/library';
-import { IMultiSubstitution } from '@/features/oss/models/oss';
 import { APP_COLORS } from '@/styling/colors';
 import { errorMsg } from '@/utils/labels';
 
-import { ICstSubstitute } from '../backend/api';
-import { ConstituentaID, IConstituenta, IRSForm } from '../models/rsform';
+import { ICstSubstitute } from '../backend/types';
+import { IConstituenta, IRSForm } from '../models/rsform';
 import BadgeConstituenta from './BadgeConstituenta';
 import SelectConstituenta from './SelectConstituenta';
+
+interface IMultiSubstitution {
+  original_source: ILibraryItem;
+  original: IConstituenta;
+  substitution: IConstituenta;
+  substitution_source: ILibraryItem;
+  is_suggestion: boolean;
+}
 
 interface PickSubstitutionsProps extends CProps.Styling {
   value: ICstSubstitute[];
@@ -34,7 +41,7 @@ interface PickSubstitutionsProps extends CProps.Styling {
 
 const columnHelper = createColumnHelper<IMultiSubstitution>();
 
-function PickSubstitutions({
+export function PickSubstitutions({
   value,
   onChange,
   suggestions,
@@ -81,7 +88,7 @@ function PickSubstitutions({
     }))
   ];
 
-  function getSchemaByCst(id: ConstituentaID): IRSForm | undefined {
+  function getSchemaByCst(id: number): IRSForm | undefined {
     for (const schema of schemas) {
       const cst = schema.cstByID.get(id);
       if (cst) {
@@ -91,7 +98,7 @@ function PickSubstitutions({
     return undefined;
   }
 
-  function getConstituenta(id: ConstituentaID): IConstituenta | undefined {
+  function getConstituenta(id: number): IConstituenta | undefined {
     for (const schema of schemas) {
       const cst = schema.cstByID.get(id);
       if (cst) {
@@ -291,5 +298,3 @@ function PickSubstitutions({
     </div>
   );
 }
-
-export default PickSubstitutions;

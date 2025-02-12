@@ -6,7 +6,7 @@ import { TextInput } from '@/components/Input';
 import { LibraryItemType, PickSchema, useLibrary } from '@/features/library';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { IInlineSynthesisDTO } from '../../backend/api';
+import { IInlineSynthesisDTO } from '../../backend/types';
 import { sortItemsForInlineSynthesis } from '../../models/rsformAPI';
 import { DlgInlineSynthesisProps } from './DlgInlineSynthesis';
 
