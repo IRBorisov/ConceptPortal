@@ -3,7 +3,7 @@
 import clsx from 'clsx';
 
 import { FlexColumn } from '@/components/Container';
-import { EditorLibraryItem } from '@/features/library/components/EditorLibraryItem';
+import { EditorLibraryItem } from '@/features/library';
 import { useModificationStore } from '@/stores/modification';
 import { globals } from '@/utils/constants';
 

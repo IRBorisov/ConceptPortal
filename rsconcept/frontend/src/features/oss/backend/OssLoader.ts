@@ -2,7 +2,7 @@
  * Module: OSS data loading and processing.
  */
 
-import { ILibraryItem, LibraryItemID } from '@/features/library/models/library';
+import { ILibraryItem } from '@/features/library/models/library';
 import {
   IOperation,
   IOperationSchema,
@@ -22,7 +22,7 @@ export class OssLoader {
   private oss: IOperationSchemaDTO;
   private graph: Graph = new Graph();
   private operationByID = new Map<OperationID, IOperation>();
-  private schemaIDs: LibraryItemID[] = [];
+  private schemaIDs: number[] = [];
   private items: ILibraryItem[];
 
   constructor(input: IOperationSchemaDTO, items: ILibraryItem[]) {

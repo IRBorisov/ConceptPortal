@@ -1,13 +1,12 @@
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 
 import { useLibrary, useLibrarySuspense } from '@/features/library/backend/useLibrary';
-import { LibraryItemID } from '@/features/library/models/library';
-import { OssLoader } from '@/features/oss/backend/OssLoader';
 
 import { queryClient } from '../../../backend/queryClient';
 import { ossApi } from './api';
+import { OssLoader } from './OssLoader';
 
-export function useOss({ itemID }: { itemID?: LibraryItemID }) {
+export function useOss({ itemID }: { itemID?: number }) {
   const { items: libraryItems, isLoading: libraryLoading } = useLibrary();
   const { data, isLoading, error } = useQuery({
     ...ossApi.getOssQueryOptions({ itemID })
@@ -17,7 +16,7 @@ export function useOss({ itemID }: { itemID?: LibraryItemID }) {
   return { schema: schema, isLoading: isLoading || libraryLoading, error: error };
 }
 
-export function useOssSuspense({ itemID }: { itemID: LibraryItemID }) {
+export function useOssSuspense({ itemID }: { itemID: number }) {
   const { items: libraryItems } = useLibrarySuspense();
   const { data } = useSuspenseQuery({
     ...ossApi.getOssQueryOptions({ itemID })
@@ -26,7 +25,7 @@ export function useOssSuspense({ itemID }: { itemID: LibraryItemID }) {
   return { schema };
 }
 
-export function prefetchOSS({ itemID }: { itemID?: LibraryItemID }) {
+export function prefetchOSS({ itemID }: { itemID?: number }) {
   if (!itemID) {
     return null;
   }

@@ -17,7 +17,7 @@ interface SelectLocationContextProps extends CProps.Styling {
   stretchTop?: boolean;
 }
 
-function SelectLocationContext({
+export function SelectLocationContext({
   value,
   title = 'Проводник...',
   onChange,
@@ -56,5 +56,3 @@ function SelectLocationContext({
     </div>
   );
 }
-
-export default SelectLocationContext;

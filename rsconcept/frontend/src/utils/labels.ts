@@ -5,7 +5,7 @@
  * Description is a long description used in tooltips.
  */
 import { AccessPolicy, LibraryItemType } from '@/features/library/models/library';
-import { UserRole } from '@/features/users/models/user';
+import { UserRole } from '@/features/users/stores/role';
 
 /**
  * Retrieves label for {@link UserRole}.

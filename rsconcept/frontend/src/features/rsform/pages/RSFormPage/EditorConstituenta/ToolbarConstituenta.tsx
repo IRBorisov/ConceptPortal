@@ -18,6 +18,7 @@ import {
   IconSave
 } from '@/components/Icons';
 import { BadgeHelp, HelpTopic } from '@/features/help';
+import { MiniSelectorOSS } from '@/features/library';
 import { useFindPredecessor } from '@/features/oss/backend/useFindPredecessor';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
@@ -26,7 +27,6 @@ import { tooltipText } from '@/utils/labels';
 import { prepareTooltip } from '@/utils/utils';
 
 import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
-import MiniSelectorOSS from '../../../components/MiniSelectorOSS';
 import { ConstituentaID, IConstituenta } from '../../../models/rsform';
 import { RSTabID, useRSEdit } from '../RSEditContext';
 

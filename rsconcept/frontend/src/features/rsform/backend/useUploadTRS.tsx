@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { libraryApi } from '@/features/library/backend/api';
+import { libraryApi } from '@/features/library';
 import { ILibraryItem } from '@/features/library/models/library';
 import { ossApi } from '@/features/oss/backend/api';
 

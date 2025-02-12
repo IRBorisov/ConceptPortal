@@ -1,7 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { LibraryItemID, VersionID } from '@/features/library/models/library';
-
 import { rsformsApi } from './api';
 
 export const useDownloadRSForm = () => {
@@ -10,6 +8,6 @@ export const useDownloadRSForm = () => {
     mutationFn: rsformsApi.download
   });
   return {
-    download: (data: { itemID: LibraryItemID; version?: VersionID }) => mutation.mutateAsync(data)
+    download: (data: { itemID: number; version?: number }) => mutation.mutateAsync(data)
   };
 };

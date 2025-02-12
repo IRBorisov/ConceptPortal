@@ -3,12 +3,7 @@ import { z } from 'zod';
 
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/apiTransport';
 import { DELAYS } from '@/backend/configuration';
-import {
-  ILibraryItemReference,
-  ILibraryItemVersioned,
-  LibraryItemID,
-  VersionID
-} from '@/features/library/models/library';
+import { ILibraryItemReference, ILibraryItemVersioned } from '@/features/library/models/library';
 import { errorMsg, infoMsg } from '@/utils/labels';
 
 import {
@@ -48,7 +43,7 @@ export interface IRSFormDTO extends ILibraryItemVersioned {
  * Represents data, used for uploading {@link IRSForm} as file.
  */
 export interface IRSFormUploadDTO {
-  itemID: LibraryItemID;
+  itemID: number;
   load_metadata: boolean;
   file: File;
   fileName: string;
@@ -178,7 +173,7 @@ export type ICstSubstitutionsDTO = z.infer<typeof schemaCstSubstitutions>;
 export const rsformsApi = {
   baseKey: 'rsform',
 
-  getRSFormQueryOptions: ({ itemID, version }: { itemID?: LibraryItemID; version?: VersionID }) => {
+  getRSFormQueryOptions: ({ itemID, version }: { itemID?: number; version?: number }) => {
     return queryOptions({
       queryKey: [rsformsApi.baseKey, 'item', itemID, version ?? ''],
       staleTime: DELAYS.staleShort,
@@ -192,7 +187,7 @@ export const rsformsApi = {
     });
   },
 
-  download: ({ itemID, version }: { itemID: LibraryItemID; version?: VersionID }) =>
+  download: ({ itemID, version }: { itemID: number; version?: number }) =>
     axiosGet<Blob>({
       endpoint: version ? `/api/versions/${version}/export-file` : `/api/rsforms/${itemID}/export-trs`,
       options: { responseType: 'blob' }
@@ -211,7 +206,7 @@ export const rsformsApi = {
       }
     }),
 
-  cstCreate: ({ itemID, data }: { itemID: LibraryItemID; data: ICstCreateDTO }) =>
+  cstCreate: ({ itemID, data }: { itemID: number; data: ICstCreateDTO }) =>
     axiosPost<ICstCreateDTO, ICstCreatedResponse>({
       endpoint: `/api/rsforms/${itemID}/create-cst`,
       request: {
@@ -219,7 +214,7 @@ export const rsformsApi = {
         successMessage: response => infoMsg.newConstituent(response.new_cst.alias)
       }
     }),
-  cstUpdate: ({ itemID, data }: { itemID: LibraryItemID; data: ICstUpdateDTO }) =>
+  cstUpdate: ({ itemID, data }: { itemID: number; data: ICstUpdateDTO }) =>
     axiosPatch<ICstUpdateDTO, IConstituentaMeta>({
       endpoint: `/api/rsforms/${itemID}/update-cst`,
       request: {
@@ -227,7 +222,7 @@ export const rsformsApi = {
         successMessage: infoMsg.changesSaved
       }
     }),
-  cstDelete: ({ itemID, data }: { itemID: LibraryItemID; data: IConstituentaList }) =>
+  cstDelete: ({ itemID, data }: { itemID: number; data: IConstituentaList }) =>
     axiosPatch<IConstituentaList, IRSFormDTO>({
       endpoint: `/api/rsforms/${itemID}/delete-multiple-cst`,
       request: {
@@ -235,7 +230,7 @@ export const rsformsApi = {
         successMessage: infoMsg.constituentsDestroyed(data.items.length)
       }
     }),
-  cstRename: ({ itemID, data }: { itemID: LibraryItemID; data: ICstRenameDTO }) =>
+  cstRename: ({ itemID, data }: { itemID: number; data: ICstRenameDTO }) =>
     axiosPatch<ICstRenameDTO, ICstCreatedResponse>({
       endpoint: `/api/rsforms/${itemID}/rename-cst`,
       request: {
@@ -243,7 +238,7 @@ export const rsformsApi = {
         successMessage: infoMsg.changesSaved
       }
     }),
-  cstSubstitute: ({ itemID, data }: { itemID: LibraryItemID; data: ICstSubstitutionsDTO }) =>
+  cstSubstitute: ({ itemID, data }: { itemID: number; data: ICstSubstitutionsDTO }) =>
     axiosPatch<ICstSubstitutionsDTO, IRSFormDTO>({
       endpoint: `/api/rsforms/${itemID}/substitute`,
       request: {
@@ -251,13 +246,13 @@ export const rsformsApi = {
         successMessage: infoMsg.substituteSingle
       }
     }),
-  cstMove: ({ itemID, data }: { itemID: LibraryItemID; data: ICstMoveDTO }) =>
+  cstMove: ({ itemID, data }: { itemID: number; data: ICstMoveDTO }) =>
     axiosPatch<ICstMoveDTO, IRSFormDTO>({
       endpoint: `/api/rsforms/${itemID}/move-cst`,
       request: { data: data }
     }),
 
-  produceStructure: ({ itemID, data }: { itemID: LibraryItemID; data: ITargetCst }) =>
+  produceStructure: ({ itemID, data }: { itemID: number; data: ITargetCst }) =>
     axiosPatch<ITargetCst, IProduceStructureResponse>({
       endpoint: `/api/rsforms/${itemID}/produce-structure`,
       request: {
@@ -273,18 +268,18 @@ export const rsformsApi = {
         successMessage: infoMsg.inlineSynthesisComplete
       }
     }),
-  restoreOrder: ({ itemID }: { itemID: LibraryItemID }) =>
+  restoreOrder: ({ itemID }: { itemID: number }) =>
     axiosPatch<undefined, IRSFormDTO>({
       endpoint: `/api/rsforms/${itemID}/restore-order`,
       request: { successMessage: infoMsg.reorderComplete }
     }),
-  resetAliases: ({ itemID }: { itemID: LibraryItemID }) =>
+  resetAliases: ({ itemID }: { itemID: number }) =>
     axiosPatch<undefined, IRSFormDTO>({
       endpoint: `/api/rsforms/${itemID}/reset-aliases`,
       request: { successMessage: infoMsg.reindexComplete }
     }),
 
-  checkConstituenta: ({ itemID, data }: { itemID: LibraryItemID; data: ICheckConstituentaDTO }) =>
+  checkConstituenta: ({ itemID, data }: { itemID: number; data: ICheckConstituentaDTO }) =>
     axiosPost<ICheckConstituentaDTO, IExpressionParse>({
       endpoint: `/api/rsforms/${itemID}/check-constituenta`,
       request: { data: data }

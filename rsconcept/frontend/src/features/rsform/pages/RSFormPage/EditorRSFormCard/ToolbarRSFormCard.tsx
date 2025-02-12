@@ -4,17 +4,14 @@ import { Overlay } from '@/components/Container';
 import { MiniButton } from '@/components/Control';
 import { IconDestroy, IconSave, IconShare } from '@/components/Icons';
 import { BadgeHelp, HelpTopic } from '@/features/help';
-import { useMutatingLibrary } from '@/features/library/backend/useMutatingLibrary';
-import { AccessPolicy, ILibraryItemEditor, LibraryItemType } from '@/features/library/models/library';
-import { useRoleStore } from '@/features/users';
-import { UserRole } from '@/features/users/models/user';
+import { ILibraryItemEditor, MiniSelectorOSS, useMutatingLibrary } from '@/features/library';
+import { AccessPolicy, LibraryItemType } from '@/features/library';
+import { useRoleStore, UserRole } from '@/features/users';
 import { useModificationStore } from '@/stores/modification';
 import { PARAMETER } from '@/utils/constants';
 import { tooltipText } from '@/utils/labels';
-import { prepareTooltip } from '@/utils/utils';
-import { sharePage } from '@/utils/utils';
+import { prepareTooltip, sharePage } from '@/utils/utils';
 
-import MiniSelectorOSS from '../../../components/MiniSelectorOSS';
 import { IRSForm } from '../../../models/rsform';
 import { IRSEditContext } from '../RSEditContext';
 

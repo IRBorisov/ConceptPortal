@@ -1,7 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { LibraryItemID } from '@/features/library/models/library';
-
 import { ICheckConstituentaDTO, rsformsApi } from './api';
 
 export const useCheckConstituenta = () => {
@@ -10,7 +8,7 @@ export const useCheckConstituenta = () => {
     mutationFn: rsformsApi.checkConstituenta
   });
   return {
-    checkConstituenta: (data: { itemID: LibraryItemID; data: ICheckConstituentaDTO }) => mutation.mutateAsync(data),
+    checkConstituenta: (data: { itemID: number; data: ICheckConstituentaDTO }) => mutation.mutateAsync(data),
     isPending: mutation.isPending,
     error: mutation.error
   };

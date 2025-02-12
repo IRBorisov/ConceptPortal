@@ -12,8 +12,8 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { limits } from '@/utils/constants';
 import { errorMsg } from '@/utils/labels';
 
-import SelectLocationContext from '../components/SelectLocationContext';
-import SelectLocationHead from '../components/SelectLocationHead';
+import { SelectLocationContext } from '../components/SelectLocationContext';
+import { SelectLocationHead } from '../components/SelectLocationHead';
 import { LocationHead } from '../models/library';
 import { combineLocation, validateLocation } from '../models/libraryAPI';
 

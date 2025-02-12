@@ -3,7 +3,6 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 import { FlexColumn } from '@/components/Container';
 import { Label } from '@/components/Input';
-import { LibraryItemID } from '@/features/library/models/library';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { IOperationUpdateDTO } from '../../backend/api';
@@ -16,7 +15,7 @@ function TabArguments() {
   const potentialCycle = [target.id, ...oss.graph.expandAllOutputs([target.id])];
   const filtered = oss.items.filter(item => !potentialCycle.includes(item.id));
 
-  function handleChangeArguments(prev: LibraryItemID[], newValue: LibraryItemID[]) {
+  function handleChangeArguments(prev: number[], newValue: number[]) {
     setValue('arguments', newValue);
     if (prev.some(id => !newValue.includes(id))) {
       setValue('substitutions', []);

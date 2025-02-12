@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { libraryApi } from '@/features/library/backend/api';
-import { LibraryItemID } from '@/features/library/models/library';
+import { libraryApi } from '@/features/library';
 import { rsformsApi } from '@/features/rsform/backend/api';
 
 import { IOperationDeleteDTO, ossApi } from './api';
@@ -20,6 +19,6 @@ export const useOperationDelete = () => {
     }
   });
   return {
-    operationDelete: (data: { itemID: LibraryItemID; data: IOperationDeleteDTO }) => mutation.mutateAsync(data)
+    operationDelete: (data: { itemID: number; data: IOperationDeleteDTO }) => mutation.mutateAsync(data)
   };
 };

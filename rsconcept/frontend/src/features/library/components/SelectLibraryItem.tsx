@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { SelectSingle } from '@/components/Input';
 import { CProps } from '@/components/props';
 
-import { ILibraryItem, LibraryItemID } from '../models/library';
+import { ILibraryItem } from '../models/library';
 import { matchLibraryItem } from '../models/libraryAPI';
 
 interface SelectLibraryItemProps extends CProps.Styling {
@@ -17,7 +17,7 @@ interface SelectLibraryItemProps extends CProps.Styling {
   noBorder?: boolean;
 }
 
-function SelectLibraryItem({
+export function SelectLibraryItem({
   className,
   items,
   value,
@@ -31,7 +31,7 @@ function SelectLibraryItem({
       label: `${cst.alias}: ${cst.title}`
     })) ?? [];
 
-  function filter(option: { value: LibraryItemID | undefined; label: string }, inputValue: string) {
+  function filter(option: { value: number | undefined; label: string }, inputValue: string) {
     const item = items?.find(item => item.id === option.value);
     return !item ? false : matchLibraryItem(item, inputValue);
   }
@@ -49,5 +49,3 @@ function SelectLibraryItem({
     />
   );
 }
-
-export default SelectLibraryItem;

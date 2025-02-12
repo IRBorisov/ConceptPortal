@@ -17,10 +17,10 @@ import { EXTEOR_TRS_FILE } from '@/utils/constants';
 
 import { ICreateLibraryItemDTO, schemaCreateLibraryItem } from '../../backend/api';
 import { useCreateItem } from '../../backend/useCreateItem';
-import SelectAccessPolicy from '../../components/SelectAccessPolicy';
-import SelectItemType from '../../components/SelectItemType';
-import SelectLocationContext from '../../components/SelectLocationContext';
-import SelectLocationHead from '../../components/SelectLocationHead';
+import { SelectAccessPolicy } from '../../components/SelectAccessPolicy';
+import { SelectItemType } from '../../components/SelectItemType';
+import { SelectLocationContext } from '../../components/SelectLocationContext';
+import { SelectLocationHead } from '../../components/SelectLocationHead';
 import { AccessPolicy, LibraryItemType, LocationHead } from '../../models/library';
 import { combineLocation } from '../../models/libraryAPI';
 import { useLibrarySearchStore } from '../../stores/librarySearch';

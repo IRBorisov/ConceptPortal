@@ -16,8 +16,7 @@ import {
 import { Loader } from '@/components/Loader';
 import { CProps } from '@/components/props';
 import { ValueIcon } from '@/components/View';
-import { InfoUsers, SelectUser, useLabelUser, useRoleStore } from '@/features/users';
-import { UserRole } from '@/features/users/models/user';
+import { InfoUsers, SelectUser, useLabelUser, useRoleStore, UserRole } from '@/features/users';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { prefixes } from '@/utils/constants';
@@ -26,8 +25,19 @@ import { promptText } from '@/utils/labels';
 import { useMutatingLibrary } from '../backend/useMutatingLibrary';
 import { useSetLocation } from '../backend/useSetLocation';
 import { useSetOwner } from '../backend/useSetOwner';
-import { ILibraryItemEditor } from '../models/library';
+import { ILibraryItemData } from '../models/library';
 import { useLibrarySearchStore } from '../stores/librarySearch';
+
+/**
+ * Represents common {@link ILibraryItem} editor controller.
+ */
+export interface ILibraryItemEditor {
+  schema: ILibraryItemData;
+  deleteSchema: () => void;
+
+  isMutable: boolean;
+  isAttachedToOSS: boolean;
+}
 
 interface EditorLibraryItemProps {
   controller: ILibraryItemEditor;

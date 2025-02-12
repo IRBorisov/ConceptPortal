@@ -19,7 +19,7 @@ import {
 import { urls, useConceptNavigation } from '@/app';
 import { Overlay } from '@/components/Container';
 import { CProps } from '@/components/props';
-import { useLibrary } from '@/features/library/backend/useLibrary';
+import { useLibrary } from '@/features/library';
 import { useMainHeight } from '@/stores/appLayout';
 import { useModificationStore } from '@/stores/modification';
 import { APP_COLORS } from '@/styling/colors';

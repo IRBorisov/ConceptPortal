@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { useUpdateTimestamp } from '@/features/library/backend/useUpdateTimestamp';
-import { LibraryItemID } from '@/features/library/models/library';
+import { useUpdateTimestamp } from '@/features/library';
 
 import { IOperationCreateDTO, ossApi } from './api';
 
@@ -17,6 +16,6 @@ export const useOperationCreate = () => {
     }
   });
   return {
-    operationCreate: (data: { itemID: LibraryItemID; data: IOperationCreateDTO }) => mutation.mutateAsync(data)
+    operationCreate: (data: { itemID: number; data: IOperationCreateDTO }) => mutation.mutateAsync(data)
   };
 };

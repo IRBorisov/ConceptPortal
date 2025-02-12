@@ -3,8 +3,7 @@
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import { useRoleStore } from '@/features/users';
-import { UserRole } from '@/features/users/models/user';
+import { useRoleStore, UserRole } from '@/features/users';
 import useWindowSize from '@/hooks/useWindowSize';
 import { useFitHeight } from '@/stores/appLayout';
 import { PARAMETER } from '@/utils/constants';

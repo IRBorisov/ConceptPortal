@@ -1,12 +1,10 @@
 import { useSuspenseQueries } from '@tanstack/react-query';
 
-import { LibraryItemID } from '@/features/library/models/library';
-
 import { DELAYS } from '../../../backend/configuration';
 import { rsformsApi } from './api';
 import { RSFormLoader } from './RSFormLoader';
 
-export function useRSForms(itemIDs: LibraryItemID[]) {
+export function useRSForms(itemIDs: number[]) {
   const results = useSuspenseQueries({
     queries: itemIDs.map(itemID => ({
       ...rsformsApi.getRSFormQueryOptions({ itemID }),

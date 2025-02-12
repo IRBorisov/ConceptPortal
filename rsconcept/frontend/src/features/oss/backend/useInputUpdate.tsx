@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { libraryApi } from '@/features/library/backend/api';
-import { LibraryItemID } from '@/features/library/models/library';
+import { libraryApi } from '@/features/library';
 import { rsformsApi } from '@/features/rsform/backend/api';
 
 import { IInputUpdateDTO, ossApi } from './api';
@@ -20,6 +19,6 @@ export const useInputUpdate = () => {
     }
   });
   return {
-    inputUpdate: (data: { itemID: LibraryItemID; data: IInputUpdateDTO }) => mutation.mutateAsync(data)
+    inputUpdate: (data: { itemID: number; data: IInputUpdateDTO }) => mutation.mutateAsync(data)
   };
 };

@@ -1,7 +1,7 @@
 /**
  * Module: Schema of Synthesis Operations.
  */
-import { ILibraryItem, ILibraryItemData, LibraryItemID } from '@/features/library/models/library';
+import { ILibraryItem, ILibraryItemData } from '@/features/library/models/library';
 import { ICstSubstitute } from '@/features/rsform/backend/api';
 import { IConstituenta } from '@/features/rsform/models/rsform';
 
@@ -26,7 +26,7 @@ export enum OperationType {
 export interface IOperation {
   id: OperationID;
   operation_type: OperationType;
-  oss: LibraryItemID;
+  oss: number;
 
   alias: string;
   title: string;
@@ -35,7 +35,7 @@ export interface IOperation {
   position_x: number;
   position_y: number;
 
-  result: LibraryItemID | null;
+  result: number | null;
 
   is_owned: boolean;
   is_consolidation: boolean; // aka 'diamond synthesis'
@@ -93,7 +93,7 @@ export interface IOperationSchema extends ILibraryItemData {
   substitutions: ICstSubstituteEx[];
 
   graph: Graph;
-  schemas: LibraryItemID[];
+  schemas: number[];
   stats: IOperationSchemaStats;
   operationByID: Map<OperationID, IOperation>;
 }

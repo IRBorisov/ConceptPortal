@@ -17,7 +17,13 @@ interface SelectLocationHeadProps extends CProps.Styling {
   excluded?: LocationHead[];
 }
 
-function SelectLocationHead({ value, excluded = [], onChange, className, ...restProps }: SelectLocationHeadProps) {
+export function SelectLocationHead({
+  value,
+  excluded = [],
+  onChange,
+  className,
+  ...restProps
+}: SelectLocationHeadProps) {
   const menu = useDropdown();
 
   function handleChange(newValue: LocationHead) {
@@ -60,5 +66,3 @@ function SelectLocationHead({ value, excluded = [], onChange, className, ...rest
     </div>
   );
 }
-
-export default SelectLocationHead;

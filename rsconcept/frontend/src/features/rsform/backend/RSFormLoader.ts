@@ -2,7 +2,6 @@
  * Module: RSForm data loading and processing.
  */
 
-import { LibraryItemID } from '@/features/library/models/library';
 import { Graph } from '@/models/Graph';
 
 import { ConstituentaID, CstType, IConstituenta, IRSForm, IRSFormStats } from '../models/rsform';
@@ -62,8 +61,8 @@ export class RSFormLoader {
   }
 
   private inferCstAttributes() {
-    const schemaByCst = new Map<ConstituentaID, LibraryItemID>();
-    const parents: LibraryItemID[] = [];
+    const schemaByCst = new Map<ConstituentaID, number>();
+    const parents: number[] = [];
     this.schema.inheritance.forEach(item => {
       if (item.child_source === this.schema.id) {
         schemaByCst.set(item.child, item.parent_source);

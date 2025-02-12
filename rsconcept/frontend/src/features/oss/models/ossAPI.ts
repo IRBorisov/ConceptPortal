@@ -2,7 +2,7 @@
  * Module: API for OperationSystem.
  */
 
-import { ILibraryItem, LibraryItemID } from '@/features/library/models/library';
+import { ILibraryItem } from '@/features/library/models/library';
 import { ICstSubstitute } from '@/features/rsform/backend/api';
 import { ConstituentaID, CstClass, CstType, IConstituenta, IRSForm } from '@/features/rsform/models/rsform';
 import { AliasMapping, ParsingStatus } from '@/features/rsform/models/rslang';
@@ -56,7 +56,7 @@ export function sortItemsForOSS(oss: IOperationSchema, items: ILibraryItem[]): I
   return result;
 }
 
-type CrossMapping = Map<LibraryItemID, AliasMapping>;
+type CrossMapping = Map<number, AliasMapping>;
 
 /**
  * Validator for Substitution table.
@@ -72,7 +72,7 @@ export class SubstitutionValidator {
   private mapping: CrossMapping = new Map();
 
   private cstByID = new Map<ConstituentaID, IConstituenta>();
-  private schemaByID = new Map<LibraryItemID, IRSForm>();
+  private schemaByID = new Map<number, IRSForm>();
   private schemaByCst = new Map<ConstituentaID, IRSForm>();
 
   constructor(schemas: IRSForm[], substitutions: ICstSubstitute[]) {

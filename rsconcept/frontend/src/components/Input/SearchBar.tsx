@@ -2,8 +2,9 @@ import clsx from 'clsx';
 
 import { Overlay } from '@/components/Container';
 import { IconSearch } from '@/components/Icons';
-import { TextInput } from '@/components/Input';
 import { CProps } from '@/components/props';
+
+import { TextInput } from './TextInput';
 
 interface SearchBarProps extends CProps.Styling {
   /** Id of the search bar. */

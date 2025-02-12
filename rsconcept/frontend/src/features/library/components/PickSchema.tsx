@@ -9,17 +9,17 @@ import { Dropdown, useDropdown } from '@/components/Dropdown';
 import { IconClose, IconFolderTree } from '@/components/Icons';
 import { SearchBar } from '@/components/Input';
 import { CProps } from '@/components/props';
-import { ILibraryItem, LibraryItemID, LibraryItemType } from '@/features/library/models/library';
-import { matchLibraryItem } from '@/features/library/models/libraryAPI';
 import { APP_COLORS } from '@/styling/colors';
 import { prefixes } from '@/utils/constants';
 
-import SelectLocation from '../../library/components/SelectLocation';
+import { ILibraryItem, LibraryItemType } from '../models/library';
+import { matchLibraryItem } from '../models/libraryAPI';
+import SelectLocation from './SelectLocation';
 
 interface PickSchemaProps extends CProps.Styling {
   id?: string;
-  value: LibraryItemID | null;
-  onChange: (newValue: LibraryItemID) => void;
+  value: number | null;
+  onChange: (newValue: number) => void;
 
   initialFilter?: string;
   rows?: number;

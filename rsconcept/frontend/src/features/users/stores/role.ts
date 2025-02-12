@@ -1,6 +1,14 @@
 import { create } from 'zustand';
 
-import { UserRole } from '../models/user';
+/**
+ * Represents user access mode.
+ */
+export enum UserRole {
+  READER = 0,
+  EDITOR,
+  OWNER,
+  ADMIN
+}
 
 export interface RoleFlags {
   isOwner: boolean;

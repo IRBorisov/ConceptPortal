@@ -9,8 +9,7 @@ import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/D
 import { IconAccept, IconPageLeft, IconPageRight, IconRemove, IconReplace } from '@/components/Icons';
 import { CProps } from '@/components/props';
 import { NoData } from '@/components/View';
-import SelectLibraryItem from '@/features/library/components/SelectLibraryItem';
-import { ILibraryItem } from '@/features/library/models/library';
+import { ILibraryItem, SelectLibraryItem } from '@/features/library';
 import { IMultiSubstitution } from '@/features/oss/models/oss';
 import { APP_COLORS } from '@/styling/colors';
 import { errorMsg } from '@/utils/labels';

@@ -6,31 +6,26 @@ import { Controller, useForm, useWatch } from 'react-hook-form';
 
 import { Checkbox, TextArea, TextInput } from '@/components/Input';
 import { ModalForm } from '@/components/Modal';
-import { IVersionCreateDTO, schemaVersionCreate } from '@/features/library/backend/api';
-import { useVersionCreate } from '@/features/library/backend/useVersionCreate';
-import { IVersionInfo, LibraryItemID, VersionID } from '@/features/library/models/library';
-import { nextVersion } from '@/features/library/models/libraryAPI';
 import { useDialogsStore } from '@/stores/dialogs';
 import { errorMsg } from '@/utils/labels';
 
-import { ConstituentaID } from '../models/rsform';
+import { IVersionCreateDTO, schemaVersionCreate } from '../backend/api';
+import { useVersionCreate } from '../backend/useVersionCreate';
+import { IVersionInfo } from '../models/library';
+import { nextVersion } from '../models/libraryAPI';
 
 export interface DlgCreateVersionProps {
-  itemID: LibraryItemID;
+  itemID: number;
   versions: IVersionInfo[];
-  onCreate: (newVersion: VersionID) => void;
-  selected: ConstituentaID[];
+  onCreate: (newVersion: number) => void;
+  selected: number[];
   totalCount: number;
 }
 
 function DlgCreateVersion() {
-  const {
-    itemID, //
-    versions,
-    selected,
-    totalCount,
-    onCreate
-  } = useDialogsStore(state => state.props as DlgCreateVersionProps);
+  const { itemID, versions, selected, totalCount, onCreate } = useDialogsStore(
+    state => state.props as DlgCreateVersionProps
+  );
   const { versionCreate } = useVersionCreate();
 
   const { register, handleSubmit, control } = useForm<IVersionCreateDTO>({

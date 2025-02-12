@@ -12,11 +12,11 @@ import {
   IconReset
 } from '@/components/Icons';
 import { BadgeHelp, HelpTopic } from '@/features/help';
+import { MiniSelectorOSS } from '@/features/library';
 import { prefixes } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/utils';
 
 import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
-import MiniSelectorOSS from '../../../components/MiniSelectorOSS';
 import { getCstTypeShortcut, labelCstType } from '../../../labels';
 import { CstType } from '../../../models/rsform';
 import { useRSEdit } from '../RSEditContext';

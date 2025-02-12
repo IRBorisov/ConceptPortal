@@ -9,10 +9,8 @@ import { useForm, useWatch } from 'react-hook-form';
 import { SubmitButton } from '@/components/Control';
 import { IconSave } from '@/components/Icons';
 import { TextArea, TextInput } from '@/components/Input';
+import { LibraryItemType, ToolbarItemAccess, useUpdateItem } from '@/features/library';
 import { IUpdateLibraryItemDTO, schemaUpdateLibraryItem } from '@/features/library/backend/api';
-import { useUpdateItem } from '@/features/library/backend/useUpdateItem';
-import { LibraryItemType } from '@/features/library/models/library';
-import ToolbarItemAccess from '@/features/rsform/pages/RSFormPage/EditorRSFormCard/ToolbarItemAccess';
 import { useModificationStore } from '@/stores/modification';
 import { globals } from '@/utils/constants';
 

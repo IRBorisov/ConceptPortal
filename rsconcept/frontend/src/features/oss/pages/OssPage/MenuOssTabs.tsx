@@ -20,8 +20,7 @@ import {
 } from '@/components/Icons';
 import { useAuthSuspense } from '@/features/auth';
 import { useMutatingOss } from '@/features/oss/backend/useMutatingOss';
-import { useRoleStore } from '@/features/users';
-import { UserRole } from '@/features/users/models/user';
+import { useRoleStore, UserRole } from '@/features/users';
 import { describeAccessMode as describeUserRole, labelAccessMode as labelUserRole } from '@/utils/labels';
 import { sharePage } from '@/utils/utils';
 

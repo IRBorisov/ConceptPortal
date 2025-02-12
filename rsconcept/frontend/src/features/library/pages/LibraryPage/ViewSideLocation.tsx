@@ -7,7 +7,6 @@ import { IconFolderEdit, IconFolderTree } from '@/components/Icons';
 import { CProps } from '@/components/props';
 import { useAuthSuspense } from '@/features/auth';
 import { BadgeHelp, HelpTopic } from '@/features/help';
-import { FolderNode } from '@/features/library/models/FolderTree';
 import useWindowSize from '@/hooks/useWindowSize';
 import { useFitHeight } from '@/stores/appLayout';
 import { PARAMETER, prefixes } from '@/utils/constants';
@@ -15,6 +14,7 @@ import { infoMsg } from '@/utils/labels';
 
 import { useLibrary } from '../../backend/useLibrary';
 import SelectLocation from '../../components/SelectLocation';
+import { FolderNode } from '../../models/FolderTree';
 import { useLibrarySearchStore } from '../../stores/librarySearch';
 
 interface ViewSideLocationProps {

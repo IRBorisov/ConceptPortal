@@ -14,11 +14,11 @@ import {
   IconTypeGraph
 } from '@/components/Icons';
 import { BadgeHelp, HelpTopic } from '@/features/help';
+import { MiniSelectorOSS } from '@/features/library';
 import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER } from '@/utils/constants';
 
 import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
-import MiniSelectorOSS from '../../../components/MiniSelectorOSS';
 import { useRSEdit } from '../RSEditContext';
 
 interface ToolbarTermGraphProps {

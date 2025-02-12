@@ -6,15 +6,16 @@ import { useIntl } from 'react-intl';
 import { MiniButton } from '@/components/Control';
 import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/DataTable';
 import { IconRemove } from '@/components/Icons';
-import { IVersionInfo, VersionID } from '@/features/library/models/library';
 import { APP_COLORS } from '@/styling/colors';
+
+import { IVersionInfo } from '../../models/library';
 
 interface TableVersionsProps {
   processing: boolean;
   items: IVersionInfo[];
-  selected?: VersionID;
-  onDelete: (versionID: VersionID) => void;
-  onSelect: (versionID: VersionID) => void;
+  selected?: number;
+  onDelete: (versionID: number) => void;
+  onSelect: (versionID: number) => void;
 }
 
 const columnHelper = createColumnHelper<IVersionInfo>();
@@ -22,7 +23,7 @@ const columnHelper = createColumnHelper<IVersionInfo>();
 function TableVersions({ processing, items, onDelete, selected, onSelect }: TableVersionsProps) {
   const intl = useIntl();
 
-  function handleDeleteVersion(event: React.MouseEvent, targetVersion: VersionID) {
+  function handleDeleteVersion(event: React.MouseEvent, targetVersion: number) {
     event.preventDefault();
     event.stopPropagation();
     onDelete(targetVersion);

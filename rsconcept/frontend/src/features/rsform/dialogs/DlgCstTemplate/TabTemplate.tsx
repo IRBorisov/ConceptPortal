@@ -3,7 +3,7 @@
 import { Dispatch, useEffect, useState } from 'react';
 
 import { SelectSingle, TextArea } from '@/components/Input';
-import { useTemplatesSuspense } from '@/features/library/backend/useTemplates';
+import { useTemplatesSuspense } from '@/features/library';
 import PickConstituenta from '@/features/rsform/components/PickConstituenta';
 
 import RSInput from '../../components/RSInput';

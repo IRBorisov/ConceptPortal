@@ -17,7 +17,7 @@ interface SelectAccessPolicyProps extends CProps.Styling {
   stretchLeft?: boolean;
 }
 
-function SelectAccessPolicy({ value, disabled, stretchLeft, onChange, ...restProps }: SelectAccessPolicyProps) {
+export function SelectAccessPolicy({ value, disabled, stretchLeft, onChange, ...restProps }: SelectAccessPolicyProps) {
   const menu = useDropdown();
 
   function handleChange(newValue: AccessPolicy) {
@@ -51,5 +51,3 @@ function SelectAccessPolicy({ value, disabled, stretchLeft, onChange, ...restPro
     </div>
   );
 }
-
-export default SelectAccessPolicy;

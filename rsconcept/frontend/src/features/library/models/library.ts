@@ -91,17 +91,6 @@ export interface ILibraryItemVersioned extends ILibraryItemData {
 }
 
 /**
- * Represents common {@link ILibraryItem} editor controller.
- */
-export interface ILibraryItemEditor {
-  schema: ILibraryItemData;
-  deleteSchema: () => void;
-
-  isMutable: boolean;
-  isAttachedToOSS: boolean;
-}
-
-/**
  * Represents Library filter parameters.
  */
 export interface ILibraryFilter {

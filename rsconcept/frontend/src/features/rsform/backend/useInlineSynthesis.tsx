@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { useUpdateTimestamp } from '@/features/library/backend/useUpdateTimestamp';
+import { useUpdateTimestamp } from '@/features/library';
 import { ossApi } from '@/features/oss/backend/api';
 
 import { IInlineSynthesisDTO, rsformsApi } from './api';

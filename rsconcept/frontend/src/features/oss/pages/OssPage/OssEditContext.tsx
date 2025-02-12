@@ -4,12 +4,9 @@ import { createContext, useContext, useEffect, useState } from 'react';
 
 import { urls, useConceptNavigation } from '@/app';
 import { useAuthSuspense } from '@/features/auth';
-import { useDeleteItem } from '@/features/library/backend/useDeleteItem';
-import { ILibraryItemEditor, LibraryItemID } from '@/features/library/models/library';
-import { useLibrarySearchStore } from '@/features/library/stores/librarySearch';
+import { ILibraryItemEditor, useDeleteItem, useLibrarySearchStore } from '@/features/library';
 import { RSTabID } from '@/features/rsform/pages/RSFormPage/RSEditContext';
-import { useRoleStore } from '@/features/users';
-import { UserRole } from '@/features/users/models/user';
+import { useRoleStore, UserRole } from '@/features/users';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { promptText } from '@/utils/labels';
@@ -66,7 +63,7 @@ export const useOssEdit = () => {
 };
 
 interface OssEditStateProps {
-  itemID: LibraryItemID;
+  itemID: number;
 }
 
 export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEditStateProps>) => {

@@ -10,9 +10,7 @@ import { RelocateUpIcon } from '@/components/DomainIcons';
 import { Loader } from '@/components/Loader';
 import { ModalForm } from '@/components/Modal';
 import { HelpTopic } from '@/features/help';
-import { useLibrary } from '@/features/library/backend/useLibrary';
-import SelectLibraryItem from '@/features/library/components/SelectLibraryItem';
-import { ILibraryItem, LibraryItemID } from '@/features/library/models/library';
+import { ILibraryItem, SelectLibraryItem, useLibrary } from '@/features/library';
 import { useRSForm } from '@/features/rsform/backend/useRSForm';
 import PickMultiConstituenta from '@/features/rsform/components/PickMultiConstituenta';
 import { useDialogsStore } from '@/stores/dialogs';
@@ -63,10 +61,10 @@ function DlgRelocateConstituents() {
       return [];
     }
     const node = oss.graph.at(operation.id)!;
-    const ids: LibraryItemID[] = directionUp
+    const schemaIds: number[] = directionUp
       ? node.inputs.map(id => oss.operationByID.get(id)!.result).filter(id => id !== null)
       : node.outputs.map(id => oss.operationByID.get(id)!.result).filter(id => id !== null);
-    return ids.map(id => libraryItems.find(item => item.id === id)).filter(item => item !== undefined);
+    return schemaIds.map(id => libraryItems.find(item => item.id === id)).filter(item => item !== undefined);
   })();
 
   const sourceData = useRSForm({ itemID: source?.id });

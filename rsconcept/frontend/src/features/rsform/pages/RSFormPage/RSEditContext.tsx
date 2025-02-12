@@ -4,12 +4,9 @@ import { createContext, useContext, useEffect, useState } from 'react';
 
 import { urls, useConceptNavigation } from '@/app';
 import { useAuthSuspense } from '@/features/auth';
-import { useDeleteItem } from '@/features/library/backend/useDeleteItem';
-import { ILibraryItemEditor, LibraryItemID, VersionID } from '@/features/library/models/library';
-import { useLibrarySearchStore } from '@/features/library/stores/librarySearch';
+import { ILibraryItemEditor, useDeleteItem, useLibrarySearchStore } from '@/features/library';
 import { OssTabID } from '@/features/oss/pages/OssPage/OssEditContext';
-import { useRoleStore } from '@/features/users';
-import { UserRole } from '@/features/users/models/user';
+import { useRoleStore, UserRole } from '@/features/users';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
@@ -35,7 +32,7 @@ export interface IRSEditContext extends ILibraryItemEditor {
   schema: IRSForm;
   selected: ConstituentaID[];
   activeCst?: IConstituenta;
-  activeVersion?: VersionID;
+  activeVersion?: number;
 
   isOwned: boolean;
   isArchive: boolean;
@@ -44,10 +41,10 @@ export interface IRSEditContext extends ILibraryItemEditor {
   isAttachedToOSS: boolean;
   canDeleteSelected: boolean;
 
-  navigateVersion: (versionID: VersionID | undefined) => void;
+  navigateVersion: (versionID: number | undefined) => void;
   navigateRSForm: ({ tab, activeID }: { tab: RSTabID; activeID?: ConstituentaID }) => void;
   navigateCst: (cstID: ConstituentaID) => void;
-  navigateOss: (target: LibraryItemID, newTab?: boolean) => void;
+  navigateOss: (ossID: number, newTab?: boolean) => void;
 
   deleteSchema: () => void;
 
@@ -75,9 +72,9 @@ export const useRSEdit = () => {
 };
 
 interface RSEditStateProps {
-  itemID: LibraryItemID;
+  itemID: number;
   activeTab: RSTabID;
-  activeVersion?: VersionID;
+  activeVersion?: number;
 }
 
 export const RSEditState = ({
@@ -127,12 +124,12 @@ export const RSEditState = ({
     [schema, adjustRole, isOwned, user, adminMode]
   );
 
-  function navigateVersion(versionID: VersionID | undefined) {
+  function navigateVersion(versionID: number | undefined) {
     router.push(urls.schema(schema.id, versionID));
   }
 
-  function navigateOss(target: LibraryItemID, newTab?: boolean) {
-    router.push(urls.oss(target), newTab);
+  function navigateOss(ossID: number, newTab?: boolean) {
+    router.push(urls.oss(ossID), newTab);
   }
 
   function navigateRSForm({ tab, activeID }: { tab: RSTabID; activeID?: ConstituentaID }) {

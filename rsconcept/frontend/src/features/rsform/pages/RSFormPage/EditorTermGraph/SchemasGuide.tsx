@@ -1,7 +1,6 @@
 import { Tooltip } from '@/components/Container';
 import { IconHelp } from '@/components/Icons';
-import { useLibrary } from '@/features/library/backend/useLibrary';
-import { LibraryItemID } from '@/features/library/models/library';
+import { useLibrary } from '@/features/library';
 import { globals, prefixes } from '@/utils/constants';
 
 import { colorBgSchemas } from '../../../colors';
@@ -15,7 +14,7 @@ function SchemasGuide({ schema }: SchemasGuideProps) {
   const { items: libraryItems } = useLibrary();
 
   const schemas = (() => {
-    const processed = new Set<LibraryItemID>();
+    const processed = new Set<number>();
     const aliases: string[] = [];
     const indexes: number[] = [];
     schema.items.forEach(cst => {

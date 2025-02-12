@@ -16,7 +16,7 @@ interface SelectItemTypeProps extends CProps.Styling {
   stretchLeft?: boolean;
 }
 
-function SelectItemType({ value, disabled, stretchLeft, onChange, ...restProps }: SelectItemTypeProps) {
+export function SelectItemType({ value, disabled, stretchLeft, onChange, ...restProps }: SelectItemTypeProps) {
   const menu = useDropdown();
 
   function handleChange(newValue: LibraryItemType) {
@@ -52,5 +52,3 @@ function SelectItemType({ value, disabled, stretchLeft, onChange, ...restProps }
     </div>
   );
 }
-
-export default SelectItemType;

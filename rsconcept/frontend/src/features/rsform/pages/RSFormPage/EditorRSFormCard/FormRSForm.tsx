@@ -10,16 +10,13 @@ import { urls, useConceptNavigation } from '@/app';
 import { SubmitButton } from '@/components/Control';
 import { IconSave } from '@/components/Icons';
 import { Label, TextArea, TextInput } from '@/components/Input';
+import { LibraryItemType, SelectVersion, ToolbarItemAccess, useUpdateItem } from '@/features/library';
 import { IUpdateLibraryItemDTO, schemaUpdateLibraryItem } from '@/features/library/backend/api';
-import { useUpdateItem } from '@/features/library/backend/useUpdateItem';
-import { LibraryItemType, VersionID } from '@/features/library/models/library';
 import { useModificationStore } from '@/stores/modification';
 import { globals } from '@/utils/constants';
 
 import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
-import SelectVersion from '../../../components/SelectVersion';
 import { useRSEdit } from '../RSEditContext';
-import ToolbarItemAccess from './ToolbarItemAccess';
 import ToolbarVersioning from './ToolbarVersioning';
 
 function FormRSForm() {
@@ -55,7 +52,7 @@ function FormRSForm() {
     setIsModified(isDirty);
   }, [isDirty, setIsModified]);
 
-  function handleSelectVersion(version?: VersionID) {
+  function handleSelectVersion(version?: number) {
     router.push(urls.schema(controller.schema.id, version));
   }
 

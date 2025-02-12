@@ -8,9 +8,7 @@ import { MiniButton } from '@/components/Control';
 import { IconReset } from '@/components/Icons';
 import { Label } from '@/components/Input';
 import { ModalForm } from '@/components/Modal';
-import { useLibrary } from '@/features/library/backend/useLibrary';
-import { ILibraryItem, LibraryItemType } from '@/features/library/models/library';
-import { PickSchema } from '@/features/rsform/components/PickSchema';
+import { ILibraryItem, LibraryItemType, PickSchema, useLibrary } from '@/features/library';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { IInputUpdateDTO, IOperationPosition, schemaInputUpdate } from '../backend/api';

@@ -5,13 +5,11 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { MiniButton } from '@/components/Control';
 import { IconReset } from '@/components/Icons';
 import { Checkbox, Label, TextArea, TextInput } from '@/components/Input';
-import { useLibrary } from '@/features/library/backend/useLibrary';
-import { ILibraryItem, LibraryItemID, LibraryItemType } from '@/features/library/models/library';
-import { sortItemsForOSS } from '@/features/oss/models/ossAPI';
-import { PickSchema } from '@/features/rsform/components/PickSchema';
+import { ILibraryItem, LibraryItemType, PickSchema, useLibrary } from '@/features/library';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { IOperationCreateDTO } from '../../backend/api';
+import { sortItemsForOSS } from '../../models/ossAPI';
 import { DlgCreateOperationProps } from './DlgCreateOperation';
 
 function TabInputOperation() {
@@ -38,12 +36,12 @@ function TabInputOperation() {
     setValue('create_schema', value);
   }
 
-  function handleSetInput(value: LibraryItemID) {
-    const schema = libraryItems.find(item => item.id === value);
+  function handleSetInput(inputID: number) {
+    const schema = libraryItems.find(item => item.id === inputID);
     if (!schema) {
       return;
     }
-    setValue('item_data.result', value);
+    setValue('item_data.result', inputID);
     setValue('create_schema', false);
     setValue('item_data.alias', schema.alias);
     setValue('item_data.title', schema.title);

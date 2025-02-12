@@ -29,13 +29,3 @@ export interface IUserProfile extends Omit<IUser, 'is_staff'> {}
  * Represents user reference information.
  */
 export interface IUserInfo extends Omit<IUserProfile, 'email' | 'username'> {}
-
-/**
- * Represents user access mode.
- */
-export enum UserRole {
-  READER = 0,
-  EDITOR,
-  OWNER,
-  ADMIN
-}

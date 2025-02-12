@@ -4,13 +4,12 @@ import { useState } from 'react';
 
 import { Checkbox, FileInput } from '@/components/Input';
 import { ModalForm } from '@/components/Modal';
-import { LibraryItemID } from '@/features/library/models/library';
 import { useUploadTRS } from '@/features/rsform/backend/useUploadTRS';
 import { useDialogsStore } from '@/stores/dialogs';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';
 
 export interface DlgUploadRSFormProps {
-  itemID: LibraryItemID;
+  itemID: number;
 }
 
 function DlgUploadRSForm() {

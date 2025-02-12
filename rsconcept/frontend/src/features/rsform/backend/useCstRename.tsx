@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { useUpdateTimestamp } from '@/features/library/backend/useUpdateTimestamp';
-import { LibraryItemID } from '@/features/library/models/library';
+import { useUpdateTimestamp } from '@/features/library';
 import { ossApi } from '@/features/oss/backend/api';
 
 import { ICstRenameDTO, rsformsApi } from './api';
@@ -26,6 +25,6 @@ export const useCstRename = () => {
     }
   });
   return {
-    cstRename: (data: { itemID: LibraryItemID; data: ICstRenameDTO }) => mutation.mutateAsync(data)
+    cstRename: (data: { itemID: number; data: ICstRenameDTO }) => mutation.mutateAsync(data)
   };
 };

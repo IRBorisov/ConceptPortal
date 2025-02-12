@@ -4,21 +4,21 @@ import clsx from 'clsx';
 
 import { SelectSingle } from '@/components/Input';
 import { CProps } from '@/components/props';
-import { IVersionInfo, VersionID } from '@/features/library/models/library';
 
-import { labelVersion } from '../labels';
+import { labelVersion } from '../../rsform/labels';
+import { IVersionInfo } from '../models/library';
 
 interface SelectVersionProps extends CProps.Styling {
   id?: string;
   items?: IVersionInfo[];
-  value?: VersionID;
-  onChange: (newValue?: VersionID) => void;
+  value?: number;
+  onChange: (newValue?: number) => void;
 
   placeholder?: string;
   noBorder?: boolean;
 }
 
-function SelectVersion({ id, className, items, value, onChange, ...restProps }: SelectVersionProps) {
+export function SelectVersion({ id, className, items, value, onChange, ...restProps }: SelectVersionProps) {
   const options = [
     {
       value: undefined,
@@ -46,5 +46,3 @@ function SelectVersion({ id, className, items, value, onChange, ...restProps }: 
     />
   );
 }
-
-export default SelectVersion;

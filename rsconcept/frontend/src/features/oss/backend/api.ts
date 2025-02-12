@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/apiTransport';
 import { DELAYS } from '@/backend/configuration';
-import { ILibraryItem, ILibraryItemData, LibraryItemID } from '@/features/library/models/library';
+import { ILibraryItem, ILibraryItemData } from '@/features/library/models/library';
 import { IArgument, ICstSubstituteEx, IOperation, OperationID, OperationType } from '@/features/oss/models/oss';
 import { schemaCstSubstitute } from '@/features/rsform/backend/api';
 import { IConstituentaReference, ITargetCst } from '@/features/rsform/models/rsform';
@@ -149,7 +149,7 @@ export type ICstRelocateDTO = z.infer<typeof schemaCstRelocate>;
 export const ossApi = {
   baseKey: 'oss',
 
-  getOssQueryOptions: ({ itemID }: { itemID?: LibraryItemID }) => {
+  getOssQueryOptions: ({ itemID }: { itemID?: number }) => {
     return queryOptions({
       queryKey: [ossApi.baseKey, 'item', itemID],
       staleTime: DELAYS.staleShort,
@@ -168,7 +168,7 @@ export const ossApi = {
     positions,
     isSilent
   }: {
-    itemID: LibraryItemID;
+    itemID: number;
     positions: IOperationPosition[];
     isSilent?: boolean;
   }) =>
@@ -180,7 +180,7 @@ export const ossApi = {
       }
     }),
 
-  operationCreate: ({ itemID, data }: { itemID: LibraryItemID; data: IOperationCreateDTO }) =>
+  operationCreate: ({ itemID, data }: { itemID: number; data: IOperationCreateDTO }) =>
     axiosPost<IOperationCreateDTO, IOperationCreatedResponse>({
       endpoint: `/api/oss/${itemID}/create-operation`,
       request: {
@@ -188,7 +188,7 @@ export const ossApi = {
         successMessage: response => infoMsg.newOperation(response.new_operation.alias)
       }
     }),
-  operationDelete: ({ itemID, data }: { itemID: LibraryItemID; data: IOperationDeleteDTO }) =>
+  operationDelete: ({ itemID, data }: { itemID: number; data: IOperationDeleteDTO }) =>
     axiosPatch<IOperationDeleteDTO, IOperationSchemaDTO>({
       endpoint: `/api/oss/${itemID}/delete-operation`,
       request: {
@@ -196,7 +196,7 @@ export const ossApi = {
         successMessage: infoMsg.operationDestroyed
       }
     }),
-  inputCreate: ({ itemID, data }: { itemID: LibraryItemID; data: ITargetOperation }) =>
+  inputCreate: ({ itemID, data }: { itemID: number; data: ITargetOperation }) =>
     axiosPatch<ITargetOperation, IInputCreatedResponse>({
       endpoint: `/api/oss/${itemID}/create-input`,
       request: {
@@ -204,7 +204,7 @@ export const ossApi = {
         successMessage: infoMsg.newLibraryItem
       }
     }),
-  inputUpdate: ({ itemID, data }: { itemID: LibraryItemID; data: IInputUpdateDTO }) =>
+  inputUpdate: ({ itemID, data }: { itemID: number; data: IInputUpdateDTO }) =>
     axiosPatch<IInputUpdateDTO, IOperationSchemaDTO>({
       endpoint: `/api/oss/${itemID}/set-input`,
       request: {
@@ -212,7 +212,7 @@ export const ossApi = {
         successMessage: infoMsg.changesSaved
       }
     }),
-  operationUpdate: ({ itemID, data }: { itemID: LibraryItemID; data: IOperationUpdateDTO }) =>
+  operationUpdate: ({ itemID, data }: { itemID: number; data: IOperationUpdateDTO }) =>
     axiosPatch<IOperationUpdateDTO, IOperationSchemaDTO>({
       endpoint: `/api/oss/${itemID}/update-operation`,
       request: {
@@ -220,7 +220,7 @@ export const ossApi = {
         successMessage: infoMsg.changesSaved
       }
     }),
-  operationExecute: ({ itemID, data }: { itemID: LibraryItemID; data: ITargetOperation }) =>
+  operationExecute: ({ itemID, data }: { itemID: number; data: ITargetOperation }) =>
     axiosPost<ITargetOperation, IOperationSchemaDTO>({
       endpoint: `/api/oss/${itemID}/execute-operation`,
       request: {

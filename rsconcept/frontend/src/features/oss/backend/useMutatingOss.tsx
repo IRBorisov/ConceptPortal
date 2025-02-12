@@ -1,6 +1,6 @@
 import { useIsMutating } from '@tanstack/react-query';
 
-import { libraryApi } from '@/features/library/backend/api';
+import { libraryApi } from '@/features/library';
 
 import { ossApi } from './api';
 

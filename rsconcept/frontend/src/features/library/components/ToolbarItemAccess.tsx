@@ -4,13 +4,14 @@ import { VisibilityIcon } from '@/components/DomainIcons';
 import { IconImmutable, IconMutable } from '@/components/Icons';
 import { Label } from '@/components/Input';
 import { BadgeHelp, HelpTopic } from '@/features/help';
-import { useMutatingLibrary } from '@/features/library/backend/useMutatingLibrary';
-import { useSetAccessPolicy } from '@/features/library/backend/useSetAccessPolicy';
-import SelectAccessPolicy from '@/features/library/components/SelectAccessPolicy';
-import { AccessPolicy, ILibraryItemEditor } from '@/features/library/models/library';
-import { useRoleStore } from '@/features/users';
-import { UserRole } from '@/features/users/models/user';
+import { useRoleStore, UserRole } from '@/features/users';
 import { PARAMETER } from '@/utils/constants';
+
+import { useMutatingLibrary } from '../backend/useMutatingLibrary';
+import { useSetAccessPolicy } from '../backend/useSetAccessPolicy';
+import { AccessPolicy } from '../models/library';
+import { ILibraryItemEditor } from './EditorLibraryItem';
+import { SelectAccessPolicy } from './SelectAccessPolicy';
 
 interface ToolbarItemAccessProps {
   visible: boolean;
@@ -20,7 +21,13 @@ interface ToolbarItemAccessProps {
   controller: ILibraryItemEditor;
 }
 
-function ToolbarItemAccess({ visible, toggleVisible, readOnly, toggleReadOnly, controller }: ToolbarItemAccessProps) {
+export function ToolbarItemAccess({
+  visible,
+  toggleVisible,
+  readOnly,
+  toggleReadOnly,
+  controller
+}: ToolbarItemAccessProps) {
   const role = useRoleStore(state => state.role);
   const isProcessing = useMutatingLibrary();
   const policy = controller.schema.access_policy;
@@ -65,5 +72,3 @@ function ToolbarItemAccess({ visible, toggleVisible, readOnly, toggleReadOnly, c
     </Overlay>
   );
 }
-
-export default ToolbarItemAccess;

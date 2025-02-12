@@ -10,21 +10,20 @@ import { VisibilityIcon } from '@/components/DomainIcons';
 import { Checkbox, Label, TextArea, TextInput } from '@/components/Input';
 import { ModalForm } from '@/components/Modal';
 import { useAuthSuspense } from '@/features/auth';
-import { ICloneLibraryItemDTO, schemaCloneLibraryItem } from '@/features/library/backend/api';
-import { useCloneItem } from '@/features/library/backend/useCloneItem';
-import SelectAccessPolicy from '@/features/library/components/SelectAccessPolicy';
-import SelectLocationContext from '@/features/library/components/SelectLocationContext';
-import SelectLocationHead from '@/features/library/components/SelectLocationHead';
-import { AccessPolicy, ILibraryItem, LocationHead } from '@/features/library/models/library';
-import { cloneTitle, combineLocation } from '@/features/library/models/libraryAPI';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { ConstituentaID } from '../models/rsform';
+import { ICloneLibraryItemDTO, schemaCloneLibraryItem } from '../backend/api';
+import { useCloneItem } from '../backend/useCloneItem';
+import { SelectAccessPolicy } from '../components/SelectAccessPolicy';
+import { SelectLocationContext } from '../components/SelectLocationContext';
+import { SelectLocationHead } from '../components/SelectLocationHead';
+import { AccessPolicy, ILibraryItem, LocationHead } from '../models/library';
+import { cloneTitle, combineLocation } from '../models/libraryAPI';
 
 export interface DlgCloneLibraryItemProps {
   base: ILibraryItem;
   initialLocation: string;
-  selected: ConstituentaID[];
+  selected: number[];
   totalCount: number;
 }
 

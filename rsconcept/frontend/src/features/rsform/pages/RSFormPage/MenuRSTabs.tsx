@@ -34,8 +34,7 @@ import {
 import { useAuthSuspense } from '@/features/auth';
 import { AccessPolicy, LocationHead } from '@/features/library/models/library';
 import { OssTabID } from '@/features/oss/pages/OssPage/OssEditContext';
-import { useRoleStore } from '@/features/users';
-import { UserRole } from '@/features/users/models/user';
+import { useRoleStore, UserRole } from '@/features/users';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';

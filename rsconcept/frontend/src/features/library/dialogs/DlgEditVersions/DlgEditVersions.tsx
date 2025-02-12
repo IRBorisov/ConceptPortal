@@ -9,20 +9,19 @@ import { MiniButton } from '@/components/Control';
 import { IconReset, IconSave } from '@/components/Icons';
 import { TextArea, TextInput } from '@/components/Input';
 import { ModalView } from '@/components/Modal';
-import { IVersionUpdateDTO, schemaVersionUpdate } from '@/features/library/backend/api';
-import { useMutatingLibrary } from '@/features/library/backend/useMutatingLibrary';
-import { useVersionDelete } from '@/features/library/backend/useVersionDelete';
-import { useVersionUpdate } from '@/features/library/backend/useVersionUpdate';
-import { LibraryItemID, VersionID } from '@/features/library/models/library';
+import { useRSFormSuspense } from '@/features/rsform/backend/useRSForm';
 import { useDialogsStore } from '@/stores/dialogs';
 import { errorMsg } from '@/utils/labels';
 
-import { useRSFormSuspense } from '../../backend/useRSForm';
+import { IVersionUpdateDTO, schemaVersionUpdate } from '../../backend/api';
+import { useMutatingLibrary } from '../../backend/useMutatingLibrary';
+import { useVersionDelete } from '../../backend/useVersionDelete';
+import { useVersionUpdate } from '../../backend/useVersionUpdate';
 import TableVersions from './TableVersions';
 
 export interface DlgEditVersionsProps {
-  itemID: LibraryItemID;
-  afterDelete: (targetVersion: VersionID) => void;
+  itemID: number;
+  afterDelete: (targetVersion: number) => void;
 }
 
 function DlgEditVersions() {
@@ -56,7 +55,7 @@ function DlgEditVersions() {
     [schema, versionID, versionName]
   );
 
-  function handleSelectVersion(targetVersion: VersionID) {
+  function handleSelectVersion(targetVersion: number) {
     const ver = schema.versions.find(ver => ver.id === targetVersion);
     if (!ver) {
       return;
@@ -64,7 +63,7 @@ function DlgEditVersions() {
     reset({ ...ver });
   }
 
-  function handleDeleteVersion(targetVersion: VersionID) {
+  function handleDeleteVersion(targetVersion: number) {
     const nextVer = schema.versions.find(ver => ver.id !== targetVersion);
     void versionDelete({ itemID: itemID, versionID: targetVersion }).then(() => {
       if (!nextVer) {

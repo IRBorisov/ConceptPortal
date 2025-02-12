@@ -1,7 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { useUpdateTimestamp } from '@/features/library/backend/useUpdateTimestamp';
-import { LibraryItemID } from '@/features/library/models/library';
+import { useUpdateTimestamp } from '@/features/library';
 
 import { IOperationPosition, ossApi } from './api';
 
@@ -14,7 +13,7 @@ export const useUpdatePositions = () => {
   });
   return {
     updatePositions: (data: {
-      itemID: LibraryItemID; //
+      itemID: number; //
       positions: IOperationPosition[];
       isSilent?: boolean;
     }) => mutation.mutateAsync(data)

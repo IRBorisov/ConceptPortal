@@ -2,7 +2,7 @@
  * Module: Models for formal representation for systems of concepts.
  */
 
-import { ILibraryItemReference, ILibraryItemVersioned, LibraryItemID } from '@/features/library/models/library';
+import { ILibraryItemReference, ILibraryItemVersioned } from '@/features/library/models/library';
 import { Graph } from '@/models/Graph';
 
 import { IArgumentInfo, ParsingStatus, ValueClass } from './rslang';
@@ -94,8 +94,8 @@ export interface IConstituenta extends IConstituentaMeta {
     args: IArgumentInfo[];
   };
 
-  /** {@link LibraryItemID} of this {@link IConstituenta}. */
-  schema: LibraryItemID;
+  /** Identifier of {@link LibraryItem} containing this {@link IConstituenta}. */
+  schema: number;
 
   /** {@link CstClass} of this {@link IConstituenta}. */
   cst_class: CstClass;
@@ -111,8 +111,8 @@ export interface IConstituenta extends IConstituentaMeta {
    *  0 - not inherited, 1 - inherited by 1st schema, 2 - inherited by 2nd schema, etc.
    */
   parent_schema_index: number;
-  /** {@link LibraryItemID} that contains parent of this inherited {@link IConstituenta}. */
-  parent_schema?: LibraryItemID;
+  /** {@link LibraryItem} that contains parent of this inherited {@link IConstituenta}. */
+  parent_schema?: number;
   /** Indicates if this {@link IConstituenta} is inherited. */
   is_inherited: boolean;
   /** Indicates if this {@link IConstituenta} has children that are inherited. */
@@ -169,9 +169,9 @@ export interface IRSFormStats {
  */
 export interface IInheritanceInfo {
   child: ConstituentaID;
-  child_source: LibraryItemID;
+  child_source: number;
   parent: ConstituentaID;
-  parent_source: LibraryItemID;
+  parent_source: number;
 }
 
 /**

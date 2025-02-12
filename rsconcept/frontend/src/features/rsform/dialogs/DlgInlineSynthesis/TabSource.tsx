@@ -3,12 +3,10 @@
 import { useFormContext, useWatch } from 'react-hook-form';
 
 import { TextInput } from '@/components/Input';
-import { useLibrary } from '@/features/library/backend/useLibrary';
-import { LibraryItemID, LibraryItemType } from '@/features/library/models/library';
+import { LibraryItemType, PickSchema, useLibrary } from '@/features/library';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { IInlineSynthesisDTO } from '../../backend/api';
-import { PickSchema } from '../../components/PickSchema';
 import { sortItemsForInlineSynthesis } from '../../models/rsformAPI';
 import { DlgInlineSynthesisProps } from './DlgInlineSynthesis';
 
@@ -21,7 +19,7 @@ function TabSource() {
   const selectedInfo = libraryItems.find(item => item.id === sourceID);
   const sortedItems = sortItemsForInlineSynthesis(receiver, libraryItems);
 
-  function handleSelectSource(newValue: LibraryItemID) {
+  function handleSelectSource(newValue: number) {
     if (newValue === sourceID) {
       return;
     }

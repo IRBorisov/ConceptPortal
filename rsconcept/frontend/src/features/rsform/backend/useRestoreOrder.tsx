@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { useUpdateTimestamp } from '@/features/library/backend/useUpdateTimestamp';
-import { LibraryItemID } from '@/features/library/models/library';
+import { useUpdateTimestamp } from '@/features/library';
 
 import { rsformsApi } from './api';
 
@@ -17,6 +16,6 @@ export const useRestoreOrder = () => {
     }
   });
   return {
-    restoreOrder: (data: { itemID: LibraryItemID }) => mutation.mutateAsync(data)
+    restoreOrder: (data: { itemID: number }) => mutation.mutateAsync(data)
   };
 };

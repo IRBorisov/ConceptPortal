@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { libraryApi } from '@/features/library/backend/api';
+import { libraryApi } from '@/features/library';
 import { rsformsApi } from '@/features/rsform/backend/api';
 
 import { ICstRelocateDTO, ossApi } from './api';

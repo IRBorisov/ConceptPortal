@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { libraryApi } from '@/features/library/backend/api';
-import { LibraryItemID } from '@/features/library/models/library';
+import { libraryApi } from '@/features/library';
 import { rsformsApi } from '@/features/rsform/backend/api';
 
 import { ITargetOperation, ossApi } from './api';
@@ -20,6 +19,6 @@ export const useOperationExecute = () => {
     }
   });
   return {
-    operationExecute: (data: { itemID: LibraryItemID; data: ITargetOperation }) => mutation.mutateAsync(data)
+    operationExecute: (data: { itemID: number; data: ITargetOperation }) => mutation.mutateAsync(data)
   };
 };

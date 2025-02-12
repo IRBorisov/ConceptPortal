@@ -10,7 +10,6 @@ import { isAxiosError } from '@/backend/apiTransport';
 import { Divider } from '@/components/Container';
 import { TextURL } from '@/components/Control';
 import { ErrorData } from '@/components/InfoError';
-import { LibraryItemID } from '@/features/library/models/library';
 import useQueryStrings from '@/hooks/useQueryStrings';
 import { useModificationStore } from '@/stores/modification';
 
@@ -72,7 +71,7 @@ function ProcessError({
 }: {
   error: ErrorData;
   isArchive: boolean;
-  itemID?: LibraryItemID;
+  itemID?: number;
 }): React.ReactElement | null {
   if (isAxiosError(error) && error.response) {
     if (error.response.status === 404) {
