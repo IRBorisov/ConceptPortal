@@ -9,8 +9,8 @@ import { useMutatingLibrary } from '@/features/library/backend/useMutatingLibrar
 import { useSetAccessPolicy } from '@/features/library/backend/useSetAccessPolicy';
 import SelectAccessPolicy from '@/features/library/components/SelectAccessPolicy';
 import { AccessPolicy, ILibraryItemEditor } from '@/features/library/models/library';
+import { useRoleStore } from '@/features/users';
 import { UserRole } from '@/features/users/models/user';
-import { useRoleStore } from '@/stores/role';
 import { PARAMETER } from '@/utils/constants';
 
 interface ToolbarItemAccessProps {

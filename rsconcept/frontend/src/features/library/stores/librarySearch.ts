@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-import { UserID } from '@/features/users/models/user';
 import { toggleTristateFlag } from '@/utils/utils';
 
 import { ILibraryFilter, LocationHead } from '../models/library';
@@ -34,8 +33,8 @@ interface LibrarySearchStore {
   isEditor: boolean | undefined;
   toggleEditor: () => void;
 
-  filterUser: UserID | undefined;
-  setFilterUser: (value: UserID | undefined) => void;
+  filterUser: number | undefined;
+  setFilterUser: (value: number | undefined) => void;
 
   resetFilter: () => void;
 }

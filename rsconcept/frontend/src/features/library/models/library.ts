@@ -2,8 +2,6 @@
  * Module: Models for LibraryItem.
  */
 
-import { UserID } from '@/features/users/models/user';
-
 /**
  * Represents type of library items.
  */
@@ -69,14 +67,14 @@ export interface ILibraryItem {
   access_policy: AccessPolicy;
   time_create: string;
   time_update: string;
-  owner: UserID | null;
+  owner: number | null;
 }
 
 /**
  * Represents {@link ILibraryItem} constant data loaded for both OSS and RSForm.
  */
 export interface ILibraryItemData extends ILibraryItem {
-  editors: UserID[];
+  editors: number[];
 }
 
 /**
@@ -119,5 +117,5 @@ export interface ILibraryFilter {
   isVisible?: boolean;
   isOwned?: boolean;
   isEditor?: boolean;
-  filterUser?: UserID;
+  filterUser?: number;
 }

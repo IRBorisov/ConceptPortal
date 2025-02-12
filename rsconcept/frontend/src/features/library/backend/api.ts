@@ -5,7 +5,6 @@ import { axiosDelete, axiosGet, axiosPatch, axiosPost } from '@/backend/apiTrans
 import { DELAYS } from '@/backend/configuration';
 import { ossApi } from '@/features/oss/backend/api';
 import { IRSFormDTO, rsformsApi } from '@/features/rsform/backend/api';
-import { UserID } from '@/features/users/models/user';
 import { errorMsg, infoMsg } from '@/utils/labels';
 
 import { AccessPolicy, ILibraryItem, IVersionInfo, LibraryItemID, LibraryItemType, VersionID } from '../models/library';
@@ -179,7 +178,7 @@ export const libraryApi = {
         successMessage: infoMsg.changesSaved
       }
     }),
-  setOwner: ({ itemID, owner }: { itemID: LibraryItemID; owner: UserID }) =>
+  setOwner: ({ itemID, owner }: { itemID: LibraryItemID; owner: number }) =>
     axiosPatch({
       endpoint: `/api/library/${itemID}/set-owner`,
       request: {
@@ -203,7 +202,7 @@ export const libraryApi = {
         successMessage: infoMsg.changesSaved
       }
     }),
-  setEditors: ({ itemID, editors }: { itemID: LibraryItemID; editors: UserID[] }) =>
+  setEditors: ({ itemID, editors }: { itemID: LibraryItemID; editors: number[] }) =>
     axiosPatch({
       endpoint: `/api/library/${itemID}/set-editors`,
       request: {

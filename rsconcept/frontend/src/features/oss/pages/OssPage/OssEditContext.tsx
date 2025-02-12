@@ -8,10 +8,10 @@ import { useDeleteItem } from '@/features/library/backend/useDeleteItem';
 import { ILibraryItemEditor, LibraryItemID } from '@/features/library/models/library';
 import { useLibrarySearchStore } from '@/features/library/stores/librarySearch';
 import { RSTabID } from '@/features/rsform/pages/RSFormPage/RSEditContext';
+import { useRoleStore } from '@/features/users';
 import { UserRole } from '@/features/users/models/user';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
-import { useRoleStore } from '@/stores/role';
 import { promptText } from '@/utils/labels';
 
 import { IOperationPosition } from '../../backend/api';

@@ -2,9 +2,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { IOperationSchemaDTO, ossApi } from '@/features/oss/backend/api';
 import { rsformsApi } from '@/features/rsform/backend/api';
-import { UserID } from '@/features/users/models/user';
 
-import { ILibraryItem, LibraryItemID } from '../models/library';
+import { ILibraryItem } from '../models/library';
 import { libraryApi } from './api';
 
 export const useSetOwner = () => {
@@ -40,6 +39,6 @@ export const useSetOwner = () => {
   });
 
   return {
-    setOwner: (data: { itemID: LibraryItemID; owner: UserID }) => mutation.mutateAsync(data)
+    setOwner: (data: { itemID: number; owner: number }) => mutation.mutateAsync(data)
   };
 };

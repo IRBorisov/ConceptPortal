@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-import { UserRole } from '@/features/users/models/user';
+import { UserRole } from '../models/user';
 
 export interface RoleFlags {
   isOwner: boolean;

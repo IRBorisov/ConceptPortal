@@ -7,36 +7,32 @@ import { MiniButton } from '@/components/Control';
 import { IconRemove } from '@/components/Icons';
 import { Label } from '@/components/Input';
 import { ModalForm } from '@/components/Modal';
-import { useUsers } from '@/features/users/backend/useUsers';
-import { SelectUser } from '@/features/users/components/SelectUser';
-import { UserID } from '@/features/users/models/user';
+import { SelectUser, TableUsers, useUsers } from '@/features/users';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { useSetEditors } from '../../backend/useSetEditors';
-import { LibraryItemID } from '../../models/library';
-import TableUsers from './TableUsers';
 
 export interface DlgEditEditorsProps {
-  itemID: LibraryItemID;
-  initial: UserID[];
+  itemID: number;
+  initialEditors: number[];
 }
 
 function DlgEditEditors() {
-  const { initial, itemID } = useDialogsStore(state => state.props as DlgEditEditorsProps);
+  const { initialEditors: initial, itemID } = useDialogsStore(state => state.props as DlgEditEditorsProps);
   const { setEditors } = useSetEditors();
 
-  const [selected, setSelected] = useState<UserID[]>(initial);
+  const [selected, setSelected] = useState<number[]>(initial);
   const { users } = useUsers();
 
   function handleSubmit() {
     void setEditors({ itemID: itemID, editors: selected });
   }
 
-  function onDeleteEditor(target: UserID) {
+  function onDeleteEditor(target: number) {
     setSelected(prev => prev.filter(id => id !== target));
   }
 
-  function onAddEditor(target: UserID) {
+  function onAddEditor(target: number) {
     setSelected(prev => [...prev, target]);
   }
 

@@ -2,9 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { ossApi } from '@/features/oss/backend/api';
 import { rsformsApi } from '@/features/rsform/backend/api';
-import { UserID } from '@/features/users/models/user';
 
-import { LibraryItemID } from '../models/library';
 import { libraryApi } from './api';
 
 export const useSetEditors = () => {
@@ -36,6 +34,6 @@ export const useSetEditors = () => {
   });
 
   return {
-    setEditors: (data: { itemID: LibraryItemID; editors: UserID[] }) => mutation.mutateAsync(data)
+    setEditors: (data: { itemID: number; editors: number[] }) => mutation.mutateAsync(data)
   };
 };

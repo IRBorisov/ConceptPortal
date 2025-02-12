@@ -3,16 +3,17 @@
 import { MiniButton } from '@/components/Control';
 import DataTable, { createColumnHelper } from '@/components/DataTable';
 import { IconRemove } from '@/components/Icons';
-import { IUserInfo, UserID } from '@/features/users/models/user';
+
+import { IUserInfo } from '../models/user';
 
 interface TableUsersProps {
   items: IUserInfo[];
-  onDelete: (target: UserID) => void;
+  onDelete: (target: number) => void;
 }
 
 const columnHelper = createColumnHelper<IUserInfo>();
 
-function TableUsers({ items, onDelete }: TableUsersProps) {
+export function TableUsers({ items, onDelete }: TableUsersProps) {
   const columns = [
     columnHelper.accessor('last_name', {
       id: 'last_name',
@@ -53,5 +54,3 @@ function TableUsers({ items, onDelete }: TableUsersProps) {
     />
   );
 }
-
-export default TableUsers;

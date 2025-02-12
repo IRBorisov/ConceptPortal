@@ -34,10 +34,10 @@ import {
 import { useAuthSuspense } from '@/features/auth/backend/useAuth';
 import { AccessPolicy, LocationHead } from '@/features/library/models/library';
 import { OssTabID } from '@/features/oss/pages/OssPage/OssEditContext';
+import { useRoleStore } from '@/features/users';
 import { UserRole } from '@/features/users/models/user';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
-import { useRoleStore } from '@/stores/role';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';
 import { describeAccessMode, labelAccessMode, tooltipText } from '@/utils/labels';
 import { generatePageQR, promptUnsaved, sharePage } from '@/utils/utils';

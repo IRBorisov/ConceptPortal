@@ -3,18 +3,16 @@ import { z } from 'zod';
 
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/apiTransport';
 import { DELAYS } from '@/backend/configuration';
-import { LibraryItemID } from '@/features/library/models/library';
-import { UserID } from '@/features/users/models/user';
 import { errorMsg, infoMsg } from '@/utils/labels';
 
 /**
  * Represents CurrentUser information.
  */
 export interface ICurrentUser {
-  id: UserID | null;
+  id: number | null;
   username: string;
   is_staff: boolean;
-  editor: LibraryItemID[];
+  editor: number[];
 }
 
 /**

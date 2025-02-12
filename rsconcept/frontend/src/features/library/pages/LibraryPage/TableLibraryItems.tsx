@@ -10,7 +10,7 @@ import { MiniButton, TextURL } from '@/components/Control';
 import DataTable, { createColumnHelper, IConditionalStyle, VisibilityState } from '@/components/DataTable';
 import { IconFolderTree } from '@/components/Icons';
 import { CProps } from '@/components/props';
-import { useLabelUser } from '@/features/users/backend/useLabelUser';
+import { useLabelUser } from '@/features/users';
 import useWindowSize from '@/hooks/useWindowSize';
 import { useFitHeight } from '@/stores/appLayout';
 import { usePreferencesStore } from '@/stores/preferences';

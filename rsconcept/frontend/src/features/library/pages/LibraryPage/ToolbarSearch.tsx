@@ -16,7 +16,7 @@ import {
 } from '@/components/Icons';
 import { CProps } from '@/components/props';
 import { SearchBar } from '@/components/shared/SearchBar';
-import { SelectUser } from '@/features/users/components/SelectUser';
+import { SelectUser } from '@/features/users';
 import { prefixes } from '@/utils/constants';
 import { tripleToggleColor } from '@/utils/utils';
 

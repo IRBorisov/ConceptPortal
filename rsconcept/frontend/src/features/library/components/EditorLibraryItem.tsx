@@ -16,13 +16,10 @@ import {
 import { Loader } from '@/components/Loader';
 import { CProps } from '@/components/props';
 import { ValueIcon } from '@/components/View';
-import { useLabelUser } from '@/features/users/backend/useLabelUser';
-import { InfoUsers } from '@/features/users/components/InfoUsers';
-import { SelectUser } from '@/features/users/components/SelectUser';
-import { UserID, UserRole } from '@/features/users/models/user';
+import { InfoUsers, SelectUser, useLabelUser, useRoleStore } from '@/features/users';
+import { UserRole } from '@/features/users/models/user';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
-import { useRoleStore } from '@/stores/role';
 import { prefixes } from '@/utils/constants';
 import { promptText } from '@/utils/labels';
 
@@ -53,7 +50,7 @@ export function EditorLibraryItem({ controller }: EditorLibraryItemProps) {
   const showEditLocation = useDialogsStore(state => state.showChangeLocation);
 
   const ownerSelector = useDropdown();
-  const onSelectUser = function (newValue: UserID) {
+  const onSelectUser = function (newValue: number) {
     ownerSelector.hide();
     if (newValue === controller.schema.owner) {
       return;
@@ -79,7 +76,7 @@ export function EditorLibraryItem({ controller }: EditorLibraryItemProps) {
   function handleEditEditors() {
     showEditEditors({
       itemID: controller.schema.id,
-      initial: controller.schema.editors
+      initialEditors: controller.schema.editors
     });
   }
 
