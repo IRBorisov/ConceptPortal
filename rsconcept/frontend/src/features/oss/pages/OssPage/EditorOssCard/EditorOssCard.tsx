@@ -3,8 +3,7 @@
 import clsx from 'clsx';
 
 import { FlexColumn } from '@/components/Container';
-// TODO: reconsider this dependency
-import EditorLibraryItem from '@/features/rsform/pages/RSFormPage/EditorRSFormCard/EditorLibraryItem';
+import { EditorLibraryItem } from '@/features/library/components/EditorLibraryItem';
 import ToolbarRSFormCard from '@/features/rsform/pages/RSFormPage/EditorRSFormCard/ToolbarRSFormCard';
 import { useModificationStore } from '@/stores/modification';
 import { globals } from '@/utils/constants';

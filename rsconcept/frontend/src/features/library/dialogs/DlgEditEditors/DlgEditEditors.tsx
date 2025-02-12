@@ -12,21 +12,24 @@ import { SelectUser } from '@/features/users/components/SelectUser';
 import { UserID } from '@/features/users/models/user';
 import { useDialogsStore } from '@/stores/dialogs';
 
+import { useSetEditors } from '../../backend/useSetEditors';
+import { LibraryItemID } from '../../models/library';
 import TableUsers from './TableUsers';
 
 export interface DlgEditEditorsProps {
-  editors: UserID[];
-  onChangeEditors: (newValue: UserID[]) => void;
+  itemID: LibraryItemID;
+  initial: UserID[];
 }
 
 function DlgEditEditors() {
-  const { editors, onChangeEditors } = useDialogsStore(state => state.props as DlgEditEditorsProps);
-  const [selected, setSelected] = useState<UserID[]>(editors);
+  const { initial, itemID } = useDialogsStore(state => state.props as DlgEditEditorsProps);
+  const { setEditors } = useSetEditors();
+
+  const [selected, setSelected] = useState<UserID[]>(initial);
   const { users } = useUsers();
 
   function handleSubmit() {
-    onChangeEditors(selected);
-    return true;
+    void setEditors({ itemID: itemID, editors: selected });
   }
 
   function onDeleteEditor(target: UserID) {

@@ -3,11 +3,11 @@
 import clsx from 'clsx';
 
 import { FlexColumn } from '@/components/Container';
+import { EditorLibraryItem } from '@/features/library/components/EditorLibraryItem';
 import { useModificationStore } from '@/stores/modification';
 import { globals } from '@/utils/constants';
 
 import { useRSEdit } from '../RSEditContext';
-import EditorLibraryItem from './EditorLibraryItem';
 import FormRSForm from './FormRSForm';
 import RSFormStats from './RSFormStats';
 import ToolbarRSFormCard from './ToolbarRSFormCard';

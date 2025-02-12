@@ -1,8 +1,9 @@
 import clsx from 'clsx';
 
 import { CProps } from '@/components/props';
-import { useLabelUser } from '@/features/users/backend/useLabelUser';
-import { UserID } from '@/features/users/models/user';
+
+import { useLabelUser } from '../backend/useLabelUser';
+import { UserID } from '../models/user';
 
 interface InfoUsersProps extends CProps.Styling {
   items: UserID[];
@@ -10,7 +11,7 @@ interface InfoUsersProps extends CProps.Styling {
   header?: string;
 }
 
-function InfoUsers({ items, className, prefix, header, ...restProps }: InfoUsersProps) {
+export function InfoUsers({ items, className, prefix, header, ...restProps }: InfoUsersProps) {
   const getUserLabel = useLabelUser();
   return (
     <div className={clsx('flex flex-col dense', className)} {...restProps}>
@@ -22,5 +23,3 @@ function InfoUsers({ items, className, prefix, header, ...restProps }: InfoUsers
     </div>
   );
 }
-
-export default InfoUsers;

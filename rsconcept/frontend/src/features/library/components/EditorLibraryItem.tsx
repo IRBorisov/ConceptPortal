@@ -16,13 +16,8 @@ import {
 import { Loader } from '@/components/Loader';
 import { CProps } from '@/components/props';
 import { ValueIcon } from '@/components/View';
-import { useMutatingLibrary } from '@/features/library/backend/useMutatingLibrary';
-import { useSetEditors } from '@/features/library/backend/useSetEditors';
-import { useSetLocation } from '@/features/library/backend/useSetLocation';
-import { useSetOwner } from '@/features/library/backend/useSetOwner';
-import { ILibraryItemEditor } from '@/features/library/models/library';
-import { useLibrarySearchStore } from '@/features/library/stores/librarySearch';
 import { useLabelUser } from '@/features/users/backend/useLabelUser';
+import { InfoUsers } from '@/features/users/components/InfoUsers';
 import { SelectUser } from '@/features/users/components/SelectUser';
 import { UserID, UserRole } from '@/features/users/models/user';
 import { useDialogsStore } from '@/stores/dialogs';
@@ -31,13 +26,17 @@ import { useRoleStore } from '@/stores/role';
 import { prefixes } from '@/utils/constants';
 import { promptText } from '@/utils/labels';
 
-import InfoUsers from './InfoUsers';
+import { useMutatingLibrary } from '../backend/useMutatingLibrary';
+import { useSetLocation } from '../backend/useSetLocation';
+import { useSetOwner } from '../backend/useSetOwner';
+import { ILibraryItemEditor } from '../models/library';
+import { useLibrarySearchStore } from '../stores/librarySearch';
 
 interface EditorLibraryItemProps {
   controller: ILibraryItemEditor;
 }
 
-function EditorLibraryItem({ controller }: EditorLibraryItemProps) {
+export function EditorLibraryItem({ controller }: EditorLibraryItemProps) {
   const getUserLabel = useLabelUser();
   const role = useRoleStore(state => state.role);
   const intl = useIntl();
@@ -49,7 +48,6 @@ function EditorLibraryItem({ controller }: EditorLibraryItemProps) {
 
   const { setOwner } = useSetOwner();
   const { setLocation } = useSetLocation();
-  const { setEditors } = useSetEditors();
 
   const showEditEditors = useDialogsStore(state => state.showEditEditors);
   const showEditLocation = useDialogsStore(state => state.showChangeLocation);
@@ -80,8 +78,8 @@ function EditorLibraryItem({ controller }: EditorLibraryItemProps) {
 
   function handleEditEditors() {
     showEditEditors({
-      editors: controller.schema.editors,
-      onChangeEditors: newEditors => void setEditors({ itemID: controller.schema.id, editors: newEditors })
+      itemID: controller.schema.id,
+      initial: controller.schema.editors
     });
   }
 
@@ -163,5 +161,3 @@ function EditorLibraryItem({ controller }: EditorLibraryItemProps) {
     </div>
   );
 }
-
-export default EditorLibraryItem;

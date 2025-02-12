@@ -13,7 +13,7 @@ const DlgCreateVersion = React.lazy(() => import('@/features/rsform/dialogs/DlgC
 const DlgCstTemplate = React.lazy(() => import('@/features/rsform/dialogs/DlgCstTemplate'));
 const DlgDeleteCst = React.lazy(() => import('@/features/rsform/dialogs/DlgDeleteCst'));
 const DlgDeleteOperation = React.lazy(() => import('@/features/oss/dialogs/DlgDeleteOperation'));
-const DlgEditEditors = React.lazy(() => import('@/features/rsform/dialogs/DlgEditEditors'));
+const DlgEditEditors = React.lazy(() => import('@/features/library/dialogs/DlgEditEditors'));
 const DlgEditOperation = React.lazy(() => import('@/features/oss/dialogs/DlgEditOperation'));
 const DlgEditReference = React.lazy(() => import('@/features/rsform/dialogs/DlgEditReference'));
 const DlgEditVersions = React.lazy(() => import('@/features/rsform/dialogs/DlgEditVersions'));

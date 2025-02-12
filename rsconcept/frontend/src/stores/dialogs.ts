@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 
 import { DlgChangeLocationProps } from '@/features/library/dialogs/DlgChangeLocation';
+import { DlgEditEditorsProps } from '@/features/library/dialogs/DlgEditEditors/DlgEditEditors';
 import { DlgChangeInputSchemaProps } from '@/features/oss/dialogs/DlgChangeInputSchema';
 import { DlgCreateOperationProps } from '@/features/oss/dialogs/DlgCreateOperation/DlgCreateOperation';
 import { DlgDeleteOperationProps } from '@/features/oss/dialogs/DlgDeleteOperation';
@@ -11,7 +12,6 @@ import { DlgCreateCstProps } from '@/features/rsform/dialogs/DlgCreateCst/DlgCre
 import { DlgCreateVersionProps } from '@/features/rsform/dialogs/DlgCreateVersion';
 import { DlgCstTemplateProps } from '@/features/rsform/dialogs/DlgCstTemplate/DlgCstTemplate';
 import { DlgDeleteCstProps } from '@/features/rsform/dialogs/DlgDeleteCst/DlgDeleteCst';
-import { DlgEditEditorsProps } from '@/features/rsform/dialogs/DlgEditEditors/DlgEditEditors';
 import { DlgEditReferenceProps } from '@/features/rsform/dialogs/DlgEditReference/DlgEditReference';
 import { DlgEditVersionsProps } from '@/features/rsform/dialogs/DlgEditVersions/DlgEditVersions';
 import { DlgEditWordFormsProps } from '@/features/rsform/dialogs/DlgEditWordForms/DlgEditWordForms';
