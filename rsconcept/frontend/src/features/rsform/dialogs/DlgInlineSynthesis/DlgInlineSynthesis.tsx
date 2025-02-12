@@ -1,24 +1,25 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
 import clsx from 'clsx';
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useState } from 'react';
+import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import { Loader } from '@/components/Loader';
 import { ModalForm } from '@/components/Modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/Tabs';
-import { LibraryItemID } from '@/features/library/models/library';
-import { useRSForm } from '@/features/rsform/backend/useRSForm';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { ICstSubstitute, IInlineSynthesisDTO } from '../../backend/api';
-import { ConstituentaID, IRSForm } from '../../models/rsform';
+import { IInlineSynthesisDTO, schemaInlineSynthesis } from '../../backend/api';
+import { useInlineSynthesis } from '../../backend/useInlineSynthesis';
+import { IRSForm } from '../../models/rsform';
 import TabConstituents from './TabConstituents';
 import TabSource from './TabSource';
 import TabSubstitutions from './TabSubstitutions';
 
 export interface DlgInlineSynthesisProps {
   receiver: IRSForm;
-  onInlineSynthesis: (data: IInlineSynthesisDTO) => void;
+  onSynthesis: () => void;
 }
 
 export enum TabID {
@@ -28,40 +29,24 @@ export enum TabID {
 }
 
 function DlgInlineSynthesis() {
-  const { receiver, onInlineSynthesis } = useDialogsStore(state => state.props as DlgInlineSynthesisProps);
+  const { receiver, onSynthesis } = useDialogsStore(state => state.props as DlgInlineSynthesisProps);
   const [activeTab, setActiveTab] = useState(TabID.SCHEMA);
+  const { inlineSynthesis } = useInlineSynthesis();
 
-  const [sourceID, setSourceID] = useState<LibraryItemID | undefined>(undefined);
-  const [selected, setSelected] = useState<ConstituentaID[]>([]);
-  const [substitutions, setSubstitutions] = useState<ICstSubstitute[]>([]);
-
-  const { schema } = useRSForm({ itemID: sourceID });
-
-  const validated = selected.length > 0;
-
-  function handleSubmit() {
-    if (!sourceID || selected.length === 0) {
-      return true;
-    }
-    onInlineSynthesis({
-      source: sourceID,
+  const methods = useForm<IInlineSynthesisDTO>({
+    resolver: zodResolver(schemaInlineSynthesis),
+    defaultValues: {
       receiver: receiver.id,
-      items: selected,
-      substitutions: substitutions
-    });
-    return true;
-  }
+      source: null,
+      items: [],
+      substitutions: []
+    },
+    mode: 'onChange'
+  });
+  const sourceID = useWatch({ control: methods.control, name: 'source' });
 
-  useEffect(() => {
-    if (schema) {
-      setSelected(schema.items.map(cst => cst.id));
-    }
-  }, [schema, setSelected]);
-
-  function handleSetSource(schemaID: LibraryItemID) {
-    setSourceID(schemaID);
-    setSelected([]);
-    setSubstitutions([]);
+  function onSubmit(data: IInlineSynthesisDTO) {
+    return inlineSynthesis(data).then(onSynthesis);
   }
 
   return (
@@ -69,8 +54,8 @@ function DlgInlineSynthesis() {
       header='Импорт концептуальной схем'
       submitText='Добавить конституенты'
       className='w-[40rem] h-[33rem] px-6'
-      canSubmit={validated}
-      onSubmit={handleSubmit}
+      canSubmit={methods.formState.isValid && sourceID !== null}
+      onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
     >
       <Tabs
         selectedTabClassName='clr-selected'
@@ -94,31 +79,27 @@ function DlgInlineSynthesis() {
           />
         </TabList>
 
-        <TabPanel>
-          <TabSource selected={sourceID} setSelected={handleSetSource} receiver={receiver} />
-        </TabPanel>
+        <FormProvider {...methods}>
+          <TabPanel>
+            <TabSource />
+          </TabPanel>
 
-        <TabPanel>
-          {!!sourceID ? (
-            <Suspense fallback={<Loader />}>
-              <TabConstituents itemID={sourceID} selected={selected} setSelected={setSelected} />
-            </Suspense>
-          ) : null}
-        </TabPanel>
+          <TabPanel>
+            {!!sourceID ? (
+              <Suspense fallback={<Loader />}>
+                <TabConstituents />
+              </Suspense>
+            ) : null}
+          </TabPanel>
 
-        <TabPanel>
-          {!!sourceID ? (
-            <Suspense fallback={<Loader />}>
-              <TabSubstitutions
-                sourceID={sourceID}
-                receiver={receiver}
-                selected={selected}
-                substitutions={substitutions}
-                setSubstitutions={setSubstitutions}
-              />
-            </Suspense>
-          ) : null}
-        </TabPanel>
+          <TabPanel>
+            {!!sourceID ? (
+              <Suspense fallback={<Loader />}>
+                <TabSubstitutions />
+              </Suspense>
+            ) : null}
+          </TabPanel>
+        </FormProvider>
       </Tabs>
     </ModalForm>
   );

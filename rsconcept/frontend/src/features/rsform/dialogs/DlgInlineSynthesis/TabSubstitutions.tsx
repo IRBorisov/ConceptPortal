@@ -1,32 +1,37 @@
 'use client';
 
-import { LibraryItemID } from '@/features/library/models/library';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
-import { ICstSubstitute } from '../../backend/api';
+import { useDialogsStore } from '@/stores/dialogs';
+
+import { IInlineSynthesisDTO } from '../../backend/api';
 import { useRSFormSuspense } from '../../backend/useRSForm';
 import PickSubstitutions from '../../components/PickSubstitutions';
-import { ConstituentaID, IRSForm } from '../../models/rsform';
+import { DlgInlineSynthesisProps } from './DlgInlineSynthesis';
 
-interface TabSubstitutionsProps {
-  receiver: IRSForm;
-  sourceID: LibraryItemID;
-  selected: ConstituentaID[];
+function TabSubstitutions() {
+  const { receiver } = useDialogsStore(state => state.props as DlgInlineSynthesisProps);
+  const { control } = useFormContext<IInlineSynthesisDTO>();
+  const sourceID = useWatch({ control, name: 'source' });
+  const selected = useWatch({ control, name: 'items' });
 
-  substitutions: ICstSubstitute[];
-  setSubstitutions: React.Dispatch<React.SetStateAction<ICstSubstitute[]>>;
-}
-
-function TabSubstitutions({ sourceID, receiver, selected, substitutions, setSubstitutions }: TabSubstitutionsProps) {
-  const { schema: source } = useRSFormSuspense({ itemID: sourceID });
-  const schemas = [...(source ? [source] : []), ...(receiver ? [receiver] : [])];
+  const { schema: source } = useRSFormSuspense({ itemID: sourceID! });
+  const selfSubstitution = receiver.id === source.id;
 
   return (
-    <PickSubstitutions
-      value={substitutions}
-      onChange={setSubstitutions}
-      rows={10}
-      schemas={schemas}
-      filter={cst => cst.id !== source?.id || selected.includes(cst.id)}
+    <Controller
+      name='substitutions'
+      control={control}
+      render={({ field }) => (
+        <PickSubstitutions
+          value={field.value}
+          onChange={field.onChange}
+          allowSelfSubstitution={selfSubstitution}
+          rows={10}
+          schemas={selfSubstitution ? [source] : [source, receiver]}
+          filterCst={selected.length === 0 ? undefined : cst => selected.includes(cst.id)}
+        />
+      )}
     />
   );
 }

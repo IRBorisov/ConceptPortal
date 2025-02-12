@@ -620,6 +620,8 @@ def inline_synthesis(request: Request) -> HttpResponse:
 
     receiver = m.RSForm(serializer.validated_data['receiver'])
     items = cast(list[m.Constituenta], serializer.validated_data['items'])
+    if len(items) == 0:
+        items = list(m.RSForm(serializer.validated_data['source']).constituents().order_by('order'))
 
     with transaction.atomic():
         new_items = receiver.insert_copy(items)

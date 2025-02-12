@@ -10,7 +10,7 @@ import { Label } from '@/components/Input';
 import { ModalForm } from '@/components/Modal';
 import { useLibrary } from '@/features/library/backend/useLibrary';
 import { ILibraryItem, LibraryItemType } from '@/features/library/models/library';
-import PickSchema from '@/features/rsform/components/PickSchema';
+import { PickSchema } from '@/features/rsform/components/PickSchema';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { IInputUpdateDTO, IOperationPosition, schemaInputUpdate } from '../backend/api';

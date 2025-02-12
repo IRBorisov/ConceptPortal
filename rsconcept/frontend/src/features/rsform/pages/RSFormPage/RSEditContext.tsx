@@ -19,7 +19,6 @@ import { promptUnsaved } from '@/utils/utils';
 
 import { ICstCreateDTO } from '../../backend/api';
 import { useCstCreate } from '../../backend/useCstCreate';
-import { useCstDelete } from '../../backend/useCstDelete';
 import { useCstMove } from '../../backend/useCstMove';
 import { useRSFormSuspense } from '../../backend/useRSForm';
 import { ConstituentaID, CstType, IConstituenta, IRSForm } from '../../models/rsform';
@@ -111,7 +110,6 @@ export const RSEditState = ({
 
   const { cstCreate } = useCstCreate();
   const { cstMove } = useCstMove();
-  const { cstDelete } = useCstDelete();
   const { deleteItem } = useDeleteItem();
 
   const showCreateCst = useDialogsStore(state => state.showCreateCst);
@@ -202,26 +200,6 @@ export const RSEditState = ({
     });
   }
 
-  function handleDeleteCst(deleted: ConstituentaID[]) {
-    const data = {
-      items: deleted
-    };
-
-    const isEmpty = deleted.length === schema.items.length;
-    const nextActive = isEmpty ? undefined : getNextActiveOnDelete(activeCst?.id, schema.items, deleted);
-
-    void cstDelete({ itemID: itemID, data }).then(() => {
-      setSelected(nextActive ? [nextActive] : []);
-      if (!nextActive) {
-        navigateRSForm({ tab: RSTabID.CST_LIST });
-      } else if (activeTab === RSTabID.CST_EDIT) {
-        navigateRSForm({ tab: activeTab, activeID: nextActive });
-      } else {
-        navigateRSForm({ tab: activeTab });
-      }
-    });
-  }
-
   function moveUp() {
     if (selected.length === 0) {
       return;
@@ -307,7 +285,22 @@ export const RSEditState = ({
   }
 
   function promptDeleteCst() {
-    showDeleteCst({ schema: schema, selected: selected, onDelete: handleDeleteCst });
+    showDeleteCst({
+      schema: schema,
+      selected: selected,
+      afterDelete: (schema, deleted) => {
+        const isEmpty = deleted.length === schema.items.length;
+        const nextActive = isEmpty ? undefined : getNextActiveOnDelete(activeCst?.id, schema.items, deleted);
+        setSelected(nextActive ? [nextActive] : []);
+        if (!nextActive) {
+          navigateRSForm({ tab: RSTabID.CST_LIST });
+        } else if (activeTab === RSTabID.CST_EDIT) {
+          navigateRSForm({ tab: activeTab, activeID: nextActive });
+        } else {
+          navigateRSForm({ tab: activeTab });
+        }
+      }
+    });
   }
   function promptTemplate() {
     if (isModified && !promptUnsaved()) {

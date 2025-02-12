@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useUpdateTimestamp } from '@/features/library/backend/useUpdateTimestamp';
-import { LibraryItemID } from '@/features/library/models/library';
 import { ossApi } from '@/features/oss/backend/api';
 
 import { IInlineSynthesisDTO, rsformsApi } from './api';
@@ -26,6 +25,6 @@ export const useInlineSynthesis = () => {
     }
   });
   return {
-    inlineSynthesis: (data: { itemID: LibraryItemID; data: IInlineSynthesisDTO }) => mutation.mutateAsync(data)
+    inlineSynthesis: (data: IInlineSynthesisDTO) => mutation.mutateAsync(data)
   };
 };

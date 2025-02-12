@@ -1,33 +1,46 @@
 'use client';
 
+import { useFormContext, useWatch } from 'react-hook-form';
+
 import { TextInput } from '@/components/Input';
 import { useLibrary } from '@/features/library/backend/useLibrary';
 import { LibraryItemID, LibraryItemType } from '@/features/library/models/library';
+import { useDialogsStore } from '@/stores/dialogs';
 
-import PickSchema from '../../components/PickSchema';
-import { IRSForm } from '../../models/rsform';
+import { IInlineSynthesisDTO } from '../../backend/api';
+import { PickSchema } from '../../components/PickSchema';
 import { sortItemsForInlineSynthesis } from '../../models/rsformAPI';
+import { DlgInlineSynthesisProps } from './DlgInlineSynthesis';
 
-interface TabSourceProps {
-  selected?: LibraryItemID;
-  setSelected: (newValue: LibraryItemID) => void;
-  receiver: IRSForm;
-}
-
-function TabSource({ selected, receiver, setSelected }: TabSourceProps) {
+function TabSource() {
   const { items: libraryItems } = useLibrary();
-  const selectedInfo = libraryItems.find(item => item.id === selected);
+  const { receiver } = useDialogsStore(state => state.props as DlgInlineSynthesisProps);
+  const { setValue, control } = useFormContext<IInlineSynthesisDTO>();
+  const sourceID = useWatch({ control, name: 'source' });
+
+  const selectedInfo = libraryItems.find(item => item.id === sourceID);
   const sortedItems = sortItemsForInlineSynthesis(receiver, libraryItems);
+
+  function handleSelectSource(newValue: LibraryItemID) {
+    if (newValue === sourceID) {
+      return;
+    }
+    setValue('source', newValue);
+    setValue('items', []);
+    setValue('substitutions', []);
+  }
+
   return (
     <div className='cc-fade-in flex flex-col'>
       <PickSchema
-        id='dlg_schema_picker' //
+        id='dlg_schema_picker'
         items={sortedItems}
         itemType={LibraryItemType.RSFORM}
         rows={14}
-        value={selected ?? null}
-        onChange={setSelected}
+        value={sourceID}
+        onChange={handleSelectSource}
       />
+
       <div className='flex items-center gap-6 '>
         <span className='select-none'>Выбрана</span>
         <TextInput

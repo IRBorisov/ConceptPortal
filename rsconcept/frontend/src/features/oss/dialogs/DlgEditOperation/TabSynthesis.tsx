@@ -32,7 +32,6 @@ function TabSynthesis() {
       <Controller
         name='substitutions'
         control={control}
-        defaultValue={[]}
         render={({ field }) => (
           <PickSubstitutions
             schemas={schemas}

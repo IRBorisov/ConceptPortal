@@ -8,7 +8,7 @@ import { Checkbox, Label, TextArea, TextInput } from '@/components/Input';
 import { useLibrary } from '@/features/library/backend/useLibrary';
 import { ILibraryItem, LibraryItemID, LibraryItemType } from '@/features/library/models/library';
 import { sortItemsForOSS } from '@/features/oss/models/ossAPI';
-import PickSchema from '@/features/rsform/components/PickSchema';
+import { PickSchema } from '@/features/rsform/components/PickSchema';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { IOperationCreateDTO } from '../../backend/api';

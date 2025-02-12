@@ -142,12 +142,17 @@ export type ICstSubstitute = z.infer<typeof schemaCstSubstitute>;
 /**
  * Represents input data for inline synthesis.
  */
-export interface IInlineSynthesisDTO {
-  receiver: LibraryItemID;
-  source: LibraryItemID;
-  items: ConstituentaID[];
-  substitutions: ICstSubstitute[];
-}
+export const schemaInlineSynthesis = z.object({
+  receiver: z.number(),
+  source: z.number().nullable(),
+  items: z.array(z.number()),
+  substitutions: z.array(schemaCstSubstitute)
+});
+
+/**
+ * Represents input data for inline synthesis.
+ */
+export type IInlineSynthesisDTO = z.infer<typeof schemaInlineSynthesis>;
 
 /**
  * Represents {@link IConstituenta} data, used for checking expression.
@@ -260,9 +265,9 @@ export const rsformsApi = {
         successMessage: response => infoMsg.addedConstituents(response.cst_list.length)
       }
     }),
-  inlineSynthesis: ({ itemID, data }: { itemID: LibraryItemID; data: IInlineSynthesisDTO }) =>
-    axiosPost<IInlineSynthesisDTO, IRSFormDTO>({
-      endpoint: `/api/rsforms/${itemID}/inline-synthesis`,
+  inlineSynthesis: (data: IInlineSynthesisDTO) =>
+    axiosPatch<IInlineSynthesisDTO, IRSFormDTO>({
+      endpoint: `/api/rsforms/inline-synthesis`,
       request: {
         data: data,
         successMessage: infoMsg.inlineSynthesisComplete

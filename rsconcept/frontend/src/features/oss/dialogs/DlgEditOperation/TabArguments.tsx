@@ -29,7 +29,6 @@ function TabArguments() {
         <Controller
           name='arguments'
           control={control}
-          defaultValue={[]}
           render={({ field }) => (
             <>
               <Label text={`Выбор аргументов: [ ${field.value.length} ]`} />

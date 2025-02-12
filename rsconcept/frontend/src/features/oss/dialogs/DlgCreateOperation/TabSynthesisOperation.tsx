@@ -49,7 +49,6 @@ function TabSynthesisOperation() {
         <Controller
           name='arguments'
           control={control}
-          defaultValue={[]}
           render={({ field }) => (
             <PickMultiOperation items={oss.items} value={field.value} onChange={field.onChange} rows={6} />
           )}

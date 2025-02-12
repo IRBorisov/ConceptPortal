@@ -8,17 +8,20 @@ import { ModalForm } from '@/components/Modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { prefixes } from '@/utils/constants';
 
+import { useCstDelete } from '../../backend/useCstDelete';
 import { ConstituentaID, IRSForm } from '../../models/rsform';
 import ListConstituents from './ListConstituents';
 
 export interface DlgDeleteCstProps {
   schema: IRSForm;
   selected: ConstituentaID[];
-  onDelete: (items: ConstituentaID[]) => void;
+  afterDelete: (initialSchema: IRSForm, deleted: ConstituentaID[]) => void;
 }
 
 function DlgDeleteCst() {
-  const { selected, schema, onDelete } = useDialogsStore(state => state.props as DlgDeleteCstProps);
+  const { selected, schema, afterDelete } = useDialogsStore(state => state.props as DlgDeleteCstProps);
+  const { cstDelete } = useCstDelete();
+
   const [expandOut, setExpandOut] = useState(false);
   const expansion: ConstituentaID[] = schema.graph.expandAllOutputs(selected);
   const hasInherited = selected.some(
@@ -27,12 +30,8 @@ function DlgDeleteCst() {
   );
 
   function handleSubmit() {
-    if (expandOut) {
-      onDelete(selected.concat(expansion));
-    } else {
-      onDelete(selected);
-    }
-    return true;
+    const deleted = expandOut ? selected.concat(expansion) : selected;
+    void cstDelete({ itemID: schema.id, data: { items: deleted } }).then(() => afterDelete(schema, deleted));
   }
 
   return (

@@ -1,22 +1,43 @@
 'use client';
 
-import { LibraryItemID } from '@/features/library/models/library';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
+import { IInlineSynthesisDTO } from '../../backend/api';
 import { useRSFormSuspense } from '../../backend/useRSForm';
 import PickMultiConstituenta from '../../components/PickMultiConstituenta';
 import { ConstituentaID } from '../../models/rsform';
 
-interface TabConstituentsProps {
-  itemID: LibraryItemID;
-  selected: ConstituentaID[];
-  setSelected: React.Dispatch<React.SetStateAction<ConstituentaID[]>>;
-}
+function TabConstituents() {
+  const { setValue, control } = useFormContext<IInlineSynthesisDTO>();
+  const sourceID = useWatch({ control, name: 'source' });
+  const substitutions = useWatch({ control, name: 'substitutions' });
 
-function TabConstituents({ itemID, selected, setSelected }: TabConstituentsProps) {
-  const { schema } = useRSFormSuspense({ itemID });
+  const { schema } = useRSFormSuspense({ itemID: sourceID! });
+
+  function handleSelectItems(newValue: ConstituentaID[]) {
+    setValue('items', newValue);
+    const newSubstitutions = substitutions.filter(
+      sub => newValue.includes(sub.original) || newValue.includes(sub.substitution)
+    );
+    if (newSubstitutions.length !== substitutions.length) {
+      setValue('substitutions', newSubstitutions);
+    }
+  }
 
   return (
-    <PickMultiConstituenta schema={schema} items={schema.items} rows={13} value={selected} onChange={setSelected} />
+    <Controller
+      name='items'
+      control={control}
+      render={({ field }) => (
+        <PickMultiConstituenta
+          schema={schema}
+          items={schema.items}
+          rows={13}
+          value={field.value}
+          onChange={handleSelectItems}
+        />
+      )}
+    />
   );
 }
 

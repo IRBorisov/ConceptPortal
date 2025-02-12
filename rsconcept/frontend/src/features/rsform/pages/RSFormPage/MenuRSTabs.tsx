@@ -43,7 +43,6 @@ import { describeAccessMode, labelAccessMode, tooltipText } from '@/utils/labels
 import { generatePageQR, promptUnsaved, sharePage } from '@/utils/utils';
 
 import { useDownloadRSForm } from '../../backend/useDownloadRSForm';
-import { useInlineSynthesis } from '../../backend/useInlineSynthesis';
 import { useMutatingRSForm } from '../../backend/useMutatingRSForm';
 import { useProduceStructure } from '../../backend/useProduceStructure';
 import { useResetAliases } from '../../backend/useResetAliases';
@@ -64,7 +63,6 @@ function MenuRSTabs() {
   const { resetAliases } = useResetAliases();
   const { restoreOrder } = useRestoreOrder();
   const { produceStructure } = useProduceStructure();
-  const { inlineSynthesis } = useInlineSynthesis();
   const { download } = useDownloadRSForm();
 
   const showInlineSynthesis = useDialogsStore(state => state.showInlineSynthesis);
@@ -199,9 +197,7 @@ function MenuRSTabs() {
     }
     showInlineSynthesis({
       receiver: controller.schema,
-      onInlineSynthesis: data => {
-        void inlineSynthesis({ itemID: controller.schema.id, data }).then(() => controller.deselectAll());
-      }
+      onSynthesis: () => controller.deselectAll()
     });
   }
 

@@ -30,7 +30,7 @@ interface PickSubstitutionsProps extends CProps.Styling {
   allowSelfSubstitution?: boolean;
 
   schemas: IRSForm[];
-  filter?: (cst: IConstituenta) => boolean;
+  filterCst?: (cst: IConstituenta) => boolean;
 }
 
 const columnHelper = createColumnHelper<IMultiSubstitution>();
@@ -41,7 +41,7 @@ function PickSubstitutions({
   suggestions,
   rows,
   schemas,
-  filter,
+  filterCst,
   allowSelfSubstitution,
   className,
   ...restProps
@@ -225,7 +225,7 @@ function PickSubstitutions({
           <SelectConstituenta
             noBorder
             items={(leftArgument as IRSForm)?.items.filter(
-              cst => !value.find(item => item.original === cst.id) && (!filter || filter(cst))
+              cst => !value.find(item => item.original === cst.id) && (!filterCst || filterCst(cst))
             )}
             value={leftCst}
             onChange={setLeftCst}
@@ -247,7 +247,7 @@ function PickSubstitutions({
             title='Добавить в таблицу отождествлений'
             className='mb-[0.375rem] grow-0'
             icon={<IconReplace size='1.5rem' className='icon-primary' />}
-            disabled={!leftCst || !rightCst || leftCst === rightCst}
+            disabled={!leftCst || !rightCst || (leftCst === rightCst && !allowSelfSubstitution)}
             onClick={addSubstitution}
           />
         </div>
@@ -263,7 +263,7 @@ function PickSubstitutions({
           <SelectConstituenta
             noBorder
             items={(rightArgument as IRSForm)?.items.filter(
-              cst => !value.find(item => item.original === cst.id) && (!filter || filter(cst))
+              cst => !value.find(item => item.original === cst.id) && (!filterCst || filterCst(cst))
             )}
             value={rightCst}
             onChange={setRightCst}

@@ -31,7 +31,7 @@ interface PickSchemaProps extends CProps.Styling {
 
 const columnHelper = createColumnHelper<ILibraryItem>();
 
-function PickSchema({
+export function PickSchema({
   id,
   initialFilter = '',
   rows = 4,
@@ -157,5 +157,3 @@ function PickSchema({
     </div>
   );
 }
-
-export default PickSchema;
