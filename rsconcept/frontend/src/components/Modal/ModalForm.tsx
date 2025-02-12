@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 
-import { HelpTopic } from '@/features/help/models/helpTopic';
+import { BadgeHelp, HelpTopic } from '@/features/help';
 import useEscapeKey from '@/hooks/useEscapeKey';
 import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER } from '@/utils/constants';
@@ -11,7 +11,6 @@ import { prepareTooltip } from '@/utils/utils';
 import { Button, MiniButton, SubmitButton } from '../Control';
 import { IconClose } from '../Icons';
 import { CProps } from '../props';
-import { BadgeHelp } from '../shared/BadgeHelp';
 import { ModalBackdrop } from './ModalBackdrop';
 
 export interface ModalProps extends CProps.Styling {

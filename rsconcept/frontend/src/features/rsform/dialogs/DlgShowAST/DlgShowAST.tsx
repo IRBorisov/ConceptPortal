@@ -5,7 +5,7 @@ import { ReactFlowProvider } from 'reactflow';
 
 import { Overlay } from '@/components/Container';
 import { ModalView } from '@/components/Modal';
-import { HelpTopic } from '@/features/help/models/helpTopic';
+import { HelpTopic } from '@/features/help';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { SyntaxTree } from '../../models/rslang';

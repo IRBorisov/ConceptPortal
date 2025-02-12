@@ -3,7 +3,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 
 import { urls, useConceptNavigation } from '@/app';
-import { useAuthSuspense } from '@/features/auth/backend/useAuth';
+import { useAuthSuspense } from '@/features/auth';
 import { useDeleteItem } from '@/features/library/backend/useDeleteItem';
 import { ILibraryItemEditor, LibraryItemID } from '@/features/library/models/library';
 import { useLibrarySearchStore } from '@/features/library/stores/librarySearch';

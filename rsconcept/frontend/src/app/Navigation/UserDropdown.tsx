@@ -14,8 +14,7 @@ import {
   IconUser
 } from '@/components/Icons';
 import { CProps } from '@/components/props';
-import { useAuthSuspense } from '@/features/auth/backend/useAuth';
-import { useLogout } from '@/features/auth/backend/useLogout';
+import { useAuthSuspense, useLogout } from '@/features/auth';
 import { usePreferencesStore } from '@/stores/preferences';
 
 import { urls } from '../urls';

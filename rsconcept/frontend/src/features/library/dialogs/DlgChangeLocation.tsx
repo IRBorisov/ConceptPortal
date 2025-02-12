@@ -7,7 +7,7 @@ import { z } from 'zod';
 
 import { Label, TextArea } from '@/components/Input';
 import { ModalForm } from '@/components/Modal';
-import { useAuthSuspense } from '@/features/auth/backend/useAuth';
+import { useAuthSuspense } from '@/features/auth';
 import { useDialogsStore } from '@/stores/dialogs';
 import { limits } from '@/utils/constants';
 import { errorMsg } from '@/utils/labels';

@@ -3,8 +3,7 @@
 import { Overlay } from '@/components/Container';
 import { MiniButton } from '@/components/Control';
 import { IconDestroy, IconSave, IconShare } from '@/components/Icons';
-import { BadgeHelp } from '@/components/shared/BadgeHelp';
-import { HelpTopic } from '@/features/help/models/helpTopic';
+import { BadgeHelp, HelpTopic } from '@/features/help';
 import { useMutatingLibrary } from '@/features/library/backend/useMutatingLibrary';
 import { AccessPolicy, ILibraryItemEditor, LibraryItemType } from '@/features/library/models/library';
 import { useRoleStore } from '@/features/users';

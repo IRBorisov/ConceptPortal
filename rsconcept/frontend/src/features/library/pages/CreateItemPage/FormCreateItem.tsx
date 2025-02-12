@@ -12,7 +12,7 @@ import { VisibilityIcon } from '@/components/DomainIcons';
 import { IconDownload } from '@/components/Icons';
 import { InfoError } from '@/components/InfoError';
 import { Label, TextArea, TextInput } from '@/components/Input';
-import { useAuthSuspense } from '@/features/auth/backend/useAuth';
+import { useAuthSuspense } from '@/features/auth';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';
 
 import { ICreateLibraryItemDTO, schemaCreateLibraryItem } from '../../backend/api';

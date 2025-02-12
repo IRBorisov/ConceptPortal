@@ -3,8 +3,7 @@
 import { Overlay } from '@/components/Container';
 import { MiniButton } from '@/components/Control';
 import { IconNewVersion, IconUpload, IconVersions } from '@/components/Icons';
-import { BadgeHelp } from '@/components/shared/BadgeHelp';
-import { HelpTopic } from '@/features/help/models/helpTopic';
+import { BadgeHelp, HelpTopic } from '@/features/help';
 import { useVersionRestore } from '@/features/library/backend/useVersionRestore';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';

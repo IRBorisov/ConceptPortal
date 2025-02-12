@@ -13,8 +13,7 @@ import {
   IconTextOff,
   IconTypeGraph
 } from '@/components/Icons';
-import { BadgeHelp } from '@/components/shared/BadgeHelp';
-import { HelpTopic } from '@/features/help/models/helpTopic';
+import { BadgeHelp, HelpTopic } from '@/features/help';
 import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER } from '@/utils/constants';
 

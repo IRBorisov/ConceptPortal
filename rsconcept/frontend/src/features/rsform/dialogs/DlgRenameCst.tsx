@@ -6,7 +6,7 @@ import { useForm, useWatch } from 'react-hook-form';
 
 import { TextInput } from '@/components/Input';
 import { ModalForm } from '@/components/Modal';
-import { HelpTopic } from '@/features/help/models/helpTopic';
+import { HelpTopic } from '@/features/help';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { ICstRenameDTO, schemaCstRename } from '../backend/api';

@@ -5,8 +5,9 @@ import { TextURL } from '@/components/Control';
 import { IconHelp } from '@/components/Icons';
 import { Loader } from '@/components/Loader';
 import { CProps } from '@/components/props';
-import { HelpTopic } from '@/features/help/models/helpTopic';
 import { usePreferencesStore } from '@/stores/preferences';
+
+import { HelpTopic } from '../models/helpTopic';
 
 const TopicPage = React.lazy(() => import('@/features/help/pages/ManualsPage/TopicPage'));
 

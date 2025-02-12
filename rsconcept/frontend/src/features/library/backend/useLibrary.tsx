@@ -1,7 +1,7 @@
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 
 import { queryClient } from '@/backend/queryClient';
-import { useAuthSuspense } from '@/features/auth/backend/useAuth';
+import { useAuthSuspense } from '@/features/auth';
 import { usePreferencesStore } from '@/stores/preferences';
 
 import { libraryApi } from './api';

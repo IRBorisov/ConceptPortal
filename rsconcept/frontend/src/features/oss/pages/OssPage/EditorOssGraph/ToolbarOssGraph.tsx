@@ -18,8 +18,7 @@ import {
   IconReset,
   IconSave
 } from '@/components/Icons';
-import { BadgeHelp } from '@/components/shared/BadgeHelp';
-import { HelpTopic } from '@/features/help/models/helpTopic';
+import { BadgeHelp, HelpTopic } from '@/features/help';
 import { useModificationStore } from '@/stores/modification';
 import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/utils';

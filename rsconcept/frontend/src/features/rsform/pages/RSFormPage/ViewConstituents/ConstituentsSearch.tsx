@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 
 import { MiniButton } from '@/components/Control';
 import { IconChild } from '@/components/Icons';
-import { SearchBar } from '@/components/shared/SearchBar';
+import { SearchBar } from '@/components/Input';
 
 import { ConstituentaID, IConstituenta, IRSForm } from '../../../models/rsform';
 import { matchConstituenta } from '../../../models/rsformAPI';

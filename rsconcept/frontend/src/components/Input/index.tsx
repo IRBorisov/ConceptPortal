@@ -3,6 +3,7 @@ export { CheckboxTristate } from './CheckboxTristate';
 export { ErrorField } from './ErrorField';
 export { FileInput } from './FileInput';
 export { Label } from './Label';
+export { SearchBar } from './SearchBar';
 export { SelectMulti, type SelectMultiProps } from './SelectMulti';
 export { SelectSingle, type SelectSingleProps } from './SelectSingle';
 export { SelectTree } from './SelectTree';

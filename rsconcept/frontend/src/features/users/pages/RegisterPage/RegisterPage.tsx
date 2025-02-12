@@ -1,5 +1,4 @@
-import { useAuthSuspense } from '@/features/auth/backend/useAuth';
-import ExpectedAnonymous from '@/features/auth/components/ExpectedAnonymous';
+import { ExpectedAnonymous, useAuthSuspense } from '@/features/auth';
 
 import FormSignup from './FormSignup';
 

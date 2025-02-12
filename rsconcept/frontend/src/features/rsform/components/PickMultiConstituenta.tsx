@@ -4,8 +4,8 @@ import clsx from 'clsx';
 import { useState } from 'react';
 
 import DataTable, { createColumnHelper, RowSelectionState } from '@/components/DataTable';
+import { SearchBar } from '@/components/Input';
 import { CProps } from '@/components/props';
-import { SearchBar } from '@/components/shared/SearchBar';
 import { NoData } from '@/components/View';
 import { Graph } from '@/models/Graph';
 

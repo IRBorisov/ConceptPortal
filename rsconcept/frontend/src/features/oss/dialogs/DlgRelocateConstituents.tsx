@@ -9,7 +9,7 @@ import { MiniButton } from '@/components/Control';
 import { RelocateUpIcon } from '@/components/DomainIcons';
 import { Loader } from '@/components/Loader';
 import { ModalForm } from '@/components/Modal';
-import { HelpTopic } from '@/features/help/models/helpTopic';
+import { HelpTopic } from '@/features/help';
 import { useLibrary } from '@/features/library/backend/useLibrary';
 import SelectLibraryItem from '@/features/library/components/SelectLibraryItem';
 import { ILibraryItem, LibraryItemID } from '@/features/library/models/library';

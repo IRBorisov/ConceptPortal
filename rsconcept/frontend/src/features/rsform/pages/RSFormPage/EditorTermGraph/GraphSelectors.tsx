@@ -1,7 +1,6 @@
 import { Overlay } from '@/components/Container';
 import { SelectSingle } from '@/components/Input';
-import { BadgeHelp } from '@/components/shared/BadgeHelp';
-import { HelpTopic } from '@/features/help/models/helpTopic';
+import { BadgeHelp, HelpTopic } from '@/features/help';
 
 import { mapLabelColoring } from '../../../labels';
 import { IRSForm } from '../../../models/rsform';

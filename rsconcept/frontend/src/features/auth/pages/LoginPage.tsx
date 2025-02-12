@@ -15,7 +15,7 @@ import { resources } from '@/utils/constants';
 import { IUserLoginDTO, schemaUserLogin } from '../backend/api';
 import { useAuthSuspense } from '../backend/useAuth';
 import { useLogin } from '../backend/useLogin';
-import ExpectedAnonymous from '../components/ExpectedAnonymous';
+import { ExpectedAnonymous } from '../components/ExpectedAnonymous';
 
 function LoginPage() {
   const router = useConceptNavigation();

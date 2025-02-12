@@ -17,8 +17,7 @@ import {
   IconReset,
   IconSave
 } from '@/components/Icons';
-import { BadgeHelp } from '@/components/shared/BadgeHelp';
-import { HelpTopic } from '@/features/help/models/helpTopic';
+import { BadgeHelp, HelpTopic } from '@/features/help';
 import { useFindPredecessor } from '@/features/oss/backend/useFindPredecessor';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';

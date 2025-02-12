@@ -6,7 +6,7 @@ import { Suspense, useEffect, useState } from 'react';
 import { Loader } from '@/components/Loader';
 import { ModalForm } from '@/components/Modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/Tabs';
-import { HelpTopic } from '@/features/help/models/helpTopic';
+import { HelpTopic } from '@/features/help';
 import usePartialUpdate from '@/hooks/usePartialUpdate';
 import { useDialogsStore } from '@/stores/dialogs';
 import { promptText } from '@/utils/labels';

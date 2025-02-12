@@ -13,7 +13,7 @@ import { IconHelp } from '@/components/Icons';
 import { ErrorData } from '@/components/InfoError';
 import { Checkbox, TextInput } from '@/components/Input';
 import { PrettyJson } from '@/components/View';
-import { HelpTopic } from '@/features/help/models/helpTopic';
+import { HelpTopic } from '@/features/help';
 import { globals, patterns } from '@/utils/constants';
 
 import { IUserSignupDTO, schemaUserSignup } from '../../backend/api';

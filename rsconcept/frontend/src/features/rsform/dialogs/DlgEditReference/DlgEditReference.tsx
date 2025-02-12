@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 import { ModalForm } from '@/components/Modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/Tabs';
-import { HelpTopic } from '@/features/help/models/helpTopic';
+import { HelpTopic } from '@/features/help';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { labelReferenceType } from '../../labels';

@@ -7,7 +7,7 @@ import { MiniButton } from '@/components/Control';
 import { IconAccept, IconMoveDown, IconMoveLeft, IconMoveRight, IconRemove } from '@/components/Icons';
 import { Label, TextArea } from '@/components/Input';
 import { ModalForm } from '@/components/Modal';
-import { HelpTopic } from '@/features/help/models/helpTopic';
+import { HelpTopic } from '@/features/help';
 import { useDialogsStore } from '@/stores/dialogs';
 import { promptText } from '@/utils/labels';
 

@@ -4,7 +4,7 @@ import { TextURL } from '@/components/Control';
 
 import { useAuthSuspense } from '../backend/useAuth';
 
-function RequireAuth({ children }: React.PropsWithChildren) {
+export function RequireAuth({ children }: React.PropsWithChildren) {
   const { isAnonymous } = useAuthSuspense();
 
   if (isAnonymous) {
@@ -19,5 +19,3 @@ function RequireAuth({ children }: React.PropsWithChildren) {
   }
   return <>{children}</>;
 }
-
-export default RequireAuth;

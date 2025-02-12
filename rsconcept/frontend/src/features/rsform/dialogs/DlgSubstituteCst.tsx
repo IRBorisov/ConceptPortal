@@ -6,7 +6,7 @@ import { Controller, useForm } from 'react-hook-form';
 
 import { ErrorField } from '@/components/Input';
 import { ModalForm } from '@/components/Modal';
-import { HelpTopic } from '@/features/help/models/helpTopic';
+import { HelpTopic } from '@/features/help';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { ICstSubstitutionsDTO, schemaCstSubstitutions } from '../backend/api';

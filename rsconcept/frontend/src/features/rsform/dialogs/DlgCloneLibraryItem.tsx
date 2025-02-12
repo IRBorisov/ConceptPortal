@@ -9,7 +9,7 @@ import { MiniButton } from '@/components/Control';
 import { VisibilityIcon } from '@/components/DomainIcons';
 import { Checkbox, Label, TextArea, TextInput } from '@/components/Input';
 import { ModalForm } from '@/components/Modal';
-import { useAuthSuspense } from '@/features/auth/backend/useAuth';
+import { useAuthSuspense } from '@/features/auth';
 import { ICloneLibraryItemDTO, schemaCloneLibraryItem } from '@/features/library/backend/api';
 import { useCloneItem } from '@/features/library/backend/useCloneItem';
 import SelectAccessPolicy from '@/features/library/components/SelectAccessPolicy';

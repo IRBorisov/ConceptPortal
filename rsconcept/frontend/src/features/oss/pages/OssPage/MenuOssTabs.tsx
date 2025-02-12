@@ -18,7 +18,7 @@ import {
   IconReader,
   IconShare
 } from '@/components/Icons';
-import { useAuthSuspense } from '@/features/auth/backend/useAuth';
+import { useAuthSuspense } from '@/features/auth';
 import { useMutatingOss } from '@/features/oss/backend/useMutatingOss';
 import { useRoleStore } from '@/features/users';
 import { UserRole } from '@/features/users/models/user';

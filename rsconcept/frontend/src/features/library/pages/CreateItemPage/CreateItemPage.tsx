@@ -1,4 +1,4 @@
-import RequireAuth from '@/features/auth/components/RequireAuth';
+import { RequireAuth } from '@/features/auth';
 
 import FormCreateItem from './FormCreateItem';
 

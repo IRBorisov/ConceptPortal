@@ -14,8 +14,8 @@ import {
   IconOwner,
   IconUserSearch
 } from '@/components/Icons';
+import { SearchBar } from '@/components/Input';
 import { CProps } from '@/components/props';
-import { SearchBar } from '@/components/shared/SearchBar';
 import { SelectUser } from '@/features/users';
 import { prefixes } from '@/utils/constants';
 import { tripleToggleColor } from '@/utils/utils';

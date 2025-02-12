@@ -4,7 +4,7 @@ import { TextURL } from '@/components/Control';
 import { useAuthSuspense } from '../backend/useAuth';
 import { useLogout } from '../backend/useLogout';
 
-function ExpectedAnonymous() {
+export function ExpectedAnonymous() {
   const { user } = useAuthSuspense();
   const { logout } = useLogout();
   const router = useConceptNavigation();
@@ -30,5 +30,3 @@ function ExpectedAnonymous() {
     </div>
   );
 }
-
-export default ExpectedAnonymous;

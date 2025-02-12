@@ -31,7 +31,7 @@ import {
   IconTemplates,
   IconUpload
 } from '@/components/Icons';
-import { useAuthSuspense } from '@/features/auth/backend/useAuth';
+import { useAuthSuspense } from '@/features/auth';
 import { AccessPolicy, LocationHead } from '@/features/library/models/library';
 import { OssTabID } from '@/features/oss/pages/OssPage/OssEditContext';
 import { useRoleStore } from '@/features/users';

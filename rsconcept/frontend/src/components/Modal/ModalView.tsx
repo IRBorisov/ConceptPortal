@@ -2,6 +2,7 @@
 
 import clsx from 'clsx';
 
+import { BadgeHelp } from '@/features/help';
 import useEscapeKey from '@/hooks/useEscapeKey';
 import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER } from '@/utils/constants';
@@ -9,7 +10,6 @@ import { prepareTooltip } from '@/utils/utils';
 
 import { Button, MiniButton } from '../Control';
 import { IconClose } from '../Icons';
-import { BadgeHelp } from '../shared/BadgeHelp';
 import { ModalBackdrop } from './ModalBackdrop';
 import { ModalProps } from './ModalForm';
 

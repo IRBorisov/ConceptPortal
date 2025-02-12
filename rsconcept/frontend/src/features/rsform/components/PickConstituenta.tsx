@@ -4,8 +4,8 @@ import clsx from 'clsx';
 import { useState } from 'react';
 
 import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/DataTable';
+import { SearchBar } from '@/components/Input';
 import { CProps } from '@/components/props';
-import { SearchBar } from '@/components/shared/SearchBar';
 import { NoData } from '@/components/View';
 import { APP_COLORS } from '@/styling/colors';
 

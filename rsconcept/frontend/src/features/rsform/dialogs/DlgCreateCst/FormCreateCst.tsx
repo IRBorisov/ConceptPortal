@@ -4,8 +4,7 @@ import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
 import { TextArea, TextInput } from '@/components/Input';
-import { BadgeHelp } from '@/components/shared/BadgeHelp';
-import { HelpTopic } from '@/features/help/models/helpTopic';
+import { BadgeHelp, HelpTopic } from '@/features/help';
 import { PARAMETER } from '@/utils/constants';
 
 import { ICstCreateDTO } from '../../backend/api';

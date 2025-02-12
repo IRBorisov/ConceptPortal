@@ -8,7 +8,7 @@ import { Overlay } from '@/components/Container';
 import { MiniButton } from '@/components/Control';
 import { type RowSelectionState } from '@/components/DataTable';
 import { IconCSV } from '@/components/Icons';
-import { SearchBar } from '@/components/shared/SearchBar';
+import { SearchBar } from '@/components/Input';
 import { useFitHeight } from '@/stores/appLayout';
 import { infoMsg } from '@/utils/labels';
 import { convertToCSV } from '@/utils/utils';
