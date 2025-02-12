@@ -1,6 +1,7 @@
+import { useLibrary } from '@/features/library';
+
 import { Tooltip } from '@/components/Container';
 import { IconHelp } from '@/components/Icons';
-import { useLibrary } from '@/features/library';
 import { globals, prefixes } from '@/utils/constants';
 
 import { colorBgSchemas } from '../../../colors';

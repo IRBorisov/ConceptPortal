@@ -3,13 +3,15 @@
 import { toast } from 'react-toastify';
 import { ReactFlowProvider } from 'reactflow';
 
-import { ModalView } from '@/components/Modal';
 import { HelpTopic } from '@/features/help';
+
+import { ModalView } from '@/components/Modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { errorMsg } from '@/utils/labels';
 
 import { ITypeInfo } from '../../models/rslang';
 import { TMGraph } from '../../models/TMGraph';
+
 import MGraphFlow from './MGraphFlow';
 
 export interface DlgShowTypeGraphProps {

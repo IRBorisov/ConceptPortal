@@ -1,13 +1,14 @@
 'use client';
 
+import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import clsx from 'clsx';
-import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
+
+import { useAuthSuspense } from '@/features/auth';
 
 import { Label, TextArea } from '@/components/Input';
 import { ModalForm } from '@/components/Modal';
-import { useAuthSuspense } from '@/features/auth';
 import { useDialogsStore } from '@/stores/dialogs';
 import { limits } from '@/utils/constants';
 import { errorMsg } from '@/utils/labels';

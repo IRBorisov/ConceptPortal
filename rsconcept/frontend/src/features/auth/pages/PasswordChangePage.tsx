@@ -1,9 +1,10 @@
 'use client';
 
-import clsx from 'clsx';
 import { useEffect, useState } from 'react';
+import clsx from 'clsx';
 
 import { urls, useConceptNavigation } from '@/app';
+
 import { isAxiosError } from '@/backend/apiTransport';
 import { SubmitButton } from '@/components/Control';
 import { ErrorData, InfoError } from '@/components/InfoError';

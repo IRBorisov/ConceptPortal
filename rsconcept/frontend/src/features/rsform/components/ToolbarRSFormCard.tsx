@@ -1,8 +1,5 @@
 'use client';
 
-import { Overlay } from '@/components/Container';
-import { MiniButton } from '@/components/Control';
-import { IconDestroy, IconSave, IconShare } from '@/components/Icons';
 import { BadgeHelp, HelpTopic } from '@/features/help';
 import {
   AccessPolicy,
@@ -12,6 +9,10 @@ import {
   useMutatingLibrary
 } from '@/features/library';
 import { useRoleStore, UserRole } from '@/features/users';
+
+import { Overlay } from '@/components/Container';
+import { MiniButton } from '@/components/Control';
+import { IconDestroy, IconSave, IconShare } from '@/components/Icons';
 import { useModificationStore } from '@/stores/modification';
 import { PARAMETER } from '@/utils/constants';
 import { tooltipText } from '@/utils/labels';

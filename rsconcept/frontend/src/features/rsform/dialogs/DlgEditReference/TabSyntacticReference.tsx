@@ -6,6 +6,7 @@ import { TextInput } from '@/components/Input';
 
 import { ReferenceType } from '../../models/language';
 import { parseSyntacticReference } from '../../models/languageAPI';
+
 import { IReferenceInputState } from './DlgEditReference';
 
 interface TabSyntacticReferenceProps {

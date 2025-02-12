@@ -1,9 +1,9 @@
 'use client';
 'use no memo';
 
+import { useCallback } from 'react';
 import { Table } from '@tanstack/react-table';
 import clsx from 'clsx';
-import { useCallback } from 'react';
 
 import { prefixes } from '@/utils/constants';
 

@@ -1,7 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { KEYS } from '@/backend/configuration';
 import { useUpdateTimestamp } from '@/features/library';
+
+import { KEYS } from '@/backend/configuration';
 
 import { rsformsApi } from './api';
 import { IInlineSynthesisDTO } from './types';

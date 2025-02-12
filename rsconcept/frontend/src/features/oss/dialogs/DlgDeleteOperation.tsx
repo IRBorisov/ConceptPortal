@@ -1,12 +1,13 @@
 'use client';
 
+import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import clsx from 'clsx';
-import { Controller, useForm } from 'react-hook-form';
+
+import { HelpTopic } from '@/features/help';
 
 import { Checkbox, TextInput } from '@/components/Input';
 import { ModalForm } from '@/components/Modal';
-import { HelpTopic } from '@/features/help';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { IOperationDeleteDTO, IOperationPosition, schemaOperationDelete } from '../backend/types';

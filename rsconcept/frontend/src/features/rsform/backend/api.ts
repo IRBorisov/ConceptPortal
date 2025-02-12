@@ -6,6 +6,7 @@ import { infoMsg } from '@/utils/labels';
 
 import { IConstituentaList, IConstituentaMeta, ITargetCst } from '../models/rsform';
 import { IExpressionParse } from '../models/rslang';
+
 import {
   ICheckConstituentaDTO,
   ICstCreatedResponse,

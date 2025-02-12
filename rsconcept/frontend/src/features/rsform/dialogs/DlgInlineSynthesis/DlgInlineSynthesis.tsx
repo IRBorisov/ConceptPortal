@@ -1,9 +1,9 @@
 'use client';
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import clsx from 'clsx';
 import { Suspense, useState } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import clsx from 'clsx';
 
 import { Loader } from '@/components/Loader';
 import { ModalForm } from '@/components/Modal';
@@ -13,6 +13,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { IInlineSynthesisDTO, schemaInlineSynthesis } from '../../backend/types';
 import { useInlineSynthesis } from '../../backend/useInlineSynthesis';
 import { IRSForm } from '../../models/rsform';
+
 import TabConstituents from './TabConstituents';
 import TabSource from './TabSource';
 import TabSubstitutions from './TabSubstitutions';

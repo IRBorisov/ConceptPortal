@@ -5,6 +5,7 @@ import { DELAYS, KEYS } from '@/backend/configuration';
 import { infoMsg } from '@/utils/labels';
 
 import { IUserInfo, IUserProfile } from '../models/user';
+
 import { IUpdateProfileDTO, IUserSignupDTO } from './types';
 
 export const usersApi = {

@@ -7,6 +7,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 
 import { IOperationUpdateDTO } from '../../backend/types';
 import { PickMultiOperation } from '../../components/PickMultiOperation';
+
 import { DlgEditOperationProps } from './DlgEditOperation';
 
 function TabArguments() {

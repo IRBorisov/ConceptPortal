@@ -1,15 +1,17 @@
 'use client';
 
-import clsx from 'clsx';
 import { useEffect } from 'react';
+import clsx from 'clsx';
 
 import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
+
 import { Overlay } from '@/components/Container';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/Tabs';
 import { useAppLayoutStore } from '@/stores/appLayout';
 import { useModificationStore } from '@/stores/modification';
 
 import { labelVersion } from '../../labels';
+
 import EditorConstituenta from './EditorConstituenta';
 import EditorRSForm from './EditorRSFormCard';
 import EditorRSList from './EditorRSList';

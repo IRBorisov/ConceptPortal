@@ -1,13 +1,14 @@
 'use client';
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import clsx from 'clsx';
 import { useState } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import clsx from 'clsx';
+
+import { HelpTopic } from '@/features/help';
 
 import { ModalForm } from '@/components/Modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/Tabs';
-import { HelpTopic } from '@/features/help';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { IOperationCreateDTO, IOperationPosition, schemaOperationCreate } from '../../backend/types';
@@ -15,6 +16,7 @@ import { useOperationCreate } from '../../backend/useOperationCreate';
 import { describeOperationType, labelOperationType } from '../../labels';
 import { IOperationSchema, OperationID, OperationType } from '../../models/oss';
 import { calculateInsertPosition } from '../../models/ossAPI';
+
 import TabInputOperation from './TabInputOperation';
 import TabSynthesisOperation from './TabSynthesisOperation';
 

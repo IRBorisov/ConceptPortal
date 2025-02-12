@@ -1,12 +1,13 @@
 'use client';
 
-import clsx from 'clsx';
 import { Suspense, useEffect, useState } from 'react';
+import clsx from 'clsx';
+
+import { HelpTopic } from '@/features/help';
 
 import { Loader } from '@/components/Loader';
 import { ModalForm } from '@/components/Modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/Tabs';
-import { HelpTopic } from '@/features/help';
 import usePartialUpdate from '@/hooks/usePartialUpdate';
 import { useDialogsStore } from '@/stores/dialogs';
 import { promptText } from '@/utils/labels';
@@ -17,6 +18,7 @@ import { CstType, IRSForm } from '../../models/rsform';
 import { generateAlias, validateNewAlias } from '../../models/rsformAPI';
 import { inferTemplatedType, substituteTemplateArgs } from '../../models/rslangAPI';
 import FormCreateCst from '../DlgCreateCst/FormCreateCst';
+
 import TabArguments, { IArgumentsState } from './TabArguments';
 import TabTemplate, { ITemplateState } from './TabTemplate';
 

@@ -1,12 +1,12 @@
 'use client';
 
+import { forwardRef, useRef } from 'react';
 import { Extension } from '@codemirror/state';
 import { tags } from '@lezer/highlight';
 import { createTheme } from '@uiw/codemirror-themes';
 import CodeMirror, { BasicSetupOptions, ReactCodeMirrorProps, ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import clsx from 'clsx';
 import { EditorView } from 'codemirror';
-import { forwardRef, useRef } from 'react';
 
 import { Label } from '@/components/Input';
 import { usePreferencesStore } from '@/stores/preferences';
@@ -15,6 +15,7 @@ import { APP_COLORS } from '@/styling/colors';
 import { IRSForm } from '../../models/rsform';
 import { generateAlias, getCstTypePrefix, guessCstType } from '../../models/rsformAPI';
 import { extractGlobals } from '../../models/rslangAPI';
+
 import { ccBracketMatching } from './bracketMatching';
 import { rsNavigation } from './clickNavigation';
 import { RSLanguage } from './rslang';

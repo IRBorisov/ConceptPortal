@@ -4,6 +4,7 @@ import { globals } from '@/utils/constants';
 
 import { CheckboxChecked, CheckboxNull } from '../Icons';
 import { CProps } from '../props';
+
 import { CheckboxProps } from './Checkbox';
 
 export interface CheckboxTristateProps extends Omit<CheckboxProps, 'value' | 'onChange'> {

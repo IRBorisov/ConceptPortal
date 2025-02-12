@@ -1,3 +1,6 @@
+import { BadgeHelp, HelpTopic } from '@/features/help';
+import { MiniSelectorOSS } from '@/features/library';
+
 import { Overlay } from '@/components/Container';
 import { MiniButton } from '@/components/Control';
 import { CstTypeIcon } from '@/components/DomainIcons';
@@ -11,8 +14,6 @@ import {
   IconOpenList,
   IconReset
 } from '@/components/Icons';
-import { BadgeHelp, HelpTopic } from '@/features/help';
-import { MiniSelectorOSS } from '@/features/library';
 import { prefixes } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/utils';
 

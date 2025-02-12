@@ -3,12 +3,14 @@
 import { useState } from 'react';
 import { ReactFlowProvider } from 'reactflow';
 
+import { HelpTopic } from '@/features/help';
+
 import { Overlay } from '@/components/Container';
 import { ModalView } from '@/components/Modal';
-import { HelpTopic } from '@/features/help';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { SyntaxTree } from '../../models/rslang';
+
 import ASTFlow from './ASTFlow';
 
 export interface DlgShowASTProps {

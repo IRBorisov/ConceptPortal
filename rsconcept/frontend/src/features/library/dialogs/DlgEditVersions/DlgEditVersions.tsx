@@ -1,15 +1,16 @@
 'use no memo'; // TODO: remove when react hook forms are compliant with react compiler
 'use client';
 
-import { zodResolver } from '@hookform/resolvers/zod';
 import { useMemo } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+import { useRSFormSuspense } from '@/features/rsform';
 
 import { MiniButton } from '@/components/Control';
 import { IconReset, IconSave } from '@/components/Icons';
 import { TextArea, TextInput } from '@/components/Input';
 import { ModalView } from '@/components/Modal';
-import { useRSFormSuspense } from '@/features/rsform';
 import { useDialogsStore } from '@/stores/dialogs';
 import { errorMsg } from '@/utils/labels';
 
@@ -17,6 +18,7 @@ import { IVersionUpdateDTO, schemaVersionUpdate } from '../../backend/types';
 import { useMutatingLibrary } from '../../backend/useMutatingLibrary';
 import { useVersionDelete } from '../../backend/useVersionDelete';
 import { useVersionUpdate } from '../../backend/useVersionUpdate';
+
 import TableVersions from './TableVersions';
 
 export interface DlgEditVersionsProps {

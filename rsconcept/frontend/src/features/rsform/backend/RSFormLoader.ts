@@ -8,6 +8,7 @@ import { CstType, IConstituenta, IRSForm, IRSFormStats } from '../models/rsform'
 import { inferClass, inferStatus, inferTemplate, isBaseSet, isFunctional } from '../models/rsformAPI';
 import { ParsingStatus, ValueClass } from '../models/rslang';
 import { extractGlobals, isSimpleExpression, splitTemplateDefinition } from '../models/rslangAPI';
+
 import { IRSFormDTO } from './types';
 
 /**

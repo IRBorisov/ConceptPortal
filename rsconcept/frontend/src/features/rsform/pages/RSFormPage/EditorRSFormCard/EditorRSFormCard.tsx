@@ -2,13 +2,15 @@
 
 import clsx from 'clsx';
 
-import { FlexColumn } from '@/components/Container';
 import { EditorLibraryItem } from '@/features/library';
+
+import { FlexColumn } from '@/components/Container';
 import { useModificationStore } from '@/stores/modification';
 import { globals } from '@/utils/constants';
 
 import { ToolbarRSFormCard } from '../../../components/ToolbarRSFormCard';
 import { useRSEdit } from '../RSEditContext';
+
 import FormRSForm from './FormRSForm';
 import RSFormStats from './RSFormStats';
 

@@ -1,5 +1,5 @@
-import clsx from 'clsx';
 import { FieldError, GlobalError } from 'react-hook-form';
+import clsx from 'clsx';
 
 import { CProps } from '../props';
 

@@ -1,6 +1,6 @@
-import clsx from 'clsx';
 import { useState } from 'react';
 import { useIntl } from 'react-intl';
+import clsx from 'clsx';
 
 import { FlexColumn } from '@/components/Container';
 import { MiniButton } from '@/components/Control';
@@ -14,6 +14,7 @@ import { prefixes } from '@/utils/constants';
 
 import { ILibraryItem, LibraryItemType } from '../models/library';
 import { matchLibraryItem } from '../models/libraryAPI';
+
 import SelectLocation from './SelectLocation';
 
 interface PickSchemaProps extends CProps.Styling {

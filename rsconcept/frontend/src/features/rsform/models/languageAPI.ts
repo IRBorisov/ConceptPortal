@@ -3,6 +3,7 @@
  */
 
 import { labelGrammeme } from '../labels';
+
 import {
   GramData,
   Grammeme,

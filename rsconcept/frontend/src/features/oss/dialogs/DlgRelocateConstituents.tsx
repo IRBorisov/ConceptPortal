@@ -1,17 +1,18 @@
 'use client';
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import clsx from 'clsx';
 import { useState } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import clsx from 'clsx';
+
+import { HelpTopic } from '@/features/help';
+import { ILibraryItem, SelectLibraryItem, useLibrary } from '@/features/library';
+import { PickMultiConstituenta, useRSForm } from '@/features/rsform';
 
 import { MiniButton } from '@/components/Control';
 import { RelocateUpIcon } from '@/components/DomainIcons';
 import { Loader } from '@/components/Loader';
 import { ModalForm } from '@/components/Modal';
-import { HelpTopic } from '@/features/help';
-import { ILibraryItem, SelectLibraryItem, useLibrary } from '@/features/library';
-import { PickMultiConstituenta, useRSForm } from '@/features/rsform';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { ICstRelocateDTO, IOperationPosition, schemaCstRelocate } from '../backend/types';

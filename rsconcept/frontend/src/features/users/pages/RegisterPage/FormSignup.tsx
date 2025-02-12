@@ -1,11 +1,13 @@
 'use client';
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import clsx from 'clsx';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import clsx from 'clsx';
 
 import { urls, useBlockNavigation, useConceptNavigation } from '@/app';
+import { HelpTopic } from '@/features/help';
+
 import { isAxiosError } from '@/backend/apiTransport';
 import { FlexColumn, Overlay, Tooltip } from '@/components/Container';
 import { Button, SubmitButton, TextURL } from '@/components/Control';
@@ -13,7 +15,6 @@ import { IconHelp } from '@/components/Icons';
 import { ErrorData } from '@/components/InfoError';
 import { Checkbox, TextInput } from '@/components/Input';
 import { PrettyJson } from '@/components/View';
-import { HelpTopic } from '@/features/help';
 import { globals, patterns } from '@/utils/constants';
 
 import { IUserSignupDTO, schemaUserSignup } from '../../backend/types';

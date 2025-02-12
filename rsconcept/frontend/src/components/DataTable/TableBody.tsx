@@ -4,8 +4,9 @@ import { Cell, flexRender, Row, Table } from '@tanstack/react-table';
 import clsx from 'clsx';
 
 import { CProps } from '../props';
-import { IConditionalStyle } from '.';
+
 import SelectRow from './SelectRow';
+import { IConditionalStyle } from '.';
 
 interface TableBodyProps<TData> {
   table: Table<TData>;

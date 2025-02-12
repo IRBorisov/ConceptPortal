@@ -1,13 +1,14 @@
 'use client';
 
-import clsx from 'clsx';
 import { useEffect, useState } from 'react';
+import clsx from 'clsx';
+
+import { HelpTopic } from '@/features/help';
 
 import { MiniButton } from '@/components/Control';
 import { IconAccept, IconMoveDown, IconMoveLeft, IconMoveRight, IconRemove } from '@/components/Icons';
 import { Label, TextArea } from '@/components/Input';
 import { ModalForm } from '@/components/Modal';
-import { HelpTopic } from '@/features/help';
 import { useDialogsStore } from '@/stores/dialogs';
 import { promptText } from '@/utils/labels';
 
@@ -19,6 +20,7 @@ import SelectMultiGrammeme from '../../components/SelectMultiGrammeme';
 import { Grammeme, IGrammemeOption, IWordForm, supportedGrammemes } from '../../models/language';
 import { parseGrammemes, supportedGrammeOptions, wordFormEquals } from '../../models/languageAPI';
 import { IConstituenta, TermForm } from '../../models/rsform';
+
 import TableWordForms from './TableWordForms';
 
 export interface DlgEditWordFormsProps {

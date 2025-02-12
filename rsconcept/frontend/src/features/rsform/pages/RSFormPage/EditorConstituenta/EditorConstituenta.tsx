@@ -1,7 +1,7 @@
 'use client';
 
-import clsx from 'clsx';
 import { useState } from 'react';
+import clsx from 'clsx';
 
 import useWindowSize from '@/hooks/useWindowSize';
 import { useMainHeight } from '@/stores/appLayout';
@@ -15,6 +15,7 @@ import { useCstUpdate } from '../../../backend/useCstUpdate';
 import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
 import { useRSEdit } from '../RSEditContext';
 import ViewConstituents from '../ViewConstituents';
+
 import EditorControls from './EditorControls';
 import FormConstituenta from './FormConstituenta';
 import ToolbarConstituenta from './ToolbarConstituenta';

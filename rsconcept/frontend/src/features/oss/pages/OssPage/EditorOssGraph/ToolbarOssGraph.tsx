@@ -2,6 +2,8 @@
 
 import clsx from 'clsx';
 
+import { BadgeHelp, HelpTopic } from '@/features/help';
+
 import { MiniButton } from '@/components/Control';
 import {
   IconAnimation,
@@ -18,7 +20,6 @@ import {
   IconReset,
   IconSave
 } from '@/components/Icons';
-import { BadgeHelp, HelpTopic } from '@/features/help';
 import { useModificationStore } from '@/stores/modification';
 import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/utils';

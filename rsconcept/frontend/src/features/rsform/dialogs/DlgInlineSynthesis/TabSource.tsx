@@ -2,12 +2,14 @@
 
 import { useFormContext, useWatch } from 'react-hook-form';
 
-import { TextInput } from '@/components/Input';
 import { LibraryItemType, PickSchema, useLibrary } from '@/features/library';
+
+import { TextInput } from '@/components/Input';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { IInlineSynthesisDTO } from '../../backend/types';
 import { sortItemsForInlineSynthesis } from '../../models/rsformAPI';
+
 import { DlgInlineSynthesisProps } from './DlgInlineSynthesis';
 
 function TabSource() {

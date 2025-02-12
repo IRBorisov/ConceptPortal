@@ -1,15 +1,17 @@
+import { BadgeHelp, HelpTopic } from '@/features/help';
+import { useRoleStore, UserRole } from '@/features/users';
+
 import { Overlay } from '@/components/Container';
 import { MiniButton } from '@/components/Control';
 import { VisibilityIcon } from '@/components/DomainIcons';
 import { IconImmutable, IconMutable } from '@/components/Icons';
 import { Label } from '@/components/Input';
-import { BadgeHelp, HelpTopic } from '@/features/help';
-import { useRoleStore, UserRole } from '@/features/users';
 import { PARAMETER } from '@/utils/constants';
 
 import { useMutatingLibrary } from '../backend/useMutatingLibrary';
 import { useSetAccessPolicy } from '../backend/useSetAccessPolicy';
 import { AccessPolicy } from '../models/library';
+
 import { ILibraryItemEditor } from './EditorLibraryItem';
 import { SelectAccessPolicy } from './SelectAccessPolicy';
 

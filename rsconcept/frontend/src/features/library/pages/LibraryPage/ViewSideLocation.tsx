@@ -1,12 +1,13 @@
-import clsx from 'clsx';
 import { toast } from 'react-toastify';
+import clsx from 'clsx';
+
+import { useAuthSuspense } from '@/features/auth';
+import { BadgeHelp, HelpTopic } from '@/features/help';
 
 import { MiniButton } from '@/components/Control';
 import { SubfoldersIcon } from '@/components/DomainIcons';
 import { IconFolderEdit, IconFolderTree } from '@/components/Icons';
 import { CProps } from '@/components/props';
-import { useAuthSuspense } from '@/features/auth';
-import { BadgeHelp, HelpTopic } from '@/features/help';
 import useWindowSize from '@/hooks/useWindowSize';
 import { useFitHeight } from '@/stores/appLayout';
 import { PARAMETER, prefixes } from '@/utils/constants';

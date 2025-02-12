@@ -1,13 +1,14 @@
 'use client';
 
-import clsx from 'clsx';
 import { useState } from 'react';
+import clsx from 'clsx';
+
+import { SelectUser, TableUsers, useUsers } from '@/features/users';
 
 import { MiniButton } from '@/components/Control';
 import { IconRemove } from '@/components/Icons';
 import { Label } from '@/components/Input';
 import { ModalForm } from '@/components/Modal';
-import { SelectUser, TableUsers, useUsers } from '@/features/users';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { useSetEditors } from '../../backend/useSetEditors';

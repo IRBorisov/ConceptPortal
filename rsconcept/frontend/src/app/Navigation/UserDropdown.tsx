@@ -1,3 +1,5 @@
+import { useAuthSuspense, useLogout } from '@/features/auth';
+
 import { Dropdown, DropdownButton } from '@/components/Dropdown';
 import {
   IconAdmin,
@@ -14,10 +16,10 @@ import {
   IconUser
 } from '@/components/Icons';
 import { CProps } from '@/components/props';
-import { useAuthSuspense, useLogout } from '@/features/auth';
 import { usePreferencesStore } from '@/stores/preferences';
 
 import { urls } from '../urls';
+
 import { useConceptNavigation } from './NavigationContext';
 
 interface UserDropdownProps {

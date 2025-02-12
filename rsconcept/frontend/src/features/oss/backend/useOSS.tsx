@@ -1,7 +1,8 @@
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 
-import { queryClient } from '@/backend/queryClient';
 import { useLibrary, useLibrarySuspense } from '@/features/library/backend/useLibrary';
+
+import { queryClient } from '@/backend/queryClient';
 
 import { ossApi } from './api';
 import { OssLoader } from './OssLoader';

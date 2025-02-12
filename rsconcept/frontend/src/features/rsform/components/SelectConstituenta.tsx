@@ -5,8 +5,7 @@ import clsx from 'clsx';
 import { SelectSingle } from '@/components/Input';
 import { CProps } from '@/components/props';
 
-import { describeConstituentaTerm } from '../labels';
-import { describeConstituenta } from '../labels';
+import { describeConstituenta, describeConstituentaTerm } from '../labels';
 import { IConstituenta } from '../models/rsform';
 import { matchConstituenta } from '../models/rsformAPI';
 import { CstMatchMode } from '../stores/cstSearch';

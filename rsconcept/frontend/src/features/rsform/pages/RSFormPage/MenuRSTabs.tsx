@@ -3,6 +3,10 @@
 import fileDownload from 'js-file-download';
 
 import { urls, useConceptNavigation } from '@/app';
+import { useAuthSuspense } from '@/features/auth';
+import { AccessPolicy, LocationHead } from '@/features/library/models/library';
+import { useRoleStore, UserRole } from '@/features/users';
+
 import { Divider } from '@/components/Container';
 import { Button } from '@/components/Control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/Dropdown';
@@ -31,9 +35,6 @@ import {
   IconTemplates,
   IconUpload
 } from '@/components/Icons';
-import { useAuthSuspense } from '@/features/auth';
-import { AccessPolicy, LocationHead } from '@/features/library/models/library';
-import { useRoleStore, UserRole } from '@/features/users';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';
@@ -46,6 +47,7 @@ import { useProduceStructure } from '../../backend/useProduceStructure';
 import { useResetAliases } from '../../backend/useResetAliases';
 import { useRestoreOrder } from '../../backend/useRestoreOrder';
 import { CstType } from '../../models/rsform';
+
 import { useRSEdit } from './RSEditContext';
 
 function MenuRSTabs() {

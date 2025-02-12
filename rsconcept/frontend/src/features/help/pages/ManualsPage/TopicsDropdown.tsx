@@ -9,10 +9,8 @@ import { SelectTree } from '@/components/Input';
 import { useAppLayoutStore, useFitHeight } from '@/stores/appLayout';
 import { PARAMETER, prefixes } from '@/utils/constants';
 
-import { describeHelpTopic } from '../../labels';
-import { labelHelpTopic } from '../../labels';
-import { topicParent } from '../../models/helpTopic';
-import { HelpTopic } from '../../models/helpTopic';
+import { describeHelpTopic, labelHelpTopic } from '../../labels';
+import { HelpTopic, topicParent } from '../../models/helpTopic';
 
 interface TopicsDropdownProps {
   activeTopic: HelpTopic;

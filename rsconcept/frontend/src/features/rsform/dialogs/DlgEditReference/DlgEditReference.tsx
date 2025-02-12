@@ -1,16 +1,18 @@
 'use client';
 
-import clsx from 'clsx';
 import { useState } from 'react';
+import clsx from 'clsx';
+
+import { HelpTopic } from '@/features/help';
 
 import { ModalForm } from '@/components/Modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/Tabs';
-import { HelpTopic } from '@/features/help';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { labelReferenceType } from '../../labels';
 import { ReferenceType } from '../../models/language';
 import { IRSForm } from '../../models/rsform';
+
 import TabEntityReference from './TabEntityReference';
 import TabSyntacticReference from './TabSyntacticReference';
 

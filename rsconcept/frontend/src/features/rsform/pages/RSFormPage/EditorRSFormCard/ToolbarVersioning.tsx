@@ -1,10 +1,11 @@
 'use client';
 
+import { BadgeHelp, HelpTopic } from '@/features/help';
+import { useVersionRestore } from '@/features/library';
+
 import { Overlay } from '@/components/Container';
 import { MiniButton } from '@/components/Control';
 import { IconNewVersion, IconUpload, IconVersions } from '@/components/Icons';
-import { BadgeHelp, HelpTopic } from '@/features/help';
-import { useVersionRestore } from '@/features/library';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { PARAMETER } from '@/utils/constants';

@@ -1,6 +1,6 @@
-import clsx from 'clsx';
 import type { TabProps as TabPropsImpl } from 'react-tabs';
 import { Tab as TabImpl } from 'react-tabs';
+import clsx from 'clsx';
 
 import { globals } from '@/utils/constants';
 

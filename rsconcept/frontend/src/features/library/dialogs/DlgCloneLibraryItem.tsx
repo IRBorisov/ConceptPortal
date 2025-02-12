@@ -1,15 +1,16 @@
 'use client';
 
+import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import clsx from 'clsx';
-import { Controller, useForm } from 'react-hook-form';
 
 import { urls, useConceptNavigation } from '@/app';
+import { useAuthSuspense } from '@/features/auth';
+
 import { MiniButton } from '@/components/Control';
 import { VisibilityIcon } from '@/components/DomainIcons';
 import { Checkbox, Label, TextArea, TextInput } from '@/components/Input';
 import { ModalForm } from '@/components/Modal';
-import { useAuthSuspense } from '@/features/auth';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { ICloneLibraryItemDTO, schemaCloneLibraryItem } from '../backend/types';

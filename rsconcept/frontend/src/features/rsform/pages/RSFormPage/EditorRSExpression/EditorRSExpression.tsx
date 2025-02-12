@@ -1,13 +1,14 @@
 'use client';
 
-import { ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
+import { ReactCodeMirrorRef } from '@uiw/react-codemirror';
+
+import { BadgeHelp, HelpTopic } from '@/features/help';
 
 import { DataCallback } from '@/backend/apiTransport';
 import { Overlay } from '@/components/Container';
 import { CProps } from '@/components/props';
-import { BadgeHelp, HelpTopic } from '@/features/help';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { errorMsg } from '@/utils/labels';
@@ -23,6 +24,7 @@ import { getDefinitionPrefix } from '../../../models/rsformAPI';
 import { IExpressionParse, IRSErrorDescription, TokenID } from '../../../models/rslang';
 import { transformAST } from '../../../models/rslangAPI';
 import { useRSEdit } from '../RSEditContext';
+
 import ParsingResult from './ParsingResult';
 import RSEditorControls from './RSEditControls';
 import StatusBar from './StatusBar';

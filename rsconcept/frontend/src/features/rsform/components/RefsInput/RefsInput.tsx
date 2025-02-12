@@ -1,12 +1,12 @@
 'use client';
 
+import { forwardRef, useRef, useState } from 'react';
 import { Extension } from '@codemirror/state';
 import { tags } from '@lezer/highlight';
 import { createTheme } from '@uiw/codemirror-themes';
 import CodeMirror, { BasicSetupOptions, ReactCodeMirrorProps, ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import clsx from 'clsx';
 import { EditorView } from 'codemirror';
-import { forwardRef, useRef, useState } from 'react';
 
 import { Label } from '@/components/Input';
 import { DialogType, useDialogsStore } from '@/stores/dialogs';
@@ -16,9 +16,10 @@ import { CodeMirrorWrapper } from '@/utils/codemirror';
 
 import { ReferenceType } from '../../models/language';
 import { IRSForm } from '../../models/rsform';
+
+import { RefEntity } from './parse/parser.terms';
 import { refsNavigation } from './clickNavigation';
 import { NaturalLanguage, ReferenceTokens } from './parse';
-import { RefEntity } from './parse/parser.terms';
 import { refsHoverTooltip } from './tooltip';
 
 const editorSetup: BasicSetupOptions = {

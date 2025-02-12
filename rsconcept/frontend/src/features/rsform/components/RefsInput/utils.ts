@@ -4,8 +4,9 @@ import { EditorState } from '@uiw/react-codemirror';
 import { findEnvelopingNodes } from '@/utils/codemirror';
 
 import { parseEntityReference, parseSyntacticReference } from '../../models/languageAPI';
-import { ReferenceTokens } from './parse';
+
 import { RefEntity } from './parse/parser.terms';
+import { ReferenceTokens } from './parse';
 
 /**
  * Retrieves reference from position in Editor.

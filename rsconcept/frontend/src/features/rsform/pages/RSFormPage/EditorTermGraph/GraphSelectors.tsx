@@ -1,10 +1,12 @@
+import { BadgeHelp, HelpTopic } from '@/features/help';
+
 import { Overlay } from '@/components/Container';
 import { SelectSingle } from '@/components/Input';
-import { BadgeHelp, HelpTopic } from '@/features/help';
 
 import { mapLabelColoring } from '../../../labels';
 import { IRSForm } from '../../../models/rsform';
 import { GraphColoring } from '../../../stores/termGraph';
+
 import SchemasGuide from './SchemasGuide';
 
 /**

@@ -2,6 +2,8 @@
 
 import clsx from 'clsx';
 
+import { SelectUser } from '@/features/users';
+
 import { MiniButton, SelectorButton } from '@/components/Control';
 import { LocationIcon, VisibilityIcon } from '@/components/DomainIcons';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/Dropdown';
@@ -16,7 +18,6 @@ import {
 } from '@/components/Icons';
 import { SearchBar } from '@/components/Input';
 import { CProps } from '@/components/props';
-import { SelectUser } from '@/features/users';
 import { prefixes } from '@/utils/constants';
 import { tripleToggleColor } from '@/utils/utils';
 

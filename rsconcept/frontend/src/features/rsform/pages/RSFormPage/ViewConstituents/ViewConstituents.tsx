@@ -1,15 +1,17 @@
 'use client';
 
-import clsx from 'clsx';
 import { useState } from 'react';
+import clsx from 'clsx';
 
 import { useRoleStore, UserRole } from '@/features/users';
+
 import useWindowSize from '@/hooks/useWindowSize';
 import { useFitHeight } from '@/stores/appLayout';
 import { PARAMETER } from '@/utils/constants';
 
 import { IConstituenta } from '../../../models/rsform';
 import { useRSEdit } from '../RSEditContext';
+
 import ConstituentsSearch from './ConstituentsSearch';
 import TableSideConstituents from './TableSideConstituents';
 

@@ -2,6 +2,7 @@ import { Extension } from '@codemirror/state';
 import { EditorView } from '@uiw/react-codemirror';
 
 import { IRSForm } from '../../models/rsform';
+
 import { findReferenceAt } from './utils';
 
 const navigationProducer = (schema: IRSForm, onOpenEdit: (cstID: number) => void) => {

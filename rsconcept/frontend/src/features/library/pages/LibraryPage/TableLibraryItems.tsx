@@ -1,16 +1,17 @@
 'use client';
 
-import clsx from 'clsx';
 import { useLayoutEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
+import clsx from 'clsx';
 
 import { urls, useConceptNavigation } from '@/app';
+import { useLabelUser } from '@/features/users';
+
 import { FlexColumn } from '@/components/Container';
 import { MiniButton, TextURL } from '@/components/Control';
 import DataTable, { createColumnHelper, IConditionalStyle, VisibilityState } from '@/components/DataTable';
 import { IconFolderTree } from '@/components/Icons';
 import { CProps } from '@/components/props';
-import { useLabelUser } from '@/features/users';
 import useWindowSize from '@/hooks/useWindowSize';
 import { useFitHeight } from '@/stores/appLayout';
 import { usePreferencesStore } from '@/stores/preferences';

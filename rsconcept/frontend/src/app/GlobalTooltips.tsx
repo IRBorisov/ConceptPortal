@@ -1,8 +1,9 @@
 'use client';
 
+import InfoConstituenta from '@/features/rsform/components/InfoConstituenta';
+
 import { Tooltip } from '@/components/Container';
 import { Loader } from '@/components/Loader';
-import InfoConstituenta from '@/features/rsform/components/InfoConstituenta';
 import { useTooltipsStore } from '@/stores/tooltips';
 import { globals } from '@/utils/constants';
 

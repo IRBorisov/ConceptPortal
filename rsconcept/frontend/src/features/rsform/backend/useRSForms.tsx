@@ -1,6 +1,7 @@
 import { useSuspenseQueries } from '@tanstack/react-query';
 
 import { DELAYS } from '../../../backend/configuration';
+
 import { rsformsApi } from './api';
 import { RSFormLoader } from './RSFormLoader';
 

@@ -1,6 +1,9 @@
 'use client';
 
 import { urls, useConceptNavigation } from '@/app';
+import { useAuthSuspense } from '@/features/auth';
+import { useRoleStore, UserRole } from '@/features/users';
+
 import { Divider } from '@/components/Container';
 import { Button } from '@/components/Control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/Dropdown';
@@ -18,12 +21,11 @@ import {
   IconReader,
   IconShare
 } from '@/components/Icons';
-import { useAuthSuspense } from '@/features/auth';
-import { useRoleStore, UserRole } from '@/features/users';
 import { describeAccessMode as describeUserRole, labelAccessMode as labelUserRole } from '@/utils/labels';
 import { sharePage } from '@/utils/utils';
 
 import { useMutatingOss } from '../../backend/useMutatingOss';
+
 import { useOssEdit } from './OssEditContext';
 
 function MenuOssTabs() {

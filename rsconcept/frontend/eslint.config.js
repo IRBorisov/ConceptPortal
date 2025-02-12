@@ -4,7 +4,7 @@ import typescriptParser from '@typescript-eslint/parser';
 import reactPlugin from 'eslint-plugin-react';
 import reactCompilerPlugin from 'eslint-plugin-react-compiler';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
-
+import importPlugin from 'eslint-plugin-import';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
 
 export default [
@@ -37,7 +37,8 @@ export default [
       'react': reactPlugin,
       'react-compiler': reactCompilerPlugin,
       'react-hooks': reactHooksPlugin,
-      'simple-import-sort': simpleImportSort
+      'simple-import-sort': simpleImportSort,
+      'import': importPlugin
     },
     settings: { react: { version: 'detect' } },
     rules: {
@@ -57,8 +58,33 @@ export default [
 
       'react-refresh/only-export-components': ['off', { allowConstantExport: true }],
 
-      'simple-import-sort/imports': 'warn',
+      'simple-import-sort/imports': [
+        'warn',
+        {
+          groups: [
+            // Node.js builtins.
+            [
+              '^(assert|buffer|child_process|cluster|console|constants|crypto|dgram|dns|domain|events|fs|http|https|module|net|os|path|punycode|querystring|readline|repl|stream|string_decoder|sys|timers|tls|tty|url|util|vm|zlib|freelist|v8|process|async_hooks|http2|perf_hooks)(/.*|$)'
+            ],
+            // Packages. `react` related packages come first.
+            ['^react', '^@?\\w'],
+            // Global app and features
+            ['^(@/app|@/features)(/.*|$)'],
+            // Internal packages.
+            ['^(@)(/.*|$)'],
+            // Side effect imports.
+            ['^\\u0000'],
+            // Parent imports. Put `..` last.
+            ['^\\.\\.(?!/?$)', '^\\.\\./?$'],
+            // Other relative imports. Put same-folder imports and `.` last.
+            ['^\\./(?=.*/)(?!/?$)', '^\\.(?!/?$)', '^\\./?$'],
+            // Style imports.
+            ['^.+\\.s?css$']
+          ]
+        }
+      ],
       'simple-import-sort/exports': 'error',
+      'import/no-duplicates': 'warn',
 
       ...reactHooksPlugin.configs.recommended.rules
     }

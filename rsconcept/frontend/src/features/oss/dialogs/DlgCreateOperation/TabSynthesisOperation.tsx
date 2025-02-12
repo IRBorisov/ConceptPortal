@@ -6,6 +6,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 
 import { IOperationCreateDTO } from '../../backend/types';
 import { PickMultiOperation } from '../../components/PickMultiOperation';
+
 import { DlgCreateOperationProps } from './DlgCreateOperation';
 
 function TabSynthesisOperation() {

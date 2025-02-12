@@ -1,7 +1,7 @@
 'use client';
 
-import clsx from 'clsx';
 import { useIntl } from 'react-intl';
+import clsx from 'clsx';
 
 import { MiniButton } from '@/components/Control';
 import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/DataTable';

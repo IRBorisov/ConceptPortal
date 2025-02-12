@@ -1,6 +1,7 @@
 'use client';
 'use no memo';
 
+import { useMemo, useState } from 'react';
 import {
   ColumnSort,
   createColumnHelper,
@@ -15,9 +16,9 @@ import {
   useReactTable,
   type VisibilityState
 } from '@tanstack/react-table';
-import { useMemo, useState } from 'react';
 
 import { CProps } from '../props';
+
 import DefaultNoData from './DefaultNoData';
 import PaginationTools from './PaginationTools';
 import TableBody from './TableBody';

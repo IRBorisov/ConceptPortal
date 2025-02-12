@@ -3,6 +3,10 @@
 import clsx from 'clsx';
 
 import { urls, useConceptNavigation } from '@/app';
+import { BadgeHelp, HelpTopic } from '@/features/help';
+import { MiniSelectorOSS } from '@/features/library';
+import { useFindPredecessor } from '@/features/oss';
+
 import { Overlay } from '@/components/Container';
 import { MiniButton } from '@/components/Control';
 import {
@@ -17,9 +21,6 @@ import {
   IconReset,
   IconSave
 } from '@/components/Icons';
-import { BadgeHelp, HelpTopic } from '@/features/help';
-import { MiniSelectorOSS } from '@/features/library';
-import { useFindPredecessor } from '@/features/oss';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { PARAMETER } from '@/utils/constants';

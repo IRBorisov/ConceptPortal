@@ -1,7 +1,7 @@
 'use client';
 
-import clsx from 'clsx';
 import { useState } from 'react';
+import clsx from 'clsx';
 
 import DataTable, { createColumnHelper, RowSelectionState } from '@/components/DataTable';
 import { SearchBar } from '@/components/Input';
@@ -13,6 +13,7 @@ import { describeConstituenta } from '../labels';
 import { IConstituenta, IRSForm } from '../models/rsform';
 import { isBasicConcept, matchConstituenta } from '../models/rsformAPI';
 import { CstMatchMode } from '../stores/cstSearch';
+
 import BadgeConstituenta from './BadgeConstituenta';
 import ToolbarGraphSelection from './ToolbarGraphSelection';
 

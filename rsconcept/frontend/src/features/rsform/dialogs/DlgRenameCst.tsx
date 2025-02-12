@@ -1,12 +1,13 @@
 'use client';
 
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import clsx from 'clsx';
-import { useForm, useWatch } from 'react-hook-form';
+
+import { HelpTopic } from '@/features/help';
 
 import { TextInput } from '@/components/Input';
 import { ModalForm } from '@/components/Modal';
-import { HelpTopic } from '@/features/help';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { ICstRenameDTO, schemaCstRename } from '../backend/types';

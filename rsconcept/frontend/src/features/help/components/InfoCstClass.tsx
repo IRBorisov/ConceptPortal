@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import { colorBgCstClass } from '@/features/rsform/colors';
 import { describeCstClass, labelCstClass } from '@/features/rsform/labels';
 import { CstClass } from '@/features/rsform/models/rsform';
+
 import { prefixes } from '@/utils/constants';
 
 interface InfoCstClassProps {

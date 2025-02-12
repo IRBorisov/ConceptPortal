@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
 
 import { urls, useConceptNavigation } from '@/app';
-import { Loader } from '@/components/Loader';
 import { useAuthSuspense } from '@/features/auth';
+
+import { Loader } from '@/components/Loader';
 import { PARAMETER } from '@/utils/constants';
 
 function HomePage() {

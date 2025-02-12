@@ -2,6 +2,7 @@ import clsx from 'clsx';
 
 import { Label } from '../Input/Label';
 import { CProps } from '../props';
+
 import { ErrorField } from './ErrorField';
 
 interface TextInputProps extends CProps.Editor, CProps.ErrorProcessing, CProps.Colors, CProps.Input {

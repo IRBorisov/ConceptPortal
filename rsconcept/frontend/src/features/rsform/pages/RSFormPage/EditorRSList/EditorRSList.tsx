@@ -1,8 +1,8 @@
 'use client';
 
-import fileDownload from 'js-file-download';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
+import fileDownload from 'js-file-download';
 
 import { Overlay } from '@/components/Container';
 import { MiniButton } from '@/components/Control';
@@ -18,6 +18,7 @@ import { CstType } from '../../../models/rsform';
 import { matchConstituenta } from '../../../models/rsformAPI';
 import { CstMatchMode } from '../../../stores/cstSearch';
 import { useRSEdit } from '../RSEditContext';
+
 import TableRSList from './TableRSList';
 import ToolbarRSList from './ToolbarRSList';
 

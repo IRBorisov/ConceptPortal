@@ -1,7 +1,7 @@
 'use client';
 
-import clsx from 'clsx';
 import { useEffect, useState } from 'react';
+import clsx from 'clsx';
 
 import { MiniButton } from '@/components/Control';
 import { IconFolder, IconFolderClosed, IconFolderEmpty, IconFolderOpened } from '@/components/Icons';

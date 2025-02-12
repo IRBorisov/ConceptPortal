@@ -2,8 +2,9 @@
 
 import { Dispatch, useEffect, useState } from 'react';
 
-import { SelectSingle, TextArea } from '@/components/Input';
 import { useTemplatesSuspense } from '@/features/library';
+
+import { SelectSingle, TextArea } from '@/components/Input';
 
 import { PickConstituenta } from '../../components/PickConstituenta';
 import RSInput from '../../components/RSInput';

@@ -1,11 +1,12 @@
 'use client';
 
-import clsx from 'clsx';
 import { useRef, useState } from 'react';
+import clsx from 'clsx';
 
 import { Button } from '../Control';
 import { IconUpload } from '../Icons';
 import { CProps } from '../props';
+
 import { Label } from './Label';
 
 interface FileInputProps extends Omit<CProps.Input, 'accept' | 'type'> {

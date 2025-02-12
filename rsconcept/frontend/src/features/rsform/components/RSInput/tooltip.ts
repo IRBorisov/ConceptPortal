@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import { labelCstTypification } from '../../labels';
 import { IConstituenta, IRSForm } from '../../models/rsform';
 import { isBasicConcept } from '../../models/rsformAPI';
+
 import { findAliasAt } from './utils';
 
 const tooltipProducer = (schema: IRSForm, canClick?: boolean) => {

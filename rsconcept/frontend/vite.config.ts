@@ -1,5 +1,6 @@
-import react from '@vitejs/plugin-react';
 import path from 'path';
+
+import react from '@vitejs/plugin-react';
 import { defineConfig, loadEnv, PluginOption } from 'vite';
 
 import { dependencies } from './package.json';

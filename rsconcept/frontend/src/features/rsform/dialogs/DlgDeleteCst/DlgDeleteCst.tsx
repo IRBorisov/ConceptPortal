@@ -1,7 +1,7 @@
 'use client';
 
-import clsx from 'clsx';
 import { useState } from 'react';
+import clsx from 'clsx';
 
 import { Checkbox } from '@/components/Input';
 import { ModalForm } from '@/components/Modal';
@@ -10,6 +10,7 @@ import { prefixes } from '@/utils/constants';
 
 import { useCstDelete } from '../../backend/useCstDelete';
 import { IRSForm } from '../../models/rsform';
+
 import ListConstituents from './ListConstituents';
 
 export interface DlgDeleteCstProps {

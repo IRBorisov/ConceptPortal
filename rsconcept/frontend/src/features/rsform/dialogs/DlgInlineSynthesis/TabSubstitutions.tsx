@@ -7,6 +7,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { IInlineSynthesisDTO } from '../../backend/types';
 import { useRSFormSuspense } from '../../backend/useRSForm';
 import { PickSubstitutions } from '../../components/PickSubstitutions';
+
 import { DlgInlineSynthesisProps } from './DlgInlineSynthesis';
 
 function TabSubstitutions() {

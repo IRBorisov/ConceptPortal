@@ -1,17 +1,18 @@
 'use client';
 
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import clsx from 'clsx';
-import { useForm } from 'react-hook-form';
 
 import { urls, useConceptNavigation } from '@/app';
+import { useChangePassword } from '@/features/auth';
+import { IChangePasswordDTO, schemaChangePassword } from '@/features/auth/backend/types';
+
 import { isAxiosError } from '@/backend/apiTransport';
 import { FlexColumn } from '@/components/Container';
 import { SubmitButton } from '@/components/Control';
 import { ErrorData } from '@/components/InfoError';
 import { TextInput } from '@/components/Input';
-import { useChangePassword } from '@/features/auth';
-import { IChangePasswordDTO, schemaChangePassword } from '@/features/auth/backend/types';
 
 function EditorPassword() {
   const router = useConceptNavigation();

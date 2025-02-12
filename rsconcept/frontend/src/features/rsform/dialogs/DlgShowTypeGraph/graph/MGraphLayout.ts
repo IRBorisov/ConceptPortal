@@ -1,5 +1,5 @@
-import dagre from '@dagrejs/dagre';
 import { Edge, Node } from 'reactflow';
+import dagre from '@dagrejs/dagre';
 
 import { TMGraphNode } from '../../../models/TMGraph';
 

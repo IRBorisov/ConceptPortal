@@ -2,6 +2,8 @@ import { Suspense } from 'react';
 import { useIntl } from 'react-intl';
 
 import { urls, useConceptNavigation } from '@/app';
+import { InfoUsers, SelectUser, useLabelUser, useRoleStore, UserRole } from '@/features/users';
+
 import { Overlay, Tooltip } from '@/components/Container';
 import { MiniButton } from '@/components/Control';
 import { useDropdown } from '@/components/Dropdown';
@@ -16,7 +18,6 @@ import {
 import { Loader } from '@/components/Loader';
 import { CProps } from '@/components/props';
 import { ValueIcon } from '@/components/View';
-import { InfoUsers, SelectUser, useLabelUser, useRoleStore, UserRole } from '@/features/users';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { prefixes } from '@/utils/constants';

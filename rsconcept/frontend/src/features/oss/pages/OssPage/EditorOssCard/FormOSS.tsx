@@ -1,16 +1,17 @@
 'use no memo'; // TODO: remove when react hook forms are compliant with react compiler
 'use client';
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import clsx from 'clsx';
 import { useEffect } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import clsx from 'clsx';
+
+import { LibraryItemType, ToolbarItemAccess, useUpdateItem } from '@/features/library';
+import { IUpdateLibraryItemDTO, schemaUpdateLibraryItem } from '@/features/library/backend/types';
 
 import { SubmitButton } from '@/components/Control';
 import { IconSave } from '@/components/Icons';
 import { TextArea, TextInput } from '@/components/Input';
-import { LibraryItemType, ToolbarItemAccess, useUpdateItem } from '@/features/library';
-import { IUpdateLibraryItemDTO, schemaUpdateLibraryItem } from '@/features/library/backend/types';
 import { useModificationStore } from '@/stores/modification';
 import { globals } from '@/utils/constants';
 

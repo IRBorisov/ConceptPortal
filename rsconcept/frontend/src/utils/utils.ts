@@ -2,8 +2,8 @@
  * Module: Utility functions.
  */
 
-import { AxiosError, AxiosHeaderValue, AxiosResponse, isAxiosError } from 'axios';
 import { toast } from 'react-toastify';
+import { AxiosError, AxiosHeaderValue, AxiosResponse, isAxiosError } from 'axios';
 
 import { infoMsg, promptText } from './labels';
 

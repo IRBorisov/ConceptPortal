@@ -1,9 +1,10 @@
 'use client';
 
-import clsx from 'clsx';
 import { useEffect } from 'react';
+import clsx from 'clsx';
 
 import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
+
 import { Overlay } from '@/components/Container';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/Tabs';
 import { useAppLayoutStore } from '@/stores/appLayout';

@@ -1,4 +1,5 @@
 import { IWordForm } from '../models/language';
+
 import BadgeGrammeme from './BadgeGrammeme';
 
 interface BadgeWordFormProps {

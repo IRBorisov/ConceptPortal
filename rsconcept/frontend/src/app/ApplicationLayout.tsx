@@ -6,12 +6,12 @@ import { ModalLoader } from '@/components/Modal';
 import { useAppLayoutStore, useMainHeight, useViewportHeight } from '@/stores/appLayout';
 import { globals } from '@/utils/constants';
 
+import { NavigationState } from './Navigation/NavigationContext';
 import { Footer } from './Footer';
 import { GlobalDialogs } from './GlobalDialogs';
 import ConceptToaster from './GlobalToaster';
 import { GlobalTooltips } from './GlobalTooltips';
 import { Navigation } from './Navigation';
-import { NavigationState } from './Navigation/NavigationContext';
 
 function ApplicationLayout() {
   const mainHeight = useMainHeight();

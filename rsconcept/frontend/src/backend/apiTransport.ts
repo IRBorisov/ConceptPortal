@@ -1,8 +1,8 @@
 /**
  * Module: generic API for backend REST communications using axios library.
  */
-import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import { toast } from 'react-toastify';
+import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 
 import { buildConstants } from '@/utils/buildConstants';
 import { extractErrorMessage } from '@/utils/utils';
