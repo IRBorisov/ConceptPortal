@@ -1,6 +1,8 @@
 'use client';
 
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useState } from 'react';
+import { FormProvider, useForm, useWatch } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import clsx from 'clsx';
 
 import { HelpTopic } from '@/features/help';
@@ -8,23 +10,21 @@ import { HelpTopic } from '@/features/help';
 import { Loader } from '@/components/Loader';
 import { ModalForm } from '@/components/Modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/Tabs';
-import usePartialUpdate from '@/hooks/usePartialUpdate';
 import { useDialogsStore } from '@/stores/dialogs';
-import { promptText } from '@/utils/labels';
 
-import { ICstCreateDTO } from '../../backend/types';
-import { useRSForm } from '../../backend/useRSForm';
-import { CstType, IRSForm } from '../../models/rsform';
+import { ICstCreateDTO, schemaCstCreate } from '../../backend/types';
+import { useCstCreate } from '../../backend/useCstCreate';
+import { CstType, IConstituentaMeta, IRSForm } from '../../models/rsform';
 import { generateAlias, validateNewAlias } from '../../models/rsformAPI';
-import { inferTemplatedType, substituteTemplateArgs } from '../../models/rslangAPI';
 import FormCreateCst from '../DlgCreateCst/FormCreateCst';
 
-import TabArguments, { IArgumentsState } from './TabArguments';
-import TabTemplate, { ITemplateState } from './TabTemplate';
+import TabArguments from './TabArguments';
+import TabTemplate from './TabTemplate';
+import { TemplateState } from './TemplateContext';
 
 export interface DlgCstTemplateProps {
   schema: IRSForm;
-  onCreate: (data: ICstCreateDTO) => void;
+  onCreate: (data: IConstituentaMeta) => void;
   insertAfter?: number;
 }
 
@@ -36,98 +36,38 @@ export enum TabID {
 
 function DlgCstTemplate() {
   const { schema, onCreate, insertAfter } = useDialogsStore(state => state.props as DlgCstTemplateProps);
+  const { cstCreate } = useCstCreate();
+
+  const methods = useForm<ICstCreateDTO>({
+    resolver: zodResolver(schemaCstCreate),
+    defaultValues: {
+      cst_type: CstType.TERM,
+      insert_after: insertAfter ?? null,
+      alias: generateAlias(CstType.TERM, schema),
+      convention: '',
+      definition_formal: '',
+      definition_raw: '',
+      term_raw: '',
+      term_forms: []
+    }
+  });
+  const alias = useWatch({ control: methods.control, name: 'alias' });
+  const cst_type = useWatch({ control: methods.control, name: 'cst_type' });
+  const isValid = validateNewAlias(alias, cst_type, schema);
+
   const [activeTab, setActiveTab] = useState(TabID.TEMPLATE);
 
-  const [template, updateTemplate] = usePartialUpdate<ITemplateState>({});
-  const { schema: templateSchema } = useRSForm({ itemID: template.templateID });
-  const [substitutes, updateSubstitutes] = usePartialUpdate<IArgumentsState>({
-    definition: '',
-    arguments: []
-  });
-  const [constituenta, updateConstituenta] = usePartialUpdate<ICstCreateDTO>({
-    cst_type: CstType.TERM,
-    insert_after: insertAfter ?? null,
-    alias: generateAlias(CstType.TERM, schema),
-    convention: '',
-    definition_formal: '',
-    definition_raw: '',
-    term_raw: '',
-    term_forms: []
-  });
-
-  const [validated, setValidated] = useState(false);
-
-  function handleSubmit() {
-    onCreate(constituenta);
-    return true;
+  function onSubmit(data: ICstCreateDTO) {
+    return cstCreate({ itemID: schema.id, data }).then(onCreate);
   }
-
-  function handlePrompt(): boolean {
-    const definedSomeArgs = substitutes.arguments.some(arg => !!arg.value);
-    if (!definedSomeArgs && !window.confirm(promptText.templateUndefined)) {
-      return false;
-    }
-    return true;
-  }
-
-  useEffect(() => {
-    if (!template.prototype) {
-      updateConstituenta({
-        definition_raw: '',
-        definition_formal: '',
-        term_raw: ''
-      });
-      updateSubstitutes({
-        definition: '',
-        arguments: []
-      });
-    } else {
-      updateConstituenta({
-        cst_type: template.prototype.cst_type,
-        alias: generateAlias(template.prototype.cst_type, schema),
-        definition_raw: template.prototype.definition_raw,
-        definition_formal: template.prototype.definition_formal,
-        term_raw: template.prototype.term_raw
-      });
-      updateSubstitutes({
-        definition: template.prototype.definition_formal,
-        arguments: template.prototype.parse.args.map(arg => ({
-          alias: arg.alias,
-          typification: arg.typification,
-          value: ''
-        }))
-      });
-    }
-  }, [template.prototype, updateConstituenta, updateSubstitutes, schema]);
-
-  useEffect(() => {
-    if (substitutes.arguments.length === 0 || !template.prototype) {
-      return;
-    }
-    const definition = substituteTemplateArgs(template.prototype.definition_formal, substitutes.arguments);
-    const type = inferTemplatedType(template.prototype.cst_type, substitutes.arguments);
-    updateConstituenta({
-      cst_type: type,
-      alias: generateAlias(type, schema),
-      definition_formal: definition
-    });
-    updateSubstitutes({
-      definition: definition
-    });
-  }, [substitutes.arguments, template.prototype, updateConstituenta, updateSubstitutes, schema]);
-
-  useEffect(() => {
-    setValidated(!!template.prototype && validateNewAlias(constituenta.alias, constituenta.cst_type, schema));
-  }, [constituenta.alias, constituenta.cst_type, schema, template.prototype]);
 
   return (
     <ModalForm
       header='Создание конституенты из шаблона'
       submitText='Создать'
       className='w-[43rem] h-[35rem] px-6'
-      canSubmit={validated}
-      beforeSubmit={handlePrompt}
-      onSubmit={handleSubmit}
+      canSubmit={isValid}
+      onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
       helpTopic={HelpTopic.RSL_TEMPLATES}
     >
       <Tabs
@@ -142,21 +82,25 @@ function DlgCstTemplate() {
           <TabLabel label='Конституента' title='Редактирование конституенты' className='w-[8rem]' />
         </TabList>
 
-        <TabPanel>
-          <Suspense fallback={<Loader />}>
-            <TabTemplate state={template} partialUpdate={updateTemplate} templateSchema={templateSchema} />
-          </Suspense>
-        </TabPanel>
+        <FormProvider {...methods}>
+          <TemplateState>
+            <TabPanel>
+              <Suspense fallback={<Loader />}>
+                <TabTemplate />
+              </Suspense>
+            </TabPanel>
 
-        <TabPanel>
-          <TabArguments schema={schema} state={substitutes} partialUpdate={updateSubstitutes} />
-        </TabPanel>
+            <TabPanel>
+              <TabArguments />
+            </TabPanel>
 
-        <TabPanel>
-          <div className='cc-fade-in cc-column'>
-            <FormCreateCst state={constituenta} partialUpdate={updateConstituenta} schema={schema} />
-          </div>
-        </TabPanel>
+            <TabPanel>
+              <div className='cc-fade-in cc-column'>
+                <FormCreateCst schema={schema} />
+              </div>
+            </TabPanel>
+          </TemplateState>
+        </FormProvider>
       </Tabs>
     </ModalForm>
   );

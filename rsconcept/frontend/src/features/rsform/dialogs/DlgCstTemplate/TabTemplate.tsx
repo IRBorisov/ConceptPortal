@@ -1,36 +1,44 @@
 'use client';
 
-import { Dispatch, useEffect, useState } from 'react';
-
 import { useTemplatesSuspense } from '@/features/library';
 
 import { SelectSingle, TextArea } from '@/components/Input';
 
+import { useRSForm } from '../../backend/useRSForm';
 import { PickConstituenta } from '../../components/PickConstituenta';
 import RSInput from '../../components/RSInput';
-import { CATEGORY_CST_TYPE, IConstituenta, IRSForm } from '../../models/rsform';
+import { CATEGORY_CST_TYPE } from '../../models/rsform';
 import { applyFilterCategory } from '../../models/rsformAPI';
 
-export interface ITemplateState {
-  templateID?: number;
-  prototype?: IConstituenta;
-  filterCategory?: IConstituenta;
-}
+import { useTemplateContext } from './TemplateContext';
 
-interface TabTemplateProps {
-  state: ITemplateState;
-  partialUpdate: Dispatch<Partial<ITemplateState>>;
-  templateSchema?: IRSForm;
-}
+function TabTemplate() {
+  const {
+    templateID, //
+    filterCategory,
+    prototype,
+    onChangePrototype,
+    onChangeTemplateID,
+    onChangeFilterCategory
+  } = useTemplateContext();
 
-function TabTemplate({ state, partialUpdate, templateSchema }: TabTemplateProps) {
   const { templates } = useTemplatesSuspense();
+  const { schema: templateSchema } = useRSForm({ itemID: templateID });
 
-  const [filteredData, setFilteredData] = useState<IConstituenta[]>([]);
+  if (!templateID) {
+    onChangeTemplateID(templates[0].id);
+    return null;
+  }
 
-  const prototypeInfo = !state.prototype
+  const filteredData = !templateSchema
+    ? []
+    : !filterCategory
+    ? templateSchema.items
+    : applyFilterCategory(filterCategory, templateSchema);
+
+  const prototypeInfo = !prototype
     ? ''
-    : `${state.prototype?.term_raw}${state.prototype?.definition_raw ? ` — ${state.prototype?.definition_raw}` : ''}`;
+    : `${prototype?.term_raw}${prototype?.definition_raw ? ` — ${prototype?.definition_raw}` : ''}`;
 
   const templateSelector = templates.map(template => ({
     value: template.id,
@@ -46,23 +54,6 @@ function TabTemplate({ state, partialUpdate, templateSchema }: TabTemplateProps)
           label: cst.term_raw
         }));
 
-  useEffect(() => {
-    if (templates.length > 0 && !state.templateID) {
-      partialUpdate({ templateID: templates[0].id });
-    }
-  }, [templates, state.templateID, partialUpdate]);
-
-  useEffect(() => {
-    if (!templateSchema) {
-      return;
-    }
-    let data = templateSchema.items;
-    if (state.filterCategory) {
-      data = applyFilterCategory(state.filterCategory, templateSchema);
-    }
-    setFilteredData(data);
-  }, [state.filterCategory, templateSchema]);
-
   return (
     <div className='cc-fade-in'>
       <div className='flex border-t border-x rounded-t-md clr-input'>
@@ -71,12 +62,8 @@ function TabTemplate({ state, partialUpdate, templateSchema }: TabTemplateProps)
           placeholder='Источник'
           className='w-[12rem]'
           options={templateSelector}
-          value={
-            state.templateID
-              ? { value: state.templateID, label: templates.find(item => item.id == state.templateID)!.title }
-              : null
-          }
-          onChange={data => partialUpdate({ templateID: data ? data.value : undefined })}
+          value={templateID ? { value: templateID, label: templates.find(item => item.id == templateID)!.title } : null}
+          onChange={data => onChangeTemplateID(data ? data.value : undefined)}
         />
         <SelectSingle
           noBorder
@@ -85,24 +72,22 @@ function TabTemplate({ state, partialUpdate, templateSchema }: TabTemplateProps)
           className='flex-grow ml-1 border-none'
           options={categorySelector}
           value={
-            state.filterCategory && templateSchema
+            filterCategory && templateSchema
               ? {
-                  value: state.filterCategory.id,
-                  label: state.filterCategory.term_raw
+                  value: filterCategory.id,
+                  label: filterCategory.term_raw
                 }
               : null
           }
-          onChange={data =>
-            partialUpdate({ filterCategory: data ? templateSchema?.cstByID.get(data?.value) : undefined })
-          }
+          onChange={data => onChangeFilterCategory(data ? templateSchema?.cstByID.get(data?.value) : undefined)}
           isClearable
         />
       </div>
       <PickConstituenta
         id='dlg_template_picker'
-        value={state.prototype}
+        value={prototype}
         items={filteredData}
-        onChange={cst => partialUpdate({ prototype: cst })}
+        onChange={onChangePrototype}
         className='rounded-t-none'
         rows={8}
       />
@@ -121,7 +106,7 @@ function TabTemplate({ state, partialUpdate, templateSchema }: TabTemplateProps)
         disabled
         placeholder='Выберите шаблон из списка'
         height='5.1rem'
-        value={state.prototype?.definition_formal}
+        value={prototype?.definition_formal}
       />
     </div>
   );

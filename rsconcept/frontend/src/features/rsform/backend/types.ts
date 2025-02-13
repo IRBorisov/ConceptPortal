@@ -4,7 +4,7 @@ import { ILibraryItemReference, ILibraryItemVersioned } from '@/features/library
 
 import { errorMsg } from '@/utils/labels';
 
-import { CstType, IConstituentaMeta, IInheritanceInfo, TermForm } from '../models/rsform';
+import { CstType, IConstituentaMeta, IInheritanceInfo } from '../models/rsform';
 import { IArgumentInfo, ParsingStatus, ValueClass } from '../models/rslang';
 
 /**
@@ -42,17 +42,21 @@ export interface IRSFormUploadDTO {
 /**
  * Represents {@link IConstituenta} data, used in creation process.
  */
-export interface ICstCreateDTO {
-  alias: string;
-  cst_type: CstType;
-  definition_raw: string;
-  term_raw: string;
-  convention: string;
-  definition_formal: string;
-  term_forms: TermForm[];
+export const schemaCstCreate = z.object({
+  cst_type: z.nativeEnum(CstType),
+  alias: z.string().nonempty(errorMsg.requiredField),
+  convention: z.string(),
+  definition_formal: z.string(),
+  definition_raw: z.string(),
+  term_raw: z.string(),
+  term_forms: z.array(z.object({ text: z.string(), tags: z.string() })),
+  insert_after: z.number().nullable()
+});
 
-  insert_after: number | null;
-}
+/**
+ * Represents {@link IConstituenta} data, used in creation process.
+ */
+export type ICstCreateDTO = z.infer<typeof schemaCstCreate>;
 
 /**
  * Represents data response when creating {@link IConstituenta}.

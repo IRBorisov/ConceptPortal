@@ -18,7 +18,7 @@ import { ICstCreateDTO } from '../../backend/types';
 import { useCstCreate } from '../../backend/useCstCreate';
 import { useCstMove } from '../../backend/useCstMove';
 import { useRSFormSuspense } from '../../backend/useRSForm';
-import { CstType, IConstituenta, IRSForm } from '../../models/rsform';
+import { CstType, IConstituenta, IConstituentaMeta, IRSForm } from '../../models/rsform';
 import { generateAlias } from '../../models/rsformAPI';
 
 export enum RSTabID {
@@ -177,24 +177,21 @@ export const RSEditState = ({
     });
   }
 
-  function handleCreateCst(data: ICstCreateDTO) {
-    data.alias = data.alias || generateAlias(data.cst_type, schema);
-    void cstCreate({ itemID: itemID, data }).then(newCst => {
-      setSelected([newCst.id]);
-      navigateRSForm({ tab: activeTab, activeID: newCst.id });
-      if (activeTab === RSTabID.CST_LIST) {
-        setTimeout(() => {
-          const element = document.getElementById(`${prefixes.cst_list}${newCst.id}`);
-          if (element) {
-            element.scrollIntoView({
-              behavior: 'smooth',
-              block: 'nearest',
-              inline: 'end'
-            });
-          }
-        }, PARAMETER.refreshTimeout);
-      }
-    });
+  function onCreateCst(newCst: IConstituentaMeta) {
+    setSelected([newCst.id]);
+    navigateRSForm({ tab: activeTab, activeID: newCst.id });
+    if (activeTab === RSTabID.CST_LIST) {
+      setTimeout(() => {
+        const element = document.getElementById(`${prefixes.cst_list}${newCst.id}`);
+        if (element) {
+          element.scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest',
+            inline: 'end'
+          });
+        }
+      }, PARAMETER.refreshTimeout);
+    }
   }
 
   function moveUp() {
@@ -258,9 +255,9 @@ export const RSEditState = ({
       term_forms: []
     };
     if (skipDialog) {
-      handleCreateCst(data);
+      void cstCreate({ itemID: schema.id, data }).then(onCreateCst);
     } else {
-      showCreateCst({ schema: schema, onCreate: handleCreateCst, initial: data });
+      showCreateCst({ schema: schema, onCreate: onCreateCst, initial: data });
     }
   }
 
@@ -268,17 +265,19 @@ export const RSEditState = ({
     if (!activeCst) {
       return;
     }
-    const data: ICstCreateDTO = {
-      insert_after: activeCst.id,
-      cst_type: activeCst.cst_type,
-      alias: generateAlias(activeCst.cst_type, schema),
-      term_raw: activeCst.term_raw,
-      definition_formal: activeCst.definition_formal,
-      definition_raw: activeCst.definition_raw,
-      convention: activeCst.convention,
-      term_forms: activeCst.term_forms
-    };
-    handleCreateCst(data);
+    void cstCreate({
+      itemID: schema.id,
+      data: {
+        insert_after: activeCst.id,
+        cst_type: activeCst.cst_type,
+        alias: generateAlias(activeCst.cst_type, schema),
+        term_raw: activeCst.term_raw,
+        definition_formal: activeCst.definition_formal,
+        definition_raw: activeCst.definition_raw,
+        convention: activeCst.convention,
+        term_forms: activeCst.term_forms
+      }
+    }).then(onCreateCst);
   }
 
   function promptDeleteCst() {
@@ -299,11 +298,12 @@ export const RSEditState = ({
       }
     });
   }
+
   function promptTemplate() {
     if (isModified && !promptUnsaved()) {
       return;
     }
-    showCstTemplate({ schema: schema, onCreate: handleCreateCst, insertAfter: activeCst?.id });
+    showCstTemplate({ schema: schema, onCreate: onCreateCst, insertAfter: activeCst?.id });
   }
 
   return (

@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { useFormContext, useWatch } from 'react-hook-form';
 import { createColumnHelper } from '@tanstack/react-table';
 import clsx from 'clsx';
 
@@ -8,37 +9,32 @@ import { MiniButton } from '@/components/Control';
 import DataTable, { IConditionalStyle } from '@/components/DataTable';
 import { IconAccept, IconRemove, IconReset } from '@/components/Icons';
 import { NoData } from '@/components/View';
+import { useDialogsStore } from '@/stores/dialogs';
 import { APP_COLORS } from '@/styling/colors';
 
+import { ICstCreateDTO } from '../../backend/types';
 import { PickConstituenta } from '../../components/PickConstituenta';
 import RSInput from '../../components/RSInput';
-import { IConstituenta, IRSForm } from '../../models/rsform';
+import { IConstituenta } from '../../models/rsform';
 import { IArgumentValue } from '../../models/rslang';
 
-interface TabArgumentsProps {
-  state: IArgumentsState;
-  schema: IRSForm;
-  partialUpdate: React.Dispatch<Partial<IArgumentsState>>;
-}
-
-export interface IArgumentsState {
-  arguments: IArgumentValue[];
-  definition: string;
-}
+import { DlgCstTemplateProps } from './DlgCstTemplate';
+import { useTemplateContext } from './TemplateContext';
 
 const argumentsHelper = createColumnHelper<IArgumentValue>();
 
-function TabArguments({ state, schema, partialUpdate }: TabArgumentsProps) {
-  const [selectedCst, setSelectedCst] = useState<IConstituenta | undefined>(undefined);
-  const [selectedArgument, setSelectedArgument] = useState<IArgumentValue | undefined>(undefined);
-  const [argumentValue, setArgumentValue] = useState('');
-  const isModified = selectedArgument && argumentValue !== selectedArgument.value;
+function TabArguments() {
+  const { schema } = useDialogsStore(state => state.props as DlgCstTemplateProps);
+  const { control } = useFormContext<ICstCreateDTO>();
+  const { args, onChangeArguments } = useTemplateContext();
+  const definition = useWatch({ control, name: 'definition_formal' });
 
-  useEffect(() => {
-    if (!selectedArgument && state.arguments.length > 0) {
-      setSelectedArgument(state.arguments[0]);
-    }
-  }, [state.arguments, selectedArgument]);
+  const [selectedCst, setSelectedCst] = useState<IConstituenta | undefined>(undefined);
+  const [selectedArgument, setSelectedArgument] = useState<IArgumentValue | undefined>(
+    args.length > 0 ? args[0] : undefined
+  );
+
+  const [argumentValue, setArgumentValue] = useState('');
 
   function handleSelectArgument(arg: IArgumentValue) {
     setSelectedArgument(arg);
@@ -54,9 +50,7 @@ function TabArguments({ state, schema, partialUpdate }: TabArgumentsProps) {
 
   function handleClearArgument(target: IArgumentValue) {
     const newArg = { ...target, value: '' };
-    partialUpdate({
-      arguments: state.arguments.map(arg => (arg.alias !== target.alias ? arg : newArg))
-    });
+    onChangeArguments(args.map(arg => (arg.alias !== target.alias ? arg : newArg)));
     setSelectedArgument(newArg);
   }
 
@@ -64,11 +58,9 @@ function TabArguments({ state, schema, partialUpdate }: TabArgumentsProps) {
     setArgumentValue(selectedArgument?.value ?? '');
   }
 
-  function handleAssignArgument(target: IArgumentValue, value: string) {
-    const newArg = { ...target, value: value };
-    partialUpdate({
-      arguments: state.arguments.map(arg => (arg.alias !== target.alias ? arg : newArg))
-    });
+  function handleAssignArgument(target: IArgumentValue, argValue: string) {
+    const newArg = { ...target, value: argValue };
+    onChangeArguments(args.map(arg => (arg.alias !== target.alias ? arg : newArg)));
     setSelectedArgument(newArg);
   }
 
@@ -139,7 +131,7 @@ function TabArguments({ state, schema, partialUpdate }: TabArgumentsProps) {
           'border',
           'select-none'
         )}
-        data={state.arguments}
+        data={args}
         columns={columns}
         conditionalRowStyles={conditionalRowStyles}
         noDataComponent={<NoData className='min-h-[3.6rem]'>Аргументы отсутствуют</NoData>}
@@ -179,7 +171,6 @@ function TabArguments({ state, schema, partialUpdate }: TabArgumentsProps) {
             title='Очистить поле'
             noHover
             className='py-0'
-            disabled={!isModified}
             onClick={handleReset}
             icon={<IconReset size='1.5rem' className='icon-primary' />}
           />
@@ -201,7 +192,7 @@ function TabArguments({ state, schema, partialUpdate }: TabArgumentsProps) {
         placeholder='Итоговое определение'
         className='mt-[1.2rem]'
         height='5.1rem'
-        value={state.definition}
+        value={definition}
       />
     </div>
   );

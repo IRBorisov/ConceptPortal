@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import clsx from 'clsx';
 
 import { BadgeHelp, HelpTopic } from '@/features/help';
@@ -12,48 +13,45 @@ import { ICstCreateDTO } from '../../backend/types';
 import RSInput from '../../components/RSInput';
 import { SelectCstType } from '../../components/SelectCstType';
 import { CstType, IRSForm } from '../../models/rsform';
-import { generateAlias, isBaseSet, isBasicConcept, isFunctional, validateNewAlias } from '../../models/rsformAPI';
+import { generateAlias, isBaseSet, isBasicConcept, isFunctional } from '../../models/rsformAPI';
 
 interface FormCreateCstProps {
   schema: IRSForm;
-  state: ICstCreateDTO;
-
-  partialUpdate: React.Dispatch<Partial<ICstCreateDTO>>;
-  setValidated?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function FormCreateCst({ schema, state, partialUpdate, setValidated }: FormCreateCstProps) {
+function FormCreateCst({ schema }: FormCreateCstProps) {
+  const {
+    setValue,
+    register,
+    control,
+    formState: { errors }
+  } = useFormContext<ICstCreateDTO>();
   const [forceComment, setForceComment] = useState(false);
 
-  const isBasic = isBasicConcept(state.cst_type);
-  const isElementary = isBaseSet(state.cst_type);
-  const showConvention = !!state.convention || forceComment || isBasic;
-
-  useEffect(() => {
-    setForceComment(false);
-  }, [state.cst_type, partialUpdate, schema]);
-
-  useEffect(() => {
-    if (setValidated) {
-      setValidated(validateNewAlias(state.alias, state.cst_type, schema));
-    }
-  }, [state.alias, state.cst_type, schema, setValidated]);
+  const cst_type = useWatch({ control, name: 'cst_type' });
+  const convention = useWatch({ control, name: 'convention' });
+  const isBasic = isBasicConcept(cst_type);
+  const isElementary = isBaseSet(cst_type);
+  const isFunction = isFunctional(cst_type);
+  const showConvention = !!convention || forceComment || isBasic;
 
   function handleTypeChange(target: CstType) {
-    return partialUpdate({ cst_type: target, alias: generateAlias(target, schema) });
+    setValue('cst_type', target);
+    setValue('alias', generateAlias(target, schema));
+    setForceComment(false);
   }
 
   return (
     <>
       <div className='flex items-center self-center gap-3'>
-        <SelectCstType id='dlg_cst_type' className='w-[16rem]' value={state.cst_type} onChange={handleTypeChange} />
+        <SelectCstType id='dlg_cst_type' className='w-[16rem]' value={cst_type} onChange={handleTypeChange} />
         <TextInput
           id='dlg_cst_alias'
           dense
           label='Имя'
           className='w-[7rem]'
-          value={state.alias}
-          onChange={event => partialUpdate({ alias: event.target.value })}
+          {...register('alias')}
+          error={errors.alias}
         />
         <BadgeHelp
           topic={HelpTopic.CC_CONSTITUENTA}
@@ -69,42 +67,58 @@ function FormCreateCst({ schema, state, partialUpdate, setValidated }: FormCreat
         label='Термин'
         placeholder='Обозначение для текстовых определений'
         className='max-h-[3.6rem]'
-        value={state.term_raw}
-        onChange={event => partialUpdate({ term_raw: event.target.value })}
+        {...register('term_raw')}
+        error={errors.term_raw}
       />
 
-      {!!state.definition_formal || !isElementary ? (
-        <RSInput
-          id='dlg_cst_expression'
-          noTooltip
-          label={
-            state.cst_type === CstType.STRUCTURED
-              ? 'Область определения'
-              : isFunctional(state.cst_type)
-              ? 'Определение функции'
-              : 'Формальное определение'
-          }
-          placeholder={
-            state.cst_type !== CstType.STRUCTURED ? 'Родоструктурное выражение' : 'Типизация родовой структуры'
-          }
-          value={state.definition_formal}
-          onChange={value => partialUpdate({ definition_formal: value })}
-          schema={schema}
-        />
-      ) : null}
+      <Controller
+        control={control}
+        name='definition_formal'
+        render={({ field }) =>
+          !!field.value || !isElementary ? (
+            <RSInput
+              id='dlg_cst_expression'
+              noTooltip
+              label={
+                cst_type === CstType.STRUCTURED
+                  ? 'Область определения'
+                  : isFunction
+                  ? 'Определение функции'
+                  : 'Формальное определение'
+              }
+              placeholder={
+                cst_type !== CstType.STRUCTURED ? 'Родоструктурное выражение' : 'Типизация родовой структуры'
+              }
+              value={field.value}
+              onChange={field.onChange}
+              schema={schema}
+            />
+          ) : (
+            <></>
+          )
+        }
+      />
 
-      {!!state.definition_raw || !isElementary ? (
-        <TextArea
-          id='dlg_cst_definition'
-          spellCheck
-          fitContent
-          label='Текстовое определение'
-          placeholder='Текстовая интерпретация формального выражения'
-          className='max-h-[3.6rem]'
-          value={state.definition_raw}
-          onChange={event => partialUpdate({ definition_raw: event.target.value })}
-        />
-      ) : null}
+      <Controller
+        control={control}
+        name='definition_raw'
+        render={({ field }) =>
+          !!field.value || !isElementary ? (
+            <TextArea
+              id='dlg_cst_definition'
+              spellCheck
+              fitContent
+              label='Текстовое определение'
+              placeholder='Текстовая интерпретация формального выражения'
+              className='max-h-[3.6rem]'
+              value={field.value}
+              onChange={field.onChange}
+            />
+          ) : (
+            <></>
+          )
+        }
+      />
 
       {!showConvention ? (
         <button
@@ -124,8 +138,7 @@ function FormCreateCst({ schema, state, partialUpdate, setValidated }: FormCreat
           label={isBasic ? 'Конвенция' : 'Комментарий'}
           placeholder={isBasic ? 'Договоренность об интерпретации' : 'Пояснение разработчика'}
           className='max-h-[5.4rem]'
-          value={state.convention}
-          onChange={event => partialUpdate({ convention: event.target.value })}
+          {...register('convention')}
         />
       )}
     </>
