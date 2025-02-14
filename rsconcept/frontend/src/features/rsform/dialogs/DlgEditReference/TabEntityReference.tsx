@@ -3,26 +3,26 @@
 import { useEffect, useState } from 'react';
 
 import { Label, TextInput } from '@/components/Input';
+import { useDialogsStore } from '@/stores/dialogs';
 
 import { PickConstituenta } from '../../components/PickConstituenta';
 import SelectMultiGrammeme from '../../components/SelectMultiGrammeme';
 import SelectWordForm from '../../components/SelectWordForm';
 import { IGrammemeOption, ReferenceType } from '../../models/language';
 import { parseEntityReference, parseGrammemes, supportedGrammeOptions } from '../../models/languageAPI';
-import { IConstituenta, IRSForm } from '../../models/rsform';
+import { IConstituenta } from '../../models/rsform';
 import { matchConstituenta } from '../../models/rsformAPI';
 import { CstMatchMode } from '../../stores/cstSearch';
 
-import { IReferenceInputState } from './DlgEditReference';
+import { DlgEditReferenceProps } from './DlgEditReference';
 
 interface TabEntityReferenceProps {
-  initial: IReferenceInputState;
-  schema: IRSForm;
   onChangeValid: (newValue: boolean) => void;
   onChangeReference: (newValue: string) => void;
 }
 
-function TabEntityReference({ initial, schema, onChangeValid, onChangeReference }: TabEntityReferenceProps) {
+function TabEntityReference({ onChangeValid, onChangeReference }: TabEntityReferenceProps) {
+  const { schema, initial } = useDialogsStore(state => state.props as DlgEditReferenceProps);
   const [selectedCst, setSelectedCst] = useState<IConstituenta | undefined>(undefined);
   const [alias, setAlias] = useState('');
   const [term, setTerm] = useState('');

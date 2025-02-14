@@ -14,7 +14,7 @@ import { promptUnsaved } from '@/utils/utils';
 import { useCstUpdate } from '../../../backend/useCstUpdate';
 import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
 import { useRSEdit } from '../RSEditContext';
-import ViewConstituents from '../ViewConstituents';
+import { ViewConstituents } from '../ViewConstituents';
 
 import EditorControls from './EditorControls';
 import FormConstituenta from './FormConstituenta';
@@ -135,11 +135,7 @@ function EditorConstituenta() {
             />
           ) : null}
         </div>
-        <ViewConstituents
-          isMounted={showList} //
-          expression={activeCst?.definition_formal ?? ''}
-          isBottom={isNarrow}
-        />
+        <ViewConstituents isMounted={showList} isBottom={isNarrow} />
       </div>
     </>
   );

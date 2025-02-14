@@ -3,19 +3,20 @@
 import { useEffect, useState } from 'react';
 
 import { TextInput } from '@/components/Input';
+import { useDialogsStore } from '@/stores/dialogs';
 
 import { ReferenceType } from '../../models/language';
 import { parseSyntacticReference } from '../../models/languageAPI';
 
-import { IReferenceInputState } from './DlgEditReference';
+import { DlgEditReferenceProps } from './DlgEditReference';
 
 interface TabSyntacticReferenceProps {
-  initial: IReferenceInputState;
   onChangeValid: (newValue: boolean) => void;
   onChangeReference: (newValue: string) => void;
 }
 
-function TabSyntacticReference({ initial, onChangeValid, onChangeReference }: TabSyntacticReferenceProps) {
+function TabSyntacticReference({ onChangeValid, onChangeReference }: TabSyntacticReferenceProps) {
+  const { initial } = useDialogsStore(state => state.props as DlgEditReferenceProps);
   const [nominal, setNominal] = useState('');
   const [offset, setOffset] = useState(1);
 

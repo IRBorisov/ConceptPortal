@@ -36,7 +36,7 @@ export enum TabID {
 }
 
 function DlgEditReference() {
-  const { schema, initial, onSave } = useDialogsStore(state => state.props as DlgEditReferenceProps);
+  const { initial, onSave } = useDialogsStore(state => state.props as DlgEditReferenceProps);
   const [activeTab, setActiveTab] = useState(initial.type === ReferenceType.ENTITY ? TabID.ENTITY : TabID.SYNTACTIC);
   const [reference, setReference] = useState('');
   const [isValid, setIsValid] = useState(false);
@@ -70,16 +70,11 @@ function DlgEditReference() {
         </TabList>
 
         <TabPanel>
-          <TabEntityReference
-            initial={initial}
-            schema={schema}
-            onChangeReference={setReference}
-            onChangeValid={setIsValid}
-          />
+          <TabEntityReference onChangeReference={setReference} onChangeValid={setIsValid} />
         </TabPanel>
 
         <TabPanel>
-          <TabSyntacticReference initial={initial} onChangeReference={setReference} onChangeValid={setIsValid} />
+          <TabSyntacticReference onChangeReference={setReference} onChangeValid={setIsValid} />
         </TabPanel>
       </Tabs>
     </ModalForm>

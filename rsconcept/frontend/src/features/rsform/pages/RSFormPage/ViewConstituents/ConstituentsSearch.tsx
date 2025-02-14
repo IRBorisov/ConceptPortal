@@ -17,12 +17,11 @@ interface ConstituentsSearchProps {
   schema: IRSForm;
   dense?: boolean;
   activeID?: number;
-  activeExpression: string;
 
-  onChange: React.Dispatch<React.SetStateAction<IConstituenta[]>>;
+  onChange: (newValue: IConstituenta[]) => void;
 }
 
-function ConstituentsSearch({ schema, activeID, activeExpression, dense, onChange }: ConstituentsSearchProps) {
+export function ConstituentsSearch({ schema, activeID, dense, onChange }: ConstituentsSearchProps) {
   const query = useCstSearchStore(state => state.query);
   const filterMatch = useCstSearchStore(state => state.match);
   const filterSource = useCstSearchStore(state => state.source);
@@ -32,25 +31,13 @@ function ConstituentsSearch({ schema, activeID, activeExpression, dense, onChang
   const setSource = useCstSearchStore(state => state.setSource);
   const toggleInherited = useCstSearchStore(state => state.toggleInherited);
 
+  const graphFiltered = activeID ? applyGraphQuery(schema, activeID, filterSource) : schema.items;
+  const queryFiltered = query ? graphFiltered.filter(cst => matchConstituenta(cst, query, filterMatch)) : graphFiltered;
+  const inheritanceFiltered = !includeInherited ? queryFiltered.filter(cst => !cst.is_inherited) : queryFiltered;
+
   useEffect(() => {
-    if (schema.items.length === 0) {
-      onChange([]);
-      return;
-    }
-    let result: IConstituenta[] = [];
-    if (!activeID) {
-      result = schema.items;
-    } else {
-      result = applyGraphQuery(schema, activeID, filterSource);
-    }
-    if (query) {
-      result = result.filter(cst => matchConstituenta(cst, query, filterMatch));
-    }
-    if (!includeInherited) {
-      result = result.filter(cst => !cst.is_inherited);
-    }
-    onChange(result);
-  }, [query, onChange, filterSource, activeExpression, schema.items, schema, filterMatch, activeID, includeInherited]);
+    onChange(inheritanceFiltered);
+  }, [inheritanceFiltered, onChange]);
 
   return (
     <div className='flex border-b clr-input rounded-t-md'>
@@ -76,29 +63,27 @@ function ConstituentsSearch({ schema, activeID, activeExpression, dense, onChang
   );
 }
 
-export default ConstituentsSearch;
-
 // ====== Internals =========
 /**
  * Filter list of  {@link ILibraryItem} to a given graph query.
  */
-export function applyGraphQuery(target: IRSForm, start: number, mode: DependencyMode): IConstituenta[] {
+function applyGraphQuery(target: IRSForm, pivot: number, mode: DependencyMode): IConstituenta[] {
   if (mode === DependencyMode.ALL) {
     return target.items;
   }
   const ids: number[] | undefined = (() => {
     switch (mode) {
       case DependencyMode.OUTPUTS: {
-        return target.graph.nodes.get(start)?.outputs;
+        return target.graph.nodes.get(pivot)?.outputs;
       }
       case DependencyMode.INPUTS: {
-        return target.graph.nodes.get(start)?.inputs;
+        return target.graph.nodes.get(pivot)?.inputs;
       }
       case DependencyMode.EXPAND_OUTPUTS: {
-        return target.graph.expandAllOutputs([start]);
+        return target.graph.expandAllOutputs([pivot]);
       }
       case DependencyMode.EXPAND_INPUTS: {
-        return target.graph.expandAllInputs([start]);
+        return target.graph.expandAllInputs([pivot]);
       }
     }
     return undefined;

@@ -1,1 +1,1 @@
-export { default } from './ViewConstituents';
+export { ViewConstituents } from './ViewConstituents';
