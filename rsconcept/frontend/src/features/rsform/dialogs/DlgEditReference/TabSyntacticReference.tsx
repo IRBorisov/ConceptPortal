@@ -1,24 +1,16 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 import { TextInput } from '@/components/Input';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { ReferenceType } from '../../models/language';
-import { parseSyntacticReference } from '../../models/languageAPI';
+import { DlgEditReferenceProps, IEditReferenceState } from './DlgEditReference';
 
-import { DlgEditReferenceProps } from './DlgEditReference';
-
-interface TabSyntacticReferenceProps {
-  onChangeValid: (newValue: boolean) => void;
-  onChangeReference: (newValue: string) => void;
-}
-
-function TabSyntacticReference({ onChangeValid, onChangeReference }: TabSyntacticReferenceProps) {
+export function TabSyntacticReference() {
   const { initial } = useDialogsStore(state => state.props as DlgEditReferenceProps);
-  const [nominal, setNominal] = useState('');
-  const [offset, setOffset] = useState(1);
+  const { control, register } = useFormContext<IEditReferenceState>();
+  const offset = useWatch({ control, name: 'syntactic.offset' });
 
   const mainLink = (() => {
     const position = offset > 0 ? initial.basePosition + (offset - 1) : initial.basePosition + offset;
@@ -29,21 +21,6 @@ function TabSyntacticReference({ onChangeValid, onChangeReference }: TabSyntacti
     }
   })();
 
-  useEffect(() => {
-    if (initial.refRaw && initial.type === ReferenceType.SYNTACTIC) {
-      const ref = parseSyntacticReference(initial.refRaw);
-      setOffset(ref.offset);
-      setNominal(ref.nominal);
-    } else {
-      setNominal(initial.text ?? '');
-    }
-  }, [initial]);
-
-  useEffect(() => {
-    onChangeValid(nominal !== '' && offset !== 0);
-    onChangeReference(`@{${offset}|${nominal}}`);
-  }, [nominal, offset, onChangeValid, onChangeReference]);
-
   return (
     <div className='cc-fade-in flex flex-col gap-2'>
       <TextInput
@@ -52,8 +29,7 @@ function TabSyntacticReference({ onChangeValid, onChangeReference }: TabSyntacti
         dense
         label='Смещение'
         className='max-w-[10rem]'
-        value={offset}
-        onChange={event => setOffset(event.target.valueAsNumber)}
+        {...register('syntactic.offset')}
       />
       <TextInput
         id='dlg_main_ref'
@@ -68,11 +44,8 @@ function TabSyntacticReference({ onChangeValid, onChangeReference }: TabSyntacti
         spellCheck
         label='Начальная форма'
         placeholder='зависимое слово в начальной форме'
-        value={nominal}
-        onChange={event => setNominal(event.target.value)}
+        {...register('syntactic.nominal')}
       />
     </div>
   );
 }
-
-export default TabSyntacticReference;

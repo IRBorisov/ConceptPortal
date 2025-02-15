@@ -43,7 +43,10 @@ interface ModalFormProps extends ModalProps {
   beforeSubmit?: () => boolean;
 
   /** Callback to be called after submit. */
-  onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+  onSubmit: (event: React.FormEvent<HTMLFormElement>) => void | Promise<void>;
+
+  /** Callback to be called when modal is canceled. */
+  onCancel?: () => void;
 }
 
 /**
@@ -61,25 +64,30 @@ export function ModalForm({
   submitInvalidTooltip,
   beforeSubmit,
   onSubmit,
+  onCancel,
 
   helpTopic,
   hideHelpWhen,
   ...restProps
 }: React.PropsWithChildren<ModalFormProps>) {
   const hideDialog = useDialogsStore(state => state.hideDialog);
-  useEscapeKey(hideDialog);
+
+  function handleCancel() {
+    onCancel?.();
+    hideDialog();
+  }
+  useEscapeKey(handleCancel);
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     if (beforeSubmit && !beforeSubmit()) {
       return;
     }
-    onSubmit(event);
-    hideDialog();
+    void Promise.resolve(onSubmit(event)).then(hideDialog);
   }
 
   return (
     <div className='fixed top-0 left-0 w-full h-full z-modal cursor-default'>
-      <ModalBackdrop onHide={hideDialog} />
+      <ModalBackdrop onHide={handleCancel} />
       <form
         className={clsx(
           'cc-animate-modal',
@@ -99,7 +107,7 @@ export function ModalForm({
           titleHtml={prepareTooltip('Закрыть диалоговое окно', 'ESC')}
           icon={<IconClose size='1.25rem' />}
           className='float-right mt-2 mr-2'
-          onClick={hideDialog}
+          onClick={handleCancel}
         />
 
         {header ? <h1 className='px-12 py-2 select-none'>{header}</h1> : null}
@@ -126,7 +134,7 @@ export function ModalForm({
             className='min-w-[7rem]'
             disabled={!canSubmit}
           />
-          <Button text='Отмена' className='min-w-[7rem]' onClick={hideDialog} />
+          <Button text='Отмена' className='min-w-[7rem]' onClick={handleCancel} />
         </div>
       </form>
     </div>

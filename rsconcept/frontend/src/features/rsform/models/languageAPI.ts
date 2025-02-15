@@ -10,9 +10,11 @@ import {
   GrammemeGroups,
   IEntityReference,
   IGrammemeOption,
+  IReference,
   ISyntacticReference,
   IWordForm,
   NounGrams,
+  ReferenceType,
   supportedGrammemes,
   VerbGrams
 } from './language';
@@ -128,3 +130,19 @@ export const supportedGrammeOptions: IGrammemeOption[] = supportedGrammemes.map(
   value: gram,
   label: labelGrammeme(gram)
 }));
+
+/**
+ * Transforms {@link IReference} to string representation.
+ */
+export function referenceToString(ref: IReference): string {
+  switch (ref.type) {
+    case ReferenceType.ENTITY: {
+      const entity = ref.data as IEntityReference;
+      return `@{${entity.entity}|${entity.form}}`;
+    }
+    case ReferenceType.SYNTACTIC: {
+      const syntactic = ref.data as ISyntacticReference;
+      return `@{${syntactic.offset}|${syntactic.nominal}}`;
+    }
+  }
+}

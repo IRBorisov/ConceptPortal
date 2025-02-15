@@ -52,6 +52,10 @@ export enum DialogType {
   UPLOAD_RSFORM
 }
 
+export interface GenericDialogProps {
+  onHide?: () => void;
+}
+
 interface DialogsStore {
   active: DialogType | undefined;
   props: unknown;
@@ -85,7 +89,12 @@ interface DialogsStore {
 export const useDialogsStore = create<DialogsStore>()(set => ({
   active: undefined,
   props: undefined,
-  hideDialog: () => set({ active: undefined, props: undefined }),
+  hideDialog: () => {
+    set(state => {
+      (state.props as GenericDialogProps | undefined)?.onHide?.();
+      return { active: undefined, props: undefined };
+    });
+  },
 
   showCstTemplate: props => set({ active: DialogType.CONSTITUENTA_TEMPLATE, props: props }),
   showCreateCst: props => set({ active: DialogType.CREATE_CONSTITUENTA, props: props }),

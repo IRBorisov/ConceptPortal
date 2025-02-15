@@ -19,7 +19,7 @@ import { errorMsg } from '@/utils/labels';
 import { ICstUpdateDTO, schemaCstUpdate } from '../../../backend/types';
 import { useCstUpdate } from '../../../backend/useCstUpdate';
 import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
-import RefsInput from '../../../components/RefsInput';
+import { RefsInput } from '../../../components/RefsInput';
 import { labelCstTypification, labelTypification } from '../../../labels';
 import { CstType, IConstituenta, IRSForm } from '../../../models/rsform';
 import { isBaseSet, isBasicConcept, isFunctional } from '../../../models/rsformAPI';
@@ -125,7 +125,7 @@ function FormConstituenta({ disabled, id, toggleReset, schema, activeCst, onOpen
             placeholder='Обозначение для текстовых определений'
             schema={schema}
             onOpenEdit={onOpenEdit}
-            value={field.value}
+            value={field.value ?? ''}
             initialValue={activeCst.term_raw}
             resolved={activeCst.term_resolved}
             disabled={disabled}
@@ -189,7 +189,7 @@ function FormConstituenta({ disabled, id, toggleReset, schema, activeCst, onOpen
               maxHeight='8rem'
               schema={schema}
               onOpenEdit={onOpenEdit}
-              value={field.value}
+              value={field.value ?? ''}
               initialValue={activeCst.definition_raw}
               resolved={activeCst.definition_resolved}
               disabled={disabled}

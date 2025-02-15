@@ -2,6 +2,8 @@
  * Module: Natural language model declarations.
  */
 
+import { z } from 'zod';
+
 /**
  * Represents single unit of language Morphology.
  */
@@ -266,10 +268,15 @@ export interface ITextPosition {
   finish: number;
 }
 
+export const schemaReference = z.object({
+  type: z.nativeEnum(ReferenceType),
+  data: z.union([
+    z.object({ entity: z.string(), form: z.string() }),
+    z.object({ offset: z.number(), nominal: z.string() })
+  ])
+});
+
 /**
  * Represents abstract reference data.
  */
-export interface IReference {
-  type: ReferenceType;
-  data: IEntityReference | ISyntacticReference;
-}
+export type IReference = z.infer<typeof schemaReference>;

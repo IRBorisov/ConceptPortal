@@ -9,12 +9,15 @@ import clsx from 'clsx';
 import { EditorView } from 'codemirror';
 
 import { Label } from '@/components/Input';
-import { DialogType, useDialogsStore } from '@/stores/dialogs';
+import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { APP_COLORS } from '@/styling/colors';
 import { CodeMirrorWrapper } from '@/utils/codemirror';
+import { PARAMETER } from '@/utils/constants';
 
+import { IReferenceInputState } from '../../dialogs/DlgEditReference/DlgEditReference';
 import { ReferenceType } from '../../models/language';
+import { referenceToString } from '../../models/languageAPI';
 import { IRSForm } from '../../models/rsform';
 
 import { RefEntity } from './parse/parser.terms';
@@ -63,9 +66,9 @@ interface RefsInputInputProps
     | 'onBlur'
     | 'placeholder'
   > {
-  value?: string;
-  resolved?: string;
-  onChange?: (newValue: string) => void;
+  value: string;
+  resolved: string;
+  onChange: (newValue: string) => void;
 
   schema: IRSForm;
   onOpenEdit?: (cstID: number) => void;
@@ -75,7 +78,7 @@ interface RefsInputInputProps
   initialValue?: string;
 }
 
-const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
+export const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
   (
     {
       id, // prettier: split-lines
@@ -98,14 +101,7 @@ const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
     const [isFocused, setIsFocused] = useState(false);
 
     const showEditReference = useDialogsStore(state => state.showEditReference);
-    const activeDialog = useDialogsStore(state => state.active);
-    const isActive = activeDialog === DialogType.EDIT_REFERENCE; // TODO: reconsider this dependency
-
-    const [currentType, setCurrentType] = useState<ReferenceType>(ReferenceType.ENTITY);
-    const [refText, setRefText] = useState('');
-    const [hintText, setHintText] = useState('');
-    const [basePosition, setBasePosition] = useState(0);
-    const [mainRefs, setMainRefs] = useState<string[]>([]);
+    const [isEditing, setIsEditing] = useState(false);
 
     const internalRef = useRef<ReactCodeMirrorRef>(null);
     const thisRef = !ref || typeof ref === 'function' ? internalRef : ref;
@@ -135,11 +131,8 @@ const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
       refsHoverTooltip(schema, onOpenEdit !== undefined)
     ];
 
-    function handleChange(newValue: string) {
-      if (onChange) onChange(newValue);
-    }
-
     function handleFocusIn(event: React.FocusEvent<HTMLDivElement>) {
+      setIsEditing(false);
       setIsFocused(true);
       if (onFocus) onFocus(event);
     }
@@ -162,43 +155,48 @@ const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
         const wrap = new CodeMirrorWrapper(thisRef.current as Required<ReactCodeMirrorRef>);
         wrap.fixSelection(ReferenceTokens);
         const nodes = wrap.getEnvelopingNodes(ReferenceTokens);
+
+        const data: IReferenceInputState = {
+          type: ReferenceType.ENTITY,
+          refRaw: '',
+          text: '',
+          mainRefs: [],
+          basePosition: 0
+        };
+
         if (nodes.length !== 1) {
-          setCurrentType(ReferenceType.ENTITY);
-          setRefText('');
-          setHintText(wrap.getSelectionText());
+          data.text = wrap.getSelectionText();
         } else {
-          setCurrentType(nodes[0].type.id === RefEntity ? ReferenceType.ENTITY : ReferenceType.SYNTACTIC);
-          setRefText(wrap.getSelectionText());
+          data.type = nodes[0].type.id === RefEntity ? ReferenceType.ENTITY : ReferenceType.SYNTACTIC;
+          data.refRaw = wrap.getSelectionText();
         }
 
         const selection = wrap.getSelection();
         const mainNodes = wrap
           .getAllNodes([RefEntity])
           .filter(node => node.from >= selection.to || node.to <= selection.from);
-        setMainRefs(mainNodes.map(node => wrap.getText(node.from, node.to)));
-        setBasePosition(mainNodes.filter(node => node.to <= selection.from).length);
+        data.mainRefs = mainNodes.map(node => wrap.getText(node.from, node.to));
+        data.basePosition = mainNodes.filter(node => node.to <= selection.from).length;
 
+        setIsEditing(true);
         showEditReference({
           schema: schema,
-          initial: {
-            type: currentType,
-            refRaw: refText,
-            text: hintText,
-            basePosition: basePosition,
-            mainRefs: mainRefs
+          initial: data,
+          onCancel: () => {
+            setIsEditing(false);
+            setTimeout(() => {
+              thisRef.current?.view?.focus();
+            }, PARAMETER.minimalTimeout);
           },
-          onSave: handleInputReference
+          onSave: ref => {
+            wrap.replaceWith(referenceToString(ref));
+            setIsEditing(false);
+            setTimeout(() => {
+              thisRef.current?.view?.focus();
+            }, PARAMETER.minimalTimeout);
+          }
         });
       }
-    }
-
-    function handleInputReference(referenceText: string) {
-      if (!thisRef.current?.view) {
-        return;
-      }
-      thisRef.current.view.focus();
-      const wrap = new CodeMirrorWrapper(thisRef.current as Required<ReactCodeMirrorRef>);
-      wrap.replaceWith(referenceText);
     }
 
     return (
@@ -210,10 +208,10 @@ const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
           basicSetup={editorSetup}
           theme={customTheme}
           extensions={editorExtensions}
-          value={isFocused ? value : value !== initialValue || isActive ? value : resolved}
+          value={isFocused ? value : value !== initialValue || isEditing ? value : resolved}
           indentWithTab={false}
-          onChange={handleChange}
-          editable={!disabled && !isActive}
+          onChange={onChange}
+          editable={!disabled && !isEditing}
           onKeyDown={handleInput}
           onFocus={handleFocusIn}
           onBlur={handleFocusOut}
@@ -223,5 +221,3 @@ const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
     );
   }
 );
-
-export default RefsInput;

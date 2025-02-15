@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { Label, TextInput } from '@/components/Input';
 import { useDialogsStore } from '@/stores/dialogs';
@@ -8,51 +8,22 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { PickConstituenta } from '../../components/PickConstituenta';
 import SelectMultiGrammeme from '../../components/SelectMultiGrammeme';
 import SelectWordForm from '../../components/SelectWordForm';
-import { IGrammemeOption, ReferenceType } from '../../models/language';
-import { parseEntityReference, parseGrammemes, supportedGrammeOptions } from '../../models/languageAPI';
 import { IConstituenta } from '../../models/rsform';
 import { matchConstituenta } from '../../models/rsformAPI';
 import { CstMatchMode } from '../../stores/cstSearch';
 
-import { DlgEditReferenceProps } from './DlgEditReference';
+import { DlgEditReferenceProps, IEditReferenceState } from './DlgEditReference';
 
-interface TabEntityReferenceProps {
-  onChangeValid: (newValue: boolean) => void;
-  onChangeReference: (newValue: string) => void;
-}
-
-function TabEntityReference({ onChangeValid, onChangeReference }: TabEntityReferenceProps) {
+export function TabEntityReference() {
   const { schema, initial } = useDialogsStore(state => state.props as DlgEditReferenceProps);
-  const [selectedCst, setSelectedCst] = useState<IConstituenta | undefined>(undefined);
-  const [alias, setAlias] = useState('');
-  const [term, setTerm] = useState('');
-  const [selectedGrams, setSelectedGrams] = useState<IGrammemeOption[]>([]);
+  const { setValue, control, register } = useFormContext<IEditReferenceState>();
+  const alias = useWatch({ control, name: 'entity.entity' });
 
-  // Initialization
-  useEffect(() => {
-    if (!!initial.refRaw && initial.type === ReferenceType.ENTITY) {
-      const ref = parseEntityReference(initial.refRaw);
-      setAlias(ref.entity);
-      const grams = parseGrammemes(ref.form);
-      setSelectedGrams(supportedGrammeOptions.filter(data => grams.includes(data.value)));
-    }
-  }, [initial, schema.items]);
-
-  // Produce result
-  useEffect(() => {
-    onChangeValid(alias !== '' && selectedGrams.length > 0);
-    onChangeReference(`@{${alias}|${selectedGrams.map(gram => gram.value).join(',')}}`);
-  }, [alias, selectedGrams, onChangeValid, onChangeReference]);
-
-  // Update term when alias changes
-  useEffect(() => {
-    const cst = schema.cstByAlias.get(alias);
-    setTerm(cst?.term_resolved ?? '');
-  }, [alias, term, schema]);
+  const selectedCst = schema.cstByAlias.get(alias);
+  const term = selectedCst?.term_resolved ?? '';
 
   function handleSelectConstituenta(cst: IConstituenta) {
-    setAlias(cst.alias);
-    setSelectedCst(cst);
+    setValue('entity.entity', cst.alias);
   }
 
   return (
@@ -76,8 +47,7 @@ function TabEntityReference({ onChangeValid, onChangeReference }: TabEntityRefer
           label='Конституента'
           placeholder='Имя'
           className='w-[11rem]'
-          value={alias}
-          onChange={event => setAlias(event.target.value)}
+          {...register('entity.entity')}
         />
         <TextInput
           id='dlg_reference_term'
@@ -91,21 +61,29 @@ function TabEntityReference({ onChangeValid, onChangeReference }: TabEntityRefer
         />
       </div>
 
-      <SelectWordForm value={selectedGrams} onChange={setSelectedGrams} />
+      <Controller
+        control={control}
+        name='entity.grams'
+        render={({ field }) => <SelectWordForm value={field.value} onChange={field.onChange} />}
+      />
 
       <div className='flex items-center gap-4'>
         <Label text='Словоформа' />
-        <SelectMultiGrammeme
-          id='dlg_reference_grammemes'
-          placeholder='Выберите граммемы'
-          className='flex-grow'
-          menuPlacement='top'
-          value={selectedGrams}
-          onChange={setSelectedGrams}
+        <Controller
+          control={control}
+          name='entity.grams'
+          render={({ field }) => (
+            <SelectMultiGrammeme
+              id='dlg_reference_grammemes'
+              placeholder='Выберите граммемы'
+              className='flex-grow'
+              menuPlacement='top'
+              value={field.value}
+              onChange={field.onChange}
+            />
+          )}
         />
       </div>
     </div>
   );
 }
-
-export default TabEntityReference;
