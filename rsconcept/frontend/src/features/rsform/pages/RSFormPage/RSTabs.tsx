@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
 import clsx from 'clsx';
 
 import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
@@ -31,7 +31,7 @@ function RSTabs({ activeID, activeTab }: RSTabsProps) {
   const { setIsModified } = useModificationStore();
   const { schema, selected, setSelected, navigateRSForm } = useRSEdit();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const oldTitle = document.title;
     document.title = schema.title;
     return () => {
@@ -39,7 +39,7 @@ function RSTabs({ activeID, activeTab }: RSTabsProps) {
     };
   }, [schema.title]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     hideFooter(activeTab !== RSTabID.CARD);
     setIsModified(false);
     if (activeTab === RSTabID.CST_EDIT) {

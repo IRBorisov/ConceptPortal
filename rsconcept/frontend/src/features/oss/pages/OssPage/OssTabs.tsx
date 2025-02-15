@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
 import clsx from 'clsx';
 
 import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
@@ -24,7 +24,7 @@ function OssTabs({ activeTab }: OssTabsProps) {
 
   const hideFooter = useAppLayoutStore(state => state.hideFooter);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const oldTitle = document.title;
     document.title = schema.title;
     return () => {
@@ -32,7 +32,7 @@ function OssTabs({ activeTab }: OssTabsProps) {
     };
   }, [schema.title]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     hideFooter(activeTab === OssTabID.GRAPH);
   }, [activeTab, hideFooter]);
 

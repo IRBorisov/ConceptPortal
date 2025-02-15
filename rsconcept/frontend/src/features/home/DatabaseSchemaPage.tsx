@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
 
 import { useAppLayoutStore, useFitHeight } from '@/stores/appLayout';
@@ -10,7 +10,7 @@ export function Component() {
   const hideFooter = useAppLayoutStore(state => state.hideFooter);
   const panelHeight = useFitHeight('0px');
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     hideFooter(true);
     return () => hideFooter(false);
   }, [hideFooter]);
