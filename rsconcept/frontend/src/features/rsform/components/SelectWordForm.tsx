@@ -33,7 +33,7 @@ interface SelectWordFormProps extends CProps.Styling {
   onChange: React.Dispatch<React.SetStateAction<IGrammemeOption[]>>;
 }
 
-function SelectWordForm({ value, onChange, className, ...restProps }: SelectWordFormProps) {
+export function SelectWordForm({ value, onChange, className, ...restProps }: SelectWordFormProps) {
   function handleSelect(grams: Grammeme[]) {
     onChange(supportedGrammeOptions.filter(({ value }) => grams.includes(value as Grammeme)));
   }
@@ -53,5 +53,3 @@ function SelectWordForm({ value, onChange, className, ...restProps }: SelectWord
     </div>
   );
 }
-
-export default SelectWordForm;

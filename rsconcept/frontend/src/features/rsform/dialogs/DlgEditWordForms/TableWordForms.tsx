@@ -7,7 +7,7 @@ import DataTable, { createColumnHelper } from '@/components/DataTable';
 import { IconRemove } from '@/components/Icons';
 import { NoData } from '@/components/View';
 
-import BadgeWordForm from '../../components/BadgeWordForm';
+import { BadgeWordForm } from '../../components/BadgeWordForm';
 import { IWordForm } from '../../models/language';
 
 interface TableWordFormsProps {
@@ -18,7 +18,7 @@ interface TableWordFormsProps {
 
 const columnHelper = createColumnHelper<IWordForm>();
 
-function TableWordForms({ forms, setForms, onFormSelect }: TableWordFormsProps) {
+export function TableWordForms({ forms, setForms, onFormSelect }: TableWordFormsProps) {
   function handleDeleteRow(row: number) {
     setForms(prev => {
       const newForms: IWordForm[] = [];
@@ -80,5 +80,3 @@ function TableWordForms({ forms, setForms, onFormSelect }: TableWordFormsProps) 
     />
   );
 }
-
-export default TableWordForms;

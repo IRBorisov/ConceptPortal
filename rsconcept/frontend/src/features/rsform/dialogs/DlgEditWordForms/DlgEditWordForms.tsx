@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import clsx from 'clsx';
 
 import { HelpTopic } from '@/features/help';
@@ -16,53 +16,51 @@ import { useGenerateLexeme } from '../../backend/cctext/useGenerateLexeme';
 import { useInflectText } from '../../backend/cctext/useInflectText';
 import { useIsProcessingCctext } from '../../backend/cctext/useIsProcessingCctext';
 import { useParseText } from '../../backend/cctext/useParseText';
-import SelectMultiGrammeme from '../../components/SelectMultiGrammeme';
+import { useCstUpdate } from '../../backend/useCstUpdate';
+import { SelectMultiGrammeme } from '../../components/SelectMultiGrammeme';
 import { Grammeme, IGrammemeOption, IWordForm, supportedGrammemes } from '../../models/language';
 import { parseGrammemes, supportedGrammeOptions, wordFormEquals } from '../../models/languageAPI';
-import { IConstituenta, TermForm } from '../../models/rsform';
+import { IConstituenta } from '../../models/rsform';
 
-import TableWordForms from './TableWordForms';
+import { TableWordForms } from './TableWordForms';
 
 export interface DlgEditWordFormsProps {
+  itemID: number;
   target: IConstituenta;
-  onSave: (data: TermForm[]) => void;
 }
 
 function DlgEditWordForms() {
-  const { target, onSave } = useDialogsStore(state => state.props as DlgEditWordFormsProps);
+  const { itemID, target } = useDialogsStore(state => state.props as DlgEditWordFormsProps);
+  const { cstUpdate } = useCstUpdate();
+
   const isProcessing = useIsProcessingCctext();
   const { inflectText } = useInflectText();
   const { parseText } = useParseText();
   const { generateLexeme } = useGenerateLexeme();
 
-  const [term, setTerm] = useState('');
-  const [inputText, setInputText] = useState('');
+  const [inputText, setInputText] = useState(target.term_resolved);
   const [inputGrams, setInputGrams] = useState<IGrammemeOption[]>([]);
-  const [forms, setForms] = useState<IWordForm[]>([]);
 
-  useEffect(() => {
-    const initForms: IWordForm[] = [];
-    target.term_forms.forEach(term =>
-      initForms.push({
-        text: term.text,
-        grams: parseGrammemes(term.tags)
-      })
-    );
-    setForms(initForms);
-    setTerm(target.term_resolved);
-    setInputText(target.term_resolved);
-    setInputGrams([]);
-  }, [target]);
+  const [forms, setForms] = useState<IWordForm[]>(
+    target.term_forms.map(term => ({
+      text: term.text,
+      grams: parseGrammemes(term.tags)
+    }))
+  );
 
   function handleSubmit() {
-    const result: TermForm[] = [];
-    forms.forEach(({ text, grams }) =>
-      result.push({
-        text: text,
-        tags: grams.join(',')
-      })
-    );
-    onSave(result);
+    void cstUpdate({
+      itemID: itemID,
+      data: {
+        target: target.id,
+        item_data: {
+          term_forms: forms.map(({ text, grams }) => ({
+            text: text,
+            tags: grams.join(',')
+          }))
+        }
+      }
+    });
   }
 
   function handleAddForm() {
@@ -80,7 +78,7 @@ function DlgEditWordForms() {
 
   function handleInflect() {
     void inflectText({
-      text: term,
+      text: target.term_resolved,
       grams: inputGrams.map(gram => gram.value).join(',')
     }).then(response => setInputText(response.result));
   }
@@ -134,7 +132,7 @@ function DlgEditWordForms() {
         label='Начальная форма'
         placeholder='Термин в начальной форме'
         rows={1}
-        value={term}
+        value={target.term_resolved}
       />
 
       <div className='mt-3 mb-2'>

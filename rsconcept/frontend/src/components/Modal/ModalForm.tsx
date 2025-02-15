@@ -43,7 +43,7 @@ interface ModalFormProps extends ModalProps {
   beforeSubmit?: () => boolean;
 
   /** Callback to be called after submit. */
-  onSubmit: (event: React.FormEvent<HTMLFormElement>) => void | Promise<void>;
+  onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
 
   /** Callback to be called when modal is canceled. */
   onCancel?: () => void;
@@ -82,7 +82,8 @@ export function ModalForm({
     if (beforeSubmit && !beforeSubmit()) {
       return;
     }
-    void Promise.resolve(onSubmit(event)).then(hideDialog);
+    onSubmit(event);
+    hideDialog();
   }
 
   return (

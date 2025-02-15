@@ -13,7 +13,7 @@ interface BadgeWordFormProps {
 /**
  * Displays a badge with grammemes of a word form.
  */
-function BadgeWordForm({ keyPrefix, form }: BadgeWordFormProps) {
+export function BadgeWordForm({ keyPrefix, form }: BadgeWordFormProps) {
   return (
     <div className='flex flex-wrap justify-start gap-1 select-none w-fit'>
       {form.grams.map(gram => (
@@ -22,5 +22,3 @@ function BadgeWordForm({ keyPrefix, form }: BadgeWordFormProps) {
     </div>
   );
 }
-
-export default BadgeWordForm;

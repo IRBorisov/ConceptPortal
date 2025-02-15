@@ -11,7 +11,6 @@ import { usePreferencesStore } from '@/stores/preferences';
 import { globals } from '@/utils/constants';
 import { promptUnsaved } from '@/utils/utils';
 
-import { useCstUpdate } from '../../../backend/useCstUpdate';
 import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
 import { useRSEdit } from '../RSEditContext';
 import { ViewConstituents } from '../ViewConstituents';
@@ -30,7 +29,6 @@ function EditorConstituenta() {
 
   const showList = usePreferencesStore(state => state.showCstSideList);
   const showEditTerm = useDialogsStore(state => state.showEditWordForms);
-  const { cstUpdate } = useCstUpdate();
   const { isModified } = useModificationStore();
 
   const [toggleReset, setToggleReset] = useState(false);
@@ -66,17 +64,7 @@ function EditorConstituenta() {
     if (isModified && !promptUnsaved()) {
       return;
     }
-    showEditTerm({
-      target: activeCst,
-      onSave: forms =>
-        void cstUpdate({
-          itemID: schema.id,
-          data: {
-            target: activeCst.id,
-            item_data: { term_forms: forms }
-          }
-        })
-    });
+    showEditTerm({ itemID: schema.id, target: activeCst });
   }
 
   function initiateSubmit() {

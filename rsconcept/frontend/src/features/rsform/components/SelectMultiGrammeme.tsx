@@ -12,7 +12,7 @@ interface SelectMultiGrammemeProps
   placeholder?: string;
 }
 
-function SelectMultiGrammeme({ value, onChange, ...restProps }: SelectMultiGrammemeProps) {
+export function SelectMultiGrammeme({ value, onChange, ...restProps }: SelectMultiGrammemeProps) {
   const compatible = getCompatibleGrams(
     value.filter(data => Object.values(Grammeme).includes(data.value as Grammeme)).map(data => data.value as Grammeme)
   );
@@ -27,5 +27,3 @@ function SelectMultiGrammeme({ value, onChange, ...restProps }: SelectMultiGramm
     />
   );
 }
-
-export default SelectMultiGrammeme;

@@ -6,8 +6,8 @@ import { Label, TextInput } from '@/components/Input';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { PickConstituenta } from '../../components/PickConstituenta';
-import SelectMultiGrammeme from '../../components/SelectMultiGrammeme';
-import SelectWordForm from '../../components/SelectWordForm';
+import { SelectMultiGrammeme } from '../../components/SelectMultiGrammeme';
+import { SelectWordForm } from '../../components/SelectWordForm';
 import { IConstituenta } from '../../models/rsform';
 import { matchConstituenta } from '../../models/rsformAPI';
 import { CstMatchMode } from '../../stores/cstSearch';
