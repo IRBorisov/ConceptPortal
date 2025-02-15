@@ -43,9 +43,9 @@ function DlgEditVersions() {
   } = useForm<IVersionUpdateDTO>({
     resolver: zodResolver(schemaVersionUpdate),
     defaultValues: {
-      id: schema.versions[0].id,
-      version: schema.versions[0].version,
-      description: schema.versions[0].description
+      id: schema.versions[schema.versions.length - 1].id,
+      version: schema.versions[schema.versions.length - 1].version,
+      description: schema.versions[schema.versions.length - 1].description
     },
     context: { schema: schema }
   });
@@ -88,7 +88,7 @@ function DlgEditVersions() {
     <ModalView header='Редактирование версий' className='flex flex-col w-[40rem] px-6 gap-3 pb-6'>
       <TableVersions
         processing={isProcessing}
-        items={schema.versions}
+        items={schema.versions.reverse()}
         onDelete={handleDeleteVersion}
         onSelect={handleSelectVersion}
         selected={versionID}
