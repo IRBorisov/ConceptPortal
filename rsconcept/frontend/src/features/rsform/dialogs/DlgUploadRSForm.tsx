@@ -28,7 +28,6 @@ function DlgUploadRSForm() {
         fileName: file.name
       });
     }
-    return true;
   };
 
   const handleFile = (event: React.ChangeEvent<HTMLInputElement>) => {
