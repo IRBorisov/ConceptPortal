@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { Outlet } from 'react-router';
+import { Outlet, useNavigation } from 'react-router';
 
 import { Loader } from '@/components/Loader';
 import { ModalLoader } from '@/components/Modal';
@@ -9,11 +9,14 @@ import { globals } from '@/utils/constants';
 import { NavigationState } from './Navigation/NavigationContext';
 import { Footer } from './Footer';
 import { GlobalDialogs } from './GlobalDialogs';
-import ConceptToaster from './GlobalToaster';
+import { GlobalLoader } from './GlobalLoader';
+import { ToasterThemed } from './GlobalToaster';
 import { GlobalTooltips } from './GlobalTooltips';
 import { Navigation } from './Navigation';
 
 function ApplicationLayout() {
+  const navigation = useNavigation();
+
   const mainHeight = useMainHeight();
   const viewportHeight = useViewportHeight();
   const showScroll = useAppLayoutStore(state => !state.noScroll);
@@ -24,7 +27,7 @@ function ApplicationLayout() {
   return (
     <NavigationState>
       <div className='min-w-[20rem] antialiased h-full max-w-[120rem] mx-auto'>
-        <ConceptToaster
+        <ToasterThemed
           className='text-[14px] cc-animate-position'
           style={{ marginTop: noNavigationAnimation ? '1.5rem' : '3.5rem' }}
           autoClose={3000}
@@ -47,6 +50,7 @@ function ApplicationLayout() {
           }}
         >
           <main className='cc-scroll-y' style={{ overflowY: showScroll ? 'scroll' : 'auto', minHeight: mainHeight }}>
+            {navigation.state === 'loading' ? <GlobalLoader /> : null}
             <Suspense fallback={<Loader />}>
               <Outlet />
             </Suspense>

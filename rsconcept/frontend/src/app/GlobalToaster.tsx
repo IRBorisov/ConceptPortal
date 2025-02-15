@@ -4,9 +4,7 @@ import { usePreferencesStore } from '@/stores/preferences';
 
 interface ToasterThemedProps extends Omit<ToastContainerProps, 'theme'> {}
 
-function ToasterThemed(props: ToasterThemedProps) {
+export function ToasterThemed(props: ToasterThemedProps) {
   const darkMode = usePreferencesStore(state => state.darkMode);
   return <ToastContainer theme={darkMode ? 'dark' : 'light'} {...props} />;
 }
-
-export default ToasterThemed;
