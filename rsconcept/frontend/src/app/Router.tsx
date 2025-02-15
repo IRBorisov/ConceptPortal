@@ -23,7 +23,7 @@ export const Router = createBrowserRouter([
     element: <ApplicationLayout />,
     errorElement: <ErrorFallback />,
     loader: prefetchAuth,
-    hydrateFallbackElement: <Loader />,
+    hydrateFallbackElement: fallbackLoader(),
     children: [
       {
         path: '',
@@ -98,4 +98,12 @@ function parseRSFormURL(id: string | undefined, url: string) {
 
 function parseOssURL(id: string | undefined) {
   return { itemID: id ? Number(id) : undefined };
+}
+
+function fallbackLoader() {
+  return (
+    <div className='flex justify-center items-center h-[100dvh]'>
+      <Loader scale={6} />
+    </div>
+  );
 }

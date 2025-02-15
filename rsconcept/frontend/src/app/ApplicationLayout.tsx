@@ -1,7 +1,6 @@
 import { Suspense } from 'react';
-import { Outlet, useNavigation } from 'react-router';
+import { Outlet } from 'react-router';
 
-import { Loader } from '@/components/Loader';
 import { ModalLoader } from '@/components/Modal';
 import { useAppLayoutStore, useMainHeight, useViewportHeight } from '@/stores/appLayout';
 import { globals } from '@/utils/constants';
@@ -15,8 +14,6 @@ import { GlobalTooltips } from './GlobalTooltips';
 import { Navigation } from './Navigation';
 
 function ApplicationLayout() {
-  const navigation = useNavigation();
-
   const mainHeight = useMainHeight();
   const viewportHeight = useViewportHeight();
   const showScroll = useAppLayoutStore(state => !state.noScroll);
@@ -50,10 +47,8 @@ function ApplicationLayout() {
           }}
         >
           <main className='cc-scroll-y' style={{ overflowY: showScroll ? 'scroll' : 'auto', minHeight: mainHeight }}>
-            {navigation.state === 'loading' ? <GlobalLoader /> : null}
-            <Suspense fallback={<Loader />}>
-              <Outlet />
-            </Suspense>
+            <GlobalLoader />
+            <Outlet />
           </main>
           {!noNavigation && !noFooter ? <Footer /> : null}
         </div>

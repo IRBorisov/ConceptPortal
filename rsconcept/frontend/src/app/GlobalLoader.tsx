@@ -1,8 +1,20 @@
+import { useNavigation } from 'react-router';
 import clsx from 'clsx';
+import { useDebounce } from 'use-debounce';
 
 import { Loader } from '@/components/Loader';
+import { PARAMETER } from '@/utils/constants';
 
 export function GlobalLoader() {
+  const navigation = useNavigation();
+
+  const isLoading = navigation.state === 'loading';
+  const [loadingDebounced] = useDebounce(isLoading, PARAMETER.navigationPopupDelay);
+
+  if (!loadingDebounced || !isLoading) {
+    return null;
+  }
+
   return (
     <div className='fixed top-0 left-0 w-full h-full z-modal cursor-default'>
       <div className={clsx('z-navigation', 'fixed top-0 left-0', 'w-full h-full', 'backdrop-blur-[3px] opacity-50')} />
