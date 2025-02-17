@@ -31,9 +31,9 @@ export function SelectLibraryItem({
       label: `${cst.alias}: ${cst.title}`
     })) ?? [];
 
-  function filter(option: { value: number | undefined; label: string }, inputValue: string) {
-    const item = items?.find(item => item.id === option.value);
-    return !item ? false : matchLibraryItem(item, inputValue);
+  function filter(option: { value: string | undefined; label: string }, query: string) {
+    const item = items?.find(item => item.id === Number(option.value));
+    return !item ? false : matchLibraryItem(item, query);
   }
 
   return (
@@ -42,7 +42,6 @@ export function SelectLibraryItem({
       options={options}
       value={value ? { value: value.id, label: `${value.alias}: ${value.title}` } : null}
       onChange={data => onChange(items?.find(cst => cst.id === data?.value))}
-      // @ts-expect-error: TODO: use type definitions from react-select in filter object
       filterOption={filter}
       placeholder={placeholder}
       {...restProps}

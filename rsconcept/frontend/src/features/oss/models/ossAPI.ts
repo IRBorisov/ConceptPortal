@@ -21,7 +21,7 @@ import { Graph } from '../../../models/Graph';
 import { IOperationPosition } from '../backend/types';
 import { describeSubstitutionError } from '../labels';
 
-import { IOperation, IOperationSchema, OperationID, OperationType, SubstitutionErrorType } from './oss';
+import { IOperation, IOperationSchema, OperationType, SubstitutionErrorType } from './oss';
 import { Position2D } from './ossLayout';
 
 /**
@@ -439,8 +439,8 @@ export class SubstitutionValidator {
  * Filter relocate candidates from gives schema.
  */
 export function getRelocateCandidates(
-  source: OperationID,
-  destination: OperationID,
+  source: number,
+  destination: number,
   schema: IRSForm,
   oss: IOperationSchema
 ): IConstituenta[] {
@@ -482,7 +482,7 @@ export function getRelocateCandidates(
 export function calculateInsertPosition(
   oss: IOperationSchema,
   operationType: OperationType,
-  argumentsOps: OperationID[],
+  argumentsOps: number[],
   positions: IOperationPosition[],
   defaultPosition: Position2D
 ): Position2D {

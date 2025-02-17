@@ -14,7 +14,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { IOperationCreateDTO, IOperationPosition, schemaOperationCreate } from '../../backend/types';
 import { useOperationCreate } from '../../backend/useOperationCreate';
 import { describeOperationType, labelOperationType } from '../../labels';
-import { IOperationSchema, OperationID, OperationType } from '../../models/oss';
+import { IOperationSchema, OperationType } from '../../models/oss';
 import { calculateInsertPosition } from '../../models/ossAPI';
 
 import TabInputOperation from './TabInputOperation';
@@ -23,10 +23,10 @@ import TabSynthesisOperation from './TabSynthesisOperation';
 export interface DlgCreateOperationProps {
   oss: IOperationSchema;
   positions: IOperationPosition[];
-  initialInputs: OperationID[];
+  initialInputs: number[];
   defaultX: number;
   defaultY: number;
-  onCreate?: (newID: OperationID) => void;
+  onCreate?: (newID: number) => void;
 }
 
 export enum TabID {

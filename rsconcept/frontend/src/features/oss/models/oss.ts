@@ -7,11 +7,6 @@ import { ICstSubstitute } from '@/features/rsform';
 import { Graph } from '@/models/Graph';
 
 /**
- * Represents {@link IOperation} identifier type.
- */
-export type OperationID = number;
-
-/**
  * Represents {@link IOperation} type.
  */
 export enum OperationType {
@@ -23,7 +18,7 @@ export enum OperationType {
  * Represents Operation.
  */
 export interface IOperation {
-  id: OperationID;
+  id: number;
   operation_type: OperationType;
   oss: number;
 
@@ -39,22 +34,22 @@ export interface IOperation {
   is_owned: boolean;
   is_consolidation: boolean; // aka 'diamond synthesis'
   substitutions: ICstSubstituteEx[];
-  arguments: OperationID[];
+  arguments: number[];
 }
 
 /**
  * Represents {@link IOperation} Argument.
  */
 export interface IArgument {
-  operation: OperationID;
-  argument: OperationID;
+  operation: number;
+  argument: number;
 }
 
 /**
  * Represents {@link ICstSubstitute} extended data.
  */
 export interface ICstSubstituteEx extends ICstSubstitute {
-  operation: OperationID;
+  operation: number;
   original_alias: string;
   original_term: string;
   substitution_alias: string;
@@ -83,7 +78,7 @@ export interface IOperationSchema extends ILibraryItemData {
   graph: Graph;
   schemas: number[];
   stats: IOperationSchemaStats;
-  operationByID: Map<OperationID, IOperation>;
+  operationByID: Map<number, IOperation>;
 }
 
 /**

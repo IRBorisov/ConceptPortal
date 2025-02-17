@@ -14,7 +14,7 @@ import { promptText } from '@/utils/labels';
 
 import { IOperationPosition } from '../../backend/types';
 import { useOssSuspense } from '../../backend/useOSS';
-import { IOperationSchema, OperationID, OperationType } from '../../models/oss';
+import { IOperationSchema, OperationType } from '../../models/oss';
 
 export enum OssTabID {
   CARD = 0,
@@ -24,14 +24,14 @@ export enum OssTabID {
 export interface ICreateOperationPrompt {
   defaultX: number;
   defaultY: number;
-  inputs: OperationID[];
+  inputs: number[];
   positions: IOperationPosition[];
-  callback: (newID: OperationID) => void;
+  callback: (newID: number) => void;
 }
 
 export interface IOssEditContext extends ILibraryItemEditor {
   schema: IOperationSchema;
-  selected: OperationID[];
+  selected: number[];
 
   isOwned: boolean;
   isMutable: boolean;
@@ -41,17 +41,17 @@ export interface IOssEditContext extends ILibraryItemEditor {
   setShowTooltip: (newValue: boolean) => void;
 
   navigateTab: (tab: OssTabID) => void;
-  navigateOperationSchema: (target: OperationID) => void;
+  navigateOperationSchema: (target: number) => void;
 
   deleteSchema: () => void;
-  setSelected: React.Dispatch<React.SetStateAction<OperationID[]>>;
+  setSelected: React.Dispatch<React.SetStateAction<number[]>>;
 
-  canDelete: (target: OperationID) => boolean;
+  canDelete: (target: number) => boolean;
   promptCreateOperation: (props: ICreateOperationPrompt) => void;
-  promptDeleteOperation: (target: OperationID, positions: IOperationPosition[]) => void;
-  promptEditInput: (target: OperationID, positions: IOperationPosition[]) => void;
-  promptEditOperation: (target: OperationID, positions: IOperationPosition[]) => void;
-  promptRelocateConstituents: (target: OperationID | undefined, positions: IOperationPosition[]) => void;
+  promptDeleteOperation: (target: number, positions: IOperationPosition[]) => void;
+  promptEditInput: (target: number, positions: IOperationPosition[]) => void;
+  promptEditOperation: (target: number, positions: IOperationPosition[]) => void;
+  promptRelocateConstituents: (target: number | undefined, positions: IOperationPosition[]) => void;
 }
 
 const OssEditContext = createContext<IOssEditContext | null>(null);
@@ -83,7 +83,7 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
   const isMutable = role > UserRole.READER && !schema.read_only;
 
   const [showTooltip, setShowTooltip] = useState(true);
-  const [selected, setSelected] = useState<OperationID[]>([]);
+  const [selected, setSelected] = useState<number[]>([]);
 
   const showEditInput = useDialogsStore(state => state.showChangeInputSchema);
   const showEditOperation = useDialogsStore(state => state.showEditOperation);
@@ -112,7 +112,7 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
     router.push(url);
   }
 
-  function navigateOperationSchema(target: OperationID) {
+  function navigateOperationSchema(target: number) {
     const node = schema.operationByID.get(target);
     if (!node?.result) {
       return;
@@ -143,7 +143,7 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
     });
   }
 
-  function canDelete(target: OperationID) {
+  function canDelete(target: number) {
     const operation = schema.operationByID.get(target);
     if (!operation) {
       return false;
@@ -154,7 +154,7 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
     return schema.graph.expandOutputs([target]).length === 0;
   }
 
-  function promptEditOperation(target: OperationID, positions: IOperationPosition[]) {
+  function promptEditOperation(target: number, positions: IOperationPosition[]) {
     const operation = schema.operationByID.get(target);
     if (!operation) {
       return;
@@ -166,7 +166,7 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
     });
   }
 
-  function promptDeleteOperation(target: OperationID, positions: IOperationPosition[]) {
+  function promptDeleteOperation(target: number, positions: IOperationPosition[]) {
     const operation = schema.operationByID.get(target);
     if (!operation) {
       return;
@@ -178,7 +178,7 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
     });
   }
 
-  function promptEditInput(target: OperationID, positions: IOperationPosition[]) {
+  function promptEditInput(target: number, positions: IOperationPosition[]) {
     const operation = schema.operationByID.get(target);
     if (!operation) {
       return;
@@ -190,7 +190,7 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
     });
   }
 
-  function promptRelocateConstituents(target: OperationID | undefined, positions: IOperationPosition[]) {
+  function promptRelocateConstituents(target: number | undefined, positions: IOperationPosition[]) {
     const operation = target ? schema.operationByID.get(target) : undefined;
     showRelocateConstituents({
       oss: schema,

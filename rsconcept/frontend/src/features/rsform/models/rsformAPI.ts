@@ -213,6 +213,13 @@ export function isFunctional(type: CstType): boolean {
 }
 
 /**
+ * Evaluate if {@link IConstituenta} can be used produce structure.
+ */
+export function canProduceStructure(cst: IConstituenta): boolean {
+  return !!cst.parse.typification && cst.cst_type !== CstType.BASE && cst.cst_type !== CstType.CONSTANT;
+}
+
+/**
  * Validate new alias against {@link CstType} and {@link IRSForm}.
  */
 export function validateNewAlias(alias: string, type: CstType, schema: IRSForm): boolean {

@@ -46,7 +46,7 @@ import { useMutatingRSForm } from '../../backend/useMutatingRSForm';
 import { useProduceStructure } from '../../backend/useProduceStructure';
 import { useResetAliases } from '../../backend/useResetAliases';
 import { useRestoreOrder } from '../../backend/useRestoreOrder';
-import { CstType } from '../../models/rsform';
+import { canProduceStructure } from '../../models/rsformAPI';
 
 import { useRSEdit } from './RSEditContext';
 
@@ -75,12 +75,7 @@ function MenuRSTabs() {
   const editMenu = useDropdown();
   const accessMenu = useDropdown();
 
-  // TODO: move into separate function
-  const canProduceStructure =
-    !!controller.activeCst &&
-    !!controller.activeCst.parse.typification &&
-    controller.activeCst.cst_type !== CstType.BASE &&
-    controller.activeCst.cst_type !== CstType.CONSTANT;
+  const structureEnabled = !!controller.activeCst && canProduceStructure(controller.activeCst);
 
   function calculateCloneLocation() {
     const location = controller.schema.location;
@@ -344,7 +339,7 @@ function MenuRSTabs() {
               text='Порождение структуры'
               titleHtml='Раскрыть структуру типизации <br/>выделенной конституенты'
               icon={<IconGenerateStructure size='1rem' className='icon-primary' />}
-              disabled={!controller.isContentEditable || !canProduceStructure || isProcessing}
+              disabled={!controller.isContentEditable || !structureEnabled || isProcessing}
               onClick={handleProduceStructure}
             />
             <DropdownButton

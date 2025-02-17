@@ -3,10 +3,9 @@ import clsx from 'clsx';
 import { CProps } from '@/components/props';
 
 import { useLabelUser } from '../backend/useLabelUser';
-import { UserID } from '../models/user';
 
 interface InfoUsersProps extends CProps.Styling {
-  items: UserID[];
+  items: number[];
   prefix: string;
   header?: string;
 }

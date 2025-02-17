@@ -31,7 +31,6 @@ import { useInputCreate } from '../../../backend/useInputCreate';
 import { useMutatingOss } from '../../../backend/useMutatingOss';
 import { useOperationExecute } from '../../../backend/useOperationExecute';
 import { useUpdatePositions } from '../../../backend/useUpdatePositions';
-import { OperationID } from '../../../models/oss';
 import { OssNode } from '../../../models/ossLayout';
 import { useOSSGraphStore } from '../../../stores/ossGraph';
 import { useOssEdit } from '../OssEditContext';
@@ -137,7 +136,7 @@ function OssFlow() {
     });
   }
 
-  function handleCreateOperation(inputs: OperationID[]) {
+  function handleCreateOperation(inputs: number[]) {
     const positions = getPositions();
     const target = flow.project({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
     controller.promptCreateOperation({
@@ -149,7 +148,7 @@ function OssFlow() {
     });
   }
 
-  function handleDeleteOperation(target: OperationID) {
+  function handleDeleteOperation(target: number) {
     if (!controller.canDelete(target)) {
       return;
     }
@@ -163,7 +162,7 @@ function OssFlow() {
     handleDeleteOperation(controller.selected[0]);
   }
 
-  function handleInputCreate(target: OperationID) {
+  function handleInputCreate(target: number) {
     const operation = controller.schema.operationByID.get(target);
     if (!operation) {
       return;
@@ -178,15 +177,15 @@ function OssFlow() {
     }).then(new_schema => router.push(urls.schema(new_schema.id)));
   }
 
-  function handleEditSchema(target: OperationID) {
+  function handleEditSchema(target: number) {
     controller.promptEditInput(target, getPositions());
   }
 
-  function handleEditOperation(target: OperationID) {
+  function handleEditOperation(target: number) {
     controller.promptEditOperation(target, getPositions());
   }
 
-  function handleOperationExecute(target: OperationID) {
+  function handleOperationExecute(target: number) {
     void operationExecute({
       itemID: controller.schema.id, //
       data: { target: target, positions: getPositions() }
@@ -200,7 +199,7 @@ function OssFlow() {
     handleOperationExecute(controller.selected[0]);
   }
 
-  function handleRelocateConstituents(target: OperationID) {
+  function handleRelocateConstituents(target: number) {
     controller.promptRelocateConstituents(target, getPositions());
   }
 

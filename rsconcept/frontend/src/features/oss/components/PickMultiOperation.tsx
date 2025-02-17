@@ -9,13 +9,13 @@ import { IconMoveDown, IconMoveUp, IconRemove } from '@/components/Icons';
 import { CProps } from '@/components/props';
 import { NoData } from '@/components/View';
 
-import { IOperation, OperationID } from '../models/oss';
+import { IOperation } from '../models/oss';
 
 import SelectOperation from './SelectOperation';
 
 interface PickMultiOperationProps extends CProps.Styling {
-  value: OperationID[];
-  onChange: (newValue: OperationID[]) => void;
+  value: number[];
+  onChange: (newValue: number[]) => void;
   items: IOperation[];
   rows?: number;
 }
@@ -27,7 +27,7 @@ export function PickMultiOperation({ rows, items, value, onChange, className, ..
   const nonSelectedItems = items.filter(item => !value.includes(item.id));
   const [lastSelected, setLastSelected] = useState<IOperation | undefined>(undefined);
 
-  function handleDelete(operation: OperationID) {
+  function handleDelete(operation: number) {
     onChange(value.filter(item => item !== operation));
   }
 
@@ -39,7 +39,7 @@ export function PickMultiOperation({ rows, items, value, onChange, className, ..
     }
   }
 
-  function handleMoveUp(operation: OperationID) {
+  function handleMoveUp(operation: number) {
     const index = value.indexOf(operation);
     if (index > 0) {
       const newSelected = [...value];
@@ -49,7 +49,7 @@ export function PickMultiOperation({ rows, items, value, onChange, className, ..
     }
   }
 
-  function handleMoveDown(operation: OperationID) {
+  function handleMoveDown(operation: number) {
     const index = value.indexOf(operation);
     if (index < value.length - 1) {
       const newSelected = [...value];

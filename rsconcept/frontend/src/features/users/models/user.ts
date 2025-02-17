@@ -3,16 +3,11 @@
  */
 
 /**
- * Represents {@link User} identifier type.
- */
-export type UserID = number;
-
-/**
  * Represents user detailed information.
  * Some information should only be accessible to authorized users
  */
 export interface IUser {
-  id: UserID;
+  id: number;
   username: string;
   is_staff: boolean;
   email: string;

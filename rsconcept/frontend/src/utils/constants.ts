@@ -12,7 +12,7 @@ export const PARAMETER = {
   minimalTimeout: 10, // milliseconds delay for fast updates
   zoomDuration: 500, // milliseconds animation duration
   navigationDuration: 300, // milliseconds navigation duration
-  navigationPopupDelay: 200, // milliseconds delay for navigation popup
+  navigationPopupDelay: 300, // milliseconds delay for navigation popup
 
   ossImageWidth: 1280, // pixels - size of OSS image
   ossImageHeight: 960, // pixels - size of OSS image

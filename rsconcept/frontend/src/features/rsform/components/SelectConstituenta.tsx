@@ -33,9 +33,9 @@ function SelectConstituenta({
       label: `${cst.alias}${cst.is_inherited ? '*' : ''}: ${describeConstituenta(cst)}`
     })) ?? [];
 
-  function filter(option: { value: number | undefined; label: string }, inputValue: string) {
-    const cst = items?.find(item => item.id === option.value);
-    return !cst ? false : matchConstituenta(cst, inputValue, CstMatchMode.ALL);
+  function filter(option: { value: string | undefined; label: string }, query: string) {
+    const cst = items?.find(item => item.id === Number(option.value));
+    return !cst ? false : matchConstituenta(cst, query, CstMatchMode.ALL);
   }
 
   return (
@@ -44,7 +44,6 @@ function SelectConstituenta({
       options={options}
       value={value ? { value: value.id, label: `${value.alias}: ${describeConstituentaTerm(value)}` } : null}
       onChange={data => onChange(items?.find(cst => cst.id === data?.value))}
-      // @ts-expect-error: TODO: use type definitions from react-select in filter object
       filterOption={filter}
       placeholder={placeholder}
       {...restProps}

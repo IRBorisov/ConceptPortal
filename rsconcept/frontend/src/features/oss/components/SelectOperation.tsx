@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { SelectSingle } from '@/components/Input';
 import { CProps } from '@/components/props';
 
-import { IOperation, OperationID } from '../models/oss';
+import { IOperation } from '../models/oss';
 import { matchOperation } from '../models/ossAPI';
 
 interface SelectOperationProps extends CProps.Styling {
@@ -31,9 +31,9 @@ function SelectOperation({
       label: `${cst.alias}: ${cst.title}`
     })) ?? [];
 
-  function filter(option: { value: OperationID | undefined; label: string }, inputValue: string) {
-    const operation = items?.find(item => item.id === option.value);
-    return !operation ? false : matchOperation(operation, inputValue);
+  function filter(option: { value: string | undefined; label: string }, query: string) {
+    const operation = items?.find(item => item.id === Number(option.value));
+    return !operation ? false : matchOperation(operation, query);
   }
 
   return (
@@ -42,7 +42,6 @@ function SelectOperation({
       options={options}
       value={value ? { value: value.id, label: `${value.alias}: ${value.title}` } : null}
       onChange={data => onChange(items?.find(cst => cst.id === data?.value))}
-      // @ts-expect-error: TODO: use type definitions from react-select in filter object
       filterOption={filter}
       placeholder={placeholder}
       {...restProps}

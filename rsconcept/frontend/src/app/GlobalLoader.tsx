@@ -5,13 +5,14 @@ import { useDebounce } from 'use-debounce';
 import { Loader } from '@/components/Loader';
 import { PARAMETER } from '@/utils/constants';
 
+// TODO: add animation
 export function GlobalLoader() {
   const navigation = useNavigation();
 
   const isLoading = navigation.state === 'loading';
   const [loadingDebounced] = useDebounce(isLoading, PARAMETER.navigationPopupDelay);
 
-  if (!loadingDebounced || !isLoading) {
+  if (!loadingDebounced) {
     return null;
   }
 
