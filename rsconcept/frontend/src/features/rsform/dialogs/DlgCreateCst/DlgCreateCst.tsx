@@ -7,9 +7,9 @@ import { ModalForm } from '@/components/Modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { errorMsg } from '@/utils/labels';
 
-import { ICstCreateDTO, schemaCstCreate } from '../../backend/types';
+import { IConstituentaBasicsDTO, ICstCreateDTO, schemaCstCreate } from '../../backend/types';
 import { useCstCreate } from '../../backend/useCstCreate';
-import { IConstituentaMeta, IRSForm } from '../../models/rsform';
+import { IRSForm } from '../../models/rsform';
 import { validateNewAlias } from '../../models/rsformAPI';
 
 import FormCreateCst from './FormCreateCst';
@@ -17,7 +17,7 @@ import FormCreateCst from './FormCreateCst';
 export interface DlgCreateCstProps {
   initial: ICstCreateDTO;
   schema: IRSForm;
-  onCreate: (data: IConstituentaMeta) => void;
+  onCreate: (data: IConstituentaBasicsDTO) => void;
 }
 
 function DlgCreateCst() {
@@ -30,7 +30,7 @@ function DlgCreateCst() {
   });
   const alias = useWatch({ control: methods.control, name: 'alias' });
   const cst_type = useWatch({ control: methods.control, name: 'cst_type' });
-  const isValid = alias !== initial.alias && validateNewAlias(alias, cst_type, schema);
+  const isValid = validateNewAlias(alias, cst_type, schema);
 
   function onSubmit(data: ICstCreateDTO) {
     return cstCreate({ itemID: schema.id, data }).then(onCreate);

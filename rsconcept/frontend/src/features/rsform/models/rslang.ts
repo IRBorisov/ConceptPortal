@@ -35,16 +35,6 @@ export enum ParsingStatus {
 }
 
 /**
- * Represents parsing error description.
- */
-export interface IRSErrorDescription {
-  errorType: RSErrorType;
-  position: number;
-  isCritical: boolean;
-  params: string[];
-}
-
-/**
  * Represents AST node.
  */
 export interface ISyntaxTreeNode {
@@ -84,21 +74,6 @@ export interface ITypeInfo {
  */
 export interface IArgumentValue extends IArgumentInfo {
   value?: string;
-}
-
-/**
- * Represents results of expression parse in RSLang.
- */
-export interface IExpressionParse {
-  parseResult: boolean;
-  prefixLen: number;
-  syntax: Syntax;
-  typification: string;
-  valueClass: ValueClass;
-  errors: IRSErrorDescription[];
-  astText: string;
-  ast: SyntaxTree;
-  args: IArgumentInfo[];
 }
 
 /**

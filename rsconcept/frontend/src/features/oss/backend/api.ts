@@ -1,6 +1,7 @@
 import { queryOptions } from '@tanstack/react-query';
 
-import { IConstituentaReference, ITargetCst } from '@/features/rsform/models/rsform';
+import { ITargetCst } from '@/features/rsform/backend/types';
+import { IConstituentaReference } from '@/features/rsform/models/rsform';
 
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/apiTransport';
 import { DELAYS, KEYS } from '@/backend/configuration';

@@ -1,11 +1,12 @@
 import clsx from 'clsx';
+import { ZodError } from 'zod';
 
 import { AxiosError, isAxiosError } from '@/backend/apiTransport';
 import { isResponseHtml } from '@/utils/utils';
 
 import { PrettyJson } from './View';
 
-export type ErrorData = string | Error | AxiosError | undefined | null;
+export type ErrorData = string | Error | AxiosError | ZodError | undefined | null;
 
 interface InfoErrorProps {
   error: ErrorData;
@@ -16,6 +17,13 @@ function DescribeError({ error }: { error: ErrorData }) {
     return <p>Ошибки отсутствуют</p>;
   } else if (typeof error === 'string') {
     return <p>{error}</p>;
+  } else if (error instanceof ZodError) {
+    return (
+      <div className='mt-6'>
+        <p>Ошибка валидации данных</p>
+        <PrettyJson data={JSON.parse(error.toString()) as unknown} />;
+      </div>
+    );
   } else if (!isAxiosError(error)) {
     return (
       <div className='mt-6'>

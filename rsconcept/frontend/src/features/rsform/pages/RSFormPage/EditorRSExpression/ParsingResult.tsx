@@ -1,9 +1,9 @@
+import { IExpressionParseDTO, IRSErrorDescription } from '../../../backend/types';
 import { describeRSError } from '../../../labels';
-import { IExpressionParse, IRSErrorDescription } from '../../../models/rslang';
 import { getRSErrorPrefix } from '../../../models/rslangAPI';
 
 interface ParsingResultProps {
-  data: IExpressionParse | undefined;
+  data: IExpressionParseDTO | undefined;
   disabled?: boolean;
   isOpen: boolean;
   onShowError: (error: IRSErrorDescription) => void;

@@ -141,7 +141,8 @@ export const errorMsg = {
   invalidLocation: 'Некорректный формат пути',
   versionTaken: 'Версия с таким шифром уже существует',
   emptySubstitutions: 'Выберите хотя бы одно отождествление',
-  aliasInvalid: 'Введите незанятое имя, соответствующее типу'
+  aliasInvalid: 'Введите незанятое имя, соответствующее типу',
+  invalidResponse: 'Некорректный ответ сервера'
 };
 
 /**

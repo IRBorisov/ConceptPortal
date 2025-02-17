@@ -12,9 +12,9 @@ import { ModalForm } from '@/components/Modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/Tabs';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { ICstCreateDTO, schemaCstCreate } from '../../backend/types';
+import { IConstituentaBasicsDTO, ICstCreateDTO, schemaCstCreate } from '../../backend/types';
 import { useCstCreate } from '../../backend/useCstCreate';
-import { CstType, IConstituentaMeta, IRSForm } from '../../models/rsform';
+import { CstType, IRSForm } from '../../models/rsform';
 import { generateAlias, validateNewAlias } from '../../models/rsformAPI';
 import FormCreateCst from '../DlgCreateCst/FormCreateCst';
 
@@ -24,7 +24,7 @@ import { TemplateState } from './TemplateContext';
 
 export interface DlgCstTemplateProps {
   schema: IRSForm;
-  onCreate: (data: IConstituentaMeta) => void;
+  onCreate: (data: IConstituentaBasicsDTO) => void;
   insertAfter?: number;
 }
 

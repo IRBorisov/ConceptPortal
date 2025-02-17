@@ -2,6 +2,8 @@
  * Module: Models for LibraryItem.
  */
 
+import { z } from 'zod';
+
 /**
  * Represents type of library items.
  */
@@ -31,16 +33,17 @@ export enum LocationHead {
 
 export const BASIC_SCHEMAS = '/L/Базовые';
 
+export const schemaVersionInfo = z.object({
+  id: z.coerce.number(),
+  version: z.string(),
+  description: z.string(),
+  time_create: z.string()
+});
+
 /**
  * Represents library item version information.
  */
-export interface IVersionInfo {
-  id: number;
-  item: number;
-  version: string;
-  description: string;
-  time_create: string;
-}
+export type IVersionInfo = z.infer<typeof schemaVersionInfo>;
 
 /**
  * Represents library item common data typical for all item types.
@@ -70,7 +73,10 @@ export interface ILibraryItemData extends ILibraryItem {
 /**
  * Represents {@link ILibraryItem} minimal reference data.
  */
-export interface ILibraryItemReference extends Pick<ILibraryItem, 'id' | 'alias'> {}
+export interface ILibraryItemReference {
+  id: number;
+  alias: string;
+}
 
 /**
  * Represents {@link ILibraryItem} extended data with versions.

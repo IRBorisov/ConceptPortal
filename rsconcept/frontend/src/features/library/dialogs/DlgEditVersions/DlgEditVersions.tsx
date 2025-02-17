@@ -81,7 +81,7 @@ function DlgEditVersions() {
     if (!isDirty || isProcessing || !isValid) {
       return;
     }
-    void versionUpdate(data).then(() => reset({ ...data }));
+    void versionUpdate({ itemID: itemID, version: data }).then(() => reset({ ...data }));
   }
 
   return (

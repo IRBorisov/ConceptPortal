@@ -56,9 +56,9 @@ export interface TermForm {
 }
 
 /**
- * Represents Constituenta basic persistent data.
+ * Represents Constituenta.
  */
-export interface IConstituentaMeta {
+export interface IConstituenta {
   id: number;
   alias: string;
   convention: string;
@@ -69,19 +69,7 @@ export interface IConstituentaMeta {
   term_raw: string;
   term_resolved: string;
   term_forms: TermForm[];
-}
 
-/**
- * Represents target {@link IConstituenta}.
- */
-export interface ITargetCst {
-  target: number;
-}
-
-/**
- * Represents Constituenta.
- */
-export interface IConstituenta extends IConstituentaMeta {
   parse: {
     status: ParsingStatus;
     valueClass: ValueClass;
@@ -127,7 +115,10 @@ export interface IConstituenta extends IConstituentaMeta {
 /**
  * Represents {@link IConstituenta} reference.
  */
-export interface IConstituentaReference extends Pick<IConstituenta, 'id' | 'schema'> {}
+export interface IConstituentaReference {
+  id: number;
+  schema: number;
+}
 
 /**
  * Represents Constituenta list.
@@ -182,13 +173,4 @@ export interface IRSForm extends ILibraryItemVersioned {
   graph: Graph;
   cstByAlias: Map<string, IConstituenta>;
   cstByID: Map<number, IConstituenta>;
-}
-
-/**
- * Represents single substitution for binary synthesis table.
- */
-export interface IBinarySubstitution {
-  leftCst: IConstituenta;
-  rightCst: IConstituenta;
-  deleteRight: boolean;
 }

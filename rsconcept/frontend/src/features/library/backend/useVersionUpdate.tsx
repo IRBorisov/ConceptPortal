@@ -12,8 +12,8 @@ export const useVersionUpdate = () => {
   const mutation = useMutation({
     mutationKey: [libraryApi.baseKey, 'update-version'],
     mutationFn: libraryApi.versionUpdate,
-    onSuccess: data => {
-      client.setQueryData(KEYS.composite.rsItem({ itemID: data.item }), (prev: IRSFormDTO | undefined) =>
+    onSuccess: (data, variables) => {
+      client.setQueryData(KEYS.composite.rsItem({ itemID: variables.itemID }), (prev: IRSFormDTO | undefined) =>
         !prev
           ? undefined
           : {
@@ -26,6 +26,6 @@ export const useVersionUpdate = () => {
     }
   });
   return {
-    versionUpdate: (data: IVersionUpdateDTO) => mutation.mutateAsync(data)
+    versionUpdate: (data: { itemID: number; version: IVersionUpdateDTO }) => mutation.mutateAsync(data)
   };
 };

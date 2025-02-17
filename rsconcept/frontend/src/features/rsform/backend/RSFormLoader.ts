@@ -19,13 +19,13 @@ import { IRSFormDTO } from './types';
  * based on the loaded data. It also establishes dependencies between concepts in the graph.
  */
 export class RSFormLoader {
-  private schema: IRSFormDTO;
+  private schema: IRSForm;
   private graph: Graph = new Graph();
   private cstByAlias = new Map<string, IConstituenta>();
   private cstByID = new Map<number, IConstituenta>();
 
   constructor(input: IRSFormDTO) {
-    this.schema = input;
+    this.schema = input as unknown as IRSForm;
   }
 
   produceRSForm(): IRSForm {
@@ -33,7 +33,7 @@ export class RSFormLoader {
     this.createGraph();
     this.inferCstAttributes();
 
-    const result = this.schema as IRSForm;
+    const result = this.schema;
     result.stats = this.calculateStats();
     result.graph = this.graph;
     result.cstByAlias = this.cstByAlias;
@@ -43,8 +43,8 @@ export class RSFormLoader {
 
   private prepareLookups() {
     this.schema.items.forEach(cst => {
-      this.cstByAlias.set(cst.alias, cst as IConstituenta);
-      this.cstByID.set(cst.id, cst as IConstituenta);
+      this.cstByAlias.set(cst.alias, cst);
+      this.cstByID.set(cst.id, cst);
       this.graph.addNode(cst.id);
     });
   }
@@ -189,7 +189,7 @@ export class RSFormLoader {
           sum + (cst.parse.status === ParsingStatus.VERIFIED && cst.parse.valueClass === ValueClass.INVALID ? 1 : 0),
         0
       ),
-      count_inherited: items.reduce((sum, cst) => sum + ((cst as IConstituenta).is_inherited ? 1 : 0), 0),
+      count_inherited: items.reduce((sum, cst) => sum + (cst.is_inherited ? 1 : 0), 0),
 
       count_text_term: items.reduce((sum, cst) => sum + (cst.term_raw ? 1 : 0), 0),
       count_definition: items.reduce((sum, cst) => sum + (cst.definition_raw ? 1 : 0), 0),

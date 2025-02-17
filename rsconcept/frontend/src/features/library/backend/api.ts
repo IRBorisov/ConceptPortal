@@ -138,11 +138,11 @@ export const libraryApi = {
         successMessage: infoMsg.versionRestored
       }
     }),
-  versionUpdate: (data: IVersionUpdateDTO) =>
+  versionUpdate: (data: { itemID: number; version: IVersionUpdateDTO }) =>
     axiosPatch<IVersionUpdateDTO, IVersionInfo>({
-      endpoint: `/api/versions/${data.id}`,
+      endpoint: `/api/versions/${data.version.id}`,
       request: {
-        data: data,
+        data: data.version,
         successMessage: infoMsg.changesSaved
       }
     }),

@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { ReactCodeMirrorRef } from '@uiw/react-codemirror';
 
 import { BadgeHelp, HelpTopic } from '@/features/help';
+import { IExpressionParseDTO } from '@/features/rsform/backend/types';
 
 import { DataCallback } from '@/backend/apiTransport';
 import { Overlay } from '@/components/Container';
@@ -13,7 +14,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { errorMsg } from '@/utils/labels';
 
-import { ICheckConstituentaDTO } from '../../../backend/types';
+import { ICheckConstituentaDTO, IRSErrorDescription } from '../../../backend/types';
 import { useCheckConstituenta } from '../../../backend/useCheckConstituenta';
 import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
 import RSInput from '../../../components/RSInput';
@@ -21,7 +22,7 @@ import { parser as rslangParser } from '../../../components/RSInput/rslang/parse
 import { RSTextWrapper } from '../../../components/RSInput/textEditing';
 import { IConstituenta } from '../../../models/rsform';
 import { getDefinitionPrefix } from '../../../models/rsformAPI';
-import { IExpressionParse, IRSErrorDescription, TokenID } from '../../../models/rslang';
+import { TokenID } from '../../../models/rslang';
 import { transformAST } from '../../../models/rslangAPI';
 import { useRSEdit } from '../RSEditContext';
 
@@ -42,7 +43,7 @@ interface EditorRSExpressionProps {
   disabled?: boolean;
   toggleReset?: boolean;
 
-  onChangeLocalParse: (typification: IExpressionParse | undefined) => void;
+  onChangeLocalParse: (typification: IExpressionParseDTO | undefined) => void;
   onOpenEdit?: (cstID: number) => void;
   onShowTypeGraph: (event: CProps.EventMouse) => void;
 }
@@ -62,7 +63,7 @@ function EditorRSExpression({
 
   const [isModified, setIsModified] = useState(false);
   const rsInput = useRef<ReactCodeMirrorRef>(null);
-  const [parseData, setParseData] = useState<IExpressionParse | undefined>(undefined);
+  const [parseData, setParseData] = useState<IExpressionParseDTO | undefined>(undefined);
 
   const isProcessing = useMutatingRSForm();
   const showControls = usePreferencesStore(state => state.showExpressionControls);
@@ -70,7 +71,11 @@ function EditorRSExpression({
 
   const { checkConstituenta: checkInternal, isPending } = useCheckConstituenta();
 
-  function checkConstituenta(expression: string, activeCst: IConstituenta, onSuccess?: DataCallback<IExpressionParse>) {
+  function checkConstituenta(
+    expression: string,
+    activeCst: IConstituenta,
+    onSuccess?: DataCallback<IExpressionParseDTO>
+  ) {
     const data: ICheckConstituentaDTO = {
       definition_formal: expression,
       alias: activeCst.alias,
@@ -92,7 +97,7 @@ function EditorRSExpression({
     setIsModified(newValue !== activeCst.definition_formal);
   }
 
-  function handleCheckExpression(callback?: (parse: IExpressionParse) => void) {
+  function handleCheckExpression(callback?: (parse: IExpressionParseDTO) => void) {
     checkConstituenta(value, activeCst, parse => {
       onChangeLocalParse(parse);
       if (parse.errors.length > 0) {

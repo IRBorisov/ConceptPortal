@@ -4,9 +4,8 @@ import { useUpdateTimestamp } from '@/features/library';
 
 import { KEYS } from '@/backend/configuration';
 
-import { ITargetCst } from '../models/rsform';
-
 import { rsformsApi } from './api';
+import { ITargetCst } from './types';
 
 export const useProduceStructure = () => {
   const client = useQueryClient();
