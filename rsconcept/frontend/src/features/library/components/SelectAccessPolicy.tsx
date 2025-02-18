@@ -1,13 +1,14 @@
 'use client';
 
 import { MiniButton } from '@/components/Control';
-import { PolicyIcon } from '@/components/DomainIcons';
+import { DomIconProps } from '@/components/DomainIcons';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/Dropdown';
+import { IconPrivate, IconProtected, IconPublic } from '@/components/Icons';
 import { CProps } from '@/components/props';
 import { prefixes } from '@/utils/constants';
 import { describeAccessPolicy, labelAccessPolicy } from '@/utils/labels';
 
-import { AccessPolicy } from '../models/library';
+import { AccessPolicy } from '../backend/types';
 
 interface SelectAccessPolicyProps extends CProps.Styling {
   value: AccessPolicy;
@@ -50,4 +51,16 @@ export function SelectAccessPolicy({ value, disabled, stretchLeft, onChange, ...
       </Dropdown>
     </div>
   );
+}
+
+/** Icon for access policy. */
+function PolicyIcon({ value, size = '1.25rem', className }: DomIconProps<AccessPolicy>) {
+  switch (value) {
+    case AccessPolicy.PRIVATE:
+      return <IconPrivate size={size} className={className ?? 'text-warn-600'} />;
+    case AccessPolicy.PROTECTED:
+      return <IconProtected size={size} className={className ?? 'text-sec-600'} />;
+    case AccessPolicy.PUBLIC:
+      return <IconPublic size={size} className={className ?? 'text-ok-600'} />;
+  }
 }

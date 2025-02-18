@@ -4,12 +4,11 @@
 
 import { Graph } from '@/models/Graph';
 
-import { CstType, IConstituenta, IRSForm, IRSFormStats } from '../models/rsform';
+import { IConstituenta, IRSForm, IRSFormStats } from '../models/rsform';
 import { inferClass, inferStatus, inferTemplate, isBaseSet, isFunctional } from '../models/rsformAPI';
-import { ParsingStatus, ValueClass } from '../models/rslang';
 import { extractGlobals, isSimpleExpression, splitTemplateDefinition } from '../models/rslangAPI';
 
-import { IRSFormDTO } from './types';
+import { CstType, IRSFormDTO, ParsingStatus, ValueClass } from './types';
 
 /**
  * Loads data into an {@link IRSForm} based on {@link IRSFormDTO}.

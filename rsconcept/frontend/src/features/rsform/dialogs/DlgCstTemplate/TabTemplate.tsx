@@ -6,7 +6,7 @@ import { SelectSingle, TextArea } from '@/components/Input';
 
 import { useRSForm } from '../../backend/useRSForm';
 import { PickConstituenta } from '../../components/PickConstituenta';
-import RSInput from '../../components/RSInput';
+import { RSInput } from '../../components/RSInput';
 import { CATEGORY_CST_TYPE } from '../../models/rsform';
 import { applyFilterCategory } from '../../models/rsformAPI';
 

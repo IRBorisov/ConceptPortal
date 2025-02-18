@@ -5,10 +5,8 @@ import { IRSFormDTO } from '@/features/rsform/backend/types';
 
 import { KEYS } from '@/backend/configuration';
 
-import { ILibraryItem, LibraryItemType } from '../models/library';
-
 import { libraryApi } from './api';
-import { IUpdateLibraryItemDTO } from './types';
+import { ILibraryItem, IUpdateLibraryItemDTO, LibraryItemType } from './types';
 
 export const useUpdateItem = () => {
   const client = useQueryClient();

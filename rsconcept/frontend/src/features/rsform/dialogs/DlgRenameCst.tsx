@@ -10,10 +10,10 @@ import { TextInput } from '@/components/Input';
 import { ModalForm } from '@/components/Modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { ICstRenameDTO, schemaCstRename } from '../backend/types';
+import { CstType, ICstRenameDTO, schemaCstRename } from '../backend/types';
 import { useCstRename } from '../backend/useCstRename';
 import { SelectCstType } from '../components/SelectCstType';
-import { CstType, IConstituenta, IRSForm } from '../models/rsform';
+import { IConstituenta, IRSForm } from '../models/rsform';
 import { generateAlias, validateNewAlias } from '../models/rsformAPI';
 
 export interface DlgRenameCstProps {

@@ -1,13 +1,14 @@
 'use client';
 
 import { SelectorButton } from '@/components/Control';
-import { ItemTypeIcon } from '@/components/DomainIcons';
+import { DomIconProps } from '@/components/DomainIcons';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/Dropdown';
+import { IconOSS, IconRSForm } from '@/components/Icons';
 import { CProps } from '@/components/props';
 import { prefixes } from '@/utils/constants';
 import { describeLibraryItemType, labelLibraryItemType } from '@/utils/labels';
 
-import { LibraryItemType } from '../models/library';
+import { LibraryItemType } from '../backend/types';
 
 interface SelectItemTypeProps extends CProps.Styling {
   value: LibraryItemType;
@@ -51,4 +52,14 @@ export function SelectItemType({ value, disabled, stretchLeft, onChange, ...rest
       </Dropdown>
     </div>
   );
+}
+
+/** Icon for library item type. */
+function ItemTypeIcon({ value, size = '1.25rem', className }: DomIconProps<LibraryItemType>) {
+  switch (value) {
+    case LibraryItemType.RSFORM:
+      return <IconRSForm size={size} className={className ?? 'text-sec-600'} />;
+    case LibraryItemType.OSS:
+      return <IconOSS size={size} className={className ?? 'text-ok-600'} />;
+  }
 }

@@ -1,3 +1,4 @@
+export { AccessPolicy, type ILibraryItem, type IVersionInfo, LibraryItemType } from './backend/types';
 export { useDeleteItem } from './backend/useDeleteItem';
 export { useLibrary, useLibrarySuspense } from './backend/useLibrary';
 export { useMutatingLibrary } from './backend/useMutatingLibrary';
@@ -11,11 +12,5 @@ export { PickSchema } from './components/PickSchema';
 export { SelectLibraryItem } from './components/SelectLibraryItem';
 export { SelectVersion } from './components/SelectVersion';
 export { ToolbarItemAccess } from './components/ToolbarItemAccess';
-export {
-  AccessPolicy,
-  type ILibraryItem,
-  type ILibraryItemReference,
-  type IVersionInfo,
-  LibraryItemType
-} from './models/library';
+export { type ILibraryItemReference } from './models/library';
 export { useLibrarySearchStore } from './stores/librarySearch';

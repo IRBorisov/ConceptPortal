@@ -17,8 +17,8 @@ import { useFitHeight } from '@/stores/appLayout';
 import { usePreferencesStore } from '@/stores/preferences';
 import { APP_COLORS } from '@/styling/colors';
 
+import { ILibraryItem, LibraryItemType } from '../../backend/types';
 import BadgeLocation from '../../components/BadgeLocation';
-import { ILibraryItem, LibraryItemType } from '../../models/library';
 import { useLibrarySearchStore } from '../../stores/librarySearch';
 
 interface TableLibraryItemsProps {

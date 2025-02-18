@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { CProps } from '@/components/props';
 import { globals } from '@/utils/constants';
 
-import { TokenID } from '../../../models/rslang';
+import { TokenID } from '../../../backend/types';
 
 interface RSLocalButtonProps extends CProps.Titled, CProps.Styling {
   text: string;

@@ -1,8 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 
-import { ILibraryItem } from '../models/library';
-
 import { libraryApi } from './api';
+import { ILibraryItem } from './types';
 
 export function useUpdateTimestamp() {
   const client = useQueryClient();

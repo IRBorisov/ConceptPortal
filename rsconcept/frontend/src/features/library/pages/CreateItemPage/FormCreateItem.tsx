@@ -16,13 +16,13 @@ import { InfoError } from '@/components/InfoError';
 import { Label, TextArea, TextInput } from '@/components/Input';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';
 
-import { ICreateLibraryItemDTO, schemaCreateLibraryItem } from '../../backend/types';
+import { AccessPolicy, ICreateLibraryItemDTO, LibraryItemType, schemaCreateLibraryItem } from '../../backend/types';
 import { useCreateItem } from '../../backend/useCreateItem';
 import { SelectAccessPolicy } from '../../components/SelectAccessPolicy';
 import { SelectItemType } from '../../components/SelectItemType';
 import { SelectLocationContext } from '../../components/SelectLocationContext';
 import { SelectLocationHead } from '../../components/SelectLocationHead';
-import { AccessPolicy, LibraryItemType, LocationHead } from '../../models/library';
+import { LocationHead } from '../../models/library';
 import { combineLocation } from '../../models/libraryAPI';
 import { useLibrarySearchStore } from '../../stores/librarySearch';
 

@@ -14,11 +14,11 @@ import { PARAMETER, prefixes } from '@/utils/constants';
 import { promptText } from '@/utils/labels';
 import { promptUnsaved } from '@/utils/utils';
 
-import { IConstituentaBasicsDTO, ICstCreateDTO } from '../../backend/types';
+import { CstType, IConstituentaBasicsDTO, ICstCreateDTO } from '../../backend/types';
 import { useCstCreate } from '../../backend/useCstCreate';
 import { useCstMove } from '../../backend/useCstMove';
 import { useRSFormSuspense } from '../../backend/useRSForm';
-import { CstType, IConstituenta, IRSForm } from '../../models/rsform';
+import { IConstituenta, IRSForm } from '../../models/rsform';
 import { generateAlias } from '../../models/rsformAPI';
 
 export enum RSTabID {

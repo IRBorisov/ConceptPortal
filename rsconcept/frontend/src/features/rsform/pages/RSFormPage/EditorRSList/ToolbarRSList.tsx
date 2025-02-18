@@ -1,12 +1,21 @@
 import { BadgeHelp, HelpTopic } from '@/features/help';
 import { MiniSelectorOSS } from '@/features/library';
+import { CstType } from '@/features/rsform';
 
 import { Overlay } from '@/components/Container';
 import { MiniButton } from '@/components/Control';
-import { CstTypeIcon } from '@/components/DomainIcons';
+import { DomIconProps } from '@/components/DomainIcons';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/Dropdown';
 import {
   IconClone,
+  IconCstAxiom,
+  IconCstBaseSet,
+  IconCstConstSet,
+  IconCstFunction,
+  IconCstPredicate,
+  IconCstStructured,
+  IconCstTerm,
+  IconCstTheorem,
   IconDestroy,
   IconMoveDown,
   IconMoveUp,
@@ -19,10 +28,9 @@ import { prepareTooltip } from '@/utils/utils';
 
 import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
 import { getCstTypeShortcut, labelCstType } from '../../../labels';
-import { CstType } from '../../../models/rsform';
 import { useRSEdit } from '../RSEditContext';
 
-function ToolbarRSList() {
+export function ToolbarRSList() {
   const controller = useRSEdit();
   const isProcessing = useMutatingRSForm();
   const insertMenu = useDropdown();
@@ -107,4 +115,24 @@ function ToolbarRSList() {
   );
 }
 
-export default ToolbarRSList;
+/** Icon for constituenta type. */
+function CstTypeIcon({ value, size = '1.25rem', className }: DomIconProps<CstType>) {
+  switch (value) {
+    case CstType.BASE:
+      return <IconCstBaseSet size={size} className={className ?? 'text-ok-600'} />;
+    case CstType.CONSTANT:
+      return <IconCstConstSet size={size} className={className ?? 'text-ok-600'} />;
+    case CstType.STRUCTURED:
+      return <IconCstStructured size={size} className={className ?? 'text-ok-600'} />;
+    case CstType.TERM:
+      return <IconCstTerm size={size} className={className ?? 'text-sec-600'} />;
+    case CstType.AXIOM:
+      return <IconCstAxiom size={size} className={className ?? 'text-warn-600'} />;
+    case CstType.FUNCTION:
+      return <IconCstFunction size={size} className={className ?? 'text-sec-600'} />;
+    case CstType.PREDICATE:
+      return <IconCstPredicate size={size} className={className ?? 'text-warn-600'} />;
+    case CstType.THEOREM:
+      return <IconCstTheorem size={size} className={className ?? 'text-warn-600'} />;
+  }
+}

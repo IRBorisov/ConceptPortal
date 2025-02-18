@@ -14,7 +14,7 @@ import { APP_COLORS } from '@/styling/colors';
 
 import { ICstCreateDTO } from '../../backend/types';
 import { PickConstituenta } from '../../components/PickConstituenta';
-import RSInput from '../../components/RSInput';
+import { RSInput } from '../../components/RSInput';
 import { IConstituenta } from '../../models/rsform';
 import { IArgumentValue } from '../../models/rslang';
 

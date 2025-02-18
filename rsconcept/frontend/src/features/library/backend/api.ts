@@ -6,15 +6,16 @@ import { axiosDelete, axiosGet, axiosPatch, axiosPost } from '@/backend/apiTrans
 import { DELAYS, KEYS } from '@/backend/configuration';
 import { infoMsg } from '@/utils/labels';
 
-import { AccessPolicy, ILibraryItem, IVersionInfo } from '../models/library';
-
 import {
+  AccessPolicy,
   ICloneLibraryItemDTO,
   ICreateLibraryItemDTO,
+  ILibraryItem,
   IRenameLocationDTO,
   IUpdateLibraryItemDTO,
   IVersionCreatedResponse,
   IVersionCreateDTO,
+  IVersionInfo,
   IVersionUpdateDTO
 } from './types';
 

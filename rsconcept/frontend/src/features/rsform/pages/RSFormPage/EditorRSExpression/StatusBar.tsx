@@ -8,12 +8,11 @@ import { APP_COLORS } from '@/styling/colors';
 import { globals } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/utils';
 
-import { IExpressionParseDTO } from '../../../backend/types';
+import { IExpressionParseDTO, ParsingStatus } from '../../../backend/types';
 import { colorStatusBar } from '../../../colors';
 import { labelExpressionStatus } from '../../../labels';
 import { ExpressionStatus, IConstituenta } from '../../../models/rsform';
 import { inferStatus } from '../../../models/rsformAPI';
-import { ParsingStatus } from '../../../models/rslang';
 
 interface StatusBarProps {
   processing?: boolean;

@@ -5,7 +5,7 @@
 import { limits } from '@/utils/constants';
 import { TextMatcher } from '@/utils/utils';
 
-import { ILibraryItem } from './library';
+import { ILibraryItem } from '../backend/types';
 
 const LOCATION_REGEXP = /^\/[PLUS]((\/[!\d\p{L}]([!\d\p{L}\- ]*[!\d\p{L}])?)*)?$/u; // cspell:disable-line
 

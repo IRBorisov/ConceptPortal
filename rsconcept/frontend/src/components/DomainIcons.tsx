@@ -1,18 +1,10 @@
-import { AccessPolicy, LibraryItemType, LocationHead } from '@/features/library/models/library';
-import { CstType, ExpressionStatus } from '@/features/rsform/models/rsform';
+import { LocationHead } from '@/features/library/models/library';
+import { ExpressionStatus } from '@/features/rsform/models/rsform';
 import { CstMatchMode, DependencyMode } from '@/features/rsform/stores/cstSearch';
 
 import {
   IconAlias,
   IconBusiness,
-  IconCstAxiom,
-  IconCstBaseSet,
-  IconCstConstSet,
-  IconCstFunction,
-  IconCstPredicate,
-  IconCstStructured,
-  IconCstTerm,
-  IconCstTheorem,
   IconFilter,
   IconFormula,
   IconGraphCollapse,
@@ -22,12 +14,8 @@ import {
   IconHide,
   IconMoveDown,
   IconMoveUp,
-  IconOSS,
-  IconPrivate,
   IconProps,
-  IconProtected,
   IconPublic,
-  IconRSForm,
   IconSettings,
   IconShow,
   IconStatusError,
@@ -43,28 +31,6 @@ import {
 
 export interface DomIconProps<RequestData> extends IconProps {
   value: RequestData;
-}
-
-/** Icon for library item type. */
-export function ItemTypeIcon({ value, size = '1.25rem', className }: DomIconProps<LibraryItemType>) {
-  switch (value) {
-    case LibraryItemType.RSFORM:
-      return <IconRSForm size={size} className={className ?? 'text-sec-600'} />;
-    case LibraryItemType.OSS:
-      return <IconOSS size={size} className={className ?? 'text-ok-600'} />;
-  }
-}
-
-/** Icon for access policy. */
-export function PolicyIcon({ value, size = '1.25rem', className }: DomIconProps<AccessPolicy>) {
-  switch (value) {
-    case AccessPolicy.PRIVATE:
-      return <IconPrivate size={size} className={className ?? 'text-warn-600'} />;
-    case AccessPolicy.PROTECTED:
-      return <IconProtected size={size} className={className ?? 'text-sec-600'} />;
-    case AccessPolicy.PUBLIC:
-      return <IconPublic size={size} className={className ?? 'text-ok-600'} />;
-  }
 }
 
 /** Icon for visibility. */
@@ -146,28 +112,6 @@ export function StatusIcon({ value, size = '1.25rem', className }: DomIconProps<
     case ExpressionStatus.INCORRECT:
     case ExpressionStatus.UNDEFINED:
       return <IconStatusError size={size} className={className} />;
-  }
-}
-
-/** Icon for constituenta type. */
-export function CstTypeIcon({ value, size = '1.25rem', className }: DomIconProps<CstType>) {
-  switch (value) {
-    case CstType.BASE:
-      return <IconCstBaseSet size={size} className={className ?? 'text-ok-600'} />;
-    case CstType.CONSTANT:
-      return <IconCstConstSet size={size} className={className ?? 'text-ok-600'} />;
-    case CstType.STRUCTURED:
-      return <IconCstStructured size={size} className={className ?? 'text-ok-600'} />;
-    case CstType.TERM:
-      return <IconCstTerm size={size} className={className ?? 'text-sec-600'} />;
-    case CstType.AXIOM:
-      return <IconCstAxiom size={size} className={className ?? 'text-warn-600'} />;
-    case CstType.FUNCTION:
-      return <IconCstFunction size={size} className={className ?? 'text-sec-600'} />;
-    case CstType.PREDICATE:
-      return <IconCstPredicate size={size} className={className ?? 'text-warn-600'} />;
-    case CstType.THEOREM:
-      return <IconCstTheorem size={size} className={className ?? 'text-warn-600'} />;
   }
 }
 

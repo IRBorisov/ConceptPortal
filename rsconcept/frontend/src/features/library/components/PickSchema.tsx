@@ -12,7 +12,7 @@ import { CProps } from '@/components/props';
 import { APP_COLORS } from '@/styling/colors';
 import { prefixes } from '@/utils/constants';
 
-import { ILibraryItem, LibraryItemType } from '../models/library';
+import { ILibraryItem, LibraryItemType } from '../backend/types';
 import { matchLibraryItem } from '../models/libraryAPI';
 
 import SelectLocation from './SelectLocation';

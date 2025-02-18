@@ -1,60 +1,12 @@
 /**
  * Module: Schema of Synthesis Operations.
  */
-import { ILibraryItemData } from '@/features/library/models/library';
-import { ICstSubstitute } from '@/features/rsform';
+
+import { ILibraryItemData } from '@/features/library/backend/types';
 
 import { Graph } from '@/models/Graph';
 
-/**
- * Represents {@link IOperation} type.
- */
-export enum OperationType {
-  INPUT = 'input',
-  SYNTHESIS = 'synthesis'
-}
-
-/**
- * Represents Operation.
- */
-export interface IOperation {
-  id: number;
-  operation_type: OperationType;
-  oss: number;
-
-  alias: string;
-  title: string;
-  comment: string;
-
-  position_x: number;
-  position_y: number;
-
-  result: number | null;
-
-  is_owned: boolean;
-  is_consolidation: boolean; // aka 'diamond synthesis'
-  substitutions: ICstSubstituteEx[];
-  arguments: number[];
-}
-
-/**
- * Represents {@link IOperation} Argument.
- */
-export interface IArgument {
-  operation: number;
-  argument: number;
-}
-
-/**
- * Represents {@link ICstSubstitute} extended data.
- */
-export interface ICstSubstituteEx extends ICstSubstitute {
-  operation: number;
-  original_alias: string;
-  original_term: string;
-  substitution_alias: string;
-  substitution_term: string;
-}
+import { IArgument, ICstSubstituteEx, IOperation } from '../backend/types';
 
 /**
  * Represents {@link IOperationSchema} statistics.

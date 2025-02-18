@@ -5,9 +5,8 @@ import { IRSFormDTO } from '@/features/rsform/backend/types';
 
 import { KEYS } from '@/backend/configuration';
 
-import { ILibraryItem } from '../models/library';
-
 import { libraryApi } from './api';
+import { ILibraryItem } from './types';
 
 export const useSetLocation = () => {
   const client = useQueryClient();

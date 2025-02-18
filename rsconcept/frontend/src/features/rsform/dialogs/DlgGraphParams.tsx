@@ -5,8 +5,8 @@ import { Controller, useForm } from 'react-hook-form';
 import { Checkbox } from '@/components/Input';
 import { ModalForm } from '@/components/Modal';
 
+import { CstType } from '../backend/types';
 import { labelCstType } from '../labels';
-import { CstType } from '../models/rsform';
 import { GraphFilterParams, useTermGraphStore } from '../stores/termGraph';
 
 function DlgGraphParams() {

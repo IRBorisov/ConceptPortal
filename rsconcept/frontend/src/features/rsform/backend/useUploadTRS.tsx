@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { ILibraryItem } from '@/features/library/models/library';
+import { ILibraryItem } from '@/features/library/backend/types';
 
 import { KEYS } from '@/backend/configuration';
 

@@ -1,4 +1,6 @@
-import { AccessPolicy, ILibraryItem, LibraryItemType, LocationHead } from './library';
+import { AccessPolicy, ILibraryItem, LibraryItemType } from '../backend/types';
+
+import { LocationHead } from './library';
 import { matchLibraryItem, validateLocation } from './libraryAPI';
 
 describe('Testing matching LibraryItem', () => {

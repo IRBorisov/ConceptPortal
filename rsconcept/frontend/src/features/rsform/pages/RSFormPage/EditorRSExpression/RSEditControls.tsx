@@ -2,7 +2,7 @@ import clsx from 'clsx';
 
 import { PARAMETER, prefixes } from '@/utils/constants';
 
-import { TokenID } from '../../../models/rslang';
+import { TokenID } from '../../../backend/types';
 
 import RSLocalButton from './RSLocalButton';
 import RSTokenButton from './RSTokenButton';

@@ -6,7 +6,7 @@ import { SelectSingle } from '@/components/Input';
 import { CProps } from '@/components/props';
 
 import { labelVersion } from '../../rsform/labels';
-import { IVersionInfo } from '../models/library';
+import { IVersionInfo } from '../backend/types';
 
 interface SelectVersionProps extends CProps.Styling {
   id?: string;

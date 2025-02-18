@@ -15,10 +15,10 @@ import { Loader } from '@/components/Loader';
 import { ModalForm } from '@/components/Modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { ICstRelocateDTO, IOperationPosition, schemaCstRelocate } from '../backend/types';
+import { ICstRelocateDTO, IOperation, IOperationPosition, schemaCstRelocate } from '../backend/types';
 import { useRelocateConstituents } from '../backend/useRelocateConstituents';
 import { useUpdatePositions } from '../backend/useUpdatePositions';
-import { IOperation, IOperationSchema } from '../models/oss';
+import { IOperationSchema } from '../models/oss';
 import { getRelocateCandidates } from '../models/ossAPI';
 
 export interface DlgRelocateConstituentsProps {

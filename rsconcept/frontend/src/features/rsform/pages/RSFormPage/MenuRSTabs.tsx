@@ -4,7 +4,8 @@ import fileDownload from 'js-file-download';
 
 import { urls, useConceptNavigation } from '@/app';
 import { useAuthSuspense } from '@/features/auth';
-import { AccessPolicy, LocationHead } from '@/features/library/models/library';
+import { AccessPolicy } from '@/features/library';
+import { LocationHead } from '@/features/library/models/library';
 import { useRoleStore, UserRole } from '@/features/users';
 
 import { Divider } from '@/components/Container';

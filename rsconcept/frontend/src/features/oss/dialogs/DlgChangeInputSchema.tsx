@@ -12,9 +12,9 @@ import { Label } from '@/components/Input';
 import { ModalForm } from '@/components/Modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { IInputUpdateDTO, IOperationPosition, schemaInputUpdate } from '../backend/types';
+import { IInputUpdateDTO, IOperation, IOperationPosition, schemaInputUpdate } from '../backend/types';
 import { useInputUpdate } from '../backend/useInputUpdate';
-import { IOperation, IOperationSchema } from '../models/oss';
+import { IOperationSchema } from '../models/oss';
 import { sortItemsForOSS } from '../models/ossAPI';
 
 export interface DlgChangeInputSchemaProps {

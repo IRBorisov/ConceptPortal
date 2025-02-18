@@ -3,8 +3,7 @@
  */
 import { Node } from 'reactflow';
 
-import { IOperation } from './oss';
-
+import { IOperation } from '../backend/types';
 /**
  * Represents XY Position.
  */

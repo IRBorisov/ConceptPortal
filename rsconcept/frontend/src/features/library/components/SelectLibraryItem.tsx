@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { SelectSingle } from '@/components/Input';
 import { CProps } from '@/components/props';
 
-import { ILibraryItem } from '../models/library';
+import { ILibraryItem } from '../backend/types';
 import { matchLibraryItem } from '../models/libraryAPI';
 
 interface SelectLibraryItemProps extends CProps.Styling {

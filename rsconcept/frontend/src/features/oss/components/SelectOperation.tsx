@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { SelectSingle } from '@/components/Input';
 import { CProps } from '@/components/props';
 
-import { IOperation } from '../models/oss';
+import { IOperation } from '../backend/types';
 import { matchOperation } from '../models/ossAPI';
 
 interface SelectOperationProps extends CProps.Styling {

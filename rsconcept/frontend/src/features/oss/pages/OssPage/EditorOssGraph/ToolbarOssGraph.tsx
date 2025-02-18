@@ -24,8 +24,8 @@ import { useModificationStore } from '@/stores/modification';
 import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/utils';
 
+import { OperationType } from '../../../backend/types';
 import { useMutatingOss } from '../../../backend/useMutatingOss';
-import { OperationType } from '../../../models/oss';
 import { useOSSGraphStore } from '../../../stores/ossGraph';
 import { useOssEdit } from '../OssEditContext';
 

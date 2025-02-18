@@ -1,9 +1,10 @@
 import { APP_COLORS } from '@/styling/colors';
 import { PARAMETER } from '@/utils/constants';
 
+import { TokenID } from './backend/types';
 import { GramData, Grammeme, NounGrams, PartOfSpeech, VerbGrams } from './models/language';
 import { CstClass, ExpressionStatus, IConstituenta } from './models/rsform';
-import { ISyntaxTreeNode, TokenID } from './models/rslang';
+import { ISyntaxTreeNode } from './models/rslang';
 import { TMGraphNode } from './models/TMGraph';
 import { GraphColoring } from './stores/termGraph';
 

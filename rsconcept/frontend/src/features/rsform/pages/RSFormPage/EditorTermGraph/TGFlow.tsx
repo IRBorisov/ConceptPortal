@@ -27,11 +27,12 @@ import { APP_COLORS } from '@/styling/colors';
 import { PARAMETER } from '@/utils/constants';
 import { errorMsg } from '@/utils/labels';
 
+import { CstType } from '../../../backend/types';
 import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
 import { colorBgGraphNode } from '../../../colors';
 import InfoConstituenta from '../../../components/InfoConstituenta';
 import ToolbarGraphSelection from '../../../components/ToolbarGraphSelection';
-import { CstType, IConstituenta, IRSForm } from '../../../models/rsform';
+import { IConstituenta, IRSForm } from '../../../models/rsform';
 import { isBasicConcept } from '../../../models/rsformAPI';
 import { GraphFilterParams, useTermGraphStore } from '../../../stores/termGraph';
 import { useRSEdit } from '../RSEditContext';

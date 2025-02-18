@@ -4,11 +4,10 @@ import { axiosGet, axiosPatch, axiosPost } from '@/backend/apiTransport';
 import { DELAYS, KEYS } from '@/backend/configuration';
 import { infoMsg } from '@/utils/labels';
 
-import { IConstituentaList } from '../models/rsform';
-
 import {
   ICheckConstituentaDTO,
   IConstituentaBasicsDTO,
+  IConstituentaList,
   ICstCreatedResponse,
   ICstCreateDTO,
   ICstMoveDTO,

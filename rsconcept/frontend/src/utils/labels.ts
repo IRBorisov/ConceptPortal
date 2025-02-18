@@ -4,7 +4,7 @@
  * Label is a short text used to represent an entity.
  * Description is a long description used in tooltips.
  */
-import { AccessPolicy, LibraryItemType } from '@/features/library/models/library';
+import { AccessPolicy, LibraryItemType } from '@/features/library/backend/types';
 import { UserRole } from '@/features/users/stores/role';
 
 /**

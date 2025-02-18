@@ -13,12 +13,12 @@ import { Checkbox, Label, TextArea, TextInput } from '@/components/Input';
 import { ModalForm } from '@/components/Modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { ICloneLibraryItemDTO, schemaCloneLibraryItem } from '../backend/types';
+import { AccessPolicy, ICloneLibraryItemDTO, ILibraryItem, schemaCloneLibraryItem } from '../backend/types';
 import { useCloneItem } from '../backend/useCloneItem';
 import { SelectAccessPolicy } from '../components/SelectAccessPolicy';
 import { SelectLocationContext } from '../components/SelectLocationContext';
 import { SelectLocationHead } from '../components/SelectLocationHead';
-import { AccessPolicy, ILibraryItem, LocationHead } from '../models/library';
+import { LocationHead } from '../models/library';
 import { cloneTitle, combineLocation } from '../models/libraryAPI';
 
 export interface DlgCloneLibraryItemProps {

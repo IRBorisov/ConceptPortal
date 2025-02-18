@@ -4,7 +4,7 @@ import { ReactCodeMirrorRef } from '@uiw/react-codemirror';
 
 import { CodeMirrorWrapper } from '@/utils/codemirror';
 
-import { TokenID } from '../../models/rslang';
+import { TokenID } from '../../backend/types';
 
 export function getSymbolSubstitute(keyCode: string, shiftPressed: boolean): string | undefined {
   // prettier-ignore

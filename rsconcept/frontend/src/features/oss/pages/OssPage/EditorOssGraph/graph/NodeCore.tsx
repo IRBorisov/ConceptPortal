@@ -6,8 +6,8 @@ import { Indicator } from '@/components/View';
 import { PARAMETER, prefixes } from '@/utils/constants';
 import { truncateToLastWord } from '@/utils/utils';
 
+import { OperationType } from '../../../../backend/types';
 import TooltipOperation from '../../../../components/TooltipOperation';
-import { OperationType } from '../../../../models/oss';
 import { OssNodeInternal } from '../../../../models/ossLayout';
 import { useOssEdit } from '../../OssEditContext';
 

@@ -45,7 +45,7 @@ interface RSInputProps
   onOpenEdit?: (cstID: number) => void;
 }
 
-const RSInput = forwardRef<ReactCodeMirrorRef, RSInputProps>(
+export const RSInput = forwardRef<ReactCodeMirrorRef, RSInputProps>(
   (
     {
       id, //
@@ -175,8 +175,6 @@ const RSInput = forwardRef<ReactCodeMirrorRef, RSInputProps>(
     );
   }
 );
-
-export default RSInput;
 
 // ======= Internal ==========
 const editorSetup: BasicSetupOptions = {

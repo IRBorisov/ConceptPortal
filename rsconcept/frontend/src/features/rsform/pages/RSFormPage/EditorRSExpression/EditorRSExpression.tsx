@@ -5,7 +5,6 @@ import { toast } from 'react-toastify';
 import { ReactCodeMirrorRef } from '@uiw/react-codemirror';
 
 import { BadgeHelp, HelpTopic } from '@/features/help';
-import { IExpressionParseDTO } from '@/features/rsform/backend/types';
 
 import { DataCallback } from '@/backend/apiTransport';
 import { Overlay } from '@/components/Container';
@@ -14,15 +13,14 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { errorMsg } from '@/utils/labels';
 
-import { ICheckConstituentaDTO, IRSErrorDescription } from '../../../backend/types';
+import { ICheckConstituentaDTO, IExpressionParseDTO, IRSErrorDescription, TokenID } from '../../../backend/types';
 import { useCheckConstituenta } from '../../../backend/useCheckConstituenta';
 import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
-import RSInput from '../../../components/RSInput';
+import { RSInput } from '../../../components/RSInput';
 import { parser as rslangParser } from '../../../components/RSInput/rslang/parserAST';
 import { RSTextWrapper } from '../../../components/RSInput/textEditing';
 import { IConstituenta } from '../../../models/rsform';
 import { getDefinitionPrefix } from '../../../models/rsformAPI';
-import { TokenID } from '../../../models/rslang';
 import { transformAST } from '../../../models/rslangAPI';
 import { useRSEdit } from '../RSEditContext';
 

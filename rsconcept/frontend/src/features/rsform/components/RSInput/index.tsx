@@ -1,1 +1,1 @@
-export { default } from './RSInput';
+export { RSInput } from './RSInput';

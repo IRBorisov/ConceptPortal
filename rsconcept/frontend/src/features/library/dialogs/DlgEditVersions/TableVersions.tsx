@@ -8,7 +8,7 @@ import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/D
 import { IconRemove } from '@/components/Icons';
 import { APP_COLORS } from '@/styling/colors';
 
-import { IVersionInfo } from '../../models/library';
+import { IVersionInfo } from '../../backend/types';
 
 interface TableVersionsProps {
   processing: boolean;

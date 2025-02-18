@@ -11,10 +11,10 @@ import { ModalForm } from '@/components/Modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/Tabs';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { IOperationCreateDTO, IOperationPosition, schemaOperationCreate } from '../../backend/types';
+import { IOperationCreateDTO, IOperationPosition, OperationType, schemaOperationCreate } from '../../backend/types';
 import { useOperationCreate } from '../../backend/useOperationCreate';
 import { describeOperationType, labelOperationType } from '../../labels';
-import { IOperationSchema, OperationType } from '../../models/oss';
+import { IOperationSchema } from '../../models/oss';
 import { calculateInsertPosition } from '../../models/ossAPI';
 
 import TabInputOperation from './TabInputOperation';

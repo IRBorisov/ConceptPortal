@@ -16,14 +16,13 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { errorMsg } from '@/utils/labels';
 
-import { ICstUpdateDTO, IExpressionParseDTO, schemaCstUpdate } from '../../../backend/types';
+import { CstType, ICstUpdateDTO, IExpressionParseDTO, ParsingStatus, schemaCstUpdate } from '../../../backend/types';
 import { useCstUpdate } from '../../../backend/useCstUpdate';
 import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
 import { RefsInput } from '../../../components/RefsInput';
 import { labelCstTypification, labelTypification } from '../../../labels';
-import { CstType, IConstituenta, IRSForm } from '../../../models/rsform';
+import { IConstituenta, IRSForm } from '../../../models/rsform';
 import { isBaseSet, isBasicConcept, isFunctional } from '../../../models/rsformAPI';
-import { ParsingStatus } from '../../../models/rslang';
 import EditorRSExpression from '../EditorRSExpression';
 
 interface FormConstituentaProps {

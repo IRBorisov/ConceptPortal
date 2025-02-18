@@ -6,21 +6,9 @@ import { ILibraryItemReference, ILibraryItemVersioned } from '@/features/library
 
 import { Graph } from '@/models/Graph';
 
-import { IArgumentInfo, ParsingStatus, ValueClass } from './rslang';
+import { CstType, ParsingStatus, ValueClass } from '../backend/types';
 
-/**
- * Represents {@link IConstituenta} type.
- */
-export enum CstType {
-  BASE = 'basic',
-  STRUCTURED = 'structure',
-  TERM = 'term',
-  AXIOM = 'axiom',
-  FUNCTION = 'function',
-  PREDICATE = 'predicate',
-  CONSTANT = 'constant',
-  THEOREM = 'theorem'
-}
+import { IArgumentInfo } from './rslang';
 
 // CstType constant for category dividers in TemplateSchemas
 export const CATEGORY_CST_TYPE = CstType.THEOREM;
@@ -110,21 +98,6 @@ export interface IConstituenta {
   spawn: number[];
   /** List of aliases of {@link IConstituenta} that are spawned by this one. */
   spawn_alias: string[];
-}
-
-/**
- * Represents {@link IConstituenta} reference.
- */
-export interface IConstituentaReference {
-  id: number;
-  schema: number;
-}
-
-/**
- * Represents Constituenta list.
- */
-export interface IConstituentaList {
-  items: number[];
 }
 
 /**

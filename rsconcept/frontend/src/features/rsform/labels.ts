@@ -5,10 +5,10 @@
 import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/utils';
 
-import { IRSErrorDescription } from './backend/types';
+import { CstType, IRSErrorDescription, ParsingStatus, RSErrorType, TokenID } from './backend/types';
 import { GramData, Grammeme, ReferenceType } from './models/language';
-import { CstClass, CstType, ExpressionStatus, IConstituenta, IRSForm } from './models/rsform';
-import { IArgumentInfo, ISyntaxTreeNode, ParsingStatus, RSErrorType, TokenID } from './models/rslang';
+import { CstClass, ExpressionStatus, IConstituenta, IRSForm } from './models/rsform';
+import { IArgumentInfo, ISyntaxTreeNode } from './models/rslang';
 import { CstMatchMode, DependencyMode } from './stores/cstSearch';
 import { GraphColoring } from './stores/termGraph';
 

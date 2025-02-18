@@ -23,10 +23,10 @@ import { useModificationStore } from '@/stores/modification';
 import { prefixes } from '@/utils/constants';
 import { promptText } from '@/utils/labels';
 
+import { ILibraryItemData } from '../backend/types';
 import { useMutatingLibrary } from '../backend/useMutatingLibrary';
 import { useSetLocation } from '../backend/useSetLocation';
 import { useSetOwner } from '../backend/useSetOwner';
-import { ILibraryItemData } from '../models/library';
 import { useLibrarySearchStore } from '../stores/librarySearch';
 
 /**

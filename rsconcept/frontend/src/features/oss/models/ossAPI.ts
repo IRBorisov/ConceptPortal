@@ -2,10 +2,10 @@
  * Module: API for OperationSystem.
  */
 
-import { ILibraryItem } from '@/features/library/models/library';
-import { CstClass, CstType, IConstituenta, IRSForm } from '@/features/rsform';
-import { ICstSubstitute } from '@/features/rsform/backend/types';
-import { AliasMapping, ParsingStatus } from '@/features/rsform/models/rslang';
+import { ILibraryItem } from '@/features/library/backend/types';
+import { CstType, ICstSubstitute, ParsingStatus } from '@/features/rsform/backend/types';
+import { CstClass, IConstituenta, IRSForm } from '@/features/rsform/models/rsform';
+import { AliasMapping } from '@/features/rsform/models/rslang';
 import {
   applyAliasMapping,
   applyTypificationMapping,
@@ -18,10 +18,10 @@ import { infoMsg } from '@/utils/labels';
 import { TextMatcher } from '@/utils/utils';
 
 import { Graph } from '../../../models/Graph';
-import { IOperationPosition } from '../backend/types';
+import { IOperation, IOperationPosition, OperationType } from '../backend/types';
 import { describeSubstitutionError } from '../labels';
 
-import { IOperation, IOperationSchema, OperationType, SubstitutionErrorType } from './oss';
+import { IOperationSchema, SubstitutionErrorType } from './oss';
 import { Position2D } from './ossLayout';
 
 /**
