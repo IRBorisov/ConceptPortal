@@ -9,7 +9,7 @@ import { IconMoveDown, IconMoveUp, IconRemove } from '@/components/Icons';
 import { CProps } from '@/components/props';
 import { NoData } from '@/components/View';
 
-import { IOperation } from '../backend/types';
+import { IOperation } from '../models/oss';
 
 import SelectOperation from './SelectOperation';
 

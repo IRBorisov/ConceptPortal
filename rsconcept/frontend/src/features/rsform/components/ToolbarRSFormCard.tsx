@@ -62,7 +62,7 @@ export function ToolbarRSFormCard({ controller, onSubmit }: ToolbarRSFormCardPro
         />
       ) : null}
       <MiniButton
-        titleHtml={tooltipText.shareItem(controller.schema.access_policy)}
+        titleHtml={tooltipText.shareItem(controller.schema.access_policy === AccessPolicy.PUBLIC)}
         icon={<IconShare size='1.25rem' className='icon-primary' />}
         onClick={sharePage}
         disabled={controller.schema.access_policy !== AccessPolicy.PUBLIC}

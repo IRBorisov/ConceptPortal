@@ -1,3 +1,4 @@
+import { AccessPolicy, LibraryItemType } from './backend/types';
 import { FolderNode } from './models/FolderTree';
 import { LocationHead } from './models/library';
 import { validateLocation } from './models/libraryAPI';
@@ -44,4 +45,53 @@ export function labelFolderNode(node: FolderNode): string {
  */
 export function describeFolderNode(node: FolderNode): string {
   return `${node.filesInside} | ${node.filesTotal}`;
+}
+
+/**
+ * Retrieves label for {@link AccessPolicy}.
+ */
+export function labelAccessPolicy(policy: AccessPolicy): string {
+  // prettier-ignore
+  switch (policy) {
+    case AccessPolicy.PRIVATE:     return 'Личный';
+    case AccessPolicy.PROTECTED:   return 'Защищенный';
+    case AccessPolicy.PUBLIC:      return 'Открытый';
+  }
+}
+
+/**
+ * Retrieves description for {@link AccessPolicy}.
+ */
+export function describeAccessPolicy(policy: AccessPolicy): string {
+  // prettier-ignore
+  switch (policy) {
+    case AccessPolicy.PRIVATE:
+      return 'Доступ только для владельца';
+    case AccessPolicy.PROTECTED:
+      return 'Доступ для владельца и редакторов';
+    case AccessPolicy.PUBLIC:
+      return 'Открытый доступ';
+  }
+}
+
+/**
+ * Retrieves label for {@link LibraryItemType}.
+ */
+export function labelLibraryItemType(itemType: LibraryItemType): string {
+  // prettier-ignore
+  switch (itemType) {
+    case LibraryItemType.RSFORM:  return 'КС';
+    case LibraryItemType.OSS:     return 'ОСС';
+  }
+}
+
+/**
+ * Retrieves description for {@link LibraryItemType}.
+ */
+export function describeLibraryItemType(itemType: LibraryItemType): string {
+  // prettier-ignore
+  switch (itemType) {
+    case LibraryItemType.RSFORM:  return 'Концептуальная схема';
+    case LibraryItemType.OSS:     return 'Операционная схема синтеза';
+  }
 }

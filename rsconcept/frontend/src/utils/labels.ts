@@ -4,7 +4,6 @@
  * Label is a short text used to represent an entity.
  * Description is a long description used in tooltips.
  */
-import { AccessPolicy, LibraryItemType } from '@/features/library/backend/types';
 import { UserRole } from '@/features/users/stores/role';
 
 /**
@@ -34,55 +33,6 @@ export function describeAccessMode(mode: UserRole): string {
       return 'Режим владельца';
     case UserRole.ADMIN:
       return 'Режим администратора';
-  }
-}
-
-/**
- * Retrieves label for {@link AccessPolicy}.
- */
-export function labelAccessPolicy(policy: AccessPolicy): string {
-  // prettier-ignore
-  switch (policy) {
-    case AccessPolicy.PRIVATE:     return 'Личный';
-    case AccessPolicy.PROTECTED:   return 'Защищенный';
-    case AccessPolicy.PUBLIC:      return 'Открытый';
-  }
-}
-
-/**
- * Retrieves description for {@link AccessPolicy}.
- */
-export function describeAccessPolicy(policy: AccessPolicy): string {
-  // prettier-ignore
-  switch (policy) {
-    case AccessPolicy.PRIVATE:
-      return 'Доступ только для владельца';
-    case AccessPolicy.PROTECTED:
-      return 'Доступ для владельца и редакторов';
-    case AccessPolicy.PUBLIC:
-      return 'Открытый доступ';
-  }
-}
-
-/**
- * Retrieves label for {@link LibraryItemType}.
- */
-export function labelLibraryItemType(itemType: LibraryItemType): string {
-  // prettier-ignore
-  switch (itemType) {
-    case LibraryItemType.RSFORM:  return 'КС';
-    case LibraryItemType.OSS:     return 'ОСС';
-  }
-}
-
-/**
- * Retrieves description for {@link LibraryItemType}.
- */
-export function describeLibraryItemType(itemType: LibraryItemType): string {
-  // prettier-ignore
-  switch (itemType) {
-    case LibraryItemType.RSFORM:  return 'Концептуальная схема';
-    case LibraryItemType.OSS:     return 'Операционная схема синтеза';
   }
 }
 
@@ -150,8 +100,7 @@ export const errorMsg = {
  */
 export const tooltipText = {
   unsaved: 'Сохраните или отмените изменения',
-  shareItem: (policy?: AccessPolicy) =>
-    policy === AccessPolicy.PUBLIC ? 'Поделиться схемой' : 'Поделиться можно только <br/>открытой схемой'
+  shareItem: (isPublic: boolean) => (isPublic ? 'Поделиться схемой' : 'Поделиться можно только <br/>открытой схемой')
 };
 
 /**

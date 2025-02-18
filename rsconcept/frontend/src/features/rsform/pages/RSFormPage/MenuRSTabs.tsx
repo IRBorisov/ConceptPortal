@@ -227,7 +227,7 @@ function MenuRSTabs() {
         <Dropdown isOpen={schemaMenu.isOpen}>
           <DropdownButton
             text='Поделиться'
-            titleHtml={tooltipText.shareItem(controller.schema.access_policy)}
+            titleHtml={tooltipText.shareItem(controller.schema.access_policy === AccessPolicy.PUBLIC)}
             icon={<IconShare size='1rem' className='icon-primary' />}
             onClick={handleShare}
             disabled={controller.schema.access_policy !== AccessPolicy.PUBLIC}

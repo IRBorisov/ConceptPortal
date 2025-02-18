@@ -94,7 +94,7 @@ function DlgEditVersions() {
         selected={versionID}
       />
 
-      <form className='flex' onSubmit={event => void handleSubmit(onUpdate)(event)}>
+      <form className='flex items-center ' onSubmit={event => void handleSubmit(onUpdate)(event)}>
         <TextInput
           id='dlg_version'
           {...register('version')}
@@ -103,7 +103,7 @@ function DlgEditVersions() {
           className='w-[16rem] mr-3'
           error={formErrors.version}
         />
-        <div className='cc-icons'>
+        <div className='cc-icons h-fit'>
           <MiniButton
             type='submit'
             title={isValid ? 'Сохранить изменения' : errorMsg.versionTaken}

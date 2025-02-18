@@ -1,6 +1,11 @@
 import { queryOptions } from '@tanstack/react-query';
 
-import { IRSFormDTO } from '@/features/rsform/backend/types';
+import {
+  IRSFormDTO,
+  IVersionCreatedResponse,
+  schemaRSForm,
+  schemaVersionCreatedResponse
+} from '@/features/rsform/backend/types';
 
 import { axiosDelete, axiosGet, axiosPatch, axiosPost } from '@/backend/apiTransport';
 import { DELAYS, KEYS } from '@/backend/configuration';
@@ -13,10 +18,12 @@ import {
   ILibraryItem,
   IRenameLocationDTO,
   IUpdateLibraryItemDTO,
-  IVersionCreatedResponse,
   IVersionCreateDTO,
   IVersionInfo,
-  IVersionUpdateDTO
+  IVersionUpdateDTO,
+  schemaLibraryItem,
+  schemaLibraryItemArray,
+  schemaVersionInfo
 } from './types';
 
 export const libraryApi = {
@@ -29,6 +36,7 @@ export const libraryApi = {
       staleTime: DELAYS.staleMedium,
       queryFn: meta =>
         axiosGet<ILibraryItem[]>({
+          schema: schemaLibraryItemArray,
           endpoint: isAdmin ? '/api/library/all' : '/api/library/active',
           options: { signal: meta.signal }
         })
@@ -39,6 +47,7 @@ export const libraryApi = {
       staleTime: DELAYS.staleMedium,
       queryFn: meta =>
         axiosGet<ILibraryItem[]>({
+          schema: schemaLibraryItemArray,
           endpoint: '/api/library/templates',
           options: { signal: meta.signal }
         })
@@ -46,6 +55,7 @@ export const libraryApi = {
 
   createItem: (data: ICreateLibraryItemDTO) =>
     axiosPost<ICreateLibraryItemDTO, ILibraryItem>({
+      schema: schemaLibraryItem,
       endpoint: !data.file ? '/api/library' : '/api/rsforms/create-detailed',
       request: {
         data: data,
@@ -61,6 +71,7 @@ export const libraryApi = {
     }),
   updateItem: (data: IUpdateLibraryItemDTO) =>
     axiosPatch<IUpdateLibraryItemDTO, ILibraryItem>({
+      schema: schemaLibraryItem,
       endpoint: `/api/library/${data.id}`,
       request: {
         data: data,
@@ -109,6 +120,7 @@ export const libraryApi = {
     }),
   cloneItem: (data: ICloneLibraryItemDTO) =>
     axiosPost<ICloneLibraryItemDTO, IRSFormDTO>({
+      schema: schemaRSForm,
       endpoint: `/api/library/${data.id}/clone`,
       request: {
         data: data,
@@ -126,6 +138,7 @@ export const libraryApi = {
 
   versionCreate: ({ itemID, data }: { itemID: number; data: IVersionCreateDTO }) =>
     axiosPost<IVersionCreateDTO, IVersionCreatedResponse>({
+      schema: schemaVersionCreatedResponse,
       endpoint: `/api/library/${itemID}/create-version`,
       request: {
         data: data,
@@ -134,6 +147,7 @@ export const libraryApi = {
     }),
   versionRestore: ({ versionID }: { versionID: number }) =>
     axiosPatch<undefined, IRSFormDTO>({
+      schema: schemaRSForm,
       endpoint: `/api/versions/${versionID}/restore`,
       request: {
         successMessage: infoMsg.versionRestored
@@ -141,6 +155,7 @@ export const libraryApi = {
     }),
   versionUpdate: (data: { itemID: number; version: IVersionUpdateDTO }) =>
     axiosPatch<IVersionUpdateDTO, IVersionInfo>({
+      schema: schemaVersionInfo,
       endpoint: `/api/versions/${data.version.id}`,
       request: {
         data: data.version,

@@ -2,11 +2,19 @@
  * Module: Schema of Synthesis Operations.
  */
 
-import { ILibraryItemData } from '@/features/library/backend/types';
-
 import { Graph } from '@/models/Graph';
 
-import { IArgument, ICstSubstituteEx, IOperation } from '../backend/types';
+import { ICstSubstituteInfo, IOperationDTO, IOperationSchemaDTO } from '../backend/types';
+
+/**
+ * Represents Operation.
+ */
+export interface IOperation extends IOperationDTO {
+  is_owned: boolean;
+  is_consolidation: boolean; // aka 'diamond synthesis'
+  substitutions: ICstSubstituteInfo[];
+  arguments: number[];
+}
 
 /**
  * Represents {@link IOperationSchema} statistics.
@@ -22,10 +30,8 @@ export interface IOperationSchemaStats {
 /**
  * Represents OperationSchema.
  */
-export interface IOperationSchema extends ILibraryItemData {
+export interface IOperationSchema extends IOperationSchemaDTO {
   items: IOperation[];
-  arguments: IArgument[];
-  substitutions: ICstSubstituteEx[];
 
   graph: Graph;
   schemas: number[];

@@ -109,6 +109,9 @@ export type IRSErrorDescription = z.infer<typeof schemaRSErrorDescription>;
 /** Represents results of expression parse in RSLang. */
 export type IExpressionParseDTO = z.infer<typeof schemaExpressionParse>;
 
+/** Represents data response when creating {@link IVersionInfo}. */
+export type IVersionCreatedResponse = z.infer<typeof schemaVersionCreatedResponse>;
+
 /** Represents RSLang token types. */
 export enum TokenID {
   // Global, local IDs and literals
@@ -320,6 +323,11 @@ export const schemaRSForm = z.object({
     })
   ),
   oss: z.array(z.object({ id: z.coerce.number(), alias: z.string() }))
+});
+
+export const schemaVersionCreatedResponse = z.object({
+  version: z.number(),
+  schema: schemaRSForm
 });
 
 export const schemaCstCreate = schemaConstituentaBasics

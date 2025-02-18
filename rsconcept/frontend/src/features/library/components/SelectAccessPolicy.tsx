@@ -6,9 +6,9 @@ import { Dropdown, DropdownButton, useDropdown } from '@/components/Dropdown';
 import { IconPrivate, IconProtected, IconPublic } from '@/components/Icons';
 import { CProps } from '@/components/props';
 import { prefixes } from '@/utils/constants';
-import { describeAccessPolicy, labelAccessPolicy } from '@/utils/labels';
 
 import { AccessPolicy } from '../backend/types';
+import { describeAccessPolicy, labelAccessPolicy } from '../labels';
 
 interface SelectAccessPolicyProps extends CProps.Styling {
   value: AccessPolicy;

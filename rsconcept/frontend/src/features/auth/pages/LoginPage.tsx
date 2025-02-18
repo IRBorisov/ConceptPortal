@@ -27,7 +27,6 @@ function LoginPage() {
     register,
     handleSubmit,
     clearErrors,
-    resetField,
     formState: { errors }
   } = useForm({
     resolver: zodResolver(schemaUserLogin),
@@ -39,7 +38,6 @@ function LoginPage() {
 
   function onSubmit(data: IUserLoginDTO) {
     return login(data).then(() => {
-      resetField('password');
       if (router.canBack()) {
         router.back();
       } else {

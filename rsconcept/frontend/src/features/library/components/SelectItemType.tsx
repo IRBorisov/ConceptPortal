@@ -6,9 +6,9 @@ import { Dropdown, DropdownButton, useDropdown } from '@/components/Dropdown';
 import { IconOSS, IconRSForm } from '@/components/Icons';
 import { CProps } from '@/components/props';
 import { prefixes } from '@/utils/constants';
-import { describeLibraryItemType, labelLibraryItemType } from '@/utils/labels';
 
 import { LibraryItemType } from '../backend/types';
+import { describeLibraryItemType, labelLibraryItemType } from '../labels';
 
 interface SelectItemTypeProps extends CProps.Styling {
   value: LibraryItemType;

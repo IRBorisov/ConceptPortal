@@ -14,6 +14,11 @@ export const PARAMETER = {
   navigationDuration: 300, // milliseconds navigation duration
   navigationPopupDelay: 300, // milliseconds delay for navigation popup
 
+  fastAnimation: 200, // milliseconds - duration of fast animation
+  fadeDuration: 300, // milliseconds - duration of fade animation
+  dropdownDuration: 200, // milliseconds - duration of dropdown animation
+  moveDuration: 500, // milliseconds - duration of move animation
+
   ossImageWidth: 1280, // pixels - size of OSS image
   ossImageHeight: 960, // pixels - size of OSS image
   ossContextMenuWidth: 200, // pixels - width of OSS context menu
@@ -22,11 +27,6 @@ export const PARAMETER = {
   ossMinDistance: 20, // pixels - minimum distance between node centers
   ossDistanceX: 180, // pixels - insert x-distance between node centers
   ossDistanceY: 100, // pixels - insert y-distance between node centers
-
-  fastAnimation: 200, // milliseconds - duration of fast animation
-  fadeDuration: 300, // milliseconds - duration of fade animation
-  dropdownDuration: 300, // milliseconds - duration of dropdown animation
-  moveDuration: 500, // milliseconds - duration of move animation
 
   graphHandleSize: 3, // pixels - size of graph connection handle
   graphNodeRadius: 20, // pixels - radius of graph node

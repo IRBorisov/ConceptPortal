@@ -6,7 +6,7 @@ import { Tooltip } from '@/components/Container';
 import DataTable from '@/components/DataTable';
 import { IconPageRight } from '@/components/Icons';
 
-import { ICstSubstituteEx, OperationType } from '../backend/types';
+import { ICstSubstituteInfo, OperationType } from '../backend/types';
 import { labelOperationType } from '../labels';
 import { OssNodeInternal } from '../models/ossLayout';
 
@@ -15,7 +15,7 @@ interface TooltipOperationProps {
   anchor: string;
 }
 
-const columnHelper = createColumnHelper<ICstSubstituteEx>();
+const columnHelper = createColumnHelper<ICstSubstituteInfo>();
 
 function TooltipOperation({ node, anchor }: TooltipOperationProps) {
   const columns = [

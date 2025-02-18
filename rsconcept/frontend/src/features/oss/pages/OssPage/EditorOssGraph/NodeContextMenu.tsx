@@ -16,8 +16,9 @@ import useClickedOutside from '@/hooks/useClickedOutside';
 import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/utils';
 
-import { IOperation, OperationType } from '../../../backend/types';
+import { OperationType } from '../../../backend/types';
 import { useMutatingOss } from '../../../backend/useMutatingOss';
+import { IOperation } from '../../../models/oss';
 import { useOssEdit } from '../OssEditContext';
 
 export interface ContextMenuData {

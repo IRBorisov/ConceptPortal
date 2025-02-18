@@ -2,7 +2,7 @@
  * Module: Models for LibraryItem.
  */
 
-import { ILibraryItemData, IVersionInfo, LibraryItemType } from '../backend/types';
+import { LibraryItemType } from '../backend/types';
 
 /**
  * Represents valid location headers.
@@ -22,14 +22,6 @@ export const BASIC_SCHEMAS = '/L/Базовые';
 export interface ILibraryItemReference {
   id: number;
   alias: string;
-}
-
-/**
- * Represents {@link ILibraryItem} extended data with versions.
- */
-export interface ILibraryItemVersioned extends ILibraryItemData {
-  version?: number;
-  versions: IVersionInfo[];
 }
 
 /**

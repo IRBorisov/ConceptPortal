@@ -18,10 +18,10 @@ import { infoMsg } from '@/utils/labels';
 import { TextMatcher } from '@/utils/utils';
 
 import { Graph } from '../../../models/Graph';
-import { IOperation, IOperationPosition, OperationType } from '../backend/types';
+import { IOperationPosition, OperationType } from '../backend/types';
 import { describeSubstitutionError } from '../labels';
 
-import { IOperationSchema, SubstitutionErrorType } from './oss';
+import { IOperation, IOperationSchema, SubstitutionErrorType } from './oss';
 import { Position2D } from './ossLayout';
 
 /**

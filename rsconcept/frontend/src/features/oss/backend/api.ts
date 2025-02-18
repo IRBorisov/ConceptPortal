@@ -17,7 +17,10 @@ import {
   IOperationPosition,
   IOperationSchemaDTO,
   IOperationUpdateDTO,
-  ITargetOperation
+  ITargetOperation,
+  schemaConstituentaReference,
+  schemaOperationCreatedResponse,
+  schemaOperationSchema
 } from './types';
 
 export const ossApi = {
@@ -31,6 +34,7 @@ export const ossApi = {
         !itemID
           ? undefined
           : axiosGet<IOperationSchemaDTO>({
+              schema: schemaOperationSchema,
               endpoint: `/api/oss/${itemID}/details`,
               options: { signal: meta.signal }
             })
@@ -56,6 +60,7 @@ export const ossApi = {
 
   operationCreate: ({ itemID, data }: { itemID: number; data: IOperationCreateDTO }) =>
     axiosPost<IOperationCreateDTO, IOperationCreatedResponse>({
+      schema: schemaOperationCreatedResponse,
       endpoint: `/api/oss/${itemID}/create-operation`,
       request: {
         data: data,
@@ -64,6 +69,7 @@ export const ossApi = {
     }),
   operationDelete: ({ itemID, data }: { itemID: number; data: IOperationDeleteDTO }) =>
     axiosPatch<IOperationDeleteDTO, IOperationSchemaDTO>({
+      schema: schemaOperationSchema,
       endpoint: `/api/oss/${itemID}/delete-operation`,
       request: {
         data: data,
@@ -80,6 +86,7 @@ export const ossApi = {
     }),
   inputUpdate: ({ itemID, data }: { itemID: number; data: IInputUpdateDTO }) =>
     axiosPatch<IInputUpdateDTO, IOperationSchemaDTO>({
+      schema: schemaOperationSchema,
       endpoint: `/api/oss/${itemID}/set-input`,
       request: {
         data: data,
@@ -88,6 +95,7 @@ export const ossApi = {
     }),
   operationUpdate: ({ itemID, data }: { itemID: number; data: IOperationUpdateDTO }) =>
     axiosPatch<IOperationUpdateDTO, IOperationSchemaDTO>({
+      schema: schemaOperationSchema,
       endpoint: `/api/oss/${itemID}/update-operation`,
       request: {
         data: data,
@@ -96,6 +104,7 @@ export const ossApi = {
     }),
   operationExecute: ({ itemID, data }: { itemID: number; data: ITargetOperation }) =>
     axiosPost<ITargetOperation, IOperationSchemaDTO>({
+      schema: schemaOperationSchema,
       endpoint: `/api/oss/${itemID}/execute-operation`,
       request: {
         data: data,
@@ -105,6 +114,7 @@ export const ossApi = {
 
   relocateConstituents: (data: ICstRelocateDTO) =>
     axiosPost<ICstRelocateDTO, IOperationSchemaDTO>({
+      schema: schemaOperationSchema,
       endpoint: `/api/oss/relocate-constituents`,
       request: {
         data: data,
@@ -113,6 +123,7 @@ export const ossApi = {
     }),
   getPredecessor: (data: ITargetCst) =>
     axiosPost<ITargetCst, IConstituentaReference>({
+      schema: schemaConstituentaReference,
       endpoint: '/api/oss/get-predecessor',
       request: { data: data }
     })

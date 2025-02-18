@@ -6,28 +6,28 @@ import { ILibraryItem } from '@/features/library/backend/types';
 
 import { Graph } from '@/models/Graph';
 
-import { IOperationSchema, IOperationSchemaStats } from '../models/oss';
+import { IOperation, IOperationSchema, IOperationSchemaStats } from '../models/oss';
 
-import { IOperation, IOperationSchemaDTO, OperationType } from './types';
+import { IOperationSchemaDTO, OperationType } from './types';
 
 /**
  * Loads data into an {@link IOperationSchema} based on {@link IOperationSchemaDTO}.
  *
  */
 export class OssLoader {
-  private oss: IOperationSchemaDTO;
+  private oss: IOperationSchema;
   private graph: Graph = new Graph();
   private operationByID = new Map<number, IOperation>();
   private schemaIDs: number[] = [];
   private items: ILibraryItem[];
 
   constructor(input: IOperationSchemaDTO, items: ILibraryItem[]) {
-    this.oss = input;
+    this.oss = input as unknown as IOperationSchema;
     this.items = items;
   }
 
   produceOSS(): IOperationSchema {
-    const result = this.oss as IOperationSchema;
+    const result = this.oss;
     this.prepareLookups();
     this.createGraph();
     this.extractSchemas();
@@ -42,7 +42,7 @@ export class OssLoader {
 
   private prepareLookups() {
     this.oss.items.forEach(operation => {
-      this.operationByID.set(operation.id, operation as IOperation);
+      this.operationByID.set(operation.id, operation);
       this.graph.addNode(operation.id);
     });
   }

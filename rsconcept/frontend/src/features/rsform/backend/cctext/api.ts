@@ -1,43 +1,26 @@
 import { axiosPost } from '@/backend/apiTransport';
 import { KEYS } from '@/backend/configuration';
 
-/**
- * Represents API result for text output.
- */
-export interface ITextResult {
-  result: string;
-}
-
-/**
- * Represents wordform data used for backend communication.
- */
-export interface IWordFormDTO {
-  text: string;
-  grams: string;
-}
-
-/**
- * Represents lexeme response containing multiple {@link Wordform}s.
- */
-export interface ILexemeResponse {
-  items: IWordFormDTO[];
-}
+import { ILexemeResponse, ITextResult, IWordFormDTO, schemaLexemeResponse, schemaTextResult } from './types';
 
 export const cctextApi = {
   baseKey: KEYS.cctext,
 
   inflectText: (data: IWordFormDTO) =>
     axiosPost<IWordFormDTO, ITextResult>({
+      schema: schemaTextResult,
       endpoint: '/api/cctext/inflect',
       request: { data: data }
     }),
   parseText: (data: { text: string }) =>
     axiosPost<{ text: string }, ITextResult>({
+      schema: schemaTextResult,
       endpoint: '/api/cctext/parse',
       request: { data: data }
     }),
   generateLexeme: (data: { text: string }) =>
     axiosPost<{ text: string }, ILexemeResponse>({
+      schema: schemaLexemeResponse,
       endpoint: '/api/cctext/generate-lexeme',
       request: { data: data }
     })

@@ -1,7 +1,9 @@
 import { z } from 'zod';
 
-import { ILibraryItem, ILibraryItemData } from '@/features/library/backend/types';
-import { ICstSubstitute, schemaCstSubstitute } from '@/features/rsform/backend/types';
+import { schemaLibraryItem } from '@/features/library/backend/types';
+import { schemaCstSubstitute } from '@/features/rsform/backend/types';
+
+import { errorMsg } from '@/utils/labels';
 
 /**
  * Represents {@link IOperation} type.
@@ -11,61 +13,14 @@ export enum OperationType {
   SYNTHESIS = 'synthesis'
 }
 
-/**
- * Represents {@link ICstSubstitute} extended data.
- */
-export interface ICstSubstituteEx extends ICstSubstitute {
-  operation: number;
-  original_alias: string;
-  original_term: string;
-  substitution_alias: string;
-  substitution_term: string;
-}
+/** Represents {@link ICstSubstitute} extended data. */
+export type ICstSubstituteInfo = z.infer<typeof schemaCstSubstituteInfo>;
 
-/**
- * Represents Operation.
- */
-export interface IOperation {
-  id: number;
-  operation_type: OperationType;
-  oss: number;
+/** Represents {@link IOperation} data from server. */
+export type IOperationDTO = z.infer<typeof schemaOperation>;
 
-  alias: string;
-  title: string;
-  comment: string;
-
-  position_x: number;
-  position_y: number;
-
-  result: number | null;
-
-  is_owned: boolean;
-  is_consolidation: boolean; // aka 'diamond synthesis'
-  substitutions: ICstSubstituteEx[];
-  arguments: number[];
-}
-
-/**
- * Represents {@link IOperation} Argument.
- */
-export interface IArgument {
-  operation: number;
-  argument: number;
-}
-
-/**
- * Represents {@link IOperation} data from server.
- */
-export interface IOperationDTO extends Omit<IOperation, 'substitutions' | 'arguments'> {}
-
-/**
- * Represents backend data for {@link IOperationSchema}.
- */
-export interface IOperationSchemaDTO extends ILibraryItemData {
-  items: IOperationDTO[];
-  arguments: IArgument[];
-  substitutions: ICstSubstituteEx[];
-}
+/** Represents backend data for {@link IOperationSchema}. */
+export type IOperationSchemaDTO = z.infer<typeof schemaOperationSchema>;
 
 /** Represents {@link IOperation} position. */
 export type IOperationPosition = z.infer<typeof schemaOperationPosition>;
@@ -73,14 +28,8 @@ export type IOperationPosition = z.infer<typeof schemaOperationPosition>;
 /** Represents {@link IOperation} data, used in creation process. */
 export type IOperationCreateDTO = z.infer<typeof schemaOperationCreate>;
 
-/**
- * Represents data response when creating {@link IOperation}.
- */
-export interface IOperationCreatedResponse {
-  new_operation: IOperationDTO;
-  oss: IOperationSchemaDTO;
-}
-
+/** Represents data response when creating {@link IOperation}. */
+export type IOperationCreatedResponse = z.infer<typeof schemaOperationCreatedResponse>;
 /**
  * Represents target {@link IOperation}.
  */
@@ -92,13 +41,8 @@ export interface ITargetOperation {
 /** Represents {@link IOperation} data, used in destruction process. */
 export type IOperationDeleteDTO = z.infer<typeof schemaOperationDelete>;
 
-/**
- * Represents data response when creating {@link IRSForm} for Input {@link IOperation}.
- */
-export interface IInputCreatedResponse {
-  new_schema: ILibraryItem;
-  oss: IOperationSchemaDTO;
-}
+/** Represents data response when creating {@link IRSForm} for Input {@link IOperation}. */
+export type IInputCreatedResponse = z.infer<typeof schemaInputCreatedResponse>;
 
 /** Represents {@link IOperation} data, used in setInput process. */
 export type IInputUpdateDTO = z.infer<typeof schemaInputUpdate>;
@@ -106,28 +50,48 @@ export type IInputUpdateDTO = z.infer<typeof schemaInputUpdate>;
 /** Represents {@link IOperation} data, used in update process. */
 export type IOperationUpdateDTO = z.infer<typeof schemaOperationUpdate>;
 
-/**
- * Represents data, used relocating {@link IConstituenta}s between {@link ILibraryItem}s.
- */
-export const schemaCstRelocate = z.object({
-  destination: z.number(),
-  items: z.array(z.number()).refine(data => data.length > 0)
-});
-
-/**
- * Represents data, used relocating {@link IConstituenta}s between {@link ILibraryItem}s.
- */
+/** Represents data, used relocating {@link IConstituenta}s between {@link ILibraryItem}s. */
 export type ICstRelocateDTO = z.infer<typeof schemaCstRelocate>;
 
-/**
- * Represents {@link IConstituenta} reference.
- */
-export interface IConstituentaReference {
-  id: number;
-  schema: number;
-}
+/** Represents {@link IConstituenta} reference. */
+export type IConstituentaReference = z.infer<typeof schemaConstituentaReference>;
 
 // ====== Schemas ======
+
+export const schemaOperation = z.object({
+  id: z.number(),
+  operation_type: z.nativeEnum(OperationType),
+  oss: z.number(),
+
+  alias: z.string(),
+  title: z.string(),
+  comment: z.string(),
+
+  position_x: z.number(),
+  position_y: z.number(),
+
+  result: z.number().nullable()
+});
+
+export const schemaCstSubstituteInfo = schemaCstSubstitute.extend({
+  operation: z.number(),
+  original_alias: z.string(),
+  original_term: z.string(),
+  substitution_alias: z.string(),
+  substitution_term: z.string()
+});
+
+export const schemaOperationSchema = schemaLibraryItem.extend({
+  editors: z.number().array(),
+  items: z.array(schemaOperation),
+  arguments: z
+    .object({
+      operation: z.number(),
+      argument: z.number()
+    })
+    .array(),
+  substitutions: z.array(schemaCstSubstituteInfo)
+});
 
 export const schemaOperationPosition = z.object({
   id: z.number(),
@@ -150,6 +114,11 @@ export const schemaOperationCreate = z.object({
   create_schema: z.boolean()
 });
 
+export const schemaOperationCreatedResponse = z.object({
+  new_operation: schemaOperation,
+  oss: schemaOperationSchema
+});
+
 export const schemaOperationDelete = z.object({
   target: z.number(),
   positions: z.array(schemaOperationPosition),
@@ -163,14 +132,29 @@ export const schemaInputUpdate = z.object({
   input: z.number().nullable()
 });
 
+export const schemaInputCreatedResponse = z.object({
+  new_schema: schemaLibraryItem,
+  oss: schemaOperationSchema
+});
+
 export const schemaOperationUpdate = z.object({
   target: z.number(),
   positions: z.array(schemaOperationPosition),
   item_data: z.object({
-    alias: z.string().nonempty(),
+    alias: z.string().nonempty(errorMsg.requiredField),
     title: z.string(),
     comment: z.string()
   }),
   arguments: z.array(z.number()),
   substitutions: z.array(schemaCstSubstitute)
+});
+
+export const schemaCstRelocate = z.object({
+  destination: z.number().nullable(),
+  items: z.array(z.number()).refine(data => data.length > 0)
+});
+
+export const schemaConstituentaReference = z.object({
+  id: z.number(),
+  schema: z.number()
 });

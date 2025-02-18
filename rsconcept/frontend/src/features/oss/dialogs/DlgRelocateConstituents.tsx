@@ -15,10 +15,10 @@ import { Loader } from '@/components/Loader';
 import { ModalForm } from '@/components/Modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { ICstRelocateDTO, IOperation, IOperationPosition, schemaCstRelocate } from '../backend/types';
+import { ICstRelocateDTO, IOperationPosition, schemaCstRelocate } from '../backend/types';
 import { useRelocateConstituents } from '../backend/useRelocateConstituents';
 import { useUpdatePositions } from '../backend/useUpdatePositions';
-import { IOperationSchema } from '../models/oss';
+import { IOperation, IOperationSchema } from '../models/oss';
 import { getRelocateCandidates } from '../models/ossAPI';
 
 export interface DlgRelocateConstituentsProps {
@@ -37,7 +37,6 @@ function DlgRelocateConstituents() {
     handleSubmit,
     control,
     setValue,
-    resetField,
     formState: { isValid }
   } = useForm<ICstRelocateDTO>({
     resolver: zodResolver(schemaCstRelocate),
@@ -78,22 +77,22 @@ function DlgRelocateConstituents() {
 
   function toggleDirection() {
     setDirectionUp(prev => !prev);
-    resetField('destination');
+    setValue('destination', null);
   }
 
   function handleSelectSource(newValue: ILibraryItem | undefined) {
     setSource(newValue);
-    resetField('destination');
-    resetField('items');
+    setValue('destination', null);
+    setValue('items', []);
   }
 
   function handleSelectDestination(newValue: ILibraryItem | undefined) {
     if (newValue) {
       setValue('destination', newValue.id);
     } else {
-      resetField('destination');
+      setValue('destination', null);
     }
-    resetField('items');
+    setValue('items', []);
   }
 
   function onSubmit(data: ICstRelocateDTO) {
@@ -116,7 +115,7 @@ function DlgRelocateConstituents() {
     <ModalForm
       header='Перенос конституент'
       submitText='Переместить'
-      canSubmit={isValid}
+      canSubmit={isValid && destinationItem !== undefined}
       onSubmit={event => void handleSubmit(onSubmit)(event)}
       className={clsx('w-[40rem] h-[33rem]', 'py-3 px-6')}
       helpTopic={HelpTopic.UI_RELOCATE_CST}

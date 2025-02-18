@@ -1,7 +1,7 @@
 'use client';
 
 import { Suspense, useState } from 'react';
-import { FormProvider, useForm, useWatch } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import clsx from 'clsx';
 
@@ -12,15 +12,9 @@ import { ModalForm } from '@/components/Modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/Tabs';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import {
-  IOperation,
-  IOperationPosition,
-  IOperationUpdateDTO,
-  OperationType,
-  schemaOperationUpdate
-} from '../../backend/types';
+import { IOperationPosition, IOperationUpdateDTO, OperationType, schemaOperationUpdate } from '../../backend/types';
 import { useOperationUpdate } from '../../backend/useOperationUpdate';
-import { IOperationSchema } from '../../models/oss';
+import { IOperation, IOperationSchema } from '../../models/oss';
 
 import TabArguments from './TabArguments';
 import TabOperation from './TabOperation';
@@ -45,6 +39,7 @@ function DlgEditOperation() {
   const methods = useForm<IOperationUpdateDTO>({
     resolver: zodResolver(schemaOperationUpdate),
     defaultValues: {
+      target: target.id,
       item_data: {
         alias: target.alias,
         title: target.alias,
@@ -56,10 +51,9 @@ function DlgEditOperation() {
         substitution: sub.substitution
       })),
       positions: positions
-    }
+    },
+    mode: 'onChange'
   });
-  const alias = useWatch({ control: methods.control, name: 'item_data.alias' });
-  const canSubmit = alias !== '';
 
   const [activeTab, setActiveTab] = useState(TabID.CARD);
 
@@ -71,7 +65,7 @@ function DlgEditOperation() {
     <ModalForm
       header='Редактирование операции'
       submitText='Сохранить'
-      canSubmit={canSubmit}
+      canSubmit={methods.formState.isValid}
       onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
       className='w-[40rem] px-6 h-[32rem]'
       helpTopic={HelpTopic.UI_SUBSTITUTIONS}
