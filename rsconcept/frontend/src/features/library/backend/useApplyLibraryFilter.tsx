@@ -16,32 +16,29 @@ export function useApplyLibraryFilter(filter: ILibraryFilter) {
   if (filter.folderMode && filter.location) {
     if (filter.subfolders) {
       result = result.filter(
-        item => item.location == filter.location || item.location.startsWith(filter.location! + '/')
+        item => item.location == filter.location || item.location.startsWith(filter.location + '/')
       );
     } else {
       result = result.filter(item => item.location == filter.location);
     }
   }
-  if (filter.type) {
-    result = result.filter(item => item.item_type === filter.type);
-  }
-  if (filter.isVisible !== undefined) {
+  if (filter.isVisible !== null) {
     result = result.filter(item => filter.isVisible === item.visible);
   }
-  if (filter.isOwned !== undefined) {
+  if (filter.isOwned !== null) {
     result = result.filter(item => filter.isOwned === (item.owner === user.id));
   }
-  if (filter.isEditor !== undefined) {
+  if (filter.isEditor !== null) {
     result = result.filter(item => filter.isEditor == user.editor.includes(item.id));
   }
-  if (filter.filterUser !== undefined) {
+  if (filter.filterUser !== null) {
     result = result.filter(item => filter.filterUser === item.owner);
   }
-  if (!filter.folderMode && filter.path) {
-    result = result.filter(item => matchLibraryItemLocation(item, filter.path!));
+  if (!filter.folderMode && !!filter.path) {
+    result = result.filter(item => matchLibraryItemLocation(item, filter.path));
   }
   if (filter.query) {
-    result = result.filter(item => matchLibraryItem(item, filter.query!));
+    result = result.filter(item => matchLibraryItem(item, filter.query));
   }
 
   return { filtered: result };

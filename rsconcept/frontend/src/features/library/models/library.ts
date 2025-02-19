@@ -2,8 +2,6 @@
  * Module: Models for LibraryItem.
  */
 
-import { LibraryItemType } from '../backend/types';
-
 /**
  * Represents valid location headers.
  */
@@ -28,17 +26,16 @@ export interface ILibraryItemReference {
  * Represents Library filter parameters.
  */
 export interface ILibraryFilter {
-  type?: LibraryItemType;
-  query?: string;
+  query: string;
 
-  folderMode?: boolean;
-  subfolders?: boolean;
-  path?: string;
-  head?: LocationHead;
-  location?: string;
+  folderMode: boolean;
+  subfolders: boolean;
+  path: string;
+  head: LocationHead | null;
+  location: string;
 
-  isVisible?: boolean;
-  isOwned?: boolean;
-  isEditor?: boolean;
-  filterUser?: number;
+  isVisible: boolean | null;
+  isOwned: boolean | null;
+  isEditor: boolean | null;
+  filterUser: number | null;
 }

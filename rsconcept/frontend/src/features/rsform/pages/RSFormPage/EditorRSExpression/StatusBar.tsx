@@ -15,14 +15,14 @@ import { ExpressionStatus, IConstituenta } from '../../../models/rsform';
 import { inferStatus } from '../../../models/rsformAPI';
 
 interface StatusBarProps {
-  processing?: boolean;
-  isModified?: boolean;
-  parseData?: IExpressionParseDTO;
+  processing: boolean;
+  isModified: boolean;
+  parseData: IExpressionParseDTO | null;
   activeCst: IConstituenta;
   onAnalyze: () => void;
 }
 
-function StatusBar({ isModified, processing, activeCst, parseData, onAnalyze }: StatusBarProps) {
+export function StatusBar({ isModified, processing, activeCst, parseData, onAnalyze }: StatusBarProps) {
   const status = (() => {
     if (isModified) {
       return ExpressionStatus.UNKNOWN;
@@ -66,5 +66,3 @@ function StatusBar({ isModified, processing, activeCst, parseData, onAnalyze }: 
     </div>
   );
 }
-
-export default StatusBar;

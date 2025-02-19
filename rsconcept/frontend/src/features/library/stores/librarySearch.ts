@@ -21,20 +21,20 @@ interface LibrarySearchStore {
   location: string;
   setLocation: (value: string) => void;
 
-  head: LocationHead | undefined;
-  setHead: (value: LocationHead | undefined) => void;
+  head: LocationHead | null;
+  setHead: (value: LocationHead | null) => void;
 
-  isVisible: boolean | undefined;
+  isVisible: boolean | null;
   toggleVisible: () => void;
 
-  isOwned: boolean | undefined;
+  isOwned: boolean | null;
   toggleOwned: () => void;
 
-  isEditor: boolean | undefined;
+  isEditor: boolean | null;
   toggleEditor: () => void;
 
-  filterUser: number | undefined;
-  setFilterUser: (value: number | undefined) => void;
+  filterUser: number | null;
+  setFilterUser: (value: number | null) => void;
 
   resetFilter: () => void;
 }
@@ -57,19 +57,19 @@ export const useLibrarySearchStore = create<LibrarySearchStore>()(
       location: '',
       setLocation: value => set(!!value ? { location: value, folderMode: true } : { location: '' }),
 
-      head: undefined,
+      head: null,
       setHead: value => set({ head: value }),
 
       isVisible: true,
       toggleVisible: () => set(state => ({ isVisible: toggleTristateFlag(state.isVisible) })),
 
-      isOwned: undefined,
+      isOwned: null,
       toggleOwned: () => set(state => ({ isOwned: toggleTristateFlag(state.isOwned) })),
 
-      isEditor: undefined,
+      isEditor: null,
       toggleEditor: () => set(state => ({ isEditor: toggleTristateFlag(state.isEditor) })),
 
-      filterUser: undefined,
+      filterUser: null,
       setFilterUser: value => set({ filterUser: value }),
 
       resetFilter: () =>
@@ -77,11 +77,11 @@ export const useLibrarySearchStore = create<LibrarySearchStore>()(
           query: '',
           path: '',
           location: '',
-          head: undefined,
+          head: null,
           isVisible: true,
-          isOwned: undefined,
-          isEditor: undefined,
-          filterUser: undefined
+          isOwned: null,
+          isEditor: null,
+          filterUser: null
         }))
     }),
     {
@@ -116,11 +116,11 @@ export function useHasCustomFilter(): boolean {
     !!path ||
     !!query ||
     !!location ||
-    head !== undefined ||
-    isEditor !== undefined ||
-    isOwned !== undefined ||
+    head !== null ||
+    isEditor !== null ||
+    isOwned !== null ||
     isVisible !== true ||
-    filterUser !== undefined
+    filterUser !== null
   );
 }
 

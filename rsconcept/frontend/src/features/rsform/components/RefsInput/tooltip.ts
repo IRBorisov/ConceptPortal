@@ -23,7 +23,7 @@ export const tooltipProducer = (schema: IRSForm, canClick?: boolean) => {
     }
 
     if ('entity' in parse.ref) {
-      const cst = schema.cstByAlias.get(parse.ref.entity);
+      const cst = schema.cstByAlias.get(parse.ref.entity) ?? null;
       return {
         pos: parse.start,
         end: parse.end,
@@ -31,7 +31,7 @@ export const tooltipProducer = (schema: IRSForm, canClick?: boolean) => {
         create: () => domTooltipEntityReference(parse.ref as IEntityReference, cst, canClick)
       };
     } else {
-      let masterText: string | undefined = undefined;
+      let masterText: string | null = null;
       if (parse.ref.offset > 0) {
         const entities = findContainedNodes(parse.end, view.state.doc.length, syntaxTree(view.state), [RefEntity]);
         if (parse.ref.offset <= entities.length) {
@@ -62,11 +62,7 @@ export function refsHoverTooltip(schema: IRSForm, canClick?: boolean): Extension
 /**
  * Create DOM tooltip for {@link IEntityReference}.
  */
-function domTooltipEntityReference(
-  ref: IEntityReference,
-  cst: IConstituenta | undefined,
-  canClick?: boolean
-): TooltipView {
+function domTooltipEntityReference(ref: IEntityReference, cst: IConstituenta | null, canClick?: boolean): TooltipView {
   const dom = document.createElement('div');
   dom.className = clsx(
     'max-h-[25rem] max-w-[25rem] min-w-[10rem]',
@@ -122,7 +118,7 @@ function domTooltipEntityReference(
  */
 function domTooltipSyntacticReference(
   ref: ISyntacticReference,
-  masterRef: string | undefined,
+  masterRef: string | null,
   canClick?: boolean
 ): TooltipView {
   const dom = document.createElement('div');

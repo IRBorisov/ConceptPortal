@@ -15,14 +15,14 @@ import { DlgCstTemplateProps } from './DlgCstTemplate';
 
 export interface ITemplateContext {
   args: IArgumentValue[];
-  prototype?: IConstituenta;
-  templateID?: number;
-  filterCategory?: IConstituenta;
+  prototype: IConstituenta | null;
+  templateID: number | null;
+  filterCategory: IConstituenta | null;
 
   onChangeArguments: (newArgs: IArgumentValue[]) => void;
   onChangePrototype: (newPrototype: IConstituenta) => void;
-  onChangeTemplateID: (newTemplateID: number | undefined) => void;
-  onChangeFilterCategory: (newFilterCategory: IConstituenta | undefined) => void;
+  onChangeTemplateID: (newTemplateID: number | null) => void;
+  onChangeFilterCategory: (newFilterCategory: IConstituenta | null) => void;
 }
 
 const TemplateContext = createContext<ITemplateContext | null>(null);
@@ -37,10 +37,10 @@ export const useTemplateContext = () => {
 export const TemplateState = ({ children }: React.PropsWithChildren) => {
   const { schema } = useDialogsStore(state => state.props as DlgCstTemplateProps);
   const { setValue } = useFormContext<ICstCreateDTO>();
-  const [templateID, setTemplateID] = useState<number | undefined>(undefined);
+  const [templateID, setTemplateID] = useState<number | null>(null);
   const [args, setArguments] = useState<IArgumentValue[]>([]);
-  const [prototype, setPrototype] = useState<IConstituenta | undefined>(undefined);
-  const [filterCategory, setFilterCategory] = useState<IConstituenta | undefined>(undefined);
+  const [prototype, setPrototype] = useState<IConstituenta | null>(null);
+  const [filterCategory, setFilterCategory] = useState<IConstituenta | null>(null);
 
   function onChangeArguments(newArgs: IArgumentValue[]) {
     setArguments(newArgs);
@@ -70,9 +70,9 @@ export const TemplateState = ({ children }: React.PropsWithChildren) => {
     setValue('definition_raw', newPrototype.definition_raw);
   }
 
-  function onChangeTemplateID(newTemplateID: number | undefined) {
+  function onChangeTemplateID(newTemplateID: number | null) {
     setTemplateID(newTemplateID);
-    setPrototype(undefined);
+    setPrototype(null);
     setArguments([]);
   }
 

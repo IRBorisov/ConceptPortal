@@ -14,12 +14,12 @@ import { IConstituenta } from '../models/rsform';
 import { matchConstituenta } from '../models/rsformAPI';
 import { CstMatchMode } from '../stores/cstSearch';
 
-import BadgeConstituenta from './BadgeConstituenta';
+import { BadgeConstituenta } from './BadgeConstituenta';
 
 interface PickConstituentaProps extends CProps.Styling {
   id?: string;
   items: IConstituenta[];
-  value?: IConstituenta;
+  value: IConstituenta | null;
   onChange: (newValue: IConstituenta) => void;
 
   rows?: number;

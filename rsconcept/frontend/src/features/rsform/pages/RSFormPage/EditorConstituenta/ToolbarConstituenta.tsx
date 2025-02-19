@@ -32,7 +32,7 @@ import { IConstituenta } from '../../../models/rsform';
 import { RSTabID, useRSEdit } from '../RSEditContext';
 
 interface ToolbarConstituentaProps {
-  activeCst?: IConstituenta;
+  activeCst: IConstituenta | null;
   disabled: boolean;
 
   onSubmit: () => void;
@@ -103,7 +103,9 @@ function ToolbarConstituenta({
             title='Создать конституенту после данной'
             icon={<IconNewItem size='1.25rem' className='icon-green' />}
             disabled={!controller.isContentEditable || isProcessing}
-            onClick={() => controller.createCst(activeCst?.cst_type, false)}
+            onClick={() =>
+              activeCst ? controller.createCst(activeCst.cst_type, false) : controller.createCstDefault()
+            }
           />
           <MiniButton
             titleHtml={isModified ? tooltipText.unsaved : prepareTooltip('Клонировать конституенту', 'Alt + V')}

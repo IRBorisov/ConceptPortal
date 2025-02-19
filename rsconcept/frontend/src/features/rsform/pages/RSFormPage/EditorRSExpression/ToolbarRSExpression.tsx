@@ -12,7 +12,7 @@ interface ToolbarRSExpressionProps {
   showTypeGraph: (event: CProps.EventMouse) => void;
 }
 
-function ToolbarRSExpression({ disabled, showTypeGraph, showAST }: ToolbarRSExpressionProps) {
+export function ToolbarRSExpression({ disabled, showTypeGraph, showAST }: ToolbarRSExpressionProps) {
   const isProcessing = useMutatingRSForm();
   const showControls = usePreferencesStore(state => state.showExpressionControls);
   const toggleControls = usePreferencesStore(state => state.toggleShowExpressionControls);
@@ -39,5 +39,3 @@ function ToolbarRSExpression({ disabled, showTypeGraph, showAST }: ToolbarRSExpr
     </Overlay>
   );
 }
-
-export default ToolbarRSExpression;

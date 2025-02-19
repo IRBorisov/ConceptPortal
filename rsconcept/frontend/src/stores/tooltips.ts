@@ -3,11 +3,11 @@ import { create } from 'zustand';
 import { IConstituenta } from '@/features/rsform/models/rsform';
 
 interface TooltipsStore {
-  activeCst: IConstituenta | undefined;
-  setActiveCst: (value: IConstituenta | undefined) => void;
+  activeCst: IConstituenta | null;
+  setActiveCst: (value: IConstituenta | null) => void;
 }
 
 export const useTooltipsStore = create<TooltipsStore>()(set => ({
-  activeCst: undefined,
+  activeCst: null,
   setActiveCst: value => set({ activeCst: value })
 }));

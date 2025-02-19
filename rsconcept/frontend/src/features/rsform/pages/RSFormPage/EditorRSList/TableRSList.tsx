@@ -11,7 +11,7 @@ import useWindowSize from '@/hooks/useWindowSize';
 import { PARAMETER, prefixes } from '@/utils/constants';
 import { truncateToSymbol } from '@/utils/utils';
 
-import BadgeConstituenta from '../../../components/BadgeConstituenta';
+import { BadgeConstituenta } from '../../../components/BadgeConstituenta';
 import { labelCstTypification } from '../../../labels';
 import { IConstituenta } from '../../../models/rsform';
 

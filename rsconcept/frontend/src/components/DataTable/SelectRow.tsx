@@ -6,7 +6,7 @@ import { Checkbox } from '../Input';
 
 interface SelectRowProps<TData> {
   row: Row<TData>;
-  onChangeLastSelected: (newValue: string | undefined) => void;
+  onChangeLastSelected: (newValue: string) => void;
 }
 
 function SelectRow<TData>({ row, onChangeLastSelected }: SelectRowProps<TData>) {

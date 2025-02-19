@@ -17,8 +17,7 @@ export function applyLayout(nodes: Node<TMGraphNode>[], edges: Edge[]) {
     rankdir: 'BT',
     ranksep: VERT_SEPARATION,
     nodesep: HOR_SEPARATION,
-    ranker: 'network-simplex',
-    align: undefined
+    ranker: 'network-simplex'
   });
   nodes.forEach(node => {
     dagreGraph.setNode(node.id, { width: NODE_WIDTH, height: NODE_HEIGHT });

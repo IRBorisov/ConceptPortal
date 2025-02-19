@@ -87,7 +87,7 @@ interface RSEditorControlsProps {
   onEdit: (id: TokenID, key?: string) => void;
 }
 
-function RSEditorControls({ isOpen, disabled, onEdit }: RSEditorControlsProps) {
+export function RSEditorControls({ isOpen, disabled, onEdit }: RSEditorControlsProps) {
   return (
     <div
       className={clsx(
@@ -149,5 +149,3 @@ function RSEditorControls({ isOpen, disabled, onEdit }: RSEditorControlsProps) {
     </div>
   );
 }
-
-export default RSEditorControls;

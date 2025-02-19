@@ -110,20 +110,20 @@ export function promptUnsaved(): boolean {
 }
 
 /**
- * Toggle tristate flag: undefined - true - false.
+ * Toggle tristate flag: null - true - false.
  */
-export function toggleTristateFlag(prev: boolean | undefined): boolean | undefined {
-  if (prev === undefined) {
+export function toggleTristateFlag(prev: boolean | null): boolean | null {
+  if (prev === null) {
     return true;
   }
-  return prev ? false : undefined;
+  return prev ? false : null;
 }
 
 /**
  * Toggle tristate color: gray - green - red .
  */
-export function tripleToggleColor(value: boolean | undefined): string {
-  if (value === undefined) {
+export function tripleToggleColor(value: boolean | null): string {
+  if (value === null) {
     return 'clr-text-controls';
   }
   return value ? 'text-ok-600' : 'text-warn-600';

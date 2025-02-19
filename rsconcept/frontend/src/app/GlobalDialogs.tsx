@@ -31,7 +31,7 @@ const DlgUploadRSForm = React.lazy(() => import('@/features/rsform/dialogs/DlgUp
 export const GlobalDialogs = () => {
   const active = useDialogsStore(state => state.active);
 
-  if (active === undefined) {
+  if (active === null) {
     return null;
   }
   switch (active) {

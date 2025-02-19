@@ -46,11 +46,11 @@ function DlgRelocateConstituents() {
     mode: 'onChange'
   });
   const destination = useWatch({ control, name: 'destination' });
-  const destinationItem = destination ? libraryItems.find(item => item.id === destination) : undefined;
+  const destinationItem = destination ? libraryItems.find(item => item.id === destination) ?? null : null;
 
   const [directionUp, setDirectionUp] = useState(true);
-  const [source, setSource] = useState<ILibraryItem | undefined>(
-    libraryItems.find(item => item.id === initialTarget?.result)
+  const [source, setSource] = useState<ILibraryItem | null>(
+    libraryItems.find(item => item.id === initialTarget?.result) ?? null
   );
 
   const operation = oss.items.find(item => item.result === source?.id);
@@ -80,13 +80,13 @@ function DlgRelocateConstituents() {
     setValue('destination', null);
   }
 
-  function handleSelectSource(newValue: ILibraryItem | undefined) {
+  function handleSelectSource(newValue: ILibraryItem | null) {
     setSource(newValue);
     setValue('destination', null);
     setValue('items', []);
   }
 
-  function handleSelectDestination(newValue: ILibraryItem | undefined) {
+  function handleSelectDestination(newValue: ILibraryItem | null) {
     if (newValue) {
       setValue('destination', newValue.id);
     } else {

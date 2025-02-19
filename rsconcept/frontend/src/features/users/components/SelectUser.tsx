@@ -10,7 +10,7 @@ import { useUsers } from '../backend/useUsers';
 import { matchUser } from '../models/userAPI';
 
 interface SelectUserProps extends CProps.Styling {
-  value?: number;
+  value: number | null;
   onChange: (newValue: number) => void;
   filter?: (userID: number) => boolean;
 

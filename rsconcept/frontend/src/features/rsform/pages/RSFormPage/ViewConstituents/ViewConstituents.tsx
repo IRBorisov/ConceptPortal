@@ -49,7 +49,7 @@ export function ViewConstituents({ isBottom, isMounted }: ViewConstituentsProps)
       }}
     >
       <ConstituentsSearch
-        dense={windowSize.width && windowSize.width < COLUMN_DENSE_SEARCH_THRESHOLD ? true : undefined}
+        dense={!!windowSize.width && windowSize.width < COLUMN_DENSE_SEARCH_THRESHOLD}
         schema={schema}
         activeID={activeCst?.id}
         onChange={setFilteredData}

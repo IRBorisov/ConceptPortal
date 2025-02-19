@@ -116,7 +116,7 @@ export function EditorLibraryItem({ controller }: EditorLibraryItemProps) {
           {ownerSelector.isOpen ? (
             <SelectUser
               className='w-[25rem] sm:w-[26rem] text-sm'
-              value={controller.schema.owner ?? undefined}
+              value={controller.schema.owner}
               onChange={onSelectUser}
             />
           ) : null}

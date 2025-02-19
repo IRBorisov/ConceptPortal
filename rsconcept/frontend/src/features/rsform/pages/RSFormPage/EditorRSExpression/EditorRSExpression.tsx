@@ -6,7 +6,6 @@ import { ReactCodeMirrorRef } from '@uiw/react-codemirror';
 
 import { BadgeHelp, HelpTopic } from '@/features/help';
 
-import { DataCallback } from '@/backend/apiTransport';
 import { Overlay } from '@/components/Container';
 import { CProps } from '@/components/props';
 import { useDialogsStore } from '@/stores/dialogs';
@@ -24,10 +23,10 @@ import { getDefinitionPrefix } from '../../../models/rsformAPI';
 import { transformAST } from '../../../models/rslangAPI';
 import { useRSEdit } from '../RSEditContext';
 
-import ParsingResult from './ParsingResult';
-import RSEditorControls from './RSEditControls';
-import StatusBar from './StatusBar';
-import ToolbarRSExpression from './ToolbarRSExpression';
+import { ParsingResult } from './ParsingResult';
+import { RSEditorControls } from './RSEditControls';
+import { StatusBar } from './StatusBar';
+import { ToolbarRSExpression } from './ToolbarRSExpression';
 
 interface EditorRSExpressionProps {
   id?: string;
@@ -41,12 +40,12 @@ interface EditorRSExpressionProps {
   disabled?: boolean;
   toggleReset?: boolean;
 
-  onChangeLocalParse: (typification: IExpressionParseDTO | undefined) => void;
-  onOpenEdit?: (cstID: number) => void;
+  onChangeLocalParse: (typification: IExpressionParseDTO) => void;
+  onOpenEdit: (cstID: number) => void;
   onShowTypeGraph: (event: CProps.EventMouse) => void;
 }
 
-function EditorRSExpression({
+export function EditorRSExpression({
   activeCst,
   disabled,
   value,
@@ -61,7 +60,7 @@ function EditorRSExpression({
 
   const [isModified, setIsModified] = useState(false);
   const rsInput = useRef<ReactCodeMirrorRef>(null);
-  const [parseData, setParseData] = useState<IExpressionParseDTO | undefined>(undefined);
+  const [parseData, setParseData] = useState<IExpressionParseDTO | null>(null);
 
   const isProcessing = useMutatingRSForm();
   const showControls = usePreferencesStore(state => state.showExpressionControls);
@@ -72,7 +71,7 @@ function EditorRSExpression({
   function checkConstituenta(
     expression: string,
     activeCst: IConstituenta,
-    onSuccess?: DataCallback<IExpressionParseDTO>
+    onSuccess?: (data: IExpressionParseDTO) => void
   ) {
     const data: ICheckConstituentaDTO = {
       definition_formal: expression,
@@ -87,7 +86,7 @@ function EditorRSExpression({
 
   useEffect(() => {
     setIsModified(false);
-    setParseData(undefined);
+    setParseData(null);
   }, [activeCst, toggleReset]);
 
   function handleChange(newValue: string) {
@@ -200,5 +199,3 @@ function EditorRSExpression({
     </div>
   );
 }
-
-export default EditorRSExpression;

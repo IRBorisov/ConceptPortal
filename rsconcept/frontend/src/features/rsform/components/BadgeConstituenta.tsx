@@ -19,7 +19,7 @@ interface BadgeConstituentaProps extends CProps.Styling {
 /**
  * Displays a badge with a constituenta alias and information tooltip.
  */
-function BadgeConstituenta({ value, prefixID, className, style }: BadgeConstituentaProps) {
+export function BadgeConstituenta({ value, prefixID, className, style }: BadgeConstituentaProps) {
   const setActiveCst = useTooltipsStore(state => state.setActiveCst);
 
   return (
@@ -46,5 +46,3 @@ function BadgeConstituenta({ value, prefixID, className, style }: BadgeConstitue
     </div>
   );
 }
-
-export default BadgeConstituenta;

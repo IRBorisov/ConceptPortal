@@ -9,12 +9,12 @@ export class FolderNode {
   rank: number = 0;
   text: string;
   children: Map<string, FolderNode>;
-  parent: FolderNode | undefined;
+  parent: FolderNode | null;
 
   filesInside: number = 0;
   filesTotal: number = 0;
 
-  constructor(text: string, parent?: FolderNode) {
+  constructor(text: string, parent: FolderNode | null = null) {
     this.text = text;
     this.parent = parent;
     this.children = new Map();
@@ -126,7 +126,7 @@ export class FolderTree {
   }
 
   private addNode(text: string, parent?: FolderNode): FolderNode {
-    if (parent === undefined) {
+    if (!parent) {
       const newNode = new FolderNode(text);
       this.roots.set(text, newNode);
       return newNode;

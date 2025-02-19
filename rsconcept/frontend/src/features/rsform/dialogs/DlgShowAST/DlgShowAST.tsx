@@ -20,7 +20,7 @@ export interface DlgShowASTProps {
 
 function DlgShowAST() {
   const { syntaxTree, expression } = useDialogsStore(state => state.props as DlgShowASTProps);
-  const [hoverID, setHoverID] = useState<number | undefined>(undefined);
+  const [hoverID, setHoverID] = useState<number | null>(null);
   const hoverNode = syntaxTree.find(node => node.uid === hoverID);
 
   const [isDragging, setIsDragging] = useState(false);
@@ -47,7 +47,7 @@ function DlgShowAST() {
         <ASTFlow
           data={syntaxTree}
           onNodeEnter={node => setHoverID(Number(node.id))}
-          onNodeLeave={() => setHoverID(undefined)}
+          onNodeLeave={() => setHoverID(null)}
           onChangeDragging={setIsDragging}
         />
       </ReactFlowProvider>

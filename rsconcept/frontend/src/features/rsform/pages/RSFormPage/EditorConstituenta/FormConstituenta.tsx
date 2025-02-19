@@ -23,7 +23,7 @@ import { RefsInput } from '../../../components/RefsInput';
 import { labelCstTypification, labelTypification } from '../../../labels';
 import { IConstituenta, IRSForm } from '../../../models/rsform';
 import { isBaseSet, isBasicConcept, isFunctional } from '../../../models/rsformAPI';
-import EditorRSExpression from '../EditorRSExpression';
+import { EditorRSExpression } from '../EditorRSExpression';
 
 interface FormConstituentaProps {
   id?: string;
@@ -32,10 +32,10 @@ interface FormConstituentaProps {
 
   activeCst: IConstituenta;
   schema: IRSForm;
-  onOpenEdit?: (cstID: number) => void;
+  onOpenEdit: (cstID: number) => void;
 }
 
-function FormConstituenta({ disabled, id, toggleReset, schema, activeCst, onOpenEdit }: FormConstituentaProps) {
+export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst, onOpenEdit }: FormConstituentaProps) {
   const { cstUpdate } = useCstUpdate();
   const showTypification = useDialogsStore(state => state.showShowTypeGraph);
   const { isModified, setIsModified } = useModificationStore();
@@ -49,7 +49,7 @@ function FormConstituenta({ disabled, id, toggleReset, schema, activeCst, onOpen
     formState: { isDirty }
   } = useForm<ICstUpdateDTO>({ resolver: zodResolver(schemaCstUpdate) });
 
-  const [localParse, setLocalParse] = useState<IExpressionParseDTO | undefined>(undefined);
+  const [localParse, setLocalParse] = useState<IExpressionParseDTO | null>(null);
 
   const typification = useMemo(
     () =>
@@ -88,7 +88,7 @@ function FormConstituenta({ disabled, id, toggleReset, schema, activeCst, onOpen
       }
     });
     setForceComment(false);
-    setLocalParse(undefined);
+    setLocalParse(null);
   }, [activeCst, schema, toggleReset, reset]);
 
   useLayoutEffect(() => {
@@ -252,5 +252,3 @@ function FormConstituenta({ disabled, id, toggleReset, schema, activeCst, onOpen
     </form>
   );
 }
-
-export default FormConstituenta;

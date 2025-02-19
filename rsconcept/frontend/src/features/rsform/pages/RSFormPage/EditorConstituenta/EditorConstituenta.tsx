@@ -16,7 +16,7 @@ import { useRSEdit } from '../RSEditContext';
 import { ViewConstituents } from '../ViewConstituents';
 
 import EditorControls from './EditorControls';
-import FormConstituenta from './FormConstituenta';
+import { FormConstituenta } from './FormConstituenta';
 import ToolbarConstituenta from './ToolbarConstituenta';
 
 // Threshold window width to switch layout.

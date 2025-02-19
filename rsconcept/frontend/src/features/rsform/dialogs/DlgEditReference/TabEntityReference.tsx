@@ -19,7 +19,7 @@ export function TabEntityReference() {
   const { setValue, control, register } = useFormContext<IEditReferenceState>();
   const alias = useWatch({ control, name: 'entity.entity' });
 
-  const selectedCst = schema.cstByAlias.get(alias);
+  const selectedCst = schema.cstByAlias.get(alias) ?? null;
   const term = selectedCst?.term_resolved ?? '';
 
   function handleSelectConstituenta(cst: IConstituenta) {

@@ -32,8 +32,6 @@ axiosInstance.interceptors.request.use(config => {
 });
 
 // ================ Data transfer types ================
-export type DataCallback<ResponseData = undefined> = (data: ResponseData) => void;
-
 export interface IFrontRequest<RequestData, ResponseData> {
   data?: RequestData;
   successMessage?: string | ((data: ResponseData) => string);

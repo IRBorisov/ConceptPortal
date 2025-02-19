@@ -71,7 +71,7 @@ function applyGraphQuery(target: IRSForm, pivot: number, mode: DependencyMode): 
   if (mode === DependencyMode.ALL) {
     return target.items;
   }
-  const ids: number[] | undefined = (() => {
+  const ids = (() => {
     switch (mode) {
       case DependencyMode.OUTPUTS: {
         return target.graph.nodes.get(pivot)?.outputs;
@@ -86,7 +86,6 @@ function applyGraphQuery(target: IRSForm, pivot: number, mode: DependencyMode): 
         return target.graph.expandAllInputs([pivot]);
       }
     }
-    return undefined;
   })();
   if (ids) {
     return target.items.filter(cst => ids.find(id => id === cst.id));

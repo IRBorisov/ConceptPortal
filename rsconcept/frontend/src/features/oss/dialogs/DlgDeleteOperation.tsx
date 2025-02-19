@@ -69,7 +69,7 @@ function DlgDeleteOperation() {
           <Checkbox
             label='Удалить схему'
             titleHtml={
-              !target.is_owned || target.result === undefined
+              !target.is_owned || target.result === null
                 ? 'Привязанную схему нельзя удалить'
                 : 'Удалить схему вместе с операцией'
             }

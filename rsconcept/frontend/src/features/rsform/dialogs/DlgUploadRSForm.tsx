@@ -17,7 +17,7 @@ function DlgUploadRSForm() {
   const { itemID } = useDialogsStore(state => state.props as DlgUploadRSFormProps);
   const { upload } = useUploadTRS();
   const [loadMetadata, setLoadMetadata] = useState(false);
-  const [file, setFile] = useState<File | undefined>();
+  const [file, setFile] = useState<File | null>(null);
 
   const handleSubmit = () => {
     if (file) {
@@ -34,7 +34,7 @@ function DlgUploadRSForm() {
     if (event.target.files && event.target.files.length > 0) {
       setFile(event.target.files[0]);
     } else {
-      setFile(undefined);
+      setFile(null);
     }
   };
 

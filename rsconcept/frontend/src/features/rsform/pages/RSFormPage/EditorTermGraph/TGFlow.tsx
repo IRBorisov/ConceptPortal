@@ -68,12 +68,12 @@ function TGFlow() {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges] = useEdgesState([]);
 
-  const [focusCst, setFocusCst] = useState<IConstituenta | undefined>(undefined);
+  const [focusCst, setFocusCst] = useState<IConstituenta | null>(null);
   const filteredGraph = produceFilteredGraph(controller.schema, filter, focusCst);
   const [hidden, setHidden] = useState<number[]>([]);
 
   const [isDragging, setIsDragging] = useState(false);
-  const [hoverID, setHoverID] = useState<number | undefined>(undefined);
+  const [hoverID, setHoverID] = useState<number | null>(null);
   const hoverCst = hoverID && controller.schema.cstByID.get(hoverID);
   const [hoverCstDebounced] = useDebounce(hoverCst, PARAMETER.graphPopupDelay);
   const [hoverLeft, setHoverLeft] = useState(true);
@@ -102,7 +102,7 @@ function TGFlow() {
       }
     });
     setHidden(newDismissed);
-    setHoverID(undefined);
+    setHoverID(null);
   }, [controller.schema, filteredGraph]);
 
   const resetNodes = useCallback(() => {
@@ -227,7 +227,7 @@ function TGFlow() {
     if (event.key === 'Escape') {
       event.preventDefault();
       event.stopPropagation();
-      setFocusCst(undefined);
+      setFocusCst(null);
       handleSetSelected([]);
       return;
     }
@@ -252,11 +252,15 @@ function TGFlow() {
     }, PARAMETER.graphRefreshDelay);
   }
 
-  function handleSetFocus(cstID: number | undefined) {
-    const target = cstID !== undefined ? controller.schema.cstByID.get(cstID) : cstID;
-    setFocusCst(prev => (prev === target ? undefined : target));
-    if (target) {
-      controller.setSelected([]);
+  function handleSetFocus(cstID: number | null) {
+    if (cstID === null) {
+      setFocusCst(null);
+    } else {
+      const target = controller.schema.cstByID.get(cstID) ?? null;
+      setFocusCst(prev => (prev === target ? null : target));
+      if (target) {
+        controller.setSelected([]);
+      }
     }
   }
 
@@ -304,7 +308,10 @@ function TGFlow() {
         {!focusCst ? (
           <ToolbarGraphSelection
             graph={controller.schema.graph}
-            isCore={cstID => isBasicConcept(controller.schema.cstByID.get(cstID)?.cst_type)}
+            isCore={cstID => {
+              const cst = controller.schema.cstByID.get(cstID);
+              return !!cst && isBasicConcept(cst.cst_type);
+            }}
             isOwned={
               controller.schema.inheritance.length > 0
                 ? cstID => !controller.schema.cstByID.get(cstID)?.is_inherited
@@ -318,7 +325,7 @@ function TGFlow() {
         {focusCst ? (
           <ToolbarFocusedCst
             center={focusCst}
-            reset={() => handleSetFocus(undefined)}
+            reset={() => handleSetFocus(null)}
             showInputs={filter.focusShowInputs}
             showOutputs={filter.focusShowOutputs}
             toggleShowInputs={() =>
@@ -395,7 +402,7 @@ function TGFlow() {
             onNodeDragStart={() => setIsDragging(true)}
             onNodeDragStop={() => setIsDragging(false)}
             onNodeMouseEnter={(event, node) => handleNodeEnter(event, Number(node.id))}
-            onNodeMouseLeave={() => setHoverID(undefined)}
+            onNodeMouseLeave={() => setHoverID(null)}
             onNodeClick={(event, node) => handleNodeClick(event, Number(node.id))}
             onNodeDoubleClick={(event, node) => handleNodeDoubleClick(event, Number(node.id))}
           />
@@ -408,7 +415,7 @@ function TGFlow() {
 export default TGFlow;
 
 // ====== Internals =========
-function produceFilteredGraph(schema: IRSForm, params: GraphFilterParams, focusCst: IConstituenta | undefined) {
+function produceFilteredGraph(schema: IRSForm, params: GraphFilterParams, focusCst: IConstituenta | null) {
   const filtered = schema.graph.clone();
   const allowedTypes: CstType[] = (() => {
     const result: CstType[] = [];

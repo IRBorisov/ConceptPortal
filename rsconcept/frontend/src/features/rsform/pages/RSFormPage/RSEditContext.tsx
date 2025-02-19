@@ -31,7 +31,7 @@ export enum RSTabID {
 export interface IRSEditContext extends ILibraryItemEditor {
   schema: IRSForm;
   selected: number[];
-  activeCst?: IConstituenta;
+  activeCst: IConstituenta | null;
   activeVersion?: number;
 
   isOwned: boolean;
@@ -41,7 +41,7 @@ export interface IRSEditContext extends ILibraryItemEditor {
   isAttachedToOSS: boolean;
   canDeleteSelected: boolean;
 
-  navigateVersion: (versionID: number | undefined) => void;
+  navigateVersion: (versionID?: number) => void;
   navigateRSForm: ({ tab, activeID }: { tab: RSTabID; activeID?: number }) => void;
   navigateCst: (cstID: number) => void;
   navigateOss: (ossID: number, newTab?: boolean) => void;
@@ -56,7 +56,8 @@ export interface IRSEditContext extends ILibraryItemEditor {
 
   moveUp: () => void;
   moveDown: () => void;
-  createCst: (type: CstType | undefined, skipDialog: boolean, definition?: string) => void;
+  createCst: (type: CstType, skipDialog: boolean, definition?: string) => void;
+  createCstDefault: () => void;
   cloneCst: () => void;
   promptDeleteCst: () => void;
   promptTemplate: () => void;
@@ -103,7 +104,7 @@ export const RSEditState = ({
   const [selected, setSelected] = useState<number[]>([]);
   const canDeleteSelected = selected.length > 0 && selected.every(id => !schema.cstByID.get(id)?.is_inherited);
 
-  const activeCst = selected.length === 0 ? undefined : schema.cstByID.get(selected[selected.length - 1]);
+  const activeCst = selected.length === 0 ? null : schema.cstByID.get(selected[selected.length - 1])!;
 
   const { cstCreate } = useCstCreate();
   const { cstMove } = useCstMove();
@@ -124,7 +125,7 @@ export const RSEditState = ({
     [schema, adjustRole, isOwned, user, adminMode]
   );
 
-  function navigateVersion(versionID: number | undefined) {
+  function navigateVersion(versionID?: number) {
     router.push(urls.schema(schema.id, versionID));
   }
 
@@ -164,7 +165,7 @@ export const RSEditState = ({
     if (!window.confirm(promptText.deleteLibraryItem)) {
       return;
     }
-    const ossID = schema.oss.length > 0 ? schema.oss[0].id : undefined;
+    const ossID = schema.oss.length > 0 ? schema.oss[0].id : null;
     void deleteItem(schema.id).then(() => {
       if (ossID) {
         router.push(urls.oss(ossID));
@@ -242,7 +243,7 @@ export const RSEditState = ({
     });
   }
 
-  function createCst(type: CstType | undefined, skipDialog: boolean, definition?: string) {
+  function createCst(type: CstType | null, skipDialog: boolean, definition?: string) {
     const targetType = type ?? activeCst?.cst_type ?? CstType.BASE;
     const data: ICstCreateDTO = {
       insert_after: activeCst?.id ?? null,
@@ -286,7 +287,7 @@ export const RSEditState = ({
       selected: selected,
       afterDelete: (schema, deleted) => {
         const isEmpty = deleted.length === schema.items.length;
-        const nextActive = isEmpty ? undefined : getNextActiveOnDelete(activeCst?.id, schema.items, deleted);
+        const nextActive = isEmpty ? null : getNextActiveOnDelete(activeCst?.id ?? null, schema.items, deleted);
         setSelected(nextActive ? [nextActive] : []);
         if (!nextActive) {
           navigateRSForm({ tab: RSTabID.CST_LIST });
@@ -338,6 +339,7 @@ export const RSEditState = ({
         moveUp,
         moveDown,
         createCst,
+        createCstDefault: () => createCst(null, false),
         cloneCst,
         promptDeleteCst,
 
@@ -350,18 +352,14 @@ export const RSEditState = ({
 };
 
 // ====== Internals =========
-function getNextActiveOnDelete(
-  activeID: number | undefined,
-  items: IConstituenta[],
-  deleted: number[]
-): number | undefined {
+function getNextActiveOnDelete(activeID: number | null, items: IConstituenta[], deleted: number[]): number | null {
   if (items.length === deleted.length) {
-    return undefined;
+    return null;
   }
 
   let activeIndex = items.findIndex(cst => cst.id === activeID);
   if (activeIndex === -1) {
-    return undefined;
+    return null;
   }
 
   while (activeIndex < items.length && deleted.find(id => id === items[activeIndex].id)) {

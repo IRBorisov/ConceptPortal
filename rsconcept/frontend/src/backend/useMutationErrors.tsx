@@ -5,10 +5,10 @@ import { KEYS } from './configuration';
 
 export const useMutationErrors = () => {
   const queryClient = useQueryClient();
-  const [ignored, setIgnored] = useState<(Error | null)[]>([]);
+  const [ignored, setIgnored] = useState<Error[]>([]);
   const mutationErrors = useMutationState({
     filters: { mutationKey: [KEYS.global_mutation], status: 'error' },
-    select: mutation => mutation.state.error
+    select: mutation => mutation.state.error!
   });
 
   console.log(queryClient.getMutationCache().getAll());

@@ -54,7 +54,6 @@ function DlgEditOperation() {
     },
     mode: 'onChange'
   });
-
   const [activeTab, setActiveTab] = useState(TabID.CARD);
 
   function onSubmit(data: IOperationUpdateDTO) {

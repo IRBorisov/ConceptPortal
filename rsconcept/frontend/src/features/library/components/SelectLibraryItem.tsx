@@ -9,10 +9,10 @@ import { ILibraryItem } from '../backend/types';
 import { matchLibraryItem } from '../models/libraryAPI';
 
 interface SelectLibraryItemProps extends CProps.Styling {
-  items?: ILibraryItem[];
-  value?: ILibraryItem;
-  onChange: (newValue?: ILibraryItem) => void;
+  value: ILibraryItem | null;
+  onChange: (newValue: ILibraryItem | null) => void;
 
+  items?: ILibraryItem[];
   placeholder?: string;
   noBorder?: boolean;
 }
@@ -41,7 +41,7 @@ export function SelectLibraryItem({
       className={clsx('text-ellipsis', className)}
       options={options}
       value={value ? { value: value.id, label: `${value.alias}: ${value.title}` } : null}
-      onChange={data => onChange(items?.find(cst => cst.id === data?.value))}
+      onChange={data => onChange(items?.find(cst => cst.id === data?.value) ?? null)}
       filterOption={filter}
       placeholder={placeholder}
       {...restProps}

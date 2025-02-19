@@ -17,8 +17,8 @@ import { errorMsg } from '@/utils/labels';
 import { ICstSubstitute } from '../backend/types';
 import { IConstituenta, IRSForm } from '../models/rsform';
 
-import BadgeConstituenta from './BadgeConstituenta';
-import SelectConstituenta from './SelectConstituenta';
+import { BadgeConstituenta } from './BadgeConstituenta';
+import { SelectConstituenta } from './SelectConstituenta';
 
 interface IMultiSubstitution {
   original_source: ILibraryItem;
@@ -54,15 +54,13 @@ export function PickSubstitutions({
   className,
   ...restProps
 }: PickSubstitutionsProps) {
-  const [leftArgument, setLeftArgument] = useState<ILibraryItem | undefined>(
-    schemas.length === 1 ? schemas[0] : undefined
-  );
-  const [rightArgument, setRightArgument] = useState<ILibraryItem | undefined>(
-    schemas.length === 1 && allowSelfSubstitution ? schemas[0] : undefined
+  const [leftArgument, setLeftArgument] = useState<ILibraryItem | null>(schemas.length === 1 ? schemas[0] : null);
+  const [rightArgument, setRightArgument] = useState<ILibraryItem | null>(
+    schemas.length === 1 && allowSelfSubstitution ? schemas[0] : null
   );
 
-  const [leftCst, setLeftCst] = useState<IConstituenta | undefined>(undefined);
-  const [rightCst, setRightCst] = useState<IConstituenta | undefined>(undefined);
+  const [leftCst, setLeftCst] = useState<IConstituenta | null>(null);
+  const [rightCst, setRightCst] = useState<IConstituenta | null>(null);
 
   const [deleteRight, setDeleteRight] = useState(true);
   const toggleDelete = () => setDeleteRight(prev => !prev);
@@ -135,8 +133,8 @@ export function PickSubstitutions({
       }
     }
     onChange([...value, newSubstitution]);
-    setLeftCst(undefined);
-    setRightCst(undefined);
+    setLeftCst(null);
+    setRightCst(null);
   }
 
   function handleDeclineSuggestion(item: IMultiSubstitution) {

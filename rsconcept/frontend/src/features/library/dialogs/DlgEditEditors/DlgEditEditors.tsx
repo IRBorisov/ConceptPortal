@@ -61,8 +61,8 @@ function DlgEditEditors() {
       <div className='flex items-center gap-3'>
         <Label text='Добавить' />
         <SelectUser
-          filter={id => !selected.includes(id)}
-          value={undefined}
+          filter={id => !selected.includes(id)} //
+          value={null}
           onChange={onAddEditor}
           className='w-[25rem]'
         />

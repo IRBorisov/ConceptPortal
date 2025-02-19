@@ -57,7 +57,7 @@ export interface GenericDialogProps {
 }
 
 interface DialogsStore {
-  active: DialogType | undefined;
+  active: DialogType | null;
   props: unknown;
   hideDialog: () => void;
 
@@ -87,12 +87,12 @@ interface DialogsStore {
 }
 
 export const useDialogsStore = create<DialogsStore>()(set => ({
-  active: undefined,
-  props: undefined,
+  active: null,
+  props: null,
   hideDialog: () => {
     set(state => {
-      (state.props as GenericDialogProps | undefined)?.onHide?.();
-      return { active: undefined, props: undefined };
+      (state.props as GenericDialogProps | null)?.onHide?.();
+      return { active: null, props: null };
     });
   },
 
@@ -113,7 +113,7 @@ export const useDialogsStore = create<DialogsStore>()(set => ({
   showCloneLibraryItem: props => set({ active: DialogType.CLONE_LIBRARY_ITEM, props: props }),
   showCreateVersion: props => set({ active: DialogType.CREATE_VERSION, props: props }),
   showDeleteOperation: props => set({ active: DialogType.DELETE_OPERATION, props: props }),
-  showGraphParams: () => set({ active: DialogType.GRAPH_PARAMETERS, props: undefined }),
+  showGraphParams: () => set({ active: DialogType.GRAPH_PARAMETERS, props: null }),
   showRelocateConstituents: props => set({ active: DialogType.RELOCATE_CONSTITUENTS, props: props }),
   showRenameCst: props => set({ active: DialogType.RENAME_CONSTITUENTA, props: props }),
   showQR: props => set({ active: DialogType.SHOW_QR_CODE, props: props }),

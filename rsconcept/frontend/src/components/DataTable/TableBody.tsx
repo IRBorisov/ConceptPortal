@@ -15,8 +15,8 @@ interface TableBodyProps<TData> {
   enableRowSelection?: boolean;
   conditionalRowStyles?: IConditionalStyle<TData>[];
 
-  lastSelected: string | undefined;
-  onChangeLastSelected: (newValue: string | undefined) => void;
+  lastSelected: string | null;
+  onChangeLastSelected: (newValue: string | null) => void;
 
   onRowClicked?: (rowData: TData, event: CProps.EventMouse) => void;
   onRowDoubleClicked?: (rowData: TData, event: CProps.EventMouse) => void;
@@ -49,7 +49,7 @@ function TableBody<TData>({
           newSelection[row.id] = !target.getIsSelected();
         });
         table.setRowSelection(prev => ({ ...prev, ...newSelection }));
-        onChangeLastSelected(undefined);
+        onChangeLastSelected(null);
       } else {
         onChangeLastSelected(target.id);
         target.toggleSelected(!target.getIsSelected());
@@ -94,7 +94,7 @@ function TableBody<TData>({
                 width: noHeader && index === 0 ? `calc(var(--col-${cell.column.id}-size) * 1px)` : 'auto'
               }}
               onClick={event => handleRowClicked(row, event)}
-              onDoubleClick={event => (onRowDoubleClicked ? onRowDoubleClicked(row.original, event) : undefined)}
+              onDoubleClick={event => onRowDoubleClicked?.(row.original, event)}
             >
               {flexRender(cell.column.columnDef.cell, cell.getContext())}
             </td>

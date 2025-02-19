@@ -30,7 +30,7 @@ function ToolbarVersioning({ blockReload }: ToolbarVersioningProps) {
     if (!controller.schema.version || !window.confirm(promptText.restoreArchive)) {
       return;
     }
-    void versionRestore({ versionID: controller.schema.version }).then(() => controller.navigateVersion(undefined));
+    void versionRestore({ versionID: controller.schema.version }).then(() => controller.navigateVersion());
   }
 
   function handleCreateVersion() {
@@ -50,7 +50,7 @@ function ToolbarVersioning({ blockReload }: ToolbarVersioningProps) {
     showEditVersions({
       itemID: controller.schema.id,
       afterDelete: targetVersion => {
-        if (targetVersion === controller.activeVersion) controller.navigateVersion(undefined);
+        if (targetVersion === controller.activeVersion) controller.navigateVersion();
       }
     });
   }

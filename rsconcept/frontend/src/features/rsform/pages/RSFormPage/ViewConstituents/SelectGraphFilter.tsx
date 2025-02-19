@@ -34,7 +34,7 @@ function SelectGraphFilter({ value, dense, onChange, ...restProps }: SelectGraph
         hideTitle={menu.isOpen}
         className='h-full pr-2'
         icon={<DependencyIcon value={value} size='1rem' />}
-        text={dense || size.isSmall ? undefined : labelCstSource(value)}
+        text={!dense && !size.isSmall ? labelCstSource(value) : undefined}
         onClick={menu.toggle}
       />
       <Dropdown stretchLeft isOpen={menu.isOpen}>

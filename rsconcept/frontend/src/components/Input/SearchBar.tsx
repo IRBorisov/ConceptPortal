@@ -53,7 +53,7 @@ export function SearchBar({
         className={clsx('outline-none bg-transparent', !noIcon && 'pl-10')}
         noBorder={noBorder}
         value={query}
-        onChange={event => (onChangeQuery ? onChangeQuery(event.target.value) : undefined)}
+        onChange={event => onChangeQuery?.(event.target.value)}
       />
     </div>
   );

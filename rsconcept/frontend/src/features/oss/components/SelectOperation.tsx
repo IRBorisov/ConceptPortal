@@ -9,15 +9,15 @@ import { IOperation } from '../models/oss';
 import { matchOperation } from '../models/ossAPI';
 
 interface SelectOperationProps extends CProps.Styling {
-  items?: IOperation[];
-  value?: IOperation;
-  onChange: (newValue?: IOperation) => void;
+  value: IOperation | null;
+  onChange: (newValue: IOperation | null) => void;
 
+  items?: IOperation[];
   placeholder?: string;
   noBorder?: boolean;
 }
 
-function SelectOperation({
+export function SelectOperation({
   className,
   items,
   value,
@@ -41,12 +41,10 @@ function SelectOperation({
       className={clsx('text-ellipsis', className)}
       options={options}
       value={value ? { value: value.id, label: `${value.alias}: ${value.title}` } : null}
-      onChange={data => onChange(items?.find(cst => cst.id === data?.value))}
+      onChange={data => onChange(items?.find(cst => cst.id === data?.value) ?? null)}
       filterOption={filter}
       placeholder={placeholder}
       {...restProps}
     />
   );
 }
-
-export default SelectOperation;

@@ -53,7 +53,7 @@ function DlgCloneLibraryItem() {
       read_only: false,
       access_policy: AccessPolicy.PUBLIC,
       location: initialLocation,
-      items: undefined
+      items: []
     },
     mode: 'onChange',
     reValidateMode: 'onChange'
@@ -165,8 +165,8 @@ function DlgCloneLibraryItem() {
             <Checkbox
               id='dlg_only_selected'
               label={`Только выбранные конституенты [${selected.length} из ${totalCount}]`}
-              value={field.value !== undefined}
-              onChange={value => field.onChange(value ? selected : undefined)}
+              value={field.value.length > 0}
+              onChange={value => field.onChange(value ? selected : [])}
             />
           )}
         />

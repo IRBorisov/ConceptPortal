@@ -29,10 +29,8 @@ function TabArguments() {
   const { args, onChangeArguments } = useTemplateContext();
   const definition = useWatch({ control, name: 'definition_formal' });
 
-  const [selectedCst, setSelectedCst] = useState<IConstituenta | undefined>(undefined);
-  const [selectedArgument, setSelectedArgument] = useState<IArgumentValue | undefined>(
-    args.length > 0 ? args[0] : undefined
-  );
+  const [selectedCst, setSelectedCst] = useState<IConstituenta | null>(null);
+  const [selectedArgument, setSelectedArgument] = useState<IArgumentValue | null>(args.length > 0 ? args[0] : null);
 
   const [argumentValue, setArgumentValue] = useState('');
 

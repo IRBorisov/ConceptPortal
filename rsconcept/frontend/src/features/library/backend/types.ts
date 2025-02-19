@@ -86,7 +86,7 @@ export const schemaCloneLibraryItem = schemaLibraryItem
     alias: z.string().nonempty(errorMsg.requiredField),
     location: z.string().refine(data => validateLocation(data), { message: errorMsg.invalidLocation }),
 
-    items: z.array(z.number()).optional()
+    items: z.array(z.number())
   });
 
 export const schemaCreateLibraryItem = z
@@ -138,5 +138,5 @@ export const schemaVersionUpdate = z.object({
 export const schemaVersionCreate = z.object({
   version: z.string(),
   description: z.string(),
-  items: z.array(z.number()).optional()
+  items: z.array(z.number())
 });

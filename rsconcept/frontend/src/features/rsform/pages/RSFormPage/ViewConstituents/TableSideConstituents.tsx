@@ -7,7 +7,7 @@ import { NoData, TextContent } from '@/components/View';
 import { APP_COLORS } from '@/styling/colors';
 import { PARAMETER, prefixes } from '@/utils/constants';
 
-import BadgeConstituenta from '../../../components/BadgeConstituenta';
+import { BadgeConstituenta } from '../../../components/BadgeConstituenta';
 import { describeConstituenta } from '../../../labels';
 import { IConstituenta } from '../../../models/rsform';
 
@@ -15,7 +15,7 @@ const DESCRIPTION_MAX_SYMBOLS = 280;
 
 interface TableSideConstituentsProps {
   items: IConstituenta[];
-  activeCst?: IConstituenta;
+  activeCst: IConstituenta | null;
   onOpenEdit: (cstID: number) => void;
   autoScroll?: boolean;
   maxHeight: string;
@@ -54,7 +54,6 @@ function TableSideConstituents({
       header: () => <span className='pl-3'>Имя</span>,
       size: 65,
       minSize: 65,
-      footer: undefined,
       cell: props => (
         <BadgeConstituenta className='mr-[-0.5rem]' value={props.row.original} prefixID={prefixes.cst_side_table} />
       )
@@ -81,19 +80,19 @@ function TableSideConstituents({
 
   const conditionalRowStyles: IConditionalStyle<IConstituenta>[] = [
     {
-      when: (cst: IConstituenta) => !!activeCst && cst.id === activeCst?.id,
+      when: (cst: IConstituenta) => !!activeCst && cst.id === activeCst.id,
       style: {
         backgroundColor: APP_COLORS.bgSelected
       }
     },
     {
-      when: (cst: IConstituenta) => !!activeCst && cst.spawner === activeCst?.id && cst.id !== activeCst?.id,
+      when: (cst: IConstituenta) => !!activeCst && cst.spawner === activeCst.id && cst.id !== activeCst.id,
       style: {
         backgroundColor: APP_COLORS.bgOrange50
       }
     },
     {
-      when: (cst: IConstituenta) => activeCst?.id !== undefined && cst.spawn.includes(activeCst.id),
+      when: (cst: IConstituenta) => !!activeCst && cst.spawn.includes(activeCst.id),
       style: {
         backgroundColor: APP_COLORS.bgGreen50
       }

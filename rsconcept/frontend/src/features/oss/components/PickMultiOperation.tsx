@@ -11,7 +11,7 @@ import { NoData } from '@/components/View';
 
 import { IOperation } from '../models/oss';
 
-import SelectOperation from './SelectOperation';
+import { SelectOperation } from './SelectOperation';
 
 interface PickMultiOperationProps extends CProps.Styling {
   value: number[];
@@ -25,17 +25,17 @@ const columnHelper = createColumnHelper<IOperation>();
 export function PickMultiOperation({ rows, items, value, onChange, className, ...restProps }: PickMultiOperationProps) {
   const selectedItems = value.map(itemID => items.find(item => item.id === itemID)!);
   const nonSelectedItems = items.filter(item => !value.includes(item.id));
-  const [lastSelected, setLastSelected] = useState<IOperation | undefined>(undefined);
+  const [lastSelected, setLastSelected] = useState<IOperation | null>(null);
 
   function handleDelete(operation: number) {
     onChange(value.filter(item => item !== operation));
   }
 
-  function handleSelect(operation?: IOperation) {
+  function handleSelect(operation: IOperation | null) {
     if (operation) {
       setLastSelected(operation);
       onChange([...value, operation.id]);
-      setTimeout(() => setLastSelected(undefined), 1000);
+      setTimeout(() => setLastSelected(null), 1000);
     }
   }
 

@@ -100,7 +100,7 @@ function EditorRSList() {
     }
     // prettier-ignore
     switch (code) {
-      case 'Backquote': controller.createCst(undefined, false); return true;
+      case 'Backquote': controller.createCstDefault(); return true;
       
       case 'Digit1':    controller.createCst(CstType.BASE, true); return true;
       case 'Digit2':    controller.createCst(CstType.STRUCTURED, true); return true;
@@ -150,7 +150,7 @@ function EditorRSList() {
           selected={rowSelection}
           setSelected={handleRowSelection}
           onEdit={controller.navigateCst}
-          onCreateNew={() => controller.createCst(undefined, false)}
+          onCreateNew={controller.createCstDefault}
         />
       </div>
     </>

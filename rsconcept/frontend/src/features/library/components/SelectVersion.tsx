@@ -10,10 +10,10 @@ import { IVersionInfo } from '../backend/types';
 
 interface SelectVersionProps extends CProps.Styling {
   id?: string;
-  items?: IVersionInfo[];
-  value?: number;
-  onChange: (newValue?: number) => void;
+  value: number | undefined;
+  onChange: (newValue: number | undefined) => void;
 
+  items?: IVersionInfo[];
   placeholder?: string;
   noBorder?: boolean;
 }

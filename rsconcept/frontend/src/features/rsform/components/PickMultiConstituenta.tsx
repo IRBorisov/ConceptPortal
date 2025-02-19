@@ -14,7 +14,7 @@ import { IConstituenta, IRSForm } from '../models/rsform';
 import { isBasicConcept, matchConstituenta } from '../models/rsformAPI';
 import { CstMatchMode } from '../stores/cstSearch';
 
-import BadgeConstituenta from './BadgeConstituenta';
+import { BadgeConstituenta } from './BadgeConstituenta';
 import ToolbarGraphSelection from './ToolbarGraphSelection';
 
 interface PickMultiConstituentaProps extends CProps.Styling {
@@ -112,7 +112,10 @@ export function PickMultiConstituenta({
         />
         <ToolbarGraphSelection
           graph={foldedGraph}
-          isCore={cstID => isBasicConcept(schema.cstByID.get(cstID)?.cst_type)}
+          isCore={cstID => {
+            const cst = schema.cstByID.get(cstID);
+            return !!cst && isBasicConcept(cst.cst_type);
+          }}
           isOwned={cstID => !schema.cstByID.get(cstID)?.is_inherited}
           value={value}
           onChange={onChange}

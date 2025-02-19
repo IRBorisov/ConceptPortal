@@ -11,15 +11,15 @@ import { matchConstituenta } from '../models/rsformAPI';
 import { CstMatchMode } from '../stores/cstSearch';
 
 interface SelectConstituentaProps extends CProps.Styling {
-  value?: IConstituenta;
-  onChange: (newValue?: IConstituenta) => void;
+  value: IConstituenta | null;
+  onChange: (newValue: IConstituenta | null) => void;
 
   items?: IConstituenta[];
   placeholder?: string;
   noBorder?: boolean;
 }
 
-function SelectConstituenta({
+export function SelectConstituenta({
   className,
   items,
   value,
@@ -43,12 +43,10 @@ function SelectConstituenta({
       className={clsx('text-ellipsis', className)}
       options={options}
       value={value ? { value: value.id, label: `${value.alias}: ${describeConstituentaTerm(value)}` } : null}
-      onChange={data => onChange(items?.find(cst => cst.id === data?.value))}
+      onChange={data => onChange(items?.find(cst => cst.id === data?.value) ?? null)}
       filterOption={filter}
       placeholder={placeholder}
       {...restProps}
     />
   );
 }
-
-export default SelectConstituenta;

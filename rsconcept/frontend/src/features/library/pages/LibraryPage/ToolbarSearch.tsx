@@ -54,9 +54,9 @@ function ToolbarSearch({ total, filtered }: ToolbarSearchProps) {
   const resetFilter = useLibrarySearchStore(state => state.resetFilter);
   const hasCustomFilter = useHasCustomFilter();
 
-  const userActive = isOwned !== undefined || isEditor !== undefined || filterUser !== undefined;
+  const userActive = isOwned !== null || isEditor !== null || filterUser !== null;
 
-  function handleChange(newValue: LocationHead | undefined) {
+  function handleChange(newValue: LocationHead | null) {
     headMenu.hide();
     setHead(newValue);
   }
@@ -173,7 +173,7 @@ function ToolbarSearch({ total, filtered }: ToolbarSearchProps) {
                   <span>проводник...</span>
                 </div>
               </DropdownButton>
-              <DropdownButton className='w-[10rem]' onClick={() => handleChange(undefined)}>
+              <DropdownButton className='w-[10rem]' onClick={() => handleChange(null)}>
                 <div className='inline-flex items-center gap-3'>
                   <IconFolder size='1rem' className='clr-text-controls' />
                   <span>отображать все</span>

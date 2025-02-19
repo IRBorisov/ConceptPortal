@@ -96,7 +96,7 @@ export function ToolbarRSList() {
         titleHtml={prepareTooltip('Добавить новую конституенту...', 'Alt + `')}
         icon={<IconNewItem size='1.25rem' className='icon-green' />}
         disabled={isProcessing}
-        onClick={() => controller.createCst(undefined, false)}
+        onClick={controller.createCstDefault}
       />
       <MiniButton
         titleHtml={prepareTooltip('Клонировать конституенту', 'Alt + V')}

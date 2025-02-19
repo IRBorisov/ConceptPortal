@@ -122,9 +122,9 @@ export class TMGraph {
     this.nodeByAlias.set(alias, nodeToAnnotate);
   }
 
-  private processArguments(args: IArgumentInfo[]): TMGraphNode | undefined {
+  private processArguments(args: IArgumentInfo[]): TMGraphNode | null {
     if (args.length === 0) {
-      return undefined;
+      return null;
     }
     const argsNodes = args.map(argument => this.parseToNode(argument.typification));
     if (args.length === 1) {
@@ -133,16 +133,16 @@ export class TMGraph {
     return this.addCartesianNode(argsNodes.map(node => node.id));
   }
 
-  private processResult(result: string): TMGraphNode | undefined {
+  private processResult(result: string): TMGraphNode | null {
     if (!result || result === PARAMETER.logicLabel) {
-      return undefined;
+      return null;
     }
     return this.parseToNode(result);
   }
 
-  private combineResults(result: TMGraphNode | undefined, args: TMGraphNode | undefined): TMGraphNode | undefined {
+  private combineResults(result: TMGraphNode | null, args: TMGraphNode | null): TMGraphNode | null {
     if (!result && !args) {
-      return undefined;
+      return null;
     }
     if (!result) {
       return this.addBooleanNode(args!.id);

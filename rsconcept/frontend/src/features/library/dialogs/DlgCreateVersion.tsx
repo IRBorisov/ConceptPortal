@@ -32,7 +32,7 @@ function DlgCreateVersion() {
     defaultValues: {
       version: versions.length > 0 ? nextVersion(versions[versions.length - 1].version) : '1.0.0',
       description: '',
-      items: undefined
+      items: []
     }
   });
   const version = useWatch({ control, name: 'version' });
@@ -61,8 +61,8 @@ function DlgCreateVersion() {
             <Checkbox
               id='dlg_only_selected'
               label={`Только выбранные конституенты [${selected.length} из ${totalCount}]`}
-              value={field.value !== undefined}
-              onChange={value => field.onChange(value ? selected : undefined)}
+              value={field.value.length > 0}
+              onChange={value => field.onChange(value ? selected : [])}
             />
           )}
         />

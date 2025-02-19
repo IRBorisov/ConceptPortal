@@ -23,7 +23,7 @@ function TabTemplate() {
   } = useTemplateContext();
 
   const { templates } = useTemplatesSuspense();
-  const { schema: templateSchema } = useRSForm({ itemID: templateID });
+  const { schema: templateSchema } = useRSForm({ itemID: templateID ?? undefined });
 
   if (!templateID) {
     onChangeTemplateID(templates[0].id);
@@ -63,7 +63,7 @@ function TabTemplate() {
           className='w-[12rem]'
           options={templateSelector}
           value={templateID ? { value: templateID, label: templates.find(item => item.id == templateID)!.title } : null}
-          onChange={data => onChangeTemplateID(data ? data.value : undefined)}
+          onChange={data => onChangeTemplateID(data ? data.value : null)}
         />
         <SelectSingle
           noBorder
@@ -79,7 +79,7 @@ function TabTemplate() {
                 }
               : null
           }
-          onChange={data => onChangeFilterCategory(data ? templateSchema?.cstByID.get(data?.value) : undefined)}
+          onChange={data => onChangeFilterCategory(data ? templateSchema?.cstByID.get(data?.value) ?? null : null)}
           isClearable
         />
       </div>

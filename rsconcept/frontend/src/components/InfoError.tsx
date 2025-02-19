@@ -6,7 +6,7 @@ import { isResponseHtml } from '@/utils/utils';
 
 import { PrettyJson } from './View';
 
-export type ErrorData = string | Error | AxiosError | ZodError | undefined | null;
+export type ErrorData = string | Error | AxiosError | ZodError;
 
 interface InfoErrorProps {
   error: ErrorData;

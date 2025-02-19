@@ -40,7 +40,7 @@ export function describeConstituenta(cst: IConstituenta): string {
 /**
  * Generates description for term of a given {@link IConstituenta}.
  */
-export function describeConstituentaTerm(cst?: IConstituenta): string {
+export function describeConstituentaTerm(cst: IConstituenta | null): string {
   if (!cst) {
     return '!Конституента отсутствует!';
   }
@@ -61,7 +61,7 @@ export function labelConstituenta(cst: IConstituenta) {
 /**
  * Generates label for {@link IVersionInfo} of {@link IRSForm}.
  */
-export function labelVersion(schema?: IRSForm) {
+export function labelVersion(schema: IRSForm | undefined) {
   const version = schema?.versions.find(ver => ver.id === schema?.version);
   return version ? version.version : 'актуальная';
 }

@@ -11,8 +11,7 @@ export function applyLayout(nodes: Node<ISyntaxTreeNode>[], edges: Edge[]) {
     rankdir: 'TB',
     ranksep: 40,
     nodesep: 40,
-    ranker: 'network-simplex',
-    align: undefined
+    ranker: 'network-simplex'
   });
   nodes.forEach(node => {
     dagreGraph.setNode(node.id, { width: 2 * PARAMETER.graphNodeRadius, height: 2 * PARAMETER.graphNodeRadius });
