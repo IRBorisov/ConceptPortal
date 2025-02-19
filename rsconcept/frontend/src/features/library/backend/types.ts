@@ -62,8 +62,8 @@ export const schemaLibraryItem = z.object({
   location: z.string(),
   access_policy: z.nativeEnum(AccessPolicy),
 
-  time_create: z.string(),
-  time_update: z.string(),
+  time_create: z.string().datetime({ offset: true }),
+  time_update: z.string().datetime({ offset: true }),
   owner: z.coerce.number().nullable()
 });
 
@@ -126,7 +126,7 @@ export const schemaVersionInfo = z.object({
   id: z.coerce.number(),
   version: z.string(),
   description: z.string(),
-  time_create: z.string()
+  time_create: z.string().datetime({ offset: true })
 });
 
 export const schemaVersionUpdate = z.object({

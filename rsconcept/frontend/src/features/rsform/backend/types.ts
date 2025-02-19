@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { AccessPolicy, LibraryItemType, schemaVersionInfo } from '@/features/library/backend/types';
+import { schemaLibraryItem, schemaVersionInfo } from '@/features/library/backend/types';
 
 import { errorMsg } from '@/utils/labels';
 
@@ -294,20 +294,7 @@ export const schemaConstituenta = schemaConstituentaBasics.extend({
   })
 });
 
-export const schemaRSForm = z.object({
-  id: z.coerce.number(),
-  item_type: z.nativeEnum(LibraryItemType),
-  title: z.string(),
-  alias: z.string(),
-  comment: z.string(),
-  visible: z.boolean(),
-  read_only: z.boolean(),
-  location: z.string(),
-  access_policy: z.nativeEnum(AccessPolicy),
-  time_create: z.string(),
-  time_update: z.string(),
-
-  owner: z.coerce.number().nullable(),
+export const schemaRSForm = schemaLibraryItem.extend({
   editors: z.array(z.coerce.number()),
 
   version: z.coerce.number().optional(),
