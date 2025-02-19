@@ -9,9 +9,9 @@ For more specific TODOs see comments in code
 - Design first user experience
 - Demo sandbox for anonymous users
 
-- User profile: Settings + settings server persistency
+User profile: 
+- Settings + settings server persistency
 - Profile pictures
-- Integrate socials and feedback
 - Custom LibraryItem lists
 - Custom user filters and sharing filters
 
@@ -31,6 +31,7 @@ For more specific TODOs see comments in code
 
 [Functionality - CANCELED]
 - User notifications on edit - consider spam prevention and change aggregation
+- Integrate socials and feedback
 - Content based search in Library
 - Private projects. Consider cooperative editing
 - OSS: synthesis table: auto substitution for diamond synthesis
@@ -38,10 +39,7 @@ For more specific TODOs see comments in code
 
 [Tech]
 - duplicate syntax parsing and type info calculations to client. Consider moving backend to Nodejs or embedding c++ lib
-- add debounce to some search fields. Consider pagination and dynamic loading
-- move autopep8 and isort settings from vscode settings to pyproject.toml
-
-- Testing: frontend react components, testplane / playwright?
+- Testing E2E playwright
 
 
 [Deployment]
@@ -70,11 +68,3 @@ https://drf-standardized-errors.readthedocs.io/en/latest/error_response.html
 https://stackoverflow.com/questions/28838170/multilevel-json-diff-in-python
 
 - Documentation platform. Consider diplodoc
-
-- radix-ui
-- shadcn-ui
-
-- Zod
-
-- react-query
-- react-hook-form
