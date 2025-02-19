@@ -54,7 +54,7 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
       }
       if (validate()) {
         scrollTop();
-        Promise.resolve(router(path)).catch(console.log);
+        Promise.resolve(router(path, { viewTransition: true })).catch(console.log);
         setIsBlocked(false);
       }
     },
@@ -65,7 +65,7 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
     (path: string) => {
       if (validate()) {
         scrollTop();
-        Promise.resolve(router(path, { replace: true })).catch(console.log);
+        Promise.resolve(router(path, { replace: true, viewTransition: true })).catch(console.log);
         setIsBlocked(false);
       }
     },
