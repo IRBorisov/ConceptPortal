@@ -8,7 +8,7 @@ import { ITargetOperation } from './types';
 export const useInputCreate = () => {
   const client = useQueryClient();
   const mutation = useMutation({
-    mutationKey: [ossApi.baseKey, 'input-create'],
+    mutationKey: [KEYS.global_mutation, ossApi.baseKey, 'input-create'],
     mutationFn: ossApi.inputCreate,
     onSuccess: data => {
       client.setQueryData(ossApi.getOssQueryOptions({ itemID: data.oss.id }).queryKey, data.oss);
@@ -16,7 +16,8 @@ export const useInputCreate = () => {
         client.invalidateQueries({ queryKey: KEYS.composite.libraryList }),
         client.invalidateQueries({ queryKey: [KEYS.rsform] })
       ]);
-    }
+    },
+    onError: () => client.invalidateQueries()
   });
   return {
     inputCreate: (data: { itemID: number; data: ITargetOperation }) =>

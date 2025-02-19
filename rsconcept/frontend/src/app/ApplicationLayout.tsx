@@ -11,6 +11,7 @@ import { GlobalDialogs } from './GlobalDialogs';
 import { GlobalLoader } from './GlobalLoader';
 import { ToasterThemed } from './GlobalToaster';
 import { GlobalTooltips } from './GlobalTooltips';
+import { MutationErrors } from './MutationErrors';
 import { Navigation } from './Navigation';
 
 function ApplicationLayout() {
@@ -48,6 +49,7 @@ function ApplicationLayout() {
         >
           <main className='cc-scroll-y' style={{ overflowY: showScroll ? 'scroll' : 'auto', minHeight: mainHeight }}>
             <GlobalLoader />
+            <MutationErrors />
             <Outlet />
           </main>
           {!noNavigation && !noFooter ? <Footer /> : null}

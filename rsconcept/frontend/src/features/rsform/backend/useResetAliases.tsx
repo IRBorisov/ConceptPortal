@@ -10,7 +10,7 @@ export const useResetAliases = () => {
   const client = useQueryClient();
   const { updateTimestamp } = useUpdateTimestamp();
   const mutation = useMutation({
-    mutationKey: [rsformsApi.baseKey, 'reset-aliases'],
+    mutationKey: [KEYS.global_mutation, rsformsApi.baseKey, 'reset-aliases'],
     mutationFn: rsformsApi.resetAliases,
     onSuccess: data => {
       client.setQueryData(rsformsApi.getRSFormQueryOptions({ itemID: data.id }).queryKey, data);
@@ -23,7 +23,8 @@ export const useResetAliases = () => {
           predicate: query => query.queryKey.length > 2 && query.queryKey[2] !== data.id
         })
       ]);
-    }
+    },
+    onError: () => client.invalidateQueries()
   });
   return {
     resetAliases: (data: { itemID: number }) => mutation.mutateAsync(data)

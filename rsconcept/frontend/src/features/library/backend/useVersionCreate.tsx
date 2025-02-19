@@ -10,12 +10,13 @@ export const useVersionCreate = () => {
   const client = useQueryClient();
   const { updateTimestamp } = useUpdateTimestamp();
   const mutation = useMutation({
-    mutationKey: [libraryApi.baseKey, 'create-version'],
+    mutationKey: [KEYS.global_mutation, libraryApi.baseKey, 'create-version'],
     mutationFn: libraryApi.versionCreate,
     onSuccess: data => {
       client.setQueryData(KEYS.composite.rsItem({ itemID: data.schema.id }), data.schema);
       updateTimestamp(data.schema.id);
-    }
+    },
+    onError: () => client.invalidateQueries()
   });
   return {
     versionCreate: (data: { itemID: number; data: IVersionCreateDTO }) =>

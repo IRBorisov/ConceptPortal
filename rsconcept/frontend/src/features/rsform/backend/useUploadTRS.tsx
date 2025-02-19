@@ -10,7 +10,7 @@ import { IRSFormUploadDTO } from './types';
 export const useUploadTRS = () => {
   const client = useQueryClient();
   const mutation = useMutation({
-    mutationKey: [rsformsApi.baseKey, 'load-trs'],
+    mutationKey: [KEYS.global_mutation, rsformsApi.baseKey, 'load-trs'],
     mutationFn: rsformsApi.upload,
     onSuccess: data => {
       client.setQueryData(KEYS.composite.rsItem({ itemID: data.id }), data);
@@ -25,7 +25,8 @@ export const useUploadTRS = () => {
           predicate: query => query.queryKey.length > 2 && query.queryKey[2] !== data.id
         })
       ]);
-    }
+    },
+    onError: () => client.invalidateQueries()
   });
   return {
     upload: (data: IRSFormUploadDTO) => mutation.mutateAsync(data)

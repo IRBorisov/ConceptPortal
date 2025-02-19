@@ -12,21 +12,21 @@ interface InfoErrorProps {
   error: ErrorData;
 }
 
-function DescribeError({ error }: { error: ErrorData }) {
+export function DescribeError({ error }: { error: ErrorData }) {
   if (!error) {
     return <p>Ошибки отсутствуют</p>;
   } else if (typeof error === 'string') {
     return <p>{error}</p>;
   } else if (error instanceof ZodError) {
     return (
-      <div className='mt-6'>
+      <div>
         <p>Ошибка валидации данных</p>
         <PrettyJson data={JSON.parse(error.toString()) as unknown} />;
       </div>
     );
   } else if (!isAxiosError(error)) {
     return (
-      <div className='mt-6'>
+      <div>
         <p>
           <b>Error:</b> {error.name}
         </p>
@@ -96,7 +96,7 @@ export function InfoError({ error }: InfoErrorProps) {
         'select-text'
       )}
     >
-      <div className='font-normal clr-text-default'>
+      <div className='font-normal clr-text-default mb-6'>
         <p>Пожалуйста сделайте скриншот и отправьте вместе с описанием ситуации на почту portal@acconcept.ru</p>
         <br />
         <p>Для продолжения работы перезагрузите страницу</p>

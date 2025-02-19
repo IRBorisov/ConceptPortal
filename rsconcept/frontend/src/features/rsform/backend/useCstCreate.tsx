@@ -11,7 +11,7 @@ export const useCstCreate = () => {
   const client = useQueryClient();
   const { updateTimestamp } = useUpdateTimestamp();
   const mutation = useMutation({
-    mutationKey: [rsformsApi.baseKey, 'create-cst'],
+    mutationKey: [KEYS.global_mutation, rsformsApi.baseKey, 'create-cst'],
     mutationFn: rsformsApi.cstCreate,
     onSuccess: data => {
       client.setQueryData(rsformsApi.getRSFormQueryOptions({ itemID: data.schema.id }).queryKey, data.schema);
@@ -24,7 +24,8 @@ export const useCstCreate = () => {
           predicate: query => query.queryKey.length > 2 && query.queryKey[2] !== data.schema.id
         })
       ]);
-    }
+    },
+    onError: () => client.invalidateQueries()
   });
   return {
     cstCreate: (data: { itemID: number; data: ICstCreateDTO }) =>

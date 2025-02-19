@@ -15,7 +15,8 @@ export const useRenameLocation = () => {
         client.invalidateQueries({ queryKey: [KEYS.library] }),
         client.invalidateQueries({ queryKey: [KEYS.rsform] }),
         client.invalidateQueries({ queryKey: [KEYS.oss] })
-      ])
+      ]),
+    onError: () => client.invalidateQueries()
   });
   return {
     renameLocation: (data: IRenameLocationDTO) => mutation.mutateAsync(data)

@@ -1,12 +1,14 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { KEYS } from '@/backend/configuration';
+
 import { usersApi } from './api';
 import { IUserSignupDTO } from './types';
 
 export const useSignup = () => {
   const client = useQueryClient();
   const mutation = useMutation({
-    mutationKey: ['signup'],
+    mutationKey: [KEYS.users, 'signup'],
     mutationFn: usersApi.signup,
     onSuccess: () => client.invalidateQueries({ queryKey: usersApi.getUsersQueryOptions().queryKey })
   });

@@ -11,7 +11,7 @@ import { AccessPolicy, ILibraryItem } from './types';
 export const useSetAccessPolicy = () => {
   const client = useQueryClient();
   const mutation = useMutation({
-    mutationKey: [libraryApi.baseKey, 'set-location'],
+    mutationKey: [KEYS.global_mutation, libraryApi.baseKey, 'set-location'],
     mutationFn: libraryApi.setAccessPolicy,
     onSuccess: (_, variables) => {
       const ossKey = KEYS.composite.ossItem({ itemID: variables.itemID });
@@ -39,7 +39,8 @@ export const useSetAccessPolicy = () => {
       client.setQueryData(libraryApi.libraryListKey, (prev: ILibraryItem[] | undefined) =>
         prev?.map(item => (item.id === variables.itemID ? { ...item, access_policy: variables.policy } : item))
       );
-    }
+    },
+    onError: () => client.invalidateQueries()
   });
 
   return {

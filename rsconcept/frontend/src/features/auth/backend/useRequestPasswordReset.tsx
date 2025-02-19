@@ -1,11 +1,13 @@
 import { useMutation } from '@tanstack/react-query';
 
+import { KEYS } from '@/backend/configuration';
+
 import { authApi } from './api';
 import { IRequestPasswordDTO } from './types';
 
 export const useRequestPasswordReset = () => {
   const mutation = useMutation({
-    mutationKey: ['request-password-reset'],
+    mutationKey: [KEYS.auth, 'request-password-reset'],
     mutationFn: authApi.requestPasswordReset
   });
   return {

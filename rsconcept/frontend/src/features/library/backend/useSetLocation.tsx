@@ -11,7 +11,7 @@ import { ILibraryItem } from './types';
 export const useSetLocation = () => {
   const client = useQueryClient();
   const mutation = useMutation({
-    mutationKey: [libraryApi.baseKey, 'set-location'],
+    mutationKey: [KEYS.global_mutation, libraryApi.baseKey, 'set-location'],
     mutationFn: libraryApi.setLocation,
     onSuccess: (_, variables) => {
       const ossKey = KEYS.composite.ossItem({ itemID: variables.itemID });
@@ -39,7 +39,8 @@ export const useSetLocation = () => {
       client.setQueryData(libraryApi.libraryListKey, (prev: ILibraryItem[] | undefined) =>
         prev?.map(item => (item.id === variables.itemID ? { ...item, location: variables.location } : item))
       );
-    }
+    },
+    onError: () => client.invalidateQueries()
   });
 
   return {

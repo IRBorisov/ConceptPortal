@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect } from 'react';
 
-function useEscapeKey(handleClose: () => void) {
+function useEscapeKey(handleClose: () => void, isEnabled: boolean = true) {
   const handleEscKey = useCallback(
     (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -13,11 +13,13 @@ function useEscapeKey(handleClose: () => void) {
   );
 
   useEffect(() => {
-    document.addEventListener('keyup', handleEscKey, false);
-    return () => {
-      document.removeEventListener('keyup', handleEscKey, false);
-    };
-  }, [handleEscKey]);
+    if (isEnabled) {
+      document.addEventListener('keyup', handleEscKey, false);
+      return () => {
+        document.removeEventListener('keyup', handleEscKey, false);
+      };
+    }
+  }, [handleEscKey, isEnabled]);
 }
 
 export default useEscapeKey;

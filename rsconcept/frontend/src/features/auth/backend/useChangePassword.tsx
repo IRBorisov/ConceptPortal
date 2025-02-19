@@ -1,12 +1,14 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { KEYS } from '@/backend/configuration';
+
 import { authApi } from './api';
 import { IChangePasswordDTO } from './types';
 
 export const useChangePassword = () => {
   const client = useQueryClient();
   const mutation = useMutation({
-    mutationKey: ['change-password'],
+    mutationKey: [KEYS.auth, 'change-password'],
     mutationFn: authApi.changePassword,
     onSettled: () => client.invalidateQueries({ queryKey: [authApi.baseKey] })
   });

@@ -1,10 +1,12 @@
 import { useMutation } from '@tanstack/react-query';
 
+import { KEYS } from '@/backend/configuration';
+
 import { rsformsApi } from './api';
 
 export const useDownloadRSForm = () => {
   const mutation = useMutation({
-    mutationKey: [rsformsApi.baseKey, 'download'],
+    mutationKey: [KEYS.global_mutation, rsformsApi.baseKey, 'download'],
     mutationFn: rsformsApi.download
   });
   return {

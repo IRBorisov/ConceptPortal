@@ -10,7 +10,7 @@ import { IVersionUpdateDTO } from './types';
 export const useVersionUpdate = () => {
   const client = useQueryClient();
   const mutation = useMutation({
-    mutationKey: [libraryApi.baseKey, 'update-version'],
+    mutationKey: [KEYS.global_mutation, libraryApi.baseKey, 'update-version'],
     mutationFn: libraryApi.versionUpdate,
     onSuccess: (data, variables) => {
       client.setQueryData(KEYS.composite.rsItem({ itemID: variables.itemID }), (prev: IRSFormDTO | undefined) =>
@@ -23,7 +23,8 @@ export const useVersionUpdate = () => {
               )
             }
       );
-    }
+    },
+    onError: () => client.invalidateQueries()
   });
   return {
     versionUpdate: (data: { itemID: number; version: IVersionUpdateDTO }) => mutation.mutateAsync(data)

@@ -100,7 +100,6 @@ export function axiosPost<RequestData, ResponseData = void>({
       } else {
         toast.error(extractErrorMessage(error));
       }
-      console.error(error);
       throw error;
     });
 }
@@ -130,7 +129,6 @@ export function axiosDelete<RequestData, ResponseData = void>({
       } else {
         toast.error(extractErrorMessage(error));
       }
-      console.error(error);
       throw error;
     });
 }
@@ -160,7 +158,6 @@ export function axiosPatch<RequestData, ResponseData = void>({
       } else {
         toast.error(extractErrorMessage(error));
       }
-      console.error(error);
       throw error;
     });
 }

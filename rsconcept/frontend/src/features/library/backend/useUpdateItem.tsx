@@ -11,7 +11,7 @@ import { ILibraryItem, IUpdateLibraryItemDTO, LibraryItemType } from './types';
 export const useUpdateItem = () => {
   const client = useQueryClient();
   const mutation = useMutation({
-    mutationKey: [libraryApi.baseKey, 'update-item'],
+    mutationKey: [KEYS.global_mutation, libraryApi.baseKey, 'update-item'],
     mutationFn: libraryApi.updateItem,
     onSuccess: (data: ILibraryItem) => {
       const itemKey =
@@ -32,7 +32,8 @@ export const useUpdateItem = () => {
           );
         }
       }
-    }
+    },
+    onError: () => client.invalidateQueries()
   });
   return {
     updateItem: (data: IUpdateLibraryItemDTO) => mutation.mutateAsync(data)

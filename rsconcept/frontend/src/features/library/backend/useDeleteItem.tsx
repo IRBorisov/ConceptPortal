@@ -8,7 +8,7 @@ import { libraryApi } from './api';
 export const useDeleteItem = () => {
   const client = useQueryClient();
   const mutation = useMutation({
-    mutationKey: [libraryApi.baseKey, 'delete-item'],
+    mutationKey: [KEYS.global_mutation, libraryApi.baseKey, 'delete-item'],
     mutationFn: libraryApi.deleteItem,
     onSuccess: (_, variables) => {
       client.invalidateQueries({ queryKey: libraryApi.libraryListKey }).catch(console.error);
@@ -21,7 +21,8 @@ export const useDeleteItem = () => {
           ]).catch(console.error),
         PARAMETER.navigationDuration
       );
-    }
+    },
+    onError: () => client.invalidateQueries()
   });
   return {
     deleteItem: (target: number) => mutation.mutateAsync(target),

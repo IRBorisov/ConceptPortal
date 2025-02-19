@@ -9,7 +9,7 @@ import { libraryApi } from './api';
 export const useVersionDelete = () => {
   const client = useQueryClient();
   const mutation = useMutation({
-    mutationKey: [libraryApi.baseKey, 'delete-version'],
+    mutationKey: [KEYS.global_mutation, libraryApi.baseKey, 'delete-version'],
     mutationFn: libraryApi.versionDelete,
     onSuccess: (_, variables) => {
       client.setQueryData(KEYS.composite.rsItem({ itemID: variables.itemID }), (prev: IRSFormDTO | undefined) =>
@@ -20,7 +20,8 @@ export const useVersionDelete = () => {
               versions: prev.versions.filter(version => version.id !== variables.versionID)
             }
       );
-    }
+    },
+    onError: () => client.invalidateQueries()
   });
   return {
     versionDelete: (data: { itemID: number; versionID: number }) => mutation.mutateAsync(data)

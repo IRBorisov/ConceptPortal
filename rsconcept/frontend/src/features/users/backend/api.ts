@@ -10,6 +10,7 @@ import { IUpdateProfileDTO, IUserSignupDTO } from './types';
 
 export const usersApi = {
   baseKey: KEYS.users,
+
   getUsersQueryOptions: () =>
     queryOptions({
       queryKey: [usersApi.baseKey, 'list'],

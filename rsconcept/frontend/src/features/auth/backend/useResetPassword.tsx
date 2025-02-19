@@ -1,15 +1,17 @@
 import { useMutation } from '@tanstack/react-query';
 
+import { KEYS } from '@/backend/configuration';
+
 import { authApi } from './api';
 import { IPasswordTokenDTO, IResetPasswordDTO } from './types';
 
 export const useResetPassword = () => {
   const validateMutation = useMutation({
-    mutationKey: ['validate-token'],
+    mutationKey: [KEYS.auth, 'validate-token'],
     mutationFn: authApi.validatePasswordToken
   });
   const resetMutation = useMutation({
-    mutationKey: ['reset-password'],
+    mutationKey: [KEYS.auth, 'reset-password'],
     mutationFn: authApi.resetPassword
   });
   return {

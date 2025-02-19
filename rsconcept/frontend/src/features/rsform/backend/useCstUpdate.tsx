@@ -11,7 +11,7 @@ export const useCstUpdate = () => {
   const client = useQueryClient();
   const { updateTimestamp } = useUpdateTimestamp();
   const mutation = useMutation({
-    mutationKey: [rsformsApi.baseKey, 'update-cst'],
+    mutationKey: [KEYS.global_mutation, rsformsApi.baseKey, 'update-cst'],
     mutationFn: rsformsApi.cstUpdate,
     onSuccess: (_, variables) => {
       updateTimestamp(variables.itemID);
@@ -20,7 +20,8 @@ export const useCstUpdate = () => {
         client.invalidateQueries({ queryKey: [KEYS.oss] }),
         client.invalidateQueries({ queryKey: [rsformsApi.baseKey] })
       ]);
-    }
+    },
+    onError: () => client.invalidateQueries()
   });
   return {
     cstUpdate: (data: { itemID: number; data: ICstUpdateDTO }) => mutation.mutateAsync(data)

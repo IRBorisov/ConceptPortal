@@ -8,7 +8,7 @@ import { ITargetOperation } from './types';
 export const useOperationExecute = () => {
   const client = useQueryClient();
   const mutation = useMutation({
-    mutationKey: [ossApi.baseKey, 'operation-execute'],
+    mutationKey: [KEYS.global_mutation, ossApi.baseKey, 'operation-execute'],
     mutationFn: ossApi.operationExecute,
     onSuccess: data => {
       client.setQueryData(ossApi.getOssQueryOptions({ itemID: data.id }).queryKey, data);
@@ -16,7 +16,8 @@ export const useOperationExecute = () => {
         client.invalidateQueries({ queryKey: KEYS.composite.libraryList }),
         client.invalidateQueries({ queryKey: [KEYS.rsform] })
       ]);
-    }
+    },
+    onError: () => client.invalidateQueries()
   });
   return {
     operationExecute: (data: { itemID: number; data: ITargetOperation }) => mutation.mutateAsync(data)

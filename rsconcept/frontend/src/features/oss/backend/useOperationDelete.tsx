@@ -8,7 +8,7 @@ import { IOperationDeleteDTO } from './types';
 export const useOperationDelete = () => {
   const client = useQueryClient();
   const mutation = useMutation({
-    mutationKey: [ossApi.baseKey, 'operation-delete'],
+    mutationKey: [KEYS.global_mutation, ossApi.baseKey, 'operation-delete'],
     mutationFn: ossApi.operationDelete,
     onSuccess: data => {
       client.setQueryData(ossApi.getOssQueryOptions({ itemID: data.id }).queryKey, data);
@@ -16,7 +16,8 @@ export const useOperationDelete = () => {
         client.invalidateQueries({ queryKey: KEYS.composite.libraryList }),
         client.invalidateQueries({ queryKey: [KEYS.rsform] })
       ]);
-    }
+    },
+    onError: () => client.invalidateQueries()
   });
   return {
     operationDelete: (data: { itemID: number; data: IOperationDeleteDTO }) => mutation.mutateAsync(data)

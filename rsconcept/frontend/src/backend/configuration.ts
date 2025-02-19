@@ -11,10 +11,12 @@ export const DELAYS = {
 /** API keys for local cache. */
 export const KEYS = {
   oss: 'oss',
+  auth: 'auth',
   rsform: 'rsform',
   library: 'library',
   users: 'users',
   cctext: 'cctext',
+  global_mutation: 'global_mutation',
 
   composite: {
     libraryList: ['library', 'list'],

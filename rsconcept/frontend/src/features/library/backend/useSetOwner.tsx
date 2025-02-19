@@ -11,7 +11,7 @@ import { ILibraryItem } from './types';
 export const useSetOwner = () => {
   const client = useQueryClient();
   const mutation = useMutation({
-    mutationKey: [libraryApi.baseKey, 'set-owner'],
+    mutationKey: [KEYS.global_mutation, libraryApi.baseKey, 'set-owner'],
     mutationFn: libraryApi.setOwner,
     onSuccess: (_, variables) => {
       const ossKey = KEYS.composite.ossItem({ itemID: variables.itemID });
@@ -39,7 +39,8 @@ export const useSetOwner = () => {
       client.setQueryData(libraryApi.libraryListKey, (prev: ILibraryItem[] | undefined) =>
         prev?.map(item => (item.id === variables.itemID ? { ...item, owner: variables.owner } : item))
       );
-    }
+    },
+    onError: () => client.invalidateQueries()
   });
 
   return {

@@ -10,7 +10,7 @@ import { IOperationUpdateDTO } from './types';
 export const useOperationUpdate = () => {
   const client = useQueryClient();
   const mutation = useMutation({
-    mutationKey: [ossApi.baseKey, 'operation-update'],
+    mutationKey: [KEYS.global_mutation, ossApi.baseKey, 'operation-update'],
     mutationFn: ossApi.operationUpdate,
     onSuccess: (data, variables) => {
       client.setQueryData(KEYS.composite.ossItem({ itemID: data.id }), data);
@@ -28,7 +28,8 @@ export const useOperationUpdate = () => {
       return client.invalidateQueries({
         queryKey: KEYS.composite.rsItem({ itemID: schemaID })
       });
-    }
+    },
+    onError: () => client.invalidateQueries()
   });
   return {
     operationUpdate: (data: { itemID: number; data: IOperationUpdateDTO }) => mutation.mutateAsync(data)

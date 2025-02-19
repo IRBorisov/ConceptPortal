@@ -11,7 +11,7 @@ export const useCstDelete = () => {
   const client = useQueryClient();
   const { updateTimestamp } = useUpdateTimestamp();
   const mutation = useMutation({
-    mutationKey: [rsformsApi.baseKey, 'delete-multiple-cst'],
+    mutationKey: [KEYS.global_mutation, rsformsApi.baseKey, 'delete-multiple-cst'],
     mutationFn: rsformsApi.cstDelete,
     onSuccess: data => {
       client.setQueryData(rsformsApi.getRSFormQueryOptions({ itemID: data.id }).queryKey, data);
@@ -24,7 +24,8 @@ export const useCstDelete = () => {
           predicate: query => query.queryKey.length > 2 && query.queryKey[2] !== data.id
         })
       ]);
-    }
+    },
+    onError: () => client.invalidateQueries()
   });
   return {
     cstDelete: (data: { itemID: number; data: IConstituentaList }) => mutation.mutateAsync(data)

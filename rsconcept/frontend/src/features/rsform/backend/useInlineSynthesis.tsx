@@ -11,7 +11,7 @@ export const useInlineSynthesis = () => {
   const client = useQueryClient();
   const { updateTimestamp } = useUpdateTimestamp();
   const mutation = useMutation({
-    mutationKey: [rsformsApi.baseKey, 'inline-synthesis'],
+    mutationKey: [KEYS.global_mutation, rsformsApi.baseKey, 'inline-synthesis'],
     mutationFn: rsformsApi.inlineSynthesis,
     onSuccess: data => {
       client.setQueryData(rsformsApi.getRSFormQueryOptions({ itemID: data.id }).queryKey, data);
@@ -24,7 +24,8 @@ export const useInlineSynthesis = () => {
           predicate: query => query.queryKey.length > 2 && query.queryKey[2] !== data.id
         })
       ]);
-    }
+    },
+    onError: () => client.invalidateQueries()
   });
   return {
     inlineSynthesis: (data: IInlineSynthesisDTO) => mutation.mutateAsync(data)

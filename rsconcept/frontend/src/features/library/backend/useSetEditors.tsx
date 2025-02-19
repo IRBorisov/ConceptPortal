@@ -10,7 +10,7 @@ import { libraryApi } from './api';
 export const useSetEditors = () => {
   const client = useQueryClient();
   const mutation = useMutation({
-    mutationKey: [libraryApi.baseKey, 'set-location'],
+    mutationKey: [KEYS.global_mutation, libraryApi.baseKey, 'set-location'],
     mutationFn: libraryApi.setEditors,
     onSuccess: (_, variables) => {
       const ossKey = KEYS.composite.ossItem({ itemID: variables.itemID });
@@ -34,7 +34,8 @@ export const useSetEditors = () => {
       client.setQueryData(rsKey, (prev: IRSFormDTO | undefined) =>
         !prev ? undefined : { ...prev, editors: variables.editors }
       );
-    }
+    },
+    onError: () => client.invalidateQueries()
   });
 
   return {

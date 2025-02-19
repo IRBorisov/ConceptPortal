@@ -1,7 +1,7 @@
 import { queryOptions } from '@tanstack/react-query';
 
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/apiTransport';
-import { DELAYS } from '@/backend/configuration';
+import { DELAYS, KEYS } from '@/backend/configuration';
 import { infoMsg } from '@/utils/labels';
 
 import {
@@ -17,7 +17,7 @@ import {
  * Authentication API.
  */
 export const authApi = {
-  baseKey: 'auth',
+  baseKey: KEYS.auth,
 
   getAuthQueryOptions: () => {
     return queryOptions({

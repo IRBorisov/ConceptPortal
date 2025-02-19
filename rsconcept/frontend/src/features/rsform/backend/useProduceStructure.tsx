@@ -11,7 +11,7 @@ export const useProduceStructure = () => {
   const client = useQueryClient();
   const { updateTimestamp } = useUpdateTimestamp();
   const mutation = useMutation({
-    mutationKey: [rsformsApi.baseKey, 'produce-structure'],
+    mutationKey: [KEYS.global_mutation, rsformsApi.baseKey, 'produce-structure'],
     mutationFn: rsformsApi.produceStructure,
     onSuccess: data => {
       client.setQueryData(rsformsApi.getRSFormQueryOptions({ itemID: data.schema.id }).queryKey, data.schema);
@@ -24,7 +24,8 @@ export const useProduceStructure = () => {
           predicate: query => query.queryKey.length > 2 && query.queryKey[2] !== data.schema.id
         })
       ]);
-    }
+    },
+    onError: () => client.invalidateQueries()
   });
   return {
     produceStructure: (data: { itemID: number; data: ITargetCst }) =>
