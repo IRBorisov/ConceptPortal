@@ -5,7 +5,7 @@ import { LinkTopic } from '../components/LinkTopic';
 import { TopicItem } from '../components/TopicItem';
 import { HelpTopic } from '../models/helpTopic';
 
-function HelpMain() {
+export function HelpMain() {
   return (
     <div className='text-justify'>
       <h1>Портал</h1>
@@ -66,5 +66,3 @@ function HelpMain() {
     </div>
   );
 }
-
-export default HelpMain;

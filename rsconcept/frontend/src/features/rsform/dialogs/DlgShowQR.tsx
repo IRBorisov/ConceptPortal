@@ -10,7 +10,7 @@ export interface DlgShowQRProps {
   target: string;
 }
 
-function DlgShowQR() {
+export function DlgShowQR() {
   const { target } = useDialogsStore(state => state.props as DlgShowQRProps);
   return (
     <ModalView className={clsx('w-[30rem]', 'py-12 pr-3 pl-6 flex gap-3 justify-center items-center')}>
@@ -20,5 +20,3 @@ function DlgShowQR() {
     </ModalView>
   );
 }
-
-export default DlgShowQR;

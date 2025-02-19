@@ -1,1 +1,1 @@
-export { default } from './DlgCstTemplate';
+export { DlgCstTemplate } from './DlgCstTemplate';

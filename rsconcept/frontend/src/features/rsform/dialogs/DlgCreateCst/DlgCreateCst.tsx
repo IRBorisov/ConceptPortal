@@ -12,7 +12,7 @@ import { useCstCreate } from '../../backend/useCstCreate';
 import { IRSForm } from '../../models/rsform';
 import { validateNewAlias } from '../../models/rsformAPI';
 
-import FormCreateCst from './FormCreateCst';
+import { FormCreateCst } from './FormCreateCst';
 
 export interface DlgCreateCstProps {
   initial: ICstCreateDTO;
@@ -20,7 +20,7 @@ export interface DlgCreateCstProps {
   onCreate: (data: IConstituentaBasicsDTO) => void;
 }
 
-function DlgCreateCst() {
+export function DlgCreateCst() {
   const { initial, schema, onCreate } = useDialogsStore(state => state.props as DlgCreateCstProps);
   const { cstCreate } = useCstCreate();
 
@@ -51,5 +51,3 @@ function DlgCreateCst() {
     </ModalForm>
   );
 }
-
-export default DlgCreateCst;

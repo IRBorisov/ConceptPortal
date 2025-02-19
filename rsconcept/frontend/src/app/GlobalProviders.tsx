@@ -7,7 +7,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { queryClient } from '@/backend/queryClient';
 
 // prettier-ignore
-function GlobalProviders({ children }: React.PropsWithChildren) {
+export function GlobalProviders({ children }: React.PropsWithChildren) {
   return (
   <IntlProvider locale='ru' defaultLocale='ru'>
   <QueryClientProvider client={queryClient}>
@@ -18,5 +18,3 @@ function GlobalProviders({ children }: React.PropsWithChildren) {
   </QueryClientProvider>
   </IntlProvider>);
 }
-
-export default GlobalProviders;

@@ -9,7 +9,9 @@ import { usePreferencesStore } from '@/stores/preferences';
 
 import { HelpTopic } from '../models/helpTopic';
 
-const TopicPage = React.lazy(() => import('@/features/help/pages/ManualsPage/TopicPage'));
+const TopicPage = React.lazy(() =>
+  import('@/features/help/pages/ManualsPage/TopicPage').then(module => ({ default: module.TopicPage }))
+);
 
 interface BadgeHelpProps extends CProps.Styling {
   /** Topic to display in a tooltip. */

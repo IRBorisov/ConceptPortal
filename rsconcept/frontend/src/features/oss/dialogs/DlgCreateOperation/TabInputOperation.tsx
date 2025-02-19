@@ -14,7 +14,7 @@ import { sortItemsForOSS } from '../../models/ossAPI';
 
 import { DlgCreateOperationProps } from './DlgCreateOperation';
 
-function TabInputOperation() {
+export function TabInputOperation() {
   const { oss } = useDialogsStore(state => state.props as DlgCreateOperationProps);
   const { items: libraryItems } = useLibrary();
   const sortedItems = sortItemsForOSS(oss, libraryItems);
@@ -112,5 +112,3 @@ function TabInputOperation() {
     </div>
   );
 }
-
-export default TabInputOperation;

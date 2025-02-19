@@ -18,7 +18,7 @@ export interface DlgEditEditorsProps {
   initialEditors: number[];
 }
 
-function DlgEditEditors() {
+export function DlgEditEditors() {
   const { initialEditors: initial, itemID } = useDialogsStore(state => state.props as DlgEditEditorsProps);
   const { setEditors } = useSetEditors();
 
@@ -70,5 +70,3 @@ function DlgEditEditors() {
     </ModalForm>
   );
 }
-
-export default DlgEditEditors;

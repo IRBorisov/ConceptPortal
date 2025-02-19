@@ -3,7 +3,7 @@ import { APP_COLORS } from '@/styling/colors';
 import { LinkTopic } from '../../components/LinkTopic';
 import { HelpTopic } from '../../models/helpTopic';
 
-function HelpTypeGraph() {
+export function HelpTypeGraph() {
   return (
     <div>
       <h1>Граф ступеней</h1>
@@ -32,5 +32,3 @@ function HelpTypeGraph() {
     </div>
   );
 }
-
-export default HelpTypeGraph;

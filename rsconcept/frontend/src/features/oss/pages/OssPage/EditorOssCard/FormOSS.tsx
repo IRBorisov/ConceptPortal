@@ -18,7 +18,7 @@ import { globals } from '@/utils/constants';
 import { useMutatingOss } from '../../../backend/useMutatingOss';
 import { useOssEdit } from '../OssEditContext';
 
-function FormOSS() {
+export function FormOSS() {
   const { updateItem: updateOss } = useUpdateItem();
   const controller = useOssEdit();
   const { isModified, setIsModified } = useModificationStore();
@@ -106,5 +106,3 @@ function FormOSS() {
     </form>
   );
 }
-
-export default FormOSS;

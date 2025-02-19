@@ -19,7 +19,7 @@ interface SelectLocationProps extends CProps.Styling {
   dense?: boolean;
 }
 
-function SelectLocation({ value, dense, prefix, onClick, className, style }: SelectLocationProps) {
+export function SelectLocation({ value, dense, prefix, onClick, className, style }: SelectLocationProps) {
   const { folders } = useFolders();
   const activeNode = folders.at(value);
   const items = folders.getTree();
@@ -102,5 +102,3 @@ function SelectLocation({ value, dense, prefix, onClick, className, style }: Sel
     </div>
   );
 }
-
-export default SelectLocation;

@@ -25,7 +25,7 @@ interface ASTNodeInternal {
   yPos: number;
 }
 
-function ASTNode(node: ASTNodeInternal) {
+export function ASTNode(node: ASTNodeInternal) {
   const label = labelSyntaxTree(node.data);
 
   return (
@@ -54,5 +54,3 @@ function ASTNode(node: ASTNodeInternal) {
     </>
   );
 }
-
-export default ASTNode;

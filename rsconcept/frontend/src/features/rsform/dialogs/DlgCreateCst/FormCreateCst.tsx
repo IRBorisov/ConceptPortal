@@ -19,7 +19,7 @@ interface FormCreateCstProps {
   schema: IRSForm;
 }
 
-function FormCreateCst({ schema }: FormCreateCstProps) {
+export function FormCreateCst({ schema }: FormCreateCstProps) {
   const {
     setValue,
     register,
@@ -144,5 +144,3 @@ function FormCreateCst({ schema }: FormCreateCstProps) {
     </>
   );
 }
-
-export default FormCreateCst;

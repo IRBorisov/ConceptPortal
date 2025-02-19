@@ -1,1 +1,1 @@
-export { default } from './DlgShowTypeGraph';
+export { DlgShowTypeGraph } from './DlgShowTypeGraph';

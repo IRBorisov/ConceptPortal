@@ -1,7 +1,7 @@
 import { LinkTopic } from '../../components/LinkTopic';
 import { HelpTopic } from '../../models/helpTopic';
 
-function HelpCstAttributes() {
+export function HelpCstAttributes() {
   return (
     <div className='dense'>
       <h1>Атрибуты конституенты</h1>
@@ -64,5 +64,3 @@ function HelpCstAttributes() {
     </div>
   );
 }
-
-export default HelpCstAttributes;

@@ -1,1 +1,1 @@
-export { default } from './DlgDeleteCst';
+export { DlgDeleteCst } from './DlgDeleteCst';

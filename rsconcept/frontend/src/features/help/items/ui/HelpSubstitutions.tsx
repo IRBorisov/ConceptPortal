@@ -1,4 +1,4 @@
-function HelpSubstitutions() {
+export function HelpSubstitutions() {
   return (
     <div>
       <h1>Таблица отождествлений</h1>
@@ -19,5 +19,3 @@ function HelpSubstitutions() {
     </div>
   );
 }
-
-export default HelpSubstitutions;

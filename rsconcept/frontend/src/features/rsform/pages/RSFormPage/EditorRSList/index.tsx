@@ -1,1 +1,1 @@
-export { default } from './EditorRSList';
+export { EditorRSList } from './EditorRSList';

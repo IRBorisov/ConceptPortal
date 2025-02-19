@@ -1,43 +1,43 @@
-import useWindowSize from '@/hooks/useWindowSize';
+import { useWindowSize } from '@/hooks/useWindowSize';
 
-import HelpConceptOSS from '../../items/cc/HelpConceptOSS';
-import HelpConceptPropagation from '../../items/cc/HelpConceptPropagation';
-import HelpConceptRelations from '../../items/cc/HelpConceptRelations';
-import HelpConceptSynthesis from '../../items/cc/HelpConceptSynthesis';
-import HelpConceptSystem from '../../items/cc/HelpConceptSystem';
-import HelpCstAttributes from '../../items/cc/HelpCstAttributes';
-import HelpAccess from '../../items/HelpAccess';
-import HelpConcept from '../../items/HelpConcept';
-import HelpExteor from '../../items/HelpExteor';
-import HelpInfo from '../../items/HelpInfo';
-import HelpInterface from '../../items/HelpInterface';
-import HelpMain from '../../items/HelpMain';
-import HelpRSLang from '../../items/HelpRSLang';
-import HelpTerminologyControl from '../../items/HelpTerminologyControl';
-import HelpThesaurus from '../../items/HelpThesaurus';
-import HelpVersions from '../../items/HelpVersions';
-import HelpAPI from '../../items/info/HelpAPI';
-import HelpContributors from '../../items/info/HelpContributors';
-import HelpPrivacy from '../../items/info/HelpPrivacy';
-import HelpRules from '../../items/info/HelpRules';
-import HelpRSLangCorrect from '../../items/rslang/HelpRSLangCorrect';
-import HelpRSLangInterpret from '../../items/rslang/HelpRSLangInterpret';
-import HelpRSLangOperations from '../../items/rslang/HelpRSLangOperations';
-import HelpRSLangTemplates from '../../items/rslang/HelpRSLangTemplates';
-import HelpRSLangTypes from '../../items/rslang/HelpRSLangTypes';
-import HelpCstClass from '../../items/ui/HelpCstClass';
-import HelpCstStatus from '../../items/ui/HelpCstStatus';
-import HelpFormulaTree from '../../items/ui/HelpFormulaTree';
-import HelpLibrary from '../../items/ui/HelpLibrary';
-import HelpOssGraph from '../../items/ui/HelpOssGraph';
-import HelpRelocateCst from '../../items/ui/HelpRelocateCst';
-import HelpRSCard from '../../items/ui/HelpRSCard';
-import HelpRSEditor from '../../items/ui/HelpRSEditor';
-import HelpRSGraphTerm from '../../items/ui/HelpRSGraphTerm';
-import HelpRSList from '../../items/ui/HelpRSList';
-import HelpRSMenu from '../../items/ui/HelpRSMenu';
-import HelpSubstitutions from '../../items/ui/HelpSubstitutions';
-import HelpTypeGraph from '../../items/ui/HelpTypeGraph';
+import { HelpConceptOSS } from '../../items/cc/HelpConceptOSS';
+import { HelpConceptPropagation } from '../../items/cc/HelpConceptPropagation';
+import { HelpConceptRelations } from '../../items/cc/HelpConceptRelations';
+import { HelpConceptSynthesis } from '../../items/cc/HelpConceptSynthesis';
+import { HelpConceptSystem } from '../../items/cc/HelpConceptSystem';
+import { HelpCstAttributes } from '../../items/cc/HelpCstAttributes';
+import { HelpAccess } from '../../items/HelpAccess';
+import { HelpConcept } from '../../items/HelpConcept';
+import { HelpExteor } from '../../items/HelpExteor';
+import { HelpInfo } from '../../items/HelpInfo';
+import { HelpInterface } from '../../items/HelpInterface';
+import { HelpMain } from '../../items/HelpMain';
+import { HelpRSLang } from '../../items/HelpRSLang';
+import { HelpTerminologyControl } from '../../items/HelpTerminologyControl';
+import { HelpThesaurus } from '../../items/HelpThesaurus';
+import { HelpVersions } from '../../items/HelpVersions';
+import { HelpAPI } from '../../items/info/HelpAPI';
+import { HelpContributors } from '../../items/info/HelpContributors';
+import { HelpPrivacy } from '../../items/info/HelpPrivacy';
+import { HelpRules } from '../../items/info/HelpRules';
+import { HelpRSLangCorrect } from '../../items/rslang/HelpRSLangCorrect';
+import { HelpRSLangInterpret } from '../../items/rslang/HelpRSLangInterpret';
+import { HelpRSLangOperations } from '../../items/rslang/HelpRSLangOperations';
+import { HelpRSLangTemplates } from '../../items/rslang/HelpRSLangTemplates';
+import { HelpRSLangTypes } from '../../items/rslang/HelpRSLangTypes';
+import { HelpCstClass } from '../../items/ui/HelpCstClass';
+import { HelpCstStatus } from '../../items/ui/HelpCstStatus';
+import { HelpFormulaTree } from '../../items/ui/HelpFormulaTree';
+import { HelpLibrary } from '../../items/ui/HelpLibrary';
+import { HelpOssGraph } from '../../items/ui/HelpOssGraph';
+import { HelpRelocateCst } from '../../items/ui/HelpRelocateCst';
+import { HelpRSCard } from '../../items/ui/HelpRSCard';
+import { HelpRSEditor } from '../../items/ui/HelpRSEditor';
+import { HelpRSGraphTerm } from '../../items/ui/HelpRSGraphTerm';
+import { HelpRSList } from '../../items/ui/HelpRSList';
+import { HelpRSMenu } from '../../items/ui/HelpRSMenu';
+import { HelpSubstitutions } from '../../items/ui/HelpSubstitutions';
+import { HelpTypeGraph } from '../../items/ui/HelpTypeGraph';
 import { HelpTopic } from '../../models/helpTopic';
 
 // PDF Viewer setup
@@ -51,7 +51,7 @@ interface TopicPageProps {
   topic: HelpTopic;
 }
 
-function TopicPage({ topic }: TopicPageProps) {
+export function TopicPage({ topic }: TopicPageProps) {
   const size = useWindowSize();
 
   if (topic === HelpTopic.MAIN) return <HelpMain />;
@@ -106,5 +106,3 @@ function TopicPage({ topic }: TopicPageProps) {
   if (topic === HelpTopic.EXTEOR) return <HelpExteor />;
   return null;
 }
-
-export default TopicPage;

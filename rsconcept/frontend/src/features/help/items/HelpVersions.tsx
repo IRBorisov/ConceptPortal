@@ -1,6 +1,6 @@
 import { IconEditor, IconNewVersion, IconShare, IconUpload, IconVersions } from '@/components/Icons';
 
-function HelpVersions() {
+export function HelpVersions() {
   return (
     <div className=''>
       <h1>Версионирование схем</h1>
@@ -28,5 +28,3 @@ function HelpVersions() {
     </div>
   );
 }
-
-export default HelpVersions;

@@ -19,14 +19,14 @@ import { useMutatingLibrary } from '../../backend/useMutatingLibrary';
 import { useVersionDelete } from '../../backend/useVersionDelete';
 import { useVersionUpdate } from '../../backend/useVersionUpdate';
 
-import TableVersions from './TableVersions';
+import { TableVersions } from './TableVersions';
 
 export interface DlgEditVersionsProps {
   itemID: number;
   afterDelete: (targetVersion: number) => void;
 }
 
-function DlgEditVersions() {
+export function DlgEditVersions() {
   const { itemID, afterDelete } = useDialogsStore(state => state.props as DlgEditVersionsProps);
   const hideDialog = useDialogsStore(state => state.hideDialog);
   const { schema } = useRSFormSuspense({ itemID });
@@ -128,5 +128,3 @@ function DlgEditVersions() {
     </ModalView>
   );
 }
-
-export default DlgEditVersions;

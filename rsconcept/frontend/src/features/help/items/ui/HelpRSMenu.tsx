@@ -18,7 +18,7 @@ import {
 import { LinkTopic } from '../../components/LinkTopic';
 import { HelpTopic } from '../../models/helpTopic';
 
-function HelpRSMenu() {
+export function HelpRSMenu() {
   return (
     <div>
       <h1>Редактирование схемы</h1>
@@ -100,5 +100,3 @@ function HelpRSMenu() {
     </div>
   );
 }
-
-export default HelpRSMenu;

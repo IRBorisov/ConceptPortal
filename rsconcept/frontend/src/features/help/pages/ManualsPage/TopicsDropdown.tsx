@@ -17,7 +17,7 @@ interface TopicsDropdownProps {
   onChangeTopic: (newTopic: HelpTopic) => void;
 }
 
-function TopicsDropdown({ activeTopic, onChangeTopic }: TopicsDropdownProps) {
+export function TopicsDropdown({ activeTopic, onChangeTopic }: TopicsDropdownProps) {
   const menu = useDropdown();
   const noNavigation = useAppLayoutStore(state => state.noNavigation);
   const treeHeight = useFitHeight('4rem + 2px');
@@ -74,5 +74,3 @@ function TopicsDropdown({ activeTopic, onChangeTopic }: TopicsDropdownProps) {
     </div>
   );
 }
-
-export default TopicsDropdown;

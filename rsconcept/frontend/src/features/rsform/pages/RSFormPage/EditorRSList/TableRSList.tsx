@@ -4,10 +4,10 @@ import { useLayoutEffect, useState } from 'react';
 import clsx from 'clsx';
 
 import { TextURL } from '@/components/Control';
-import DataTable, { createColumnHelper, RowSelectionState, VisibilityState } from '@/components/DataTable';
+import { createColumnHelper, DataTable, RowSelectionState, VisibilityState } from '@/components/DataTable';
 import { CProps } from '@/components/props';
 import { NoData, TextContent } from '@/components/View';
-import useWindowSize from '@/hooks/useWindowSize';
+import { useWindowSize } from '@/hooks/useWindowSize';
 import { PARAMETER, prefixes } from '@/utils/constants';
 import { truncateToSymbol } from '@/utils/utils';
 
@@ -36,7 +36,7 @@ const DEFINITION_MAX_SYMBOLS = 120;
 
 const columnHelper = createColumnHelper<IConstituenta>();
 
-function TableRSList({
+export function TableRSList({
   items,
   maxHeight,
   enableSelection,
@@ -153,5 +153,3 @@ function TableRSList({
     />
   );
 }
-
-export default TableRSList;

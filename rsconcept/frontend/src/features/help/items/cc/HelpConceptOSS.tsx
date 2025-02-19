@@ -11,7 +11,7 @@ import {
 import { LinkTopic } from '../../components/LinkTopic';
 import { HelpTopic } from '../../models/helpTopic';
 
-function HelpConceptOSS() {
+export function HelpConceptOSS() {
   return (
     <div className='text-justify'>
       <h1>Операционная схема синтеза</h1>
@@ -70,5 +70,3 @@ function HelpConceptOSS() {
     </div>
   );
 }
-
-export default HelpConceptOSS;

@@ -1,4 +1,4 @@
-function HelpTerminologyControl() {
+export function HelpTerminologyControl() {
   return (
     <div>
       <h1>Терминологизация</h1>
@@ -24,5 +24,3 @@ function HelpTerminologyControl() {
     </div>
   );
 }
-
-export default HelpTerminologyControl;

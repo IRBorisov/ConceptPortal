@@ -1,1 +1,1 @@
-export { default } from './DlgShowAST';
+export { DlgShowAST } from './DlgShowAST';

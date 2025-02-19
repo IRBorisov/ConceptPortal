@@ -29,7 +29,7 @@ export interface DlgChangeLocationProps {
   onChangeLocation: (newLocation: string) => void;
 }
 
-function DlgChangeLocation() {
+export function DlgChangeLocation() {
   const { initial, onChangeLocation } = useDialogsStore(state => state.props as DlgChangeLocationProps);
   const { user } = useAuthSuspense();
 
@@ -97,5 +97,3 @@ function DlgChangeLocation() {
     </ModalForm>
   );
 }
-
-export default DlgChangeLocation;

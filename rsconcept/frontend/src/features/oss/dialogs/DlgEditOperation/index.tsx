@@ -1,1 +1,1 @@
-export { default } from './DlgEditOperation';
+export { DlgEditOperation } from './DlgEditOperation';

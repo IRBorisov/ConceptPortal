@@ -2,7 +2,7 @@
 
 import { useLocation } from 'react-router';
 
-function useQueryStrings() {
+export function useQueryStrings() {
   const search = useLocation().search;
 
   function get(key: string) {
@@ -10,5 +10,3 @@ function useQueryStrings() {
   }
   return { get };
 }
-
-export default useQueryStrings;

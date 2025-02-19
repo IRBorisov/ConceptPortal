@@ -6,7 +6,7 @@ import { IInlineSynthesisDTO } from '../../backend/types';
 import { useRSFormSuspense } from '../../backend/useRSForm';
 import { PickMultiConstituenta } from '../../components/PickMultiConstituenta';
 
-function TabConstituents() {
+export function TabConstituents() {
   const { setValue, control } = useFormContext<IInlineSynthesisDTO>();
   const sourceID = useWatch({ control, name: 'source' });
   const substitutions = useWatch({ control, name: 'substitutions' });
@@ -39,5 +39,3 @@ function TabConstituents() {
     />
   );
 }
-
-export default TabConstituents;

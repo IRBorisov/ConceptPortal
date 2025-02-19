@@ -39,7 +39,7 @@ interface ToolbarConstituentaProps {
   onReset: () => void;
 }
 
-function ToolbarConstituenta({
+export function ToolbarConstituenta({
   activeCst,
   disabled,
 
@@ -152,5 +152,3 @@ function ToolbarConstituenta({
     </Overlay>
   );
 }
-
-export default ToolbarConstituenta;

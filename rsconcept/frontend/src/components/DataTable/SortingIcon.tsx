@@ -8,7 +8,7 @@ interface SortingIconProps<TData> {
   column: Column<TData>;
 }
 
-function SortingIcon<TData>({ column }: SortingIconProps<TData>) {
+export function SortingIcon<TData>({ column }: SortingIconProps<TData>) {
   return (
     <>
       {{
@@ -18,5 +18,3 @@ function SortingIcon<TData>({ column }: SortingIconProps<TData>) {
     </>
   );
 }
-
-export default SortingIcon;

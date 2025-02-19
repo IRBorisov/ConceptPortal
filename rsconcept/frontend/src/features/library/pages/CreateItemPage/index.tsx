@@ -1,1 +1,1 @@
-export { default } from './CreateItemPage';
+export { CreateItemPage } from './CreateItemPage';

@@ -9,7 +9,7 @@ interface SelectRowProps<TData> {
   onChangeLastSelected: (newValue: string) => void;
 }
 
-function SelectRow<TData>({ row, onChangeLastSelected }: SelectRowProps<TData>) {
+export function SelectRow<TData>({ row, onChangeLastSelected }: SelectRowProps<TData>) {
   function handleChange(value: boolean) {
     onChangeLastSelected(row.id);
     row.toggleSelected(value);
@@ -17,5 +17,3 @@ function SelectRow<TData>({ row, onChangeLastSelected }: SelectRowProps<TData>) 
 
   return <Checkbox tabIndex={-1} value={row.getIsSelected()} onChange={handleChange} />;
 }
-
-export default SelectRow;

@@ -16,7 +16,7 @@ interface ASTFlowProps {
   onChangeDragging: (value: boolean) => void;
 }
 
-function ASTFlow({ data, onNodeEnter, onNodeLeave, onChangeDragging }: ASTFlowProps) {
+export function ASTFlow({ data, onNodeEnter, onNodeLeave, onChangeDragging }: ASTFlowProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges] = useEdgesState([]);
 
@@ -72,5 +72,3 @@ function ASTFlow({ data, onNodeEnter, onNodeLeave, onChangeDragging }: ASTFlowPr
     />
   );
 }
-
-export default ASTFlow;

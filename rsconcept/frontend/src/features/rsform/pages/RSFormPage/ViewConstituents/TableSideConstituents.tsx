@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 
-import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/DataTable';
+import { createColumnHelper, DataTable, IConditionalStyle } from '@/components/DataTable';
 import { NoData, TextContent } from '@/components/View';
 import { APP_COLORS } from '@/styling/colors';
 import { PARAMETER, prefixes } from '@/utils/constants';
@@ -23,7 +23,7 @@ interface TableSideConstituentsProps {
 
 const columnHelper = createColumnHelper<IConstituenta>();
 
-function TableSideConstituents({
+export function TableSideConstituents({
   items,
   activeCst,
   autoScroll = true,
@@ -120,5 +120,3 @@ function TableSideConstituents({
     />
   );
 }
-
-export default TableSideConstituents;

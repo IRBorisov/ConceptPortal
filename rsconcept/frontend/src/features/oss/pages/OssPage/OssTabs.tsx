@@ -9,16 +9,16 @@ import { Overlay } from '@/components/Container';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/Tabs';
 import { useAppLayoutStore } from '@/stores/appLayout';
 
-import EditorRSForm from './EditorOssCard';
-import EditorTermGraph from './EditorOssGraph';
-import MenuOssTabs from './MenuOssTabs';
+import { EditorOssCard } from './EditorOssCard';
+import { EditorOssGraph } from './EditorOssGraph';
+import { MenuOssTabs } from './MenuOssTabs';
 import { OssTabID, useOssEdit } from './OssEditContext';
 
 interface OssTabsProps {
   activeTab: OssTabID;
 }
 
-function OssTabs({ activeTab }: OssTabsProps) {
+export function OssTabs({ activeTab }: OssTabsProps) {
   const router = useConceptNavigation();
   const { schema, navigateTab } = useOssEdit();
 
@@ -74,15 +74,13 @@ function OssTabs({ activeTab }: OssTabsProps) {
 
       <div className='overflow-x-hidden'>
         <TabPanel>
-          <EditorRSForm />
+          <EditorOssCard />
         </TabPanel>
 
         <TabPanel>
-          <EditorTermGraph />
+          <EditorOssGraph />
         </TabPanel>
       </div>
     </Tabs>
   );
 }
-
-export default OssTabs;

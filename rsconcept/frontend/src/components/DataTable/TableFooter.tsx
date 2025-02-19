@@ -6,7 +6,7 @@ interface TableFooterProps<TData> {
   table: Table<TData>;
 }
 
-function TableFooter<TData>({ table }: TableFooterProps<TData>) {
+export function TableFooter<TData>({ table }: TableFooterProps<TData>) {
   return (
     <tfoot>
       {table.getFooterGroups().map((footerGroup: HeaderGroup<TData>) => (
@@ -21,5 +21,3 @@ function TableFooter<TData>({ table }: TableFooterProps<TData>) {
     </tfoot>
   );
 }
-
-export default TableFooter;

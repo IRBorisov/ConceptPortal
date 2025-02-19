@@ -24,7 +24,7 @@ interface ToolbarGraphSelectionProps extends CProps.Styling {
   emptySelection?: boolean;
 }
 
-function ToolbarGraphSelection({
+export function ToolbarGraphSelection({
   className,
   graph,
   value: selected,
@@ -101,5 +101,3 @@ function ToolbarGraphSelection({
     </div>
   );
 }
-
-export default ToolbarGraphSelection;

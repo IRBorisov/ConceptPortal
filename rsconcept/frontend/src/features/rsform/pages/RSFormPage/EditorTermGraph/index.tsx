@@ -1,1 +1,1 @@
-export { default } from './EditorTermGraph';
+export { EditorTermGraph } from './EditorTermGraph';

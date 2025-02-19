@@ -9,7 +9,7 @@ import Select, {
   StylesConfig
 } from 'react-select';
 
-import useWindowSize from '@/hooks/useWindowSize';
+import { useWindowSize } from '@/hooks/useWindowSize';
 import { APP_COLORS, SELECT_THEME } from '@/styling/colors';
 
 import { IconClose, IconDropArrow, IconDropArrowUp } from '../Icons';

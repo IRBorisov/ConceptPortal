@@ -4,13 +4,13 @@ import { useMainHeight } from '@/stores/appLayout';
 
 import { HelpTopic } from '../../models/helpTopic';
 
-import TopicPage from './TopicPage';
+import { TopicPage } from './TopicPage';
 
 interface ViewTopicProps {
   topic: HelpTopic;
 }
 
-function ViewTopic({ topic }: ViewTopicProps) {
+export function ViewTopic({ topic }: ViewTopicProps) {
   const mainHeight = useMainHeight();
   return (
     <div
@@ -22,5 +22,3 @@ function ViewTopic({ topic }: ViewTopicProps) {
     </div>
   );
 }
-
-export default ViewTopic;

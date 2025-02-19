@@ -2,8 +2,8 @@
 
 import { flexRender, Header, HeaderGroup, Table } from '@tanstack/react-table';
 
-import SelectAll from './SelectAll';
-import SortingIcon from './SortingIcon';
+import { SelectAll } from './SelectAll';
+import { SortingIcon } from './SortingIcon';
 
 interface TableHeaderProps<TData> {
   table: Table<TData>;
@@ -13,7 +13,7 @@ interface TableHeaderProps<TData> {
   resetLastSelected: () => void;
 }
 
-function TableHeader<TData>({
+export function TableHeader<TData>({
   table,
   headPosition,
   enableRowSelection,
@@ -61,5 +61,3 @@ function TableHeader<TData>({
     </thead>
   );
 }
-
-export default TableHeader;

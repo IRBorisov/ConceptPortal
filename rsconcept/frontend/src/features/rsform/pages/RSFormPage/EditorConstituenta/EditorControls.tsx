@@ -17,7 +17,7 @@ interface EditorControlsProps {
   onEditTerm: () => void;
 }
 
-function EditorControls({ constituenta, disabled, onEditTerm }: EditorControlsProps) {
+export function EditorControls({ constituenta, disabled, onEditTerm }: EditorControlsProps) {
   const { schema } = useRSEdit();
   const { isModified } = useModificationStore();
   const isProcessing = useMutatingRSForm();
@@ -62,5 +62,3 @@ function EditorControls({ constituenta, disabled, onEditTerm }: EditorControlsPr
     </Overlay>
   );
 }
-
-export default EditorControls;

@@ -1,1 +1,1 @@
-export { default } from './EditorOssCard';
+export { EditorOssCard } from './EditorOssCard';

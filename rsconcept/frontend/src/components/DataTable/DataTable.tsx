@@ -19,11 +19,11 @@ import {
 
 import { CProps } from '../props';
 
-import DefaultNoData from './DefaultNoData';
-import PaginationTools from './PaginationTools';
-import TableBody from './TableBody';
-import TableFooter from './TableFooter';
-import TableHeader from './TableHeader';
+import { DefaultNoData } from './DefaultNoData';
+import { PaginationTools } from './PaginationTools';
+import { TableBody } from './TableBody';
+import { TableFooter } from './TableFooter';
+import { TableHeader } from './TableHeader';
 
 export { type ColumnSort, createColumnHelper, type RowSelectionState, type VisibilityState };
 
@@ -109,7 +109,7 @@ export interface DataTableProps<TData extends RowData>
  * @param headPosition - Top position of sticky header (0 if no other sticky elements are present).
  * No sticky header if omitted
  */
-function DataTable<TData extends RowData>({
+export function DataTable<TData extends RowData>({
   id,
   style,
   className,
@@ -229,5 +229,3 @@ function DataTable<TData extends RowData>({
     </div>
   );
 }
-
-export default DataTable;

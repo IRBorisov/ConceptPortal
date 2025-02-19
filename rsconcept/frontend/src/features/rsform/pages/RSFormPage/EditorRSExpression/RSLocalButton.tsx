@@ -11,7 +11,7 @@ interface RSLocalButtonProps extends CProps.Titled, CProps.Styling {
   onInsert: (token: TokenID, key?: string) => void;
 }
 
-function RSLocalButton({
+export function RSLocalButton({
   text,
   title,
   titleHtml,
@@ -45,5 +45,3 @@ function RSLocalButton({
     </button>
   );
 }
-
-export default RSLocalButton;

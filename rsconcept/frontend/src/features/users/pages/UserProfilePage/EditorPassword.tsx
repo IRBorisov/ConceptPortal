@@ -14,7 +14,7 @@ import { SubmitButton } from '@/components/Control';
 import { ErrorData } from '@/components/InfoError';
 import { TextInput } from '@/components/Input';
 
-function EditorPassword() {
+export function EditorPassword() {
   const router = useConceptNavigation();
   const { changePassword, isPending, error: serverError, reset: clearServerError } = useChangePassword();
   const {
@@ -75,8 +75,6 @@ function EditorPassword() {
     </form>
   );
 }
-
-export default EditorPassword;
 
 // ====== Internals =========
 function ServerError({ error }: { error: ErrorData }): React.ReactElement {

@@ -10,7 +10,7 @@ import { PickSubstitutions } from '../../components/PickSubstitutions';
 
 import { DlgInlineSynthesisProps } from './DlgInlineSynthesis';
 
-function TabSubstitutions() {
+export function TabSubstitutions() {
   const { receiver } = useDialogsStore(state => state.props as DlgInlineSynthesisProps);
   const { control } = useFormContext<IInlineSynthesisDTO>();
   const sourceID = useWatch({ control, name: 'source' });
@@ -36,5 +36,3 @@ function TabSubstitutions() {
     />
   );
 }
-
-export default TabSubstitutions;

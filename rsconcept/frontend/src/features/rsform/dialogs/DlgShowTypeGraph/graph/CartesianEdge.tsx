@@ -9,7 +9,7 @@ export interface MGraphEdgeProps extends EdgeProps {
   data?: { indices: number[] };
 }
 
-function CartesianEdge({ data, ...restProps }: MGraphEdgeProps) {
+export function CartesianEdge({ data, ...restProps }: MGraphEdgeProps) {
   return (
     <>
       <SimpleBezierEdge
@@ -21,5 +21,3 @@ function CartesianEdge({ data, ...restProps }: MGraphEdgeProps) {
     </>
   );
 }
-
-export default CartesianEdge;

@@ -1,1 +1,1 @@
-export { default } from './DlgCreateOperation';
+export { DlgCreateOperation } from './DlgCreateOperation';

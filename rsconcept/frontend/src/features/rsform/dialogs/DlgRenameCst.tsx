@@ -21,7 +21,7 @@ export interface DlgRenameCstProps {
   target: IConstituenta;
 }
 
-function DlgRenameCst() {
+export function DlgRenameCst() {
   const { schema, target } = useDialogsStore(state => state.props as DlgRenameCstProps);
   const { cstRename } = useCstRename();
 
@@ -73,5 +73,3 @@ function DlgRenameCst() {
     </ModalForm>
   );
 }
-
-export default DlgRenameCst;

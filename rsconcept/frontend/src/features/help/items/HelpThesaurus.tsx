@@ -30,7 +30,7 @@ import {
 import { LinkTopic } from '../components/LinkTopic';
 import { HelpTopic } from '../models/helpTopic';
 
-function HelpThesaurus() {
+export function HelpThesaurus() {
   return (
     <div className='text-justify'>
       <h1>Тезаурус</h1>
@@ -281,5 +281,3 @@ function HelpThesaurus() {
     </div>
   );
 }
-
-export default HelpThesaurus;

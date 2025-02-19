@@ -20,7 +20,7 @@ export interface DlgDeleteOperationProps {
   positions: IOperationPosition[];
 }
 
-function DlgDeleteOperation() {
+export function DlgDeleteOperation() {
   const { oss, target, positions } = useDialogsStore(state => state.props as DlgDeleteOperationProps);
   const { operationDelete } = useOperationDelete();
 
@@ -82,5 +82,3 @@ function DlgDeleteOperation() {
     </ModalForm>
   );
 }
-
-export default DlgDeleteOperation;

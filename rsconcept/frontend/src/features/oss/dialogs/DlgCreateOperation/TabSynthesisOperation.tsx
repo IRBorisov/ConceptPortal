@@ -9,7 +9,7 @@ import { PickMultiOperation } from '../../components/PickMultiOperation';
 
 import { DlgCreateOperationProps } from './DlgCreateOperation';
 
-function TabSynthesisOperation() {
+export function TabSynthesisOperation() {
   const { oss } = useDialogsStore(state => state.props as DlgCreateOperationProps);
   const {
     register,
@@ -58,5 +58,3 @@ function TabSynthesisOperation() {
     </div>
   );
 }
-
-export default TabSynthesisOperation;

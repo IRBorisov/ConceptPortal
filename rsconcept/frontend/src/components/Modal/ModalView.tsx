@@ -4,7 +4,7 @@ import clsx from 'clsx';
 
 import { BadgeHelp } from '@/features/help';
 
-import useEscapeKey from '@/hooks/useEscapeKey';
+import { useEscapeKey } from '@/hooks/useEscapeKey';
 import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/utils';

@@ -26,7 +26,7 @@ import { LocationHead } from '../../models/library';
 import { combineLocation } from '../../models/libraryAPI';
 import { useLibrarySearchStore } from '../../stores/librarySearch';
 
-function FormCreateItem() {
+export function FormCreateItem() {
   const router = useConceptNavigation();
   const { user } = useAuthSuspense();
   const { createItem, isPending, error: serverError, reset: clearServerError } = useCreateItem();
@@ -249,5 +249,3 @@ function FormCreateItem() {
     </form>
   );
 }
-
-export default FormCreateItem;

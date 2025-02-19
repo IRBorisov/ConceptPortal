@@ -1,11 +1,11 @@
 import { createBrowserRouter } from 'react-router';
 
 import { prefetchAuth } from '@/features/auth/backend/useAuth';
-import LoginPage from '@/features/auth/pages/LoginPage';
-import HomePage from '@/features/home/HomePage';
-import NotFoundPage from '@/features/home/NotFoundPage';
+import { LoginPage } from '@/features/auth/pages/LoginPage';
+import { HomePage } from '@/features/home/HomePage';
+import { NotFoundPage } from '@/features/home/NotFoundPage';
 import { prefetchLibrary } from '@/features/library/backend/useLibrary';
-import CreateItemPage from '@/features/library/pages/CreateItemPage';
+import { CreateItemPage } from '@/features/library/pages/CreateItemPage';
 import { prefetchOSS } from '@/features/oss/backend/useOSS';
 import { prefetchRSForm } from '@/features/rsform/backend/useRSForm';
 import { prefetchProfile } from '@/features/users/backend/useProfile';
@@ -13,7 +13,7 @@ import { prefetchUsers } from '@/features/users/backend/useUsers';
 
 import { Loader } from '@/components/Loader';
 
-import ApplicationLayout from './ApplicationLayout';
+import { ApplicationLayout } from './ApplicationLayout';
 import { ErrorFallback } from './ErrorFallback';
 import { routes } from './urls';
 

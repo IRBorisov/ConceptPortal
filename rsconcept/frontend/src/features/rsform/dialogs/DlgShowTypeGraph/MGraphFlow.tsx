@@ -16,7 +16,7 @@ interface MGraphFlowProps {
   data: TMGraph;
 }
 
-function MGraphFlow({ data }: MGraphFlowProps) {
+export function MGraphFlow({ data }: MGraphFlowProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges] = useEdgesState([]);
 
@@ -72,5 +72,3 @@ function MGraphFlow({ data }: MGraphFlowProps) {
     />
   );
 }
-
-export default MGraphFlow;

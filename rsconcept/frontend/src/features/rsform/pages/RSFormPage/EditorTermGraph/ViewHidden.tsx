@@ -6,7 +6,7 @@ import { Overlay } from '@/components/Container';
 import { MiniButton } from '@/components/Control';
 import { IconDropArrow, IconDropArrowUp } from '@/components/Icons';
 import { CProps } from '@/components/props';
-import useWindowSize from '@/hooks/useWindowSize';
+import { useWindowSize } from '@/hooks/useWindowSize';
 import { useFitHeight } from '@/stores/appLayout';
 import { useTooltipsStore } from '@/stores/tooltips';
 import { APP_COLORS } from '@/styling/colors';
@@ -27,7 +27,7 @@ interface ViewHiddenProps {
   setFocus: (cstID: number) => void;
 }
 
-function ViewHidden({ items, selected, toggleSelection, setFocus, schema, coloringScheme }: ViewHiddenProps) {
+export function ViewHidden({ items, selected, toggleSelection, setFocus, schema, coloringScheme }: ViewHiddenProps) {
   const windowSize = useWindowSize();
   const localSelected = items.filter(id => selected.includes(id));
 
@@ -122,5 +122,3 @@ function ViewHidden({ items, selected, toggleSelection, setFocus, schema, colori
     </div>
   );
 }
-
-export default ViewHidden;

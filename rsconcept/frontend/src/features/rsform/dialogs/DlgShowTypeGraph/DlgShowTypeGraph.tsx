@@ -12,13 +12,13 @@ import { errorMsg } from '@/utils/labels';
 import { ITypeInfo } from '../../models/rslang';
 import { TMGraph } from '../../models/TMGraph';
 
-import MGraphFlow from './MGraphFlow';
+import { MGraphFlow } from './MGraphFlow';
 
 export interface DlgShowTypeGraphProps {
   items: ITypeInfo[];
 }
 
-function DlgShowTypeGraph() {
+export function DlgShowTypeGraph() {
   const { items } = useDialogsStore(state => state.props as DlgShowTypeGraphProps);
   const hideDialog = useDialogsStore(state => state.hideDialog);
   const graph = (() => {
@@ -45,5 +45,3 @@ function DlgShowTypeGraph() {
     </ModalView>
   );
 }
-
-export default DlgShowTypeGraph;

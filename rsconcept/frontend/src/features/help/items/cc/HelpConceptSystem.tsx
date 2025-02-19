@@ -1,7 +1,7 @@
 import { LinkTopic } from '../../components/LinkTopic';
 import { HelpTopic } from '../../models/helpTopic';
 
-function HelpConceptSystem() {
+export function HelpConceptSystem() {
   return (
     <div className='text-justify'>
       <h1>Концептуальная схема – Система определений</h1>
@@ -61,5 +61,3 @@ function HelpConceptSystem() {
     </div>
   );
 }
-
-export default HelpConceptSystem;

@@ -1,13 +1,11 @@
 import { ReactFlowProvider } from 'reactflow';
 
-import TGFlow from './TGFlow';
+import { TGFlow } from './TGFlow';
 
-function EditorTermGraph() {
+export function EditorTermGraph() {
   return (
     <ReactFlowProvider>
       <TGFlow />
     </ReactFlowProvider>
   );
 }
-
-export default EditorTermGraph;

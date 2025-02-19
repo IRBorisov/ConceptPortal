@@ -30,7 +30,7 @@ interface ToolbarSearchProps {
   filtered: number;
 }
 
-function ToolbarSearch({ total, filtered }: ToolbarSearchProps) {
+export function ToolbarSearch({ total, filtered }: ToolbarSearchProps) {
   const headMenu = useDropdown();
   const userMenu = useDropdown();
 
@@ -212,5 +212,3 @@ function ToolbarSearch({ total, filtered }: ToolbarSearchProps) {
     </div>
   );
 }
-
-export default ToolbarSearch;

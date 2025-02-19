@@ -3,7 +3,7 @@ import { IconPredecessor } from '@/components/Icons';
 import { LinkTopic } from '../../components/LinkTopic';
 import { HelpTopic } from '../../models/helpTopic';
 
-function HelpConceptPropagation() {
+export function HelpConceptPropagation() {
   return (
     <div className='text-justify'>
       <h1>Сквозные изменения</h1>
@@ -44,5 +44,3 @@ function HelpConceptPropagation() {
     </div>
   );
 }
-
-export default HelpConceptPropagation;

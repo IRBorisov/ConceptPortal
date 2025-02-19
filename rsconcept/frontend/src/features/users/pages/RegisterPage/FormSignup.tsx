@@ -20,7 +20,7 @@ import { globals, patterns } from '@/utils/constants';
 import { IUserSignupDTO, schemaUserSignup } from '../../backend/types';
 import { useSignup } from '../../backend/useSignup';
 
-function FormSignup() {
+export function FormSignup() {
   const router = useConceptNavigation();
   const { signup, isPending, error: serverError, reset: clearServerError } = useSignup();
   const [acceptPrivacy, setAcceptPrivacy] = useState(false);
@@ -152,8 +152,6 @@ function FormSignup() {
     </form>
   );
 }
-
-export default FormSignup;
 
 // ====== Internals =========
 function ServerError({ error }: { error: ErrorData }): React.ReactElement {

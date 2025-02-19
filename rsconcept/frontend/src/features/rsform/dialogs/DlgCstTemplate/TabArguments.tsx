@@ -6,7 +6,7 @@ import { createColumnHelper } from '@tanstack/react-table';
 import clsx from 'clsx';
 
 import { MiniButton } from '@/components/Control';
-import DataTable, { IConditionalStyle } from '@/components/DataTable';
+import { DataTable, IConditionalStyle } from '@/components/DataTable';
 import { IconAccept, IconRemove, IconReset } from '@/components/Icons';
 import { NoData } from '@/components/View';
 import { useDialogsStore } from '@/stores/dialogs';
@@ -23,7 +23,7 @@ import { useTemplateContext } from './TemplateContext';
 
 const argumentsHelper = createColumnHelper<IArgumentValue>();
 
-function TabArguments() {
+export function TabArguments() {
   const { schema } = useDialogsStore(state => state.props as DlgCstTemplateProps);
   const { control } = useFormContext<ICstCreateDTO>();
   const { args, onChangeArguments } = useTemplateContext();
@@ -195,5 +195,3 @@ function TabArguments() {
     </div>
   );
 }
-
-export default TabArguments;

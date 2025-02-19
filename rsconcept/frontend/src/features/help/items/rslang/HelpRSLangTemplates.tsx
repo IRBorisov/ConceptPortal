@@ -1,4 +1,4 @@
-function HelpRSLangTemplates() {
+export function HelpRSLangTemplates() {
   return (
     <div>
       <h1>Шаблоны</h1>
@@ -24,5 +24,3 @@ function HelpRSLangTemplates() {
     </div>
   );
 }
-
-export default HelpRSLangTemplates;

@@ -3,7 +3,7 @@
 import clsx from 'clsx';
 
 import { MiniButton } from '@/components/Control';
-import DataTable, { createColumnHelper } from '@/components/DataTable';
+import { createColumnHelper, DataTable } from '@/components/DataTable';
 import { IconRemove } from '@/components/Icons';
 import { NoData } from '@/components/View';
 

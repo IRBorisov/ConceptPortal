@@ -3,7 +3,7 @@
 import { createColumnHelper } from '@tanstack/react-table';
 
 import { Tooltip } from '@/components/Container';
-import DataTable from '@/components/DataTable';
+import { DataTable } from '@/components/DataTable';
 import { IconPageRight } from '@/components/Icons';
 
 import { ICstSubstituteInfo, OperationType } from '../backend/types';
@@ -17,7 +17,7 @@ interface TooltipOperationProps {
 
 const columnHelper = createColumnHelper<ICstSubstituteInfo>();
 
-function TooltipOperation({ node, anchor }: TooltipOperationProps) {
+export function TooltipOperation({ node, anchor }: TooltipOperationProps) {
   const columns = [
     columnHelper.accessor('substitution_term', {
       id: 'substitution_term',
@@ -88,5 +88,3 @@ function TooltipOperation({ node, anchor }: TooltipOperationProps) {
     </Tooltip>
   );
 }
-
-export default TooltipOperation;

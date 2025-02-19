@@ -27,7 +27,7 @@ export interface DlgRelocateConstituentsProps {
   positions: IOperationPosition[];
 }
 
-function DlgRelocateConstituents() {
+export function DlgRelocateConstituents() {
   const { oss, initialTarget, positions } = useDialogsStore(state => state.props as DlgRelocateConstituentsProps);
   const { items: libraryItems } = useLibrary();
   const { updatePositions } = useUpdatePositions();
@@ -165,5 +165,3 @@ function DlgRelocateConstituents() {
     </ModalForm>
   );
 }
-
-export default DlgRelocateConstituents;

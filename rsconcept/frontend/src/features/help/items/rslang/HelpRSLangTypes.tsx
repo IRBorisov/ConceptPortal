@@ -1,4 +1,4 @@
-function HelpRSLangTypes() {
+export function HelpRSLangTypes() {
   return (
     <div>
       <h1>Типизация</h1>
@@ -41,5 +41,3 @@ function HelpRSLangTypes() {
     </div>
   );
 }
-
-export default HelpRSLangTypes;

@@ -8,7 +8,7 @@ import { IconFolderTree } from '@/components/Icons';
 import { CProps } from '@/components/props';
 import { prefixes } from '@/utils/constants';
 
-import SelectLocation from './SelectLocation';
+import { SelectLocation } from './SelectLocation';
 
 interface SelectLocationContextProps extends CProps.Styling {
   value: string;

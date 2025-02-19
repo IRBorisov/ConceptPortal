@@ -10,7 +10,7 @@ interface InfoCstClassProps {
   header?: string;
 }
 
-function InfoCstClass({ header }: InfoCstClassProps) {
+export function InfoCstClass({ header }: InfoCstClassProps) {
   return (
     <div className='flex flex-col gap-1 mb-2 dense'>
       {header ? <h1>{header}</h1> : null}
@@ -31,5 +31,3 @@ function InfoCstClass({ header }: InfoCstClassProps) {
     </div>
   );
 }
-
-export default InfoCstClass;

@@ -1,7 +1,7 @@
 import { TextURL } from '@/components/Control';
 import { external_urls } from '@/utils/constants';
 
-function HelpAPI() {
+export function HelpAPI() {
   return (
     <div>
       <h1>Программный интерфейс Портала</h1>
@@ -16,5 +16,3 @@ function HelpAPI() {
     </div>
   );
 }
-
-export default HelpAPI;

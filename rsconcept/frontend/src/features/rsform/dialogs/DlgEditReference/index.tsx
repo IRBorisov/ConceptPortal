@@ -1,1 +1,1 @@
-export { default } from './DlgEditReference';
+export { DlgEditReference } from './DlgEditReference';

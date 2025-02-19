@@ -7,7 +7,7 @@ import clsx from 'clsx';
 import { ILibraryItem, SelectLibraryItem } from '@/features/library';
 
 import { MiniButton } from '@/components/Control';
-import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/DataTable';
+import { createColumnHelper, DataTable, IConditionalStyle } from '@/components/DataTable';
 import { IconAccept, IconPageLeft, IconPageRight, IconRemove, IconReplace } from '@/components/Icons';
 import { CProps } from '@/components/props';
 import { NoData } from '@/components/View';

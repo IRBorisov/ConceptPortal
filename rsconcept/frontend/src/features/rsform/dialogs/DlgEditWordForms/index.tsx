@@ -1,1 +1,1 @@
-export { default } from './DlgEditWordForms';
+export { DlgEditWordForms } from './DlgEditWordForms';

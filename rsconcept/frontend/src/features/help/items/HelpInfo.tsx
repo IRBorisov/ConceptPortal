@@ -1,7 +1,7 @@
 import { Subtopics } from '../components/Subtopics';
 import { HelpTopic } from '../models/helpTopic';
 
-function HelpInfo() {
+export function HelpInfo() {
   return (
     <div>
       <h1>Справочная информация и документы</h1>
@@ -14,5 +14,3 @@ function HelpInfo() {
     </div>
   );
 }
-
-export default HelpInfo;

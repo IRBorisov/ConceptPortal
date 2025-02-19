@@ -9,7 +9,7 @@ import { CstType } from '../backend/types';
 import { labelCstType } from '../labels';
 import { GraphFilterParams, useTermGraphStore } from '../stores/termGraph';
 
-function DlgGraphParams() {
+export function DlgGraphParams() {
   const params = useTermGraphStore(state => state.filter);
   const setParams = useTermGraphStore(state => state.setFilter);
 
@@ -116,5 +116,3 @@ function DlgGraphParams() {
     </ModalForm>
   );
 }
-
-export default DlgGraphParams;

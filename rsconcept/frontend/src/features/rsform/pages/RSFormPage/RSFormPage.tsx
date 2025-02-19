@@ -11,11 +11,11 @@ import { isAxiosError } from '@/backend/apiTransport';
 import { Divider } from '@/components/Container';
 import { TextURL } from '@/components/Control';
 import { ErrorData } from '@/components/InfoError';
-import useQueryStrings from '@/hooks/useQueryStrings';
+import { useQueryStrings } from '@/hooks/useQueryStrings';
 import { useModificationStore } from '@/stores/modification';
 
 import { RSEditState, RSTabID } from './RSEditContext';
-import RSTabs from './RSTabs';
+import { RSTabs } from './RSTabs';
 
 const paramsSchema = z.object({
   id: z.coerce.number(),

@@ -14,7 +14,7 @@ interface BadgeGrammemeProps {
 /**
  * Displays a badge with a grammeme tag.
  */
-function BadgeGrammeme({ grammeme }: BadgeGrammemeProps) {
+export function BadgeGrammeme({ grammeme }: BadgeGrammemeProps) {
   return (
     <div
       className={clsx(
@@ -33,5 +33,3 @@ function BadgeGrammeme({ grammeme }: BadgeGrammemeProps) {
     </div>
   );
 }
-
-export default BadgeGrammeme;

@@ -10,7 +10,7 @@ interface InfoCstStatusProps {
   title?: string;
 }
 
-function InfoCstStatus({ title }: InfoCstStatusProps) {
+export function InfoCstStatus({ title }: InfoCstStatusProps) {
   return (
     <div className='flex flex-col gap-1 mb-2 dense'>
       {title ? <h1>{title}</h1> : null}
@@ -37,5 +37,3 @@ function InfoCstStatus({ title }: InfoCstStatusProps) {
     </div>
   );
 }
-
-export default InfoCstStatus;

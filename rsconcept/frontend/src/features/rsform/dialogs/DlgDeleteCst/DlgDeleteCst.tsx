@@ -11,7 +11,7 @@ import { prefixes } from '@/utils/constants';
 import { useCstDelete } from '../../backend/useCstDelete';
 import { IRSForm } from '../../models/rsform';
 
-import ListConstituents from './ListConstituents';
+import { ListConstituents } from './ListConstituents';
 
 export interface DlgDeleteCstProps {
   schema: IRSForm;
@@ -19,7 +19,7 @@ export interface DlgDeleteCstProps {
   afterDelete: (initialSchema: IRSForm, deleted: number[]) => void;
 }
 
-function DlgDeleteCst() {
+export function DlgDeleteCst() {
   const { selected, schema, afterDelete } = useDialogsStore(state => state.props as DlgDeleteCstProps);
   const { cstDelete } = useCstDelete();
 
@@ -61,5 +61,3 @@ function DlgDeleteCst() {
     </ModalForm>
   );
 }
-
-export default DlgDeleteCst;

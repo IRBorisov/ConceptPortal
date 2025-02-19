@@ -14,7 +14,7 @@ import { IUpdateProfileDTO, schemaUpdateProfile } from '../../backend/types';
 import { useProfileSuspense } from '../../backend/useProfile';
 import { useUpdateProfile } from '../../backend/useUpdateProfile';
 
-function EditorProfile() {
+export function EditorProfile() {
   const { profile } = useProfileSuspense();
   const { updateProfile, isPending, error: serverError, reset: clearServerError } = useUpdateProfile();
 
@@ -80,8 +80,6 @@ function EditorProfile() {
     </form>
   );
 }
-
-export default EditorProfile;
 
 // ====== Internals =========
 function ServerError({ error }: { error: ErrorData }): React.ReactElement {

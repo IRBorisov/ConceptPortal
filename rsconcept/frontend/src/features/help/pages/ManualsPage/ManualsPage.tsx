@@ -2,14 +2,14 @@
 
 import { urls, useConceptNavigation } from '@/app';
 
-import useQueryStrings from '@/hooks/useQueryStrings';
+import { useQueryStrings } from '@/hooks/useQueryStrings';
 import { useMainHeight } from '@/stores/appLayout';
 import { PARAMETER } from '@/utils/constants';
 
 import { HelpTopic } from '../../models/helpTopic';
 
-import TopicsList from './TopicsList';
-import ViewTopic from './ViewTopic';
+import { TopicsList } from './TopicsList';
+import { ViewTopic } from './ViewTopic';
 
 export function ManualsPage() {
   const router = useConceptNavigation();

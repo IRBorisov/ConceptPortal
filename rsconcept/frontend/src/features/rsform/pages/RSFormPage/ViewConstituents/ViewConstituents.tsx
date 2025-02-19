@@ -5,7 +5,7 @@ import clsx from 'clsx';
 
 import { useRoleStore, UserRole } from '@/features/users';
 
-import useWindowSize from '@/hooks/useWindowSize';
+import { useWindowSize } from '@/hooks/useWindowSize';
 import { useFitHeight } from '@/stores/appLayout';
 import { PARAMETER } from '@/utils/constants';
 
@@ -13,7 +13,7 @@ import { IConstituenta } from '../../../models/rsform';
 import { useRSEdit } from '../RSEditContext';
 
 import { ConstituentsSearch } from './ConstituentsSearch';
-import TableSideConstituents from './TableSideConstituents';
+import { TableSideConstituents } from './TableSideConstituents';
 
 // Window width cutoff for dense search bar
 const COLUMN_DENSE_SEARCH_THRESHOLD = 1100;

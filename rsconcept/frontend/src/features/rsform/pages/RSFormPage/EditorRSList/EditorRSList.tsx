@@ -19,10 +19,10 @@ import { matchConstituenta } from '../../../models/rsformAPI';
 import { CstMatchMode } from '../../../stores/cstSearch';
 import { useRSEdit } from '../RSEditContext';
 
-import TableRSList from './TableRSList';
+import { TableRSList } from './TableRSList';
 import { ToolbarRSList } from './ToolbarRSList';
 
-function EditorRSList() {
+export function EditorRSList() {
   const controller = useRSEdit();
   const isProcessing = useMutatingRSForm();
 
@@ -156,5 +156,3 @@ function EditorRSList() {
     </>
   );
 }
-
-export default EditorRSList;

@@ -29,7 +29,7 @@ export interface DlgEditWordFormsProps {
   target: IConstituenta;
 }
 
-function DlgEditWordForms() {
+export function DlgEditWordForms() {
   const { itemID, target } = useDialogsStore(state => state.props as DlgEditWordFormsProps);
   const { cstUpdate } = useCstUpdate();
 
@@ -205,5 +205,3 @@ function DlgEditWordForms() {
     </ModalForm>
   );
 }
-
-export default DlgEditWordForms;

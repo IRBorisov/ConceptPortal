@@ -1,7 +1,7 @@
 import { TextURL } from '@/components/Control';
 import { external_urls, PARAMETER } from '@/utils/constants';
 
-function HelpExteor() {
+export function HelpExteor() {
   return (
     <div>
       <h1>Экстеор</h1>
@@ -38,5 +38,3 @@ function HelpExteor() {
     </div>
   );
 }
-
-export default HelpExteor;

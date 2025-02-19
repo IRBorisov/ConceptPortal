@@ -7,7 +7,7 @@ import { PARAMETER, prefixes } from '@/utils/constants';
 import { truncateToLastWord } from '@/utils/utils';
 
 import { OperationType } from '../../../../backend/types';
-import TooltipOperation from '../../../../components/TooltipOperation';
+import { TooltipOperation } from '../../../../components/TooltipOperation';
 import { OssNodeInternal } from '../../../../models/ossLayout';
 import { useOssEdit } from '../../OssEditContext';
 
@@ -15,7 +15,7 @@ interface NodeCoreProps {
   node: OssNodeInternal;
 }
 
-function NodeCore({ node }: NodeCoreProps) {
+export function NodeCore({ node }: NodeCoreProps) {
   const controller = useOssEdit();
 
   const hasFile = !!node.data.operation.result;
@@ -72,5 +72,3 @@ function NodeCore({ node }: NodeCoreProps) {
     </>
   );
 }
-
-export default NodeCore;

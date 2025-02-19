@@ -1,6 +1,6 @@
 import { ExpectedAnonymous, useAuthSuspense } from '@/features/auth';
 
-import FormSignup from './FormSignup';
+import { FormSignup } from './FormSignup';
 
 export function RegisterPage() {
   const { isAnonymous } = useAuthSuspense();

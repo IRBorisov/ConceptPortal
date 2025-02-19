@@ -9,7 +9,7 @@ interface NavigationButtonProps extends CProps.Titled, CProps.Styling {
   onClick?: (event: CProps.EventMouse) => void;
 }
 
-function NavigationButton({
+export function NavigationButton({
   icon,
   title,
   className,
@@ -47,5 +47,3 @@ function NavigationButton({
     </button>
   );
 }
-
-export default NavigationButton;

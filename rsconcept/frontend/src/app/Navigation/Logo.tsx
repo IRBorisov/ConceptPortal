@@ -1,7 +1,7 @@
-import useWindowSize from '@/hooks/useWindowSize';
+import { useWindowSize } from '@/hooks/useWindowSize';
 import { usePreferencesStore } from '@/stores/preferences';
 
-function Logo() {
+export function Logo() {
   const darkMode = usePreferencesStore(state => state.darkMode);
   const size = useWindowSize();
 
@@ -13,4 +13,3 @@ function Logo() {
     />
   );
 }
-export default Logo;

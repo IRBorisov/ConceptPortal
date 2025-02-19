@@ -3,7 +3,7 @@ import { IconMoveDown, IconMoveUp, IconOSS, IconPredecessor } from '@/components
 import { LinkTopic } from '../../components/LinkTopic';
 import { HelpTopic } from '../../models/helpTopic';
 
-function HelpRelocateCst() {
+export function HelpRelocateCst() {
   return (
     <div className='text-justify'>
       <h1>Перенос конституент</h1>
@@ -32,5 +32,3 @@ function HelpRelocateCst() {
     </div>
   );
 }
-
-export default HelpRelocateCst;

@@ -4,7 +4,7 @@ import { TextArea, TextInput } from '@/components/Input';
 
 import { IOperationUpdateDTO } from '../../backend/types';
 
-function TabOperation() {
+export function TabOperation() {
   const {
     register,
     formState: { errors }
@@ -39,5 +39,3 @@ function TabOperation() {
     </div>
   );
 }
-
-export default TabOperation;

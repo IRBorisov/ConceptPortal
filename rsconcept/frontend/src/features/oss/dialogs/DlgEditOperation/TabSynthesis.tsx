@@ -13,7 +13,7 @@ import { SubstitutionValidator } from '../../models/ossAPI';
 
 import { DlgEditOperationProps } from './DlgEditOperation';
 
-function TabSynthesis() {
+export function TabSynthesis() {
   const { oss } = useDialogsStore(state => state.props as DlgEditOperationProps);
   const { control } = useFormContext<IOperationUpdateDTO>();
   const inputs = useWatch({ control, name: 'arguments' });
@@ -53,5 +53,3 @@ function TabSynthesis() {
     </div>
   );
 }
-
-export default TabSynthesis;

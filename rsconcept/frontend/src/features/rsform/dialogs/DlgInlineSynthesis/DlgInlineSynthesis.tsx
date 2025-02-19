@@ -14,9 +14,9 @@ import { IInlineSynthesisDTO, schemaInlineSynthesis } from '../../backend/types'
 import { useInlineSynthesis } from '../../backend/useInlineSynthesis';
 import { IRSForm } from '../../models/rsform';
 
-import TabConstituents from './TabConstituents';
-import TabSource from './TabSource';
-import TabSubstitutions from './TabSubstitutions';
+import { TabConstituents } from './TabConstituents';
+import { TabSource } from './TabSource';
+import { TabSubstitutions } from './TabSubstitutions';
 
 export interface DlgInlineSynthesisProps {
   receiver: IRSForm;
@@ -29,7 +29,7 @@ export enum TabID {
   SUBSTITUTIONS = 2
 }
 
-function DlgInlineSynthesis() {
+export function DlgInlineSynthesis() {
   const { receiver, onSynthesis } = useDialogsStore(state => state.props as DlgInlineSynthesisProps);
   const [activeTab, setActiveTab] = useState(TabID.SCHEMA);
   const { inlineSynthesis } = useInlineSynthesis();
@@ -105,5 +105,3 @@ function DlgInlineSynthesis() {
     </ModalForm>
   );
 }
-
-export default DlgInlineSynthesis;

@@ -4,7 +4,7 @@ import { PARAMETER } from '@/utils/constants';
 
 const RADIUS = PARAMETER.graphNodeRadius + PARAMETER.graphNodePadding;
 
-function DynamicEdge({ id, markerEnd, style, ...props }: EdgeProps) {
+export function DynamicEdge({ id, markerEnd, style, ...props }: EdgeProps) {
   const sourceY = props.sourceY - PARAMETER.graphNodeRadius - PARAMETER.graphHandleSize;
   const targetY = props.targetY + PARAMETER.graphNodeRadius + PARAMETER.graphHandleSize;
 
@@ -32,5 +32,3 @@ function DynamicEdge({ id, markerEnd, style, ...props }: EdgeProps) {
     </>
   );
 }
-
-export default DynamicEdge;

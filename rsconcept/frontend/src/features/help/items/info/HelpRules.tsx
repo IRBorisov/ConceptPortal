@@ -3,7 +3,7 @@ import { urls } from '@/app';
 import { TextURL } from '@/components/Control';
 import { external_urls } from '@/utils/constants';
 
-function HelpRules() {
+export function HelpRules() {
   return (
     <div className='text-justify'>
       <h1>Правила поведения участников Портала</h1>
@@ -53,5 +53,3 @@ function HelpRules() {
     </div>
   );
 }
-
-export default HelpRules;

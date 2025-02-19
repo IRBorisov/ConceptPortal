@@ -1,7 +1,7 @@
 import { urls, useConceptNavigation } from '@/app';
 import { useAuthSuspense } from '@/features/auth';
 
-function HomePage() {
+export function HomePage() {
   const router = useConceptNavigation();
   const { isAnonymous } = useAuthSuspense();
 
@@ -13,5 +13,3 @@ function HomePage() {
 
   return null;
 }
-
-export default HomePage;

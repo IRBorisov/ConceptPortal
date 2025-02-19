@@ -9,7 +9,7 @@ interface SelectAllProps<TData> {
   resetLastSelected: () => void;
 }
 
-function SelectAll<TData>({ table, resetLastSelected }: SelectAllProps<TData>) {
+export function SelectAll<TData>({ table, resetLastSelected }: SelectAllProps<TData>) {
   function handleChange(value: boolean | null) {
     resetLastSelected();
     table.toggleAllPageRowsSelected(value !== false);
@@ -26,5 +26,3 @@ function SelectAll<TData>({ table, resetLastSelected }: SelectAllProps<TData>) {
     />
   );
 }
-
-export default SelectAll;

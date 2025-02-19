@@ -8,10 +8,10 @@ import { SearchBar } from '@/components/Input';
 
 import { IConstituenta, IRSForm } from '../../../models/rsform';
 import { matchConstituenta } from '../../../models/rsformAPI';
-import SelectMatchMode from '../../../pages/RSFormPage/ViewConstituents/SelectMatchMode';
+import { SelectMatchMode } from '../../../pages/RSFormPage/ViewConstituents/SelectMatchMode';
 import { DependencyMode, useCstSearchStore } from '../../../stores/cstSearch';
 
-import SelectGraphFilter from './SelectGraphFilter';
+import { SelectGraphFilter } from './SelectGraphFilter';
 
 interface ConstituentsSearchProps {
   schema: IRSForm;

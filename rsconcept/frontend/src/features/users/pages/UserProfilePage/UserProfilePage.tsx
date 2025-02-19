@@ -1,7 +1,7 @@
 import { RequireAuth } from '@/features/auth';
 
-import EditorPassword from './EditorPassword';
-import EditorProfile from './EditorProfile';
+import { EditorPassword } from './EditorPassword';
+import { EditorProfile } from './EditorProfile';
 
 export function UserProfilePage() {
   return (

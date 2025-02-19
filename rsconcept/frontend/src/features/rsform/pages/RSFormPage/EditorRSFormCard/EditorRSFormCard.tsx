@@ -11,10 +11,10 @@ import { globals } from '@/utils/constants';
 import { ToolbarRSFormCard } from '../../../components/ToolbarRSFormCard';
 import { useRSEdit } from '../RSEditContext';
 
-import FormRSForm from './FormRSForm';
-import RSFormStats from './RSFormStats';
+import { FormRSForm } from './FormRSForm';
+import { RSFormStats } from './RSFormStats';
 
-function EditorRSFormCard() {
+export function EditorRSFormCard() {
   const controller = useRSEdit();
   const { isModified } = useModificationStore();
 
@@ -55,5 +55,3 @@ function EditorRSFormCard() {
     </>
   );
 }
-
-export default EditorRSFormCard;

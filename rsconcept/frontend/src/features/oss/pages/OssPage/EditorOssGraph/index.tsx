@@ -1,1 +1,1 @@
-export { default } from './EditorOssGraph';
+export { EditorOssGraph } from './EditorOssGraph';

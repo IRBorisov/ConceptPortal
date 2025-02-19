@@ -4,7 +4,7 @@ import { external_urls } from '@/utils/constants';
 import { Subtopics } from '../components/Subtopics';
 import { HelpTopic } from '../models/helpTopic';
 
-function HelpConceptSystem() {
+export function HelpConcept() {
   return (
     <div className='text-justify'>
       <h1>Концептуализация</h1>
@@ -43,5 +43,3 @@ function HelpConceptSystem() {
     </div>
   );
 }
-
-export default HelpConceptSystem;

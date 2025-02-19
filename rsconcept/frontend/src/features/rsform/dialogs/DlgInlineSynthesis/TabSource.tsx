@@ -12,7 +12,7 @@ import { sortItemsForInlineSynthesis } from '../../models/rsformAPI';
 
 import { DlgInlineSynthesisProps } from './DlgInlineSynthesis';
 
-function TabSource() {
+export function TabSource() {
   const { items: libraryItems } = useLibrary();
   const { receiver } = useDialogsStore(state => state.props as DlgInlineSynthesisProps);
   const { setValue, control } = useFormContext<IInlineSynthesisDTO>();
@@ -56,5 +56,3 @@ function TabSource() {
     </div>
   );
 }
-
-export default TabSource;

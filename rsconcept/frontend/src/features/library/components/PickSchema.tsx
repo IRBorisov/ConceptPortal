@@ -4,7 +4,7 @@ import clsx from 'clsx';
 
 import { FlexColumn } from '@/components/Container';
 import { MiniButton } from '@/components/Control';
-import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/DataTable';
+import { createColumnHelper, DataTable, IConditionalStyle } from '@/components/DataTable';
 import { Dropdown, useDropdown } from '@/components/Dropdown';
 import { IconClose, IconFolderTree } from '@/components/Icons';
 import { SearchBar } from '@/components/Input';
@@ -15,7 +15,7 @@ import { prefixes } from '@/utils/constants';
 import { ILibraryItem, LibraryItemType } from '../backend/types';
 import { matchLibraryItem } from '../models/libraryAPI';
 
-import SelectLocation from './SelectLocation';
+import { SelectLocation } from './SelectLocation';
 
 interface PickSchemaProps extends CProps.Styling {
   id?: string;

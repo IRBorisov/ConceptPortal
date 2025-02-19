@@ -17,8 +17,8 @@ import { describeOperationType, labelOperationType } from '../../labels';
 import { IOperationSchema } from '../../models/oss';
 import { calculateInsertPosition } from '../../models/ossAPI';
 
-import TabInputOperation from './TabInputOperation';
-import TabSynthesisOperation from './TabSynthesisOperation';
+import { TabInputOperation } from './TabInputOperation';
+import { TabSynthesisOperation } from './TabSynthesisOperation';
 
 export interface DlgCreateOperationProps {
   oss: IOperationSchema;
@@ -34,7 +34,7 @@ export enum TabID {
   SYNTHESIS = 1
 }
 
-function DlgCreateOperation() {
+export function DlgCreateOperation() {
   const { operationCreate } = useOperationCreate();
 
   const { oss, positions, initialInputs, onCreate, defaultX, defaultY } = useDialogsStore(
@@ -128,5 +128,3 @@ function DlgCreateOperation() {
     </ModalForm>
   );
 }
-
-export default DlgCreateOperation;

@@ -12,7 +12,7 @@ interface TopicsStaticProps {
   onChangeTopic: (newTopic: HelpTopic) => void;
 }
 
-function TopicsStatic({ activeTopic, onChangeTopic }: TopicsStaticProps) {
+export function TopicsStatic({ activeTopic, onChangeTopic }: TopicsStaticProps) {
   const topicsHeight = useFitHeight('1rem + 2px');
   return (
     <SelectTree
@@ -36,5 +36,3 @@ function TopicsStatic({ activeTopic, onChangeTopic }: TopicsStaticProps) {
     />
   );
 }
-
-export default TopicsStatic;

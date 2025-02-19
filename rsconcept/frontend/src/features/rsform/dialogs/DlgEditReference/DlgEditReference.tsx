@@ -59,7 +59,7 @@ export enum TabID {
   SYNTACTIC = 1
 }
 
-function DlgEditReference() {
+export function DlgEditReference() {
   const { initial, onSave, onCancel } = useDialogsStore(state => state.props as DlgEditReferenceProps);
   const [activeTab, setActiveTab] = useState(initial.type === ReferenceType.ENTITY ? TabID.ENTITY : TabID.SYNTACTIC);
 
@@ -129,8 +129,6 @@ function DlgEditReference() {
     </ModalForm>
   );
 }
-
-export default DlgEditReference;
 
 // ====== Internals =========
 function initEntityReference(initial: IReferenceInputState) {

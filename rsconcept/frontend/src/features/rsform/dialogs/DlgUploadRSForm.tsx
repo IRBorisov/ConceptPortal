@@ -13,7 +13,7 @@ export interface DlgUploadRSFormProps {
   itemID: number;
 }
 
-function DlgUploadRSForm() {
+export function DlgUploadRSForm() {
   const { itemID } = useDialogsStore(state => state.props as DlgUploadRSFormProps);
   const { upload } = useUploadTRS();
   const [loadMetadata, setLoadMetadata] = useState(false);
@@ -56,5 +56,3 @@ function DlgUploadRSForm() {
     </ModalForm>
   );
 }
-
-export default DlgUploadRSForm;

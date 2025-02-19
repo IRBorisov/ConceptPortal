@@ -11,14 +11,14 @@ import { useDialogsStore } from '@/stores/dialogs';
 
 import { SyntaxTree } from '../../models/rslang';
 
-import ASTFlow from './ASTFlow';
+import { ASTFlow } from './ASTFlow';
 
 export interface DlgShowASTProps {
   syntaxTree: SyntaxTree;
   expression: string;
 }
 
-function DlgShowAST() {
+export function DlgShowAST() {
   const { syntaxTree, expression } = useDialogsStore(state => state.props as DlgShowASTProps);
   const [hoverID, setHoverID] = useState<number | null>(null);
   const hoverNode = syntaxTree.find(node => node.uid === hoverID);
@@ -54,5 +54,3 @@ function DlgShowAST() {
     </ModalView>
   );
 }
-
-export default DlgShowAST;

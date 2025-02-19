@@ -1,7 +1,5 @@
-import InfoCstStatus from '../../components/InfoCstStatus';
+import { InfoCstStatus } from '../../components/InfoCstStatus';
 
-function HelpCstStatus() {
+export function HelpCstStatus() {
   return <InfoCstStatus title='Статусы конституент' />;
 }
-
-export default HelpCstStatus;

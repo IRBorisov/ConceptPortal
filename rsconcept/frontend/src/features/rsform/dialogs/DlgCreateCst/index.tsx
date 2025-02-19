@@ -1,1 +1,1 @@
-export { default } from './DlgCreateCst';
+export { DlgCreateCst } from './DlgCreateCst';

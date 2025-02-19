@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { useMutationErrors } from '@/backend/useMutationErrors';
 import { Button } from '@/components/Control';
 import { DescribeError } from '@/components/InfoError';
-import useEscapeKey from '@/hooks/useEscapeKey';
+import { useEscapeKey } from '@/hooks/useEscapeKey';
 import { useDialogsStore } from '@/stores/dialogs';
 
 export function MutationErrors() {

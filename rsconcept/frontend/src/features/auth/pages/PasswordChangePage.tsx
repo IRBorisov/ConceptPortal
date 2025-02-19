@@ -10,7 +10,7 @@ import { SubmitButton } from '@/components/Control';
 import { ErrorData, InfoError } from '@/components/InfoError';
 import { TextInput } from '@/components/Input';
 import { Loader } from '@/components/Loader';
-import useQueryStrings from '@/hooks/useQueryStrings';
+import { useQueryStrings } from '@/hooks/useQueryStrings';
 
 import { useResetPassword } from '../backend/useResetPassword';
 

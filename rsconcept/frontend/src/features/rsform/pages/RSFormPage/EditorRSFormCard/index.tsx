@@ -1,1 +1,1 @@
-export { default } from './EditorRSFormCard';
+export { EditorRSFormCard } from './EditorRSFormCard';

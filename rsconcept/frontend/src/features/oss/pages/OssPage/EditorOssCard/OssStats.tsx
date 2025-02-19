@@ -9,7 +9,7 @@ interface OssStatsProps {
   stats: IOperationSchemaStats;
 }
 
-function OssStats({ stats }: OssStatsProps) {
+export function OssStats({ stats }: OssStatsProps) {
   return (
     <div
       className={clsx(
@@ -55,5 +55,3 @@ function OssStats({ stats }: OssStatsProps) {
     </div>
   );
 }
-
-export default OssStats;

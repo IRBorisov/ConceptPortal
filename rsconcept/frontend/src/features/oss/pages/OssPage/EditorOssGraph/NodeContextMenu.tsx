@@ -12,7 +12,7 @@ import {
   IconNewRSForm,
   IconRSForm
 } from '@/components/Icons';
-import useClickedOutside from '@/hooks/useClickedOutside';
+import { useClickedOutside } from '@/hooks/useClickedOutside';
 import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/utils';
 
@@ -38,7 +38,7 @@ interface NodeContextMenuProps extends ContextMenuData {
   onRelocateConstituents: (target: number) => void;
 }
 
-function NodeContextMenu({
+export function NodeContextMenu({
   isOpen,
   operation,
   cursorX,
@@ -188,5 +188,3 @@ function NodeContextMenu({
     </div>
   );
 }
-
-export default NodeContextMenu;

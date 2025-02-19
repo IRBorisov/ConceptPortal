@@ -20,7 +20,7 @@ export interface DlgSubstituteCstProps {
   onSubstitute: (data: ICstSubstitutionsDTO) => void;
 }
 
-function DlgSubstituteCst() {
+export function DlgSubstituteCst() {
   const { onSubstitute, schema } = useDialogsStore(state => state.props as DlgSubstituteCstProps);
   const { cstSubstitute } = useCstSubstitute();
 
@@ -67,5 +67,3 @@ function DlgSubstituteCst() {
     </ModalForm>
   );
 }
-
-export default DlgSubstituteCst;

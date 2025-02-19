@@ -13,7 +13,7 @@ import {
 import { LinkTopic } from '../../components/LinkTopic';
 import { HelpTopic } from '../../models/helpTopic';
 
-function HelpRSCard() {
+export function HelpRSCard() {
   return (
     <div className='dense'>
       <h1>Карточка схемы</h1>
@@ -60,5 +60,3 @@ function HelpRSCard() {
     </div>
   );
 }
-
-export default HelpRSCard;

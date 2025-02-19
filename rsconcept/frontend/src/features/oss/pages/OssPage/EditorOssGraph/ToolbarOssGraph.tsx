@@ -40,7 +40,7 @@ interface ToolbarOssGraphProps {
   onResetPositions: () => void;
 }
 
-function ToolbarOssGraph({
+export function ToolbarOssGraph({
   onCreate,
   onDelete,
   onEdit,
@@ -177,5 +177,3 @@ function ToolbarOssGraph({
     </div>
   );
 }
-//IconExecute
-export default ToolbarOssGraph;

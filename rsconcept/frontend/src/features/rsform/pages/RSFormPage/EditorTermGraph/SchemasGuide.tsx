@@ -11,7 +11,7 @@ interface SchemasGuideProps {
   schema: IRSForm;
 }
 
-function SchemasGuide({ schema }: SchemasGuideProps) {
+export function SchemasGuide({ schema }: SchemasGuideProps) {
   const { items: libraryItems } = useLibrary();
 
   const schemas = (() => {
@@ -67,5 +67,3 @@ function SchemasGuide({ schema }: SchemasGuideProps) {
     </div>
   );
 }
-
-export default SchemasGuide;

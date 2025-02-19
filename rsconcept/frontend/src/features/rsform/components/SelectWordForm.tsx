@@ -5,9 +5,10 @@ import clsx from 'clsx';
 import { CProps } from '@/components/props';
 import { prefixes } from '@/utils/constants';
 
-import WordformButton from '../dialogs/DlgEditReference/WordformButton';
 import { Grammeme, IGrammemeOption } from '../models/language';
 import { supportedGrammeOptions } from '../models/languageAPI';
+
+import { WordformButton } from './WordformButton';
 
 /**
  * Represents recommended wordforms data.

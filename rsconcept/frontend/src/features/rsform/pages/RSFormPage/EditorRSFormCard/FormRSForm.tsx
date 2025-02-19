@@ -19,9 +19,9 @@ import { globals } from '@/utils/constants';
 import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
 import { useRSEdit } from '../RSEditContext';
 
-import ToolbarVersioning from './ToolbarVersioning';
+import { ToolbarVersioning } from './ToolbarVersioning';
 
-function FormRSForm() {
+export function FormRSForm() {
   const controller = useRSEdit();
   const router = useConceptNavigation();
   const { updateItem: updateSchema } = useUpdateItem();
@@ -125,5 +125,3 @@ function FormRSForm() {
     </form>
   );
 }
-
-export default FormRSForm;

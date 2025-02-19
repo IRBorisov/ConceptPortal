@@ -30,8 +30,8 @@ import { errorMsg } from '@/utils/labels';
 import { CstType } from '../../../backend/types';
 import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
 import { colorBgGraphNode } from '../../../colors';
-import InfoConstituenta from '../../../components/InfoConstituenta';
-import ToolbarGraphSelection from '../../../components/ToolbarGraphSelection';
+import { InfoConstituenta } from '../../../components/InfoConstituenta';
+import { ToolbarGraphSelection } from '../../../components/ToolbarGraphSelection';
 import { IConstituenta, IRSForm } from '../../../models/rsform';
 import { isBasicConcept } from '../../../models/rsformAPI';
 import { GraphFilterParams, useTermGraphStore } from '../../../stores/termGraph';
@@ -41,16 +41,16 @@ import { TGEdgeTypes } from './graph/TGEdgeTypes';
 import { applyLayout } from './graph/TGLayout';
 import { TGNodeData } from './graph/TGNode';
 import { TGNodeTypes } from './graph/TGNodeTypes';
-import GraphSelectors from './GraphSelectors';
-import SelectedCounter from './SelectedCounter';
-import ToolbarFocusedCst from './ToolbarFocusedCst';
-import ToolbarTermGraph from './ToolbarTermGraph';
-import ViewHidden from './ViewHidden';
+import { GraphSelectors } from './GraphSelectors';
+import { SelectedCounter } from './SelectedCounter';
+import { ToolbarFocusedCst } from './ToolbarFocusedCst';
+import { ToolbarTermGraph } from './ToolbarTermGraph';
+import { ViewHidden } from './ViewHidden';
 
 const ZOOM_MAX = 3;
 const ZOOM_MIN = 0.25;
 
-function TGFlow() {
+export function TGFlow() {
   const mainHeight = useMainHeight();
   const controller = useRSEdit();
   const flow = useReactFlow();
@@ -411,8 +411,6 @@ function TGFlow() {
     </>
   );
 }
-
-export default TGFlow;
 
 // ====== Internals =========
 function produceFilteredGraph(schema: IRSForm, params: GraphFilterParams, focusCst: IConstituenta | null) {

@@ -1,1 +1,1 @@
-export { default } from './DlgInlineSynthesis';
+export { DlgInlineSynthesis } from './DlgInlineSynthesis';

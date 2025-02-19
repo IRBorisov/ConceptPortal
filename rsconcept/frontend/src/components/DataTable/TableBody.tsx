@@ -5,7 +5,7 @@ import clsx from 'clsx';
 
 import { CProps } from '../props';
 
-import SelectRow from './SelectRow';
+import { SelectRow } from './SelectRow';
 import { IConditionalStyle } from '.';
 
 interface TableBodyProps<TData> {
@@ -22,7 +22,7 @@ interface TableBodyProps<TData> {
   onRowDoubleClicked?: (rowData: TData, event: CProps.EventMouse) => void;
 }
 
-function TableBody<TData>({
+export function TableBody<TData>({
   table,
   dense,
   noHeader,
@@ -104,5 +104,3 @@ function TableBody<TData>({
     </tbody>
   );
 }
-
-export default TableBody;

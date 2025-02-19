@@ -11,10 +11,10 @@ import { globals } from '@/utils/constants';
 
 import { useOssEdit } from '../OssEditContext';
 
-import FormOSS from './FormOSS';
-import OssStats from './OssStats';
+import { FormOSS } from './FormOSS';
+import { OssStats } from './OssStats';
 
-function EditorOssCard() {
+export function EditorOssCard() {
   const controller = useOssEdit();
   const { isModified } = useModificationStore();
 
@@ -56,5 +56,3 @@ function EditorOssCard() {
     </>
   );
 }
-
-export default EditorOssCard;

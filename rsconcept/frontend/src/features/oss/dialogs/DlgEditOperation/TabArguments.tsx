@@ -10,7 +10,7 @@ import { PickMultiOperation } from '../../components/PickMultiOperation';
 
 import { DlgEditOperationProps } from './DlgEditOperation';
 
-function TabArguments() {
+export function TabArguments() {
   const { control, setValue } = useFormContext<IOperationUpdateDTO>();
   const { oss, target } = useDialogsStore(state => state.props as DlgEditOperationProps);
   const potentialCycle = [target.id, ...oss.graph.expandAllOutputs([target.id])];
@@ -45,5 +45,3 @@ function TabArguments() {
     </div>
   );
 }
-
-export default TabArguments;

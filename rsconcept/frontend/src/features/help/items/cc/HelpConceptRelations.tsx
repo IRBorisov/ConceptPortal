@@ -1,7 +1,7 @@
 import { LinkTopic } from '../../components/LinkTopic';
 import { HelpTopic } from '../../models/helpTopic';
 
-function HelpConceptRelations() {
+export function HelpConceptRelations() {
   return (
     <div className='text-justify'>
       <h1>Связи между конституентами</h1>
@@ -38,5 +38,3 @@ function HelpConceptRelations() {
     </div>
   );
 }
-
-export default HelpConceptRelations;

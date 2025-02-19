@@ -1,7 +1,7 @@
 import { LinkTopic } from '../../components/LinkTopic';
 import { HelpTopic } from '../../models/helpTopic';
 
-function HelpConceptSynthesis() {
+export function HelpConceptSynthesis() {
   return (
     <div className='text-justify'>
       <h1>Синтез концептуальных схем</h1>
@@ -46,5 +46,3 @@ function HelpConceptSynthesis() {
     </div>
   );
 }
-
-export default HelpConceptSynthesis;

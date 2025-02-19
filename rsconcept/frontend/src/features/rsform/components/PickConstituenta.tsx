@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import clsx from 'clsx';
 
-import DataTable, { createColumnHelper, IConditionalStyle } from '@/components/DataTable';
+import { createColumnHelper, DataTable, IConditionalStyle } from '@/components/DataTable';
 import { SearchBar } from '@/components/Input';
 import { CProps } from '@/components/props';
 import { NoData } from '@/components/View';

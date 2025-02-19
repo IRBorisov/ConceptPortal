@@ -5,7 +5,7 @@ import { useAppLayoutStore } from '@/stores/appLayout';
 import { usePreferencesStore } from '@/stores/preferences';
 import { globals, PARAMETER } from '@/utils/constants';
 
-function ToggleNavigation() {
+export function ToggleNavigation() {
   const darkMode = usePreferencesStore(state => state.darkMode);
   const toggleDarkMode = usePreferencesStore(state => state.toggleDarkMode);
   const noNavigation = useAppLayoutStore(state => state.noNavigation);
@@ -55,5 +55,3 @@ function ToggleNavigation() {
     </div>
   );
 }
-
-export default ToggleNavigation;

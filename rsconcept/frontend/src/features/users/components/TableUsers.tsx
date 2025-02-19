@@ -1,7 +1,7 @@
 'use client';
 
 import { MiniButton } from '@/components/Control';
-import DataTable, { createColumnHelper } from '@/components/DataTable';
+import { createColumnHelper, DataTable } from '@/components/DataTable';
 import { IconRemove } from '@/components/Icons';
 
 import { IUserInfo } from '../models/user';

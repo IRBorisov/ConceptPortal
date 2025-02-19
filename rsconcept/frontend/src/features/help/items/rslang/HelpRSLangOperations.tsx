@@ -10,7 +10,7 @@ import {
 import { LinkTopic } from '../../components/LinkTopic';
 import { HelpTopic } from '../../models/helpTopic';
 
-function HelpRSLangOperations() {
+export function HelpRSLangOperations() {
   return (
     <div>
       <h1>Операции над концептуальными схемами</h1>
@@ -80,5 +80,3 @@ function HelpRSLangOperations() {
     </div>
   );
 }
-
-export default HelpRSLangOperations;

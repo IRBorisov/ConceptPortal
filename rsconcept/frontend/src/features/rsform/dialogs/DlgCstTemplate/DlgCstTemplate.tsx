@@ -16,10 +16,10 @@ import { CstType, IConstituentaBasicsDTO, ICstCreateDTO, schemaCstCreate } from 
 import { useCstCreate } from '../../backend/useCstCreate';
 import { IRSForm } from '../../models/rsform';
 import { generateAlias, validateNewAlias } from '../../models/rsformAPI';
-import FormCreateCst from '../DlgCreateCst/FormCreateCst';
+import { FormCreateCst } from '../DlgCreateCst/FormCreateCst';
 
-import TabArguments from './TabArguments';
-import TabTemplate from './TabTemplate';
+import { TabArguments } from './TabArguments';
+import { TabTemplate } from './TabTemplate';
 import { TemplateState } from './TemplateContext';
 
 export interface DlgCstTemplateProps {
@@ -34,7 +34,7 @@ export enum TabID {
   CONSTITUENTA = 2
 }
 
-function DlgCstTemplate() {
+export function DlgCstTemplate() {
   const { schema, onCreate, insertAfter } = useDialogsStore(state => state.props as DlgCstTemplateProps);
   const { cstCreate } = useCstCreate();
 
@@ -105,5 +105,3 @@ function DlgCstTemplate() {
     </ModalForm>
   );
 }
-
-export default DlgCstTemplate;

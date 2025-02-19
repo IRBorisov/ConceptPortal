@@ -19,7 +19,7 @@ interface MGraphNodeInternal {
   yPos: number;
 }
 
-function MGraphNode(node: MGraphNodeInternal) {
+export function MGraphNode(node: MGraphNodeInternal) {
   const tooltipText =
     (node.data.annotations.length === 0 ? '' : `Конституенты: ${node.data.annotations.join(' ')}<br/>`) +
     node.data.text;
@@ -44,5 +44,3 @@ function MGraphNode(node: MGraphNodeInternal) {
     </>
   );
 }
-
-export default MGraphNode;

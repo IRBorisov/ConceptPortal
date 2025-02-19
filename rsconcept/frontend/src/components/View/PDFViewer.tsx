@@ -1,6 +1,6 @@
 'use client';
 
-import useWindowSize from '@/hooks/useWindowSize';
+import { useWindowSize } from '@/hooks/useWindowSize';
 import { useFitHeight } from '@/stores/appLayout';
 
 /** Maximum width of the viewer. */

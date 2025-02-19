@@ -28,7 +28,7 @@ interface RSFormStatsProps {
   stats: IRSFormStats;
 }
 
-function RSFormStats({ stats, isArchive }: RSFormStatsProps) {
+export function RSFormStats({ stats, isArchive }: RSFormStatsProps) {
   return (
     <div
       className={clsx(
@@ -150,5 +150,3 @@ function RSFormStats({ stats, isArchive }: RSFormStatsProps) {
     </div>
   );
 }
-
-export default RSFormStats;

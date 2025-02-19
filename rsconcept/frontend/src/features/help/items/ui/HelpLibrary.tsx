@@ -21,7 +21,7 @@ import { APP_COLORS } from '@/styling/colors';
 import { LinkTopic } from '../../components/LinkTopic';
 import { HelpTopic } from '../../models/helpTopic';
 
-function HelpLibrary() {
+export function HelpLibrary() {
   return (
     <div>
       <h1>Библиотека схем</h1>
@@ -89,5 +89,3 @@ function HelpLibrary() {
     </div>
   );
 }
-
-export default HelpLibrary;

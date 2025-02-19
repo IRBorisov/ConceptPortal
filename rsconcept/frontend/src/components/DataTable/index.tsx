@@ -1,6 +1,6 @@
 export {
   createColumnHelper,
-  default,
+  DataTable,
   type IConditionalStyle,
   type RowSelectionState,
   type VisibilityState

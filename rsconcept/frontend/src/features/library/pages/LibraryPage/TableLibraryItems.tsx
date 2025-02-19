@@ -9,16 +9,16 @@ import { useLabelUser } from '@/features/users';
 
 import { FlexColumn } from '@/components/Container';
 import { MiniButton, TextURL } from '@/components/Control';
-import DataTable, { createColumnHelper, IConditionalStyle, VisibilityState } from '@/components/DataTable';
+import { createColumnHelper, DataTable, IConditionalStyle, VisibilityState } from '@/components/DataTable';
 import { IconFolderTree } from '@/components/Icons';
 import { CProps } from '@/components/props';
-import useWindowSize from '@/hooks/useWindowSize';
+import { useWindowSize } from '@/hooks/useWindowSize';
 import { useFitHeight } from '@/stores/appLayout';
 import { usePreferencesStore } from '@/stores/preferences';
 import { APP_COLORS } from '@/styling/colors';
 
 import { ILibraryItem, LibraryItemType } from '../../backend/types';
-import BadgeLocation from '../../components/BadgeLocation';
+import { BadgeLocation } from '../../components/BadgeLocation';
 import { useLibrarySearchStore } from '../../stores/librarySearch';
 
 interface TableLibraryItemsProps {
@@ -27,7 +27,7 @@ interface TableLibraryItemsProps {
 
 const columnHelper = createColumnHelper<ILibraryItem>();
 
-function TableLibraryItems({ items }: TableLibraryItemsProps) {
+export function TableLibraryItems({ items }: TableLibraryItemsProps) {
   const router = useConceptNavigation();
   const intl = useIntl();
   const getUserLabel = useLabelUser();
@@ -185,5 +185,3 @@ function TableLibraryItems({ items }: TableLibraryItemsProps) {
     />
   );
 }
-
-export default TableLibraryItems;

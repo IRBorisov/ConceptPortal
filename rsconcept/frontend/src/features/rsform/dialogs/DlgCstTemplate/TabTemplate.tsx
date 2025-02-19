@@ -12,7 +12,7 @@ import { applyFilterCategory } from '../../models/rsformAPI';
 
 import { useTemplateContext } from './TemplateContext';
 
-function TabTemplate() {
+export function TabTemplate() {
   const {
     templateID, //
     filterCategory,
@@ -111,5 +111,3 @@ function TabTemplate() {
     </div>
   );
 }
-
-export default TabTemplate;

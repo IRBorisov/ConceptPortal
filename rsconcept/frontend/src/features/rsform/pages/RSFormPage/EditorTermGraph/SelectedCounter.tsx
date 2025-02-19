@@ -7,7 +7,12 @@ interface SelectedCounterProps {
   hideZero?: boolean;
 }
 
-function SelectedCounter({ totalCount, selectedCount, hideZero, position = 'top-0 left-0' }: SelectedCounterProps) {
+export function SelectedCounter({
+  totalCount,
+  selectedCount,
+  hideZero,
+  position = 'top-0 left-0'
+}: SelectedCounterProps) {
   if (selectedCount === 0 && hideZero) {
     return null;
   }
@@ -17,5 +22,3 @@ function SelectedCounter({ totalCount, selectedCount, hideZero, position = 'top-
     </Overlay>
   );
 }
-
-export default SelectedCounter;

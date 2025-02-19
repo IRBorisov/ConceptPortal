@@ -1,1 +1,1 @@
-export { default } from './DlgEditVersions';
+export { DlgEditVersions } from './DlgEditVersions';

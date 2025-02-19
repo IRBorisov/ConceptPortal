@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import { Grammeme } from '../../models/language';
+import { Grammeme } from '../models/language';
 
 interface WordformButtonProps {
   text: string;
@@ -10,7 +10,7 @@ interface WordformButtonProps {
   onSelectGrams: (grams: Grammeme[]) => void;
 }
 
-function WordformButton({ text, example, grams, onSelectGrams, isSelected, ...restProps }: WordformButtonProps) {
+export function WordformButton({ text, example, grams, onSelectGrams, isSelected, ...restProps }: WordformButtonProps) {
   return (
     <button
       type='button'
@@ -31,5 +31,3 @@ function WordformButton({ text, example, grams, onSelectGrams, isSelected, ...re
     </button>
   );
 }
-
-export default WordformButton;

@@ -36,7 +36,7 @@ interface ToolbarTermGraphProps {
   toggleNoText: () => void;
 }
 
-function ToolbarTermGraph({
+export function ToolbarTermGraph({
   noText,
   foldDerived,
   toggleNoText,
@@ -134,5 +134,3 @@ function ToolbarTermGraph({
     </div>
   );
 }
-
-export default ToolbarTermGraph;

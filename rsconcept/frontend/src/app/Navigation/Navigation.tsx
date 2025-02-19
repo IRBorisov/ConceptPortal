@@ -2,17 +2,17 @@ import clsx from 'clsx';
 
 import { IconLibrary2, IconManuals, IconNewItem2 } from '@/components/Icons';
 import { CProps } from '@/components/props';
-import useWindowSize from '@/hooks/useWindowSize';
+import { useWindowSize } from '@/hooks/useWindowSize';
 import { useAppLayoutStore } from '@/stores/appLayout';
 import { PARAMETER } from '@/utils/constants';
 
 import { urls } from '../urls';
 
-import Logo from './Logo';
-import NavigationButton from './NavigationButton';
+import { Logo } from './Logo';
+import { NavigationButton } from './NavigationButton';
 import { useConceptNavigation } from './NavigationContext';
-import ToggleNavigation from './ToggleNavigation';
-import UserMenu from './UserMenu';
+import { ToggleNavigation } from './ToggleNavigation';
+import { UserMenu } from './UserMenu';
 
 export function Navigation() {
   const router = useConceptNavigation();

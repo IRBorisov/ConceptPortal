@@ -31,7 +31,7 @@ interface TGNodeInternal {
   yPos: number;
 }
 
-function TGNode(node: TGNodeInternal) {
+export function TGNode(node: TGNodeInternal) {
   const description = truncateToLastWord(node.data.description, MAX_DESCRIPTION_LENGTH);
 
   return (
@@ -77,5 +77,3 @@ function TGNode(node: TGNodeInternal) {
     </>
   );
 }
-
-export default TGNode;

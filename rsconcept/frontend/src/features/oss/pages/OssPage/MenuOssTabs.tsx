@@ -28,7 +28,7 @@ import { useMutatingOss } from '../../backend/useMutatingOss';
 
 import { useOssEdit } from './OssEditContext';
 
-function MenuOssTabs() {
+export function MenuOssTabs() {
   const controller = useOssEdit();
   const router = useConceptNavigation();
   const { user, isAnonymous } = useAuthSuspense();
@@ -211,5 +211,3 @@ function MenuOssTabs() {
     </div>
   );
 }
-
-export default MenuOssTabs;

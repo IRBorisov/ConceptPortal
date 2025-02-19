@@ -4,7 +4,7 @@ import { SelectorButton } from '@/components/Control';
 import { DependencyIcon } from '@/components/DomainIcons';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/Dropdown';
 import { CProps } from '@/components/props';
-import useWindowSize from '@/hooks/useWindowSize';
+import { useWindowSize } from '@/hooks/useWindowSize';
 import { prefixes } from '@/utils/constants';
 
 import { describeCstSource, labelCstSource } from '../../../labels';
@@ -16,7 +16,7 @@ interface SelectGraphFilterProps extends CProps.Styling {
   dense?: boolean;
 }
 
-function SelectGraphFilter({ value, dense, onChange, ...restProps }: SelectGraphFilterProps) {
+export function SelectGraphFilter({ value, dense, onChange, ...restProps }: SelectGraphFilterProps) {
   const menu = useDropdown();
   const size = useWindowSize();
 
@@ -63,5 +63,3 @@ function SelectGraphFilter({ value, dense, onChange, ...restProps }: SelectGraph
     </div>
   );
 }
-
-export default SelectGraphFilter;

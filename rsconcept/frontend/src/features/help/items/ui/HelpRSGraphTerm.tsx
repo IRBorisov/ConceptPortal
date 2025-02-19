@@ -25,7 +25,7 @@ import { APP_COLORS } from '@/styling/colors';
 import { LinkTopic } from '../../components/LinkTopic';
 import { HelpTopic } from '../../models/helpTopic';
 
-function HelpRSGraphTerm() {
+export function HelpRSGraphTerm() {
   return (
     <div className='flex flex-col'>
       <h1>Граф термов</h1>
@@ -121,5 +121,3 @@ function HelpRSGraphTerm() {
     </div>
   );
 }
-
-export default HelpRSGraphTerm;

@@ -1,7 +1,5 @@
-import InfoCstClass from '../../components/InfoCstClass';
+import { InfoCstClass } from '../../components/InfoCstClass';
 
-function HelpCstClass() {
+export function HelpCstClass() {
   return <InfoCstClass header='Классы конституент' />;
 }
-
-export default HelpCstClass;

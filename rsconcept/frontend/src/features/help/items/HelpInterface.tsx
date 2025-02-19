@@ -12,7 +12,7 @@ import {
 import { Subtopics } from '../components/Subtopics';
 import { HelpTopic } from '../models/helpTopic';
 
-function HelpInterface() {
+export function HelpInterface() {
   return (
     <div>
       <h1>Пользовательский интерфейс</h1>
@@ -60,5 +60,3 @@ function HelpInterface() {
     </div>
   );
 }
-
-export default HelpInterface;

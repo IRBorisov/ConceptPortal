@@ -16,9 +16,9 @@ import { IOperationPosition, IOperationUpdateDTO, OperationType, schemaOperation
 import { useOperationUpdate } from '../../backend/useOperationUpdate';
 import { IOperation, IOperationSchema } from '../../models/oss';
 
-import TabArguments from './TabArguments';
-import TabOperation from './TabOperation';
-import TabSynthesis from './TabSynthesis';
+import { TabArguments } from './TabArguments';
+import { TabOperation } from './TabOperation';
+import { TabSynthesis } from './TabSynthesis';
 
 export interface DlgEditOperationProps {
   oss: IOperationSchema;
@@ -32,7 +32,7 @@ export enum TabID {
   SUBSTITUTION = 2
 }
 
-function DlgEditOperation() {
+export function DlgEditOperation() {
   const { oss, target, positions } = useDialogsStore(state => state.props as DlgEditOperationProps);
   const { operationUpdate } = useOperationUpdate();
 
@@ -108,5 +108,3 @@ function DlgEditOperation() {
     </ModalForm>
   );
 }
-
-export default DlgEditOperation;

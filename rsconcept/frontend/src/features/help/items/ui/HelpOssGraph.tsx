@@ -23,7 +23,7 @@ import {
 import { LinkTopic } from '../../components/LinkTopic';
 import { HelpTopic } from '../../models/helpTopic';
 
-function HelpOssGraph() {
+export function HelpOssGraph() {
   return (
     <div className='flex flex-col'>
       <h1 className='sm:pr-[6rem]'>Граф синтеза</h1>
@@ -117,5 +117,3 @@ function HelpOssGraph() {
     </div>
   );
 }
-
-export default HelpOssGraph;

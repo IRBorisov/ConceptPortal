@@ -16,7 +16,7 @@ interface PaginationToolsProps<TData> {
   onChangePaginationOption?: (newValue: number) => void;
 }
 
-function PaginationTools<TData>({
+export function PaginationTools<TData>({
   id,
   table,
   paginationOptions,
@@ -106,5 +106,3 @@ function PaginationTools<TData>({
     </div>
   );
 }
-
-export default PaginationTools;

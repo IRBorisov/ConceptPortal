@@ -4,7 +4,7 @@ import { SelectorButton } from '@/components/Control';
 import { MatchModeIcon } from '@/components/DomainIcons';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/Dropdown';
 import { CProps } from '@/components/props';
-import useWindowSize from '@/hooks/useWindowSize';
+import { useWindowSize } from '@/hooks/useWindowSize';
 import { prefixes } from '@/utils/constants';
 
 import { describeCstMatchMode, labelCstMatchMode } from '../../../labels';
@@ -16,7 +16,7 @@ interface SelectMatchModeProps extends CProps.Styling {
   dense?: boolean;
 }
 
-function SelectMatchMode({ value, dense, onChange, ...restProps }: SelectMatchModeProps) {
+export function SelectMatchMode({ value, dense, onChange, ...restProps }: SelectMatchModeProps) {
   const menu = useDropdown();
   const size = useWindowSize();
 
@@ -62,5 +62,3 @@ function SelectMatchMode({ value, dense, onChange, ...restProps }: SelectMatchMo
     </div>
   );
 }
-
-export default SelectMatchMode;

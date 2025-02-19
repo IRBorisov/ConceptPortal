@@ -4,7 +4,7 @@ import { useState } from 'react';
 import clsx from 'clsx';
 
 import { MiniButton } from '@/components/Control';
-import DataTable, { createColumnHelper } from '@/components/DataTable';
+import { createColumnHelper, DataTable } from '@/components/DataTable';
 import { IconMoveDown, IconMoveUp, IconRemove } from '@/components/Icons';
 import { CProps } from '@/components/props';
 import { NoData } from '@/components/View';

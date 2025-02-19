@@ -1,13 +1,11 @@
 import { RequireAuth } from '@/features/auth';
 
-import FormCreateItem from './FormCreateItem';
+import { FormCreateItem } from './FormCreateItem';
 
-function CreateItemPage() {
+export function CreateItemPage() {
   return (
     <RequireAuth>
       <FormCreateItem />
     </RequireAuth>
   );
 }
-
-export default CreateItemPage;

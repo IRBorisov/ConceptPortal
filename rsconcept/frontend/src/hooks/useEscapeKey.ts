@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect } from 'react';
 
-function useEscapeKey(handleClose: () => void, isEnabled: boolean = true) {
+export function useEscapeKey(handleClose: () => void, isEnabled: boolean = true) {
   const handleEscKey = useCallback(
     (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -21,5 +21,3 @@ function useEscapeKey(handleClose: () => void, isEnabled: boolean = true) {
     }
   }, [handleEscKey, isEnabled]);
 }
-
-export default useEscapeKey;

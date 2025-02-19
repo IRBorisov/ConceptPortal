@@ -23,7 +23,7 @@ import { APP_COLORS } from '@/styling/colors';
 import { LinkTopic } from '../../components/LinkTopic';
 import { HelpTopic } from '../../models/helpTopic';
 
-function HelpRSEditor() {
+export function HelpRSEditor() {
   return (
     <div className='dense'>
       <h1>Редактор конституенты</h1>
@@ -110,5 +110,3 @@ function HelpRSEditor() {
     </div>
   );
 }
-
-export default HelpRSEditor;

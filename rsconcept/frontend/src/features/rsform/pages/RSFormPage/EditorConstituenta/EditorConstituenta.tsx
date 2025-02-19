@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import clsx from 'clsx';
 
-import useWindowSize from '@/hooks/useWindowSize';
+import { useWindowSize } from '@/hooks/useWindowSize';
 import { useMainHeight } from '@/stores/appLayout';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
@@ -15,14 +15,14 @@ import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
 import { useRSEdit } from '../RSEditContext';
 import { ViewConstituents } from '../ViewConstituents';
 
-import EditorControls from './EditorControls';
+import { EditorControls } from './EditorControls';
 import { FormConstituenta } from './FormConstituenta';
-import ToolbarConstituenta from './ToolbarConstituenta';
+import { ToolbarConstituenta } from './ToolbarConstituenta';
 
 // Threshold window width to switch layout.
 const SIDELIST_LAYOUT_THRESHOLD = 1000; // px
 
-function EditorConstituenta() {
+export function EditorConstituenta() {
   const { schema, activeCst, isContentEditable, moveUp, moveDown, cloneCst, navigateCst } = useRSEdit();
   const windowSize = useWindowSize();
   const mainHeight = useMainHeight();
@@ -128,5 +128,3 @@ function EditorConstituenta() {
     </>
   );
 }
-
-export default EditorConstituenta;

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import clsx from 'clsx';
 
-import DataTable, { createColumnHelper, RowSelectionState } from '@/components/DataTable';
+import { createColumnHelper, DataTable, RowSelectionState } from '@/components/DataTable';
 import { SearchBar } from '@/components/Input';
 import { CProps } from '@/components/props';
 import { NoData } from '@/components/View';
@@ -15,7 +15,7 @@ import { isBasicConcept, matchConstituenta } from '../models/rsformAPI';
 import { CstMatchMode } from '../stores/cstSearch';
 
 import { BadgeConstituenta } from './BadgeConstituenta';
-import ToolbarGraphSelection from './ToolbarGraphSelection';
+import { ToolbarGraphSelection } from './ToolbarGraphSelection';
 
 interface PickMultiConstituentaProps extends CProps.Styling {
   id?: string;

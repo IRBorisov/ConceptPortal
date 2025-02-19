@@ -1,11 +1,11 @@
 import { EmbedYoutube } from '@/components/View';
-import useWindowSize from '@/hooks/useWindowSize';
+import { useWindowSize } from '@/hooks/useWindowSize';
 import { external_urls, youtube } from '@/utils/constants';
 
 import { Subtopics } from '../components/Subtopics';
 import { HelpTopic } from '../models/helpTopic';
 
-function HelpRSLang() {
+export function HelpRSLang() {
   const windowSize = useWindowSize();
 
   const videoHeight = (() => {
@@ -35,5 +35,3 @@ function HelpRSLang() {
     </div>
   </div>);
 }
-
-export default HelpRSLang;

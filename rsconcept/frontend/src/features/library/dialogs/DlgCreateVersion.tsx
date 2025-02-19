@@ -21,7 +21,7 @@ export interface DlgCreateVersionProps {
   totalCount: number;
 }
 
-function DlgCreateVersion() {
+export function DlgCreateVersion() {
   const { itemID, versions, selected, totalCount, onCreate } = useDialogsStore(
     state => state.props as DlgCreateVersionProps
   );
@@ -70,5 +70,3 @@ function DlgCreateVersion() {
     </ModalForm>
   );
 }
-
-export default DlgCreateVersion;

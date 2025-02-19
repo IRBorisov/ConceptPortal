@@ -1,6 +1,6 @@
 import { IconHide, IconImmutable, IconPrivate, IconProtected, IconPublic } from '@/components/Icons';
 
-function HelpAccess() {
+export function HelpAccess() {
   return (
     <div>
       <h1>Организация доступов</h1>
@@ -29,5 +29,3 @@ function HelpAccess() {
     </div>
   );
 }
-
-export default HelpAccess;

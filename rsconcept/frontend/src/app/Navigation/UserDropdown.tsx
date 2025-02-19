@@ -27,7 +27,7 @@ interface UserDropdownProps {
   hideDropdown: () => void;
 }
 
-function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
+export function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
   const router = useConceptNavigation();
   const { user } = useAuthSuspense();
   const { logout } = useLogout();
@@ -141,5 +141,3 @@ function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
     </Dropdown>
   );
 }
-
-export default UserDropdown;

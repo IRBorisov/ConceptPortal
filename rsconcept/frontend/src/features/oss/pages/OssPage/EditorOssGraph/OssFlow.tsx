@@ -36,13 +36,13 @@ import { useOSSGraphStore } from '../../../stores/ossGraph';
 import { useOssEdit } from '../OssEditContext';
 
 import { OssNodeTypes } from './graph/OssNodeTypes';
-import NodeContextMenu, { ContextMenuData } from './NodeContextMenu';
-import ToolbarOssGraph from './ToolbarOssGraph';
+import { ContextMenuData, NodeContextMenu } from './NodeContextMenu';
+import { ToolbarOssGraph } from './ToolbarOssGraph';
 
 const ZOOM_MAX = 2;
 const ZOOM_MIN = 0.5;
 
-function OssFlow() {
+export function OssFlow() {
   const mainHeight = useMainHeight();
   const controller = useOssEdit();
   const router = useConceptNavigation();
@@ -350,5 +350,3 @@ function OssFlow() {
     </div>
   );
 }
-
-export default OssFlow;

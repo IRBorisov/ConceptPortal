@@ -6,10 +6,10 @@ import { Loader } from '@/components/Loader';
 import { urls } from '../urls';
 
 import { useConceptNavigation } from './NavigationContext';
-import UserButton from './UserButton';
-import UserDropdown from './UserDropdown';
+import { UserButton } from './UserButton';
+import { UserDropdown } from './UserDropdown';
 
-function UserMenu() {
+export function UserMenu() {
   const router = useConceptNavigation();
   const menu = useDropdown();
   return (
@@ -21,5 +21,3 @@ function UserMenu() {
     </div>
   );
 }
-
-export default UserMenu;

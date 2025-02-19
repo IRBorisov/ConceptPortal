@@ -11,7 +11,7 @@ interface RSTokenButtonProps {
   onInsert: (token: TokenID, key?: string) => void;
 }
 
-function RSTokenButton({ token, disabled, onInsert }: RSTokenButtonProps) {
+export function RSTokenButton({ token, disabled, onInsert }: RSTokenButtonProps) {
   const label = labelToken(token);
   return (
     <button
@@ -38,5 +38,3 @@ function RSTokenButton({ token, disabled, onInsert }: RSTokenButtonProps) {
     </button>
   );
 }
-
-export default RSTokenButton;

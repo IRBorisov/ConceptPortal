@@ -3,14 +3,14 @@ import { useAuthSuspense } from '@/features/auth';
 import { IconLogin, IconUser2 } from '@/components/Icons';
 import { usePreferencesStore } from '@/stores/preferences';
 
-import NavigationButton from './NavigationButton';
+import { NavigationButton } from './NavigationButton';
 
 interface UserButtonProps {
   onLogin: () => void;
   onClickUser: () => void;
 }
 
-function UserButton({ onLogin, onClickUser }: UserButtonProps) {
+export function UserButton({ onLogin, onClickUser }: UserButtonProps) {
   const { user, isAnonymous } = useAuthSuspense();
   const adminMode = usePreferencesStore(state => state.adminMode);
   if (isAnonymous) {
@@ -32,5 +32,3 @@ function UserButton({ onLogin, onClickUser }: UserButtonProps) {
     );
   }
 }
-
-export default UserButton;

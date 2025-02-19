@@ -11,11 +11,11 @@ import {
   IconReset
 } from '@/components/Icons';
 
-import InfoCstStatus from '../../components/InfoCstStatus';
+import { InfoCstStatus } from '../../components/InfoCstStatus';
 import { LinkTopic } from '../../components/LinkTopic';
 import { HelpTopic } from '../../models/helpTopic';
 
-function HelpRSList() {
+export function HelpRSList() {
   return (
     <div className='dense'>
       <h1>Список конституент</h1>
@@ -63,5 +63,3 @@ function HelpRSList() {
     </div>
   );
 }
-
-export default HelpRSList;

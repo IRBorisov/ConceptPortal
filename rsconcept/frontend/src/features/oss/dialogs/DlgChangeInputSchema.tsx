@@ -23,7 +23,7 @@ export interface DlgChangeInputSchemaProps {
   positions: IOperationPosition[];
 }
 
-function DlgChangeInputSchema() {
+export function DlgChangeInputSchema() {
   const { oss, target, positions } = useDialogsStore(state => state.props as DlgChangeInputSchemaProps);
   const { inputUpdate } = useInputUpdate();
 
@@ -84,5 +84,3 @@ function DlgChangeInputSchema() {
     </ModalForm>
   );
 }
-
-export default DlgChangeInputSchema;

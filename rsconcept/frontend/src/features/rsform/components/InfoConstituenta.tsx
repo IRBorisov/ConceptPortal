@@ -11,7 +11,7 @@ interface InfoConstituentaProps extends CProps.Div {
   data: IConstituenta;
 }
 
-function InfoConstituenta({ data, className, ...restProps }: InfoConstituentaProps) {
+export function InfoConstituenta({ data, className, ...restProps }: InfoConstituentaProps) {
   return (
     <div className={clsx('dense min-w-[15rem] break-words', className)} {...restProps}>
       <h2 className='cursor-default' title={data.is_inherited ? ' наследник' : undefined}>
@@ -63,5 +63,3 @@ function InfoConstituenta({ data, className, ...restProps }: InfoConstituentaPro
     </div>
   );
 }
-
-export default InfoConstituenta;

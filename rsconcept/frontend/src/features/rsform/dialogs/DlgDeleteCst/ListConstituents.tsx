@@ -10,7 +10,7 @@ interface ListConstituentsProps {
   title?: string;
 }
 
-function ListConstituents({ list, schema, title, prefix }: ListConstituentsProps) {
+export function ListConstituents({ list, schema, title, prefix }: ListConstituentsProps) {
   return (
     <div>
       {title ? (
@@ -27,5 +27,3 @@ function ListConstituents({ list, schema, title, prefix }: ListConstituentsProps
     </div>
   );
 }
-
-export default ListConstituents;

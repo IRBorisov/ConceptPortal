@@ -14,7 +14,7 @@ import { GlobalTooltips } from './GlobalTooltips';
 import { MutationErrors } from './MutationErrors';
 import { Navigation } from './Navigation';
 
-function ApplicationLayout() {
+export function ApplicationLayout() {
   const mainHeight = useMainHeight();
   const viewportHeight = useViewportHeight();
   const showScroll = useAppLayoutStore(state => !state.noScroll);
@@ -58,5 +58,3 @@ function ApplicationLayout() {
     </NavigationState>
   );
 }
-
-export default ApplicationLayout;

@@ -2,14 +2,12 @@
 
 import { ReactFlowProvider } from 'reactflow';
 
-import OssFlow from './OssFlow';
+import { OssFlow } from './OssFlow';
 
-function EditorOssGraph() {
+export function EditorOssGraph() {
   return (
     <ReactFlowProvider>
       <OssFlow />
     </ReactFlowProvider>
   );
 }
-
-export default EditorOssGraph;

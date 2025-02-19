@@ -1,1 +1,1 @@
-export { default } from './EditorConstituenta';
+export { EditorConstituenta } from './EditorConstituenta';

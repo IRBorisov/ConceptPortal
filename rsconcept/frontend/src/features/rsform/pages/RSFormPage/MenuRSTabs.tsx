@@ -51,7 +51,7 @@ import { canProduceStructure } from '../../models/rsformAPI';
 
 import { useRSEdit } from './RSEditContext';
 
-function MenuRSTabs() {
+export function MenuRSTabs() {
   const controller = useRSEdit();
   const router = useConceptNavigation();
   const { user, isAnonymous } = useAuthSuspense();
@@ -436,5 +436,3 @@ function MenuRSTabs() {
     </div>
   );
 }
-
-export default MenuRSTabs;

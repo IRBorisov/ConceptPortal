@@ -1,6 +1,6 @@
 import { APP_COLORS } from '@/styling/colors';
 
-function HelpFormulaTree() {
+export function HelpFormulaTree() {
   return (
     <div>
       <h1>Дерево разбора выражения</h1>
@@ -32,5 +32,3 @@ function HelpFormulaTree() {
     </div>
   );
 }
-
-export default HelpFormulaTree;

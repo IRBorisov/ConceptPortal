@@ -16,9 +16,9 @@ import { useLibrarySuspense } from '../../backend/useLibrary';
 import { useRenameLocation } from '../../backend/useRenameLocation';
 import { useCreateLibraryFilter, useLibrarySearchStore } from '../../stores/librarySearch';
 
-import TableLibraryItems from './TableLibraryItems';
-import ToolbarSearch from './ToolbarSearch';
-import ViewSideLocation from './ViewSideLocation';
+import { TableLibraryItems } from './TableLibraryItems';
+import { ToolbarSearch } from './ToolbarSearch';
+import { ViewSideLocation } from './ViewSideLocation';
 
 export function LibraryPage() {
   const { items: libraryItems } = useLibrarySuspense();

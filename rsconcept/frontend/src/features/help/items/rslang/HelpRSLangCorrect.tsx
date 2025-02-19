@@ -1,7 +1,7 @@
 import { LinkTopic } from '../../components/LinkTopic';
 import { HelpTopic } from '../../models/helpTopic';
 
-function HelpRSLangCorrect() {
+export function HelpRSLangCorrect() {
   return (
     <div className='text-justify'>
       <h1>Переносимость и корректность</h1>
@@ -33,5 +33,3 @@ function HelpRSLangCorrect() {
     </div>
   );
 }
-
-export default HelpRSLangCorrect;

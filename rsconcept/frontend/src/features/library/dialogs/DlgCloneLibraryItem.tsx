@@ -28,7 +28,7 @@ export interface DlgCloneLibraryItemProps {
   totalCount: number;
 }
 
-function DlgCloneLibraryItem() {
+export function DlgCloneLibraryItem() {
   const { base, initialLocation, selected, totalCount } = useDialogsStore(
     state => state.props as DlgCloneLibraryItemProps
   );
@@ -174,5 +174,3 @@ function DlgCloneLibraryItem() {
     </ModalForm>
   );
 }
-
-export default DlgCloneLibraryItem;

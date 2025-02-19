@@ -4,7 +4,7 @@ import { external_urls } from '@/utils/constants';
 import { LinkTopic } from '../../components/LinkTopic';
 import { HelpTopic } from '../../models/helpTopic';
 
-function HelpInfo() {
+export function HelpContributors() {
   return (
     <div>
       <h1>Благодарности разработчикам и исследователям</h1>
@@ -291,5 +291,3 @@ function HelpInfo() {
     </div>
   );
 }
-
-export default HelpInfo;

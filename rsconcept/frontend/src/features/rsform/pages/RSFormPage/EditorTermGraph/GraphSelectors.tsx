@@ -7,7 +7,7 @@ import { mapLabelColoring } from '../../../labels';
 import { IRSForm } from '../../../models/rsform';
 import { GraphColoring } from '../../../stores/termGraph';
 
-import SchemasGuide from './SchemasGuide';
+import { SchemasGuide } from './SchemasGuide';
 
 /**
  * Represents options for {@link GraphColoring} selector.
@@ -21,7 +21,7 @@ interface GraphSelectorsProps {
   onChangeColoring: (newValue: GraphColoring) => void;
 }
 
-function GraphSelectors({ schema, coloring, onChangeColoring }: GraphSelectorsProps) {
+export function GraphSelectors({ schema, coloring, onChangeColoring }: GraphSelectorsProps) {
   return (
     <div className='border rounded-b-none select-none clr-input rounded-t-md pointer-events-auto'>
       <Overlay position='right-[2.5rem] top-[0.25rem]'>
@@ -40,5 +40,3 @@ function GraphSelectors({ schema, coloring, onChangeColoring }: GraphSelectorsPr
     </div>
   );
 }
-
-export default GraphSelectors;

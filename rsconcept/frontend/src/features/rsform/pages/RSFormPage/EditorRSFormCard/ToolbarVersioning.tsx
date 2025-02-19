@@ -18,7 +18,7 @@ interface ToolbarVersioningProps {
   blockReload?: boolean;
 }
 
-function ToolbarVersioning({ blockReload }: ToolbarVersioningProps) {
+export function ToolbarVersioning({ blockReload }: ToolbarVersioningProps) {
   const controller = useRSEdit();
   const { isModified } = useModificationStore();
   const { versionRestore } = useVersionRestore();
@@ -89,5 +89,3 @@ function ToolbarVersioning({ blockReload }: ToolbarVersioningProps) {
     </Overlay>
   );
 }
-
-export default ToolbarVersioning;

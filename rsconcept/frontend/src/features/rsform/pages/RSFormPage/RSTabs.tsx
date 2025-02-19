@@ -12,11 +12,11 @@ import { useModificationStore } from '@/stores/modification';
 
 import { labelVersion } from '../../labels';
 
-import EditorConstituenta from './EditorConstituenta';
-import EditorRSForm from './EditorRSFormCard';
-import EditorRSList from './EditorRSList';
-import EditorTermGraph from './EditorTermGraph';
-import MenuRSTabs from './MenuRSTabs';
+import { EditorConstituenta } from './EditorConstituenta';
+import { EditorRSFormCard } from './EditorRSFormCard';
+import { EditorRSList } from './EditorRSList';
+import { EditorTermGraph } from './EditorTermGraph';
+import { MenuRSTabs } from './MenuRSTabs';
 import { RSTabID, useRSEdit } from './RSEditContext';
 
 interface RSTabsProps {
@@ -24,7 +24,7 @@ interface RSTabsProps {
   activeTab: RSTabID;
 }
 
-function RSTabs({ activeID, activeTab }: RSTabsProps) {
+export function RSTabs({ activeID, activeTab }: RSTabsProps) {
   const router = useConceptNavigation();
 
   const hideFooter = useAppLayoutStore(state => state.hideFooter);
@@ -98,7 +98,7 @@ function RSTabs({ activeID, activeTab }: RSTabsProps) {
 
         <div className='overflow-x-hidden'>
           <TabPanel>
-            <EditorRSForm />
+            <EditorRSFormCard />
           </TabPanel>
 
           <TabPanel>
@@ -117,5 +117,3 @@ function RSTabs({ activeID, activeTab }: RSTabsProps) {
     </>
   );
 }
-
-export default RSTabs;

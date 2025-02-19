@@ -8,13 +8,13 @@ import { MiniButton } from '@/components/Control';
 import { SubfoldersIcon } from '@/components/DomainIcons';
 import { IconFolderEdit, IconFolderTree } from '@/components/Icons';
 import { CProps } from '@/components/props';
-import useWindowSize from '@/hooks/useWindowSize';
+import { useWindowSize } from '@/hooks/useWindowSize';
 import { useFitHeight } from '@/stores/appLayout';
 import { PARAMETER, prefixes } from '@/utils/constants';
 import { infoMsg } from '@/utils/labels';
 
 import { useLibrary } from '../../backend/useLibrary';
-import SelectLocation from '../../components/SelectLocation';
+import { SelectLocation } from '../../components/SelectLocation';
 import { FolderNode } from '../../models/FolderTree';
 import { useLibrarySearchStore } from '../../stores/librarySearch';
 
@@ -23,7 +23,7 @@ interface ViewSideLocationProps {
   onRenameLocation: () => void;
 }
 
-function ViewSideLocation({ isVisible, onRenameLocation }: ViewSideLocationProps) {
+export function ViewSideLocation({ isVisible, onRenameLocation }: ViewSideLocationProps) {
   const { user, isAnonymous } = useAuthSuspense();
   const { items } = useLibrary();
   const windowSize = useWindowSize();
@@ -111,5 +111,3 @@ function ViewSideLocation({ isVisible, onRenameLocation }: ViewSideLocationProps
     </div>
   );
 }
-
-export default ViewSideLocation;

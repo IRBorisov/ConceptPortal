@@ -17,7 +17,7 @@ interface ToolbarFocusedCstProps {
   toggleShowOutputs: () => void;
 }
 
-function ToolbarFocusedCst({
+export function ToolbarFocusedCst({
   center,
   reset,
   showInputs,
@@ -56,5 +56,3 @@ function ToolbarFocusedCst({
     </div>
   );
 }
-
-export default ToolbarFocusedCst;
