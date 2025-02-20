@@ -15,7 +15,7 @@ import { FormRSForm } from './FormRSForm';
 import { RSFormStats } from './RSFormStats';
 
 export function EditorRSFormCard() {
-  const controller = useRSEdit();
+  const { schema, isArchive, isMutable, deleteSchema, isAttachedToOSS } = useRSEdit();
   const { isModified } = useModificationStore();
 
   function initiateSubmit() {
@@ -36,7 +36,7 @@ export function EditorRSFormCard() {
 
   return (
     <>
-      <ToolbarRSFormCard onSubmit={initiateSubmit} controller={controller} />
+      <ToolbarRSFormCard onSubmit={initiateSubmit} schema={schema} isMutable={isMutable} deleteSchema={deleteSchema} />
       <div
         onKeyDown={handleInput}
         className={clsx(
@@ -47,10 +47,10 @@ export function EditorRSFormCard() {
       >
         <FlexColumn className='flex-shrink'>
           <FormRSForm />
-          <EditorLibraryItem controller={controller} />
+          <EditorLibraryItem schema={schema} isAttachedToOSS={isAttachedToOSS} />
         </FlexColumn>
 
-        <RSFormStats stats={controller.schema.stats} isArchive={controller.isArchive} />
+        <RSFormStats stats={schema.stats} isArchive={isArchive} />
       </div>
     </>
   );

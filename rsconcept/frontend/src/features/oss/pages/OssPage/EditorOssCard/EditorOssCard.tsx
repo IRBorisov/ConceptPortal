@@ -15,7 +15,7 @@ import { FormOSS } from './FormOSS';
 import { OssStats } from './OssStats';
 
 export function EditorOssCard() {
-  const controller = useOssEdit();
+  const { schema, isMutable, deleteSchema } = useOssEdit();
   const { isModified } = useModificationStore();
 
   function initiateSubmit() {
@@ -36,7 +36,7 @@ export function EditorOssCard() {
 
   return (
     <>
-      <ToolbarRSFormCard onSubmit={initiateSubmit} controller={controller} />
+      <ToolbarRSFormCard onSubmit={initiateSubmit} schema={schema} isMutable={isMutable} deleteSchema={deleteSchema} />
       <div
         onKeyDown={handleInput}
         className={clsx(
@@ -48,10 +48,10 @@ export function EditorOssCard() {
       >
         <FlexColumn className='px-3'>
           <FormOSS />
-          <EditorLibraryItem controller={controller} />
+          <EditorLibraryItem schema={schema} isAttachedToOSS={false} />
         </FlexColumn>
 
-        <OssStats stats={controller.schema.stats} />
+        <OssStats stats={schema.stats} />
       </div>
     </>
   );

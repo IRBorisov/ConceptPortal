@@ -52,9 +52,21 @@ import { canProduceStructure } from '../../models/rsformAPI';
 import { useRSEdit } from './RSEditContext';
 
 export function MenuRSTabs() {
-  const controller = useRSEdit();
   const router = useConceptNavigation();
   const { user, isAnonymous } = useAuthSuspense();
+  const {
+    activeCst,
+    schema,
+    selected,
+    setSelected,
+    deleteSchema,
+    promptTemplate,
+    deselectAll,
+    isArchive,
+    isMutable,
+    isContentEditable,
+    isOwned
+  } = useRSEdit();
 
   const role = useRoleStore(state => state.role);
   const setRole = useRoleStore(state => state.setRole);
@@ -76,15 +88,15 @@ export function MenuRSTabs() {
   const editMenu = useDropdown();
   const accessMenu = useDropdown();
 
-  const structureEnabled = !!controller.activeCst && canProduceStructure(controller.activeCst);
+  const structureEnabled = !!activeCst && canProduceStructure(activeCst);
 
   function calculateCloneLocation() {
-    const location = controller.schema.location;
+    const location = schema.location;
     const head = location.substring(0, 2) as LocationHead;
     if (head === LocationHead.LIBRARY) {
       return user.is_staff ? location : LocationHead.USER;
     }
-    if (controller.schema.owner === user.id) {
+    if (schema.owner === user.id) {
       return location;
     }
     return head === LocationHead.USER ? LocationHead.USER : location;
@@ -92,7 +104,7 @@ export function MenuRSTabs() {
 
   function handleDelete() {
     schemaMenu.hide();
-    controller.deleteSchema();
+    deleteSchema();
   }
 
   function handleDownload() {
@@ -100,10 +112,10 @@ export function MenuRSTabs() {
     if (isModified && !promptUnsaved()) {
       return;
     }
-    const fileName = (controller.schema.alias ?? 'Schema') + EXTEOR_TRS_FILE;
+    const fileName = (schema.alias ?? 'Schema') + EXTEOR_TRS_FILE;
     void download({
-      itemID: controller.schema.id,
-      version: controller.schema.version
+      itemID: schema.id,
+      version: schema.version
     }).then((data: Blob) => {
       try {
         fileDownload(data, fileName);
@@ -115,7 +127,7 @@ export function MenuRSTabs() {
 
   function handleUpload() {
     schemaMenu.hide();
-    showUpload({ itemID: controller.schema.id });
+    showUpload({ itemID: schema.id });
   }
 
   function handleClone() {
@@ -124,10 +136,10 @@ export function MenuRSTabs() {
       return;
     }
     showClone({
-      base: controller.schema,
+      base: schema,
       initialLocation: calculateCloneLocation(),
-      selected: controller.selected,
-      totalCount: controller.schema.items.length
+      selected: selected,
+      totalCount: schema.items.length
     });
   }
 
@@ -143,12 +155,12 @@ export function MenuRSTabs() {
 
   function handleReindex() {
     editMenu.hide();
-    void resetAliases({ itemID: controller.schema.id });
+    void resetAliases({ itemID: schema.id });
   }
 
   function handleRestoreOrder() {
     editMenu.hide();
-    void restoreOrder({ itemID: controller.schema.id });
+    void restoreOrder({ itemID: schema.id });
   }
 
   function handleSubstituteCst() {
@@ -157,31 +169,30 @@ export function MenuRSTabs() {
       return;
     }
     showSubstituteCst({
-      schema: controller.schema,
-      onSubstitute: data =>
-        controller.setSelected(prev => prev.filter(id => !data.substitutions.find(sub => sub.original === id)))
+      schema: schema,
+      onSubstitute: data => setSelected(prev => prev.filter(id => !data.substitutions.find(sub => sub.original === id)))
     });
   }
 
   function handleTemplates() {
     editMenu.hide();
-    controller.promptTemplate();
+    promptTemplate();
   }
 
   function handleProduceStructure() {
     editMenu.hide();
-    if (!controller.activeCst) {
+    if (!activeCst) {
       return;
     }
     if (isModified && !promptUnsaved()) {
       return;
     }
     void produceStructure({
-      itemID: controller.schema.id,
-      data: { target: controller.activeCst.id }
+      itemID: schema.id,
+      data: { target: activeCst.id }
     }).then(cstList => {
       if (cstList.length !== 0) {
-        controller.setSelected(cstList);
+        setSelected(cstList);
       }
     });
   }
@@ -192,8 +203,8 @@ export function MenuRSTabs() {
       return;
     }
     showInlineSynthesis({
-      receiver: controller.schema,
-      onSynthesis: () => controller.deselectAll()
+      receiver: schema,
+      onSynthesis: () => deselectAll()
     });
   }
 
@@ -227,10 +238,10 @@ export function MenuRSTabs() {
         <Dropdown isOpen={schemaMenu.isOpen}>
           <DropdownButton
             text='Поделиться'
-            titleHtml={tooltipText.shareItem(controller.schema.access_policy === AccessPolicy.PUBLIC)}
+            titleHtml={tooltipText.shareItem(schema.access_policy === AccessPolicy.PUBLIC)}
             icon={<IconShare size='1rem' className='icon-primary' />}
             onClick={handleShare}
-            disabled={controller.schema.access_policy !== AccessPolicy.PUBLIC}
+            disabled={schema.access_policy !== AccessPolicy.PUBLIC}
           />
           <DropdownButton
             text='QR-код'
@@ -242,7 +253,7 @@ export function MenuRSTabs() {
             <DropdownButton
               text='Клонировать'
               icon={<IconClone size='1rem' className='icon-green' />}
-              disabled={controller.isArchive}
+              disabled={isArchive}
               onClick={handleClone}
             />
           ) : null}
@@ -251,15 +262,15 @@ export function MenuRSTabs() {
             icon={<IconDownload size='1rem' className='icon-primary' />}
             onClick={handleDownload}
           />
-          {controller.isContentEditable ? (
+          {isContentEditable ? (
             <DropdownButton
               text='Загрузить из Экстеор'
               icon={<IconUpload size='1rem' className='icon-red' />}
-              disabled={isProcessing || controller.schema.oss.length !== 0}
+              disabled={isProcessing || schema.oss.length !== 0}
               onClick={handleUpload}
             />
           ) : null}
-          {controller.isMutable ? (
+          {isMutable ? (
             <DropdownButton
               text='Удалить схему'
               icon={<IconDestroy size='1rem' className='icon-red' />}
@@ -277,11 +288,11 @@ export function MenuRSTabs() {
               onClick={handleCreateNew}
             />
           ) : null}
-          {controller.schema.oss.length > 0 ? (
+          {schema.oss.length > 0 ? (
             <DropdownButton
               text='Перейти к ОСС'
               icon={<IconOSS size='1rem' className='icon-primary' />}
-              onClick={() => router.push(urls.oss(controller.schema.oss[0].id))}
+              onClick={() => router.push(urls.oss(schema.oss[0].id))}
             />
           ) : null}
           <DropdownButton
@@ -291,7 +302,7 @@ export function MenuRSTabs() {
           />
         </Dropdown>
       </div>
-      {!controller.isArchive && !isAnonymous ? (
+      {!isArchive && !isAnonymous ? (
         <div ref={editMenu.ref}>
           <Button
             dense
@@ -301,7 +312,7 @@ export function MenuRSTabs() {
             title='Редактирование'
             hideTitle={editMenu.isOpen}
             className='h-full px-2'
-            icon={<IconEdit2 size='1.25rem' className={controller.isContentEditable ? 'icon-green' : 'icon-red'} />}
+            icon={<IconEdit2 size='1.25rem' className={isContentEditable ? 'icon-green' : 'icon-red'} />}
             onClick={editMenu.toggle}
           />
           <Dropdown isOpen={editMenu.isOpen}>
@@ -309,14 +320,14 @@ export function MenuRSTabs() {
               text='Шаблоны'
               title='Создать конституенту из шаблона'
               icon={<IconTemplates size='1rem' className='icon-green' />}
-              disabled={!controller.isContentEditable || isProcessing}
+              disabled={!isContentEditable || isProcessing}
               onClick={handleTemplates}
             />
             <DropdownButton
               text='Встраивание'
               titleHtml='Импортировать совокупность <br/>конституент из другой схемы'
               icon={<IconInlineSynthesis size='1rem' className='icon-green' />}
-              disabled={!controller.isContentEditable || isProcessing}
+              disabled={!isContentEditable || isProcessing}
               onClick={handleInlineSynthesis}
             />
 
@@ -326,21 +337,21 @@ export function MenuRSTabs() {
               text='Упорядочить список'
               titleHtml='Упорядочить список, исходя из <br/>логики типов и связей конституент'
               icon={<IconSortList size='1rem' className='icon-primary' />}
-              disabled={!controller.isContentEditable || isProcessing}
+              disabled={!isContentEditable || isProcessing}
               onClick={handleRestoreOrder}
             />
             <DropdownButton
               text='Порядковые имена'
               titleHtml='Присвоить порядковые имена <br/>и обновить выражения'
               icon={<IconGenerateNames size='1rem' className='icon-primary' />}
-              disabled={!controller.isContentEditable || isProcessing}
+              disabled={!isContentEditable || isProcessing}
               onClick={handleReindex}
             />
             <DropdownButton
               text='Порождение структуры'
               titleHtml='Раскрыть структуру типизации <br/>выделенной конституенты'
               icon={<IconGenerateStructure size='1rem' className='icon-primary' />}
-              disabled={!controller.isContentEditable || !structureEnabled || isProcessing}
+              disabled={!isContentEditable || !structureEnabled || isProcessing}
               onClick={handleProduceStructure}
             />
             <DropdownButton
@@ -348,12 +359,12 @@ export function MenuRSTabs() {
               titleHtml='Заменить вхождения <br/>одной конституенты на другую'
               icon={<IconReplace size='1rem' className='icon-red' />}
               onClick={handleSubstituteCst}
-              disabled={!controller.isContentEditable || isProcessing}
+              disabled={!isContentEditable || isProcessing}
             />
           </Dropdown>
         </div>
       ) : null}
-      {controller.isArchive && !isAnonymous ? (
+      {isArchive && !isAnonymous ? (
         <Button
           dense
           noBorder
@@ -363,7 +374,7 @@ export function MenuRSTabs() {
           hideTitle={accessMenu.isOpen}
           className='h-full px-2'
           icon={<IconArchive size='1.25rem' className='icon-primary' />}
-          onClick={event => router.push(urls.schema(controller.schema.id), event.ctrlKey || event.metaKey)}
+          onClick={event => router.push(urls.schema(schema.id), event.ctrlKey || event.metaKey)}
         />
       ) : null}
       {!isAnonymous ? (
@@ -400,14 +411,14 @@ export function MenuRSTabs() {
               text={labelAccessMode(UserRole.EDITOR)}
               title={describeAccessMode(UserRole.EDITOR)}
               icon={<IconEditor size='1rem' className='icon-primary' />}
-              disabled={!controller.isOwned && (!user.id || !controller.schema.editors.includes(user.id))}
+              disabled={!isOwned && (!user.id || !schema.editors.includes(user.id))}
               onClick={() => handleChangeMode(UserRole.EDITOR)}
             />
             <DropdownButton
               text={labelAccessMode(UserRole.OWNER)}
               title={describeAccessMode(UserRole.OWNER)}
               icon={<IconOwner size='1rem' className='icon-primary' />}
-              disabled={!controller.isOwned}
+              disabled={!isOwned}
               onClick={() => handleChangeMode(UserRole.OWNER)}
             />
             <DropdownButton

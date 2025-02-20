@@ -31,46 +31,50 @@ import { getCstTypeShortcut, labelCstType } from '../../../labels';
 import { useRSEdit } from '../RSEditContext';
 
 export function ToolbarRSList() {
-  const controller = useRSEdit();
   const isProcessing = useMutatingRSForm();
   const insertMenu = useDropdown();
+  const {
+    schema,
+    selected,
+    navigateOss,
+    deselectAll,
+    createCst,
+    createCstDefault,
+    cloneCst,
+    canDeleteSelected,
+    promptDeleteCst,
+    moveUp,
+    moveDown
+  } = useRSEdit();
 
   return (
     <Overlay
       position='cc-tab-tools right-4 translate-x-0 md:right-1/2 md:translate-x-1/2'
       className='cc-icons cc-animate-position items-start outline-none'
     >
-      {controller.schema.oss.length > 0 ? (
+      {schema.oss.length > 0 ? (
         <MiniSelectorOSS
-          items={controller.schema.oss}
-          onSelect={(event, value) => controller.navigateOss(value.id, event.ctrlKey || event.metaKey)}
+          items={schema.oss}
+          onSelect={(event, value) => navigateOss(value.id, event.ctrlKey || event.metaKey)}
         />
       ) : null}
       <MiniButton
         titleHtml={prepareTooltip('Сбросить выделение', 'ESC')}
         icon={<IconReset size='1.25rem' className='icon-primary' />}
-        disabled={controller.selected.length === 0}
-        onClick={controller.deselectAll}
+        disabled={selected.length === 0}
+        onClick={deselectAll}
       />
       <MiniButton
         titleHtml={prepareTooltip('Переместить вверх', 'Alt + вверх')}
         icon={<IconMoveUp size='1.25rem' className='icon-primary' />}
-        disabled={
-          isProcessing ||
-          controller.selected.length === 0 ||
-          controller.selected.length === controller.schema.items.length
-        }
-        onClick={controller.moveUp}
+        disabled={isProcessing || selected.length === 0 || selected.length === schema.items.length}
+        onClick={moveUp}
       />
       <MiniButton
         titleHtml={prepareTooltip('Переместить вниз', 'Alt + вниз')}
         icon={<IconMoveDown size='1.25rem' className='icon-primary' />}
-        disabled={
-          isProcessing ||
-          controller.selected.length === 0 ||
-          controller.selected.length === controller.schema.items.length
-        }
-        onClick={controller.moveDown}
+        disabled={isProcessing || selected.length === 0 || selected.length === schema.items.length}
+        onClick={moveDown}
       />
       <div ref={insertMenu.ref}>
         <MiniButton
@@ -86,7 +90,7 @@ export function ToolbarRSList() {
               key={`${prefixes.csttype_list}${typeStr}`}
               text={labelCstType(typeStr as CstType)}
               icon={<CstTypeIcon value={typeStr as CstType} size='1.25rem' />}
-              onClick={() => controller.createCst(typeStr as CstType, true)}
+              onClick={() => createCst(typeStr as CstType, true)}
               titleHtml={getCstTypeShortcut(typeStr as CstType)}
             />
           ))}
@@ -96,19 +100,19 @@ export function ToolbarRSList() {
         titleHtml={prepareTooltip('Добавить новую конституенту...', 'Alt + `')}
         icon={<IconNewItem size='1.25rem' className='icon-green' />}
         disabled={isProcessing}
-        onClick={controller.createCstDefault}
+        onClick={createCstDefault}
       />
       <MiniButton
         titleHtml={prepareTooltip('Клонировать конституенту', 'Alt + V')}
         icon={<IconClone size='1.25rem' className='icon-green' />}
-        disabled={isProcessing || controller.selected.length !== 1}
-        onClick={controller.cloneCst}
+        disabled={isProcessing || selected.length !== 1}
+        onClick={cloneCst}
       />
       <MiniButton
         titleHtml={prepareTooltip('Удалить выбранные', 'Delete')}
         icon={<IconDestroy size='1.25rem' className='icon-red' />}
-        disabled={isProcessing || !controller.canDeleteSelected}
-        onClick={controller.promptDeleteCst}
+        disabled={isProcessing || !canDeleteSelected}
+        onClick={promptDeleteCst}
       />
       <BadgeHelp topic={HelpTopic.UI_RS_LIST} offset={5} />
     </Overlay>

@@ -40,6 +40,7 @@ This readme file is used mostly to document project dependencies and conventions
   - react-tooltip
   - react-zoom-pan-pinch
   - react-hook-form
+  - react-scan
   - reactflow
   - js-file-download
   - use-debounce

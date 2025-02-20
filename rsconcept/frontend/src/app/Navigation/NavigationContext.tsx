@@ -1,9 +1,8 @@
 'use client';
 
-import { createContext, useCallback, useContext, useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
 
-import { globals } from '@/utils/constants';
 import { contextOutsideScope } from '@/utils/labels';
 
 interface INavigationContext {
@@ -29,68 +28,48 @@ export const useConceptNavigation = () => {
 
 export const NavigationState = ({ children }: React.PropsWithChildren) => {
   const router = useNavigate();
-  const { pathname } = useLocation();
 
   const [isBlocked, setIsBlocked] = useState(false);
-  const validate = useCallback(() => {
+
+  function validate() {
     return !isBlocked || confirm('Изменения не сохранены. Вы уверены что хотите совершить переход?');
-  }, [isBlocked]);
+  }
 
-  const canBack = useCallback(() => !!window.history && window.history?.length !== 0, []);
+  function canBack() {
+    return !!window.history && window.history?.length !== 0;
+  }
 
-  const scrollTop = useCallback(() => {
-    window.scrollTo(0, 0);
-    const mainScroll = document.getElementById(globals.main_scroll);
-    if (mainScroll) {
-      mainScroll.scroll(0, 0);
+  function push(path: string, newTab?: boolean) {
+    if (newTab) {
+      window.open(`${path}`, '_blank');
+      return;
     }
-  }, []);
-
-  const push = useCallback(
-    (path: string, newTab?: boolean) => {
-      if (newTab) {
-        window.open(`${path}`, '_blank');
-        return;
-      }
-      if (validate()) {
-        scrollTop();
-        Promise.resolve(router(path, { viewTransition: true })).catch(console.log);
-        setIsBlocked(false);
-      }
-    },
-    [router, validate, scrollTop]
-  );
-
-  const replace = useCallback(
-    (path: string) => {
-      if (validate()) {
-        scrollTop();
-        Promise.resolve(router(path, { replace: true, viewTransition: true })).catch(console.log);
-        setIsBlocked(false);
-      }
-    },
-    [router, validate, scrollTop]
-  );
-
-  const back = useCallback(() => {
     if (validate()) {
-      scrollTop();
-      Promise.resolve(router(-1)).catch(console.log);
+      Promise.resolve(router(path, { viewTransition: true })).catch(console.error);
       setIsBlocked(false);
     }
-  }, [router, validate, scrollTop]);
+  }
 
-  const forward = useCallback(() => {
+  function replace(path: string) {
     if (validate()) {
-      scrollTop();
-      Promise.resolve(router(1)).catch(console.log);
+      Promise.resolve(router(path, { replace: true, viewTransition: true })).catch(console.error);
       setIsBlocked(false);
     }
-  }, [router, validate, scrollTop]);
+  }
 
-  useEffect(() => {
-    scrollTop();
-  }, [pathname, scrollTop]);
+  function back() {
+    if (validate()) {
+      Promise.resolve(router(-1)).catch(console.error);
+      setIsBlocked(false);
+    }
+  }
+
+  function forward() {
+    if (validate()) {
+      Promise.resolve(router(1)).catch(console.error);
+      setIsBlocked(false);
+    }
+  }
 
   return (
     <NavigationContext

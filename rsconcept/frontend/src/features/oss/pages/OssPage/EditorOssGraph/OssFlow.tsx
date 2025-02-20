@@ -23,6 +23,7 @@ import { Overlay } from '@/components/Container';
 import { CProps } from '@/components/props';
 import { useMainHeight } from '@/stores/appLayout';
 import { useModificationStore } from '@/stores/modification';
+import { useTooltipsStore } from '@/stores/tooltips';
 import { APP_COLORS } from '@/styling/colors';
 import { PARAMETER } from '@/utils/constants';
 import { errorMsg } from '@/utils/labels';
@@ -44,13 +45,27 @@ const ZOOM_MIN = 0.5;
 
 export function OssFlow() {
   const mainHeight = useMainHeight();
-  const controller = useOssEdit();
+  const {
+    navigateOperationSchema,
+    schema,
+    setSelected,
+    selected,
+    isMutable,
+    promptCreateOperation,
+    canDelete,
+    promptDeleteOperation,
+    promptEditInput,
+    promptEditOperation,
+    promptRelocateConstituents
+  } = useOssEdit();
   const router = useConceptNavigation();
   const { items: libraryItems } = useLibrary();
   const flow = useReactFlow();
   const { setIsModified } = useModificationStore();
 
   const isProcessing = useMutatingOss();
+
+  const setHoverOperation = useTooltipsStore(state => state.setActiveOperation);
 
   const showGrid = useOSSGraphStore(state => state.showGrid);
   const edgeAnimate = useOSSGraphStore(state => state.edgeAnimate);
@@ -63,12 +78,12 @@ export function OssFlow() {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [toggleReset, setToggleReset] = useState(false);
-  const [menuProps, setMenuProps] = useState<ContextMenuData>({ operation: undefined, cursorX: 0, cursorY: 0 });
+  const [menuProps, setMenuProps] = useState<ContextMenuData | null>(null);
   const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
 
   function onSelectionChange({ nodes }: { nodes: Node[] }) {
     const ids = nodes.map(node => Number(node.id));
-    controller.setSelected(prev => [
+    setSelected(prev => [
       ...prev.filter(nodeID => ids.includes(nodeID)),
       ...ids.filter(nodeID => !prev.includes(Number(nodeID)))
     ]);
@@ -80,7 +95,7 @@ export function OssFlow() {
 
   useEffect(() => {
     setNodes(
-      controller.schema.items.map(operation => ({
+      schema.items.map(operation => ({
         id: String(operation.id),
         data: { label: operation.alias, operation: operation },
         position: { x: operation.position_x, y: operation.position_y },
@@ -88,15 +103,15 @@ export function OssFlow() {
       }))
     );
     setEdges(
-      controller.schema.arguments.map((argument, index) => ({
+      schema.arguments.map((argument, index) => ({
         id: String(index),
         source: String(argument.argument),
         target: String(argument.operation),
         type: edgeStraight ? 'straight' : 'simplebezier',
         animated: edgeAnimate,
         targetHandle:
-          controller.schema.operationByID.get(argument.argument)!.position_x >
-          controller.schema.operationByID.get(argument.operation)!.position_x
+          schema.operationByID.get(argument.argument)!.position_x >
+          schema.operationByID.get(argument.operation)!.position_x
             ? 'right'
             : 'left'
       }))
@@ -105,7 +120,7 @@ export function OssFlow() {
     setTimeout(() => {
       setIsModified(false);
     }, PARAMETER.graphRefreshDelay);
-  }, [controller.schema, setNodes, setEdges, setIsModified, toggleReset, edgeStraight, edgeAnimate]);
+  }, [schema, setNodes, setEdges, setIsModified, toggleReset, edgeStraight, edgeAnimate]);
 
   function getPositions() {
     return nodes.map(node => ({
@@ -116,7 +131,7 @@ export function OssFlow() {
   }
 
   function handleNodesChange(changes: NodeChange[]) {
-    if (controller.isMutable && changes.some(change => change.type === 'position' && change.position)) {
+    if (isMutable && changes.some(change => change.type === 'position' && change.position)) {
       setIsModified(true);
     }
     onNodesChange(changes);
@@ -124,9 +139,9 @@ export function OssFlow() {
 
   function handleSavePositions() {
     const positions = getPositions();
-    void updatePositions({ itemID: controller.schema.id, positions: positions }).then(() => {
+    void updatePositions({ itemID: schema.id, positions: positions }).then(() => {
       positions.forEach(item => {
-        const operation = controller.schema.operationByID.get(item.id);
+        const operation = schema.operationByID.get(item.id);
         if (operation) {
           operation.position_x = item.position_x;
           operation.position_y = item.position_y;
@@ -139,7 +154,7 @@ export function OssFlow() {
   function handleCreateOperation(inputs: number[]) {
     const positions = getPositions();
     const target = flow.project({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
-    controller.promptCreateOperation({
+    promptCreateOperation({
       defaultX: target.x,
       defaultY: target.y,
       inputs: inputs,
@@ -149,58 +164,58 @@ export function OssFlow() {
   }
 
   function handleDeleteOperation(target: number) {
-    if (!controller.canDelete(target)) {
+    if (!canDelete(target)) {
       return;
     }
-    controller.promptDeleteOperation(target, getPositions());
+    promptDeleteOperation(target, getPositions());
   }
 
   function handleDeleteSelected() {
-    if (controller.selected.length !== 1) {
+    if (selected.length !== 1) {
       return;
     }
-    handleDeleteOperation(controller.selected[0]);
+    handleDeleteOperation(selected[0]);
   }
 
   function handleInputCreate(target: number) {
-    const operation = controller.schema.operationByID.get(target);
+    const operation = schema.operationByID.get(target);
     if (!operation) {
       return;
     }
-    if (libraryItems.find(item => item.alias === operation.alias && item.location === controller.schema.location)) {
+    if (libraryItems.find(item => item.alias === operation.alias && item.location === schema.location)) {
       toast.error(errorMsg.inputAlreadyExists);
       return;
     }
     void inputCreate({
-      itemID: controller.schema.id,
+      itemID: schema.id,
       data: { target: target, positions: getPositions() }
     }).then(new_schema => router.push(urls.schema(new_schema.id)));
   }
 
   function handleEditSchema(target: number) {
-    controller.promptEditInput(target, getPositions());
+    promptEditInput(target, getPositions());
   }
 
   function handleEditOperation(target: number) {
-    controller.promptEditOperation(target, getPositions());
+    promptEditOperation(target, getPositions());
   }
 
   function handleOperationExecute(target: number) {
     void operationExecute({
-      itemID: controller.schema.id, //
+      itemID: schema.id, //
       data: { target: target, positions: getPositions() }
     });
   }
 
   function handleExecuteSelected() {
-    if (controller.selected.length !== 1) {
+    if (selected.length !== 1) {
       return;
     }
-    handleOperationExecute(controller.selected[0]);
+    handleOperationExecute(selected[0]);
   }
 
   function handleRelocateConstituents(target: number) {
-    controller.promptRelocateConstituents(target, getPositions());
+    promptRelocateConstituents(target, getPositions());
   }
 
   function handleSaveImage() {
@@ -226,7 +241,7 @@ export function OssFlow() {
     })
       .then(dataURL => {
         const a = document.createElement('a');
-        a.setAttribute('download', `${controller.schema.alias}.png`);
+        a.setAttribute('download', `${schema.alias}.png`);
         a.setAttribute('href', dataURL);
         a.click();
       })
@@ -246,11 +261,10 @@ export function OssFlow() {
       cursorY: event.clientY
     });
     setIsContextMenuOpen(true);
-    controller.setShowTooltip(false);
+    setHoverOperation(null);
   }
 
   function handleContextMenuHide() {
-    controller.setShowTooltip(true);
     setIsContextMenuOpen(false);
   }
 
@@ -262,9 +276,7 @@ export function OssFlow() {
     event.preventDefault();
     event.stopPropagation();
     if (node.data.operation.result) {
-      controller.navigateOperationSchema(Number(node.id));
-    } else {
-      handleEditOperation(Number(node.id));
+      navigateOperationSchema(Number(node.id));
     }
   }
 
@@ -272,7 +284,7 @@ export function OssFlow() {
     if (isProcessing) {
       return;
     }
-    if (!controller.isMutable) {
+    if (!isMutable) {
       return;
     }
     if ((event.ctrlKey || event.metaKey) && event.code === 'KeyS') {
@@ -284,7 +296,7 @@ export function OssFlow() {
     if ((event.ctrlKey || event.metaKey) && event.code === 'KeyQ') {
       event.preventDefault();
       event.stopPropagation();
-      handleCreateOperation(controller.selected);
+      handleCreateOperation(selected);
       return;
     }
     if (event.key === 'Delete') {
@@ -303,9 +315,9 @@ export function OssFlow() {
       >
         <ToolbarOssGraph
           onFitView={() => flow.fitView({ duration: PARAMETER.zoomDuration })}
-          onCreate={() => handleCreateOperation(controller.selected)}
+          onCreate={() => handleCreateOperation(selected)}
           onDelete={handleDeleteSelected}
-          onEdit={() => handleEditOperation(controller.selected[0])}
+          onEdit={() => handleEditOperation(selected[0])}
           onExecute={handleExecuteSelected}
           onResetPositions={() => setToggleReset(prev => !prev)}
           onSavePositions={handleSavePositions}

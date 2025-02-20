@@ -52,11 +52,21 @@ const ZOOM_MIN = 0.25;
 
 export function TGFlow() {
   const mainHeight = useMainHeight();
-  const controller = useRSEdit();
   const flow = useReactFlow();
   const store = useStoreApi();
   const { addSelectedNodes } = store.getState();
   const isProcessing = useMutatingRSForm();
+  const {
+    isContentEditable,
+    schema,
+    selected,
+    setSelected,
+    navigateCst,
+    createCst,
+    toggleSelect,
+    canDeleteSelected,
+    promptDeleteCst
+  } = useRSEdit();
 
   const showParams = useDialogsStore(state => state.showGraphParams);
 
@@ -69,12 +79,12 @@ export function TGFlow() {
   const [edges, setEdges] = useEdgesState([]);
 
   const [focusCst, setFocusCst] = useState<IConstituenta | null>(null);
-  const filteredGraph = produceFilteredGraph(controller.schema, filter, focusCst);
+  const filteredGraph = produceFilteredGraph(schema, filter, focusCst);
   const [hidden, setHidden] = useState<number[]>([]);
 
   const [isDragging, setIsDragging] = useState(false);
   const [hoverID, setHoverID] = useState<number | null>(null);
-  const hoverCst = hoverID && controller.schema.cstByID.get(hoverID);
+  const hoverCst = hoverID && schema.cstByID.get(hoverID);
   const [hoverCstDebounced] = useDebounce(hoverCst, PARAMETER.graphPopupDelay);
   const [hoverLeft, setHoverLeft] = useState(true);
 
@@ -84,9 +94,9 @@ export function TGFlow() {
   function onSelectionChange({ nodes }: { nodes: Node[] }) {
     const ids = nodes.map(node => Number(node.id));
     if (ids.length === 0) {
-      controller.setSelected([]);
+      setSelected([]);
     } else {
-      controller.setSelected(prev => [...prev.filter(nodeID => !filteredGraph.hasNode(nodeID)), ...ids]);
+      setSelected(prev => [...prev.filter(nodeID => !filteredGraph.hasNode(nodeID)), ...ids]);
     }
   }
 
@@ -96,24 +106,24 @@ export function TGFlow() {
 
   useEffect(() => {
     const newDismissed: number[] = [];
-    controller.schema.items.forEach(cst => {
+    schema.items.forEach(cst => {
       if (!filteredGraph.nodes.has(cst.id)) {
         newDismissed.push(cst.id);
       }
     });
     setHidden(newDismissed);
     setHoverID(null);
-  }, [controller.schema, filteredGraph]);
+  }, [schema, filteredGraph]);
 
   const resetNodes = useCallback(() => {
     const newNodes: Node<TGNodeData>[] = [];
     filteredGraph.nodes.forEach(node => {
-      const cst = controller.schema.cstByID.get(node.id);
+      const cst = schema.cstByID.get(node.id);
       if (cst) {
         newNodes.push({
           id: String(node.id),
           type: 'concept',
-          selected: controller.selected.includes(node.id),
+          selected: selected.includes(node.id),
           position: { x: 0, y: 0 },
           data: {
             fill: focusCst === cst ? APP_COLORS.bgPurple : colorBgGraphNode(cst, coloring),
@@ -150,11 +160,11 @@ export function TGFlow() {
 
     setNodes(newNodes);
     setEdges(newEdges);
-  }, [controller.schema, filteredGraph, setNodes, setEdges, filter.noText, controller.selected, focusCst, coloring]);
+  }, [schema, filteredGraph, setNodes, setEdges, filter.noText, selected, focusCst, coloring]);
 
   useEffect(() => {
     setNeedReset(true);
-  }, [controller.schema, focusCst, coloring, filter]);
+  }, [schema, focusCst, coloring, filter]);
 
   useEffect(() => {
     if (!needReset || !flow.viewportInitialized) {
@@ -162,7 +172,7 @@ export function TGFlow() {
     }
     setNeedReset(false);
     resetNodes();
-  }, [needReset, controller.schema, resetNodes, flow.viewportInitialized]);
+  }, [needReset, schema, resetNodes, flow.viewportInitialized]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -171,20 +181,20 @@ export function TGFlow() {
   }, [toggleResetView, flow, focusCst, filter]);
 
   function handleSetSelected(newSelection: number[]) {
-    controller.setSelected(newSelection);
+    setSelected(newSelection);
     addSelectedNodes(newSelection.map(id => String(id)));
   }
 
   function handleCreateCst() {
-    const definition = controller.selected.map(id => controller.schema.cstByID.get(id)!.alias).join(' ');
-    controller.createCst(controller.selected.length === 0 ? CstType.BASE : CstType.TERM, false, definition);
+    const definition = selected.map(id => schema.cstByID.get(id)!.alias).join(' ');
+    createCst(selected.length === 0 ? CstType.BASE : CstType.TERM, false, definition);
   }
 
   function handleDeleteCst() {
-    if (!controller.canDeleteSelected) {
+    if (!canDeleteSelected) {
       return;
     }
-    controller.promptDeleteCst();
+    promptDeleteCst();
   }
 
   function handleSaveImage() {
@@ -210,7 +220,7 @@ export function TGFlow() {
     })
       .then(dataURL => {
         const a = document.createElement('a');
-        a.setAttribute('download', `${controller.schema.alias}.png`);
+        a.setAttribute('download', `${schema.alias}.png`);
         a.setAttribute('href', dataURL);
         a.click();
       })
@@ -231,7 +241,7 @@ export function TGFlow() {
       handleSetSelected([]);
       return;
     }
-    if (!controller.isContentEditable) {
+    if (!isContentEditable) {
       return;
     }
     if (event.key === 'Delete') {
@@ -256,10 +266,10 @@ export function TGFlow() {
     if (cstID === null) {
       setFocusCst(null);
     } else {
-      const target = controller.schema.cstByID.get(cstID) ?? null;
+      const target = schema.cstByID.get(cstID) ?? null;
       setFocusCst(prev => (prev === target ? null : target));
       if (target) {
-        controller.setSelected([]);
+        setSelected([]);
       }
     }
   }
@@ -275,7 +285,7 @@ export function TGFlow() {
   function handleNodeDoubleClick(event: CProps.EventMouse, cstID: number) {
     event.preventDefault();
     event.stopPropagation();
-    controller.navigateCst(cstID);
+    navigateCst(cstID);
   }
 
   function handleNodeEnter(event: CProps.EventMouse, cstID: number) {
@@ -307,19 +317,15 @@ export function TGFlow() {
         />
         {!focusCst ? (
           <ToolbarGraphSelection
-            graph={controller.schema.graph}
+            graph={schema.graph}
             isCore={cstID => {
-              const cst = controller.schema.cstByID.get(cstID);
+              const cst = schema.cstByID.get(cstID);
               return !!cst && isBasicConcept(cst.cst_type);
             }}
-            isOwned={
-              controller.schema.inheritance.length > 0
-                ? cstID => !controller.schema.cstByID.get(cstID)?.is_inherited
-                : undefined
-            }
-            value={controller.selected}
+            isOwned={schema.inheritance.length > 0 ? cstID => !schema.cstByID.get(cstID)?.is_inherited : undefined}
+            value={selected}
             onChange={handleSetSelected}
-            emptySelection={controller.selected.length === 0}
+            emptySelection={selected.length === 0}
           />
         ) : null}
         {focusCst ? (
@@ -347,8 +353,8 @@ export function TGFlow() {
       <div className='cc-fade-in' tabIndex={-1} onKeyDown={handleKeyDown}>
         <SelectedCounter
           hideZero
-          totalCount={controller.schema.stats?.count_all ?? 0}
-          selectedCount={controller.selected.length}
+          totalCount={schema.stats?.count_all ?? 0}
+          selectedCount={selected.length}
           position='top-[4.4rem] sm:top-[4.1rem] left-[0.5rem] sm:left-[0.65rem]'
         />
 
@@ -374,13 +380,13 @@ export function TGFlow() {
 
         <Overlay position='top-[6.15rem] sm:top-[5.9rem] left-0' className='flex gap-1 pointer-events-none'>
           <div className='flex flex-col ml-2 w-[13.5rem]'>
-            <GraphSelectors schema={controller.schema} coloring={coloring} onChangeColoring={setColoring} />
+            <GraphSelectors schema={schema} coloring={coloring} onChangeColoring={setColoring} />
             <ViewHidden
               items={hidden}
-              selected={controller.selected}
-              schema={controller.schema}
+              selected={selected}
+              schema={schema}
               coloringScheme={coloring}
-              toggleSelection={controller.toggleSelect}
+              toggleSelection={toggleSelect}
               setFocus={handleSetFocus}
             />
           </div>

@@ -3,20 +3,19 @@
 import { Overlay } from '@/components/Container';
 import { IconConsolidation, IconRSForm } from '@/components/Icons';
 import { Indicator } from '@/components/View';
-import { PARAMETER, prefixes } from '@/utils/constants';
+import { useTooltipsStore } from '@/stores/tooltips';
+import { globals, PARAMETER } from '@/utils/constants';
 import { truncateToLastWord } from '@/utils/utils';
 
 import { OperationType } from '../../../../backend/types';
-import { TooltipOperation } from '../../../../components/TooltipOperation';
 import { OssNodeInternal } from '../../../../models/ossLayout';
-import { useOssEdit } from '../../OssEditContext';
 
 interface NodeCoreProps {
   node: OssNodeInternal;
 }
 
 export function NodeCore({ node }: NodeCoreProps) {
-  const controller = useOssEdit();
+  const setHover = useTooltipsStore(state => state.setActiveOperation);
 
   const hasFile = !!node.data.operation.result;
   const longLabel = node.data.label.length > PARAMETER.ossLongLabel;
@@ -29,14 +28,12 @@ export function NodeCore({ node }: NodeCoreProps) {
           noPadding
           title={hasFile ? 'Связанная КС' : 'Нет связанной КС'}
           icon={<IconRSForm className={hasFile ? 'text-ok-600' : 'text-warn-600'} size='12px' />}
-          hideTitle={!controller.showTooltip}
         />
         {node.data.operation.is_consolidation ? (
           <Indicator
             noPadding
             titleHtml='<b>Внимание!</b><br />Ромбовидный синтез</br/>Возможны дубликаты конституент'
             icon={<IconConsolidation className='text-sec-600' size='12px' />}
-            hideTitle={!controller.showTooltip}
           />
         ) : null}
       </Overlay>
@@ -53,7 +50,11 @@ export function NodeCore({ node }: NodeCoreProps) {
         </Overlay>
       ) : null}
 
-      <div id={`${prefixes.operation_list}${node.id}`} className='h-[34px] w-[144px] flex items-center justify-center'>
+      <div
+        className='h-[34px] w-[144px] flex items-center justify-center'
+        data-tooltip-id={globals.operation_tooltip}
+        onMouseEnter={() => setHover(node.data.operation)}
+      >
         <div
           className='text-center'
           style={{
@@ -65,9 +66,6 @@ export function NodeCore({ node }: NodeCoreProps) {
         >
           {labelText}
         </div>
-        {controller.showTooltip && !node.dragging ? (
-          <TooltipOperation anchor={`#${prefixes.operation_list}${node.id}`} node={node} />
-        ) : null}
       </div>
     </>
   );

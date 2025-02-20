@@ -1,13 +1,9 @@
 'use client';
 
+import { urls, useConceptNavigation } from '@/app';
 import { BadgeHelp, HelpTopic } from '@/features/help';
-import {
-  AccessPolicy,
-  ILibraryItemEditor,
-  LibraryItemType,
-  MiniSelectorOSS,
-  useMutatingLibrary
-} from '@/features/library';
+import { AccessPolicy, LibraryItemType, MiniSelectorOSS, useMutatingLibrary } from '@/features/library';
+import { ILibraryItem } from '@/features/library/backend/types';
 import { useRoleStore, UserRole } from '@/features/users';
 
 import { Overlay } from '@/components/Container';
@@ -19,33 +15,33 @@ import { tooltipText } from '@/utils/labels';
 import { prepareTooltip, sharePage } from '@/utils/utils';
 
 import { IRSForm } from '../models/rsform';
-import { IRSEditContext } from '../pages/RSFormPage/RSEditContext';
 
 interface ToolbarRSFormCardProps {
   onSubmit: () => void;
-  controller: ILibraryItemEditor;
+  isMutable: boolean;
+  schema: ILibraryItem;
+  deleteSchema: () => void;
 }
 
-export function ToolbarRSFormCard({ controller, onSubmit }: ToolbarRSFormCardProps) {
+export function ToolbarRSFormCard({ schema, onSubmit, isMutable, deleteSchema }: ToolbarRSFormCardProps) {
   const role = useRoleStore(state => state.role);
+  const router = useConceptNavigation();
   const { isModified } = useModificationStore();
   const isProcessing = useMutatingLibrary();
   const canSave = isModified && !isProcessing;
 
   const ossSelector = (() => {
-    if (controller.schema.item_type !== LibraryItemType.RSFORM) {
+    if (schema.item_type !== LibraryItemType.RSFORM) {
       return null;
     }
-    const schema = controller.schema as IRSForm;
-    if (schema.oss.length <= 0) {
+    const rsSchema = schema as IRSForm;
+    if (rsSchema.oss.length <= 0) {
       return null;
     }
     return (
       <MiniSelectorOSS
-        items={schema.oss}
-        onSelect={(event, value) =>
-          (controller as IRSEditContext).navigateOss(value.id, event.ctrlKey || event.metaKey)
-        }
+        items={rsSchema.oss}
+        onSelect={(event, value) => router.push(urls.oss(value.id), event.ctrlKey || event.metaKey)}
       />
     );
   })();
@@ -53,7 +49,7 @@ export function ToolbarRSFormCard({ controller, onSubmit }: ToolbarRSFormCardPro
   return (
     <Overlay position='cc-tab-tools' className='cc-icons'>
       {ossSelector}
-      {controller.isMutable || isModified ? (
+      {isMutable || isModified ? (
         <MiniButton
           titleHtml={prepareTooltip('Сохранить изменения', 'Ctrl + S')}
           disabled={!canSave}
@@ -62,17 +58,17 @@ export function ToolbarRSFormCard({ controller, onSubmit }: ToolbarRSFormCardPro
         />
       ) : null}
       <MiniButton
-        titleHtml={tooltipText.shareItem(controller.schema.access_policy === AccessPolicy.PUBLIC)}
+        titleHtml={tooltipText.shareItem(schema.access_policy === AccessPolicy.PUBLIC)}
         icon={<IconShare size='1.25rem' className='icon-primary' />}
         onClick={sharePage}
-        disabled={controller.schema.access_policy !== AccessPolicy.PUBLIC}
+        disabled={schema.access_policy !== AccessPolicy.PUBLIC}
       />
-      {controller.isMutable ? (
+      {isMutable ? (
         <MiniButton
           title='Удалить схему'
           icon={<IconDestroy size='1.25rem' className='icon-red' />}
-          disabled={!controller.isMutable || isProcessing || role < UserRole.OWNER}
-          onClick={controller.deleteSchema}
+          disabled={!isMutable || isProcessing || role < UserRole.OWNER}
+          onClick={deleteSchema}
         />
       ) : null}
       <BadgeHelp topic={HelpTopic.UI_RS_CARD} offset={4} className={PARAMETER.TOOLTIP_WIDTH} />

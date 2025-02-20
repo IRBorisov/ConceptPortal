@@ -3,7 +3,6 @@ import { Outlet } from 'react-router';
 
 import { ModalLoader } from '@/components/Modal';
 import { useAppLayoutStore, useMainHeight, useViewportHeight } from '@/stores/appLayout';
-import { globals } from '@/utils/constants';
 
 import { NavigationState } from './Navigation/NavigationContext';
 import { Footer } from './Footer';
@@ -40,13 +39,7 @@ export function ApplicationLayout() {
 
         <Navigation />
 
-        <div
-          id={globals.main_scroll}
-          className='overflow-x-auto max-w-[100vw]'
-          style={{
-            maxHeight: viewportHeight
-          }}
-        >
+        <div className='overflow-x-auto max-w-[100vw]' style={{ maxHeight: viewportHeight }}>
           <main className='cc-scroll-y' style={{ overflowY: showScroll ? 'scroll' : 'auto', minHeight: mainHeight }}>
             <GlobalLoader />
             <MutationErrors />

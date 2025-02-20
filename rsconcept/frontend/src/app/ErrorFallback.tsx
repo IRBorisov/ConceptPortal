@@ -8,7 +8,7 @@ export function ErrorFallback() {
   const router = useNavigate();
 
   function resetErrorBoundary() {
-    Promise.resolve(router('/')).catch(console.log);
+    Promise.resolve(router('/')).catch(console.error);
   }
   return (
     <div className='flex flex-col gap-3 my-3 items-center antialiased' role='alert'>

@@ -47,12 +47,12 @@ export function ToolbarTermGraph({
   onFitView,
   onSaveImage
 }: ToolbarTermGraphProps) {
-  const controller = useRSEdit();
   const isProcessing = useMutatingRSForm();
   const showTypeGraph = useDialogsStore(state => state.showShowTypeGraph);
+  const { schema, navigateOss, isContentEditable, canDeleteSelected } = useRSEdit();
 
   function handleShowTypeGraph() {
-    const typeInfo = controller.schema.items.map(item => ({
+    const typeInfo = schema.items.map(item => ({
       alias: item.alias,
       result: item.parse.typification,
       args: item.parse.args
@@ -62,10 +62,10 @@ export function ToolbarTermGraph({
 
   return (
     <div className='cc-icons'>
-      {controller.schema.oss.length > 0 ? (
+      {schema.oss.length > 0 ? (
         <MiniSelectorOSS
-          items={controller.schema.oss}
-          onSelect={(event, value) => controller.navigateOss(value.id, event.ctrlKey || event.metaKey)}
+          items={schema.oss}
+          onSelect={(event, value) => navigateOss(value.id, event.ctrlKey || event.metaKey)}
         />
       ) : null}
       <MiniButton
@@ -100,7 +100,7 @@ export function ToolbarTermGraph({
         }
         onClick={toggleFoldDerived}
       />
-      {controller.isContentEditable ? (
+      {isContentEditable ? (
         <MiniButton
           title='Новая конституента'
           icon={<IconNewItem size='1.25rem' className='icon-green' />}
@@ -108,11 +108,11 @@ export function ToolbarTermGraph({
           onClick={onCreate}
         />
       ) : null}
-      {controller.isContentEditable ? (
+      {isContentEditable ? (
         <MiniButton
           title='Удалить выбранные'
           icon={<IconDestroy size='1.25rem' className='icon-red' />}
-          disabled={!controller.canDeleteSelected || isProcessing}
+          disabled={!canDeleteSelected || isProcessing}
           onClick={onDelete}
         />
       ) : null}

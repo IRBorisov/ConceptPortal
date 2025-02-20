@@ -4,7 +4,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 
 import { urls, useConceptNavigation } from '@/app';
 import { useAuthSuspense } from '@/features/auth';
-import { ILibraryItemEditor, useDeleteItem, useLibrarySearchStore } from '@/features/library';
+import { useDeleteItem, useLibrarySearchStore } from '@/features/library';
 import { RSTabID } from '@/features/rsform/pages/RSFormPage/RSEditContext';
 import { useRoleStore, UserRole } from '@/features/users';
 
@@ -29,16 +29,12 @@ export interface ICreateOperationPrompt {
   callback: (newID: number) => void;
 }
 
-export interface IOssEditContext extends ILibraryItemEditor {
+export interface IOssEditContext {
   schema: IOperationSchema;
   selected: number[];
 
   isOwned: boolean;
   isMutable: boolean;
-  isAttachedToOSS: boolean;
-
-  showTooltip: boolean;
-  setShowTooltip: (newValue: boolean) => void;
 
   navigateTab: (tab: OssTabID) => void;
   navigateOperationSchema: (target: number) => void;
@@ -82,7 +78,6 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
   const isOwned = !!user.id && user.id === schema.owner;
   const isMutable = role > UserRole.READER && !schema.read_only;
 
-  const [showTooltip, setShowTooltip] = useState(true);
   const [selected, setSelected] = useState<number[]>([]);
 
   const showEditInput = useDialogsStore(state => state.showChangeInputSchema);
@@ -209,12 +204,8 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
 
         deleteSchema,
 
-        showTooltip,
-        setShowTooltip,
-
         isOwned,
         isMutable,
-        isAttachedToOSS: false,
 
         setSelected,
 

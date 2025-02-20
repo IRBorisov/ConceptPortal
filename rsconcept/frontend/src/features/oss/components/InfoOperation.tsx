@@ -2,22 +2,20 @@
 
 import { createColumnHelper } from '@tanstack/react-table';
 
-import { Tooltip } from '@/components/Container';
 import { DataTable } from '@/components/DataTable';
 import { IconPageRight } from '@/components/Icons';
 
 import { ICstSubstituteInfo, OperationType } from '../backend/types';
 import { labelOperationType } from '../labels';
-import { OssNodeInternal } from '../models/ossLayout';
+import { IOperation } from '../models/oss';
 
-interface TooltipOperationProps {
-  node: OssNodeInternal;
-  anchor: string;
+interface InfoOperationProps {
+  operation: IOperation;
 }
 
 const columnHelper = createColumnHelper<ICstSubstituteInfo>();
 
-export function TooltipOperation({ node, anchor }: TooltipOperationProps) {
+export function InfoOperation({ operation }: InfoOperationProps) {
   const columns = [
     columnHelper.accessor('substitution_term', {
       id: 'substitution_term',
@@ -44,47 +42,47 @@ export function TooltipOperation({ node, anchor }: TooltipOperationProps) {
   ];
 
   return (
-    <Tooltip layer='z-modalTooltip' anchorSelect={anchor} className='max-w-[35rem] max-h-[40rem] dense'>
-      <h2>{node.data.operation.alias}</h2>
+    <>
+      <h2>{operation.alias}</h2>
       <p>
-        <b>Тип:</b> {labelOperationType(node.data.operation.operation_type)}
+        <b>Тип:</b> {labelOperationType(operation.operation_type)}
       </p>
-      {!node.data.operation.is_owned ? (
+      {!operation.is_owned ? (
         <p>
           <b>КС не принадлежит ОСС</b>
         </p>
       ) : null}
-      {node.data.operation.is_consolidation ? (
+      {operation.is_consolidation ? (
         <p>
           <b>Ромбовидный синтез</b>
         </p>
       ) : null}
-      {node.data.operation.title ? (
+      {operation.title ? (
         <p>
           <b>Название: </b>
-          {node.data.operation.title}
+          {operation.title}
         </p>
       ) : null}
-      {node.data.operation.comment ? (
+      {operation.comment ? (
         <p>
           <b>Комментарий: </b>
-          {node.data.operation.comment}
+          {operation.comment}
         </p>
       ) : null}
-      {node.data.operation.substitutions.length > 0 ? (
+      {operation.substitutions.length > 0 ? (
         <DataTable
           dense
           noHeader
           noFooter
           className='text-sm border select-none mb-2'
-          data={node.data.operation.substitutions}
+          data={operation.substitutions}
           columns={columns}
         />
-      ) : node.data.operation.operation_type !== OperationType.INPUT ? (
+      ) : operation.operation_type !== OperationType.INPUT ? (
         <p>
           <b>Отождествления:</b> Отсутствуют
         </p>
       ) : null}
-    </Tooltip>
+    </>
   );
 }

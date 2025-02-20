@@ -50,10 +50,10 @@ export function ToolbarOssGraph({
   onSavePositions,
   onResetPositions
 }: ToolbarOssGraphProps) {
-  const controller = useOssEdit();
+  const { schema, selected, isMutable, canDelete } = useOssEdit();
   const { isModified } = useModificationStore();
   const isProcessing = useMutatingOss();
-  const selectedOperation = controller.schema.operationByID.get(controller.selected[0]);
+  const selectedOperation = schema.operationByID.get(selected[0]);
 
   const showGrid = useOSSGraphStore(state => state.showGrid);
   const edgeAnimate = useOSSGraphStore(state => state.edgeAnimate);
@@ -70,12 +70,12 @@ export function ToolbarOssGraph({
       return false;
     }
 
-    const argumentIDs = controller.schema.graph.expandInputs([selectedOperation.id]);
+    const argumentIDs = schema.graph.expandInputs([selectedOperation.id]);
     if (!argumentIDs || argumentIDs.length < 1) {
       return false;
     }
 
-    const argumentOperations = argumentIDs.map(id => controller.schema.operationByID.get(id)!);
+    const argumentOperations = argumentIDs.map(id => schema.operationByID.get(id)!);
     if (argumentOperations.some(item => item.result === null)) {
       return false;
     }
@@ -140,7 +140,7 @@ export function ToolbarOssGraph({
           offset={4}
         />
       </div>
-      {controller.isMutable ? (
+      {isMutable ? (
         <div className='cc-icons'>
           <MiniButton
             titleHtml={prepareTooltip('Сохранить изменения', 'Ctrl + S')}
@@ -157,19 +157,19 @@ export function ToolbarOssGraph({
           <MiniButton
             title='Активировать операцию'
             icon={<IconExecute size='1.25rem' className='icon-green' />}
-            disabled={isProcessing || controller.selected.length !== 1 || !readyForSynthesis}
+            disabled={isProcessing || selected.length !== 1 || !readyForSynthesis}
             onClick={onExecute}
           />
           <MiniButton
             titleHtml={prepareTooltip('Редактировать выбранную', 'Двойной клик')}
             icon={<IconEdit2 size='1.25rem' className='icon-primary' />}
-            disabled={controller.selected.length !== 1 || isProcessing}
+            disabled={selected.length !== 1 || isProcessing}
             onClick={onEdit}
           />
           <MiniButton
             titleHtml={prepareTooltip('Удалить выбранную', 'Delete')}
             icon={<IconDestroy size='1.25rem' className='icon-red' />}
-            disabled={controller.selected.length !== 1 || isProcessing || !controller.canDelete(controller.selected[0])}
+            disabled={selected.length !== 1 || isProcessing || !canDelete(selected[0])}
             onClick={onDelete}
           />
         </div>

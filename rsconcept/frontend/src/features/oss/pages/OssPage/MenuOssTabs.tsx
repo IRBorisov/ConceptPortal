@@ -29,7 +29,7 @@ import { useMutatingOss } from '../../backend/useMutatingOss';
 import { useOssEdit } from './OssEditContext';
 
 export function MenuOssTabs() {
-  const controller = useOssEdit();
+  const { deleteSchema, promptRelocateConstituents, isMutable, isOwned, schema } = useOssEdit();
   const router = useConceptNavigation();
   const { user, isAnonymous } = useAuthSuspense();
 
@@ -44,7 +44,7 @@ export function MenuOssTabs() {
 
   function handleDelete() {
     schemaMenu.hide();
-    controller.deleteSchema();
+    deleteSchema();
   }
 
   function handleShare() {
@@ -67,7 +67,7 @@ export function MenuOssTabs() {
 
   function handleRelocate() {
     editMenu.hide();
-    controller.promptRelocateConstituents(undefined, []);
+    promptRelocateConstituents(undefined, []);
   }
 
   return (
@@ -90,7 +90,7 @@ export function MenuOssTabs() {
             icon={<IconShare size='1rem' className='icon-primary' />}
             onClick={handleShare}
           />
-          {controller.isMutable ? (
+          {isMutable ? (
             <DropdownButton
               text='Удалить схему'
               icon={<IconDestroy size='1rem' className='icon-red' />}
@@ -126,7 +126,7 @@ export function MenuOssTabs() {
             title='Редактирование'
             hideTitle={editMenu.isOpen}
             className='h-full px-2'
-            icon={<IconEdit2 size='1.25rem' className={controller.isMutable ? 'icon-green' : 'icon-red'} />}
+            icon={<IconEdit2 size='1.25rem' className={isMutable ? 'icon-green' : 'icon-red'} />}
             onClick={editMenu.toggle}
           />
           <Dropdown isOpen={editMenu.isOpen}>
@@ -175,14 +175,14 @@ export function MenuOssTabs() {
               text={labelUserRole(UserRole.EDITOR)}
               title={describeUserRole(UserRole.EDITOR)}
               icon={<IconEditor size='1rem' className='icon-primary' />}
-              disabled={!controller.isOwned && (!user.id || !controller.schema.editors.includes(user.id))}
+              disabled={!isOwned && (!user.id || !schema.editors.includes(user.id))}
               onClick={() => handleChangeRole(UserRole.EDITOR)}
             />
             <DropdownButton
               text={labelUserRole(UserRole.OWNER)}
               title={describeUserRole(UserRole.OWNER)}
               icon={<IconOwner size='1rem' className='icon-primary' />}
-              disabled={!controller.isOwned}
+              disabled={!isOwned}
               onClick={() => handleChangeRole(UserRole.OWNER)}
             />
             <DropdownButton

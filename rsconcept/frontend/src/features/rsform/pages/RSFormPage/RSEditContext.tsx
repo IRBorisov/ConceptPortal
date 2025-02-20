@@ -4,7 +4,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 
 import { urls, useConceptNavigation } from '@/app';
 import { useAuthSuspense } from '@/features/auth';
-import { ILibraryItemEditor, useDeleteItem, useLibrarySearchStore } from '@/features/library';
+import { useDeleteItem, useLibrarySearchStore } from '@/features/library';
 import { useRoleStore, UserRole } from '@/features/users';
 
 import { useDialogsStore } from '@/stores/dialogs';
@@ -28,7 +28,7 @@ export enum RSTabID {
   TERM_GRAPH = 3
 }
 
-export interface IRSEditContext extends ILibraryItemEditor {
+export interface IRSEditContext {
   schema: IRSForm;
   selected: number[];
   activeCst: IConstituenta | null;

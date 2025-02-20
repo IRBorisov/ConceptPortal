@@ -22,7 +22,7 @@ import { IOperation } from '../../../models/oss';
 import { useOssEdit } from '../OssEditContext';
 
 export interface ContextMenuData {
-  operation?: IOperation;
+  operation: IOperation;
   cursorX: number;
   cursorY: number;
 }
@@ -51,24 +51,24 @@ export function NodeContextMenu({
   onExecuteOperation,
   onRelocateConstituents
 }: NodeContextMenuProps) {
-  const controller = useOssEdit();
   const isProcessing = useMutatingOss();
+  const { schema, navigateOperationSchema, isMutable, canDelete } = useOssEdit();
 
   const ref = useRef<HTMLDivElement>(null);
   const readyForSynthesis = (() => {
-    if (operation?.operation_type !== OperationType.SYNTHESIS) {
+    if (operation.operation_type !== OperationType.SYNTHESIS) {
       return false;
     }
     if (operation.result) {
       return false;
     }
 
-    const argumentIDs = controller.schema.graph.expandInputs([operation.id]);
+    const argumentIDs = schema.graph.expandInputs([operation.id]);
     if (!argumentIDs || argumentIDs.length < 1) {
       return false;
     }
 
-    const argumentOperations = argumentIDs.map(id => controller.schema.operationByID.get(id)!);
+    const argumentOperations = argumentIDs.map(id => schema.operationByID.get(id)!);
     if (argumentOperations.some(item => item.result === null)) {
       return false;
     }
@@ -79,37 +79,37 @@ export function NodeContextMenu({
   useClickedOutside(isOpen, ref, onHide);
 
   function handleOpenSchema() {
-    if (operation) controller.navigateOperationSchema(operation.id);
+    navigateOperationSchema(operation.id);
   }
 
   function handleEditSchema() {
     onHide();
-    if (operation) onEditSchema(operation.id);
+    onEditSchema(operation.id);
   }
 
   function handleEditOperation() {
     onHide();
-    if (operation) onEditOperation(operation.id);
+    onEditOperation(operation.id);
   }
 
   function handleDeleteOperation() {
     onHide();
-    if (operation) onDelete(operation.id);
+    onDelete(operation.id);
   }
 
   function handleCreateSchema() {
     onHide();
-    if (operation) onCreateInput(operation.id);
+    onCreateInput(operation.id);
   }
 
   function handleRunSynthesis() {
     onHide();
-    if (operation) onExecuteOperation(operation.id);
+    onExecuteOperation(operation.id);
   }
 
   function handleRelocateConstituents() {
     onHide();
-    if (operation) onRelocateConstituents(operation.id);
+    onRelocateConstituents(operation.id);
   }
 
   return (
@@ -123,7 +123,7 @@ export function NodeContextMenu({
           text='Редактировать'
           title='Редактировать операцию'
           icon={<IconEdit2 size='1rem' className='icon-primary' />}
-          disabled={!controller.isMutable || isProcessing}
+          disabled={!isMutable || isProcessing}
           onClick={handleEditOperation}
         />
 
@@ -136,7 +136,7 @@ export function NodeContextMenu({
             onClick={handleOpenSchema}
           />
         ) : null}
-        {controller.isMutable && !operation?.result && operation?.operation_type === OperationType.INPUT ? (
+        {isMutable && !operation?.result && operation?.operation_type === OperationType.INPUT ? (
           <DropdownButton
             text='Создать схему'
             title='Создать пустую схему для загрузки'
@@ -145,7 +145,7 @@ export function NodeContextMenu({
             onClick={handleCreateSchema}
           />
         ) : null}
-        {controller.isMutable && operation?.operation_type === OperationType.INPUT ? (
+        {isMutable && operation?.operation_type === OperationType.INPUT ? (
           <DropdownButton
             text={!operation?.result ? 'Загрузить схему' : 'Изменить схему'}
             title='Выбрать схему для загрузки'
@@ -154,7 +154,7 @@ export function NodeContextMenu({
             onClick={handleEditSchema}
           />
         ) : null}
-        {controller.isMutable && !operation?.result && operation?.operation_type === OperationType.SYNTHESIS ? (
+        {isMutable && !operation?.result && operation?.operation_type === OperationType.SYNTHESIS ? (
           <DropdownButton
             text='Активировать синтез'
             titleHtml={
@@ -168,7 +168,7 @@ export function NodeContextMenu({
           />
         ) : null}
 
-        {controller.isMutable && operation?.result ? (
+        {isMutable && operation?.result ? (
           <DropdownButton
             text='Конституенты'
             titleHtml='Перенос конституент</br>между схемами'
@@ -181,7 +181,7 @@ export function NodeContextMenu({
         <DropdownButton
           text='Удалить операцию'
           icon={<IconDestroy size='1rem' className='icon-red' />}
-          disabled={!controller.isMutable || isProcessing || !operation || !controller.canDelete(operation.id)}
+          disabled={!isMutable || isProcessing || !operation || !canDelete(operation.id)}
           onClick={handleDeleteOperation}
         />
       </Dropdown>

@@ -1,14 +1,23 @@
 'use client';
 
-import { InfoConstituenta } from '@/features/rsform/components/InfoConstituenta';
+import React, { Suspense } from 'react';
 
 import { Tooltip } from '@/components/Container';
 import { Loader } from '@/components/Loader';
 import { useTooltipsStore } from '@/stores/tooltips';
 import { globals } from '@/utils/constants';
 
+const InfoConstituenta = React.lazy(() =>
+  import('@/features/rsform/components/InfoConstituenta').then(module => ({ default: module.InfoConstituenta }))
+);
+
+const InfoOperation = React.lazy(() =>
+  import('@/features/oss/components/InfoOperation').then(module => ({ default: module.InfoOperation }))
+);
+
 export const GlobalTooltips = () => {
   const hoverCst = useTooltipsStore(state => state.activeCst);
+  const hoverOperation = useTooltipsStore(state => state.activeOperation);
 
   return (
     <>
@@ -25,8 +34,26 @@ export const GlobalTooltips = () => {
         layer='z-topmost'
         className='max-w-[calc(min(40rem,100dvw-2rem))] text-justify'
       />
-      <Tooltip clickable id={globals.constituenta_tooltip} layer='z-modalTooltip' className='max-w-[30rem]'>
-        {hoverCst ? <InfoConstituenta data={hoverCst} onClick={event => event.stopPropagation()} /> : <Loader />}
+      <Tooltip
+        clickable
+        id={globals.constituenta_tooltip}
+        layer='z-modalTooltip'
+        className='max-w-[30rem]'
+        hidden={!hoverCst}
+      >
+        <Suspense fallback={<Loader />}>
+          {hoverCst ? <InfoConstituenta data={hoverCst} onClick={event => event.stopPropagation()} /> : null}
+        </Suspense>
+      </Tooltip>
+      <Tooltip
+        id={globals.operation_tooltip}
+        layer='z-modalTooltip'
+        className='max-w-[35rem] max-h-[40rem] dense'
+        hidden={!hoverOperation}
+      >
+        <Suspense fallback={<Loader />}>
+          {hoverOperation ? <InfoOperation operation={hoverOperation} /> : null}
+        </Suspense>
       </Tooltip>
     </>
   );

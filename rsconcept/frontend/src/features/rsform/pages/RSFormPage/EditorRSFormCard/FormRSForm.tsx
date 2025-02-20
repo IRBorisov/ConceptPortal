@@ -22,11 +22,11 @@ import { useRSEdit } from '../RSEditContext';
 import { ToolbarVersioning } from './ToolbarVersioning';
 
 export function FormRSForm() {
-  const controller = useRSEdit();
   const router = useConceptNavigation();
   const { updateItem: updateSchema } = useUpdateItem();
   const { setIsModified } = useModificationStore();
   const isProcessing = useMutatingRSForm();
+  const { schema, isAttachedToOSS, isContentEditable } = useRSEdit();
 
   const {
     register,
@@ -38,13 +38,13 @@ export function FormRSForm() {
   } = useForm<IUpdateLibraryItemDTO>({
     resolver: zodResolver(schemaUpdateLibraryItem),
     defaultValues: {
-      id: controller.schema.id,
+      id: schema.id,
       item_type: LibraryItemType.RSFORM,
-      title: controller.schema.title,
-      alias: controller.schema.alias,
-      comment: controller.schema.comment,
-      visible: controller.schema.visible,
-      read_only: controller.schema.read_only
+      title: schema.title,
+      alias: schema.alias,
+      comment: schema.comment,
+      visible: schema.visible,
+      read_only: schema.read_only
     }
   });
   const visible = useWatch({ control, name: 'visible' });
@@ -55,7 +55,7 @@ export function FormRSForm() {
   }, [isDirty, setIsModified]);
 
   function handleSelectVersion(version?: number) {
-    router.push(urls.schema(controller.schema.id, version));
+    router.push(urls.schema(schema.id, version));
   }
 
   function onSubmit(data: IUpdateLibraryItemDTO) {
@@ -73,7 +73,7 @@ export function FormRSForm() {
         {...register('title')}
         label='Полное название'
         className='mb-3'
-        disabled={!controller.isContentEditable}
+        disabled={!isContentEditable}
         error={errors.title}
       />
       <div className='flex justify-between gap-3 mb-3'>
@@ -82,24 +82,25 @@ export function FormRSForm() {
           {...register('alias')}
           label='Сокращение'
           className='w-[16rem]'
-          disabled={!controller.isContentEditable}
+          disabled={!isContentEditable}
           error={errors.alias}
         />
         <div className='flex flex-col'>
-          <ToolbarVersioning blockReload={controller.schema.oss.length > 0} />
+          <ToolbarVersioning blockReload={schema.oss.length > 0} />
           <ToolbarItemAccess
             visible={visible}
             toggleVisible={() => setValue('visible', !visible, { shouldDirty: true })}
             readOnly={readOnly}
             toggleReadOnly={() => setValue('read_only', !readOnly, { shouldDirty: true })}
-            controller={controller}
+            schema={schema}
+            isAttachedToOSS={isAttachedToOSS}
           />
           <Label text='Версия' className='mb-2 select-none' />
           <SelectVersion
             id='schema_version'
             className='select-none'
-            value={controller.schema.version} //
-            items={controller.schema.versions}
+            value={schema.version} //
+            items={schema.versions}
             onChange={handleSelectVersion}
           />
         </div>
@@ -110,10 +111,10 @@ export function FormRSForm() {
         {...register('comment')}
         label='Описание'
         rows={3}
-        disabled={!controller.isContentEditable || isProcessing}
+        disabled={!isContentEditable || isProcessing}
         error={errors.comment}
       />
-      {controller.isContentEditable || isDirty ? (
+      {isContentEditable || isDirty ? (
         <SubmitButton
           text='Сохранить изменения'
           className='self-center mt-4'

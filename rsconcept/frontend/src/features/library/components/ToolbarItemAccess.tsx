@@ -8,11 +8,10 @@ import { IconImmutable, IconMutable } from '@/components/Icons';
 import { Label } from '@/components/Input';
 import { PARAMETER } from '@/utils/constants';
 
-import { AccessPolicy } from '../backend/types';
+import { AccessPolicy, ILibraryItem } from '../backend/types';
 import { useMutatingLibrary } from '../backend/useMutatingLibrary';
 import { useSetAccessPolicy } from '../backend/useSetAccessPolicy';
 
-import { ILibraryItemEditor } from './EditorLibraryItem';
 import { SelectAccessPolicy } from './SelectAccessPolicy';
 
 interface ToolbarItemAccessProps {
@@ -20,7 +19,8 @@ interface ToolbarItemAccessProps {
   toggleVisible: () => void;
   readOnly: boolean;
   toggleReadOnly: () => void;
-  controller: ILibraryItemEditor;
+  schema: ILibraryItem;
+  isAttachedToOSS: boolean;
 }
 
 export function ToolbarItemAccess({
@@ -28,15 +28,16 @@ export function ToolbarItemAccess({
   toggleVisible,
   readOnly,
   toggleReadOnly,
-  controller
+  schema,
+  isAttachedToOSS
 }: ToolbarItemAccessProps) {
   const role = useRoleStore(state => state.role);
   const isProcessing = useMutatingLibrary();
-  const policy = controller.schema.access_policy;
+  const policy = schema.access_policy;
   const { setAccessPolicy } = useSetAccessPolicy();
 
   function handleSetAccessPolicy(newPolicy: AccessPolicy) {
-    void setAccessPolicy({ itemID: controller.schema.id, policy: newPolicy });
+    void setAccessPolicy({ itemID: schema.id, policy: newPolicy });
   }
 
   return (
@@ -44,7 +45,7 @@ export function ToolbarItemAccess({
       <Label text='Доступ' className='self-center select-none' />
       <div className='ml-auto cc-icons'>
         <SelectAccessPolicy
-          disabled={role <= UserRole.EDITOR || isProcessing || controller.isAttachedToOSS}
+          disabled={role <= UserRole.EDITOR || isProcessing || isAttachedToOSS}
           value={policy}
           onChange={handleSetAccessPolicy}
         />

@@ -20,9 +20,9 @@ import { useOssEdit } from '../OssEditContext';
 
 export function FormOSS() {
   const { updateItem: updateOss } = useUpdateItem();
-  const controller = useOssEdit();
   const { isModified, setIsModified } = useModificationStore();
   const isProcessing = useMutatingOss();
+  const { schema, isMutable } = useOssEdit();
 
   const {
     register,
@@ -34,13 +34,13 @@ export function FormOSS() {
   } = useForm<IUpdateLibraryItemDTO>({
     resolver: zodResolver(schemaUpdateLibraryItem),
     defaultValues: {
-      id: controller.schema.id,
+      id: schema.id,
       item_type: LibraryItemType.RSFORM,
-      title: controller.schema.title,
-      alias: controller.schema.alias,
-      comment: controller.schema.comment,
-      visible: controller.schema.visible,
-      read_only: controller.schema.read_only
+      title: schema.title,
+      alias: schema.alias,
+      comment: schema.comment,
+      visible: schema.visible,
+      read_only: schema.read_only
     }
   });
   const visible = useWatch({ control, name: 'visible' });
@@ -65,7 +65,7 @@ export function FormOSS() {
         {...register('title')}
         label='Полное название'
         className='mb-3'
-        disabled={!controller.isMutable}
+        disabled={!isMutable}
         error={errors.title}
       />
       <div className='flex justify-between gap-3 mb-3'>
@@ -74,7 +74,7 @@ export function FormOSS() {
           {...register('alias')}
           label='Сокращение'
           className='w-[16rem]'
-          disabled={!controller.isMutable}
+          disabled={!isMutable}
           error={errors.alias}
         />
         <ToolbarItemAccess
@@ -82,7 +82,8 @@ export function FormOSS() {
           toggleVisible={() => setValue('visible', !visible, { shouldDirty: true })}
           readOnly={readOnly}
           toggleReadOnly={() => setValue('read_only', !readOnly, { shouldDirty: true })}
-          controller={controller}
+          schema={schema}
+          isAttachedToOSS={false}
         />
       </div>
 
@@ -91,10 +92,10 @@ export function FormOSS() {
         {...register('comment')}
         label='Описание'
         rows={3}
-        disabled={!controller.isMutable || isProcessing}
+        disabled={!isMutable || isProcessing}
         error={errors.comment}
       />
-      {controller.isMutable || isModified ? (
+      {isMutable || isModified ? (
         <SubmitButton
           text='Сохранить изменения'
           className='self-center mt-4'

@@ -6,7 +6,7 @@ export { useTemplatesSuspense } from './backend/useTemplates';
 export { useUpdateItem } from './backend/useUpdateItem';
 export { useUpdateTimestamp } from './backend/useUpdateTimestamp';
 export { useVersionRestore } from './backend/useVersionRestore';
-export { EditorLibraryItem, type ILibraryItemEditor } from './components/EditorLibraryItem';
+export { EditorLibraryItem } from './components/EditorLibraryItem';
 export { MiniSelectorOSS } from './components/MiniSelectorOSS';
 export { PickSchema } from './components/PickSchema';
 export { SelectLibraryItem } from './components/SelectLibraryItem';

@@ -25,11 +25,11 @@ export function ToolbarFocusedCst({
   toggleShowInputs,
   toggleShowOutputs
 }: ToolbarFocusedCstProps) {
-  const controller = useRSEdit();
+  const { deselectAll } = useRSEdit();
 
   function resetSelection() {
     reset();
-    controller.setSelected([]);
+    deselectAll();
   }
 
   return (

@@ -56,7 +56,7 @@ export function EditorRSExpression({
   onShowTypeGraph,
   ...restProps
 }: EditorRSExpressionProps) {
-  const controller = useRSEdit();
+  const { schema } = useRSEdit();
 
   const [isModified, setIsModified] = useState(false);
   const rsInput = useRef<ReactCodeMirrorRef>(null);
@@ -78,7 +78,7 @@ export function EditorRSExpression({
       alias: activeCst.alias,
       cst_type: activeCst.cst_type
     };
-    void checkInternal({ itemID: controller.schema.id, data }).then(parse => {
+    void checkInternal({ itemID: schema.id, data }).then(parse => {
       setParseData(parse);
       onSuccess?.(parse);
     });
@@ -179,7 +179,7 @@ export function EditorRSExpression({
         disabled={disabled}
         onChange={handleChange}
         onAnalyze={handleCheckExpression}
-        schema={controller.schema}
+        schema={schema}
         onOpenEdit={onOpenEdit}
         {...restProps}
       />
