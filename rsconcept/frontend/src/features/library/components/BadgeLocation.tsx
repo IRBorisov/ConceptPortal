@@ -1,5 +1,5 @@
 import { LocationIcon } from '@/components/DomainIcons';
-import { globals } from '@/utils/constants';
+import { globalIDs } from '@/utils/constants';
 
 interface BadgeLocationProps {
   /** Location to display. */
@@ -11,7 +11,7 @@ interface BadgeLocationProps {
  */
 export function BadgeLocation({ location }: BadgeLocationProps) {
   return (
-    <div className='pl-2' data-tooltip-id={globals.tooltip} data-tooltip-content={location}>
+    <div className='pl-2' data-tooltip-id={globalIDs.tooltip} data-tooltip-content={location}>
       <LocationIcon value={location} size='1.25rem' />
     </div>
   );

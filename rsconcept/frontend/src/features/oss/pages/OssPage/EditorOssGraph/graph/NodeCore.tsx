@@ -4,7 +4,7 @@ import { Overlay } from '@/components/Container';
 import { IconConsolidation, IconRSForm } from '@/components/Icons';
 import { Indicator } from '@/components/View';
 import { useTooltipsStore } from '@/stores/tooltips';
-import { globals, PARAMETER } from '@/utils/constants';
+import { globalIDs, PARAMETER } from '@/utils/constants';
 import { truncateToLastWord } from '@/utils/utils';
 
 import { OperationType } from '../../../../backend/types';
@@ -52,7 +52,7 @@ export function NodeCore({ node }: NodeCoreProps) {
 
       <div
         className='h-[34px] w-[144px] flex items-center justify-center'
-        data-tooltip-id={globals.operation_tooltip}
+        data-tooltip-id={globalIDs.operation_tooltip}
         onMouseEnter={() => setHover(node.data.operation)}
       >
         <div

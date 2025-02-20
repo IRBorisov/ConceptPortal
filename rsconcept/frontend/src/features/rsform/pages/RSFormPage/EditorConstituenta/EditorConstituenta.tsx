@@ -8,7 +8,7 @@ import { useMainHeight } from '@/stores/appLayout';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
-import { globals } from '@/utils/constants';
+import { globalIDs } from '@/utils/constants';
 import { promptUnsaved } from '@/utils/utils';
 
 import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
@@ -68,7 +68,7 @@ export function EditorConstituenta() {
   }
 
   function initiateSubmit() {
-    const element = document.getElementById(globals.constituenta_editor) as HTMLFormElement;
+    const element = document.getElementById(globalIDs.constituenta_editor) as HTMLFormElement;
     if (element) {
       element.requestSubmit();
     }
@@ -114,7 +114,7 @@ export function EditorConstituenta() {
           ) : null}
           {activeCst ? (
             <FormConstituenta
-              id={globals.constituenta_editor} //
+              id={globalIDs.constituenta_editor} //
               disabled={disabled}
               toggleReset={toggleReset}
               activeCst={activeCst}

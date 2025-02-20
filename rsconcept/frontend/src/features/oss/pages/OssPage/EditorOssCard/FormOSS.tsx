@@ -13,7 +13,7 @@ import { SubmitButton } from '@/components/Control';
 import { IconSave } from '@/components/Icons';
 import { TextArea, TextInput } from '@/components/Input';
 import { useModificationStore } from '@/stores/modification';
-import { globals } from '@/utils/constants';
+import { globalIDs } from '@/utils/constants';
 
 import { useMutatingOss } from '../../../backend/useMutatingOss';
 import { useOssEdit } from '../OssEditContext';
@@ -56,7 +56,7 @@ export function FormOSS() {
 
   return (
     <form
-      id={globals.library_item_editor}
+      id={globalIDs.library_item_editor}
       className={clsx('mt-1 min-w-[22rem] sm:w-[30rem]', 'flex flex-col pt-1')}
       onSubmit={event => void handleSubmit(onSubmit)(event)}
     >

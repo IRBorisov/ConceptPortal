@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 
-import { globals, PARAMETER } from '@/utils/constants';
+import { globalIDs, PARAMETER } from '@/utils/constants';
 
 import { Overlay } from '../Container';
 import { MiniButton } from '../Control';
@@ -93,7 +93,7 @@ export function SelectTree<ItemType>({
               value === item && 'clr-selected',
               !isActive && 'pointer-events-none'
             )}
-            data-tooltip-id={globals.tooltip}
+            data-tooltip-id={globalIDs.tooltip}
             data-tooltip-html={getDescription(item)}
             onClick={event => handleSetValue(event, item)}
             style={{

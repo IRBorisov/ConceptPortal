@@ -15,7 +15,7 @@ import { IconHelp } from '@/components/Icons';
 import { ErrorData } from '@/components/InfoError';
 import { Checkbox, TextInput } from '@/components/Input';
 import { PrettyJson } from '@/components/View';
-import { globals, patterns } from '@/utils/constants';
+import { globalIDs, patterns } from '@/utils/constants';
 
 import { IUserSignupDTO, schemaUserSignup } from '../../backend/types';
 import { useSignup } from '../../backend/useSignup';
@@ -62,10 +62,10 @@ export function FormSignup() {
     >
       <h1>
         <span>Новый пользователь</span>
-        <Overlay id={globals.email_tooltip} position='top-[0.5rem] right-[1.75rem]'>
+        <Overlay id={globalIDs.email_tooltip} position='top-[0.5rem] right-[1.75rem]'>
           <IconHelp size='1.25rem' className='icon-primary' />
         </Overlay>
-        <Tooltip anchorSelect={`#${globals.email_tooltip}`} offset={6}>
+        <Tooltip anchorSelect={`#${globalIDs.email_tooltip}`} offset={6}>
           электронная почта используется для восстановления пароля
         </Tooltip>
       </h1>

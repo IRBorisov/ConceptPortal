@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { IconDarkTheme, IconLightTheme, IconPin, IconUnpin } from '@/components/Icons';
 import { useAppLayoutStore } from '@/stores/appLayout';
 import { usePreferencesStore } from '@/stores/preferences';
-import { globals, PARAMETER } from '@/utils/constants';
+import { globalIDs, PARAMETER } from '@/utils/constants';
 
 export function ToggleNavigation() {
   const darkMode = usePreferencesStore(state => state.darkMode);
@@ -34,7 +34,7 @@ export function ToggleNavigation() {
           type='button'
           className='p-1'
           onClick={toggleDarkMode}
-          data-tooltip-id={globals.tooltip}
+          data-tooltip-id={globalIDs.tooltip}
           data-tooltip-content={darkMode ? 'Тема: Темная' : 'Тема: Светлая'}
         >
           {darkMode ? <IconDarkTheme size='0.75rem' /> : null}
@@ -46,7 +46,7 @@ export function ToggleNavigation() {
         type='button'
         className='p-1'
         onClick={toggleNoNavigation}
-        data-tooltip-id={globals.tooltip}
+        data-tooltip-id={globalIDs.tooltip}
         data-tooltip-content={noNavigationAnimation ? 'Показать навигацию' : 'Скрыть навигацию'}
       >
         {!noNavigationAnimation ? <IconPin size={iconSize} /> : null}

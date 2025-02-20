@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 
 import { CProps } from '@/components/props';
-import { globals } from '@/utils/constants';
+import { globalIDs } from '@/utils/constants';
 import { truncateToLastWord } from '@/utils/utils';
 
 export interface TextContentProps extends CProps.Styling {
@@ -24,7 +24,7 @@ export function TextContent({ className, text, maxLength, noTooltip, ...restProp
   return (
     <div
       className={clsx('text-xs text-pretty', className)}
-      data-tooltip-id={isTruncated && !noTooltip ? globals.value_tooltip : undefined}
+      data-tooltip-id={isTruncated && !noTooltip ? globalIDs.value_tooltip : undefined}
       data-tooltip-html={isTruncated && !noTooltip ? text : undefined}
       {...restProps}
     >

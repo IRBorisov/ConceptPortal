@@ -2,7 +2,7 @@ import { useLibrary } from '@/features/library';
 
 import { Tooltip } from '@/components/Container';
 import { IconHelp } from '@/components/Icons';
-import { globals, prefixes } from '@/utils/constants';
+import { globalIDs, prefixes } from '@/utils/constants';
 
 import { colorBgSchemas } from '../../../colors';
 import { IRSForm } from '../../../models/rsform';
@@ -39,10 +39,10 @@ export function SchemasGuide({ schema }: SchemasGuideProps) {
   })();
 
   return (
-    <div tabIndex={-1} id={globals.graph_schemas} className='p-1'>
+    <div tabIndex={-1} id={globalIDs.graph_schemas} className='p-1'>
       <IconHelp size='1.25rem' className='icon-primary' />
       <Tooltip
-        anchorSelect={`#${globals.graph_schemas}`}
+        anchorSelect={`#${globalIDs.graph_schemas}`}
         layer='z-modalTooltip'
         place='right'
         className='max-w-[25rem] break-words text-base'

@@ -6,7 +6,7 @@ import { EditorLibraryItem } from '@/features/library';
 
 import { FlexColumn } from '@/components/Container';
 import { useModificationStore } from '@/stores/modification';
-import { globals } from '@/utils/constants';
+import { globalIDs } from '@/utils/constants';
 
 import { ToolbarRSFormCard } from '../../../components/ToolbarRSFormCard';
 import { useRSEdit } from '../RSEditContext';
@@ -19,7 +19,7 @@ export function EditorRSFormCard() {
   const { isModified } = useModificationStore();
 
   function initiateSubmit() {
-    const element = document.getElementById(globals.library_item_editor) as HTMLFormElement;
+    const element = document.getElementById(globalIDs.library_item_editor) as HTMLFormElement;
     if (element) {
       element.requestSubmit();
     }

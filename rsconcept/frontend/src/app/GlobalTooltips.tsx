@@ -5,7 +5,7 @@ import React, { Suspense } from 'react';
 import { Tooltip } from '@/components/Container';
 import { Loader } from '@/components/Loader';
 import { useTooltipsStore } from '@/stores/tooltips';
-import { globals } from '@/utils/constants';
+import { globalIDs } from '@/utils/constants';
 
 const InfoConstituenta = React.lazy(() =>
   import('@/features/rsform/components/InfoConstituenta').then(module => ({ default: module.InfoConstituenta }))
@@ -23,20 +23,20 @@ export const GlobalTooltips = () => {
     <>
       <Tooltip
         float
-        id={globals.tooltip}
+        id={globalIDs.tooltip}
         layer='z-topmost'
         place='right-start'
         className='mt-8 max-w-[20rem] break-words'
       />
       <Tooltip
         float
-        id={globals.value_tooltip}
+        id={globalIDs.value_tooltip}
         layer='z-topmost'
         className='max-w-[calc(min(40rem,100dvw-2rem))] text-justify'
       />
       <Tooltip
         clickable
-        id={globals.constituenta_tooltip}
+        id={globalIDs.constituenta_tooltip}
         layer='z-modalTooltip'
         className='max-w-[30rem]'
         hidden={!hoverCst}
@@ -46,7 +46,7 @@ export const GlobalTooltips = () => {
         </Suspense>
       </Tooltip>
       <Tooltip
-        id={globals.operation_tooltip}
+        id={globalIDs.operation_tooltip}
         layer='z-modalTooltip'
         className='max-w-[35rem] max-h-[40rem] dense'
         hidden={!hoverOperation}

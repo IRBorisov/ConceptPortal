@@ -7,7 +7,7 @@ import { ToolbarRSFormCard } from '@/features/rsform';
 
 import { FlexColumn } from '@/components/Container';
 import { useModificationStore } from '@/stores/modification';
-import { globals } from '@/utils/constants';
+import { globalIDs } from '@/utils/constants';
 
 import { useOssEdit } from '../OssEditContext';
 
@@ -19,7 +19,7 @@ export function EditorOssCard() {
   const { isModified } = useModificationStore();
 
   function initiateSubmit() {
-    const element = document.getElementById(globals.library_item_editor) as HTMLFormElement;
+    const element = document.getElementById(globalIDs.library_item_editor) as HTMLFormElement;
     if (element) {
       element.requestSubmit();
     }

@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 
 import { CProps } from '@/components/props';
-import { globals } from '@/utils/constants';
+import { globalIDs } from '@/utils/constants';
 
 import { TokenID } from '../../../backend/types';
 
@@ -26,7 +26,7 @@ export function RSLocalButton({
       type='button'
       tabIndex={-1}
       disabled={disabled}
-      data-tooltip-id={!!title || !!titleHtml ? globals.tooltip : undefined}
+      data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}
       data-tooltip-html={titleHtml}
       data-tooltip-content={title}
       data-tooltip-hidden={hideTitle}

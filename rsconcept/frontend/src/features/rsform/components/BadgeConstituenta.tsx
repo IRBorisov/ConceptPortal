@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { CProps } from '@/components/props';
 import { useTooltipsStore } from '@/stores/tooltips';
 import { APP_COLORS } from '@/styling/colors';
-import { globals } from '@/utils/constants';
+import { globalIDs } from '@/utils/constants';
 
 import { colorFgCstStatus } from '../colors';
 import { CstClass, IConstituenta } from '../models/rsform';
@@ -39,7 +39,7 @@ export function BadgeConstituenta({ value, prefixID, className, style }: BadgeCo
         backgroundColor: value.cst_class === CstClass.BASIC ? APP_COLORS.bgGreen25 : APP_COLORS.bgInput,
         ...style
       }}
-      data-tooltip-id={globals.constituenta_tooltip}
+      data-tooltip-id={globalIDs.constituenta_tooltip}
       onMouseEnter={() => setActiveCst(value)}
     >
       {value.alias}

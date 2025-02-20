@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 
 import { CProps } from '@/components/props';
-import { globals } from '@/utils/constants';
+import { globalIDs } from '@/utils/constants';
 
 interface IndicatorProps extends CProps.Titled, CProps.Styling {
   /** Icon to display. */
@@ -25,7 +25,7 @@ export function Indicator({ icon, title, titleHtml, hideTitle, noPadding, classN
         },
         className
       )}
-      data-tooltip-id={!!title || !!titleHtml ? globals.tooltip : undefined}
+      data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}
       data-tooltip-html={titleHtml}
       data-tooltip-content={title}
       data-tooltip-hidden={hideTitle}

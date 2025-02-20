@@ -3,7 +3,7 @@
 import { Handle, Position } from 'reactflow';
 
 import { APP_COLORS } from '@/styling/colors';
-import { globals } from '@/utils/constants';
+import { globalIDs } from '@/utils/constants';
 
 import { colorBgTMGraphNode } from '../../../colors';
 import { TMGraphNode } from '../../../models/TMGraph';
@@ -29,7 +29,7 @@ export function MGraphNode(node: MGraphNodeInternal) {
       <Handle type='source' position={Position.Top} style={{ opacity: 0 }} />
       <div
         className='w-full h-full cursor-default flex items-center justify-center rounded-full'
-        data-tooltip-id={globals.tooltip}
+        data-tooltip-id={globalIDs.tooltip}
         data-tooltip-html={tooltipText}
         style={{
           backgroundColor: colorBgTMGraphNode(node.data),

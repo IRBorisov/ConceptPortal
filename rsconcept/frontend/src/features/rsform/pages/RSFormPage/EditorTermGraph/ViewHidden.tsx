@@ -10,7 +10,7 @@ import { useWindowSize } from '@/hooks/useWindowSize';
 import { useFitHeight } from '@/stores/appLayout';
 import { useTooltipsStore } from '@/stores/tooltips';
 import { APP_COLORS } from '@/styling/colors';
-import { globals, PARAMETER, prefixes } from '@/utils/constants';
+import { globalIDs, PARAMETER, prefixes } from '@/utils/constants';
 
 import { colorBgGraphNode } from '../../../colors';
 import { IRSForm } from '../../../models/rsform';
@@ -111,7 +111,7 @@ export function ViewHidden({ items, selected, toggleSelection, setFocus, schema,
               }}
               onClick={event => handleClick(cstID, event)}
               onDoubleClick={() => navigateCst(cstID)}
-              data-tooltip-id={globals.constituenta_tooltip}
+              data-tooltip-id={globalIDs.constituenta_tooltip}
               onMouseEnter={() => setActiveCst(cst)}
             >
               {cst.alias}

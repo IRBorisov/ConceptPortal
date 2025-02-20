@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { StatusIcon } from '@/components/DomainIcons';
 import { Loader } from '@/components/Loader';
 import { APP_COLORS } from '@/styling/colors';
-import { globals } from '@/utils/constants';
+import { globalIDs } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/utils';
 
 import { IExpressionParseDTO, ParsingStatus } from '../../../backend/types';
@@ -47,7 +47,7 @@ export function StatusBar({ isModified, processing, activeCst, parseData, onAnal
         'transition-colors duration-500'
       )}
       style={{ backgroundColor: processing ? APP_COLORS.bgDefault : colorStatusBar(status) }}
-      data-tooltip-id={globals.tooltip}
+      data-tooltip-id={globalIDs.tooltip}
       data-tooltip-html={prepareTooltip('Проверить определение', 'Ctrl + Q')}
       onClick={onAnalyze}
     >

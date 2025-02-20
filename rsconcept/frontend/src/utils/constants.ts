@@ -107,7 +107,7 @@ export const external_urls = {
 /**
  * Global element ID.
  */
-export const globals = {
+export const globalIDs = {
   tooltip: 'global_tooltip',
   value_tooltip: 'value_tooltip',
   constituenta_tooltip: 'cst_tooltip',

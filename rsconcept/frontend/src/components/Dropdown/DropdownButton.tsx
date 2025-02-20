@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 
 import { CProps } from '@/components/props';
-import { globals } from '@/utils/constants';
+import { globalIDs } from '@/utils/constants';
 
 interface DropdownButtonProps extends CProps.Button {
   /** Icon to display first (not used if children are provided). */
@@ -46,7 +46,7 @@ export function DropdownButton({
         },
         className
       )}
-      data-tooltip-id={!!title || !!titleHtml ? globals.tooltip : undefined}
+      data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}
       data-tooltip-html={titleHtml}
       data-tooltip-content={title}
       data-tooltip-hidden={hideTitle}
