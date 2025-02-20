@@ -48,9 +48,9 @@ export function HelpRSGraphTerm() {
 
         <div className='sm:w-[21rem]'>
           <h1>Изменение узлов</h1>
-          <li>Клик на конституенту – выделение</li>
+          <li>Клик на узел – выделение</li>
           <li>
-            Alt + клик – выбор <span style={{ color: APP_COLORS.fgPurple }}>фокус-конституенты</span>
+            Левый клик – выбор <span style={{ color: APP_COLORS.fgPurple }}>фокус-конституенты</span>
           </li>
           <li>
             <IconReset className='inline-icon' /> Esc – сбросить выделение

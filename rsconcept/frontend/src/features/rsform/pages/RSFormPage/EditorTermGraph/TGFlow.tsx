@@ -274,12 +274,10 @@ export function TGFlow() {
     }
   }
 
-  function handleNodeClick(event: CProps.EventMouse, cstID: number) {
-    if (event.altKey) {
-      event.preventDefault();
-      event.stopPropagation();
-      handleSetFocus(cstID);
-    }
+  function handleNodeContextMenu(event: CProps.EventMouse, cstID: number) {
+    event.preventDefault();
+    event.stopPropagation();
+    handleSetFocus(cstID);
   }
 
   function handleNodeDoubleClick(event: CProps.EventMouse, cstID: number) {
@@ -409,8 +407,8 @@ export function TGFlow() {
             onNodeDragStop={() => setIsDragging(false)}
             onNodeMouseEnter={(event, node) => handleNodeEnter(event, Number(node.id))}
             onNodeMouseLeave={() => setHoverID(null)}
-            onNodeClick={(event, node) => handleNodeClick(event, Number(node.id))}
             onNodeDoubleClick={(event, node) => handleNodeDoubleClick(event, Number(node.id))}
+            onNodeContextMenu={(event, node) => handleNodeContextMenu(event, Number(node.id))}
           />
         </div>
       </div>
