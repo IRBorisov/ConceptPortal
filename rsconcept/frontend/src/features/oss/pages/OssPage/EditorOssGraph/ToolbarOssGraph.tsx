@@ -20,7 +20,6 @@ import {
   IconReset,
   IconSave
 } from '@/components/Icons';
-import { useModificationStore } from '@/stores/modification';
 import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/utils';
 
@@ -51,7 +50,6 @@ export function ToolbarOssGraph({
   onResetPositions
 }: ToolbarOssGraphProps) {
   const { schema, selected, isMutable, canDelete } = useOssEdit();
-  const { isModified } = useModificationStore();
   const isProcessing = useMutatingOss();
   const selectedOperation = schema.operationByID.get(selected[0]);
 
@@ -145,7 +143,7 @@ export function ToolbarOssGraph({
           <MiniButton
             titleHtml={prepareTooltip('Сохранить изменения', 'Ctrl + S')}
             icon={<IconSave size='1.25rem' className='icon-primary' />}
-            disabled={isProcessing || !isModified}
+            disabled={isProcessing}
             onClick={onSavePositions}
           />
           <MiniButton

@@ -7,7 +7,6 @@ import {
   getNodesBounds,
   getViewportForBounds,
   Node,
-  NodeChange,
   ReactFlow,
   useEdgesState,
   useNodesState,
@@ -22,7 +21,6 @@ import { useLibrary } from '@/features/library';
 import { Overlay } from '@/components/Container';
 import { CProps } from '@/components/props';
 import { useMainHeight } from '@/stores/appLayout';
-import { useModificationStore } from '@/stores/modification';
 import { useTooltipsStore } from '@/stores/tooltips';
 import { APP_COLORS } from '@/styling/colors';
 import { PARAMETER } from '@/utils/constants';
@@ -61,7 +59,6 @@ export function OssFlow() {
   const router = useConceptNavigation();
   const { items: libraryItems } = useLibrary();
   const flow = useReactFlow();
-  const { setIsModified } = useModificationStore();
 
   const isProcessing = useMutatingOss();
 
@@ -116,11 +113,7 @@ export function OssFlow() {
             : 'left'
       }))
     );
-
-    setTimeout(() => {
-      setIsModified(false);
-    }, PARAMETER.graphRefreshDelay);
-  }, [schema, setNodes, setEdges, setIsModified, toggleReset, edgeStraight, edgeAnimate]);
+  }, [schema, setNodes, setEdges, toggleReset, edgeStraight, edgeAnimate]);
 
   function getPositions() {
     return nodes.map(node => ({
@@ -128,13 +121,6 @@ export function OssFlow() {
       position_x: node.position.x,
       position_y: node.position.y
     }));
-  }
-
-  function handleNodesChange(changes: NodeChange[]) {
-    if (isMutable && changes.some(change => change.type === 'position' && change.position)) {
-      setIsModified(true);
-    }
-    onNodesChange(changes);
   }
 
   function handleSavePositions() {
@@ -147,7 +133,6 @@ export function OssFlow() {
           operation.position_y = item.position_y;
         }
       });
-      setIsModified(false);
     });
   }
 
@@ -341,7 +326,7 @@ export function OssFlow() {
         <ReactFlow
           nodes={nodes}
           edges={edges}
-          onNodesChange={handleNodesChange}
+          onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onNodeDoubleClick={handleNodeDoubleClick}
           edgesFocusable={false}
