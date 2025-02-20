@@ -25,6 +25,7 @@ export class RSFormLoader {
 
   constructor(input: IRSFormDTO) {
     this.schema = input as unknown as IRSForm;
+    this.schema.version = input.version ?? 'latest';
   }
 
   produceRSForm(): IRSForm {

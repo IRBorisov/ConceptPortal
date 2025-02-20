@@ -3,7 +3,7 @@
  */
 
 import { ILibraryItemData, IVersionInfo } from '@/features/library/backend/types';
-import { ILibraryItemReference } from '@/features/library/models/library';
+import { CurrentVersion, ILibraryItemReference } from '@/features/library/models/library';
 
 import { Graph } from '@/models/Graph';
 
@@ -139,7 +139,7 @@ export interface IInheritanceInfo {
  * Represents formal explication for set of concepts.
  */
 export interface IRSForm extends ILibraryItemData {
-  version?: number;
+  version: CurrentVersion;
   versions: IVersionInfo[];
 
   items: IConstituenta[];

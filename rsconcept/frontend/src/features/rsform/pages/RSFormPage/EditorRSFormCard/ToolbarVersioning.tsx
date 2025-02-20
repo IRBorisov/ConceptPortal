@@ -27,7 +27,7 @@ export function ToolbarVersioning({ blockReload }: ToolbarVersioningProps) {
   const showEditVersions = useDialogsStore(state => state.showEditVersions);
 
   function handleRestoreVersion() {
-    if (!schema.version || !window.confirm(promptText.restoreArchive)) {
+    if (schema.version === 'latest' || !window.confirm(promptText.restoreArchive)) {
       return;
     }
     void versionRestore({ versionID: schema.version }).then(() => navigateVersion());

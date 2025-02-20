@@ -5,9 +5,12 @@
 import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/utils';
 
+import { IVersionInfo } from '../library';
+import { CurrentVersion } from '../library/models/library';
+
 import { CstType, IRSErrorDescription, ParsingStatus, RSErrorType, TokenID } from './backend/types';
 import { GramData, Grammeme, ReferenceType } from './models/language';
-import { CstClass, ExpressionStatus, IConstituenta, IRSForm } from './models/rsform';
+import { CstClass, ExpressionStatus, IConstituenta } from './models/rsform';
 import { IArgumentInfo, ISyntaxTreeNode } from './models/rslang';
 import { CstMatchMode, DependencyMode } from './stores/cstSearch';
 import { GraphColoring } from './stores/termGraph';
@@ -61,8 +64,8 @@ export function labelConstituenta(cst: IConstituenta) {
 /**
  * Generates label for {@link IVersionInfo} of {@link IRSForm}.
  */
-export function labelVersion(schema: IRSForm | undefined) {
-  const version = schema?.versions.find(ver => ver.id === schema?.version);
+export function labelVersion(value: CurrentVersion, items: IVersionInfo[]) {
+  const version = items.find(ver => ver.id === value);
   return version ? version.version : 'актуальная';
 }
 

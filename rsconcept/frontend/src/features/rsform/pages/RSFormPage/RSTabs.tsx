@@ -86,7 +86,10 @@ export function RSTabs({ activeID, activeTab }: RSTabsProps) {
           >
             <MenuRSTabs />
 
-            <TabLabel label='Карточка' titleHtml={`${schema.title ?? ''}<br />Версия: ${labelVersion(schema)}`} />
+            <TabLabel
+              label='Карточка'
+              titleHtml={`${schema.title ?? ''}<br />Версия: ${labelVersion(schema.version, schema.versions)}`}
+            />
             <TabLabel
               label='Содержание'
               titleHtml={`Конституент: ${schema.stats?.count_all ?? 0}<br />Ошибок: ${schema.stats?.count_errors ?? 0}`}

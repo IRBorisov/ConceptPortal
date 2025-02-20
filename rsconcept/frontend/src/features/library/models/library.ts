@@ -39,3 +39,6 @@ export interface ILibraryFilter {
   isEditor: boolean | null;
   filterUser: number | null;
 }
+
+/** Represents current version */
+export type CurrentVersion = number | 'latest';

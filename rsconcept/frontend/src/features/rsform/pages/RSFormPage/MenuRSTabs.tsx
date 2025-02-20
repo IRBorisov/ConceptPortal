@@ -115,7 +115,7 @@ export function MenuRSTabs() {
     const fileName = (schema.alias ?? 'Schema') + EXTEOR_TRS_FILE;
     void download({
       itemID: schema.id,
-      version: schema.version
+      version: schema.version === 'latest' ? undefined : schema.version
     }).then((data: Blob) => {
       try {
         fileDownload(data, fileName);

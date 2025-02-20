@@ -7,13 +7,14 @@ import { CProps } from '@/components/props';
 
 import { labelVersion } from '../../rsform/labels';
 import { IVersionInfo } from '../backend/types';
+import { CurrentVersion } from '../models/library';
 
 interface SelectVersionProps extends CProps.Styling {
   id?: string;
-  value: number | undefined;
-  onChange: (newValue: number | undefined) => void;
+  value: CurrentVersion;
+  onChange: (newValue: CurrentVersion) => void;
 
-  items?: IVersionInfo[];
+  items: IVersionInfo[];
   placeholder?: string;
   noBorder?: boolean;
 }
@@ -21,8 +22,8 @@ interface SelectVersionProps extends CProps.Styling {
 export function SelectVersion({ id, className, items, value, onChange, ...restProps }: SelectVersionProps) {
   const options = [
     {
-      value: undefined,
-      label: labelVersion(undefined)
+      value: 'latest' as const,
+      label: labelVersion('latest', items)
     },
     ...(items?.map(version => ({
       value: version.id,
@@ -30,18 +31,13 @@ export function SelectVersion({ id, className, items, value, onChange, ...restPr
     })) ?? [])
   ];
 
-  const valueLabel = (() => {
-    const version = items?.find(ver => ver.id === value);
-    return version ? version.version : labelVersion(undefined);
-  })();
-
   return (
     <SelectSingle
       id={id}
       className={clsx('min-w-[12rem] text-ellipsis', className)}
       options={options}
-      value={{ value: value, label: valueLabel }}
-      onChange={data => onChange(data?.value)}
+      value={{ value: value, label: labelVersion(value, items) }}
+      onChange={data => onChange(data?.value ?? 'latest')}
       {...restProps}
     />
   );
