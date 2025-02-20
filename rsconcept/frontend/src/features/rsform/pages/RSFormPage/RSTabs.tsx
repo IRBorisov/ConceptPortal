@@ -78,7 +78,7 @@ export function RSTabs({ activeID, activeTab }: RSTabsProps) {
         onSelect={onSelectTab}
         defaultFocus
         selectedTabClassName='clr-selected'
-        className='flex flex-col mx-auto min-w-fit'
+        className='flex flex-col mx-auto min-w-fit items-center'
       >
         <Overlay position='top-0 right-1/2 translate-x-1/2' layer='z-sticky'>
           <TabList

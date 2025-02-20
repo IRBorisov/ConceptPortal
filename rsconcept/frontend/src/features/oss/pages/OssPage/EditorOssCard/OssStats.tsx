@@ -13,7 +13,7 @@ export function OssStats({ stats }: OssStatsProps) {
   return (
     <div
       className={clsx(
-        'mt-3 md:ml-5 md:mt-8 md:w-[15rem] w-[20rem] h-min mx-auto', // prettier: split-lines
+        'mt-3 md:ml-5 md:mt-8 md:w-[12rem] w-[14rem] h-min mx-auto', // prettier: split-lines
         'grid grid-cols-3 gap-1 justify-items-end'
       )}
     >

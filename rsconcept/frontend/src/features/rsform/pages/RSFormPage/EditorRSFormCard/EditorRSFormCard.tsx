@@ -41,7 +41,7 @@ export function EditorRSFormCard() {
         onKeyDown={handleInput}
         className={clsx(
           'cc-fade-in',
-          'md:w-fit md:max-w-fit max-w-[32rem] mx-auto',
+          'md:w-fit md:max-w-fit max-w-[32rem]',
           'flex flex-row flex-wrap px-6 pt-[1.9rem]'
         )}
       >

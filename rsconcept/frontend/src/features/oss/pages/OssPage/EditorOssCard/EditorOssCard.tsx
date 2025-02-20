@@ -41,9 +41,9 @@ export function EditorOssCard() {
         onKeyDown={handleInput}
         className={clsx(
           'cc-fade-in',
-          'md:w-fit md:max-w-fit max-w-[32rem]',
-          'mx-auto pt-[1.9rem]',
-          'flex flex-row flex-wrap px-6'
+          'md:max-w-fit max-w-[32rem] min-w-fit',
+          'pt-[1.9rem]',
+          'flex flex-row flex-wrap px-6 justify-center'
         )}
       >
         <FlexColumn className='px-3'>
