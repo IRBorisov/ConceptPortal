@@ -6,12 +6,12 @@ import clsx from 'clsx';
 
 import { urls, useConceptNavigation } from '@/app';
 import { useChangePassword } from '@/features/auth';
-import { IChangePasswordDTO, schemaChangePassword } from '@/features/auth/backend/types';
+import { type IChangePasswordDTO, schemaChangePassword } from '@/features/auth/backend/types';
 
 import { isAxiosError } from '@/backend/apiTransport';
 import { FlexColumn } from '@/components/Container';
 import { SubmitButton } from '@/components/Control';
-import { ErrorData } from '@/components/InfoError';
+import { type ErrorData } from '@/components/InfoError';
 import { TextInput } from '@/components/Input';
 
 export function EditorPassword() {

@@ -22,7 +22,7 @@ export function RSTokenButton({ token, disabled, onInsert }: RSTokenButtonProps)
       className={clsx(
         'h-5 sm:h-6',
         'px-1',
-        'outline-none',
+        'outline-hidden',
         'clr-hover clr-text-controls cc-animate-color',
         'font-math',
         'cursor-pointer disabled:cursor-default',

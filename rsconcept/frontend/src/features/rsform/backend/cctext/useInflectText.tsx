@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 
 import { cctextApi } from './api';
-import { IWordFormDTO } from './types';
+import { type IWordFormDTO } from './types';
 
 export const useInflectText = () => {
   const mutation = useMutation({

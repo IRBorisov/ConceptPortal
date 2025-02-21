@@ -9,7 +9,7 @@ import { Overlay } from '@/components/Container';
 import { ModalView } from '@/components/Modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { SyntaxTree } from '../../models/rslang';
+import { type SyntaxTree } from '../../models/rslang';
 
 import { ASTFlow } from './ASTFlow';
 

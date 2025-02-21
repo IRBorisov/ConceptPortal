@@ -1,3 +1,55 @@
+@import 'tailwindcss';
+
 @import './styling/setup.css';
 @import './styling/overrides.css';
 @import './styling/styles.css';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --color-*: initial;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+  --color-inherit: inherit;
+
+  --color-prim-0: var(--clr-prim-0);
+  --color-prim-100: var(--clr-prim-100);
+  --color-prim-200: var(--clr-prim-200);
+  --color-prim-300: var(--clr-prim-300);
+  --color-prim-400: var(--clr-prim-400);
+  --color-prim-600: var(--clr-prim-600);
+  --color-prim-800: var(--clr-prim-800);
+  --color-prim-999: var(--clr-prim-999);
+
+  --color-sec-0: var(--clr-sec-0);
+  --color-sec-100: var(--clr-sec-100);
+  --color-sec-200: var(--clr-sec-200);
+  --color-sec-300: var(--clr-sec-300);
+  --color-sec-400: var(--clr-sec-400);
+  --color-sec-600: var(--clr-sec-600);
+  --color-sec-800: var(--clr-sec-800);
+
+  --color-warn-100: var(--clr-warn-100);
+  --color-warn-600: var(--clr-warn-600);
+
+  --color-ok-600: var(--clr-ok-600);
+
+  --z-index-*: initial;
+  --z-index-bottom: 0;
+  --z-index-topmost: 99;
+  --z-index-pop: 10;
+  --z-index-sticky: 20;
+  --z-index-tooltip: 30;
+  --z-index-navigation: 50;
+  --z-index-modal: 60;
+  --z-index-modal-controls: 70;
+  --z-index-modal-tooltip: 90;
+
+  --breakpoint-*: initial;
+  --breakpoint-xs: 475px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+}

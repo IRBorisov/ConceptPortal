@@ -10,9 +10,9 @@ import { Checkbox, TextInput } from '@/components/Input';
 import { ModalForm } from '@/components/Modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { IOperationDeleteDTO, IOperationPosition, schemaOperationDelete } from '../backend/types';
+import { type IOperationDeleteDTO, type IOperationPosition, schemaOperationDelete } from '../backend/types';
 import { useOperationDelete } from '../backend/useOperationDelete';
-import { IOperation, IOperationSchema } from '../models/oss';
+import { type IOperation, type IOperationSchema } from '../models/oss';
 
 export interface DlgDeleteOperationProps {
   oss: IOperationSchema;

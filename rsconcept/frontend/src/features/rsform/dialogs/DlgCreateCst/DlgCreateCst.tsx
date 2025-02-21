@@ -7,9 +7,9 @@ import { ModalForm } from '@/components/Modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { errorMsg } from '@/utils/labels';
 
-import { IConstituentaBasicsDTO, ICstCreateDTO, schemaCstCreate } from '../../backend/types';
+import { type IConstituentaBasicsDTO, type ICstCreateDTO, schemaCstCreate } from '../../backend/types';
 import { useCstCreate } from '../../backend/useCstCreate';
-import { IRSForm } from '../../models/rsform';
+import { type IRSForm } from '../../models/rsform';
 import { validateNewAlias } from '../../models/rsformAPI';
 
 import { FormCreateCst } from './FormCreateCst';

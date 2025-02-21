@@ -2,7 +2,7 @@
 
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
-import { IInlineSynthesisDTO } from '../../backend/types';
+import { type IInlineSynthesisDTO } from '../../backend/types';
 import { useRSFormSuspense } from '../../backend/useRSForm';
 import { PickMultiConstituenta } from '../../components/PickMultiConstituenta';
 

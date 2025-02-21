@@ -14,7 +14,7 @@ import { ModalView } from '@/components/Modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { errorMsg } from '@/utils/labels';
 
-import { IVersionUpdateDTO, schemaVersionUpdate } from '../../backend/types';
+import { type IVersionUpdateDTO, schemaVersionUpdate } from '../../backend/types';
 import { useMutatingLibrary } from '../../backend/useMutatingLibrary';
 import { useVersionDelete } from '../../backend/useVersionDelete';
 import { useVersionUpdate } from '../../backend/useVersionUpdate';

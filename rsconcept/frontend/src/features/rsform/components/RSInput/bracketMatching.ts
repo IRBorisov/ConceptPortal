@@ -1,4 +1,4 @@
-import { bracketMatching, MatchResult } from '@codemirror/language';
+import { bracketMatching, type MatchResult } from '@codemirror/language';
 import { Decoration, EditorView } from '@codemirror/view';
 
 import { BRACKETS_THEME } from '../../colors';

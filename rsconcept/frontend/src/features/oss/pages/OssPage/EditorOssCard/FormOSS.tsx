@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import clsx from 'clsx';
 
 import { LibraryItemType, ToolbarItemAccess, useUpdateItem } from '@/features/library';
-import { IUpdateLibraryItemDTO, schemaUpdateLibraryItem } from '@/features/library/backend/types';
+import { type IUpdateLibraryItemDTO, schemaUpdateLibraryItem } from '@/features/library/backend/types';
 
 import { SubmitButton } from '@/components/Control';
 import { IconSave } from '@/components/Icons';

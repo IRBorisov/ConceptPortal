@@ -13,14 +13,14 @@ import { TabLabel, TabList, TabPanel, Tabs } from '@/components/Tabs';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { labelReferenceType } from '../../labels';
-import { IReference, ReferenceType } from '../../models/language';
+import { type IReference, ReferenceType } from '../../models/language';
 import {
   parseEntityReference,
   parseGrammemes,
   parseSyntacticReference,
   supportedGrammeOptions
 } from '../../models/languageAPI';
-import { IRSForm } from '../../models/rsform';
+import { type IRSForm } from '../../models/rsform';
 
 import { TabEntityReference } from './TabEntityReference';
 import { TabSyntacticReference } from './TabSyntacticReference';

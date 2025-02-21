@@ -5,13 +5,13 @@ import clsx from 'clsx';
 import { SelectorButton } from '@/components/Control';
 import { LocationIcon } from '@/components/DomainIcons';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/Dropdown';
-import { CProps } from '@/components/props';
+import { type Styling } from '@/components/props';
 import { prefixes } from '@/utils/constants';
 
 import { describeLocationHead, labelLocationHead } from '../labels';
 import { LocationHead } from '../models/library';
 
-interface SelectLocationHeadProps extends CProps.Styling {
+interface SelectLocationHeadProps extends Styling {
   value: LocationHead;
   onChange: (newValue: LocationHead) => void;
   excluded?: LocationHead[];

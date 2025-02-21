@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 
 import { IconLibrary2, IconManuals, IconNewItem2 } from '@/components/Icons';
-import { CProps } from '@/components/props';
+import { type EventMouse } from '@/components/props';
 import { useWindowSize } from '@/hooks/useWindowSize';
 import { useAppLayoutStore } from '@/stores/appLayout';
 import { PARAMETER } from '@/utils/constants';
@@ -19,11 +19,10 @@ export function Navigation() {
   const size = useWindowSize();
   const noNavigationAnimation = useAppLayoutStore(state => state.noNavigationAnimation);
 
-  const navigateHome = (event: CProps.EventMouse) => router.push(urls.home, event.ctrlKey || event.metaKey);
-  const navigateLibrary = (event: CProps.EventMouse) => router.push(urls.library, event.ctrlKey || event.metaKey);
-  const navigateHelp = (event: CProps.EventMouse) => router.push(urls.manuals, event.ctrlKey || event.metaKey);
-  const navigateCreateNew = (event: CProps.EventMouse) =>
-    router.push(urls.create_schema, event.ctrlKey || event.metaKey);
+  const navigateHome = (event: EventMouse) => router.push(urls.home, event.ctrlKey || event.metaKey);
+  const navigateLibrary = (event: EventMouse) => router.push(urls.library, event.ctrlKey || event.metaKey);
+  const navigateHelp = (event: EventMouse) => router.push(urls.manuals, event.ctrlKey || event.metaKey);
+  const navigateCreateNew = (event: EventMouse) => router.push(urls.create_schema, event.ctrlKey || event.metaKey);
 
   return (
     <nav

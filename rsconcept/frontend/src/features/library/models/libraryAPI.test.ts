@@ -1,4 +1,4 @@
-import { AccessPolicy, ILibraryItem, LibraryItemType } from '../backend/types';
+import { AccessPolicy, type ILibraryItem, LibraryItemType } from '../backend/types';
 
 import { LocationHead } from './library';
 import { matchLibraryItem, validateLocation } from './libraryAPI';

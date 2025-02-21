@@ -2,14 +2,14 @@
 
 import { useEffect } from 'react';
 
-import { createColumnHelper, DataTable, IConditionalStyle } from '@/components/DataTable';
+import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/DataTable';
 import { NoData, TextContent } from '@/components/View';
 import { APP_COLORS } from '@/styling/colors';
 import { PARAMETER, prefixes } from '@/utils/constants';
 
 import { BadgeConstituenta } from '../../../components/BadgeConstituenta';
 import { describeConstituenta } from '../../../labels';
-import { IConstituenta } from '../../../models/rsform';
+import { type IConstituenta } from '../../../models/rsform';
 
 const DESCRIPTION_MAX_SYMBOLS = 280;
 

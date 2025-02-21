@@ -1,11 +1,11 @@
 import clsx from 'clsx';
 
 import { Label } from '../Input/Label';
-import { CProps } from '../props';
+import { type Colors, type Editor, type ErrorProcessing, type TextArea as TextAreaStyle } from '../props';
 
 import { ErrorField } from './ErrorField';
 
-export interface TextAreaProps extends CProps.Editor, CProps.ErrorProcessing, CProps.Colors, CProps.TextArea {
+export interface TextAreaProps extends Editor, ErrorProcessing, Colors, TextAreaStyle {
   /** Indicates that padding should be minimal. */
   dense?: boolean;
 
@@ -40,7 +40,7 @@ export function TextArea({
         'w-full',
         {
           'flex flex-col': !dense,
-          'flex flex-grow items-center gap-3': dense
+          'flex grow items-center gap-3': dense
         },
         dense && className
       )}
@@ -56,7 +56,7 @@ export function TextArea({
             'cc-fit-content': fitContent,
             'resize-none': noResize,
             'border': !noBorder,
-            'flex-grow max-w-full': dense,
+            'grow max-w-full': dense,
             'mt-2': !dense && !!label,
             'clr-outline': !noOutline
           },

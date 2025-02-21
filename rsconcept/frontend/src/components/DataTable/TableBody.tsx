@@ -1,12 +1,12 @@
 'use no memo';
 
-import { Cell, flexRender, Row, Table } from '@tanstack/react-table';
+import { type Cell, flexRender, type Row, type Table } from '@tanstack/react-table';
 import clsx from 'clsx';
 
-import { CProps } from '../props';
+import { type EventMouse } from '../props';
 
 import { SelectRow } from './SelectRow';
-import { IConditionalStyle } from '.';
+import { type IConditionalStyle } from '.';
 
 interface TableBodyProps<TData> {
   table: Table<TData>;
@@ -18,8 +18,8 @@ interface TableBodyProps<TData> {
   lastSelected: string | null;
   onChangeLastSelected: (newValue: string | null) => void;
 
-  onRowClicked?: (rowData: TData, event: CProps.EventMouse) => void;
-  onRowDoubleClicked?: (rowData: TData, event: CProps.EventMouse) => void;
+  onRowClicked?: (rowData: TData, event: EventMouse) => void;
+  onRowDoubleClicked?: (rowData: TData, event: EventMouse) => void;
 }
 
 export function TableBody<TData>({
@@ -33,7 +33,7 @@ export function TableBody<TData>({
   onRowClicked,
   onRowDoubleClicked
 }: TableBodyProps<TData>) {
-  function handleRowClicked(target: Row<TData>, event: CProps.EventMouse) {
+  function handleRowClicked(target: Row<TData>, event: EventMouse) {
     onRowClicked?.(target.original, event);
     if (enableRowSelection && target.getCanSelect()) {
       if (event.shiftKey && !!lastSelected && lastSelected !== target.id) {

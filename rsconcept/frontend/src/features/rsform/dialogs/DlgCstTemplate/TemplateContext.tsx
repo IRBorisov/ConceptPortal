@@ -5,13 +5,13 @@ import { useFormContext } from 'react-hook-form';
 
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { ICstCreateDTO } from '../../backend/types';
-import { IConstituenta } from '../../models/rsform';
+import { type ICstCreateDTO } from '../../backend/types';
+import { type IConstituenta } from '../../models/rsform';
 import { generateAlias } from '../../models/rsformAPI';
-import { IArgumentValue } from '../../models/rslang';
+import { type IArgumentValue } from '../../models/rslang';
 import { inferTemplatedType, substituteTemplateArgs } from '../../models/rslangAPI';
 
-import { DlgCstTemplateProps } from './DlgCstTemplate';
+import { type DlgCstTemplateProps } from './DlgCstTemplate';
 
 export interface ITemplateContext {
   args: IArgumentValue[];

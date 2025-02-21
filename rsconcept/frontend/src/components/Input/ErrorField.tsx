@@ -1,9 +1,9 @@
-import { FieldError, GlobalError } from 'react-hook-form';
+import { type FieldError, type GlobalError } from 'react-hook-form';
 import clsx from 'clsx';
 
-import { CProps } from '../props';
+import { type Styling } from '../props';
 
-interface ErrorFieldProps extends CProps.Styling {
+interface ErrorFieldProps extends Styling {
   error?: FieldError | GlobalError;
 }
 

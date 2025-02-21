@@ -4,7 +4,7 @@
 
 import { PARAMETER } from '@/utils/constants';
 
-import { IArgumentInfo } from './rslang';
+import { type IArgumentInfo } from './rslang';
 
 /**
  * Represents a single node of a {@link TMGraph}.

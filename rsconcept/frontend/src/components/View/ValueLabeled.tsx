@@ -1,8 +1,8 @@
 import clsx from 'clsx';
 
-import { CProps } from '@/components/props';
+import { type Styling } from '@/components/props';
 
-interface ValueLabeledProps extends CProps.Styling {
+interface ValueLabeledProps extends Styling {
   /** Id of the component. */
   id?: string;
 

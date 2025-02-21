@@ -2,13 +2,13 @@
  * Module: OSS data loading and processing.
  */
 
-import { ILibraryItem } from '@/features/library/backend/types';
+import { type ILibraryItem } from '@/features/library/backend/types';
 
 import { Graph } from '@/models/Graph';
 
-import { IOperation, IOperationSchema, IOperationSchemaStats } from '../models/oss';
+import { type IOperation, type IOperationSchema, type IOperationSchemaStats } from '../models/oss';
 
-import { IOperationSchemaDTO, OperationType } from './types';
+import { type IOperationSchemaDTO, OperationType } from './types';
 
 /**
  * Loads data into an {@link IOperationSchema} based on {@link IOperationSchemaDTO}.

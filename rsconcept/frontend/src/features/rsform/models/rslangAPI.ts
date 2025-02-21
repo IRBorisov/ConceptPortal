@@ -7,9 +7,9 @@ import { Tree } from '@lezer/common';
 import { cursorNode } from '@/utils/codemirror';
 import { PARAMETER } from '@/utils/constants';
 
-import { CstType, IRSErrorDescription, RSErrorType } from '../backend/types';
+import { CstType, type IRSErrorDescription, RSErrorType } from '../backend/types';
 
-import { AliasMapping, IArgumentValue, RSErrorClass, SyntaxTree } from './rslang';
+import { type AliasMapping, type IArgumentValue, RSErrorClass, type SyntaxTree } from './rslang';
 
 // cspell:disable
 const LOCALS_REGEXP = /[_a-zα-ω][a-zα-ω]*\d*/g;

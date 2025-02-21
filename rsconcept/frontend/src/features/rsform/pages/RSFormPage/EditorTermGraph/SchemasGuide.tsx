@@ -5,7 +5,7 @@ import { IconHelp } from '@/components/Icons';
 import { globalIDs, prefixes } from '@/utils/constants';
 
 import { colorBgSchemas } from '../../../colors';
-import { IRSForm } from '../../../models/rsform';
+import { type IRSForm } from '../../../models/rsform';
 
 interface SchemasGuideProps {
   schema: IRSForm;

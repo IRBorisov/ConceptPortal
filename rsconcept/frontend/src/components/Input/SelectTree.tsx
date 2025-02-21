@@ -6,9 +6,9 @@ import { globalIDs, PARAMETER } from '@/utils/constants';
 import { Overlay } from '../Container';
 import { MiniButton } from '../Control';
 import { IconDropArrow, IconPageRight } from '../Icons';
-import { CProps } from '../props';
+import { type EventMouse, type Styling } from '../props';
 
-interface SelectTreeProps<ItemType> extends CProps.Styling {
+interface SelectTreeProps<ItemType> extends Styling {
   /** Current value. */
   value: ItemType;
 
@@ -66,13 +66,13 @@ export function SelectTree<ItemType>({
     );
   }
 
-  function handleClickFold(event: CProps.EventMouse, target: ItemType, showChildren: boolean) {
+  function handleClickFold(event: EventMouse, target: ItemType, showChildren: boolean) {
     event.preventDefault();
     event.stopPropagation();
     onFoldItem(target, showChildren);
   }
 
-  function handleSetValue(event: CProps.EventMouse, target: ItemType) {
+  function handleSetValue(event: EventMouse, target: ItemType) {
     event.preventDefault();
     event.stopPropagation();
     onChange(target);

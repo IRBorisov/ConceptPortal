@@ -4,10 +4,10 @@ import { FlexColumn } from '@/components/Container';
 import { Label, TextArea, TextInput } from '@/components/Input';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { IOperationCreateDTO } from '../../backend/types';
+import { type IOperationCreateDTO } from '../../backend/types';
 import { PickMultiOperation } from '../../components/PickMultiOperation';
 
-import { DlgCreateOperationProps } from './DlgCreateOperation';
+import { type DlgCreateOperationProps } from './DlgCreateOperation';
 
 export function TabSynthesisOperation() {
   const { oss } = useDialogsStore(state => state.props as DlgCreateOperationProps);

@@ -5,7 +5,7 @@ import { useUpdateTimestamp } from '@/features/library';
 import { KEYS } from '@/backend/configuration';
 
 import { rsformsApi } from './api';
-import { ICstCreateDTO } from './types';
+import { type ICstCreateDTO } from './types';
 
 export const useCstCreate = () => {
   const client = useQueryClient();

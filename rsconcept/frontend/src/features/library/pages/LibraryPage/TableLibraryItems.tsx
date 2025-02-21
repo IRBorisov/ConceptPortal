@@ -9,15 +9,15 @@ import { useLabelUser } from '@/features/users';
 
 import { FlexColumn } from '@/components/Container';
 import { MiniButton, TextURL } from '@/components/Control';
-import { createColumnHelper, DataTable, IConditionalStyle, VisibilityState } from '@/components/DataTable';
+import { createColumnHelper, DataTable, type IConditionalStyle, type VisibilityState } from '@/components/DataTable';
 import { IconFolderTree } from '@/components/Icons';
-import { CProps } from '@/components/props';
+import { type EventMouse } from '@/components/props';
 import { useWindowSize } from '@/hooks/useWindowSize';
 import { useFitHeight } from '@/stores/appLayout';
 import { usePreferencesStore } from '@/stores/preferences';
 import { APP_COLORS } from '@/styling/colors';
 
-import { ILibraryItem, LibraryItemType } from '../../backend/types';
+import { type ILibraryItem, LibraryItemType } from '../../backend/types';
 import { BadgeLocation } from '../../components/BadgeLocation';
 import { useLibrarySearchStore } from '../../stores/librarySearch';
 
@@ -39,7 +39,7 @@ export function TableLibraryItems({ items }: TableLibraryItemsProps) {
   const itemsPerPage = usePreferencesStore(state => state.libraryPagination);
   const setItemsPerPage = usePreferencesStore(state => state.setLibraryPagination);
 
-  function handleOpenItem(item: ILibraryItem, event: CProps.EventMouse) {
+  function handleOpenItem(item: ILibraryItem, event: EventMouse) {
     const selection = window.getSelection();
     if (!!selection && selection.toString().length > 0) {
       return;
@@ -61,7 +61,7 @@ export function TableLibraryItems({ items }: TableLibraryItemsProps) {
     });
   }, [windowSize]);
 
-  function handleToggleFolder(event: CProps.EventMouse) {
+  function handleToggleFolder(event: EventMouse) {
     event.preventDefault();
     event.stopPropagation();
     toggleFolderMode();

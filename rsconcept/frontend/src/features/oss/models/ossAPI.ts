@@ -2,10 +2,10 @@
  * Module: API for OperationSystem.
  */
 
-import { ILibraryItem } from '@/features/library/backend/types';
-import { CstType, ICstSubstitute, ParsingStatus } from '@/features/rsform/backend/types';
-import { CstClass, IConstituenta, IRSForm } from '@/features/rsform/models/rsform';
-import { AliasMapping } from '@/features/rsform/models/rslang';
+import { type ILibraryItem } from '@/features/library/backend/types';
+import { CstType, type ICstSubstitute, ParsingStatus } from '@/features/rsform/backend/types';
+import { CstClass, type IConstituenta, type IRSForm } from '@/features/rsform/models/rsform';
+import { type AliasMapping } from '@/features/rsform/models/rslang';
 import {
   applyAliasMapping,
   applyTypificationMapping,
@@ -18,11 +18,11 @@ import { infoMsg } from '@/utils/labels';
 import { TextMatcher } from '@/utils/utils';
 
 import { Graph } from '../../../models/Graph';
-import { IOperationPosition, OperationType } from '../backend/types';
+import { type IOperationPosition, OperationType } from '../backend/types';
 import { describeSubstitutionError } from '../labels';
 
-import { IOperation, IOperationSchema, SubstitutionErrorType } from './oss';
-import { Position2D } from './ossLayout';
+import { type IOperation, type IOperationSchema, SubstitutionErrorType } from './oss';
+import { type Position2D } from './ossLayout';
 
 /**
  * Checks if a given target {@link IOperation} matches the specified query using.

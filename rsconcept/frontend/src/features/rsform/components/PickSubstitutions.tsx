@@ -4,18 +4,18 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import clsx from 'clsx';
 
-import { ILibraryItem, SelectLibraryItem } from '@/features/library';
+import { type ILibraryItem, SelectLibraryItem } from '@/features/library';
 
 import { MiniButton } from '@/components/Control';
-import { createColumnHelper, DataTable, IConditionalStyle } from '@/components/DataTable';
+import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/DataTable';
 import { IconAccept, IconPageLeft, IconPageRight, IconRemove, IconReplace } from '@/components/Icons';
-import { CProps } from '@/components/props';
+import { type Styling } from '@/components/props';
 import { NoData } from '@/components/View';
 import { APP_COLORS } from '@/styling/colors';
 import { errorMsg } from '@/utils/labels';
 
-import { ICstSubstitute } from '../backend/types';
-import { IConstituenta, IRSForm } from '../models/rsform';
+import { type ICstSubstitute } from '../backend/types';
+import { type IConstituenta, type IRSForm } from '../models/rsform';
 
 import { BadgeConstituenta } from './BadgeConstituenta';
 import { SelectConstituenta } from './SelectConstituenta';
@@ -28,7 +28,7 @@ interface IMultiSubstitution {
   is_suggestion: boolean;
 }
 
-interface PickSubstitutionsProps extends CProps.Styling {
+interface PickSubstitutionsProps extends Styling {
   value: ICstSubstitute[];
   onChange: (newValue: ICstSubstitute[]) => void;
 
@@ -58,9 +58,19 @@ export function PickSubstitutions({
   const [rightArgument, setRightArgument] = useState<ILibraryItem | null>(
     schemas.length === 1 && allowSelfSubstitution ? schemas[0] : null
   );
+  const leftItems = !leftArgument
+    ? []
+    : (leftArgument as IRSForm).items.filter(
+        cst => !value.find(item => item.original === cst.id) && (!filterCst || filterCst(cst))
+      );
 
   const [leftCst, setLeftCst] = useState<IConstituenta | null>(null);
   const [rightCst, setRightCst] = useState<IConstituenta | null>(null);
+  const rightItems = !rightArgument
+    ? []
+    : (rightArgument as IRSForm).items.filter(
+        cst => !value.find(item => item.original === cst.id) && (!filterCst || filterCst(cst))
+      );
 
   const [deleteRight, setDeleteRight] = useState(true);
   const toggleDelete = () => setDeleteRight(prev => !prev);
@@ -220,7 +230,7 @@ export function PickSubstitutions({
   return (
     <div className={clsx('flex flex-col', className)} {...restProps}>
       <div className='flex items-end gap-3 justify-stretch'>
-        <div className='flex-grow flex flex-col basis-1/2 gap-[0.125rem] border-x border-t clr-input rounded-t-md'>
+        <div className='grow flex flex-col basis-1/2 gap-[0.125rem] border-x border-t clr-input rounded-t-md'>
           <SelectLibraryItem
             noBorder
             placeholder='Выберите аргумент'
@@ -228,14 +238,7 @@ export function PickSubstitutions({
             value={leftArgument}
             onChange={setLeftArgument}
           />
-          <SelectConstituenta
-            noBorder
-            items={(leftArgument as IRSForm)?.items.filter(
-              cst => !value.find(item => item.original === cst.id) && (!filterCst || filterCst(cst))
-            )}
-            value={leftCst}
-            onChange={setLeftCst}
-          />
+          <SelectConstituenta noBorder items={leftItems} value={leftCst} onChange={setLeftCst} />
         </div>
         <div className='flex flex-col gap-1'>
           <MiniButton
@@ -258,7 +261,7 @@ export function PickSubstitutions({
           />
         </div>
 
-        <div className='flex-grow basis-1/2 flex flex-col gap-[0.125rem] border-x border-t clr-input rounded-t-md'>
+        <div className='grow basis-1/2 flex flex-col gap-[0.125rem] border-x border-t clr-input rounded-t-md'>
           <SelectLibraryItem
             noBorder
             placeholder='Выберите аргумент'
@@ -266,14 +269,7 @@ export function PickSubstitutions({
             value={rightArgument}
             onChange={setRightArgument}
           />
-          <SelectConstituenta
-            noBorder
-            items={(rightArgument as IRSForm)?.items.filter(
-              cst => !value.find(item => item.original === cst.id) && (!filterCst || filterCst(cst))
-            )}
-            value={rightCst}
-            onChange={setRightCst}
-          />
+          <SelectConstituenta noBorder items={rightItems} value={rightCst} onChange={setRightCst} />
         </div>
       </div>
 

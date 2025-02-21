@@ -1,5 +1,5 @@
 import { OperationType } from './backend/types';
-import { ISubstitutionErrorDescription, SubstitutionErrorType } from './models/oss';
+import { type ISubstitutionErrorDescription, SubstitutionErrorType } from './models/oss';
 
 /**
  * Retrieves label for {@link OperationType}.

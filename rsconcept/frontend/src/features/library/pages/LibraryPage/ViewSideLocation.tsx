@@ -7,7 +7,7 @@ import { BadgeHelp, HelpTopic } from '@/features/help';
 import { MiniButton } from '@/components/Control';
 import { SubfoldersIcon } from '@/components/DomainIcons';
 import { IconFolderEdit, IconFolderTree } from '@/components/Icons';
-import { CProps } from '@/components/props';
+import { type EventMouse } from '@/components/props';
 import { useWindowSize } from '@/hooks/useWindowSize';
 import { useFitHeight } from '@/stores/appLayout';
 import { PARAMETER, prefixes } from '@/utils/constants';
@@ -48,7 +48,7 @@ export function ViewSideLocation({ isVisible, onRenameLocation }: ViewSideLocati
 
   const maxHeight = useFitHeight('4.5rem');
 
-  function handleClickFolder(event: CProps.EventMouse, target: FolderNode) {
+  function handleClickFolder(event: EventMouse, target: FolderNode) {
     event.preventDefault();
     event.stopPropagation();
     if (event.ctrlKey || event.metaKey) {

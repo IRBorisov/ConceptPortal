@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 import { KEYS } from '@/backend/configuration';
 
 import { rsformsApi } from './api';
-import { ICheckConstituentaDTO } from './types';
+import { type ICheckConstituentaDTO } from './types';
 
 export const useCheckConstituenta = () => {
   const mutation = useMutation({

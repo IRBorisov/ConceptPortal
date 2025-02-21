@@ -1,23 +1,23 @@
 import { queryOptions } from '@tanstack/react-query';
 
-import { ITargetCst } from '@/features/rsform/backend/types';
+import { type ITargetCst } from '@/features/rsform/backend/types';
 
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/apiTransport';
 import { DELAYS, KEYS } from '@/backend/configuration';
 import { infoMsg } from '@/utils/labels';
 
 import {
-  IConstituentaReference,
-  ICstRelocateDTO,
-  IInputCreatedResponse,
-  IInputUpdateDTO,
-  IOperationCreatedResponse,
-  IOperationCreateDTO,
-  IOperationDeleteDTO,
-  IOperationPosition,
-  IOperationSchemaDTO,
-  IOperationUpdateDTO,
-  ITargetOperation,
+  type IConstituentaReference,
+  type ICstRelocateDTO,
+  type IInputCreatedResponse,
+  type IInputUpdateDTO,
+  type IOperationCreatedResponse,
+  type IOperationCreateDTO,
+  type IOperationDeleteDTO,
+  type IOperationPosition,
+  type IOperationSchemaDTO,
+  type IOperationUpdateDTO,
+  type ITargetOperation,
   schemaConstituentaReference,
   schemaOperationCreatedResponse,
   schemaOperationSchema

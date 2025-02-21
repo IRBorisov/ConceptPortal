@@ -45,7 +45,7 @@ export function EditorRSFormCard() {
           'flex flex-row flex-wrap px-6 pt-[1.9rem]'
         )}
       >
-        <FlexColumn className='flex-shrink'>
+        <FlexColumn className='shrink'>
           <FormRSForm />
           <EditorLibraryItem schema={schema} isAttachedToOSS={isAttachedToOSS} />
         </FlexColumn>

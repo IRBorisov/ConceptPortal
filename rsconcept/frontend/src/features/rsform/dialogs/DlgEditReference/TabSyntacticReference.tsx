@@ -5,7 +5,7 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import { TextInput } from '@/components/Input';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { DlgEditReferenceProps, IEditReferenceState } from './DlgEditReference';
+import { type DlgEditReferenceProps, type IEditReferenceState } from './DlgEditReference';
 
 export function TabSyntacticReference() {
   const { initial } = useDialogsStore(state => state.props as DlgEditReferenceProps);

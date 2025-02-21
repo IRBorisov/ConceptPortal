@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { KEYS } from '@/backend/configuration';
 
 import { ossApi } from './api';
-import { IInputUpdateDTO } from './types';
+import { type IInputUpdateDTO } from './types';
 
 export const useInputUpdate = () => {
   const client = useQueryClient();

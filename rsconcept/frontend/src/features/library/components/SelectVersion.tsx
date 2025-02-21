@@ -3,13 +3,13 @@
 import clsx from 'clsx';
 
 import { SelectSingle } from '@/components/Input';
-import { CProps } from '@/components/props';
+import { type Styling } from '@/components/props';
 
 import { labelVersion } from '../../rsform/labels';
-import { IVersionInfo } from '../backend/types';
-import { CurrentVersion } from '../models/library';
+import { type IVersionInfo } from '../backend/types';
+import { type CurrentVersion } from '../models/library';
 
-interface SelectVersionProps extends CProps.Styling {
+interface SelectVersionProps extends Styling {
   id?: string;
   value: CurrentVersion;
   onChange: (newValue: CurrentVersion) => void;

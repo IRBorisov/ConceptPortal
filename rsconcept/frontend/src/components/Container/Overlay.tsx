@@ -1,8 +1,8 @@
 import clsx from 'clsx';
 
-import { CProps } from '../props';
+import { type Styling } from '../props';
 
-interface OverlayProps extends CProps.Styling {
+interface OverlayProps extends Styling {
   /** Id of the overlay. */
   id?: string;
 

@@ -6,7 +6,7 @@ import {
   Background,
   getNodesBounds,
   getViewportForBounds,
-  Node,
+  type Node,
   ReactFlow,
   useEdgesState,
   useNodesState,
@@ -19,7 +19,7 @@ import { urls, useConceptNavigation } from '@/app';
 import { useLibrary } from '@/features/library';
 
 import { Overlay } from '@/components/Container';
-import { CProps } from '@/components/props';
+import { type EventMouse } from '@/components/props';
 import { useMainHeight } from '@/stores/appLayout';
 import { useTooltipsStore } from '@/stores/tooltips';
 import { APP_COLORS } from '@/styling/colors';
@@ -30,12 +30,12 @@ import { useInputCreate } from '../../../backend/useInputCreate';
 import { useMutatingOss } from '../../../backend/useMutatingOss';
 import { useOperationExecute } from '../../../backend/useOperationExecute';
 import { useUpdatePositions } from '../../../backend/useUpdatePositions';
-import { OssNode } from '../../../models/ossLayout';
+import { type OssNode } from '../../../models/ossLayout';
 import { useOSSGraphStore } from '../../../stores/ossGraph';
 import { useOssEdit } from '../OssEditContext';
 
 import { OssNodeTypes } from './graph/OssNodeTypes';
-import { ContextMenuData, NodeContextMenu } from './NodeContextMenu';
+import { type ContextMenuData, NodeContextMenu } from './NodeContextMenu';
 import { ToolbarOssGraph } from './ToolbarOssGraph';
 
 const ZOOM_MAX = 2;
@@ -236,7 +236,7 @@ export function OssFlow() {
       });
   }
 
-  function handleContextMenu(event: CProps.EventMouse, node: OssNode) {
+  function handleContextMenu(event: EventMouse, node: OssNode) {
     event.preventDefault();
     event.stopPropagation();
 
@@ -257,7 +257,7 @@ export function OssFlow() {
     handleContextMenuHide();
   }
 
-  function handleNodeDoubleClick(event: CProps.EventMouse, node: OssNode) {
+  function handleNodeDoubleClick(event: EventMouse, node: OssNode) {
     event.preventDefault();
     event.stopPropagation();
     if (node.data.operation.result) {

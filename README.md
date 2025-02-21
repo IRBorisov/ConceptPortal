@@ -62,8 +62,6 @@ This readme file is used mostly to document project dependencies and conventions
   <summary>npm install -D</summary>
   <pre>
   - tailwindcss
-  - postcss
-  - autoprefixer
   - eslint-plugin-import
   - eslint-plugin-react-compiler
   - eslint-plugin-simple-import-sort
@@ -73,6 +71,7 @@ This readme file is used mostly to document project dependencies and conventions
   - vite
   - jest
   - ts-jest
+  - @vitejs/plugin-react
   - @types/jest
   - @lezer/generator
   - @playwright/test

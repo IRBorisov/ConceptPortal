@@ -2,14 +2,14 @@
  * Module: Models for formal representation for systems of concepts.
  */
 
-import { ILibraryItemData, IVersionInfo } from '@/features/library/backend/types';
-import { CurrentVersion, ILibraryItemReference } from '@/features/library/models/library';
+import { type ILibraryItemData, type IVersionInfo } from '@/features/library/backend/types';
+import { type CurrentVersion, type ILibraryItemReference } from '@/features/library/models/library';
 
 import { Graph } from '@/models/Graph';
 
 import { CstType, ParsingStatus, ValueClass } from '../backend/types';
 
-import { IArgumentInfo } from './rslang';
+import { type IArgumentInfo } from './rslang';
 
 // CstType constant for category dividers in TemplateSchemas
 export const CATEGORY_CST_TYPE = CstType.THEOREM;

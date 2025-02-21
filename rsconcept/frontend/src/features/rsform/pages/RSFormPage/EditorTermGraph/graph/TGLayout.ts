@@ -1,9 +1,9 @@
-import { Edge, Node } from 'reactflow';
+import { type Edge, type Node } from 'reactflow';
 import dagre from '@dagrejs/dagre';
 
 import { PARAMETER } from '@/utils/constants';
 
-import { TGNodeData } from './TGNode';
+import { type TGNodeData } from './TGNode';
 
 export function applyLayout(nodes: Node<TGNodeData>[], edges: Edge[], subLabels?: boolean) {
   const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));

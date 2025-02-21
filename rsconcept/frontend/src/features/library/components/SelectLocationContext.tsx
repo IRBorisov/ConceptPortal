@@ -5,12 +5,12 @@ import clsx from 'clsx';
 import { MiniButton } from '@/components/Control';
 import { Dropdown, useDropdown } from '@/components/Dropdown';
 import { IconFolderTree } from '@/components/Icons';
-import { CProps } from '@/components/props';
+import { type EventMouse, type Styling } from '@/components/props';
 import { prefixes } from '@/utils/constants';
 
 import { SelectLocation } from './SelectLocation';
 
-interface SelectLocationContextProps extends CProps.Styling {
+interface SelectLocationContextProps extends Styling {
   value: string;
   onChange: (newValue: string) => void;
   title?: string;
@@ -26,7 +26,7 @@ export function SelectLocationContext({
 }: SelectLocationContextProps) {
   const menu = useDropdown();
 
-  function handleClick(event: CProps.EventMouse, newValue: string) {
+  function handleClick(event: EventMouse, newValue: string) {
     event.preventDefault();
     event.stopPropagation();
     menu.hide();

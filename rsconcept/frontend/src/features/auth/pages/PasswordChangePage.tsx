@@ -7,7 +7,7 @@ import { urls, useConceptNavigation } from '@/app';
 
 import { isAxiosError } from '@/backend/apiTransport';
 import { SubmitButton } from '@/components/Control';
-import { ErrorData, InfoError } from '@/components/InfoError';
+import { type ErrorData, InfoError } from '@/components/InfoError';
 import { TextInput } from '@/components/Input';
 import { Loader } from '@/components/Loader';
 import { useQueryStrings } from '@/hooks/useQueryStrings';

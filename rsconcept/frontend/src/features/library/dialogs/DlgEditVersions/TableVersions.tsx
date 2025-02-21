@@ -4,11 +4,11 @@ import { useIntl } from 'react-intl';
 import clsx from 'clsx';
 
 import { MiniButton } from '@/components/Control';
-import { createColumnHelper, DataTable, IConditionalStyle } from '@/components/DataTable';
+import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/DataTable';
 import { IconRemove } from '@/components/Icons';
 import { APP_COLORS } from '@/styling/colors';
 
-import { IVersionInfo } from '../../backend/types';
+import { type IVersionInfo } from '../../backend/types';
 
 interface TableVersionsProps {
   processing: boolean;

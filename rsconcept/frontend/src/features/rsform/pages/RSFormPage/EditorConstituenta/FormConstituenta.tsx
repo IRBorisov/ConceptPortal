@@ -10,18 +10,24 @@ import { Overlay } from '@/components/Container';
 import { SubmitButton } from '@/components/Control';
 import { IconChild, IconPredecessor, IconSave } from '@/components/Icons';
 import { TextArea } from '@/components/Input';
-import { CProps } from '@/components/props';
+import { type EventMouse } from '@/components/props';
 import { Indicator } from '@/components/View';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { errorMsg } from '@/utils/labels';
 
-import { CstType, ICstUpdateDTO, IExpressionParseDTO, ParsingStatus, schemaCstUpdate } from '../../../backend/types';
+import {
+  CstType,
+  type ICstUpdateDTO,
+  type IExpressionParseDTO,
+  ParsingStatus,
+  schemaCstUpdate
+} from '../../../backend/types';
 import { useCstUpdate } from '../../../backend/useCstUpdate';
 import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
 import { RefsInput } from '../../../components/RefsInput';
 import { labelCstTypification, labelTypification } from '../../../labels';
-import { IConstituenta, IRSForm } from '../../../models/rsform';
+import { type IConstituenta, type IRSForm } from '../../../models/rsform';
 import { isBaseSet, isBasicConcept, isFunctional } from '../../../models/rsformAPI';
 import { EditorRSExpression } from '../EditorRSExpression';
 
@@ -100,7 +106,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
     return cstUpdate({ itemID: schema.id, data }).then(() => reset({ ...data }));
   }
 
-  function handleTypeGraph(event: CProps.EventMouse) {
+  function handleTypeGraph(event: EventMouse) {
     if ((localParse && !localParse.parseResult) || activeCst.parse.status !== ParsingStatus.VERIFIED) {
       toast.error(errorMsg.typeStructureFailed);
       return;

@@ -1,9 +1,9 @@
 import clsx from 'clsx';
 
-import { CProps } from '@/components/props';
+import { type Styling, type Titled } from '@/components/props';
 import { globalIDs } from '@/utils/constants';
 
-interface IndicatorProps extends CProps.Titled, CProps.Styling {
+interface IndicatorProps extends Titled, Styling {
   /** Icon to display. */
   icon: React.ReactNode;
 
@@ -19,7 +19,7 @@ export function Indicator({ icon, title, titleHtml, hideTitle, noPadding, classN
     <div
       className={clsx(
         'clr-text-controls',
-        'outline-none',
+        'outline-hidden',
         {
           'px-1 py-1': !noPadding
         },

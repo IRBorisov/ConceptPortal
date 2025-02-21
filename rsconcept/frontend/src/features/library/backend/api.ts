@@ -1,8 +1,8 @@
 import { queryOptions } from '@tanstack/react-query';
 
 import {
-  IRSFormDTO,
-  IVersionCreatedResponse,
+  type IRSFormDTO,
+  type IVersionCreatedResponse,
   schemaRSForm,
   schemaVersionCreatedResponse
 } from '@/features/rsform/backend/types';
@@ -13,14 +13,14 @@ import { infoMsg } from '@/utils/labels';
 
 import {
   AccessPolicy,
-  ICloneLibraryItemDTO,
-  ICreateLibraryItemDTO,
-  ILibraryItem,
-  IRenameLocationDTO,
-  IUpdateLibraryItemDTO,
-  IVersionCreateDTO,
-  IVersionInfo,
-  IVersionUpdateDTO,
+  type ICloneLibraryItemDTO,
+  type ICreateLibraryItemDTO,
+  type ILibraryItem,
+  type IRenameLocationDTO,
+  type IUpdateLibraryItemDTO,
+  type IVersionCreateDTO,
+  type IVersionInfo,
+  type IVersionUpdateDTO,
   schemaLibraryItem,
   schemaLibraryItemArray,
   schemaVersionInfo

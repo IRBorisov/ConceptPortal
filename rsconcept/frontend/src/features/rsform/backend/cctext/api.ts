@@ -1,7 +1,13 @@
 import { axiosPost } from '@/backend/apiTransport';
 import { KEYS } from '@/backend/configuration';
 
-import { ILexemeResponse, ITextResult, IWordFormDTO, schemaLexemeResponse, schemaTextResult } from './types';
+import {
+  type ILexemeResponse,
+  type ITextResult,
+  type IWordFormDTO,
+  schemaLexemeResponse,
+  schemaTextResult
+} from './types';
 
 export const cctextApi = {
   baseKey: KEYS.cctext,

@@ -1,14 +1,14 @@
 import clsx from 'clsx';
 
-import { CProps } from '@/components/props';
+import { type Styling } from '@/components/props';
 import { useTooltipsStore } from '@/stores/tooltips';
 import { APP_COLORS } from '@/styling/colors';
 import { globalIDs } from '@/utils/constants';
 
 import { colorFgCstStatus } from '../colors';
-import { CstClass, IConstituenta } from '../models/rsform';
+import { CstClass, type IConstituenta } from '../models/rsform';
 
-interface BadgeConstituentaProps extends CProps.Styling {
+interface BadgeConstituentaProps extends Styling {
   /** Prefix for tooltip ID. */
   prefixID?: string;
 

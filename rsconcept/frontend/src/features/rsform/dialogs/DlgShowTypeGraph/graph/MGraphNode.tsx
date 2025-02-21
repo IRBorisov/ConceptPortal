@@ -6,7 +6,7 @@ import { APP_COLORS } from '@/styling/colors';
 import { globalIDs } from '@/utils/constants';
 
 import { colorBgTMGraphNode } from '../../../colors';
-import { TMGraphNode } from '../../../models/TMGraph';
+import { type TMGraphNode } from '../../../models/TMGraph';
 
 /**
  * Represents graph TMGraph node internal data.

@@ -6,14 +6,14 @@ import clsx from 'clsx';
 import { MiniButton } from '@/components/Control';
 import { createColumnHelper, DataTable } from '@/components/DataTable';
 import { IconMoveDown, IconMoveUp, IconRemove } from '@/components/Icons';
-import { CProps } from '@/components/props';
+import { type Styling } from '@/components/props';
 import { NoData } from '@/components/View';
 
-import { IOperation } from '../models/oss';
+import { type IOperation } from '../models/oss';
 
 import { SelectOperation } from './SelectOperation';
 
-interface PickMultiOperationProps extends CProps.Styling {
+interface PickMultiOperationProps extends Styling {
   value: number[];
   onChange: (newValue: number[]) => void;
   items: IOperation[];

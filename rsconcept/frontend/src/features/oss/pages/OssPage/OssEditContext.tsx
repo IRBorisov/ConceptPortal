@@ -12,9 +12,9 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { promptText } from '@/utils/labels';
 
-import { IOperationPosition, OperationType } from '../../backend/types';
+import { type IOperationPosition, OperationType } from '../../backend/types';
 import { useOssSuspense } from '../../backend/useOSS';
-import { IOperationSchema } from '../../models/oss';
+import { type IOperationSchema } from '../../models/oss';
 
 export enum OssTabID {
   CARD = 0,

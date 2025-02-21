@@ -1,7 +1,7 @@
-import { Extension } from '@codemirror/state';
+import { type Extension } from '@codemirror/state';
 import { EditorView } from '@uiw/react-codemirror';
 
-import { IRSForm } from '../../models/rsform';
+import { type IRSForm } from '../../models/rsform';
 
 import { findAliasAt } from './utils';
 

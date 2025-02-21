@@ -6,7 +6,7 @@ import { APP_COLORS } from '@/styling/colors';
 
 import { colorBgSyntaxTree } from '../../../colors';
 import { labelSyntaxTree } from '../../../labels';
-import { ISyntaxTreeNode } from '../../../models/rslang';
+import { type ISyntaxTreeNode } from '../../../models/rslang';
 
 const FONT_SIZE_MAX = 14;
 const FONT_SIZE_MED = 12;

@@ -3,21 +3,21 @@
 import { useState } from 'react';
 import clsx from 'clsx';
 
-import { createColumnHelper, DataTable, RowSelectionState } from '@/components/DataTable';
+import { createColumnHelper, DataTable, type RowSelectionState } from '@/components/DataTable';
 import { SearchBar } from '@/components/Input';
-import { CProps } from '@/components/props';
+import { type Styling } from '@/components/props';
 import { NoData } from '@/components/View';
 import { Graph } from '@/models/Graph';
 
 import { describeConstituenta } from '../labels';
-import { IConstituenta, IRSForm } from '../models/rsform';
+import { type IConstituenta, type IRSForm } from '../models/rsform';
 import { isBasicConcept, matchConstituenta } from '../models/rsformAPI';
 import { CstMatchMode } from '../stores/cstSearch';
 
 import { BadgeConstituenta } from './BadgeConstituenta';
 import { ToolbarGraphSelection } from './ToolbarGraphSelection';
 
-interface PickMultiConstituentaProps extends CProps.Styling {
+interface PickMultiConstituentaProps extends Styling {
   id?: string;
   value: number[];
   onChange: (newValue: number[]) => void;
@@ -106,7 +106,7 @@ export function PickMultiConstituenta({
         <SearchBar
           id='dlg_constituents_search'
           noBorder
-          className='min-w-[6rem] pr-2 flex-grow'
+          className='min-w-[6rem] pr-2 grow'
           query={filterText}
           onChangeQuery={setFilterText}
         />

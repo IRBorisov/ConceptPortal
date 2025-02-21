@@ -5,7 +5,7 @@ import { useUpdateTimestamp } from '@/features/library';
 import { KEYS } from '@/backend/configuration';
 
 import { rsformsApi } from './api';
-import { IConstituentaList } from './types';
+import { type IConstituentaList } from './types';
 
 export const useCstDelete = () => {
   const client = useQueryClient();

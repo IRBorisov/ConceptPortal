@@ -8,7 +8,7 @@ import { IconRemove } from '@/components/Icons';
 import { NoData } from '@/components/View';
 
 import { BadgeWordForm } from '../../components/BadgeWordForm';
-import { IWordForm } from '../../models/language';
+import { type IWordForm } from '../../models/language';
 
 interface TableWordFormsProps {
   forms: IWordForm[];

@@ -1,228 +1,232 @@
-/**
- * Module: Custom styling.
- */
-@import './constants.css';
+@utility font-main {
+  font-family: var(--font-main);
+}
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@utility font-controls {
+  font-family: var(--font-ui);
+  font-weight: 600;
+}
 
-@layer utilities {
-  .font-main {
-    font-family: var(--font-main);
-  }
-  .font-controls {
-    font-family: var(--font-ui);
-    font-weight: 600;
-  }
-  .font-math {
-    font-family: var(--font-math);
+@utility font-math {
+  font-family: var(--font-math);
+}
+
+@utility clr-input {
+  background-color: var(--clr-prim-0);
+  &:disabled {
+    background-color: var(--clr-prim-100);
   }
 }
 
-@layer components {
-  .clr-input {
-    background-color: var(--clr-prim-0);
-    &:disabled {
-      background-color: var(--clr-prim-100);
-    }
-  }
+@utility clr-selected {
+  color: var(--clr-prim-999);
+  background-color: var(--clr-sec-200);
+}
 
-  .clr-selected {
-    color: var(--clr-prim-999);
-    background-color: var(--clr-sec-200);
-  }
+@utility clr-btn-default {
+  color: var(--clr-prim-999);
+  background-color: var(--clr-prim-200);
 
-  .clr-btn-default {
-    color: var(--clr-prim-999);
-    background-color: var(--clr-prim-200);
-
-    &:disabled {
-      color: var(--clr-prim-800);
-      background-color: var(--clr-prim-200);
-    }
-
-    &:hover:not(:disabled) {
-      color: var(--clr-prim-999);
-      background-color: var(--clr-sec-100);
-    }
-  }
-
-  .clr-btn-primary {
-    color: var(--clr-prim-999);
-    background-color: var(--clr-sec-200);
-
-    &:disabled {
-      color: var(--clr-prim-800);
-      background-color: var(--clr-prim-200);
-    }
-
-    &:hover:not(:disabled),
-    &:focus-visible {
-      color: var(--clr-sec-0);
-      background-color: var(--clr-sec-600);
-    }
-
-    &:focus-visible,
-    .focus-frame:has(:focus-visible) {
-      outline-width: 2px;
-      outline-style: solid;
-      outline-color: var(--clr-sec-600);
-    }
-  }
-
-  .clr-btn-nav {
+  &:disabled {
     color: var(--clr-prim-800);
-
-    &:hover:not(:disabled) {
-      background-color: var(--clr-sec-100);
-    }
-
-    &:disabled {
-      color: var(--clr-prim-600);
-    }
+    background-color: var(--clr-prim-200);
   }
 
-  .clr-hover:hover:not(:disabled) {
+  &:hover:not(:disabled) {
     color: var(--clr-prim-999);
     background-color: var(--clr-sec-100);
   }
+}
 
-  :is(.clr-outline, .focus-frame):focus-visible,
+@utility clr-btn-primary {
+  color: var(--clr-prim-999);
+  background-color: var(--clr-sec-200);
+
+  &:disabled {
+    color: var(--clr-prim-800);
+    background-color: var(--clr-prim-200);
+  }
+
+  &:hover:not(:disabled),
+  &:focus-visible {
+    color: var(--clr-sec-0);
+    background-color: var(--clr-sec-600);
+  }
+
+  &:focus-visible,
   .focus-frame:has(:focus-visible) {
     outline-width: 2px;
     outline-style: solid;
     outline-color: var(--clr-sec-600);
   }
+}
 
-  .clr-text-default,
-  input:disabled:not(::placeholder),
-  textarea:disabled:not(::placeholder) {
-    opacity: 1;
-    -webkit-text-fill-color: var(--clr-prim-999);
+@utility clr-btn-nav {
+  color: var(--clr-prim-800);
+
+  &:hover:not(:disabled) {
+    background-color: var(--clr-sec-100);
+  }
+
+  &:disabled {
+    color: var(--clr-prim-600);
+  }
+}
+
+@utility clr-hover {
+  &:hover:not(:disabled) {
     color: var(--clr-prim-999);
+    background-color: var(--clr-sec-100);
+  }
+}
+
+@utility clr-outline {
+  :is(&, .focus-frame):focus-visible {
+    outline-width: 2px;
+    outline-style: solid;
+    outline-color: var(--clr-sec-600);
+  }
+}
+
+@utility focus-frame {
+  :is(.clr-outline, &):focus-visible {
+    outline-width: 2px;
+    outline-style: solid;
+    outline-color: var(--clr-sec-600);
   }
 
-  .clr-text-controls {
-    color: var(--clr-prim-800);
-    background-color: transparent;
-    &:disabled {
-      color: var(--clr-prim-600);
-    }
+  &:has(:focus-visible) {
+    outline-width: 2px;
+    outline-style: solid;
+    outline-color: var(--clr-sec-600);
   }
+}
 
-  .icon-primary {
-    :not([disabled]) > & {
-      color: var(--clr-sec-800);
-    }
+@utility clr-text-default {
+  opacity: 1;
+  -webkit-text-fill-color: var(--clr-prim-999);
+  color: var(--clr-prim-999);
+}
+
+@utility clr-text-controls {
+  color: var(--clr-prim-800);
+  background-color: transparent;
+  &:disabled {
+    color: var(--clr-prim-600);
   }
+}
 
-  .icon-red {
-    :not([disabled]) > & {
-      color: var(--clr-warn-600);
-    }
-  }
-
-  .icon-green {
-    :not([disabled]) > & {
-      color: var(--clr-ok-600);
-    }
-  }
-
-  .inline-icon {
-    display: inline-block;
-    font-size: 1.25rem;
-    margin-left: 0.1rem;
-    margin-right: 0.1rem;
-    transform: translate(0, -0.2rem);
+@utility icon-primary {
+  :not([disabled]) > & {
     color: var(--clr-sec-800);
   }
+}
 
-  .cc-tab-tools {
-    top: 1.7rem;
-    right: 50%;
-    padding-top: 0.4rem;
-    transform: translate(50%, 0%);
+@utility icon-red {
+  :not([disabled]) > & {
+    color: var(--clr-warn-600);
   }
+}
 
-  .cc-label {
-    font-size: 0.875rem;
-    line-height: 1.25rem;
-    font-weight: 500;
-    cursor: default;
-    user-select: text;
-    white-space: nowrap;
+@utility icon-green {
+  :not([disabled]) > & {
+    color: var(--clr-ok-600);
   }
+}
 
-  .cc-column {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
+@utility inline-icon {
+  display: inline-block;
+  font-size: 1.25rem;
+  margin-left: 0.1rem;
+  margin-right: 0.1rem;
+  transform: translate(0, -0.2rem);
+  color: var(--clr-sec-800);
+}
+
+@utility cc-tab-tools {
+  top: 1.7rem;
+  right: 50%;
+  padding-top: 0.4rem;
+  transform: translate(50%, 0%);
+}
+
+@utility cc-label {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+  cursor: default;
+  user-select: text;
+  white-space: nowrap;
+}
+
+@utility cc-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+@utility cc-icons {
+  display: flex;
+  gap: 0.25rem;
+}
+
+@utility cc-fit-content {
+  field-sizing: content;
+}
+
+@utility cc-scroll-row {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+@utility cc-scroll-y {
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  scroll-snap-type: y mandatory;
+}
+
+@utility cc-blur {
+  backdrop-filter: blur(3px);
+}
+
+@utility cc-shadow-border {
+  box-shadow: 0 1px 2px 0 var(--clr-prim-400);
+}
+
+@utility cc-fade-in {
+  opacity: 1;
+
+  transition-property: opacity;
+  transition-timing-function: var(--transition-bezier);
+  transition-duration: var(--duration-fade);
+
+  @starting-style {
+    opacity: 0;
   }
+}
 
-  .cc-icons {
-    display: flex;
-    gap: 0.25rem;
+@utility cc-animate-position {
+  transition-property: transform top left bottom right margin padding;
+  transition-timing-function: var(--transition-bezier);
+  transition-duration: var(--duration-move);
+}
+
+@utility cc-animate-modal {
+  clip-path: inset(0% 0% 0% 0%);
+  opacity: 1;
+
+  transition-property: clip-path, opacity;
+  transition-timing-function: var(--transition-bezier);
+  transition-duration: var(--duration-modal);
+
+  @starting-style {
+    clip-path: inset(50% 50% 50% 50%);
+    opacity: 0;
   }
+}
 
-  .cc-fit-content {
-    field-sizing: content;
-  }
-
-  .cc-scroll-row {
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
-  }
-
-  .cc-scroll-y {
-    overflow-y: auto;
-    overscroll-behavior-y: contain;
-    scroll-snap-type: y mandatory;
-  }
-
-  .cc-blur {
-    backdrop-filter: blur(3px);
-  }
-
-  .cc-shadow-border {
-    box-shadow: 0 1px 2px 0 var(--clr-prim-400);
-  }
-
-  .cc-fade-in {
-    opacity: 1;
-
-    transition-property: opacity;
-    transition-timing-function: var(--transition-bezier);
-    transition-duration: var(--duration-fade);
-
-    @starting-style {
-      opacity: 0;
-    }
-  }
-
-  .cc-animate-position {
-    transition-property: transform top left bottom right margin padding;
-    transition-timing-function: var(--transition-bezier);
-    transition-duration: var(--duration-move);
-  }
-
-  .cc-animate-modal {
-    clip-path: inset(0% 0% 0% 0%);
-    opacity: 1;
-
-    transition-property: clip-path, opacity;
-    transition-timing-function: var(--transition-bezier);
-    transition-duration: var(--duration-modal);
-
-    @starting-style {
-      clip-path: inset(50% 50% 50% 50%);
-      opacity: 0;
-    }
-  }
-
-  .cc-animate-color {
-    transition-property: color, background-color;
-    transition-timing-function: var(--transition-bezier);
-    transition-duration: var(--duration-select);
-  }
+@utility cc-animate-color {
+  transition-property: color, background-color;
+  transition-timing-function: var(--transition-bezier);
+  transition-duration: var(--duration-select);
 }

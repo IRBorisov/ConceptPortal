@@ -1,6 +1,6 @@
 import { syntaxTree } from '@codemirror/language';
-import { Extension } from '@codemirror/state';
-import { hoverTooltip, TooltipView } from '@codemirror/view';
+import { type Extension } from '@codemirror/state';
+import { hoverTooltip, type TooltipView } from '@codemirror/view';
 import clsx from 'clsx';
 
 import { APP_COLORS } from '@/styling/colors';
@@ -8,9 +8,9 @@ import { findContainedNodes } from '@/utils/codemirror';
 
 import { colorFgGrammeme } from '../../colors';
 import { describeConstituentaTerm, labelGrammeme } from '../../labels';
-import { IEntityReference, ISyntacticReference } from '../../models/language';
+import { type IEntityReference, type ISyntacticReference } from '../../models/language';
 import { parseGrammemes } from '../../models/languageAPI';
-import { IConstituenta, IRSForm } from '../../models/rsform';
+import { type IConstituenta, type IRSForm } from '../../models/rsform';
 
 import { RefEntity } from './parse/parser.terms';
 import { findReferenceAt } from './utils';

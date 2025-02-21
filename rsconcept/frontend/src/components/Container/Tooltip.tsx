@@ -1,8 +1,8 @@
 'use client';
 
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import { ITooltip, Tooltip as TooltipImpl } from 'react-tooltip';
+import { type ITooltip, Tooltip as TooltipImpl } from 'react-tooltip';
 import clsx from 'clsx';
 
 import { usePreferencesStore } from '@/stores/preferences';

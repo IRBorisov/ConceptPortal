@@ -3,20 +3,20 @@
 import { useState } from 'react';
 import clsx from 'clsx';
 
-import { createColumnHelper, DataTable, IConditionalStyle } from '@/components/DataTable';
+import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/DataTable';
 import { SearchBar } from '@/components/Input';
-import { CProps } from '@/components/props';
+import { type Styling } from '@/components/props';
 import { NoData } from '@/components/View';
 import { APP_COLORS } from '@/styling/colors';
 
 import { describeConstituenta } from '../labels';
-import { IConstituenta } from '../models/rsform';
+import { type IConstituenta } from '../models/rsform';
 import { matchConstituenta } from '../models/rsformAPI';
 import { CstMatchMode } from '../stores/cstSearch';
 
 import { BadgeConstituenta } from './BadgeConstituenta';
 
-interface PickConstituentaProps extends CProps.Styling {
+interface PickConstituentaProps extends Styling {
   id?: string;
   items: IConstituenta[];
   value: IConstituenta | null;
@@ -73,10 +73,10 @@ export function PickConstituenta({
   ];
 
   return (
-    <div className={clsx('border divide-y', className)} {...restProps}>
+    <div className={clsx('border', className)} {...restProps}>
       <SearchBar
         id={id ? `${id}__search` : undefined}
-        className='clr-input rounded-t-md'
+        className='clr-input border-b rounded-t-md'
         noBorder
         query={filterText}
         onChangeQuery={newValue => setFilterText(newValue)}

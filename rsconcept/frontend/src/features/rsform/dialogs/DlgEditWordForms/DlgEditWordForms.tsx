@@ -18,9 +18,9 @@ import { useIsProcessingCctext } from '../../backend/cctext/useIsProcessingCctex
 import { useParseText } from '../../backend/cctext/useParseText';
 import { useCstUpdate } from '../../backend/useCstUpdate';
 import { SelectMultiGrammeme } from '../../components/SelectMultiGrammeme';
-import { Grammeme, IGrammemeOption, IWordForm, supportedGrammemes } from '../../models/language';
+import { Grammeme, type IGrammemeOption, type IWordForm, supportedGrammemes } from '../../models/language';
 import { parseGrammemes, supportedGrammeOptions, wordFormEquals } from '../../models/languageAPI';
-import { IConstituenta } from '../../models/rsform';
+import { type IConstituenta } from '../../models/rsform';
 
 import { TableWordForms } from './TableWordForms';
 

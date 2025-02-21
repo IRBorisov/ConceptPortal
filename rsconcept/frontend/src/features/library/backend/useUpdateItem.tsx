@@ -1,12 +1,12 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { IOperationSchemaDTO } from '@/features/oss/backend/types';
-import { IRSFormDTO } from '@/features/rsform/backend/types';
+import { type IOperationSchemaDTO } from '@/features/oss/backend/types';
+import { type IRSFormDTO } from '@/features/rsform/backend/types';
 
 import { KEYS } from '@/backend/configuration';
 
 import { libraryApi } from './api';
-import { ILibraryItem, IUpdateLibraryItemDTO, LibraryItemType } from './types';
+import { type ILibraryItem, type IUpdateLibraryItemDTO, LibraryItemType } from './types';
 
 export const useUpdateItem = () => {
   const client = useQueryClient();

@@ -1,11 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { ILibraryItem } from '@/features/library/backend/types';
+import { type ILibraryItem } from '@/features/library/backend/types';
 
 import { KEYS } from '@/backend/configuration';
 
 import { rsformsApi } from './api';
-import { IRSFormUploadDTO } from './types';
+import { type IRSFormUploadDTO } from './types';
 
 export const useUploadTRS = () => {
   const client = useQueryClient();

@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect } from 'react';
-import { Edge, MarkerType, Node, ReactFlow, useEdgesState, useNodesState } from 'reactflow';
+import { type Edge, MarkerType, type Node, ReactFlow, useEdgesState, useNodesState } from 'reactflow';
 
-import { SyntaxTree } from '../../models/rslang';
+import { type SyntaxTree } from '../../models/rslang';
 
 import { ASTEdgeTypes } from './graph/ASTEdgeTypes';
 import { applyLayout } from './graph/ASTLayout';

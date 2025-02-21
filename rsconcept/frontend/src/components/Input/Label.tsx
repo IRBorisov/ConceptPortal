@@ -1,8 +1,8 @@
 import clsx from 'clsx';
 
-import { CProps } from '../props';
+import { type Label as LabelStyle } from '../props';
 
-interface LabelProps extends CProps.Label {
+interface LabelProps extends LabelStyle {
   /** Text to display. */
   text?: string;
 }

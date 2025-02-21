@@ -2,11 +2,11 @@ import { APP_COLORS } from '@/styling/colors';
 import { PARAMETER } from '@/utils/constants';
 
 import { TokenID } from './backend/types';
-import { GramData, Grammeme, NounGrams, PartOfSpeech, VerbGrams } from './models/language';
-import { CstClass, ExpressionStatus, IConstituenta } from './models/rsform';
-import { ISyntaxTreeNode } from './models/rslang';
-import { TMGraphNode } from './models/TMGraph';
-import { GraphColoring } from './stores/termGraph';
+import { type GramData, Grammeme, NounGrams, PartOfSpeech, VerbGrams } from './models/language';
+import { CstClass, ExpressionStatus, type IConstituenta } from './models/rsform';
+import { type ISyntaxTreeNode } from './models/rslang';
+import { type TMGraphNode } from './models/TMGraph';
+import { type GraphColoring } from './stores/termGraph';
 
 /**
  * Represents Brackets highlights theme.

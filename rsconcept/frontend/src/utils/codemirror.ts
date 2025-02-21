@@ -3,7 +3,7 @@
  */
 import { syntaxTree } from '@codemirror/language';
 import { NodeType, Tree, TreeCursor } from '@lezer/common';
-import { ReactCodeMirrorRef, SelectionRange } from '@uiw/react-codemirror';
+import { type ReactCodeMirrorRef, SelectionRange } from '@uiw/react-codemirror';
 
 /**
  * Represents syntax tree node data.

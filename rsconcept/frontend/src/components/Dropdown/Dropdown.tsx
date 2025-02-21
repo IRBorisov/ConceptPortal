@@ -2,9 +2,9 @@ import clsx from 'clsx';
 
 import { PARAMETER } from '@/utils/constants';
 
-import { CProps } from '../props';
+import { type Styling } from '../props';
 
-interface DropdownProps extends CProps.Styling {
+interface DropdownProps extends Styling {
   /** Indicates whether the dropdown should stretch to the left. */
   stretchLeft?: boolean;
 

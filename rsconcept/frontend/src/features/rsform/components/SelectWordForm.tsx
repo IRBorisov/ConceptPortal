@@ -2,10 +2,10 @@
 
 import clsx from 'clsx';
 
-import { CProps } from '@/components/props';
+import { type Styling } from '@/components/props';
 import { prefixes } from '@/utils/constants';
 
-import { Grammeme, IGrammemeOption } from '../models/language';
+import { Grammeme, type IGrammemeOption } from '../models/language';
 import { supportedGrammeOptions } from '../models/languageAPI';
 
 import { WordformButton } from './WordformButton';
@@ -29,7 +29,7 @@ const DefaultWordForms = [
   { text: 'мн пред', example: 'ручках', grams: [Grammeme.plur, Grammeme.loct] }
 ] as const;
 
-interface SelectWordFormProps extends CProps.Styling {
+interface SelectWordFormProps extends Styling {
   value: IGrammemeOption[];
   onChange: React.Dispatch<React.SetStateAction<IGrammemeOption[]>>;
 }

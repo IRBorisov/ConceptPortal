@@ -12,9 +12,14 @@ import { ModalForm } from '@/components/Modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/Tabs';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { IOperationPosition, IOperationUpdateDTO, OperationType, schemaOperationUpdate } from '../../backend/types';
+import {
+  type IOperationPosition,
+  type IOperationUpdateDTO,
+  OperationType,
+  schemaOperationUpdate
+} from '../../backend/types';
 import { useOperationUpdate } from '../../backend/useOperationUpdate';
-import { IOperation, IOperationSchema } from '../../models/oss';
+import { type IOperation, type IOperationSchema } from '../../models/oss';
 
 import { TabArguments } from './TabArguments';
 import { TabOperation } from './TabOperation';

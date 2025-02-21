@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { KEYS } from '@/backend/configuration';
 
 import { ossApi } from './api';
-import { ITargetOperation } from './types';
+import { type ITargetOperation } from './types';
 
 export const useOperationExecute = () => {
   const client = useQueryClient();

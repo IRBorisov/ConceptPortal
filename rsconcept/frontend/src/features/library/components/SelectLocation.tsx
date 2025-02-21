@@ -5,15 +5,15 @@ import clsx from 'clsx';
 
 import { MiniButton } from '@/components/Control';
 import { IconFolder, IconFolderClosed, IconFolderEmpty, IconFolderOpened } from '@/components/Icons';
-import { CProps } from '@/components/props';
+import { type EventMouse, type Styling } from '@/components/props';
 
 import { useFolders } from '../backend/useFolders';
 import { labelFolderNode } from '../labels';
 import { FolderNode } from '../models/FolderTree';
 
-interface SelectLocationProps extends CProps.Styling {
+interface SelectLocationProps extends Styling {
   value: string;
-  onClick: (event: CProps.EventMouse, target: FolderNode) => void;
+  onClick: (event: EventMouse, target: FolderNode) => void;
 
   prefix: string;
   dense?: boolean;
@@ -44,7 +44,7 @@ export function SelectLocation({ value, dense, prefix, onClick, className, style
     );
   }
 
-  function handleClickFold(event: CProps.EventMouse, target: FolderNode, showChildren: boolean) {
+  function handleClickFold(event: EventMouse, target: FolderNode, showChildren: boolean) {
     event.preventDefault();
     event.stopPropagation();
     onFoldItem(target, showChildren);

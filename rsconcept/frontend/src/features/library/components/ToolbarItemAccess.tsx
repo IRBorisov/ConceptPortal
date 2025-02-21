@@ -8,7 +8,7 @@ import { IconImmutable, IconMutable } from '@/components/Icons';
 import { Label } from '@/components/Input';
 import { PARAMETER } from '@/utils/constants';
 
-import { AccessPolicy, ILibraryItem } from '../backend/types';
+import { AccessPolicy, type ILibraryItem } from '../backend/types';
 import { useMutatingLibrary } from '../backend/useMutatingLibrary';
 import { useSetAccessPolicy } from '../backend/useSetAccessPolicy';
 

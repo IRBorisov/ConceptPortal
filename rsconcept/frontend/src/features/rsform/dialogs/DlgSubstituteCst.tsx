@@ -10,10 +10,10 @@ import { ErrorField } from '@/components/Input';
 import { ModalForm } from '@/components/Modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { ICstSubstitutionsDTO, schemaCstSubstitutions } from '../backend/types';
+import { type ICstSubstitutionsDTO, schemaCstSubstitutions } from '../backend/types';
 import { useCstSubstitute } from '../backend/useCstSubstitute';
 import { PickSubstitutions } from '../components/PickSubstitutions';
-import { IRSForm } from '../models/rsform';
+import { type IRSForm } from '../models/rsform';
 
 export interface DlgSubstituteCstProps {
   schema: IRSForm;

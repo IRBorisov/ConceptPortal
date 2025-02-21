@@ -12,12 +12,12 @@ import { isAxiosError } from '@/backend/apiTransport';
 import { FlexColumn, Overlay, Tooltip } from '@/components/Container';
 import { Button, SubmitButton, TextURL } from '@/components/Control';
 import { IconHelp } from '@/components/Icons';
-import { ErrorData } from '@/components/InfoError';
+import { type ErrorData } from '@/components/InfoError';
 import { Checkbox, TextInput } from '@/components/Input';
 import { PrettyJson } from '@/components/View';
 import { globalIDs, patterns } from '@/utils/constants';
 
-import { IUserSignupDTO, schemaUserSignup } from '../../backend/types';
+import { type IUserSignupDTO, schemaUserSignup } from '../../backend/types';
 import { useSignup } from '../../backend/useSignup';
 
 export function FormSignup() {

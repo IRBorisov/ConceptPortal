@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware';
 
 import { toggleTristateFlag } from '@/utils/utils';
 
-import { ILibraryFilter, LocationHead } from '../models/library';
+import { type ILibraryFilter, LocationHead } from '../models/library';
 
 interface LibrarySearchStore {
   folderMode: boolean;

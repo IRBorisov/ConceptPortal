@@ -2,7 +2,7 @@
  * Module: API for formal representation for systems of concepts.
  */
 
-import { ILibraryItem } from '@/features/library/backend/types';
+import { type ILibraryItem } from '@/features/library/backend/types';
 import { BASIC_SCHEMAS } from '@/features/library/models/library';
 
 import { TextMatcher } from '@/utils/utils';
@@ -10,7 +10,7 @@ import { TextMatcher } from '@/utils/utils';
 import { CstType, ParsingStatus, ValueClass } from '../backend/types';
 import { CstMatchMode } from '../stores/cstSearch';
 
-import { CATEGORY_CST_TYPE, CstClass, ExpressionStatus, IConstituenta, IRSForm } from './rsform';
+import { CATEGORY_CST_TYPE, CstClass, ExpressionStatus, type IConstituenta, type IRSForm } from './rsform';
 
 /**
  * Checks if a given target {@link IConstituenta} matches the specified query using the provided matching mode.

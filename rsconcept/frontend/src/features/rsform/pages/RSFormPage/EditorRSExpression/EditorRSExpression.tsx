@@ -2,23 +2,28 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
-import { ReactCodeMirrorRef } from '@uiw/react-codemirror';
+import { type ReactCodeMirrorRef } from '@uiw/react-codemirror';
 
 import { BadgeHelp, HelpTopic } from '@/features/help';
 
 import { Overlay } from '@/components/Container';
-import { CProps } from '@/components/props';
+import { type EventMouse } from '@/components/props';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { errorMsg } from '@/utils/labels';
 
-import { ICheckConstituentaDTO, IExpressionParseDTO, IRSErrorDescription, TokenID } from '../../../backend/types';
+import {
+  type ICheckConstituentaDTO,
+  type IExpressionParseDTO,
+  type IRSErrorDescription,
+  TokenID
+} from '../../../backend/types';
 import { useCheckConstituenta } from '../../../backend/useCheckConstituenta';
 import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
 import { RSInput } from '../../../components/RSInput';
 import { parser as rslangParser } from '../../../components/RSInput/rslang/parserAST';
 import { RSTextWrapper } from '../../../components/RSInput/textEditing';
-import { IConstituenta } from '../../../models/rsform';
+import { type IConstituenta } from '../../../models/rsform';
 import { getDefinitionPrefix } from '../../../models/rsformAPI';
 import { transformAST } from '../../../models/rslangAPI';
 import { useRSEdit } from '../RSEditContext';
@@ -42,7 +47,7 @@ interface EditorRSExpressionProps {
 
   onChangeLocalParse: (typification: IExpressionParseDTO) => void;
   onOpenEdit: (cstID: number) => void;
-  onShowTypeGraph: (event: CProps.EventMouse) => void;
+  onShowTypeGraph: (event: EventMouse) => void;
 }
 
 export function EditorRSExpression({
@@ -136,7 +141,7 @@ export function EditorRSExpression({
     setIsModified(true);
   }
 
-  function handleShowAST(event: CProps.EventMouse) {
+  function handleShowAST(event: EventMouse) {
     if (event.ctrlKey) {
       const tree = rslangParser.parse(value);
       const ast = transformAST(tree);

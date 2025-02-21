@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { KEYS } from '@/backend/configuration';
 
 import { libraryApi } from './api';
-import { IVersionCreateDTO } from './types';
+import { type IVersionCreateDTO } from './types';
 import { useUpdateTimestamp } from './useUpdateTimestamp';
 
 export const useVersionCreate = () => {

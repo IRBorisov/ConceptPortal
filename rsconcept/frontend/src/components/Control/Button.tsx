@@ -2,9 +2,9 @@ import clsx from 'clsx';
 
 import { globalIDs } from '@/utils/constants';
 
-import { CProps } from '../props';
+import { type Button as ButtonStyle, type Colors, type Control } from '../props';
 
-interface ButtonProps extends CProps.Control, CProps.Colors, CProps.Button {
+interface ButtonProps extends Control, Colors, ButtonStyle {
   /** Icon to display first. */
   icon?: React.ReactNode;
 
@@ -45,12 +45,12 @@ export function Button({
         'select-none disabled:cursor-auto',
         'cc-animate-color',
         {
-          'border rounded': !noBorder,
+          'border rounded-sm': !noBorder,
           'px-1': dense,
           'px-3 py-1': !dense,
           'cursor-progress': loading,
           'cursor-pointer': !loading,
-          'outline-none': noOutline,
+          'outline-hidden': noOutline,
           'clr-outline': !noOutline
         },
         className,

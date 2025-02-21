@@ -1,7 +1,7 @@
-import { Edge, Node } from 'reactflow';
+import { type Edge, type Node } from 'reactflow';
 import dagre from '@dagrejs/dagre';
 
-import { TMGraphNode } from '../../../models/TMGraph';
+import { type TMGraphNode } from '../../../models/TMGraph';
 
 const NODE_WIDTH = 44;
 const NODE_HEIGHT = 44;

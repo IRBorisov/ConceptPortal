@@ -5,9 +5,9 @@ import { createColumnHelper } from '@tanstack/react-table';
 import { DataTable } from '@/components/DataTable';
 import { IconPageRight } from '@/components/Icons';
 
-import { ICstSubstituteInfo, OperationType } from '../backend/types';
+import { type ICstSubstituteInfo, OperationType } from '../backend/types';
 import { labelOperationType } from '../labels';
-import { IOperation } from '../models/oss';
+import { type IOperation } from '../models/oss';
 
 interface InfoOperationProps {
   operation: IOperation;

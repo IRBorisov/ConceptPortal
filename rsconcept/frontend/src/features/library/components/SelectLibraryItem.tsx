@@ -3,12 +3,12 @@
 import clsx from 'clsx';
 
 import { SelectSingle } from '@/components/Input';
-import { CProps } from '@/components/props';
+import { type Styling } from '@/components/props';
 
-import { ILibraryItem } from '../backend/types';
+import { type ILibraryItem } from '../backend/types';
 import { matchLibraryItem } from '../models/libraryAPI';
 
-interface SelectLibraryItemProps extends CProps.Styling {
+interface SelectLibraryItemProps extends Styling {
   value: ILibraryItem | null;
   onChange: (newValue: ILibraryItem | null) => void;
 

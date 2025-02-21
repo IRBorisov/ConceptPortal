@@ -1,5 +1,5 @@
 import { SelectSingle } from '@/components/Input';
-import { CProps } from '@/components/props';
+import { type Styling } from '@/components/props';
 
 import { CstType } from '../backend/types';
 import { labelCstType } from '../labels';
@@ -9,7 +9,7 @@ const SelectorCstType = Object.values(CstType).map(typeStr => ({
   label: labelCstType(typeStr as CstType)
 }));
 
-interface SelectCstTypeProps extends CProps.Styling {
+interface SelectCstTypeProps extends Styling {
   id?: string;
   disabled?: boolean;
   value: CstType;

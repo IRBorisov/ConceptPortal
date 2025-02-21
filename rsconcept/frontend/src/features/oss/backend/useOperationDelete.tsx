@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { KEYS } from '@/backend/configuration';
 
 import { ossApi } from './api';
-import { IOperationDeleteDTO } from './types';
+import { type IOperationDeleteDTO } from './types';
 
 export const useOperationDelete = () => {
   const client = useQueryClient();

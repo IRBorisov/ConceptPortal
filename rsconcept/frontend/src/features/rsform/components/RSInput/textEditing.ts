@@ -1,6 +1,6 @@
 // Formatted text editing helpers
 
-import { ReactCodeMirrorRef } from '@uiw/react-codemirror';
+import { type ReactCodeMirrorRef } from '@uiw/react-codemirror';
 
 import { CodeMirrorWrapper } from '@/utils/codemirror';
 

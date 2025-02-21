@@ -5,7 +5,7 @@ import { useUpdateTimestamp } from '@/features/library';
 import { KEYS } from '@/backend/configuration';
 
 import { ossApi } from './api';
-import { IOperationCreateDTO } from './types';
+import { type IOperationCreateDTO } from './types';
 
 export const useOperationCreate = () => {
   const client = useQueryClient();

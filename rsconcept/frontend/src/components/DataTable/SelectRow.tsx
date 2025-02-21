@@ -1,6 +1,6 @@
 'use no memo';
 
-import { Row } from '@tanstack/react-table';
+import { type Row } from '@tanstack/react-table';
 
 import { Checkbox } from '../Input';
 

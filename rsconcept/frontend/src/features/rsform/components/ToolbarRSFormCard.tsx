@@ -3,7 +3,7 @@
 import { urls, useConceptNavigation } from '@/app';
 import { BadgeHelp, HelpTopic } from '@/features/help';
 import { AccessPolicy, LibraryItemType, MiniSelectorOSS, useMutatingLibrary } from '@/features/library';
-import { ILibraryItem } from '@/features/library/backend/types';
+import { type ILibraryItem } from '@/features/library/backend/types';
 import { useRoleStore, UserRole } from '@/features/users';
 
 import { Overlay } from '@/components/Container';
@@ -14,7 +14,7 @@ import { PARAMETER } from '@/utils/constants';
 import { tooltipText } from '@/utils/labels';
 import { prepareTooltip, sharePage } from '@/utils/utils';
 
-import { IRSForm } from '../models/rsform';
+import { type IRSForm } from '../models/rsform';
 
 interface ToolbarRSFormCardProps {
   onSubmit: () => void;

@@ -5,7 +5,7 @@ import { useUpdateTimestamp } from '@/features/library';
 import { KEYS } from '@/backend/configuration';
 
 import { ossApi } from './api';
-import { IOperationPosition } from './types';
+import { type IOperationPosition } from './types';
 
 export const useUpdatePositions = () => {
   const client = useQueryClient();

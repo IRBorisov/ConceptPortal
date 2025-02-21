@@ -5,15 +5,15 @@
 import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/utils';
 
-import { IVersionInfo } from '../library';
-import { CurrentVersion } from '../library/models/library';
+import { type IVersionInfo } from '../library';
+import { type CurrentVersion } from '../library/models/library';
 
-import { CstType, IRSErrorDescription, ParsingStatus, RSErrorType, TokenID } from './backend/types';
-import { GramData, Grammeme, ReferenceType } from './models/language';
-import { CstClass, ExpressionStatus, IConstituenta } from './models/rsform';
-import { IArgumentInfo, ISyntaxTreeNode } from './models/rslang';
+import { CstType, type IRSErrorDescription, ParsingStatus, RSErrorType, TokenID } from './backend/types';
+import { type GramData, Grammeme, ReferenceType } from './models/language';
+import { CstClass, ExpressionStatus, type IConstituenta } from './models/rsform';
+import { type IArgumentInfo, type ISyntaxTreeNode } from './models/rslang';
 import { CstMatchMode, DependencyMode } from './stores/cstSearch';
-import { GraphColoring } from './stores/termGraph';
+import { type GraphColoring } from './stores/termGraph';
 
 /**
  * Generates description for {@link IConstituenta}.

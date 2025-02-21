@@ -4,9 +4,9 @@ import clsx from 'clsx';
 
 import { globalIDs } from '@/utils/constants';
 
-import { CProps } from '../props';
+import { type Titled } from '../props';
 
-interface TabLabelProps extends Omit<TabPropsImpl, 'children'>, CProps.Titled {
+interface TabLabelProps extends Omit<TabPropsImpl, 'children'>, Titled {
   /** Label to display in the tab. */
   label?: string;
 }
@@ -23,7 +23,7 @@ export function TabLabel({ label, title, titleHtml, hideTitle, className, ...oth
         'clr-hover cc-animate-color duration-150',
         'text-sm whitespace-nowrap font-controls',
         'select-none hover:cursor-pointer',
-        'outline-none',
+        'outline-hidden',
         className
       )}
       tabIndex='-1'

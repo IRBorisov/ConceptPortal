@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { IRSFormDTO } from '@/features/rsform/backend/types';
+import { type IRSFormDTO } from '@/features/rsform/backend/types';
 
 import { KEYS } from '@/backend/configuration';
 

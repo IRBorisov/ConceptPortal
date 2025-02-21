@@ -3,11 +3,11 @@
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import {
-  Edge,
+  type Edge,
   getNodesBounds,
   getViewportForBounds,
   MarkerType,
-  Node,
+  type Node,
   ReactFlow,
   useEdgesState,
   useNodesState,
@@ -20,7 +20,7 @@ import { toPng } from 'html-to-image';
 import { useDebounce } from 'use-debounce';
 
 import { Overlay } from '@/components/Container';
-import { CProps } from '@/components/props';
+import { type EventMouse } from '@/components/props';
 import { useMainHeight } from '@/stores/appLayout';
 import { useDialogsStore } from '@/stores/dialogs';
 import { APP_COLORS } from '@/styling/colors';
@@ -32,14 +32,14 @@ import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
 import { colorBgGraphNode } from '../../../colors';
 import { InfoConstituenta } from '../../../components/InfoConstituenta';
 import { ToolbarGraphSelection } from '../../../components/ToolbarGraphSelection';
-import { IConstituenta, IRSForm } from '../../../models/rsform';
+import { type IConstituenta, type IRSForm } from '../../../models/rsform';
 import { isBasicConcept } from '../../../models/rsformAPI';
-import { GraphFilterParams, useTermGraphStore } from '../../../stores/termGraph';
+import { type GraphFilterParams, useTermGraphStore } from '../../../stores/termGraph';
 import { useRSEdit } from '../RSEditContext';
 
 import { TGEdgeTypes } from './graph/TGEdgeTypes';
 import { applyLayout } from './graph/TGLayout';
-import { TGNodeData } from './graph/TGNode';
+import { type TGNodeData } from './graph/TGNode';
 import { TGNodeTypes } from './graph/TGNodeTypes';
 import { GraphSelectors } from './GraphSelectors';
 import { SelectedCounter } from './SelectedCounter';
@@ -274,19 +274,19 @@ export function TGFlow() {
     }
   }
 
-  function handleNodeContextMenu(event: CProps.EventMouse, cstID: number) {
+  function handleNodeContextMenu(event: EventMouse, cstID: number) {
     event.preventDefault();
     event.stopPropagation();
     handleSetFocus(cstID);
   }
 
-  function handleNodeDoubleClick(event: CProps.EventMouse, cstID: number) {
+  function handleNodeDoubleClick(event: EventMouse, cstID: number) {
     event.preventDefault();
     event.stopPropagation();
     navigateCst(cstID);
   }
 
-  function handleNodeEnter(event: CProps.EventMouse, cstID: number) {
+  function handleNodeEnter(event: EventMouse, cstID: number) {
     setHoverID(cstID);
     setHoverLeft(
       event.clientX / window.innerWidth >= PARAMETER.graphHoverXLimit ||
@@ -390,7 +390,7 @@ export function TGFlow() {
           </div>
         </Overlay>
 
-        <div className='relative outline-none w-[100dvw]' style={{ height: mainHeight }}>
+        <div className='relative outline-hidden w-[100dvw]' style={{ height: mainHeight }}>
           <ReactFlow
             nodes={nodes}
             onNodesChange={onNodesChange}

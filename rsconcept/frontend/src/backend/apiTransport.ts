@@ -2,7 +2,7 @@
  * Module: generic API for backend REST communications using axios library.
  */
 import { toast } from 'react-toastify';
-import axios, { AxiosError, AxiosRequestConfig } from 'axios';
+import axios, { AxiosError, type AxiosRequestConfig } from 'axios';
 import { z, ZodError } from 'zod';
 
 import { buildConstants } from '@/utils/buildConstants';

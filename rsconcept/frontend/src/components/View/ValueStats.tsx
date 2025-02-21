@@ -1,9 +1,9 @@
-import { CProps } from '@/components/props';
+import { type Styling, type Titled } from '@/components/props';
 import { PARAMETER } from '@/utils/constants';
 
 import { ValueIcon } from './ValueIcon';
 
-interface ValueStatsProps extends CProps.Styling, CProps.Titled {
+interface ValueStatsProps extends Styling, Titled {
   /** Id of the component. */
   id: string;
 

@@ -1,4 +1,4 @@
-import { IExpressionParseDTO, IRSErrorDescription } from '../../../backend/types';
+import { type IExpressionParseDTO, type IRSErrorDescription } from '../../../backend/types';
 import { describeRSError } from '../../../labels';
 import { getRSErrorPrefix } from '../../../models/rslangAPI';
 

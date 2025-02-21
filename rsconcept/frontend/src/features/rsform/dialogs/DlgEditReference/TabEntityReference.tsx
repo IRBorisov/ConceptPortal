@@ -8,11 +8,11 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { PickConstituenta } from '../../components/PickConstituenta';
 import { SelectMultiGrammeme } from '../../components/SelectMultiGrammeme';
 import { SelectWordForm } from '../../components/SelectWordForm';
-import { IConstituenta } from '../../models/rsform';
+import { type IConstituenta } from '../../models/rsform';
 import { matchConstituenta } from '../../models/rsformAPI';
 import { CstMatchMode } from '../../stores/cstSearch';
 
-import { DlgEditReferenceProps, IEditReferenceState } from './DlgEditReference';
+import { type DlgEditReferenceProps, type IEditReferenceState } from './DlgEditReference';
 
 export function TabEntityReference() {
   const { schema, initial } = useDialogsStore(state => state.props as DlgEditReferenceProps);
@@ -55,7 +55,7 @@ export function TabEntityReference() {
           dense
           noBorder
           label='Термин'
-          className='flex-grow text-sm'
+          className='grow text-sm'
           value={term}
           title={term}
         />
@@ -76,7 +76,7 @@ export function TabEntityReference() {
             <SelectMultiGrammeme
               id='dlg_reference_grammemes'
               placeholder='Выберите граммемы'
-              className='flex-grow'
+              className='grow'
               menuPlacement='top'
               value={field.value}
               onChange={field.onChange}

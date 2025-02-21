@@ -16,7 +16,12 @@ import { InfoError } from '@/components/InfoError';
 import { Label, TextArea, TextInput } from '@/components/Input';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';
 
-import { AccessPolicy, ICreateLibraryItemDTO, LibraryItemType, schemaCreateLibraryItem } from '../../backend/types';
+import {
+  AccessPolicy,
+  type ICreateLibraryItemDTO,
+  LibraryItemType,
+  schemaCreateLibraryItem
+} from '../../backend/types';
 import { useCreateItem } from '../../backend/useCreateItem';
 import { SelectAccessPolicy } from '../../components/SelectAccessPolicy';
 import { SelectItemType } from '../../components/SelectItemType';
@@ -200,7 +205,7 @@ export function FormCreateItem() {
         error={errors.comment}
       />
 
-      <div className='flex justify-between gap-3 flex-grow'>
+      <div className='flex justify-between gap-3 grow'>
         <div className='flex flex-col gap-2 min-w-[7rem] h-min'>
           <Label text='Корень' />
           <Controller

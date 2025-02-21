@@ -21,7 +21,7 @@ import {
 } from '@/components/Icons';
 import { ValueStats } from '@/components/View';
 
-import { IRSFormStats } from '../../../models/rsform';
+import { type IRSFormStats } from '../../../models/rsform';
 
 interface RSFormStatsProps {
   isArchive: boolean;

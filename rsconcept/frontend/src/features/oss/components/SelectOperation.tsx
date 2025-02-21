@@ -3,12 +3,12 @@
 import clsx from 'clsx';
 
 import { SelectSingle } from '@/components/Input';
-import { CProps } from '@/components/props';
+import { type Styling } from '@/components/props';
 
-import { IOperation } from '../models/oss';
+import { type IOperation } from '../models/oss';
 import { matchOperation } from '../models/ossAPI';
 
-interface SelectOperationProps extends CProps.Styling {
+interface SelectOperationProps extends Styling {
   value: IOperation | null;
   onChange: (newValue: IOperation | null) => void;
 

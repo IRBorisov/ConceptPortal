@@ -1,11 +1,11 @@
 import clsx from 'clsx';
 
-import { CProps } from '@/components/props';
 import { globalIDs } from '@/utils/constants';
 
 import { MiniButton } from '../Control';
+import { type EventMouse, type Styling, type Titled } from '../props';
 
-interface ValueIconProps extends CProps.Styling, CProps.Titled {
+interface ValueIconProps extends Styling, Titled {
   /** Id of the component. */
   id?: string;
 
@@ -19,7 +19,7 @@ interface ValueIconProps extends CProps.Styling, CProps.Titled {
   textClassName?: string;
 
   /** Callback to be called when the component is clicked. */
-  onClick?: (event: CProps.EventMouse) => void;
+  onClick?: (event: EventMouse) => void;
 
   /** Number of symbols to display in a small size. */
   smallThreshold?: number;

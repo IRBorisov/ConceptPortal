@@ -3,9 +3,9 @@ import clsx from 'clsx';
 import { globalIDs } from '@/utils/constants';
 
 import { CheckboxChecked, CheckboxNull } from '../Icons';
-import { CProps } from '../props';
+import { type EventMouse } from '../props';
 
-import { CheckboxProps } from './Checkbox';
+import { type CheckboxProps } from './Checkbox';
 
 export interface CheckboxTristateProps extends Omit<CheckboxProps, 'value' | 'onChange'> {
   /** Current value - `null`, `true` or `false`. */
@@ -31,7 +31,7 @@ export function CheckboxTristate({
 }: CheckboxTristateProps) {
   const cursor = disabled ? 'cursor-arrow' : onChange ? 'cursor-pointer' : '';
 
-  function handleClick(event: CProps.EventMouse): void {
+  function handleClick(event: EventMouse): void {
     event.preventDefault();
     event.stopPropagation();
     if (disabled || !onChange) {
@@ -51,7 +51,7 @@ export function CheckboxTristate({
       type='button'
       className={clsx(
         'flex items-center gap-2', //
-        'outline-none',
+        'outline-hidden',
         'focus-frame',
         cursor,
         className
@@ -68,7 +68,7 @@ export function CheckboxTristate({
         className={clsx(
           'w-4 h-4', //
           'pt-[0.05rem] pl-[0.05rem]',
-          'border rounded-sm',
+          'border rounded-xs',
           'cc-animate-color',
           {
             'bg-sec-600 text-sec-0': value !== false,

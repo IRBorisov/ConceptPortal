@@ -5,14 +5,14 @@
 import { labelGrammeme } from '../labels';
 
 import {
-  GramData,
+  type GramData,
   Grammeme,
   GrammemeGroups,
-  IEntityReference,
-  IGrammemeOption,
-  IReference,
-  ISyntacticReference,
-  IWordForm,
+  type IEntityReference,
+  type IGrammemeOption,
+  type IReference,
+  type ISyntacticReference,
+  type IWordForm,
   NounGrams,
   ReferenceType,
   supportedGrammemes,

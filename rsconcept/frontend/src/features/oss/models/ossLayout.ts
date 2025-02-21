@@ -1,9 +1,9 @@
 /**
  * Module: OSS representation.
  */
-import { Node } from 'reactflow';
+import { type Node } from 'reactflow';
 
-import { IOperation } from './oss';
+import { type IOperation } from './oss';
 
 /**
  * Represents XY Position.

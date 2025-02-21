@@ -3,14 +3,14 @@
 import { SelectorButton } from '@/components/Control';
 import { MatchModeIcon } from '@/components/DomainIcons';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/Dropdown';
-import { CProps } from '@/components/props';
+import { type Styling } from '@/components/props';
 import { useWindowSize } from '@/hooks/useWindowSize';
 import { prefixes } from '@/utils/constants';
 
 import { describeCstMatchMode, labelCstMatchMode } from '../../../labels';
 import { CstMatchMode } from '../../../stores/cstSearch';
 
-interface SelectMatchModeProps extends CProps.Styling {
+interface SelectMatchModeProps extends Styling {
   value: CstMatchMode;
   onChange: (value: CstMatchMode) => void;
   dense?: boolean;

@@ -2,9 +2,9 @@ import clsx from 'clsx';
 
 import { globalIDs } from '@/utils/constants';
 
-import { CProps } from '../props';
+import { type Button } from '../props';
 
-interface MiniButtonProps extends CProps.Button {
+interface MiniButtonProps extends Button {
   /** Button type. */
   type?: 'button' | 'submit';
 
@@ -43,7 +43,7 @@ export function MiniButton({
         'cursor-pointer disabled:cursor-auto',
         {
           'px-1 py-1': !noPadding,
-          'outline-none': noHover,
+          'outline-hidden': noHover,
           'clr-hover': !noHover
         },
         className

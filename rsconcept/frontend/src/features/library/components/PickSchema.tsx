@@ -4,20 +4,20 @@ import clsx from 'clsx';
 
 import { FlexColumn } from '@/components/Container';
 import { MiniButton } from '@/components/Control';
-import { createColumnHelper, DataTable, IConditionalStyle } from '@/components/DataTable';
+import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/DataTable';
 import { Dropdown, useDropdown } from '@/components/Dropdown';
 import { IconClose, IconFolderTree } from '@/components/Icons';
 import { SearchBar } from '@/components/Input';
-import { CProps } from '@/components/props';
+import { type EventMouse, type Styling } from '@/components/props';
 import { APP_COLORS } from '@/styling/colors';
 import { prefixes } from '@/utils/constants';
 
-import { ILibraryItem, LibraryItemType } from '../backend/types';
+import { type ILibraryItem, LibraryItemType } from '../backend/types';
 import { matchLibraryItem } from '../models/libraryAPI';
 
 import { SelectLocation } from './SelectLocation';
 
-interface PickSchemaProps extends CProps.Styling {
+interface PickSchemaProps extends Styling {
   id?: string;
   value: number | null;
   onChange: (newValue: number) => void;
@@ -96,7 +96,7 @@ export function PickSchema({
     }
   ];
 
-  function handleLocationClick(event: CProps.EventMouse, newValue: string) {
+  function handleLocationClick(event: EventMouse, newValue: string) {
     event.preventDefault();
     event.stopPropagation();
     locationMenu.hide();
@@ -108,7 +108,7 @@ export function PickSchema({
       <div className='flex justify-between clr-input items-center pr-1 rounded-t-md'>
         <SearchBar
           id={id ? `${id}__search` : undefined}
-          className='clr-input flex-grow rounded-t-md'
+          className='clr-input grow rounded-t-md'
           noBorder
           query={filterText}
           onChangeQuery={newValue => setFilterText(newValue)}

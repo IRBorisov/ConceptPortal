@@ -9,7 +9,7 @@ import { ModalView } from '@/components/Modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { errorMsg } from '@/utils/labels';
 
-import { ITypeInfo } from '../../models/rslang';
+import { type ITypeInfo } from '../../models/rslang';
 import { TMGraph } from '../../models/TMGraph';
 
 import { MGraphFlow } from './MGraphFlow';

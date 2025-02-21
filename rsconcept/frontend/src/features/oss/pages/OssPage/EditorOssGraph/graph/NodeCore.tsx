@@ -8,7 +8,7 @@ import { globalIDs, PARAMETER } from '@/utils/constants';
 import { truncateToLastWord } from '@/utils/utils';
 
 import { OperationType } from '../../../../backend/types';
-import { OssNodeInternal } from '../../../../models/ossLayout';
+import { type OssNodeInternal } from '../../../../models/ossLayout';
 
 interface NodeCoreProps {
   node: OssNodeInternal;

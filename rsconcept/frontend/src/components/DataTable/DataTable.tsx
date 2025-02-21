@@ -3,21 +3,21 @@
 
 import { useMemo, useState } from 'react';
 import {
-  ColumnSort,
+  type ColumnSort,
   createColumnHelper,
   getCoreRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  PaginationState,
-  RowData,
+  type PaginationState,
+  type RowData,
   type RowSelectionState,
-  SortingState,
-  TableOptions,
+  type SortingState,
+  type TableOptions,
   useReactTable,
   type VisibilityState
 } from '@tanstack/react-table';
 
-import { CProps } from '../props';
+import { type EventMouse, type Styling } from '../props';
 
 import { DefaultNoData } from './DefaultNoData';
 import { PaginationTools } from './PaginationTools';
@@ -37,7 +37,7 @@ export interface IConditionalStyle<TData> {
 }
 
 export interface DataTableProps<TData extends RowData>
-  extends CProps.Styling,
+  extends Styling,
     Pick<TableOptions<TData>, 'data' | 'columns' | 'onRowSelectionChange' | 'onColumnVisibilityChange'> {
   /** Id of the component. */
   id?: string;
@@ -67,10 +67,10 @@ export interface DataTableProps<TData extends RowData>
   noDataComponent?: React.ReactNode;
 
   /** Callback to be called when a row is clicked. */
-  onRowClicked?: (rowData: TData, event: CProps.EventMouse) => void;
+  onRowClicked?: (rowData: TData, event: EventMouse) => void;
 
   /** Callback to be called when a row is double clicked. */
-  onRowDoubleClicked?: (rowData: TData, event: CProps.EventMouse) => void;
+  onRowDoubleClicked?: (rowData: TData, event: EventMouse) => void;
 
   /** Enable row selection. */
   enableRowSelection?: boolean;

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { Edge, ReactFlow, useEdgesState, useNodesState } from 'reactflow';
+import { type Edge, ReactFlow, useEdgesState, useNodesState } from 'reactflow';
 
 import { TMGraph } from '../../models/TMGraph';
 

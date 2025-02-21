@@ -3,7 +3,7 @@
  */
 
 import { toast } from 'react-toastify';
-import { AxiosError, AxiosHeaderValue, AxiosResponse, isAxiosError } from 'axios';
+import { AxiosError, type AxiosHeaderValue, type AxiosResponse, isAxiosError } from 'axios';
 
 import { infoMsg, promptText } from './labels';
 

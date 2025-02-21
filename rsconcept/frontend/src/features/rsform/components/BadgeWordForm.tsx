@@ -1,4 +1,4 @@
-import { IWordForm } from '../models/language';
+import { type IWordForm } from '../models/language';
 
 import { BadgeGrammeme } from './BadgeGrammeme';
 

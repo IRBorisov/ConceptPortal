@@ -3,13 +3,13 @@
 import clsx from 'clsx';
 
 import { SelectSingle } from '@/components/Input';
-import { CProps } from '@/components/props';
+import { type Styling } from '@/components/props';
 
 import { useLabelUser } from '../backend/useLabelUser';
 import { useUsers } from '../backend/useUsers';
 import { matchUser } from '../models/userAPI';
 
-interface SelectUserProps extends CProps.Styling {
+interface SelectUserProps extends Styling {
   value: number | null;
   onChange: (newValue: number) => void;
   filter?: (userID: number) => boolean;

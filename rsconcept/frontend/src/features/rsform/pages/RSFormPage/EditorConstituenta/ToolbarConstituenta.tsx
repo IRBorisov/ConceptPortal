@@ -28,7 +28,7 @@ import { tooltipText } from '@/utils/labels';
 import { prepareTooltip } from '@/utils/utils';
 
 import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
-import { IConstituenta } from '../../../models/rsform';
+import { type IConstituenta } from '../../../models/rsform';
 import { RSTabID, useRSEdit } from '../RSEditContext';
 
 interface ToolbarConstituentaProps {
@@ -80,8 +80,8 @@ export function ToolbarConstituenta({
 
   return (
     <Overlay
-      position='cc-tab-tools right-1/2 translate-x-1/2 xs:right-4 xs:translate-x-0 md:right-1/2 md:translate-x-1/2'
-      className='cc-icons cc-animate-position outline-none cc-blur px-1 rounded-b-2xl'
+      position='cc-tab-tools right-1/2 translate-x-0 xs:right-4 xs:-translate-x-1/2 md:right-1/2 md:translate-x-0'
+      className='cc-icons cc-animate-position outline-hidden cc-blur px-1 rounded-b-2xl'
     >
       {schema.oss.length > 0 ? (
         <MiniSelectorOSS

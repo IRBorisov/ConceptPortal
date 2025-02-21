@@ -1,10 +1,10 @@
 import React, { Suspense } from 'react';
 
-import { PlacesType, Tooltip } from '@/components/Container';
+import { type PlacesType, Tooltip } from '@/components/Container';
 import { TextURL } from '@/components/Control';
 import { IconHelp } from '@/components/Icons';
 import { Loader } from '@/components/Loader';
-import { CProps } from '@/components/props';
+import { type Styling } from '@/components/props';
 import { usePreferencesStore } from '@/stores/preferences';
 
 import { HelpTopic } from '../models/helpTopic';
@@ -13,7 +13,7 @@ const TopicPage = React.lazy(() =>
   import('@/features/help/pages/ManualsPage/TopicPage').then(module => ({ default: module.TopicPage }))
 );
 
-interface BadgeHelpProps extends CProps.Styling {
+interface BadgeHelpProps extends Styling {
   /** Topic to display in a tooltip. */
   topic: HelpTopic;
 

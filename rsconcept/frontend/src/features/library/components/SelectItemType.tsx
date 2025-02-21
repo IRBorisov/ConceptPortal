@@ -1,16 +1,16 @@
 'use client';
 
 import { SelectorButton } from '@/components/Control';
-import { DomIconProps } from '@/components/DomainIcons';
+import { type DomIconProps } from '@/components/DomainIcons';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/Dropdown';
 import { IconOSS, IconRSForm } from '@/components/Icons';
-import { CProps } from '@/components/props';
+import { type Styling } from '@/components/props';
 import { prefixes } from '@/utils/constants';
 
 import { LibraryItemType } from '../backend/types';
 import { describeLibraryItemType, labelLibraryItemType } from '../labels';
 
-interface SelectItemTypeProps extends CProps.Styling {
+interface SelectItemTypeProps extends Styling {
   value: LibraryItemType;
   onChange: (value: LibraryItemType) => void;
   disabled?: boolean;

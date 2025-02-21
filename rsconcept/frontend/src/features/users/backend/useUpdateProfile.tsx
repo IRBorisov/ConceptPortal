@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { KEYS } from '@/backend/configuration';
 
 import { usersApi } from './api';
-import { IUpdateProfileDTO } from './types';
+import { type IUpdateProfileDTO } from './types';
 
 export const useUpdateProfile = () => {
   const client = useQueryClient();

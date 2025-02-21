@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { IconDownload, IconRSForm, IconRSFormImported, IconRSFormOwned, IconSynthesis } from '@/components/Icons';
 import { ValueStats } from '@/components/View';
 
-import { IOperationSchemaStats } from '../../../models/oss';
+import { type IOperationSchemaStats } from '../../../models/oss';
 
 interface OssStatsProps {
   stats: IOperationSchemaStats;

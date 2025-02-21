@@ -13,7 +13,7 @@ import { Checkbox, Label, TextArea, TextInput } from '@/components/Input';
 import { ModalForm } from '@/components/Modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { AccessPolicy, ICloneLibraryItemDTO, ILibraryItem, schemaCloneLibraryItem } from '../backend/types';
+import { AccessPolicy, type ICloneLibraryItemDTO, type ILibraryItem, schemaCloneLibraryItem } from '../backend/types';
 import { useCloneItem } from '../backend/useCloneItem';
 import { SelectAccessPolicy } from '../components/SelectAccessPolicy';
 import { SelectLocationContext } from '../components/SelectLocationContext';

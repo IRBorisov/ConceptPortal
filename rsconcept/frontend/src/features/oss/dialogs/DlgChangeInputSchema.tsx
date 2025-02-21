@@ -4,7 +4,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import clsx from 'clsx';
 
-import { ILibraryItem, LibraryItemType, PickSchema, useLibrary } from '@/features/library';
+import { type ILibraryItem, LibraryItemType, PickSchema, useLibrary } from '@/features/library';
 
 import { MiniButton } from '@/components/Control';
 import { IconReset } from '@/components/Icons';
@@ -12,9 +12,9 @@ import { Label } from '@/components/Input';
 import { ModalForm } from '@/components/Modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { IInputUpdateDTO, IOperationPosition, schemaInputUpdate } from '../backend/types';
+import { type IInputUpdateDTO, type IOperationPosition, schemaInputUpdate } from '../backend/types';
 import { useInputUpdate } from '../backend/useInputUpdate';
-import { IOperation, IOperationSchema } from '../models/oss';
+import { type IOperation, type IOperationSchema } from '../models/oss';
 import { sortItemsForOSS } from '../models/ossAPI';
 
 export interface DlgChangeInputSchemaProps {

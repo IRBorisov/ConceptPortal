@@ -17,7 +17,7 @@ import {
   IconUserSearch
 } from '@/components/Icons';
 import { SearchBar } from '@/components/Input';
-import { CProps } from '@/components/props';
+import { type EventMouse } from '@/components/props';
 import { prefixes } from '@/utils/constants';
 import { tripleToggleColor } from '@/utils/utils';
 
@@ -66,7 +66,7 @@ export function ToolbarSearch({ total, filtered }: ToolbarSearchProps) {
     toggleFolderMode();
   }
 
-  function handleFolderClick(event: CProps.EventMouse) {
+  function handleFolderClick(event: EventMouse) {
     if (event.ctrlKey || event.metaKey) {
       toggleFolderMode();
     } else {
@@ -139,12 +139,12 @@ export function ToolbarSearch({ total, filtered }: ToolbarSearchProps) {
         />
       </div>
 
-      <div className='flex h-full flex-grow pr-4'>
+      <div className='flex h-full grow pr-4'>
         <SearchBar
           id='library_search'
           placeholder='Поиск'
           noBorder
-          className={clsx('min-w-[7rem] sm:min-w-[10rem] max-w-[20rem]', folderMode && 'flex-grow')}
+          className={clsx('min-w-[7rem] sm:min-w-[10rem] max-w-[20rem]', folderMode && 'grow')}
           query={query}
           onChangeQuery={setQuery}
         />
@@ -203,7 +203,7 @@ export function ToolbarSearch({ total, filtered }: ToolbarSearchProps) {
             placeholder='Путь'
             noIcon
             noBorder
-            className='w-[4.5rem] sm:w-[5rem] flex-grow'
+            className='w-[4.5rem] sm:w-[5rem] grow'
             query={path}
             onChangeQuery={setPath}
           />

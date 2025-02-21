@@ -1,10 +1,10 @@
 import clsx from 'clsx';
 
-import { CProps } from '@/components/props';
+import { type Styling } from '@/components/props';
 
 import { useLabelUser } from '../backend/useLabelUser';
 
-interface InfoUsersProps extends CProps.Styling {
+interface InfoUsersProps extends Styling {
   items: number[];
   prefix: string;
   header?: string;

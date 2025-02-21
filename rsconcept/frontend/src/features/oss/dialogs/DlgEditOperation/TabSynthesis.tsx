@@ -8,10 +8,10 @@ import { TextArea } from '@/components/Input';
 import { useDialogsStore } from '@/stores/dialogs';
 import { APP_COLORS } from '@/styling/colors';
 
-import { IOperationUpdateDTO } from '../../backend/types';
+import { type IOperationUpdateDTO } from '../../backend/types';
 import { SubstitutionValidator } from '../../models/ossAPI';
 
-import { DlgEditOperationProps } from './DlgEditOperation';
+import { type DlgEditOperationProps } from './DlgEditOperation';
 
 export function TabSynthesis() {
   const { oss } = useDialogsStore(state => state.props as DlgEditOperationProps);

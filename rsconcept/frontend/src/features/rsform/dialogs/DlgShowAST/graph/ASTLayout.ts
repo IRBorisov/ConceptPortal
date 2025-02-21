@@ -1,9 +1,9 @@
-import { Edge, Node } from 'reactflow';
+import { type Edge, type Node } from 'reactflow';
 import dagre from '@dagrejs/dagre';
 
 import { PARAMETER } from '@/utils/constants';
 
-import { ISyntaxTreeNode } from '../../../models/rslang';
+import { type ISyntaxTreeNode } from '../../../models/rslang';
 
 export function applyLayout(nodes: Node<ISyntaxTreeNode>[], edges: Edge[]) {
   const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));

@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { KEYS } from '@/backend/configuration';
 
 import { usersApi } from './api';
-import { IUserSignupDTO } from './types';
+import { type IUserSignupDTO } from './types';
 
 export const useSignup = () => {
   const client = useQueryClient();

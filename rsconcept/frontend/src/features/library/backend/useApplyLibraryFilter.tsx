@@ -1,6 +1,6 @@
 import { useAuthSuspense } from '@/features/auth';
 
-import { ILibraryFilter } from '../models/library';
+import { type ILibraryFilter } from '../models/library';
 import { matchLibraryItem, matchLibraryItemLocation } from '../models/libraryAPI';
 
 import { useLibrary } from './useLibrary';

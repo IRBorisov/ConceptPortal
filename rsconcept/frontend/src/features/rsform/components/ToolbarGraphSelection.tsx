@@ -12,10 +12,10 @@ import {
   IconPredecessor,
   IconReset
 } from '@/components/Icons';
-import { CProps } from '@/components/props';
+import { type Styling } from '@/components/props';
 import { Graph } from '@/models/Graph';
 
-interface ToolbarGraphSelectionProps extends CProps.Styling {
+interface ToolbarGraphSelectionProps extends Styling {
   value: number[];
   onChange: (newSelection: number[]) => void;
   graph: Graph;

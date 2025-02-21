@@ -1,4 +1,4 @@
-import { NodeTypes } from 'reactflow';
+import { type NodeTypes } from 'reactflow';
 
 import { TGNode } from './TGNode';
 

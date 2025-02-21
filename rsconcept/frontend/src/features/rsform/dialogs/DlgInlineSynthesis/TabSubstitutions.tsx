@@ -4,11 +4,11 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { IInlineSynthesisDTO } from '../../backend/types';
+import { type IInlineSynthesisDTO } from '../../backend/types';
 import { useRSFormSuspense } from '../../backend/useRSForm';
 import { PickSubstitutions } from '../../components/PickSubstitutions';
 
-import { DlgInlineSynthesisProps } from './DlgInlineSynthesis';
+import { type DlgInlineSynthesisProps } from './DlgInlineSynthesis';
 
 export function TabSubstitutions() {
   const { receiver } = useDialogsStore(state => state.props as DlgInlineSynthesisProps);
@@ -30,7 +30,7 @@ export function TabSubstitutions() {
           allowSelfSubstitution={selfSubstitution}
           rows={10}
           schemas={selfSubstitution ? [source] : [source, receiver]}
-          filterCst={selected.length === 0 ? undefined : cst => selected.includes(cst.id)}
+          filterCst={selected.length === 0 ? undefined : cst => cst.schema !== source.id || selected.includes(cst.id)}
         />
       )}
     />

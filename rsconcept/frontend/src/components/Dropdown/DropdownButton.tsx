@@ -1,9 +1,9 @@
 import clsx from 'clsx';
 
-import { CProps } from '@/components/props';
+import { type Button } from '@/components/props';
 import { globalIDs } from '@/utils/constants';
 
-interface DropdownButtonProps extends CProps.Button {
+interface DropdownButtonProps extends Button {
   /** Icon to display first (not used if children are provided). */
   icon?: React.ReactNode;
 
@@ -36,7 +36,7 @@ export function DropdownButton({
       onClick={onClick}
       className={clsx(
         'px-3 py-1 inline-flex items-center gap-2',
-        'text-left text-sm overflow-ellipsis whitespace-nowrap',
+        'text-left text-sm text-ellipsis whitespace-nowrap',
         'disabled:clr-text-controls',
         'cc-animate-color',
         {

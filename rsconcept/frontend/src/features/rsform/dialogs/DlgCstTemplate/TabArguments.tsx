@@ -6,19 +6,19 @@ import { createColumnHelper } from '@tanstack/react-table';
 import clsx from 'clsx';
 
 import { MiniButton } from '@/components/Control';
-import { DataTable, IConditionalStyle } from '@/components/DataTable';
+import { DataTable, type IConditionalStyle } from '@/components/DataTable';
 import { IconAccept, IconRemove, IconReset } from '@/components/Icons';
 import { NoData } from '@/components/View';
 import { useDialogsStore } from '@/stores/dialogs';
 import { APP_COLORS } from '@/styling/colors';
 
-import { ICstCreateDTO } from '../../backend/types';
+import { type ICstCreateDTO } from '../../backend/types';
 import { PickConstituenta } from '../../components/PickConstituenta';
 import { RSInput } from '../../components/RSInput';
-import { IConstituenta } from '../../models/rsform';
-import { IArgumentValue } from '../../models/rslang';
+import { type IConstituenta } from '../../models/rsform';
+import { type IArgumentValue } from '../../models/rslang';
 
-import { DlgCstTemplateProps } from './DlgCstTemplate';
+import { type DlgCstTemplateProps } from './DlgCstTemplate';
 import { useTemplateContext } from './TemplateContext';
 
 const argumentsHelper = createColumnHelper<IArgumentValue>();
@@ -188,7 +188,7 @@ export function TabArguments() {
         noTooltip
         id='result'
         placeholder='Итоговое определение'
-        className='mt-[1.2rem]'
+        className='mt-[1.1rem]'
         height='5.1rem'
         value={definition}
       />

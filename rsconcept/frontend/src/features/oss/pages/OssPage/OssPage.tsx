@@ -9,7 +9,7 @@ import { urls, useBlockNavigation, useConceptNavigation } from '@/app';
 
 import { isAxiosError } from '@/backend/apiTransport';
 import { TextURL } from '@/components/Control';
-import { ErrorData } from '@/components/InfoError';
+import { type ErrorData } from '@/components/InfoError';
 import { useQueryStrings } from '@/hooks/useQueryStrings';
 import { useModificationStore } from '@/stores/modification';
 

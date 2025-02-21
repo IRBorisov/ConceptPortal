@@ -11,15 +11,7 @@ export default [
   ...typescriptPlugin.configs.recommendedTypeChecked,
   ...typescriptPlugin.configs.stylisticTypeChecked,
   {
-    ignores: [
-      '**/parser.ts',
-      '**/node_modules/**',
-      '**/public/**',
-      '**/dist/**',
-      'eslint.config.js',
-      'tailwind.config.js',
-      'postcss.config.js'
-    ]
+    ignores: ['**/parser.ts', '**/node_modules/**', '**/public/**', '**/dist/**', 'eslint.config.js']
   },
   {
     languageOptions: {
@@ -43,6 +35,12 @@ export default [
     settings: { react: { version: 'detect' } },
     rules: {
       'react-compiler/react-compiler': 'error',
+      '@typescript-eslint/consistent-type-imports': [
+        'warn',
+        {
+          fixStyle: 'inline-type-imports'
+        }
+      ],
       '@typescript-eslint/no-empty-object-type': ['error', { allowInterfaces: 'with-single-extends' }],
       '@typescript-eslint/prefer-nullish-coalescing': 'off',
       '@typescript-eslint/no-inferrable-types': 'off',

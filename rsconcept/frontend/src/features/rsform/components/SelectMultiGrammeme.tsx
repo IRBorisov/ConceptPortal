@@ -1,12 +1,10 @@
-import { SelectMulti, SelectMultiProps } from '@/components/Input';
-import { CProps } from '@/components/props';
+import { SelectMulti, type SelectMultiProps } from '@/components/Input';
+import { type Styling } from '@/components/props';
 
-import { Grammeme, IGrammemeOption } from '../models/language';
+import { Grammeme, type IGrammemeOption } from '../models/language';
 import { getCompatibleGrams, grammemeCompare, supportedGrammeOptions } from '../models/languageAPI';
 
-interface SelectMultiGrammemeProps
-  extends Omit<SelectMultiProps<IGrammemeOption>, 'value' | 'onChange'>,
-    CProps.Styling {
+interface SelectMultiGrammemeProps extends Omit<SelectMultiProps<IGrammemeOption>, 'value' | 'onChange'>, Styling {
   value: IGrammemeOption[];
   onChange: (newValue: IGrammemeOption[]) => void;
   placeholder?: string;

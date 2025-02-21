@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 import { KEYS } from '@/backend/configuration';
 
 import { authApi } from './api';
-import { IPasswordTokenDTO, IResetPasswordDTO } from './types';
+import { type IPasswordTokenDTO, type IResetPasswordDTO } from './types';
 
 export const useResetPassword = () => {
   const validateMutation = useMutation({

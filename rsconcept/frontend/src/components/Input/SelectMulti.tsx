@@ -1,12 +1,12 @@
 'use client';
 
 import Select, {
-  ClearIndicatorProps,
+  type ClearIndicatorProps,
   components,
-  DropdownIndicatorProps,
-  GroupBase,
-  Props,
-  StylesConfig
+  type DropdownIndicatorProps,
+  type GroupBase,
+  type Props,
+  type StylesConfig
 } from 'react-select';
 
 import { useWindowSize } from '@/hooks/useWindowSize';

@@ -5,7 +5,7 @@ import { useUpdateTimestamp } from '@/features/library';
 import { KEYS } from '@/backend/configuration';
 
 import { rsformsApi } from './api';
-import { IInlineSynthesisDTO } from './types';
+import { type IInlineSynthesisDTO } from './types';
 
 export const useInlineSynthesis = () => {
   const client = useQueryClient();

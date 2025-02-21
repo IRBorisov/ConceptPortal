@@ -1,4 +1,4 @@
-import { EdgeProps, SimpleBezierEdge } from 'reactflow';
+import { type EdgeProps, SimpleBezierEdge } from 'reactflow';
 
 import { APP_COLORS } from '@/styling/colors';
 

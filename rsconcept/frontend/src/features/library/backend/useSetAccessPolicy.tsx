@@ -1,12 +1,12 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { IOperationSchemaDTO } from '@/features/oss/backend/types';
-import { IRSFormDTO } from '@/features/rsform/backend/types';
+import { type IOperationSchemaDTO } from '@/features/oss/backend/types';
+import { type IRSFormDTO } from '@/features/rsform/backend/types';
 
 import { KEYS } from '@/backend/configuration';
 
 import { libraryApi } from './api';
-import { AccessPolicy, ILibraryItem } from './types';
+import { AccessPolicy, type ILibraryItem } from './types';
 
 export const useSetAccessPolicy = () => {
   const client = useQueryClient();

@@ -1,4 +1,4 @@
-import { EdgeTypes } from 'reactflow';
+import { type EdgeTypes } from 'reactflow';
 
 import { BooleanEdge } from './BooleanEdge';
 import { CartesianEdge } from './CartesianEdge';

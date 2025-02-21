@@ -12,9 +12,9 @@ import { ModalForm } from '@/components/Modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/Tabs';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { CstType, IConstituentaBasicsDTO, ICstCreateDTO, schemaCstCreate } from '../../backend/types';
+import { CstType, type IConstituentaBasicsDTO, type ICstCreateDTO, schemaCstCreate } from '../../backend/types';
 import { useCstCreate } from '../../backend/useCstCreate';
-import { IRSForm } from '../../models/rsform';
+import { type IRSForm } from '../../models/rsform';
 import { generateAlias, validateNewAlias } from '../../models/rsformAPI';
 import { FormCreateCst } from '../DlgCreateCst/FormCreateCst';
 

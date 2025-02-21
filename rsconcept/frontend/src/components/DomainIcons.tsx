@@ -14,7 +14,7 @@ import {
   IconHide,
   IconMoveDown,
   IconMoveUp,
-  IconProps,
+  type IconProps,
   IconPublic,
   IconSettings,
   IconShow,

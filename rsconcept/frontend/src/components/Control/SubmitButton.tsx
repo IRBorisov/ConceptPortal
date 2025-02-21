@@ -1,8 +1,8 @@
 import clsx from 'clsx';
 
-import { CProps } from '../props';
+import { type Button } from '../props';
 
-interface SubmitButtonProps extends CProps.Button {
+interface SubmitButtonProps extends Button {
   /** Text to display in the button. */
   text?: string;
 

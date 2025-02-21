@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { Overlay } from '@/components/Container';
 import { MiniButton } from '@/components/Control';
 import { IconDropArrow, IconDropArrowUp } from '@/components/Icons';
-import { CProps } from '@/components/props';
+import { type EventMouse } from '@/components/props';
 import { useWindowSize } from '@/hooks/useWindowSize';
 import { useFitHeight } from '@/stores/appLayout';
 import { useTooltipsStore } from '@/stores/tooltips';
@@ -13,8 +13,8 @@ import { APP_COLORS } from '@/styling/colors';
 import { globalIDs, PARAMETER, prefixes } from '@/utils/constants';
 
 import { colorBgGraphNode } from '../../../colors';
-import { IRSForm } from '../../../models/rsform';
-import { GraphColoring, useTermGraphStore } from '../../../stores/termGraph';
+import { type IRSForm } from '../../../models/rsform';
+import { type GraphColoring, useTermGraphStore } from '../../../stores/termGraph';
 import { useRSEdit } from '../RSEditContext';
 
 interface ViewHiddenProps {
@@ -37,7 +37,7 @@ export function ViewHidden({ items, selected, toggleSelection, setFocus, schema,
   const setActiveCst = useTooltipsStore(state => state.setActiveCst);
   const hiddenHeight = useFitHeight(windowSize.isSmall ? '10.4rem + 2px' : '12.5rem + 2px');
 
-  function handleClick(cstID: number, event: CProps.EventMouse) {
+  function handleClick(cstID: number, event: EventMouse) {
     if (event.ctrlKey || event.metaKey) {
       setFocus(cstID);
     } else {

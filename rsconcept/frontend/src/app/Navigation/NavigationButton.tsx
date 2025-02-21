@@ -1,12 +1,12 @@
 import clsx from 'clsx';
 
-import { CProps } from '@/components/props';
+import { type EventMouse, type Styling, type Titled } from '@/components/props';
 import { globalIDs } from '@/utils/constants';
 
-interface NavigationButtonProps extends CProps.Titled, CProps.Styling {
+interface NavigationButtonProps extends Titled, Styling {
   text?: string;
   icon: React.ReactNode;
-  onClick?: (event: CProps.EventMouse) => void;
+  onClick?: (event: EventMouse) => void;
 }
 
 export function NavigationButton({
@@ -29,8 +29,9 @@ export function NavigationButton({
       data-tooltip-hidden={hideTitle}
       onClick={onClick}
       className={clsx(
-        'mr-1 h-full', //
+        'mr-1 h-full',
         'flex items-center gap-1',
+        'cursor-pointer',
         'clr-btn-nav cc-animate-color duration-500',
         'rounded-xl',
         'font-controls whitespace-nowrap',

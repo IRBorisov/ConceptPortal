@@ -2,17 +2,17 @@
 
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
-import { ILibraryItem, LibraryItemType, PickSchema, useLibrary } from '@/features/library';
+import { type ILibraryItem, LibraryItemType, PickSchema, useLibrary } from '@/features/library';
 
 import { MiniButton } from '@/components/Control';
 import { IconReset } from '@/components/Icons';
 import { Checkbox, Label, TextArea, TextInput } from '@/components/Input';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { IOperationCreateDTO } from '../../backend/types';
+import { type IOperationCreateDTO } from '../../backend/types';
 import { sortItemsForOSS } from '../../models/ossAPI';
 
-import { DlgCreateOperationProps } from './DlgCreateOperation';
+import { type DlgCreateOperationProps } from './DlgCreateOperation';
 
 export function TabInputOperation() {
   const { oss } = useDialogsStore(state => state.props as DlgCreateOperationProps);

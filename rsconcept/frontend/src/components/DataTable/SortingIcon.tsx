@@ -1,6 +1,6 @@
 'use no memo';
 
-import { Column } from '@tanstack/react-table';
+import { type Column } from '@tanstack/react-table';
 
 import { IconSortAsc, IconSortDesc } from '../Icons';
 

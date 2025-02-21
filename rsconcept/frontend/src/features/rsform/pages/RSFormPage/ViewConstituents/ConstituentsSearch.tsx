@@ -6,7 +6,7 @@ import { MiniButton } from '@/components/Control';
 import { IconChild } from '@/components/Icons';
 import { SearchBar } from '@/components/Input';
 
-import { IConstituenta, IRSForm } from '../../../models/rsform';
+import { type IConstituenta, type IRSForm } from '../../../models/rsform';
 import { matchConstituenta } from '../../../models/rsformAPI';
 import { SelectMatchMode } from '../../../pages/RSFormPage/ViewConstituents/SelectMatchMode';
 import { DependencyMode, useCstSearchStore } from '../../../stores/cstSearch';
@@ -44,7 +44,7 @@ export function ConstituentsSearch({ schema, activeID, dense, onChange }: Consti
       <SearchBar
         id='constituents_search'
         noBorder
-        className='min-w-[6rem] w-[6rem] mr-2 flex-grow'
+        className='min-w-[6rem] w-[6rem] mr-2 grow'
         query={query}
         onChangeQuery={setQuery}
       />

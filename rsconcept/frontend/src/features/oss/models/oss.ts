@@ -4,7 +4,7 @@
 
 import { Graph } from '@/models/Graph';
 
-import { ICstSubstituteInfo, IOperationDTO, IOperationSchemaDTO } from '../backend/types';
+import { type ICstSubstituteInfo, type IOperationDTO, type IOperationSchemaDTO } from '../backend/types';
 
 /**
  * Represents Operation.

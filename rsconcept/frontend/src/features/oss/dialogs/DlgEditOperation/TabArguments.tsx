@@ -5,10 +5,10 @@ import { FlexColumn } from '@/components/Container';
 import { Label } from '@/components/Input';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { IOperationUpdateDTO } from '../../backend/types';
+import { type IOperationUpdateDTO } from '../../backend/types';
 import { PickMultiOperation } from '../../components/PickMultiOperation';
 
-import { DlgEditOperationProps } from './DlgEditOperation';
+import { type DlgEditOperationProps } from './DlgEditOperation';
 
 export function TabArguments() {
   const { control, setValue } = useFormContext<IOperationUpdateDTO>();

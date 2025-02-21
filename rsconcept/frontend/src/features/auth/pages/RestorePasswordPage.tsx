@@ -5,7 +5,7 @@ import clsx from 'clsx';
 
 import { isAxiosError } from '@/backend/apiTransport';
 import { SubmitButton, TextURL } from '@/components/Control';
-import { ErrorData } from '@/components/InfoError';
+import { type ErrorData } from '@/components/InfoError';
 import { TextInput } from '@/components/Input';
 
 import { useRequestPasswordReset } from '../backend/useRequestPasswordReset';

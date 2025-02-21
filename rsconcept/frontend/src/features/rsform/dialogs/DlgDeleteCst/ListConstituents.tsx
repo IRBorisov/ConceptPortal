@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 
 import { labelConstituenta } from '../../labels';
-import { IRSForm } from '../../models/rsform';
+import { type IRSForm } from '../../models/rsform';
 
 interface ListConstituentsProps {
   list: number[];

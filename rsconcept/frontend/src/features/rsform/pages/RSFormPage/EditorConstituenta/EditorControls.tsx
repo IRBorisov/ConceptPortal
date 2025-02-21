@@ -8,7 +8,7 @@ import { useModificationStore } from '@/stores/modification';
 import { tooltipText } from '@/utils/labels';
 
 import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
-import { IConstituenta } from '../../../models/rsform';
+import { type IConstituenta } from '../../../models/rsform';
 import { useRSEdit } from '../RSEditContext';
 
 interface EditorControlsProps {

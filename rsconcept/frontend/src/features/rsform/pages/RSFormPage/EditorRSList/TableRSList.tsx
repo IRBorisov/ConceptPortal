@@ -4,8 +4,8 @@ import { useLayoutEffect, useState } from 'react';
 import clsx from 'clsx';
 
 import { TextURL } from '@/components/Control';
-import { createColumnHelper, DataTable, RowSelectionState, VisibilityState } from '@/components/DataTable';
-import { CProps } from '@/components/props';
+import { createColumnHelper, DataTable, type RowSelectionState, type VisibilityState } from '@/components/DataTable';
+import { type EventMouse } from '@/components/props';
 import { NoData, TextContent } from '@/components/View';
 import { useWindowSize } from '@/hooks/useWindowSize';
 import { PARAMETER, prefixes } from '@/utils/constants';
@@ -13,7 +13,7 @@ import { truncateToSymbol } from '@/utils/utils';
 
 import { BadgeConstituenta } from '../../../components/BadgeConstituenta';
 import { labelCstTypification } from '../../../labels';
-import { IConstituenta } from '../../../models/rsform';
+import { type IConstituenta } from '../../../models/rsform';
 
 interface TableRSListProps {
   items?: IConstituenta[];
@@ -57,14 +57,14 @@ export function TableRSList({
     });
   }, [windowSize]);
 
-  function handleRowClicked(cst: IConstituenta, event: CProps.EventMouse) {
+  function handleRowClicked(cst: IConstituenta, event: EventMouse) {
     if (event.altKey) {
       event.preventDefault();
       onEdit(cst.id);
     }
   }
 
-  function handleRowDoubleClicked(cst: IConstituenta, event: CProps.EventMouse) {
+  function handleRowDoubleClicked(cst: IConstituenta, event: EventMouse) {
     event.preventDefault();
     onEdit(cst.id);
   }

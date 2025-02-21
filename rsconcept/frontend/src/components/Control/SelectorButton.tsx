@@ -2,9 +2,9 @@ import clsx from 'clsx';
 
 import { globalIDs } from '@/utils/constants';
 
-import { CProps } from '../props';
+import { type Button } from '../props';
 
-interface SelectorButtonProps extends CProps.Button {
+interface SelectorButtonProps extends Button {
   /** Text to display in the button. */
   text?: string;
 

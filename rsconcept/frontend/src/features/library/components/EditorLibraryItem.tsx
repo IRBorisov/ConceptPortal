@@ -16,14 +16,14 @@ import {
   IconOwner
 } from '@/components/Icons';
 import { Loader } from '@/components/Loader';
-import { CProps } from '@/components/props';
+import { type EventMouse } from '@/components/props';
 import { ValueIcon } from '@/components/View';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { prefixes } from '@/utils/constants';
 import { promptText } from '@/utils/labels';
 
-import { ILibraryItemData } from '../backend/types';
+import { type ILibraryItemData } from '../backend/types';
 import { useMutatingLibrary } from '../backend/useMutatingLibrary';
 import { useSetLocation } from '../backend/useSetLocation';
 import { useSetOwner } from '../backend/useSetOwner';
@@ -62,7 +62,7 @@ export function EditorLibraryItem({ schema, isAttachedToOSS }: EditorLibraryItem
     void setOwner({ itemID: schema.id, owner: newValue });
   };
 
-  function handleOpenLibrary(event: CProps.EventMouse) {
+  function handleOpenLibrary(event: EventMouse) {
     setGlobalLocation(schema.location);
     router.push(urls.library, event.ctrlKey || event.metaKey);
   }
@@ -92,7 +92,7 @@ export function EditorLibraryItem({ schema, isAttachedToOSS }: EditorLibraryItem
           onClick={handleOpenLibrary}
         />
         <ValueIcon
-          className='text-ellipsis flex-grow'
+          className='text-ellipsis grow'
           icon={<IconFolderEdit size='1.25rem' className='icon-primary' />}
           value={schema.location}
           title={isAttachedToOSS ? 'Путь наследуется от ОСС' : 'Путь'}

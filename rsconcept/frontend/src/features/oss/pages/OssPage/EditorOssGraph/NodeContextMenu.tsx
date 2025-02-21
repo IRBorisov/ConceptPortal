@@ -18,7 +18,7 @@ import { prepareTooltip } from '@/utils/utils';
 
 import { OperationType } from '../../../backend/types';
 import { useMutatingOss } from '../../../backend/useMutatingOss';
-import { IOperation } from '../../../models/oss';
+import { type IOperation } from '../../../models/oss';
 import { useOssEdit } from '../OssEditContext';
 
 export interface ContextMenuData {

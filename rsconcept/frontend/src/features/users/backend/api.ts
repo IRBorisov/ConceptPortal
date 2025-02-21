@@ -4,9 +4,9 @@ import { axiosGet, axiosPatch, axiosPost } from '@/backend/apiTransport';
 import { DELAYS, KEYS } from '@/backend/configuration';
 import { infoMsg } from '@/utils/labels';
 
-import { IUserInfo, IUserProfile } from '../models/user';
+import { type IUserInfo, type IUserProfile } from '../models/user';
 
-import { IUpdateProfileDTO, IUserSignupDTO } from './types';
+import { type IUpdateProfileDTO, type IUserSignupDTO } from './types';
 
 export const usersApi = {
   baseKey: KEYS.users,

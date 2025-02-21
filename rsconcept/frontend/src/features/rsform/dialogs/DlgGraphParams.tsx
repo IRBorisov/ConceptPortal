@@ -7,7 +7,7 @@ import { ModalForm } from '@/components/Modal';
 
 import { CstType } from '../backend/types';
 import { labelCstType } from '../labels';
-import { GraphFilterParams, useTermGraphStore } from '../stores/termGraph';
+import { type GraphFilterParams, useTermGraphStore } from '../stores/termGraph';
 
 export function DlgGraphParams() {
   const params = useTermGraphStore(state => state.filter);

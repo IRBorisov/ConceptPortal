@@ -3,9 +3,9 @@ import clsx from 'clsx';
 import { globalIDs } from '@/utils/constants';
 
 import { CheckboxChecked } from '../Icons';
-import { CProps } from '../props';
+import { type Button, type EventMouse } from '../props';
 
-export interface CheckboxProps extends Omit<CProps.Button, 'value' | 'onClick' | 'onChange'> {
+export interface CheckboxProps extends Omit<Button, 'value' | 'onClick' | 'onChange'> {
   /** Label to display next to the checkbox. */
   label?: string;
 
@@ -35,7 +35,7 @@ export function Checkbox({
 }: CheckboxProps) {
   const cursor = disabled ? 'cursor-arrow' : onChange ? 'cursor-pointer' : '';
 
-  function handleClick(event: CProps.EventMouse): void {
+  function handleClick(event: EventMouse): void {
     event.preventDefault();
     event.stopPropagation();
     if (disabled || !onChange) {
@@ -49,7 +49,7 @@ export function Checkbox({
       type='button'
       className={clsx(
         'flex items-center gap-2', //
-        'outline-none',
+        'outline-hidden',
         'focus-frame',
         cursor,
         className
@@ -66,7 +66,7 @@ export function Checkbox({
         className={clsx(
           'max-w-[1rem] min-w-[1rem] h-4', //
           'pt-[0.05rem] pl-[0.05rem]',
-          'border rounded-sm',
+          'border rounded-xs',
           'cc-animate-color',
           {
             'bg-sec-600 text-sec-0': value !== false,

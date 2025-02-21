@@ -7,10 +7,10 @@ import { LibraryItemType, PickSchema, useLibrary } from '@/features/library';
 import { TextInput } from '@/components/Input';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { IInlineSynthesisDTO } from '../../backend/types';
+import { type IInlineSynthesisDTO } from '../../backend/types';
 import { sortItemsForInlineSynthesis } from '../../models/rsformAPI';
 
-import { DlgInlineSynthesisProps } from './DlgInlineSynthesis';
+import { type DlgInlineSynthesisProps } from './DlgInlineSynthesis';
 
 export function TabSource() {
   const { items: libraryItems } = useLibrary();
@@ -47,7 +47,7 @@ export function TabSource() {
           id='dlg_selected_schema_title'
           disabled
           noBorder
-          className='flex-grow'
+          className='grow'
           placeholder='Схема не выбрана'
           value={selectedInfo?.title ?? ''}
           dense

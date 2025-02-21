@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import clsx from 'clsx';
 
 import { HelpTopic } from '@/features/help';
-import { ILibraryItem, SelectLibraryItem, useLibrary } from '@/features/library';
+import { type ILibraryItem, SelectLibraryItem, useLibrary } from '@/features/library';
 import { PickMultiConstituenta, useRSForm } from '@/features/rsform';
 
 import { MiniButton } from '@/components/Control';
@@ -15,10 +15,10 @@ import { Loader } from '@/components/Loader';
 import { ModalForm } from '@/components/Modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { ICstRelocateDTO, IOperationPosition, schemaCstRelocate } from '../backend/types';
+import { type ICstRelocateDTO, type IOperationPosition, schemaCstRelocate } from '../backend/types';
 import { useRelocateConstituents } from '../backend/useRelocateConstituents';
 import { useUpdatePositions } from '../backend/useUpdatePositions';
-import { IOperation, IOperationSchema } from '../models/oss';
+import { type IOperation, type IOperationSchema } from '../models/oss';
 import { getRelocateCandidates } from '../models/ossAPI';
 
 export interface DlgRelocateConstituentsProps {

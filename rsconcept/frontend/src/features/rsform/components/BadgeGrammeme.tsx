@@ -4,7 +4,7 @@ import { APP_COLORS } from '@/styling/colors';
 
 import { colorFgGrammeme } from '../colors';
 import { labelGrammeme } from '../labels';
-import { GramData } from '../models/language';
+import { type GramData } from '../models/language';
 
 interface BadgeGrammemeProps {
   /** Grammeme to display. */

@@ -8,12 +8,12 @@ import { urls, useConceptNavigation } from '@/app';
 
 import { isAxiosError } from '@/backend/apiTransport';
 import { SubmitButton, TextURL } from '@/components/Control';
-import { ErrorData } from '@/components/InfoError';
+import { type ErrorData } from '@/components/InfoError';
 import { TextInput } from '@/components/Input';
 import { useQueryStrings } from '@/hooks/useQueryStrings';
 import { resources } from '@/utils/constants';
 
-import { IUserLoginDTO, schemaUserLogin } from '../backend/types';
+import { type IUserLoginDTO, schemaUserLogin } from '../backend/types';
 import { useAuthSuspense } from '../backend/useAuth';
 import { useLogin } from '../backend/useLogin';
 import { ExpectedAnonymous } from '../components/ExpectedAnonymous';

@@ -1,11 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { ILibraryItem } from '@/features/library/backend/types';
+import { type ILibraryItem } from '@/features/library/backend/types';
 
 import { KEYS } from '@/backend/configuration';
 
 import { ossApi } from './api';
-import { IOperationUpdateDTO } from './types';
+import { type IOperationUpdateDTO } from './types';
 
 export const useOperationUpdate = () => {
   const client = useQueryClient();

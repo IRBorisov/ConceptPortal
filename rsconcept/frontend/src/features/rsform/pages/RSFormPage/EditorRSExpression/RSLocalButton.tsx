@@ -1,11 +1,11 @@
 import clsx from 'clsx';
 
-import { CProps } from '@/components/props';
+import { type Styling, type Titled } from '@/components/props';
 import { globalIDs } from '@/utils/constants';
 
 import { TokenID } from '../../../backend/types';
 
-interface RSLocalButtonProps extends CProps.Titled, CProps.Styling {
+interface RSLocalButtonProps extends Titled, Styling {
   text: string;
   disabled?: boolean;
   onInsert: (token: TokenID, key?: string) => void;

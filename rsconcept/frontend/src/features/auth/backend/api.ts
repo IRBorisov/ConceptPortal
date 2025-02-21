@@ -5,12 +5,12 @@ import { DELAYS, KEYS } from '@/backend/configuration';
 import { infoMsg } from '@/utils/labels';
 
 import {
-  IChangePasswordDTO,
-  ICurrentUser,
-  IPasswordTokenDTO,
-  IRequestPasswordDTO,
-  IResetPasswordDTO,
-  IUserLoginDTO
+  type IChangePasswordDTO,
+  type ICurrentUser,
+  type IPasswordTokenDTO,
+  type IRequestPasswordDTO,
+  type IResetPasswordDTO,
+  type IUserLoginDTO
 } from './types';
 
 /**

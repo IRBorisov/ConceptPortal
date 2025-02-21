@@ -5,11 +5,11 @@ import clsx from 'clsx';
 
 import { Button } from '../Control';
 import { IconUpload } from '../Icons';
-import { CProps } from '../props';
+import { type Input } from '../props';
 
 import { Label } from './Label';
 
-interface FileInputProps extends Omit<CProps.Input, 'accept' | 'type'> {
+interface FileInputProps extends Omit<Input, 'accept' | 'type'> {
   /** Label to display in file upload button. */
   label: string;
 

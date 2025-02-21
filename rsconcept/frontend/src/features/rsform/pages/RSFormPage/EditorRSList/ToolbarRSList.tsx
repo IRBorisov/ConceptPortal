@@ -4,7 +4,7 @@ import { CstType } from '@/features/rsform';
 
 import { Overlay } from '@/components/Container';
 import { MiniButton } from '@/components/Control';
-import { DomIconProps } from '@/components/DomainIcons';
+import { type DomIconProps } from '@/components/DomainIcons';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/Dropdown';
 import {
   IconClone,
@@ -49,8 +49,8 @@ export function ToolbarRSList() {
 
   return (
     <Overlay
-      position='cc-tab-tools right-4 translate-x-0 md:right-1/2 md:translate-x-1/2'
-      className='cc-icons cc-animate-position items-start outline-none'
+      position='cc-tab-tools right-4 md:right-1/2 -translate-x-1/2 md:translate-x-0'
+      className='cc-icons cc-animate-position items-start outline-hidden'
     >
       {schema.oss.length > 0 ? (
         <MiniSelectorOSS

@@ -3,14 +3,14 @@
 import clsx from 'clsx';
 
 import { SelectSingle } from '@/components/Input';
-import { CProps } from '@/components/props';
+import { type Styling } from '@/components/props';
 
 import { describeConstituenta, describeConstituentaTerm } from '../labels';
-import { IConstituenta } from '../models/rsform';
+import { type IConstituenta } from '../models/rsform';
 import { matchConstituenta } from '../models/rsformAPI';
 import { CstMatchMode } from '../stores/cstSearch';
 
-interface SelectConstituentaProps extends CProps.Styling {
+interface SelectConstituentaProps extends Styling {
   value: IConstituenta | null;
   onChange: (newValue: IConstituenta | null) => void;
 

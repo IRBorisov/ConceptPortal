@@ -9,7 +9,7 @@ import { useWindowSize } from '@/hooks/useWindowSize';
 import { useFitHeight } from '@/stores/appLayout';
 import { PARAMETER } from '@/utils/constants';
 
-import { IConstituenta } from '../../../models/rsform';
+import { type IConstituenta } from '../../../models/rsform';
 import { useRSEdit } from '../RSEditContext';
 
 import { ConstituentsSearch } from './ConstituentsSearch';

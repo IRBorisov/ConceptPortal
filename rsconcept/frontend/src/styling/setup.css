@@ -2,111 +2,119 @@
  * Module: Basic styling setup.
  */
 
-@import './constants.css';
+@import './constants.css' layer(base);
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-*,
-*::after,
-*::before {
-  box-sizing: border-box;
-
-  /* Uncomment to debug layering and overflow */
-  /* background: hsla(135, 50%, 50%, 0.05); */
-  /* outline: 2px solid hotpink; */
-}
-
-html {
-  -webkit-text-size-adjust: none;
-  -moz-text-size-adjust: none;
-  text-size-adjust: none;
-
-  hanging-punctuation: first last;
-  color-scheme: dark light;
-
-  interpolate-size: allow-keywords;
-}
-
-body {
-  margin: 0px;
-  padding: 0px;
-  overflow-x: hidden;
-}
-
-[data-color-scheme='dark'] {
-  color-scheme: dark;
-}
-
-[data-color-scheme='light'] {
-  color-scheme: light;
-}
-
-/* Default scroll behavior */
-@media (prefers-reduced-motion: no-preference) {
-  :has(:target) {
-    scroll-behavior: smooth;
-    scroll-padding-top: var(--scroll-padding);
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--clr-prim-400);
   }
 }
 
-:root {
-  interpolate-size: allow-keywords;
+@layer utilities {
+  *,
+  *::after,
+  *::before {
+    box-sizing: border-box;
 
-  font-size: var(--font-size-base);
-  line-height: var(--line-height);
-  font-family: var(--font-main);
+    /* Uncomment to debug layering and overflow */
+    /* background: hsla(135, 50%, 50%, 0.05); */
+    /* outline: 2px solid hotpink; */
+  }
 
-  color: var(--clr-prim-999);
-  border-color: var(--clr-prim-400);
-  background-color: var(--clr-prim-100);
-}
+  html {
+    -webkit-text-size-adjust: none;
+    -moz-text-size-adjust: none;
+    text-size-adjust: none;
 
-@media only screen and (max-width: 639px) {
+    hanging-punctuation: first last;
+    color-scheme: dark light;
+
+    interpolate-size: allow-keywords;
+  }
+
+  body {
+    margin: 0px;
+    padding: 0px;
+    overflow-x: hidden;
+  }
+
+  [data-color-scheme='dark'] {
+    color-scheme: dark;
+  }
+
+  [data-color-scheme='light'] {
+    color-scheme: light;
+  }
+
+  /* Default scroll behavior */
+  @media (prefers-reduced-motion: no-preference) {
+    :has(:target) {
+      scroll-behavior: smooth;
+      scroll-padding-top: var(--scroll-padding);
+    }
+  }
+
   :root {
-    font-size: var(--font-size-sm);
+    interpolate-size: allow-keywords;
+
+    font-size: var(--font-size-base);
+    line-height: var(--line-height);
+    font-family: var(--font-main);
+
+    color: var(--clr-prim-999);
+    border-color: var(--clr-prim-400);
+    background-color: var(--clr-prim-100);
   }
-}
 
-:focus,
-:focus-visible,
-:focus-within {
-  outline-width: 2px;
-  outline-style: solid;
-  outline-color: transparent;
-}
-
-::selection {
-  background: var(--clr-sec-100);
-  tr :hover& {
-    background: var(--clr-warn-100);
+  @media only screen and (max-width: 639px) {
+    :root {
+      font-size: var(--font-size-sm);
+    }
   }
-}
 
-::placeholder {
-  color: var(--clr-prim-600);
-}
+  :focus,
+  :focus-visible,
+  :focus-within {
+    outline-width: 2px;
+    outline-style: solid;
+    outline-color: transparent;
+  }
 
-/* Wrapping headers */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  text-wrap: balance;
-}
+  ::selection {
+    background: var(--clr-sec-100);
+    tr :hover& {
+      background: var(--clr-warn-100);
+    }
+  }
 
-/* Limit text lines and setup wrapping */
-p,
-li {
-  max-width: var(--text-max-width);
-  text-wrap: pretty;
-}
+  ::placeholder {
+    color: var(--clr-prim-600);
+  }
 
-div:not(.dense) > p:not(:last-child) {
-  margin-bottom: 0.5rem;
+  /* Wrapping headers */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    text-wrap: balance;
+  }
+
+  /* Limit text lines and setup wrapping */
+  p,
+  li {
+    max-width: var(--text-max-width);
+    text-wrap: pretty;
+  }
+
+  div:not(.dense) > p:not(:last-child) {
+    margin-bottom: 0.5rem;
+  }
 }
 
 @layer components {
@@ -147,36 +155,12 @@ div:not(.dense) > p:not(:last-child) {
   li::marker {
     content: '–\2009';
   }
+}
 
-  .border {
-    border-radius: 0.25rem;
-  }
+@utility border {
+  border-radius: 0.25rem;
+}
 
-  .border,
-  .border-x,
-  .border-y,
-  .border-b,
-  .border-t,
-  .border-l,
-  .border-r,
-  .border-2,
-  .border-x-2,
-  .border-y-2,
-  .border-b-2,
-  .border-t-2,
-  .border-l-2,
-  .border-r-2,
-  .divide-x,
-  .divide-y,
-  .divide-x-2,
-  .divide-y-2 {
-    border-color: var(--clr-prim-400);
-    & > :not([hidden]) ~ :not([hidden]) {
-      border-color: inherit;
-    }
-  }
-
-  .sticky {
-    z-index: 20;
-  }
+@utility sticky {
+  z-index: 20;
 }

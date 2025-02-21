@@ -13,7 +13,7 @@ import { Button, MiniButton } from '../Control';
 import { IconClose } from '../Icons';
 
 import { ModalBackdrop } from './ModalBackdrop';
-import { ModalProps } from './ModalForm';
+import { type ModalProps } from './ModalForm';
 
 interface ModalViewProps extends ModalProps {}
 
@@ -60,7 +60,7 @@ export function ModalView({
 
         <div
           className={clsx(
-            'overscroll-contain max-h-[calc(100svh-8rem)] max-w-[100svw] xs:max-w-[calc(100svw-2rem)] outline-none',
+            'overscroll-contain max-h-[calc(100svh-8rem)] max-w-[100svw] xs:max-w-[calc(100svw-2rem)] outline-hidden',
             {
               'overflow-auto': !overflowVisible,
               'overflow-visible': overflowVisible

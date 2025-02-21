@@ -1,10 +1,11 @@
 import clsx from 'clsx';
 
-import { CProps } from '@/components/props';
 import { globalIDs } from '@/utils/constants';
 import { truncateToLastWord } from '@/utils/utils';
 
-export interface TextContentProps extends CProps.Styling {
+import { type Styling } from '../props';
+
+export interface TextContentProps extends Styling {
   /** Text to display. */
   text: string;
 

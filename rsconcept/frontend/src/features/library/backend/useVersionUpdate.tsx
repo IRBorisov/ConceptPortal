@@ -1,11 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { IRSFormDTO } from '@/features/rsform/backend/types';
+import { type IRSFormDTO } from '@/features/rsform/backend/types';
 
 import { KEYS } from '@/backend/configuration';
 
 import { libraryApi } from './api';
-import { IVersionUpdateDTO } from './types';
+import { type IVersionUpdateDTO } from './types';
 
 export const useVersionUpdate = () => {
   const client = useQueryClient();

@@ -1,10 +1,14 @@
 'use client';
 
 import { forwardRef, useRef, useState } from 'react';
-import { Extension } from '@codemirror/state';
+import { type Extension } from '@codemirror/state';
 import { tags } from '@lezer/highlight';
 import { createTheme } from '@uiw/codemirror-themes';
-import CodeMirror, { BasicSetupOptions, ReactCodeMirrorProps, ReactCodeMirrorRef } from '@uiw/react-codemirror';
+import CodeMirror, {
+  type BasicSetupOptions,
+  type ReactCodeMirrorProps,
+  type ReactCodeMirrorRef
+} from '@uiw/react-codemirror';
 import clsx from 'clsx';
 import { EditorView } from 'codemirror';
 
@@ -15,10 +19,10 @@ import { APP_COLORS } from '@/styling/colors';
 import { CodeMirrorWrapper } from '@/utils/codemirror';
 import { PARAMETER } from '@/utils/constants';
 
-import { IReferenceInputState } from '../../dialogs/DlgEditReference/DlgEditReference';
+import { type IReferenceInputState } from '../../dialogs/DlgEditReference/DlgEditReference';
 import { ReferenceType } from '../../models/language';
 import { referenceToString } from '../../models/languageAPI';
-import { IRSForm } from '../../models/rsform';
+import { type IRSForm } from '../../models/rsform';
 
 import { RefEntity } from './parse/parser.terms';
 import { refsNavigation } from './clickNavigation';

@@ -9,7 +9,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { prefixes } from '@/utils/constants';
 
 import { useCstDelete } from '../../backend/useCstDelete';
-import { IRSForm } from '../../models/rsform';
+import { type IRSForm } from '../../models/rsform';
 
 import { ListConstituents } from './ListConstituents';
 

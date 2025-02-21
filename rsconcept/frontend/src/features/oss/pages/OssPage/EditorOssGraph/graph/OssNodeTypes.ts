@@ -1,4 +1,4 @@
-import { NodeTypes } from 'reactflow';
+import { type NodeTypes } from 'reactflow';
 
 import { InputNode } from './InputNode';
 import { OperationNode } from './OperationNode';

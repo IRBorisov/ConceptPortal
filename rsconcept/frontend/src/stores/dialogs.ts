@@ -1,27 +1,27 @@
 import { create } from 'zustand';
 
-import { DlgChangeLocationProps } from '@/features/library/dialogs/DlgChangeLocation';
-import { DlgCloneLibraryItemProps } from '@/features/library/dialogs/DlgCloneLibraryItem';
-import { DlgCreateVersionProps } from '@/features/library/dialogs/DlgCreateVersion';
-import { DlgEditEditorsProps } from '@/features/library/dialogs/DlgEditEditors/DlgEditEditors';
-import { DlgEditVersionsProps } from '@/features/library/dialogs/DlgEditVersions/DlgEditVersions';
-import { DlgChangeInputSchemaProps } from '@/features/oss/dialogs/DlgChangeInputSchema';
-import { DlgCreateOperationProps } from '@/features/oss/dialogs/DlgCreateOperation/DlgCreateOperation';
-import { DlgDeleteOperationProps } from '@/features/oss/dialogs/DlgDeleteOperation';
-import { DlgEditOperationProps } from '@/features/oss/dialogs/DlgEditOperation/DlgEditOperation';
-import { DlgRelocateConstituentsProps } from '@/features/oss/dialogs/DlgRelocateConstituents';
-import { DlgCreateCstProps } from '@/features/rsform/dialogs/DlgCreateCst/DlgCreateCst';
-import { DlgCstTemplateProps } from '@/features/rsform/dialogs/DlgCstTemplate/DlgCstTemplate';
-import { DlgDeleteCstProps } from '@/features/rsform/dialogs/DlgDeleteCst/DlgDeleteCst';
-import { DlgEditReferenceProps } from '@/features/rsform/dialogs/DlgEditReference/DlgEditReference';
-import { DlgEditWordFormsProps } from '@/features/rsform/dialogs/DlgEditWordForms/DlgEditWordForms';
-import { DlgInlineSynthesisProps } from '@/features/rsform/dialogs/DlgInlineSynthesis/DlgInlineSynthesis';
-import { DlgRenameCstProps } from '@/features/rsform/dialogs/DlgRenameCst';
-import { DlgShowASTProps } from '@/features/rsform/dialogs/DlgShowAST/DlgShowAST';
-import { DlgShowQRProps } from '@/features/rsform/dialogs/DlgShowQR';
-import { DlgShowTypeGraphProps } from '@/features/rsform/dialogs/DlgShowTypeGraph/DlgShowTypeGraph';
-import { DlgSubstituteCstProps } from '@/features/rsform/dialogs/DlgSubstituteCst';
-import { DlgUploadRSFormProps } from '@/features/rsform/dialogs/DlgUploadRSForm';
+import { type DlgChangeLocationProps } from '@/features/library/dialogs/DlgChangeLocation';
+import { type DlgCloneLibraryItemProps } from '@/features/library/dialogs/DlgCloneLibraryItem';
+import { type DlgCreateVersionProps } from '@/features/library/dialogs/DlgCreateVersion';
+import { type DlgEditEditorsProps } from '@/features/library/dialogs/DlgEditEditors/DlgEditEditors';
+import { type DlgEditVersionsProps } from '@/features/library/dialogs/DlgEditVersions/DlgEditVersions';
+import { type DlgChangeInputSchemaProps } from '@/features/oss/dialogs/DlgChangeInputSchema';
+import { type DlgCreateOperationProps } from '@/features/oss/dialogs/DlgCreateOperation/DlgCreateOperation';
+import { type DlgDeleteOperationProps } from '@/features/oss/dialogs/DlgDeleteOperation';
+import { type DlgEditOperationProps } from '@/features/oss/dialogs/DlgEditOperation/DlgEditOperation';
+import { type DlgRelocateConstituentsProps } from '@/features/oss/dialogs/DlgRelocateConstituents';
+import { type DlgCreateCstProps } from '@/features/rsform/dialogs/DlgCreateCst/DlgCreateCst';
+import { type DlgCstTemplateProps } from '@/features/rsform/dialogs/DlgCstTemplate/DlgCstTemplate';
+import { type DlgDeleteCstProps } from '@/features/rsform/dialogs/DlgDeleteCst/DlgDeleteCst';
+import { type DlgEditReferenceProps } from '@/features/rsform/dialogs/DlgEditReference/DlgEditReference';
+import { type DlgEditWordFormsProps } from '@/features/rsform/dialogs/DlgEditWordForms/DlgEditWordForms';
+import { type DlgInlineSynthesisProps } from '@/features/rsform/dialogs/DlgInlineSynthesis/DlgInlineSynthesis';
+import { type DlgRenameCstProps } from '@/features/rsform/dialogs/DlgRenameCst';
+import { type DlgShowASTProps } from '@/features/rsform/dialogs/DlgShowAST/DlgShowAST';
+import { type DlgShowQRProps } from '@/features/rsform/dialogs/DlgShowQR';
+import { type DlgShowTypeGraphProps } from '@/features/rsform/dialogs/DlgShowTypeGraph/DlgShowTypeGraph';
+import { type DlgSubstituteCstProps } from '@/features/rsform/dialogs/DlgSubstituteCst';
+import { type DlgUploadRSFormProps } from '@/features/rsform/dialogs/DlgUploadRSForm';
 
 /**
  * Represents global dialog.

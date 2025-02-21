@@ -1,8 +1,8 @@
 import clsx from 'clsx';
 
-import { CProps } from '../props';
+import { type Styling } from '../props';
 
-interface DividerProps extends CProps.Styling {
+interface DividerProps extends Styling {
   /** Indicates whether the divider is vertical. */
   vertical?: boolean;
 

@@ -9,10 +9,10 @@ import { BadgeHelp, HelpTopic } from '@/features/help';
 import { TextArea, TextInput } from '@/components/Input';
 import { PARAMETER } from '@/utils/constants';
 
-import { CstType, ICstCreateDTO } from '../../backend/types';
+import { CstType, type ICstCreateDTO } from '../../backend/types';
 import { RSInput } from '../../components/RSInput';
 import { SelectCstType } from '../../components/SelectCstType';
-import { IRSForm } from '../../models/rsform';
+import { type IRSForm } from '../../models/rsform';
 import { generateAlias, isBaseSet, isBasicConcept, isFunctional } from '../../models/rsformAPI';
 
 interface FormCreateCstProps {

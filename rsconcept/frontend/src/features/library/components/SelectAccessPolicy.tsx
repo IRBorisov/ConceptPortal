@@ -1,16 +1,16 @@
 'use client';
 
 import { MiniButton } from '@/components/Control';
-import { DomIconProps } from '@/components/DomainIcons';
+import { type DomIconProps } from '@/components/DomainIcons';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/Dropdown';
 import { IconPrivate, IconProtected, IconPublic } from '@/components/Icons';
-import { CProps } from '@/components/props';
+import { type Styling } from '@/components/props';
 import { prefixes } from '@/utils/constants';
 
 import { AccessPolicy } from '../backend/types';
 import { describeAccessPolicy, labelAccessPolicy } from '../labels';
 
-interface SelectAccessPolicyProps extends CProps.Styling {
+interface SelectAccessPolicyProps extends Styling {
   value: AccessPolicy;
   onChange: (value: AccessPolicy) => void;
 

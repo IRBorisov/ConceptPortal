@@ -2,11 +2,11 @@ import clsx from 'clsx';
 
 import { Overlay } from '@/components/Container';
 import { IconSearch } from '@/components/Icons';
-import { CProps } from '@/components/props';
+import { type Styling } from '@/components/props';
 
 import { TextInput } from './TextInput';
 
-interface SearchBarProps extends CProps.Styling {
+interface SearchBarProps extends Styling {
   /** Id of the search bar. */
   id?: string;
 
@@ -50,7 +50,8 @@ export function SearchBar({
         noOutline
         placeholder={placeholder}
         type='search'
-        className={clsx('outline-none bg-transparent', !noIcon && 'pl-10')}
+        colors='bg-transparent'
+        className={clsx(!noIcon && 'pl-10')}
         noBorder={noBorder}
         value={query}
         onChange={event => onChangeQuery?.(event.target.value)}

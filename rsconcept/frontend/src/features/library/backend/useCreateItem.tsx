@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { KEYS } from '@/backend/configuration';
 
 import { libraryApi } from './api';
-import { ICreateLibraryItemDTO } from './types';
+import { type ICreateLibraryItemDTO } from './types';
 
 export const useCreateItem = () => {
   const client = useQueryClient();

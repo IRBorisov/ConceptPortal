@@ -1,15 +1,15 @@
 import { Overlay } from '@/components/Container';
 import { MiniButton } from '@/components/Control';
 import { IconControls, IconTree, IconTypeGraph } from '@/components/Icons';
-import { CProps } from '@/components/props';
+import { type EventMouse } from '@/components/props';
 import { usePreferencesStore } from '@/stores/preferences';
 
 import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
 
 interface ToolbarRSExpressionProps {
   disabled?: boolean;
-  showAST: (event: CProps.EventMouse) => void;
-  showTypeGraph: (event: CProps.EventMouse) => void;
+  showAST: (event: EventMouse) => void;
+  showTypeGraph: (event: EventMouse) => void;
 }
 
 export function ToolbarRSExpression({ disabled, showTypeGraph, showAST }: ToolbarRSExpressionProps) {

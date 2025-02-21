@@ -1,6 +1,6 @@
 import { Handle, Position } from 'reactflow';
 
-import { OssNodeInternal } from '../../../../models/ossLayout';
+import { type OssNodeInternal } from '../../../../models/ossLayout';
 
 import { NodeCore } from './NodeCore';
 

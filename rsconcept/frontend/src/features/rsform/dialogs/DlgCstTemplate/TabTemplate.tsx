@@ -69,7 +69,7 @@ export function TabTemplate() {
           noBorder
           isSearchable={false}
           placeholder='Выберите категорию'
-          className='flex-grow ml-1 border-none'
+          className='grow ml-1 border-none'
           options={categorySelector}
           value={
             filterCategory && templateSchema

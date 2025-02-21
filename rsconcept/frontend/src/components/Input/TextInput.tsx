@@ -1,11 +1,11 @@
 import clsx from 'clsx';
 
 import { Label } from '../Input/Label';
-import { CProps } from '../props';
+import { type Colors, type Editor, type ErrorProcessing, type Input } from '../props';
 
 import { ErrorField } from './ErrorField';
 
-interface TextInputProps extends CProps.Editor, CProps.ErrorProcessing, CProps.Colors, CProps.Input {
+interface TextInputProps extends Editor, ErrorProcessing, Colors, Input {
   /** Indicates that padding should be minimal. */
   dense?: boolean;
 
@@ -54,7 +54,7 @@ export function TextInput({
           'leading-tight truncate hover:text-clip',
           {
             'px-3': !noBorder || !disabled,
-            'flex-grow max-w-full': dense,
+            'grow max-w-full': dense,
             'mt-2': !dense && !!label,
             'border': !noBorder,
             'clr-outline': !noOutline

@@ -3,14 +3,14 @@
 import { SelectorButton } from '@/components/Control';
 import { DependencyIcon } from '@/components/DomainIcons';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/Dropdown';
-import { CProps } from '@/components/props';
+import { type Styling } from '@/components/props';
 import { useWindowSize } from '@/hooks/useWindowSize';
 import { prefixes } from '@/utils/constants';
 
 import { describeCstSource, labelCstSource } from '../../../labels';
 import { DependencyMode } from '../../../stores/cstSearch';
 
-interface SelectGraphFilterProps extends CProps.Styling {
+interface SelectGraphFilterProps extends Styling {
   value: DependencyMode;
   onChange: (value: DependencyMode) => void;
   dense?: boolean;

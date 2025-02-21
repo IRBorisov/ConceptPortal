@@ -11,11 +11,11 @@ import { prepareTooltip } from '@/utils/utils';
 
 import { Button, MiniButton, SubmitButton } from '../Control';
 import { IconClose } from '../Icons';
-import { CProps } from '../props';
+import { type Styling } from '../props';
 
 import { ModalBackdrop } from './ModalBackdrop';
 
-export interface ModalProps extends CProps.Styling {
+export interface ModalProps extends Styling {
   /** Title of the modal window. */
   header?: string;
 
@@ -115,7 +115,7 @@ export function ModalForm({
 
         <div
           className={clsx(
-            'overscroll-contain max-h-[calc(100svh-8rem)] max-w-[100svw] xs:max-w-[calc(100svw-2rem)] outline-none',
+            'overscroll-contain max-h-[calc(100svh-8rem)] max-w-[100svw] xs:max-w-[calc(100svw-2rem)] outline-hidden',
             {
               'overflow-auto': !overflowVisible,
               'overflow-visible': overflowVisible

@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { KEYS } from '@/backend/configuration';
 
 import { ossApi } from './api';
-import { ICstRelocateDTO } from './types';
+import { type ICstRelocateDTO } from './types';
 
 export const useRelocateConstituents = () => {
   const client = useQueryClient();

@@ -71,7 +71,7 @@ export function MenuOssTabs() {
   }
 
   return (
-    <div className='flex'>
+    <div className='flex  border-r-2'>
       <div ref={schemaMenu.ref}>
         <Button
           dense

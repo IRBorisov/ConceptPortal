@@ -4,8 +4,8 @@ import { Overlay } from '@/components/Container';
 import { SelectSingle } from '@/components/Input';
 
 import { mapLabelColoring } from '../../../labels';
-import { IRSForm } from '../../../models/rsform';
-import { GraphColoring } from '../../../stores/termGraph';
+import { type IRSForm } from '../../../models/rsform';
+import { type GraphColoring } from '../../../stores/termGraph';
 
 import { SchemasGuide } from './SchemasGuide';
 
