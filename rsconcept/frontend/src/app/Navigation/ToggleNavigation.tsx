@@ -22,7 +22,8 @@ export function ToggleNavigation() {
         !noNavigation && 'flex-col-reverse'
       )}
       style={{
-        transitionProperty: 'height, width, background-color',
+        willChange: 'height, width',
+        transitionProperty: 'height, width',
         transitionDuration: `${PARAMETER.moveDuration}ms`,
         height: noNavigationAnimation ? '2rem' : '3rem',
         width: noNavigationAnimation ? '3rem' : '2rem'
@@ -32,7 +33,7 @@ export function ToggleNavigation() {
         <button
           tabIndex={-1}
           type='button'
-          className='p-1'
+          className='p-1 cursor-pointer'
           onClick={toggleDarkMode}
           data-tooltip-id={globalIDs.tooltip}
           data-tooltip-content={darkMode ? 'Тема: Темная' : 'Тема: Светлая'}
@@ -44,7 +45,7 @@ export function ToggleNavigation() {
       <button
         tabIndex={-1}
         type='button'
-        className='p-1'
+        className='p-1 cursor-pointer'
         onClick={toggleNoNavigation}
         data-tooltip-id={globalIDs.tooltip}
         data-tooltip-content={noNavigationAnimation ? 'Показать навигацию' : 'Скрыть навигацию'}

@@ -46,6 +46,7 @@ export function Dropdown({
           className
         )}
         style={{
+          willChange: 'clip-path, transform',
           transitionProperty: 'clip-path, transform',
           transitionDuration: `${PARAMETER.dropdownDuration}ms`,
           transitionTimingFunction: 'ease-in-out',

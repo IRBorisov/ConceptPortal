@@ -13,13 +13,13 @@ import { type ILibraryItemReference } from '../models/library';
 
 interface MiniSelectorOSSProps extends Styling {
   items: ILibraryItemReference[];
-  onSelect: (event: React.MouseEvent<Element>, newValue: ILibraryItemReference) => void;
+  onSelect: (event: React.MouseEvent<HTMLElement>, newValue: ILibraryItemReference) => void;
 }
 
 export function MiniSelectorOSS({ items, onSelect, className, ...restProps }: MiniSelectorOSSProps) {
   const ossMenu = useDropdown();
 
-  function onToggle(event: React.MouseEvent<Element>) {
+  function onToggle(event: React.MouseEvent<HTMLElement>) {
     if (items.length > 1) {
       ossMenu.toggle();
     } else {

@@ -42,9 +42,10 @@ export function Navigation() {
           'cc-shadow-border'
         )}
         style={{
-          transitionProperty: 'height, translate',
+          willChange: 'max-height, translate',
+          transitionProperty: 'max-height, translate',
           transitionDuration: `${PARAMETER.moveDuration}ms`,
-          height: noNavigationAnimation ? '0rem' : '3rem',
+          maxHeight: noNavigationAnimation ? '0rem' : '3rem',
           translate: noNavigationAnimation ? '0 -1.5rem' : '0'
         }}
       >

@@ -62,11 +62,10 @@ export function ViewHidden({ items, selected, toggleSelection, setFocus, schema,
         <div
           className='w-fit select-none'
           style={{
-            transitionProperty: 'margin, translate',
+            transitionProperty: 'translate',
             transitionDuration: `${PARAMETER.fastAnimation}ms`,
             transitionTimingFunction: 'ease-out',
-            marginLeft: isFolded ? '0.75rem' : '0',
-            translate: isFolded ? '0' : 'calc(6.5rem - 50%)'
+            translate: isFolded ? '0.75rem' : 'calc(6.5rem - 50%)'
           }}
         >
           {`Скрытые [${localSelected.length} | ${items.length}]`}
@@ -84,6 +83,7 @@ export function ViewHidden({ items, selected, toggleSelection, setFocus, schema,
         style={{
           pointerEvents: isFolded ? 'none' : 'auto',
           maxHeight: hiddenHeight,
+          willChange: 'clip-path',
           transitionProperty: 'clip-path',
           transitionDuration: `${PARAMETER.fastAnimation}ms`,
           transitionTimingFunction: 'ease-out',

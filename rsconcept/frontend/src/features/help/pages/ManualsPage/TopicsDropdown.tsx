@@ -66,6 +66,7 @@ export function TopicsDropdown({ activeTopic, onChangeTopic }: TopicsDropdownPro
         )}
         style={{
           maxHeight: treeHeight,
+          willChange: 'clip-path',
           transitionProperty: 'clip-path',
           transitionDuration: `${PARAMETER.moveDuration}ms`,
           clipPath: menu.isOpen ? 'inset(0% 0% 0% 0%)' : 'inset(0% 100% 0% 0%)'

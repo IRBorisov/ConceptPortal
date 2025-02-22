@@ -98,11 +98,12 @@ export function RSEditorControls({ isOpen, disabled, onEdit }: RSEditorControlsP
         'select-none'
       )}
       style={{
-        transitionProperty: 'clipPath, height',
-        transitionDuration: `${PARAMETER.moveDuration}ms`,
         clipPath: isOpen ? 'inset(0% 0% 0% 0%)' : 'inset(0% 0% 100% 0%)',
         marginTop: isOpen ? '0.25rem' : '0rem',
-        height: isOpen ? 'max-content' : '0rem'
+        willChange: 'max-height',
+        transitionProperty: 'max-height',
+        transitionDuration: `${PARAMETER.moveDuration}ms`,
+        maxHeight: isOpen ? '4.5rem' : '0rem'
       }}
     >
       {MAIN_FIRST_ROW.map(token => (

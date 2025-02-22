@@ -98,11 +98,12 @@ export function SelectTree<ItemType>({
             onClick={event => handleSetValue(event, item)}
             style={{
               borderBottomWidth: isActive ? '1px' : '0px',
-              transitionProperty: 'height, opacity, padding',
+              willChange: 'max-height, opacity, padding',
+              transitionProperty: 'max-height, opacity, padding',
               transitionDuration: `${PARAMETER.moveDuration}ms`,
               paddingTop: isActive ? '0.25rem' : '0',
               paddingBottom: isActive ? '0.25rem' : '0',
-              height: isActive ? 'min-content' : '0',
+              maxHeight: isActive ? '1.75rem' : '0',
               opacity: isActive ? '1' : '0'
             }}
           >

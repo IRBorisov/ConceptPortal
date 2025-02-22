@@ -41,11 +41,12 @@ export function ViewConstituents({ isBottom, isMounted }: ViewConstituentsProps)
         }
       )}
       style={{
-        transitionProperty: 'opacity, width',
+        willChange: 'opacity, max-width',
+        transitionProperty: 'opacity, max-width',
         transitionDuration: `${2 * PARAMETER.moveDuration}ms`,
         transitionTimingFunction: 'ease-in-out',
         opacity: isMounted ? 1 : 0,
-        width: isMounted ? 'fit-content' : '0'
+        maxWidth: isMounted ? '100%' : '0'
       }}
     >
       <ConstituentsSearch
