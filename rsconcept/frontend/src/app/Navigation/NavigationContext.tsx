@@ -3,8 +3,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 
-import { contextOutsideScope } from '@/utils/labels';
-
 interface INavigationContext {
   push: (path: string, newTab?: boolean) => void;
   replace: (path: string) => void;
@@ -21,7 +19,7 @@ const NavigationContext = createContext<INavigationContext | null>(null);
 export const useConceptNavigation = () => {
   const context = useContext(NavigationContext);
   if (!context) {
-    throw new Error(contextOutsideScope('useConceptNavigation', 'NavigationState'));
+    throw new Error('useConceptNavigation has to be used within <NavigationState>');
   }
   return context;
 };

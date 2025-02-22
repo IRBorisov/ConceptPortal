@@ -4,37 +4,6 @@
  * Label is a short text used to represent an entity.
  * Description is a long description used in tooltips.
  */
-import { UserRole } from '@/features/users/stores/role';
-
-/**
- * Retrieves label for {@link UserRole}.
- */
-export function labelAccessMode(mode: UserRole): string {
-  // prettier-ignore
-  switch (mode) {
-    case UserRole.READER:     return 'Читатель';
-    case UserRole.EDITOR:     return 'Редактор';
-    case UserRole.OWNER:      return 'Владелец';
-    case UserRole.ADMIN:      return 'Администратор';
-  }
-}
-
-/**
- * Retrieves description for {@link UserRole}.
- */
-export function describeAccessMode(mode: UserRole): string {
-  // prettier-ignore
-  switch (mode) {
-    case UserRole.READER:
-      return 'Режим запрещает редактирование';
-    case UserRole.EDITOR:
-      return 'Режим редактирования';
-    case UserRole.OWNER:
-      return 'Режим владельца';
-    case UserRole.ADMIN:
-      return 'Режим администратора';
-  }
-}
 
 /**
  * UI info descriptors.
@@ -116,8 +85,3 @@ export const promptText = {
   ownerChange:
     'Вы уверены, что хотите изменить владельца? Вы потеряете право управления данной схемой. Данное действие отменить нельзя'
 };
-
-// ============== INTERNAL LABELS FOR DEVELOPERS TEXT ================
-export function contextOutsideScope(contextName: string, contextState: string): string {
-  return `${contextName} has to be used within <${contextState}>`;
-}

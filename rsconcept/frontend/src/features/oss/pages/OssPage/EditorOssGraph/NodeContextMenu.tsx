@@ -13,13 +13,16 @@ import {
   IconRSForm
 } from '@/components/Icons';
 import { useClickedOutside } from '@/hooks/useClickedOutside';
-import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/utils';
 
 import { OperationType } from '../../../backend/types';
 import { useMutatingOss } from '../../../backend/useMutatingOss';
 import { type IOperation } from '../../../models/oss';
 import { useOssEdit } from '../OssEditContext';
+
+// pixels - size of OSS context menu
+const MENU_WIDTH = 200;
+const MENU_HEIGHT = 200;
 
 export interface ContextMenuData {
   operation: IOperation;
@@ -116,8 +119,8 @@ export function NodeContextMenu({
     <div ref={ref} className='absolute select-none' style={{ top: cursorY, left: cursorX }}>
       <Dropdown
         isOpen={isOpen}
-        stretchLeft={cursorX >= window.innerWidth - PARAMETER.ossContextMenuWidth}
-        stretchTop={cursorY >= window.innerHeight - PARAMETER.ossContextMenuHeight}
+        stretchLeft={cursorX >= window.innerWidth - MENU_WIDTH}
+        stretchTop={cursorY >= window.innerHeight - MENU_HEIGHT}
       >
         <DropdownButton
           text='Редактировать'

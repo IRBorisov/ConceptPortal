@@ -4,10 +4,13 @@ import { Overlay } from '@/components/Container';
 import { IconConsolidation, IconRSForm } from '@/components/Icons';
 import { Indicator } from '@/components/View';
 import { useTooltipsStore } from '@/stores/tooltips';
-import { globalIDs, PARAMETER } from '@/utils/constants';
+import { globalIDs } from '@/utils/constants';
 
 import { OperationType } from '../../../../backend/types';
 import { type OssNodeInternal } from '../../../../models/ossLayout';
+
+// characters - threshold for long labels - small font
+const LONG_LABEL_CHARS = 14;
 
 interface NodeCoreProps {
   node: OssNodeInternal;
@@ -17,7 +20,7 @@ export function NodeCore({ node }: NodeCoreProps) {
   const setHover = useTooltipsStore(state => state.setActiveOperation);
 
   const hasFile = !!node.data.operation.result;
-  const longLabel = node.data.label.length > PARAMETER.ossLongLabel;
+  const longLabel = node.data.label.length > LONG_LABEL_CHARS;
 
   return (
     <>

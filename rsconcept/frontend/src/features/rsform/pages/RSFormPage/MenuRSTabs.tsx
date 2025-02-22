@@ -7,6 +7,7 @@ import { useAuthSuspense } from '@/features/auth';
 import { AccessPolicy } from '@/features/library';
 import { LocationHead } from '@/features/library/models/library';
 import { useRoleStore, UserRole } from '@/features/users';
+import { describeUserRole, labelUserRole } from '@/features/users/labels';
 
 import { Divider } from '@/components/Container';
 import { Button } from '@/components/Control';
@@ -39,7 +40,7 @@ import {
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';
-import { describeAccessMode, labelAccessMode, tooltipText } from '@/utils/labels';
+import { tooltipText } from '@/utils/labels';
 import { generatePageQR, promptUnsaved, sharePage } from '@/utils/utils';
 
 import { useDownloadRSForm } from '../../backend/useDownloadRSForm';
@@ -384,7 +385,7 @@ export function MenuRSTabs() {
             noBorder
             noOutline
             tabIndex={-1}
-            title={`Режим ${labelAccessMode(role)}`}
+            title={`Режим ${labelUserRole(role)}`}
             hideTitle={accessMenu.isOpen}
             className='h-full pr-2'
             icon={
@@ -402,28 +403,28 @@ export function MenuRSTabs() {
           />
           <Dropdown isOpen={accessMenu.isOpen}>
             <DropdownButton
-              text={labelAccessMode(UserRole.READER)}
-              title={describeAccessMode(UserRole.READER)}
+              text={labelUserRole(UserRole.READER)}
+              title={describeUserRole(UserRole.READER)}
               icon={<IconReader size='1rem' className='icon-primary' />}
               onClick={() => handleChangeMode(UserRole.READER)}
             />
             <DropdownButton
-              text={labelAccessMode(UserRole.EDITOR)}
-              title={describeAccessMode(UserRole.EDITOR)}
+              text={labelUserRole(UserRole.EDITOR)}
+              title={describeUserRole(UserRole.EDITOR)}
               icon={<IconEditor size='1rem' className='icon-primary' />}
               disabled={!isOwned && (!user.id || !schema.editors.includes(user.id))}
               onClick={() => handleChangeMode(UserRole.EDITOR)}
             />
             <DropdownButton
-              text={labelAccessMode(UserRole.OWNER)}
-              title={describeAccessMode(UserRole.OWNER)}
+              text={labelUserRole(UserRole.OWNER)}
+              title={describeUserRole(UserRole.OWNER)}
               icon={<IconOwner size='1rem' className='icon-primary' />}
               disabled={!isOwned}
               onClick={() => handleChangeMode(UserRole.OWNER)}
             />
             <DropdownButton
-              text={labelAccessMode(UserRole.ADMIN)}
-              title={describeAccessMode(UserRole.ADMIN)}
+              text={labelUserRole(UserRole.ADMIN)}
+              title={describeUserRole(UserRole.ADMIN)}
               icon={<IconAdmin size='1rem' className='icon-primary' />}
               disabled={!user.is_staff}
               onClick={() => handleChangeMode(UserRole.ADMIN)}

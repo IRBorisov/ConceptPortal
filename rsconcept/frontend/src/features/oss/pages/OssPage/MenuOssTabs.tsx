@@ -3,6 +3,7 @@
 import { urls, useConceptNavigation } from '@/app';
 import { useAuthSuspense } from '@/features/auth';
 import { useRoleStore, UserRole } from '@/features/users';
+import { describeUserRole, labelUserRole } from '@/features/users/labels';
 
 import { Divider } from '@/components/Container';
 import { Button } from '@/components/Control';
@@ -21,7 +22,6 @@ import {
   IconReader,
   IconShare
 } from '@/components/Icons';
-import { describeAccessMode as describeUserRole, labelAccessMode as labelUserRole } from '@/utils/labels';
 import { sharePage } from '@/utils/utils';
 
 import { useMutatingOss } from '../../backend/useMutatingOss';

@@ -11,33 +11,22 @@ export const PARAMETER = {
   refreshTimeout: 100, // milliseconds delay for post-refresh actions
   minimalTimeout: 10, // milliseconds delay for fast updates
   zoomDuration: 500, // milliseconds animation duration
+  moveDuration: 500, // milliseconds - duration of move animation
+  dropdownDuration: 200, // milliseconds - duration of dropdown animation
   navigationDuration: 300, // milliseconds navigation duration
   navigationPopupDelay: 300, // milliseconds delay for navigation popup
+  graphPopupDelay: 500, // milliseconds delay for graph popup selections
+  graphRefreshDelay: 10, // milliseconds delay for graph viewpoint reset
 
   fastAnimation: 200, // milliseconds - duration of fast animation
   fadeDuration: 300, // milliseconds - duration of fade animation
-  dropdownDuration: 200, // milliseconds - duration of dropdown animation
-  moveDuration: 500, // milliseconds - duration of move animation
 
   ossImageWidth: 1280, // pixels - size of OSS image
   ossImageHeight: 960, // pixels - size of OSS image
-  ossContextMenuWidth: 200, // pixels - width of OSS context menu
-  ossContextMenuHeight: 200, // pixels - height of OSS context menu
-  ossGridSize: 10, // pixels - size of OSS grid
-  ossMinDistance: 20, // pixels - minimum distance between node centers
-  ossDistanceX: 180, // pixels - insert x-distance between node centers
-  ossDistanceY: 100, // pixels - insert y-distance between node centers
 
   graphHandleSize: 3, // pixels - size of graph connection handle
   graphNodeRadius: 20, // pixels - radius of graph node
   graphNodePadding: 5, // pixels - padding of graph node
-  graphHoverXLimit: 0.4, // ratio to clientWidth used to determine which side of screen popup should be
-  graphHoverYLimit: 0.6, // ratio to clientHeight used to determine which side of screen popup should be
-  graphPopupDelay: 500, // milliseconds delay for graph popup selections
-  graphRefreshDelay: 10, // milliseconds delay for graph viewpoint reset
-
-  ossLongLabel: 14, // characters - threshold for long labels - small font
-  statSmallThreshold: 3, // characters - threshold for small labels - small font
 
   logicLabel: 'LOGIC',
   errorNodeLabel: '[ERROR]',
@@ -50,8 +39,7 @@ export const PARAMETER = {
  * Numeric limitations.
  */
 export const limits = {
-  location_len: 500,
-  max_semantic_index: 900
+  location_len: 500
 };
 
 /**
@@ -133,12 +121,10 @@ export const prefixes = {
   operation_list: 'operation_list_',
   csttype_list: 'csttype_',
   policy_list: 'policy_list_',
-  library_filters_list: 'library_filters_list_',
   location_head_list: 'location_head_list_',
   folders_list: 'folders_list_',
   topic_list: 'topic_list_',
   topic_item: 'topic_item_',
-  library_list: 'library_list_',
   user_subs: 'user_subs_',
   user_editors: 'user_editors_',
   wordform_list: 'wordform_list_',

@@ -49,6 +49,10 @@ import { ViewHidden } from './ViewHidden';
 const ZOOM_MAX = 3;
 const ZOOM_MIN = 0.25;
 
+// ratio to client size used to determine which side of screen popup should be
+const HOVER_LIMIT_X = 0.4;
+const HOVER_LIMIT_Y = 0.6;
+
 export function TGFlow() {
   const mainHeight = useMainHeight();
   const flow = useReactFlow();
@@ -288,8 +292,7 @@ export function TGFlow() {
   function handleNodeEnter(event: React.MouseEvent, cstID: number) {
     setHoverID(cstID);
     setHoverLeft(
-      event.clientX / window.innerWidth >= PARAMETER.graphHoverXLimit ||
-        event.clientY / window.innerHeight >= PARAMETER.graphHoverYLimit
+      event.clientX / window.innerWidth >= HOVER_LIMIT_X || event.clientY / window.innerHeight >= HOVER_LIMIT_Y
     );
   }
 

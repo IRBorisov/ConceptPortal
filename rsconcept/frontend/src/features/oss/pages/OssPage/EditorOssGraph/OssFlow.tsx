@@ -29,6 +29,7 @@ import { useInputCreate } from '../../../backend/useInputCreate';
 import { useMutatingOss } from '../../../backend/useMutatingOss';
 import { useOperationExecute } from '../../../backend/useOperationExecute';
 import { useUpdatePositions } from '../../../backend/useUpdatePositions';
+import { GRID_SIZE } from '../../../models/ossAPI';
 import { type OssNode } from '../../../models/ossLayout';
 import { useOSSGraphStore } from '../../../stores/ossGraph';
 import { useOssEdit } from '../OssEditContext';
@@ -336,11 +337,11 @@ export function OssFlow() {
           minZoom={ZOOM_MIN}
           nodesConnectable={false}
           snapToGrid={true}
-          snapGrid={[PARAMETER.ossGridSize, PARAMETER.ossGridSize]}
+          snapGrid={[GRID_SIZE, GRID_SIZE]}
           onNodeContextMenu={handleContextMenu}
           onClick={handleCanvasClick}
         >
-          {showGrid ? <Background gap={PARAMETER.ossGridSize} /> : null}
+          {showGrid ? <Background gap={GRID_SIZE} /> : null}
         </ReactFlow>
       </div>
     </div>

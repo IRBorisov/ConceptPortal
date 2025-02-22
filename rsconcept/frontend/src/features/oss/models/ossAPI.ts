@@ -13,7 +13,6 @@ import {
   isSetTypification
 } from '@/features/rsform/models/rslangAPI';
 
-import { limits, PARAMETER } from '@/utils/constants';
 import { infoMsg } from '@/utils/labels';
 import { TextMatcher } from '@/utils/utils';
 
@@ -23,6 +22,13 @@ import { describeSubstitutionError } from '../labels';
 
 import { type IOperation, type IOperationSchema, SubstitutionErrorType } from './oss';
 import { type Position2D } from './ossLayout';
+
+export const GRID_SIZE = 10; // pixels - size of OSS grid
+const MIN_DISTANCE = 20; // pixels - minimum distance between node centers
+const DISTANCE_X = 180; // pixels - insert x-distance between node centers
+const DISTANCE_Y = 100; // pixels - insert y-distance between node centers
+
+const STARTING_SUB_INDEX = 900; // max semantic index for starting substitution
 
 /**
  * Checks if a given target {@link IOperation} matches the specified query using.
@@ -92,7 +98,7 @@ export class SubstitutionValidator {
         this.schemaByCst.set(item.id, schema);
       });
     });
-    let index = limits.max_semantic_index;
+    let index = STARTING_SUB_INDEX;
     substitutions.forEach(item => {
       this.constituents.add(item.original);
       this.constituents.add(item.substitution);
@@ -500,27 +506,27 @@ export function calculateInsertPosition(
     }
     const maxX = Math.max(...inputsNodes.map(node => node.position_x));
     const minY = Math.min(...inputsNodes.map(node => node.position_y));
-    result.x = maxX + PARAMETER.ossDistanceX;
+    result.x = maxX + DISTANCE_X;
     result.y = minY;
   } else {
     const argNodes = positions.filter(pos => argumentsOps.includes(pos.id));
     const maxY = Math.max(...argNodes.map(node => node.position_y));
     const minX = Math.min(...argNodes.map(node => node.position_x));
     const maxX = Math.max(...argNodes.map(node => node.position_x));
-    result.x = Math.ceil((maxX + minX) / 2 / PARAMETER.ossGridSize) * PARAMETER.ossGridSize;
-    result.y = maxY + PARAMETER.ossDistanceY;
+    result.x = Math.ceil((maxX + minX) / 2 / GRID_SIZE) * GRID_SIZE;
+    result.y = maxY + DISTANCE_Y;
   }
 
   let flagIntersect = false;
   do {
     flagIntersect = positions.some(
       position =>
-        Math.abs(position.position_x - result.x) < PARAMETER.ossMinDistance &&
-        Math.abs(position.position_y - result.y) < PARAMETER.ossMinDistance
+        Math.abs(position.position_x - result.x) < MIN_DISTANCE &&
+        Math.abs(position.position_y - result.y) < MIN_DISTANCE
     );
     if (flagIntersect) {
-      result.x += PARAMETER.ossMinDistance;
-      result.y += PARAMETER.ossMinDistance;
+      result.x += MIN_DISTANCE;
+      result.y += MIN_DISTANCE;
     }
   } while (flagIntersect);
   return result;

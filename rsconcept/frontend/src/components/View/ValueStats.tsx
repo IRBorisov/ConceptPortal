@@ -1,7 +1,9 @@
 import { type Styling, type Titled } from '@/components/props';
-import { PARAMETER } from '@/utils/constants';
 
 import { ValueIcon } from './ValueIcon';
+
+// characters - threshold for small labels - small font
+const SMALL_THRESHOLD = 3;
 
 interface ValueStatsProps extends Styling, Titled {
   /** Id of the component. */
@@ -18,5 +20,5 @@ interface ValueStatsProps extends Styling, Titled {
  * Displays statistics value with an icon.
  */
 export function ValueStats(props: ValueStatsProps) {
-  return <ValueIcon dense smallThreshold={PARAMETER.statSmallThreshold} textClassName='min-w-[1.4rem]' {...props} />;
+  return <ValueIcon dense smallThreshold={SMALL_THRESHOLD} textClassName='min-w-[1.4rem]' {...props} />;
 }
