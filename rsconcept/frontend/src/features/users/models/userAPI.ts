@@ -4,7 +4,7 @@
 
 import { TextMatcher } from '@/utils/utils';
 
-import { type IUserInfo } from './user';
+import { type IUserInfo } from '../backend/types';
 
 /**
  * Checks if a given target {@link IConstituenta} matches the specified query using the provided matching mode.

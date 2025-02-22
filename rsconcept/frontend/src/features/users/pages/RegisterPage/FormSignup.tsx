@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import clsx from 'clsx';
 
-import { urls, useBlockNavigation, useConceptNavigation } from '@/app';
+import { urls, useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';
 
 import { isAxiosError } from '@/backend/apiTransport';
@@ -30,12 +30,10 @@ export function FormSignup() {
     register,
     handleSubmit,
     clearErrors,
-    formState: { errors, isDirty }
+    formState: { errors }
   } = useForm<IUserSignupDTO>({
     resolver: zodResolver(schemaUserSignup)
   });
-
-  useBlockNavigation(isDirty);
 
   function resetErrors() {
     clearServerError();

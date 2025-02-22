@@ -4,7 +4,7 @@ import { MiniButton } from '@/components/Control';
 import { createColumnHelper, DataTable } from '@/components/DataTable';
 import { IconRemove } from '@/components/Icons';
 
-import { type IUserInfo } from '../models/user';
+import { type IUserInfo } from '../backend/types';
 
 interface TableUsersProps {
   items: IUserInfo[];

@@ -1,12 +1,18 @@
 import { queryOptions } from '@tanstack/react-query';
+import { z } from 'zod';
 
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/apiTransport';
 import { DELAYS, KEYS } from '@/backend/configuration';
 import { infoMsg } from '@/utils/labels';
 
-import { type IUserInfo, type IUserProfile } from '../models/user';
-
-import { type IUpdateProfileDTO, type IUserSignupDTO } from './types';
+import {
+  type IUpdateProfileDTO,
+  type IUserInfo,
+  type IUserProfile,
+  type IUserSignupDTO,
+  schemaUserInfo,
+  schemaUserProfile
+} from './types';
 
 export const usersApi = {
   baseKey: KEYS.users,
@@ -17,6 +23,7 @@ export const usersApi = {
       staleTime: DELAYS.staleMedium,
       queryFn: meta =>
         axiosGet<IUserInfo[]>({
+          schema: z.array(schemaUserInfo),
           endpoint: '/users/api/active-users',
           options: { signal: meta.signal }
         })
@@ -27,6 +34,7 @@ export const usersApi = {
       staleTime: DELAYS.staleShort,
       queryFn: meta =>
         axiosGet<IUserProfile>({
+          schema: schemaUserProfile,
           endpoint: '/users/api/profile',
           options: { signal: meta.signal }
         })
@@ -34,6 +42,7 @@ export const usersApi = {
 
   signup: (data: IUserSignupDTO) =>
     axiosPost<IUserSignupDTO, IUserProfile>({
+      schema: schemaUserProfile,
       endpoint: '/users/api/signup',
       request: {
         data: data,
@@ -43,6 +52,7 @@ export const usersApi = {
 
   updateProfile: (data: IUpdateProfileDTO) =>
     axiosPatch<IUpdateProfileDTO, IUserProfile>({
+      schema: schemaUserProfile,
       endpoint: '/users/api/profile',
       request: {
         data: data,
