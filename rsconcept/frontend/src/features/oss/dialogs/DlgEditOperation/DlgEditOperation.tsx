@@ -47,7 +47,7 @@ export function DlgEditOperation() {
       target: target.id,
       item_data: {
         alias: target.alias,
-        title: target.alias,
+        title: target.title,
         comment: target.comment
       },
       arguments: target.arguments,
