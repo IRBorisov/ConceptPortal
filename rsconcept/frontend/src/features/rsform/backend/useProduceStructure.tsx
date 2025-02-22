@@ -5,7 +5,6 @@ import { useUpdateTimestamp } from '@/features/library';
 import { KEYS } from '@/backend/configuration';
 
 import { rsformsApi } from './api';
-import { type ITargetCst } from './types';
 
 export const useProduceStructure = () => {
   const client = useQueryClient();
@@ -28,7 +27,7 @@ export const useProduceStructure = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    produceStructure: (data: { itemID: number; data: ITargetCst }) =>
+    produceStructure: (data: { itemID: number; cstID: number }) =>
       mutation.mutateAsync(data).then(response => response.cst_list)
   };
 };

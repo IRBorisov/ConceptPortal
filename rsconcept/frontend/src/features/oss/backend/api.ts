@@ -1,7 +1,5 @@
 import { queryOptions } from '@tanstack/react-query';
 
-import { type ITargetCst } from '@/features/rsform/backend/types';
-
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/apiTransport';
 import { DELAYS, KEYS } from '@/backend/configuration';
 import { infoMsg } from '@/utils/labels';
@@ -121,10 +119,10 @@ export const ossApi = {
         successMessage: infoMsg.changesSaved
       }
     }),
-  getPredecessor: (data: ITargetCst) =>
-    axiosPost<ITargetCst, IConstituentaReference>({
+  getPredecessor: (cstID: number) =>
+    axiosPost<{ target: number }, IConstituentaReference>({
       schema: schemaConstituentaReference,
       endpoint: '/api/oss/get-predecessor',
-      request: { data: data }
+      request: { data: { target: cstID } }
     })
 };

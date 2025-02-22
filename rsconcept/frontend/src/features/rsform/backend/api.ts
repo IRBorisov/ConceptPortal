@@ -19,7 +19,6 @@ import {
   type IProduceStructureResponse,
   type IRSFormDTO,
   type IRSFormUploadDTO,
-  type ITargetCst,
   schemaConstituentaBasics,
   schemaCstCreatedResponse,
   schemaExpressionParse,
@@ -117,12 +116,12 @@ export const rsformsApi = {
       request: { data: data }
     }),
 
-  produceStructure: ({ itemID, data }: { itemID: number; data: ITargetCst }) =>
-    axiosPatch<ITargetCst, IProduceStructureResponse>({
+  produceStructure: ({ itemID, cstID }: { itemID: number; cstID: number }) =>
+    axiosPatch<{ target: number }, IProduceStructureResponse>({
       schema: schemaProduceStructureResponse,
       endpoint: `/api/rsforms/${itemID}/produce-structure`,
       request: {
-        data: data,
+        data: { target: cstID },
         successMessage: response => infoMsg.addedConstituents(response.cst_list.length)
       }
     }),

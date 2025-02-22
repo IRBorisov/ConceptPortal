@@ -54,11 +54,6 @@ export interface IRSFormUploadDTO {
   fileName: string;
 }
 
-/** Represents target {@link IConstituenta}. */
-export interface ITargetCst {
-  target: number;
-}
-
 /** Represents {@link IConstituenta} data, used in creation process. */
 export type ICstCreateDTO = z.infer<typeof schemaCstCreate>;
 

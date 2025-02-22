@@ -10,6 +10,6 @@ export const useFindPredecessor = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    findPredecessor: (target: number) => mutation.mutateAsync({ target: target })
+    findPredecessor: (target: number) => mutation.mutateAsync(target)
   };
 };

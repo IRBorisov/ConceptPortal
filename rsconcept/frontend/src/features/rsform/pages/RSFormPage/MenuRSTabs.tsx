@@ -189,7 +189,7 @@ export function MenuRSTabs() {
     }
     void produceStructure({
       itemID: schema.id,
-      data: { target: activeCst.id }
+      cstID: activeCst.id
     }).then(cstList => {
       if (cstList.length !== 0) {
         setSelected(cstList);
