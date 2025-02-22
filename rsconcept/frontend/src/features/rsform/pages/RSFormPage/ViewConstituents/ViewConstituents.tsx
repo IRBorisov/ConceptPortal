@@ -32,7 +32,7 @@ export function ViewConstituents({ isBottom, isMounted }: ViewConstituentsProps)
   const [filteredData, setFilteredData] = useState<IConstituenta[]>(schema.items);
 
   return (
-    <div
+    <aside
       className={clsx(
         'border', // prettier: split-lines
         {
@@ -61,6 +61,6 @@ export function ViewConstituents({ isBottom, isMounted }: ViewConstituentsProps)
         onOpenEdit={navigateCst}
         autoScroll={!isBottom}
       />
-    </div>
+    </aside>
   );
 }
