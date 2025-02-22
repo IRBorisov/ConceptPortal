@@ -7,7 +7,7 @@ import { TextURL } from '@/components/Control';
 import { createColumnHelper, DataTable, type RowSelectionState, type VisibilityState } from '@/components/DataTable';
 import { NoData, TextContent } from '@/components/View';
 import { useWindowSize } from '@/hooks/useWindowSize';
-import { PARAMETER, prefixes } from '@/utils/constants';
+import { prefixes } from '@/utils/constants';
 import { truncateToSymbol } from '@/utils/utils';
 
 import { BadgeConstituenta } from '../../../components/BadgeConstituenta';
@@ -32,6 +32,9 @@ const COLUMN_CONVENTION_HIDE_THRESHOLD = 1800;
 
 const COMMENT_MAX_SYMBOLS = 100;
 const DEFINITION_MAX_SYMBOLS = 120;
+
+// characters - threshold for long typification - truncate
+const TYPIFICATION_TRUNCATE = 42;
 
 const columnHelper = createColumnHelper<IConstituenta>();
 
@@ -86,7 +89,7 @@ export function TableRSList({
       maxSize: 200,
       cell: props => (
         <div className={clsx('min-w-[9.3rem] max-w-[9.3rem]', 'text-xs break-words')}>
-          {truncateToSymbol(props.getValue(), PARAMETER.typificationTruncate)}
+          {truncateToSymbol(props.getValue(), TYPIFICATION_TRUNCATE)}
         </div>
       )
     }),

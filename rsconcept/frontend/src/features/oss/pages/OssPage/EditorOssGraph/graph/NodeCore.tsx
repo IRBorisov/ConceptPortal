@@ -5,7 +5,6 @@ import { IconConsolidation, IconRSForm } from '@/components/Icons';
 import { Indicator } from '@/components/View';
 import { useTooltipsStore } from '@/stores/tooltips';
 import { globalIDs, PARAMETER } from '@/utils/constants';
-import { truncateToLastWord } from '@/utils/utils';
 
 import { OperationType } from '../../../../backend/types';
 import { type OssNodeInternal } from '../../../../models/ossLayout';
@@ -19,7 +18,6 @@ export function NodeCore({ node }: NodeCoreProps) {
 
   const hasFile = !!node.data.operation.result;
   const longLabel = node.data.label.length > PARAMETER.ossLongLabel;
-  const labelText = truncateToLastWord(node.data.label, PARAMETER.ossTruncateLabel);
 
   return (
     <>
@@ -56,7 +54,7 @@ export function NodeCore({ node }: NodeCoreProps) {
         onMouseEnter={() => setHover(node.data.operation)}
       >
         <div
-          className='text-center'
+          className='text-center line-clamp-2'
           style={{
             fontSize: longLabel ? '12px' : '14px',
             lineHeight: longLabel ? '16px' : '20px',
@@ -64,7 +62,7 @@ export function NodeCore({ node }: NodeCoreProps) {
             paddingRight: longLabel ? '10px' : '4px'
           }}
         >
-          {labelText}
+          {node.data.label}
         </div>
       </div>
     </>
