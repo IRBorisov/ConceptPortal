@@ -18,7 +18,7 @@ import { useIsProcessingCctext } from '../../backend/cctext/useIsProcessingCctex
 import { useParseText } from '../../backend/cctext/useParseText';
 import { useCstUpdate } from '../../backend/useCstUpdate';
 import { SelectMultiGrammeme } from '../../components/SelectMultiGrammeme';
-import { Grammeme, type IGrammemeOption, type IWordForm, supportedGrammemes } from '../../models/language';
+import { type Grammeme, type IGrammemeOption, type IWordForm, supportedGrammemes } from '../../models/language';
 import { parseGrammemes, supportedGrammeOptions, wordFormEquals } from '../../models/languageAPI';
 import { type IConstituenta } from '../../models/rsform';
 

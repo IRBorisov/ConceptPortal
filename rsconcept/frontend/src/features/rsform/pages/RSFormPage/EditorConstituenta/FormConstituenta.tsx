@@ -10,7 +10,6 @@ import { Overlay } from '@/components/Container';
 import { SubmitButton } from '@/components/Control';
 import { IconChild, IconPredecessor, IconSave } from '@/components/Icons';
 import { TextArea } from '@/components/Input';
-import { type EventMouse } from '@/components/props';
 import { Indicator } from '@/components/View';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
@@ -106,7 +105,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
     return cstUpdate({ itemID: schema.id, data }).then(() => reset({ ...data }));
   }
 
-  function handleTypeGraph(event: EventMouse) {
+  function handleTypeGraph(event: React.MouseEvent<Element>) {
     if ((localParse && !localParse.parseResult) || activeCst.parse.status !== ParsingStatus.VERIFIED) {
       toast.error(errorMsg.typeStructureFailed);
       return;
@@ -145,11 +144,12 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
         dense
         noResize
         noBorder
+        transparent
         noOutline
         readOnly
         label='Типизация'
         value={typification}
-        colors='bg-transparent clr-text-default cursor-default'
+        className='clr-text-default cursor-default'
       />
 
       {!!activeCst.definition_formal || !isElementary ? (

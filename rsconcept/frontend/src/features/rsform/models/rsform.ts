@@ -5,9 +5,9 @@
 import { type ILibraryItemData, type IVersionInfo } from '@/features/library/backend/types';
 import { type CurrentVersion, type ILibraryItemReference } from '@/features/library/models/library';
 
-import { Graph } from '@/models/Graph';
+import { type Graph } from '@/models/Graph';
 
-import { CstType, ParsingStatus, ValueClass } from '../backend/types';
+import { CstType, type ParsingStatus, type ValueClass } from '../backend/types';
 
 import { type IArgumentInfo } from './rslang';
 

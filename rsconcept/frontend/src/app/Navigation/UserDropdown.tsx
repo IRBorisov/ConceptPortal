@@ -15,7 +15,6 @@ import {
   IconRESTapi,
   IconUser
 } from '@/components/Icons';
-import { type EventMouse } from '@/components/props';
 import { usePreferencesStore } from '@/stores/preferences';
 
 import { urls } from '../urls';
@@ -39,7 +38,7 @@ export function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
   const adminMode = usePreferencesStore(state => state.adminMode);
   const toggleAdminMode = usePreferencesStore(state => state.toggleAdminMode);
 
-  function navigateProfile(event: EventMouse) {
+  function navigateProfile(event: React.MouseEvent<Element>) {
     hideDropdown();
     router.push(urls.profile, event.ctrlKey || event.metaKey);
   }
@@ -54,7 +53,7 @@ export function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
     void logout().then(() => router.push(urls.admin, true));
   }
 
-  function gotoIcons(event: EventMouse) {
+  function gotoIcons(event: React.MouseEvent<Element>) {
     hideDropdown();
     router.push(urls.icons, event.ctrlKey || event.metaKey);
   }
@@ -64,7 +63,7 @@ export function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
     router.push(urls.rest_api, true);
   }
 
-  function gotoDatabaseSchema(event: EventMouse) {
+  function gotoDatabaseSchema(event: React.MouseEvent<Element>) {
     hideDropdown();
     router.push(urls.database_schema, event.ctrlKey || event.metaKey);
   }

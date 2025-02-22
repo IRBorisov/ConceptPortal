@@ -2,7 +2,7 @@ import clsx from 'clsx';
 
 import { globalIDs } from '@/utils/constants';
 
-import { TokenID } from '../../../backend/types';
+import { type TokenID } from '../../../backend/types';
 import { describeToken, labelToken } from '../../../labels';
 
 interface RSTokenButtonProps {

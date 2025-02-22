@@ -12,7 +12,7 @@ import { DELAYS, KEYS } from '@/backend/configuration';
 import { infoMsg } from '@/utils/labels';
 
 import {
-  AccessPolicy,
+  type AccessPolicy,
   type ICloneLibraryItemDTO,
   type ICreateLibraryItemDTO,
   type ILibraryItem,

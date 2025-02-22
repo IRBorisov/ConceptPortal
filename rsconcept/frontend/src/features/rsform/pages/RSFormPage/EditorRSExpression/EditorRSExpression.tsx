@@ -7,7 +7,6 @@ import { type ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import { BadgeHelp, HelpTopic } from '@/features/help';
 
 import { Overlay } from '@/components/Container';
-import { type EventMouse } from '@/components/props';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { errorMsg } from '@/utils/labels';
@@ -47,7 +46,7 @@ interface EditorRSExpressionProps {
 
   onChangeLocalParse: (typification: IExpressionParseDTO) => void;
   onOpenEdit: (cstID: number) => void;
-  onShowTypeGraph: (event: EventMouse) => void;
+  onShowTypeGraph: (event: React.MouseEvent<Element>) => void;
 }
 
 export function EditorRSExpression({
@@ -141,7 +140,7 @@ export function EditorRSExpression({
     setIsModified(true);
   }
 
-  function handleShowAST(event: EventMouse) {
+  function handleShowAST(event: React.MouseEvent<Element>) {
     if (event.ctrlKey) {
       const tree = rslangParser.parse(value);
       const ast = transformAST(tree);

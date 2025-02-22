@@ -10,7 +10,7 @@ import { TextInput } from '@/components/Input';
 import { ModalForm } from '@/components/Modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { CstType, type ICstRenameDTO, schemaCstRename } from '../backend/types';
+import { type CstType, type ICstRenameDTO, schemaCstRename } from '../backend/types';
 import { useCstRename } from '../backend/useCstRename';
 import { SelectCstType } from '../components/SelectCstType';
 import { type IConstituenta, type IRSForm } from '../models/rsform';

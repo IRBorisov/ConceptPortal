@@ -2,7 +2,7 @@
  * Module: Schema of Synthesis Operations.
  */
 
-import { Graph } from '@/models/Graph';
+import { type Graph } from '@/models/Graph';
 
 import { type ICstSubstituteInfo, type IOperationDTO, type IOperationSchemaDTO } from '../backend/types';
 

@@ -5,7 +5,6 @@ import clsx from 'clsx';
 import { Overlay } from '@/components/Container';
 import { MiniButton } from '@/components/Control';
 import { IconDropArrow, IconDropArrowUp } from '@/components/Icons';
-import { type EventMouse } from '@/components/props';
 import { useWindowSize } from '@/hooks/useWindowSize';
 import { useFitHeight } from '@/stores/appLayout';
 import { useTooltipsStore } from '@/stores/tooltips';
@@ -37,7 +36,7 @@ export function ViewHidden({ items, selected, toggleSelection, setFocus, schema,
   const setActiveCst = useTooltipsStore(state => state.setActiveCst);
   const hiddenHeight = useFitHeight(windowSize.isSmall ? '10.4rem + 2px' : '12.5rem + 2px');
 
-  function handleClick(cstID: number, event: EventMouse) {
+  function handleClick(cstID: number, event: React.MouseEvent<Element>) {
     if (event.ctrlKey || event.metaKey) {
       setFocus(cstID);
     } else {

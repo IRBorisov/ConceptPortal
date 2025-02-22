@@ -3,8 +3,6 @@
 import { type Cell, flexRender, type Row, type Table } from '@tanstack/react-table';
 import clsx from 'clsx';
 
-import { type EventMouse } from '../props';
-
 import { SelectRow } from './SelectRow';
 import { type IConditionalStyle } from '.';
 
@@ -18,8 +16,8 @@ interface TableBodyProps<TData> {
   lastSelected: string | null;
   onChangeLastSelected: (newValue: string | null) => void;
 
-  onRowClicked?: (rowData: TData, event: EventMouse) => void;
-  onRowDoubleClicked?: (rowData: TData, event: EventMouse) => void;
+  onRowClicked?: (rowData: TData, event: React.MouseEvent<Element>) => void;
+  onRowDoubleClicked?: (rowData: TData, event: React.MouseEvent<Element>) => void;
 }
 
 export function TableBody<TData>({
@@ -33,7 +31,7 @@ export function TableBody<TData>({
   onRowClicked,
   onRowDoubleClicked
 }: TableBodyProps<TData>) {
-  function handleRowClicked(target: Row<TData>, event: EventMouse) {
+  function handleRowClicked(target: Row<TData>, event: React.MouseEvent<Element>) {
     onRowClicked?.(target.original, event);
     if (enableRowSelection && target.getCanSelect()) {
       if (event.shiftKey && !!lastSelected && lastSelected !== target.id) {

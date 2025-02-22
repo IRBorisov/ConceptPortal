@@ -1,5 +1,5 @@
 import { AccessPolicy, LibraryItemType } from './backend/types';
-import { FolderNode } from './models/FolderTree';
+import { type FolderNode } from './models/FolderTree';
 import { LocationHead } from './models/library';
 import { validateLocation } from './models/libraryAPI';
 

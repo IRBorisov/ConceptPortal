@@ -19,7 +19,6 @@ import { urls, useConceptNavigation } from '@/app';
 import { useLibrary } from '@/features/library';
 
 import { Overlay } from '@/components/Container';
-import { type EventMouse } from '@/components/props';
 import { useMainHeight } from '@/stores/appLayout';
 import { useTooltipsStore } from '@/stores/tooltips';
 import { APP_COLORS } from '@/styling/colors';
@@ -236,7 +235,7 @@ export function OssFlow() {
       });
   }
 
-  function handleContextMenu(event: EventMouse, node: OssNode) {
+  function handleContextMenu(event: React.MouseEvent<Element>, node: OssNode) {
     event.preventDefault();
     event.stopPropagation();
 
@@ -257,7 +256,7 @@ export function OssFlow() {
     handleContextMenuHide();
   }
 
-  function handleNodeDoubleClick(event: EventMouse, node: OssNode) {
+  function handleNodeDoubleClick(event: React.MouseEvent<Element>, node: OssNode) {
     event.preventDefault();
     event.stopPropagation();
     if (node.data.operation.result) {

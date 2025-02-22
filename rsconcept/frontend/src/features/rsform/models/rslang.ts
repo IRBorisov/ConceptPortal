@@ -2,7 +2,7 @@
  * Module: Models for RSLanguage.
  */
 
-import { TokenID } from '../backend/types';
+import { type TokenID } from '../backend/types';
 
 /**
  * Represents alias mapping.

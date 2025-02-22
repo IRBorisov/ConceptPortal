@@ -1,11 +1,14 @@
 import clsx from 'clsx';
 
 import { Label } from '../Input/Label';
-import { type Colors, type Editor, type ErrorProcessing, type Input } from '../props';
+import { type Editor, type ErrorProcessing, type Titled } from '../props';
 
 import { ErrorField } from './ErrorField';
 
-interface TextInputProps extends Editor, ErrorProcessing, Colors, Input {
+interface TextInputProps extends Editor, ErrorProcessing, Titled, React.ComponentProps<'input'> {
+  /** Indicates that the input should be transparent. */
+  transparent?: boolean;
+
   /** Indicates that padding should be minimal. */
   dense?: boolean;
 
@@ -30,8 +33,8 @@ export function TextInput({
   noOutline,
   allowEnter,
   disabled,
+  transparent,
   className,
-  colors = 'clr-input',
   onKeyDown,
   error,
   ...restProps
@@ -57,9 +60,10 @@ export function TextInput({
             'grow max-w-full': dense,
             'mt-2': !dense && !!label,
             'border': !noBorder,
-            'clr-outline': !noOutline
+            'clr-outline': !noOutline,
+            'bg-transparent': transparent,
+            'clr-input': !transparent
           },
-          colors,
           !dense && className
         )}
         onKeyDown={!allowEnter && !onKeyDown ? preventEnterCapture : onKeyDown}

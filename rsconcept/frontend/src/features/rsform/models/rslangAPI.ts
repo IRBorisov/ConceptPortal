@@ -2,12 +2,12 @@
  * Module: API for RSLanguage.
  */
 
-import { Tree } from '@lezer/common';
+import { type Tree } from '@lezer/common';
 
 import { cursorNode } from '@/utils/codemirror';
 import { PARAMETER } from '@/utils/constants';
 
-import { CstType, type IRSErrorDescription, RSErrorType } from '../backend/types';
+import { CstType, type IRSErrorDescription, type RSErrorType } from '../backend/types';
 
 import { type AliasMapping, type IArgumentValue, RSErrorClass, type SyntaxTree } from './rslang';
 

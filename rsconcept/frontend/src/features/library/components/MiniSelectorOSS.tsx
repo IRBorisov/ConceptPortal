@@ -6,20 +6,20 @@ import { MiniButton } from '@/components/Control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/Dropdown';
 import { IconOSS } from '@/components/Icons';
 import { Label } from '@/components/Input';
-import { type EventMouse, type Styling } from '@/components/props';
+import { type Styling } from '@/components/props';
 import { prefixes } from '@/utils/constants';
 
 import { type ILibraryItemReference } from '../models/library';
 
 interface MiniSelectorOSSProps extends Styling {
   items: ILibraryItemReference[];
-  onSelect: (event: EventMouse, newValue: ILibraryItemReference) => void;
+  onSelect: (event: React.MouseEvent<Element>, newValue: ILibraryItemReference) => void;
 }
 
 export function MiniSelectorOSS({ items, onSelect, className, ...restProps }: MiniSelectorOSSProps) {
   const ossMenu = useDropdown();
 
-  function onToggle(event: EventMouse) {
+  function onToggle(event: React.MouseEvent<Element>) {
     if (items.length > 1) {
       ossMenu.toggle();
     } else {

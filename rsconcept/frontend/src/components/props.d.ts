@@ -1,6 +1,6 @@
 // =========== Module contains interfaces for common UI elements. ==========
-import React from 'react';
-import { FieldError } from 'react-hook-form';
+import type React from 'react';
+import { type FieldError } from 'react-hook-form';
 
 /**
  * Represents an object that can have inline styles and CSS class names for styling.
@@ -11,14 +11,6 @@ export interface Styling {
 
   /** Optional CSS class name(s) for the component. */
   className?: string;
-}
-
-/**
- * Represents an object that can have a color or set of colors.
- */
-export interface Colors {
-  /** Optional color or set of colors applied via classNames. */
-  colors?: string;
 }
 
 /**
@@ -71,31 +63,6 @@ export type Editor = Control & {
 };
 
 /**
- * Represents `div` component with all standard HTML attributes and React-specific properties.
- */
-export type Div = React.ComponentProps<'div'>;
-
-/**
  * Represents `button` component with optional title and HTML attributes.
  */
 export type Button = Titled & Omit<React.ComponentProps<'button'>, 'children' | 'type'>;
-
-/**
- * Represents `label` component with HTML attributes.
- */
-export type Label = Omit<React.ComponentProps<'label'>, 'children'>;
-
-/**
- * Represents `textarea` component with optional title and HTML attributes.
- */
-export type TextArea = Titled & React.ComponentProps<'textarea'>;
-
-/**
- * Represents `input` component with optional title and HTML attributes.
- */
-export type Input = Titled & React.ComponentProps<'input'>;
-
-/**
- * Represents `mouse event` in React.
- */
-export type EventMouse = React.MouseEvent<Element, MouseEvent>;

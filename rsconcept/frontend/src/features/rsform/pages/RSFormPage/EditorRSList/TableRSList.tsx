@@ -5,7 +5,6 @@ import clsx from 'clsx';
 
 import { TextURL } from '@/components/Control';
 import { createColumnHelper, DataTable, type RowSelectionState, type VisibilityState } from '@/components/DataTable';
-import { type EventMouse } from '@/components/props';
 import { NoData, TextContent } from '@/components/View';
 import { useWindowSize } from '@/hooks/useWindowSize';
 import { PARAMETER, prefixes } from '@/utils/constants';
@@ -57,14 +56,14 @@ export function TableRSList({
     });
   }, [windowSize]);
 
-  function handleRowClicked(cst: IConstituenta, event: EventMouse) {
+  function handleRowClicked(cst: IConstituenta, event: React.MouseEvent<Element>) {
     if (event.altKey) {
       event.preventDefault();
       onEdit(cst.id);
     }
   }
 
-  function handleRowDoubleClicked(cst: IConstituenta, event: EventMouse) {
+  function handleRowDoubleClicked(cst: IConstituenta, event: React.MouseEvent<Element>) {
     event.preventDefault();
     onEdit(cst.id);
   }

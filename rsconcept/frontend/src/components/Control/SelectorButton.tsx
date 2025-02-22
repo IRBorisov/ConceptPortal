@@ -11,9 +11,6 @@ interface SelectorButtonProps extends Button {
   /** Icon to display in the button. */
   icon?: React.ReactNode;
 
-  /** Classnames for the colors of the button. */
-  colors?: string;
-
   /** Indicates if button background should be transparent. */
   transparent?: boolean;
 }
@@ -26,7 +23,6 @@ export function SelectorButton({
   icon,
   title,
   titleHtml,
-  colors = 'clr-btn-default',
   className,
   transparent,
   hideTitle,
@@ -44,10 +40,9 @@ export function SelectorButton({
         'cc-animate-color',
         {
           'clr-hover': transparent,
-          'border': !transparent
+          'clr-btn-default border': !transparent
         },
-        className,
-        !transparent && colors
+        className
       )}
       data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}
       data-tooltip-html={titleHtml}

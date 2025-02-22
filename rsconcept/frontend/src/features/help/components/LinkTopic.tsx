@@ -2,7 +2,7 @@ import { urls } from '@/app';
 
 import { TextURL } from '@/components/Control';
 
-import { HelpTopic } from '../models/helpTopic';
+import { type HelpTopic } from '../models/helpTopic';
 
 interface TextURLProps {
   /** Text to display. */

@@ -48,10 +48,10 @@ export function SearchBar({
       <TextInput
         id={id}
         noOutline
+        transparent
         placeholder={placeholder}
         type='search'
-        colors='bg-transparent'
-        className={clsx(!noIcon && 'pl-10')}
+        className={clsx('bg-transparent', !noIcon && 'pl-10')}
         noBorder={noBorder}
         value={query}
         onChange={event => onChangeQuery?.(event.target.value)}

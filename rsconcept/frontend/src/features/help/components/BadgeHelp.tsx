@@ -7,7 +7,7 @@ import { Loader } from '@/components/Loader';
 import { type Styling } from '@/components/props';
 import { usePreferencesStore } from '@/stores/preferences';
 
-import { HelpTopic } from '../models/helpTopic';
+import { type HelpTopic } from '../models/helpTopic';
 
 const TopicPage = React.lazy(() =>
   import('@/features/help/pages/ManualsPage/TopicPage').then(module => ({ default: module.TopicPage }))

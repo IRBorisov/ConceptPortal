@@ -6,7 +6,7 @@ import { type IRSFormDTO } from '@/features/rsform/backend/types';
 import { KEYS } from '@/backend/configuration';
 
 import { libraryApi } from './api';
-import { AccessPolicy, type ILibraryItem } from './types';
+import { type AccessPolicy, type ILibraryItem } from './types';
 
 export const useSetAccessPolicy = () => {
   const client = useQueryClient();

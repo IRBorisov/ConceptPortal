@@ -16,7 +16,6 @@ import {
   IconOwner
 } from '@/components/Icons';
 import { Loader } from '@/components/Loader';
-import { type EventMouse } from '@/components/props';
 import { ValueIcon } from '@/components/View';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
@@ -62,7 +61,7 @@ export function EditorLibraryItem({ schema, isAttachedToOSS }: EditorLibraryItem
     void setOwner({ itemID: schema.id, owner: newValue });
   };
 
-  function handleOpenLibrary(event: EventMouse) {
+  function handleOpenLibrary(event: React.MouseEvent<Element>) {
     setGlobalLocation(schema.location);
     router.push(urls.library, event.ctrlKey || event.metaKey);
   }

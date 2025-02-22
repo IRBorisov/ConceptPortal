@@ -3,7 +3,6 @@ import clsx from 'clsx';
 import { globalIDs } from '@/utils/constants';
 
 import { CheckboxChecked, CheckboxNull } from '../Icons';
-import { type EventMouse } from '../props';
 
 import { type CheckboxProps } from './Checkbox';
 
@@ -31,7 +30,7 @@ export function CheckboxTristate({
 }: CheckboxTristateProps) {
   const cursor = disabled ? 'cursor-arrow' : onChange ? 'cursor-pointer' : '';
 
-  function handleClick(event: EventMouse): void {
+  function handleClick(event: React.MouseEvent<Element>): void {
     event.preventDefault();
     event.stopPropagation();
     if (disabled || !onChange) {

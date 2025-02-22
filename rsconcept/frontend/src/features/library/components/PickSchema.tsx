@@ -8,11 +8,11 @@ import { createColumnHelper, DataTable, type IConditionalStyle } from '@/compone
 import { Dropdown, useDropdown } from '@/components/Dropdown';
 import { IconClose, IconFolderTree } from '@/components/Icons';
 import { SearchBar } from '@/components/Input';
-import { type EventMouse, type Styling } from '@/components/props';
+import { type Styling } from '@/components/props';
 import { APP_COLORS } from '@/styling/colors';
 import { prefixes } from '@/utils/constants';
 
-import { type ILibraryItem, LibraryItemType } from '../backend/types';
+import { type ILibraryItem, type LibraryItemType } from '../backend/types';
 import { matchLibraryItem } from '../models/libraryAPI';
 
 import { SelectLocation } from './SelectLocation';
@@ -96,7 +96,7 @@ export function PickSchema({
     }
   ];
 
-  function handleLocationClick(event: EventMouse, newValue: string) {
+  function handleLocationClick(event: React.MouseEvent<Element>, newValue: string) {
     event.preventDefault();
     event.stopPropagation();
     locationMenu.hide();

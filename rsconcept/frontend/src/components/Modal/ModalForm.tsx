@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 
-import { BadgeHelp, HelpTopic } from '@/features/help';
+import { BadgeHelp, type HelpTopic } from '@/features/help';
 
 import { useEscapeKey } from '@/hooks/useEscapeKey';
 import { useDialogsStore } from '@/stores/dialogs';

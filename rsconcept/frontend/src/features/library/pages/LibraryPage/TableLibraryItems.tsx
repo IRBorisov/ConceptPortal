@@ -11,7 +11,6 @@ import { FlexColumn } from '@/components/Container';
 import { MiniButton, TextURL } from '@/components/Control';
 import { createColumnHelper, DataTable, type IConditionalStyle, type VisibilityState } from '@/components/DataTable';
 import { IconFolderTree } from '@/components/Icons';
-import { type EventMouse } from '@/components/props';
 import { useWindowSize } from '@/hooks/useWindowSize';
 import { useFitHeight } from '@/stores/appLayout';
 import { usePreferencesStore } from '@/stores/preferences';
@@ -39,7 +38,7 @@ export function TableLibraryItems({ items }: TableLibraryItemsProps) {
   const itemsPerPage = usePreferencesStore(state => state.libraryPagination);
   const setItemsPerPage = usePreferencesStore(state => state.setLibraryPagination);
 
-  function handleOpenItem(item: ILibraryItem, event: EventMouse) {
+  function handleOpenItem(item: ILibraryItem, event: React.MouseEvent<Element>) {
     const selection = window.getSelection();
     if (!!selection && selection.toString().length > 0) {
       return;
@@ -61,7 +60,7 @@ export function TableLibraryItems({ items }: TableLibraryItemsProps) {
     });
   }, [windowSize]);
 
-  function handleToggleFolder(event: EventMouse) {
+  function handleToggleFolder(event: React.MouseEvent<Element>) {
     event.preventDefault();
     event.stopPropagation();
     toggleFolderMode();

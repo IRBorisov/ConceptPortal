@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { MiniButton } from '@/components/Control';
 import { Dropdown, useDropdown } from '@/components/Dropdown';
 import { IconFolderTree } from '@/components/Icons';
-import { type EventMouse, type Styling } from '@/components/props';
+import { type Styling } from '@/components/props';
 import { prefixes } from '@/utils/constants';
 
 import { SelectLocation } from './SelectLocation';
@@ -26,7 +26,7 @@ export function SelectLocationContext({
 }: SelectLocationContextProps) {
   const menu = useDropdown();
 
-  function handleClick(event: EventMouse, newValue: string) {
+  function handleClick(event: React.MouseEvent<Element>, newValue: string) {
     event.preventDefault();
     event.stopPropagation();
     menu.hide();

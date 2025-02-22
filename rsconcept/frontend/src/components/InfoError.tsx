@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { ZodError } from 'zod';
 
-import { AxiosError, isAxiosError } from '@/backend/apiTransport';
+import { type AxiosError, isAxiosError } from '@/backend/apiTransport';
 import { isResponseHtml } from '@/utils/utils';
 
 import { PrettyJson } from './View';

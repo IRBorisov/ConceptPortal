@@ -2,8 +2,8 @@
  * Module: CodeMirror customizations.
  */
 import { syntaxTree } from '@codemirror/language';
-import { NodeType, Tree, TreeCursor } from '@lezer/common';
-import { type ReactCodeMirrorRef, SelectionRange } from '@uiw/react-codemirror';
+import { type NodeType, type Tree, type TreeCursor } from '@lezer/common';
+import { type ReactCodeMirrorRef, type SelectionRange } from '@uiw/react-codemirror';
 
 /**
  * Represents syntax tree node data.

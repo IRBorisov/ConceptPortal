@@ -2,7 +2,7 @@ import path from 'path';
 
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
-import { defineConfig, loadEnv, PluginOption } from 'vite';
+import { defineConfig, loadEnv, type PluginOption } from 'vite';
 
 import { dependencies } from './package.json';
 
@@ -27,10 +27,10 @@ export default ({ mode }: { mode: string }) => {
   };
   return defineConfig({
     appType: 'spa',
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
     plugins: [
       tailwindcss(),
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+
       react({
         babel: {
           plugins: [['babel-plugin-react-compiler', reactCompilerConfig]]

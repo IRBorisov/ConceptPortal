@@ -1,12 +1,12 @@
 import clsx from 'clsx';
 
-import { type EventMouse, type Styling, type Titled } from '@/components/props';
+import { type Styling, type Titled } from '@/components/props';
 import { globalIDs } from '@/utils/constants';
 
 interface NavigationButtonProps extends Titled, Styling {
   text?: string;
   icon: React.ReactNode;
-  onClick?: (event: EventMouse) => void;
+  onClick?: (event: React.MouseEvent<Element>) => void;
 }
 
 export function NavigationButton({

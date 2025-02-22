@@ -1,5 +1,5 @@
 import { syntaxTree } from '@codemirror/language';
-import { EditorState } from '@uiw/react-codemirror';
+import { type EditorState } from '@uiw/react-codemirror';
 
 import { findEnvelopingNodes } from '@/utils/codemirror';
 

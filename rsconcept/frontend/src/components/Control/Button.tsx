@@ -2,9 +2,9 @@ import clsx from 'clsx';
 
 import { globalIDs } from '@/utils/constants';
 
-import { type Button as ButtonStyle, type Colors, type Control } from '../props';
+import { type Button as ButtonStyle, type Control } from '../props';
 
-interface ButtonProps extends Control, Colors, ButtonStyle {
+interface ButtonProps extends Control, ButtonStyle {
   /** Icon to display first. */
   icon?: React.ReactNode;
 
@@ -32,7 +32,6 @@ export function Button({
   disabled,
   noBorder,
   noOutline,
-  colors = 'clr-btn-default',
   className,
   ...restProps
 }: ButtonProps) {
@@ -43,7 +42,7 @@ export function Button({
       className={clsx(
         'inline-flex gap-2 items-center justify-center',
         'select-none disabled:cursor-auto',
-        'cc-animate-color',
+        'clr-btn-default cc-animate-color',
         {
           'border rounded-sm': !noBorder,
           'px-1': dense,
@@ -53,8 +52,7 @@ export function Button({
           'outline-hidden': noOutline,
           'clr-outline': !noOutline
         },
-        className,
-        colors
+        className
       )}
       data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}
       data-tooltip-html={titleHtml}

@@ -17,7 +17,6 @@ import {
   IconUserSearch
 } from '@/components/Icons';
 import { SearchBar } from '@/components/Input';
-import { type EventMouse } from '@/components/props';
 import { prefixes } from '@/utils/constants';
 import { tripleToggleColor } from '@/utils/utils';
 
@@ -66,7 +65,7 @@ export function ToolbarSearch({ total, filtered }: ToolbarSearchProps) {
     toggleFolderMode();
   }
 
-  function handleFolderClick(event: EventMouse) {
+  function handleFolderClick(event: React.MouseEvent<Element>) {
     if (event.ctrlKey || event.metaKey) {
       toggleFolderMode();
     } else {

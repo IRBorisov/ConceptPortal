@@ -24,9 +24,6 @@ export function Component() {
   const [newPassword, setNewPassword] = useState('');
   const [newPasswordRepeat, setNewPasswordRepeat] = useState('');
 
-  const passwordColor =
-    !!newPassword && !!newPasswordRepeat && newPassword !== newPasswordRepeat ? 'bg-warn-100' : 'clr-input';
-
   const canSubmit = !!newPassword && !!newPasswordRepeat && newPassword === newPasswordRepeat;
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -61,7 +58,6 @@ export function Component() {
         label='Новый пароль'
         autoComplete='new-password'
         allowEnter
-        colors={passwordColor}
         value={newPassword}
         onChange={event => {
           setNewPassword(event.target.value);
@@ -73,7 +69,6 @@ export function Component() {
         label='Повторите новый'
         autoComplete='new-password'
         allowEnter
-        colors={passwordColor}
         value={newPasswordRepeat}
         onChange={event => {
           setNewPasswordRepeat(event.target.value);

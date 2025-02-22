@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import { type Page } from '@playwright/test';
 
 import { BACKEND_URL } from '../constants';
 

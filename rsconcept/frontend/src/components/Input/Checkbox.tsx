@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { globalIDs } from '@/utils/constants';
 
 import { CheckboxChecked } from '../Icons';
-import { type Button, type EventMouse } from '../props';
+import { type Button } from '../props';
 
 export interface CheckboxProps extends Omit<Button, 'value' | 'onClick' | 'onChange'> {
   /** Label to display next to the checkbox. */
@@ -35,7 +35,7 @@ export function Checkbox({
 }: CheckboxProps) {
   const cursor = disabled ? 'cursor-arrow' : onChange ? 'cursor-pointer' : '';
 
-  function handleClick(event: EventMouse): void {
+  function handleClick(event: React.MouseEvent<Element>): void {
     event.preventDefault();
     event.stopPropagation();
     if (disabled || !onChange) {

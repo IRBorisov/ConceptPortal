@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { globalIDs } from '@/utils/constants';
 
 import { MiniButton } from '../Control';
-import { type EventMouse, type Styling, type Titled } from '../props';
+import { type Styling, type Titled } from '../props';
 
 interface ValueIconProps extends Styling, Titled {
   /** Id of the component. */
@@ -19,7 +19,7 @@ interface ValueIconProps extends Styling, Titled {
   textClassName?: string;
 
   /** Callback to be called when the component is clicked. */
-  onClick?: (event: EventMouse) => void;
+  onClick?: (event: React.MouseEvent<Element>) => void;
 
   /** Number of symbols to display in a small size. */
   smallThreshold?: number;

@@ -1,13 +1,12 @@
 import clsx from 'clsx';
 
 import { IconChild } from '@/components/Icons';
-import { type Div } from '@/components/props';
 
 import { labelCstTypification } from '../labels';
 import { type IConstituenta } from '../models/rsform';
 import { isBasicConcept } from '../models/rsformAPI';
 
-interface InfoConstituentaProps extends Div {
+interface InfoConstituentaProps extends React.ComponentProps<'div'> {
   data: IConstituenta;
 }
 

@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { type Edge, ReactFlow, useEdgesState, useNodesState } from 'reactflow';
 
-import { TMGraph } from '../../models/TMGraph';
+import { type TMGraph } from '../../models/TMGraph';
 
 import { TMGraphEdgeTypes } from './graph/MGraphEdgeTypes';
 import { applyLayout } from './graph/MGraphLayout';

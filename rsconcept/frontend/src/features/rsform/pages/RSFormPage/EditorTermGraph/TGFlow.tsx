@@ -20,7 +20,6 @@ import { toPng } from 'html-to-image';
 import { useDebounce } from 'use-debounce';
 
 import { Overlay } from '@/components/Container';
-import { type EventMouse } from '@/components/props';
 import { useMainHeight } from '@/stores/appLayout';
 import { useDialogsStore } from '@/stores/dialogs';
 import { APP_COLORS } from '@/styling/colors';
@@ -274,19 +273,19 @@ export function TGFlow() {
     }
   }
 
-  function handleNodeContextMenu(event: EventMouse, cstID: number) {
+  function handleNodeContextMenu(event: React.MouseEvent, cstID: number) {
     event.preventDefault();
     event.stopPropagation();
     handleSetFocus(cstID);
   }
 
-  function handleNodeDoubleClick(event: EventMouse, cstID: number) {
+  function handleNodeDoubleClick(event: React.MouseEvent, cstID: number) {
     event.preventDefault();
     event.stopPropagation();
     navigateCst(cstID);
   }
 
-  function handleNodeEnter(event: EventMouse, cstID: number) {
+  function handleNodeEnter(event: React.MouseEvent, cstID: number) {
     setHoverID(cstID);
     setHoverLeft(
       event.clientX / window.innerWidth >= PARAMETER.graphHoverXLimit ||

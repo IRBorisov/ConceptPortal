@@ -1,8 +1,6 @@
 import clsx from 'clsx';
 
-import { type Label as LabelStyle } from '../props';
-
-interface LabelProps extends LabelStyle {
+interface LabelProps extends Omit<React.ComponentProps<'label'>, 'children'> {
   /** Text to display. */
   text?: string;
 }

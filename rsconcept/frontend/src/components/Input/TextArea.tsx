@@ -1,11 +1,14 @@
 import clsx from 'clsx';
 
 import { Label } from '../Input/Label';
-import { type Colors, type Editor, type ErrorProcessing, type TextArea as TextAreaStyle } from '../props';
+import { type Editor, type ErrorProcessing, type Titled } from '../props';
 
 import { ErrorField } from './ErrorField';
 
-export interface TextAreaProps extends Editor, ErrorProcessing, Colors, TextAreaStyle {
+export interface TextAreaProps extends Editor, ErrorProcessing, Titled, React.ComponentProps<'textarea'> {
+  /** Indicates that the input should be transparent. */
+  transparent?: boolean;
+
   /** Indicates that padding should be minimal. */
   dense?: boolean;
 
@@ -23,6 +26,7 @@ export function TextArea({
   id,
   label,
   required,
+  transparent,
   rows,
   dense,
   noBorder,
@@ -31,7 +35,6 @@ export function TextArea({
   className,
   fitContent,
   error,
-  colors = 'clr-input',
   ...restProps
 }: TextAreaProps) {
   return (
@@ -53,14 +56,15 @@ export function TextArea({
           'leading-tight',
           'overflow-x-hidden overflow-y-auto',
           {
-            'cc-fit-content': fitContent,
+            'field-sizing-content': fitContent,
             'resize-none': noResize,
             'border': !noBorder,
             'grow max-w-full': dense,
             'mt-2': !dense && !!label,
-            'clr-outline': !noOutline
+            'clr-outline': !noOutline,
+            'bg-transparent': transparent,
+            'clr-input': !transparent
           },
-          colors,
           !dense && className
         )}
         rows={rows}

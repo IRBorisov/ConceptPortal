@@ -2,7 +2,7 @@ import { removeTags } from '@/utils/utils';
 
 import { LinkTopic } from '../components/LinkTopic';
 import { describeHelpTopic, labelHelpTopic } from '../labels';
-import { HelpTopic } from '../models/helpTopic';
+import { type HelpTopic } from '../models/helpTopic';
 
 interface TopicItemProps {
   topic: HelpTopic;

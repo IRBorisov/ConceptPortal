@@ -17,7 +17,7 @@ import {
   type VisibilityState
 } from '@tanstack/react-table';
 
-import { type EventMouse, type Styling } from '../props';
+import { type Styling } from '../props';
 
 import { DefaultNoData } from './DefaultNoData';
 import { PaginationTools } from './PaginationTools';
@@ -67,10 +67,10 @@ export interface DataTableProps<TData extends RowData>
   noDataComponent?: React.ReactNode;
 
   /** Callback to be called when a row is clicked. */
-  onRowClicked?: (rowData: TData, event: EventMouse) => void;
+  onRowClicked?: (rowData: TData, event: React.MouseEvent<Element>) => void;
 
   /** Callback to be called when a row is double clicked. */
-  onRowDoubleClicked?: (rowData: TData, event: EventMouse) => void;
+  onRowDoubleClicked?: (rowData: TData, event: React.MouseEvent<Element>) => void;
 
   /** Enable row selection. */
   enableRowSelection?: boolean;

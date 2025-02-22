@@ -13,7 +13,7 @@ import {
   IconReset
 } from '@/components/Icons';
 import { type Styling } from '@/components/props';
-import { Graph } from '@/models/Graph';
+import { type Graph } from '@/models/Graph';
 
 interface ToolbarGraphSelectionProps extends Styling {
   value: number[];

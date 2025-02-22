@@ -6,7 +6,7 @@ import { globalIDs, PARAMETER } from '@/utils/constants';
 import { Overlay } from '../Container';
 import { MiniButton } from '../Control';
 import { IconDropArrow, IconPageRight } from '../Icons';
-import { type EventMouse, type Styling } from '../props';
+import { type Styling } from '../props';
 
 interface SelectTreeProps<ItemType> extends Styling {
   /** Current value. */
@@ -66,13 +66,13 @@ export function SelectTree<ItemType>({
     );
   }
 
-  function handleClickFold(event: EventMouse, target: ItemType, showChildren: boolean) {
+  function handleClickFold(event: React.MouseEvent<Element>, target: ItemType, showChildren: boolean) {
     event.preventDefault();
     event.stopPropagation();
     onFoldItem(target, showChildren);
   }
 
-  function handleSetValue(event: EventMouse, target: ItemType) {
+  function handleSetValue(event: React.MouseEvent<Element>, target: ItemType) {
     event.preventDefault();
     event.stopPropagation();
     onChange(target);
