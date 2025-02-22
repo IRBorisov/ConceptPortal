@@ -4,16 +4,6 @@
 
 @import './constants.css' layer(base);
 
-@layer base {
-  *,
-  ::after,
-  ::before,
-  ::backdrop,
-  ::file-selector-button {
-    border-color: var(--clr-prim-400);
-  }
-}
-
 @layer utilities {
   *,
   *::after,
@@ -23,6 +13,16 @@
     /* Uncomment to debug layering and overflow */
     /* background: hsla(135, 50%, 50%, 0.05); */
     /* outline: 2px solid hotpink; */
+  }
+}
+
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--clr-prim-400);
   }
 
   html {
@@ -115,9 +115,7 @@
   div:not(.dense) > p:not(:last-child) {
     margin-bottom: 0.5rem;
   }
-}
 
-@layer components {
   h1 {
     font-weight: 600;
     font-size: 1.125rem;
