@@ -11,7 +11,7 @@ const reactCompilerConfig = {
 };
 
 // Packages to include in main app bundle
-const inlinePackages = ['react', 'react-router', 'react-dom'];
+const inlinePackages = ['react', 'react-router', 'react-dom', 'global', 'react-scan'];
 
 // Rollup warnings that should not be displayed
 const warningsToIgnore = [

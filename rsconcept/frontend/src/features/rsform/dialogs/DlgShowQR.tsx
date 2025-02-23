@@ -13,7 +13,7 @@ export interface DlgShowQRProps {
 export function DlgShowQR() {
   const { target } = useDialogsStore(state => state.props as DlgShowQRProps);
   return (
-    <ModalView className={clsx('w-[30rem]', 'py-12 pr-3 pl-6 flex gap-3 justify-center items-center')}>
+    <ModalView className={clsx('w-[25rem]', 'pb-6 pt-12 flex justify-center items-center')}>
       <div className='bg-[#ffffff] p-4 border'>
         <QRCodeSVG value={target} size={256} />
       </div>

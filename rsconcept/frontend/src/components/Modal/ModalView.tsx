@@ -9,6 +9,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/utils';
 
+import { Overlay } from '../Container';
 import { Button, MiniButton } from '../Control';
 import { IconClose } from '../Icons';
 
@@ -48,13 +49,15 @@ export function ModalView({
           </div>
         ) : null}
 
-        <MiniButton
-          noPadding
-          titleHtml={prepareTooltip('Закрыть диалоговое окно', 'ESC')}
-          icon={<IconClose size='1.25rem' />}
-          className='float-right mt-2 mr-2'
-          onClick={hideDialog}
-        />
+        <Overlay className='z-modalOverlay'>
+          <MiniButton
+            noPadding
+            titleHtml={prepareTooltip('Закрыть диалоговое окно', 'ESC')}
+            icon={<IconClose size='1.25rem' />}
+            className='float-right mt-2 mr-2'
+            onClick={hideDialog}
+          />
+        </Overlay>
 
         {header ? <h1 className='px-12 py-2 select-none'>{header}</h1> : null}
 

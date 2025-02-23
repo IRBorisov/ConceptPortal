@@ -9,6 +9,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/utils';
 
+import { Overlay } from '../Container';
 import { Button, MiniButton, SubmitButton } from '../Control';
 import { IconClose } from '../Icons';
 import { type Styling } from '../props';
@@ -103,13 +104,15 @@ export function ModalForm({
           </div>
         ) : null}
 
-        <MiniButton
-          noPadding
-          titleHtml={prepareTooltip('Закрыть диалоговое окно', 'ESC')}
-          icon={<IconClose size='1.25rem' />}
-          className='float-right mt-2 mr-2'
-          onClick={handleCancel}
-        />
+        <Overlay className='z-modalOverlay'>
+          <MiniButton
+            noPadding
+            titleHtml={prepareTooltip('Закрыть диалоговое окно', 'ESC')}
+            icon={<IconClose size='1.25rem' />}
+            className='float-right mt-2 mr-2'
+            onClick={handleCancel}
+          />
+        </Overlay>
 
         {header ? <h1 className='px-12 py-2 select-none'>{header}</h1> : null}
 
