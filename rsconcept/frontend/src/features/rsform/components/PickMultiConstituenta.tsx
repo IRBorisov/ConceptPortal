@@ -119,7 +119,6 @@ export function PickMultiConstituenta({
           isOwned={cstID => !schema.cstByID.get(cstID)?.is_inherited}
           value={value}
           onChange={onChange}
-          emptySelection={value.length === 0}
           className='w-fit'
         />
       </div>

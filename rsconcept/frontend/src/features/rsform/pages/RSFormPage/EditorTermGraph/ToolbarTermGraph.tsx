@@ -1,7 +1,12 @@
+import { toast } from 'react-toastify';
+import { getNodesBounds, getViewportForBounds, useNodes, useReactFlow } from 'reactflow';
 import clsx from 'clsx';
+import { toPng } from 'html-to-image';
 
 import { BadgeHelp, HelpTopic } from '@/features/help';
 import { MiniSelectorOSS } from '@/features/library';
+import { CstType } from '@/features/rsform/backend/types';
+import { useTermGraphStore } from '@/features/rsform/stores/termGraph';
 
 import { MiniButton } from '@/components/Control';
 import {
@@ -17,39 +22,34 @@ import {
   IconTypeGraph
 } from '@/components/Icons';
 import { useDialogsStore } from '@/stores/dialogs';
+import { usePreferencesStore } from '@/stores/preferences';
+import { APP_COLORS } from '@/styling/colors';
 import { PARAMETER } from '@/utils/constants';
+import { errorMsg } from '@/utils/labels';
 
 import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
 import { useRSEdit } from '../RSEditContext';
 
-interface ToolbarTermGraphProps {
-  noText: boolean;
-  foldDerived: boolean;
+import { ZOOM_MAX, ZOOM_MIN } from './TGFlow';
 
-  showParamsDialog: () => void;
-  onCreate: () => void;
-  onDelete: () => void;
-  onFitView: () => void;
-  onSaveImage: () => void;
-
-  toggleFoldDerived: () => void;
-  toggleNoText: () => void;
-}
-
-export function ToolbarTermGraph({
-  noText,
-  foldDerived,
-  toggleNoText,
-  toggleFoldDerived,
-  showParamsDialog,
-  onCreate,
-  onDelete,
-  onFitView,
-  onSaveImage
-}: ToolbarTermGraphProps) {
+export function ToolbarTermGraph() {
   const isProcessing = useMutatingRSForm();
+  const darkMode = usePreferencesStore(state => state.darkMode);
+  const {
+    schema, //
+    selected,
+    navigateOss,
+    isContentEditable,
+    canDeleteSelected,
+    createCst,
+    promptDeleteCst
+  } = useRSEdit();
   const showTypeGraph = useDialogsStore(state => state.showShowTypeGraph);
-  const { schema, navigateOss, isContentEditable, canDeleteSelected } = useRSEdit();
+  const showParams = useDialogsStore(state => state.showGraphParams);
+  const filter = useTermGraphStore(state => state.filter);
+  const setFilter = useTermGraphStore(state => state.setFilter);
+  const nodes = useNodes();
+  const flow = useReactFlow();
 
   function handleShowTypeGraph() {
     const typeInfo = schema.items.map(item => ({
@@ -58,6 +58,74 @@ export function ToolbarTermGraph({
       args: item.parse.args
     }));
     showTypeGraph({ items: typeInfo });
+  }
+
+  function handleCreateCst() {
+    const definition = selected.map(id => schema.cstByID.get(id)!.alias).join(' ');
+    createCst(selected.length === 0 ? CstType.BASE : CstType.TERM, false, definition);
+  }
+
+  function handleDeleteCst() {
+    if (!canDeleteSelected || isProcessing) {
+      return;
+    }
+    promptDeleteCst();
+  }
+
+  function handleToggleNoText() {
+    setFilter({
+      ...filter,
+      noText: !filter.noText
+    });
+  }
+
+  function handleSaveImage() {
+    const canvas: HTMLElement | null = document.querySelector('.react-flow__viewport');
+    if (canvas === null) {
+      toast.error(errorMsg.imageFailed);
+      return;
+    }
+
+    const imageWidth = PARAMETER.ossImageWidth;
+    const imageHeight = PARAMETER.ossImageHeight;
+    const nodesBounds = getNodesBounds(nodes);
+    const viewport = getViewportForBounds(nodesBounds, imageWidth, imageHeight, ZOOM_MIN, ZOOM_MAX);
+    toPng(canvas, {
+      backgroundColor: darkMode ? APP_COLORS.bgDefaultDark : APP_COLORS.bgDefaultLight,
+      width: imageWidth,
+      height: imageHeight,
+      style: {
+        width: String(imageWidth),
+        height: String(imageHeight),
+        transform: `translate(${viewport.x}px, ${viewport.y}px) scale(${viewport.zoom * 2})`
+      }
+    })
+      .then(dataURL => {
+        const a = document.createElement('a');
+        a.setAttribute('download', `${schema.alias}.png`);
+        a.setAttribute('href', dataURL);
+        a.click();
+      })
+      .catch(error => {
+        console.error(error);
+        toast.error(errorMsg.imageFailed);
+      });
+  }
+
+  function handleFitView() {
+    setTimeout(() => {
+      flow.fitView({ duration: PARAMETER.zoomDuration });
+    }, PARAMETER.minimalTimeout);
+  }
+
+  function handleFoldDerived() {
+    setFilter({
+      ...filter,
+      foldDerived: !filter.foldDerived
+    });
+    setTimeout(() => {
+      flow.fitView({ duration: PARAMETER.zoomDuration });
+    }, PARAMETER.graphRefreshDelay);
   }
 
   return (
@@ -71,41 +139,41 @@ export function ToolbarTermGraph({
       <MiniButton
         title='Настройки фильтрации узлов и связей'
         icon={<IconFilter size='1.25rem' className='icon-primary' />}
-        onClick={showParamsDialog}
+        onClick={showParams}
       />
       <MiniButton
         icon={<IconFitImage size='1.25rem' className='icon-primary' />}
         title='Граф целиком'
-        onClick={onFitView}
+        onClick={handleFitView}
       />
       <MiniButton
-        title={!noText ? 'Скрыть текст' : 'Отобразить текст'}
+        title={!filter.noText ? 'Скрыть текст' : 'Отобразить текст'}
         icon={
-          !noText ? (
+          !filter.noText ? (
             <IconText size='1.25rem' className='icon-green' />
           ) : (
             <IconTextOff size='1.25rem' className='icon-primary' />
           )
         }
-        onClick={toggleNoText}
+        onClick={handleToggleNoText}
       />
       <MiniButton
-        title={!foldDerived ? 'Скрыть порожденные' : 'Отобразить порожденные'}
+        title={!filter.foldDerived ? 'Скрыть порожденные' : 'Отобразить порожденные'}
         icon={
-          !foldDerived ? (
+          !filter.foldDerived ? (
             <IconClustering size='1.25rem' className='icon-green' />
           ) : (
             <IconClusteringOff size='1.25rem' className='icon-primary' />
           )
         }
-        onClick={toggleFoldDerived}
+        onClick={handleFoldDerived}
       />
       {isContentEditable ? (
         <MiniButton
           title='Новая конституента'
           icon={<IconNewItem size='1.25rem' className='icon-green' />}
           disabled={isProcessing}
-          onClick={onCreate}
+          onClick={handleCreateCst}
         />
       ) : null}
       {isContentEditable ? (
@@ -113,7 +181,7 @@ export function ToolbarTermGraph({
           title='Удалить выбранные'
           icon={<IconDestroy size='1.25rem' className='icon-red' />}
           disabled={!canDeleteSelected || isProcessing}
-          onClick={onDelete}
+          onClick={handleDeleteCst}
         />
       ) : null}
       <MiniButton
@@ -124,7 +192,7 @@ export function ToolbarTermGraph({
       <MiniButton
         icon={<IconImage size='1.25rem' className='icon-primary' />}
         title='Сохранить изображение'
-        onClick={onSaveImage}
+        onClick={handleSaveImage}
       />
       <BadgeHelp
         topic={HelpTopic.UI_GRAPH_TERM}

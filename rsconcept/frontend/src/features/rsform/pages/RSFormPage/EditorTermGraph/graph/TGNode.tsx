@@ -3,6 +3,7 @@
 import { Handle, Position } from 'reactflow';
 
 import { APP_COLORS } from '@/styling/colors';
+import { globalIDs } from '@/utils/constants';
 
 const DESCRIPTION_THRESHOLD = 15;
 const LABEL_THRESHOLD = 3;
@@ -39,6 +40,7 @@ export function TGNode(node: TGNodeInternal) {
           backgroundColor: !node.selected ? node.data.fill : APP_COLORS.bgActiveSelection,
           fontSize: node.data.label.length > LABEL_THRESHOLD ? FONT_SIZE_MED : FONT_SIZE_MAX
         }}
+        data-tooltip-id={globalIDs.constituenta_tooltip}
       >
         <div
           style={{

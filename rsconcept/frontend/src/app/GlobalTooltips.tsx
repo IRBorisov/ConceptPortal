@@ -37,7 +37,7 @@ export const GlobalTooltips = () => {
       <Tooltip
         clickable
         id={globalIDs.constituenta_tooltip}
-        layer='z-modalTooltip'
+        layer='z-topmost'
         className='max-w-[30rem]'
         hidden={!hoverCst}
       >
@@ -47,7 +47,7 @@ export const GlobalTooltips = () => {
       </Tooltip>
       <Tooltip
         id={globalIDs.operation_tooltip}
-        layer='z-modalTooltip'
+        layer='z-topmost'
         className='max-w-[35rem] max-h-[40rem] dense'
         hidden={!hoverOperation}
       >

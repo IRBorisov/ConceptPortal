@@ -21,7 +21,6 @@ interface ToolbarGraphSelectionProps extends Styling {
   graph: Graph;
   isCore: (item: number) => boolean;
   isOwned?: (item: number) => boolean;
-  emptySelection?: boolean;
 }
 
 export function ToolbarGraphSelection({
@@ -31,9 +30,10 @@ export function ToolbarGraphSelection({
   isCore,
   isOwned,
   onChange,
-  emptySelection,
   ...restProps
 }: ToolbarGraphSelectionProps) {
+  const emptySelection = selected.length === 0;
+
   function handleSelectCore() {
     const core = [...graph.nodes.keys()].filter(isCore);
     onChange([...core, ...graph.expandInputs(core)]);

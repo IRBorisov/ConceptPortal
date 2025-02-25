@@ -4,16 +4,10 @@ interface SelectedCounterProps {
   totalCount: number;
   selectedCount: number;
   position?: string;
-  hideZero?: boolean;
 }
 
-export function SelectedCounter({
-  totalCount,
-  selectedCount,
-  hideZero,
-  position = 'top-0 left-0'
-}: SelectedCounterProps) {
-  if (selectedCount === 0 && hideZero) {
+export function SelectedCounter({ totalCount, selectedCount, position = 'top-0 left-0' }: SelectedCounterProps) {
+  if (selectedCount === 0) {
     return null;
   }
   return (

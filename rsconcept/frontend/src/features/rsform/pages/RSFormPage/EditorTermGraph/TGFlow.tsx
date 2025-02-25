@@ -1,11 +1,8 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 import {
   type Edge,
-  getNodesBounds,
-  getViewportForBounds,
   MarkerType,
   type Node,
   ReactFlow,
@@ -15,21 +12,16 @@ import {
   useReactFlow,
   useStoreApi
 } from 'reactflow';
-import clsx from 'clsx';
-import { toPng } from 'html-to-image';
-import { useDebounce } from 'use-debounce';
 
 import { Overlay } from '@/components/Container';
 import { useMainHeight } from '@/stores/appLayout';
-import { useDialogsStore } from '@/stores/dialogs';
+import { useTooltipsStore } from '@/stores/tooltips';
 import { APP_COLORS } from '@/styling/colors';
 import { PARAMETER } from '@/utils/constants';
-import { errorMsg } from '@/utils/labels';
 
 import { CstType } from '../../../backend/types';
 import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
 import { colorBgGraphNode } from '../../../colors';
-import { InfoConstituenta } from '../../../components/InfoConstituenta';
 import { ToolbarGraphSelection } from '../../../components/ToolbarGraphSelection';
 import { type IConstituenta, type IRSForm } from '../../../models/rsform';
 import { isBasicConcept } from '../../../models/rsformAPI';
@@ -46,12 +38,8 @@ import { ToolbarFocusedCst } from './ToolbarFocusedCst';
 import { ToolbarTermGraph } from './ToolbarTermGraph';
 import { ViewHidden } from './ViewHidden';
 
-const ZOOM_MAX = 3;
-const ZOOM_MIN = 0.25;
-
-// ratio to client size used to determine which side of screen popup should be
-const HOVER_LIMIT_X = 0.4;
-const HOVER_LIMIT_Y = 0.6;
+export const ZOOM_MAX = 3;
+export const ZOOM_MIN = 0.25;
 
 export function TGFlow() {
   const mainHeight = useMainHeight();
@@ -65,18 +53,16 @@ export function TGFlow() {
     selected,
     setSelected,
     navigateCst,
-    createCst,
     toggleSelect,
     canDeleteSelected,
     promptDeleteCst
   } = useRSEdit();
 
-  const showParams = useDialogsStore(state => state.showGraphParams);
-
   const filter = useTermGraphStore(state => state.filter);
-  const setFilter = useTermGraphStore(state => state.setFilter);
   const coloring = useTermGraphStore(state => state.coloring);
   const setColoring = useTermGraphStore(state => state.setColoring);
+
+  const setActiveCst = useTooltipsStore(state => state.setActiveCst);
 
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges] = useEdgesState([]);
@@ -85,14 +71,7 @@ export function TGFlow() {
   const filteredGraph = produceFilteredGraph(schema, filter, focusCst);
   const [hidden, setHidden] = useState<number[]>([]);
 
-  const [isDragging, setIsDragging] = useState(false);
-  const [hoverID, setHoverID] = useState<number | null>(null);
-  const hoverCst = hoverID && schema.cstByID.get(hoverID);
-  const [hoverCstDebounced] = useDebounce(hoverCst, PARAMETER.graphPopupDelay);
-  const [hoverLeft, setHoverLeft] = useState(true);
-
   const [needReset, setNeedReset] = useState(true);
-  const [toggleResetView, setToggleResetView] = useState(false);
 
   function onSelectionChange({ nodes }: { nodes: Node[] }) {
     const ids = nodes.map(node => Number(node.id));
@@ -115,7 +94,6 @@ export function TGFlow() {
       }
     });
     setHidden(newDismissed);
-    setHoverID(null);
   }, [schema, filteredGraph]);
 
   const resetNodes = useCallback(() => {
@@ -177,60 +155,9 @@ export function TGFlow() {
     resetNodes();
   }, [needReset, schema, resetNodes, flow.viewportInitialized]);
 
-  useEffect(() => {
-    setTimeout(() => {
-      flow.fitView({ duration: PARAMETER.zoomDuration });
-    }, PARAMETER.minimalTimeout);
-  }, [toggleResetView, flow, focusCst, filter]);
-
   function handleSetSelected(newSelection: number[]) {
     setSelected(newSelection);
     addSelectedNodes(newSelection.map(id => String(id)));
-  }
-
-  function handleCreateCst() {
-    const definition = selected.map(id => schema.cstByID.get(id)!.alias).join(' ');
-    createCst(selected.length === 0 ? CstType.BASE : CstType.TERM, false, definition);
-  }
-
-  function handleDeleteCst() {
-    if (!canDeleteSelected) {
-      return;
-    }
-    promptDeleteCst();
-  }
-
-  function handleSaveImage() {
-    const canvas: HTMLElement | null = document.querySelector('.react-flow__viewport');
-    if (canvas === null) {
-      toast.error(errorMsg.imageFailed);
-      return;
-    }
-
-    const imageWidth = PARAMETER.ossImageWidth;
-    const imageHeight = PARAMETER.ossImageHeight;
-    const nodesBounds = getNodesBounds(nodes);
-    const viewport = getViewportForBounds(nodesBounds, imageWidth, imageHeight, ZOOM_MIN, ZOOM_MAX);
-    toPng(canvas, {
-      backgroundColor: APP_COLORS.bgDefault,
-      width: imageWidth,
-      height: imageHeight,
-      style: {
-        width: String(imageWidth),
-        height: String(imageHeight),
-        transform: `translate(${viewport.x}px, ${viewport.y}px) scale(${viewport.zoom * 2})`
-      }
-    })
-      .then(dataURL => {
-        const a = document.createElement('a');
-        a.setAttribute('download', `${schema.alias}.png`);
-        a.setAttribute('href', dataURL);
-        a.click();
-      })
-      .catch(error => {
-        console.error(error);
-        toast.error(errorMsg.imageFailed);
-      });
   }
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
@@ -240,7 +167,7 @@ export function TGFlow() {
     if (event.key === 'Escape') {
       event.preventDefault();
       event.stopPropagation();
-      setFocusCst(null);
+      handleSetFocus(null);
       handleSetSelected([]);
       return;
     }
@@ -250,19 +177,11 @@ export function TGFlow() {
     if (event.key === 'Delete') {
       event.preventDefault();
       event.stopPropagation();
-      handleDeleteCst();
+      if (canDeleteSelected) {
+        promptDeleteCst();
+      }
       return;
     }
-  }
-
-  function handleFoldDerived() {
-    setFilter({
-      ...filter,
-      foldDerived: !filter.foldDerived
-    });
-    setTimeout(() => {
-      setToggleResetView(prev => !prev);
-    }, PARAMETER.graphRefreshDelay);
   }
 
   function handleSetFocus(cstID: number | null) {
@@ -271,10 +190,11 @@ export function TGFlow() {
     } else {
       const target = schema.cstByID.get(cstID) ?? null;
       setFocusCst(prev => (prev === target ? null : target));
-      if (target) {
-        setSelected([]);
-      }
     }
+    setSelected([]);
+    setTimeout(() => {
+      flow.fitView({ duration: PARAMETER.zoomDuration });
+    }, PARAMETER.minimalTimeout);
   }
 
   function handleNodeContextMenu(event: React.MouseEvent, cstID: number) {
@@ -289,32 +209,18 @@ export function TGFlow() {
     navigateCst(cstID);
   }
 
-  function handleNodeEnter(event: React.MouseEvent, cstID: number) {
-    setHoverID(cstID);
-    setHoverLeft(
-      event.clientX / window.innerWidth >= HOVER_LIMIT_X || event.clientY / window.innerHeight >= HOVER_LIMIT_Y
-    );
+  function handleNodeEnter(cstID: number) {
+    const cst = schema.cstByID.get(cstID);
+    if (cst) {
+      setActiveCst(cst);
+    }
   }
 
   return (
     <>
       <Overlay position='cc-tab-tools' className='flex flex-col items-center rounded-b-2xl cc-blur'>
-        <ToolbarTermGraph
-          noText={filter.noText}
-          foldDerived={filter.foldDerived}
-          showParamsDialog={() => showParams()}
-          onCreate={handleCreateCst}
-          onDelete={handleDeleteCst}
-          onFitView={() => setToggleResetView(prev => !prev)}
-          onSaveImage={handleSaveImage}
-          toggleFoldDerived={handleFoldDerived}
-          toggleNoText={() =>
-            setFilter({
-              ...filter,
-              noText: !filter.noText
-            })
-          }
-        />
+        <ToolbarTermGraph />
+        {focusCst ? <ToolbarFocusedCst focusedCst={focusCst} onResetFocus={() => handleSetFocus(null)} /> : null}
         {!focusCst ? (
           <ToolbarGraphSelection
             graph={schema.graph}
@@ -325,58 +231,16 @@ export function TGFlow() {
             isOwned={schema.inheritance.length > 0 ? cstID => !schema.cstByID.get(cstID)?.is_inherited : undefined}
             value={selected}
             onChange={handleSetSelected}
-            emptySelection={selected.length === 0}
-          />
-        ) : null}
-        {focusCst ? (
-          <ToolbarFocusedCst
-            center={focusCst}
-            reset={() => handleSetFocus(null)}
-            showInputs={filter.focusShowInputs}
-            showOutputs={filter.focusShowOutputs}
-            toggleShowInputs={() =>
-              setFilter({
-                ...filter,
-                focusShowInputs: !filter.focusShowInputs
-              })
-            }
-            toggleShowOutputs={() =>
-              setFilter({
-                ...filter,
-                focusShowOutputs: !filter.focusShowOutputs
-              })
-            }
           />
         ) : null}
       </Overlay>
 
       <div className='cc-fade-in' tabIndex={-1} onKeyDown={handleKeyDown}>
         <SelectedCounter
-          hideZero
           totalCount={schema.stats?.count_all ?? 0}
           selectedCount={selected.length}
           position='top-[4.4rem] sm:top-[4.1rem] left-[0.5rem] sm:left-[0.65rem]'
         />
-
-        {hoverCstDebounced ? (
-          <Overlay
-            layer='z-tooltip'
-            position={clsx('top-[3.5rem]', { 'left-[2.6rem]': hoverLeft, 'right-[2.6rem]': !hoverLeft })}
-            className={clsx(
-              'w-[25rem] max-h-[calc(100dvh-15rem)]',
-              'px-3',
-              'cc-scroll-y cc-fade-in',
-              'border shadow-md',
-              'clr-input cc-fade-in',
-              'text-sm'
-            )}
-            style={{
-              opacity: !isDragging && hoverCst && hoverCst === hoverCstDebounced ? 1 : 0
-            }}
-          >
-            <InfoConstituenta className='pt-1 pb-2' data={hoverCstDebounced} />
-          </Overlay>
-        ) : null}
 
         <Overlay position='top-[6.15rem] sm:top-[5.9rem] left-0' className='flex gap-1 pointer-events-none'>
           <div className='flex flex-col ml-2 w-[13.5rem]'>
@@ -405,10 +269,7 @@ export function TGFlow() {
             edgeTypes={TGEdgeTypes}
             maxZoom={ZOOM_MAX}
             minZoom={ZOOM_MIN}
-            onNodeDragStart={() => setIsDragging(true)}
-            onNodeDragStop={() => setIsDragging(false)}
-            onNodeMouseEnter={(event, node) => handleNodeEnter(event, Number(node.id))}
-            onNodeMouseLeave={() => setHoverID(null)}
+            onNodeMouseEnter={(_, node) => handleNodeEnter(Number(node.id))}
             onNodeDoubleClick={(event, node) => handleNodeDoubleClick(event, Number(node.id))}
             onNodeContextMenu={(event, node) => handleNodeContextMenu(event, Number(node.id))}
           />
