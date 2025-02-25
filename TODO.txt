@@ -8,9 +8,10 @@ For more specific TODOs see comments in code
 - Landing page
 - Design first user experience
 - Demo sandbox for anonymous users
+- Save react-flow to vector image
 
 User profile: 
-- Settings + settings server persistency
+- Settings server persistency
 - Profile pictures
 - Custom LibraryItem lists
 - Custom user filters and sharing filters
@@ -39,7 +40,6 @@ User profile:
 
 [Tech]
 - duplicate syntax parsing and type info calculations to client. Consider moving backend to Nodejs or embedding c++ lib
-- Testing E2E playwright
 
 
 [Deployment]
@@ -60,7 +60,6 @@ Research and consider integration
 - skeleton loading
 https://react.dev/reference/react/Suspense
 
-- backend error message unification
 - drf-messages
 https://drf-standardized-errors.readthedocs.io/en/latest/error_response.html
 

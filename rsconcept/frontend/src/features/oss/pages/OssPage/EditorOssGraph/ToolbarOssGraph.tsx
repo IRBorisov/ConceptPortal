@@ -13,7 +13,6 @@ import {
   IconExecute,
   IconFitImage,
   IconGrid,
-  IconImage,
   IconLineStraight,
   IconLineWave,
   IconNewItem,
@@ -34,7 +33,6 @@ interface ToolbarOssGraphProps {
   onEdit: () => void;
   onExecute: () => void;
   onFitView: () => void;
-  onSaveImage: () => void;
   onSavePositions: () => void;
   onResetPositions: () => void;
 }
@@ -45,7 +43,6 @@ export function ToolbarOssGraph({
   onEdit,
   onExecute,
   onFitView,
-  onSaveImage,
   onSavePositions,
   onResetPositions
 }: ToolbarOssGraphProps) {
@@ -126,11 +123,6 @@ export function ToolbarOssGraph({
             )
           }
           onClick={toggleEdgeAnimate}
-        />
-        <MiniButton
-          icon={<IconImage size='1.25rem' className='icon-primary' />}
-          title='Сохранить изображение'
-          onClick={onSaveImage}
         />
         <BadgeHelp
           topic={HelpTopic.UI_OSS_GRAPH}

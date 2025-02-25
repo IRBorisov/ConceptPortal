@@ -1,7 +1,5 @@
-import { toast } from 'react-toastify';
-import { getNodesBounds, getViewportForBounds, useReactFlow } from 'reactflow';
+import { useReactFlow } from 'reactflow';
 import clsx from 'clsx';
-import { toPng } from 'html-to-image';
 
 import { BadgeHelp, HelpTopic } from '@/features/help';
 import { MiniSelectorOSS } from '@/features/library';
@@ -15,26 +13,21 @@ import {
   IconDestroy,
   IconFilter,
   IconFitImage,
-  IconImage,
   IconNewItem,
   IconText,
   IconTextOff,
   IconTypeGraph
 } from '@/components/Icons';
 import { useDialogsStore } from '@/stores/dialogs';
-import { usePreferencesStore } from '@/stores/preferences';
-import { APP_COLORS } from '@/styling/colors';
 import { PARAMETER } from '@/utils/constants';
-import { errorMsg } from '@/utils/labels';
 
 import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
 import { useRSEdit } from '../RSEditContext';
 
-import { VIEW_PADDING, ZOOM_MAX, ZOOM_MIN } from './TGFlow';
+import { VIEW_PADDING } from './TGFlow';
 
 export function ToolbarTermGraph() {
   const isProcessing = useMutatingRSForm();
-  const darkMode = usePreferencesStore(state => state.darkMode);
   const {
     schema, //
     selected,
@@ -49,7 +42,7 @@ export function ToolbarTermGraph() {
   const filter = useTermGraphStore(state => state.filter);
   const setFilter = useTermGraphStore(state => state.setFilter);
 
-  const { fitView, getNodes } = useReactFlow();
+  const { fitView } = useReactFlow();
 
   function handleShowTypeGraph() {
     const typeInfo = schema.items.map(item => ({
@@ -77,39 +70,6 @@ export function ToolbarTermGraph() {
       ...filter,
       noText: !filter.noText
     });
-  }
-
-  function handleSaveImage() {
-    const canvas: HTMLElement | null = document.querySelector('.react-flow__viewport');
-    if (canvas === null) {
-      toast.error(errorMsg.imageFailed);
-      return;
-    }
-
-    const imageWidth = PARAMETER.ossImageWidth;
-    const imageHeight = PARAMETER.ossImageHeight;
-    const nodesBounds = getNodesBounds(getNodes());
-    const viewport = getViewportForBounds(nodesBounds, imageWidth, imageHeight, ZOOM_MIN, ZOOM_MAX);
-    toPng(canvas, {
-      backgroundColor: darkMode ? APP_COLORS.bgDefaultDark : APP_COLORS.bgDefaultLight,
-      width: imageWidth,
-      height: imageHeight,
-      style: {
-        width: String(imageWidth),
-        height: String(imageHeight),
-        transform: `translate(${viewport.x}px, ${viewport.y}px) scale(${viewport.zoom * 2})`
-      }
-    })
-      .then(dataURL => {
-        const a = document.createElement('a');
-        a.setAttribute('download', `${schema.alias}.png`);
-        a.setAttribute('href', dataURL);
-        a.click();
-      })
-      .catch(error => {
-        console.error(error);
-        toast.error(errorMsg.imageFailed);
-      });
   }
 
   function handleFitView() {
@@ -185,11 +145,6 @@ export function ToolbarTermGraph() {
         icon={<IconTypeGraph size='1.25rem' className='icon-primary' />}
         title='Граф ступеней'
         onClick={handleShowTypeGraph}
-      />
-      <MiniButton
-        icon={<IconImage size='1.25rem' className='icon-primary' />}
-        title='Сохранить изображение'
-        onClick={handleSaveImage}
       />
       <BadgeHelp
         topic={HelpTopic.UI_GRAPH_TERM}

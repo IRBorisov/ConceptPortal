@@ -4,8 +4,6 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import {
   Background,
-  getNodesBounds,
-  getViewportForBounds,
   type Node,
   ReactFlow,
   useEdgesState,
@@ -13,7 +11,6 @@ import {
   useOnSelectionChange,
   useReactFlow
 } from 'reactflow';
-import { toPng } from 'html-to-image';
 
 import { urls, useConceptNavigation } from '@/app';
 import { useLibrary } from '@/features/library';
@@ -21,7 +18,6 @@ import { useLibrary } from '@/features/library';
 import { Overlay } from '@/components/Container';
 import { useMainHeight } from '@/stores/appLayout';
 import { useTooltipsStore } from '@/stores/tooltips';
-import { APP_COLORS } from '@/styling/colors';
 import { PARAMETER } from '@/utils/constants';
 import { errorMsg } from '@/utils/labels';
 
@@ -203,39 +199,6 @@ export function OssFlow() {
     promptRelocateConstituents(target, getPositions());
   }
 
-  function handleSaveImage() {
-    const canvas: HTMLElement | null = document.querySelector('.react-flow__viewport');
-    if (canvas === null) {
-      toast.error(errorMsg.imageFailed);
-      return;
-    }
-
-    const imageWidth = PARAMETER.ossImageWidth;
-    const imageHeight = PARAMETER.ossImageHeight;
-    const nodesBounds = getNodesBounds(nodes);
-    const viewport = getViewportForBounds(nodesBounds, imageWidth, imageHeight, ZOOM_MIN, ZOOM_MAX);
-    toPng(canvas, {
-      backgroundColor: APP_COLORS.bgDefault,
-      width: imageWidth,
-      height: imageHeight,
-      style: {
-        width: String(imageWidth),
-        height: String(imageHeight),
-        transform: `translate(${viewport.x}px, ${viewport.y}px) scale(${viewport.zoom})`
-      }
-    })
-      .then(dataURL => {
-        const a = document.createElement('a');
-        a.setAttribute('download', `${schema.alias}.png`);
-        a.setAttribute('href', dataURL);
-        a.click();
-      })
-      .catch(error => {
-        console.error(error);
-        toast.error(errorMsg.imageFailed);
-      });
-  }
-
   function handleContextMenu(event: React.MouseEvent<Element>, node: OssNode) {
     event.preventDefault();
     event.stopPropagation();
@@ -306,7 +269,6 @@ export function OssFlow() {
           onExecute={handleExecuteSelected}
           onResetPositions={() => setToggleReset(prev => !prev)}
           onSavePositions={handleSavePositions}
-          onSaveImage={handleSaveImage}
         />
       </Overlay>
       {menuProps ? (

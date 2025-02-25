@@ -11,7 +11,6 @@ import {
   IconGraphInputs,
   IconGraphMaximize,
   IconGraphOutputs,
-  IconImage,
   IconNewItem,
   IconOSS,
   IconPredecessor,
@@ -84,9 +83,6 @@ export function HelpRSGraphTerm() {
           <li>
             <IconTypeGraph className='inline-icon' /> Открыть{' '}
             <LinkTopic text='граф ступеней' topic={HelpTopic.UI_TYPE_GRAPH} />
-          </li>
-          <li>
-            <IconImage className='inline-icon' /> Сохранить в формат PNG
           </li>
         </div>
 

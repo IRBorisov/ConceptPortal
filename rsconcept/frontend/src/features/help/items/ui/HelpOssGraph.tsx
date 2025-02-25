@@ -10,7 +10,6 @@ import {
   IconExecute,
   IconFitImage,
   IconGrid,
-  IconImage,
   IconLineStraight,
   IconLineWave,
   IconNewItem,
@@ -81,9 +80,6 @@ export function HelpOssGraph() {
           </li>
           <li>
             <IconSave className='inline-icon' /> Сохранить положения
-          </li>
-          <li>
-            <IconImage className='inline-icon' /> Сохранить в SVG
           </li>
         </div>
 

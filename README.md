@@ -45,7 +45,6 @@ This readme file is used mostly to document project dependencies and conventions
   - js-file-download
   - use-debounce
   - qrcode.react
-  - html-to-image
   - zustand
   - zod
   - @hookform/resolvers
