@@ -86,9 +86,10 @@
 
   ::selection {
     background: var(--clr-sec-100);
-    tr :hover& {
-      background: var(--clr-warn-100);
-    }
+  }
+
+  tr:hover ::selection {
+    background: var(--clr-warn-100);
   }
 
   ::placeholder {
