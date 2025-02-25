@@ -15,7 +15,6 @@ import {
 
 import { Overlay } from '@/components/Container';
 import { useMainHeight } from '@/stores/appLayout';
-import { useTooltipsStore } from '@/stores/tooltips';
 import { APP_COLORS } from '@/styling/colors';
 import { PARAMETER } from '@/utils/constants';
 
@@ -43,7 +42,7 @@ export const ZOOM_MIN = 0.25;
 
 export function TGFlow() {
   const mainHeight = useMainHeight();
-  const flow = useReactFlow();
+  const { fitView, viewportInitialized } = useReactFlow();
   const store = useStoreApi();
   const { addSelectedNodes } = store.getState();
   const isProcessing = useMutatingRSForm();
@@ -61,8 +60,6 @@ export function TGFlow() {
   const filter = useTermGraphStore(state => state.filter);
   const coloring = useTermGraphStore(state => state.coloring);
   const setColoring = useTermGraphStore(state => state.setColoring);
-
-  const setActiveCst = useTooltipsStore(state => state.setActiveCst);
 
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges] = useEdgesState([]);
@@ -108,8 +105,7 @@ export function TGFlow() {
           position: { x: 0, y: 0 },
           data: {
             fill: focusCst === cst ? APP_COLORS.bgPurple : colorBgGraphNode(cst, coloring),
-            label: cst.alias,
-            description: !filter.noText ? cst.term_resolved : ''
+            cst: cst
           }
         });
       }
@@ -148,12 +144,12 @@ export function TGFlow() {
   }, [schema, focusCst, coloring, filter]);
 
   useEffect(() => {
-    if (!needReset || !flow.viewportInitialized) {
+    if (!needReset || !viewportInitialized) {
       return;
     }
     setNeedReset(false);
     resetNodes();
-  }, [needReset, schema, resetNodes, flow.viewportInitialized]);
+  }, [needReset, schema, resetNodes, viewportInitialized]);
 
   function handleSetSelected(newSelection: number[]) {
     setSelected(newSelection);
@@ -193,7 +189,7 @@ export function TGFlow() {
     }
     setSelected([]);
     setTimeout(() => {
-      flow.fitView({ duration: PARAMETER.zoomDuration });
+      fitView({ duration: PARAMETER.zoomDuration });
     }, PARAMETER.minimalTimeout);
   }
 
@@ -207,13 +203,6 @@ export function TGFlow() {
     event.preventDefault();
     event.stopPropagation();
     navigateCst(cstID);
-  }
-
-  function handleNodeEnter(cstID: number) {
-    const cst = schema.cstByID.get(cstID);
-    if (cst) {
-      setActiveCst(cst);
-    }
   }
 
   return (
@@ -269,7 +258,6 @@ export function TGFlow() {
             edgeTypes={TGEdgeTypes}
             maxZoom={ZOOM_MAX}
             minZoom={ZOOM_MIN}
-            onNodeMouseEnter={(_, node) => handleNodeEnter(Number(node.id))}
             onNodeDoubleClick={(event, node) => handleNodeDoubleClick(event, Number(node.id))}
             onNodeContextMenu={(event, node) => handleNodeContextMenu(event, Number(node.id))}
           />

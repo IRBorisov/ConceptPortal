@@ -2,6 +2,9 @@
 
 import { Handle, Position } from 'reactflow';
 
+import { type IConstituenta } from '@/features/rsform/models/rsform';
+import { useTermGraphStore } from '@/features/rsform/stores/termGraph';
+
 import { APP_COLORS } from '@/styling/colors';
 import { globalIDs } from '@/utils/constants';
 
@@ -14,8 +17,7 @@ const FONT_SIZE_MIN = 10;
 
 export interface TGNodeData {
   fill: string;
-  label: string;
-  description: string;
+  cst: IConstituenta;
 }
 
 /**
@@ -31,6 +33,10 @@ interface TGNodeInternal {
 }
 
 export function TGNode(node: TGNodeInternal) {
+  const filter = useTermGraphStore(state => state.filter);
+  const label = node.data.cst.alias;
+  const description = !filter.noText ? node.data.cst.term_resolved : '';
+
   return (
     <>
       <Handle type='target' position={Position.Top} style={{ opacity: 0 }} />
@@ -38,9 +44,10 @@ export function TGNode(node: TGNodeInternal) {
         className='w-full h-full cursor-default flex items-center justify-center rounded-full'
         style={{
           backgroundColor: !node.selected ? node.data.fill : APP_COLORS.bgActiveSelection,
-          fontSize: node.data.label.length > LABEL_THRESHOLD ? FONT_SIZE_MED : FONT_SIZE_MAX
+          fontSize: label.length > LABEL_THRESHOLD ? FONT_SIZE_MED : FONT_SIZE_MAX
         }}
-        data-tooltip-id={globalIDs.constituenta_tooltip}
+        data-tooltip-id={globalIDs.tooltip}
+        data-tooltip-html={describeCstNode(node.data.cst)}
       >
         <div
           style={{
@@ -49,19 +56,19 @@ export function TGNode(node: TGNodeInternal) {
             WebkitTextStrokeColor: APP_COLORS.bgDefault
           }}
         >
-          {node.data.label}
+          {label}
         </div>
       </div>
       <Handle type='source' position={Position.Bottom} style={{ opacity: 0 }} />
-      {node.data.description ? (
+      {description ? (
         <div
           className='mt-1 w-[150px] px-1 text-center translate-x-[calc(-50%+20px)]'
           style={{
-            fontSize: node.data.description.length > DESCRIPTION_THRESHOLD ? FONT_SIZE_MIN : FONT_SIZE_MED
+            fontSize: description.length > DESCRIPTION_THRESHOLD ? FONT_SIZE_MIN : FONT_SIZE_MED
           }}
         >
           <div className='absolute top-0 px-1 left-0 text-center w-full line-clamp-3 hover:line-clamp-none'>
-            {node.data.description}
+            {description}
           </div>
           <div
             aria-hidden='true'
@@ -71,10 +78,15 @@ export function TGNode(node: TGNodeInternal) {
               WebkitTextStrokeColor: APP_COLORS.bgDefault
             }}
           >
-            {node.data.description}
+            {description}
           </div>
         </div>
       ) : null}
     </>
   );
+}
+
+// ====== INTERNAL ======
+function describeCstNode(cst: IConstituenta) {
+  return `${cst.alias}: ${cst.term_resolved}</br>Типизация: ${cst.parse.typification}`;
 }

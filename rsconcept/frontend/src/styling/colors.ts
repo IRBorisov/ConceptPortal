@@ -5,6 +5,8 @@
 /** Semantic colors for application. */
 // prettier-ignore
 export const APP_COLORS = {
+  bgDefaultLight:     '#fafafa',
+  bgDefaultDark:      '#171717',
   bgDefault:          'var(--clr-prim-100)',
   bgInput:            'var(--clr-prim-0)', 
   bgControls:         'var(--clr-prim-200)',
