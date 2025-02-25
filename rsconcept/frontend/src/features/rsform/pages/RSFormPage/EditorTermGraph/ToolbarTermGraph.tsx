@@ -1,5 +1,5 @@
 import { toast } from 'react-toastify';
-import { getNodesBounds, getViewportForBounds, useNodes, useReactFlow } from 'reactflow';
+import { getNodesBounds, getViewportForBounds, useReactFlow } from 'reactflow';
 import clsx from 'clsx';
 import { toPng } from 'html-to-image';
 
@@ -30,7 +30,7 @@ import { errorMsg } from '@/utils/labels';
 import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
 import { useRSEdit } from '../RSEditContext';
 
-import { ZOOM_MAX, ZOOM_MIN } from './TGFlow';
+import { VIEW_PADDING, ZOOM_MAX, ZOOM_MIN } from './TGFlow';
 
 export function ToolbarTermGraph() {
   const isProcessing = useMutatingRSForm();
@@ -48,8 +48,8 @@ export function ToolbarTermGraph() {
   const showParams = useDialogsStore(state => state.showGraphParams);
   const filter = useTermGraphStore(state => state.filter);
   const setFilter = useTermGraphStore(state => state.setFilter);
-  const nodes = useNodes();
-  const flow = useReactFlow();
+
+  const { fitView, getNodes } = useReactFlow();
 
   function handleShowTypeGraph() {
     const typeInfo = schema.items.map(item => ({
@@ -88,7 +88,7 @@ export function ToolbarTermGraph() {
 
     const imageWidth = PARAMETER.ossImageWidth;
     const imageHeight = PARAMETER.ossImageHeight;
-    const nodesBounds = getNodesBounds(nodes);
+    const nodesBounds = getNodesBounds(getNodes());
     const viewport = getViewportForBounds(nodesBounds, imageWidth, imageHeight, ZOOM_MIN, ZOOM_MAX);
     toPng(canvas, {
       backgroundColor: darkMode ? APP_COLORS.bgDefaultDark : APP_COLORS.bgDefaultLight,
@@ -114,7 +114,7 @@ export function ToolbarTermGraph() {
 
   function handleFitView() {
     setTimeout(() => {
-      flow.fitView({ duration: PARAMETER.zoomDuration });
+      fitView({ duration: PARAMETER.zoomDuration, padding: VIEW_PADDING });
     }, PARAMETER.minimalTimeout);
   }
 
@@ -123,9 +123,6 @@ export function ToolbarTermGraph() {
       ...filter,
       foldDerived: !filter.foldDerived
     });
-    setTimeout(() => {
-      flow.fitView({ duration: PARAMETER.zoomDuration });
-    }, PARAMETER.graphRefreshDelay);
   }
 
   return (

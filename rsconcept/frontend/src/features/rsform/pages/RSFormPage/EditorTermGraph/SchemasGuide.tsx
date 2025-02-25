@@ -5,14 +5,11 @@ import { IconHelp } from '@/components/Icons';
 import { globalIDs, prefixes } from '@/utils/constants';
 
 import { colorBgSchemas } from '../../../colors';
-import { type IRSForm } from '../../../models/rsform';
+import { useRSEdit } from '../RSEditContext';
 
-interface SchemasGuideProps {
-  schema: IRSForm;
-}
-
-export function SchemasGuide({ schema }: SchemasGuideProps) {
+export function SchemasGuide() {
   const { items: libraryItems } = useLibrary();
+  const { schema } = useRSEdit();
 
   const schemas = (() => {
     const processed = new Set<number>();

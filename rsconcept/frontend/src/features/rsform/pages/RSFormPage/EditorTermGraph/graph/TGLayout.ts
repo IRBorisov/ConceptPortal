@@ -1,11 +1,11 @@
 import { type Edge, type Node } from 'reactflow';
 import dagre from '@dagrejs/dagre';
 
+import { type IConstituenta } from '@/features/rsform/models/rsform';
+
 import { PARAMETER } from '@/utils/constants';
 
-import { type TGNodeData } from './TGNode';
-
-export function applyLayout(nodes: Node<TGNodeData>[], edges: Edge[], subLabels?: boolean) {
+export function applyLayout(nodes: Node<IConstituenta>[], edges: Edge[], subLabels: boolean) {
   const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
   dagreGraph.setGraph({
     rankdir: 'TB',

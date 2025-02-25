@@ -29,7 +29,7 @@ export function RSTabs({ activeID, activeTab }: RSTabsProps) {
 
   const hideFooter = useAppLayoutStore(state => state.hideFooter);
   const { setIsModified } = useModificationStore();
-  const { schema, selected, setSelected, navigateRSForm } = useRSEdit();
+  const { schema, selected, setSelected, deselectAll, navigateRSForm } = useRSEdit();
 
   useLayoutEffect(() => {
     const oldTitle = document.title;
@@ -46,11 +46,11 @@ export function RSTabs({ activeID, activeTab }: RSTabsProps) {
       if (activeID && schema.cstByID.has(activeID)) {
         setSelected([activeID]);
       } else {
-        setSelected([]);
+        deselectAll();
       }
     }
     return () => hideFooter(false);
-  }, [activeTab, activeID, setSelected, schema, hideFooter, setIsModified]);
+  }, [activeTab, activeID, setSelected, deselectAll, schema, hideFooter, setIsModified]);
 
   function onSelectTab(index: number, last: number, event: Event) {
     if (last === index) {

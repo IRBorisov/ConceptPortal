@@ -31,6 +31,7 @@ export enum RSTabID {
 export interface IRSEditContext {
   schema: IRSForm;
   selected: number[];
+  focusCst: IConstituenta | null;
   activeCst: IConstituenta | null;
   activeVersion?: number;
 
@@ -48,6 +49,7 @@ export interface IRSEditContext {
 
   deleteSchema: () => void;
 
+  setFocus: (newValue: IConstituenta | null) => void;
   setSelected: React.Dispatch<React.SetStateAction<number[]>>;
   select: (target: number) => void;
   deselect: (target: number) => void;
@@ -103,6 +105,7 @@ export const RSEditState = ({
 
   const [selected, setSelected] = useState<number[]>([]);
   const canDeleteSelected = selected.length > 0 && selected.every(id => !schema.cstByID.get(id)?.is_inherited);
+  const [focusCst, setFocusCst] = useState<IConstituenta | null>(null);
 
   const activeCst = selected.length === 0 ? null : schema.cstByID.get(selected[selected.length - 1])!;
 
@@ -124,6 +127,11 @@ export const RSEditState = ({
       }),
     [schema, adjustRole, isOwned, user, adminMode]
   );
+
+  function handleSetFocus(newValue: IConstituenta | null) {
+    setFocusCst(newValue);
+    setSelected([]);
+  }
 
   function navigateVersion(versionID?: number) {
     router.push(urls.schema(schema.id, versionID));
@@ -311,6 +319,7 @@ export const RSEditState = ({
     <RSEditContext
       value={{
         schema,
+        focusCst,
         selected,
         activeCst,
         activeVersion,
@@ -329,6 +338,7 @@ export const RSEditState = ({
 
         deleteSchema,
 
+        setFocus: handleSetFocus,
         setSelected,
         select: (target: number) => setSelected(prev => [...prev, target]),
         deselect: (target: number) => setSelected(prev => prev.filter(id => id !== target)),

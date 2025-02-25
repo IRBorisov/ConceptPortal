@@ -12,36 +12,35 @@ import { APP_COLORS } from '@/styling/colors';
 import { globalIDs, PARAMETER, prefixes } from '@/utils/constants';
 
 import { colorBgGraphNode } from '../../../colors';
-import { type IRSForm } from '../../../models/rsform';
-import { type GraphColoring, useTermGraphStore } from '../../../stores/termGraph';
+import { type IConstituenta } from '../../../models/rsform';
+import { useTermGraphStore } from '../../../stores/termGraph';
 import { useRSEdit } from '../RSEditContext';
 
 interface ViewHiddenProps {
-  schema: IRSForm;
   items: number[];
-  selected: number[];
-  coloringScheme: GraphColoring;
-
-  toggleSelection: (cstID: number) => void;
-  setFocus: (cstID: number) => void;
 }
 
-export function ViewHidden({ items, selected, toggleSelection, setFocus, schema, coloringScheme }: ViewHiddenProps) {
+export function ViewHidden({ items }: ViewHiddenProps) {
   const windowSize = useWindowSize();
-  const localSelected = items.filter(id => selected.includes(id));
+  const coloring = useTermGraphStore(state => state.coloring);
+  const { navigateCst, setFocus, schema, selected, toggleSelect } = useRSEdit();
 
-  const { navigateCst } = useRSEdit();
+  const localSelected = items.filter(id => selected.includes(id));
   const isFolded = useTermGraphStore(state => state.foldHidden);
   const toggleFolded = useTermGraphStore(state => state.toggleFoldHidden);
   const setActiveCst = useTooltipsStore(state => state.setActiveCst);
   const hiddenHeight = useFitHeight(windowSize.isSmall ? '10.4rem + 2px' : '12.5rem + 2px');
 
-  function handleClick(cstID: number, event: React.MouseEvent<Element>) {
-    if (event.ctrlKey || event.metaKey) {
-      setFocus(cstID);
-    } else {
-      toggleSelection(cstID);
-    }
+  function handleClick(event: React.MouseEvent<Element>, cstID: number) {
+    event.preventDefault();
+    event.stopPropagation();
+    toggleSelect(cstID);
+  }
+
+  function handleContextMenu(event: React.MouseEvent<HTMLElement>, target: IConstituenta) {
+    event.stopPropagation();
+    event.preventDefault();
+    setFocus(target);
   }
 
   if (items.length <= 0) {
@@ -92,14 +91,13 @@ export function ViewHidden({ items, selected, toggleSelection, setFocus, schema,
       >
         {items.map(cstID => {
           const cst = schema.cstByID.get(cstID)!;
-          const id = `${prefixes.cst_hidden_list}${cst.alias}`;
           return (
             <button
-              key={id}
+              key={`${prefixes.cst_hidden_list}${cst.alias}`}
               type='button'
               className='min-w-[3rem] rounded-md text-center select-none'
               style={{
-                backgroundColor: colorBgGraphNode(cst, coloringScheme),
+                backgroundColor: colorBgGraphNode(cst, coloring),
                 ...(localSelected.includes(cstID)
                   ? {
                       outlineWidth: '2px',
@@ -108,7 +106,8 @@ export function ViewHidden({ items, selected, toggleSelection, setFocus, schema,
                     }
                   : {})
               }}
-              onClick={event => handleClick(cstID, event)}
+              onClick={event => handleClick(event, cstID)}
+              onContextMenu={event => handleContextMenu(event, cst)}
               onDoubleClick={() => navigateCst(cstID)}
               data-tooltip-id={globalIDs.constituenta_tooltip}
               onMouseEnter={() => setActiveCst(cst)}

@@ -2,11 +2,13 @@
 
 import { Handle, Position } from 'reactflow';
 
-import { type IConstituenta } from '@/features/rsform/models/rsform';
-import { useTermGraphStore } from '@/features/rsform/stores/termGraph';
-
 import { APP_COLORS } from '@/styling/colors';
 import { globalIDs } from '@/utils/constants';
+
+import { colorBgGraphNode } from '../../../../colors';
+import { type IConstituenta } from '../../../../models/rsform';
+import { useTermGraphStore } from '../../../../stores/termGraph';
+import { useRSEdit } from '../../RSEditContext';
 
 const DESCRIPTION_THRESHOLD = 15;
 const LABEL_THRESHOLD = 3;
@@ -15,17 +17,12 @@ const FONT_SIZE_MAX = 14;
 const FONT_SIZE_MED = 12;
 const FONT_SIZE_MIN = 10;
 
-export interface TGNodeData {
-  fill: string;
-  cst: IConstituenta;
-}
-
 /**
  * Represents graph AST node internal data.
  */
 interface TGNodeInternal {
   id: string;
-  data: TGNodeData;
+  data: IConstituenta;
   selected: boolean;
   dragging: boolean;
   xPos: number;
@@ -33,9 +30,24 @@ interface TGNodeInternal {
 }
 
 export function TGNode(node: TGNodeInternal) {
+  const { focusCst, setFocus: setFocusCst, navigateCst } = useRSEdit();
   const filter = useTermGraphStore(state => state.filter);
-  const label = node.data.cst.alias;
-  const description = !filter.noText ? node.data.cst.term_resolved : '';
+  const coloring = useTermGraphStore(state => state.coloring);
+
+  const label = node.data.alias;
+  const description = !filter.noText ? node.data.term_resolved : '';
+
+  function handleContextMenu(event: React.MouseEvent<HTMLElement>) {
+    event.stopPropagation();
+    event.preventDefault();
+    setFocusCst(focusCst === node.data ? null : node.data);
+  }
+
+  function handleDoubleClick(event: React.MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    navigateCst(node.data.id);
+  }
 
   return (
     <>
@@ -43,11 +55,18 @@ export function TGNode(node: TGNodeInternal) {
       <div
         className='w-full h-full cursor-default flex items-center justify-center rounded-full'
         style={{
-          backgroundColor: !node.selected ? node.data.fill : APP_COLORS.bgActiveSelection,
+          backgroundColor: node.selected
+            ? APP_COLORS.bgActiveSelection
+            : focusCst === node.data
+            ? APP_COLORS.bgPurple
+            : colorBgGraphNode(node.data, coloring),
           fontSize: label.length > LABEL_THRESHOLD ? FONT_SIZE_MED : FONT_SIZE_MAX
         }}
         data-tooltip-id={globalIDs.tooltip}
-        data-tooltip-html={describeCstNode(node.data.cst)}
+        data-tooltip-html={describeCstNode(node.data)}
+        data-tooltip-hidden={node.dragging}
+        onContextMenu={handleContextMenu}
+        onDoubleClick={handleDoubleClick}
       >
         <div
           style={{
@@ -66,6 +85,8 @@ export function TGNode(node: TGNodeInternal) {
           style={{
             fontSize: description.length > DESCRIPTION_THRESHOLD ? FONT_SIZE_MIN : FONT_SIZE_MED
           }}
+          onContextMenu={handleContextMenu}
+          onDoubleClick={handleDoubleClick}
         >
           <div className='absolute top-0 px-1 left-0 text-center w-full line-clamp-3 hover:line-clamp-none'>
             {description}

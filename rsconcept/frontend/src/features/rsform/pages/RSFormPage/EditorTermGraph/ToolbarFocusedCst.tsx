@@ -6,23 +6,16 @@ import { MiniButton } from '@/components/Control';
 import { IconGraphInputs, IconGraphOutputs, IconReset } from '@/components/Icons';
 import { APP_COLORS } from '@/styling/colors';
 
-import { type IConstituenta } from '../../../models/rsform';
 import { useRSEdit } from '../RSEditContext';
 
-interface ToolbarFocusedCstProps {
-  focusedCst: IConstituenta;
-  onResetFocus: () => void;
-}
-
-export function ToolbarFocusedCst({ focusedCst, onResetFocus }: ToolbarFocusedCstProps) {
-  const { deselectAll } = useRSEdit();
+export function ToolbarFocusedCst() {
+  const { setFocus, focusCst } = useRSEdit();
 
   const filter = useTermGraphStore(state => state.filter);
   const setFilter = useTermGraphStore(state => state.setFilter);
 
   function resetSelection() {
-    onResetFocus();
-    deselectAll();
+    setFocus(null);
   }
 
   function handleShowInputs() {
@@ -39,11 +32,15 @@ export function ToolbarFocusedCst({ focusedCst, onResetFocus }: ToolbarFocusedCs
     });
   }
 
+  if (!focusCst) {
+    return null;
+  }
+
   return (
     <div className='items-center cc-icons'>
       <div className='w-[7.8rem] text-right select-none' style={{ color: APP_COLORS.fgPurple }}>
         Фокус
-        <b className='px-1'> {focusedCst.alias} </b>
+        <b className='px-1'> {focusCst.alias} </b>
       </div>
       <MiniButton
         titleHtml='Сбросить фокус'
