@@ -120,7 +120,7 @@ export function PickSchema({
             className='mt-1'
             onClick={() => locationMenu.toggle()}
           />
-          <Dropdown isOpen={locationMenu.isOpen} stretchLeft className='w-[20rem] h-[12.5rem] z-modalTooltip mt-0'>
+          <Dropdown isOpen={locationMenu.isOpen} stretchLeft className='w-[20rem] h-[12.5rem] z-modal-tooltip mt-0'>
             <SelectLocation
               value={filterLocation}
               prefix={prefixes.folders_list}

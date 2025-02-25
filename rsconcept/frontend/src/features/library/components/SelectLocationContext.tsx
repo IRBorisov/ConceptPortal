@@ -43,7 +43,7 @@ export function SelectLocationContext({
       />
       <Dropdown
         isOpen={menu.isOpen}
-        className={clsx('w-[20rem] h-[12.5rem] z-modalTooltip mt-[-0.25rem]', className)}
+        className={clsx('w-[20rem] h-[12.5rem] z-modal-tooltip mt-[-0.25rem]', className)}
         style={style}
       >
         <SelectLocation

@@ -44,7 +44,7 @@ export function SelectLocationHead({
         onClick={menu.toggle}
       />
 
-      <Dropdown isOpen={menu.isOpen} className='z-modalTooltip'>
+      <Dropdown isOpen={menu.isOpen} className='z-modal-tooltip'>
         {Object.values(LocationHead)
           .filter(head => !excluded.includes(head))
           .map((head, index) => {

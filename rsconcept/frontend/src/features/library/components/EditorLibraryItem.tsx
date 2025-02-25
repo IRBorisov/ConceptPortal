@@ -125,7 +125,7 @@ export function EditorLibraryItem({ schema, isAttachedToOSS }: EditorLibraryItem
           onClick={handleEditEditors}
           disabled={isModified || isProcessing || role < UserRole.OWNER}
         />
-        <Tooltip anchorSelect='#editor_stats' layer='z-modalTooltip'>
+        <Tooltip anchorSelect='#editor_stats' layer='z-modal-tooltip'>
           <Suspense fallback={<Loader scale={2} />}>
             <InfoUsers items={schema.editors} prefix={prefixes.user_editors} header='Редакторы' />
           </Suspense>

@@ -33,7 +33,7 @@ export function TopicsDropdown({ activeTopic, onChangeTopic }: TopicsDropdownPro
       className={clsx(
         'absolute left-0 w-[13.5rem]', // prettier: split-lines
         'flex flex-col',
-        'z-modalTooltip',
+        'z-modal-tooltip',
         'text-xs sm:text-sm',
         'select-none',
         {

@@ -39,7 +39,7 @@ export function BadgeHelp({ topic, padding = 'p-1', ...restProps }: BadgeHelpPro
   return (
     <div tabIndex={-1} id={`help-${topic}`} className={padding}>
       <IconHelp size='1.25rem' className='icon-primary' />
-      <Tooltip clickable anchorSelect={`#help-${topic}`} layer='z-modalTooltip' {...restProps}>
+      <Tooltip clickable anchorSelect={`#help-${topic}`} layer='z-modal-tooltip' {...restProps}>
         <Suspense fallback={<Loader />}>
           <div className='relative' onClick={event => event.stopPropagation()}>
             <div className='absolute right-0 text-sm top-[0.4rem] clr-input'>
