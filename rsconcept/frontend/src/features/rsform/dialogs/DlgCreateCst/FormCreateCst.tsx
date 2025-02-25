@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import clsx from 'clsx';
 
-import { BadgeHelp, HelpTopic } from '@/features/help';
+import { HelpTopic } from '@/features/help';
+import { BadgeHelp } from '@/features/help/components';
 
 import { TextArea, TextInput } from '@/components/Input';
 import { PARAMETER } from '@/utils/constants';

@@ -4,7 +4,9 @@ import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import clsx from 'clsx';
 
-import { type ILibraryItem, LibraryItemType, PickSchema, useLibrary } from '@/features/library';
+import { type ILibraryItem, LibraryItemType } from '@/features/library';
+import { useLibrary } from '@/features/library/backend/useLibrary';
+import { PickSchema } from '@/features/library/components';
 
 import { MiniButton } from '@/components/Control';
 import { IconReset } from '@/components/Icons';

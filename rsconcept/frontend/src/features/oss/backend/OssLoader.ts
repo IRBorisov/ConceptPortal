@@ -2,7 +2,7 @@
  * Module: OSS data loading and processing.
  */
 
-import { type ILibraryItem } from '@/features/library/backend/types';
+import { type ILibraryItem } from '@/features/library';
 
 import { Graph } from '@/models/Graph';
 

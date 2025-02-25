@@ -5,7 +5,7 @@ import { useMemo } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { useRSFormSuspense } from '@/features/rsform';
+import { useRSFormSuspense } from '@/features/rsform/backend/useRSForm';
 
 import { MiniButton } from '@/components/Control';
 import { IconReset, IconSave } from '@/components/Icons';

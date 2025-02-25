@@ -13,7 +13,7 @@ import {
 } from 'reactflow';
 
 import { urls, useConceptNavigation } from '@/app';
-import { useLibrary } from '@/features/library';
+import { useLibrary } from '@/features/library/backend/useLibrary';
 
 import { Overlay } from '@/components/Container';
 import { useMainHeight } from '@/stores/appLayout';

@@ -8,13 +8,13 @@ import { urls, useConceptNavigation } from '@/app';
 import { useAuthSuspense } from '@/features/auth';
 
 import { MiniButton } from '@/components/Control';
-import { VisibilityIcon } from '@/components/DomainIcons';
 import { Checkbox, Label, TextArea, TextInput } from '@/components/Input';
 import { ModalForm } from '@/components/Modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { AccessPolicy, type ICloneLibraryItemDTO, type ILibraryItem, schemaCloneLibraryItem } from '../backend/types';
 import { useCloneItem } from '../backend/useCloneItem';
+import { IconItemVisibility } from '../components/IconItemVisibility';
 import { SelectAccessPolicy } from '../components/SelectAccessPolicy';
 import { SelectLocationContext } from '../components/SelectLocationContext';
 import { SelectLocationHead } from '../components/SelectLocationHead';
@@ -105,7 +105,7 @@ export function DlgCloneLibraryItem() {
               render={({ field }) => (
                 <MiniButton
                   title={field.value ? 'Библиотека: отображать' : 'Библиотека: скрывать'}
-                  icon={<VisibilityIcon value={field.value} />}
+                  icon={<IconItemVisibility value={field.value} />}
                   onClick={() => field.onChange(!field.value)}
                 />
               )}

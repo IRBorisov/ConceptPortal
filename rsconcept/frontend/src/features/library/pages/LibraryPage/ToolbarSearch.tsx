@@ -2,10 +2,9 @@
 
 import clsx from 'clsx';
 
-import { SelectUser } from '@/features/users';
+import { SelectUser } from '@/features/users/components';
 
 import { MiniButton, SelectorButton } from '@/components/Control';
-import { LocationIcon, VisibilityIcon } from '@/components/DomainIcons';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/Dropdown';
 import {
   IconEditor,
@@ -20,6 +19,8 @@ import { SearchBar } from '@/components/Input';
 import { prefixes } from '@/utils/constants';
 import { tripleToggleColor } from '@/utils/utils';
 
+import { IconItemVisibility } from '../../components/IconItemVisibility';
+import { IconLocationHead } from '../../components/IconLocationHead';
 import { describeLocationHead, labelLocationHead } from '../../labels';
 import { LocationHead } from '../../models/library';
 import { useHasCustomFilter, useLibrarySearchStore } from '../../stores/librarySearch';
@@ -98,7 +99,7 @@ export function ToolbarSearch({ total, filtered }: ToolbarSearchProps) {
       <div className='cc-icons'>
         <MiniButton
           title='Видимость'
-          icon={<VisibilityIcon value={true} className={tripleToggleColor(isVisible)} />}
+          icon={<IconItemVisibility value={true} className={tripleToggleColor(isVisible)} />}
           onClick={toggleVisible}
         />
 
@@ -156,7 +157,7 @@ export function ToolbarSearch({ total, filtered }: ToolbarSearchProps) {
               hideTitle={headMenu.isOpen}
               icon={
                 head ? (
-                  <LocationIcon value={head} size='1.25rem' />
+                  <IconLocationHead value={head} size='1.25rem' />
                 ) : (
                   <IconFolderSearch size='1.25rem' className='clr-text-controls' />
                 )
@@ -187,7 +188,7 @@ export function ToolbarSearch({ total, filtered }: ToolbarSearchProps) {
                     title={describeLocationHead(head)}
                   >
                     <div className='inline-flex items-center gap-3'>
-                      <LocationIcon value={head} size='1rem' />
+                      <IconLocationHead value={head} size='1rem' />
                       {labelLocationHead(head)}
                     </div>
                   </DropdownButton>

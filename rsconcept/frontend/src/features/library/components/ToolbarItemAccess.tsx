@@ -1,9 +1,9 @@
-import { BadgeHelp, HelpTopic } from '@/features/help';
+import { HelpTopic } from '@/features/help';
+import { BadgeHelp } from '@/features/help/components';
 import { useRoleStore, UserRole } from '@/features/users';
 
 import { Overlay } from '@/components/Container';
 import { MiniButton } from '@/components/Control';
-import { VisibilityIcon } from '@/components/DomainIcons';
 import { IconImmutable, IconMutable } from '@/components/Icons';
 import { Label } from '@/components/Input';
 import { PARAMETER } from '@/utils/constants';
@@ -12,6 +12,7 @@ import { type AccessPolicy, type ILibraryItem } from '../backend/types';
 import { useMutatingLibrary } from '../backend/useMutatingLibrary';
 import { useSetAccessPolicy } from '../backend/useSetAccessPolicy';
 
+import { IconItemVisibility } from './IconItemVisibility';
 import { SelectAccessPolicy } from './SelectAccessPolicy';
 
 interface ToolbarItemAccessProps {
@@ -52,7 +53,7 @@ export function ToolbarItemAccess({
 
         <MiniButton
           title={visible ? 'Библиотека: отображать' : 'Библиотека: скрывать'}
-          icon={<VisibilityIcon value={visible} />}
+          icon={<IconItemVisibility value={visible} />}
           onClick={toggleVisible}
           disabled={role === UserRole.READER || isProcessing}
         />

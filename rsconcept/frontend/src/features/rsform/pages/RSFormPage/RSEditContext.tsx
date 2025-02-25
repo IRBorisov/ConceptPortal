@@ -4,7 +4,8 @@ import { createContext, useContext, useEffect, useState } from 'react';
 
 import { urls, useConceptNavigation } from '@/app';
 import { useAuthSuspense } from '@/features/auth';
-import { useDeleteItem, useLibrarySearchStore } from '@/features/library';
+import { useLibrarySearchStore } from '@/features/library';
+import { useDeleteItem } from '@/features/library/backend/useDeleteItem';
 import { useRoleStore, UserRole } from '@/features/users';
 
 import { useDialogsStore } from '@/stores/dialogs';

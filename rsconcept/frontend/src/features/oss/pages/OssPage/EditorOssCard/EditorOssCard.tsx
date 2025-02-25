@@ -2,8 +2,8 @@
 
 import clsx from 'clsx';
 
-import { EditorLibraryItem } from '@/features/library';
-import { ToolbarRSFormCard } from '@/features/rsform';
+import { EditorLibraryItem } from '@/features/library/components';
+import { ToolbarRSFormCard } from '@/features/rsform/components';
 
 import { FlexColumn } from '@/components/Container';
 import { useModificationStore } from '@/stores/modification';

@@ -5,7 +5,7 @@ import {
   type IVersionCreatedResponse,
   schemaRSForm,
   schemaVersionCreatedResponse
-} from '@/features/rsform/backend/types';
+} from '@/features/rsform';
 
 import { axiosDelete, axiosGet, axiosPatch, axiosPost } from '@/backend/apiTransport';
 import { DELAYS, KEYS } from '@/backend/configuration';

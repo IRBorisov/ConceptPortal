@@ -1,7 +1,8 @@
 'use client';
 
-import { BadgeHelp, HelpTopic } from '@/features/help';
-import { useVersionRestore } from '@/features/library';
+import { HelpTopic } from '@/features/help';
+import { BadgeHelp } from '@/features/help/components';
+import { useVersionRestore } from '@/features/library/backend/useVersionRestore';
 
 import { Overlay } from '@/components/Container';
 import { MiniButton } from '@/components/Control';

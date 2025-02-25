@@ -1,7 +1,7 @@
 'use client';
 
 import { useAuthSuspense } from '@/features/auth';
-import { MenuRole } from '@/features/library';
+import { MenuRole } from '@/features/library/components';
 
 import { MenuEditSchema } from './MenuEditSchema';
 import { MenuMain } from './MenuMain';

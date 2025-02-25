@@ -3,9 +3,10 @@
 import clsx from 'clsx';
 
 import { urls, useConceptNavigation } from '@/app';
-import { BadgeHelp, HelpTopic } from '@/features/help';
-import { MiniSelectorOSS } from '@/features/library';
-import { useFindPredecessor } from '@/features/oss';
+import { HelpTopic } from '@/features/help';
+import { BadgeHelp } from '@/features/help/components';
+import { MiniSelectorOSS } from '@/features/library/components';
+import { useFindPredecessor } from '@/features/oss/backend/useFindPredecessor';
 
 import { Overlay } from '@/components/Container';
 import { MiniButton } from '@/components/Control';

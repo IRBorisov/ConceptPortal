@@ -2,7 +2,8 @@ import { Suspense } from 'react';
 import { useIntl } from 'react-intl';
 
 import { urls, useConceptNavigation } from '@/app';
-import { InfoUsers, SelectUser, useLabelUser, useRoleStore, UserRole } from '@/features/users';
+import { useLabelUser, useRoleStore, UserRole } from '@/features/users';
+import { InfoUsers, SelectUser } from '@/features/users/components';
 
 import { Overlay, Tooltip } from '@/components/Container';
 import { MiniButton } from '@/components/Control';

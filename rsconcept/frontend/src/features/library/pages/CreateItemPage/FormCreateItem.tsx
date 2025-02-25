@@ -10,7 +10,6 @@ import { useAuthSuspense } from '@/features/auth';
 
 import { Overlay } from '@/components/Container';
 import { Button, MiniButton, SubmitButton } from '@/components/Control';
-import { VisibilityIcon } from '@/components/DomainIcons';
 import { IconDownload } from '@/components/Icons';
 import { InfoError } from '@/components/InfoError';
 import { Label, TextArea, TextInput } from '@/components/Input';
@@ -23,6 +22,7 @@ import {
   schemaCreateLibraryItem
 } from '../../backend/types';
 import { useCreateItem } from '../../backend/useCreateItem';
+import { IconItemVisibility } from '../../components/IconItemVisibility';
 import { SelectAccessPolicy } from '../../components/SelectAccessPolicy';
 import { SelectItemType } from '../../components/SelectItemType';
 import { SelectLocationContext } from '../../components/SelectLocationContext';
@@ -188,7 +188,7 @@ export function FormCreateItem() {
               render={({ field }) => (
                 <MiniButton
                   title={field.value ? 'Библиотека: отображать' : 'Библиотека: скрывать'}
-                  icon={<VisibilityIcon value={field.value} />}
+                  icon={<IconItemVisibility value={field.value} />}
                   onClick={() => field.onChange(!field.value)}
                 />
               )}

@@ -3,13 +3,14 @@
 import clsx from 'clsx';
 
 import { SelectorButton } from '@/components/Control';
-import { LocationIcon } from '@/components/DomainIcons';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/Dropdown';
 import { type Styling } from '@/components/props';
 import { prefixes } from '@/utils/constants';
 
 import { describeLocationHead, labelLocationHead } from '../labels';
 import { LocationHead } from '../models/library';
+
+import { IconLocationHead } from './IconLocationHead';
 
 interface SelectLocationHeadProps extends Styling {
   value: LocationHead;
@@ -39,7 +40,7 @@ export function SelectLocationHead({
         title={describeLocationHead(value)}
         hideTitle={menu.isOpen}
         className='h-full'
-        icon={<LocationIcon value={value} size='1rem' />}
+        icon={<IconLocationHead value={value} size='1rem' />}
         text={labelLocationHead(value)}
         onClick={menu.toggle}
       />
@@ -56,7 +57,7 @@ export function SelectLocationHead({
                 title={describeLocationHead(head)}
               >
                 <div className='inline-flex items-center gap-3'>
-                  <LocationIcon value={head} size='1rem' />
+                  <IconLocationHead value={head} size='1rem' />
                   {labelLocationHead(head)}
                 </div>
               </DropdownButton>

@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
-import { type IOperation } from '@/features/oss/models/oss';
-import { type IConstituenta } from '@/features/rsform/models/rsform';
+import { type IOperation } from '@/features/oss';
+import { type IConstituenta } from '@/features/rsform';
 
 interface TooltipsStore {
   activeCst: IConstituenta | null;

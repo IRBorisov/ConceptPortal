@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { useUpdateTimestamp } from '@/features/library';
+import { useUpdateTimestamp } from '@/features/library/backend/useUpdateTimestamp';
 
 import { KEYS } from '@/backend/configuration';
 

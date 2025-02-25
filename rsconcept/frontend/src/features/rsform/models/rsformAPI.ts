@@ -2,8 +2,7 @@
  * Module: API for formal representation for systems of concepts.
  */
 
-import { type ILibraryItem } from '@/features/library/backend/types';
-import { BASIC_SCHEMAS } from '@/features/library/models/library';
+import { BASIC_SCHEMAS, type ILibraryItem } from '@/features/library';
 
 import { TextMatcher } from '@/utils/utils';
 

@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 
-import { EditorLibraryItem } from '@/features/library';
+import { EditorLibraryItem } from '@/features/library/components';
 
 import { FlexColumn } from '@/components/Container';
 import { useModificationStore } from '@/stores/modification';

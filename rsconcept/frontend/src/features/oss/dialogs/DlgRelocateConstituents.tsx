@@ -6,11 +6,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import clsx from 'clsx';
 
 import { HelpTopic } from '@/features/help';
-import { type ILibraryItem, SelectLibraryItem, useLibrary } from '@/features/library';
-import { PickMultiConstituenta, useRSForm } from '@/features/rsform';
+import { type ILibraryItem } from '@/features/library';
+import { useLibrary } from '@/features/library/backend/useLibrary';
+import { SelectLibraryItem } from '@/features/library/components';
+import { useRSForm } from '@/features/rsform/backend/useRSForm';
+import { PickMultiConstituenta } from '@/features/rsform/components';
 
 import { MiniButton } from '@/components/Control';
-import { RelocateUpIcon } from '@/components/DomainIcons';
 import { Loader } from '@/components/Loader';
 import { ModalForm } from '@/components/Modal';
 import { useDialogsStore } from '@/stores/dialogs';
@@ -18,6 +20,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { type ICstRelocateDTO, type IOperationPosition, schemaCstRelocate } from '../backend/types';
 import { useRelocateConstituents } from '../backend/useRelocateConstituents';
 import { useUpdatePositions } from '../backend/useUpdatePositions';
+import { IconRelocationUp } from '../components/IconRelocationUp';
 import { type IOperation, type IOperationSchema } from '../models/oss';
 import { getRelocateCandidates } from '../models/ossAPI';
 
@@ -132,7 +135,7 @@ export function DlgRelocateConstituents() {
           />
           <MiniButton
             title='Направление перемещения'
-            icon={<RelocateUpIcon value={directionUp} />}
+            icon={<IconRelocationUp value={directionUp} />}
             onClick={toggleDirection}
           />
           <SelectLibraryItem

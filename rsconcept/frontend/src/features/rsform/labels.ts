@@ -5,7 +5,7 @@
 import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/utils';
 
-import { type IVersionInfo } from '../library';
+import { type IVersionInfo } from '../library/backend/types';
 import { type CurrentVersion } from '../library/models/library';
 
 import { CstType, type IRSErrorDescription, ParsingStatus, RSErrorType, TokenID } from './backend/types';

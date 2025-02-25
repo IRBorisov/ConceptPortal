@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { type ReactCodeMirrorRef } from '@uiw/react-codemirror';
 
-import { BadgeHelp, HelpTopic } from '@/features/help';
+import { HelpTopic } from '@/features/help';
+import { BadgeHelp } from '@/features/help/components';
 
 import { Overlay } from '@/components/Container';
 import { useDialogsStore } from '@/stores/dialogs';

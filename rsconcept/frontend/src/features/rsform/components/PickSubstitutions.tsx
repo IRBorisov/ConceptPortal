@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import clsx from 'clsx';
 
-import { type ILibraryItem, SelectLibraryItem } from '@/features/library';
+import { type ILibraryItem } from '@/features/library';
+import { SelectLibraryItem } from '@/features/library/components';
 
 import { MiniButton } from '@/components/Control';
 import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/DataTable';

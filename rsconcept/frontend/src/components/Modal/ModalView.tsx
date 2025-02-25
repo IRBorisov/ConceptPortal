@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 
-import { BadgeHelp } from '@/features/help';
+import { BadgeHelp } from '@/features/help/components';
 
 import { useEscapeKey } from '@/hooks/useEscapeKey';
 import { useDialogsStore } from '@/stores/dialogs';
@@ -75,7 +75,7 @@ export function ModalView({
           {children}
         </div>
 
-        <div className='z-modalControls my-2 flex gap-12 justify-center text-sm'>
+        <div className='z-modal-controls my-2 flex gap-12 justify-center text-sm'>
           <Button text='Закрыть' className='min-w-[7rem]' onClick={hideDialog} />
         </div>
       </div>

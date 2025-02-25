@@ -5,8 +5,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import clsx from 'clsx';
 
 import { urls, useConceptNavigation } from '@/app';
-import { useChangePassword } from '@/features/auth';
-import { type IChangePasswordDTO, schemaChangePassword } from '@/features/auth/backend/types';
+import { type IChangePasswordDTO, schemaChangePassword } from '@/features/auth';
+import { useChangePassword } from '@/features/auth/backend/useChangePassword';
 
 import { isAxiosError } from '@/backend/apiTransport';
 import { FlexColumn } from '@/components/Container';

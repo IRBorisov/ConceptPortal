@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { type IOperationSchemaDTO } from '@/features/oss/backend/types';
-import { type IRSFormDTO } from '@/features/rsform/backend/types';
+import { type IOperationSchemaDTO } from '@/features/oss';
+import { type IRSFormDTO } from '@/features/rsform';
 
 import { KEYS } from '@/backend/configuration';
 

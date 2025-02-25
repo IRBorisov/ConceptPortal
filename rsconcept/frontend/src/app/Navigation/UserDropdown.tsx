@@ -1,4 +1,5 @@
-import { useAuthSuspense, useLogout } from '@/features/auth';
+import { useAuthSuspense } from '@/features/auth';
+import { useLogout } from '@/features/auth/backend/useLogout';
 
 import { Dropdown, DropdownButton } from '@/components/Dropdown';
 import {

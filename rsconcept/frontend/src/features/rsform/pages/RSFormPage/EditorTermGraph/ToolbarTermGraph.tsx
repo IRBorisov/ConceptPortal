@@ -1,10 +1,9 @@
 import { useReactFlow } from 'reactflow';
 import clsx from 'clsx';
 
-import { BadgeHelp, HelpTopic } from '@/features/help';
-import { MiniSelectorOSS } from '@/features/library';
-import { CstType } from '@/features/rsform/backend/types';
-import { useTermGraphStore } from '@/features/rsform/stores/termGraph';
+import { HelpTopic } from '@/features/help';
+import { BadgeHelp } from '@/features/help/components';
+import { MiniSelectorOSS } from '@/features/library/components';
 
 import { MiniButton } from '@/components/Control';
 import {
@@ -21,7 +20,9 @@ import {
 import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER } from '@/utils/constants';
 
+import { CstType } from '../../../backend/types';
 import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
+import { useTermGraphStore } from '../../../stores/termGraph';
 import { useRSEdit } from '../RSEditContext';
 
 import { VIEW_PADDING } from './TGFlow';

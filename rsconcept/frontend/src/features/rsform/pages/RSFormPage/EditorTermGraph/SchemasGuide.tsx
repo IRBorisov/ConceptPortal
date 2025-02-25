@@ -1,4 +1,4 @@
-import { useLibrary } from '@/features/library';
+import { useLibrary } from '@/features/library/backend/useLibrary';
 
 import { Tooltip } from '@/components/Container';
 import { IconHelp } from '@/components/Icons';

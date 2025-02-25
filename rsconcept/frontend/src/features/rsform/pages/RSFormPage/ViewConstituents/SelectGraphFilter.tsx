@@ -1,12 +1,12 @@
 'use client';
 
 import { SelectorButton } from '@/components/Control';
-import { DependencyIcon } from '@/components/DomainIcons';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/Dropdown';
 import { type Styling } from '@/components/props';
 import { useWindowSize } from '@/hooks/useWindowSize';
 import { prefixes } from '@/utils/constants';
 
+import { IconDependencyMode } from '../../../components/IconDependencyMode';
 import { describeCstSource, labelCstSource } from '../../../labels';
 import { DependencyMode } from '../../../stores/cstSearch';
 
@@ -33,7 +33,7 @@ export function SelectGraphFilter({ value, dense, onChange, ...restProps }: Sele
         titleHtml='Настройка фильтрации <br/>по графу термов'
         hideTitle={menu.isOpen}
         className='h-full pr-2'
-        icon={<DependencyIcon value={value} size='1rem' />}
+        icon={<IconDependencyMode value={value} size='1rem' />}
         text={!dense && !size.isSmall ? labelCstSource(value) : undefined}
         onClick={menu.toggle}
       />
@@ -49,7 +49,7 @@ export function SelectGraphFilter({ value, dense, onChange, ...restProps }: Sele
                 onClick={() => handleChange(source)}
               >
                 <div className='inline-flex items-center gap-1'>
-                  {<DependencyIcon value={source} size='1rem' />}
+                  {<IconDependencyMode value={source} size='1rem' />}
                   {!dense ? (
                     <span>
                       <b>{labelCstSource(source)}:</b> {describeCstSource(source)}

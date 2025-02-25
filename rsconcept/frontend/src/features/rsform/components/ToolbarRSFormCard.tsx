@@ -1,9 +1,11 @@
 'use client';
 
 import { urls, useConceptNavigation } from '@/app';
-import { BadgeHelp, HelpTopic } from '@/features/help';
-import { AccessPolicy, LibraryItemType, MiniSelectorOSS, useMutatingLibrary } from '@/features/library';
-import { type ILibraryItem } from '@/features/library/backend/types';
+import { HelpTopic } from '@/features/help';
+import { BadgeHelp } from '@/features/help/components';
+import { AccessPolicy, type ILibraryItem, LibraryItemType } from '@/features/library';
+import { useMutatingLibrary } from '@/features/library/backend/useMutatingLibrary';
+import { MiniSelectorOSS } from '@/features/library/components';
 import { useRoleStore, UserRole } from '@/features/users';
 
 import { Overlay } from '@/components/Container';

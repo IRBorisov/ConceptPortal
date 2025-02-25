@@ -1,11 +1,10 @@
 'use client';
 
-import { useTermGraphStore } from '@/features/rsform/stores/termGraph';
-
 import { MiniButton } from '@/components/Control';
 import { IconGraphInputs, IconGraphOutputs, IconReset } from '@/components/Icons';
 import { APP_COLORS } from '@/styling/colors';
 
+import { useTermGraphStore } from '../../../stores/termGraph';
 import { useRSEdit } from '../RSEditContext';
 
 export function ToolbarFocusedCst() {

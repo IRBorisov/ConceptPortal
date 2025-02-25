@@ -1,0 +1,1 @@
+export { BadgeHelp } from './BadgeHelp';

@@ -1,1 +1,2 @@
-export { useFindPredecessor } from './backend/useFindPredecessor';
+export { type IOperationSchemaDTO } from './backend/types';
+export { type IOperation } from './models/oss';

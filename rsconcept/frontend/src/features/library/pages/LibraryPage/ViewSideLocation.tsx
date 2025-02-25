@@ -2,10 +2,10 @@ import { toast } from 'react-toastify';
 import clsx from 'clsx';
 
 import { useAuthSuspense } from '@/features/auth';
-import { BadgeHelp, HelpTopic } from '@/features/help';
+import { HelpTopic } from '@/features/help';
+import { BadgeHelp } from '@/features/help/components';
 
 import { MiniButton } from '@/components/Control';
-import { SubfoldersIcon } from '@/components/DomainIcons';
 import { IconFolderEdit, IconFolderTree } from '@/components/Icons';
 import { useWindowSize } from '@/hooks/useWindowSize';
 import { useFitHeight } from '@/stores/appLayout';
@@ -13,6 +13,7 @@ import { PARAMETER, prefixes } from '@/utils/constants';
 import { infoMsg } from '@/utils/labels';
 
 import { useLibrary } from '../../backend/useLibrary';
+import { IconShowSubfolders } from '../../components/IconShowSubfolders';
 import { SelectLocation } from '../../components/SelectLocation';
 import { type FolderNode } from '../../models/FolderTree';
 import { useLibrarySearchStore } from '../../stores/librarySearch';
@@ -90,7 +91,7 @@ export function ViewSideLocation({ isVisible, onRenameLocation }: ViewSideLocati
           {!!location ? (
             <MiniButton
               title={subfolders ? 'Вложенные папки: Вкл' : 'Вложенные папки: Выкл'} // prettier: split-lines
-              icon={<SubfoldersIcon value={subfolders} />}
+              icon={<IconShowSubfolders value={subfolders} />}
               onClick={toggleSubfolders}
             />
           ) : null}

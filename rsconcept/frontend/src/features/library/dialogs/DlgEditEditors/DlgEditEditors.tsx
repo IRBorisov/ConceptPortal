@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import clsx from 'clsx';
 
-import { SelectUser, TableUsers, useUsers } from '@/features/users';
+import { useUsers } from '@/features/users';
+import { SelectUser, TableUsers } from '@/features/users/components';
 
 import { MiniButton } from '@/components/Control';
 import { IconRemove } from '@/components/Icons';

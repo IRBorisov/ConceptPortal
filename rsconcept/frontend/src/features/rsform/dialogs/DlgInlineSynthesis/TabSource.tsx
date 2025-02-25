@@ -2,7 +2,9 @@
 
 import { useFormContext, useWatch } from 'react-hook-form';
 
-import { LibraryItemType, PickSchema, useLibrary } from '@/features/library';
+import { LibraryItemType } from '@/features/library';
+import { useLibrary } from '@/features/library/backend/useLibrary';
+import { PickSchema } from '@/features/library/components';
 
 import { TextInput } from '@/components/Input';
 import { useDialogsStore } from '@/stores/dialogs';

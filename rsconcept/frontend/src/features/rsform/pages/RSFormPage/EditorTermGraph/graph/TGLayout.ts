@@ -1,9 +1,9 @@
 import { type Edge, type Node } from 'reactflow';
 import dagre from '@dagrejs/dagre';
 
-import { type IConstituenta } from '@/features/rsform/models/rsform';
-
 import { PARAMETER } from '@/utils/constants';
+
+import { type IConstituenta } from '../../../../models/rsform';
 
 export function applyLayout(nodes: Node<IConstituenta>[], edges: Edge[], subLabels: boolean) {
   const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));

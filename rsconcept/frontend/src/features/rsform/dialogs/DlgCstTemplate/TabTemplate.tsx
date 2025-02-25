@@ -1,6 +1,6 @@
 'use client';
 
-import { useTemplatesSuspense } from '@/features/library';
+import { useTemplatesSuspense } from '@/features/library/backend/useTemplates';
 
 import { SelectSingle, TextArea } from '@/components/Input';
 

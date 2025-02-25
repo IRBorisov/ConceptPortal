@@ -6,8 +6,9 @@ import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import clsx from 'clsx';
 
-import { LibraryItemType, ToolbarItemAccess, useUpdateItem } from '@/features/library';
-import { type IUpdateLibraryItemDTO, schemaUpdateLibraryItem } from '@/features/library/backend/types';
+import { type IUpdateLibraryItemDTO, LibraryItemType, schemaUpdateLibraryItem } from '@/features/library';
+import { useUpdateItem } from '@/features/library/backend/useUpdateItem';
+import { ToolbarItemAccess } from '@/features/library/components';
 
 import { SubmitButton } from '@/components/Control';
 import { IconSave } from '@/components/Icons';

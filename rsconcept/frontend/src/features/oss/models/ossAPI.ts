@@ -2,10 +2,16 @@
  * Module: API for OperationSystem.
  */
 
-import { type ILibraryItem } from '@/features/library/backend/types';
-import { CstType, type ICstSubstitute, ParsingStatus } from '@/features/rsform/backend/types';
-import { CstClass, type IConstituenta, type IRSForm } from '@/features/rsform/models/rsform';
-import { type AliasMapping } from '@/features/rsform/models/rslang';
+import { type ILibraryItem } from '@/features/library';
+import {
+  type AliasMapping,
+  CstClass,
+  CstType,
+  type IConstituenta,
+  type ICstSubstitute,
+  type IRSForm,
+  ParsingStatus
+} from '@/features/rsform';
 import {
   applyAliasMapping,
   applyTypificationMapping,

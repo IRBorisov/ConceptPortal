@@ -155,6 +155,10 @@ export { LuCircleDashed   as IconAnimation }      from 'react-icons/lu';
 export { LuCircle         as IconAnimationOff }   from 'react-icons/lu';
 
 // ===== Custom elements ======
+export interface DomIconProps<RequestData> extends IconProps {
+  value: RequestData;
+}
+
 interface IconSVGProps {
   viewBox: string;
   size?: string;

@@ -1,12 +1,12 @@
 'use client';
 
 import { SelectorButton } from '@/components/Control';
-import { MatchModeIcon } from '@/components/DomainIcons';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/Dropdown';
 import { type Styling } from '@/components/props';
 import { useWindowSize } from '@/hooks/useWindowSize';
 import { prefixes } from '@/utils/constants';
 
+import { IconCstMatchMode } from '../../../components/IconCstMatchMode';
 import { describeCstMatchMode, labelCstMatchMode } from '../../../labels';
 import { CstMatchMode } from '../../../stores/cstSearch';
 
@@ -32,7 +32,7 @@ export function SelectMatchMode({ value, dense, onChange, ...restProps }: Select
         titleHtml='Настройка фильтрации <br/>по проверяемым атрибутам'
         hideTitle={menu.isOpen}
         className='h-full pr-2'
-        icon={<MatchModeIcon value={value} size='1rem' />}
+        icon={<IconCstMatchMode value={value} size='1rem' />}
         text={dense || size.isSmall ? undefined : labelCstMatchMode(value)}
         onClick={menu.toggle}
       />
@@ -48,7 +48,7 @@ export function SelectMatchMode({ value, dense, onChange, ...restProps }: Select
                 onClick={() => handleChange(matchMode)}
               >
                 <div className='inline-flex items-center gap-1'>
-                  {<MatchModeIcon value={matchMode} size='1rem' />}
+                  {<IconCstMatchMode value={matchMode} size='1rem' />}
                   {!dense ? (
                     <span>
                       <b>{labelCstMatchMode(matchMode)}:</b> {describeCstMatchMode(matchMode)}

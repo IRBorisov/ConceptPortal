@@ -1,4 +1,5 @@
-import { BadgeHelp, HelpTopic } from '@/features/help';
+import { HelpTopic } from '@/features/help';
+import { BadgeHelp } from '@/features/help/components';
 
 import { Overlay } from '@/components/Container';
 import { SelectSingle } from '@/components/Input';

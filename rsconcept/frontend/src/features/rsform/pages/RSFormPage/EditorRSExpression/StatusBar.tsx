@@ -2,7 +2,6 @@
 
 import clsx from 'clsx';
 
-import { StatusIcon } from '@/components/DomainIcons';
 import { Loader } from '@/components/Loader';
 import { APP_COLORS } from '@/styling/colors';
 import { globalIDs } from '@/utils/constants';
@@ -10,6 +9,7 @@ import { prepareTooltip } from '@/utils/utils';
 
 import { type IExpressionParseDTO, ParsingStatus } from '../../../backend/types';
 import { colorStatusBar } from '../../../colors';
+import { IconExpressionStatus } from '../../../components/IconExpressionStatus';
 import { labelExpressionStatus } from '../../../labels';
 import { ExpressionStatus, type IConstituenta } from '../../../models/rsform';
 import { inferStatus } from '../../../models/rsformAPI';
@@ -59,7 +59,7 @@ export function StatusBar({ isModified, processing, activeCst, parseData, onAnal
       ) : null}
       {!processing ? (
         <div className='cc-fade-in flex items-center gap-2'>
-          <StatusIcon size='1rem' value={status} />
+          <IconExpressionStatus size='1rem' value={status} />
           <span className='pb-[0.125rem] font-controls pr-2'>{labelExpressionStatus(status)}</span>
         </div>
       ) : null}

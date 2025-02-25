@@ -2,7 +2,8 @@
 
 import clsx from 'clsx';
 
-import { BadgeHelp, type HelpTopic } from '@/features/help';
+import { type HelpTopic } from '@/features/help';
+import { BadgeHelp } from '@/features/help/components';
 
 import { useEscapeKey } from '@/hooks/useEscapeKey';
 import { useDialogsStore } from '@/stores/dialogs';
@@ -130,7 +131,7 @@ export function ModalForm({
           {children}
         </div>
 
-        <div className='z-modalControls my-2 flex gap-12 justify-center text-sm'>
+        <div className='z-modal-controls my-2 flex gap-12 justify-center text-sm'>
           <SubmitButton
             autoFocus
             text={submitText}
