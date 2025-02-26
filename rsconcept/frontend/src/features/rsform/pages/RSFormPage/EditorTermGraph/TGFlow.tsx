@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import {
   type Edge,
   MarkerType,
@@ -55,7 +55,6 @@ export function TGFlow() {
     deselectAll
   } = useRSEdit();
 
-  const [needReset, setNeedReset] = useState(true);
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges] = useEdgesState([]);
 
@@ -75,10 +74,9 @@ export function TGFlow() {
   });
 
   useEffect(() => {
-    setNeedReset(true);
-  }, [schema, filter, focusCst]);
-
-  const resetNodes = useCallback(() => {
+    if (!viewportInitialized) {
+      return;
+    }
     const newNodes: Node<IConstituenta>[] = [];
     filteredGraph.nodes.forEach(node => {
       const cst = schema.cstByID.get(node.id);
@@ -86,7 +84,6 @@ export function TGFlow() {
         newNodes.push({
           id: String(node.id),
           type: 'concept',
-          selected: selected.includes(node.id),
           position: { x: 0, y: 0 },
           data: cst
         });
@@ -123,15 +120,19 @@ export function TGFlow() {
     setTimeout(() => {
       fitView({ duration: PARAMETER.zoomDuration, padding: VIEW_PADDING });
     }, PARAMETER.minimalTimeout);
-  }, [schema, filteredGraph, setNodes, setEdges, filter.noText, selected, fitView]);
+  }, [schema, filteredGraph, setNodes, setEdges, filter.noText, fitView, viewportInitialized, focusCst]);
 
   useEffect(() => {
-    if (!needReset || !viewportInitialized) {
+    if (!viewportInitialized) {
       return;
     }
-    setNeedReset(false);
-    resetNodes();
-  }, [needReset, schema, resetNodes, viewportInitialized]);
+    setNodes(prev =>
+      prev.map(node => ({
+        ...node,
+        selected: selected.includes(Number(node.id))
+      }))
+    );
+  }, [selected, setNodes, viewportInitialized]);
 
   function handleSetSelected(newSelection: number[]) {
     setSelected(newSelection);
