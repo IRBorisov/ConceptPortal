@@ -3,6 +3,7 @@ import { useAuthSuspense } from '@/features/auth';
 import { Button } from '@/components/Control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/Dropdown';
 import { IconChild, IconEdit2 } from '@/components/Icons';
+import { useDialogsStore } from '@/stores/dialogs';
 
 import { useMutatingOss } from '../../backend/useMutatingOss';
 
@@ -11,12 +12,18 @@ import { useOssEdit } from './OssEditContext';
 export function MenuEditOss() {
   const { isAnonymous } = useAuthSuspense();
   const editMenu = useDropdown();
-  const { promptRelocateConstituents, isMutable } = useOssEdit();
+  const { schema, isMutable } = useOssEdit();
   const isProcessing = useMutatingOss();
+
+  const showRelocateConstituents = useDialogsStore(state => state.showRelocateConstituents);
 
   function handleRelocate() {
     editMenu.hide();
-    promptRelocateConstituents(undefined, []);
+    showRelocateConstituents({
+      oss: schema,
+      initialTarget: undefined,
+      positions: []
+    });
   }
 
   if (isAnonymous) {

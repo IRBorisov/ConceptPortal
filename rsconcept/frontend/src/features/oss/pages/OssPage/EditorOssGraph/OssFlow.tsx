@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 import {
   Background,
   type Node,
@@ -12,18 +11,13 @@ import {
   useReactFlow
 } from 'reactflow';
 
-import { urls, useConceptNavigation } from '@/app';
-import { useLibrary } from '@/features/library/backend/useLibrary';
-
 import { Overlay } from '@/components/Container';
 import { useMainHeight } from '@/stores/appLayout';
+import { useDialogsStore } from '@/stores/dialogs';
 import { useTooltipsStore } from '@/stores/tooltips';
 import { PARAMETER } from '@/utils/constants';
-import { errorMsg } from '@/utils/labels';
 
-import { useInputCreate } from '../../../backend/useInputCreate';
 import { useMutatingOss } from '../../../backend/useMutatingOss';
-import { useOperationExecute } from '../../../backend/useOperationExecute';
 import { useUpdatePositions } from '../../../backend/useUpdatePositions';
 import { GRID_SIZE } from '../../../models/ossAPI';
 import { type OssNode } from '../../../models/ossLayout';
@@ -33,9 +27,11 @@ import { useOssEdit } from '../OssEditContext';
 import { OssNodeTypes } from './graph/OssNodeTypes';
 import { type ContextMenuData, NodeContextMenu } from './NodeContextMenu';
 import { ToolbarOssGraph } from './ToolbarOssGraph';
+import { useGetPositions } from './useGetPositions';
 
 const ZOOM_MAX = 2;
 const ZOOM_MIN = 0.5;
+export const VIEW_PADDING = 0.2;
 
 export function OssFlow() {
   const mainHeight = useMainHeight();
@@ -45,16 +41,9 @@ export function OssFlow() {
     setSelected,
     selected,
     isMutable,
-    promptCreateOperation,
-    canDelete,
-    promptDeleteOperation,
-    promptEditInput,
-    promptEditOperation,
-    promptRelocateConstituents
+    canDeleteOperation: canDelete
   } = useOssEdit();
-  const router = useConceptNavigation();
-  const { items: libraryItems } = useLibrary();
-  const flow = useReactFlow();
+  const { fitView, project } = useReactFlow();
 
   const isProcessing = useMutatingOss();
 
@@ -64,15 +53,17 @@ export function OssFlow() {
   const edgeAnimate = useOSSGraphStore(state => state.edgeAnimate);
   const edgeStraight = useOSSGraphStore(state => state.edgeStraight);
 
-  const { inputCreate } = useInputCreate();
-  const { operationExecute } = useOperationExecute();
+  const getPositions = useGetPositions();
   const { updatePositions } = useUpdatePositions();
 
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [toggleReset, setToggleReset] = useState(false);
-  const [menuProps, setMenuProps] = useState<ContextMenuData | null>(null);
+  const [menuProps, setMenuProps] = useState<ContextMenuData>({ operation: null, cursorX: 0, cursorY: 0 });
   const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
+
+  const showCreateOperation = useDialogsStore(state => state.showCreateOperation);
+  const showDeleteOperation = useDialogsStore(state => state.showDeleteOperation);
 
   function onSelectionChange({ nodes }: { nodes: Node[] }) {
     const ids = nodes.map(node => Number(node.id));
@@ -109,15 +100,8 @@ export function OssFlow() {
             : 'left'
       }))
     );
-  }, [schema, setNodes, setEdges, toggleReset, edgeStraight, edgeAnimate]);
-
-  function getPositions() {
-    return nodes.map(node => ({
-      id: Number(node.id),
-      position_x: node.position.x,
-      position_y: node.position.y
-    }));
-  }
+    setTimeout(() => fitView({ duration: PARAMETER.zoomDuration, padding: VIEW_PADDING }), PARAMETER.refreshTimeout);
+  }, [schema, setNodes, setEdges, toggleReset, edgeStraight, edgeAnimate, fitView]);
 
   function handleSavePositions() {
     const positions = getPositions();
@@ -132,71 +116,32 @@ export function OssFlow() {
     });
   }
 
-  function handleCreateOperation(inputs: number[]) {
-    const positions = getPositions();
-    const target = flow.project({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
-    promptCreateOperation({
-      defaultX: target.x,
-      defaultY: target.y,
-      inputs: inputs,
-      positions: positions,
-      callback: () => setTimeout(() => flow.fitView({ duration: PARAMETER.zoomDuration }), PARAMETER.refreshTimeout)
+  function handleCreateOperation() {
+    const targetPosition = project({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
+    showCreateOperation({
+      oss: schema,
+      defaultX: targetPosition.x,
+      defaultY: targetPosition.y,
+      positions: getPositions(),
+      initialInputs: selected,
+      onCreate: () =>
+        setTimeout(() => fitView({ duration: PARAMETER.zoomDuration, padding: VIEW_PADDING }), PARAMETER.refreshTimeout)
     });
-  }
-
-  function handleDeleteOperation(target: number) {
-    if (!canDelete(target)) {
-      return;
-    }
-    promptDeleteOperation(target, getPositions());
   }
 
   function handleDeleteSelected() {
     if (selected.length !== 1) {
       return;
     }
-    handleDeleteOperation(selected[0]);
-  }
-
-  function handleInputCreate(target: number) {
-    const operation = schema.operationByID.get(target);
-    if (!operation) {
+    const operation = schema.operationByID.get(selected[0]);
+    if (!operation || !canDelete(operation)) {
       return;
     }
-    if (libraryItems.find(item => item.alias === operation.alias && item.location === schema.location)) {
-      toast.error(errorMsg.inputAlreadyExists);
-      return;
-    }
-    void inputCreate({
-      itemID: schema.id,
-      data: { target: target, positions: getPositions() }
-    }).then(new_schema => router.push(urls.schema(new_schema.id)));
-  }
-
-  function handleEditSchema(target: number) {
-    promptEditInput(target, getPositions());
-  }
-
-  function handleEditOperation(target: number) {
-    promptEditOperation(target, getPositions());
-  }
-
-  function handleOperationExecute(target: number) {
-    void operationExecute({
-      itemID: schema.id, //
-      data: { target: target, positions: getPositions() }
+    showDeleteOperation({
+      oss: schema,
+      target: operation,
+      positions: getPositions()
     });
-  }
-
-  function handleExecuteSelected() {
-    if (selected.length !== 1) {
-      return;
-    }
-    handleOperationExecute(selected[0]);
-  }
-
-  function handleRelocateConstituents(target: number) {
-    promptRelocateConstituents(target, getPositions());
   }
 
   function handleContextMenu(event: React.MouseEvent<Element>, node: OssNode) {
@@ -212,14 +157,6 @@ export function OssFlow() {
     setHoverOperation(null);
   }
 
-  function handleContextMenuHide() {
-    setIsContextMenuOpen(false);
-  }
-
-  function handleCanvasClick() {
-    handleContextMenuHide();
-  }
-
   function handleNodeDoubleClick(event: React.MouseEvent<Element>, node: OssNode) {
     event.preventDefault();
     event.stopPropagation();
@@ -229,10 +166,7 @@ export function OssFlow() {
   }
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
-    if (isProcessing) {
-      return;
-    }
-    if (!isMutable) {
+    if (isProcessing || !isMutable) {
       return;
     }
     if ((event.ctrlKey || event.metaKey) && event.code === 'KeyS') {
@@ -244,7 +178,7 @@ export function OssFlow() {
     if ((event.ctrlKey || event.metaKey) && event.code === 'KeyQ') {
       event.preventDefault();
       event.stopPropagation();
-      handleCreateOperation(selected);
+      handleCreateOperation();
       return;
     }
     if (event.key === 'Delete') {
@@ -262,35 +196,20 @@ export function OssFlow() {
         className='rounded-b-2xl cc-blur hover:bg-prim-100 hover:bg-opacity-50'
       >
         <ToolbarOssGraph
-          onFitView={() => flow.fitView({ duration: PARAMETER.zoomDuration })}
-          onCreate={() => handleCreateOperation(selected)}
+          onCreate={handleCreateOperation}
           onDelete={handleDeleteSelected}
-          onEdit={() => handleEditOperation(selected[0])}
-          onExecute={handleExecuteSelected}
           onResetPositions={() => setToggleReset(prev => !prev)}
-          onSavePositions={handleSavePositions}
         />
       </Overlay>
-      {menuProps ? (
-        <NodeContextMenu
-          isOpen={isContextMenuOpen}
-          onHide={handleContextMenuHide}
-          onDelete={handleDeleteOperation}
-          onCreateInput={handleInputCreate}
-          onEditSchema={handleEditSchema}
-          onEditOperation={handleEditOperation}
-          onExecuteOperation={handleOperationExecute}
-          onRelocateConstituents={handleRelocateConstituents}
-          {...menuProps}
-        />
-      ) : null}
+
+      <NodeContextMenu isOpen={isContextMenuOpen} onHide={() => setIsContextMenuOpen(false)} {...menuProps} />
+
       <div className='cc-fade-in relative w-[100vw]' style={{ height: mainHeight, fontFamily: 'Rubik' }}>
         <ReactFlow
           nodes={nodes}
           edges={edges}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
-          onNodeDoubleClick={handleNodeDoubleClick}
           edgesFocusable={false}
           nodesFocusable={false}
           fitView
@@ -300,8 +219,10 @@ export function OssFlow() {
           nodesConnectable={false}
           snapToGrid={true}
           snapGrid={[GRID_SIZE, GRID_SIZE]}
+          onClick={() => setIsContextMenuOpen(false)}
+          onNodeDoubleClick={handleNodeDoubleClick}
           onNodeContextMenu={handleContextMenu}
-          onClick={handleCanvasClick}
+          onNodeDragStart={() => setIsContextMenuOpen(false)}
         >
           {showGrid ? <Background gap={GRID_SIZE} /> : null}
         </ReactFlow>

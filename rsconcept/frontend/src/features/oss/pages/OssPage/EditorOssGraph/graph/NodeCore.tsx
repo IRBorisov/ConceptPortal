@@ -54,6 +54,7 @@ export function NodeCore({ node }: NodeCoreProps) {
       <div
         className='h-[34px] w-[144px] flex items-center justify-center'
         data-tooltip-id={globalIDs.operation_tooltip}
+        data-tooltip-hidden={node.dragging}
         onMouseEnter={() => setHover(node.data.operation)}
       >
         <div

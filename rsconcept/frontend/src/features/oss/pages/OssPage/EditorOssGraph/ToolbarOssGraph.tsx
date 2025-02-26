@@ -1,9 +1,12 @@
 'use client';
 
+import { useReactFlow } from 'reactflow';
 import clsx from 'clsx';
 
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components';
+import { useOperationExecute } from '@/features/oss/backend/useOperationExecute';
+import { useUpdatePositions } from '@/features/oss/backend/useUpdatePositions';
 
 import { MiniButton } from '@/components/Control';
 import {
@@ -20,6 +23,7 @@ import {
   IconReset,
   IconSave
 } from '@/components/Icons';
+import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/utils';
 
@@ -28,28 +32,21 @@ import { useMutatingOss } from '../../../backend/useMutatingOss';
 import { useOSSGraphStore } from '../../../stores/ossGraph';
 import { useOssEdit } from '../OssEditContext';
 
+import { VIEW_PADDING } from './OssFlow';
+import { useGetPositions } from './useGetPositions';
+
 interface ToolbarOssGraphProps {
   onCreate: () => void;
   onDelete: () => void;
-  onEdit: () => void;
-  onExecute: () => void;
-  onFitView: () => void;
-  onSavePositions: () => void;
   onResetPositions: () => void;
 }
 
-export function ToolbarOssGraph({
-  onCreate,
-  onDelete,
-  onEdit,
-  onExecute,
-  onFitView,
-  onSavePositions,
-  onResetPositions
-}: ToolbarOssGraphProps) {
-  const { schema, selected, isMutable, canDelete } = useOssEdit();
+export function ToolbarOssGraph({ onCreate, onDelete, onResetPositions }: ToolbarOssGraphProps) {
+  const { schema, selected, isMutable, canDeleteOperation: canDelete } = useOssEdit();
   const isProcessing = useMutatingOss();
+  const { fitView } = useReactFlow();
   const selectedOperation = schema.operationByID.get(selected[0]);
+  const getPositions = useGetPositions();
 
   const showGrid = useOSSGraphStore(state => state.showGrid);
   const edgeAnimate = useOSSGraphStore(state => state.edgeAnimate);
@@ -57,6 +54,11 @@ export function ToolbarOssGraph({
   const toggleShowGrid = useOSSGraphStore(state => state.toggleShowGrid);
   const toggleEdgeAnimate = useOSSGraphStore(state => state.toggleEdgeAnimate);
   const toggleEdgeStraight = useOSSGraphStore(state => state.toggleEdgeStraight);
+
+  const { updatePositions } = useUpdatePositions();
+  const { operationExecute } = useOperationExecute();
+
+  const showEditOperation = useDialogsStore(state => state.showEditOperation);
 
   const readyForSynthesis = (() => {
     if (!selectedOperation || selectedOperation.operation_type !== OperationType.SYNTHESIS) {
@@ -79,6 +81,44 @@ export function ToolbarOssGraph({
     return true;
   })();
 
+  function handleFitView() {
+    fitView({ duration: PARAMETER.zoomDuration, padding: VIEW_PADDING });
+  }
+
+  function handleSavePositions() {
+    const positions = getPositions();
+    void updatePositions({ itemID: schema.id, positions: positions }).then(() => {
+      positions.forEach(item => {
+        const operation = schema.operationByID.get(item.id);
+        if (operation) {
+          operation.position_x = item.position_x;
+          operation.position_y = item.position_y;
+        }
+      });
+    });
+  }
+
+  function handleOperationExecute() {
+    if (selected.length !== 1 || !readyForSynthesis || !selectedOperation) {
+      return;
+    }
+    void operationExecute({
+      itemID: schema.id, //
+      data: { target: selectedOperation.id, positions: getPositions() }
+    });
+  }
+
+  function handleEditOperation() {
+    if (selected.length !== 1 || !selectedOperation) {
+      return;
+    }
+    showEditOperation({
+      oss: schema,
+      target: selectedOperation,
+      positions: getPositions()
+    });
+  }
+
   return (
     <div className='flex flex-col items-center'>
       <div className='cc-icons'>
@@ -90,7 +130,7 @@ export function ToolbarOssGraph({
         <MiniButton
           icon={<IconFitImage size='1.25rem' className='icon-primary' />}
           title='Сбросить вид'
-          onClick={onFitView}
+          onClick={handleFitView}
         />
         <MiniButton
           title={showGrid ? 'Скрыть сетку' : 'Отобразить сетку'}
@@ -137,7 +177,7 @@ export function ToolbarOssGraph({
             titleHtml={prepareTooltip('Сохранить изменения', 'Ctrl + S')}
             icon={<IconSave size='1.25rem' className='icon-primary' />}
             disabled={isProcessing}
-            onClick={onSavePositions}
+            onClick={handleSavePositions}
           />
           <MiniButton
             titleHtml={prepareTooltip('Новая операция', 'Ctrl + Q')}
@@ -149,18 +189,18 @@ export function ToolbarOssGraph({
             title='Активировать операцию'
             icon={<IconExecute size='1.25rem' className='icon-green' />}
             disabled={isProcessing || selected.length !== 1 || !readyForSynthesis}
-            onClick={onExecute}
+            onClick={handleOperationExecute}
           />
           <MiniButton
             titleHtml={prepareTooltip('Редактировать выбранную', 'Двойной клик')}
             icon={<IconEdit2 size='1.25rem' className='icon-primary' />}
             disabled={selected.length !== 1 || isProcessing}
-            onClick={onEdit}
+            onClick={handleEditOperation}
           />
           <MiniButton
             titleHtml={prepareTooltip('Удалить выбранную', 'Delete')}
             icon={<IconDestroy size='1.25rem' className='icon-red' />}
-            disabled={selected.length !== 1 || isProcessing || !canDelete(selected[0])}
+            disabled={selected.length !== 1 || isProcessing || !selectedOperation || !canDelete(selectedOperation)}
             onClick={onDelete}
           />
         </div>

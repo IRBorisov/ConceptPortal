@@ -1,6 +1,12 @@
 'use client';
 
 import { useRef } from 'react';
+import { toast } from 'react-toastify';
+
+import { urls, useConceptNavigation } from '@/app';
+import { useLibrary } from '@/features/library/backend/useLibrary';
+import { useInputCreate } from '@/features/oss/backend/useInputCreate';
+import { useOperationExecute } from '@/features/oss/backend/useOperationExecute';
 
 import { Dropdown, DropdownButton } from '@/components/Dropdown';
 import {
@@ -13,6 +19,8 @@ import {
   IconRSForm
 } from '@/components/Icons';
 import { useClickedOutside } from '@/hooks/useClickedOutside';
+import { useDialogsStore } from '@/stores/dialogs';
+import { errorMsg } from '@/utils/labels';
 import { prepareTooltip } from '@/utils/utils';
 
 import { OperationType } from '../../../backend/types';
@@ -20,12 +28,14 @@ import { useMutatingOss } from '../../../backend/useMutatingOss';
 import { type IOperation } from '../../../models/oss';
 import { useOssEdit } from '../OssEditContext';
 
+import { useGetPositions } from './useGetPositions';
+
 // pixels - size of OSS context menu
 const MENU_WIDTH = 200;
 const MENU_HEIGHT = 200;
 
 export interface ContextMenuData {
-  operation: IOperation;
+  operation: IOperation | null;
   cursorX: number;
   cursorY: number;
 }
@@ -33,33 +43,25 @@ export interface ContextMenuData {
 interface NodeContextMenuProps extends ContextMenuData {
   isOpen: boolean;
   onHide: () => void;
-  onDelete: (target: number) => void;
-  onCreateInput: (target: number) => void;
-  onEditSchema: (target: number) => void;
-  onEditOperation: (target: number) => void;
-  onExecuteOperation: (target: number) => void;
-  onRelocateConstituents: (target: number) => void;
 }
 
-export function NodeContextMenu({
-  isOpen,
-  operation,
-  cursorX,
-  cursorY,
-  onHide,
-  onDelete,
-  onCreateInput,
-  onEditSchema,
-  onEditOperation,
-  onExecuteOperation,
-  onRelocateConstituents
-}: NodeContextMenuProps) {
+export function NodeContextMenu({ isOpen, operation, cursorX, cursorY, onHide }: NodeContextMenuProps) {
+  const router = useConceptNavigation();
+  const { items: libraryItems } = useLibrary();
+  const { schema, navigateOperationSchema, isMutable, canDeleteOperation: canDelete } = useOssEdit();
   const isProcessing = useMutatingOss();
-  const { schema, navigateOperationSchema, isMutable, canDelete } = useOssEdit();
+  const getPositions = useGetPositions();
 
-  const ref = useRef<HTMLDivElement>(null);
+  const { inputCreate } = useInputCreate();
+  const { operationExecute } = useOperationExecute();
+
+  const showEditInput = useDialogsStore(state => state.showChangeInputSchema);
+  const showRelocateConstituents = useDialogsStore(state => state.showRelocateConstituents);
+  const showEditOperation = useDialogsStore(state => state.showEditOperation);
+  const showDeleteOperation = useDialogsStore(state => state.showDeleteOperation);
+
   const readyForSynthesis = (() => {
-    if (operation.operation_type !== OperationType.SYNTHESIS) {
+    if (operation?.operation_type !== OperationType.SYNTHESIS) {
       return false;
     }
     if (operation.result) {
@@ -79,40 +81,89 @@ export function NodeContextMenu({
     return true;
   })();
 
+  const ref = useRef<HTMLDivElement>(null);
   useClickedOutside(isOpen, ref, onHide);
 
   function handleOpenSchema() {
+    if (!operation) {
+      return;
+    }
+    onHide();
     navigateOperationSchema(operation.id);
   }
 
   function handleEditSchema() {
+    if (!operation) {
+      return;
+    }
     onHide();
-    onEditSchema(operation.id);
+    showEditInput({
+      oss: schema,
+      target: operation,
+      positions: getPositions()
+    });
   }
 
   function handleEditOperation() {
+    if (!operation) {
+      return;
+    }
     onHide();
-    onEditOperation(operation.id);
+    showEditOperation({
+      oss: schema,
+      target: operation,
+      positions: getPositions()
+    });
   }
 
   function handleDeleteOperation() {
+    if (!operation || !canDelete(operation)) {
+      return;
+    }
     onHide();
-    onDelete(operation.id);
+    showDeleteOperation({
+      oss: schema,
+      target: operation,
+      positions: getPositions()
+    });
   }
 
-  function handleCreateSchema() {
+  function handleOperationExecute() {
+    if (!operation) {
+      return;
+    }
     onHide();
-    onCreateInput(operation.id);
+    void operationExecute({
+      itemID: schema.id, //
+      data: { target: operation.id, positions: getPositions() }
+    });
   }
 
-  function handleRunSynthesis() {
+  function handleInputCreate() {
+    if (!operation) {
+      return;
+    }
+    if (libraryItems.find(item => item.alias === operation.alias && item.location === schema.location)) {
+      toast.error(errorMsg.inputAlreadyExists);
+      return;
+    }
     onHide();
-    onExecuteOperation(operation.id);
+    void inputCreate({
+      itemID: schema.id,
+      data: { target: operation.id, positions: getPositions() }
+    }).then(new_schema => router.push(urls.schema(new_schema.id)));
   }
 
   function handleRelocateConstituents() {
+    if (!operation) {
+      return;
+    }
     onHide();
-    onRelocateConstituents(operation.id);
+    showRelocateConstituents({
+      oss: schema,
+      initialTarget: operation,
+      positions: getPositions()
+    });
   }
 
   return (
@@ -145,7 +196,7 @@ export function NodeContextMenu({
             title='Создать пустую схему для загрузки'
             icon={<IconNewRSForm size='1rem' className='icon-green' />}
             disabled={isProcessing}
-            onClick={handleCreateSchema}
+            onClick={handleInputCreate}
           />
         ) : null}
         {isMutable && operation?.operation_type === OperationType.INPUT ? (
@@ -167,7 +218,7 @@ export function NodeContextMenu({
             }
             icon={<IconExecute size='1rem' className='icon-green' />}
             disabled={isProcessing || !readyForSynthesis}
-            onClick={handleRunSynthesis}
+            onClick={handleOperationExecute}
           />
         ) : null}
 
@@ -184,7 +235,7 @@ export function NodeContextMenu({
         <DropdownButton
           text='Удалить операцию'
           icon={<IconDestroy size='1rem' className='icon-red' />}
-          disabled={!isMutable || isProcessing || !operation || !canDelete(operation.id)}
+          disabled={!isMutable || isProcessing || !operation || !canDelete(operation)}
           onClick={handleDeleteOperation}
         />
       </Dropdown>

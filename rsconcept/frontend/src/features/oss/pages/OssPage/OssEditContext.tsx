@@ -9,13 +9,12 @@ import { useDeleteItem } from '@/features/library/backend/useDeleteItem';
 import { RSTabID } from '@/features/rsform/pages/RSFormPage/RSEditContext';
 import { useRoleStore, UserRole } from '@/features/users';
 
-import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { promptText } from '@/utils/labels';
 
 import { type IOperationPosition, OperationType } from '../../backend/types';
 import { useOssSuspense } from '../../backend/useOSS';
-import { type IOperationSchema } from '../../models/oss';
+import { type IOperation, type IOperationSchema } from '../../models/oss';
 
 export enum OssTabID {
   CARD = 0,
@@ -40,15 +39,9 @@ export interface IOssEditContext {
   navigateTab: (tab: OssTabID) => void;
   navigateOperationSchema: (target: number) => void;
 
+  canDeleteOperation: (target: IOperation) => boolean;
   deleteSchema: () => void;
   setSelected: React.Dispatch<React.SetStateAction<number[]>>;
-
-  canDelete: (target: number) => boolean;
-  promptCreateOperation: (props: ICreateOperationPrompt) => void;
-  promptDeleteOperation: (target: number, positions: IOperationPosition[]) => void;
-  promptEditInput: (target: number, positions: IOperationPosition[]) => void;
-  promptEditOperation: (target: number, positions: IOperationPosition[]) => void;
-  promptRelocateConstituents: (target: number | undefined, positions: IOperationPosition[]) => void;
 }
 
 const OssEditContext = createContext<IOssEditContext | null>(null);
@@ -80,12 +73,6 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
   const isMutable = role > UserRole.READER && !schema.read_only;
 
   const [selected, setSelected] = useState<number[]>([]);
-
-  const showEditInput = useDialogsStore(state => state.showChangeInputSchema);
-  const showEditOperation = useDialogsStore(state => state.showEditOperation);
-  const showDeleteOperation = useDialogsStore(state => state.showDeleteOperation);
-  const showRelocateConstituents = useDialogsStore(state => state.showRelocateConstituents);
-  const showCreateOperation = useDialogsStore(state => state.showCreateOperation);
 
   const { deleteItem } = useDeleteItem();
 
@@ -128,71 +115,11 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
     });
   }
 
-  function promptCreateOperation({ defaultX, defaultY, inputs, positions, callback }: ICreateOperationPrompt) {
-    showCreateOperation({
-      oss: schema,
-      defaultX: defaultX,
-      defaultY: defaultY,
-      positions: positions,
-      initialInputs: inputs,
-      onCreate: callback
-    });
-  }
-
-  function canDelete(target: number) {
-    const operation = schema.operationByID.get(target);
-    if (!operation) {
-      return false;
-    }
-    if (operation.operation_type === OperationType.INPUT) {
+  function canDeleteOperation(target: IOperation) {
+    if (target.operation_type === OperationType.INPUT) {
       return true;
     }
-    return schema.graph.expandOutputs([target]).length === 0;
-  }
-
-  function promptEditOperation(target: number, positions: IOperationPosition[]) {
-    const operation = schema.operationByID.get(target);
-    if (!operation) {
-      return;
-    }
-    showEditOperation({
-      oss: schema,
-      target: operation,
-      positions: positions
-    });
-  }
-
-  function promptDeleteOperation(target: number, positions: IOperationPosition[]) {
-    const operation = schema.operationByID.get(target);
-    if (!operation) {
-      return;
-    }
-    showDeleteOperation({
-      oss: schema,
-      positions: positions,
-      target: operation
-    });
-  }
-
-  function promptEditInput(target: number, positions: IOperationPosition[]) {
-    const operation = schema.operationByID.get(target);
-    if (!operation) {
-      return;
-    }
-    showEditInput({
-      oss: schema,
-      target: operation,
-      positions: positions
-    });
-  }
-
-  function promptRelocateConstituents(target: number | undefined, positions: IOperationPosition[]) {
-    const operation = target ? schema.operationByID.get(target) : undefined;
-    showRelocateConstituents({
-      oss: schema,
-      initialTarget: operation,
-      positions: positions
-    });
+    return schema.graph.expandOutputs([target.id]).length === 0;
   }
 
   return (
@@ -201,22 +128,15 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
         schema,
         selected,
 
-        navigateTab,
-
-        deleteSchema,
-
         isOwned,
         isMutable,
 
-        setSelected,
-
+        navigateTab,
         navigateOperationSchema,
-        promptCreateOperation,
-        canDelete,
-        promptDeleteOperation,
-        promptEditInput,
-        promptEditOperation,
-        promptRelocateConstituents
+
+        canDeleteOperation,
+        deleteSchema,
+        setSelected
       }}
     >
       {children}
