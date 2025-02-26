@@ -6,6 +6,7 @@ import axios, { type AxiosError, type AxiosRequestConfig } from 'axios';
 import { type z, ZodError } from 'zod';
 
 import { buildConstants } from '@/utils/buildConstants';
+import { PARAMETER } from '@/utils/constants';
 import { errorMsg } from '@/utils/labels';
 import { extractErrorMessage } from '@/utils/utils';
 
@@ -62,11 +63,7 @@ export function axiosGet<ResponseData>({ endpoint, options, schema }: IAxiosGetR
     .catch((error: Error | AxiosError) => {
       // Note: Ignore cancellation errors
       if (error.name !== 'CanceledError') {
-        if (error instanceof ZodError) {
-          toast.error(errorMsg.invalidResponse);
-        } else {
-          toast.error(extractErrorMessage(error));
-        }
+        notifyError(error);
         console.error(error);
       }
       throw error;
@@ -83,21 +80,11 @@ export function axiosPost<RequestData, ResponseData = void>({
     .post<ResponseData>(endpoint, request?.data, options)
     .then(response => {
       schema?.parse(response.data);
-      if (request?.successMessage) {
-        if (typeof request.successMessage === 'string') {
-          toast.success(request.successMessage);
-        } else {
-          toast.success(request.successMessage(response.data));
-        }
-      }
+      notifySuccess(response.data, request?.successMessage);
       return response.data;
     })
     .catch((error: Error | AxiosError | ZodError) => {
-      if (error instanceof ZodError) {
-        toast.error(errorMsg.invalidResponse);
-      } else {
-        toast.error(extractErrorMessage(error));
-      }
+      notifyError(error);
       throw error;
     });
 }
@@ -112,21 +99,11 @@ export function axiosDelete<RequestData, ResponseData = void>({
     .delete<ResponseData>(endpoint, options)
     .then(response => {
       schema?.parse(response.data);
-      if (request?.successMessage) {
-        if (typeof request.successMessage === 'string') {
-          toast.success(request.successMessage);
-        } else {
-          toast.success(request.successMessage(response.data));
-        }
-      }
+      notifySuccess(response.data, request?.successMessage);
       return response.data;
     })
     .catch((error: Error | AxiosError | ZodError) => {
-      if (error instanceof ZodError) {
-        toast.error(errorMsg.invalidResponse);
-      } else {
-        toast.error(extractErrorMessage(error));
-      }
+      notifyError(error);
       throw error;
     });
 }
@@ -141,21 +118,36 @@ export function axiosPatch<RequestData, ResponseData = void>({
     .patch<ResponseData>(endpoint, request?.data, options)
     .then(response => {
       schema?.parse(response.data);
-      if (request?.successMessage) {
-        if (typeof request.successMessage === 'string') {
-          toast.success(request.successMessage);
-        } else {
-          toast.success(request.successMessage(response.data));
-        }
-      }
+      notifySuccess(response.data, request?.successMessage);
       return response.data;
     })
     .catch((error: Error | AxiosError | ZodError) => {
-      if (error instanceof ZodError) {
-        toast.error(errorMsg.invalidResponse);
-      } else {
-        toast.error(extractErrorMessage(error));
-      }
+      notifyError(error);
       throw error;
     });
+}
+
+// ====== Internals =========
+function notifySuccess<ResponseData>(
+  data: ResponseData,
+  message: string | ((data: ResponseData) => string) | undefined
+) {
+  if (!message) {
+    return;
+  }
+  setTimeout(() => {
+    if (typeof message === 'string') {
+      toast.success(message);
+    } else {
+      toast.success(message(data));
+    }
+  }, PARAMETER.notificationDelay);
+}
+
+function notifyError(error: Error | AxiosError | ZodError) {
+  if (error instanceof ZodError) {
+    toast.error(errorMsg.invalidResponse);
+  } else {
+    toast.error(extractErrorMessage(error));
+  }
 }

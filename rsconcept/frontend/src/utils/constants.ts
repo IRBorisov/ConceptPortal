@@ -9,6 +9,7 @@ export const PARAMETER = {
   smallScreen: 640, // == tailwind:sm
   smallTreeNodes: 50, // amount of nodes threshold for size increase for large graphs
   refreshTimeout: 100, // milliseconds delay for post-refresh actions
+  notificationDelay: 300, // milliseconds delay for notifications
   minimalTimeout: 10, // milliseconds delay for fast updates
   zoomDuration: 500, // milliseconds animation duration
   moveDuration: 500, // milliseconds - duration of move animation
