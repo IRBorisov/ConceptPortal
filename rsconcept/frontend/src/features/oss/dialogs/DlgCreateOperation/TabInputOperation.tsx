@@ -49,7 +49,7 @@ export function TabInputOperation() {
     setValue('create_schema', false);
     setValue('item_data.alias', schema.alias);
     setValue('item_data.title', schema.title);
-    setValue('item_data.comment', schema.comment);
+    setValue('item_data.comment', schema.comment, { shouldValidate: true });
   }
 
   return (

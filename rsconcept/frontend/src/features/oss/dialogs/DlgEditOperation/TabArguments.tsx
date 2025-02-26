@@ -17,7 +17,7 @@ export function TabArguments() {
   const filtered = oss.items.filter(item => !potentialCycle.includes(item.id));
 
   function handleChangeArguments(prev: number[], newValue: number[]) {
-    setValue('arguments', newValue);
+    setValue('arguments', newValue, { shouldValidate: true });
     if (prev.some(id => !newValue.includes(id))) {
       setValue('substitutions', []);
     }

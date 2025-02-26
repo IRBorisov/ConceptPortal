@@ -14,12 +14,12 @@ export function TabConstituents() {
   const { schema } = useRSFormSuspense({ itemID: sourceID! });
 
   function handleSelectItems(newValue: number[]) {
-    setValue('items', newValue);
+    setValue('items', newValue, { shouldValidate: true });
     const newSubstitutions = substitutions.filter(
       sub => newValue.includes(sub.original) || newValue.includes(sub.substitution)
     );
     if (newSubstitutions.length !== substitutions.length) {
-      setValue('substitutions', newSubstitutions);
+      setValue('substitutions', newSubstitutions, { shouldValidate: true });
     }
   }
 

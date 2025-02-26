@@ -42,8 +42,8 @@ export function DlgRenameCst() {
   }
 
   function handleChangeType(newType: CstType) {
-    setValue('alias', generateAlias(newType, schema));
     setValue('cst_type', newType);
+    setValue('alias', generateAlias(newType, schema), { shouldValidate: true });
   }
 
   return (

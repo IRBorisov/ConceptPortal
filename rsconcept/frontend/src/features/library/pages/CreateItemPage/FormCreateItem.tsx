@@ -76,7 +76,7 @@ export function FormCreateItem() {
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     if (event.target.files && event.target.files.length > 0) {
       setValue('file', event.target.files[0]);
-      setValue('fileName', event.target.files[0].name);
+      setValue('fileName', event.target.files[0].name, { shouldValidate: true });
     } else {
       setValue('file', undefined);
       setValue('fileName', '');
@@ -88,7 +88,7 @@ export function FormCreateItem() {
       setValue('file', undefined);
       setValue('fileName', '');
     }
-    setValue('item_type', value);
+    setValue('item_type', value, { shouldValidate: true });
   }
 
   function onSubmit(data: ICreateLibraryItemDTO) {

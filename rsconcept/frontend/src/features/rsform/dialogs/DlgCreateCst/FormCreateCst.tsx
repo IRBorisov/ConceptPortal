@@ -38,7 +38,7 @@ export function FormCreateCst({ schema }: FormCreateCstProps) {
 
   function handleTypeChange(target: CstType) {
     setValue('cst_type', target);
-    setValue('alias', generateAlias(target, schema));
+    setValue('alias', generateAlias(target, schema), { shouldValidate: true });
     setForceComment(false);
   }
 

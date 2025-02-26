@@ -23,7 +23,7 @@ export function TabEntityReference() {
   const term = selectedCst?.term_resolved ?? '';
 
   function handleSelectConstituenta(cst: IConstituenta) {
-    setValue('entity.entity', cst.alias);
+    setValue('entity.entity', cst.alias, { shouldValidate: true });
   }
 
   return (
