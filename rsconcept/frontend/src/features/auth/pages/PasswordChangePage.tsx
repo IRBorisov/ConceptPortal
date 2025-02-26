@@ -33,8 +33,8 @@ export function Component() {
         password: newPassword,
         token: token
       }).then(() => {
-        router.replace(urls.home);
-        router.push(urls.login);
+        router.replace({ path: urls.home });
+        router.push({ path: urls.login });
       });
     }
   }

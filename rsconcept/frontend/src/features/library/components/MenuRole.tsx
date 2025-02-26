@@ -38,7 +38,7 @@ export function MenuRole({ isOwned, isEditor }: MenuRoleProps) {
         hideTitle={accessMenu.isOpen}
         className='h-full pr-2'
         icon={<IconAlert size='1.25rem' className='icon-red' />}
-        onClick={() => router.push(urls.login)}
+        onClick={() => router.push({ path: urls.login })}
       />
     );
   }

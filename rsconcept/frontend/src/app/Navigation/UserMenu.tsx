@@ -15,7 +15,7 @@ export function UserMenu() {
   return (
     <div ref={menu.ref} className='h-full w-[4rem] flex items-center justify-center'>
       <Suspense fallback={<Loader circular scale={1.5} />}>
-        <UserButton onLogin={() => router.push(urls.login)} onClickUser={menu.toggle} />
+        <UserButton onLogin={() => router.push({ path: urls.login, force: true })} onClickUser={menu.toggle} />
       </Suspense>
       <UserDropdown isOpen={menu.isOpen} hideDropdown={() => menu.hide()} />
     </div>

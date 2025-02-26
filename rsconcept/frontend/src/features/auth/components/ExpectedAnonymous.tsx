@@ -11,7 +11,7 @@ export function ExpectedAnonymous() {
   const router = useConceptNavigation();
 
   function logoutAndRedirect() {
-    void logout().then(() => router.push(urls.login));
+    void logout().then(() => router.push({ path: urls.login, force: true }));
   }
 
   return (

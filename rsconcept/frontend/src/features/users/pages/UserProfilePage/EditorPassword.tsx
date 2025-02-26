@@ -32,7 +32,7 @@ export function EditorPassword() {
   }
 
   function onSubmit(data: IChangePasswordDTO) {
-    return changePassword(data).then(() => router.push(urls.login));
+    return changePassword(data).then(() => router.pushAsync({ path: urls.login, force: true }));
   }
 
   return (

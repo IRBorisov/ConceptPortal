@@ -44,12 +44,14 @@ export function FormSignup() {
     if (router.canBack()) {
       router.back();
     } else {
-      router.push(urls.library);
+      router.push({ path: urls.library });
     }
   }
 
   function onSubmit(data: IUserSignupDTO) {
-    return signup(data).then(createdUser => router.push(urls.login_hint(createdUser.username)));
+    return signup(data).then(createdUser =>
+      router.pushAsync({ path: urls.login_hint(createdUser.username), force: true })
+    );
   }
 
   return (

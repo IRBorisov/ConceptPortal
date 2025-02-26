@@ -64,7 +64,7 @@ export function EditorLibraryItem({ schema, isAttachedToOSS }: EditorLibraryItem
 
   function handleOpenLibrary(event: React.MouseEvent<Element>) {
     setGlobalLocation(schema.location);
-    router.push(urls.library, event.ctrlKey || event.metaKey);
+    router.push({ path: urls.library, newTab: event.ctrlKey || event.metaKey });
   }
 
   function handleEditLocation() {

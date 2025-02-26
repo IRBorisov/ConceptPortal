@@ -37,7 +37,7 @@ export function MenuMain() {
   }
 
   function handleCreateNew() {
-    router.push(urls.create_schema);
+    router.push({ path: urls.create_schema });
   }
 
   function handleShowQR() {
@@ -91,7 +91,7 @@ export function MenuMain() {
         <DropdownButton
           text='Библиотека'
           icon={<IconLibrary size='1rem' className='icon-primary' />}
-          onClick={() => router.push(urls.library)}
+          onClick={() => router.push({ path: urls.library })}
         />
       </Dropdown>
     </div>

@@ -41,32 +41,32 @@ export function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
 
   function navigateProfile(event: React.MouseEvent<Element>) {
     hideDropdown();
-    router.push(urls.profile, event.ctrlKey || event.metaKey);
+    router.push({ path: urls.profile, newTab: event.ctrlKey || event.metaKey });
   }
 
   function logoutAndRedirect() {
     hideDropdown();
-    void logout().then(() => router.push(urls.login));
+    void logout().then(() => router.push({ path: urls.login, force: true }));
   }
 
   function gotoAdmin() {
     hideDropdown();
-    void logout().then(() => router.push(urls.admin, true));
+    void logout().then(() => router.push({ path: urls.admin, force: true, newTab: true }));
   }
 
   function gotoIcons(event: React.MouseEvent<Element>) {
     hideDropdown();
-    router.push(urls.icons, event.ctrlKey || event.metaKey);
+    router.push({ path: urls.icons, newTab: event.ctrlKey || event.metaKey });
   }
 
   function gotoRestApi() {
     hideDropdown();
-    router.push(urls.rest_api, true);
+    router.push({ path: urls.rest_api, newTab: true });
   }
 
   function gotoDatabaseSchema(event: React.MouseEvent<Element>) {
     hideDropdown();
-    router.push(urls.database_schema, event.ctrlKey || event.metaKey);
+    router.push({ path: urls.database_schema, newTab: event.ctrlKey || event.metaKey });
   }
 
   function handleToggleDarkMode() {

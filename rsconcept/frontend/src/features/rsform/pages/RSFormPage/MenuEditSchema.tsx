@@ -112,7 +112,7 @@ export function MenuEditSchema() {
         hideTitle={editMenu.isOpen}
         className='h-full px-2'
         icon={<IconArchive size='1.25rem' className='icon-primary' />}
-        onClick={event => router.push(urls.schema(schema.id), event.ctrlKey || event.metaKey)}
+        onClick={event => router.push({ path: urls.schema(schema.id), newTab: event.ctrlKey || event.metaKey })}
       />
     );
   }

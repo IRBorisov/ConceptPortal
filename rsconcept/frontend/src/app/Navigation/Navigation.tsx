@@ -18,12 +18,14 @@ export function Navigation() {
   const size = useWindowSize();
   const noNavigationAnimation = useAppLayoutStore(state => state.noNavigationAnimation);
 
-  const navigateHome = (event: React.MouseEvent<Element>) => router.push(urls.home, event.ctrlKey || event.metaKey);
+  const navigateHome = (event: React.MouseEvent<Element>) =>
+    router.push({ path: urls.home, newTab: event.ctrlKey || event.metaKey });
   const navigateLibrary = (event: React.MouseEvent<Element>) =>
-    router.push(urls.library, event.ctrlKey || event.metaKey);
-  const navigateHelp = (event: React.MouseEvent<Element>) => router.push(urls.manuals, event.ctrlKey || event.metaKey);
+    router.push({ path: urls.library, newTab: event.ctrlKey || event.metaKey });
+  const navigateHelp = (event: React.MouseEvent<Element>) =>
+    router.push({ path: urls.manuals, newTab: event.ctrlKey || event.metaKey });
   const navigateCreateNew = (event: React.MouseEvent<Element>) =>
-    router.push(urls.create_schema, event.ctrlKey || event.metaKey);
+    router.push({ path: urls.create_schema, newTab: event.ctrlKey || event.metaKey });
 
   return (
     <nav

@@ -3,11 +3,19 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 
+export interface NavigationProps {
+  path: string;
+  newTab?: boolean;
+  force?: boolean;
+}
+
 interface INavigationContext {
-  push: (path: string, newTab?: boolean) => void;
-  replace: (path: string) => void;
-  back: () => void;
-  forward: () => void;
+  push: (props: NavigationProps) => void;
+  pushAsync: (props: NavigationProps) => void | Promise<void>;
+  replace: (props: Omit<NavigationProps, 'newTab'>) => void;
+  replaceAsync: (props: Omit<NavigationProps, 'newTab'>) => void | Promise<void>;
+  back: (force?: boolean) => void;
+  forward: (force?: boolean) => void;
 
   canBack: () => boolean;
 
@@ -37,33 +45,47 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
     return !!window.history && window.history?.length !== 0;
   }
 
-  function push(path: string, newTab?: boolean) {
-    if (newTab) {
-      window.open(`${path}`, '_blank');
-      return;
-    }
-    if (validate()) {
-      Promise.resolve(router(path, { viewTransition: true })).catch(console.error);
+  function push(props: NavigationProps) {
+    if (props.newTab) {
+      window.open(`${props.path}`, '_blank');
+    } else if (props.force || validate()) {
       setIsBlocked(false);
+      Promise.resolve(router(props.path, { viewTransition: true })).catch(console.error);
     }
   }
 
-  function replace(path: string) {
-    if (validate()) {
-      Promise.resolve(router(path, { replace: true, viewTransition: true })).catch(console.error);
+  function pushAsync(props: NavigationProps): void | Promise<void> {
+    if (props.newTab) {
+      window.open(`${props.path}`, '_blank');
+    } else if (props.force || validate()) {
       setIsBlocked(false);
+      return router(props.path, { viewTransition: true });
     }
   }
 
-  function back() {
-    if (validate()) {
+  function replace(props: Omit<NavigationProps, 'newTab'>) {
+    if (props.force || validate()) {
+      setIsBlocked(false);
+      Promise.resolve(router(props.path, { replace: true, viewTransition: true })).catch(console.error);
+    }
+  }
+
+  function replaceAsync(props: Omit<NavigationProps, 'newTab'>): void | Promise<void> {
+    if (props.force || validate()) {
+      setIsBlocked(false);
+      return router(props.path, { replace: true, viewTransition: true });
+    }
+  }
+
+  function back(force?: boolean) {
+    if (force || validate()) {
       Promise.resolve(router(-1)).catch(console.error);
       setIsBlocked(false);
     }
   }
 
-  function forward() {
-    if (validate()) {
+  function forward(force?: boolean) {
+    if (force || validate()) {
       Promise.resolve(router(1)).catch(console.error);
       setIsBlocked(false);
     }
@@ -73,7 +95,9 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
     <NavigationContext
       value={{
         push,
+        pushAsync,
         replace,
+        replaceAsync,
         back,
         forward,
         canBack,

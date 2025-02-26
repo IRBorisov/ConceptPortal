@@ -135,11 +135,11 @@ export const RSEditState = ({
   }
 
   function navigateVersion(versionID?: number) {
-    router.push(urls.schema(schema.id, versionID));
+    router.push({ path: urls.schema(schema.id, versionID) });
   }
 
   function navigateOss(ossID: number, newTab?: boolean) {
-    router.push(urls.oss(ossID), newTab);
+    router.push({ path: urls.oss(ossID), newTab: newTab });
   }
 
   function navigateRSForm({ tab, activeID }: { tab: RSTabID; activeID?: number }) {
@@ -152,15 +152,15 @@ export const RSEditState = ({
     const url = urls.schema_props(data);
     if (activeID) {
       if (tab === activeTab && tab !== RSTabID.CST_EDIT) {
-        router.replace(url);
+        router.replace({ path: url });
       } else {
-        router.push(url);
+        router.push({ path: url });
       }
     } else if (tab !== activeTab && tab === RSTabID.CST_EDIT && schema.items.length > 0) {
       data.active = schema.items[0].id;
-      router.replace(urls.schema_props(data));
+      router.replace({ path: urls.schema_props(data) });
     } else {
-      router.push(url);
+      router.push({ path: url });
     }
   }
 
@@ -175,14 +175,17 @@ export const RSEditState = ({
       return;
     }
     const ossID = schema.oss.length > 0 ? schema.oss[0].id : null;
-    void deleteItem(schema.id).then(() => {
-      if (ossID) {
-        router.push(urls.oss(ossID));
-      } else {
-        if (searchLocation === schema.location) {
-          setSearchLocation('');
+    void deleteItem({
+      target: schema.id,
+      beforeInvalidate: () => {
+        if (ossID) {
+          return router.pushAsync({ path: urls.oss(ossID), force: true });
+        } else {
+          if (searchLocation === schema.location) {
+            setSearchLocation('');
+          }
+          return router.pushAsync({ path: urls.library, force: true });
         }
-        router.push(urls.library);
       }
     });
   }

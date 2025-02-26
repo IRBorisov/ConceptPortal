@@ -92,7 +92,7 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
       id: schema.id,
       tab: tab
     });
-    router.push(url);
+    router.push({ path: url });
   }
 
   function navigateOperationSchema(target: number) {
@@ -100,18 +100,21 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
     if (!node?.result) {
       return;
     }
-    router.push(urls.schema_props({ id: node.result, tab: RSTabID.CST_LIST }));
+    router.push({ path: urls.schema_props({ id: node.result, tab: RSTabID.CST_LIST }) });
   }
 
   function deleteSchema() {
     if (!window.confirm(promptText.deleteOSS)) {
       return;
     }
-    void deleteItem(schema.id).then(() => {
-      if (searchLocation === schema.location) {
-        setSearchLocation('');
+    void deleteItem({
+      target: schema.id,
+      beforeInvalidate: () => {
+        if (searchLocation === schema.location) {
+          setSearchLocation('');
+        }
+        return router.pushAsync({ path: urls.library, force: true });
       }
-      router.push(urls.library);
     });
   }
 

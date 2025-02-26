@@ -6,9 +6,9 @@ export function HomePage() {
   const { isAnonymous } = useAuthSuspense();
 
   if (isAnonymous) {
-    router.replace(urls.manuals);
+    router.replace({ path: urls.manuals });
   } else {
-    router.replace(urls.library);
+    router.replace({ path: urls.library });
   }
 
   return null;

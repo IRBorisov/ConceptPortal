@@ -48,7 +48,7 @@ export function RSFormPage() {
   useEffect(() => setIsModified(false), [setIsModified]);
 
   if (!urlData.id) {
-    router.replace(urls.page404);
+    router.replace({ path: urls.page404, force: true });
     return null;
   }
   return (

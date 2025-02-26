@@ -61,7 +61,7 @@ export function FormRSForm() {
   }, [isDirty, setIsModified]);
 
   function handleSelectVersion(version: CurrentVersion) {
-    router.push(urls.schema(schema.id, version === 'latest' ? undefined : version));
+    router.push({ path: urls.schema(schema.id, version === 'latest' ? undefined : version) });
   }
 
   function onSubmit(data: IUpdateLibraryItemDTO) {

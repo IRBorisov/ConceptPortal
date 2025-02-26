@@ -69,7 +69,7 @@ export function FormCreateItem() {
     if (router.canBack()) {
       router.back();
     } else {
-      router.push(urls.library);
+      router.push({ path: urls.library });
     }
   }
 
@@ -95,9 +95,9 @@ export function FormCreateItem() {
     return createItem(data).then(newItem => {
       setSearchLocation(data.location);
       if (newItem.item_type == LibraryItemType.RSFORM) {
-        router.push(urls.schema(newItem.id));
+        router.push({ path: urls.schema(newItem.id), force: true });
       } else {
-        router.push(urls.oss(newItem.id));
+        router.push({ path: urls.oss(newItem.id), force: true });
       }
     });
   }

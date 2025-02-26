@@ -43,7 +43,7 @@ export function ToolbarRSFormCard({ schema, onSubmit, isMutable, deleteSchema }:
     return (
       <MiniSelectorOSS
         items={rsSchema.oss}
-        onSelect={(event, value) => router.push(urls.oss(value.id), event.ctrlKey || event.metaKey)}
+        onSelect={(event, value) => router.push({ path: urls.oss(value.id), newTab: event.ctrlKey || event.metaKey })}
       />
     );
   })();

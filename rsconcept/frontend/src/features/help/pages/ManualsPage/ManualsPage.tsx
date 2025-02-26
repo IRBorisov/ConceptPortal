@@ -4,7 +4,6 @@ import { urls, useConceptNavigation } from '@/app';
 
 import { useQueryStrings } from '@/hooks/useQueryStrings';
 import { useMainHeight } from '@/stores/appLayout';
-import { PARAMETER } from '@/utils/constants';
 
 import { HelpTopic } from '../../models/helpTopic';
 
@@ -19,13 +18,11 @@ export function ManualsPage() {
   const mainHeight = useMainHeight();
 
   function onSelectTopic(newTopic: HelpTopic) {
-    router.push(urls.help_topic(newTopic));
+    router.push({ path: urls.help_topic(newTopic) });
   }
 
   if (!Object.values(HelpTopic).includes(activeTopic)) {
-    setTimeout(() => {
-      router.push(urls.page404);
-    }, PARAMETER.refreshTimeout);
+    router.push({ path: urls.page404, force: true });
     return null;
   }
 

@@ -44,9 +44,9 @@ export function TableLibraryItems({ items }: TableLibraryItemsProps) {
       return;
     }
     if (item.item_type === LibraryItemType.RSFORM) {
-      router.push(urls.schema(item.id), event.ctrlKey || event.metaKey);
+      router.push({ path: urls.schema(item.id), newTab: event.ctrlKey || event.metaKey });
     } else if (item.item_type === LibraryItemType.OSS) {
-      router.push(urls.oss(item.id), event.ctrlKey || event.metaKey);
+      router.push({ path: urls.oss(item.id), newTab: event.ctrlKey || event.metaKey });
     }
   }
 

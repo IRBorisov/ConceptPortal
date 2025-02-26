@@ -111,9 +111,9 @@ export const libraryApi = {
       }
     }),
 
-  deleteItem: (target: number) =>
+  deleteItem: (data: { target: number; beforeInvalidate?: () => void | Promise<void> }) =>
     axiosDelete({
-      endpoint: `/api/library/${target}`,
+      endpoint: `/api/library/${data.target}`,
       request: {
         successMessage: infoMsg.itemDestroyed
       }

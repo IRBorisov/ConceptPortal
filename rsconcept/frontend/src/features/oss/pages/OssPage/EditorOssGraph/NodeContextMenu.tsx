@@ -151,7 +151,7 @@ export function NodeContextMenu({ isOpen, operation, cursorX, cursorY, onHide }:
     void inputCreate({
       itemID: schema.id,
       data: { target: operation.id, positions: getPositions() }
-    }).then(new_schema => router.push(urls.schema(new_schema.id)));
+    }).then(new_schema => router.push({ path: urls.schema(new_schema.id), force: true }));
   }
 
   function handleRelocateConstituents() {

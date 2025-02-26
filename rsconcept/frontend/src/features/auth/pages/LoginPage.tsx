@@ -41,7 +41,7 @@ export function LoginPage() {
       if (router.canBack()) {
         router.back();
       } else {
-        router.push(urls.library);
+        router.push({ path: urls.library, force: true });
       }
     });
   }

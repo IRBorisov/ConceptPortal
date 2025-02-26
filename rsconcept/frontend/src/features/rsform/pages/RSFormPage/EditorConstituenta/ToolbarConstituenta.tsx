@@ -69,13 +69,13 @@ export function ToolbarConstituenta({
 
   function viewPredecessor(target: number) {
     void findPredecessor(target).then(reference =>
-      router.push(
-        urls.schema_props({
+      router.push({
+        path: urls.schema_props({
           id: reference.schema,
           active: reference.id,
           tab: RSTabID.CST_EDIT
         })
-      )
+      })
     );
   }
 

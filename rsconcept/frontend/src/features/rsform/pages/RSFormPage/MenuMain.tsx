@@ -175,20 +175,20 @@ export function MenuMain() {
           <DropdownButton
             text='Создать новую схему'
             icon={<IconNewItem size='1rem' className='icon-primary' />}
-            onClick={() => router.push(urls.create_schema)}
+            onClick={() => router.push({ path: urls.create_schema })}
           />
         ) : null}
         {schema.oss.length > 0 ? (
           <DropdownButton
             text='Перейти к ОСС'
             icon={<IconOSS size='1rem' className='icon-primary' />}
-            onClick={() => router.push(urls.oss(schema.oss[0].id))}
+            onClick={() => router.push({ path: urls.oss(schema.oss[0].id) })}
           />
         ) : null}
         <DropdownButton
           text='Библиотека'
           icon={<IconLibrary size='1rem' className='icon-primary' />}
-          onClick={() => router.push(urls.library)}
+          onClick={() => router.push({ path: urls.library })}
         />
       </Dropdown>
     </div>
