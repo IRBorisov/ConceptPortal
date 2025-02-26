@@ -43,7 +43,7 @@ export function OssFlow() {
     isMutable,
     canDeleteOperation: canDelete
   } = useOssEdit();
-  const { fitView, project } = useReactFlow();
+  const { fitView, screenToFlowPosition } = useReactFlow();
 
   const isProcessing = useMutatingOss();
 
@@ -117,7 +117,7 @@ export function OssFlow() {
   }
 
   function handleCreateOperation() {
-    const targetPosition = project({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
+    const targetPosition = screenToFlowPosition({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
     showCreateOperation({
       oss: schema,
       defaultX: targetPosition.x,
