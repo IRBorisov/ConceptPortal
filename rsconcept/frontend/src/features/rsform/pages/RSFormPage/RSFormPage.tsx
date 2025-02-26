@@ -14,6 +14,8 @@ import { type ErrorData } from '@/components/InfoError';
 import { useQueryStrings } from '@/hooks/useQueryStrings';
 import { useModificationStore } from '@/stores/modification';
 
+import { ConstituentaTooltip } from '../../components/ConstituentaTooltip';
+
 import { RSEditState, RSTabID } from './RSEditContext';
 import { RSTabs } from './RSTabs';
 
@@ -57,6 +59,7 @@ export function RSFormPage() {
         <ProcessError error={error as ErrorData} isArchive={!!urlData.version} itemID={urlData.id} />
       )}
     >
+      <ConstituentaTooltip />
       <RSEditState itemID={urlData.id} activeVersion={urlData.version} activeTab={urlData.tab}>
         <RSTabs activeID={urlData.activeID} activeTab={urlData.tab} />
       </RSEditState>

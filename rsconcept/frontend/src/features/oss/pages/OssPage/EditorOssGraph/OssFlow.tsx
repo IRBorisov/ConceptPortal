@@ -14,13 +14,13 @@ import {
 import { Overlay } from '@/components/Container';
 import { useMainHeight } from '@/stores/appLayout';
 import { useDialogsStore } from '@/stores/dialogs';
-import { useTooltipsStore } from '@/stores/tooltips';
 import { PARAMETER } from '@/utils/constants';
 
 import { useMutatingOss } from '../../../backend/useMutatingOss';
 import { useUpdatePositions } from '../../../backend/useUpdatePositions';
 import { GRID_SIZE } from '../../../models/ossAPI';
 import { type OssNode } from '../../../models/ossLayout';
+import { useOperationTooltipStore } from '../../../stores/operationTooltip';
 import { useOSSGraphStore } from '../../../stores/ossGraph';
 import { useOssEdit } from '../OssEditContext';
 
@@ -47,7 +47,7 @@ export function OssFlow() {
 
   const isProcessing = useMutatingOss();
 
-  const setHoverOperation = useTooltipsStore(state => state.setActiveOperation);
+  const setHoverOperation = useOperationTooltipStore(state => state.setActiveOperation);
 
   const showGrid = useOSSGraphStore(state => state.showGrid);
   const edgeAnimate = useOSSGraphStore(state => state.edgeAnimate);

@@ -7,12 +7,12 @@ import { MiniButton } from '@/components/Control';
 import { IconDropArrow, IconDropArrowUp } from '@/components/Icons';
 import { useWindowSize } from '@/hooks/useWindowSize';
 import { useFitHeight } from '@/stores/appLayout';
-import { useTooltipsStore } from '@/stores/tooltips';
 import { APP_COLORS } from '@/styling/colors';
 import { globalIDs, PARAMETER, prefixes } from '@/utils/constants';
 
 import { colorBgGraphNode } from '../../../colors';
 import { type IConstituenta } from '../../../models/rsform';
+import { useCstTooltipStore } from '../../../stores/cstTooltip';
 import { useTermGraphStore } from '../../../stores/termGraph';
 import { useRSEdit } from '../RSEditContext';
 
@@ -28,7 +28,7 @@ export function ViewHidden({ items }: ViewHiddenProps) {
   const localSelected = items.filter(id => selected.includes(id));
   const isFolded = useTermGraphStore(state => state.foldHidden);
   const toggleFolded = useTermGraphStore(state => state.toggleFoldHidden);
-  const setActiveCst = useTooltipsStore(state => state.setActiveCst);
+  const setActiveCst = useCstTooltipStore(state => state.setActiveCst);
   const hiddenHeight = useFitHeight(windowSize.isSmall ? '10.4rem + 2px' : '12.5rem + 2px');
 
   function handleClick(event: React.MouseEvent<Element>, cstID: number) {

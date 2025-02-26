@@ -6,12 +6,15 @@ import { useParams } from 'react-router';
 import { z } from 'zod';
 
 import { urls, useBlockNavigation, useConceptNavigation } from '@/app';
+import { ConstituentaTooltip } from '@/features/rsform/components';
 
 import { isAxiosError } from '@/backend/apiTransport';
 import { TextURL } from '@/components/Control';
 import { type ErrorData } from '@/components/InfoError';
 import { useQueryStrings } from '@/hooks/useQueryStrings';
 import { useModificationStore } from '@/stores/modification';
+
+import { OperationTooltip } from '../../components/OperationTooltip';
 
 import { OssEditState, OssTabID } from './OssEditContext';
 import { OssTabs } from './OssTabs';
@@ -43,6 +46,8 @@ export function OssPage() {
 
   return (
     <ErrorBoundary FallbackComponent={ProcessError}>
+      <OperationTooltip />
+      <ConstituentaTooltip />
       <OssEditState itemID={urlData.id}>
         <OssTabs activeTab={urlData.tab} />
       </OssEditState>

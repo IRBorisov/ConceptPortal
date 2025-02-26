@@ -1,12 +1,12 @@
 import clsx from 'clsx';
 
 import { type Styling } from '@/components/props';
-import { useTooltipsStore } from '@/stores/tooltips';
 import { APP_COLORS } from '@/styling/colors';
 import { globalIDs } from '@/utils/constants';
 
 import { colorFgCstStatus } from '../colors';
 import { CstClass, type IConstituenta } from '../models/rsform';
+import { useCstTooltipStore } from '../stores/cstTooltip';
 
 interface BadgeConstituentaProps extends Styling {
   /** Prefix for tooltip ID. */
@@ -20,7 +20,7 @@ interface BadgeConstituentaProps extends Styling {
  * Displays a badge with a constituenta alias and information tooltip.
  */
 export function BadgeConstituenta({ value, prefixID, className, style }: BadgeConstituentaProps) {
-  const setActiveCst = useTooltipsStore(state => state.setActiveCst);
+  const setActiveCst = useCstTooltipStore(state => state.setActiveCst);
 
   return (
     <div
