@@ -122,7 +122,6 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
         name='item_data.term_raw'
         render={({ field }) => (
           <RefsInput
-            key='cst_term'
             id='cst_term'
             label='Термин'
             maxHeight='8rem'
@@ -219,8 +218,6 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
 
       {!showConvention && (!disabled || isProcessing) ? (
         <button
-          key='cst_disable_comment'
-          id='cst_disable_comment'
           type='button'
           tabIndex={-1}
           className='self-start cc-label text-sec-600 hover:underline'
@@ -233,8 +230,6 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
       {!disabled || isProcessing ? (
         <div className='mx-auto flex'>
           <SubmitButton
-            key='cst_form_submit'
-            id='cst_form_submit'
             text='Сохранить изменения'
             disabled={disabled || !isModified}
             icon={<IconSave size='1.25rem' />}

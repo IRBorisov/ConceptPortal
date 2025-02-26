@@ -11,7 +11,24 @@ const reactCompilerConfig = {
 };
 
 // Packages to include in main app bundle
-const inlinePackages = ['react', 'react-router', 'react-dom', 'global', 'react-scan'];
+const inlinePackages = [
+  'react',
+  'react-router',
+  'react-dom',
+  'react-icons',
+  'react-hook-form',
+  'react-tooltip',
+  'react-toastify',
+
+  'global',
+  'react-scan',
+
+  'axios',
+  'zod',
+  'zustand',
+  '@tanstack/react-query',
+  '@hookform/resolvers'
+];
 
 // Rollup warnings that should not be displayed
 const warningsToIgnore = [

@@ -26,8 +26,8 @@ export function ToolbarRSExpression({ disabled, showTypeGraph, showAST }: Toolba
         />
       ) : null}
       <MiniButton
-        icon={<IconTypeGraph size='1.25rem' className='icon-primary' />}
         title='Граф ступеней типизации'
+        icon={<IconTypeGraph size='1.25rem' className='icon-primary' />}
         onClick={showTypeGraph}
       />
       <MiniButton
