@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "generate": "lezer-generator src/components/RSInput/rslang/rslangFast.grammar -o src/components/RSInput/rslang/parser.ts && lezer-generator src/components/RSInput/rslang/rslangAST.grammar -o src/components/RSInput/rslang/parserAST.ts && lezer-generator src/components/RefsInput/parse/refsText.grammar -o src/components/RefsInput/parse/parser.ts",
-    "test": "jest && playwright test",
+    "test": "jest",
+    "teste2e": "playwright test",
     "dev": "vite --host",
     "build": "tsc && vite build",
     "lint": "eslint . --report-unused-disable-directives --max-warnings 0",

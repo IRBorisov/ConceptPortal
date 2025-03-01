@@ -29,6 +29,14 @@
       "args": []
     },
     {
+      // Run end-to-end tests
+      "name": "Test E2E",
+      "type": "PowerShell",
+      "request": "launch",
+      "script": "${workspaceFolder}/scripts/dev/RunE2ETests.ps1",
+      "args": []
+    },
+    {
       // Run Tests for backend for current file in Debug mode
       "name": "BE-DebugTestFile",
       "type": "debugpy",
