@@ -92,7 +92,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         return Response(
             status=c.HTTP_201_CREATED,
             data={
-                'new_cst': s.CstSerializer(new_cst).data,
+                'new_cst': s.CstInfoSerializer(new_cst).data,
                 'schema': s.RSFormParseSerializer(schema.model).data
             }
         )
@@ -102,7 +102,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         tags=['RSForm'],
         request=s.CstUpdateSerializer,
         responses={
-            c.HTTP_200_OK: s.CstSerializer,
+            c.HTTP_200_OK: s.CstInfoSerializer,
             c.HTTP_400_BAD_REQUEST: None,
             c.HTTP_403_FORBIDDEN: None,
             c.HTTP_404_NOT_FOUND: None
@@ -122,7 +122,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             PropagationFacade.after_update_cst(schema, cst, data, old_data)
         return Response(
             status=c.HTTP_200_OK,
-            data=s.CstSerializer(m.Constituenta.objects.get(pk=request.data['target'])).data
+            data=s.CstInfoSerializer(m.Constituenta.objects.get(pk=request.data['target'])).data
         )
 
     @extend_schema(
@@ -202,7 +202,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         return Response(
             status=c.HTTP_200_OK,
             data={
-                'new_cst': s.CstSerializer(cst).data,
+                'new_cst': s.CstInfoSerializer(cst).data,
                 'schema': s.RSFormParseSerializer(schema.model).data
             }
         )

@@ -58,7 +58,7 @@ export type IConstituentaReference = z.infer<typeof schemaConstituentaReference>
 
 // ====== Schemas ======
 
-export const schemaOperation = z.object({
+export const schemaOperation = z.strictObject({
   id: z.number(),
   operation_type: z.nativeEnum(OperationType),
   oss: z.number(),
@@ -93,15 +93,15 @@ export const schemaOperationSchema = schemaLibraryItem.extend({
   substitutions: z.array(schemaCstSubstituteInfo)
 });
 
-export const schemaOperationPosition = z.object({
+export const schemaOperationPosition = z.strictObject({
   id: z.number(),
   position_x: z.number(),
   position_y: z.number()
 });
 
-export const schemaOperationCreate = z.object({
+export const schemaOperationCreate = z.strictObject({
   positions: z.array(schemaOperationPosition),
-  item_data: z.object({
+  item_data: z.strictObject({
     alias: z.string().nonempty(),
     operation_type: z.nativeEnum(OperationType),
     title: z.string(),
@@ -114,33 +114,33 @@ export const schemaOperationCreate = z.object({
   create_schema: z.boolean()
 });
 
-export const schemaOperationCreatedResponse = z.object({
+export const schemaOperationCreatedResponse = z.strictObject({
   new_operation: schemaOperation,
   oss: schemaOperationSchema
 });
 
-export const schemaOperationDelete = z.object({
+export const schemaOperationDelete = z.strictObject({
   target: z.number(),
   positions: z.array(schemaOperationPosition),
   keep_constituents: z.boolean(),
   delete_schema: z.boolean()
 });
 
-export const schemaInputUpdate = z.object({
+export const schemaInputUpdate = z.strictObject({
   target: z.number(),
   positions: z.array(schemaOperationPosition),
   input: z.number().nullable()
 });
 
-export const schemaInputCreatedResponse = z.object({
+export const schemaInputCreatedResponse = z.strictObject({
   new_schema: schemaLibraryItem,
   oss: schemaOperationSchema
 });
 
-export const schemaOperationUpdate = z.object({
+export const schemaOperationUpdate = z.strictObject({
   target: z.number(),
   positions: z.array(schemaOperationPosition),
-  item_data: z.object({
+  item_data: z.strictObject({
     alias: z.string().nonempty(errorMsg.requiredField),
     title: z.string(),
     comment: z.string()
@@ -149,12 +149,12 @@ export const schemaOperationUpdate = z.object({
   substitutions: z.array(schemaCstSubstitute)
 });
 
-export const schemaCstRelocate = z.object({
+export const schemaCstRelocate = z.strictObject({
   destination: z.number().nullable(),
   items: z.array(z.number()).refine(data => data.length > 0)
 });
 
-export const schemaConstituentaReference = z.object({
+export const schemaConstituentaReference = z.strictObject({
   id: z.number(),
   schema: z.number()
 });

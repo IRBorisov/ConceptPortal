@@ -19,7 +19,7 @@ import { OperationTooltip } from '../../components/OperationTooltip';
 import { OssEditState, OssTabID } from './OssEditContext';
 import { OssTabs } from './OssTabs';
 
-const paramsSchema = z.object({
+const paramsSchema = z.strictObject({
   id: z.coerce.number(),
   tab: z.preprocess(v => (v ? Number(v) : undefined), z.nativeEnum(OssTabID).default(OssTabID.GRAPH))
 });

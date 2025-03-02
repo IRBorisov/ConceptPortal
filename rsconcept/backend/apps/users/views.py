@@ -73,7 +73,7 @@ class AuthAPIView(generics.RetrieveAPIView):
 class ActiveUsersView(generics.ListAPIView):
     ''' Endpoint: Get list of active users. '''
     permission_classes = (permissions.AllowAny,)
-    serializer_class = s.UserSerializer
+    serializer_class = s.UserInfoSerializer
 
     def get_queryset(self):
         return m.User.objects.filter(is_active=True)

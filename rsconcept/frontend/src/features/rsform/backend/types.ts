@@ -266,7 +266,7 @@ export enum RSErrorType {
 }
 
 // ========= SCHEMAS ========
-export const schemaConstituentaBasics = z.object({
+export const schemaConstituentaBasics = z.strictObject({
   id: z.coerce.number(),
   alias: z.string().nonempty(errorMsg.requiredField),
   convention: z.string(),
@@ -276,16 +276,16 @@ export const schemaConstituentaBasics = z.object({
   definition_resolved: z.string(),
   term_raw: z.string(),
   term_resolved: z.string(),
-  term_forms: z.array(z.object({ text: z.string(), tags: z.string() }))
+  term_forms: z.array(z.strictObject({ text: z.string(), tags: z.string() }))
 });
 
 export const schemaConstituenta = schemaConstituentaBasics.extend({
-  parse: z.object({
+  parse: z.strictObject({
     status: z.nativeEnum(ParsingStatus),
     valueClass: z.nativeEnum(ValueClass),
     typification: z.string(),
     syntaxTree: z.string(),
-    args: z.array(z.object({ alias: z.string(), typification: z.string() }))
+    args: z.array(z.strictObject({ alias: z.string(), typification: z.string() }))
   })
 });
 
@@ -297,17 +297,17 @@ export const schemaRSForm = schemaLibraryItem.extend({
 
   items: z.array(schemaConstituenta),
   inheritance: z.array(
-    z.object({
+    z.strictObject({
       child: z.coerce.number(),
       child_source: z.coerce.number(),
       parent: z.coerce.number(),
       parent_source: z.coerce.number()
     })
   ),
-  oss: z.array(z.object({ id: z.coerce.number(), alias: z.string() }))
+  oss: z.array(z.strictObject({ id: z.coerce.number(), alias: z.string() }))
 });
 
-export const schemaVersionCreatedResponse = z.object({
+export const schemaVersionCreatedResponse = z.strictObject({
   version: z.number(),
   schema: schemaRSForm
 });
@@ -326,57 +326,57 @@ export const schemaCstCreate = schemaConstituentaBasics
     insert_after: z.number().nullable()
   });
 
-export const schemaCstCreatedResponse = z.object({
+export const schemaCstCreatedResponse = z.strictObject({
   new_cst: schemaConstituentaBasics,
   schema: schemaRSForm
 });
 
-export const schemaCstUpdate = z.object({
+export const schemaCstUpdate = z.strictObject({
   target: z.number(),
-  item_data: z.object({
+  item_data: z.strictObject({
     convention: z.string().optional(),
     definition_formal: z.string().optional(),
     definition_raw: z.string().optional(),
     term_raw: z.string().optional(),
-    term_forms: z.array(z.object({ text: z.string(), tags: z.string() })).optional()
+    term_forms: z.array(z.strictObject({ text: z.string(), tags: z.string() })).optional()
   })
 });
 
-export const schemaCstRename = z.object({
+export const schemaCstRename = z.strictObject({
   target: z.number(),
   alias: z.string(),
   cst_type: z.nativeEnum(CstType)
 });
 
-export const schemaProduceStructureResponse = z.object({
+export const schemaProduceStructureResponse = z.strictObject({
   cst_list: z.array(z.number()),
   schema: schemaRSForm
 });
 
-export const schemaCstSubstitute = z.object({
+export const schemaCstSubstitute = z.strictObject({
   original: z.number(),
   substitution: z.number()
 });
 
-export const schemaCstSubstitutions = z.object({
+export const schemaCstSubstitutions = z.strictObject({
   substitutions: z.array(schemaCstSubstitute).min(1, { message: errorMsg.emptySubstitutions })
 });
 
-export const schemaInlineSynthesis = z.object({
+export const schemaInlineSynthesis = z.strictObject({
   receiver: z.number(),
   source: z.number().nullable(),
   items: z.array(z.number()),
   substitutions: z.array(schemaCstSubstitute)
 });
 
-export const schemaRSErrorDescription = z.object({
+export const schemaRSErrorDescription = z.strictObject({
   errorType: z.nativeEnum(RSErrorType),
   position: z.number(),
   isCritical: z.boolean(),
   params: z.array(z.string())
 });
 
-export const schemaExpressionParse = z.object({
+export const schemaExpressionParse = z.strictObject({
   parseResult: z.boolean(),
   prefixLen: z.number(),
   syntax: z.nativeEnum(Syntax),
@@ -385,17 +385,17 @@ export const schemaExpressionParse = z.object({
   errors: z.array(schemaRSErrorDescription),
   astText: z.string(),
   ast: z.array(
-    z.object({
+    z.strictObject({
       uid: z.number(),
       parent: z.number(),
       typeID: z.nativeEnum(TokenID),
       start: z.number(),
       finish: z.number(),
-      data: z.object({ dataType: z.string(), value: z.unknown().refine(value => value !== undefined) })
+      data: z.strictObject({ dataType: z.string(), value: z.unknown().refine(value => value !== undefined) })
     })
   ),
   args: z.array(
-    z.object({
+    z.strictObject({
       alias: z.string(),
       typification: z.string()
     })

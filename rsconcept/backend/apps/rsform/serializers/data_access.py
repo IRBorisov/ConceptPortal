@@ -30,13 +30,12 @@ class CstBaseSerializer(serializers.ModelSerializer):
         read_only_fields = ('id',)
 
 
-class CstSerializer(serializers.ModelSerializer):
-    ''' Serializer: Constituenta data. '''
+class CstInfoSerializer(serializers.ModelSerializer):
+    ''' Serializer: Constituenta public information. '''
     class Meta:
         ''' serializer metadata. '''
         model = Constituenta
-        exclude = ('order',)
-        read_only_fields = ('id', 'schema', 'alias', 'cst_type', 'definition_resolved', 'term_resolved')
+        exclude = ('order', 'schema')
 
 
 class CstUpdateSerializer(serializers.Serializer):
@@ -100,7 +99,7 @@ class RSFormSerializer(serializers.ModelSerializer):
         child=serializers.IntegerField()
     )
     items = serializers.ListField(
-        child=CstSerializer()
+        child=CstInfoSerializer()
     )
     inheritance = serializers.ListField(
         child=InheritanceDataSerializer()
@@ -136,8 +135,7 @@ class RSFormSerializer(serializers.ModelSerializer):
         result['oss'] = []
         result['inheritance'] = []
         for cst in RSForm(instance).constituents().defer('order').order_by('order'):
-            result['items'].append(CstSerializer(cst).data)
-            del result['items'][-1]['schema']
+            result['items'].append(CstInfoSerializer(cst).data)
         for oss in LibraryItem.objects.filter(operations__result=instance).only('alias'):
             result['oss'].append({
                 'id': oss.pk,

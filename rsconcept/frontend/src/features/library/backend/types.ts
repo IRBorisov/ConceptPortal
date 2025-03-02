@@ -51,7 +51,7 @@ export type IVersionUpdateDTO = z.infer<typeof schemaVersionUpdate>;
 
 // ======= SCHEMAS =========
 
-export const schemaLibraryItem = z.object({
+export const schemaLibraryItem = z.strictObject({
   id: z.coerce.number(),
   item_type: z.nativeEnum(LibraryItemType),
   title: z.string(),
@@ -112,7 +112,7 @@ export const schemaCreateLibraryItem = z
     message: errorMsg.requiredField
   });
 
-export const schemaUpdateLibraryItem = z.object({
+export const schemaUpdateLibraryItem = z.strictObject({
   id: z.number(),
   item_type: z.nativeEnum(LibraryItemType),
   title: z.string().nonempty(errorMsg.requiredField),
@@ -122,20 +122,20 @@ export const schemaUpdateLibraryItem = z.object({
   read_only: z.boolean()
 });
 
-export const schemaVersionInfo = z.object({
+export const schemaVersionInfo = z.strictObject({
   id: z.coerce.number(),
   version: z.string(),
   description: z.string(),
   time_create: z.string().datetime({ offset: true })
 });
 
-export const schemaVersionUpdate = z.object({
+export const schemaVersionUpdate = z.strictObject({
   id: z.number(),
   version: z.string().nonempty(errorMsg.requiredField),
   description: z.string()
 });
 
-export const schemaVersionCreate = z.object({
+export const schemaVersionCreate = z.strictObject({
   version: z.string(),
   description: z.string(),
   items: z.array(z.number())

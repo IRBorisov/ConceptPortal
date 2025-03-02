@@ -11,15 +11,15 @@ export type ILexemeResponse = z.infer<typeof schemaLexemeResponse>;
 
 // ====== Schemas =========
 
-export const schemaTextResult = z.object({
+export const schemaTextResult = z.strictObject({
   result: z.string()
 });
 
-export const schemaWordForm = z.object({
+export const schemaWordForm = z.strictObject({
   text: z.string(),
   grams: z.string()
 });
 
-export const schemaLexemeResponse = z.object({
+export const schemaLexemeResponse = z.strictObject({
   items: z.array(schemaWordForm)
 });

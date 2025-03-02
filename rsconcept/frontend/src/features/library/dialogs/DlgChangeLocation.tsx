@@ -18,7 +18,7 @@ import { SelectLocationHead } from '../components/SelectLocationHead';
 import { LocationHead } from '../models/library';
 import { combineLocation, validateLocation } from '../models/libraryAPI';
 
-const schemaLocation = z.object({
+const schemaLocation = z.strictObject({
   location: z.string().refine(data => validateLocation(data), { message: errorMsg.invalidLocation })
 });
 

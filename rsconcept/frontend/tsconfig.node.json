@@ -4,7 +4,12 @@
     "skipLibCheck": true,
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+
+    "baseUrl": "./src/",
+    "paths": {
+      "@/*": ["*"]
+    }
   },
-  "include": ["vite.config.ts", "package.json", "playwright.config.ts", "tests"]
+  "include": ["vite.config.ts", "package.json", "playwright.config.ts", "tests", "src"]
 }

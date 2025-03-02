@@ -36,8 +36,11 @@ export interface IReferenceInputState {
 const schemaEditReferenceState = z
   .object({
     type: z.nativeEnum(ReferenceType),
-    entity: z.object({ entity: z.string(), grams: z.array(z.object({ value: z.string(), label: z.string() })) }),
-    syntactic: z.object({ offset: z.coerce.number(), nominal: z.string() })
+    entity: z.strictObject({
+      entity: z.string(),
+      grams: z.array(z.strictObject({ value: z.string(), label: z.string() }))
+    }),
+    syntactic: z.strictObject({ offset: z.coerce.number(), nominal: z.string() })
   })
   .refine(
     data =>

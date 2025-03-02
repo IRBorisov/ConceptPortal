@@ -203,6 +203,7 @@ class OperationSchemaSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance: LibraryItem):
         result = LibraryItemDetailsSerializer(instance).data
+        del result['versions']
         oss = OperationSchema(instance)
         result['items'] = []
         for operation in oss.operations().order_by('pk'):

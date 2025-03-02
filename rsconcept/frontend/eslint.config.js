@@ -20,7 +20,8 @@ export default [
         ecmaVersion: 'latest',
         sourceType: 'module',
         globals: { ...globals.browser, ...globals.es2020, ...globals.jest },
-        project: ['./tsconfig.json', './tsconfig.node.json']
+        project: ['./tsconfig.json', './tsconfig.node.json'],
+        projectService: true
       }
     }
   },

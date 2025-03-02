@@ -268,11 +268,11 @@ export interface ITextPosition {
   finish: number;
 }
 
-export const schemaReference = z.object({
+export const schemaReference = z.strictObject({
   type: z.nativeEnum(ReferenceType),
   data: z.union([
-    z.object({ entity: z.string(), form: z.string() }),
-    z.object({ offset: z.number(), nominal: z.string() })
+    z.strictObject({ entity: z.string(), form: z.string() }),
+    z.strictObject({ offset: z.number(), nominal: z.string() })
   ])
 });
 

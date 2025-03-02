@@ -13,10 +13,10 @@ from .basics import (
 )
 from .data_access import (
     CstCreateSerializer,
+    CstInfoSerializer,
     CstListSerializer,
     CstMoveSerializer,
     CstRenameSerializer,
-    CstSerializer,
     CstSubstituteSerializer,
     CstTargetSerializer,
     CstUpdateSerializer,

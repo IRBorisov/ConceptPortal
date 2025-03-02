@@ -22,7 +22,7 @@ export type IUserSignupDTO = z.infer<typeof schemaUserSignup>;
 export type IUpdateProfileDTO = z.infer<typeof schemaUpdateProfile>;
 
 // ========= SCHEMAS ========
-export const schemaUser = z.object({
+export const schemaUser = z.strictObject({
   id: z.coerce.number(),
   username: z.string().nonempty(errorMsg.requiredField),
   is_staff: z.boolean(),
@@ -47,7 +47,7 @@ export const schemaUserSignup = z
   })
   .refine(schema => schema.password === schema.password2, { path: ['password2'], message: errorMsg.passwordsMismatch });
 
-export const schemaUpdateProfile = z.object({
+export const schemaUpdateProfile = z.strictObject({
   email: z.string().email(errorMsg.emailField),
   first_name: z.string(),
   last_name: z.string()

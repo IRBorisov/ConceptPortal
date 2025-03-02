@@ -15,7 +15,7 @@ export interface ICurrentUser {
 /**
  * Represents login data, used to authenticate users.
  */
-export const schemaUserLogin = z.object({
+export const schemaUserLogin = z.strictObject({
   username: z.string().nonempty(errorMsg.requiredField),
   password: z.string().nonempty(errorMsg.requiredField)
 });

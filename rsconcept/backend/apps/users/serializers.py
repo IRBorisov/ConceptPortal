@@ -117,6 +117,20 @@ class UserSerializer(serializers.ModelSerializer):
         return attrs
 
 
+class UserInfoSerializer(serializers.ModelSerializer):
+    ''' Serializer: User open information. '''
+    id = serializers.IntegerField(read_only=True)
+
+    class Meta:
+        ''' serializer metadata. '''
+        model = models.User
+        fields = [
+            'id',
+            'first_name',
+            'last_name',
+        ]
+
+
 class ChangePasswordSerializer(serializers.Serializer):
     ''' Serializer: Change password. '''
     old_password = serializers.CharField(required=True)

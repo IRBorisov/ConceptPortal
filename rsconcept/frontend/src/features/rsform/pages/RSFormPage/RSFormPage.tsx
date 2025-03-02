@@ -19,7 +19,7 @@ import { ConstituentaTooltip } from '../../components/ConstituentaTooltip';
 import { RSEditState, RSTabID } from './RSEditContext';
 import { RSTabs } from './RSTabs';
 
-const paramsSchema = z.object({
+const paramsSchema = z.strictObject({
   id: z.coerce.number(),
   version: z.coerce
     .number()
