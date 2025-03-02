@@ -4,7 +4,30 @@
     ".pytest_cache/": true
   },
   "typescript.tsdk": "rsconcept/frontend/node_modules/typescript/lib",
-  "eslint.workingDirectories": ["rsconcept/frontend"],
+  "eslint.probe": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "eslint.workingDirectories": [
+    {
+      "directory": "./",
+      "overrideConfigFile": "eslint.config.js",
+      "changeProcessCWD": true
+    },
+    {
+      "directory": "./",
+      "pattern": "tests/**",
+      "overrideConfigFile": "eslint.playwright.config.js"
+    }
+  ],
   "isort.args": [
     "--line-length",
     "100",

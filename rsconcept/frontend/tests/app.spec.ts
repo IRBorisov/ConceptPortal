@@ -6,9 +6,8 @@ test('should load the homepage and display login button', async ({ page }) => {
   await authAnonymous(page);
 
   await page.goto('/');
-  await page.waitForSelector('.h-full > .mr-1');
   await expect(page).toHaveTitle('Концепт Портал');
 
-  await page.click('.h-full > .mr-1');
+  await page.locator('.h-full > .mr-1').click();
   await expect(page.getByText('Логин или email')).toBeVisible();
 });

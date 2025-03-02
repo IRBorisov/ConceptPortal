@@ -77,18 +77,6 @@ class AuthSerializer(serializers.Serializer):
             }
 
 
-class UserInfoSerializer(serializers.ModelSerializer):
-    ''' Serializer: User data. '''
-    class Meta:
-        ''' serializer metadata. '''
-        model = models.User
-        fields = [
-            'id',
-            'first_name',
-            'last_name',
-        ]
-
-
 class UserSerializer(serializers.ModelSerializer):
     ''' Serializer: User data. '''
     id = serializers.IntegerField(read_only=True)

@@ -11,7 +11,16 @@ export default [
   ...typescriptPlugin.configs.recommendedTypeChecked,
   ...typescriptPlugin.configs.stylisticTypeChecked,
   {
-    ignores: ['**/parser.ts', '**/node_modules/**', '**/public/**', '**/dist/**', 'eslint.config.js']
+    ignores: [
+      '**/parser.ts',
+      '**/node_modules/**',
+      '**/public/**',
+      '**/dist/**',
+      'eslint.config.js',
+      'playwright.config.ts',
+      'eslint.playwright.config.js',
+      'tests/**'
+    ]
   },
   {
     languageOptions: {
@@ -20,7 +29,7 @@ export default [
         ecmaVersion: 'latest',
         sourceType: 'module',
         globals: { ...globals.browser, ...globals.es2020, ...globals.jest },
-        project: ['./tsconfig.json', './tsconfig.node.json'],
+        project: ['./tsconfig.json', './tsconfig.vite.json'],
         projectService: true
       }
     }
@@ -36,6 +45,8 @@ export default [
     settings: { react: { version: 'detect' } },
     rules: {
       'react-compiler/react-compiler': 'error',
+      'react-refresh/only-export-components': ['off', { allowConstantExport: true }],
+
       '@typescript-eslint/consistent-type-imports': [
         'warn',
         {
@@ -55,8 +66,8 @@ export default [
         }
       ],
 
-      'react-refresh/only-export-components': ['off', { allowConstantExport: true }],
-
+      'simple-import-sort/exports': 'error',
+      'import/no-duplicates': 'warn',
       'simple-import-sort/imports': [
         'warn',
         {
@@ -82,8 +93,6 @@ export default [
           ]
         }
       ],
-      'simple-import-sort/exports': 'error',
-      'import/no-duplicates': 'warn',
 
       ...reactHooksPlugin.configs.recommended.rules
     }

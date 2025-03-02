@@ -21,6 +21,7 @@ function LintBackend() {
 function LintFrontend() {
   Set-Location $frontend
   & npm run lint
+  & npm run lint:playwright
 }
 
 RunLinters
