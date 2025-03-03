@@ -6,6 +6,7 @@ import reactCompilerPlugin from 'eslint-plugin-react-compiler';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import importPlugin from 'eslint-plugin-import';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
+import playwright from 'eslint-plugin-playwright';
 
 export default [
   ...typescriptPlugin.configs.recommendedTypeChecked,
@@ -16,10 +17,9 @@ export default [
       '**/node_modules/**',
       '**/public/**',
       '**/dist/**',
+      'vite.config.ts',
       'eslint.config.js',
-      'playwright.config.ts',
-      'eslint.playwright.config.js',
-      'tests/**'
+      'playwright.config.ts'
     ]
   },
   {
@@ -29,12 +29,13 @@ export default [
         ecmaVersion: 'latest',
         sourceType: 'module',
         globals: { ...globals.browser, ...globals.es2020, ...globals.jest },
-        project: ['./tsconfig.json', './tsconfig.vite.json'],
-        projectService: true
+        project: ['./tsconfig.json', './tsconfig.vite.json', './tsconfig.playwright.json']
       }
     }
   },
   {
+    files: ['src/**/*.ts', 'src/**/*.tsx'],
+
     plugins: {
       'react': reactPlugin,
       'react-compiler': reactCompilerPlugin,
@@ -95,6 +96,25 @@ export default [
       ],
 
       ...reactHooksPlugin.configs.recommended.rules
+    }
+  },
+  {
+    ...playwright.configs['flat/recommended'],
+
+    files: ['tests/**/*.ts'],
+
+    plugins: {
+      'playwright': playwright,
+      'simple-import-sort': simpleImportSort,
+      'import': importPlugin
+    },
+
+    rules: {
+      ...playwright.configs['flat/recommended'].rules,
+
+      'simple-import-sort/exports': 'error',
+      'import/no-duplicates': 'warn',
+      'simple-import-sort/imports': 'warn'
     }
   },
   {

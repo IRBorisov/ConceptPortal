@@ -4,30 +4,6 @@
     ".pytest_cache/": true
   },
   "typescript.tsdk": "rsconcept/frontend/node_modules/typescript/lib",
-  "eslint.probe": [
-    "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact"
-  ],
-  "eslint.validate": [
-    "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact"
-  ],
-  "eslint.workingDirectories": [
-    {
-      "directory": "./",
-      "overrideConfigFile": "eslint.config.js",
-      "changeProcessCWD": true
-    },
-    {
-      "directory": "./",
-      "pattern": "tests/**",
-      "overrideConfigFile": "eslint.playwright.config.js"
-    }
-  ],
   "isort.args": [
     "--line-length",
     "100",
@@ -37,6 +13,13 @@
     "apps",
     "--project",
     "shared"
+  ],
+  "eslint.workingDirectories": [
+    {
+      "directory": "rsconcept/frontend",
+      "overrideConfigFile": "rsconcept/frontend/eslint.config.js",
+      "changeProcessCWD": true
+    }
   ],
   "autopep8.args": [
     "--max-line-length",
