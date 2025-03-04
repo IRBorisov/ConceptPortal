@@ -40,7 +40,7 @@ export function SelectWordForm({ value, onChange, className, ...restProps }: Sel
   }
 
   return (
-    <div className={clsx('text-xs sm:text-sm', className)} {...restProps}>
+    <div className={clsx('text-xs sm:text-sm grid grid-cols-6', className)} {...restProps}>
       {DefaultWordForms.slice(0, 12).map((data, index) => (
         <WordformButton
           key={`${prefixes.wordform_list}${index}`}
