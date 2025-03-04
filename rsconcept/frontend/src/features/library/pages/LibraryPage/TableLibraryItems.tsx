@@ -1,42 +1,47 @@
 'use client';
 
-import { useLayoutEffect, useState } from 'react';
-import { useIntl } from 'react-intl';
 import clsx from 'clsx';
 
 import { urls, useConceptNavigation } from '@/app';
-import { useLabelUser } from '@/features/users';
 
 import { FlexColumn } from '@/components/Container';
-import { MiniButton, TextURL } from '@/components/Control';
-import { createColumnHelper, DataTable, type IConditionalStyle, type VisibilityState } from '@/components/DataTable';
-import { IconFolderTree } from '@/components/Icons';
+import { TextURL } from '@/components/Control';
+import { DataTable, type IConditionalStyle, type VisibilityState } from '@/components/DataTable';
 import { useWindowSize } from '@/hooks/useWindowSize';
 import { useFitHeight } from '@/stores/appLayout';
 import { usePreferencesStore } from '@/stores/preferences';
 import { APP_COLORS } from '@/styling/colors';
 
 import { type ILibraryItem, LibraryItemType } from '../../backend/types';
-import { BadgeLocation } from '../../components/BadgeLocation';
 import { useLibrarySearchStore } from '../../stores/librarySearch';
+
+import { useLibraryColumns } from './useLibraryColumns';
 
 interface TableLibraryItemsProps {
   items: ILibraryItem[];
 }
 
-const columnHelper = createColumnHelper<ILibraryItem>();
-
 export function TableLibraryItems({ items }: TableLibraryItemsProps) {
   const router = useConceptNavigation();
-  const intl = useIntl();
-  const getUserLabel = useLabelUser();
+  const { isSmall } = useWindowSize();
 
   const folderMode = useLibrarySearchStore(state => state.folderMode);
-  const toggleFolderMode = useLibrarySearchStore(state => state.toggleFolderMode);
   const resetFilter = useLibrarySearchStore(state => state.resetFilter);
 
   const itemsPerPage = usePreferencesStore(state => state.libraryPagination);
   const setItemsPerPage = usePreferencesStore(state => state.setLibraryPagination);
+
+  const columns = useLibraryColumns();
+  const columnVisibility: VisibilityState = { owner: !isSmall };
+  const conditionalRowStyles: IConditionalStyle<ILibraryItem>[] = [
+    {
+      when: (item: ILibraryItem) => item.item_type === LibraryItemType.OSS,
+      style: {
+        color: APP_COLORS.fgGreen
+      }
+    }
+  ];
+  const tableHeight = useFitHeight('2.2rem');
 
   function handleOpenItem(item: ILibraryItem, event: React.MouseEvent<Element>) {
     const selection = window.getSelection();
@@ -49,108 +54,6 @@ export function TableLibraryItems({ items }: TableLibraryItemsProps) {
       router.push({ path: urls.oss(item.id), newTab: event.ctrlKey || event.metaKey });
     }
   }
-
-  const windowSize = useWindowSize();
-
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-
-  useLayoutEffect(() => {
-    setColumnVisibility({
-      owner: !windowSize.isSmall
-    });
-  }, [windowSize]);
-
-  function handleToggleFolder(event: React.MouseEvent<Element>) {
-    event.preventDefault();
-    event.stopPropagation();
-    toggleFolderMode();
-  }
-
-  const columns = [
-    ...(folderMode
-      ? []
-      : [
-          columnHelper.accessor('location', {
-            id: 'location',
-            header: () => (
-              <MiniButton
-                noPadding
-                noHover
-                className='pl-2 max-h-[1rem] translate-y-[-0.125rem]'
-                onClick={handleToggleFolder}
-                titleHtml='Переключение в режим Проводник'
-                icon={<IconFolderTree size='1.25rem' className='clr-text-controls' />}
-              />
-            ),
-            size: 50,
-            minSize: 50,
-            maxSize: 50,
-            enableSorting: true,
-            cell: props => <BadgeLocation location={props.getValue()} />,
-            sortingFn: 'text'
-          })
-        ]),
-    columnHelper.accessor('alias', {
-      id: 'alias',
-      header: 'Шифр',
-      size: 150,
-      minSize: 80,
-      maxSize: 150,
-      enableSorting: true,
-      cell: props => <div className='min-w-[5rem]'>{props.getValue()}</div>,
-      sortingFn: 'text'
-    }),
-    columnHelper.accessor('title', {
-      id: 'title',
-      header: 'Название',
-      size: 1200,
-      minSize: 200,
-      maxSize: 1200,
-      enableSorting: true,
-      sortingFn: 'text'
-    }),
-    columnHelper.accessor(item => item.owner ?? 0, {
-      id: 'owner',
-      header: 'Владелец',
-      size: 400,
-      minSize: 100,
-      maxSize: 400,
-      cell: props => getUserLabel(props.getValue()),
-      enableSorting: true,
-      sortingFn: 'text'
-    }),
-    columnHelper.accessor('time_update', {
-      id: 'time_update',
-      header: windowSize.isSmall ? 'Дата' : 'Обновлена',
-      cell: props => (
-        <div className='whitespace-nowrap'>
-          {new Date(props.getValue()).toLocaleString(intl.locale, {
-            year: '2-digit',
-            month: '2-digit',
-            day: '2-digit',
-            ...(!windowSize.isSmall && {
-              hour: '2-digit',
-              minute: '2-digit'
-            })
-          })}
-        </div>
-      ),
-      enableSorting: true,
-      sortingFn: 'datetime',
-      sortDescFirst: true
-    })
-  ];
-
-  const tableHeight = useFitHeight('2.2rem');
-
-  const conditionalRowStyles: IConditionalStyle<ILibraryItem>[] = [
-    {
-      when: (item: ILibraryItem) => item.item_type === LibraryItemType.OSS,
-      style: {
-        color: APP_COLORS.fgGreen
-      }
-    }
-  ];
 
   return (
     <DataTable

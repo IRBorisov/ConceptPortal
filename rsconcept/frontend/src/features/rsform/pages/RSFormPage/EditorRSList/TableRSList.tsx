@@ -1,6 +1,5 @@
 'use client';
 
-import { useLayoutEffect, useState } from 'react';
 import clsx from 'clsx';
 
 import { TextURL } from '@/components/Control';
@@ -48,16 +47,6 @@ export function TableRSList({
   onCreateNew
 }: TableRSListProps) {
   const windowSize = useWindowSize();
-
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-
-  useLayoutEffect(() => {
-    setColumnVisibility({
-      type: (windowSize.width ?? 0) >= COLUMN_TYPE_HIDE_THRESHOLD,
-      convention: (windowSize.width ?? 0) >= COLUMN_CONVENTION_HIDE_THRESHOLD,
-      definition: (windowSize.width ?? 0) >= COLUMN_DEFINITION_HIDE_THRESHOLD
-    });
-  }, [windowSize]);
 
   function handleRowClicked(cst: IConstituenta, event: React.MouseEvent<Element>) {
     if (event.altKey) {
@@ -127,6 +116,12 @@ export function TableRSList({
     })
   ];
 
+  const columnVisibility: VisibilityState = {
+    type: (windowSize.width ?? 0) >= COLUMN_TYPE_HIDE_THRESHOLD,
+    convention: (windowSize.width ?? 0) >= COLUMN_CONVENTION_HIDE_THRESHOLD,
+    definition: (windowSize.width ?? 0) >= COLUMN_DEFINITION_HIDE_THRESHOLD
+  };
+
   return (
     <DataTable
       dense
@@ -140,7 +135,6 @@ export function TableRSList({
       onRowClicked={handleRowClicked}
       enableHiding
       columnVisibility={columnVisibility}
-      onColumnVisibilityChange={setColumnVisibility}
       enableRowSelection={enableSelection}
       rowSelection={selected}
       onRowSelectionChange={setSelected}

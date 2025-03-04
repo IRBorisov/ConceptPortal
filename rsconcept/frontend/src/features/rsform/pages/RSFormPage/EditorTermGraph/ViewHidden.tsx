@@ -21,7 +21,7 @@ interface ViewHiddenProps {
 }
 
 export function ViewHidden({ items }: ViewHiddenProps) {
-  const windowSize = useWindowSize();
+  const { isSmall } = useWindowSize();
   const coloring = useTermGraphStore(state => state.coloring);
   const { navigateCst, setFocus, schema, selected, toggleSelect } = useRSEdit();
 
@@ -29,7 +29,7 @@ export function ViewHidden({ items }: ViewHiddenProps) {
   const isFolded = useTermGraphStore(state => state.foldHidden);
   const toggleFolded = useTermGraphStore(state => state.toggleFoldHidden);
   const setActiveCst = useCstTooltipStore(state => state.setActiveCst);
-  const hiddenHeight = useFitHeight(windowSize.isSmall ? '10.4rem + 2px' : '12.5rem + 2px');
+  const hiddenHeight = useFitHeight(isSmall ? '10.4rem + 2px' : '12.5rem + 2px');
 
   function handleClick(event: React.MouseEvent<Element>, cstID: number) {
     event.preventDefault();

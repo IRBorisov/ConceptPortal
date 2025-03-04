@@ -7,11 +7,12 @@ import { HelpTopic } from '../models/helpTopic';
 
 export function HelpRSLang() {
   const windowSize = useWindowSize();
+  const isSmall = windowSize.isSmall;
 
   const videoHeight = (() => {
     const viewH = windowSize.height ?? 0;
     const viewW = windowSize.width ?? 0;
-    const availableWidth = viewW - (windowSize.isSmall ? 35 : 310);
+    const availableWidth = viewW - (isSmall ? 35 : 310);
     return Math.min(1080, Math.max(viewH - 450, 300), Math.floor((availableWidth * 9) / 16));
   })();
 

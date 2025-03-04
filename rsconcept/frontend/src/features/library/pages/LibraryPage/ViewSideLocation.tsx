@@ -26,7 +26,7 @@ interface ViewSideLocationProps {
 export function ViewSideLocation({ isVisible, onRenameLocation }: ViewSideLocationProps) {
   const { user, isAnonymous } = useAuthSuspense();
   const { items } = useLibrary();
-  const windowSize = useWindowSize();
+  const { isSmall } = useWindowSize();
 
   const location = useLibrarySearchStore(state => state.location);
   const setLocation = useLibrarySearchStore(state => state.setLocation);
@@ -68,7 +68,7 @@ export function ViewSideLocation({ isVisible, onRenameLocation }: ViewSideLocati
         transitionProperty: 'width, min-width, opacity',
         transitionDuration: `${PARAMETER.moveDuration}ms`,
         transitionTimingFunction: 'ease-out',
-        minWidth: isVisible ? (windowSize.isSmall ? '10rem' : '15rem') : '0',
+        minWidth: isVisible ? (isSmall ? '10rem' : '15rem') : '0',
         width: isVisible ? '100%' : '0',
         opacity: isVisible ? 1 : 0
       }}
