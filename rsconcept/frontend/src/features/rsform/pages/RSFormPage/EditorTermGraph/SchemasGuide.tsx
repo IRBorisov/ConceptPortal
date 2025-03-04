@@ -8,8 +8,8 @@ import { colorBgSchemas } from '../../../colors';
 import { useRSEdit } from '../RSEditContext';
 
 export function SchemasGuide() {
-  const { items: libraryItems } = useLibrary();
-  const { schema } = useRSEdit();
+  const libraryItems = useLibrary().items;
+  const schema = useRSEdit().schema;
 
   const schemas = (() => {
     const processed = new Set<number>();

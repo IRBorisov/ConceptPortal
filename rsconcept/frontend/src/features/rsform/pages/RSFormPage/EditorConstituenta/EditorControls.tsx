@@ -18,7 +18,7 @@ interface EditorControlsProps {
 }
 
 export function EditorControls({ constituenta, disabled, onEditTerm }: EditorControlsProps) {
-  const { schema } = useRSEdit();
+  const schema = useRSEdit().schema;
   const { isModified } = useModificationStore();
   const isProcessing = useMutatingRSForm();
 

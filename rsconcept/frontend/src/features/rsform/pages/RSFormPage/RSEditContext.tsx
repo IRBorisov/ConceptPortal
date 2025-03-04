@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, use, useEffect, useState } from 'react';
 
 import { urls, useConceptNavigation } from '@/app';
 import { useAuthSuspense } from '@/features/auth';
@@ -66,9 +66,9 @@ export interface IRSEditContext {
   promptTemplate: () => void;
 }
 
-const RSEditContext = createContext<IRSEditContext | null>(null);
+export const RSEditContext = createContext<IRSEditContext | null>(null);
 export const useRSEdit = () => {
-  const context = useContext(RSEditContext);
+  const context = use(RSEditContext);
   if (context === null) {
     throw new Error('useRSEdit has to be used within <RSEditState>');
   }

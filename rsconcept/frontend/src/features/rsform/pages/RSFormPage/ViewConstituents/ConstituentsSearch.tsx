@@ -24,7 +24,7 @@ export function ConstituentsSearch({ dense }: ConstituentsSearchProps) {
   const setSource = useCstSearchStore(state => state.setSource);
   const toggleInherited = useCstSearchStore(state => state.toggleInherited);
 
-  const { schema } = useRSEdit();
+  const schema = useRSEdit().schema;
 
   return (
     <div className='flex border-b clr-input rounded-t-md'>

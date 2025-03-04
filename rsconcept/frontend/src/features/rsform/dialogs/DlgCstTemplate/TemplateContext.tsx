@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState } from 'react';
+import { createContext, use, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { useDialogsStore } from '@/stores/dialogs';
@@ -25,9 +25,9 @@ export interface ITemplateContext {
   onChangeFilterCategory: (newFilterCategory: IConstituenta | null) => void;
 }
 
-const TemplateContext = createContext<ITemplateContext | null>(null);
+export const TemplateContext = createContext<ITemplateContext | null>(null);
 export const useTemplateContext = () => {
-  const context = useContext(TemplateContext);
+  const context = use(TemplateContext);
   if (context === null) {
     throw new Error('useTemplateContext has to be used within <TemplateState>');
   }

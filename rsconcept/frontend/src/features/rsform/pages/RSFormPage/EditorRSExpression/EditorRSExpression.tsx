@@ -61,7 +61,7 @@ export function EditorRSExpression({
   onShowTypeGraph,
   ...restProps
 }: EditorRSExpressionProps) {
-  const { schema } = useRSEdit();
+  const schema = useRSEdit().schema;
 
   const [isModified, setIsModified] = useState(false);
   const rsInput = useRef<ReactCodeMirrorRef>(null);

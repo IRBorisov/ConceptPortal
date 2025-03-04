@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, use, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 
 export interface NavigationProps {
@@ -23,9 +23,9 @@ interface INavigationContext {
   setIsBlocked: (value: boolean) => void;
 }
 
-const NavigationContext = createContext<INavigationContext | null>(null);
+export const NavigationContext = createContext<INavigationContext | null>(null);
 export const useConceptNavigation = () => {
-  const context = useContext(NavigationContext);
+  const context = use(NavigationContext);
   if (!context) {
     throw new Error('useConceptNavigation has to be used within <NavigationState>');
   }

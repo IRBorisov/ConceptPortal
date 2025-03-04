@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, use, useEffect, useState } from 'react';
 
 import { urls, useConceptNavigation } from '@/app';
 import { useAuthSuspense } from '@/features/auth';
@@ -44,9 +44,9 @@ export interface IOssEditContext {
   setSelected: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
-const OssEditContext = createContext<IOssEditContext | null>(null);
+export const OssEditContext = createContext<IOssEditContext | null>(null);
 export const useOssEdit = () => {
-  const context = useContext(OssEditContext);
+  const context = use(OssEditContext);
   if (context === null) {
     throw new Error('useOssEdit has to be used within <OssEditState>');
   }
