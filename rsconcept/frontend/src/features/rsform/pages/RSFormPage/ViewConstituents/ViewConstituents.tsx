@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import clsx from 'clsx';
 
 import { useRoleStore, UserRole } from '@/features/users';
@@ -8,9 +7,6 @@ import { useRoleStore, UserRole } from '@/features/users';
 import { useWindowSize } from '@/hooks/useWindowSize';
 import { useFitHeight } from '@/stores/appLayout';
 import { PARAMETER } from '@/utils/constants';
-
-import { type IConstituenta } from '../../../models/rsform';
-import { useRSEdit } from '../RSEditContext';
 
 import { ConstituentsSearch } from './ConstituentsSearch';
 import { TableSideConstituents } from './TableSideConstituents';
@@ -27,9 +23,6 @@ export function ViewConstituents({ isBottom, isMounted }: ViewConstituentsProps)
   const windowSize = useWindowSize();
   const role = useRoleStore(state => state.role);
   const listHeight = useFitHeight(!isBottom ? '8.2rem' : role !== UserRole.READER ? '42rem' : '35rem', '10rem');
-  const { schema, activeCst, navigateCst } = useRSEdit();
-
-  const [filteredData, setFilteredData] = useState<IConstituenta[]>(schema.items);
 
   return (
     <aside
@@ -49,19 +42,8 @@ export function ViewConstituents({ isBottom, isMounted }: ViewConstituentsProps)
         maxWidth: isMounted ? '100%' : '0'
       }}
     >
-      <ConstituentsSearch
-        dense={!!windowSize.width && windowSize.width < COLUMN_DENSE_SEARCH_THRESHOLD}
-        schema={schema}
-        activeID={activeCst?.id}
-        onChange={setFilteredData}
-      />
-      <TableSideConstituents
-        maxHeight={listHeight}
-        items={filteredData}
-        activeCst={activeCst}
-        onOpenEdit={navigateCst}
-        autoScroll={!isBottom}
-      />
+      <ConstituentsSearch dense={!!windowSize.width && windowSize.width < COLUMN_DENSE_SEARCH_THRESHOLD} />
+      <TableSideConstituents maxHeight={listHeight} autoScroll={!isBottom} />
     </aside>
   );
 }

@@ -9,27 +9,32 @@ import { PARAMETER, prefixes } from '@/utils/constants';
 
 import { BadgeConstituenta } from '../../../components/BadgeConstituenta';
 import { describeConstituenta } from '../../../labels';
-import { type IConstituenta } from '../../../models/rsform';
+import { type IConstituenta, type IRSForm } from '../../../models/rsform';
+import { matchConstituenta } from '../../../models/rsformAPI';
+import { DependencyMode, useCstSearchStore } from '../../../stores/cstSearch';
+import { useRSEdit } from '../RSEditContext';
 
 const DESCRIPTION_MAX_SYMBOLS = 280;
 
 interface TableSideConstituentsProps {
-  items: IConstituenta[];
-  activeCst: IConstituenta | null;
-  onOpenEdit: (cstID: number) => void;
   autoScroll?: boolean;
   maxHeight: string;
 }
 
 const columnHelper = createColumnHelper<IConstituenta>();
 
-export function TableSideConstituents({
-  items,
-  activeCst,
-  autoScroll = true,
-  onOpenEdit,
-  maxHeight
-}: TableSideConstituentsProps) {
+export function TableSideConstituents({ autoScroll = true, maxHeight }: TableSideConstituentsProps) {
+  const { schema, activeCst, navigateCst } = useRSEdit();
+
+  const query = useCstSearchStore(state => state.query);
+  const filterMatch = useCstSearchStore(state => state.match);
+  const filterSource = useCstSearchStore(state => state.source);
+  const includeInherited = useCstSearchStore(state => state.includeInherited);
+
+  const graphFiltered = activeCst ? applyGraphQuery(schema, activeCst.id, filterSource) : schema.items;
+  const queryFiltered = query ? graphFiltered.filter(cst => matchConstituenta(cst, query, filterMatch)) : graphFiltered;
+  const items = !includeInherited ? queryFiltered.filter(cst => !cst.is_inherited) : queryFiltered;
+
   useEffect(() => {
     if (!activeCst) {
       return;
@@ -116,7 +121,38 @@ export function TableSideConstituents({
           <p>Измените параметры фильтра</p>
         </NoData>
       }
-      onRowClicked={cst => onOpenEdit(cst.id)}
+      onRowClicked={cst => navigateCst(cst.id)}
     />
   );
+}
+
+// ====== Internals =========
+/**
+ * Filter list of  {@link ILibraryItem} to a given graph query.
+ */
+function applyGraphQuery(target: IRSForm, pivot: number, mode: DependencyMode): IConstituenta[] {
+  if (mode === DependencyMode.ALL) {
+    return target.items;
+  }
+  const ids = (() => {
+    switch (mode) {
+      case DependencyMode.OUTPUTS: {
+        return target.graph.nodes.get(pivot)?.outputs;
+      }
+      case DependencyMode.INPUTS: {
+        return target.graph.nodes.get(pivot)?.inputs;
+      }
+      case DependencyMode.EXPAND_OUTPUTS: {
+        return target.graph.expandAllOutputs([pivot]);
+      }
+      case DependencyMode.EXPAND_INPUTS: {
+        return target.graph.expandAllInputs([pivot]);
+      }
+    }
+  })();
+  if (ids) {
+    return target.items.filter(cst => ids.find(id => id === cst.id));
+  } else {
+    return target.items;
+  }
 }
