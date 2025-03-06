@@ -44,7 +44,7 @@ export function MenuRole({ isOwned, isEditor }: MenuRoleProps) {
   }
 
   return (
-    <div ref={accessMenu.ref}>
+    <div ref={accessMenu.ref} className='relative'>
       <Button
         dense
         noBorder
@@ -56,7 +56,7 @@ export function MenuRole({ isOwned, isEditor }: MenuRoleProps) {
         icon={<IconRole role={role} size='1.25rem' />}
         onClick={accessMenu.toggle}
       />
-      <Dropdown isOpen={accessMenu.isOpen}>
+      <Dropdown isOpen={accessMenu.isOpen} margin='mt-3'>
         <DropdownButton
           text={labelUserRole(UserRole.READER)}
           title={describeUserRole(UserRole.READER)}

@@ -1,5 +1,7 @@
 'use client';
 
+import clsx from 'clsx';
+
 import { SelectorButton } from '@/components/Control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/Dropdown';
 import { type Styling } from '@/components/props';
@@ -16,7 +18,7 @@ interface SelectGraphFilterProps extends Styling {
   dense?: boolean;
 }
 
-export function SelectGraphFilter({ value, dense, onChange, ...restProps }: SelectGraphFilterProps) {
+export function SelectGraphFilter({ value, dense, className, onChange, ...restProps }: SelectGraphFilterProps) {
   const menu = useDropdown();
   const size = useWindowSize();
 
@@ -26,7 +28,7 @@ export function SelectGraphFilter({ value, dense, onChange, ...restProps }: Sele
   }
 
   return (
-    <div ref={menu.ref} {...restProps}>
+    <div ref={menu.ref} className={clsx('relative', className)} {...restProps}>
       <SelectorButton
         transparent
         tabIndex={-1}
@@ -37,7 +39,7 @@ export function SelectGraphFilter({ value, dense, onChange, ...restProps }: Sele
         text={!dense && !size.isSmall ? labelCstSource(value) : undefined}
         onClick={menu.toggle}
       />
-      <Dropdown stretchLeft isOpen={menu.isOpen}>
+      <Dropdown stretchLeft isOpen={menu.isOpen} margin='mt-3'>
         {Object.values(DependencyMode)
           .filter(value => !isNaN(Number(value)))
           .map((value, index) => {

@@ -113,14 +113,14 @@ export function PickSchema({
           query={filterText}
           onChangeQuery={newValue => setFilterText(newValue)}
         />
-        <div ref={locationMenu.ref}>
+        <div className='relative' ref={locationMenu.ref}>
           <MiniButton
             icon={<IconFolderTree size='1.25rem' className={!!filterLocation ? 'icon-green' : 'icon-primary'} />}
             title='Фильтр по расположению'
             className='mt-1'
             onClick={() => locationMenu.toggle()}
           />
-          <Dropdown isOpen={locationMenu.isOpen} stretchLeft className='w-[20rem] h-[12.5rem] z-modal-tooltip mt-0'>
+          <Dropdown isOpen={locationMenu.isOpen} stretchLeft className='w-[20rem] h-[12.5rem] z-modal-tooltip'>
             <SelectLocation
               value={filterLocation}
               prefix={prefixes.folders_list}

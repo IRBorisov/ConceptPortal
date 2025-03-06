@@ -1,5 +1,7 @@
 'use client';
 
+import clsx from 'clsx';
+
 import { MiniButton } from '@/components/Control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/Dropdown';
 import { type Styling } from '@/components/props';
@@ -18,7 +20,14 @@ interface SelectAccessPolicyProps extends Styling {
   stretchLeft?: boolean;
 }
 
-export function SelectAccessPolicy({ value, disabled, stretchLeft, onChange, ...restProps }: SelectAccessPolicyProps) {
+export function SelectAccessPolicy({
+  value,
+  disabled,
+  className,
+  stretchLeft,
+  onChange,
+  ...restProps
+}: SelectAccessPolicyProps) {
   const menu = useDropdown();
 
   function handleChange(newValue: AccessPolicy) {
@@ -29,7 +38,7 @@ export function SelectAccessPolicy({ value, disabled, stretchLeft, onChange, ...
   }
 
   return (
-    <div ref={menu.ref} {...restProps}>
+    <div ref={menu.ref} className={clsx('relative', className)} {...restProps}>
       <MiniButton
         title={`Доступ: ${labelAccessPolicy(value)}`}
         hideTitle={menu.isOpen}
@@ -38,7 +47,7 @@ export function SelectAccessPolicy({ value, disabled, stretchLeft, onChange, ...
         onClick={menu.toggle}
         disabled={disabled}
       />
-      <Dropdown isOpen={menu.isOpen} stretchLeft={stretchLeft}>
+      <Dropdown isOpen={menu.isOpen} stretchLeft={stretchLeft} margin='mt-1'>
         {Object.values(AccessPolicy).map((item, index) => (
           <DropdownButton
             key={`${prefixes.policy_list}${index}`}

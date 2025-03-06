@@ -118,7 +118,7 @@ export function MenuEditSchema() {
   }
 
   return (
-    <div ref={editMenu.ref}>
+    <div ref={editMenu.ref} className='relative'>
       <Button
         dense
         noBorder
@@ -130,7 +130,7 @@ export function MenuEditSchema() {
         icon={<IconEdit2 size='1.25rem' className={isContentEditable ? 'icon-green' : 'icon-red'} />}
         onClick={editMenu.toggle}
       />
-      <Dropdown isOpen={editMenu.isOpen}>
+      <Dropdown isOpen={editMenu.isOpen} margin='mt-3'>
         <DropdownButton
           text='Шаблоны'
           title='Создать конституенту из шаблона'

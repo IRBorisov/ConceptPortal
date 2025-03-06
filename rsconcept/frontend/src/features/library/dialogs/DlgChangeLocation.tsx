@@ -77,7 +77,7 @@ export function DlgChangeLocation() {
         control={control}
         name='location'
         render={({ field }) => (
-          <SelectLocationContext className='max-h-[9.2rem]' value={field.value} onChange={field.onChange} />
+          <SelectLocationContext dropdownHeight='max-h-[9.2rem]' value={field.value} onChange={field.onChange} />
         )}
       />
       <Controller

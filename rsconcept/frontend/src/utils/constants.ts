@@ -102,7 +102,8 @@ export const globalIDs = {
   email_tooltip: 'email_tooltip',
   library_item_editor: 'library_item_editor',
   constituenta_editor: 'constituenta_editor',
-  graph_schemas: 'graph_schemas_tooltip'
+  graph_schemas: 'graph_schemas_tooltip',
+  user_dropdown: 'user_dropdown'
 };
 
 /**

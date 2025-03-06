@@ -33,7 +33,7 @@ export function SelectLocationHead({
   }
 
   return (
-    <div ref={menu.ref} className={clsx('h-full text-right', className)} {...restProps}>
+    <div ref={menu.ref} className={clsx('h-full text-right relative', className)} {...restProps}>
       <SelectorButton
         transparent
         tabIndex={-1}
@@ -45,7 +45,7 @@ export function SelectLocationHead({
         onClick={menu.toggle}
       />
 
-      <Dropdown isOpen={menu.isOpen} className='z-modal-tooltip'>
+      <Dropdown isOpen={menu.isOpen} className='z-modal-tooltip' margin='mt-2'>
         {Object.values(LocationHead)
           .filter(head => !excluded.includes(head))
           .map((head, index) => {

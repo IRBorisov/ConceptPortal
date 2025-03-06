@@ -1,5 +1,7 @@
 'use client';
 
+import clsx from 'clsx';
+
 import { SelectorButton } from '@/components/Control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/Dropdown';
 import { type Styling } from '@/components/props';
@@ -16,7 +18,7 @@ interface SelectMatchModeProps extends Styling {
   dense?: boolean;
 }
 
-export function SelectMatchMode({ value, dense, onChange, ...restProps }: SelectMatchModeProps) {
+export function SelectMatchMode({ value, dense, className, onChange, ...restProps }: SelectMatchModeProps) {
   const menu = useDropdown();
   const size = useWindowSize();
 
@@ -26,7 +28,7 @@ export function SelectMatchMode({ value, dense, onChange, ...restProps }: Select
   }
 
   return (
-    <div ref={menu.ref} {...restProps}>
+    <div ref={menu.ref} className={clsx('relative', className)} {...restProps}>
       <SelectorButton
         transparent
         titleHtml='Настройка фильтрации <br/>по проверяемым атрибутам'
@@ -36,7 +38,7 @@ export function SelectMatchMode({ value, dense, onChange, ...restProps }: Select
         text={dense || size.isSmall ? undefined : labelCstMatchMode(value)}
         onClick={menu.toggle}
       />
-      <Dropdown stretchLeft isOpen={menu.isOpen}>
+      <Dropdown stretchLeft isOpen={menu.isOpen} margin='mt-3'>
         {Object.values(CstMatchMode)
           .filter(value => !isNaN(Number(value)))
           .map((value, index) => {

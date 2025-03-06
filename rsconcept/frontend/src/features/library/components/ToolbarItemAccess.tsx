@@ -70,8 +70,9 @@ export function ToolbarItemAccess({
           onClick={toggleReadOnly}
           disabled={role === UserRole.READER || isProcessing}
         />
-
-        <BadgeHelp topic={HelpTopic.ACCESS} className={PARAMETER.TOOLTIP_WIDTH} offset={4} />
+        <div className='pt-[0.125rem]'>
+          <BadgeHelp topic={HelpTopic.ACCESS} className={PARAMETER.TOOLTIP_WIDTH} offset={4} />
+        </div>
       </div>
     </Overlay>
   );

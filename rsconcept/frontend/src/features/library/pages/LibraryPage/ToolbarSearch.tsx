@@ -103,14 +103,14 @@ export function ToolbarSearch({ total, filtered }: ToolbarSearchProps) {
           onClick={toggleVisible}
         />
 
-        <div ref={userMenu.ref} className='flex'>
+        <div ref={userMenu.ref} className='relative flex'>
           <MiniButton
             title='Поиск пользователя'
             hideTitle={userMenu.isOpen}
             icon={<IconUserSearch size='1.25rem' className={userActive ? 'icon-green' : 'icon-primary'} />}
             onClick={userMenu.toggle}
           />
-          <Dropdown isOpen={userMenu.isOpen}>
+          <Dropdown isOpen={userMenu.isOpen} margin='mt-[0.2rem]'>
             <DropdownButton
               text='Я - Владелец'
               icon={<IconOwner size='1.25rem' className={tripleToggleColor(isOwned)} />}
@@ -149,7 +149,7 @@ export function ToolbarSearch({ total, filtered }: ToolbarSearchProps) {
           onChangeQuery={setQuery}
         />
         {!folderMode ? (
-          <div ref={headMenu.ref} className='flex items-center h-full py-1 select-none'>
+          <div ref={headMenu.ref} className='relative flex items-center h-full py-1 select-none'>
             <SelectorButton
               transparent
               className='h-full rounded-lg'

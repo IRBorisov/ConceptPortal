@@ -46,7 +46,7 @@ export function MenuMain() {
   }
 
   return (
-    <div ref={schemaMenu.ref}>
+    <div ref={schemaMenu.ref} className='relative'>
       <Button
         dense
         noBorder
@@ -58,7 +58,7 @@ export function MenuMain() {
         className='h-full pl-2'
         onClick={schemaMenu.toggle}
       />
-      <Dropdown isOpen={schemaMenu.isOpen}>
+      <Dropdown isOpen={schemaMenu.isOpen} margin='mt-3'>
         <DropdownButton
           text='Поделиться'
           icon={<IconShare size='1rem' className='icon-primary' />}

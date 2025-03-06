@@ -1,5 +1,7 @@
 'use client';
 
+import clsx from 'clsx';
+
 import { SelectorButton } from '@/components/Control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/Dropdown';
 import { type Styling } from '@/components/props';
@@ -17,7 +19,14 @@ interface SelectItemTypeProps extends Styling {
   stretchLeft?: boolean;
 }
 
-export function SelectItemType({ value, disabled, stretchLeft, onChange, ...restProps }: SelectItemTypeProps) {
+export function SelectItemType({
+  value,
+  disabled,
+  className,
+  stretchLeft,
+  onChange,
+  ...restProps
+}: SelectItemTypeProps) {
   const menu = useDropdown();
 
   function handleChange(newValue: LibraryItemType) {
@@ -28,7 +37,7 @@ export function SelectItemType({ value, disabled, stretchLeft, onChange, ...rest
   }
 
   return (
-    <div ref={menu.ref} {...restProps}>
+    <div ref={menu.ref} className={clsx('relative', className)} {...restProps}>
       <SelectorButton
         transparent
         title={describeLibraryItemType(value)}
@@ -39,7 +48,7 @@ export function SelectItemType({ value, disabled, stretchLeft, onChange, ...rest
         onClick={menu.toggle}
         disabled={disabled}
       />
-      <Dropdown isOpen={menu.isOpen} stretchLeft={stretchLeft}>
+      <Dropdown isOpen={menu.isOpen} stretchLeft={stretchLeft} margin='mt-1'>
         {Object.values(LibraryItemType).map((item, index) => (
           <DropdownButton
             key={`${prefixes.policy_list}${index}`}

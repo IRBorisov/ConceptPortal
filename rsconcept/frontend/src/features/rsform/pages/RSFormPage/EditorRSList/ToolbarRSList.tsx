@@ -69,7 +69,7 @@ export function ToolbarRSList() {
         disabled={isProcessing || selected.length === 0 || selected.length === schema.items.length}
         onClick={moveDown}
       />
-      <div ref={insertMenu.ref}>
+      <div ref={insertMenu.ref} className='relative'>
         <MiniButton
           title='Добавить пустую конституенту'
           hideTitle={insertMenu.isOpen}
@@ -77,7 +77,7 @@ export function ToolbarRSList() {
           disabled={isProcessing}
           onClick={insertMenu.toggle}
         />
-        <Dropdown isOpen={insertMenu.isOpen} className='-translate-x-1/2 md:translate-x-0'>
+        <Dropdown isOpen={insertMenu.isOpen} className='-translate-x-1/2'>
           {Object.values(CstType).map(typeStr => (
             <DropdownButton
               key={`${prefixes.csttype_list}${typeStr}`}

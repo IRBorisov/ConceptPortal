@@ -31,7 +31,7 @@ export function MenuEditOss() {
   }
 
   return (
-    <div ref={editMenu.ref}>
+    <div ref={editMenu.ref} className='relative'>
       <Button
         dense
         noBorder
@@ -43,7 +43,7 @@ export function MenuEditOss() {
         icon={<IconEdit2 size='1.25rem' className={isMutable ? 'icon-green' : 'icon-red'} />}
         onClick={editMenu.toggle}
       />
-      <Dropdown isOpen={editMenu.isOpen}>
+      <Dropdown isOpen={editMenu.isOpen} margin='mt-3'>
         <DropdownButton
           text='Конституенты'
           titleHtml='Перенос конституент</br>между схемами'

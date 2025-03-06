@@ -2,6 +2,7 @@ import { useAuthSuspense } from '@/features/auth';
 
 import { IconLogin, IconUser2 } from '@/components/Icons';
 import { usePreferencesStore } from '@/stores/preferences';
+import { globalIDs } from '@/utils/constants';
 
 import { NavigationButton } from './NavigationButton';
 
@@ -28,8 +29,10 @@ export function UserButton({ onLogin, onClickUser, isOpen }: UserButtonProps) {
       <NavigationButton
         className='cc-fade-in'
         title='Пользователь'
+        hideTitle={isOpen}
         aria-haspopup='true'
         aria-expanded={isOpen}
+        aria-controls={globalIDs.user_dropdown}
         icon={<IconUser2 size='1.5rem' className={adminMode && user.is_staff ? 'icon-primary' : ''} />}
         onClick={onClickUser}
       />

@@ -58,11 +58,10 @@ export function Navigation() {
         >
           <Logo />
         </div>
-        <div className='flex gap-1 py-[0.3rem]'>
+        <div className='flex gap-2 items-center'>
           <NavigationButton text='Новая схема' icon={<IconNewItem2 size='1.5rem' />} onClick={navigateCreateNew} />
           <NavigationButton text='Библиотека' icon={<IconLibrary2 size='1.5rem' />} onClick={navigateLibrary} />
           <NavigationButton text='Справка' icon={<IconManuals size='1.5rem' />} onClick={navigateHelp} />
-
           <UserMenu />
         </div>
       </div>

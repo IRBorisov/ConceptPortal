@@ -17,6 +17,7 @@ import {
   IconUser
 } from '@/components/Icons';
 import { usePreferencesStore } from '@/stores/preferences';
+import { globalIDs } from '@/utils/constants';
 
 import { urls } from '../urls';
 
@@ -75,7 +76,7 @@ export function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
   }
 
   return (
-    <Dropdown className='mt-[1.5rem] min-w-[18ch] max-w-[12rem]' stretchLeft isOpen={isOpen}>
+    <Dropdown id={globalIDs.user_dropdown} className='min-w-[18ch] max-w-[12rem]' stretchLeft isOpen={isOpen}>
       <DropdownButton
         text={user.username}
         title='Профиль пользователя'

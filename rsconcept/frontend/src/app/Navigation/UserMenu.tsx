@@ -13,7 +13,7 @@ export function UserMenu() {
   const router = useConceptNavigation();
   const menu = useDropdown();
   return (
-    <div ref={menu.ref} className='h-full w-[4rem] flex items-center justify-center'>
+    <div ref={menu.ref} className='flex items-center justify-start relative h-full pr-2'>
       <Suspense fallback={<Loader circular scale={1.5} />}>
         <UserButton
           onLogin={() => router.push({ path: urls.login, force: true })}

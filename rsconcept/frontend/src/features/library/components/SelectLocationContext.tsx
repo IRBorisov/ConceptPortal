@@ -14,7 +14,7 @@ interface SelectLocationContextProps extends Styling {
   value: string;
   onChange: (newValue: string) => void;
   title?: string;
-  stretchTop?: boolean;
+  dropdownHeight?: string;
 }
 
 export function SelectLocationContext({
@@ -22,7 +22,8 @@ export function SelectLocationContext({
   title = 'Проводник...',
   onChange,
   className,
-  style
+  dropdownHeight,
+  ...restProps
 }: SelectLocationContextProps) {
   const menu = useDropdown();
 
@@ -34,7 +35,11 @@ export function SelectLocationContext({
   }
 
   return (
-    <div ref={menu.ref} className='h-full text-right self-start mt-[-0.25rem] ml-[-1.5rem]'>
+    <div
+      ref={menu.ref}
+      className={clsx('relative h-full mt-[-0.25rem] ml-[-1.5rem]', 'text-right self-start', className)}
+      {...restProps}
+    >
       <MiniButton
         title={title}
         hideTitle={menu.isOpen}
@@ -43,8 +48,8 @@ export function SelectLocationContext({
       />
       <Dropdown
         isOpen={menu.isOpen}
-        className={clsx('w-[20rem] h-[12.5rem] z-modal-tooltip mt-[-0.25rem]', className)}
-        style={style}
+        className={clsx('w-[20rem] h-[12.5rem] z-modal-tooltip', dropdownHeight)}
+        margin='mt-[-0.25rem]'
       >
         <SelectLocation
           value={value}

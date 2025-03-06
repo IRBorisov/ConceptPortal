@@ -172,6 +172,7 @@ export function NodeContextMenu({ isOpen, operation, cursorX, cursorY, onHide }:
         isOpen={isOpen}
         stretchLeft={cursorX >= window.innerWidth - MENU_WIDTH}
         stretchTop={cursorY >= window.innerHeight - MENU_HEIGHT}
+        margin={cursorY >= window.innerHeight - MENU_HEIGHT ? 'mb-3' : 'mt-3'}
       >
         <DropdownButton
           text='Редактировать'
