@@ -54,6 +54,7 @@ export function Dropdown({
           clipPath: isOpen ? 'inset(0% 0% 0% 0%)' : 'inset(10% 0% 90% 0%)',
           ...style
         }}
+        aria-hidden={!isOpen}
         {...restProps}
       >
         {children}

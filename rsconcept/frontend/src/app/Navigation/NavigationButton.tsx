@@ -1,32 +1,23 @@
 import clsx from 'clsx';
 
-import { type Styling, type Titled } from '@/components/props';
+import { type Styling } from '@/components/props';
 import { globalIDs } from '@/utils/constants';
 
-interface NavigationButtonProps extends Titled, Styling {
+interface NavigationButtonProps extends Styling {
   text?: string;
+  title?: string;
   icon: React.ReactNode;
   onClick?: (event: React.MouseEvent<Element>) => void;
 }
 
-export function NavigationButton({
-  icon,
-  title,
-  className,
-  style,
-  titleHtml,
-  hideTitle,
-  onClick,
-  text
-}: NavigationButtonProps) {
+export function NavigationButton({ icon, title, className, style, onClick, text }: NavigationButtonProps) {
   return (
     <button
       type='button'
       tabIndex={-1}
-      data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}
-      data-tooltip-html={titleHtml}
+      aria-label={title}
+      data-tooltip-id={!!title ? globalIDs.tooltip : undefined}
       data-tooltip-content={title}
-      data-tooltip-hidden={hideTitle}
       onClick={onClick}
       className={clsx(
         'mr-1 h-full',

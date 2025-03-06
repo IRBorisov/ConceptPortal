@@ -8,9 +8,10 @@ import { NavigationButton } from './NavigationButton';
 interface UserButtonProps {
   onLogin: () => void;
   onClickUser: () => void;
+  isOpen: boolean;
 }
 
-export function UserButton({ onLogin, onClickUser }: UserButtonProps) {
+export function UserButton({ onLogin, onClickUser, isOpen }: UserButtonProps) {
   const { user, isAnonymous } = useAuthSuspense();
   const adminMode = usePreferencesStore(state => state.adminMode);
   if (isAnonymous) {
@@ -26,6 +27,9 @@ export function UserButton({ onLogin, onClickUser }: UserButtonProps) {
     return (
       <NavigationButton
         className='cc-fade-in'
+        title='Пользователь'
+        aria-haspopup='true'
+        aria-expanded={isOpen}
         icon={<IconUser2 size='1.5rem' className={adminMode && user.is_staff ? 'icon-primary' : ''} />}
         onClick={onClickUser}
       />
