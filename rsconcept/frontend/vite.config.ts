@@ -57,7 +57,10 @@ export default ({ mode }: { mode: string }) => {
       muteWarningsPlugin(warningsToIgnore)
     ],
     server: {
-      port: Number(process.env.VITE_PORTAL_FRONT_PORT)
+      port: Number(process.env.VITE_PORTAL_FRONT_PORT),
+      watch: {
+        ignored: ['**/tests/**']
+      }
     },
     publicDir: 'public',
     build: {

@@ -8,7 +8,7 @@ function RunTests() {
 
 function TestFrontend() {
   Set-Location $frontend
-  & npm run teste2e
+  & npm run test:e2e
 }
 
 RunTests

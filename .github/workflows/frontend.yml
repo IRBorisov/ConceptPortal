@@ -35,14 +35,14 @@ jobs:
       - name: Build
         run: |
           npm install -g typescript vite jest playwright
-          npx playwright install --with-deps
           npm ci
+          npx playwright install --with-deps
           npm run build --if-present
       - name: Run CI
         run: |
           npm run lint
           npm test
-          npm run teste2e
+          npm run test:e2e
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
