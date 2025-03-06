@@ -6,13 +6,13 @@ import {
   type IUserProfile,
   type IUserSignupDTO
 } from '../../src/features/users/backend/types';
-import { BACKEND_URL } from '../constants';
+import { BACKEND_URL } from './constants';
 
 const dataActiveUsers: IUserInfo[] = [
   {
     id: 1,
     first_name: 'Admin',
-    last_name: 'User'
+    last_name: 'Admin'
   },
   {
     id: 2,
@@ -23,10 +23,10 @@ const dataActiveUsers: IUserInfo[] = [
 
 let dataUserProfile: IUserProfile = {
   id: 1,
-  username: 'user',
-  email: 'user@example.com',
-  first_name: 'User',
-  last_name: 'User'
+  username: 'admin',
+  email: 'admin@example.com',
+  first_name: 'Admin',
+  last_name: 'Admin'
 };
 
 export async function setupUsers(page: Page) {

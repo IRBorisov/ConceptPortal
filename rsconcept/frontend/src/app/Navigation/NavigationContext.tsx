@@ -36,13 +36,14 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
   const router = useNavigate();
 
   const [isBlocked, setIsBlocked] = useState(false);
+  const [internalNavigation, setInternalNavigation] = useState(false);
 
   function validate() {
     return !isBlocked || confirm('Изменения не сохранены. Вы уверены что хотите совершить переход?');
   }
 
   function canBack() {
-    return !!window.history && window.history?.length !== 0;
+    return internalNavigation && !!window.history && window.history?.length !== 0;
   }
 
   function push(props: NavigationProps) {
@@ -50,6 +51,7 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
       window.open(`${props.path}`, '_blank');
     } else if (props.force || validate()) {
       setIsBlocked(false);
+      setInternalNavigation(true);
       Promise.resolve(router(props.path, { viewTransition: true })).catch(console.error);
     }
   }
@@ -59,6 +61,7 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
       window.open(`${props.path}`, '_blank');
     } else if (props.force || validate()) {
       setIsBlocked(false);
+      setInternalNavigation(true);
       return router(props.path, { viewTransition: true });
     }
   }

@@ -47,8 +47,27 @@
       "django": true
     },
     {
+      // Run Tests for frontend for current file in Debug mode
+      "name": "FE-DebugTestFile",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/rsconcept/frontend",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "playwright",
+        "test",
+        "${fileBasename}",
+        "--headed",
+        "--project=Desktop Chrome"
+      ],
+      "env": {
+        "PWDEBUG": "1"
+      },
+      "console": "integratedTerminal"
+    },
+    {
       // Run Tests for frontned in Debug mode
-      "name": "FE-DebugTestAll",
+      "name": "Jest DebugAll",
       "type": "node",
       "request": "launch",
       "runtimeExecutable": "${workspaceFolder}/rsconcept/frontend/node_modules/.bin/jest",

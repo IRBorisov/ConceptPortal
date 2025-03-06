@@ -45,6 +45,9 @@ export default [
     },
     settings: { react: { version: 'detect' } },
     rules: {
+      'no-console': 'off',
+      'require-jsdoc': 'off',
+
       'react-compiler/react-compiler': 'error',
       'react-refresh/only-export-components': ['off', { allowConstantExport: true }],
 
@@ -112,16 +115,12 @@ export default [
     rules: {
       ...playwright.configs['flat/recommended'].rules,
 
+      'no-console': 'off',
+      'require-jsdoc': 'off',
+
       'simple-import-sort/exports': 'error',
       'import/no-duplicates': 'warn',
       'simple-import-sort/imports': 'warn'
-    }
-  },
-  {
-    files: ['**/*.ts', '**/*.tsx'],
-    rules: {
-      'no-console': 'off',
-      'require-jsdoc': 'off'
     }
   }
 ];

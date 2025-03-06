@@ -15,7 +15,7 @@
     "paths": {
       "@/*": ["src/*"]
     },
-    "types": ["playwright"]
+    "types": ["playwright", "node"]
   },
   "include": ["playwright.config.ts", "tests/**/*.ts"]
 }
