@@ -4,7 +4,6 @@ import clsx from 'clsx';
 
 import { urls, useConceptNavigation } from '@/app';
 
-import { FlexColumn } from '@/components/Container';
 import { TextURL } from '@/components/Control';
 import { DataTable, type IConditionalStyle, type VisibilityState } from '@/components/DataTable';
 import { useWindowSize } from '@/hooks/useWindowSize';
@@ -64,13 +63,13 @@ export function TableLibraryItems({ items }: TableLibraryItemsProps) {
       className={clsx('text-xs sm:text-sm cc-scroll-y h-fit border-b', { 'border-l': folderMode })}
       style={{ maxHeight: tableHeight }}
       noDataComponent={
-        <FlexColumn className='dense p-3 items-center min-h-[6rem]'>
+        <div className='cc-column dense p-3 items-center min-h-[6rem]'>
           <p>Список схем пуст</p>
           <p className='flex gap-6'>
             <TextURL text='Создать схему' href='/library/create' />
             <TextURL text='Очистить фильтр' onClick={resetFilter} />
           </p>
-        </FlexColumn>
+        </div>
       }
       columnVisibility={columnVisibility}
       onRowClicked={handleOpenItem}

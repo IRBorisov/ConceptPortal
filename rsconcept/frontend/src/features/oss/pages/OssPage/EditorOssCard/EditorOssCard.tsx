@@ -2,10 +2,8 @@
 
 import clsx from 'clsx';
 
-import { EditorLibraryItem } from '@/features/library/components';
-import { ToolbarRSFormCard } from '@/features/rsform/components';
+import { EditorLibraryItem, ToolbarItemCard } from '@/features/library/components';
 
-import { FlexColumn } from '@/components/Container';
 import { useModificationStore } from '@/stores/modification';
 import { globalIDs } from '@/utils/constants';
 
@@ -36,7 +34,7 @@ export function EditorOssCard() {
 
   return (
     <>
-      <ToolbarRSFormCard onSubmit={initiateSubmit} schema={schema} isMutable={isMutable} deleteSchema={deleteSchema} />
+      <ToolbarItemCard onSubmit={initiateSubmit} schema={schema} isMutable={isMutable} deleteSchema={deleteSchema} />
       <div
         onKeyDown={handleInput}
         className={clsx(
@@ -46,10 +44,10 @@ export function EditorOssCard() {
           'flex flex-row flex-wrap px-6 justify-center'
         )}
       >
-        <FlexColumn className='px-3'>
+        <div className='cc-column px-3'>
           <FormOSS />
           <EditorLibraryItem schema={schema} isAttachedToOSS={false} />
-        </FlexColumn>
+        </div>
 
         <OssStats stats={schema.stats} />
       </div>

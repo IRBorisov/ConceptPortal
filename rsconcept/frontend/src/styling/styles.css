@@ -144,6 +144,8 @@
 }
 
 @utility cc-tab-tools {
+  z-index: var(--z-index-pop);
+  position: absolute;
   top: 1.7rem;
   right: 50%;
   padding-top: 0.4rem;

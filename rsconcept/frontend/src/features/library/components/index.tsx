@@ -5,3 +5,4 @@ export { PickSchema } from './PickSchema';
 export { SelectLibraryItem } from './SelectLibraryItem';
 export { SelectVersion } from './SelectVersion';
 export { ToolbarItemAccess } from './ToolbarItemAccess';
+export { ToolbarItemCard } from './ToolbarItemCard';

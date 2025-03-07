@@ -1,5 +1,4 @@
 import { useReactFlow } from 'reactflow';
-import clsx from 'clsx';
 
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components';
@@ -147,11 +146,7 @@ export function ToolbarTermGraph() {
         title='Граф ступеней'
         onClick={handleShowTypeGraph}
       />
-      <BadgeHelp
-        topic={HelpTopic.UI_GRAPH_TERM}
-        className={clsx(PARAMETER.TOOLTIP_WIDTH, 'sm:max-w-[40rem]')}
-        offset={4}
-      />
+      <BadgeHelp topic={HelpTopic.UI_GRAPH_TERM} contentClass='sm:max-w-[40rem]' offset={4} />
     </div>
   );
 }

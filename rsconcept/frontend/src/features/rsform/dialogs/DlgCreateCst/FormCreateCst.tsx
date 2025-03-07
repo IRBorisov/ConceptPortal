@@ -2,13 +2,11 @@
 
 import { useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
-import clsx from 'clsx';
 
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components';
 
 import { TextArea, TextInput } from '@/components/Input';
-import { PARAMETER } from '@/utils/constants';
 
 import { CstType, type ICstCreateDTO } from '../../backend/types';
 import { RSInput } from '../../components/RSInput';
@@ -54,11 +52,7 @@ export function FormCreateCst({ schema }: FormCreateCstProps) {
           {...register('alias')}
           error={errors.alias}
         />
-        <BadgeHelp
-          topic={HelpTopic.CC_CONSTITUENTA}
-          offset={16}
-          className={clsx(PARAMETER.TOOLTIP_WIDTH, 'sm:max-w-[40rem]')}
-        />
+        <BadgeHelp topic={HelpTopic.CC_CONSTITUENTA} offset={16} contentClass='sm:max-w-[40rem]' />
       </div>
 
       <TextArea

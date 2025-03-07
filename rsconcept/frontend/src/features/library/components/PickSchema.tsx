@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useIntl } from 'react-intl';
 import clsx from 'clsx';
 
-import { FlexColumn } from '@/components/Container';
 import { MiniButton } from '@/components/Control';
 import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/DataTable';
 import { Dropdown, useDropdown } from '@/components/Dropdown';
@@ -148,10 +147,10 @@ export function PickSchema({
         columns={columns}
         conditionalRowStyles={conditionalRowStyles}
         noDataComponent={
-          <FlexColumn className='dense p-3 items-center min-h-[6rem]'>
+          <div className='cc-column dense p-3 items-center min-h-[6rem]'>
             <p>Список схем пуст</p>
             <p>Измените параметры фильтра</p>
-          </FlexColumn>
+          </div>
         }
         onRowClicked={rowData => onChange(rowData.id)}
       />

@@ -6,7 +6,6 @@ import { BadgeHelp } from '@/features/help/components';
 
 import { useEscapeKey } from '@/hooks/useEscapeKey';
 import { useDialogsStore } from '@/stores/dialogs';
-import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/utils';
 
 import { Button, MiniButton } from '../Control';
@@ -43,9 +42,7 @@ export function ModalView({
         )}
       >
         {helpTopic && !hideHelpWhen?.() ? (
-          <div className='float-left mt-2 ml-2'>
-            <BadgeHelp topic={helpTopic} className={clsx(PARAMETER.TOOLTIP_WIDTH, 'sm:max-w-[40rem]')} padding='p-0' />
-          </div>
+          <BadgeHelp topic={helpTopic} className='float-left mt-2 ml-2' padding='p-0' contentClass='sm:max-w-[40rem]' />
         ) : null}
 
         <MiniButton

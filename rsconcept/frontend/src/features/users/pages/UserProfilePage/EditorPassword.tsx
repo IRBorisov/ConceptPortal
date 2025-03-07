@@ -9,7 +9,6 @@ import { type IChangePasswordDTO, schemaChangePassword } from '@/features/auth';
 import { useChangePassword } from '@/features/auth/backend/useChangePassword';
 
 import { isAxiosError } from '@/backend/apiTransport';
-import { FlexColumn } from '@/components/Container';
 import { SubmitButton } from '@/components/Control';
 import { type ErrorData } from '@/components/InfoError';
 import { TextInput } from '@/components/Input';
@@ -41,7 +40,7 @@ export function EditorPassword() {
       onSubmit={event => void handleSubmit(onSubmit)(event)}
       onChange={resetErrors}
     >
-      <FlexColumn>
+      <div className='cc-column'>
         <TextInput
           id='old_password'
           type='password'
@@ -70,7 +69,7 @@ export function EditorPassword() {
           error={errors.new_password2}
         />
         {serverError ? <ServerError error={serverError} /> : null}
-      </FlexColumn>
+      </div>
       <SubmitButton text='Сменить пароль' className='self-center mt-2' loading={isPending} />
     </form>
   );

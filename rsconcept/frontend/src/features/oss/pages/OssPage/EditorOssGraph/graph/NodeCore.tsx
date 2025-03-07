@@ -1,6 +1,5 @@
 'use client';
 
-import { Overlay } from '@/components/Container';
 import { IconConsolidation, IconRSForm } from '@/components/Icons';
 import { Indicator } from '@/components/View';
 import { globalIDs } from '@/utils/constants';
@@ -29,7 +28,7 @@ export function NodeCore({ node }: NodeCoreProps) {
       data-tooltip-hidden={node.dragging}
       onMouseEnter={() => setHover(node.data.operation)}
     >
-      <Overlay position='top-0 right-0' className='flex flex-col gap-1 p-[2px]'>
+      <div className='absolute z-pop top-0 right-0 flex flex-col gap-1 p-[2px]'>
         <Indicator
           noPadding
           title={hasFile ? 'Связанная КС' : 'Нет связанной КС'}
@@ -42,7 +41,7 @@ export function NodeCore({ node }: NodeCoreProps) {
             icon={<IconConsolidation className='text-sec-600' size='12px' />}
           />
         ) : null}
-      </Overlay>
+      </div>
 
       {node.data.operation.operation_type === OperationType.INPUT ? (
         <div className='absolute top-[1px] right-1/2 translate-x-1/2 border-t w-[30px]' />

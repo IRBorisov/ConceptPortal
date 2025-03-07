@@ -12,8 +12,8 @@ import {
   useReactFlow,
   useStoreApi
 } from 'reactflow';
+import clsx from 'clsx';
 
-import { Overlay } from '@/components/Container';
 import { useMainHeight } from '@/stores/appLayout';
 import { PARAMETER } from '@/utils/constants';
 
@@ -163,8 +163,8 @@ export function TGFlow() {
   }
 
   return (
-    <>
-      <Overlay position='cc-tab-tools' className='flex flex-col items-center rounded-b-2xl cc-blur'>
+    <div className='cc-fade-in relative' tabIndex={-1} onKeyDown={handleKeyDown}>
+      <div className='cc-tab-tools flex flex-col items-center rounded-b-2xl cc-blur'>
         <ToolbarTermGraph />
         <ToolbarFocusedCst />
         {!focusCst ? (
@@ -179,37 +179,37 @@ export function TGFlow() {
             onChange={handleSetSelected}
           />
         ) : null}
-      </Overlay>
-
-      <div className='cc-fade-in' tabIndex={-1} onKeyDown={handleKeyDown}>
-        <Overlay
-          position='top-[4.4rem] sm:top-[4.1rem] left-[0.5rem] sm:left-[0.65rem]  w-[13.5rem]'
-          className='flex flex-col pointer-events-none'
-        >
-          <div className='px-2 pb-1 select-none whitespace-nowrap cc-blur rounded-xl'>
-            Выбор {selected.length} из {schema.stats?.count_all ?? 0}
-          </div>
-          <GraphSelectors />
-          <ViewHidden items={hidden} />
-        </Overlay>
-
-        <div className='relative outline-hidden w-[100dvw]' style={{ height: mainHeight }}>
-          <ReactFlow
-            nodes={nodes}
-            onNodesChange={onNodesChange}
-            edges={edges}
-            fitView
-            edgesFocusable={false}
-            nodesFocusable={false}
-            nodesConnectable={false}
-            nodeTypes={TGNodeTypes}
-            edgeTypes={TGEdgeTypes}
-            maxZoom={ZOOM_MAX}
-            minZoom={ZOOM_MIN}
-            onContextMenu={event => event.preventDefault()}
-          />
-        </div>
       </div>
-    </>
+
+      <div
+        className={clsx(
+          'absolute z-pop top-[4.4rem] sm:top-[4.1rem] left-[0.5rem] sm:left-[0.65rem] w-[13.5rem]',
+          'flex flex-col pointer-events-none'
+        )}
+      >
+        <div className='px-2 pb-1 select-none whitespace-nowrap cc-blur rounded-xl'>
+          Выбор {selected.length} из {schema.stats?.count_all ?? 0}
+        </div>
+        <GraphSelectors />
+        <ViewHidden items={hidden} />
+      </div>
+
+      <div className='relative outline-hidden w-[100dvw]' style={{ height: mainHeight }}>
+        <ReactFlow
+          nodes={nodes}
+          onNodesChange={onNodesChange}
+          edges={edges}
+          fitView
+          edgesFocusable={false}
+          nodesFocusable={false}
+          nodesConnectable={false}
+          nodeTypes={TGNodeTypes}
+          edgeTypes={TGEdgeTypes}
+          maxZoom={ZOOM_MAX}
+          minZoom={ZOOM_MIN}
+          onContextMenu={event => event.preventDefault()}
+        />
+      </div>
+    </div>
   );
 }

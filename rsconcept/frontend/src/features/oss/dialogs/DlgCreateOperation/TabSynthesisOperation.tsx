@@ -1,6 +1,5 @@
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
-import { FlexColumn } from '@/components/Container';
 import { Label, TextArea, TextInput } from '@/components/Input';
 import { useDialogsStore } from '@/stores/dialogs';
 
@@ -45,7 +44,7 @@ export function TabSynthesisOperation() {
         />
       </div>
 
-      <FlexColumn>
+      <div className='cc-column'>
         <Label text={`Выбор аргументов: [ ${inputs.length} ]`} />
         <Controller
           name='arguments'
@@ -54,7 +53,7 @@ export function TabSynthesisOperation() {
             <PickMultiOperation items={oss.items} value={field.value} onChange={field.onChange} rows={6} />
           )}
         />
-      </FlexColumn>
+      </div>
     </div>
   );
 }

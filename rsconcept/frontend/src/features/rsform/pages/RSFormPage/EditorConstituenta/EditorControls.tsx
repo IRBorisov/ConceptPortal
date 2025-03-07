@@ -1,6 +1,5 @@
 import clsx from 'clsx';
 
-import { Overlay } from '@/components/Container';
 import { MiniButton } from '@/components/Control';
 import { IconEdit } from '@/components/Icons';
 import { useDialogsStore } from '@/stores/dialogs';
@@ -29,7 +28,7 @@ export function EditorControls({ constituenta, disabled, onEditTerm }: EditorCon
   }
 
   return (
-    <Overlay position='top-0 left-[4.7rem]' className='flex select-none'>
+    <div className='absolute z-pop top-0 left-[4.7rem] flex select-none'>
       {!disabled || isProcessing ? (
         <MiniButton
           title={isModified ? tooltipText.unsaved : `Редактировать словоформы термина`}
@@ -59,6 +58,6 @@ export function EditorControls({ constituenta, disabled, onEditTerm }: EditorCon
           disabled={isModified}
         />
       ) : null}
-    </Overlay>
+    </div>
   );
 }

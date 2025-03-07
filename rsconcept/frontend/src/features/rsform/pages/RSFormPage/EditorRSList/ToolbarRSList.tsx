@@ -1,9 +1,10 @@
+import clsx from 'clsx';
+
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components';
 import { MiniSelectorOSS } from '@/features/library/components';
 import { CstType } from '@/features/rsform';
 
-import { Overlay } from '@/components/Container';
 import { MiniButton } from '@/components/Control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/Dropdown';
 import {
@@ -41,9 +42,12 @@ export function ToolbarRSList() {
   } = useRSEdit();
 
   return (
-    <Overlay
-      position='cc-tab-tools right-4 md:right-1/2 -translate-x-1/2 md:translate-x-0'
-      className='cc-icons cc-animate-position items-start outline-hidden'
+    <div
+      className={clsx(
+        'cc-tab-tools right-4 md:right-1/2 -translate-x-1/2 md:translate-x-0',
+        'cc-icons items-start',
+        'outline-hidden cc-animate-position'
+      )}
     >
       {schema.oss.length > 0 ? (
         <MiniSelectorOSS
@@ -108,6 +112,6 @@ export function ToolbarRSList() {
         onClick={promptDeleteCst}
       />
       <BadgeHelp topic={HelpTopic.UI_RS_LIST} offset={5} />
-    </Overlay>
+    </div>
   );
 }

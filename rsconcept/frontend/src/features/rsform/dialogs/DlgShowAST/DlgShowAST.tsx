@@ -2,10 +2,10 @@
 
 import { useState } from 'react';
 import { ReactFlowProvider } from 'reactflow';
+import clsx from 'clsx';
 
 import { HelpTopic } from '@/features/help';
 
-import { Overlay } from '@/components/Container';
 import { ModalView } from '@/components/Modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
@@ -27,9 +27,13 @@ export function DlgShowAST() {
 
   return (
     <ModalView className='relative w-[calc(100dvw-3rem)] h-[calc(100dvh-6rem)]' helpTopic={HelpTopic.UI_FORMULA_TREE}>
-      <Overlay
-        position='top-0 -mt-1 right-1/2 translate-x-1/2'
-        className='px-2 rounded-2xl cc-blur bg-prim-100 max-w-[60ch] text-lg text-center'
+      <div
+        className={clsx(
+          'absolute z-pop top-0 -mt-1 right-1/2 translate-x-1/2 max-w-[60ch]',
+          'px-2 rounded-2xl',
+          'cc-blur bg-prim-100',
+          'text-lg text-center'
+        )}
       >
         {!hoverNode || isDragging ? expression : null}
         {!isDragging && hoverNode ? (
@@ -39,7 +43,7 @@ export function DlgShowAST() {
             <span>{expression.slice(hoverNode.finish)}</span>
           </div>
         ) : null}
-      </Overlay>
+      </div>
 
       <ReactFlowProvider>
         <ASTFlow

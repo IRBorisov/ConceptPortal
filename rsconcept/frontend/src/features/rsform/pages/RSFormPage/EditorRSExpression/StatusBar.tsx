@@ -5,7 +5,6 @@ import clsx from 'clsx';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components';
 
-import { Overlay } from '@/components/Container';
 import { Loader } from '@/components/Loader';
 import { APP_COLORS } from '@/styling/colors';
 import { globalIDs } from '@/utils/constants';
@@ -39,10 +38,11 @@ export function StatusBar({ isModified, processing, activeCst, parseData, onAnal
   })();
 
   return (
-    <Overlay
-      position='top-[-0.5rem] right-1/2 translate-x-1/2'
-      layer='z-pop'
-      className='w-fit pl-[8.5rem] xs:pl-[2rem] flex gap-1'
+    <div
+      className={clsx(
+        'absolute z-pop top-[-0.5rem] right-1/2 translate-x-1/2 w-fit',
+        'pl-[8.5rem] xs:pl-[2rem] flex gap-1'
+      )}
     >
       <div
         tabIndex={0}
@@ -73,6 +73,6 @@ export function StatusBar({ isModified, processing, activeCst, parseData, onAnal
         ) : null}
       </div>
       <BadgeHelp topic={HelpTopic.UI_CST_STATUS} offset={4} />
-    </Overlay>
+    </div>
   );
 }

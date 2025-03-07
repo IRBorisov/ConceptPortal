@@ -2,13 +2,11 @@
 
 import clsx from 'clsx';
 
-import { EditorLibraryItem } from '@/features/library/components';
+import { EditorLibraryItem, ToolbarItemCard } from '@/features/library/components';
 
-import { FlexColumn } from '@/components/Container';
 import { useModificationStore } from '@/stores/modification';
 import { globalIDs } from '@/utils/constants';
 
-import { ToolbarRSFormCard } from '../../../components/ToolbarRSFormCard';
 import { useRSEdit } from '../RSEditContext';
 
 import { FormRSForm } from './FormRSForm';
@@ -44,12 +42,12 @@ export function EditorRSFormCard() {
         'flex flex-row flex-wrap px-6 pt-[1.9rem]'
       )}
     >
-      <ToolbarRSFormCard onSubmit={initiateSubmit} schema={schema} isMutable={isMutable} deleteSchema={deleteSchema} />
+      <ToolbarItemCard onSubmit={initiateSubmit} schema={schema} isMutable={isMutable} deleteSchema={deleteSchema} />
 
-      <FlexColumn className='shrink'>
+      <div className='cc-column shrink'>
         <FormRSForm />
         <EditorLibraryItem schema={schema} isAttachedToOSS={isAttachedToOSS} />
-      </FlexColumn>
+      </div>
 
       <RSFormStats stats={schema.stats} isArchive={isArchive} />
     </div>

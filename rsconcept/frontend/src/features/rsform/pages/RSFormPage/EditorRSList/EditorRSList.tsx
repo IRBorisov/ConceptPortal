@@ -128,14 +128,6 @@ export function EditorRSList() {
   return (
     <div tabIndex={-1} onKeyDown={handleKeyDown} className='relative cc-fade-in pt-[1.9rem]'>
       {isContentEditable ? <ToolbarRSList /> : null}
-
-      <MiniButton
-        className='absolute z-tooltip top-[2.15rem] right-[1rem]'
-        title='Выгрузить в формате CSV'
-        icon={<IconCSV size='1.25rem' className='icon-green' />}
-        onClick={handleDownloadCSV}
-      />
-
       {isContentEditable ? (
         <div className='flex items-center border-b'>
           <div className='px-2'>
@@ -150,6 +142,13 @@ export function EditorRSList() {
           />
         </div>
       ) : null}
+
+      <MiniButton
+        className='absolute z-pop top-[4.45rem] md:top-[2.15rem] right-[1rem] cc-animate-position'
+        title='Выгрузить в формате CSV'
+        icon={<IconCSV size='1.25rem' className='icon-green' />}
+        onClick={handleDownloadCSV}
+      />
 
       <TableRSList
         items={filtered}

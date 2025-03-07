@@ -8,7 +8,6 @@ import { BadgeHelp } from '@/features/help/components';
 import { MiniSelectorOSS } from '@/features/library/components';
 import { useFindPredecessor } from '@/features/oss/backend/useFindPredecessor';
 
-import { Overlay } from '@/components/Container';
 import { MiniButton } from '@/components/Control';
 import {
   IconClone,
@@ -24,7 +23,6 @@ import {
 } from '@/components/Icons';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
-import { PARAMETER } from '@/utils/constants';
 import { tooltipText } from '@/utils/labels';
 import { prepareTooltip } from '@/utils/utils';
 
@@ -80,9 +78,13 @@ export function ToolbarConstituenta({
   }
 
   return (
-    <Overlay
-      position='cc-tab-tools right-1/2 translate-x-0 xs:right-4 xs:-translate-x-1/2 md:right-1/2 md:translate-x-0'
-      className='cc-icons cc-animate-position outline-hidden cc-blur px-1 rounded-b-2xl'
+    <div
+      className={clsx(
+        'absolute z-pop right-1/2 translate-x-0 xs:right-4 xs:-translate-x-1/2 md:right-1/2 md:translate-x-0',
+        'px-1 rounded-b-2xl',
+        'cc-blur',
+        'cc-tab-tools cc-icons cc-animate-position outline-hidden'
+      )}
     >
       {schema.oss.length > 0 ? (
         <MiniSelectorOSS
@@ -154,11 +156,7 @@ export function ToolbarConstituenta({
           />
         </>
       ) : null}
-      <BadgeHelp
-        topic={HelpTopic.UI_RS_EDITOR}
-        offset={4}
-        className={clsx(PARAMETER.TOOLTIP_WIDTH, 'sm:max-w-[40rem]')}
-      />
-    </Overlay>
+      <BadgeHelp topic={HelpTopic.UI_RS_EDITOR} offset={4} contentClass='sm:max-w-[40rem]' />
+    </div>
   );
 }

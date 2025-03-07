@@ -6,7 +6,6 @@ import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { Overlay } from '@/components/Container';
 import { SubmitButton } from '@/components/Control';
 import { IconChild, IconPredecessor, IconSave } from '@/components/Icons';
 import { TextArea } from '@/components/Input';
@@ -251,7 +250,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
             disabled={disabled || !isModified}
             icon={<IconSave size='1.25rem' />}
           />
-          <Overlay position='top-[0.1rem] left-full' className='cc-icons'>
+          <div className='absolute z-pop top-[0.1rem] left-full cc-icons'>
             {activeCst.has_inherited_children && !activeCst.is_inherited ? (
               <Indicator
                 icon={<IconPredecessor size='1.25rem' className='text-sec-600' />}
@@ -264,7 +263,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
                 titleHtml='Внимание!</br> Конституента является наследником<br/>'
               />
             ) : null}
-          </Overlay>
+          </div>
         </div>
       ) : null}
     </form>

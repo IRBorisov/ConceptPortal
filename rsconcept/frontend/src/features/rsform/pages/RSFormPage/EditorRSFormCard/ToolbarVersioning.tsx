@@ -4,12 +4,10 @@ import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components';
 import { useVersionRestore } from '@/features/library/backend/useVersionRestore';
 
-import { Overlay } from '@/components/Container';
 import { MiniButton } from '@/components/Control';
 import { IconNewVersion, IconUpload, IconVersions } from '@/components/Icons';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
-import { PARAMETER } from '@/utils/constants';
 import { promptText } from '@/utils/labels';
 import { promptUnsaved } from '@/utils/utils';
 
@@ -57,7 +55,7 @@ export function ToolbarVersioning({ blockReload }: ToolbarVersioningProps) {
   }
 
   return (
-    <Overlay position='top-[-0.4rem] right-[0rem]' className='pr-2 cc-icons' layer='z-bottom'>
+    <div className='absolute z-bottom top-[-0.4rem] right-[0rem] pr-2 cc-icons'>
       {isMutable ? (
         <>
           <MiniButton
@@ -86,7 +84,7 @@ export function ToolbarVersioning({ blockReload }: ToolbarVersioningProps) {
           />
         </>
       ) : null}
-      <BadgeHelp topic={HelpTopic.VERSIONS} className={PARAMETER.TOOLTIP_WIDTH} offset={4} />
-    </Overlay>
+      <BadgeHelp topic={HelpTopic.VERSIONS} offset={4} />
+    </div>
   );
 }

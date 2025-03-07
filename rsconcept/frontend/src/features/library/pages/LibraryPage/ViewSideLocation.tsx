@@ -74,12 +74,7 @@ export function ViewSideLocation({ isVisible, onRenameLocation }: ViewSideLocati
       }}
     >
       <div className='h-[2.08rem] flex justify-between items-center pr-1 pl-[0.125rem]'>
-        <BadgeHelp
-          topic={HelpTopic.UI_LIBRARY}
-          className={clsx(PARAMETER.TOOLTIP_WIDTH, 'text-sm')}
-          offset={5}
-          place='right-start'
-        />
+        <BadgeHelp topic={HelpTopic.UI_LIBRARY} contentClass='text-sm' offset={5} place='right-start' />
         <div className='cc-icons'>
           {canRename ? (
             <MiniButton

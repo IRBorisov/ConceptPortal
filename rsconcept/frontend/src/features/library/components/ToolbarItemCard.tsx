@@ -3,29 +3,28 @@
 import { urls, useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components';
-import { AccessPolicy, type ILibraryItem, LibraryItemType } from '@/features/library';
-import { useMutatingLibrary } from '@/features/library/backend/useMutatingLibrary';
-import { MiniSelectorOSS } from '@/features/library/components';
+import { type IRSForm } from '@/features/rsform';
 import { useRoleStore, UserRole } from '@/features/users';
 
-import { Overlay } from '@/components/Container';
 import { MiniButton } from '@/components/Control';
 import { IconDestroy, IconSave, IconShare } from '@/components/Icons';
 import { useModificationStore } from '@/stores/modification';
-import { PARAMETER } from '@/utils/constants';
 import { tooltipText } from '@/utils/labels';
 import { prepareTooltip, sharePage } from '@/utils/utils';
 
-import { type IRSForm } from '../models/rsform';
+import { AccessPolicy, type ILibraryItem, LibraryItemType } from '../backend/types';
+import { useMutatingLibrary } from '../backend/useMutatingLibrary';
 
-interface ToolbarRSFormCardProps {
+import { MiniSelectorOSS } from './MiniSelectorOSS';
+
+interface ToolbarItemCardProps {
   onSubmit: () => void;
   isMutable: boolean;
   schema: ILibraryItem;
   deleteSchema: () => void;
 }
 
-export function ToolbarRSFormCard({ schema, onSubmit, isMutable, deleteSchema }: ToolbarRSFormCardProps) {
+export function ToolbarItemCard({ schema, onSubmit, isMutable, deleteSchema }: ToolbarItemCardProps) {
   const role = useRoleStore(state => state.role);
   const router = useConceptNavigation();
   const { isModified } = useModificationStore();
@@ -49,7 +48,7 @@ export function ToolbarRSFormCard({ schema, onSubmit, isMutable, deleteSchema }:
   })();
 
   return (
-    <Overlay position='cc-tab-tools' className='cc-icons'>
+    <div className='cc-tab-tools cc-icons'>
       {ossSelector}
       {isMutable || isModified ? (
         <MiniButton
@@ -73,7 +72,7 @@ export function ToolbarRSFormCard({ schema, onSubmit, isMutable, deleteSchema }:
           onClick={deleteSchema}
         />
       ) : null}
-      <BadgeHelp topic={HelpTopic.UI_RS_CARD} offset={4} className={PARAMETER.TOOLTIP_WIDTH} />
-    </Overlay>
+      <BadgeHelp topic={HelpTopic.UI_RS_CARD} offset={4} />
+    </div>
   );
 }

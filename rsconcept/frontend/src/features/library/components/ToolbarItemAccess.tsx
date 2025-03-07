@@ -2,11 +2,9 @@ import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components';
 import { useRoleStore, UserRole } from '@/features/users';
 
-import { Overlay } from '@/components/Container';
 import { MiniButton } from '@/components/Control';
 import { IconImmutable, IconMutable } from '@/components/Icons';
 import { Label } from '@/components/Input';
-import { PARAMETER } from '@/utils/constants';
 
 import { type AccessPolicy, type ILibraryItem } from '../backend/types';
 import { useMutatingLibrary } from '../backend/useMutatingLibrary';
@@ -42,7 +40,7 @@ export function ToolbarItemAccess({
   }
 
   return (
-    <Overlay position='top-[4.5rem] right-0' className='w-[12rem] flex pr-2' layer='z-bottom'>
+    <div className='absolute z-bottom top-[4.5rem] right-0 w-[12rem] flex pr-2'>
       <Label text='Доступ' className='self-center select-none' />
       <div className='ml-auto cc-icons'>
         <SelectAccessPolicy
@@ -70,10 +68,8 @@ export function ToolbarItemAccess({
           onClick={toggleReadOnly}
           disabled={role === UserRole.READER || isProcessing}
         />
-        <div className='pt-[0.125rem]'>
-          <BadgeHelp topic={HelpTopic.ACCESS} className={PARAMETER.TOOLTIP_WIDTH} offset={4} />
-        </div>
+        <BadgeHelp topic={HelpTopic.ACCESS} className='mt-[0.125rem]' offset={4} />
       </div>
-    </Overlay>
+    </div>
   );
 }

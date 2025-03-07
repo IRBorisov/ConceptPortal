@@ -1,7 +1,6 @@
 'use client';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import { FlexColumn } from '@/components/Container';
 import { Label } from '@/components/Input';
 import { useDialogsStore } from '@/stores/dialogs';
 
@@ -25,23 +24,21 @@ export function TabArguments() {
 
   return (
     <div className='cc-fade-in cc-column'>
-      <FlexColumn>
-        <Controller
-          name='arguments'
-          control={control}
-          render={({ field }) => (
-            <>
-              <Label text={`Выбор аргументов: [ ${field.value.length} ]`} />
-              <PickMultiOperation
-                items={filtered}
-                value={field.value}
-                onChange={newValue => handleChangeArguments(field.value, newValue)}
-                rows={8}
-              />
-            </>
-          )}
-        />
-      </FlexColumn>
+      <Controller
+        name='arguments'
+        control={control}
+        render={({ field }) => (
+          <>
+            <Label text={`Выбор аргументов: [ ${field.value.length} ]`} />
+            <PickMultiOperation
+              items={filtered}
+              value={field.value}
+              onChange={newValue => handleChangeArguments(field.value, newValue)}
+              rows={8}
+            />
+          </>
+        )}
+      />
     </div>
   );
 }

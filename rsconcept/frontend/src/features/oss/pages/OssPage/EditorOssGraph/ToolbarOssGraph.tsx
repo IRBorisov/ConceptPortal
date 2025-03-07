@@ -1,7 +1,6 @@
 'use client';
 
 import { useReactFlow } from 'reactflow';
-import clsx from 'clsx';
 
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components';
@@ -165,11 +164,7 @@ export function ToolbarOssGraph({ onCreate, onDelete, onResetPositions }: Toolba
           }
           onClick={toggleEdgeAnimate}
         />
-        <BadgeHelp
-          topic={HelpTopic.UI_OSS_GRAPH}
-          className={clsx(PARAMETER.TOOLTIP_WIDTH, 'sm:max-w-[40rem]')}
-          offset={4}
-        />
+        <BadgeHelp topic={HelpTopic.UI_OSS_GRAPH} contentClass='sm:max-w-[40rem]' offset={4} />
       </div>
       {isMutable ? (
         <div className='cc-icons'>

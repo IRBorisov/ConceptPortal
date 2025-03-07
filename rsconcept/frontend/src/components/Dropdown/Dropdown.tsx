@@ -39,18 +39,17 @@ export function Dropdown({
     <div
       tabIndex={-1}
       className={clsx(
-        'z-topmost',
-        'absolute',
-        'flex flex-col',
-        'border rounded-md shadow-lg',
-        'text-sm',
-        'clr-input',
+        'z-topmost absolute',
         {
           'right-0': stretchLeft,
           'left-0': !stretchLeft,
           'bottom-0': stretchTop,
           'top-full': !stretchTop
         },
+        'grid',
+        'border rounded-md shadow-lg',
+        'clr-input',
+        'text-sm',
         margin,
         className
       )}

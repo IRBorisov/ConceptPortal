@@ -3,13 +3,12 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import clsx from 'clsx';
 
 import { urls, useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';
 
 import { isAxiosError } from '@/backend/apiTransport';
-import { FlexColumn, Tooltip } from '@/components/Container';
+import { Tooltip } from '@/components/Container';
 import { Button, SubmitButton, TextURL } from '@/components/Control';
 import { IconHelp } from '@/components/Icons';
 import { type ErrorData } from '@/components/InfoError';
@@ -56,13 +55,13 @@ export function FormSignup() {
 
   return (
     <form
-      className={clsx('cc-fade-in cc-column', 'mx-auto w-[36rem]', 'px-6 py-3')}
+      className='cc-column cc-fade-in mx-auto w-[36rem] px-6 py-3'
       onSubmit={event => void handleSubmit(onSubmit)(event)}
       onChange={resetErrors}
     >
       <h1>Новый пользователь</h1>
       <div className='flex gap-12'>
-        <FlexColumn>
+        <div className='cc-column'>
           <TextInput
             id='username'
             {...register('username')}
@@ -92,9 +91,9 @@ export function FormSignup() {
             className='w-[15rem]'
             error={errors.password2}
           />
-        </FlexColumn>
+        </div>
 
-        <FlexColumn className='w-[15rem] relative'>
+        <div className='cc-column w-[15rem] relative'>
           <IconHelp id={globalIDs.email_tooltip} className='absolute top-0 right-0 icon-primary' size='1.25rem' />
           <Tooltip anchorSelect={`#${globalIDs.email_tooltip}`} offset={6}>
             электронная почта используется для восстановления пароля
@@ -123,7 +122,7 @@ export function FormSignup() {
             autoComplete='family-name'
             error={errors.last_name}
           />
-        </FlexColumn>
+        </div>
       </div>
 
       <div className='flex gap-1 text-sm'>

@@ -1,4 +1,3 @@
-import { Overlay } from '@/components/Container';
 import { MiniButton } from '@/components/Control';
 import { IconControls, IconTree, IconTypeGraph } from '@/components/Icons';
 import { usePreferencesStore } from '@/stores/preferences';
@@ -17,7 +16,7 @@ export function ToolbarRSExpression({ disabled, showTypeGraph, showAST }: Toolba
   const toggleControls = usePreferencesStore(state => state.toggleShowExpressionControls);
 
   return (
-    <Overlay position='top-[-0.5rem] right-0' layer='z-pop' className='cc-icons'>
+    <div className='absolute z-pop top-[-0.5rem] right-0 cc-icons'>
       {!disabled || isProcessing ? (
         <MiniButton
           title='Отображение специальной клавиатуры'
@@ -35,6 +34,6 @@ export function ToolbarRSExpression({ disabled, showTypeGraph, showAST }: Toolba
         onClick={showAST}
         icon={<IconTree size='1.25rem' className='icon-primary' />}
       />
-    </Overlay>
+    </div>
   );
 }
