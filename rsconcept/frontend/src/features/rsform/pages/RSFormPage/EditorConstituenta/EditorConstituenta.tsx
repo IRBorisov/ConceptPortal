@@ -5,17 +5,14 @@ import clsx from 'clsx';
 
 import { useWindowSize } from '@/hooks/useWindowSize';
 import { useMainHeight } from '@/stores/appLayout';
-import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { globalIDs } from '@/utils/constants';
-import { promptUnsaved } from '@/utils/utils';
 
 import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
 import { useRSEdit } from '../RSEditContext';
 import { ViewConstituents } from '../ViewConstituents';
 
-import { EditorControls } from './EditorControls';
 import { FormConstituenta } from './FormConstituenta';
 import { ToolbarConstituenta } from './ToolbarConstituenta';
 
@@ -28,7 +25,6 @@ export function EditorConstituenta() {
   const mainHeight = useMainHeight();
 
   const showList = usePreferencesStore(state => state.showCstSideList);
-  const showEditTerm = useDialogsStore(state => state.showEditWordForms);
   const { isModified } = useModificationStore();
 
   const [toggleReset, setToggleReset] = useState(false);
@@ -57,16 +53,6 @@ export function EditorConstituenta() {
     }
   }
 
-  function handleEditTermForms() {
-    if (!activeCst) {
-      return;
-    }
-    if (isModified && !promptUnsaved()) {
-      return;
-    }
-    showEditTerm({ itemID: schema.id, target: activeCst });
-  }
-
   function initiateSubmit() {
     const element = document.getElementById(globalIDs.constituenta_editor) as HTMLFormElement;
     if (element) {
@@ -85,46 +71,38 @@ export function EditorConstituenta() {
   }
 
   return (
-    <>
+    <div
+      tabIndex={-1}
+      className={clsx(
+        'relative',
+        'cc-fade-in',
+        'min-h-[20rem] max-w-[calc(min(100vw,95rem))] mx-auto',
+        'flex pt-[1.9rem]',
+        'overflow-y-auto overflow-x-clip',
+        { 'flex-col md:items-center': isNarrow }
+      )}
+      style={{ maxHeight: mainHeight }}
+      onKeyDown={handleInput}
+    >
       <ToolbarConstituenta
         activeCst={activeCst}
         disabled={disabled}
         onSubmit={initiateSubmit}
         onReset={() => setToggleReset(prev => !prev)}
       />
-      <div
-        tabIndex={-1}
-        className={clsx(
-          'cc-fade-in',
-          'min-h-[20rem] max-w-[calc(min(100vw,95rem))] mx-auto',
-          'flex pt-[1.9rem]',
-          'overflow-y-auto overflow-x-clip',
-          { 'flex-col md:items-center': isNarrow }
-        )}
-        style={{ maxHeight: mainHeight }}
-        onKeyDown={handleInput}
-      >
-        <div className='mx-0 md:mx-auto pt-[2rem] md:w-[48.8rem] shrink-0 xs:pt-0'>
-          {activeCst ? (
-            <EditorControls
-              disabled={disabled} //
-              constituenta={activeCst}
-              onEditTerm={handleEditTermForms}
-            />
-          ) : null}
-          {activeCst ? (
-            <FormConstituenta
-              id={globalIDs.constituenta_editor} //
-              disabled={disabled}
-              toggleReset={toggleReset}
-              activeCst={activeCst}
-              schema={schema}
-              onOpenEdit={navigateCst}
-            />
-          ) : null}
-        </div>
-        <ViewConstituents isMounted={showList} isBottom={isNarrow} />
+      <div className='mx-0 md:mx-auto pt-[2rem] md:w-[48.8rem] shrink-0 xs:pt-0'>
+        {activeCst ? (
+          <FormConstituenta
+            id={globalIDs.constituenta_editor}
+            disabled={disabled}
+            toggleReset={toggleReset}
+            activeCst={activeCst}
+            schema={schema}
+            onOpenEdit={navigateCst}
+          />
+        ) : null}
       </div>
-    </>
+      <ViewConstituents isMounted={showList} isBottom={isNarrow} />
+    </div>
   );
 }

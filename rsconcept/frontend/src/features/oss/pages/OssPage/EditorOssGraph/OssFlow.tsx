@@ -190,7 +190,7 @@ export function OssFlow() {
   }
 
   return (
-    <div tabIndex={-1} onKeyDown={handleKeyDown}>
+    <div tabIndex={-1} className='relative' onKeyDown={handleKeyDown}>
       <Overlay
         position='top-[1.9rem] pt-1 right-1/2 translate-x-1/2'
         className='rounded-b-2xl cc-blur hover:bg-prim-100 hover:bg-opacity-50'

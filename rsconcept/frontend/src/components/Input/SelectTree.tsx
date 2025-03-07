@@ -3,7 +3,6 @@ import clsx from 'clsx';
 
 import { globalIDs, PARAMETER } from '@/utils/constants';
 
-import { Overlay } from '../Container';
 import { MiniButton } from '../Control';
 import { IconDropArrow, IconPageRight } from '../Icons';
 import { type Styling } from '../props';
@@ -86,6 +85,7 @@ export function SelectTree<ItemType>({
           <div
             key={`${prefix}${index}`}
             className={clsx(
+              'relative',
               'pr-3 pl-6 border-b',
               'cc-scroll-row',
               'bg-prim-200 clr-hover cc-animate-color',
@@ -108,14 +108,13 @@ export function SelectTree<ItemType>({
             }}
           >
             {foldable.has(item) ? (
-              <Overlay position='left-[-1.3rem]' className={clsx(!folded.includes(item) && 'top-[0.1rem]')}>
-                <MiniButton
-                  noPadding
-                  noHover
-                  icon={!folded.includes(item) ? <IconDropArrow size='1rem' /> : <IconPageRight size='1.25rem' />}
-                  onClick={event => handleClickFold(event, item, folded.includes(item))}
-                />
-              </Overlay>
+              <MiniButton
+                className={clsx('absolute left-[0.3rem]', !folded.includes(item) ? 'top-[0.4rem]' : 'top-1')}
+                noPadding
+                noHover
+                icon={!folded.includes(item) ? <IconDropArrow size='1rem' /> : <IconPageRight size='1.25rem' />}
+                onClick={event => handleClickFold(event, item, folded.includes(item))}
+              />
             ) : null}
             {getParent(item) === item ? getLabel(item) : `- ${getLabel(item).toLowerCase()}`}
           </div>

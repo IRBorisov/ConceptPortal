@@ -39,6 +39,7 @@ export function Tooltip({
       delayHide={100}
       opacity={1}
       className={clsx(
+        'relative',
         'max-h-[calc(100svh-6rem)]',
         'overflow-y-auto overflow-x-hidden sm:overflow-hidden overscroll-contain',
         'border shadow-md',

@@ -29,7 +29,7 @@ export function EditorControls({ constituenta, disabled, onEditTerm }: EditorCon
   }
 
   return (
-    <Overlay position='top-1 left-[4.7rem]' className='flex select-none'>
+    <Overlay position='top-0 left-[4.7rem]' className='flex select-none'>
       {!disabled || isProcessing ? (
         <MiniButton
           title={isModified ? tooltipText.unsaved : `Редактировать словоформы термина`}

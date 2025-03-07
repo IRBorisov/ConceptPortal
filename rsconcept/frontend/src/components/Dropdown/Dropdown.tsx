@@ -23,6 +23,7 @@ interface DropdownProps extends Styling {
 
 /**
  *  Animated list of children with optional positioning and visibility control.
+ *  Note: Dropdown should be inside a relative container.
  */
 export function Dropdown({
   isOpen,

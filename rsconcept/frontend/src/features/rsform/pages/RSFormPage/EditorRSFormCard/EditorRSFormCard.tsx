@@ -35,23 +35,23 @@ export function EditorRSFormCard() {
   }
 
   return (
-    <>
+    <div
+      onKeyDown={handleInput}
+      className={clsx(
+        'relative',
+        'cc-fade-in',
+        'md:w-fit md:max-w-fit max-w-[32rem]',
+        'flex flex-row flex-wrap px-6 pt-[1.9rem]'
+      )}
+    >
       <ToolbarRSFormCard onSubmit={initiateSubmit} schema={schema} isMutable={isMutable} deleteSchema={deleteSchema} />
-      <div
-        onKeyDown={handleInput}
-        className={clsx(
-          'cc-fade-in',
-          'md:w-fit md:max-w-fit max-w-[32rem]',
-          'flex flex-row flex-wrap px-6 pt-[1.9rem]'
-        )}
-      >
-        <FlexColumn className='shrink'>
-          <FormRSForm />
-          <EditorLibraryItem schema={schema} isAttachedToOSS={isAttachedToOSS} />
-        </FlexColumn>
 
-        <RSFormStats stats={schema.stats} isArchive={isArchive} />
-      </div>
-    </>
+      <FlexColumn className='shrink'>
+        <FormRSForm />
+        <EditorLibraryItem schema={schema} isAttachedToOSS={isAttachedToOSS} />
+      </FlexColumn>
+
+      <RSFormStats stats={schema.stats} isArchive={isArchive} />
+    </div>
   );
 }

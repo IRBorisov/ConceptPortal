@@ -4,9 +4,9 @@ import { Loader } from '@/components/Loader';
 
 export function ModalLoader() {
   return (
-    <div className='fixed top-0 left-0 w-full h-full z-modal cursor-default'>
-      <div className={clsx('z-navigation', 'fixed top-0 left-0', 'w-full h-full', 'backdrop-blur-[3px] opacity-50')} />
-      <div className={clsx('z-navigation', 'fixed top-0 left-0', 'w-full h-full', 'bg-prim-0 opacity-25')} />
+    <div className='fixed top-0 left-0 w-full h-full z-modal isolate cursor-default'>
+      <div className={clsx('z-bottom fixed top-0 left-0', 'w-full h-full', 'backdrop-blur-[3px] opacity-50')} />
+      <div className={clsx('z-bottom fixed top-0 left-0', 'w-full h-full', 'bg-prim-0 opacity-25')} />
       <div
         className={clsx(
           'cc-animate-modal p-20',

@@ -5,7 +5,6 @@ import clsx from 'clsx';
 
 import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 
-import { Overlay } from '@/components/Container';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/Tabs';
 import { useAppLayoutStore } from '@/stores/appLayout';
 import { useModificationStore } from '@/stores/modification';
@@ -72,51 +71,53 @@ export function RSTabs({ activeID, activeTab }: RSTabsProps) {
   }
 
   return (
-    <>
-      <Tabs
-        selectedIndex={activeTab}
-        onSelect={onSelectTab}
-        defaultFocus
-        selectedTabClassName='clr-selected'
-        className='flex flex-col mx-auto min-w-fit items-center'
+    <Tabs
+      selectedIndex={activeTab}
+      onSelect={onSelectTab}
+      defaultFocus
+      selectedTabClassName='clr-selected'
+      className='relative flex flex-col mx-auto min-w-fit items-center'
+    >
+      <TabList
+        className={clsx(
+          'absolute z-sticky',
+          'mx-auto w-fit top-0 right-1/2 translate-x-1/2',
+          'flex items-stretch',
+          'border-b-2 border-x-2 divide-x-2',
+          'bg-prim-200'
+        )}
       >
-        <Overlay position='top-0 right-1/2 translate-x-1/2' layer='z-sticky'>
-          <TabList
-            className={clsx('mx-auto w-fit', 'flex items-stretch', 'border-b-2 border-x-2 divide-x-2', 'bg-prim-200')}
-          >
-            <MenuRSTabs />
+        <MenuRSTabs />
 
-            <TabLabel
-              label='Карточка'
-              titleHtml={`${schema.title ?? ''}<br />Версия: ${labelVersion(schema.version, schema.versions)}`}
-            />
-            <TabLabel
-              label='Содержание'
-              titleHtml={`Конституент: ${schema.stats?.count_all ?? 0}<br />Ошибок: ${schema.stats?.count_errors ?? 0}`}
-            />
-            <TabLabel label='Редактор' />
-            <TabLabel label='Граф термов' />
-          </TabList>
-        </Overlay>
+        <TabLabel
+          label='Карточка'
+          titleHtml={`${schema.title ?? ''}<br />Версия: ${labelVersion(schema.version, schema.versions)}`}
+        />
+        <TabLabel
+          label='Содержание'
+          titleHtml={`Конституент: ${schema.stats?.count_all ?? 0}<br />Ошибок: ${schema.stats?.count_errors ?? 0}`}
+        />
+        <TabLabel label='Редактор' />
+        <TabLabel label='Граф термов' />
+      </TabList>
 
-        <div className='overflow-x-hidden'>
-          <TabPanel>
-            <EditorRSFormCard />
-          </TabPanel>
+      <div className='overflow-x-hidden'>
+        <TabPanel>
+          <EditorRSFormCard />
+        </TabPanel>
 
-          <TabPanel>
-            <EditorRSList />
-          </TabPanel>
+        <TabPanel>
+          <EditorRSList />
+        </TabPanel>
 
-          <TabPanel>
-            <EditorConstituenta />
-          </TabPanel>
+        <TabPanel>
+          <EditorConstituenta />
+        </TabPanel>
 
-          <TabPanel>
-            <EditorTermGraph />
-          </TabPanel>
-        </div>
-      </Tabs>
-    </>
+        <TabPanel>
+          <EditorTermGraph />
+        </TabPanel>
+      </div>
+    </Tabs>
   );
 }

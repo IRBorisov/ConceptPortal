@@ -69,7 +69,7 @@ export function FormOSS() {
         disabled={!isMutable}
         error={errors.title}
       />
-      <div className='flex justify-between gap-3 mb-3'>
+      <div className='relative flex justify-between gap-3 mb-3'>
         <TextInput
           id='schema_alias'
           {...register('alias')}

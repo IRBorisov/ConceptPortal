@@ -166,7 +166,7 @@ export function ToolbarSearch({ total, filtered }: ToolbarSearchProps) {
               text={head ?? '//'}
             />
 
-            <Dropdown isOpen={headMenu.isOpen} stretchLeft className='z-modal-tooltip'>
+            <Dropdown isOpen={headMenu.isOpen} stretchLeft>
               <DropdownButton title='Переключение в режим Проводник' onClick={handleToggleFolder}>
                 <div className='inline-flex items-center gap-3'>
                   <IconFolderTree size='1rem' className='clr-text-controls' />

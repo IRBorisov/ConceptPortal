@@ -9,7 +9,7 @@ import { urls, useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';
 
 import { isAxiosError } from '@/backend/apiTransport';
-import { FlexColumn, Overlay, Tooltip } from '@/components/Container';
+import { FlexColumn, Tooltip } from '@/components/Container';
 import { Button, SubmitButton, TextURL } from '@/components/Control';
 import { IconHelp } from '@/components/Icons';
 import { type ErrorData } from '@/components/InfoError';
@@ -60,15 +60,7 @@ export function FormSignup() {
       onSubmit={event => void handleSubmit(onSubmit)(event)}
       onChange={resetErrors}
     >
-      <h1>
-        <span>Новый пользователь</span>
-        <Overlay id={globalIDs.email_tooltip} position='top-[0.5rem] right-[1.75rem]'>
-          <IconHelp size='1.25rem' className='icon-primary' />
-        </Overlay>
-        <Tooltip anchorSelect={`#${globalIDs.email_tooltip}`} offset={6}>
-          электронная почта используется для восстановления пароля
-        </Tooltip>
-      </h1>
+      <h1>Новый пользователь</h1>
       <div className='flex gap-12'>
         <FlexColumn>
           <TextInput
@@ -102,7 +94,11 @@ export function FormSignup() {
           />
         </FlexColumn>
 
-        <FlexColumn className='w-[15rem]'>
+        <FlexColumn className='w-[15rem] relative'>
+          <IconHelp id={globalIDs.email_tooltip} className='absolute top-0 right-0 icon-primary' size='1.25rem' />
+          <Tooltip anchorSelect={`#${globalIDs.email_tooltip}`} offset={6}>
+            электронная почта используется для восстановления пароля
+          </Tooltip>
           <TextInput
             id='email'
             {...register('email')}

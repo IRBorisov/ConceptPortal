@@ -26,13 +26,10 @@ export function DlgShowAST() {
   const [isDragging, setIsDragging] = useState(false);
 
   return (
-    <ModalView
-      className='flex flex-col justify-stretch w-[calc(100dvw-3rem)] h-[calc(100dvh-6rem)]'
-      helpTopic={HelpTopic.UI_FORMULA_TREE}
-    >
+    <ModalView className='relative w-[calc(100dvw-3rem)] h-[calc(100dvh-6rem)]' helpTopic={HelpTopic.UI_FORMULA_TREE}>
       <Overlay
-        position='top-2 right-1/2 translate-x-1/2'
-        className='px-2 py-1 rounded-2xl cc-blur bg-prim-100 max-w-[60ch] text-lg text-center'
+        position='top-0 -mt-1 right-1/2 translate-x-1/2'
+        className='px-2 rounded-2xl cc-blur bg-prim-100 max-w-[60ch] text-lg text-center'
       >
         {!hoverNode || isDragging ? expression : null}
         {!isDragging && hoverNode ? (
@@ -43,6 +40,7 @@ export function DlgShowAST() {
           </div>
         ) : null}
       </Overlay>
+
       <ReactFlowProvider>
         <ASTFlow
           data={syntaxTree}

@@ -23,7 +23,12 @@ export function NodeCore({ node }: NodeCoreProps) {
   const longLabel = node.data.label.length > LONG_LABEL_CHARS;
 
   return (
-    <>
+    <div
+      className='relative h-[34px] w-[144px] flex items-center justify-center'
+      data-tooltip-id={globalIDs.operation_tooltip}
+      data-tooltip-hidden={node.dragging}
+      onMouseEnter={() => setHover(node.data.operation)}
+    >
       <Overlay position='top-0 right-0' className='flex flex-col gap-1 p-[2px]'>
         <Indicator
           noPadding
@@ -40,35 +45,24 @@ export function NodeCore({ node }: NodeCoreProps) {
       </Overlay>
 
       {node.data.operation.operation_type === OperationType.INPUT ? (
-        <Overlay position='top-[1px] right-1/2 translate-x-1/2' className='flex'>
-          <div className='border-t w-[30px]'></div>
-        </Overlay>
+        <div className='absolute top-[1px] right-1/2 translate-x-1/2 border-t w-[30px]' />
       ) : null}
 
       {!node.data.operation.is_owned ? (
-        <Overlay position='left-[2px] top-[6px]'>
-          <div className='border-r rounded-none clr-input h-[22px]'></div>
-        </Overlay>
+        <div className='absolute left-[2px] top-[6px] border-r rounded-none clr-input h-[22px]' />
       ) : null}
 
       <div
-        className='h-[34px] w-[144px] flex items-center justify-center'
-        data-tooltip-id={globalIDs.operation_tooltip}
-        data-tooltip-hidden={node.dragging}
-        onMouseEnter={() => setHover(node.data.operation)}
+        className='text-center line-clamp-2'
+        style={{
+          fontSize: longLabel ? '12px' : '14px',
+          lineHeight: longLabel ? '16px' : '20px',
+          paddingLeft: '4px',
+          paddingRight: longLabel ? '10px' : '4px'
+        }}
       >
-        <div
-          className='text-center line-clamp-2'
-          style={{
-            fontSize: longLabel ? '12px' : '14px',
-            lineHeight: longLabel ? '16px' : '20px',
-            paddingLeft: '4px',
-            paddingRight: longLabel ? '10px' : '4px'
-          }}
-        >
-          {node.data.label}
-        </div>
+        {node.data.label}
       </div>
-    </>
+    </div>
   );
 }

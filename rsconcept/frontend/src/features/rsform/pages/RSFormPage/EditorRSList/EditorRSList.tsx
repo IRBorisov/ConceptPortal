@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import fileDownload from 'js-file-download';
 
-import { Overlay } from '@/components/Container';
 import { MiniButton } from '@/components/Control';
 import { type RowSelectionState } from '@/components/DataTable';
 import { IconCSV } from '@/components/Icons';
@@ -127,42 +126,40 @@ export function EditorRSList() {
   const tableHeight = useFitHeight('4.05rem + 5px');
 
   return (
-    <>
+    <div tabIndex={-1} onKeyDown={handleKeyDown} className='relative cc-fade-in pt-[1.9rem]'>
       {isContentEditable ? <ToolbarRSList /> : null}
-      <div tabIndex={-1} onKeyDown={handleKeyDown} className='cc-fade-in pt-[1.9rem]'>
-        {isContentEditable ? (
-          <div className='flex items-center border-b'>
-            <div className='px-2'>
-              Выбор {selected.length} из {schema.stats?.count_all}
-            </div>
-            <SearchBar
-              id='constituents_search'
-              noBorder
-              className='w-[8rem]'
-              query={filterText}
-              onChangeQuery={setFilterText}
-            />
+
+      <MiniButton
+        className='absolute z-tooltip top-[2.15rem] right-[1rem]'
+        title='Выгрузить в формате CSV'
+        icon={<IconCSV size='1.25rem' className='icon-green' />}
+        onClick={handleDownloadCSV}
+      />
+
+      {isContentEditable ? (
+        <div className='flex items-center border-b'>
+          <div className='px-2'>
+            Выбор {selected.length} из {schema.stats?.count_all}
           </div>
-        ) : null}
-
-        <Overlay position='top-[0.25rem] right-[1rem]' layer='z-tooltip'>
-          <MiniButton
-            title='Выгрузить в формате CSV'
-            icon={<IconCSV size='1.25rem' className='icon-green' />}
-            onClick={handleDownloadCSV}
+          <SearchBar
+            id='constituents_search'
+            noBorder
+            className='w-[8rem]'
+            query={filterText}
+            onChangeQuery={setFilterText}
           />
-        </Overlay>
+        </div>
+      ) : null}
 
-        <TableRSList
-          items={filtered}
-          maxHeight={tableHeight}
-          enableSelection={isContentEditable}
-          selected={rowSelection}
-          setSelected={handleRowSelection}
-          onEdit={navigateCst}
-          onCreateNew={createCstDefault}
-        />
-      </div>
-    </>
+      <TableRSList
+        items={filtered}
+        maxHeight={tableHeight}
+        enableSelection={isContentEditable}
+        selected={rowSelection}
+        setSelected={handleRowSelection}
+        onEdit={navigateCst}
+        onCreateNew={createCstDefault}
+      />
+    </div>
   );
 }

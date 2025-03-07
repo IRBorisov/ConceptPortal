@@ -14,6 +14,7 @@ import { Indicator } from '@/components/View';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { errorMsg } from '@/utils/labels';
+import { promptUnsaved } from '@/utils/utils';
 
 import {
   CstType,
@@ -30,6 +31,8 @@ import { type IConstituenta, type IRSForm } from '../../../models/rsform';
 import { isBaseSet, isBasicConcept, isFunctional } from '../../../models/rsformAPI';
 import { EditorRSExpression } from '../EditorRSExpression';
 
+import { EditorControls } from './EditorControls';
+
 interface FormConstituentaProps {
   id?: string;
   disabled: boolean;
@@ -41,8 +44,6 @@ interface FormConstituentaProps {
 }
 
 export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst, onOpenEdit }: FormConstituentaProps) {
-  const { cstUpdate } = useCstUpdate();
-  const showTypification = useDialogsStore(state => state.showShowTypeGraph);
   const { isModified, setIsModified } = useModificationStore();
   const isProcessing = useMutatingRSForm();
 
@@ -53,6 +54,10 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
     reset,
     formState: { isDirty }
   } = useForm<ICstUpdateDTO>({ resolver: zodResolver(schemaCstUpdate) });
+
+  const { cstUpdate } = useCstUpdate();
+  const showTypification = useDialogsStore(state => state.showShowTypeGraph);
+  const showEditTerm = useDialogsStore(state => state.showEditWordForms);
 
   const [localParse, setLocalParse] = useState<IExpressionParseDTO | null>(null);
 
@@ -115,8 +120,20 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
     showTypification({ items: typeInfo ? [typeInfo] : [] });
   }
 
+  function handleEditTermForms() {
+    if (!activeCst) {
+      return;
+    }
+    if (isModified && !promptUnsaved()) {
+      return;
+    }
+    showEditTerm({ itemID: schema.id, target: activeCst });
+  }
+
   return (
-    <form id={id} className='cc-column mt-1 px-6 py-1' onSubmit={event => void handleSubmit(onSubmit)(event)}>
+    <form id={id} className='relative cc-column mt-1 px-6 py-1' onSubmit={event => void handleSubmit(onSubmit)(event)}>
+      <EditorControls disabled={disabled} constituenta={activeCst} onEditTerm={handleEditTermForms} />
+
       <Controller
         control={control}
         name='item_data.term_raw'
@@ -228,13 +245,13 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
       ) : null}
 
       {!disabled || isProcessing ? (
-        <div className='mx-auto flex'>
+        <div className='relative mx-auto flex'>
           <SubmitButton
             text='Сохранить изменения'
             disabled={disabled || !isModified}
             icon={<IconSave size='1.25rem' />}
           />
-          <Overlay position='top-[0.1rem] left-[0.4rem]' className='cc-icons'>
+          <Overlay position='top-[0.1rem] left-full' className='cc-icons'>
             {activeCst.has_inherited_children && !activeCst.is_inherited ? (
               <Indicator
                 icon={<IconPredecessor size='1.25rem' className='text-sec-600' />}

@@ -2,7 +2,6 @@
 
 import clsx from 'clsx';
 
-import { Overlay } from '@/components/Container';
 import { MiniButton } from '@/components/Control';
 import { IconDropArrow, IconDropArrowUp } from '@/components/Icons';
 import { useWindowSize } from '@/hooks/useWindowSize';
@@ -47,16 +46,16 @@ export function ViewHidden({ items }: ViewHiddenProps) {
     return null;
   }
   return (
-    <div className='flex flex-col'>
-      <Overlay position='right-[calc(0.7rem-2px)] top-2 pointer-events-auto'>
-        <MiniButton
-          noPadding
-          noHover
-          title={!isFolded ? 'Свернуть' : 'Развернуть'}
-          icon={!isFolded ? <IconDropArrowUp size='1.25rem' /> : <IconDropArrow size='1.25rem' />}
-          onClick={toggleFolded}
-        />
-      </Overlay>
+    <div className='flex flex-col relative'>
+      <MiniButton
+        className='absolute right-[calc(0.7rem-2px)] top-2 pointer-events-auto'
+        noPadding
+        noHover
+        title={!isFolded ? 'Свернуть' : 'Развернуть'}
+        icon={!isFolded ? <IconDropArrowUp size='1.25rem' /> : <IconDropArrow size='1.25rem' />}
+        onClick={toggleFolded}
+      />
+
       <div className={clsx('pt-2 clr-input border-x pb-2', { 'border-b rounded-b-md': isFolded })}>
         <div
           className='w-fit select-none'

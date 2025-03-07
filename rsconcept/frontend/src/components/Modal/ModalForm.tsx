@@ -10,7 +10,6 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/utils';
 
-import { Overlay } from '../Container';
 import { Button, MiniButton, SubmitButton } from '../Control';
 import { IconClose } from '../Icons';
 import { type Styling } from '../props';
@@ -89,12 +88,12 @@ export function ModalForm({
   }
 
   return (
-    <div className='fixed top-0 left-0 w-full h-full z-modal cursor-default'>
+    <div className='fixed top-0 left-0 w-full h-full z-modal isolate cursor-default'>
       <ModalBackdrop onHide={handleCancel} />
       <form
         className={clsx(
           'cc-animate-modal',
-          'z-modal absolute bottom-1/2 left-1/2 -translate-x-1/2 translate-y-1/2',
+          'absolute bottom-1/2 left-1/2 -translate-x-1/2 translate-y-1/2',
           'border rounded-xl bg-prim-100'
         )}
         onSubmit={handleSubmit}
@@ -105,15 +104,13 @@ export function ModalForm({
           </div>
         ) : null}
 
-        <Overlay className='z-modalOverlay'>
-          <MiniButton
-            noPadding
-            titleHtml={prepareTooltip('Закрыть диалоговое окно', 'ESC')}
-            icon={<IconClose size='1.25rem' />}
-            className='float-right mt-2 mr-2'
-            onClick={handleCancel}
-          />
-        </Overlay>
+        <MiniButton
+          noPadding
+          titleHtml={prepareTooltip('Закрыть диалоговое окно', 'ESC')}
+          icon={<IconClose size='1.25rem' />}
+          className='float-right mt-2 mr-2'
+          onClick={handleCancel}
+        />
 
         {header ? <h1 className='px-12 py-2 select-none'>{header}</h1> : null}
 
@@ -133,7 +130,7 @@ export function ModalForm({
           {children}
         </div>
 
-        <div className='z-modal-controls my-2 flex gap-12 justify-center text-sm'>
+        <div className='z-pop my-2 flex gap-12 justify-center text-sm'>
           <SubmitButton
             autoFocus
             text={submitText}

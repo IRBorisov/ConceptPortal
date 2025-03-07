@@ -91,7 +91,7 @@ export function FormRSForm() {
           disabled={!isContentEditable}
           error={errors.alias}
         />
-        <div className='flex flex-col'>
+        <div className='relative flex flex-col'>
           <ToolbarVersioning blockReload={schema.oss.length > 0} />
           <ToolbarItemAccess
             visible={visible}

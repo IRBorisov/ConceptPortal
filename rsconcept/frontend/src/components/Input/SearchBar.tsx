@@ -1,6 +1,5 @@
 import clsx from 'clsx';
 
-import { Overlay } from '@/components/Container';
 import { IconSearch } from '@/components/Icons';
 import { type Styling } from '@/components/props';
 
@@ -35,15 +34,17 @@ export function SearchBar({
   noIcon,
   onChangeQuery,
   noBorder,
+  className,
   placeholder = 'Поиск',
   ...restProps
 }: SearchBarProps) {
   return (
-    <div {...restProps}>
+    <div className={clsx('relative', className)} {...restProps}>
       {!noIcon ? (
-        <Overlay position='top-[-0.125rem] left-3 translate-y-1/2' className='pointer-events-none clr-text-controls'>
-          <IconSearch size='1.25rem' />
-        </Overlay>
+        <IconSearch
+          className='absolute top-[-0.125rem] left-3 translate-y-1/2 pointer-events-none clr-text-controls'
+          size='1.25rem'
+        />
       ) : null}
       <TextInput
         id={id}

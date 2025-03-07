@@ -15,6 +15,7 @@ interface OverlayProps extends Styling {
 
 /**
  * Displays a transparent overlay over the main content.
+ * Note: Overlay should be inside a relative container.
  */
 export function Overlay({
   children,
@@ -24,10 +25,8 @@ export function Overlay({
   ...restProps
 }: React.PropsWithChildren<OverlayProps>) {
   return (
-    <div className='relative'>
-      <div className={clsx('absolute', className, position, layer)} {...restProps}>
-        {children}
-      </div>
+    <div className={clsx('absolute', className, position, layer)} {...restProps}>
+      {children}
     </div>
   );
 }

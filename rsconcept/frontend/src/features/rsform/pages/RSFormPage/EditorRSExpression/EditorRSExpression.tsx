@@ -4,10 +4,6 @@ import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { type ReactCodeMirrorRef } from '@uiw/react-codemirror';
 
-import { HelpTopic } from '@/features/help';
-import { BadgeHelp } from '@/features/help/components';
-
-import { Overlay } from '@/components/Container';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { errorMsg } from '@/utils/labels';
@@ -158,23 +154,16 @@ export function EditorRSExpression({
   }
 
   return (
-    <div className='cc-fade-in'>
+    <div className='relative cc-fade-in'>
       <ToolbarRSExpression disabled={disabled} showAST={handleShowAST} showTypeGraph={onShowTypeGraph} />
 
-      <Overlay
-        position='top-[-0.5rem] right-1/2 translate-x-1/2'
-        layer='z-pop'
-        className='w-fit pl-[8.5rem] xs:pl-[2rem] flex gap-1'
-      >
-        <StatusBar
-          processing={isPending}
-          isModified={isModified}
-          activeCst={activeCst}
-          parseData={parseData}
-          onAnalyze={() => handleCheckExpression()}
-        />
-        <BadgeHelp topic={HelpTopic.UI_CST_STATUS} offset={4} />
-      </Overlay>
+      <StatusBar
+        processing={isPending}
+        isModified={isModified}
+        activeCst={activeCst}
+        parseData={parseData}
+        onAnalyze={() => handleCheckExpression()}
+      />
 
       <RSInput
         ref={rsInput}

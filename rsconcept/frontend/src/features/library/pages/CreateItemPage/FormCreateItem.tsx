@@ -8,7 +8,6 @@ import clsx from 'clsx';
 import { urls, useConceptNavigation } from '@/app';
 import { useAuthSuspense } from '@/features/auth';
 
-import { Overlay } from '@/components/Container';
 import { Button, MiniButton, SubmitButton } from '@/components/Control';
 import { IconDownload } from '@/components/Icons';
 import { InfoError } from '@/components/InfoError';
@@ -108,9 +107,9 @@ export function FormCreateItem() {
       onSubmit={event => void handleSubmit(onSubmit)(event)}
       onChange={resetErrors}
     >
-      <h1 className='select-none'>
+      <h1 className='select-none relative'>
         {itemType == LibraryItemType.RSFORM ? (
-          <Overlay position='top-0 right-[0.5rem]'>
+          <>
             <Controller
               control={control}
               name='file'
@@ -127,10 +126,11 @@ export function FormCreateItem() {
             />
             <MiniButton
               title='Загрузить из Экстеор'
+              className='absolute top-0 right-0'
               icon={<IconDownload size='1.25rem' className='icon-primary' />}
               onClick={() => inputRef.current?.click()}
             />
-          </Overlay>
+          </>
         ) : null}
         Создание схемы
       </h1>

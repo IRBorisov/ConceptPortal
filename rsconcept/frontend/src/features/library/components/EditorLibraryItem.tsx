@@ -5,7 +5,7 @@ import { urls, useConceptNavigation } from '@/app';
 import { useLabelUser, useRoleStore, UserRole } from '@/features/users';
 import { InfoUsers, SelectUser } from '@/features/users/components';
 
-import { Overlay, Tooltip } from '@/components/Container';
+import { Tooltip } from '@/components/Container';
 import { MiniButton } from '@/components/Control';
 import { useDropdown } from '@/components/Dropdown';
 import {
@@ -83,7 +83,7 @@ export function EditorLibraryItem({ schema, isAttachedToOSS }: EditorLibraryItem
 
   return (
     <div className='flex flex-col'>
-      <div className='flex justify-stretch sm:mb-1 max-w-[30rem] gap-3'>
+      <div className='relative flex justify-stretch sm:mb-1 max-w-[30rem] gap-3'>
         <MiniButton
           noHover
           noPadding
@@ -101,21 +101,21 @@ export function EditorLibraryItem({ schema, isAttachedToOSS }: EditorLibraryItem
         />
       </div>
 
-      {ownerSelector.isOpen ? (
-        <Overlay position='top-[-0.5rem] left-[4rem] cc-icons'>
-          {ownerSelector.isOpen ? (
+      <div className='relative'>
+        {ownerSelector.isOpen ? (
+          <div className='absolute top-[-0.5rem] left-[4rem]'>
             <SelectUser className='w-[25rem] sm:w-[26rem] text-sm' value={schema.owner} onChange={onSelectUser} />
-          ) : null}
-        </Overlay>
-      ) : null}
-      <ValueIcon
-        className='sm:mb-1'
-        icon={<IconOwner size='1.25rem' className='icon-primary' />}
-        value={getUserLabel(schema.owner)}
-        title={isAttachedToOSS ? 'Владелец наследуется от ОСС' : 'Владелец'}
-        onClick={ownerSelector.toggle}
-        disabled={isModified || isProcessing || isAttachedToOSS || role < UserRole.OWNER}
-      />
+          </div>
+        ) : null}
+        <ValueIcon
+          className='sm:mb-1'
+          icon={<IconOwner size='1.25rem' className='icon-primary' />}
+          value={getUserLabel(schema.owner)}
+          title={isAttachedToOSS ? 'Владелец наследуется от ОСС' : 'Владелец'}
+          onClick={ownerSelector.toggle}
+          disabled={isModified || isProcessing || isAttachedToOSS || role < UserRole.OWNER}
+        />
+      </div>
 
       <div className='sm:mb-1 flex justify-between items-center'>
         <ValueIcon
@@ -126,7 +126,7 @@ export function EditorLibraryItem({ schema, isAttachedToOSS }: EditorLibraryItem
           onClick={handleEditEditors}
           disabled={isModified || isProcessing || role < UserRole.OWNER}
         />
-        <Tooltip anchorSelect='#editor_stats' layer='z-modal-tooltip'>
+        <Tooltip anchorSelect='#editor_stats'>
           <Suspense fallback={<Loader scale={2} />}>
             <InfoUsers items={schema.editors} prefix={prefixes.user_editors} header='Редакторы' />
           </Suspense>

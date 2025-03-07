@@ -42,7 +42,7 @@ export function ToolbarItemAccess({
   }
 
   return (
-    <Overlay position='top-[4.5rem] right-0 w-[12rem] pr-2' className='flex' layer='z-bottom'>
+    <Overlay position='top-[4.5rem] right-0' className='w-[12rem] flex pr-2' layer='z-bottom'>
       <Label text='Доступ' className='self-center select-none' />
       <div className='ml-auto cc-icons'>
         <SelectAccessPolicy

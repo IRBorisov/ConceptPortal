@@ -155,7 +155,7 @@ export function DlgCloneLibraryItem() {
         />
       </div>
 
-      <TextArea id='dlg_comment' {...register('comment')} label='Описание' error={errors.comment} />
+      <TextArea id='dlg_comment' {...register('comment')} label='Описание' rows={4} error={errors.comment} />
 
       {selected.length > 0 ? (
         <Controller

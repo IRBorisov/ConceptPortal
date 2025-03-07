@@ -42,8 +42,6 @@
   --z-index-tooltip: 30;
   --z-index-navigation: 50;
   --z-index-modal: 60;
-  --z-index-modal-controls: 70;
-  --z-index-modal-tooltip: 90;
 
   --breakpoint-*: initial;
   --breakpoint-xs: 475px;

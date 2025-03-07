@@ -5,7 +5,6 @@ import clsx from 'clsx';
 
 import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 
-import { Overlay } from '@/components/Container';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/Tabs';
 import { useAppLayoutStore } from '@/stores/appLayout';
 
@@ -61,16 +60,22 @@ export function OssTabs({ activeTab }: OssTabsProps) {
       onSelect={onSelectTab}
       defaultFocus
       selectedTabClassName='clr-selected'
-      className='flex flex-col mx-auto min-w-fit items-center'
+      className='relative flex flex-col mx-auto min-w-fit items-center'
     >
-      <Overlay position='top-0 right-1/2 translate-x-1/2' layer='z-sticky'>
-        <TabList className={clsx('w-fit', 'flex items-stretch', 'border-b-2 border-x-2 divide-x-2', 'bg-prim-200')}>
-          <MenuOssTabs />
+      <TabList
+        className={clsx(
+          'absolute z-sticky',
+          'top-0 right-1/2 w-fit translate-x-1/2',
+          'flex items-stretch',
+          'border-b-2 border-x-2 divide-x-2',
+          'bg-prim-200'
+        )}
+      >
+        <MenuOssTabs />
 
-          <TabLabel label='Карточка' title={schema.title ?? ''} />
-          <TabLabel label='Граф' />
-        </TabList>
-      </Overlay>
+        <TabLabel label='Карточка' title={schema.title ?? ''} />
+        <TabLabel label='Граф' />
+      </TabList>
 
       <div className='overflow-x-hidden'>
         <TabPanel>

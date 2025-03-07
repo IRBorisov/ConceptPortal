@@ -3,10 +3,8 @@
 import { toast } from 'react-toastify';
 import fileDownload from 'js-file-download';
 
-import { Overlay } from '@/components/Container';
 import { MiniButton } from '@/components/Control';
 import { IconCSV } from '@/components/Icons';
-import { useAppLayoutStore } from '@/stores/appLayout';
 import { useDialogsStore } from '@/stores/dialogs';
 import { infoMsg } from '@/utils/labels';
 import { convertToCSV } from '@/utils/utils';
@@ -23,8 +21,6 @@ import { ViewSideLocation } from './ViewSideLocation';
 export function LibraryPage() {
   const { items: libraryItems } = useLibrarySuspense();
   const { renameLocation } = useRenameLocation();
-
-  const noNavigation = useAppLayoutStore(state => state.noNavigation);
 
   const folderMode = useLibrarySearchStore(state => state.folderMode);
   const location = useLibrarySearchStore(state => state.location);
@@ -57,20 +53,15 @@ export function LibraryPage() {
 
   return (
     <>
-      <Overlay
-        position={noNavigation ? 'top-[0.25rem] right-[3rem]' : 'top-[0.25rem] right-0'}
-        layer='z-tooltip'
-        className='cc-animate-position'
-      >
+      <ToolbarSearch total={libraryItems.length} filtered={filtered.length} />
+      <div className='relative cc-fade-in flex'>
         <MiniButton
+          className='absolute z-tooltip top-[0.25rem] right-0 cc-animate-position'
           title='Выгрузить в формате CSV'
           icon={<IconCSV size='1.25rem' className='icon-green' />}
           onClick={handleDownloadCSV}
         />
-      </Overlay>
-      <ToolbarSearch total={libraryItems.length} filtered={filtered.length} />
 
-      <div className='cc-fade-in flex'>
         <ViewSideLocation
           isVisible={folderMode}
           onRenameLocation={() => showChangeLocation({ initial: location, onChangeLocation: handleRenameLocation })}

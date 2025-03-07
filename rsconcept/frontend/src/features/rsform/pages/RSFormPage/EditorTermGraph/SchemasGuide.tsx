@@ -40,7 +40,6 @@ export function SchemasGuide() {
       <IconHelp size='1.25rem' className='icon-primary' />
       <Tooltip
         anchorSelect={`#${globalIDs.graph_schemas}`}
-        layer='z-modal-tooltip'
         place='right'
         className='max-w-[25rem] break-words text-base'
       >
