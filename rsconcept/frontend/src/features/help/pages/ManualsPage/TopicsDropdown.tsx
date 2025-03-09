@@ -31,14 +31,14 @@ export function TopicsDropdown({ activeTopic, onChangeTopic }: TopicsDropdownPro
     <div
       ref={menu.ref}
       className={clsx(
-        'absolute left-0 w-[13.5rem]', // prettier: split-lines
+        'absolute left-0 w-54', // prettier: split-lines
         'flex flex-col',
         'z-topmost',
         'text-xs sm:text-sm',
         'select-none',
         {
           'top-0': noNavigation,
-          'top-[3rem]': !noNavigation
+          'top-12': !noNavigation
         }
       )}
     >
@@ -48,7 +48,7 @@ export function TopicsDropdown({ activeTopic, onChangeTopic }: TopicsDropdownPro
         title='Список тем'
         hideTitle={menu.isOpen}
         icon={!menu.isOpen ? <IconMenuUnfold size='1.25rem' /> : <IconMenuFold size='1.25rem' />}
-        className={clsx('w-[3rem] h-7 rounded-none border-l-0', menu.isOpen && 'border-b-0')}
+        className={clsx('w-12 h-7 rounded-none border-l-0', menu.isOpen && 'border-b-0')}
         onClick={menu.toggle}
       />
       <SelectTree

@@ -31,7 +31,7 @@ export function TableHeader<TData>({
       {table.getHeaderGroups().map((headerGroup: HeaderGroup<TData>) => (
         <tr key={headerGroup.id}>
           {enableRowSelection ? (
-            <th className='pl-3 pr-1 align-middle'>
+            <th className='pl-3 pr-1' scope='col'>
               <SelectAll table={table} resetLastSelected={resetLastSelected} />
             </th>
           ) : null}
@@ -39,17 +39,16 @@ export function TableHeader<TData>({
             <th
               key={header.id}
               colSpan={header.colSpan}
-              className='pl-2 py-2 text-xs font-medium select-none whitespace-nowrap'
+              scope='col'
+              className='cc-table-header group'
               style={{
-                paddingRight: enableSorting && header.column.getCanSort() ? '0px' : '2px',
-                textAlign: 'start',
                 width: `calc(var(--header-${header?.id}-size) * 1px)`,
                 cursor: enableSorting && header.column.getCanSort() ? 'pointer' : 'auto'
               }}
               onClick={enableSorting ? header.column.getToggleSortingHandler() : undefined}
             >
               {!header.isPlaceholder ? (
-                <span className='inline-flex align-middle gap-1'>
+                <span className='inline-flex gap-1'>
                   {flexRender(header.column.columnDef.header, header.getContext())}
                   {enableSorting && header.column.getCanSort() ? <SortingIcon column={header.column} /> : null}
                 </span>

@@ -36,27 +36,17 @@ export function SchemasGuide() {
   })();
 
   return (
-    <div tabIndex={-1} id={globalIDs.graph_schemas} className='p-1'>
+    <div tabIndex={-1} id={globalIDs.graph_schemas}>
       <IconHelp size='1.25rem' className='icon-primary' />
-      <Tooltip
-        anchorSelect={`#${globalIDs.graph_schemas}`}
-        place='right'
-        className='max-w-[25rem] break-words text-base'
-      >
-        <div>
-          <span
-            className='min-w-[0.6rem] min-h-[0.6rem] border inline-block mr-1 rounded-full'
-            style={{ backgroundColor: colorBgSchemas(0) }}
-          />
-          Текущая схема
+      <Tooltip anchorSelect={`#${globalIDs.graph_schemas}`} place='right' className='max-w-100 break-words text-base'>
+        <div className='inline-flex items-center gap-2'>
+          <span className='w-2.5 h-2.5 border rounded-full' style={{ backgroundColor: colorBgSchemas(0) }} />
+          <span>Текущая схема</span>
         </div>
         {schemas.map((alias, index) => (
-          <div key={`${prefixes.schemas_list}${index}`}>
-            <span
-              className='min-w-[0.6rem] min-h-[0.6rem] border inline-block mr-1 rounded-full'
-              style={{ backgroundColor: colorBgSchemas(index + 1) }}
-            />
-            {alias}
+          <div key={`${prefixes.schemas_list}${index}`} className='inline-flex items-center gap-2'>
+            <span className='w-2.5 h-2.5 border rounded-full' style={{ backgroundColor: colorBgSchemas(index + 1) }} />
+            <span>{alias}</span>
           </div>
         ))}
       </Tooltip>

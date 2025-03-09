@@ -18,7 +18,7 @@ export function InfoCstClass({ header }: InfoCstClassProps) {
         return (
           <p key={`${prefixes.cst_status_list}${index}`}>
             <span
-              className={clsx('inline-block', 'min-w-[7rem]', 'px-1', 'border', 'text-center text-sm font-controls')}
+              className={clsx('inline-block', 'min-w-28', 'px-1', 'border', 'text-center text-sm font-controls')}
               style={{ backgroundColor: colorBgCstClass(cstClass) }}
             >
               {labelCstClass(cstClass)}

@@ -29,15 +29,14 @@ export function TableUsers({ items, onDelete }: TableUsersProps) {
       id: 'actions',
       size: 0,
       cell: props => (
-        <div className='h-[1.25rem] w-[1.25rem]'>
-          <MiniButton
-            title='Удалить из списка'
-            noHover
-            noPadding
-            icon={<IconRemove size='1.25rem' className='icon-red' />}
-            onClick={() => onDelete(props.row.original.id)}
-          />
-        </div>
+        <MiniButton
+          title='Удалить из списка'
+          className='align-middle'
+          noHover
+          noPadding
+          icon={<IconRemove size='1.25rem' className='icon-red' />}
+          onClick={() => onDelete(props.row.original.id)}
+        />
       )
     })
   ];

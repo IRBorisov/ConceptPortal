@@ -63,7 +63,7 @@ export function ViewSideLocation({ isVisible, onRenameLocation }: ViewSideLocati
 
   return (
     <div
-      className={clsx('max-w-[10rem] sm:max-w-[15rem]', 'flex flex-col', 'text:xs sm:text-sm', 'select-none')}
+      className={clsx('max-w-40 sm:max-w-60', 'flex flex-col', 'text:xs sm:text-sm', 'select-none')}
       style={{
         transitionProperty: 'width, min-width, opacity',
         transitionDuration: `${PARAMETER.moveDuration}ms`,
@@ -73,7 +73,7 @@ export function ViewSideLocation({ isVisible, onRenameLocation }: ViewSideLocati
         opacity: isVisible ? 1 : 0
       }}
     >
-      <div className='h-[2.08rem] flex justify-between items-center pr-1 pl-[0.125rem]'>
+      <div className='h-8 flex justify-between items-center pr-1 pl-0.5'>
         <BadgeHelp topic={HelpTopic.UI_LIBRARY} contentClass='text-sm' offset={5} place='right-start' />
         <div className='cc-icons'>
           {canRename ? (

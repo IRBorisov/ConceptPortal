@@ -51,9 +51,7 @@ export function TableSideConstituents({ autoScroll = true, maxHeight }: TableSid
       header: () => <span className='pl-3'>Имя</span>,
       size: 65,
       minSize: 65,
-      cell: props => (
-        <BadgeConstituenta className='mr-[-0.5rem]' value={props.row.original} prefixID={prefixes.cst_side_table} />
-      )
+      cell: props => <BadgeConstituenta value={props.row.original} prefixID={prefixes.cst_side_table} />
     }),
     columnHelper.accessor(cst => describeConstituenta(cst), {
       id: 'description',
@@ -61,17 +59,7 @@ export function TableSideConstituents({ autoScroll = true, maxHeight }: TableSid
       size: 1000,
       minSize: 250,
       maxSize: 1000,
-      cell: props => (
-        <TextContent
-          noTooltip
-          text={props.getValue()}
-          maxLength={DESCRIPTION_MAX_SYMBOLS}
-          style={{
-            textWrap: 'pretty',
-            fontSize: 12
-          }}
-        />
-      )
+      cell: props => <TextContent noTooltip text={props.getValue()} maxLength={DESCRIPTION_MAX_SYMBOLS} />
     })
   ];
 
@@ -108,7 +96,7 @@ export function TableSideConstituents({ autoScroll = true, maxHeight }: TableSid
       headPosition='0'
       enableHiding
       noDataComponent={
-        <NoData className='min-h-[5rem]'>
+        <NoData className='min-h-20'>
           <p>Список конституент пуст</p>
           <p>Измените параметры фильтра</p>
         </NoData>

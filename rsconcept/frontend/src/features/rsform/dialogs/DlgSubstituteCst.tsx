@@ -47,7 +47,7 @@ export function DlgSubstituteCst() {
       submitInvalidTooltip='Выберите две различные конституенты'
       canSubmit={isValid}
       onSubmit={event => void handleSubmit(onSubmit)(event)}
-      className={clsx('w-[40rem]', 'px-6 pb-3')}
+      className={clsx('w-160', 'px-6 pb-3')}
       helpTopic={HelpTopic.UI_SUBSTITUTIONS}
     >
       <Controller

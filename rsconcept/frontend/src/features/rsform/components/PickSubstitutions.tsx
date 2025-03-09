@@ -187,7 +187,7 @@ export function PickSubstitutions({
     columnHelper.accessor(item => item.original_source.alias, {
       id: 'right_schema',
       size: 100,
-      cell: props => <div className='min-w-[8rem] text-ellipsis text-right'>{props.getValue()}</div>
+      cell: props => <div className='min-w-32 text-ellipsis text-right'>{props.getValue()}</div>
     }),
     columnHelper.display({
       id: 'actions',

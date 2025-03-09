@@ -13,15 +13,14 @@ export function Footer() {
         'text-xs sm:text-sm select-none whitespace-nowrap text-prim-600 bg-prim-100'
       )}
     >
-      <div className='flex gap-3'>
+      <nav className='flex gap-3' aria-label='Вторичная навигация'>
         <TextURL text='Библиотека' href='/library' color='' />
         <TextURL text='Справка' href='/manuals' color='' />
         <TextURL text='Центр Концепт' href={external_urls.concept} color='' />
         <TextURL text='Экстеор' href='/manuals?topic=exteor' color='' />
-      </div>
-      <div>
-        <p>© 2024 ЦИВТ КОНЦЕПТ</p>
-      </div>
+      </nav>
+
+      <p>© 2024 ЦИВТ КОНЦЕПТ</p>
     </footer>
   );
 }

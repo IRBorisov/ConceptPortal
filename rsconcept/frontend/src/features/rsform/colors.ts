@@ -282,7 +282,7 @@ export function colorBgGraphNode(cst: IConstituenta, coloringScheme: GraphColori
   if (coloringScheme === 'schemas') {
     return colorBgSchemas(cst.parent_schema_index);
   }
-  return '';
+  return APP_COLORS.bgGreen50;
 }
 
 /**

@@ -83,7 +83,7 @@ export function EditorLibraryItem({ schema, isAttachedToOSS }: EditorLibraryItem
 
   return (
     <div className='flex flex-col'>
-      <div className='relative flex justify-stretch sm:mb-1 max-w-[30rem] gap-3'>
+      <div className='relative flex justify-stretch sm:mb-1 max-w-120 gap-3'>
         <MiniButton
           noHover
           noPadding
@@ -103,8 +103,8 @@ export function EditorLibraryItem({ schema, isAttachedToOSS }: EditorLibraryItem
 
       <div className='relative'>
         {ownerSelector.isOpen ? (
-          <div className='absolute top-[-0.5rem] left-[4rem]'>
-            <SelectUser className='w-[25rem] sm:w-[26rem] text-sm' value={schema.owner} onChange={onSelectUser} />
+          <div className='absolute -top-2 right-0'>
+            <SelectUser className='w-100 text-sm' value={schema.owner} onChange={onSelectUser} />
           </div>
         ) : null}
         <ValueIcon

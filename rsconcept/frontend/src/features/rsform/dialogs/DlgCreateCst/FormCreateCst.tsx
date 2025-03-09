@@ -52,7 +52,7 @@ export function FormCreateCst({ schema }: FormCreateCstProps) {
           {...register('alias')}
           error={errors.alias}
         />
-        <BadgeHelp topic={HelpTopic.CC_CONSTITUENTA} offset={16} contentClass='sm:max-w-[40rem]' />
+        <BadgeHelp topic={HelpTopic.CC_CONSTITUENTA} offset={16} contentClass='sm:max-w-160' />
       </div>
 
       <TextArea

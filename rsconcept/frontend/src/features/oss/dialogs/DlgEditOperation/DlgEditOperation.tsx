@@ -71,7 +71,7 @@ export function DlgEditOperation() {
       submitText='Сохранить'
       canSubmit={methods.formState.isValid}
       onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
-      className='w-[40rem] px-6 h-[32rem]'
+      className='w-160 px-6 h-128'
       helpTopic={HelpTopic.UI_SUBSTITUTIONS}
       hideHelpWhen={() => activeTab !== TabID.SUBSTITUTION}
     >
@@ -82,12 +82,12 @@ export function DlgEditOperation() {
         onSelect={setActiveTab}
       >
         <TabList className={clsx('mb-3 self-center', 'flex', 'border divide-x rounded-none', 'bg-prim-200')}>
-          <TabLabel title='Текстовые поля' label='Карточка' className='w-[8rem]' />
+          <TabLabel title='Текстовые поля' label='Карточка' className='w-32' />
           {target.operation_type === OperationType.SYNTHESIS ? (
-            <TabLabel title='Выбор аргументов операции' label='Аргументы' className='w-[8rem]' />
+            <TabLabel title='Выбор аргументов операции' label='Аргументы' className='w-32' />
           ) : null}
           {target.operation_type === OperationType.SYNTHESIS ? (
-            <TabLabel titleHtml='Таблица отождествлений' label='Отождествления' className='w-[8rem]' />
+            <TabLabel titleHtml='Таблица отождествлений' label='Отождествления' className='w-32' />
           ) : null}
         </TabList>
 

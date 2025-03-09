@@ -34,6 +34,9 @@ export interface IRenameLocationDTO {
 /** Represents library item version information. */
 export type IVersionInfo = z.infer<typeof schemaVersionInfo>;
 
+/** Represents library item version extended information. */
+export type IVersionExInfo = z.infer<typeof schemaVersionExInfo>;
+
 /** Represents data, used for cloning {@link IRSForm}. */
 export type ICloneLibraryItemDTO = z.infer<typeof schemaCloneLibraryItem>;
 
@@ -127,6 +130,10 @@ export const schemaVersionInfo = z.strictObject({
   version: z.string(),
   description: z.string(),
   time_create: z.string().datetime({ offset: true })
+});
+
+export const schemaVersionExInfo = schemaVersionInfo.extend({
+  item: z.number()
 });
 
 export const schemaVersionUpdate = z.strictObject({

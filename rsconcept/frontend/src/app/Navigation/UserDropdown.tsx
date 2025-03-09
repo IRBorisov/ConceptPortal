@@ -76,7 +76,7 @@ export function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
   }
 
   return (
-    <Dropdown id={globalIDs.user_dropdown} className='min-w-[18ch] max-w-[12rem]' stretchLeft isOpen={isOpen}>
+    <Dropdown id={globalIDs.user_dropdown} className='min-w-[18ch] max-w-48' stretchLeft isOpen={isOpen}>
       <DropdownButton
         text={user.username}
         title='Профиль пользователя'
@@ -105,7 +105,7 @@ export function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
       ) : null}
       {user.is_staff ? (
         <DropdownButton
-          text='REST API' // prettier: split-line
+          text='REST API' //
           icon={<IconRESTapi size='1rem' />}
           className='border-t'
           onClick={gotoRestApi}
@@ -113,21 +113,21 @@ export function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
       ) : null}
       {user.is_staff ? (
         <DropdownButton
-          text='База данных' // prettier: split-line
+          text='База данных' //
           icon={<IconDatabase size='1rem' />}
           onClick={gotoAdmin}
         />
       ) : null}
       {user?.is_staff ? (
         <DropdownButton
-          text='Иконки' // prettier: split-line
+          text='Иконки' //
           icon={<IconImage size='1rem' />}
           onClick={gotoIcons}
         />
       ) : null}
       {user.is_staff ? (
         <DropdownButton
-          text='Структура БД' // prettier: split-line
+          text='Структура БД' //
           icon={<IconDBStructure size='1rem' />}
           onClick={gotoDatabaseSchema}
           className='border-b'

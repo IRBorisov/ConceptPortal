@@ -78,21 +78,14 @@ export function ToolbarSearch({ total, filtered }: ToolbarSearchProps) {
     <div
       className={clsx(
         'sticky top-0', //
-        'h-[2.2rem]',
+        'h-9',
         'flex items-center gap-3',
         'border-b',
         'text-sm',
         'clr-input'
       )}
     >
-      <div
-        className={clsx(
-          'ml-3 pt-1 self-center',
-          'min-w-[4.5rem] sm:min-w-[7.4rem]',
-          'select-none',
-          'whitespace-nowrap'
-        )}
-      >
+      <div className={clsx('ml-3 pt-1 self-center', 'min-w-18 sm:min-w-30', 'select-none', 'whitespace-nowrap')}>
         {filtered} из {total}
       </div>
 
@@ -124,7 +117,7 @@ export function ToolbarSearch({ total, filtered }: ToolbarSearchProps) {
             <SelectUser
               noBorder
               placeholder='Выберите владельца'
-              className='min-w-[15rem] text-sm mx-1 mb-1'
+              className='min-w-60 text-sm mx-1 mb-1'
               value={filterUser}
               onChange={setFilterUser}
             />
@@ -144,7 +137,7 @@ export function ToolbarSearch({ total, filtered }: ToolbarSearchProps) {
           id='library_search'
           placeholder='Поиск'
           noBorder
-          className={clsx('min-w-[7rem] sm:min-w-[10rem] max-w-[20rem]', folderMode && 'grow')}
+          className={clsx('min-w-28 sm:min-w-40 max-w-80', folderMode && 'grow')}
           query={query}
           onChangeQuery={setQuery}
         />
@@ -167,31 +160,26 @@ export function ToolbarSearch({ total, filtered }: ToolbarSearchProps) {
             />
 
             <Dropdown isOpen={headMenu.isOpen} stretchLeft>
-              <DropdownButton title='Переключение в режим Проводник' onClick={handleToggleFolder}>
-                <div className='inline-flex items-center gap-3'>
-                  <IconFolderTree size='1rem' className='clr-text-controls' />
-                  <span>проводник...</span>
-                </div>
-              </DropdownButton>
-              <DropdownButton className='w-[10rem]' onClick={() => handleChange(null)}>
-                <div className='inline-flex items-center gap-3'>
-                  <IconFolder size='1rem' className='clr-text-controls' />
-                  <span>отображать все</span>
-                </div>
-              </DropdownButton>
+              <DropdownButton
+                title='Переключение в режим Проводник'
+                text='проводник...'
+                icon={<IconFolderTree size='1rem' className='clr-text-controls' />}
+                onClick={handleToggleFolder}
+              />
+              <DropdownButton
+                text='отображать все'
+                icon={<IconFolder size='1rem' className='clr-text-controls' />}
+                onClick={() => handleChange(null)}
+              />
               {Object.values(LocationHead).map((head, index) => {
                 return (
                   <DropdownButton
-                    className='w-[10rem]'
                     key={`${prefixes.location_head_list}${index}`}
                     onClick={() => handleChange(head)}
                     title={describeLocationHead(head)}
-                  >
-                    <div className='inline-flex items-center gap-3'>
-                      <IconLocationHead value={head} size='1rem' />
-                      {labelLocationHead(head)}
-                    </div>
-                  </DropdownButton>
+                    text={labelLocationHead(head)}
+                    icon={<IconLocationHead value={head} size='1rem' />}
+                  />
                 );
               })}
             </Dropdown>
@@ -203,7 +191,7 @@ export function ToolbarSearch({ total, filtered }: ToolbarSearchProps) {
             placeholder='Путь'
             noIcon
             noBorder
-            className='w-[4.5rem] sm:w-[5rem] grow'
+            className='w-18 sm:w-20 grow'
             query={path}
             onChangeQuery={setPath}
           />

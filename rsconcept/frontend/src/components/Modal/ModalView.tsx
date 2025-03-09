@@ -37,19 +37,27 @@ export function ModalView({
       <div
         className={clsx(
           'cc-animate-modal',
-          'z-modal absolute bottom-1/2 left-1/2 -translate-x-1/2 translate-y-1/2',
+          'absolute bottom-1/2 left-1/2 -translate-x-1/2 translate-y-1/2',
+          'grid',
           'border rounded-xl bg-prim-100'
         )}
+        role='dialog'
       >
         {helpTopic && !hideHelpWhen?.() ? (
-          <BadgeHelp topic={helpTopic} className='float-left mt-2 ml-2' padding='p-0' contentClass='sm:max-w-[40rem]' />
+          <BadgeHelp
+            topic={helpTopic}
+            className='absolute z-pop left-0 mt-2 ml-2'
+            padding='p-0'
+            contentClass='sm:max-w-160'
+          />
         ) : null}
 
         <MiniButton
           noPadding
+          aria-label='Закрыть'
           titleHtml={prepareTooltip('Закрыть диалоговое окно', 'ESC')}
           icon={<IconClose size='1.25rem' />}
-          className='float-right mt-2 mr-2'
+          className='absolute z-pop right-0 mt-2 mr-2'
           onClick={hideDialog}
         />
 
@@ -71,9 +79,12 @@ export function ModalView({
           {children}
         </div>
 
-        <div className='z-pop my-2 flex gap-12 justify-center text-sm'>
-          <Button text='Закрыть' className='min-w-[7rem]' onClick={hideDialog} />
-        </div>
+        <Button
+          text='Закрыть'
+          aria-label='Закрыть'
+          className='z-pop my-2 mx-auto text-sm min-w-28'
+          onClick={hideDialog}
+        />
       </div>
     </div>
   );

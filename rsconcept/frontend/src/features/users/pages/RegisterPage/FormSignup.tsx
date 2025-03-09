@@ -55,13 +55,16 @@ export function FormSignup() {
 
   return (
     <form
-      className='cc-column cc-fade-in mx-auto w-[36rem] px-6 py-3'
+      className='cc-column cc-fade-in mx-auto w-144 px-6 py-3'
       onSubmit={event => void handleSubmit(onSubmit)(event)}
       onChange={resetErrors}
     >
       <h1>Новый пользователь</h1>
+
       <div className='flex gap-12'>
-        <div className='cc-column'>
+        <fieldset className='cc-column w-60'>
+          <legend className='sr-only'>Данные для входа</legend>
+
           <TextInput
             id='username'
             {...register('username')}
@@ -70,7 +73,6 @@ export function FormSignup() {
             spellCheck={false}
             pattern={patterns.login}
             title='Минимум 3 знака. Латинские буквы и цифры. Не может начинаться с цифры'
-            className='w-[15rem]'
             error={errors.username}
           />
           <TextInput
@@ -79,7 +81,6 @@ export function FormSignup() {
             {...register('password')}
             autoComplete='new-password'
             label='Пароль'
-            className='w-[15rem]'
             error={errors.password}
           />
           <TextInput
@@ -88,12 +89,13 @@ export function FormSignup() {
             {...register('password2')}
             label='Повторите пароль'
             autoComplete='new-password'
-            className='w-[15rem]'
             error={errors.password2}
           />
-        </div>
+        </fieldset>
 
-        <div className='cc-column w-[15rem] relative'>
+        <fieldset className='cc-column w-60 relative'>
+          <legend className='sr-only'>Информация о пользователе</legend>
+
           <IconHelp id={globalIDs.email_tooltip} className='absolute top-0 right-0 icon-primary' size='1.25rem' />
           <Tooltip anchorSelect={`#${globalIDs.email_tooltip}`} offset={6}>
             электронная почта используется для восстановления пароля
@@ -122,7 +124,7 @@ export function FormSignup() {
             autoComplete='family-name'
             error={errors.last_name}
           />
-        </div>
+        </fieldset>
       </div>
 
       <div className='flex gap-1 text-sm'>
@@ -134,14 +136,14 @@ export function FormSignup() {
         <TextURL text='правила поведения на Портале...' href={urls.help_topic(HelpTopic.INFO_RULES)} />
       </div>
 
-      <div className='flex justify-around my-3'>
+      <div className='flex justify-around mt-3'>
         <SubmitButton
           text='Регистрировать'
-          className='min-w-[10rem]'
+          className='min-w-40'
           loading={isPending}
           disabled={!acceptPrivacy || !acceptRules}
         />
-        <Button text='Назад' className='min-w-[10rem]' onClick={() => handleCancel()} />
+        <Button text='Назад' className='min-w-40' onClick={() => handleCancel()} />
       </div>
       {serverError ? <ServerError error={serverError} /> : null}
     </form>

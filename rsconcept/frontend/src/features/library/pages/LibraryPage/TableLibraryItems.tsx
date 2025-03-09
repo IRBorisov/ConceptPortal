@@ -40,7 +40,7 @@ export function TableLibraryItems({ items }: TableLibraryItemsProps) {
       }
     }
   ];
-  const tableHeight = useFitHeight('2.2rem');
+  const tableHeight = useFitHeight('2.25rem');
 
   function handleOpenItem(item: ILibraryItem, event: React.MouseEvent<Element>) {
     const selection = window.getSelection();

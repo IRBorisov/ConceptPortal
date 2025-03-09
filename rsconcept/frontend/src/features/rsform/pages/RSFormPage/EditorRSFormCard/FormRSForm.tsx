@@ -4,7 +4,6 @@
 import { useEffect } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import clsx from 'clsx';
 
 import { urls, useConceptNavigation } from '@/app';
 import {
@@ -71,7 +70,7 @@ export function FormRSForm() {
   return (
     <form
       id={globalIDs.library_item_editor}
-      className={clsx('mt-1 min-w-[22rem] sm:w-[30rem]', 'flex flex-col pt-1')}
+      className='mt-1 min-w-88 sm:w-120 flex flex-col pt-1'
       onSubmit={event => void handleSubmit(onSubmit)(event)}
     >
       <TextInput
@@ -87,7 +86,7 @@ export function FormRSForm() {
           id='schema_alias'
           {...register('alias')}
           label='Сокращение'
-          className='w-[16rem]'
+          className='w-64'
           disabled={!isContentEditable}
           error={errors.alias}
         />

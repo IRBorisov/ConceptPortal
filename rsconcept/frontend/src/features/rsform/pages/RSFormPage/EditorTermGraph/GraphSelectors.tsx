@@ -20,9 +20,9 @@ export function GraphSelectors() {
 
   return (
     <div className='relative border rounded-b-none select-none clr-input rounded-t-md pointer-events-auto'>
-      <div className='absolute z-pop right-[2.5rem] top-[0.25rem]'>
-        {coloring === 'status' ? <BadgeHelp topic={HelpTopic.UI_CST_STATUS} contentClass='min-w-[25rem]' /> : null}
-        {coloring === 'type' ? <BadgeHelp topic={HelpTopic.UI_CST_CLASS} contentClass='min-w-[25rem]' /> : null}
+      <div className='absolute z-pop right-10 h-10 flex items-center'>
+        {coloring === 'status' ? <BadgeHelp topic={HelpTopic.UI_CST_STATUS} contentClass='min-w-100' /> : null}
+        {coloring === 'type' ? <BadgeHelp topic={HelpTopic.UI_CST_CLASS} contentClass='min-w-100]' /> : null}
         {coloring === 'schemas' ? <SchemasGuide /> : null}
       </div>
       <SelectSingle

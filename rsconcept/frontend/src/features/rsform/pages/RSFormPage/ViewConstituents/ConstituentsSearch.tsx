@@ -31,7 +31,7 @@ export function ConstituentsSearch({ dense }: ConstituentsSearchProps) {
       <SearchBar
         id='constituents_search'
         noBorder
-        className='min-w-[6rem] w-[6rem] mr-2 grow'
+        className='min-w-24 mr-2 grow'
         query={query}
         onChangeQuery={setQuery}
       />

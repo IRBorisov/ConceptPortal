@@ -1,6 +1,7 @@
 'use client';
 
 import { useReactFlow } from 'reactflow';
+import clsx from 'clsx';
 
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components';
@@ -22,6 +23,7 @@ import {
   IconReset,
   IconSave
 } from '@/components/Icons';
+import { type Styling } from '@/components/props';
 import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/utils';
@@ -34,13 +36,19 @@ import { useOssEdit } from '../OssEditContext';
 import { VIEW_PADDING } from './OssFlow';
 import { useGetPositions } from './useGetPositions';
 
-interface ToolbarOssGraphProps {
+interface ToolbarOssGraphProps extends Styling {
   onCreate: () => void;
   onDelete: () => void;
   onResetPositions: () => void;
 }
 
-export function ToolbarOssGraph({ onCreate, onDelete, onResetPositions }: ToolbarOssGraphProps) {
+export function ToolbarOssGraph({
+  onCreate,
+  onDelete,
+  onResetPositions,
+  className,
+  ...restProps
+}: ToolbarOssGraphProps) {
   const { schema, selected, isMutable, canDeleteOperation: canDelete } = useOssEdit();
   const isProcessing = useMutatingOss();
   const { fitView } = useReactFlow();
@@ -119,7 +127,16 @@ export function ToolbarOssGraph({ onCreate, onDelete, onResetPositions }: Toolba
   }
 
   return (
-    <div className='flex flex-col items-center'>
+    <div
+      className={clsx(
+        'flex flex-col items-center pt-1',
+        'rounded-b-2xl',
+        'cc-blur',
+        'hover:bg-prim-100 hover:bg-opacity-50',
+        className
+      )}
+      {...restProps}
+    >
       <div className='cc-icons'>
         <MiniButton
           title='Сбросить изменения'
@@ -164,7 +181,7 @@ export function ToolbarOssGraph({ onCreate, onDelete, onResetPositions }: Toolba
           }
           onClick={toggleEdgeAnimate}
         />
-        <BadgeHelp topic={HelpTopic.UI_OSS_GRAPH} contentClass='sm:max-w-[40rem]' offset={4} />
+        <BadgeHelp topic={HelpTopic.UI_OSS_GRAPH} contentClass='sm:max-w-160' offset={4} />
       </div>
       {isMutable ? (
         <div className='cc-icons'>

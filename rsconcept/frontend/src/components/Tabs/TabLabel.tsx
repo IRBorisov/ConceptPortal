@@ -18,7 +18,7 @@ export function TabLabel({ label, title, titleHtml, hideTitle, className, ...oth
   return (
     <TabImpl
       className={clsx(
-        'min-w-[5.5rem] h-full',
+        'min-w-20 h-full',
         'px-2 py-1 flex justify-center',
         'clr-hover cc-animate-color duration-150',
         'text-sm whitespace-nowrap font-controls',

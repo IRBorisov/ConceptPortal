@@ -10,7 +10,6 @@ import {
   useOnSelectionChange,
   useReactFlow
 } from 'reactflow';
-import clsx from 'clsx';
 
 import { useMainHeight } from '@/stores/appLayout';
 import { useDialogsStore } from '@/stores/dialogs';
@@ -191,20 +190,12 @@ export function OssFlow() {
 
   return (
     <div tabIndex={-1} className='relative' onKeyDown={handleKeyDown}>
-      <div
-        className={clsx(
-          'absolute z-pop top-[1.9rem] right-1/2 translate-x-1/2',
-          'pt-1 rounded-b-2xl',
-          'cc-blur',
-          'hover:bg-prim-100 hover:bg-opacity-50'
-        )}
-      >
-        <ToolbarOssGraph
-          onCreate={handleCreateOperation}
-          onDelete={handleDeleteSelected}
-          onResetPositions={() => setToggleReset(prev => !prev)}
-        />
-      </div>
+      <ToolbarOssGraph
+        className='absolute z-pop top-8 right-1/2 translate-x-1/2'
+        onCreate={handleCreateOperation}
+        onDelete={handleDeleteSelected}
+        onResetPositions={() => setToggleReset(prev => !prev)}
+      />
 
       <NodeContextMenu isOpen={isContextMenuOpen} onHide={() => setIsContextMenuOpen(false)} {...menuProps} />
 

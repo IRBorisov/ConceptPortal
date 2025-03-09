@@ -77,9 +77,7 @@ export function TableRSList({
       minSize: 150,
       maxSize: 200,
       cell: props => (
-        <div className={clsx('min-w-[9.3rem] max-w-[9.3rem]', 'text-xs break-words')}>
-          {truncateToSymbol(props.getValue(), TYPIFICATION_TRUNCATE)}
-        </div>
+        <div className='w-40 text-xs break-words'>{truncateToSymbol(props.getValue(), TYPIFICATION_TRUNCATE)}</div>
       )
     }),
     columnHelper.accessor(cst => cst.term_resolved || cst.term_raw || '', {
@@ -126,7 +124,7 @@ export function TableRSList({
     <DataTable
       dense
       noFooter
-      className={clsx('min-h-[16rem]', 'cc-scroll-y', 'text-sm', 'select-none')}
+      className={clsx('min-h-64', 'cc-scroll-y', 'text-sm', 'select-none')}
       style={{ maxHeight: maxHeight }}
       data={items ?? []}
       columns={columns}

@@ -66,9 +66,7 @@ export function CheckboxTristate({
       <div
         className={clsx(
           'w-4 h-4', //
-          'pt-[0.05rem] pl-[0.05rem]',
           'border rounded-xs',
-          'cc-animate-color',
           {
             'bg-sec-600 text-sec-0': value !== false,
             'bg-prim-100': value === false

@@ -41,7 +41,7 @@ export function Button({
       disabled={disabled ?? loading}
       className={clsx(
         'inline-flex gap-2 items-center justify-center',
-        'select-none disabled:cursor-auto',
+        'font-medium select-none disabled:cursor-auto',
         'clr-btn-default cc-animate-color',
         {
           'border rounded-sm': !noBorder,
@@ -61,7 +61,7 @@ export function Button({
       {...restProps}
     >
       {icon ? icon : null}
-      {text ? <span className='font-medium'>{text}</span> : null}
+      {text ? <span>{text}</span> : null}
     </button>
   );
 }

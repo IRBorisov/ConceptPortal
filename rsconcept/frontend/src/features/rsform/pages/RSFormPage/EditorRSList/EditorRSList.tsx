@@ -123,10 +123,10 @@ export function EditorRSList() {
     return false;
   }
 
-  const tableHeight = useFitHeight('4.05rem + 5px');
+  const tableHeight = useFitHeight('4rem + 5px');
 
   return (
-    <div tabIndex={-1} onKeyDown={handleKeyDown} className='relative cc-fade-in pt-[1.9rem]'>
+    <div tabIndex={-1} onKeyDown={handleKeyDown} className='relative cc-fade-in pt-8'>
       {isContentEditable ? <ToolbarRSList /> : null}
       {isContentEditable ? (
         <div className='flex items-center border-b'>
@@ -136,7 +136,7 @@ export function EditorRSList() {
           <SearchBar
             id='constituents_search'
             noBorder
-            className='w-[8rem]'
+            className='w-32'
             query={filterText}
             onChangeQuery={setFilterText}
           />
@@ -144,7 +144,7 @@ export function EditorRSList() {
       ) : null}
 
       <MiniButton
-        className='absolute z-pop top-[4.45rem] md:top-[2.15rem] right-[1rem] cc-animate-position'
+        className='absolute z-pop top-18 right-4'
         title='Выгрузить в формате CSV'
         icon={<IconCSV size='1.25rem' className='icon-green' />}
         onClick={handleDownloadCSV}

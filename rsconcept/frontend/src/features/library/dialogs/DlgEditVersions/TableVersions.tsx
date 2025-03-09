@@ -1,7 +1,6 @@
 'use client';
 
 import { useIntl } from 'react-intl';
-import clsx from 'clsx';
 
 import { MiniButton } from '@/components/Control';
 import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/DataTable';
@@ -33,7 +32,7 @@ export function TableVersions({ processing, items, onDelete, selected, onSelect 
     columnHelper.accessor('version', {
       id: 'version',
       header: 'Версия',
-      cell: props => <div className='min-w-[6rem] max-w-[6rem] text-ellipsis'>{props.getValue()}</div>
+      cell: props => <div className='w-24 text-ellipsis'>{props.getValue()}</div>
     }),
     columnHelper.accessor('description', {
       id: 'description',
@@ -62,16 +61,15 @@ export function TableVersions({ processing, items, onDelete, selected, onSelect 
       id: 'actions',
       size: 0,
       cell: props => (
-        <div className='h-[1.25rem] w-[1.25rem]'>
-          <MiniButton
-            title='Удалить версию'
-            noHover
-            noPadding
-            disabled={processing}
-            icon={<IconRemove size='1.25rem' className='icon-red' />}
-            onClick={event => handleDeleteVersion(event, props.row.original.id)}
-          />
-        </div>
+        <MiniButton
+          title='Удалить версию'
+          className='align-middle'
+          noHover
+          noPadding
+          disabled={processing}
+          icon={<IconRemove size='1.25rem' className='icon-red' />}
+          onClick={event => handleDeleteVersion(event, props.row.original.id)}
+        />
       )
     })
   ];
@@ -90,7 +88,7 @@ export function TableVersions({ processing, items, onDelete, selected, onSelect 
       dense
       noFooter
       headPosition='0'
-      className={clsx('mb-2', 'max-h-[17.4rem] min-h-[17.4rem]', 'border', 'cc-scroll-y')}
+      className='mb-2 h-70 border cc-scroll-y'
       data={items}
       columns={columns}
       onRowClicked={rowData => onSelect(rowData.id)}

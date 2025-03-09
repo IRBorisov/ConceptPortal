@@ -46,18 +46,16 @@ export function SelectGraphFilter({ value, dense, className, onChange, ...restPr
             const source = value as DependencyMode;
             return (
               <DropdownButton
-                className={!dense ? 'w-[18rem]' : undefined}
+                className={!dense ? 'w-72' : undefined}
                 key={`${prefixes.cst_source_list}${index}`}
                 onClick={() => handleChange(source)}
+                icon={<IconDependencyMode value={source} size='1rem' />}
               >
-                <div className='inline-flex items-center gap-1'>
-                  {<IconDependencyMode value={source} size='1rem' />}
-                  {!dense ? (
-                    <span>
-                      <b>{labelCstSource(source)}:</b> {describeCstSource(source)}
-                    </span>
-                  ) : null}
-                </div>
+                {!dense ? (
+                  <span>
+                    <b>{labelCstSource(source)}:</b> {describeCstSource(source)}
+                  </span>
+                ) : null}
               </DropdownButton>
             );
           })}

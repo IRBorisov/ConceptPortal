@@ -156,7 +156,7 @@ export function ToolbarConstituenta({
           />
         </>
       ) : null}
-      <BadgeHelp topic={HelpTopic.UI_RS_EDITOR} offset={4} contentClass='sm:max-w-[40rem]' />
+      <BadgeHelp topic={HelpTopic.UI_RS_EDITOR} offset={4} contentClass='sm:max-w-160' />
     </div>
   );
 }

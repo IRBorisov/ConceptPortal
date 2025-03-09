@@ -224,7 +224,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
           id='cst_convention'
           {...register('item_data.convention')}
           fitContent
-          className='max-h-[8rem]'
+          className='max-h-32'
           spellCheck
           label={isBasic ? 'Конвенция' : 'Комментарий'}
           placeholder={isBasic ? 'Договоренность об интерпретации' : 'Пояснение разработчика'}
@@ -250,7 +250,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
             disabled={disabled || !isModified}
             icon={<IconSave size='1.25rem' />}
           />
-          <div className='absolute z-pop top-[0.1rem] left-full cc-icons'>
+          <div className='absolute z-pop top-1/2 -translate-y-1/2 left-full cc-icons'>
             {activeCst.has_inherited_children && !activeCst.is_inherited ? (
               <Indicator
                 icon={<IconPredecessor size='1.25rem' className='text-sec-600' />}

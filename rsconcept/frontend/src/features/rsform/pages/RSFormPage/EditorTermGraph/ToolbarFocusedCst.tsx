@@ -36,11 +36,14 @@ export function ToolbarFocusedCst() {
   }
 
   return (
-    <div className='items-center cc-icons'>
-      <div className='w-[7.8rem] text-right select-none' style={{ color: APP_COLORS.fgPurple }}>
-        Фокус
-        <b className='px-1'> {focusCst.alias} </b>
+    <div className='flex items-center cc-icons'>
+      <div className='w-31 mt-0.5 text-right select-none' style={{ color: APP_COLORS.fgPurple }}>
+        <span>
+          Фокус
+          <b className='pr-1'> {focusCst.alias} </b>
+        </span>
       </div>
+
       <MiniButton
         titleHtml='Сбросить фокус'
         icon={<IconReset size='1.25rem' className='icon-primary' />}

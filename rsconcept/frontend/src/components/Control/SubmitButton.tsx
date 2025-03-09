@@ -32,7 +32,7 @@ export function SubmitButton({ text = 'ОК', icon, disabled, loading, className
       disabled={disabled || loading}
       {...restProps}
     >
-      {icon ? <span>{icon}</span> : null}
+      {icon ? icon : null}
       {text ? <span>{text}</span> : null}
     </button>
   );

@@ -46,7 +46,7 @@ export function EditorProfile() {
 
   return (
     <form
-      className='cc-column w-[18rem] px-6 py-2'
+      className='cc-column w-72 px-6 py-2'
       onSubmit={event => void handleSubmit(onSubmit)(event)}
       onChange={resetErrors}
     >

@@ -85,7 +85,7 @@ export function DlgEditVersions() {
   }
 
   return (
-    <ModalView header='Редактирование версий' className='flex flex-col w-[40rem] px-6 gap-3 pb-6'>
+    <ModalView header='Редактирование версий' className='flex flex-col w-160 px-6 gap-3 pb-3'>
       <TableVersions
         processing={isProcessing}
         items={schema.versions.reverse()}
@@ -100,7 +100,7 @@ export function DlgEditVersions() {
           {...register('version')}
           dense
           label='Версия'
-          className='w-[16rem] mr-3'
+          className='w-64 mr-3'
           error={formErrors.version}
         />
         <div className='cc-icons h-fit'>

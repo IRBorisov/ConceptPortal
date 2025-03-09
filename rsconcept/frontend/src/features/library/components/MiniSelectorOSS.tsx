@@ -40,7 +40,7 @@ export function MiniSelectorOSS({ items, onSelect, className, ...restProps }: Mi
           <Label text='Список ОСС' className='border-b px-3 py-1' />
           {items.map((reference, index) => (
             <DropdownButton
-              className='min-w-[5rem]'
+              className='min-w-20'
               key={`${prefixes.oss_list}${index}`}
               text={reference.alias}
               onClick={event => onSelect(event, reference)}

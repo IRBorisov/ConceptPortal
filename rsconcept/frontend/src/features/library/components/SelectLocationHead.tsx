@@ -33,7 +33,7 @@ export function SelectLocationHead({
   }
 
   return (
-    <div ref={menu.ref} className={clsx('h-full text-right relative', className)} {...restProps}>
+    <div ref={menu.ref} className={clsx('text-right relative', className)} {...restProps}>
       <SelectorButton
         transparent
         tabIndex={-1}
@@ -51,16 +51,12 @@ export function SelectLocationHead({
           .map((head, index) => {
             return (
               <DropdownButton
-                className='w-[10rem]'
                 key={`${prefixes.location_head_list}${index}`}
                 onClick={() => handleChange(head)}
                 title={describeLocationHead(head)}
-              >
-                <div className='inline-flex items-center gap-3'>
-                  <IconLocationHead value={head} size='1rem' />
-                  {labelLocationHead(head)}
-                </div>
-              </DropdownButton>
+                icon={<IconLocationHead value={head} size='1rem' />}
+                text={labelLocationHead(head)}
+              />
             );
           })}
       </Dropdown>

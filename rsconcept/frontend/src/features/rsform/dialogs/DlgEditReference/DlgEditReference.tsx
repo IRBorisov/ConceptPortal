@@ -102,7 +102,7 @@ export function DlgEditReference() {
       canSubmit={methods.formState.isValid}
       onCancel={onCancel}
       onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
-      className='w-[40rem] px-6 h-[32rem]'
+      className='w-160 px-6 h-[32rem]'
       helpTopic={HelpTopic.TERM_CONTROL}
     >
       <Tabs

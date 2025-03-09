@@ -146,7 +146,7 @@ export function ToolbarTermGraph() {
         title='Граф ступеней'
         onClick={handleShowTypeGraph}
       />
-      <BadgeHelp topic={HelpTopic.UI_GRAPH_TERM} contentClass='sm:max-w-[40rem]' offset={4} />
+      <BadgeHelp topic={HelpTopic.UI_GRAPH_TERM} contentClass='sm:max-w-160' offset={4} />
     </div>
   );
 }

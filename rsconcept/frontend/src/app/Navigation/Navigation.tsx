@@ -39,7 +39,7 @@ export function Navigation() {
       <ToggleNavigation />
       <div
         className={clsx(
-          'pl-2 pr-[1.5rem] sm:pr-[0.9rem] h-[3rem]', //
+          'pl-2 pr-6 sm:pr-4 h-12', //
           'flex',
           'cc-shadow-border'
         )}

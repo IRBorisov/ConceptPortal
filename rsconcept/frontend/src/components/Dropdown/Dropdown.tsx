@@ -1,3 +1,4 @@
+import React from 'react';
 import clsx from 'clsx';
 
 import { PARAMETER } from '@/utils/constants';
@@ -5,6 +6,9 @@ import { PARAMETER } from '@/utils/constants';
 import { type Styling } from '../props';
 
 interface DropdownProps extends Styling {
+  /** Reference to the dropdown element. */
+  ref?: React.Ref<HTMLDivElement>;
+
   /** Unique ID for the dropdown. */
   id?: string;
 

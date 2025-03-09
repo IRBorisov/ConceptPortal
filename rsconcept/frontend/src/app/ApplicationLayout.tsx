@@ -25,7 +25,7 @@ export function ApplicationLayout() {
 
   return (
     <NavigationState>
-      <div className='min-w-[20rem] antialiased h-full max-w-[120rem] mx-auto'>
+      <div className='min-w-80 antialiased h-full max-w-[120rem] mx-auto'>
         <ToasterThemed
           className='text-[14px]'
           style={{ marginTop: noNavigationAnimation ? '1.5rem' : '3.5rem' }}

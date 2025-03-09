@@ -120,7 +120,7 @@ export function DlgRelocateConstituents() {
       submitText='Переместить'
       canSubmit={isValid && destinationItem !== undefined}
       onSubmit={event => void handleSubmit(onSubmit)(event)}
-      className={clsx('w-[40rem] h-[33rem]', 'py-3 px-6')}
+      className={clsx('w-160 h-[33rem]', 'py-3 px-6')}
       helpTopic={HelpTopic.UI_RELOCATE_CST}
     >
       <div className='flex flex-col border'>

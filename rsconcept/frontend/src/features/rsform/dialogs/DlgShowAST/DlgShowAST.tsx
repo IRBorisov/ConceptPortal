@@ -29,7 +29,7 @@ export function DlgShowAST() {
     <ModalView className='relative w-[calc(100dvw-3rem)] h-[calc(100dvh-6rem)]' helpTopic={HelpTopic.UI_FORMULA_TREE}>
       <div
         className={clsx(
-          'absolute z-pop top-0 -mt-1 right-1/2 translate-x-1/2 max-w-[60ch]',
+          'absolute z-pop top-2 right-1/2 translate-x-1/2 max-w-[60ch]',
           'px-2 rounded-2xl',
           'cc-blur bg-prim-100',
           'text-lg text-center'

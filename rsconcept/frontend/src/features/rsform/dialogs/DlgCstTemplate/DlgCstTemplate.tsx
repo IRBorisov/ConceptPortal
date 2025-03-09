@@ -77,9 +77,9 @@ export function DlgCstTemplate() {
         onSelect={setActiveTab}
       >
         <TabList className={clsx('mb-3 self-center', 'flex', 'border divide-x rounded-none', 'bg-prim-200')}>
-          <TabLabel label='Шаблон' title='Выбор шаблона выражения' className='w-[8rem]' />
-          <TabLabel label='Аргументы' title='Подстановка аргументов шаблона' className='w-[8rem]' />
-          <TabLabel label='Конституента' title='Редактирование конституенты' className='w-[8rem]' />
+          <TabLabel label='Шаблон' title='Выбор шаблона выражения' className='w-32' />
+          <TabLabel label='Аргументы' title='Подстановка аргументов шаблона' className='w-32' />
+          <TabLabel label='Конституента' title='Редактирование конституенты' className='w-32' />
         </TabList>
 
         <FormProvider {...methods}>

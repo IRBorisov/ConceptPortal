@@ -38,16 +38,11 @@ export function StatusBar({ isModified, processing, activeCst, parseData, onAnal
   })();
 
   return (
-    <div
-      className={clsx(
-        'absolute z-pop top-[-0.5rem] right-1/2 translate-x-1/2 w-fit',
-        'pl-[8.5rem] xs:pl-[2rem] flex gap-1'
-      )}
-    >
+    <div className={clsx('absolute z-pop -top-2 right-1/2 translate-x-1/2 w-fit', 'pl-34 xs:pl-8 flex gap-1')}>
       <div
         tabIndex={0}
         className={clsx(
-          'w-[10rem] h-[1.75rem]',
+          'w-40 h-7',
           'px-2 flex items-center justify-center',
           'border',
           'select-none',
@@ -68,7 +63,7 @@ export function StatusBar({ isModified, processing, activeCst, parseData, onAnal
         {!processing ? (
           <div className='cc-fade-in flex items-center gap-2'>
             <IconExpressionStatus size='1rem' value={status} />
-            <span className='pb-[0.125rem] font-controls pr-2'>{labelExpressionStatus(status)}</span>
+            <span className='pb-0.5 font-controls pr-2'>{labelExpressionStatus(status)}</span>
           </div>
         ) : null}
       </div>

@@ -52,9 +52,9 @@ export function DropdownButton({
       data-tooltip-hidden={hideTitle}
       {...restProps}
     >
+      {icon ? icon : null}
+      {text ? <span>{text}</span> : null}
       {children ? children : null}
-      {!children && icon ? icon : null}
-      {!children && text ? <span>{text}</span> : null}
     </button>
   );
 }

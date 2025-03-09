@@ -45,18 +45,16 @@ export function SelectMatchMode({ value, dense, className, onChange, ...restProp
             const matchMode = value as CstMatchMode;
             return (
               <DropdownButton
-                className={!dense ? 'w-[20rem]' : undefined}
+                className={!dense ? 'w-80' : undefined}
                 key={`${prefixes.cst_source_list}${index}`}
                 onClick={() => handleChange(matchMode)}
+                icon={<IconCstMatchMode value={matchMode} size='1rem' />}
               >
-                <div className='inline-flex items-center gap-1'>
-                  {<IconCstMatchMode value={matchMode} size='1rem' />}
-                  {!dense ? (
-                    <span>
-                      <b>{labelCstMatchMode(matchMode)}:</b> {describeCstMatchMode(matchMode)}
-                    </span>
-                  ) : null}
-                </div>
+                {!dense ? (
+                  <span>
+                    <b>{labelCstMatchMode(matchMode)}:</b> {describeCstMatchMode(matchMode)}
+                  </span>
+                ) : null}
               </DropdownButton>
             );
           })}

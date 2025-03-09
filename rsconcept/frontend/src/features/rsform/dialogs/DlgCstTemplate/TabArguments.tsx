@@ -93,19 +93,17 @@ export function TabArguments() {
     argumentsHelper.display({
       id: 'actions',
       size: 0,
-      cell: props => (
-        <div className='h-[1.25rem] w-[1.25rem]'>
-          {props.row.original.value ? (
-            <MiniButton
-              title='Очистить значение'
-              noPadding
-              noHover
-              icon={<IconRemove size='1.25rem' className='icon-red' />}
-              onClick={() => handleClearArgument(props.row.original)}
-            />
-          ) : null}
-        </div>
-      )
+      cell: props =>
+        props.row.original.value ? (
+          <MiniButton
+            title='Очистить значение'
+            noPadding
+            noHover
+            className='align-middle'
+            icon={<IconRemove size='1.25rem' className='icon-red' />}
+            onClick={() => handleClearArgument(props.row.original)}
+          />
+        ) : null
     })
   ];
 
@@ -150,12 +148,7 @@ export function TabArguments() {
           {selectedArgument?.alias || 'ARG'}
         </span>
         <span>=</span>
-        <RSInput
-          noTooltip
-          className='w-[12rem]'
-          value={argumentValue}
-          onChange={newValue => setArgumentValue(newValue)}
-        />
+        <RSInput noTooltip className='w-48' value={argumentValue} onChange={newValue => setArgumentValue(newValue)} />
         <div className='flex'>
           <MiniButton
             title='Подставить значение аргумента'

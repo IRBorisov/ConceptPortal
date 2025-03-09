@@ -32,7 +32,7 @@ export function RSFormStats({ stats, isArchive }: RSFormStatsProps) {
   return (
     <div
       className={clsx(
-        'mt-3 md:ml-5 md:mt-8 md:w-[14rem] w-[20rem] h-min mx-auto', // prettier: split-lines
+        'mt-3 md:ml-5 md:mt-8 md:w-56 w-80 h-min mx-auto', // prettier: split-lines
         'grid grid-cols-4 gap-1 justify-items-end'
       )}
     >

@@ -14,7 +14,7 @@ export function SortingIcon<TData>({ column }: SortingIconProps<TData>) {
       {{
         desc: <IconSortDesc size='1rem' />,
         asc: <IconSortAsc size='1rem' />
-      }[column.getIsSorted() as string] ?? <IconSortDesc size='1rem' className='opacity-0 hover:opacity-50' />}
+      }[column.getIsSorted() as string] ?? <IconSortDesc size='1rem' className='opacity-0 group-hover:opacity-25' />}
     </>
   );
 }

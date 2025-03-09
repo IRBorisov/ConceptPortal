@@ -19,7 +19,7 @@ import {
   type IRenameLocationDTO,
   type IUpdateLibraryItemDTO,
   type IVersionCreateDTO,
-  type IVersionInfo,
+  type IVersionExInfo,
   type IVersionUpdateDTO,
   schemaLibraryItem,
   schemaLibraryItemArray,
@@ -154,7 +154,7 @@ export const libraryApi = {
       }
     }),
   versionUpdate: (data: { itemID: number; version: IVersionUpdateDTO }) =>
-    axiosPatch<IVersionUpdateDTO, IVersionInfo>({
+    axiosPatch<IVersionUpdateDTO, IVersionExInfo>({
       schema: schemaVersionInfo,
       endpoint: `/api/versions/${data.version.id}`,
       request: {

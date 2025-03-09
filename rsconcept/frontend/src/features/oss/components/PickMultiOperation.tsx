@@ -113,7 +113,7 @@ export function PickMultiOperation({ rows, items, value, onChange, className, ..
     >
       <SelectOperation
         noBorder
-        items={nonSelectedItems} // prettier: split-line
+        items={nonSelectedItems} //
         value={lastSelected}
         onChange={handleSelect}
       />

@@ -3,7 +3,6 @@
 import { Suspense, useState } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import clsx from 'clsx';
 
 import { Loader } from '@/components/Loader';
 import { ModalForm } from '@/components/Modal';
@@ -54,7 +53,7 @@ export function DlgInlineSynthesis() {
     <ModalForm
       header='Импорт концептуальной схем'
       submitText='Добавить конституенты'
-      className='w-[40rem] h-[33rem] px-6'
+      className='w-160 h-132 px-6'
       canSubmit={methods.formState.isValid && sourceID !== null}
       onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
     >
@@ -64,18 +63,22 @@ export function DlgInlineSynthesis() {
         selectedIndex={activeTab}
         onSelect={setActiveTab}
       >
-        <TabList className={clsx('mb-3 self-center', 'flex', 'border divide-x rounded-none', 'bg-prim-200')}>
-          <TabLabel label='Схема' title='Источник конституент' className='w-[8rem]' />
+        <TabList className='mb-3 self-center flex border divide-x rounded-none bg-prim-200'>
+          <TabLabel
+            label='Схема' //
+            title='Источник конституент'
+            className='w-32'
+          />
           <TabLabel
             label='Содержание'
             title={!sourceID ? 'Выберите схему' : 'Перечень конституент'}
-            className='w-[8rem]'
+            className='w-32'
             disabled={!sourceID}
           />
           <TabLabel
             label='Отождествления'
             title={!sourceID ? 'Выберите схему' : 'Таблица отождествлений'}
-            className='w-[8rem]'
+            className='w-32'
             disabled={!sourceID}
           />
         </TabList>

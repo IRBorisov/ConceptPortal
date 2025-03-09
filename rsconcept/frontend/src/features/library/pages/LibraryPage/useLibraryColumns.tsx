@@ -37,7 +37,7 @@ export function useLibraryColumns() {
               <MiniButton
                 noPadding
                 noHover
-                className='pl-2 max-h-[1rem] translate-y-[-0.125rem]'
+                className='pl-2 max-h-4 -translate-y-0.5'
                 onClick={handleToggleFolder}
                 titleHtml='Переключение в режим Проводник'
                 icon={<IconFolderTree size='1.25rem' className='clr-text-controls' />}
@@ -58,7 +58,7 @@ export function useLibraryColumns() {
       minSize: 80,
       maxSize: 150,
       enableSorting: true,
-      cell: props => <div className='min-w-[5rem]'>{props.getValue()}</div>,
+      cell: props => <span className='min-w-20'>{props.getValue()}</span>,
       sortingFn: 'text'
     }),
     columnHelper.accessor('title', {
@@ -84,7 +84,7 @@ export function useLibraryColumns() {
       id: 'time_update',
       header: isSmall ? 'Дата' : 'Обновлена',
       cell: props => (
-        <div className='whitespace-nowrap'>
+        <span className='whitespace-nowrap'>
           {new Date(props.getValue()).toLocaleString(intl.locale, {
             year: '2-digit',
             month: '2-digit',
@@ -94,7 +94,7 @@ export function useLibraryColumns() {
               minute: '2-digit'
             })
           })}
-        </div>
+        </span>
       ),
       enableSorting: true,
       sortingFn: 'datetime',

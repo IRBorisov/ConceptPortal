@@ -59,7 +59,7 @@ export function DlgChangeLocation() {
       onSubmit={event => void handleSubmit(onSubmit)(event)}
       className={clsx('w-[35rem]', 'pb-3 px-6 flex gap-3 h-[9rem]')}
     >
-      <div className='flex flex-col gap-2 min-w-[7rem] h-min'>
+      <div className='flex flex-col gap-2 min-w-[7rem]'>
         <Label className='select-none' text='Корень' />
         <Controller
           control={control}

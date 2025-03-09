@@ -103,7 +103,7 @@ export function FormCreateItem() {
 
   return (
     <form
-      className={clsx('cc-fade-in cc-column', 'min-w-[30rem] max-w-[30rem] mx-auto', 'px-6 py-3')}
+      className={clsx('cc-fade-in cc-column', 'min-w-120 max-w-120 mx-auto', 'px-6 py-3')}
       onSubmit={event => void handleSubmit(onSubmit)(event)}
       onChange={resetErrors}
     >
@@ -151,7 +151,7 @@ export function FormCreateItem() {
           {...register('alias')}
           label='Сокращение'
           placeholder={file && 'Загрузить из файла'}
-          className='w-[16rem]'
+          className='w-64'
           error={errors.alias}
         />
         <div className='flex flex-col items-center gap-2'>
@@ -206,7 +206,7 @@ export function FormCreateItem() {
       />
 
       <div className='flex justify-between gap-3 grow'>
-        <div className='flex flex-col gap-2 min-w-[7rem] h-min'>
+        <div className='flex flex-col gap-2 min-w-28'>
           <Label text='Корень' />
           <Controller
             control={control} //
@@ -247,8 +247,8 @@ export function FormCreateItem() {
       </div>
 
       <div className='flex justify-around gap-6 py-3'>
-        <SubmitButton text='Создать схему' loading={isPending} className='min-w-[10rem]' />
-        <Button text='Отмена' className='min-w-[10rem]' onClick={() => handleCancel()} />
+        <SubmitButton text='Создать схему' loading={isPending} className='min-w-40' />
+        <Button text='Отмена' className='min-w-40' onClick={() => handleCancel()} />
       </div>
       {serverError ? <InfoError error={serverError} /> : null}
     </form>

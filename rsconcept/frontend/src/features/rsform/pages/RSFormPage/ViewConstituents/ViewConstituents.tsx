@@ -29,8 +29,8 @@ export function ViewConstituents({ isBottom, isMounted }: ViewConstituentsProps)
       className={clsx(
         'border', // prettier: split-lines
         {
-          'mt-[2.2rem] rounded-l-md rounded-r-none h-fit overflow-visible': !isBottom,
-          'mt-3 mx-6 rounded-md md:max-w-[45.8rem] overflow-hidden': isBottom
+          'mt-9 rounded-l-md rounded-r-none h-fit overflow-visible': !isBottom,
+          'mt-3 mx-6 rounded-md overflow-hidden': isBottom
         }
       )}
       style={{

@@ -114,8 +114,8 @@ export function DlgCloneLibraryItem() {
         </div>
       </div>
 
-      <div className='flex justify-between gap-3'>
-        <div className='flex flex-col gap-2 w-[7rem] h-min'>
+      <div className='flex gap-3'>
+        <div className='flex flex-col gap-2 w-[7rem]'>
           <Label text='Корень' />
           <Controller
             control={control} //

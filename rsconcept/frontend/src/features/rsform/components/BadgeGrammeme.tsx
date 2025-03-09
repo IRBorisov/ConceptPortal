@@ -18,7 +18,7 @@ export function BadgeGrammeme({ grammeme }: BadgeGrammemeProps) {
   return (
     <div
       className={clsx(
-        'min-w-[3rem]', //
+        'min-w-12', //
         'px-1',
         'border rounded-md',
         'text-sm font-medium text-center whitespace-nowrap'

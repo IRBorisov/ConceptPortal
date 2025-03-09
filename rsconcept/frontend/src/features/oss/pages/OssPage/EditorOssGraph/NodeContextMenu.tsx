@@ -167,7 +167,7 @@ export function NodeContextMenu({ isOpen, operation, cursorX, cursorY, onHide }:
   }
 
   return (
-    <div ref={ref} className='absolute select-none' style={{ top: cursorY, left: cursorX }}>
+    <div ref={ref} className='relative' style={{ top: `calc(${cursorY}px - 2.5rem)`, left: cursorX }}>
       <Dropdown
         isOpen={isOpen}
         stretchLeft={cursorX >= window.innerWidth - MENU_WIDTH}

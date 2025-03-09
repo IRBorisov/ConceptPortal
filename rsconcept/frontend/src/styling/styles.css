@@ -228,3 +228,28 @@
   transition-timing-function: var(--transition-bezier);
   transition-duration: var(--duration-select);
 }
+
+@utility cc-badge-constituenta {
+  width: 3rem;
+  padding-inline: 0.25rem;
+
+  border-width: 1px;
+  border-radius: 0.5rem;
+
+  text-align: center;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+@utility cc-table-header {
+  text-align: start;
+  padding: 0.5rem;
+
+  font-size: var(--text-xs);
+  line-height: var(--tw-leading, var(--text-xs--line-height));
+  font-weight: 500;
+  white-space: nowrap;
+
+  -webkit-user-select: none;
+  user-select: none;
+}

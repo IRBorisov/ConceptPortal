@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import clsx from 'clsx';
 
 import { useUsers } from '@/features/users';
 import { SelectUser, TableUsers } from '@/features/users/components';
@@ -42,15 +41,15 @@ export function DlgEditEditors() {
     <ModalForm
       header='Список редакторов'
       submitText='Сохранить список'
-      className='flex flex-col w-[35rem] px-6 gap-3 pb-6'
+      className='flex flex-col w-140 px-6 gap-3 pb-6'
       onSubmit={handleSubmit}
     >
-      <div className={clsx('flex self-center items-center', 'text-sm font-semibold')}>
+      <div className='self-center text-sm font-semibold'>
         <span>Всего редакторов [{selected.length}]</span>
         <MiniButton
           noHover
           title='Очистить список'
-          className='py-0'
+          className='py-0 align-middle'
           icon={<IconRemove size='1.5rem' className='icon-red' />}
           disabled={selected.length === 0}
           onClick={() => setSelected([])}
@@ -65,7 +64,7 @@ export function DlgEditEditors() {
           filter={id => !selected.includes(id)} //
           value={null}
           onChange={onAddEditor}
-          className='w-[25rem]'
+          className='w-100'
         />
       </div>
     </ModalForm>

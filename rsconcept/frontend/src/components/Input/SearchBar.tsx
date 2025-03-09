@@ -42,7 +42,7 @@ export function SearchBar({
     <div className={clsx('relative', className)} {...restProps}>
       {!noIcon ? (
         <IconSearch
-          className='absolute top-[-0.125rem] left-3 translate-y-1/2 pointer-events-none clr-text-controls'
+          className='absolute -top-0.5 left-3 translate-y-1/2 pointer-events-none clr-text-controls'
           size='1.25rem'
         />
       ) : null}

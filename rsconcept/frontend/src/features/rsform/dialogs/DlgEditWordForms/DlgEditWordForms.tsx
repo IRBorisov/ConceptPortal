@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import clsx from 'clsx';
 
 import { HelpTopic } from '@/features/help';
 
@@ -123,7 +122,7 @@ export function DlgEditWordForms() {
       header='Редактирование словоформ'
       submitText='Сохранить'
       onSubmit={handleSubmit}
-      className='flex flex-col w-[40rem] px-6'
+      className='flex flex-col w-160 px-6'
       helpTopic={HelpTopic.TERM_CONTROL}
     >
       <TextArea
@@ -135,15 +134,12 @@ export function DlgEditWordForms() {
         value={target.term_resolved}
       />
 
-      <div className='mt-3 mb-2'>
-        <Label text='Параметры словоформы' />
-      </div>
-
+      <Label className='mt-3 mb-2' text='Параметры словоформы' />
       <div className='flex'>
         <TextArea
           placeholder='Введите текст'
-          className='min-w-[20rem] min-h-[5rem]'
-          rows={2}
+          className='min-w-80'
+          rows={3}
           value={inputText}
           onChange={event => setInputText(event.target.value)}
         />
@@ -165,7 +161,7 @@ export function DlgEditWordForms() {
         </div>
         <SelectMultiGrammeme
           placeholder='Выберите граммемы'
-          className='min-w-[15rem] h-fit'
+          className='min-w-60 h-fit'
           value={inputGrams}
           onChange={setInputGrams}
         />
@@ -188,12 +184,12 @@ export function DlgEditWordForms() {
             onClick={handleGenerateLexeme}
           />
         </div>
-        <div className={clsx('mt-3 mb-2 mx-auto', 'flex items-center', 'text-sm text-center font-semibold')}>
-          <div>Заданные вручную словоформы [{forms.length}]</div>
+        <div className='mt-3 mb-2 mx-auto text-sm font-semibold'>
+          <span>Заданные вручную словоформы [{forms.length}]</span>
           <MiniButton
             noHover
             title='Сбросить все словоформы'
-            className='py-0'
+            className='py-0 align-middle'
             icon={<IconRemove size='1.5rem' className='icon-red' />}
             disabled={isProcessing || forms.length === 0}
             onClick={handleResetAll}

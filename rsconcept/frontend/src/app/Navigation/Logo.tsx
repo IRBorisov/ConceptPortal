@@ -8,7 +8,7 @@ export function Logo() {
   return (
     <img
       alt=''
-      className='max-h-[1.6rem] w-fit max-w-[11.4rem]'
+      className='max-h-7 w-fit max-w-46'
       src={size.isSmall ? '/logo_sign.svg' : !darkMode ? '/logo_full.svg' : '/logo_full_dark.svg'}
     />
   );

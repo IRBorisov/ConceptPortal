@@ -99,7 +99,7 @@ export function DlgCreateOperation() {
       submitText='Создать'
       canSubmit={isValid}
       onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
-      className='w-[40rem] px-6 h-[32rem]'
+      className='w-160 px-6 h-128'
       helpTopic={HelpTopic.CC_OSS}
     >
       <Tabs
@@ -108,9 +108,7 @@ export function DlgCreateOperation() {
         selectedIndex={activeTab}
         onSelect={handleSelectTab}
       >
-        <TabList
-          className={clsx('self-center absolute top-[2.4rem]', 'flex', 'border divide-x rounded-none', 'bg-prim-200')}
-        >
+        <TabList className={clsx('self-center absolute top-10', 'flex', 'border divide-x rounded-none', 'bg-prim-200')}>
           <TabLabel
             title={describeOperationType(OperationType.INPUT)}
             label={labelOperationType(OperationType.INPUT)}

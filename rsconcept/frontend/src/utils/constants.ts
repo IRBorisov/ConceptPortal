@@ -33,7 +33,7 @@ export const PARAMETER = {
   errorNodeLabel: '[ERROR]',
   exteorVersion: '4.9.7',
 
-  TOOLTIP_WIDTH: 'max-w-[29rem]'
+  TOOLTIP_WIDTH: 'max-w-120'
 };
 
 /**

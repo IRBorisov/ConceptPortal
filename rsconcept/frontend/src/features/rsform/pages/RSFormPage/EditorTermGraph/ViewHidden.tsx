@@ -46,9 +46,9 @@ export function ViewHidden({ items }: ViewHiddenProps) {
     return null;
   }
   return (
-    <div className='flex flex-col relative'>
+    <div className='grid relative'>
       <MiniButton
-        className='absolute right-[calc(0.7rem-2px)] top-2 pointer-events-auto'
+        className='absolute right-[calc(0.75rem-2px)] top-2 pointer-events-auto'
         noPadding
         noHover
         title={!isFolded ? 'Свернуть' : 'Развернуть'}
@@ -56,7 +56,7 @@ export function ViewHidden({ items }: ViewHiddenProps) {
         onClick={toggleFolded}
       />
 
-      <div className={clsx('pt-2 clr-input border-x pb-2', { 'border-b rounded-b-md': isFolded })}>
+      <div className={clsx('py-2 clr-input border-x', { 'border-b rounded-b-md': isFolded })}>
         <div
           className='w-fit select-none'
           style={{
@@ -73,7 +73,7 @@ export function ViewHidden({ items }: ViewHiddenProps) {
       <div
         tabIndex={-1}
         className={clsx(
-          'flex flex-wrap justify-center gap-2 py-2 mt-[-0.5rem]',
+          'flex flex-wrap justify-center gap-2 py-2 -mt-2',
           'text-sm',
           'clr-input border-x border-b rounded-b-md',
           'cc-scroll-y'
@@ -94,7 +94,7 @@ export function ViewHidden({ items }: ViewHiddenProps) {
             <button
               key={`${prefixes.cst_hidden_list}${cst.alias}`}
               type='button'
-              className='min-w-[3rem] rounded-md text-center select-none'
+              className='w-12 rounded-md text-center select-none'
               style={{
                 backgroundColor: colorBgGraphNode(cst, coloring),
                 ...(localSelected.includes(cstID)

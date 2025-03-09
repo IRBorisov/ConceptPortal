@@ -25,9 +25,9 @@ import { HelpTopic } from '../../models/helpTopic';
 export function HelpOssGraph() {
   return (
     <div className='flex flex-col'>
-      <h1 className='sm:pr-[6rem]'>Граф синтеза</h1>
+      <h1 className='sm:pr-24'>Граф синтеза</h1>
       <div className='flex flex-col sm:flex-row'>
-        <div className='sm:w-[14rem]'>
+        <div className='sm:w-56'>
           <h1>Настройка графа</h1>
           <li>
             <IconFitImage className='inline-icon' /> Вписать в экран
@@ -51,7 +51,7 @@ export function HelpOssGraph() {
 
         <Divider vertical margins='mx-3 mt-3' className='hidden sm:block' />
 
-        <div className='sm:w-[21rem]'>
+        <div className='sm:w-84'>
           <h1>Изменение узлов</h1>
           <li>Клик на операцию – выделение</li>
           <li>Esc – сбросить выделение</li>
@@ -73,7 +73,7 @@ export function HelpOssGraph() {
       <Divider margins='my-3' className='hidden sm:block' />
 
       <div className='flex flex-col-reverse mb-3 sm:flex-row'>
-        <div className='sm:w-[14rem]'>
+        <div className='sm:w-56'>
           <h1>Общие</h1>
           <li>
             <IconReset className='inline-icon' /> Сбросить изменения
@@ -85,7 +85,7 @@ export function HelpOssGraph() {
 
         <Divider vertical margins='mx-3' className='hidden sm:block' />
 
-        <div className='dense w-[21rem]'>
+        <div className='dense w-84'>
           <h1>Контекстное меню</h1>
           <li>
             <IconRSForm className='inline-icon icon-green' /> Статус связанной{' '}

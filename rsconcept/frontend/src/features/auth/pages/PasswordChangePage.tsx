@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import clsx from 'clsx';
 
 import { urls, useConceptNavigation } from '@/app';
 
@@ -51,7 +50,7 @@ export function Component() {
   }
 
   return (
-    <form className={clsx('cc-fade-in cc-column', 'w-[24rem] mx-auto', 'px-6 mt-3')} onSubmit={handleSubmit}>
+    <form className='cc-fade-in cc-column w-96 mx-auto px-6 mt-3' onSubmit={handleSubmit}>
       <TextInput
         id='new_password'
         type='password'
@@ -77,7 +76,7 @@ export function Component() {
 
       <SubmitButton
         text='Установить пароль'
-        className='self-center w-[12rem] mt-3'
+        className='self-center w-48 mt-3'
         loading={isPending}
         disabled={!canSubmit}
       />

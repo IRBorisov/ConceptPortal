@@ -93,28 +93,36 @@ export function ModalForm({
         className={clsx(
           'cc-animate-modal',
           'absolute bottom-1/2 left-1/2 -translate-x-1/2 translate-y-1/2',
+          'grid',
           'border rounded-xl bg-prim-100'
         )}
+        role='dialog'
         onSubmit={handleSubmit}
+        aria-labelledby='modal-title'
       >
         {helpTopic && !hideHelpWhen?.() ? (
           <BadgeHelp
-            topic={helpTopic} //
-            className='float-left mt-2 ml-2'
+            topic={helpTopic}
+            className='absolute z-pop left-0 mt-2 ml-2'
             padding='p-0'
-            contentClass='sm:max-w-[40rem]'
+            contentClass='sm:max-w-160'
           />
         ) : null}
 
         <MiniButton
           noPadding
+          aria-label='Закрыть'
           titleHtml={prepareTooltip('Закрыть диалоговое окно', 'ESC')}
           icon={<IconClose size='1.25rem' />}
-          className='float-right mt-2 mr-2'
-          onClick={handleCancel}
+          className='absolute z-pop right-0 mt-2 mr-2'
+          onClick={hideDialog}
         />
 
-        {header ? <h1 className='px-12 py-2 select-none'>{header}</h1> : null}
+        {header ? (
+          <h1 id='modal-title' className='px-12 py-2 select-none'>
+            {header}
+          </h1>
+        ) : null}
 
         <div
           className={clsx(
@@ -137,10 +145,10 @@ export function ModalForm({
             autoFocus
             text={submitText}
             title={!canSubmit ? submitInvalidTooltip : ''}
-            className='min-w-[7rem]'
+            className='min-w-28'
             disabled={!canSubmit}
           />
-          <Button text='Отмена' className='min-w-[7rem]' onClick={handleCancel} />
+          <Button text='Отмена' aria-label='Закрыть' className='min-w-28' onClick={handleCancel} />
         </div>
       </form>
     </div>

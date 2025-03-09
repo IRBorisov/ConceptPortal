@@ -22,18 +22,16 @@ export function NavigationButton({ icon, title, hideTitle, className, style, onC
       data-tooltip-content={title}
       onClick={onClick}
       className={clsx(
-        'p-2 h-min',
-        'flex items-center gap-1',
+        'p-2 flex items-center gap-1',
         'cursor-pointer',
         'clr-btn-nav cc-animate-color duration-500',
         'rounded-xl',
         'font-controls whitespace-nowrap',
-
         className
       )}
       style={style}
     >
-      {icon ? <span>{icon}</span> : null}
+      {icon ? icon : null}
       {text ? <span className='hidden sm:inline'>{text}</span> : null}
     </button>
   );

@@ -2,7 +2,6 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import clsx from 'clsx';
 
 import { urls, useConceptNavigation } from '@/app';
 import { type IChangePasswordDTO, schemaChangePassword } from '@/features/auth';
@@ -36,7 +35,7 @@ export function EditorPassword() {
 
   return (
     <form
-      className={clsx('max-w-[16rem]', 'px-6 py-2 flex flex-col justify-between', 'border-l-2')}
+      className='max-w-64 px-6 py-2 flex flex-col justify-between border-l-2'
       onSubmit={event => void handleSubmit(onSubmit)(event)}
       onChange={resetErrors}
     >

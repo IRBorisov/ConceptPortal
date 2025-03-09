@@ -72,12 +72,12 @@ export function TableBody<TData>({
             'cc-scroll-row',
             'clr-hover cc-animate-color',
             !noHeader && 'scroll-mt-[calc(2px+2rem)]',
-            row.getIsSelected() ? 'clr-selected' : index % 2 === 0 ? 'bg-prim-200' : 'bg-prim-100'
+            row.getIsSelected() ? 'clr-selected' : 'odd:bg-prim-200 even:bg-prim-100'
           )}
           style={{ ...(conditionalRowStyles ? getRowStyles(row) : []) }}
         >
           {enableRowSelection ? (
-            <td key={`select-${row.id}`} className='pl-3 pr-1 align-middle border-y'>
+            <td key={`select-${row.id}`} className='pl-3 pr-1 border-y'>
               <SelectRow row={row} onChangeLastSelected={onChangeLastSelected} />
             </td>
           ) : null}
