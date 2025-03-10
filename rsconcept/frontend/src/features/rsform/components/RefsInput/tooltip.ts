@@ -65,7 +65,7 @@ export function refsHoverTooltip(schema: IRSForm, canClick?: boolean): Extension
 function domTooltipEntityReference(ref: IEntityReference, cst: IConstituenta | null, canClick?: boolean): TooltipView {
   const dom = document.createElement('div');
   dom.className = clsx(
-    'max-h-[25rem] max-w-[25rem] min-w-[10rem]',
+    'max-h-100 max-w-100 min-w-40',
     'dense',
     'p-2 flex flex-col',
     'border shadow-md',
@@ -87,12 +87,7 @@ function domTooltipEntityReference(ref: IEntityReference, cst: IConstituenta | n
   parseGrammemes(ref.form).forEach(gramStr => {
     const gram = document.createElement('div');
     gram.id = `tooltip-${gramStr}`;
-    gram.className = clsx(
-      'min-w-[3rem]', //
-      'px-1',
-      'border rounded-md',
-      'text-sm text-center whitespace-nowrap'
-    );
+    gram.className = 'min-w-12 px-1 border rounded-md text-sm text-center whitespace-nowrap';
     gram.style.borderWidth = '1px';
     gram.style.borderColor = colorFgGrammeme(gramStr);
     gram.style.color = colorFgGrammeme(gramStr);
@@ -123,7 +118,7 @@ function domTooltipSyntacticReference(
 ): TooltipView {
   const dom = document.createElement('div');
   dom.className = clsx(
-    'max-h-[25rem] max-w-[25rem] min-w-[10rem]',
+    'max-h-100 max-w-100 min-w-40',
     'dense',
     'p-2 flex flex-col',
     'border shadow-md',

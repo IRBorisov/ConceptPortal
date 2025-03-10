@@ -74,8 +74,8 @@ export function ViewHidden({ items }: ViewHiddenProps) {
         tabIndex={-1}
         className={clsx(
           'flex flex-wrap justify-center gap-2 py-2 -mt-2',
-          'text-sm',
           'clr-input border-x border-b rounded-b-md',
+          'text-sm',
           'cc-scroll-y'
         )}
         style={{

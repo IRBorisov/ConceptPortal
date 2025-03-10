@@ -107,7 +107,7 @@ export function SelectSingle<Option, Group extends GroupBase<Option> = GroupBase
         ...theme,
         borderRadius: 0,
         spacing: {
-          ...theme.spacing, // prettier: split-lines
+          ...theme.spacing,
           baseUnit: size.isSmall ? 2 : 4,
           menuGutter: 2,
           controlHeight: size.isSmall ? 28 : 38

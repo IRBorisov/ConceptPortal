@@ -2,7 +2,6 @@
 
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import clsx from 'clsx';
 import { z } from 'zod';
 
 import { useAuthSuspense } from '@/features/auth';
@@ -57,9 +56,9 @@ export function DlgChangeLocation() {
       submitInvalidTooltip={`Допустимы буквы, цифры, подчерк, пробел и "!". Сегмент пути не может начинаться и заканчиваться пробелом. Общая длина (с корнем) не должна превышать ${limits.location_len}`}
       canSubmit={isValid && isDirty}
       onSubmit={event => void handleSubmit(onSubmit)(event)}
-      className={clsx('w-[35rem]', 'pb-3 px-6 flex gap-3 h-[9rem]')}
+      className='w-140 pb-3 px-6 flex gap-3 h-36'
     >
-      <div className='flex flex-col gap-2 min-w-[7rem]'>
+      <div className='flex flex-col gap-2 min-w-28'>
         <Label className='select-none' text='Корень' />
         <Controller
           control={control}
@@ -77,11 +76,11 @@ export function DlgChangeLocation() {
         control={control}
         name='location'
         render={({ field }) => (
-          <SelectLocationContext dropdownHeight='max-h-[9.2rem]' value={field.value} onChange={field.onChange} />
+          <SelectLocationContext dropdownHeight='max-h-36' value={field.value} onChange={field.onChange} />
         )}
       />
       <Controller
-        control={control} //
+        control={control}
         name='location'
         render={({ field }) => (
           <TextArea

@@ -28,7 +28,7 @@ export function EditorControls({ constituenta, disabled, onEditTerm }: EditorCon
   }
 
   return (
-    <div className='absolute z-pop top-0 left-[4.7rem] flex select-none'>
+    <div className='absolute z-pop top-0 left-19 flex select-none'>
       {!disabled || isProcessing ? (
         <MiniButton
           title={isModified ? tooltipText.unsaved : `Редактировать словоформы термина`}
@@ -40,10 +40,10 @@ export function EditorControls({ constituenta, disabled, onEditTerm }: EditorCon
       ) : null}
       <div
         className={clsx(
-          'pt-1 sm:pl-[1.375rem] pl-1', //
+          'pt-1 sm:pl-5 pl-1',
           'text-sm font-medium whitespace-nowrap',
           'select-text cursor-default',
-          disabled && !isProcessing && 'pl-[1.6rem] sm:pl-[2.8rem]'
+          disabled && !isProcessing && 'pl-6 sm:pl-11'
         )}
       >
         <span>Имя </span>

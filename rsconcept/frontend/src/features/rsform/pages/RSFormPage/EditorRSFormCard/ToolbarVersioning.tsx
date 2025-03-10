@@ -55,7 +55,7 @@ export function ToolbarVersioning({ blockReload }: ToolbarVersioningProps) {
   }
 
   return (
-    <div className='absolute z-bottom top-[-0.4rem] right-[0rem] pr-2 cc-icons'>
+    <div className='absolute z-bottom -top-2 right-0 pr-2 cc-icons'>
       {isMutable ? (
         <>
           <MiniButton

@@ -76,8 +76,8 @@ export function EditorConstituenta() {
       className={clsx(
         'relative',
         'cc-fade-in',
-        'min-h-[20rem] max-w-[calc(min(100vw,95rem))] mx-auto',
-        'flex pt-[1.9rem]',
+        'min-h-80 max-w-[calc(min(100vw,95rem))] mx-auto',
+        'flex pt-8',
         'overflow-y-auto overflow-x-clip',
         { 'flex-col md:items-center': isNarrow }
       )}
@@ -90,7 +90,7 @@ export function EditorConstituenta() {
         onSubmit={initiateSubmit}
         onReset={() => setToggleReset(prev => !prev)}
       />
-      <div className='mx-0 md:mx-auto pt-[2rem] md:w-[48.8rem] shrink-0 xs:pt-0'>
+      <div className='mx-0 md:mx-auto pt-8 md:w-195 shrink-0 xs:pt-0'>
         {activeCst ? (
           <FormConstituenta
             id={globalIDs.constituenta_editor}

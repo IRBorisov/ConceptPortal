@@ -38,7 +38,12 @@ export function StatusBar({ isModified, processing, activeCst, parseData, onAnal
   })();
 
   return (
-    <div className={clsx('absolute z-pop -top-2 right-1/2 translate-x-1/2 w-fit', 'pl-34 xs:pl-8 flex gap-1')}>
+    <div
+      className={clsx(
+        'absolute z-pop -top-2 right-1/2 translate-x-1/2 w-fit', //
+        'pl-34 xs:pl-8 flex gap-1'
+      )}
+    >
       <div
         tabIndex={0}
         className={clsx(

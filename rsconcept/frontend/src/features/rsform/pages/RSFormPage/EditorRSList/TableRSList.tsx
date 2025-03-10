@@ -1,7 +1,5 @@
 'use client';
 
-import clsx from 'clsx';
-
 import { TextURL } from '@/components/Control';
 import { createColumnHelper, DataTable, type RowSelectionState, type VisibilityState } from '@/components/DataTable';
 import { NoData, TextContent } from '@/components/View';
@@ -124,7 +122,7 @@ export function TableRSList({
     <DataTable
       dense
       noFooter
-      className={clsx('min-h-64', 'cc-scroll-y', 'text-sm', 'select-none')}
+      className='min-h-64 cc-scroll-y text-sm select-none'
       style={{ maxHeight: maxHeight }}
       data={items ?? []}
       columns={columns}

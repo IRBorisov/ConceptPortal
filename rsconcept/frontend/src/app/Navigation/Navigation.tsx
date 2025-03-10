@@ -1,9 +1,6 @@
-import clsx from 'clsx';
-
 import { IconLibrary2, IconManuals, IconNewItem2 } from '@/components/Icons';
 import { useWindowSize } from '@/hooks/useWindowSize';
 import { useAppLayoutStore } from '@/stores/appLayout';
-import { PARAMETER } from '@/utils/constants';
 
 import { urls } from '../urls';
 
@@ -28,34 +25,16 @@ export function Navigation() {
     router.push({ path: urls.create_schema, newTab: event.ctrlKey || event.metaKey });
 
   return (
-    <nav
-      className={clsx(
-        'z-navigation', //
-        'sticky top-0 left-0 right-0',
-        'select-none',
-        'bg-prim-100'
-      )}
-    >
+    <nav className='z-navigation sticky top-0 left-0 right-0 select-none bg-prim-100'>
       <ToggleNavigation />
       <div
-        className={clsx(
-          'pl-2 pr-6 sm:pr-4 h-12', //
-          'flex',
-          'cc-shadow-border'
-        )}
+        className='pl-2 pr-6 sm:pr-4 h-12 flex cc-shadow-border'
         style={{
-          willChange: 'max-height, translate',
-          transitionProperty: 'max-height, translate',
-          transitionDuration: `${PARAMETER.moveDuration}ms`,
           maxHeight: noNavigationAnimation ? '0rem' : '3rem',
           translate: noNavigationAnimation ? '0 -1.5rem' : '0'
         }}
       >
-        <div
-          tabIndex={-1}
-          className={clsx('flex items-center mr-auto', !size.isSmall && 'cursor-pointer')}
-          onClick={!size.isSmall ? navigateHome : undefined}
-        >
+        <div className='flex items-center mr-auto cursor-pointer' onClick={!size.isSmall ? navigateHome : undefined}>
           <Logo />
         </div>
         <div className='flex gap-2 items-center'>

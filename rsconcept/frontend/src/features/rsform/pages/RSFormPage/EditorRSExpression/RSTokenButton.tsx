@@ -27,8 +27,8 @@ export function RSTokenButton({ token, disabled, onInsert }: RSTokenButtonProps)
         'font-math',
         'cursor-pointer disabled:cursor-default',
         {
-          'w-[3.7rem] md:w-[4.5rem]': label.length > 3,
-          'w-[1.85rem] md:w-[2.25rem]': label.length <= 3
+          'w-14.5 md:w-18': label.length > 3,
+          'w-7.25 md:w-9': label.length <= 3
         }
       )}
       data-tooltip-id={globalIDs.tooltip}

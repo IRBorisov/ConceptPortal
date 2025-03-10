@@ -1,5 +1,3 @@
-import clsx from 'clsx';
-
 import { CstClass } from '@/features/rsform';
 import { colorBgCstClass } from '@/features/rsform/colors';
 import { describeCstClass, labelCstClass } from '@/features/rsform/labels';
@@ -18,7 +16,7 @@ export function InfoCstClass({ header }: InfoCstClassProps) {
         return (
           <p key={`${prefixes.cst_status_list}${index}`}>
             <span
-              className={clsx('inline-block', 'min-w-28', 'px-1', 'border', 'text-center text-sm font-controls')}
+              className='inline-block min-w-28 px-1 border text-center text-sm font-controls'
               style={{ backgroundColor: colorBgCstClass(cstClass) }}
             >
               {labelCstClass(cstClass)}

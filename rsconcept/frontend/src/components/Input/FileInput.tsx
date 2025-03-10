@@ -41,7 +41,7 @@ export function FileInput({ id, label, acceptType, title, className, style, onCh
   };
 
   return (
-    <div className={clsx('py-2', 'flex flex-col gap-2 items-center', className)} style={style}>
+    <div className={clsx('py-2 flex flex-col gap-2 items-center', className)} style={style}>
       <input
         id={id}
         type='file'

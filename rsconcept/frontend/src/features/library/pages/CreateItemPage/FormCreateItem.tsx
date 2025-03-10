@@ -3,7 +3,6 @@
 import { useRef } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import clsx from 'clsx';
 
 import { urls, useConceptNavigation } from '@/app';
 import { useAuthSuspense } from '@/features/auth';
@@ -103,7 +102,7 @@ export function FormCreateItem() {
 
   return (
     <form
-      className={clsx('cc-fade-in cc-column', 'min-w-120 max-w-120 mx-auto', 'px-6 py-3')}
+      className='cc-fade-in cc-column min-w-120 max-w-120 mx-auto px-6 py-3'
       onSubmit={event => void handleSubmit(onSubmit)(event)}
       onChange={resetErrors}
     >

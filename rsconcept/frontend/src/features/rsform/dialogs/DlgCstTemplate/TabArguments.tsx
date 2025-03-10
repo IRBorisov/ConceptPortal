@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { createColumnHelper } from '@tanstack/react-table';
-import clsx from 'clsx';
 
 import { MiniButton } from '@/components/Control';
 import { DataTable, type IConditionalStyle } from '@/components/DataTable';
@@ -79,16 +78,7 @@ export function TabArguments() {
     argumentsHelper.accessor(arg => arg.typification, {
       id: 'type',
       enableHiding: true,
-      cell: props => (
-        <div
-          className={clsx(
-            'min-w-[9.3rem] max-w-[9.3rem]', //
-            'text-sm break-words'
-          )}
-        >
-          {props.getValue()}
-        </div>
-      )
+      cell: props => <div className='w-36 text-sm break-words'>{props.getValue()}</div>
     }),
     argumentsHelper.display({
       id: 'actions',
@@ -120,27 +110,15 @@ export function TabArguments() {
         dense
         noFooter
         noHeader
-        className={clsx(
-          'max-h-[5.8rem] min-h-[5.8rem]', //
-          'cc-scroll-y',
-          'text-sm',
-          'border',
-          'select-none'
-        )}
+        className='h-23 cc-scroll-y text-sm border select-none'
         data={args}
         columns={columns}
         conditionalRowStyles={conditionalRowStyles}
-        noDataComponent={<NoData className='min-h-[3.6rem]'>Аргументы отсутствуют</NoData>}
+        noDataComponent={<NoData className='min-h-14'>Аргументы отсутствуют</NoData>}
         onRowClicked={handleSelectArgument}
       />
 
-      <div
-        className={clsx(
-          'my-4', //
-          'flex gap-2 justify-center items-center',
-          'select-none'
-        )}
-      >
+      <div className='my-3 flex gap-2 justify-center items-center select-none'>
         <span
           title='Выберите аргумент из списка сверху и значение из списка снизу'
           className='font-semibold text-center'
@@ -181,7 +159,7 @@ export function TabArguments() {
         noTooltip
         id='result'
         placeholder='Итоговое определение'
-        className='mt-[1.1rem]'
+        className='mt-4'
         height='5.1rem'
         value={definition}
       />

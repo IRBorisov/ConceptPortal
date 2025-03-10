@@ -21,7 +21,7 @@ export function InfoCstStatus({ title }: InfoCstStatusProps) {
             <span
               className={clsx(
                 'inline-block', //
-                'min-w-[7rem]',
+                'min-w-28',
                 'px-1',
                 'border',
                 'text-center text-sm font-controls'

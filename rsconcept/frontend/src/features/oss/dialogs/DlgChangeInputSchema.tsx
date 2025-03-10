@@ -2,7 +2,6 @@
 
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import clsx from 'clsx';
 
 import { type ILibraryItem, LibraryItemType } from '@/features/library';
 import { useLibrary } from '@/features/library/backend/useLibrary';
@@ -55,7 +54,7 @@ export function DlgChangeInputSchema() {
       header='Выбор концептуальной схемы'
       submitText='Подтвердить выбор'
       onSubmit={event => void handleSubmit(onSubmit)(event)}
-      className={clsx('w-[35rem]', 'pb-3 px-6 cc-column')}
+      className='w-140 pb-3 px-6 cc-column'
     >
       <div className='flex justify-between gap-3 items-center'>
         <div className='flex gap-3'>

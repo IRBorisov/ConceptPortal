@@ -4,15 +4,25 @@
 
 @import './constants.css' layer(base);
 
+/* Uncomment to debug layering and overflow */
+/* *,
+*::after,
+*::before {
+  background: hsla(135, 50%, 50%, 0.05) !important;
+  outline: 2px solid hotpink !important;
+
+  :focus,
+  :focus-visible,
+  :focus-within {
+    outline: 2px solid hotpink !important;
+  }
+} */
+
 @layer utilities {
   *,
   *::after,
   *::before {
     box-sizing: border-box;
-
-    /* Uncomment to debug layering and overflow */
-    /* background: hsla(135, 50%, 50%, 0.05); */
-    /* outline: 2px solid hotpink; */
   }
 }
 

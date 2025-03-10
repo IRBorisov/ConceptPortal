@@ -99,14 +99,14 @@ export function PickMultiConstituenta({
 
   return (
     <div className={clsx(noBorder ? '' : 'border', className)} {...restProps}>
-      <div className={clsx('px-3 flex justify-between items-center', 'clr-input', 'border-b', 'rounded-t-md')}>
+      <div className='px-3 flex justify-between items-center clr-input border-b rounded-t-md'>
         <div className='w-[24ch] select-none whitespace-nowrap'>
           {items.length > 0 ? `Выбраны ${value.length} из ${items.length}` : 'Конституенты'}
         </div>
         <SearchBar
           id='dlg_constituents_search'
           noBorder
-          className='min-w-[6rem] pr-2 grow'
+          className='min-w-24 pr-2 grow'
           query={filterText}
           onChangeQuery={setFilterText}
         />
@@ -122,6 +122,7 @@ export function PickMultiConstituenta({
           className='w-fit'
         />
       </div>
+
       <DataTable
         id={id}
         dense

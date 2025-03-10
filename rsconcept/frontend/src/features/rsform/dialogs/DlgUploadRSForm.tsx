@@ -44,7 +44,7 @@ export function DlgUploadRSForm() {
       canSubmit={!!file}
       onSubmit={handleSubmit}
       submitText='Загрузить'
-      className='w-[25rem] px-6'
+      className='w-100 px-6'
     >
       <FileInput label='Выбрать файл' acceptType={EXTEOR_TRS_FILE} onChange={handleFile} />
       <Checkbox

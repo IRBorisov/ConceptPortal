@@ -34,7 +34,7 @@ export function SelectVersion({ id, className, items, value, onChange, ...restPr
   return (
     <SelectSingle
       id={id}
-      className={clsx('min-w-[12rem] text-ellipsis', className)}
+      className={clsx('min-w-48 text-ellipsis', className)}
       options={options}
       value={{ value: value, label: labelVersion(value, items) }}
       onChange={data => onChange(data?.value ?? 'latest')}

@@ -50,13 +50,13 @@ export function SelectTree<ItemType>({
     setFolded(items.filter(item => getParent(value) !== item && getParent(getParent(value)) !== item));
   }, [value, getParent, items]);
 
-  function onFoldItem(target: ItemType, showChildren: boolean) {
+  function onFoldItem(target: ItemType) {
     setFolded(prev =>
       items.filter(item => {
         if (item === target) {
-          return !showChildren;
+          return !prev.includes(target);
         }
-        if (!showChildren && (getParent(item) === target || getParent(getParent(item)) === target)) {
+        if (!prev.includes(target) && (getParent(item) === target || getParent(getParent(item)) === target)) {
           return true;
         } else {
           return prev.includes(item);
@@ -65,16 +65,20 @@ export function SelectTree<ItemType>({
     );
   }
 
-  function handleClickFold(event: React.MouseEvent<Element>, target: ItemType, showChildren: boolean) {
+  function handleClickFold(event: React.MouseEvent<Element>, target: ItemType) {
     event.preventDefault();
     event.stopPropagation();
-    onFoldItem(target, showChildren);
+    onFoldItem(target);
   }
 
-  function handleSetValue(event: React.MouseEvent<Element>, target: ItemType) {
+  function handleClickItem(event: React.MouseEvent<Element>, target: ItemType) {
     event.preventDefault();
     event.stopPropagation();
-    onChange(target);
+    if (event.ctrlKey || event.metaKey) {
+      onFoldItem(target);
+    } else {
+      onChange(target);
+    }
   }
 
   return (
@@ -95,7 +99,7 @@ export function SelectTree<ItemType>({
             )}
             data-tooltip-id={globalIDs.tooltip}
             data-tooltip-html={getDescription(item)}
-            onClick={event => handleSetValue(event, item)}
+            onClick={event => handleClickItem(event, item)}
             style={{
               borderBottomWidth: isActive ? '1px' : '0px',
               willChange: 'max-height, opacity, padding',
@@ -109,11 +113,11 @@ export function SelectTree<ItemType>({
           >
             {foldable.has(item) ? (
               <MiniButton
-                className={clsx('absolute left-[0.3rem]', !folded.includes(item) ? 'top-[0.4rem]' : 'top-1')}
+                className={clsx('absolute left-1', !folded.includes(item) ? 'top-1.5' : 'top-1')}
                 noPadding
                 noHover
                 icon={!folded.includes(item) ? <IconDropArrow size='1rem' /> : <IconPageRight size='1.25rem' />}
-                onClick={event => handleClickFold(event, item, folded.includes(item))}
+                onClick={event => handleClickFold(event, item)}
               />
             ) : null}
             {getParent(item) === item ? getLabel(item) : `- ${getLabel(item).toLowerCase()}`}

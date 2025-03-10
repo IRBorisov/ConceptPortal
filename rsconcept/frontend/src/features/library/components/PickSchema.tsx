@@ -119,7 +119,7 @@ export function PickSchema({
             className='mt-1'
             onClick={() => locationMenu.toggle()}
           />
-          <Dropdown isOpen={locationMenu.isOpen} stretchLeft className='w-[20rem] h-[12.5rem]'>
+          <Dropdown isOpen={locationMenu.isOpen} stretchLeft className='w-80 h-50'>
             <SelectLocation
               value={filterLocation}
               prefix={prefixes.folders_list}
@@ -147,7 +147,7 @@ export function PickSchema({
         columns={columns}
         conditionalRowStyles={conditionalRowStyles}
         noDataComponent={
-          <div className='cc-column dense p-3 items-center min-h-[6rem]'>
+          <div className='cc-column dense p-3 items-center min-h-24'>
             <p>Список схем пуст</p>
             <p>Измените параметры фильтра</p>
           </div>

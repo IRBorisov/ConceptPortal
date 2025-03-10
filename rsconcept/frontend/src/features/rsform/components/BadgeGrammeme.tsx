@@ -1,5 +1,3 @@
-import clsx from 'clsx';
-
 import { APP_COLORS } from '@/styling/colors';
 
 import { colorFgGrammeme } from '../colors';
@@ -17,12 +15,7 @@ interface BadgeGrammemeProps {
 export function BadgeGrammeme({ grammeme }: BadgeGrammemeProps) {
   return (
     <div
-      className={clsx(
-        'min-w-12', //
-        'px-1',
-        'border rounded-md',
-        'text-sm font-medium text-center whitespace-nowrap'
-      )}
+      className='min-w-12 px-1 border rounded-md text-sm font-medium text-center whitespace-nowrap'
       style={{
         borderColor: colorFgGrammeme(grammeme),
         color: colorFgGrammeme(grammeme),

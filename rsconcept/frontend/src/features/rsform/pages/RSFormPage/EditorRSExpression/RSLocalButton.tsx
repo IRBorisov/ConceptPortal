@@ -31,7 +31,7 @@ export function RSLocalButton({
       data-tooltip-content={title}
       data-tooltip-hidden={hideTitle}
       className={clsx(
-        'w-[1.7rem] sm:w-[2rem] h-5 sm:h-6',
+        'w-7 sm:w-8 h-5 sm:h-6',
         'cursor-pointer disabled:cursor-default',
         'rounded-none',
         'clr-hover clr-text-controls cc-animate-color',

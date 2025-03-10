@@ -167,7 +167,7 @@ export function PickSubstitutions({
     columnHelper.accessor(item => item.substitution_source.alias, {
       id: 'left_schema',
       size: 100,
-      cell: props => <div className='min-w-[10.5rem] text-ellipsis text-left'>{props.getValue()}</div>
+      cell: props => <div className='min-w-43 text-ellipsis text-left'>{props.getValue()}</div>
     }),
     columnHelper.accessor(item => item.substitution.alias, {
       id: 'left_alias',
@@ -230,8 +230,8 @@ export function PickSubstitutions({
 
   return (
     <div className={clsx('flex flex-col', className)} {...restProps}>
-      <div className='flex items-end gap-3 justify-stretch'>
-        <div className='grow flex flex-col basis-1/2 gap-[0.125rem] border-x border-t clr-input rounded-t-md'>
+      <div className='flex items-center gap-3'>
+        <div className='grow flex flex-col basis-1/2 gap-1 border-x border-t clr-input rounded-t-md'>
           <SelectLibraryItem
             noBorder
             placeholder='Выберите аргумент'
@@ -241,7 +241,7 @@ export function PickSubstitutions({
           />
           <SelectConstituenta noBorder items={leftItems} value={leftCst} onChange={setLeftCst} />
         </div>
-        <div className='flex flex-col gap-1'>
+        <div className='flex flex-col justify-center gap-1'>
           <MiniButton
             title={deleteRight ? 'Заменить правую' : 'Заменить левую'}
             onClick={toggleDelete}
@@ -255,14 +255,14 @@ export function PickSubstitutions({
           />
           <MiniButton
             title='Добавить в таблицу отождествлений'
-            className='mb-[0.375rem] grow-0'
+            className='grow-0'
             icon={<IconReplace size='1.5rem' className='icon-primary' />}
             disabled={!leftCst || !rightCst || (leftCst === rightCst && !allowSelfSubstitution)}
             onClick={addSubstitution}
           />
         </div>
 
-        <div className='grow basis-1/2 flex flex-col gap-[0.125rem] border-x border-t clr-input rounded-t-md'>
+        <div className='grow basis-1/2 flex flex-col gap-1 border-x border-t clr-input rounded-t-md'>
           <SelectLibraryItem
             noBorder
             placeholder='Выберите аргумент'
@@ -285,7 +285,7 @@ export function PickSubstitutions({
         columns={columns}
         headPosition='0'
         noDataComponent={
-          <NoData className='min-h-[2rem]'>
+          <NoData className='min-h-8'>
             <p>Список пуст</p>
             <p>Добавьте отождествление</p>
           </NoData>

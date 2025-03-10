@@ -26,13 +26,10 @@ export function ViewConstituents({ isBottom, isMounted }: ViewConstituentsProps)
 
   return (
     <aside
-      className={clsx(
-        'border', // prettier: split-lines
-        {
-          'mt-9 rounded-l-md rounded-r-none h-fit overflow-visible': !isBottom,
-          'mt-3 mx-6 rounded-md overflow-hidden': isBottom
-        }
-      )}
+      className={clsx('border', {
+        'mt-9 rounded-l-md rounded-r-none h-fit overflow-visible': !isBottom,
+        'mt-3 mx-6 rounded-md overflow-hidden': isBottom
+      })}
       style={{
         willChange: 'opacity, max-width',
         transitionProperty: 'opacity, max-width',

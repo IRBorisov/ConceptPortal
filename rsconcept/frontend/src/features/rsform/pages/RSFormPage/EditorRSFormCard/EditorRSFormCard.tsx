@@ -36,10 +36,10 @@ export function EditorRSFormCard() {
     <div
       onKeyDown={handleInput}
       className={clsx(
-        'relative',
+        'relative', //
         'cc-fade-in',
-        'md:w-fit md:max-w-fit max-w-[32rem]',
-        'flex flex-row flex-wrap px-6 pt-[1.9rem]'
+        'md:w-fit md:max-w-fit max-w-128',
+        'flex flex-row flex-wrap px-6 pt-8'
       )}
     >
       <ToolbarItemCard onSubmit={initiateSubmit} schema={schema} isMutable={isMutable} deleteSchema={deleteSchema} />

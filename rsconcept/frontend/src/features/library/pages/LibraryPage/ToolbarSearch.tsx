@@ -75,21 +75,12 @@ export function ToolbarSearch({ total, filtered }: ToolbarSearchProps) {
   }
 
   return (
-    <div
-      className={clsx(
-        'sticky top-0', //
-        'h-9',
-        'flex items-center gap-3',
-        'border-b',
-        'text-sm',
-        'clr-input'
-      )}
-    >
-      <div className={clsx('ml-3 pt-1 self-center', 'min-w-18 sm:min-w-30', 'select-none', 'whitespace-nowrap')}>
+    <div className='sticky top-0 h-9 flex gap-3 border-b text-sm clr-input items-center'>
+      <div className='ml-3 min-w-18 sm:min-w-30 select-none whitespace-nowrap'>
         {filtered} из {total}
       </div>
 
-      <div className='cc-icons'>
+      <div className='cc-icons h-full items-center'>
         <MiniButton
           title='Видимость'
           icon={<IconItemVisibility value={true} className={tripleToggleColor(isVisible)} />}
@@ -103,7 +94,7 @@ export function ToolbarSearch({ total, filtered }: ToolbarSearchProps) {
             icon={<IconUserSearch size='1.25rem' className={userActive ? 'icon-green' : 'icon-primary'} />}
             onClick={userMenu.toggle}
           />
-          <Dropdown isOpen={userMenu.isOpen} margin='mt-[0.2rem]'>
+          <Dropdown isOpen={userMenu.isOpen}>
             <DropdownButton
               text='Я - Владелец'
               icon={<IconOwner size='1.25rem' className={tripleToggleColor(isOwned)} />}
@@ -142,10 +133,10 @@ export function ToolbarSearch({ total, filtered }: ToolbarSearchProps) {
           onChangeQuery={setQuery}
         />
         {!folderMode ? (
-          <div ref={headMenu.ref} className='relative flex items-center h-full py-1 select-none'>
+          <div ref={headMenu.ref} className='relative flex items-center h-full select-none'>
             <SelectorButton
               transparent
-              className='h-full rounded-lg'
+              className='rounded-lg py-1'
               titleHtml={(head ? describeLocationHead(head) : 'Выберите каталог') + '<br/>Ctrl + клик - Проводник'}
               hideTitle={headMenu.isOpen}
               icon={

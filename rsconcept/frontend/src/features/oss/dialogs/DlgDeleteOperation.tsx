@@ -2,7 +2,6 @@
 
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import clsx from 'clsx';
 
 import { HelpTopic } from '@/features/help';
 
@@ -44,7 +43,7 @@ export function DlgDeleteOperation() {
       header='Удаление операции'
       submitText='Подтвердить удаление'
       onSubmit={event => void handleSubmit(onSubmit)(event)}
-      className={clsx('w-[35rem]', 'pb-3 px-6 cc-column', 'select-none')}
+      className='w-140 pb-3 px-6 cc-column select-none'
       helpTopic={HelpTopic.CC_PROPAGATION}
     >
       <TextInput disabled dense noBorder id='operation_alias' label='Операция' value={target.alias} />

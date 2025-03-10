@@ -51,14 +51,14 @@ export function SelectLocation({ value, dense, prefix, onClick, className, style
   }
 
   return (
-    <div className={clsx('flex flex-col', 'cc-scroll-y', className)} style={style}>
+    <div className={clsx('flex flex-col cc-scroll-y', className)} style={style}>
       {items.map((item, index) =>
         !item.parent || !folded.includes(item.parent) ? (
           <div
             tabIndex={-1}
             key={`${prefix}${index}`}
             className={clsx(
-              !dense && 'min-h-[2.0825rem] sm:min-h-[2.3125rem]',
+              !dense && 'h-7 sm:h-8',
               'pr-3 py-1 flex items-center gap-2',
               'cc-scroll-row',
               'clr-hover cc-animate-color',

@@ -2,7 +2,6 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import clsx from 'clsx';
 
 import { urls, useConceptNavigation } from '@/app';
 
@@ -56,11 +55,11 @@ export function LoginPage() {
   }
   return (
     <form
-      className={clsx('cc-column cc-fade-in', 'w-[24rem] mx-auto', 'pt-12 pb-6 px-6')}
+      className='cc-column cc-fade-in w-96 mx-auto pt-12 pb-6 px-6'
       onSubmit={event => void handleSubmit(onSubmit)(event)}
       onChange={resetErrors}
     >
-      <img alt='Концепт Портал' src={resources.logo} className='max-h-[2.5rem] min-w-[2.5rem] mb-3' />
+      <img alt='Концепт Портал' src={resources.logo} className='max-h-10 min-w-10 mb-3' />
       <TextInput
         id='username'
         autoComplete='username'
@@ -82,7 +81,7 @@ export function LoginPage() {
         error={errors.password}
       />
 
-      <SubmitButton text='Войти' className='self-center w-[12rem] mt-3' loading={isPending} />
+      <SubmitButton text='Войти' className='self-center w-48 mt-3' loading={isPending} />
       <div className='flex flex-col text-sm'>
         <TextURL text='Восстановить пароль...' href='/restore-password' />
         <TextURL text='Нет аккаунта? Зарегистрируйтесь...' href='/signup' />

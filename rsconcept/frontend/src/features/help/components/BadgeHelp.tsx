@@ -52,7 +52,7 @@ export function BadgeHelp({ topic, padding = 'p-1', className, contentClass, sty
         {...restProps}
       >
         <Suspense fallback={<Loader />}>
-          <div className='absolute right-1 text-sm top-[0.4rem] clr-input' onClick={event => event.stopPropagation()}>
+          <div className='absolute right-1 text-sm top-2 clr-input' onClick={event => event.stopPropagation()}>
             <TextURL text='Справка...' href={`/manuals?topic=${topic}`} />
           </div>
           <TopicPage topic={topic} />

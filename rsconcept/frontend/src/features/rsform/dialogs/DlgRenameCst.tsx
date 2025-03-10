@@ -2,7 +2,6 @@
 
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import clsx from 'clsx';
 
 import { HelpTopic } from '@/features/help';
 
@@ -53,12 +52,12 @@ export function DlgRenameCst() {
       submitInvalidTooltip='Введите незанятое имя, соответствующее типу'
       canSubmit={isValid}
       onSubmit={event => void handleSubmit(onSubmit)(event)}
-      className={clsx('w-[30rem]', 'py-6 pr-3 pl-6 flex gap-3 justify-center items-center ')}
+      className='w-120 py-6 pr-3 pl-6 flex gap-3 justify-center items-center'
       helpTopic={HelpTopic.CC_CONSTITUENTA}
     >
       <SelectCstType
         id='dlg_cst_type'
-        className='w-[16rem]'
+        className='w-64'
         value={cst_type}
         onChange={handleChangeType}
         disabled={target.is_inherited}
@@ -68,7 +67,7 @@ export function DlgRenameCst() {
         {...register('alias')}
         dense
         label='Имя'
-        className='w-[7rem]'
+        className='w-28'
       />
     </ModalForm>
   );

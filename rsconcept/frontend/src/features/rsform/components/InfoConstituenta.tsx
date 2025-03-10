@@ -12,12 +12,10 @@ interface InfoConstituentaProps extends React.ComponentProps<'div'> {
 
 export function InfoConstituenta({ data, className, ...restProps }: InfoConstituentaProps) {
   return (
-    <div className={clsx('dense min-w-[15rem] break-words', className)} {...restProps}>
+    <div className={clsx('dense min-w-60 break-words', className)} {...restProps}>
       <h2 className='cursor-default' title={data.is_inherited ? ' наследник' : undefined}>
         {data.alias}
-        {data.is_inherited ? (
-          <IconChild size='1rem' className='inline-icon translate-y-[-0.1rem] translate-x-[0.125rem]' />
-        ) : null}
+        {data.is_inherited ? <IconChild size='1rem' className='inline-icon align-middle ml-1 mt-1' /> : null}
       </h2>
       {data.term_resolved ? (
         <p>

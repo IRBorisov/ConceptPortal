@@ -31,7 +31,7 @@ export function TopicsDropdown({ activeTopic, onChangeTopic }: TopicsDropdownPro
     <div
       ref={menu.ref}
       className={clsx(
-        'absolute left-0 w-54', // prettier: split-lines
+        'absolute left-0 w-54', //
         'flex flex-col',
         'z-topmost',
         'text-xs sm:text-sm',
@@ -59,11 +59,7 @@ export function TopicsDropdown({ activeTopic, onChangeTopic }: TopicsDropdownPro
         getParent={item => topicParent.get(item) ?? item}
         getLabel={labelHelpTopic}
         getDescription={describeHelpTopic}
-        className={clsx(
-          'border-r border-t rounded-none', // prettier: split-lines
-          'cc-scroll-y',
-          'bg-prim-200'
-        )}
+        className='border-r border-t rounded-none cc-scroll-y bg-prim-200'
         style={{
           maxHeight: treeHeight,
           willChange: 'clip-path',

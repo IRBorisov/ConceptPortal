@@ -60,7 +60,7 @@ const editorSetup: BasicSetupOptions = {
 interface RefsInputInputProps
   extends Pick<
     ReactCodeMirrorProps,
-    | 'id' // prettier: split-lines
+    | 'id' //
     | 'height'
     | 'minHeight'
     | 'maxHeight'
@@ -85,7 +85,7 @@ interface RefsInputInputProps
 export const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
   (
     {
-      id, // prettier: split-lines
+      id, //
       label,
       disabled,
       schema,

@@ -43,7 +43,7 @@ export function DlgCreateCst() {
       onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
       submitInvalidTooltip={errorMsg.aliasInvalid}
       submitText='Создать'
-      className='cc-column w-[35rem] max-h-[30rem] py-2 px-6'
+      className='cc-column w-140 max-h-120 py-2 px-6'
     >
       <FormProvider {...methods}>
         <FormCreateCst schema={schema} />

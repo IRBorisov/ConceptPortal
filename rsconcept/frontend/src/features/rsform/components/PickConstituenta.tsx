@@ -93,7 +93,7 @@ export function PickConstituenta({
         columns={columns}
         conditionalRowStyles={conditionalRowStyles}
         noDataComponent={
-          <NoData className='min-h-[6rem]'>
+          <NoData className='min-h-24'>
             <p>Список конституент пуст</p>
             <p>Измените параметры фильтра</p>
           </NoData>

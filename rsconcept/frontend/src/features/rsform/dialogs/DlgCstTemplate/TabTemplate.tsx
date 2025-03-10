@@ -60,7 +60,7 @@ export function TabTemplate() {
         <SelectSingle
           noBorder
           placeholder='Источник'
-          className='w-[12rem]'
+          className='w-48'
           options={templateSelector}
           value={templateID ? { value: templateID, label: templates.find(item => item.id == templateID)!.title } : null}
           onChange={data => onChangeTemplateID(data ? data.value : null)}

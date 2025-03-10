@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import clsx from 'clsx';
 
 import { isAxiosError } from '@/backend/apiTransport';
 import { SubmitButton, TextURL } from '@/components/Control';
@@ -33,11 +32,7 @@ export function Component() {
     );
   } else {
     return (
-      <form
-        className={clsx('cc-fade-in cc-column', 'w-[24rem] mx-auto', 'px-6 mt-3')}
-        onSubmit={handleSubmit}
-        onChange={clearServerError}
-      >
+      <form className='cc-fade-in cc-column w-96 mx-auto px-6 mt-3' onSubmit={handleSubmit} onChange={clearServerError}>
         <TextInput
           id='email'
           autoComplete='email'
@@ -48,12 +43,7 @@ export function Component() {
           onChange={event => setEmail(event.target.value)}
         />
 
-        <SubmitButton
-          text='Запросить пароль'
-          className='self-center w-[12rem] mt-3'
-          loading={isPending}
-          disabled={!email}
-        />
+        <SubmitButton text='Запросить пароль' className='self-center w-48 mt-3' loading={isPending} disabled={!email} />
         {serverError ? <ServerError error={serverError} /> : null}
       </form>
     );

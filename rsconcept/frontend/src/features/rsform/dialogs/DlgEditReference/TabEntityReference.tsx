@@ -46,7 +46,7 @@ export function TabEntityReference() {
           dense
           label='Конституента'
           placeholder='Имя'
-          className='w-[11rem]'
+          className='w-44'
           {...register('entity.entity')}
         />
         <TextInput

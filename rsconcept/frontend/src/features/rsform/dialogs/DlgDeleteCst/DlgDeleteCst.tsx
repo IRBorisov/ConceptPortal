@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import clsx from 'clsx';
 
 import { Checkbox } from '@/components/Input';
 import { ModalForm } from '@/components/Modal';
@@ -40,7 +39,7 @@ export function DlgDeleteCst() {
       header='Удаление конституент'
       submitText={expandOut ? 'Удалить с зависимыми' : 'Удалить'}
       onSubmit={handleSubmit}
-      className={clsx('cc-column', 'max-w-[60vw] min-w-[30rem]', 'px-6')}
+      className='cc-column max-w-[60vw] min-w-120 px-6'
     >
       <ListConstituents title='Выбраны к удалению' list={selected} schema={schema} prefix={prefixes.cst_delete_list} />
       <ListConstituents

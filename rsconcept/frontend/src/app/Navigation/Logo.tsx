@@ -8,6 +8,7 @@ export function Logo() {
   return (
     <img
       alt=''
+      aria-hidden
       className='max-h-7 w-fit max-w-46'
       src={size.isSmall ? '/logo_sign.svg' : !darkMode ? '/logo_full.svg' : '/logo_full_dark.svg'}
     />

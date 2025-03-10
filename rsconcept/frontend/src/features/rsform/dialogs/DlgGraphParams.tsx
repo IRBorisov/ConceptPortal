@@ -26,7 +26,7 @@ export function DlgGraphParams() {
       header='Настройки графа термов'
       onSubmit={event => void handleSubmit(onSubmit)(event)}
       submitText='Применить'
-      className='flex gap-6 justify-between px-6 pb-3 w-[30rem]'
+      className='flex gap-6 justify-between px-6 pb-3 w-120'
     >
       <div className='flex flex-col gap-1'>
         <h1 className='mb-2'>Преобразования</h1>

@@ -28,7 +28,7 @@ export function TabSyntacticReference() {
         type='number'
         dense
         label='Смещение'
-        className='max-w-[10rem]'
+        className='max-w-40'
         {...register('syntactic.offset')}
       />
       <TextInput

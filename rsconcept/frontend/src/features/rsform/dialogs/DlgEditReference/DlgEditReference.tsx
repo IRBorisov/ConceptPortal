@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import clsx from 'clsx';
 import { z } from 'zod';
 
 import { HelpTopic } from '@/features/help';
@@ -102,7 +101,7 @@ export function DlgEditReference() {
       canSubmit={methods.formState.isValid}
       onCancel={onCancel}
       onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
-      className='w-160 px-6 h-[32rem]'
+      className='w-160 px-6 h-128'
       helpTopic={HelpTopic.TERM_CONTROL}
     >
       <Tabs
@@ -111,7 +110,7 @@ export function DlgEditReference() {
         selectedIndex={activeTab}
         onSelect={handleChangeTab}
       >
-        <TabList className={clsx('mb-3 self-center', 'flex', 'border divide-x rounded-none', 'bg-prim-200')}>
+        <TabList className='mb-3 self-center flex border divide-x rounded-none bg-prim-200'>
           <TabLabel title='Отсылка на термин в заданной словоформе' label={labelReferenceType(ReferenceType.ENTITY)} />
           <TabLabel
             title='Установление синтаксической связи с отсылкой на термин'

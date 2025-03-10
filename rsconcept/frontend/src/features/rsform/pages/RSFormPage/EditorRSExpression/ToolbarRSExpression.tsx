@@ -16,7 +16,7 @@ export function ToolbarRSExpression({ disabled, showTypeGraph, showAST }: Toolba
   const toggleControls = usePreferencesStore(state => state.toggleShowExpressionControls);
 
   return (
-    <div className='absolute z-pop top-[-0.5rem] right-0 cc-icons'>
+    <div className='absolute z-pop -top-2 right-0 cc-icons'>
       {!disabled || isProcessing ? (
         <MiniButton
           title='Отображение специальной клавиатуры'

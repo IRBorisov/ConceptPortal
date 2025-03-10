@@ -29,7 +29,7 @@ import { rsHoverTooltip } from './tooltip';
 interface RSInputProps
   extends Pick<
     ReactCodeMirrorProps,
-    | 'id' // prettier: split-lines
+    | 'id' //
     | 'height'
     | 'minHeight'
     | 'maxHeight'

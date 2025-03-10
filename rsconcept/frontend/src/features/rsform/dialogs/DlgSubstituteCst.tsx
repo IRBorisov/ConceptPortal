@@ -2,7 +2,6 @@
 
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import clsx from 'clsx';
 
 import { HelpTopic } from '@/features/help';
 
@@ -47,7 +46,7 @@ export function DlgSubstituteCst() {
       submitInvalidTooltip='Выберите две различные конституенты'
       canSubmit={isValid}
       onSubmit={event => void handleSubmit(onSubmit)(event)}
-      className={clsx('w-160', 'px-6 pb-3')}
+      className='w-160 px-6 pb-3'
       helpTopic={HelpTopic.UI_SUBSTITUTIONS}
     >
       <Controller

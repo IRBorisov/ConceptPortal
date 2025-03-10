@@ -3,7 +3,6 @@
 
 import { useCallback } from 'react';
 import { type Table } from '@tanstack/react-table';
-import clsx from 'clsx';
 
 import { prefixes } from '@/utils/constants';
 
@@ -34,7 +33,7 @@ export function PaginationTools<TData>({
   );
 
   return (
-    <div className={clsx('flex justify-end items-center', 'my-2', 'text-sm', 'clr-text-controls', 'select-none')}>
+    <div className='flex justify-end items-center my-2 text-sm clr-text-controls select-none'>
       <span className='mr-3'>
         {`${table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1}
       -

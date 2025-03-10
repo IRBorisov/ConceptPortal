@@ -25,7 +25,7 @@ export function TopicsStatic({ activeTopic, onChangeTopic }: TopicsStaticProps) 
       getDescription={describeHelpTopic}
       className={clsx(
         'sticky top-0 left-0',
-        'min-w-[14.5rem] max-w-[14.5rem] sm:min-w-[12.5rem] sm:max-w-[12.5rem] md:min-w-[14.5rem] md:max-w-[14.5rem]',
+        'min-w-58 max-w-58 sm:min-w-50 sm:max-w-50 md:min-w-58 md:max-w-58',
         'cc-scroll-y',
         'self-start',
         'border-x border-t rounded-none',

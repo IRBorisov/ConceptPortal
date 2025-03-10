@@ -67,7 +67,7 @@ export function HelpRSMenu() {
 
         <Divider vertical margins='mx-3' />
 
-        <div className='w-[18rem]'>
+        <div className='w-72'>
           <h2>Режимы работы</h2>
           <li>
             <IconAlert size='1.25rem' className='inline-icon icon-red' /> работа в анонимном режиме. Переход на страницу

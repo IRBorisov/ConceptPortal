@@ -35,22 +35,14 @@ export function SelectLocationContext({
   }
 
   return (
-    <div
-      ref={menu.ref}
-      className={clsx('relative h-full mt-[-0.25rem] ml-[-1.5rem]', 'text-right self-start', className)}
-      {...restProps}
-    >
+    <div ref={menu.ref} className={clsx('relative h-full -mt-1 -ml-6 text-right self-start', className)} {...restProps}>
       <MiniButton
         title={title}
         hideTitle={menu.isOpen}
         icon={<IconFolderTree size='1.25rem' className='icon-green' />}
         onClick={() => menu.toggle()}
       />
-      <Dropdown
-        isOpen={menu.isOpen}
-        className={clsx('w-[20rem] h-[12.5rem] z-tooltip', dropdownHeight)}
-        margin='mt-[-0.25rem]'
-      >
+      <Dropdown isOpen={menu.isOpen} className={clsx('w-80 h-50 z-tooltip', dropdownHeight)}>
         <SelectLocation
           value={value}
           prefix={prefixes.folders_list}

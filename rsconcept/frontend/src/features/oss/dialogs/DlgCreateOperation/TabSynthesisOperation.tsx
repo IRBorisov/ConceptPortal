@@ -29,7 +29,7 @@ export function TabSynthesisOperation() {
         <TextInput
           id='operation_alias'
           label='Сокращение'
-          className='w-[16rem]'
+          className='w-64'
           {...register('item_data.alias')}
           error={errors.item_data?.alias}
         />

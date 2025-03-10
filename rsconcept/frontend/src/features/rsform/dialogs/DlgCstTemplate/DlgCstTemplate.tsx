@@ -3,7 +3,6 @@
 import { Suspense, useState } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import clsx from 'clsx';
 
 import { HelpTopic } from '@/features/help';
 
@@ -65,7 +64,7 @@ export function DlgCstTemplate() {
     <ModalForm
       header='Создание конституенты из шаблона'
       submitText='Создать'
-      className='w-[43rem] h-[35rem] px-6'
+      className='w-172 h-140 px-6'
       canSubmit={isValid}
       onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
       helpTopic={HelpTopic.RSL_TEMPLATES}
@@ -76,7 +75,7 @@ export function DlgCstTemplate() {
         selectedIndex={activeTab}
         onSelect={setActiveTab}
       >
-        <TabList className={clsx('mb-3 self-center', 'flex', 'border divide-x rounded-none', 'bg-prim-200')}>
+        <TabList className='mb-4 self-center flex border divide-x rounded-none bg-prim-200'>
           <TabLabel label='Шаблон' title='Выбор шаблона выражения' className='w-32' />
           <TabLabel label='Аргументы' title='Подстановка аргументов шаблона' className='w-32' />
           <TabLabel label='Конституента' title='Редактирование конституенты' className='w-32' />

@@ -85,7 +85,7 @@ export function ViewSideLocation({ isVisible, onRenameLocation }: ViewSideLocati
           ) : null}
           {!!location ? (
             <MiniButton
-              title={subfolders ? 'Вложенные папки: Вкл' : 'Вложенные папки: Выкл'} // prettier: split-lines
+              title={subfolders ? 'Вложенные папки: Вкл' : 'Вложенные папки: Выкл'}
               icon={<IconShowSubfolders value={subfolders} />}
               onClick={toggleSubfolders}
             />

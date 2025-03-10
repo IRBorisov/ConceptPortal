@@ -1,6 +1,5 @@
 import { type Extension } from '@codemirror/state';
 import { hoverTooltip, type TooltipView } from '@codemirror/view';
-import clsx from 'clsx';
 
 import { labelCstTypification } from '../../labels';
 import { type IConstituenta, type IRSForm } from '../../models/rsform';
@@ -33,14 +32,7 @@ export function rsHoverTooltip(schema: IRSForm, canClick?: boolean): Extension {
  */
 function domTooltipConstituenta(cst?: IConstituenta, canClick?: boolean): TooltipView {
   const dom = document.createElement('div');
-  dom.className = clsx(
-    'max-h-[25rem] max-w-[25rem] min-w-[10rem]',
-    'dense',
-    'p-2',
-    'border shadow-md',
-    'cc-scroll-y',
-    'text-sm font-main'
-  );
+  dom.className = 'max-h-100 max-w-100 min-w-40 dense p-2 border shadow-md cc-scroll-y text-sm font-main';
 
   if (!cst) {
     const text = document.createElement('p');

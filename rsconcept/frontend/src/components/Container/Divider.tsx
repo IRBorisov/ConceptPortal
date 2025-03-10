@@ -17,7 +17,7 @@ export function Divider({ vertical, margins = 'mx-2', className, ...restProps }:
   return (
     <div
       className={clsx(
-        margins, //prettier: split-lines
+        margins, //
         className,
         {
           'border-x': vertical,

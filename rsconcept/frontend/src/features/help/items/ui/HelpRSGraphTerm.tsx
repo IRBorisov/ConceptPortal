@@ -69,7 +69,7 @@ export function HelpRSGraphTerm() {
       <Divider margins='my-3' className='hidden sm:block' />
 
       <div className='flex flex-col-reverse mb-3 sm:flex-row'>
-        <div className='sm:w-[14rem]'>
+        <div className='sm:w-56'>
           <h1>Общие</h1>
           <li>
             <IconOSS className='inline-icon' /> переход к связанной <LinkTopic text='ОСС' topic={HelpTopic.CC_OSS} />
@@ -88,7 +88,7 @@ export function HelpRSGraphTerm() {
 
         <Divider vertical margins='mx-3' className='hidden sm:block' />
 
-        <div className='dense w-[21rem]'>
+        <div className='dense w-84'>
           <h1>Выделение</h1>
           <li>
             <IconGraphCollapse className='inline-icon' /> все влияющие

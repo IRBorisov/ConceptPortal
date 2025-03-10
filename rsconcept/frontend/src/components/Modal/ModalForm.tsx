@@ -87,15 +87,10 @@ export function ModalForm({
   }
 
   return (
-    <div className='fixed top-0 left-0 w-full h-full z-modal isolate cursor-default'>
+    <div className='cc-modal-wrapper'>
       <ModalBackdrop onHide={handleCancel} />
       <form
-        className={clsx(
-          'cc-animate-modal',
-          'absolute bottom-1/2 left-1/2 -translate-x-1/2 translate-y-1/2',
-          'grid',
-          'border rounded-xl bg-prim-100'
-        )}
+        className='cc-animate-modal grid border rounded-xl bg-prim-100'
         role='dialog'
         onSubmit={handleSubmit}
         aria-labelledby='modal-title'

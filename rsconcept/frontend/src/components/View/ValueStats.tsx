@@ -20,5 +20,5 @@ interface ValueStatsProps extends Styling, Titled {
  * Displays statistics value with an icon.
  */
 export function ValueStats(props: ValueStatsProps) {
-  return <ValueIcon dense smallThreshold={SMALL_THRESHOLD} textClassName='min-w-[1.4rem]' {...props} />;
+  return <ValueIcon dense smallThreshold={SMALL_THRESHOLD} textClassName='min-w-5' {...props} />;
 }

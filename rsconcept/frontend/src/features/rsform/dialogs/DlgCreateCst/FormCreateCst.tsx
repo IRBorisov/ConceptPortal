@@ -43,15 +43,8 @@ export function FormCreateCst({ schema }: FormCreateCstProps) {
   return (
     <>
       <div className='flex items-center self-center gap-3'>
-        <SelectCstType id='dlg_cst_type' className='w-[16rem]' value={cst_type} onChange={handleTypeChange} />
-        <TextInput
-          id='dlg_cst_alias'
-          dense
-          label='Имя'
-          className='w-[7rem]'
-          {...register('alias')}
-          error={errors.alias}
-        />
+        <SelectCstType id='dlg_cst_type' className='w-64' value={cst_type} onChange={handleTypeChange} />
+        <TextInput id='dlg_cst_alias' dense label='Имя' className='w-28' {...register('alias')} error={errors.alias} />
         <BadgeHelp topic={HelpTopic.CC_CONSTITUENTA} offset={16} contentClass='sm:max-w-160' />
       </div>
 
@@ -61,7 +54,7 @@ export function FormCreateCst({ schema }: FormCreateCstProps) {
         spellCheck
         label='Термин'
         placeholder='Обозначение для текстовых определений'
-        className='max-h-[3.6rem]'
+        className='max-h-15'
         {...register('term_raw')}
         error={errors.term_raw}
       />
@@ -105,7 +98,7 @@ export function FormCreateCst({ schema }: FormCreateCstProps) {
               fitContent
               label='Текстовое определение'
               placeholder='Текстовая интерпретация формального выражения'
-              className='max-h-[3.6rem]'
+              className='max-h-15'
               value={field.value}
               onChange={field.onChange}
             />
@@ -132,7 +125,7 @@ export function FormCreateCst({ schema }: FormCreateCstProps) {
           fitContent
           label={isBasic ? 'Конвенция' : 'Комментарий'}
           placeholder={isBasic ? 'Договоренность об интерпретации' : 'Пояснение разработчика'}
-          className='max-h-[5.4rem]'
+          className='max-h-20'
           {...register('convention')}
         />
       )}

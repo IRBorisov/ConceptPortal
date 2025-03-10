@@ -2,7 +2,6 @@
 
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import clsx from 'clsx';
 
 import { Checkbox, TextArea, TextInput } from '@/components/Input';
 import { ModalForm } from '@/components/Modal';
@@ -45,13 +44,13 @@ export function DlgCreateVersion() {
   return (
     <ModalForm
       header='Создание версии'
-      className={clsx('cc-column', 'w-[30rem]', 'py-2 px-6')}
+      className='cc-column w-120 py-2 px-6'
       canSubmit={canSubmit}
       submitInvalidTooltip={errorMsg.versionTaken}
       submitText='Создать'
       onSubmit={event => void handleSubmit(onSubmit)(event)}
     >
-      <TextInput id='dlg_version' {...register('version')} dense label='Версия' className='w-[16rem]' />
+      <TextInput id='dlg_version' {...register('version')} dense label='Версия' className='w-64' />
       <TextArea id='dlg_description' {...register('description')} spellCheck label='Описание' rows={3} />
       {selected.length > 0 ? (
         <Controller

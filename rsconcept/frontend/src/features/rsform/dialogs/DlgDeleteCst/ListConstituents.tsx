@@ -1,5 +1,3 @@
-import clsx from 'clsx';
-
 import { labelConstituenta } from '../../labels';
 import { type IRSForm } from '../../models/rsform';
 
@@ -18,7 +16,7 @@ export function ListConstituents({ list, schema, title, prefix }: ListConstituen
           {title}: <b>{list.length}</b>
         </p>
       ) : null}
-      <div className={clsx('h-[9rem]', 'px-3', 'cc-scroll-y', 'border', 'whitespace-nowrap')}>
+      <div className='h-36 px-3 cc-scroll-y border whitespace-nowrap'>
         {list.map(id => {
           const cst = schema.cstByID.get(id);
           return cst ? <p key={`${prefix}${cst.id}`}>{labelConstituenta(cst)}</p> : null;

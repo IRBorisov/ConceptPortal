@@ -1,7 +1,5 @@
 'use client';
 
-import clsx from 'clsx';
-
 import { MiniButton } from '@/components/Control';
 import { createColumnHelper, DataTable } from '@/components/DataTable';
 import { IconRemove } from '@/components/Icons';
@@ -37,7 +35,7 @@ export function TableWordForms({ forms, setForms, onFormSelect }: TableWordForms
       size: 350,
       minSize: 500,
       maxSize: 500,
-      cell: props => <div className='min-w-[25rem]'>{props.getValue()}</div>
+      cell: props => <div className='min-w-100'>{props.getValue()}</div>
     }),
     columnHelper.accessor('grams', {
       id: 'grams',
@@ -65,12 +63,12 @@ export function TableWordForms({ forms, setForms, onFormSelect }: TableWordForms
       dense
       noFooter
       noHeader
-      className={clsx('mb-2', 'max-h-[17.4rem] min-h-[17.4rem]', 'border', 'text-sm', 'cc-scroll-y')}
+      className='mb-2 max-h-70 min-h-70 border text-sm cc-scroll-y'
       data={forms}
       columns={columns}
       headPosition='0'
       noDataComponent={
-        <NoData className='min-h-[2rem]'>
+        <NoData className='min-h-8'>
           <p>Список пуст</p>
           <p>Добавьте словоформу</p>
         </NoData>

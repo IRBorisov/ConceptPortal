@@ -2,7 +2,6 @@
 
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import clsx from 'clsx';
 
 import { urls, useConceptNavigation } from '@/app';
 import { useAuthSuspense } from '@/features/auth';
@@ -69,7 +68,7 @@ export function DlgCloneLibraryItem() {
       submitText='Создать'
       canSubmit={isValid}
       onSubmit={event => void handleSubmit(onSubmit)(event)}
-      className={clsx('px-6 py-2', 'cc-column', 'max-h-full w-[30rem]')}
+      className='px-6 py-2 cc-column h-fit w-120'
     >
       <TextInput
         id='dlg_full_name' //
@@ -77,14 +76,9 @@ export function DlgCloneLibraryItem() {
         {...register('title')}
         error={errors.title}
       />
+
       <div className='flex justify-between gap-3'>
-        <TextInput
-          id='dlg_alias'
-          label='Сокращение'
-          className='w-[16rem]'
-          {...register('alias')}
-          error={errors.alias}
-        />
+        <TextInput id='dlg_alias' label='Сокращение' className='w-64' {...register('alias')} error={errors.alias} />
         <div className='flex flex-col gap-2'>
           <Label text='Доступ' className='self-center select-none' />
           <div className='ml-auto cc-icons'>
@@ -115,7 +109,7 @@ export function DlgCloneLibraryItem() {
       </div>
 
       <div className='flex gap-3'>
-        <div className='flex flex-col gap-2 w-[7rem]'>
+        <div className='flex flex-col gap-2 w-28'>
           <Label text='Корень' />
           <Controller
             control={control} //
