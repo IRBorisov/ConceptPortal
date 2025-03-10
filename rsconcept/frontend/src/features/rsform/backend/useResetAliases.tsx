@@ -20,7 +20,7 @@ export const useResetAliases = () => {
         client.invalidateQueries({ queryKey: [KEYS.oss] }),
         client.invalidateQueries({
           queryKey: [rsformsApi.baseKey],
-          predicate: query => query.queryKey.length > 2 && query.queryKey[2] !== data.id
+          predicate: query => query.queryKey.length > 2 && query.queryKey[2] !== String(data.id)
         })
       ]);
     },
