@@ -6,13 +6,13 @@ import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { SubmitButton } from '@/components/Control';
-import { IconChild, IconPredecessor, IconSave } from '@/components/Icons';
+import { MiniButton, SubmitButton } from '@/components/Control';
+import { IconChild, IconEdit, IconPredecessor, IconSave } from '@/components/Icons';
 import { TextArea } from '@/components/Input';
 import { Indicator } from '@/components/View';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
-import { errorMsg } from '@/utils/labels';
+import { errorMsg, tooltipText } from '@/utils/labels';
 import { promptUnsaved } from '@/utils/utils';
 
 import {
@@ -29,8 +29,6 @@ import { labelCstTypification, labelTypification } from '../../../labels';
 import { type IConstituenta, type IRSForm } from '../../../models/rsform';
 import { isBaseSet, isBasicConcept, isFunctional } from '../../../models/rsformAPI';
 import { EditorRSExpression } from '../EditorRSExpression';
-
-import { EditorControls } from './EditorControls';
 
 interface FormConstituentaProps {
   id?: string;
@@ -57,6 +55,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
   const { cstUpdate } = useCstUpdate();
   const showTypification = useDialogsStore(state => state.showShowTypeGraph);
   const showEditTerm = useDialogsStore(state => state.showEditWordForms);
+  const showRenameCst = useDialogsStore(state => state.showRenameCst);
 
   const [localParse, setLocalParse] = useState<IExpressionParseDTO | null>(null);
 
@@ -129,9 +128,38 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
     showEditTerm({ itemID: schema.id, target: activeCst });
   }
 
+  function handleRenameCst() {
+    showRenameCst({ schema: schema, target: activeCst });
+  }
+
   return (
     <form id={id} className='relative cc-column mt-1 px-6 py-1' onSubmit={event => void handleSubmit(onSubmit)(event)}>
-      <EditorControls disabled={disabled} constituenta={activeCst} onEditTerm={handleEditTermForms} />
+      {!disabled || isProcessing ? (
+        <MiniButton
+          title={isModified ? tooltipText.unsaved : `Редактировать словоформы термина`}
+          noHover
+          onClick={handleEditTermForms}
+          className='absolute z-pop top-0 left-[calc(7ch+4px)]'
+          icon={<IconEdit size='1rem' className='icon-primary' />}
+          disabled={isModified}
+        />
+      ) : null}
+
+      <div className='absolute z-pop top-0 left-[calc(7ch+4px+3rem)] flex select-none'>
+        <div className='pt-1 text-sm font-medium whitespace-nowrap select-text cursor-default'>
+          <span>Имя </span>
+          <span className='ml-1'>{activeCst?.alias ?? ''}</span>
+        </div>
+        {!disabled || isProcessing ? (
+          <MiniButton
+            noHover
+            title={isModified ? tooltipText.unsaved : 'Переименовать конституенту'}
+            onClick={handleRenameCst}
+            icon={<IconEdit size='1rem' className='icon-primary' />}
+            disabled={isModified}
+          />
+        ) : null}
+      </div>
 
       <Controller
         control={control}

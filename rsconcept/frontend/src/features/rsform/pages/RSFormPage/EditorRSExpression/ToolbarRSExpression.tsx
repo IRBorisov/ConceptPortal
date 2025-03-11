@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+
 import { MiniButton } from '@/components/Control';
 import { IconControls, IconTree, IconTypeGraph } from '@/components/Icons';
 import { usePreferencesStore } from '@/stores/preferences';
@@ -5,18 +7,19 @@ import { usePreferencesStore } from '@/stores/preferences';
 import { useMutatingRSForm } from '../../../backend/useMutatingRSForm';
 
 interface ToolbarRSExpressionProps {
+  className?: string;
   disabled?: boolean;
   showAST: (event: React.MouseEvent<Element>) => void;
   showTypeGraph: (event: React.MouseEvent<Element>) => void;
 }
 
-export function ToolbarRSExpression({ disabled, showTypeGraph, showAST }: ToolbarRSExpressionProps) {
+export function ToolbarRSExpression({ className, disabled, showTypeGraph, showAST }: ToolbarRSExpressionProps) {
   const isProcessing = useMutatingRSForm();
   const showControls = usePreferencesStore(state => state.showExpressionControls);
   const toggleControls = usePreferencesStore(state => state.toggleShowExpressionControls);
 
   return (
-    <div className='absolute z-pop -top-2 right-0 cc-icons'>
+    <div className={clsx('cc-icons', className)}>
       {!disabled || isProcessing ? (
         <MiniButton
           title='Отображение специальной клавиатуры'

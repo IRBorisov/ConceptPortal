@@ -6,17 +6,13 @@ import { ValueStats } from '@/components/View';
 import { type IOperationSchemaStats } from '../../../models/oss';
 
 interface OssStatsProps {
+  className?: string;
   stats: IOperationSchemaStats;
 }
 
-export function OssStats({ stats }: OssStatsProps) {
+export function OssStats({ className, stats }: OssStatsProps) {
   return (
-    <div
-      className={clsx(
-        'mt-3 md:ml-5 md:mt-8 md:w-48 w-56 h-min mx-auto', //
-        'grid grid-cols-3 gap-1 justify-items-end'
-      )}
-    >
+    <div className={clsx('grid grid-cols-3 gap-1 justify-items-end', className)}>
       <div id='count_operations' className='w-fit flex gap-3 hover:cursor-default '>
         <span>Всего</span>
         <span>{stats.count_operations}</span>

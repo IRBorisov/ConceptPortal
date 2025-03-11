@@ -24,18 +24,14 @@ import { ValueStats } from '@/components/View';
 import { type IRSFormStats } from '../../../models/rsform';
 
 interface RSFormStatsProps {
+  className?: string;
   isArchive: boolean;
   stats: IRSFormStats;
 }
 
-export function RSFormStats({ stats, isArchive }: RSFormStatsProps) {
+export function RSFormStats({ className, stats, isArchive }: RSFormStatsProps) {
   return (
-    <div
-      className={clsx(
-        'mt-3 md:ml-5 md:mt-8 md:w-56 w-80 h-min mx-auto', //
-        'grid grid-cols-4 gap-1 justify-items-end'
-      )}
-    >
+    <div className={clsx('grid grid-cols-4 gap-1 justify-items-end', className)}>
       <div id='count_all' className='col-span-2 w-fit flex gap-3 hover:cursor-default '>
         <span>Всего</span>
         <span>{stats.count_all}</span>

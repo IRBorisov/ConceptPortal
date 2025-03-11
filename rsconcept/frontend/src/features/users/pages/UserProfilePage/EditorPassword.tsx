@@ -35,7 +35,7 @@ export function EditorPassword() {
 
   return (
     <form
-      className='max-w-64 px-6 py-2 flex flex-col justify-between border-l-2'
+      className='max-w-64 px-6 py-2 flex flex-col gap-2 justify-between border-l-2'
       onSubmit={event => void handleSubmit(onSubmit)(event)}
       onChange={resetErrors}
     >
@@ -69,7 +69,7 @@ export function EditorPassword() {
         />
         {serverError ? <ServerError error={serverError} /> : null}
       </div>
-      <SubmitButton text='Сменить пароль' className='self-center mt-2' loading={isPending} />
+      <SubmitButton text='Сменить пароль' className='self-center' loading={isPending} />
     </form>
   );
 }

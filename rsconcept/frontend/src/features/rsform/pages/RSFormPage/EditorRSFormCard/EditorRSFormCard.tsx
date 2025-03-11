@@ -42,14 +42,24 @@ export function EditorRSFormCard() {
         'flex flex-row flex-wrap px-6 pt-8'
       )}
     >
-      <ToolbarItemCard onSubmit={initiateSubmit} schema={schema} isMutable={isMutable} deleteSchema={deleteSchema} />
+      <ToolbarItemCard
+        className='cc-tab-tools'
+        onSubmit={initiateSubmit}
+        schema={schema}
+        isMutable={isMutable}
+        deleteSchema={deleteSchema}
+      />
 
       <div className='cc-column shrink'>
         <FormRSForm />
         <EditorLibraryItem schema={schema} isAttachedToOSS={isAttachedToOSS} />
       </div>
 
-      <RSFormStats stats={schema.stats} isArchive={isArchive} />
+      <RSFormStats
+        className='mt-3 md:mt-8 md:ml-5 w-80 md:w-56 mx-auto h-min'
+        stats={schema.stats}
+        isArchive={isArchive}
+      />
     </div>
   );
 }

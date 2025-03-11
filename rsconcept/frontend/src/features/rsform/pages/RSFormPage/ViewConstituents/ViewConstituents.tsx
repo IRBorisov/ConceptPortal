@@ -15,21 +15,26 @@ import { TableSideConstituents } from './TableSideConstituents';
 const COLUMN_DENSE_SEARCH_THRESHOLD = 1100;
 
 interface ViewConstituentsProps {
+  className?: string;
   isBottom?: boolean;
   isMounted: boolean;
 }
 
-export function ViewConstituents({ isBottom, isMounted }: ViewConstituentsProps) {
+export function ViewConstituents({ className, isBottom, isMounted }: ViewConstituentsProps) {
   const windowSize = useWindowSize();
   const role = useRoleStore(state => state.role);
   const listHeight = useFitHeight(!isBottom ? '8.2rem' : role !== UserRole.READER ? '42rem' : '35rem', '10rem');
 
   return (
     <aside
-      className={clsx('border', {
-        'mt-9 rounded-l-md rounded-r-none h-fit overflow-visible': !isBottom,
-        'mt-3 mx-6 rounded-md overflow-hidden': isBottom
-      })}
+      className={clsx(
+        'border',
+        {
+          'rounded-l-md rounded-r-none': !isBottom,
+          'rounded-md': isBottom
+        },
+        className
+      )}
       style={{
         willChange: 'opacity, max-width',
         transitionProperty: 'opacity, max-width',

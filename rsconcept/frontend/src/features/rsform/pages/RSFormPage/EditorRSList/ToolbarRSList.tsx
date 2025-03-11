@@ -24,7 +24,11 @@ import { IconCstType } from '../../../components/IconCstType';
 import { getCstTypeShortcut, labelCstType } from '../../../labels';
 import { useRSEdit } from '../RSEditContext';
 
-export function ToolbarRSList() {
+interface ToolbarRSListProps {
+  className?: string;
+}
+
+export function ToolbarRSList({ className }: ToolbarRSListProps) {
   const isProcessing = useMutatingRSForm();
   const insertMenu = useDropdown();
   const {
@@ -42,13 +46,7 @@ export function ToolbarRSList() {
   } = useRSEdit();
 
   return (
-    <div
-      className={clsx(
-        'cc-tab-tools right-4 md:right-1/2 -translate-x-1/2 md:translate-x-0',
-        'cc-icons items-start',
-        'outline-hidden cc-animate-position'
-      )}
-    >
+    <div className={clsx('cc-icons items-start outline-hidden', className)}>
       {schema.oss.length > 0 ? (
         <MiniSelectorOSS
           items={schema.oss}

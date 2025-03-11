@@ -12,7 +12,6 @@ import {
   useReactFlow,
   useStoreApi
 } from 'reactflow';
-import clsx from 'clsx';
 
 import { useMainHeight } from '@/stores/appLayout';
 import { PARAMETER } from '@/utils/constants';
@@ -181,13 +180,7 @@ export function TGFlow() {
         ) : null}
       </div>
 
-      <div
-        className={clsx(
-          'absolute z-pop top-18 sm:top-16 left-2 sm:left-3 w-54',
-          'flex flex-col',
-          'pointer-events-none'
-        )}
-      >
+      <div className='absolute z-pop top-18 sm:top-16 left-2 sm:left-3 w-54 flex flex-col pointer-events-none'>
         <span className='px-2 pb-1 select-none whitespace-nowrap cc-blur rounded-xl'>
           Выбор {selected.length} из {schema.stats?.count_all ?? 0}
         </span>

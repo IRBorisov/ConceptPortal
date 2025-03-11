@@ -1,5 +1,7 @@
 'use client';
 
+import clsx from 'clsx';
+
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components';
 import { useVersionRestore } from '@/features/library/backend/useVersionRestore';
@@ -15,9 +17,10 @@ import { useRSEdit } from '../RSEditContext';
 
 interface ToolbarVersioningProps {
   blockReload?: boolean;
+  className?: string;
 }
 
-export function ToolbarVersioning({ blockReload }: ToolbarVersioningProps) {
+export function ToolbarVersioning({ blockReload, className }: ToolbarVersioningProps) {
   const { isModified } = useModificationStore();
   const { versionRestore } = useVersionRestore();
   const { schema, isMutable, isContentEditable, navigateVersion, activeVersion, selected } = useRSEdit();
@@ -55,7 +58,7 @@ export function ToolbarVersioning({ blockReload }: ToolbarVersioningProps) {
   }
 
   return (
-    <div className='absolute z-bottom -top-2 right-0 pr-2 cc-icons'>
+    <div className={clsx('cc-icons', className)}>
       {isMutable ? (
         <>
           <MiniButton

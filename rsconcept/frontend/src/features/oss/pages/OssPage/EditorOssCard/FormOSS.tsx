@@ -78,6 +78,7 @@ export function FormOSS() {
           error={errors.alias}
         />
         <ToolbarItemAccess
+          className='absolute top-18 right-2'
           visible={visible}
           toggleVisible={() => setValue('visible', !visible, { shouldDirty: true })}
           readOnly={readOnly}

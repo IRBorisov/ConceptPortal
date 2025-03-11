@@ -18,6 +18,7 @@ import { ExpressionStatus, type IConstituenta } from '../../../models/rsform';
 import { inferStatus } from '../../../models/rsformAPI';
 
 interface StatusBarProps {
+  className?: string;
   processing: boolean;
   isModified: boolean;
   parseData: IExpressionParseDTO | null;
@@ -25,7 +26,7 @@ interface StatusBarProps {
   onAnalyze: () => void;
 }
 
-export function StatusBar({ isModified, processing, activeCst, parseData, onAnalyze }: StatusBarProps) {
+export function StatusBar({ className, isModified, processing, activeCst, parseData, onAnalyze }: StatusBarProps) {
   const status = (() => {
     if (isModified) {
       return ExpressionStatus.UNKNOWN;
@@ -38,12 +39,7 @@ export function StatusBar({ isModified, processing, activeCst, parseData, onAnal
   })();
 
   return (
-    <div
-      className={clsx(
-        'absolute z-pop -top-2 right-1/2 translate-x-1/2 w-fit', //
-        'pl-34 xs:pl-8 flex gap-1'
-      )}
-    >
+    <div className={clsx('pl-34 xs:pl-8 flex gap-1', className)}>
       <div
         tabIndex={0}
         className={clsx(

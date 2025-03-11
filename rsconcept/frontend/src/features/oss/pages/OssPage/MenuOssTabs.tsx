@@ -11,7 +11,7 @@ export function MenuOssTabs() {
   const { isOwned, schema } = useOssEdit();
   const { user } = useAuthSuspense();
   return (
-    <div className='flex  border-r-2'>
+    <div className='flex border-r-2'>
       <MenuMain />
 
       <MenuEditOss />

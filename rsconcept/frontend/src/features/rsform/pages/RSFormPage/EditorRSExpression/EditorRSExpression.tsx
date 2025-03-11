@@ -155,9 +155,15 @@ export function EditorRSExpression({
 
   return (
     <div className='relative cc-fade-in'>
-      <ToolbarRSExpression disabled={disabled} showAST={handleShowAST} showTypeGraph={onShowTypeGraph} />
+      <ToolbarRSExpression
+        className='absolute -top-2 right-0'
+        disabled={disabled}
+        showAST={handleShowAST}
+        showTypeGraph={onShowTypeGraph}
+      />
 
       <StatusBar
+        className='absolute -top-2 right-1/2 translate-x-1/2'
         processing={isPending}
         isModified={isModified}
         activeCst={activeCst}

@@ -90,23 +90,29 @@ export function FormRSForm() {
           disabled={!isContentEditable}
           error={errors.alias}
         />
-        <div className='relative flex flex-col'>
-          <ToolbarVersioning blockReload={schema.oss.length > 0} />
-          <ToolbarItemAccess
-            visible={visible}
-            toggleVisible={() => setValue('visible', !visible, { shouldDirty: true })}
-            readOnly={readOnly}
-            toggleReadOnly={() => setValue('read_only', !readOnly, { shouldDirty: true })}
-            schema={schema}
-            isAttachedToOSS={isAttachedToOSS}
+        <div className='relative flex flex-col gap-2'>
+          <ToolbarVersioning
+            className='absolute -top-2 right-2' //
+            blockReload={schema.oss.length > 0}
           />
-          <Label text='Версия' className='mb-2 select-none' />
+
+          <Label text='Версия' className='select-none w-fit' />
           <SelectVersion
             id='schema_version'
             className='select-none'
             value={schema.version} //
             items={schema.versions}
             onChange={handleSelectVersion}
+          />
+
+          <ToolbarItemAccess
+            className='absolute top-18 right-2'
+            visible={visible}
+            toggleVisible={() => setValue('visible', !visible, { shouldDirty: true })}
+            readOnly={readOnly}
+            toggleReadOnly={() => setValue('read_only', !readOnly, { shouldDirty: true })}
+            schema={schema}
+            isAttachedToOSS={isAttachedToOSS}
           />
         </div>
       </div>

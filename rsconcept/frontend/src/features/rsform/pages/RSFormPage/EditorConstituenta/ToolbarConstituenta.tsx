@@ -31,6 +31,7 @@ import { type IConstituenta } from '../../../models/rsform';
 import { RSTabID, useRSEdit } from '../RSEditContext';
 
 interface ToolbarConstituentaProps {
+  className?: string;
   activeCst: IConstituenta | null;
   disabled: boolean;
 
@@ -39,6 +40,7 @@ interface ToolbarConstituentaProps {
 }
 
 export function ToolbarConstituenta({
+  className,
   activeCst,
   disabled,
 
@@ -78,14 +80,7 @@ export function ToolbarConstituenta({
   }
 
   return (
-    <div
-      className={clsx(
-        'absolute z-pop right-1/2 translate-x-0 xs:right-4 xs:-translate-x-1/2 md:right-1/2 md:translate-x-0',
-        'px-1 rounded-b-2xl',
-        'cc-blur',
-        'cc-tab-tools cc-icons cc-animate-position outline-hidden'
-      )}
-    >
+    <div className={clsx('px-1 rounded-b-2xl cc-blur cc-icons cc-animate-position outline-hidden', className)}>
       {schema.oss.length > 0 ? (
         <MiniSelectorOSS
           items={schema.oss}

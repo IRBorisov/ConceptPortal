@@ -74,7 +74,7 @@ export function EditorConstituenta() {
     <div
       tabIndex={-1}
       className={clsx(
-        'relative',
+        'relative ',
         'cc-fade-in',
         'min-h-80 max-w-[calc(min(100vw,95rem))] mx-auto',
         'flex pt-8',
@@ -85,11 +85,13 @@ export function EditorConstituenta() {
       onKeyDown={handleInput}
     >
       <ToolbarConstituenta
+        className='cc-tab-tools right-1/2 translate-x-0 xs:right-4 xs:-translate-x-1/2 md:right-1/2 md:translate-x-0 cc-animate-position'
         activeCst={activeCst}
         disabled={disabled}
         onSubmit={initiateSubmit}
         onReset={() => setToggleReset(prev => !prev)}
       />
+
       <div className='mx-0 md:mx-auto pt-8 md:w-195 shrink-0 xs:pt-0'>
         {activeCst ? (
           <FormConstituenta
@@ -102,7 +104,11 @@ export function EditorConstituenta() {
           />
         ) : null}
       </div>
-      <ViewConstituents isMounted={showList} isBottom={isNarrow} />
+      <ViewConstituents
+        className={isNarrow ? 'mt-3 mx-6 overflow-hidden' : 'mt-9 h-fit overflow-visible'}
+        isMounted={showList}
+        isBottom={isNarrow}
+      />
     </div>
   );
 }

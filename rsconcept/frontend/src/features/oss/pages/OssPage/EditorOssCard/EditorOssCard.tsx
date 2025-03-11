@@ -34,7 +34,13 @@ export function EditorOssCard() {
 
   return (
     <>
-      <ToolbarItemCard onSubmit={initiateSubmit} schema={schema} isMutable={isMutable} deleteSchema={deleteSchema} />
+      <ToolbarItemCard
+        className='cc-tab-tools'
+        onSubmit={initiateSubmit}
+        schema={schema}
+        isMutable={isMutable}
+        deleteSchema={deleteSchema}
+      />
       <div
         onKeyDown={handleInput}
         className={clsx(
@@ -48,7 +54,7 @@ export function EditorOssCard() {
           <EditorLibraryItem schema={schema} isAttachedToOSS={false} />
         </div>
 
-        <OssStats stats={schema.stats} />
+        <OssStats className='mt-3 md:mt-8 md:ml-5 w-56 md:w-48 mx-auto h-min' stats={schema.stats} />
       </div>
     </>
   );

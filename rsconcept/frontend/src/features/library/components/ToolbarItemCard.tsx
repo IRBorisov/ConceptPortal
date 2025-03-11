@@ -1,5 +1,7 @@
 'use client';
 
+import clsx from 'clsx';
+
 import { urls, useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components';
@@ -18,13 +20,14 @@ import { useMutatingLibrary } from '../backend/useMutatingLibrary';
 import { MiniSelectorOSS } from './MiniSelectorOSS';
 
 interface ToolbarItemCardProps {
+  className?: string;
   onSubmit: () => void;
   isMutable: boolean;
   schema: ILibraryItem;
   deleteSchema: () => void;
 }
 
-export function ToolbarItemCard({ schema, onSubmit, isMutable, deleteSchema }: ToolbarItemCardProps) {
+export function ToolbarItemCard({ className, schema, onSubmit, isMutable, deleteSchema }: ToolbarItemCardProps) {
   const role = useRoleStore(state => state.role);
   const router = useConceptNavigation();
   const { isModified } = useModificationStore();
@@ -48,7 +51,7 @@ export function ToolbarItemCard({ schema, onSubmit, isMutable, deleteSchema }: T
   })();
 
   return (
-    <div className='cc-tab-tools cc-icons'>
+    <div className={clsx('cc-icons', className)}>
       {ossSelector}
       {isMutable || isModified ? (
         <MiniButton

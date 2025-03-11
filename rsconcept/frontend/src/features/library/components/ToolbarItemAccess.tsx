@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components';
 import { useRoleStore, UserRole } from '@/features/users';
@@ -20,9 +22,11 @@ interface ToolbarItemAccessProps {
   toggleReadOnly: () => void;
   schema: ILibraryItem;
   isAttachedToOSS: boolean;
+  className?: string;
 }
 
 export function ToolbarItemAccess({
+  className,
   visible,
   toggleVisible,
   readOnly,
@@ -40,7 +44,7 @@ export function ToolbarItemAccess({
   }
 
   return (
-    <div className='absolute z-bottom top-18 right-0 w-48 flex pr-2'>
+    <div className={clsx('w-46 flex', className)}>
       <Label text='Доступ' className='self-center select-none' />
       <div className='ml-auto cc-icons'>
         <SelectAccessPolicy
