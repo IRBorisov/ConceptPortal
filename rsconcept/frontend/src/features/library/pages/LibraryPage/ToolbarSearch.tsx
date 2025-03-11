@@ -26,11 +26,12 @@ import { LocationHead } from '../../models/library';
 import { useHasCustomFilter, useLibrarySearchStore } from '../../stores/librarySearch';
 
 interface ToolbarSearchProps {
+  className?: string;
   total: number;
   filtered: number;
 }
 
-export function ToolbarSearch({ total, filtered }: ToolbarSearchProps) {
+export function ToolbarSearch({ className, total, filtered }: ToolbarSearchProps) {
   const headMenu = useDropdown();
   const userMenu = useDropdown();
 
@@ -75,7 +76,7 @@ export function ToolbarSearch({ total, filtered }: ToolbarSearchProps) {
   }
 
   return (
-    <div className='sticky top-0 h-9 flex gap-3 border-b text-sm clr-input items-center'>
+    <div className={clsx('flex gap-3 border-b text-sm clr-input items-center', className)}>
       <div className='ml-3 min-w-18 sm:min-w-30 select-none whitespace-nowrap'>
         {filtered} из {total}
       </div>

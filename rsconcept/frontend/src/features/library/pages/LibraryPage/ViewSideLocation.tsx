@@ -1,5 +1,4 @@
 import { toast } from 'react-toastify';
-import clsx from 'clsx';
 
 import { useAuthSuspense } from '@/features/auth';
 import { HelpTopic } from '@/features/help';
@@ -63,7 +62,7 @@ export function ViewSideLocation({ isVisible, onRenameLocation }: ViewSideLocati
 
   return (
     <div
-      className={clsx('max-w-40 sm:max-w-60', 'flex flex-col', 'text:xs sm:text-sm', 'select-none')}
+      className='max-w-40 sm:max-w-60 flex flex-col text:xs sm:text-sm select-none'
       style={{
         transitionProperty: 'width, min-width, opacity',
         transitionDuration: `${PARAMETER.moveDuration}ms`,

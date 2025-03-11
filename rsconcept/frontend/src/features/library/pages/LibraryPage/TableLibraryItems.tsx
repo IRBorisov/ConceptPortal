@@ -60,7 +60,7 @@ export function TableLibraryItems({ items }: TableLibraryItemsProps) {
       columns={columns}
       data={items}
       headPosition='0'
-      className={clsx('text-xs sm:text-sm cc-scroll-y h-fit border-b', { 'border-l': folderMode })}
+      className={clsx('cc-scroll-y h-fit text-xs sm:text-sm border-b', { 'border-l': folderMode })}
       style={{ maxHeight: tableHeight }}
       noDataComponent={
         <div className='cc-column dense p-3 items-center min-h-24'>

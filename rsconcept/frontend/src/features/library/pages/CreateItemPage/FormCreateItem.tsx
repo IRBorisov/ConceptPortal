@@ -102,7 +102,7 @@ export function FormCreateItem() {
 
   return (
     <form
-      className='cc-fade-in cc-column min-w-120 max-w-120 mx-auto px-6 py-3'
+      className='cc-fade-in cc-column w-120 mx-auto px-6 py-3'
       onSubmit={event => void handleSubmit(onSubmit)(event)}
       onChange={resetErrors}
     >
