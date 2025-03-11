@@ -12,24 +12,15 @@ interface PaginationToolsProps<TData> {
   id?: string;
   table: Table<TData>;
   paginationOptions: number[];
-  onChangePaginationOption?: (newValue: number) => void;
 }
 
-export function PaginationTools<TData>({
-  id,
-  table,
-  paginationOptions,
-  onChangePaginationOption
-}: PaginationToolsProps<TData>) {
+export function PaginationTools<TData>({ id, table, paginationOptions }: PaginationToolsProps<TData>) {
   const handlePaginationOptionsChange = useCallback(
     (event: React.ChangeEvent<HTMLSelectElement>) => {
       const perPage = Number(event.target.value);
       table.setPageSize(perPage);
-      if (onChangePaginationOption) {
-        onChangePaginationOption(perPage);
-      }
     },
-    [onChangePaginationOption, table]
+    [table]
   );
 
   return (

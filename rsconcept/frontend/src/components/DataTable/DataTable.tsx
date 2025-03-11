@@ -1,7 +1,7 @@
 'use client';
 'use no memo';
 
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import {
   type ColumnSort,
   createColumnHelper,
@@ -13,6 +13,7 @@ import {
   type RowSelectionState,
   type SortingState,
   type TableOptions,
+  type Updater,
   useReactTable,
   type VisibilityState
 } from '@tanstack/react-table';
@@ -148,6 +149,19 @@ export function DataTable<TData extends RowData>({
     pageSize: paginationPerPage
   });
 
+  const handleChangePagination = useCallback(
+    (updater: Updater<PaginationState>) => {
+      setPagination(prev => {
+        const resolvedValue = typeof updater === 'function' ? updater(prev) : updater;
+        if (onChangePaginationOption && prev.pageSize !== resolvedValue.pageSize) {
+          onChangePaginationOption(resolvedValue.pageSize);
+        }
+        return resolvedValue;
+      });
+    },
+    [onChangePaginationOption]
+  );
+
   const tableImpl = useReactTable({
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: enableSorting ? getSortedRowModel() : undefined,
@@ -160,7 +174,7 @@ export function DataTable<TData extends RowData>({
       columnVisibility: columnVisibility ?? {}
     },
     enableHiding: enableHiding,
-    onPaginationChange: enablePagination ? setPagination : undefined,
+    onPaginationChange: enablePagination ? handleChangePagination : undefined,
     onSortingChange: enableSorting ? setSorting : undefined,
     enableMultiRowSelection: enableRowSelection,
     ...restProps
@@ -222,7 +236,6 @@ export function DataTable<TData extends RowData>({
           id={id ? `${id}__pagination` : undefined}
           table={tableImpl}
           paginationOptions={paginationOptions}
-          onChangePaginationOption={onChangePaginationOption}
         />
       ) : null}
       {isEmpty ? noDataComponent ?? <DefaultNoData /> : null}
