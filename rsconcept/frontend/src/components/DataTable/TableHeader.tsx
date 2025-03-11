@@ -31,7 +31,7 @@ export function TableHeader<TData>({
       {table.getHeaderGroups().map((headerGroup: HeaderGroup<TData>) => (
         <tr key={headerGroup.id}>
           {enableRowSelection ? (
-            <th className='pl-3 pr-1' scope='col'>
+            <th className='pl-2' scope='col'>
               <SelectAll table={table} resetLastSelected={resetLastSelected} />
             </th>
           ) : null}

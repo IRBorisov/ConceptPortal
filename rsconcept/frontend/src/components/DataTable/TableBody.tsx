@@ -77,7 +77,7 @@ export function TableBody<TData>({
           style={{ ...(conditionalRowStyles ? getRowStyles(row) : []) }}
         >
           {enableRowSelection ? (
-            <td key={`select-${row.id}`} className='pl-3 pr-1 border-y'>
+            <td key={`select-${row.id}`} className='pl-2 border-y'>
               <SelectRow row={row} onChangeLastSelected={onChangeLastSelected} />
             </td>
           ) : null}
