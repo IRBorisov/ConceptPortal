@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, use, useEffect, useState } from 'react';
+import { createContext, use, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 
 export interface NavigationProps {
@@ -19,8 +19,7 @@ interface INavigationContext {
 
   canBack: () => boolean;
 
-  isBlocked: boolean;
-  setIsBlocked: (value: boolean) => void;
+  setRequireConfirmation: (value: boolean) => void;
 }
 
 export const NavigationContext = createContext<INavigationContext | null>(null);
@@ -35,11 +34,11 @@ export const useConceptNavigation = () => {
 export const NavigationState = ({ children }: React.PropsWithChildren) => {
   const router = useNavigate();
 
-  const [isBlocked, setIsBlocked] = useState(false);
+  const isBlocked = useRef(false);
   const [internalNavigation, setInternalNavigation] = useState(false);
 
   function validate() {
-    return !isBlocked || confirm('Изменения не сохранены. Вы уверены что хотите совершить переход?');
+    return !isBlocked.current || confirm('Изменения не сохранены. Вы уверены что хотите совершить переход?');
   }
 
   function canBack() {
@@ -50,7 +49,7 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
     if (props.newTab) {
       window.open(`${props.path}`, '_blank');
     } else if (props.force || validate()) {
-      setIsBlocked(false);
+      isBlocked.current = false;
       setInternalNavigation(true);
       Promise.resolve(router(props.path, { viewTransition: true })).catch(console.error);
     }
@@ -60,7 +59,7 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
     if (props.newTab) {
       window.open(`${props.path}`, '_blank');
     } else if (props.force || validate()) {
-      setIsBlocked(false);
+      isBlocked.current = false;
       setInternalNavigation(true);
       return router(props.path, { viewTransition: true });
     }
@@ -68,14 +67,14 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
 
   function replace(props: Omit<NavigationProps, 'newTab'>) {
     if (props.force || validate()) {
-      setIsBlocked(false);
+      isBlocked.current = false;
       Promise.resolve(router(props.path, { replace: true, viewTransition: true })).catch(console.error);
     }
   }
 
   function replaceAsync(props: Omit<NavigationProps, 'newTab'>): void | Promise<void> {
     if (props.force || validate()) {
-      setIsBlocked(false);
+      isBlocked.current = false;
       return router(props.path, { replace: true, viewTransition: true });
     }
   }
@@ -83,14 +82,14 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
   function back(force?: boolean) {
     if (force || validate()) {
       Promise.resolve(router(-1)).catch(console.error);
-      setIsBlocked(false);
+      isBlocked.current = false;
     }
   }
 
   function forward(force?: boolean) {
     if (force || validate()) {
       Promise.resolve(router(1)).catch(console.error);
-      setIsBlocked(false);
+      isBlocked.current = false;
     }
   }
 
@@ -104,8 +103,7 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
         back,
         forward,
         canBack,
-        isBlocked,
-        setIsBlocked
+        setRequireConfirmation: (value: boolean) => (isBlocked.current = value)
       }}
     >
       {children}
@@ -114,9 +112,9 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
 };
 
 export function useBlockNavigation(isBlocked: boolean) {
-  const router = useConceptNavigation();
+  const { setRequireConfirmation } = useConceptNavigation();
   useEffect(() => {
-    router.setIsBlocked(isBlocked);
-    return () => router.setIsBlocked(false);
-  }, [router, isBlocked]);
+    setRequireConfirmation(isBlocked);
+    return () => setRequireConfirmation(false);
+  }, [setRequireConfirmation, isBlocked]);
 }
