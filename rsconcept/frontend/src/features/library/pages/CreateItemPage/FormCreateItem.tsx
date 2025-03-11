@@ -5,7 +5,6 @@ import { Controller, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { urls, useConceptNavigation } from '@/app';
-import { useAuthSuspense } from '@/features/auth';
 
 import { Button, MiniButton, SubmitButton } from '@/components/Control';
 import { IconDownload } from '@/components/Icons';
@@ -21,17 +20,14 @@ import {
 } from '../../backend/types';
 import { useCreateItem } from '../../backend/useCreateItem';
 import { IconItemVisibility } from '../../components/IconItemVisibility';
+import { PickLocation } from '../../components/PickLocation';
 import { SelectAccessPolicy } from '../../components/SelectAccessPolicy';
 import { SelectItemType } from '../../components/SelectItemType';
-import { SelectLocationContext } from '../../components/SelectLocationContext';
-import { SelectLocationHead } from '../../components/SelectLocationHead';
 import { LocationHead } from '../../models/library';
-import { combineLocation } from '../../models/libraryAPI';
 import { useLibrarySearchStore } from '../../stores/librarySearch';
 
 export function FormCreateItem() {
   const router = useConceptNavigation();
-  const { user } = useAuthSuspense();
   const { createItem, isPending, error: serverError, reset: clearServerError } = useCreateItem();
 
   const searchLocation = useLibrarySearchStore(state => state.location);
@@ -196,6 +192,14 @@ export function FormCreateItem() {
         </div>
       </div>
 
+      <Controller
+        control={control}
+        name='location'
+        render={({ field }) => (
+          <PickLocation value={field.value} rows={2} onChange={field.onChange} error={errors.location} />
+        )}
+      />
+
       <TextArea
         id='schema_comment'
         {...register('comment')}
@@ -203,47 +207,6 @@ export function FormCreateItem() {
         placeholder={file && 'Загрузить из файла'}
         error={errors.comment}
       />
-
-      <div className='flex justify-between gap-3 grow'>
-        <div className='flex flex-col gap-2 min-w-28'>
-          <Label text='Корень' />
-          <Controller
-            control={control} //
-            name='location'
-            render={({ field }) => (
-              <SelectLocationHead
-                value={field.value.substring(0, 2) as LocationHead}
-                onChange={newValue => field.onChange(combineLocation(newValue, field.value.substring(3)))}
-                excluded={!user.is_staff ? [LocationHead.LIBRARY] : []}
-              />
-            )}
-          />
-        </div>
-        <Controller
-          control={control} //
-          name='location'
-          render={({ field }) => (
-            <SelectLocationContext
-              value={field.value} //
-              onChange={field.onChange}
-            />
-          )}
-        />
-        <Controller
-          control={control} //
-          name='location'
-          render={({ field }) => (
-            <TextArea
-              id='location'
-              label='Путь'
-              rows={4}
-              value={field.value.substring(3)}
-              onChange={event => field.onChange(combineLocation(field.value.substring(0, 2), event.target.value))}
-              error={errors.location}
-            />
-          )}
-        />
-      </div>
 
       <div className='flex justify-around gap-6 py-3'>
         <SubmitButton text='Создать схему' loading={isPending} className='min-w-40' />

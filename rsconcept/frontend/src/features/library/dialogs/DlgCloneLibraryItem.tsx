@@ -4,7 +4,6 @@ import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { urls, useConceptNavigation } from '@/app';
-import { useAuthSuspense } from '@/features/auth';
 
 import { MiniButton } from '@/components/Control';
 import { Checkbox, Label, TextArea, TextInput } from '@/components/Input';
@@ -14,11 +13,9 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { AccessPolicy, type ICloneLibraryItemDTO, type ILibraryItem, schemaCloneLibraryItem } from '../backend/types';
 import { useCloneItem } from '../backend/useCloneItem';
 import { IconItemVisibility } from '../components/IconItemVisibility';
+import { PickLocation } from '../components/PickLocation';
 import { SelectAccessPolicy } from '../components/SelectAccessPolicy';
-import { SelectLocationContext } from '../components/SelectLocationContext';
-import { SelectLocationHead } from '../components/SelectLocationHead';
-import { LocationHead } from '../models/library';
-import { cloneTitle, combineLocation } from '../models/libraryAPI';
+import { cloneTitle } from '../models/libraryAPI';
 
 export interface DlgCloneLibraryItemProps {
   base: ILibraryItem;
@@ -32,7 +29,6 @@ export function DlgCloneLibraryItem() {
     state => state.props as DlgCloneLibraryItemProps
   );
   const router = useConceptNavigation();
-  const { user } = useAuthSuspense();
   const { cloneItem } = useCloneItem();
 
   const {
@@ -108,46 +104,13 @@ export function DlgCloneLibraryItem() {
         </div>
       </div>
 
-      <div className='flex gap-3'>
-        <div className='flex flex-col gap-2 w-28'>
-          <Label text='Корень' />
-          <Controller
-            control={control} //
-            name='location'
-            render={({ field }) => (
-              <SelectLocationHead
-                value={field.value.substring(0, 2) as LocationHead}
-                onChange={newValue => field.onChange(combineLocation(newValue, field.value.substring(3)))}
-                excluded={!user.is_staff ? [LocationHead.LIBRARY] : []}
-              />
-            )}
-          />
-        </div>
-        <Controller
-          control={control} //
-          name='location'
-          render={({ field }) => (
-            <SelectLocationContext
-              value={field.value} //
-              onChange={field.onChange}
-            />
-          )}
-        />
-        <Controller
-          control={control} //
-          name='location'
-          render={({ field }) => (
-            <TextArea
-              id='dlg_location'
-              label='Путь'
-              rows={3}
-              value={field.value.substring(3)}
-              onChange={event => field.onChange(combineLocation(field.value.substring(0, 2), event.target.value))}
-              error={errors.location}
-            />
-          )}
-        />
-      </div>
+      <Controller
+        control={control}
+        name='location'
+        render={({ field }) => (
+          <PickLocation value={field.value} rows={2} onChange={field.onChange} error={errors.location} />
+        )}
+      />
 
       <TextArea id='dlg_comment' {...register('comment')} label='Описание' rows={4} error={errors.comment} />
 

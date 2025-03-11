@@ -8,7 +8,7 @@ import { IconFolderTree } from '@/components/Icons';
 import { type Styling } from '@/components/props';
 import { prefixes } from '@/utils/constants';
 
-import { SelectLocation } from './SelectLocation';
+import { SelectLocation } from '../SelectLocation';
 
 interface SelectLocationContextProps extends Styling {
   value: string;
@@ -22,7 +22,7 @@ export function SelectLocationContext({
   title = 'Проводник...',
   onChange,
   className,
-  dropdownHeight,
+  dropdownHeight = 'h-50',
   ...restProps
 }: SelectLocationContextProps) {
   const menu = useDropdown();
@@ -35,14 +35,14 @@ export function SelectLocationContext({
   }
 
   return (
-    <div ref={menu.ref} className={clsx('relative h-full -mt-1 -ml-6 text-right self-start', className)} {...restProps}>
+    <div ref={menu.ref} className={clsx('relative text-right self-start', className)} {...restProps}>
       <MiniButton
         title={title}
         hideTitle={menu.isOpen}
         icon={<IconFolderTree size='1.25rem' className='icon-green' />}
         onClick={() => menu.toggle()}
       />
-      <Dropdown isOpen={menu.isOpen} className={clsx('w-80 h-50 z-tooltip', dropdownHeight)}>
+      <Dropdown isOpen={menu.isOpen} className={clsx('w-80 z-tooltip', dropdownHeight)}>
         <SelectLocation
           value={value}
           prefix={prefixes.folders_list}
