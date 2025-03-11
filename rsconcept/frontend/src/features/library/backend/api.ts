@@ -23,7 +23,7 @@ import {
   type IVersionUpdateDTO,
   schemaLibraryItem,
   schemaLibraryItemArray,
-  schemaVersionInfo
+  schemaVersionExInfo
 } from './types';
 
 export const libraryApi = {
@@ -155,7 +155,7 @@ export const libraryApi = {
     }),
   versionUpdate: (data: { itemID: number; version: IVersionUpdateDTO }) =>
     axiosPatch<IVersionUpdateDTO, IVersionExInfo>({
-      schema: schemaVersionInfo,
+      schema: schemaVersionExInfo,
       endpoint: `/api/versions/${data.version.id}`,
       request: {
         data: data.version,
