@@ -67,3 +67,5 @@ https://drf-standardized-errors.readthedocs.io/en/latest/error_response.html
 https://stackoverflow.com/questions/28838170/multilevel-json-diff-in-python
 
 - Documentation platform. Consider diplodoc
+
+- nuqs useQueryState
