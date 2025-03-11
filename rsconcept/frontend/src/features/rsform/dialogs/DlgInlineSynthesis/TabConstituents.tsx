@@ -34,6 +34,7 @@ export function TabConstituents() {
           rows={13}
           value={field.value}
           onChange={handleSelectItems}
+          className='w-144'
         />
       )}
     />

@@ -1,7 +1,6 @@
 'use client';
 
 import { useLayoutEffect } from 'react';
-import clsx from 'clsx';
 
 import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 
@@ -78,15 +77,7 @@ export function RSTabs({ activeID, activeTab }: RSTabsProps) {
       selectedTabClassName='clr-selected'
       className='relative flex flex-col min-w-fit items-center'
     >
-      <TabList
-        className={clsx(
-          'absolute z-sticky',
-          'mx-auto w-fit top-0 right-1/2 translate-x-1/2',
-          'flex items-stretch',
-          'border-b-2 border-x-2 divide-x-2',
-          'bg-prim-200'
-        )}
-      >
+      <TabList className='absolute z-sticky flex border-b-2 border-x-2 divide-x-2 bg-prim-200'>
         <MenuRSTabs />
 
         <TabLabel

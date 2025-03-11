@@ -1,7 +1,6 @@
 'use client';
 
 import { useLayoutEffect } from 'react';
-import clsx from 'clsx';
 
 import { useConceptNavigation } from '@/app/Navigation/NavigationContext';
 
@@ -62,15 +61,7 @@ export function OssTabs({ activeTab }: OssTabsProps) {
       selectedTabClassName='clr-selected'
       className='relative flex flex-col mx-auto min-w-fit items-center'
     >
-      <TabList
-        className={clsx(
-          'absolute z-sticky',
-          'top-0 right-1/2 w-fit translate-x-1/2',
-          'flex items-stretch',
-          'border-b-2 border-x-2 divide-x-2',
-          'bg-prim-200'
-        )}
-      >
+      <TabList className='absolute z-sticky flex border-b-2 border-x-2 divide-x-2 bg-prim-200'>
         <MenuOssTabs />
 
         <TabLabel label='Карточка' title={schema.title ?? ''} />

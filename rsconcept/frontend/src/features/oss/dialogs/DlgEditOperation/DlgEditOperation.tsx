@@ -3,7 +3,6 @@
 import { Suspense, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import clsx from 'clsx';
 
 import { HelpTopic } from '@/features/help';
 
@@ -75,13 +74,8 @@ export function DlgEditOperation() {
       helpTopic={HelpTopic.UI_SUBSTITUTIONS}
       hideHelpWhen={() => activeTab !== TabID.SUBSTITUTION}
     >
-      <Tabs
-        selectedTabClassName='clr-selected'
-        className='flex flex-col'
-        selectedIndex={activeTab}
-        onSelect={setActiveTab}
-      >
-        <TabList className={clsx('mb-3 self-center', 'flex', 'border divide-x rounded-none', 'bg-prim-200')}>
+      <Tabs selectedTabClassName='clr-selected' className='grid' selectedIndex={activeTab} onSelect={setActiveTab}>
+        <TabList className='mb-3 mx-auto w-fit flex border divide-x rounded-none bg-prim-200'>
           <TabLabel title='Текстовые поля' label='Карточка' className='w-32' />
           {target.operation_type === OperationType.SYNTHESIS ? (
             <TabLabel title='Выбор аргументов операции' label='Аргументы' className='w-32' />

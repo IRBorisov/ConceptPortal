@@ -69,13 +69,8 @@ export function DlgCstTemplate() {
       onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
       helpTopic={HelpTopic.RSL_TEMPLATES}
     >
-      <Tabs
-        selectedTabClassName='clr-selected'
-        className='flex flex-col'
-        selectedIndex={activeTab}
-        onSelect={setActiveTab}
-      >
-        <TabList className='mb-4 self-center flex border divide-x rounded-none bg-prim-200'>
+      <Tabs selectedTabClassName='clr-selected' className='grid' selectedIndex={activeTab} onSelect={setActiveTab}>
+        <TabList className='mb-3 mx-auto flex border divide-x rounded-none bg-prim-200'>
           <TabLabel label='Шаблон' title='Выбор шаблона выражения' className='w-32' />
           <TabLabel label='Аргументы' title='Подстановка аргументов шаблона' className='w-32' />
           <TabLabel label='Конституента' title='Редактирование конституенты' className='w-32' />

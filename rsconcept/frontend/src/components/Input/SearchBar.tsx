@@ -39,10 +39,10 @@ export function SearchBar({
   ...restProps
 }: SearchBarProps) {
   return (
-    <div className={clsx('relative', className)} {...restProps}>
+    <div className={clsx('relative flex items-center', className)} {...restProps}>
       {!noIcon ? (
         <IconSearch
-          className='absolute -top-0.5 left-3 translate-y-1/2 pointer-events-none clr-text-controls'
+          className='absolute -top-0.5 left-2 translate-y-1/2 pointer-events-none clr-text-controls'
           size='1.25rem'
         />
       ) : null}
@@ -52,7 +52,7 @@ export function SearchBar({
         transparent
         placeholder={placeholder}
         type='search'
-        className={clsx('bg-transparent', !noIcon && 'pl-10')}
+        className={clsx('bg-transparent', !noIcon && 'pl-8')}
         noBorder={noBorder}
         value={query}
         onChange={event => onChangeQuery?.(event.target.value)}

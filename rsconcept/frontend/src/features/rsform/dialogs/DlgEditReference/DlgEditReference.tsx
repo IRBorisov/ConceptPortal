@@ -104,13 +104,8 @@ export function DlgEditReference() {
       className='w-160 px-6 h-128'
       helpTopic={HelpTopic.TERM_CONTROL}
     >
-      <Tabs
-        selectedTabClassName='clr-selected'
-        className='flex flex-col'
-        selectedIndex={activeTab}
-        onSelect={handleChangeTab}
-      >
-        <TabList className='mb-3 self-center flex border divide-x rounded-none bg-prim-200'>
+      <Tabs selectedTabClassName='clr-selected' className='grid' selectedIndex={activeTab} onSelect={handleChangeTab}>
+        <TabList className='mb-3 mx-auto flex border divide-x rounded-none bg-prim-200'>
           <TabLabel title='Отсылка на термин в заданной словоформе' label={labelReferenceType(ReferenceType.ENTITY)} />
           <TabLabel
             title='Установление синтаксической связи с отсылкой на термин'

@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import clsx from 'clsx';
 
 import { HelpTopic } from '@/features/help';
 
@@ -102,13 +101,8 @@ export function DlgCreateOperation() {
       className='w-160 px-6 h-128'
       helpTopic={HelpTopic.CC_OSS}
     >
-      <Tabs
-        selectedTabClassName='clr-selected'
-        className='flex flex-col pt-2'
-        selectedIndex={activeTab}
-        onSelect={handleSelectTab}
-      >
-        <TabList className={clsx('self-center absolute top-10', 'flex', 'border divide-x rounded-none', 'bg-prim-200')}>
+      <Tabs selectedTabClassName='clr-selected' className='grid' selectedIndex={activeTab} onSelect={handleSelectTab}>
+        <TabList className='z-pop mx-auto -mb-5 flex border divide-x rounded-none bg-prim-200'>
           <TabLabel
             title={describeOperationType(OperationType.INPUT)}
             label={labelOperationType(OperationType.INPUT)}
