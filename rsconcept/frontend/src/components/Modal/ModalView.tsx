@@ -34,11 +34,11 @@ export function ModalView({
   return (
     <div className='cc-modal-wrapper'>
       <ModalBackdrop onHide={hideDialog} />
-      <div className='cc-animate-modal grid border rounded-xl bg-prim-100' role='dialog'>
+      <div className='cc-animate-modal relative grid border rounded-xl bg-prim-100' role='dialog'>
         {helpTopic && !hideHelpWhen?.() ? (
           <BadgeHelp
             topic={helpTopic}
-            className='absolute z-pop left-0 mt-2 ml-2'
+            className='absolute z-pop top-2 left-2'
             padding='p-0'
             contentClass='sm:max-w-160'
           />
@@ -49,7 +49,7 @@ export function ModalView({
           aria-label='Закрыть'
           titleHtml={prepareTooltip('Закрыть диалоговое окно', 'ESC')}
           icon={<IconClose size='1.25rem' />}
-          className='absolute z-pop right-0 mt-2 mr-2'
+          className='absolute z-pop top-2 right-2'
           onClick={hideDialog}
         />
 
