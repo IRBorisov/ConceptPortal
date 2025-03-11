@@ -33,6 +33,7 @@ export function TGNode(node: TGNodeInternal) {
   const { focusCst, setFocus: setFocusCst, navigateCst } = useRSEdit();
   const filter = useTermGraphStore(state => state.filter);
   const coloring = useTermGraphStore(state => state.coloring);
+  const isFocused = focusCst === node.data;
 
   const label = node.data.alias;
   const description = !filter.noText ? node.data.term_resolved : '';
@@ -40,7 +41,7 @@ export function TGNode(node: TGNodeInternal) {
   function handleContextMenu(event: React.MouseEvent<HTMLElement>) {
     event.stopPropagation();
     event.preventDefault();
-    setFocusCst(focusCst === node.data ? null : node.data);
+    setFocusCst(isFocused ? null : node.data);
   }
 
   function handleDoubleClick(event: React.MouseEvent) {
@@ -57,10 +58,12 @@ export function TGNode(node: TGNodeInternal) {
         style={{
           backgroundColor: node.selected
             ? APP_COLORS.bgActiveSelection
-            : focusCst === node.data
+            : isFocused
             ? APP_COLORS.bgPurple
             : colorBgGraphNode(node.data, coloring),
-          fontSize: label.length > LABEL_THRESHOLD ? FONT_SIZE_MED : FONT_SIZE_MAX
+          fontSize: label.length > LABEL_THRESHOLD ? FONT_SIZE_MED : FONT_SIZE_MAX,
+          borderWidth: isFocused ? '2px' : '0px',
+          borderColor: isFocused ? APP_COLORS.bgSelected : 'transparent'
         }}
         data-tooltip-id={globalIDs.tooltip}
         data-tooltip-html={describeCstNode(node.data)}
