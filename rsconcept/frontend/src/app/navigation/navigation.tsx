@@ -1,6 +1,7 @@
 import { IconLibrary2, IconManuals, IconNewItem2 } from '@/components/icons';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useAppLayoutStore } from '@/stores/app-layout';
+import { PARAMETER } from '@/utils/constants';
 
 import { urls } from '../urls';
 
@@ -30,6 +31,9 @@ export function Navigation() {
       <div
         className='pl-2 pr-6 sm:pr-4 h-12 flex cc-shadow-border'
         style={{
+          transitionProperty: 'max-height, translate',
+          transitionDuration: `${PARAMETER.moveDuration}ms`,
+          transitionTimingFunction: 'ease-in-out',
           maxHeight: noNavigationAnimation ? '0rem' : '3rem',
           translate: noNavigationAnimation ? '0 -1.5rem' : '0'
         }}
