@@ -100,7 +100,6 @@ export function RSEditorControls({ isOpen, disabled, onEdit }: RSEditorControlsP
       style={{
         clipPath: isOpen ? 'inset(0% 0% 0% 0%)' : 'inset(0% 0% 100% 0%)',
         marginTop: isOpen ? '0.25rem' : '0rem',
-        willChange: 'max-height',
         transitionProperty: 'max-height',
         transitionDuration: `${PARAMETER.moveDuration}ms`,
         maxHeight: isOpen ? '4.5rem' : '0rem'

@@ -36,7 +36,6 @@ export function ViewConstituents({ className, isBottom, isMounted }: ViewConstit
         className
       )}
       style={{
-        willChange: 'opacity, max-width',
         transitionProperty: 'opacity, max-width',
         transitionDuration: `${2 * PARAMETER.moveDuration}ms`,
         transitionTimingFunction: 'ease-in-out',

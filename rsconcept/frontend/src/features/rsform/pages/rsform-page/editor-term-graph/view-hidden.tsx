@@ -81,7 +81,6 @@ export function ViewHidden({ items }: ViewHiddenProps) {
         style={{
           pointerEvents: isFolded ? 'none' : 'auto',
           maxHeight: hiddenHeight,
-          willChange: 'clip-path',
           transitionProperty: 'clip-path',
           transitionDuration: `${PARAMETER.fastAnimation}ms`,
           transitionTimingFunction: 'ease-out',
