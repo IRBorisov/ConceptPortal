@@ -12,7 +12,7 @@ import CodeMirror, {
 import clsx from 'clsx';
 import { EditorView } from 'codemirror';
 
-import { Label } from '@/components/input1';
+import { Label } from '@/components/input';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { APP_COLORS } from '@/styling/colors';

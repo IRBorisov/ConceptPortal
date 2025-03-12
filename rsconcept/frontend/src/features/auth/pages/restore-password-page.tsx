@@ -3,9 +3,9 @@
 import { useState } from 'react';
 
 import { isAxiosError } from '@/backend/api-transport';
-import { SubmitButton, TextURL } from '@/components/control1';
+import { SubmitButton, TextURL } from '@/components/control';
 import { type ErrorData } from '@/components/info-error';
-import { TextInput } from '@/components/input1';
+import { TextInput } from '@/components/input';
 
 import { useRequestPasswordReset } from '../backend/use-request-password-reset';
 

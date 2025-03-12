@@ -1,4 +1,4 @@
-import { type DomIconProps, IconPrivate, IconProtected, IconPublic } from '@/components/icons1';
+import { type DomIconProps, IconPrivate, IconProtected, IconPublic } from '@/components/icons';
 
 import { AccessPolicy } from '../backend/types';
 

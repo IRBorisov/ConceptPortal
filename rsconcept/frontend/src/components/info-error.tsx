@@ -4,7 +4,7 @@ import { ZodError } from 'zod';
 import { type AxiosError, isAxiosError } from '@/backend/api-transport';
 import { isResponseHtml } from '@/utils/utils';
 
-import { PrettyJson } from './view1';
+import { PrettyJson } from './view';
 
 export type ErrorData = string | Error | AxiosError | ZodError;
 

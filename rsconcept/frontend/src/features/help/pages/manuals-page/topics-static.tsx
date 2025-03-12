@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import { SelectTree } from '@/components/input1';
+import { SelectTree } from '@/components/input';
 import { useFitHeight } from '@/stores/app-layout';
 import { prefixes } from '@/utils/constants';
 

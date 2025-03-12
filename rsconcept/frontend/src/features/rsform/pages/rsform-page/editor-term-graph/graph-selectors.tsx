@@ -1,7 +1,7 @@
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components';
 
-import { SelectSingle } from '@/components/input1';
+import { SelectSingle } from '@/components/input';
 
 import { mapLabelColoring } from '../../../labels';
 import { type GraphColoring, useTermGraphStore } from '../../../stores/term-graph';

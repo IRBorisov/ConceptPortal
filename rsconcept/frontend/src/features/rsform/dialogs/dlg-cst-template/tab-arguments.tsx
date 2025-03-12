@@ -4,10 +4,10 @@ import { useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { createColumnHelper } from '@tanstack/react-table';
 
-import { MiniButton } from '@/components/control1';
+import { MiniButton } from '@/components/control';
 import { DataTable, type IConditionalStyle } from '@/components/data-table';
-import { IconAccept, IconRemove, IconReset } from '@/components/icons1';
-import { NoData } from '@/components/view1';
+import { IconAccept, IconRemove, IconReset } from '@/components/icons';
+import { NoData } from '@/components/view';
 import { useDialogsStore } from '@/stores/dialogs';
 import { APP_COLORS } from '@/styling/colors';
 

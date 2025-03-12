@@ -6,7 +6,7 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components';
 
-import { TextArea, TextInput } from '@/components/input1';
+import { TextArea, TextInput } from '@/components/input';
 
 import { CstType, type ICstCreateDTO } from '../../backend/types';
 import { RSInput } from '../../components/rs-input';

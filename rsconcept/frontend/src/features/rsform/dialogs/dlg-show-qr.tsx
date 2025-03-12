@@ -2,7 +2,7 @@
 
 import { QRCodeSVG } from 'qrcode.react';
 
-import { ModalView } from '@/components/modal1';
+import { ModalView } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
 export interface DlgShowQRProps {

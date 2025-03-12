@@ -5,7 +5,7 @@
 import { type ILibraryItemData, type IVersionInfo } from '@/features/library/backend/types';
 import { type CurrentVersion, type ILibraryItemReference } from '@/features/library/models/library';
 
-import { type Graph } from '@/models/graph1';
+import { type Graph } from '@/models/graph';
 
 import { CstType, type ParsingStatus, type ValueClass } from '../backend/types';
 

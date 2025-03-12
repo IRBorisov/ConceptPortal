@@ -1,4 +1,4 @@
-import { TextURL } from '@/components/control1';
+import { TextURL } from '@/components/control';
 
 export function NotFoundPage() {
   return (

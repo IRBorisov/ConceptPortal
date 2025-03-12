@@ -8,8 +8,8 @@ import { BadgeHelp } from '@/features/help/components';
 import { type IRSForm } from '@/features/rsform';
 import { useRoleStore, UserRole } from '@/features/users';
 
-import { MiniButton } from '@/components/control1';
-import { IconDestroy, IconSave, IconShare } from '@/components/icons1';
+import { MiniButton } from '@/components/control';
+import { IconDestroy, IconSave, IconShare } from '@/components/icons';
 import { useModificationStore } from '@/stores/modification';
 import { tooltipText } from '@/utils/labels';
 import { prepareTooltip, sharePage } from '@/utils/utils';

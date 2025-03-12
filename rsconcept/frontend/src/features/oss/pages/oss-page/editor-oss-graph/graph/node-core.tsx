@@ -1,7 +1,7 @@
 'use client';
 
-import { IconConsolidation, IconRSForm } from '@/components/icons1';
-import { Indicator } from '@/components/view1';
+import { IconConsolidation, IconRSForm } from '@/components/icons';
+import { Indicator } from '@/components/view';
 import { globalIDs } from '@/utils/constants';
 
 import { OperationType } from '../../../../backend/types';

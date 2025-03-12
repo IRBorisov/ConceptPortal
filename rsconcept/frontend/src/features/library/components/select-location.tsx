@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 
-import { MiniButton } from '@/components/control1';
-import { IconFolder, IconFolderClosed, IconFolderEmpty, IconFolderOpened } from '@/components/icons1';
+import { MiniButton } from '@/components/control';
+import { IconFolder, IconFolderClosed, IconFolderEmpty, IconFolderOpened } from '@/components/icons';
 import { type Styling } from '@/components/props';
 
 import { useFolders } from '../backend/use-folders';

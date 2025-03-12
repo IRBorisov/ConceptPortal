@@ -1,7 +1,7 @@
 'use client';
 
-import { MiniButton } from '@/components/control1';
-import { IconGraphInputs, IconGraphOutputs, IconReset } from '@/components/icons1';
+import { MiniButton } from '@/components/control';
+import { IconGraphInputs, IconGraphOutputs, IconReset } from '@/components/icons';
 import { APP_COLORS } from '@/styling/colors';
 
 import { useTermGraphStore } from '../../../stores/term-graph';

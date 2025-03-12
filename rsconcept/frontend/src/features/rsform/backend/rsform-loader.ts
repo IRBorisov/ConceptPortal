@@ -2,7 +2,7 @@
  * Module: RSForm data loading and processing.
  */
 
-import { Graph } from '@/models/graph1';
+import { Graph } from '@/models/graph';
 
 import { type IConstituenta, type IRSForm, type IRSFormStats } from '../models/rsform';
 import { inferClass, inferStatus, inferTemplate, isBaseSet, isFunctional } from '../models/rsform-api';

@@ -2,7 +2,7 @@
 
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
-import { Label, TextInput } from '@/components/input1';
+import { Label, TextInput } from '@/components/input';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { PickConstituenta } from '../../components/pick-constituenta';

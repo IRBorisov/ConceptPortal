@@ -6,9 +6,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { urls, useConceptNavigation } from '@/app';
 
 import { isAxiosError } from '@/backend/api-transport';
-import { SubmitButton, TextURL } from '@/components/control1';
+import { SubmitButton, TextURL } from '@/components/control';
 import { type ErrorData } from '@/components/info-error';
-import { TextInput } from '@/components/input1';
+import { TextInput } from '@/components/input';
 import { useQueryStrings } from '@/hooks/use-query-strings';
 import { resources } from '@/utils/constants';
 

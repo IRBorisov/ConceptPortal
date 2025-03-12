@@ -8,9 +8,9 @@ import { type IChangePasswordDTO, schemaChangePassword } from '@/features/auth';
 import { useChangePassword } from '@/features/auth/backend/use-change-password';
 
 import { isAxiosError } from '@/backend/api-transport';
-import { SubmitButton } from '@/components/control1';
+import { SubmitButton } from '@/components/control';
 import { type ErrorData } from '@/components/info-error';
-import { TextInput } from '@/components/input1';
+import { TextInput } from '@/components/input';
 
 export function EditorPassword() {
   const router = useConceptNavigation();

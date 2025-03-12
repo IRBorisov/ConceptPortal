@@ -6,7 +6,7 @@ import { type Table } from '@tanstack/react-table';
 
 import { prefixes } from '@/utils/constants';
 
-import { IconPageFirst, IconPageLast, IconPageLeft, IconPageRight } from '../icons1';
+import { IconPageFirst, IconPageLast, IconPageLeft, IconPageRight } from '../icons';
 
 interface PaginationToolsProps<TData> {
   id?: string;

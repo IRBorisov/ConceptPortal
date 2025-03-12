@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import { MiniButton } from '@/components/control1';
+import { MiniButton } from '@/components/control';
 import {
   IconGraphCollapse,
   IconGraphCore,
@@ -11,9 +11,9 @@ import {
   IconGraphOutputs,
   IconPredecessor,
   IconReset
-} from '@/components/icons1';
+} from '@/components/icons';
 import { type Styling } from '@/components/props';
-import { type Graph } from '@/models/graph1';
+import { type Graph } from '@/models/graph';
 
 interface ToolbarGraphSelectionProps extends Styling {
   value: number[];

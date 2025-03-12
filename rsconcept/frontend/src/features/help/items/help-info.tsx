@@ -1,4 +1,4 @@
-import { Subtopics } from '../components/subtopics1';
+import { Subtopics } from '../components/subtopics';
 import { HelpTopic } from '../models/help-topic';
 
 export function HelpInfo() {

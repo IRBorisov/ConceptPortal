@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 
-import { SelectSingle } from '@/components/input1';
+import { SelectSingle } from '@/components/input';
 import { type Styling } from '@/components/props';
 
 import { type ILibraryItem } from '../backend/types';

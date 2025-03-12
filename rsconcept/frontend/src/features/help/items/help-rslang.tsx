@@ -1,8 +1,8 @@
-import { EmbedYoutube } from '@/components/view1';
+import { EmbedYoutube } from '@/components/view';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { external_urls, youtube } from '@/utils/constants';
 
-import { Subtopics } from '../components/subtopics1';
+import { Subtopics } from '../components/subtopics';
 import { HelpTopic } from '../models/help-topic';
 
 export function HelpRSLang() {

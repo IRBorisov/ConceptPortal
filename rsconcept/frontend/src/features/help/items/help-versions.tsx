@@ -1,4 +1,4 @@
-import { IconEditor, IconNewVersion, IconShare, IconUpload, IconVersions } from '@/components/icons1';
+import { IconEditor, IconNewVersion, IconShare, IconUpload, IconVersions } from '@/components/icons';
 
 export function HelpVersions() {
   return (

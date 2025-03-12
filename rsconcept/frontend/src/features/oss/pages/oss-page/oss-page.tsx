@@ -9,7 +9,7 @@ import { urls, useBlockNavigation, useConceptNavigation } from '@/app';
 import { ConstituentaTooltip } from '@/features/rsform/components';
 
 import { isAxiosError } from '@/backend/api-transport';
-import { TextURL } from '@/components/control1';
+import { TextURL } from '@/components/control';
 import { type ErrorData } from '@/components/info-error';
 import { useQueryStrings } from '@/hooks/use-query-strings';
 import { useModificationStore } from '@/stores/modification';

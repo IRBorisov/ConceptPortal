@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 
-import { IconDownload, IconRSForm, IconRSFormImported, IconRSFormOwned, IconSynthesis } from '@/components/icons1';
-import { ValueStats } from '@/components/view1';
+import { IconDownload, IconRSForm, IconRSFormImported, IconRSFormOwned, IconSynthesis } from '@/components/icons';
+import { ValueStats } from '@/components/view';
 
 import { type IOperationSchemaStats } from '../../../models/oss';
 

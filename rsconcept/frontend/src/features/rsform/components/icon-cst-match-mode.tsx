@@ -1,4 +1,4 @@
-import { type DomIconProps, IconAlias, IconFilter, IconFormula, IconTerm, IconText } from '@/components/icons1';
+import { type DomIconProps, IconAlias, IconFilter, IconFormula, IconTerm, IconText } from '@/components/icons';
 
 import { CstMatchMode } from '../stores/cst-search';
 

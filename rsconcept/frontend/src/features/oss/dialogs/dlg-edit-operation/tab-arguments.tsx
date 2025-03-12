@@ -1,7 +1,7 @@
 'use client';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import { Label } from '@/components/input1';
+import { Label } from '@/components/input';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { type IOperationUpdateDTO } from '../../backend/types';

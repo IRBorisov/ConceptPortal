@@ -8,7 +8,7 @@ import { useLibrary } from '@/features/library/backend/use-library';
 import { useInputCreate } from '@/features/oss/backend/use-input-create';
 import { useOperationExecute } from '@/features/oss/backend/use-operation-execute';
 
-import { Dropdown, DropdownButton } from '@/components/dropdown1';
+import { Dropdown, DropdownButton } from '@/components/dropdown';
 import {
   IconChild,
   IconConnect,
@@ -17,7 +17,7 @@ import {
   IconExecute,
   IconNewRSForm,
   IconRSForm
-} from '@/components/icons1';
+} from '@/components/icons';
 import { useClickedOutside } from '@/hooks/use-clicked-outside';
 import { useDialogsStore } from '@/stores/dialogs';
 import { errorMsg } from '@/utils/labels';

@@ -2,7 +2,7 @@
 
 import { type Column } from '@tanstack/react-table';
 
-import { IconSortAsc, IconSortDesc } from '../icons1';
+import { IconSortAsc, IconSortDesc } from '../icons';
 
 interface SortingIconProps<TData> {
   column: Column<TData>;

@@ -18,8 +18,8 @@ import {
   IconStatusOK,
   IconStatusProperty,
   IconTerminology
-} from '@/components/icons1';
-import { ValueStats } from '@/components/view1';
+} from '@/components/icons';
+import { ValueStats } from '@/components/view';
 
 import { type IRSFormStats } from '../../../models/rsform';
 

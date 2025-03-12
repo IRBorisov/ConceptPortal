@@ -1,4 +1,4 @@
-import { IconHide, IconImmutable, IconPrivate, IconProtected, IconPublic } from '@/components/icons1';
+import { IconHide, IconImmutable, IconPrivate, IconProtected, IconPublic } from '@/components/icons';
 
 export function HelpAccess() {
   return (

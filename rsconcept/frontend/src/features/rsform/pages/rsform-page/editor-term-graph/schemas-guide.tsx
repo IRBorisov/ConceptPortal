@@ -1,7 +1,7 @@
 import { useLibrary } from '@/features/library/backend/use-library';
 
-import { Tooltip } from '@/components/container1';
-import { IconHelp } from '@/components/icons1';
+import { Tooltip } from '@/components/container';
+import { IconHelp } from '@/components/icons';
 import { globalIDs, prefixes } from '@/utils/constants';
 
 import { colorBgSchemas } from '../../../colors';

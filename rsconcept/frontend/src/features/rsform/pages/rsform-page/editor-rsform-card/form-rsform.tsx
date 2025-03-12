@@ -15,9 +15,9 @@ import {
 import { useUpdateItem } from '@/features/library/backend/use-update-item';
 import { SelectVersion, ToolbarItemAccess } from '@/features/library/components';
 
-import { SubmitButton } from '@/components/control1';
-import { IconSave } from '@/components/icons1';
-import { Label, TextArea, TextInput } from '@/components/input1';
+import { SubmitButton } from '@/components/control';
+import { IconSave } from '@/components/icons';
+import { Label, TextArea, TextInput } from '@/components/input';
 import { useModificationStore } from '@/stores/modification';
 import { globalIDs } from '@/utils/constants';
 

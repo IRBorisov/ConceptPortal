@@ -4,10 +4,10 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import fileDownload from 'js-file-download';
 
-import { MiniButton } from '@/components/control1';
+import { MiniButton } from '@/components/control';
 import { type RowSelectionState } from '@/components/data-table';
-import { IconCSV } from '@/components/icons1';
-import { SearchBar } from '@/components/input1';
+import { IconCSV } from '@/components/icons';
+import { SearchBar } from '@/components/input';
 import { useFitHeight } from '@/stores/app-layout';
 import { infoMsg } from '@/utils/labels';
 import { convertToCSV } from '@/utils/utils';

@@ -8,8 +8,8 @@ import { z } from 'zod';
 import { urls, useBlockNavigation, useConceptNavigation } from '@/app';
 
 import { isAxiosError } from '@/backend/api-transport';
-import { Divider } from '@/components/container1';
-import { TextURL } from '@/components/control1';
+import { Divider } from '@/components/container';
+import { TextURL } from '@/components/control';
 import { type ErrorData } from '@/components/info-error';
 import { useQueryStrings } from '@/hooks/use-query-strings';
 import { useModificationStore } from '@/stores/modification';

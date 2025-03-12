@@ -1,6 +1,6 @@
 import { useNavigate, useRouteError } from 'react-router';
 
-import { Button } from '@/components/control1';
+import { Button } from '@/components/control';
 import { InfoError } from '@/components/info-error';
 
 export function ErrorFallback() {

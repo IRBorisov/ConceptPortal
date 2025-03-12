@@ -1,10 +1,10 @@
 import React, { Suspense } from 'react';
 import clsx from 'clsx';
 
-import { type PlacesType, Tooltip } from '@/components/container1';
-import { TextURL } from '@/components/control1';
-import { IconHelp } from '@/components/icons1';
-import { Loader } from '@/components/loader1';
+import { type PlacesType, Tooltip } from '@/components/container';
+import { TextURL } from '@/components/control';
+import { IconHelp } from '@/components/icons';
+import { Loader } from '@/components/loader';
 import { type Styling } from '@/components/props';
 import { usePreferencesStore } from '@/stores/preferences';
 import { PARAMETER } from '@/utils/constants';

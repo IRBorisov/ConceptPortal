@@ -5,8 +5,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import { HelpTopic } from '@/features/help';
 
-import { ErrorField } from '@/components/input1';
-import { ModalForm } from '@/components/modal1';
+import { ErrorField } from '@/components/input';
+import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { type ICstSubstitutionsDTO, schemaCstSubstitutions } from '../backend/types';

@@ -4,9 +4,9 @@ import { Suspense, useState } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { Loader } from '@/components/loader1';
-import { ModalForm } from '@/components/modal1';
-import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs1';
+import { Loader } from '@/components/loader';
+import { ModalForm } from '@/components/modal';
+import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { type IInlineSynthesisDTO, schemaInlineSynthesis } from '../../backend/types';

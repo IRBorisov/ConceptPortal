@@ -6,10 +6,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import { urls, useConceptNavigation } from '@/app';
 
-import { Button, MiniButton, SubmitButton } from '@/components/control1';
-import { IconDownload } from '@/components/icons1';
+import { Button, MiniButton, SubmitButton } from '@/components/control';
+import { IconDownload } from '@/components/icons';
 import { InfoError } from '@/components/info-error';
-import { Label, TextArea, TextInput } from '@/components/input1';
+import { Label, TextArea, TextInput } from '@/components/input';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';
 
 import {

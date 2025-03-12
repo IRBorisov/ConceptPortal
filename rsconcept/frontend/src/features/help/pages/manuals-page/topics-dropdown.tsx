@@ -2,10 +2,10 @@
 
 import clsx from 'clsx';
 
-import { Button } from '@/components/control1';
-import { useDropdown } from '@/components/dropdown1';
-import { IconMenuFold, IconMenuUnfold } from '@/components/icons1';
-import { SelectTree } from '@/components/input1';
+import { Button } from '@/components/control';
+import { useDropdown } from '@/components/dropdown';
+import { IconMenuFold, IconMenuUnfold } from '@/components/icons';
+import { SelectTree } from '@/components/input';
 import { useAppLayoutStore, useFitHeight } from '@/stores/app-layout';
 import { PARAMETER, prefixes } from '@/utils/constants';
 

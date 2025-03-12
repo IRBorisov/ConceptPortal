@@ -1,4 +1,4 @@
-import { type DomIconProps, IconSubfolders } from '@/components/icons1';
+import { type DomIconProps, IconSubfolders } from '@/components/icons';
 
 /** Icon for subfolders. */
 export function IconShowSubfolders({ value, size = '1.25rem', className }: DomIconProps<boolean>) {

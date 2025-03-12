@@ -6,10 +6,10 @@ import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { MiniButton, SubmitButton } from '@/components/control1';
-import { IconChild, IconEdit, IconPredecessor, IconSave } from '@/components/icons1';
-import { TextArea } from '@/components/input1';
-import { Indicator } from '@/components/view1';
+import { MiniButton, SubmitButton } from '@/components/control';
+import { IconChild, IconEdit, IconPredecessor, IconSave } from '@/components/icons';
+import { TextArea } from '@/components/input';
+import { Indicator } from '@/components/view';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { errorMsg, tooltipText } from '@/utils/labels';

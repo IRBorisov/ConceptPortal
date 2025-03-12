@@ -2,9 +2,9 @@
 
 import { useIntl } from 'react-intl';
 
-import { MiniButton } from '@/components/control1';
+import { MiniButton } from '@/components/control';
 import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/data-table';
-import { IconRemove } from '@/components/icons1';
+import { IconRemove } from '@/components/icons';
 import { APP_COLORS } from '@/styling/colors';
 
 import { type IVersionInfo } from '../../backend/types';

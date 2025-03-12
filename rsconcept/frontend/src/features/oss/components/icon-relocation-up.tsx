@@ -1,4 +1,4 @@
-import { type DomIconProps, IconMoveDown, IconMoveUp } from '@/components/icons1';
+import { type DomIconProps, IconMoveDown, IconMoveUp } from '@/components/icons';
 
 /** Icon for relocation direction. */
 export function IconRelocationUp({ value, size = '1.25rem', className }: DomIconProps<boolean>) {

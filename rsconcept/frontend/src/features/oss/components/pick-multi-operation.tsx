@@ -3,11 +3,11 @@
 import { useState } from 'react';
 import clsx from 'clsx';
 
-import { MiniButton } from '@/components/control1';
+import { MiniButton } from '@/components/control';
 import { createColumnHelper, DataTable } from '@/components/data-table';
-import { IconMoveDown, IconMoveUp, IconRemove } from '@/components/icons1';
+import { IconMoveDown, IconMoveUp, IconRemove } from '@/components/icons';
 import { type Styling } from '@/components/props';
-import { NoData } from '@/components/view1';
+import { NoData } from '@/components/view';
 
 import { type IOperation } from '../models/oss';
 

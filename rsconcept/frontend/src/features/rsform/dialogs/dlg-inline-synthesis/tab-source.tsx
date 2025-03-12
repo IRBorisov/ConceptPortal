@@ -6,7 +6,7 @@ import { LibraryItemType } from '@/features/library';
 import { useLibrary } from '@/features/library/backend/use-library';
 import { PickSchema } from '@/features/library/components';
 
-import { TextInput } from '@/components/input1';
+import { TextInput } from '@/components/input';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { type IInlineSynthesisDTO } from '../../backend/types';

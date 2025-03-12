@@ -5,8 +5,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import { HelpTopic } from '@/features/help';
 
-import { TextInput } from '@/components/input1';
-import { ModalForm } from '@/components/modal1';
+import { TextInput } from '@/components/input';
+import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { type CstType, type ICstRenameDTO, schemaCstRename } from '../backend/types';

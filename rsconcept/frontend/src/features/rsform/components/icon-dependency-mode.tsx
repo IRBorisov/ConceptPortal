@@ -5,7 +5,7 @@ import {
   IconGraphInputs,
   IconGraphOutputs,
   IconSettings
-} from '@/components/icons1';
+} from '@/components/icons';
 
 import { DependencyMode } from '../stores/cst-search';
 

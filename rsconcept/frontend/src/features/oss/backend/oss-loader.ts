@@ -4,7 +4,7 @@
 
 import { type ILibraryItem } from '@/features/library';
 
-import { Graph } from '@/models/graph1';
+import { Graph } from '@/models/graph';
 
 import { type IOperation, type IOperationSchema, type IOperationSchemaStats } from '../models/oss';
 

@@ -7,9 +7,9 @@ import {
   IconLogout,
   IconPin,
   IconUser2
-} from '@/components/icons1';
+} from '@/components/icons';
 
-import { Subtopics } from '../components/subtopics1';
+import { Subtopics } from '../components/subtopics';
 import { HelpTopic } from '../models/help-topic';
 
 export function HelpInterface() {

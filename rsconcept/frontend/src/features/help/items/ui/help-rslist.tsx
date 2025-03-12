@@ -1,4 +1,4 @@
-import { Divider } from '@/components/container1';
+import { Divider } from '@/components/container';
 import {
   IconAlias,
   IconClone,
@@ -9,7 +9,7 @@ import {
   IconOpenList,
   IconOSS,
   IconReset
-} from '@/components/icons1';
+} from '@/components/icons';
 
 import { InfoCstStatus } from '../../components/info-cst-status';
 import { LinkTopic } from '../../components/link-topic';

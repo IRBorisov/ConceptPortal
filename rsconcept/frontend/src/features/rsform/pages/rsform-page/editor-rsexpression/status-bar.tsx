@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components';
 
-import { Loader } from '@/components/loader1';
+import { Loader } from '@/components/loader';
 import { APP_COLORS } from '@/styling/colors';
 import { globalIDs } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/utils';

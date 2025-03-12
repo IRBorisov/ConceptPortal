@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 
 import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/data-table';
-import { NoData, TextContent } from '@/components/view1';
+import { NoData, TextContent } from '@/components/view';
 import { APP_COLORS } from '@/styling/colors';
 import { PARAMETER, prefixes } from '@/utils/constants';
 

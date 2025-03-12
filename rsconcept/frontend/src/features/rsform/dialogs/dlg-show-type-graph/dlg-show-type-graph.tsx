@@ -5,7 +5,7 @@ import { ReactFlowProvider } from 'reactflow';
 
 import { HelpTopic } from '@/features/help';
 
-import { ModalView } from '@/components/modal1';
+import { ModalView } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { errorMsg } from '@/utils/labels';
 

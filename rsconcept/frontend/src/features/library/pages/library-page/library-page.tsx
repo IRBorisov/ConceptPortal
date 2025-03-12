@@ -3,8 +3,8 @@
 import { toast } from 'react-toastify';
 import fileDownload from 'js-file-download';
 
-import { MiniButton } from '@/components/control1';
-import { IconCSV } from '@/components/icons1';
+import { MiniButton } from '@/components/control';
+import { IconCSV } from '@/components/icons';
 import { useDialogsStore } from '@/stores/dialogs';
 import { infoMsg } from '@/utils/labels';
 import { convertToCSV } from '@/utils/utils';

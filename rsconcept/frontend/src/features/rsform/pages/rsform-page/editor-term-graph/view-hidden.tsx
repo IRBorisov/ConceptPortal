@@ -2,8 +2,8 @@
 
 import clsx from 'clsx';
 
-import { MiniButton } from '@/components/control1';
-import { IconDropArrow, IconDropArrowUp } from '@/components/icons1';
+import { MiniButton } from '@/components/control';
+import { IconDropArrow, IconDropArrowUp } from '@/components/icons';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight } from '@/stores/app-layout';
 import { APP_COLORS } from '@/styling/colors';

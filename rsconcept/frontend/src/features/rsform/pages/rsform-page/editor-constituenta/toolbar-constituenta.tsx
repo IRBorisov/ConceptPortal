@@ -8,7 +8,7 @@ import { BadgeHelp } from '@/features/help/components';
 import { MiniSelectorOSS } from '@/features/library/components';
 import { useFindPredecessor } from '@/features/oss/backend/use-find-predecessor';
 
-import { MiniButton } from '@/components/control1';
+import { MiniButton } from '@/components/control';
 import {
   IconClone,
   IconDestroy,
@@ -20,7 +20,7 @@ import {
   IconPredecessor,
   IconReset,
   IconSave
-} from '@/components/icons1';
+} from '@/components/icons';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { tooltipText } from '@/utils/labels';

@@ -2,10 +2,10 @@
 
 import clsx from 'clsx';
 
-import { MiniButton } from '@/components/control1';
-import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown1';
-import { IconOSS } from '@/components/icons1';
-import { Label } from '@/components/input1';
+import { MiniButton } from '@/components/control';
+import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
+import { IconOSS } from '@/components/icons';
+import { Label } from '@/components/input';
 import { type Styling } from '@/components/props';
 import { prefixes } from '@/utils/constants';
 

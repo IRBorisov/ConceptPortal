@@ -2,7 +2,7 @@
 
 import { useFormContext, useWatch } from 'react-hook-form';
 
-import { TextInput } from '@/components/input1';
+import { TextInput } from '@/components/input';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { type DlgEditReferenceProps, type IEditReferenceState } from './dlg-edit-reference';

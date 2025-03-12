@@ -2,9 +2,9 @@ import { useIntl } from 'react-intl';
 
 import { useLabelUser } from '@/features/users';
 
-import { MiniButton } from '@/components/control1';
+import { MiniButton } from '@/components/control';
 import { createColumnHelper } from '@/components/data-table';
-import { IconFolderTree } from '@/components/icons1';
+import { IconFolderTree } from '@/components/icons';
 import { useWindowSize } from '@/hooks/use-window-size';
 
 import { type ILibraryItem } from '../../backend/types';

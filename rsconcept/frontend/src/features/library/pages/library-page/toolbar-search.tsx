@@ -4,8 +4,8 @@ import clsx from 'clsx';
 
 import { SelectUser } from '@/features/users/components';
 
-import { MiniButton, SelectorButton } from '@/components/control1';
-import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown1';
+import { MiniButton, SelectorButton } from '@/components/control';
+import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import {
   IconEditor,
   IconFilterReset,
@@ -14,8 +14,8 @@ import {
   IconFolderTree,
   IconOwner,
   IconUserSearch
-} from '@/components/icons1';
-import { SearchBar } from '@/components/input1';
+} from '@/components/icons';
+import { SearchBar } from '@/components/input';
 import { prefixes } from '@/utils/constants';
 import { tripleToggleColor } from '@/utils/utils';
 

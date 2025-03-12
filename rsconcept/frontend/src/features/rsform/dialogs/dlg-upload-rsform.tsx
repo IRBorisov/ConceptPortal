@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 
-import { Checkbox, FileInput } from '@/components/input1';
-import { ModalForm } from '@/components/modal1';
+import { Checkbox, FileInput } from '@/components/input';
+import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';
 

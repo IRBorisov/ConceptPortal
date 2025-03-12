@@ -1,8 +1,8 @@
 'use client';
 
-import { TextURL } from '@/components/control1';
+import { TextURL } from '@/components/control';
 import { createColumnHelper, DataTable, type RowSelectionState, type VisibilityState } from '@/components/data-table';
-import { NoData, TextContent } from '@/components/view1';
+import { NoData, TextContent } from '@/components/view';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { prefixes } from '@/utils/constants';
 import { truncateToSymbol } from '@/utils/utils';

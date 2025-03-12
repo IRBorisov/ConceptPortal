@@ -1,8 +1,8 @@
 import { useAuthSuspense } from '@/features/auth';
 
-import { Button } from '@/components/control1';
-import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown1';
-import { IconChild, IconEdit2 } from '@/components/icons1';
+import { Button } from '@/components/control';
+import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
+import { IconChild, IconEdit2 } from '@/components/icons';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { useMutatingOss } from '../../backend/use-mutating-oss';

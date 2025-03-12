@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 
-import { Checkbox } from '@/components/input1';
-import { ModalForm } from '@/components/modal1';
+import { Checkbox } from '@/components/input';
+import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { prefixes } from '@/utils/constants';
 

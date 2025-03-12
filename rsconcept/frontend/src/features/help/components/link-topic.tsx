@@ -1,6 +1,6 @@
 import { urls } from '@/app';
 
-import { TextURL } from '@/components/control1';
+import { TextURL } from '@/components/control';
 
 import { type HelpTopic } from '../models/help-topic';
 

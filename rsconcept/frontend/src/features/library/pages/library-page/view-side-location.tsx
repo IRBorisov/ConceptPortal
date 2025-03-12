@@ -4,8 +4,8 @@ import { useAuthSuspense } from '@/features/auth';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components';
 
-import { MiniButton } from '@/components/control1';
-import { IconFolderEdit, IconFolderTree } from '@/components/icons1';
+import { MiniButton } from '@/components/control';
+import { IconFolderEdit, IconFolderTree } from '@/components/icons';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight } from '@/stores/app-layout';
 import { PARAMETER, prefixes } from '@/utils/constants';

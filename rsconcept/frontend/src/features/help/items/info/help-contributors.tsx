@@ -1,4 +1,4 @@
-import { TextURL } from '@/components/control1';
+import { TextURL } from '@/components/control';
 import { external_urls } from '@/utils/constants';
 
 import { LinkTopic } from '../../components/link-topic';

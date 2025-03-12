@@ -5,9 +5,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import { urls, useConceptNavigation } from '@/app';
 
-import { MiniButton } from '@/components/control1';
-import { Checkbox, Label, TextArea, TextInput } from '@/components/input1';
-import { ModalForm } from '@/components/modal1';
+import { MiniButton } from '@/components/control';
+import { Checkbox, Label, TextArea, TextInput } from '@/components/input';
+import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { AccessPolicy, type ICloneLibraryItemDTO, type ILibraryItem, schemaCloneLibraryItem } from '../backend/types';

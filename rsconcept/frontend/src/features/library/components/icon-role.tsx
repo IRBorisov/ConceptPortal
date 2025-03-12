@@ -1,6 +1,6 @@
 import { UserRole } from '@/features/users';
 
-import { IconAdmin, IconEditor, IconOwner, IconReader } from '@/components/icons1';
+import { IconAdmin, IconEditor, IconOwner, IconReader } from '@/components/icons';
 
 interface IconRoleProps {
   role: UserRole;

@@ -2,7 +2,7 @@
 
 import { type Row } from '@tanstack/react-table';
 
-import { Checkbox } from '../input1';
+import { Checkbox } from '../input';
 
 interface SelectRowProps<TData> {
   row: Row<TData>;

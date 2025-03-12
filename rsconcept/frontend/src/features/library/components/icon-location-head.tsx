@@ -1,4 +1,4 @@
-import { type DomIconProps, IconBusiness, IconPublic, IconTemplates, IconUser } from '@/components/icons1';
+import { type DomIconProps, IconBusiness, IconPublic, IconTemplates, IconUser } from '@/components/icons';
 
 import { LocationHead } from '../models/library';
 

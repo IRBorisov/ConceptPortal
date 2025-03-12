@@ -5,7 +5,7 @@ import clsx from 'clsx';
 
 import { useAuthSuspense } from '@/features/auth';
 
-import { Label, TextArea } from '@/components/input1';
+import { Label, TextArea } from '@/components/input';
 import { type Styling } from '@/components/props';
 
 import { LocationHead } from '../../models/library';

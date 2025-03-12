@@ -3,8 +3,8 @@
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { Checkbox, TextArea, TextInput } from '@/components/input1';
-import { ModalForm } from '@/components/modal1';
+import { Checkbox, TextArea, TextInput } from '@/components/input';
+import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { errorMsg } from '@/utils/labels';
 

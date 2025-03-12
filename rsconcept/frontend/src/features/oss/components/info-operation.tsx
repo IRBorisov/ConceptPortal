@@ -3,7 +3,7 @@
 import { createColumnHelper } from '@tanstack/react-table';
 
 import { DataTable } from '@/components/data-table';
-import { IconPageRight } from '@/components/icons1';
+import { IconPageRight } from '@/components/icons';
 
 import { type ICstSubstituteInfo, OperationType } from '../backend/types';
 import { labelOperationType } from '../labels';

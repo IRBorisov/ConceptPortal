@@ -5,9 +5,9 @@ import { urls, useConceptNavigation } from '@/app';
 import { useLabelUser, useRoleStore, UserRole } from '@/features/users';
 import { InfoUsers, SelectUser } from '@/features/users/components';
 
-import { Tooltip } from '@/components/container1';
-import { MiniButton } from '@/components/control1';
-import { useDropdown } from '@/components/dropdown1';
+import { Tooltip } from '@/components/container';
+import { MiniButton } from '@/components/control';
+import { useDropdown } from '@/components/dropdown';
 import {
   IconDateCreate,
   IconDateUpdate,
@@ -15,9 +15,9 @@ import {
   IconFolderEdit,
   IconFolderOpened,
   IconOwner
-} from '@/components/icons1';
-import { Loader } from '@/components/loader1';
-import { ValueIcon } from '@/components/view1';
+} from '@/components/icons';
+import { Loader } from '@/components/loader';
+import { ValueIcon } from '@/components/view';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { prefixes } from '@/utils/constants';

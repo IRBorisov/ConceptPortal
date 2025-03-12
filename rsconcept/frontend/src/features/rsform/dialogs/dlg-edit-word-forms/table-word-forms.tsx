@@ -1,9 +1,9 @@
 'use client';
 
-import { MiniButton } from '@/components/control1';
+import { MiniButton } from '@/components/control';
 import { createColumnHelper, DataTable } from '@/components/data-table';
-import { IconRemove } from '@/components/icons1';
-import { NoData } from '@/components/view1';
+import { IconRemove } from '@/components/icons';
+import { NoData } from '@/components/view';
 
 import { BadgeWordForm } from '../../components/badge-word-form';
 import { type IWordForm } from '../../models/language';

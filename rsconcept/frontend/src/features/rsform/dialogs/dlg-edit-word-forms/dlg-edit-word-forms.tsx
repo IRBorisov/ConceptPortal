@@ -4,10 +4,10 @@ import { useState } from 'react';
 
 import { HelpTopic } from '@/features/help';
 
-import { MiniButton } from '@/components/control1';
-import { IconAccept, IconMoveDown, IconMoveLeft, IconMoveRight, IconRemove } from '@/components/icons1';
-import { Label, TextArea } from '@/components/input1';
-import { ModalForm } from '@/components/modal1';
+import { MiniButton } from '@/components/control';
+import { IconAccept, IconMoveDown, IconMoveLeft, IconMoveRight, IconRemove } from '@/components/icons';
+import { Label, TextArea } from '@/components/input';
+import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { promptText } from '@/utils/labels';
 

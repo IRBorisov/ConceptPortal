@@ -4,7 +4,7 @@ import {
   IconStatusIncalculable,
   IconStatusOK,
   IconStatusUnknown
-} from '@/components/icons1';
+} from '@/components/icons';
 
 import { ExpressionStatus } from '../models/rsform';
 

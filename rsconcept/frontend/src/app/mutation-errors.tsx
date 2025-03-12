@@ -1,7 +1,7 @@
 import { useMutationErrors } from '@/backend/use-mutation-errors';
-import { Button } from '@/components/control1';
+import { Button } from '@/components/control';
 import { DescribeError } from '@/components/info-error';
-import { ModalBackdrop } from '@/components/modal1/modal-backdrop';
+import { ModalBackdrop } from '@/components/modal/modal-backdrop';
 import { useEscapeKey } from '@/hooks/use-escape-key';
 import { useDialogsStore } from '@/stores/dialogs';
 

@@ -1,4 +1,4 @@
-import { PDFViewer } from '@/components/view1';
+import { PDFViewer } from '@/components/view';
 import { resources } from '@/utils/constants';
 
 interface HelpPrivacyProps {

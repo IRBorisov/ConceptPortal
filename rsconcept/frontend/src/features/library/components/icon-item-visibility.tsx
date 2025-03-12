@@ -1,4 +1,4 @@
-import { type DomIconProps, IconHide, IconShow } from '@/components/icons1';
+import { type DomIconProps, IconHide, IconShow } from '@/components/icons';
 
 /** Icon for visibility. */
 export function IconItemVisibility({ value, size = '1.25rem', className }: DomIconProps<boolean>) {

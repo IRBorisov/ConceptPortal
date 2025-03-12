@@ -1,6 +1,6 @@
 import { urls } from '@/app';
 
-import { TextURL } from '@/components/control1';
+import { TextURL } from '@/components/control';
 import { external_urls } from '@/utils/constants';
 
 export function HelpRules() {

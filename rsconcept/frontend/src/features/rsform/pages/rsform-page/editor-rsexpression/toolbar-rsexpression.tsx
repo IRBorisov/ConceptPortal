@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 
-import { MiniButton } from '@/components/control1';
-import { IconControls, IconTree, IconTypeGraph } from '@/components/icons1';
+import { MiniButton } from '@/components/control';
+import { IconControls, IconTree, IconTypeGraph } from '@/components/icons';
 import { usePreferencesStore } from '@/stores/preferences';
 
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';

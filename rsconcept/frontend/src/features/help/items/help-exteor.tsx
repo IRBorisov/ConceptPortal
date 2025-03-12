@@ -1,4 +1,4 @@
-import { TextURL } from '@/components/control1';
+import { TextURL } from '@/components/control';
 import { external_urls, PARAMETER } from '@/utils/constants';
 
 export function HelpExteor() {

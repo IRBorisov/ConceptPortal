@@ -7,8 +7,8 @@ import { z } from 'zod';
 
 import { HelpTopic } from '@/features/help';
 
-import { ModalForm } from '@/components/modal1';
-import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs1';
+import { ModalForm } from '@/components/modal';
+import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { labelReferenceType } from '../../labels';

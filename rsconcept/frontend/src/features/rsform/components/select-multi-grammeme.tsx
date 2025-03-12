@@ -1,4 +1,4 @@
-import { SelectMulti, type SelectMultiProps } from '@/components/input1';
+import { SelectMulti, type SelectMultiProps } from '@/components/input';
 import { type Styling } from '@/components/props';
 
 import { Grammeme, type IGrammemeOption } from '../models/language';

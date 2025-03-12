@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import * as icons from '@/components/icons1';
+import * as icons from '@/components/icons';
 
 export function Component() {
   const iconsList = Object.keys(icons).filter(key => key.startsWith('Icon'));

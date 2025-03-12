@@ -2,8 +2,8 @@
 
 import { Controller, useForm } from 'react-hook-form';
 
-import { Checkbox } from '@/components/input1';
-import { ModalForm } from '@/components/modal1';
+import { Checkbox } from '@/components/input';
+import { ModalForm } from '@/components/modal';
 
 import { CstType } from '../backend/types';
 import { labelCstType } from '../labels';

@@ -1,18 +1,18 @@
 import { Suspense } from 'react';
 import { Outlet } from 'react-router';
 
-import { ModalLoader } from '@/components/modal1';
+import { ModalLoader } from '@/components/modal';
 import { useAppLayoutStore, useMainHeight, useViewportHeight } from '@/stores/app-layout';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { NavigationState } from './navigation1/navigation-context';
-import { Footer } from './footer1';
+import { NavigationState } from './navigation/navigation-context';
+import { Footer } from './footer';
 import { GlobalDialogs } from './global-dialogs';
 import { GlobalLoader } from './global-Loader';
 import { ToasterThemed } from './global-toaster';
 import { GlobalTooltips } from './global-tooltips';
 import { MutationErrors } from './mutation-errors';
-import { Navigation } from './navigation1';
+import { Navigation } from './navigation';
 
 export function ApplicationLayout() {
   const mainHeight = useMainHeight();

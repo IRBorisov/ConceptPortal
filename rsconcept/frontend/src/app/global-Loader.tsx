@@ -1,8 +1,8 @@
 import { useNavigation } from 'react-router';
 import { useDebounce } from 'use-debounce';
 
-import { Loader } from '@/components/loader1';
-import { ModalBackdrop } from '@/components/modal1/modal-backdrop';
+import { Loader } from '@/components/loader';
+import { ModalBackdrop } from '@/components/modal/modal-backdrop';
 import { PARAMETER } from '@/utils/constants';
 
 export function GlobalLoader() {

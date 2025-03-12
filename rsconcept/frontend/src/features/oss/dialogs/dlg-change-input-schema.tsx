@@ -7,10 +7,10 @@ import { type ILibraryItem, LibraryItemType } from '@/features/library';
 import { useLibrary } from '@/features/library/backend/use-library';
 import { PickSchema } from '@/features/library/components';
 
-import { MiniButton } from '@/components/control1';
-import { IconReset } from '@/components/icons1';
-import { Label } from '@/components/input1';
-import { ModalForm } from '@/components/modal1';
+import { MiniButton } from '@/components/control';
+import { IconReset } from '@/components/icons';
+import { Label } from '@/components/input';
+import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { type IInputUpdateDTO, type IOperationPosition, schemaInputUpdate } from '../backend/types';

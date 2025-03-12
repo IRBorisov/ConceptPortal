@@ -6,7 +6,7 @@ import {
   IconRSFormImported,
   IconRSFormOwned,
   IconSynthesis
-} from '@/components/icons1';
+} from '@/components/icons';
 
 import { LinkTopic } from '../../components/link-topic';
 import { HelpTopic } from '../../models/help-topic';

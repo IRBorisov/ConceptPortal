@@ -1,4 +1,4 @@
-import { type DomIconProps, IconOSS, IconRSForm } from '@/components/icons1';
+import { type DomIconProps, IconOSS, IconRSForm } from '@/components/icons';
 
 import { LibraryItemType } from '../backend/types';
 

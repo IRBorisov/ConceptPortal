@@ -22,7 +22,7 @@ import {
 import { infoMsg } from '@/utils/labels';
 import { TextMatcher } from '@/utils/utils';
 
-import { Graph } from '../../../models/graph1';
+import { Graph } from '../../../models/graph';
 import { type IOperationPosition, OperationType } from '../backend/types';
 import { describeSubstitutionError } from '../labels';
 

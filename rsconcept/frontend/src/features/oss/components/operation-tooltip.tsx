@@ -1,4 +1,4 @@
-import { Tooltip } from '@/components/container1';
+import { Tooltip } from '@/components/container';
 import { globalIDs } from '@/utils/constants';
 
 import { useOperationTooltipStore } from '../stores/operation-tooltip';

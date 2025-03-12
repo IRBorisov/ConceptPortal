@@ -2,8 +2,8 @@
 
 import clsx from 'clsx';
 
-import { SelectorButton } from '@/components/control1';
-import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown1';
+import { SelectorButton } from '@/components/control';
+import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import { type Styling } from '@/components/props';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { prefixes } from '@/utils/constants';

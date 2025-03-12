@@ -5,7 +5,7 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { useRSForms } from '@/features/rsform/backend/use-rsforms';
 import { PickSubstitutions } from '@/features/rsform/components';
 
-import { TextArea } from '@/components/input1';
+import { TextArea } from '@/components/input';
 import { useDialogsStore } from '@/stores/dialogs';
 import { APP_COLORS } from '@/styling/colors';
 

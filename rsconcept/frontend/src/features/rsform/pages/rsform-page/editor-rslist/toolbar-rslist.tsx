@@ -5,8 +5,8 @@ import { BadgeHelp } from '@/features/help/components';
 import { MiniSelectorOSS } from '@/features/library/components';
 import { CstType } from '@/features/rsform';
 
-import { MiniButton } from '@/components/control1';
-import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown1';
+import { MiniButton } from '@/components/control';
+import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import {
   IconClone,
   IconDestroy,
@@ -15,7 +15,7 @@ import {
   IconNewItem,
   IconOpenList,
   IconReset
-} from '@/components/icons1';
+} from '@/components/icons';
 import { prefixes } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/utils';
 

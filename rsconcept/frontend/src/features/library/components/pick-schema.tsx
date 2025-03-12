@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { useIntl } from 'react-intl';
 import clsx from 'clsx';
 
-import { MiniButton } from '@/components/control1';
+import { MiniButton } from '@/components/control';
 import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/data-table';
-import { Dropdown, useDropdown } from '@/components/dropdown1';
-import { IconClose, IconFolderTree } from '@/components/icons1';
-import { SearchBar } from '@/components/input1';
+import { Dropdown, useDropdown } from '@/components/dropdown';
+import { IconClose, IconFolderTree } from '@/components/icons';
+import { SearchBar } from '@/components/input';
 import { type Styling } from '@/components/props';
 import { APP_COLORS } from '@/styling/colors';
 import { prefixes } from '@/utils/constants';

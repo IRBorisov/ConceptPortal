@@ -4,10 +4,10 @@ import { useState } from 'react';
 import clsx from 'clsx';
 
 import { createColumnHelper, DataTable, type RowSelectionState } from '@/components/data-table';
-import { SearchBar } from '@/components/input1';
+import { SearchBar } from '@/components/input';
 import { type Styling } from '@/components/props';
-import { NoData } from '@/components/view1';
-import { Graph } from '@/models/graph1';
+import { NoData } from '@/components/view';
+import { Graph } from '@/models/graph';
 
 import { describeConstituenta } from '../labels';
 import { type IConstituenta, type IRSForm } from '../models/rsform';

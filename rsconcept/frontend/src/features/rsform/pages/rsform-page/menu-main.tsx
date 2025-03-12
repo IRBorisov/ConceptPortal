@@ -5,9 +5,9 @@ import { useAuthSuspense } from '@/features/auth';
 import { AccessPolicy, LocationHead } from '@/features/library';
 import { useRoleStore, UserRole } from '@/features/users';
 
-import { Divider } from '@/components/container1';
-import { Button } from '@/components/control1';
-import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown1';
+import { Divider } from '@/components/container';
+import { Button } from '@/components/control';
+import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import {
   IconClone,
   IconDestroy,
@@ -19,7 +19,7 @@ import {
   IconQR,
   IconShare,
   IconUpload
-} from '@/components/icons1';
+} from '@/components/icons';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';

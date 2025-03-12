@@ -6,9 +6,9 @@ import { type ILibraryItem, LibraryItemType } from '@/features/library';
 import { useLibrary } from '@/features/library/backend/use-library';
 import { PickSchema } from '@/features/library/components';
 
-import { MiniButton } from '@/components/control1';
-import { IconReset } from '@/components/icons1';
-import { Checkbox, Label, TextArea, TextInput } from '@/components/input1';
+import { MiniButton } from '@/components/control';
+import { IconReset } from '@/components/icons';
+import { Checkbox, Label, TextArea, TextInput } from '@/components/input';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { type IOperationCreateDTO } from '../../backend/types';

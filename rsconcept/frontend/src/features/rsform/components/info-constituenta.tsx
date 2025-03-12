@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import { IconChild } from '@/components/icons1';
+import { IconChild } from '@/components/icons';
 
 import { labelCstTypification } from '../labels';
 import { type IConstituenta } from '../models/rsform';

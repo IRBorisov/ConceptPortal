@@ -4,9 +4,9 @@ import { useState } from 'react';
 import clsx from 'clsx';
 
 import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/data-table';
-import { SearchBar } from '@/components/input1';
+import { SearchBar } from '@/components/input';
 import { type Styling } from '@/components/props';
-import { NoData } from '@/components/view1';
+import { NoData } from '@/components/view';
 import { APP_COLORS } from '@/styling/colors';
 
 import { describeConstituenta } from '../labels';

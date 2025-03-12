@@ -8,7 +8,7 @@ import { BadgeHelp } from '@/features/help/components';
 import { useOperationExecute } from '@/features/oss/backend/use-operation-execute';
 import { useUpdatePositions } from '@/features/oss/backend/use-update-positions';
 
-import { MiniButton } from '@/components/control1';
+import { MiniButton } from '@/components/control';
 import {
   IconAnimation,
   IconAnimationOff,
@@ -22,7 +22,7 @@ import {
   IconNewItem,
   IconReset,
   IconSave
-} from '@/components/icons1';
+} from '@/components/icons';
 import { type Styling } from '@/components/props';
 import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER } from '@/utils/constants';

@@ -8,12 +8,12 @@ import { urls, useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';
 
 import { isAxiosError } from '@/backend/api-transport';
-import { Tooltip } from '@/components/container1';
-import { Button, SubmitButton, TextURL } from '@/components/control1';
-import { IconHelp } from '@/components/icons1';
+import { Tooltip } from '@/components/container';
+import { Button, SubmitButton, TextURL } from '@/components/control';
+import { IconHelp } from '@/components/icons';
 import { type ErrorData } from '@/components/info-error';
-import { Checkbox, TextInput } from '@/components/input1';
-import { PrettyJson } from '@/components/view1';
+import { Checkbox, TextInput } from '@/components/input';
+import { PrettyJson } from '@/components/view';
 import { globalIDs, patterns } from '@/utils/constants';
 
 import { type IUserSignupDTO, schemaUserSignup } from '../../backend/types';

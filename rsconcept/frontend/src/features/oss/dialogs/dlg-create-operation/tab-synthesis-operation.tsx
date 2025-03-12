@@ -1,6 +1,6 @@
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
-import { Label, TextArea, TextInput } from '@/components/input1';
+import { Label, TextArea, TextInput } from '@/components/input';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { type IOperationCreateDTO } from '../../backend/types';

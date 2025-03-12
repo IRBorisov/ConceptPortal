@@ -4,7 +4,7 @@ import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components';
 import { MiniSelectorOSS } from '@/features/library/components';
 
-import { MiniButton } from '@/components/control1';
+import { MiniButton } from '@/components/control';
 import {
   IconClustering,
   IconClusteringOff,
@@ -15,7 +15,7 @@ import {
   IconText,
   IconTextOff,
   IconTypeGraph
-} from '@/components/icons1';
+} from '@/components/icons';
 import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER } from '@/utils/constants';
 

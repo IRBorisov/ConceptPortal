@@ -2,7 +2,7 @@
 
 import { type Table } from '@tanstack/react-table';
 
-import { CheckboxTristate } from '../input1';
+import { CheckboxTristate } from '../input';
 
 interface SelectAllProps<TData> {
   table: Table<TData>;

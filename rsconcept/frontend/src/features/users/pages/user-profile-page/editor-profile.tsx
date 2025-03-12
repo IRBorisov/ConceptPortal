@@ -6,9 +6,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useBlockNavigation } from '@/app';
 
 import { isAxiosError } from '@/backend/api-transport';
-import { SubmitButton } from '@/components/control1';
+import { SubmitButton } from '@/components/control';
 import { type ErrorData } from '@/components/info-error';
-import { TextInput } from '@/components/input1';
+import { TextInput } from '@/components/input';
 
 import { type IUpdateProfileDTO, schemaUpdateProfile } from '../../backend/types';
 import { useProfileSuspense } from '../../backend/use-profile';

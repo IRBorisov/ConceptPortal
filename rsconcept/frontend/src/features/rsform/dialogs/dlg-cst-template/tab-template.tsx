@@ -2,7 +2,7 @@
 
 import { useTemplatesSuspense } from '@/features/library/backend/use-templates';
 
-import { SelectSingle, TextArea } from '@/components/input1';
+import { SelectSingle, TextArea } from '@/components/input';
 
 import { useRSForm } from '../../backend/use-rsform';
 import { PickConstituenta } from '../../components/pick-constituenta';

@@ -1,9 +1,9 @@
 import { urls, useConceptNavigation } from '@/app';
 import { useAuthSuspense } from '@/features/auth';
 
-import { Divider } from '@/components/container1';
-import { Button } from '@/components/control1';
-import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown1';
+import { Divider } from '@/components/container';
+import { Button } from '@/components/control';
+import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import {
   IconArchive,
   IconEdit2,
@@ -13,7 +13,7 @@ import {
   IconReplace,
   IconSortList,
   IconTemplates
-} from '@/components/icons1';
+} from '@/components/icons';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { promptUnsaved } from '@/utils/utils';

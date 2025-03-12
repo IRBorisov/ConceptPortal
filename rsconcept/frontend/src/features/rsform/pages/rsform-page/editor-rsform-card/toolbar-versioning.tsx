@@ -6,8 +6,8 @@ import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components';
 import { useVersionRestore } from '@/features/library/backend/use-version-restore';
 
-import { MiniButton } from '@/components/control1';
-import { IconNewVersion, IconUpload, IconVersions } from '@/components/icons1';
+import { MiniButton } from '@/components/control';
+import { IconNewVersion, IconUpload, IconVersions } from '@/components/icons';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { promptText } from '@/utils/labels';

@@ -1,6 +1,6 @@
 'use client';
 
-import { TextURL } from '@/components/control1';
+import { TextURL } from '@/components/control';
 
 import { useAuthSuspense } from '../backend/use-auth';
 

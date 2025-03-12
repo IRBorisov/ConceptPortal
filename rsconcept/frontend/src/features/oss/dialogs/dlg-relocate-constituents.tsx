@@ -11,9 +11,9 @@ import { SelectLibraryItem } from '@/features/library/components';
 import { useRSForm } from '@/features/rsform/backend/use-rsform';
 import { PickMultiConstituenta } from '@/features/rsform/components';
 
-import { MiniButton } from '@/components/control1';
-import { Loader } from '@/components/loader1';
-import { ModalForm } from '@/components/modal1';
+import { MiniButton } from '@/components/control';
+import { Loader } from '@/components/loader';
+import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { type ICstRelocateDTO, type IOperationPosition, schemaCstRelocate } from '../backend/types';

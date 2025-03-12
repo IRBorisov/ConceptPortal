@@ -1,7 +1,7 @@
-import { TextURL } from '@/components/control1';
+import { TextURL } from '@/components/control';
 import { external_urls } from '@/utils/constants';
 
-import { Subtopics } from '../components/subtopics1';
+import { Subtopics } from '../components/subtopics';
 import { HelpTopic } from '../models/help-topic';
 
 export function HelpConcept() {

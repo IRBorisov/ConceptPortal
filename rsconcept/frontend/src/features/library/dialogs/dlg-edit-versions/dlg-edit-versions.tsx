@@ -7,10 +7,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import { useRSFormSuspense } from '@/features/rsform/backend/use-rsform';
 
-import { MiniButton } from '@/components/control1';
-import { IconReset, IconSave } from '@/components/icons1';
-import { TextArea, TextInput } from '@/components/input1';
-import { ModalView } from '@/components/modal1';
+import { MiniButton } from '@/components/control';
+import { IconReset, IconSave } from '@/components/icons';
+import { TextArea, TextInput } from '@/components/input';
+import { ModalView } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { errorMsg } from '@/utils/labels';
 

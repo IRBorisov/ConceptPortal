@@ -4,7 +4,7 @@ import clsx from 'clsx';
 
 import { urls, useConceptNavigation } from '@/app';
 
-import { TextURL } from '@/components/control1';
+import { TextURL } from '@/components/control';
 import { DataTable, type IConditionalStyle, type VisibilityState } from '@/components/data-table';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight } from '@/stores/app-layout';

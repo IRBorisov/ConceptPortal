@@ -4,7 +4,7 @@ import { useLayoutEffect } from 'react';
 
 import { useConceptNavigation } from '@/app/navigation1/navigation-context';
 
-import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs1';
+import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useAppLayoutStore } from '@/stores/app-layout';
 import { useModificationStore } from '@/stores/modification';
 

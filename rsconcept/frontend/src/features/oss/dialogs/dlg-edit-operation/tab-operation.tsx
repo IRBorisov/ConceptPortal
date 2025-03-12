@@ -1,6 +1,6 @@
 import { useFormContext } from 'react-hook-form';
 
-import { TextArea, TextInput } from '@/components/input1';
+import { TextArea, TextInput } from '@/components/input';
 
 import { type IOperationUpdateDTO } from '../../backend/types';
 

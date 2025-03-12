@@ -7,11 +7,11 @@ import clsx from 'clsx';
 import { type ILibraryItem } from '@/features/library';
 import { SelectLibraryItem } from '@/features/library/components';
 
-import { MiniButton } from '@/components/control1';
+import { MiniButton } from '@/components/control';
 import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/data-table';
-import { IconAccept, IconPageLeft, IconPageRight, IconRemove, IconReplace } from '@/components/icons1';
+import { IconAccept, IconPageLeft, IconPageRight, IconRemove, IconReplace } from '@/components/icons';
 import { type Styling } from '@/components/props';
-import { NoData } from '@/components/view1';
+import { NoData } from '@/components/view';
 import { APP_COLORS } from '@/styling/colors';
 import { errorMsg } from '@/utils/labels';
 

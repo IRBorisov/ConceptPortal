@@ -1,4 +1,4 @@
-import { type DomIconProps } from '@/components/icons1';
+import { type DomIconProps } from '@/components/icons';
 import {
   IconCstAxiom,
   IconCstBaseSet,
@@ -8,7 +8,7 @@ import {
   IconCstStructured,
   IconCstTerm,
   IconCstTheorem
-} from '@/components/icons1';
+} from '@/components/icons';
 
 import { CstType } from '../backend/types';
 

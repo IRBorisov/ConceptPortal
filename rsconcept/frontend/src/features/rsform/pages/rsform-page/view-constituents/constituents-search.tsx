@@ -1,8 +1,8 @@
 'use client';
 
-import { MiniButton } from '@/components/control1';
-import { IconChild } from '@/components/icons1';
-import { SearchBar } from '@/components/input1';
+import { MiniButton } from '@/components/control';
+import { IconChild } from '@/components/icons';
+import { SearchBar } from '@/components/input';
 
 import { SelectMatchMode } from './select-match-mode';
 import { useCstSearchStore } from '../../../stores/cst-search';

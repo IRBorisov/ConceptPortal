@@ -2,10 +2,10 @@ import { urls, useConceptNavigation } from '@/app';
 import { useAuthSuspense } from '@/features/auth';
 import { useRoleStore, UserRole } from '@/features/users';
 
-import { Divider } from '@/components/container1';
-import { Button } from '@/components/control1';
-import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown1';
-import { IconDestroy, IconLibrary, IconMenu, IconNewItem, IconQR, IconShare } from '@/components/icons1';
+import { Divider } from '@/components/container';
+import { Button } from '@/components/control';
+import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
+import { IconDestroy, IconLibrary, IconMenu, IconNewItem, IconQR, IconShare } from '@/components/icons';
 import { useDialogsStore } from '@/stores/dialogs';
 import { generatePageQR, sharePage } from '@/utils/utils';
 

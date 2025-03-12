@@ -4,9 +4,9 @@ import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components';
 import { useRoleStore, UserRole } from '@/features/users';
 
-import { MiniButton } from '@/components/control1';
-import { IconImmutable, IconMutable } from '@/components/icons1';
-import { Label } from '@/components/input1';
+import { MiniButton } from '@/components/control';
+import { IconImmutable, IconMutable } from '@/components/icons';
+import { Label } from '@/components/input';
 
 import { type AccessPolicy, type ILibraryItem } from '../backend/types';
 import { useMutatingLibrary } from '../backend/use-mutating-library';

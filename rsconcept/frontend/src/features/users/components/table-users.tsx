@@ -1,8 +1,8 @@
 'use client';
 
-import { MiniButton } from '@/components/control1';
+import { MiniButton } from '@/components/control';
 import { createColumnHelper, DataTable } from '@/components/data-table';
-import { IconRemove } from '@/components/icons1';
+import { IconRemove } from '@/components/icons';
 
 import { type IUserInfo } from '../backend/types';
 

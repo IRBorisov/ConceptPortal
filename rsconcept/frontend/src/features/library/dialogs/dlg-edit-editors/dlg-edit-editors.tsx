@@ -5,10 +5,10 @@ import { useState } from 'react';
 import { useUsers } from '@/features/users';
 import { SelectUser, TableUsers } from '@/features/users/components';
 
-import { MiniButton } from '@/components/control1';
-import { IconRemove } from '@/components/icons1';
-import { Label } from '@/components/input1';
-import { ModalForm } from '@/components/modal1';
+import { MiniButton } from '@/components/control';
+import { IconRemove } from '@/components/icons';
+import { Label } from '@/components/input';
+import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { useSetEditors } from '../../backend/use-set-editors';

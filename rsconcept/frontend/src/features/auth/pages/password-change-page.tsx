@@ -5,10 +5,10 @@ import { useEffect, useState } from 'react';
 import { urls, useConceptNavigation } from '@/app';
 
 import { isAxiosError } from '@/backend/api-transport';
-import { SubmitButton } from '@/components/control1';
+import { SubmitButton } from '@/components/control';
 import { type ErrorData, InfoError } from '@/components/info-error';
-import { TextInput } from '@/components/input1';
-import { Loader } from '@/components/loader1';
+import { TextInput } from '@/components/input';
+import { Loader } from '@/components/loader';
 import { useQueryStrings } from '@/hooks/use-query-strings';
 
 import { useResetPassword } from '../backend/use-reset-password';

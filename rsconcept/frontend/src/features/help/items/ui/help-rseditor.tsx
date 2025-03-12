@@ -17,7 +17,7 @@ import {
   IconStatusOK,
   IconTree,
   IconTypeGraph
-} from '@/components/icons1';
+} from '@/components/icons';
 import { APP_COLORS } from '@/styling/colors';
 
 import { LinkTopic } from '../../components/link-topic';

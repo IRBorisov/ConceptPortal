@@ -3,9 +3,9 @@ import { useAuthSuspense } from '@/features/auth';
 import { useRoleStore, UserRole } from '@/features/users';
 import { describeUserRole, labelUserRole } from '@/features/users/labels';
 
-import { Button } from '@/components/control1';
-import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown1';
-import { IconAlert } from '@/components/icons1';
+import { Button } from '@/components/control';
+import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
+import { IconAlert } from '@/components/icons';
 
 import { IconRole } from './icon-role';
 
