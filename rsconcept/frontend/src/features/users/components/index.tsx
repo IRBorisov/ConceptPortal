@@ -1,3 +1,3 @@
-export { InfoUsers } from './InfoUsers';
-export { SelectUser } from './SelectUser';
-export { TableUsers } from './TableUsers';
+export { InfoUsers } from './info-users';
+export { SelectUser } from './select-user';
+export { TableUsers } from './table-users';

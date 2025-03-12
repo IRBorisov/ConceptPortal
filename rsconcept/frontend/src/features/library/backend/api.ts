@@ -7,7 +7,7 @@ import {
   schemaVersionCreatedResponse
 } from '@/features/rsform';
 
-import { axiosDelete, axiosGet, axiosPatch, axiosPost } from '@/backend/apiTransport';
+import { axiosDelete, axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';
 import { DELAYS, KEYS } from '@/backend/configuration';
 import { infoMsg } from '@/utils/labels';
 

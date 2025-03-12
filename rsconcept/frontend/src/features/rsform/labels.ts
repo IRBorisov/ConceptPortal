@@ -12,8 +12,8 @@ import { CstType, type IRSErrorDescription, ParsingStatus, RSErrorType, TokenID 
 import { type GramData, Grammeme, ReferenceType } from './models/language';
 import { CstClass, ExpressionStatus, type IConstituenta } from './models/rsform';
 import { type IArgumentInfo, type ISyntaxTreeNode } from './models/rslang';
-import { CstMatchMode, DependencyMode } from './stores/cstSearch';
-import { type GraphColoring } from './stores/termGraph';
+import { CstMatchMode, DependencyMode } from './stores/cst-search';
+import { type GraphColoring } from './stores/term-graph';
 
 /**
  * Generates description for {@link IConstituenta}.

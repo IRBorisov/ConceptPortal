@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client';
 
-import { GlobalProviders } from './app/GlobalProviders';
+import { GlobalProviders } from './app/global-providers';
 import { App } from './app';
 
 import './index.css';

@@ -1,7 +1,7 @@
 import { AccessPolicy, LibraryItemType } from './backend/types';
-import { type FolderNode } from './models/FolderTree';
+import { type FolderNode } from './models/folder-tree';
 import { LocationHead } from './models/library';
-import { validateLocation } from './models/libraryAPI';
+import { validateLocation } from './models/library-api';
 
 /**
  * Retrieves label for {@link LocationHead}.

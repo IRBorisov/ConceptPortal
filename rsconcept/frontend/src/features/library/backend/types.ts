@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import { errorMsg } from '@/utils/labels';
 
-import { validateLocation } from '../models/libraryAPI';
+import { validateLocation } from '../models/library-api';
 
 /** Represents type of library items. */
 export enum LibraryItemType {

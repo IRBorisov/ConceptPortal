@@ -1,4 +1,4 @@
-import { HelpTopic } from './models/helpTopic';
+import { HelpTopic } from './models/help-topic';
 
 /**
  * Retrieves label for {@link HelpTopic}.

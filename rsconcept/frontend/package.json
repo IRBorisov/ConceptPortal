@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "generate": "lezer-generator src/components/RSInput/rslang/rslangFast.grammar -o src/components/RSInput/rslang/parser.ts && lezer-generator src/components/RSInput/rslang/rslangAST.grammar -o src/components/RSInput/rslang/parserAST.ts && lezer-generator src/components/RefsInput/parse/refsText.grammar -o src/components/RefsInput/parse/parser.ts",
+    "generate": "lezer-generator src/components/rs-input/rslang/rslang-fast.grammar -o src/components/rs-input/rslang/parser.ts && lezer-generator src/components/rs-input/rslang/rslang-ast.grammar -o src/components/rs-input/rslang/parserAST.ts && lezer-generator src/components/refs-input/parse/refs-text.grammar -o src/components/refs-input/parse/parser.ts",
     "test": "jest",
     "test:e2e": "playwright test",
     "dev": "vite --host",

@@ -1,3 +1,3 @@
-export { ConstituentaTooltip } from './ConstituentaTooltip';
-export { PickMultiConstituenta } from './PickMultiConstituenta';
-export { PickSubstitutions } from './PickSubstitutions';
+export { ConstituentaTooltip } from './constituenta-tooltip';
+export { PickMultiConstituenta } from './pick-multi-constituenta';
+export { PickSubstitutions } from './pick-substitutions';

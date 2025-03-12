@@ -5,8 +5,8 @@ import { TokenID } from './backend/types';
 import { type GramData, Grammeme, NounGrams, PartOfSpeech, VerbGrams } from './models/language';
 import { CstClass, ExpressionStatus, type IConstituenta } from './models/rsform';
 import { type ISyntaxTreeNode } from './models/rslang';
-import { type TMGraphNode } from './models/TMGraph';
-import { type GraphColoring } from './stores/termGraph';
+import { type TypificationGraphNode } from './models/typification-graph';
+import { type GraphColoring } from './stores/term-graph';
 
 /**
  * Represents Brackets highlights theme.
@@ -286,9 +286,9 @@ export function colorBgGraphNode(cst: IConstituenta, coloringScheme: GraphColori
 }
 
 /**
- * Determines m-graph color for {@link TMGraphNode}.
+ * Determines m-graph color for {@link TypificationGraphNode}.
  */
-export function colorBgTMGraphNode(node: TMGraphNode): string {
+export function colorBgTMGraphNode(node: TypificationGraphNode): string {
   if (node.rank === 0) {
     return APP_COLORS.bgControls;
   }

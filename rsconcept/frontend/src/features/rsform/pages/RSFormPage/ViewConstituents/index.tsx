@@ -1,1 +1,0 @@
-export { ViewConstituents } from './ViewConstituents';

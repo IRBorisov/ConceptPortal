@@ -1,3 +1,3 @@
-export { useLabelUser } from './backend/useLabelUser';
-export { useUsers } from './backend/useUsers';
+export { useLabelUser } from './backend/use-label-user';
+export { useUsers } from './backend/use-users';
 export { useRoleStore, UserRole } from './stores/role';

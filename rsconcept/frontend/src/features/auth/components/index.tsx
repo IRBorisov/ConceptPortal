@@ -1,2 +1,2 @@
-export { ExpectedAnonymous } from './ExpectedAnonymous';
-export { RequireAuth } from './RequireAuth';
+export { ExpectedAnonymous } from './expected-anonymous';
+export { RequireAuth } from './require-auth';

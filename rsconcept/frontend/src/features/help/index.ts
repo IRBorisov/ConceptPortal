@@ -1,1 +1,1 @@
-export { HelpTopic } from './models/helpTopic';
+export { HelpTopic } from './models/help-topic';

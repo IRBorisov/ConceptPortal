@@ -1,1 +1,1 @@
-export { BadgeHelp } from './BadgeHelp';
+export { BadgeHelp } from './badge-help';

@@ -1,1 +1,0 @@
-export { DlgEditWordForms } from './DlgEditWordForms';
