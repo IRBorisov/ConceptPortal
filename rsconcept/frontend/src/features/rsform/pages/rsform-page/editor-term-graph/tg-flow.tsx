@@ -188,7 +188,7 @@ export function TGFlow() {
         <ViewHidden items={hidden} />
       </div>
 
-      <div className='relative outline-hidden w-[100dvw]' style={{ height: mainHeight }}>
+      <div className='relative outline-hidden w-[100dvw] cc-mask-sides' style={{ height: mainHeight }}>
         <ReactFlow
           nodes={nodes}
           onNodesChange={onNodesChange}

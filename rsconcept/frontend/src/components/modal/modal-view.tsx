@@ -14,7 +14,10 @@ import { IconClose } from '../icons';
 import { ModalBackdrop } from './modal-backdrop';
 import { type ModalProps } from './modal-form';
 
-interface ModalViewProps extends ModalProps {}
+interface ModalViewProps extends ModalProps {
+  /** Float all UI elements on top of contents. */
+  fullScreen?: boolean;
+}
 
 /**
  * Displays a customizable modal window with submit form.
@@ -26,6 +29,7 @@ export function ModalView({
   overflowVisible,
   helpTopic,
   hideHelpWhen,
+  fullScreen,
   ...restProps
 }: React.PropsWithChildren<ModalViewProps>) {
   const hideDialog = useDialogsStore(state => state.hideDialog);
@@ -53,7 +57,16 @@ export function ModalView({
           onClick={hideDialog}
         />
 
-        {header ? <h1 className='px-12 py-2 select-none'>{header}</h1> : null}
+        {header ? (
+          <h1
+            className={clsx(
+              'px-12 py-2 select-none',
+              fullScreen && 'z-pop absolute top-0 right-1/2 translate-x-1/2 cc-blur bg-prim-100/90 rounded-2xl'
+            )}
+          >
+            {header}
+          </h1>
+        ) : null}
 
         <div
           className={clsx(
@@ -71,12 +84,22 @@ export function ModalView({
           {children}
         </div>
 
-        <Button
-          text='Закрыть'
-          aria-label='Закрыть'
-          className='z-pop my-2 mx-auto text-sm min-w-28'
-          onClick={hideDialog}
-        />
+        {!fullScreen ? (
+          <Button
+            text='Закрыть'
+            aria-label='Закрыть'
+            className={clsx(
+              'my-2 mx-auto text-sm min-w-28',
+              fullScreen && 'z-pop absolute bottom-0 right-1/2 translate-x-1/2 cc-blur'
+            )}
+            onClick={hideDialog}
+          />
+        ) : (
+          <div className='z-pop absolute bottom-0 right-1/2 translate-x-1/2 bg-prim-100/90 cc-blur p-3 rounded-xl'>
+            {' '}
+            <Button text='Закрыть' aria-label='Закрыть' className='text-sm min-w-28' onClick={hideDialog} />
+          </div>
+        )}
       </div>
     </div>
   );

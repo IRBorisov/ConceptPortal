@@ -264,3 +264,20 @@
   align-items: center;
   justify-content: center;
 }
+
+@utility cc-mask-sides {
+  --mask-border-size: 2rem;
+
+  mask-image: linear-gradient(to top, transparent, black calc(var(--mask-border-size))),
+    linear-gradient(to bottom, transparent, black calc(var(--mask-border-size))),
+    linear-gradient(to left, transparent, black calc(var(--mask-border-size))),
+    linear-gradient(to right, transparent, black calc(var(--mask-border-size)));
+
+  -webkit-mask-image: linear-gradient(to top, transparent, black calc(var(--mask-border-size))),
+    linear-gradient(to bottom, transparent, black calc(var(--mask-border-size))),
+    linear-gradient(to left, transparent, black calc(var(--mask-border-size))),
+    linear-gradient(to right, transparent, black calc(var(--mask-border-size)));
+
+  mask-composite: intersect;
+  -webkit-mask-composite: destination-in;
+}

@@ -62,8 +62,7 @@
 .react-flow__attribution {
   font-size: var(--font-size-sm);
   font-family: var(--font-ui);
-  margin-left: 3px;
-  margin-right: 3px;
+  margin: 1rem;
 
   background-color: transparent;
   color: var(--clr-prim-600);
