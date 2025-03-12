@@ -1,5 +1,5 @@
-export { CheckboxTristate } from './checkbox-tristate';
 export { Checkbox, type CheckboxProps } from './checkbox';
+export { CheckboxTristate } from './checkbox-tristate';
 export { ErrorField } from './error-field';
 export { FileInput } from './file-input';
 export { Label } from './label';

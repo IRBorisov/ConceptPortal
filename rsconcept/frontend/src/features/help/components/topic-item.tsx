@@ -1,8 +1,9 @@
 import { removeTags } from '@/utils/utils';
 
-import { LinkTopic } from './link-topic';
 import { describeHelpTopic, labelHelpTopic } from '../labels';
 import { type HelpTopic } from '../models/help-topic';
+
+import { LinkTopic } from './link-topic';
 
 interface TopicItemProps {
   topic: HelpTopic;

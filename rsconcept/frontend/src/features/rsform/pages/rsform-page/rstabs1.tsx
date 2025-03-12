@@ -2,7 +2,7 @@
 
 import { useLayoutEffect } from 'react';
 
-import { useConceptNavigation } from '@/app/navigation1/navigation-context';
+import { useConceptNavigation } from '@/app/navigation/navigation-context';
 
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useAppLayoutStore } from '@/stores/app-layout';

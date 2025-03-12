@@ -1,5 +1,5 @@
 export { EmbedYoutube } from './embed-youtube';
-export { Indicator } from './indicator1';
+export { Indicator } from './indicator';
 export { NoData } from './no-data';
 export { PDFViewer } from './pdf-viewer';
 export { PrettyJson } from './pretty-json';

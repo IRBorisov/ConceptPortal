@@ -4,11 +4,11 @@ import { MiniButton } from '@/components/control';
 import { IconChild } from '@/components/icons';
 import { SearchBar } from '@/components/input';
 
-import { SelectMatchMode } from './select-match-mode';
 import { useCstSearchStore } from '../../../stores/cst-search';
 import { useRSEdit } from '../rsedit-context';
 
 import { SelectGraphFilter } from './select-graph-filter';
+import { SelectMatchMode } from './select-match-mode';
 
 interface ConstituentsSearchProps {
   dense?: boolean;

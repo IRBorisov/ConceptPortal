@@ -154,6 +154,8 @@
     "rsforms",
     "rsgraph",
     "rslang",
+    "rslist",
+    "rstabs",
     "rstemplates",
     "setexpr",
     "SIDELIST",

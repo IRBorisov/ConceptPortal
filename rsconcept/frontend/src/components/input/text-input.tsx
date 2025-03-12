@@ -1,9 +1,9 @@
 import clsx from 'clsx';
 
-import { Label } from './label';
 import { type Editor, type ErrorProcessing, type Titled } from '../props';
 
 import { ErrorField } from './error-field';
+import { Label } from './label';
 
 interface TextInputProps extends Editor, ErrorProcessing, Titled, React.ComponentProps<'input'> {
   /** Indicates that the input should be transparent. */
