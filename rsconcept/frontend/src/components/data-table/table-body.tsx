@@ -98,7 +98,7 @@ export function TableBody<TData>({
                 cursor: onRowClicked || onRowDoubleClicked ? 'pointer' : 'auto',
                 paddingBottom: dense ? '0.25rem' : '0.5rem',
                 paddingTop: dense ? '0.25rem' : '0.5rem',
-                width: noHeader && index === 0 ? `calc(var(--col-${cell.column.id}-size) * 1px)` : 'auto'
+                width: noHeader && index === 0 ? `calc(var(--col-${cell.column.id}-size) * 1px)` : undefined
               }}
             >
               {flexRender(cell.column.columnDef.cell, cell.getContext())}

@@ -10,6 +10,7 @@ import {
   type TableOptions,
   type VisibilityState
 } from '@tanstack/react-table';
+import clsx from 'clsx';
 
 import { type Styling } from '../props';
 
@@ -152,7 +153,12 @@ export function DataTable<TData extends RowData>({
   }, [table]);
 
   return (
-    <div tabIndex={-1} id={id} className={className} style={{ minHeight: fixedSize, maxHeight: fixedSize, ...style }}>
+    <div
+      tabIndex={-1}
+      id={id}
+      className={clsx('table-auto', className)}
+      style={{ minHeight: fixedSize, maxHeight: fixedSize, ...style }}
+    >
       <table className='w-full' style={{ ...columnSizeVars }}>
         {!noHeader ? (
           <TableHeader table={table} headPosition={headPosition} resetLastSelected={() => setLastSelected(null)} />

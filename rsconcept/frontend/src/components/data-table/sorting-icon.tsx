@@ -11,5 +11,5 @@ export function SortingIcon({ sortDirection }: SortingIconProps) {
   if (sortDirection === 'desc') {
     return <IconSortDesc size='1rem' />;
   }
-  return <IconSortDesc size='1rem' className='opacity-0 group-hover:opacity-25' />;
+  return <IconSortDesc size='1rem' className='opacity-0 group-hover:opacity-25 transition-opacity' />;
 }
