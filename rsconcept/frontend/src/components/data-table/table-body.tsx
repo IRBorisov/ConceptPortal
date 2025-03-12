@@ -1,5 +1,6 @@
 'use no memo';
 
+import { useCallback } from 'react';
 import { type Cell, flexRender, type Row, type Table } from '@tanstack/react-table';
 import clsx from 'clsx';
 
@@ -10,7 +11,6 @@ interface TableBodyProps<TData> {
   table: Table<TData>;
   dense?: boolean;
   noHeader?: boolean;
-  enableRowSelection?: boolean;
   conditionalRowStyles?: IConditionalStyle<TData>[];
 
   lastSelected: string | null;
@@ -24,44 +24,49 @@ export function TableBody<TData>({
   table,
   dense,
   noHeader,
-  enableRowSelection,
   conditionalRowStyles,
   lastSelected,
   onChangeLastSelected,
   onRowClicked,
   onRowDoubleClicked
 }: TableBodyProps<TData>) {
-  function handleRowClicked(target: Row<TData>, event: React.MouseEvent<Element>) {
-    onRowClicked?.(target.original, event);
-    if (enableRowSelection && target.getCanSelect()) {
-      if (event.shiftKey && !!lastSelected && lastSelected !== target.id) {
-        const { rows, rowsById } = table.getRowModel();
-        const lastIndex = rowsById[lastSelected].index;
-        const currentIndex = target.index;
-        const toggleRows = rows.slice(
-          lastIndex > currentIndex ? currentIndex : lastIndex + 1,
-          lastIndex > currentIndex ? lastIndex : currentIndex + 1
-        );
-        const newSelection: Record<string, boolean> = {};
-        toggleRows.forEach(row => {
-          newSelection[row.id] = !target.getIsSelected();
-        });
-        table.setRowSelection(prev => ({ ...prev, ...newSelection }));
-        onChangeLastSelected(null);
-      } else {
-        onChangeLastSelected(target.id);
-        target.toggleSelected(!target.getIsSelected());
+  const handleRowClicked = useCallback(
+    (target: Row<TData>, event: React.MouseEvent<Element>) => {
+      onRowClicked?.(target.original, event);
+      if (target.getCanSelect()) {
+        if (event.shiftKey && !!lastSelected && lastSelected !== target.id) {
+          const { rows, rowsById } = table.getRowModel();
+          const lastIndex = rowsById[lastSelected].index;
+          const currentIndex = target.index;
+          const toggleRows = rows.slice(
+            lastIndex > currentIndex ? currentIndex : lastIndex + 1,
+            lastIndex > currentIndex ? lastIndex : currentIndex + 1
+          );
+          const newSelection: Record<string, boolean> = {};
+          toggleRows.forEach(row => {
+            newSelection[row.id] = !target.getIsSelected();
+          });
+          table.setRowSelection(prev => ({ ...prev, ...newSelection }));
+          onChangeLastSelected(null);
+        } else {
+          onChangeLastSelected(target.id);
+          target.toggleSelected(!target.getIsSelected());
+        }
       }
-    }
-  }
+    },
+    [table, lastSelected, onChangeLastSelected, onRowClicked]
+  );
 
-  function getRowStyles(row: Row<TData>) {
-    return {
-      ...conditionalRowStyles!
-        .filter(item => item.when(row.original))
-        .reduce((prev, item) => ({ ...prev, ...item.style }), {})
-    };
-  }
+  const getRowStyles = useCallback(
+    (row: Row<TData>) => {
+      return {
+        ...conditionalRowStyles!
+          .filter(item => item.when(row.original))
+          .reduce((prev, item) => ({ ...prev, ...item.style }), {})
+      };
+    },
+    [conditionalRowStyles]
+  );
 
   return (
     <tbody>
@@ -72,11 +77,15 @@ export function TableBody<TData>({
             'cc-scroll-row',
             'clr-hover cc-animate-color',
             !noHeader && 'scroll-mt-[calc(2px+2rem)]',
-            row.getIsSelected() ? 'clr-selected' : 'odd:bg-prim-200 even:bg-prim-100'
+            table.options.enableRowSelection && row.getIsSelected()
+              ? 'clr-selected'
+              : 'odd:bg-prim-200 even:bg-prim-100'
           )}
           style={{ ...(conditionalRowStyles ? getRowStyles(row) : []) }}
+          onClick={event => handleRowClicked(row, event)}
+          onDoubleClick={event => onRowDoubleClicked?.(row.original, event)}
         >
-          {enableRowSelection ? (
+          {table.options.enableRowSelection ? (
             <td key={`select-${row.id}`} className='pl-2 border-y'>
               <SelectRow row={row} onChangeLastSelected={onChangeLastSelected} />
             </td>
@@ -91,8 +100,6 @@ export function TableBody<TData>({
                 paddingTop: dense ? '0.25rem' : '0.5rem',
                 width: noHeader && index === 0 ? `calc(var(--col-${cell.column.id}-size) * 1px)` : 'auto'
               }}
-              onClick={event => handleRowClicked(row, event)}
-              onDoubleClick={event => onRowDoubleClicked?.(row.original, event)}
             >
               {flexRender(cell.column.columnDef.cell, cell.getContext())}
             </td>

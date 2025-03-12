@@ -1,20 +1,13 @@
 'use client';
 'use no memo';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   type ColumnSort,
   createColumnHelper,
-  getCoreRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  type PaginationState,
   type RowData,
   type RowSelectionState,
-  type SortingState,
   type TableOptions,
-  type Updater,
-  useReactTable,
   type VisibilityState
 } from '@tanstack/react-table';
 
@@ -25,6 +18,7 @@ import { PaginationTools } from './pagination-tools';
 import { TableBody } from './table-body';
 import { TableFooter } from './table-footer';
 import { TableHeader } from './table-header';
+import { useDataTable } from './use-data-table';
 
 export { type ColumnSort, createColumnHelper, type RowSelectionState, type VisibilityState };
 
@@ -125,62 +119,16 @@ export function DataTable<TData extends RowData>({
   onRowDoubleClicked,
   noDataComponent,
 
-  enableRowSelection,
-  rowSelection,
-
-  enableHiding,
-  columnVisibility,
-
-  enableSorting,
-  initialSorting,
-
-  enablePagination,
-  paginationPerPage = 10,
   paginationOptions = [10, 20, 30, 40, 50],
-  onChangePaginationOption,
 
   ...restProps
 }: DataTableProps<TData>) {
-  const [sorting, setSorting] = useState<SortingState>(initialSorting ? [initialSorting] : []);
   const [lastSelected, setLastSelected] = useState<string | null>(null);
 
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: paginationPerPage
-  });
+  const table = useDataTable({ ...restProps });
 
-  const handleChangePagination = useCallback(
-    (updater: Updater<PaginationState>) => {
-      setPagination(prev => {
-        const resolvedValue = typeof updater === 'function' ? updater(prev) : updater;
-        if (onChangePaginationOption && prev.pageSize !== resolvedValue.pageSize) {
-          onChangePaginationOption(resolvedValue.pageSize);
-        }
-        return resolvedValue;
-      });
-    },
-    [onChangePaginationOption]
-  );
-
-  const tableImpl = useReactTable({
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: enableSorting ? getSortedRowModel() : undefined,
-    getPaginationRowModel: enablePagination ? getPaginationRowModel() : undefined,
-
-    state: {
-      pagination: pagination,
-      sorting: sorting,
-      rowSelection: rowSelection ?? {},
-      columnVisibility: columnVisibility ?? {}
-    },
-    enableHiding: enableHiding,
-    onPaginationChange: enablePagination ? handleChangePagination : undefined,
-    onSortingChange: enableSorting ? setSorting : undefined,
-    enableMultiRowSelection: enableRowSelection,
-    ...restProps
-  });
-
-  const isEmpty = tableImpl.getRowModel().rows.length === 0;
+  const isPaginationEnabled = typeof table.getCanNextPage === 'function';
+  const isEmpty = table.getRowModel().rows.length === 0;
 
   const fixedSize = useMemo(() => {
     if (!rows) {
@@ -194,47 +142,40 @@ export function DataTable<TData extends RowData>({
   }, [rows, dense, noHeader, contentHeight]);
 
   const columnSizeVars = useMemo(() => {
-    const headers = tableImpl.getFlatHeaders();
+    const headers = table.getFlatHeaders();
     const colSizes: Record<string, number> = {};
     for (const header of headers) {
       colSizes[`--header-${header.id}-size`] = header.getSize();
       colSizes[`--col-${header.column.id}-size`] = header.column.getSize();
     }
     return colSizes;
-  }, [tableImpl]);
+  }, [table]);
 
   return (
     <div tabIndex={-1} id={id} className={className} style={{ minHeight: fixedSize, maxHeight: fixedSize, ...style }}>
       <table className='w-full' style={{ ...columnSizeVars }}>
         {!noHeader ? (
-          <TableHeader
-            table={tableImpl}
-            enableRowSelection={enableRowSelection}
-            enableSorting={enableSorting}
-            headPosition={headPosition}
-            resetLastSelected={() => setLastSelected(null)}
-          />
+          <TableHeader table={table} headPosition={headPosition} resetLastSelected={() => setLastSelected(null)} />
         ) : null}
 
         <TableBody
-          table={tableImpl}
+          table={table}
           dense={dense}
           noHeader={noHeader}
           conditionalRowStyles={conditionalRowStyles}
-          enableRowSelection={enableRowSelection}
           lastSelected={lastSelected}
           onChangeLastSelected={setLastSelected}
           onRowClicked={onRowClicked}
           onRowDoubleClicked={onRowDoubleClicked}
         />
 
-        {!noFooter ? <TableFooter table={tableImpl} /> : null}
+        {!noFooter ? <TableFooter table={table} /> : null}
       </table>
 
-      {enablePagination && !isEmpty ? (
+      {isPaginationEnabled && !isEmpty ? (
         <PaginationTools
           id={id ? `${id}__pagination` : undefined}
-          table={tableImpl}
+          table={table}
           paginationOptions={paginationOptions}
         />
       ) : null}

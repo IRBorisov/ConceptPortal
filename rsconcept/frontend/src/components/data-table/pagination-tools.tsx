@@ -1,5 +1,5 @@
-'use client';
 'use no memo';
+'use client';
 
 import { useCallback } from 'react';
 import { type Table } from '@tanstack/react-table';

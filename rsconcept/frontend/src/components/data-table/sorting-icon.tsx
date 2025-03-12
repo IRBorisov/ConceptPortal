@@ -1,20 +1,15 @@
-'use no memo';
-
-import { type Column } from '@tanstack/react-table';
-
 import { IconSortAsc, IconSortDesc } from '../icons';
 
-interface SortingIconProps<TData> {
-  column: Column<TData>;
+interface SortingIconProps {
+  sortDirection?: 'asc' | 'desc' | false;
 }
 
-export function SortingIcon<TData>({ column }: SortingIconProps<TData>) {
-  return (
-    <>
-      {{
-        desc: <IconSortDesc size='1rem' />,
-        asc: <IconSortAsc size='1rem' />
-      }[column.getIsSorted() as string] ?? <IconSortDesc size='1rem' className='opacity-0 group-hover:opacity-25' />}
-    </>
-  );
+export function SortingIcon({ sortDirection }: SortingIconProps) {
+  if (sortDirection === 'asc') {
+    return <IconSortAsc size='1rem' />;
+  }
+  if (sortDirection === 'desc') {
+    return <IconSortDesc size='1rem' />;
+  }
+  return <IconSortDesc size='1rem' className='opacity-0 group-hover:opacity-25' />;
 }
