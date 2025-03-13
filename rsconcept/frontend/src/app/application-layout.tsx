@@ -27,7 +27,7 @@ export function ApplicationLayout() {
     <NavigationState>
       <div className='min-w-80 antialiased h-full max-w-480 mx-auto'>
         <ToasterThemed
-          className={clsx('text-[14px]/[20px]', noNavigationAnimation ? 'mt-6' : 'mt-14')}
+          className={clsx('sm:text-[14px]/[20px] text-[12px]/[16px]', noNavigationAnimation ? 'mt-6' : 'mt-14')}
           autoClose={3000}
           draggable={false}
           pauseOnFocusLoss={false}
