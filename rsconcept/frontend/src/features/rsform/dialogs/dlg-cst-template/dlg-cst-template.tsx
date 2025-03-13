@@ -27,7 +27,7 @@ export interface DlgCstTemplateProps {
   insertAfter?: number;
 }
 
-export enum TabID {
+enum TabID {
   TEMPLATE = 0,
   ARGUMENTS = 1,
   CONSTITUENTA = 2

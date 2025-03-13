@@ -56,7 +56,7 @@ export interface DlgEditReferenceProps {
   onCancel: () => void;
 }
 
-export enum TabID {
+enum TabID {
   ENTITY = 0,
   SYNTACTIC = 1
 }

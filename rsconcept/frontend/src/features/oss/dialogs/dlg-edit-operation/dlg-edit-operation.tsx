@@ -30,7 +30,7 @@ export interface DlgEditOperationProps {
   positions: IOperationPosition[];
 }
 
-export enum TabID {
+enum TabID {
   CARD = 0,
   ARGUMENTS = 1,
   SUBSTITUTION = 2

@@ -66,7 +66,7 @@ export interface IRSEditContext {
   promptTemplate: () => void;
 }
 
-export const RSEditContext = createContext<IRSEditContext | null>(null);
+const RSEditContext = createContext<IRSEditContext | null>(null);
 export const useRSEdit = () => {
   const context = use(RSEditContext);
   if (context === null) {

@@ -22,7 +22,7 @@ export interface DlgInlineSynthesisProps {
   onSynthesis: () => void;
 }
 
-export enum TabID {
+enum TabID {
   SCHEMA = 0,
   SELECTIONS = 1,
   SUBSTITUTIONS = 2

@@ -38,7 +38,7 @@ function ClearIndicator<Option, Group extends GroupBase<Option> = GroupBase<Opti
   );
 }
 
-export interface SelectSingleProps<Option, Group extends GroupBase<Option> = GroupBase<Option>>
+interface SelectSingleProps<Option, Group extends GroupBase<Option> = GroupBase<Option>>
   extends Omit<Props<Option, false, Group>, 'theme' | 'menuPortalTarget'> {
   noPortal?: boolean;
   noBorder?: boolean;

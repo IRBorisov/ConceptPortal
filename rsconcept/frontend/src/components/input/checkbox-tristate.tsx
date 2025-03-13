@@ -6,7 +6,7 @@ import { CheckboxChecked, CheckboxNull } from '../icons';
 
 import { type CheckboxProps } from './checkbox';
 
-export interface CheckboxTristateProps extends Omit<CheckboxProps, 'value' | 'onChange'> {
+interface CheckboxTristateProps extends Omit<CheckboxProps, 'value' | 'onChange'> {
   /** Current value - `null`, `true` or `false`. */
   value: boolean | null;
 

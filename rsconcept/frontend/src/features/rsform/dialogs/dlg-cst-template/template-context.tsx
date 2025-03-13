@@ -25,7 +25,7 @@ export interface ITemplateContext {
   onChangeFilterCategory: (newFilterCategory: IConstituenta | null) => void;
 }
 
-export const TemplateContext = createContext<ITemplateContext | null>(null);
+const TemplateContext = createContext<ITemplateContext | null>(null);
 export const useTemplateContext = () => {
   const context = use(TemplateContext);
   if (context === null) {

@@ -5,5 +5,4 @@ export { PDFViewer } from './pdf-viewer';
 export { PrettyJson } from './pretty-json';
 export { TextContent } from './text-content';
 export { ValueIcon } from './value-icon';
-export { ValueLabeled } from './value-labeled';
 export { ValueStats } from './value-stats';

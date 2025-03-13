@@ -3,13 +3,7 @@ import { z } from 'zod';
 import { patterns } from '@/utils/constants';
 import { errorMsg } from '@/utils/labels';
 
-/**
- * Represents user detailed information.
- * Some information should only be accessible to authorized users
- */
-export type IUser = z.infer<typeof schemaUser>;
-
-/** Represents user profile for viewing and editing {@link IUser}. */
+/** Represents user profile for viewing and editing. */
 export type IUserProfile = z.infer<typeof schemaUserProfile>;
 
 /** Represents user reference information. */

@@ -21,7 +21,7 @@ import { TableFooter } from './table-footer';
 import { TableHeader } from './table-header';
 import { useDataTable } from './use-data-table';
 
-export { type ColumnSort, createColumnHelper, type RowSelectionState, type VisibilityState };
+export { createColumnHelper, type RowSelectionState, type VisibilityState };
 
 /** Style to conditionally apply to rows. */
 export interface IConditionalStyle<TData> {

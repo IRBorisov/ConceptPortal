@@ -52,7 +52,7 @@ export enum DialogType {
   UPLOAD_RSFORM
 }
 
-export interface GenericDialogProps {
+interface DialogProps {
   onHide?: () => void;
 }
 
@@ -91,7 +91,7 @@ export const useDialogsStore = create<DialogsStore>()(set => ({
   props: null,
   hideDialog: () => {
     set(state => {
-      (state.props as GenericDialogProps | null)?.onHide?.();
+      (state.props as DialogProps | null)?.onHide?.();
       return { active: null, props: null };
     });
   },

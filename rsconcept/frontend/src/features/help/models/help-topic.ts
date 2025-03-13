@@ -1,53 +1,55 @@
 /**
  * Represents manuals topic.
  */
-export enum HelpTopic {
-  MAIN = 'main',
+export const HelpTopic = {
+  MAIN: 'main',
 
-  THESAURUS = 'thesaurus',
+  THESAURUS: 'thesaurus',
 
-  INTERFACE = 'user-interface',
-  UI_LIBRARY = 'ui-library',
-  UI_RS_MENU = 'ui-rsform-menu',
-  UI_RS_CARD = 'ui-rsform-card',
-  UI_RS_LIST = 'ui-rsform-list',
-  UI_RS_EDITOR = 'ui-rsform-editor',
-  UI_GRAPH_TERM = 'ui-graph-term',
-  UI_FORMULA_TREE = 'ui-formula-tree',
-  UI_TYPE_GRAPH = 'ui-type-graph',
-  UI_CST_STATUS = 'ui-rsform-cst-status',
-  UI_CST_CLASS = 'ui-rsform-cst-class',
-  UI_OSS_GRAPH = 'ui-oss-graph',
-  UI_SUBSTITUTIONS = 'ui-substitutions',
-  UI_RELOCATE_CST = 'ui-relocate-cst',
+  INTERFACE: 'user-interface',
+  UI_LIBRARY: 'ui-library',
+  UI_RS_MENU: 'ui-rsform-menu',
+  UI_RS_CARD: 'ui-rsform-card',
+  UI_RS_LIST: 'ui-rsform-list',
+  UI_RS_EDITOR: 'ui-rsform-editor',
+  UI_GRAPH_TERM: 'ui-graph-term',
+  UI_FORMULA_TREE: 'ui-formula-tree',
+  UI_TYPE_GRAPH: 'ui-type-graph',
+  UI_CST_STATUS: 'ui-rsform-cst-status',
+  UI_CST_CLASS: 'ui-rsform-cst-class',
+  UI_OSS_GRAPH: 'ui-oss-graph',
+  UI_SUBSTITUTIONS: 'ui-substitutions',
+  UI_RELOCATE_CST: 'ui-relocate-cst',
 
-  CONCEPTUAL = 'concept',
-  CC_SYSTEM = 'concept-rsform',
-  CC_CONSTITUENTA = 'concept-constituenta',
-  CC_RELATIONS = 'concept-relations',
-  CC_SYNTHESIS = 'concept-synthesis',
-  CC_OSS = 'concept-operations-schema',
-  CC_PROPAGATION = 'concept-change-propagation',
+  CONCEPTUAL: 'concept',
+  CC_SYSTEM: 'concept-rsform',
+  CC_CONSTITUENTA: 'concept-constituenta',
+  CC_RELATIONS: 'concept-relations',
+  CC_SYNTHESIS: 'concept-synthesis',
+  CC_OSS: 'concept-operations-schema',
+  CC_PROPAGATION: 'concept-change-propagation',
 
-  RSLANG = 'rslang',
-  RSL_TYPES = 'rslang-types',
-  RSL_CORRECT = 'rslang-correctness',
-  RSL_INTERPRET = 'rslang-interpretation',
-  RSL_OPERATIONS = 'rslang-operations',
-  RSL_TEMPLATES = 'rslang-templates',
+  RSLANG: 'rslang',
+  RSL_TYPES: 'rslang-types',
+  RSL_CORRECT: 'rslang-correctness',
+  RSL_INTERPRET: 'rslang-interpretation',
+  RSL_OPERATIONS: 'rslang-operations',
+  RSL_TEMPLATES: 'rslang-templates',
 
-  TERM_CONTROL = 'terminology-control',
-  ACCESS = 'access',
-  VERSIONS = 'versions',
+  TERM_CONTROL: 'terminology-control',
+  ACCESS: 'access',
+  VERSIONS: 'versions',
 
-  INFO = 'documentation',
-  INFO_RULES = 'rules',
-  INFO_CONTRIB = 'contributors',
-  INFO_PRIVACY = 'privacy',
-  INFO_API = 'api',
+  INFO: 'documentation',
+  INFO_RULES: 'rules',
+  INFO_CONTRIB: 'contributors',
+  INFO_PRIVACY: 'privacy',
+  INFO_API: 'api',
 
-  EXTEOR = 'exteor'
-}
+  EXTEOR: 'exteor'
+} as const;
+
+export type HelpTopic = (typeof HelpTopic)[keyof typeof HelpTopic];
 
 /**
  *  Manual topics hierarchy.
@@ -99,8 +101,3 @@ export const topicParent = new Map<HelpTopic, HelpTopic>([
 
   [HelpTopic.EXTEOR, HelpTopic.EXTEOR]
 ]);
-
-/**
- *  Topics that can be folded.
- */
-export const foldableTopics = [HelpTopic.INTERFACE, HelpTopic.RSLANG, HelpTopic.CONCEPTUAL, HelpTopic.INFO];

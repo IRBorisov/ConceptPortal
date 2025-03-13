@@ -3,7 +3,6 @@
 import { useCallback, useState } from 'react';
 import {
   type ColumnSort,
-  createColumnHelper,
   getCoreRowModel,
   getPaginationRowModel,
   getSortedRowModel,
@@ -17,8 +16,6 @@ import {
   type VisibilityState
 } from '@tanstack/react-table';
 
-export { type ColumnSort, createColumnHelper, type RowSelectionState, type VisibilityState };
-
 /** Style to conditionally apply to rows. */
 export interface IConditionalStyle<TData> {
   /** Callback to determine if the style should be applied. */
@@ -28,7 +25,7 @@ export interface IConditionalStyle<TData> {
   style: React.CSSProperties;
 }
 
-export interface UseDataTableProps<TData extends RowData>
+interface UseDataTableProps<TData extends RowData>
   extends Pick<TableOptions<TData>, 'data' | 'columns' | 'onRowSelectionChange' | 'onColumnVisibilityChange'> {
   /** Enable row selection. */
   enableRowSelection?: boolean;

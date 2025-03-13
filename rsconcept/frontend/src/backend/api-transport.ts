@@ -33,19 +33,19 @@ axiosInstance.interceptors.request.use(config => {
 });
 
 // ================ Data transfer types ================
-export interface IFrontRequest<RequestData, ResponseData> {
+interface IFrontRequest<RequestData, ResponseData> {
   data?: RequestData;
   successMessage?: string | ((data: ResponseData) => string);
 }
 
-export interface IAxiosRequest<RequestData, ResponseData> {
+interface IAxiosRequest<RequestData, ResponseData> {
   endpoint: string;
   request?: IFrontRequest<RequestData, ResponseData>;
   options?: AxiosRequestConfig;
   schema?: z.ZodType;
 }
 
-export interface IAxiosGetRequest {
+interface IAxiosGetRequest {
   endpoint: string;
   options?: AxiosRequestConfig;
   signal?: AbortSignal;

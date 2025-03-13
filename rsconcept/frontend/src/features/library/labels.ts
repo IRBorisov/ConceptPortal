@@ -41,13 +41,6 @@ export function labelFolderNode(node: FolderNode): string {
 }
 
 /**
- * Retrieves description for {@link FolderNode}.
- */
-export function describeFolderNode(node: FolderNode): string {
-  return `${node.filesInside} | ${node.filesTotal}`;
-}
-
-/**
  * Retrieves label for {@link AccessPolicy}.
  */
 export function labelAccessPolicy(policy: AccessPolicy): string {

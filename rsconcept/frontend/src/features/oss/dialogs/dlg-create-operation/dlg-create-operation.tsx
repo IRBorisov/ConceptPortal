@@ -33,7 +33,7 @@ export interface DlgCreateOperationProps {
   onCreate?: (newID: number) => void;
 }
 
-export enum TabID {
+enum TabID {
   INPUT = 0,
   SYNTHESIS = 1
 }

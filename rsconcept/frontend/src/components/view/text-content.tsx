@@ -5,7 +5,7 @@ import { truncateToLastWord } from '@/utils/utils';
 
 import { type Styling } from '../props';
 
-export interface TextContentProps extends Styling {
+interface TextContentProps extends Styling {
   /** Text to display. */
   text: string;
 

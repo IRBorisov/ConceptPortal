@@ -260,14 +260,6 @@ export interface ISyntacticReference {
   nominal: string;
 }
 
-/**
- * Represents text 0-indexed position inside another text.
- */
-export interface ITextPosition {
-  start: number;
-  finish: number;
-}
-
 export const schemaReference = z.strictObject({
   type: z.nativeEnum(ReferenceType),
   data: z.union([

@@ -234,22 +234,6 @@ export function colorBgSchemas(schema_index: number): string {
 }
 
 /**
- * Determines background color for {@link GramData}.
- */
-export function colorBgGrammeme(gram: GramData): string {
-  if (PartOfSpeech.includes(gram as Grammeme)) {
-    return APP_COLORS.bgBlue;
-  }
-  if (NounGrams.includes(gram as Grammeme)) {
-    return APP_COLORS.bgGreen;
-  }
-  if (VerbGrams.includes(gram as Grammeme)) {
-    return APP_COLORS.bgTeal;
-  }
-  return APP_COLORS.bgInput;
-}
-
-/**
  * Determines foreground color for {@link GramData}.
  */
 export function colorFgGrammeme(gram: GramData): string {

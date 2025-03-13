@@ -22,7 +22,7 @@ interface INavigationContext {
   setRequireConfirmation: (value: boolean) => void;
 }
 
-export const NavigationContext = createContext<INavigationContext | null>(null);
+const NavigationContext = createContext<INavigationContext | null>(null);
 export const useConceptNavigation = () => {
   const context = use(NavigationContext);
   if (!context) {

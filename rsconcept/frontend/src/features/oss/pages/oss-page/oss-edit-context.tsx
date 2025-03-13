@@ -12,21 +12,13 @@ import { useRoleStore, UserRole } from '@/features/users';
 import { usePreferencesStore } from '@/stores/preferences';
 import { promptText } from '@/utils/labels';
 
-import { type IOperationPosition, OperationType } from '../../backend/types';
+import { OperationType } from '../../backend/types';
 import { useOssSuspense } from '../../backend/use-oss';
 import { type IOperation, type IOperationSchema } from '../../models/oss';
 
 export enum OssTabID {
   CARD = 0,
   GRAPH = 1
-}
-
-export interface ICreateOperationPrompt {
-  defaultX: number;
-  defaultY: number;
-  inputs: number[];
-  positions: IOperationPosition[];
-  callback: (newID: number) => void;
 }
 
 export interface IOssEditContext {
@@ -44,7 +36,7 @@ export interface IOssEditContext {
   setSelected: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
-export const OssEditContext = createContext<IOssEditContext | null>(null);
+const OssEditContext = createContext<IOssEditContext | null>(null);
 export const useOssEdit = () => {
   const context = use(OssEditContext);
   if (context === null) {
