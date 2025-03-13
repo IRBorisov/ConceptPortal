@@ -27,7 +27,7 @@ export function DlgShowAST() {
 
   return (
     <ModalView
-      className='relative w-[calc(100dvw-3rem)] h-[calc(100dvh-6rem)] cc-mask-sides'
+      className='relative w-[calc(100dvw-3rem)] h-[calc(100dvh-3rem)] cc-mask-sides'
       helpTopic={HelpTopic.UI_FORMULA_TREE}
       fullScreen
     >

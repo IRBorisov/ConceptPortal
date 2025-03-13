@@ -36,7 +36,7 @@ export function DlgShowTypeGraph() {
   return (
     <ModalView
       header='Граф ступеней'
-      className='cc-mask-sides flex flex-col justify-stretch w-[calc(100dvw-3rem)] h-[calc(100dvh-6rem)]'
+      className='cc-mask-sides flex flex-col justify-stretch w-[calc(100dvw-3rem)] h-[calc(100dvh-3rem)]'
       fullScreen
       helpTopic={HelpTopic.UI_TYPE_GRAPH}
     >

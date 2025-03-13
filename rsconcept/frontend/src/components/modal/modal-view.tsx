@@ -71,9 +71,10 @@ export function ModalView({
         <div
           className={clsx(
             '@container/modal',
-            'max-h-[calc(100svh-8rem)] max-w-[100svw] xs:max-w-[calc(100svw-2rem)]',
+            'max-w-[100svw] xs:max-w-[calc(100svw-2rem)]',
             'overscroll-contain outline-hidden',
             overflowVisible ? 'overflow-visible' : 'overflow-auto',
+            fullScreen ? 'max-h-[calc(100svh-2rem)]' : 'max-h-[calc(100svh-8rem)]',
             className
           )}
           {...restProps}
