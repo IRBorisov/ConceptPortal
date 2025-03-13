@@ -1,5 +1,3 @@
-import { APP_COLORS } from '@/styling/colors';
-
 import { colorFgGrammeme } from '../colors';
 import { labelGrammeme } from '../labels';
 import { type GramData } from '../models/language';
@@ -15,11 +13,10 @@ interface BadgeGrammemeProps {
 export function BadgeGrammeme({ grammeme }: BadgeGrammemeProps) {
   return (
     <div
-      className='min-w-12 px-1 border rounded-md text-sm font-medium text-center whitespace-nowrap'
+      className='min-w-12 px-1 border rounded-md text-sm font-medium text-center whitespace-nowrap bg-prim-0'
       style={{
         borderColor: colorFgGrammeme(grammeme),
-        color: colorFgGrammeme(grammeme),
-        backgroundColor: APP_COLORS.bgInput
+        color: colorFgGrammeme(grammeme)
       }}
     >
       {labelGrammeme(grammeme)}

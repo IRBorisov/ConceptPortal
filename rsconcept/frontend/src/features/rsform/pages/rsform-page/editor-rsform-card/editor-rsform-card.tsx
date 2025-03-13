@@ -1,7 +1,5 @@
 'use client';
 
-import clsx from 'clsx';
-
 import { EditorLibraryItem, ToolbarItemCard } from '@/features/library/components';
 
 import { useModificationStore } from '@/stores/modification';
@@ -35,12 +33,7 @@ export function EditorRSFormCard() {
   return (
     <div
       onKeyDown={handleInput}
-      className={clsx(
-        'relative', //
-        'cc-fade-in',
-        'md:w-fit md:max-w-fit max-w-128',
-        'flex flex-row flex-wrap px-6 pt-8'
-      )}
+      className='relative cc-fade-in md:w-fit md:max-w-fit max-w-128 flex flex-row flex-wrap px-6 pt-8'
     >
       <ToolbarItemCard
         className='cc-tab-tools'

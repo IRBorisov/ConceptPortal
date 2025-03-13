@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 
-import { globalIDs, PARAMETER } from '@/utils/constants';
+import { globalIDs } from '@/utils/constants';
 
 import { MiniButton } from '../control';
 import { IconDropArrow, IconPageRight } from '../icons';
@@ -89,27 +89,13 @@ export function SelectTree<ItemType>({
           <div
             key={`${prefix}${index}`}
             className={clsx(
-              'relative',
-              'pr-3 pl-6 border-b',
-              'cc-scroll-row',
-              'bg-prim-200 clr-hover cc-animate-color',
-              'cursor-pointer',
-              value === item && 'clr-selected',
-              !isActive && 'pointer-events-none'
+              'cc-tree-item relative cc-scroll-row clr-hover',
+              isActive ? 'max-h-7 py-1 border-b' : 'max-h-0 opacity-0 pointer-events-none',
+              value === item && 'clr-selected'
             )}
             data-tooltip-id={globalIDs.tooltip}
             data-tooltip-html={getDescription(item)}
             onClick={event => handleClickItem(event, item)}
-            style={{
-              borderBottomWidth: isActive ? '1px' : '0px',
-              willChange: 'max-height, opacity, padding',
-              transitionProperty: 'max-height, opacity, padding',
-              transitionDuration: `${PARAMETER.moveDuration}ms`,
-              paddingTop: isActive ? '0.25rem' : '0',
-              paddingBottom: isActive ? '0.25rem' : '0',
-              maxHeight: isActive ? '1.75rem' : '0',
-              opacity: isActive ? '1' : '0'
-            }}
           >
             {foldable.has(item) ? (
               <MiniButton

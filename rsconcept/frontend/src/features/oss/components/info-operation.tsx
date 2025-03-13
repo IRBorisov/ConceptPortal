@@ -74,7 +74,7 @@ export function InfoOperation({ operation }: InfoOperationProps) {
           dense
           noHeader
           noFooter
-          className='text-sm border select-none mb-2'
+          className='text-sm border-x select-none mb-2'
           data={operation.substitutions}
           columns={columns}
         />

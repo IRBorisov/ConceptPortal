@@ -18,9 +18,8 @@ export function EmbedYoutube({ videoID, pxHeight, pxWidth }: EmbedYoutubeProps) 
   }
   return (
     <div
-      className='relative'
+      className='relative h-0'
       style={{
-        height: 0,
         paddingBottom: `${pxHeight}px`,
         paddingLeft: `${pxWidth}px`
       }}

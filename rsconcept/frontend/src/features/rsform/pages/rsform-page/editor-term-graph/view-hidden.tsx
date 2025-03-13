@@ -6,8 +6,7 @@ import { MiniButton } from '@/components/control';
 import { IconDropArrow, IconDropArrowUp } from '@/components/icons';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight } from '@/stores/app-layout';
-import { APP_COLORS } from '@/styling/colors';
-import { globalIDs, PARAMETER, prefixes } from '@/utils/constants';
+import { globalIDs, prefixes } from '@/utils/constants';
 
 import { colorBgGraphNode } from '../../../colors';
 import { type IConstituenta } from '../../../models/rsform';
@@ -56,16 +55,8 @@ export function ViewHidden({ items }: ViewHiddenProps) {
         onClick={toggleFolded}
       />
 
-      <div className={clsx('py-2 clr-input border-x', { 'border-b rounded-b-md': isFolded })}>
-        <div
-          className='w-fit select-none'
-          style={{
-            transitionProperty: 'translate',
-            transitionDuration: `${PARAMETER.fastAnimation}ms`,
-            transitionTimingFunction: 'ease-out',
-            translate: isFolded ? '0.75rem' : 'calc(6.5rem - 50%)'
-          }}
-        >
+      <div className={clsx('py-2 clr-input border-x', isFolded && 'border-b rounded-b-md')}>
+        <div className={clsx('w-fit select-none cc-view-hidden-header', !isFolded && 'open')}>
           {`Скрытые [${localSelected.length} | ${items.length}]`}
         </div>
       </div>
@@ -73,19 +64,14 @@ export function ViewHidden({ items }: ViewHiddenProps) {
       <div
         tabIndex={-1}
         className={clsx(
-          'flex flex-wrap justify-center gap-2 py-2 -mt-2',
-          'clr-input border-x border-b rounded-b-md',
+          'cc-view-hidden-list flex flex-wrap gap-2 justify-center py-2 -mt-2',
+          'border-x border-b rounded-b-md bg-prim-0',
           'text-sm',
-          'cc-scroll-y'
+          'cc-scroll-y',
+          !isFolded && 'open'
         )}
-        style={{
-          pointerEvents: isFolded ? 'none' : 'auto',
-          maxHeight: hiddenHeight,
-          transitionProperty: 'clip-path',
-          transitionDuration: `${PARAMETER.fastAnimation}ms`,
-          transitionTimingFunction: 'ease-out',
-          clipPath: isFolded ? 'inset(10% 0% 90% 0%)' : 'inset(0% 0% 0% 0%)'
-        }}
+        aria-hidden={isFolded}
+        style={{ maxHeight: hiddenHeight }}
       >
         {items.map(cstID => {
           const cst = schema.cstByID.get(cstID)!;
@@ -93,17 +79,12 @@ export function ViewHidden({ items }: ViewHiddenProps) {
             <button
               key={`${prefixes.cst_hidden_list}${cst.alias}`}
               type='button'
-              className='w-12 rounded-md text-center select-none'
-              style={{
-                backgroundColor: colorBgGraphNode(cst, coloring),
-                ...(localSelected.includes(cstID)
-                  ? {
-                      outlineWidth: '2px',
-                      outlineStyle: cst.is_inherited ? 'dashed' : 'solid',
-                      outlineColor: APP_COLORS.fgDefault
-                    }
-                  : {})
-              }}
+              className={clsx(
+                'cc-view-hidden-item w-12 rounded-md text-center select-none',
+                localSelected.includes(cstID) && 'selected',
+                cst.is_inherited && 'inherited'
+              )}
+              style={{ backgroundColor: colorBgGraphNode(cst, coloring) }}
               onClick={event => handleClick(event, cstID)}
               onContextMenu={event => handleContextMenu(event, cst)}
               onDoubleClick={() => navigateCst(cstID)}

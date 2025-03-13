@@ -38,10 +38,7 @@ export function SelectorButton({
         'text-btn clr-text-controls',
         'disabled:cursor-auto cursor-pointer',
         'cc-animate-color',
-        {
-          'clr-hover': transparent,
-          'clr-btn-default border': !transparent
-        },
+        transparent ? 'clr-hover' : 'clr-btn-default border',
         className
       )}
       data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}

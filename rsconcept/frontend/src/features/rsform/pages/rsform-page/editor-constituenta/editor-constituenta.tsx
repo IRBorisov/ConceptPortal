@@ -79,7 +79,7 @@ export function EditorConstituenta() {
         'min-h-80 max-w-[calc(min(100vw,95rem))] mx-auto',
         'flex pt-8',
         'overflow-y-auto overflow-x-clip',
-        { 'flex-col md:items-center': isNarrow }
+        isNarrow && 'flex-col md:items-center'
       )}
       style={{ maxHeight: mainHeight }}
       onKeyDown={handleInput}

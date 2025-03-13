@@ -120,15 +120,15 @@ export function DataTable<TData extends RowData>({
   onRowDoubleClicked,
   noDataComponent,
 
+  paginationPerPage,
   paginationOptions = [10, 20, 30, 40, 50],
 
   ...restProps
 }: DataTableProps<TData>) {
   const [lastSelected, setLastSelected] = useState<string | null>(null);
 
-  const table = useDataTable({ ...restProps });
+  const table = useDataTable({ paginationPerPage, ...restProps });
 
-  const isPaginationEnabled = typeof table.getCanNextPage === 'function';
   const isEmpty = table.getRowModel().rows.length === 0;
 
   const fixedSize = useMemo(() => {
@@ -178,7 +178,7 @@ export function DataTable<TData extends RowData>({
         {!noFooter ? <TableFooter table={table} /> : null}
       </table>
 
-      {isPaginationEnabled && !isEmpty ? (
+      {!!paginationPerPage && !isEmpty ? (
         <PaginationTools
           id={id ? `${id}__pagination` : undefined}
           table={table}

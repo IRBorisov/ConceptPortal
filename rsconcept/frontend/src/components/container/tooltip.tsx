@@ -26,7 +26,6 @@ export function Tooltip({
   layer = 'z-tooltip',
   place = 'bottom',
   className,
-  style,
   ...restProps
 }: TooltipProps) {
   const darkMode = usePreferencesStore(state => state.darkMode);
@@ -40,6 +39,7 @@ export function Tooltip({
       opacity={1}
       className={clsx(
         'relative',
+        'py-0.5! px-2!',
         'max-h-[calc(100svh-6rem)]',
         'overflow-y-auto overflow-x-hidden sm:overflow-hidden overscroll-contain',
         'border shadow-md',
@@ -48,7 +48,6 @@ export function Tooltip({
         className
       )}
       classNameArrow={layer}
-      style={{ ...{ paddingTop: '2px', paddingBottom: '2px', paddingLeft: '8px', paddingRight: '8px' }, ...style }}
       variant={darkMode ? 'dark' : 'light'}
       place={place}
       {...restProps}

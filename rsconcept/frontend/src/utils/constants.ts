@@ -7,33 +7,25 @@
  */
 export const PARAMETER = {
   smallScreen: 640, // == tailwind:sm
-  smallTreeNodes: 50, // amount of nodes threshold for size increase for large graphs
+
+  minimalTimeout: 10, // milliseconds delay for fast updates
   refreshTimeout: 100, // milliseconds delay for post-refresh actions
   notificationDelay: 300, // milliseconds delay for notifications
-  minimalTimeout: 10, // milliseconds delay for fast updates
   zoomDuration: 500, // milliseconds animation duration
-  moveDuration: 500, // milliseconds - duration of move animation
-  dropdownDuration: 200, // milliseconds - duration of dropdown animation
-  navigationDuration: 300, // milliseconds navigation duration
   navigationPopupDelay: 300, // milliseconds delay for navigation popup
-  graphPopupDelay: 500, // milliseconds delay for graph popup selections
-  graphRefreshDelay: 10, // milliseconds delay for graph viewpoint reset
 
-  fastAnimation: 200, // milliseconds - duration of fast animation
-  fadeDuration: 300, // milliseconds - duration of fade animation
+  moveDuration: 500, // milliseconds - duration of move animation
 
   ossImageWidth: 1280, // pixels - size of OSS image
   ossImageHeight: 960, // pixels - size of OSS image
 
   graphHandleSize: 3, // pixels - size of graph connection handle
-  graphNodeRadius: 20, // pixels - radius of graph node
   graphNodePadding: 5, // pixels - padding of graph node
+  graphNodeRadius: 20, // pixels - radius of graph node
 
   logicLabel: 'LOGIC',
   errorNodeLabel: '[ERROR]',
-  exteorVersion: '4.9.7',
-
-  TOOLTIP_WIDTH: 'max-w-120'
+  exteorVersion: '4.9.7'
 };
 
 /**

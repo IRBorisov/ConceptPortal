@@ -35,7 +35,7 @@ export function DlgShowAST() {
         className={clsx(
           'absolute z-pop top-2 right-1/2 translate-x-1/2 max-w-[60ch]',
           'px-2 rounded-2xl',
-          'cc-blur bg-prim-100/90',
+          'backdrop-blur-xs bg-prim-100/90',
           'text-lg text-center'
         )}
       >

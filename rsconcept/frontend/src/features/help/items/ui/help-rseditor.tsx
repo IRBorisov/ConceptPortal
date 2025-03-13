@@ -18,7 +18,6 @@ import {
   IconTree,
   IconTypeGraph
 } from '@/components/icons';
-import { APP_COLORS } from '@/styling/colors';
 
 import { LinkTopic } from '../../components/link-topic';
 import { HelpTopic } from '../../models/help-topic';
@@ -69,15 +68,15 @@ export function HelpRSEditor() {
             <IconChild className='inline-icon' /> отображение наследованных
           </li>
           <li>
-            <span style={{ backgroundColor: APP_COLORS.bgSelected }}>текущая конституента</span>
+            <span className='bg-sec-200'>текущая конституента</span>
           </li>
           <li>
-            <span style={{ backgroundColor: APP_COLORS.bgGreen50 }}>
+            <span className='bg-(--acc-bg-green50)'>
               <LinkTopic text='основа' topic={HelpTopic.CC_RELATIONS} /> текущей
             </span>
           </li>
           <li>
-            <span style={{ backgroundColor: APP_COLORS.bgOrange50 }}>
+            <span className='bg-(--acc-bg-orange50)'>
               <LinkTopic text='порожденные' topic={HelpTopic.CC_RELATIONS} /> текущей
             </span>
           </li>

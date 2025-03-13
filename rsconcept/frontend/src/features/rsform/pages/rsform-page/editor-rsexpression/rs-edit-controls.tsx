@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import { PARAMETER, prefixes } from '@/utils/constants';
+import { prefixes } from '@/utils/constants';
 
 import { TokenID } from '../../../backend/types';
 
@@ -91,19 +91,14 @@ export function RSEditorControls({ isOpen, disabled, onEdit }: RSEditorControlsP
   return (
     <div
       className={clsx(
+        'cc-rs-edit-controls',
         'max-w-112 min-w-112 xs:max-w-154 xs:min-w-154 sm:max-w-160 sm:min-w-160 md:max-w-fit mx-1 sm:mx-0',
-        'flex-wrap',
-        'divide-solid',
+        'flex flex-wrap',
         'text-xs md:text-sm',
-        'select-none'
+        'select-none',
+        isOpen && 'open'
       )}
-      style={{
-        clipPath: isOpen ? 'inset(0% 0% 0% 0%)' : 'inset(0% 0% 100% 0%)',
-        marginTop: isOpen ? '0.25rem' : '0rem',
-        transitionProperty: 'max-height',
-        transitionDuration: `${PARAMETER.moveDuration}ms`,
-        maxHeight: isOpen ? '4.5rem' : '0rem'
-      }}
+      aria-hidden={!isOpen}
     >
       {MAIN_FIRST_ROW.map(token => (
         <RSTokenButton key={`${prefixes.rsedit_btn}${token}`} token={token} onInsert={onEdit} disabled={disabled} />

@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import { Outlet } from 'react-router';
+import clsx from 'clsx';
 
 import { ModalLoader } from '@/components/modal';
 import { useAppLayoutStore, useMainHeight, useViewportHeight } from '@/stores/app-layout';
@@ -17,7 +18,6 @@ import { Navigation } from './navigation';
 export function ApplicationLayout() {
   const mainHeight = useMainHeight();
   const viewportHeight = useViewportHeight();
-  const showScroll = useAppLayoutStore(state => !state.noScroll);
   const noNavigationAnimation = useAppLayoutStore(state => state.noNavigationAnimation);
   const noNavigation = useAppLayoutStore(state => state.noNavigation);
   const noFooter = useAppLayoutStore(state => state.noFooter);
@@ -27,8 +27,7 @@ export function ApplicationLayout() {
     <NavigationState>
       <div className='min-w-80 antialiased h-full max-w-480 mx-auto'>
         <ToasterThemed
-          className='text-[14px]'
-          style={{ marginTop: noNavigationAnimation ? '1.5rem' : '3.5rem' }}
+          className={clsx('text-[14px]/[20px]', noNavigationAnimation ? 'mt-6' : 'mt-14')}
           autoClose={3000}
           draggable={false}
           pauseOnFocusLoss={false}
@@ -46,7 +45,7 @@ export function ApplicationLayout() {
           style={{ maxHeight: viewportHeight }}
           inert={activeDialog !== null}
         >
-          <main className='cc-scroll-y' style={{ overflowY: showScroll ? 'scroll' : 'auto', minHeight: mainHeight }}>
+          <main className='cc-scroll-y overflow-y-auto' style={{ minHeight: mainHeight }}>
             <GlobalLoader />
             <MutationErrors />
             <Outlet />

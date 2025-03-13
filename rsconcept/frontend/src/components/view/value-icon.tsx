@@ -57,7 +57,7 @@ export function ValueIcon({
         'flex items-center',
         'text-right',
         'hover:cursor-default',
-        { 'justify-between gap-6': !dense, 'gap-1': dense },
+        dense ? 'gap-1' : 'justify-between gap-6',
         className
       )}
       {...restProps}

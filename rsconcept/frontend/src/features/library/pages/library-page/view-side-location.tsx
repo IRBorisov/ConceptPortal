@@ -1,4 +1,5 @@
 import { toast } from 'react-toastify';
+import clsx from 'clsx';
 
 import { useAuthSuspense } from '@/features/auth';
 import { HelpTopic } from '@/features/help';
@@ -6,9 +7,8 @@ import { BadgeHelp } from '@/features/help/components';
 
 import { MiniButton } from '@/components/control';
 import { IconFolderEdit, IconFolderTree } from '@/components/icons';
-import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight } from '@/stores/app-layout';
-import { PARAMETER, prefixes } from '@/utils/constants';
+import { prefixes } from '@/utils/constants';
 import { infoMsg } from '@/utils/labels';
 
 import { useLibrary } from '../../backend/use-library';
@@ -25,7 +25,6 @@ interface ViewSideLocationProps {
 export function ViewSideLocation({ isVisible, onRenameLocation }: ViewSideLocationProps) {
   const { user, isAnonymous } = useAuthSuspense();
   const { items } = useLibrary();
-  const { isSmall } = useWindowSize();
 
   const location = useLibrarySearchStore(state => state.location);
   const setLocation = useLibrarySearchStore(state => state.setLocation);
@@ -62,15 +61,10 @@ export function ViewSideLocation({ isVisible, onRenameLocation }: ViewSideLocati
 
   return (
     <div
-      className='max-w-40 sm:max-w-60 flex flex-col text:xs sm:text-sm select-none'
-      style={{
-        transitionProperty: 'width, min-width, opacity',
-        transitionDuration: `${PARAMETER.moveDuration}ms`,
-        transitionTimingFunction: 'ease-out',
-        minWidth: isVisible ? (isSmall ? '10rem' : '15rem') : '0',
-        width: isVisible ? '100%' : '0',
-        opacity: isVisible ? 1 : 0
-      }}
+      className={clsx(
+        'max-w-40 sm:max-w-60 flex flex-col text:xs sm:text-sm select-none cc-side-location',
+        isVisible && 'open min-w-[10rem] sm:min-w-[15rem]'
+      )}
     >
       <div className='h-8 flex justify-between items-center pr-1 pl-0.5'>
         <BadgeHelp topic={HelpTopic.UI_LIBRARY} contentClass='text-sm' offset={5} place='right-start' />

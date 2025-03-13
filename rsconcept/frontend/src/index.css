@@ -2,7 +2,8 @@
 
 @import './styling/setup.css';
 @import './styling/overrides.css';
-@import './styling/styles.css';
+@import './styling/utilities.css';
+@import './styling/components.css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -50,4 +51,12 @@
   --breakpoint-lg: 1024px;
   --breakpoint-xl: 1280px;
   --breakpoint-2xl: 1536px;
+
+  --ease-bezier: cubic-bezier(0.4, 0, 0.2, 1);
+
+  --duration-move: 500ms;
+  --duration-modal: 300ms;
+  --duration-fade: 300ms;
+  --duration-dropdown: 200ms;
+  --duration-select: 100ms;
 }

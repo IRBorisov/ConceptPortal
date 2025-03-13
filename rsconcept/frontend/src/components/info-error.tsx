@@ -33,18 +33,7 @@ export function DescribeError({ error }: { error: ErrorData }) {
         <p>
           <b>Message:</b> {error.message}
         </p>
-        {error.stack && (
-          <pre
-            style={{
-              whiteSpace: 'pre-wrap',
-              wordWrap: 'break-word',
-              padding: '6px',
-              overflowX: 'auto'
-            }}
-          >
-            {error.stack}
-          </pre>
-        )}
+        {error.stack && <pre className='whitespace-pre-wrap p-2 overflow-x-auto break-words'>{error.stack}</pre>}
       </div>
     );
   }

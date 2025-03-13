@@ -80,7 +80,7 @@ export function ToolbarConstituenta({
   }
 
   return (
-    <div className={clsx('px-1 rounded-b-2xl cc-blur cc-icons cc-animate-position outline-hidden', className)}>
+    <div className={clsx('px-1 rounded-b-2xl backdrop-blur-xs cc-icons cc-animate-position outline-hidden', className)}>
       {schema.oss.length > 0 ? (
         <MiniSelectorOSS
           items={schema.oss}

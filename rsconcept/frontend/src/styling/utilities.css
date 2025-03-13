@@ -1,3 +1,7 @@
+/**
+ * Module: Utility classes for stlye features.
+ */
+
 @utility font-main {
   font-family: var(--font-main);
 }
@@ -143,24 +147,6 @@
   color: var(--clr-sec-800);
 }
 
-@utility cc-tab-tools {
-  z-index: var(--z-index-pop);
-  position: absolute;
-  top: 1.7rem;
-  right: 50%;
-  padding-top: 0.4rem;
-  transform: translate(50%, 0%);
-}
-
-@utility cc-label {
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  font-weight: 500;
-  cursor: default;
-  user-select: text;
-  white-space: nowrap;
-}
-
 @utility cc-column {
   display: flex;
   flex-direction: column;
@@ -183,10 +169,6 @@
   scroll-snap-type: y mandatory;
 }
 
-@utility cc-blur {
-  backdrop-filter: blur(3px);
-}
-
 @utility cc-shadow-border {
   box-shadow: 0 1px 2px 0 var(--clr-prim-400);
 }
@@ -195,7 +177,7 @@
   opacity: 1;
 
   transition-property: opacity;
-  transition-timing-function: var(--transition-bezier);
+  transition-timing-function: var(--ease-bezier);
   transition-duration: var(--duration-fade);
 
   @starting-style {
@@ -205,7 +187,7 @@
 
 @utility cc-animate-position {
   transition-property: transform top left bottom right margin padding;
-  transition-timing-function: var(--transition-bezier);
+  transition-timing-function: var(--ease-bezier);
   transition-duration: var(--duration-move);
 }
 
@@ -214,7 +196,7 @@
   opacity: 1;
 
   transition-property: clip-path, opacity;
-  transition-timing-function: var(--transition-bezier);
+  transition-timing-function: var(--ease-bezier);
   transition-duration: var(--duration-modal);
 
   @starting-style {
@@ -225,44 +207,8 @@
 
 @utility cc-animate-color {
   transition-property: color, background-color;
-  transition-timing-function: var(--transition-bezier);
+  transition-timing-function: var(--ease-bezier);
   transition-duration: var(--duration-select);
-}
-
-@utility cc-badge-constituenta {
-  width: 3rem;
-  padding-inline: 0.25rem;
-
-  border-width: 1px;
-  border-radius: 0.5rem;
-
-  text-align: center;
-  font-weight: 500;
-  white-space: nowrap;
-}
-
-@utility cc-table-header {
-  text-align: start;
-  padding: 0.5rem;
-
-  font-size: var(--text-xs);
-  line-height: var(--tw-leading, var(--text-xs--line-height));
-  font-weight: 500;
-  white-space: nowrap;
-
-  -webkit-user-select: none;
-  user-select: none;
-}
-
-@utility cc-modal-wrapper {
-  isolation: isolate;
-  z-index: var(--z-index-modal);
-  position: fixed;
-  inset: 0;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 @utility cc-mask-sides {

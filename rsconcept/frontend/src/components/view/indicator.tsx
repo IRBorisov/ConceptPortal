@@ -18,11 +18,9 @@ export function Indicator({ icon, title, titleHtml, hideTitle, noPadding, classN
   return (
     <div
       className={clsx(
-        'clr-text-controls',
+        'clr-text-controls', //
         'outline-hidden',
-        {
-          'px-1 py-1': !noPadding
-        },
+        !noPadding && 'px-1 py-1',
         className
       )}
       data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}

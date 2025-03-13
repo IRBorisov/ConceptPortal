@@ -26,10 +26,7 @@ export function RSTokenButton({ token, disabled, onInsert }: RSTokenButtonProps)
         'clr-hover clr-text-controls cc-animate-color',
         'font-math',
         'cursor-pointer disabled:cursor-default',
-        {
-          'w-14.5 md:w-18': label.length > 3,
-          'w-7.25 md:w-9': label.length <= 3
-        }
+        label.length > 3 ? 'w-14.5 md:w-18' : 'w-7.25 md:w-9'
       )}
       data-tooltip-id={globalIDs.tooltip}
       data-tooltip-html={describeToken(token)}

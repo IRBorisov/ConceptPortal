@@ -124,10 +124,7 @@ export function ModalForm({
             '@container/modal',
             'max-h-[calc(100svh-8rem)] max-w-[100svw] xs:max-w-[calc(100svw-2rem)]',
             'overscroll-contain outline-hidden',
-            {
-              'overflow-auto': !overflowVisible,
-              'overflow-visible': overflowVisible
-            },
+            overflowVisible ? 'overflow-visible' : 'overflow-auto',
             className
           )}
           {...restProps}

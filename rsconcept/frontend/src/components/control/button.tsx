@@ -43,15 +43,10 @@ export function Button({
         'inline-flex gap-2 items-center justify-center',
         'font-medium select-none disabled:cursor-auto',
         'clr-btn-default cc-animate-color',
-        {
-          'border rounded-sm': !noBorder,
-          'px-1': dense,
-          'px-3 py-1': !dense,
-          'cursor-progress': loading,
-          'cursor-pointer': !loading,
-          'outline-hidden': noOutline,
-          'clr-outline': !noOutline
-        },
+        dense ? 'px-1' : 'px-3 py-1',
+        loading ? 'cursor-progress' : 'cursor-pointer',
+        noOutline ? 'outline-hidden' : 'clr-outline',
+        !noBorder && 'border rounded-sm',
         className
       )}
       data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}

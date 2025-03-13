@@ -67,10 +67,7 @@ export function CheckboxTristate({
         className={clsx(
           'w-4 h-4', //
           'border rounded-sm',
-          {
-            'bg-sec-600 text-sec-0': value !== false,
-            'bg-prim-100': value === false
-          }
+          value === false ? 'bg-prim-100' : 'bg-sec-600 text-sec-0'
         )}
       >
         {value ? <CheckboxChecked /> : null}

@@ -16,7 +16,6 @@ import {
   IconSubfolders,
   IconUserSearch
 } from '@/components/icons';
-import { APP_COLORS } from '@/styling/colors';
 
 import { LinkTopic } from '../../components/link-topic';
 import { HelpTopic } from '../../models/help-topic';
@@ -33,7 +32,7 @@ export function HelpLibrary() {
       </p>
 
       <li>
-        <span style={{ color: APP_COLORS.fgGreen }}>зеленым текстом</span> выделены ОСС
+        <span className='text-(--acc-fg-green)'>зеленым текстом</span> выделены ОСС
       </li>
       <li>клик по строке - переход к редактированию схемы</li>
       <li>Ctrl + клик по строке откроет схему в новой вкладке</li>

@@ -169,7 +169,3 @@
 @utility border {
   border-radius: 0.25rem;
 }
-
-@utility sticky {
-  z-index: 20;
-}

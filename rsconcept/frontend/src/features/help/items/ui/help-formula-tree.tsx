@@ -1,5 +1,3 @@
-import { APP_COLORS } from '@/styling/colors';
-
 export function HelpFormulaTree() {
   return (
     <div>
@@ -12,22 +10,22 @@ export function HelpFormulaTree() {
 
       <h2>Виды узлов</h2>
       <li>
-        <span style={{ backgroundColor: APP_COLORS.bgGreen }}>объявление идентификатора</span>
+        <span className='bg-(--acc-bg-green)'>объявление идентификатора</span>
       </li>
       <li>
-        <span style={{ backgroundColor: APP_COLORS.bgTeal }}>глобальный идентификатор</span>
+        <span className='bg-(--acc-bg-teal)'>глобальный идентификатор</span>
       </li>
       <li>
-        <span style={{ backgroundColor: APP_COLORS.bgOrange }}>логическое выражение</span>
+        <span className='bg-(--acc-bg-orange)'>логическое выражение</span>
       </li>
       <li>
-        <span style={{ backgroundColor: APP_COLORS.bgBlue }}>типизированное выражение</span>
+        <span className='bg-(--acc-bg-blue)'>типизированное выражение</span>
       </li>
       <li>
-        <span style={{ backgroundColor: APP_COLORS.bgRed }}>присвоение и итерация</span>
+        <span className='bg-(--acc-bg-red)'>присвоение и итерация</span>
       </li>
       <li>
-        <span style={{ backgroundColor: APP_COLORS.bgDisabled }}>составные выражения</span>
+        <span className='bg-prim-300'>составные выражения</span>
       </li>
     </div>
   );

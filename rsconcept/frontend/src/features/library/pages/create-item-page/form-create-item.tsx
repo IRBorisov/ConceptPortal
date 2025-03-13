@@ -113,7 +113,8 @@ export function FormCreateItem() {
                   id='schema_file'
                   ref={inputRef}
                   type='file'
-                  style={{ display: 'none' }}
+                  aria-hidden
+                  className='hidden'
                   accept={EXTEOR_TRS_FILE}
                   onChange={handleFileChange}
                 />

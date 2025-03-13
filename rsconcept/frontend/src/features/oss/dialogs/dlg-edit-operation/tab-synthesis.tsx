@@ -7,7 +7,6 @@ import { PickSubstitutions } from '@/features/rsform/components';
 
 import { TextArea } from '@/components/input';
 import { useDialogsStore } from '@/stores/dialogs';
-import { APP_COLORS } from '@/styling/colors';
 
 import { type IOperationUpdateDTO } from '../../backend/types';
 import { SubstitutionValidator } from '../../models/oss-api';
@@ -45,12 +44,7 @@ export function TabSynthesis() {
         )}
       />
 
-      <TextArea
-        disabled
-        value={validator.msg}
-        rows={4}
-        style={{ borderColor: isCorrect ? undefined : APP_COLORS.fgRed, borderWidth: isCorrect ? undefined : '2px' }}
-      />
+      <TextArea disabled value={validator.msg} rows={4} className={isCorrect ? '' : 'border-(--acc-fg-red) border-2'} />
     </div>
   );
 }

@@ -39,11 +39,7 @@ export function DropdownButton({
         'text-left text-sm text-ellipsis whitespace-nowrap',
         'disabled:clr-text-controls',
         'cc-animate-color',
-        {
-          'clr-hover': onClick,
-          'cursor-pointer disabled:cursor-auto': onClick,
-          'cursor-default': !onClick
-        },
+        !!onClick ? 'clr-hover cursor-pointer disabled:cursor-auto' : 'clr-btn-default',
         className
       )}
       data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}

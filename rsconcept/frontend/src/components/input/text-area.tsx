@@ -40,11 +40,8 @@ export function TextArea({
   return (
     <div
       className={clsx(
-        'w-full',
-        {
-          'flex flex-col': !dense,
-          'flex grow items-center gap-3': dense
-        },
+        'w-full', //
+        dense ? 'flex grow items-center gap-3' : 'flex flex-col',
         dense && className
       )}
     >
@@ -55,16 +52,13 @@ export function TextArea({
           'px-3 py-2',
           'leading-tight',
           'overflow-x-hidden overflow-y-auto',
-          {
-            'field-sizing-content': fitContent,
-            'resize-none': noResize,
-            'border': !noBorder,
-            'grow max-w-full': dense,
-            'mt-2': !dense && !!label,
-            'clr-outline': !noOutline,
-            'bg-transparent': transparent,
-            'clr-input': !transparent
-          },
+          !noBorder && 'border',
+          fitContent && 'field-sizing-content',
+          noResize && 'resize-none',
+          transparent ? 'bg-transparent' : 'clr-input',
+          !noOutline && 'clr-outline',
+          dense && 'grow max-w-full',
+          !dense && !!label && 'mt-2',
           !dense && className
         )}
         rows={rows}

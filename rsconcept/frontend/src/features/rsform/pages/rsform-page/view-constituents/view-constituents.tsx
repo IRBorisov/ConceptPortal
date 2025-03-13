@@ -6,7 +6,6 @@ import { useRoleStore, UserRole } from '@/features/users';
 
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight } from '@/stores/app-layout';
-import { PARAMETER } from '@/utils/constants';
 
 import { ConstituentsSearch } from './constituents-search';
 import { TableSideConstituents } from './table-side-constituents';
@@ -29,19 +28,11 @@ export function ViewConstituents({ className, isBottom, isMounted }: ViewConstit
     <aside
       className={clsx(
         'border',
-        {
-          'rounded-l-md rounded-r-none': !isBottom,
-          'rounded-md': isBottom
-        },
+        isBottom ? 'rounded-md' : 'rounded-l-md rounded-r-none',
+        isMounted ? 'max-w-full' : 'opacity-0 max-w-0',
+        'ease-in-out duration-1000 transition-[opacity,max-width]',
         className
       )}
-      style={{
-        transitionProperty: 'opacity, max-width',
-        transitionDuration: `${2 * PARAMETER.moveDuration}ms`,
-        transitionTimingFunction: 'ease-in-out',
-        opacity: isMounted ? 1 : 0,
-        maxWidth: isMounted ? '100%' : '0'
-      }}
     >
       <ConstituentsSearch dense={!!windowSize.width && windowSize.width < COLUMN_DENSE_SEARCH_THRESHOLD} />
       <TableSideConstituents maxHeight={listHeight} autoScroll={!isBottom} />

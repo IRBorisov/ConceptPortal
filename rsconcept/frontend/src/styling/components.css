@@ -1,0 +1,202 @@
+/**
+ * Module: Utility classes for specific react components.
+ */
+
+@utility cc-tab-tools {
+  z-index: var(--z-index-pop);
+  position: absolute;
+  top: 1.7rem;
+  right: 50%;
+  padding-top: 0.4rem;
+  transform: translate(50%, 0%);
+}
+
+@utility cc-label {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+  cursor: default;
+  user-select: text;
+  white-space: nowrap;
+}
+
+@utility cc-tree-item {
+  padding-left: 1.5rem;
+  padding-right: 0.75rem;
+
+  cursor: pointer;
+
+  will-change: max-height, opacity, padding, border;
+  transition-property: max-height, opacity, padding, border, color, background-color;
+  transition-timing-function: var(--ease-bezier);
+  transition-duration: var(--duration-dropdown);
+}
+
+@utility cc-badge-constituenta {
+  width: 3rem;
+  padding-inline: 0.25rem;
+
+  border-width: 1px;
+  border-radius: 0.5rem;
+
+  text-align: center;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+@utility cc-table-header {
+  text-align: start;
+  padding: 0.5rem;
+
+  font-size: var(--text-xs);
+  line-height: var(--tw-leading, var(--text-xs--line-height));
+  font-weight: 500;
+  white-space: nowrap;
+
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+@utility cc-modal-wrapper {
+  isolation: isolate;
+  z-index: var(--z-index-modal);
+  position: fixed;
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@utility cc-node-label {
+  font-weight: 600;
+  -webkit-text-stroke-width: 0.6px;
+  -webkit-text-stroke-color: var(--clr-prim-100);
+}
+
+@utility cc-text-outline {
+  -webkit-text-stroke-width: 3px;
+  -webkit-text-stroke-color: var(--clr-prim-100);
+}
+
+@utility cc-ast-label-outline {
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: var(--clr-prim-100);
+}
+
+@utility cc-dropdown {
+  transition-property: clip-path, transform;
+  transition-duration: var(--duration-dropdown);
+  transition-timing-function: var(--ease-in-out);
+
+  transform: translateY(-10%);
+  clip-path: inset(10% 0% 90% 0%);
+
+  &.open {
+    transform: translateY(0);
+    clip-path: inset(0% 0% 0% 0%);
+  }
+}
+
+@utility cc-side-location {
+  transition-property: width, min-width, opacity;
+  transition-duration: var(--duration-move);
+  transition-timing-function: var(--ease-bezier);
+
+  opacity: 0;
+  width: 0;
+  min-width: 0;
+
+  &.open {
+    opacity: 1;
+    width: 100%;
+  }
+}
+
+@utility cc-view-hidden-header {
+  transition-property: transform;
+  transition-duration: var(--duration-dropdown);
+  transition-timing-function: var(--ease-out);
+
+  transform: translateX(0.75rem);
+
+  &.open {
+    transform: translateX(calc(6.5rem - 50%));
+  }
+}
+
+@utility cc-view-hidden-list {
+  transition-property: clip-path;
+  transition-duration: var(--duration-dropdown);
+  transition-timing-function: var(--ease-out);
+
+  clip-path: inset(10% 0% 90% 0%);
+  pointer-events: none;
+
+  &.open {
+    clip-path: inset(0% 0% 0% 0%);
+    pointer-events: auto;
+  }
+}
+
+@utility cc-view-hidden-item {
+  outline-width: 0px;
+  outline-color: transparent;
+
+  &.selected {
+    outline-width: 2px;
+    outline-color: var(--clr-prim-999);
+    outline-style: solid;
+  }
+  &.inherited {
+    outline-style: dashed;
+  }
+}
+
+@utility cc-rs-edit-controls {
+  transition-property: max-height;
+  transition-duration: var(--duration-move);
+  transition-timing-function: var(--ease-in-out);
+
+  clip-path: inset(0% 0% 100% 0%);
+  max-height: 0;
+  margin-top: 0;
+
+  &.open {
+    clip-path: inset(0% 0% 0% 0%);
+    max-height: 4.5rem;
+    margin-top: 0.25rem;
+  }
+}
+
+@utility cc-parsing-result {
+  transition-property: clip-path, padding, margin, border, height;
+  transition-duration: var(--duration-move);
+  transition-timing-function: var(--ease-in-out);
+
+  clip-path: inset(0% 0% 100% 0%);
+  height: 0;
+  margin-top: 0;
+  padding: 0;
+  border-width: 0;
+
+  &.open {
+    clip-path: inset(0% 0% 0% 0%);
+    height: 4.5rem;
+    margin-top: 0.75rem;
+    padding: 0.25rem 0.5rem 0.25rem 0.5rem;
+  }
+}
+
+@utility cc-topic-dropdown {
+  will-change: clip-path;
+  transition-property: clip-path;
+  transition-duration: var(--duration-move);
+  transition-timing-function: var(--ease-in-out);
+
+  clip-path: inset(0% 100% 0% 0%);
+
+  &.open {
+    clip-path: inset(0% 0% 0% 0%);
+  }
+}

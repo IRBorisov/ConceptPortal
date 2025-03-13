@@ -42,10 +42,7 @@ export function TextInput({
   return (
     <div
       className={clsx(
-        {
-          'flex flex-col': !dense,
-          'flex items-center gap-3': dense
-        },
+        dense ? 'flex items-center gap-3' : 'flex flex-col', //
         dense && className
       )}
     >
@@ -55,15 +52,12 @@ export function TextInput({
         className={clsx(
           'min-w-0 py-2',
           'leading-tight truncate hover:text-clip',
-          {
-            'px-3': !noBorder || !disabled,
-            'grow max-w-full': dense,
-            'mt-2': !dense && !!label,
-            'border': !noBorder,
-            'clr-outline': !noOutline,
-            'bg-transparent': transparent,
-            'clr-input': !transparent
-          },
+          transparent ? 'bg-transparent' : 'clr-input',
+          !noBorder && 'border',
+          !noOutline && 'clr-outline',
+          (!noBorder || !disabled) && 'px-3',
+          dense && 'grow max-w-full',
+          !dense && !!label && 'mt-2',
           !dense && className
         )}
         onKeyDown={!allowEnter && !onKeyDown ? preventEnterCapture : onKeyDown}

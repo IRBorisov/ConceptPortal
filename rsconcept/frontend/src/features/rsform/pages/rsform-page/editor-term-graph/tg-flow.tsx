@@ -163,7 +163,7 @@ export function TGFlow() {
 
   return (
     <div className='cc-fade-in relative' tabIndex={-1} onKeyDown={handleKeyDown}>
-      <div className='cc-tab-tools flex flex-col items-center rounded-b-2xl cc-blur'>
+      <div className='cc-tab-tools flex flex-col items-center rounded-b-2xl backdrop-blur-xs'>
         <ToolbarTermGraph />
         <ToolbarFocusedCst />
         {!focusCst ? (
@@ -181,7 +181,7 @@ export function TGFlow() {
       </div>
 
       <div className='absolute z-pop top-18 sm:top-16 left-2 sm:left-3 w-54 flex flex-col pointer-events-none'>
-        <span className='px-2 pb-1 select-none whitespace-nowrap cc-blur rounded-xl'>
+        <span className='px-2 pb-1 select-none whitespace-nowrap backdrop-blur-xs rounded-xl'>
           Выбор {selected.length} из {schema.stats?.count_all ?? 0}
         </span>
         <GraphSelectors />

@@ -41,11 +41,8 @@ export function MiniButton({
         'rounded-lg',
         'clr-text-controls cc-animate-color',
         'cursor-pointer disabled:cursor-auto',
-        {
-          'px-1 py-1': !noPadding,
-          'outline-hidden': noHover,
-          'clr-hover': !noHover
-        },
+        noHover ? 'outline-hidden' : 'clr-hover',
+        !noPadding && 'px-1 py-1',
         className
       )}
       data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}

@@ -93,11 +93,12 @@ export function TableBody<TData>({
           {row.getVisibleCells().map((cell: Cell<TData, unknown>) => (
             <td
               key={cell.id}
-              className='px-2 align-middle border-y'
+              className={clsx(
+                'px-2 align-middle border-y',
+                dense ? 'py-1' : 'py-2',
+                onRowClicked || onRowDoubleClicked ? 'cursor-pointer' : 'cursor-auto'
+              )}
               style={{
-                cursor: onRowClicked || onRowDoubleClicked ? 'pointer' : 'auto',
-                paddingBottom: dense ? '0.25rem' : '0.5rem',
-                paddingTop: dense ? '0.25rem' : '0.5rem',
                 width: noHeader && index === 0 ? `calc(var(--col-${cell.column.id}-size) * 1px)` : undefined
               }}
             >

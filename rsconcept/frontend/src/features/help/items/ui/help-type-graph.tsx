@@ -1,5 +1,3 @@
-import { APP_COLORS } from '@/styling/colors';
-
 import { LinkTopic } from '../../components/link-topic';
 import { HelpTopic } from '../../models/help-topic';
 
@@ -21,13 +19,13 @@ export function HelpTypeGraph() {
 
       <h2>Виды узлов</h2>
       <li>
-        <span style={{ backgroundColor: APP_COLORS.bgControls }}>ступень-основание</span>
+        <span className='bg-prim-200'>ступень-основание</span>
       </li>
       <li>
-        <span style={{ backgroundColor: APP_COLORS.bgTeal }}>ступень-булеан</span>
+        <span className='bg-(--acc-bg-teal)'>ступень-булеан</span>
       </li>
       <li>
-        <span style={{ backgroundColor: APP_COLORS.bgOrange }}>ступень декартова произведения</span>
+        <span className='bg-(--acc-bg-orange)'>ступень декартова произведения</span>
       </li>
     </div>
   );

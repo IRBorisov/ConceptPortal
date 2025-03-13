@@ -1,8 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
 
-import { PARAMETER } from '@/utils/constants';
-
 import { type Styling } from '../props';
 
 interface DropdownProps extends Styling {
@@ -36,36 +34,19 @@ export function Dropdown({
   margin,
   className,
   children,
-  style,
   ...restProps
 }: React.PropsWithChildren<DropdownProps>) {
   return (
     <div
       tabIndex={-1}
       className={clsx(
-        'z-topmost absolute',
-        {
-          'right-0': stretchLeft,
-          'left-0': !stretchLeft,
-          'bottom-0': stretchTop,
-          'top-full': !stretchTop
-        },
-        'grid',
-        'border rounded-md shadow-lg',
-        'clr-input',
-        'text-sm',
+        'cc-dropdown isolate z-topmost absolute grid bg-prim-0 border rounded-md shadow-lg text-sm',
+        stretchLeft ? 'right-0' : 'left-0',
+        stretchTop ? 'bottom-0' : 'top-full',
+        isOpen && 'open',
         margin,
         className
       )}
-      style={{
-        willChange: 'clip-path, transform',
-        transitionProperty: 'clip-path, transform',
-        transitionDuration: `${PARAMETER.dropdownDuration}ms`,
-        transitionTimingFunction: 'ease-in-out',
-        transform: isOpen ? 'translateY(0)' : 'translateY(-10%)',
-        clipPath: isOpen ? 'inset(0% 0% 0% 0%)' : 'inset(10% 0% 90% 0%)',
-        ...style
-      }}
       aria-hidden={!isOpen}
       {...restProps}
     >

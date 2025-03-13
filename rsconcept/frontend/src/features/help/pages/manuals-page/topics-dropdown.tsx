@@ -7,7 +7,7 @@ import { useDropdown } from '@/components/dropdown';
 import { IconMenuFold, IconMenuUnfold } from '@/components/icons';
 import { SelectTree } from '@/components/input';
 import { useAppLayoutStore, useFitHeight } from '@/stores/app-layout';
-import { PARAMETER, prefixes } from '@/utils/constants';
+import { prefixes } from '@/utils/constants';
 
 import { describeHelpTopic, labelHelpTopic } from '../../labels';
 import { HelpTopic, topicParent } from '../../models/help-topic';
@@ -32,14 +32,11 @@ export function TopicsDropdown({ activeTopic, onChangeTopic }: TopicsDropdownPro
       ref={menu.ref}
       className={clsx(
         'absolute left-0 w-54', //
+        noNavigation ? 'top-0' : 'top-12',
         'flex flex-col',
         'z-topmost',
         'text-xs sm:text-sm',
-        'select-none',
-        {
-          'top-0': noNavigation,
-          'top-12': !noNavigation
-        }
+        'select-none'
       )}
     >
       <Button
@@ -59,14 +56,11 @@ export function TopicsDropdown({ activeTopic, onChangeTopic }: TopicsDropdownPro
         getParent={item => topicParent.get(item) ?? item}
         getLabel={labelHelpTopic}
         getDescription={describeHelpTopic}
-        className='border-r border-t rounded-none cc-scroll-y bg-prim-200'
-        style={{
-          maxHeight: treeHeight,
-          willChange: 'clip-path',
-          transitionProperty: 'clip-path',
-          transitionDuration: `${PARAMETER.moveDuration}ms`,
-          clipPath: menu.isOpen ? 'inset(0% 0% 0% 0%)' : 'inset(0% 100% 0% 0%)'
-        }}
+        className={clsx(
+          'cc-topic-dropdown border-r border-t rounded-none cc-scroll-y bg-prim-200',
+          menu.isOpen && 'open'
+        )}
+        style={{ maxHeight: treeHeight }}
       />
     </div>
   );

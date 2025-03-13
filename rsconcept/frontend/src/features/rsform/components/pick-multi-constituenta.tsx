@@ -98,7 +98,7 @@ export function PickMultiConstituenta({
   ];
 
   return (
-    <div className={clsx(noBorder ? '' : 'border', className)} {...restProps}>
+    <div className={clsx(!noBorder && 'border', className)} {...restProps}>
       <div className='px-3 flex justify-between items-center clr-input border-b rounded-t-md'>
         <div className='w-[24ch] select-none whitespace-nowrap'>
           {items.length > 0 ? `Выбраны ${value.length} из ${items.length}` : 'Конституенты'}

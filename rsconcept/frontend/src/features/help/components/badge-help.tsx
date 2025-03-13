@@ -7,7 +7,6 @@ import { IconHelp } from '@/components/icons';
 import { Loader } from '@/components/loader';
 import { type Styling } from '@/components/props';
 import { usePreferencesStore } from '@/stores/preferences';
-import { PARAMETER } from '@/utils/constants';
 
 import { type HelpTopic } from '../models/help-topic';
 
@@ -48,7 +47,7 @@ export function BadgeHelp({ topic, padding = 'p-1', className, contentClass, sty
         clickable
         anchorSelect={`#help-${topic}`}
         layer='z-topmost'
-        className={clsx(PARAMETER.TOOLTIP_WIDTH, contentClass)}
+        className={clsx('max-w-120', contentClass)}
         {...restProps}
       >
         <Suspense fallback={<Loader />}>

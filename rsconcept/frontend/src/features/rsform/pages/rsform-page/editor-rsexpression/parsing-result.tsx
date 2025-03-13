@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+
 import { type IExpressionParseDTO, type IRSErrorDescription } from '../../../backend/types';
 import { describeRSError } from '../../../labels';
 import { getRSErrorPrefix } from '../../../models/rslang-api';
@@ -14,17 +16,7 @@ export function ParsingResult({ isOpen, data, disabled, onShowError }: ParsingRe
   const warningsCount = data ? data.errors.length - errorCount : 0;
 
   return (
-    <div
-      tabIndex={-1}
-      className='text-sm border dense cc-scroll-y transition-all duration-300'
-      style={{
-        clipPath: isOpen ? 'inset(0% 0% 0% 0%)' : 'inset(0% 0% 100% 0%)',
-        marginTop: isOpen ? '0.75rem' : '0rem',
-        padding: isOpen ? '0.25rem 0.5rem 0.25rem 0.5rem' : '0rem 0rem 0rem 0rem',
-        borderWidth: isOpen ? '1px' : '0px',
-        height: isOpen ? '4.5rem' : '0rem'
-      }}
-    >
+    <div tabIndex={-1} className={clsx('cc-parsing-result text-sm border dense cc-scroll-y', isOpen && 'open')}>
       <p>
         Ошибок: <b>{errorCount}</b> | Предупреждений: <b>{warningsCount}</b>
       </p>

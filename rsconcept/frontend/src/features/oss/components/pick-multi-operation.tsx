@@ -107,10 +107,7 @@ export function PickMultiOperation({ rows, items, value, onChange, className, ..
   ];
 
   return (
-    <div
-      className={clsx('flex flex-col gap-1', ' border-t border-x rounded-md', 'clr-input', className)}
-      {...restProps}
-    >
+    <div className={clsx('flex flex-col gap-1 border-t border-x rounded-md clr-input', className)} {...restProps}>
       <SelectOperation
         noBorder
         items={nonSelectedItems} //

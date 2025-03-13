@@ -131,8 +131,7 @@ export function ToolbarOssGraph({
       className={clsx(
         'flex flex-col items-center pt-1',
         'rounded-b-2xl',
-        'cc-blur',
-        'hover:bg-prim-100 hover:bg-opacity-50',
+        'hover:bg-prim-100 hover:bg-opacity-50 backdrop-blur-xs',
         className
       )}
       {...restProps}

@@ -1,5 +1,7 @@
 'use client';
 
+import clsx from 'clsx';
+
 import { IconConsolidation, IconRSForm } from '@/components/icons';
 import { Indicator } from '@/components/view';
 import { globalIDs } from '@/utils/constants';
@@ -52,13 +54,10 @@ export function NodeCore({ node }: NodeCoreProps) {
       ) : null}
 
       <div
-        className='text-center line-clamp-2'
-        style={{
-          fontSize: longLabel ? '12px' : '14px',
-          lineHeight: longLabel ? '16px' : '20px',
-          paddingLeft: '4px',
-          paddingRight: longLabel ? '10px' : '4px'
-        }}
+        className={clsx(
+          'text-center line-clamp-2 pl-[4px]',
+          longLabel ? 'text-[12px]/[16px] pr-[10px]' : 'text-[14px]/[20px] pr-[4px]'
+        )}
       >
         {node.data.label}
       </div>

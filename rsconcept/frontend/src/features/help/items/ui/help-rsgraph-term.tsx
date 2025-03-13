@@ -19,7 +19,6 @@ import {
   IconText,
   IconTypeGraph
 } from '@/components/icons';
-import { APP_COLORS } from '@/styling/colors';
 
 import { LinkTopic } from '../../components/link-topic';
 import { HelpTopic } from '../../models/help-topic';
@@ -49,7 +48,7 @@ export function HelpRSGraphTerm() {
           <h1>Изменение узлов</h1>
           <li>Клик на узел – выделение</li>
           <li>
-            Левый клик – выбор <span style={{ color: APP_COLORS.fgPurple }}>фокус-конституенты</span>
+            Левый клик – выбор <span className='text-(--acc-fg-purple)'>фокус-конституенты</span>
           </li>
           <li>
             <IconReset className='inline-icon' /> Esc – сбросить выделение

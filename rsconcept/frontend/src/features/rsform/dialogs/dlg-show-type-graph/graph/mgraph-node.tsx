@@ -2,7 +2,6 @@
 
 import { Handle, Position } from 'reactflow';
 
-import { APP_COLORS } from '@/styling/colors';
 import { globalIDs } from '@/utils/constants';
 
 import { colorBgTMGraphNode } from '../../../colors';
@@ -26,21 +25,16 @@ export function MGraphNode(node: MGraphNodeInternal) {
 
   return (
     <>
-      <Handle type='source' position={Position.Top} style={{ opacity: 0 }} />
+      <Handle type='source' position={Position.Top} className='opacity-0' />
       <div
-        className='w-full h-full cursor-default flex items-center justify-center rounded-full'
+        className='cc-node-label w-full h-full cursor-default flex items-center justify-center rounded-full'
         data-tooltip-id={globalIDs.tooltip}
         data-tooltip-html={tooltipText}
-        style={{
-          backgroundColor: colorBgTMGraphNode(node.data),
-          fontWeight: 600,
-          WebkitTextStrokeWidth: '0.6px',
-          WebkitTextStrokeColor: APP_COLORS.bgDefault
-        }}
+        style={{ backgroundColor: colorBgTMGraphNode(node.data) }}
       >
         {node.data.rank === 0 ? node.data.text : node.data.annotations.length > 0 ? node.data.annotations.length : ''}
       </div>
-      <Handle type='target' position={Position.Bottom} style={{ opacity: 0 }} />
+      <Handle type='target' position={Position.Bottom} className='opacity-0' />
     </>
   );
 }

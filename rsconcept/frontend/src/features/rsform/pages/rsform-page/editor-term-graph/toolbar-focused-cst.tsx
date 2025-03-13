@@ -2,7 +2,6 @@
 
 import { MiniButton } from '@/components/control';
 import { IconGraphInputs, IconGraphOutputs, IconReset } from '@/components/icons';
-import { APP_COLORS } from '@/styling/colors';
 
 import { useTermGraphStore } from '../../../stores/term-graph';
 import { useRSEdit } from '../rsedit-context';
@@ -37,7 +36,7 @@ export function ToolbarFocusedCst() {
 
   return (
     <div className='flex items-center cc-icons'>
-      <div className='w-31 mt-0.5 text-right select-none' style={{ color: APP_COLORS.fgPurple }}>
+      <div className='w-31 mt-0.5 text-right select-none color-(--acc-fg-purple)'>
         <span>
           Фокус
           <b className='pr-1'> {focusCst.alias} </b>

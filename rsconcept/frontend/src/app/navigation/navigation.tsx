@@ -1,7 +1,8 @@
+import clsx from 'clsx';
+
 import { IconLibrary2, IconManuals, IconNewItem2 } from '@/components/icons';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useAppLayoutStore } from '@/stores/app-layout';
-import { PARAMETER } from '@/utils/constants';
 
 import { urls } from '../urls';
 
@@ -29,14 +30,11 @@ export function Navigation() {
     <nav className='z-navigation sticky top-0 left-0 right-0 select-none bg-prim-100'>
       <ToggleNavigation />
       <div
-        className='pl-2 pr-6 sm:pr-4 h-12 flex cc-shadow-border'
-        style={{
-          transitionProperty: 'max-height, translate',
-          transitionDuration: `${PARAMETER.moveDuration}ms`,
-          transitionTimingFunction: 'ease-in-out',
-          maxHeight: noNavigationAnimation ? '0rem' : '3rem',
-          translate: noNavigationAnimation ? '0 -1.5rem' : '0'
-        }}
+        className={clsx(
+          'pl-2 pr-6 sm:pr-4 h-12 flex cc-shadow-border',
+          'transition-[max-height,translate] ease-bezier duration-(--duration-move)',
+          noNavigationAnimation ? '-translate-y-6 max-h-0' : 'max-h-12'
+        )}
       >
         <div className='flex items-center mr-auto cursor-pointer' onClick={!size.isSmall ? navigateHome : undefined}>
           <Logo />

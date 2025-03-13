@@ -61,7 +61,7 @@ export function ModalView({
           <h1
             className={clsx(
               'px-12 py-2 select-none',
-              fullScreen && 'z-pop absolute top-0 right-1/2 translate-x-1/2 cc-blur bg-prim-100/90 rounded-2xl'
+              fullScreen && 'z-pop absolute top-0 right-1/2 translate-x-1/2 backdrop-blur-xs bg-prim-100/90 rounded-2xl'
             )}
           >
             {header}
@@ -73,10 +73,7 @@ export function ModalView({
             '@container/modal',
             'max-h-[calc(100svh-8rem)] max-w-[100svw] xs:max-w-[calc(100svw-2rem)]',
             'overscroll-contain outline-hidden',
-            {
-              'overflow-auto': !overflowVisible,
-              'overflow-visible': overflowVisible
-            },
+            overflowVisible ? 'overflow-visible' : 'overflow-auto',
             className
           )}
           {...restProps}
@@ -90,12 +87,12 @@ export function ModalView({
             aria-label='Закрыть'
             className={clsx(
               'my-2 mx-auto text-sm min-w-28',
-              fullScreen && 'z-pop absolute bottom-0 right-1/2 translate-x-1/2 cc-blur'
+              fullScreen && 'z-pop absolute bottom-0 right-1/2 translate-x-1/2'
             )}
             onClick={hideDialog}
           />
         ) : (
-          <div className='z-pop absolute bottom-0 right-1/2 translate-x-1/2 bg-prim-100/90 cc-blur p-3 rounded-xl'>
+          <div className='z-pop absolute bottom-0 right-1/2 translate-x-1/2 p-3 rounded-xl bg-prim-100/90 backdrop-blur-xs'>
             {' '}
             <Button text='Закрыть' aria-label='Закрыть' className='text-sm min-w-28' onClick={hideDialog} />
           </div>

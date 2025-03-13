@@ -15,13 +15,6 @@
 
   --text-max-width: 75ch;
   --scroll-padding: 3rem;
-
-  --duration-move: 500ms;
-  --duration-modal: 300ms;
-  --duration-fade: 300ms;
-  --duration-select: 100ms;
-
-  --transition-bezier: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Light Theme */

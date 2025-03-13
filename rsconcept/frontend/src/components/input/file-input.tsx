@@ -46,7 +46,7 @@ export function FileInput({ id, label, acceptType, title, className, style, onCh
         id={id}
         type='file'
         ref={inputRef}
-        style={{ display: 'none' }}
+        className='hidden'
         accept={acceptType}
         onChange={handleFileChange}
         {...restProps}
