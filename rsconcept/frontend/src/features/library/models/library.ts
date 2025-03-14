@@ -5,12 +5,13 @@
 /**
  * Represents valid location headers.
  */
-export enum LocationHead {
-  USER = '/U',
-  COMMON = '/S',
-  PROJECTS = '/P',
-  LIBRARY = '/L'
-}
+export const LocationHead = {
+  USER: '/U',
+  COMMON: '/S',
+  PROJECTS: '/P',
+  LIBRARY: '/L'
+} as const;
+export type LocationHead = (typeof LocationHead)[keyof typeof LocationHead];
 
 export const BASIC_SCHEMAS = '/L/Базовые';
 

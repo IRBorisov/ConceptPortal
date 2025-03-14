@@ -27,11 +27,12 @@ export interface DlgCstTemplateProps {
   insertAfter?: number;
 }
 
-enum TabID {
-  TEMPLATE = 0,
-  ARGUMENTS = 1,
-  CONSTITUENTA = 2
-}
+export const TabID = {
+  TEMPLATE: 0,
+  ARGUMENTS: 1,
+  CONSTITUENTA: 2
+} as const;
+export type TabID = (typeof TabID)[keyof typeof TabID];
 
 export function DlgCstTemplate() {
   const { schema, onCreate, insertAfter } = useDialogsStore(state => state.props as DlgCstTemplateProps);
@@ -54,7 +55,7 @@ export function DlgCstTemplate() {
   const cst_type = useWatch({ control: methods.control, name: 'cst_type' });
   const isValid = validateNewAlias(alias, cst_type, schema);
 
-  const [activeTab, setActiveTab] = useState(TabID.TEMPLATE);
+  const [activeTab, setActiveTab] = useState<TabID>(TabID.TEMPLATE);
 
   function onSubmit(data: ICstCreateDTO) {
     return cstCreate({ itemID: schema.id, data }).then(onCreate);
@@ -69,7 +70,12 @@ export function DlgCstTemplate() {
       onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
       helpTopic={HelpTopic.RSL_TEMPLATES}
     >
-      <Tabs selectedTabClassName='clr-selected' className='grid' selectedIndex={activeTab} onSelect={setActiveTab}>
+      <Tabs
+        selectedTabClassName='clr-selected'
+        className='grid'
+        selectedIndex={activeTab}
+        onSelect={index => setActiveTab(index as TabID)}
+      >
         <TabList className='mb-3 mx-auto flex border divide-x rounded-none bg-prim-200'>
           <TabLabel label='Шаблон' title='Выбор шаблона выражения' className='w-32' />
           <TabLabel label='Аргументы' title='Подстановка аргументов шаблона' className='w-32' />

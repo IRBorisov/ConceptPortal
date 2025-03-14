@@ -50,7 +50,7 @@ export function OssTabs({ activeTab }: OssTabsProps) {
         }
       }
     }
-    navigateTab(index);
+    navigateTab(index as OssTabID);
   }
 
   return (

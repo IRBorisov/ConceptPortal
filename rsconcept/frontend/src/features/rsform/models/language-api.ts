@@ -5,7 +5,6 @@
 import { labelGrammeme } from '../labels';
 
 import {
-  type GramData,
   Grammeme,
   GrammemeGroups,
   type IEntityReference,
@@ -35,11 +34,11 @@ export function wordFormEquals(left: IWordForm, right: IWordForm): boolean {
 }
 
 /**
- * Compares {@link GramData} based on Grammeme enum and alpha order for strings.
+ * Compares {@link Grammeme} based on Grammeme enum and alpha order for strings.
  */
-export function grammemeCompare(left: GramData, right: GramData): number {
-  const indexLeft = Object.values(Grammeme).findIndex(gram => gram === (left as Grammeme));
-  const indexRight = Object.values(Grammeme).findIndex(gram => gram === (right as Grammeme));
+export function grammemeCompare(left: Grammeme, right: Grammeme): number {
+  const indexLeft = Object.values(Grammeme).findIndex(gram => gram === left);
+  const indexRight = Object.values(Grammeme).findIndex(gram => gram === right);
   if (indexLeft === -1 && indexRight === -1) {
     return left.localeCompare(right);
   } else if (indexLeft === -1 && indexRight !== -1) {
@@ -52,15 +51,15 @@ export function grammemeCompare(left: GramData, right: GramData): number {
 }
 
 /**
- * Transforms {@link Grammeme} enumeration to {@link GramData}.
+ * Transforms {@link Grammeme} enumeration to {@link Grammeme}.
  */
-export function parseGrammemes(termForm: string): GramData[] {
-  const result: GramData[] = [];
+export function parseGrammemes(termForm: string): Grammeme[] {
+  const result: Grammeme[] = [];
   const chunks = termForm.split(',');
   chunks.forEach(chunk => {
     const gram = chunk.trim();
     if (gram !== '') {
-      result.push(gram);
+      result.push(gram as Grammeme);
     }
   });
   return result.sort(grammemeCompare);

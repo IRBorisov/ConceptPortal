@@ -17,7 +17,7 @@ import { useModificationStore } from '@/stores/modification';
 import { ConstituentaTooltip } from '../../components/constituenta-tooltip';
 
 import { RSEditState, RSTabID } from './rsedit-context';
-import { RSTabs } from './rstabs1';
+import { RSTabs } from './rstabs';
 
 const paramsSchema = z.strictObject({
   id: z.coerce.number(),

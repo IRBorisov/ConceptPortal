@@ -40,22 +40,9 @@ describe('Testing wordform equality', () => {
     expect(wordFormEquals({ text: '', grams: ['nomn', 'sing'] }, { text: '', grams: ['nomn'] })).toEqual(false);
     expect(wordFormEquals({ text: '', grams: ['nomn', 'nomn'] }, { text: '', grams: ['nomn'] })).toEqual(false);
   });
-
-  test('custom grammemes', () => {
-    expect(wordFormEquals({ text: '', grams: ['с1'] }, { text: '', grams: ['с1'] })).toEqual(true);
-    expect(wordFormEquals({ text: '', grams: ['с1'] }, { text: '', grams: ['с2'] })).toEqual(false);
-    expect(wordFormEquals({ text: '', grams: ['sing'] }, { text: '', grams: ['с1'] })).toEqual(false);
-  });
 });
 
 describe('Testing grammeme ordering', () => {
-  test('empty input', () => {
-    expect(grammemeCompare('', '')).toEqual(0);
-    expect(grammemeCompare(' ', ' ')).toEqual(0);
-    expect(grammemeCompare('', '123')).toBeLessThan(0);
-    expect(grammemeCompare('123', '')).toBeGreaterThan(0);
-  });
-
   test('regular grammemes', () => {
     expect(grammemeCompare('NOUN', 'NOUN')).toEqual(0);
     expect(grammemeCompare('NOUN', Grammeme.NOUN)).toEqual(0);
@@ -74,16 +61,6 @@ describe('Testing grammeme ordering', () => {
     expect(grammemeCompare('accs', 'datv')).toBeGreaterThan(0);
     expect(grammemeCompare('datv', 'gent')).toBeGreaterThan(0);
     expect(grammemeCompare('gent', 'nomn')).toBeGreaterThan(0);
-  });
-
-  test('custom grammemes', () => {
-    expect(grammemeCompare('noun', 'noun')).toEqual(0);
-    expect(grammemeCompare('NOUN', 'noun')).toBeLessThan(0);
-    expect(grammemeCompare('PRTF', 'noun')).toBeLessThan(0);
-    expect(grammemeCompare('noun', 'NOUN')).toBeGreaterThan(0);
-    expect(grammemeCompare('aab', 'aaa')).toBeGreaterThan(0);
-    expect(grammemeCompare('aaa', 'aab')).toBeLessThan(0);
-    expect(grammemeCompare('test', 'abcd')).toBeGreaterThan(0);
   });
 });
 

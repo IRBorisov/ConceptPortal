@@ -14,39 +14,33 @@ import { type IArgumentInfo } from './rslang';
 // CstType constant for category dividers in TemplateSchemas
 export const CATEGORY_CST_TYPE = CstType.THEOREM;
 
-/**
- * Represents Constituenta classification in terms of system of concepts.
- */
-export enum CstClass {
-  BASIC = 'basic',
-  DERIVED = 'derived',
-  STATEMENT = 'statement',
-  TEMPLATE = 'template'
-}
+/** Represents Constituenta classification in terms of system of concepts. */
+export const CstClass = {
+  BASIC: 'basic',
+  DERIVED: 'derived',
+  STATEMENT: 'statement',
+  TEMPLATE: 'template'
+} as const;
+export type CstClass = (typeof CstClass)[keyof typeof CstClass];
 
-/**
- * Represents formal expression Status.
- */
-export enum ExpressionStatus {
-  VERIFIED = 'verified',
-  INCORRECT = 'incorrect',
-  INCALCULABLE = 'incalculable',
-  PROPERTY = 'property',
-  UNDEFINED = 'undefined',
-  UNKNOWN = 'unknown'
-}
+/** Represents formal expression Status. */
+export const ExpressionStatus = {
+  VERIFIED: 'verified',
+  INCORRECT: 'incorrect',
+  INCALCULABLE: 'incalculable',
+  PROPERTY: 'property',
+  UNDEFINED: 'undefined',
+  UNKNOWN: 'unknown'
+} as const;
+export type ExpressionStatus = (typeof ExpressionStatus)[keyof typeof ExpressionStatus];
 
-/**
- * Represents word form for natural language.
- */
+/** Represents word form for natural language. */
 export interface TermForm {
   text: string;
   tags: string;
 }
 
-/**
- * Represents Constituenta.
- */
+/** Represents Constituenta. */
 export interface IConstituenta {
   id: number;
   alias: string;
@@ -101,9 +95,7 @@ export interface IConstituenta {
   spawn_alias: string[];
 }
 
-/**
- * Represents {@link IRSForm} statistics.
- */
+/** Represents {@link IRSForm} statistics. */
 export interface IRSFormStats {
   count_all: number;
   count_errors: number;
@@ -125,9 +117,7 @@ export interface IRSFormStats {
   count_theorem: number;
 }
 
-/**
- * Represents inheritance data for {@link IRSForm}.
- */
+/** Represents inheritance data for {@link IRSForm}. */
 export interface IInheritanceInfo {
   child: number;
   child_source: number;
@@ -135,9 +125,7 @@ export interface IInheritanceInfo {
   parent_source: number;
 }
 
-/**
- * Represents formal explication for set of concepts.
- */
+/** Represents formal explication for set of concepts. */
 export interface IRSForm extends ILibraryItemData {
   version: CurrentVersion;
   versions: IVersionInfo[];

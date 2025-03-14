@@ -66,7 +66,7 @@ export function RSTabs({ activeID, activeTab }: RSTabsProps) {
         }
       }
     }
-    navigateRSForm({ tab: index, activeID: selected.length > 0 ? selected.at(-1) : undefined });
+    navigateRSForm({ tab: index as RSTabID, activeID: selected.length > 0 ? selected.at(-1) : undefined });
   }
 
   return (

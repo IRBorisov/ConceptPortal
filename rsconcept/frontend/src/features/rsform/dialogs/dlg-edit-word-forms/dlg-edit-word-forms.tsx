@@ -17,7 +17,7 @@ import { useIsProcessingCctext } from '../../backend/cctext/use-is-processing-cc
 import { useParseText } from '../../backend/cctext/use-parse-text';
 import { useCstUpdate } from '../../backend/use-cst-update';
 import { SelectMultiGrammeme } from '../../components/select-multi-grammeme';
-import { type Grammeme, type IGrammemeOption, type IWordForm, supportedGrammemes } from '../../models/language';
+import { type IGrammemeOption, type IWordForm, supportedGrammemes } from '../../models/language';
 import { parseGrammemes, supportedGrammeOptions, wordFormEquals } from '../../models/language-api';
 import { type IConstituenta } from '../../models/rsform';
 
@@ -98,9 +98,7 @@ export function DlgEditWordForms() {
     void generateLexeme({ text: inputText }).then(response => {
       const lexeme: IWordForm[] = [];
       response.items.forEach(form => {
-        const grams = parseGrammemes(form.grams).filter(gram =>
-          supportedGrammemes.find(item => item === (gram as Grammeme))
-        );
+        const grams = parseGrammemes(form.grams).filter(gram => supportedGrammemes.find(item => item === gram));
         const newForm: IWordForm = {
           text: form.text,
           grams: grams

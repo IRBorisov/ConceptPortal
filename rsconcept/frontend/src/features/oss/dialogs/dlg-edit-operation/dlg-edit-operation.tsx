@@ -30,11 +30,12 @@ export interface DlgEditOperationProps {
   positions: IOperationPosition[];
 }
 
-enum TabID {
-  CARD = 0,
-  ARGUMENTS = 1,
-  SUBSTITUTION = 2
-}
+export const TabID = {
+  CARD: 0,
+  ARGUMENTS: 1,
+  SUBSTITUTION: 2
+} as const;
+export type TabID = (typeof TabID)[keyof typeof TabID];
 
 export function DlgEditOperation() {
   const { oss, target, positions } = useDialogsStore(state => state.props as DlgEditOperationProps);
@@ -58,7 +59,7 @@ export function DlgEditOperation() {
     },
     mode: 'onChange'
   });
-  const [activeTab, setActiveTab] = useState(TabID.CARD);
+  const [activeTab, setActiveTab] = useState<TabID>(TabID.CARD);
 
   function onSubmit(data: IOperationUpdateDTO) {
     return operationUpdate({ itemID: oss.id, data });
@@ -74,7 +75,12 @@ export function DlgEditOperation() {
       helpTopic={HelpTopic.UI_SUBSTITUTIONS}
       hideHelpWhen={() => activeTab !== TabID.SUBSTITUTION}
     >
-      <Tabs selectedTabClassName='clr-selected' className='grid' selectedIndex={activeTab} onSelect={setActiveTab}>
+      <Tabs
+        selectedTabClassName='clr-selected'
+        className='grid'
+        selectedIndex={activeTab}
+        onSelect={index => setActiveTab(index as TabID)}
+      >
         <TabList className='mb-3 mx-auto w-fit flex border divide-x rounded-none bg-prim-200'>
           <TabLabel title='Текстовые поля' label='Карточка' className='w-32' />
           {target.operation_type === OperationType.SYNTHESIS ? (

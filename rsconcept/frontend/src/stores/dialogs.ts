@@ -23,34 +23,33 @@ import { type DlgShowTypeGraphProps } from '@/features/rsform/dialogs/dlg-show-t
 import { type DlgSubstituteCstProps } from '@/features/rsform/dialogs/dlg-substitute-cst';
 import { type DlgUploadRSFormProps } from '@/features/rsform/dialogs/dlg-upload-rsform';
 
-/**
- * Represents global dialog.
- */
-export enum DialogType {
-  CONSTITUENTA_TEMPLATE = 1,
-  CREATE_CONSTITUENTA,
-  CREATE_OPERATION,
-  DELETE_CONSTITUENTA,
-  EDIT_EDITORS,
-  EDIT_OPERATION,
-  EDIT_REFERENCE,
-  EDIT_VERSIONS,
-  EDIT_WORD_FORMS,
-  INLINE_SYNTHESIS,
-  SHOW_AST,
-  SHOW_TYPE_GRAPH,
-  CHANGE_INPUT_SCHEMA,
-  CHANGE_LOCATION,
-  CLONE_LIBRARY_ITEM,
-  CREATE_VERSION,
-  DELETE_OPERATION,
-  GRAPH_PARAMETERS,
-  RELOCATE_CONSTITUENTS,
-  RENAME_CONSTITUENTA,
-  SHOW_QR_CODE,
-  SUBSTITUTE_CONSTITUENTS,
-  UPLOAD_RSFORM
-}
+/** Represents global dialog. */
+export const DialogType = {
+  CONSTITUENTA_TEMPLATE: 1,
+  CREATE_CONSTITUENTA: 2,
+  CREATE_OPERATION: 3,
+  DELETE_CONSTITUENTA: 4,
+  EDIT_EDITORS: 5,
+  EDIT_OPERATION: 6,
+  EDIT_REFERENCE: 7,
+  EDIT_VERSIONS: 8,
+  EDIT_WORD_FORMS: 9,
+  INLINE_SYNTHESIS: 10,
+  SHOW_AST: 11,
+  SHOW_TYPE_GRAPH: 12,
+  CHANGE_INPUT_SCHEMA: 13,
+  CHANGE_LOCATION: 14,
+  CLONE_LIBRARY_ITEM: 15,
+  CREATE_VERSION: 16,
+  DELETE_OPERATION: 17,
+  GRAPH_PARAMETERS: 18,
+  RELOCATE_CONSTITUENTS: 19,
+  RENAME_CONSTITUENTA: 20,
+  SHOW_QR_CODE: 21,
+  SUBSTITUTE_CONSTITUENTS: 22,
+  UPLOAD_RSFORM: 23
+} as const;
+export type DialogType = (typeof DialogType)[keyof typeof DialogType];
 
 interface DialogProps {
   onHide?: () => void;

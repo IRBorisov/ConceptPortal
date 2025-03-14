@@ -16,10 +16,11 @@ import { OperationType } from '../../backend/types';
 import { useOssSuspense } from '../../backend/use-oss';
 import { type IOperation, type IOperationSchema } from '../../models/oss';
 
-export enum OssTabID {
-  CARD = 0,
-  GRAPH = 1
-}
+export const OssTabID = {
+  CARD: 0,
+  GRAPH: 1
+} as const;
+export type OssTabID = (typeof OssTabID)[keyof typeof OssTabID];
 
 export interface IOssEditContext {
   schema: IOperationSchema;

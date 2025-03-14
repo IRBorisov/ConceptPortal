@@ -5,17 +5,19 @@ import { errorMsg } from '@/utils/labels';
 import { validateLocation } from '../models/library-api';
 
 /** Represents type of library items. */
-export enum LibraryItemType {
-  RSFORM = 'rsform',
-  OSS = 'oss'
-}
+export const LibraryItemType = {
+  RSFORM: 'rsform',
+  OSS: 'oss'
+} as const;
+export type LibraryItemType = (typeof LibraryItemType)[keyof typeof LibraryItemType];
 
 /** Represents Access policy for library items.*/
-export enum AccessPolicy {
-  PUBLIC = 'public',
-  PROTECTED = 'protected',
-  PRIVATE = 'private'
-}
+export const AccessPolicy = {
+  PUBLIC: 'public',
+  PROTECTED: 'protected',
+  PRIVATE: 'private'
+} as const;
+export type AccessPolicy = (typeof AccessPolicy)[keyof typeof AccessPolicy];
 
 /** Represents library item common data typical for all item types. */
 export type ILibraryItem = z.infer<typeof schemaLibraryItem>;
@@ -53,17 +55,19 @@ export type IVersionCreateDTO = z.infer<typeof schemaVersionCreate>;
 export type IVersionUpdateDTO = z.infer<typeof schemaVersionUpdate>;
 
 // ======= SCHEMAS =========
+export const schemaLibraryItemType = z.enum(Object.values(LibraryItemType) as [LibraryItemType, ...LibraryItemType[]]);
+export const schemaAccessPolicy = z.enum(Object.values(AccessPolicy) as [AccessPolicy, ...AccessPolicy[]]);
 
 export const schemaLibraryItem = z.strictObject({
   id: z.coerce.number(),
-  item_type: z.nativeEnum(LibraryItemType),
+  item_type: schemaLibraryItemType,
   title: z.string(),
   alias: z.string().nonempty(),
   comment: z.string(),
   visible: z.boolean(),
   read_only: z.boolean(),
   location: z.string(),
-  access_policy: z.nativeEnum(AccessPolicy),
+  access_policy: schemaAccessPolicy,
 
   time_create: z.string().datetime({ offset: true }),
   time_update: z.string().datetime({ offset: true }),
@@ -94,14 +98,14 @@ export const schemaCloneLibraryItem = schemaLibraryItem
 
 export const schemaCreateLibraryItem = z
   .object({
-    item_type: z.nativeEnum(LibraryItemType),
+    item_type: schemaLibraryItemType,
     title: z.string().optional(),
     alias: z.string().optional(),
     comment: z.string(),
     visible: z.boolean(),
     read_only: z.boolean(),
     location: z.string().refine(data => validateLocation(data), { message: errorMsg.invalidLocation }),
-    access_policy: z.nativeEnum(AccessPolicy),
+    access_policy: schemaAccessPolicy,
 
     file: z.instanceof(File).optional(),
     fileName: z.string().optional()
@@ -117,7 +121,7 @@ export const schemaCreateLibraryItem = z
 
 export const schemaUpdateLibraryItem = z.strictObject({
   id: z.number(),
-  item_type: z.nativeEnum(LibraryItemType),
+  item_type: schemaLibraryItemType,
   title: z.string().nonempty(errorMsg.requiredField),
   alias: z.string().nonempty(errorMsg.requiredField),
   comment: z.string(),

@@ -36,7 +36,7 @@ interface SelectWordFormProps extends Styling {
 
 export function SelectWordForm({ value, onChange, className, ...restProps }: SelectWordFormProps) {
   function handleSelect(grams: Grammeme[]) {
-    onChange(supportedGrammeOptions.filter(({ value }) => grams.includes(value as Grammeme)));
+    onChange(supportedGrammeOptions.filter(({ value }) => grams.includes(value)));
   }
 
   return (
@@ -47,7 +47,7 @@ export function SelectWordForm({ value, onChange, className, ...restProps }: Sel
           text={data.text}
           example={data.example}
           grams={data.grams}
-          isSelected={data.grams.every(gram => value.find(item => (item.value as Grammeme) === gram))}
+          isSelected={data.grams.every(gram => value.find(item => item.value === gram))}
           onSelectGrams={handleSelect}
         />
       ))}

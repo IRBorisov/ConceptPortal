@@ -22,12 +22,13 @@ import { useRSFormSuspense } from '../../backend/use-rsform';
 import { type IConstituenta, type IRSForm } from '../../models/rsform';
 import { generateAlias } from '../../models/rsform-api';
 
-export enum RSTabID {
-  CARD = 0,
-  CST_LIST = 1,
-  CST_EDIT = 2,
-  TERM_GRAPH = 3
-}
+export const RSTabID = {
+  CARD: 0,
+  CST_LIST: 1,
+  CST_EDIT: 2,
+  TERM_GRAPH: 3
+} as const;
+export type RSTabID = (typeof RSTabID)[keyof typeof RSTabID];
 
 export interface IRSEditContext {
   schema: IRSForm;

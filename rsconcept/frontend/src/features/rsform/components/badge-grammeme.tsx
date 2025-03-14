@@ -1,10 +1,10 @@
 import { colorFgGrammeme } from '../colors';
 import { labelGrammeme } from '../labels';
-import { type GramData } from '../models/language';
+import { type Grammeme } from '../models/language';
 
 interface BadgeGrammemeProps {
   /** Grammeme to display. */
-  grammeme: GramData;
+  grammeme: Grammeme;
 }
 
 /**

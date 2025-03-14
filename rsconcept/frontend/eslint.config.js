@@ -8,6 +8,33 @@ import importPlugin from 'eslint-plugin-import';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import playwright from 'eslint-plugin-playwright';
 
+const basicRules = {
+  'no-console': 'off',
+  'require-jsdoc': 'off',
+
+  '@typescript-eslint/consistent-type-imports': [
+    'warn',
+    {
+      fixStyle: 'inline-type-imports'
+    }
+  ],
+  '@typescript-eslint/no-empty-object-type': ['error', { allowInterfaces: 'with-single-extends' }],
+  '@typescript-eslint/prefer-nullish-coalescing': 'off',
+  '@typescript-eslint/no-inferrable-types': 'off',
+  '@typescript-eslint/no-unused-vars': [
+    'error',
+    {
+      argsIgnorePattern: '^_',
+      varsIgnorePattern: '^_',
+      caughtErrorsIgnorePattern: '^_',
+      destructuredArrayIgnorePattern: '^_'
+    }
+  ],
+
+  'simple-import-sort/exports': 'error',
+  'import/no-duplicates': 'warn'
+};
+
 export default [
   ...typescriptPlugin.configs.recommendedTypeChecked,
   ...typescriptPlugin.configs.stylisticTypeChecked,
@@ -45,33 +72,9 @@ export default [
     },
     settings: { react: { version: 'detect' } },
     rules: {
-      'no-console': 'off',
-      'require-jsdoc': 'off',
-
+      ...basicRules,
       'react-compiler/react-compiler': 'error',
       'react-refresh/only-export-components': ['off', { allowConstantExport: true }],
-
-      '@typescript-eslint/consistent-type-imports': [
-        'warn',
-        {
-          fixStyle: 'inline-type-imports'
-        }
-      ],
-      '@typescript-eslint/no-empty-object-type': ['error', { allowInterfaces: 'with-single-extends' }],
-      '@typescript-eslint/prefer-nullish-coalescing': 'off',
-      '@typescript-eslint/no-inferrable-types': 'off',
-      '@typescript-eslint/no-unused-vars': [
-        'error',
-        {
-          argsIgnorePattern: '^_',
-          varsIgnorePattern: '^_',
-          caughtErrorsIgnorePattern: '^_',
-          destructuredArrayIgnorePattern: '^_'
-        }
-      ],
-
-      'simple-import-sort/exports': 'error',
-      'import/no-duplicates': 'warn',
       'simple-import-sort/imports': [
         'warn',
         {
@@ -113,13 +116,8 @@ export default [
     },
 
     rules: {
+      ...basicRules,
       ...playwright.configs['flat/recommended'].rules,
-
-      'no-console': 'off',
-      'require-jsdoc': 'off',
-
-      'simple-import-sort/exports': 'error',
-      'import/no-duplicates': 'warn',
       'simple-import-sort/imports': 'warn'
     }
   }

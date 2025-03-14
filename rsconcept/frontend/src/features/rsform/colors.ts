@@ -2,15 +2,13 @@ import { APP_COLORS } from '@/styling/colors';
 import { PARAMETER } from '@/utils/constants';
 
 import { TokenID } from './backend/types';
-import { type GramData, Grammeme, NounGrams, PartOfSpeech, VerbGrams } from './models/language';
+import { Grammeme, NounGrams, PartOfSpeech, VerbGrams } from './models/language';
 import { CstClass, ExpressionStatus, type IConstituenta } from './models/rsform';
 import { type ISyntaxTreeNode } from './models/rslang';
 import { type TypificationGraphNode } from './models/typification-graph';
 import { type GraphColoring } from './stores/term-graph';
 
-/**
- * Represents Brackets highlights theme.
- */
+/** Represents Brackets highlights theme. */
 export const BRACKETS_THEME = {
   '.cc-nonmatchingBracket': {
     color: APP_COLORS.fgRed,
@@ -22,9 +20,7 @@ export const BRACKETS_THEME = {
   }
 };
 
-/**
- * Determines background color for {@link ISyntaxTreeNode} based on its type.
- */
+/** Determines background color for {@link ISyntaxTreeNode} based on its type. */
 export function colorBgSyntaxTree(node: ISyntaxTreeNode): string {
   switch (node.typeID) {
     case TokenID.PUNCTUATION_DEFINE:
@@ -158,9 +154,7 @@ export function colorBgSyntaxTree(node: ISyntaxTreeNode): string {
   return APP_COLORS.bgPurple;
 }
 
-/**
- * Determines background color for {@link ExpressionStatus}.
- */
+/** Determines background color for {@link ExpressionStatus}. */
 export function colorBgCstStatus(status: ExpressionStatus): string {
   // prettier-ignore
   switch (status) {
@@ -173,9 +167,7 @@ export function colorBgCstStatus(status: ExpressionStatus): string {
   }
 }
 
-/**
- * Determines statusbar color for {@link ExpressionStatus}.
- */
+/** Determines statusbar color for {@link ExpressionStatus}. */
 export function colorStatusBar(status: ExpressionStatus): string {
   // prettier-ignore
   switch (status) {
@@ -188,9 +180,7 @@ export function colorStatusBar(status: ExpressionStatus): string {
   }
 }
 
-/**
- * Determines foreground color for {@link ExpressionStatus}.
- */
+/** Determines foreground color for {@link ExpressionStatus}. */
 export function colorFgCstStatus(status: ExpressionStatus): string {
   // prettier-ignore
   switch (status) {
@@ -203,9 +193,7 @@ export function colorFgCstStatus(status: ExpressionStatus): string {
   }
 }
 
-/**
- * Determines background color for {@link IConstituenta} depending on its {@link CstClass}.
- */
+/** Determines background color for {@link IConstituenta} depending on its {@link CstClass}. */
 export function colorBgCstClass(cstClass: CstClass): string {
   // prettier-ignore
   switch (cstClass) {
@@ -216,9 +204,7 @@ export function colorBgCstClass(cstClass: CstClass): string {
   }
 }
 
-/**
- * Determines background color for {@link IConstituenta} depending on its parent schema index.
- */
+/** Determines background color for {@link IConstituenta} depending on its parent schema index. */
 export function colorBgSchemas(schema_index: number): string {
   if (schema_index === 0) {
     return APP_COLORS.bgGreen;
@@ -233,29 +219,25 @@ export function colorBgSchemas(schema_index: number): string {
   return APP_COLORS.bgBlue;
 }
 
-/**
- * Determines foreground color for {@link GramData}.
- */
-export function colorFgGrammeme(gram: GramData): string {
-  if (PartOfSpeech.includes(gram as Grammeme)) {
+/** Determines foreground color for {@link Grammeme}. */
+export function colorFgGrammeme(gram: Grammeme): string {
+  if (PartOfSpeech.includes(gram)) {
     return APP_COLORS.fgBlue;
   }
-  if (NounGrams.includes(gram as Grammeme)) {
+  if (NounGrams.includes(gram)) {
     return APP_COLORS.fgGreen;
   }
-  if (VerbGrams.includes(gram as Grammeme)) {
+  if (VerbGrams.includes(gram)) {
     return APP_COLORS.fgTeal;
   }
-  if (!Object.values(Grammeme).includes(gram as Grammeme)) {
+  if (!Object.values(Grammeme).includes(gram)) {
     return APP_COLORS.fgRed;
   } else {
     return APP_COLORS.fgPurple;
   }
 }
 
-/**
- * Determines graph color for {@link IConstituenta}.
- */
+/** Determines graph color for {@link IConstituenta}. */
 export function colorBgGraphNode(cst: IConstituenta, coloringScheme: GraphColoring): string {
   if (coloringScheme === 'type') {
     return colorBgCstClass(cst.cst_class);
@@ -269,9 +251,7 @@ export function colorBgGraphNode(cst: IConstituenta, coloringScheme: GraphColori
   return APP_COLORS.bgGreen50;
 }
 
-/**
- * Determines m-graph color for {@link TypificationGraphNode}.
- */
+/** Determines m-graph color for {@link TypificationGraphNode}. */
 export function colorBgTMGraphNode(node: TypificationGraphNode): string {
   if (node.rank === 0) {
     return APP_COLORS.bgControls;

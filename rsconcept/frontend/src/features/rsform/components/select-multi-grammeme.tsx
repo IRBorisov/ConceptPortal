@@ -12,9 +12,9 @@ interface SelectMultiGrammemeProps extends Omit<SelectMultiProps<IGrammemeOption
 
 export function SelectMultiGrammeme({ value, onChange, ...restProps }: SelectMultiGrammemeProps) {
   const compatible = getCompatibleGrams(
-    value.filter(data => Object.values(Grammeme).includes(data.value as Grammeme)).map(data => data.value as Grammeme)
+    value.filter(data => Object.values(Grammeme).includes(data.value)).map(data => data.value)
   );
-  const options = supportedGrammeOptions.filter(({ value }) => compatible.includes(value as Grammeme));
+  const options = supportedGrammeOptions.filter(({ value }) => compatible.includes(value));
 
   return (
     <SelectMulti

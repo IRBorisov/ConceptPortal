@@ -33,10 +33,11 @@ export interface DlgCreateOperationProps {
   onCreate?: (newID: number) => void;
 }
 
-enum TabID {
-  INPUT = 0,
-  SYNTHESIS = 1
-}
+export const TabID = {
+  INPUT: 0,
+  SYNTHESIS: 1
+} as const;
+export type TabID = (typeof TabID)[keyof typeof TabID];
 
 export function DlgCreateOperation() {
   const { operationCreate } = useOperationCreate();
@@ -101,7 +102,12 @@ export function DlgCreateOperation() {
       className='w-160 px-6 h-128'
       helpTopic={HelpTopic.CC_OSS}
     >
-      <Tabs selectedTabClassName='clr-selected' className='grid' selectedIndex={activeTab} onSelect={handleSelectTab}>
+      <Tabs
+        selectedTabClassName='clr-selected'
+        className='grid'
+        selectedIndex={activeTab}
+        onSelect={(index, last) => handleSelectTab(index as TabID, last as TabID)}
+      >
         <TabList className='z-pop mx-auto -mb-5 flex border divide-x rounded-none bg-prim-200'>
           <TabLabel
             title={describeOperationType(OperationType.INPUT)}

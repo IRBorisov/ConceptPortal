@@ -5,37 +5,41 @@ import { schemaLibraryItem, schemaVersionInfo } from '@/features/library/backend
 import { errorMsg } from '@/utils/labels';
 
 /** Represents {@link IConstituenta} type. */
-export enum CstType {
-  BASE = 'basic',
-  STRUCTURED = 'structure',
-  TERM = 'term',
-  AXIOM = 'axiom',
-  FUNCTION = 'function',
-  PREDICATE = 'predicate',
-  CONSTANT = 'constant',
-  THEOREM = 'theorem'
-}
+export const CstType = {
+  BASE: 'basic',
+  STRUCTURED: 'structure',
+  TERM: 'term',
+  AXIOM: 'axiom',
+  FUNCTION: 'function',
+  PREDICATE: 'predicate',
+  CONSTANT: 'constant',
+  THEOREM: 'theorem'
+} as const;
+export type CstType = (typeof CstType)[keyof typeof CstType];
 
 /** Represents syntax type. */
-export enum Syntax {
-  UNDEF = 'undefined',
-  ASCII = 'ascii',
-  MATH = 'math'
-}
+export const Syntax = {
+  UNDEF: 'undefined',
+  ASCII: 'ascii',
+  MATH: 'math'
+} as const;
+export type Syntax = (typeof Syntax)[keyof typeof Syntax];
 
 /** Represents computability class. */
-export enum ValueClass {
-  INVALID = 'invalid', // incalculable
-  VALUE = 'value',
-  PROPERTY = 'property'
-}
+export const ValueClass = {
+  INVALID: 'invalid', // incalculable
+  VALUE: 'value',
+  PROPERTY: 'property'
+} as const;
+export type ValueClass = (typeof ValueClass)[keyof typeof ValueClass];
 
 /** Represents parsing status. */
-export enum ParsingStatus {
-  UNDEF = 'undefined',
-  VERIFIED = 'verified',
-  INCORRECT = 'incorrect'
-}
+export const ParsingStatus = {
+  UNDEF: 'undefined',
+  VERIFIED: 'verified',
+  INCORRECT: 'incorrect'
+} as const;
+export type ParsingStatus = (typeof ParsingStatus)[keyof typeof ParsingStatus];
 
 /** Represents Constituenta basic persistent data. */
 export type IConstituentaBasicsDTO = z.infer<typeof schemaConstituentaBasics>;
@@ -108,169 +112,178 @@ export type IExpressionParseDTO = z.infer<typeof schemaExpressionParse>;
 export type IVersionCreatedResponse = z.infer<typeof schemaVersionCreatedResponse>;
 
 /** Represents RSLang token types. */
-export enum TokenID {
+export const TokenID = {
   // Global, local IDs and literals
-  ID_LOCAL = 258,
-  ID_GLOBAL,
-  ID_FUNCTION,
-  ID_PREDICATE,
-  ID_RADICAL,
-  LIT_INTEGER,
-  LIT_WHOLE_NUMBERS,
-  LIT_EMPTYSET,
+  ID_LOCAL: 258,
+  ID_GLOBAL: 259,
+  ID_FUNCTION: 260,
+  ID_PREDICATE: 261,
+  ID_RADICAL: 262,
+  LIT_INTEGER: 263,
+  LIT_WHOLE_NUMBERS: 264,
+  LIT_EMPTYSET: 265,
 
   // Arithmetic
-  PLUS,
-  MINUS,
-  MULTIPLY,
+  PLUS: 266,
+  MINUS: 267,
+  MULTIPLY: 268,
 
   // Integer predicate symbols
-  GREATER,
-  LESSER,
-  GREATER_OR_EQ,
-  LESSER_OR_EQ,
+  GREATER: 269,
+  LESSER: 270,
+  GREATER_OR_EQ: 271,
+  LESSER_OR_EQ: 272,
 
   // Equality comparison
-  EQUAL,
-  NOTEQUAL,
+  EQUAL: 273,
+  NOTEQUAL: 274,
 
   // Logic predicate symbols
-  QUANTOR_UNIVERSAL,
-  QUANTOR_EXISTS,
-  LOGIC_NOT,
-  LOGIC_EQUIVALENT,
-  LOGIC_IMPLICATION,
-  LOGIC_OR,
-  LOGIC_AND,
+  QUANTOR_UNIVERSAL: 275,
+  QUANTOR_EXISTS: 276,
+  LOGIC_NOT: 277,
+  LOGIC_EQUIVALENT: 278,
+  LOGIC_IMPLICATION: 279,
+  LOGIC_OR: 280,
+  LOGIC_AND: 281,
 
   // Set theory predicate symbols
-  SET_IN,
-  SET_NOT_IN,
-  SUBSET,
-  SUBSET_OR_EQ,
-  NOT_SUBSET,
+  SET_IN: 282,
+  SET_NOT_IN: 283,
+  SUBSET: 284,
+  SUBSET_OR_EQ: 285,
+  NOT_SUBSET: 286,
 
   // Set theory operators
-  DECART,
-  SET_UNION,
-  SET_INTERSECTION,
-  SET_MINUS,
-  SET_SYMMETRIC_MINUS,
-  BOOLEAN,
+  DECART: 287,
+  SET_UNION: 288,
+  SET_INTERSECTION: 289,
+  SET_MINUS: 290,
+  SET_SYMMETRIC_MINUS: 291,
+  BOOLEAN: 292,
 
   // Structure operations
-  BIGPR,
-  SMALLPR,
-  FILTER,
-  CARD,
-  BOOL,
-  DEBOOL,
-  REDUCE,
+  BIGPR: 293,
+  SMALLPR: 294,
+  FILTER: 295,
+  CARD: 296,
+  BOOL: 297,
+  DEBOOL: 298,
+  REDUCE: 299,
 
   // Term constructions prefixes
-  DECLARATIVE,
-  RECURSIVE,
-  IMPERATIVE,
+  DECLARATIVE: 300,
+  RECURSIVE: 301,
+  IMPERATIVE: 302,
 
-  ITERATE,
-  ASSIGN,
+  ITERATE: 303,
+  ASSIGN: 304,
 
   // Punctuation
-  PUNCTUATION_DEFINE,
-  PUNCTUATION_STRUCT,
-  PUNCTUATION_PL,
-  PUNCTUATION_PR,
-  PUNCTUATION_CL,
-  PUNCTUATION_CR,
-  PUNCTUATION_SL,
-  PUNCTUATION_SR,
-  PUNCTUATION_BAR,
-  PUNCTUATION_COMMA,
-  PUNCTUATION_SEMICOLON,
+  PUNCTUATION_DEFINE: 305,
+  PUNCTUATION_STRUCT: 306,
+  PUNCTUATION_PL: 307,
+  PUNCTUATION_PR: 308,
+  PUNCTUATION_CL: 309,
+  PUNCTUATION_CR: 310,
+  PUNCTUATION_SL: 311,
+  PUNCTUATION_SR: 312,
+  PUNCTUATION_BAR: 313,
+  PUNCTUATION_COMMA: 314,
+  PUNCTUATION_SEMICOLON: 315,
 
   // ======= Non-terminal tokens =========
-  NT_ENUM_DECL,
-  NT_TUPLE,
-  NT_ENUMERATION,
-  NT_TUPLE_DECL,
-  NT_ARG_DECL,
+  NT_ENUM_DECL: 316,
+  NT_TUPLE: 317,
+  NT_ENUMERATION: 318,
+  NT_TUPLE_DECL: 319,
+  NT_ARG_DECL: 320,
 
-  NT_FUNC_DEFINITION,
-  NT_ARGUMENTS,
-  NT_FUNC_CALL,
+  NT_FUNC_DEFINITION: 321,
+  NT_ARGUMENTS: 322,
+  NT_FUNC_CALL: 323,
 
-  NT_DECLARATIVE_EXPR,
-  NT_IMPERATIVE_EXPR,
-  NT_RECURSIVE_FULL,
-  NT_RECURSIVE_SHORT,
+  NT_DECLARATIVE_EXPR: 324,
+  NT_IMPERATIVE_EXPR: 325,
+  NT_RECURSIVE_FULL: 326,
+  NT_RECURSIVE_SHORT: 327,
 
   // ======= Helper tokens ========
-  INTERRUPT,
-  END
-}
+  INTERRUPT: 328,
+  END: 329
+} as const;
+export type TokenID = (typeof TokenID)[keyof typeof TokenID];
 
 /** Represents RSLang expression error types. */
-export enum RSErrorType {
-  unknownSymbol = 33283,
-  syntax = 33792,
-  missingParenthesis = 33798,
-  missingCurlyBrace = 33799,
-  invalidQuantifier = 33800,
-  invalidImperative = 33801,
-  expectedArgDeclaration = 33812,
-  expectedLocal = 33813,
-  localDoubleDeclare = 10241,
-  localNotUsed = 10242,
+export const RSErrorType = {
+  unknownSymbol: 33283,
+  syntax: 33792,
+  missingParenthesis: 33798,
+  missingCurlyBrace: 33799,
+  invalidQuantifier: 33800,
+  invalidImperative: 33801,
+  expectedArgDeclaration: 33812,
+  expectedLocal: 33813,
+  localDoubleDeclare: 10241,
+  localNotUsed: 10242,
 
-  localUndeclared = 34817,
-  localShadowing = 34818,
+  localUndeclared: 34817,
+  localShadowing: 34818,
 
-  typesNotEqual = 34819,
-  globalNotTyped = 34820,
-  invalidDecart = 34821,
-  invalidBoolean = 34822,
-  invalidTypeOperation = 34823,
-  invalidCard = 34824,
-  invalidDebool = 34825,
-  globalFuncMissing = 34826,
-  globalFuncWithoutArgs = 34827,
-  invalidReduce = 34832,
-  invalidProjectionTuple = 34833,
-  invalidProjectionSet = 34834,
-  invalidEnumeration = 34835,
-  invalidBinding = 34836,
-  localOutOfScope = 34837,
-  invalidElementPredicate = 34838,
-  invalidEmptySetUsage = 34839,
-  invalidArgsArity = 34840,
-  invalidArgumentType = 34841,
-  globalStructure = 34844,
-  radicalUsage = 34849,
-  invalidFilterArgumentType = 34850,
-  invalidFilterArity = 34851,
-  arithmeticNotSupported = 34852,
-  typesNotCompatible = 34853,
-  orderingNotSupported = 34854,
+  typesNotEqual: 34819,
+  globalNotTyped: 34820,
+  invalidDecart: 34821,
+  invalidBoolean: 34822,
+  invalidTypeOperation: 34823,
+  invalidCard: 34824,
+  invalidDebool: 34825,
+  globalFuncMissing: 34826,
+  globalFuncWithoutArgs: 34827,
+  invalidReduce: 34832,
+  invalidProjectionTuple: 34833,
+  invalidProjectionSet: 34834,
+  invalidEnumeration: 34835,
+  invalidBinding: 34836,
+  localOutOfScope: 34837,
+  invalidElementPredicate: 34838,
+  invalidEmptySetUsage: 34839,
+  invalidArgsArity: 34840,
+  invalidArgumentType: 34841,
+  globalStructure: 34844,
+  radicalUsage: 34849,
+  invalidFilterArgumentType: 34850,
+  invalidFilterArity: 34851,
+  arithmeticNotSupported: 34852,
+  typesNotCompatible: 34853,
+  orderingNotSupported: 34854,
 
-  globalNoValue = 34880,
-  invalidPropertyUsage = 34881,
-  globalMissingAST = 34882,
-  globalFuncNoInterpretation = 34883,
+  globalNoValue: 34880,
+  invalidPropertyUsage: 34881,
+  globalMissingAST: 34882,
+  globalFuncNoInterpretation: 34883,
 
-  cstNonemptyBase = 34912,
-  cstEmptyDerived = 34913,
-  cstCallableNoArgs = 34914,
-  cstNonCallableHasArgs = 34915,
-  cstExpectedLogical = 34916,
-  cstExpectedTyped = 34917
-}
+  cstNonemptyBase: 34912,
+  cstEmptyDerived: 34913,
+  cstCallableNoArgs: 34914,
+  cstNonCallableHasArgs: 34915,
+  cstExpectedLogical: 34916,
+  cstExpectedTyped: 34917
+} as const;
+export type RSErrorType = (typeof RSErrorType)[keyof typeof RSErrorType];
 
 // ========= SCHEMAS ========
+export const schemaCstType = z.enum(Object.values(CstType) as [CstType, ...CstType[]]);
+export const schemaSyntax = z.enum(Object.values(Syntax) as [Syntax, ...Syntax[]]);
+export const schemaValueClass = z.enum(Object.values(ValueClass) as [ValueClass, ...ValueClass[]]);
+export const schemaParsingStatus = z.enum(Object.values(ParsingStatus) as [ParsingStatus, ...ParsingStatus[]]);
+export const schemaTokenID = z.nativeEnum(TokenID);
+export const schemaRSErrorType = z.nativeEnum(RSErrorType);
+
 export const schemaConstituentaBasics = z.strictObject({
   id: z.coerce.number(),
   alias: z.string().nonempty(errorMsg.requiredField),
   convention: z.string(),
-  cst_type: z.nativeEnum(CstType),
+  cst_type: schemaCstType,
   definition_formal: z.string(),
   definition_raw: z.string(),
   definition_resolved: z.string(),
@@ -281,8 +294,8 @@ export const schemaConstituentaBasics = z.strictObject({
 
 export const schemaConstituenta = schemaConstituentaBasics.extend({
   parse: z.strictObject({
-    status: z.nativeEnum(ParsingStatus),
-    valueClass: z.nativeEnum(ValueClass),
+    status: schemaParsingStatus,
+    valueClass: schemaValueClass,
     typification: z.string(),
     syntaxTree: z.string(),
     args: z.array(z.strictObject({ alias: z.string(), typification: z.string() }))
@@ -345,7 +358,7 @@ export const schemaCstUpdate = z.strictObject({
 export const schemaCstRename = z.strictObject({
   target: z.number(),
   alias: z.string(),
-  cst_type: z.nativeEnum(CstType)
+  cst_type: schemaCstType
 });
 
 export const schemaProduceStructureResponse = z.strictObject({
@@ -370,7 +383,7 @@ export const schemaInlineSynthesis = z.strictObject({
 });
 
 export const schemaRSErrorDescription = z.strictObject({
-  errorType: z.nativeEnum(RSErrorType),
+  errorType: schemaRSErrorType,
   position: z.number(),
   isCritical: z.boolean(),
   params: z.array(z.string())
@@ -379,16 +392,16 @@ export const schemaRSErrorDescription = z.strictObject({
 export const schemaExpressionParse = z.strictObject({
   parseResult: z.boolean(),
   prefixLen: z.number(),
-  syntax: z.nativeEnum(Syntax),
+  syntax: schemaSyntax,
   typification: z.string(),
-  valueClass: z.nativeEnum(ValueClass),
+  valueClass: schemaValueClass,
   errors: z.array(schemaRSErrorDescription),
   astText: z.string(),
   ast: z.array(
     z.strictObject({
       uid: z.number(),
       parent: z.number(),
-      typeID: z.nativeEnum(TokenID),
+      typeID: schemaTokenID,
       start: z.number(),
       finish: z.number(),
       data: z.strictObject({ dataType: z.string(), value: z.unknown().refine(value => value !== undefined) })

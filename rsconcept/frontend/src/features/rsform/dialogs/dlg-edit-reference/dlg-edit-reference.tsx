@@ -12,7 +12,7 @@ import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { labelReferenceType } from '../../labels';
-import { type IReference, ReferenceType } from '../../models/language';
+import { type IReference, ReferenceType, schemaGrammemeOption, schemaReferenceType } from '../../models/language';
 import {
   parseEntityReference,
   parseGrammemes,
@@ -34,10 +34,10 @@ export interface IReferenceInputState {
 
 const schemaEditReferenceState = z
   .object({
-    type: z.nativeEnum(ReferenceType),
+    type: schemaReferenceType,
     entity: z.strictObject({
       entity: z.string(),
-      grams: z.array(z.strictObject({ value: z.string(), label: z.string() }))
+      grams: z.array(schemaGrammemeOption)
     }),
     syntactic: z.strictObject({ offset: z.coerce.number(), nominal: z.string() })
   })
@@ -56,10 +56,11 @@ export interface DlgEditReferenceProps {
   onCancel: () => void;
 }
 
-enum TabID {
-  ENTITY = 0,
-  SYNTACTIC = 1
-}
+const TabID = {
+  ENTITY: 0,
+  SYNTACTIC: 1
+} as const;
+type TabID = (typeof TabID)[keyof typeof TabID];
 
 export function DlgEditReference() {
   const { initial, onSave, onCancel } = useDialogsStore(state => state.props as DlgEditReferenceProps);
@@ -89,9 +90,9 @@ export function DlgEditReference() {
     }
   }
 
-  function handleChangeTab(tab: TabID) {
+  function handleChangeTab(tab: number) {
     methods.setValue('type', tab === TabID.ENTITY ? ReferenceType.ENTITY : ReferenceType.SYNTACTIC);
-    setActiveTab(tab);
+    setActiveTab(tab as TabID);
   }
 
   return (

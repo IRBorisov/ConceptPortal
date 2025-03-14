@@ -1,6 +1,6 @@
 import { type Page } from '@playwright/test';
 
-import { type ICurrentUser, IUserLoginDTO } from '../../src/features/auth/backend/types';
+import { type ICurrentUser, type IUserLoginDTO } from '../../src/features/auth/backend/types';
 import { BACKEND_URL } from './constants';
 
 const dataAnonymousAuth: ICurrentUser = {

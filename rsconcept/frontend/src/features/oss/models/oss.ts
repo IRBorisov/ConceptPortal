@@ -6,9 +6,7 @@ import { type Graph } from '@/models/graph';
 
 import { type ICstSubstituteInfo, type IOperationDTO, type IOperationSchemaDTO } from '../backend/types';
 
-/**
- * Represents Operation.
- */
+/** Represents Operation. */
 export interface IOperation extends IOperationDTO {
   is_owned: boolean;
   is_consolidation: boolean; // aka 'diamond synthesis'
@@ -16,9 +14,7 @@ export interface IOperation extends IOperationDTO {
   arguments: number[];
 }
 
-/**
- * Represents {@link IOperationSchema} statistics.
- */
+/** Represents {@link IOperationSchema} statistics. */
 export interface IOperationSchemaStats {
   count_operations: number;
   count_inputs: number;
@@ -27,9 +23,7 @@ export interface IOperationSchemaStats {
   count_owned: number;
 }
 
-/**
- * Represents OperationSchema.
- */
+/** Represents OperationSchema. */
 export interface IOperationSchema extends IOperationSchemaDTO {
   items: IOperation[];
 
@@ -39,27 +33,25 @@ export interface IOperationSchema extends IOperationSchemaDTO {
   operationByID: Map<number, IOperation>;
 }
 
-/**
- * Represents substitution error description.
- */
+/** Represents substitution error description. */
 export interface ISubstitutionErrorDescription {
   errorType: SubstitutionErrorType;
   params: string[];
 }
 
-/**
- * Represents Substitution table error types.
- */
-export enum SubstitutionErrorType {
-  invalidIDs,
-  incorrectCst,
-  invalidClasses,
-  invalidBasic,
-  invalidConstant,
-  typificationCycle,
-  baseSubstitutionNotSet,
-  unequalTypification,
-  unequalExpressions,
-  unequalArgsCount,
-  unequalArgs
-}
+/** Represents Substitution table error types. */
+export const SubstitutionErrorType = {
+  invalidIDs: 0,
+  incorrectCst: 1,
+  invalidClasses: 2,
+  invalidBasic: 3,
+  invalidConstant: 4,
+  typificationCycle: 5,
+  baseSubstitutionNotSet: 6,
+  unequalTypification: 7,
+  unequalExpressions: 8,
+  unequalArgsCount: 9,
+  unequalArgs: 10
+} as const;
+
+export type SubstitutionErrorType = (typeof SubstitutionErrorType)[keyof typeof SubstitutionErrorType];

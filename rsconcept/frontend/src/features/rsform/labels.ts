@@ -9,7 +9,7 @@ import { type IVersionInfo } from '../library/backend/types';
 import { type CurrentVersion } from '../library/models/library';
 
 import { CstType, type IRSErrorDescription, ParsingStatus, RSErrorType, TokenID } from './backend/types';
-import { type GramData, Grammeme, ReferenceType } from './models/language';
+import { Grammeme, ReferenceType } from './models/language';
 import { CstClass, ExpressionStatus, type IConstituenta } from './models/rsform';
 import { type IArgumentInfo, type ISyntaxTreeNode } from './models/rslang';
 import { CstMatchMode, DependencyMode } from './stores/cst-search';
@@ -285,6 +285,7 @@ export function describeExpressionStatus(status: ExpressionStatus): string {
  * Retrieves label for {@link CstType}.
  */
 export function labelCstType(target: CstType): string {
+  console.log(1);
   // prettier-ignore
   switch (target) {
     case CstType.BASE: return 'Базисное множество';
@@ -457,10 +458,10 @@ export function labelSyntaxTree(node: ISyntaxTreeNode): string {
 /**
  * Generates label for grammeme.
  */
-export function labelGrammeme(gram: GramData): string {
+export function labelGrammeme(gram: Grammeme): string {
   // prettier-ignore
-  switch (gram as Grammeme) {
-    default: return `Неизв: ${gram}`;
+  switch (gram) {
+    default: return `Неизв: ${gram as string}`;
 
     case Grammeme.NOUN: return 'ЧР: сущ';
     case Grammeme.VERB: return 'ЧР: глагол';

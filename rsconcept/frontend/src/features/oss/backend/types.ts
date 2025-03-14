@@ -8,10 +8,11 @@ import { errorMsg } from '@/utils/labels';
 /**
  * Represents {@link IOperation} type.
  */
-export enum OperationType {
-  INPUT = 'input',
-  SYNTHESIS = 'synthesis'
-}
+export const OperationType = {
+  INPUT: 'input',
+  SYNTHESIS: 'synthesis'
+} as const;
+export type OperationType = (typeof OperationType)[keyof typeof OperationType];
 
 /** Represents {@link ICstSubstitute} extended data. */
 export type ICstSubstituteInfo = z.infer<typeof schemaCstSubstituteInfo>;
@@ -57,10 +58,11 @@ export type ICstRelocateDTO = z.infer<typeof schemaCstRelocate>;
 export type IConstituentaReference = z.infer<typeof schemaConstituentaReference>;
 
 // ====== Schemas ======
+export const schemaOperationType = z.enum(Object.values(OperationType) as [OperationType, ...OperationType[]]);
 
 export const schemaOperation = z.strictObject({
   id: z.number(),
-  operation_type: z.nativeEnum(OperationType),
+  operation_type: schemaOperationType,
   oss: z.number(),
 
   alias: z.string(),
@@ -103,7 +105,7 @@ export const schemaOperationCreate = z.strictObject({
   positions: z.array(schemaOperationPosition),
   item_data: z.strictObject({
     alias: z.string().nonempty(),
-    operation_type: z.nativeEnum(OperationType),
+    operation_type: schemaOperationType,
     title: z.string(),
     comment: z.string(),
     position_x: z.number(),

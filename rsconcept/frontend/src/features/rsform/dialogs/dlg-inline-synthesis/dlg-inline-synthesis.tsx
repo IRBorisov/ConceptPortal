@@ -22,15 +22,16 @@ export interface DlgInlineSynthesisProps {
   onSynthesis: () => void;
 }
 
-enum TabID {
-  SCHEMA = 0,
-  SELECTIONS = 1,
-  SUBSTITUTIONS = 2
-}
+export const TabID = {
+  SCHEMA: 0,
+  SELECTIONS: 1,
+  SUBSTITUTIONS: 2
+} as const;
+export type TabID = (typeof TabID)[keyof typeof TabID];
 
 export function DlgInlineSynthesis() {
   const { receiver, onSynthesis } = useDialogsStore(state => state.props as DlgInlineSynthesisProps);
-  const [activeTab, setActiveTab] = useState(TabID.SCHEMA);
+  const [activeTab, setActiveTab] = useState<TabID>(TabID.SCHEMA);
   const { inlineSynthesis } = useInlineSynthesis();
 
   const methods = useForm<IInlineSynthesisDTO>({
@@ -57,7 +58,12 @@ export function DlgInlineSynthesis() {
       canSubmit={methods.formState.isValid && sourceID !== null}
       onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
     >
-      <Tabs selectedTabClassName='clr-selected' className='grid' selectedIndex={activeTab} onSelect={setActiveTab}>
+      <Tabs
+        selectedTabClassName='clr-selected'
+        className='grid'
+        selectedIndex={activeTab}
+        onSelect={index => setActiveTab(index as TabID)}
+      >
         <TabList className='mb-3 mx-auto flex border divide-x rounded-none bg-prim-200'>
           <TabLabel
             label='Схема' //
