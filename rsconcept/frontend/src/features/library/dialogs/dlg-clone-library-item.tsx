@@ -108,7 +108,13 @@ export function DlgCloneLibraryItem() {
         control={control}
         name='location'
         render={({ field }) => (
-          <PickLocation value={field.value} rows={2} onChange={field.onChange} error={errors.location} />
+          <PickLocation
+            value={field.value} //
+            rows={2}
+            onChange={field.onChange}
+            className={!!errors.location ? '-mb-6' : undefined}
+            error={errors.location}
+          />
         )}
       />
 

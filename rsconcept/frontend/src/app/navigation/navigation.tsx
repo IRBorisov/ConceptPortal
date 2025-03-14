@@ -31,7 +31,7 @@ export function Navigation() {
       <ToggleNavigation />
       <div
         className={clsx(
-          'pl-2 pr-6 sm:pr-4 h-12 flex cc-shadow-border',
+          'pl-2 sm:pr-4 h-12 flex cc-shadow-border',
           'transition-[max-height,translate] ease-bezier duration-(--duration-move)',
           noNavigationAnimation ? '-translate-y-6 max-h-0' : 'max-h-12'
         )}

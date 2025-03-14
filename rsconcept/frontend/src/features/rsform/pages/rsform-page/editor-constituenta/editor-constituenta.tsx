@@ -76,7 +76,7 @@ export function EditorConstituenta() {
       className={clsx(
         'relative ',
         'cc-fade-in',
-        'min-h-80 max-w-[calc(min(100vw,95rem))] mx-auto',
+        'min-h-80 max-w-[calc(min(100vw,80rem))] mx-auto',
         'flex pt-8',
         'overflow-y-auto overflow-x-clip',
         isNarrow && 'flex-col md:items-center'

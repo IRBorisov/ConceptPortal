@@ -1,5 +1,7 @@
 'use client';
 
+import clsx from 'clsx';
+
 import { IconDarkTheme, IconLightTheme, IconPin, IconUnpin } from '@/components/icons';
 import { useAppLayoutStore } from '@/stores/app-layout';
 import { usePreferencesStore } from '@/stores/preferences';
@@ -11,7 +13,9 @@ export function ToggleNavigation() {
   const noNavigationAnimation = useAppLayoutStore(state => state.noNavigationAnimation);
   const toggleNoNavigation = useAppLayoutStore(state => state.toggleNoNavigation);
   return (
-    <div className='absolute top-0 right-0 z-navigation h-12 grid'>
+    <div
+      className={clsx('absolute top-0 right-0 z-navigation h-12', noNavigationAnimation ? 'grid' : 'hidden sm:grid')}
+    >
       <button
         tabIndex={-1}
         type='button'
