@@ -53,7 +53,7 @@ export function LibraryPage() {
 
   return (
     <>
-      <ToolbarSearch className='sticky top-0 h-9' total={libraryItems.length} filtered={filtered.length} />
+      <ToolbarSearch className='top-0 h-9' total={libraryItems.length} filtered={filtered.length} />
       <div className='relative cc-fade-in flex'>
         <MiniButton
           className='absolute z-tooltip -top-8 right-6'
