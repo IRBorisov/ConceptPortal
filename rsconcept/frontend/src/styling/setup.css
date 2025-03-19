@@ -94,16 +94,9 @@
     outline-color: transparent;
   }
 
-  ::selection {
-    background: var(--clr-sec-100);
-  }
-
-  tr:hover ::selection {
-    background: var(--clr-warn-100);
-  }
-
   ::placeholder {
     color: var(--clr-prim-600);
+    user-select: none;
   }
 
   /* Wrapping headers */

@@ -81,7 +81,6 @@ export const RSInput = forwardRef<ReactCodeMirrorRef, RSInputProps>(
         fontFamily: 'inherit',
         background: !disabled ? APP_COLORS.bgInput : APP_COLORS.bgDefault,
         foreground: APP_COLORS.fgDefault,
-        selection: APP_COLORS.bgHover,
         caret: APP_COLORS.fgDefault
       },
       styles: [
@@ -184,7 +183,7 @@ export const RSInput = forwardRef<ReactCodeMirrorRef, RSInputProps>(
 const editorSetup: BasicSetupOptions = {
   highlightSpecialChars: false,
   history: true,
-  drawSelection: true,
+  drawSelection: false,
   syntaxHighlighting: false,
   defaultKeymap: true,
   historyKeymap: true,

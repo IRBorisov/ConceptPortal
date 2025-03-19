@@ -113,7 +113,7 @@ export function FormCreateCst({ schema }: FormCreateCstProps) {
           id='dlg_cst_show_comment'
           tabIndex={-1}
           type='button'
-          className='self-start cc-label text-sec-600 hover:underline'
+          className='self-start cc-label text-sec-600 hover:underline select-none'
           onClick={() => setForceComment(true)}
         >
           Добавить комментарий

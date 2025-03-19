@@ -19,6 +19,15 @@
   z-index: 100;
 }
 
+.cm-selectionBackground {
+  background: highlight !important;
+}
+
+.cm-content ::selection {
+  background: highlight !important;
+  color: highlighttext !important;
+}
+
 .cm-editor {
   resize: vertical;
   overflow-y: auto;
@@ -43,6 +52,8 @@
 .cm-editor .cm-placeholder {
   font-family: var(--font-main);
   color: var(--clr-prim-600);
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .react-flow__handle {

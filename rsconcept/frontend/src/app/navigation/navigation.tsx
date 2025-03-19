@@ -13,18 +13,18 @@ import { ToggleNavigation } from './toggle-navigation';
 import { UserMenu } from './user-menu';
 
 export function Navigation() {
-  const router = useConceptNavigation();
+  const { push } = useConceptNavigation();
   const size = useWindowSize();
   const noNavigationAnimation = useAppLayoutStore(state => state.noNavigationAnimation);
 
   const navigateHome = (event: React.MouseEvent<Element>) =>
-    router.push({ path: urls.home, newTab: event.ctrlKey || event.metaKey });
+    push({ path: urls.home, newTab: event.ctrlKey || event.metaKey });
   const navigateLibrary = (event: React.MouseEvent<Element>) =>
-    router.push({ path: urls.library, newTab: event.ctrlKey || event.metaKey });
+    push({ path: urls.library, newTab: event.ctrlKey || event.metaKey });
   const navigateHelp = (event: React.MouseEvent<Element>) =>
-    router.push({ path: urls.manuals, newTab: event.ctrlKey || event.metaKey });
+    push({ path: urls.manuals, newTab: event.ctrlKey || event.metaKey });
   const navigateCreateNew = (event: React.MouseEvent<Element>) =>
-    router.push({ path: urls.create_schema, newTab: event.ctrlKey || event.metaKey });
+    push({ path: urls.create_schema, newTab: event.ctrlKey || event.metaKey });
 
   return (
     <nav className='z-navigation sticky top-0 left-0 right-0 select-none bg-prim-100'>

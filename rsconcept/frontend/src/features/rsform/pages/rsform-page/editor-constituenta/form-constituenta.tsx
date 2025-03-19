@@ -146,7 +146,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
       ) : null}
 
       <div className='absolute z-pop top-0 left-[calc(7ch+4px+3rem)] flex select-none'>
-        <div className='pt-1 text-sm font-medium whitespace-nowrap select-text cursor-default'>
+        <div className='pt-1 text-sm font-medium min-w-16 whitespace-nowrap select-text cursor-default'>
           <span>Имя </span>
           <span className='ml-1'>{activeCst?.alias ?? ''}</span>
         </div>
@@ -264,7 +264,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
         <button
           type='button'
           tabIndex={-1}
-          className='self-start cc-label text-sec-600 hover:underline'
+          className='self-start cc-label text-sec-600 hover:underline select-none'
           onClick={() => setForceComment(true)}
         >
           Добавить комментарий

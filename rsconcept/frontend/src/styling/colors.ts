@@ -41,9 +41,7 @@ export const APP_COLORS = {
   fgOrange:           'var(--acc-fg-orange)'
 }
 
-/**
- * Represents Select component theme.
- */
+/** Represents Select component theme. */
 export const SELECT_THEME = {
   primary: APP_COLORS.bgPrimary,
   primary75: APP_COLORS.bgSelected,
