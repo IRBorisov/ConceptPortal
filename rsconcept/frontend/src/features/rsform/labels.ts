@@ -285,7 +285,6 @@ export function describeExpressionStatus(status: ExpressionStatus): string {
  * Retrieves label for {@link CstType}.
  */
 export function labelCstType(target: CstType): string {
-  console.log(1);
   // prettier-ignore
   switch (target) {
     case CstType.BASE: return 'Базисное множество';

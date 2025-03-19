@@ -33,7 +33,7 @@ export function TableBody<TData>({
   const handleRowClicked = useCallback(
     (target: Row<TData>, event: React.MouseEvent<Element>) => {
       onRowClicked?.(target.original, event);
-      if (target.getCanSelect()) {
+      if (table.options.enableRowSelection && target.getCanSelect()) {
         if (event.shiftKey && !!lastSelected && lastSelected !== target.id) {
           const { rows, rowsById } = table.getRowModel();
           const lastIndex = rowsById[lastSelected].index;

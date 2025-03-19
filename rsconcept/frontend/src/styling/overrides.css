@@ -76,6 +76,7 @@
 .react-flow__attribution {
   font-size: var(--font-size-sm);
   font-family: var(--font-ui);
+  font-weight: 400;
   margin: 1rem;
 
   background-color: transparent;
