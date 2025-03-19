@@ -1,5 +1,5 @@
 /**
- * Module: Utility classes for stlye features.
+ * Module: Utility classes for style features.
  */
 
 @utility font-main {
@@ -17,6 +17,7 @@
 
 @utility clr-input {
   background-color: var(--clr-prim-0);
+
   &:disabled {
     background-color: var(--clr-prim-100);
   }
@@ -51,29 +52,27 @@
     background-color: var(--clr-prim-200);
   }
 
-  &:hover:not(:disabled),
-  &:focus-visible {
-    color: var(--clr-sec-0);
-    background-color: var(--clr-sec-600);
+  &:focus-visible,
+  .focus-frame:has(:focus-visible) {
+    outline: 2px solid var(--clr-sec-600);
   }
 
   &:focus-visible,
-  .focus-frame:has(:focus-visible) {
-    outline-width: 2px;
-    outline-style: solid;
-    outline-color: var(--clr-sec-600);
+  &:hover:not(:disabled) {
+    color: var(--clr-sec-0);
+    background-color: var(--clr-sec-600);
   }
 }
 
 @utility clr-btn-nav {
   color: var(--clr-prim-800);
 
-  &:hover:not(:disabled) {
-    background-color: var(--clr-sec-100);
-  }
-
   &:disabled {
     color: var(--clr-prim-600);
+  }
+
+  &:hover:not(:disabled) {
+    background-color: var(--clr-sec-100);
   }
 }
 
@@ -86,23 +85,17 @@
 
 @utility clr-outline {
   :is(&, .focus-frame):focus-visible {
-    outline-width: 2px;
-    outline-style: solid;
-    outline-color: var(--clr-sec-600);
+    outline: 2px solid var(--clr-sec-600);
   }
 }
 
 @utility focus-frame {
   :is(.clr-outline, &):focus-visible {
-    outline-width: 2px;
-    outline-style: solid;
-    outline-color: var(--clr-sec-600);
+    outline: 2px solid var(--clr-sec-600);
   }
 
   &:has(:focus-visible) {
-    outline-width: 2px;
-    outline-style: solid;
-    outline-color: var(--clr-sec-600);
+    outline: 2px solid var(--clr-sec-600);
   }
 }
 
@@ -115,6 +108,7 @@
 @utility clr-text-controls {
   color: var(--clr-prim-800);
   background-color: transparent;
+
   &:disabled {
     color: var(--clr-prim-600);
   }
@@ -140,10 +134,12 @@
 
 @utility inline-icon {
   display: inline-block;
-  font-size: 1.25rem;
+
   margin-left: 0.1rem;
   margin-right: 0.1rem;
   transform: translate(0, -0.2rem);
+
+  font-size: 1.25rem;
   color: var(--clr-sec-800);
 }
 
@@ -219,11 +215,5 @@
     linear-gradient(to left, transparent, black calc(var(--mask-border-size))),
     linear-gradient(to right, transparent, black calc(var(--mask-border-size)));
 
-  -webkit-mask-image: linear-gradient(to top, transparent, black calc(var(--mask-border-size))),
-    linear-gradient(to bottom, transparent, black calc(var(--mask-border-size))),
-    linear-gradient(to left, transparent, black calc(var(--mask-border-size))),
-    linear-gradient(to right, transparent, black calc(var(--mask-border-size)));
-
   mask-composite: intersect;
-  -webkit-mask-composite: destination-in;
 }

@@ -8,9 +8,9 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
+  /* stylelint-disable-next-line custom-property-pattern */
   --color-*: initial;
   --color-transparent: transparent;
-  --color-current: currentColor;
   --color-inherit: inherit;
 
   --color-prim-0: var(--clr-prim-0);
@@ -35,6 +35,7 @@
 
   --color-ok-600: var(--clr-ok-600);
 
+  /* stylelint-disable-next-line custom-property-pattern */
   --z-index-*: initial;
   --z-index-bottom: 0;
   --z-index-topmost: 99;
@@ -44,6 +45,7 @@
   --z-index-navigation: 50;
   --z-index-modal: 60;
 
+  /* stylelint-disable-next-line custom-property-pattern */
   --breakpoint-*: initial;
   --breakpoint-xs: 475px;
   --breakpoint-sm: 640px;

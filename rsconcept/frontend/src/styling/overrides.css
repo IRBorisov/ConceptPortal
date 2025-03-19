@@ -1,8 +1,10 @@
 /**
- * Module: Override imported components CSS styling.
- */
+* Module: Override imported components CSS styling.
+*/
 @import './constants.css';
 @import './imports.css';
+
+/* stylelint-disable selector-class-pattern */
 
 :root {
   /* Import overrides */
@@ -37,23 +39,18 @@
   border-width: 1px;
   border-radius: 0.25rem;
 
-  padding-left: 0.375rem;
-  padding-right: 0.375rem;
-  padding-top: 0.15rem;
-  padding-bottom: 0.15rem;
+  padding: 0.15rem 0.375rem;
 }
+
 .cm-editor.cm-focused {
   border-color: var(--clr-prim-400);
-  outline-color: var(--clr-sec-600);
-  outline-style: solid;
-  outline-width: 2px;
+  outline: 2px solid var(--clr-sec-600);
 }
 
 .cm-editor .cm-placeholder {
   font-family: var(--font-main);
   color: var(--clr-prim-600);
   user-select: none;
-  -webkit-user-select: none;
 }
 
 .react-flow__handle {
@@ -89,7 +86,6 @@
   font-size: 14px;
   border: 1px solid;
 
-  background-color: var(--clr-prim-0);
   color: var(--clr-prim-999);
   border-color: var(--clr-prim-400);
   background-color: var(--clr-prim-0);

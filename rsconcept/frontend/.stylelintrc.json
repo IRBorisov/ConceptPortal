@@ -1,0 +1,22 @@
+{
+  "extends": ["stylelint-config-recommended", "stylelint-config-standard", "stylelint-config-tailwindcss"],
+  "rules": {
+    "color-no-invalid-hex": true,
+    "font-family-no-missing-generic-family-keyword": true,
+    "unit-no-unknown": true,
+    "block-no-empty": true,
+    "selector-pseudo-element-no-unknown": true,
+    "property-no-unknown": true,
+    "declaration-block-no-duplicate-properties": true,
+    "no-duplicate-selectors": true,
+    "no-empty-source": true,
+
+    "import-notation": null,
+    "at-rule-empty-line-before": null,
+    "declaration-empty-line-before": null,
+    "at-rule-no-unknown": null,
+    "comment-no-empty": null,
+    "comment-empty-line-before": null,
+    "custom-property-empty-line-before": null
+  }
+}

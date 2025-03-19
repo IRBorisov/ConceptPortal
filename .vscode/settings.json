@@ -21,6 +21,7 @@
       "changeProcessCWD": true
     }
   ],
+  "stylelint.enable": true,
   "autopep8.args": [
     "--max-line-length",
     "120",

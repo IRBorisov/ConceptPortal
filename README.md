@@ -71,6 +71,10 @@ This readme file is used mostly to document project dependencies and conventions
   - vite
   - jest
   - ts-jest
+  - stylelint
+  - stylelint-config-recommended
+  - stylelint-config-standard
+  - stylelint-config-tailwindcss
   - @vitejs/plugin-react
   - @types/jest
   - @lezer/generator

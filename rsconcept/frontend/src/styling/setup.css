@@ -33,11 +33,10 @@
   ::backdrop,
   ::file-selector-button {
     border-color: var(--clr-prim-400);
+    accent-color: var(--clr-sec-600);
   }
 
   html {
-    -webkit-text-size-adjust: none;
-    -moz-text-size-adjust: none;
     text-size-adjust: none;
 
     hanging-punctuation: first last;
@@ -47,8 +46,8 @@
   }
 
   body {
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
     overflow-x: hidden;
   }
 
@@ -80,7 +79,7 @@
     background-color: var(--clr-prim-100);
   }
 
-  @media only screen and (max-width: 639px) {
+  @media only screen and (width <= 639px) {
     :root {
       font-size: var(--font-size-sm);
     }
@@ -89,9 +88,7 @@
   :focus,
   :focus-visible,
   :focus-within {
-    outline-width: 2px;
-    outline-style: solid;
-    outline-color: transparent;
+    outline: 2px solid transparent;
   }
 
   ::placeholder {
@@ -135,6 +132,7 @@
       :not([role='manuals']) & {
         margin-top: 0.5rem;
       }
+
       [role='manuals'] & {
         margin-top: 0.75rem;
         margin-bottom: 0.5rem;
