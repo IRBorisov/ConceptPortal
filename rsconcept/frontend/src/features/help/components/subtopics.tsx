@@ -10,13 +10,13 @@ interface SubtopicsProps {
 
 export function Subtopics({ headTopic }: SubtopicsProps) {
   return (
-    <>
-      <h2>Содержание раздела</h2>
+    <details>
+      <summary className='text-center font-semibold'>Содержание раздела</summary>
       {Object.values(HelpTopic)
         .filter(topic => topic !== headTopic && topicParent.get(topic) === headTopic)
         .map(topic => (
           <TopicItem key={`${prefixes.topic_item}${topic}`} topic={topic} />
         ))}
-    </>
+    </details>
   );
 }

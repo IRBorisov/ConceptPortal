@@ -171,9 +171,9 @@ export interface IconProps {
   className?: string;
 }
 
-function MetaIconSVG({ viewBox, size = '1.5rem', props, children }: React.PropsWithChildren<IconSVGProps>) {
+function MetaIconSVG({ viewBox, size = '1.5rem', props, className, children }: React.PropsWithChildren<IconSVGProps>) {
   return (
-    <svg width={size} height={size} fill='currentColor' viewBox={viewBox} {...props}>
+    <svg width={size} height={size} fill='currentColor' className={className} viewBox={viewBox} {...props}>
       {children}
     </svg>
   );

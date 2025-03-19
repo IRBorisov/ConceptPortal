@@ -38,13 +38,13 @@ export function HelpRSEditor() {
             <IconList className='inline-icon' /> список конституент
           </li>
           <li>
-            <IconSave className='inline-icon' /> сохранить: Ctrl + S
+            <IconSave className='inline-icon' /> сохранить: <kbd>Ctrl + S</kbd>
           </li>
           <li>
             <IconReset className='inline-icon' /> сбросить изменения
           </li>
           <li>
-            <IconClone className='inline-icon icon-green' /> клонировать: Alt + V
+            <IconClone className='inline-icon icon-green' /> клонировать: <kbd>Alt + V</kbd>
           </li>
           <li>
             <IconNewItem className='inline-icon icon-green' /> новая конституента
@@ -58,7 +58,7 @@ export function HelpRSEditor() {
           <h2>Список конституент</h2>
           <li>
             <IconMoveDown className='inline-icon' />
-            <IconMoveUp className='inline-icon' /> Alt + вверх/вниз
+            <IconMoveUp className='inline-icon' /> <kbd>Alt + вверх/вниз</kbd>
           </li>
           <li>
             <IconFilter className='inline-icon' />
@@ -98,14 +98,18 @@ export function HelpRSEditor() {
         <IconTree className='inline-icon' /> отображение{' '}
         <LinkTopic text='дерева разбора' topic={HelpTopic.UI_FORMULA_TREE} />
       </li>
-      <li>Ctrl + Пробел вставка незанятого имени / замена проекции</li>
+      <li>
+        <kbd>Ctrl + Пробел</kbd> вставка незанятого имени / замена проекции
+      </li>
 
       <h2>Термин и Текстовое определение</h2>
       <li>
         <IconEdit className='inline-icon' /> редактирование <LinkTopic text='Имени' topic={HelpTopic.CC_CONSTITUENTA} />{' '}
         / <LinkTopic text='Термина' topic={HelpTopic.CC_CONSTITUENTA} />
       </li>
-      <li>Ctrl + Пробел открывает редактирование отсылок</li>
+      <li>
+        <kbd>Ctrl + Пробел</kbd> открывает редактирование отсылок
+      </li>
     </div>
   );
 }

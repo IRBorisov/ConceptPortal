@@ -53,10 +53,14 @@ export function HelpOssGraph() {
 
         <div className='sm:w-84'>
           <h1>Изменение узлов</h1>
-          <li>Клик на операцию – выделение</li>
-          <li>Esc – сбросить выделение</li>
           <li>
-            Двойной клик – переход к связанной <LinkTopic text='КС' topic={HelpTopic.CC_SYSTEM} />
+            <kbd>Клик</kbd> на операцию – выделение
+          </li>
+          <li>
+            <kbd>Esc</kbd> – сбросить выделение
+          </li>
+          <li>
+            <kbd>Двойной клик</kbd> – переход к связанной <LinkTopic text='КС' topic={HelpTopic.CC_SYSTEM} />
           </li>
           <li>
             <IconEdit2 className='inline-icon' /> Редактирование операции
@@ -65,7 +69,7 @@ export function HelpOssGraph() {
             <IconNewItem className='inline-icon icon-green' /> Новая операция
           </li>
           <li>
-            <IconDestroy className='inline-icon icon-red' /> Delete – удалить выбранные
+            <IconDestroy className='inline-icon icon-red' /> <kbd>Delete</kbd> – удалить выбранные
           </li>
         </div>
       </div>

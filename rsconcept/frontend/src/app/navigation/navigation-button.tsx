@@ -15,20 +15,13 @@ export function NavigationButton({ icon, title, hideTitle, className, style, onC
   return (
     <button
       type='button'
-      tabIndex={-1}
+      tabIndex={1}
       aria-label={title}
       data-tooltip-id={!!title ? globalIDs.tooltip : undefined}
       data-tooltip-hidden={hideTitle}
       data-tooltip-content={title}
       onClick={onClick}
-      className={clsx(
-        'p-2 flex items-center gap-1',
-        'cursor-pointer',
-        'clr-btn-nav cc-animate-color duration-500',
-        'rounded-xl',
-        'font-controls whitespace-nowrap',
-        className
-      )}
+      className={clsx('p-2 flex items-center gap-1', 'cc-btn-nav', 'font-controls clr-outline', className)}
       style={style}
     >
       {icon ? icon : null}

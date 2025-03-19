@@ -155,6 +155,23 @@
   li::marker {
     content: '–\2009';
   }
+
+  summary {
+    cursor: pointer;
+    list-style: none;
+  }
+
+  summary::before {
+    font-family: var(--font-math);
+    padding-right: 0.5rem;
+    content: '+';
+  }
+
+  details[open] summary::before {
+    font-family: var(--font-math);
+    padding-right: 0.5rem;
+    content: '-';
+  }
 }
 
 @utility border {

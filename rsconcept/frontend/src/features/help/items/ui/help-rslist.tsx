@@ -33,28 +33,34 @@ export function HelpRSList() {
         <IconOSS className='inline-icon' /> переход к связанной <LinkTopic text='ОСС' topic={HelpTopic.CC_OSS} />
       </li>
       <li>
-        <IconReset className='inline-icon' /> сбросить выделение: ESC
+        <IconReset className='inline-icon' /> сбросить выделение: <kbd>ESC</kbd>
       </li>
       <li>Клик на строку – выделение</li>
-      <li>Shift + клик – выделение нескольких</li>
-      <li>Alt + клик – Редактор</li>
-      <li>Двойной клик – Редактор</li>
+      <li>
+        <kbd>Shift + клик</kbd> – выделение нескольких
+      </li>
+      <li>
+        <kbd>Alt + клик</kbd> – Редактор
+      </li>
+      <li>
+        <kbd>Двойной клик</kbd> – Редактор
+      </li>
       <li>
         <IconMoveUp className='inline-icon' />
-        <IconMoveDown className='inline-icon' /> Alt + вверх/вниз – перемещение
+        <IconMoveDown className='inline-icon' /> <kbd>Alt + вверх/вниз</kbd> – перемещение
       </li>
 
       <li>
-        <IconClone className='inline-icon icon-green' /> клонировать выделенную: Alt + V
+        <IconClone className='inline-icon icon-green' /> клонировать выделенную: <kbd>Alt + V</kbd>
       </li>
       <li>
-        <IconNewItem className='inline-icon icon-green' /> новая конституента: Alt + `
+        <IconNewItem className='inline-icon icon-green' /> новая конституента: <kbd>Alt + `</kbd>
       </li>
       <li>
-        <IconOpenList className='inline-icon icon-green' /> быстрое добавление: Alt + 1-6,Q,W
+        <IconOpenList className='inline-icon icon-green' /> быстрое добавление: <kbd>Alt + 1-6,Q,W</kbd>
       </li>
       <li>
-        <IconDestroy className='inline-icon icon-red' /> удаление выделенных: Delete
+        <IconDestroy className='inline-icon icon-red' /> удаление выделенных: <kbd>Delete</kbd>
       </li>
 
       <Divider margins='my-2' />

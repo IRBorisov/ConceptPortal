@@ -34,7 +34,7 @@ export function HelpRSCard() {
         <IconOSS className='inline-icon' /> переход к связанной <LinkTopic text='ОСС' topic={HelpTopic.CC_OSS} />
       </li>
       <li>
-        <IconSave className='inline-icon' /> сохранить изменения: Ctrl + S
+        <IconSave className='inline-icon' /> сохранить изменения: <kbd>Ctrl + S</kbd>
       </li>
       <li>
         <IconEditor className='inline-icon' /> Редактор обладает правом редактирования

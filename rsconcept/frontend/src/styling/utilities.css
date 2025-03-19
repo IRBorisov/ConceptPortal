@@ -64,18 +64,6 @@
   }
 }
 
-@utility clr-btn-nav {
-  color: var(--clr-prim-800);
-
-  &:disabled {
-    color: var(--clr-prim-600);
-  }
-
-  &:hover:not(:disabled) {
-    background-color: var(--clr-sec-100);
-  }
-}
-
 @utility clr-hover {
   &:hover:not(:disabled) {
     color: var(--clr-prim-999);

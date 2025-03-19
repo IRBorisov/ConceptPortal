@@ -138,7 +138,9 @@ export function ToolbarSearch({ className, total, filtered }: ToolbarSearchProps
             <SelectorButton
               transparent
               className='rounded-lg py-1'
-              titleHtml={(head ? describeLocationHead(head) : 'Выберите каталог') + '<br/>Ctrl + клик - Проводник'}
+              titleHtml={
+                (head ? describeLocationHead(head) : 'Выберите каталог') + '<br/><kbd>Ctrl + клик</kbd> - Проводник'
+              }
               hideTitle={headMenu.isOpen}
               icon={
                 head ? (

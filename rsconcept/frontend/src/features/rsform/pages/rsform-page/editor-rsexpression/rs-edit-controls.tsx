@@ -55,30 +55,30 @@ const MAIN_THIRD_ROW: TokenID[] = [
 ];
 
 const SECONDARY_FIRST_ROW = [
-  { text: 'μ', title: 'q' },
-  { text: 'ω', title: 'w' },
-  { text: 'ε', title: 'e' },
-  { text: 'ρ', title: 'r' },
-  { text: 'τ', title: 't' },
-  { text: 'π', title: 'y' }
+  { text: 'μ', hotkey: 'q' },
+  { text: 'ω', hotkey: 'w' },
+  { text: 'ε', hotkey: 'e' },
+  { text: 'ρ', hotkey: 'r' },
+  { text: 'τ', hotkey: 't' },
+  { text: 'π', hotkey: 'y' }
 ];
 
 const SECONDARY_SECOND_ROW = [
-  { text: 'α', title: 'a' },
-  { text: 'σ', title: 's' },
-  { text: 'δ', title: 'd' },
-  { text: 'φ', title: 'f' },
-  { text: 'γ', title: 'g' },
-  { text: 'λ', title: 'h' }
+  { text: 'α', hotkey: 'a' },
+  { text: 'σ', hotkey: 's' },
+  { text: 'δ', hotkey: 'd' },
+  { text: 'φ', hotkey: 'f' },
+  { text: 'γ', hotkey: 'g' },
+  { text: 'λ', hotkey: 'h' }
 ];
 
 const SECONDARY_THIRD_ROW = [
-  { text: 'ζ', title: 'z' },
-  { text: 'ξ', title: 'x' },
-  { text: 'ψ', title: 'c' },
-  { text: 'θ', title: 'v' },
-  { text: 'β', title: 'b' },
-  { text: 'η', title: 'n' }
+  { text: 'ζ', hotkey: 'z' },
+  { text: 'ξ', hotkey: 'x' },
+  { text: 'ψ', hotkey: 'c' },
+  { text: 'θ', hotkey: 'v' },
+  { text: 'β', hotkey: 'b' },
+  { text: 'η', hotkey: 'n' }
 ];
 
 interface RSEditorControlsProps {
@@ -103,11 +103,11 @@ export function RSEditorControls({ isOpen, disabled, onEdit }: RSEditorControlsP
       {MAIN_FIRST_ROW.map(token => (
         <RSTokenButton key={`${prefixes.rsedit_btn}${token}`} token={token} onInsert={onEdit} disabled={disabled} />
       ))}
-      {SECONDARY_FIRST_ROW.map(({ text, title }) => (
+      {SECONDARY_FIRST_ROW.map(({ text, hotkey }) => (
         <RSLocalButton
-          key={`${prefixes.rsedit_btn}${title}`}
+          key={`${prefixes.rsedit_btn}${hotkey}`}
           text={text}
-          title={title}
+          titleHtml={`<kbd>[${hotkey}]</kbd>`}
           onInsert={onEdit}
           disabled={disabled}
           className='hidden xs:inline'
@@ -117,12 +117,12 @@ export function RSEditorControls({ isOpen, disabled, onEdit }: RSEditorControlsP
       {MAIN_SECOND_ROW.map(token => (
         <RSTokenButton key={`${prefixes.rsedit_btn}${token}`} token={token} onInsert={onEdit} disabled={disabled} />
       ))}
-      {SECONDARY_SECOND_ROW.map(({ text, title }) => (
+      {SECONDARY_SECOND_ROW.map(({ text, hotkey }) => (
         <RSLocalButton
-          key={`${prefixes.rsedit_btn}${title}`}
+          key={`${prefixes.rsedit_btn}${hotkey}`}
           className='hidden xs:inline'
           text={text}
-          title={title}
+          titleHtml={`<kbd>[${hotkey}]</kbd>`}
           onInsert={onEdit}
           disabled={disabled}
         />
@@ -131,12 +131,12 @@ export function RSEditorControls({ isOpen, disabled, onEdit }: RSEditorControlsP
       {MAIN_THIRD_ROW.map(token => (
         <RSTokenButton key={`${prefixes.rsedit_btn}${token}`} token={token} onInsert={onEdit} disabled={disabled} />
       ))}
-      {SECONDARY_THIRD_ROW.map(({ text, title }) => (
+      {SECONDARY_THIRD_ROW.map(({ text, hotkey }) => (
         <RSLocalButton
-          key={`${prefixes.rsedit_btn}${title}`}
+          key={`${prefixes.rsedit_btn}${hotkey}`}
           className='hidden xs:inline'
           text={text}
-          title={title}
+          titleHtml={`<kbd>[${hotkey}]</kbd>`}
           onInsert={onEdit}
           disabled={disabled}
         />

@@ -20,20 +20,22 @@ export function HelpMain() {
         <LinkTopic text='Операционной схеме синтеза' topic={HelpTopic.CC_OSS} />.
       </p>
 
-      <h2>Разделы Справки</h2>
-      {[
-        HelpTopic.THESAURUS,
-        HelpTopic.INTERFACE,
-        HelpTopic.CONCEPTUAL,
-        HelpTopic.RSLANG,
-        HelpTopic.TERM_CONTROL,
-        HelpTopic.ACCESS,
-        HelpTopic.VERSIONS,
-        HelpTopic.INFO,
-        HelpTopic.EXTEOR
-      ].map(topic => (
-        <TopicItem key={`${prefixes.topic_item}${topic}`} topic={topic} />
-      ))}
+      <details>
+        <summary className='text-center font-semibold'>Разделы Справки</summary>
+        {[
+          HelpTopic.THESAURUS,
+          HelpTopic.INTERFACE,
+          HelpTopic.CONCEPTUAL,
+          HelpTopic.RSLANG,
+          HelpTopic.TERM_CONTROL,
+          HelpTopic.ACCESS,
+          HelpTopic.VERSIONS,
+          HelpTopic.INFO,
+          HelpTopic.EXTEOR
+        ].map(topic => (
+          <TopicItem key={`${prefixes.topic_item}${topic}`} topic={topic} />
+        ))}
+      </details>
 
       <h2>Лицензирование и раскрытие информации</h2>
       <li>Пользователи Портала сохраняют авторские права на создаваемый ими контент</li>

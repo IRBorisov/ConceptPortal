@@ -34,8 +34,12 @@ export function HelpLibrary() {
       <li>
         <span className='text-(--acc-fg-green)'>зеленым текстом</span> выделены ОСС
       </li>
-      <li>клик по строке - переход к редактированию схемы</li>
-      <li>Ctrl + клик по строке откроет схему в новой вкладке</li>
+      <li>
+        <kbd>клик</kbd> по строке - переход к редактированию схемы
+      </li>
+      <li>
+        <kbd>Ctrl + клик</kbd> по строке откроет схему в новой вкладке
+      </li>
       <li>Фильтры атрибутов три позиции: да/нет/не применять</li>
       <li>
         <IconShow size='1rem' className='inline-icon' /> фильтры атрибутов применяются по клику
@@ -67,9 +71,15 @@ export function HelpLibrary() {
       <li>
         <IconSubfolders size='1rem' className='inline-icon icon-green' /> схемы во вложенных папках
       </li>
-      <li>клик по папке отображает справа схемы в ней</li>
-      <li>Ctrl + клик по папке копирует путь в буфер обмена</li>
-      <li>клик по иконке сворачивает/разворачивает вложенные</li>
+      <li>
+        <kbd>клик</kbd> по папке отображает справа схемы в ней
+      </li>
+      <li>
+        <kbd>Ctrl + клик по папке копирует путь в буфер обмена</kbd>
+      </li>
+      <li>
+        <kbd>клик</kbd> по иконке сворачивает/разворачивает вложенные
+      </li>
       <li>
         <IconFolderEmpty size='1rem' className='inline-icon clr-text-default' /> папка без схем
       </li>

@@ -101,7 +101,7 @@ function domTooltipEntityReference(ref: IEntityReference, cst: IConstituenta | n
   if (canClick) {
     const clickTip = document.createElement('p');
     clickTip.className = 'text-center text-xs mt-1';
-    clickTip.innerHTML = 'Ctrl + клик для перехода</br>Ctrl + пробел для редактирования';
+    clickTip.innerHTML = '<kbd>Ctrl + клик</kbd> для перехода</br><kbd>Ctrl + пробел</kbd> для редактирования';
     dom.appendChild(clickTip);
   }
 
@@ -146,7 +146,7 @@ function domTooltipSyntacticReference(
   if (canClick) {
     const clickTip = document.createElement('p');
     clickTip.className = 'text-center text-xs mt-1';
-    clickTip.innerHTML = 'Ctrl + пробел для редактирования';
+    clickTip.innerHTML = '<kbd>Ctrl + пробел</kbd> для редактирования';
     dom.appendChild(clickTip);
   }
 

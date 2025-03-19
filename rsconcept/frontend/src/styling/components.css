@@ -2,6 +2,22 @@
  * Module: Utility classes for specific react components.
  */
 
+@utility cc-btn-nav {
+  color: var(--clr-prim-800);
+  border-radius: 0.75rem;
+
+  cursor: pointer;
+  white-space: nowrap;
+
+  transition-property: background-color;
+  transition-timing-function: var(--ease-bezier);
+  transition-duration: 500ms;
+
+  &:hover {
+    background-color: var(--clr-sec-100);
+  }
+}
+
 @utility cc-tab-tools {
   z-index: var(--z-index-pop);
   position: absolute;
@@ -15,6 +31,7 @@
   font-size: 0.875rem;
   line-height: 1.25rem;
   font-weight: 500;
+
   cursor: default;
   user-select: text;
   white-space: nowrap;

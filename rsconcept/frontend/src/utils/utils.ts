@@ -213,5 +213,5 @@ export function removeTags(target?: string): string {
  * Generate HTML wrapper for control description including hotkey.
  */
 export function prepareTooltip(text: string, hotkey?: string) {
-  return hotkey ? `<b>[${hotkey}]</b><br/>${text}` : text;
+  return hotkey ? `<kbd>[${hotkey}]</kbd><br/>${text}` : text;
 }
