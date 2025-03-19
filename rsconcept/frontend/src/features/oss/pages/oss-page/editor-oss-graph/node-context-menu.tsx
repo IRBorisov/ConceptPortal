@@ -191,10 +191,10 @@ export function NodeContextMenu({ isOpen, operation, cursorX, cursorY, onHide }:
             onClick={handleOpenSchema}
           />
         ) : null}
-        {isMutable && !operation?.result && operation?.operation_type === OperationType.INPUT ? (
+        {isMutable && !operation?.result && operation?.arguments.length === 0 ? (
           <DropdownButton
             text='Создать схему'
-            title='Создать пустую схему для загрузки'
+            title='Создать пустую схему'
             icon={<IconNewRSForm size='1rem' className='icon-green' />}
             disabled={isProcessing}
             onClick={handleInputCreate}

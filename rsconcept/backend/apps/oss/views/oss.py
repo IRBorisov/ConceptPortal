@@ -200,9 +200,9 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         serializer.is_valid(raise_exception=True)
 
         operation: m.Operation = cast(m.Operation, serializer.validated_data['target'])
-        if operation.operation_type != m.OperationType.INPUT:
+        if len(operation.getQ_arguments()) > 0:
             raise serializers.ValidationError({
-                'target': msg.operationNotInput(operation.alias)
+                'target': msg.operationHasArguments(operation.alias)
             })
         if operation.result is not None:
             raise serializers.ValidationError({

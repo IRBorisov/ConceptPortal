@@ -34,6 +34,10 @@ def operationNotInput(title: str):
     return f'Операция не является Загрузкой: {title}'
 
 
+def operationHasArguments(title: str):
+    return f'Операция имеет аргументы: {title}'
+
+
 def operationResultFromAnotherOSS():
     return 'Схема является результатом другой ОСС'
 

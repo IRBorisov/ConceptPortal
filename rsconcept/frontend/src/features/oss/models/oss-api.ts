@@ -23,7 +23,7 @@ import { infoMsg } from '@/utils/labels';
 import { TextMatcher } from '@/utils/utils';
 
 import { Graph } from '../../../models/graph';
-import { type IOperationPosition, OperationType } from '../backend/types';
+import { type IOperationPosition } from '../backend/types';
 import { describeSubstitutionError } from '../labels';
 
 import { type IOperation, type IOperationSchema, SubstitutionErrorType } from './oss';
@@ -493,7 +493,6 @@ export function getRelocateCandidates(
  */
 export function calculateInsertPosition(
   oss: IOperationSchema,
-  operationType: OperationType,
   argumentsOps: number[],
   positions: IOperationPosition[],
   defaultPosition: Position2D
@@ -503,15 +502,15 @@ export function calculateInsertPosition(
     return result;
   }
 
-  if (operationType === OperationType.INPUT || argumentsOps.length === 0) {
-    let inputsNodes = positions.filter(pos =>
-      oss.items.find(operation => operation.operation_type === OperationType.INPUT && operation.id === pos.id)
+  if (argumentsOps.length === 0) {
+    let inputsPositions = positions.filter(pos =>
+      oss.items.find(operation => operation.arguments.length === 0 && operation.id === pos.id)
     );
-    if (inputsNodes.length > 0) {
-      inputsNodes = positions;
+    if (inputsPositions.length === 0) {
+      inputsPositions = positions;
     }
-    const maxX = Math.max(...inputsNodes.map(node => node.position_x));
-    const minY = Math.min(...inputsNodes.map(node => node.position_y));
+    const maxX = Math.max(...inputsPositions.map(node => node.position_x));
+    const minY = Math.min(...inputsPositions.map(node => node.position_y));
     result.x = maxX + DISTANCE_X;
     result.y = minY;
   } else {

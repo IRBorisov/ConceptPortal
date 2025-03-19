@@ -69,7 +69,7 @@ export function DlgCreateOperation() {
   const isValid = !!alias && !oss.items.some(operation => operation.alias === alias);
 
   function onSubmit(data: IOperationCreateDTO) {
-    const target = calculateInsertPosition(oss, data.item_data.operation_type, data.arguments, positions, {
+    const target = calculateInsertPosition(oss, data.arguments, positions, {
       x: defaultX,
       y: defaultY
     });
