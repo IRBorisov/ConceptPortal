@@ -56,7 +56,7 @@ export function TextArea({
           fitContent && 'field-sizing-content',
           noResize && 'resize-none',
           transparent ? 'bg-transparent' : 'clr-input',
-          !noOutline && 'clr-outline',
+          !noOutline && 'focus-outline',
           dense && 'grow max-w-full',
           !dense && !!label && 'mt-2',
           !dense && className

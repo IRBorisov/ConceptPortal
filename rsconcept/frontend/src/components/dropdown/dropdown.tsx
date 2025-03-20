@@ -48,6 +48,7 @@ export function Dropdown({
         className
       )}
       aria-hidden={!isOpen}
+      inert={!isOpen}
       {...restProps}
     >
       {children}

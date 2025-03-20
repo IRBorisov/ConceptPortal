@@ -84,6 +84,7 @@ export function SelectLocation({ value, dense, prefix, onClick, className, style
                     <IconFolderOpened size='1rem' className='icon-green' />
                   )
                 }
+                aria-label='Отображение вложенных папок'
                 onClick={event => handleClickFold(event, item, folded.includes(item))}
               />
             ) : (

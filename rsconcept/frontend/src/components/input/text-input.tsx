@@ -54,7 +54,7 @@ export function TextInput({
           'leading-tight truncate hover:text-clip',
           transparent ? 'bg-transparent' : 'clr-input',
           !noBorder && 'border',
-          !noOutline && 'clr-outline',
+          !noOutline && 'focus-outline',
           (!noBorder || !disabled) && 'px-3',
           dense && 'grow max-w-full',
           !dense && !!label && 'mt-2',

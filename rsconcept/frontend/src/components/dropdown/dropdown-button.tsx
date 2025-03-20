@@ -31,7 +31,6 @@ export function DropdownButton({
 }: DropdownButtonProps) {
   return (
     <button
-      tabIndex={-1}
       type='button'
       onClick={onClick}
       className={clsx(

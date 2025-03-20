@@ -44,7 +44,7 @@ export function Button({
         'clr-btn-default cc-animate-color',
         dense ? 'px-1' : 'px-3 py-1',
         loading ? 'cursor-progress' : 'cursor-pointer',
-        noOutline ? 'outline-hidden' : 'clr-outline',
+        noOutline ? 'outline-hidden' : 'focus-outline',
         !noBorder && 'border rounded-sm',
         className
       )}

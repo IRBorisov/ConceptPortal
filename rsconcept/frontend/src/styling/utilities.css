@@ -71,14 +71,14 @@
   }
 }
 
-@utility clr-outline {
+@utility focus-outline {
   :is(&, .focus-frame):focus-visible {
     outline: 2px solid var(--clr-sec-600);
   }
 }
 
 @utility focus-frame {
-  :is(.clr-outline, &):focus-visible {
+  :is(.focus-outline, &):focus-visible {
     outline: 2px solid var(--clr-sec-600);
   }
 

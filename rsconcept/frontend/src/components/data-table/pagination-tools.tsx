@@ -38,7 +38,8 @@ export function PaginationTools<TData>({ id, table, paginationOptions }: Paginat
       <div className='flex'>
         <button
           type='button'
-          className='clr-hover clr-text-controls cc-animate-color'
+          aria-label='Первая страница'
+          className='clr-hover clr-text-controls cc-animate-color focus-outline'
           onClick={() => table.setPageIndex(0)}
           disabled={!table.getCanPreviousPage()}
         >
@@ -46,7 +47,8 @@ export function PaginationTools<TData>({ id, table, paginationOptions }: Paginat
         </button>
         <button
           type='button'
-          className='clr-hover clr-text-controls cc-animate-color'
+          aria-label='Предыдущая страница'
+          className='clr-hover clr-text-controls cc-animate-color focus-outline'
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
@@ -55,7 +57,8 @@ export function PaginationTools<TData>({ id, table, paginationOptions }: Paginat
         <input
           id={id ? `${id}__page` : undefined}
           title='Номер страницы. Выделите для ручного ввода'
-          className='w-6 text-center bg-prim-100'
+          aria-label='Номер страницы'
+          className='w-6 text-center bg-prim-100 focus-outline'
           value={table.getState().pagination.pageIndex + 1}
           onChange={event => {
             const page = event.target.value ? Number(event.target.value) - 1 : 0;
@@ -66,7 +69,8 @@ export function PaginationTools<TData>({ id, table, paginationOptions }: Paginat
         />
         <button
           type='button'
-          className='clr-hover clr-text-controls cc-animate-color'
+          aria-label='Следующая страница'
+          className='clr-hover clr-text-controls cc-animate-color focus-outline'
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
@@ -74,7 +78,8 @@ export function PaginationTools<TData>({ id, table, paginationOptions }: Paginat
         </button>
         <button
           type='button'
-          className='clr-hover clr-text-controls cc-animate-color'
+          aria-label='Последняя страница'
+          className='clr-hover clr-text-controls cc-animate-color focus-outline'
           onClick={() => table.setPageIndex(table.getPageCount() - 1)}
           disabled={!table.getCanNextPage()}
         >
@@ -83,12 +88,13 @@ export function PaginationTools<TData>({ id, table, paginationOptions }: Paginat
       </div>
       <select
         id={id ? `${id}__per_page` : undefined}
+        aria-label='Выбор количества строчек на странице'
         value={table.getState().pagination.pageSize}
         onChange={handlePaginationOptionsChange}
-        className='mx-2 cursor-pointer bg-prim-100'
+        className='mx-2 cursor-pointer bg-prim-100 focus-outline'
       >
         {paginationOptions.map(pageSize => (
-          <option key={`${prefixes.page_size}${pageSize}`} value={pageSize}>
+          <option key={`${prefixes.page_size}${pageSize}`} value={pageSize} aria-label={`${pageSize} на страницу`}>
             {pageSize} на стр
           </option>
         ))}

@@ -21,7 +21,7 @@ export function NavigationButton({ icon, title, hideTitle, className, style, onC
       data-tooltip-hidden={hideTitle}
       data-tooltip-content={title}
       onClick={onClick}
-      className={clsx('p-2 flex items-center gap-1', 'cc-btn-nav', 'font-controls clr-outline', className)}
+      className={clsx('p-2 flex items-center gap-1', 'cc-btn-nav', 'font-controls focus-outline', className)}
       style={style}
     >
       {icon ? icon : null}

@@ -8,14 +8,18 @@
 /* *,
 *::after,
 *::before {
-  background: hsla(135, 50%, 50%, 0.05) !important;
-  outline: 2px solid hotpink !important;
-
   :focus,
   :focus-visible,
   :focus-within {
     outline: 2px solid hotpink !important;
   }
+} */
+
+/* *,
+*::after,
+*::before {
+  background: hsla(135, 50%, 50%, 0.05) !important;
+  outline: 2px solid hotpink !important;
 } */
 
 @layer utilities {

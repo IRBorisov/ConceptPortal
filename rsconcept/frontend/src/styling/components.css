@@ -18,6 +18,16 @@
   }
 }
 
+@utility cc-search-icon {
+  pointer-events: none;
+  color: var(--clr-prim-800);
+  background-color: transparent;
+
+  :focus-within > & {
+    color: var(--clr-sec-600);
+  }
+}
+
 @utility cc-tab-tools {
   z-index: var(--z-index-pop);
   position: absolute;
