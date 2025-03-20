@@ -15,7 +15,7 @@ export function NavigationButton({ icon, title, hideTitle, className, style, onC
   return (
     <button
       type='button'
-      tabIndex={1}
+      tabIndex={0}
       aria-label={title}
       data-tooltip-id={!!title ? globalIDs.tooltip : undefined}
       data-tooltip-hidden={hideTitle}

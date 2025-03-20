@@ -41,7 +41,6 @@ export function ValueIcon({
   onClick,
   ...restProps
 }: ValueIconProps) {
-  // TODO: do not add button if onClick is disabled
   return (
     <div
       className={clsx(
