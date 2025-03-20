@@ -7,6 +7,7 @@ User = get_user_model()
 
 
 class CustomUserAdmin(UserAdmin):
+    ''' Admin model: User. '''
     fieldsets = UserAdmin.fieldsets
     list_display = (
         'username',
