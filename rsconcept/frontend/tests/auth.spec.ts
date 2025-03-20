@@ -31,7 +31,7 @@ test('logout procedure and consequence', async ({ page }) => {
   await page.goto('/');
 
   await page.getByRole('button', { name: 'Пользователь' }).click();
-  await page.getByRole('button', { name: 'Выйти' }).click();
+  await page.getByRole('button', { name: 'Выход из приложения' }).click();
 
   await page.getByRole('button', { name: 'Перейти на страницу логина' }).click();
   await expect(page.getByRole('button', { name: 'Войти' })).toBeVisible();
