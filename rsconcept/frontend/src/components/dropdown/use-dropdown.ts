@@ -2,18 +2,21 @@
 
 import { useRef, useState } from 'react';
 
-import { useClickedOutside } from '@/hooks/use-clicked-outside';
-
 export function useDropdown() {
   const [isOpen, setIsOpen] = useState(false);
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement>(null);
 
-  useClickedOutside(isOpen, ref, () => setIsOpen(false));
+  function handleBlur(event: React.FocusEvent<HTMLDivElement>) {
+    if (!ref.current?.contains(event.relatedTarget as Node)) {
+      setIsOpen(false);
+    }
+  }
 
   return {
     ref,
     isOpen,
     setIsOpen,
+    handleBlur,
     toggle: () => setIsOpen(!isOpen),
     hide: () => setIsOpen(false)
   };

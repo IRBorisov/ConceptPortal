@@ -47,7 +47,7 @@ export function MenuMain() {
   const showClone = useDialogsStore(state => state.showCloneLibraryItem);
   const showUpload = useDialogsStore(state => state.showUploadRSForm);
 
-  const schemaMenu = useDropdown();
+  const menu = useDropdown();
 
   function calculateCloneLocation() {
     const location = schema.location;
@@ -62,12 +62,12 @@ export function MenuMain() {
   }
 
   function handleDelete() {
-    schemaMenu.hide();
+    menu.hide();
     deleteSchema();
   }
 
   function handleDownload() {
-    schemaMenu.hide();
+    menu.hide();
     if (isModified && !promptUnsaved()) {
       return;
     }
@@ -85,12 +85,12 @@ export function MenuMain() {
   }
 
   function handleUpload() {
-    schemaMenu.hide();
+    menu.hide();
     showUpload({ itemID: schema.id });
   }
 
   function handleClone() {
-    schemaMenu.hide();
+    menu.hide();
     if (isModified && !promptUnsaved()) {
       return;
     }
@@ -103,29 +103,29 @@ export function MenuMain() {
   }
 
   function handleShare() {
-    schemaMenu.hide();
+    menu.hide();
     sharePage();
   }
 
   function handleShowQR() {
-    schemaMenu.hide();
+    menu.hide();
     showQR({ target: generatePageQR() });
   }
 
   return (
-    <div ref={schemaMenu.ref} className='relative'>
+    <div ref={menu.ref} onBlur={menu.handleBlur} className='relative'>
       <Button
         dense
         noBorder
         noOutline
         tabIndex={-1}
         title='Меню'
-        hideTitle={schemaMenu.isOpen}
+        hideTitle={menu.isOpen}
         icon={<IconMenu size='1.25rem' className='clr-text-controls' />}
         className='h-full pl-2'
-        onClick={schemaMenu.toggle}
+        onClick={menu.toggle}
       />
-      <Dropdown isOpen={schemaMenu.isOpen} margin='mt-3'>
+      <Dropdown isOpen={menu.isOpen} margin='mt-3'>
         <DropdownButton
           text='Поделиться'
           titleHtml={tooltipText.shareItem(schema.access_policy === AccessPolicy.PUBLIC)}

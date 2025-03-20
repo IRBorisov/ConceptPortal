@@ -32,8 +32,8 @@ interface ToolbarSearchProps {
 }
 
 export function ToolbarSearch({ className, total, filtered }: ToolbarSearchProps) {
-  const headMenu = useDropdown();
   const userMenu = useDropdown();
+  const headMenu = useDropdown();
 
   const query = useLibrarySearchStore(state => state.query);
   const setQuery = useLibrarySearchStore(state => state.setQuery);
@@ -88,7 +88,7 @@ export function ToolbarSearch({ className, total, filtered }: ToolbarSearchProps
           onClick={toggleVisible}
         />
 
-        <div ref={userMenu.ref} className='relative flex'>
+        <div ref={userMenu.ref} onBlur={userMenu.handleBlur} className='relative flex'>
           <MiniButton
             title='Поиск пользователя'
             hideTitle={userMenu.isOpen}
@@ -137,7 +137,11 @@ export function ToolbarSearch({ className, total, filtered }: ToolbarSearchProps
           onChangeQuery={setQuery}
         />
         {!folderMode ? (
-          <div ref={headMenu.ref} className='relative flex items-center h-full select-none'>
+          <div
+            ref={headMenu.ref}
+            onBlur={headMenu.handleBlur}
+            className='relative flex items-center h-full select-none'
+          >
             <SelectorButton
               transparent
               className='rounded-lg py-1'

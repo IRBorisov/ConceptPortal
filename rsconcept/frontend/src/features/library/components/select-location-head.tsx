@@ -33,7 +33,12 @@ export function SelectLocationHead({
   }
 
   return (
-    <div ref={menu.ref} className={clsx('text-right relative', className)} {...restProps}>
+    <div
+      ref={menu.ref} //
+      onBlur={menu.handleBlur}
+      className={clsx('text-right relative', className)}
+      {...restProps}
+    >
       <SelectorButton
         transparent
         tabIndex={-1}

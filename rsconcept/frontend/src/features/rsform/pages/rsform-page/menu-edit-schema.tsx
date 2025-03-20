@@ -31,7 +31,7 @@ export function MenuEditSchema() {
   const { isAnonymous } = useAuthSuspense();
   const { isModified } = useModificationStore();
   const router = useConceptNavigation();
-  const editMenu = useDropdown();
+  const menu = useDropdown();
   const { schema, activeCst, setSelected, isArchive, isContentEditable, promptTemplate, deselectAll } = useRSEdit();
   const isProcessing = useMutatingRSForm();
 
@@ -43,17 +43,17 @@ export function MenuEditSchema() {
   const showSubstituteCst = useDialogsStore(state => state.showSubstituteCst);
 
   function handleReindex() {
-    editMenu.hide();
+    menu.hide();
     void resetAliases({ itemID: schema.id });
   }
 
   function handleRestoreOrder() {
-    editMenu.hide();
+    menu.hide();
     void restoreOrder({ itemID: schema.id });
   }
 
   function handleSubstituteCst() {
-    editMenu.hide();
+    menu.hide();
     if (isModified && !promptUnsaved()) {
       return;
     }
@@ -64,12 +64,12 @@ export function MenuEditSchema() {
   }
 
   function handleTemplates() {
-    editMenu.hide();
+    menu.hide();
     promptTemplate();
   }
 
   function handleProduceStructure(targetCst: IConstituenta | null) {
-    editMenu.hide();
+    menu.hide();
     if (!targetCst) {
       return;
     }
@@ -87,7 +87,7 @@ export function MenuEditSchema() {
   }
 
   function handleInlineSynthesis() {
-    editMenu.hide();
+    menu.hide();
     if (isModified && !promptUnsaved()) {
       return;
     }
@@ -109,7 +109,7 @@ export function MenuEditSchema() {
         noOutline
         tabIndex={-1}
         titleHtml='<b>Архив</b>: Редактирование запрещено<br />Перейти к актуальной версии'
-        hideTitle={editMenu.isOpen}
+        hideTitle={menu.isOpen}
         className='h-full px-2'
         icon={<IconArchive size='1.25rem' className='icon-primary' />}
         onClick={event => router.push({ path: urls.schema(schema.id), newTab: event.ctrlKey || event.metaKey })}
@@ -118,19 +118,19 @@ export function MenuEditSchema() {
   }
 
   return (
-    <div ref={editMenu.ref} className='relative'>
+    <div ref={menu.ref} onBlur={menu.handleBlur} className='relative'>
       <Button
         dense
         noBorder
         noOutline
         tabIndex={-1}
         title='Редактирование'
-        hideTitle={editMenu.isOpen}
+        hideTitle={menu.isOpen}
         className='h-full px-2'
         icon={<IconEdit2 size='1.25rem' className={isContentEditable ? 'icon-green' : 'icon-red'} />}
-        onClick={editMenu.toggle}
+        onClick={menu.toggle}
       />
-      <Dropdown isOpen={editMenu.isOpen} margin='mt-3'>
+      <Dropdown isOpen={menu.isOpen} margin='mt-3'>
         <DropdownButton
           text='Шаблоны'
           title='Создать конституенту из шаблона'

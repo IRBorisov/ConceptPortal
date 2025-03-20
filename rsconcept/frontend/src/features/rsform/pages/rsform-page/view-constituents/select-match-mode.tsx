@@ -28,7 +28,7 @@ export function SelectMatchMode({ value, dense, className, onChange, ...restProp
   }
 
   return (
-    <div ref={menu.ref} className={clsx('relative', className)} {...restProps}>
+    <div ref={menu.ref} onBlur={menu.handleBlur} className={clsx('relative', className)} {...restProps}>
       <SelectorButton
         transparent
         titleHtml='Настройка фильтрации <br/>по проверяемым атрибутам'

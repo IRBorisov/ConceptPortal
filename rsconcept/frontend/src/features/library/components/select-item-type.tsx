@@ -37,7 +37,7 @@ export function SelectItemType({
   }
 
   return (
-    <div ref={menu.ref} className={clsx('relative', className)} {...restProps}>
+    <div ref={menu.ref} onBlur={menu.handleBlur} className={clsx('relative', className)} {...restProps}>
       <SelectorButton
         transparent
         title={describeLibraryItemType(value)}

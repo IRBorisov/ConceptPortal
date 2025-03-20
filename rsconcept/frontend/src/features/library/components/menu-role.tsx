@@ -44,7 +44,7 @@ export function MenuRole({ isOwned, isEditor }: MenuRoleProps) {
   }
 
   return (
-    <div ref={accessMenu.ref} className='relative'>
+    <div ref={accessMenu.ref} onBlur={accessMenu.handleBlur} className='relative'>
       <Button
         dense
         noBorder

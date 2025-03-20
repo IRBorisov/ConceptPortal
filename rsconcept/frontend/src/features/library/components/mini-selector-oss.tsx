@@ -28,7 +28,12 @@ export function MiniSelectorOSS({ items, onSelect, className, ...restProps }: Mi
   }
 
   return (
-    <div ref={ossMenu.ref} className={clsx('relative flex items-center', className)} {...restProps}>
+    <div
+      ref={ossMenu.ref}
+      onBlur={ossMenu.handleBlur}
+      className={clsx('relative flex items-center', className)}
+      {...restProps}
+    >
       <MiniButton
         title='Операционные схемы'
         icon={<IconOSS size='1.25rem' className='icon-primary' />}

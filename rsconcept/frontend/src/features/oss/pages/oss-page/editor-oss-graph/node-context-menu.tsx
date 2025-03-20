@@ -18,7 +18,6 @@ import {
   IconNewRSForm,
   IconRSForm
 } from '@/components/icons';
-import { useClickedOutside } from '@/hooks/use-clicked-outside';
 import { useDialogsStore } from '@/stores/dialogs';
 import { errorMsg } from '@/utils/labels';
 import { prepareTooltip } from '@/utils/utils';
@@ -82,7 +81,12 @@ export function NodeContextMenu({ isOpen, operation, cursorX, cursorY, onHide }:
   })();
 
   const ref = useRef<HTMLDivElement>(null);
-  useClickedOutside(isOpen, ref, onHide);
+
+  function handleBlur(event: React.FocusEvent<HTMLDivElement>) {
+    if (!ref.current?.contains(event.relatedTarget as Node)) {
+      onHide();
+    }
+  }
 
   function handleOpenSchema() {
     if (!operation) {
@@ -167,7 +171,12 @@ export function NodeContextMenu({ isOpen, operation, cursorX, cursorY, onHide }:
   }
 
   return (
-    <div ref={ref} className='relative' style={{ top: `calc(${cursorY}px - 2.5rem)`, left: cursorX }}>
+    <div
+      ref={ref}
+      onBlur={handleBlur}
+      className='relative'
+      style={{ top: `calc(${cursorY}px - 2.5rem)`, left: cursorX }}
+    >
       <Dropdown
         isOpen={isOpen}
         stretchLeft={cursorX >= window.innerWidth - MENU_WIDTH}

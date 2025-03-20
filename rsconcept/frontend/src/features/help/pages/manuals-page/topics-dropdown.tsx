@@ -30,6 +30,7 @@ export function TopicsDropdown({ activeTopic, onChangeTopic }: TopicsDropdownPro
   return (
     <div
       ref={menu.ref}
+      onBlur={menu.handleBlur}
       className={clsx(
         'absolute left-0 w-54', //
         noNavigation ? 'top-0' : 'top-12',

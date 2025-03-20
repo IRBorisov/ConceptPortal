@@ -38,7 +38,7 @@ export function SelectAccessPolicy({
   }
 
   return (
-    <div ref={menu.ref} className={clsx('relative', className)} {...restProps}>
+    <div ref={menu.ref} onBlur={menu.handleBlur} className={clsx('relative', className)} {...restProps}>
       <MiniButton
         title={`Доступ: ${labelAccessPolicy(value)}`}
         hideTitle={menu.isOpen}

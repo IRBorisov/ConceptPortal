@@ -30,7 +30,7 @@ interface ToolbarRSListProps {
 
 export function ToolbarRSList({ className }: ToolbarRSListProps) {
   const isProcessing = useMutatingRSForm();
-  const insertMenu = useDropdown();
+  const menu = useDropdown();
   const {
     schema,
     selected,
@@ -74,15 +74,15 @@ export function ToolbarRSList({ className }: ToolbarRSListProps) {
         onClick={moveDown}
         disabled={isProcessing || selected.length === 0 || selected.length === schema.items.length}
       />
-      <div ref={insertMenu.ref} className='relative'>
+      <div ref={menu.ref} onBlur={menu.handleBlur} className='relative'>
         <MiniButton
           title='Добавить пустую конституенту'
-          hideTitle={insertMenu.isOpen}
+          hideTitle={menu.isOpen}
           icon={<IconOpenList size='1.25rem' className='icon-green' />}
-          onClick={insertMenu.toggle}
+          onClick={menu.toggle}
           disabled={isProcessing}
         />
-        <Dropdown isOpen={insertMenu.isOpen} className='-translate-x-1/2'>
+        <Dropdown isOpen={menu.isOpen} className='-translate-x-1/2'>
           {Object.values(CstType).map(typeStr => (
             <DropdownButton
               key={`${prefixes.csttype_list}${typeStr}`}

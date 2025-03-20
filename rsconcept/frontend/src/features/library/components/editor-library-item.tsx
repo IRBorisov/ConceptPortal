@@ -101,7 +101,7 @@ export function EditorLibraryItem({ schema, isAttachedToOSS }: EditorLibraryItem
         />
       </div>
 
-      <div className='relative'>
+      <div className='relative' ref={ownerSelector.ref} onBlur={ownerSelector.handleBlur}>
         {ownerSelector.isOpen ? (
           <div className='absolute -top-2 right-0'>
             <SelectUser className='w-100 text-sm' value={schema.owner} onChange={onSelectUser} />

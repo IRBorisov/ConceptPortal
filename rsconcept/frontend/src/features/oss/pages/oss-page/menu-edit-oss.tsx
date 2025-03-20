@@ -11,14 +11,14 @@ import { useOssEdit } from './oss-edit-context';
 
 export function MenuEditOss() {
   const { isAnonymous } = useAuthSuspense();
-  const editMenu = useDropdown();
+  const menu = useDropdown();
   const { schema, isMutable } = useOssEdit();
   const isProcessing = useMutatingOss();
 
   const showRelocateConstituents = useDialogsStore(state => state.showRelocateConstituents);
 
   function handleRelocate() {
-    editMenu.hide();
+    menu.hide();
     showRelocateConstituents({
       oss: schema,
       initialTarget: undefined,
@@ -31,19 +31,19 @@ export function MenuEditOss() {
   }
 
   return (
-    <div ref={editMenu.ref} className='relative'>
+    <div ref={menu.ref} onBlur={menu.handleBlur} className='relative'>
       <Button
         dense
         noBorder
         noOutline
         tabIndex={-1}
         title='Редактирование'
-        hideTitle={editMenu.isOpen}
+        hideTitle={menu.isOpen}
         className='h-full px-2'
         icon={<IconEdit2 size='1.25rem' className={isMutable ? 'icon-green' : 'icon-red'} />}
-        onClick={editMenu.toggle}
+        onClick={menu.toggle}
       />
-      <Dropdown isOpen={editMenu.isOpen} margin='mt-3'>
+      <Dropdown isOpen={menu.isOpen} margin='mt-3'>
         <DropdownButton
           text='Конституенты'
           titleHtml='Перенос конституент</br>между схемами'

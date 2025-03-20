@@ -112,7 +112,7 @@ export function PickSchema({
           query={filterText}
           onChangeQuery={newValue => setFilterText(newValue)}
         />
-        <div className='relative' ref={locationMenu.ref}>
+        <div className='relative' ref={locationMenu.ref} onBlur={locationMenu.handleBlur}>
           <MiniButton
             title='Фильтр по расположению'
             icon={<IconFolderTree size='1.25rem' className={!!filterLocation ? 'icon-green' : 'icon-primary'} />}
