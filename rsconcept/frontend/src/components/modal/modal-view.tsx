@@ -49,9 +49,9 @@ export function ModalView({
         ) : null}
 
         <MiniButton
-          noPadding
-          aria-label='Закрыть'
           titleHtml={prepareTooltip('Закрыть диалоговое окно', 'ESC')}
+          aria-label='Закрыть'
+          noPadding
           icon={<IconClose size='1.25rem' />}
           className='absolute z-pop top-2 right-2'
           onClick={hideDialog}

@@ -17,7 +17,6 @@ export function RSTokenButton({ token, disabled, onInsert }: RSTokenButtonProps)
     <button
       type='button'
       tabIndex={-1}
-      disabled={disabled}
       onClick={() => onInsert(token)}
       className={clsx(
         'h-5 sm:h-6',
@@ -30,6 +29,7 @@ export function RSTokenButton({ token, disabled, onInsert }: RSTokenButtonProps)
       )}
       data-tooltip-id={globalIDs.tooltip}
       data-tooltip-html={describeToken(token)}
+      disabled={disabled}
     >
       {label ? <span className='whitespace-nowrap'>{label}</span> : null}
     </button>

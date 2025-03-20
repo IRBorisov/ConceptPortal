@@ -107,14 +107,15 @@ export function DlgEditVersions() {
           <MiniButton
             type='submit'
             title={isValid ? 'Сохранить изменения' : errorMsg.versionTaken}
-            disabled={!isDirty || !isValid || isProcessing}
+            aria-label='Сохранить изменения'
             icon={<IconSave size='1.25rem' className='icon-primary' />}
+            disabled={!isDirty || !isValid || isProcessing}
           />
           <MiniButton
             title='Сбросить несохраненные изменения'
-            disabled={!isDirty}
             onClick={() => reset()}
             icon={<IconReset size='1.25rem' className='icon-primary' />}
+            disabled={!isDirty}
           />
         </div>
       </form>

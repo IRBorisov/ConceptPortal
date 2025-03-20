@@ -35,11 +35,12 @@ export function useLibraryColumns() {
             id: 'location',
             header: () => (
               <MiniButton
+                titleHtml='Переключение в режим Проводник'
+                aria-label='Переключатель режима Проводник'
                 noPadding
                 noHover
                 className='pl-2 max-h-4 -translate-y-0.5'
                 onClick={handleToggleFolder}
-                titleHtml='Переключение в режим Проводник'
                 icon={<IconFolderTree size='1.25rem' className='clr-text-controls' />}
               />
             ),

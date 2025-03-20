@@ -56,13 +56,15 @@ export function ToolbarItemCard({ className, schema, onSubmit, isMutable, delete
       {isMutable || isModified ? (
         <MiniButton
           titleHtml={prepareTooltip('Сохранить изменения', 'Ctrl + S')}
-          disabled={!canSave}
+          aria-label='Сохранить изменения'
           icon={<IconSave size='1.25rem' className='icon-primary' />}
           onClick={onSubmit}
+          disabled={!canSave}
         />
       ) : null}
       <MiniButton
         titleHtml={tooltipText.shareItem(schema.access_policy === AccessPolicy.PUBLIC)}
+        aria-label='Поделиться схемой'
         icon={<IconShare size='1.25rem' className='icon-primary' />}
         onClick={sharePage}
         disabled={schema.access_policy !== AccessPolicy.PUBLIC}
@@ -71,8 +73,8 @@ export function ToolbarItemCard({ className, schema, onSubmit, isMutable, delete
         <MiniButton
           title='Удалить схему'
           icon={<IconDestroy size='1.25rem' className='icon-red' />}
-          disabled={!isMutable || isProcessing || role < UserRole.OWNER}
           onClick={deleteSchema}
+          disabled={!isMutable || isProcessing || role < UserRole.OWNER}
         />
       ) : null}
       <BadgeHelp topic={HelpTopic.UI_RS_CARD} offset={4} />

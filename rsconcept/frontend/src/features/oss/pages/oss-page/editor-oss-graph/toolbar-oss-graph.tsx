@@ -143,12 +143,13 @@ export function ToolbarOssGraph({
           onClick={onResetPositions}
         />
         <MiniButton
-          icon={<IconFitImage size='1.25rem' className='icon-primary' />}
           title='Сбросить вид'
+          icon={<IconFitImage size='1.25rem' className='icon-primary' />}
           onClick={handleFitView}
         />
         <MiniButton
           title={showGrid ? 'Скрыть сетку' : 'Отобразить сетку'}
+          aria-label='Переключатель отображения сетки'
           icon={
             showGrid ? (
               <IconGrid size='1.25rem' className='icon-green' />
@@ -160,6 +161,7 @@ export function ToolbarOssGraph({
         />
         <MiniButton
           title={edgeStraight ? 'Связи: прямые' : 'Связи: безье'}
+          aria-label='Переключатель формы связей'
           icon={
             edgeStraight ? (
               <IconLineStraight size='1.25rem' className='icon-primary' />
@@ -171,6 +173,7 @@ export function ToolbarOssGraph({
         />
         <MiniButton
           title={edgeAnimate ? 'Анимация: вкл' : 'Анимация: выкл'}
+          aria-label='Переключатель анимации связей'
           icon={
             edgeAnimate ? (
               <IconAnimation size='1.25rem' className='icon-primary' />
@@ -186,33 +189,37 @@ export function ToolbarOssGraph({
         <div className='cc-icons'>
           <MiniButton
             titleHtml={prepareTooltip('Сохранить изменения', 'Ctrl + S')}
+            aria-label='Сохранить изменения'
             icon={<IconSave size='1.25rem' className='icon-primary' />}
-            disabled={isProcessing}
             onClick={handleSavePositions}
+            disabled={isProcessing}
           />
           <MiniButton
             titleHtml={prepareTooltip('Новая операция', 'Ctrl + Q')}
+            aria-label='Новая операция'
             icon={<IconNewItem size='1.25rem' className='icon-green' />}
-            disabled={isProcessing}
             onClick={onCreate}
+            disabled={isProcessing}
           />
           <MiniButton
             title='Активировать операцию'
             icon={<IconExecute size='1.25rem' className='icon-green' />}
-            disabled={isProcessing || selected.length !== 1 || !readyForSynthesis}
             onClick={handleOperationExecute}
+            disabled={isProcessing || selected.length !== 1 || !readyForSynthesis}
           />
           <MiniButton
             titleHtml={prepareTooltip('Редактировать выбранную', 'Двойной клик')}
+            aria-label='Редактировать выбранную'
             icon={<IconEdit2 size='1.25rem' className='icon-primary' />}
-            disabled={selected.length !== 1 || isProcessing}
             onClick={handleEditOperation}
+            disabled={selected.length !== 1 || isProcessing}
           />
           <MiniButton
             titleHtml={prepareTooltip('Удалить выбранную', 'Delete')}
+            aria-label='Удалить выбранную'
             icon={<IconDestroy size='1.25rem' className='icon-red' />}
-            disabled={selected.length !== 1 || isProcessing || !selectedOperation || !canDelete(selectedOperation)}
             onClick={onDelete}
+            disabled={selected.length !== 1 || isProcessing || !selectedOperation || !canDelete(selectedOperation)}
           />
         </div>
       ) : null}

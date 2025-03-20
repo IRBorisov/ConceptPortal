@@ -178,17 +178,18 @@ export function NodeContextMenu({ isOpen, operation, cursorX, cursorY, onHide }:
           text='Редактировать'
           title='Редактировать операцию'
           icon={<IconEdit2 size='1rem' className='icon-primary' />}
-          disabled={!isMutable || isProcessing}
           onClick={handleEditOperation}
+          disabled={!isMutable || isProcessing}
         />
 
         {operation?.result ? (
           <DropdownButton
             text='Открыть схему'
             titleHtml={prepareTooltip('Открыть привязанную КС', 'Двойной клик')}
+            aria-label='Открыть привязанную КС'
             icon={<IconRSForm size='1rem' className='icon-green' />}
-            disabled={isProcessing}
             onClick={handleOpenSchema}
+            disabled={isProcessing}
           />
         ) : null}
         {isMutable && !operation?.result && operation?.arguments.length === 0 ? (
@@ -196,8 +197,8 @@ export function NodeContextMenu({ isOpen, operation, cursorX, cursorY, onHide }:
             text='Создать схему'
             title='Создать пустую схему'
             icon={<IconNewRSForm size='1rem' className='icon-green' />}
-            disabled={isProcessing}
             onClick={handleInputCreate}
+            disabled={isProcessing}
           />
         ) : null}
         {isMutable && operation?.operation_type === OperationType.INPUT ? (
@@ -205,8 +206,8 @@ export function NodeContextMenu({ isOpen, operation, cursorX, cursorY, onHide }:
             text={!operation?.result ? 'Загрузить схему' : 'Изменить схему'}
             title='Выбрать схему для загрузки'
             icon={<IconConnect size='1rem' className='icon-primary' />}
-            disabled={isProcessing}
             onClick={handleEditSchema}
+            disabled={isProcessing}
           />
         ) : null}
         {isMutable && !operation?.result && operation?.operation_type === OperationType.SYNTHESIS ? (
@@ -217,9 +218,10 @@ export function NodeContextMenu({ isOpen, operation, cursorX, cursorY, onHide }:
                 ? 'Активировать операцию<br/>и получить синтезированную КС'
                 : 'Необходимо предоставить все аргументы'
             }
+            aria-label='Активировать операцию и получить синтезированную КС'
             icon={<IconExecute size='1rem' className='icon-green' />}
-            disabled={isProcessing || !readyForSynthesis}
             onClick={handleOperationExecute}
+            disabled={isProcessing || !readyForSynthesis}
           />
         ) : null}
 
@@ -227,17 +229,18 @@ export function NodeContextMenu({ isOpen, operation, cursorX, cursorY, onHide }:
           <DropdownButton
             text='Конституенты'
             titleHtml='Перенос конституент</br>между схемами'
+            aria-label='Перенос конституент между схемами'
             icon={<IconChild size='1rem' className='icon-green' />}
-            disabled={isProcessing}
             onClick={handleRelocateConstituents}
+            disabled={isProcessing}
           />
         ) : null}
 
         <DropdownButton
           text='Удалить операцию'
           icon={<IconDestroy size='1rem' className='icon-red' />}
-          disabled={!isMutable || isProcessing || !operation || !canDelete(operation)}
           onClick={handleDeleteOperation}
+          disabled={!isMutable || isProcessing || !operation || !canDelete(operation)}
         />
       </Dropdown>
     </div>

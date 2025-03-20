@@ -157,9 +157,9 @@ export function EditorRSExpression({
     <div className='relative cc-fade-in'>
       <ToolbarRSExpression
         className='absolute -top-2 right-0'
-        disabled={disabled}
         showAST={handleShowAST}
         showTypeGraph={onShowTypeGraph}
+        disabled={disabled}
       />
 
       <StatusBar
@@ -174,27 +174,27 @@ export function EditorRSExpression({
       <RSInput
         ref={rsInput}
         value={value}
+        schema={schema}
         minHeight='3.75rem'
         maxHeight='8rem'
-        disabled={disabled}
         onChange={handleChange}
         onAnalyze={handleCheckExpression}
-        schema={schema}
         onOpenEdit={onOpenEdit}
+        disabled={disabled}
         {...restProps}
       />
 
       <RSEditorControls
         isOpen={showControls && (!disabled || (isProcessing && !activeCst.is_inherited))}
-        disabled={disabled}
         onEdit={handleEdit}
+        disabled={disabled}
       />
 
       <ParsingResult
         isOpen={!!parseData && parseData.errors.length > 0}
         data={parseData}
-        disabled={disabled}
         onShowError={error => onShowError(error, parseData?.prefixLen ?? 0)}
+        disabled={disabled}
       />
     </div>
   );

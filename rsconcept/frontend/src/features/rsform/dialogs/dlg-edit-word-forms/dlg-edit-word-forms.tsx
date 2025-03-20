@@ -143,18 +143,18 @@ export function DlgEditWordForms() {
         />
         <div className='flex flex-col self-center gap-1'>
           <MiniButton
-            noHover
             title='Определить граммемы'
+            noHover
             icon={<IconMoveRight size='1.25rem' className='icon-primary' />}
-            disabled={isProcessing || !inputText}
             onClick={handleParse}
+            disabled={isProcessing || !inputText}
           />
           <MiniButton
-            noHover
             title='Генерировать словоформу'
+            noHover
             icon={<IconMoveLeft size='1.25rem' className='icon-primary' />}
-            disabled={isProcessing || inputGrams.length == 0}
             onClick={handleInflect}
+            disabled={isProcessing || inputGrams.length == 0}
           />
         </div>
         <SelectMultiGrammeme
@@ -168,29 +168,29 @@ export function DlgEditWordForms() {
       <div className='flex justify-between'>
         <div className='cc-icons'>
           <MiniButton
-            noHover
             title='Внести словоформу'
+            noHover
             icon={<IconAccept size='1.5rem' className='icon-green' />}
-            disabled={isProcessing || !inputText || inputGrams.length == 0}
             onClick={handleAddForm}
+            disabled={isProcessing || !inputText || inputGrams.length == 0}
           />
           <MiniButton
-            noHover
             title='Генерировать стандартные словоформы'
+            noHover
             icon={<IconMoveDown size='1.5rem' className='icon-primary' />}
-            disabled={isProcessing || !inputText}
             onClick={handleGenerateLexeme}
+            disabled={isProcessing || !inputText}
           />
         </div>
         <div className='mt-3 mb-2 mx-auto text-sm font-semibold'>
           <span>Заданные вручную словоформы [{forms.length}]</span>
           <MiniButton
-            noHover
             title='Сбросить все словоформы'
+            noHover
             className='py-0 align-middle'
             icon={<IconRemove size='1.5rem' className='icon-red' />}
-            disabled={isProcessing || forms.length === 0}
             onClick={handleResetAll}
+            disabled={isProcessing || forms.length === 0}
           />
         </div>
       </div>

@@ -49,6 +49,7 @@ export function MiniButton({
       data-tooltip-html={titleHtml}
       data-tooltip-content={title}
       data-tooltip-hidden={hideTitle}
+      aria-label={title}
       {...restProps}
     >
       {icon}

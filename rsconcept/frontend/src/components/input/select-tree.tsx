@@ -99,6 +99,7 @@ export function SelectTree<ItemType>({
           >
             {foldable.has(item) ? (
               <MiniButton
+                aria-label={!folded.includes(item) ? 'Свернуть' : 'Развернуть'}
                 className={clsx('absolute left-1', !folded.includes(item) ? 'top-1.5' : 'top-1')}
                 noPadding
                 noHover

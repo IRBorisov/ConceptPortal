@@ -65,8 +65,8 @@ export function FormOSS() {
         {...register('title')}
         label='Полное название'
         className='mb-3'
-        disabled={!isMutable}
         error={errors.title}
+        disabled={!isMutable}
       />
       <div className='relative flex justify-between gap-3 mb-3'>
         <TextInput
@@ -74,8 +74,8 @@ export function FormOSS() {
           {...register('alias')}
           label='Сокращение'
           className='w-64'
-          disabled={!isMutable}
           error={errors.alias}
+          disabled={!isMutable}
         />
         <ToolbarItemAccess
           className='absolute top-18 right-2'
@@ -93,16 +93,16 @@ export function FormOSS() {
         {...register('comment')}
         label='Описание'
         rows={3}
-        disabled={!isMutable || isProcessing}
         error={errors.comment}
+        disabled={!isMutable || isProcessing}
       />
       {isMutable || isModified ? (
         <SubmitButton
           text='Сохранить изменения'
           className='self-center mt-4'
           loading={isProcessing}
-          disabled={!isModified}
           icon={<IconSave size='1.25rem' />}
+          disabled={!isModified}
         />
       ) : null}
     </form>

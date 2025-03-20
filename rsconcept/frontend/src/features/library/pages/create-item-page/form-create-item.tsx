@@ -185,6 +185,7 @@ export function FormCreateItem() {
               render={({ field }) => (
                 <MiniButton
                   title={field.value ? 'Библиотека: отображать' : 'Библиотека: скрывать'}
+                  aria-label='Переключатель отображения библиотеки'
                   icon={<IconItemVisibility value={field.value} />}
                   onClick={() => field.onChange(!field.value)}
                 />

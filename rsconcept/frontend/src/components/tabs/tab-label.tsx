@@ -14,7 +14,15 @@ interface TabLabelProps extends Omit<TabPropsImpl, 'children'>, Titled {
 /**
  * Displays a tab header with a label.
  */
-export function TabLabel({ label, title, titleHtml, hideTitle, className, ...otherProps }: TabLabelProps) {
+export function TabLabel({
+  label,
+  title,
+  titleHtml,
+  hideTitle,
+  className,
+  role = 'tab',
+  ...otherProps
+}: TabLabelProps) {
   return (
     <TabImpl
       className={clsx(
@@ -31,6 +39,7 @@ export function TabLabel({ label, title, titleHtml, hideTitle, className, ...oth
       data-tooltip-html={titleHtml}
       data-tooltip-content={title}
       data-tooltip-hidden={hideTitle}
+      role={role}
       {...otherProps}
     >
       {label}

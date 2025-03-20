@@ -136,7 +136,8 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
     <form id={id} className='relative cc-column mt-1 px-6 py-1' onSubmit={event => void handleSubmit(onSubmit)(event)}>
       {!disabled || isProcessing ? (
         <MiniButton
-          title={isModified ? tooltipText.unsaved : `Редактировать словоформы термина`}
+          title={isModified ? tooltipText.unsaved : 'Редактировать словоформы термина'}
+          aria-label='Редактировать словоформы термина'
           noHover
           onClick={handleEditTermForms}
           className='absolute z-pop top-0 left-[calc(7ch+4px)]'
@@ -152,8 +153,9 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
         </div>
         {!disabled || isProcessing ? (
           <MiniButton
-            noHover
             title={isModified ? tooltipText.unsaved : 'Переименовать конституенту'}
+            aria-label='Переименовать конституенту'
+            noHover
             onClick={handleRenameCst}
             icon={<IconEdit size='1rem' className='icon-primary' />}
             disabled={isModified}
@@ -175,8 +177,8 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
             value={field.value ?? ''}
             initialValue={activeCst.term_raw}
             resolved={activeCst.term_resolved}
-            disabled={disabled}
             onChange={newValue => field.onChange(newValue)}
+            disabled={disabled}
           />
         )}
       />
@@ -214,12 +216,12 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
               }
               value={field.value ?? ''}
               activeCst={activeCst}
-              disabled={disabled || activeCst.is_inherited}
               toggleReset={toggleReset}
               onChange={newValue => field.onChange(newValue)}
               onChangeLocalParse={setLocalParse}
               onOpenEdit={onOpenEdit}
               onShowTypeGraph={handleTypeGraph}
+              disabled={disabled || activeCst.is_inherited}
             />
           )}
         />
@@ -240,8 +242,8 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
               value={field.value ?? ''}
               initialValue={activeCst.definition_raw}
               resolved={activeCst.definition_resolved}
-              disabled={disabled}
               onChange={newValue => field.onChange(newValue)}
+              disabled={disabled}
             />
           )}
         />
@@ -275,8 +277,8 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
         <div className='relative mx-auto flex'>
           <SubmitButton
             text='Сохранить изменения'
-            disabled={disabled || !isModified}
             icon={<IconSave size='1.25rem' />}
+            disabled={disabled || !isModified}
           />
           <div className='absolute z-pop top-1/2 -translate-y-1/2 left-full cc-icons'>
             {activeCst.has_inherited_children && !activeCst.is_inherited ? (

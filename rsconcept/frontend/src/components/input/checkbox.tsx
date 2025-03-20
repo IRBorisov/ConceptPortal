@@ -54,12 +54,12 @@ export function Checkbox({
         cursor,
         className
       )}
-      disabled={disabled}
       onClick={handleClick}
       data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}
       data-tooltip-html={titleHtml}
       data-tooltip-content={title}
       data-tooltip-hidden={hideTitle}
+      disabled={disabled}
       {...restProps}
     >
       <div

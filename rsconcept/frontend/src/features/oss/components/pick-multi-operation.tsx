@@ -81,22 +81,22 @@ export function PickMultiOperation({ rows, items, value, onChange, className, ..
       cell: props => (
         <div className='flex gap-1 w-fit'>
           <MiniButton
+            title='Удалить'
             noHover
             className='px-0'
-            title='Удалить'
             icon={<IconRemove size='1rem' className='icon-red' />}
             onClick={() => handleDelete(props.row.original.id)}
           />
           <MiniButton
+            title='Переместить выше'
             noHover
             className='px-0'
-            title='Выше'
             icon={<IconMoveUp size='1rem' className='icon-primary' />}
             onClick={() => handleMoveUp(props.row.original.id)}
           />
           <MiniButton
+            title='Переместить ниже'
             noHover
-            title='Ниже'
             className='px-0'
             icon={<IconMoveDown size='1rem' className='icon-primary' />}
             onClick={() => handleMoveDown(props.row.original.id)}

@@ -52,10 +52,10 @@ export function SelectLocationHead({
             return (
               <DropdownButton
                 key={`${prefixes.location_head_list}${index}`}
-                onClick={() => handleChange(head)}
-                title={describeLocationHead(head)}
-                icon={<IconLocationHead value={head} size='1rem' />}
                 text={labelLocationHead(head)}
+                title={describeLocationHead(head)}
+                onClick={() => handleChange(head)}
+                icon={<IconLocationHead value={head} size='1rem' />}
               />
             );
           })}

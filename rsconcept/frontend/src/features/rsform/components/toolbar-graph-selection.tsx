@@ -46,54 +46,55 @@ export function ToolbarGraphSelection({
   return (
     <div className={clsx('cc-icons', className)} {...restProps}>
       <MiniButton
-        titleHtml='Сбросить выделение'
+        title='Сбросить выделение'
         icon={<IconReset size='1.25rem' className='icon-primary' />}
         onClick={() => onChange([])}
         disabled={emptySelection}
       />
       <MiniButton
-        titleHtml='Выделить все влияющие'
+        title='Выделить все влияющие'
         icon={<IconGraphCollapse size='1.25rem' className='icon-primary' />}
         onClick={() => onChange([...selected, ...graph.expandAllInputs(selected)])}
         disabled={emptySelection}
       />
       <MiniButton
-        titleHtml='Выделить все зависимые'
+        title='Выделить все зависимые'
         icon={<IconGraphExpand size='1.25rem' className='icon-primary' />}
         onClick={() => onChange([...selected, ...graph.expandAllOutputs(selected)])}
         disabled={emptySelection}
       />
       <MiniButton
         titleHtml='<b>Максимизация</b> <br/>дополнение выделения конституентами, <br/>зависимыми только от выделенных'
+        aria-label='Максимизация - дополнение выделения конституентами, зависимыми только от выделенных'
         icon={<IconGraphMaximize size='1.25rem' className='icon-primary' />}
         onClick={() => onChange(graph.maximizePart(selected))}
         disabled={emptySelection}
       />
       <MiniButton
-        titleHtml='Выделить поставщиков'
+        title='Выделить поставщиков'
         icon={<IconGraphInputs size='1.25rem' className='icon-primary' />}
         onClick={() => onChange([...selected, ...graph.expandInputs(selected)])}
         disabled={emptySelection}
       />
       <MiniButton
-        titleHtml='Выделить потребителей'
+        title='Выделить потребителей'
         icon={<IconGraphOutputs size='1.25rem' className='icon-primary' />}
         onClick={() => onChange([...selected, ...graph.expandOutputs(selected)])}
         disabled={emptySelection}
       />
       <MiniButton
-        titleHtml='Инвертировать'
+        title='Инвертировать'
         icon={<IconGraphInverse size='1.25rem' className='icon-primary' />}
         onClick={() => onChange([...graph.nodes.keys()].filter(item => !selected.includes(item)))}
       />
       <MiniButton
-        titleHtml='Выделить ядро'
+        title='Выделить ядро'
         icon={<IconGraphCore size='1.25rem' className='icon-primary' />}
         onClick={handleSelectCore}
       />
       {isOwned ? (
         <MiniButton
-          titleHtml='Выделить собственные'
+          title='Выделить собственные'
           icon={<IconPredecessor size='1.25rem' className='icon-primary' />}
           onClick={handleSelectOwned}
         />

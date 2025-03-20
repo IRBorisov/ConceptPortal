@@ -66,9 +66,9 @@ export function TableVersions({ processing, items, onDelete, selected, onSelect 
           className='align-middle'
           noHover
           noPadding
-          disabled={processing}
           icon={<IconRemove size='1.25rem' className='icon-red' />}
           onClick={event => handleDeleteVersion(event, props.row.original.id)}
+          disabled={processing}
         />
       )
     })

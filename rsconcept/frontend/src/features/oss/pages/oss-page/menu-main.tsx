@@ -61,6 +61,7 @@ export function MenuMain() {
       <Dropdown isOpen={schemaMenu.isOpen} margin='mt-3'>
         <DropdownButton
           text='Поделиться'
+          title='Скопировать ссылку в буфер обмена'
           icon={<IconShare size='1rem' className='icon-primary' />}
           onClick={handleShare}
         />
@@ -74,8 +75,8 @@ export function MenuMain() {
           <DropdownButton
             text='Удалить схему'
             icon={<IconDestroy size='1rem' className='icon-red' />}
-            disabled={isProcessing || role < UserRole.OWNER}
             onClick={handleDelete}
+            disabled={isProcessing || role < UserRole.OWNER}
           />
         ) : null}
 

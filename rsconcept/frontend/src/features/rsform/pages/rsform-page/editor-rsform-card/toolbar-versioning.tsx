@@ -69,21 +69,23 @@ export function ToolbarVersioning({ blockReload, className }: ToolbarVersioningP
                 ? 'Откатить к версии'
                 : 'Переключитесь на <br/>неактуальную версию'
             }
-            disabled={isContentEditable || blockReload}
+            aria-label='Откатить к выбранной версии'
             onClick={handleRestoreVersion}
             icon={<IconUpload size='1.25rem' className='icon-red' />}
+            disabled={isContentEditable || blockReload}
           />
           <MiniButton
             titleHtml={isContentEditable ? 'Создать версию' : 'Переключитесь <br/>на актуальную версию'}
-            disabled={!isContentEditable}
+            aria-label={isContentEditable ? 'Создать версию' : 'Переключить на актуальную версию'}
             onClick={handleCreateVersion}
             icon={<IconNewVersion size='1.25rem' className='icon-green' />}
+            disabled={!isContentEditable}
           />
           <MiniButton
             title={schema.versions.length === 0 ? 'Список версий пуст' : 'Редактировать версии'}
-            disabled={schema.versions.length === 0}
             onClick={handleEditVersions}
             icon={<IconVersions size='1.25rem' className='icon-primary' />}
+            disabled={schema.versions.length === 0}
           />
         </>
       ) : null}

@@ -23,6 +23,7 @@ export function ToggleNavigation() {
         onClick={toggleNoNavigation}
         data-tooltip-id={globalIDs.tooltip}
         data-tooltip-content={noNavigationAnimation ? 'Показать навигацию' : 'Скрыть навигацию'}
+        aria-label={noNavigationAnimation ? 'Показать навигацию' : 'Скрыть навигацию'}
       >
         {!noNavigationAnimation ? <IconPin size='0.75rem' /> : null}
         {noNavigationAnimation ? <IconUnpin size='0.75rem' /> : null}
@@ -35,6 +36,7 @@ export function ToggleNavigation() {
           onClick={toggleDarkMode}
           data-tooltip-id={globalIDs.tooltip}
           data-tooltip-content={darkMode ? 'Тема: Темная' : 'Тема: Светлая'}
+          aria-label={darkMode ? 'Тема: Темная' : 'Тема: Светлая'}
         >
           {darkMode ? <IconDarkTheme size='0.75rem' /> : null}
           {!darkMode ? <IconLightTheme size='0.75rem' /> : null}

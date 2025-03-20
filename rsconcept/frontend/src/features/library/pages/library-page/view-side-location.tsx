@@ -71,21 +71,23 @@ export function ViewSideLocation({ isVisible, onRenameLocation }: ViewSideLocati
         <div className='cc-icons'>
           {canRename ? (
             <MiniButton
-              icon={<IconFolderEdit size='1.25rem' className='icon-primary' />}
               titleHtml='<b>Редактирование пути</b><br/>Перемещаются только Ваши схемы<br/>в указанной папке (и подпапках)'
+              aria-label='Редактирование расположения'
+              icon={<IconFolderEdit size='1.25rem' className='icon-primary' />}
               onClick={onRenameLocation}
             />
           ) : null}
           {!!location ? (
             <MiniButton
               title={subfolders ? 'Вложенные папки: Вкл' : 'Вложенные папки: Выкл'}
+              aria-label='Переключатель отображения вложенных папок'
               icon={<IconShowSubfolders value={subfolders} />}
               onClick={toggleSubfolders}
             />
           ) : null}
           <MiniButton
-            icon={<IconFolderTree size='1.25rem' className='icon-green' />}
             title='Переключение в режим Поиск'
+            icon={<IconFolderTree size='1.25rem' className='icon-green' />}
             onClick={toggleFolderMode}
           />
         </div>

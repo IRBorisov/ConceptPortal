@@ -85,9 +85,9 @@ export function EditorLibraryItem({ schema, isAttachedToOSS }: EditorLibraryItem
     <div className='flex flex-col'>
       <div className='relative flex justify-stretch sm:mb-1 max-w-120 gap-3'>
         <MiniButton
+          title='Открыть в библиотеке'
           noHover
           noPadding
-          title='Открыть в библиотеке'
           icon={<IconFolderOpened size='1.25rem' className='icon-primary' />}
           onClick={handleOpenLibrary}
         />

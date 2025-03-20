@@ -43,8 +43,20 @@ export function FormCreateCst({ schema }: FormCreateCstProps) {
   return (
     <>
       <div className='flex items-center self-center gap-3'>
-        <SelectCstType id='dlg_cst_type' className='w-64' value={cst_type} onChange={handleTypeChange} />
-        <TextInput id='dlg_cst_alias' dense label='Имя' className='w-28' {...register('alias')} error={errors.alias} />
+        <SelectCstType
+          id='dlg_cst_type' //
+          className='w-64'
+          value={cst_type}
+          onChange={handleTypeChange}
+        />
+        <TextInput
+          id='dlg_cst_alias' //
+          dense
+          label='Имя'
+          className='w-28'
+          {...register('alias')}
+          error={errors.alias}
+        />
         <BadgeHelp topic={HelpTopic.CC_CONSTITUENTA} offset={16} contentClass='sm:max-w-160' />
       </div>
 

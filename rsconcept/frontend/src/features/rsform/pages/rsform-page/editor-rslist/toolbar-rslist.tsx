@@ -55,29 +55,32 @@ export function ToolbarRSList({ className }: ToolbarRSListProps) {
       ) : null}
       <MiniButton
         titleHtml={prepareTooltip('Сбросить выделение', 'ESC')}
+        aria-label='Сбросить выделение'
         icon={<IconReset size='1.25rem' className='icon-primary' />}
-        disabled={selected.length === 0}
         onClick={deselectAll}
+        disabled={selected.length === 0}
       />
       <MiniButton
         titleHtml={prepareTooltip('Переместить вверх', 'Alt + вверх')}
+        aria-label='Переместить вверх'
         icon={<IconMoveUp size='1.25rem' className='icon-primary' />}
-        disabled={isProcessing || selected.length === 0 || selected.length === schema.items.length}
         onClick={moveUp}
+        disabled={isProcessing || selected.length === 0 || selected.length === schema.items.length}
       />
       <MiniButton
         titleHtml={prepareTooltip('Переместить вниз', 'Alt + вниз')}
+        aria-label='Переместить вниз'
         icon={<IconMoveDown size='1.25rem' className='icon-primary' />}
-        disabled={isProcessing || selected.length === 0 || selected.length === schema.items.length}
         onClick={moveDown}
+        disabled={isProcessing || selected.length === 0 || selected.length === schema.items.length}
       />
       <div ref={insertMenu.ref} className='relative'>
         <MiniButton
           title='Добавить пустую конституенту'
           hideTitle={insertMenu.isOpen}
           icon={<IconOpenList size='1.25rem' className='icon-green' />}
-          disabled={isProcessing}
           onClick={insertMenu.toggle}
+          disabled={isProcessing}
         />
         <Dropdown isOpen={insertMenu.isOpen} className='-translate-x-1/2'>
           {Object.values(CstType).map(typeStr => (
@@ -93,21 +96,24 @@ export function ToolbarRSList({ className }: ToolbarRSListProps) {
       </div>
       <MiniButton
         titleHtml={prepareTooltip('Добавить новую конституенту...', 'Alt + `')}
+        aria-label='Добавить новую конституенту'
         icon={<IconNewItem size='1.25rem' className='icon-green' />}
-        disabled={isProcessing}
         onClick={createCstDefault}
+        disabled={isProcessing}
       />
       <MiniButton
         titleHtml={prepareTooltip('Клонировать конституенту', 'Alt + V')}
+        aria-label='Клонировать конституенту'
         icon={<IconClone size='1.25rem' className='icon-green' />}
-        disabled={isProcessing || selected.length !== 1}
         onClick={cloneCst}
+        disabled={isProcessing || selected.length !== 1}
       />
       <MiniButton
         titleHtml={prepareTooltip('Удалить выбранные', 'Delete')}
+        aria-label='Удалить выбранные'
         icon={<IconDestroy size='1.25rem' className='icon-red' />}
-        disabled={isProcessing || !canDeleteSelected}
         onClick={promptDeleteCst}
+        disabled={isProcessing || !canDeleteSelected}
       />
       <BadgeHelp topic={HelpTopic.UI_RS_LIST} offset={5} />
     </div>

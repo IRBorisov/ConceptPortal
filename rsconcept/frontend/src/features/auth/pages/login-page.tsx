@@ -64,20 +64,20 @@ export function LoginPage() {
         id='username'
         autoComplete='username'
         label='Логин или email'
-        {...register('username')}
         autoFocus
         allowEnter
         spellCheck={false}
         defaultValue={initialName}
+        {...register('username')}
         error={errors.username}
       />
       <TextInput
         id='password'
-        {...register('password')}
         type='password'
         autoComplete='current-password'
         label='Пароль'
         allowEnter
+        {...register('password')}
         error={errors.password}
       />
 

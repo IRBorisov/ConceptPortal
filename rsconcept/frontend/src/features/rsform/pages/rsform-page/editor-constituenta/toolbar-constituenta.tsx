@@ -98,33 +98,35 @@ export function ToolbarConstituenta({
         <>
           <MiniButton
             titleHtml={prepareTooltip('Сохранить изменения', 'Ctrl + S')}
+            aria-label='Сохранить изменения'
             icon={<IconSave size='1.25rem' className='icon-primary' />}
-            disabled={disabled || !isModified}
             onClick={onSubmit}
+            disabled={disabled || !isModified}
           />
           <MiniButton
             title='Сбросить несохраненные изменения'
             icon={<IconReset size='1.25rem' className='icon-primary' />}
-            disabled={disabled || !isModified}
             onClick={onReset}
+            disabled={disabled || !isModified}
           />
           <MiniButton
             title='Создать конституенту после данной'
             icon={<IconNewItem size='1.25rem' className='icon-green' />}
-            disabled={!isContentEditable || isProcessing}
             onClick={() => (activeCst ? createCst(activeCst.cst_type, false) : createCstDefault())}
+            disabled={!isContentEditable || isProcessing}
           />
           <MiniButton
             titleHtml={isModified ? tooltipText.unsaved : prepareTooltip('Клонировать конституенту', 'Alt + V')}
+            aria-label='Клонировать конституенту'
             icon={<IconClone size='1.25rem' className='icon-green' />}
-            disabled={disabled || isModified}
             onClick={cloneCst}
+            disabled={disabled || isModified}
           />
           <MiniButton
             title='Удалить редактируемую конституенту'
-            disabled={disabled || !canDeleteSelected}
             onClick={promptDeleteCst}
             icon={<IconDestroy size='1.25rem' className='icon-red' />}
+            disabled={disabled || !canDeleteSelected}
           />
         </>
       ) : null}
@@ -139,15 +141,17 @@ export function ToolbarConstituenta({
         <>
           <MiniButton
             titleHtml={prepareTooltip('Переместить вверх', 'Alt + вверх')}
+            aria-label='Переместить вверх'
             icon={<IconMoveUp size='1.25rem' className='icon-primary' />}
-            disabled={disabled || isModified || schema.items.length < 2}
             onClick={moveUp}
+            disabled={disabled || isModified || schema.items.length < 2}
           />
           <MiniButton
             titleHtml={prepareTooltip('Переместить вниз', 'Alt + вниз')}
+            aria-label='Переместить вниз'
             icon={<IconMoveDown size='1.25rem' className='icon-primary' />}
-            disabled={disabled || isModified || schema.items.length < 2}
             onClick={moveDown}
+            disabled={disabled || isModified || schema.items.length < 2}
           />
         </>
       ) : null}

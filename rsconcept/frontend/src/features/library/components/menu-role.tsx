@@ -67,22 +67,22 @@ export function MenuRole({ isOwned, isEditor }: MenuRoleProps) {
           text={labelUserRole(UserRole.EDITOR)}
           title={describeUserRole(UserRole.EDITOR)}
           icon={<IconRole role={UserRole.EDITOR} size='1rem' />}
-          disabled={!isOwned && !isEditor}
           onClick={() => handleChangeMode(UserRole.EDITOR)}
+          disabled={!isOwned && !isEditor}
         />
         <DropdownButton
           text={labelUserRole(UserRole.OWNER)}
           title={describeUserRole(UserRole.OWNER)}
           icon={<IconRole role={UserRole.OWNER} size='1rem' />}
-          disabled={!isOwned}
           onClick={() => handleChangeMode(UserRole.OWNER)}
+          disabled={!isOwned}
         />
         <DropdownButton
           text={labelUserRole(UserRole.ADMIN)}
           title={describeUserRole(UserRole.ADMIN)}
           icon={<IconRole role={UserRole.ADMIN} size='1rem' />}
-          disabled={!user.is_staff}
           onClick={() => handleChangeMode(UserRole.ADMIN)}
+          disabled={!user.is_staff}
         />
       </Dropdown>
     </div>

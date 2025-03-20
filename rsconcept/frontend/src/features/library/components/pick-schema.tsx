@@ -114,8 +114,8 @@ export function PickSchema({
         />
         <div className='relative' ref={locationMenu.ref}>
           <MiniButton
-            icon={<IconFolderTree size='1.25rem' className={!!filterLocation ? 'icon-green' : 'icon-primary'} />}
             title='Фильтр по расположению'
+            icon={<IconFolderTree size='1.25rem' className={!!filterLocation ? 'icon-green' : 'icon-primary'} />}
             className='mt-1'
             onClick={() => locationMenu.toggle()}
           />

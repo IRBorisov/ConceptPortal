@@ -133,8 +133,8 @@ export function TabArguments() {
             noHover
             className='py-0'
             icon={<IconAccept size='1.5rem' className='icon-green' />}
-            disabled={!argumentValue || !selectedArgument}
             onClick={() => handleAssignArgument(selectedArgument!, argumentValue)}
+            disabled={!argumentValue || !selectedArgument}
           />
           <MiniButton
             title='Очистить поле'

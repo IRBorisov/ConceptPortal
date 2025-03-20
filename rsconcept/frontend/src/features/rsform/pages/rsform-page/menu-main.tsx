@@ -129,6 +129,7 @@ export function MenuMain() {
         <DropdownButton
           text='Поделиться'
           titleHtml={tooltipText.shareItem(schema.access_policy === AccessPolicy.PUBLIC)}
+          aria-label='Скопировать ссылку в буфер обмена'
           icon={<IconShare size='1rem' className='icon-primary' />}
           onClick={handleShare}
           disabled={schema.access_policy !== AccessPolicy.PUBLIC}

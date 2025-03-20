@@ -99,8 +99,8 @@ export function ToolbarTermGraph() {
         onClick={showParams}
       />
       <MiniButton
-        icon={<IconFitImage size='1.25rem' className='icon-primary' />}
         title='Граф целиком'
+        icon={<IconFitImage size='1.25rem' className='icon-primary' />}
         onClick={handleFitView}
       />
       <MiniButton
@@ -129,16 +129,16 @@ export function ToolbarTermGraph() {
         <MiniButton
           title='Новая конституента'
           icon={<IconNewItem size='1.25rem' className='icon-green' />}
-          disabled={isProcessing}
           onClick={handleCreateCst}
+          disabled={isProcessing}
         />
       ) : null}
       {isContentEditable ? (
         <MiniButton
           title='Удалить выбранные'
           icon={<IconDestroy size='1.25rem' className='icon-red' />}
-          disabled={!canDeleteSelected || isProcessing}
           onClick={handleDeleteCst}
+          disabled={!canDeleteSelected || isProcessing}
         />
       ) : null}
       <MiniButton

@@ -196,14 +196,14 @@ export function PickSubstitutions({
         props.row.original.is_suggestion ? (
           <div className='max-w-fit'>
             <MiniButton
-              noHover
               title='Принять предложение'
+              noHover
               icon={<IconAccept size='1rem' className='icon-green' />}
               onClick={() => handleAcceptSuggestion(props.row.original)}
             />
             <MiniButton
-              noHover
               title='Игнорировать предложение'
+              noHover
               icon={<IconRemove size='1rem' className='icon-red' />}
               onClick={() => handleDeclineSuggestion(props.row.original)}
             />
@@ -211,8 +211,8 @@ export function PickSubstitutions({
         ) : (
           <div className='max-w-fit'>
             <MiniButton
-              noHover
               title='Удалить'
+              noHover
               icon={<IconRemove size='1rem' className='icon-red' />}
               onClick={() => handleDeleteSubstitution(props.row.original)}
             />
@@ -257,8 +257,8 @@ export function PickSubstitutions({
             title='Добавить в таблицу отождествлений'
             className='grow-0'
             icon={<IconReplace size='1.5rem' className='icon-primary' />}
-            disabled={!leftCst || !rightCst || (leftCst === rightCst && !allowSelfSubstitution)}
             onClick={addSubstitution}
+            disabled={!leftCst || !rightCst || (leftCst === rightCst && !allowSelfSubstitution)}
           />
         </div>
 

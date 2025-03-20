@@ -135,15 +135,16 @@ export function MenuEditSchema() {
           text='Шаблоны'
           title='Создать конституенту из шаблона'
           icon={<IconTemplates size='1rem' className='icon-green' />}
-          disabled={!isContentEditable || isProcessing}
           onClick={handleTemplates}
+          disabled={!isContentEditable || isProcessing}
         />
         <DropdownButton
           text='Встраивание'
           titleHtml='Импортировать совокупность <br/>конституент из другой схемы'
+          aria-label='Импортировать совокупность конституент из другой схемы'
           icon={<IconInlineSynthesis size='1rem' className='icon-green' />}
-          disabled={!isContentEditable || isProcessing}
           onClick={handleInlineSynthesis}
+          disabled={!isContentEditable || isProcessing}
         />
 
         <Divider margins='mx-3 my-1' />
@@ -151,27 +152,31 @@ export function MenuEditSchema() {
         <DropdownButton
           text='Упорядочить список'
           titleHtml='Упорядочить список, исходя из <br/>логики типов и связей конституент'
+          aria-label='Упорядочить список, исходя из логики типов и связей конституент'
           icon={<IconSortList size='1rem' className='icon-primary' />}
-          disabled={!isContentEditable || isProcessing}
           onClick={handleRestoreOrder}
+          disabled={!isContentEditable || isProcessing}
         />
         <DropdownButton
           text='Порядковые имена'
           titleHtml='Присвоить порядковые имена <br/>и обновить выражения'
+          aria-label='Присвоить порядковые имена и обновить выражения'
           icon={<IconGenerateNames size='1rem' className='icon-primary' />}
-          disabled={!isContentEditable || isProcessing}
           onClick={handleReindex}
+          disabled={!isContentEditable || isProcessing}
         />
         <DropdownButton
           text='Порождение структуры'
           titleHtml='Раскрыть структуру типизации <br/>выделенной конституенты'
+          aria-label='Раскрыть структуру типизации выделенной конституенты'
           icon={<IconGenerateStructure size='1rem' className='icon-primary' />}
-          disabled={!isContentEditable || isProcessing || !activeCst || !canProduceStructure(activeCst)}
           onClick={() => handleProduceStructure(activeCst)}
+          disabled={!isContentEditable || isProcessing || !activeCst || !canProduceStructure(activeCst)}
         />
         <DropdownButton
           text='Отождествление'
           titleHtml='Заменить вхождения <br/>одной конституенты на другую'
+          aria-label='Заменить вхождения одной конституенты на другую'
           icon={<IconReplace size='1rem' className='icon-red' />}
           onClick={handleSubstituteCst}
           disabled={!isContentEditable || isProcessing}

@@ -47,6 +47,7 @@ export function MenuEditOss() {
         <DropdownButton
           text='Конституенты'
           titleHtml='Перенос конституент</br>между схемами'
+          aria-label='Перенос конституент между схемами'
           icon={<IconChild size='1rem' className='icon-green' />}
           disabled={isProcessing}
           onClick={handleRelocate}

@@ -98,17 +98,20 @@ export function ToolbarSearch({ className, total, filtered }: ToolbarSearchProps
           <Dropdown isOpen={userMenu.isOpen}>
             <DropdownButton
               text='Я - Владелец'
+              title='Фильтровать схемы, в которых текущий пользователь является владельцем'
               icon={<IconOwner size='1.25rem' className={tripleToggleColor(isOwned)} />}
               onClick={toggleOwned}
             />
             <DropdownButton
               text='Я - Редактор'
+              title='Фильтровать схемы, в которых текущий пользователя является редактором'
               icon={<IconEditor size='1.25rem' className={tripleToggleColor(isEditor)} />}
               onClick={toggleEditor}
             />
             <SelectUser
-              noBorder
+              aria-label='Выбор пользователя для фильтра по владельцу'
               placeholder='Выберите владельца'
+              noBorder
               className='min-w-60 text-sm mx-1 mb-1'
               value={filterUser}
               onChange={setFilterUser}
@@ -155,13 +158,14 @@ export function ToolbarSearch({ className, total, filtered }: ToolbarSearchProps
 
             <Dropdown isOpen={headMenu.isOpen} stretchLeft>
               <DropdownButton
-                title='Переключение в режим Проводник'
                 text='проводник...'
+                title='Переключение в режим Проводник'
                 icon={<IconFolderTree size='1rem' className='clr-text-controls' />}
                 onClick={handleToggleFolder}
               />
               <DropdownButton
                 text='отображать все'
+                title='Очистить фильтр по расположению'
                 icon={<IconFolder size='1rem' className='clr-text-controls' />}
                 onClick={() => handleChange(null)}
               />
@@ -169,9 +173,9 @@ export function ToolbarSearch({ className, total, filtered }: ToolbarSearchProps
                 return (
                   <DropdownButton
                     key={`${prefixes.location_head_list}${index}`}
-                    onClick={() => handleChange(head)}
-                    title={describeLocationHead(head)}
                     text={labelLocationHead(head)}
+                    title={describeLocationHead(head)}
+                    onClick={() => handleChange(head)}
                     icon={<IconLocationHead value={head} size='1rem' />}
                   />
                 );

@@ -38,7 +38,6 @@ export function Button({
   return (
     <button
       type='button'
-      disabled={disabled ?? loading}
       className={clsx(
         'inline-flex gap-2 items-center justify-center',
         'font-medium select-none disabled:cursor-auto',
@@ -53,6 +52,8 @@ export function Button({
       data-tooltip-html={titleHtml}
       data-tooltip-content={title}
       data-tooltip-hidden={hideTitle}
+      disabled={disabled ?? loading}
+      aria-label={!text ? title : undefined}
       {...restProps}
     >
       {icon ? icon : null}

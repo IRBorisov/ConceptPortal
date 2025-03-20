@@ -78,8 +78,8 @@ export function FormRSForm() {
         {...register('title')}
         label='Полное название'
         className='mb-3'
-        disabled={!isContentEditable}
         error={errors.title}
+        disabled={!isContentEditable}
       />
       <div className='flex justify-between gap-3 mb-3'>
         <TextInput
@@ -87,8 +87,8 @@ export function FormRSForm() {
           {...register('alias')}
           label='Сокращение'
           className='w-64'
-          disabled={!isContentEditable}
           error={errors.alias}
+          disabled={!isContentEditable}
         />
         <div className='relative flex flex-col gap-2'>
           <ToolbarVersioning
@@ -122,16 +122,16 @@ export function FormRSForm() {
         {...register('comment')}
         label='Описание'
         rows={3}
-        disabled={!isContentEditable || isProcessing}
         error={errors.comment}
+        disabled={!isContentEditable || isProcessing}
       />
       {isContentEditable || isDirty ? (
         <SubmitButton
           text='Сохранить изменения'
           className='self-center mt-4'
           loading={isProcessing}
-          disabled={!isDirty}
           icon={<IconSave size='1.25rem' />}
+          disabled={!isDirty}
         />
       ) : null}
     </form>

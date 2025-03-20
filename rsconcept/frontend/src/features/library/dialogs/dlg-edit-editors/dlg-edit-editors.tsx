@@ -47,12 +47,12 @@ export function DlgEditEditors() {
       <div className='self-center text-sm font-semibold'>
         <span>Всего редакторов [{selected.length}]</span>
         <MiniButton
-          noHover
           title='Очистить список'
+          noHover
           className='py-0 align-middle'
           icon={<IconRemove size='1.5rem' className='icon-red' />}
-          disabled={selected.length === 0}
           onClick={() => setSelected([])}
+          disabled={selected.length === 0}
         />
       </div>
 

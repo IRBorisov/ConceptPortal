@@ -56,8 +56,8 @@ export function LibraryPage() {
       <ToolbarSearch className='top-0 h-9' total={libraryItems.length} filtered={filtered.length} />
       <div className='relative cc-fade-in flex'>
         <MiniButton
-          className='absolute z-tooltip -top-8 right-6'
           title='Выгрузить в формате CSV'
+          className='absolute z-tooltip -top-8 right-6'
           icon={<IconCSV size='1.25rem' className='icon-green' />}
           onClick={handleDownloadCSV}
         />

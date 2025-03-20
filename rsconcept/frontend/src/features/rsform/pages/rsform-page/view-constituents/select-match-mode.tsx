@@ -45,10 +45,10 @@ export function SelectMatchMode({ value, dense, className, onChange, ...restProp
             const matchMode = value as CstMatchMode;
             return (
               <DropdownButton
-                className={!dense ? 'w-80' : undefined}
                 key={`${prefixes.cst_source_list}${index}`}
-                onClick={() => handleChange(matchMode)}
+                className={!dense ? 'w-80' : undefined}
                 icon={<IconCstMatchMode value={matchMode} size='1rem' />}
+                onClick={() => handleChange(matchMode)}
               >
                 {!dense ? (
                   <span>

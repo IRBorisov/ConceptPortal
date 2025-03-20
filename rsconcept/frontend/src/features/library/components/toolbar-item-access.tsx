@@ -48,13 +48,14 @@ export function ToolbarItemAccess({
       <Label text='Доступ' className='self-center select-none' />
       <div className='ml-auto cc-icons'>
         <SelectAccessPolicy
-          disabled={role <= UserRole.EDITOR || isProcessing || isAttachedToOSS}
           value={policy}
           onChange={handleSetAccessPolicy}
+          disabled={role <= UserRole.EDITOR || isProcessing || isAttachedToOSS}
         />
 
         <MiniButton
           title={visible ? 'Библиотека: отображать' : 'Библиотека: скрывать'}
+          aria-label='Переключатель отображения библиотеки'
           icon={<IconItemVisibility value={visible} />}
           onClick={toggleVisible}
           disabled={role === UserRole.READER || isProcessing}
@@ -62,6 +63,7 @@ export function ToolbarItemAccess({
 
         <MiniButton
           title={readOnly ? 'Изменение: запрещено' : 'Изменение: разрешено'}
+          aria-label='Переключатель режима изменения'
           icon={
             readOnly ? (
               <IconImmutable size='1.25rem' className='text-sec-600' />

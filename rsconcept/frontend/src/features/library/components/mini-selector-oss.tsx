@@ -30,8 +30,8 @@ export function MiniSelectorOSS({ items, onSelect, className, ...restProps }: Mi
   return (
     <div ref={ossMenu.ref} className={clsx('relative flex items-center', className)} {...restProps}>
       <MiniButton
-        icon={<IconOSS size='1.25rem' className='icon-primary' />}
         title='Операционные схемы'
+        icon={<IconOSS size='1.25rem' className='icon-primary' />}
         hideTitle={ossMenu.isOpen}
         onClick={onToggle}
       />
@@ -40,9 +40,9 @@ export function MiniSelectorOSS({ items, onSelect, className, ...restProps }: Mi
           <Label text='Список ОСС' className='border-b px-3 py-1' />
           {items.map((reference, index) => (
             <DropdownButton
-              className='min-w-20'
               key={`${prefixes.oss_list}${index}`}
               text={reference.alias}
+              className='min-w-20'
               onClick={event => onSelect(event, reference)}
             />
           ))}

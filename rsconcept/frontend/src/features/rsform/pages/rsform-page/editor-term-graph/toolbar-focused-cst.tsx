@@ -44,7 +44,7 @@ export function ToolbarFocusedCst() {
       </div>
 
       <MiniButton
-        titleHtml='Сбросить фокус'
+        title='Сбросить фокус'
         icon={<IconReset size='1.25rem' className='icon-primary' />}
         onClick={resetSelection}
       />

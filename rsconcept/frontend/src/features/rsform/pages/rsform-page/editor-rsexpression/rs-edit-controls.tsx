@@ -108,9 +108,9 @@ export function RSEditorControls({ isOpen, disabled, onEdit }: RSEditorControlsP
           key={`${prefixes.rsedit_btn}${hotkey}`}
           text={text}
           titleHtml={`<kbd>[${hotkey}]</kbd>`}
+          className='hidden xs:inline'
           onInsert={onEdit}
           disabled={disabled}
-          className='hidden xs:inline'
         />
       ))}
 

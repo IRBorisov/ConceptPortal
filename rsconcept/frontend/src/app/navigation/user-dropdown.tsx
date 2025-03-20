@@ -85,27 +85,28 @@ export function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
       />
       <DropdownButton
         text={darkMode ? 'Тема: Темная' : 'Тема: Светлая'}
-        icon={darkMode ? <IconDarkTheme size='1rem' /> : <IconLightTheme size='1rem' />}
         title='Переключение темы оформления'
+        icon={darkMode ? <IconDarkTheme size='1rem' /> : <IconLightTheme size='1rem' />}
         onClick={handleToggleDarkMode}
       />
       <DropdownButton
         text={showHelp ? 'Помощь: Вкл' : 'Помощь: Выкл'}
-        icon={showHelp ? <IconHelp size='1rem' /> : <IconHelpOff size='1rem' />}
         title='Отображение иконок подсказок'
+        icon={showHelp ? <IconHelp size='1rem' /> : <IconHelpOff size='1rem' />}
         onClick={toggleShowHelp}
       />
       {user.is_staff ? (
         <DropdownButton
           text={adminMode ? 'Админ: Вкл' : 'Админ: Выкл'}
-          icon={adminMode ? <IconAdmin size='1rem' /> : <IconAdminOff size='1rem' />}
           title='Работа в режиме администратора'
+          icon={adminMode ? <IconAdmin size='1rem' /> : <IconAdminOff size='1rem' />}
           onClick={toggleAdminMode}
         />
       ) : null}
       {user.is_staff ? (
         <DropdownButton
           text='REST API' //
+          title='Переход к backend API'
           icon={<IconRESTapi size='1rem' />}
           className='border-t'
           onClick={gotoRestApi}
@@ -114,6 +115,7 @@ export function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
       {user.is_staff ? (
         <DropdownButton
           text='База данных' //
+          title='Переход к администрированию базы данных'
           icon={<IconDatabase size='1rem' />}
           onClick={gotoAdmin}
         />
@@ -121,6 +123,7 @@ export function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
       {user?.is_staff ? (
         <DropdownButton
           text='Иконки' //
+          title='Переход к странице иконок'
           icon={<IconImage size='1rem' />}
           onClick={gotoIcons}
         />
@@ -128,6 +131,7 @@ export function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
       {user.is_staff ? (
         <DropdownButton
           text='Структура БД' //
+          title='Переход к странице структуры БД'
           icon={<IconDBStructure size='1rem' />}
           onClick={gotoDatabaseSchema}
           className='border-b'
@@ -135,6 +139,7 @@ export function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
       ) : null}
       <DropdownButton
         text='Выйти...'
+        title='Выход из приложения'
         className='font-semibold'
         icon={<IconLogout size='1rem' />}
         onClick={logoutAndRedirect}

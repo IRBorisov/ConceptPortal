@@ -87,20 +87,20 @@ export function EditorConstituenta() {
       <ToolbarConstituenta
         className='cc-tab-tools right-1/2 translate-x-0 xs:right-4 xs:-translate-x-1/2 md:right-1/2 md:translate-x-0 cc-animate-position'
         activeCst={activeCst}
-        disabled={disabled}
         onSubmit={initiateSubmit}
         onReset={() => setToggleReset(prev => !prev)}
+        disabled={disabled}
       />
 
       <div className='mx-0 md:mx-auto pt-8 md:w-195 shrink-0 xs:pt-0'>
         {activeCst ? (
           <FormConstituenta
             id={globalIDs.constituenta_editor}
-            disabled={disabled}
             toggleReset={toggleReset}
             activeCst={activeCst}
             schema={schema}
             onOpenEdit={navigateCst}
+            disabled={disabled}
           />
         ) : null}
       </div>

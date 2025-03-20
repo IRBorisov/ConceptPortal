@@ -50,6 +50,7 @@ export function ValueIcon({
   ...restProps
 }: ValueIconProps) {
   // TODO: use CSS instead of threshold
+  // TODO: do not add button if onClick is disabled
   const isSmall = !smallThreshold || String(value).length < smallThreshold;
   return (
     <div
@@ -66,7 +67,7 @@ export function ValueIcon({
       data-tooltip-content={title}
       data-tooltip-hidden={hideTitle}
     >
-      <MiniButton noHover noPadding icon={icon} disabled={disabled} onClick={onClick} />
+      <MiniButton noHover noPadding icon={icon} onClick={onClick} disabled={disabled} />
       <span id={id} className={clsx({ 'text-xs': !isSmall }, textClassName)}>
         {value}
       </span>
