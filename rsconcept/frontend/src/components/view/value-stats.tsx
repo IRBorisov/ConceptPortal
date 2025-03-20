@@ -1,6 +1,7 @@
-import { type Styling, type Titled } from '@/components/props';
+import clsx from 'clsx';
 
-import { ValueIcon } from './value-icon';
+import { type Styling, type Titled } from '@/components/props';
+import { globalIDs } from '@/utils/constants';
 
 // characters - threshold for small labels - small font
 const SMALL_THRESHOLD = 3;
@@ -16,9 +17,23 @@ interface ValueStatsProps extends Styling, Titled {
   value: string | number;
 }
 
-/**
- * Displays statistics value with an icon.
- */
-export function ValueStats(props: ValueStatsProps) {
-  return <ValueIcon dense smallThreshold={SMALL_THRESHOLD} textClassName='min-w-5' {...props} />;
+/** Displays statistics value with an icon. */
+export function ValueStats({ id, icon, value, className, title, titleHtml, hideTitle, ...restProps }: ValueStatsProps) {
+  const isSmall = String(value).length < SMALL_THRESHOLD;
+  return (
+    <div
+      className={clsx('flex items-center gap-1', 'text-right', 'hover:cursor-default', className)}
+      data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}
+      data-tooltip-html={titleHtml}
+      data-tooltip-content={title}
+      data-tooltip-hidden={hideTitle}
+      aria-label={title}
+      {...restProps}
+    >
+      {icon}
+      <span id={id} className={clsx(!isSmall && 'text-xs', 'min-w-5')}>
+        {value}
+      </span>
+    </div>
+  );
 }

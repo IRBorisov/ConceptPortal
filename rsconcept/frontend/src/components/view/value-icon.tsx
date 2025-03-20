@@ -15,14 +15,8 @@ interface ValueIconProps extends Styling, Titled {
   /** Icon to display. */
   icon: React.ReactNode;
 
-  /** Classname for the text. */
-  textClassName?: string;
-
   /** Callback to be called when the component is clicked. */
   onClick?: (event: React.MouseEvent<Element>) => void;
-
-  /** Number of symbols to display in a small size. */
-  smallThreshold?: number;
 
   /** Indicates that padding should be minimal. */
   dense?: boolean;
@@ -39,19 +33,15 @@ export function ValueIcon({
   dense,
   icon,
   value,
-  textClassName,
   disabled = true,
   title,
   titleHtml,
   hideTitle,
   className,
-  smallThreshold,
   onClick,
   ...restProps
 }: ValueIconProps) {
-  // TODO: use CSS instead of threshold
   // TODO: do not add button if onClick is disabled
-  const isSmall = !smallThreshold || String(value).length < smallThreshold;
   return (
     <div
       className={clsx(
@@ -66,11 +56,10 @@ export function ValueIcon({
       data-tooltip-html={titleHtml}
       data-tooltip-content={title}
       data-tooltip-hidden={hideTitle}
+      aria-label={title}
     >
-      <MiniButton noHover noPadding icon={icon} onClick={onClick} disabled={disabled} />
-      <span id={id} className={clsx({ 'text-xs': !isSmall }, textClassName)}>
-        {value}
-      </span>
+      {onClick ? <MiniButton noHover noPadding icon={icon} onClick={onClick} disabled={disabled} /> : icon}
+      <span id={id}>{value}</span>
     </div>
   );
 }

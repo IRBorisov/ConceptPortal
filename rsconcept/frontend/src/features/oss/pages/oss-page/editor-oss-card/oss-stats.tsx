@@ -19,34 +19,34 @@ export function OssStats({ className, stats }: OssStatsProps) {
       </div>
       <ValueStats
         id='count_inputs'
+        title='Загрузка'
         icon={<IconDownload size='1.25rem' className='text-sec-600' />}
         value={stats.count_inputs}
-        title='Загрузка'
       />
       <ValueStats
         id='count_synthesis'
+        title='Синтез'
         icon={<IconSynthesis size='1.25rem' className='text-sec-600' />}
         value={stats.count_synthesis}
-        title='Синтез'
       />
 
       <ValueStats
         id='count_schemas'
+        title='Прикрепленные схемы'
         icon={<IconRSForm size='1.25rem' className='text-sec-600' />}
         value={stats.count_schemas}
-        title='Прикрепленные схемы'
       />
       <ValueStats
         id='count_owned'
+        title='Собственные'
         icon={<IconRSFormOwned size='1.25rem' className='text-sec-600' />}
         value={stats.count_owned}
-        title='Собственные'
       />
       <ValueStats
         id='count_imported'
+        title='Внешние'
         icon={<IconRSFormImported size='1.25rem' className='text-sec-600' />}
         value={stats.count_schemas - stats.count_owned}
-        title='Внешние'
       />
     </div>
   );

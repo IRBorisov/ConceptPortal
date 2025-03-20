@@ -133,23 +133,21 @@ export function EditorLibraryItem({ schema, isAttachedToOSS }: EditorLibraryItem
         </Tooltip>
 
         <ValueIcon
+          title='Дата обновления'
           dense
-          disabled
           icon={<IconDateUpdate size='1.25rem' className='text-ok-600' />}
           value={new Date(schema.time_update).toLocaleString(intl.locale)}
-          title='Дата обновления'
         />
 
         <ValueIcon
+          title='Дата создания'
           dense
-          disabled
           icon={<IconDateCreate size='1.25rem' className='text-ok-600' />}
           value={new Date(schema.time_create).toLocaleString(intl.locale, {
             year: '2-digit',
             month: '2-digit',
             day: '2-digit'
           })}
-          title='Дата создания'
         />
       </div>
     </div>

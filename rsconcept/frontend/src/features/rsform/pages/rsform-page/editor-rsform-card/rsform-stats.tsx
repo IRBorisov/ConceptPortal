@@ -38,9 +38,9 @@ export function RSFormStats({ className, stats, isArchive }: RSFormStatsProps) {
       </div>
       <ValueStats
         id='count_owned'
+        title='Собственные'
         icon={<IconPredecessor size='1.25rem' className='text-sec-600' />}
         value={stats.count_all - stats.count_inherited}
-        title='Собственные'
       />
       <ValueStats
         id='count_inherited'
@@ -50,98 +50,98 @@ export function RSFormStats({ className, stats, isArchive }: RSFormStatsProps) {
       />
 
       <ValueStats
-        className='col-start-1'
         id='count_ok'
+        title='Корректные'
+        className='col-start-1'
         icon={<IconStatusOK size='1.25rem' className='text-ok-600' />}
         value={stats.count_all - stats.count_errors - stats.count_property - stats.count_incalculable}
-        title='Корректные'
       />
       <ValueStats
         id='count_property'
+        title='Неразмерные'
         icon={<IconStatusProperty size='1.25rem' className='text-sec-600' />}
         value={stats.count_errors}
-        title='Неразмерные'
       />
       <ValueStats
         id='count_incalculable'
+        title='Невычислимые'
         icon={<IconStatusIncalculable size='1.25rem' className='text-warn-600' />}
         value={stats.count_incalculable}
-        title='Невычислимые'
       />
       <ValueStats
         id='count_errors'
+        title='Некорректные'
         icon={<IconStatusError size='1.25rem' className='text-warn-600' />}
         value={stats.count_errors}
-        title='Некорректные'
       />
 
       <ValueStats
         id='count_base'
+        title='Базисные множества'
         icon={<IconCstBaseSet size='1.25rem' className='clr-text-controls' />}
         value={stats.count_base}
-        title='Базисные множества'
       />
       <ValueStats
         id='count_constant'
+        title='Константные множества'
         icon={<IconCstConstSet size='1.25rem' className='clr-text-controls' />}
         value={stats.count_constant}
-        title='Константные множества'
       />
       <ValueStats
         id='count_structured'
+        title='Родовые структуры'
         icon={<IconCstStructured size='1.25rem' className='clr-text-controls' />}
         value={stats.count_structured}
-        title='Родовые структуры'
       />
       <ValueStats
         id='count_axiom'
+        title='Аксиомы'
         icon={<IconCstAxiom size='1.25rem' className='clr-text-controls' />}
         value={stats.count_axiom}
-        title='Аксиомы'
       />
 
       <ValueStats
         id='count_term'
+        title='Термы'
         icon={<IconCstTerm size='1.25rem' className='clr-text-controls' />}
         value={stats.count_term}
-        title='Термы'
       />
       <ValueStats
         id='count_function'
+        title='Терм-функции'
         icon={<IconCstFunction size='1.25rem' className='clr-text-controls' />}
         value={stats.count_function}
-        title='Терм-функции'
       />
       <ValueStats
         id='count_predicate'
+        title='Предикат-функции'
         icon={<IconCstPredicate size='1.25rem' className='clr-text-controls' />}
         value={stats.count_predicate}
-        title='Предикат-функции'
       />
       <ValueStats
         id='count_theorem'
+        title='Теоремы'
         icon={<IconCstTheorem size='1.25rem' className='clr-text-controls' />}
         value={stats.count_theorem}
-        title='Теоремы'
       />
 
       <ValueStats
         id='count_text_term'
+        title='Термины'
         icon={<IconTerminology size='1.25rem' className='text-sec-600' />}
         value={stats.count_text_term}
-        title='Термины'
       />
       <ValueStats
         id='count_definition'
+        title='Определения'
         icon={<IconDefinition size='1.25rem' className='text-sec-600' />}
         value={stats.count_definition}
-        title='Определения'
       />
       <ValueStats
         id='count_convention'
+        title='Конвенции'
         icon={<IconConvention size='1.25rem' className='text-sec-600' />}
         value={stats.count_convention}
-        title='Конвенции'
       />
     </div>
   );
