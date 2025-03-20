@@ -120,6 +120,7 @@ export function DataTable<TData extends RowData>({
   onRowDoubleClicked,
   noDataComponent,
 
+  onChangePaginationOption,
   paginationPerPage,
   paginationOptions = [10, 20, 30, 40, 50],
 
@@ -182,6 +183,7 @@ export function DataTable<TData extends RowData>({
         <PaginationTools
           id={id ? `${id}__pagination` : undefined}
           table={table}
+          onChangePaginationOption={onChangePaginationOption}
           paginationOptions={paginationOptions}
         />
       ) : null}

@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import {
   type ColumnSort,
   getCoreRowModel,
@@ -11,7 +11,6 @@ import {
   type RowSelectionState,
   type SortingState,
   type TableOptions,
-  type Updater,
   useReactTable,
   type VisibilityState
 } from '@tanstack/react-table';
@@ -45,9 +44,6 @@ interface UseDataTableProps<TData extends RowData>
   /** Number of rows per page. */
   paginationPerPage?: number;
 
-  /** Callback to be called when the pagination option is changed. */
-  onChangePaginationOption?: (newValue: number) => void;
-
   /** Enable sorting. */
   enableSorting?: boolean;
 
@@ -73,7 +69,6 @@ export function useDataTable<TData extends RowData>({
 
   enablePagination,
   paginationPerPage = 10,
-  onChangePaginationOption,
 
   ...restProps
 }: UseDataTableProps<TData>) {
@@ -82,19 +77,6 @@ export function useDataTable<TData extends RowData>({
     pageIndex: 0,
     pageSize: paginationPerPage
   });
-
-  const handleChangePagination = useCallback(
-    (updater: Updater<PaginationState>) => {
-      setPagination(prev => {
-        const resolvedValue = typeof updater === 'function' ? updater(prev) : updater;
-        if (onChangePaginationOption && prev.pageSize !== resolvedValue.pageSize) {
-          onChangePaginationOption(resolvedValue.pageSize);
-        }
-        return resolvedValue;
-      });
-    },
-    [onChangePaginationOption]
-  );
 
   const table = useReactTable({
     state: {
@@ -111,7 +93,7 @@ export function useDataTable<TData extends RowData>({
     onSortingChange: enableSorting ? setSorting : undefined,
 
     getPaginationRowModel: enablePagination ? getPaginationRowModel() : undefined,
-    onPaginationChange: enablePagination ? handleChangePagination : undefined,
+    onPaginationChange: enablePagination ? setPagination : undefined,
 
     enableHiding: enableHiding,
     enableMultiRowSelection: enableRowSelection,
