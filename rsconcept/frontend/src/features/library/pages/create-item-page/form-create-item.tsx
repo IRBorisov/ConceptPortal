@@ -137,7 +137,7 @@ export function FormCreateItem() {
       <TextInput
         id='schema_title'
         {...register('title')}
-        label='Полное название'
+        label='Название'
         placeholder={file && 'Загрузить из файла'}
         error={errors.title}
       />

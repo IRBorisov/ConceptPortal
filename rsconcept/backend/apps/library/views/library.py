@@ -168,7 +168,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
 
         with transaction.atomic():
             clone.save()
-            need_filter = 'items' in request.data
+            need_filter = 'items' in request.data and len(request.data['items']) > 0
             for cst in RSForm(item).constituents():
                 if not need_filter or cst.pk in request.data['items']:
                     cst.pk = None

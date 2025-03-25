@@ -359,7 +359,7 @@ class TestLibraryViewset(EndpointTester):
         data = {'title': 'Title1340', 'items': []}
         response = self.executeCreated(data=data, item=self.owned.pk)
         self.assertEqual(response.data['title'], data['title'])
-        self.assertEqual(len(response.data['items']), 0)
+        self.assertEqual(len(response.data['items']), 2)
 
         data = {'title': 'Title1341', 'items': [x12.pk]}
         response = self.executeCreated(data=data, item=self.owned.pk)

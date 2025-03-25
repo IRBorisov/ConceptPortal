@@ -14,7 +14,7 @@ export function TabOperation() {
     <div className='cc-fade-in cc-column'>
       <TextInput
         id='operation_title'
-        label='Полное название'
+        label='Названиее'
         {...register('item_data.title')}
         error={errors.item_data?.title}
       />

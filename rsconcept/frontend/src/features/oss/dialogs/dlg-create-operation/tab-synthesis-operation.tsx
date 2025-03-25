@@ -21,7 +21,7 @@ export function TabSynthesisOperation() {
     <div className='cc-fade-in cc-column'>
       <TextInput
         id='operation_title'
-        label='Полное название'
+        label='Название'
         {...register('item_data.title')}
         error={errors.item_data?.title}
       />

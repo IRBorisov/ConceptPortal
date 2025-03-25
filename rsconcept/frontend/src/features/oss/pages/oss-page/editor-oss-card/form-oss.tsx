@@ -63,7 +63,7 @@ export function FormOSS() {
       <TextInput
         id='schema_title'
         {...register('title')}
-        label='Полное название'
+        label='Название'
         className='mb-3'
         error={errors.title}
         disabled={!isMutable}

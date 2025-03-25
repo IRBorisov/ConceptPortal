@@ -41,8 +41,13 @@ export function FormRSForm() {
     reset,
     formState: { isDirty, errors }
   } = useForm<IUpdateLibraryItemDTO>({
-    resolver: zodResolver(schemaUpdateLibraryItem),
-    defaultValues: {
+    resolver: zodResolver(schemaUpdateLibraryItem)
+  });
+  const visible = useWatch({ control, name: 'visible' });
+  const readOnly = useWatch({ control, name: 'read_only' });
+
+  useEffect(() => {
+    reset({
       id: schema.id,
       item_type: LibraryItemType.RSFORM,
       title: schema.title,
@@ -50,10 +55,8 @@ export function FormRSForm() {
       description: schema.description,
       visible: schema.visible,
       read_only: schema.read_only
-    }
-  });
-  const visible = useWatch({ control, name: 'visible' });
-  const readOnly = useWatch({ control, name: 'read_only' });
+    });
+  }, [schema, reset]);
 
   useEffect(() => {
     setIsModified(isDirty);
@@ -76,7 +79,7 @@ export function FormRSForm() {
       <TextInput
         id='schema_title'
         {...register('title')}
-        label='Полное название'
+        label='Название'
         className='mb-3'
         error={errors.title}
         disabled={!isContentEditable}

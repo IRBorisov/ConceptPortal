@@ -68,7 +68,7 @@ export function DlgCloneLibraryItem() {
     >
       <TextInput
         id='dlg_full_name' //
-        label='Полное название'
+        label='Название'
         {...register('title')}
         error={errors.title}
       />
