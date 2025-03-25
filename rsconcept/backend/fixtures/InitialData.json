@@ -88,7 +88,7 @@
       "owner": 1,
       "title": "Банк выражений",
       "alias": "БВ",
-      "comment": "Банк шаблонов для генерации выражений",
+      "description": "Банк шаблонов для генерации выражений",
       "visible": true,
       "read_only": false,
       "access_policy": "public",
@@ -105,7 +105,7 @@
       "owner": 5,
       "title": "Групповая операция",
       "alias": "БК09",
-      "comment": "",
+      "description": "",
       "visible": true,
       "read_only": false,
       "access_policy": "public",
@@ -122,7 +122,7 @@
       "owner": 3,
       "title": "Булева алгебра",
       "alias": "БК12",
-      "comment": "",
+      "description": "",
       "visible": true,
       "read_only": false,
       "access_policy": "public",
@@ -139,7 +139,7 @@
       "owner": 3,
       "title": "Генеалогия",
       "alias": "D0001",
-      "comment": "построено на основе понятия \"родство\" из Википедии",
+      "description": "построено на основе понятия \"родство\" из Википедии",
       "visible": true,
       "read_only": false,
       "access_policy": "public",
@@ -156,7 +156,7 @@
       "owner": 1,
       "title": "Вещества и смеси",
       "alias": "КС Вещества",
-      "comment": "",
+      "description": "",
       "visible": false,
       "read_only": false,
       "access_policy": "public",
@@ -173,7 +173,7 @@
       "owner": 1,
       "title": "Объект-объектные отношения",
       "alias": "КС ООО",
-      "comment": "",
+      "description": "",
       "visible": false,
       "read_only": false,
       "access_policy": "public",
@@ -190,7 +190,7 @@
       "owner": 1,
       "title": "Процессы",
       "alias": "КС Процессы",
-      "comment": "",
+      "description": "",
       "visible": false,
       "read_only": false,
       "access_policy": "public",
@@ -207,7 +207,7 @@
       "owner": 1,
       "title": "Экологические правоотношения",
       "alias": "ЭКОС",
-      "comment": "",
+      "description": "",
       "visible": true,
       "read_only": false,
       "access_policy": "public",
@@ -224,7 +224,7 @@
       "owner": 1,
       "title": "Объектная среда",
       "alias": "КС Объект-сред",
-      "comment": "",
+      "description": "",
       "visible": false,
       "read_only": false,
       "access_policy": "public",
@@ -241,7 +241,7 @@
       "owner": 1,
       "title": "Процессные среды",
       "alias": "КС Проц-сред",
-      "comment": "",
+      "description": "",
       "visible": false,
       "read_only": false,
       "access_policy": "public",
@@ -6763,7 +6763,7 @@
     "fields": {
       "operation": 9,
       "argument": 1,
-	  "order": 0
+      "order": 0
     }
   },
   {
@@ -6772,7 +6772,7 @@
     "fields": {
       "operation": 9,
       "argument": 2,
-	  "order": 1
+      "order": 1
     }
   },
   {
@@ -6781,7 +6781,7 @@
     "fields": {
       "operation": 10,
       "argument": 4,
-	  "order": 0
+      "order": 0
     }
   },
   {
@@ -6790,7 +6790,7 @@
     "fields": {
       "operation": 10,
       "argument": 9,
-	  "order": 1
+      "order": 1
     }
   },
   {
@@ -7414,7 +7414,7 @@
       "result": 38,
       "alias": "КС Вещества",
       "title": "Вещества и смеси",
-      "comment": "",
+      "description": "",
       "position_x": 530.0,
       "position_y": 370.0
     }
@@ -7428,7 +7428,7 @@
       "result": 39,
       "alias": "КС ООО",
       "title": "Объект-объектные отношения",
-      "comment": "",
+      "description": "",
       "position_x": 710.0,
       "position_y": 370.0
     }
@@ -7442,7 +7442,7 @@
       "result": 40,
       "alias": "КС Процессы",
       "title": "Процессы",
-      "comment": "",
+      "description": "",
       "position_x": 890.0,
       "position_y": 370.0
     }
@@ -7456,7 +7456,7 @@
       "result": 43,
       "alias": "КС Объект-сред",
       "title": "Объектная среда",
-      "comment": "",
+      "description": "",
       "position_x": 620.0,
       "position_y": 470.0
     }
@@ -7470,7 +7470,7 @@
       "result": 44,
       "alias": "КС Проц-сред",
       "title": "Процессные среды",
-      "comment": "",
+      "description": "",
       "position_x": 760.0,
       "position_y": 570.0
     }

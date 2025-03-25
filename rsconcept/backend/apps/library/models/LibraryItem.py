@@ -69,8 +69,8 @@ class LibraryItem(Model):
         max_length=255,
         blank=True
     )
-    comment = TextField(
-        verbose_name='Комментарий',
+    description = TextField(
+        verbose_name='Описание',
         blank=True
     )
     visible = BooleanField(

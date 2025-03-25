@@ -53,8 +53,8 @@ class Operation(Model):
         verbose_name='Название',
         blank=True
     )
-    comment = TextField(
-        verbose_name='Комментарий',
+    description = TextField(
+        verbose_name='Описание',
         blank=True
     )
 

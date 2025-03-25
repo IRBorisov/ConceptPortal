@@ -67,7 +67,7 @@ export const schemaOperation = z.strictObject({
 
   alias: z.string(),
   title: z.string(),
-  comment: z.string(),
+  description: z.string(),
 
   position_x: z.number(),
   position_y: z.number(),
@@ -107,7 +107,7 @@ export const schemaOperationCreate = z.strictObject({
     alias: z.string().nonempty(),
     operation_type: schemaOperationType,
     title: z.string(),
-    comment: z.string(),
+    description: z.string(),
     position_x: z.number(),
     position_y: z.number(),
     result: z.number().nullable()
@@ -145,7 +145,7 @@ export const schemaOperationUpdate = z.strictObject({
   item_data: z.strictObject({
     alias: z.string().nonempty(errorMsg.requiredField),
     title: z.string(),
-    comment: z.string()
+    description: z.string()
   }),
   arguments: z.array(z.number()),
   substitutions: z.array(schemaCstSubstitute)

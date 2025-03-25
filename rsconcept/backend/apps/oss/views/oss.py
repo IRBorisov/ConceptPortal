@@ -295,15 +295,15 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
             oss.update_positions(serializer.validated_data['positions'])
             operation.alias = serializer.validated_data['item_data']['alias']
             operation.title = serializer.validated_data['item_data']['title']
-            operation.comment = serializer.validated_data['item_data']['comment']
-            operation.save(update_fields=['alias', 'title', 'comment'])
+            operation.description = serializer.validated_data['item_data']['description']
+            operation.save(update_fields=['alias', 'title', 'description'])
 
             if operation.result is not None:
                 can_edit = permissions.can_edit_item(request.user, operation.result)
                 if can_edit or operation.operation_type == m.OperationType.SYNTHESIS:
                     operation.result.alias = operation.alias
                     operation.result.title = operation.title
-                    operation.result.comment = operation.comment
+                    operation.result.description = operation.description
                     operation.result.save()
             if 'arguments' in serializer.validated_data:
                 oss.set_arguments(operation.pk, serializer.validated_data['arguments'])

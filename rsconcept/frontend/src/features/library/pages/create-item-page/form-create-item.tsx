@@ -211,10 +211,10 @@ export function FormCreateItem() {
 
       <TextArea
         id='schema_comment'
-        {...register('comment')}
+        {...register('description')}
         label='Описание'
         placeholder={file && 'Загрузить из файла'}
-        error={errors.comment}
+        error={errors.description}
       />
 
       <div className='flex justify-around gap-6 py-3'>

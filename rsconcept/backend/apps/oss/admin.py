@@ -7,7 +7,16 @@ from . import models
 class OperationAdmin(admin.ModelAdmin):
     ''' Admin model: Operation. '''
     ordering = ['oss']
-    list_display = ['id', 'oss', 'operation_type', 'result', 'alias', 'title', 'comment', 'position_x', 'position_y']
+    list_display = [
+        'id',
+        'oss',
+        'operation_type',
+        'result',
+        'alias',
+        'title',
+        'description',
+        'position_x',
+        'position_y']
     search_fields = ['id', 'operation_type', 'title', 'alias']
 
 

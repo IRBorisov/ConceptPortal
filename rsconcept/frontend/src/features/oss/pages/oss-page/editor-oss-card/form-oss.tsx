@@ -38,7 +38,7 @@ export function FormOSS() {
       item_type: LibraryItemType.RSFORM,
       title: schema.title,
       alias: schema.alias,
-      comment: schema.comment,
+      description: schema.description,
       visible: schema.visible,
       read_only: schema.read_only
     }
@@ -90,10 +90,10 @@ export function FormOSS() {
 
       <TextArea
         id='schema_comment'
-        {...register('comment')}
+        {...register('description')}
         label='Описание'
         rows={3}
-        error={errors.comment}
+        error={errors.description}
         disabled={!isMutable || isProcessing}
       />
       {isMutable || isModified ? (

@@ -43,7 +43,7 @@ export function DlgCloneLibraryItem() {
       item_type: base.item_type,
       title: cloneTitle(base),
       alias: base.alias,
-      comment: base.comment,
+      description: base.description,
       visible: true,
       read_only: false,
       access_policy: AccessPolicy.PUBLIC,
@@ -119,7 +119,7 @@ export function DlgCloneLibraryItem() {
         )}
       />
 
-      <TextArea id='dlg_comment' {...register('comment')} label='Описание' rows={4} error={errors.comment} />
+      <TextArea id='dlg_comment' {...register('description')} label='Описание' rows={4} error={errors.description} />
 
       {selected.length > 0 ? (
         <Controller

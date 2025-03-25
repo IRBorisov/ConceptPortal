@@ -28,6 +28,6 @@ class TestOperation(TestCase):
         self.assertEqual(self.operation.result, None)
         self.assertEqual(self.operation.alias, 'KS1')
         self.assertEqual(self.operation.title, '')
-        self.assertEqual(self.operation.comment, '')
+        self.assertEqual(self.operation.description, '')
         self.assertEqual(self.operation.position_x, 0)
         self.assertEqual(self.operation.position_y, 0)

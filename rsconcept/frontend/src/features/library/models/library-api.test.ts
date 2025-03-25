@@ -9,7 +9,7 @@ describe('Testing matching LibraryItem', () => {
     item_type: LibraryItemType.RSFORM,
     title: 'Item1',
     alias: 'I1',
-    comment: 'comment',
+    description: 'description',
     time_create: 'I2',
     time_update: '',
     owner: null,
@@ -24,7 +24,7 @@ describe('Testing matching LibraryItem', () => {
     item_type: LibraryItemType.RSFORM,
     title: '',
     alias: '',
-    comment: '',
+    description: '',
     time_create: '',
     time_update: '',
     owner: null,
@@ -46,7 +46,7 @@ describe('Testing matching LibraryItem', () => {
     expect(matchLibraryItem(item1, item1.title + '@invalid')).toEqual(false);
     expect(matchLibraryItem(item1, item1.alias + '@invalid')).toEqual(false);
     expect(matchLibraryItem(item1, item1.time_create)).toEqual(false);
-    expect(matchLibraryItem(item1, item1.comment)).toEqual(true);
+    expect(matchLibraryItem(item1, item1.description)).toEqual(true);
   });
 });
 

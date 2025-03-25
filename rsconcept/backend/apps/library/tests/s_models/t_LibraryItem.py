@@ -46,7 +46,7 @@ class TestLibraryItem(TestCase):
         self.assertIsNone(item.owner)
         self.assertEqual(item.title, 'Test')
         self.assertEqual(item.alias, '')
-        self.assertEqual(item.comment, '')
+        self.assertEqual(item.description, '')
         self.assertEqual(item.visible, True)
         self.assertEqual(item.read_only, False)
         self.assertEqual(item.access_policy, AccessPolicy.PUBLIC)
@@ -59,13 +59,13 @@ class TestLibraryItem(TestCase):
             title='Test',
             owner=self.user1,
             alias='KS1',
-            comment='Test comment',
+            description='Test description',
             location=LocationHead.COMMON
         )
         self.assertEqual(item.owner, self.user1)
         self.assertEqual(item.title, 'Test')
         self.assertEqual(item.alias, 'KS1')
-        self.assertEqual(item.comment, 'Test comment')
+        self.assertEqual(item.description, 'Test description')
         self.assertEqual(item.location, LocationHead.COMMON)
 
 

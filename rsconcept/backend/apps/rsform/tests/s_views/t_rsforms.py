@@ -30,7 +30,7 @@ class TestRSFormViewset(EndpointTester):
         work_dir = os.path.dirname(os.path.abspath(__file__))
         data = {
             'title': 'Test123',
-            'comment': '123',
+            'description': '123',
             'alias': 'ks1',
             'location': LocationHead.PROJECTS,
             'access_policy': AccessPolicy.PROTECTED,
@@ -45,7 +45,7 @@ class TestRSFormViewset(EndpointTester):
         self.assertEqual(response.data['owner'], self.user.pk)
         self.assertEqual(response.data['title'], data['title'])
         self.assertEqual(response.data['alias'], data['alias'])
-        self.assertEqual(response.data['comment'], data['comment'])
+        self.assertEqual(response.data['description'], data['description'])
 
 
     @decl_endpoint('/api/rsforms', method='get')

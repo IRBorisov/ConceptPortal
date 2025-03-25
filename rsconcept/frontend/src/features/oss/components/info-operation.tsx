@@ -63,10 +63,10 @@ export function InfoOperation({ operation }: InfoOperationProps) {
           {operation.title}
         </p>
       ) : null}
-      {operation.comment ? (
+      {operation.description ? (
         <p>
-          <b>Комментарий: </b>
-          {operation.comment}
+          <b>Описание: </b>
+          {operation.description}
         </p>
       ) : null}
       {operation.substitutions.length > 0 ? (

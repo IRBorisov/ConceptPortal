@@ -143,7 +143,7 @@ class TestOssViewset(EndpointTester):
             'item_data': {
                 'alias': 'Test3',
                 'title': 'Test title',
-                'comment': 'Тест кириллицы',
+                'description': 'Тест кириллицы',
                 'position_x': 1,
                 'position_y': 1,
             },
@@ -165,7 +165,7 @@ class TestOssViewset(EndpointTester):
         self.assertEqual(new_operation['alias'], data['item_data']['alias'])
         self.assertEqual(new_operation['operation_type'], data['item_data']['operation_type'])
         self.assertEqual(new_operation['title'], data['item_data']['title'])
-        self.assertEqual(new_operation['comment'], data['item_data']['comment'])
+        self.assertEqual(new_operation['description'], data['item_data']['description'])
         self.assertEqual(new_operation['position_x'], data['item_data']['position_x'])
         self.assertEqual(new_operation['position_y'], data['item_data']['position_y'])
         self.assertEqual(new_operation['result'], None)
@@ -223,7 +223,7 @@ class TestOssViewset(EndpointTester):
             'item_data': {
                 'alias': 'Test4',
                 'title': 'Test title',
-                'comment': 'Comment',
+                'description': 'Comment',
                 'operation_type': OperationType.INPUT,
                 'result': self.ks1.model.pk
             },
@@ -238,7 +238,7 @@ class TestOssViewset(EndpointTester):
         schema = LibraryItem.objects.get(pk=new_operation['result'])
         self.assertEqual(schema.alias, data['item_data']['alias'])
         self.assertEqual(schema.title, data['item_data']['title'])
-        self.assertEqual(schema.comment, data['item_data']['comment'])
+        self.assertEqual(schema.description, data['item_data']['description'])
         self.assertEqual(schema.visible, False)
         self.assertEqual(schema.access_policy, self.owned.model.access_policy)
         self.assertEqual(schema.location, self.owned.model.location)
@@ -286,7 +286,7 @@ class TestOssViewset(EndpointTester):
         self.executeBadData(data=data, item=self.owned_id)
 
         self.operation1.result = None
-        self.operation1.comment = 'TestComment'
+        self.operation1.description = 'TestComment'
         self.operation1.title = 'TestTitle'
         self.operation1.save()
         response = self.executeOK(data=data)
@@ -296,7 +296,7 @@ class TestOssViewset(EndpointTester):
         self.assertEqual(new_schema['id'], self.operation1.result.pk)
         self.assertEqual(new_schema['alias'], self.operation1.alias)
         self.assertEqual(new_schema['title'], self.operation1.title)
-        self.assertEqual(new_schema['comment'], self.operation1.comment)
+        self.assertEqual(new_schema['description'], self.operation1.description)
 
         data['target'] = self.operation3.pk
         self.executeBadData(data=data)
@@ -326,14 +326,14 @@ class TestOssViewset(EndpointTester):
         data['input'] = self.ks1.model.pk
         self.ks1.model.alias = 'Test42'
         self.ks1.model.title = 'Test421'
-        self.ks1.model.comment = 'TestComment42'
+        self.ks1.model.description = 'TestComment42'
         self.ks1.save()
         response = self.executeOK(data=data)
         self.operation1.refresh_from_db()
         self.assertEqual(self.operation1.result, self.ks1.model)
         self.assertEqual(self.operation1.alias, self.ks1.model.alias)
         self.assertEqual(self.operation1.title, self.ks1.model.title)
-        self.assertEqual(self.operation1.comment, self.ks1.model.comment)
+        self.assertEqual(self.operation1.description, self.ks1.model.description)
 
     @decl_endpoint('/api/oss/{item}/set-input', method='patch')
     def test_set_input_change_schema(self):
@@ -382,7 +382,7 @@ class TestOssViewset(EndpointTester):
             'item_data': {
                 'alias': 'Test3 mod',
                 'title': 'Test title mod',
-                'comment': 'Comment mod'
+                'description': 'Comment mod'
             },
             'positions': [],
             'arguments': [self.operation2.pk, self.operation1.pk],
@@ -406,7 +406,7 @@ class TestOssViewset(EndpointTester):
         self.operation3.refresh_from_db()
         self.assertEqual(self.operation3.alias, data['item_data']['alias'])
         self.assertEqual(self.operation3.title, data['item_data']['title'])
-        self.assertEqual(self.operation3.comment, data['item_data']['comment'])
+        self.assertEqual(self.operation3.description, data['item_data']['description'])
         args = self.operation3.getQ_arguments().order_by('order')
         self.assertEqual(args[0].argument.pk, data['arguments'][0])
         self.assertEqual(args[0].order, 0)
@@ -426,7 +426,7 @@ class TestOssViewset(EndpointTester):
             'item_data': {
                 'alias': 'Test3 mod',
                 'title': 'Test title mod',
-                'comment': 'Comment mod'
+                'description': 'Comment mod'
             },
             'positions': [],
         }
@@ -435,10 +435,10 @@ class TestOssViewset(EndpointTester):
         self.operation1.refresh_from_db()
         self.assertEqual(self.operation1.alias, data['item_data']['alias'])
         self.assertEqual(self.operation1.title, data['item_data']['title'])
-        self.assertEqual(self.operation1.comment, data['item_data']['comment'])
+        self.assertEqual(self.operation1.description, data['item_data']['description'])
         self.assertEqual(self.operation1.result.alias, data['item_data']['alias'])
         self.assertEqual(self.operation1.result.title, data['item_data']['title'])
-        self.assertEqual(self.operation1.result.comment, data['item_data']['comment'])
+        self.assertEqual(self.operation1.result.description, data['item_data']['description'])
 
     @decl_endpoint('/api/oss/{item}/update-operation', method='patch')
     def test_update_operation_invalid_substitution(self):
@@ -451,7 +451,7 @@ class TestOssViewset(EndpointTester):
             'item_data': {
                 'alias': 'Test3 mod',
                 'title': 'Test title mod',
-                'comment': 'Comment mod'
+                'description': 'Comment mod'
             },
             'positions': [],
             'arguments': [self.operation1.pk, self.operation2.pk],
@@ -490,7 +490,7 @@ class TestOssViewset(EndpointTester):
         self.operation3.refresh_from_db()
         schema = self.operation3.result
         self.assertEqual(schema.alias, self.operation3.alias)
-        self.assertEqual(schema.comment, self.operation3.comment)
+        self.assertEqual(schema.description, self.operation3.description)
         self.assertEqual(schema.title, self.operation3.title)
         self.assertEqual(schema.visible, False)
         items = list(RSForm(schema).constituents())

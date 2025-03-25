@@ -39,8 +39,8 @@ export function TabSynthesisOperation() {
           label='Описание'
           noResize
           rows={3}
-          {...register('item_data.comment')}
-          error={errors.item_data?.comment}
+          {...register('item_data.description')}
+          error={errors.item_data?.description}
         />
       </div>
 

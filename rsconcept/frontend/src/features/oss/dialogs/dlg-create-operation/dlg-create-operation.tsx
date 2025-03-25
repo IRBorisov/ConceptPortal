@@ -56,7 +56,7 @@ export function DlgCreateOperation() {
         position_y: defaultY,
         alias: '',
         title: '',
-        comment: ''
+        description: ''
       },
       arguments: initialInputs,
       create_schema: false,

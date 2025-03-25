@@ -281,7 +281,7 @@ class TestChangeOperations(EndpointTester):
             'item_data': {
                 'alias': 'Test4 mod',
                 'title': 'Test title mod',
-                'comment': 'Comment mod'
+                'description': 'Comment mod'
             },
             'positions': [],
             'substitutions': [
@@ -315,7 +315,7 @@ class TestChangeOperations(EndpointTester):
             'item_data': {
                 'alias': 'Test4 mod',
                 'title': 'Test title mod',
-                'comment': 'Comment mod'
+                'description': 'Comment mod'
             },
             'positions': [],
             'arguments': [self.operation1.pk],

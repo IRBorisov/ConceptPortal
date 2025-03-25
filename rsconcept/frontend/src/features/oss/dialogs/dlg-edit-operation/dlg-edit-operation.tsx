@@ -48,7 +48,7 @@ export function DlgEditOperation() {
       item_data: {
         alias: target.alias,
         title: target.title,
-        comment: target.comment
+        description: target.description
       },
       arguments: target.arguments,
       substitutions: target.substitutions.map(sub => ({

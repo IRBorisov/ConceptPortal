@@ -141,8 +141,8 @@ class OperationSchema:
         if schema is not None:
             operation.alias = schema.alias
             operation.title = schema.title
-            operation.comment = schema.comment
-        operation.save(update_fields=['result', 'alias', 'title', 'comment'])
+            operation.description = schema.description
+        operation.save(update_fields=['result', 'alias', 'title', 'description'])
 
         if schema is not None and has_children:
             rsform = RSForm(schema)
@@ -227,7 +227,7 @@ class OperationSchema:
             owner=self.model.owner,
             alias=operation.alias,
             title=operation.title,
-            comment=operation.comment,
+            description=operation.description,
             visible=False,
             access_policy=self.model.access_policy,
             location=self.model.location

@@ -55,13 +55,13 @@ class LibraryViewSet(viewsets.ModelViewSet):
             if operation.title != instance.title:
                 operation.title = instance.title
                 changed = True
-            if operation.comment != instance.comment:
-                operation.comment = instance.comment
+            if operation.description != instance.description:
+                operation.description = instance.description
                 changed = True
             if changed:
                 update_list.append(operation)
         if update_list:
-            Operation.objects.bulk_update(update_list, ['alias', 'title', 'comment'])
+            Operation.objects.bulk_update(update_list, ['alias', 'title', 'description'])
 
     def perform_destroy(self, instance: m.LibraryItem) -> None:
         if instance.item_type == m.LibraryItemType.RSFORM:
@@ -160,7 +160,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
         clone.owner = cast(User, self.request.user)
         clone.title = serializer.validated_data['title']
         clone.alias = serializer.validated_data.get('alias', '')
-        clone.comment = serializer.validated_data.get('comment', '')
+        clone.description = serializer.validated_data.get('description', '')
         clone.visible = serializer.validated_data.get('visible', True)
         clone.read_only = False
         clone.access_policy = serializer.validated_data.get('access_policy', m.AccessPolicy.PUBLIC)

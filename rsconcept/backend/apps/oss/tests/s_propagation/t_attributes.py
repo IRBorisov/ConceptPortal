@@ -123,7 +123,7 @@ class TestChangeAttributes(EndpointTester):
 
     @decl_endpoint('/api/library/{item}', method='patch')
     def test_sync_from_result(self):
-        data = {'alias': 'KS111', 'title': 'New Title', 'comment': 'New Comment'}
+        data = {'alias': 'KS111', 'title': 'New Title', 'description': 'New description'}
 
         self.executeOK(data=data, item=self.ks1.model.pk)
         self.operation1.refresh_from_db()
@@ -131,7 +131,7 @@ class TestChangeAttributes(EndpointTester):
         self.assertEqual(self.operation1.result, self.ks1.model)
         self.assertEqual(self.operation1.alias, data['alias'])
         self.assertEqual(self.operation1.title, data['title'])
-        self.assertEqual(self.operation1.comment, data['comment'])
+        self.assertEqual(self.operation1.description, data['description'])
 
     @decl_endpoint('/api/oss/{item}/update-operation', method='patch')
     def test_sync_from_operation(self):
@@ -140,7 +140,7 @@ class TestChangeAttributes(EndpointTester):
             'item_data': {
                 'alias': 'Test3 mod',
                 'title': 'Test title mod',
-                'comment': 'Comment mod'
+                'description': 'Comment mod'
             },
             'positions': [],
         }
@@ -149,7 +149,7 @@ class TestChangeAttributes(EndpointTester):
         self.ks3.refresh_from_db()
         self.assertEqual(self.ks3.model.alias, data['item_data']['alias'])
         self.assertEqual(self.ks3.model.title, data['item_data']['title'])
-        self.assertEqual(self.ks3.model.comment, data['item_data']['comment'])
+        self.assertEqual(self.ks3.model.description, data['item_data']['description'])
 
     @decl_endpoint('/api/library/{item}', method='delete')
     def test_destroy_oss_consequence(self):

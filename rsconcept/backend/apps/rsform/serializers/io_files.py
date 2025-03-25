@@ -42,7 +42,7 @@ class RSFormTRSSerializer(serializers.Serializer):
             'type': _TRS_TYPE,
             'title': schema.title,
             'alias': schema.alias,
-            'comment': schema.comment,
+            'comment': schema.description,
             'items': [],
             'claimed': False,
             'selection': [],
@@ -78,7 +78,7 @@ class RSFormTRSSerializer(serializers.Serializer):
             'type': _TRS_TYPE,
             'title': data['title'],
             'alias': data['alias'],
-            'comment': data['comment'],
+            'comment': data['description'],
             'items': [],
             'claimed': False,
             'selection': [],
@@ -123,7 +123,7 @@ class RSFormTRSSerializer(serializers.Serializer):
         if self.context['load_meta']:
             result['title'] = data.get('title', 'Без названия')
             result['alias'] = data.get('alias', '')
-            result['comment'] = data.get('comment', '')
+            result['description'] = data.get('description', '')
         if 'id' in data:
             result['id'] = data['id']
             self.instance = RSForm.from_id(result['id'])
@@ -144,7 +144,7 @@ class RSFormTRSSerializer(serializers.Serializer):
             owner=validated_data.get('owner', None),
             alias=validated_data['alias'],
             title=validated_data['title'],
-            comment=validated_data['comment'],
+            description=validated_data['description'],
             visible=validated_data['visible'],
             read_only=validated_data['read_only'],
             access_policy=validated_data['access_policy'],
@@ -171,8 +171,8 @@ class RSFormTRSSerializer(serializers.Serializer):
             instance.model.alias = validated_data['alias']
         if 'title' in validated_data:
             instance.model.title = validated_data['title']
-        if 'comment' in validated_data:
-            instance.model.comment = validated_data['comment']
+        if 'description' in validated_data:
+            instance.model.description = validated_data['description']
 
         order = 0
         prev_constituents = instance.constituents()

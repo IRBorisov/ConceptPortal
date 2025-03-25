@@ -586,8 +586,8 @@ def _prepare_rsform_data(data: dict, request: Request, owner: Union[User, None])
         data['title'] = 'Без названия ' + request.FILES['file'].fileName
     if 'alias' in request.data and request.data['alias'] != '':
         data['alias'] = request.data['alias']
-    if 'comment' in request.data and request.data['comment'] != '':
-        data['comment'] = request.data['comment']
+    if 'description' in request.data and request.data['description'] != '':
+        data['description'] = request.data['description']
 
     visible = True
     if 'visible' in request.data:

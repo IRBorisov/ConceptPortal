@@ -49,7 +49,7 @@ export function TabInputOperation() {
     setValue('create_schema', false);
     setValue('item_data.alias', schema.alias);
     setValue('item_data.title', schema.title);
-    setValue('item_data.comment', schema.comment, { shouldValidate: true });
+    setValue('item_data.description', schema.description, { shouldValidate: true });
   }
 
   return (
@@ -74,7 +74,7 @@ export function TabInputOperation() {
           label='Описание'
           noResize
           rows={3}
-          {...register('item_data.comment')}
+          {...register('item_data.description')}
         />
       </div>
 

@@ -44,7 +44,7 @@ class OperationCreateSerializer(serializers.Serializer):
             model = Operation
             fields = \
                 'alias', 'operation_type', 'title', \
-                'comment', 'result', 'position_x', 'position_y'
+                'description', 'result', 'position_x', 'position_y'
 
     create_schema = serializers.BooleanField(default=False, required=False)
     item_data = OperationCreateData()
@@ -63,7 +63,7 @@ class OperationUpdateSerializer(serializers.Serializer):
         class Meta:
             ''' serializer metadata. '''
             model = Operation
-            fields = 'alias', 'title', 'comment'
+            fields = 'alias', 'title', 'description'
 
     target = PKField(many=False, queryset=Operation.objects.all())
     item_data = OperationUpdateData()
