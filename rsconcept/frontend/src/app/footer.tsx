@@ -20,7 +20,7 @@ export function Footer() {
         <TextURL text='Экстеор' href='/manuals?topic=exteor' color='' />
       </nav>
 
-      <p>© 2024 ЦИВТ КОНЦЕПТ</p>
+      <p>© 2025 ЦИВТ КОНЦЕПТ</p>
     </footer>
   );
 }
