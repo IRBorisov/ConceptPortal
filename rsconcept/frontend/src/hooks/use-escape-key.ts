@@ -6,6 +6,8 @@ export function useEscapeKey(handleClose: () => void, isEnabled: boolean = true)
   const handleEscKey = useCallback(
     (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
+        event.preventDefault();
+        event.stopPropagation();
         handleClose();
       }
     },
@@ -14,9 +16,9 @@ export function useEscapeKey(handleClose: () => void, isEnabled: boolean = true)
 
   useEffect(() => {
     if (isEnabled) {
-      document.addEventListener('keyup', handleEscKey, false);
+      document.addEventListener('keydown', handleEscKey, false);
       return () => {
-        document.removeEventListener('keyup', handleEscKey, false);
+        document.removeEventListener('keydown', handleEscKey, false);
       };
     }
   }, [handleEscKey, isEnabled]);
