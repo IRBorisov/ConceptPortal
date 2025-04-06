@@ -14,7 +14,7 @@ export const useOperationUpdate = () => {
     mutationFn: ossApi.operationUpdate,
     onSuccess: (data, variables) => {
       client.setQueryData(KEYS.composite.ossItem({ itemID: data.id }), data);
-      const schemaID = data.items.find(item => item.id === variables.data.target)?.result;
+      const schemaID = data.operations.find(item => item.id === variables.data.target)?.result;
       if (!schemaID) {
         return;
       }

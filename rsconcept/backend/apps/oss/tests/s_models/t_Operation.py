@@ -25,9 +25,8 @@ class TestOperation(TestCase):
     def test_create_default(self):
         self.assertEqual(self.operation.oss, self.oss.model)
         self.assertEqual(self.operation.operation_type, OperationType.INPUT)
+        self.assertEqual(self.operation.parent, None)
         self.assertEqual(self.operation.result, None)
         self.assertEqual(self.operation.alias, 'KS1')
         self.assertEqual(self.operation.title, '')
         self.assertEqual(self.operation.description, '')
-        self.assertEqual(self.operation.position_x, 0)
-        self.assertEqual(self.operation.position_y, 0)

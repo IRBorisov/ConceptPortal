@@ -20,7 +20,7 @@ export const useSetOwner = () => {
         client.setQueryData(ossKey, { ...ossData, owner: variables.owner });
         return Promise.allSettled([
           client.invalidateQueries({ queryKey: libraryApi.libraryListKey }),
-          ...ossData.items
+          ...ossData.operations
             .map(item => {
               if (!item.result) {
                 return;

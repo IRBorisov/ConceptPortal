@@ -13,7 +13,7 @@ import { Label } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { type IInputUpdateDTO, type IOperationPosition, schemaInputUpdate } from '../backend/types';
+import { type IInputUpdateDTO, type IOssLayout, schemaInputUpdate } from '../backend/types';
 import { useInputUpdate } from '../backend/use-input-update';
 import { type IOperation, type IOperationSchema } from '../models/oss';
 import { sortItemsForOSS } from '../models/oss-api';
@@ -21,18 +21,18 @@ import { sortItemsForOSS } from '../models/oss-api';
 export interface DlgChangeInputSchemaProps {
   oss: IOperationSchema;
   target: IOperation;
-  positions: IOperationPosition[];
+  layout: IOssLayout;
 }
 
 export function DlgChangeInputSchema() {
-  const { oss, target, positions } = useDialogsStore(state => state.props as DlgChangeInputSchemaProps);
+  const { oss, target, layout } = useDialogsStore(state => state.props as DlgChangeInputSchemaProps);
   const { inputUpdate } = useInputUpdate();
 
   const { setValue, handleSubmit, control } = useForm<IInputUpdateDTO>({
     resolver: zodResolver(schemaInputUpdate),
     defaultValues: {
       target: target.id,
-      positions: positions,
+      layout: layout,
       input: target.result
     }
   });

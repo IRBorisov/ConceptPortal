@@ -2,17 +2,29 @@
 from rest_framework import serializers
 
 
-class OperationPositionSerializer(serializers.Serializer):
+class OperationNodeSerializer(serializers.Serializer):
     ''' Operation position. '''
     id = serializers.IntegerField()
-    position_x = serializers.FloatField()
-    position_y = serializers.FloatField()
+    x = serializers.FloatField()
+    y = serializers.FloatField()
 
 
-class PositionsSerializer(serializers.Serializer):
-    ''' Operations position for OperationSchema. '''
-    positions = serializers.ListField(
-        child=OperationPositionSerializer()
+class BlockNodeSerializer(serializers.Serializer):
+    ''' Block position. '''
+    id = serializers.IntegerField()
+    x = serializers.FloatField()
+    y = serializers.FloatField()
+    width = serializers.FloatField()
+    height = serializers.FloatField()
+
+
+class LayoutSerializer(serializers.Serializer):
+    ''' Layout for OperationSchema. '''
+    blocks = serializers.ListField(
+        child=BlockNodeSerializer()
+    )
+    operations = serializers.ListField(
+        child=OperationNodeSerializer()
     )
 
 

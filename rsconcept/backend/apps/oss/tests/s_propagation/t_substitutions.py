@@ -106,6 +106,20 @@ class TestChangeSubstitutions(EndpointTester):
             convention='KS5D4'
         )
 
+        self.layout_data = {
+            'operations': [
+                {'id': self.operation1.pk, 'x': 0, 'y': 0},
+                {'id': self.operation2.pk, 'x': 0, 'y': 0},
+                {'id': self.operation3.pk, 'x': 0, 'y': 0},
+                {'id': self.operation4.pk, 'x': 0, 'y': 0},
+                {'id': self.operation5.pk, 'x': 0, 'y': 0},
+            ],
+            'blocks': []
+        }
+        layout = self.owned.layout()
+        layout.data = self.layout_data
+        layout.save()
+
 
     def test_oss_setup(self):
         self.assertEqual(self.ks1.constituents().count(), 3)
@@ -139,10 +153,12 @@ class TestChangeSubstitutions(EndpointTester):
 
     @decl_endpoint('/api/rsforms/{schema}/substitute', method='patch')
     def test_substitute_substitution(self):
-        data = {'substitutions': [{
-            'original': self.ks2S1.pk,
-            'substitution': self.ks2X1.pk
-        }]}
+        data = {
+            'substitutions': [{
+                'original': self.ks2S1.pk,
+                'substitution': self.ks2X1.pk
+            }]
+        }
         self.executeOK(data=data, schema=self.ks2.model.pk)
         self.ks4D1.refresh_from_db()
         self.ks4D2.refresh_from_db()

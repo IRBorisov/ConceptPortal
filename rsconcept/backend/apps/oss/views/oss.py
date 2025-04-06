@@ -36,9 +36,9 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     def get_permissions(self):
         ''' Determine permission class. '''
         if self.action in [
+            'update_layout',
             'create_operation',
             'delete_operation',
-            'update_positions',
             'create_input',
             'set_input',
             'update_operation',
@@ -73,21 +73,21 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         )
 
     @extend_schema(
-        summary='update positions',
+        summary='update layout',
         tags=['OSS'],
-        request=s.PositionsSerializer,
+        request=s.LayoutSerializer,
         responses={
             c.HTTP_200_OK: None,
             c.HTTP_403_FORBIDDEN: None,
             c.HTTP_404_NOT_FOUND: None
         }
     )
-    @action(detail=True, methods=['patch'], url_path='update-positions')
-    def update_positions(self, request: Request, pk) -> HttpResponse:
-        ''' Endpoint: Update operations positions. '''
-        serializer = s.PositionsSerializer(data=request.data)
+    @action(detail=True, methods=['patch'], url_path='update-layout')
+    def update_layout(self, request: Request, pk) -> HttpResponse:
+        ''' Endpoint: Update schema layout. '''
+        serializer = s.LayoutSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        m.OperationSchema(self.get_object()).update_positions(serializer.validated_data['positions'])
+        m.OperationSchema(self.get_object()).update_layout(serializer.validated_data)
         return Response(status=c.HTTP_200_OK)
 
     @extend_schema(
@@ -108,9 +108,16 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         serializer.is_valid(raise_exception=True)
 
         oss = m.OperationSchema(self.get_object())
+        layout = serializer.validated_data['layout']
         with transaction.atomic():
-            oss.update_positions(serializer.validated_data['positions'])
             new_operation = oss.create_operation(**serializer.validated_data['item_data'])
+            layout['operations'].append({
+                'id': new_operation.pk,
+                'x': serializer.validated_data['position_x'],
+                'y': serializer.validated_data['position_y']
+            })
+            oss.update_layout(layout)
+
             schema = new_operation.result
             if schema is not None:
                 connected_operations = \
@@ -164,9 +171,11 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         oss = m.OperationSchema(self.get_object())
         operation = cast(m.Operation, serializer.validated_data['target'])
         old_schema = operation.result
+        layout = serializer.validated_data['layout']
+        layout['operations'] = [x for x in layout['operations'] if x['id'] != operation.pk]
         with transaction.atomic():
-            oss.update_positions(serializer.validated_data['positions'])
             oss.delete_operation(operation.pk, serializer.validated_data['keep_constituents'])
+            oss.update_layout(layout)
             if old_schema is not None:
                 if serializer.validated_data['delete_schema']:
                     m.PropagationFacade.before_delete_schema(old_schema)
@@ -211,7 +220,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
 
         oss = m.OperationSchema(self.get_object())
         with transaction.atomic():
-            oss.update_positions(serializer.validated_data['positions'])
+            oss.update_layout(serializer.validated_data['layout'])
             schema = oss.create_input(operation)
 
         return Response(
@@ -262,7 +271,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
                 if old_schema.is_synced(oss.model):
                     old_schema.visible = True
                     old_schema.save(update_fields=['visible'])
-            oss.update_positions(serializer.validated_data['positions'])
+            oss.update_layout(serializer.validated_data['layout'])
             oss.set_input(target_operation.pk, schema)
         return Response(
             status=c.HTTP_200_OK,
@@ -292,7 +301,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         operation: m.Operation = cast(m.Operation, serializer.validated_data['target'])
         oss = m.OperationSchema(self.get_object())
         with transaction.atomic():
-            oss.update_positions(serializer.validated_data['positions'])
+            oss.update_layout(serializer.validated_data['layout'])
             operation.alias = serializer.validated_data['item_data']['alias']
             operation.title = serializer.validated_data['item_data']['title']
             operation.description = serializer.validated_data['item_data']['description']
@@ -346,7 +355,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
 
         oss = m.OperationSchema(self.get_object())
         with transaction.atomic():
-            oss.update_positions(serializer.validated_data['positions'])
+            oss.update_layout(serializer.validated_data['layout'])
             oss.execute_operation(operation)
 
         return Response(

@@ -23,7 +23,7 @@ import { infoMsg } from '@/utils/labels';
 import { TextMatcher } from '@/utils/utils';
 
 import { Graph } from '../../../models/graph';
-import { type IOperationPosition } from '../backend/types';
+import { type IOssLayout } from '../backend/types';
 import { describeSubstitutionError } from '../labels';
 
 import { type IOperation, type IOperationSchema, SubstitutionErrorType } from './oss';
@@ -494,40 +494,39 @@ export function getRelocateCandidates(
 export function calculateInsertPosition(
   oss: IOperationSchema,
   argumentsOps: number[],
-  positions: IOperationPosition[],
+  layout: IOssLayout,
   defaultPosition: Position2D
 ): Position2D {
   const result = defaultPosition;
-  if (positions.length === 0) {
+  const operations = layout.operations;
+  if (operations.length === 0) {
     return result;
   }
 
   if (argumentsOps.length === 0) {
-    let inputsPositions = positions.filter(pos =>
-      oss.items.find(operation => operation.arguments.length === 0 && operation.id === pos.id)
+    let inputsPositions = operations.filter(pos =>
+      oss.operations.find(operation => operation.arguments.length === 0 && operation.id === pos.id)
     );
     if (inputsPositions.length === 0) {
-      inputsPositions = positions;
+      inputsPositions = operations;
     }
-    const maxX = Math.max(...inputsPositions.map(node => node.position_x));
-    const minY = Math.min(...inputsPositions.map(node => node.position_y));
+    const maxX = Math.max(...inputsPositions.map(node => node.x));
+    const minY = Math.min(...inputsPositions.map(node => node.y));
     result.x = maxX + DISTANCE_X;
     result.y = minY;
   } else {
-    const argNodes = positions.filter(pos => argumentsOps.includes(pos.id));
-    const maxY = Math.max(...argNodes.map(node => node.position_y));
-    const minX = Math.min(...argNodes.map(node => node.position_x));
-    const maxX = Math.max(...argNodes.map(node => node.position_x));
+    const argNodes = operations.filter(pos => argumentsOps.includes(pos.id));
+    const maxY = Math.max(...argNodes.map(node => node.y));
+    const minX = Math.min(...argNodes.map(node => node.x));
+    const maxX = Math.max(...argNodes.map(node => node.x));
     result.x = Math.ceil((maxX + minX) / 2 / GRID_SIZE) * GRID_SIZE;
     result.y = maxY + DISTANCE_Y;
   }
 
   let flagIntersect = false;
   do {
-    flagIntersect = positions.some(
-      position =>
-        Math.abs(position.position_x - result.x) < MIN_DISTANCE &&
-        Math.abs(position.position_y - result.y) < MIN_DISTANCE
+    flagIntersect = operations.some(
+      position => Math.abs(position.x - result.x) < MIN_DISTANCE && Math.abs(position.y - result.y) < MIN_DISTANCE
     );
     if (flagIntersect) {
       result.x += MIN_DISTANCE;

@@ -27,7 +27,7 @@ import { useMutatingOss } from '../../../backend/use-mutating-oss';
 import { type IOperation } from '../../../models/oss';
 import { useOssEdit } from '../oss-edit-context';
 
-import { useGetPositions } from './use-get-positions';
+import { useGetLayout } from './use-get-layout';
 
 // pixels - size of OSS context menu
 const MENU_WIDTH = 200;
@@ -49,7 +49,7 @@ export function NodeContextMenu({ isOpen, operation, cursorX, cursorY, onHide }:
   const { items: libraryItems } = useLibrary();
   const { schema, navigateOperationSchema, isMutable, canDeleteOperation: canDelete } = useOssEdit();
   const isProcessing = useMutatingOss();
-  const getPositions = useGetPositions();
+  const getLayout = useGetLayout();
 
   const { inputCreate } = useInputCreate();
   const { operationExecute } = useOperationExecute();
@@ -104,7 +104,7 @@ export function NodeContextMenu({ isOpen, operation, cursorX, cursorY, onHide }:
     showEditInput({
       oss: schema,
       target: operation,
-      positions: getPositions()
+      layout: getLayout()
     });
   }
 
@@ -116,7 +116,7 @@ export function NodeContextMenu({ isOpen, operation, cursorX, cursorY, onHide }:
     showEditOperation({
       oss: schema,
       target: operation,
-      positions: getPositions()
+      layout: getLayout()
     });
   }
 
@@ -128,7 +128,7 @@ export function NodeContextMenu({ isOpen, operation, cursorX, cursorY, onHide }:
     showDeleteOperation({
       oss: schema,
       target: operation,
-      positions: getPositions()
+      layout: getLayout()
     });
   }
 
@@ -139,7 +139,7 @@ export function NodeContextMenu({ isOpen, operation, cursorX, cursorY, onHide }:
     onHide();
     void operationExecute({
       itemID: schema.id, //
-      data: { target: operation.id, positions: getPositions() }
+      data: { target: operation.id, layout: getLayout() }
     });
   }
 
@@ -154,7 +154,7 @@ export function NodeContextMenu({ isOpen, operation, cursorX, cursorY, onHide }:
     onHide();
     void inputCreate({
       itemID: schema.id,
-      data: { target: operation.id, positions: getPositions() }
+      data: { target: operation.id, layout: getLayout() }
     }).then(new_schema => router.push({ path: urls.schema(new_schema.id), force: true }));
   }
 
@@ -166,7 +166,7 @@ export function NodeContextMenu({ isOpen, operation, cursorX, cursorY, onHide }:
     showRelocateConstituents({
       oss: schema,
       initialTarget: operation,
-      positions: getPositions()
+      layout: getLayout()
     });
   }
 

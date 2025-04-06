@@ -12,7 +12,7 @@ from apps.rsform.serializers import SubstitutionSerializerBase
 from shared import messages as msg
 
 from ..models import Argument, Inheritance, Operation, OperationSchema, OperationType
-from .basics import OperationPositionSerializer, SubstitutionExSerializer
+from .basics import LayoutSerializer, SubstitutionExSerializer
 
 
 class OperationSerializer(serializers.ModelSerializer):
@@ -44,16 +44,15 @@ class OperationCreateSerializer(serializers.Serializer):
             model = Operation
             fields = \
                 'alias', 'operation_type', 'title', \
-                'description', 'result', 'position_x', 'position_y'
+                'description', 'result', 'parent'
 
-    create_schema = serializers.BooleanField(default=False, required=False)
+    layout = LayoutSerializer()
+    position_x = serializers.FloatField()
+    position_y = serializers.FloatField()
+
     item_data = OperationCreateData()
+    create_schema = serializers.BooleanField(default=False, required=False)
     arguments = PKField(many=True, queryset=Operation.objects.all().only('pk'), required=False)
-
-    positions = serializers.ListField(
-        child=OperationPositionSerializer(),
-        default=[]
-    )
 
 
 class OperationUpdateSerializer(serializers.Serializer):
@@ -65,17 +64,13 @@ class OperationUpdateSerializer(serializers.Serializer):
             model = Operation
             fields = 'alias', 'title', 'description'
 
+    layout = LayoutSerializer()
     target = PKField(many=False, queryset=Operation.objects.all())
     item_data = OperationUpdateData()
     arguments = PKField(many=True, queryset=Operation.objects.all().only('oss_id', 'result_id'), required=False)
     substitutions = serializers.ListField(
         child=SubstitutionSerializerBase(),
         required=False
-    )
-
-    positions = serializers.ListField(
-        child=OperationPositionSerializer(),
-        default=[]
     )
 
     def validate(self, attrs):
@@ -120,11 +115,8 @@ class OperationUpdateSerializer(serializers.Serializer):
 
 class OperationTargetSerializer(serializers.Serializer):
     ''' Serializer: Target single operation. '''
+    layout = LayoutSerializer()
     target = PKField(many=False, queryset=Operation.objects.all().only('oss_id', 'result_id'))
-    positions = serializers.ListField(
-        child=OperationPositionSerializer(),
-        default=[]
-    )
 
     def validate(self, attrs):
         oss = cast(LibraryItem, self.context['oss'])
@@ -138,11 +130,8 @@ class OperationTargetSerializer(serializers.Serializer):
 
 class OperationDeleteSerializer(serializers.Serializer):
     ''' Serializer: Delete operation. '''
+    layout = LayoutSerializer()
     target = PKField(many=False, queryset=Operation.objects.all().only('oss_id', 'result'))
-    positions = serializers.ListField(
-        child=OperationPositionSerializer(),
-        default=[]
-    )
     keep_constituents = serializers.BooleanField(default=False, required=False)
     delete_schema = serializers.BooleanField(default=False, required=False)
 
@@ -158,16 +147,13 @@ class OperationDeleteSerializer(serializers.Serializer):
 
 class SetOperationInputSerializer(serializers.Serializer):
     ''' Serializer: Set input schema for operation. '''
+    layout = LayoutSerializer()
     target = PKField(many=False, queryset=Operation.objects.all())
     input = PKField(
         many=False,
         queryset=LibraryItem.objects.filter(item_type=LibraryItemType.RSFORM),
         allow_null=True,
         default=None
-    )
-    positions = serializers.ListField(
-        child=OperationPositionSerializer(),
-        default=[]
     )
 
     def validate(self, attrs):
@@ -186,7 +172,7 @@ class SetOperationInputSerializer(serializers.Serializer):
 
 class OperationSchemaSerializer(serializers.ModelSerializer):
     ''' Serializer: Detailed data for OSS. '''
-    items = serializers.ListField(
+    operations = serializers.ListField(
         child=OperationSerializer()
     )
     arguments = serializers.ListField(
@@ -195,6 +181,7 @@ class OperationSchemaSerializer(serializers.ModelSerializer):
     substitutions = serializers.ListField(
         child=SubstitutionExSerializer()
     )
+    layout = LayoutSerializer()
 
     class Meta:
         ''' serializer metadata. '''
@@ -205,9 +192,10 @@ class OperationSchemaSerializer(serializers.ModelSerializer):
         result = LibraryItemDetailsSerializer(instance).data
         del result['versions']
         oss = OperationSchema(instance)
-        result['items'] = []
+        result['layout'] = oss.layout().data
+        result['operations'] = []
         for operation in oss.operations().order_by('pk'):
-            result['items'].append(OperationSerializer(operation).data)
+            result['operations'].append(OperationSerializer(operation).data)
         result['arguments'] = []
         for argument in oss.arguments().order_by('order'):
             result['arguments'].append(ArgumentSerializer(argument).data)

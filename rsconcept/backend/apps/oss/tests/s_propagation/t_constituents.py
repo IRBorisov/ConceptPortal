@@ -57,6 +57,18 @@ class TestChangeConstituents(EndpointTester):
         self.ks3 = RSForm(self.operation3.result)
         self.assertEqual(self.ks3.constituents().count(), 4)
 
+        self.layout_data = {
+            'operations': [
+                {'id': self.operation1.pk, 'x': 0, 'y': 0},
+                {'id': self.operation2.pk, 'x': 0, 'y': 0},
+                {'id': self.operation3.pk, 'x': 0, 'y': 0},
+            ],
+            'blocks': []
+        }
+        layout = self.owned.layout()
+        layout.data = self.layout_data
+        layout.save()
+
     @decl_endpoint('/api/rsforms/{item}/details', method='get')
     def test_retrieve_inheritance(self):
         response = self.executeOK(item=self.ks3.model.pk)

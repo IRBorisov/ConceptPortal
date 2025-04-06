@@ -20,7 +20,7 @@ export const useSetLocation = () => {
         client.setQueryData(ossKey, { ...ossData, location: variables.location });
         return Promise.allSettled([
           client.invalidateQueries({ queryKey: libraryApi.libraryListKey }),
-          ...ossData.items
+          ...ossData.operations
             .map(item => {
               if (!item.result) {
                 return;

@@ -1,9 +1,9 @@
 ''' Models: Operation in OSS. '''
+# pylint: disable=duplicate-code
 from django.db.models import (
     CASCADE,
     SET_NULL,
     CharField,
-    FloatField,
     ForeignKey,
     Model,
     QuerySet,
@@ -44,6 +44,15 @@ class Operation(Model):
         related_name='producer'
     )
 
+    parent = ForeignKey(
+        verbose_name='Содержащий блок',
+        to='oss.Block',
+        blank=True,
+        null=True,
+        on_delete=SET_NULL,
+        related_name='as_child_operation'
+    )
+
     alias = CharField(
         verbose_name='Шифр',
         max_length=255,
@@ -56,15 +65,6 @@ class Operation(Model):
     description = TextField(
         verbose_name='Описание',
         blank=True
-    )
-
-    position_x = FloatField(
-        verbose_name='Положение по горизонтали',
-        default=0
-    )
-    position_y = FloatField(
-        verbose_name='Положение по вертикали',
-        default=0
     )
 
     class Meta:

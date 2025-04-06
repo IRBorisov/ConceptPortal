@@ -41,7 +41,7 @@ export class OssLoader {
   }
 
   private prepareLookups() {
-    this.oss.items.forEach(operation => {
+    this.oss.operations.forEach(operation => {
       this.operationByID.set(operation.id, operation);
       this.graph.addNode(operation.id);
     });
@@ -52,13 +52,16 @@ export class OssLoader {
   }
 
   private extractSchemas() {
-    this.schemaIDs = this.oss.items.map(operation => operation.result).filter(item => item !== null);
+    this.schemaIDs = this.oss.operations.map(operation => operation.result).filter(item => item !== null);
   }
 
   private inferOperationAttributes() {
     this.graph.topologicalOrder().forEach(operationID => {
       const operation = this.operationByID.get(operationID)!;
       const schema = this.items.find(item => item.id === operation.result);
+      const position = this.oss.layout.operations.find(item => item.id === operationID);
+      operation.x = position?.x ?? 0;
+      operation.y = position?.y ?? 0;
       operation.is_consolidation = this.inferConsolidation(operationID);
       operation.is_owned = !schema || (schema.owner === this.oss.owner && schema.location === this.oss.location);
       operation.substitutions = this.oss.substitutions.filter(item => item.operation === operationID);
@@ -82,7 +85,7 @@ export class OssLoader {
   }
 
   private calculateStats(): IOperationSchemaStats {
-    const items = this.oss.items;
+    const items = this.oss.operations;
     return {
       count_operations: items.length,
       count_inputs: items.filter(item => item.operation_type === OperationType.INPUT).length,

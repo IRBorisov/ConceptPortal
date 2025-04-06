@@ -23,8 +23,8 @@ export type IOperationDTO = z.infer<typeof schemaOperation>;
 /** Represents backend data for {@link IOperationSchema}. */
 export type IOperationSchemaDTO = z.infer<typeof schemaOperationSchema>;
 
-/** Represents {@link IOperation} position. */
-export type IOperationPosition = z.infer<typeof schemaOperationPosition>;
+/** Represents {@link schemaOperation} layout. */
+export type IOssLayout = z.infer<typeof schemaOssLayout>;
 
 /** Represents {@link IOperation} data, used in creation process. */
 export type IOperationCreateDTO = z.infer<typeof schemaOperationCreate>;
@@ -35,7 +35,7 @@ export type IOperationCreatedResponse = z.infer<typeof schemaOperationCreatedRes
  * Represents target {@link IOperation}.
  */
 export interface ITargetOperation {
-  positions: IOperationPosition[];
+  layout: IOssLayout;
   target: number;
 }
 
@@ -69,9 +69,7 @@ export const schemaOperation = z.strictObject({
   title: z.string(),
   description: z.string(),
 
-  position_x: z.number(),
-  position_y: z.number(),
-
+  parent: z.number().nullable(),
   result: z.number().nullable()
 });
 
@@ -83,9 +81,21 @@ export const schemaCstSubstituteInfo = schemaCstSubstitute.extend({
   substitution_term: z.string()
 });
 
+export const schemaPosition = z.strictObject({
+  id: z.number(),
+  x: z.number(),
+  y: z.number()
+});
+
+export const schemaOssLayout = z.strictObject({
+  operations: z.array(schemaPosition),
+  blocks: z.array(schemaPosition)
+});
+
 export const schemaOperationSchema = schemaLibraryItem.extend({
   editors: z.number().array(),
-  items: z.array(schemaOperation),
+  operations: z.array(schemaOperation),
+  layout: schemaOssLayout,
   arguments: z
     .object({
       operation: z.number(),
@@ -95,23 +105,18 @@ export const schemaOperationSchema = schemaLibraryItem.extend({
   substitutions: z.array(schemaCstSubstituteInfo)
 });
 
-export const schemaOperationPosition = z.strictObject({
-  id: z.number(),
-  position_x: z.number(),
-  position_y: z.number()
-});
-
 export const schemaOperationCreate = z.strictObject({
-  positions: z.array(schemaOperationPosition),
+  layout: schemaOssLayout,
   item_data: z.strictObject({
     alias: z.string().nonempty(),
     operation_type: schemaOperationType,
     title: z.string(),
     description: z.string(),
-    position_x: z.number(),
-    position_y: z.number(),
+    parent: z.number().nullable(),
     result: z.number().nullable()
   }),
+  position_x: z.number(),
+  position_y: z.number(),
   arguments: z.array(z.number()),
   create_schema: z.boolean()
 });
@@ -123,14 +128,14 @@ export const schemaOperationCreatedResponse = z.strictObject({
 
 export const schemaOperationDelete = z.strictObject({
   target: z.number(),
-  positions: z.array(schemaOperationPosition),
+  layout: schemaOssLayout,
   keep_constituents: z.boolean(),
   delete_schema: z.boolean()
 });
 
 export const schemaInputUpdate = z.strictObject({
   target: z.number(),
-  positions: z.array(schemaOperationPosition),
+  layout: schemaOssLayout,
   input: z.number().nullable()
 });
 
@@ -141,7 +146,7 @@ export const schemaInputCreatedResponse = z.strictObject({
 
 export const schemaOperationUpdate = z.strictObject({
   target: z.number(),
-  positions: z.array(schemaOperationPosition),
+  layout: schemaOssLayout,
   item_data: z.strictObject({
     alias: z.string().nonempty(errorMsg.requiredField),
     title: z.string(),

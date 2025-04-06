@@ -20,7 +20,7 @@ export const useSetAccessPolicy = () => {
         client.setQueryData(ossKey, { ...ossData, access_policy: variables.policy });
         return Promise.allSettled([
           client.invalidateQueries({ queryKey: KEYS.composite.libraryList }),
-          ...ossData.items
+          ...ossData.operations
             .map(item => {
               if (!item.result) {
                 return;

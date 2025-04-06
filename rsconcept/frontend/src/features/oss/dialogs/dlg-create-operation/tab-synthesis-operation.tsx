@@ -50,7 +50,7 @@ export function TabSynthesisOperation() {
           name='arguments'
           control={control}
           render={({ field }) => (
-            <PickMultiOperation items={oss.items} value={field.value} onChange={field.onChange} rows={6} />
+            <PickMultiOperation items={oss.operations} value={field.value} onChange={field.onChange} rows={6} />
           )}
         />
       </div>

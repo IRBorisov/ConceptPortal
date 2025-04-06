@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components';
 import { useOperationExecute } from '@/features/oss/backend/use-operation-execute';
-import { useUpdatePositions } from '@/features/oss/backend/use-update-positions';
+import { useUpdateLayout } from '@/features/oss/backend/use-update-layout';
 
 import { MiniButton } from '@/components/control';
 import {
@@ -34,7 +34,7 @@ import { useOSSGraphStore } from '../../../stores/oss-graph';
 import { useOssEdit } from '../oss-edit-context';
 
 import { VIEW_PADDING } from './oss-flow';
-import { useGetPositions } from './use-get-positions';
+import { useGetLayout } from './use-get-layout';
 
 interface ToolbarOssGraphProps extends Styling {
   onCreate: () => void;
@@ -53,7 +53,7 @@ export function ToolbarOssGraph({
   const isProcessing = useMutatingOss();
   const { fitView } = useReactFlow();
   const selectedOperation = schema.operationByID.get(selected[0]);
-  const getPositions = useGetPositions();
+  const getLayout = useGetLayout();
 
   const showGrid = useOSSGraphStore(state => state.showGrid);
   const edgeAnimate = useOSSGraphStore(state => state.edgeAnimate);
@@ -62,7 +62,7 @@ export function ToolbarOssGraph({
   const toggleEdgeAnimate = useOSSGraphStore(state => state.toggleEdgeAnimate);
   const toggleEdgeStraight = useOSSGraphStore(state => state.toggleEdgeStraight);
 
-  const { updatePositions } = useUpdatePositions();
+  const { updateLayout: updatePositions } = useUpdateLayout();
   const { operationExecute } = useOperationExecute();
 
   const showEditOperation = useDialogsStore(state => state.showEditOperation);
@@ -93,16 +93,7 @@ export function ToolbarOssGraph({
   }
 
   function handleSavePositions() {
-    const positions = getPositions();
-    void updatePositions({ itemID: schema.id, positions: positions }).then(() => {
-      positions.forEach(item => {
-        const operation = schema.operationByID.get(item.id);
-        if (operation) {
-          operation.position_x = item.position_x;
-          operation.position_y = item.position_y;
-        }
-      });
-    });
+    void updatePositions({ itemID: schema.id, data: getLayout() });
   }
 
   function handleOperationExecute() {
@@ -111,7 +102,7 @@ export function ToolbarOssGraph({
     }
     void operationExecute({
       itemID: schema.id, //
-      data: { target: selectedOperation.id, positions: getPositions() }
+      data: { target: selectedOperation.id, layout: getLayout() }
     });
   }
 
@@ -122,7 +113,7 @@ export function ToolbarOssGraph({
     showEditOperation({
       oss: schema,
       target: selectedOperation,
-      positions: getPositions()
+      layout: getLayout()
     });
   }
 

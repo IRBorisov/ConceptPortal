@@ -10,12 +10,7 @@ import { ModalForm } from '@/components/modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import {
-  type IOperationCreateDTO,
-  type IOperationPosition,
-  OperationType,
-  schemaOperationCreate
-} from '../../backend/types';
+import { type IOperationCreateDTO, type IOssLayout, OperationType, schemaOperationCreate } from '../../backend/types';
 import { useOperationCreate } from '../../backend/use-operation-create';
 import { describeOperationType, labelOperationType } from '../../labels';
 import { type IOperationSchema } from '../../models/oss';
@@ -26,7 +21,7 @@ import { TabSynthesisOperation } from './tab-synthesis-operation';
 
 export interface DlgCreateOperationProps {
   oss: IOperationSchema;
-  positions: IOperationPosition[];
+  layout: IOssLayout;
   initialInputs: number[];
   defaultX: number;
   defaultY: number;
@@ -42,7 +37,7 @@ export type TabID = (typeof TabID)[keyof typeof TabID];
 export function DlgCreateOperation() {
   const { operationCreate } = useOperationCreate();
 
-  const { oss, positions, initialInputs, onCreate, defaultX, defaultY } = useDialogsStore(
+  const { oss, layout, initialInputs, onCreate, defaultX, defaultY } = useDialogsStore(
     state => state.props as DlgCreateOperationProps
   );
 
@@ -51,30 +46,31 @@ export function DlgCreateOperation() {
     defaultValues: {
       item_data: {
         operation_type: initialInputs.length === 0 ? OperationType.INPUT : OperationType.SYNTHESIS,
-        result: null,
-        position_x: defaultX,
-        position_y: defaultY,
         alias: '',
         title: '',
-        description: ''
+        description: '',
+        result: null,
+        parent: null
       },
+      position_x: defaultX,
+      position_y: defaultY,
       arguments: initialInputs,
       create_schema: false,
-      positions: positions
+      layout: layout
     },
     mode: 'onChange'
   });
   const alias = useWatch({ control: methods.control, name: 'item_data.alias' });
   const [activeTab, setActiveTab] = useState(initialInputs.length === 0 ? TabID.INPUT : TabID.SYNTHESIS);
-  const isValid = !!alias && !oss.items.some(operation => operation.alias === alias);
+  const isValid = !!alias && !oss.operations.some(operation => operation.alias === alias);
 
   function onSubmit(data: IOperationCreateDTO) {
-    const target = calculateInsertPosition(oss, data.arguments, positions, {
+    const target = calculateInsertPosition(oss, data.arguments, layout, {
       x: defaultX,
       y: defaultY
     });
-    data.item_data.position_x = target.x;
-    data.item_data.position_y = target.y;
+    data.position_x = target.x;
+    data.position_y = target.y;
     void operationCreate({ itemID: oss.id, data: data }).then(response => onCreate?.(response.new_operation.id));
   }
 

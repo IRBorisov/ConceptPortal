@@ -16,9 +16,9 @@ import { Loader } from '@/components/loader';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { type ICstRelocateDTO, type IOperationPosition, schemaCstRelocate } from '../backend/types';
+import { type ICstRelocateDTO, type IOssLayout, schemaCstRelocate } from '../backend/types';
 import { useRelocateConstituents } from '../backend/use-relocate-constituents';
-import { useUpdatePositions } from '../backend/use-update-positions';
+import { useUpdateLayout } from '../backend/use-update-layout';
 import { IconRelocationUp } from '../components/icon-relocation-up';
 import { type IOperation, type IOperationSchema } from '../models/oss';
 import { getRelocateCandidates } from '../models/oss-api';
@@ -26,13 +26,13 @@ import { getRelocateCandidates } from '../models/oss-api';
 export interface DlgRelocateConstituentsProps {
   oss: IOperationSchema;
   initialTarget?: IOperation;
-  positions: IOperationPosition[];
+  layout?: IOssLayout;
 }
 
 export function DlgRelocateConstituents() {
-  const { oss, initialTarget, positions } = useDialogsStore(state => state.props as DlgRelocateConstituentsProps);
+  const { oss, initialTarget, layout } = useDialogsStore(state => state.props as DlgRelocateConstituentsProps);
   const { items: libraryItems } = useLibrary();
-  const { updatePositions } = useUpdatePositions();
+  const { updateLayout: updatePositions } = useUpdateLayout();
   const { relocateConstituents } = useRelocateConstituents();
 
   const {
@@ -55,7 +55,7 @@ export function DlgRelocateConstituents() {
     libraryItems.find(item => item.id === initialTarget?.result) ?? null
   );
 
-  const operation = oss.items.find(item => item.result === source?.id);
+  const operation = oss.operations.find(item => item.result === source?.id);
   const sourceSchemas = libraryItems.filter(item => oss.schemas.includes(item.id));
   const destinationSchemas = (() => {
     if (!operation) {
@@ -73,7 +73,7 @@ export function DlgRelocateConstituents() {
     if (!sourceData.schema || !destinationItem || !operation) {
       return [];
     }
-    const destinationOperation = oss.items.find(item => item.result === destination);
+    const destinationOperation = oss.operations.find(item => item.result === destination);
     return getRelocateCandidates(operation.id, destinationOperation!.id, sourceData.schema, oss);
   })();
 
@@ -98,17 +98,13 @@ export function DlgRelocateConstituents() {
   }
 
   function onSubmit(data: ICstRelocateDTO) {
-    const positionsUnchanged = positions.every(item => {
-      const operation = oss.operationByID.get(item.id)!;
-      return operation.position_x === item.position_x && operation.position_y === item.position_y;
-    });
-    if (positionsUnchanged) {
+    if (!layout || JSON.stringify(layout) === JSON.stringify(oss.layout)) {
       return relocateConstituents(data);
     } else {
       return updatePositions({
         isSilent: true,
         itemID: oss.id,
-        positions: positions
+        data: layout
       }).then(() => relocateConstituents(data));
     }
   }

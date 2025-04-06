@@ -21,8 +21,7 @@ export function MenuEditOss() {
     menu.hide();
     showRelocateConstituents({
       oss: schema,
-      initialTarget: undefined,
-      positions: []
+      initialTarget: undefined
     });
   }
 

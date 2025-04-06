@@ -15,9 +15,22 @@ class OperationAdmin(admin.ModelAdmin):
         'alias',
         'title',
         'description',
-        'position_x',
-        'position_y']
+        'parent']
     search_fields = ['id', 'operation_type', 'title', 'alias']
+
+
+class BlockAdmin(admin.ModelAdmin):
+    ''' Admin model: Block. '''
+    ordering = ['oss']
+    list_display = ['id', 'oss', 'title', 'description', 'parent']
+    search_fields = ['oss']
+
+
+class LayoutAdmin(admin.ModelAdmin):
+    ''' Admin model: Layout. '''
+    ordering = ['oss']
+    list_display = ['id', 'oss', 'data']
+    search_fields = ['oss']
 
 
 class ArgumentAdmin(admin.ModelAdmin):
@@ -42,6 +55,8 @@ class InheritanceAdmin(admin.ModelAdmin):
 
 
 admin.site.register(models.Operation, OperationAdmin)
+admin.site.register(models.Block, BlockAdmin)
+admin.site.register(models.Layout, LayoutAdmin)
 admin.site.register(models.Argument, ArgumentAdmin)
 admin.site.register(models.Substitution, SynthesisSubstitutionAdmin)
 admin.site.register(models.Inheritance, InheritanceAdmin)

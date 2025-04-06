@@ -20,6 +20,7 @@ from apps.rsform.models import (
 
 from .Argument import Argument
 from .Inheritance import Inheritance
+from .Layout import Layout
 from .Operation import Operation
 from .Substitution import Substitution
 
@@ -38,6 +39,7 @@ class OperationSchema:
     def create(**kwargs) -> 'OperationSchema':
         ''' Create LibraryItem via OperationSchema. '''
         model = LibraryItem.objects.create(item_type=LibraryItemType.OPERATION_SCHEMA, **kwargs)
+        Layout.objects.create(oss=model, data={'operations': [], 'blocks': []})
         return OperationSchema(model)
 
     @staticmethod
@@ -62,6 +64,12 @@ class OperationSchema:
         ''' Operation arguments. '''
         return Argument.objects.filter(operation__oss=self.model)
 
+    def layout(self) -> Layout:
+        ''' OSS layout. '''
+        result = Layout.objects.filter(oss=self.model).first()
+        assert result is not None
+        return result
+
     def substitutions(self) -> QuerySet[Substitution]:
         ''' Operation substitutions. '''
         return Substitution.objects.filter(operation__oss=self.model)
@@ -78,15 +86,11 @@ class OperationSchema:
             location=self.model.location
         )
 
-    def update_positions(self, data: list[dict]) -> None:
+    def update_layout(self, data: dict) -> None:
         ''' Update positions. '''
-        lookup = {x['id']: x for x in data}
-        operations = self.operations()
-        for item in operations:
-            if item.pk in lookup:
-                item.position_x = lookup[item.pk]['position_x']
-                item.position_y = lookup[item.pk]['position_y']
-        Operation.objects.bulk_update(operations, ['position_x', 'position_y'])
+        layout = self.layout()
+        layout.data = data
+        layout.save()
 
     def create_operation(self, **kwargs) -> Operation:
         ''' Insert new operation. '''

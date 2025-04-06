@@ -106,6 +106,20 @@ class TestChangeOperations(EndpointTester):
             convention='KS5D4'
         )
 
+        self.layout_data = {
+            'operations': [
+                {'id': self.operation1.pk, 'x': 0, 'y': 0},
+                {'id': self.operation2.pk, 'x': 0, 'y': 0},
+                {'id': self.operation3.pk, 'x': 0, 'y': 0},
+                {'id': self.operation4.pk, 'x': 0, 'y': 0},
+                {'id': self.operation5.pk, 'x': 0, 'y': 0},
+            ],
+            'blocks': []
+        }
+        layout = self.owned.layout()
+        layout.data = self.layout_data
+        layout.save()
+
     def test_oss_setup(self):
         self.assertEqual(self.ks1.constituents().count(), 3)
         self.assertEqual(self.ks2.constituents().count(), 3)
@@ -117,7 +131,7 @@ class TestChangeOperations(EndpointTester):
     @decl_endpoint('/api/oss/{item}/delete-operation', method='patch')
     def test_delete_input_operation(self):
         data = {
-            'positions': [],
+            'layout': self.layout_data,
             'target': self.operation2.pk
         }
         self.executeOK(data=data, item=self.owned_id)
@@ -137,7 +151,7 @@ class TestChangeOperations(EndpointTester):
     @decl_endpoint('/api/oss/{item}/set-input', method='patch')
     def test_set_input_null(self):
         data = {
-            'positions': [],
+            'layout': self.layout_data,
             'target': self.operation2.pk,
             'input': None
         }
@@ -169,7 +183,7 @@ class TestChangeOperations(EndpointTester):
         ks6D1 = ks6.insert_new('D1', definition_formal='X1 X2', convention='KS6D1')
 
         data = {
-            'positions': [],
+            'layout': self.layout_data,
             'target': self.operation2.pk,
             'input': ks6.model.pk
         }
@@ -211,7 +225,7 @@ class TestChangeOperations(EndpointTester):
     @decl_endpoint('/api/oss/{item}/delete-operation', method='patch')
     def test_delete_operation_and_constituents(self):
         data = {
-            'positions': [],
+            'layout': self.layout_data,
             'target': self.operation1.pk,
             'keep_constituents': False,
             'delete_schema': True
@@ -232,7 +246,7 @@ class TestChangeOperations(EndpointTester):
     @decl_endpoint('/api/oss/{item}/delete-operation', method='patch')
     def test_delete_operation_keep_constituents(self):
         data = {
-            'positions': [],
+            'layout': self.layout_data,
             'target': self.operation1.pk,
             'keep_constituents': True,
             'delete_schema': True
@@ -253,7 +267,7 @@ class TestChangeOperations(EndpointTester):
     @decl_endpoint('/api/oss/{item}/delete-operation', method='patch')
     def test_delete_operation_keep_schema(self):
         data = {
-            'positions': [],
+            'layout': self.layout_data,
             'target': self.operation1.pk,
             'keep_constituents': True,
             'delete_schema': False
@@ -283,7 +297,7 @@ class TestChangeOperations(EndpointTester):
                 'title': 'Test title mod',
                 'description': 'Comment mod'
             },
-            'positions': [],
+            'layout': self.layout_data,
             'substitutions': [
                 {
                     'original': self.ks1X1.pk,
@@ -317,7 +331,7 @@ class TestChangeOperations(EndpointTester):
                 'title': 'Test title mod',
                 'description': 'Comment mod'
             },
-            'positions': [],
+            'layout': self.layout_data,
             'arguments': [self.operation1.pk],
         }
 
@@ -356,7 +370,7 @@ class TestChangeOperations(EndpointTester):
 
         data = {
             'target': self.operation4.pk,
-            'positions': []
+            'layout': self.layout_data
         }
         self.executeOK(data=data, item=self.owned_id)
         self.operation4.refresh_from_db()

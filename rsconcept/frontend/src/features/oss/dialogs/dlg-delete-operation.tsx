@@ -9,25 +9,25 @@ import { Checkbox, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { type IOperationDeleteDTO, type IOperationPosition, schemaOperationDelete } from '../backend/types';
+import { type IOperationDeleteDTO, type IOssLayout, schemaOperationDelete } from '../backend/types';
 import { useOperationDelete } from '../backend/use-operation-delete';
 import { type IOperation, type IOperationSchema } from '../models/oss';
 
 export interface DlgDeleteOperationProps {
   oss: IOperationSchema;
   target: IOperation;
-  positions: IOperationPosition[];
+  layout: IOssLayout;
 }
 
 export function DlgDeleteOperation() {
-  const { oss, target, positions } = useDialogsStore(state => state.props as DlgDeleteOperationProps);
+  const { oss, target, layout } = useDialogsStore(state => state.props as DlgDeleteOperationProps);
   const { operationDelete } = useOperationDelete();
 
   const { handleSubmit, control } = useForm<IOperationDeleteDTO>({
     resolver: zodResolver(schemaOperationDelete),
     defaultValues: {
       target: target.id,
-      positions: positions,
+      layout: layout,
       keep_constituents: false,
       delete_schema: false
     }

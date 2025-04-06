@@ -18,7 +18,7 @@ export const useSetEditors = () => {
       if (ossData) {
         client.setQueryData(ossKey, { ...ossData, editors: variables.editors });
         return Promise.allSettled(
-          ossData.items
+          ossData.operations
             .map(item => {
               if (!item.result) {
                 return;

@@ -11,12 +11,7 @@ import { ModalForm } from '@/components/modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import {
-  type IOperationPosition,
-  type IOperationUpdateDTO,
-  OperationType,
-  schemaOperationUpdate
-} from '../../backend/types';
+import { type IOperationUpdateDTO, type IOssLayout, OperationType, schemaOperationUpdate } from '../../backend/types';
 import { useOperationUpdate } from '../../backend/use-operation-update';
 import { type IOperation, type IOperationSchema } from '../../models/oss';
 
@@ -27,7 +22,7 @@ import { TabSynthesis } from './tab-synthesis';
 export interface DlgEditOperationProps {
   oss: IOperationSchema;
   target: IOperation;
-  positions: IOperationPosition[];
+  layout: IOssLayout;
 }
 
 export const TabID = {
@@ -38,7 +33,7 @@ export const TabID = {
 export type TabID = (typeof TabID)[keyof typeof TabID];
 
 export function DlgEditOperation() {
-  const { oss, target, positions } = useDialogsStore(state => state.props as DlgEditOperationProps);
+  const { oss, target, layout } = useDialogsStore(state => state.props as DlgEditOperationProps);
   const { operationUpdate } = useOperationUpdate();
 
   const methods = useForm<IOperationUpdateDTO>({
@@ -55,7 +50,7 @@ export function DlgEditOperation() {
         original: sub.original,
         substitution: sub.substitution
       })),
-      positions: positions
+      layout: layout
     },
     mode: 'onChange'
   });

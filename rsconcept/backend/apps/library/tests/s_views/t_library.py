@@ -9,6 +9,7 @@ from apps.library.models import (
     LibraryTemplate,
     LocationHead
 )
+from apps.oss.models import OperationSchema
 from apps.rsform.models import RSForm
 from shared.EndpointTester import EndpointTester, decl_endpoint
 from shared.testing_utils import response_contains
@@ -58,6 +59,8 @@ class TestLibraryViewset(EndpointTester):
             'read_only': True
         }
         response = self.executeCreated(data=data)
+        oss = OperationSchema(LibraryItem.objects.get(pk=response.data['id']))
+        self.assertEqual(oss.model.owner, self.user)
         self.assertEqual(response.data['owner'], self.user.pk)
         self.assertEqual(response.data['item_type'], data['item_type'])
         self.assertEqual(response.data['title'], data['title'])
@@ -65,6 +68,8 @@ class TestLibraryViewset(EndpointTester):
         self.assertEqual(response.data['access_policy'], data['access_policy'])
         self.assertEqual(response.data['visible'], data['visible'])
         self.assertEqual(response.data['read_only'], data['read_only'])
+        self.assertEqual(oss.layout().data['operations'], [])
+        self.assertEqual(oss.layout().data['blocks'], [])
 
         self.logout()
         data = {'title': 'Title2'}

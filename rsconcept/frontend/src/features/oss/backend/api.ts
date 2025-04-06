@@ -12,9 +12,9 @@ import {
   type IOperationCreatedResponse,
   type IOperationCreateDTO,
   type IOperationDeleteDTO,
-  type IOperationPosition,
   type IOperationSchemaDTO,
   type IOperationUpdateDTO,
+  type IOssLayout,
   type ITargetOperation,
   schemaConstituentaReference,
   schemaOperationCreatedResponse,
@@ -39,19 +39,11 @@ export const ossApi = {
     });
   },
 
-  updatePositions: ({
-    itemID,
-    positions,
-    isSilent
-  }: {
-    itemID: number;
-    positions: IOperationPosition[];
-    isSilent?: boolean;
-  }) =>
+  updateLayout: ({ itemID, data, isSilent }: { itemID: number; data: IOssLayout; isSilent?: boolean }) =>
     axiosPatch({
-      endpoint: `/api/oss/${itemID}/update-positions`,
+      endpoint: `/api/oss/${itemID}/update-layout`,
       request: {
-        data: { positions: positions },
+        data: data,
         successMessage: isSilent ? undefined : infoMsg.changesSaved
       }
     }),

@@ -16,7 +16,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER } from '@/utils/constants';
 
 import { useMutatingOss } from '../../../backend/use-mutating-oss';
-import { useUpdatePositions } from '../../../backend/use-update-positions';
+import { useUpdateLayout } from '../../../backend/use-update-layout';
 import { GRID_SIZE } from '../../../models/oss-api';
 import { type OssNode } from '../../../models/oss-layout';
 import { useOperationTooltipStore } from '../../../stores/operation-tooltip';
@@ -26,7 +26,7 @@ import { useOssEdit } from '../oss-edit-context';
 import { OssNodeTypes } from './graph/oss-node-types';
 import { type ContextMenuData, NodeContextMenu } from './node-context-menu';
 import { ToolbarOssGraph } from './toolbar-oss-graph';
-import { useGetPositions } from './use-get-positions';
+import { useGetLayout } from './use-get-layout';
 
 const ZOOM_MAX = 2;
 const ZOOM_MIN = 0.5;
@@ -52,8 +52,8 @@ export function OssFlow() {
   const edgeAnimate = useOSSGraphStore(state => state.edgeAnimate);
   const edgeStraight = useOSSGraphStore(state => state.edgeStraight);
 
-  const getPositions = useGetPositions();
-  const { updatePositions } = useUpdatePositions();
+  const getLayout = useGetLayout();
+  const { updateLayout: updatePositions } = useUpdateLayout();
 
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -78,10 +78,10 @@ export function OssFlow() {
 
   useEffect(() => {
     setNodes(
-      schema.items.map(operation => ({
+      schema.operations.map(operation => ({
         id: String(operation.id),
         data: { label: operation.alias, operation: operation },
-        position: { x: operation.position_x, y: operation.position_y },
+        position: { x: operation.x, y: operation.y },
         type: operation.operation_type.toString()
       }))
     );
@@ -93,8 +93,7 @@ export function OssFlow() {
         type: edgeStraight ? 'straight' : 'simplebezier',
         animated: edgeAnimate,
         targetHandle:
-          schema.operationByID.get(argument.argument)!.position_x >
-          schema.operationByID.get(argument.operation)!.position_x
+          schema.operationByID.get(argument.argument)!.x > schema.operationByID.get(argument.operation)!.x
             ? 'right'
             : 'left'
       }))
@@ -103,16 +102,7 @@ export function OssFlow() {
   }, [schema, setNodes, setEdges, toggleReset, edgeStraight, edgeAnimate, fitView]);
 
   function handleSavePositions() {
-    const positions = getPositions();
-    void updatePositions({ itemID: schema.id, positions: positions }).then(() => {
-      positions.forEach(item => {
-        const operation = schema.operationByID.get(item.id);
-        if (operation) {
-          operation.position_x = item.position_x;
-          operation.position_y = item.position_y;
-        }
-      });
-    });
+    void updatePositions({ itemID: schema.id, data: getLayout() });
   }
 
   function handleCreateOperation() {
@@ -121,7 +111,7 @@ export function OssFlow() {
       oss: schema,
       defaultX: targetPosition.x,
       defaultY: targetPosition.y,
-      positions: getPositions(),
+      layout: getLayout(),
       initialInputs: selected,
       onCreate: () =>
         setTimeout(() => fitView({ duration: PARAMETER.zoomDuration, padding: VIEW_PADDING }), PARAMETER.refreshTimeout)
@@ -139,7 +129,7 @@ export function OssFlow() {
     showDeleteOperation({
       oss: schema,
       target: operation,
-      positions: getPositions()
+      layout: getLayout()
     });
   }
 

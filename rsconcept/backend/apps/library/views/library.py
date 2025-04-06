@@ -13,7 +13,7 @@ from rest_framework.decorators import action
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from apps.oss.models import Operation, OperationSchema, PropagationFacade
+from apps.oss.models import Layout, Operation, OperationSchema, PropagationFacade
 from apps.rsform.models import RSForm
 from apps.rsform.serializers import RSFormParseSerializer
 from apps.users.models import User
@@ -40,6 +40,8 @@ class LibraryViewSet(viewsets.ModelViewSet):
             serializer.save(owner=self.request.user)
         else:
             serializer.save()
+        if serializer.data.get('item_type') == m.LibraryItemType.OPERATION_SCHEMA:
+            Layout.objects.create(oss=serializer.instance, data={'operations': [], 'blocks': []})
 
     def perform_update(self, serializer) -> None:
         instance = serializer.save()

@@ -58,6 +58,18 @@ class TestChangeAttributes(EndpointTester):
         self.operation3.refresh_from_db()
         self.ks3 = RSForm(self.operation3.result)
 
+        self.layout_data = {
+            'operations': [
+                {'id': self.operation1.pk, 'x': 0, 'y': 0},
+                {'id': self.operation2.pk, 'x': 0, 'y': 0},
+                {'id': self.operation3.pk, 'x': 0, 'y': 0},
+            ],
+            'blocks': []
+        }
+        layout = self.owned.layout()
+        layout.data = self.layout_data
+        layout.save()
+
     @decl_endpoint('/api/library/{item}/set-owner', method='patch')
     def test_set_owner(self):
         data = {'user': self.user3.pk}
@@ -142,7 +154,7 @@ class TestChangeAttributes(EndpointTester):
                 'title': 'Test title mod',
                 'description': 'Comment mod'
             },
-            'positions': [],
+            'layout': self.layout_data
         }
 
         response = self.executeOK(data=data, item=self.owned_id)

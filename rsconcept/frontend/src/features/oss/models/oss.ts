@@ -8,6 +8,8 @@ import { type ICstSubstituteInfo, type IOperationDTO, type IOperationSchemaDTO }
 
 /** Represents Operation. */
 export interface IOperation extends IOperationDTO {
+  x: number;
+  y: number;
   is_owned: boolean;
   is_consolidation: boolean; // aka 'diamond synthesis'
   substitutions: ICstSubstituteInfo[];
@@ -25,7 +27,7 @@ export interface IOperationSchemaStats {
 
 /** Represents OperationSchema. */
 export interface IOperationSchema extends IOperationSchemaDTO {
-  items: IOperation[];
+  operations: IOperation[];
 
   graph: Graph;
   schemas: number[];
