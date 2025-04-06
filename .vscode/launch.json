@@ -42,8 +42,8 @@
       "type": "debugpy",
       "request": "launch",
       "cwd": "${workspaceFolder}/rsconcept/backend",
-      "program": "${workspaceFolder}/rsconcept/backend/manage.py",
-      "args": ["test", "-k", "${fileBasenameNoExtension}"],
+      "program": "${workspaceFolder}/rsconcept/backend/run_testfile.py",
+      "args": ["${file}"],
       "django": true
     },
     {
