@@ -70,6 +70,7 @@ This readme file is used mostly to document project dependencies and conventions
   - babel-plugin-react-compiler
   - vite
   - jest
+  - shadcn
   - ts-jest
   - stylelint
   - stylelint-config-recommended

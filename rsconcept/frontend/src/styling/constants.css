@@ -20,93 +20,91 @@
 /* Light Theme */
 /* prettier-ignore */
 :not(.dark):root {
-  --clr-prim-0:       hsl(000deg 000% 100%);
-  --clr-prim-100:     hsl(000deg 000% 098%);
-  --clr-prim-200:     hsl(000deg 000% 094%);
-  --clr-prim-300:     hsl(000deg 000% 091%);
-  --clr-prim-400:     hsl(000deg 000% 080%);
-  --clr-prim-600:     hsl(000deg 000% 065%);
-  --clr-prim-800:     hsl(000deg 000% 047%);
-  --clr-prim-999:     hsl(000deg 000% 000%);
+  --clr-prim-0:       oklch(100% 0 0deg);
+  --clr-prim-100:     oklch(098% 0 0deg);
+  --clr-prim-200:     oklch(095% 0 0deg);
+  --clr-prim-300:     oklch(092% 0 0deg);
+  --clr-prim-400:     oklch(085% 0 0deg);
+  --clr-prim-600:     oklch(070% 0 0deg);
+  --clr-prim-800:     oklch(055% 0 0deg);
+  --clr-prim-999:     oklch(000% 0 0deg);
 
-  --clr-sec-0:        hsl(000deg 000% 100%);
-  --clr-sec-100:      hsl(190deg 080% 094%);
-  --clr-sec-200:      hsl(220deg 080% 092%);
-  --clr-sec-300:      hsl(220deg 100%080%);
-  --clr-sec-400:      hsl(220deg 100% 070%);
-  --clr-sec-600:      hsl(220deg 100% 060%);
-  --clr-sec-800:      hsl(220deg 100% 050%);
+  --clr-sec-0:        oklch(100% 0 0deg);
+  --clr-sec-100:      oklch(095% 0.050 262deg);
+  --clr-sec-200:      oklch(088% 0.050 262deg);
+  --clr-sec-300:      oklch(080% 0.100 262deg);
+  --clr-sec-400:      oklch(075% 0.150 262deg);
+  --clr-sec-600:      oklch(065% 0.250 262deg);
+  --clr-sec-800:      oklch(055% 0.250 262deg);
 
-  --clr-warn-100:     hsl(000deg 100% 095%);
-  --clr-warn-600:     hsl(000deg 072% 051%);
+  --clr-warn-100:     oklch(094% 0.050 27deg);
+  --clr-warn-600:     oklch(060% 0.250 27deg);
+  --clr-ok-600:       oklch(060% 0.250 143deg);
 
-  --clr-ok-600:       hsl(120deg 080% 37%);
-
-  --clr-select-node:  hsl(162deg 082% 051%);
+  --clr-select-node:  oklch(080% 0.150 165deg);
 
   /* Highlight accents */
-  --acc-bg-red:       hsl(000deg 100% 089%);
-  --acc-bg-green:     hsl(100deg 100% 075%);
-  --acc-bg-blue:      hsl(235deg 080% 087%);
-  --acc-bg-purple:    hsl(274deg 089% 081%);
-  --acc-bg-teal:      hsl(192deg 089% 081%);
-  --acc-bg-orange:    hsl(028deg 100% 075%);
+  --acc-bg-red:       oklch(085% 0.150 27deg);
+  --acc-bg-green:     oklch(085% 0.150 138deg);
+  --acc-bg-blue:      oklch(085% 0.150 262deg);
+  --acc-bg-purple:    oklch(085% 0.200 295deg);
+  --acc-bg-teal:      oklch(085% 0.200 210deg);
+  --acc-bg-orange:    oklch(085% 0.150 62deg);
 
-  --acc-bg-green25:   hsl(100deg 100% 096%);
-  --acc-bg-green50:   hsl(100deg 100% 090%);
-  --acc-bg-orange50:  hsl(028deg 100% 090%);
+  --acc-bg-green25:   oklch(097% 0.131 138deg);
+  --acc-bg-green50:   oklch(090% 0.175 138deg);
+  --acc-bg-orange50:  oklch(090% 0.044 62deg);
   
-  --acc-fg-red:       hsl(000deg 090% 045%);
-  --acc-fg-green:     hsl(100deg 090% 035%);
-  --acc-fg-blue:      hsl(235deg 100% 050%);
-  --acc-fg-purple:    hsl(270deg 100% 055%);
-  --acc-fg-teal:      hsl(200deg 080% 050%);
-  --acc-fg-orange:    hsl(028deg 100% 050%);
+  --acc-fg-red:       oklch(060% 0.220 27deg);
+  --acc-fg-green:     oklch(060% 0.250 138deg);
+  --acc-fg-blue:      oklch(060% 0.300 262deg);
+  --acc-fg-purple:    oklch(060% 0.250 295deg);
+  --acc-fg-teal:      oklch(060% 0.150 210deg);
+  --acc-fg-orange:    oklch(060% 0.150 62deg);
 }
 
 /* Dark Theme */
 /* prettier-ignore */
 .dark:root {
-  --clr-prim-0:       hsl(000deg 000% 005%);
-  --clr-prim-100:     hsl(000deg 000% 009%);
-  --clr-prim-200:     hsl(000deg 000% 015%);
-  --clr-prim-300:     hsl(000deg 000% 022%);
-  --clr-prim-400:     hsl(000deg 000% 035%);
-  --clr-prim-600:     hsl(000deg 000% 055%);
-  --clr-prim-800:     hsl(000deg 000% 080%);
-  --clr-prim-999:     hsl(000deg 000% 093%);
+  --clr-prim-0:       oklch(015% 0 0deg);
+  --clr-prim-100:     oklch(022% 0 0deg);
+  --clr-prim-200:     oklch(030% 0 0deg);
+  --clr-prim-300:     oklch(036% 0 0deg);
+  --clr-prim-400:     oklch(050% 0 0deg);
+  --clr-prim-600:     oklch(065% 0 0deg);
+  --clr-prim-800:     oklch(085% 0 0deg);
+  --clr-prim-999:     oklch(095% 0 0deg);
 
-  --clr-sec-800:      hsl(267deg 070% 070%);
-  --clr-sec-600:      hsl(267deg 050% 060%);
-  --clr-sec-400:      hsl(267deg 050% 050%);
-  --clr-sec-300:      hsl(267deg 050% 040%);
-  --clr-sec-200:      hsl(267deg 050% 032%);
-  --clr-sec-100:      hsl(269deg 030% 028%);
-  --clr-sec-0:        hsl(000deg 000% 100%);
+  --clr-sec-0:        oklch(100% 0 0deg);
+  --clr-sec-100:      oklch(025% 0.100 295deg);
+  --clr-sec-200:      oklch(035% 0.100 295deg);
+  --clr-sec-300:      oklch(045% 0.150 295deg);
+  --clr-sec-400:      oklch(055% 0.200 295deg);
+  --clr-sec-600:      oklch(065% 0.250 295deg);
+  --clr-sec-800:      oklch(075% 0.250 295deg);  
 
-  --clr-warn-100:     hsl(000deg 100% 015%);
-  --clr-warn-600:     hsl(000deg 080% 055%);
+  --clr-warn-100:     oklch(025% 0.108 27deg);
+  --clr-warn-600:     oklch(070% 0.200 27deg);
+  --clr-ok-600:       oklch(070% 0.200 143deg);
 
-  --clr-ok-600:       hsl(120deg 080% 042%);
-
-  --clr-select-node:  hsl(162deg 082% 041%);
+  --clr-select-node:  oklch(070% 0.147 165deg);
 
   /* Highlight accents */
-  --acc-bg-red:       hsl(000deg 080% 037%);
-  --acc-bg-green:     hsl(100deg 080% 025%);
-  --acc-bg-blue:      hsl(235deg 054% 049%);
-  --acc-bg-purple:    hsl(270deg 080% 050%);
-  --acc-bg-teal:      hsl(192deg 080% 030%);
-  --acc-bg-orange:    hsl(035deg 100% 035%);
+  --acc-bg-red:       oklch(050% 0.150 27deg);
+  --acc-bg-green:     oklch(050% 0.150 138deg);
+  --acc-bg-blue:      oklch(050% 0.150 262deg);
+  --acc-bg-purple:    oklch(050% 0.200 295deg);
+  --acc-bg-teal:      oklch(050% 0.250 210deg);
+  --acc-bg-orange:    oklch(050% 0.100 62deg);
 
-  --acc-bg-green25:   hsl(100deg 080% 009%);
-  --acc-bg-green50:   hsl(100deg 080% 017%);
-  --acc-bg-orange50:  hsl(035deg 100% 016%);
+  --acc-bg-green25:   oklch(028% 0.100 138deg);
+  --acc-bg-green50:   oklch(038% 0.200 138deg);
+  --acc-bg-orange50:  oklch(038% 0.075 62deg);
 
-  --acc-fg-red:       hsl(000deg 080% 045%);
-  --acc-fg-green:     hsl(100deg 080% 035%);
-  --acc-fg-blue:      hsl(235deg 100% 080%);
-  --acc-fg-purple:    hsl(270deg 100% 080%);
-  --acc-fg-teal:      hsl(192deg 100% 045%);
-  --acc-fg-orange:    hsl(035deg 100% 050%);
+  --acc-fg-red:       oklch(075% 0.200 27deg);
+  --acc-fg-green:     oklch(075% 0.150 138deg);
+  --acc-fg-blue:      oklch(075% 0.150 262deg);
+  --acc-fg-purple:    oklch(075% 0.250 295deg);
+  --acc-fg-teal:      oklch(075% 0.150 210deg);
+  --acc-fg-orange:    oklch(075% 0.150 62deg);
 }
