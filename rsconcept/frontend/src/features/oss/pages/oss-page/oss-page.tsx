@@ -16,7 +16,8 @@ import { useModificationStore } from '@/stores/modification';
 
 import { OperationTooltip } from '../../components/operation-tooltip';
 
-import { OssEditState, OssTabID } from './oss-edit-context';
+import { OssTabID } from './oss-edit-context';
+import { OssEditState } from './oss-edit-state';
 import { OssTabs } from './oss-tabs';
 
 const paramsSchema = z.strictObject({

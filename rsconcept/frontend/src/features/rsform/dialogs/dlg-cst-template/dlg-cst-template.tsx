@@ -19,7 +19,7 @@ import { FormCreateCst } from '../dlg-create-cst/form-create-cst';
 
 import { TabArguments } from './tab-arguments';
 import { TabTemplate } from './tab-template';
-import { TemplateState } from './template-context';
+import { TemplateState } from './template-state';
 
 export interface DlgCstTemplateProps {
   schema: IRSForm;
