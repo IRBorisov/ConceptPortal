@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { ReactFlowProvider } from 'reactflow';
 import clsx from 'clsx';
+import { useDebounce } from 'use-debounce';
 
 import { HelpTopic } from '@/features/help';
 
@@ -13,6 +14,8 @@ import { type SyntaxTree } from '../../models/rslang';
 
 import { ASTFlow } from './ast-flow';
 
+const NODE_POPUP_DELAY = 100;
+
 export interface DlgShowASTProps {
   syntaxTree: SyntaxTree;
   expression: string;
@@ -22,6 +25,7 @@ export function DlgShowAST() {
   const { syntaxTree, expression } = useDialogsStore(state => state.props as DlgShowASTProps);
   const [hoverID, setHoverID] = useState<number | null>(null);
   const hoverNode = syntaxTree.find(node => node.uid === hoverID);
+  const [hoverNodeDebounced] = useDebounce(hoverNode, NODE_POPUP_DELAY);
 
   const [isDragging, setIsDragging] = useState(false);
 
@@ -39,12 +43,14 @@ export function DlgShowAST() {
           'text-lg text-center'
         )}
       >
-        {!hoverNode || isDragging ? expression : null}
-        {!isDragging && hoverNode ? (
-          <div>
-            <span>{expression.slice(0, hoverNode.start)}</span>
-            <span className='clr-selected'>{expression.slice(hoverNode.start, hoverNode.finish)}</span>
-            <span>{expression.slice(hoverNode.finish)}</span>
+        {!hoverNodeDebounced || isDragging ? expression : null}
+        {!isDragging && hoverNodeDebounced ? (
+          <div key={hoverNodeDebounced.uid}>
+            <span>{expression.slice(0, hoverNodeDebounced.start)}</span>
+            <span className='bg-sec-200 cc-animate-color starting:bg-prim-100 duration-500'>
+              {expression.slice(hoverNodeDebounced.start, hoverNodeDebounced.finish)}
+            </span>
+            <span>{expression.slice(hoverNodeDebounced.finish)}</span>
           </div>
         ) : null}
       </div>
