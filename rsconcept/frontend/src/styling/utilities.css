@@ -195,6 +195,12 @@
   transition-duration: var(--duration-select);
 }
 
+@utility cc-animate-background {
+  transition-property: background-color;
+  transition-timing-function: var(--ease-bezier);
+  transition-duration: var(--duration-select);
+}
+
 @utility cc-mask-sides {
   --mask-border-size: 2rem;
 

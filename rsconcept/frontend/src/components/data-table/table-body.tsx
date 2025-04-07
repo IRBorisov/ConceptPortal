@@ -75,7 +75,7 @@ export function TableBody<TData>({
           key={row.id}
           className={clsx(
             'cc-scroll-row',
-            'clr-hover cc-animate-color',
+            'clr-hover cc-animate-background duration-300',
             !noHeader && 'scroll-mt-[calc(2px+2rem)]',
             table.options.enableRowSelection && row.getIsSelected()
               ? 'clr-selected'

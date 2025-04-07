@@ -25,7 +25,7 @@ export function SubmitButton({ text = 'ОК', icon, disabled, loading, className
         'border',
         'font-medium',
         'clr-btn-primary cc-animate-color',
-        'select-none disabled:cursor-auto',
+        'select-none cursor-pointer disabled:cursor-auto',
         loading && 'cursor-progress',
         className
       )}

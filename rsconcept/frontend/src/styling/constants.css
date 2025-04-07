@@ -76,8 +76,8 @@
   --clr-prim-999:     oklch(095% 0 0deg);
 
   --clr-sec-0:        oklch(100% 0 0deg);
-  --clr-sec-100:      oklch(025% 0.100 295deg);
-  --clr-sec-200:      oklch(035% 0.100 295deg);
+  --clr-sec-100:      oklch(025% 0.200 295deg);
+  --clr-sec-200:      oklch(035% 0.150 295deg);
   --clr-sec-300:      oklch(045% 0.150 295deg);
   --clr-sec-400:      oklch(055% 0.200 295deg);
   --clr-sec-600:      oklch(065% 0.250 295deg);
