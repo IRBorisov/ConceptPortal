@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import { SelectSingle } from '@/components/input';
 import { type Styling } from '@/components/props';
 
+import { type IUserInfo } from '../backend/types';
 import { useLabelUser } from '../backend/use-label-user';
 import { useUsers } from '../backend/use-users';
 import { matchUser } from '../models/user-api';
@@ -16,6 +17,19 @@ interface SelectUserProps extends Styling {
 
   placeholder?: string;
   noBorder?: boolean;
+}
+
+function compareUsers(a: IUserInfo, b: IUserInfo) {
+  if (!a.last_name && !!b.last_name) {
+    return 1;
+  } else if (!!a.last_name && !b.last_name) {
+    return -1;
+  } else if (a.last_name !== b.last_name) {
+    return a.last_name.localeCompare(b.last_name);
+  } else if (a.first_name !== b.first_name) {
+    return a.first_name.localeCompare(b.first_name);
+  }
+  return a.id - b.id;
 }
 
 export function SelectUser({
@@ -30,7 +44,11 @@ export function SelectUser({
   const getUserLabel = useLabelUser();
 
   const items = filter ? users.filter(user => filter(user.id)) : users;
-  const options = items.map(user => ({
+  const sorted = [
+    ...items.filter(user => !!user.first_name || !!user.last_name).sort(compareUsers),
+    ...items.filter(user => !user.first_name && !user.last_name)
+  ];
+  const options = sorted.map(user => ({
     value: user.id,
     label: getUserLabel(user.id)
   }));
