@@ -85,7 +85,7 @@
 /* ========= shadcn theme ============ */
 
 :root {
-  --radius: 0.625rem;
+  /* --radius: 0.625rem; */
 
   --background: oklch(100% 0 0deg);
   --foreground: oklch(14.5% 0 0deg);
@@ -155,10 +155,10 @@
 }
 
 @theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
+  /* --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  --radius-xl: calc(var(--radius) + 4px); */
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
