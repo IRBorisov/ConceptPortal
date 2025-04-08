@@ -5,6 +5,7 @@ import {
   IconEdit,
   IconFilter,
   IconFitImage,
+  IconFocus,
   IconGraphCollapse,
   IconGraphCore,
   IconGraphExpand,
@@ -47,9 +48,7 @@ export function HelpRSGraphTerm() {
         <div className='sm:w-84'>
           <h1>Изменение узлов</h1>
           <li>Клик на узел – выделение</li>
-          <li>
-            Левый клик – выбор <span className='text-(--acc-fg-purple)'>фокус-конституенты</span>
-          </li>
+          <li>Левый клик – выбор фокус-конституенты</li>
           <li>
             <IconReset className='inline-icon' /> Esc – сбросить выделение
           </li>
@@ -75,6 +74,9 @@ export function HelpRSGraphTerm() {
           </li>
           <li>
             <IconFilter className='inline-icon' /> Открыть настройки
+          </li>
+          <li>
+            <IconFocus className='inline-icon' /> Задать фокус
           </li>
           <li>
             <IconFitImage className='inline-icon' /> Вписать в экран

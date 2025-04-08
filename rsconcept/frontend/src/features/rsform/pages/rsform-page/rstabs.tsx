@@ -43,6 +43,8 @@ export function RSTabs({ activeID, activeTab }: RSTabsProps) {
     if (activeTab === RSTabID.CST_EDIT) {
       if (activeID && schema.cstByID.has(activeID)) {
         setSelected([activeID]);
+      } else if (schema.items.length > 0) {
+        setSelected([schema.items[0].id]);
       } else {
         deselectAll();
       }

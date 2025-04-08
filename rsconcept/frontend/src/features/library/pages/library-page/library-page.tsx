@@ -57,7 +57,7 @@ export function LibraryPage() {
       <div className='relative cc-fade-in flex'>
         <MiniButton
           title='Выгрузить в формате CSV'
-          className='absolute z-tooltip -top-8 right-6'
+          className='absolute z-tooltip -top-8 right-6 hidden sm:block'
           icon={<IconCSV size='1.25rem' className='icon-green' />}
           onClick={handleDownloadCSV}
         />

@@ -12,7 +12,7 @@ export function ToolbarFocusedCst() {
   const filter = useTermGraphStore(state => state.filter);
   const setFilter = useTermGraphStore(state => state.setFilter);
 
-  function resetSelection() {
+  function resetFocus() {
     setFocus(null);
   }
 
@@ -36,17 +36,17 @@ export function ToolbarFocusedCst() {
 
   return (
     <div className='flex items-center cc-icons'>
-      <div className='w-31 mt-0.5 text-right select-none color-(--acc-fg-purple)'>
+      <div className='w-31 mt-0.5 text-right select-none text-(--acc-fg-purple)'>
         <span>
           Фокус
-          <b className='pr-1'> {focusCst.alias} </b>
+          <b> {focusCst.alias} </b>
         </span>
       </div>
 
       <MiniButton
         title='Сбросить фокус'
         icon={<IconReset size='1.25rem' className='icon-primary' />}
-        onClick={resetSelection}
+        onClick={resetFocus}
       />
       <MiniButton
         title={filter.focusShowInputs ? 'Скрыть поставщиков' : 'Отобразить поставщиков'}

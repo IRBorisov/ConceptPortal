@@ -27,10 +27,10 @@ interface TGNodeInternal {
 }
 
 export function TGNode(node: TGNodeInternal) {
-  const { focusCst, setFocus: setFocusCst, navigateCst } = useRSEdit();
+  const { focusCst, setFocus, navigateCst } = useRSEdit();
   const filter = useTermGraphStore(state => state.filter);
   const coloring = useTermGraphStore(state => state.coloring);
-  const isFocused = focusCst === node.data;
+  const isFocused = focusCst?.id === node.data.id;
 
   const label = node.data.alias;
   const description = !filter.noText ? node.data.term_resolved : '';
@@ -38,7 +38,7 @@ export function TGNode(node: TGNodeInternal) {
   function handleContextMenu(event: React.MouseEvent<HTMLElement>) {
     event.stopPropagation();
     event.preventDefault();
-    setFocusCst(isFocused ? null : node.data);
+    setFocus(isFocused ? null : node.data);
   }
 
   function handleDoubleClick(event: React.MouseEvent) {

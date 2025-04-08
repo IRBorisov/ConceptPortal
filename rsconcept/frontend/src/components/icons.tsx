@@ -146,6 +146,7 @@ export { BiGitMerge       as IconGraphOutputs }   from 'react-icons/bi';
 export { LuAtom           as IconGraphCore }      from 'react-icons/lu';
 export { LuRotate3D       as IconRotate3D }       from 'react-icons/lu';
 export { MdOutlineFitScreen as IconFitImage }     from 'react-icons/md';
+export { RiFocus3Line     as IconFocus }          from 'react-icons/ri';
 export { LuSparkles       as IconClustering }     from 'react-icons/lu';
 export { LuSparkle        as IconClusteringOff }  from 'react-icons/lu';
 export { TbGridDots       as IconGrid }           from 'react-icons/tb';

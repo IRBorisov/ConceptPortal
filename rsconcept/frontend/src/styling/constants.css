@@ -41,7 +41,7 @@
   --clr-warn-600:     oklch(060% 0.250 27deg);
   --clr-ok-600:       oklch(060% 0.250 143deg);
 
-  --clr-select-node:  oklch(080% 0.150 165deg);
+  --clr-select-node:  oklch(080% 0.250 180deg);
 
   /* Highlight accents */
   --acc-bg-red:       oklch(085% 0.150 27deg);
@@ -51,8 +51,8 @@
   --acc-bg-teal:      oklch(085% 0.200 210deg);
   --acc-bg-orange:    oklch(085% 0.150 62deg);
 
-  --acc-bg-green25:   oklch(097% 0.131 138deg);
-  --acc-bg-green50:   oklch(090% 0.175 138deg);
+  --acc-bg-green25:   oklch(097% 0.150 138deg);
+  --acc-bg-green50:   oklch(090% 0.150 138deg);
   --acc-bg-orange50:  oklch(090% 0.044 62deg);
   
   --acc-fg-red:       oklch(060% 0.220 27deg);
@@ -83,11 +83,11 @@
   --clr-sec-600:      oklch(065% 0.250 295deg);
   --clr-sec-800:      oklch(075% 0.250 295deg);  
 
-  --clr-warn-100:     oklch(025% 0.108 27deg);
+  --clr-warn-100:     oklch(025% 0.100 27deg);
   --clr-warn-600:     oklch(070% 0.200 27deg);
   --clr-ok-600:       oklch(070% 0.200 143deg);
 
-  --clr-select-node:  oklch(070% 0.147 165deg);
+  --clr-select-node:  oklch(070% 0.250 180deg);
 
   /* Highlight accents */
   --acc-bg-red:       oklch(050% 0.150 27deg);

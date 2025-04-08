@@ -11,6 +11,7 @@ import {
   IconDestroy,
   IconFilter,
   IconFitImage,
+  IconFocus,
   IconNewItem,
   IconText,
   IconTextOff,
@@ -31,6 +32,7 @@ export function ToolbarTermGraph() {
   const {
     schema, //
     selected,
+    setFocus,
     navigateOss,
     isContentEditable,
     canDeleteSelected,
@@ -78,6 +80,13 @@ export function ToolbarTermGraph() {
     }, PARAMETER.minimalTimeout);
   }
 
+  function handleSetFocus() {
+    const target = schema.cstByID.get(selected[0]);
+    if (target) {
+      setFocus(target);
+    }
+  }
+
   function handleFoldDerived() {
     setFilter({
       ...filter,
@@ -97,6 +106,12 @@ export function ToolbarTermGraph() {
         title='Настройки фильтрации узлов и связей'
         icon={<IconFilter size='1.25rem' className='icon-primary' />}
         onClick={showParams}
+      />
+      <MiniButton
+        title='Задать фокус конституенту'
+        icon={<IconFocus size='1.25rem' className='icon-primary' />}
+        disabled={selected.length !== 1}
+        onClick={handleSetFocus}
       />
       <MiniButton
         title='Граф целиком'
