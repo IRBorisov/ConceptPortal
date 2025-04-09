@@ -1,9 +1,8 @@
 'use client';
 
-import clsx from 'clsx';
-
-import { SelectSingle } from '@/components/input';
 import { type Styling } from '@/components/props';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { cn } from '@/lib/utils';
 
 import { labelVersion } from '../../rsform/labels';
 import { type IVersionInfo } from '../backend/types';
@@ -19,26 +18,28 @@ interface SelectVersionProps extends Styling {
   noBorder?: boolean;
 }
 
-export function SelectVersion({ id, className, items, value, onChange, ...restProps }: SelectVersionProps) {
-  const options = [
-    {
-      value: 'latest' as const,
-      label: labelVersion('latest', items)
-    },
-    ...(items?.map(version => ({
-      value: version.id,
-      label: version.version
-    })) ?? [])
-  ];
+export function SelectVersion({ id, className, items, value, placeholder, onChange }: SelectVersionProps) {
+  function handleSelect(newValue: string) {
+    if (newValue === 'latest') {
+      onChange(newValue);
+    } else {
+      onChange(Number(newValue));
+    }
+  }
 
   return (
-    <SelectSingle
-      id={id}
-      className={clsx('min-w-48 text-ellipsis', className)}
-      options={options}
-      value={{ value: value, label: labelVersion(value, items) }}
-      onChange={data => onChange(data?.value ?? 'latest')}
-      {...restProps}
-    />
+    <Select onValueChange={handleSelect} defaultValue={String(value)}>
+      <SelectTrigger id={id} className={cn('min-w-48', className)}>
+        <SelectValue placeholder={placeholder} />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value='latest'>{labelVersion('latest', items)}</SelectItem>
+        {items?.map(version => (
+          <SelectItem key={`version-${version.id}`} value={String(version.id)}>
+            {version.version}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   );
 }

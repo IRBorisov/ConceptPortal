@@ -23,6 +23,20 @@ export const useVersionUpdate = () => {
               )
             }
       );
+      client.setQueryData(
+        KEYS.composite.rsItem({ itemID: variables.itemID, version: variables.version.id }),
+        (prev: IRSFormDTO | undefined) =>
+          !prev
+            ? undefined
+            : {
+                ...prev,
+                versions: prev.versions.map(version =>
+                  version.id === data.id
+                    ? { ...version, description: data.description, version: data.version }
+                    : version
+                )
+              }
+      );
     },
     onError: () => client.invalidateQueries()
   });
