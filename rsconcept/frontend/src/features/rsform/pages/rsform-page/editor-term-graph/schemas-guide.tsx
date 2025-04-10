@@ -36,7 +36,7 @@ export function SchemasGuide() {
   })();
 
   return (
-    <div tabIndex={-1} id={globalIDs.graph_schemas}>
+    <div className='p-1' tabIndex={-1} id={globalIDs.graph_schemas}>
       <IconHelp size='1.25rem' className='icon-primary' />
       <Tooltip anchorSelect={`#${globalIDs.graph_schemas}`} place='right' className='max-w-100 break-words text-base'>
         <div className='inline-flex items-center gap-2'>

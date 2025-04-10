@@ -1,13 +1,11 @@
-import { SelectSingle } from '@/components/input';
 import { type Styling } from '@/components/props';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { cn } from '@/lib/utils';
 
 import { CstType } from '../backend/types';
 import { labelCstType } from '../labels';
 
-const SelectorCstType = Object.values(CstType).map(typeStr => ({
-  value: typeStr as CstType,
-  label: labelCstType(typeStr as CstType)
-}));
+import { IconCstType } from './icon-cst-type';
 
 interface SelectCstTypeProps extends Styling {
   id?: string;
@@ -16,16 +14,20 @@ interface SelectCstTypeProps extends Styling {
   onChange: (newValue: CstType) => void;
 }
 
-export function SelectCstType({ value, onChange, disabled = false, ...restProps }: SelectCstTypeProps) {
+export function SelectCstType({ id, value, onChange, className, disabled = false, ...restProps }: SelectCstTypeProps) {
   return (
-    <SelectSingle
-      id='dlg_cst_type'
-      placeholder='Выберите тип'
-      options={SelectorCstType}
-      value={{ value: value, label: labelCstType(value) }}
-      onChange={data => onChange(data?.value ?? CstType.BASE)}
-      isDisabled={disabled}
-      {...restProps}
-    />
+    <Select onValueChange={onChange} defaultValue={value} disabled={disabled}>
+      <SelectTrigger id={id} className={cn('w-66', className)} {...restProps}>
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent>
+        {Object.values(CstType).map(typeStr => (
+          <SelectItem key={`csttype-${typeStr}`} value={typeStr}>
+            <IconCstType value={typeStr as CstType} />
+            <span>{labelCstType(typeStr as CstType)}</span>
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   );
 }

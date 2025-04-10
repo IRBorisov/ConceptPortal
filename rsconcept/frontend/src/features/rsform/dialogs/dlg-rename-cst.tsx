@@ -56,8 +56,7 @@ export function DlgRenameCst() {
       helpTopic={HelpTopic.CC_CONSTITUENTA}
     >
       <SelectCstType
-        id='dlg_cst_type'
-        className='w-64'
+        id='dlg_cst_type' //
         value={cst_type}
         onChange={handleChangeType}
         disabled={target.is_inherited}

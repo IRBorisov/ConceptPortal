@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import { IconLibrary2, IconManuals, IconNewItem2 } from '@/components/icons';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useAppLayoutStore } from '@/stores/app-layout';
+import { useDialogsStore } from '@/stores/dialogs';
 
 import { urls } from '../urls';
 
@@ -16,6 +17,7 @@ export function Navigation() {
   const { push } = useConceptNavigation();
   const size = useWindowSize();
   const noNavigationAnimation = useAppLayoutStore(state => state.noNavigationAnimation);
+  const activeDialog = useDialogsStore(state => state.active);
 
   const navigateHome = (event: React.MouseEvent<Element>) =>
     push({ path: urls.home, newTab: event.ctrlKey || event.metaKey });
@@ -27,7 +29,7 @@ export function Navigation() {
     push({ path: urls.create_schema, newTab: event.ctrlKey || event.metaKey });
 
   return (
-    <nav className='z-navigation sticky top-0 left-0 right-0 select-none bg-prim-100'>
+    <nav className='z-navigation sticky top-0 left-0 right-0 select-none bg-prim-100' inert={activeDialog !== null}>
       <ToggleNavigation />
       <div
         className={clsx(

@@ -45,7 +45,6 @@ export function FormCreateCst({ schema }: FormCreateCstProps) {
       <div className='flex items-center self-center gap-3'>
         <SelectCstType
           id='dlg_cst_type' //
-          className='w-64'
           value={cst_type}
           onChange={handleTypeChange}
         />

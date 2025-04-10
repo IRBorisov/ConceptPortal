@@ -231,8 +231,9 @@ export function PickSubstitutions({
   return (
     <div className={clsx('flex flex-col', className)} {...restProps}>
       <div className='flex items-center gap-3'>
-        <div className='grow flex flex-col basis-1/2 gap-1 border-x border-t clr-input rounded-t-md'>
+        <div className='w-60 grow flex flex-col basis-1/2 gap-1 border-x border-t clr-input rounded-t-md'>
           <SelectLibraryItem
+            id='substitute-left-schema'
             noBorder
             placeholder='Выберите аргумент'
             items={allowSelfSubstitution ? schemas : schemas.filter(item => item.id !== rightArgument?.id)}
@@ -262,8 +263,9 @@ export function PickSubstitutions({
           />
         </div>
 
-        <div className='grow basis-1/2 flex flex-col gap-1 border-x border-t clr-input rounded-t-md'>
+        <div className='w-60 grow basis-1/2 flex flex-col gap-1 border-x border-t clr-input rounded-t-md'>
           <SelectLibraryItem
+            id='substitute-right-schema'
             noBorder
             placeholder='Выберите аргумент'
             items={allowSelfSubstitution ? schemas : schemas.filter(item => item.id !== leftArgument?.id)}

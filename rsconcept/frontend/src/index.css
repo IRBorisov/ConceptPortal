@@ -129,7 +129,7 @@
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--clr-prim-100);
-  --color-muted-foreground: var(--clr-prim-600);
+  --color-muted-foreground: var(--clr-prim-800);
   --color-accent: var(--clr-sec-100);
   --color-accent-foreground: var(--clr-prim-999);
   --color-destructive: var(--clr-warn-600);

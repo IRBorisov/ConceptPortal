@@ -18,7 +18,15 @@ interface SelectVersionProps extends Styling {
   noBorder?: boolean;
 }
 
-export function SelectVersion({ id, className, items, value, placeholder, onChange }: SelectVersionProps) {
+export function SelectVersion({
+  id,
+  className,
+  items,
+  value,
+  placeholder,
+  onChange,
+  ...restProps
+}: SelectVersionProps) {
   function handleSelect(newValue: string) {
     if (newValue === 'latest') {
       onChange(newValue);
@@ -26,10 +34,9 @@ export function SelectVersion({ id, className, items, value, placeholder, onChan
       onChange(Number(newValue));
     }
   }
-
   return (
     <Select onValueChange={handleSelect} defaultValue={String(value)}>
-      <SelectTrigger id={id} className={cn('min-w-48', className)}>
+      <SelectTrigger id={id} className={cn('min-w-48', className)} {...restProps}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>

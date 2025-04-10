@@ -26,7 +26,7 @@ import { useRSEdit } from '../rsedit-context';
 import { TGEdgeTypes } from './graph/tg-edge-types';
 import { applyLayout } from './graph/tg-layout';
 import { TGNodeTypes } from './graph/tg-node-types';
-import { GraphSelectors } from './graph-selectors';
+import { SelectColoring } from './select-coloring';
 import { ToolbarFocusedCst } from './toolbar-focused-cst';
 import { ToolbarTermGraph } from './toolbar-term-graph';
 import { useFilteredGraph } from './use-filtered-graph';
@@ -184,7 +184,7 @@ export function TGFlow() {
         <span className='px-2 pb-1 select-none whitespace-nowrap backdrop-blur-xs rounded-xl'>
           Выбор {selected.length} из {schema.stats?.count_all ?? 0}
         </span>
-        <GraphSelectors />
+        <SelectColoring />
         <ViewHidden items={hidden} />
       </div>
 
