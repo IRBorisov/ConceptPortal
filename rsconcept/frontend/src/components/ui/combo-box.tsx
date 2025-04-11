@@ -5,11 +5,9 @@ import { ChevronDownIcon } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 
-import { MiniButton } from '../control';
 import { IconRemove } from '../icons';
 import { type Styling } from '../props';
 
-import { Button } from './button';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from './command';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
 
@@ -64,7 +62,7 @@ export function ComboBox<Option>({
     setOpen(false);
   }
 
-  function handleClear(event: React.MouseEvent<HTMLButtonElement>) {
+  function handleClear(event: React.MouseEvent<SVGElement>) {
     event.stopPropagation();
     handleChangeValue(null);
   }
@@ -72,18 +70,19 @@ export function ComboBox<Option>({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button
+        <button
           id={id}
           ref={triggerRef}
-          variant='ghost'
           role='combobox'
           aria-expanded={open}
           className={cn(
-            'relative justify-between font-normal bg-input hover:bg-input',
+            'relative h-9',
+            'inline-flex gap-2 px-3 py-2 items-center justify-between bg-input cursor-pointer disabled:cursor-auto whitespace-nowrap outline-none focus-visible:border-ring focus-visible:ring-ring focus-visible:ring-[3px] aria-invalid:ring-destructive aria-invalid:border-destructive',
+            "[&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0",
             open && 'cursor-auto',
             !noBorder && 'border',
             noBorder && 'rounded-md',
-            !value && 'text-muted-foreground hover:text-muted-foreground',
+            !value && 'text-muted-foreground',
             className
           )}
           style={style}
@@ -92,16 +91,14 @@ export function ComboBox<Option>({
           <span className='truncate'>{value ? labelValueFunc(value) : placeholder}</span>
           <ChevronDownIcon className={cn('text-muted-foreground', clearable && !!value && 'opacity-0')} />
           {clearable && !!value ? (
-            <MiniButton
-              noHover
-              title='Очистить'
-              aria-label='Очистить'
-              className='absolute right-2 text-muted-foreground hover:text-warn-600'
-              icon={<IconRemove size='1rem' />}
+            <IconRemove
+              tabIndex={-1}
+              size='1rem'
+              className='absolute pointer-events-auto right-3 text-muted-foreground hover:text-warn-600'
               onClick={handleClear}
             />
           ) : null}
-        </Button>
+        </button>
       </PopoverTrigger>
       <PopoverContent sideOffset={-1} className='p-0' style={{ width: popoverWidth }}>
         <Command>
