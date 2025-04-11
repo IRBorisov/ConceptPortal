@@ -20,13 +20,12 @@ import {
 } from '@/features/rsform/models/rslang-api';
 
 import { infoMsg } from '@/utils/labels';
-import { TextMatcher } from '@/utils/utils';
 
 import { Graph } from '../../../models/graph';
 import { type IOssLayout } from '../backend/types';
 import { describeSubstitutionError } from '../labels';
 
-import { type IOperation, type IOperationSchema, SubstitutionErrorType } from './oss';
+import { type IOperationSchema, SubstitutionErrorType } from './oss';
 import { type Position2D } from './oss-layout';
 
 export const GRID_SIZE = 10; // pixels - size of OSS grid
@@ -35,17 +34,6 @@ const DISTANCE_X = 180; // pixels - insert x-distance between node centers
 const DISTANCE_Y = 100; // pixels - insert y-distance between node centers
 
 const STARTING_SUB_INDEX = 900; // max semantic index for starting substitution
-
-/**
- * Checks if a given target {@link IOperation} matches the specified query using.
- *
- * @param target - The target object to be matched.
- * @param query - The query string used for matching.
- */
-export function matchOperation(target: IOperation, query: string): boolean {
-  const matcher = new TextMatcher(query);
-  return matcher.test(target.alias) || matcher.test(target.title);
-}
 
 /**
  * Sorts library items relevant for the specified {@link IOperationSchema}.

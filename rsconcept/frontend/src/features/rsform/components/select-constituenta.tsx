@@ -1,51 +1,31 @@
-'use client';
-
-import clsx from 'clsx';
-
-import { SelectSingle } from '@/components/input';
-import { type Styling } from '@/components/props';
+import { ComboBox } from '@/components/ui/combo-box';
 
 import { describeConstituenta, describeConstituentaTerm } from '../labels';
 import { type IConstituenta } from '../models/rsform';
-import { matchConstituenta } from '../models/rsform-api';
-import { CstMatchMode } from '../stores/cst-search';
 
-interface SelectConstituentaProps extends Styling {
+interface SelectConstituentaProps {
+  id?: string;
   value: IConstituenta | null;
   onChange: (newValue: IConstituenta | null) => void;
 
+  className?: string;
   items?: IConstituenta[];
   placeholder?: string;
   noBorder?: boolean;
 }
 
 export function SelectConstituenta({
-  className,
   items,
-  value,
-  onChange,
   placeholder = 'Выберите конституенту',
   ...restProps
 }: SelectConstituentaProps) {
-  const options =
-    items?.map(cst => ({
-      value: cst.id,
-      label: `${cst.alias}${cst.is_inherited ? '*' : ''}: ${describeConstituenta(cst)}`
-    })) ?? [];
-
-  function filter(option: { value: string | undefined; label: string }, query: string) {
-    const cst = items?.find(item => item.id === Number(option.value));
-    return !cst ? false : matchConstituenta(cst, query, CstMatchMode.ALL);
-  }
-
   return (
-    <SelectSingle
-      className={clsx('text-ellipsis', className)}
-      options={options}
-      value={value ? { value: value.id, label: `${value.alias}: ${describeConstituentaTerm(value)}` } : null}
-      onChange={data => onChange(items?.find(cst => cst.id === data?.value) ?? null)}
-      filterOption={filter}
+    <ComboBox
+      items={items}
       placeholder={placeholder}
+      idFunc={cst => String(cst.id)}
+      labelValueFunc={cst => `${cst.alias}: ${describeConstituentaTerm(cst)}`}
+      labelOptionFunc={cst => `${cst.alias}${cst.is_inherited ? '*' : ''}: ${describeConstituenta(cst)}`}
       {...restProps}
     />
   );

@@ -1,7 +1,5 @@
-'use client';
-
 import { type Styling } from '@/components/props';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { ComboBox } from '@/components/ui/combo-box';
 
 import { type ILibraryItem } from '../backend/types';
 
@@ -15,31 +13,15 @@ interface SelectLibraryItemProps extends Styling {
   noBorder?: boolean;
 }
 
-export function SelectLibraryItem({
-  id,
-  items,
-  value,
-  onChange,
-  placeholder = 'Выберите схему',
-  ...restProps
-}: SelectLibraryItemProps) {
-  function handleSelect(newValue: string) {
-    const newItem = items?.find(item => item.id === Number(newValue)) ?? null;
-    onChange(newItem);
-  }
-
+export function SelectLibraryItem({ items, placeholder = 'Выберите схему', ...restProps }: SelectLibraryItemProps) {
   return (
-    <Select onValueChange={handleSelect} defaultValue={value ? String(value.id) : undefined}>
-      <SelectTrigger id={id} {...restProps}>
-        <SelectValue placeholder={placeholder} />
-      </SelectTrigger>
-      <SelectContent className='max-w-80'>
-        {items?.map(item => (
-          <SelectItem key={`${id ?? 'default'}-item-select-${item.id}`} value={String(item.id)}>
-            {`${item.alias}: ${item.title}`}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
+    <ComboBox
+      items={items}
+      placeholder={placeholder}
+      idFunc={item => String(item.id)}
+      labelValueFunc={item => `${item.alias}: ${item.title}`}
+      labelOptionFunc={item => `${item.alias}: ${item.title}`}
+      {...restProps}
+    />
   );
 }

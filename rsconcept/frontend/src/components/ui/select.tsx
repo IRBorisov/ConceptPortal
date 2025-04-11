@@ -1,6 +1,7 @@
-import * as React from 'react';
+'use client';
+
 import * as SelectPrimitive from '@radix-ui/react-select';
-import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
+import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 
@@ -33,7 +34,8 @@ function SelectTrigger({
       className={cn(
         'data-[size=default]:h-9 data-[size=sm]:h-8',
         'flex items-center justify-between gap-2 px-3 py-2',
-        'bg-input cursor-pointer disabled:cursor-auto disabled:opacity-50',
+        'bg-input disabled:opacity-50',
+        'cursor-pointer disabled:cursor-auto',
         'data-[placeholder]:text-muted-foreground',
         'whitespace-nowrap',
         'outline-none focus-visible:ring-[2px] focus-visible:border-ring focus-visible:ring-ring aria-invalid:ring-destructive',
@@ -68,7 +70,7 @@ function SelectContent({
           'bg-popover text-sm text-popover-foreground',
           'border shadow-md',
           'overflow-x-hidden overflow-y-auto',
-          'cc-select-popover',
+          'cc-animate-popover',
           position === 'popper' &&
             'data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1',
           className
@@ -113,15 +115,11 @@ function SelectItem({ className, children, ...props }: React.ComponentProps<type
         'outline-none focus:bg-accent focus:text-accent-foreground',
         '*:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2',
         "[&_svg:not([class*='text-'])]:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "data-[state='checked']:not-[:hover]:bg-selected data-[state='checked']:not-[:hover]:text-selected-foreground",
         className
       )}
       {...props}
     >
-      <span className='absolute right-2 flex size-3.5 items-center justify-center'>
-        <SelectPrimitive.ItemIndicator>
-          <CheckIcon className='size-4' />
-        </SelectPrimitive.ItemIndicator>
-      </span>
       <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
     </SelectPrimitive.Item>
   );

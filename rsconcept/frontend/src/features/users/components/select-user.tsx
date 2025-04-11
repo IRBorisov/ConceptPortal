@@ -1,22 +1,21 @@
 'use client';
 
-import clsx from 'clsx';
-
-import { SelectSingle } from '@/components/input';
 import { type Styling } from '@/components/props';
+import { ComboBox } from '@/components/ui/combo-box';
 
 import { type IUserInfo } from '../backend/types';
 import { useLabelUser } from '../backend/use-label-user';
 import { useUsers } from '../backend/use-users';
-import { matchUser } from '../models/user-api';
 
 interface SelectUserProps extends Styling {
   value: number | null;
-  onChange: (newValue: number) => void;
+  onChange: (newValue: number | null) => void;
   filter?: (userID: number) => boolean;
 
   placeholder?: string;
   noBorder?: boolean;
+  noAnonymous?: boolean;
+  hidden?: boolean;
 }
 
 function compareUsers(a: IUserInfo, b: IUserInfo) {
@@ -33,10 +32,8 @@ function compareUsers(a: IUserInfo, b: IUserInfo) {
 }
 
 export function SelectUser({
-  className,
   filter,
-  value,
-  onChange,
+  noAnonymous,
   placeholder = 'Выберите пользователя',
   ...restProps
 }: SelectUserProps) {
@@ -46,28 +43,16 @@ export function SelectUser({
   const items = filter ? users.filter(user => filter(user.id)) : users;
   const sorted = [
     ...items.filter(user => !!user.first_name || !!user.last_name).sort(compareUsers),
-    ...items.filter(user => !user.first_name && !user.last_name)
-  ];
-  const options = sorted.map(user => ({
-    value: user.id,
-    label: getUserLabel(user.id)
-  }));
-
-  function filterLabel(option: { value: string | undefined; label: string }, query: string) {
-    const user = items.find(item => item.id === Number(option.value));
-    return !user ? false : matchUser(user, query);
-  }
+    ...(!noAnonymous ? items.filter(user => !user.first_name && !user.last_name) : [])
+  ].map(user => user.id);
 
   return (
-    <SelectSingle
-      className={clsx('text-ellipsis', className)}
-      options={options}
-      value={value ? { value: value, label: getUserLabel(value) } : null}
-      onChange={data => {
-        if (data?.value !== undefined) onChange(data.value);
-      }}
-      filterOption={filterLabel}
+    <ComboBox
+      items={sorted}
       placeholder={placeholder}
+      idFunc={user => String(user)}
+      labelValueFunc={user => getUserLabel(user)}
+      labelOptionFunc={user => getUserLabel(user)}
       {...restProps}
     />
   );

@@ -5,7 +5,6 @@ export { FileInput } from './file-input';
 export { Label } from './label';
 export { SearchBar } from './search-bar';
 export { SelectMulti, type SelectMultiProps } from './select-multi';
-export { SelectSingle } from './select-single';
 export { SelectTree } from './select-tree';
 export { TextArea } from './text-area';
 export { TextInput } from './text-input';

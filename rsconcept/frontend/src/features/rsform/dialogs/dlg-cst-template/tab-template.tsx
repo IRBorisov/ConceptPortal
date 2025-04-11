@@ -2,7 +2,8 @@
 
 import { useTemplatesSuspense } from '@/features/library/backend/use-templates';
 
-import { SelectSingle, TextArea } from '@/components/input';
+import { TextArea } from '@/components/input';
+import { ComboBox } from '@/components/ui/combo-box';
 
 import { useRSForm } from '../../backend/use-rsform';
 import { PickConstituenta } from '../../components/pick-constituenta';
@@ -24,6 +25,7 @@ export function TabTemplate() {
 
   const { templates } = useTemplatesSuspense();
   const { schema: templateSchema } = useRSForm({ itemID: templateID ?? undefined });
+  const selectedTemplate = templates.find(item => item.id === templateID);
 
   if (!templateID) {
     onChangeTemplateID(templates[0].id);
@@ -40,47 +42,37 @@ export function TabTemplate() {
     ? ''
     : `${prototype?.term_raw}${prototype?.definition_raw ? ` — ${prototype?.definition_raw}` : ''}`;
 
-  const templateSelector = templates.map(template => ({
-    value: template.id,
-    label: template.title
-  }));
-
-  const categorySelector: { value: number; label: string }[] = !templateSchema
+  const categorySelector = !templateSchema
     ? []
-    : templateSchema.items
-        .filter(cst => cst.cst_type === CATEGORY_CST_TYPE)
-        .map(cst => ({
-          value: cst.id,
-          label: cst.term_raw
-        }));
+    : templateSchema.items.filter(cst => cst.cst_type === CATEGORY_CST_TYPE);
 
   return (
     <div className='cc-fade-in'>
-      <div className='flex border-t border-x rounded-t-md clr-input'>
-        <SelectSingle
+      <div className='flex gap-1 border-t border-x rounded-t-md clr-input'>
+        <ComboBox
+          value={selectedTemplate ?? null}
+          items={templates}
           noBorder
+          noSearch
           placeholder='Источник'
           className='w-48'
-          options={templateSelector}
-          value={templateID ? { value: templateID, label: templates.find(item => item.id == templateID)!.title } : null}
-          onChange={data => onChangeTemplateID(data ? data.value : null)}
+          idFunc={item => String(item.id)}
+          labelValueFunc={item => item.title}
+          labelOptionFunc={item => item.title}
+          onChange={item => onChangeTemplateID(item?.id ?? null)}
         />
-        <SelectSingle
+        <ComboBox
+          value={filterCategory}
+          items={categorySelector}
           noBorder
-          isSearchable={false}
+          noSearch
+          clearable
           placeholder='Выберите категорию'
-          className='grow ml-1 border-none'
-          options={categorySelector}
-          value={
-            filterCategory && templateSchema
-              ? {
-                  value: filterCategory.id,
-                  label: filterCategory.term_raw
-                }
-              : null
-          }
-          onChange={data => onChangeFilterCategory(data ? templateSchema?.cstByID.get(data?.value) ?? null : null)}
-          isClearable
+          className='grow'
+          idFunc={cst => String(cst.id)}
+          labelValueFunc={cst => cst.term_raw}
+          labelOptionFunc={cst => cst.term_raw}
+          onChange={cst => onChangeFilterCategory(cst)}
         />
       </div>
       <PickConstituenta

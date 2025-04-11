@@ -63,7 +63,8 @@ export function DlgEditEditors() {
         <SelectUser
           filter={id => !selected.includes(id)} //
           value={null}
-          onChange={onAddEditor}
+          noAnonymous
+          onChange={user => user && onAddEditor(user)}
           className='w-100'
         />
       </div>

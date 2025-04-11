@@ -228,7 +228,7 @@
   }
 }
 
-@utility cc-select-popover {
+@utility cc-animate-popover {
   transform-origin: var(--radix-select-content-transform-origin);
 
   &[data-state='open'] {

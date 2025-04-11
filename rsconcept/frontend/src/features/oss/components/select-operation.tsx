@@ -1,49 +1,27 @@
-'use client';
-
-import clsx from 'clsx';
-
-import { SelectSingle } from '@/components/input';
 import { type Styling } from '@/components/props';
+import { ComboBox } from '@/components/ui/combo-box';
 
 import { type IOperation } from '../models/oss';
-import { matchOperation } from '../models/oss-api';
 
 interface SelectOperationProps extends Styling {
+  id?: string;
   value: IOperation | null;
   onChange: (newValue: IOperation | null) => void;
 
   items?: IOperation[];
   placeholder?: string;
   noBorder?: boolean;
+  popoverClassname?: string;
 }
 
-export function SelectOperation({
-  className,
-  items,
-  value,
-  onChange,
-  placeholder = 'Выберите операцию',
-  ...restProps
-}: SelectOperationProps) {
-  const options =
-    items?.map(cst => ({
-      value: cst.id,
-      label: `${cst.alias}: ${cst.title}`
-    })) ?? [];
-
-  function filter(option: { value: string | undefined; label: string }, query: string) {
-    const operation = items?.find(item => item.id === Number(option.value));
-    return !operation ? false : matchOperation(operation, query);
-  }
-
+export function SelectOperation({ items, placeholder = 'Выберите операцию', ...restProps }: SelectOperationProps) {
   return (
-    <SelectSingle
-      className={clsx('text-ellipsis', className)}
-      options={options}
-      value={value ? { value: value.id, label: `${value.alias}: ${value.title}` } : null}
-      onChange={data => onChange(items?.find(cst => cst.id === data?.value) ?? null)}
-      filterOption={filter}
+    <ComboBox
+      items={items}
       placeholder={placeholder}
+      idFunc={operation => String(operation.id)}
+      labelValueFunc={operation => `${operation.alias}: ${operation.title}`}
+      labelOptionFunc={operation => `${operation.alias}: ${operation.title}`}
       {...restProps}
     />
   );

@@ -20,6 +20,7 @@ export function SelectMultiGrammeme({ value, onChange, ...restProps }: SelectMul
     <SelectMulti
       options={options}
       value={value}
+      isSearchable={false}
       onChange={newValue => onChange([...newValue].sort((left, right) => grammemeCompare(left.value, right.value)))}
       {...restProps}
     />
