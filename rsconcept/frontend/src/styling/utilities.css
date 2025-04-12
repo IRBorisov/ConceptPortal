@@ -15,108 +15,69 @@
   font-family: var(--font-math);
 }
 
-@utility clr-input {
-  background-color: var(--clr-prim-0);
-
-  &:disabled {
-    background-color: var(--clr-prim-100);
-  }
+@utility cc-selected {
+  color: var(--color-selected-foreground);
+  background-color: var(--color-selected);
 }
 
-@utility clr-selected {
-  color: var(--clr-prim-999);
-  background-color: var(--clr-sec-200);
-}
-
-@utility clr-btn-default {
-  color: var(--clr-prim-999);
-  background-color: var(--clr-prim-200);
-
-  &:disabled {
-    color: var(--clr-prim-800);
-    background-color: var(--clr-prim-200);
-  }
-
+@utility cc-hover {
   &:hover:not(:disabled) {
-    color: var(--clr-prim-999);
-    background-color: var(--clr-sec-100);
-  }
-}
-
-@utility clr-btn-primary {
-  color: var(--clr-prim-999);
-  background-color: var(--clr-sec-200);
-
-  &:disabled {
-    color: var(--clr-prim-800);
-    background-color: var(--clr-prim-200);
-  }
-
-  &:focus-visible,
-  .focus-frame:has(:focus-visible) {
-    outline: 2px solid var(--clr-sec-600);
-  }
-
-  &:focus-visible,
-  &:hover:not(:disabled) {
-    color: var(--clr-sec-0);
-    background-color: var(--clr-sec-600);
-  }
-}
-
-@utility clr-hover {
-  &:hover:not(:disabled) {
-    color: var(--clr-prim-999);
-    background-color: var(--clr-sec-100);
+    color: var(--color-accent-foreground);
+    background-color: var(--color-accent);
   }
 }
 
 @utility focus-outline {
-  :is(&, .focus-frame):focus-visible {
-    outline: 2px solid var(--clr-sec-600);
+  --focus-color: var(--color-ring);
+
+  &:focus-visible {
+    outline: 2px solid var(--focus-color);
+    border-color: var(--focus-color);
+  }
+
+  &[aria-invalid='true'] {
+    --focus-color: var(--color-destructive);
   }
 }
 
 @utility focus-frame {
-  :is(.focus-outline, &):focus-visible {
-    outline: 2px solid var(--clr-sec-600);
-  }
+  --focus-color: var(--color-ring);
 
+  &:focus-visible,
   &:has(:focus-visible) {
-    outline: 2px solid var(--clr-sec-600);
+    outline: 2px solid var(--focus-color);
+    border-color: var(--focus-color);
+  }
+
+  &[aria-invalid='true'] {
+    --focus-color: var(--color-destructive);
   }
 }
 
-@utility clr-text-default {
-  opacity: 1;
-  -webkit-text-fill-color: var(--clr-prim-999);
-  color: var(--clr-prim-999);
-}
-
-@utility clr-text-controls {
-  color: var(--clr-prim-800);
+@utility cc-controls {
+  color: var(--color-muted-foreground);
   background-color: transparent;
 
   &:disabled {
-    color: var(--clr-prim-600);
+    color: var(--color-inert-foreground);
   }
 }
 
 @utility icon-primary {
   :not([disabled]) > & {
-    color: var(--clr-sec-800);
+    color: var(--color-primary);
   }
 }
 
 @utility icon-red {
   :not([disabled]) > & {
-    color: var(--clr-warn-600);
+    color: var(--color-destructive);
   }
 }
 
 @utility icon-green {
   :not([disabled]) > & {
-    color: var(--clr-ok-600);
+    color: var(--color-constructive);
   }
 }
 
@@ -128,7 +89,7 @@
   transform: translate(0, -0.2rem);
 
   font-size: 1.25rem;
-  color: var(--clr-sec-800);
+  color: var(--color-primary);
 }
 
 @utility cc-column {
@@ -154,7 +115,7 @@
 }
 
 @utility cc-shadow-border {
-  box-shadow: 0 1px 2px 0 var(--clr-prim-400);
+  box-shadow: 0 1px 2px 0 var(--color-border);
 }
 
 @utility cc-fade-in {

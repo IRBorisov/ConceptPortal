@@ -1,6 +1,5 @@
-import clsx from 'clsx';
-
 import { type Editor, type ErrorProcessing, type Titled } from '../props';
+import { cn } from '../utils';
 
 import { ErrorField } from './error-field';
 import { Label } from './label';
@@ -41,7 +40,7 @@ export function TextInput({
 }: TextInputProps) {
   return (
     <div
-      className={clsx(
+      className={cn(
         dense ? 'flex items-center gap-3' : 'flex flex-col', //
         dense && className
       )}
@@ -49,10 +48,10 @@ export function TextInput({
       <Label text={label} htmlFor={id} />
       <input
         id={id}
-        className={clsx(
+        className={cn(
           'min-w-0 py-2',
           'leading-tight truncate hover:text-clip',
-          transparent ? 'bg-transparent' : 'clr-input',
+          transparent || disabled ? 'bg-transparent' : 'bg-input',
           !noBorder && 'border',
           !noOutline && 'focus-outline',
           (!noBorder || !disabled) && 'px-3',

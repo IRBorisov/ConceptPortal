@@ -3,7 +3,7 @@
 import * as SelectPrimitive from '@radix-ui/react-select';
 import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
 
-import { cn } from '@/lib/utils';
+import { cn } from '../utils';
 
 function Select({ ...props }: React.ComponentProps<typeof SelectPrimitive.Root>) {
   return <SelectPrimitive.Root data-slot='select' {...props} />;
@@ -19,29 +19,26 @@ function SelectValue({ ...props }: React.ComponentProps<typeof SelectPrimitive.V
 
 function SelectTrigger({
   className,
-  size = 'default',
   children,
   noBorder,
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Trigger> & {
   noBorder?: boolean;
-  size?: 'sm' | 'default';
 }) {
   return (
     <SelectPrimitive.Trigger
       data-slot='select-trigger'
-      data-size={size}
       className={cn(
-        'data-[size=default]:h-9 data-[size=sm]:h-8',
-        'flex items-center justify-between gap-2 px-3 py-2',
+        'h-9',
+        'flex gap-2 px-3 py-2 items-center justify-between',
         'bg-input disabled:opacity-50',
         'cursor-pointer disabled:cursor-auto',
-        'data-[placeholder]:text-muted-foreground',
         'whitespace-nowrap',
-        'outline-none focus-visible:ring-[2px] focus-visible:border-ring focus-visible:ring-ring aria-invalid:ring-destructive',
+        'focus-outline',
+        'data-[placeholder]:text-muted-foreground',
         '*:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2',
         "[&_svg:not([class*='text-'])]:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
-        !noBorder && 'border aria-invalid:border-destructive',
+        !noBorder && 'border',
         noBorder && 'rounded-md',
         className
       )}

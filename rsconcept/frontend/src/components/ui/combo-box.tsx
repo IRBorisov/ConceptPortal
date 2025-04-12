@@ -3,10 +3,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { ChevronDownIcon } from 'lucide-react';
 
-import { cn } from '@/lib/utils';
-
 import { IconRemove } from '../icons';
 import { type Styling } from '../props';
+import { cn } from '../utils';
 
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from './command';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
@@ -77,7 +76,11 @@ export function ComboBox<Option>({
           aria-expanded={open}
           className={cn(
             'relative h-9',
-            'inline-flex gap-2 px-3 py-2 items-center justify-between bg-input cursor-pointer disabled:cursor-auto whitespace-nowrap outline-none focus-visible:border-ring focus-visible:ring-ring focus-visible:ring-[3px] aria-invalid:ring-destructive aria-invalid:border-destructive',
+            'flex gap-2 px-3 py-2 items-center justify-between',
+            'bg-input disabled:opacity-50',
+            'cursor-pointer disabled:cursor-auto',
+            'whitespace-nowrap',
+            'focus-outline',
             "[&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0",
             open && 'cursor-auto',
             !noBorder && 'border',
@@ -94,7 +97,7 @@ export function ComboBox<Option>({
             <IconRemove
               tabIndex={-1}
               size='1rem'
-              className='absolute pointer-events-auto right-3 text-muted-foreground hover:text-warn-600'
+              className='absolute pointer-events-auto right-3 text-muted-foreground hover:text-destructive'
               onClick={handleClear}
             />
           ) : null}

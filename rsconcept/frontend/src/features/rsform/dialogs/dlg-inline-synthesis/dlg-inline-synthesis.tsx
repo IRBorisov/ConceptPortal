@@ -59,7 +59,7 @@ export function DlgInlineSynthesis() {
       onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
     >
       <Tabs
-        selectedTabClassName='clr-selected'
+        selectedTabClassName='cc-selected'
         className='grid'
         selectedIndex={activeTab}
         onSelect={index => setActiveTab(index as TabID)}

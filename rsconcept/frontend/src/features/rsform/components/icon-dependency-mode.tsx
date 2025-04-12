@@ -15,12 +15,12 @@ export function IconDependencyMode({ value, size = '1.25rem', className }: DomIc
     case DependencyMode.ALL:
       return <IconSettings size={size} className={className} />;
     case DependencyMode.OUTPUTS:
-      return <IconGraphOutputs size={size} className={className ?? 'text-sec-600'} />;
+      return <IconGraphOutputs size={size} className={className ?? 'text-primary'} />;
     case DependencyMode.INPUTS:
-      return <IconGraphInputs size={size} className={className ?? 'text-sec-600'} />;
+      return <IconGraphInputs size={size} className={className ?? 'text-primary'} />;
     case DependencyMode.EXPAND_OUTPUTS:
-      return <IconGraphExpand size={size} className={className ?? 'text-sec-600'} />;
+      return <IconGraphExpand size={size} className={className ?? 'text-primary'} />;
     case DependencyMode.EXPAND_INPUTS:
-      return <IconGraphCollapse size={size} className={className ?? 'text-sec-600'} />;
+      return <IconGraphCollapse size={size} className={className ?? 'text-primary'} />;
   }
 }

@@ -13,7 +13,7 @@ export function SelectColoring() {
   const setColoring = useTermGraphStore(state => state.setColoring);
 
   return (
-    <div className='relative border rounded-b-none select-none clr-input rounded-t-md pointer-events-auto'>
+    <div className='relative border rounded-b-none select-none bg-input rounded-t-md pointer-events-auto'>
       <div className='absolute z-pop right-10 h-9 flex items-center'>
         {coloring === 'status' ? <BadgeHelp topic={HelpTopic.UI_CST_STATUS} contentClass='min-w-100' /> : null}
         {coloring === 'type' ? <BadgeHelp topic={HelpTopic.UI_CST_CLASS} contentClass='min-w-100' /> : null}

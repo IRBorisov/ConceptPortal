@@ -1,8 +1,7 @@
-import clsx from 'clsx';
-
 import { globalIDs } from '@/utils/constants';
 
 import { type Button } from '../props';
+import { cn } from '../utils';
 
 interface SelectorButtonProps extends Button {
   /** Text to display in the button. */
@@ -10,9 +9,6 @@ interface SelectorButtonProps extends Button {
 
   /** Icon to display in the button. */
   icon?: React.ReactNode;
-
-  /** Indicates if button background should be transparent. */
-  transparent?: boolean;
 }
 
 /**
@@ -24,7 +20,6 @@ export function SelectorButton({
   title,
   titleHtml,
   className,
-  transparent,
   hideTitle,
   ...restProps
 }: SelectorButtonProps) {
@@ -32,13 +27,12 @@ export function SelectorButton({
     <button
       type='button'
       tabIndex={-1}
-      className={clsx(
+      className={cn(
         'px-1 flex flex-start items-center gap-1',
         'text-sm font-controls select-none',
-        'text-btn clr-text-controls',
+        'text-btn cc-controls',
         'disabled:cursor-auto cursor-pointer',
-        'cc-animate-color',
-        transparent ? 'clr-hover' : 'clr-btn-default border',
+        'cc-hover cc-animate-color',
         className
       )}
       data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}

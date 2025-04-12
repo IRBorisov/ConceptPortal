@@ -87,7 +87,7 @@ function ServerError({ error }: { error: ErrorData }): React.ReactElement {
     if ('email' in error.response.data) {
       return (
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        <div className='text-sm select-text text-warn-600'>{error.response.data.email}.</div>
+        <div className='text-sm select-text text-destructive'>{error.response.data.email}.</div>
       );
     }
   }

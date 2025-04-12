@@ -20,7 +20,7 @@ interface TextURLProps {
 /**
  * Displays a text with a clickable link.
  */
-export function TextURL({ text, href, title, color = 'text-sec-600', onClick }: TextURLProps) {
+export function TextURL({ text, href, title, color = 'text-primary', onClick }: TextURLProps) {
   const design = `cursor-pointer hover:underline ${color}`;
   if (href) {
     return (
@@ -38,4 +38,3 @@ export function TextURL({ text, href, title, color = 'text-sec-600', onClick }: 
     return null;
   }
 }
-

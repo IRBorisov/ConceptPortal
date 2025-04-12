@@ -20,9 +20,9 @@ export function MutationErrors() {
   return (
     <div className='cc-modal-wrapper'>
       <ModalBackdrop onHide={resetErrors} />
-      <div className='z-pop px-10 py-3 flex flex-col items-center border rounded-xl bg-prim-100' role='alertdialog'>
+      <div className='z-pop px-10 py-3 flex flex-col items-center border rounded-xl bg-background' role='alertdialog'>
         <h1 className='py-2 select-none'>Ошибка при обработке</h1>
-        <div className='px-3 flex flex-col text-warn-600 text-sm font-semibold select-text'>
+        <div className='px-3 flex flex-col text-destructive text-sm font-semibold select-text'>
           <DescribeError error={mutationErrors[0]} />
         </div>
         <Button onClick={resetErrors} className='w-fit' text='Закрыть' />

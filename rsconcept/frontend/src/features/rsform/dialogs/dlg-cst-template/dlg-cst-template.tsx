@@ -71,7 +71,7 @@ export function DlgCstTemplate() {
       helpTopic={HelpTopic.RSL_TEMPLATES}
     >
       <Tabs
-        selectedTabClassName='clr-selected'
+        selectedTabClassName='cc-selected'
         className='grid'
         selectedIndex={activeTab}
         onSelect={index => setActiveTab(index as TabID)}

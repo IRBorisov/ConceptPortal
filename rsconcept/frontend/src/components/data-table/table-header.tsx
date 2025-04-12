@@ -14,7 +14,7 @@ interface TableHeaderProps<TData> {
 
 export function TableHeader<TData>({ table, headPosition, resetLastSelected }: TableHeaderProps<TData>) {
   return (
-    <thead className='sticky bg-prim-100 cc-shadow-border' style={{ top: headPosition }}>
+    <thead className='sticky bg-background cc-shadow-border' style={{ top: headPosition }}>
       {table.getHeaderGroups().map((headerGroup: HeaderGroup<TData>) => (
         <tr key={headerGroup.id}>
           {table.options.enableRowSelection ? (

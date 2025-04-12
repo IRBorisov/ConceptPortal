@@ -10,6 +10,7 @@ import { prepareTooltip } from '@/utils/utils';
 
 import { Button, MiniButton } from '../control';
 import { IconClose } from '../icons';
+import { cn } from '../utils';
 
 import { ModalBackdrop } from './modal-backdrop';
 import { type ModalProps } from './modal-form';
@@ -38,7 +39,7 @@ export function ModalView({
   return (
     <div className='cc-modal-wrapper'>
       <ModalBackdrop onHide={hideDialog} />
-      <div className='cc-animate-modal relative grid border rounded-xl bg-prim-100' role='dialog'>
+      <div className='cc-animate-modal relative grid border rounded-xl bg-background' role='dialog'>
         {helpTopic && !hideHelpWhen?.() ? (
           <BadgeHelp
             topic={helpTopic}
@@ -61,7 +62,8 @@ export function ModalView({
           <h1
             className={clsx(
               'px-12 py-2 select-none',
-              fullScreen && 'z-pop absolute top-0 right-1/2 translate-x-1/2 backdrop-blur-xs bg-prim-100/90 rounded-2xl'
+              fullScreen &&
+                'z-pop absolute top-0 right-1/2 translate-x-1/2 backdrop-blur-xs bg-background/90 rounded-2xl'
             )}
           >
             {header}
@@ -69,7 +71,7 @@ export function ModalView({
         ) : null}
 
         <div
-          className={clsx(
+          className={cn(
             '@container/modal',
             'max-w-[100svw] xs:max-w-[calc(100svw-2rem)]',
             'overscroll-contain outline-hidden',
@@ -93,7 +95,7 @@ export function ModalView({
             onClick={hideDialog}
           />
         ) : (
-          <div className='z-pop absolute bottom-0 right-1/2 translate-x-1/2 p-3 rounded-xl bg-prim-100/90 backdrop-blur-xs'>
+          <div className='z-pop absolute bottom-0 right-1/2 translate-x-1/2 p-3 rounded-xl bg-background/90 backdrop-blur-xs'>
             {' '}
             <Button text='Закрыть' aria-label='Закрыть' className='text-sm min-w-28' onClick={hideDialog} />
           </div>

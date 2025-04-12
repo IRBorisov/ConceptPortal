@@ -81,11 +81,11 @@ export function InfoError({ error }: InfoErrorProps) {
         'cc-fade-in',
         'min-w-100',
         'px-3 py-2 flex flex-col',
-        'text-warn-600 text-sm font-semibold',
+        'text-destructive text-sm font-semibold',
         'select-text'
       )}
     >
-      <div className='font-normal clr-text-default mb-6'>
+      <div className='font-normal text-foreground mb-6'>
         <p>Пожалуйста сделайте скриншот и отправьте вместе с описанием ситуации на почту portal@acconcept.ru</p>
         <br />
         <p>Для продолжения работы перезагрузите страницу</p>

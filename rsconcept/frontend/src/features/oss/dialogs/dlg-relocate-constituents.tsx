@@ -119,7 +119,7 @@ export function DlgRelocateConstituents() {
       helpTopic={HelpTopic.UI_RELOCATE_CST}
     >
       <div className='flex flex-col border'>
-        <div className='flex gap-1 items-center clr-input border-b rounded-t-md'>
+        <div className='flex gap-1 items-center bg-input border-b rounded-t-md'>
           <SelectLibraryItem
             noBorder
             className='w-1/2'

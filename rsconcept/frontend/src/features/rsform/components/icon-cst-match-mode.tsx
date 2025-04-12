@@ -8,12 +8,12 @@ export function IconCstMatchMode({ value, size = '1.25rem', className }: DomIcon
     case CstMatchMode.ALL:
       return <IconFilter size={size} className={className} />;
     case CstMatchMode.TEXT:
-      return <IconText size={size} className={className ?? 'text-sec-600'} />;
+      return <IconText size={size} className={className ?? 'text-primary'} />;
     case CstMatchMode.EXPR:
-      return <IconFormula size={size} className={className ?? 'text-sec-600'} />;
+      return <IconFormula size={size} className={className ?? 'text-primary'} />;
     case CstMatchMode.TERM:
-      return <IconTerm size={size} className={className ?? 'text-sec-600'} />;
+      return <IconTerm size={size} className={className ?? 'text-primary'} />;
     case CstMatchMode.NAME:
-      return <IconAlias size={size} className={className ?? 'text-sec-600'} />;
+      return <IconAlias size={size} className={className ?? 'text-primary'} />;
   }
 }

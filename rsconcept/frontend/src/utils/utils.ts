@@ -124,9 +124,9 @@ export function toggleTristateFlag(prev: boolean | null): boolean | null {
  */
 export function tripleToggleColor(value: boolean | null): string {
   if (value === null) {
-    return 'clr-text-controls';
+    return 'cc-controls';
   }
-  return value ? 'text-ok-600' : 'text-warn-600';
+  return value ? 'text-constructive' : 'text-destructive';
 }
 
 /**

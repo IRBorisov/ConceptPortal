@@ -18,7 +18,7 @@ export function Indicator({ icon, title, titleHtml, hideTitle, noPadding, classN
   return (
     <div
       className={clsx(
-        'clr-text-controls', //
+        'cc-controls', //
         'outline-hidden',
         !noPadding && 'px-1 py-1',
         className

@@ -1,7 +1,7 @@
-import clsx from 'clsx';
-
 import { type Button } from '@/components/props';
 import { globalIDs } from '@/utils/constants';
+
+import { cn } from '../utils';
 
 interface DropdownButtonProps extends Button {
   /** Icon to display first (not used if children are provided). */
@@ -33,12 +33,12 @@ export function DropdownButton({
     <button
       type='button'
       onClick={onClick}
-      className={clsx(
+      className={cn(
         'px-3 py-1 inline-flex items-center gap-2',
         'text-left text-sm text-ellipsis whitespace-nowrap',
-        'disabled:clr-text-controls',
+        'disabled:cc-controls disabled:opacity-75',
         'cc-animate-background',
-        !!onClick ? 'clr-hover cursor-pointer disabled:cursor-auto' : 'clr-btn-default',
+        !!onClick ? 'cc-hover cursor-pointer disabled:cursor-auto' : 'bg-secondary text-secondary-foreground',
         className
       )}
       data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}

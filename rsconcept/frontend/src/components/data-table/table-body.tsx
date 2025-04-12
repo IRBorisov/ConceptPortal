@@ -75,11 +75,11 @@ export function TableBody<TData>({
           key={row.id}
           className={clsx(
             'cc-scroll-row',
-            'clr-hover cc-animate-background duration-(--duration-fade)',
+            'cc-hover cc-animate-background duration-(--duration-fade)',
             !noHeader && 'scroll-mt-[calc(2px+2rem)]',
             table.options.enableRowSelection && row.getIsSelected()
-              ? 'clr-selected'
-              : 'odd:bg-prim-200 even:bg-prim-100'
+              ? 'cc-selected'
+              : 'odd:bg-secondary even:bg-background'
           )}
           style={{ ...(conditionalRowStyles ? getRowStyles(row) : []) }}
           onClick={event => handleRowClicked(row, event)}

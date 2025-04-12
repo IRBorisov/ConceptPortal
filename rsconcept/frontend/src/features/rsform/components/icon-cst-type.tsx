@@ -16,20 +16,20 @@ import { CstType } from '../backend/types';
 export function IconCstType({ value, size = '1.25rem', className }: DomIconProps<CstType>) {
   switch (value) {
     case CstType.BASE:
-      return <IconCstBaseSet size={size} className={className ?? 'text-ok-600'} />;
+      return <IconCstBaseSet size={size} className={className ?? 'text-constructive'} />;
     case CstType.CONSTANT:
-      return <IconCstConstSet size={size} className={className ?? 'text-ok-600'} />;
+      return <IconCstConstSet size={size} className={className ?? 'text-constructive'} />;
     case CstType.STRUCTURED:
-      return <IconCstStructured size={size} className={className ?? 'text-ok-600'} />;
+      return <IconCstStructured size={size} className={className ?? 'text-constructive'} />;
     case CstType.TERM:
-      return <IconCstTerm size={size} className={className ?? 'text-sec-600'} />;
+      return <IconCstTerm size={size} className={className ?? 'text-primary'} />;
     case CstType.AXIOM:
-      return <IconCstAxiom size={size} className={className ?? 'text-warn-600'} />;
+      return <IconCstAxiom size={size} className={className ?? 'text-destructive'} />;
     case CstType.FUNCTION:
-      return <IconCstFunction size={size} className={className ?? 'text-sec-600'} />;
+      return <IconCstFunction size={size} className={className ?? 'text-primary'} />;
     case CstType.PREDICATE:
-      return <IconCstPredicate size={size} className={className ?? 'text-warn-600'} />;
+      return <IconCstPredicate size={size} className={className ?? 'text-destructive'} />;
     case CstType.THEOREM:
-      return <IconCstTheorem size={size} className={className ?? 'text-warn-600'} />;
+      return <IconCstTheorem size={size} className={className ?? 'text-destructive'} />;
   }
 }

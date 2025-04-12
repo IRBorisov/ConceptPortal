@@ -16,6 +16,7 @@ import {
   IconUserSearch
 } from '@/components/icons';
 import { SearchBar } from '@/components/input';
+import { cn } from '@/components/utils';
 import { prefixes } from '@/utils/constants';
 import { tripleToggleColor } from '@/utils/utils';
 
@@ -76,7 +77,7 @@ export function ToolbarSearch({ className, total, filtered }: ToolbarSearchProps
   }
 
   return (
-    <div className={clsx('flex gap-3 border-b text-sm clr-input items-center', className)}>
+    <div className={cn('flex gap-3 border-b text-sm bg-input items-center', className)}>
       <div className='ml-3 min-w-18 sm:min-w-30 select-none whitespace-nowrap'>
         {filtered} из {total}
       </div>
@@ -143,7 +144,6 @@ export function ToolbarSearch({ className, total, filtered }: ToolbarSearchProps
             className='relative flex items-center h-full select-none'
           >
             <SelectorButton
-              transparent
               className='rounded-lg py-1'
               titleHtml={
                 (head ? describeLocationHead(head) : 'Выберите каталог') + '<br/><kbd>Ctrl + клик</kbd> - Проводник'
@@ -153,7 +153,7 @@ export function ToolbarSearch({ className, total, filtered }: ToolbarSearchProps
                 head ? (
                   <IconLocationHead value={head} size='1.25rem' />
                 ) : (
-                  <IconFolderSearch size='1.25rem' className='clr-text-controls' />
+                  <IconFolderSearch size='1.25rem' className='cc-controls' />
                 )
               }
               onClick={handleFolderClick}
@@ -164,13 +164,13 @@ export function ToolbarSearch({ className, total, filtered }: ToolbarSearchProps
               <DropdownButton
                 text='проводник...'
                 title='Переключение в режим Проводник'
-                icon={<IconFolderTree size='1rem' className='clr-text-controls' />}
+                icon={<IconFolderTree size='1rem' className='cc-controls' />}
                 onClick={handleToggleFolder}
               />
               <DropdownButton
                 text='отображать все'
                 title='Очистить фильтр по расположению'
-                icon={<IconFolder size='1rem' className='clr-text-controls' />}
+                icon={<IconFolder size='1rem' className='cc-controls' />}
                 onClick={() => handleChange(null)}
               />
               {Object.values(LocationHead).map((head, index) => {

@@ -1,6 +1,5 @@
-import clsx from 'clsx';
-
 import { type Styling } from '@/components/props';
+import { cn } from '@/components/utils';
 import { globalIDs } from '@/utils/constants';
 
 interface NavigationButtonProps extends Styling {
@@ -21,7 +20,7 @@ export function NavigationButton({ icon, title, hideTitle, className, style, onC
       data-tooltip-hidden={hideTitle}
       data-tooltip-content={title}
       onClick={onClick}
-      className={clsx('p-2 flex items-center gap-1', 'cc-btn-nav', 'font-controls focus-outline', className)}
+      className={cn('p-2 flex items-center gap-1', 'cc-btn-nav', 'font-controls focus-outline', className)}
       style={style}
     >
       {icon ? icon : null}

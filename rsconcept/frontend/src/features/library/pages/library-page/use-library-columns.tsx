@@ -41,7 +41,7 @@ export function useLibraryColumns() {
                 noHover
                 className='pl-2 max-h-4 -translate-y-0.5'
                 onClick={handleToggleFolder}
-                icon={<IconFolderTree size='1.25rem' className='clr-text-controls' />}
+                icon={<IconFolderTree size='1.25rem' className='cc-controls' />}
               />
             ),
             size: 50,

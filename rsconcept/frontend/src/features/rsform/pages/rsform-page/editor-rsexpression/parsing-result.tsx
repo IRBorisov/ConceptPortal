@@ -25,7 +25,7 @@ export function ParsingResult({ isOpen, data, disabled, onShowError }: ParsingRe
           <p
             tabIndex={-1}
             key={`error-${index}`}
-            className={`text-warn-600 break-all ${disabled ? '' : 'cursor-pointer'}`}
+            className={`text-destructive break-all ${disabled ? '' : 'cursor-pointer'}`}
             onClick={disabled ? undefined : () => onShowError(error)}
           >
             <span className='mr-1 font-semibold underline'>

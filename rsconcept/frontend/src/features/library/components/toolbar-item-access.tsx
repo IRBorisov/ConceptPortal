@@ -66,9 +66,9 @@ export function ToolbarItemAccess({
           aria-label='Переключатель режима изменения'
           icon={
             readOnly ? (
-              <IconImmutable size='1.25rem' className='text-sec-600' />
+              <IconImmutable size='1.25rem' className='text-primary' />
             ) : (
-              <IconMutable size='1.25rem' className='text-ok-600' />
+              <IconMutable size='1.25rem' className='text-constructive' />
             )
           }
           onClick={toggleReadOnly}

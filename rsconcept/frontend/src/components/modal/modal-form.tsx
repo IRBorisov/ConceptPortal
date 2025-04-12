@@ -1,7 +1,5 @@
 'use client';
 
-import clsx from 'clsx';
-
 import { type HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components';
 
@@ -12,6 +10,7 @@ import { prepareTooltip } from '@/utils/utils';
 import { Button, MiniButton, SubmitButton } from '../control';
 import { IconClose } from '../icons';
 import { type Styling } from '../props';
+import { cn } from '../utils';
 
 import { ModalBackdrop } from './modal-backdrop';
 
@@ -90,7 +89,7 @@ export function ModalForm({
     <div className='cc-modal-wrapper'>
       <ModalBackdrop onHide={handleCancel} />
       <form
-        className='cc-animate-modal relative grid border rounded-xl bg-prim-100'
+        className='cc-animate-modal relative grid border rounded-xl bg-background'
         role='dialog'
         onSubmit={handleSubmit}
         aria-labelledby='modal-title'
@@ -120,7 +119,7 @@ export function ModalForm({
         ) : null}
 
         <div
-          className={clsx(
+          className={cn(
             '@container/modal',
             'max-h-[calc(100svh-8rem)] max-w-[100svw] xs:max-w-[calc(100svw-2rem)]',
             'overscroll-contain outline-hidden',

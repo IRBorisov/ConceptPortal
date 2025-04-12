@@ -39,7 +39,7 @@ export function DlgShowAST() {
         className={clsx(
           'absolute z-pop top-2 right-1/2 translate-x-1/2 max-w-[60ch]',
           'px-2 rounded-2xl',
-          'backdrop-blur-xs bg-prim-100/90',
+          'backdrop-blur-xs bg-background/90',
           'text-lg text-center'
         )}
       >
@@ -47,7 +47,7 @@ export function DlgShowAST() {
         {!isDragging && hoverNodeDebounced ? (
           <div key={hoverNodeDebounced.uid}>
             <span>{expression.slice(0, hoverNodeDebounced.start)}</span>
-            <span className='bg-sec-200 cc-animate-background starting:bg-prim-100 duration-500'>
+            <span className='bg-selected cc-animate-background starting:bg-background duration-500'>
               {expression.slice(hoverNodeDebounced.start, hoverNodeDebounced.finish)}
             </span>
             <span>{expression.slice(hoverNodeDebounced.finish)}</span>

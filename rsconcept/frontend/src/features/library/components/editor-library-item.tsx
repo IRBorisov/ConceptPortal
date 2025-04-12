@@ -137,14 +137,14 @@ export function EditorLibraryItem({ schema, isAttachedToOSS }: EditorLibraryItem
         <ValueIcon
           title='Дата обновления'
           dense
-          icon={<IconDateUpdate size='1.25rem' className='text-ok-600' />}
+          icon={<IconDateUpdate size='1.25rem' className='text-constructive' />}
           value={new Date(schema.time_update).toLocaleString(intl.locale)}
         />
 
         <ValueIcon
           title='Дата создания'
           dense
-          icon={<IconDateCreate size='1.25rem' className='text-ok-600' />}
+          icon={<IconDateCreate size='1.25rem' className='text-constructive' />}
           value={new Date(schema.time_create).toLocaleString(intl.locale, {
             year: '2-digit',
             month: '2-digit',

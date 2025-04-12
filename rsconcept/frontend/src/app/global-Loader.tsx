@@ -18,7 +18,7 @@ export function GlobalLoader() {
   return (
     <div className='cc-modal-wrapper'>
       <ModalBackdrop />
-      <div className='z-pop cc-fade-in px-10 border rounded-xl bg-prim-100'>
+      <div className='z-pop cc-fade-in px-10 border rounded-xl bg-background'>
         <Loader scale={6} />
       </div>
     </div>

@@ -1,7 +1,5 @@
-import React from 'react';
-import clsx from 'clsx';
-
 import { type Styling } from '../props';
+import { cn } from '../utils';
 
 interface DropdownProps extends Styling {
   /** Reference to the dropdown element. */
@@ -39,8 +37,8 @@ export function Dropdown({
   return (
     <div
       tabIndex={-1}
-      className={clsx(
-        'cc-dropdown isolate z-topmost absolute grid bg-prim-0 border rounded-md shadow-lg text-sm',
+      className={cn(
+        'cc-dropdown isolate z-topmost absolute grid bg-popover border rounded-md shadow-lg text-sm',
         stretchLeft ? 'right-0' : 'left-0',
         stretchTop ? 'bottom-0' : 'top-full',
         isOpen && 'open',

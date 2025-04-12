@@ -2,7 +2,7 @@
 
 import { type Styling } from '@/components/props';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { cn } from '@/lib/utils';
+import { cn } from '@/components/utils';
 
 import { labelVersion } from '../../rsform/labels';
 import { type IVersionInfo } from '../backend/types';

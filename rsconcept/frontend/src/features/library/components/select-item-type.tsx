@@ -1,10 +1,9 @@
 'use client';
 
-import clsx from 'clsx';
-
 import { SelectorButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import { type Styling } from '@/components/props';
+import { cn } from '@/components/utils';
 import { prefixes } from '@/utils/constants';
 
 import { LibraryItemType } from '../backend/types';
@@ -37,9 +36,8 @@ export function SelectItemType({
   }
 
   return (
-    <div ref={menu.ref} onBlur={menu.handleBlur} className={clsx('relative', className)} {...restProps}>
+    <div ref={menu.ref} onBlur={menu.handleBlur} className={cn('relative', className)} {...restProps}>
       <SelectorButton
-        transparent
         title={describeLibraryItemType(value)}
         hideTitle={menu.isOpen}
         className='h-full px-2 py-1 rounded-lg'

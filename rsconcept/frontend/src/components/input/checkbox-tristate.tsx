@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import { globalIDs } from '@/utils/constants';
 
 import { CheckboxChecked, CheckboxNull } from '../icons';
+import { cn } from '../utils';
 
 import { type CheckboxProps } from './checkbox';
 
@@ -48,7 +49,7 @@ export function CheckboxTristate({
   return (
     <button
       type='button'
-      className={clsx(
+      className={cn(
         'flex items-center gap-2', //
         'outline-hidden',
         'focus-frame',
@@ -67,7 +68,7 @@ export function CheckboxTristate({
         className={clsx(
           'w-4 h-4', //
           'border rounded-sm',
-          value === false ? 'bg-prim-100' : 'bg-sec-600 text-sec-0'
+          value === false ? 'bg-background text-foreground' : 'bg-primary text-primary-foreground'
         )}
       >
         {value ? <CheckboxChecked /> : null}

@@ -55,7 +55,7 @@ export function ViewHidden({ items }: ViewHiddenProps) {
         onClick={toggleFolded}
       />
 
-      <div className={clsx('py-2 clr-input border-x', isFolded && 'border-b rounded-b-md')}>
+      <div className={clsx('py-2 bg-input border-x', isFolded && 'border-b rounded-b-md')}>
         <div className={clsx('w-fit select-none cc-view-hidden-header', !isFolded && 'open')}>
           {`Скрытые [${localSelected.length} | ${items.length}]`}
         </div>
@@ -65,7 +65,7 @@ export function ViewHidden({ items }: ViewHiddenProps) {
         tabIndex={-1}
         className={clsx(
           'cc-view-hidden-list flex flex-wrap gap-2 justify-center py-2 -mt-2',
-          'border-x border-b rounded-b-md bg-prim-0',
+          'border-x border-b rounded-b-md bg-popover',
           'text-sm',
           'cc-scroll-y',
           !isFolded && 'open'

@@ -34,12 +34,12 @@
   --clr-sec-200:      oklch(088% 0.050 262deg);
   --clr-sec-300:      oklch(080% 0.100 262deg);
   --clr-sec-400:      oklch(075% 0.150 262deg);
-  --clr-sec-600:      oklch(065% 0.250 262deg);
-  --clr-sec-800:      oklch(055% 0.250 262deg);
+  --clr-sec-600:      oklch(060% 0.250 262deg);
+
 
   --clr-warn-100:     oklch(094% 0.050 27deg);
   --clr-warn-600:     oklch(060% 0.250 27deg);
-  --clr-ok-600:       oklch(060% 0.250 143deg);
+  --clr-ok-600:       oklch(060% 0.250 138deg);
 
   --clr-select-node:  oklch(080% 0.250 180deg);
 
@@ -80,12 +80,11 @@
   --clr-sec-200:      oklch(035% 0.150 295deg);
   --clr-sec-300:      oklch(045% 0.150 295deg);
   --clr-sec-400:      oklch(055% 0.200 295deg);
-  --clr-sec-600:      oklch(065% 0.250 295deg);
-  --clr-sec-800:      oklch(075% 0.250 295deg);  
+  --clr-sec-600:      oklch(070% 0.250 295deg);
 
   --clr-warn-100:     oklch(025% 0.100 27deg);
-  --clr-warn-600:     oklch(070% 0.200 27deg);
-  --clr-ok-600:       oklch(070% 0.200 143deg);
+  --clr-warn-600:     oklch(065% 0.200 27deg);
+  --clr-ok-600:       oklch(065% 0.200 138deg);
 
   --clr-select-node:  oklch(070% 0.250 180deg);
 

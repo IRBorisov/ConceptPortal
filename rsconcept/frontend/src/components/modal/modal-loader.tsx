@@ -6,7 +6,7 @@ export function ModalLoader() {
   return (
     <div className='cc-modal-wrapper'>
       <ModalBackdrop />
-      <div className='cc-animate-modal p-20 border rounded-xl bg-prim-100'>
+      <div className='cc-animate-modal p-20 border rounded-xl bg-background'>
         <Loader circular scale={6} />
       </div>
     </div>

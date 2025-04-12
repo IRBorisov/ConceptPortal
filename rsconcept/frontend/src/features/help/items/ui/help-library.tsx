@@ -81,7 +81,7 @@ export function HelpLibrary() {
         <kbd>клик</kbd> по иконке сворачивает/разворачивает вложенные
       </li>
       <li>
-        <IconFolderEmpty size='1rem' className='inline-icon clr-text-default' /> папка без схем
+        <IconFolderEmpty size='1rem' className='inline-icon text-foreground' /> папка без схем
       </li>
       <li>
         <IconFolderEmpty size='1rem' className='inline-icon' /> папка с вложенными без схем

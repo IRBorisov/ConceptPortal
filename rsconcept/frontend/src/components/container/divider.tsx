@@ -1,6 +1,5 @@
-import clsx from 'clsx';
-
 import { type Styling } from '../props';
+import { cn } from '../utils';
 
 interface DividerProps extends Styling {
   /** Indicates whether the divider is vertical. */
@@ -16,7 +15,7 @@ interface DividerProps extends Styling {
 export function Divider({ vertical, margins = 'mx-2', className, ...restProps }: DividerProps) {
   return (
     <div
-      className={clsx(
+      className={cn(
         vertical ? 'border-x' : 'border-y', //
         margins,
         className

@@ -6,6 +6,7 @@ import clsx from 'clsx';
 import { MiniButton } from '@/components/control';
 import { IconFolder, IconFolderClosed, IconFolderEmpty, IconFolderOpened } from '@/components/icons';
 import { type Styling } from '@/components/props';
+import { cn } from '@/components/utils';
 
 import { useFolders } from '../backend/use-folders';
 import { labelFolderNode } from '../labels';
@@ -51,7 +52,7 @@ export function SelectLocation({ value, dense, prefix, onClick, className, style
   }
 
   return (
-    <div className={clsx('flex flex-col cc-scroll-y', className)} style={style}>
+    <div className={cn('flex flex-col cc-scroll-y', className)} style={style}>
       {items.map((item, index) =>
         !item.parent || !folded.includes(item.parent) ? (
           <div
@@ -61,10 +62,10 @@ export function SelectLocation({ value, dense, prefix, onClick, className, style
               !dense && 'h-7 sm:h-8',
               'pr-3 py-1 flex items-center gap-2',
               'cc-scroll-row',
-              'clr-hover cc-animate-color',
+              'cc-hover cc-animate-color',
               'cursor-pointer',
               'leading-3 sm:leading-4',
-              activeNode === item && 'clr-selected'
+              activeNode === item && 'cc-selected'
             )}
             style={{ paddingLeft: `${(item.rank > 5 ? 5 : item.rank) * 0.5 + 0.5}rem` }}
             onClick={event => onClick(event, item)}
@@ -90,9 +91,9 @@ export function SelectLocation({ value, dense, prefix, onClick, className, style
             ) : (
               <div>
                 {item.filesInside ? (
-                  <IconFolder size='1rem' className='clr-text-default' />
+                  <IconFolder size='1rem' className='text-foreground' />
                 ) : (
-                  <IconFolderEmpty size='1rem' className='clr-text-controls' />
+                  <IconFolderEmpty size='1rem' className='cc-controls' />
                 )}
               </div>
             )}

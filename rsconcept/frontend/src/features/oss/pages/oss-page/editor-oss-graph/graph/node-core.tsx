@@ -34,13 +34,13 @@ export function NodeCore({ node }: NodeCoreProps) {
         <Indicator
           noPadding
           title={hasFile ? 'Связанная КС' : 'Нет связанной КС'}
-          icon={<IconRSForm className={hasFile ? 'text-ok-600' : 'text-warn-600'} size='12px' />}
+          icon={<IconRSForm className={hasFile ? 'text-constructive' : 'text-destructive'} size='12px' />}
         />
         {node.data.operation.is_consolidation ? (
           <Indicator
             noPadding
             titleHtml='<b>Внимание!</b><br />Ромбовидный синтез</br/>Возможны дубликаты конституент'
-            icon={<IconConsolidation className='text-sec-600' size='12px' />}
+            icon={<IconConsolidation className='text-primary' size='12px' />}
           />
         ) : null}
       </div>
@@ -50,7 +50,7 @@ export function NodeCore({ node }: NodeCoreProps) {
       ) : null}
 
       {!node.data.operation.is_owned ? (
-        <div className='absolute left-[2px] top-[6px] border-r rounded-none clr-input h-[22px]' />
+        <div className='absolute left-[2px] top-[6px] border-r rounded-none bg-input h-[22px]' />
       ) : null}
 
       <div

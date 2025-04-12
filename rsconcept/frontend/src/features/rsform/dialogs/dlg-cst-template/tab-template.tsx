@@ -48,7 +48,7 @@ export function TabTemplate() {
 
   return (
     <div className='cc-fade-in'>
-      <div className='flex gap-1 border-t border-x rounded-t-md clr-input'>
+      <div className='flex gap-1 border-t border-x rounded-t-md bg-input'>
         <ComboBox
           value={selectedTemplate ?? null}
           items={templates}

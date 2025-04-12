@@ -1,6 +1,5 @@
-import clsx from 'clsx';
-
 import { type Button } from '../props';
+import { cn } from '../utils';
 
 interface SubmitButtonProps extends Button {
   /** Text to display in the button. */
@@ -20,11 +19,11 @@ export function SubmitButton({ text = 'ОК', icon, disabled, loading, className
   return (
     <button
       type='submit'
-      className={clsx(
+      className={cn(
         'px-3 py-1 flex gap-2 items-center justify-center',
         'border',
         'font-medium',
-        'clr-btn-primary cc-animate-color',
+        'cc-btn-primary disabled:opacity-50 cc-animate-color',
         'select-none cursor-pointer disabled:cursor-auto',
         loading && 'cursor-progress',
         className

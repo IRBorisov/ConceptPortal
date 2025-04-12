@@ -1,12 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import clsx from 'clsx';
 
 import { MiniButton } from '@/components/control';
 import { createColumnHelper, DataTable } from '@/components/data-table';
 import { IconMoveDown, IconMoveUp, IconRemove } from '@/components/icons';
 import { type Styling } from '@/components/props';
+import { cn } from '@/components/utils';
 import { NoData } from '@/components/view';
 
 import { type IOperation } from '../models/oss';
@@ -107,7 +107,7 @@ export function PickMultiOperation({ rows, items, value, onChange, className, ..
   ];
 
   return (
-    <div className={clsx('flex flex-col gap-1 border-t border-x rounded-md clr-input', className)} {...restProps}>
+    <div className={cn('flex flex-col gap-1 border-t border-x rounded-md bg-input', className)} {...restProps}>
       <SelectOperation
         noBorder
         items={nonSelectedItems} //

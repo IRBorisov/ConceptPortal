@@ -15,7 +15,7 @@ export function ErrorField({ error, className, ...restProps }: ErrorFieldProps):
     return null;
   }
   return (
-    <div className={clsx('text-sm text-warn-600 select-none', className)} {...restProps}>
+    <div className={clsx('text-sm text-destructive select-none', className)} {...restProps}>
       {error.message}
     </div>
   );

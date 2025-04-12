@@ -194,7 +194,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
         readOnly
         label='Типизация'
         value={typification}
-        className='clr-text-default cursor-default'
+        className='cursor-default'
       />
 
       {!!activeCst.definition_formal || !isElementary ? (
@@ -266,7 +266,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
         <button
           type='button'
           tabIndex={-1}
-          className='self-start cc-label text-sec-600 hover:underline select-none'
+          className='self-start cc-label text-primary hover:underline select-none'
           onClick={() => setForceComment(true)}
         >
           Добавить комментарий
@@ -283,13 +283,13 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
           <div className='absolute z-pop top-1/2 -translate-y-1/2 left-full cc-icons'>
             {activeCst.has_inherited_children && !activeCst.is_inherited ? (
               <Indicator
-                icon={<IconPredecessor size='1.25rem' className='text-sec-600' />}
+                icon={<IconPredecessor size='1.25rem' className='text-primary' />}
                 titleHtml='Внимание!</br> Конституента имеет потомков<br/> в операционной схеме синтеза'
               />
             ) : null}
             {activeCst.is_inherited ? (
               <Indicator
-                icon={<IconChild size='1.25rem' className='text-sec-600' />}
+                icon={<IconChild size='1.25rem' className='text-primary' />}
                 titleHtml='Внимание!</br> Конституента является наследником<br/>'
               />
             ) : null}

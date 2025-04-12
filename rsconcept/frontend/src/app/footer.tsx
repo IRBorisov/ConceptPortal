@@ -10,7 +10,7 @@ export function Footer() {
         'z-navigation',
         'mx-auto',
         'px-3 py-2 flex flex-col items-center gap-1',
-        'text-xs sm:text-sm select-none whitespace-nowrap text-prim-600 bg-prim-100'
+        'text-xs sm:text-sm select-none whitespace-nowrap text-inert-foreground bg-background'
       )}
     >
       <nav className='flex gap-3' aria-label='Вторичная навигация'>

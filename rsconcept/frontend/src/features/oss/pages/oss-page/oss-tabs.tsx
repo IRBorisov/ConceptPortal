@@ -58,7 +58,7 @@ export function OssTabs({ activeTab }: OssTabsProps) {
       selectedIndex={activeTab}
       onSelect={onSelectTab}
       defaultFocus
-      selectedTabClassName='clr-selected'
+      selectedTabClassName='cc-selected'
       className='relative flex flex-col mx-auto min-w-fit items-center'
     >
       <TabList className='absolute z-sticky flex border-b-2 border-x-2 divide-x-2 bg-prim-200'>

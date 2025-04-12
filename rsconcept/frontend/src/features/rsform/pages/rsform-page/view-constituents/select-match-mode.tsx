@@ -1,10 +1,9 @@
 'use client';
 
-import clsx from 'clsx';
-
 import { SelectorButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import { type Styling } from '@/components/props';
+import { cn } from '@/components/utils';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { prefixes } from '@/utils/constants';
 
@@ -28,9 +27,8 @@ export function SelectMatchMode({ value, dense, className, onChange, ...restProp
   }
 
   return (
-    <div ref={menu.ref} onBlur={menu.handleBlur} className={clsx('relative', className)} {...restProps}>
+    <div ref={menu.ref} onBlur={menu.handleBlur} className={cn('relative', className)} {...restProps}>
       <SelectorButton
-        transparent
         titleHtml='Настройка фильтрации <br/>по проверяемым атрибутам'
         hideTitle={menu.isOpen}
         className='h-full pr-2'

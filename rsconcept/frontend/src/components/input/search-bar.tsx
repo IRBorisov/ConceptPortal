@@ -2,6 +2,9 @@ import clsx from 'clsx';
 
 import { IconSearch } from '@/components/icons';
 import { type Styling } from '@/components/props';
+
+import { cn } from '../utils';
+
 interface SearchBarProps extends Styling {
   /** Id of the search bar. */
   id?: string;
@@ -36,7 +39,7 @@ export function SearchBar({
   ...restProps
 }: SearchBarProps) {
   return (
-    <div className={clsx('relative flex items-center grow', className)} {...restProps}>
+    <div className={cn('relative flex items-center grow', className)} {...restProps}>
       {!noIcon ? (
         <IconSearch className='absolute -top-0.5 left-2 translate-y-1/2 cc-search-icon' size='1.25rem' />
       ) : null}

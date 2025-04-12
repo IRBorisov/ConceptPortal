@@ -6,8 +6,8 @@ import { LibraryItemType } from '../backend/types';
 export function IconLibraryItemType({ value, size = '1.25rem', className }: DomIconProps<LibraryItemType>) {
   switch (value) {
     case LibraryItemType.RSFORM:
-      return <IconRSForm size={size} className={className ?? 'text-sec-600'} />;
+      return <IconRSForm size={size} className={className ?? 'text-primary'} />;
     case LibraryItemType.OSS:
-      return <IconOSS size={size} className={className ?? 'text-ok-600'} />;
+      return <IconOSS size={size} className={className ?? 'text-constructive'} />;
   }
 }

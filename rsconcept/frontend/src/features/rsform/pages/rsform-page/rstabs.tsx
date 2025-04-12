@@ -76,7 +76,7 @@ export function RSTabs({ activeID, activeTab }: RSTabsProps) {
       selectedIndex={activeTab}
       onSelect={onSelectTab}
       defaultFocus
-      selectedTabClassName='clr-selected'
+      selectedTabClassName='cc-selected'
       className='relative flex flex-col min-w-fit items-center'
     >
       <TabList className='absolute z-sticky flex border-b-2 border-x-2 divide-x-2 bg-prim-200'>

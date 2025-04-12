@@ -1,11 +1,11 @@
 import React, { Suspense } from 'react';
-import clsx from 'clsx';
 
 import { type PlacesType, Tooltip } from '@/components/container';
 import { TextURL } from '@/components/control';
 import { IconHelp } from '@/components/icons';
 import { Loader } from '@/components/loader';
 import { type Styling } from '@/components/props';
+import { cn } from '@/components/utils';
 import { usePreferencesStore } from '@/stores/preferences';
 
 import { type HelpTopic } from '../models/help-topic';
@@ -41,17 +41,17 @@ export function BadgeHelp({ topic, padding = 'p-1', className, contentClass, sty
     return null;
   }
   return (
-    <div tabIndex={-1} id={`help-${topic}`} className={clsx(padding, className)} style={style}>
+    <div tabIndex={-1} id={`help-${topic}`} className={cn(padding, className)} style={style}>
       <IconHelp size='1.25rem' className='icon-primary' />
       <Tooltip
         clickable
         anchorSelect={`#help-${topic}`}
         layer='z-topmost'
-        className={clsx('max-w-120', contentClass)}
+        className={cn('max-w-120', contentClass)}
         {...restProps}
       >
         <Suspense fallback={<Loader />}>
-          <div className='absolute right-1 text-sm top-2 clr-input' onClick={event => event.stopPropagation()}>
+          <div className='absolute right-1 text-sm top-2 bg-input' onClick={event => event.stopPropagation()}>
             <TextURL text='Справка...' href={`/manuals?topic=${topic}`} />
           </div>
           <TopicPage topic={topic} />

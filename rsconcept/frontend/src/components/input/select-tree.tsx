@@ -89,9 +89,9 @@ export function SelectTree<ItemType>({
           <div
             key={`${prefix}${index}`}
             className={clsx(
-              'cc-tree-item relative cc-scroll-row clr-hover',
+              'cc-tree-item relative cc-scroll-row cc-hover',
               isActive ? 'max-h-7 py-1 border-b' : 'max-h-0 opacity-0 pointer-events-none',
-              value === item && 'clr-selected'
+              value === item && 'cc-selected'
             )}
             data-tooltip-id={globalIDs.tooltip}
             data-tooltip-html={getDescription(item)}

@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import clsx from 'clsx';
 
 import { type ILibraryItem } from '@/features/library';
 import { SelectLibraryItem } from '@/features/library/components';
@@ -11,6 +10,7 @@ import { MiniButton } from '@/components/control';
 import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/data-table';
 import { IconAccept, IconPageLeft, IconPageRight, IconRemove, IconReplace } from '@/components/icons';
 import { type Styling } from '@/components/props';
+import { cn } from '@/components/utils';
 import { NoData } from '@/components/view';
 import { APP_COLORS } from '@/styling/colors';
 import { errorMsg } from '@/utils/labels';
@@ -229,9 +229,9 @@ export function PickSubstitutions({
   ];
 
   return (
-    <div className={clsx('flex flex-col', className)} {...restProps}>
+    <div className={cn('flex flex-col', className)} {...restProps}>
       <div className='flex items-center gap-3'>
-        <div className='w-60 grow flex flex-col basis-1/2 gap-1 border-x border-t clr-input rounded-t-md'>
+        <div className='w-60 grow flex flex-col basis-1/2 gap-1 border-x border-t bg-input rounded-t-md'>
           <SelectLibraryItem
             id='substitute-left-schema'
             noBorder
@@ -248,9 +248,9 @@ export function PickSubstitutions({
             onClick={toggleDelete}
             icon={
               deleteRight ? (
-                <IconPageRight size='1.5rem' className='text-sec-600' />
+                <IconPageRight size='1.5rem' className='text-primary' />
               ) : (
-                <IconPageLeft size='1.5rem' className='text-sec-600' />
+                <IconPageLeft size='1.5rem' className='text-primary' />
               )
             }
           />
@@ -263,7 +263,7 @@ export function PickSubstitutions({
           />
         </div>
 
-        <div className='w-60 grow basis-1/2 flex flex-col gap-1 border-x border-t clr-input rounded-t-md'>
+        <div className='w-60 grow basis-1/2 flex flex-col gap-1 border-x border-t bg-input rounded-t-md'>
           <SelectLibraryItem
             id='substitute-right-schema'
             noBorder

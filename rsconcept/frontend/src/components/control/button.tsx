@@ -1,8 +1,7 @@
-import clsx from 'clsx';
-
 import { globalIDs } from '@/utils/constants';
 
 import { type Button as ButtonStyle, type Control } from '../props';
+import { cn } from '../utils';
 
 interface ButtonProps extends Control, ButtonStyle {
   /** Icon to display first. */
@@ -38,10 +37,10 @@ export function Button({
   return (
     <button
       type='button'
-      className={clsx(
+      className={cn(
         'inline-flex gap-2 items-center justify-center',
-        'font-medium select-none disabled:cursor-auto',
-        'clr-btn-default cc-animate-color',
+        'font-medium select-none disabled:cursor-auto disabled:opacity-75',
+        'bg-secondary text-secondary-foreground cc-hover cc-animate-color',
         dense ? 'px-1' : 'px-3 py-1',
         loading ? 'cursor-progress' : 'cursor-pointer',
         noOutline ? 'outline-hidden' : 'focus-outline',

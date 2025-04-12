@@ -54,7 +54,7 @@ export function MenuMain() {
         tabIndex={-1}
         title='Меню'
         hideTitle={menu.isOpen}
-        icon={<IconMenu size='1.25rem' className='clr-text-controls' />}
+        icon={<IconMenu size='1.25rem' className='cc-controls' />}
         className='h-full pl-2'
         onClick={menu.toggle}
       />

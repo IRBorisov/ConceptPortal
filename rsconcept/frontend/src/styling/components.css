@@ -3,7 +3,7 @@
  */
 
 @utility cc-btn-nav {
-  color: var(--clr-prim-800);
+  color: var(--color-muted-foreground);
   border-radius: 0.75rem;
 
   cursor: pointer;
@@ -14,17 +14,28 @@
   transition-duration: 500ms;
 
   &:hover {
-    background-color: var(--clr-sec-100);
+    background-color: var(--color-accent);
+  }
+}
+
+@utility cc-btn-primary {
+  color: var(--color-foreground);
+  background-color: var(--color-selected);
+
+  &:focus-visible,
+  &:hover:not(:disabled) {
+    color: var(--color-primary-foreground);
+    background-color: var(--color-primary);
   }
 }
 
 @utility cc-search-icon {
   pointer-events: none;
-  color: var(--clr-prim-800);
+  color: var(--color-muted-foreground);
   background-color: transparent;
 
   :focus-within > & {
-    color: var(--clr-sec-600);
+    color: var(--color-ring);
   }
 }
 
@@ -99,17 +110,17 @@
 @utility cc-node-label {
   font-weight: 600;
   -webkit-text-stroke-width: 0.6px;
-  -webkit-text-stroke-color: var(--clr-prim-100);
+  -webkit-text-stroke-color: var(--color-background);
 }
 
 @utility cc-text-outline {
   -webkit-text-stroke-width: 3px;
-  -webkit-text-stroke-color: var(--clr-prim-100);
+  -webkit-text-stroke-color: var(--color-background);
 }
 
 @utility cc-ast-label-outline {
   -webkit-text-stroke-width: 2px;
-  -webkit-text-stroke-color: var(--clr-prim-100);
+  -webkit-text-stroke-color: var(--color-background);
 }
 
 @utility cc-dropdown {

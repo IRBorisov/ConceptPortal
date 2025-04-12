@@ -22,7 +22,7 @@ export function RSTokenButton({ token, disabled, onInsert }: RSTokenButtonProps)
         'h-5 sm:h-6',
         'px-1',
         'outline-hidden',
-        'clr-hover clr-text-controls cc-animate-color',
+        'cc-hover cc-controls cc-animate-color',
         'font-math',
         'cursor-pointer disabled:cursor-default',
         label.length > 3 ? 'w-14.5 md:w-18' : 'w-7.25 md:w-9'

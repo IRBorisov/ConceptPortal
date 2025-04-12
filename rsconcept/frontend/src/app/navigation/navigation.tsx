@@ -29,7 +29,7 @@ export function Navigation() {
     push({ path: urls.create_schema, newTab: event.ctrlKey || event.metaKey });
 
   return (
-    <nav className='z-navigation sticky top-0 left-0 right-0 select-none bg-prim-100' inert={activeDialog !== null}>
+    <nav className='z-navigation sticky top-0 left-0 right-0 select-none bg-background' inert={activeDialog !== null}>
       <ToggleNavigation />
       <div
         className={clsx(

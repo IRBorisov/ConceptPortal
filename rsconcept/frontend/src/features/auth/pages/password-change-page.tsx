@@ -88,7 +88,7 @@ export function Component() {
 // ====== Internals =========
 function ServerError({ error }: { error: ErrorData }): React.ReactElement {
   if (isAxiosError(error) && error.response && error.response.status === 404) {
-    return <div className='mx-auto mt-6 text-sm select-text text-warn-600'>Данная ссылка не действительна</div>;
+    return <div className='mx-auto mt-6 text-sm select-text text-destructive'>Данная ссылка не действительна</div>;
   }
   return <InfoError error={error} />;
 }

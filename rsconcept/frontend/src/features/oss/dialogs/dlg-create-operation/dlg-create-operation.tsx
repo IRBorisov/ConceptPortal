@@ -99,7 +99,7 @@ export function DlgCreateOperation() {
       helpTopic={HelpTopic.CC_OSS}
     >
       <Tabs
-        selectedTabClassName='clr-selected'
+        selectedTabClassName='cc-selected'
         className='grid'
         selectedIndex={activeTab}
         onSelect={(index, last) => handleSelectTab(index as TabID, last as TabID)}

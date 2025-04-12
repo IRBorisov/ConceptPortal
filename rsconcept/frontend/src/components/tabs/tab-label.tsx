@@ -28,7 +28,7 @@ export function TabLabel({
       className={clsx(
         'min-w-20 h-full',
         'px-2 py-1 flex justify-center',
-        'clr-hover cc-animate-color duration-150',
+        'cc-hover cc-animate-color duration-150',
         'text-sm whitespace-nowrap font-controls',
         'select-none hover:cursor-pointer',
         'outline-hidden',

@@ -68,7 +68,7 @@ export function HelpRSEditor() {
             <IconChild className='inline-icon' /> отображение наследованных
           </li>
           <li>
-            <span className='bg-sec-200'>текущая конституента</span>
+            <span className='bg-selected'>текущая конституента</span>
           </li>
           <li>
             <span className='bg-(--acc-bg-green50)'>

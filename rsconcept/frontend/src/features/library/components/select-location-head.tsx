@@ -1,10 +1,9 @@
 'use client';
 
-import clsx from 'clsx';
-
 import { SelectorButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import { type Styling } from '@/components/props';
+import { cn } from '@/components/utils';
 import { prefixes } from '@/utils/constants';
 
 import { describeLocationHead, labelLocationHead } from '../labels';
@@ -36,11 +35,10 @@ export function SelectLocationHead({
     <div
       ref={menu.ref} //
       onBlur={menu.handleBlur}
-      className={clsx('text-right relative', className)}
+      className={cn('text-right relative', className)}
       {...restProps}
     >
       <SelectorButton
-        transparent
         tabIndex={-1}
         title={describeLocationHead(value)}
         hideTitle={menu.isOpen}

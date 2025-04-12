@@ -6,10 +6,10 @@ import { AccessPolicy } from '../backend/types';
 export function IconAccessPolicy({ value, size = '1.25rem', className }: DomIconProps<AccessPolicy>) {
   switch (value) {
     case AccessPolicy.PRIVATE:
-      return <IconPrivate size={size} className={className ?? 'text-warn-600'} />;
+      return <IconPrivate size={size} className={className ?? 'text-destructive'} />;
     case AccessPolicy.PROTECTED:
-      return <IconProtected size={size} className={className ?? 'text-sec-600'} />;
+      return <IconProtected size={size} className={className ?? 'text-primary'} />;
     case AccessPolicy.PUBLIC:
-      return <IconPublic size={size} className={className ?? 'text-ok-600'} />;
+      return <IconPublic size={size} className={className ?? 'text-constructive'} />;
   }
 }

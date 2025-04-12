@@ -1,7 +1,6 @@
 'use client';
 
 import { useReactFlow } from 'reactflow';
-import clsx from 'clsx';
 
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components';
@@ -24,6 +23,7 @@ import {
   IconSave
 } from '@/components/icons';
 import { type Styling } from '@/components/props';
+import { cn } from '@/components/utils';
 import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/utils';
@@ -119,10 +119,10 @@ export function ToolbarOssGraph({
 
   return (
     <div
-      className={clsx(
+      className={cn(
         'flex flex-col items-center pt-1',
         'rounded-b-2xl',
-        'hover:bg-prim-100 hover:bg-opacity-50 backdrop-blur-xs',
+        'hover:bg-background backdrop-blur-xs',
         className
       )}
       {...restProps}

@@ -1,10 +1,9 @@
 'use client';
 
-import clsx from 'clsx';
-
 import { SelectorButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import { type Styling } from '@/components/props';
+import { cn } from '@/components/utils';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { prefixes } from '@/utils/constants';
 
@@ -28,9 +27,8 @@ export function SelectGraphFilter({ value, dense, className, onChange, ...restPr
   }
 
   return (
-    <div ref={menu.ref} onBlur={menu.handleBlur} className={clsx('relative', className)} {...restProps}>
+    <div ref={menu.ref} onBlur={menu.handleBlur} className={cn('relative', className)} {...restProps}>
       <SelectorButton
-        transparent
         tabIndex={-1}
         titleHtml='Настройка фильтрации <br/>по графу термов'
         hideTitle={menu.isOpen}

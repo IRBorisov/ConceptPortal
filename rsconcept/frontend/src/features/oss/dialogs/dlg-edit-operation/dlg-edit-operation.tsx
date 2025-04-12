@@ -71,7 +71,7 @@ export function DlgEditOperation() {
       hideHelpWhen={() => activeTab !== TabID.SUBSTITUTION}
     >
       <Tabs
-        selectedTabClassName='clr-selected'
+        selectedTabClassName='cc-selected'
         className='grid'
         selectedIndex={activeTab}
         onSelect={index => setActiveTab(index as TabID)}

@@ -1,11 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import clsx from 'clsx';
 
 import { createColumnHelper, DataTable, type RowSelectionState } from '@/components/data-table';
 import { SearchBar } from '@/components/input';
 import { type Styling } from '@/components/props';
+import { cn } from '@/components/utils';
 import { NoData } from '@/components/view';
 import { Graph } from '@/models/graph';
 
@@ -98,8 +98,8 @@ export function PickMultiConstituenta({
   ];
 
   return (
-    <div className={clsx(!noBorder && 'border', className)} {...restProps}>
-      <div className='px-3 flex justify-between items-center clr-input border-b rounded-t-md'>
+    <div className={cn(!noBorder && 'border', className)} {...restProps}>
+      <div className='px-3 flex justify-between items-center bg-input border-b rounded-t-md'>
         <div className='w-[24ch] select-none whitespace-nowrap'>
           {items.length > 0 ? `Выбраны ${value.length} из ${items.length}` : 'Конституенты'}
         </div>

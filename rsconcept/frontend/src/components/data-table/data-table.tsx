@@ -10,9 +10,9 @@ import {
   type TableOptions,
   type VisibilityState
 } from '@tanstack/react-table';
-import clsx from 'clsx';
 
 import { type Styling } from '../props';
+import { cn } from '../utils';
 
 import { DefaultNoData } from './default-no-data';
 import { PaginationTools } from './pagination-tools';
@@ -157,7 +157,7 @@ export function DataTable<TData extends RowData>({
     <div
       tabIndex={-1}
       id={id}
-      className={clsx('table-auto', className)}
+      className={cn('table-auto', className)}
       style={{ minHeight: fixedSize, maxHeight: fixedSize, ...style }}
     >
       <table className='w-full' style={{ ...columnSizeVars }}>

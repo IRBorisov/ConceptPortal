@@ -4,6 +4,7 @@ import { globalIDs } from '@/utils/constants';
 
 import { CheckboxChecked } from '../icons';
 import { type Button } from '../props';
+import { cn } from '../utils';
 
 export interface CheckboxProps extends Omit<Button, 'value' | 'onClick' | 'onChange'> {
   /** Label to display next to the checkbox. */
@@ -47,7 +48,7 @@ export function Checkbox({
   return (
     <button
       type='button'
-      className={clsx(
+      className={cn(
         'flex items-center gap-2', //
         'outline-hidden',
         'focus-frame',
@@ -66,7 +67,7 @@ export function Checkbox({
         className={clsx(
           'w-4 h-4', //
           'border rounded-sm',
-          value === false ? 'bg-prim-100' : 'bg-sec-600 text-sec-0'
+          value === false ? 'bg-background text-foreground' : 'bg-primary text-primary-foreground'
         )}
       >
         {value ? <CheckboxChecked /> : null}

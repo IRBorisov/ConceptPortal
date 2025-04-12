@@ -1,11 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import clsx from 'clsx';
 
 import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/data-table';
 import { SearchBar } from '@/components/input';
 import { type Styling } from '@/components/props';
+import { cn } from '@/components/utils';
 import { NoData } from '@/components/view';
 import { APP_COLORS } from '@/styling/colors';
 
@@ -73,10 +73,10 @@ export function PickConstituenta({
   ];
 
   return (
-    <div className={clsx('border', className)} {...restProps}>
+    <div className={cn('border', className)} {...restProps}>
       <SearchBar
         id={id ? `${id}__search` : undefined}
-        className='clr-input border-b rounded-t-md'
+        className='bg-input border-b rounded-t-md'
         noBorder
         query={filterText}
         onChangeQuery={newValue => setFilterText(newValue)}

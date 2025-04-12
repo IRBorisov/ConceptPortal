@@ -1,7 +1,5 @@
 'use client';
 
-import clsx from 'clsx';
-
 import { urls, useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components';
@@ -10,6 +8,7 @@ import { useRoleStore, UserRole } from '@/features/users';
 
 import { MiniButton } from '@/components/control';
 import { IconDestroy, IconSave, IconShare } from '@/components/icons';
+import { cn } from '@/components/utils';
 import { useModificationStore } from '@/stores/modification';
 import { tooltipText } from '@/utils/labels';
 import { prepareTooltip, sharePage } from '@/utils/utils';
@@ -51,7 +50,7 @@ export function ToolbarItemCard({ className, schema, onSubmit, isMutable, delete
   })();
 
   return (
-    <div className={clsx('cc-icons', className)}>
+    <div className={cn('cc-icons', className)}>
       {ossSelector}
       {isMutable || isModified ? (
         <MiniButton

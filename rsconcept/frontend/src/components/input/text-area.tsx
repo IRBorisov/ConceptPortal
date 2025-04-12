@@ -1,6 +1,5 @@
-import clsx from 'clsx';
-
 import { type Editor, type ErrorProcessing, type Titled } from '../props';
+import { cn } from '../utils';
 
 import { ErrorField } from './error-field';
 import { Label } from './label';
@@ -25,21 +24,20 @@ interface TextAreaProps extends Editor, ErrorProcessing, Titled, React.Component
 export function TextArea({
   id,
   label,
-  required,
   transparent,
-  rows,
   dense,
   noBorder,
   noOutline,
   noResize,
   className,
   fitContent,
+  disabled,
   error,
   ...restProps
 }: TextAreaProps) {
   return (
     <div
-      className={clsx(
+      className={cn(
         'w-full', //
         dense ? 'flex grow items-center gap-3' : 'flex flex-col',
         dense && className
@@ -48,21 +46,20 @@ export function TextArea({
       <Label text={label} htmlFor={id} />
       <textarea
         id={id}
-        className={clsx(
+        className={cn(
           'px-3 py-2',
           'leading-tight',
           'overflow-x-hidden overflow-y-auto',
           !noBorder && 'border',
           fitContent && 'field-sizing-content',
           noResize && 'resize-none',
-          transparent ? 'bg-transparent' : 'clr-input',
+          transparent || disabled ? 'bg-transparent' : 'bg-input',
           !noOutline && 'focus-outline',
           dense && 'grow max-w-full',
           !dense && !!label && 'mt-2',
           !dense && className
         )}
-        rows={rows}
-        required={required}
+        disabled={disabled}
         {...restProps}
       />
       <ErrorField className='mt-1' error={error} />

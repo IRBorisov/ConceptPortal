@@ -3,9 +3,10 @@
 import { type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { type ITooltip, Tooltip as TooltipImpl } from 'react-tooltip';
-import clsx from 'clsx';
 
 import { usePreferencesStore } from '@/stores/preferences';
+
+import { cn } from '../utils';
 
 export type { PlacesType } from 'react-tooltip';
 
@@ -37,7 +38,7 @@ export function Tooltip({
       delayShow={750}
       delayHide={100}
       opacity={1}
-      className={clsx(
+      className={cn(
         'relative',
         'py-0.5! px-2!',
         'max-h-[calc(100svh-6rem)]',

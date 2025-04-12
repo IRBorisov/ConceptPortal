@@ -34,7 +34,7 @@ export function RSLocalButton({
         'w-7 sm:w-8 h-5 sm:h-6',
         'cursor-pointer disabled:cursor-default',
         'rounded-none',
-        'clr-hover clr-text-controls cc-animate-color',
+        'cc-hover cc-controls cc-animate-color',
         'font-math',
         className
       )}

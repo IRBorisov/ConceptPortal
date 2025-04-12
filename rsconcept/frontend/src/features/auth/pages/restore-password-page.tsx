@@ -54,7 +54,7 @@ export function Component() {
 function ServerError({ error }: { error: ErrorData }): React.ReactElement {
   if (isAxiosError(error) && error.response && error.response.status === 400) {
     return (
-      <div className='mx-auto mt-6 text-sm select-text text-warn-600'>Данный email не используется на Портале.</div>
+      <div className='mx-auto mt-6 text-sm select-text text-destructive'>Данный email не используется на Портале.</div>
     );
   }
   throw error as Error;
