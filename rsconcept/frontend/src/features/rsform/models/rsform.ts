@@ -2,8 +2,12 @@
  * Module: Models for formal representation for systems of concepts.
  */
 
-import { type ILibraryItemData, type IVersionInfo } from '@/features/library/backend/types';
-import { type CurrentVersion, type ILibraryItemReference } from '@/features/library/models/library';
+import {
+  type CurrentVersion,
+  type ILibraryItemData,
+  type ILibraryItemReference,
+  type IVersionInfo
+} from '@/features/library';
 
 import { type Graph } from '@/models/graph';
 

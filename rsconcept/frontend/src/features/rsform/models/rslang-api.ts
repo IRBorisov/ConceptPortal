@@ -19,29 +19,6 @@ const TYPIFICATION_SET = /^ℬ+\([ℬ\(X\d+\)×]*\)$/g;
 // cspell:enable
 
 /**
- * Text substitution guided by mapping and regular expression.
- */
-export function applyPattern(text: string, mapping: AliasMapping, pattern: RegExp): string {
-  if (text === '' || pattern === null) {
-    return text;
-  }
-  let posInput = 0;
-  let output = '';
-  const patternMatches = text.matchAll(pattern);
-  for (const segment of patternMatches) {
-    const entity = segment[0];
-    const start = segment.index ?? 0;
-    if (entity in mapping) {
-      output += text.substring(posInput, start);
-      output += mapping[entity];
-      posInput = start + segment[0].length;
-    }
-  }
-  output += text.substring(posInput);
-  return output;
-}
-
-/**
  * Extracts global variable names from a given expression.
  */
 export function extractGlobals(expression: string): Set<string> {
@@ -144,25 +121,6 @@ export function substituteTemplateArgs(expression: string, args: IArgumentValue[
     return body;
   } else {
     return `[${head}] ${body}`;
-  }
-}
-
-const ERROR_LEXER_MASK = 512;
-const ERROR_PARSER_MASK = 1024;
-const ERROR_SEMANTIC_MASK = 2048;
-
-/**
- * Infers error class from error type (code).
- */
-export function inferErrorClass(error: RSErrorType): RSErrorClass {
-  if ((error & ERROR_LEXER_MASK) !== 0) {
-    return RSErrorClass.LEXER;
-  } else if ((error & ERROR_PARSER_MASK) !== 0) {
-    return RSErrorClass.PARSER;
-  } else if ((error & ERROR_SEMANTIC_MASK) !== 0) {
-    return RSErrorClass.SEMANTIC;
-  } else {
-    return RSErrorClass.UNKNOWN;
   }
 }
 
@@ -292,4 +250,43 @@ export function transformAST(tree: Tree): SyntaxTree {
     }
   }
   return result;
+}
+
+// ====== Internals =========
+/** Text substitution guided by mapping and regular expression. */
+function applyPattern(text: string, mapping: AliasMapping, pattern: RegExp): string {
+  if (text === '' || pattern === null) {
+    return text;
+  }
+  let posInput = 0;
+  let output = '';
+  const patternMatches = text.matchAll(pattern);
+  for (const segment of patternMatches) {
+    const entity = segment[0];
+    const start = segment.index ?? 0;
+    if (entity in mapping) {
+      output += text.substring(posInput, start);
+      output += mapping[entity];
+      posInput = start + segment[0].length;
+    }
+  }
+  output += text.substring(posInput);
+  return output;
+}
+
+const ERROR_LEXER_MASK = 512;
+const ERROR_PARSER_MASK = 1024;
+const ERROR_SEMANTIC_MASK = 2048;
+
+/** Infers error class from error type (code). */
+function inferErrorClass(error: RSErrorType): RSErrorClass {
+  if ((error & ERROR_LEXER_MASK) !== 0) {
+    return RSErrorClass.LEXER;
+  } else if ((error & ERROR_PARSER_MASK) !== 0) {
+    return RSErrorClass.PARSER;
+  } else if ((error & ERROR_SEMANTIC_MASK) !== 0) {
+    return RSErrorClass.SEMANTIC;
+  } else {
+    return RSErrorClass.UNKNOWN;
+  }
 }

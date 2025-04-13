@@ -5,18 +5,14 @@ import { syntaxTree } from '@codemirror/language';
 import { type NodeType, type Tree, type TreeCursor } from '@lezer/common';
 import { type ReactCodeMirrorRef, type SelectionRange } from '@uiw/react-codemirror';
 
-/**
- * Represents syntax tree node data.
- */
+/** Represents syntax tree node data. */
 interface SyntaxNode {
   type: NodeType;
   from: number;
   to: number;
 }
 
-/**
- * Represents syntax tree cursor data.
- */
+/** Represents syntax tree cursor data. */
 interface CursorNode extends SyntaxNode {
   isLeaf: boolean;
 }
@@ -31,10 +27,8 @@ interface TreeTraversalOptions {
   onLeave?: (node: CursorNode) => false | void;
 }
 
-/**
- * Implements depth-first traversal.
- */
-export function traverseTree(tree: Tree, { beforeEnter, onEnter, onLeave }: TreeTraversalOptions) {
+/** Implements depth-first traversal. */
+function traverseTree(tree: Tree, { beforeEnter, onEnter, onLeave }: TreeTraversalOptions) {
   const cursor = tree.cursor();
   for (;;) {
     let node = cursorNode(cursor);
@@ -59,9 +53,7 @@ export function traverseTree(tree: Tree, { beforeEnter, onEnter, onLeave }: Tree
   }
 }
 
-/**
- * Prints tree to compact string.
- */
+/** Prints tree to compact string. */
 export function printTree(tree: Tree): string {
   const state = {
     output: '',
@@ -79,9 +71,7 @@ export function printTree(tree: Tree): string {
   return state.output;
 }
 
-/**
- * Retrieves a list of all nodes, containing given range and corresponding to a filter.
- */
+/** Retrieves a list of all nodes, containing given range and corresponding to a filter. */
 export function findEnvelopingNodes(start: number, finish: number, tree: Tree, filter?: number[]): SyntaxNode[] {
   const result: SyntaxNode[] = [];
   tree.cursor().iterate(node => {
@@ -96,9 +86,7 @@ export function findEnvelopingNodes(start: number, finish: number, tree: Tree, f
   return result;
 }
 
-/**
- * Retrieves a list of all nodes, contained in given range and corresponding to a filter.
- */
+/** Retrieves a list of all nodes, contained in given range and corresponding to a filter. */
 export function findContainedNodes(start: number, finish: number, tree: Tree, filter?: number[]): SyntaxNode[] {
   const result: SyntaxNode[] = [];
   tree.cursor().iterate(node => {

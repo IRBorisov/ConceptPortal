@@ -5,7 +5,7 @@ import { createContext, use } from 'react';
 import { type IConstituenta } from '../../models/rsform';
 import { type IArgumentValue } from '../../models/rslang';
 
-export interface ITemplateContext {
+interface ITemplateContext {
   args: IArgumentValue[];
   prototype: IConstituenta | null;
   templateID: number | null;

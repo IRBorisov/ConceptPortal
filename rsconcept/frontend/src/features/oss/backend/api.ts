@@ -17,6 +17,7 @@ import {
   type IOssLayout,
   type ITargetOperation,
   schemaConstituentaReference,
+  schemaInputCreatedResponse,
   schemaOperationCreatedResponse,
   schemaOperationSchema
 } from './types';
@@ -68,6 +69,7 @@ export const ossApi = {
     }),
   inputCreate: ({ itemID, data }: { itemID: number; data: ITargetOperation }) =>
     axiosPatch<ITargetOperation, IInputCreatedResponse>({
+      schema: schemaInputCreatedResponse,
       endpoint: `/api/oss/${itemID}/create-input`,
       request: {
         data: data,

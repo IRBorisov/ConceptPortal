@@ -10,7 +10,7 @@ export const OssTabID = {
 } as const;
 export type OssTabID = (typeof OssTabID)[keyof typeof OssTabID];
 
-export interface IOssEditContext {
+interface IOssEditContext {
   schema: IOperationSchema;
   selected: number[];
 

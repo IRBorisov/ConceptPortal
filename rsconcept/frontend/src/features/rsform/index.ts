@@ -4,7 +4,6 @@ export {
   type IRSFormDTO,
   type IVersionCreatedResponse,
   ParsingStatus,
-  schemaCstSubstitute,
   schemaRSForm,
   schemaVersionCreatedResponse
 } from './backend/types';

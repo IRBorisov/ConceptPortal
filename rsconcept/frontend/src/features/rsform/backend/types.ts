@@ -44,9 +44,6 @@ export type ParsingStatus = (typeof ParsingStatus)[keyof typeof ParsingStatus];
 /** Represents Constituenta basic persistent data. */
 export type IConstituentaBasicsDTO = z.infer<typeof schemaConstituentaBasics>;
 
-/** Represents {@link IConstituenta} data from server. */
-export type IConstituentaDTO = z.infer<typeof schemaConstituenta>;
-
 /** Represents data for {@link IRSForm} provided by backend. */
 export type IRSFormDTO = z.infer<typeof schemaRSForm>;
 

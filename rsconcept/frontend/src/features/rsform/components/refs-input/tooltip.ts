@@ -14,7 +14,7 @@ import { type IConstituenta, type IRSForm } from '../../models/rsform';
 import { RefEntity } from './parse/parser.terms';
 import { findReferenceAt } from './utils';
 
-export const tooltipProducer = (schema: IRSForm, canClick?: boolean) => {
+const tooltipProducer = (schema: IRSForm, canClick?: boolean) => {
   return hoverTooltip((view, pos) => {
     const parse = findReferenceAt(pos, view.state);
     if (!parse) {

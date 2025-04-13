@@ -13,7 +13,7 @@ export const RSTabID = {
 } as const;
 export type RSTabID = (typeof RSTabID)[keyof typeof RSTabID];
 
-export interface IRSEditContext {
+interface IRSEditContext {
   schema: IRSForm;
   selected: number[];
   focusCst: IConstituenta | null;
