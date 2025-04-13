@@ -25,7 +25,7 @@ export function HelpFormulaTree() {
         <span className='bg-(--acc-bg-red)'>присвоение и итерация</span>
       </li>
       <li>
-        <span className='bg-prim-300'>составные выражения</span>
+        <span className='bg-secondary'>составные выражения</span>
       </li>
     </div>
   );

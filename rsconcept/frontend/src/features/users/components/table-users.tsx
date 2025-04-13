@@ -34,7 +34,7 @@ export function TableUsers({ items, onDelete }: TableUsersProps) {
           className='align-middle'
           noHover
           noPadding
-          icon={<IconRemove size='1.25rem' className='icon-red' />}
+          icon={<IconRemove size='1.25rem' className='cc-remove' />}
           onClick={() => onDelete(props.row.original.id)}
         />
       )

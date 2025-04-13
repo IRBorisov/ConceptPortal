@@ -2,7 +2,6 @@ import { APP_COLORS } from '@/styling/colors';
 import { PARAMETER } from '@/utils/constants';
 
 import { TokenID } from './backend/types';
-import { Grammeme, NounGrams, PartOfSpeech, VerbGrams } from './models/language';
 import { CstClass, ExpressionStatus, type IConstituenta } from './models/rsform';
 import { type ISyntaxTreeNode } from './models/rslang';
 import { type TypificationGraphNode } from './models/typification-graph';
@@ -87,7 +86,7 @@ export function colorBgSyntaxTree(node: ISyntaxTreeNode): string {
     case TokenID.NT_FUNC_CALL:
     case TokenID.NT_ARGUMENTS:
     case TokenID.NT_RECURSIVE_SHORT:
-      return APP_COLORS.bgDisabled;
+      return APP_COLORS.bgControls;
 
     case TokenID.ASSIGN:
     case TokenID.ITERATE:
@@ -217,24 +216,6 @@ export function colorBgSchemas(schema_index: number): string {
     case 0: return APP_COLORS.bgBlue;
   }
   return APP_COLORS.bgBlue;
-}
-
-/** Determines foreground color for {@link Grammeme}. */
-export function colorFgGrammeme(gram: Grammeme): string {
-  if (PartOfSpeech.includes(gram)) {
-    return APP_COLORS.fgBlue;
-  }
-  if (NounGrams.includes(gram)) {
-    return APP_COLORS.fgGreen;
-  }
-  if (VerbGrams.includes(gram)) {
-    return APP_COLORS.fgTeal;
-  }
-  if (!Object.values(Grammeme).includes(gram)) {
-    return APP_COLORS.fgRed;
-  } else {
-    return APP_COLORS.fgPurple;
-  }
 }
 
 /** Determines graph color for {@link IConstituenta}. */

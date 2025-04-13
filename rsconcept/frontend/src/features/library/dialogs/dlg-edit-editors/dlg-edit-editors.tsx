@@ -50,7 +50,7 @@ export function DlgEditEditors() {
           title='Очистить список'
           noHover
           className='py-0 align-middle'
-          icon={<IconRemove size='1.5rem' className='icon-red' />}
+          icon={<IconRemove size='1.5rem' className='cc-remove' />}
           onClick={() => setSelected([])}
           disabled={selected.length === 0}
         />

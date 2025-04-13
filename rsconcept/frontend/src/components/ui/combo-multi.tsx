@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import clsx from 'clsx';
 import { ChevronDownIcon } from 'lucide-react';
 
 import { IconRemove } from '../icons';
@@ -93,18 +92,15 @@ export function ComboMulti<Option>({
           )}
           style={style}
         >
-          <div className='flex flex-wrap items-center'>
+          <div className='flex flex-wrap gap-1 items-center'>
             {value.length === 0 ? <div className='text-muted-foreground'>{placeholder}</div> : null}
             {value.map(item => (
-              <div
-                key={idFunc(item)}
-                className={clsx('m-1', 'flex px-1 items-center', 'border rounded-lg', 'bg-accent', 'text-sm')}
-              >
+              <div key={idFunc(item)} className='flex px-1 items-center border rounded-lg bg-accent text-sm'>
                 {labelValueFunc(item)}
                 <IconRemove
                   tabIndex={-1}
                   size='1rem'
-                  className='text-muted-foreground hover:text-destructive'
+                  className='cc-remove'
                   onClick={event => {
                     event.stopPropagation();
                     handleRemoveValue(item);
@@ -119,7 +115,7 @@ export function ComboMulti<Option>({
             <IconRemove
               tabIndex={-1}
               size='1rem'
-              className='absolute pointer-events-auto right-3 text-muted-foreground hover:text-destructive'
+              className='cc-remove absolute pointer-events-auto right-3'
               onClick={handleClear}
             />
           ) : null}

@@ -188,7 +188,7 @@ export function DlgEditWordForms() {
             title='Сбросить все словоформы'
             noHover
             className='py-0 align-middle'
-            icon={<IconRemove size='1.5rem' className='icon-red' />}
+            icon={<IconRemove size='1.5rem' className='cc-remove' />}
             onClick={handleResetAll}
             disabled={isProcessing || forms.length === 0}
           />

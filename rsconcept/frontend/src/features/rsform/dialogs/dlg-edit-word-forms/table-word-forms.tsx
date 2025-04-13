@@ -51,7 +51,7 @@ export function TableWordForms({ forms, setForms, onFormSelect }: TableWordForms
           noHover
           noPadding
           className='align-middle'
-          icon={<IconRemove size='1.25rem' className='icon-red' />}
+          icon={<IconRemove size='1.25rem' className='cc-remove' />}
           onClick={() => handleDeleteRow(props.row.index)}
         />
       )

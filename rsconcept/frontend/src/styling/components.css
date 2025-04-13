@@ -3,7 +3,7 @@
  */
 
 @utility cc-btn-nav {
-  color: var(--color-muted-foreground);
+  color: color-mix(in oklab, var(--color-foreground) 50%, transparent);
   border-radius: 0.75rem;
 
   cursor: pointer;
@@ -21,11 +21,13 @@
 @utility cc-btn-primary {
   color: var(--color-foreground);
   background-color: var(--color-selected);
+  border-color: var(--color-primary-border);
 
   &:focus-visible,
   &:hover:not(:disabled) {
     color: var(--color-primary-foreground);
     background-color: var(--color-primary);
+    border-color: var(--color-primary);
   }
 }
 

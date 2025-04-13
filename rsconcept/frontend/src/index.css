@@ -35,20 +35,15 @@
   --color-prim-0: var(--clr-prim-0);
   --color-prim-100: var(--clr-prim-100);
   --color-prim-200: var(--clr-prim-200);
-  --color-prim-300: var(--clr-prim-300);
   --color-prim-400: var(--clr-prim-400);
   --color-prim-600: var(--clr-prim-600);
-  --color-prim-800: var(--clr-prim-800);
   --color-prim-999: var(--clr-prim-999);
 
   --color-sec-0: var(--clr-sec-0);
   --color-sec-100: var(--clr-sec-100);
   --color-sec-200: var(--clr-sec-200);
-  --color-sec-300: var(--clr-sec-300);
   --color-sec-400: var(--clr-sec-400);
   --color-sec-600: var(--clr-sec-600);
-
-  --color-warn-100: var(--clr-warn-100);
 
   /* stylelint-disable-next-line custom-property-pattern */
   --z-index-*: initial;
@@ -93,11 +88,11 @@
 
   --color-primary: var(--clr-sec-600);
   --color-primary-foreground: var(--clr-sec-0);
+  --color-primary-border: var(--clr-sec-400);
   --color-secondary: var(--clr-prim-200);
   --color-secondary-foreground: var(--color-foreground);
   --color-muted: var(--clr-prim-100);
-  --color-muted-foreground: var(--clr-prim-800);
-  --color-inert-foreground: var(--clr-prim-600);
+  --color-muted-foreground: var(--clr-prim-600);
   --color-accent: var(--clr-sec-100);
   --color-accent-foreground: var(--color-foreground);
   --color-selected: var(--clr-sec-200);

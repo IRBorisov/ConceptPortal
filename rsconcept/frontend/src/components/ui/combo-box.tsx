@@ -97,7 +97,7 @@ export function ComboBox<Option>({
             <IconRemove
               tabIndex={-1}
               size='1rem'
-              className='absolute pointer-events-auto right-3 text-muted-foreground hover:text-destructive'
+              className='cc-remove absolute pointer-events-auto right-3'
               onClick={handleClear}
             />
           ) : null}

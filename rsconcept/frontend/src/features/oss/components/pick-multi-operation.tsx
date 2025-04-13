@@ -79,7 +79,7 @@ export function PickMultiOperation({ rows, items, value, onChange, className, ..
       id: 'actions',
       size: 0,
       cell: props => (
-        <div className='flex gap-1 w-fit'>
+        <div className='flex w-fit'>
           <MiniButton
             title='Удалить'
             noHover

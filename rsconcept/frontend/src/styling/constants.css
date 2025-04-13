@@ -23,21 +23,16 @@
   --clr-prim-0:       oklch(100% 0 0deg);
   --clr-prim-100:     oklch(098% 0 0deg);
   --clr-prim-200:     oklch(095% 0 0deg);
-  --clr-prim-300:     oklch(092% 0 0deg);
   --clr-prim-400:     oklch(085% 0 0deg);
   --clr-prim-600:     oklch(070% 0 0deg);
-  --clr-prim-800:     oklch(055% 0 0deg);
   --clr-prim-999:     oklch(000% 0 0deg);
 
   --clr-sec-0:        oklch(100% 0 0deg);
   --clr-sec-100:      oklch(095% 0.050 262deg);
   --clr-sec-200:      oklch(088% 0.050 262deg);
-  --clr-sec-300:      oklch(080% 0.100 262deg);
   --clr-sec-400:      oklch(075% 0.150 262deg);
   --clr-sec-600:      oklch(060% 0.250 262deg);
 
-
-  --clr-warn-100:     oklch(094% 0.050 27deg);
   --clr-warn-600:     oklch(060% 0.250 27deg);
   --clr-ok-600:       oklch(060% 0.250 138deg);
 
@@ -69,20 +64,16 @@
   --clr-prim-0:       oklch(015% 0 0deg);
   --clr-prim-100:     oklch(022% 0 0deg);
   --clr-prim-200:     oklch(030% 0 0deg);
-  --clr-prim-300:     oklch(036% 0 0deg);
   --clr-prim-400:     oklch(050% 0 0deg);
   --clr-prim-600:     oklch(065% 0 0deg);
-  --clr-prim-800:     oklch(085% 0 0deg);
   --clr-prim-999:     oklch(095% 0 0deg);
 
   --clr-sec-0:        oklch(100% 0 0deg);
   --clr-sec-100:      oklch(025% 0.200 295deg);
   --clr-sec-200:      oklch(035% 0.150 295deg);
-  --clr-sec-300:      oklch(045% 0.150 295deg);
   --clr-sec-400:      oklch(055% 0.200 295deg);
   --clr-sec-600:      oklch(070% 0.250 295deg);
 
-  --clr-warn-100:     oklch(025% 0.100 27deg);
   --clr-warn-600:     oklch(065% 0.200 27deg);
   --clr-ok-600:       oklch(065% 0.200 138deg);
 

@@ -6,7 +6,6 @@ import clsx from 'clsx';
 import { APP_COLORS } from '@/styling/colors';
 import { findContainedNodes } from '@/utils/codemirror';
 
-import { colorFgGrammeme } from '../../colors';
 import { describeConstituentaTerm, labelGrammeme } from '../../labels';
 import { type IEntityReference, type ISyntacticReference } from '../../models/language';
 import { parseGrammemes } from '../../models/language-api';
@@ -87,11 +86,8 @@ function domTooltipEntityReference(ref: IEntityReference, cst: IConstituenta | n
   parseGrammemes(ref.form).forEach(gramStr => {
     const gram = document.createElement('div');
     gram.id = `tooltip-${gramStr}`;
-    gram.className = 'min-w-12 px-1 border rounded-md text-sm text-center whitespace-nowrap';
+    gram.className = 'min-w-12 px-1 border rounded-lg text-sm text-center whitespace-nowrap';
     gram.style.borderWidth = '1px';
-    gram.style.borderColor = colorFgGrammeme(gramStr);
-    gram.style.color = colorFgGrammeme(gramStr);
-    gram.style.fontWeight = '600';
     gram.style.backgroundColor = APP_COLORS.bgInput;
     gram.innerText = labelGrammeme(gramStr);
     grams.appendChild(gram);

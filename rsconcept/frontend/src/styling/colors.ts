@@ -8,12 +8,10 @@ export const APP_COLORS = {
   bgDefault:          'var(--clr-prim-100)',
   bgInput:            'var(--clr-prim-0)', 
   bgControls:         'var(--clr-prim-200)',
-  bgDisabled:         'var(--clr-prim-300)',
   bgPrimary:          'var(--clr-sec-600)',
   bgSelected:         'var(--clr-sec-200)',
   bgActiveSelection:  'var(--clr-select-node)',
   bgHover:            'var(--clr-sec-100)',
-  bgWarning:          'var(--clr-warn-100)',
   
   border:             'var(--clr-prim-400)',
 

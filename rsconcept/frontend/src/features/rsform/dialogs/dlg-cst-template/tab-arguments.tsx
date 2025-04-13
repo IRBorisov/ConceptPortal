@@ -90,7 +90,7 @@ export function TabArguments() {
             noPadding
             noHover
             className='align-middle'
-            icon={<IconRemove size='1.25rem' className='icon-red' />}
+            icon={<IconRemove size='1.25rem' className='cc-remove' />}
             onClick={() => handleClearArgument(props.row.original)}
           />
         ) : null

@@ -8,7 +8,7 @@
 
 :root {
   /* Import overrides */
-  --toastify-color-dark: var(--clr-prim-300);
+  --toastify-color-dark: var(--clr-prim-200);
 
   --toastify-toast-width: 20rem;
   --toastify-toast-padding: 0.75rem;
@@ -43,7 +43,7 @@
 }
 
 .cm-editor.cm-focused {
-  border-color: var(--clr-prim-400);
+  border-color: var(--clr-sec-600);
   outline: 2px solid var(--clr-sec-600);
 }
 
@@ -61,7 +61,7 @@
   background-color: var(--clr-prim-0);
 
   .selected & {
-    border-color: var(--clr-prim-800);
+    border-color: var(--clr-prim-600);
   }
 }
 
@@ -116,7 +116,7 @@
   &.selected {
     outline-offset: 4px;
     outline-color: var(--clr-select-node);
-    border-color: var(--clr-prim-800);
+    border-color: var(--clr-prim-999);
   }
 }
 
