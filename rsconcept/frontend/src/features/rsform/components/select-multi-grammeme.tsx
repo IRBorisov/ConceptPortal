@@ -1,27 +1,30 @@
-import { SelectMulti, type SelectMultiProps } from '@/components/input';
 import { type Styling } from '@/components/props';
+import { ComboMulti } from '@/components/ui/combo-multi';
 
-import { Grammeme, type IGrammemeOption } from '../models/language';
-import { getCompatibleGrams, grammemeCompare, supportedGrammeOptions } from '../models/language-api';
+import { labelGrammeme } from '../labels';
+import { type Grammeme, supportedGrammemes } from '../models/language';
+import { getCompatibleGrams } from '../models/language-api';
 
-interface SelectMultiGrammemeProps extends Omit<SelectMultiProps<IGrammemeOption>, 'value' | 'onChange'>, Styling {
-  value: IGrammemeOption[];
-  onChange: (newValue: IGrammemeOption[]) => void;
+interface SelectMultiGrammemeProps extends Styling {
+  id?: string;
+  value: Grammeme[];
+  onChange: (newValue: Grammeme[]) => void;
   placeholder?: string;
 }
 
 export function SelectMultiGrammeme({ value, onChange, ...restProps }: SelectMultiGrammemeProps) {
-  const compatible = getCompatibleGrams(
-    value.filter(data => Object.values(Grammeme).includes(data.value)).map(data => data.value)
-  );
-  const options = supportedGrammeOptions.filter(({ value }) => compatible.includes(value));
+  const compatible = getCompatibleGrams(value);
+  const items: Grammeme[] = [...supportedGrammemes.filter(gram => compatible.includes(gram))];
 
   return (
-    <SelectMulti
-      options={options}
+    <ComboMulti
+      noSearch
+      items={items}
       value={value}
-      isSearchable={false}
-      onChange={newValue => onChange([...newValue].sort((left, right) => grammemeCompare(left.value, right.value)))}
+      onChange={onChange}
+      idFunc={gram => gram}
+      labelOptionFunc={gram => labelGrammeme(gram)}
+      labelValueFunc={gram => labelGrammeme(gram)}
       {...restProps}
     />
   );

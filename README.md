@@ -35,7 +35,6 @@ This readme file is used mostly to document project dependencies and conventions
   - react-toastify
   - react-tabs
   - react-intl
-  - react-select
   - react-error-boundary
   - react-tooltip
   - react-zoom-pan-pinch

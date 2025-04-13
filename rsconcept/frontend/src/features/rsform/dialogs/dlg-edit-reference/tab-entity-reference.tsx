@@ -77,7 +77,6 @@ export function TabEntityReference() {
               id='dlg_reference_grammemes'
               placeholder='Выберите граммемы'
               className='grow'
-              menuPlacement='top'
               value={field.value}
               onChange={field.onChange}
             />

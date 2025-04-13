@@ -31,11 +31,9 @@ User profile:
 - Sitemap for better SEO and crawler optimization
 
 [Functionality - CANCELED]
-- User notifications on edit - consider spam prevention and change aggregation
 - Integrate socials and feedback
 - Content based search in Library
 - Private projects. Consider cooperative editing
-- OSS: synthesis table: auto substitution for diamond synthesis
 
 
 [Tech]

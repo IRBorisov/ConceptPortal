@@ -2,19 +2,15 @@
  * Module: Natural language model API.
  */
 
-import { labelGrammeme } from '../labels';
-
 import {
   Grammeme,
   GrammemeGroups,
   type IEntityReference,
-  type IGrammemeOption,
   type IReference,
   type ISyntacticReference,
   type IWordForm,
   NounGrams,
   ReferenceType,
-  supportedGrammemes,
   VerbGrams
 } from './language';
 
@@ -121,14 +117,6 @@ export function parseSyntacticReference(text: string): ISyntacticReference {
     nominal: blocks[1].trim()
   };
 }
-
-/**
- * Represents options for {@link Grammeme} selector.
- */
-export const supportedGrammeOptions: IGrammemeOption[] = supportedGrammemes.map(gram => ({
-  value: gram,
-  label: labelGrammeme(gram)
-}));
 
 /**
  * Transforms {@link IReference} to string representation.

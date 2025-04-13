@@ -17,8 +17,8 @@ import { useIsProcessingCctext } from '../../backend/cctext/use-is-processing-cc
 import { useParseText } from '../../backend/cctext/use-parse-text';
 import { useCstUpdate } from '../../backend/use-cst-update';
 import { SelectMultiGrammeme } from '../../components/select-multi-grammeme';
-import { type IGrammemeOption, type IWordForm, supportedGrammemes } from '../../models/language';
-import { parseGrammemes, supportedGrammeOptions, wordFormEquals } from '../../models/language-api';
+import { type Grammeme, type IWordForm, supportedGrammemes } from '../../models/language';
+import { parseGrammemes, wordFormEquals } from '../../models/language-api';
 import { type IConstituenta } from '../../models/rsform';
 
 import { TableWordForms } from './table-word-forms';
@@ -38,7 +38,7 @@ export function DlgEditWordForms() {
   const { generateLexeme } = useGenerateLexeme();
 
   const [inputText, setInputText] = useState(target.term_resolved);
-  const [inputGrams, setInputGrams] = useState<IGrammemeOption[]>([]);
+  const [inputGrams, setInputGrams] = useState<Grammeme[]>([]);
 
   const [forms, setForms] = useState<IWordForm[]>(
     target.term_forms.map(term => ({
@@ -65,27 +65,27 @@ export function DlgEditWordForms() {
   function handleAddForm() {
     const newForm: IWordForm = {
       text: inputText,
-      grams: inputGrams.map(item => item.value)
+      grams: inputGrams
     };
     setForms(forms => [newForm, ...forms.filter(value => !wordFormEquals(value, newForm))]);
   }
 
   function handleSelectForm(form: IWordForm) {
     setInputText(form.text);
-    setInputGrams(supportedGrammeOptions.filter(gram => form.grams.find(test => test === gram.value)));
+    setInputGrams(supportedGrammemes.filter(gram => form.grams.find(test => test === gram)));
   }
 
   function handleInflect() {
     void inflectText({
       text: target.term_resolved,
-      grams: inputGrams.map(gram => gram.value).join(',')
+      grams: inputGrams.join(',')
     }).then(response => setInputText(response.result));
   }
 
   function handleParse() {
     void parseText({ text: inputText }).then(response => {
       const grams = parseGrammemes(response.result);
-      setInputGrams(supportedGrammeOptions.filter(gram => grams.find(test => test === gram.value)));
+      setInputGrams(supportedGrammemes.filter(gram => grams.find(test => test === gram)));
     });
   }
 
@@ -159,7 +159,7 @@ export function DlgEditWordForms() {
         </div>
         <SelectMultiGrammeme
           placeholder='Выберите граммемы'
-          className='min-w-60 h-fit'
+          className='w-60 h-fit'
           value={inputGrams}
           onChange={setInputGrams}
         />

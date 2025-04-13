@@ -12,13 +12,14 @@ import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { labelReferenceType } from '../../labels';
-import { type IReference, ReferenceType, schemaGrammemeOption, schemaReferenceType } from '../../models/language';
 import {
-  parseEntityReference,
-  parseGrammemes,
-  parseSyntacticReference,
-  supportedGrammeOptions
-} from '../../models/language-api';
+  type IReference,
+  ReferenceType,
+  schemaGrammeme,
+  schemaReferenceType,
+  supportedGrammemes
+} from '../../models/language';
+import { parseEntityReference, parseGrammemes, parseSyntacticReference } from '../../models/language-api';
 import { type IRSForm } from '../../models/rsform';
 
 import { TabEntityReference } from './tab-entity-reference';
@@ -37,7 +38,7 @@ const schemaEditReferenceState = z
     type: schemaReferenceType,
     entity: z.strictObject({
       entity: z.string(),
-      grams: z.array(schemaGrammemeOption)
+      grams: z.array(schemaGrammeme)
     }),
     syntactic: z.strictObject({ offset: z.coerce.number(), nominal: z.string() })
   })
@@ -82,7 +83,7 @@ export function DlgEditReference() {
         type: data.type,
         data: {
           entity: data.entity.entity,
-          form: data.entity.grams.map(gram => gram.value).join(',')
+          form: data.entity.grams.join(',')
         }
       });
     } else {
@@ -138,7 +139,7 @@ function initEntityReference(initial: IReferenceInputState) {
   } else {
     const ref = parseEntityReference(initial.refRaw);
     const grams = parseGrammemes(ref.form);
-    const supported = supportedGrammeOptions.filter(data => grams.includes(data.value));
+    const supported = supportedGrammemes.filter(data => grams.includes(data));
     return {
       entity: ref.entity,
       grams: supported

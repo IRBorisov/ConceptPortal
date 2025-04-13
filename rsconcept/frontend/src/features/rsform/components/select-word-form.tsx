@@ -5,8 +5,7 @@ import clsx from 'clsx';
 import { type Styling } from '@/components/props';
 import { prefixes } from '@/utils/constants';
 
-import { Grammeme, type IGrammemeOption } from '../models/language';
-import { supportedGrammeOptions } from '../models/language-api';
+import { Grammeme, supportedGrammemes } from '../models/language';
 
 import { WordformButton } from './wordform-button';
 
@@ -30,13 +29,13 @@ const DefaultWordForms = [
 ] as const;
 
 interface SelectWordFormProps extends Styling {
-  value: IGrammemeOption[];
-  onChange: React.Dispatch<React.SetStateAction<IGrammemeOption[]>>;
+  value: Grammeme[];
+  onChange: React.Dispatch<React.SetStateAction<Grammeme[]>>;
 }
 
 export function SelectWordForm({ value, onChange, className, ...restProps }: SelectWordFormProps) {
   function handleSelect(grams: Grammeme[]) {
-    onChange(supportedGrammeOptions.filter(({ value }) => grams.includes(value)));
+    onChange(supportedGrammemes.filter(value => grams.includes(value)));
   }
 
   return (
@@ -47,7 +46,7 @@ export function SelectWordForm({ value, onChange, className, ...restProps }: Sel
           text={data.text}
           example={data.example}
           grams={data.grams}
-          isSelected={data.grams.every(gram => value.find(item => item.value === gram))}
+          isSelected={data.grams.every(gram => value.find(item => item === gram))}
           onSelectGrams={handleSelect}
         />
       ))}

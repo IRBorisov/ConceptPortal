@@ -19,7 +19,7 @@ export const APP_COLORS = {
 
   fgDefault:          'var(--clr-prim-999)',
   fgSelected:         'var(--clr-prim-999)', 
-  fgDisabled:         'var(--clr-prim-800)',
+  fgMuted:            'var(--clr-prim-600)',
   fgWarning:          'var(--clr-warn-600)',
 
   bgRed:              'var(--acc-bg-red)',
@@ -40,26 +40,3 @@ export const APP_COLORS = {
   fgTeal:             'var(--acc-fg-teal)',
   fgOrange:           'var(--acc-fg-orange)'
 }
-
-/** Represents Select component theme. */
-export const SELECT_THEME = {
-  primary: APP_COLORS.bgPrimary,
-  primary75: APP_COLORS.bgSelected,
-  primary50: APP_COLORS.bgHover,
-  primary25: APP_COLORS.bgHover,
-
-  danger: APP_COLORS.fgWarning,
-  dangerLight: APP_COLORS.bgWarning,
-
-  neutral0: APP_COLORS.bgInput,
-  neutral5: APP_COLORS.bgDefault,
-  neutral10: APP_COLORS.border,
-  neutral20: APP_COLORS.border,
-  neutral30: APP_COLORS.border,
-  neutral40: APP_COLORS.fgDisabled,
-  neutral50: APP_COLORS.fgDisabled, // placeholder
-  neutral60: APP_COLORS.fgDefault,
-  neutral70: APP_COLORS.fgWarning,
-  neutral80: APP_COLORS.fgDefault,
-  neutral90: APP_COLORS.fgWarning
-};

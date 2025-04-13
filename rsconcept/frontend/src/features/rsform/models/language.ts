@@ -230,13 +230,6 @@ export const supportedGrammemes = [
   Grammeme.accs, Grammeme.ablt, Grammeme.loct,
 ] as const;
 
-export const schemaGrammemeOption = z.strictObject({
-  value: schemaGrammeme,
-  label: z.string()
-});
-
-export type IGrammemeOption = z.infer<typeof schemaGrammemeOption>;
-
 // ====== Reference resolution =====
 
 /** Represents text reference type. */
