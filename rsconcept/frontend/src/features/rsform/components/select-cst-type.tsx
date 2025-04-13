@@ -1,5 +1,5 @@
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/input/select';
 import { type Styling } from '@/components/props';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/components/utils';
 
 import { CstType } from '../backend/types';

@@ -37,7 +37,7 @@ export function DropdownButton({
         'px-3 py-1 inline-flex items-center gap-2',
         'text-left text-sm text-ellipsis whitespace-nowrap',
         'disabled:cc-controls disabled:opacity-75',
-        'cc-animate-background',
+        'focus-outline cc-animate-background',
         !!onClick ? 'cc-hover cursor-pointer disabled:cursor-auto' : 'bg-secondary text-secondary-foreground',
         className
       )}

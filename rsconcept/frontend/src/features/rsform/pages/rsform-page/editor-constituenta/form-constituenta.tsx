@@ -189,8 +189,8 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
         dense
         noResize
         noBorder
-        transparent
         noOutline
+        transparent
         readOnly
         label='Типизация'
         value={typification}

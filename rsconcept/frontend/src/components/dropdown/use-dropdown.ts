@@ -7,9 +7,10 @@ export function useDropdown() {
   const ref = useRef<HTMLDivElement>(null);
 
   function handleBlur(event: React.FocusEvent<HTMLDivElement>) {
-    if (!ref.current?.contains(event.relatedTarget as Node)) {
-      setIsOpen(false);
+    if (ref.current?.contains(event.relatedTarget as Node)) {
+      return;
     }
+    setIsOpen(false);
   }
 
   return {

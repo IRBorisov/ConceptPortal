@@ -118,7 +118,6 @@ export function MenuMain() {
         dense
         noBorder
         noOutline
-        tabIndex={-1}
         title='Меню'
         hideTitle={menu.isOpen}
         icon={<IconMenu size='1.25rem' className='cc-controls' />}

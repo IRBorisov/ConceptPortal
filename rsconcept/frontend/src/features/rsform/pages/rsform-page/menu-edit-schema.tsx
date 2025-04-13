@@ -107,7 +107,6 @@ export function MenuEditSchema() {
         dense
         noBorder
         noOutline
-        tabIndex={-1}
         titleHtml='<b>Архив</b>: Редактирование запрещено<br />Перейти к актуальной версии'
         hideTitle={menu.isOpen}
         className='h-full px-2'
@@ -123,7 +122,6 @@ export function MenuEditSchema() {
         dense
         noBorder
         noOutline
-        tabIndex={-1}
         title='Редактирование'
         hideTitle={menu.isOpen}
         className='h-full px-2'

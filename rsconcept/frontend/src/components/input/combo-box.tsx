@@ -5,10 +5,9 @@ import { ChevronDownIcon } from 'lucide-react';
 
 import { IconRemove } from '../icons';
 import { type Styling } from '../props';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '../ui/command';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { cn } from '../utils';
-
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from './command';
-import { Popover, PopoverContent, PopoverTrigger } from './popover';
 
 interface ComboBoxProps<Option> extends Styling {
   id?: string;

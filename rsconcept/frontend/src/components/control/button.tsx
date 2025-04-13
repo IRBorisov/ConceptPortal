@@ -43,7 +43,7 @@ export function Button({
         'bg-secondary text-secondary-foreground cc-hover cc-animate-color',
         dense ? 'px-1' : 'px-3 py-1',
         loading ? 'cursor-progress' : 'cursor-pointer',
-        noOutline ? 'outline-hidden' : 'focus-outline',
+        noOutline ? 'outline-hidden focus-visible:bg-selected' : 'focus-outline',
         !noBorder && 'border rounded-sm',
         className
       )}

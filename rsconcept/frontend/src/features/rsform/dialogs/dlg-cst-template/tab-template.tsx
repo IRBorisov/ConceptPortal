@@ -3,7 +3,7 @@
 import { useTemplatesSuspense } from '@/features/library/backend/use-templates';
 
 import { TextArea } from '@/components/input';
-import { ComboBox } from '@/components/ui/combo-box';
+import { ComboBox } from '@/components/input/combo-box';
 
 import { useRSForm } from '../../backend/use-rsform';
 import { PickConstituenta } from '../../components/pick-constituenta';

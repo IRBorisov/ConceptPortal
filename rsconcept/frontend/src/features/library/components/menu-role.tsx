@@ -33,7 +33,6 @@ export function MenuRole({ isOwned, isEditor }: MenuRoleProps) {
         dense
         noBorder
         noOutline
-        tabIndex={-1}
         titleHtml='<b>Анонимный режим</b><br />Войти в Портал'
         hideTitle={accessMenu.isOpen}
         className='h-full pr-2'
@@ -49,7 +48,6 @@ export function MenuRole({ isOwned, isEditor }: MenuRoleProps) {
         dense
         noBorder
         noOutline
-        tabIndex={-1}
         title={`Режим ${labelUserRole(role)}`}
         hideTitle={accessMenu.isOpen}
         className='h-full pr-2'

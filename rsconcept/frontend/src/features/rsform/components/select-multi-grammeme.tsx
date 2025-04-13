@@ -1,5 +1,5 @@
+import { ComboMulti } from '@/components/input/combo-multi';
 import { type Styling } from '@/components/props';
-import { ComboMulti } from '@/components/ui/combo-multi';
 
 import { labelGrammeme } from '../labels';
 import { type Grammeme, supportedGrammemes } from '../models/language';

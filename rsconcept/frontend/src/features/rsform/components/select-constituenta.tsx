@@ -1,4 +1,4 @@
-import { ComboBox } from '@/components/ui/combo-box';
+import { ComboBox } from '@/components/input/combo-box';
 
 import { describeConstituenta, describeConstituentaTerm } from '../labels';
 import { type IConstituenta } from '../models/rsform';

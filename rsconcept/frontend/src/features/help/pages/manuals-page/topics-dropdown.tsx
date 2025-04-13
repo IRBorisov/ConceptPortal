@@ -42,7 +42,6 @@ export function TopicsDropdown({ activeTopic, onChangeTopic }: TopicsDropdownPro
     >
       <Button
         noOutline
-        tabIndex={-1}
         title='Список тем'
         hideTitle={menu.isOpen}
         icon={!menu.isOpen ? <IconMenuUnfold size='1.25rem' /> : <IconMenuFold size='1.25rem' />}

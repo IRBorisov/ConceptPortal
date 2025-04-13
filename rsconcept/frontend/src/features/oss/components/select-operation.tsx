@@ -1,5 +1,5 @@
+import { ComboBox } from '@/components/input/combo-box';
 import { type Styling } from '@/components/props';
-import { ComboBox } from '@/components/ui/combo-box';
 
 import { type IOperation } from '../models/oss';
 

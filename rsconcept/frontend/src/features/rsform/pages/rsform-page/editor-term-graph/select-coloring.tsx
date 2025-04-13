@@ -1,7 +1,7 @@
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components';
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/input/select';
 
 import { mapLabelColoring } from '../../../labels';
 import { useTermGraphStore } from '../../../stores/term-graph';

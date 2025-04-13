@@ -35,7 +35,6 @@ export function MenuEditOss() {
         dense
         noBorder
         noOutline
-        tabIndex={-1}
         title='Редактирование'
         hideTitle={menu.isOpen}
         className='h-full px-2'
