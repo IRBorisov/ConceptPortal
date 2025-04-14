@@ -9,6 +9,7 @@ from shared.EndpointTester import EndpointTester, decl_endpoint
 class TestChangeAttributes(EndpointTester):
     ''' Testing LibraryItem view when OSS is associated with RSForms. '''
 
+
     def setUp(self):
         super().setUp()
         self.user3 = User.objects.create(
@@ -70,6 +71,7 @@ class TestChangeAttributes(EndpointTester):
         layout.data = self.layout_data
         layout.save()
 
+
     @decl_endpoint('/api/library/{item}/set-owner', method='patch')
     def test_set_owner(self):
         data = {'user': self.user3.pk}
@@ -84,6 +86,7 @@ class TestChangeAttributes(EndpointTester):
         self.assertEqual(self.ks1.model.owner, self.user)
         self.assertEqual(self.ks2.model.owner, self.user2)
         self.assertEqual(self.ks3.model.owner, self.user3)
+
 
     @decl_endpoint('/api/library/{item}/set-location', method='patch')
     def test_set_location(self):
@@ -100,6 +103,7 @@ class TestChangeAttributes(EndpointTester):
         self.assertNotEqual(self.ks2.model.location, data['location'])
         self.assertEqual(self.ks3.model.location, data['location'])
 
+
     @decl_endpoint('/api/library/{item}/set-access-policy', method='patch')
     def test_set_access_policy(self):
         data = {'access_policy': AccessPolicy.PROTECTED}
@@ -114,6 +118,7 @@ class TestChangeAttributes(EndpointTester):
         self.assertNotEqual(self.ks1.model.access_policy, data['access_policy'])
         self.assertNotEqual(self.ks2.model.access_policy, data['access_policy'])
         self.assertEqual(self.ks3.model.access_policy, data['access_policy'])
+
 
     @decl_endpoint('/api/library/{item}/set-editors', method='patch')
     def test_set_editors(self):
@@ -133,6 +138,7 @@ class TestChangeAttributes(EndpointTester):
         self.assertEqual(list(self.ks2.model.getQ_editors()), [])
         self.assertEqual(set(self.ks3.model.getQ_editors()), set([self.user, self.user3]))
 
+
     @decl_endpoint('/api/library/{item}', method='patch')
     def test_sync_from_result(self):
         data = {'alias': 'KS111', 'title': 'New Title', 'description': 'New description'}
@@ -144,6 +150,7 @@ class TestChangeAttributes(EndpointTester):
         self.assertEqual(self.operation1.alias, data['alias'])
         self.assertEqual(self.operation1.title, data['title'])
         self.assertEqual(self.operation1.description, data['description'])
+
 
     @decl_endpoint('/api/oss/{item}/update-operation', method='patch')
     def test_sync_from_operation(self):
@@ -162,6 +169,7 @@ class TestChangeAttributes(EndpointTester):
         self.assertEqual(self.ks3.model.alias, data['item_data']['alias'])
         self.assertEqual(self.ks3.model.title, data['item_data']['title'])
         self.assertEqual(self.ks3.model.description, data['item_data']['description'])
+
 
     @decl_endpoint('/api/library/{item}', method='delete')
     def test_destroy_oss_consequence(self):

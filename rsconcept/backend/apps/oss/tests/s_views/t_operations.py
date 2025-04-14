@@ -1,4 +1,4 @@
-''' Testing API: Operation Schema. '''
+''' Testing API: Operation Schema - operations manipulation. '''
 from apps.library.models import AccessPolicy, Editor, LibraryItem, LibraryItemType
 from apps.oss.models import Operation, OperationSchema, OperationType
 from apps.rsform.models import Constituenta, RSForm
@@ -6,7 +6,8 @@ from shared.EndpointTester import EndpointTester, decl_endpoint
 
 
 class TestOssOperations(EndpointTester):
-    ''' Testing OSS view - operations. '''
+    ''' Testing OSS view - Operations. '''
+
 
     def setUp(self):
         super().setUp()
@@ -14,9 +15,8 @@ class TestOssOperations(EndpointTester):
         self.owned_id = self.owned.model.pk
         self.unowned = OperationSchema.create(title='Test2', alias='T2')
         self.unowned_id = self.unowned.model.pk
-        self.private = OperationSchema.create(title='Test2', alias='T2', access_policy=AccessPolicy.PRIVATE)
-        self.private_id = self.private.model.pk
-        self.invalid_id = self.private.model.pk + 1337
+        self.invalid_id = self.unowned_id + 1337
+
 
     def populateData(self):
         self.ks1 = RSForm.create(
@@ -72,6 +72,7 @@ class TestOssOperations(EndpointTester):
             'substitution': self.ks2X1
         }])
 
+
     @decl_endpoint('/api/oss/{item}/create-operation', method='post')
     def test_create_operation(self):
         self.populateData()
@@ -116,6 +117,38 @@ class TestOssOperations(EndpointTester):
         self.toggle_admin(True)
         self.executeCreated(data=data, item=self.unowned_id)
 
+
+    @decl_endpoint('/api/oss/{item}/create-operation', method='post')
+    def test_create_operation_parent(self):
+        self.populateData()
+        data = {
+            'item_data': {
+                'parent': self.invalid_id,
+                'alias': 'Test3',
+                'title': 'Test title',
+                'description': '',
+                'operation_type': OperationType.INPUT
+
+            },
+            'layout': self.layout_data,
+            'position_x': 1,
+            'position_y': 1
+
+        }
+        self.executeBadData(data=data, item=self.owned_id)
+
+        block_unowned = self.unowned.create_block(title='TestBlock1')
+        data['item_data']['parent'] = block_unowned.id
+        self.executeBadData(data=data, item=self.owned_id)
+
+        block_owned = self.owned.create_block(title='TestBlock2')
+        data['item_data']['parent'] = block_owned.id
+        response = self.executeCreated(data=data, item=self.owned_id)
+        self.assertEqual(len(response.data['oss']['operations']), 4)
+        new_operation = response.data['new_operation']
+        self.assertEqual(new_operation['parent'], block_owned.id)
+
+
     @decl_endpoint('/api/oss/{item}/create-operation', method='post')
     def test_create_operation_arguments(self):
         self.populateData()
@@ -136,6 +169,7 @@ class TestOssOperations(EndpointTester):
         self.assertTrue(arguments.filter(operation__id=new_operation['id'], argument=self.operation1))
         self.assertTrue(arguments.filter(operation__id=new_operation['id'], argument=self.operation3))
 
+
     @decl_endpoint('/api/oss/{item}/create-operation', method='post')
     def test_create_operation_result(self):
         self.populateData()
@@ -154,9 +188,9 @@ class TestOssOperations(EndpointTester):
             'position_y': 1
         }
         response = self.executeCreated(data=data, item=self.owned_id)
-        self.owned.refresh_from_db()
         new_operation = response.data['new_operation']
         self.assertEqual(new_operation['result'], self.ks1.model.pk)
+
 
     @decl_endpoint('/api/oss/{item}/create-operation', method='post')
     def test_create_operation_schema(self):
@@ -189,6 +223,7 @@ class TestOssOperations(EndpointTester):
         self.assertEqual(schema.location, self.owned.model.location)
         self.assertIn(self.user2, schema.getQ_editors())
 
+
     @decl_endpoint('/api/oss/{item}/delete-operation', method='patch')
     def test_delete_operation(self):
         self.executeNotFound(item=self.invalid_id)
@@ -213,6 +248,7 @@ class TestOssOperations(EndpointTester):
         deleted_items = [item for item in layout['operations'] if item['id'] == data['target']]
         self.assertEqual(len(response.data['operations']), 2)
         self.assertEqual(len(deleted_items), 0)
+
 
     @decl_endpoint('/api/oss/{item}/create-input', method='patch')
     def test_create_input(self):
@@ -249,6 +285,7 @@ class TestOssOperations(EndpointTester):
         data['target'] = self.operation3.pk
         self.executeBadData(data=data)
 
+
     @decl_endpoint('/api/oss/{item}/set-input', method='patch')
     def test_set_input_null(self):
         self.populateData()
@@ -283,6 +320,7 @@ class TestOssOperations(EndpointTester):
         self.assertEqual(self.operation1.title, self.ks1.model.title)
         self.assertEqual(self.operation1.description, self.ks1.model.description)
 
+
     @decl_endpoint('/api/oss/{item}/set-input', method='patch')
     def test_set_input_change_schema(self):
         self.populateData()
@@ -316,6 +354,7 @@ class TestOssOperations(EndpointTester):
         self.executeOK(data=data, item=self.owned_id)
         self.operation1.refresh_from_db()
         self.assertEqual(self.operation1.result, self.ks2.model)
+
 
     @decl_endpoint('/api/oss/{item}/update-operation', method='patch')
     def test_update_operation(self):
@@ -388,6 +427,7 @@ class TestOssOperations(EndpointTester):
         self.assertEqual(self.operation1.result.title, data['item_data']['title'])
         self.assertEqual(self.operation1.result.description, data['item_data']['description'])
 
+
     @decl_endpoint('/api/oss/{item}/update-operation', method='patch')
     def test_update_operation_invalid_substitution(self):
         self.populateData()
@@ -415,6 +455,7 @@ class TestOssOperations(EndpointTester):
             ]
         }
         self.executeBadData(data=data, item=self.owned_id)
+
 
     @decl_endpoint('/api/oss/{item}/execute-operation', method='post')
     def test_execute_operation(self):

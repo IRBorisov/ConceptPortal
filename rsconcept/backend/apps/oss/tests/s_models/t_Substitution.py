@@ -10,6 +10,7 @@ from apps.rsform.models import RSForm
 class TestSynthesisSubstitution(TestCase):
     ''' Testing Synthesis Substitution model. '''
 
+
     def setUp(self):
         self.oss = OperationSchema.create(alias='T1')
 

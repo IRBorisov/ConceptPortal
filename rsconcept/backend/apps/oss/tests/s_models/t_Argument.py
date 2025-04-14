@@ -8,6 +8,7 @@ from apps.oss.models import Argument, Operation, OperationSchema, OperationType
 class TestArgument(TestCase):
     ''' Testing Argument model. '''
 
+
     def setUp(self):
         self.oss = OperationSchema.create(alias='T1')
 

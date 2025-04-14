@@ -19,6 +19,7 @@ from apps.rsform.models import (
 )
 
 from .Argument import Argument
+from .Block import Block
 from .Inheritance import Inheritance
 from .Layout import Layout
 from .Operation import Operation
@@ -60,6 +61,10 @@ class OperationSchema:
         ''' Get QuerySet containing all operations of current OSS. '''
         return Operation.objects.filter(oss=self.model)
 
+    def blocks(self) -> QuerySet[Block]:
+        ''' Get QuerySet containing all blocks of current OSS. '''
+        return Block.objects.filter(oss=self.model)
+
     def arguments(self) -> QuerySet[Argument]:
         ''' Operation arguments. '''
         return Argument.objects.filter(operation__oss=self.model)
@@ -96,6 +101,12 @@ class OperationSchema:
         ''' Insert new operation. '''
         result = Operation.objects.create(oss=self.model, **kwargs)
         self.cache.insert_operation(result)
+        self.save(update_fields=['time_update'])
+        return result
+
+    def create_block(self, **kwargs) -> Block:
+        ''' Insert new block. '''
+        result = Block.objects.create(oss=self.model, **kwargs)
         self.save(update_fields=['time_update'])
         return result
 

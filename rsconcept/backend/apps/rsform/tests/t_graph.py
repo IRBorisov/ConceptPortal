@@ -7,6 +7,7 @@ from apps.rsform.graph import Graph
 class TestGraph(unittest.TestCase):
     ''' Test class for graph. '''
 
+
     def test_construction(self):
         graph = Graph()
         self.assertFalse(graph.contains(1))
@@ -26,6 +27,7 @@ class TestGraph(unittest.TestCase):
         self.assertTrue(graph.has_edge(1, 3))
         self.assertTrue(graph.has_edge(2, 1))
 
+
     def test_remove_node(self):
         graph = Graph({
             1: [2],
@@ -38,6 +40,7 @@ class TestGraph(unittest.TestCase):
         graph.remove_node(2)
         self.assertEqual(graph.outputs[1], [])
         self.assertEqual(len(graph.outputs), 3)
+
 
     def test_remove_edge(self):
         graph = Graph({
@@ -53,6 +56,7 @@ class TestGraph(unittest.TestCase):
         self.assertEqual(graph.outputs[1], [])
         graph.remove_edge(1, 2)
 
+
     def test_expand_outputs(self):
         graph = Graph({
             1: [2],
@@ -66,6 +70,7 @@ class TestGraph(unittest.TestCase):
         self.assertEqual(graph.expand_outputs([3]), [])
         self.assertEqual(graph.expand_outputs([7]), [])
         self.assertEqual(graph.expand_outputs([2, 5]), [3, 6, 1])
+
 
     def test_expand_inputs(self):
         graph = Graph({
@@ -101,6 +106,7 @@ class TestGraph(unittest.TestCase):
             7: [6]
         })
 
+
     def test_topological_order(self):
         self.assertEqual(Graph().topological_order(), [])
         graph = Graph({
@@ -121,6 +127,7 @@ class TestGraph(unittest.TestCase):
             5: [2],
         })
         self.assertEqual(graph.topological_order(), [5, 3, 2, 4, 1])
+
 
     def test_sort_stable(self):
         graph = Graph({

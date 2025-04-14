@@ -69,6 +69,7 @@ class TestChangeConstituents(EndpointTester):
         layout.data = self.layout_data
         layout.save()
 
+
     @decl_endpoint('/api/rsforms/{item}/details', method='get')
     def test_retrieve_inheritance(self):
         response = self.executeOK(item=self.ks3.model.pk)
@@ -96,6 +97,7 @@ class TestChangeConstituents(EndpointTester):
             },
         ])
 
+
     @decl_endpoint('/api/rsforms/{schema}/create-cst', method='post')
     def test_create_constituenta(self):
         data = {
@@ -112,6 +114,7 @@ class TestChangeConstituents(EndpointTester):
         self.assertEqual(inherited_cst.order, 2)
         self.assertEqual(inherited_cst.definition_formal, 'X1 = X2')
 
+
     @decl_endpoint('/api/rsforms/{schema}/rename-cst', method='patch')
     def test_rename_constituenta(self):
         data = {'target': self.ks1X1.pk, 'alias': 'D21', 'cst_type': CstType.TERM}
@@ -122,6 +125,7 @@ class TestChangeConstituents(EndpointTester):
         self.assertEqual(self.ks1X1.cst_type, data['cst_type'])
         self.assertEqual(inherited_cst.alias, 'D2')
         self.assertEqual(inherited_cst.cst_type, data['cst_type'])
+
 
     @decl_endpoint('/api/rsforms/{schema}/update-cst', method='patch')
     def test_update_constituenta(self):
@@ -149,6 +153,7 @@ class TestChangeConstituents(EndpointTester):
         self.assertEqual(inherited_cst.definition_formal, r'X1\X1')
         self.assertEqual(inherited_cst.definition_raw, r'@{X2|sing,datv}')
 
+
     @decl_endpoint('/api/rsforms/{schema}/delete-multiple-cst', method='patch')
     def test_delete_constituenta(self):
         data = {'items': [self.ks2X1.pk]}
@@ -159,6 +164,7 @@ class TestChangeConstituents(EndpointTester):
         self.assertEqual(self.ks3.constituents().count(), 3)
         self.assertEqual(self.ks2D1.definition_formal, r'DEL\DEL')
         self.assertEqual(inherited_cst.definition_formal, r'DEL\DEL')
+
 
     @decl_endpoint('/api/rsforms/{schema}/substitute', method='patch')
     def test_substitute(self):

@@ -8,6 +8,7 @@ from apps.rsform.models import Constituenta, RSForm
 class TestInheritance(TestCase):
     ''' Testing Inheritance model. '''
 
+
     def setUp(self):
         self.oss = OperationSchema.create(alias='T1')
 

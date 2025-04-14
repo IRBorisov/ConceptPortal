@@ -9,6 +9,7 @@ from shared.DBTester import DBTester
 class TestRSForm(DBTester):
     ''' Testing RSForm wrapper. '''
 
+
     def setUp(self):
         super().setUp()
         self.user1 = User.objects.create(username='User1')
@@ -103,6 +104,7 @@ class TestRSForm(DBTester):
         self.assertEqual(x2.schema, self.schema.model)
         self.assertEqual(x1.order, 0)
 
+
     def test_create_cst(self):
         data = {
             'alias': 'X3',
@@ -193,6 +195,7 @@ class TestRSForm(DBTester):
         self.assertEqual(d1.definition_formal, 'DEL = X2')
         self.assertEqual(d1.definition_raw, '@{DEL|sing}')
         self.assertEqual(d1.term_raw, '@{X2|plur}')
+
 
     def test_apply_mapping(self):
         x1 = self.schema.insert_new('X1')

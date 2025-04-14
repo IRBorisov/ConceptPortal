@@ -38,6 +38,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         if self.action in [
             'update_layout',
             'create_operation',
+            'create_block',
             'delete_operation',
             'create_input',
             'set_input',
@@ -104,7 +105,10 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     @action(detail=True, methods=['post'], url_path='create-operation')
     def create_operation(self, request: Request, pk) -> HttpResponse:
         ''' Create new operation. '''
-        serializer = s.OperationCreateSerializer(data=request.data)
+        serializer = s.OperationCreateSerializer(
+            data=request.data,
+            context={'oss': self.get_object()}
+        )
         serializer.is_valid(raise_exception=True)
 
         oss = m.OperationSchema(self.get_object())
@@ -144,6 +148,57 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
             status=c.HTTP_201_CREATED,
             data={
                 'new_operation': s.OperationSerializer(new_operation).data,
+                'oss': s.OperationSchemaSerializer(oss.model).data
+            }
+        )
+
+    @extend_schema(
+        summary='create block',
+        tags=['OSS'],
+        request=s.BlockCreateSerializer(),
+        responses={
+            c.HTTP_201_CREATED: s.NewBlockResponse,
+            c.HTTP_400_BAD_REQUEST: None,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
+    )
+    @action(detail=True, methods=['post'], url_path='create-block')
+    def create_block(self, request: Request, pk) -> HttpResponse:
+        ''' Create new block. '''
+        serializer = s.BlockCreateSerializer(
+            data=request.data,
+            context={'oss': self.get_object()}
+        )
+        serializer.is_valid(raise_exception=True)
+
+        oss = m.OperationSchema(self.get_object())
+        layout = serializer.validated_data['layout']
+        children_blocks: list[m.Block] = serializer.validated_data['children_blocks']
+        children_operations: list[m.Operation] = serializer.validated_data['children_operations']
+        with transaction.atomic():
+            new_block = oss.create_block(**serializer.validated_data['item_data'])
+            layout['blocks'].append({
+                'id': new_block.pk,
+                'x': serializer.validated_data['position_x'],
+                'y': serializer.validated_data['position_y'],
+                'width': serializer.validated_data['width'],
+                'height': serializer.validated_data['height'],
+            })
+            oss.update_layout(layout)
+            if len(children_blocks) > 0:
+                for block in children_blocks:
+                    block.parent = new_block
+                m.Block.objects.bulk_update(children_blocks, ['parent'])
+            if len(children_operations) > 0:
+                for operation in children_operations:
+                    operation.parent = new_block
+                m.Operation.objects.bulk_update(children_operations, ['parent'])
+
+        return Response(
+            status=c.HTTP_201_CREATED,
+            data={
+                'new_block': s.BlockSerializer(new_block).data,
                 'oss': s.OperationSchemaSerializer(oss.model).data
             }
         )

@@ -8,6 +8,7 @@ from shared.EndpointTester import EndpointTester, decl_endpoint
 class TestChangeSubstitutions(EndpointTester):
     ''' Testing Substitutions change propagation in OSS. '''
 
+
     def setUp(self):
         super().setUp()
         self.owned = OperationSchema.create(
@@ -129,6 +130,7 @@ class TestChangeSubstitutions(EndpointTester):
         self.assertEqual(self.ks5.constituents().count(), 8)
         self.assertEqual(self.ks4D1.definition_formal, 'S1 X1')
 
+
     @decl_endpoint('/api/rsforms/{schema}/substitute', method='patch')
     def test_substitute_original(self):
         data = {'substitutions': [{
@@ -150,6 +152,7 @@ class TestChangeSubstitutions(EndpointTester):
         self.assertEqual(self.ks4D1.definition_formal, r'S1 S1')
         self.assertEqual(self.ks4D2.definition_formal, r'S1 X2 X3 S1 D1')
         self.assertEqual(self.ks5D4.definition_formal, r'X1 X2 X3 X3 D1 D2 D3')
+
 
     @decl_endpoint('/api/rsforms/{schema}/substitute', method='patch')
     def test_substitute_substitution(self):
@@ -175,6 +178,7 @@ class TestChangeSubstitutions(EndpointTester):
         self.assertEqual(self.ks4D2.definition_formal, r'X1 X2 X3 X2 D1')
         self.assertEqual(self.ks5D4.definition_formal, r'X1 X2 X3 X1 D1 D2 D3')
 
+
     @decl_endpoint('/api/rsforms/{schema}/delete-multiple-cst', method='patch')
     def test_delete_original(self):
         data = {'items': [self.ks1X1.pk, self.ks1D1.pk]}
@@ -188,6 +192,7 @@ class TestChangeSubstitutions(EndpointTester):
         self.assertEqual(self.ks5.constituents().count(), 7)
         self.assertEqual(self.ks4D2.definition_formal, r'X1 X2 X3 S1 DEL')
         self.assertEqual(self.ks5D4.definition_formal, r'X1 X2 X3 S1 DEL D2 D3')
+
 
     @decl_endpoint('/api/rsforms/{schema}/delete-multiple-cst', method='patch')
     def test_delete_substitution(self):

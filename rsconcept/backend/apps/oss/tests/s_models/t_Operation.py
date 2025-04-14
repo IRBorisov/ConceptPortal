@@ -9,6 +9,7 @@ from apps.rsform.models import RSForm
 class TestOperation(TestCase):
     ''' Testing Operation model. '''
 
+
     def setUp(self):
         self.oss = OperationSchema.create(alias='T1')
         self.operation = Operation.objects.create(

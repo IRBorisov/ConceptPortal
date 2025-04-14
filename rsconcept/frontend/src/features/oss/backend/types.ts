@@ -5,9 +5,7 @@ import { schemaCstSubstitute } from '@/features/rsform/backend/types';
 
 import { errorMsg } from '@/utils/labels';
 
-/**
- * Represents {@link IOperation} type.
- */
+/** Represents {@link IOperation} type. */
 export const OperationType = {
   INPUT: 'input',
   SYNTHESIS: 'synthesis'
@@ -20,10 +18,13 @@ export type ICstSubstituteInfo = z.infer<typeof schemaCstSubstituteInfo>;
 /** Represents {@link IOperation} data from server. */
 export type IOperationDTO = z.infer<typeof schemaOperation>;
 
+/** Represents {@link IOperation} data from server. */
+export type IBlockDTO = z.infer<typeof schemaBlock>;
+
 /** Represents backend data for {@link IOperationSchema}. */
 export type IOperationSchemaDTO = z.infer<typeof schemaOperationSchema>;
 
-/** Represents {@link schemaOperation} layout. */
+/** Represents {@link IOperationSchema} layout. */
 export type IOssLayout = z.infer<typeof schemaOssLayout>;
 
 /** Represents {@link IOperation} data, used in creation process. */
@@ -64,13 +65,19 @@ export const schemaOperation = z.strictObject({
   id: z.number(),
   operation_type: schemaOperationType,
   oss: z.number(),
-
   alias: z.string(),
   title: z.string(),
   description: z.string(),
-
   parent: z.number().nullable(),
   result: z.number().nullable()
+});
+
+export const schemaBlock = z.strictObject({
+  id: z.number(),
+  oss: z.number(),
+  title: z.string(),
+  description: z.string(),
+  parent: z.number().nullable()
 });
 
 export const schemaCstSubstituteInfo = schemaCstSubstitute.extend({
@@ -81,20 +88,29 @@ export const schemaCstSubstituteInfo = schemaCstSubstitute.extend({
   substitution_term: z.string()
 });
 
-export const schemaPosition = z.strictObject({
+export const schemaOperationPosition = z.strictObject({
   id: z.number(),
   x: z.number(),
   y: z.number()
 });
 
+export const schemaBlockPosition = z.strictObject({
+  id: z.number(),
+  x: z.number(),
+  y: z.number(),
+  width: z.number(),
+  height: z.number()
+});
+
 export const schemaOssLayout = z.strictObject({
-  operations: z.array(schemaPosition),
-  blocks: z.array(schemaPosition)
+  operations: z.array(schemaOperationPosition),
+  blocks: z.array(schemaBlockPosition)
 });
 
 export const schemaOperationSchema = schemaLibraryItem.extend({
   editors: z.number().array(),
   operations: z.array(schemaOperation),
+  blocks: z.array(schemaBlock),
   layout: schemaOssLayout,
   arguments: z
     .object({

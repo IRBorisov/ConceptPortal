@@ -14,6 +14,18 @@ def operationNotInOSS(title: str):
     return f'Операция не принадлежит ОСС: {title}'
 
 
+def parentNotInOSS():
+    return f'Родительский блок не принадлежит ОСС'
+
+
+def childNotInOSS():
+    return f'Дочерний элемент блок не принадлежит ОСС'
+
+
+def missingArguments():
+    return 'Операция не содержит аргументов, при этом содержит отождествления'
+
+
 def exteorFileCorrupted():
     return 'Файл Экстеор не соответствует ожидаемому формату. Попробуйте сохранить файл в новой версии'
 

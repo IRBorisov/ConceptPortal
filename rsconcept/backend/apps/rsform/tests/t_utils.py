@@ -8,6 +8,7 @@ from apps.rsform.utils import apply_pattern, fix_old_references
 class TestUtils(unittest.TestCase):
     ''' Test various utility functions. '''
 
+
     def test_apply_mapping_patter(self):
         mapping = {'X101': 'X20'}
         pattern = re.compile(r'(X[0-9]+)')

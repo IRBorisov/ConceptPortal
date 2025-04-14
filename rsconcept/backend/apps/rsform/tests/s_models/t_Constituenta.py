@@ -9,6 +9,7 @@ from apps.rsform.models import Constituenta, CstType, RSForm
 class TestConstituenta(TestCase):
     ''' Testing Constituenta model. '''
 
+
     def setUp(self):
         self.schema1 = RSForm.create(title='Test1')
         self.schema2 = RSForm.create(title='Test2')
@@ -47,6 +48,7 @@ class TestConstituenta(TestCase):
         self.assertEqual(cst.definition_resolved, '')
         self.assertEqual(cst.definition_raw, '')
 
+
     def test_extract_references(self):
         cst = Constituenta.objects.create(
             alias='X1',
@@ -56,6 +58,7 @@ class TestConstituenta(TestCase):
             definition_raw='@{X5|sing}'
         )
         self.assertEqual(cst.extract_references(), set(['X1', 'X2', 'X3', 'X4', 'X5']))
+
 
     def text_apply_mapping(self):
         cst = Constituenta.objects.create(

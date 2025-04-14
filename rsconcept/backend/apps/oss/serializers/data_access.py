@@ -11,7 +11,7 @@ from apps.rsform.models import Constituenta
 from apps.rsform.serializers import SubstitutionSerializerBase
 from shared import messages as msg
 
-from ..models import Argument, Inheritance, Operation, OperationSchema, OperationType
+from ..models import Argument, Block, Inheritance, Operation, OperationSchema, OperationType
 from .basics import LayoutSerializer, SubstitutionExSerializer
 
 
@@ -24,12 +24,64 @@ class OperationSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'oss')
 
 
+class BlockSerializer(serializers.ModelSerializer):
+    ''' Serializer: Block data. '''
+    class Meta:
+        ''' serializer metadata. '''
+        model = Block
+        fields = '__all__'
+        read_only_fields = ('id', 'oss')
+
+
 class ArgumentSerializer(serializers.ModelSerializer):
     ''' Serializer: Operation data. '''
     class Meta:
         ''' serializer metadata. '''
         model = Argument
         fields = ('operation', 'argument')
+
+
+class BlockCreateSerializer(serializers.Serializer):
+    ''' Serializer: Block creation. '''
+    class BlockCreateData(serializers.ModelSerializer):
+        ''' Serializer: Block creation data. '''
+
+        class Meta:
+            ''' serializer metadata. '''
+            model = Block
+            fields = 'title', 'description', 'parent'
+
+    layout = LayoutSerializer()
+
+    item_data = BlockCreateData()
+    width = serializers.FloatField()
+    height = serializers.FloatField()
+    position_x = serializers.FloatField()
+    position_y = serializers.FloatField()
+    children_operations = PKField(many=True, queryset=Operation.objects.all().only('oss_id'))
+    children_blocks = PKField(many=True, queryset=Block.objects.all().only('oss_id'))
+
+    def validate(self, attrs):
+        oss = cast(LibraryItem, self.context['oss'])
+        if 'parent' in attrs['item_data'] and \
+                attrs['item_data']['parent'] is not None and \
+                attrs['item_data']['parent'].oss_id != oss.pk:
+            raise serializers.ValidationError({
+                'parent': msg.parentNotInOSS()
+            })
+
+        for operation in attrs['children_operations']:
+            if operation.oss_id != oss.pk:
+                raise serializers.ValidationError({
+                    'children_operations': msg.childNotInOSS()
+                })
+
+        for block in attrs['children_blocks']:
+            if block.oss_id != oss.pk:
+                raise serializers.ValidationError({
+                    'children_blocks': msg.childNotInOSS()
+                })
+        return attrs
 
 
 class OperationCreateSerializer(serializers.Serializer):
@@ -47,12 +99,30 @@ class OperationCreateSerializer(serializers.Serializer):
                 'description', 'result', 'parent'
 
     layout = LayoutSerializer()
-    position_x = serializers.FloatField()
-    position_y = serializers.FloatField()
 
     item_data = OperationCreateData()
+    position_x = serializers.FloatField()
+    position_y = serializers.FloatField()
     create_schema = serializers.BooleanField(default=False, required=False)
     arguments = PKField(many=True, queryset=Operation.objects.all().only('pk'), required=False)
+
+    def validate(self, attrs):
+        oss = cast(LibraryItem, self.context['oss'])
+        if 'parent' in attrs['item_data'] and \
+                attrs['item_data']['parent'] is not None and \
+                attrs['item_data']['parent'].oss_id != oss.pk:
+            raise serializers.ValidationError({
+                'parent': msg.parentNotInOSS()
+            })
+
+        if 'arguments' not in attrs:
+            return attrs
+        for operation in attrs['arguments']:
+            if operation.oss_id != oss.pk:
+                raise serializers.ValidationError({
+                    'arguments': msg.operationNotInOSS(oss.title)
+                })
+        return attrs
 
 
 class OperationUpdateSerializer(serializers.Serializer):
@@ -74,10 +144,19 @@ class OperationUpdateSerializer(serializers.Serializer):
     )
 
     def validate(self, attrs):
+        oss = cast(LibraryItem, self.context['oss'])
+        if 'parent' in attrs['item_data'] and attrs['item_data']['parent'].oss_id != oss.pk:
+            raise serializers.ValidationError({
+                'parent': msg.parentNotInOSS()
+            })
+
         if 'arguments' not in attrs:
+            if 'substitutions' in attrs:
+                raise serializers.ValidationError({
+                    'arguments': msg.missingArguments()
+                })
             return attrs
 
-        oss = cast(LibraryItem, self.context['oss'])
         for operation in attrs['arguments']:
             if operation.oss_id != oss.pk:
                 raise serializers.ValidationError({
@@ -175,6 +254,9 @@ class OperationSchemaSerializer(serializers.ModelSerializer):
     operations = serializers.ListField(
         child=OperationSerializer()
     )
+    blocks = serializers.ListField(
+        child=BlockSerializer()
+    )
     arguments = serializers.ListField(
         child=ArgumentSerializer()
     )
@@ -194,12 +276,15 @@ class OperationSchemaSerializer(serializers.ModelSerializer):
         oss = OperationSchema(instance)
         result['layout'] = oss.layout().data
         result['operations'] = []
+        result['blocks'] = []
+        result['arguments'] = []
+        result['substitutions'] = []
         for operation in oss.operations().order_by('pk'):
             result['operations'].append(OperationSerializer(operation).data)
-        result['arguments'] = []
+        for block in oss.blocks().order_by('pk'):
+            result['blocks'].append(BlockSerializer(block).data)
         for argument in oss.arguments().order_by('order'):
             result['arguments'].append(ArgumentSerializer(argument).data)
-        result['substitutions'] = []
         for substitution in oss.substitutions().values(
             'operation',
             'original',

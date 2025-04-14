@@ -16,7 +16,8 @@ class TestOssViewset(EndpointTester):
         self.unowned_id = self.unowned.model.pk
         self.private = OperationSchema.create(title='Test2', alias='T2', access_policy=AccessPolicy.PRIVATE)
         self.private_id = self.private.model.pk
-        self.invalid_id = self.private.model.pk + 1337
+        self.invalid_id = self.private_id + 1337
+
 
     def populateData(self):
         self.ks1 = RSForm.create(
@@ -68,6 +69,7 @@ class TestOssViewset(EndpointTester):
             'substitution': self.ks2X1
         }])
 
+
     @decl_endpoint('/api/oss/{item}/details', method='get')
     def test_details(self):
         self.populateData()
@@ -117,6 +119,7 @@ class TestOssViewset(EndpointTester):
         self.executeOK(item=self.unowned_id)
         self.executeForbidden(item=self.private_id)
 
+
     @decl_endpoint('/api/oss/{item}/update-layout', method='patch')
     def test_update_layout(self):
         self.populateData()
@@ -142,6 +145,7 @@ class TestOssViewset(EndpointTester):
 
         self.executeForbidden(data=data, item=self.unowned_id)
         self.executeForbidden(data=data, item=self.private_id)
+
 
     @decl_endpoint('/api/oss/get-predecessor', method='post')
     def test_get_predecessor(self):
