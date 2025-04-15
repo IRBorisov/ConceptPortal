@@ -7,6 +7,11 @@ import { usePreferencesStore } from '@/stores/preferences';
 
 import { libraryApi } from './api';
 
+export function useLibraryListKey() {
+  const adminMode = usePreferencesStore(state => state.adminMode);
+  return libraryApi.getLibraryQueryOptions({ isAdmin: adminMode }).queryKey;
+}
+
 export function useLibrarySuspense() {
   const adminMode = usePreferencesStore(state => state.adminMode);
   const { user } = useAuthSuspense();

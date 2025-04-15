@@ -7,9 +7,11 @@ import { KEYS } from '@/backend/configuration';
 
 import { libraryApi } from './api';
 import { type ILibraryItem, type IUpdateLibraryItemDTO, LibraryItemType } from './types';
+import { useLibraryListKey } from './use-library';
 
 export const useUpdateItem = () => {
   const client = useQueryClient();
+  const libraryKey = useLibraryListKey();
   const mutation = useMutation({
     mutationKey: [KEYS.global_mutation, libraryApi.baseKey, 'update-item'],
     mutationFn: libraryApi.updateItem,
@@ -18,7 +20,7 @@ export const useUpdateItem = () => {
         data.item_type === LibraryItemType.RSFORM
           ? KEYS.composite.rsItem({ itemID: data.id })
           : KEYS.composite.ossItem({ itemID: data.id });
-      client.setQueryData(libraryApi.libraryListKey, (prev: ILibraryItem[] | undefined) =>
+      client.setQueryData(libraryKey, (prev: ILibraryItem[] | undefined) =>
         prev?.map(item => (item.id === data.id ? data : item))
       );
       client.setQueryData(itemKey, (prev: IRSFormDTO | IOperationSchemaDTO | undefined) =>

@@ -7,9 +7,11 @@ import { KEYS } from '@/backend/configuration';
 
 import { libraryApi } from './api';
 import { type ILibraryItem } from './types';
+import { useLibraryListKey } from './use-library';
 
 export const useSetOwner = () => {
   const client = useQueryClient();
+  const libraryKey = useLibraryListKey();
   const mutation = useMutation({
     mutationKey: [KEYS.global_mutation, libraryApi.baseKey, 'set-owner'],
     mutationFn: libraryApi.setOwner,
@@ -36,7 +38,7 @@ export const useSetOwner = () => {
       client.setQueryData(rsKey, (prev: IRSFormDTO | undefined) =>
         !prev ? undefined : { ...prev, owner: variables.owner }
       );
-      client.setQueryData(libraryApi.libraryListKey, (prev: ILibraryItem[] | undefined) =>
+      client.setQueryData(libraryKey, (prev: ILibraryItem[] | undefined) =>
         prev?.map(item => (item.id === variables.itemID ? { ...item, owner: variables.owner } : item))
       );
     },

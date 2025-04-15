@@ -7,9 +7,11 @@ import { KEYS } from '@/backend/configuration';
 
 import { libraryApi } from './api';
 import { type AccessPolicy, type ILibraryItem } from './types';
+import { useLibraryListKey } from './use-library';
 
 export const useSetAccessPolicy = () => {
   const client = useQueryClient();
+  const libraryKey = useLibraryListKey();
   const mutation = useMutation({
     mutationKey: [KEYS.global_mutation, libraryApi.baseKey, 'set-location'],
     mutationFn: libraryApi.setAccessPolicy,
@@ -36,7 +38,7 @@ export const useSetAccessPolicy = () => {
       client.setQueryData(rsKey, (prev: IRSFormDTO | undefined) =>
         !prev ? undefined : { ...prev, access_policy: variables.policy }
       );
-      client.setQueryData(libraryApi.libraryListKey, (prev: ILibraryItem[] | undefined) =>
+      client.setQueryData(libraryKey, (prev: ILibraryItem[] | undefined) =>
         prev?.map(item => (item.id === variables.itemID ? { ...item, access_policy: variables.policy } : item))
       );
     },
