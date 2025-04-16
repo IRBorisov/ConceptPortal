@@ -9,6 +9,7 @@ import { PARAMETER } from '@/utils/constants';
 
 import { CstType, type IRSErrorDescription, type RSErrorType } from '../backend/types';
 
+import { type IRSForm } from './rsform';
 import { type AliasMapping, type IArgumentValue, RSErrorClass, type SyntaxTree } from './rslang';
 
 // cspell:disable
@@ -18,30 +19,22 @@ const COMPLEX_SYMBOLS_REGEXP = /[∀∃×ℬ;|:]/g;
 const TYPIFICATION_SET = /^ℬ+\([ℬ\(X\d+\)×]*\)$/g;
 // cspell:enable
 
-/**
- * Extracts global variable names from a given expression.
- */
+/** Extracts global variable names from a given expression. */
 export function extractGlobals(expression: string): Set<string> {
   return new Set(expression.match(GLOBALS_REGEXP) ?? []);
 }
 
-/**
- * Check if expression is simple derivation.
- */
+/** Check if expression is simple derivation. */
 export function isSimpleExpression(text: string): boolean {
   return !text.match(COMPLEX_SYMBOLS_REGEXP);
 }
 
-/**
- * Check if expression is set typification.
- */
+/** Check if expression is set typification. */
 export function isSetTypification(text: string): boolean {
   return !!text.match(TYPIFICATION_SET);
 }
 
-/**
- * Infers type of constituent for a given template and arguments.
- */
+/** Infers type of constituent for a given template and arguments. */
 export function inferTemplatedType(templateType: CstType, args: IArgumentValue[]): CstType {
   if (args.length === 0 || args.some(arg => !arg.value)) {
     return templateType;
@@ -138,16 +131,12 @@ export function getRSErrorPrefix(error: IRSErrorDescription): string {
   }
 }
 
-/**
- * Apply alias mapping.
- */
+/** Apply alias mapping. */
 export function applyAliasMapping(target: string, mapping: AliasMapping): string {
   return applyPattern(target, mapping, GLOBALS_REGEXP);
 }
 
-/**
- * Apply alias typification mapping.
- */
+/** Apply alias typification mapping. */
 export function applyTypificationMapping(target: string, mapping: AliasMapping): string {
   const modified = applyAliasMapping(target, mapping);
   if (modified === target) {
@@ -202,9 +191,7 @@ export function applyTypificationMapping(target: string, mapping: AliasMapping):
   return result;
 }
 
-/**
- * Transform Tree to {@link SyntaxTree}.
- */
+/** Transform Tree to {@link SyntaxTree}. */
 export function transformAST(tree: Tree): SyntaxTree {
   const result: SyntaxTree = [];
   const parents: number[] = [];
@@ -250,6 +237,21 @@ export function transformAST(tree: Tree): SyntaxTree {
     }
   }
   return result;
+}
+
+export function generatePrompt(schema: IRSForm): string {
+  const intro =
+    'Концептуальная схема — это формализованная модель предметной области, выраженная с помощью языка родов структур, основанного на аппарате формальной логики и теории множеств, и дополненная естественно-языковыми пояснениями. Она представляет собой систему взаимосвязанных определений, где каждое понятие или утверждение задаётся в строгом формате Обозначение - "Типизация" - "Термин" - "Определение в языке родов структур" - "Определение в естественном языке" - "Конвенция или комментарий".\nОбозначение — уникальный идентификатор понятия (например, X1, S3, F14).\nТипизация — структура элементов множества, моделирующего данное понятие (например, ℬ(X1) для подмножества индивидов или ℬ(X1×X1) для бинарных отношений).\nТермин — название понятия в естественном языке.\nКонвенция описывает неопределяемые понятия предметным языком, включая уточнения, ограничения или примеры, включая ссылки на внешние данные (например, документы).\n------------\nДалее приведена концептуальная схема, описывающая некоторую предметную область.\n';
+  const outro =
+    '\n------\nПри ответе на следующий вопрос используй представленные в концептуальной схеме понятия и определения.\n';
+
+  let body = `Название концептуальной схемы: ${schema.title}\n`;
+  body += `[${schema.alias}] Описание: "${schema.description}"\n\n`;
+  body += 'Понятия:\n';
+  schema.items.forEach(item => {
+    body += `${item.alias} - "${item.parse.typification}" - "${item.term_resolved}" - "${item.definition_formal}" - "${item.definition_resolved}" - "${item.convention}"\n`;
+  });
+  return `${intro} ${body} ${outro}`;
 }
 
 // ====== Internals =========

@@ -17,6 +17,7 @@ export const infoMsg = {
   reindexComplete: 'Имена конституент обновлены',
   moveComplete: 'Перемещение завершено',
   linkReady: 'Ссылка скопирована',
+  promptReady: 'Текст скопирован',
   versionRestored: 'Загрузка версии завершена',
   locationRenamed: 'Ваши схемы перемещены',
   cloneComplete: (alias: string) => `Копия создана: ${alias}`,
