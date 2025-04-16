@@ -137,7 +137,7 @@ class RSForm:
         return result
 
     def create_cst(self, data: dict, insert_after: Optional[Constituenta] = None) -> Constituenta:
-        ''' Create new cst from data. '''
+        ''' Create constituenta from data. '''
         if insert_after is None:
             position = INSERT_LAST
         else:

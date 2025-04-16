@@ -92,26 +92,26 @@ class OperationSchema:
         )
 
     def update_layout(self, data: dict) -> None:
-        ''' Update positions. '''
+        ''' Update graphical layout. '''
         layout = self.layout()
         layout.data = data
         layout.save()
 
     def create_operation(self, **kwargs) -> Operation:
-        ''' Insert new operation. '''
+        ''' Create Operation. '''
         result = Operation.objects.create(oss=self.model, **kwargs)
         self.cache.insert_operation(result)
         self.save(update_fields=['time_update'])
         return result
 
     def create_block(self, **kwargs) -> Block:
-        ''' Insert new block. '''
+        ''' Create Block. '''
         result = Block.objects.create(oss=self.model, **kwargs)
         self.save(update_fields=['time_update'])
         return result
 
     def delete_operation(self, target: int, keep_constituents: bool = False):
-        ''' Delete operation. '''
+        ''' Delete Operation. '''
         self.cache.ensure_loaded()
         operation = self.cache.operation_by_id[target]
         schema = self.cache.get_schema(operation)
@@ -137,6 +137,20 @@ class OperationSchema:
                 Inheritance.objects.filter(pk__in=[item.pk for item in inheritance_to_delete]).delete()
         self.cache.remove_operation(target)
         operation.delete()
+        self.save(update_fields=['time_update'])
+
+    def delete_block(self, target: Block):
+        ''' Delete Block. '''
+        new_parent = target.parent
+        if new_parent is not None:
+            for block in Block.objects.filter(parent=target):
+                if block != new_parent:
+                    block.parent = new_parent
+                    block.save(update_fields=['parent'])
+            for operation in Operation.objects.filter(parent=target):
+                operation.parent = new_parent
+                operation.save(update_fields=['parent'])
+        target.delete()
         self.save(update_fields=['time_update'])
 
     def set_input(self, target: int, schema: Optional[LibraryItem]) -> None:
@@ -165,7 +179,7 @@ class OperationSchema:
         self.save(update_fields=['time_update'])
 
     def set_arguments(self, target: int, arguments: list[Operation]) -> None:
-        ''' Set arguments to operation. '''
+        ''' Set arguments of target Operation. '''
         self.cache.ensure_loaded()
         operation = self.cache.operation_by_id[target]
         processed: list[Operation] = []
@@ -198,7 +212,7 @@ class OperationSchema:
             self.save(update_fields=['time_update'])
 
     def set_substitutions(self, target: int, substitutes: list[dict]) -> None:
-        ''' Clear all arguments for operation. '''
+        ''' Clear all arguments for target Operation. '''
         self.cache.ensure_loaded()
         operation = self.cache.operation_by_id[target]
         schema = self.cache.get_schema(operation)
@@ -237,7 +251,7 @@ class OperationSchema:
             self.save(update_fields=['time_update'])
 
     def create_input(self, operation: Operation) -> RSForm:
-        ''' Create input RSForm. '''
+        ''' Create input RSForm for given Operation. '''
         schema = RSForm.create(
             owner=self.model.owner,
             alias=operation.alias,
@@ -254,7 +268,7 @@ class OperationSchema:
         return schema
 
     def execute_operation(self, operation: Operation) -> bool:
-        ''' Execute target operation. '''
+        ''' Execute target Operation. '''
         schemas = [
             arg.argument.result
             for arg in operation.getQ_arguments().order_by('order')
@@ -301,7 +315,7 @@ class OperationSchema:
         return True
 
     def relocate_down(self, source: RSForm, destination: RSForm, items: list[Constituenta]):
-        ''' Move list of constituents to specific schema inheritor. '''
+        ''' Move list of Constituents to destination Schema inheritor. '''
         self.cache.ensure_loaded()
         self.cache.insert_schema(source)
         self.cache.insert_schema(destination)
@@ -315,7 +329,7 @@ class OperationSchema:
         Inheritance.objects.filter(operation_id=operation.pk, parent__in=items).delete()
 
     def relocate_up(self, source: RSForm, destination: RSForm, items: list[Constituenta]) -> list[Constituenta]:
-        ''' Move list of constituents to specific schema upstream. '''
+        ''' Move list of Constituents upstream to destination Schema. '''
         self.cache.ensure_loaded()
         self.cache.insert_schema(source)
         self.cache.insert_schema(destination)
@@ -345,7 +359,7 @@ class OperationSchema:
         cst_list: list[Constituenta],
         exclude: Optional[list[int]] = None
     ) -> None:
-        ''' Trigger cascade resolutions when new constituent is created. '''
+        ''' Trigger cascade resolutions when new Constituenta is created. '''
         self.cache.insert_schema(source)
         inserted_aliases = [cst.alias for cst in cst_list]
         depend_aliases: set[str] = set()
@@ -361,13 +375,13 @@ class OperationSchema:
         self._cascade_inherit_cst(operation.pk, source, cst_list, alias_mapping, exclude)
 
     def after_change_cst_type(self, source: RSForm, target: Constituenta) -> None:
-        ''' Trigger cascade resolutions when constituenta type is changed. '''
+        ''' Trigger cascade resolutions when Constituenta type is changed. '''
         self.cache.insert_schema(source)
         operation = self.cache.get_operation(source.model.pk)
         self._cascade_change_cst_type(operation.pk, target.pk, cast(CstType, target.cst_type))
 
     def after_update_cst(self, source: RSForm, target: Constituenta, data: dict, old_data: dict) -> None:
-        ''' Trigger cascade resolutions when constituenta data is changed. '''
+        ''' Trigger cascade resolutions when Constituenta data is changed. '''
         self.cache.insert_schema(source)
         operation = self.cache.get_operation(source.model.pk)
         depend_aliases = self._extract_data_references(data, old_data)
@@ -385,13 +399,13 @@ class OperationSchema:
         )
 
     def before_delete_cst(self, source: RSForm, target: list[Constituenta]) -> None:
-        ''' Trigger cascade resolutions before constituents are deleted. '''
+        ''' Trigger cascade resolutions before Constituents are deleted. '''
         self.cache.insert_schema(source)
         operation = self.cache.get_operation(source.model.pk)
         self._cascade_delete_inherited(operation.pk, target)
 
     def before_substitute(self, source: RSForm, substitutions: CstSubstitution) -> None:
-        ''' Trigger cascade resolutions before constituents are substituted. '''
+        ''' Trigger cascade resolutions before Constituents are substituted. '''
         self.cache.insert_schema(source)
         operation = self.cache.get_operation(source.model.pk)
         self._cascade_before_substitute(substitutions, operation)

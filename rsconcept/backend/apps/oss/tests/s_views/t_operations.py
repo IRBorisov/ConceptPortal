@@ -226,9 +226,8 @@ class TestOssOperations(EndpointTester):
 
     @decl_endpoint('/api/oss/{item}/delete-operation', method='patch')
     def test_delete_operation(self):
-        self.executeNotFound(item=self.invalid_id)
-
         self.populateData()
+        self.executeNotFound(item=self.invalid_id)
         self.executeBadData(item=self.owned_id)
 
         data = {
@@ -371,7 +370,6 @@ class TestOssOperations(EndpointTester):
                 'title': 'Test title mod',
                 'description': 'Comment mod'
             },
-            'layout': self.layout_data,
             'arguments': [self.operation2.pk, self.operation1.pk],
             'substitutions': [
                 {
@@ -402,6 +400,10 @@ class TestOssOperations(EndpointTester):
         sub = self.operation3.getQ_substitutions()[0]
         self.assertEqual(sub.original.pk, data['substitutions'][0]['original'])
         self.assertEqual(sub.substitution.pk, data['substitutions'][0]['substitution'])
+
+        data['layout'] = self.layout_data
+        self.executeOK(data=data)
+
 
     @decl_endpoint('/api/oss/{item}/update-operation', method='patch')
     def test_update_operation_sync(self):

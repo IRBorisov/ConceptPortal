@@ -9,7 +9,7 @@ export type IUserProfile = z.infer<typeof schemaUserProfile>;
 /** Represents user reference information. */
 export type IUserInfo = z.infer<typeof schemaUserInfo>;
 
-/** Represents signup data, used to create new users. */
+/** Represents signup data, used to create users. */
 export type IUserSignupDTO = z.infer<typeof schemaUserSignup>;
 
 /** Represents user data, intended to update user profile in persistent storage. */

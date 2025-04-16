@@ -27,6 +27,10 @@ class TestOssBlocks(EndpointTester):
         self.block1 = self.owned.create_block(
             title='1',
         )
+        self.block2 = self.owned.create_block(
+            title='2',
+            parent=self.block1
+        )
         self.operation1 = self.owned.create_operation(
             alias='1',
             operation_type=OperationType.INPUT,
@@ -35,14 +39,11 @@ class TestOssBlocks(EndpointTester):
         self.operation2 = self.owned.create_operation(
             alias='2',
             operation_type=OperationType.INPUT,
+            parent=self.block2,
         )
         self.operation3 = self.unowned.create_operation(
             alias='3',
             operation_type=OperationType.INPUT
-        )
-        self.block2 = self.owned.create_block(
-            title='2',
-            parent=self.block1
         )
         self.block3 = self.unowned.create_block(
             title='3',
@@ -165,3 +166,73 @@ class TestOssBlocks(EndpointTester):
         self.block1.refresh_from_db()
         self.assertEqual(self.operation1.parent.pk, new_block['id'])
         self.assertEqual(self.block1.parent.pk, new_block['id'])
+
+
+    @decl_endpoint('/api/oss/{item}/delete-block', method='patch')
+    def test_delete_block(self):
+        self.populateData()
+        self.executeNotFound(item=self.invalid_id)
+        self.executeBadData(item=self.owned_id)
+
+        data = {
+            'layout': self.layout_data
+        }
+        self.executeBadData(data=data)
+
+        data['target'] = self.operation1.pk
+        self.executeBadData(data=data)
+
+        data['target'] = self.block3.pk
+        self.executeBadData(data=data)
+
+        data['target'] = self.block2.pk
+        self.logout()
+        self.executeForbidden(data=data)
+
+        self.login()
+        response = self.executeOK(data=data)
+        self.operation2.refresh_from_db()
+        self.assertEqual(len(response.data['blocks']), 1)
+        self.assertEqual(self.operation2.parent.pk, self.block1.pk)
+
+        data['target'] = self.block1.pk
+        response = self.executeOK(data=data)
+        self.operation1.refresh_from_db()
+        self.operation2.refresh_from_db()
+        self.assertEqual(len(response.data['blocks']), 0)
+        self.assertEqual(self.operation1.parent, None)
+        self.assertEqual(self.operation2.parent, None)
+
+
+    @decl_endpoint('/api/oss/{item}/update-block', method='patch')
+    def test_update_block(self):
+        self.populateData()
+        self.executeBadData(item=self.owned_id)
+
+        data = {
+            'target': self.invalid_id,
+            'item_data': {
+                'title': 'Test title mod',
+                'description': 'Comment mod',
+                'parent': None
+            },
+        }
+        self.executeBadData(data=data)
+
+        data['target'] = self.block3.pk
+        self.toggle_admin(True)
+        self.executeBadData(data=data)
+
+        data['target'] = self.block2.pk
+        self.logout()
+        self.executeForbidden(data=data)
+
+        self.login()
+        response = self.executeOK(data=data)
+        self.block2.refresh_from_db()
+        self.assertEqual(self.block2.title, data['item_data']['title'])
+        self.assertEqual(self.block2.description, data['item_data']['description'])
+        self.assertEqual(self.block2.parent, data['item_data']['parent'])
+
+        data['layout'] = self.layout_data
+        self.executeOK(data=data)

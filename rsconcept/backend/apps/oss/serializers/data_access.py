@@ -41,7 +41,7 @@ class ArgumentSerializer(serializers.ModelSerializer):
         fields = ('operation', 'argument')
 
 
-class BlockCreateSerializer(serializers.Serializer):
+class CreateBlockSerializer(serializers.Serializer):
     ''' Serializer: Block creation. '''
     class BlockCreateData(serializers.ModelSerializer):
         ''' Serializer: Block creation data. '''
@@ -52,7 +52,6 @@ class BlockCreateSerializer(serializers.Serializer):
             fields = 'title', 'description', 'parent'
 
     layout = LayoutSerializer()
-
     item_data = BlockCreateData()
     width = serializers.FloatField()
     height = serializers.FloatField()
@@ -84,9 +83,9 @@ class BlockCreateSerializer(serializers.Serializer):
         return attrs
 
 
-class OperationCreateSerializer(serializers.Serializer):
+class CreateOperationSerializer(serializers.Serializer):
     ''' Serializer: Operation creation. '''
-    class OperationCreateData(serializers.ModelSerializer):
+    class CreateOperationData(serializers.ModelSerializer):
         ''' Serializer: Operation creation data. '''
         alias = serializers.CharField()
         operation_type = serializers.ChoiceField(OperationType.choices)
@@ -99,8 +98,7 @@ class OperationCreateSerializer(serializers.Serializer):
                 'description', 'result', 'parent'
 
     layout = LayoutSerializer()
-
-    item_data = OperationCreateData()
+    item_data = CreateOperationData()
     position_x = serializers.FloatField()
     position_y = serializers.FloatField()
     create_schema = serializers.BooleanField(default=False, required=False)
@@ -120,23 +118,23 @@ class OperationCreateSerializer(serializers.Serializer):
         for operation in attrs['arguments']:
             if operation.oss_id != oss.pk:
                 raise serializers.ValidationError({
-                    'arguments': msg.operationNotInOSS(oss.title)
+                    'arguments': msg.operationNotInOSS()
                 })
         return attrs
 
 
-class OperationUpdateSerializer(serializers.Serializer):
+class UpdateOperationSerializer(serializers.Serializer):
     ''' Serializer: Operation update. '''
-    class OperationUpdateData(serializers.ModelSerializer):
+    class UpdateOperationData(serializers.ModelSerializer):
         ''' Serializer: Operation update data. '''
         class Meta:
             ''' serializer metadata. '''
             model = Operation
-            fields = 'alias', 'title', 'description'
+            fields = 'alias', 'title', 'description', 'parent'
 
-    layout = LayoutSerializer()
+    layout = LayoutSerializer(required=False)
     target = PKField(many=False, queryset=Operation.objects.all())
-    item_data = OperationUpdateData()
+    item_data = UpdateOperationData()
     arguments = PKField(many=True, queryset=Operation.objects.all().only('oss_id', 'result_id'), required=False)
     substitutions = serializers.ListField(
         child=SubstitutionSerializerBase(),
@@ -145,6 +143,12 @@ class OperationUpdateSerializer(serializers.Serializer):
 
     def validate(self, attrs):
         oss = cast(LibraryItem, self.context['oss'])
+        target = cast(Block, attrs['target'])
+        if target.oss_id != oss.pk:
+            raise serializers.ValidationError({
+                'target': msg.operationNotInOSS()
+            })
+
         if 'parent' in attrs['item_data'] and attrs['item_data']['parent'].oss_id != oss.pk:
             raise serializers.ValidationError({
                 'parent': msg.parentNotInOSS()
@@ -160,7 +164,7 @@ class OperationUpdateSerializer(serializers.Serializer):
         for operation in attrs['arguments']:
             if operation.oss_id != oss.pk:
                 raise serializers.ValidationError({
-                    'arguments': msg.operationNotInOSS(oss.title)
+                    'arguments': msg.operationNotInOSS()
                 })
 
         if 'substitutions' not in attrs:
@@ -192,17 +196,51 @@ class OperationUpdateSerializer(serializers.Serializer):
         return attrs
 
 
-class OperationTargetSerializer(serializers.Serializer):
-    ''' Serializer: Target single operation. '''
-    layout = LayoutSerializer()
-    target = PKField(many=False, queryset=Operation.objects.all().only('oss_id', 'result_id'))
+class UpdateBlockSerializer(serializers.Serializer):
+    ''' Serializer: Block update. '''
+    class UpdateBlockData(serializers.ModelSerializer):
+        ''' Serializer: Block update data. '''
+        class Meta:
+            ''' serializer metadata. '''
+            model = Block
+            fields = 'title', 'description', 'parent'
+
+    layout = LayoutSerializer(required=False)
+    target = PKField(many=False, queryset=Block.objects.all())
+    item_data = UpdateBlockData()
 
     def validate(self, attrs):
         oss = cast(LibraryItem, self.context['oss'])
-        operation = cast(Operation, attrs['target'])
-        if oss and operation.oss_id != oss.pk:
+        block = cast(Block, attrs['target'])
+        if block.oss_id != oss.pk:
             raise serializers.ValidationError({
-                'target': msg.operationNotInOSS(oss.title)
+                'target': msg.blockNotInOSS()
+            })
+
+        if 'parent' in attrs['item_data'] and \
+                attrs['item_data']['parent'] is not None:
+            if attrs['item_data']['parent'].oss_id != oss.pk:
+                raise serializers.ValidationError({
+                    'parent': msg.parentNotInOSS()
+                })
+            if attrs['item_data']['parent'] == attrs['target']:
+                raise serializers.ValidationError({
+                    'parent': msg.blockSelfParent()
+                })
+        return attrs
+
+
+class DeleteBlockSerializer(serializers.Serializer):
+    ''' Serializer: Delete block. '''
+    layout = LayoutSerializer()
+    target = PKField(many=False, queryset=Block.objects.all().only('oss_id'))
+
+    def validate(self, attrs):
+        oss = cast(LibraryItem, self.context['oss'])
+        block = cast(Block, attrs['target'])
+        if block.oss_id != oss.pk:
+            raise serializers.ValidationError({
+                'target': msg.blockNotInOSS()
             })
         return attrs
 
@@ -217,9 +255,24 @@ class OperationDeleteSerializer(serializers.Serializer):
     def validate(self, attrs):
         oss = cast(LibraryItem, self.context['oss'])
         operation = cast(Operation, attrs['target'])
-        if oss and operation.oss_id != oss.pk:
+        if operation.oss_id != oss.pk:
             raise serializers.ValidationError({
-                'target': msg.operationNotInOSS(oss.title)
+                'target': msg.operationNotInOSS()
+            })
+        return attrs
+
+
+class OperationTargetSerializer(serializers.Serializer):
+    ''' Serializer: Target single operation. '''
+    layout = LayoutSerializer()
+    target = PKField(many=False, queryset=Operation.objects.all().only('oss_id', 'result_id'))
+
+    def validate(self, attrs):
+        oss = cast(LibraryItem, self.context['oss'])
+        operation = cast(Operation, attrs['target'])
+        if operation.oss_id != oss.pk:
+            raise serializers.ValidationError({
+                'target': msg.operationNotInOSS()
             })
         return attrs
 
@@ -240,7 +293,7 @@ class SetOperationInputSerializer(serializers.Serializer):
         operation = cast(Operation, attrs['target'])
         if oss and operation.oss_id != oss.pk:
             raise serializers.ValidationError({
-                'target': msg.operationNotInOSS(oss.title)
+                'target': msg.operationNotInOSS()
             })
         if operation.operation_type != OperationType.INPUT:
             raise serializers.ValidationError({

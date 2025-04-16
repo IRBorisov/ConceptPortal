@@ -7,15 +7,23 @@ def constituentaNotInRSform(title: str):
 
 
 def constituentaNotFromOperation():
-    return f'Конституента не соответствую аргументам операции'
+    return 'Конституента не соответствую аргументам операции'
 
 
-def operationNotInOSS(title: str):
-    return f'Операция не принадлежит ОСС: {title}'
+def operationNotInOSS():
+    return 'Операция не принадлежит ОСС'
+
+
+def blockNotInOSS():
+    return 'Блок не принадлежит ОСС'
 
 
 def parentNotInOSS():
-    return f'Родительский блок не принадлежит ОСС'
+    return 'Родительский блок не принадлежит ОСС'
+
+
+def blockSelfParent():
+    return 'Попытка создания циклического вложения'
 
 
 def childNotInOSS():

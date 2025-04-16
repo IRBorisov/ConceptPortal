@@ -77,7 +77,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     )
     @action(detail=True, methods=['post'], url_path='create-cst')
     def create_cst(self, request: Request, pk) -> HttpResponse:
-        ''' Create new constituenta. '''
+        ''' Create Constituenta. '''
         serializer = s.CstCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
@@ -254,7 +254,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     )
     @action(detail=True, methods=['patch'], url_path='delete-multiple-cst')
     def delete_multiple_cst(self, request: Request, pk) -> HttpResponse:
-        ''' Endpoint: Delete multiple constituents. '''
+        ''' Endpoint: Delete multiple Constituents. '''
         model = self._get_item()
         serializer = s.CstListSerializer(
             data=request.data,
@@ -284,7 +284,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     )
     @action(detail=True, methods=['patch'], url_path='move-cst')
     def move_cst(self, request: Request, pk) -> HttpResponse:
-        ''' Endpoint: Move multiple constituents. '''
+        ''' Endpoint: Move multiple Constituents. '''
         model = self._get_item()
         serializer = s.CstMoveSerializer(
             data=request.data,
@@ -334,7 +334,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     )
     @action(detail=True, methods=['patch'], url_path='restore-order')
     def restore_order(self, request: Request, pk) -> HttpResponse:
-        ''' Endpoint: Restore order based on types and term graph. '''
+        ''' Endpoint: Restore order based on types and Term graph. '''
         model = self._get_item()
         m.RSForm(model).restore_order()
         return Response(
@@ -449,7 +449,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     )
     @action(detail=True, methods=['post'], url_path='check-constituenta')
     def check_constituenta(self, request: Request, pk) -> HttpResponse:
-        ''' Endpoint: Check RSLang expression against schema context. '''
+        ''' Endpoint: Check RSLang expression against Schema context. '''
         serializer = s.ConstituentaCheckSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         expression = serializer.validated_data['definition_formal']
@@ -474,7 +474,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     )
     @action(detail=True, methods=['post'], url_path='resolve')
     def resolve(self, request: Request, pk) -> HttpResponse:
-        ''' Endpoint: Resolve references in text against schema terms context. '''
+        ''' Endpoint: Resolve references in text against Schema terms context. '''
         serializer = s.TextSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         text = serializer.validated_data['text']
@@ -543,7 +543,7 @@ class TrsImportView(views.APIView):
 
 
 @extend_schema(
-    summary='create new RSForm empty or from file',
+    summary='create RSForm empty or from file',
     tags=['RSForm'],
     request=LibraryItemSerializer,
     responses={

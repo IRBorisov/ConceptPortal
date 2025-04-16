@@ -17,7 +17,7 @@ class PropagationFacade:
 
     @staticmethod
     def after_create_cst(source: RSForm, new_cst: list[Constituenta], exclude: Optional[list[int]] = None) -> None:
-        ''' Trigger cascade resolutions when new constituent is created. '''
+        ''' Trigger cascade resolutions when new constituenta is created. '''
         hosts = _get_oss_hosts(source.model)
         for host in hosts:
             if exclude is None or host.pk not in exclude:

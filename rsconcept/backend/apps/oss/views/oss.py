@@ -40,9 +40,11 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
             'create_operation',
             'create_block',
             'delete_operation',
+            'delete_block',
+            'update_operation',
+            'update_block',
             'create_input',
             'set_input',
-            'update_operation',
             'execute_operation',
             'relocate_constituents'
         ]:
@@ -94,7 +96,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     @extend_schema(
         summary='create operation',
         tags=['OSS'],
-        request=s.OperationCreateSerializer(),
+        request=s.CreateOperationSerializer(),
         responses={
             c.HTTP_201_CREATED: s.NewOperationResponse,
             c.HTTP_400_BAD_REQUEST: None,
@@ -104,8 +106,8 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     )
     @action(detail=True, methods=['post'], url_path='create-operation')
     def create_operation(self, request: Request, pk) -> HttpResponse:
-        ''' Create new operation. '''
-        serializer = s.OperationCreateSerializer(
+        ''' Create Operation. '''
+        serializer = s.CreateOperationSerializer(
             data=request.data,
             context={'oss': self.get_object()}
         )
@@ -155,7 +157,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     @extend_schema(
         summary='create block',
         tags=['OSS'],
-        request=s.BlockCreateSerializer(),
+        request=s.CreateBlockSerializer(),
         responses={
             c.HTTP_201_CREATED: s.NewBlockResponse,
             c.HTTP_400_BAD_REQUEST: None,
@@ -165,8 +167,8 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     )
     @action(detail=True, methods=['post'], url_path='create-block')
     def create_block(self, request: Request, pk) -> HttpResponse:
-        ''' Create new block. '''
-        serializer = s.BlockCreateSerializer(
+        ''' Create Block. '''
+        serializer = s.CreateBlockSerializer(
             data=request.data,
             context={'oss': self.get_object()}
         )
@@ -216,7 +218,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     )
     @action(detail=True, methods=['patch'], url_path='delete-operation')
     def delete_operation(self, request: Request, pk) -> HttpResponse:
-        ''' Endpoint: Delete operation. '''
+        ''' Endpoint: Delete Operation. '''
         serializer = s.OperationDeleteSerializer(
             data=request.data,
             context={'oss': self.get_object()}
@@ -244,6 +246,119 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         )
 
     @extend_schema(
+        summary='delete block',
+        tags=['OSS'],
+        request=s.DeleteBlockSerializer,
+        responses={
+            c.HTTP_200_OK: s.OperationSchemaSerializer,
+            c.HTTP_400_BAD_REQUEST: None,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
+    )
+    @action(detail=True, methods=['patch'], url_path='delete-block')
+    def delete_block(self, request: Request, pk) -> HttpResponse:
+        ''' Endpoint: Delete Block. '''
+        serializer = s.DeleteBlockSerializer(
+            data=request.data,
+            context={'oss': self.get_object()}
+        )
+        serializer.is_valid(raise_exception=True)
+
+        oss = m.OperationSchema(self.get_object())
+        block = cast(m.Block, serializer.validated_data['target'])
+        layout = serializer.validated_data['layout']
+        layout['blocks'] = [x for x in layout['blocks'] if x['id'] != block.pk]
+        with transaction.atomic():
+            oss.delete_block(block)
+            oss.update_layout(layout)
+
+        return Response(
+            status=c.HTTP_200_OK,
+            data=s.OperationSchemaSerializer(oss.model).data
+        )
+
+    @extend_schema(
+        summary='update operation',
+        tags=['OSS'],
+        request=s.UpdateOperationSerializer(),
+        responses={
+            c.HTTP_200_OK: s.OperationSchemaSerializer,
+            c.HTTP_400_BAD_REQUEST: None,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
+    )
+    @action(detail=True, methods=['patch'], url_path='update-operation')
+    def update_operation(self, request: Request, pk) -> HttpResponse:
+        ''' Update Operation arguments and parameters. '''
+        serializer = s.UpdateOperationSerializer(
+            data=request.data,
+            context={'oss': self.get_object()}
+        )
+        serializer.is_valid(raise_exception=True)
+
+        operation: m.Operation = cast(m.Operation, serializer.validated_data['target'])
+        oss = m.OperationSchema(self.get_object())
+        with transaction.atomic():
+            if 'layout' in serializer.validated_data:
+                oss.update_layout(serializer.validated_data['layout'])
+            operation.alias = serializer.validated_data['item_data']['alias']
+            operation.title = serializer.validated_data['item_data']['title']
+            operation.description = serializer.validated_data['item_data']['description']
+            operation.save(update_fields=['alias', 'title', 'description'])
+
+            if operation.result is not None:
+                can_edit = permissions.can_edit_item(request.user, operation.result)
+                if can_edit or operation.operation_type == m.OperationType.SYNTHESIS:
+                    operation.result.alias = operation.alias
+                    operation.result.title = operation.title
+                    operation.result.description = operation.description
+                    operation.result.save()
+            if 'arguments' in serializer.validated_data:
+                oss.set_arguments(operation.pk, serializer.validated_data['arguments'])
+            if 'substitutions' in serializer.validated_data:
+                oss.set_substitutions(operation.pk, serializer.validated_data['substitutions'])
+        return Response(
+            status=c.HTTP_200_OK,
+            data=s.OperationSchemaSerializer(oss.model).data
+        )
+
+    @extend_schema(
+        summary='update block',
+        tags=['OSS'],
+        request=s.UpdateBlockSerializer(),
+        responses={
+            c.HTTP_200_OK: s.OperationSchemaSerializer,
+            c.HTTP_400_BAD_REQUEST: None,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
+    )
+    @action(detail=True, methods=['patch'], url_path='update-block')
+    def update_block(self, request: Request, pk) -> HttpResponse:
+        ''' Update Block. '''
+        serializer = s.UpdateBlockSerializer(
+            data=request.data,
+            context={'oss': self.get_object()}
+        )
+        serializer.is_valid(raise_exception=True)
+
+        block: m.Block = cast(m.Block, serializer.validated_data['target'])
+        oss = m.OperationSchema(self.get_object())
+        with transaction.atomic():
+            if 'layout' in serializer.validated_data:
+                oss.update_layout(serializer.validated_data['layout'])
+            block.title = serializer.validated_data['item_data']['title']
+            block.description = serializer.validated_data['item_data']['description']
+            block.parent = serializer.validated_data['item_data']['parent']
+            block.save(update_fields=['title', 'description', 'parent'])
+        return Response(
+            status=c.HTTP_200_OK,
+            data=s.OperationSchemaSerializer(oss.model).data
+        )
+
+    @extend_schema(
         summary='create input schema for target operation',
         tags=['OSS'],
         request=s.OperationTargetSerializer(),
@@ -256,7 +371,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     )
     @action(detail=True, methods=['patch'], url_path='create-input')
     def create_input(self, request: Request, pk) -> HttpResponse:
-        ''' Create new input RSForm. '''
+        ''' Create input RSForm. '''
         serializer = s.OperationTargetSerializer(
             data=request.data,
             context={'oss': self.get_object()}
@@ -328,51 +443,6 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
                     old_schema.save(update_fields=['visible'])
             oss.update_layout(serializer.validated_data['layout'])
             oss.set_input(target_operation.pk, schema)
-        return Response(
-            status=c.HTTP_200_OK,
-            data=s.OperationSchemaSerializer(oss.model).data
-        )
-
-    @extend_schema(
-        summary='update operation',
-        tags=['OSS'],
-        request=s.OperationUpdateSerializer(),
-        responses={
-            c.HTTP_200_OK: s.OperationSchemaSerializer,
-            c.HTTP_400_BAD_REQUEST: None,
-            c.HTTP_403_FORBIDDEN: None,
-            c.HTTP_404_NOT_FOUND: None
-        }
-    )
-    @action(detail=True, methods=['patch'], url_path='update-operation')
-    def update_operation(self, request: Request, pk) -> HttpResponse:
-        ''' Update operation arguments and parameters. '''
-        serializer = s.OperationUpdateSerializer(
-            data=request.data,
-            context={'oss': self.get_object()}
-        )
-        serializer.is_valid(raise_exception=True)
-
-        operation: m.Operation = cast(m.Operation, serializer.validated_data['target'])
-        oss = m.OperationSchema(self.get_object())
-        with transaction.atomic():
-            oss.update_layout(serializer.validated_data['layout'])
-            operation.alias = serializer.validated_data['item_data']['alias']
-            operation.title = serializer.validated_data['item_data']['title']
-            operation.description = serializer.validated_data['item_data']['description']
-            operation.save(update_fields=['alias', 'title', 'description'])
-
-            if operation.result is not None:
-                can_edit = permissions.can_edit_item(request.user, operation.result)
-                if can_edit or operation.operation_type == m.OperationType.SYNTHESIS:
-                    operation.result.alias = operation.alias
-                    operation.result.title = operation.title
-                    operation.result.description = operation.description
-                    operation.result.save()
-            if 'arguments' in serializer.validated_data:
-                oss.set_arguments(operation.pk, serializer.validated_data['arguments'])
-            if 'substitutions' in serializer.validated_data:
-                oss.set_substitutions(operation.pk, serializer.validated_data['substitutions'])
         return Response(
             status=c.HTTP_200_OK,
             data=s.OperationSchemaSerializer(oss.model).data
