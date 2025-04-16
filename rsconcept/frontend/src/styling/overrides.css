@@ -19,6 +19,10 @@
 
 .cm-tooltip {
   z-index: 100;
+
+  border-color: var(--clr-prim-400);
+  border-width: 1px;
+  border-radius: 0.25rem;
 }
 
 .cm-selectionBackground {

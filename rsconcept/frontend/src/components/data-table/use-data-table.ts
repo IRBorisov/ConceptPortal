@@ -21,7 +21,10 @@ export interface IConditionalStyle<TData> {
   when: (rowData: TData) => boolean;
 
   /** Style to apply. */
-  style: React.CSSProperties;
+  style?: React.CSSProperties;
+
+  /** Classname to apply. */
+  className?: string;
 }
 
 interface UseDataTableProps<TData extends RowData>

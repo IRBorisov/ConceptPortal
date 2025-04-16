@@ -1,4 +1,5 @@
 'use no memo';
+'use client';
 
 import { flexRender, type Header, type HeaderGroup, type Table } from '@tanstack/react-table';
 import clsx from 'clsx';

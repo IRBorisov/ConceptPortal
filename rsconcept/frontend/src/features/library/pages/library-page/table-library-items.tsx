@@ -9,7 +9,6 @@ import { DataTable, type IConditionalStyle, type VisibilityState } from '@/compo
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight } from '@/stores/app-layout';
 import { usePreferencesStore } from '@/stores/preferences';
-import { APP_COLORS } from '@/styling/colors';
 
 import { type ILibraryItem, LibraryItemType } from '../../backend/types';
 import { useLibrarySearchStore } from '../../stores/library-search';
@@ -35,9 +34,7 @@ export function TableLibraryItems({ items }: TableLibraryItemsProps) {
   const conditionalRowStyles: IConditionalStyle<ILibraryItem>[] = [
     {
       when: (item: ILibraryItem) => item.item_type === LibraryItemType.OSS,
-      style: {
-        color: APP_COLORS.fgGreen
-      }
+      className: 'text-accent-green-foreground'
     }
   ];
   const tableHeight = useFitHeight('2.25rem');

@@ -8,7 +8,6 @@ import { IconClose, IconFolderTree } from '@/components/icons';
 import { SearchBar } from '@/components/input';
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
-import { APP_COLORS } from '@/styling/colors';
 import { prefixes } from '@/utils/constants';
 
 import { type ILibraryItem, type LibraryItemType } from '../backend/types';
@@ -91,7 +90,7 @@ export function PickSchema({
   const conditionalRowStyles: IConditionalStyle<ILibraryItem>[] = [
     {
       when: (item: ILibraryItem) => item.id === value,
-      style: { backgroundColor: APP_COLORS.bgSelected }
+      className: 'bg-selected'
     }
   ];
 

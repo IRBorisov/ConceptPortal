@@ -1,12 +1,11 @@
 'use no memo';
 'use client';
 
-import { useCallback } from 'react';
 import { type Table } from '@tanstack/react-table';
 
-import { prefixes } from '@/utils/constants';
-
 import { IconPageFirst, IconPageLast, IconPageLeft, IconPageRight } from '../icons';
+
+import { SelectPagination } from './select-pagination';
 
 interface PaginationToolsProps<TData> {
   id?: string;
@@ -21,15 +20,6 @@ export function PaginationTools<TData>({
   onChangePaginationOption,
   paginationOptions
 }: PaginationToolsProps<TData>) {
-  const handlePaginationOptionsChange = useCallback(
-    (event: React.ChangeEvent<HTMLSelectElement>) => {
-      const perPage = Number(event.target.value);
-      table.setPageSize(perPage);
-      onChangePaginationOption?.(perPage);
-    },
-    [table, onChangePaginationOption]
-  );
-
   return (
     <div className='flex justify-end items-center my-2 text-sm cc-controls select-none'>
       <span className='mr-3'>
@@ -93,19 +83,12 @@ export function PaginationTools<TData>({
           <IconPageLast size='1.5rem' />
         </button>
       </div>
-      <select
+      <SelectPagination
         id={id ? `${id}__per_page` : undefined}
-        aria-label='Выбор количества строчек на странице'
-        value={table.getState().pagination.pageSize}
-        onChange={handlePaginationOptionsChange}
-        className='mx-2 cursor-pointer bg-transparent focus-outline'
-      >
-        {paginationOptions.map(pageSize => (
-          <option key={`${prefixes.page_size}${pageSize}`} value={pageSize} aria-label={`${pageSize} на страницу`}>
-            {pageSize} на стр
-          </option>
-        ))}
-      </select>
+        table={table}
+        paginationOptions={paginationOptions}
+        onChange={onChangePaginationOption}
+      />
     </div>
   );
 }

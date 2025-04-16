@@ -47,7 +47,7 @@ export function DlgShowAST() {
         {!isDragging && hoverNodeDebounced ? (
           <div key={hoverNodeDebounced.uid}>
             <span>{expression.slice(0, hoverNodeDebounced.start)}</span>
-            <span className='bg-selected cc-animate-background starting:bg-background duration-500'>
+            <span className='bg-selected cc-animate-background starting:bg-background duration-move'>
               {expression.slice(hoverNodeDebounced.start, hoverNodeDebounced.finish)}
             </span>
             <span>{expression.slice(hoverNodeDebounced.finish)}</span>

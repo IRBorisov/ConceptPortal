@@ -49,7 +49,7 @@ export function StatusBar({ className, isModified, processing, activeCst, parseD
           'select-none',
           'cursor-pointer',
           'focus-frame outline-none',
-          'transition-colors duration-500'
+          'transition-colors duration-fade'
         )}
         style={{ backgroundColor: processing ? APP_COLORS.bgDefault : colorStatusBar(status) }}
         data-tooltip-id={globalIDs.tooltip}

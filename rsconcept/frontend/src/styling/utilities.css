@@ -22,7 +22,6 @@
 
 @utility cc-hover {
   &:hover:not(:disabled) {
-    color: var(--color-accent-foreground);
     background-color: var(--color-accent);
   }
 }
@@ -180,4 +179,29 @@
     linear-gradient(to right, transparent, black calc(var(--mask-border-size)));
 
   mask-composite: intersect;
+}
+
+@utility duration-select {
+  --tw-duration: var(--duration-select);
+  transition-duration: var(--duration-select);
+}
+
+@utility duration-dropdown {
+  --tw-duration: var(--duration-dropdown);
+  transition-duration: var(--duration-dropdown);
+}
+
+@utility duration-modal {
+  --tw-duration: var(--duration-modal);
+  transition-duration: var(--duration-modal);
+}
+
+@utility duration-fade {
+  --tw-duration: var(--duration-fade);
+  transition-duration: var(--duration-fade);
+}
+
+@utility duration-move {
+  --tw-duration: var(--duration-move);
+  transition-duration: var(--duration-move);
 }

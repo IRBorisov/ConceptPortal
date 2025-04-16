@@ -85,7 +85,7 @@ This readme file is used mostly to document project dependencies and conventions
   <summary>VS Code plugins</summary>
   <pre>
   - ESLint
-  - Colorize
+  - Oklch Color Preview
   - Tailwind CSS IntelliSense
   - Code Spell Checker (eng + rus)
   - Backticks

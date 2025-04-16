@@ -7,7 +7,6 @@ import { SearchBar } from '@/components/input';
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
 import { NoData } from '@/components/view';
-import { APP_COLORS } from '@/styling/colors';
 
 import { describeConstituenta } from '../labels';
 import { type IConstituenta } from '../models/rsform';
@@ -68,7 +67,7 @@ export function PickConstituenta({
   const conditionalRowStyles: IConditionalStyle<IConstituenta>[] = [
     {
       when: (cst: IConstituenta) => cst.id === value?.id,
-      style: { backgroundColor: APP_COLORS.bgSelected }
+      className: 'bg-selected'
     }
   ];
 

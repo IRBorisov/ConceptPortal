@@ -62,7 +62,7 @@ export function SelectLocation({ value, dense, prefix, onClick, className, style
               !dense && 'h-7 sm:h-8',
               'pr-3 py-1 flex items-center gap-2',
               'cc-scroll-row',
-              'cc-hover cc-animate-color',
+              'cc-hover cc-animate-color duration-fade',
               'cursor-pointer',
               'leading-3 sm:leading-4',
               activeNode === item && 'cc-selected'

@@ -3,7 +3,6 @@ import { type Extension } from '@codemirror/state';
 import { hoverTooltip, type TooltipView } from '@codemirror/view';
 import clsx from 'clsx';
 
-import { APP_COLORS } from '@/styling/colors';
 import { findContainedNodes } from '@/utils/codemirror';
 
 import { describeConstituentaTerm, labelGrammeme } from '../../labels';
@@ -67,9 +66,9 @@ function domTooltipEntityReference(ref: IEntityReference, cst: IConstituenta | n
     'max-h-100 max-w-100 min-w-40',
     'dense',
     'p-2 flex flex-col',
-    'border shadow-md',
+    'rounded-md shadow-md',
     'cc-scroll-y',
-    'text-sm',
+    'text-sm bg-card',
     'select-none cursor-auto'
   );
 
@@ -86,9 +85,8 @@ function domTooltipEntityReference(ref: IEntityReference, cst: IConstituenta | n
   parseGrammemes(ref.form).forEach(gramStr => {
     const gram = document.createElement('div');
     gram.id = `tooltip-${gramStr}`;
-    gram.className = 'min-w-12 px-1 border rounded-lg text-sm text-center whitespace-nowrap';
+    gram.className = 'min-w-12 px-1 border rounded-lg text-sm text-center whitespace-nowrap bg-accent';
     gram.style.borderWidth = '1px';
-    gram.style.backgroundColor = APP_COLORS.bgInput;
     gram.innerText = labelGrammeme(gramStr);
     grams.appendChild(gram);
   });
@@ -117,9 +115,9 @@ function domTooltipSyntacticReference(
     'max-h-100 max-w-100 min-w-40',
     'dense',
     'p-2 flex flex-col',
-    'border shadow-md',
+    'rounded-md shadow-md',
     'cc-scroll-y',
-    'text-sm',
+    'text-sm bg-card',
     'select-none cursor-auto'
   );
 

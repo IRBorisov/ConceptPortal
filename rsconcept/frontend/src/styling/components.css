@@ -9,12 +9,20 @@
   cursor: pointer;
   white-space: nowrap;
 
-  transition-property: background-color;
+  transition-property: background-color, color;
   transition-timing-function: var(--ease-bezier);
   transition-duration: 500ms;
 
   &:hover {
     background-color: var(--color-accent);
+  }
+
+  .dark & {
+    color: color-mix(in oklab, var(--color-foreground) 70%, transparent);
+
+    &:hover {
+      color: var(--color-foreground);
+    }
   }
 }
 

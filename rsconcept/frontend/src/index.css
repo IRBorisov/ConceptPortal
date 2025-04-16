@@ -45,6 +45,23 @@
   --color-sec-400: var(--clr-sec-400);
   --color-sec-600: var(--clr-sec-600);
 
+  --color-accent-red: var(--acc-bg-red);
+  --color-accent-green: var(--acc-bg-green);
+  --color-accent-green25: var(--acc-bg-green25);
+  --color-accent-green50: var(--acc-bg-green50);
+  --color-accent-blue: var(--acc-bg-blue);
+  --color-accent-purple: var(--acc-bg-purple);
+  --color-accent-teal: var(--acc-bg-teal);
+  --color-accent-orange: var(--acc-bg-orange);
+  --color-accent-orange50: var(--acc-bg-orange50);
+
+  --color-accent-red-foreground: var(--acc-fg-red);
+  --color-accent-green-foreground: var(--acc-fg-green);
+  --color-accent-blue-foreground: var(--acc-fg-blue);
+  --color-accent-purple-foreground: var(--acc-fg-purple);
+  --color-accent-teal-foreground: var(--acc-fg-teal);
+  --color-accent-orange-foreground: var(--acc-fg-orange);
+
   /* stylelint-disable-next-line custom-property-pattern */
   --z-index-*: initial;
   --z-index-bottom: 0;
@@ -66,11 +83,12 @@
 
   --ease-bezier: cubic-bezier(0.4, 0, 0.2, 1);
 
-  --duration-move: 500ms;
+  /* Animation durations */
+  --duration-select: 100ms;
+  --duration-dropdown: 200ms;
   --duration-modal: 300ms;
   --duration-fade: 300ms;
-  --duration-dropdown: 200ms;
-  --duration-select: 100ms;
+  --duration-move: 500ms;
 
   /* ========= shadcn theme ============ */
 

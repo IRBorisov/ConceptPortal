@@ -4,7 +4,6 @@ import { useEffect } from 'react';
 
 import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/data-table';
 import { NoData, TextContent } from '@/components/view';
-import { APP_COLORS } from '@/styling/colors';
 import { PARAMETER, prefixes } from '@/utils/constants';
 
 import { BadgeConstituenta } from '../../../components/badge-constituenta';
@@ -66,21 +65,15 @@ export function TableSideConstituents({ autoScroll = true, maxHeight }: TableSid
   const conditionalRowStyles: IConditionalStyle<IConstituenta>[] = [
     {
       when: (cst: IConstituenta) => !!activeCst && cst.id === activeCst.id,
-      style: {
-        backgroundColor: APP_COLORS.bgSelected
-      }
+      className: 'bg-selected'
     },
     {
       when: (cst: IConstituenta) => !!activeCst && cst.spawner === activeCst.id && cst.id !== activeCst.id,
-      style: {
-        backgroundColor: APP_COLORS.bgOrange50
-      }
+      className: 'bg-accent-orange50'
     },
     {
       when: (cst: IConstituenta) => !!activeCst && cst.spawn.includes(activeCst.id),
-      style: {
-        backgroundColor: APP_COLORS.bgGreen50
-      }
+      className: 'bg-accent-green50'
     }
   ];
 

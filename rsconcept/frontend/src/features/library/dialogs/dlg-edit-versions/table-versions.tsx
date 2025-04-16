@@ -5,7 +5,6 @@ import { useIntl } from 'react-intl';
 import { MiniButton } from '@/components/control';
 import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/data-table';
 import { IconRemove } from '@/components/icons';
-import { APP_COLORS } from '@/styling/colors';
 
 import { type IVersionInfo } from '../../backend/types';
 
@@ -77,9 +76,7 @@ export function TableVersions({ processing, items, onDelete, selected, onSelect 
   const conditionalRowStyles: IConditionalStyle<IVersionInfo>[] = [
     {
       when: (version: IVersionInfo) => version.id === selected,
-      style: {
-        backgroundColor: APP_COLORS.bgSelected
-      }
+      className: 'bg-selected'
     }
   ];
 

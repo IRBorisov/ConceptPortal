@@ -1,7 +1,2 @@
-export {
-  createColumnHelper,
-  DataTable,
-  type IConditionalStyle,
-  type RowSelectionState,
-  type VisibilityState
-} from './data-table';
+export { createColumnHelper, DataTable, type RowSelectionState, type VisibilityState } from './data-table';
+export { type IConditionalStyle } from './use-data-table';

@@ -71,12 +71,12 @@ export function HelpRSEditor() {
             <span className='bg-selected'>текущая конституента</span>
           </li>
           <li>
-            <span className='bg-(--acc-bg-green50)'>
+            <span className='bg-accent-green50'>
               <LinkTopic text='основа' topic={HelpTopic.CC_RELATIONS} /> текущей
             </span>
           </li>
           <li>
-            <span className='bg-(--acc-bg-orange50)'>
+            <span className='bg-accent-orange50'>
               <LinkTopic text='порожденные' topic={HelpTopic.CC_RELATIONS} /> текущей
             </span>
           </li>

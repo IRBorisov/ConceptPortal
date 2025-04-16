@@ -29,7 +29,6 @@ export const APP_COLORS = {
 
   bgGreen25:          'var(--acc-bg-green25)',
   bgGreen50:          'var(--acc-bg-green50)',
-  bgOrange50:         'var(--acc-bg-orange50)',
 
   fgRed:              'var(--acc-fg-red)',
   fgGreen:            'var(--acc-fg-green)',

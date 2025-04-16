@@ -200,7 +200,7 @@ export function IconLogin(props: IconProps) {
 
 export function CheckboxChecked() {
   return (
-    <svg className='w-4 h-4 p-0.75 -ml-0.25' viewBox='0 0 512 512' fill='#ffffff'>
+    <svg className='w-4 h-4 p-0.75 -ml-0.25 -mt-0.25' viewBox='0 0 512 512' fill='#ffffff'>
       <path d='M470.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L192 338.7l233.4-233.3c12.5-12.5 32.8-12.5 45.3 0z' />
     </svg>
   );
@@ -208,7 +208,7 @@ export function CheckboxChecked() {
 
 export function CheckboxNull() {
   return (
-    <svg className='w-4 h-4 px-0.25' viewBox='0 0 16 16' fill='#ffffff'>
+    <svg className='w-4 h-4 px-0.25 -ml-0.25 -mt-0.25' viewBox='0 0 16 16' fill='#ffffff'>
       <path d='M2 7.75A.75.75 0 012.75 7h10a.75.75 0 010 1.5h-10A.75.75 0 012 7.75z' />
     </svg>
   );

@@ -21,7 +21,7 @@ export function WordformButton({ text, example, grams, onSelectGrams, isSelected
         'p-1',
         'border rounded-none',
         'cursor-pointer',
-        'cc-controls cc-hover cc-animate-color',
+        'cc-controls hover:bg-accent hover:text-foreground cc-animate-color',
         isSelected && 'cc-selected'
       )}
       {...restProps}

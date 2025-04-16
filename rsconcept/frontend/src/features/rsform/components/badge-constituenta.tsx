@@ -1,6 +1,5 @@
 import clsx from 'clsx';
 
-import { APP_COLORS } from '@/styling/colors';
 import { globalIDs } from '@/utils/constants';
 
 import { colorFgCstStatus } from '../colors';
@@ -24,11 +23,14 @@ export function BadgeConstituenta({ value, prefixID }: BadgeConstituentaProps) {
   return (
     <div
       id={prefixID ? `${prefixID}${value.id}` : undefined}
-      className={clsx('cc-badge-constituenta', value.is_inherited && 'border-dashed')}
+      className={clsx(
+        'cc-badge-constituenta',
+        value.is_inherited && 'border-dashed',
+        value.cst_class === CstClass.BASIC ? 'bg-accent-green25' : 'bg-input'
+      )}
       style={{
         borderColor: colorFgCstStatus(value.status),
-        color: colorFgCstStatus(value.status),
-        backgroundColor: value.cst_class === CstClass.BASIC ? APP_COLORS.bgGreen25 : APP_COLORS.bgInput
+        color: colorFgCstStatus(value.status)
       }}
       data-tooltip-id={globalIDs.constituenta_tooltip}
       onMouseEnter={() => setActiveCst(value)}

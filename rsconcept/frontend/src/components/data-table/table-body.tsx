@@ -1,11 +1,11 @@
 'use no memo';
+'use client';
 
 import { useCallback } from 'react';
-import { type Cell, flexRender, type Row, type Table } from '@tanstack/react-table';
-import clsx from 'clsx';
+import { type Row, type Table } from '@tanstack/react-table';
 
-import { SelectRow } from './select-row';
-import { type IConditionalStyle } from '.';
+import { TableRow } from './table-row';
+import { type IConditionalStyle } from './use-data-table';
 
 interface TableBodyProps<TData> {
   table: Table<TData>;
@@ -30,82 +30,43 @@ export function TableBody<TData>({
   onRowClicked,
   onRowDoubleClicked
 }: TableBodyProps<TData>) {
-  const handleRowClicked = useCallback(
-    (target: Row<TData>, event: React.MouseEvent<Element>) => {
-      onRowClicked?.(target.original, event);
-      if (table.options.enableRowSelection && target.getCanSelect()) {
-        if (event.shiftKey && !!lastSelected && lastSelected !== target.id) {
-          const { rows, rowsById } = table.getRowModel();
-          const lastIndex = rowsById[lastSelected].index;
-          const currentIndex = target.index;
-          const toggleRows = rows.slice(
-            lastIndex > currentIndex ? currentIndex : lastIndex + 1,
-            lastIndex > currentIndex ? lastIndex : currentIndex + 1
-          );
-          const newSelection: Record<string, boolean> = {};
-          toggleRows.forEach(row => {
-            newSelection[row.id] = !target.getIsSelected();
-          });
-          table.setRowSelection(prev => ({ ...prev, ...newSelection }));
-          onChangeLastSelected(null);
-        } else {
-          onChangeLastSelected(target.id);
-          target.toggleSelected(!target.getIsSelected());
-        }
-      }
-    },
-    [table, lastSelected, onChangeLastSelected, onRowClicked]
+  const getRowStyles = useCallback(
+    (row: Row<TData>) =>
+      conditionalRowStyles
+        ?.filter(item => !!item.style && item.when(row.original))
+        ?.reduce((prev, item) => ({ ...prev, ...item.style }), {}),
+
+    [conditionalRowStyles]
   );
 
-  const getRowStyles = useCallback(
+  const getRowClasses = useCallback(
     (row: Row<TData>) => {
-      return {
-        ...conditionalRowStyles!
-          .filter(item => item.when(row.original))
-          .reduce((prev, item) => ({ ...prev, ...item.style }), {})
-      };
+      return conditionalRowStyles
+        ?.filter(item => !!item.className && item.when(row.original))
+        ?.reduce((prev, item) => {
+          prev.push(item.className!);
+          return prev;
+        }, [] as string[]);
     },
     [conditionalRowStyles]
   );
 
   return (
     <tbody>
-      {table.getRowModel().rows.map((row: Row<TData>, index) => (
-        <tr
+      {table.getRowModel().rows.map((row: Row<TData>) => (
+        <TableRow
           key={row.id}
-          className={clsx(
-            'cc-scroll-row',
-            'cc-hover cc-animate-background duration-(--duration-fade)',
-            !noHeader && 'scroll-mt-[calc(2px+2rem)]',
-            table.options.enableRowSelection && row.getIsSelected()
-              ? 'cc-selected'
-              : 'odd:bg-secondary even:bg-background'
-          )}
-          style={{ ...(conditionalRowStyles ? getRowStyles(row) : []) }}
-          onClick={event => handleRowClicked(row, event)}
-          onDoubleClick={event => onRowDoubleClicked?.(row.original, event)}
-        >
-          {table.options.enableRowSelection ? (
-            <td key={`select-${row.id}`} className='pl-2 border-y'>
-              <SelectRow row={row} onChangeLastSelected={onChangeLastSelected} />
-            </td>
-          ) : null}
-          {row.getVisibleCells().map((cell: Cell<TData, unknown>) => (
-            <td
-              key={cell.id}
-              className={clsx(
-                'px-2 align-middle border-y',
-                dense ? 'py-1' : 'py-2',
-                onRowClicked || onRowDoubleClicked ? 'cursor-pointer' : 'cursor-auto'
-              )}
-              style={{
-                width: noHeader && index === 0 ? `calc(var(--col-${cell.column.id}-size) * 1px)` : undefined
-              }}
-            >
-              {flexRender(cell.column.columnDef.cell, cell.getContext())}
-            </td>
-          ))}
-        </tr>
+          table={table}
+          row={row}
+          className={getRowClasses(row)?.join(' ')}
+          style={conditionalRowStyles ? { ...getRowStyles(row) } : undefined}
+          noHeader={noHeader}
+          dense={dense}
+          lastSelected={lastSelected}
+          onChangeLastSelected={onChangeLastSelected}
+          onRowClicked={onRowClicked}
+          onRowDoubleClicked={onRowDoubleClicked}
+        />
       ))}
     </tbody>
   );

@@ -19,18 +19,9 @@ import { PaginationTools } from './pagination-tools';
 import { TableBody } from './table-body';
 import { TableFooter } from './table-footer';
 import { TableHeader } from './table-header';
-import { useDataTable } from './use-data-table';
+import { type IConditionalStyle, useDataTable } from './use-data-table';
 
 export { createColumnHelper, type RowSelectionState, type VisibilityState };
-
-/** Style to conditionally apply to rows. */
-export interface IConditionalStyle<TData> {
-  /** Callback to determine if the style should be applied. */
-  when: (rowData: TData) => boolean;
-
-  /** Style to apply. */
-  style: React.CSSProperties;
-}
 
 export interface DataTableProps<TData extends RowData>
   extends Styling,

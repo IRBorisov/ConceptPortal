@@ -12,7 +12,6 @@ import { IconAccept, IconPageLeft, IconPageRight, IconRemove, IconReplace } from
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
 import { NoData } from '@/components/view';
-import { APP_COLORS } from '@/styling/colors';
 import { errorMsg } from '@/utils/labels';
 
 import { type ICstSubstitute } from '../backend/types';
@@ -224,7 +223,7 @@ export function PickSubstitutions({
   const conditionalRowStyles: IConditionalStyle<IMultiSubstitution>[] = [
     {
       when: (item: IMultiSubstitution) => item.is_suggestion,
-      style: { backgroundColor: APP_COLORS.bgOrange50 }
+      className: 'bg-accent-orange50'
     }
   ];
 

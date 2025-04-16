@@ -9,7 +9,6 @@ import { DataTable, type IConditionalStyle } from '@/components/data-table';
 import { IconAccept, IconRemove, IconReset } from '@/components/icons';
 import { NoData } from '@/components/view';
 import { useDialogsStore } from '@/stores/dialogs';
-import { APP_COLORS } from '@/styling/colors';
 
 import { type ICstCreateDTO } from '../../backend/types';
 import { PickConstituenta } from '../../components/pick-constituenta';
@@ -100,7 +99,7 @@ export function TabArguments() {
   const conditionalRowStyles: IConditionalStyle<IArgumentValue>[] = [
     {
       when: (arg: IArgumentValue) => arg.alias === selectedArgument?.alias,
-      style: { backgroundColor: APP_COLORS.bgSelected }
+      className: 'bg-selected'
     }
   ];
 

@@ -1,7 +1,5 @@
 'use client';
 
-import { APP_COLORS } from '@/styling/colors';
-
 interface LoaderProps {
   /** Scale of the loader from 1 to 10. */
   scale?: number;
@@ -57,8 +55,8 @@ const animatePulse = (startBig: boolean, duration: string) => {
 export function Loader({ scale = 5, circular }: LoaderProps) {
   if (circular) {
     return (
-      <div className='flex justify-center' aria-label='three-circles-loading' aria-busy='true' role='progressbar'>
-        <svg height={`${scale * 20}`} width={`${scale * 20}`} viewBox='0 0 100 100' fill={APP_COLORS.bgPrimary}>
+      <div className='flex justify-center text-primary' aria-busy='true' role='progressbar'>
+        <svg height={`${scale * 20}`} width={`${scale * 20}`} viewBox='0 0 100 100' fill='currentColor'>
           <path d='M31.6,3.5C5.9,13.6-6.6,42.7,3.5,68.4c10.1,25.7,39.2,38.3,64.9,28.1l-3.1-7.9c-21.3,8.4-45.4-2-53.8-23.3 c-8.4-21.3,2-45.4,23.3-53.8L31.6,3.5z'>
             {animateRotation('2.25s')}
           </path>
@@ -73,8 +71,8 @@ export function Loader({ scale = 5, circular }: LoaderProps) {
     );
   } else {
     return (
-      <div className='flex justify-center' aria-busy='true' role='progressbar'>
-        <svg height={`${scale * 20}`} width={`${scale * 20}`} viewBox='0 0 120 30' fill={APP_COLORS.bgPrimary}>
+      <div className='flex justify-center text-primary' aria-busy='true' role='progressbar'>
+        <svg height={`${scale * 20}`} width={`${scale * 20}`} viewBox='0 0 120 30' fill='currentColor'>
           <circle cx='15' cy='15' r='16'>
             {animatePulse(true, '0.8s')}
           </circle>
