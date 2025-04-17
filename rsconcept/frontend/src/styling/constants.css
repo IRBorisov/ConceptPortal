@@ -56,10 +56,6 @@
   --acc-fg-purple:    oklch(060% 0.250 295deg);
   --acc-fg-teal:      oklch(060% 0.140 210deg);
   --acc-fg-orange:    oklch(060% 0.150 62deg);
-
-  /* React Tooltip */
-  --rt-color-white:   var(--clr-prim-0);
-  --rt-color-dark:    var(--clr-prim-999);
 }
 
 /* Dark Theme */
@@ -101,8 +97,4 @@
   --acc-fg-purple:    oklch(075% 0.150 295deg);
   --acc-fg-teal:      oklch(075% 0.150 210deg);
   --acc-fg-orange:    oklch(075% 0.150 62deg);
-
-  /* React Tooltip */
-  --rt-color-white:   var(--clr-prim-999);
-  --rt-color-dark:    var(--clr-prim-0);
 }

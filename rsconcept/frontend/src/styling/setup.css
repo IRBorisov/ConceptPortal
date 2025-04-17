@@ -18,8 +18,8 @@
   ::before,
   ::backdrop,
   ::file-selector-button {
-    border-color: var(--clr-prim-400);
-    accent-color: var(--clr-sec-600);
+    border-color: var(--color-border);
+    accent-color: var(--color-primary);
   }
 
   html {
@@ -60,9 +60,9 @@
     line-height: var(--line-height);
     font-family: var(--font-main);
 
-    color: var(--clr-prim-999);
-    border-color: var(--clr-prim-400);
-    background-color: var(--clr-prim-100);
+    color: var(--color-foreground);
+    border-color: var(--color-border);
+    background-color: var(--color-background);
   }
 
   @media only screen and (width <= 639px) {
@@ -78,7 +78,7 @@
   }
 
   ::placeholder {
-    color: var(--clr-prim-600);
+    color: var(--color-muted-foreground);
     user-select: none;
   }
 

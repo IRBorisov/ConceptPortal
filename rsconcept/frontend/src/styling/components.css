@@ -45,7 +45,7 @@
   background-color: transparent;
 
   :focus-within > & {
-    color: var(--color-ring);
+    color: var(--color-primary);
   }
 }
 
@@ -193,7 +193,7 @@
   outline-color: transparent;
 
   &.selected {
-    outline: 2px solid var(--clr-prim-999);
+    outline: 2px solid var(--color-foreground);
   }
 
   &.inherited {

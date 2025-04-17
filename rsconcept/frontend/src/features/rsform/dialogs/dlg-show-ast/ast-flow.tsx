@@ -9,6 +9,8 @@ import { ASTEdgeTypes } from './graph/ast-edge-types';
 import { applyLayout } from './graph/ast-layout';
 import { ASTNodeTypes } from './graph/ast-node-types';
 
+import './graph/styles.css';
+
 interface ASTFlowProps {
   data: SyntaxTree;
   onNodeEnter: (node: Node) => void;

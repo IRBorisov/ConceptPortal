@@ -11,7 +11,7 @@ export const GlobalTooltips = () => {
         id={globalIDs.tooltip}
         layer='z-topmost'
         place='right-start'
-        className='mt-8 max-w-80 break-words'
+        className='mt-8 max-w-80 break-words rounded-lg!'
       />
       <Tooltip
         float

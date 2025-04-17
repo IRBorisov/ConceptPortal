@@ -19,13 +19,13 @@ export function HelpTypeGraph() {
 
       <h2>Виды узлов</h2>
       <li>
-        <span className='bg-prim-200'>ступень-основание</span>
+        <span className='bg-secondary'>ступень-основание</span>
       </li>
       <li>
-        <span className='bg-(--acc-bg-teal)'>ступень-булеан</span>
+        <span className='bg-accent-teal'>ступень-булеан</span>
       </li>
       <li>
-        <span className='bg-(--acc-bg-orange)'>ступень декартова произведения</span>
+        <span className='bg-accent-orange'>ступень декартова произведения</span>
       </li>
     </div>
   );

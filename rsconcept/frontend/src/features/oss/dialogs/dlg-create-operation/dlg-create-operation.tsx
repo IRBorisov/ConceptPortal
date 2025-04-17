@@ -104,7 +104,7 @@ export function DlgCreateOperation() {
         selectedIndex={activeTab}
         onSelect={(index, last) => handleSelectTab(index as TabID, last as TabID)}
       >
-        <TabList className='z-pop mx-auto -mb-5 flex border divide-x rounded-none bg-prim-200'>
+        <TabList className='z-pop mx-auto -mb-5 flex border divide-x rounded-none bg-secondary'>
           <TabLabel
             title={describeOperationType(OperationType.INPUT)}
             label={labelOperationType(OperationType.INPUT)}

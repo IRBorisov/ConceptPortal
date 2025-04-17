@@ -1,0 +1,26 @@
+@import '../../../../../../styling/reactflow.css';
+
+/* stylelint-disable selector-class-pattern */
+
+.react-flow__node-input,
+.react-flow__node-synthesis {
+  cursor: pointer;
+
+  border-radius: 5px;
+  padding: 2px;
+  height: fit-content;
+
+  outline-offset: -2px;
+  outline-style: solid;
+  outline-color: transparent;
+
+  transition-property: outline-offset;
+  transition-timing-function: var(--transition-bezier);
+  transition-duration: var(--duration-select);
+
+  &.selected {
+    outline-offset: 4px;
+    outline-color: var(--color-graph-selected);
+    border-color: var(--color-foreground);
+  }
+}

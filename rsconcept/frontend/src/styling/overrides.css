@@ -2,25 +2,43 @@
 * Module: Override imported components CSS styling.
 */
 @import './constants.css';
-@import './imports.css';
 
 /* stylelint-disable selector-class-pattern */
 
 :root {
-  /* Import overrides */
-  --toastify-color-dark: var(--clr-prim-200);
+  /* Toastify */
+  --toastify-color-dark: var(--color-secondary);
 
   --toastify-toast-width: 20rem;
   --toastify-toast-padding: 0.75rem;
 
-  --toastify-toast-min-height: 4rem;
+  --toastify-toast-min-height: 0;
   --toastify-toast-max-height: 40rem;
 }
+
+/* Light Theme */
+/* prettier-ignore */
+:not(.dark):root {
+  /* React Tooltip */
+  --rt-color-white:   var(--color-input);
+  --rt-color-dark:    var(--color-foreground);
+
+}
+
+/* Dark Theme */
+/* prettier-ignore */
+.dark:root {
+  /* React Tooltip */
+  --rt-color-white:   var(--color-foreground);
+  --rt-color-dark:    var(--color-input);
+}
+
+/* ----- Code Mirror ------ */
 
 .cm-tooltip {
   z-index: 100;
 
-  border-color: var(--clr-prim-400);
+  border-color: var(--color-border);
   border-width: 1px;
   border-radius: 0.25rem;
 }
@@ -39,7 +57,7 @@
   overflow-y: auto;
   overscroll-behavior-y: contain;
 
-  border-color: var(--clr-prim-400);
+  border-color: var(--color-border);
   border-width: 1px;
   border-radius: 0.25rem;
 
@@ -47,103 +65,12 @@
 }
 
 .cm-editor.cm-focused {
-  border-color: var(--clr-sec-600);
-  outline: 2px solid var(--clr-sec-600);
+  border-color: var(--color-primary);
+  outline: 2px solid var(--color-primary);
 }
 
 .cm-editor .cm-placeholder {
   font-family: var(--font-main);
-  color: var(--clr-prim-600);
+  color: var(--color-muted-foreground);
   user-select: none;
-}
-
-.react-flow__handle {
-  cursor: default !important;
-  border-radius: 9999px;
-
-  border-color: var(--clr-prim-400);
-  background-color: var(--clr-prim-0);
-
-  .selected & {
-    border-color: var(--clr-prim-600);
-  }
-}
-
-.react-flow__pane {
-  cursor: default;
-}
-
-.react-flow__edge {
-  cursor: default;
-}
-
-.react-flow__attribution {
-  font-size: var(--font-size-sm);
-  font-family: var(--font-ui);
-  font-weight: 400;
-  margin: 1rem;
-
-  background-color: transparent;
-  color: var(--clr-prim-600);
-}
-
-[class*='react-flow__node-'] {
-  font-size: 14px;
-  border: 1px solid;
-
-  color: var(--clr-prim-999);
-  border-color: var(--clr-prim-400);
-  background-color: var(--clr-prim-0);
-
-  &:hover:not(.selected) {
-    box-shadow: 0 0 0 2px var(--clr-sec-200) !important;
-  }
-}
-
-.react-flow__node-input,
-.react-flow__node-synthesis {
-  cursor: pointer;
-
-  border-radius: 5px;
-  padding: 2px;
-  width: 150px;
-  height: fit-content;
-
-  outline-offset: -2px;
-  outline-style: solid;
-  outline-color: transparent;
-
-  transition-property: outline-offset;
-  transition-timing-function: var(--transition-bezier);
-  transition-duration: var(--duration-select);
-
-  &.selected {
-    outline-offset: 4px;
-    outline-color: var(--clr-select-node);
-    border-color: var(--clr-prim-999);
-  }
-}
-
-.react-flow__node-step,
-.react-flow__node-token,
-.react-flow__node-concept {
-  cursor: default;
-
-  border-radius: 100%;
-  width: 40px;
-  height: 40px;
-
-  outline-offset: -2px;
-  outline-style: solid;
-  outline-color: transparent;
-
-  transition-property: outline-offset;
-  transition-timing-function: var(--transition-bezier);
-  transition-duration: var(--duration-select);
-
-  &.selected {
-    outline-offset: 4px;
-    outline-color: var(--clr-select-node);
-    border-color: transparent;
-  }
 }

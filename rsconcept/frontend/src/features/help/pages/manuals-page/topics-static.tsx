@@ -29,7 +29,7 @@ export function TopicsStatic({ activeTopic, onChangeTopic }: TopicsStaticProps) 
         'cc-scroll-y',
         'self-start',
         'border-x border-t rounded-none',
-        'text-xs sm:text-sm bg-prim-200',
+        'text-xs sm:text-sm bg-secondary',
         'select-none'
       )}
       style={{ maxHeight: topicsHeight }}

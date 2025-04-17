@@ -45,6 +45,8 @@
   --color-sec-400: var(--clr-sec-400);
   --color-sec-600: var(--clr-sec-600);
 
+  --color-graph-selected: var(--clr-select-node);
+
   --color-accent-red: var(--acc-bg-red);
   --color-accent-green: var(--acc-bg-green);
   --color-accent-green25: var(--acc-bg-green25);

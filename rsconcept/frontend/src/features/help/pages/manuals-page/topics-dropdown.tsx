@@ -57,7 +57,7 @@ export function TopicsDropdown({ activeTopic, onChangeTopic }: TopicsDropdownPro
         getLabel={labelHelpTopic}
         getDescription={describeHelpTopic}
         className={clsx(
-          'cc-topic-dropdown border-r border-t rounded-none cc-scroll-y bg-prim-200',
+          'cc-topic-dropdown border-r border-t rounded-none cc-scroll-y bg-secondary',
           menu.isOpen && 'open'
         )}
         style={{ maxHeight: treeHeight }}

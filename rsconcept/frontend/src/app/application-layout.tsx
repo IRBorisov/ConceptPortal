@@ -28,6 +28,7 @@ export function ApplicationLayout() {
       <div className='min-w-80 antialiased h-full max-w-480 mx-auto'>
         <ToasterThemed
           className={clsx('sm:text-[14px]/[20px] text-[12px]/[16px]', noNavigationAnimation ? 'mt-6' : 'mt-14')}
+          aria-label='Оповещения'
           autoClose={3000}
           draggable={false}
           pauseOnFocusLoss={false}

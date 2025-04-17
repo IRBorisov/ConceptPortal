@@ -64,7 +64,7 @@ export function DlgInlineSynthesis() {
         selectedIndex={activeTab}
         onSelect={index => setActiveTab(index as TabID)}
       >
-        <TabList className='mb-3 mx-auto flex border divide-x rounded-none bg-prim-200'>
+        <TabList className='mb-3 mx-auto flex border divide-x rounded-none bg-secondary'>
           <TabLabel
             label='Схема' //
             title='Источник конституент'

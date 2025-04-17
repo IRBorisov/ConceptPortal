@@ -79,7 +79,7 @@ export function RSTabs({ activeID, activeTab }: RSTabsProps) {
       selectedTabClassName='cc-selected'
       className='relative flex flex-col min-w-fit items-center'
     >
-      <TabList className='absolute z-sticky flex border-b-2 border-x-2 divide-x-2 bg-prim-200'>
+      <TabList className='absolute z-sticky flex border-b-2 border-x-2 divide-x-2 bg-secondary'>
         <MenuRSTabs />
 
         <TabLabel

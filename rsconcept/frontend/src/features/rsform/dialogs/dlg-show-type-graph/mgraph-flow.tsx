@@ -9,6 +9,8 @@ import { TMGraphEdgeTypes } from './graph/mgraph-edge-types';
 import { applyLayout } from './graph/mgraph-layout';
 import { TMGraphNodeTypes } from './graph/mgraph-node-types';
 
+import './graph/styles.css';
+
 const ZOOM_MAX = 2;
 const ZOOM_MIN = 0.5;
 

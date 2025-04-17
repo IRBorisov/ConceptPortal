@@ -76,7 +76,7 @@ export function DlgEditOperation() {
         selectedIndex={activeTab}
         onSelect={index => setActiveTab(index as TabID)}
       >
-        <TabList className='mb-3 mx-auto w-fit flex border divide-x rounded-none bg-prim-200'>
+        <TabList className='mb-3 mx-auto w-fit flex border divide-x rounded-none bg-secondary'>
           <TabLabel title='Текстовые поля' label='Карточка' className='w-32' />
           {target.operation_type === OperationType.SYNTHESIS ? (
             <TabLabel title='Выбор аргументов операции' label='Аргументы' className='w-32' />

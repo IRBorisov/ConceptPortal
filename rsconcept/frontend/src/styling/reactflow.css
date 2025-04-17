@@ -1,0 +1,73 @@
+/**
+* Module: react-flow base style overrides.
+*/
+@import 'reactflow/dist/style.css';
+
+/* stylelint-disable selector-class-pattern */
+
+.react-flow__handle {
+  cursor: default !important;
+  border-radius: 9999px;
+
+  border-color: var(--color-border);
+  background-color: var(--color-card);
+
+  .selected & {
+    border-color: var(--color-muted-foreground);
+  }
+}
+
+.react-flow__pane {
+  cursor: default;
+}
+
+.react-flow__edge {
+  cursor: default;
+}
+
+.react-flow__attribution {
+  font-size: var(--font-size-sm);
+  font-family: var(--font-ui);
+  font-weight: 400;
+  margin: 1rem;
+
+  background-color: transparent;
+  color: var(--color-muted-foreground);
+}
+
+[class*='react-flow__node-'] {
+  font-size: 14px;
+  border: 1px solid;
+
+  color: var(--color-foreground);
+  border-color: var(--color-border);
+  background-color: var(--color-card);
+
+  &:hover:not(.selected) {
+    box-shadow: 0 0 0 2px var(--color-selected) !important;
+  }
+}
+
+.react-flow__node-token,
+.react-flow__node-concept {
+  /* stylelint-disable-next-line at-rule-no-deprecated */
+  cursor: default;
+
+  border-radius: 100%;
+  width: 40px;
+  height: 40px;
+
+  outline-offset: -2px;
+  outline-style: solid;
+  outline-color: transparent;
+
+  transition-property: outline-offset;
+  transition-timing-function: var(--transition-bezier);
+  transition-duration: var(--duration-select);
+
+  &.selected {
+    outline-offset: 4px;
+    outline-color: var(--color-graph-selected);
+    border-color: transparent;
+  }
+}
