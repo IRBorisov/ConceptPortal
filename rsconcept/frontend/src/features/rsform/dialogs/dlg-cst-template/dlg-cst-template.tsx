@@ -11,8 +11,13 @@ import { ModalForm } from '@/components/modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { CstType, type IConstituentaBasicsDTO, type ICstCreateDTO, schemaCstCreate } from '../../backend/types';
-import { useCstCreate } from '../../backend/use-cst-create';
+import {
+  CstType,
+  type IConstituentaBasicsDTO,
+  type ICreateConstituentaDTO,
+  schemaCreateConstituenta
+} from '../../backend/types';
+import { useCreateConstituenta } from '../../backend/use-create-constituenta';
 import { type IRSForm } from '../../models/rsform';
 import { generateAlias, validateNewAlias } from '../../models/rsform-api';
 import { FormCreateCst } from '../dlg-create-cst/form-create-cst';
@@ -36,10 +41,10 @@ export type TabID = (typeof TabID)[keyof typeof TabID];
 
 export function DlgCstTemplate() {
   const { schema, onCreate, insertAfter } = useDialogsStore(state => state.props as DlgCstTemplateProps);
-  const { cstCreate } = useCstCreate();
+  const { createConstituenta: cstCreate } = useCreateConstituenta();
 
-  const methods = useForm<ICstCreateDTO>({
-    resolver: zodResolver(schemaCstCreate),
+  const methods = useForm<ICreateConstituentaDTO>({
+    resolver: zodResolver(schemaCreateConstituenta),
     defaultValues: {
       cst_type: CstType.TERM,
       insert_after: insertAfter ?? null,
@@ -57,7 +62,7 @@ export function DlgCstTemplate() {
 
   const [activeTab, setActiveTab] = useState<TabID>(TabID.TEMPLATE);
 
-  function onSubmit(data: ICstCreateDTO) {
+  function onSubmit(data: ICreateConstituentaDTO) {
     return cstCreate({ itemID: schema.id, data }).then(onCreate);
   }
 

@@ -9,8 +9,8 @@ import { Checkbox, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { type IOperationDeleteDTO, type IOssLayout, schemaOperationDelete } from '../backend/types';
-import { useOperationDelete } from '../backend/use-operation-delete';
+import { type IDeleteOperationDTO, type IOssLayout, schemaDeleteOperation } from '../backend/types';
+import { useDeleteOperation } from '../backend/use-delete-operation';
 import { type IOperation, type IOperationSchema } from '../models/oss';
 
 export interface DlgDeleteOperationProps {
@@ -21,10 +21,10 @@ export interface DlgDeleteOperationProps {
 
 export function DlgDeleteOperation() {
   const { oss, target, layout } = useDialogsStore(state => state.props as DlgDeleteOperationProps);
-  const { operationDelete } = useOperationDelete();
+  const { deleteOperation: operationDelete } = useDeleteOperation();
 
-  const { handleSubmit, control } = useForm<IOperationDeleteDTO>({
-    resolver: zodResolver(schemaOperationDelete),
+  const { handleSubmit, control } = useForm<IDeleteOperationDTO>({
+    resolver: zodResolver(schemaDeleteOperation),
     defaultValues: {
       target: target.id,
       layout: layout,
@@ -33,7 +33,7 @@ export function DlgDeleteOperation() {
     }
   });
 
-  function onSubmit(data: IOperationDeleteDTO) {
+  function onSubmit(data: IDeleteOperationDTO) {
     return operationDelete({ itemID: oss.id, data: data });
   }
 

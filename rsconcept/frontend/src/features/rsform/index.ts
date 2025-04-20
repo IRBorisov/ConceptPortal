@@ -1,6 +1,6 @@
 export {
   CstType,
-  type ICstSubstitute,
+  type ISubstituteConstituents as ICstSubstitute,
   type IRSFormDTO,
   type IVersionCreatedResponse,
   ParsingStatus,

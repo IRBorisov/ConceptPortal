@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import { schemaLibraryItem } from '@/features/library/backend/types';
-import { schemaCstSubstitute } from '@/features/rsform/backend/types';
+import { schemaSubstituteConstituents } from '@/features/rsform/backend/types';
 
 import { errorMsg } from '@/utils/labels';
 
@@ -28,7 +28,7 @@ export type IOperationSchemaDTO = z.infer<typeof schemaOperationSchema>;
 export type IOssLayout = z.infer<typeof schemaOssLayout>;
 
 /** Represents {@link IOperation} data, used in creation process. */
-export type IOperationCreateDTO = z.infer<typeof schemaOperationCreate>;
+export type ICreateOperationDTO = z.infer<typeof schemaCreateOperation>;
 
 /** Represents data response when creating {@link IOperation}. */
 export type IOperationCreatedResponse = z.infer<typeof schemaOperationCreatedResponse>;
@@ -41,19 +41,19 @@ export interface ITargetOperation {
 }
 
 /** Represents {@link IOperation} data, used in destruction process. */
-export type IOperationDeleteDTO = z.infer<typeof schemaOperationDelete>;
+export type IDeleteOperationDTO = z.infer<typeof schemaDeleteOperation>;
 
 /** Represents data response when creating {@link IRSForm} for Input {@link IOperation}. */
 export type IInputCreatedResponse = z.infer<typeof schemaInputCreatedResponse>;
 
 /** Represents {@link IOperation} data, used in setInput process. */
-export type IInputUpdateDTO = z.infer<typeof schemaInputUpdate>;
+export type IUpdateInputDTO = z.infer<typeof schemaUpdateInput>;
 
 /** Represents {@link IOperation} data, used in update process. */
-export type IOperationUpdateDTO = z.infer<typeof schemaOperationUpdate>;
+export type IUpdateOperationDTO = z.infer<typeof schemaUpdateOperation>;
 
 /** Represents data, used relocating {@link IConstituenta}s between {@link ILibraryItem}s. */
-export type ICstRelocateDTO = z.infer<typeof schemaCstRelocate>;
+export type IRelocateConstituentsDTO = z.infer<typeof schemaRelocateConstituents>;
 
 /** Represents {@link IConstituenta} reference. */
 export type IConstituentaReference = z.infer<typeof schemaConstituentaReference>;
@@ -80,7 +80,7 @@ export const schemaBlock = z.strictObject({
   parent: z.number().nullable()
 });
 
-export const schemaCstSubstituteInfo = schemaCstSubstitute.extend({
+export const schemaCstSubstituteInfo = schemaSubstituteConstituents.extend({
   operation: z.number(),
   original_alias: z.string(),
   original_term: z.string(),
@@ -121,7 +121,7 @@ export const schemaOperationSchema = schemaLibraryItem.extend({
   substitutions: z.array(schemaCstSubstituteInfo)
 });
 
-export const schemaOperationCreate = z.strictObject({
+export const schemaCreateOperation = z.strictObject({
   layout: schemaOssLayout,
   item_data: z.strictObject({
     alias: z.string().nonempty(),
@@ -142,14 +142,14 @@ export const schemaOperationCreatedResponse = z.strictObject({
   oss: schemaOperationSchema
 });
 
-export const schemaOperationDelete = z.strictObject({
+export const schemaDeleteOperation = z.strictObject({
   target: z.number(),
   layout: schemaOssLayout,
   keep_constituents: z.boolean(),
   delete_schema: z.boolean()
 });
 
-export const schemaInputUpdate = z.strictObject({
+export const schemaUpdateInput = z.strictObject({
   target: z.number(),
   layout: schemaOssLayout,
   input: z.number().nullable()
@@ -160,7 +160,7 @@ export const schemaInputCreatedResponse = z.strictObject({
   oss: schemaOperationSchema
 });
 
-export const schemaOperationUpdate = z.strictObject({
+export const schemaUpdateOperation = z.strictObject({
   target: z.number(),
   layout: schemaOssLayout,
   item_data: z.strictObject({
@@ -169,10 +169,10 @@ export const schemaOperationUpdate = z.strictObject({
     description: z.string()
   }),
   arguments: z.array(z.number()),
-  substitutions: z.array(schemaCstSubstitute)
+  substitutions: z.array(schemaSubstituteConstituents)
 });
 
-export const schemaCstRelocate = z.strictObject({
+export const schemaRelocateConstituents = z.strictObject({
   destination: z.number().nullable(),
   items: z.array(z.number()).refine(data => data.length > 0)
 });

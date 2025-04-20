@@ -4,7 +4,7 @@ import { useReactFlow } from 'reactflow';
 
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components';
-import { useOperationExecute } from '@/features/oss/backend/use-operation-execute';
+import { useExecuteOperation } from '@/features/oss/backend/use-execute-operation';
 import { useUpdateLayout } from '@/features/oss/backend/use-update-layout';
 
 import { MiniButton } from '@/components/control';
@@ -63,7 +63,7 @@ export function ToolbarOssGraph({
   const toggleEdgeStraight = useOSSGraphStore(state => state.toggleEdgeStraight);
 
   const { updateLayout: updatePositions } = useUpdateLayout();
-  const { operationExecute } = useOperationExecute();
+  const { executeOperation: operationExecute } = useExecuteOperation();
 
   const showEditOperation = useDialogsStore(state => state.showEditOperation);
 

@@ -4,7 +4,7 @@ import clsx from 'clsx';
 
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components';
-import { useVersionRestore } from '@/features/library/backend/use-version-restore';
+import { useRestoreVersion } from '@/features/library/backend/use-restore-version';
 
 import { MiniButton } from '@/components/control';
 import { IconNewVersion, IconUpload, IconVersions } from '@/components/icons';
@@ -22,7 +22,7 @@ interface ToolbarVersioningProps {
 
 export function ToolbarVersioning({ blockReload, className }: ToolbarVersioningProps) {
   const { isModified } = useModificationStore();
-  const { versionRestore } = useVersionRestore();
+  const { restoreVersion: versionRestore } = useRestoreVersion();
   const { schema, isMutable, isContentEditable, navigateVersion, activeVersion, selected } = useRSEdit();
 
   const showCreateVersion = useDialogsStore(state => state.showCreateVersion);

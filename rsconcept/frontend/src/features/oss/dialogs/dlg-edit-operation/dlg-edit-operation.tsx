@@ -11,8 +11,8 @@ import { ModalForm } from '@/components/modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { type IOperationUpdateDTO, type IOssLayout, OperationType, schemaOperationUpdate } from '../../backend/types';
-import { useOperationUpdate } from '../../backend/use-operation-update';
+import { type IOssLayout, type IUpdateOperationDTO, OperationType, schemaUpdateOperation } from '../../backend/types';
+import { useUpdateOperation } from '../../backend/use-update-operation';
 import { type IOperation, type IOperationSchema } from '../../models/oss';
 
 import { TabArguments } from './tab-arguments';
@@ -34,10 +34,10 @@ export type TabID = (typeof TabID)[keyof typeof TabID];
 
 export function DlgEditOperation() {
   const { oss, target, layout } = useDialogsStore(state => state.props as DlgEditOperationProps);
-  const { operationUpdate } = useOperationUpdate();
+  const { updateOperation: operationUpdate } = useUpdateOperation();
 
-  const methods = useForm<IOperationUpdateDTO>({
-    resolver: zodResolver(schemaOperationUpdate),
+  const methods = useForm<IUpdateOperationDTO>({
+    resolver: zodResolver(schemaUpdateOperation),
     defaultValues: {
       target: target.id,
       item_data: {
@@ -56,7 +56,7 @@ export function DlgEditOperation() {
   });
   const [activeTab, setActiveTab] = useState<TabID>(TabID.CARD);
 
-  function onSubmit(data: IOperationUpdateDTO) {
+  function onSubmit(data: IUpdateOperationDTO) {
     return operationUpdate({ itemID: oss.id, data });
   }
 

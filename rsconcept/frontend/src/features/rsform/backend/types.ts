@@ -56,19 +56,19 @@ export interface IRSFormUploadDTO {
 }
 
 /** Represents {@link IConstituenta} data, used in creation process. */
-export type ICstCreateDTO = z.infer<typeof schemaCstCreate>;
+export type ICreateConstituentaDTO = z.infer<typeof schemaCreateConstituenta>;
 
 /** Represents data response when creating {@link IConstituenta}. */
-export type ICstCreatedResponse = z.infer<typeof schemaCstCreatedResponse>;
+export type IConstituentaCreatedResponse = z.infer<typeof schemaConstituentaCreatedResponse>;
 
 /** Represents data, used in updating persistent attributes in {@link IConstituenta}. */
-export type ICstUpdateDTO = z.infer<typeof schemaCstUpdate>;
+export type IUpdateConstituentaDTO = z.infer<typeof schemaUpdateConstituenta>;
 
 /** Represents data, used in renaming {@link IConstituenta}. */
-export type ICstRenameDTO = z.infer<typeof schemaCstRename>;
+export type IRenameConstituentaDTO = z.infer<typeof schemaRenameConstituenta>;
 
 /** Represents data, used in ordering a list of {@link IConstituenta}. */
-export interface ICstMoveDTO {
+export interface IMoveConstituentsDTO {
   items: number[];
   move_to: number; // Note: 0-base index
 }
@@ -77,7 +77,7 @@ export interface ICstMoveDTO {
 export type IProduceStructureResponse = z.infer<typeof schemaProduceStructureResponse>;
 
 /** Represents data, used in merging single {@link IConstituenta}. */
-export type ICstSubstitute = z.infer<typeof schemaCstSubstitute>;
+export type ISubstituteConstituents = z.infer<typeof schemaSubstituteConstituents>;
 
 /** Represents input data for inline synthesis. */
 export type IInlineSynthesisDTO = z.infer<typeof schemaInlineSynthesis>;
@@ -90,7 +90,7 @@ export interface ICheckConstituentaDTO {
 }
 
 /** Represents data, used in merging multiple {@link IConstituenta}. */
-export type ICstSubstitutionsDTO = z.infer<typeof schemaCstSubstitutions>;
+export type ISubstitutionsDTO = z.infer<typeof schemaSubstitutions>;
 
 /**
  * Represents Constituenta list.
@@ -322,7 +322,7 @@ export const schemaVersionCreatedResponse = z.strictObject({
   schema: schemaRSForm
 });
 
-export const schemaCstCreate = schemaConstituentaBasics
+export const schemaCreateConstituenta = schemaConstituentaBasics
   .pick({
     cst_type: true,
     alias: true,
@@ -336,12 +336,12 @@ export const schemaCstCreate = schemaConstituentaBasics
     insert_after: z.number().nullable()
   });
 
-export const schemaCstCreatedResponse = z.strictObject({
+export const schemaConstituentaCreatedResponse = z.strictObject({
   new_cst: schemaConstituentaBasics,
   schema: schemaRSForm
 });
 
-export const schemaCstUpdate = z.strictObject({
+export const schemaUpdateConstituenta = z.strictObject({
   target: z.number(),
   item_data: z.strictObject({
     convention: z.string().optional(),
@@ -352,7 +352,7 @@ export const schemaCstUpdate = z.strictObject({
   })
 });
 
-export const schemaCstRename = z.strictObject({
+export const schemaRenameConstituenta = z.strictObject({
   target: z.number(),
   alias: z.string(),
   cst_type: schemaCstType
@@ -363,20 +363,20 @@ export const schemaProduceStructureResponse = z.strictObject({
   schema: schemaRSForm
 });
 
-export const schemaCstSubstitute = z.strictObject({
+export const schemaSubstituteConstituents = z.strictObject({
   original: z.number(),
   substitution: z.number()
 });
 
-export const schemaCstSubstitutions = z.strictObject({
-  substitutions: z.array(schemaCstSubstitute).min(1, { message: errorMsg.emptySubstitutions })
+export const schemaSubstitutions = z.strictObject({
+  substitutions: z.array(schemaSubstituteConstituents).min(1, { message: errorMsg.emptySubstitutions })
 });
 
 export const schemaInlineSynthesis = z.strictObject({
   receiver: z.number(),
   source: z.number().nullable(),
   items: z.array(z.number()),
-  substitutions: z.array(schemaCstSubstitute)
+  substitutions: z.array(schemaSubstituteConstituents)
 });
 
 export const schemaRSErrorDescription = z.strictObject({

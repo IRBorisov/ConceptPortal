@@ -3,7 +3,7 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { Label, TextArea, TextInput } from '@/components/input';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { type IOperationCreateDTO } from '../../backend/types';
+import { type ICreateOperationDTO } from '../../backend/types';
 import { PickMultiOperation } from '../../components/pick-multi-operation';
 
 import { type DlgCreateOperationProps } from './dlg-create-operation';
@@ -14,7 +14,7 @@ export function TabSynthesisOperation() {
     register,
     control,
     formState: { errors }
-  } = useFormContext<IOperationCreateDTO>();
+  } = useFormContext<ICreateOperationDTO>();
   const inputs = useWatch({ control, name: 'arguments' });
 
   return (

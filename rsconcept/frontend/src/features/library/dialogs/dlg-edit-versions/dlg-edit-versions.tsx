@@ -14,10 +14,10 @@ import { ModalView } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { errorMsg } from '@/utils/labels';
 
-import { type IVersionUpdateDTO, schemaVersionUpdate } from '../../backend/types';
+import { type IUpdateVersionDTO, schemaUpdateVersion } from '../../backend/types';
+import { useDeleteVersion } from '../../backend/use-delete-version';
 import { useMutatingLibrary } from '../../backend/use-mutating-library';
-import { useVersionDelete } from '../../backend/use-version-delete';
-import { useVersionUpdate } from '../../backend/use-version-update';
+import { useUpdateVersion } from '../../backend/use-update-version';
 
 import { TableVersions } from './table-versions';
 
@@ -31,8 +31,8 @@ export function DlgEditVersions() {
   const hideDialog = useDialogsStore(state => state.hideDialog);
   const { schema } = useRSFormSuspense({ itemID });
   const isProcessing = useMutatingLibrary();
-  const { versionDelete } = useVersionDelete();
-  const { versionUpdate } = useVersionUpdate();
+  const { deleteVersion: versionDelete } = useDeleteVersion();
+  const { updateVersion: versionUpdate } = useUpdateVersion();
 
   const {
     register,
@@ -40,8 +40,8 @@ export function DlgEditVersions() {
     control,
     reset,
     formState: { isDirty, errors: formErrors }
-  } = useForm<IVersionUpdateDTO>({
-    resolver: zodResolver(schemaVersionUpdate),
+  } = useForm<IUpdateVersionDTO>({
+    resolver: zodResolver(schemaUpdateVersion),
     defaultValues: {
       id: schema.versions[schema.versions.length - 1].id,
       version: schema.versions[schema.versions.length - 1].version,
@@ -77,7 +77,7 @@ export function DlgEditVersions() {
     });
   }
 
-  function onUpdate(data: IVersionUpdateDTO) {
+  function onUpdate(data: IUpdateVersionDTO) {
     if (!isDirty || isProcessing || !isValid) {
       return;
     }

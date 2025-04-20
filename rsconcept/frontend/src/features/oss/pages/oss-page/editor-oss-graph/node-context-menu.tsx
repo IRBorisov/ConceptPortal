@@ -5,8 +5,8 @@ import { toast } from 'react-toastify';
 
 import { urls, useConceptNavigation } from '@/app';
 import { useLibrary } from '@/features/library/backend/use-library';
-import { useInputCreate } from '@/features/oss/backend/use-input-create';
-import { useOperationExecute } from '@/features/oss/backend/use-operation-execute';
+import { useCreateInput } from '@/features/oss/backend/use-create-input';
+import { useExecuteOperation } from '@/features/oss/backend/use-execute-operation';
 
 import { Dropdown, DropdownButton } from '@/components/dropdown';
 import {
@@ -51,8 +51,8 @@ export function NodeContextMenu({ isOpen, operation, cursorX, cursorY, onHide }:
   const isProcessing = useMutatingOss();
   const getLayout = useGetLayout();
 
-  const { inputCreate } = useInputCreate();
-  const { operationExecute } = useOperationExecute();
+  const { createInput: inputCreate } = useCreateInput();
+  const { executeOperation: operationExecute } = useExecuteOperation();
 
   const showEditInput = useDialogsStore(state => state.showChangeInputSchema);
   const showRelocateConstituents = useDialogsStore(state => state.showRelocateConstituents);

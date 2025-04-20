@@ -11,7 +11,7 @@ import { IconReset } from '@/components/icons';
 import { Checkbox, Label, TextArea, TextInput } from '@/components/input';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { type IOperationCreateDTO } from '../../backend/types';
+import { type ICreateOperationDTO } from '../../backend/types';
 import { sortItemsForOSS } from '../../models/oss-api';
 
 import { type DlgCreateOperationProps } from './dlg-create-operation';
@@ -26,7 +26,7 @@ export function TabInputOperation() {
     control,
     setValue,
     formState: { errors }
-  } = useFormContext<IOperationCreateDTO>();
+  } = useFormContext<ICreateOperationDTO>();
   const createSchema = useWatch({ control, name: 'create_schema' });
 
   function baseFilter(item: ILibraryItem) {

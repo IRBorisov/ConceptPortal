@@ -15,9 +15,9 @@ import { PARAMETER, prefixes } from '@/utils/constants';
 import { promptText } from '@/utils/labels';
 import { promptUnsaved } from '@/utils/utils';
 
-import { CstType, type IConstituentaBasicsDTO, type ICstCreateDTO } from '../../backend/types';
-import { useCstCreate } from '../../backend/use-cst-create';
-import { useCstMove } from '../../backend/use-cst-move';
+import { CstType, type IConstituentaBasicsDTO, type ICreateConstituentaDTO } from '../../backend/types';
+import { useCreateConstituenta } from '../../backend/use-create-constituenta';
+import { useMoveConstituents } from '../../backend/use-move-constituents';
 import { useRSFormSuspense } from '../../backend/use-rsform';
 import { type IConstituenta } from '../../models/rsform';
 import { generateAlias } from '../../models/rsform-api';
@@ -59,8 +59,8 @@ export const RSEditState = ({
 
   const activeCst = selected.length === 0 ? null : schema.cstByID.get(selected[selected.length - 1])!;
 
-  const { cstCreate } = useCstCreate();
-  const { cstMove } = useCstMove();
+  const { createConstituenta: cstCreate } = useCreateConstituenta();
+  const { moveConstituents: cstMove } = useMoveConstituents();
   const { deleteItem } = useDeleteItem();
 
   const showCreateCst = useDialogsStore(state => state.showCreateCst);
@@ -206,7 +206,7 @@ export const RSEditState = ({
 
   function createCst(type: CstType | null, skipDialog: boolean, definition?: string) {
     const targetType = type ?? activeCst?.cst_type ?? CstType.BASE;
-    const data: ICstCreateDTO = {
+    const data: ICreateConstituentaDTO = {
       insert_after: activeCst?.id ?? null,
       cst_type: targetType,
       alias: generateAlias(targetType, schema),

@@ -10,7 +10,7 @@ import { IconAccept, IconRemove, IconReset } from '@/components/icons';
 import { NoData } from '@/components/view';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { type ICstCreateDTO } from '../../backend/types';
+import { type ICreateConstituentaDTO } from '../../backend/types';
 import { PickConstituenta } from '../../components/pick-constituenta';
 import { RSInput } from '../../components/rs-input';
 import { type IConstituenta } from '../../models/rsform';
@@ -23,7 +23,7 @@ const argumentsHelper = createColumnHelper<IArgumentValue>();
 
 export function TabArguments() {
   const { schema } = useDialogsStore(state => state.props as DlgCstTemplateProps);
-  const { control } = useFormContext<ICstCreateDTO>();
+  const { control } = useFormContext<ICreateConstituentaDTO>();
   const { args, onChangeArguments } = useTemplateContext();
   const definition = useWatch({ control, name: 'definition_formal' });
 

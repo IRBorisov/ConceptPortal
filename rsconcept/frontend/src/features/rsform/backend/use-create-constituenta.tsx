@@ -5,14 +5,14 @@ import { useUpdateTimestamp } from '@/features/library/backend/use-update-timest
 import { KEYS } from '@/backend/configuration';
 
 import { rsformsApi } from './api';
-import { type ICstRenameDTO } from './types';
+import { type ICreateConstituentaDTO } from './types';
 
-export const useCstRename = () => {
+export const useCreateConstituenta = () => {
   const client = useQueryClient();
   const { updateTimestamp } = useUpdateTimestamp();
   const mutation = useMutation({
-    mutationKey: [KEYS.global_mutation, rsformsApi.baseKey, 'rename-cst'],
-    mutationFn: rsformsApi.cstRename,
+    mutationKey: [KEYS.global_mutation, rsformsApi.baseKey, 'create-cst'],
+    mutationFn: rsformsApi.createConstituenta,
     onSuccess: data => {
       client.setQueryData(rsformsApi.getRSFormQueryOptions({ itemID: data.schema.id }).queryKey, data.schema);
       updateTimestamp(data.schema.id);
@@ -28,6 +28,7 @@ export const useCstRename = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    cstRename: (data: { itemID: number; data: ICstRenameDTO }) => mutation.mutateAsync(data)
+    createConstituenta: (data: { itemID: number; data: ICreateConstituentaDTO }) =>
+      mutation.mutateAsync(data).then(response => response.new_cst)
   };
 };

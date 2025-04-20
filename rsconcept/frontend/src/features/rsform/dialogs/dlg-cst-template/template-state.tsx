@@ -5,7 +5,7 @@ import { useFormContext } from 'react-hook-form';
 
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { type ICstCreateDTO } from '../../backend/types';
+import { type ICreateConstituentaDTO } from '../../backend/types';
 import { type IConstituenta } from '../../models/rsform';
 import { generateAlias } from '../../models/rsform-api';
 import { type IArgumentValue } from '../../models/rslang';
@@ -16,7 +16,7 @@ import { TemplateContext } from './template-context';
 
 export const TemplateState = ({ children }: React.PropsWithChildren) => {
   const { schema } = useDialogsStore(state => state.props as DlgCstTemplateProps);
-  const { setValue } = useFormContext<ICstCreateDTO>();
+  const { setValue } = useFormContext<ICreateConstituentaDTO>();
   const [templateID, setTemplateID] = useState<number | null>(null);
   const [args, setArguments] = useState<IArgumentValue[]>([]);
   const [prototype, setPrototype] = useState<IConstituenta | null>(null);

@@ -5,29 +5,21 @@ import { useUpdateTimestamp } from '@/features/library/backend/use-update-timest
 import { KEYS } from '@/backend/configuration';
 
 import { rsformsApi } from './api';
-import { type IConstituentaList } from './types';
+import { type IMoveConstituentsDTO } from './types';
 
-export const useCstDelete = () => {
+export const useMoveConstituents = () => {
   const client = useQueryClient();
   const { updateTimestamp } = useUpdateTimestamp();
   const mutation = useMutation({
-    mutationKey: [KEYS.global_mutation, rsformsApi.baseKey, 'delete-multiple-cst'],
-    mutationFn: rsformsApi.cstDelete,
+    mutationKey: [KEYS.global_mutation, rsformsApi.baseKey, 'move-cst'],
+    mutationFn: rsformsApi.moveConstituents,
     onSuccess: data => {
       client.setQueryData(rsformsApi.getRSFormQueryOptions({ itemID: data.id }).queryKey, data);
       updateTimestamp(data.id);
-
-      return Promise.allSettled([
-        client.invalidateQueries({ queryKey: [KEYS.oss] }),
-        client.invalidateQueries({
-          queryKey: [rsformsApi.baseKey],
-          predicate: query => query.queryKey.length > 2 && query.queryKey[2] !== String(data.id)
-        })
-      ]);
     },
     onError: () => client.invalidateQueries()
   });
   return {
-    cstDelete: (data: { itemID: number; data: IConstituentaList }) => mutation.mutateAsync(data)
+    moveConstituents: (data: { itemID: number; data: IMoveConstituentsDTO }) => mutation.mutateAsync(data)
   };
 };

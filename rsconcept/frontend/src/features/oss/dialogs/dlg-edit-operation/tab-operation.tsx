@@ -2,13 +2,13 @@ import { useFormContext } from 'react-hook-form';
 
 import { TextArea, TextInput } from '@/components/input';
 
-import { type IOperationUpdateDTO } from '../../backend/types';
+import { type IUpdateOperationDTO } from '../../backend/types';
 
 export function TabOperation() {
   const {
     register,
     formState: { errors }
-  } = useFormContext<IOperationUpdateDTO>();
+  } = useFormContext<IUpdateOperationDTO>();
 
   return (
     <div className='cc-fade-in cc-column'>

@@ -8,14 +8,14 @@ import { PickSubstitutions } from '@/features/rsform/components';
 import { TextArea } from '@/components/input';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { type IOperationUpdateDTO } from '../../backend/types';
+import { type IUpdateOperationDTO } from '../../backend/types';
 import { SubstitutionValidator } from '../../models/oss-api';
 
 import { type DlgEditOperationProps } from './dlg-edit-operation';
 
 export function TabSynthesis() {
   const { oss } = useDialogsStore(state => state.props as DlgEditOperationProps);
-  const { control } = useFormContext<IOperationUpdateDTO>();
+  const { control } = useFormContext<IUpdateOperationDTO>();
   const inputs = useWatch({ control, name: 'arguments' });
   const substitutions = useWatch({ control, name: 'substitutions' });
 

@@ -49,10 +49,10 @@ export type ICreateLibraryItemDTO = z.infer<typeof schemaCreateLibraryItem>;
 export type IUpdateLibraryItemDTO = z.infer<typeof schemaUpdateLibraryItem>;
 
 /** Create version metadata in persistent storage. */
-export type IVersionCreateDTO = z.infer<typeof schemaVersionCreate>;
+export type ICreateVersionDTO = z.infer<typeof schemaCreateVersion>;
 
 /** Represents version data, intended to update version metadata in persistent storage. */
-export type IVersionUpdateDTO = z.infer<typeof schemaVersionUpdate>;
+export type IUpdateVersionDTO = z.infer<typeof schemaUpdateVersion>;
 
 // ======= SCHEMAS =========
 export const schemaLibraryItemType = z.enum(Object.values(LibraryItemType) as [LibraryItemType, ...LibraryItemType[]]);
@@ -140,13 +140,13 @@ export const schemaVersionExInfo = schemaVersionInfo.extend({
   item: z.number()
 });
 
-export const schemaVersionUpdate = z.strictObject({
+export const schemaUpdateVersion = z.strictObject({
   id: z.number(),
   version: z.string().nonempty(errorMsg.requiredField),
   description: z.string()
 });
 
-export const schemaVersionCreate = z.strictObject({
+export const schemaCreateVersion = z.strictObject({
   version: z.string(),
   description: z.string(),
   items: z.array(z.number())

@@ -7,20 +7,20 @@ import { infoMsg } from '@/utils/labels';
 import {
   type ICheckConstituentaDTO,
   type IConstituentaBasicsDTO,
+  type IConstituentaCreatedResponse,
   type IConstituentaList,
-  type ICstCreatedResponse,
-  type ICstCreateDTO,
-  type ICstMoveDTO,
-  type ICstRenameDTO,
-  type ICstSubstitutionsDTO,
-  type ICstUpdateDTO,
+  type ICreateConstituentaDTO,
   type IExpressionParseDTO,
   type IInlineSynthesisDTO,
+  type IMoveConstituentsDTO,
   type IProduceStructureResponse,
+  type IRenameConstituentaDTO,
   type IRSFormDTO,
   type IRSFormUploadDTO,
+  type ISubstitutionsDTO,
+  type IUpdateConstituentaDTO,
   schemaConstituentaBasics,
-  schemaCstCreatedResponse,
+  schemaConstituentaCreatedResponse,
   schemaExpressionParse,
   schemaProduceStructureResponse,
   schemaRSForm
@@ -64,17 +64,17 @@ export const rsformsApi = {
       }
     }),
 
-  cstCreate: ({ itemID, data }: { itemID: number; data: ICstCreateDTO }) =>
-    axiosPost<ICstCreateDTO, ICstCreatedResponse>({
-      schema: schemaCstCreatedResponse,
+  createConstituenta: ({ itemID, data }: { itemID: number; data: ICreateConstituentaDTO }) =>
+    axiosPost<ICreateConstituentaDTO, IConstituentaCreatedResponse>({
+      schema: schemaConstituentaCreatedResponse,
       endpoint: `/api/rsforms/${itemID}/create-cst`,
       request: {
         data: data,
         successMessage: response => infoMsg.newConstituent(response.new_cst.alias)
       }
     }),
-  cstUpdate: ({ itemID, data }: { itemID: number; data: ICstUpdateDTO }) =>
-    axiosPatch<ICstUpdateDTO, IConstituentaBasicsDTO>({
+  updateConstituenta: ({ itemID, data }: { itemID: number; data: IUpdateConstituentaDTO }) =>
+    axiosPatch<IUpdateConstituentaDTO, IConstituentaBasicsDTO>({
       schema: schemaConstituentaBasics,
       endpoint: `/api/rsforms/${itemID}/update-cst`,
       request: {
@@ -82,7 +82,7 @@ export const rsformsApi = {
         successMessage: infoMsg.changesSaved
       }
     }),
-  cstDelete: ({ itemID, data }: { itemID: number; data: IConstituentaList }) =>
+  deleteConstituents: ({ itemID, data }: { itemID: number; data: IConstituentaList }) =>
     axiosPatch<IConstituentaList, IRSFormDTO>({
       schema: schemaRSForm,
       endpoint: `/api/rsforms/${itemID}/delete-multiple-cst`,
@@ -91,17 +91,17 @@ export const rsformsApi = {
         successMessage: infoMsg.constituentsDestroyed(data.items.length)
       }
     }),
-  cstRename: ({ itemID, data }: { itemID: number; data: ICstRenameDTO }) =>
-    axiosPatch<ICstRenameDTO, ICstCreatedResponse>({
-      schema: schemaCstCreatedResponse,
+  renameConstituenta: ({ itemID, data }: { itemID: number; data: IRenameConstituentaDTO }) =>
+    axiosPatch<IRenameConstituentaDTO, IConstituentaCreatedResponse>({
+      schema: schemaConstituentaCreatedResponse,
       endpoint: `/api/rsforms/${itemID}/rename-cst`,
       request: {
         data: data,
         successMessage: infoMsg.changesSaved
       }
     }),
-  cstSubstitute: ({ itemID, data }: { itemID: number; data: ICstSubstitutionsDTO }) =>
-    axiosPatch<ICstSubstitutionsDTO, IRSFormDTO>({
+  substituteConstituents: ({ itemID, data }: { itemID: number; data: ISubstitutionsDTO }) =>
+    axiosPatch<ISubstitutionsDTO, IRSFormDTO>({
       schema: schemaRSForm,
       endpoint: `/api/rsforms/${itemID}/substitute`,
       request: {
@@ -109,8 +109,8 @@ export const rsformsApi = {
         successMessage: infoMsg.substituteSingle
       }
     }),
-  cstMove: ({ itemID, data }: { itemID: number; data: ICstMoveDTO }) =>
-    axiosPatch<ICstMoveDTO, IRSFormDTO>({
+  moveConstituents: ({ itemID, data }: { itemID: number; data: IMoveConstituentsDTO }) =>
+    axiosPatch<IMoveConstituentsDTO, IRSFormDTO>({
       schema: schemaRSForm,
       endpoint: `/api/rsforms/${itemID}/move-cst`,
       request: { data: data }

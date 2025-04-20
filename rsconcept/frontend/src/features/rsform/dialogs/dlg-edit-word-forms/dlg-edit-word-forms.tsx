@@ -15,7 +15,7 @@ import { useGenerateLexeme } from '../../backend/cctext/use-generate-lexeme';
 import { useInflectText } from '../../backend/cctext/use-inflect-text';
 import { useIsProcessingCctext } from '../../backend/cctext/use-is-processing-cctext';
 import { useParseText } from '../../backend/cctext/use-parse-text';
-import { useCstUpdate } from '../../backend/use-cst-update';
+import { useUpdateConstituenta } from '../../backend/use-update-constituenta';
 import { SelectMultiGrammeme } from '../../components/select-multi-grammeme';
 import { type Grammeme, type IWordForm, supportedGrammemes } from '../../models/language';
 import { parseGrammemes, wordFormEquals } from '../../models/language-api';
@@ -30,7 +30,7 @@ export interface DlgEditWordFormsProps {
 
 export function DlgEditWordForms() {
   const { itemID, target } = useDialogsStore(state => state.props as DlgEditWordFormsProps);
-  const { cstUpdate } = useCstUpdate();
+  const { updateConstituenta: cstUpdate } = useUpdateConstituenta();
 
   const isProcessing = useIsProcessingCctext();
   const { inflectText } = useInflectText();

@@ -10,8 +10,8 @@ import { ModalForm } from '@/components/modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { type IOperationCreateDTO, type IOssLayout, OperationType, schemaOperationCreate } from '../../backend/types';
-import { useOperationCreate } from '../../backend/use-operation-create';
+import { type ICreateOperationDTO, type IOssLayout, OperationType, schemaCreateOperation } from '../../backend/types';
+import { useCreateOperation } from '../../backend/use-create-operation';
 import { describeOperationType, labelOperationType } from '../../labels';
 import { type IOperationSchema } from '../../models/oss';
 import { calculateInsertPosition } from '../../models/oss-api';
@@ -35,14 +35,14 @@ export const TabID = {
 export type TabID = (typeof TabID)[keyof typeof TabID];
 
 export function DlgCreateOperation() {
-  const { operationCreate } = useOperationCreate();
+  const { createOperation: operationCreate } = useCreateOperation();
 
   const { oss, layout, initialInputs, onCreate, defaultX, defaultY } = useDialogsStore(
     state => state.props as DlgCreateOperationProps
   );
 
-  const methods = useForm<IOperationCreateDTO>({
-    resolver: zodResolver(schemaOperationCreate),
+  const methods = useForm<ICreateOperationDTO>({
+    resolver: zodResolver(schemaCreateOperation),
     defaultValues: {
       item_data: {
         operation_type: initialInputs.length === 0 ? OperationType.INPUT : OperationType.SYNTHESIS,
@@ -64,7 +64,7 @@ export function DlgCreateOperation() {
   const [activeTab, setActiveTab] = useState(initialInputs.length === 0 ? TabID.INPUT : TabID.SYNTHESIS);
   const isValid = !!alias && !oss.operations.some(operation => operation.alias === alias);
 
-  function onSubmit(data: IOperationCreateDTO) {
+  function onSubmit(data: ICreateOperationDTO) {
     const target = calculateInsertPosition(oss, data.arguments, layout, {
       x: defaultX,
       y: defaultY

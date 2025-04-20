@@ -5,14 +5,14 @@ import { useUpdateTimestamp } from '@/features/library/backend/use-update-timest
 import { KEYS } from '@/backend/configuration';
 
 import { rsformsApi } from './api';
-import { type ICstSubstitutionsDTO } from './types';
+import { type IConstituentaList } from './types';
 
-export const useCstSubstitute = () => {
+export const useDeleteConstituents = () => {
   const client = useQueryClient();
   const { updateTimestamp } = useUpdateTimestamp();
   const mutation = useMutation({
-    mutationKey: [KEYS.global_mutation, rsformsApi.baseKey, 'substitute-cst'],
-    mutationFn: rsformsApi.cstSubstitute,
+    mutationKey: [KEYS.global_mutation, rsformsApi.baseKey, 'delete-multiple-cst'],
+    mutationFn: rsformsApi.deleteConstituents,
     onSuccess: data => {
       client.setQueryData(rsformsApi.getRSFormQueryOptions({ itemID: data.id }).queryKey, data);
       updateTimestamp(data.id);
@@ -28,6 +28,6 @@ export const useCstSubstitute = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    cstSubstitute: (data: { itemID: number; data: ICstSubstitutionsDTO }) => mutation.mutateAsync(data)
+    deleteConstituents: (data: { itemID: number; data: IConstituentaList }) => mutation.mutateAsync(data)
   };
 };

@@ -5,11 +5,11 @@ import { KEYS } from '@/backend/configuration';
 import { ossApi } from './api';
 import { type ITargetOperation } from './types';
 
-export const useInputCreate = () => {
+export const useCreateInput = () => {
   const client = useQueryClient();
   const mutation = useMutation({
     mutationKey: [KEYS.global_mutation, ossApi.baseKey, 'input-create'],
-    mutationFn: ossApi.inputCreate,
+    mutationFn: ossApi.createInput,
     onSuccess: data => {
       client.setQueryData(ossApi.getOssQueryOptions({ itemID: data.oss.id }).queryKey, data.oss);
       return Promise.allSettled([
@@ -20,7 +20,7 @@ export const useInputCreate = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    inputCreate: (data: { itemID: number; data: ITargetOperation }) =>
+    createInput: (data: { itemID: number; data: ITargetOperation }) =>
       mutation.mutateAsync(data).then(response => response.new_schema)
   };
 };

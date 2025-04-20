@@ -7,7 +7,7 @@ import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { prefixes } from '@/utils/constants';
 
-import { useCstDelete } from '../../backend/use-cst-delete';
+import { useDeleteConstituents } from '../../backend/use-delete-constituents';
 import { type IRSForm } from '../../models/rsform';
 
 import { ListConstituents } from './list-constituents';
@@ -20,7 +20,7 @@ export interface DlgDeleteCstProps {
 
 export function DlgDeleteCst() {
   const { selected, schema, afterDelete } = useDialogsStore(state => state.props as DlgDeleteCstProps);
-  const { cstDelete } = useCstDelete();
+  const { deleteConstituents: cstDelete } = useDeleteConstituents();
 
   const [expandOut, setExpandOut] = useState(false);
   const expansion: number[] = schema.graph.expandAllOutputs(selected);

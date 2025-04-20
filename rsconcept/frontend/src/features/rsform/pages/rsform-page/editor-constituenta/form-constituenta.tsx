@@ -17,13 +17,13 @@ import { promptUnsaved } from '@/utils/utils';
 
 import {
   CstType,
-  type ICstUpdateDTO,
   type IExpressionParseDTO,
+  type IUpdateConstituentaDTO,
   ParsingStatus,
-  schemaCstUpdate
+  schemaUpdateConstituenta
 } from '../../../backend/types';
-import { useCstUpdate } from '../../../backend/use-cst-update';
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
+import { useUpdateConstituenta } from '../../../backend/use-update-constituenta';
 import { RefsInput } from '../../../components/refs-input';
 import { labelCstTypification, labelTypification } from '../../../labels';
 import { type IConstituenta, type IRSForm } from '../../../models/rsform';
@@ -50,9 +50,9 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
     control,
     reset,
     formState: { isDirty }
-  } = useForm<ICstUpdateDTO>({ resolver: zodResolver(schemaCstUpdate) });
+  } = useForm<IUpdateConstituentaDTO>({ resolver: zodResolver(schemaUpdateConstituenta) });
 
-  const { cstUpdate } = useCstUpdate();
+  const { updateConstituenta: cstUpdate } = useUpdateConstituenta();
   const showTypification = useDialogsStore(state => state.showShowTypeGraph);
   const showEditTerm = useDialogsStore(state => state.showEditWordForms);
   const showRenameCst = useDialogsStore(state => state.showRenameCst);
@@ -104,7 +104,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
     return () => setIsModified(false);
   }, [isDirty, activeCst, setIsModified]);
 
-  function onSubmit(data: ICstUpdateDTO) {
+  function onSubmit(data: IUpdateConstituentaDTO) {
     return cstUpdate({ itemID: schema.id, data }).then(() => reset({ ...data }));
   }
 

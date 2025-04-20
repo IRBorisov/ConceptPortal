@@ -8,7 +8,7 @@ import { BadgeHelp } from '@/features/help/components';
 
 import { TextArea, TextInput } from '@/components/input';
 
-import { CstType, type ICstCreateDTO } from '../../backend/types';
+import { CstType, type ICreateConstituentaDTO } from '../../backend/types';
 import { RSInput } from '../../components/rs-input';
 import { SelectCstType } from '../../components/select-cst-type';
 import { type IRSForm } from '../../models/rsform';
@@ -24,7 +24,7 @@ export function FormCreateCst({ schema }: FormCreateCstProps) {
     register,
     control,
     formState: { errors }
-  } = useFormContext<ICstCreateDTO>();
+  } = useFormContext<ICreateConstituentaDTO>();
   const [forceComment, setForceComment] = useState(false);
 
   const cst_type = useWatch({ control, name: 'cst_type' });

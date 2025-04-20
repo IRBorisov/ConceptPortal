@@ -15,12 +15,12 @@ import {
   type AccessPolicy,
   type ICloneLibraryItemDTO,
   type ICreateLibraryItemDTO,
+  type ICreateVersionDTO,
   type ILibraryItem,
   type IRenameLocationDTO,
   type IUpdateLibraryItemDTO,
-  type IVersionCreateDTO,
+  type IUpdateVersionDTO,
   type IVersionExInfo,
-  type IVersionUpdateDTO,
   schemaLibraryItem,
   schemaLibraryItemArray,
   schemaVersionExInfo
@@ -136,8 +136,8 @@ export const libraryApi = {
       }
     }),
 
-  versionCreate: ({ itemID, data }: { itemID: number; data: IVersionCreateDTO }) =>
-    axiosPost<IVersionCreateDTO, IVersionCreatedResponse>({
+  createVersion: ({ itemID, data }: { itemID: number; data: ICreateVersionDTO }) =>
+    axiosPost<ICreateVersionDTO, IVersionCreatedResponse>({
       schema: schemaVersionCreatedResponse,
       endpoint: `/api/library/${itemID}/create-version`,
       request: {
@@ -145,7 +145,7 @@ export const libraryApi = {
         successMessage: infoMsg.newVersion(data.version)
       }
     }),
-  versionRestore: ({ versionID }: { versionID: number }) =>
+  restoreVersion: ({ versionID }: { versionID: number }) =>
     axiosPatch<undefined, IRSFormDTO>({
       schema: schemaRSForm,
       endpoint: `/api/versions/${versionID}/restore`,
@@ -153,8 +153,8 @@ export const libraryApi = {
         successMessage: infoMsg.versionRestored
       }
     }),
-  versionUpdate: (data: { itemID: number; version: IVersionUpdateDTO }) =>
-    axiosPatch<IVersionUpdateDTO, IVersionExInfo>({
+  updateVersion: (data: { itemID: number; version: IUpdateVersionDTO }) =>
+    axiosPatch<IUpdateVersionDTO, IVersionExInfo>({
       schema: schemaVersionExInfo,
       endpoint: `/api/versions/${data.version.id}`,
       request: {
@@ -162,7 +162,7 @@ export const libraryApi = {
         successMessage: infoMsg.changesSaved
       }
     }),
-  versionDelete: (data: { itemID: number; versionID: number }) =>
+  deleteVersion: (data: { itemID: number; versionID: number }) =>
     axiosDelete({
       endpoint: `/api/versions/${data.versionID}`,
       request: {

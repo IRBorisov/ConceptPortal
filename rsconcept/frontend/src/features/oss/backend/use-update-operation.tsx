@@ -5,13 +5,13 @@ import { type ILibraryItem } from '@/features/library';
 import { KEYS } from '@/backend/configuration';
 
 import { ossApi } from './api';
-import { type IOperationUpdateDTO } from './types';
+import { type IUpdateOperationDTO } from './types';
 
-export const useOperationUpdate = () => {
+export const useUpdateOperation = () => {
   const client = useQueryClient();
   const mutation = useMutation({
     mutationKey: [KEYS.global_mutation, ossApi.baseKey, 'operation-update'],
-    mutationFn: ossApi.operationUpdate,
+    mutationFn: ossApi.updateOperation,
     onSuccess: (data, variables) => {
       client.setQueryData(KEYS.composite.ossItem({ itemID: data.id }), data);
       const schemaID = data.operations.find(item => item.id === variables.data.target)?.result;
@@ -32,6 +32,6 @@ export const useOperationUpdate = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    operationUpdate: (data: { itemID: number; data: IOperationUpdateDTO }) => mutation.mutateAsync(data)
+    updateOperation: (data: { itemID: number; data: IUpdateOperationDTO }) => mutation.mutateAsync(data)
   };
 };

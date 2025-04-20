@@ -16,7 +16,7 @@ import { Loader } from '@/components/loader';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { type ICstRelocateDTO, type IOssLayout, schemaCstRelocate } from '../backend/types';
+import { type IOssLayout, type IRelocateConstituentsDTO, schemaRelocateConstituents } from '../backend/types';
 import { useRelocateConstituents } from '../backend/use-relocate-constituents';
 import { useUpdateLayout } from '../backend/use-update-layout';
 import { IconRelocationUp } from '../components/icon-relocation-up';
@@ -40,8 +40,8 @@ export function DlgRelocateConstituents() {
     control,
     setValue,
     formState: { isValid }
-  } = useForm<ICstRelocateDTO>({
-    resolver: zodResolver(schemaCstRelocate),
+  } = useForm<IRelocateConstituentsDTO>({
+    resolver: zodResolver(schemaRelocateConstituents),
     defaultValues: {
       items: []
     },
@@ -97,7 +97,7 @@ export function DlgRelocateConstituents() {
     setValue('items', []);
   }
 
-  function onSubmit(data: ICstRelocateDTO) {
+  function onSubmit(data: IRelocateConstituentsDTO) {
     if (!layout || JSON.stringify(layout) === JSON.stringify(oss.layout)) {
       return relocateConstituents(data);
     } else {

@@ -14,7 +14,7 @@ import { cn } from '@/components/utils';
 import { NoData } from '@/components/view';
 import { errorMsg } from '@/utils/labels';
 
-import { type ICstSubstitute } from '../backend/types';
+import { type ISubstituteConstituents } from '../backend/types';
 import { type IConstituenta, type IRSForm } from '../models/rsform';
 
 import { BadgeConstituenta } from './badge-constituenta';
@@ -29,10 +29,10 @@ interface IMultiSubstitution {
 }
 
 interface PickSubstitutionsProps extends Styling {
-  value: ICstSubstitute[];
-  onChange: (newValue: ICstSubstitute[]) => void;
+  value: ISubstituteConstituents[];
+  onChange: (newValue: ISubstituteConstituents[]) => void;
 
-  suggestions?: ICstSubstitute[];
+  suggestions?: ISubstituteConstituents[];
 
   rows?: number;
   allowSelfSubstitution?: boolean;
@@ -75,7 +75,7 @@ export function PickSubstitutions({
   const [deleteRight, setDeleteRight] = useState(true);
   const toggleDelete = () => setDeleteRight(prev => !prev);
 
-  const [ignores, setIgnores] = useState<ICstSubstitute[]>([]);
+  const [ignores, setIgnores] = useState<ISubstituteConstituents[]>([]);
   const filteredSuggestions =
     suggestions?.filter(
       item => !ignores.find(ignore => ignore.original === item.original && ignore.substitution === item.substitution)
@@ -122,7 +122,7 @@ export function PickSubstitutions({
     if (!leftCst || !rightCst) {
       return;
     }
-    const newSubstitution: ICstSubstitute = {
+    const newSubstitution: ISubstituteConstituents = {
       original: deleteRight ? rightCst.id : leftCst.id,
       substitution: deleteRight ? leftCst.id : rightCst.id
     };

@@ -5,14 +5,14 @@ import { useUpdateTimestamp } from '@/features/library/backend/use-update-timest
 import { KEYS } from '@/backend/configuration';
 
 import { rsformsApi } from './api';
-import { type ICstUpdateDTO } from './types';
+import { type IUpdateConstituentaDTO } from './types';
 
-export const useCstUpdate = () => {
+export const useUpdateConstituenta = () => {
   const client = useQueryClient();
   const { updateTimestamp } = useUpdateTimestamp();
   const mutation = useMutation({
     mutationKey: [KEYS.global_mutation, rsformsApi.baseKey, 'update-cst'],
-    mutationFn: rsformsApi.cstUpdate,
+    mutationFn: rsformsApi.updateConstituenta,
     onSuccess: (_, variables) => {
       updateTimestamp(variables.itemID);
 
@@ -24,6 +24,6 @@ export const useCstUpdate = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    cstUpdate: (data: { itemID: number; data: ICstUpdateDTO }) => mutation.mutateAsync(data)
+    updateConstituenta: (data: { itemID: number; data: IUpdateConstituentaDTO }) => mutation.mutateAsync(data)
   };
 };

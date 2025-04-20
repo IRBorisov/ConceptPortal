@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { KEYS } from '@/backend/configuration';
 
 import { ossApi } from './api';
-import { type ICstRelocateDTO } from './types';
+import { type IRelocateConstituentsDTO } from './types';
 
 export const useRelocateConstituents = () => {
   const client = useQueryClient();
@@ -20,6 +20,6 @@ export const useRelocateConstituents = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    relocateConstituents: (data: ICstRelocateDTO) => mutation.mutateAsync(data)
+    relocateConstituents: (data: IRelocateConstituentsDTO) => mutation.mutateAsync(data)
   };
 };

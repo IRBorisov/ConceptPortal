@@ -3,13 +3,13 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { KEYS } from '@/backend/configuration';
 
 import { ossApi } from './api';
-import { type IOperationDeleteDTO } from './types';
+import { type ITargetOperation } from './types';
 
-export const useOperationDelete = () => {
+export const useExecuteOperation = () => {
   const client = useQueryClient();
   const mutation = useMutation({
-    mutationKey: [KEYS.global_mutation, ossApi.baseKey, 'operation-delete'],
-    mutationFn: ossApi.operationDelete,
+    mutationKey: [KEYS.global_mutation, ossApi.baseKey, 'operation-execute'],
+    mutationFn: ossApi.executeOperation,
     onSuccess: data => {
       client.setQueryData(ossApi.getOssQueryOptions({ itemID: data.id }).queryKey, data);
       return Promise.allSettled([
@@ -20,6 +20,6 @@ export const useOperationDelete = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    operationDelete: (data: { itemID: number; data: IOperationDeleteDTO }) => mutation.mutateAsync(data)
+    executeOperation: (data: { itemID: number; data: ITargetOperation }) => mutation.mutateAsync(data)
   };
 };

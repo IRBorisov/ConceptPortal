@@ -9,33 +9,33 @@ import { ErrorField } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { type ICstSubstitutionsDTO, schemaCstSubstitutions } from '../backend/types';
-import { useCstSubstitute } from '../backend/use-cst-substitute';
+import { type ISubstitutionsDTO, schemaSubstitutions } from '../backend/types';
+import { useSubstituteConstituents } from '../backend/use-substitute-constituents';
 import { PickSubstitutions } from '../components/pick-substitutions';
 import { type IRSForm } from '../models/rsform';
 
 export interface DlgSubstituteCstProps {
   schema: IRSForm;
-  onSubstitute: (data: ICstSubstitutionsDTO) => void;
+  onSubstitute: (data: ISubstitutionsDTO) => void;
 }
 
 export function DlgSubstituteCst() {
   const { onSubstitute, schema } = useDialogsStore(state => state.props as DlgSubstituteCstProps);
-  const { cstSubstitute } = useCstSubstitute();
+  const { substituteConstituents: cstSubstitute } = useSubstituteConstituents();
 
   const {
     handleSubmit,
     control,
     formState: { errors, isValid }
-  } = useForm<ICstSubstitutionsDTO>({
-    resolver: zodResolver(schemaCstSubstitutions),
+  } = useForm<ISubstitutionsDTO>({
+    resolver: zodResolver(schemaSubstitutions),
     defaultValues: {
       substitutions: []
     },
     mode: 'onChange'
   });
 
-  function onSubmit(data: ICstSubstitutionsDTO) {
+  function onSubmit(data: ISubstitutionsDTO) {
     return cstSubstitute({ itemID: schema.id, data: data }).then(() => onSubstitute(data));
   }
 

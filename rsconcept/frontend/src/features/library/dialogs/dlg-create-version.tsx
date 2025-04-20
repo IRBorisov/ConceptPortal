@@ -8,8 +8,8 @@ import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { errorMsg } from '@/utils/labels';
 
-import { type IVersionCreateDTO, type IVersionInfo, schemaVersionCreate } from '../backend/types';
-import { useVersionCreate } from '../backend/use-version-create';
+import { type ICreateVersionDTO, type IVersionInfo, schemaCreateVersion } from '../backend/types';
+import { useCreateVersion } from '../backend/use-create-version';
 import { nextVersion } from '../models/library-api';
 
 export interface DlgCreateVersionProps {
@@ -24,10 +24,10 @@ export function DlgCreateVersion() {
   const { itemID, versions, selected, totalCount, onCreate } = useDialogsStore(
     state => state.props as DlgCreateVersionProps
   );
-  const { versionCreate } = useVersionCreate();
+  const { createVersion: versionCreate } = useCreateVersion();
 
-  const { register, handleSubmit, control } = useForm<IVersionCreateDTO>({
-    resolver: zodResolver(schemaVersionCreate),
+  const { register, handleSubmit, control } = useForm<ICreateVersionDTO>({
+    resolver: zodResolver(schemaCreateVersion),
     defaultValues: {
       version: versions.length > 0 ? nextVersion(versions[versions.length - 1].version) : '1.0.0',
       description: '',
@@ -37,7 +37,7 @@ export function DlgCreateVersion() {
   const version = useWatch({ control, name: 'version' });
   const canSubmit = !versions.find(ver => ver.version === version);
 
-  function onSubmit(data: IVersionCreateDTO) {
+  function onSubmit(data: ICreateVersionDTO) {
     return versionCreate({ itemID, data }).then(onCreate);
   }
 

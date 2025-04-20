@@ -4,13 +4,13 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { Label } from '@/components/input';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { type IOperationUpdateDTO } from '../../backend/types';
+import { type IUpdateOperationDTO } from '../../backend/types';
 import { PickMultiOperation } from '../../components/pick-multi-operation';
 
 import { type DlgEditOperationProps } from './dlg-edit-operation';
 
 export function TabArguments() {
-  const { control, setValue } = useFormContext<IOperationUpdateDTO>();
+  const { control, setValue } = useFormContext<IUpdateOperationDTO>();
   const { oss, target } = useDialogsStore(state => state.props as DlgEditOperationProps);
   const potentialCycle = [target.id, ...oss.graph.expandAllOutputs([target.id])];
   const filtered = oss.operations.filter(item => !potentialCycle.includes(item.id));
