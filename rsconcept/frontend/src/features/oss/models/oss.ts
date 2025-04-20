@@ -4,7 +4,12 @@
 
 import { type Graph } from '@/models/graph';
 
-import { type ICstSubstituteInfo, type IOperationDTO, type IOperationSchemaDTO } from '../backend/types';
+import {
+  type IBlockDTO,
+  type ICstSubstituteInfo,
+  type IOperationDTO,
+  type IOperationSchemaDTO
+} from '../backend/types';
 
 /** Represents Operation. */
 export interface IOperation extends IOperationDTO {
@@ -16,23 +21,35 @@ export interface IOperation extends IOperationDTO {
   arguments: number[];
 }
 
+/** Represents Block. */
+export interface IBlock extends IBlockDTO {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
 /** Represents {@link IOperationSchema} statistics. */
 export interface IOperationSchemaStats {
-  count_operations: number;
+  count_all: number;
   count_inputs: number;
   count_synthesis: number;
   count_schemas: number;
   count_owned: number;
+  count_block: number;
 }
 
 /** Represents OperationSchema. */
 export interface IOperationSchema extends IOperationSchemaDTO {
   operations: IOperation[];
+  blocks: IBlock[];
 
   graph: Graph;
+  hierarchy: Graph;
   schemas: number[];
   stats: IOperationSchemaStats;
   operationByID: Map<number, IOperation>;
+  blockByID: Map<number, IBlock>;
 }
 
 /** Represents substitution error description. */

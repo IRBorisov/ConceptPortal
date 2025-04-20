@@ -47,27 +47,3 @@
     box-shadow: 0 0 0 2px var(--color-selected) !important;
   }
 }
-
-.react-flow__node-token,
-.react-flow__node-concept {
-  /* stylelint-disable-next-line at-rule-no-deprecated */
-  cursor: default;
-
-  border-radius: 100%;
-  width: 40px;
-  height: 40px;
-
-  outline-offset: -2px;
-  outline-style: solid;
-  outline-color: transparent;
-
-  transition-property: outline-offset;
-  transition-timing-function: var(--transition-bezier);
-  transition-duration: var(--duration-select);
-
-  &.selected {
-    outline-offset: 4px;
-    outline-color: var(--color-graph-selected);
-    border-color: transparent;
-  }
-}

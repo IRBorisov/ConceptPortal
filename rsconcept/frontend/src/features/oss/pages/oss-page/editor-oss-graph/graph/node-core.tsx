@@ -7,14 +7,17 @@ import { Indicator } from '@/components/view';
 import { globalIDs } from '@/utils/constants';
 
 import { OperationType } from '../../../../backend/types';
-import { type OssNodeInternal } from '../../../../models/oss-layout';
+import { type OperationInternalNode } from '../../../../models/oss-layout';
 import { useOperationTooltipStore } from '../../../../stores/operation-tooltip';
+
+export const OPERATION_NODE_WIDTH = 150;
+export const OPERATION_NODE_HEIGHT = 40;
 
 // characters - threshold for long labels - small font
 const LONG_LABEL_CHARS = 14;
 
 interface NodeCoreProps {
-  node: OssNodeInternal;
+  node: OperationInternalNode;
 }
 
 export function NodeCore({ node }: NodeCoreProps) {

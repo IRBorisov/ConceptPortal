@@ -2,11 +2,11 @@
 
 import { Handle, Position } from 'reactflow';
 
-import { type OssNodeInternal } from '../../../../models/oss-layout';
+import { type OperationInternalNode } from '../../../../models/oss-layout';
 
 import { NodeCore } from './node-core';
 
-export function OperationNode(node: OssNodeInternal) {
+export function OperationNode(node: OperationInternalNode) {
   return (
     <>
       <Handle type='target' position={Position.Top} id='left' style={{ left: 40 }} />

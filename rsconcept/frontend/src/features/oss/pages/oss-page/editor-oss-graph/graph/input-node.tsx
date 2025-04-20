@@ -1,10 +1,10 @@
 import { Handle, Position } from 'reactflow';
 
-import { type OssNodeInternal } from '../../../../models/oss-layout';
+import { type OperationInternalNode } from '../../../../models/oss-layout';
 
 import { NodeCore } from './node-core';
 
-export function InputNode(node: OssNodeInternal) {
+export function InputNode(node: OperationInternalNode) {
   return (
     <>
       <NodeCore node={node} />

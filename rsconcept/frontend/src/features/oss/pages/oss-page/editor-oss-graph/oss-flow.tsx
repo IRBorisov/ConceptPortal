@@ -8,8 +8,11 @@ import {
   useEdgesState,
   useNodesState,
   useOnSelectionChange,
-  useReactFlow
+  useReactFlow,
+  useStoreApi
 } from 'reactflow';
+
+import { type IOperationSchema } from '@/features/oss/models/oss';
 
 import { useMainHeight } from '@/stores/app-layout';
 import { useDialogsStore } from '@/stores/dialogs';
@@ -18,7 +21,7 @@ import { PARAMETER } from '@/utils/constants';
 import { useMutatingOss } from '../../../backend/use-mutating-oss';
 import { useUpdateLayout } from '../../../backend/use-update-layout';
 import { GRID_SIZE } from '../../../models/oss-api';
-import { type OssNode } from '../../../models/oss-layout';
+import { type OssNode, type Position2D } from '../../../models/oss-layout';
 import { useOperationTooltipStore } from '../../../stores/operation-tooltip';
 import { useOSSGraphStore } from '../../../stores/oss-graph';
 import { useOssEdit } from '../oss-edit-context';
@@ -32,6 +35,10 @@ import './graph/styles.css';
 
 const ZOOM_MAX = 2;
 const ZOOM_MIN = 0.5;
+
+const Z_BLOCK = 1;
+const Z_SCHEMA = 10;
+
 export const VIEW_PADDING = 0.2;
 
 export function OssFlow() {
@@ -45,6 +52,8 @@ export function OssFlow() {
     canDeleteOperation: canDelete
   } = useOssEdit();
   const { fitView, screenToFlowPosition } = useReactFlow();
+  const store = useStoreApi();
+  const { resetSelectedElements } = store.getState();
 
   const isProcessing = useMutatingOss();
 
@@ -79,14 +88,36 @@ export function OssFlow() {
   });
 
   useEffect(() => {
-    setNodes(
-      schema.operations.map(operation => ({
+    setNodes([
+      ...schema.hierarchy
+        .topologicalOrder()
+        .filter(id => id < 0)
+        .map(id => {
+          const block = schema.blockByID.get(-id)!;
+          return {
+            id: String(id),
+            type: 'block',
+            data: { label: block.title, block: block },
+            position: computeRelativePosition(schema, { x: block.x, y: block.y }, block.parent),
+            width: block.width,
+            height: block.height,
+            parentId: block.parent ? `-${block.parent}` : undefined,
+            expandParent: true,
+            extent: 'parent' as const,
+            zIndex: Z_BLOCK
+          };
+        }),
+      ...schema.operations.map(operation => ({
         id: String(operation.id),
+        type: operation.operation_type.toString(),
         data: { label: operation.alias, operation: operation },
-        position: { x: operation.x, y: operation.y },
-        type: operation.operation_type.toString()
+        position: computeRelativePosition(schema, { x: operation.x, y: operation.y }, operation.parent),
+        parentId: operation.parent ? `-${operation.parent}` : undefined,
+        expandParent: true,
+        extent: 'parent' as const,
+        zIndex: Z_SCHEMA
       }))
-    );
+    ]);
     setEdges(
       schema.arguments.map((argument, index) => ({
         id: String(index),
@@ -114,7 +145,7 @@ export function OssFlow() {
       defaultX: targetPosition.x,
       defaultY: targetPosition.y,
       layout: getLayout(),
-      initialInputs: selected,
+      initialInputs: selected.filter(id => id > 0),
       onCreate: () =>
         setTimeout(() => fitView({ duration: PARAMETER.zoomDuration, padding: VIEW_PADDING }), PARAMETER.refreshTimeout)
     });
@@ -157,7 +188,16 @@ export function OssFlow() {
   }
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
-    if (isProcessing || !isMutable) {
+    if (isProcessing) {
+      return;
+    }
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      event.stopPropagation();
+      resetSelectedElements();
+      return;
+    }
+    if (!isMutable) {
       return;
     }
     if ((event.ctrlKey || event.metaKey) && event.code === 'KeyS') {
@@ -216,4 +256,21 @@ export function OssFlow() {
       </div>
     </div>
   );
+}
+
+// -------- Internals --------
+function computeRelativePosition(schema: IOperationSchema, position: Position2D, parent: number | null): Position2D {
+  if (!parent) {
+    return position;
+  }
+
+  const parentBlock = schema.blockByID.get(parent);
+  if (!parentBlock) {
+    return position;
+  }
+
+  return {
+    x: position.x - parentBlock.x,
+    y: position.y - parentBlock.y
+  };
 }

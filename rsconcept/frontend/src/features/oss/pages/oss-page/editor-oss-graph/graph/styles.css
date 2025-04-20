@@ -2,12 +2,27 @@
 
 /* stylelint-disable selector-class-pattern */
 
+.react-flow__resize-control.handle {
+  background-color: transparent;
+
+  z-index: var(--z-index-navigation);
+  color: var(--color-muted-foreground);
+
+  &:hover {
+    color: var(--color-foreground);
+  }
+
+  width: 0;
+  height: 0;
+}
+
 .react-flow__node-input,
 .react-flow__node-synthesis {
   cursor: pointer;
 
   border-radius: 5px;
   padding: 2px;
+  width: 150px;
   height: fit-content;
 
   outline-offset: -2px;
@@ -22,5 +37,37 @@
     outline-offset: 4px;
     outline-color: var(--color-graph-selected);
     border-color: var(--color-foreground);
+  }
+}
+
+.react-flow__node-block {
+  cursor: auto;
+
+  border-radius: 5px;
+  border-width: 0;
+
+  padding: 0;
+  margin: 0;
+
+  background-color: transparent;
+  pointer-events: none;
+}
+
+.cc-node-block {
+  border-radius: 5px;
+  border-style: dashed;
+  border-width: 2px;
+
+  padding: 4px;
+
+  color: var(--color-muted-foreground);
+
+  .selected & {
+    color: var(--color-foreground);
+    border-color: var(--color-graph-selected);
+  }
+
+  &:hover {
+    color: var(--color-foreground);
   }
 }

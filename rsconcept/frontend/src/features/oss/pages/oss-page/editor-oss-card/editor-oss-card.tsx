@@ -54,7 +54,7 @@ export function EditorOssCard() {
           <EditorLibraryItem schema={schema} isAttachedToOSS={false} />
         </div>
 
-        <OssStats className='mt-3 md:mt-8 md:ml-5 w-56 md:w-48 mx-auto h-min' stats={schema.stats} />
+        <OssStats className='mt-3 md:mt-8 md:ml-5 w-80 md:w-56 mx-auto h-min' stats={schema.stats} />
       </div>
     </>
   );

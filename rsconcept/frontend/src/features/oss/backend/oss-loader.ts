@@ -6,18 +6,20 @@ import { type ILibraryItem } from '@/features/library';
 
 import { Graph } from '@/models/graph';
 
-import { type IOperation, type IOperationSchema, type IOperationSchemaStats } from '../models/oss';
+import { type IBlock, type IOperation, type IOperationSchema, type IOperationSchemaStats } from '../models/oss';
 
 import { type IOperationSchemaDTO, OperationType } from './types';
 
-/**
- * Loads data into an {@link IOperationSchema} based on {@link IOperationSchemaDTO}.
- *
- */
+export const DEFAULT_BLOCK_WIDTH = 100;
+export const DEFAULT_BLOCK_HEIGHT = 100;
+
+/** Loads data into an {@link IOperationSchema} based on {@link IOperationSchemaDTO}. */
 export class OssLoader {
   private oss: IOperationSchema;
   private graph: Graph = new Graph();
+  private hierarchy: Graph = new Graph();
   private operationByID = new Map<number, IOperation>();
+  private blockByID = new Map<number, IBlock>();
   private schemaIDs: number[] = [];
   private items: ILibraryItem[];
 
@@ -32,9 +34,12 @@ export class OssLoader {
     this.createGraph();
     this.extractSchemas();
     this.inferOperationAttributes();
+    this.inferBlockAttributes();
 
     result.operationByID = this.operationByID;
+    result.blockByID = this.blockByID;
     result.graph = this.graph;
+    result.hierarchy = this.hierarchy;
     result.schemas = this.schemaIDs;
     result.stats = this.calculateStats();
     return result;
@@ -44,6 +49,17 @@ export class OssLoader {
     this.oss.operations.forEach(operation => {
       this.operationByID.set(operation.id, operation);
       this.graph.addNode(operation.id);
+      this.hierarchy.addNode(operation.id);
+      if (operation.parent) {
+        this.hierarchy.addEdge(-operation.parent, operation.id);
+      }
+    });
+    this.oss.blocks.forEach(block => {
+      this.blockByID.set(block.id, block);
+      this.hierarchy.addNode(-block.id);
+      if (block.parent) {
+        this.graph.addEdge(-block.parent, -block.id);
+      }
     });
   }
 
@@ -71,6 +87,16 @@ export class OssLoader {
     });
   }
 
+  private inferBlockAttributes() {
+    this.oss.blocks.forEach(block => {
+      const geometry = this.oss.layout.blocks.find(item => item.id === block.id);
+      block.x = geometry?.x ?? 0;
+      block.y = geometry?.y ?? 0;
+      block.width = geometry?.width ?? DEFAULT_BLOCK_WIDTH;
+      block.height = geometry?.height ?? DEFAULT_BLOCK_HEIGHT;
+    });
+  }
+
   private inferConsolidation(operationID: number): boolean {
     const inputs = this.graph.expandInputs([operationID]);
     if (inputs.length === 0) {
@@ -85,13 +111,14 @@ export class OssLoader {
   }
 
   private calculateStats(): IOperationSchemaStats {
-    const items = this.oss.operations;
+    const operations = this.oss.operations;
     return {
-      count_operations: items.length,
-      count_inputs: items.filter(item => item.operation_type === OperationType.INPUT).length,
-      count_synthesis: items.filter(item => item.operation_type === OperationType.SYNTHESIS).length,
+      count_all: this.oss.operations.length + this.oss.blocks.length,
+      count_inputs: operations.filter(item => item.operation_type === OperationType.INPUT).length,
+      count_synthesis: operations.filter(item => item.operation_type === OperationType.SYNTHESIS).length,
       count_schemas: this.schemaIDs.length,
-      count_owned: items.filter(item => !!item.result && item.is_owned).length
+      count_owned: operations.filter(item => !!item.result && item.is_owned).length,
+      count_block: this.oss.blocks.length
     };
   }
 }

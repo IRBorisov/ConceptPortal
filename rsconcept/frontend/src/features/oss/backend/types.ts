@@ -18,7 +18,7 @@ export type ICstSubstituteInfo = z.infer<typeof schemaCstSubstituteInfo>;
 /** Represents {@link IOperation} data from server. */
 export type IOperationDTO = z.infer<typeof schemaOperation>;
 
-/** Represents {@link IOperation} data from server. */
+/** Represents {@link IBlock} data from server. */
 export type IBlockDTO = z.infer<typeof schemaBlock>;
 
 /** Represents backend data for {@link IOperationSchema}. */

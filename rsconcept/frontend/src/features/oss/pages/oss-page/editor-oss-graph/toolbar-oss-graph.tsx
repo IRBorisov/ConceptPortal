@@ -52,7 +52,7 @@ export function ToolbarOssGraph({
   const { schema, selected, isMutable, canDeleteOperation: canDelete } = useOssEdit();
   const isProcessing = useMutatingOss();
   const { fitView } = useReactFlow();
-  const selectedOperation = schema.operationByID.get(selected[0]);
+  const selectedOperation = selected.length !== 1 ? null : schema.operationByID.get(selected[0]) ?? null;
   const getLayout = useGetLayout();
 
   const showGrid = useOSSGraphStore(state => state.showGrid);
@@ -97,7 +97,7 @@ export function ToolbarOssGraph({
   }
 
   function handleOperationExecute() {
-    if (selected.length !== 1 || !readyForSynthesis || !selectedOperation) {
+    if (!readyForSynthesis || !selectedOperation) {
       return;
     }
     void operationExecute({
@@ -106,8 +106,8 @@ export function ToolbarOssGraph({
     });
   }
 
-  function handleEditOperation() {
-    if (selected.length !== 1 || !selectedOperation) {
+  function handleEditItem() {
+    if (!selectedOperation) {
       return;
     }
     showEditOperation({
@@ -202,7 +202,7 @@ export function ToolbarOssGraph({
             titleHtml={prepareTooltip('Редактировать выбранную', 'Двойной клик')}
             aria-label='Редактировать выбранную'
             icon={<IconEdit2 size='1.25rem' className='icon-primary' />}
-            onClick={handleEditOperation}
+            onClick={handleEditItem}
             disabled={selected.length !== 1 || isProcessing}
           />
           <MiniButton
