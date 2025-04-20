@@ -27,30 +27,41 @@ export type IOperationSchemaDTO = z.infer<typeof schemaOperationSchema>;
 /** Represents {@link IOperationSchema} layout. */
 export type IOssLayout = z.infer<typeof schemaOssLayout>;
 
-/** Represents {@link IOperation} data, used in creation process. */
+/** Represents {@link IBlock} data, used in Create action. */
+export type ICreateBlockDTO = z.infer<typeof schemaCreateBlock>;
+
+/** Represents data response when creating {@link IBlock}. */
+export type IBlockCreatedResponse = z.infer<typeof schemaBlockCreatedResponse>;
+
+/** Represents {@link IBlock} data, used in Update action. */
+export type IUpdateBlockDTO = z.infer<typeof schemaUpdateBlock>;
+
+/** Represents {@link IBlock} data, used in Delete action. */
+export type IDeleteBlockDTO = z.infer<typeof schemaDeleteBlock>;
+
+/** Represents {@link IOperation} data, used in Create action. */
 export type ICreateOperationDTO = z.infer<typeof schemaCreateOperation>;
 
 /** Represents data response when creating {@link IOperation}. */
 export type IOperationCreatedResponse = z.infer<typeof schemaOperationCreatedResponse>;
-/**
- * Represents target {@link IOperation}.
- */
+
+/** Represents {@link IOperation} data, used in Update action. */
+export type IUpdateOperationDTO = z.infer<typeof schemaUpdateOperation>;
+
+/** Represents {@link IOperation} data, used in Delete action. */
+export type IDeleteOperationDTO = z.infer<typeof schemaDeleteOperation>;
+
+/** Represents target {@link IOperation}. */
 export interface ITargetOperation {
   layout: IOssLayout;
   target: number;
 }
 
-/** Represents {@link IOperation} data, used in destruction process. */
-export type IDeleteOperationDTO = z.infer<typeof schemaDeleteOperation>;
-
 /** Represents data response when creating {@link IRSForm} for Input {@link IOperation}. */
 export type IInputCreatedResponse = z.infer<typeof schemaInputCreatedResponse>;
 
-/** Represents {@link IOperation} data, used in setInput process. */
+/** Represents {@link IOperation} data, used in setInput action. */
 export type IUpdateInputDTO = z.infer<typeof schemaUpdateInput>;
-
-/** Represents {@link IOperation} data, used in update process. */
-export type IUpdateOperationDTO = z.infer<typeof schemaUpdateOperation>;
 
 /** Represents data, used relocating {@link IConstituenta}s between {@link ILibraryItem}s. */
 export type IRelocateConstituentsDTO = z.infer<typeof schemaRelocateConstituents>;
@@ -121,6 +132,41 @@ export const schemaOperationSchema = schemaLibraryItem.extend({
   substitutions: z.array(schemaCstSubstituteInfo)
 });
 
+export const schemaCreateBlock = z.strictObject({
+  layout: schemaOssLayout,
+  item_data: z.strictObject({
+    title: z.string(),
+    description: z.string(),
+    parent: z.number().nullable()
+  }),
+  position_x: z.number(),
+  position_y: z.number(),
+  width: z.number(),
+  height: z.number(),
+  children_operations: z.array(z.number()),
+  children_blocks: z.array(z.number())
+});
+
+export const schemaBlockCreatedResponse = z.strictObject({
+  new_block: schemaBlock,
+  oss: schemaOperationSchema
+});
+
+export const schemaUpdateBlock = z.strictObject({
+  target: z.number(),
+  layout: schemaOssLayout,
+  item_data: z.strictObject({
+    title: z.string(),
+    description: z.string(),
+    parent: z.number().nullable()
+  })
+});
+
+export const schemaDeleteBlock = z.strictObject({
+  target: z.number(),
+  layout: schemaOssLayout
+});
+
 export const schemaCreateOperation = z.strictObject({
   layout: schemaOssLayout,
   item_data: z.strictObject({
@@ -142,6 +188,19 @@ export const schemaOperationCreatedResponse = z.strictObject({
   oss: schemaOperationSchema
 });
 
+export const schemaUpdateOperation = z.strictObject({
+  target: z.number(),
+  layout: schemaOssLayout,
+  item_data: z.strictObject({
+    alias: z.string().nonempty(errorMsg.requiredField),
+    title: z.string(),
+    description: z.string(),
+    parent: z.number().nullable()
+  }),
+  arguments: z.array(z.number()),
+  substitutions: z.array(schemaSubstituteConstituents)
+});
+
 export const schemaDeleteOperation = z.strictObject({
   target: z.number(),
   layout: schemaOssLayout,
@@ -158,18 +217,6 @@ export const schemaUpdateInput = z.strictObject({
 export const schemaInputCreatedResponse = z.strictObject({
   new_schema: schemaLibraryItem,
   oss: schemaOperationSchema
-});
-
-export const schemaUpdateOperation = z.strictObject({
-  target: z.number(),
-  layout: schemaOssLayout,
-  item_data: z.strictObject({
-    alias: z.string().nonempty(errorMsg.requiredField),
-    title: z.string(),
-    description: z.string()
-  }),
-  arguments: z.array(z.number()),
-  substitutions: z.array(schemaSubstituteConstituents)
 });
 
 export const schemaRelocateConstituents = z.strictObject({

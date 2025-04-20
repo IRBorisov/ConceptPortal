@@ -7,18 +7,18 @@ from .data_access import (
     CreateBlockSerializer,
     CreateOperationSerializer,
     DeleteBlockSerializer,
-    OperationDeleteSerializer,
+    DeleteOperationSerializer,
     OperationSchemaSerializer,
     OperationSerializer,
-    OperationTargetSerializer,
     RelocateConstituentsSerializer,
     SetOperationInputSerializer,
+    TargetOperationSerializer,
     UpdateBlockSerializer,
     UpdateOperationSerializer
 )
 from .responses import (
+    BlockCreatedResponse,
     ConstituentaReferenceResponse,
-    NewBlockResponse,
-    NewOperationResponse,
-    NewSchemaResponse
+    OperationCreatedResponse,
+    SchemaCreatedResponse
 )

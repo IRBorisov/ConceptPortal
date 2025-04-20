@@ -11,7 +11,7 @@ export const useUpdateConstituenta = () => {
   const client = useQueryClient();
   const { updateTimestamp } = useUpdateTimestamp();
   const mutation = useMutation({
-    mutationKey: [KEYS.global_mutation, rsformsApi.baseKey, 'update-cst'],
+    mutationKey: [KEYS.global_mutation, rsformsApi.baseKey, 'update-constituenta'],
     mutationFn: rsformsApi.updateConstituenta,
     onSuccess: (_, variables) => {
       updateTimestamp(variables.itemID);

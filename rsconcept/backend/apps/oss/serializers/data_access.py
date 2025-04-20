@@ -83,6 +83,55 @@ class CreateBlockSerializer(serializers.Serializer):
         return attrs
 
 
+class UpdateBlockSerializer(serializers.Serializer):
+    ''' Serializer: Block update. '''
+    class UpdateBlockData(serializers.ModelSerializer):
+        ''' Serializer: Block update data. '''
+        class Meta:
+            ''' serializer metadata. '''
+            model = Block
+            fields = 'title', 'description', 'parent'
+
+    layout = LayoutSerializer(required=False)
+    target = PKField(many=False, queryset=Block.objects.all())
+    item_data = UpdateBlockData()
+
+    def validate(self, attrs):
+        oss = cast(LibraryItem, self.context['oss'])
+        block = cast(Block, attrs['target'])
+        if block.oss_id != oss.pk:
+            raise serializers.ValidationError({
+                'target': msg.blockNotInOSS()
+            })
+
+        if 'parent' in attrs['item_data'] and \
+                attrs['item_data']['parent'] is not None:
+            if attrs['item_data']['parent'].oss_id != oss.pk:
+                raise serializers.ValidationError({
+                    'parent': msg.parentNotInOSS()
+                })
+            if attrs['item_data']['parent'] == attrs['target']:
+                raise serializers.ValidationError({
+                    'parent': msg.blockSelfParent()
+                })
+        return attrs
+
+
+class DeleteBlockSerializer(serializers.Serializer):
+    ''' Serializer: Delete block. '''
+    layout = LayoutSerializer()
+    target = PKField(many=False, queryset=Block.objects.all().only('oss_id'))
+
+    def validate(self, attrs):
+        oss = cast(LibraryItem, self.context['oss'])
+        block = cast(Block, attrs['target'])
+        if block.oss_id != oss.pk:
+            raise serializers.ValidationError({
+                'target': msg.blockNotInOSS()
+            })
+        return attrs
+
+
 class CreateOperationSerializer(serializers.Serializer):
     ''' Serializer: Operation creation. '''
     class CreateOperationData(serializers.ModelSerializer):
@@ -196,56 +245,7 @@ class UpdateOperationSerializer(serializers.Serializer):
         return attrs
 
 
-class UpdateBlockSerializer(serializers.Serializer):
-    ''' Serializer: Block update. '''
-    class UpdateBlockData(serializers.ModelSerializer):
-        ''' Serializer: Block update data. '''
-        class Meta:
-            ''' serializer metadata. '''
-            model = Block
-            fields = 'title', 'description', 'parent'
-
-    layout = LayoutSerializer(required=False)
-    target = PKField(many=False, queryset=Block.objects.all())
-    item_data = UpdateBlockData()
-
-    def validate(self, attrs):
-        oss = cast(LibraryItem, self.context['oss'])
-        block = cast(Block, attrs['target'])
-        if block.oss_id != oss.pk:
-            raise serializers.ValidationError({
-                'target': msg.blockNotInOSS()
-            })
-
-        if 'parent' in attrs['item_data'] and \
-                attrs['item_data']['parent'] is not None:
-            if attrs['item_data']['parent'].oss_id != oss.pk:
-                raise serializers.ValidationError({
-                    'parent': msg.parentNotInOSS()
-                })
-            if attrs['item_data']['parent'] == attrs['target']:
-                raise serializers.ValidationError({
-                    'parent': msg.blockSelfParent()
-                })
-        return attrs
-
-
-class DeleteBlockSerializer(serializers.Serializer):
-    ''' Serializer: Delete block. '''
-    layout = LayoutSerializer()
-    target = PKField(many=False, queryset=Block.objects.all().only('oss_id'))
-
-    def validate(self, attrs):
-        oss = cast(LibraryItem, self.context['oss'])
-        block = cast(Block, attrs['target'])
-        if block.oss_id != oss.pk:
-            raise serializers.ValidationError({
-                'target': msg.blockNotInOSS()
-            })
-        return attrs
-
-
-class OperationDeleteSerializer(serializers.Serializer):
+class DeleteOperationSerializer(serializers.Serializer):
     ''' Serializer: Delete operation. '''
     layout = LayoutSerializer()
     target = PKField(many=False, queryset=Operation.objects.all().only('oss_id', 'result'))
@@ -262,7 +262,7 @@ class OperationDeleteSerializer(serializers.Serializer):
         return attrs
 
 
-class OperationTargetSerializer(serializers.Serializer):
+class TargetOperationSerializer(serializers.Serializer):
     ''' Serializer: Target single operation. '''
     layout = LayoutSerializer()
     target = PKField(many=False, queryset=Operation.objects.all().only('oss_id', 'result_id'))

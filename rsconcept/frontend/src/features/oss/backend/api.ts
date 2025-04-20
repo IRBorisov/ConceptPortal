@@ -5,8 +5,11 @@ import { DELAYS, KEYS } from '@/backend/configuration';
 import { infoMsg } from '@/utils/labels';
 
 import {
+  type IBlockCreatedResponse,
   type IConstituentaReference,
+  type ICreateBlockDTO,
   type ICreateOperationDTO,
+  type IDeleteBlockDTO,
   type IDeleteOperationDTO,
   type IInputCreatedResponse,
   type IOperationCreatedResponse,
@@ -14,6 +17,7 @@ import {
   type IOssLayout,
   type IRelocateConstituentsDTO,
   type ITargetOperation,
+  type IUpdateBlockDTO,
   type IUpdateInputDTO,
   type IUpdateOperationDTO,
   schemaConstituentaReference,
@@ -49,6 +53,34 @@ export const ossApi = {
       }
     }),
 
+  createBlock: ({ itemID, data }: { itemID: number; data: ICreateBlockDTO }) =>
+    axiosPost<ICreateBlockDTO, IBlockCreatedResponse>({
+      schema: schemaOperationCreatedResponse,
+      endpoint: `/api/oss/${itemID}/create-block`,
+      request: {
+        data: data,
+        successMessage: infoMsg.changesSaved
+      }
+    }),
+  updateBlock: ({ itemID, data }: { itemID: number; data: IUpdateBlockDTO }) =>
+    axiosPatch<IUpdateBlockDTO, IOperationSchemaDTO>({
+      schema: schemaOperationSchema,
+      endpoint: `/api/oss/${itemID}/update-operation`,
+      request: {
+        data: data,
+        successMessage: infoMsg.changesSaved
+      }
+    }),
+  deleteBlock: ({ itemID, data }: { itemID: number; data: IDeleteBlockDTO }) =>
+    axiosPatch<IDeleteBlockDTO, IOperationSchemaDTO>({
+      schema: schemaOperationSchema,
+      endpoint: `/api/oss/${itemID}/delete-operation`,
+      request: {
+        data: data,
+        successMessage: infoMsg.operationDestroyed
+      }
+    }),
+
   createOperation: ({ itemID, data }: { itemID: number; data: ICreateOperationDTO }) =>
     axiosPost<ICreateOperationDTO, IOperationCreatedResponse>({
       schema: schemaOperationCreatedResponse,
@@ -56,6 +88,15 @@ export const ossApi = {
       request: {
         data: data,
         successMessage: response => infoMsg.newOperation(response.new_operation.alias)
+      }
+    }),
+  updateOperation: ({ itemID, data }: { itemID: number; data: IUpdateOperationDTO }) =>
+    axiosPatch<IUpdateOperationDTO, IOperationSchemaDTO>({
+      schema: schemaOperationSchema,
+      endpoint: `/api/oss/${itemID}/update-operation`,
+      request: {
+        data: data,
+        successMessage: infoMsg.changesSaved
       }
     }),
   deleteOperation: ({ itemID, data }: { itemID: number; data: IDeleteOperationDTO }) =>
@@ -67,6 +108,7 @@ export const ossApi = {
         successMessage: infoMsg.operationDestroyed
       }
     }),
+
   createInput: ({ itemID, data }: { itemID: number; data: ITargetOperation }) =>
     axiosPatch<ITargetOperation, IInputCreatedResponse>({
       schema: schemaInputCreatedResponse,
@@ -80,15 +122,6 @@ export const ossApi = {
     axiosPatch<IUpdateInputDTO, IOperationSchemaDTO>({
       schema: schemaOperationSchema,
       endpoint: `/api/oss/${itemID}/set-input`,
-      request: {
-        data: data,
-        successMessage: infoMsg.changesSaved
-      }
-    }),
-  updateOperation: ({ itemID, data }: { itemID: number; data: IUpdateOperationDTO }) =>
-    axiosPatch<IUpdateOperationDTO, IOperationSchemaDTO>({
-      schema: schemaOperationSchema,
-      endpoint: `/api/oss/${itemID}/update-operation`,
       request: {
         data: data,
         successMessage: infoMsg.changesSaved

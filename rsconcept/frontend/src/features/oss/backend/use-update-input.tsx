@@ -8,7 +8,7 @@ import { type IUpdateInputDTO } from './types';
 export const useUpdateInput = () => {
   const client = useQueryClient();
   const mutation = useMutation({
-    mutationKey: [KEYS.global_mutation, ossApi.baseKey, 'input-update'],
+    mutationKey: [KEYS.global_mutation, ossApi.baseKey, 'update-input'],
     mutationFn: ossApi.updateInput,
     onSuccess: data => {
       client.setQueryData(ossApi.getOssQueryOptions({ itemID: data.id }).queryKey, data);

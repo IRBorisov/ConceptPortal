@@ -11,7 +11,7 @@ export const useDeleteConstituents = () => {
   const client = useQueryClient();
   const { updateTimestamp } = useUpdateTimestamp();
   const mutation = useMutation({
-    mutationKey: [KEYS.global_mutation, rsformsApi.baseKey, 'delete-multiple-cst'],
+    mutationKey: [KEYS.global_mutation, rsformsApi.baseKey, 'delete-constituents'],
     mutationFn: rsformsApi.deleteConstituents,
     onSuccess: data => {
       client.setQueryData(rsformsApi.getRSFormQueryOptions({ itemID: data.id }).queryKey, data);

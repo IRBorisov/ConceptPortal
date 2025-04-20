@@ -8,7 +8,7 @@ import { type ITargetOperation } from './types';
 export const useExecuteOperation = () => {
   const client = useQueryClient();
   const mutation = useMutation({
-    mutationKey: [KEYS.global_mutation, ossApi.baseKey, 'operation-execute'],
+    mutationKey: [KEYS.global_mutation, ossApi.baseKey, 'execute-operation'],
     mutationFn: ossApi.executeOperation,
     onSuccess: data => {
       client.setQueryData(ossApi.getOssQueryOptions({ itemID: data.id }).queryKey, data);

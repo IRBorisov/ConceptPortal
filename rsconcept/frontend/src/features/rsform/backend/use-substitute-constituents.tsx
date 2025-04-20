@@ -11,7 +11,7 @@ export const useSubstituteConstituents = () => {
   const client = useQueryClient();
   const { updateTimestamp } = useUpdateTimestamp();
   const mutation = useMutation({
-    mutationKey: [KEYS.global_mutation, rsformsApi.baseKey, 'substitute-cst'],
+    mutationKey: [KEYS.global_mutation, rsformsApi.baseKey, 'substitute-constituents'],
     mutationFn: rsformsApi.substituteConstituents,
     onSuccess: data => {
       client.setQueryData(rsformsApi.getRSFormQueryOptions({ itemID: data.id }).queryKey, data);

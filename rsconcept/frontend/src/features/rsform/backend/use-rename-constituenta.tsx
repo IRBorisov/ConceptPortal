@@ -11,7 +11,7 @@ export const useRenameConstituenta = () => {
   const client = useQueryClient();
   const { updateTimestamp } = useUpdateTimestamp();
   const mutation = useMutation({
-    mutationKey: [KEYS.global_mutation, rsformsApi.baseKey, 'rename-cst'],
+    mutationKey: [KEYS.global_mutation, rsformsApi.baseKey, 'rename-constituenta'],
     mutationFn: rsformsApi.renameConstituenta,
     onSuccess: data => {
       client.setQueryData(rsformsApi.getRSFormQueryOptions({ itemID: data.schema.id }).queryKey, data.schema);

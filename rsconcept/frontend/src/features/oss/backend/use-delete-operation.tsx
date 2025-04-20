@@ -8,7 +8,7 @@ import { type IDeleteOperationDTO } from './types';
 export const useDeleteOperation = () => {
   const client = useQueryClient();
   const mutation = useMutation({
-    mutationKey: [KEYS.global_mutation, ossApi.baseKey, 'operation-delete'],
+    mutationKey: [KEYS.global_mutation, ossApi.baseKey, 'delete-operation'],
     mutationFn: ossApi.deleteOperation,
     onSuccess: data => {
       client.setQueryData(ossApi.getOssQueryOptions({ itemID: data.id }).queryKey, data);
