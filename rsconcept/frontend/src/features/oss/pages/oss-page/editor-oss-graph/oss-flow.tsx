@@ -32,8 +32,6 @@ import { type ContextMenuData, NodeContextMenu } from './node-context-menu';
 import { ToolbarOssGraph } from './toolbar-oss-graph';
 import { useGetLayout } from './use-get-layout';
 
-import './graph/styles.css';
-
 const ZOOM_MAX = 2;
 const ZOOM_MIN = 0.5;
 

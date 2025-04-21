@@ -280,3 +280,50 @@
     --tw-enter-translate-y: calc(2 * var(--spacing));
   }
 }
+
+@utility cc-node-operation {
+  cursor: pointer;
+
+  border-radius: 5px;
+  border-color: var(--color-muted-foreground);
+  border-width: 1px;
+
+  color: var(--color-foreground);
+  background-color: var(--color-card);
+
+  outline-offset: -2px;
+  outline-style: solid;
+  outline-color: transparent;
+
+  transition-property: outline-offset;
+  transition-timing-function: var(--transition-bezier);
+  transition-duration: var(--duration-select);
+
+  .selected & {
+    outline-offset: 4px;
+    outline-color: var(--color-graph-selected);
+    border-color: var(--color-foreground);
+  }
+}
+
+@utility cc-node-block {
+  cursor: default;
+
+  border-radius: 5px;
+  border-style: dashed;
+  border-width: 2px;
+
+  padding: 4px;
+
+  color: var(--color-muted-foreground);
+  background-color: transparent;
+
+  .selected & {
+    color: var(--color-foreground);
+    border-color: var(--color-graph-selected);
+  }
+
+  &:hover {
+    color: var(--color-foreground);
+  }
+}

@@ -2,6 +2,7 @@
 * Module: Override imported components CSS styling.
 */
 @import './constants.css';
+@import './reactflow.css';
 
 /* stylelint-disable selector-class-pattern */
 

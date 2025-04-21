@@ -32,8 +32,6 @@ import { ToolbarTermGraph } from './toolbar-term-graph';
 import { useFilteredGraph } from './use-filtered-graph';
 import { ViewHidden } from './view-hidden';
 
-import './graph/styles.css';
-
 const ZOOM_MAX = 3;
 const ZOOM_MIN = 0.25;
 export const VIEW_PADDING = 0.3;
