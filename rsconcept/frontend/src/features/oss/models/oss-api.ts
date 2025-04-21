@@ -543,26 +543,26 @@ export function calculateNewBlockPosition(data: ICreateBlockDTO, layout: IOssLay
   let right = undefined;
   let bottom = undefined;
 
-  for (const node of block_nodes) {
-    left = !left ? node.x - GRID_SIZE : Math.min(left, node.x - GRID_SIZE);
-    top = !top ? node.y - GRID_SIZE : Math.min(top, node.y - GRID_SIZE);
+  for (const block of block_nodes) {
+    left = !left ? block.x - GRID_SIZE : Math.min(left, block.x - GRID_SIZE);
+    top = !top ? block.y - GRID_SIZE : Math.min(top, block.y - GRID_SIZE);
     right = !right
-      ? Math.max(left + data.width, node.x + node.width + GRID_SIZE)
-      : Math.max(right, node.x + node.width + GRID_SIZE);
+      ? Math.max(left + data.width, block.x + block.width + GRID_SIZE)
+      : Math.max(right, block.x + block.width + GRID_SIZE);
     bottom = !bottom
-      ? Math.max(top + data.height, node.y + node.height + GRID_SIZE)
-      : Math.max(bottom, node.y + node.height + GRID_SIZE);
+      ? Math.max(top + data.height, block.y + block.height + GRID_SIZE)
+      : Math.max(bottom, block.y + block.height + GRID_SIZE);
   }
 
-  for (const node of operation_nodes) {
-    left = !left ? node.x - GRID_SIZE : Math.min(left, node.x - GRID_SIZE);
-    top = !top ? node.y - GRID_SIZE : Math.min(top, node.y - GRID_SIZE);
+  for (const operation of operation_nodes) {
+    left = !left ? operation.x - GRID_SIZE : Math.min(left, operation.x - GRID_SIZE);
+    top = !top ? operation.y - GRID_SIZE : Math.min(top, operation.y - GRID_SIZE);
     right = !right
-      ? Math.max(left + data.width, node.x + OPERATION_NODE_WIDTH + GRID_SIZE)
-      : Math.max(right, node.x + OPERATION_NODE_WIDTH + GRID_SIZE);
+      ? Math.max(left + data.width, operation.x + OPERATION_NODE_WIDTH + GRID_SIZE)
+      : Math.max(right, operation.x + OPERATION_NODE_WIDTH + GRID_SIZE);
     bottom = !bottom
-      ? Math.max(top + data.height, node.y + OPERATION_NODE_HEIGHT + GRID_SIZE)
-      : Math.max(bottom, node.y + OPERATION_NODE_HEIGHT + GRID_SIZE);
+      ? Math.max(top + data.height, operation.y + OPERATION_NODE_HEIGHT + GRID_SIZE)
+      : Math.max(bottom, operation.y + OPERATION_NODE_HEIGHT + GRID_SIZE);
   }
 
   return {

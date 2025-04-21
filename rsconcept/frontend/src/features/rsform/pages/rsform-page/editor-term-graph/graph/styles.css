@@ -4,8 +4,12 @@
 
 .react-flow__node-concept {
   cursor: default;
+  font-size: 14px;
 
+  border: 1px solid;
+  border-color: var(--color-border);
   border-radius: 100%;
+
   width: 40px;
   height: 40px;
 

@@ -9,7 +9,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { NavigationState } from './navigation/navigation-context';
 import { Footer } from './footer';
 import { GlobalDialogs } from './global-dialogs';
-import { GlobalLoader } from './global-loader1';
+import { GlobalLoader } from './global-loader';
 import { ToasterThemed } from './global-toaster';
 import { GlobalTooltips } from './global-tooltips';
 import { MutationErrors } from './mutation-errors';

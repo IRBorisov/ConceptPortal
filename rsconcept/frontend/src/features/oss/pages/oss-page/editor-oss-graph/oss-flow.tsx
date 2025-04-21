@@ -200,6 +200,10 @@ export function OssFlow() {
     event.preventDefault();
     event.stopPropagation();
 
+    if (node.type === 'block') {
+      return;
+    }
+
     setMenuProps({
       operation: node.data.operation,
       cursorX: event.clientX,

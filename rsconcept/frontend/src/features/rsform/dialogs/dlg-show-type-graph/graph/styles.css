@@ -3,9 +3,14 @@
 /* stylelint-disable selector-class-pattern */
 
 .react-flow__node-step {
+  font-size: 14px;
   cursor: default;
 
+  color: var(--color-foreground);
+  border: 1px solid;
+  border-color: var(--color-border);
   border-radius: 100%;
+
   width: 40px;
   height: 40px;
 

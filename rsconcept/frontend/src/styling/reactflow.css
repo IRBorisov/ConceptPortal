@@ -6,6 +6,7 @@
 /* stylelint-disable selector-class-pattern */
 
 .react-flow__handle {
+  z-index: var(--z-index-navigation);
   cursor: default !important;
   border-radius: 9999px;
 
@@ -36,13 +37,6 @@
 }
 
 [class*='react-flow__node-'] {
-  font-size: 14px;
-  border: 1px solid;
-
-  color: var(--color-foreground);
-  border-color: var(--color-border);
-  background-color: var(--color-card);
-
   &:hover:not(.selected) {
     box-shadow: 0 0 0 2px var(--color-selected) !important;
   }

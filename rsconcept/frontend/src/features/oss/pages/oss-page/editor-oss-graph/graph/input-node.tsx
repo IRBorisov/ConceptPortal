@@ -8,7 +8,7 @@ export function InputNode(node: OperationInternalNode) {
   return (
     <>
       <NodeCore node={node} />
-      <Handle type='source' position={Position.Bottom} />
+      <Handle type='source' position={Position.Bottom} className='-translate-y-[1px]' />
     </>
   );
 }

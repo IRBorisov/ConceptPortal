@@ -16,8 +16,9 @@ export const BLOCK_NODE_MIN_HEIGHT = 100;
 export function BlockNode(node: BlockInternalNode) {
   const showCoordinates = useOSSGraphStore(state => state.showCoordinates);
   const { selected, schema } = useOssEdit();
-  const singleSelected = selected.length === 1 ? selected[0] : null;
-  const isParent = !singleSelected ? false : schema.hierarchy.at(singleSelected)?.inputs.includes(node.data.block.id);
+  const focus = selected.length === 1 ? selected[0] : null;
+  const isParent = (!!focus && schema.hierarchy.at(focus)?.inputs.includes(-node.data.block.id)) ?? false;
+  const isChild = (!!focus && schema.hierarchy.at(focus)?.outputs.includes(-node.data.block.id)) ?? false;
   return (
     <>
       <NodeResizeControl minWidth={BLOCK_NODE_MIN_WIDTH} minHeight={BLOCK_NODE_MIN_HEIGHT}>
@@ -34,7 +35,13 @@ export function BlockNode(node: BlockInternalNode) {
           {`X: ${node.xPos.toFixed(0)} Y: ${node.yPos.toFixed(0)}`}
         </div>
       ) : null}
-      <div className={clsx('cc-node-block h-full w-full', isParent && 'border-primary')}>
+      <div
+        className={clsx(
+          'cc-node-block h-full w-full',
+          isParent && 'border-primary',
+          isChild && 'border-accent-orange50'
+        )}
+      >
         <div
           className={clsx(
             'w-fit mx-auto -translate-y-[14px]',
