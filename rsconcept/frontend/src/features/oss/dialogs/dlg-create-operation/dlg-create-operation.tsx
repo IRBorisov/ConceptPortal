@@ -14,7 +14,7 @@ import { type ICreateOperationDTO, type IOssLayout, OperationType, schemaCreateO
 import { useCreateOperation } from '../../backend/use-create-operation';
 import { describeOperationType, labelOperationType } from '../../labels';
 import { type IOperationSchema } from '../../models/oss';
-import { calculateInsertPosition } from '../../models/oss-api';
+import { calculateNewOperationPosition } from '../../models/oss-api';
 
 import { TabInputOperation } from './tab-input-operation';
 import { TabSynthesisOperation } from './tab-synthesis-operation';
@@ -22,6 +22,7 @@ import { TabSynthesisOperation } from './tab-synthesis-operation';
 export interface DlgCreateOperationProps {
   oss: IOperationSchema;
   layout: IOssLayout;
+  initialParent: number | null;
   initialInputs: number[];
   defaultX: number;
   defaultY: number;
@@ -35,9 +36,9 @@ export const TabID = {
 export type TabID = (typeof TabID)[keyof typeof TabID];
 
 export function DlgCreateOperation() {
-  const { createOperation: operationCreate } = useCreateOperation();
+  const { createOperation } = useCreateOperation();
 
-  const { oss, layout, initialInputs, onCreate, defaultX, defaultY } = useDialogsStore(
+  const { oss, layout, initialInputs, initialParent, onCreate, defaultX, defaultY } = useDialogsStore(
     state => state.props as DlgCreateOperationProps
   );
 
@@ -50,7 +51,7 @@ export function DlgCreateOperation() {
         title: '',
         description: '',
         result: null,
-        parent: null
+        parent: initialParent
       },
       position_x: defaultX,
       position_y: defaultY,
@@ -65,13 +66,10 @@ export function DlgCreateOperation() {
   const isValid = !!alias && !oss.operations.some(operation => operation.alias === alias);
 
   function onSubmit(data: ICreateOperationDTO) {
-    const target = calculateInsertPosition(oss, data.arguments, layout, {
-      x: defaultX,
-      y: defaultY
-    });
+    const target = calculateNewOperationPosition(oss, data, layout);
     data.position_x = target.x;
     data.position_y = target.y;
-    void operationCreate({ itemID: oss.id, data: data }).then(response => onCreate?.(response.new_operation.id));
+    void createOperation({ itemID: oss.id, data: data }).then(response => onCreate?.(response.new_operation.id));
   }
 
   function handleSelectTab(newTab: TabID, last: TabID) {

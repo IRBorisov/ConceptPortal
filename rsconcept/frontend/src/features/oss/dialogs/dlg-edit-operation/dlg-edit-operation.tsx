@@ -34,7 +34,7 @@ export type TabID = (typeof TabID)[keyof typeof TabID];
 
 export function DlgEditOperation() {
   const { oss, target, layout } = useDialogsStore(state => state.props as DlgEditOperationProps);
-  const { updateOperation: operationUpdate } = useUpdateOperation();
+  const { updateOperation } = useUpdateOperation();
 
   const methods = useForm<IUpdateOperationDTO>({
     resolver: zodResolver(schemaUpdateOperation),
@@ -58,7 +58,7 @@ export function DlgEditOperation() {
   const [activeTab, setActiveTab] = useState<TabID>(TabID.CARD);
 
   function onSubmit(data: IUpdateOperationDTO) {
-    return operationUpdate({ itemID: oss.id, data });
+    return updateOperation({ itemID: oss.id, data });
   }
 
   return (
@@ -78,13 +78,23 @@ export function DlgEditOperation() {
         onSelect={index => setActiveTab(index as TabID)}
       >
         <TabList className='mb-3 mx-auto w-fit flex border divide-x rounded-none bg-secondary'>
-          <TabLabel title='Текстовые поля' label='Карточка' className='w-32' />
-          {target.operation_type === OperationType.SYNTHESIS ? (
-            <TabLabel title='Выбор аргументов операции' label='Аргументы' className='w-32' />
-          ) : null}
-          {target.operation_type === OperationType.SYNTHESIS ? (
-            <TabLabel titleHtml='Таблица отождествлений' label='Отождествления' className='w-32' />
-          ) : null}
+          <TabLabel
+            title='Текстовые поля' //
+            label='Карточка'
+            className='w-32'
+          />
+          <TabLabel
+            title='Выбор аргументов операции'
+            label='Аргументы'
+            className='w-32'
+            disabled={target.operation_type !== OperationType.SYNTHESIS}
+          />
+          <TabLabel
+            titleHtml='Таблица отождествлений'
+            label='Отождествления'
+            className='w-32'
+            disabled={target.operation_type !== OperationType.SYNTHESIS}
+          />
         </TabList>
 
         <FormProvider {...methods}>

@@ -6,6 +6,7 @@ import { type DlgCreateVersionProps } from '@/features/library/dialogs/dlg-creat
 import { type DlgEditEditorsProps } from '@/features/library/dialogs/dlg-edit-editors/dlg-edit-editors';
 import { type DlgEditVersionsProps } from '@/features/library/dialogs/dlg-edit-versions/dlg-edit-versions';
 import { type DlgChangeInputSchemaProps } from '@/features/oss/dialogs/dlg-change-input-schema';
+import { type DlgCreateBlockProps } from '@/features/oss/dialogs/dlg-create-block/dlg-create-block';
 import { type DlgCreateOperationProps } from '@/features/oss/dialogs/dlg-create-operation/dlg-create-operation';
 import { type DlgDeleteOperationProps } from '@/features/oss/dialogs/dlg-delete-operation';
 import { type DlgEditOperationProps } from '@/features/oss/dialogs/dlg-edit-operation/dlg-edit-operation';
@@ -26,28 +27,36 @@ import { type DlgUploadRSFormProps } from '@/features/rsform/dialogs/dlg-upload-
 /** Represents global dialog. */
 export const DialogType = {
   CONSTITUENTA_TEMPLATE: 1,
-  CREATE_CONSTITUENTA: 2,
-  CREATE_OPERATION: 3,
-  DELETE_CONSTITUENTA: 4,
-  EDIT_EDITORS: 5,
-  EDIT_OPERATION: 6,
-  EDIT_REFERENCE: 7,
-  EDIT_VERSIONS: 8,
-  EDIT_WORD_FORMS: 9,
-  INLINE_SYNTHESIS: 10,
-  SHOW_AST: 11,
-  SHOW_TYPE_GRAPH: 12,
-  CHANGE_INPUT_SCHEMA: 13,
-  CHANGE_LOCATION: 14,
-  CLONE_LIBRARY_ITEM: 15,
-  CREATE_VERSION: 16,
-  DELETE_OPERATION: 17,
-  GRAPH_PARAMETERS: 18,
-  RELOCATE_CONSTITUENTS: 19,
-  RENAME_CONSTITUENTA: 20,
+  SUBSTITUTE_CONSTITUENTS: 2,
+
+  CREATE_VERSION: 3,
+
+  CREATE_CONSTITUENTA: 4,
+  DELETE_CONSTITUENTA: 5,
+  RENAME_CONSTITUENTA: 6,
+
+  CREATE_BLOCK: 7,
+
+  CREATE_OPERATION: 8,
+  EDIT_OPERATION: 9,
+  DELETE_OPERATION: 10,
+  CHANGE_INPUT_SCHEMA: 11,
+  RELOCATE_CONSTITUENTS: 12,
+
+  CLONE_LIBRARY_ITEM: 13,
+  UPLOAD_RSFORM: 14,
+  EDIT_EDITORS: 15,
+  EDIT_VERSIONS: 16,
+  CHANGE_LOCATION: 17,
+
+  EDIT_REFERENCE: 18,
+  EDIT_WORD_FORMS: 19,
+  INLINE_SYNTHESIS: 20,
+
   SHOW_QR_CODE: 21,
-  SUBSTITUTE_CONSTITUENTS: 22,
-  UPLOAD_RSFORM: 23
+  SHOW_AST: 22,
+  SHOW_TYPE_GRAPH: 23,
+  GRAPH_PARAMETERS: 24
 } as const;
 export type DialogType = (typeof DialogType)[keyof typeof DialogType];
 
@@ -62,6 +71,7 @@ interface DialogsStore {
 
   showCstTemplate: (props: DlgCstTemplateProps) => void;
   showCreateCst: (props: DlgCreateCstProps) => void;
+  showCreateBlock: (props: DlgCreateBlockProps) => void;
   showCreateOperation: (props: DlgCreateOperationProps) => void;
   showDeleteCst: (props: DlgDeleteCstProps) => void;
   showEditEditors: (props: DlgEditEditorsProps) => void;
@@ -98,6 +108,7 @@ export const useDialogsStore = create<DialogsStore>()(set => ({
   showCstTemplate: props => set({ active: DialogType.CONSTITUENTA_TEMPLATE, props: props }),
   showCreateCst: props => set({ active: DialogType.CREATE_CONSTITUENTA, props: props }),
   showCreateOperation: props => set({ active: DialogType.CREATE_OPERATION, props: props }),
+  showCreateBlock: props => set({ active: DialogType.CREATE_BLOCK, props: props }),
   showDeleteCst: props => set({ active: DialogType.DELETE_CONSTITUENTA, props: props }),
   showEditEditors: props => set({ active: DialogType.EDIT_EDITORS, props: props }),
   showEditOperation: props => set({ active: DialogType.EDIT_OPERATION, props: props }),

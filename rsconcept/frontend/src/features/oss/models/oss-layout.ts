@@ -5,12 +5,16 @@ import { type Node } from 'reactflow';
 
 import { type IBlock, type IOperation } from './oss';
 
-/**
- * Represents XY Position.
- */
+/** Represents XY Position. */
 export interface Position2D {
   x: number;
   y: number;
+}
+
+/** Represents XY Position and dimensions. */
+export interface Rectangle2D extends Position2D {
+  width: number;
+  height: number;
 }
 
 /** Represents graph OSS node data. */

@@ -20,6 +20,7 @@ export function TabLabel({
   titleHtml,
   hideTitle,
   className,
+  disabled,
   role = 'tab',
   ...otherProps
 }: TabLabelProps) {
@@ -28,10 +29,12 @@ export function TabLabel({
       className={clsx(
         'min-w-20 h-full',
         'px-2 py-1 flex justify-center',
-        'cc-hover cc-animate-color duration-select',
+        'cc-animate-color duration-select',
         'text-sm whitespace-nowrap font-controls',
-        'select-none hover:cursor-pointer',
+        'select-none',
         'outline-hidden',
+        !disabled && 'hover:cursor-pointer cc-hover',
+        disabled && 'text-muted-foreground',
         className
       )}
       tabIndex='-1'
@@ -40,6 +43,7 @@ export function TabLabel({
       data-tooltip-content={title}
       data-tooltip-hidden={hideTitle}
       role={role}
+      disabled={disabled}
       {...otherProps}
     >
       {label}

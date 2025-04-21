@@ -1,9 +1,13 @@
 import { OperationType } from './backend/types';
-import { type ISubstitutionErrorDescription, SubstitutionErrorType } from './models/oss';
+import {
+  type IOperation,
+  type IOssItem,
+  type ISubstitutionErrorDescription,
+  SubstitutionErrorType
+} from './models/oss';
+import { isOperation } from './models/oss-api';
 
-/**
- * Retrieves label for {@link OperationType}.
- */
+/** Retrieves label for {@link OperationType}. */
 export function labelOperationType(itemType: OperationType): string {
   // prettier-ignore
   switch (itemType) {
@@ -12,9 +16,7 @@ export function labelOperationType(itemType: OperationType): string {
   }
 }
 
-/**
- * Retrieves description for {@link OperationType}.
- */
+/** Retrieves description for {@link OperationType}. */
 export function describeOperationType(itemType: OperationType): string {
   // prettier-ignore
   switch (itemType) {
@@ -23,9 +25,7 @@ export function describeOperationType(itemType: OperationType): string {
   }
 }
 
-/**
- * Generates error description for {@link ISubstitutionErrorDescription}.
- */
+/** Generates error description for {@link ISubstitutionErrorDescription}. */
 export function describeSubstitutionError(error: ISubstitutionErrorDescription): string {
   switch (error.errorType) {
     case SubstitutionErrorType.invalidIDs:
@@ -52,4 +52,13 @@ export function describeSubstitutionError(error: ISubstitutionErrorDescription):
       return `Предупреждение ${error.params[0]} -> ${error.params[1]}: определения понятий не совпадают`;
   }
   return 'UNKNOWN ERROR';
+}
+
+/** Retrieves label for {@link IOssItem}. */
+export function labelOssItem(item: IOssItem): string {
+  if (isOperation(item)) {
+    return `${(item as IOperation).alias}: ${item.title}`;
+  } else {
+    return `Блок: ${item.title}`;
+  }
 }

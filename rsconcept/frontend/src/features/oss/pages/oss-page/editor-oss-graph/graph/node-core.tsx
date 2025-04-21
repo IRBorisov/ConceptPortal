@@ -2,6 +2,8 @@
 
 import clsx from 'clsx';
 
+import { useOSSGraphStore } from '@/features/oss/stores/oss-graph';
+
 import { IconConsolidation, IconRSForm } from '@/components/icons';
 import { Indicator } from '@/components/view';
 import { globalIDs } from '@/utils/constants';
@@ -22,6 +24,7 @@ interface NodeCoreProps {
 
 export function NodeCore({ node }: NodeCoreProps) {
   const setHover = useOperationTooltipStore(state => state.setActiveOperation);
+  const showCoordinates = useOSSGraphStore(state => state.showCoordinates);
 
   const hasFile = !!node.data.operation.result;
   const longLabel = node.data.label.length > LONG_LABEL_CHARS;
@@ -47,6 +50,17 @@ export function NodeCore({ node }: NodeCoreProps) {
           />
         ) : null}
       </div>
+      {showCoordinates ? (
+        <div
+          className={clsx(
+            'absolute top-full mt-1 right-[1px]',
+            'text-[7px]/[8px] font-math',
+            'text-muted-foreground hover:text-foreground'
+          )}
+        >
+          {`X: ${node.xPos.toFixed(0)} Y: ${node.yPos.toFixed(0)}`}
+        </div>
+      ) : null}
 
       {node.data.operation.operation_type === OperationType.INPUT ? (
         <div className='absolute top-[1px] right-1/2 translate-x-1/2 border-t w-[30px]' />

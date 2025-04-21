@@ -11,6 +11,8 @@ import { MiniButton } from '@/components/control';
 import {
   IconAnimation,
   IconAnimationOff,
+  IconConceptBlock,
+  IconCoordinates,
   IconDestroy,
   IconEdit2,
   IconExecute,
@@ -37,13 +39,15 @@ import { VIEW_PADDING } from './oss-flow';
 import { useGetLayout } from './use-get-layout';
 
 interface ToolbarOssGraphProps extends Styling {
-  onCreate: () => void;
+  onCreateOperation: () => void;
+  onCreateBlock: () => void;
   onDelete: () => void;
   onResetPositions: () => void;
 }
 
 export function ToolbarOssGraph({
-  onCreate,
+  onCreateOperation,
+  onCreateBlock,
   onDelete,
   onResetPositions,
   className,
@@ -53,12 +57,15 @@ export function ToolbarOssGraph({
   const isProcessing = useMutatingOss();
   const { fitView } = useReactFlow();
   const selectedOperation = selected.length !== 1 ? null : schema.operationByID.get(selected[0]) ?? null;
+  const selectedBlock = selected.length !== 1 ? null : schema.blockByID.get(-selected[0]) ?? null;
   const getLayout = useGetLayout();
 
   const showGrid = useOSSGraphStore(state => state.showGrid);
+  const showCoordinates = useOSSGraphStore(state => state.showCoordinates);
   const edgeAnimate = useOSSGraphStore(state => state.edgeAnimate);
   const edgeStraight = useOSSGraphStore(state => state.edgeStraight);
   const toggleShowGrid = useOSSGraphStore(state => state.toggleShowGrid);
+  const toggleShowCoordinates = useOSSGraphStore(state => state.toggleShowCoordinates);
   const toggleEdgeAnimate = useOSSGraphStore(state => state.toggleEdgeAnimate);
   const toggleEdgeStraight = useOSSGraphStore(state => state.toggleEdgeStraight);
 
@@ -174,6 +181,12 @@ export function ToolbarOssGraph({
           }
           onClick={toggleEdgeAnimate}
         />
+        <MiniButton
+          title={showCoordinates ? 'Координаты: вкл' : 'Координаты: выкл'}
+          aria-label='Переключатель видимости координат (для отладки)'
+          icon={<IconCoordinates size='1.25rem' className={showCoordinates ? 'icon-green' : 'icon-primary'} />}
+          onClick={toggleShowCoordinates}
+        />
         <BadgeHelp topic={HelpTopic.UI_OSS_GRAPH} contentClass='sm:max-w-160' offset={4} />
       </div>
       {isMutable ? (
@@ -186,10 +199,17 @@ export function ToolbarOssGraph({
             disabled={isProcessing}
           />
           <MiniButton
+            titleHtml={prepareTooltip('Новый блок', 'Ctrl + Shift + Q')}
+            aria-label='Новый блок'
+            icon={<IconConceptBlock size='1.25rem' className='icon-green' />}
+            onClick={onCreateBlock}
+            disabled={isProcessing}
+          />
+          <MiniButton
             titleHtml={prepareTooltip('Новая операция', 'Ctrl + Q')}
             aria-label='Новая операция'
             icon={<IconNewItem size='1.25rem' className='icon-green' />}
-            onClick={onCreate}
+            onClick={onCreateOperation}
             disabled={isProcessing}
           />
           <MiniButton
@@ -210,7 +230,11 @@ export function ToolbarOssGraph({
             aria-label='Удалить выбранную'
             icon={<IconDestroy size='1.25rem' className='icon-red' />}
             onClick={onDelete}
-            disabled={selected.length !== 1 || isProcessing || !selectedOperation || !canDelete(selectedOperation)}
+            disabled={
+              isProcessing ||
+              (!selectedOperation && !selectedBlock) ||
+              (!!selectedOperation && !canDelete(selectedOperation))
+            }
           />
         </div>
       ) : null}

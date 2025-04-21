@@ -113,6 +113,11 @@ const DlgUploadRSForm = React.lazy(() =>
 const DlgGraphParams = React.lazy(() =>
   import('@/features/rsform/dialogs/dlg-graph-params').then(module => ({ default: module.DlgGraphParams }))
 );
+const DlgCreateBlock = React.lazy(() =>
+  import('@/features/oss/dialogs/dlg-create-block').then(module => ({
+    default: module.DlgCreateBlock
+  }))
+);
 
 export const GlobalDialogs = () => {
   const active = useDialogsStore(state => state.active);
@@ -127,6 +132,8 @@ export const GlobalDialogs = () => {
       return <DlgCreateCst />;
     case DialogType.CREATE_OPERATION:
       return <DlgCreateOperation />;
+    case DialogType.CREATE_BLOCK:
+      return <DlgCreateBlock />;
     case DialogType.DELETE_CONSTITUENTA:
       return <DlgDeleteCst />;
     case DialogType.EDIT_EDITORS:

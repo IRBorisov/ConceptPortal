@@ -70,6 +70,7 @@ export { LuGlasses        as IconReader }         from 'react-icons/lu';
 export { TbBriefcase      as IconBusiness }       from 'react-icons/tb';
 export { VscLibrary       as IconLibrary }        from 'react-icons/vsc';
 export { BiBot            as IconRobot }          from 'react-icons/bi';
+export { TbGps            as IconCoordinates }    from 'react-icons/tb';
 export { IoLibrary        as IconLibrary2 }       from 'react-icons/io5';
 export { BiDiamond        as IconTemplates }      from 'react-icons/bi';
 export { TbHexagons       as IconOSS }            from 'react-icons/tb';

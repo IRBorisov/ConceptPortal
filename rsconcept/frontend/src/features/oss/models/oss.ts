@@ -52,6 +52,9 @@ export interface IOperationSchema extends IOperationSchemaDTO {
   blockByID: Map<number, IBlock>;
 }
 
+/** Represents item of OperationSchema. */
+export type IOssItem = IOperation | IBlock;
+
 /** Represents substitution error description. */
 export interface ISubstitutionErrorDescription {
   errorType: SubstitutionErrorType;

@@ -24,6 +24,12 @@ export function OssStats({ className, stats }: OssStatsProps) {
         <span>{stats.count_all}</span>
       </div>
       <ValueStats
+        id='count_block'
+        title='Блоки'
+        icon={<IconConceptBlock size='1.25rem' className='text-primary' />}
+        value={stats.count_block}
+      />
+      <ValueStats
         id='count_inputs'
         title='Загрузка'
         icon={<IconDownload size='1.25rem' className='text-primary' />}
@@ -34,12 +40,6 @@ export function OssStats({ className, stats }: OssStatsProps) {
         title='Синтез'
         icon={<IconSynthesis size='1.25rem' className='text-primary' />}
         value={stats.count_synthesis}
-      />
-      <ValueStats
-        id='count_block'
-        title='Блоки'
-        icon={<IconConceptBlock size='1.25rem' className='text-primary' />}
-        value={stats.count_block}
       />
 
       <ValueStats

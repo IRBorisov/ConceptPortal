@@ -22,22 +22,26 @@ import {
 import { infoMsg } from '@/utils/labels';
 
 import { Graph } from '../../../models/graph';
-import { type IOssLayout } from '../backend/types';
+import { type ICreateBlockDTO, type ICreateOperationDTO, type IOssLayout } from '../backend/types';
 import { describeSubstitutionError } from '../labels';
+import { OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '../pages/oss-page/editor-oss-graph/graph/node-core';
 
-import { type IOperationSchema, SubstitutionErrorType } from './oss';
-import { type Position2D } from './oss-layout';
+import { type IOperationSchema, type IOssItem, SubstitutionErrorType } from './oss';
+import { type Position2D, type Rectangle2D } from './oss-layout';
 
 export const GRID_SIZE = 10; // pixels - size of OSS grid
-const MIN_DISTANCE = 20; // pixels - minimum distance between node centers
+const MIN_DISTANCE = 2 * GRID_SIZE; // pixels - minimum distance between nodes
 const DISTANCE_X = 180; // pixels - insert x-distance between node centers
 const DISTANCE_Y = 100; // pixels - insert y-distance between node centers
 
 const STARTING_SUB_INDEX = 900; // max semantic index for starting substitution
 
-/**
- * Sorts library items relevant for the specified {@link IOperationSchema}.
- */
+/** Checks if element is {@link IOperation} or {@link IBlock}. */
+export function isOperation(item: IOssItem): boolean {
+  return 'arguments' in item;
+}
+
+/** Sorts library items relevant for the specified {@link IOperationSchema}. */
 export function sortItemsForOSS(oss: IOperationSchema, items: ILibraryItem[]): ILibraryItem[] {
   const result = items.filter(item => item.location === oss.location);
   for (const item of items) {
@@ -60,9 +64,7 @@ export function sortItemsForOSS(oss: IOperationSchema, items: ILibraryItem[]): I
 
 type CrossMapping = Map<number, AliasMapping>;
 
-/**
- * Validator for Substitution table.
- */
+/** Validator for Substitution table. */
 export class SubstitutionValidator {
   public msg: string = '';
   public suggestions: ICstSubstitute[] = [];
@@ -476,22 +478,21 @@ export function getRelocateCandidates(
   return addedCst.filter(cst => !unreachable.includes(cst.id));
 }
 
-/**
- * Calculate insert position for a new {@link IOperation}
- */
-export function calculateInsertPosition(
+/** Calculate insert position for a new {@link IOperation} */
+export function calculateNewOperationPosition(
   oss: IOperationSchema,
-  argumentsOps: number[],
-  layout: IOssLayout,
-  defaultPosition: Position2D
+  data: ICreateOperationDTO,
+  layout: IOssLayout
 ): Position2D {
-  const result = defaultPosition;
+  // TODO: check parent node
+
+  const result = { x: data.position_x, y: data.position_y };
   const operations = layout.operations;
   if (operations.length === 0) {
     return result;
   }
 
-  if (argumentsOps.length === 0) {
+  if (data.arguments.length === 0) {
     let inputsPositions = operations.filter(pos =>
       oss.operations.find(operation => operation.arguments.length === 0 && operation.id === pos.id)
     );
@@ -503,7 +504,7 @@ export function calculateInsertPosition(
     result.x = maxX + DISTANCE_X;
     result.y = minY;
   } else {
-    const argNodes = operations.filter(pos => argumentsOps.includes(pos.id));
+    const argNodes = operations.filter(pos => data.arguments.includes(pos.id));
     const maxY = Math.max(...argNodes.map(node => node.y));
     const minX = Math.min(...argNodes.map(node => node.x));
     const maxX = Math.max(...argNodes.map(node => node.x));
@@ -522,4 +523,52 @@ export function calculateInsertPosition(
     }
   } while (flagIntersect);
   return result;
+}
+
+/** Calculate insert position for a new {@link IBlock} */
+export function calculateNewBlockPosition(data: ICreateBlockDTO, layout: IOssLayout): Rectangle2D {
+  const block_nodes = data.children_blocks
+    .map(id => layout.blocks.find(block => block.id === -id))
+    .filter(node => !!node);
+  const operation_nodes = data.children_operations
+    .map(id => layout.operations.find(operation => operation.id === id))
+    .filter(node => !!node);
+
+  if (block_nodes.length === 0 && operation_nodes.length === 0) {
+    return { x: data.position_x, y: data.position_y, width: data.width, height: data.height };
+  }
+
+  let left = undefined;
+  let top = undefined;
+  let right = undefined;
+  let bottom = undefined;
+
+  for (const node of block_nodes) {
+    left = !left ? node.x - GRID_SIZE : Math.min(left, node.x - GRID_SIZE);
+    top = !top ? node.y - GRID_SIZE : Math.min(top, node.y - GRID_SIZE);
+    right = !right
+      ? Math.max(left + data.width, node.x + node.width + GRID_SIZE)
+      : Math.max(right, node.x + node.width + GRID_SIZE);
+    bottom = !bottom
+      ? Math.max(top + data.height, node.y + node.height + GRID_SIZE)
+      : Math.max(bottom, node.y + node.height + GRID_SIZE);
+  }
+
+  for (const node of operation_nodes) {
+    left = !left ? node.x - GRID_SIZE : Math.min(left, node.x - GRID_SIZE);
+    top = !top ? node.y - GRID_SIZE : Math.min(top, node.y - GRID_SIZE);
+    right = !right
+      ? Math.max(left + data.width, node.x + OPERATION_NODE_WIDTH + GRID_SIZE)
+      : Math.max(right, node.x + OPERATION_NODE_WIDTH + GRID_SIZE);
+    bottom = !bottom
+      ? Math.max(top + data.height, node.y + OPERATION_NODE_HEIGHT + GRID_SIZE)
+      : Math.max(bottom, node.y + OPERATION_NODE_HEIGHT + GRID_SIZE);
+  }
+
+  return {
+    x: left ?? data.position_x,
+    y: top ?? data.position_y,
+    width: right && left ? right - left : data.width,
+    height: bottom && top ? bottom - top : data.height
+  };
 }

@@ -1,11 +1,12 @@
 import { type Node, useReactFlow } from 'reactflow';
 
-import { DEFAULT_BLOCK_HEIGHT, DEFAULT_BLOCK_WIDTH } from '@/features/oss/backend/oss-loader';
 import { type IOssLayout } from '@/features/oss/backend/types';
 import { type IOperationSchema } from '@/features/oss/models/oss';
 import { type Position2D } from '@/features/oss/models/oss-layout';
 
 import { useOssEdit } from '../oss-edit-context';
+
+import { BLOCK_NODE_MIN_HEIGHT, BLOCK_NODE_MIN_WIDTH } from './graph/block-node';
 
 export function useGetLayout() {
   const { getNodes } = useReactFlow();
@@ -26,8 +27,8 @@ export function useGetLayout() {
         .map(node => ({
           id: -Number(node.id),
           ...computeAbsolutePosition(node, schema, nodeById),
-          width: node.width ?? DEFAULT_BLOCK_WIDTH,
-          height: node.height ?? DEFAULT_BLOCK_HEIGHT
+          width: node.width ?? BLOCK_NODE_MIN_WIDTH,
+          height: node.height ?? BLOCK_NODE_MIN_HEIGHT
         }))
     };
   };

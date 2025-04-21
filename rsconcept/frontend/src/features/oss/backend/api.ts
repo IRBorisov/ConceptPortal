@@ -20,6 +20,7 @@ import {
   type IUpdateBlockDTO,
   type IUpdateInputDTO,
   type IUpdateOperationDTO,
+  schemaBlockCreatedResponse,
   schemaConstituentaReference,
   schemaInputCreatedResponse,
   schemaOperationCreatedResponse,
@@ -55,7 +56,7 @@ export const ossApi = {
 
   createBlock: ({ itemID, data }: { itemID: number; data: ICreateBlockDTO }) =>
     axiosPost<ICreateBlockDTO, IBlockCreatedResponse>({
-      schema: schemaOperationCreatedResponse,
+      schema: schemaBlockCreatedResponse,
       endpoint: `/api/oss/${itemID}/create-block`,
       request: {
         data: data,
@@ -74,7 +75,7 @@ export const ossApi = {
   deleteBlock: ({ itemID, data }: { itemID: number; data: IDeleteBlockDTO }) =>
     axiosPatch<IDeleteBlockDTO, IOperationSchemaDTO>({
       schema: schemaOperationSchema,
-      endpoint: `/api/oss/${itemID}/delete-operation`,
+      endpoint: `/api/oss/${itemID}/delete-block`,
       request: {
         data: data,
         successMessage: infoMsg.operationDestroyed

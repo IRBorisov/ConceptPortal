@@ -12,6 +12,7 @@ import {
   useStoreApi
 } from 'reactflow';
 
+import { useDeleteBlock } from '@/features/oss/backend/use-delete-block';
 import { type IOperationSchema } from '@/features/oss/models/oss';
 
 import { useMainHeight } from '@/stores/app-layout';
@@ -60,11 +61,13 @@ export function OssFlow() {
   const setHoverOperation = useOperationTooltipStore(state => state.setActiveOperation);
 
   const showGrid = useOSSGraphStore(state => state.showGrid);
+  const showCoordinates = useOSSGraphStore(state => state.showCoordinates);
   const edgeAnimate = useOSSGraphStore(state => state.edgeAnimate);
   const edgeStraight = useOSSGraphStore(state => state.edgeStraight);
 
   const getLayout = useGetLayout();
-  const { updateLayout: updatePositions } = useUpdateLayout();
+  const { updateLayout } = useUpdateLayout();
+  const { deleteBlock } = useDeleteBlock();
 
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -72,7 +75,10 @@ export function OssFlow() {
   const [menuProps, setMenuProps] = useState<ContextMenuData>({ operation: null, cursorX: 0, cursorY: 0 });
   const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
 
+  const [mouseCoords, setMouseCoords] = useState<Position2D>({ x: 0, y: 0 });
+
   const showCreateOperation = useDialogsStore(state => state.showCreateOperation);
+  const showCreateBlock = useDialogsStore(state => state.showCreateBlock);
   const showDeleteOperation = useDialogsStore(state => state.showDeleteOperation);
 
   function onSelectionChange({ nodes }: { nodes: Node[] }) {
@@ -99,8 +105,10 @@ export function OssFlow() {
             type: 'block',
             data: { label: block.title, block: block },
             position: computeRelativePosition(schema, { x: block.x, y: block.y }, block.parent),
-            width: block.width,
-            height: block.height,
+            style: {
+              width: block.width,
+              height: block.height
+            },
             parentId: block.parent ? `-${block.parent}` : undefined,
             expandParent: true,
             extent: 'parent' as const,
@@ -135,7 +143,7 @@ export function OssFlow() {
   }, [schema, setNodes, setEdges, toggleReset, edgeStraight, edgeAnimate, fitView]);
 
   function handleSavePositions() {
-    void updatePositions({ itemID: schema.id, data: getLayout() });
+    void updateLayout({ itemID: schema.id, data: getLayout() });
   }
 
   function handleCreateOperation() {
@@ -146,6 +154,20 @@ export function OssFlow() {
       defaultY: targetPosition.y,
       layout: getLayout(),
       initialInputs: selected.filter(id => id > 0),
+      initialParent: extractSingleBlock(selected),
+      onCreate: () =>
+        setTimeout(() => fitView({ duration: PARAMETER.zoomDuration, padding: VIEW_PADDING }), PARAMETER.refreshTimeout)
+    });
+  }
+
+  function handleCreateBlock() {
+    const targetPosition = screenToFlowPosition({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
+    showCreateBlock({
+      oss: schema,
+      defaultX: targetPosition.x,
+      defaultY: targetPosition.y,
+      layout: getLayout(),
+      initialInputs: selected,
       onCreate: () =>
         setTimeout(() => fitView({ duration: PARAMETER.zoomDuration, padding: VIEW_PADDING }), PARAMETER.refreshTimeout)
     });
@@ -155,15 +177,23 @@ export function OssFlow() {
     if (selected.length !== 1) {
       return;
     }
-    const operation = schema.operationByID.get(selected[0]);
-    if (!operation || !canDelete(operation)) {
-      return;
+    if (selected[0] > 0) {
+      const operation = schema.operationByID.get(selected[0]);
+      if (!operation || !canDelete(operation)) {
+        return;
+      }
+      showDeleteOperation({
+        oss: schema,
+        target: operation,
+        layout: getLayout()
+      });
+    } else {
+      const block = schema.blockByID.get(-selected[0]);
+      if (!block) {
+        return;
+      }
+      void deleteBlock({ itemID: schema.id, data: { target: block.id, layout: getLayout() } });
     }
-    showDeleteOperation({
-      oss: schema,
-      target: operation,
-      layout: getLayout()
-    });
   }
 
   function handleContextMenu(event: React.MouseEvent<Element>, node: OssNode) {
@@ -209,7 +239,11 @@ export function OssFlow() {
     if ((event.ctrlKey || event.metaKey) && event.code === 'KeyQ') {
       event.preventDefault();
       event.stopPropagation();
-      handleCreateOperation();
+      if (event.shiftKey) {
+        handleCreateBlock();
+      } else {
+        handleCreateOperation();
+      }
       return;
     }
     if (event.key === 'Delete') {
@@ -220,11 +254,27 @@ export function OssFlow() {
     }
   }
 
+  function handleMouseMove(event: React.MouseEvent<HTMLDivElement>) {
+    const targetPosition = screenToFlowPosition({ x: event.clientX, y: event.clientY });
+    setMouseCoords(targetPosition);
+  }
+
   return (
-    <div tabIndex={-1} className='relative' onKeyDown={handleKeyDown}>
+    <div
+      tabIndex={-1}
+      className='relative'
+      onKeyDown={handleKeyDown}
+      onMouseMove={showCoordinates ? handleMouseMove : undefined}
+    >
+      {showCoordinates ? (
+        <div className='absolute top-1 right-2 hover:bg-background backdrop-blur-xs text-sm font-math'>
+          {`X: ${mouseCoords.x.toFixed(0)} Y: ${mouseCoords.y.toFixed(0)}`}
+        </div>
+      ) : null}
       <ToolbarOssGraph
         className='absolute z-pop top-8 right-1/2 translate-x-1/2'
-        onCreate={handleCreateOperation}
+        onCreateOperation={handleCreateOperation}
+        onCreateBlock={handleCreateBlock}
         onDelete={handleDeleteSelected}
         onResetPositions={() => setToggleReset(prev => !prev)}
       />
@@ -273,4 +323,9 @@ function computeRelativePosition(schema: IOperationSchema, position: Position2D,
     x: position.x - parentBlock.x,
     y: position.y - parentBlock.y
   };
+}
+
+function extractSingleBlock(selected: number[]): number | null {
+  const blocks = selected.filter(id => id < 0);
+  return blocks.length === 1 ? -blocks[0] : null;
 }

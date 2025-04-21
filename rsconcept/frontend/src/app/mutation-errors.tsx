@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+
 import { useMutationErrors } from '@/backend/use-mutation-errors';
 import { Button } from '@/components/control';
 import { DescribeError } from '@/components/info-error';
@@ -20,9 +22,23 @@ export function MutationErrors() {
   return (
     <div className='cc-modal-wrapper'>
       <ModalBackdrop onHide={resetErrors} />
-      <div className='z-pop px-10 py-3 flex flex-col items-center border rounded-xl bg-background' role='alertdialog'>
+      <div
+        className={clsx(
+          'z-pop', //
+          'flex flex-col px-10 py-3 items-center',
+          'border rounded-xl bg-background'
+        )}
+        role='alertdialog'
+      >
         <h1 className='py-2 select-none'>Ошибка при обработке</h1>
-        <div className='px-3 flex flex-col text-destructive text-sm font-semibold select-text'>
+        <div
+          className={clsx(
+            'max-h-[calc(100svh-8rem)] max-w-[calc(100svw-2rem)]',
+            'px-3 flex flex-col',
+            'text-destructive text-sm font-semibold select-text',
+            'overflow-auto'
+          )}
+        >
           <DescribeError error={mutationErrors[0]} />
         </div>
         <Button onClick={resetErrors} className='w-fit' text='Закрыть' />

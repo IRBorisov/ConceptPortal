@@ -7,11 +7,9 @@ import { type ILibraryItem } from '@/features/library';
 import { Graph } from '@/models/graph';
 
 import { type IBlock, type IOperation, type IOperationSchema, type IOperationSchemaStats } from '../models/oss';
+import { BLOCK_NODE_MIN_HEIGHT, BLOCK_NODE_MIN_WIDTH } from '../pages/oss-page/editor-oss-graph/graph/block-node';
 
 import { type IOperationSchemaDTO, OperationType } from './types';
-
-export const DEFAULT_BLOCK_WIDTH = 100;
-export const DEFAULT_BLOCK_HEIGHT = 100;
 
 /** Loads data into an {@link IOperationSchema} based on {@link IOperationSchemaDTO}. */
 export class OssLoader {
@@ -58,7 +56,7 @@ export class OssLoader {
       this.blockByID.set(block.id, block);
       this.hierarchy.addNode(-block.id);
       if (block.parent) {
-        this.graph.addEdge(-block.parent, -block.id);
+        this.hierarchy.addEdge(-block.parent, -block.id);
       }
     });
   }
@@ -92,8 +90,8 @@ export class OssLoader {
       const geometry = this.oss.layout.blocks.find(item => item.id === block.id);
       block.x = geometry?.x ?? 0;
       block.y = geometry?.y ?? 0;
-      block.width = geometry?.width ?? DEFAULT_BLOCK_WIDTH;
-      block.height = geometry?.height ?? DEFAULT_BLOCK_HEIGHT;
+      block.width = geometry?.width ?? BLOCK_NODE_MIN_WIDTH;
+      block.height = geometry?.height ?? BLOCK_NODE_MIN_HEIGHT;
     });
   }
 

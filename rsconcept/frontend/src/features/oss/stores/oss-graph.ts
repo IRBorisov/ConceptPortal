@@ -5,6 +5,9 @@ interface OSSGraphStore {
   showGrid: boolean;
   toggleShowGrid: () => void;
 
+  showCoordinates: boolean;
+  toggleShowCoordinates: () => void;
+
   edgeAnimate: boolean;
   toggleEdgeAnimate: () => void;
 
@@ -17,6 +20,9 @@ export const useOSSGraphStore = create<OSSGraphStore>()(
     set => ({
       showGrid: false,
       toggleShowGrid: () => set(state => ({ showGrid: !state.showGrid })),
+
+      showCoordinates: false,
+      toggleShowCoordinates: () => set(state => ({ showCoordinates: !state.showCoordinates })),
 
       edgeAnimate: false,
       toggleEdgeAnimate: () => set(state => ({ edgeAnimate: !state.edgeAnimate })),

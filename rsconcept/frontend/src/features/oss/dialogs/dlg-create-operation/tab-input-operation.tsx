@@ -12,6 +12,7 @@ import { Checkbox, Label, TextArea, TextInput } from '@/components/input';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { type ICreateOperationDTO } from '../../backend/types';
+import { SelectBlock } from '../../components/select-block';
 import { sortItemsForOSS } from '../../models/oss-api';
 
 import { type DlgCreateOperationProps } from './dlg-create-operation';
@@ -61,14 +62,27 @@ export function TabInputOperation() {
         error={errors.item_data?.title}
       />
       <div className='flex gap-6'>
-        <TextInput
-          id='operation_alias' //
-          label='Сокращение'
-          className='w-64'
-          {...register('item_data.alias')}
-          error={errors.item_data?.alias}
-        />
-
+        <div className='grid gap-1'>
+          <TextInput
+            id='operation_alias' //
+            label='Сокращение'
+            className='w-64'
+            {...register('item_data.alias')}
+            error={errors.item_data?.alias}
+          />
+          <Controller
+            name='item_data.parent'
+            control={control}
+            render={({ field }) => (
+              <SelectBlock
+                items={oss.blocks}
+                value={field.value ? oss.blockByID.get(field.value) ?? null : null}
+                placeholder='Блок содержания'
+                onChange={value => field.onChange(value ? value.id : null)}
+              />
+            )}
+          />
+        </div>
         <TextArea
           id='operation_comment' //
           label='Описание'

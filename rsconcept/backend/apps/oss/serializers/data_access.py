@@ -198,7 +198,9 @@ class UpdateOperationSerializer(serializers.Serializer):
                 'target': msg.operationNotInOSS()
             })
 
-        if 'parent' in attrs['item_data'] and attrs['item_data']['parent'].oss_id != oss.pk:
+        if 'parent' in attrs['item_data'] and \
+                attrs['item_data']['parent'] is not None and \
+                attrs['item_data']['parent'].oss_id != oss.pk:
             raise serializers.ValidationError({
                 'parent': msg.parentNotInOSS()
             })
