@@ -1,13 +1,13 @@
 import { create } from 'zustand';
 
-import { type IOperation } from '../models/oss';
+import { type IOssItem } from '../models/oss';
 
 interface OperationTooltipStore {
-  activeOperation: IOperation | null;
-  setActiveOperation: (value: IOperation | null) => void;
+  hoverItem: IOssItem | null;
+  setHoverItem: (value: IOssItem | null) => void;
 }
 
 export const useOperationTooltipStore = create<OperationTooltipStore>()(set => ({
-  activeOperation: null,
-  setActiveOperation: value => set({ activeOperation: value })
+  hoverItem: null,
+  setHoverItem: value => set({ hoverItem: value })
 }));

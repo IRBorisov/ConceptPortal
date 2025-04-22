@@ -15,6 +15,7 @@ User profile:
 - Profile pictures
 - Custom LibraryItem lists
 - Custom user filters and sharing filters
+- Personal prompt templates
 
 - Static analyzer for RSForm as a whole: check term duplication and empty conventions
 - OSS clone and versioning

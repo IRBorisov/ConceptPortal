@@ -37,8 +37,8 @@ const DISTANCE_Y = 100; // pixels - insert y-distance between node centers
 const STARTING_SUB_INDEX = 900; // max semantic index for starting substitution
 
 /** Checks if element is {@link IOperation} or {@link IBlock}. */
-export function isOperation(item: IOssItem): boolean {
-  return 'arguments' in item;
+export function isOperation(item: IOssItem | null): boolean {
+  return !!item && 'arguments' in item;
 }
 
 /** Sorts library items relevant for the specified {@link IOperationSchema}. */
@@ -528,7 +528,7 @@ export function calculateNewOperationPosition(
 /** Calculate insert position for a new {@link IBlock} */
 export function calculateNewBlockPosition(data: ICreateBlockDTO, layout: IOssLayout): Rectangle2D {
   const block_nodes = data.children_blocks
-    .map(id => layout.blocks.find(block => block.id === -id))
+    .map(id => layout.blocks.find(block => block.id === id))
     .filter(node => !!node);
   const operation_nodes = data.children_operations
     .map(id => layout.operations.find(operation => operation.id === id))
@@ -544,25 +544,27 @@ export function calculateNewBlockPosition(data: ICreateBlockDTO, layout: IOssLay
   let bottom = undefined;
 
   for (const block of block_nodes) {
-    left = !left ? block.x - GRID_SIZE : Math.min(left, block.x - GRID_SIZE);
-    top = !top ? block.y - GRID_SIZE : Math.min(top, block.y - GRID_SIZE);
+    left = !left ? block.x - MIN_DISTANCE : Math.min(left, block.x - MIN_DISTANCE);
+    top = !top ? block.y - MIN_DISTANCE : Math.min(top, block.y - MIN_DISTANCE);
     right = !right
-      ? Math.max(left + data.width, block.x + block.width + GRID_SIZE)
-      : Math.max(right, block.x + block.width + GRID_SIZE);
+      ? Math.max(left + data.width, block.x + block.width + MIN_DISTANCE)
+      : Math.max(right, block.x + block.width + MIN_DISTANCE);
     bottom = !bottom
-      ? Math.max(top + data.height, block.y + block.height + GRID_SIZE)
-      : Math.max(bottom, block.y + block.height + GRID_SIZE);
+      ? Math.max(top + data.height, block.y + block.height + MIN_DISTANCE)
+      : Math.max(bottom, block.y + block.height + MIN_DISTANCE);
   }
 
+  console.log('left, top, right, bottom', left, top, right, bottom);
+
   for (const operation of operation_nodes) {
-    left = !left ? operation.x - GRID_SIZE : Math.min(left, operation.x - GRID_SIZE);
-    top = !top ? operation.y - GRID_SIZE : Math.min(top, operation.y - GRID_SIZE);
+    left = !left ? operation.x - MIN_DISTANCE : Math.min(left, operation.x - MIN_DISTANCE);
+    top = !top ? operation.y - MIN_DISTANCE : Math.min(top, operation.y - MIN_DISTANCE);
     right = !right
-      ? Math.max(left + data.width, operation.x + OPERATION_NODE_WIDTH + GRID_SIZE)
-      : Math.max(right, operation.x + OPERATION_NODE_WIDTH + GRID_SIZE);
+      ? Math.max(left + data.width, operation.x + OPERATION_NODE_WIDTH + MIN_DISTANCE)
+      : Math.max(right, operation.x + OPERATION_NODE_WIDTH + MIN_DISTANCE);
     bottom = !bottom
-      ? Math.max(top + data.height, operation.y + OPERATION_NODE_HEIGHT + GRID_SIZE)
-      : Math.max(bottom, operation.y + OPERATION_NODE_HEIGHT + GRID_SIZE);
+      ? Math.max(top + data.height, operation.y + OPERATION_NODE_HEIGHT + MIN_DISTANCE)
+      : Math.max(bottom, operation.y + OPERATION_NODE_HEIGHT + MIN_DISTANCE);
   }
 
   return {

@@ -29,7 +29,7 @@ export function NodeCore({ node }: NodeCoreProps) {
   const focus = selected.length === 1 ? selected[0] : null;
   const isChild = (!!focus && schema.hierarchy.at(focus)?.outputs.includes(node.data.operation.id)) ?? false;
 
-  const setHover = useOperationTooltipStore(state => state.setActiveOperation);
+  const setHover = useOperationTooltipStore(state => state.setHoverItem);
   const showCoordinates = useOSSGraphStore(state => state.showCoordinates);
 
   const hasFile = !!node.data.operation.result;

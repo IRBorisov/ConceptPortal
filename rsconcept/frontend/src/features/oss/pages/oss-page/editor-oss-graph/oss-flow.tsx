@@ -28,8 +28,8 @@ import { useOperationTooltipStore } from '../../../stores/operation-tooltip';
 import { useOSSGraphStore } from '../../../stores/oss-graph';
 import { useOssEdit } from '../oss-edit-context';
 
+import { ContextMenu, type ContextMenuData } from './context-menu/context-menu';
 import { OssNodeTypes } from './graph/oss-node-types';
-import { type ContextMenuData, NodeContextMenu } from './node-context-menu';
 import { ToolbarOssGraph } from './toolbar-oss-graph';
 import { useGetLayout } from './use-get-layout';
 
@@ -53,11 +53,11 @@ export function OssFlow() {
   } = useOssEdit();
   const { fitView, screenToFlowPosition } = useReactFlow();
   const store = useStoreApi();
-  const { resetSelectedElements } = store.getState();
+  const { resetSelectedElements, addSelectedNodes } = store.getState();
 
   const isProcessing = useMutatingOss();
 
-  const setHoverOperation = useOperationTooltipStore(state => state.setActiveOperation);
+  const setHoverOperation = useOperationTooltipStore(state => state.setHoverItem);
 
   const showGrid = useOSSGraphStore(state => state.showGrid);
   const showCoordinates = useOSSGraphStore(state => state.showCoordinates);
@@ -71,7 +71,7 @@ export function OssFlow() {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [toggleReset, setToggleReset] = useState(false);
-  const [menuProps, setMenuProps] = useState<ContextMenuData>({ operation: null, cursorX: 0, cursorY: 0 });
+  const [menuProps, setMenuProps] = useState<ContextMenuData>({ item: null, cursorX: 0, cursorY: 0 });
   const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
 
   const [mouseCoords, setMouseCoords] = useState<Position2D>({ x: 0, y: 0 });
@@ -202,12 +202,10 @@ export function OssFlow() {
     event.preventDefault();
     event.stopPropagation();
 
-    if (node.type === 'block') {
-      return;
-    }
+    addSelectedNodes([node.id]);
 
     setMenuProps({
-      operation: node.data.operation,
+      item: node.type === 'block' ? node.data.block ?? null : node.data.operation ?? null,
       cursorX: event.clientX,
       cursorY: event.clientY
     });
@@ -216,9 +214,12 @@ export function OssFlow() {
   }
 
   function handleNodeDoubleClick(event: React.MouseEvent<Element>, node: OssNode) {
+    if (node.type === 'block') {
+      return;
+    }
     event.preventDefault();
     event.stopPropagation();
-    if (node.data.operation.result) {
+    if (node.data.operation?.result) {
       navigateOperationSchema(Number(node.id));
     }
   }
@@ -285,7 +286,7 @@ export function OssFlow() {
         onResetPositions={() => setToggleReset(prev => !prev)}
       />
 
-      <NodeContextMenu isOpen={isContextMenuOpen} onHide={() => setIsContextMenuOpen(false)} {...menuProps} />
+      <ContextMenu isOpen={isContextMenuOpen} onHide={() => setIsContextMenuOpen(false)} {...menuProps} />
 
       <div className='cc-fade-in relative w-[100vw] cc-mask-sides' style={{ height: mainHeight, fontFamily: 'Rubik' }}>
         <ReactFlow

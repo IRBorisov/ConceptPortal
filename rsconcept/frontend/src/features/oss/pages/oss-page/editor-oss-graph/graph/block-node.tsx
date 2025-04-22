@@ -3,9 +3,11 @@
 import { NodeResizeControl } from 'reactflow';
 import clsx from 'clsx';
 
+import { useOperationTooltipStore } from '@/features/oss/stores/operation-tooltip';
 import { useOSSGraphStore } from '@/features/oss/stores/oss-graph';
 
 import { IconResize } from '@/components/icons';
+import { globalIDs } from '@/utils/constants';
 
 import { type BlockInternalNode } from '../../../../models/oss-layout';
 import { useOssEdit } from '../../oss-edit-context';
@@ -14,8 +16,10 @@ export const BLOCK_NODE_MIN_WIDTH = 160;
 export const BLOCK_NODE_MIN_HEIGHT = 100;
 
 export function BlockNode(node: BlockInternalNode) {
-  const showCoordinates = useOSSGraphStore(state => state.showCoordinates);
   const { selected, schema } = useOssEdit();
+  const showCoordinates = useOSSGraphStore(state => state.showCoordinates);
+  const setHover = useOperationTooltipStore(state => state.setHoverItem);
+
   const focus = selected.length === 1 ? selected[0] : null;
   const isParent = (!!focus && schema.hierarchy.at(focus)?.inputs.includes(-node.data.block.id)) ?? false;
   const isChild = (!!focus && schema.hierarchy.at(focus)?.outputs.includes(-node.data.block.id)) ?? false;
@@ -50,6 +54,9 @@ export function BlockNode(node: BlockInternalNode) {
             'text-[18px]/[20px] line-clamp-2 text-center text-ellipsis',
             'pointer-events-auto'
           )}
+          data-tooltip-id={globalIDs.operation_tooltip}
+          data-tooltip-hidden={node.dragging}
+          onMouseEnter={() => setHover(node.data.block)}
         >
           {node.data.label}
         </div>

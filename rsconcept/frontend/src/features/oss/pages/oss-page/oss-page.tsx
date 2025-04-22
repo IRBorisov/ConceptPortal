@@ -14,7 +14,7 @@ import { type ErrorData } from '@/components/info-error';
 import { useQueryStrings } from '@/hooks/use-query-strings';
 import { useModificationStore } from '@/stores/modification';
 
-import { OperationTooltip } from '../../components/operation-tooltip';
+import { OperationTooltip } from '../../components/tooltip-oss-item';
 
 import { OssTabID } from './oss-edit-context';
 import { OssEditState } from './oss-edit-state';

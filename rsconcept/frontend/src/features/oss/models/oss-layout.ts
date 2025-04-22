@@ -22,7 +22,8 @@ export interface OssNode extends Node {
   id: string;
   data: {
     label: string;
-    operation: IOperation;
+    operation?: IOperation;
+    block?: IBlock;
   };
   position: { x: number; y: number };
 }
