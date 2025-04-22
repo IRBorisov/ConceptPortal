@@ -169,9 +169,12 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         with transaction.atomic():
             if 'layout' in serializer.validated_data:
                 oss.update_layout(serializer.validated_data['layout'])
-            block.title = serializer.validated_data['item_data']['title']
-            block.description = serializer.validated_data['item_data']['description']
-            block.parent = serializer.validated_data['item_data']['parent']
+            if 'title' in serializer.validated_data['item_data']:
+                block.title = serializer.validated_data['item_data']['title']
+            if 'description' in serializer.validated_data['item_data']:
+                block.description = serializer.validated_data['item_data']['description']
+            if 'parent' in serializer.validated_data['item_data']:
+                block.parent = serializer.validated_data['item_data']['parent']
             block.save(update_fields=['title', 'description', 'parent'])
         return Response(
             status=c.HTTP_200_OK,
@@ -297,9 +300,12 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         with transaction.atomic():
             if 'layout' in serializer.validated_data:
                 oss.update_layout(serializer.validated_data['layout'])
-            operation.alias = serializer.validated_data['item_data']['alias']
-            operation.title = serializer.validated_data['item_data']['title']
-            operation.description = serializer.validated_data['item_data']['description']
+            if 'alias' in serializer.validated_data['item_data']:
+                operation.alias = serializer.validated_data['item_data']['alias']
+            if 'title' in serializer.validated_data['item_data']:
+                operation.title = serializer.validated_data['item_data']['title']
+            if 'description' in serializer.validated_data['item_data']:
+                operation.description = serializer.validated_data['item_data']['description']
             operation.save(update_fields=['alias', 'title', 'description'])
 
             if operation.result is not None:
