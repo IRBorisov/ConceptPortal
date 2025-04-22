@@ -3,6 +3,8 @@
 import { Handle, Position } from 'reactflow';
 import clsx from 'clsx';
 
+import { labelCstTypification } from '@/features/rsform/labels';
+
 import { APP_COLORS } from '@/styling/colors';
 import { globalIDs } from '@/utils/constants';
 
@@ -95,5 +97,5 @@ export function TGNode(node: TGNodeInternal) {
 
 // ====== INTERNAL ======
 function describeCstNode(cst: IConstituenta) {
-  return `${cst.alias}: ${cst.term_resolved}</br>Типизация: ${cst.parse.typification}`;
+  return `${cst.alias}: ${cst.term_resolved}</br>Типизация: ${labelCstTypification(cst)}`;
 }

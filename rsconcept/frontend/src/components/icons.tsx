@@ -105,7 +105,7 @@ export { LuSubscript      as IconAlias }          from 'react-icons/lu';
 export { TbMathFunction   as IconFormula }        from 'react-icons/tb';
 export { BiFontFamily     as IconText }           from 'react-icons/bi';
 export { BiFont           as IconTextOff }        from 'react-icons/bi';
-export { TbCar4Wd         as IconTypeGraph }      from 'react-icons/tb';
+export { TbCircleLetterM  as IconTypeGraph }      from 'react-icons/tb';
 export { RiTreeLine       as IconTree }           from 'react-icons/ri';
 export { FaRegKeyboard    as IconControls }       from 'react-icons/fa6';
 export { RiLockLine       as IconImmutable }      from 'react-icons/ri';
