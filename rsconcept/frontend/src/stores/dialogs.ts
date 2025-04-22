@@ -9,6 +9,7 @@ import { type DlgChangeInputSchemaProps } from '@/features/oss/dialogs/dlg-chang
 import { type DlgCreateBlockProps } from '@/features/oss/dialogs/dlg-create-block/dlg-create-block';
 import { type DlgCreateOperationProps } from '@/features/oss/dialogs/dlg-create-operation/dlg-create-operation';
 import { type DlgDeleteOperationProps } from '@/features/oss/dialogs/dlg-delete-operation';
+import { type DlgEditBlockProps } from '@/features/oss/dialogs/dlg-edit-block';
 import { type DlgEditOperationProps } from '@/features/oss/dialogs/dlg-edit-operation/dlg-edit-operation';
 import { type DlgRelocateConstituentsProps } from '@/features/oss/dialogs/dlg-relocate-constituents';
 import { type DlgCreateCstProps } from '@/features/rsform/dialogs/dlg-create-cst/dlg-create-cst';
@@ -36,6 +37,7 @@ export const DialogType = {
   RENAME_CONSTITUENTA: 6,
 
   CREATE_BLOCK: 7,
+  EDIT_BLOCK: 25,
 
   CREATE_OPERATION: 8,
   EDIT_OPERATION: 9,
@@ -76,6 +78,7 @@ interface DialogsStore {
   showDeleteCst: (props: DlgDeleteCstProps) => void;
   showEditEditors: (props: DlgEditEditorsProps) => void;
   showEditOperation: (props: DlgEditOperationProps) => void;
+  showEditBlock: (props: DlgEditBlockProps) => void;
   showEditReference: (props: DlgEditReferenceProps) => void;
   showEditVersions: (props: DlgEditVersionsProps) => void;
   showEditWordForms: (props: DlgEditWordFormsProps) => void;
@@ -112,6 +115,7 @@ export const useDialogsStore = create<DialogsStore>()(set => ({
   showDeleteCst: props => set({ active: DialogType.DELETE_CONSTITUENTA, props: props }),
   showEditEditors: props => set({ active: DialogType.EDIT_EDITORS, props: props }),
   showEditOperation: props => set({ active: DialogType.EDIT_OPERATION, props: props }),
+  showEditBlock: props => set({ active: DialogType.EDIT_BLOCK, props: props }),
   showEditReference: props => set({ active: DialogType.EDIT_REFERENCE, props: props }),
   showEditVersions: props => set({ active: DialogType.EDIT_VERSIONS, props: props }),
   showEditWordForms: props => set({ active: DialogType.EDIT_WORD_FORMS, props: props }),

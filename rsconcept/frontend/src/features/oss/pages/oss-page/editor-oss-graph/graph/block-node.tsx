@@ -44,10 +44,10 @@ export function BlockNode(node: BlockInternalNode) {
       >
         <div
           className={clsx(
-            'w-fit mx-auto -translate-y-[14px]',
+            'w-fit mx-auto -translate-y-1/2 -mt-[8px]',
             'px-2',
             'bg-background rounded-lg',
-            'text-xs line-clamp-1 text-ellipsis',
+            'text-[18px]/[20px] line-clamp-2 text-center text-ellipsis',
             'pointer-events-auto'
           )}
         >

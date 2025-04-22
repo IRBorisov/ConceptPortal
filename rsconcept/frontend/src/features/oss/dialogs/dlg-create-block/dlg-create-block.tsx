@@ -78,7 +78,7 @@ export function DlgCreateBlock() {
       submitText='Создать'
       canSubmit={isValid}
       onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
-      className='w-160 px-6 h-128'
+      className='w-160 px-6 h-110'
       helpTopic={HelpTopic.CC_OSS}
     >
       <Tabs

@@ -118,6 +118,11 @@ const DlgCreateBlock = React.lazy(() =>
     default: module.DlgCreateBlock
   }))
 );
+const DlgEditBlock = React.lazy(() =>
+  import('@/features/oss/dialogs/dlg-edit-block').then(module => ({
+    default: module.DlgEditBlock
+  }))
+);
 
 export const GlobalDialogs = () => {
   const active = useDialogsStore(state => state.active);
@@ -134,6 +139,8 @@ export const GlobalDialogs = () => {
       return <DlgCreateOperation />;
     case DialogType.CREATE_BLOCK:
       return <DlgCreateBlock />;
+    case DialogType.EDIT_BLOCK:
+      return <DlgEditBlock />;
     case DialogType.DELETE_CONSTITUENTA:
       return <DlgDeleteCst />;
     case DialogType.EDIT_EDITORS:

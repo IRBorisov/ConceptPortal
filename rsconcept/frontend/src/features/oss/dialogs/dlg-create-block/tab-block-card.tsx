@@ -6,7 +6,7 @@ import { TextArea, TextInput } from '@/components/input';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { type ICreateBlockDTO } from '../../backend/types';
-import { SelectBlock } from '../../components/select-block';
+import { SelectParent } from '../../components/select-parent';
 
 import { type DlgCreateBlockProps } from './dlg-create-block';
 
@@ -30,9 +30,8 @@ export function TabBlockCard() {
         name='item_data.parent'
         control={control}
         render={({ field }) => (
-          <SelectBlock
+          <SelectParent
             items={oss.blocks}
-            className='w-80'
             value={field.value ? oss.blockByID.get(field.value) ?? null : null}
             placeholder='Блок содержания не выбран'
             onChange={value => field.onChange(value ? value.id : null)}
@@ -44,7 +43,7 @@ export function TabBlockCard() {
         id='operation_comment' //
         label='Описание'
         noResize
-        rows={3}
+        rows={5}
         {...register('item_data.description')}
       />
     </div>

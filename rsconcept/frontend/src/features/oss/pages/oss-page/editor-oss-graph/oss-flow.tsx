@@ -18,6 +18,7 @@ import { type IOperationSchema } from '@/features/oss/models/oss';
 import { useMainHeight } from '@/stores/app-layout';
 import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER } from '@/utils/constants';
+import { promptText } from '@/utils/labels';
 
 import { useMutatingOss } from '../../../backend/use-mutating-oss';
 import { useUpdateLayout } from '../../../backend/use-update-layout';
@@ -188,6 +189,9 @@ export function OssFlow() {
     } else {
       const block = schema.blockByID.get(-selected[0]);
       if (!block) {
+        return;
+      }
+      if (!window.confirm(promptText.deleteBlock)) {
         return;
       }
       void deleteBlock({ itemID: schema.id, data: { target: block.id, layout: getLayout() } });

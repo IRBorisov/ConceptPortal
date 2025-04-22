@@ -66,7 +66,7 @@ export const ossApi = {
   updateBlock: ({ itemID, data }: { itemID: number; data: IUpdateBlockDTO }) =>
     axiosPatch<IUpdateBlockDTO, IOperationSchemaDTO>({
       schema: schemaOperationSchema,
-      endpoint: `/api/oss/${itemID}/update-operation`,
+      endpoint: `/api/oss/${itemID}/update-block`,
       request: {
         data: data,
         successMessage: infoMsg.changesSaved

@@ -69,10 +69,11 @@ export function ToolbarOssGraph({
   const toggleEdgeAnimate = useOSSGraphStore(state => state.toggleEdgeAnimate);
   const toggleEdgeStraight = useOSSGraphStore(state => state.toggleEdgeStraight);
 
-  const { updateLayout: updatePositions } = useUpdateLayout();
-  const { executeOperation: operationExecute } = useExecuteOperation();
+  const { updateLayout } = useUpdateLayout();
+  const { executeOperation } = useExecuteOperation();
 
   const showEditOperation = useDialogsStore(state => state.showEditOperation);
+  const showEditBlock = useDialogsStore(state => state.showEditBlock);
 
   const readyForSynthesis = (() => {
     if (!selectedOperation || selectedOperation.operation_type !== OperationType.SYNTHESIS) {
@@ -100,28 +101,33 @@ export function ToolbarOssGraph({
   }
 
   function handleSavePositions() {
-    void updatePositions({ itemID: schema.id, data: getLayout() });
+    void updateLayout({ itemID: schema.id, data: getLayout() });
   }
 
   function handleOperationExecute() {
     if (!readyForSynthesis || !selectedOperation) {
       return;
     }
-    void operationExecute({
+    void executeOperation({
       itemID: schema.id, //
       data: { target: selectedOperation.id, layout: getLayout() }
     });
   }
 
   function handleEditItem() {
-    if (!selectedOperation) {
-      return;
+    if (selectedOperation) {
+      showEditOperation({
+        oss: schema,
+        target: selectedOperation,
+        layout: getLayout()
+      });
+    } else if (selectedBlock) {
+      showEditBlock({
+        oss: schema,
+        target: selectedBlock,
+        layout: getLayout()
+      });
     }
-    showEditOperation({
-      oss: schema,
-      target: selectedOperation,
-      layout: getLayout()
-    });
   }
 
   return (

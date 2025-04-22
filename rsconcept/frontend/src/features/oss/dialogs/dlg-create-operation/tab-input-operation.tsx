@@ -12,7 +12,7 @@ import { Checkbox, Label, TextArea, TextInput } from '@/components/input';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { type ICreateOperationDTO } from '../../backend/types';
-import { SelectBlock } from '../../components/select-block';
+import { SelectParent } from '../../components/select-parent';
 import { sortItemsForOSS } from '../../models/oss-api';
 
 import { type DlgCreateOperationProps } from './dlg-create-operation';
@@ -66,7 +66,7 @@ export function TabInputOperation() {
           <TextInput
             id='operation_alias' //
             label='Сокращение'
-            className='w-64'
+            className='w-80'
             {...register('item_data.alias')}
             error={errors.item_data?.alias}
           />
@@ -74,7 +74,7 @@ export function TabInputOperation() {
             name='item_data.parent'
             control={control}
             render={({ field }) => (
-              <SelectBlock
+              <SelectParent
                 items={oss.blocks}
                 value={field.value ? oss.blockByID.get(field.value) ?? null : null}
                 placeholder='Блок содержания'

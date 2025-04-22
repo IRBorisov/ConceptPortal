@@ -33,7 +33,7 @@ export function TabBlockChildren() {
   return (
     <div className='cc-fade-in cc-column'>
       <Label text={`Выбор содержания: [ ${value.length} ]`} />
-      <PickContents schema={oss} value={value} onChange={newValue => handleChangeSelected(newValue)} rows={8} />
+      <PickContents schema={oss} value={value} onChange={newValue => handleChangeSelected(newValue)} rows={10} />
     </div>
   );
 }

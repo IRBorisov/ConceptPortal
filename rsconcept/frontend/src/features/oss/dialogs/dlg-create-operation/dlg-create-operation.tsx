@@ -93,7 +93,7 @@ export function DlgCreateOperation() {
       submitText='Создать'
       canSubmit={isValid}
       onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
-      className='w-160 px-6 h-128'
+      className='w-180 px-6 h-128'
       helpTopic={HelpTopic.CC_OSS}
     >
       <Tabs
