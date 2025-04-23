@@ -11,6 +11,7 @@ import {
   useReactFlow,
   useStoreApi
 } from 'reactflow';
+import clsx from 'clsx';
 
 import { useDeleteBlock } from '@/features/oss/backend/use-delete-block';
 import { type IOperationSchema } from '@/features/oss/models/oss';
@@ -30,6 +31,7 @@ import { useOssEdit } from '../oss-edit-context';
 
 import { ContextMenu, type ContextMenuData } from './context-menu/context-menu';
 import { OssNodeTypes } from './graph/oss-node-types';
+import { useOssFlow } from './oss-flow-context';
 import { ToolbarOssGraph } from './toolbar-oss-graph';
 import { useGetLayout } from './use-get-layout';
 
@@ -51,7 +53,8 @@ export function OssFlow() {
     isMutable,
     canDeleteOperation: canDelete
   } = useOssEdit();
-  const { fitView, screenToFlowPosition } = useReactFlow();
+  const { fitView, screenToFlowPosition, getIntersectingNodes } = useReactFlow();
+  const { setDropTarget, setContainMovement, containMovement } = useOssFlow();
   const store = useStoreApi();
   const { resetSelectedElements, addSelectedNodes } = store.getState();
 
@@ -109,8 +112,6 @@ export function OssFlow() {
               height: block.height
             },
             parentId: block.parent ? `-${block.parent}` : undefined,
-            expandParent: true,
-            extent: 'parent' as const,
             zIndex: Z_BLOCK
           };
         }),
@@ -120,8 +121,6 @@ export function OssFlow() {
         data: { label: operation.alias, operation: operation },
         position: computeRelativePosition(schema, { x: operation.x, y: operation.y }, operation.parent),
         parentId: operation.parent ? `-${operation.parent}` : undefined,
-        expandParent: true,
-        extent: 'parent' as const,
         zIndex: Z_SCHEMA
       }))
     ]);
@@ -266,6 +265,81 @@ export function OssFlow() {
     setMouseCoords(targetPosition);
   }
 
+  function handleDragStart(event: React.MouseEvent, target: Node) {
+    if (event.shiftKey) {
+      setContainMovement(true);
+      setNodes(prev =>
+        prev.map(node =>
+          node.id === target.id || selected.includes(Number(node.id))
+            ? {
+                ...node,
+                extent: 'parent',
+                expandParent: true
+              }
+            : node
+        )
+      );
+    } else {
+      setContainMovement(false);
+    }
+    setIsContextMenuOpen(false);
+  }
+
+  function handleDrag(event: React.MouseEvent) {
+    if (containMovement) {
+      return;
+    }
+    const mousePosition = screenToFlowPosition({ x: event.clientX, y: event.clientY });
+    const blocks = getIntersectingNodes({
+      x: mousePosition.x,
+      y: mousePosition.y,
+      width: 1,
+      height: 1
+    })
+      .map(node => Number(node.id))
+      .filter(id => id < 0)
+      .map(id => schema.blockByID.get(-id))
+      .filter(block => !!block);
+
+    if (blocks.length === 0) {
+      setDropTarget(null);
+      return;
+    } else if (blocks.length === 1) {
+      setDropTarget(blocks[0].id);
+      return;
+    }
+
+    const parents = blocks.map(block => block.parent).filter(id => !!id);
+    const potentialTargets = blocks.map(block => block.id).filter(id => !parents.includes(id));
+    if (potentialTargets.length === 0) {
+      setDropTarget(null);
+      return;
+    } else {
+      setDropTarget(potentialTargets[0]);
+      return;
+    }
+  }
+
+  function handleDragStop(_: React.MouseEvent, target: Node) {
+    if (containMovement) {
+      setNodes(prev =>
+        prev.map(node =>
+          node.id === target.id || selected.includes(Number(node.id))
+            ? {
+                ...node,
+                extent: undefined,
+                expandParent: undefined
+              }
+            : node
+        )
+      );
+    } else {
+      // TODO: process drop event
+    }
+    setContainMovement(false);
+    setDropTarget(null);
+  }
+
   return (
     <div
       tabIndex={-1}
@@ -288,7 +362,10 @@ export function OssFlow() {
 
       <ContextMenu isOpen={isContextMenuOpen} onHide={() => setIsContextMenuOpen(false)} {...menuProps} />
 
-      <div className='cc-fade-in relative w-[100vw] cc-mask-sides' style={{ height: mainHeight, fontFamily: 'Rubik' }}>
+      <div
+        className={clsx('cc-fade-in relative w-[100vw] cc-mask-sides', !containMovement && 'cursor-relocate')}
+        style={{ height: mainHeight, fontFamily: 'Rubik' }}
+      >
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -306,7 +383,9 @@ export function OssFlow() {
           onClick={() => setIsContextMenuOpen(false)}
           onNodeDoubleClick={handleNodeDoubleClick}
           onNodeContextMenu={handleContextMenu}
-          onNodeDragStart={() => setIsContextMenuOpen(false)}
+          onNodeDragStart={handleDragStart}
+          onNodeDrag={handleDrag}
+          onNodeDragStop={handleDragStop}
         >
           {showGrid ? <Background gap={GRID_SIZE} /> : null}
         </ReactFlow>

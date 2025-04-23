@@ -304,6 +304,10 @@
     outline-color: var(--color-graph-selected);
     border-color: var(--color-foreground);
   }
+
+  .cursor-relocate .dragging & {
+    cursor: move;
+  }
 }
 
 @utility cc-node-block {
@@ -325,5 +329,9 @@
 
   &:hover {
     color: var(--color-foreground);
+  }
+
+  .cursor-relocate .dragging & {
+    cursor: move;
   }
 }
