@@ -3,6 +3,8 @@
 import { createContext, use } from 'react';
 
 interface IOssFlowContext {
+  isDragging: boolean;
+  setIsDragging: React.Dispatch<React.SetStateAction<boolean>>;
   dropTarget: number | null;
   setDropTarget: React.Dispatch<React.SetStateAction<number | null>>;
   containMovement: boolean;

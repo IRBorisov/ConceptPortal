@@ -39,6 +39,9 @@ export type IUpdateBlockDTO = z.infer<typeof schemaUpdateBlock>;
 /** Represents {@link IBlock} data, used in Delete action. */
 export type IDeleteBlockDTO = z.infer<typeof schemaDeleteBlock>;
 
+/** Represents data, used to move {@link IOssItem} to another parent. */
+export type IMoveItemsDTO = z.infer<typeof schemaMoveItems>;
+
 /** Represents {@link IOperation} data, used in Create action. */
 export type ICreateOperationDTO = z.infer<typeof schemaCreateOperation>;
 
@@ -206,6 +209,13 @@ export const schemaDeleteOperation = z.strictObject({
   layout: schemaOssLayout,
   keep_constituents: z.boolean(),
   delete_schema: z.boolean()
+});
+
+export const schemaMoveItems = z.strictObject({
+  layout: schemaOssLayout,
+  operations: z.array(z.number()),
+  blocks: z.array(z.number()),
+  destination: z.number().nullable()
 });
 
 export const schemaUpdateInput = z.strictObject({

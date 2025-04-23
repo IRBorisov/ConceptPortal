@@ -55,12 +55,13 @@ class TestOssViewset(EndpointTester):
             alias='3',
             operation_type=OperationType.SYNTHESIS
         )
-        layout = self.owned.layout()
-        layout.data = {'operations': [
+        self.layout_data = {'operations': [
             {'id': self.operation1.pk, 'x': 0, 'y': 0},
             {'id': self.operation2.pk, 'x': 0, 'y': 0},
             {'id': self.operation3.pk, 'x': 0, 'y': 0},
         ], 'blocks': []}
+        layout = self.owned.layout()
+        layout.data = self.layout_data
         layout.save()
 
         self.owned.set_arguments(self.operation3.pk, [self.operation1, self.operation2])
@@ -166,6 +167,43 @@ class TestOssViewset(EndpointTester):
         response = self.executeOK(data={'target': self.ks3X2.pk})
         self.assertEqual(response.data['id'], self.ks1X2.pk)
         self.assertEqual(response.data['schema'], self.ks1.model.pk)
+
+
+    @decl_endpoint('/api/oss/{item}/move-items', method='patch')
+    def test_move_items(self):
+        self.populateData()
+        self.executeBadData(item=self.owned_id)
+
+        block1 = self.owned.create_block(title='1')
+        block2 = self.owned.create_block(title='2')
+
+        data = {
+            'layout': self.layout_data,
+            'blocks': [block2.pk],
+            'operations': [self.operation1.pk, self.operation2.pk],
+            'destination': block2.pk
+        }
+        self.executeBadData(data=data)
+
+        data['destination'] = block1.pk
+        self.executeOK(data=data)
+        self.operation1.refresh_from_db()
+        self.operation2.refresh_from_db()
+        block2.refresh_from_db()
+
+        self.assertEqual(self.operation1.parent.pk, block1.pk)
+        self.assertEqual(self.operation2.parent.pk, block1.pk)
+        self.assertEqual(block2.parent.pk, block1.pk)
+
+        data['destination'] = None
+        self.executeOK(data=data)
+        self.operation1.refresh_from_db()
+        self.operation2.refresh_from_db()
+        block2.refresh_from_db()
+        self.assertEqual(block2.parent, None)
+        self.assertEqual(self.operation1.parent, None)
+        self.assertEqual(self.operation2.parent, None)
+
 
     @decl_endpoint('/api/oss/relocate-constituents', method='post')
     def test_relocate_constituents(self):

@@ -14,6 +14,7 @@ import {
 import clsx from 'clsx';
 
 import { useDeleteBlock } from '@/features/oss/backend/use-delete-block';
+import { useMoveItems } from '@/features/oss/backend/use-move-items';
 import { type IOperationSchema } from '@/features/oss/models/oss';
 
 import { useMainHeight } from '@/stores/app-layout';
@@ -54,7 +55,7 @@ export function OssFlow() {
     canDeleteOperation: canDelete
   } = useOssEdit();
   const { fitView, screenToFlowPosition, getIntersectingNodes } = useReactFlow();
-  const { setDropTarget, setContainMovement, containMovement } = useOssFlow();
+  const { setDropTarget, setContainMovement, containMovement, setIsDragging } = useOssFlow();
   const store = useStoreApi();
   const { resetSelectedElements, addSelectedNodes } = store.getState();
 
@@ -70,6 +71,7 @@ export function OssFlow() {
   const getLayout = useGetLayout();
   const { updateLayout } = useUpdateLayout();
   const { deleteBlock } = useDeleteBlock();
+  const { moveItems } = useMoveItems();
 
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -265,6 +267,35 @@ export function OssFlow() {
     setMouseCoords(targetPosition);
   }
 
+  function determineDropTarget(event: React.MouseEvent): number | null {
+    const mousePosition = screenToFlowPosition({ x: event.clientX, y: event.clientY });
+    const blocks = getIntersectingNodes({
+      x: mousePosition.x,
+      y: mousePosition.y,
+      width: 1,
+      height: 1
+    })
+      .map(node => Number(node.id))
+      .filter(id => id < 0 && !selected.includes(id))
+      .map(id => schema.blockByID.get(-id))
+      .filter(block => !!block);
+
+    if (blocks.length === 0) {
+      return null;
+    }
+    if (blocks.length === 1) {
+      return blocks[0].id;
+    }
+
+    const parents = blocks.map(block => block.parent).filter(id => !!id);
+    const potentialTargets = blocks.map(block => block.id).filter(id => !parents.includes(id));
+    if (potentialTargets.length === 0) {
+      return null;
+    } else {
+      return potentialTargets[0];
+    }
+  }
+
   function handleDragStart(event: React.MouseEvent, target: Node) {
     if (event.shiftKey) {
       setContainMovement(true);
@@ -281,6 +312,7 @@ export function OssFlow() {
       );
     } else {
       setContainMovement(false);
+      setDropTarget(determineDropTarget(event));
     }
     setIsContextMenuOpen(false);
   }
@@ -289,38 +321,11 @@ export function OssFlow() {
     if (containMovement) {
       return;
     }
-    const mousePosition = screenToFlowPosition({ x: event.clientX, y: event.clientY });
-    const blocks = getIntersectingNodes({
-      x: mousePosition.x,
-      y: mousePosition.y,
-      width: 1,
-      height: 1
-    })
-      .map(node => Number(node.id))
-      .filter(id => id < 0)
-      .map(id => schema.blockByID.get(-id))
-      .filter(block => !!block);
-
-    if (blocks.length === 0) {
-      setDropTarget(null);
-      return;
-    } else if (blocks.length === 1) {
-      setDropTarget(blocks[0].id);
-      return;
-    }
-
-    const parents = blocks.map(block => block.parent).filter(id => !!id);
-    const potentialTargets = blocks.map(block => block.id).filter(id => !parents.includes(id));
-    if (potentialTargets.length === 0) {
-      setDropTarget(null);
-      return;
-    } else {
-      setDropTarget(potentialTargets[0]);
-      return;
-    }
+    setIsDragging(true);
+    setDropTarget(determineDropTarget(event));
   }
 
-  function handleDragStop(_: React.MouseEvent, target: Node) {
+  function handleDragStop(event: React.MouseEvent, target: Node) {
     if (containMovement) {
       setNodes(prev =>
         prev.map(node =>
@@ -334,8 +339,32 @@ export function OssFlow() {
         )
       );
     } else {
-      // TODO: process drop event
+      const new_parent = determineDropTarget(event);
+      const allSelected = [...selected.filter(id => id != Number(target.id)), Number(target.id)];
+      const operations = allSelected
+        .filter(id => id > 0)
+        .map(id => schema.operationByID.get(id))
+        .filter(operation => !!operation);
+      const blocks = allSelected
+        .filter(id => id < 0)
+        .map(id => schema.blockByID.get(-id))
+        .filter(operation => !!operation);
+      const parents = [...blocks.map(block => block.parent), ...operations.map(operation => operation.parent)].filter(
+        id => !!id
+      );
+      if ((parents.length !== 1 || parents[0] !== new_parent) && (parents.length !== 0 || new_parent !== null)) {
+        void moveItems({
+          itemID: schema.id,
+          data: {
+            layout: getLayout(),
+            operations: operations.map(operation => operation.id),
+            blocks: blocks.map(block => block.id),
+            destination: new_parent
+          }
+        });
+      }
     }
+    setIsDragging(false);
     setContainMovement(false);
     setDropTarget(null);
   }

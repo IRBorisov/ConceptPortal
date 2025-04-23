@@ -132,6 +132,37 @@ class DeleteBlockSerializer(serializers.Serializer):
         return attrs
 
 
+class MoveItemsSerializer(serializers.Serializer):
+    ''' Serializer: Move items to another parent. '''
+    layout = LayoutSerializer()
+    operations = PKField(many=True, queryset=Operation.objects.all().only('oss_id', 'parent'))
+    blocks = PKField(many=True, queryset=Block.objects.all().only('oss_id', 'parent'))
+    destination = PKField(many=False, queryset=Block.objects.all().only('oss_id'), allow_null=True)
+
+    def validate(self, attrs):
+        oss = cast(LibraryItem, self.context['oss'])
+        parent_block = cast(Block, attrs['destination'])
+        if parent_block is not None and parent_block.oss_id != oss.pk:
+            raise serializers.ValidationError({
+                'destination': msg.blockNotInOSS()
+            })
+        for operation in attrs['operations']:
+            if operation.oss_id != oss.pk:
+                raise serializers.ValidationError({
+                    'operations': msg.operationNotInOSS()
+                })
+        for block in attrs['blocks']:
+            if parent_block is not None and block.pk == parent_block.pk:
+                raise serializers.ValidationError({
+                    'destination': msg.blockSelfParent()
+                })
+            if block.oss_id != oss.pk:
+                raise serializers.ValidationError({
+                    'blocks': msg.blockNotInOSS()
+                })
+        return attrs
+
+
 class CreateOperationSerializer(serializers.Serializer):
     ''' Serializer: Operation creation. '''
     class CreateOperationData(serializers.ModelSerializer):

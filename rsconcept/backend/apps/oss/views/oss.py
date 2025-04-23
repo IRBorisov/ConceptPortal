@@ -40,6 +40,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
             'create_block',
             'update_block',
             'delete_block',
+            'move_items',
             'create_operation',
             'update_operation',
             'delete_operation',
@@ -208,6 +209,41 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         with transaction.atomic():
             oss.delete_block(block)
             oss.update_layout(layout)
+
+        return Response(
+            status=c.HTTP_200_OK,
+            data=s.OperationSchemaSerializer(oss.model).data
+        )
+
+    @extend_schema(
+        summary='move items',
+        tags=['OSS'],
+        request=s.MoveItemsSerializer(),
+        responses={
+            c.HTTP_200_OK: s.OperationSchemaSerializer,
+            c.HTTP_400_BAD_REQUEST: None,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
+    )
+    @action(detail=True, methods=['patch'], url_path='move-items')
+    def move_items(self, request: Request, pk) -> HttpResponse:
+        ''' Move items to another parent. '''
+        serializer = s.MoveItemsSerializer(
+            data=request.data,
+            context={'oss': self.get_object()}
+        )
+        serializer.is_valid(raise_exception=True)
+
+        oss = m.OperationSchema(self.get_object())
+        with transaction.atomic():
+            oss.update_layout(serializer.validated_data['layout'])
+            for operation in serializer.validated_data['operations']:
+                operation.parent = serializer.validated_data['destination']
+                operation.save(update_fields=['parent'])
+            for block in serializer.validated_data['blocks']:
+                block.parent = serializer.validated_data['destination']
+                block.save(update_fields=['parent'])
 
         return Response(
             status=c.HTTP_200_OK,

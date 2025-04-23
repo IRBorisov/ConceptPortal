@@ -8,6 +8,7 @@ from .data_access import (
     CreateOperationSerializer,
     DeleteBlockSerializer,
     DeleteOperationSerializer,
+    MoveItemsSerializer,
     OperationSchemaSerializer,
     OperationSerializer,
     RelocateConstituentsSerializer,

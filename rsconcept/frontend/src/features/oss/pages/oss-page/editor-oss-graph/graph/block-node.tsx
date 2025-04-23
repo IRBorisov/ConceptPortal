@@ -18,7 +18,7 @@ export const BLOCK_NODE_MIN_HEIGHT = 100;
 
 export function BlockNode(node: BlockInternalNode) {
   const { selected, schema } = useOssEdit();
-  const { dropTarget } = useOssFlow();
+  const { dropTarget, isDragging } = useOssFlow();
   const showCoordinates = useOSSGraphStore(state => state.showCoordinates);
   const setHover = useOperationTooltipStore(state => state.setHoverItem);
 
@@ -44,8 +44,8 @@ export function BlockNode(node: BlockInternalNode) {
       <div
         className={clsx(
           'cc-node-block h-full w-full',
-          dropTarget && isParent && dropTarget !== node.data.block.id && 'border-destructive',
-          ((isParent && !dropTarget) || dropTarget === node.data.block.id) && 'border-primary',
+          isDragging && isParent && dropTarget !== node.data.block.id && 'border-destructive',
+          ((isParent && !isDragging) || dropTarget === node.data.block.id) && 'border-primary',
           isChild && 'border-accent-orange50'
         )}
       >

@@ -12,6 +12,7 @@ import {
   type IDeleteBlockDTO,
   type IDeleteOperationDTO,
   type IInputCreatedResponse,
+  type IMoveItemsDTO,
   type IOperationCreatedResponse,
   type IOperationSchemaDTO,
   type IOssLayout,
@@ -135,6 +136,16 @@ export const ossApi = {
       request: {
         data: data,
         successMessage: infoMsg.operationExecuted
+      }
+    }),
+
+  moveItems: ({ itemID, data }: { itemID: number; data: IMoveItemsDTO }) =>
+    axiosPatch<IMoveItemsDTO, IOperationSchemaDTO>({
+      schema: schemaOperationSchema,
+      endpoint: `/api/oss/${itemID}/move-items`,
+      request: {
+        data: data,
+        successMessage: infoMsg.moveSuccess
       }
     }),
 

@@ -25,6 +25,7 @@ export const infoMsg = {
   substitutionsCorrect: 'Таблица отождествлений прошла проверку',
   uploadSuccess: 'Схема загружена из файла',
   inlineSynthesisComplete: 'Встраивание завершено',
+  moveSuccess: 'Перемещение завершено',
 
   newLibraryItem: 'Схема успешно создана',
   addedConstituents: (count: number) => `Добавлены конституенты: ${count}`,
