@@ -44,6 +44,7 @@ export function ContextMenu({ isOpen, item, cursorX, cursorY, onHide }: ContextM
       style={{ top: `calc(${cursorY}px - 2.5rem)`, left: cursorX }}
     >
       <Dropdown
+        className='z-navigation!'
         isOpen={isOpen}
         stretchLeft={cursorX >= window.innerWidth - MENU_WIDTH}
         stretchTop={cursorY >= window.innerHeight - MENU_HEIGHT}

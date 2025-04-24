@@ -123,6 +123,11 @@ const DlgEditBlock = React.lazy(() =>
     default: module.DlgEditBlock
   }))
 );
+const DlgOssSettings = React.lazy(() =>
+  import('@/features/oss/dialogs/dlg-oss-settings').then(module => ({
+    default: module.DlgOssSettings
+  }))
+);
 
 export const GlobalDialogs = () => {
   const active = useDialogsStore(state => state.active);
@@ -155,6 +160,8 @@ export const GlobalDialogs = () => {
       return <DlgEditWordForms />;
     case DialogType.INLINE_SYNTHESIS:
       return <DlgInlineSynthesis />;
+    case DialogType.OSS_SETTINGS:
+      return <DlgOssSettings />;
     case DialogType.SHOW_AST:
       return <DlgShowAST />;
     case DialogType.SHOW_TYPE_GRAPH:

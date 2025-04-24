@@ -44,6 +44,7 @@ export const DialogType = {
   DELETE_OPERATION: 10,
   CHANGE_INPUT_SCHEMA: 11,
   RELOCATE_CONSTITUENTS: 12,
+  OSS_SETTINGS: 26,
 
   CLONE_LIBRARY_ITEM: 13,
   UPLOAD_RSFORM: 14,
@@ -91,6 +92,7 @@ interface DialogsStore {
   showCreateVersion: (props: DlgCreateVersionProps) => void;
   showDeleteOperation: (props: DlgDeleteOperationProps) => void;
   showGraphParams: () => void;
+  showOssOptions: () => void;
   showRelocateConstituents: (props: DlgRelocateConstituentsProps) => void;
   showRenameCst: (props: DlgRenameCstProps) => void;
   showQR: (props: DlgShowQRProps) => void;
@@ -128,6 +130,7 @@ export const useDialogsStore = create<DialogsStore>()(set => ({
   showCreateVersion: props => set({ active: DialogType.CREATE_VERSION, props: props }),
   showDeleteOperation: props => set({ active: DialogType.DELETE_OPERATION, props: props }),
   showGraphParams: () => set({ active: DialogType.GRAPH_PARAMETERS, props: null }),
+  showOssOptions: () => set({ active: DialogType.OSS_SETTINGS, props: null }),
   showRelocateConstituents: props => set({ active: DialogType.RELOCATE_CONSTITUENTS, props: props }),
   showRenameCst: props => set({ active: DialogType.RENAME_CONSTITUENTA, props: props }),
   showQR: props => set({ active: DialogType.SHOW_QR_CODE, props: props }),

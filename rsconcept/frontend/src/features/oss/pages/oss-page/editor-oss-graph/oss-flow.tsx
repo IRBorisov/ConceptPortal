@@ -17,6 +17,7 @@ import { useDeleteBlock } from '@/features/oss/backend/use-delete-block';
 import { useMoveItems } from '@/features/oss/backend/use-move-items';
 import { type IOperationSchema } from '@/features/oss/models/oss';
 
+import { useThrottleCallback } from '@/hooks/use-throttle-callback';
 import { useMainHeight } from '@/stores/app-layout';
 import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER } from '@/utils/constants';
@@ -41,6 +42,8 @@ const ZOOM_MIN = 0.5;
 
 const Z_BLOCK = 1;
 const Z_SCHEMA = 10;
+
+const DRAG_THROTTLE_DELAY = 50; // ms
 
 export const VIEW_PADDING = 0.2;
 
@@ -84,6 +87,7 @@ export function OssFlow() {
   const showCreateOperation = useDialogsStore(state => state.showCreateOperation);
   const showCreateBlock = useDialogsStore(state => state.showCreateBlock);
   const showDeleteOperation = useDialogsStore(state => state.showDeleteOperation);
+  const showEditBlock = useDialogsStore(state => state.showEditBlock);
 
   function onSelectionChange({ nodes }: { nodes: Node[] }) {
     const ids = nodes.map(node => Number(node.id));
@@ -215,13 +219,22 @@ export function OssFlow() {
   }
 
   function handleNodeDoubleClick(event: React.MouseEvent<Element>, node: OssNode) {
-    if (node.type === 'block') {
-      return;
-    }
     event.preventDefault();
     event.stopPropagation();
-    if (node.data.operation?.result) {
-      navigateOperationSchema(Number(node.id));
+
+    if (node.type === 'block') {
+      const block = schema.blockByID.get(-Number(node.id));
+      if (block) {
+        showEditBlock({
+          oss: schema,
+          target: block,
+          layout: getLayout()
+        });
+      }
+    } else {
+      if (node.data.operation?.result) {
+        navigateOperationSchema(Number(node.id));
+      }
     }
   }
 
@@ -269,7 +282,7 @@ export function OssFlow() {
 
   function determineDropTarget(event: React.MouseEvent): number | null {
     const mousePosition = screenToFlowPosition({ x: event.clientX, y: event.clientY });
-    const blocks = getIntersectingNodes({
+    let blocks = getIntersectingNodes({
       x: mousePosition.x,
       y: mousePosition.y,
       width: 1,
@@ -280,6 +293,12 @@ export function OssFlow() {
       .map(id => schema.blockByID.get(-id))
       .filter(block => !!block);
 
+    if (blocks.length === 0) {
+      return null;
+    }
+
+    const successors = schema.hierarchy.expandAllOutputs([...selected]).filter(id => id < 0);
+    blocks = blocks.filter(block => !successors.includes(-block.id));
     if (blocks.length === 0) {
       return null;
     }
@@ -317,13 +336,13 @@ export function OssFlow() {
     setIsContextMenuOpen(false);
   }
 
-  function handleDrag(event: React.MouseEvent) {
+  const handleDrag = useThrottleCallback((event: React.MouseEvent) => {
     if (containMovement) {
       return;
     }
     setIsDragging(true);
     setDropTarget(determineDropTarget(event));
-  }
+  }, DRAG_THROTTLE_DELAY);
 
   function handleDragStop(event: React.MouseEvent, target: Node) {
     if (containMovement) {
@@ -412,6 +431,7 @@ export function OssFlow() {
           onClick={() => setIsContextMenuOpen(false)}
           onNodeDoubleClick={handleNodeDoubleClick}
           onNodeContextMenu={handleContextMenu}
+          onContextMenu={event => event.preventDefault()}
           onNodeDragStart={handleDragStart}
           onNodeDrag={handleDrag}
           onNodeDragStop={handleDragStop}

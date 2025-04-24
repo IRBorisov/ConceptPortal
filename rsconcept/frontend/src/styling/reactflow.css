@@ -157,5 +157,5 @@
   margin: 0;
 
   background-color: transparent;
-  pointer-events: none;
+  pointer-events: none !important;
 }

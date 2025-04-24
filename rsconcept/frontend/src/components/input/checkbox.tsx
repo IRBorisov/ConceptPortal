@@ -14,10 +14,13 @@ export interface CheckboxProps extends Omit<Button, 'value' | 'onClick' | 'onCha
   disabled?: boolean;
 
   /** Current value - `true` or `false`. */
-  value?: boolean;
+  value: boolean;
 
   /** Callback to set the `value`. */
   onChange?: (newValue: boolean) => void;
+
+  /** Custom icon to display next instead of checkbox. */
+  customIcon?: (checked?: boolean) => React.ReactNode;
 }
 
 /**
@@ -31,6 +34,7 @@ export function Checkbox({
   hideTitle,
   className,
   value,
+  customIcon,
   onChange,
   ...restProps
 }: CheckboxProps) {
@@ -63,15 +67,19 @@ export function Checkbox({
       disabled={disabled}
       {...restProps}
     >
-      <div
-        className={clsx(
-          'w-4 h-4', //
-          'border rounded-sm',
-          value === false ? 'bg-background text-foreground' : 'bg-primary text-primary-foreground'
-        )}
-      >
-        {value ? <CheckboxChecked /> : null}
-      </div>
+      {customIcon ? (
+        customIcon(value)
+      ) : (
+        <div
+          className={clsx(
+            'w-4 h-4', //
+            'border rounded-sm',
+            value === false ? 'bg-background text-foreground' : 'bg-primary text-primary-foreground'
+          )}
+        >
+          {value ? <CheckboxChecked /> : null}
+        </div>
+      )}
       {label ? <span className={clsx('text-start text-sm whitespace-nowrap select-text', cursor)}>{label}</span> : null}
     </button>
   );

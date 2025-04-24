@@ -69,6 +69,7 @@ export function MGraphFlow({ data }: MGraphFlowProps) {
       maxZoom={ZOOM_MAX}
       minZoom={ZOOM_MIN}
       nodesConnectable={false}
+      onContextMenu={event => event.preventDefault()}
     />
   );
 }

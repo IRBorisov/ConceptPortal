@@ -46,16 +46,21 @@ export function BlockNode(node: BlockInternalNode) {
           'cc-node-block h-full w-full',
           isDragging && isParent && dropTarget !== node.data.block.id && 'border-destructive',
           ((isParent && !isDragging) || dropTarget === node.data.block.id) && 'border-primary',
-          isChild && 'border-accent-orange50'
+          isChild && 'border-accent-orange'
         )}
       >
+        <div className='absolute top-0 left-0 w-full h-2 pointer-events-auto cursor-pointer' />
+        <div className='absolute top-0 right-0 h-full w-2 pointer-events-auto cursor-pointer' />
+        <div className='absolute bottom-0 right-0 w-full h-2 pointer-events-auto cursor-pointer' />
+        <div className='absolute bottom-0 left-0 h-full w-2 pointer-events-auto cursor-pointer' />
+
         <div
           className={clsx(
             'w-fit mx-auto -translate-y-1/2 -mt-[8px]',
             'px-2',
             'bg-background rounded-lg',
             'text-[18px]/[20px] line-clamp-2 text-center text-ellipsis',
-            'pointer-events-auto'
+            'pointer-events-auto cursor-pointer'
           )}
           data-tooltip-id={globalIDs.operation_tooltip}
           data-tooltip-hidden={node.dragging}

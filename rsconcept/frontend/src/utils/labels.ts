@@ -37,6 +37,7 @@ export const infoMsg = {
   versionDestroyed: 'Версия удалена',
   itemDestroyed: 'Схема удалена',
   operationDestroyed: 'Операция удалена',
+  blockDestroyed: 'Блок удален',
   operationExecuted: 'Операция выполнена',
   allOperationExecuted: 'Все операции выполнены',
   constituentsDestroyed: (count: number) => `Конституенты удалены: ${count}`

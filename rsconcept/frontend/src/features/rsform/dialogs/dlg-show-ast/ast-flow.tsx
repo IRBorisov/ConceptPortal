@@ -69,6 +69,7 @@ export function ASTFlow({ data, onNodeEnter, onNodeLeave, onChangeDragging }: AS
       maxZoom={2}
       minZoom={0.5}
       nodesConnectable={false}
+      onContextMenu={event => event.preventDefault()}
     />
   );
 }

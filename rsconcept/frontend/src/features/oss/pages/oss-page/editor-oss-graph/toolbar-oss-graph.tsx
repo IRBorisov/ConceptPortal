@@ -1,5 +1,6 @@
 'use client';
 
+import { toast } from 'react-toastify';
 import { useReactFlow } from 'reactflow';
 
 import { HelpTopic } from '@/features/help';
@@ -9,20 +10,16 @@ import { useUpdateLayout } from '@/features/oss/backend/use-update-layout';
 
 import { MiniButton } from '@/components/control';
 import {
-  IconAnimation,
-  IconAnimationOff,
   IconConceptBlock,
-  IconCoordinates,
   IconDestroy,
   IconEdit2,
   IconExecute,
   IconFitImage,
-  IconGrid,
-  IconLineStraight,
-  IconLineWave,
+  IconFixLayout,
   IconNewItem,
   IconReset,
-  IconSave
+  IconSave,
+  IconSettings
 } from '@/components/icons';
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
@@ -32,7 +29,6 @@ import { prepareTooltip } from '@/utils/utils';
 
 import { OperationType } from '../../../backend/types';
 import { useMutatingOss } from '../../../backend/use-mutating-oss';
-import { useOSSGraphStore } from '../../../stores/oss-graph';
 import { useOssEdit } from '../oss-edit-context';
 
 import { VIEW_PADDING } from './oss-flow';
@@ -60,20 +56,12 @@ export function ToolbarOssGraph({
   const selectedBlock = selected.length !== 1 ? null : schema.blockByID.get(-selected[0]) ?? null;
   const getLayout = useGetLayout();
 
-  const showGrid = useOSSGraphStore(state => state.showGrid);
-  const showCoordinates = useOSSGraphStore(state => state.showCoordinates);
-  const edgeAnimate = useOSSGraphStore(state => state.edgeAnimate);
-  const edgeStraight = useOSSGraphStore(state => state.edgeStraight);
-  const toggleShowGrid = useOSSGraphStore(state => state.toggleShowGrid);
-  const toggleShowCoordinates = useOSSGraphStore(state => state.toggleShowCoordinates);
-  const toggleEdgeAnimate = useOSSGraphStore(state => state.toggleEdgeAnimate);
-  const toggleEdgeStraight = useOSSGraphStore(state => state.toggleEdgeStraight);
-
   const { updateLayout } = useUpdateLayout();
   const { executeOperation } = useExecuteOperation();
 
   const showEditOperation = useDialogsStore(state => state.showEditOperation);
   const showEditBlock = useDialogsStore(state => state.showEditBlock);
+  const showOssOptions = useDialogsStore(state => state.showOssOptions);
 
   const readyForSynthesis = (() => {
     if (!selectedOperation || selectedOperation.operation_type !== OperationType.SYNTHESIS) {
@@ -98,6 +86,15 @@ export function ToolbarOssGraph({
 
   function handleFitView() {
     fitView({ duration: PARAMETER.zoomDuration, padding: VIEW_PADDING });
+  }
+
+  function handleFixLayout() {
+    // TODO: implement layout algorithm
+    toast.info('Еще не реализовано');
+  }
+
+  function handleShowOptions() {
+    showOssOptions();
   }
 
   function handleSavePositions() {
@@ -152,46 +149,15 @@ export function ToolbarOssGraph({
           onClick={handleFitView}
         />
         <MiniButton
-          title={showGrid ? 'Скрыть сетку' : 'Отобразить сетку'}
-          aria-label='Переключатель отображения сетки'
-          icon={
-            showGrid ? (
-              <IconGrid size='1.25rem' className='icon-green' />
-            ) : (
-              <IconGrid size='1.25rem' className='icon-primary' />
-            )
-          }
-          onClick={toggleShowGrid}
+          title='Исправить позиции узлов'
+          icon={<IconFixLayout size='1.25rem' className='icon-primary' />}
+          onClick={handleFixLayout}
+          disabled={selected.length > 1 || selected[0] > 0}
         />
         <MiniButton
-          title={edgeStraight ? 'Связи: прямые' : 'Связи: безье'}
-          aria-label='Переключатель формы связей'
-          icon={
-            edgeStraight ? (
-              <IconLineStraight size='1.25rem' className='icon-primary' />
-            ) : (
-              <IconLineWave size='1.25rem' className='icon-primary' />
-            )
-          }
-          onClick={toggleEdgeStraight}
-        />
-        <MiniButton
-          title={edgeAnimate ? 'Анимация: вкл' : 'Анимация: выкл'}
-          aria-label='Переключатель анимации связей'
-          icon={
-            edgeAnimate ? (
-              <IconAnimation size='1.25rem' className='icon-primary' />
-            ) : (
-              <IconAnimationOff size='1.25rem' className='icon-primary' />
-            )
-          }
-          onClick={toggleEdgeAnimate}
-        />
-        <MiniButton
-          title={showCoordinates ? 'Координаты: вкл' : 'Координаты: выкл'}
-          aria-label='Переключатель видимости координат (для отладки)'
-          icon={<IconCoordinates size='1.25rem' className={showCoordinates ? 'icon-green' : 'icon-primary'} />}
-          onClick={toggleShowCoordinates}
+          title='Настройки отображения'
+          icon={<IconSettings size='1.25rem' className='icon-primary' />}
+          onClick={handleShowOptions}
         />
         <BadgeHelp topic={HelpTopic.UI_OSS_GRAPH} contentClass='sm:max-w-160' offset={4} />
       </div>

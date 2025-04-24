@@ -51,7 +51,7 @@ export function DlgEditBlock() {
       submitText='Сохранить'
       canSubmit={isValid}
       onSubmit={event => void handleSubmit(onSubmit)(event)}
-      className='w-160 px-6 h-fit cc-column'
+      className='w-160 px-6 pb-2 h-fit cc-column'
     >
       <TextInput
         id='operation_title' //

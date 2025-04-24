@@ -24,7 +24,7 @@ export function MenuBlock({ block, onHide }: MenuBlockProps) {
   const showEditBlock = useDialogsStore(state => state.showEditBlock);
   const { deleteBlock } = useDeleteBlock();
 
-  function handleEditOperation() {
+  function handleEditBlock() {
     if (!block) {
       return;
     }
@@ -47,7 +47,7 @@ export function MenuBlock({ block, onHide }: MenuBlockProps) {
         text='Редактировать'
         title='Редактировать блок'
         icon={<IconEdit2 size='1rem' className='icon-primary' />}
-        onClick={handleEditOperation}
+        onClick={handleEditBlock}
         disabled={!isMutable || isProcessing}
       />
       <DropdownButton

@@ -325,6 +325,7 @@
   .selected & {
     color: var(--color-foreground);
     border-color: var(--color-graph-selected);
+    border-style: solid;
   }
 
   &:hover {

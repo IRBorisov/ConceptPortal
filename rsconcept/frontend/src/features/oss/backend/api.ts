@@ -79,7 +79,7 @@ export const ossApi = {
       endpoint: `/api/oss/${itemID}/delete-block`,
       request: {
         data: data,
-        successMessage: infoMsg.operationDestroyed
+        successMessage: infoMsg.blockDestroyed
       }
     }),
 

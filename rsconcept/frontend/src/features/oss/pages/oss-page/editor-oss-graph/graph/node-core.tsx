@@ -40,7 +40,7 @@ export function NodeCore({ node }: NodeCoreProps) {
       className={cn(
         'cc-node-operation h-[40px] w-[150px]',
         'relative flex items-center justify-center p-[2px]',
-        isChild && 'border-accent-orange50!'
+        isChild && 'border-accent-orange'
       )}
       data-tooltip-id={globalIDs.operation_tooltip}
       data-tooltip-hidden={node.dragging}

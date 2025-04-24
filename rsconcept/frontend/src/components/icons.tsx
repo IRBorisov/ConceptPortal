@@ -16,7 +16,7 @@ export { FiEdit           as IconEdit2 }          from 'react-icons/fi';
 export { BiSearchAlt2     as IconSearch }         from 'react-icons/bi';
 export { BiDownload       as IconDownload }       from 'react-icons/bi';
 export { BiUpload         as IconUpload }         from 'react-icons/bi';
-export { BiCog            as IconSettings }       from 'react-icons/bi';
+export { LuSettings       as IconSettings }       from 'react-icons/lu';
 export { TbEye            as IconShow }           from 'react-icons/tb';
 export { TbEyeX           as IconHide }           from 'react-icons/tb';
 export { BiShareAlt       as IconShare }          from 'react-icons/bi';
@@ -141,6 +141,7 @@ export { GrConnect        as IconConnect }        from 'react-icons/gr';
 export { BiPlayCircle     as IconExecute }        from 'react-icons/bi';
 
 // ======== Graph UI =======
+export { LuLayoutDashboard as IconFixLayout }     from 'react-icons/lu';
 export { BiCollapse       as IconGraphCollapse }  from 'react-icons/bi';
 export { BiExpand         as IconGraphExpand }    from 'react-icons/bi';
 export { LuMaximize       as IconGraphMaximize }  from 'react-icons/lu';
