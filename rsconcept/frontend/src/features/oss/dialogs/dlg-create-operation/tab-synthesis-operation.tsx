@@ -10,7 +10,7 @@ import { SelectParent } from '../../components/select-parent';
 import { type DlgCreateOperationProps } from './dlg-create-operation';
 
 export function TabSynthesisOperation() {
-  const { oss } = useDialogsStore(state => state.props as DlgCreateOperationProps);
+  const { manager } = useDialogsStore(state => state.props as DlgCreateOperationProps);
   const {
     register,
     control,
@@ -40,8 +40,8 @@ export function TabSynthesisOperation() {
             control={control}
             render={({ field }) => (
               <SelectParent
-                items={oss.blocks}
-                value={field.value ? oss.blockByID.get(field.value) ?? null : null}
+                items={manager.oss.blocks}
+                value={field.value ? manager.oss.blockByID.get(field.value) ?? null : null}
                 placeholder='Блок содержания'
                 onChange={value => field.onChange(value ? value.id : null)}
               />
@@ -64,7 +64,7 @@ export function TabSynthesisOperation() {
           name='arguments'
           control={control}
           render={({ field }) => (
-            <PickMultiOperation items={oss.operations} value={field.value} onChange={field.onChange} rows={6} />
+            <PickMultiOperation items={manager.oss.operations} value={field.value} onChange={field.onChange} rows={6} />
           )}
         />
       </div>

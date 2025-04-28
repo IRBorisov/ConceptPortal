@@ -7,19 +7,19 @@ import { TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { type IOssLayout, type IUpdateBlockDTO, schemaUpdateBlock } from '../backend/types';
+import { type IUpdateBlockDTO, schemaUpdateBlock } from '../backend/types';
 import { useUpdateBlock } from '../backend/use-update-block';
 import { SelectParent } from '../components/select-parent';
-import { type IBlock, type IOperationSchema } from '../models/oss';
+import { type IBlock } from '../models/oss';
+import { type LayoutManager } from '../models/oss-layout-api';
 
 export interface DlgEditBlockProps {
-  oss: IOperationSchema;
+  manager: LayoutManager;
   target: IBlock;
-  layout: IOssLayout;
 }
 
 export function DlgEditBlock() {
-  const { oss, target, layout } = useDialogsStore(state => state.props as DlgEditBlockProps);
+  const { manager, target } = useDialogsStore(state => state.props as DlgEditBlockProps);
   const { updateBlock } = useUpdateBlock();
 
   const {
@@ -36,13 +36,13 @@ export function DlgEditBlock() {
         description: target.description,
         parent: target.parent
       },
-      layout: layout
+      layout: manager.layout
     },
     mode: 'onChange'
   });
 
   function onSubmit(data: IUpdateBlockDTO) {
-    return updateBlock({ itemID: oss.id, data });
+    return updateBlock({ itemID: manager.oss.id, data });
   }
 
   return (
@@ -64,8 +64,8 @@ export function DlgEditBlock() {
         control={control}
         render={({ field }) => (
           <SelectParent
-            items={oss.blocks.filter(block => block.id !== target.id)}
-            value={field.value ? oss.blockByID.get(field.value) ?? null : null}
+            items={manager.oss.blocks.filter(block => block.id !== target.id)}
+            value={field.value ? manager.oss.blockByID.get(field.value) ?? null : null}
             placeholder='Блок содержания не выбран'
             onChange={value => field.onChange(value ? value.id : null)}
           />

@@ -11,7 +11,7 @@ import { SelectParent } from '../../components/select-parent';
 import { type DlgCreateBlockProps } from './dlg-create-block';
 
 export function TabBlockCard() {
-  const { oss } = useDialogsStore(state => state.props as DlgCreateBlockProps);
+  const { manager } = useDialogsStore(state => state.props as DlgCreateBlockProps);
   const {
     register,
     control,
@@ -31,8 +31,8 @@ export function TabBlockCard() {
         control={control}
         render={({ field }) => (
           <SelectParent
-            items={oss.blocks}
-            value={field.value ? oss.blockByID.get(field.value) ?? null : null}
+            items={manager.oss.blocks}
+            value={field.value ? manager.oss.blockByID.get(field.value) ?? null : null}
             placeholder='Блок содержания не выбран'
             onChange={value => field.onChange(value ? value.id : null)}
           />

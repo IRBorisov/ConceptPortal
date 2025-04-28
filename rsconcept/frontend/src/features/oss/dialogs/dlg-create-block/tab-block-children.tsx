@@ -11,7 +11,7 @@ import { type DlgCreateBlockProps } from './dlg-create-block';
 
 export function TabBlockChildren() {
   const { setValue, control } = useFormContext<ICreateBlockDTO>();
-  const { oss } = useDialogsStore(state => state.props as DlgCreateBlockProps);
+  const { manager } = useDialogsStore(state => state.props as DlgCreateBlockProps);
   const children_blocks = useWatch({ control, name: 'children_blocks' });
   const children_operations = useWatch({ control, name: 'children_operations' });
 
@@ -33,7 +33,12 @@ export function TabBlockChildren() {
   return (
     <div className='cc-fade-in cc-column'>
       <Label text={`Выбор содержания: [ ${value.length} ]`} />
-      <PickContents schema={oss} value={value} onChange={newValue => handleChangeSelected(newValue)} rows={10} />
+      <PickContents
+        schema={manager.oss}
+        value={value}
+        onChange={newValue => handleChangeSelected(newValue)}
+        rows={10}
+      />
     </div>
   );
 }

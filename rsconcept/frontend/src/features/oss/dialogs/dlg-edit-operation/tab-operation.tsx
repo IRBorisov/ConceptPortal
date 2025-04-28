@@ -9,7 +9,7 @@ import { SelectParent } from '../../components/select-parent';
 import { type DlgEditOperationProps } from './dlg-edit-operation';
 
 export function TabOperation() {
-  const { oss } = useDialogsStore(state => state.props as DlgEditOperationProps);
+  const { manager } = useDialogsStore(state => state.props as DlgEditOperationProps);
   const {
     register,
     control,
@@ -37,8 +37,8 @@ export function TabOperation() {
         control={control}
         render={({ field }) => (
           <SelectParent
-            items={oss.blocks}
-            value={field.value ? oss.blockByID.get(field.value) ?? null : null}
+            items={manager.oss.blocks}
+            value={field.value ? manager.oss.blockByID.get(field.value) ?? null : null}
             placeholder='Блок содержания'
             onChange={value => field.onChange(value ? value.id : null)}
           />

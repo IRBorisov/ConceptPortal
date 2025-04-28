@@ -10,18 +10,16 @@ import { ModalForm } from '@/components/modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { type ICreateOperationDTO, type IOssLayout, OperationType, schemaCreateOperation } from '../../backend/types';
+import { type ICreateOperationDTO, OperationType, schemaCreateOperation } from '../../backend/types';
 import { useCreateOperation } from '../../backend/use-create-operation';
 import { describeOperationType, labelOperationType } from '../../labels';
-import { type IOperationSchema } from '../../models/oss';
-import { calculateNewOperationPosition } from '../../models/oss-api';
+import { type LayoutManager } from '../../models/oss-layout-api';
 
 import { TabInputOperation } from './tab-input-operation';
 import { TabSynthesisOperation } from './tab-synthesis-operation';
 
 export interface DlgCreateOperationProps {
-  oss: IOperationSchema;
-  layout: IOssLayout;
+  manager: LayoutManager;
   initialParent: number | null;
   initialInputs: number[];
   defaultX: number;
@@ -38,7 +36,7 @@ export type TabID = (typeof TabID)[keyof typeof TabID];
 export function DlgCreateOperation() {
   const { createOperation } = useCreateOperation();
 
-  const { oss, layout, initialInputs, initialParent, onCreate, defaultX, defaultY } = useDialogsStore(
+  const { manager, initialInputs, initialParent, onCreate, defaultX, defaultY } = useDialogsStore(
     state => state.props as DlgCreateOperationProps
   );
 
@@ -57,19 +55,21 @@ export function DlgCreateOperation() {
       position_y: defaultY,
       arguments: initialInputs,
       create_schema: false,
-      layout: layout
+      layout: manager.layout
     },
     mode: 'onChange'
   });
   const alias = useWatch({ control: methods.control, name: 'item_data.alias' });
   const [activeTab, setActiveTab] = useState(initialInputs.length === 0 ? TabID.INPUT : TabID.SYNTHESIS);
-  const isValid = !!alias && !oss.operations.some(operation => operation.alias === alias);
+  const isValid = !!alias && !manager.oss.operations.some(operation => operation.alias === alias);
 
   function onSubmit(data: ICreateOperationDTO) {
-    const target = calculateNewOperationPosition(oss, data, layout);
+    const target = manager.calculateNewOperationPosition(data);
     data.position_x = target.x;
     data.position_y = target.y;
-    void createOperation({ itemID: oss.id, data: data }).then(response => onCreate?.(response.new_operation.id));
+    void createOperation({ itemID: manager.oss.id, data: data }).then(response =>
+      onCreate?.(response.new_operation.id)
+    );
   }
 
   function handleSelectTab(newTab: TabID, last: TabID) {

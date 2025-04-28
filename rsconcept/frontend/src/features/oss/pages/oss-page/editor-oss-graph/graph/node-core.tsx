@@ -2,8 +2,6 @@
 
 import clsx from 'clsx';
 
-import { useOSSGraphStore } from '@/features/oss/stores/oss-graph';
-
 import { IconConsolidation, IconRSForm } from '@/components/icons';
 import { cn } from '@/components/utils';
 import { Indicator } from '@/components/view';
@@ -12,10 +10,8 @@ import { globalIDs } from '@/utils/constants';
 import { OperationType } from '../../../../backend/types';
 import { type OperationInternalNode } from '../../../../models/oss-layout';
 import { useOperationTooltipStore } from '../../../../stores/operation-tooltip';
+import { useOSSGraphStore } from '../../../../stores/oss-graph';
 import { useOssEdit } from '../../oss-edit-context';
-
-export const OPERATION_NODE_WIDTH = 150;
-export const OPERATION_NODE_HEIGHT = 40;
 
 // characters - threshold for long labels - small font
 const LONG_LABEL_CHARS = 14;

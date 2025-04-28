@@ -2,11 +2,10 @@
 
 import { useRef } from 'react';
 
-import { isOperation } from '@/features/oss/models/oss-api';
-
 import { Dropdown } from '@/components/dropdown';
 
 import { type IBlock, type IOperation, type IOssItem } from '../../../../models/oss';
+import { isOperation } from '../../../../models/oss-api';
 
 import { MenuBlock } from './menu-block';
 import { MenuOperation } from './menu-operation';

@@ -14,13 +14,13 @@ import { SubstitutionValidator } from '../../models/oss-api';
 import { type DlgEditOperationProps } from './dlg-edit-operation';
 
 export function TabSynthesis() {
-  const { oss } = useDialogsStore(state => state.props as DlgEditOperationProps);
+  const { manager } = useDialogsStore(state => state.props as DlgEditOperationProps);
   const { control } = useFormContext<IUpdateOperationDTO>();
   const inputs = useWatch({ control, name: 'arguments' });
   const substitutions = useWatch({ control, name: 'substitutions' });
 
   const schemasIDs = inputs
-    .map(id => oss.operationByID.get(id)!)
+    .map(id => manager.oss.operationByID.get(id)!)
     .map(operation => operation.result)
     .filter(id => id !== null);
   const schemas = useRSForms(schemasIDs);

@@ -10,18 +10,16 @@ import { ModalForm } from '@/components/modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { type ICreateBlockDTO, type IOssLayout, schemaCreateBlock } from '../../backend/types';
+import { type ICreateBlockDTO, schemaCreateBlock } from '../../backend/types';
 import { useCreateBlock } from '../../backend/use-create-block';
-import { type IOperationSchema } from '../../models/oss';
-import { calculateNewBlockPosition } from '../../models/oss-api';
+import { type LayoutManager } from '../../models/oss-layout-api';
 import { BLOCK_NODE_MIN_HEIGHT, BLOCK_NODE_MIN_WIDTH } from '../../pages/oss-page/editor-oss-graph/graph/block-node';
 
 import { TabBlockCard } from './tab-block-card';
 import { TabBlockChildren } from './tab-block-children';
 
 export interface DlgCreateBlockProps {
-  oss: IOperationSchema;
-  layout: IOssLayout;
+  manager: LayoutManager;
   initialInputs: number[];
   defaultX: number;
   defaultY: number;
@@ -37,7 +35,7 @@ export type TabID = (typeof TabID)[keyof typeof TabID];
 export function DlgCreateBlock() {
   const { createBlock } = useCreateBlock();
 
-  const { oss, layout, initialInputs, onCreate, defaultX, defaultY } = useDialogsStore(
+  const { manager, initialInputs, onCreate, defaultX, defaultY } = useDialogsStore(
     state => state.props as DlgCreateBlockProps
   );
 
@@ -55,21 +53,21 @@ export function DlgCreateBlock() {
       height: BLOCK_NODE_MIN_HEIGHT,
       children_blocks: initialInputs.filter(id => id < 0).map(id => -id),
       children_operations: initialInputs.filter(id => id > 0),
-      layout: layout
+      layout: manager.layout
     },
     mode: 'onChange'
   });
   const title = useWatch({ control: methods.control, name: 'item_data.title' });
   const [activeTab, setActiveTab] = useState<TabID>(TabID.CARD);
-  const isValid = !!title && !oss.blocks.some(block => block.title === title);
+  const isValid = !!title && !manager.oss.blocks.some(block => block.title === title);
 
   function onSubmit(data: ICreateBlockDTO) {
-    const rectangle = calculateNewBlockPosition(data, layout);
+    const rectangle = manager.calculateNewBlockPosition(data);
     data.position_x = rectangle.x;
     data.position_y = rectangle.y;
     data.width = rectangle.width;
     data.height = rectangle.height;
-    void createBlock({ itemID: oss.id, data: data }).then(response => onCreate?.(response.new_block.id));
+    void createBlock({ itemID: manager.oss.id, data: data }).then(response => onCreate?.(response.new_block.id));
   }
 
   return (

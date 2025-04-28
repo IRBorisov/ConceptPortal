@@ -3,13 +3,12 @@
 import { NodeResizeControl } from 'reactflow';
 import clsx from 'clsx';
 
-import { useOperationTooltipStore } from '@/features/oss/stores/operation-tooltip';
-import { useOSSGraphStore } from '@/features/oss/stores/oss-graph';
-
 import { IconResize } from '@/components/icons';
 import { globalIDs } from '@/utils/constants';
 
 import { type BlockInternalNode } from '../../../../models/oss-layout';
+import { useOperationTooltipStore } from '../../../../stores/operation-tooltip';
+import { useOSSGraphStore } from '../../../../stores/oss-graph';
 import { useOssEdit } from '../../oss-edit-context';
 import { useOssFlow } from '../oss-flow-context';
 

@@ -1,9 +1,8 @@
 import { type Node, useReactFlow } from 'reactflow';
 
-import { type IOssLayout } from '@/features/oss/backend/types';
-import { type IOperationSchema } from '@/features/oss/models/oss';
-import { type Position2D } from '@/features/oss/models/oss-layout';
-
+import { type IOssLayout } from '../../../backend/types';
+import { type IOperationSchema } from '../../../models/oss';
+import { type Position2D } from '../../../models/oss-layout';
 import { useOssEdit } from '../oss-edit-context';
 
 import { BLOCK_NODE_MIN_HEIGHT, BLOCK_NODE_MIN_WIDTH } from './graph/block-node';

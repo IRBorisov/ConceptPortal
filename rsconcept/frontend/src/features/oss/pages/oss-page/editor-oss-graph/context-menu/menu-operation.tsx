@@ -3,8 +3,6 @@ import { toast } from 'react-toastify';
 
 import { urls, useConceptNavigation } from '@/app';
 import { useLibrary } from '@/features/library/backend/use-library';
-import { useCreateInput } from '@/features/oss/backend/use-create-input';
-import { useExecuteOperation } from '@/features/oss/backend/use-execute-operation';
 
 import { DropdownButton } from '@/components/dropdown';
 import {
@@ -21,8 +19,11 @@ import { errorMsg } from '@/utils/labels';
 import { prepareTooltip } from '@/utils/utils';
 
 import { OperationType } from '../../../../backend/types';
+import { useCreateInput } from '../../../../backend/use-create-input';
+import { useExecuteOperation } from '../../../../backend/use-execute-operation';
 import { useMutatingOss } from '../../../../backend/use-mutating-oss';
 import { type IOperation } from '../../../../models/oss';
+import { LayoutManager } from '../../../../models/oss-layout-api';
 import { useOssEdit } from '../../oss-edit-context';
 import { useGetLayout } from '../use-get-layout';
 
@@ -93,9 +94,8 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
     }
     onHide();
     showEditOperation({
-      oss: schema,
-      target: operation,
-      layout: getLayout()
+      manager: new LayoutManager(schema, getLayout()),
+      target: operation
     });
   }
 

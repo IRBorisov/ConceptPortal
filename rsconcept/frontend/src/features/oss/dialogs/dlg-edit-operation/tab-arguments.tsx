@@ -11,9 +11,9 @@ import { type DlgEditOperationProps } from './dlg-edit-operation';
 
 export function TabArguments() {
   const { control, setValue } = useFormContext<IUpdateOperationDTO>();
-  const { oss, target } = useDialogsStore(state => state.props as DlgEditOperationProps);
-  const potentialCycle = [target.id, ...oss.graph.expandAllOutputs([target.id])];
-  const filtered = oss.operations.filter(item => !potentialCycle.includes(item.id));
+  const { manager, target } = useDialogsStore(state => state.props as DlgEditOperationProps);
+  const potentialCycle = [target.id, ...manager.oss.graph.expandAllOutputs([target.id])];
+  const filtered = manager.oss.operations.filter(item => !potentialCycle.includes(item.id));
 
   function handleChangeArguments(prev: number[], newValue: number[]) {
     setValue('arguments', newValue, { shouldValidate: true });

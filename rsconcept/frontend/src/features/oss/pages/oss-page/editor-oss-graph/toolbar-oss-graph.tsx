@@ -5,8 +5,6 @@ import { useReactFlow } from 'reactflow';
 
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components';
-import { useExecuteOperation } from '@/features/oss/backend/use-execute-operation';
-import { useUpdateLayout } from '@/features/oss/backend/use-update-layout';
 
 import { MiniButton } from '@/components/control';
 import {
@@ -28,7 +26,10 @@ import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/utils';
 
 import { OperationType } from '../../../backend/types';
+import { useExecuteOperation } from '../../../backend/use-execute-operation';
 import { useMutatingOss } from '../../../backend/use-mutating-oss';
+import { useUpdateLayout } from '../../../backend/use-update-layout';
+import { LayoutManager } from '../../../models/oss-layout-api';
 import { useOssEdit } from '../oss-edit-context';
 
 import { VIEW_PADDING } from './oss-flow';
@@ -114,15 +115,13 @@ export function ToolbarOssGraph({
   function handleEditItem() {
     if (selectedOperation) {
       showEditOperation({
-        oss: schema,
-        target: selectedOperation,
-        layout: getLayout()
+        manager: new LayoutManager(schema, getLayout()),
+        target: selectedOperation
       });
     } else if (selectedBlock) {
       showEditBlock({
-        oss: schema,
-        target: selectedBlock,
-        layout: getLayout()
+        manager: new LayoutManager(schema, getLayout()),
+        target: selectedBlock
       });
     }
   }

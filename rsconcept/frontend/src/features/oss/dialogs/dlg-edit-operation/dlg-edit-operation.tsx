@@ -11,18 +11,18 @@ import { ModalForm } from '@/components/modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { type IOssLayout, type IUpdateOperationDTO, OperationType, schemaUpdateOperation } from '../../backend/types';
+import { type IUpdateOperationDTO, OperationType, schemaUpdateOperation } from '../../backend/types';
 import { useUpdateOperation } from '../../backend/use-update-operation';
-import { type IOperation, type IOperationSchema } from '../../models/oss';
+import { type IOperation } from '../../models/oss';
+import { type LayoutManager } from '../../models/oss-layout-api';
 
 import { TabArguments } from './tab-arguments';
 import { TabOperation } from './tab-operation';
 import { TabSynthesis } from './tab-synthesis';
 
 export interface DlgEditOperationProps {
-  oss: IOperationSchema;
+  manager: LayoutManager;
   target: IOperation;
-  layout: IOssLayout;
 }
 
 export const TabID = {
@@ -33,7 +33,7 @@ export const TabID = {
 export type TabID = (typeof TabID)[keyof typeof TabID];
 
 export function DlgEditOperation() {
-  const { oss, target, layout } = useDialogsStore(state => state.props as DlgEditOperationProps);
+  const { manager, target } = useDialogsStore(state => state.props as DlgEditOperationProps);
   const { updateOperation } = useUpdateOperation();
 
   const methods = useForm<IUpdateOperationDTO>({
@@ -51,14 +51,17 @@ export function DlgEditOperation() {
         original: sub.original,
         substitution: sub.substitution
       })),
-      layout: layout
+      layout: manager.layout
     },
     mode: 'onChange'
   });
   const [activeTab, setActiveTab] = useState<TabID>(TabID.CARD);
 
   function onSubmit(data: IUpdateOperationDTO) {
-    return updateOperation({ itemID: oss.id, data });
+    // if (data.item_data.parent !== target.parent) {
+    //   data.layout = updateLayoutOnOperationChange(data.target, data.item_data.parent, data.layout);
+    // }
+    return updateOperation({ itemID: manager.oss.id, data });
   }
 
   return (

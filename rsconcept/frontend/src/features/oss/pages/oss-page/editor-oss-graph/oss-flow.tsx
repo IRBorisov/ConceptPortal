@@ -13,20 +13,19 @@ import {
 } from 'reactflow';
 import clsx from 'clsx';
 
-import { useDeleteBlock } from '@/features/oss/backend/use-delete-block';
-import { useMoveItems } from '@/features/oss/backend/use-move-items';
-import { type IOperationSchema } from '@/features/oss/models/oss';
-
 import { useThrottleCallback } from '@/hooks/use-throttle-callback';
 import { useMainHeight } from '@/stores/app-layout';
 import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER } from '@/utils/constants';
 import { promptText } from '@/utils/labels';
 
+import { useDeleteBlock } from '../../../backend/use-delete-block';
+import { useMoveItems } from '../../../backend/use-move-items';
 import { useMutatingOss } from '../../../backend/use-mutating-oss';
 import { useUpdateLayout } from '../../../backend/use-update-layout';
-import { GRID_SIZE } from '../../../models/oss-api';
+import { type IOperationSchema } from '../../../models/oss';
 import { type OssNode, type Position2D } from '../../../models/oss-layout';
+import { GRID_SIZE, LayoutManager } from '../../../models/oss-layout-api';
 import { useOperationTooltipStore } from '../../../stores/operation-tooltip';
 import { useOSSGraphStore } from '../../../stores/oss-graph';
 import { useOssEdit } from '../oss-edit-context';
@@ -153,10 +152,9 @@ export function OssFlow() {
   function handleCreateOperation() {
     const targetPosition = screenToFlowPosition({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
     showCreateOperation({
-      oss: schema,
+      manager: new LayoutManager(schema, getLayout()),
       defaultX: targetPosition.x,
       defaultY: targetPosition.y,
-      layout: getLayout(),
       initialInputs: selected.filter(id => id > 0),
       initialParent: extractSingleBlock(selected),
       onCreate: () =>
@@ -167,10 +165,9 @@ export function OssFlow() {
   function handleCreateBlock() {
     const targetPosition = screenToFlowPosition({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
     showCreateBlock({
-      oss: schema,
+      manager: new LayoutManager(schema, getLayout()),
       defaultX: targetPosition.x,
       defaultY: targetPosition.y,
-      layout: getLayout(),
       initialInputs: selected,
       onCreate: () =>
         setTimeout(() => fitView({ duration: PARAMETER.zoomDuration, padding: VIEW_PADDING }), PARAMETER.refreshTimeout)
@@ -226,9 +223,8 @@ export function OssFlow() {
       const block = schema.blockByID.get(-Number(node.id));
       if (block) {
         showEditBlock({
-          oss: schema,
-          target: block,
-          layout: getLayout()
+          manager: new LayoutManager(schema, getLayout()),
+          target: block
         });
       }
     } else {

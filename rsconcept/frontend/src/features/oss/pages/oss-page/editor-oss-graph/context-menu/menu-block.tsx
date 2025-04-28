@@ -1,13 +1,13 @@
 'use client';
 
-import { useDeleteBlock } from '@/features/oss/backend/use-delete-block';
-
 import { DropdownButton } from '@/components/dropdown';
 import { IconDestroy, IconEdit2 } from '@/components/icons';
 import { useDialogsStore } from '@/stores/dialogs';
 
+import { useDeleteBlock } from '../../../../backend/use-delete-block';
 import { useMutatingOss } from '../../../../backend/use-mutating-oss';
 import { type IBlock } from '../../../../models/oss';
+import { LayoutManager } from '../../../../models/oss-layout-api';
 import { useOssEdit } from '../../oss-edit-context';
 import { useGetLayout } from '../use-get-layout';
 
@@ -30,9 +30,8 @@ export function MenuBlock({ block, onHide }: MenuBlockProps) {
     }
     onHide();
     showEditBlock({
-      oss: schema,
-      target: block,
-      layout: getLayout()
+      manager: new LayoutManager(schema, getLayout()),
+      target: block
     });
   }
 

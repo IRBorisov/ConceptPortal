@@ -3,12 +3,11 @@
 import { Handle, Position } from 'reactflow';
 import clsx from 'clsx';
 
-import { labelCstTypification } from '@/features/rsform/labels';
-
 import { APP_COLORS } from '@/styling/colors';
 import { globalIDs } from '@/utils/constants';
 
 import { colorBgGraphNode } from '../../../../colors';
+import { labelCstTypification } from '../../../../labels';
 import { type IConstituenta } from '../../../../models/rsform';
 import { useTermGraphStore } from '../../../../stores/term-graph';
 import { useRSEdit } from '../../rsedit-context';

@@ -18,9 +18,9 @@ import { sortItemsForOSS } from '../../models/oss-api';
 import { type DlgCreateOperationProps } from './dlg-create-operation';
 
 export function TabInputOperation() {
-  const { oss } = useDialogsStore(state => state.props as DlgCreateOperationProps);
+  const { manager } = useDialogsStore(state => state.props as DlgCreateOperationProps);
   const { items: libraryItems } = useLibrary();
-  const sortedItems = sortItemsForOSS(oss, libraryItems);
+  const sortedItems = sortItemsForOSS(manager.oss, libraryItems);
 
   const {
     register,
@@ -31,7 +31,7 @@ export function TabInputOperation() {
   const createSchema = useWatch({ control, name: 'create_schema' });
 
   function baseFilter(item: ILibraryItem) {
-    return !oss.schemas.includes(item.id);
+    return !manager.oss.schemas.includes(item.id);
   }
 
   function handleChangeCreateSchema(value: boolean) {
@@ -75,8 +75,8 @@ export function TabInputOperation() {
             control={control}
             render={({ field }) => (
               <SelectParent
-                items={oss.blocks}
-                value={field.value ? oss.blockByID.get(field.value) ?? null : null}
+                items={manager.oss.blocks}
+                value={field.value ? manager.oss.blockByID.get(field.value) ?? null : null}
                 placeholder='Блок содержания'
                 onChange={value => field.onChange(value ? value.id : null)}
               />
