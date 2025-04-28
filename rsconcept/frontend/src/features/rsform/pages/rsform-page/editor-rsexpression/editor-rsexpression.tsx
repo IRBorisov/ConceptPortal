@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { type ReactCodeMirrorRef } from '@uiw/react-codemirror';
 
+import { useResetOnChange } from '@/hooks/use-reset-on-change';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { errorMsg } from '@/utils/labels';
@@ -69,6 +70,11 @@ export function EditorRSExpression({
 
   const { checkConstituenta: checkInternal, isPending } = useCheckConstituenta();
 
+  useResetOnChange([activeCst, toggleReset], () => {
+    setIsModified(false);
+    setParseData(null);
+  });
+
   function checkConstituenta(
     expression: string,
     activeCst: IConstituenta,
@@ -84,11 +90,6 @@ export function EditorRSExpression({
       onSuccess?.(parse);
     });
   }
-
-  useEffect(() => {
-    setIsModified(false);
-    setParseData(null);
-  }, [activeCst, toggleReset]);
 
   function handleChange(newValue: string) {
     onChange(newValue);

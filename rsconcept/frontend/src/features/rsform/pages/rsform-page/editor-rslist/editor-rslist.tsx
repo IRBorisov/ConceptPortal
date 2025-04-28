@@ -126,7 +126,7 @@ export function EditorRSList() {
   const tableHeight = useFitHeight('4rem + 5px');
 
   return (
-    <div tabIndex={-1} onKeyDown={handleKeyDown} className='relative cc-fade-in pt-8'>
+    <div tabIndex={-1} onKeyDown={handleKeyDown} className='relative pt-8'>
       {isContentEditable ? (
         <ToolbarRSList className='cc-tab-tools right-4 md:right-1/2 -translate-x-1/2 md:translate-x-0 cc-animate-position' />
       ) : null}

@@ -55,7 +55,7 @@ export function FormSignup() {
 
   return (
     <form
-      className='cc-column cc-fade-in mx-auto w-144 px-6 py-3'
+      className='cc-column mx-auto w-144 px-6 py-3'
       onSubmit={event => void handleSubmit(onSubmit)(event)}
       onChange={resetErrors}
     >

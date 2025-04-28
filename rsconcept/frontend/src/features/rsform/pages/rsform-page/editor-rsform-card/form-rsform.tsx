@@ -1,7 +1,7 @@
 'use no memo'; // TODO: remove when react hook forms are compliant with react compiler
 'use client';
 
-import { useEffect } from 'react';
+import { useRef } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -41,12 +41,23 @@ export function FormRSForm() {
     reset,
     formState: { isDirty, errors }
   } = useForm<IUpdateLibraryItemDTO>({
-    resolver: zodResolver(schemaUpdateLibraryItem)
+    resolver: zodResolver(schemaUpdateLibraryItem),
+    defaultValues: {
+      id: schema.id,
+      item_type: LibraryItemType.RSFORM,
+      title: schema.title,
+      alias: schema.alias,
+      description: schema.description,
+      visible: schema.visible,
+      read_only: schema.read_only
+    }
   });
   const visible = useWatch({ control, name: 'visible' });
   const readOnly = useWatch({ control, name: 'read_only' });
 
-  useEffect(() => {
+  const prevSchema = useRef(schema);
+  if (prevSchema.current !== schema) {
+    prevSchema.current = schema;
     reset({
       id: schema.id,
       item_type: LibraryItemType.RSFORM,
@@ -56,11 +67,13 @@ export function FormRSForm() {
       visible: schema.visible,
       read_only: schema.read_only
     });
-  }, [schema, reset]);
+  }
 
-  useEffect(() => {
+  const prevDirty = useRef(isDirty);
+  if (prevDirty.current !== isDirty) {
+    prevDirty.current = isDirty;
     setIsModified(isDirty);
-  }, [isDirty, setIsModified]);
+  }
 
   function handleSelectVersion(version: CurrentVersion) {
     router.push({ path: urls.schema(schema.id, version === 'latest' ? undefined : version) });

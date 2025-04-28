@@ -1,12 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { urls, useConceptNavigation } from '@/app';
 import { useAuthSuspense } from '@/features/auth';
 import { useLibrarySearchStore } from '@/features/library';
 import { useDeleteItem } from '@/features/library/backend/use-delete-item';
 import { useRoleStore, UserRole } from '@/features/users';
+import { useAdjustRole } from '@/features/users/stores/use-adjust-role';
 
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
@@ -39,7 +40,6 @@ export const RSEditState = ({
   const router = useConceptNavigation();
   const adminMode = usePreferencesStore(state => state.adminMode);
   const role = useRoleStore(state => state.role);
-  const adjustRole = useRoleStore(state => state.adjustRole);
   const setSearchLocation = useLibrarySearchStore(state => state.setLocation);
   const searchLocation = useLibrarySearchStore(state => state.location);
 
@@ -52,6 +52,7 @@ export const RSEditState = ({
   const isMutable = role > UserRole.READER && !schema.read_only;
   const isContentEditable = isMutable && !isArchive;
   const isAttachedToOSS = schema.oss.length > 0;
+  const isEditor = !!user.id && schema.editors.includes(user.id);
 
   const [selected, setSelected] = useState<number[]>([]);
   const canDeleteSelected = selected.length > 0 && selected.every(id => !schema.cstByID.get(id)?.is_inherited);
@@ -67,16 +68,12 @@ export const RSEditState = ({
   const showDeleteCst = useDialogsStore(state => state.showDeleteCst);
   const showCstTemplate = useDialogsStore(state => state.showCstTemplate);
 
-  useEffect(
-    () =>
-      adjustRole({
-        isOwner: isOwned,
-        isEditor: !!user.id && schema.editors.includes(user.id),
-        isStaff: user.is_staff,
-        adminMode: adminMode
-      }),
-    [schema, adjustRole, isOwned, user, adminMode]
-  );
+  useAdjustRole({
+    isOwner: isOwned,
+    isEditor: isEditor,
+    isStaff: user.is_staff,
+    adminMode: adminMode
+  });
 
   function handleSetFocus(newValue: IConstituenta | null) {
     setFocusCst(newValue);

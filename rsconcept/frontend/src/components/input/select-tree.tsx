@@ -44,11 +44,12 @@ export function SelectTree<ItemType>({
   ...restProps
 }: SelectTreeProps<ItemType>) {
   const foldable = new Set(items.filter(item => getParent(item) !== item).map(item => getParent(item)));
-  const [folded, setFolded] = useState<ItemType[]>(items);
+  const defaultFolded = items.filter(item => getParent(value) !== item && getParent(getParent(value)) !== item);
+  const [folded, setFolded] = useState<ItemType[]>(defaultFolded);
 
   useEffect(() => {
-    setFolded(items.filter(item => getParent(value) !== item && getParent(getParent(value)) !== item));
-  }, [value, getParent, items]);
+    setFolded(defaultFolded);
+  }, [defaultFolded]);
 
   function onFoldItem(target: ItemType) {
     setFolded(prev =>

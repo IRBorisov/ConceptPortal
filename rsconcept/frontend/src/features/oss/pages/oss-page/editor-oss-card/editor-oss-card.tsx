@@ -43,11 +43,7 @@ export function EditorOssCard() {
       />
       <div
         onKeyDown={handleInput}
-        className={clsx(
-          'cc-fade-in',
-          'md:max-w-fit max-w-128 min-w-fit',
-          'flex flex-row flex-wrap pt-8 px-6 justify-center'
-        )}
+        className={clsx('md:max-w-fit max-w-128 min-w-fit', 'flex flex-row flex-wrap pt-8 px-6 justify-center')}
       >
         <div className='cc-column px-3'>
           <FormOSS />

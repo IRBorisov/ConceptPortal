@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import {
   type Edge,
   MarkerType,
@@ -121,17 +121,19 @@ export function TGFlow() {
     }, PARAMETER.minimalTimeout);
   }, [schema, filteredGraph, setNodes, setEdges, filter.noText, fitView, viewportInitialized, focusCst]);
 
-  useEffect(() => {
-    if (!viewportInitialized) {
-      return;
-    }
+  const prevSelected = useRef<number[]>([]);
+  if (
+    viewportInitialized &&
+    (prevSelected.current.length !== selected.length || prevSelected.current.some((id, i) => id !== selected[i]))
+  ) {
+    prevSelected.current = selected;
     setNodes(prev =>
       prev.map(node => ({
         ...node,
         selected: selected.includes(Number(node.id))
       }))
     );
-  }, [selected, setNodes, viewportInitialized]);
+  }
 
   function handleSetSelected(newSelection: number[]) {
     setSelected(newSelection);

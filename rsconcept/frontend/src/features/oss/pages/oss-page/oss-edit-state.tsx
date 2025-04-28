@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { urls, useConceptNavigation } from '@/app';
 import { useAuthSuspense } from '@/features/auth';
@@ -8,6 +8,7 @@ import { useLibrarySearchStore } from '@/features/library';
 import { useDeleteItem } from '@/features/library/backend/use-delete-item';
 import { RSTabID } from '@/features/rsform/pages/rsform-page/rsedit-context';
 import { useRoleStore, UserRole } from '@/features/users';
+import { useAdjustRole } from '@/features/users/stores/use-adjust-role';
 
 import { usePreferencesStore } from '@/stores/preferences';
 import { promptText } from '@/utils/labels';
@@ -27,7 +28,6 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
   const adminMode = usePreferencesStore(state => state.adminMode);
 
   const role = useRoleStore(state => state.role);
-  const adjustRole = useRoleStore(state => state.adjustRole);
   const setSearchLocation = useLibrarySearchStore(state => state.setLocation);
   const searchLocation = useLibrarySearchStore(state => state.location);
 
@@ -36,21 +36,18 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
 
   const isOwned = !!user.id && user.id === schema.owner;
   const isMutable = role > UserRole.READER && !schema.read_only;
+  const isEditor = !!user.id && schema.editors.includes(user.id);
 
   const [selected, setSelected] = useState<number[]>([]);
 
   const { deleteItem } = useDeleteItem();
 
-  useEffect(
-    () =>
-      adjustRole({
-        isOwner: isOwned,
-        isEditor: !!user.id && schema.editors.includes(user.id),
-        isStaff: user.is_staff,
-        adminMode: adminMode
-      }),
-    [schema, adjustRole, isOwned, user, adminMode]
-  );
+  useAdjustRole({
+    isOwner: isOwned,
+    isEditor: isEditor,
+    isStaff: user.is_staff,
+    adminMode: adminMode
+  });
 
   function navigateTab(tab: OssTabID) {
     const url = urls.oss_props({

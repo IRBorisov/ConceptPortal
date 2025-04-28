@@ -31,10 +31,7 @@ export function EditorRSFormCard() {
   }
 
   return (
-    <div
-      onKeyDown={handleInput}
-      className='relative cc-fade-in md:w-fit md:max-w-fit max-w-128 flex flex-row flex-wrap px-6 pt-8'
-    >
+    <div onKeyDown={handleInput} className='relative md:w-fit md:max-w-fit max-w-128 flex flex-row flex-wrap px-6 pt-8'>
       <ToolbarItemCard
         className='cc-tab-tools'
         onSubmit={initiateSubmit}

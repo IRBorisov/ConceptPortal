@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { ChevronDownIcon } from 'lucide-react';
 
 import { IconRemove } from '../icons';
@@ -43,11 +43,12 @@ export function ComboMulti<Option>({
   const [popoverWidth, setPopoverWidth] = useState<number | undefined>(undefined);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
-  useEffect(() => {
-    if (triggerRef.current) {
+  function handleOpenChange(isOpen: boolean) {
+    setOpen(isOpen);
+    if (isOpen && triggerRef.current) {
       setPopoverWidth(triggerRef.current.offsetWidth);
     }
-  }, [open]);
+  }
 
   function handleAddValue(newValue: Option) {
     if (value.includes(newValue)) {
@@ -70,7 +71,7 @@ export function ComboMulti<Option>({
   }
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>
         <button
           id={id}

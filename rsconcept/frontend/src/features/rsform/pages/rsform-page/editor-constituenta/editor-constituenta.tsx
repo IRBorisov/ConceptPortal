@@ -75,7 +75,6 @@ export function EditorConstituenta() {
       tabIndex={-1}
       className={clsx(
         'relative ',
-        'cc-fade-in',
         'min-h-80 max-w-[calc(min(100vw,80rem))] mx-auto',
         'flex pt-8',
         'overflow-y-auto overflow-x-clip',

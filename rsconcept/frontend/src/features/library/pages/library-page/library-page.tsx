@@ -54,7 +54,7 @@ export function LibraryPage() {
   return (
     <>
       <ToolbarSearch className='top-0 h-9' total={libraryItems.length} filtered={filtered.length} />
-      <div className='relative cc-fade-in flex'>
+      <div className='relative flex'>
         <MiniButton
           title='Выгрузить в формате CSV'
           className='absolute z-tooltip -top-8 right-6 hidden sm:block'

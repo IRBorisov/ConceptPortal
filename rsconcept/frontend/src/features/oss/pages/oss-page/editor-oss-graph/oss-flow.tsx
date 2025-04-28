@@ -411,7 +411,7 @@ export function OssFlow() {
       <ContextMenu isOpen={isContextMenuOpen} onHide={() => setIsContextMenuOpen(false)} {...menuProps} />
 
       <div
-        className={clsx('cc-fade-in relative w-[100vw] cc-mask-sides', !containMovement && 'cursor-relocate')}
+        className={clsx('relative w-[100vw] cc-mask-sides', !containMovement && 'cursor-relocate')}
         style={{ height: mainHeight, fontFamily: 'Rubik' }}
       >
         <ReactFlow

@@ -1,7 +1,7 @@
 'use no memo'; // TODO: remove when react hook forms are compliant with react compiler
 'use client';
 
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -44,19 +44,30 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
   const { isModified, setIsModified } = useModificationStore();
   const isProcessing = useMutatingRSForm();
 
+  const { updateConstituenta: cstUpdate } = useUpdateConstituenta();
+  const showTypification = useDialogsStore(state => state.showShowTypeGraph);
+  const showEditTerm = useDialogsStore(state => state.showEditWordForms);
+  const showRenameCst = useDialogsStore(state => state.showRenameCst);
+
   const {
     register,
     handleSubmit,
     control,
     reset,
     formState: { isDirty }
-  } = useForm<IUpdateConstituentaDTO>({ resolver: zodResolver(schemaUpdateConstituenta) });
-
-  const { updateConstituenta: cstUpdate } = useUpdateConstituenta();
-  const showTypification = useDialogsStore(state => state.showShowTypeGraph);
-  const showEditTerm = useDialogsStore(state => state.showEditWordForms);
-  const showRenameCst = useDialogsStore(state => state.showRenameCst);
-
+  } = useForm<IUpdateConstituentaDTO>({
+    resolver: zodResolver(schemaUpdateConstituenta),
+    defaultValues: {
+      target: activeCst.id,
+      item_data: {
+        convention: activeCst.convention,
+        term_raw: activeCst.term_raw,
+        definition_raw: activeCst.definition_raw,
+        definition_formal: activeCst.definition_formal
+      }
+    }
+  });
+  const [forceComment, setForceComment] = useState(false);
   const [localParse, setLocalParse] = useState<IExpressionParseDTO | null>(null);
 
   const typification = useMemo(
@@ -80,12 +91,21 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
     [activeCst, localParse]
   );
 
-  const [forceComment, setForceComment] = useState(false);
   const isBasic = isBasicConcept(activeCst.cst_type);
   const isElementary = isBaseSet(activeCst.cst_type);
   const showConvention = !!activeCst.convention || forceComment || isBasic;
 
-  useEffect(() => {
+  const prevActiveCstID = useRef(activeCst.id);
+  const prevToggleReset = useRef(toggleReset);
+  const prevSchema = useRef(schema);
+  if (
+    prevActiveCstID.current !== activeCst.id ||
+    prevToggleReset.current !== toggleReset ||
+    prevSchema.current !== schema
+  ) {
+    prevActiveCstID.current = activeCst.id;
+    prevToggleReset.current = toggleReset;
+    prevSchema.current = schema;
     reset({
       target: activeCst.id,
       item_data: {
@@ -97,15 +117,19 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
     });
     setForceComment(false);
     setLocalParse(null);
-  }, [activeCst, schema, toggleReset, reset]);
+  }
 
-  useLayoutEffect(() => {
+  const prevDirty = useRef(isDirty);
+  if (prevDirty.current !== isDirty) {
+    prevDirty.current = isDirty;
     setIsModified(isDirty);
-    return () => setIsModified(false);
-  }, [isDirty, activeCst, setIsModified]);
+  }
 
   function onSubmit(data: IUpdateConstituentaDTO) {
-    return cstUpdate({ itemID: schema.id, data }).then(() => reset({ ...data }));
+    return cstUpdate({ itemID: schema.id, data }).then(() => {
+      setIsModified(false);
+      reset({ ...data });
+    });
   }
 
   function handleTypeGraph(event: React.MouseEvent<Element>) {

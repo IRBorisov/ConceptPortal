@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useRef } from 'react';
 
 import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/data-table';
 import { NoData, TextContent } from '@/components/view';
@@ -26,11 +26,10 @@ export function TableSideConstituents({ autoScroll = true, maxHeight }: TableSid
   const { activeCst, navigateCst } = useRSEdit();
   const items = useFilteredItems();
 
-  useEffect(() => {
-    if (!activeCst) {
-      return;
-    }
-    if (autoScroll) {
+  const prevActiveCstID = useRef<number | null>(null);
+  if (autoScroll && prevActiveCstID.current !== activeCst?.id) {
+    prevActiveCstID.current = activeCst?.id ?? null;
+    if (!!activeCst) {
       setTimeout(() => {
         const element = document.getElementById(`${prefixes.cst_side_table}${activeCst.id}`);
         if (element) {
@@ -42,7 +41,7 @@ export function TableSideConstituents({ autoScroll = true, maxHeight }: TableSid
         }
       }, PARAMETER.refreshTimeout);
     }
-  }, [activeCst, autoScroll]);
+  }
 
   const columns = [
     columnHelper.accessor('alias', {

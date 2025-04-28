@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useParams } from 'react-router';
 import { z } from 'zod';
@@ -12,6 +11,7 @@ import { Divider } from '@/components/container';
 import { TextURL } from '@/components/control';
 import { type ErrorData } from '@/components/info-error';
 import { useQueryStrings } from '@/hooks/use-query-strings';
+import { useResetModification } from '@/hooks/use-reset-modification';
 import { useModificationStore } from '@/stores/modification';
 
 import { ConstituentaTooltip } from '../../components/constituenta-tooltip';
@@ -34,6 +34,8 @@ const paramsSchema = z.strictObject({
 });
 
 export function RSFormPage() {
+  useResetModification();
+
   const router = useConceptNavigation();
   const params = useParams();
   const query = useQueryStrings();
@@ -45,10 +47,8 @@ export function RSFormPage() {
     activeID: query.get('active')
   });
 
-  const { isModified, setIsModified } = useModificationStore();
+  const { isModified } = useModificationStore();
   useBlockNavigation(isModified);
-
-  useEffect(() => setIsModified(false), [setIsModified]);
 
   if (!urlData.id) {
     router.replace({ path: urls.page404, force: true });

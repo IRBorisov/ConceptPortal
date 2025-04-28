@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { urls, useConceptNavigation } from '@/app';
 
@@ -13,13 +13,26 @@ import { useQueryStrings } from '@/hooks/use-query-strings';
 
 import { useResetPassword } from '../backend/use-reset-password';
 
+function useTokenValidation(token: string, isPending: boolean) {
+  const { validateToken } = useResetPassword();
+  const [isTokenValidating, setIsTokenValidating] = useState(false);
+
+  const validate = async () => {
+    if (!isTokenValidating && !isPending) {
+      await validateToken({ token });
+      setIsTokenValidating(true);
+    }
+  };
+  return { isTokenValidating, validate };
+}
+
 export function Component() {
   const router = useConceptNavigation();
   const token = useQueryStrings().get('token') ?? '';
 
-  const { validateToken, resetPassword, isPending, error: serverError } = useResetPassword();
+  const { resetPassword, isPending, error: serverError } = useResetPassword();
+  const { isTokenValidating, validate } = useTokenValidation(token, isPending);
 
-  const [isTokenValidating, setIsTokenValidating] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [newPasswordRepeat, setNewPasswordRepeat] = useState('');
 
@@ -38,12 +51,9 @@ export function Component() {
     }
   }
 
-  useEffect(() => {
-    if (!isTokenValidating && !isPending) {
-      void validateToken({ token: token });
-      setIsTokenValidating(true);
-    }
-  }, [token, validateToken, isTokenValidating, isPending]);
+  if (!isTokenValidating && !isPending) {
+    void validate();
+  }
 
   if (isPending) {
     return <Loader />;
