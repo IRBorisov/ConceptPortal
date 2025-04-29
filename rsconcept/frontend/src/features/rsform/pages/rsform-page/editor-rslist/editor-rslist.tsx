@@ -138,7 +138,7 @@ export function EditorRSList() {
           <SearchBar
             id='constituents_search'
             noBorder
-            className='w-32'
+            className='max-w-50'
             query={filterText}
             onChangeQuery={setFilterText}
           />

@@ -47,7 +47,7 @@ export function SearchBar({
         id={id}
         type='search'
         className={clsx(
-          'min-w-0 py-2',
+          'min-w-0 py-2 w-full pr-2',
           'leading-tight truncate hover:text-clip',
           'bg-transparent',
           !noIcon && 'pl-8',

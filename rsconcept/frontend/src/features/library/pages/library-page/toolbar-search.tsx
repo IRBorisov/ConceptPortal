@@ -128,7 +128,7 @@ export function ToolbarSearch({ className, total, filtered }: ToolbarSearchProps
         />
       </div>
 
-      <div className='flex h-full grow pr-4'>
+      <div className='flex h-full grow pr-4 sm:pr-12'>
         <SearchBar
           id='library_search'
           placeholder='Поиск'
