@@ -42,7 +42,7 @@ export function NodeCore({ node }: NodeCoreProps) {
       data-tooltip-hidden={node.dragging}
       onMouseEnter={() => setHover(node.data.operation)}
     >
-      <div className='absolute z-pop top-0 right-0 flex flex-col gap-1 p-[2px]'>
+      <div className='absolute z-pop top-0 right-0 flex flex-col gap-[4px] p-[2px]'>
         <Indicator
           noPadding
           title={hasFile ? 'Связанная КС' : 'Нет связанной КС'}
@@ -59,7 +59,7 @@ export function NodeCore({ node }: NodeCoreProps) {
       {showCoordinates ? (
         <div
           className={clsx(
-            'absolute top-full mt-1 right-[1px]',
+            'absolute top-full mt-[4px] right-[1px]',
             'text-[7px]/[8px] font-math',
             'text-muted-foreground hover:text-foreground',
             node.selected && 'translate-y-[6px]'

@@ -1,7 +1,9 @@
 'use client';
 
 import { useEffect } from 'react';
-import { type Edge, ReactFlow, useEdgesState, useNodesState } from 'reactflow';
+import { type Edge, useEdgesState, useNodesState } from 'reactflow';
+
+import { DiagramFlow } from '@/components/flow/diagram-flow';
 
 import { type TypificationGraph } from '../../models/typification-graph';
 
@@ -9,8 +11,15 @@ import { TMGraphEdgeTypes } from './graph/mgraph-edge-types';
 import { applyLayout } from './graph/mgraph-layout';
 import { TMGraphNodeTypes } from './graph/mgraph-node-types';
 
-const ZOOM_MAX = 2;
-const ZOOM_MIN = 0.5;
+const flowOptions = {
+  fitView: true,
+  fitViewOptions: { padding: 0.25 },
+  edgesFocusable: false,
+  nodesFocusable: false,
+  nodesConnectable: false,
+  maxZoom: 2,
+  minZoom: 0.5
+} as const;
 
 interface MGraphFlowProps {
   data: TypificationGraph;
@@ -57,19 +66,14 @@ export function MGraphFlow({ data }: MGraphFlowProps) {
   }, [data, setNodes, setEdges]);
 
   return (
-    <ReactFlow
+    <DiagramFlow
+      {...flowOptions}
+      className='h-full w-full'
       nodes={nodes}
       edges={edges}
-      edgesFocusable={false}
-      nodesFocusable={false}
       onNodesChange={onNodesChange}
       nodeTypes={TMGraphNodeTypes}
       edgeTypes={TMGraphEdgeTypes}
-      fitView
-      maxZoom={ZOOM_MAX}
-      minZoom={ZOOM_MIN}
-      nodesConnectable={false}
-      onContextMenu={event => event.preventDefault()}
     />
   );
 }

@@ -1,18 +1,9 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import {
-  type Edge,
-  MarkerType,
-  type Node,
-  ReactFlow,
-  useEdgesState,
-  useNodesState,
-  useOnSelectionChange,
-  useReactFlow,
-  useStoreApi
-} from 'reactflow';
+import { type Edge, MarkerType, type Node, useEdgesState, useNodesState, useOnSelectionChange } from 'reactflow';
 
+import { DiagramFlow, useReactFlow, useStoreApi } from '@/components/flow/diagram-flow';
 import { useMainHeight } from '@/stores/app-layout';
 import { PARAMETER } from '@/utils/constants';
 
@@ -32,9 +23,15 @@ import { ToolbarTermGraph } from './toolbar-term-graph';
 import { useFilteredGraph } from './use-filtered-graph';
 import { ViewHidden } from './view-hidden';
 
-const ZOOM_MAX = 3;
-const ZOOM_MIN = 0.25;
-export const VIEW_PADDING = 0.3;
+export const flowOptions = {
+  fitView: true,
+  fitViewOptions: { padding: 0.3, duration: PARAMETER.zoomDuration },
+  edgesFocusable: false,
+  nodesFocusable: false,
+  nodesConnectable: false,
+  maxZoom: 3,
+  minZoom: 0.25
+} as const;
 
 export function TGFlow() {
   const mainHeight = useMainHeight();
@@ -116,9 +113,7 @@ export function TGFlow() {
     setNodes(newNodes);
     setEdges(newEdges);
 
-    setTimeout(() => {
-      fitView({ duration: PARAMETER.zoomDuration, padding: VIEW_PADDING });
-    }, PARAMETER.minimalTimeout);
+    setTimeout(() => fitView(flowOptions.fitViewOptions), PARAMETER.minimalTimeout);
   }, [schema, filteredGraph, setNodes, setEdges, filter.noText, fitView, viewportInitialized, focusCst]);
 
   const prevSelected = useRef<number[]>([]);
@@ -190,22 +185,16 @@ export function TGFlow() {
         <ViewHidden items={hidden} />
       </div>
 
-      <div className='relative outline-hidden w-[100dvw] cc-mask-sides' style={{ height: mainHeight }}>
-        <ReactFlow
-          nodes={nodes}
-          onNodesChange={onNodesChange}
-          edges={edges}
-          fitView
-          edgesFocusable={false}
-          nodesFocusable={false}
-          nodesConnectable={false}
-          nodeTypes={TGNodeTypes}
-          edgeTypes={TGEdgeTypes}
-          maxZoom={ZOOM_MAX}
-          minZoom={ZOOM_MIN}
-          onContextMenu={event => event.preventDefault()}
-        />
-      </div>
+      <DiagramFlow
+        {...flowOptions}
+        height={mainHeight}
+        nodes={nodes}
+        onNodesChange={onNodesChange}
+        edges={edges}
+        nodeTypes={TGNodeTypes}
+        edgeTypes={TGEdgeTypes}
+        onContextMenu={event => event.preventDefault()}
+      />
     </div>
   );
 }

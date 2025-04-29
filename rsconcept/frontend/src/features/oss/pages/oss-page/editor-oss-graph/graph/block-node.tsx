@@ -28,12 +28,12 @@ export function BlockNode(node: BlockInternalNode) {
   return (
     <>
       <NodeResizeControl minWidth={BLOCK_NODE_MIN_WIDTH} minHeight={BLOCK_NODE_MIN_HEIGHT}>
-        <IconResize size={8} className='absolute bottom-[2px] right-[2px] cc-graph-interactive' />
+        <IconResize size={12} className='absolute bottom-[3px] right-[3px] cc-graph-interactive' />
       </NodeResizeControl>
       {showCoordinates ? (
         <div
           className={clsx(
-            'absolute top-full mt-1 right-[1px]',
+            'absolute top-full mt-[4px] right-[1px]',
             'text-[7px]/[8px] font-math',
             'text-muted-foreground hover:text-foreground'
           )}
@@ -43,24 +43,24 @@ export function BlockNode(node: BlockInternalNode) {
       ) : null}
       <div
         className={clsx(
-          'cc-node-block h-full w-full',
+          'cc-node-block h-full w-full cursor-pointer',
           isDragging && isParent && dropTarget !== node.data.block.id && 'border-destructive',
           ((isParent && !isDragging) || dropTarget === node.data.block.id) && 'border-primary',
           isChild && 'border-accent-orange'
         )}
       >
-        <div className='absolute top-0 left-0 w-full h-2 cc-graph-interactive cursor-pointer' />
-        <div className='absolute top-0 right-0 h-full w-2 cc-graph-interactive cursor-pointer' />
-        <div className='absolute bottom-0 right-0 w-full h-2 cc-graph-interactive cursor-pointer' />
-        <div className='absolute bottom-0 left-0 h-full w-2 cc-graph-interactive cursor-pointer' />
+        <div className='absolute -top-[8px] left-0 w-full h-[16px] cc-graph-interactive' />
+        <div className='absolute top-0 -right-[8px] h-full w-[16px] cc-graph-interactive' />
+        <div className='absolute -bottom-[8px] right-0 w-full h-[16px] cc-graph-interactive' />
+        <div className='absolute bottom-0 -left-[8px] h-full w-[16px] cc-graph-interactive' />
 
         <div
           className={clsx(
             'w-fit mx-auto -translate-y-1/2 -mt-[8px]',
-            'px-2',
+            'px-[8px]',
             'bg-background rounded-lg',
             'text-[18px]/[20px] line-clamp-2 text-center text-ellipsis',
-            'cc-graph-interactive cursor-pointer'
+            'cc-graph-interactive'
           )}
           data-tooltip-id={globalIDs.operation_tooltip}
           data-tooltip-hidden={node.dragging}

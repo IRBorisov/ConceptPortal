@@ -1,11 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { Background, ReactFlow, useReactFlow, useStoreApi } from 'reactflow';
 import clsx from 'clsx';
 
+import { DiagramFlow, useReactFlow, useStoreApi } from '@/components/flow/diagram-flow';
 import { useMainHeight } from '@/stores/app-layout';
 import { useDialogsStore } from '@/stores/dialogs';
+import { PARAMETER } from '@/utils/constants';
 import { promptText } from '@/utils/labels';
 
 import { useDeleteBlock } from '../../../backend/use-delete-block';
@@ -25,8 +26,18 @@ import { ToolbarOssGraph } from './toolbar-oss-graph';
 import { useDragging } from './use-dragging';
 import { useGetLayout } from './use-get-layout';
 
-const ZOOM_MAX = 2;
-const ZOOM_MIN = 0.5;
+export const flowOptions = {
+  fitView: true,
+  fitViewOptions: { padding: 0.3, duration: PARAMETER.zoomDuration },
+  edgesFocusable: false,
+  nodesFocusable: false,
+  nodesConnectable: false,
+  maxZoom: 2,
+  minZoom: 0.5,
+  gridSize: GRID_SIZE,
+  snapToGrid: true,
+  snapGrid: [GRID_SIZE, GRID_SIZE] as [number, number]
+} as const;
 
 export function OssFlow() {
   const mainHeight = useMainHeight();
@@ -46,7 +57,6 @@ export function OssFlow() {
   const { deleteBlock } = useDeleteBlock();
 
   const [mouseCoords, setMouseCoords] = useState<Position2D>({ x: 0, y: 0 });
-  const [spacePressed, setSpacePressed] = useState(false);
 
   const showCreateOperation = useDialogsStore(state => state.showCreateOperation);
   const showCreateBlock = useDialogsStore(state => state.showCreateBlock);
@@ -131,12 +141,6 @@ export function OssFlow() {
   }
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
-    if (event.code === 'Space') {
-      event.preventDefault();
-      event.stopPropagation();
-      setSpacePressed(true);
-      return;
-    }
     if (isProcessing) {
       return;
     }
@@ -173,25 +177,13 @@ export function OssFlow() {
     }
   }
 
-  function handleKeyUp(event: React.KeyboardEvent<HTMLDivElement>) {
-    if (event.code === 'Space') {
-      setSpacePressed(false);
-    }
-  }
-
   function handleMouseMove(event: React.MouseEvent<HTMLDivElement>) {
     const targetPosition = screenToFlowPosition({ x: event.clientX, y: event.clientY });
     setMouseCoords(targetPosition);
   }
 
   return (
-    <div
-      tabIndex={-1}
-      className='relative'
-      onKeyDown={handleKeyDown}
-      onKeyUp={handleKeyUp}
-      onMouseMove={showCoordinates ? handleMouseMove : undefined}
-    >
+    <div tabIndex={-1} className='relative' onMouseMove={showCoordinates ? handleMouseMove : undefined}>
       {showCoordinates ? <CoordinateDisplay mouseCoords={mouseCoords} className='absolute top-1 right-2' /> : null}
       <ToolbarOssGraph
         className='absolute z-pop top-8 right-1/2 translate-x-1/2'
@@ -203,43 +195,25 @@ export function OssFlow() {
 
       <ContextMenu isOpen={isContextMenuOpen} onHide={hideContextMenu} {...menuProps} />
 
-      <div
-        className={clsx(
-          'relative w-[100vw] cc-mask-sides',
-          spacePressed ? 'space-mode' : '',
-          !containMovement && 'cursor-relocate'
-        )}
-        style={{ height: mainHeight, fontFamily: 'Rubik' }}
-      >
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={spacePressed ? undefined : onNodesChange}
-          onEdgesChange={spacePressed ? undefined : onEdgesChange}
-          edgesFocusable={false}
-          nodesFocusable={false}
-          fitView
-          nodeTypes={OssNodeTypes}
-          maxZoom={ZOOM_MAX}
-          minZoom={ZOOM_MIN}
-          nodesConnectable={false}
-          snapToGrid={true}
-          snapGrid={[GRID_SIZE, GRID_SIZE]}
-          onClick={hideContextMenu}
-          onNodeDoubleClick={spacePressed ? undefined : handleNodeDoubleClick}
-          onNodeContextMenu={handleContextMenu}
-          onContextMenu={event => {
-            event.preventDefault();
-            hideContextMenu();
-          }}
-          nodesDraggable={!spacePressed}
-          onNodeDragStart={spacePressed ? undefined : handleDragStart}
-          onNodeDrag={spacePressed ? undefined : handleDrag}
-          onNodeDragStop={spacePressed ? undefined : handleDragStop}
-        >
-          {showGrid ? <Background gap={GRID_SIZE} /> : null}
-        </ReactFlow>
-      </div>
+      <DiagramFlow
+        {...flowOptions}
+        className={clsx(!containMovement && 'cursor-relocate')}
+        height={mainHeight}
+        onKeyDown={handleKeyDown}
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        nodeTypes={OssNodeTypes}
+        showGrid={showGrid}
+        onClick={hideContextMenu}
+        onNodeDoubleClick={handleNodeDoubleClick}
+        onNodeContextMenu={handleContextMenu}
+        onContextMenu={hideContextMenu}
+        onNodeDragStart={handleDragStart}
+        onNodeDrag={handleDrag}
+        onNodeDragStop={handleDragStop}
+      />
     </div>
   );
 }

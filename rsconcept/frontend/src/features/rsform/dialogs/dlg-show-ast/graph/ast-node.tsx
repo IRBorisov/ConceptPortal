@@ -34,7 +34,9 @@ export function ASTNode(node: ASTNodeInternal) {
       <Handle type='source' position={Position.Bottom} className='opacity-0' />
       <div
         className={clsx(
-          'font-math mt-1 w-fit text-center translate-x-[calc(-50%+20px)]',
+          'mt-[4px] w-fit translate-x-[calc(-50%+20px)]',
+          'font-math text-center ',
+          'pointer-events-none',
           label.length > LABEL_THRESHOLD ? 'text-[12px]/[16px]' : 'text-[14px]/[20px]'
         )}
       >

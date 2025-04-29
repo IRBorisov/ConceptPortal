@@ -11,9 +11,8 @@ import { PARAMETER } from '@/utils/constants';
 
 import { useOssEdit } from '../oss-edit-context';
 
+import { flowOptions } from './oss-flow';
 import { OssFlowContext } from './oss-flow-context';
-
-const VIEW_PADDING = 0.2;
 
 const Z_BLOCK = 1;
 const Z_SCHEMA = 10;
@@ -86,7 +85,7 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
     setNodes(newNodes);
     setEdges(newEdges);
 
-    setTimeout(() => fitView({ duration: PARAMETER.zoomDuration, padding: VIEW_PADDING }), PARAMETER.refreshTimeout);
+    setTimeout(() => fitView(flowOptions.fitViewOptions), PARAMETER.refreshTimeout);
   }, [schema, setNodes, setEdges, edgeAnimate, edgeStraight, fitView]);
 
   useEffect(() => {
@@ -94,7 +93,7 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
   }, [schema, edgeAnimate, edgeStraight, resetGraph]);
 
   function resetView() {
-    setTimeout(() => fitView({ duration: PARAMETER.zoomDuration, padding: VIEW_PADDING }), PARAMETER.refreshTimeout);
+    setTimeout(() => fitView(flowOptions.fitViewOptions), PARAMETER.refreshTimeout);
   }
 
   return (

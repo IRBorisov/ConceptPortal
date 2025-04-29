@@ -63,6 +63,9 @@ export function useDragging({ hideContextMenu }: DraggingProps) {
     if (containMovement) {
       applyContainMovement([target.id, ...selected.map(id => String(id))], false);
     } else {
+      event.preventDefault();
+      event.stopPropagation();
+
       const new_parent = dropTarget.evaluate(event);
       const allSelected = [...selected.filter(id => id != Number(target.id)), Number(target.id)];
       const operations = allSelected

@@ -54,7 +54,7 @@ export function TGNode(node: TGNodeInternal) {
       <div
         className={clsx(
           'w-full h-full cursor-default flex items-center justify-center rounded-full',
-          isFocused && 'border-2 border-selected',
+          isFocused && 'border-[2px] border-selected',
           label.length > LABEL_THRESHOLD ? 'text-[12px]/[16px]' : 'text-[14px]/[20px]'
         )}
         style={{
@@ -76,13 +76,14 @@ export function TGNode(node: TGNodeInternal) {
       {description ? (
         <div
           className={clsx(
-            'mt-1 w-[150px] px-1 text-center translate-x-[calc(-50%+20px)]',
+            'mt-[4px] w-[150px] px-[4px] text-center translate-x-[calc(-50%+20px)]',
+            'pointer-events-none',
             description.length > DESCRIPTION_THRESHOLD ? 'text-[10px]/[12px]' : 'text-[12px]/[16px]'
           )}
           onContextMenu={handleContextMenu}
           onDoubleClick={handleDoubleClick}
         >
-          <div className='absolute top-0 px-1 left-0 text-center w-full line-clamp-3 hover:line-clamp-none'>
+          <div className='absolute top-0 px-[4px] left-0 text-center w-full line-clamp-3 hover:line-clamp-none'>
             {description}
           </div>
           <div aria-hidden className='line-clamp-3 hover:line-clamp-none cc-text-outline'>

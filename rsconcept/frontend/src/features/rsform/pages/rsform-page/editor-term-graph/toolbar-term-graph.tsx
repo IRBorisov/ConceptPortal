@@ -25,7 +25,7 @@ import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { useTermGraphStore } from '../../../stores/term-graph';
 import { useRSEdit } from '../rsedit-context';
 
-import { VIEW_PADDING } from './tg-flow';
+import { flowOptions } from './tg-flow';
 
 export function ToolbarTermGraph() {
   const isProcessing = useMutatingRSForm();
@@ -76,7 +76,7 @@ export function ToolbarTermGraph() {
 
   function handleFitView() {
     setTimeout(() => {
-      fitView({ duration: PARAMETER.zoomDuration, padding: VIEW_PADDING });
+      fitView(flowOptions.fitViewOptions);
     }, PARAMETER.minimalTimeout);
   }
 
