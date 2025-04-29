@@ -73,10 +73,13 @@ export function useDragging({ hideContextMenu }: DraggingProps) {
         .filter(id => id < 0)
         .map(id => schema.blockByID.get(-id))
         .filter(operation => !!operation);
-      const parents = [...blocks.map(block => block.parent), ...operations.map(operation => operation.parent)].filter(
-        id => !!id
+      const parents = new Set(
+        [...blocks.map(block => block.parent), ...operations.map(operation => operation.parent)].filter(id => !!id)
       );
-      if ((parents.length !== 1 || parents[0] !== new_parent) && (parents.length !== 0 || new_parent !== null)) {
+      if (
+        (parents.size !== 1 || parents.values().next().value !== new_parent) &&
+        (parents.size !== 0 || new_parent !== null)
+      ) {
         void moveItems({
           itemID: schema.id,
           data: {

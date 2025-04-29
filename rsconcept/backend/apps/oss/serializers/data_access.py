@@ -1,4 +1,5 @@
 ''' Serializers for persistent data manipulation. '''
+from collections import deque
 from typing import cast
 
 from django.db.models import F
@@ -62,9 +63,10 @@ class CreateBlockSerializer(serializers.Serializer):
 
     def validate(self, attrs):
         oss = cast(LibraryItem, self.context['oss'])
-        if 'parent' in attrs['item_data'] and \
-                attrs['item_data']['parent'] is not None and \
-                attrs['item_data']['parent'].oss_id != oss.pk:
+        parent = attrs['item_data'].get('parent')
+        children_blocks = attrs.get('children_blocks', [])
+
+        if parent is not None and parent.oss_id != oss.pk:
             raise serializers.ValidationError({
                 'parent': msg.parentNotInOSS()
             })
@@ -75,11 +77,17 @@ class CreateBlockSerializer(serializers.Serializer):
                     'children_operations': msg.childNotInOSS()
                 })
 
-        for block in attrs['children_blocks']:
+        for block in children_blocks:
             if block.oss_id != oss.pk:
                 raise serializers.ValidationError({
                     'children_blocks': msg.childNotInOSS()
                 })
+
+        if parent:
+            descendant_ids = _collect_descendants(children_blocks)
+            if parent.pk in descendant_ids:
+                raise serializers.ValidationError({'parent': msg.blockCyclicHierarchy()})
+
         return attrs
 
 
@@ -104,15 +112,15 @@ class UpdateBlockSerializer(serializers.Serializer):
                 'target': msg.blockNotInOSS()
             })
 
-        if 'parent' in attrs['item_data'] and \
-                attrs['item_data']['parent'] is not None:
-            if attrs['item_data']['parent'].oss_id != oss.pk:
+        parent = attrs['item_data'].get('parent')
+        if parent is not None:
+            if parent.oss_id != oss.pk:
                 raise serializers.ValidationError({
                     'parent': msg.parentNotInOSS()
                 })
-            if attrs['item_data']['parent'] == attrs['target']:
+            if parent == attrs['target']:
                 raise serializers.ValidationError({
-                    'parent': msg.blockSelfParent()
+                    'parent': msg.blockCyclicHierarchy()
                 })
         return attrs
 
@@ -142,23 +150,34 @@ class MoveItemsSerializer(serializers.Serializer):
     def validate(self, attrs):
         oss = cast(LibraryItem, self.context['oss'])
         parent_block = cast(Block, attrs['destination'])
+        moved_blocks = attrs.get('blocks', [])
+        moved_operations = attrs.get('operations', [])
+
         if parent_block is not None and parent_block.oss_id != oss.pk:
             raise serializers.ValidationError({
                 'destination': msg.blockNotInOSS()
             })
-        for operation in attrs['operations']:
+        for operation in moved_operations:
             if operation.oss_id != oss.pk:
                 raise serializers.ValidationError({
                     'operations': msg.operationNotInOSS()
                 })
-        for block in attrs['blocks']:
+        for block in moved_blocks:
             if parent_block is not None and block.pk == parent_block.pk:
                 raise serializers.ValidationError({
-                    'destination': msg.blockSelfParent()
+                    'destination': msg.blockCyclicHierarchy()
                 })
             if block.oss_id != oss.pk:
                 raise serializers.ValidationError({
                     'blocks': msg.blockNotInOSS()
+                })
+
+        if parent_block:
+            ancestor_ids = _collect_ancestors(parent_block)
+            moved_block_ids = {b.pk for b in moved_blocks}
+            if moved_block_ids & ancestor_ids:
+                raise serializers.ValidationError({
+                    'destination': msg.blockCyclicHierarchy()
                 })
         return attrs
 
@@ -186,9 +205,8 @@ class CreateOperationSerializer(serializers.Serializer):
 
     def validate(self, attrs):
         oss = cast(LibraryItem, self.context['oss'])
-        if 'parent' in attrs['item_data'] and \
-                attrs['item_data']['parent'] is not None and \
-                attrs['item_data']['parent'].oss_id != oss.pk:
+        parent = attrs['item_data'].get('parent')
+        if parent is not None and parent.oss_id != oss.pk:
             raise serializers.ValidationError({
                 'parent': msg.parentNotInOSS()
             })
@@ -223,15 +241,14 @@ class UpdateOperationSerializer(serializers.Serializer):
 
     def validate(self, attrs):
         oss = cast(LibraryItem, self.context['oss'])
+        parent = attrs['item_data'].get('parent')
         target = cast(Block, attrs['target'])
         if target.oss_id != oss.pk:
             raise serializers.ValidationError({
                 'target': msg.operationNotInOSS()
             })
 
-        if 'parent' in attrs['item_data'] and \
-                attrs['item_data']['parent'] is not None and \
-                attrs['item_data']['parent'].oss_id != oss.pk:
+        if parent is not None and parent.oss_id != oss.pk:
             raise serializers.ValidationError({
                 'parent': msg.parentNotInOSS()
             })
@@ -441,3 +458,29 @@ class RelocateConstituentsSerializer(serializers.Serializer):
             })
 
         return attrs
+
+# ====== Internals =================================================================================
+
+
+def _collect_descendants(start_blocks: list[Block]) -> set[int]:
+    """ Recursively collect all descendant block IDs from a list of blocks. """
+    visited = set()
+    queue = deque(start_blocks)
+    while queue:
+        block = queue.popleft()
+        if block.pk not in visited:
+            visited.add(block.pk)
+            queue.extend(block.as_child_block.all())
+    return visited
+
+
+def _collect_ancestors(block: Block) -> set[int]:
+    """ Recursively collect all ancestor block IDs of a block. """
+    ancestors = set()
+    current = block.parent
+    while current:
+        if current.pk in ancestors:
+            break  # Prevent infinite loop in malformed data
+        ancestors.add(current.pk)
+        current = current.parent
+    return ancestors

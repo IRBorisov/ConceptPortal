@@ -18,6 +18,7 @@ export function SelectBlock({ items, placeholder = 'Выберите блок', 
   return (
     <ComboBox
       items={items}
+      clearable
       placeholder={placeholder}
       idFunc={block => String(block.id)}
       labelValueFunc={block => block.title}

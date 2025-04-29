@@ -20,7 +20,8 @@ import { TabBlockChildren } from './tab-block-children';
 
 export interface DlgCreateBlockProps {
   manager: LayoutManager;
-  initialInputs: number[];
+  initialChildren: number[];
+  initialParent: number | null;
   defaultX: number;
   defaultY: number;
   onCreate?: (newID: number) => void;
@@ -35,7 +36,7 @@ export type TabID = (typeof TabID)[keyof typeof TabID];
 export function DlgCreateBlock() {
   const { createBlock } = useCreateBlock();
 
-  const { manager, initialInputs, onCreate, defaultX, defaultY } = useDialogsStore(
+  const { manager, initialChildren, initialParent, onCreate, defaultX, defaultY } = useDialogsStore(
     state => state.props as DlgCreateBlockProps
   );
 
@@ -45,19 +46,21 @@ export function DlgCreateBlock() {
       item_data: {
         title: '',
         description: '',
-        parent: null
+        parent: initialParent
       },
       position_x: defaultX,
       position_y: defaultY,
       width: BLOCK_NODE_MIN_WIDTH,
       height: BLOCK_NODE_MIN_HEIGHT,
-      children_blocks: initialInputs.filter(id => id < 0).map(id => -id),
-      children_operations: initialInputs.filter(id => id > 0),
+      children_blocks: initialChildren.filter(id => id < 0).map(id => -id),
+      children_operations: initialChildren.filter(id => id > 0),
       layout: manager.layout
     },
     mode: 'onChange'
   });
   const title = useWatch({ control: methods.control, name: 'item_data.title' });
+  const children_blocks = useWatch({ control: methods.control, name: 'children_blocks' });
+  const children_operations = useWatch({ control: methods.control, name: 'children_operations' });
   const [activeTab, setActiveTab] = useState<TabID>(TabID.CARD);
   const isValid = !!title && !manager.oss.blocks.some(block => block.title === title);
 
@@ -87,7 +90,10 @@ export function DlgCreateBlock() {
       >
         <TabList className='z-pop mx-auto -mb-5 flex border divide-x rounded-none bg-secondary'>
           <TabLabel title='Основные атрибуты блока' label='Карточка' />
-          <TabLabel title='Выбор вложенных узлов' label='Содержимое' />
+          <TabLabel
+            title={`Выбор вложенных узлов: [${children_operations.length + children_blocks.length}]`}
+            label={`Содержимое${children_operations.length + children_blocks.length > 0 ? '*' : ''}`}
+          />
         </TabList>
 
         <FormProvider {...methods}>

@@ -168,6 +168,32 @@ class TestOssBlocks(EndpointTester):
         self.assertEqual(self.block1.parent.pk, new_block['id'])
 
 
+    @decl_endpoint('/api/oss/{item}/create-block', method='post')
+    def test_create_block_cyclic(self):
+        self.populateData()
+        data = {
+            'item_data': {
+                'title': 'Test title',
+                'description': 'Тест кириллицы',
+                'parent': self.block2.pk
+            },
+            'layout': self.layout_data,
+            'position_x': 1337,
+            'position_y': 1337,
+            'width': 0.42,
+            'height': 0.42,
+            'children_operations': [],
+            'children_blocks': [self.block1.pk]
+        }
+        self.executeBadData(data=data, item=self.owned_id)
+
+        data['item_data']['parent'] = self.block1.pk
+        self.executeBadData(data=data)
+
+        data['children_blocks'] = [self.block2.pk]
+        self.executeCreated(data=data)
+
+
     @decl_endpoint('/api/oss/{item}/delete-block', method='patch')
     def test_delete_block(self):
         self.populateData()

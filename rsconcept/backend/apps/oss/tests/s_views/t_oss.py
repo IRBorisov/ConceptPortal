@@ -205,6 +205,24 @@ class TestOssViewset(EndpointTester):
         self.assertEqual(self.operation2.parent, None)
 
 
+    @decl_endpoint('/api/oss/{item}/move-items', method='patch')
+    def test_move_items_cyclic(self):
+        self.populateData()
+        self.executeBadData(item=self.owned_id)
+
+        block1 = self.owned.create_block(title='1')
+        block2 = self.owned.create_block(title='2', parent=block1)
+        block3 = self.owned.create_block(title='3', parent=block2)
+
+        data = {
+            'layout': self.layout_data,
+            'blocks': [block1.pk],
+            'operations': [],
+            'destination': block3.pk
+        }
+        self.executeBadData(data=data)
+
+
     @decl_endpoint('/api/oss/relocate-constituents', method='post')
     def test_relocate_constituents(self):
         self.populateData()

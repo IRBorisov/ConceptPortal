@@ -74,11 +74,13 @@ export function OssFlow() {
 
   function handleCreateBlock() {
     const targetPosition = screenToFlowPosition({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
+    const parent = extractSingleBlock(selected);
     showCreateBlock({
       manager: new LayoutManager(schema, getLayout()),
       defaultX: targetPosition.x,
       defaultY: targetPosition.y,
-      initialInputs: selected,
+      initialChildren: parent !== null ? [] : selected,
+      initialParent: parent,
       onCreate: resetView
     });
   }

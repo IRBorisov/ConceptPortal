@@ -22,7 +22,7 @@ def parentNotInOSS():
     return 'Родительский блок не принадлежит ОСС'
 
 
-def blockSelfParent():
+def blockCyclicHierarchy():
     return 'Попытка создания циклического вложения'
 
 

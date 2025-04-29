@@ -12,7 +12,7 @@ import { NoData } from '@/components/view';
 
 import { labelOssItem } from '../labels';
 import { type IBlock, type IOperation, type IOperationSchema } from '../models/oss';
-import { isOperation } from '../models/oss-api';
+import { getItemID, isOperation } from '../models/oss-api';
 
 const SELECTION_CLEAR_TIMEOUT = 1000;
 
@@ -21,6 +21,7 @@ interface PickMultiOperationProps extends Styling {
   onChange: (newValue: number[]) => void;
   schema: IOperationSchema;
   rows?: number;
+  exclude?: number[];
   disallowBlocks?: boolean;
 }
 
@@ -29,6 +30,7 @@ const columnHelper = createColumnHelper<IOperation | IBlock>();
 export function PickContents({
   rows,
   schema,
+  exclude,
   value,
   disallowBlocks,
   onChange,
@@ -40,38 +42,38 @@ export function PickContents({
     .filter(item => item !== undefined);
   const [lastSelected, setLastSelected] = useState<IOperation | IBlock | null>(null);
   const items = [
-    ...schema.operations.filter(item => !value.includes(item.id)),
-    ...(disallowBlocks ? [] : schema.blocks.filter(item => !value.includes(-item.id)))
+    ...(disallowBlocks ? [] : schema.blocks.filter(item => !value.includes(-item.id) && !exclude?.includes(-item.id))),
+    ...schema.operations.filter(item => !value.includes(item.id) && !exclude?.includes(item.id))
   ];
 
-  function handleDelete(operation: number) {
-    onChange(value.filter(item => item !== operation));
+  function handleDelete(target: number) {
+    onChange(value.filter(item => item !== target));
   }
 
   function handleSelect(target: IOperation | IBlock | null) {
     if (target) {
       setLastSelected(target);
-      onChange([...value, isOperation(target) ? target.id : -target.id]);
+      onChange([...value, getItemID(target)]);
       setTimeout(() => setLastSelected(null), SELECTION_CLEAR_TIMEOUT);
     }
   }
 
-  function handleMoveUp(operation: number) {
-    const index = value.indexOf(operation);
+  function handleMoveUp(target: number) {
+    const index = value.indexOf(target);
     if (index > 0) {
       const newSelected = [...value];
       newSelected[index] = newSelected[index - 1];
-      newSelected[index - 1] = operation;
+      newSelected[index - 1] = target;
       onChange(newSelected);
     }
   }
 
-  function handleMoveDown(operation: number) {
-    const index = value.indexOf(operation);
+  function handleMoveDown(target: number) {
+    const index = value.indexOf(target);
     if (index < value.length - 1) {
       const newSelected = [...value];
       newSelected[index] = newSelected[index + 1];
-      newSelected[index + 1] = operation;
+      newSelected[index + 1] = target;
       onChange(newSelected);
     }
   }
@@ -103,21 +105,21 @@ export function PickContents({
             noHover
             className='px-0'
             icon={<IconRemove size='1rem' className='icon-red' />}
-            onClick={() => handleDelete(props.row.original.id)}
+            onClick={() => handleDelete(getItemID(props.row.original))}
           />
           <MiniButton
             title='Переместить выше'
             noHover
             className='px-0'
             icon={<IconMoveUp size='1rem' className='icon-primary' />}
-            onClick={() => handleMoveUp(props.row.original.id)}
+            onClick={() => handleMoveUp(getItemID(props.row.original))}
           />
           <MiniButton
             title='Переместить ниже'
             noHover
             className='px-0'
             icon={<IconMoveDown size='1rem' className='icon-primary' />}
-            onClick={() => handleMoveDown(props.row.original.id)}
+            onClick={() => handleMoveDown(getItemID(props.row.original))}
           />
         </div>
       )
@@ -131,7 +133,7 @@ export function PickContents({
         items={items}
         value={lastSelected}
         placeholder='Выберите операцию или блок'
-        idFunc={item => String(item.id)}
+        idFunc={item => String(getItemID(item))}
         labelValueFunc={item => labelOssItem(item)}
         labelOptionFunc={item => labelOssItem(item)}
         onChange={handleSelect}

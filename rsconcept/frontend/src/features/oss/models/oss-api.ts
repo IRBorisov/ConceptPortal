@@ -33,6 +33,11 @@ export function isOperation(item: IOssItem | null): boolean {
   return !!item && 'arguments' in item;
 }
 
+/** Extract contiguous ID of {@link IOperation} or {@link IBlock}. */
+export function getItemID(item: IOssItem): number {
+  return isOperation(item) ? item.id : -item.id;
+}
+
 /** Sorts library items relevant for the specified {@link IOperationSchema}. */
 export function sortItemsForOSS(oss: IOperationSchema, items: ILibraryItem[]): ILibraryItem[] {
   const result = items.filter(item => item.location === oss.location);

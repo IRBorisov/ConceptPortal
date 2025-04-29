@@ -12,8 +12,12 @@ import { type DlgCreateBlockProps } from './dlg-create-block';
 export function TabBlockChildren() {
   const { setValue, control } = useFormContext<ICreateBlockDTO>();
   const { manager } = useDialogsStore(state => state.props as DlgCreateBlockProps);
+  const parent = useWatch({ control, name: 'item_data.parent' });
   const children_blocks = useWatch({ control, name: 'children_blocks' });
   const children_operations = useWatch({ control, name: 'children_operations' });
+  const exclude = parent ? [-parent, ...manager.oss.hierarchy.expandAllInputs([-parent]).filter(id => id < 0)] : [];
+
+  console.log(exclude);
 
   const value = [...children_blocks.map(id => -id), ...children_operations];
 
@@ -35,6 +39,7 @@ export function TabBlockChildren() {
       <Label text={`Выбор содержания: [ ${value.length} ]`} />
       <PickContents
         schema={manager.oss}
+        exclude={exclude}
         value={value}
         onChange={newValue => handleChangeSelected(newValue)}
         rows={10}
