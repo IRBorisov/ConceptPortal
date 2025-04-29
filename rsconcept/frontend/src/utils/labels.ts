@@ -41,7 +41,7 @@ export const infoMsg = {
   operationExecuted: 'Операция выполнена',
   allOperationExecuted: 'Все операции выполнены',
   constituentsDestroyed: (count: number) => `Конституенты удалены: ${count}`
-};
+} as const;
 
 /**
  * UI error descriptors.
@@ -65,7 +65,7 @@ export const errorMsg = {
   emptySubstitutions: 'Выберите хотя бы одно отождествление',
   aliasInvalid: 'Введите незанятое имя, соответствующее типу',
   invalidResponse: 'Некорректный ответ сервера'
-};
+} as const;
 
 /**
  * UI tooltip descriptors.
@@ -73,7 +73,7 @@ export const errorMsg = {
 export const tooltipText = {
   unsaved: 'Сохраните или отмените изменения',
   shareItem: (isPublic: boolean) => (isPublic ? 'Поделиться схемой' : 'Поделиться можно только <br/>открытой схемой')
-};
+} as const;
 
 /**
  * UI prompt messages.
@@ -88,4 +88,4 @@ export const promptText = {
   restoreArchive: 'При восстановлении архивной версии актуальная схему будет заменена. Продолжить?',
   ownerChange:
     'Вы уверены, что хотите изменить владельца? Вы потеряете право управления данной схемой. Данное действие отменить нельзя'
-};
+} as const;

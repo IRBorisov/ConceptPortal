@@ -4,4 +4,4 @@ import { ASTNode } from './ast-node';
 
 export const ASTNodeTypes: NodeTypes = {
   token: ASTNode
-};
+} as const;

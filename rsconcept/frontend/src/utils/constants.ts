@@ -2,9 +2,7 @@
  * Module: Global constants.
  */
 
-/**
- * Global application Parameters. The place where magic numbers are put to rest.
- */
+/** Global application Parameters. The place where magic numbers are put to rest. */
 export const PARAMETER = {
   smallScreen: 640, // == tailwind:sm
 
@@ -26,46 +24,34 @@ export const PARAMETER = {
   logicLabel: 'LOGIC',
   errorNodeLabel: '[ERROR]',
   exteorVersion: '4.9.7'
-};
+} as const;
 
-/**
- * Numeric limitations.
- */
+/** Numeric limitations. */
 export const limits = {
   location_len: 500
-};
+} as const;
 
-/**
- * Exteor file extension for RSForm.
- */
+/** Exteor file extension for RSForm. */
 export const EXTEOR_TRS_FILE = '.trs';
 
-/**
- * Regex patterns for data validation.
- */
+/** Regex patterns for data validation. */
 export const patterns = {
   login: '^[a-zA-Z][a-zA-Z0-9_\\-]{1,}[a-zA-Z0-9]$'
-};
+} as const;
 
-/**
- * Local URIs.
- */
+/** Local URIs. */
 export const resources = {
   privacy_policy: '/privacy.pdf',
   logo: '/logo_full.svg',
   db_schema: '/db_schema.svg'
-};
+} as const;
 
-/**
- * Youtube IDs for embedding.
- */
+/** Youtube IDs for embedding. */
 export const youtube = {
   intro: '0Ty9mu9sOJo'
-};
+} as const;
 
-/**
- * External URLs.
- */
+/** External URLs. */
 export const external_urls = {
   concept: 'https://www.acconcept.ru/',
   exteor32: 'https://drive.google.com/open?id=1IHlMMwaYlAUBRSxU1RU_hXM5mFU9-oyK&usp=drive_fs',
@@ -81,11 +67,9 @@ export const external_urls = {
   git_cctext: 'https://github.com/IRBorisov/cctext',
   mail_portal: 'mailto:portal@acconcept.ru',
   restAPI: 'https://api.portal.acconcept.ru'
-};
+} as const;
 
-/**
- * Global element ID.
- */
+/** Global element ID. */
 export const globalIDs = {
   tooltip: 'global_tooltip',
   value_tooltip: 'value_tooltip',
@@ -96,11 +80,9 @@ export const globalIDs = {
   constituenta_editor: 'constituenta_editor',
   graph_schemas: 'graph_schemas_tooltip',
   user_dropdown: 'user_dropdown'
-};
+} as const;
 
-/**
- * Prefixes for generating unique keys for lists.
- */
+/** Prefixes for generating unique keys for lists. */
 export const prefixes = {
   page_size: 'page_size_',
   oss_list: 'oss_list_',
@@ -123,4 +105,4 @@ export const prefixes = {
   user_editors: 'user_editors_',
   wordform_list: 'wordform_list_',
   rsedit_btn: 'rsedit_btn_'
-};
+} as const;

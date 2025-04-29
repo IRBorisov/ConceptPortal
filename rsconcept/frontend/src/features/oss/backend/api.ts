@@ -164,4 +164,4 @@ export const ossApi = {
       endpoint: '/api/oss/get-predecessor',
       request: { data: { target: cstID } }
     })
-};
+} as const;

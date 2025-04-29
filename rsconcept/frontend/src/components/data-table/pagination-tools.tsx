@@ -10,7 +10,7 @@ import { SelectPagination } from './select-pagination';
 interface PaginationToolsProps<TData> {
   id?: string;
   table: Table<TData>;
-  paginationOptions: number[];
+  paginationOptions: readonly number[];
   onChangePaginationOption?: (newValue: number) => void;
 }
 

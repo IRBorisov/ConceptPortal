@@ -169,4 +169,4 @@ export const libraryApi = {
         successMessage: infoMsg.versionDestroyed
       }
     })
-};
+} as const;

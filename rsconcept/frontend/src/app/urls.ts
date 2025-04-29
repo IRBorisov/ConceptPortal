@@ -4,9 +4,7 @@
 
 import { buildConstants } from '@/utils/build-constants';
 
-/**
- * Routes.
- */
+/** Routes. */
 export const routes = {
   not_found: 'not-found',
   login: 'login',
@@ -22,11 +20,9 @@ export const routes = {
   oss: 'oss',
   icons: 'icons',
   database_schema: 'database-schema'
-};
+} as const;
 
-/**
- * Internal navigation URLs.
- */
+/** Internal navigation URLs. */
 export const urls = {
   page404: '/not-found',
   admin: `${buildConstants.backend}/admin`,
@@ -66,4 +62,4 @@ export const urls = {
   oss_props: ({ id, tab }: { id: number | string; tab: number }) => {
     return `/oss/${id}?tab=${tab}`;
   }
-};
+} as const;

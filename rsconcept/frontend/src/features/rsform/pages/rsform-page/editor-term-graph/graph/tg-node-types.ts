@@ -4,4 +4,4 @@ import { TGNode } from './tg-node';
 
 export const TGNodeTypes: NodeTypes = {
   concept: TGNode
-};
+} as const;

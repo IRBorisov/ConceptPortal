@@ -4,4 +4,4 @@ import { MGraphNode } from './mgraph-node';
 
 export const TMGraphNodeTypes: NodeTypes = {
   step: MGraphNode
-};
+} as const;

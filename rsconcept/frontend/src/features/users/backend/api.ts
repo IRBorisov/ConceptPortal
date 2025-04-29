@@ -59,4 +59,4 @@ export const usersApi = {
         successMessage: infoMsg.changesSaved
       }
     })
-};
+} as const;

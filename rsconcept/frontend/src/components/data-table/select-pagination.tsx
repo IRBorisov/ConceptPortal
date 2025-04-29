@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 interface SelectPaginationProps<TData> {
   id?: string;
   table: Table<TData>;
-  paginationOptions: number[];
+  paginationOptions: readonly number[];
   onChange?: (newValue: number) => void;
 }
 

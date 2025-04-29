@@ -4,4 +4,4 @@ import { DynamicEdge } from '@/components/flow/dynamic-edge';
 
 export const TGEdgeTypes: EdgeTypes = {
   termEdge: DynamicEdge
-};
+} as const;

@@ -78,7 +78,7 @@ export interface DataTableProps<TData extends RowData>
   paginationPerPage?: number;
 
   /** List of options to choose from for pagination. */
-  paginationOptions?: number[];
+  paginationOptions?: readonly number[];
 
   /** Callback to be called when the pagination option is changed. */
   onChangePaginationOption?: (newValue: number) => void;

@@ -30,4 +30,4 @@ export const cctextApi = {
       endpoint: '/api/cctext/generate-lexeme',
       request: { data: data }
     })
-};
+} as const;

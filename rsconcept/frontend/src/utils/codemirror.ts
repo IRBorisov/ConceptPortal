@@ -72,7 +72,12 @@ export function printTree(tree: Tree): string {
 }
 
 /** Retrieves a list of all nodes, containing given range and corresponding to a filter. */
-export function findEnvelopingNodes(start: number, finish: number, tree: Tree, filter?: number[]): SyntaxNode[] {
+export function findEnvelopingNodes(
+  start: number,
+  finish: number,
+  tree: Tree,
+  filter?: readonly number[]
+): SyntaxNode[] {
   const result: SyntaxNode[] = [];
   tree.cursor().iterate(node => {
     if ((!filter || filter.includes(node.type.id)) && node.to >= start && node.from <= finish) {
@@ -87,7 +92,12 @@ export function findEnvelopingNodes(start: number, finish: number, tree: Tree, f
 }
 
 /** Retrieves a list of all nodes, contained in given range and corresponding to a filter. */
-export function findContainedNodes(start: number, finish: number, tree: Tree, filter?: number[]): SyntaxNode[] {
+export function findContainedNodes(
+  start: number,
+  finish: number,
+  tree: Tree,
+  filter?: readonly number[]
+): SyntaxNode[] {
   const result: SyntaxNode[] = [];
   tree.cursor().iterate(node => {
     if ((!filter || filter.includes(node.type.id)) && node.to <= finish && node.from >= start) {
@@ -169,7 +179,7 @@ export class CodeMirrorWrapper {
   /**
    * Access list of SyntaxNodes contained in current selection.
    */
-  getContainedNodes(tokenFilter?: number[]): SyntaxNode[] {
+  getContainedNodes(tokenFilter?: readonly number[]): SyntaxNode[] {
     const selection = this.getSelection();
     return findContainedNodes(selection.from, selection.to, syntaxTree(this.ref.view.state), tokenFilter);
   }
@@ -177,7 +187,7 @@ export class CodeMirrorWrapper {
   /**
    * Access list of SyntaxNodes enveloping current selection.
    */
-  getEnvelopingNodes(tokenFilter?: number[]): SyntaxNode[] {
+  getEnvelopingNodes(tokenFilter?: readonly number[]): SyntaxNode[] {
     const selection = this.getSelection();
     return findEnvelopingNodes(selection.from, selection.to, syntaxTree(this.ref.view.state), tokenFilter);
   }
@@ -185,7 +195,7 @@ export class CodeMirrorWrapper {
   /**
    * Access list of SyntaxNodes contained in documents.
    */
-  getAllNodes(tokenFilter?: number[]): SyntaxNode[] {
+  getAllNodes(tokenFilter?: readonly number[]): SyntaxNode[] {
     return findContainedNodes(0, this.ref.view.state.doc.length, syntaxTree(this.ref.view.state), tokenFilter);
   }
 
@@ -194,7 +204,7 @@ export class CodeMirrorWrapper {
    *
    * If tokenFilter is provided then minimal valid token is selected.
    */
-  fixSelection(tokenFilter?: number[]) {
+  fixSelection(tokenFilter?: readonly number[]) {
     const selection = this.getSelection();
     if (tokenFilter) {
       const nodes = findEnvelopingNodes(selection.from, selection.to, syntaxTree(this.ref.view.state), tokenFilter);

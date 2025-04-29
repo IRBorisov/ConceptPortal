@@ -6,4 +6,4 @@ import { CartesianEdge } from './cartesian-edge';
 export const TMGraphEdgeTypes: EdgeTypes = {
   boolean: BooleanEdge,
   cartesian: CartesianEdge
-};
+} as const;

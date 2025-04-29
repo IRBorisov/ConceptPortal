@@ -36,4 +36,4 @@ export const APP_COLORS = {
   fgPurple:           'var(--acc-fg-purple)',
   fgTeal:             'var(--acc-fg-teal)',
   fgOrange:           'var(--acc-fg-orange)'
-}
+} as const

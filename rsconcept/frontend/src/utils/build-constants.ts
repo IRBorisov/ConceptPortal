@@ -4,4 +4,4 @@
  */
 export const buildConstants = {
   backend: import.meta.env.VITE_PORTAL_BACKEND as string
-};
+} as const;

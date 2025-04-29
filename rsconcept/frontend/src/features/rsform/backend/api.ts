@@ -153,4 +153,4 @@ export const rsformsApi = {
       endpoint: `/api/rsforms/${itemID}/check-constituenta`,
       request: { data: data }
     })
-};
+} as const;

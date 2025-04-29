@@ -61,4 +61,4 @@ export const authApi = {
       endpoint: '/users/api/password-reset/confirm',
       request: { data: data }
     })
-};
+} as const;

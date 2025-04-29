@@ -17,7 +17,7 @@ export const BRACKETS_THEME = {
     backgroundColor: APP_COLORS.bgSelected,
     color: APP_COLORS.fgSelected
   }
-};
+} as const;
 
 /** Determines background color for {@link ISyntaxTreeNode} based on its type. */
 export function colorBgSyntaxTree(node: ISyntaxTreeNode): string {
