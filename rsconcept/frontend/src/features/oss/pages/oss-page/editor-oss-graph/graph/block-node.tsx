@@ -4,20 +4,21 @@ import { NodeResizeControl } from 'reactflow';
 import clsx from 'clsx';
 
 import { IconResize } from '@/components/icons';
+import { useDraggingStore } from '@/stores/dragging';
 import { globalIDs } from '@/utils/constants';
 
 import { type BlockInternalNode } from '../../../../models/oss-layout';
 import { useOperationTooltipStore } from '../../../../stores/operation-tooltip';
 import { useOSSGraphStore } from '../../../../stores/oss-graph';
 import { useOssEdit } from '../../oss-edit-context';
-import { useOssFlow } from '../oss-flow-context';
 
 export const BLOCK_NODE_MIN_WIDTH = 160;
 export const BLOCK_NODE_MIN_HEIGHT = 100;
 
 export function BlockNode(node: BlockInternalNode) {
   const { selected, schema } = useOssEdit();
-  const { dropTarget, isDragging } = useOssFlow();
+  const dropTarget = useDraggingStore(state => state.dropTarget);
+  const isDragging = useDraggingStore(state => state.isDragging);
   const showCoordinates = useOSSGraphStore(state => state.showCoordinates);
   const setHover = useOperationTooltipStore(state => state.setHoverItem);
 

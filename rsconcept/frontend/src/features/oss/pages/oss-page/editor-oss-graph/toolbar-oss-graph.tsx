@@ -1,7 +1,6 @@
 'use client';
 
 import { toast } from 'react-toastify';
-import { useReactFlow } from 'reactflow';
 
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components';
@@ -22,7 +21,6 @@ import {
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
 import { useDialogsStore } from '@/stores/dialogs';
-import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/utils';
 
 import { OperationType } from '../../../backend/types';
@@ -32,7 +30,7 @@ import { useUpdateLayout } from '../../../backend/use-update-layout';
 import { LayoutManager } from '../../../models/oss-layout-api';
 import { useOssEdit } from '../oss-edit-context';
 
-import { VIEW_PADDING } from './oss-flow';
+import { useOssFlow } from './oss-flow-context';
 import { useGetLayout } from './use-get-layout';
 
 interface ToolbarOssGraphProps extends Styling {
@@ -52,7 +50,7 @@ export function ToolbarOssGraph({
 }: ToolbarOssGraphProps) {
   const { schema, selected, isMutable, canDeleteOperation: canDelete } = useOssEdit();
   const isProcessing = useMutatingOss();
-  const { fitView } = useReactFlow();
+  const { resetView } = useOssFlow();
   const selectedOperation = selected.length !== 1 ? null : schema.operationByID.get(selected[0]) ?? null;
   const selectedBlock = selected.length !== 1 ? null : schema.blockByID.get(-selected[0]) ?? null;
   const getLayout = useGetLayout();
@@ -84,10 +82,6 @@ export function ToolbarOssGraph({
 
     return true;
   })();
-
-  function handleFitView() {
-    fitView({ duration: PARAMETER.zoomDuration, padding: VIEW_PADDING });
-  }
 
   function handleFixLayout() {
     // TODO: implement layout algorithm
@@ -145,7 +139,7 @@ export function ToolbarOssGraph({
         <MiniButton
           title='Сбросить вид'
           icon={<IconFitImage size='1.25rem' className='icon-primary' />}
-          onClick={handleFitView}
+          onClick={resetView}
         />
         <MiniButton
           title='Исправить позиции узлов'
