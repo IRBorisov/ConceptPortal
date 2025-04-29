@@ -24,7 +24,7 @@ export class RSFormLoader {
   private cstByID = new Map<number, IConstituenta>();
 
   constructor(input: IRSFormDTO) {
-    this.schema = input as unknown as IRSForm;
+    this.schema = structuredClone(input) as IRSForm;
     this.schema.version = input.version ?? 'latest';
   }
 

@@ -22,7 +22,7 @@ export class OssLoader {
   private items: ILibraryItem[];
 
   constructor(input: IOperationSchemaDTO, items: ILibraryItem[]) {
-    this.oss = input as unknown as IOperationSchema;
+    this.oss = structuredClone(input) as IOperationSchema;
     this.items = items;
   }
 
