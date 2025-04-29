@@ -155,7 +155,7 @@ export function EditorRSExpression({
   }
 
   return (
-    <div className='relative cc-fade-in'>
+    <div className='relative'>
       <ToolbarRSExpression
         className='absolute -top-2 right-0'
         showAST={handleShowAST}

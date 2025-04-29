@@ -78,8 +78,7 @@ export function InfoError({ error }: InfoErrorProps) {
   return (
     <div
       className={clsx(
-        'cc-fade-in',
-        'min-w-100',
+        'min-w-100', //
         'px-3 py-2 flex flex-col',
         'text-destructive text-sm font-semibold',
         'select-text'

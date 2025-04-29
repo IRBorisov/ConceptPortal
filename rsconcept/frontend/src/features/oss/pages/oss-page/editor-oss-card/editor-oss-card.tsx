@@ -46,7 +46,7 @@ export function EditorOssCard() {
         className={clsx('md:max-w-fit max-w-128 min-w-fit', 'flex flex-row flex-wrap pt-8 px-6 justify-center')}
       >
         <div className='cc-column px-3'>
-          <FormOSS />
+          <FormOSS key={schema.id} />
           <EditorLibraryItem schema={schema} isAttachedToOSS={false} />
         </div>
 

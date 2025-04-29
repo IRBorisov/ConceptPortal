@@ -164,7 +164,7 @@ export function TGFlow() {
   }
 
   return (
-    <div className='cc-fade-in relative' tabIndex={-1} onKeyDown={handleKeyDown}>
+    <div className='relative' tabIndex={-1} onKeyDown={handleKeyDown}>
       <div className='cc-tab-tools flex flex-col items-center rounded-b-2xl backdrop-blur-xs'>
         <ToolbarTermGraph />
         <ToolbarFocusedCst />

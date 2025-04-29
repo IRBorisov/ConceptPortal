@@ -32,7 +32,7 @@ export function Component() {
     );
   } else {
     return (
-      <form className='cc-fade-in cc-column w-96 mx-auto px-6 mt-3' onSubmit={handleSubmit} onChange={clearServerError}>
+      <form className='cc-column w-96 mx-auto px-6 mt-3' onSubmit={handleSubmit} onChange={clearServerError}>
         <TextInput
           id='email'
           autoComplete='email'

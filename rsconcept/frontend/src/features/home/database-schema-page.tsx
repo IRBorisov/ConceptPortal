@@ -16,7 +16,7 @@ export function Component() {
   }, [hideFooter]);
 
   return (
-    <div className='cc-fade-in flex justify-center overflow-hidden' style={{ maxHeight: panelHeight }}>
+    <div className='flex justify-center overflow-hidden' style={{ maxHeight: panelHeight }}>
       <TransformWrapper>
         <TransformComponent>
           <img alt='Схема базы данных' src={resources.db_schema} className='w-fit h-fit' />

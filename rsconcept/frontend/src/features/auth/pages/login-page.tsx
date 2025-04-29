@@ -55,7 +55,7 @@ export function LoginPage() {
   }
   return (
     <form
-      className='cc-column cc-fade-in w-96 mx-auto pt-12 pb-6 px-6'
+      className='cc-column w-96 mx-auto pt-12 pb-6 px-6'
       onSubmit={event => void handleSubmit(onSubmit)(event)}
       onChange={resetErrors}
     >

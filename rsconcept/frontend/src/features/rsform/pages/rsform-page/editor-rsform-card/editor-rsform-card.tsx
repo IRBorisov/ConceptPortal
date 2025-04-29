@@ -41,7 +41,7 @@ export function EditorRSFormCard() {
       />
 
       <div className='cc-column shrink'>
-        <FormRSForm />
+        <FormRSForm key={schema.id} />
         <EditorLibraryItem schema={schema} isAttachedToOSS={isAttachedToOSS} />
       </div>
 
