@@ -6,6 +6,8 @@
 /* stylelint-disable selector-class-pattern */
 
 .react-flow__handle {
+  pointer-events: auto;
+
   z-index: var(--z-index-navigation);
   cursor: default !important;
   border-radius: 9999px;
@@ -15,6 +17,10 @@
 
   .selected & {
     border-color: var(--color-muted-foreground);
+  }
+
+  .space-mode & {
+    pointer-events: none !important;
   }
 }
 
@@ -31,14 +37,26 @@
   &:hover {
     color: var(--color-foreground);
   }
+
+  .space-mode & {
+    pointer-events: none !important;
+  }
 }
 
 .react-flow__pane {
-  cursor: default;
+  cursor: inherit;
+
+  .space-mode & {
+    cursor: grab;
+
+    &.dragging {
+      cursor: grabbing;
+    }
+  }
 }
 
 .react-flow__edge {
-  cursor: default;
+  cursor: inherit;
 }
 
 .react-flow__attribution {
@@ -52,8 +70,13 @@
 }
 
 [class*='react-flow__node-'] {
+  .space-mode & {
+    box-shadow: none;
+    pointer-events: none !important;
+  }
+
   &:hover:not(.selected) {
-    box-shadow: 0 0 0 2px var(--color-selected) !important;
+    box-shadow: 0 0 0 2px var(--color-selected);
   }
 }
 
@@ -138,8 +161,6 @@
 
 .react-flow__node-input,
 .react-flow__node-synthesis {
-  cursor: pointer;
-
   border-radius: 5px;
   border-width: 0;
 

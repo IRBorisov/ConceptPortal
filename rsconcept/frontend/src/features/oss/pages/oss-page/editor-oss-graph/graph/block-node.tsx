@@ -28,7 +28,7 @@ export function BlockNode(node: BlockInternalNode) {
   return (
     <>
       <NodeResizeControl minWidth={BLOCK_NODE_MIN_WIDTH} minHeight={BLOCK_NODE_MIN_HEIGHT}>
-        <IconResize size={8} className='absolute bottom-[2px] right-[2px]' />
+        <IconResize size={8} className='absolute bottom-[2px] right-[2px] cc-graph-interactive' />
       </NodeResizeControl>
       {showCoordinates ? (
         <div
@@ -49,10 +49,10 @@ export function BlockNode(node: BlockInternalNode) {
           isChild && 'border-accent-orange'
         )}
       >
-        <div className='absolute top-0 left-0 w-full h-2 pointer-events-auto cursor-pointer' />
-        <div className='absolute top-0 right-0 h-full w-2 pointer-events-auto cursor-pointer' />
-        <div className='absolute bottom-0 right-0 w-full h-2 pointer-events-auto cursor-pointer' />
-        <div className='absolute bottom-0 left-0 h-full w-2 pointer-events-auto cursor-pointer' />
+        <div className='absolute top-0 left-0 w-full h-2 cc-graph-interactive cursor-pointer' />
+        <div className='absolute top-0 right-0 h-full w-2 cc-graph-interactive cursor-pointer' />
+        <div className='absolute bottom-0 right-0 w-full h-2 cc-graph-interactive cursor-pointer' />
+        <div className='absolute bottom-0 left-0 h-full w-2 cc-graph-interactive cursor-pointer' />
 
         <div
           className={clsx(
@@ -60,7 +60,7 @@ export function BlockNode(node: BlockInternalNode) {
             'px-2',
             'bg-background rounded-lg',
             'text-[18px]/[20px] line-clamp-2 text-center text-ellipsis',
-            'pointer-events-auto cursor-pointer'
+            'cc-graph-interactive cursor-pointer'
           )}
           data-tooltip-id={globalIDs.operation_tooltip}
           data-tooltip-hidden={node.dragging}

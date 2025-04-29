@@ -97,8 +97,6 @@ export class LayoutManager {
         : Math.max(bottom, block.y + block.height + MIN_DISTANCE);
     }
 
-    console.log('left, top, right, bottom', left, top, right, bottom);
-
     for (const operation of operation_nodes) {
       left = !left ? operation.x - MIN_DISTANCE : Math.min(left, operation.x - MIN_DISTANCE);
       top = !top ? operation.y - MIN_DISTANCE : Math.min(top, operation.y - MIN_DISTANCE);

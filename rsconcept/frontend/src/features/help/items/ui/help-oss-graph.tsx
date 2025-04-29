@@ -3,12 +3,15 @@ import {
   IconAnimation,
   IconAnimationOff,
   IconChild,
+  IconConceptBlock,
   IconConnect,
   IconConsolidation,
+  IconCoordinates,
   IconDestroy,
   IconEdit2,
   IconExecute,
   IconFitImage,
+  IconFixLayout,
   IconGrid,
   IconLineStraight,
   IconLineWave,
@@ -16,7 +19,8 @@ import {
   IconNewRSForm,
   IconReset,
   IconRSForm,
-  IconSave
+  IconSave,
+  IconSettings
 } from '@/components/icons';
 
 import { LinkTopic } from '../../components/link-topic';
@@ -30,8 +34,18 @@ export function HelpOssGraph() {
         <div className='sm:w-56'>
           <h1>Настройка графа</h1>
           <li>
+            <IconReset className='inline-icon' /> Сбросить изменения
+          </li>
+          <li>
             <IconFitImage className='inline-icon' /> Вписать в экран
           </li>
+          <li>
+            <IconFixLayout className='inline-icon' /> Исправить расположения
+          </li>
+          <li>
+            <IconSettings className='inline-icon' /> Диалог настроек
+          </li>
+
           <li>
             <IconGrid className='inline-icon' /> Отображение сетки
           </li>
@@ -42,6 +56,9 @@ export function HelpOssGraph() {
           <li>
             <IconAnimation className='inline-icon' />
             <IconAnimationOff className='inline-icon' /> Анимация
+          </li>
+          <li>
+            <IconCoordinates className='inline-icon' /> Отображение координат
           </li>
           <li>черта сверху - Загрузка</li>
           <li>
@@ -63,10 +80,13 @@ export function HelpOssGraph() {
             <kbd>Двойной клик</kbd> – переход к связанной <LinkTopic text='КС' topic={HelpTopic.CC_SYSTEM} />
           </li>
           <li>
-            <IconEdit2 className='inline-icon' /> Редактирование операции
+            <IconConceptBlock className='inline-icon icon-green' /> Новый блок
           </li>
           <li>
             <IconNewItem className='inline-icon icon-green' /> Новая операция
+          </li>
+          <li>
+            <IconEdit2 className='inline-icon' /> Редактирование узла
           </li>
           <li>
             <IconDestroy className='inline-icon icon-red' /> <kbd>Delete</kbd> – удалить выбранные
@@ -80,10 +100,13 @@ export function HelpOssGraph() {
         <div className='sm:w-56'>
           <h1>Общие</h1>
           <li>
-            <IconReset className='inline-icon' /> Сбросить изменения
+            <IconSave className='inline-icon' /> Сохранить положения
           </li>
           <li>
-            <IconSave className='inline-icon' /> Сохранить положения
+            <kbd>Space</kbd> – перемещение экрана
+          </li>
+          <li>
+            <kbd>Shift</kbd> – перемещение выделенных элементов в границах родителя
           </li>
         </div>
 

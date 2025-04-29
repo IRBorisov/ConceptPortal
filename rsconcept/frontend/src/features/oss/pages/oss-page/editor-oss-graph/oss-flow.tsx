@@ -46,6 +46,7 @@ export function OssFlow() {
   const { deleteBlock } = useDeleteBlock();
 
   const [mouseCoords, setMouseCoords] = useState<Position2D>({ x: 0, y: 0 });
+  const [spacePressed, setSpacePressed] = useState(false);
 
   const showCreateOperation = useDialogsStore(state => state.showCreateOperation);
   const showCreateBlock = useDialogsStore(state => state.showCreateBlock);
@@ -128,6 +129,12 @@ export function OssFlow() {
   }
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
+    if (event.code === 'Space') {
+      event.preventDefault();
+      event.stopPropagation();
+      setSpacePressed(true);
+      return;
+    }
     if (isProcessing) {
       return;
     }
@@ -164,6 +171,12 @@ export function OssFlow() {
     }
   }
 
+  function handleKeyUp(event: React.KeyboardEvent<HTMLDivElement>) {
+    if (event.code === 'Space') {
+      setSpacePressed(false);
+    }
+  }
+
   function handleMouseMove(event: React.MouseEvent<HTMLDivElement>) {
     const targetPosition = screenToFlowPosition({ x: event.clientX, y: event.clientY });
     setMouseCoords(targetPosition);
@@ -174,6 +187,7 @@ export function OssFlow() {
       tabIndex={-1}
       className='relative'
       onKeyDown={handleKeyDown}
+      onKeyUp={handleKeyUp}
       onMouseMove={showCoordinates ? handleMouseMove : undefined}
     >
       {showCoordinates ? <CoordinateDisplay mouseCoords={mouseCoords} className='absolute top-1 right-2' /> : null}
@@ -188,14 +202,18 @@ export function OssFlow() {
       <ContextMenu isOpen={isContextMenuOpen} onHide={hideContextMenu} {...menuProps} />
 
       <div
-        className={clsx('relative w-[100vw] cc-mask-sides', !containMovement && 'cursor-relocate')}
+        className={clsx(
+          'relative w-[100vw] cc-mask-sides',
+          spacePressed ? 'space-mode' : '',
+          !containMovement && 'cursor-relocate'
+        )}
         style={{ height: mainHeight, fontFamily: 'Rubik' }}
       >
         <ReactFlow
           nodes={nodes}
           edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
+          onNodesChange={spacePressed ? undefined : onNodesChange}
+          onEdgesChange={spacePressed ? undefined : onEdgesChange}
           edgesFocusable={false}
           nodesFocusable={false}
           fitView
@@ -206,15 +224,16 @@ export function OssFlow() {
           snapToGrid={true}
           snapGrid={[GRID_SIZE, GRID_SIZE]}
           onClick={hideContextMenu}
-          onNodeDoubleClick={handleNodeDoubleClick}
+          onNodeDoubleClick={spacePressed ? undefined : handleNodeDoubleClick}
           onNodeContextMenu={handleContextMenu}
           onContextMenu={event => {
             event.preventDefault();
             hideContextMenu();
           }}
-          onNodeDragStart={handleDragStart}
-          onNodeDrag={handleDrag}
-          onNodeDragStop={handleDragStop}
+          nodesDraggable={!spacePressed}
+          onNodeDragStart={spacePressed ? undefined : handleDragStart}
+          onNodeDrag={spacePressed ? undefined : handleDrag}
+          onNodeDragStop={spacePressed ? undefined : handleDragStop}
         >
           {showGrid ? <Background gap={GRID_SIZE} /> : null}
         </ReactFlow>
