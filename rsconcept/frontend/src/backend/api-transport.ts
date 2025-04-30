@@ -8,6 +8,7 @@ import { type z, ZodError } from 'zod';
 import { buildConstants } from '@/utils/build-constants';
 import { PARAMETER } from '@/utils/constants';
 import { errorMsg } from '@/utils/labels';
+import { type RO } from '@/utils/meta';
 import { extractErrorMessage } from '@/utils/utils';
 
 export { AxiosError } from 'axios';
@@ -58,7 +59,7 @@ export function axiosGet<ResponseData>({ endpoint, options, schema }: IAxiosGetR
     .get<ResponseData>(endpoint, options)
     .then(response => {
       schema?.parse(response.data);
-      return response.data;
+      return response.data as RO<ResponseData>;
     })
     .catch((error: Error | AxiosError) => {
       // Note: Ignore cancellation errors
@@ -81,7 +82,7 @@ export function axiosPost<RequestData, ResponseData = void>({
     .then(response => {
       schema?.parse(response.data);
       notifySuccess(response.data, request?.successMessage);
-      return response.data;
+      return response.data as RO<ResponseData>;
     })
     .catch((error: Error | AxiosError | ZodError) => {
       notifyError(error);
@@ -100,7 +101,7 @@ export function axiosDelete<RequestData, ResponseData = void>({
     .then(response => {
       schema?.parse(response.data);
       notifySuccess(response.data, request?.successMessage);
-      return response.data;
+      return response.data as RO<ResponseData>;
     })
     .catch((error: Error | AxiosError | ZodError) => {
       notifyError(error);
@@ -119,7 +120,7 @@ export function axiosPatch<RequestData, ResponseData = void>({
     .then(response => {
       schema?.parse(response.data);
       notifySuccess(response.data, request?.successMessage);
-      return response.data;
+      return response.data as RO<ResponseData>;
     })
     .catch((error: Error | AxiosError | ZodError) => {
       notifyError(error);

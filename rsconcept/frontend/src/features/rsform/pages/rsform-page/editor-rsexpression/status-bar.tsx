@@ -8,6 +8,7 @@ import { BadgeHelp } from '@/features/help/components';
 import { Loader } from '@/components/loader';
 import { APP_COLORS } from '@/styling/colors';
 import { globalIDs } from '@/utils/constants';
+import { type RO } from '@/utils/meta';
 import { prepareTooltip } from '@/utils/utils';
 
 import { type IExpressionParseDTO, ParsingStatus } from '../../../backend/types';
@@ -21,7 +22,7 @@ interface StatusBarProps {
   className?: string;
   processing: boolean;
   isModified: boolean;
-  parseData: IExpressionParseDTO | null;
+  parseData: RO<IExpressionParseDTO> | null;
   activeCst: IConstituenta;
   onAnalyze: () => void;
 }

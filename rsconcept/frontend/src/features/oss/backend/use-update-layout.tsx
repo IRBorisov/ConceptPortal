@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useUpdateTimestamp } from '@/features/library/backend/use-update-timestamp';
 
 import { KEYS } from '@/backend/configuration';
+import { type RO } from '@/utils/meta';
 
 import { ossApi } from './api';
 import { type IOperationSchemaDTO, type IOssLayout } from './types';
@@ -17,7 +18,7 @@ export const useUpdateLayout = () => {
       updateTimestamp(variables.itemID);
       client.setQueryData(
         ossApi.getOssQueryOptions({ itemID: variables.itemID }).queryKey,
-        (prev: IOperationSchemaDTO | undefined) =>
+        (prev: RO<IOperationSchemaDTO> | undefined) =>
           !prev
             ? prev
             : {

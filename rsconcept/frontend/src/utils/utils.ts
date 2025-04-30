@@ -128,7 +128,7 @@ export function extractErrorMessage(error: Error | AxiosError): string {
 /**
  * Convert array of objects to CSV Blob.
  */
-export function convertToCSV(targetObj: object[]): Blob {
+export function convertToCSV(targetObj: readonly object[]): Blob {
   if (!targetObj || targetObj.length === 0) {
     return new Blob([], { type: 'text/csv;charset=utf-8;' });
   }

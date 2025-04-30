@@ -4,6 +4,7 @@ import { type IOperationSchemaDTO } from '@/features/oss';
 import { type IRSFormDTO } from '@/features/rsform';
 
 import { KEYS } from '@/backend/configuration';
+import { type RO } from '@/utils/meta';
 
 import { libraryApi } from './api';
 import { type ILibraryItem } from './types';
@@ -38,7 +39,7 @@ export const useSetLocation = () => {
       client.setQueryData(rsKey, (prev: IRSFormDTO | undefined) =>
         !prev ? undefined : { ...prev, location: variables.location }
       );
-      client.setQueryData(libraryKey, (prev: ILibraryItem[] | undefined) =>
+      client.setQueryData(libraryKey, (prev: RO<ILibraryItem[]> | undefined) =>
         prev?.map(item => (item.id === variables.itemID ? { ...item, location: variables.location } : item))
       );
     },

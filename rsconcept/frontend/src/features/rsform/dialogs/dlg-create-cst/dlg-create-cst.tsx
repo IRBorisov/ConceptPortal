@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { errorMsg } from '@/utils/labels';
+import { type RO } from '@/utils/meta';
 
 import {
   type IConstituentaBasicsDTO,
@@ -21,7 +22,7 @@ import { FormCreateCst } from './form-create-cst';
 export interface DlgCreateCstProps {
   initial: ICreateConstituentaDTO;
   schema: IRSForm;
-  onCreate: (data: IConstituentaBasicsDTO) => void;
+  onCreate: (data: RO<IConstituentaBasicsDTO>) => void;
 }
 
 export function DlgCreateCst() {

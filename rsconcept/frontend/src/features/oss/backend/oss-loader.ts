@@ -5,6 +5,7 @@
 import { type ILibraryItem } from '@/features/library';
 
 import { Graph } from '@/models/graph';
+import { type RO } from '@/utils/meta';
 
 import { type IBlock, type IOperation, type IOperationSchema, type IOperationSchemaStats } from '../models/oss';
 import { BLOCK_NODE_MIN_HEIGHT, BLOCK_NODE_MIN_WIDTH } from '../pages/oss-page/editor-oss-graph/graph/block-node';
@@ -19,9 +20,9 @@ export class OssLoader {
   private operationByID = new Map<number, IOperation>();
   private blockByID = new Map<number, IBlock>();
   private schemaIDs: number[] = [];
-  private items: ILibraryItem[];
+  private items: RO<ILibraryItem[]>;
 
-  constructor(input: IOperationSchemaDTO, items: ILibraryItem[]) {
+  constructor(input: RO<IOperationSchemaDTO>, items: RO<ILibraryItem[]>) {
     this.oss = structuredClone(input) as IOperationSchema;
     this.items = items;
   }

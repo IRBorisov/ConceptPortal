@@ -13,6 +13,7 @@ import { Indicator } from '@/components/view';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { errorMsg, tooltipText } from '@/utils/labels';
+import { type RO } from '@/utils/meta';
 import { promptUnsaved } from '@/utils/utils';
 
 import {
@@ -68,7 +69,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
     }
   });
   const [forceComment, setForceComment] = useState(false);
-  const [localParse, setLocalParse] = useState<IExpressionParseDTO | null>(null);
+  const [localParse, setLocalParse] = useState<RO<IExpressionParseDTO> | null>(null);
 
   const typification = useMemo(
     () =>

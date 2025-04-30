@@ -3,6 +3,7 @@
  */
 
 import { Graph } from '@/models/graph';
+import { type RO } from '@/utils/meta';
 
 import { type IConstituenta, type IRSForm, type IRSFormStats } from '../models/rsform';
 import { inferClass, inferStatus, inferTemplate, isBaseSet, isFunctional } from '../models/rsform-api';
@@ -23,7 +24,7 @@ export class RSFormLoader {
   private cstByAlias = new Map<string, IConstituenta>();
   private cstByID = new Map<number, IConstituenta>();
 
-  constructor(input: IRSFormDTO) {
+  constructor(input: RO<IRSFormDTO>) {
     this.schema = structuredClone(input) as IRSForm;
     this.schema.version = input.version ?? 'latest';
   }

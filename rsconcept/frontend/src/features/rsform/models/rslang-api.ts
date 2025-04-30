@@ -6,6 +6,7 @@ import { type Tree } from '@lezer/common';
 
 import { cursorNode } from '@/utils/codemirror';
 import { PARAMETER } from '@/utils/constants';
+import { type RO } from '@/utils/meta';
 
 import { CstType, type IRSErrorDescription, type RSErrorType } from '../backend/types';
 import { labelCstTypification } from '../labels';
@@ -36,7 +37,7 @@ export function isSetTypification(text: string): boolean {
 }
 
 /** Infers type of constituent for a given template and arguments. */
-export function inferTemplatedType(templateType: CstType, args: IArgumentValue[]): CstType {
+export function inferTemplatedType(templateType: CstType, args: RO<IArgumentValue[]>): CstType {
   if (args.length === 0 || args.some(arg => !arg.value)) {
     return templateType;
   } else if (templateType === CstType.PREDICATE) {
@@ -92,7 +93,7 @@ export function splitTemplateDefinition(target: string) {
  * It replaces template argument placeholders in the expression with their corresponding values
  * from the provided arguments.
  */
-export function substituteTemplateArgs(expression: string, args: IArgumentValue[]): string {
+export function substituteTemplateArgs(expression: string, args: RO<IArgumentValue[]>): string {
   if (args.every(arg => !arg.value)) {
     return expression;
   }
@@ -121,7 +122,7 @@ export function substituteTemplateArgs(expression: string, args: IArgumentValue[
 /**
  * Generate ErrorID label.
  */
-export function getRSErrorPrefix(error: IRSErrorDescription): string {
+export function getRSErrorPrefix(error: RO<IRSErrorDescription>): string {
   const id = error.errorType.toString(16);
   // prettier-ignore
   switch(inferErrorClass(error.errorType)) {
@@ -133,12 +134,12 @@ export function getRSErrorPrefix(error: IRSErrorDescription): string {
 }
 
 /** Apply alias mapping. */
-export function applyAliasMapping(target: string, mapping: AliasMapping): string {
+export function applyAliasMapping(target: string, mapping: RO<AliasMapping>): string {
   return applyPattern(target, mapping, GLOBALS_REGEXP);
 }
 
 /** Apply alias typification mapping. */
-export function applyTypificationMapping(target: string, mapping: AliasMapping): string {
+export function applyTypificationMapping(target: string, mapping: RO<AliasMapping>): string {
   const modified = applyAliasMapping(target, mapping);
   if (modified === target) {
     return target;

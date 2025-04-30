@@ -20,6 +20,7 @@ import {
 } from '@/features/rsform/models/rslang-api';
 
 import { infoMsg } from '@/utils/labels';
+import { type RO } from '@/utils/meta';
 
 import { Graph } from '../../../models/graph';
 import { describeSubstitutionError } from '../labels';
@@ -29,17 +30,17 @@ import { type IOperationSchema, type IOssItem, SubstitutionErrorType } from './o
 const STARTING_SUB_INDEX = 900; // max semantic index for starting substitution
 
 /** Checks if element is {@link IOperation} or {@link IBlock}. */
-export function isOperation(item: IOssItem | null): boolean {
+export function isOperation(item: RO<IOssItem> | null): boolean {
   return !!item && 'arguments' in item;
 }
 
 /** Extract contiguous ID of {@link IOperation} or {@link IBlock}. */
-export function getItemID(item: IOssItem): number {
+export function getItemID(item: RO<IOssItem>): number {
   return isOperation(item) ? item.id : -item.id;
 }
 
 /** Sorts library items relevant for the specified {@link IOperationSchema}. */
-export function sortItemsForOSS(oss: IOperationSchema, items: ILibraryItem[]): ILibraryItem[] {
+export function sortItemsForOSS(oss: IOperationSchema, items: readonly ILibraryItem[]): ILibraryItem[] {
   const result = items.filter(item => item.location === oss.location);
   for (const item of items) {
     if (item.visible && item.owner === oss.owner && !result.includes(item)) {

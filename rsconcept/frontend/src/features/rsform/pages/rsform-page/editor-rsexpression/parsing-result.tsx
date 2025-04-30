@@ -1,14 +1,16 @@
 import clsx from 'clsx';
 
+import { type RO } from '@/utils/meta';
+
 import { type IExpressionParseDTO, type IRSErrorDescription } from '../../../backend/types';
 import { describeRSError } from '../../../labels';
 import { getRSErrorPrefix } from '../../../models/rslang-api';
 
 interface ParsingResultProps {
-  data: IExpressionParseDTO | null;
+  data: RO<IExpressionParseDTO> | null;
   disabled?: boolean;
   isOpen: boolean;
-  onShowError: (error: IRSErrorDescription) => void;
+  onShowError: (error: RO<IRSErrorDescription>) => void;
 }
 
 export function ParsingResult({ isOpen, data, disabled, onShowError }: ParsingResultProps) {

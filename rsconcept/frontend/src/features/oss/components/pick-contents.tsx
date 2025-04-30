@@ -9,9 +9,10 @@ import { ComboBox } from '@/components/input/combo-box';
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
 import { NoData } from '@/components/view';
+import { type RO } from '@/utils/meta';
 
 import { labelOssItem } from '../labels';
-import { type IBlock, type IOperation, type IOperationSchema } from '../models/oss';
+import { type IOperationSchema, type IOssItem } from '../models/oss';
 import { getItemID, isOperation } from '../models/oss-api';
 
 const SELECTION_CLEAR_TIMEOUT = 1000;
@@ -25,7 +26,7 @@ interface PickMultiOperationProps extends Styling {
   disallowBlocks?: boolean;
 }
 
-const columnHelper = createColumnHelper<IOperation | IBlock>();
+const columnHelper = createColumnHelper<RO<IOssItem>>();
 
 export function PickContents({
   rows,
@@ -40,7 +41,7 @@ export function PickContents({
   const selectedItems = value
     .map(itemID => (itemID > 0 ? schema.operationByID.get(itemID) : schema.blockByID.get(-itemID)))
     .filter(item => item !== undefined);
-  const [lastSelected, setLastSelected] = useState<IOperation | IBlock | null>(null);
+  const [lastSelected, setLastSelected] = useState<RO<IOssItem> | null>(null);
   const items = [
     ...(disallowBlocks ? [] : schema.blocks.filter(item => !value.includes(-item.id) && !exclude?.includes(-item.id))),
     ...schema.operations.filter(item => !value.includes(item.id) && !exclude?.includes(item.id))
@@ -50,7 +51,7 @@ export function PickContents({
     onChange(value.filter(item => item !== target));
   }
 
-  function handleSelect(target: IOperation | IBlock | null) {
+  function handleSelect(target: RO<IOssItem> | null) {
     if (target) {
       setLastSelected(target);
       onChange([...value, getItemID(target)]);

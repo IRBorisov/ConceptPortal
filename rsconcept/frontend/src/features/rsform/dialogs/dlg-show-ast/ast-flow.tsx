@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { type Edge, MarkerType, type Node, useEdgesState, useNodesState } from 'reactflow';
 
 import { DiagramFlow } from '@/components/flow/diagram-flow';
+import { type RO } from '@/utils/meta';
 
 import { type SyntaxTree } from '../../models/rslang';
 
@@ -22,7 +23,7 @@ const flowOptions = {
 } as const;
 
 interface ASTFlowProps {
-  data: SyntaxTree;
+  data: RO<SyntaxTree>;
   onNodeEnter: (node: Node) => void;
   onNodeLeave: (node: Node) => void;
   onChangeDragging: (value: boolean) => void;

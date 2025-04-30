@@ -3,6 +3,7 @@
  */
 
 import { PARAMETER } from '@/utils/constants';
+import { type RO } from '@/utils/meta';
 import { prepareTooltip } from '@/utils/utils';
 
 import { type IVersionInfo } from '../library/backend/types';
@@ -18,7 +19,7 @@ import { type GraphColoring } from './stores/term-graph';
 /**
  * Generates description for {@link IConstituenta}.
  */
-export function describeConstituenta(cst: IConstituenta): string {
+export function describeConstituenta(cst: RO<IConstituenta>): string {
   if (cst.cst_type === CstType.STRUCTURED) {
     return (
       cst.term_resolved ||
@@ -43,7 +44,7 @@ export function describeConstituenta(cst: IConstituenta): string {
 /**
  * Generates description for term of a given {@link IConstituenta}.
  */
-export function describeConstituentaTerm(cst: IConstituenta | null): string {
+export function describeConstituentaTerm(cst: RO<IConstituenta> | null): string {
   if (!cst) {
     return '!Конституента отсутствует!';
   }
@@ -57,14 +58,14 @@ export function describeConstituentaTerm(cst: IConstituenta | null): string {
 /**
  * Generates label for {@link IConstituenta}.
  */
-export function labelConstituenta(cst: IConstituenta) {
+export function labelConstituenta(cst: RO<IConstituenta>) {
   return `${cst.alias}: ${describeConstituenta(cst)}`;
 }
 
 /**
  * Generates label for {@link IVersionInfo} of {@link IRSForm}.
  */
-export function labelVersion(value: CurrentVersion, items: IVersionInfo[]) {
+export function labelVersion(value: CurrentVersion, items: RO<IVersionInfo[]>) {
   const version = items.find(ver => ver.id === value);
   return version ? version.version : 'актуальная';
 }
@@ -345,7 +346,7 @@ export function labelTypification({
 }: {
   isValid: boolean;
   resultType: string;
-  args: IArgumentInfo[];
+  args: RO<IArgumentInfo[]>;
 }): string {
   if (!isValid) {
     return 'N/A';
@@ -363,7 +364,7 @@ export function labelTypification({
 /**
  * Generates label for {@link IConstituenta} typification.
  */
-export function labelCstTypification(cst: IConstituenta): string {
+export function labelCstTypification(cst: RO<IConstituenta>): string {
   return labelTypification({
     isValid: cst.parse.status === ParsingStatus.VERIFIED,
     resultType: cst.parse.typification,
@@ -374,7 +375,7 @@ export function labelCstTypification(cst: IConstituenta): string {
 /**
  * Generates label for {@link ISyntaxTreeNode}.
  */
-export function labelSyntaxTree(node: ISyntaxTreeNode): string {
+export function labelSyntaxTree(node: RO<ISyntaxTreeNode>): string {
   // prettier-ignore
   switch (node.typeID) {
     case TokenID.ID_LOCAL:
@@ -531,7 +532,7 @@ export function labelGrammeme(gram: Grammeme): string {
 /**
  * Generates error description for {@link IRSErrorDescription}.
  */
-export function describeRSError(error: IRSErrorDescription): string {
+export function describeRSError(error: RO<IRSErrorDescription>): string {
   // prettier-ignore
   switch (error.errorType) {
     case RSErrorType.unknownSymbol:

@@ -11,7 +11,7 @@ import { cn } from '../utils';
 
 interface ComboBoxProps<Option> extends Styling {
   id?: string;
-  items?: Option[];
+  items?: readonly Option[];
   value: Option | null;
   onChange: (newValue: Option | null) => void;
 

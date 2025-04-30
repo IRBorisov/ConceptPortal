@@ -6,12 +6,13 @@ import { MiniButton } from '@/components/control';
 import { createColumnHelper } from '@/components/data-table';
 import { IconFolderTree } from '@/components/icons';
 import { useWindowSize } from '@/hooks/use-window-size';
+import { type RO } from '@/utils/meta';
 
 import { type ILibraryItem } from '../../backend/types';
 import { BadgeLocation } from '../../components/badge-location';
 import { useLibrarySearchStore } from '../../stores/library-search';
 
-const columnHelper = createColumnHelper<ILibraryItem>();
+const columnHelper = createColumnHelper<RO<ILibraryItem>>();
 
 export function useLibraryColumns() {
   const { isSmall } = useWindowSize();

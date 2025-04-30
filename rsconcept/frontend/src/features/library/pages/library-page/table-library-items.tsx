@@ -9,6 +9,7 @@ import { DataTable, type IConditionalStyle, type VisibilityState } from '@/compo
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight } from '@/stores/app-layout';
 import { usePreferencesStore } from '@/stores/preferences';
+import { type RO } from '@/utils/meta';
 
 import { type ILibraryItem, LibraryItemType } from '../../backend/types';
 import { useLibrarySearchStore } from '../../stores/library-search';
@@ -16,7 +17,7 @@ import { useLibrarySearchStore } from '../../stores/library-search';
 import { useLibraryColumns } from './use-library-columns';
 
 interface TableLibraryItemsProps {
-  items: ILibraryItem[];
+  items: RO<ILibraryItem[]>;
 }
 
 export function TableLibraryItems({ items }: TableLibraryItemsProps) {
@@ -55,7 +56,7 @@ export function TableLibraryItems({ items }: TableLibraryItemsProps) {
     <DataTable
       id='library_data'
       columns={columns}
-      data={items}
+      data={items as ILibraryItem[]}
       headPosition='0'
       className={clsx('cc-scroll-y h-fit text-xs sm:text-sm border-b', folderMode && 'border-l')}
       style={{ maxHeight: tableHeight }}

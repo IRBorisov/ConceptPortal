@@ -1,3 +1,5 @@
+import { type RO } from '@/utils/meta';
+
 import { OperationType } from './backend/types';
 import {
   type IOperation,
@@ -26,7 +28,7 @@ export function describeOperationType(itemType: OperationType): string {
 }
 
 /** Generates error description for {@link ISubstitutionErrorDescription}. */
-export function describeSubstitutionError(error: ISubstitutionErrorDescription): string {
+export function describeSubstitutionError(error: RO<ISubstitutionErrorDescription>): string {
   switch (error.errorType) {
     case SubstitutionErrorType.invalidIDs:
       return 'Ошибка в идентификаторах схем';
@@ -55,7 +57,7 @@ export function describeSubstitutionError(error: ISubstitutionErrorDescription):
 }
 
 /** Retrieves label for {@link IOssItem}. */
-export function labelOssItem(item: IOssItem): string {
+export function labelOssItem(item: RO<IOssItem>): string {
   if (isOperation(item)) {
     return `${(item as IOperation).alias}: ${item.title}`;
   } else {

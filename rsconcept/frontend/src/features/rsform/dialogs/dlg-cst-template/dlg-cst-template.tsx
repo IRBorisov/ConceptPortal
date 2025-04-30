@@ -10,6 +10,7 @@ import { Loader } from '@/components/loader';
 import { ModalForm } from '@/components/modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useDialogsStore } from '@/stores/dialogs';
+import { type RO } from '@/utils/meta';
 
 import {
   CstType,
@@ -28,7 +29,7 @@ import { TemplateState } from './template-state';
 
 export interface DlgCstTemplateProps {
   schema: IRSForm;
-  onCreate: (data: IConstituentaBasicsDTO) => void;
+  onCreate: (data: RO<IConstituentaBasicsDTO>) => void;
   insertAfter?: number;
 }
 

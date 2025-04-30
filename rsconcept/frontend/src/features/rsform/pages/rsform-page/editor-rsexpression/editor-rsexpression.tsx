@@ -8,6 +8,7 @@ import { useResetOnChange } from '@/hooks/use-reset-on-change';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { errorMsg } from '@/utils/labels';
+import { type RO } from '@/utils/meta';
 
 import {
   type ICheckConstituentaDTO,
@@ -42,7 +43,7 @@ interface EditorRSExpressionProps {
   disabled?: boolean;
   toggleReset?: boolean;
 
-  onChangeLocalParse: (typification: IExpressionParseDTO) => void;
+  onChangeLocalParse: (typification: RO<IExpressionParseDTO>) => void;
   onOpenEdit: (cstID: number) => void;
   onShowTypeGraph: (event: React.MouseEvent<Element>) => void;
 }
@@ -62,7 +63,7 @@ export function EditorRSExpression({
 
   const [isModified, setIsModified] = useState(false);
   const rsInput = useRef<ReactCodeMirrorRef>(null);
-  const [parseData, setParseData] = useState<IExpressionParseDTO | null>(null);
+  const [parseData, setParseData] = useState<RO<IExpressionParseDTO> | null>(null);
 
   const isProcessing = useMutatingRSForm();
   const showControls = usePreferencesStore(state => state.showExpressionControls);
@@ -78,7 +79,7 @@ export function EditorRSExpression({
   function checkConstituenta(
     expression: string,
     activeCst: IConstituenta,
-    onSuccess?: (data: IExpressionParseDTO) => void
+    onSuccess?: (data: RO<IExpressionParseDTO>) => void
   ) {
     const data: ICheckConstituentaDTO = {
       definition_formal: expression,
@@ -96,7 +97,7 @@ export function EditorRSExpression({
     setIsModified(newValue !== activeCst.definition_formal);
   }
 
-  function handleCheckExpression(callback?: (parse: IExpressionParseDTO) => void) {
+  function handleCheckExpression(callback?: (parse: RO<IExpressionParseDTO>) => void) {
     checkConstituenta(value, activeCst, parse => {
       onChangeLocalParse(parse);
       if (parse.errors.length > 0) {
@@ -109,7 +110,7 @@ export function EditorRSExpression({
     });
   }
 
-  function onShowError(error: IRSErrorDescription, prefixLen: number) {
+  function onShowError(error: RO<IRSErrorDescription>, prefixLen: number) {
     if (!rsInput.current) {
       return;
     }

@@ -4,6 +4,7 @@ import { type IOperationSchemaDTO } from '@/features/oss';
 import { type IRSFormDTO } from '@/features/rsform';
 
 import { KEYS } from '@/backend/configuration';
+import { type RO } from '@/utils/meta';
 
 import { libraryApi } from './api';
 import { type ILibraryItem, type IUpdateLibraryItemDTO, LibraryItemType } from './types';
@@ -20,7 +21,7 @@ export const useUpdateItem = () => {
         data.item_type === LibraryItemType.RSFORM
           ? KEYS.composite.rsItem({ itemID: data.id })
           : KEYS.composite.ossItem({ itemID: data.id });
-      client.setQueryData(libraryKey, (prev: ILibraryItem[] | undefined) =>
+      client.setQueryData(libraryKey, (prev: RO<ILibraryItem[]> | undefined) =>
         prev?.map(item => (item.id === data.id ? data : item))
       );
       client.setQueryData(itemKey, (prev: IRSFormDTO | IOperationSchemaDTO | undefined) =>

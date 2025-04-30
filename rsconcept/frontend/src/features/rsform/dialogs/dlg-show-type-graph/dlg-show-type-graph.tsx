@@ -8,6 +8,7 @@ import { HelpTopic } from '@/features/help';
 import { ModalView } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { errorMsg } from '@/utils/labels';
+import { type RO } from '@/utils/meta';
 
 import { type ITypeInfo } from '../../models/rslang';
 import { TypificationGraph } from '../../models/typification-graph';
@@ -15,7 +16,7 @@ import { TypificationGraph } from '../../models/typification-graph';
 import { MGraphFlow } from './mgraph-flow';
 
 export interface DlgShowTypeGraphProps {
-  items: ITypeInfo[];
+  items: RO<ITypeInfo[]>;
 }
 
 export function DlgShowTypeGraph() {

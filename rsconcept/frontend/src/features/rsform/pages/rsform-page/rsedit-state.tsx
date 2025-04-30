@@ -14,6 +14,7 @@ import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { PARAMETER, prefixes } from '@/utils/constants';
 import { promptText } from '@/utils/labels';
+import { type RO } from '@/utils/meta';
 import { promptUnsaved } from '@/utils/utils';
 
 import { CstType, type IConstituentaBasicsDTO, type ICreateConstituentaDTO } from '../../backend/types';
@@ -136,7 +137,7 @@ export const RSEditState = ({
     });
   }
 
-  function onCreateCst(newCst: IConstituentaBasicsDTO) {
+  function onCreateCst(newCst: RO<IConstituentaBasicsDTO>) {
     setSelected([newCst.id]);
     navigateRSForm({ tab: activeTab, activeID: newCst.id });
     if (activeTab === RSTabID.CST_LIST) {

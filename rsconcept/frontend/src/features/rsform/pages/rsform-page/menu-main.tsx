@@ -26,6 +26,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';
 import { infoMsg, tooltipText } from '@/utils/labels';
+import { type RO } from '@/utils/meta';
 import { generatePageQR, promptUnsaved, sharePage } from '@/utils/utils';
 
 import { useDownloadRSForm } from '../../backend/use-download-rsform';
@@ -78,9 +79,9 @@ export function MenuMain() {
     void download({
       itemID: schema.id,
       version: schema.version === 'latest' ? undefined : schema.version
-    }).then((data: Blob) => {
+    }).then((data: RO<Blob>) => {
       try {
-        fileDownload(data, fileName);
+        fileDownload(data as Blob, fileName);
       } catch (error) {
         console.error(error);
       }

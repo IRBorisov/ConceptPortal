@@ -9,6 +9,7 @@ import { HelpTopic } from '@/features/help';
 
 import { ModalView } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
+import { type RO } from '@/utils/meta';
 
 import { type SyntaxTree } from '../../models/rslang';
 
@@ -17,7 +18,7 @@ import { ASTFlow } from './ast-flow';
 const NODE_POPUP_DELAY = 100;
 
 export interface DlgShowASTProps {
-  syntaxTree: SyntaxTree;
+  syntaxTree: RO<SyntaxTree>;
   expression: string;
 }
 

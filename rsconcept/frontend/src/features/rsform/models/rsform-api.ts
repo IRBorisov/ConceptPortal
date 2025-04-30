@@ -4,6 +4,7 @@
 
 import { BASIC_SCHEMAS, type ILibraryItem } from '@/features/library';
 
+import { type RO } from '@/utils/meta';
 import { TextMatcher } from '@/utils/utils';
 
 import { CstType, ParsingStatus, ValueClass } from '../backend/types';
@@ -18,7 +19,7 @@ import { CATEGORY_CST_TYPE, CstClass, ExpressionStatus, type IConstituenta, type
  * @param query - The query string used for matching.
  * @param mode - The matching mode to determine which properties to include in the matching process.
  */
-export function matchConstituenta(target: IConstituenta, query: string, mode: CstMatchMode): boolean {
+export function matchConstituenta(target: RO<IConstituenta>, query: string, mode: CstMatchMode): boolean {
   const matcher = new TextMatcher(query);
   if ((mode === CstMatchMode.ALL || mode === CstMatchMode.NAME) && matcher.test(target.alias)) {
     return true;
@@ -214,7 +215,7 @@ export function isFunctional(type: CstType): boolean {
 /**
  * Evaluate if {@link IConstituenta} can be used produce structure.
  */
-export function canProduceStructure(cst: IConstituenta): boolean {
+export function canProduceStructure(cst: RO<IConstituenta>): boolean {
   return !!cst.parse.typification && cst.cst_type !== CstType.BASE && cst.cst_type !== CstType.CONSTANT;
 }
 
@@ -271,7 +272,7 @@ export function generateAlias(type: CstType, schema: IRSForm, takenAliases: stri
 /**
  * Sorts library items relevant for InlineSynthesis with specified {@link IRSForm}.
  */
-export function sortItemsForInlineSynthesis(receiver: IRSForm, items: ILibraryItem[]): ILibraryItem[] {
+export function sortItemsForInlineSynthesis(receiver: IRSForm, items: readonly ILibraryItem[]): ILibraryItem[] {
   const result = items.filter(item => item.location === receiver.location);
   for (const item of items) {
     if (item.visible && item.owner === item.owner && !result.includes(item)) {

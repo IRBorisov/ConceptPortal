@@ -81,7 +81,7 @@ export function MenuEditSchema() {
       cstID: targetCst.id
     }).then(cstList => {
       if (cstList.length !== 0) {
-        setSelected(cstList);
+        setSelected([...cstList]);
       }
     });
   }

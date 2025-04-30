@@ -3,6 +3,7 @@
  */
 
 import { PARAMETER } from '@/utils/constants';
+import { type RO } from '@/utils/meta';
 
 import { type IArgumentInfo } from './rslang';
 
@@ -35,7 +36,7 @@ export class TypificationGraph {
    * @param result - typification of the formal definition.
    * @param args - arguments for term or predicate function.
    */
-  addConstituenta(alias: string, result: string, args: IArgumentInfo[]): void {
+  addConstituenta(alias: string, result: string, args: RO<IArgumentInfo[]>): void {
     const argsNode = this.processArguments(args);
     const resultNode = this.processResult(result);
     const combinedNode = this.combineResults(resultNode, argsNode);
@@ -122,7 +123,7 @@ export class TypificationGraph {
     this.nodeByAlias.set(alias, nodeToAnnotate);
   }
 
-  private processArguments(args: IArgumentInfo[]): TypificationGraphNode | null {
+  private processArguments(args: RO<IArgumentInfo[]>): TypificationGraphNode | null {
     if (args.length === 0) {
       return null;
     }
