@@ -42,7 +42,7 @@ export function ApplicationLayout() {
         <Navigation />
 
         <div
-          className='overflow-x-auto max-w-[100vw]'
+          className='overflow-x-auto max-w-[100dvw]'
           style={{ maxHeight: viewportHeight }}
           inert={activeDialog !== null}
         >
