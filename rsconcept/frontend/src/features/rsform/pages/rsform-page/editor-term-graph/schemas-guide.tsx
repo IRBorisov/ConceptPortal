@@ -38,7 +38,11 @@ export function SchemasGuide() {
   return (
     <div className='p-1' tabIndex={-1} id={globalIDs.graph_schemas}>
       <IconHelp size='1.25rem' className='icon-primary' />
-      <Tooltip anchorSelect={`#${globalIDs.graph_schemas}`} place='right' className='max-w-100 break-words text-base'>
+      <Tooltip
+        anchorSelect={`#${globalIDs.graph_schemas}`}
+        place='right'
+        className='grid max-w-100 break-words text-base'
+      >
         <div className='inline-flex items-center gap-2'>
           <span className='w-2.5 h-2.5 border rounded-full' style={{ backgroundColor: colorBgSchemas(0) }} />
           <span>Текущая схема</span>
