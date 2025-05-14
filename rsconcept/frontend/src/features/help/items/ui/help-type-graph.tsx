@@ -27,6 +27,11 @@ export function HelpTypeGraph() {
       <li>
         <span className='bg-accent-orange'>ступень декартова произведения</span>
       </li>
+
+      <h2>Команды</h2>
+      <li>
+        <kbd>Space</kbd> – перемещение экрана
+      </li>
     </div>
   );
 }

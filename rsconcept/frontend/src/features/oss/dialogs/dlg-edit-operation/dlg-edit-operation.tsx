@@ -58,9 +58,9 @@ export function DlgEditOperation() {
   const [activeTab, setActiveTab] = useState<TabID>(TabID.CARD);
 
   function onSubmit(data: IUpdateOperationDTO) {
-    // if (data.item_data.parent !== target.parent) {
-    //   data.layout = updateLayoutOnOperationChange(data.target, data.item_data.parent, data.layout);
-    // }
+    if (data.item_data.parent !== target.parent) {
+      manager.onOperationChangeParent(data.target, data.item_data.parent);
+    }
     return updateOperation({ itemID: manager.oss.id, data });
   }
 

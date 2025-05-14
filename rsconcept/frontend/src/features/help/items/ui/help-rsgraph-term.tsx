@@ -70,6 +70,9 @@ export function HelpRSGraphTerm() {
         <div className='sm:w-56'>
           <h1>Общие</h1>
           <li>
+            <kbd>Space</kbd> – перемещение экрана
+          </li>
+          <li>
             <IconOSS className='inline-icon' /> переход к связанной <LinkTopic text='ОСС' topic={HelpTopic.CC_OSS} />
           </li>
           <li>

@@ -115,4 +115,14 @@ export class LayoutManager {
       height: bottom && top ? bottom - top : data.height
     };
   }
+
+  /** Update layout when parent changes */
+  onOperationChangeParent(targetID: number, newParent: number | null) {
+    console.error('not implemented', targetID, newParent);
+  }
+
+  /** Update layout when parent changes */
+  onBlockChangeParent(targetID: number, newParent: number | null) {
+    console.error('not implemented', targetID, newParent);
+  }
 }

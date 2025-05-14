@@ -27,6 +27,11 @@ export function HelpFormulaTree() {
       <li>
         <span className='bg-secondary'>составные выражения</span>
       </li>
+
+      <h2>Команды</h2>
+      <li>
+        <kbd>Space</kbd> – перемещение экрана
+      </li>
     </div>
   );
 }
