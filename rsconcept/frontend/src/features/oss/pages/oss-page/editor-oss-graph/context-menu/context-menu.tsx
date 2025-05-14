@@ -39,8 +39,8 @@ export function ContextMenu({ isOpen, item, cursorX, cursorY, onHide }: ContextM
     <div
       ref={ref}
       onBlur={handleBlur}
-      className='relative'
-      style={{ top: `calc(${cursorY}px - 2.5rem)`, left: cursorX }}
+      className='fixed z-tooltip'
+      style={{ top: `calc(${cursorY}px + 0.5rem)`, left: cursorX }}
     >
       <Dropdown
         className='z-navigation!'
