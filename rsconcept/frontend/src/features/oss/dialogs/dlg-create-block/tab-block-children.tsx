@@ -17,8 +17,6 @@ export function TabBlockChildren() {
   const children_operations = useWatch({ control, name: 'children_operations' });
   const exclude = parent ? [-parent, ...manager.oss.hierarchy.expandAllInputs([-parent]).filter(id => id < 0)] : [];
 
-  console.log(exclude);
-
   const value = [...children_blocks.map(id => -id), ...children_operations];
 
   function handleChangeSelected(newValue: number[]) {

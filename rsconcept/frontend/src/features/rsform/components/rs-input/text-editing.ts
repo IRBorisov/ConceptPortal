@@ -1,6 +1,6 @@
 // Formatted text editing helpers
 
-import { type ReactCodeMirrorRef } from '@uiw/react-codemirror';
+import { type ReactCodeMirrorRef, type SelectionRange } from '@uiw/react-codemirror';
 
 import { CodeMirrorWrapper } from '@/utils/codemirror';
 
@@ -145,8 +145,7 @@ export class RSTextWrapper extends CodeMirrorWrapper {
         return true;
       }
       case TokenID.BOOLEAN: {
-        const selStart = selection.from;
-        if (hasSelection && this.ref.view.state.sliceDoc(selStart, selStart + 1) === 'ℬ') {
+        if (hasSelection && this.startsWithBoolean(selection)) {
           this.envelopeWith('ℬ', '');
         } else {
           this.envelopeWith('ℬ(', ')');
@@ -284,5 +283,36 @@ export class RSTextWrapper extends CodeMirrorWrapper {
       }
     }
     return false;
+  }
+
+  private startsWithBoolean(range: SelectionRange): boolean {
+    const text = this.ref.view.state.sliceDoc(range.from, range.to);
+    if (!text.startsWith('ℬ') || !text.endsWith(')')) {
+      return false;
+    }
+    const openParenIndex = text.indexOf('(', 1);
+    if (openParenIndex === -1) {
+      return false;
+    }
+    for (const char of text.slice(0, openParenIndex)) {
+      if (char !== 'ℬ') {
+        return false;
+      }
+    }
+    const bracketsContent = text.slice(openParenIndex + 1, text.length - 1);
+    return this.isValidBracketSequence(bracketsContent);
+  }
+
+  private isValidBracketSequence(text: string): boolean {
+    let depth = 0;
+    for (const char of text) {
+      if (char === '(') {
+        depth++;
+      } else if (char === ')') {
+        depth--;
+        if (depth < 0) return false;
+      }
+    }
+    return depth === 0;
   }
 }
