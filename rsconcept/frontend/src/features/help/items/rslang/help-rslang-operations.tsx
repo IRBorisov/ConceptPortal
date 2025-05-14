@@ -19,7 +19,7 @@ export function HelpRSLangOperations() {
       <h2>
         <IconSortList size='1.25rem' className='inline-icon' /> Упорядочение
       </h2>
-      <p>
+      <ul>
         Упорядочение списка конституент по следующим правилам
         <li>базисные и константные множества объявляются первыми</li>
         <li>
@@ -32,7 +32,7 @@ export function HelpRSLangOperations() {
           <LinkTopic text='порожденные' topic={HelpTopic.CC_RELATIONS} /> конституенты следуют сразу за исходной
         </li>
         <li>максимальное сохранение исходного порядка при выполнении предыдущих правил</li>
-      </p>
+      </ul>
 
       <h2>
         <IconGenerateNames size='1.25rem' className='inline-icon' /> Порядковые имена

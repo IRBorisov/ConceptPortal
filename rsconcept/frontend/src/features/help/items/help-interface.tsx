@@ -31,32 +31,34 @@ export function HelpInterface() {
       </p>
 
       <h2>Навигация и настройки</h2>
-      <li>
-        <kbd>Ctrl + клик</kbd> на объект навигации откроет новую вкладку
-      </li>
-      <li>
-        <IconPin size='1.25rem' className='inline-icon' /> навигационную панель можно скрыть с помощью кнопки в правом
-        верхнем углу
-      </li>
-      <li>
-        <IconLightTheme className='inline-icon' />
-        <IconDarkTheme className='inline-icon' /> переключатели темы
-      </li>
-      <li>
-        <IconLogin size='1.25rem' className='inline-icon' /> вход в систему / регистрация нового пользователя
-      </li>
-      <li>
-        <IconUser2 size='1.25rem' className='inline-icon' /> меню пользователя содержит ряд настроек и переход к профилю
-        пользователя
-      </li>
+      <ul>
+        <li>
+          <kbd>Ctrl + клик</kbd> на объект навигации откроет новую вкладку
+        </li>
+        <li>
+          <IconPin size='1.25rem' className='inline-icon' /> навигационную панель можно скрыть с помощью кнопки в правом
+          верхнем углу
+        </li>
+        <li>
+          <IconLightTheme className='inline-icon' />
+          <IconDarkTheme className='inline-icon' /> переключатели темы
+        </li>
+        <li>
+          <IconLogin size='1.25rem' className='inline-icon' /> вход в систему / регистрация нового пользователя
+        </li>
+        <li>
+          <IconUser2 size='1.25rem' className='inline-icon' /> меню пользователя содержит ряд настроек и переход к
+          профилю пользователя
+        </li>
 
-      <li>
-        <IconHelp className='inline-icon' />
-        <IconHelpOff className='inline-icon' /> отключение иконок контекстной справки
-      </li>
-      <li>
-        <IconLogout className='inline-icon' /> выход из системы
-      </li>
+        <li>
+          <IconHelp className='inline-icon' />
+          <IconHelpOff className='inline-icon' /> отключение иконок контекстной справки
+        </li>
+        <li>
+          <IconLogout className='inline-icon' /> выход из системы
+        </li>
+      </ul>
 
       <Subtopics headTopic={HelpTopic.INTERFACE} />
     </div>

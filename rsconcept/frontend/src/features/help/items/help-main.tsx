@@ -22,34 +22,38 @@ export function HelpMain() {
 
       <details>
         <summary className='text-center font-semibold'>Разделы Справки</summary>
-        {[
-          HelpTopic.THESAURUS,
-          HelpTopic.INTERFACE,
-          HelpTopic.CONCEPTUAL,
-          HelpTopic.RSLANG,
-          HelpTopic.TERM_CONTROL,
-          HelpTopic.ACCESS,
-          HelpTopic.VERSIONS,
-          HelpTopic.INFO,
-          HelpTopic.EXTEOR
-        ].map(topic => (
-          <TopicItem key={`${prefixes.topic_item}${topic}`} topic={topic} />
-        ))}
+        <ul>
+          {[
+            HelpTopic.THESAURUS,
+            HelpTopic.INTERFACE,
+            HelpTopic.CONCEPTUAL,
+            HelpTopic.RSLANG,
+            HelpTopic.TERM_CONTROL,
+            HelpTopic.ACCESS,
+            HelpTopic.VERSIONS,
+            HelpTopic.INFO,
+            HelpTopic.EXTEOR
+          ].map(topic => (
+            <TopicItem key={`${prefixes.topic_item}${topic}`} topic={topic} />
+          ))}
+        </ul>
       </details>
 
       <h2>Лицензирование и раскрытие информации</h2>
-      <li>Пользователи Портала сохраняют авторские права на создаваемый ими контент</li>
-      <li>
-        Политика обработки данных доступна по <LinkTopic text='ссылке' topic={HelpTopic.INFO_PRIVACY} />
-      </li>
-      <li>
-        Портал является проектом с открытым исходным кодом, доступным на{' '}
-        <TextURL text='Github' href={external_urls.git_portal} />
-      </li>
-      <li>
-        Данный сайт использует доменное имя и серверные мощности{' '}
-        <TextURL text='Центра Концепт' href={external_urls.concept} />
-      </li>
+      <ul>
+        <li>Пользователи Портала сохраняют авторские права на создаваемый ими контент</li>
+        <li>
+          Политика обработки данных доступна по <LinkTopic text='ссылке' topic={HelpTopic.INFO_PRIVACY} />
+        </li>
+        <li>
+          Портал является проектом с открытым исходным кодом, доступным на{' '}
+          <TextURL text='Github' href={external_urls.git_portal} />
+        </li>
+        <li>
+          Данный сайт использует доменное имя и серверные мощности{' '}
+          <TextURL text='Центра Концепт' href={external_urls.concept} />
+        </li>
+      </ul>
 
       <h2>Поддержка</h2>
       <p>
