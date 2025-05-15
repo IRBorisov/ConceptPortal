@@ -28,8 +28,8 @@ RUN apt-get update -qq && \
 FROM python-base AS builder
 
 # Set env variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
 COPY ./requirements.txt ./
 RUN python3.12 -m pip wheel \
