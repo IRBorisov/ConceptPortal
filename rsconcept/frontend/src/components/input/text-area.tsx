@@ -47,6 +47,7 @@ export function TextArea({
       <textarea
         id={id}
         className={cn(
+          'min-h-0',
           'px-3 py-2',
           'leading-tight',
           'overflow-x-hidden overflow-y-auto',

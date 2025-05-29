@@ -7410,13 +7410,12 @@
     "pk": 1,
     "fields": {
       "oss": 41,
+      "parent": null,
       "operation_type": "input",
       "result": 38,
       "alias": "КС Вещества",
       "title": "Вещества и смеси",
-      "description": "",
-      "position_x": 530.0,
-      "position_y": 370.0
+      "description": ""
     }
   },
   {
@@ -7424,13 +7423,12 @@
     "pk": 2,
     "fields": {
       "oss": 41,
+      "parent": null,
       "operation_type": "input",
       "result": 39,
       "alias": "КС ООО",
       "title": "Объект-объектные отношения",
-      "description": "",
-      "position_x": 710.0,
-      "position_y": 370.0
+      "description": ""
     }
   },
   {
@@ -7438,13 +7436,12 @@
     "pk": 4,
     "fields": {
       "oss": 41,
+      "parent": null,
       "operation_type": "input",
       "result": 40,
       "alias": "КС Процессы",
       "title": "Процессы",
-      "description": "",
-      "position_x": 890.0,
-      "position_y": 370.0
+      "description": ""
     }
   },
   {
@@ -7452,13 +7449,12 @@
     "pk": 9,
     "fields": {
       "oss": 41,
+      "parent": null,
       "operation_type": "synthesis",
       "result": 43,
       "alias": "КС Объект-сред",
       "title": "Объектная среда",
-      "description": "",
-      "position_x": 620.0,
-      "position_y": 470.0
+      "description": ""
     }
   },
   {
@@ -7466,13 +7462,49 @@
     "pk": 10,
     "fields": {
       "oss": 41,
+      "parent": null,
       "operation_type": "synthesis",
       "result": 44,
       "alias": "КС Проц-сред",
       "title": "Процессные среды",
-      "description": "",
-      "position_x": 760.0,
-      "position_y": 570.0
+      "description": ""
+    }
+  },
+  {
+    "model": "oss.layout",
+    "pk": 1,
+    "fields": {
+      "oss": 41,
+      "data": {
+        "blocks": [],
+        "operations": [
+          {
+            "x": 530.0,
+            "y": 370.0,
+            "id": 1
+          },
+          {
+            "x": 710.0,
+            "y": 370.0,
+            "id": 2
+          },
+          {
+            "x": 890.0,
+            "y": 370.0,
+            "id": 4
+          },
+          {
+            "x": 620.0,
+            "y": 470.0,
+            "id": 9
+          },
+          {
+            "x": 760.0,
+            "y": 570.0,
+            "id": 10
+          }
+        ]
+      }
     }
   }
 ]

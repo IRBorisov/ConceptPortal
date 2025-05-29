@@ -58,14 +58,6 @@
       "depth": 2
     }
   ],
-  "colorize.include": [".tsx", ".jsx", ".ts", ".js"],
-  "colorize.languages": [
-    "typescript",
-    "javascript",
-    "css",
-    "typescriptreact",
-    "javascriptreact"
-  ],
   "cSpell.words": [
     "ablt",
     "acconcept",
