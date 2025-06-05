@@ -6,6 +6,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 
 import { type ICreateBlockDTO } from '../../backend/types';
 import { PickContents } from '../../components/pick-contents';
+import { type IOssItem, NodeType } from '../../models/oss';
 
 import { type DlgCreateBlockProps } from './dlg-create-block';
 
@@ -15,19 +16,31 @@ export function TabBlockChildren() {
   const parent = useWatch({ control, name: 'item_data.parent' });
   const children_blocks = useWatch({ control, name: 'children_blocks' });
   const children_operations = useWatch({ control, name: 'children_operations' });
-  const exclude = parent ? [-parent, ...manager.oss.hierarchy.expandAllInputs([-parent]).filter(id => id < 0)] : [];
 
-  const value = [...children_blocks.map(id => -id), ...children_operations];
+  const parentItem = parent ? manager.oss.blockByID.get(parent) : null;
+  const internalBlocks = parentItem
+    ? manager.oss.hierarchy
+        .expandAllInputs([parentItem.nodeID])
+        .map(id => manager.oss.itemByNodeID.get(id))
+        .filter(item => item !== null && item?.nodeType === NodeType.BLOCK)
+    : [];
 
-  function handleChangeSelected(newValue: number[]) {
+  const exclude = parentItem ? [parentItem, ...internalBlocks] : [];
+
+  const value = [
+    ...children_blocks.map(id => manager.oss.blockByID.get(id)!),
+    ...children_operations.map(id => manager.oss.operationByID.get(id)!)
+  ];
+
+  function handleChangeSelected(newValue: IOssItem[]) {
     setValue(
       'children_blocks',
-      newValue.filter(id => id < 0).map(id => -id),
+      newValue.filter(item => item.nodeType === NodeType.BLOCK).map(item => item.id),
       { shouldValidate: true }
     );
     setValue(
       'children_operations',
-      newValue.filter(id => id > 0),
+      newValue.filter(item => item.nodeType === NodeType.OPERATION).map(item => item.id),
       { shouldValidate: true }
     );
   }

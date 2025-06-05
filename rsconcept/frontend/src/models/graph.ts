@@ -5,41 +5,41 @@
 /**
  * Represents single node of a {@link Graph}, as implemented by storing outgoing and incoming connections.
  */
-export class GraphNode {
+export class GraphNode<NodeID> {
   /** Unique identifier of the node. */
-  id: number;
+  id: NodeID;
   /** List of outgoing nodes. */
-  outputs: number[];
+  outputs: NodeID[];
   /** List of incoming nodes. */
-  inputs: number[];
+  inputs: NodeID[];
 
-  constructor(id: number) {
+  constructor(id: NodeID) {
     this.id = id;
     this.outputs = [];
     this.inputs = [];
   }
 
-  clone(): GraphNode {
+  clone(): GraphNode<NodeID> {
     const result = new GraphNode(this.id);
     result.outputs = [...this.outputs];
     result.inputs = [...this.inputs];
     return result;
   }
 
-  addOutput(node: number): void {
+  addOutput(node: NodeID): void {
     this.outputs.push(node);
   }
 
-  addInput(node: number): void {
+  addInput(node: NodeID): void {
     this.inputs.push(node);
   }
 
-  removeInput(target: number): number | null {
+  removeInput(target: NodeID): NodeID | null {
     const index = this.inputs.findIndex(node => node === target);
     return index > -1 ? this.inputs.splice(index, 1)[0] : null;
   }
 
-  removeOutput(target: number): number | null {
+  removeOutput(target: NodeID): NodeID | null {
     const index = this.outputs.findIndex(node => node === target);
     return index > -1 ? this.outputs.splice(index, 1)[0] : null;
   }
@@ -50,11 +50,11 @@ export class GraphNode {
  *
  * This class is optimized for TermGraph use case and not supposed to be used as generic graph implementation.
  */
-export class Graph {
+export class Graph<NodeID = number> {
   /** Map of nodes. */
-  nodes = new Map<number, GraphNode>();
+  nodes = new Map<NodeID, GraphNode<NodeID>>();
 
-  constructor(arr?: number[][]) {
+  constructor(arr?: NodeID[][]) {
     if (!arr) {
       return;
     }
@@ -67,17 +67,17 @@ export class Graph {
     });
   }
 
-  clone(): Graph {
-    const result = new Graph();
+  clone(): Graph<NodeID> {
+    const result = new Graph<NodeID>();
     this.nodes.forEach(node => result.nodes.set(node.id, node.clone()));
     return result;
   }
 
-  at(target: number): GraphNode | undefined {
+  at(target: NodeID): GraphNode<NodeID> | undefined {
     return this.nodes.get(target);
   }
 
-  addNode(target: number): GraphNode {
+  addNode(target: NodeID): GraphNode<NodeID> {
     let node = this.nodes.get(target);
     if (!node) {
       node = new GraphNode(target);
@@ -86,11 +86,11 @@ export class Graph {
     return node;
   }
 
-  hasNode(target: number): boolean {
+  hasNode(target: NodeID): boolean {
     return !!this.nodes.get(target);
   }
 
-  removeNode(target: number): void {
+  removeNode(target: NodeID): void {
     this.nodes.forEach(node => {
       node.removeInput(target);
       node.removeOutput(target);
@@ -98,7 +98,7 @@ export class Graph {
     this.nodes.delete(target);
   }
 
-  foldNode(target: number): void {
+  foldNode(target: NodeID): void {
     const nodeToRemove = this.nodes.get(target);
     if (!nodeToRemove) {
       return;
@@ -111,8 +111,8 @@ export class Graph {
     this.removeNode(target);
   }
 
-  removeIsolated(): GraphNode[] {
-    const result: GraphNode[] = [];
+  removeIsolated(): GraphNode<NodeID>[] {
+    const result: GraphNode<NodeID>[] = [];
     this.nodes.forEach(node => {
       if (node.outputs.length === 0 && node.inputs.length === 0) {
         result.push(node);
@@ -122,7 +122,7 @@ export class Graph {
     return result;
   }
 
-  addEdge(source: number, destination: number): void {
+  addEdge(source: NodeID, destination: NodeID): void {
     if (this.hasEdge(source, destination)) {
       return;
     }
@@ -132,7 +132,7 @@ export class Graph {
     destinationNode.addInput(sourceNode.id);
   }
 
-  removeEdge(source: number, destination: number): void {
+  removeEdge(source: NodeID, destination: NodeID): void {
     const sourceNode = this.nodes.get(source);
     const destinationNode = this.nodes.get(destination);
     if (sourceNode && destinationNode) {
@@ -141,7 +141,7 @@ export class Graph {
     }
   }
 
-  hasEdge(source: number, destination: number): boolean {
+  hasEdge(source: NodeID, destination: NodeID): boolean {
     const sourceNode = this.nodes.get(source);
     if (!sourceNode) {
       return false;
@@ -149,8 +149,8 @@ export class Graph {
     return !!sourceNode.outputs.find(id => id === destination);
   }
 
-  expandOutputs(origin: number[]): number[] {
-    const result: number[] = [];
+  expandOutputs(origin: NodeID[]): NodeID[] {
+    const result: NodeID[] = [];
     origin.forEach(id => {
       const node = this.nodes.get(id);
       if (node) {
@@ -164,8 +164,8 @@ export class Graph {
     return result;
   }
 
-  expandInputs(origin: number[]): number[] {
-    const result: number[] = [];
+  expandInputs(origin: NodeID[]): NodeID[] {
+    const result: NodeID[] = [];
     origin.forEach(id => {
       const node = this.nodes.get(id);
       if (node) {
@@ -179,13 +179,13 @@ export class Graph {
     return result;
   }
 
-  expandAllOutputs(origin: number[]): number[] {
-    const result: number[] = this.expandOutputs(origin);
+  expandAllOutputs(origin: NodeID[]): NodeID[] {
+    const result: NodeID[] = this.expandOutputs(origin);
     if (result.length === 0) {
       return [];
     }
 
-    const marked = new Map<number, boolean>();
+    const marked = new Map<NodeID, boolean>();
     origin.forEach(id => marked.set(id, true));
     let position = 0;
     while (position < result.length) {
@@ -203,13 +203,13 @@ export class Graph {
     return result;
   }
 
-  expandAllInputs(origin: number[]): number[] {
-    const result: number[] = this.expandInputs(origin);
+  expandAllInputs(origin: NodeID[]): NodeID[] {
+    const result: NodeID[] = this.expandInputs(origin);
     if (result.length === 0) {
       return [];
     }
 
-    const marked = new Map<number, boolean>();
+    const marked = new Map<NodeID, boolean>();
     origin.forEach(id => marked.set(id, true));
     let position = 0;
     while (position < result.length) {
@@ -227,8 +227,8 @@ export class Graph {
     return result;
   }
 
-  maximizePart(origin: number[]): number[] {
-    const outputs: number[] = this.expandAllOutputs(origin);
+  maximizePart(origin: NodeID[]): NodeID[] {
+    const outputs: NodeID[] = this.expandAllOutputs(origin);
     const result = [...origin];
     this.topologicalOrder()
       .filter(id => outputs.includes(id))
@@ -241,10 +241,10 @@ export class Graph {
     return result;
   }
 
-  topologicalOrder(): number[] {
-    const result: number[] = [];
-    const marked = new Set<number>();
-    const nodeStack: number[] = [];
+  topologicalOrder(): NodeID[] {
+    const result: NodeID[] = [];
+    const marked = new Set<NodeID>();
+    const nodeStack: NodeID[] = [];
     this.nodes.forEach(node => {
       if (marked.has(node.id)) {
         return;
@@ -275,12 +275,12 @@ export class Graph {
 
   transitiveReduction() {
     const order = this.topologicalOrder();
-    const marked = new Map<number, boolean>();
+    const marked = new Map<NodeID, boolean>();
     order.forEach(nodeID => {
       if (marked.get(nodeID)) {
         return;
       }
-      const stack: { id: number; parents: number[] }[] = [];
+      const stack: { id: NodeID; parents: NodeID[] }[] = [];
       stack.push({ id: nodeID, parents: [] });
       while (stack.length > 0) {
         const item = stack.splice(0, 1)[0];
@@ -299,20 +299,20 @@ export class Graph {
   /**
    * Finds a cycle in the graph.
    *
-   * @returns {number[] | null} The cycle if found, otherwise `null`.
+   * @returns {NodeID[] | null} The cycle if found, otherwise `null`.
    * Uses non-recursive DFS.
    */
-  findCycle(): number[] | null {
-    const visited = new Set<number>();
-    const nodeStack = new Set<number>();
-    const parents = new Map<number, number>();
+  findCycle(): NodeID[] | null {
+    const visited = new Set<NodeID>();
+    const nodeStack = new Set<NodeID>();
+    const parents = new Map<NodeID, NodeID>();
 
     for (const nodeId of this.nodes.keys()) {
       if (visited.has(nodeId)) {
         continue;
       }
 
-      const callStack: { nodeId: number; parentId: number | null }[] = [];
+      const callStack: { nodeId: NodeID; parentId: NodeID | null }[] = [];
       callStack.push({ nodeId: nodeId, parentId: null });
       while (callStack.length > 0) {
         const { nodeId, parentId } = callStack[callStack.length - 1];
@@ -336,7 +336,7 @@ export class Graph {
           if (!nodeStack.has(child)) {
             continue;
           }
-          const cycle: number[] = [];
+          const cycle: NodeID[] = [];
           let current = nodeId;
           cycle.push(child);
           while (current !== child) {

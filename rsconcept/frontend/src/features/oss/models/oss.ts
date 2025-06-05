@@ -11,8 +11,17 @@ import {
   type IOperationSchemaDTO
 } from '../backend/types';
 
+/** Represents OSS node type. */
+export const NodeType = {
+  OPERATION: 1,
+  BLOCK: 2
+} as const;
+export type NodeType = (typeof NodeType)[keyof typeof NodeType];
+
 /** Represents Operation. */
 export interface IOperation extends IOperationDTO {
+  nodeID: string;
+  nodeType: typeof NodeType.OPERATION;
   x: number;
   y: number;
   is_owned: boolean;
@@ -23,11 +32,16 @@ export interface IOperation extends IOperationDTO {
 
 /** Represents Block. */
 export interface IBlock extends IBlockDTO {
+  nodeID: string;
+  nodeType: typeof NodeType.BLOCK;
   x: number;
   y: number;
   width: number;
   height: number;
 }
+
+/** Represents item of OperationSchema. */
+export type IOssItem = IOperation | IBlock;
 
 /** Represents {@link IOperationSchema} statistics. */
 export interface IOperationSchemaStats {
@@ -45,15 +59,13 @@ export interface IOperationSchema extends IOperationSchemaDTO {
   blocks: IBlock[];
 
   graph: Graph;
-  hierarchy: Graph;
+  hierarchy: Graph<string>;
   schemas: number[];
   stats: IOperationSchemaStats;
   operationByID: Map<number, IOperation>;
   blockByID: Map<number, IBlock>;
+  itemByNodeID: Map<string, IOssItem>;
 }
-
-/** Represents item of OperationSchema. */
-export type IOssItem = IOperation | IBlock;
 
 /** Represents substitution error description. */
 export interface ISubstitutionErrorDescription {

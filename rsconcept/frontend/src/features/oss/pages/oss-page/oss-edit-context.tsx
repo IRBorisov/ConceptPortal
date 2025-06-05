@@ -2,7 +2,7 @@
 
 import { createContext, use } from 'react';
 
-import { type IOperation, type IOperationSchema } from '../../models/oss';
+import { type IOperation, type IOperationSchema, type IOssItem } from '../../models/oss';
 
 export const OssTabID = {
   CARD: 0,
@@ -12,7 +12,8 @@ export type OssTabID = (typeof OssTabID)[keyof typeof OssTabID];
 
 interface IOssEditContext {
   schema: IOperationSchema;
-  selected: number[];
+  selected: string[];
+  selectedItems: IOssItem[];
 
   isOwned: boolean;
   isMutable: boolean;
@@ -22,7 +23,7 @@ interface IOssEditContext {
 
   canDeleteOperation: (target: IOperation) => boolean;
   deleteSchema: () => void;
-  setSelected: React.Dispatch<React.SetStateAction<number[]>>;
+  setSelected: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 export const OssEditContext = createContext<IOssEditContext | null>(null);

@@ -64,9 +64,10 @@ export function DlgCreateOperation() {
   const isValid = !!alias && !manager.oss.operations.some(operation => operation.alias === alias);
 
   function onSubmit(data: ICreateOperationDTO) {
-    const target = manager.calculateNewOperationPosition(data);
+    const target = manager.newOperationPosition(data);
     data.position_x = target.x;
     data.position_y = target.y;
+    data.layout = manager.layout;
     void createOperation({ itemID: manager.oss.id, data: data }).then(response =>
       onCreate?.(response.new_operation.id)
     );

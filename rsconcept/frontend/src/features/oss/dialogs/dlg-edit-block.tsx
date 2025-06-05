@@ -44,6 +44,7 @@ export function DlgEditBlock() {
   function onSubmit(data: IUpdateBlockDTO) {
     if (data.item_data.parent !== target.parent) {
       manager.onBlockChangeParent(data.target, data.item_data.parent);
+      data.layout = manager.layout;
     }
     return updateBlock({ itemID: manager.oss.id, data });
   }

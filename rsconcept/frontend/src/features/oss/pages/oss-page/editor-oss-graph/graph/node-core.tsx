@@ -21,9 +21,9 @@ interface NodeCoreProps {
 }
 
 export function NodeCore({ node }: NodeCoreProps) {
-  const { selected, schema } = useOssEdit();
-  const focus = selected.length === 1 ? selected[0] : null;
-  const isChild = (!!focus && schema.hierarchy.at(focus)?.outputs.includes(node.data.operation.id)) ?? false;
+  const { selectedItems, schema } = useOssEdit();
+  const focus = selectedItems.length === 1 ? selectedItems[0] : null;
+  const isChild = (!!focus && schema.hierarchy.at(focus.nodeID)?.outputs.includes(node.data.operation.nodeID)) ?? false;
 
   const setHover = useOperationTooltipStore(state => state.setHoverItem);
   const showCoordinates = useOSSGraphStore(state => state.showCoordinates);

@@ -12,6 +12,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 
 import { type ICreateBlockDTO, schemaCreateBlock } from '../../backend/types';
 import { useCreateBlock } from '../../backend/use-create-block';
+import { type IOssItem, NodeType } from '../../models/oss';
 import { type LayoutManager } from '../../models/oss-layout-api';
 import { BLOCK_NODE_MIN_HEIGHT, BLOCK_NODE_MIN_WIDTH } from '../../pages/oss-page/editor-oss-graph/graph/block-node';
 
@@ -20,7 +21,7 @@ import { TabBlockChildren } from './tab-block-children';
 
 export interface DlgCreateBlockProps {
   manager: LayoutManager;
-  initialChildren: number[];
+  initialChildren: IOssItem[];
   initialParent: number | null;
   defaultX: number;
   defaultY: number;
@@ -52,8 +53,8 @@ export function DlgCreateBlock() {
       position_y: defaultY,
       width: BLOCK_NODE_MIN_WIDTH,
       height: BLOCK_NODE_MIN_HEIGHT,
-      children_blocks: initialChildren.filter(id => id < 0).map(id => -id),
-      children_operations: initialChildren.filter(id => id > 0),
+      children_blocks: initialChildren.filter(item => item.nodeType === NodeType.BLOCK).map(item => item.id),
+      children_operations: initialChildren.filter(item => item.nodeType === NodeType.OPERATION).map(item => item.id),
       layout: manager.layout
     },
     mode: 'onChange'
@@ -65,11 +66,12 @@ export function DlgCreateBlock() {
   const isValid = !!title && !manager.oss.blocks.some(block => block.title === title);
 
   function onSubmit(data: ICreateBlockDTO) {
-    const rectangle = manager.calculateNewBlockPosition(data);
+    const rectangle = manager.newBlockPosition(data);
     data.position_x = rectangle.x;
     data.position_y = rectangle.y;
     data.width = rectangle.width;
     data.height = rectangle.height;
+    data.layout = manager.layout;
     void createBlock({ itemID: manager.oss.id, data: data }).then(response => onCreate?.(response.new_block.id));
   }
 

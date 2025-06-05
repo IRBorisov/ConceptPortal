@@ -7,7 +7,15 @@ import { type ILibraryItem } from '@/features/library';
 import { Graph } from '@/models/graph';
 import { type RO } from '@/utils/meta';
 
-import { type IBlock, type IOperation, type IOperationSchema, type IOperationSchemaStats } from '../models/oss';
+import {
+  type IBlock,
+  type IOperation,
+  type IOperationSchema,
+  type IOperationSchemaStats,
+  type IOssItem,
+  NodeType
+} from '../models/oss';
+import { constructNodeID } from '../models/oss-api';
 import { BLOCK_NODE_MIN_HEIGHT, BLOCK_NODE_MIN_WIDTH } from '../pages/oss-page/editor-oss-graph/graph/block-node';
 
 import { type IOperationSchemaDTO, OperationType } from './types';
@@ -16,8 +24,9 @@ import { type IOperationSchemaDTO, OperationType } from './types';
 export class OssLoader {
   private oss: IOperationSchema;
   private graph: Graph = new Graph();
-  private hierarchy: Graph = new Graph();
+  private hierarchy: Graph<string> = new Graph<string>();
   private operationByID = new Map<number, IOperation>();
+  private itemByNodeID = new Map<string, IOssItem>();
   private blockByID = new Map<number, IBlock>();
   private schemaIDs: number[] = [];
   private items: RO<ILibraryItem[]>;
@@ -37,6 +46,7 @@ export class OssLoader {
 
     result.operationByID = this.operationByID;
     result.blockByID = this.blockByID;
+    result.itemByNodeID = this.itemByNodeID;
     result.graph = this.graph;
     result.hierarchy = this.hierarchy;
     result.schemas = this.schemaIDs;
@@ -46,18 +56,24 @@ export class OssLoader {
 
   private prepareLookups() {
     this.oss.operations.forEach(operation => {
+      operation.nodeID = constructNodeID(NodeType.OPERATION, operation.id);
+      operation.nodeType = NodeType.OPERATION;
+      this.itemByNodeID.set(operation.nodeID, operation);
       this.operationByID.set(operation.id, operation);
       this.graph.addNode(operation.id);
-      this.hierarchy.addNode(operation.id);
+      this.hierarchy.addNode(operation.nodeID);
       if (operation.parent) {
-        this.hierarchy.addEdge(-operation.parent, operation.id);
+        this.hierarchy.addEdge(constructNodeID(NodeType.BLOCK, operation.parent), operation.nodeID);
       }
     });
     this.oss.blocks.forEach(block => {
+      block.nodeID = constructNodeID(NodeType.BLOCK, block.id);
+      block.nodeType = NodeType.BLOCK;
+      this.itemByNodeID.set(block.nodeID, block);
       this.blockByID.set(block.id, block);
-      this.hierarchy.addNode(-block.id);
+      this.hierarchy.addNode(block.nodeID);
       if (block.parent) {
-        this.hierarchy.addEdge(-block.parent, -block.id);
+        this.hierarchy.addEdge(constructNodeID(NodeType.BLOCK, block.parent), block.nodeID);
       }
     });
   }

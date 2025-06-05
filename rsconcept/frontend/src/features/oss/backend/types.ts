@@ -72,6 +72,12 @@ export type IRelocateConstituentsDTO = z.infer<typeof schemaRelocateConstituents
 /** Represents {@link IConstituenta} reference. */
 export type IConstituentaReference = z.infer<typeof schemaConstituentaReference>;
 
+/** Represents {@link IOperation} position. */
+export type IOperationPosition = z.infer<typeof schemaOperationPosition>;
+
+/** Represents {@link IBlock} position. */
+export type IBlockPosition = z.infer<typeof schemaBlockPosition>;
+
 // ====== Schemas ======
 export const schemaOperationType = z.enum(Object.values(OperationType) as [OperationType, ...OperationType[]]);
 

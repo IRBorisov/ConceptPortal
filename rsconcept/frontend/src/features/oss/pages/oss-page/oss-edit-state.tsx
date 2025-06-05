@@ -38,7 +38,8 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
   const isMutable = role > UserRole.READER && !schema.read_only;
   const isEditor = !!user.id && schema.editors.includes(user.id);
 
-  const [selected, setSelected] = useState<number[]>([]);
+  const [selected, setSelected] = useState<string[]>([]);
+  const selectedItems = selected.map(id => schema.itemByNodeID.get(id)).filter(item => !!item);
 
   const { deleteItem } = useDeleteItem();
 
@@ -92,6 +93,7 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
       value={{
         schema,
         selected,
+        selectedItems,
 
         isOwned,
         isMutable,

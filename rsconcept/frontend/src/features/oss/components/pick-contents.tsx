@@ -9,24 +9,22 @@ import { ComboBox } from '@/components/input/combo-box';
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
 import { NoData } from '@/components/view';
-import { type RO } from '@/utils/meta';
 
 import { labelOssItem } from '../labels';
-import { type IOperationSchema, type IOssItem } from '../models/oss';
-import { getItemID, isOperation } from '../models/oss-api';
+import { type IOperationSchema, type IOssItem, NodeType } from '../models/oss';
 
 const SELECTION_CLEAR_TIMEOUT = 1000;
 
-interface PickMultiOperationProps extends Styling {
-  value: number[];
-  onChange: (newValue: number[]) => void;
+interface PickContentsProps extends Styling {
+  value: IOssItem[];
+  onChange: (newValue: IOssItem[]) => void;
   schema: IOperationSchema;
   rows?: number;
-  exclude?: number[];
+  exclude?: IOssItem[];
   disallowBlocks?: boolean;
 }
 
-const columnHelper = createColumnHelper<RO<IOssItem>>();
+const columnHelper = createColumnHelper<IOssItem>();
 
 export function PickContents({
   rows,
@@ -37,29 +35,26 @@ export function PickContents({
   onChange,
   className,
   ...restProps
-}: PickMultiOperationProps) {
-  const selectedItems = value
-    .map(itemID => (itemID > 0 ? schema.operationByID.get(itemID) : schema.blockByID.get(-itemID)))
-    .filter(item => item !== undefined);
-  const [lastSelected, setLastSelected] = useState<RO<IOssItem> | null>(null);
-  const items = [
-    ...(disallowBlocks ? [] : schema.blocks.filter(item => !value.includes(-item.id) && !exclude?.includes(-item.id))),
-    ...schema.operations.filter(item => !value.includes(item.id) && !exclude?.includes(item.id))
+}: PickContentsProps) {
+  const [lastSelected, setLastSelected] = useState<IOssItem | null>(null);
+  const items: IOssItem[] = [
+    ...(disallowBlocks ? [] : schema.blocks.filter(item => !value.includes(item) && !exclude?.includes(item))),
+    ...schema.operations.filter(item => !value.includes(item) && !exclude?.includes(item))
   ];
 
-  function handleDelete(target: number) {
+  function handleDelete(target: IOssItem) {
     onChange(value.filter(item => item !== target));
   }
 
-  function handleSelect(target: RO<IOssItem> | null) {
+  function handleSelect(target: IOssItem | null) {
     if (target) {
       setLastSelected(target);
-      onChange([...value, getItemID(target)]);
+      onChange([...value, target]);
       setTimeout(() => setLastSelected(null), SELECTION_CLEAR_TIMEOUT);
     }
   }
 
-  function handleMoveUp(target: number) {
+  function handleMoveUp(target: IOssItem) {
     const index = value.indexOf(target);
     if (index > 0) {
       const newSelected = [...value];
@@ -69,7 +64,7 @@ export function PickContents({
     }
   }
 
-  function handleMoveDown(target: number) {
+  function handleMoveDown(target: IOssItem) {
     const index = value.indexOf(target);
     if (index < value.length - 1) {
       const newSelected = [...value];
@@ -80,13 +75,13 @@ export function PickContents({
   }
 
   const columns = [
-    columnHelper.accessor(item => isOperation(item), {
+    columnHelper.accessor(item => item.nodeType === NodeType.OPERATION, {
       id: 'type',
       header: 'Тип',
       size: 150,
       minSize: 150,
       maxSize: 150,
-      cell: props => <div>{isOperation(props.row.original) ? 'Операция' : 'Блок'}</div>
+      cell: props => <div>{props.getValue() ? 'Операция' : 'Блок'}</div>
     }),
     columnHelper.accessor('title', {
       id: 'title',
@@ -106,21 +101,21 @@ export function PickContents({
             noHover
             className='px-0'
             icon={<IconRemove size='1rem' className='icon-red' />}
-            onClick={() => handleDelete(getItemID(props.row.original))}
+            onClick={() => handleDelete(props.row.original)}
           />
           <MiniButton
             title='Переместить выше'
             noHover
             className='px-0'
             icon={<IconMoveUp size='1rem' className='icon-primary' />}
-            onClick={() => handleMoveUp(getItemID(props.row.original))}
+            onClick={() => handleMoveUp(props.row.original)}
           />
           <MiniButton
             title='Переместить ниже'
             noHover
             className='px-0'
             icon={<IconMoveDown size='1rem' className='icon-primary' />}
-            onClick={() => handleMoveDown(getItemID(props.row.original))}
+            onClick={() => handleMoveDown(props.row.original)}
           />
         </div>
       )
@@ -134,7 +129,7 @@ export function PickContents({
         items={items}
         value={lastSelected}
         placeholder='Выберите операцию или блок'
-        idFunc={item => String(getItemID(item))}
+        idFunc={item => item.nodeID}
         labelValueFunc={item => labelOssItem(item)}
         labelOptionFunc={item => labelOssItem(item)}
         onChange={handleSelect}
@@ -145,7 +140,7 @@ export function PickContents({
         rows={rows}
         contentHeight='1.3rem'
         className='cc-scroll-y text-sm select-none border-y rounded-b-md'
-        data={selectedItems}
+        data={value}
         columns={columns}
         headPosition='0rem'
         noDataComponent={

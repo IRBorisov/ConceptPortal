@@ -3,12 +3,12 @@
 import { useCallback, useEffect, useState } from 'react';
 import { type Edge, type Node, useEdgesState, useNodesState, useOnSelectionChange, useReactFlow } from 'reactflow';
 
-import { type IOperationSchema } from '@/features/oss/models/oss';
-import { type Position2D } from '@/features/oss/models/oss-layout';
-import { useOSSGraphStore } from '@/features/oss/stores/oss-graph';
-
 import { PARAMETER } from '@/utils/constants';
 
+import { type IOperationSchema, NodeType } from '../../../models/oss';
+import { constructNodeID } from '../../../models/oss-api';
+import { type Position2D } from '../../../models/oss-layout';
+import { useOSSGraphStore } from '../../../stores/oss-graph';
 import { useOssEdit } from '../oss-edit-context';
 
 import { flowOptions } from './oss-flow';
@@ -29,10 +29,10 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
 
   function onSelectionChange({ nodes }: { nodes: Node[] }) {
-    const ids = nodes.map(node => Number(node.id));
+    const ids = nodes.map(node => node.id);
     setSelected(prev => [
       ...prev.filter(nodeID => ids.includes(nodeID)),
-      ...ids.filter(nodeID => !prev.includes(Number(nodeID)))
+      ...ids.filter(nodeID => !prev.includes(nodeID))
     ]);
   }
 
@@ -41,46 +41,45 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
   });
 
   const resetGraph = useCallback(() => {
-    const newNodes: Node[] = [
-      ...schema.hierarchy
-        .topologicalOrder()
-        .filter(id => id < 0)
-        .map(id => {
-          const block = schema.blockByID.get(-id)!;
-          return {
-            id: String(id),
-            type: 'block',
-            data: { label: block.title, block: block },
-            position: computeRelativePosition(schema, { x: block.x, y: block.y }, block.parent),
-            style: {
-              width: block.width,
-              height: block.height
-            },
-            parentId: block.parent ? `-${block.parent}` : undefined,
-            zIndex: Z_BLOCK
-          };
-        }),
-      ...schema.operations.map(operation => ({
-        id: String(operation.id),
-        type: operation.operation_type.toString(),
-        data: { label: operation.alias, operation: operation },
-        position: computeRelativePosition(schema, { x: operation.x, y: operation.y }, operation.parent),
-        parentId: operation.parent ? `-${operation.parent}` : undefined,
-        zIndex: Z_SCHEMA
-      }))
-    ];
+    const newNodes: Node[] = schema.hierarchy.topologicalOrder().map(nodeID => {
+      const item = schema.itemByNodeID.get(nodeID)!;
+      if (item.nodeType === NodeType.BLOCK) {
+        return {
+          id: nodeID,
+          type: 'block',
+          data: { label: item.title, block: item },
+          position: computeRelativePosition(schema, { x: item.x, y: item.y }, item.parent),
+          style: {
+            width: item.width,
+            height: item.height
+          },
+          parentId: item.parent ? constructNodeID(NodeType.BLOCK, item.parent) : undefined,
+          zIndex: Z_BLOCK
+        };
+      } else {
+        return {
+          id: item.nodeID,
+          type: item.operation_type.toString(),
+          data: { label: item.alias, operation: item },
+          position: computeRelativePosition(schema, { x: item.x, y: item.y }, item.parent),
+          parentId: item.parent ? constructNodeID(NodeType.BLOCK, item.parent) : undefined,
+          zIndex: Z_SCHEMA
+        };
+      }
+    });
 
-    const newEdges: Edge[] = schema.arguments.map((argument, index) => ({
-      id: String(index),
-      source: String(argument.argument),
-      target: String(argument.operation),
-      type: edgeStraight ? 'straight' : 'simplebezier',
-      animated: edgeAnimate,
-      targetHandle:
-        schema.operationByID.get(argument.argument)!.x > schema.operationByID.get(argument.operation)!.x
-          ? 'right'
-          : 'left'
-    }));
+    const newEdges: Edge[] = schema.arguments.map((argument, index) => {
+      const source = schema.operationByID.get(argument.argument)!;
+      const target = schema.operationByID.get(argument.operation)!;
+      return {
+        id: String(index),
+        source: source.nodeID,
+        target: target.nodeID,
+        type: edgeStraight ? 'straight' : 'simplebezier',
+        animated: edgeAnimate,
+        targetHandle: source.x > target.x ? 'right' : 'left'
+      };
+    });
 
     setNodes(newNodes);
     setEdges(newEdges);

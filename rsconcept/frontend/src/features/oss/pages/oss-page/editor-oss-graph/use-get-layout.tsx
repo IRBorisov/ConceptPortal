@@ -18,13 +18,13 @@ export function useGetLayout() {
       operations: nodes
         .filter(node => node.type !== 'block')
         .map(node => ({
-          id: Number(node.id),
+          id: schema.itemByNodeID.get(node.id)!.id,
           ...computeAbsolutePosition(node, schema, nodeById)
         })),
       blocks: nodes
         .filter(node => node.type === 'block')
         .map(node => ({
-          id: -Number(node.id),
+          id: schema.itemByNodeID.get(node.id)!.id,
           ...computeAbsolutePosition(node, schema, nodeById),
           width: node.width ?? BLOCK_NODE_MIN_WIDTH,
           height: node.height ?? BLOCK_NODE_MIN_HEIGHT
@@ -35,7 +35,7 @@ export function useGetLayout() {
 
 // ------- Internals -------
 function computeAbsolutePosition(target: Node, schema: IOperationSchema, nodeById: Map<string, Node>): Position2D {
-  const nodes = schema.hierarchy.expandAllInputs([Number(target.id)]);
+  const nodes = schema.hierarchy.expandAllInputs([target.id]);
   let x = target.position.x;
   let y = target.position.y;
   for (const nodeID of nodes) {

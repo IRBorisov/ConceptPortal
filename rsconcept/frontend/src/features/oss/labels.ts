@@ -5,9 +5,9 @@ import {
   type IOperation,
   type IOssItem,
   type ISubstitutionErrorDescription,
+  NodeType,
   SubstitutionErrorType
 } from './models/oss';
-import { isOperation } from './models/oss-api';
 
 /** Retrieves label for {@link OperationType}. */
 export function labelOperationType(itemType: OperationType): string {
@@ -58,7 +58,7 @@ export function describeSubstitutionError(error: RO<ISubstitutionErrorDescriptio
 
 /** Retrieves label for {@link IOssItem}. */
 export function labelOssItem(item: RO<IOssItem>): string {
-  if (isOperation(item)) {
+  if (item.nodeType === NodeType.OPERATION) {
     return `${(item as IOperation).alias}: ${item.title}`;
   } else {
     return `Блок: ${item.title}`;

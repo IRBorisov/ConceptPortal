@@ -20,23 +20,16 @@ import {
 } from '@/features/rsform/models/rslang-api';
 
 import { infoMsg } from '@/utils/labels';
-import { type RO } from '@/utils/meta';
 
 import { Graph } from '../../../models/graph';
 import { describeSubstitutionError } from '../labels';
 
-import { type IOperationSchema, type IOssItem, SubstitutionErrorType } from './oss';
+import { type IOperationSchema, NodeType, SubstitutionErrorType } from './oss';
 
 const STARTING_SUB_INDEX = 900; // max semantic index for starting substitution
 
-/** Checks if element is {@link IOperation} or {@link IBlock}. */
-export function isOperation(item: RO<IOssItem> | null): boolean {
-  return !!item && 'arguments' in item;
-}
-
-/** Extract contiguous ID of {@link IOperation} or {@link IBlock}. */
-export function getItemID(item: RO<IOssItem>): number {
-  return isOperation(item) ? item.id : -item.id;
+export function constructNodeID(type: NodeType, itemID: number): string {
+  return type === NodeType.OPERATION ? 'o' + String(itemID) : 'b' + String(itemID);
 }
 
 /** Sorts library items relevant for the specified {@link IOperationSchema}. */

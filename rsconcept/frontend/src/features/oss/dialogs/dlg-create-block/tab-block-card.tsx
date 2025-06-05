@@ -7,6 +7,8 @@ import { useDialogsStore } from '@/stores/dialogs';
 
 import { type ICreateBlockDTO } from '../../backend/types';
 import { SelectParent } from '../../components/select-parent';
+import { NodeType } from '../../models/oss';
+import { constructNodeID } from '../../models/oss-api';
 
 import { type DlgCreateBlockProps } from './dlg-create-block';
 
@@ -18,10 +20,8 @@ export function TabBlockCard() {
     formState: { errors }
   } = useFormContext<ICreateBlockDTO>();
   const children_blocks = useWatch({ control, name: 'children_blocks' });
-  const all_children = [
-    ...children_blocks,
-    ...manager.oss.hierarchy.expandAllOutputs(children_blocks.filter(id => id < 0).map(id => -id)).map(id => -id)
-  ];
+  const block_ids = children_blocks.map(id => constructNodeID(NodeType.BLOCK, id));
+  const all_children = [...block_ids, ...manager.oss.hierarchy.expandAllOutputs(block_ids)];
 
   return (
     <div className='cc-fade-in cc-column'>
@@ -36,7 +36,7 @@ export function TabBlockCard() {
         control={control}
         render={({ field }) => (
           <SelectParent
-            items={manager.oss.blocks.filter(block => !all_children.includes(block.id))}
+            items={manager.oss.blocks.filter(block => !all_children.includes(block.nodeID))}
             value={field.value ? manager.oss.blockByID.get(field.value) ?? null : null}
             placeholder='Блок содержания не выбран'
             onChange={value => field.onChange(value ? value.id : null)}

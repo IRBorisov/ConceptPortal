@@ -1,5 +1,7 @@
 import { useReactFlow } from 'reactflow';
 
+import { NodeType } from '@/features/oss/models/oss';
+
 import { useDraggingStore } from '@/stores/dragging';
 
 import { useOssEdit } from '../oss-edit-context';
@@ -7,7 +9,7 @@ import { useOssEdit } from '../oss-edit-context';
 /** Hook to encapsulate drop target logic. */
 export function useDropTarget() {
   const { getIntersectingNodes, screenToFlowPosition } = useReactFlow();
-  const { selected, schema } = useOssEdit();
+  const { selectedItems, selected, schema } = useOssEdit();
   const dropTarget = useDraggingStore(state => state.dropTarget);
   const setDropTarget = useDraggingStore(state => state.setDropTarget);
 
@@ -19,17 +21,16 @@ export function useDropTarget() {
       width: 1,
       height: 1
     })
-      .map(node => Number(node.id))
-      .filter(id => id < 0 && !selected.includes(id))
-      .map(id => schema.blockByID.get(-id))
-      .filter(block => !!block);
+      .filter(node => !selected.includes(node.id))
+      .map(node => schema.itemByNodeID.get(node.id))
+      .filter(item => item?.nodeType === NodeType.BLOCK);
 
     if (blocks.length === 0) {
       return null;
     }
 
-    const successors = schema.hierarchy.expandAllOutputs([...selected]).filter(id => id < 0);
-    blocks = blocks.filter(block => !successors.includes(-block.id));
+    const successors = schema.hierarchy.expandAllOutputs(selectedItems.map(item => item.nodeID));
+    blocks = blocks.filter(block => !successors.includes(block.nodeID));
     if (blocks.length === 0) {
       return null;
     }

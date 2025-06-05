@@ -16,15 +16,15 @@ export const BLOCK_NODE_MIN_WIDTH = 160;
 export const BLOCK_NODE_MIN_HEIGHT = 100;
 
 export function BlockNode(node: BlockInternalNode) {
-  const { selected, schema } = useOssEdit();
+  const { selectedItems, schema } = useOssEdit();
   const dropTarget = useDraggingStore(state => state.dropTarget);
   const isDragging = useDraggingStore(state => state.isDragging);
   const showCoordinates = useOSSGraphStore(state => state.showCoordinates);
   const setHover = useOperationTooltipStore(state => state.setHoverItem);
 
-  const focus = selected.length === 1 ? selected[0] : null;
-  const isParent = (!!focus && schema.hierarchy.at(focus)?.inputs.includes(-node.data.block.id)) ?? false;
-  const isChild = (!!focus && schema.hierarchy.at(focus)?.outputs.includes(-node.data.block.id)) ?? false;
+  const focus = selectedItems.length === 1 ? selectedItems[0] : null;
+  const isParent = (!!focus && schema.hierarchy.at(focus.nodeID)?.inputs.includes(node.data.block.nodeID)) ?? false;
+  const isChild = (!!focus && schema.hierarchy.at(focus.nodeID)?.outputs.includes(node.data.block.nodeID)) ?? false;
   return (
     <>
       <NodeResizeControl minWidth={BLOCK_NODE_MIN_WIDTH} minHeight={BLOCK_NODE_MIN_HEIGHT}>

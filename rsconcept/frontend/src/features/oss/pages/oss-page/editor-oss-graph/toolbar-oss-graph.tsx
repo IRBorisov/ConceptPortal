@@ -27,6 +27,7 @@ import { OperationType } from '../../../backend/types';
 import { useExecuteOperation } from '../../../backend/use-execute-operation';
 import { useMutatingOss } from '../../../backend/use-mutating-oss';
 import { useUpdateLayout } from '../../../backend/use-update-layout';
+import { NodeType } from '../../../models/oss';
 import { LayoutManager } from '../../../models/oss-layout-api';
 import { useOssEdit } from '../oss-edit-context';
 
@@ -48,11 +49,13 @@ export function ToolbarOssGraph({
   className,
   ...restProps
 }: ToolbarOssGraphProps) {
-  const { schema, selected, isMutable, canDeleteOperation: canDelete } = useOssEdit();
+  const { schema, selectedItems, isMutable, canDeleteOperation: canDelete } = useOssEdit();
   const isProcessing = useMutatingOss();
   const { resetView } = useOssFlow();
-  const selectedOperation = selected.length !== 1 ? null : schema.operationByID.get(selected[0]) ?? null;
-  const selectedBlock = selected.length !== 1 ? null : schema.blockByID.get(-selected[0]) ?? null;
+  const selectedOperation =
+    selectedItems.length === 1 && selectedItems[0].nodeType === NodeType.OPERATION ? selectedItems[0] : null;
+  const selectedBlock =
+    selectedItems.length === 1 && selectedItems[0].nodeType === NodeType.BLOCK ? selectedItems[0] : null;
   const getLayout = useGetLayout();
 
   const { updateLayout } = useUpdateLayout();
@@ -145,7 +148,9 @@ export function ToolbarOssGraph({
           title='Исправить позиции узлов'
           icon={<IconFixLayout size='1.25rem' className='icon-primary' />}
           onClick={handleFixLayout}
-          disabled={selected.length > 1 || selected[0] > 0}
+          disabled={
+            selectedItems.length > 1 || (selectedItems.length > 0 && selectedItems[0].nodeType === NodeType.OPERATION)
+          }
         />
         <MiniButton
           title='Настройки отображения'
@@ -181,14 +186,14 @@ export function ToolbarOssGraph({
             title='Активировать операцию'
             icon={<IconExecute size='1.25rem' className='icon-green' />}
             onClick={handleOperationExecute}
-            disabled={isProcessing || selected.length !== 1 || !readyForSynthesis}
+            disabled={isProcessing || selectedItems.length !== 1 || !readyForSynthesis}
           />
           <MiniButton
             titleHtml={prepareTooltip('Редактировать выбранную', 'Двойной клик')}
             aria-label='Редактировать выбранную'
             icon={<IconEdit2 size='1.25rem' className='icon-primary' />}
             onClick={handleEditItem}
-            disabled={selected.length !== 1 || isProcessing}
+            disabled={selectedItems.length !== 1 || isProcessing}
           />
           <MiniButton
             titleHtml={prepareTooltip('Удалить выбранную', 'Delete')}

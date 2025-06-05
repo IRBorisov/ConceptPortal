@@ -12,6 +12,7 @@ import { promptText } from '@/utils/labels';
 import { useDeleteBlock } from '../../../backend/use-delete-block';
 import { useMutatingOss } from '../../../backend/use-mutating-oss';
 import { useUpdateLayout } from '../../../backend/use-update-layout';
+import { type IOssItem, NodeType } from '../../../models/oss';
 import { type OssNode, type Position2D } from '../../../models/oss-layout';
 import { GRID_SIZE, LayoutManager } from '../../../models/oss-layout-api';
 import { useOSSGraphStore } from '../../../stores/oss-graph';
@@ -41,7 +42,7 @@ export const flowOptions = {
 
 export function OssFlow() {
   const mainHeight = useMainHeight();
-  const { navigateOperationSchema, schema, selected, isMutable, canDeleteOperation } = useOssEdit();
+  const { navigateOperationSchema, schema, selected, selectedItems, isMutable, canDeleteOperation } = useOssEdit();
   const { screenToFlowPosition } = useReactFlow();
   const { containMovement, nodes, onNodesChange, edges, onEdgesChange, resetGraph, resetView } = useOssFlow();
   const store = useStoreApi();
@@ -76,20 +77,21 @@ export function OssFlow() {
       manager: new LayoutManager(schema, getLayout()),
       defaultX: targetPosition.x,
       defaultY: targetPosition.y,
-      initialInputs: selected.filter(id => id > 0),
-      initialParent: extractSingleBlock(selected),
+      initialInputs: selectedItems.filter(item => item?.nodeType === NodeType.OPERATION).map(item => item.id),
+      initialParent: extractBlockParent(selectedItems),
       onCreate: resetView
     });
   }
 
   function handleCreateBlock() {
     const targetPosition = screenToFlowPosition({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
-    const parent = extractSingleBlock(selected);
+    const parent = extractBlockParent(selectedItems);
     showCreateBlock({
       manager: new LayoutManager(schema, getLayout()),
       defaultX: targetPosition.x,
       defaultY: targetPosition.y,
-      initialChildren: parent !== null ? [] : selected,
+      initialChildren:
+        parent !== null && selectedItems.length === 1 && parent === selectedItems[0].id ? [] : selectedItems,
       initialParent: parent,
       onCreate: resetView
     });
@@ -99,25 +101,24 @@ export function OssFlow() {
     if (selected.length !== 1) {
       return;
     }
-    if (selected[0] > 0) {
-      const operation = schema.operationByID.get(selected[0]);
-      if (!operation || !canDeleteOperation(operation)) {
+    const item = schema.itemByNodeID.get(selected[0]);
+    if (!item) {
+      return;
+    }
+    if (item.nodeType === NodeType.OPERATION) {
+      if (!canDeleteOperation(item)) {
         return;
       }
       showDeleteOperation({
         oss: schema,
-        target: operation,
+        target: item,
         layout: getLayout()
       });
     } else {
-      const block = schema.blockByID.get(-selected[0]);
-      if (!block) {
-        return;
-      }
       if (!window.confirm(promptText.deleteBlock)) {
         return;
       }
-      void deleteBlock({ itemID: schema.id, data: { target: block.id, layout: getLayout() } });
+      void deleteBlock({ itemID: schema.id, data: { target: item.id, layout: getLayout() } });
     }
   }
 
@@ -219,7 +220,10 @@ export function OssFlow() {
 }
 
 // -------- Internals --------
-function extractSingleBlock(selected: number[]): number | null {
-  const blocks = selected.filter(id => id < 0);
-  return blocks.length === 1 ? -blocks[0] : null;
+function extractBlockParent(selectedItems: IOssItem[]): number | null {
+  if (selectedItems.length === 1 && selectedItems[0].nodeType === NodeType.BLOCK) {
+    return selectedItems[0].id;
+  }
+  const parents = selectedItems.map(item => item.parent).filter(id => id !== null);
+  return parents.length === 0 ? null : parents[0];
 }
