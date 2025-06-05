@@ -16,12 +16,12 @@ export const useSetLocation = () => {
   const mutation = useMutation({
     mutationKey: [KEYS.global_mutation, libraryApi.baseKey, 'set-location'],
     mutationFn: libraryApi.setLocation,
-    onSuccess: (_, variables) => {
+    onSuccess: async (_, variables) => {
       const ossKey = KEYS.composite.ossItem({ itemID: variables.itemID });
       const ossData: IOperationSchemaDTO | undefined = client.getQueryData(ossKey);
       if (ossData) {
         client.setQueryData(ossKey, { ...ossData, location: variables.location });
-        return Promise.allSettled([
+        await Promise.allSettled([
           client.invalidateQueries({ queryKey: libraryApi.libraryListKey }),
           ...ossData.operations
             .map(item => {
@@ -33,6 +33,7 @@ export const useSetLocation = () => {
             })
             .filter(item => !!item)
         ]);
+        return;
       }
 
       const rsKey = KEYS.composite.rsItem({ itemID: variables.itemID });

@@ -12,11 +12,11 @@ export const useProduceStructure = () => {
   const mutation = useMutation({
     mutationKey: [KEYS.global_mutation, rsformsApi.baseKey, 'produce-structure'],
     mutationFn: rsformsApi.produceStructure,
-    onSuccess: data => {
+    onSuccess: async data => {
       client.setQueryData(rsformsApi.getRSFormQueryOptions({ itemID: data.schema.id }).queryKey, data.schema);
       updateTimestamp(data.schema.id);
 
-      return Promise.allSettled([
+      await Promise.allSettled([
         client.invalidateQueries({ queryKey: [KEYS.oss] }),
         client.invalidateQueries({
           queryKey: [rsformsApi.baseKey],

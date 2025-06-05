@@ -16,12 +16,12 @@ export const useSetAccessPolicy = () => {
   const mutation = useMutation({
     mutationKey: [KEYS.global_mutation, libraryApi.baseKey, 'set-location'],
     mutationFn: libraryApi.setAccessPolicy,
-    onSuccess: (_, variables) => {
+    onSuccess: async (_, variables) => {
       const ossKey = KEYS.composite.ossItem({ itemID: variables.itemID });
       const ossData: IOperationSchemaDTO | undefined = client.getQueryData(ossKey);
       if (ossData) {
         client.setQueryData(ossKey, { ...ossData, access_policy: variables.policy });
-        return Promise.allSettled([
+        await Promise.allSettled([
           client.invalidateQueries({ queryKey: KEYS.composite.libraryList }),
           ...ossData.operations
             .map(item => {
@@ -33,6 +33,7 @@ export const useSetAccessPolicy = () => {
             })
             .filter(item => !!item)
         ]);
+        return;
       }
 
       const rsKey = KEYS.composite.rsItem({ itemID: variables.itemID });

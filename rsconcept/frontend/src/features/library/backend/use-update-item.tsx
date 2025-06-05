@@ -16,7 +16,7 @@ export const useUpdateItem = () => {
   const mutation = useMutation({
     mutationKey: [KEYS.global_mutation, libraryApi.baseKey, 'update-item'],
     mutationFn: libraryApi.updateItem,
-    onSuccess: (data: ILibraryItem) => {
+    onSuccess: async (data: ILibraryItem) => {
       const itemKey =
         data.item_type === LibraryItemType.RSFORM
           ? KEYS.composite.rsItem({ itemID: data.id })
@@ -30,7 +30,7 @@ export const useUpdateItem = () => {
       if (data.item_type === LibraryItemType.RSFORM) {
         const schema: IRSFormDTO | undefined = client.getQueryData(itemKey);
         if (schema) {
-          return Promise.allSettled(
+          await Promise.allSettled(
             schema.oss.map(item => client.invalidateQueries({ queryKey: KEYS.composite.ossItem({ itemID: item.id }) }))
           );
         }

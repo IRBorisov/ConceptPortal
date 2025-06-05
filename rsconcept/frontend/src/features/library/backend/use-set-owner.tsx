@@ -16,12 +16,12 @@ export const useSetOwner = () => {
   const mutation = useMutation({
     mutationKey: [KEYS.global_mutation, libraryApi.baseKey, 'set-owner'],
     mutationFn: libraryApi.setOwner,
-    onSuccess: (_, variables) => {
+    onSuccess: async (_, variables) => {
       const ossKey = KEYS.composite.ossItem({ itemID: variables.itemID });
       const ossData: IOperationSchemaDTO | undefined = client.getQueryData(ossKey);
       if (ossData) {
         client.setQueryData(ossKey, { ...ossData, owner: variables.owner });
-        return Promise.allSettled([
+        await Promise.allSettled([
           client.invalidateQueries({ queryKey: libraryApi.libraryListKey }),
           ...ossData.operations
             .map(item => {

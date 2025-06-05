@@ -10,12 +10,13 @@ export const useRenameLocation = () => {
   const mutation = useMutation({
     mutationKey: [libraryApi.baseKey, 'rename-location'],
     mutationFn: libraryApi.renameLocation,
-    onSuccess: () =>
-      Promise.allSettled([
+    onSuccess: async () => {
+      await Promise.allSettled([
         client.invalidateQueries({ queryKey: [KEYS.library] }),
         client.invalidateQueries({ queryKey: [KEYS.rsform] }),
         client.invalidateQueries({ queryKey: [KEYS.oss] })
-      ]),
+      ]);
+    },
     onError: () => client.invalidateQueries()
   });
   return {

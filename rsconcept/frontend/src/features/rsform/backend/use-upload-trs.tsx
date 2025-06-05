@@ -12,13 +12,13 @@ export const useUploadTRS = () => {
   const mutation = useMutation({
     mutationKey: [KEYS.global_mutation, rsformsApi.baseKey, 'load-trs'],
     mutationFn: rsformsApi.upload,
-    onSuccess: data => {
+    onSuccess: async data => {
       client.setQueryData(KEYS.composite.rsItem({ itemID: data.id }), data);
       client.setQueryData(KEYS.composite.libraryList, (prev: ILibraryItem[] | undefined) =>
         prev?.map(item => (item.id === data.id ? data : item))
       );
 
-      return Promise.allSettled([
+      await Promise.allSettled([
         client.invalidateQueries({ queryKey: [KEYS.oss] }),
         client.invalidateQueries({
           queryKey: [rsformsApi.baseKey],

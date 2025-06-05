@@ -10,9 +10,9 @@ export const useDeleteBlock = () => {
   const mutation = useMutation({
     mutationKey: [KEYS.global_mutation, ossApi.baseKey, 'delete-block'],
     mutationFn: ossApi.deleteBlock,
-    onSuccess: data => {
+    onSuccess: async data => {
       client.setQueryData(ossApi.getOssQueryOptions({ itemID: data.id }).queryKey, data);
-      return Promise.allSettled([
+      await Promise.allSettled([
         client.invalidateQueries({ queryKey: KEYS.composite.libraryList }),
         client.invalidateQueries({ queryKey: [KEYS.rsform] })
       ]);

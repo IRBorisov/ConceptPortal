@@ -12,12 +12,12 @@ export const useSetEditors = () => {
   const mutation = useMutation({
     mutationKey: [KEYS.global_mutation, libraryApi.baseKey, 'set-location'],
     mutationFn: libraryApi.setEditors,
-    onSuccess: (_, variables) => {
+    onSuccess: async (_, variables) => {
       const ossKey = KEYS.composite.ossItem({ itemID: variables.itemID });
       const ossData: IOperationSchemaDTO | undefined = client.getQueryData(ossKey);
       if (ossData) {
         client.setQueryData(ossKey, { ...ossData, editors: variables.editors });
-        return Promise.allSettled(
+        await Promise.allSettled(
           ossData.operations
             .map(item => {
               if (!item.result) {
@@ -28,6 +28,7 @@ export const useSetEditors = () => {
             })
             .filter(item => !!item)
         );
+        return;
       }
 
       const rsKey = KEYS.composite.rsItem({ itemID: variables.itemID });

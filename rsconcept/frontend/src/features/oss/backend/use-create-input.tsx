@@ -10,9 +10,9 @@ export const useCreateInput = () => {
   const mutation = useMutation({
     mutationKey: [KEYS.global_mutation, ossApi.baseKey, 'create-input'],
     mutationFn: ossApi.createInput,
-    onSuccess: data => {
+    onSuccess: async data => {
       client.setQueryData(ossApi.getOssQueryOptions({ itemID: data.oss.id }).queryKey, data.oss);
-      return Promise.allSettled([
+      await Promise.allSettled([
         client.invalidateQueries({ queryKey: KEYS.composite.libraryList }),
         client.invalidateQueries({ queryKey: [KEYS.rsform] })
       ]);
