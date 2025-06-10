@@ -19,8 +19,8 @@ function useTokenValidation(token: string, isPending: boolean) {
 
   const validate = async () => {
     if (!isTokenValidating && !isPending) {
-      await validateToken({ token });
       setIsTokenValidating(true);
+      await validateToken({ token });
     }
   };
   return { isTokenValidating, validate };
@@ -44,10 +44,7 @@ export function Component() {
       void resetPassword({
         password: newPassword,
         token: token
-      }).then(() => {
-        router.replace({ path: urls.home });
-        router.push({ path: urls.login });
-      });
+      }).then(() => router.replace({ path: urls.login }));
     }
   }
 
@@ -83,6 +80,9 @@ export function Component() {
           setNewPasswordRepeat(event.target.value);
         }}
       />
+      {newPasswordRepeat && newPassword !== newPasswordRepeat ? (
+        <div className='text-sm text-destructive'>Пароли не совпадают</div>
+      ) : null}
 
       <SubmitButton
         text='Установить пароль'

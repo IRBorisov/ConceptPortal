@@ -35,6 +35,7 @@ export function Component() {
       <form className='cc-column w-96 mx-auto px-6 mt-3' onSubmit={handleSubmit} onChange={clearServerError}>
         <TextInput
           id='email'
+          type='email'
           autoComplete='email'
           required
           allowEnter
