@@ -7,16 +7,20 @@
 // ------------- Precedence Definitions --------------------
 ///////////////////////////////////////////////////////////
 @precedence {
-  plus @left minus @left,
-  times @left,
-  not @right,
-  log_equiv @left,
-  log_impl @left,
-  log_or @left,
   log_and @left,
+  log_or @left,
+  log_impl @left,
+  log_equiv @left,
+
+  times @left,
+  plus @left minus @left,
+
   set_decart @left set_union @left set_intersect @left set_minus @left set_symminus @left,
   set_bool @right,
-  quant @right
+
+  quant @right,
+
+  not @right
 }
 
 ///////////////////////////////////////////////////////////
@@ -197,9 +201,9 @@ identifier {
 }
 
 Setexpr_binary {
+  Setexpr !times "*" Setexpr |
   Setexpr !plus "+" Setexpr |
   Setexpr !minus "-" Setexpr |
-  Setexpr !times "*" Setexpr |
   Setexpr !set_union "∪" Setexpr |
   Setexpr !set_minus "\\" Setexpr |
   Setexpr !set_symminus "∆" Setexpr |
