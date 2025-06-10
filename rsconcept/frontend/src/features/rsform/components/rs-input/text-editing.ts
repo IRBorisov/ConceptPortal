@@ -145,6 +145,15 @@ export class RSTextWrapper extends CodeMirrorWrapper {
         return true;
       }
       case TokenID.BOOLEAN: {
+        if (!hasSelection && selection.from >= 2) {
+          const enclosingText = this.ref.view.state.sliceDoc(selection.from - 2, selection.from + 1);
+          if (enclosingText === 'ℬ()') {
+            this.ref.view.dispatch({
+              changes: [{ from: selection.from - 2, insert: 'ℬ' }]
+            });
+            return true;
+          }
+        }
         if (hasSelection && this.startsWithBoolean(selection)) {
           this.envelopeWith('ℬ', '');
         } else {
