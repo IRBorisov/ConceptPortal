@@ -11,8 +11,6 @@ import { type Position2D, type Rectangle2D } from './oss-layout';
 
 export const GRID_SIZE = 10; // pixels - size of OSS grid
 const MIN_DISTANCE = 2 * GRID_SIZE; // pixels - minimum distance between nodes
-const DISTANCE_X = 180; // pixels - insert x-distance between node centers
-const DISTANCE_Y = 100; // pixels - insert y-distance between node centers
 
 const OPERATION_NODE_WIDTH = 150;
 const OPERATION_NODE_HEIGHT = 40;
@@ -159,7 +157,7 @@ export class LayoutManager {
     const maxX = Math.max(...inputsPositions.map(node => node.x));
     const minY = Math.min(...inputsPositions.map(node => node.y));
     return {
-      x: maxX + DISTANCE_X,
+      x: maxX + OPERATION_NODE_WIDTH + MIN_DISTANCE + GRID_SIZE,
       y: minY
     };
   }
@@ -220,7 +218,7 @@ function calculatePositionFromArgs(args: number[], operations: IOperationPositio
   const maxX = Math.max(...argNodes.map(node => node.x));
   return {
     x: Math.ceil((maxX + minX) / 2 / GRID_SIZE) * GRID_SIZE,
-    y: maxY + DISTANCE_Y
+    y: maxY + 2 * OPERATION_NODE_HEIGHT + MIN_DISTANCE
   };
 }
 
