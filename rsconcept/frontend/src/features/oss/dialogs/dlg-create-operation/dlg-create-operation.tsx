@@ -13,7 +13,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { type ICreateOperationDTO, OperationType, schemaCreateOperation } from '../../backend/types';
 import { useCreateOperation } from '../../backend/use-create-operation';
 import { describeOperationType, labelOperationType } from '../../labels';
-import { type LayoutManager } from '../../models/oss-layout-api';
+import { type LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '../../models/oss-layout-api';
 
 import { TabInputOperation } from './tab-input-operation';
 import { TabSynthesisOperation } from './tab-synthesis-operation';
@@ -54,6 +54,8 @@ export function DlgCreateOperation() {
       position_x: defaultX,
       position_y: defaultY,
       arguments: initialInputs,
+      width: OPERATION_NODE_WIDTH,
+      height: OPERATION_NODE_HEIGHT,
       create_schema: false,
       layout: manager.layout
     },

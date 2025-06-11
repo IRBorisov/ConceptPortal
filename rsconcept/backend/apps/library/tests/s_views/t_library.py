@@ -68,8 +68,6 @@ class TestLibraryViewset(EndpointTester):
         self.assertEqual(response.data['access_policy'], data['access_policy'])
         self.assertEqual(response.data['visible'], data['visible'])
         self.assertEqual(response.data['read_only'], data['read_only'])
-        self.assertEqual(oss.layout().data['operations'], [])
-        self.assertEqual(oss.layout().data['blocks'], [])
 
         self.logout()
         data = {'title': 'Title2'}

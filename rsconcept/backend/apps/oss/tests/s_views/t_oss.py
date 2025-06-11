@@ -55,11 +55,11 @@ class TestOssViewset(EndpointTester):
             alias='3',
             operation_type=OperationType.SYNTHESIS
         )
-        self.layout_data = {'operations': [
-            {'id': self.operation1.pk, 'x': 0, 'y': 0},
-            {'id': self.operation2.pk, 'x': 0, 'y': 0},
-            {'id': self.operation3.pk, 'x': 0, 'y': 0},
-        ], 'blocks': []}
+        self.layout_data = [
+            {'nodeID': 'o' + str(self.operation1.pk), 'x': 0, 'y': 0, 'width': 150, 'height': 40},
+            {'nodeID': 'o' + str(self.operation2.pk), 'x': 0, 'y': 0, 'width': 150, 'height': 40},
+            {'nodeID': 'o' + str(self.operation3.pk), 'x': 0, 'y': 0, 'width': 150, 'height': 40}
+        ]
         layout = self.owned.layout()
         layout.data = self.layout_data
         layout.save()
@@ -107,10 +107,9 @@ class TestOssViewset(EndpointTester):
         self.assertEqual(arguments[1]['argument'], self.operation2.pk)
 
         layout = response.data['layout']
-        self.assertEqual(layout['blocks'], [])
-        self.assertEqual(layout['operations'][0], {'id': self.operation1.pk, 'x': 0, 'y': 0})
-        self.assertEqual(layout['operations'][1], {'id': self.operation2.pk, 'x': 0, 'y': 0})
-        self.assertEqual(layout['operations'][2], {'id': self.operation3.pk, 'x': 0, 'y': 0})
+        self.assertEqual(layout[0], self.layout_data[0])
+        self.assertEqual(layout[1], self.layout_data[1])
+        self.assertEqual(layout[2], self.layout_data[2])
 
         self.executeOK(item=self.unowned_id)
         self.executeForbidden(item=self.private_id)
@@ -126,23 +125,21 @@ class TestOssViewset(EndpointTester):
         self.populateData()
         self.executeBadData(item=self.owned_id)
 
-        data = {'operations': [], 'blocks': []}
+        data = {'data': []}
         self.executeOK(data=data)
 
-        data = {
-            'operations': [
-                {'id': self.operation1.pk, 'x': 42.1, 'y': 1337},
-                {'id': self.operation2.pk, 'x': 36.1, 'y': 1437},
-                {'id': self.operation3.pk, 'x': 36.1, 'y': 1435}
-            ], 'blocks': []
-        }
+        data = {'data': [
+            {'nodeID': 'o' + str(self.operation1.pk), 'x': 42.1, 'y': 1337, 'width': 150, 'height': 40},
+            {'nodeID': 'o' + str(self.operation2.pk), 'x': 36.1, 'y': 1437, 'width': 150, 'height': 40},
+            {'nodeID': 'o' + str(self.operation3.pk), 'x': 36.1, 'y': 1435, 'width': 150, 'height': 40}
+        ]}
         self.toggle_admin(True)
         self.executeOK(data=data, item=self.unowned_id)
 
         self.toggle_admin(False)
         self.executeOK(data=data, item=self.owned_id)
         self.owned.refresh_from_db()
-        self.assertEqual(self.owned.layout().data, data)
+        self.assertEqual(self.owned.layout().data, data['data'])
 
         self.executeForbidden(data=data, item=self.unowned_id)
         self.executeForbidden(data=data, item=self.private_id)

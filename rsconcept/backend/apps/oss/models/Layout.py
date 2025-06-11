@@ -13,7 +13,7 @@ class Layout(Model):
 
     data = JSONField(
         verbose_name='Расположение',
-        default=dict
+        default=list
     )
 
     class Meta:

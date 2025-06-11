@@ -57,14 +57,11 @@ class TestChangeConstituents(EndpointTester):
         self.ks3 = RSForm(self.operation3.result)
         self.assertEqual(self.ks3.constituents().count(), 4)
 
-        self.layout_data = {
-            'operations': [
-                {'id': self.operation1.pk, 'x': 0, 'y': 0},
-                {'id': self.operation2.pk, 'x': 0, 'y': 0},
-                {'id': self.operation3.pk, 'x': 0, 'y': 0},
-            ],
-            'blocks': []
-        }
+        self.layout_data = [
+            {'nodeID': 'o' + str(self.operation1.pk), 'x': 0, 'y': 0, 'width': 150, 'height': 40},
+            {'nodeID': 'o' + str(self.operation2.pk), 'x': 0, 'y': 0, 'width': 150, 'height': 40},
+            {'nodeID': 'o' + str(self.operation3.pk), 'x': 0, 'y': 0, 'width': 150, 'height': 40},
+        ]
         layout = self.owned.layout()
         layout.data = self.layout_data
         layout.save()

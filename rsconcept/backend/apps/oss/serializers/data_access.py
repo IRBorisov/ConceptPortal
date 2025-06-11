@@ -13,7 +13,7 @@ from apps.rsform.serializers import SubstitutionSerializerBase
 from shared import messages as msg
 
 from ..models import Argument, Block, Inheritance, Operation, OperationSchema, OperationType
-from .basics import LayoutSerializer, SubstitutionExSerializer
+from .basics import NodeSerializer, SubstitutionExSerializer
 
 
 class OperationSerializer(serializers.ModelSerializer):
@@ -52,7 +52,9 @@ class CreateBlockSerializer(serializers.Serializer):
             model = Block
             fields = 'title', 'description', 'parent'
 
-    layout = LayoutSerializer()
+    layout = serializers.ListField(
+        child=NodeSerializer()
+    )
     item_data = BlockCreateData()
     width = serializers.FloatField()
     height = serializers.FloatField()
@@ -100,7 +102,10 @@ class UpdateBlockSerializer(serializers.Serializer):
             model = Block
             fields = 'title', 'description', 'parent'
 
-    layout = LayoutSerializer(required=False)
+    layout = serializers.ListField(
+        child=NodeSerializer(),
+        required=False
+    )
     target = PKField(many=False, queryset=Block.objects.all())
     item_data = UpdateBlockData()
 
@@ -127,7 +132,9 @@ class UpdateBlockSerializer(serializers.Serializer):
 
 class DeleteBlockSerializer(serializers.Serializer):
     ''' Serializer: Delete block. '''
-    layout = LayoutSerializer()
+    layout = serializers.ListField(
+        child=NodeSerializer()
+    )
     target = PKField(many=False, queryset=Block.objects.all().only('oss_id'))
 
     def validate(self, attrs):
@@ -142,7 +149,9 @@ class DeleteBlockSerializer(serializers.Serializer):
 
 class MoveItemsSerializer(serializers.Serializer):
     ''' Serializer: Move items to another parent. '''
-    layout = LayoutSerializer()
+    layout = serializers.ListField(
+        child=NodeSerializer()
+    )
     operations = PKField(many=True, queryset=Operation.objects.all().only('oss_id', 'parent'))
     blocks = PKField(many=True, queryset=Block.objects.all().only('oss_id', 'parent'))
     destination = PKField(many=False, queryset=Block.objects.all().only('oss_id'), allow_null=True)
@@ -196,8 +205,12 @@ class CreateOperationSerializer(serializers.Serializer):
                 'alias', 'operation_type', 'title', \
                 'description', 'result', 'parent'
 
-    layout = LayoutSerializer()
+    layout = serializers.ListField(
+        child=NodeSerializer()
+    )
     item_data = CreateOperationData()
+    width = serializers.FloatField()
+    height = serializers.FloatField()
     position_x = serializers.FloatField()
     position_y = serializers.FloatField()
     create_schema = serializers.BooleanField(default=False, required=False)
@@ -230,7 +243,10 @@ class UpdateOperationSerializer(serializers.Serializer):
             model = Operation
             fields = 'alias', 'title', 'description', 'parent'
 
-    layout = LayoutSerializer(required=False)
+    layout = serializers.ListField(
+        child=NodeSerializer(),
+        required=False
+    )
     target = PKField(many=False, queryset=Operation.objects.all())
     item_data = UpdateOperationData()
     arguments = PKField(many=True, queryset=Operation.objects.all().only('oss_id', 'result_id'), required=False)
@@ -297,7 +313,9 @@ class UpdateOperationSerializer(serializers.Serializer):
 
 class DeleteOperationSerializer(serializers.Serializer):
     ''' Serializer: Delete operation. '''
-    layout = LayoutSerializer()
+    layout = serializers.ListField(
+        child=NodeSerializer()
+    )
     target = PKField(many=False, queryset=Operation.objects.all().only('oss_id', 'result'))
     keep_constituents = serializers.BooleanField(default=False, required=False)
     delete_schema = serializers.BooleanField(default=False, required=False)
@@ -314,7 +332,9 @@ class DeleteOperationSerializer(serializers.Serializer):
 
 class TargetOperationSerializer(serializers.Serializer):
     ''' Serializer: Target single operation. '''
-    layout = LayoutSerializer()
+    layout = serializers.ListField(
+        child=NodeSerializer()
+    )
     target = PKField(many=False, queryset=Operation.objects.all().only('oss_id', 'result_id'))
 
     def validate(self, attrs):
@@ -329,7 +349,9 @@ class TargetOperationSerializer(serializers.Serializer):
 
 class SetOperationInputSerializer(serializers.Serializer):
     ''' Serializer: Set input schema for operation. '''
-    layout = LayoutSerializer()
+    layout = serializers.ListField(
+        child=NodeSerializer()
+    )
     target = PKField(many=False, queryset=Operation.objects.all())
     input = PKField(
         many=False,
@@ -366,7 +388,9 @@ class OperationSchemaSerializer(serializers.ModelSerializer):
     substitutions = serializers.ListField(
         child=SubstitutionExSerializer()
     )
-    layout = LayoutSerializer()
+    layout = serializers.ListField(
+        child=NodeSerializer()
+    )
 
     class Meta:
         ''' serializer metadata. '''
@@ -459,7 +483,7 @@ class RelocateConstituentsSerializer(serializers.Serializer):
 
         return attrs
 
-# ====== Internals =================================================================================
+# ====== Internals ============
 
 
 def _collect_descendants(start_blocks: list[Block]) -> set[int]:

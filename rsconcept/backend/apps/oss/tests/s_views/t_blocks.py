@@ -49,16 +49,14 @@ class TestOssBlocks(EndpointTester):
             title='3',
             parent=self.block1
         )
-        self.layout_data = {
-            'operations': [
-                {'id': self.operation1.pk, 'x': 0, 'y': 0},
-                {'id': self.operation2.pk, 'x': 0, 'y': 0},
-            ],
-            'blocks': [
-                {'id': self.block1.pk, 'x': 0, 'y': 0, 'width': 0.5, 'height': 0.5},
-                {'id': self.block2.pk, 'x': 0, 'y': 0, 'width': 0.5, 'height': 0.5},
-            ]
-        }
+        self.layout_data = [
+            {'nodeID': 'o' + str(self.operation1.pk), 'x': 0, 'y': 0, 'width': 150, 'height': 40},
+            {'nodeID': 'o' + str(self.operation2.pk), 'x': 0, 'y': 0, 'width': 150, 'height': 40},
+
+            {'nodeID': 'b' + str(self.block1.pk), 'x': 0, 'y': 0, 'width': 0.5, 'height': 0.5},
+            {'nodeID': 'b' + str(self.block2.pk), 'x': 0, 'y': 0, 'width': 0.5, 'height': 0.5},
+        ]
+
         layout = self.owned.layout()
         layout.data = self.layout_data
         layout.save()
@@ -88,7 +86,7 @@ class TestOssBlocks(EndpointTester):
         self.assertEqual(len(response.data['oss']['blocks']), 3)
         new_block = response.data['new_block']
         layout = response.data['oss']['layout']
-        item = [item for item in layout['blocks'] if item['id'] == new_block['id']][0]
+        item = [item for item in layout if item['nodeID'] == 'b' + str(new_block['id'])][0]
         self.assertEqual(new_block['title'], data['item_data']['title'])
         self.assertEqual(new_block['description'], data['item_data']['description'])
         self.assertEqual(new_block['parent'], None)

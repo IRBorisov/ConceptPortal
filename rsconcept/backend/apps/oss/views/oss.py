@@ -91,7 +91,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         ''' Endpoint: Update schema layout. '''
         serializer = s.LayoutSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        m.OperationSchema(self.get_object()).update_layout(serializer.validated_data)
+        m.OperationSchema(self.get_object()).update_layout(serializer.validated_data['data'])
         return Response(status=c.HTTP_200_OK)
 
     @extend_schema(
@@ -120,8 +120,8 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         children_operations: list[m.Operation] = serializer.validated_data['children_operations']
         with transaction.atomic():
             new_block = oss.create_block(**serializer.validated_data['item_data'])
-            layout['blocks'].append({
-                'id': new_block.pk,
+            layout.append({
+                'nodeID': 'b' + str(new_block.pk),
                 'x': serializer.validated_data['position_x'],
                 'y': serializer.validated_data['position_y'],
                 'width': serializer.validated_data['width'],
@@ -205,7 +205,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         oss = m.OperationSchema(self.get_object())
         block = cast(m.Block, serializer.validated_data['target'])
         layout = serializer.validated_data['layout']
-        layout['blocks'] = [x for x in layout['blocks'] if x['id'] != block.pk]
+        layout = [x for x in layout if x['nodeID'] != 'b' + str(block.pk)]
         with transaction.atomic():
             oss.delete_block(block)
             oss.update_layout(layout)
@@ -274,10 +274,12 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         layout = serializer.validated_data['layout']
         with transaction.atomic():
             new_operation = oss.create_operation(**serializer.validated_data['item_data'])
-            layout['operations'].append({
-                'id': new_operation.pk,
+            layout.append({
+                'nodeID': 'o' + str(new_operation.pk),
                 'x': serializer.validated_data['position_x'],
-                'y': serializer.validated_data['position_y']
+                'y': serializer.validated_data['position_y'],
+                'width': serializer.validated_data['width'],
+                'height': serializer.validated_data['height']
             })
             oss.update_layout(layout)
 
@@ -384,7 +386,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         operation = cast(m.Operation, serializer.validated_data['target'])
         old_schema = operation.result
         layout = serializer.validated_data['layout']
-        layout['operations'] = [x for x in layout['operations'] if x['id'] != operation.pk]
+        layout = [x for x in layout if x['nodeID'] != 'o' + str(operation.pk)]
         with transaction.atomic():
             oss.delete_operation(operation.pk, serializer.validated_data['keep_constituents'])
             oss.update_layout(layout)

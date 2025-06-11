@@ -3,6 +3,7 @@ import { type Node, useReactFlow } from 'reactflow';
 import { type IOssLayout } from '../../../backend/types';
 import { type IOperationSchema } from '../../../models/oss';
 import { type Position2D } from '../../../models/oss-layout';
+import { OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '../../../models/oss-layout-api';
 import { useOssEdit } from '../oss-edit-context';
 
 import { BLOCK_NODE_MIN_HEIGHT, BLOCK_NODE_MIN_WIDTH } from './graph/block-node';
@@ -14,22 +15,24 @@ export function useGetLayout() {
   return function getLayout(): IOssLayout {
     const nodes = getNodes();
     const nodeById = new Map(nodes.map(node => [node.id, node]));
-    return {
-      operations: nodes
+    return [
+      ...nodes
         .filter(node => node.type !== 'block')
         .map(node => ({
-          id: schema.itemByNodeID.get(node.id)!.id,
-          ...computeAbsolutePosition(node, schema, nodeById)
+          nodeID: node.id,
+          ...computeAbsolutePosition(node, schema, nodeById),
+          width: OPERATION_NODE_WIDTH,
+          height: OPERATION_NODE_HEIGHT
         })),
-      blocks: nodes
+      ...nodes
         .filter(node => node.type === 'block')
         .map(node => ({
-          id: schema.itemByNodeID.get(node.id)!.id,
+          nodeID: node.id,
           ...computeAbsolutePosition(node, schema, nodeById),
           width: node.width ?? BLOCK_NODE_MIN_WIDTH,
           height: node.height ?? BLOCK_NODE_MIN_HEIGHT
         }))
-    };
+    ];
   };
 }
 

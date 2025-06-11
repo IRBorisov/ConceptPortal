@@ -50,7 +50,7 @@ export const ossApi = {
     axiosPatch({
       endpoint: `/api/oss/${itemID}/update-layout`,
       request: {
-        data: data,
+        data: { data: data },
         successMessage: isSilent ? undefined : infoMsg.changesSaved
       }
     }),

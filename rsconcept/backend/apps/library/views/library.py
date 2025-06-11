@@ -41,7 +41,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
         else:
             serializer.save()
         if serializer.data.get('item_type') == m.LibraryItemType.OPERATION_SCHEMA:
-            Layout.objects.create(oss=serializer.instance, data={'operations': [], 'blocks': []})
+            Layout.objects.create(oss=serializer.instance, data=[])
 
     def perform_update(self, serializer) -> None:
         instance = serializer.save()

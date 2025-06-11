@@ -54,14 +54,11 @@ class TestOssOperations(EndpointTester):
             alias='3',
             operation_type=OperationType.SYNTHESIS
         )
-        self.layout_data = {
-            'operations': [
-                {'id': self.operation1.pk, 'x': 0, 'y': 0},
-                {'id': self.operation2.pk, 'x': 0, 'y': 0},
-                {'id': self.operation3.pk, 'x': 0, 'y': 0},
-            ],
-            'blocks': []
-        }
+        self.layout_data = [
+            {'nodeID': 'o' + str(self.operation1.pk), 'x': 0, 'y': 0, 'width': 150, 'height': 40},
+            {'nodeID': 'o' + str(self.operation2.pk), 'x': 0, 'y': 0, 'width': 150, 'height': 40},
+            {'nodeID': 'o' + str(self.operation3.pk), 'x': 0, 'y': 0, 'width': 150, 'height': 40},
+        ]
         layout = self.owned.layout()
         layout.data = self.layout_data
         layout.save()
@@ -87,7 +84,9 @@ class TestOssOperations(EndpointTester):
             },
             'layout': self.layout_data,
             'position_x': 1,
-            'position_y': 1
+            'position_y': 1,
+            'width': 500,
+            'height': 50
 
         }
         self.executeBadData(data=data)
@@ -102,7 +101,7 @@ class TestOssOperations(EndpointTester):
         self.assertEqual(len(response.data['oss']['operations']), 4)
         new_operation = response.data['new_operation']
         layout = response.data['oss']['layout']
-        item = [item for item in layout['operations'] if item['id'] == new_operation['id']][0]
+        item = [item for item in layout if item['nodeID'] == 'o' + str(new_operation['id'])][0]
         self.assertEqual(new_operation['alias'], data['item_data']['alias'])
         self.assertEqual(new_operation['operation_type'], data['item_data']['operation_type'])
         self.assertEqual(new_operation['title'], data['item_data']['title'])
@@ -111,6 +110,8 @@ class TestOssOperations(EndpointTester):
         self.assertEqual(new_operation['parent'], None)
         self.assertEqual(item['x'], data['position_x'])
         self.assertEqual(item['y'], data['position_y'])
+        self.assertEqual(item['width'], data['width'])
+        self.assertEqual(item['height'], data['height'])
         self.operation1.refresh_from_db()
 
         self.executeForbidden(data=data, item=self.unowned_id)
@@ -132,7 +133,9 @@ class TestOssOperations(EndpointTester):
             },
             'layout': self.layout_data,
             'position_x': 1,
-            'position_y': 1
+            'position_y': 1,
+            'width': 500,
+            'height': 50
 
         }
         self.executeBadData(data=data, item=self.owned_id)
@@ -160,6 +163,8 @@ class TestOssOperations(EndpointTester):
             'layout': self.layout_data,
             'position_x': 1,
             'position_y': 1,
+            'width': 500,
+            'height': 50,
             'arguments': [self.operation1.pk, self.operation3.pk]
         }
         response = self.executeCreated(data=data, item=self.owned_id)
@@ -185,7 +190,9 @@ class TestOssOperations(EndpointTester):
             },
             'layout': self.layout_data,
             'position_x': 1,
-            'position_y': 1
+            'position_y': 1,
+            'width': 500,
+            'height': 50
         }
         response = self.executeCreated(data=data, item=self.owned_id)
         new_operation = response.data['new_operation']
@@ -207,7 +214,9 @@ class TestOssOperations(EndpointTester):
             'create_schema': True,
             'layout': self.layout_data,
             'position_x': 1,
-            'position_y': 1
+            'position_y': 1,
+            'width': 500,
+            'height': 50
         }
         self.executeBadData(data=data, item=self.owned_id)
         data['item_data']['result'] = None
@@ -244,7 +253,7 @@ class TestOssOperations(EndpointTester):
         self.login()
         response = self.executeOK(data=data)
         layout = response.data['layout']
-        deleted_items = [item for item in layout['operations'] if item['id'] == data['target']]
+        deleted_items = [item for item in layout if item['nodeID'] == 'o' + str(data['target'])]
         self.assertEqual(len(response.data['operations']), 2)
         self.assertEqual(len(deleted_items), 0)
 

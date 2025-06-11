@@ -40,7 +40,7 @@ class OperationSchema:
     def create(**kwargs) -> 'OperationSchema':
         ''' Create LibraryItem via OperationSchema. '''
         model = LibraryItem.objects.create(item_type=LibraryItemType.OPERATION_SCHEMA, **kwargs)
-        Layout.objects.create(oss=model, data={'operations': [], 'blocks': []})
+        Layout.objects.create(oss=model, data=[])
         return OperationSchema(model)
 
     @staticmethod

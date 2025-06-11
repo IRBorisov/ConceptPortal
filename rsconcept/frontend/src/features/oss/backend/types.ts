@@ -72,11 +72,8 @@ export type IRelocateConstituentsDTO = z.infer<typeof schemaRelocateConstituents
 /** Represents {@link IConstituenta} reference. */
 export type IConstituentaReference = z.infer<typeof schemaConstituentaReference>;
 
-/** Represents {@link IOperation} position. */
-export type IOperationPosition = z.infer<typeof schemaOperationPosition>;
-
-/** Represents {@link IBlock} position. */
-export type IBlockPosition = z.infer<typeof schemaBlockPosition>;
+/** Represents {@link IOperationSchema} node position. */
+export type INodePosition = z.infer<typeof schemaNodePosition>;
 
 // ====== Schemas ======
 export const schemaOperationType = z.enum(Object.values(OperationType) as [OperationType, ...OperationType[]]);
@@ -108,24 +105,15 @@ export const schemaCstSubstituteInfo = schemaSubstituteConstituents.extend({
   substitution_term: z.string()
 });
 
-export const schemaOperationPosition = z.strictObject({
-  id: z.number(),
-  x: z.number(),
-  y: z.number()
-});
-
-export const schemaBlockPosition = z.strictObject({
-  id: z.number(),
+export const schemaNodePosition = z.strictObject({
+  nodeID: z.string(),
   x: z.number(),
   y: z.number(),
   width: z.number(),
   height: z.number()
 });
 
-export const schemaOssLayout = z.strictObject({
-  operations: z.array(schemaOperationPosition),
-  blocks: z.array(schemaBlockPosition)
-});
+export const schemaOssLayout = z.array(schemaNodePosition);
 
 export const schemaOperationSchema = schemaLibraryItem.extend({
   editors: z.number().array(),
@@ -188,6 +176,8 @@ export const schemaCreateOperation = z.strictObject({
   }),
   position_x: z.number(),
   position_y: z.number(),
+  width: z.number(),
+  height: z.number(),
   arguments: z.array(z.number()),
   create_schema: z.boolean()
 });

@@ -90,7 +90,7 @@ export class OssLoader {
     this.graph.topologicalOrder().forEach(operationID => {
       const operation = this.operationByID.get(operationID)!;
       const schema = this.items.find(item => item.id === operation.result);
-      const position = this.oss.layout.operations.find(item => item.id === operationID);
+      const position = this.oss.layout.find(item => item.nodeID === operation.nodeID);
       operation.x = position?.x ?? 0;
       operation.y = position?.y ?? 0;
       operation.is_consolidation = this.inferConsolidation(operationID);
@@ -104,7 +104,7 @@ export class OssLoader {
 
   private inferBlockAttributes() {
     this.oss.blocks.forEach(block => {
-      const geometry = this.oss.layout.blocks.find(item => item.id === block.id);
+      const geometry = this.oss.layout.find(item => item.nodeID === block.nodeID);
       block.x = geometry?.x ?? 0;
       block.y = geometry?.y ?? 0;
       block.width = geometry?.width ?? BLOCK_NODE_MIN_WIDTH;
