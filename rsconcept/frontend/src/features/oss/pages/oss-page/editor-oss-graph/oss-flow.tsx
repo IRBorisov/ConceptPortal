@@ -136,7 +136,7 @@ export function OssFlow() {
       }
     } else {
       if (node.data.operation?.result) {
-        navigateOperationSchema(Number(node.id));
+        navigateOperationSchema(node.data.operation.id);
       }
     }
   }
