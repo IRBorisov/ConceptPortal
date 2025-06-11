@@ -20,6 +20,7 @@ import { cn } from '@/components/utils';
 import { prefixes } from '@/utils/constants';
 import { tripleToggleColor } from '@/utils/utils';
 
+import { useLibrarySuspense } from '../../backend/use-library';
 import { IconItemVisibility } from '../../components/icon-item-visibility';
 import { IconLocationHead } from '../../components/icon-location-head';
 import { describeLocationHead, labelLocationHead } from '../../labels';
@@ -33,6 +34,7 @@ interface ToolbarSearchProps {
 }
 
 export function ToolbarSearch({ className, total, filtered }: ToolbarSearchProps) {
+  const { items } = useLibrarySuspense();
   const userMenu = useDropdown();
   const headMenu = useDropdown();
 
@@ -57,6 +59,10 @@ export function ToolbarSearch({ className, total, filtered }: ToolbarSearchProps
   const hasCustomFilter = useHasCustomFilter();
 
   const userActive = isOwned !== null || isEditor !== null || filterUser !== null;
+
+  function filterNonEmptyUsers(userID: number): boolean {
+    return items.some(item => item.owner === userID);
+  }
 
   function handleChange(newValue: LocationHead | null) {
     headMenu.hide();
@@ -114,6 +120,7 @@ export function ToolbarSearch({ className, total, filtered }: ToolbarSearchProps
               placeholder='Выберите владельца'
               noBorder
               className='min-w-60 mx-1 mb-1'
+              filter={filterNonEmptyUsers}
               value={filterUser}
               onChange={setFilterUser}
             />
