@@ -11,7 +11,6 @@ import {
   IconEdit2,
   IconExecute,
   IconFitImage,
-  IconFixLayout,
   IconGrid,
   IconLineStraight,
   IconLineWave,
@@ -39,9 +38,6 @@ export function HelpOssGraph() {
             </li>
             <li>
               <IconFitImage className='inline-icon' /> Вписать в экран
-            </li>
-            <li>
-              <IconFixLayout className='inline-icon' /> Исправить расположения
             </li>
             <li>
               <IconSettings className='inline-icon' /> Диалог настроек

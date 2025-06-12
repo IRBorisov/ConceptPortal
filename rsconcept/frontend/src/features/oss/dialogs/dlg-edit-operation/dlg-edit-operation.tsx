@@ -59,7 +59,7 @@ export function DlgEditOperation() {
 
   function onSubmit(data: IUpdateOperationDTO) {
     if (data.item_data.parent !== target.parent) {
-      manager.onOperationChangeParent(data.target, data.item_data.parent);
+      manager.onChangeParent(target.nodeID, data.item_data.parent === null ? null : `b${data.item_data.parent}`);
       data.layout = manager.layout;
     }
     return updateOperation({ itemID: manager.oss.id, data });

@@ -344,7 +344,9 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
                 operation.title = serializer.validated_data['item_data']['title']
             if 'description' in serializer.validated_data['item_data']:
                 operation.description = serializer.validated_data['item_data']['description']
-            operation.save(update_fields=['alias', 'title', 'description'])
+            if 'parent' in serializer.validated_data['item_data']:
+                operation.parent = serializer.validated_data['item_data']['parent']
+            operation.save(update_fields=['alias', 'title', 'description', 'parent'])
 
             if operation.result is not None:
                 can_edit = permissions.can_edit_item(request.user, operation.result)

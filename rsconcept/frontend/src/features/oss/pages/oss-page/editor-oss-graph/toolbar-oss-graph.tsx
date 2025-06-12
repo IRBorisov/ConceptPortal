@@ -1,7 +1,5 @@
 'use client';
 
-import { toast } from 'react-toastify';
-
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components';
 
@@ -12,7 +10,6 @@ import {
   IconEdit2,
   IconExecute,
   IconFitImage,
-  IconFixLayout,
   IconNewItem,
   IconReset,
   IconSave,
@@ -86,11 +83,6 @@ export function ToolbarOssGraph({
     return true;
   })();
 
-  function handleFixLayout() {
-    // TODO: implement layout algorithm
-    toast.info('Еще не реализовано');
-  }
-
   function handleShowOptions() {
     showOssOptions();
   }
@@ -143,14 +135,6 @@ export function ToolbarOssGraph({
           title='Сбросить вид'
           icon={<IconFitImage size='1.25rem' className='icon-primary' />}
           onClick={resetView}
-        />
-        <MiniButton
-          title='Исправить позиции узлов'
-          icon={<IconFixLayout size='1.25rem' className='icon-primary' />}
-          onClick={handleFixLayout}
-          disabled={
-            selectedItems.length > 1 || (selectedItems.length > 0 && selectedItems[0].nodeType === NodeType.OPERATION)
-          }
         />
         <MiniButton
           title='Настройки отображения'

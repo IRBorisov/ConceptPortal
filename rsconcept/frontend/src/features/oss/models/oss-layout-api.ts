@@ -25,12 +25,8 @@ export class LayoutManager {
 
   /** Calculate insert position for a new {@link IOperation} */
   newOperationPosition(data: ICreateOperationDTO): Rectangle2D {
-    let result = { x: data.position_x, y: data.position_y, width: data.width, height: data.height };
-    const parentNode = this.layout.find(pos => pos.nodeID === `b${data.item_data.parent}`);
-    if (this.oss.operations.length === 0) {
-      return result;
-    }
-
+    const result = { x: data.position_x, y: data.position_y, width: data.width, height: data.height };
+    const parentNode = this.layout.find(pos => pos.nodeID === `b${data.item_data.parent}`) ?? null;
     const operations = this.layout.filter(pos => pos.nodeID.startsWith('o'));
     if (data.arguments.length !== 0) {
       const pos = calculatePositionFromArgs(
@@ -47,19 +43,8 @@ export class LayoutManager {
       result.y = pos.y;
     }
 
-    result = preventOverlap(result, operations);
-
-    if (parentNode) {
-      const borderX = result.x + OPERATION_NODE_WIDTH + MIN_DISTANCE;
-      const borderY = result.y + OPERATION_NODE_HEIGHT + MIN_DISTANCE;
-      if (borderX > parentNode.x + parentNode.width) {
-        parentNode.width = borderX - parentNode.x;
-      }
-      if (borderY > parentNode.y + parentNode.height) {
-        parentNode.height = borderY - parentNode.y;
-      }
-      // TODO: trigger cascading updates
-    }
+    preventOverlap(result, operations);
+    this.extendParentBounds(parentNode, result);
 
     return result;
   }
@@ -72,7 +57,7 @@ export class LayoutManager {
     const operation_nodes = data.children_operations
       .map(id => this.layout.find(operation => operation.nodeID === `o${id}`))
       .filter(node => !!node);
-    const parentNode = this.layout.find(pos => pos.nodeID === `b${data.item_data.parent}`);
+    const parentNode = this.layout.find(pos => pos.nodeID === `b${data.item_data.parent}`) ?? null;
 
     let result: Rectangle2D = { x: data.position_x, y: data.position_y, width: data.width, height: data.height };
 
@@ -99,7 +84,7 @@ export class LayoutManager {
           .filter(block => block.parent === data.item_data.parent)
           .map(block => block.nodeID);
         if (siblings.length > 0) {
-          result = preventOverlap(
+          preventOverlap(
             result,
             this.layout.filter(node => siblings.includes(node.nodeID))
           );
@@ -107,7 +92,7 @@ export class LayoutManager {
       } else {
         const rootBlocks = this.oss.blocks.filter(block => block.parent === null).map(block => block.nodeID);
         if (rootBlocks.length > 0) {
-          result = preventOverlap(
+          preventOverlap(
             result,
             this.layout.filter(node => rootBlocks.includes(node.nodeID))
           );
@@ -115,56 +100,45 @@ export class LayoutManager {
       }
     }
 
-    if (parentNode) {
-      const borderX = result.x + result.width + MIN_DISTANCE;
-      const borderY = result.y + result.height + MIN_DISTANCE;
-      if (borderX > parentNode.x + parentNode.width) {
-        parentNode.width = borderX - parentNode.x;
-      }
-      if (borderY > parentNode.y + parentNode.height) {
-        parentNode.height = borderY - parentNode.y;
-      }
-      // TODO: trigger cascading updates
-    }
-
+    this.extendParentBounds(parentNode, result);
     return result;
   }
 
   /** Update layout when parent changes */
-  onOperationChangeParent(targetID: number, newParent: number | null) {
-    const targetNode = this.layout.find(pos => pos.nodeID === `o${targetID}`);
+  onChangeParent(targetID: string, newParent: string | null) {
+    const targetNode = this.layout.find(pos => pos.nodeID === targetID);
     if (!targetNode) {
       return;
     }
 
-    if (newParent === null) {
-      const rootBlocks = this.oss.blocks.filter(block => block.parent === null).map(block => block.nodeID);
-      const blocksPositions = this.layout.filter(pos => rootBlocks.includes(pos.nodeID));
-      if (blocksPositions.length === 0) {
-        return;
-      }
-
-      const operationPositions = this.layout.filter(pos => pos.nodeID.startsWith('o') && pos.nodeID !== `o${targetID}`);
-      const newRect = preventOverlap(targetNode, [...blocksPositions, ...operationPositions]);
-      targetNode.x = newRect.x;
-      targetNode.y = newRect.y;
+    const parentNode = this.layout.find(pos => pos.nodeID === newParent) ?? null;
+    const offset = this.calculateOffsetForParentChange(targetNode, parentNode);
+    if (offset.x === 0 && offset.y === 0) {
       return;
-    } else {
-      const parentNode = this.layout.find(pos => pos.nodeID === `b${newParent}`);
-      if (!parentNode) {
-        return;
-      }
-      if (rectanglesOverlap(parentNode, targetNode)) {
-        return;
-      }
-
-      // TODO: fix position based on parent
     }
+
+    targetNode.x += offset.x;
+    targetNode.y += offset.y;
+
+    const children = this.oss.hierarchy.expandAllOutputs([targetID]);
+    const childrenPositions = this.layout.filter(pos => children.includes(pos.nodeID));
+    for (const child of childrenPositions) {
+      child.x += offset.x;
+      child.y += offset.y;
+    }
+
+    this.extendParentBounds(parentNode, targetNode);
   }
 
-  /** Update layout when parent changes */
-  onBlockChangeParent(targetID: number, newParent: number | null) {
-    console.error('not implemented', targetID, newParent);
+  private extendParentBounds(parent: INodePosition | null, child: Rectangle2D) {
+    if (!parent) {
+      return;
+    }
+    const borderX = child.x + child.width + MIN_DISTANCE;
+    const borderY = child.y + child.height + MIN_DISTANCE;
+    parent.width = Math.max(parent.width, borderX - parent.x);
+    parent.height = Math.max(parent.height, borderY - parent.y);
+    // TODO: cascade update
   }
 
   private calculatePositionForFreeOperation(initial: Position2D): Position2D {
@@ -197,6 +171,23 @@ export class LayoutManager {
     const minY = Math.min(...blocksPositions.map(node => node.y));
     return { ...initial, x: maxX + MIN_DISTANCE, y: minY };
   }
+
+  private calculateOffsetForParentChange(target: INodePosition, parent: INodePosition | null): Position2D {
+    const newPosition = { ...target };
+    if (parent === null) {
+      const rootElements = this.oss.hierarchy.rootNodes();
+      const positions = this.layout.filter(pos => rootElements.includes(pos.nodeID));
+      preventOverlap(newPosition, positions);
+    } else if (!rectanglesOverlap(target, parent)) {
+      newPosition.x = parent.x + MIN_DISTANCE;
+      newPosition.y = parent.y + MIN_DISTANCE;
+
+      const siblings = this.oss.hierarchy.at(parent.nodeID)?.outputs ?? [];
+      const siblingsPositions = this.layout.filter(pos => siblings.includes(pos.nodeID));
+      preventOverlap(newPosition, siblingsPositions);
+    }
+    return { x: newPosition.x - target.x, y: newPosition.y - target.y };
+  }
 }
 
 // ======= Internals =======
@@ -209,31 +200,19 @@ function rectanglesOverlap(a: Rectangle2D, b: Rectangle2D): boolean {
   );
 }
 
-function getOverlapAmount(a: Rectangle2D, b: Rectangle2D): Position2D {
-  const xOverlap = Math.max(0, Math.min(a.x + a.width, b.x + b.width) - Math.max(a.x, b.x));
-  const yOverlap = Math.max(0, Math.min(a.y + a.height, b.y + b.height) - Math.max(a.y, b.y));
-  return { x: xOverlap, y: yOverlap };
-}
-
-function preventOverlap(target: Rectangle2D, fixedRectangles: Rectangle2D[]): Rectangle2D {
+function preventOverlap(target: Rectangle2D, fixedRectangles: Rectangle2D[]) {
   let hasOverlap: boolean;
   do {
     hasOverlap = false;
     for (const fixed of fixedRectangles) {
       if (rectanglesOverlap(target, fixed)) {
         hasOverlap = true;
-        const overlap = getOverlapAmount(target, fixed);
-        if (overlap.x >= overlap.y) {
-          target.x += overlap.x + MIN_DISTANCE;
-        } else {
-          target.y += overlap.y + MIN_DISTANCE;
-        }
+        target.x += MIN_DISTANCE;
+        target.y += MIN_DISTANCE;
         break;
       }
     }
   } while (hasOverlap);
-
-  return target;
 }
 
 function calculatePositionFromArgs(args: INodePosition[]): Position2D {
@@ -251,39 +230,20 @@ function calculatePositionFromChildren(
   operations: INodePosition[],
   blocks: INodePosition[]
 ): Rectangle2D {
-  let left = undefined;
-  let top = undefined;
-  let right = undefined;
-  let bottom = undefined;
-
-  for (const block of blocks) {
-    left = left === undefined ? block.x - MIN_DISTANCE : Math.min(left, block.x - MIN_DISTANCE);
-    top = top === undefined ? block.y - MIN_DISTANCE : Math.min(top, block.y - MIN_DISTANCE);
-    right =
-      right === undefined
-        ? Math.max(left + initial.width, block.x + block.width + MIN_DISTANCE)
-        : Math.max(right, block.x + block.width + MIN_DISTANCE);
-    bottom = !bottom
-      ? Math.max(top + initial.height, block.y + block.height + MIN_DISTANCE)
-      : Math.max(bottom, block.y + block.height + MIN_DISTANCE);
+  const allNodes = [...blocks, ...operations];
+  if (allNodes.length === 0) {
+    return initial;
   }
 
-  for (const operation of operations) {
-    left = left === undefined ? operation.x - MIN_DISTANCE : Math.min(left, operation.x - MIN_DISTANCE);
-    top = top === undefined ? operation.y - MIN_DISTANCE : Math.min(top, operation.y - MIN_DISTANCE);
-    right =
-      right === undefined
-        ? Math.max(left + initial.width, operation.x + operation.width + MIN_DISTANCE)
-        : Math.max(right, operation.x + operation.width + MIN_DISTANCE);
-    bottom = !bottom
-      ? Math.max(top + initial.height, operation.y + operation.height + MIN_DISTANCE)
-      : Math.max(bottom, operation.y + operation.height + MIN_DISTANCE);
-  }
+  const left = Math.min(...allNodes.map(n => n.x)) - MIN_DISTANCE;
+  const top = Math.min(...allNodes.map(n => n.y)) - MIN_DISTANCE;
+  const right = Math.max(...allNodes.map(n => n.x + n.width)) + MIN_DISTANCE;
+  const bottom = Math.max(...allNodes.map(n => n.y + n.height)) + MIN_DISTANCE;
 
   return {
-    x: left ?? initial.x,
-    y: top ?? initial.y,
-    width: right !== undefined && left !== undefined ? right - left : initial.width,
-    height: bottom !== undefined && top !== undefined ? bottom - top : initial.height
+    x: left,
+    y: top,
+    width: right - left,
+    height: bottom - top
   };
 }

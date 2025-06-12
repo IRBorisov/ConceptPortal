@@ -141,7 +141,6 @@ export { GrConnect        as IconConnect }        from 'react-icons/gr';
 export { BiPlayCircle     as IconExecute }        from 'react-icons/bi';
 
 // ======== Graph UI =======
-export { LuLayoutDashboard as IconFixLayout }     from 'react-icons/lu';
 export { BiCollapse       as IconGraphCollapse }  from 'react-icons/bi';
 export { BiExpand         as IconGraphExpand }    from 'react-icons/bi';
 export { LuMaximize       as IconGraphMaximize }  from 'react-icons/lu';

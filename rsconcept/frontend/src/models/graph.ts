@@ -149,6 +149,10 @@ export class Graph<NodeID = number> {
     return !!sourceNode.outputs.find(id => id === destination);
   }
 
+  rootNodes(): NodeID[] {
+    return [...this.nodes.keys()].filter(id => !this.nodes.get(id)?.inputs.length);
+  }
+
   expandOutputs(origin: NodeID[]): NodeID[] {
     const result: NodeID[] = [];
     origin.forEach(id => {
