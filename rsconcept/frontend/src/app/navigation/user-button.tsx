@@ -18,7 +18,6 @@ export function UserButton({ onLogin, onClickUser, isOpen }: UserButtonProps) {
   if (isAnonymous) {
     return (
       <NavigationButton
-        className='cc-fade-in'
         title='Перейти на страницу логина'
         icon={<IconLogin size='1.5rem' className='icon-primary' />}
         onClick={onLogin}
@@ -27,7 +26,6 @@ export function UserButton({ onLogin, onClickUser, isOpen }: UserButtonProps) {
   } else {
     return (
       <NavigationButton
-        className='cc-fade-in'
         title='Пользователь'
         hideTitle={isOpen}
         aria-haspopup='true'
