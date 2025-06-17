@@ -41,7 +41,7 @@ export function MiniButton({
         'rounded-lg',
         'cc-controls cc-animate-background',
         'cursor-pointer disabled:cursor-auto',
-        noHover ? 'outline-hidden' : 'cc-hover',
+        noHover ? 'outline-hidden' : 'cc-hover-bg',
         !noPadding && 'px-1 py-1',
         className
       )}

@@ -70,7 +70,7 @@ export function TableRow<TData>({
     <tr
       className={cn(
         'cc-scroll-row',
-        'cc-hover cc-animate-background duration-fade',
+        'cc-hover-bg cc-animate-background duration-fade',
         !noHeader && 'scroll-mt-[calc(2px+2rem)]',
         table.options.enableRowSelection && row.getIsSelected()
           ? 'cc-selected'

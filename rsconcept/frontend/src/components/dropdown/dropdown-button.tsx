@@ -38,7 +38,7 @@ export function DropdownButton({
         'text-left text-sm text-ellipsis whitespace-nowrap',
         'disabled:cc-controls disabled:opacity-75',
         'focus-outline cc-animate-background',
-        !!onClick ? 'cc-hover cursor-pointer disabled:cursor-auto' : 'bg-secondary text-secondary-foreground',
+        !!onClick ? 'cc-hover-bg cursor-pointer disabled:cursor-auto' : 'bg-secondary text-secondary-foreground',
         className
       )}
       data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}

@@ -90,7 +90,7 @@ export function SelectTree<ItemType>({
           <div
             key={`${prefix}${index}`}
             className={clsx(
-              'cc-tree-item relative cc-scroll-row cc-hover',
+              'cc-tree-item relative cc-scroll-row cc-hover-bg',
               isActive ? 'max-h-7 py-1 border-b' : 'max-h-0 opacity-0 pointer-events-none',
               value === item && 'cc-selected'
             )}

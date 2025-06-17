@@ -32,7 +32,7 @@ export function SelectorButton({
         'text-sm font-controls select-none',
         'text-btn cc-controls',
         'disabled:cursor-auto cursor-pointer',
-        'cc-hover cc-animate-color',
+        'cc-hover-text cc-animate-color',
         className
       )}
       data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}

@@ -33,7 +33,7 @@ export function TabLabel({
         'text-sm whitespace-nowrap font-controls',
         'select-none',
         'outline-hidden',
-        !disabled && 'hover:cursor-pointer cc-hover',
+        !disabled && 'hover:cursor-pointer cc-hover-bg',
         disabled && 'text-muted-foreground',
         className
       )}

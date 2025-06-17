@@ -36,7 +36,7 @@ export function PaginationTools<TData>({
         <button
           type='button'
           aria-label='Первая страница'
-          className='cc-hover cc-controls cc-animate-color focus-outline'
+          className='cc-hover-bg cc-controls cc-animate-color focus-outline'
           onClick={() => table.setPageIndex(0)}
           disabled={!table.getCanPreviousPage()}
         >
@@ -45,7 +45,7 @@ export function PaginationTools<TData>({
         <button
           type='button'
           aria-label='Предыдущая страница'
-          className='cc-hover cc-controls cc-animate-color focus-outline'
+          className='cc-hover-bg cc-controls cc-animate-color focus-outline'
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
@@ -55,7 +55,7 @@ export function PaginationTools<TData>({
           id={id ? `${id}__page` : undefined}
           title='Номер страницы. Выделите для ручного ввода'
           aria-label='Номер страницы'
-          className='w-6 text-center bg-transparent focus-outline'
+          className='w-6 text-center bg-transparent focus-outline rounded-md'
           value={table.getState().pagination.pageIndex + 1}
           onChange={event => {
             const page = event.target.value ? Number(event.target.value) - 1 : 0;
@@ -67,7 +67,7 @@ export function PaginationTools<TData>({
         <button
           type='button'
           aria-label='Следующая страница'
-          className='cc-hover cc-controls cc-animate-color focus-outline'
+          className='cc-hover-bg cc-controls cc-animate-color focus-outline'
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
@@ -76,7 +76,7 @@ export function PaginationTools<TData>({
         <button
           type='button'
           aria-label='Последняя страница'
-          className='cc-hover cc-controls cc-animate-color focus-outline'
+          className='cc-hover-bg cc-controls cc-animate-color focus-outline'
           onClick={() => table.setPageIndex(table.getPageCount() - 1)}
           disabled={!table.getCanNextPage()}
         >

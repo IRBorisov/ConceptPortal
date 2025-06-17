@@ -40,7 +40,7 @@ export function Button({
       className={cn(
         'inline-flex gap-2 items-center justify-center',
         'font-medium select-none disabled:cursor-auto disabled:opacity-75',
-        'bg-secondary text-secondary-foreground cc-hover cc-animate-color',
+        'bg-secondary text-secondary-foreground cc-hover-bg cc-animate-color',
         dense ? 'px-1' : 'px-3 py-1',
         loading ? 'cursor-progress' : 'cursor-pointer',
         noOutline ? 'outline-hidden focus-visible:bg-selected' : 'focus-outline',
