@@ -1,0 +1,73 @@
+# Add directories or file patterns to ignore during indexing (e.g. foo/ or *.csv)
+
+# SECURITY SENSITIVE FILES
+secrets/
+nginx/cert/*.pem
+
+# External distributions
+rsconcept/backend/import/*.whl
+rsconcept/backend/static
+rsconcept/backend/media
+rsconcept/frontend/dist
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+
+# Distribution / packaging
+.Python
+build/
+eggs/
+.eggs/
+
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+.mypy_cache/
+
+
+# Django
+*.log
+db.sqlite3
+db.sqlite3-journal
+visualizeDB.dot
+
+
+# React
+.DS_*
+*.log
+*.tsbuildinfo
+logs
+**/*.backup.*
+**/*.back.*
+
+node_modules
+bower_components
+
+*.sublime*
+
+# NextJS
+**/.next/
+**/out/
+
+
+# Environments
+venv/
+/GitExtensions.settings
+rsconcept/frontend/public/privacy.pdf
+/rsconcept/frontend/playwright-report
+/rsconcept/frontend/test-results
