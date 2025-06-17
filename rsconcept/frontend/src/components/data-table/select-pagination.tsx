@@ -3,6 +3,7 @@
 
 import { useCallback } from 'react';
 import { type Table } from '@tanstack/react-table';
+import clsx from 'clsx';
 
 import { prefixes } from '@/utils/constants';
 
@@ -30,7 +31,12 @@ export function SelectPagination<TData>({ id, table, paginationOptions, onChange
       <SelectTrigger
         id={id}
         aria-label='Выбор количества строчек на странице'
-        className='mx-2 cursor-pointer bg-transparent focus-outline border-0 w-28 max-h-6 px-2 justify-end'
+        className={clsx(
+          'w-28 max-h-6 mx-2',
+          'px-2 justify-end',
+          'bg-transparent cc-hover-text cc-animate-color focus-outline border-0 rounded-md',
+          'cursor-pointer'
+        )}
       >
         <SelectValue />
       </SelectTrigger>

@@ -20,6 +20,8 @@ export function PaginationTools<TData>({
   onChangePaginationOption,
   paginationOptions
 }: PaginationToolsProps<TData>) {
+  const buttonClass =
+    'cc-hover-text cc-controls cc-animate-color focus-outline rounded-md not-[:disabled]:cursor-pointer';
   return (
     <div className='flex justify-end items-center my-2 text-sm cc-controls select-none'>
       <span className='mr-3'>
@@ -36,7 +38,7 @@ export function PaginationTools<TData>({
         <button
           type='button'
           aria-label='Первая страница'
-          className='cc-hover-bg cc-controls cc-animate-color focus-outline'
+          className={buttonClass}
           onClick={() => table.setPageIndex(0)}
           disabled={!table.getCanPreviousPage()}
         >
@@ -45,7 +47,7 @@ export function PaginationTools<TData>({
         <button
           type='button'
           aria-label='Предыдущая страница'
-          className='cc-hover-bg cc-controls cc-animate-color focus-outline'
+          className={buttonClass}
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
@@ -67,7 +69,7 @@ export function PaginationTools<TData>({
         <button
           type='button'
           aria-label='Следующая страница'
-          className='cc-hover-bg cc-controls cc-animate-color focus-outline'
+          className={buttonClass}
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
@@ -76,7 +78,7 @@ export function PaginationTools<TData>({
         <button
           type='button'
           aria-label='Последняя страница'
-          className='cc-hover-bg cc-controls cc-animate-color focus-outline'
+          className={buttonClass}
           onClick={() => table.setPageIndex(table.getPageCount() - 1)}
           disabled={!table.getCanNextPage()}
         >
