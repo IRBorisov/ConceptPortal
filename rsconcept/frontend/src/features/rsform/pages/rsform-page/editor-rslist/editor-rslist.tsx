@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import clsx from 'clsx';
 import fileDownload from 'js-file-download';
 
 import { MiniButton } from '@/components/control';
@@ -124,30 +123,31 @@ export function EditorRSList() {
     return false;
   }
 
-  const tableHeight = useFitHeight(isContentEditable ? '4rem + 5px' : '2rem');
+  const tableHeight = useFitHeight('4rem + 5px');
 
   return (
     <div tabIndex={-1} onKeyDown={handleKeyDown} className='relative pt-8'>
       {isContentEditable ? (
         <ToolbarRSList className='cc-tab-tools right-4 md:right-1/2 -translate-x-1/2 md:translate-x-0 cc-animate-position' />
       ) : null}
-      {isContentEditable ? (
-        <div className='flex items-center border-b'>
+
+      <div className='flex items-center border-b'>
+        {isContentEditable ? (
           <div className='px-2'>
             Выбор {selected.length} из {schema.stats?.count_all}
           </div>
-          <SearchBar
-            id='constituents_search'
-            noBorder
-            className='max-w-50'
-            query={filterText}
-            onChangeQuery={setFilterText}
-          />
-        </div>
-      ) : null}
+        ) : null}
+        <SearchBar
+          id='constituents_search'
+          noBorder
+          className='max-w-50'
+          query={filterText}
+          onChangeQuery={setFilterText}
+        />
+      </div>
 
       <MiniButton
-        className={clsx('absolute z-pop right-4 hidden sm:block', isContentEditable ? 'top-18' : 'top-8')}
+        className='absolute z-pop right-4 hidden sm:block top-18'
         title='Выгрузить в формате CSV'
         icon={<IconCSV size='1.25rem' className='icon-green' />}
         onClick={handleDownloadCSV}
