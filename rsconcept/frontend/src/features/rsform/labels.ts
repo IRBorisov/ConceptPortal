@@ -137,6 +137,24 @@ export function getCstTypeShortcut(type: CstType) {
   }
 }
 
+/** Generates placeholder for RS definition based on {@link CstType}. */
+export function getRSDefinitionPlaceholder(type: CstType): string {
+  switch (type) {
+    case CstType.STRUCTURED:
+      return 'Пример: ℬ(X1×D2)';
+    case CstType.TERM:
+      return 'Пример: D{ξ∈S1 | Pr1(ξ)∩Pr2(ξ)=∅}';
+    case CstType.THEOREM:
+    case CstType.AXIOM:
+      return 'Пример: D11=∅';
+    case CstType.FUNCTION:
+      return 'Пример: [α∈X1, β∈ℬ(X1×X2)] Pr2(Fi1[{α}](β))';
+    case CstType.PREDICATE:
+      return 'Пример: [α∈X1, β∈ℬ(X1)] α∈β & card(β)>1';
+  }
+  return 'Формальное выражение';
+}
+
 /**
  * Generates description for {@link TokenID}.
  */

@@ -26,7 +26,7 @@ import {
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { useUpdateConstituenta } from '../../../backend/use-update-constituenta';
 import { RefsInput } from '../../../components/refs-input';
-import { labelCstTypification, labelTypification } from '../../../labels';
+import { getRSDefinitionPlaceholder, labelCstTypification, labelTypification } from '../../../labels';
 import { type IConstituenta, type IRSForm } from '../../../models/rsform';
 import { isBaseSet, isBasicConcept, isFunctional } from '../../../models/rsform-api';
 import { EditorRSExpression } from '../editor-rsexpression';
@@ -198,7 +198,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
             id='cst_term'
             label='Термин'
             maxHeight='8rem'
-            placeholder='Обозначение для текстовых определений'
+            placeholder={disabled ? '' : 'Обозначение для текстовых определений'}
             schema={schema}
             onOpenEdit={onOpenEdit}
             value={field.value ?? ''}
@@ -238,9 +238,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
                   ? 'Определение функции'
                   : 'Формальное определение'
               }
-              placeholder={
-                activeCst.cst_type !== CstType.STRUCTURED ? 'Родоструктурное выражение' : 'Типизация родовой структуры'
-              }
+              placeholder={disabled ? '' : getRSDefinitionPlaceholder(activeCst.cst_type)}
               value={field.value ?? ''}
               activeCst={activeCst}
               toggleReset={toggleReset}
@@ -261,7 +259,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
             <RefsInput
               id='cst_definition'
               label='Текстовое определение'
-              placeholder='Текстовая интерпретация формального выражения'
+              placeholder={disabled ? '' : 'Текстовая интерпретация формального выражения'}
               minHeight='3.75rem'
               maxHeight='8rem'
               schema={schema}
@@ -284,7 +282,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
           className='max-h-32'
           spellCheck
           label={isBasic ? 'Конвенция' : 'Комментарий'}
-          placeholder={isBasic ? 'Договоренность об интерпретации' : 'Пояснение разработчика'}
+          placeholder={disabled ? '' : isBasic ? 'Договоренность об интерпретации' : 'Пояснение разработчика'}
           disabled={disabled || (isBasic && activeCst.is_inherited)}
         />
       ) : null}
