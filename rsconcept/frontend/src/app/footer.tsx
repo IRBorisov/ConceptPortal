@@ -14,10 +14,10 @@ export function Footer() {
       )}
     >
       <nav className='flex gap-3' aria-label='Вторичная навигация'>
-        <TextURL text='Библиотека' href='/library' color='' />
-        <TextURL text='Справка' href='/manuals' color='' />
-        <TextURL text='Центр Концепт' href={external_urls.concept} color='' />
-        <TextURL text='Экстеор' href='/manuals?topic=exteor' color='' />
+        <TextURL text='Библиотека' href='/library' color='hover:text-foreground' />
+        <TextURL text='Справка' href='/manuals' color='hover:text-foreground' />
+        <TextURL text='Центр Концепт' href={external_urls.concept} color='hover:text-foreground' />
+        <TextURL text='Экстеор' href='/manuals?topic=exteor' color='hover:text-foreground' />
       </nav>
 
       <p>© 2025 ЦИВТ КОНЦЕПТ</p>
