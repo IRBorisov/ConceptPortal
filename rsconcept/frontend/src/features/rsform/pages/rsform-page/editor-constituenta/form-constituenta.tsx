@@ -168,7 +168,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
           noHover
           onClick={handleEditTermForms}
           className='absolute z-pop top-0 left-[calc(7ch+4px)]'
-          icon={<IconEdit size='1rem' className='icon-primary' />}
+          icon={<IconEdit size='1rem' className='hover:icon-primary' />}
           disabled={isModified}
         />
       ) : null}
@@ -184,7 +184,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
             aria-label='Переименовать конституенту'
             noHover
             onClick={handleRenameCst}
-            icon={<IconEdit size='1rem' className='icon-primary' />}
+            icon={<IconEdit size='1rem' className='hover:icon-primary' />}
             disabled={isModified}
           />
         ) : null}

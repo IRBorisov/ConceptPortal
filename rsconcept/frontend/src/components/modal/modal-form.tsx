@@ -89,7 +89,7 @@ export function ModalForm({
     <div className='cc-modal-wrapper'>
       <ModalBackdrop onHide={handleCancel} />
       <form
-        className='cc-animate-modal relative grid border rounded-xl bg-background'
+        className='cc-animate-modal relative grid border-2 px-1 pb-1 rounded-xl bg-background'
         role='dialog'
         onSubmit={handleSubmit}
         aria-labelledby='modal-title'

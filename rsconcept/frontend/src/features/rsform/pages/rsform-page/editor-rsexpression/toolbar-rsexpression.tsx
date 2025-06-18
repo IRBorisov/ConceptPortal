@@ -1,7 +1,9 @@
 import clsx from 'clsx';
 
+import { IconShowKeyboard } from '@/features/rsform/components/icon-show-keyboard';
+
 import { MiniButton } from '@/components/control';
-import { IconControls, IconTree, IconTypeGraph } from '@/components/icons';
+import { IconTree, IconTypeGraph } from '@/components/icons';
 import { usePreferencesStore } from '@/stores/preferences';
 
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
@@ -22,20 +24,23 @@ export function ToolbarRSExpression({ className, disabled, showTypeGraph, showAS
     <div className={clsx('cc-icons', className)}>
       {!disabled || isProcessing ? (
         <MiniButton
+          noHover
           title='Отображение специальной клавиатуры'
-          icon={<IconControls size='1.25rem' className={showControls ? 'icon-primary' : ''} />}
+          icon={<IconShowKeyboard value={showControls} size='1.25rem' className='hover:text-primary' />}
           onClick={toggleControls}
         />
       ) : null}
       <MiniButton
+        noHover
         title='Граф ступеней типизации'
-        icon={<IconTypeGraph size='1.25rem' className='icon-primary' />}
+        icon={<IconTypeGraph size='1.25rem' className='hover:text-primary' />}
         onClick={showTypeGraph}
       />
       <MiniButton
+        noHover
         title='Дерево разбора выражения'
         onClick={showAST}
-        icon={<IconTree size='1.25rem' className='icon-primary' />}
+        icon={<IconTree size='1.25rem' className='hover:text-primary' />}
       />
     </div>
   );

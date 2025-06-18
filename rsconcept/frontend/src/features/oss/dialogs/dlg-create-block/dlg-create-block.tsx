@@ -84,13 +84,8 @@ export function DlgCreateBlock() {
       className='w-160 px-6 h-110'
       helpTopic={HelpTopic.CC_OSS}
     >
-      <Tabs
-        selectedTabClassName='cc-selected'
-        className='grid'
-        selectedIndex={activeTab}
-        onSelect={index => setActiveTab(index as TabID)}
-      >
-        <TabList className='z-pop mx-auto -mb-5 flex border divide-x rounded-none bg-secondary'>
+      <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>
+        <TabList className='z-pop mx-auto -mb-5 flex border divide-x rounded-none'>
           <TabLabel title='Основные атрибуты блока' label='Карточка' />
           <TabLabel
             title={`Выбор вложенных узлов: [${children_operations.length + children_blocks.length}]`}

@@ -11,7 +11,7 @@
   --toastify-color-dark: var(--color-secondary);
 
   --toastify-toast-width: 20rem;
-  --toastify-toast-padding: 0.75rem;
+  --toastify-toast-padding: 1rem;
 
   --toastify-toast-min-height: 0;
   --toastify-toast-max-height: 40rem;

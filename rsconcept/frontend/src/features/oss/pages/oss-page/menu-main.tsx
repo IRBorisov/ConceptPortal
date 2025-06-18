@@ -3,7 +3,7 @@ import { useAuthSuspense } from '@/features/auth';
 import { useRoleStore, UserRole } from '@/features/users';
 
 import { Divider } from '@/components/container';
-import { Button } from '@/components/control';
+import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import { IconDestroy, IconLibrary, IconMenu, IconNewItem, IconQR, IconShare } from '@/components/icons';
 import { useDialogsStore } from '@/stores/dialogs';
@@ -47,14 +47,13 @@ export function MenuMain() {
 
   return (
     <div ref={menu.ref} onBlur={menu.handleBlur} className='relative'>
-      <Button
-        dense
-        noBorder
-        noOutline
+      <MiniButton
+        noHover
+        noPadding
         title='Меню'
         hideTitle={menu.isOpen}
-        icon={<IconMenu size='1.25rem' className='cc-controls' />}
-        className='h-full pl-2'
+        icon={<IconMenu size='1.25rem' />}
+        className='h-full pl-2 text-muted-foreground hover:text-primary bg-transparent'
         onClick={menu.toggle}
       />
       <Dropdown isOpen={menu.isOpen} margin='mt-3'>

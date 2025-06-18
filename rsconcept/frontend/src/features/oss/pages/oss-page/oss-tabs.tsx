@@ -58,10 +58,9 @@ export function OssTabs({ activeTab }: OssTabsProps) {
       selectedIndex={activeTab}
       onSelect={onSelectTab}
       defaultFocus
-      selectedTabClassName='cc-selected'
       className='relative flex flex-col mx-auto min-w-fit items-center'
     >
-      <TabList className='absolute z-sticky flex border-b-2 border-x-2 divide-x-2 bg-secondary'>
+      <TabList className='absolute z-sticky flex border-b-2 border-x-2 divide-x-2'>
         <MenuOssTabs />
 
         <TabLabel label='Карточка' title={schema.title ?? ''} />

@@ -2,7 +2,7 @@ import { urls, useConceptNavigation } from '@/app';
 import { useAuthSuspense } from '@/features/auth';
 
 import { Divider } from '@/components/container';
-import { Button } from '@/components/control';
+import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import {
   IconArchive,
@@ -103,13 +103,12 @@ export function MenuEditSchema() {
 
   if (isArchive) {
     return (
-      <Button
-        dense
-        noBorder
-        noOutline
+      <MiniButton
+        noHover
+        noPadding
         titleHtml='<b>Архив</b>: Редактирование запрещено<br />Перейти к актуальной версии'
         hideTitle={menu.isOpen}
-        className='h-full px-2'
+        className='h-full px-3 bg-transparent'
         icon={<IconArchive size='1.25rem' className='icon-primary' />}
         onClick={event => router.push({ path: urls.schema(schema.id), newTab: event.ctrlKey || event.metaKey })}
       />
@@ -118,14 +117,13 @@ export function MenuEditSchema() {
 
   return (
     <div ref={menu.ref} onBlur={menu.handleBlur} className='relative'>
-      <Button
-        dense
-        noBorder
-        noOutline
+      <MiniButton
+        noHover
+        noPadding
         title='Редактирование'
         hideTitle={menu.isOpen}
-        className='h-full px-2'
-        icon={<IconEdit2 size='1.25rem' className={isContentEditable ? 'icon-green' : 'icon-red'} />}
+        className='h-full px-3 bg-transparent text-muted-foreground hover:text-primary'
+        icon={<IconEdit2 size='1.25rem' />}
         onClick={menu.toggle}
       />
       <Dropdown isOpen={menu.isOpen} margin='mt-3'>

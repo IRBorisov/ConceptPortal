@@ -62,7 +62,7 @@ export function HelpLibrary() {
           <IconFilterReset size='1rem' className='inline-icon' /> сбросить фильтры
         </li>
         <li>
-          <IconFolderTree size='1rem' className='inline-icon' /> переключение между Проводник и Поиск
+          <IconFolderTree size='1rem' className='inline-icon' /> переключение между Проводник и Таблица
         </li>
       </ul>
 

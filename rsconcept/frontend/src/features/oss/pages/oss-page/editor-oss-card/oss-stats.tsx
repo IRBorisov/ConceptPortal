@@ -23,41 +23,36 @@ export function OssStats({ className, stats }: OssStatsProps) {
         <span>Всего</span>
         <span>{stats.count_all}</span>
       </div>
-      <ValueStats
-        id='count_block'
-        title='Блоки'
-        icon={<IconConceptBlock size='1.25rem' className='text-primary' />}
-        value={stats.count_block}
-      />
+      <ValueStats id='count_block' title='Блоки' icon={<IconConceptBlock size='1.25rem' />} value={stats.count_block} />
       <ValueStats
         id='count_inputs'
         title='Загрузка'
-        icon={<IconDownload size='1.25rem' className='text-primary' />}
+        icon={<IconDownload size='1.25rem' />}
         value={stats.count_inputs}
       />
       <ValueStats
         id='count_synthesis'
         title='Синтез'
-        icon={<IconSynthesis size='1.25rem' className='text-primary' />}
+        icon={<IconSynthesis size='1.25rem' />}
         value={stats.count_synthesis}
       />
 
       <ValueStats
         id='count_schemas'
         title='Прикрепленные схемы'
-        icon={<IconRSForm size='1.25rem' className='text-primary' />}
+        icon={<IconRSForm size='1.25rem' />}
         value={stats.count_schemas}
       />
       <ValueStats
         id='count_owned'
         title='Собственные'
-        icon={<IconRSFormOwned size='1.25rem' className='text-primary' />}
+        icon={<IconRSFormOwned size='1.25rem' />}
         value={stats.count_owned}
       />
       <ValueStats
         id='count_imported'
         title='Внешние'
-        icon={<IconRSFormImported size='1.25rem' className='text-primary' />}
+        icon={<IconRSFormImported size='1.25rem' />}
         value={stats.count_schemas - stats.count_owned}
       />
     </div>

@@ -3,7 +3,7 @@
  */
 
 @utility cc-btn-nav {
-  color: color-mix(in oklab, var(--color-foreground) 50%, transparent);
+  color: var(--color-muted-foreground);
   border-radius: 0.75rem;
 
   cursor: pointer;
@@ -19,8 +19,6 @@
   }
 
   .dark & {
-    color: color-mix(in oklab, var(--color-foreground) 70%, transparent);
-
     &:hover {
       color: var(--color-foreground);
     }

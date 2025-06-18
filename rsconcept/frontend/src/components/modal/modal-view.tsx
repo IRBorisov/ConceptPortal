@@ -39,7 +39,7 @@ export function ModalView({
   return (
     <div className='cc-modal-wrapper'>
       <ModalBackdrop onHide={hideDialog} />
-      <div className='cc-animate-modal relative grid border rounded-xl bg-background' role='dialog'>
+      <div className='cc-animate-modal relative grid border-2 px-1 pb-1 rounded-xl bg-background' role='dialog'>
         {helpTopic && !hideHelpWhen?.() ? (
           <BadgeHelp
             topic={helpTopic}

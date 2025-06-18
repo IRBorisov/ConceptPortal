@@ -22,6 +22,7 @@ export function TabLabel({
   className,
   disabled,
   role = 'tab',
+  selectedClassName = 'text-foreground! cc-selected',
   ...otherProps
 }: TabLabelProps) {
   return (
@@ -29,12 +30,12 @@ export function TabLabel({
       className={clsx(
         'min-w-20 h-full',
         'px-2 py-1 flex justify-center',
-        'cc-animate-color duration-select',
+        'cc-animate-color duration-select text-muted-foreground',
         'text-sm whitespace-nowrap font-controls',
         'select-none',
         'outline-hidden',
-        !disabled && 'hover:cursor-pointer cc-hover-bg',
-        disabled && 'text-muted-foreground',
+        !disabled && 'hover:cursor-pointer cc-hover-text',
+        disabled && 'bg-secondary',
         className
       )}
       tabIndex='-1'
@@ -44,6 +45,7 @@ export function TabLabel({
       data-tooltip-hidden={hideTitle}
       role={role}
       disabled={disabled}
+      selectedClassName={selectedClassName}
       {...otherProps}
     >
       {label}

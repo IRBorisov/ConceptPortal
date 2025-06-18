@@ -1,6 +1,6 @@
 import { useAuthSuspense } from '@/features/auth';
 
-import { Button } from '@/components/control';
+import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import { IconChild, IconEdit2 } from '@/components/icons';
 import { useDialogsStore } from '@/stores/dialogs';
@@ -31,14 +31,13 @@ export function MenuEditOss() {
 
   return (
     <div ref={menu.ref} onBlur={menu.handleBlur} className='relative'>
-      <Button
-        dense
-        noBorder
-        noOutline
+      <MiniButton
+        noHover
+        noPadding
         title='Редактирование'
         hideTitle={menu.isOpen}
-        className='h-full px-2'
-        icon={<IconEdit2 size='1.25rem' className={isMutable ? 'icon-green' : 'icon-red'} />}
+        className='h-full px-3 bg-transparent text-muted-foreground hover:text-primary'
+        icon={<IconEdit2 size='1.25rem' />}
         onClick={menu.toggle}
       />
       <Dropdown isOpen={menu.isOpen} margin='mt-3'>
@@ -47,7 +46,7 @@ export function MenuEditOss() {
           titleHtml='Перенос конституент</br>между схемами'
           aria-label='Перенос конституент между схемами'
           icon={<IconChild size='1rem' className='icon-green' />}
-          disabled={isProcessing}
+          disabled={isProcessing || !isMutable}
           onClick={handleRelocate}
         />
       </Dropdown>

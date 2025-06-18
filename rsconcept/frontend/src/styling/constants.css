@@ -24,7 +24,7 @@
   --clr-prim-100:     oklch(098% 0 0deg);
   --clr-prim-200:     oklch(095% 0 0deg);
   --clr-prim-400:     oklch(085% 0 0deg);
-  --clr-prim-600:     oklch(070% 0 0deg);
+  --clr-prim-600:     oklch(065% 0 0deg);
   --clr-prim-999:     oklch(000% 0 0deg);
 
   --clr-sec-0:        oklch(100% 0 0deg);
@@ -46,7 +46,7 @@
   --acc-bg-teal:      oklch(082% 0.180 210deg);
   --acc-bg-orange:    oklch(085% 0.130 62deg);
 
-  --acc-bg-green25:   oklch(097% 0.080 138deg);
+  --acc-bg-green25:   oklch(096% 0.070 138deg);
   --acc-bg-green50:   oklch(092% 0.150 138deg);
   --acc-bg-orange50:  oklch(090% 0.044 62deg);
   
@@ -65,7 +65,7 @@
   --clr-prim-100:     oklch(022% 0 0deg);
   --clr-prim-200:     oklch(030% 0 0deg);
   --clr-prim-400:     oklch(050% 0 0deg);
-  --clr-prim-600:     oklch(065% 0 0deg);
+  --clr-prim-600:     oklch(070% 0 0deg);
   --clr-prim-999:     oklch(095% 0 0deg);
 
   --clr-sec-0:        oklch(100% 0 0deg);

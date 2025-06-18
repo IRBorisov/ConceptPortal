@@ -100,12 +100,11 @@ export function DlgCreateOperation() {
       helpTopic={HelpTopic.CC_OSS}
     >
       <Tabs
-        selectedTabClassName='cc-selected'
         className='grid'
         selectedIndex={activeTab}
         onSelect={(index, last) => handleSelectTab(index as TabID, last as TabID)}
       >
-        <TabList className='z-pop mx-auto -mb-5 flex border divide-x rounded-none bg-secondary'>
+        <TabList className='z-pop mx-auto -mb-5 flex border divide-x rounded-none'>
           <TabLabel
             title={describeOperationType(OperationType.INPUT)}
             label={labelOperationType(OperationType.INPUT)}

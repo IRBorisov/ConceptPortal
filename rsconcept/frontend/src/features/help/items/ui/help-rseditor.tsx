@@ -1,10 +1,10 @@
 import {
   IconChild,
   IconClone,
-  IconControls,
   IconDestroy,
   IconEdit,
   IconFilter,
+  IconKeyboard,
   IconList,
   IconMoveDown,
   IconMoveUp,
@@ -94,7 +94,7 @@ export function HelpRSEditor() {
           <IconStatusOK className='inline-icon' /> индикатор статуса определения сверху
         </li>
         <li>
-          <IconControls className='inline-icon' /> специальная клавиатура и горячие клавиши
+          <IconKeyboard className='inline-icon' /> специальная клавиатура и горячие клавиши
         </li>
         <li>
           <IconTypeGraph className='inline-icon' /> отображение{' '}

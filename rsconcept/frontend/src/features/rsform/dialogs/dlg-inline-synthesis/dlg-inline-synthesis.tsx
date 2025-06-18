@@ -58,13 +58,8 @@ export function DlgInlineSynthesis() {
       canSubmit={methods.formState.isValid && sourceID !== null}
       onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
     >
-      <Tabs
-        selectedTabClassName='cc-selected'
-        className='grid'
-        selectedIndex={activeTab}
-        onSelect={index => setActiveTab(index as TabID)}
-      >
-        <TabList className='mb-3 mx-auto flex border divide-x rounded-none bg-secondary'>
+      <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>
+        <TabList className='mb-3 mx-auto flex border divide-x rounded-none'>
           <TabLabel
             label='Схема' //
             title='Источник конституент'
