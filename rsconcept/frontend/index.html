@@ -29,6 +29,18 @@
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      try {
+        const preferences = JSON.parse(localStorage.getItem('portal.preferences') || '{}').state;
+        const isDark = preferences ? preferences.darkMode : window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (isDark) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+        document.documentElement.setAttribute('data-color-scheme', isDark ? 'dark' : 'light');
+      } catch (e) {}
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
