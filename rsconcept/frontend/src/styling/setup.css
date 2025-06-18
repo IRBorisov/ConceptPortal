@@ -23,12 +23,12 @@
   }
 
   html {
+    interpolate-size: allow-keywords;
+
     text-size-adjust: none;
 
     hanging-punctuation: first last;
     color-scheme: dark light;
-
-    interpolate-size: allow-keywords;
   }
 
   body {
@@ -54,8 +54,6 @@
   }
 
   :root {
-    interpolate-size: allow-keywords;
-
     font-size: var(--font-size-base);
     line-height: var(--line-height);
     font-family: var(--font-main);
@@ -140,6 +138,23 @@
 
   li::marker {
     content: '–\2009';
+  }
+
+  details {
+    overflow: hidden;
+  }
+
+  details::details-content {
+    block-size: 0;
+
+    transition-property: block-size, content-visibility;
+    transition-duration: var(--duration-dropdown);
+    transition-timing-function: var(--ease-in-out);
+    transition-behavior: allow-discrete;
+  }
+
+  details[open]::details-content {
+    block-size: auto;
   }
 
   summary {
