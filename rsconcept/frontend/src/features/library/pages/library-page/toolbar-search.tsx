@@ -171,13 +171,13 @@ export function ToolbarSearch({ className, total, filtered }: ToolbarSearchProps
               <DropdownButton
                 text='проводник...'
                 title='Переключение в режим Проводник'
-                icon={<IconFolderTree size='1rem' className='cc-controls' />}
+                icon={<IconFolderTree size='1rem' className='icon-primary' />}
                 onClick={handleToggleFolder}
               />
               <DropdownButton
                 text='отображать все'
                 title='Очистить фильтр по расположению'
-                icon={<IconFolder size='1rem' className='cc-controls' />}
+                icon={<IconFolder size='1rem' className='icon-primary' />}
                 onClick={() => handleChange(null)}
               />
               {Object.values(LocationHead).map((head, index) => {

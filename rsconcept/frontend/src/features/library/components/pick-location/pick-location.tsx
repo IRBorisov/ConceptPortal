@@ -5,7 +5,7 @@ import clsx from 'clsx';
 
 import { useAuthSuspense } from '@/features/auth';
 
-import { Label, TextArea } from '@/components/input';
+import { TextArea } from '@/components/input';
 import { type Styling } from '@/components/props';
 
 import { LocationHead } from '../../models/library';
@@ -35,18 +35,16 @@ export function PickLocation({
   const { user } = useAuthSuspense();
 
   return (
-    <div className={clsx('flex', className)} {...restProps}>
-      <div className='flex flex-col gap-2 min-w-28'>
-        <Label className='select-none' text='Корень' />
-        <SelectLocationHead
-          value={value.substring(0, 2) as LocationHead}
-          onChange={newValue => onChange(combineLocation(newValue, value.substring(3)))}
-          excluded={!user.is_staff ? [LocationHead.LIBRARY] : []}
-        />
-      </div>
+    <div className={clsx('flex relative', className)} {...restProps}>
+      <SelectLocationHead
+        className='absolute right-0 top-0'
+        value={value.substring(0, 2) as LocationHead}
+        onChange={newValue => onChange(combineLocation(newValue, value.substring(3)))}
+        excluded={!user.is_staff ? [LocationHead.LIBRARY] : []}
+      />
 
       <SelectLocationContext
-        className='-mt-1 -ml-8'
+        className='absolute left-28 -top-1'
         dropdownHeight={dropdownHeight} //
         value={value}
         onChange={onChange}
@@ -54,7 +52,7 @@ export function PickLocation({
 
       <TextArea
         id='dlg_location'
-        label='Путь'
+        label='Расположение'
         rows={rows}
         value={value.substring(3)}
         onChange={event => onChange(combineLocation(value.substring(0, 2), event.target.value))}

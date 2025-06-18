@@ -88,7 +88,7 @@ export function ViewSideLocation({ isVisible, onRenameLocation }: ViewSideLocati
           <MiniButton
             noHover
             title='Переключение в режим Таблица'
-            icon={<IconFolderTree size='1.25rem' className='text-muted-foreground hover:text-constructive' />}
+            icon={<IconFolderTree size='1.25rem' className='text-muted-foreground hover:text-primary' />}
             onClick={toggleFolderMode}
           />
         </div>

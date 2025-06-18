@@ -48,7 +48,7 @@ export function SelectLocationHead({
         onClick={menu.toggle}
       />
 
-      <Dropdown isOpen={menu.isOpen} margin='mt-2'>
+      <Dropdown isOpen={menu.isOpen} stretchLeft margin='mt-2'>
         {Object.values(LocationHead)
           .filter(head => !excluded.includes(head))
           .map((head, index) => {

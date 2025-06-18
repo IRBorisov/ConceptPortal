@@ -38,13 +38,13 @@ export function SelectLocationContext({
     <div
       ref={menu.ref} //
       onBlur={menu.handleBlur}
-      className={clsx('relative text-right self-start', className)}
+      className={clsx('text-right self-start', className)}
       {...restProps}
     >
       <MiniButton
         title={title}
         hideTitle={menu.isOpen}
-        icon={<IconFolderTree size='1.25rem' className='icon-green' />}
+        icon={<IconFolderTree size='1.25rem' className='icon-primary' />}
         onClick={() => menu.toggle()}
       />
       <Dropdown isOpen={menu.isOpen} className={clsx('w-80 z-tooltip', dropdownHeight)}>
