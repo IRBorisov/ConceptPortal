@@ -25,8 +25,8 @@ export function ToggleNavigation() {
         data-tooltip-content={noNavigationAnimation ? 'Показать навигацию' : 'Скрыть навигацию'}
         aria-label={noNavigationAnimation ? 'Показать навигацию' : 'Скрыть навигацию'}
       >
-        {!noNavigationAnimation ? <IconPin size='0.75rem' /> : null}
-        {noNavigationAnimation ? <IconUnpin size='0.75rem' /> : null}
+        {!noNavigationAnimation ? <IconPin size='0.75rem' className='hover:text-primary' /> : null}
+        {noNavigationAnimation ? <IconUnpin size='0.75rem' className='hover:text-primary' /> : null}
       </button>
       {!noNavigationAnimation ? (
         <button
@@ -38,8 +38,8 @@ export function ToggleNavigation() {
           data-tooltip-content={darkMode ? 'Тема: Темная' : 'Тема: Светлая'}
           aria-label={darkMode ? 'Тема: Темная' : 'Тема: Светлая'}
         >
-          {darkMode ? <IconDarkTheme size='0.75rem' /> : null}
-          {!darkMode ? <IconLightTheme size='0.75rem' /> : null}
+          {darkMode ? <IconDarkTheme size='0.75rem' className='hover:text-primary' /> : null}
+          {!darkMode ? <IconLightTheme size='0.75rem' className='hover:text-primary' /> : null}
         </button>
       ) : null}
     </div>

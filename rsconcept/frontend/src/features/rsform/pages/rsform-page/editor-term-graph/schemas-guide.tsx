@@ -37,7 +37,7 @@ export function SchemasGuide() {
 
   return (
     <div className='p-1' tabIndex={-1} id={globalIDs.graph_schemas}>
-      <IconHelp size='1.25rem' className='icon-primary' />
+      <IconHelp size='1.25rem' className='text-muted-foreground hover:icon-primary' />
       <Tooltip
         anchorSelect={`#${globalIDs.graph_schemas}`}
         place='right'

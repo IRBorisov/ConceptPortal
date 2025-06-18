@@ -96,7 +96,11 @@ export function FormSignup() {
         <fieldset className='cc-column w-60 relative'>
           <legend className='sr-only'>Информация о пользователе</legend>
 
-          <IconHelp id={globalIDs.email_tooltip} className='absolute top-0 right-0 icon-primary' size='1.25rem' />
+          <IconHelp
+            id={globalIDs.email_tooltip}
+            className='absolute top-0 right-0 text-muted-foreground hover:text-primary'
+            size='1.25rem'
+          />
           <Tooltip anchorSelect={`#${globalIDs.email_tooltip}`} offset={6}>
             электронная почта используется для восстановления пароля
           </Tooltip>

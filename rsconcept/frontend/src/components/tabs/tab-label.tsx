@@ -22,7 +22,7 @@ export function TabLabel({
   className,
   disabled,
   role = 'tab',
-  selectedClassName = 'text-foreground! cc-selected',
+  selectedClassName = 'text-foreground! bg-secondary',
   ...otherProps
 }: TabLabelProps) {
   return (

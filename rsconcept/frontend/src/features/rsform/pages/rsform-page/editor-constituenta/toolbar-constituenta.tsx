@@ -131,12 +131,6 @@ export function ToolbarConstituenta({
         </>
       ) : null}
 
-      <MiniButton
-        title='Отображение списка конституент'
-        icon={showList ? <IconList size='1.25rem' className='icon-primary' /> : <IconListOff size='1.25rem' />}
-        onClick={toggleList}
-      />
-
       {isContentEditable ? (
         <>
           <MiniButton
@@ -155,6 +149,19 @@ export function ToolbarConstituenta({
           />
         </>
       ) : null}
+
+      <MiniButton
+        noHover
+        title='Отображение списка конституент'
+        icon={
+          showList ? (
+            <IconList size='1.25rem' className='hover:icon-primary' />
+          ) : (
+            <IconListOff size='1.25rem' className='hover:icon-primary' />
+          )
+        }
+        onClick={toggleList}
+      />
       <BadgeHelp topic={HelpTopic.UI_RS_EDITOR} offset={4} contentClass='sm:max-w-160' />
     </div>
   );
