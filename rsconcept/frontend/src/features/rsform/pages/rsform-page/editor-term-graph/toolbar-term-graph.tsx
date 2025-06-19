@@ -157,8 +157,7 @@ export function ToolbarTermGraph() {
         />
       ) : null}
       <MiniButton
-        noHover
-        icon={<IconTypeGraph size='1.25rem' className='hover:icon-primary' />}
+        icon={<IconTypeGraph size='1.25rem' className='icon-primary' />}
         title='Граф ступеней'
         onClick={handleShowTypeGraph}
       />

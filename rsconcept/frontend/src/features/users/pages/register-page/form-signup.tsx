@@ -98,7 +98,7 @@ export function FormSignup() {
 
           <IconHelp
             id={globalIDs.email_tooltip}
-            className='absolute top-0 right-0 text-muted-foreground hover:text-primary'
+            className='absolute top-0 right-0 text-muted-foreground hover:text-primary cc-animate-color'
             size='1.25rem'
           />
           <Tooltip anchorSelect={`#${globalIDs.email_tooltip}`} offset={6}>

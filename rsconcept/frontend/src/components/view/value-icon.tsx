@@ -57,7 +57,7 @@ export function ValueIcon({
       data-tooltip-hidden={hideTitle}
       aria-label={title}
     >
-      {onClick ? <MiniButton noHover noPadding icon={icon} onClick={onClick} disabled={disabled} /> : icon}
+      {onClick ? <MiniButton noPadding icon={icon} onClick={onClick} disabled={disabled} /> : icon}
       <span id={id}>{value}</span>
     </div>
   );

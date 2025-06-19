@@ -98,21 +98,18 @@ export function PickContents({
         <div className='flex w-fit'>
           <MiniButton
             title='Удалить'
-            noHover
             className='px-0'
             icon={<IconRemove size='1rem' className='icon-red' />}
             onClick={() => handleDelete(props.row.original)}
           />
           <MiniButton
             title='Переместить выше'
-            noHover
             className='px-0'
             icon={<IconMoveUp size='1rem' className='icon-primary' />}
             onClick={() => handleMoveUp(props.row.original)}
           />
           <MiniButton
             title='Переместить ниже'
-            noHover
             className='px-0'
             icon={<IconMoveDown size='1rem' className='icon-primary' />}
             onClick={() => handleMoveDown(props.row.original)}

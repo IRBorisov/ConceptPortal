@@ -26,6 +26,27 @@
   }
 }
 
+@utility cc-hover-pulse {
+  &:hover:not(:disabled) {
+    animation: pulse-scale 1s infinite;
+    transition: var(--duration-move);
+  }
+}
+
+@keyframes pulse-scale {
+  0% {
+    transform: scale(1);
+  }
+
+  70% {
+    transform: scale(1.2);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
 @utility cc-hover-text {
   &:hover:not(:disabled) {
     color: var(--color-foreground);

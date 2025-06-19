@@ -144,14 +144,12 @@ export function DlgEditWordForms() {
         <div className='flex flex-col self-center gap-1'>
           <MiniButton
             title='Определить граммемы'
-            noHover
             icon={<IconMoveRight size='1.25rem' className='icon-primary' />}
             onClick={handleParse}
             disabled={isProcessing || !inputText}
           />
           <MiniButton
             title='Генерировать словоформу'
-            noHover
             icon={<IconMoveLeft size='1.25rem' className='icon-primary' />}
             onClick={handleInflect}
             disabled={isProcessing || inputGrams.length == 0}
@@ -169,14 +167,12 @@ export function DlgEditWordForms() {
         <div className='cc-icons'>
           <MiniButton
             title='Внести словоформу'
-            noHover
             icon={<IconAccept size='1.5rem' className='icon-green' />}
             onClick={handleAddForm}
             disabled={isProcessing || !inputText || inputGrams.length == 0}
           />
           <MiniButton
             title='Генерировать стандартные словоформы'
-            noHover
             icon={<IconMoveDown size='1.5rem' className='icon-primary' />}
             onClick={handleGenerateLexeme}
             disabled={isProcessing || !inputText}
@@ -186,7 +182,6 @@ export function DlgEditWordForms() {
           <span>Заданные вручную словоформы [{forms.length}]</span>
           <MiniButton
             title='Сбросить все словоформы'
-            noHover
             className='py-0 align-middle'
             icon={<IconRemove size='1.5rem' className='cc-remove' />}
             onClick={handleResetAll}

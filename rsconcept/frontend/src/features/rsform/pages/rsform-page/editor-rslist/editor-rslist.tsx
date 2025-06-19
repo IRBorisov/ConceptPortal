@@ -149,7 +149,7 @@ export function EditorRSList() {
       <MiniButton
         className='absolute z-pop right-4 hidden sm:block top-18'
         title='Выгрузить в формате CSV'
-        icon={<IconCSV size='1.25rem' className='text-muted-foreground hover:text-constructive' />}
+        icon={<IconCSV size='1.25rem' className='text-constructive' />}
         onClick={handleDownloadCSV}
       />
 

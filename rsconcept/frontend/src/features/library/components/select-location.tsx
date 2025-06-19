@@ -73,7 +73,6 @@ export function SelectLocation({ value, dense, prefix, onClick, className, style
             {item.children.size > 0 ? (
               <MiniButton
                 noPadding
-                noHover
                 icon={
                   folded.includes(item) ? (
                     item.filesInside ? (

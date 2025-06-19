@@ -92,7 +92,12 @@ export function ComboBox<Option>({
           hidden={hidden && !open}
         >
           <span className='truncate'>{value ? labelValueFunc(value) : placeholder}</span>
-          <ChevronDownIcon className={cn('text-muted-foreground', clearable && !!value && 'opacity-0')} />
+          <ChevronDownIcon
+            className={cn(
+              'text-muted-foreground cc-hover-pulse hover:text-primary',
+              clearable && !!value && 'opacity-0'
+            )}
+          />
           {clearable && !!value ? (
             <IconRemove
               tabIndex={-1}

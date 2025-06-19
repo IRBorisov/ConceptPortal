@@ -48,9 +48,8 @@ export function DlgEditEditors() {
         <span>Всего редакторов [{selected.length}]</span>
         <MiniButton
           title='Очистить список'
-          noHover
           className='py-0 align-middle'
-          icon={<IconRemove size='1.5rem' className='cc-remove' />}
+          icon={<IconRemove size='1.25rem' className='cc-remove' />}
           onClick={() => setSelected([])}
           disabled={selected.length === 0}
         />

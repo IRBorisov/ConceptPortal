@@ -48,7 +48,6 @@ export function TableWordForms({ forms, setForms, onFormSelect }: TableWordForms
       cell: props => (
         <MiniButton
           title='Удалить словоформу'
-          noHover
           noPadding
           className='align-middle'
           icon={<IconRemove size='1.25rem' className='cc-remove' />}

@@ -115,7 +115,7 @@ export function ComboMulti<Option>({
             <IconRemove
               tabIndex={-1}
               size='1rem'
-              className='cc-remove absolute pointer-events-auto right-3'
+              className='cc-remove absolute pointer-events-auto right-3 cc-hover-pulse hover:text-primary'
               onClick={handleClear}
             />
           ) : null}

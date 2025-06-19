@@ -39,7 +39,6 @@ export function ConstituentsSearch({ dense }: ConstituentsSearchProps) {
       <SelectGraphFilter value={filterSource} onChange={setSource} dense={dense} />
       {schema.stats.count_inherited > 0 ? (
         <MiniButton
-          noHover
           titleHtml={`Наследованные: <b>${includeInherited ? 'отображать' : 'скрывать'}</b>`}
           aria-label={`Отображение наследованных: ${includeInherited ? 'отображать' : 'скрывать'}`}
           icon={<IconChild size='1rem' className={includeInherited ? 'icon-primary' : 'cc-controls'} />}

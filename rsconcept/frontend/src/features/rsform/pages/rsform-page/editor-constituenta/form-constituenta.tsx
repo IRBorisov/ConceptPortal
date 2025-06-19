@@ -165,10 +165,9 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
         <MiniButton
           title={isModified ? tooltipText.unsaved : 'Редактировать словоформы термина'}
           aria-label='Редактировать словоформы термина'
-          noHover
           onClick={handleEditTermForms}
           className='absolute z-pop top-0 left-[calc(7ch+4px)]'
-          icon={<IconEdit size='1rem' className='hover:icon-primary' />}
+          icon={<IconEdit size='1rem' className='icon-primary' />}
           disabled={isModified}
         />
       ) : null}
@@ -182,9 +181,8 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
           <MiniButton
             title={isModified ? tooltipText.unsaved : 'Переименовать конституенту'}
             aria-label='Переименовать конституенту'
-            noHover
             onClick={handleRenameCst}
-            icon={<IconEdit size='1rem' className='hover:icon-primary' />}
+            icon={<IconEdit size='1rem' className='icon-primary' />}
             disabled={isModified}
           />
         ) : null}

@@ -46,7 +46,7 @@ function SelectTrigger({
     >
       {children}
       <SelectPrimitive.Icon asChild>
-        <ChevronDownIcon className='size-4' />
+        <ChevronDownIcon className='size-4 cc-hover-pulse hover:text-primary' />
       </SelectPrimitive.Icon>
     </SelectPrimitive.Trigger>
   );
@@ -154,7 +154,7 @@ function SelectScrollDownButton({
       className={cn('flex cursor-default items-center justify-center py-1', className)}
       {...props}
     >
-      <ChevronDownIcon className='size-4' />
+      <ChevronDownIcon className='size-4 cc-hover-pulse hover:text-primary' />
     </SelectPrimitive.ScrollDownButton>
   );
 }

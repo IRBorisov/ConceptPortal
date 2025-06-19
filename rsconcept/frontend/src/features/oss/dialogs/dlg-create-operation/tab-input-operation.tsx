@@ -97,7 +97,6 @@ export function TabInputOperation() {
           <Label text='Загружаемая концептуальная схема' />
           <MiniButton
             title='Сбросить выбор схемы'
-            noHover
             noPadding
             icon={<IconReset size='1.25rem' className='icon-primary' />}
             onClick={() => setValue('item_data.result', null)}

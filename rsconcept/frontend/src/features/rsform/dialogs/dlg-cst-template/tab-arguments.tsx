@@ -87,7 +87,6 @@ export function TabArguments() {
           <MiniButton
             title='Очистить значение'
             noPadding
-            noHover
             className='align-middle'
             icon={<IconRemove size='1.25rem' className='cc-remove' />}
             onClick={() => handleClearArgument(props.row.original)}
@@ -129,7 +128,6 @@ export function TabArguments() {
         <div className='flex'>
           <MiniButton
             title='Подставить значение аргумента'
-            noHover
             className='py-0'
             icon={<IconAccept size='1.5rem' className='icon-green' />}
             onClick={() => handleAssignArgument(selectedArgument!, argumentValue)}
@@ -137,7 +135,6 @@ export function TabArguments() {
           />
           <MiniButton
             title='Очистить поле'
-            noHover
             className='py-0'
             onClick={handleReset}
             icon={<IconReset size='1.5rem' className='icon-primary' />}

@@ -104,7 +104,6 @@ export function MenuEditSchema() {
   if (isArchive) {
     return (
       <MiniButton
-        noHover
         noPadding
         titleHtml='<b>Архив</b>: Редактирование запрещено<br />Перейти к актуальной версии'
         hideTitle={menu.isOpen}
@@ -122,7 +121,7 @@ export function MenuEditSchema() {
         noPadding
         title='Редактирование'
         hideTitle={menu.isOpen}
-        className='h-full px-3 bg-transparent text-muted-foreground hover:text-primary'
+        className='h-full px-3 text-muted-foreground hover:text-primary cc-animate-color'
         icon={<IconEdit2 size='1.25rem' />}
         onClick={menu.toggle}
       />

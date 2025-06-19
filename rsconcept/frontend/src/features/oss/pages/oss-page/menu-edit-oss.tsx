@@ -36,7 +36,7 @@ export function MenuEditOss() {
         noPadding
         title='Редактирование'
         hideTitle={menu.isOpen}
-        className='h-full px-3 bg-transparent text-muted-foreground hover:text-primary'
+        className='h-full px-3 text-muted-foreground hover:text-primary cc-animate-color'
         icon={<IconEdit2 size='1.25rem' />}
         onClick={menu.toggle}
       />

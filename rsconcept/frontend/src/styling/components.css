@@ -14,14 +14,7 @@
   transition-duration: 500ms;
 
   &:hover {
-    background-color: var(--color-accent);
     color: var(--color-foreground);
-  }
-
-  .dark & {
-    &:hover {
-      color: var(--color-foreground);
-    }
   }
 }
 

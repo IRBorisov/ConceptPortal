@@ -1,8 +1,7 @@
-import clsx from 'clsx';
-
 import { globalIDs } from '@/utils/constants';
 
 import { type Button } from '../props';
+import { cn } from '../utils';
 
 interface MiniButtonProps extends Button {
   /** Button type. */
@@ -37,11 +36,12 @@ export function MiniButton({
     <button
       type={type}
       tabIndex={tabIndex ?? -1}
-      className={clsx(
+      className={cn(
         'rounded-lg',
         'cc-controls cc-animate-background',
         'cursor-pointer disabled:cursor-auto',
-        noHover ? 'outline-hidden' : 'cc-hover-bg',
+        (!tabIndex || tabIndex === -1) && 'outline-hidden',
+        !noHover && 'cc-hover-pulse',
         !noPadding && 'px-1 py-1',
         className
       )}

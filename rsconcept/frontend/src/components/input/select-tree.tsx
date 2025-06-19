@@ -101,9 +101,8 @@ export function SelectTree<ItemType>({
             {foldable.has(item) ? (
               <MiniButton
                 aria-label={!folded.includes(item) ? 'Свернуть' : 'Развернуть'}
-                className={clsx('absolute left-1', !folded.includes(item) ? 'top-1.5' : 'top-1')}
+                className={clsx('absolute left-1 hover:text-primary', !folded.includes(item) ? 'top-1.5' : 'top-1')}
                 noPadding
-                noHover
                 icon={!folded.includes(item) ? <IconDropArrow size='1rem' /> : <IconPageRight size='1.25rem' />}
                 onClick={event => handleClickFold(event, item)}
               />

@@ -49,7 +49,6 @@ export function ViewHidden({ items }: ViewHiddenProps) {
       <MiniButton
         className='absolute right-[calc(1rem-4px)] top-3 pointer-events-auto'
         noPadding
-        noHover
         title={!isFolded ? 'Свернуть' : 'Развернуть'}
         icon={!isFolded ? <IconDropArrowUp size='1rem' /> : <IconDropArrow size='1rem' />}
         onClick={toggleFolded}

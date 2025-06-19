@@ -30,7 +30,6 @@ export function MenuRole({ isOwned, isEditor }: MenuRoleProps) {
   if (isAnonymous) {
     return (
       <MiniButton
-        noHover
         noPadding
         titleHtml='<b>Анонимный режим</b><br />Войти в Портал'
         hideTitle={accessMenu.isOpen}
@@ -48,7 +47,7 @@ export function MenuRole({ isOwned, isEditor }: MenuRoleProps) {
         noPadding
         title={`Режим ${labelUserRole(role)}`}
         hideTitle={accessMenu.isOpen}
-        className='h-full pr-2 bg-transparent text-muted-foreground hover:text-primary'
+        className='h-full pr-2 text-muted-foreground hover:text-primary cc-animate-color'
         icon={<IconRole value={role} size='1.25rem' className='' />}
         onClick={accessMenu.toggle}
       />

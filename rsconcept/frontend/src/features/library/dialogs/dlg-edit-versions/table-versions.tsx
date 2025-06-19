@@ -63,7 +63,6 @@ export function TableVersions({ processing, items, onDelete, selected, onSelect 
         <MiniButton
           title='Удалить версию'
           className='align-middle'
-          noHover
           noPadding
           icon={<IconRemove size='1.25rem' className='cc-remove' />}
           onClick={event => handleDeleteVersion(event, props.row.original.id)}

@@ -151,13 +151,12 @@ export function ToolbarConstituenta({
       ) : null}
 
       <MiniButton
-        noHover
         title='Отображение списка конституент'
         icon={
           showList ? (
-            <IconList size='1.25rem' className='hover:icon-primary' />
+            <IconList size='1.25rem' className='icon-primary' />
           ) : (
-            <IconListOff size='1.25rem' className='hover:icon-primary' />
+            <IconListOff size='1.25rem' className='icon-primary' />
           )
         }
         onClick={toggleList}

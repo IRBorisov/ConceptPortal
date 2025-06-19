@@ -42,7 +42,7 @@ export function BadgeHelp({ topic, padding = 'p-1', className, contentClass, sty
   }
   return (
     <div tabIndex={-1} id={`help-${topic}`} className={cn(padding, className)} style={style}>
-      <IconHelp size='1.25rem' className='text-muted-foreground hover:text-primary' />
+      <IconHelp size='1.25rem' className='text-muted-foreground hover:text-primary cc-animate-color' />
       <Tooltip
         clickable
         anchorSelect={`#help-${topic}`}

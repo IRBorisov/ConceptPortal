@@ -39,10 +39,9 @@ export function useLibraryColumns() {
                 titleHtml='Переключение в режим Проводник'
                 aria-label='Переключатель режима Проводник'
                 noPadding
-                noHover
-                className='pl-2 max-h-4 -translate-y-0.5'
+                className='ml-2 max-h-4 -translate-y-0.5'
                 onClick={handleToggleFolder}
-                icon={<IconFolderTree size='1.25rem' className='text-muted-foreground hover:text-primary' />}
+                icon={<IconFolderTree size='1.25rem' className='text-primary' />}
               />
             ),
             size: 50,
