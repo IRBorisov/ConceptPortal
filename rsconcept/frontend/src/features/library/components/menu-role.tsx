@@ -34,7 +34,7 @@ export function MenuRole({ isOwned, isEditor }: MenuRoleProps) {
         noPadding
         titleHtml='<b>Анонимный режим</b><br />Войти в Портал'
         hideTitle={accessMenu.isOpen}
-        className='h-full pr-2 bg-transparent'
+        className='h-full pr-2 pl-3 bg-transparent'
         icon={<IconAlert size='1.25rem' className='icon-red' />}
         onClick={() => router.push({ path: urls.login })}
       />
