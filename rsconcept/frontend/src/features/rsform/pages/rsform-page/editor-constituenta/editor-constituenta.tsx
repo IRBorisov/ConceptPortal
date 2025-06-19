@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 
 import { useWindowSize } from '@/hooks/use-window-size';
@@ -20,7 +20,8 @@ import { ToolbarConstituenta } from './toolbar-constituenta';
 const SIDELIST_LAYOUT_THRESHOLD = 1000; // px
 
 export function EditorConstituenta() {
-  const { schema, activeCst, isContentEditable, moveUp, moveDown, cloneCst, navigateCst } = useRSEdit();
+  const { schema, activeCst, isContentEditable, selected, setSelected, moveUp, moveDown, cloneCst, navigateCst } =
+    useRSEdit();
   const windowSize = useWindowSize();
   const mainHeight = useMainHeight();
 
@@ -32,6 +33,12 @@ export function EditorConstituenta() {
   const isProcessing = useMutatingRSForm();
   const disabled = !activeCst || !isContentEditable || isProcessing;
   const isNarrow = !!windowSize.width && windowSize.width <= SIDELIST_LAYOUT_THRESHOLD;
+
+  useEffect(() => {
+    if (activeCst && selected.length !== 1) {
+      setSelected([activeCst.id]);
+    }
+  }, [activeCst, selected, setSelected]);
 
   function handleInput(event: React.KeyboardEvent<HTMLDivElement>) {
     if (disabled) {
