@@ -99,9 +99,9 @@ export function toggleTristateFlag(prev: boolean | null): boolean | null {
 /**
  * Toggle tristate color: gray - green - red .
  */
-export function tripleToggleColor(value: boolean | null): string {
+export function tripleToggleColor(value: boolean | null): string | undefined {
   if (value === null) {
-    return 'cc-controls';
+    return undefined;
   }
   return value ? 'text-constructive' : 'text-destructive';
 }

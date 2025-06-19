@@ -21,9 +21,9 @@ export function PaginationTools<TData>({
   paginationOptions
 }: PaginationToolsProps<TData>) {
   const buttonClass =
-    'cc-hover-text cc-controls cc-animate-color focus-outline rounded-md not-[:disabled]:cursor-pointer';
+    'cc-hover-text cc-animate-color focus-outline rounded-md disabled:opacity-75 not-[:disabled]:cursor-pointer';
   return (
-    <div className='flex justify-end items-center my-2 text-sm cc-controls select-none'>
+    <div className='flex justify-end items-center my-2 text-muted-foreground text-sm select-none'>
       <span className='mr-3'>
         {`${table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1}
       -

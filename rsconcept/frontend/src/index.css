@@ -92,6 +92,23 @@
   --duration-fade: 300ms;
   --duration-move: 500ms;
 
+  /* Custom animations */
+  --animate-pulse-scale: pulse-scale 1s infinite;
+
+  @keyframes pulse-scale {
+    0% {
+      transform: scale(1);
+    }
+
+    70% {
+      transform: scale(1.2);
+    }
+
+    100% {
+      transform: scale(1);
+    }
+  }
+
   /* ========= shadcn theme ============ */
 
   /* --radius-sm: calc(var(--radius) - 4px);
@@ -123,19 +140,4 @@
   --color-border: var(--clr-prim-400);
   --color-input: var(--color-card);
   --color-ring: var(--color-primary);
-
-  /* --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-
-  --color-sidebar: var(--color-background);
-  --color-sidebar-foreground: var(--color-foreground);
-  --color-sidebar-primary: var(--color-primary);
-  --color-sidebar-primary-foreground: var(--color-primary-foreground);
-  --color-sidebar-accent: var(--color-accent);
-  --color-sidebar-accent-foreground: var(--color-accent-foreground);
-  --color-sidebar-border: var(--color-border);
-  --color-sidebar-ring: var(--color-ring); */
 }

@@ -1,7 +1,7 @@
-import clsx from 'clsx';
-
 import { type Styling, type Titled } from '@/components/props';
 import { globalIDs } from '@/utils/constants';
+
+import { cn } from '../utils';
 
 interface IndicatorProps extends Titled, Styling {
   /** Icon to display. */
@@ -17,8 +17,8 @@ interface IndicatorProps extends Titled, Styling {
 export function Indicator({ icon, title, titleHtml, hideTitle, noPadding, className, ...restProps }: IndicatorProps) {
   return (
     <div
-      className={clsx(
-        'cc-controls', //
+      className={cn(
+        'text-muted-foreground', //
         'outline-hidden',
         !noPadding && 'px-1 py-1',
         className

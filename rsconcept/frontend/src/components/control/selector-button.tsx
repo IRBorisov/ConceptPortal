@@ -30,9 +30,9 @@ export function SelectorButton({
       className={cn(
         'px-1 flex flex-start items-center gap-1',
         'text-sm font-controls select-none',
-        'text-btn cc-controls',
-        'disabled:cursor-auto cursor-pointer',
-        'cc-hover-text cc-animate-color',
+        'disabled:cursor-auto cursor-pointer outline-hidden',
+        'text-muted-foreground cc-hover-text cc-animate-color disabled:opacity-75',
+        !text && 'cc-hover-pulse',
         className
       )}
       data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}

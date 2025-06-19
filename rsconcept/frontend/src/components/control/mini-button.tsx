@@ -38,8 +38,8 @@ export function MiniButton({
       tabIndex={tabIndex ?? -1}
       className={cn(
         'rounded-lg',
-        'cc-controls cc-animate-background',
-        'cursor-pointer disabled:cursor-auto',
+        'text-muted-foreground cc-animate-color',
+        'cursor-pointer disabled:cursor-auto disabled:opacity-75',
         (!tabIndex || tabIndex === -1) && 'outline-hidden',
         !noHover && 'cc-hover-pulse',
         !noPadding && 'px-1 py-1',

@@ -92,7 +92,7 @@ export function SelectLocation({ value, dense, prefix, onClick, className, style
                 {item.filesInside ? (
                   <IconFolder size='1rem' className='text-foreground' />
                 ) : (
-                  <IconFolderEmpty size='1rem' className='cc-controls' />
+                  <IconFolderEmpty size='1rem' className='text-foreground-muted' />
                 )}
               </div>
             )}

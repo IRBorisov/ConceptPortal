@@ -33,20 +33,6 @@
   }
 }
 
-@keyframes pulse-scale {
-  0% {
-    transform: scale(1);
-  }
-
-  70% {
-    transform: scale(1.2);
-  }
-
-  100% {
-    transform: scale(1);
-  }
-}
-
 @utility cc-hover-text {
   &:hover:not(:disabled) {
     color: var(--color-foreground);
@@ -77,16 +63,6 @@
 
   &[aria-invalid='true'] {
     --focus-color: var(--color-destructive);
-  }
-}
-
-@utility cc-controls {
-  color: var(--color-muted-foreground);
-  background-color: transparent;
-
-  &:disabled {
-    color: var(--color-muted-foreground);
-    opacity: 0.75;
   }
 }
 

@@ -36,7 +36,7 @@ export function DropdownButton({
       className={cn(
         'px-3 py-1 inline-flex items-center gap-2',
         'text-left text-sm text-ellipsis whitespace-nowrap',
-        'disabled:cc-controls disabled:opacity-75',
+        'disabled:text-muted-foreground disabled:opacity-75',
         'focus-outline cc-animate-background',
         !!onClick ? 'cc-hover-bg cursor-pointer disabled:cursor-auto' : 'bg-secondary text-secondary-foreground',
         className

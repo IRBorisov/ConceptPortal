@@ -156,15 +156,8 @@ export function ToolbarSearch({ className, total, filtered }: ToolbarSearchProps
                 (head ? describeLocationHead(head) : 'Выберите каталог') + '<br/><kbd>Ctrl + клик</kbd> - Проводник'
               }
               hideTitle={headMenu.isOpen}
-              icon={
-                head ? (
-                  <IconLocationHead value={head} size='1.25rem' />
-                ) : (
-                  <IconFolderSearch size='1.25rem' className='cc-controls' />
-                )
-              }
+              icon={head ? <IconLocationHead value={head} size='1.25rem' /> : <IconFolderSearch size='1.25rem' />}
               onClick={handleFolderClick}
-              text={head ?? '//'}
             />
 
             <Dropdown isOpen={headMenu.isOpen} stretchLeft>
@@ -200,7 +193,7 @@ export function ToolbarSearch({ className, total, filtered }: ToolbarSearchProps
             placeholder='Путь'
             noIcon
             noBorder
-            className='w-18 sm:w-20 grow'
+            className='w-18 sm:w-20 grow ml-1'
             query={path}
             onChangeQuery={setPath}
           />

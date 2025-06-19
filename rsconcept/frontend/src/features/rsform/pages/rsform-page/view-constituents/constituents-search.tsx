@@ -41,7 +41,7 @@ export function ConstituentsSearch({ dense }: ConstituentsSearchProps) {
         <MiniButton
           titleHtml={`Наследованные: <b>${includeInherited ? 'отображать' : 'скрывать'}</b>`}
           aria-label={`Отображение наследованных: ${includeInherited ? 'отображать' : 'скрывать'}`}
-          icon={<IconChild size='1rem' className={includeInherited ? 'icon-primary' : 'cc-controls'} />}
+          icon={<IconChild size='1rem' className={includeInherited ? 'icon-primary' : undefined} />}
           className='h-fit self-center'
           onClick={toggleInherited}
         />

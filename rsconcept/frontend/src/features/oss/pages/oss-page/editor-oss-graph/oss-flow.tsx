@@ -135,7 +135,7 @@ export function OssFlow() {
         });
       }
     } else {
-      if (node.data.operation?.result) {
+      if (node.data.operation) {
         navigateOperationSchema(node.data.operation.id);
       }
     }
