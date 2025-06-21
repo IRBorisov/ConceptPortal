@@ -38,9 +38,6 @@ export function NodeCore({ node }: NodeCoreProps) {
         'relative flex items-center justify-center p-[2px]',
         isChild && 'border-accent-orange'
       )}
-      data-tooltip-id={globalIDs.operation_tooltip}
-      data-tooltip-hidden={node.dragging}
-      onMouseEnter={() => setHover(node.data.operation)}
     >
       <div className='absolute z-pop top-0 right-0 flex flex-col gap-[4px] p-[2px]'>
         <Indicator
@@ -79,9 +76,12 @@ export function NodeCore({ node }: NodeCoreProps) {
 
       <div
         className={clsx(
-          'text-center line-clamp-2 pl-[4px]',
-          longLabel ? 'text-[12px]/[16px] pr-[10px]' : 'text-[14px]/[20px] pr-[4px]'
+          'text-center line-clamp-2 px-[4px] mr-[12px]',
+          longLabel ? 'text-[12px]/[16px]' : 'text-[14px]/[20px]'
         )}
+        data-tooltip-id={globalIDs.operation_tooltip}
+        data-tooltip-hidden={node.dragging}
+        onMouseEnter={() => setHover(node.data.operation)}
       >
         {node.data.label}
       </div>
