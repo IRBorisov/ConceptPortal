@@ -1,8 +1,7 @@
 'use client';
 
-import clsx from 'clsx';
-
 import { type Styling } from '@/components/props';
+import { cn } from '@/components/utils';
 import { prefixes } from '@/utils/constants';
 
 import { Grammeme, supportedGrammemes } from '../models/language';
@@ -39,7 +38,7 @@ export function SelectWordForm({ value, onChange, className, ...restProps }: Sel
   }
 
   return (
-    <div className={clsx('text-xs sm:text-sm grid grid-cols-6', className)} {...restProps}>
+    <div className={cn('text-xs sm:text-sm grid grid-cols-6', className)} {...restProps}>
       {DefaultWordForms.slice(0, 12).map((data, index) => (
         <WordformButton
           key={`${prefixes.wordform_list}${index}`}

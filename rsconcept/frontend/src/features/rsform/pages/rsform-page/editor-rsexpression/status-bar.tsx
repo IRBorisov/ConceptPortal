@@ -6,6 +6,7 @@ import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components';
 
 import { Loader } from '@/components/loader';
+import { cn } from '@/components/utils';
 import { APP_COLORS } from '@/styling/colors';
 import { globalIDs } from '@/utils/constants';
 import { type RO } from '@/utils/meta';
@@ -40,7 +41,7 @@ export function StatusBar({ className, isModified, processing, activeCst, parseD
   })();
 
   return (
-    <div className={clsx('pl-34 xs:pl-8 flex gap-1', className)}>
+    <div className={cn('pl-34 xs:pl-8 flex gap-1', className)}>
       <div
         tabIndex={0}
         className={clsx(

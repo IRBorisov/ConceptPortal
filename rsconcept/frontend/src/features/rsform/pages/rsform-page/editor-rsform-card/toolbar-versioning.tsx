@@ -1,13 +1,12 @@
 'use client';
 
-import clsx from 'clsx';
-
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components';
 import { useRestoreVersion } from '@/features/library/backend/use-restore-version';
 
 import { MiniButton } from '@/components/control';
 import { IconNewVersion, IconUpload, IconVersions } from '@/components/icons';
+import { cn } from '@/components/utils';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { promptText } from '@/utils/labels';
@@ -58,7 +57,7 @@ export function ToolbarVersioning({ blockReload, className }: ToolbarVersioningP
   }
 
   return (
-    <div className={clsx('cc-icons', className)}>
+    <div className={cn('cc-icons', className)}>
       {isMutable ? (
         <>
           <MiniButton

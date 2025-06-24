@@ -1,9 +1,8 @@
-import clsx from 'clsx';
-
 import { IconShowKeyboard } from '@/features/rsform/components/icon-show-keyboard';
 
 import { MiniButton } from '@/components/control';
 import { IconTree, IconTypeGraph } from '@/components/icons';
+import { cn } from '@/components/utils';
 import { usePreferencesStore } from '@/stores/preferences';
 
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
@@ -21,7 +20,7 @@ export function ToolbarRSExpression({ className, disabled, showTypeGraph, showAS
   const toggleControls = usePreferencesStore(state => state.toggleShowExpressionControls);
 
   return (
-    <div className={clsx('cc-icons', className)}>
+    <div className={cn('cc-icons', className)}>
       {!disabled || isProcessing ? (
         <MiniButton
           title='Отображение специальной клавиатуры'

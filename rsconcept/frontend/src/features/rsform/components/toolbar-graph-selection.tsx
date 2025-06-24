@@ -1,5 +1,3 @@
-import clsx from 'clsx';
-
 import { MiniButton } from '@/components/control';
 import {
   IconGraphCollapse,
@@ -13,6 +11,7 @@ import {
   IconReset
 } from '@/components/icons';
 import { type Styling } from '@/components/props';
+import { cn } from '@/components/utils';
 import { type Graph } from '@/models/graph';
 
 interface ToolbarGraphSelectionProps extends Styling {
@@ -44,7 +43,7 @@ export function ToolbarGraphSelection({
   }
 
   return (
-    <div className={clsx('cc-icons', className)} {...restProps}>
+    <div className={cn('cc-icons', className)} {...restProps}>
       <MiniButton
         title='Сбросить выделение'
         icon={<IconReset size='1.25rem' className='icon-primary' />}
