@@ -314,6 +314,10 @@
   color: var(--color-muted-foreground);
   background-color: transparent;
 
+  transition-property: color;
+  transition-timing-function: var(--transition-bezier);
+  transition-duration: var(--duration-select);
+
   .selected & {
     color: var(--color-foreground);
     border-color: var(--color-graph-selected);
@@ -322,6 +326,7 @@
 
   &:hover {
     color: var(--color-foreground);
+    transition-delay: var(--duration-select);
   }
 
   .cursor-relocate .dragging & {

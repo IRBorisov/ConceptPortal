@@ -28,14 +28,15 @@
 
 @utility cc-hover-pulse {
   &:hover:not(:disabled) {
-    animation: pulse-scale 1s infinite;
-    transition: var(--duration-move);
+    animation: pulse-scale var(--duration-cycle) infinite;
+    animation-delay: var(--duration-select);
   }
 }
 
 @utility cc-hover-text {
   &:hover:not(:disabled) {
     color: var(--color-foreground);
+    transition-delay: var(--duration-select);
   }
 }
 

@@ -91,6 +91,7 @@
   --duration-modal: 300ms;
   --duration-fade: 300ms;
   --duration-move: 500ms;
+  --duration-cycle: 1000ms;
 
   /* Custom animations */
   --animate-pulse-scale: pulse-scale 1s infinite;
@@ -110,12 +111,6 @@
   }
 
   /* ========= shadcn theme ============ */
-
-  /* --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px); */
-
   --color-background: var(--clr-prim-100);
   --color-foreground: var(--clr-prim-999);
   --color-card: var(--clr-prim-0);

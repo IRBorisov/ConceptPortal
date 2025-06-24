@@ -75,8 +75,13 @@
     pointer-events: none !important;
   }
 
+  transition-property: box-shadow;
+  transition-timing-function: var(--transition-bezier);
+  transition-duration: var(--duration-select);
+
   &:hover:not(.selected) {
     box-shadow: 0 0 0 2px var(--color-selected);
+    transition-delay: var(--duration-select);
   }
 }
 
