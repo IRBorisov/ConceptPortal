@@ -1,19 +1,16 @@
 'use client';
 
-import clsx from 'clsx';
-
 import { urls, useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components';
 import { MiniSelectorOSS } from '@/features/library/components';
+import { IconShowSidebar } from '@/features/library/components/icon-show-sidebar';
 import { useFindPredecessor } from '@/features/oss/backend/use-find-predecessor';
 
 import { MiniButton } from '@/components/control';
 import {
   IconClone,
   IconDestroy,
-  IconList,
-  IconListOff,
   IconMoveDown,
   IconMoveUp,
   IconNewItem,
@@ -21,6 +18,7 @@ import {
   IconReset,
   IconSave
 } from '@/components/icons';
+import { cn } from '@/components/utils';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { tooltipText } from '@/utils/labels';
@@ -34,6 +32,7 @@ interface ToolbarConstituentaProps {
   className?: string;
   activeCst: IConstituenta | null;
   disabled: boolean;
+  isNarrow: boolean;
 
   onSubmit: () => void;
   onReset: () => void;
@@ -43,6 +42,7 @@ export function ToolbarConstituenta({
   className,
   activeCst,
   disabled,
+  isNarrow,
 
   onSubmit,
   onReset
@@ -80,7 +80,7 @@ export function ToolbarConstituenta({
   }
 
   return (
-    <div className={clsx('px-1 rounded-b-2xl backdrop-blur-xs cc-icons cc-animate-position outline-hidden', className)}>
+    <div className={cn('px-1 rounded-b-2xl backdrop-blur-xs cc-icons outline-hidden', className)}>
       {schema.oss.length > 0 ? (
         <MiniSelectorOSS
           items={schema.oss}
@@ -152,13 +152,7 @@ export function ToolbarConstituenta({
 
       <MiniButton
         title='Отображение списка конституент'
-        icon={
-          showList ? (
-            <IconList size='1.25rem' className='icon-primary' />
-          ) : (
-            <IconListOff size='1.25rem' className='icon-primary' />
-          )
-        }
+        icon={<IconShowSidebar size='1.25rem' value={showList} isBottom={isNarrow} />}
         onClick={toggleList}
       />
       <BadgeHelp topic={HelpTopic.UI_RS_EDITOR} offset={4} contentClass='sm:max-w-160' />

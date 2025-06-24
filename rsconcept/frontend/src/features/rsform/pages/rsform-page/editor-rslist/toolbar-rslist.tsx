@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+'use client';
 
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components';
@@ -15,6 +15,7 @@ import {
   IconOpenList,
   IconReset
 } from '@/components/icons';
+import { cn } from '@/components/utils';
 import { prefixes } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/utils';
 
@@ -46,7 +47,7 @@ export function ToolbarRSList({ className }: ToolbarRSListProps) {
   } = useRSEdit();
 
   return (
-    <div className={clsx('cc-icons items-start outline-hidden', className)}>
+    <div className={cn('cc-icons items-start outline-hidden', className)}>
       {schema.oss.length > 0 ? (
         <MiniSelectorOSS
           items={schema.oss}

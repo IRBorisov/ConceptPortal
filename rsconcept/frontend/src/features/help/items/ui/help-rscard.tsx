@@ -1,9 +1,8 @@
 import {
-  IconClone,
   IconDestroy,
-  IconDownload,
   IconEditor,
   IconImmutable,
+  IconLeftOpen,
   IconOSS,
   IconOwner,
   IconPublic,
@@ -50,13 +49,10 @@ export function HelpRSCard() {
           <IconImmutable className='inline-icon' /> Неизменные схемы
         </li>
         <li>
-          <IconClone className='inline-icon icon-green' /> Клонировать – создать копию схемы
-        </li>
-        <li>
-          <IconDownload className='inline-icon' /> Загрузить/Выгрузить – взаимодействие с Экстеор
-        </li>
-        <li>
           <IconDestroy className='inline-icon icon-red' /> Удалить – полностью удаляет схему из базы Портала
+        </li>
+        <li>
+          <IconLeftOpen className='inline-icon' /> Отображение статистики
         </li>
       </ul>
     </div>

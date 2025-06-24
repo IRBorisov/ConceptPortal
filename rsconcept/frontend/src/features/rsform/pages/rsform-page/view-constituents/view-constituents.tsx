@@ -1,9 +1,8 @@
 'use client';
 
-import clsx from 'clsx';
-
 import { useRoleStore, UserRole } from '@/features/users';
 
+import { cn } from '@/components/utils';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight } from '@/stores/app-layout';
 
@@ -26,11 +25,11 @@ export function ViewConstituents({ className, isBottom, isMounted }: ViewConstit
 
   return (
     <aside
-      className={clsx(
+      className={cn(
+        'cc-animate-sidebar',
         'border',
-        isBottom ? 'rounded-md' : 'rounded-l-md rounded-r-none',
+        isBottom ? 'rounded-md' : 'rounded-l-md rounded-r-none h-fit',
         isMounted ? 'max-w-full' : 'opacity-0 max-w-0',
-        'ease-in-out duration-1000 transition-[opacity,max-width]',
         className
       )}
     >

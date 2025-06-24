@@ -5,7 +5,7 @@ import {
   IconEdit,
   IconFilter,
   IconKeyboard,
-  IconList,
+  IconLeftOpen,
   IconMoveDown,
   IconMoveUp,
   IconNewItem,
@@ -37,7 +37,7 @@ export function HelpRSEditor() {
               <IconPredecessor className='inline-icon' /> переход к исходной
             </li>
             <li>
-              <IconList className='inline-icon' /> список конституент
+              <IconLeftOpen className='inline-icon' /> список конституент
             </li>
             <li>
               <IconSave className='inline-icon' /> сохранить: <kbd>Ctrl + S</kbd>

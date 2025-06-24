@@ -96,6 +96,7 @@ export function EditorConstituenta() {
         onSubmit={initiateSubmit}
         onReset={() => setToggleReset(prev => !prev)}
         disabled={disabled}
+        isNarrow={isNarrow}
       />
 
       <div className='mx-0 md:mx-auto pt-8 md:w-195 shrink-0 xs:pt-0'>
@@ -112,7 +113,7 @@ export function EditorConstituenta() {
         ) : null}
       </div>
       <ViewConstituents
-        className={isNarrow ? 'mt-3 mx-6 overflow-hidden' : 'mt-9 h-fit overflow-visible'}
+        className={isNarrow ? 'mt-3 mx-6 overflow-hidden' : 'mt-9 overflow-visible'}
         isMounted={showList}
         isBottom={isNarrow}
       />

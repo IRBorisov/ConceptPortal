@@ -4,7 +4,9 @@ import clsx from 'clsx';
 
 import { EditorLibraryItem, ToolbarItemCard } from '@/features/library/components';
 
+import { useWindowSize } from '@/hooks/use-window-size';
 import { useModificationStore } from '@/stores/modification';
+import { usePreferencesStore } from '@/stores/preferences';
 import { globalIDs } from '@/utils/constants';
 
 import { useOssEdit } from '../oss-edit-context';
@@ -12,9 +14,14 @@ import { useOssEdit } from '../oss-edit-context';
 import { FormOSS } from './form-oss';
 import { OssStats } from './oss-stats';
 
+const SIDELIST_LAYOUT_THRESHOLD = 768; // px
+
 export function EditorOssCard() {
   const { schema, isMutable, deleteSchema } = useOssEdit();
   const { isModified } = useModificationStore();
+  const showOSSStats = usePreferencesStore(state => state.showOSSStats);
+  const windowSize = useWindowSize();
+  const isNarrow = !!windowSize.width && windowSize.width <= SIDELIST_LAYOUT_THRESHOLD;
 
   function initiateSubmit() {
     const element = document.getElementById(globalIDs.library_item_editor) as HTMLFormElement;
@@ -33,25 +40,29 @@ export function EditorOssCard() {
   }
 
   return (
-    <>
+    <div
+      onKeyDown={handleInput}
+      className={clsx(
+        'relative md:w-fit md:max-w-fit max-w-128',
+        'flex px-6 pt-8',
+        isNarrow && 'flex-col md:items-center'
+      )}
+    >
       <ToolbarItemCard
         className='cc-tab-tools'
         onSubmit={initiateSubmit}
         schema={schema}
         isMutable={isMutable}
         deleteSchema={deleteSchema}
+        isNarrow={isNarrow}
       />
-      <div
-        onKeyDown={handleInput}
-        className={clsx('md:max-w-fit max-w-128 min-w-fit', 'flex flex-row flex-wrap pt-8 px-6 justify-center')}
-      >
-        <div className='cc-column px-3'>
-          <FormOSS key={schema.id} />
-          <EditorLibraryItem schema={schema} isAttachedToOSS={false} />
-        </div>
 
-        <OssStats className='mt-3 md:mt-8 md:ml-5 w-80 md:w-56 mx-auto h-min' stats={schema.stats} />
+      <div className='cc-column px-3 mx-0 md:mx-auto'>
+        <FormOSS key={schema.id} />
+        <EditorLibraryItem schema={schema} isAttachedToOSS={false} />
       </div>
-    </>
+
+      <OssStats className='w-80 md:w-56 mt-3 md:mt-8 md:ml-5 mx-auto' stats={schema.stats} isMounted={showOSSStats} />
+    </div>
   );
 }

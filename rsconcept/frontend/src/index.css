@@ -91,6 +91,7 @@
   --duration-modal: 300ms;
   --duration-fade: 300ms;
   --duration-move: 500ms;
+  --duration-transform: 1000ms;
   --duration-cycle: 1000ms;
 
   /* Custom animations */

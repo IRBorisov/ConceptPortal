@@ -142,6 +142,12 @@
   }
 }
 
+@utility cc-animate-sidebar {
+  transition-property: max-width, opacity;
+  transition-timing-function: var(--ease-in-out);
+  transition-duration: var(--duration-transform);
+}
+
 @utility cc-animate-position {
   transition-property: transform top left bottom right margin padding;
   transition-timing-function: var(--ease-bezier);

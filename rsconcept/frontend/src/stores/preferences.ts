@@ -20,6 +20,12 @@ interface PreferencesStore {
   showCstSideList: boolean;
   toggleShowCstSideList: () => void;
 
+  showRSFormStats: boolean;
+  toggleShowRSFormStats: () => void;
+
+  showOSSStats: boolean;
+  toggleShowOSSStats: () => void;
+
   showExpressionControls: boolean;
   toggleShowExpressionControls: () => void;
 }
@@ -62,6 +68,12 @@ export const usePreferencesStore = create<PreferencesStore>()(
 
       showCstSideList: true,
       toggleShowCstSideList: () => set(state => ({ showCstSideList: !state.showCstSideList })),
+
+      showRSFormStats: true,
+      toggleShowRSFormStats: () => set(state => ({ showRSFormStats: !state.showRSFormStats })),
+
+      showOSSStats: true,
+      toggleShowOSSStats: () => set(state => ({ showOSSStats: !state.showOSSStats })),
 
       showExpressionControls: true,
       toggleShowExpressionControls: () => set(state => ({ showExpressionControls: !state.showExpressionControls }))

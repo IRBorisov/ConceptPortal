@@ -25,6 +25,10 @@ export { LuQrCode         as IconQR }             from 'react-icons/lu';
 export { LuFilterX        as IconFilterReset }    from 'react-icons/lu';
 export {BiDownArrowCircle as IconOpenList }       from 'react-icons/bi';
 export { LuTriangleAlert  as IconAlert }          from 'react-icons/lu';
+export { LuPanelLeftOpen  as IconLeftOpen }       from 'react-icons/lu';
+export { LuPanelLeftClose as IconLeftClose }      from 'react-icons/lu';
+export { LuPanelBottomOpen as IconBottomOpen }    from 'react-icons/lu';
+export { LuPanelBottomClose as IconBottomClose }  from 'react-icons/lu';
 
 // ===== UI elements =======
 export { BiX              as IconClose }          from 'react-icons/bi';
@@ -97,9 +101,7 @@ export { LuDatabase       as IconDatabase }       from 'react-icons/lu';
 export { LuView           as IconDBStructure }    from 'react-icons/lu';  
 export { LuPlaneTakeoff   as IconRESTapi }        from 'react-icons/lu';
 export { LuImage          as IconImage }          from 'react-icons/lu';
-export { TbColumns        as IconList }           from 'react-icons/tb';
 export { GoVersions       as IconVersions }       from 'react-icons/go';
-export { TbColumnsOff     as IconListOff }        from 'react-icons/tb';
 export { LuAtSign         as IconTerm }           from 'react-icons/lu';
 export { LuSubscript      as IconAlias }          from 'react-icons/lu';
 export { TbMathFunction   as IconFormula }        from 'react-icons/tb';
