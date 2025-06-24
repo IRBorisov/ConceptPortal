@@ -72,17 +72,16 @@ export function HelpRSEditor() {
               <IconChild className='inline-icon' /> отображение наследованных
             </li>
             <li>
-              <span className='bg-selected'>текущая конституента</span>
+              <span className='cc-sample-color bg-selected' />
+              выбранная конституента
             </li>
             <li>
-              <span className='bg-accent-green50'>
-                <LinkTopic text='основа' topic={HelpTopic.CC_RELATIONS} /> текущей
-              </span>
+              <span className='cc-sample-color bg-accent-green50' />
+              <LinkTopic text='основа' topic={HelpTopic.CC_RELATIONS} /> выбранной
             </li>
             <li>
-              <span className='bg-accent-orange50'>
-                <LinkTopic text='порожденные' topic={HelpTopic.CC_RELATIONS} /> текущей
-              </span>
+              <span className='cc-sample-color bg-accent-orange50' />
+              <LinkTopic text='порожденные' topic={HelpTopic.CC_RELATIONS} /> выбранной
             </li>
           </ul>
         </div>

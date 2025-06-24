@@ -44,12 +44,12 @@ export function SchemasGuide() {
         className='grid max-w-100 break-words text-base'
       >
         <div className='inline-flex items-center gap-2'>
-          <span className='w-2.5 h-2.5 border rounded-full' style={{ backgroundColor: colorBgSchemas(0) }} />
+          <span className='w-3 h-3 border rounded-full' style={{ backgroundColor: colorBgSchemas(0) }} />
           <span>Текущая схема</span>
         </div>
         {schemas.map((alias, index) => (
           <div key={`${prefixes.schemas_list}${index}`} className='inline-flex items-center gap-2'>
-            <span className='w-2.5 h-2.5 border rounded-full' style={{ backgroundColor: colorBgSchemas(index + 1) }} />
+            <span className='w-3 h-3 border rounded-full' style={{ backgroundColor: colorBgSchemas(index + 1) }} />
             <span>{alias}</span>
           </div>
         ))}

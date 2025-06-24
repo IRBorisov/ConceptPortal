@@ -72,6 +72,18 @@
   transition-duration: var(--duration-dropdown);
 }
 
+@utility cc-sample-color {
+  display: inline-block;
+  width: 0.75rem;
+  height: 0.75rem;
+  margin-right: 0.25rem;
+  transform: translateY(0.125rem);
+
+  border-width: 1px;
+  border-style: solid;
+  border-radius: calc(infinity * 1px);
+}
+
 @utility cc-badge-constituenta {
   width: 3rem;
   padding-inline: 0.25rem;

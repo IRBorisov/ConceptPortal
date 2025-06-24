@@ -12,26 +12,30 @@ export function HelpFormulaTree() {
       </ul>
 
       <h2>Виды узлов</h2>
-      <ul>
-        <li>
-          <span className='bg-(--acc-bg-green)'>объявление идентификатора</span>
-        </li>
-        <li>
-          <span className='bg-(--acc-bg-teal)'>глобальный идентификатор</span>
-        </li>
-        <li>
-          <span className='bg-(--acc-bg-orange)'>логическое выражение</span>
-        </li>
-        <li>
-          <span className='bg-(--acc-bg-blue)'>типизированное выражение</span>
-        </li>
-        <li>
-          <span className='bg-(--acc-bg-red)'>присвоение и итерация</span>
-        </li>
-        <li>
-          <span className='bg-secondary'>составные выражения</span>
-        </li>
-      </ul>
+      <p className='m-0'>
+        <span className='cc-sample-color bg-(--acc-bg-green)' />
+        объявление идентификатора
+      </p>
+      <p className='m-0'>
+        <span className='cc-sample-color bg-(--acc-bg-teal)' />
+        глобальный идентификатор
+      </p>
+      <p className='m-0'>
+        <span className='cc-sample-color bg-(--acc-bg-orange)' />
+        логическое выражение
+      </p>
+      <p className='m-0'>
+        <span className='cc-sample-color bg-(--acc-bg-blue)' />
+        типизированное выражение
+      </p>
+      <p className='m-0'>
+        <span className='cc-sample-color bg-(--acc-bg-red)' />
+        присвоение и итерация
+      </p>
+      <p className='m-0'>
+        <span className='cc-sample-color bg-secondary' />
+        составные выражения
+      </p>
 
       <h2>Команды</h2>
       <ul>

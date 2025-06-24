@@ -23,17 +23,18 @@ export function HelpTypeGraph() {
 
       <h2>Цвета узлов</h2>
 
-      <ul>
-        <li>
-          <span className='bg-secondary'>ступень-основание</span>
-        </li>
-        <li>
-          <span className='bg-accent-teal'>ступень-булеан</span>
-        </li>
-        <li>
-          <span className='bg-accent-orange'>ступень декартова произведения</span>
-        </li>
-      </ul>
+      <p className='m-0'>
+        <span className='cc-sample-color bg-secondary' />
+        ступень-основание
+      </p>
+      <p className='m-0'>
+        <span className='cc-sample-color bg-accent-teal' />
+        ступень-булеан
+      </p>
+      <p className='m-0'>
+        <span className='cc-sample-color bg-accent-orange' />
+        ступень декартова произведения
+      </p>
 
       <h2>Команды</h2>
       <ul>
