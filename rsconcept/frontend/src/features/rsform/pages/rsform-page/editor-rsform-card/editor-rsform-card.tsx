@@ -63,7 +63,7 @@ export function EditorRSFormCard() {
       </div>
 
       <RSFormStats
-        className='w-80 md:w-56 mt-3 md:mt-8 md:ml-5 mx-auto'
+        className='w-80 md:w-56 mt-3 md:mt-8 mx-auto md:ml-5 md:mr-0'
         stats={schema.stats}
         isArchive={isArchive}
         isMounted={showRSFormStats}
