@@ -11,7 +11,6 @@ export const PARAMETER = {
   notificationDelay: 300, // milliseconds delay for notifications
   zoomDuration: 500, // milliseconds animation duration
   navigationPopupDelay: 300, // milliseconds delay for navigation popup
-  ossContextMenuDuration: 500, // milliseconds - duration of long-press to trigger context menu on iOS/iPadOS
 
   moveDuration: 500, // milliseconds - duration of move animation
 

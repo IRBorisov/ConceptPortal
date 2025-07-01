@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import clsx from 'clsx';
 
 import { DiagramFlow, useReactFlow, useStoreApi } from '@/components/flow/diagram-flow';
@@ -8,7 +8,6 @@ import { useMainHeight } from '@/stores/app-layout';
 import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER } from '@/utils/constants';
 import { promptText } from '@/utils/labels';
-import { isIOS } from '@/utils/utils';
 
 import { useDeleteBlock } from '../../../backend/use-delete-block';
 import { useMutatingOss } from '../../../backend/use-mutating-oss';
@@ -25,7 +24,7 @@ import { OssNodeTypes } from './graph/oss-node-types';
 import { CoordinateDisplay } from './coordinate-display';
 import { useOssFlow } from './oss-flow-context';
 import { ToolbarOssGraph } from './toolbar-oss-graph';
-// import { useDragging } from './use-dragging';
+import { useDragging } from './use-dragging';
 import { useGetLayout } from './use-get-layout';
 
 export const flowOptions = {
@@ -66,10 +65,7 @@ export function OssFlow() {
   const showEditBlock = useDialogsStore(state => state.showEditBlock);
 
   const { isOpen: isContextMenuOpen, menuProps, openContextMenu, hideContextMenu } = useContextMenu();
-  // const { handleDragStart, handleDrag, handleDragStop } = useDragging({ hideContextMenu });
-
-  const longPressTimeout = useRef<NodeJS.Timeout | null>(null);
-  const longPressTarget = useRef<EventTarget | null>(null);
+  const { handleDragStart, handleDrag, handleDragStop } = useDragging({ hideContextMenu });
 
   function handleSavePositions() {
     void updateLayout({ itemID: schema.id, data: getLayout() });
@@ -127,7 +123,6 @@ export function OssFlow() {
   }
 
   function handleNodeDoubleClick(event: React.MouseEvent<Element>, node: OssNode) {
-    console.log('handleNodeDoubleClick', event, node);
     event.preventDefault();
     event.stopPropagation();
 
@@ -194,62 +189,22 @@ export function OssFlow() {
     openContextMenu(node, event.clientX, event.clientY);
   }
 
-  function handleTouchStart(event: React.TouchEvent) {
-    console.log('handleTouchStart', event);
-    if (!isIOS() || event.touches.length !== 1) {
-      return;
-    }
-
-    // Long-press support for iOS/iPadOS
-    const touch = event.touches[0];
-    longPressTarget.current = touch.target;
-    longPressTimeout.current = setTimeout(() => {
-      let targetID = null;
-      let element = touch.target as HTMLElement | null;
-      while (element) {
-        if (element?.getAttribute?.('data-id')) {
-          targetID = element.getAttribute('data-id');
-          break;
-        }
-        element = element.parentElement;
-      }
-      if (targetID) {
-        const targetNode = nodes.find(node => node.id === targetID);
-        if (targetNode) {
-          openContextMenu(targetNode, touch.clientX, touch.clientY);
-        }
-      }
-    }, PARAMETER.ossContextMenuDuration);
-  }
-
-  function handleTouchEnd() {
-    if (!isIOS()) return;
-    if (longPressTimeout.current) {
-      clearTimeout(longPressTimeout.current);
-      longPressTimeout.current = null;
-    }
-  }
-
-  function handleTouchMove() {
-    if (!isIOS()) return;
-    if (longPressTimeout.current) {
-      clearTimeout(longPressTimeout.current);
-      longPressTimeout.current = null;
-    }
-  }
-
   return (
     <div tabIndex={-1} className='relative' onMouseMove={showCoordinates ? handleMouseMove : undefined}>
       {showCoordinates ? <CoordinateDisplay mouseCoords={mouseCoords} className='absolute top-1 right-2' /> : null}
+
+      <ContextMenu isOpen={isContextMenuOpen} onHide={hideContextMenu} {...menuProps} />
+
       <ToolbarOssGraph
         className='absolute z-pop top-8 right-1/2 translate-x-1/2'
         onCreateOperation={handleCreateOperation}
         onCreateBlock={handleCreateBlock}
         onDelete={handleDeleteSelected}
         onResetPositions={resetGraph}
+        openContextMenu={openContextMenu}
+        isContextMenuOpen={isContextMenuOpen}
+        hideContextMenu={hideContextMenu}
       />
-
-      <ContextMenu isOpen={isContextMenuOpen} onHide={hideContextMenu} {...menuProps} />
 
       <DiagramFlow
         {...flowOptions}
@@ -266,17 +221,13 @@ export function OssFlow() {
         onNodeDoubleClick={handleNodeDoubleClick}
         onNodeContextMenu={handleNodeContextMenu}
         onContextMenu={hideContextMenu}
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-        onTouchMove={handleTouchMove}
+        onNodeDragStart={handleDragStart}
+        onNodeDrag={handleDrag}
+        onNodeDragStop={handleDragStop}
       />
     </div>
   );
 }
-
-// onNodeDragStart={handleDragStart}
-// onNodeDrag={handleDrag}
-// onNodeDragStop={handleDragStop}
 
 // -------- Internals --------
 function extractBlockParent(selectedItems: IOssItem[]): number | null {

@@ -1,14 +1,16 @@
 'use client';
 
+import React from 'react';
+
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components';
+import { type OssNode } from '@/features/oss/models/oss-layout';
 
 import { MiniButton } from '@/components/control';
 import {
   IconConceptBlock,
   IconDestroy,
   IconEdit2,
-  IconExecute,
   IconFitImage,
   IconNewItem,
   IconReset,
@@ -18,14 +20,11 @@ import {
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
 import { useDialogsStore } from '@/stores/dialogs';
-import { prepareTooltip } from '@/utils/utils';
+import { isIOS, prepareTooltip } from '@/utils/utils';
 
-import { OperationType } from '../../../backend/types';
-import { useExecuteOperation } from '../../../backend/use-execute-operation';
 import { useMutatingOss } from '../../../backend/use-mutating-oss';
 import { useUpdateLayout } from '../../../backend/use-update-layout';
 import { NodeType } from '../../../models/oss';
-import { LayoutManager } from '../../../models/oss-layout-api';
 import { useOssEdit } from '../oss-edit-context';
 
 import { useOssFlow } from './oss-flow-context';
@@ -36,6 +35,10 @@ interface ToolbarOssGraphProps extends Styling {
   onCreateBlock: () => void;
   onDelete: () => void;
   onResetPositions: () => void;
+
+  isContextMenuOpen: boolean;
+  openContextMenu: (node: OssNode, clientX: number, clientY: number) => void;
+  hideContextMenu: () => void;
 }
 
 export function ToolbarOssGraph({
@@ -43,12 +46,16 @@ export function ToolbarOssGraph({
   onCreateBlock,
   onDelete,
   onResetPositions,
+
+  isContextMenuOpen,
+  openContextMenu,
+  hideContextMenu,
   className,
   ...restProps
 }: ToolbarOssGraphProps) {
   const { schema, selectedItems, isMutable, canDeleteOperation: canDelete } = useOssEdit();
   const isProcessing = useMutatingOss();
-  const { resetView } = useOssFlow();
+  const { resetView, nodes } = useOssFlow();
   const selectedOperation =
     selectedItems.length === 1 && selectedItems[0].nodeType === NodeType.OPERATION ? selectedItems[0] : null;
   const selectedBlock =
@@ -56,32 +63,8 @@ export function ToolbarOssGraph({
   const getLayout = useGetLayout();
 
   const { updateLayout } = useUpdateLayout();
-  const { executeOperation } = useExecuteOperation();
 
-  const showEditOperation = useDialogsStore(state => state.showEditOperation);
-  const showEditBlock = useDialogsStore(state => state.showEditBlock);
   const showOssOptions = useDialogsStore(state => state.showOssOptions);
-
-  const readyForSynthesis = (() => {
-    if (!selectedOperation || selectedOperation.operation_type !== OperationType.SYNTHESIS) {
-      return false;
-    }
-    if (selectedOperation.result) {
-      return false;
-    }
-
-    const argumentIDs = schema.graph.expandInputs([selectedOperation.id]);
-    if (!argumentIDs || argumentIDs.length < 1) {
-      return false;
-    }
-
-    const argumentOperations = argumentIDs.map(id => schema.operationByID.get(id)!);
-    if (argumentOperations.some(item => item.result === null)) {
-      return false;
-    }
-
-    return true;
-  })();
 
   function handleShowOptions() {
     showOssOptions();
@@ -91,27 +74,18 @@ export function ToolbarOssGraph({
     void updateLayout({ itemID: schema.id, data: getLayout() });
   }
 
-  function handleOperationExecute() {
-    if (!readyForSynthesis || !selectedOperation) {
+  function handleEditItem(event: React.MouseEvent<HTMLButtonElement>) {
+    if (isContextMenuOpen) {
+      hideContextMenu();
       return;
     }
-    void executeOperation({
-      itemID: schema.id, //
-      data: { target: selectedOperation.id, layout: getLayout() }
-    });
-  }
-
-  function handleEditItem() {
-    if (selectedOperation) {
-      showEditOperation({
-        manager: new LayoutManager(schema, getLayout()),
-        target: selectedOperation
-      });
-    } else if (selectedBlock) {
-      showEditBlock({
-        manager: new LayoutManager(schema, getLayout()),
-        target: selectedBlock
-      });
+    const nodeID = selectedOperation?.nodeID ?? selectedBlock?.nodeID;
+    if (!nodeID) {
+      return;
+    }
+    const node = nodes.find(node => node.id === nodeID);
+    if (node) {
+      openContextMenu(node, event.clientX, event.clientY);
     }
   }
 
@@ -153,11 +127,12 @@ export function ToolbarOssGraph({
             disabled={isProcessing}
           />
           <MiniButton
-            titleHtml={prepareTooltip('Новый блок', 'Ctrl + Shift + Q')}
-            aria-label='Новый блок'
-            icon={<IconConceptBlock size='1.25rem' className='icon-green' />}
-            onClick={onCreateBlock}
-            disabled={isProcessing}
+            titleHtml={prepareTooltip('Редактировать выбранную', isIOS() ? '' : 'Правый клик')}
+            hideTitle={isContextMenuOpen}
+            aria-label='Редактировать выбранную'
+            icon={<IconEdit2 size='1.25rem' className='icon-primary' />}
+            onClick={handleEditItem}
+            disabled={selectedItems.length !== 1 || isProcessing}
           />
           <MiniButton
             titleHtml={prepareTooltip('Новая операция', 'Ctrl + Q')}
@@ -167,18 +142,13 @@ export function ToolbarOssGraph({
             disabled={isProcessing}
           />
           <MiniButton
-            title='Активировать операцию'
-            icon={<IconExecute size='1.25rem' className='icon-green' />}
-            onClick={handleOperationExecute}
-            disabled={isProcessing || selectedItems.length !== 1 || !readyForSynthesis}
+            titleHtml={prepareTooltip('Новый блок', 'Ctrl + Shift + Q')}
+            aria-label='Новый блок'
+            icon={<IconConceptBlock size='1.25rem' className='icon-green' />}
+            onClick={onCreateBlock}
+            disabled={isProcessing}
           />
-          <MiniButton
-            titleHtml={prepareTooltip('Редактировать выбранную', 'Двойной клик')}
-            aria-label='Редактировать выбранную'
-            icon={<IconEdit2 size='1.25rem' className='icon-primary' />}
-            onClick={handleEditItem}
-            disabled={selectedItems.length !== 1 || isProcessing}
-          />
+
           <MiniButton
             titleHtml={prepareTooltip('Удалить выбранную', 'Delete')}
             aria-label='Удалить выбранную'

@@ -53,7 +53,7 @@ export function MenuMain() {
         title='Меню'
         hideTitle={menu.isOpen}
         icon={<IconMenu size='1.25rem' />}
-        className='h-full pl-2 text-muted-foreground hover:text-primary cc-animate-color'
+        className='h-full px-2 text-muted-foreground hover:text-primary cc-animate-color'
         onClick={menu.toggle}
       />
       <Dropdown isOpen={menu.isOpen} margin='mt-3'>

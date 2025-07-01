@@ -107,7 +107,7 @@ export function HelpOssGraph() {
               <kbd>Space</kbd> – перемещение экрана
             </li>
             <li>
-              <kbd>Shift</kbd> – перемещение выделенных элементов в границах родителя
+              <kbd>Shift</kbd> – перемещение в границах блока
             </li>
           </ul>
         </div>
