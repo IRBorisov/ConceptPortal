@@ -19,18 +19,13 @@ export function useContextMenu() {
   const setHoverOperation = useOperationTooltipStore(state => state.setHoverItem);
   const { addSelectedNodes } = useStoreApi().getState();
 
-  function handleContextMenu(event: React.MouseEvent<Element>, node: OssNode) {
-    event.preventDefault();
-    event.stopPropagation();
-
+  function openContextMenu(node: OssNode, clientX: number, clientY: number) {
     addSelectedNodes([node.id]);
-
     setMenuProps({
       item: node.type === 'block' ? node.data.block ?? null : node.data.operation ?? null,
-      cursorX: event.clientX,
-      cursorY: event.clientY
+      cursorX: clientX,
+      cursorY: clientY
     });
-
     setIsOpen(true);
     setHoverOperation(null);
   }
@@ -42,7 +37,7 @@ export function useContextMenu() {
   return {
     isOpen,
     menuProps,
-    handleContextMenu,
+    openContextMenu,
     hideContextMenu
   };
 }

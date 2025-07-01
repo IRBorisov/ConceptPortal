@@ -192,3 +192,16 @@ export function removeTags(target?: string): string {
 export function prepareTooltip(text: string, hotkey?: string) {
   return hotkey ? `<kbd>[${hotkey}]</kbd><br/>${text}` : text;
 }
+
+/**
+ * Utility to detect iOS/iPadOS.
+ */
+export function isIOS() {
+  if (typeof navigator === 'undefined') {
+    return false;
+  }
+  return (
+    /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.userAgent.includes('Macintosh') && 'ontouchend' in document)
+  );
+}

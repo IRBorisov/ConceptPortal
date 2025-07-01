@@ -42,6 +42,7 @@ export function useDragging({ hideContextMenu }: DraggingProps) {
   }
 
   function handleDragStart(event: React.MouseEvent, target: Node) {
+    console.log('handleDragStart', event);
     if (event.shiftKey) {
       setContainMovement(true);
       applyContainMovement([target.id, ...selected], true);
