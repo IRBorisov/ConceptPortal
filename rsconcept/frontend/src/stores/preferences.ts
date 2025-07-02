@@ -28,6 +28,9 @@ interface PreferencesStore {
 
   showExpressionControls: boolean;
   toggleShowExpressionControls: () => void;
+
+  showOssSidePanel: boolean;
+  toggleShowOssSidePanel: () => void;
 }
 
 export const usePreferencesStore = create<PreferencesStore>()(
@@ -76,7 +79,10 @@ export const usePreferencesStore = create<PreferencesStore>()(
       toggleShowOSSStats: () => set(state => ({ showOSSStats: !state.showOSSStats })),
 
       showExpressionControls: true,
-      toggleShowExpressionControls: () => set(state => ({ showExpressionControls: !state.showExpressionControls }))
+      toggleShowExpressionControls: () => set(state => ({ showExpressionControls: !state.showExpressionControls })),
+
+      showOssSidePanel: false,
+      toggleShowOssSidePanel: () => set(state => ({ showOssSidePanel: !state.showOssSidePanel }))
     }),
     {
       version: 1,

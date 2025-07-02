@@ -4,6 +4,7 @@ import React from 'react';
 
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
+import { IconShowSidebar } from '@/features/library/components/icon-show-sidebar';
 import { type OssNode } from '@/features/oss/models/oss-layout';
 
 import { MiniButton } from '@/components/control';
@@ -20,6 +21,7 @@ import {
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
 import { useDialogsStore } from '@/stores/dialogs';
+import { usePreferencesStore } from '@/stores/preferences';
 import { isIOS, prepareTooltip } from '@/utils/utils';
 
 import { useMutatingOss } from '../../../backend/use-mutating-oss';
@@ -64,10 +66,12 @@ export function ToolbarOssGraph({
 
   const { updateLayout } = useUpdateLayout();
 
-  const showOssOptions = useDialogsStore(state => state.showOssOptions);
+  const showOptions = useDialogsStore(state => state.showOssOptions);
+  const showSidePanel = usePreferencesStore(state => state.showOssSidePanel);
+  const toggleShowSidePanel = usePreferencesStore(state => state.toggleShowOssSidePanel);
 
   function handleShowOptions() {
-    showOssOptions();
+    showOptions();
   }
 
   function handleSavePositions() {
@@ -109,6 +113,11 @@ export function ToolbarOssGraph({
           title='Сбросить вид'
           icon={<IconFitImage size='1.25rem' className='icon-primary' />}
           onClick={resetView}
+        />
+        <MiniButton
+          title='Панель содержания КС'
+          icon={<IconShowSidebar value={showSidePanel} isBottom={false} size='1.25rem' />}
+          onClick={toggleShowSidePanel}
         />
         <MiniButton
           title='Настройки отображения'

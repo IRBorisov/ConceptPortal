@@ -15,9 +15,9 @@ export function IconShowSidebar({
     }
   } else {
     if (value) {
-      return <IconLeftClose size={size} className={className ?? 'icon-primary'} />;
-    } else {
       return <IconLeftOpen size={size} className={className ?? 'icon-primary'} />;
+    } else {
+      return <IconLeftClose size={size} className={className ?? 'icon-primary'} />;
     }
   }
 }

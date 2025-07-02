@@ -15,7 +15,7 @@ import { ListConstituents } from './list-constituents';
 export interface DlgDeleteCstProps {
   schema: IRSForm;
   selected: number[];
-  afterDelete: (initialSchema: IRSForm, deleted: number[]) => void;
+  afterDelete?: (initialSchema: IRSForm, deleted: number[]) => void;
 }
 
 export function DlgDeleteCst() {
@@ -31,7 +31,7 @@ export function DlgDeleteCst() {
 
   function handleSubmit() {
     const deleted = expandOut ? selected.concat(expansion) : selected;
-    void cstDelete({ itemID: schema.id, data: { items: deleted } }).then(() => afterDelete(schema, deleted));
+    void cstDelete({ itemID: schema.id, data: { items: deleted } }).then(() => afterDelete?.(schema, deleted));
   }
 
   return (
@@ -54,9 +54,7 @@ export function DlgDeleteCst() {
         value={expandOut}
         onChange={value => setExpandOut(value)}
       />
-      {hasInherited ? (
-        <p className='text-sm clr-text-red'>Внимание! Выбранные конституенты имеют наследников в ОСС</p>
-      ) : null}
+      {hasInherited ? <p className='text-sm clr-text-red'>Внимание! Конституенты имеют наследников в ОСС</p> : null}
     </ModalForm>
   );
 }

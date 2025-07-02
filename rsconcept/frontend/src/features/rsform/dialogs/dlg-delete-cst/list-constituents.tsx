@@ -12,7 +12,7 @@ export function ListConstituents({ list, schema, title, prefix }: ListConstituen
   return (
     <div>
       {title ? (
-        <p className='pb-1'>
+        <p className='mb-1'>
           {title}: <b>{list.length}</b>
         </p>
       ) : null}

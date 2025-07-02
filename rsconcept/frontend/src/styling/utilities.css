@@ -148,6 +148,12 @@
   transition-duration: var(--duration-transform);
 }
 
+@utility cc-animate-panel {
+  transition-property: translate, opacity;
+  transition-timing-function: var(--ease-bezier);
+  transition-duration: var(--duration-transform);
+}
+
 @utility cc-animate-position {
   transition-property: transform top left bottom right margin padding;
   transition-timing-function: var(--ease-bezier);
@@ -189,6 +195,10 @@
     linear-gradient(to right, transparent, black calc(var(--mask-border-size)));
 
   mask-composite: intersect;
+}
+
+@utility cc-shadow-left {
+  box-shadow: 0 0 5px 0 var(--color-border);
 }
 
 @utility duration-select {

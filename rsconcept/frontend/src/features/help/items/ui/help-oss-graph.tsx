@@ -12,6 +12,7 @@ import {
   IconExecute,
   IconFitImage,
   IconGrid,
+  IconLeftOpen,
   IconLineStraight,
   IconLineWave,
   IconNewItem,
@@ -30,7 +31,7 @@ export function HelpOssGraph() {
     <div className='flex flex-col'>
       <h1 className='sm:pr-24'>Граф синтеза</h1>
       <div className='flex flex-col sm:flex-row'>
-        <div className='sm:w-56'>
+        <div className='sm:w-64'>
           <h2>Настройка графа</h2>
           <ul>
             <li>
@@ -38,6 +39,9 @@ export function HelpOssGraph() {
             </li>
             <li>
               <IconFitImage className='inline-icon' /> Вписать в экран
+            </li>
+            <li>
+              <IconLeftOpen className='inline-icon' /> Панель связанной КС
             </li>
             <li>
               <IconSettings className='inline-icon' /> Диалог настроек
@@ -66,7 +70,7 @@ export function HelpOssGraph() {
 
         <Divider vertical margins='mx-3 mt-3' className='hidden sm:block' />
 
-        <div className='sm:w-84'>
+        <div className='sm:w-76'>
           <h2>Изменение узлов</h2>
           <ul>
             <li>
@@ -97,7 +101,7 @@ export function HelpOssGraph() {
       <Divider margins='my-2' className='hidden sm:block' />
 
       <div className='flex flex-col-reverse mb-3 sm:flex-row'>
-        <div className='sm:w-56'>
+        <div className='sm:w-64'>
           <h2>Общие</h2>
           <ul>
             <li>
@@ -114,7 +118,7 @@ export function HelpOssGraph() {
 
         <Divider vertical margins='mx-3' className='hidden sm:block' />
 
-        <div className='dense w-84'>
+        <div className='dense w-76'>
           <h2>Контекстное меню</h2>
           <ul>
             <li>

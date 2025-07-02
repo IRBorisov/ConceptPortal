@@ -6,6 +6,7 @@ import clsx from 'clsx';
 import { DiagramFlow, useReactFlow, useStoreApi } from '@/components/flow/diagram-flow';
 import { useMainHeight } from '@/stores/app-layout';
 import { useDialogsStore } from '@/stores/dialogs';
+import { usePreferencesStore } from '@/stores/preferences';
 import { PARAMETER } from '@/utils/constants';
 import { promptText } from '@/utils/labels';
 
@@ -23,6 +24,7 @@ import { useContextMenu } from './context-menu/use-context-menu';
 import { OssNodeTypes } from './graph/oss-node-types';
 import { CoordinateDisplay } from './coordinate-display';
 import { useOssFlow } from './oss-flow-context';
+import { SidePanel } from './side-panel';
 import { ToolbarOssGraph } from './toolbar-oss-graph';
 import { useDragging } from './use-dragging';
 import { useGetLayout } from './use-get-layout';
@@ -52,6 +54,7 @@ export function OssFlow() {
 
   const showGrid = useOSSGraphStore(state => state.showGrid);
   const showCoordinates = useOSSGraphStore(state => state.showCoordinates);
+  const showPanel = usePreferencesStore(state => state.showOssSidePanel);
 
   const getLayout = useGetLayout();
   const { updateLayout } = useUpdateLayout();
@@ -224,6 +227,16 @@ export function OssFlow() {
         onNodeDragStart={handleDragStart}
         onNodeDrag={handleDrag}
         onNodeDragStop={handleDragStop}
+      />
+
+      <SidePanel
+        className={clsx(
+          'absolute right-0 top-0 z-sticky w-84 min-h-80',
+          'cc-animate-panel cc-shadow-left',
+          showPanel ? 'translate-x-0' : 'opacity-0 translate-x-full pointer-events-none'
+        )}
+        isMounted={showPanel}
+        selectedItems={selectedItems}
       />
     </div>
   );
