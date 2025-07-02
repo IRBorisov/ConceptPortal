@@ -79,7 +79,7 @@ export function DlgEditOperation() {
         <TabList className='mb-3 mx-auto w-fit flex border divide-x rounded-none'>
           <TabLabel
             title='Текстовые поля' //
-            label='Карточка'
+            label='Паспорт'
             className='w-32'
           />
           <TabLabel

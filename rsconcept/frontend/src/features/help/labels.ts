@@ -13,7 +13,7 @@ export function labelHelpTopic(topic: HelpTopic): string {
     case HelpTopic.INTERFACE: return '🌀 Интерфейс';
     case HelpTopic.UI_LIBRARY: return 'Библиотека';
     case HelpTopic.UI_RS_MENU: return 'Меню схемы';
-    case HelpTopic.UI_RS_CARD: return 'Карточка схемы';
+    case HelpTopic.UI_RS_CARD: return 'Паспорт схемы';
     case HelpTopic.UI_RS_LIST: return 'Список конституент';
     case HelpTopic.UI_RS_EDITOR: return 'Редактор конституенты';
     case HelpTopic.UI_GRAPH_TERM: return 'Граф термов';

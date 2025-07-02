@@ -1,7 +1,7 @@
 'use client';
 
 import { useAuthSuspense } from '@/features/auth';
-import { MenuRole } from '@/features/library/components';
+import { MenuRole } from '@/features/library/components/menu-role';
 
 import { MenuMain } from './menu-main';
 import { useOssEdit } from './oss-edit-context';

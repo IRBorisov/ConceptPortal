@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 
 import { HelpTopic } from '@/features/help';
-import { BadgeHelp } from '@/features/help/components';
+import { BadgeHelp } from '@/features/help/components/badge-help';
 import { useRoleStore, UserRole } from '@/features/users';
 
 import { MiniButton } from '@/components/control';

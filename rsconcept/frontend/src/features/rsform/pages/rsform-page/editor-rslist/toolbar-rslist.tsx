@@ -1,8 +1,8 @@
 'use client';
 
 import { HelpTopic } from '@/features/help';
-import { BadgeHelp } from '@/features/help/components';
-import { MiniSelectorOSS } from '@/features/library/components';
+import { BadgeHelp } from '@/features/help/components/badge-help';
+import { MiniSelectorOSS } from '@/features/library/components/mini-selector-oss';
 
 import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';

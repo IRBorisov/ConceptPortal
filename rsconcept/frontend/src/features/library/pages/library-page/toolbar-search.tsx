@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 
-import { SelectUser } from '@/features/users/components';
+import { SelectUser } from '@/features/users/components/select-user';
 
 import { MiniButton, SelectorButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';

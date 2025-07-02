@@ -3,7 +3,7 @@ import clsx from 'clsx';
 
 import { useAuthSuspense } from '@/features/auth';
 import { HelpTopic } from '@/features/help';
-import { BadgeHelp } from '@/features/help/components';
+import { BadgeHelp } from '@/features/help/components/badge-help';
 
 import { MiniButton } from '@/components/control';
 import { IconFolderEdit, IconFolderTree } from '@/components/icons';

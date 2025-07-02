@@ -13,7 +13,8 @@ import {
   schemaUpdateLibraryItem
 } from '@/features/library';
 import { useUpdateItem } from '@/features/library/backend/use-update-item';
-import { SelectVersion, ToolbarItemAccess } from '@/features/library/components';
+import { SelectVersion } from '@/features/library/components/select-version';
+import { ToolbarItemAccess } from '@/features/library/components/toolbar-item-access';
 
 import { SubmitButton } from '@/components/control';
 import { IconSave } from '@/components/icons';

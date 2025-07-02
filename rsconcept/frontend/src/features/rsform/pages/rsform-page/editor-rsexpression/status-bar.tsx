@@ -3,7 +3,7 @@
 import clsx from 'clsx';
 
 import { HelpTopic } from '@/features/help';
-import { BadgeHelp } from '@/features/help/components';
+import { BadgeHelp } from '@/features/help/components/badge-help';
 
 import { Loader } from '@/components/loader';
 import { cn } from '@/components/utils';

@@ -5,7 +5,7 @@ import { useParams } from 'react-router';
 import { z } from 'zod';
 
 import { urls, useBlockNavigation, useConceptNavigation } from '@/app';
-import { ConstituentaTooltip } from '@/features/rsform/components';
+import { ConstituentaTooltip } from '@/features/rsform/components/constituenta-tooltip';
 
 import { isAxiosError } from '@/backend/api-transport';
 import { TextURL } from '@/components/control';

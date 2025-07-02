@@ -86,7 +86,7 @@ export function DlgCreateBlock() {
     >
       <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>
         <TabList className='z-pop mx-auto -mb-5 flex border divide-x rounded-none'>
-          <TabLabel title='Основные атрибуты блока' label='Карточка' />
+          <TabLabel title='Основные атрибуты блока' label='Паспорт' />
           <TabLabel
             title={`Выбор вложенных узлов: [${children_operations.length + children_blocks.length}]`}
             label={`Содержимое${children_operations.length + children_blocks.length > 0 ? '*' : ''}`}

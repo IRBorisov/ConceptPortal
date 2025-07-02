@@ -2,7 +2,8 @@
 
 import clsx from 'clsx';
 
-import { EditorLibraryItem, ToolbarItemCard } from '@/features/library/components';
+import { EditorLibraryItem } from '@/features/library/components/editor-library-item';
+import { ToolbarItemCard } from '@/features/library/components/toolbar-item-card';
 
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useModificationStore } from '@/stores/modification';

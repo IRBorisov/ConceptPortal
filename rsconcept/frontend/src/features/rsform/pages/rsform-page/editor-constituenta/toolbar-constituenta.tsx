@@ -2,9 +2,9 @@
 
 import { urls, useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';
-import { BadgeHelp } from '@/features/help/components';
-import { MiniSelectorOSS } from '@/features/library/components';
+import { BadgeHelp } from '@/features/help/components/badge-help';
 import { IconShowSidebar } from '@/features/library/components/icon-show-sidebar';
+import { MiniSelectorOSS } from '@/features/library/components/mini-selector-oss';
 import { useFindPredecessor } from '@/features/oss/backend/use-find-predecessor';
 
 import { MiniButton } from '@/components/control';

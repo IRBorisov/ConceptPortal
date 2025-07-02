@@ -8,8 +8,6 @@ import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useAppLayoutStore } from '@/stores/app-layout';
 import { useModificationStore } from '@/stores/modification';
 
-import { labelVersion } from '../../labels';
-
 import { EditorConstituenta } from './editor-constituenta';
 import { EditorRSFormCard } from './editor-rsform-card';
 import { EditorRSList } from './editor-rslist';
@@ -81,16 +79,10 @@ export function RSTabs({ activeID, activeTab }: RSTabsProps) {
       <TabList className='absolute z-sticky flex border-b-2 border-x-2 divide-x-2'>
         <MenuRSTabs />
 
-        <TabLabel
-          label='Карточка'
-          titleHtml={`${schema.title ?? ''}<br />Версия: ${labelVersion(schema.version, schema.versions)}`}
-        />
-        <TabLabel
-          label='Содержание'
-          titleHtml={`Конституент: ${schema.stats?.count_all ?? 0}<br />Ошибок: ${schema.stats?.count_errors ?? 0}`}
-        />
-        <TabLabel label='Редактор' />
-        <TabLabel label='Граф термов' />
+        <TabLabel label='Паспорт' />
+        <TabLabel label='Список' />
+        <TabLabel label='Понятие' />
+        <TabLabel label='Граф' />
       </TabList>
 
       <div className='overflow-x-hidden'>

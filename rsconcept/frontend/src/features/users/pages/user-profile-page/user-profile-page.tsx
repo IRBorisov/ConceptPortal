@@ -1,4 +1,4 @@
-import { RequireAuth } from '@/features/auth/components';
+import { RequireAuth } from '@/features/auth/components/require-auth';
 
 import { EditorPassword } from './editor-password';
 import { EditorProfile } from './editor-profile';

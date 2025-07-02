@@ -4,7 +4,7 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { type ILibraryItem, LibraryItemType } from '@/features/library';
 import { useLibrary } from '@/features/library/backend/use-library';
-import { PickSchema } from '@/features/library/components';
+import { PickSchema } from '@/features/library/components/pick-schema';
 
 import { MiniButton } from '@/components/control';
 import { IconReset } from '@/components/icons';

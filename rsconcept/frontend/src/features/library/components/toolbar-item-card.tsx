@@ -2,7 +2,7 @@
 
 import { urls, useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';
-import { BadgeHelp } from '@/features/help/components';
+import { BadgeHelp } from '@/features/help/components/badge-help';
 import { type IRSForm } from '@/features/rsform';
 import { useRoleStore, UserRole } from '@/features/users';
 

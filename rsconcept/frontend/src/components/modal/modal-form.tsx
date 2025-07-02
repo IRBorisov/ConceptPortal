@@ -1,7 +1,7 @@
 'use client';
 
 import { type HelpTopic } from '@/features/help';
-import { BadgeHelp } from '@/features/help/components';
+import { BadgeHelp } from '@/features/help/components/badge-help';
 
 import { useEscapeKey } from '@/hooks/use-escape-key';
 import { useDialogsStore } from '@/stores/dialogs';

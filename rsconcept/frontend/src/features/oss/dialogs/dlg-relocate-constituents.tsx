@@ -7,9 +7,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { HelpTopic } from '@/features/help';
 import { type ILibraryItem } from '@/features/library';
 import { useLibrary } from '@/features/library/backend/use-library';
-import { SelectLibraryItem } from '@/features/library/components';
+import { SelectLibraryItem } from '@/features/library/components/select-library-item';
 import { useRSForm } from '@/features/rsform/backend/use-rsform';
-import { PickMultiConstituenta } from '@/features/rsform/components';
+import { PickMultiConstituenta } from '@/features/rsform/components/pick-multi-constituenta';
 
 import { MiniButton } from '@/components/control';
 import { Loader } from '@/components/loader';

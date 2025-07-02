@@ -1,4 +1,4 @@
-import { RequireAuth } from '@/features/auth/components';
+import { RequireAuth } from '@/features/auth/components/require-auth';
 
 import { FormCreateItem } from './form-create-item';
 

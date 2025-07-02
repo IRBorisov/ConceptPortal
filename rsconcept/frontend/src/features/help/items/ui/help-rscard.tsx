@@ -15,17 +15,17 @@ import { HelpTopic } from '../../models/help-topic';
 export function HelpRSCard() {
   return (
     <div className='dense'>
-      <h1>Карточка схемы</h1>
+      <h1>Паспорт схемы</h1>
 
-      <p>Карточка содержит общую информацию и статистику</p>
+      <p>Паспорт содержит общую информацию и статистику</p>
       <p>
-        Карточка позволяет управлять атрибутами и <LinkTopic text='версиями' topic={HelpTopic.VERSIONS} />
+        Паспорт позволяет управлять атрибутами и <LinkTopic text='версиями' topic={HelpTopic.VERSIONS} />
       </p>
       <p>
-        Карточка позволяет назначать <IconEditor className='inline-icon' /> Редакторов
+        Паспорт позволяет назначать <IconEditor className='inline-icon' /> Редакторов
       </p>
       <p>
-        Карточка позволяет изменить <IconOwner className='inline-icon icon-green' /> Владельца
+        Паспорт позволяет изменить <IconOwner className='inline-icon icon-green' /> Владельца
       </p>
 
       <h2>Управление</h2>

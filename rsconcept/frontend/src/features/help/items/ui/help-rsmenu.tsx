@@ -32,18 +32,17 @@ export function HelpRSMenu() {
       <h2>Вкладки</h2>
       <ul>
         <li>
-          <LinkTopic text='Карточка' topic={HelpTopic.UI_RS_CARD} /> – редактирование атрибутов схемы и версии
+          <LinkTopic text='Паспорт' topic={HelpTopic.UI_RS_CARD} /> – редактирование атрибутов схемы и версии
         </li>
         <li>
-          <LinkTopic text='Содержание' topic={HelpTopic.UI_RS_LIST} /> – работа со списком конституент в табличной форме
+          <LinkTopic text='Список' topic={HelpTopic.UI_RS_LIST} /> – работа со списком конституент в табличной форме
         </li>
         <li>
-          <LinkTopic text='Редактор' topic={HelpTopic.UI_RS_EDITOR} /> – редактирование отдельной{' '}
+          <LinkTopic text='Понятие' topic={HelpTopic.UI_RS_EDITOR} /> – редактирование отдельной{' '}
           <LinkTopic text='Конституенты' topic={HelpTopic.CC_CONSTITUENTA} />
         </li>
         <li>
-          <LinkTopic text='Граф термов' topic={HelpTopic.UI_GRAPH_TERM} /> – графическое представление связей
-          конституент
+          <LinkTopic text='Граф' topic={HelpTopic.UI_GRAPH_TERM} /> – графическое представление связей конституент
         </li>
       </ul>
 

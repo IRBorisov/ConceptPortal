@@ -3,7 +3,8 @@ import { useIntl } from 'react-intl';
 
 import { urls, useConceptNavigation } from '@/app';
 import { useLabelUser, useRoleStore, UserRole } from '@/features/users';
-import { InfoUsers, SelectUser } from '@/features/users/components';
+import { InfoUsers } from '@/features/users/components/info-users';
+import { SelectUser } from '@/features/users/components/select-user';
 
 import { Tooltip } from '@/components/container';
 import { MiniButton } from '@/components/control';

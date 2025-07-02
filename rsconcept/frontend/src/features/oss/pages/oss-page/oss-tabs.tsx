@@ -63,7 +63,7 @@ export function OssTabs({ activeTab }: OssTabsProps) {
       <TabList className='absolute z-sticky flex border-b-2 border-x-2 divide-x-2'>
         <MenuOssTabs />
 
-        <TabLabel label='Карточка' title={schema.title ?? ''} />
+        <TabLabel label='Паспорт' />
         <TabLabel label='Граф' />
       </TabList>
 

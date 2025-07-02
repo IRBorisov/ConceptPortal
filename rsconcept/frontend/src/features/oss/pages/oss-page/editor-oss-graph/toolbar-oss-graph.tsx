@@ -3,7 +3,7 @@
 import React from 'react';
 
 import { HelpTopic } from '@/features/help';
-import { BadgeHelp } from '@/features/help/components';
+import { BadgeHelp } from '@/features/help/components/badge-help';
 import { type OssNode } from '@/features/oss/models/oss-layout';
 
 import { MiniButton } from '@/components/control';

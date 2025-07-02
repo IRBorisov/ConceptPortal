@@ -3,7 +3,8 @@
 import { useState } from 'react';
 
 import { useUsers } from '@/features/users';
-import { SelectUser, TableUsers } from '@/features/users/components';
+import { SelectUser } from '@/features/users/components/select-user';
+import { TableUsers } from '@/features/users/components/table-users';
 
 import { MiniButton } from '@/components/control';
 import { IconRemove } from '@/components/icons';

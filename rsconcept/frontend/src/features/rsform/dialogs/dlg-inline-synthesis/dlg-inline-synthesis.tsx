@@ -66,7 +66,7 @@ export function DlgInlineSynthesis() {
             className='w-32'
           />
           <TabLabel
-            label='Содержание'
+            label='Конституенты'
             title={!sourceID ? 'Выберите схему' : 'Перечень конституент'}
             className='w-32'
             disabled={!sourceID}

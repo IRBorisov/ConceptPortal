@@ -3,7 +3,7 @@
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { useRSForms } from '@/features/rsform/backend/use-rsforms';
-import { PickSubstitutions } from '@/features/rsform/components';
+import { PickSubstitutions } from '@/features/rsform/components/pick-substitutions';
 
 import { TextArea } from '@/components/input';
 import { useDialogsStore } from '@/stores/dialogs';
