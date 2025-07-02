@@ -60,7 +60,7 @@ export function OssTabs({ activeTab }: OssTabsProps) {
       defaultFocus
       className='relative flex flex-col mx-auto min-w-fit items-center'
     >
-      <TabList className='absolute z-sticky flex border-b-2 border-x-2 divide-x-2'>
+      <TabList className='absolute z-sticky flex border-b-2 border-x-2 divide-x-2 bg-background'>
         <MenuOssTabs />
 
         <TabLabel label='Паспорт' />

@@ -76,7 +76,7 @@ export function RSTabs({ activeID, activeTab }: RSTabsProps) {
       defaultFocus
       className='relative flex flex-col min-w-fit items-center'
     >
-      <TabList className='absolute z-sticky flex border-b-2 border-x-2 divide-x-2'>
+      <TabList className='absolute z-sticky flex border-b-2 border-x-2 divide-x-2 bg-background'>
         <MenuRSTabs />
 
         <TabLabel label='Паспорт' />
