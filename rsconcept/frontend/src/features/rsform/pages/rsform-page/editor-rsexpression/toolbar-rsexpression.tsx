@@ -23,18 +23,18 @@ export function ToolbarRSExpression({ className, disabled, showTypeGraph, showAS
     <div className={cn('cc-icons', className)}>
       {!disabled || isProcessing ? (
         <MiniButton
-          title='Отображение специальной клавиатуры'
+          title='Символьная клавиатура'
           icon={<IconShowKeyboard value={showControls} size='1.25rem' className='hover:text-primary' />}
           onClick={toggleControls}
         />
       ) : null}
       <MiniButton
-        title='Граф ступеней типизации'
+        title='Структура типизации'
         icon={<IconTypeGraph size='1.25rem' className='hover:text-primary' />}
         onClick={showTypeGraph}
       />
       <MiniButton
-        title='Дерево разбора выражения'
+        title='Структура выражения'
         onClick={showAST}
         icon={<IconTree size='1.25rem' className='hover:text-primary' />}
       />

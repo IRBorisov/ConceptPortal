@@ -20,9 +20,9 @@ interface MGraphNodeInternal {
 
 export function MGraphNode(node: MGraphNodeInternal) {
   const tooltipText =
-    `Ступень ${node.data.text}` +
+    `<span class="font-math">${node.data.text}</span>` +
     '<br/>' +
-    (node.data.annotations.length === 0 ? '' : `Конституенты: ${node.data.annotations.join(' ')}`);
+    (node.data.annotations.length === 0 ? '' : `<b>Конституенты</b> ${node.data.annotations.join(' ')}`);
 
   return (
     <>
