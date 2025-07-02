@@ -3,21 +3,26 @@
 import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 
+import { useRoleStore, UserRole } from '@/features/users';
+
 import { useWindowSize } from '@/hooks/use-window-size';
-import { useMainHeight } from '@/stores/app-layout';
+import { useFitHeight, useMainHeight } from '@/stores/app-layout';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { globalIDs } from '@/utils/constants';
 
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
+import { ViewConstituents } from '../../../components/view-constituents';
 import { useRSEdit } from '../rsedit-context';
-import { ViewConstituents } from '../view-constituents';
 
 import { FormConstituenta } from './form-constituenta';
 import { ToolbarConstituenta } from './toolbar-constituenta';
 
 // Threshold window width to switch layout.
 const SIDELIST_LAYOUT_THRESHOLD = 1000; // px
+
+// Window width cutoff for dense search bar
+const COLUMN_DENSE_SEARCH_THRESHOLD = 1100;
 
 export function EditorConstituenta() {
   const { schema, activeCst, isContentEditable, selected, setSelected, moveUp, moveDown, cloneCst, navigateCst } =
@@ -33,6 +38,9 @@ export function EditorConstituenta() {
   const isProcessing = useMutatingRSForm();
   const disabled = !activeCst || !isContentEditable || isProcessing;
   const isNarrow = !!windowSize.width && windowSize.width <= SIDELIST_LAYOUT_THRESHOLD;
+
+  const role = useRoleStore(state => state.role);
+  const listHeight = useFitHeight(!isNarrow ? '8.2rem' : role !== UserRole.READER ? '42rem' : '35rem', '10rem');
 
   useEffect(() => {
     if (activeCst && selected.length !== 1) {
@@ -113,9 +121,17 @@ export function EditorConstituenta() {
         ) : null}
       </div>
       <ViewConstituents
-        className={isNarrow ? 'mt-3 mx-6 overflow-hidden' : 'mt-9 overflow-visible'}
-        isMounted={showList}
-        isBottom={isNarrow}
+        className={clsx(
+          'cc-animate-sidebar',
+          isNarrow ? 'mt-3 mx-6 rounded-md overflow-hidden' : 'mt-9 rounded-l-md rounded-r-none overflow-visible',
+          showList ? 'max-w-full' : 'opacity-0 max-w-0'
+        )}
+        schema={schema}
+        activeCst={activeCst}
+        onActivate={cst => navigateCst(cst.id)}
+        dense={!!windowSize.width && windowSize.width < COLUMN_DENSE_SEARCH_THRESHOLD}
+        maxListHeight={listHeight}
+        autoScroll={!isNarrow}
       />
     </div>
   );

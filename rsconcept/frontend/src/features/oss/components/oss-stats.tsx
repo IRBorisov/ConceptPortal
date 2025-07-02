@@ -9,24 +9,16 @@ import {
 import { cn } from '@/components/utils';
 import { ValueStats } from '@/components/view';
 
-import { type IOperationSchemaStats } from '../../../models/oss';
+import { type IOperationSchemaStats } from '../models/oss';
 
 interface OssStatsProps {
   className?: string;
-  isMounted: boolean;
   stats: IOperationSchemaStats;
 }
 
-export function OssStats({ className, isMounted, stats }: OssStatsProps) {
+export function OssStats({ className, stats }: OssStatsProps) {
   return (
-    <aside
-      className={cn(
-        'grid grid-cols-4 gap-1 justify-items-end h-min',
-        'cc-animate-sidebar',
-        isMounted ? 'max-w-full' : 'opacity-0 max-w-0',
-        className
-      )}
-    >
+    <aside className={cn('grid grid-cols-4 gap-1 justify-items-end h-min', className)}>
       <div id='count_operations' className='w-fit flex gap-3 hover:cursor-default '>
         <span>Всего</span>
         <span>{stats.count_all}</span>

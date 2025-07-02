@@ -4,17 +4,19 @@ import { MiniButton } from '@/components/control';
 import { IconChild } from '@/components/icons';
 import { SearchBar } from '@/components/input';
 
-import { useCstSearchStore } from '../../../stores/cst-search';
-import { useRSEdit } from '../rsedit-context';
+import { type IRSForm } from '../../models/rsform';
+import { useCstSearchStore } from '../../stores/cst-search';
 
 import { SelectGraphFilter } from './select-graph-filter';
 import { SelectMatchMode } from './select-match-mode';
 
 interface ConstituentsSearchProps {
+  schema: IRSForm;
   dense?: boolean;
+  hideGraphFilter?: boolean;
 }
 
-export function ConstituentsSearch({ dense }: ConstituentsSearchProps) {
+export function ConstituentsSearch({ schema, dense, hideGraphFilter }: ConstituentsSearchProps) {
   const query = useCstSearchStore(state => state.query);
   const filterMatch = useCstSearchStore(state => state.match);
   const filterSource = useCstSearchStore(state => state.source);
@@ -23,8 +25,6 @@ export function ConstituentsSearch({ dense }: ConstituentsSearchProps) {
   const setMatch = useCstSearchStore(state => state.setMatch);
   const setSource = useCstSearchStore(state => state.setSource);
   const toggleInherited = useCstSearchStore(state => state.toggleInherited);
-
-  const schema = useRSEdit().schema;
 
   return (
     <div className='flex border-b bg-input rounded-t-md'>
@@ -36,7 +36,7 @@ export function ConstituentsSearch({ dense }: ConstituentsSearchProps) {
         onChangeQuery={setQuery}
       />
       <SelectMatchMode value={filterMatch} onChange={setMatch} dense={dense} />
-      <SelectGraphFilter value={filterSource} onChange={setSource} dense={dense} />
+      {!hideGraphFilter ? <SelectGraphFilter value={filterSource} onChange={setSource} dense={dense} /> : null}
       {schema.stats.count_inherited > 0 ? (
         <MiniButton
           titleHtml={`Наследованные: <b>${includeInherited ? 'отображать' : 'скрывать'}</b>`}

@@ -4,12 +4,11 @@ import { SelectorButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
-import { useWindowSize } from '@/hooks/use-window-size';
 import { prefixes } from '@/utils/constants';
 
-import { IconDependencyMode } from '../../../components/icon-dependency-mode';
-import { describeCstSource, labelCstSource } from '../../../labels';
-import { DependencyMode } from '../../../stores/cst-search';
+import { describeCstSource, labelCstSource } from '../../labels';
+import { DependencyMode } from '../../stores/cst-search';
+import { IconDependencyMode } from '../icon-dependency-mode';
 
 interface SelectGraphFilterProps extends Styling {
   value: DependencyMode;
@@ -19,7 +18,6 @@ interface SelectGraphFilterProps extends Styling {
 
 export function SelectGraphFilter({ value, dense, className, onChange, ...restProps }: SelectGraphFilterProps) {
   const menu = useDropdown();
-  const size = useWindowSize();
 
   function handleChange(newValue: DependencyMode) {
     menu.hide();
@@ -34,7 +32,7 @@ export function SelectGraphFilter({ value, dense, className, onChange, ...restPr
         hideTitle={menu.isOpen}
         className='h-full pr-2'
         icon={<IconDependencyMode value={value} size='1rem' />}
-        text={!dense && !size.isSmall ? labelCstSource(value) : undefined}
+        text={!dense ? labelCstSource(value) : undefined}
         onClick={menu.toggle}
       />
       <Dropdown stretchLeft isOpen={menu.isOpen} margin='mt-3'>

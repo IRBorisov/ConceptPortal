@@ -6,25 +6,33 @@ import { createColumnHelper, DataTable, type IConditionalStyle } from '@/compone
 import { NoData, TextContent } from '@/components/view';
 import { PARAMETER, prefixes } from '@/utils/constants';
 
-import { BadgeConstituenta } from '../../../components/badge-constituenta';
-import { describeConstituenta } from '../../../labels';
-import { type IConstituenta } from '../../../models/rsform';
-import { useRSEdit } from '../rsedit-context';
+import { describeConstituenta } from '../../labels';
+import { type IConstituenta, type IRSForm } from '../../models/rsform';
+import { BadgeConstituenta } from '../badge-constituenta';
 
 import { useFilteredItems } from './use-filtered-items';
 
 const DESCRIPTION_MAX_SYMBOLS = 280;
 
 interface TableSideConstituentsProps {
+  schema: IRSForm;
+  activeCst?: IConstituenta | null;
+  onActivate?: (cst: IConstituenta) => void;
+
+  maxHeight?: string;
   autoScroll?: boolean;
-  maxHeight: string;
 }
 
 const columnHelper = createColumnHelper<IConstituenta>();
 
-export function TableSideConstituents({ autoScroll = true, maxHeight }: TableSideConstituentsProps) {
-  const { activeCst, navigateCst } = useRSEdit();
-  const items = useFilteredItems();
+export function TableSideConstituents({
+  schema,
+  activeCst,
+  onActivate,
+  maxHeight,
+  autoScroll = true
+}: TableSideConstituentsProps) {
+  const items = useFilteredItems(schema, activeCst);
 
   const prevActiveCstID = useRef<number | null>(null);
   if (autoScroll && prevActiveCstID.current !== activeCst?.id) {
@@ -81,7 +89,7 @@ export function TableSideConstituents({ autoScroll = true, maxHeight }: TableSid
       dense
       noFooter
       className='text-sm select-none cc-scroll-y'
-      style={{ maxHeight: maxHeight }}
+      style={maxHeight ? { maxHeight: maxHeight } : {}}
       data={items}
       columns={columns}
       conditionalRowStyles={conditionalRowStyles}
@@ -93,7 +101,7 @@ export function TableSideConstituents({ autoScroll = true, maxHeight }: TableSid
           <p>Измените параметры фильтра</p>
         </NoData>
       }
-      onRowClicked={cst => navigateCst(cst.id)}
+      onRowClicked={onActivate ? cst => onActivate(cst) : undefined}
     />
   );
 }

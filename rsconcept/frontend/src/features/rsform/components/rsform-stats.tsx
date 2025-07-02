@@ -20,26 +20,16 @@ import {
 import { cn } from '@/components/utils';
 import { ValueStats } from '@/components/view';
 
-import { type IRSFormStats } from '../../../models/rsform';
+import { type IRSFormStats } from '../models/rsform';
 
 interface RSFormStatsProps {
   className?: string;
-  isArchive: boolean;
-  isMounted: boolean;
   stats: IRSFormStats;
 }
 
-export function RSFormStats({ className, stats, isArchive, isMounted }: RSFormStatsProps) {
+export function RSFormStats({ className, stats }: RSFormStatsProps) {
   return (
-    <aside
-      className={cn(
-        'cc-animate-sidebar',
-        'h-min',
-        'grid grid-cols-4 gap-1 justify-items-end ',
-        isMounted ? 'max-w-full' : 'opacity-0 max-w-0',
-        className
-      )}
-    >
+    <aside className={cn('h-min', 'grid grid-cols-4 gap-1 justify-items-end ', className)}>
       <div id='count_all' className='col-span-2 w-fit flex gap-3 hover:cursor-default'>
         <span>Всего</span>
         <span>{stats.count_all}</span>
@@ -54,7 +44,7 @@ export function RSFormStats({ className, stats, isArchive, isMounted }: RSFormSt
         id='count_inherited'
         icon={<IconChild size='1.25rem' />}
         value={stats.count_inherited}
-        titleHtml={isArchive ? 'Архивные схемы не хранят<br/> информацию о наследовании' : 'Наследованные'}
+        titleHtml='Наследованные'
       />
 
       <ValueStats

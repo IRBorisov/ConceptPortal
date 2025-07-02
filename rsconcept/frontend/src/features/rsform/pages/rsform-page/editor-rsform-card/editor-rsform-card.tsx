@@ -9,15 +9,15 @@ import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { globalIDs } from '@/utils/constants';
 
+import { RSFormStats } from '../../../components/rsform-stats';
 import { useRSEdit } from '../rsedit-context';
 
 import { FormRSForm } from './form-rsform';
-import { RSFormStats } from './rsform-stats';
 
 const SIDELIST_LAYOUT_THRESHOLD = 768; // px
 
 export function EditorRSFormCard() {
-  const { schema, isArchive, isMutable, deleteSchema, isAttachedToOSS } = useRSEdit();
+  const { schema, isMutable, deleteSchema, isAttachedToOSS } = useRSEdit();
   const { isModified } = useModificationStore();
   const showRSFormStats = usePreferencesStore(state => state.showRSFormStats);
   const windowSize = useWindowSize();
@@ -63,10 +63,12 @@ export function EditorRSFormCard() {
       </div>
 
       <RSFormStats
-        className='w-80 md:w-56 mt-3 md:mt-8 mx-auto md:ml-5 md:mr-0'
+        className={clsx(
+          'w-80 md:w-56 mt-3 md:mt-8 mx-auto md:ml-5 md:mr-0',
+          'cc-animate-sidebar',
+          showRSFormStats ? 'max-w-full' : 'opacity-0 max-w-0'
+        )}
         stats={schema.stats}
-        isArchive={isArchive}
-        isMounted={showRSFormStats}
       />
     </div>
   );

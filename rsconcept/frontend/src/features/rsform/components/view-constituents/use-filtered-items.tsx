@@ -1,11 +1,8 @@
-import { type IConstituenta, type IRSForm } from '../../../models/rsform';
-import { matchConstituenta } from '../../../models/rsform-api';
-import { DependencyMode, useCstSearchStore } from '../../../stores/cst-search';
-import { useRSEdit } from '../rsedit-context';
+import { type IConstituenta, type IRSForm } from '../../models/rsform';
+import { matchConstituenta } from '../../models/rsform-api';
+import { DependencyMode, useCstSearchStore } from '../../stores/cst-search';
 
-export function useFilteredItems() {
-  const { schema, activeCst } = useRSEdit();
-
+export function useFilteredItems(schema: IRSForm, activeCst?: IConstituenta | null): IConstituenta[] {
   const query = useCstSearchStore(state => state.query);
   const filterMatch = useCstSearchStore(state => state.match);
   const filterSource = useCstSearchStore(state => state.source);

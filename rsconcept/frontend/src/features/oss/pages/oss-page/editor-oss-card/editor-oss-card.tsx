@@ -9,10 +9,10 @@ import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { globalIDs } from '@/utils/constants';
 
+import { OssStats } from '../../../components/oss-stats';
 import { useOssEdit } from '../oss-edit-context';
 
 import { FormOSS } from './form-oss';
-import { OssStats } from './oss-stats';
 
 const SIDELIST_LAYOUT_THRESHOLD = 768; // px
 
@@ -63,9 +63,12 @@ export function EditorOssCard() {
       </div>
 
       <OssStats
-        className='w-80 md:w-56 mt-3 md:mt-8 mx-auto md:ml-5 md:mr-0'
+        className={clsx(
+          'w-80 md:w-56 mt-3 md:mt-8 mx-auto md:ml-5 md:mr-0',
+          'cc-animate-sidebar',
+          showOSSStats ? 'max-w-full' : 'opacity-0 max-w-0'
+        )}
         stats={schema.stats}
-        isMounted={showOSSStats}
       />
     </div>
   );

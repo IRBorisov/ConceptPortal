@@ -4,12 +4,11 @@ import { SelectorButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
-import { useWindowSize } from '@/hooks/use-window-size';
 import { prefixes } from '@/utils/constants';
 
-import { IconCstMatchMode } from '../../../components/icon-cst-match-mode';
-import { describeCstMatchMode, labelCstMatchMode } from '../../../labels';
-import { CstMatchMode } from '../../../stores/cst-search';
+import { describeCstMatchMode, labelCstMatchMode } from '../../labels';
+import { CstMatchMode } from '../../stores/cst-search';
+import { IconCstMatchMode } from '../icon-cst-match-mode';
 
 interface SelectMatchModeProps extends Styling {
   value: CstMatchMode;
@@ -19,7 +18,6 @@ interface SelectMatchModeProps extends Styling {
 
 export function SelectMatchMode({ value, dense, className, onChange, ...restProps }: SelectMatchModeProps) {
   const menu = useDropdown();
-  const size = useWindowSize();
 
   function handleChange(newValue: CstMatchMode) {
     menu.hide();
@@ -33,7 +31,7 @@ export function SelectMatchMode({ value, dense, className, onChange, ...restProp
         hideTitle={menu.isOpen}
         className='h-full pr-2'
         icon={<IconCstMatchMode value={value} size='1rem' />}
-        text={dense || size.isSmall ? undefined : labelCstMatchMode(value)}
+        text={!dense ? labelCstMatchMode(value) : undefined}
         onClick={menu.toggle}
       />
       <Dropdown stretchLeft isOpen={menu.isOpen} margin='mt-3'>
