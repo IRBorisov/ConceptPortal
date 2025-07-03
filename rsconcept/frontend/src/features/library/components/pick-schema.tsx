@@ -59,7 +59,7 @@ export function PickSchema({
   const columns = [
     columnHelper.accessor('alias', {
       id: 'alias',
-      header: 'Шифр',
+      header: 'Сокращение',
       size: 150,
       minSize: 80,
       maxSize: 150

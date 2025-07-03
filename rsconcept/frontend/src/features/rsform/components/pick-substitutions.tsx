@@ -231,7 +231,7 @@ export function PickSubstitutions({
           <SelectLibraryItem
             id='substitute-left-schema'
             noBorder
-            placeholder='Выберите аргумент'
+            placeholder='Аргумент'
             items={allowSelfSubstitution ? schemas : schemas.filter(item => item.id !== rightArgument?.id)}
             value={leftArgument}
             onChange={setLeftArgument}
@@ -263,7 +263,7 @@ export function PickSubstitutions({
           <SelectLibraryItem
             id='substitute-right-schema'
             noBorder
-            placeholder='Выберите аргумент'
+            placeholder='Аргумент'
             items={allowSelfSubstitution ? schemas : schemas.filter(item => item.id !== leftArgument?.id)}
             value={rightArgument}
             onChange={setRightArgument}

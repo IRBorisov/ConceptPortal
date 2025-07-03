@@ -31,12 +31,7 @@ function compareUsers(a: IUserInfo, b: IUserInfo) {
   return a.id - b.id;
 }
 
-export function SelectUser({
-  filter,
-  noAnonymous,
-  placeholder = 'Выберите пользователя',
-  ...restProps
-}: SelectUserProps) {
+export function SelectUser({ filter, noAnonymous, placeholder = 'Выбор пользователя', ...restProps }: SelectUserProps) {
   const { users } = useUsers();
   const getUserLabel = useLabelUser();
 

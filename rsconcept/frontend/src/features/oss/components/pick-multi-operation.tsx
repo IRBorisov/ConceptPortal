@@ -62,7 +62,7 @@ export function PickMultiOperation({ rows, items, value, onChange, className, ..
   const columns = [
     columnHelper.accessor('alias', {
       id: 'alias',
-      header: 'Шифр',
+      header: 'Сокращение',
       size: 300,
       minSize: 150,
       maxSize: 300
@@ -79,7 +79,7 @@ export function PickMultiOperation({ rows, items, value, onChange, className, ..
       id: 'actions',
       size: 0,
       cell: props => (
-        <div className='flex w-fit'>
+        <div className='flex gap-1 w-fit'>
           <MiniButton
             title='Удалить'
             className='px-0'

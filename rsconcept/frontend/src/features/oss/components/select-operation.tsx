@@ -14,7 +14,7 @@ interface SelectOperationProps extends Styling {
   popoverClassname?: string;
 }
 
-export function SelectOperation({ items, placeholder = 'Выберите операцию', ...restProps }: SelectOperationProps) {
+export function SelectOperation({ items, placeholder = 'Выбор операции', ...restProps }: SelectOperationProps) {
   return (
     <ComboBox
       items={items}

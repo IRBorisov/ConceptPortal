@@ -30,7 +30,7 @@ export function SidePanel({ selectedItems, isMounted, className }: SidePanelProp
   const sidePanelHeight = useMainHeight();
 
   return (
-    <div
+    <aside
       className={cn(
         'relative flex flex-col py-2 h-full overflow-hidden',
         'border-l rounded-none rounded-l-sm bg-background',
@@ -67,6 +67,6 @@ export function SidePanel({ selectedItems, isMounted, className }: SidePanelProp
           <ViewSchema schemaID={selectedSchema} />
         </Suspense>
       ) : null}
-    </div>
+    </aside>
   );
 }

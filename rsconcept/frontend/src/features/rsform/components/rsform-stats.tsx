@@ -29,7 +29,7 @@ interface RSFormStatsProps {
 
 export function RSFormStats({ className, stats }: RSFormStatsProps) {
   return (
-    <aside className={cn('h-min', 'grid grid-cols-4 gap-1 justify-items-end ', className)}>
+    <div className={cn('h-min', 'grid grid-cols-4 gap-1 justify-items-end select-none', className)}>
       <div id='count_all' className='col-span-2 w-fit flex gap-3 hover:cursor-default'>
         <span>Всего</span>
         <span>{stats.count_all}</span>
@@ -138,6 +138,6 @@ export function RSFormStats({ className, stats }: RSFormStatsProps) {
         }
         value={stats.count_convention}
       />
-    </aside>
+    </div>
   );
 }

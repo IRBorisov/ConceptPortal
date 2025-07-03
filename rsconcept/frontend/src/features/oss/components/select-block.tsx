@@ -14,7 +14,7 @@ interface SelectBlockProps extends Styling {
   popoverClassname?: string;
 }
 
-export function SelectBlock({ items, placeholder = 'Выберите блок', ...restProps }: SelectBlockProps) {
+export function SelectBlock({ items, placeholder = 'Выбор блока', ...restProps }: SelectBlockProps) {
   return (
     <ComboBox
       items={items}

@@ -42,7 +42,7 @@ export function TabSynthesisOperation() {
               <SelectParent
                 items={manager.oss.blocks}
                 value={field.value ? manager.oss.blockByID.get(field.value) ?? null : null}
-                placeholder='Блок содержания'
+                placeholder='Родительский блок'
                 onChange={value => field.onChange(value ? value.id : null)}
               />
             )}

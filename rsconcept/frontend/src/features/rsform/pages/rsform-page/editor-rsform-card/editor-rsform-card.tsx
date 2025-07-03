@@ -63,14 +63,15 @@ export function EditorRSFormCard() {
         <EditorLibraryItem schema={schema} isAttachedToOSS={isAttachedToOSS} />
       </div>
 
-      <RSFormStats
+      <aside
         className={clsx(
           'w-80 md:w-56 mt-3 md:mt-8 mx-auto md:ml-5 md:mr-0',
           'cc-animate-sidebar',
           showRSFormStats ? 'max-w-full' : 'opacity-0 max-w-0'
         )}
-        stats={schema.stats}
-      />
+      >
+        <RSFormStats stats={schema.stats} />
+      </aside>
     </div>
   );
 }

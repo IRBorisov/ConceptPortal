@@ -16,7 +16,7 @@ interface SelectConstituentaProps {
 
 export function SelectConstituenta({
   items,
-  placeholder = 'Выберите конституенту',
+  placeholder = 'Выбор конституенты',
   ...restProps
 }: SelectConstituentaProps) {
   return (

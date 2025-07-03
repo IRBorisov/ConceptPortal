@@ -88,7 +88,7 @@ export function ToolbarSearch({ className, total, filtered }: ToolbarSearchProps
             />
             <SelectUser
               aria-label='Выбор пользователя для фильтра по владельцу'
-              placeholder='Выберите владельца'
+              placeholder='Выбрать владельца'
               noBorder
               className='min-w-60 mx-1 mb-1 cc-hover-bg select-none'
               filter={filterNonEmptyUsers}

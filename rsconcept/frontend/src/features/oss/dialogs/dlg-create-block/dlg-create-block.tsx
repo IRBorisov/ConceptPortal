@@ -77,7 +77,7 @@ export function DlgCreateBlock() {
 
   return (
     <ModalForm
-      header='Создание операции'
+      header='Создание блока'
       submitText='Создать'
       canSubmit={isValid}
       onSubmit={event => void methods.handleSubmit(onSubmit)(event)}

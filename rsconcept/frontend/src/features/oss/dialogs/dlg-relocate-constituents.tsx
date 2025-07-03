@@ -122,8 +122,8 @@ export function DlgRelocateConstituents() {
         <div className='flex gap-1 items-center bg-input border-b rounded-t-md'>
           <SelectLibraryItem
             noBorder
-            className='w-1/2'
-            placeholder='Выберите исходную схему'
+            className='w-1/2 shrink-1'
+            placeholder='Исходная схема'
             items={sourceSchemas}
             value={source}
             onChange={handleSelectSource}
@@ -135,8 +135,8 @@ export function DlgRelocateConstituents() {
           />
           <SelectLibraryItem
             noBorder
-            className='w-1/2'
-            placeholder='Выберите целевую схему'
+            className='w-1/2 shrink-1'
+            placeholder='Целевая схема'
             items={destinationSchemas}
             value={destinationItem}
             onChange={handleSelectDestination}

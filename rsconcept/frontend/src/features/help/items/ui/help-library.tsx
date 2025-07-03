@@ -48,7 +48,7 @@ export function HelpLibrary() {
           <IconUserSearch size='1rem' className='inline-icon' /> фильтр по пользователю
         </li>
         <li>
-          <IconSearch size='1rem' className='inline-icon' /> фильтр по названию и шифру
+          <IconSearch size='1rem' className='inline-icon' /> фильтр по названию и сокращению
         </li>
         <li>
           <IconFilterReset size='1rem' className='inline-icon' /> сбросить фильтры

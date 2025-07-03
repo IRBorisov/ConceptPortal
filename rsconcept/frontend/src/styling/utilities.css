@@ -151,7 +151,7 @@
 @utility cc-animate-panel {
   transition-property: translate, opacity;
   transition-timing-function: var(--ease-bezier);
-  transition-duration: var(--duration-transform);
+  transition-duration: var(--duration-move);
 }
 
 @utility cc-animate-position {

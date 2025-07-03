@@ -67,7 +67,7 @@ export function TabTemplate() {
           noBorder
           noSearch
           clearable
-          placeholder='Выберите категорию'
+          placeholder='Категория'
           className='grow'
           idFunc={cst => String(cst.id)}
           labelValueFunc={cst => cst.term_raw}
