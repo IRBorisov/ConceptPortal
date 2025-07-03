@@ -4,27 +4,16 @@ import clsx from 'clsx';
 
 import { SelectUser } from '@/features/users/components/select-user';
 
-import { MiniButton, SelectorButton } from '@/components/control';
+import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
-import {
-  IconEditor,
-  IconFilterReset,
-  IconFolder,
-  IconFolderSearch,
-  IconFolderTree,
-  IconOwner,
-  IconUserSearch
-} from '@/components/icons';
+import { IconEditor, IconFilterReset, IconOwner, IconUserSearch } from '@/components/icons';
 import { SearchBar } from '@/components/input';
 import { cn } from '@/components/utils';
-import { prefixes } from '@/utils/constants';
 import { tripleToggleColor } from '@/utils/utils';
 
 import { useLibrarySuspense } from '../../backend/use-library';
 import { IconItemVisibility } from '../../components/icon-item-visibility';
-import { IconLocationHead } from '../../components/icon-location-head';
-import { describeLocationHead, labelLocationHead } from '../../labels';
-import { LocationHead } from '../../models/library';
+import { IconShowSidebar } from '../../components/icon-show-sidebar';
 import { useHasCustomFilter, useLibrarySearchStore } from '../../stores/library-search';
 
 interface ToolbarSearchProps {
@@ -36,14 +25,9 @@ interface ToolbarSearchProps {
 export function ToolbarSearch({ className, total, filtered }: ToolbarSearchProps) {
   const { items } = useLibrarySuspense();
   const userMenu = useDropdown();
-  const headMenu = useDropdown();
 
   const query = useLibrarySearchStore(state => state.query);
   const setQuery = useLibrarySearchStore(state => state.setQuery);
-  const path = useLibrarySearchStore(state => state.path);
-  const setPath = useLibrarySearchStore(state => state.setPath);
-  const head = useLibrarySearchStore(state => state.head);
-  const setHead = useLibrarySearchStore(state => state.setHead);
   const folderMode = useLibrarySearchStore(state => state.folderMode);
   const toggleFolderMode = useLibrarySearchStore(state => state.toggleFolderMode);
   const isOwned = useLibrarySearchStore(state => state.isOwned);
@@ -64,24 +48,6 @@ export function ToolbarSearch({ className, total, filtered }: ToolbarSearchProps
     return items.some(item => item.owner === userID);
   }
 
-  function handleChange(newValue: LocationHead | null) {
-    headMenu.hide();
-    setHead(newValue);
-  }
-
-  function handleToggleFolder() {
-    headMenu.hide();
-    toggleFolderMode();
-  }
-
-  function handleFolderClick(event: React.MouseEvent<Element>) {
-    if (event.ctrlKey || event.metaKey) {
-      toggleFolderMode();
-    } else {
-      headMenu.toggle();
-    }
-  }
-
   return (
     <div className={cn('flex gap-3 border-b text-sm bg-input items-center', className)}>
       <div className='ml-3 min-w-18 sm:min-w-30 select-none whitespace-nowrap'>
@@ -89,6 +55,11 @@ export function ToolbarSearch({ className, total, filtered }: ToolbarSearchProps
       </div>
 
       <div className='cc-icons h-full items-center'>
+        <MiniButton
+          title='Отображение проводника'
+          icon={<IconShowSidebar value={!folderMode} size='1.25rem' />}
+          onClick={toggleFolderMode}
+        />
         <MiniButton
           title='Видимость'
           icon={<IconItemVisibility value={true} className={tripleToggleColor(isVisible)} />}
@@ -119,7 +90,7 @@ export function ToolbarSearch({ className, total, filtered }: ToolbarSearchProps
               aria-label='Выбор пользователя для фильтра по владельцу'
               placeholder='Выберите владельца'
               noBorder
-              className='min-w-60 mx-1 mb-1'
+              className='min-w-60 mx-1 mb-1 cc-hover-bg'
               filter={filterNonEmptyUsers}
               value={filterUser}
               onChange={setFilterUser}
@@ -144,60 +115,6 @@ export function ToolbarSearch({ className, total, filtered }: ToolbarSearchProps
           query={query}
           onChangeQuery={setQuery}
         />
-        {!folderMode ? (
-          <div
-            ref={headMenu.ref}
-            onBlur={headMenu.handleBlur}
-            className='relative flex items-center h-full select-none'
-          >
-            <SelectorButton
-              className='rounded-lg py-1'
-              titleHtml={
-                (head ? describeLocationHead(head) : 'Выберите каталог') + '<br/><kbd>Ctrl + клик</kbd> - Проводник'
-              }
-              hideTitle={headMenu.isOpen}
-              icon={head ? <IconLocationHead value={head} size='1.25rem' /> : <IconFolderSearch size='1.25rem' />}
-              onClick={handleFolderClick}
-            />
-
-            <Dropdown isOpen={headMenu.isOpen} stretchLeft>
-              <DropdownButton
-                text='проводник...'
-                title='Переключение в режим Проводник'
-                icon={<IconFolderTree size='1rem' className='icon-primary' />}
-                onClick={handleToggleFolder}
-              />
-              <DropdownButton
-                text='отображать все'
-                title='Очистить фильтр по расположению'
-                icon={<IconFolder size='1rem' className='icon-primary' />}
-                onClick={() => handleChange(null)}
-              />
-              {Object.values(LocationHead).map((head, index) => {
-                return (
-                  <DropdownButton
-                    key={`${prefixes.location_head_list}${index}`}
-                    text={labelLocationHead(head)}
-                    title={describeLocationHead(head)}
-                    onClick={() => handleChange(head)}
-                    icon={<IconLocationHead value={head} size='1rem' />}
-                  />
-                );
-              })}
-            </Dropdown>
-          </div>
-        ) : null}
-        {!folderMode ? (
-          <SearchBar
-            id='path_search'
-            placeholder='Путь'
-            noIcon
-            noBorder
-            className='w-18 sm:w-20 grow ml-1'
-            query={path}
-            onChangeQuery={setPath}
-          />
-        ) : null}
       </div>
     </div>
   );

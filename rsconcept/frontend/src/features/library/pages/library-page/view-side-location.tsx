@@ -6,7 +6,7 @@ import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 
 import { MiniButton } from '@/components/control';
-import { IconFolderEdit, IconFolderTree } from '@/components/icons';
+import { IconFolderEdit } from '@/components/icons';
 import { useFitHeight } from '@/stores/app-layout';
 import { prefixes } from '@/utils/constants';
 import { infoMsg } from '@/utils/labels';
@@ -28,7 +28,6 @@ export function ViewSideLocation({ isVisible, onRenameLocation }: ViewSideLocati
 
   const location = useLibrarySearchStore(state => state.location);
   const setLocation = useLibrarySearchStore(state => state.setLocation);
-  const toggleFolderMode = useLibrarySearchStore(state => state.toggleFolderMode);
   const subfolders = useLibrarySearchStore(state => state.subfolders);
   const toggleSubfolders = useLibrarySearchStore(state => state.toggleSubfolders);
 
@@ -69,26 +68,18 @@ export function ViewSideLocation({ isVisible, onRenameLocation }: ViewSideLocati
       <div className='h-8 flex justify-between items-center pr-1 pl-0.5'>
         <BadgeHelp topic={HelpTopic.UI_LIBRARY} contentClass='text-sm' offset={5} place='right-start' />
         <div className='cc-icons'>
-          {canRename ? (
-            <MiniButton
-              titleHtml='<b>Редактирование пути</b><br/>Перемещаются только Ваши схемы<br/>в указанной папке (и подпапках)'
-              aria-label='Редактирование расположения'
-              icon={<IconFolderEdit size='1.25rem' className='icon-primary' />}
-              onClick={onRenameLocation}
-            />
-          ) : null}
-          {!!location ? (
-            <MiniButton
-              title={subfolders ? 'Вложенные папки: Вкл' : 'Вложенные папки: Выкл'}
-              aria-label='Переключатель отображения вложенных папок'
-              icon={<IconShowSubfolders value={subfolders} />}
-              onClick={toggleSubfolders}
-            />
-          ) : null}
           <MiniButton
-            title='Переключение в режим Таблица'
-            icon={<IconFolderTree size='1.25rem' className='text-primary' />}
-            onClick={toggleFolderMode}
+            titleHtml='<b>Редактирование пути</b><br/>Перемещаются только Ваши схемы<br/>в указанной папке (и подпапках)'
+            aria-label='Редактирование расположения'
+            icon={<IconFolderEdit size='1.25rem' className='icon-primary' />}
+            onClick={onRenameLocation}
+            disabled={!canRename}
+          />
+          <MiniButton
+            title={subfolders ? 'Вложенные папки: Вкл' : 'Вложенные папки: Выкл'}
+            aria-label='Переключатель отображения вложенных папок'
+            icon={<IconShowSubfolders value={subfolders} />}
+            onClick={toggleSubfolders}
           />
         </div>
       </div>

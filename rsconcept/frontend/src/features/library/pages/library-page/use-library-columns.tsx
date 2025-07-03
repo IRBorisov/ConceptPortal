@@ -2,9 +2,7 @@ import { useIntl } from 'react-intl';
 
 import { useLabelUser } from '@/features/users';
 
-import { MiniButton } from '@/components/control';
 import { createColumnHelper } from '@/components/data-table';
-import { IconFolderTree } from '@/components/icons';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { type RO } from '@/utils/meta';
 
@@ -20,13 +18,6 @@ export function useLibraryColumns() {
 
   const getUserLabel = useLabelUser();
   const folderMode = useLibrarySearchStore(state => state.folderMode);
-  const toggleFolderMode = useLibrarySearchStore(state => state.toggleFolderMode);
-
-  function handleToggleFolder(event: React.MouseEvent<Element>) {
-    event.preventDefault();
-    event.stopPropagation();
-    toggleFolderMode();
-  }
 
   return [
     ...(folderMode
@@ -34,16 +25,7 @@ export function useLibraryColumns() {
       : [
           columnHelper.accessor('location', {
             id: 'location',
-            header: () => (
-              <MiniButton
-                titleHtml='Переключение в режим Проводник'
-                aria-label='Переключатель режима Проводник'
-                noPadding
-                className='ml-2 max-h-4 -translate-y-0.5'
-                onClick={handleToggleFolder}
-                icon={<IconFolderTree size='1.25rem' className='text-primary' />}
-              />
-            ),
+            header: 'Путь',
             size: 50,
             minSize: 50,
             maxSize: 50,

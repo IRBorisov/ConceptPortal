@@ -5,8 +5,7 @@ import {
   IconFolderEdit,
   IconFolderEmpty,
   IconFolderOpened,
-  IconFolderSearch,
-  IconFolderTree,
+  IconLeftClose,
   IconOSS,
   IconRSForm,
   IconSearch,
@@ -46,27 +45,24 @@ export function HelpLibrary() {
           <IconShow size='1rem' className='inline-icon' /> фильтры атрибутов применяются по клику
         </li>
         <li>
-          <IconSortAsc size='1rem' className='inline-icon' />
-          <IconSortDesc size='1rem' className='inline-icon' /> сортировка по клику на заголовок таблицы
-        </li>
-        <li>
           <IconUserSearch size='1rem' className='inline-icon' /> фильтр по пользователю
         </li>
         <li>
           <IconSearch size='1rem' className='inline-icon' /> фильтр по названию и шифру
         </li>
         <li>
-          <IconFolderSearch size='1rem' className='inline-icon' /> фильтр по расположению
-        </li>
-        <li>
           <IconFilterReset size='1rem' className='inline-icon' /> сбросить фильтры
         </li>
         <li>
-          <IconFolderTree size='1rem' className='inline-icon' /> переключение между Проводник и Таблица
+          <IconLeftClose size='1rem' className='inline-icon' /> отображение Проводника
+        </li>
+        <li>
+          <IconSortAsc size='1rem' className='inline-icon' />
+          <IconSortDesc size='1rem' className='inline-icon' /> сортировка по клику на заголовок таблицы
         </li>
       </ul>
 
-      <h2>Режим: Проводник</h2>
+      <h2>Проводник</h2>
       <ul>
         <li>
           <IconFolderEdit size='1rem' className='inline-icon' /> переименовать выбранную
