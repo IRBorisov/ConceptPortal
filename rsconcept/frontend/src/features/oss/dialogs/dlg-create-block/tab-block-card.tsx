@@ -38,7 +38,7 @@ export function TabBlockCard() {
           <SelectParent
             items={manager.oss.blocks.filter(block => !all_children.includes(block.nodeID))}
             value={field.value ? manager.oss.blockByID.get(field.value) ?? null : null}
-            placeholder='Блок содержания не выбран'
+            placeholder='Родительский блок'
             onChange={value => field.onChange(value ? value.id : null)}
           />
         )}

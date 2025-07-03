@@ -70,7 +70,7 @@ export function DlgEditBlock() {
           <SelectParent
             items={manager.oss.blocks.filter(block => block.id !== target.id)}
             value={field.value ? manager.oss.blockByID.get(field.value) ?? null : null}
-            placeholder='Блок содержания не выбран'
+            placeholder='Родительский блок'
             onChange={value => field.onChange(value ? value.id : null)}
           />
         )}

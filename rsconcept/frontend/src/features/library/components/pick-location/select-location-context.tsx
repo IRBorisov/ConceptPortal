@@ -38,7 +38,7 @@ export function SelectLocationContext({
     <div
       ref={menu.ref} //
       onBlur={menu.handleBlur}
-      className={clsx('text-right self-start', className)}
+      className={clsx('text-right self-start select-none', className)}
       {...restProps}
     >
       <MiniButton
