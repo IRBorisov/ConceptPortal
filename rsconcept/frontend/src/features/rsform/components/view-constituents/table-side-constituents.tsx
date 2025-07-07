@@ -98,7 +98,7 @@ export function TableSideConstituents({
       noDataComponent={
         <NoData className='min-h-20'>
           <p>Список конституент пуст</p>
-          <p>Измените параметры фильтра</p>
+          <p>Измените параметры фильтра или создайте конституенту</p>
         </NoData>
       }
       onRowClicked={onActivate ? cst => onActivate(cst) : undefined}

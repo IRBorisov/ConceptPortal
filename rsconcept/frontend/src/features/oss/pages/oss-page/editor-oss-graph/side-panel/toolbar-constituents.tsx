@@ -16,6 +16,7 @@ import { type RO } from '@/utils/meta';
 
 interface ToolbarConstituentsProps {
   schema: IRSForm;
+  isMutable: boolean;
   activeCst: IConstituenta | null;
   setActive: (cstID: number) => void;
   resetActive: () => void;
@@ -27,6 +28,7 @@ export function ToolbarConstituents({
   activeCst,
   setActive,
   resetActive,
+  isMutable,
   className
 }: ToolbarConstituentsProps) {
   const router = useConceptNavigation();
@@ -162,33 +164,33 @@ export function ToolbarConstituents({
         title='Создать конституенту'
         icon={<IconNewItem size='1rem' className='icon-green' />}
         onClick={createCst}
-        disabled={isProcessing}
+        disabled={!isMutable || isProcessing}
       />
       <MiniButton
         title='Клонировать конституенту'
         icon={<IconClone size='1rem' className='icon-green' />}
         onClick={cloneCst}
-        disabled={!activeCst || isProcessing}
+        disabled={!isMutable || !activeCst || isProcessing}
       />
 
       <MiniButton
         title='Удалить выделенную конституенту'
         onClick={promptDeleteCst}
         icon={<IconDestroy size='1rem' className='icon-red' />}
-        disabled={!activeCst || isProcessing || activeCst?.is_inherited}
+        disabled={!isMutable || !activeCst || isProcessing || activeCst?.is_inherited}
       />
 
       <MiniButton
         title='Переместить вверх'
         icon={<IconMoveUp size='1rem' className='icon-primary' />}
         onClick={moveUp}
-        disabled={!activeCst || isProcessing || schema.items.length < 2 || hasSearch}
+        disabled={!isMutable || !activeCst || isProcessing || schema.items.length < 2 || hasSearch}
       />
       <MiniButton
         title='Переместить вниз'
         icon={<IconMoveDown size='1rem' className='icon-primary' />}
         onClick={moveDown}
-        disabled={!activeCst || isProcessing || schema.items.length < 2 || hasSearch}
+        disabled={!isMutable || !activeCst || isProcessing || schema.items.length < 2 || hasSearch}
       />
     </div>
   );

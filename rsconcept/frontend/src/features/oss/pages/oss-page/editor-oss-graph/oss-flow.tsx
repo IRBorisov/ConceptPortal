@@ -236,7 +236,6 @@ export function OssFlow() {
           showPanel ? 'translate-x-0' : 'opacity-0 translate-x-full pointer-events-none'
         )}
         isMounted={showPanel}
-        selectedItems={selectedItems}
       />
     </div>
   );

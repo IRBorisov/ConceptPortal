@@ -115,7 +115,7 @@ export function ToolbarOssGraph({
           onClick={resetView}
         />
         <MiniButton
-          title='Панель содержания КС'
+          title='Панель содержания'
           icon={<IconShowSidebar value={showSidePanel} isBottom={false} size='1.25rem' />}
           onClick={toggleShowSidePanel}
         />

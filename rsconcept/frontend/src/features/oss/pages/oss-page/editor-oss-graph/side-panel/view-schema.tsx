@@ -10,9 +10,10 @@ import { ToolbarConstituents } from './toolbar-constituents';
 
 interface ViewSchemaProps {
   schemaID: number;
+  isMutable: boolean;
 }
 
-export function ViewSchema({ schemaID }: ViewSchemaProps) {
+export function ViewSchema({ schemaID, isMutable }: ViewSchemaProps) {
   const { schema } = useRSFormSuspense({ itemID: schemaID });
   const [activeID, setActiveID] = useState<number | null>(null);
   const activeCst = activeID ? schema.cstByID.get(activeID) ?? null : null;
@@ -25,6 +26,7 @@ export function ViewSchema({ schemaID }: ViewSchemaProps) {
         className='absolute -top-7 left-1'
         schema={schema}
         activeCst={activeCst}
+        isMutable={isMutable}
         setActive={setActiveID}
         resetActive={() => setActiveID(null)}
       />

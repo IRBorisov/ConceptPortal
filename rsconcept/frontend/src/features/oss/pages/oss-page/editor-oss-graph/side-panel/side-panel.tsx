@@ -10,19 +10,23 @@ import { useMainHeight } from '@/stores/app-layout';
 import { usePreferencesStore } from '@/stores/preferences';
 import { PARAMETER } from '@/utils/constants';
 
-import { type IOssItem, NodeType } from '../../../../models/oss';
+import { NodeType } from '../../../../models/oss';
+import { useOssEdit } from '../../oss-edit-context';
 
+import { BlockStats } from './block-stats';
 import { ViewSchema } from './view-schema';
 
 interface SidePanelProps {
-  selectedItems: IOssItem[];
   className?: string;
   isMounted: boolean;
 }
 
-export function SidePanel({ selectedItems, isMounted, className }: SidePanelProps) {
+export function SidePanel({ isMounted, className }: SidePanelProps) {
+  const { schema, isMutable, selectedItems } = useOssEdit();
   const selectedOperation =
     selectedItems.length === 1 && selectedItems[0].nodeType === NodeType.OPERATION ? selectedItems[0] : null;
+  const selectedBlock =
+    selectedItems.length === 1 && selectedItems[0].nodeType === NodeType.BLOCK ? selectedItems[0] : null;
   const selectedSchema = selectedOperation?.result ?? null;
 
   const debouncedMounted = useDebounce(isMounted, PARAMETER.moveDuration);
@@ -52,21 +56,23 @@ export function SidePanel({ selectedItems, isMounted, className }: SidePanelProp
           'mt-0 mb-1',
           'font-medium text-sm select-none self-center',
           'transition-transform',
-          selectedSchema && 'translate-x-16'
+          selectedSchema && 'translate-x-20'
         )}
       >
-        Содержание КС
+        Содержание
       </div>
 
-      {!selectedOperation ? (
-        <div className='text-center text-sm cc-fade-in'>Выделите операцию для просмотра</div>
-      ) : !selectedSchema ? (
+      {!selectedOperation && !selectedBlock ? (
+        <div className='text-center text-sm cc-fade-in'>Выделите операцию или блок для просмотра</div>
+      ) : null}
+      {selectedOperation && !selectedSchema ? (
         <div className='text-center text-sm cc-fade-in'>Отсутствует концептуальная схема для выбранной операции</div>
-      ) : debouncedMounted ? (
+      ) : selectedOperation && selectedSchema && debouncedMounted ? (
         <Suspense fallback={<Loader />}>
-          <ViewSchema schemaID={selectedSchema} />
+          <ViewSchema schemaID={selectedSchema} isMutable={isMutable && selectedOperation.is_owned} />
         </Suspense>
       ) : null}
+      {selectedBlock ? <BlockStats target={selectedBlock} oss={schema} /> : null}
     </aside>
   );
 }

@@ -41,7 +41,7 @@ export function HelpOssGraph() {
               <IconFitImage className='inline-icon' /> Вписать в экран
             </li>
             <li>
-              <IconLeftOpen className='inline-icon' /> Панель связанной КС
+              <IconLeftOpen className='inline-icon' /> Панель содержания
             </li>
             <li>
               <IconSettings className='inline-icon' /> Диалог настроек
