@@ -100,7 +100,7 @@ export function ComboMulti<Option>({
                 <IconRemove
                   tabIndex={-1}
                   size='1rem'
-                  className='cc-remove'
+                  className='cc-remove cc-hover-pulse'
                   onClick={event => {
                     event.stopPropagation();
                     handleRemoveValue(item);
