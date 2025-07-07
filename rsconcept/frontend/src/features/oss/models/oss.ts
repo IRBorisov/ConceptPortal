@@ -24,7 +24,7 @@ export interface IOperation extends IOperationDTO {
   nodeType: typeof NodeType.OPERATION;
   x: number;
   y: number;
-  is_owned: boolean;
+  is_import: boolean;
   is_consolidation: boolean; // aka 'diamond synthesis'
   substitutions: ICstSubstituteInfo[];
   arguments: number[];

@@ -18,6 +18,8 @@ from .basics import NodeSerializer, SubstitutionExSerializer
 
 class OperationSerializer(serializers.ModelSerializer):
     ''' Serializer: Operation data. '''
+    is_import = serializers.BooleanField(default=False, required=False)
+
     class Meta:
         ''' serializer metadata. '''
         model = Operation
@@ -407,7 +409,13 @@ class OperationSchemaSerializer(serializers.ModelSerializer):
         result['arguments'] = []
         result['substitutions'] = []
         for operation in oss.operations().order_by('pk'):
-            result['operations'].append(OperationSerializer(operation).data)
+            operation_data = OperationSerializer(operation).data
+            operation_result = operation.result
+            operation_data['is_import'] = \
+                operation_result is not None and \
+                (operation_result.owner_id != instance.owner_id or
+                 operation_result.location != instance.location)
+            result['operations'].append(operation_data)
         for block in oss.blocks().order_by('pk'):
             result['blocks'].append(BlockSerializer(block).data)
         for argument in oss.arguments().order_by('order'):

@@ -16,7 +16,7 @@ export function BlockStats({ target, oss }: BlockStatsProps) {
     count_inputs: operations.filter(item => item.operation_type === OperationType.INPUT).length,
     count_synthesis: operations.filter(item => item.operation_type === OperationType.SYNTHESIS).length,
     count_schemas: operations.filter(item => !!item.result).length,
-    count_owned: operations.filter(item => !!item.result && item.is_owned).length,
+    count_owned: operations.filter(item => !!item.result && !item.is_import).length,
     count_block: contents.length - operations.length
   };
 

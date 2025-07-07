@@ -68,13 +68,13 @@ export function DlgDeleteOperation() {
           <Checkbox
             label='Удалить схему'
             titleHtml={
-              !target.is_owned || target.result === null
+              target.is_import || target.result === null
                 ? 'Привязанную схему нельзя удалить'
                 : 'Удалить схему вместе с операцией'
             }
             value={field.value}
             onChange={field.onChange}
-            disabled={!target.is_owned || target.result === null}
+            disabled={target.is_import || target.result === null}
           />
         )}
       />

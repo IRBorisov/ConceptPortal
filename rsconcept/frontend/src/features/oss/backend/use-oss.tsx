@@ -1,28 +1,24 @@
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 
-import { useLibrary, useLibrarySuspense } from '@/features/library/backend/use-library';
-
 import { queryClient } from '@/backend/query-client';
 
 import { ossApi } from './api';
 import { OssLoader } from './oss-loader';
 
 export function useOss({ itemID }: { itemID?: number }) {
-  const { items: libraryItems, isLoading: libraryLoading } = useLibrary();
   const { data, isLoading, error } = useQuery({
     ...ossApi.getOssQueryOptions({ itemID })
   });
 
-  const schema = data && !libraryLoading ? new OssLoader(data, libraryItems).produceOSS() : undefined;
-  return { schema: schema, isLoading: isLoading || libraryLoading, error: error };
+  const schema = data ? new OssLoader(data).produceOSS() : undefined;
+  return { schema: schema, isLoading: isLoading, error: error };
 }
 
 export function useOssSuspense({ itemID }: { itemID: number }) {
-  const { items: libraryItems } = useLibrarySuspense();
   const { data } = useSuspenseQuery({
     ...ossApi.getOssQueryOptions({ itemID })
   });
-  const schema = new OssLoader(data!, libraryItems).produceOSS();
+  const schema = new OssLoader(data!).produceOSS();
   return { schema };
 }
 

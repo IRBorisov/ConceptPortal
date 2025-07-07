@@ -70,8 +70,8 @@ export function NodeCore({ node }: NodeCoreProps) {
         <div className='absolute top-[3px] right-1/2 translate-x-1/2 border-t w-[30px]' />
       ) : null}
 
-      {!node.data.operation.is_owned ? (
-        <div className='absolute left-[2px] top-[6px] border-r rounded-none bg-input h-[22px]' />
+      {node.data.operation.is_import ? (
+        <div className='absolute left-[3px] top-1/2 -translate-y-1/2 border-r rounded-none bg-input h-[22px]' />
       ) : null}
 
       <div

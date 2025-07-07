@@ -47,7 +47,7 @@ export function InfoOperation({ operation }: InfoOperationProps) {
       <p>
         <b>Тип:</b> {labelOperationType(operation.operation_type)}
       </p>
-      {!operation.is_owned ? (
+      {operation.is_import ? (
         <p>
           <b>КС не принадлежит ОСС</b>
         </p>

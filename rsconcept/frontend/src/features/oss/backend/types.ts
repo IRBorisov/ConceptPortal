@@ -86,6 +86,7 @@ export const schemaOperation = z.strictObject({
   title: z.string(),
   description: z.string(),
   parent: z.number().nullable(),
+  is_import: z.boolean(),
   result: z.number().nullable()
 });
 

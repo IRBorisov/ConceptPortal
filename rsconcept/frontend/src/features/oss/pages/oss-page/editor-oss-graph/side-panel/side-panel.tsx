@@ -69,7 +69,7 @@ export function SidePanel({ isMounted, className }: SidePanelProps) {
         <div className='text-center text-sm cc-fade-in'>Отсутствует концептуальная схема для выбранной операции</div>
       ) : selectedOperation && selectedSchema && debouncedMounted ? (
         <Suspense fallback={<Loader />}>
-          <ViewSchema schemaID={selectedSchema} isMutable={isMutable && selectedOperation.is_owned} />
+          <ViewSchema schemaID={selectedSchema} isMutable={isMutable && !selectedOperation.is_import} />
         </Suspense>
       ) : null}
       {selectedBlock ? <BlockStats target={selectedBlock} oss={schema} /> : null}
