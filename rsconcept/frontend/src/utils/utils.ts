@@ -177,6 +177,25 @@ export function sharePage() {
 }
 
 /**
+ * Show error message about not implemented function.
+ */
+export function notImplemented() {
+  toast.error('Данная функция еще не реализована');
+  console.error('Not implemented');
+}
+
+/**
+ * Wrap event handler to prevent default and stop propagation.
+ */
+export function withPreventDefault<T extends React.SyntheticEvent>(handler: (event: T) => void) {
+  return (event: T) => {
+    event.preventDefault();
+    event.stopPropagation();
+    handler(event);
+  };
+}
+
+/**
  * Remove html tags from target string.
  */
 export function removeTags(target?: string): string {
@@ -196,12 +215,22 @@ export function prepareTooltip(text: string, hotkey?: string) {
 /**
  * Utility to detect iOS/iPadOS.
  */
-export function isIOS() {
+export function isIOS(): boolean {
   if (typeof navigator === 'undefined') {
     return false;
   }
   return (
-    /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    /iPad|iPhone|iPod/i.test(navigator.userAgent) ||
     (navigator.userAgent.includes('Macintosh') && 'ontouchend' in document)
   );
+}
+
+/**
+ * Utility to detect Mac device.
+ */
+export function isMac(): boolean {
+  if (typeof navigator === 'undefined') {
+    return false;
+  }
+  return /Macintosh|MacIntel|MacPPC|Mac68K|Mac OS/i.test(navigator.userAgent);
 }

@@ -1,7 +1,6 @@
 'use client';
 import { toast } from 'react-toastify';
 
-import { urls, useConceptNavigation } from '@/app';
 import { useLibrary } from '@/features/library/backend/use-library';
 
 import { DropdownButton } from '@/components/dropdown';
@@ -33,7 +32,6 @@ interface MenuOperationProps {
 }
 
 export function MenuOperation({ operation, onHide }: MenuOperationProps) {
-  const router = useConceptNavigation();
   const { items: libraryItems } = useLibrary();
   const { schema, navigateOperationSchema, isMutable, canDeleteOperation } = useOssEdit();
   const isProcessing = useMutatingOss();
@@ -134,7 +132,7 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
     void inputCreate({
       itemID: schema.id,
       data: { target: operation.id, layout: getLayout() }
-    }).then(new_schema => router.push({ path: urls.schema(new_schema.id), force: true }));
+    });
   }
 
   function handleRelocateConstituents() {

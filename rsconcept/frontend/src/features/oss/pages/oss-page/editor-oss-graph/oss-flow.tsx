@@ -163,14 +163,16 @@ export function OssFlow() {
       handleSavePositions();
       return;
     }
-    if ((event.ctrlKey || event.metaKey) && event.code === 'KeyQ') {
+    if (event.altKey && event.code === 'Key1') {
       event.preventDefault();
       event.stopPropagation();
-      if (event.shiftKey) {
-        handleCreateBlock();
-      } else {
-        handleCreateOperation();
-      }
+      handleCreateBlock();
+      return;
+    }
+    if (event.altKey && event.code === 'Key2') {
+      event.preventDefault();
+      event.stopPropagation();
+      handleCreateOperation();
       return;
     }
     if (event.key === 'Delete') {
@@ -200,8 +202,10 @@ export function OssFlow() {
 
       <ToolbarOssGraph
         className='absolute z-pop top-8 right-1/2 translate-x-1/2'
-        onCreateOperation={handleCreateOperation}
         onCreateBlock={handleCreateBlock}
+        onCreateSchema={handleCreateOperation}
+        onImportSchema={handleCreateOperation}
+        onCreateSynthesis={handleCreateOperation}
         onDelete={handleDeleteSelected}
         onResetPositions={resetGraph}
         openContextMenu={openContextMenu}

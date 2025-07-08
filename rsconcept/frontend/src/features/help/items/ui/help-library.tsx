@@ -15,6 +15,7 @@ import {
   IconSubfolders,
   IconUserSearch
 } from '@/components/icons';
+import { isMac } from '@/utils/utils';
 
 import { LinkTopic } from '../../components/link-topic';
 import { HelpTopic } from '../../models/help-topic';
@@ -38,7 +39,7 @@ export function HelpLibrary() {
           <kbd>клик</kbd> по строке - переход к редактированию схемы
         </li>
         <li>
-          <kbd>Ctrl + клик</kbd> по строке откроет схему в новой вкладке
+          <kbd>{isMac() ? 'Cmd + клик' : 'Ctrl + клик'}</kbd> по строке откроет схему в новой вкладке
         </li>
         <li>Фильтры атрибутов три позиции: да/нет/не применять</li>
         <li>
@@ -74,7 +75,11 @@ export function HelpLibrary() {
           <kbd>клик</kbd> по папке отображает справа схемы в ней
         </li>
         <li>
-          <kbd>Ctrl + клик по папке копирует путь в буфер обмена</kbd>
+          <kbd>
+            {isMac()
+              ? 'Cmd + клик по папке копирует путь в буфер обмена'
+              : 'Ctrl + клик по папке копирует путь в буфер обмена'}
+          </kbd>
         </li>
         <li>
           <kbd>клик</kbd> по иконке сворачивает/разворачивает вложенные

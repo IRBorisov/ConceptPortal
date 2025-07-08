@@ -22,7 +22,7 @@ import { cn } from '@/components/utils';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { tooltipText } from '@/utils/labels';
-import { prepareTooltip } from '@/utils/utils';
+import { isMac, prepareTooltip } from '@/utils/utils';
 
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { type IConstituenta } from '../../../models/rsform';
@@ -97,7 +97,7 @@ export function ToolbarConstituenta({
       {isContentEditable ? (
         <>
           <MiniButton
-            titleHtml={prepareTooltip('Сохранить изменения', 'Ctrl + S')}
+            titleHtml={prepareTooltip('Сохранить изменения', isMac() ? 'Cmd + S' : 'Ctrl + S')}
             aria-label='Сохранить изменения'
             icon={<IconSave size='1.25rem' className='icon-primary' />}
             onClick={onSubmit}

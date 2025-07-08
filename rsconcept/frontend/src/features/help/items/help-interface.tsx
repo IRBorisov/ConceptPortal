@@ -8,6 +8,7 @@ import {
   IconPin,
   IconUser2
 } from '@/components/icons';
+import { isMac } from '@/utils/utils';
 
 import { Subtopics } from '../components/subtopics';
 import { HelpTopic } from '../models/help-topic';
@@ -33,7 +34,7 @@ export function HelpInterface() {
       <h2>Навигация и настройки</h2>
       <ul>
         <li>
-          <kbd>Ctrl + клик</kbd> на объект навигации откроет новую вкладку
+          <kbd>{isMac() ? 'Cmd + клик' : 'Ctrl + клик'}</kbd> на объект навигации откроет новую вкладку
         </li>
         <li>
           <IconPin size='1.25rem' className='inline-icon' /> навигационную панель можно скрыть с помощью кнопки в правом

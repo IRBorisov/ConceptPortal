@@ -1,5 +1,6 @@
 // Search new icons at https://reactsvgicons.com/
 // Note: save this file using Ctrl + K, Ctrl + Shift + S to disable autoformat
+// Note: For Cursor hotkeys are Ctrl + M, Ctrl + Shift + S
 
 /* eslint-disable simple-import-sort/exports */
 // ==== General actions =======

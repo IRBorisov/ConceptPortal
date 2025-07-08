@@ -18,6 +18,7 @@ import {
   IconTree,
   IconTypeGraph
 } from '@/components/icons';
+import { isMac } from '@/utils/utils';
 
 import { LinkTopic } from '../../components/link-topic';
 import { HelpTopic } from '../../models/help-topic';
@@ -40,7 +41,7 @@ export function HelpRSEditor() {
               <IconLeftOpen className='inline-icon' /> список конституент
             </li>
             <li>
-              <IconSave className='inline-icon' /> сохранить: <kbd>Ctrl + S</kbd>
+              <IconSave className='inline-icon' /> сохранить: <kbd>{isMac() ? 'Cmd + S' : 'Ctrl + S'}</kbd>
             </li>
             <li>
               <IconReset className='inline-icon' /> сбросить изменения
@@ -104,7 +105,7 @@ export function HelpRSEditor() {
           <LinkTopic text='дерева разбора' topic={HelpTopic.UI_FORMULA_TREE} />
         </li>
         <li>
-          <kbd>Ctrl + Пробел</kbd> вставка незанятого имени / замена проекции
+          <kbd>{isMac() ? 'Cmd + Пробел' : 'Ctrl + Пробел'}</kbd> вставка незанятого имени / замена проекции
         </li>
       </ul>
 
@@ -116,7 +117,7 @@ export function HelpRSEditor() {
           <LinkTopic text='Термина' topic={HelpTopic.CC_CONSTITUENTA} />
         </li>
         <li>
-          <kbd>Ctrl + Пробел</kbd> открывает редактирование отсылок
+          <kbd>{isMac() ? 'Cmd + Пробел' : 'Ctrl + Пробел'}</kbd> открывает редактирование отсылок
         </li>
       </ul>
     </div>

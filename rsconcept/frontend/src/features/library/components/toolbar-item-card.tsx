@@ -12,7 +12,7 @@ import { cn } from '@/components/utils';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { tooltipText } from '@/utils/labels';
-import { prepareTooltip, sharePage } from '@/utils/utils';
+import { isMac, prepareTooltip, sharePage } from '@/utils/utils';
 
 import { AccessPolicy, type ILibraryItem, LibraryItemType } from '../backend/types';
 import { useMutatingLibrary } from '../backend/use-mutating-library';
@@ -71,7 +71,7 @@ export function ToolbarItemCard({
       {ossSelector}
       {isMutable || isModified ? (
         <MiniButton
-          titleHtml={prepareTooltip('Сохранить изменения', 'Ctrl + S')}
+          titleHtml={prepareTooltip('Сохранить изменения', isMac() ? 'Cmd + S' : 'Ctrl + S')}
           aria-label='Сохранить изменения'
           icon={<IconSave size='1.25rem' className='icon-primary' />}
           onClick={onSubmit}

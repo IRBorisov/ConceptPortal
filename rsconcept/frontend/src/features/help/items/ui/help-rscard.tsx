@@ -8,6 +8,7 @@ import {
   IconPublic,
   IconSave
 } from '@/components/icons';
+import { isMac } from '@/utils/utils';
 
 import { LinkTopic } from '../../components/link-topic';
 import { HelpTopic } from '../../models/help-topic';
@@ -34,7 +35,7 @@ export function HelpRSCard() {
           <IconOSS className='inline-icon' /> переход к связанной <LinkTopic text='ОСС' topic={HelpTopic.CC_OSS} />
         </li>
         <li>
-          <IconSave className='inline-icon' /> сохранить изменения: <kbd>Ctrl + S</kbd>
+          <IconSave className='inline-icon' /> сохранить изменения: <kbd>{isMac() ? 'Cmd + S' : 'Ctrl + S'}</kbd>
         </li>
         <li>
           <IconEditor className='inline-icon' /> Редактор обладает правом редактирования

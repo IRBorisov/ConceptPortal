@@ -4,6 +4,7 @@ import { hoverTooltip, type TooltipView } from '@codemirror/view';
 import clsx from 'clsx';
 
 import { findContainedNodes } from '@/utils/codemirror';
+import { isMac } from '@/utils/utils';
 
 import { describeConstituentaTerm, labelGrammeme } from '../../labels';
 import { type IEntityReference, type ISyntacticReference } from '../../models/language';
@@ -95,7 +96,9 @@ function domTooltipEntityReference(ref: IEntityReference, cst: IConstituenta | n
   if (canClick) {
     const clickTip = document.createElement('p');
     clickTip.className = 'text-center text-xs mt-1';
-    clickTip.innerHTML = '<kbd>Ctrl + клик</kbd> для перехода</br><kbd>Ctrl + пробел</kbd> для редактирования';
+    clickTip.innerHTML = isMac()
+      ? '<kbd>Cmd + клик</kbd> для перехода</br><kbd>Cmd + пробел</kbd> для редактирования'
+      : '<kbd>Ctrl + клик</kbd> для перехода</br><kbd>Ctrl + пробел</kbd> для редактирования';
     dom.appendChild(clickTip);
   }
 
@@ -140,7 +143,9 @@ function domTooltipSyntacticReference(
   if (canClick) {
     const clickTip = document.createElement('p');
     clickTip.className = 'text-center text-xs mt-1';
-    clickTip.innerHTML = '<kbd>Ctrl + пробел</kbd> для редактирования';
+    clickTip.innerHTML = isMac()
+      ? '<kbd>Cmd + пробел</kbd> для редактирования'
+      : '<kbd>Ctrl + пробел</kbd> для редактирования';
     dom.appendChild(clickTip);
   }
 

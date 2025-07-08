@@ -10,7 +10,7 @@ import { cn } from '@/components/utils';
 import { APP_COLORS } from '@/styling/colors';
 import { globalIDs } from '@/utils/constants';
 import { type RO } from '@/utils/meta';
-import { prepareTooltip } from '@/utils/utils';
+import { isMac, prepareTooltip } from '@/utils/utils';
 
 import { type IExpressionParseDTO, ParsingStatus } from '../../../backend/types';
 import { colorStatusBar } from '../../../colors';
@@ -55,7 +55,7 @@ export function StatusBar({ className, isModified, processing, activeCst, parseD
         )}
         style={{ backgroundColor: processing ? APP_COLORS.bgDefault : colorStatusBar(status) }}
         data-tooltip-id={globalIDs.tooltip}
-        data-tooltip-html={prepareTooltip('Проверить определение', 'Ctrl + Q')}
+        data-tooltip-html={prepareTooltip('Проверить определение', isMac() ? 'Cmd + Q' : 'Ctrl + Q')}
         onClick={onAnalyze}
       >
         {processing ? (
