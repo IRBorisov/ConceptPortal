@@ -15,12 +15,15 @@ import {
   IconMoveDown,
   IconMoveUp,
   IconNewItem,
-  IconRSForm
+  IconRSForm,
+  IconTree,
+  IconTypeGraph
 } from '@/components/icons';
 import { cn } from '@/components/utils';
 import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER, prefixes } from '@/utils/constants';
 import { type RO } from '@/utils/meta';
+import { notImplemented } from '@/utils/utils';
 
 interface ToolbarConstituentsProps {
   schema: IRSForm;
@@ -48,6 +51,7 @@ export function ToolbarConstituents({
 
   const showCreateCst = useDialogsStore(state => state.showCreateCst);
   const showDeleteCst = useDialogsStore(state => state.showDeleteCst);
+  const showTypeGraph = useDialogsStore(state => state.showShowTypeGraph);
   const { moveConstituents } = useMoveConstituents();
   const { createConstituenta } = useCreateConstituenta();
 
@@ -162,6 +166,15 @@ export function ToolbarConstituents({
     });
   }
 
+  function handleShowTypeGraph() {
+    const typeInfo = schema.items.map(item => ({
+      alias: item.alias,
+      result: item.parse.typification,
+      args: item.parse.args
+    }));
+    showTypeGraph({ items: typeInfo });
+  }
+
   return (
     <div className={cn('flex gap-0.5', className)}>
       <MiniButton
@@ -176,7 +189,6 @@ export function ToolbarConstituents({
         onClick={onEditActive}
         disabled={!isMutable || isProcessing || !activeCst}
       />
-
       <MiniButton
         title='Создать конституенту'
         icon={<IconNewItem size='1rem' className='icon-green' />}
@@ -208,6 +220,17 @@ export function ToolbarConstituents({
         icon={<IconMoveDown size='1rem' className='icon-primary' />}
         onClick={moveDown}
         disabled={!isMutable || !activeCst || isProcessing || schema.items.length < 2 || hasSearch}
+      />
+
+      <MiniButton
+        icon={<IconTree size='1rem' className='hover:text-primary' />}
+        title='Граф термов'
+        onClick={notImplemented}
+      />
+      <MiniButton
+        icon={<IconTypeGraph size='1rem' className='hover:text-primary' />}
+        title='Граф ступеней'
+        onClick={handleShowTypeGraph}
       />
     </div>
   );

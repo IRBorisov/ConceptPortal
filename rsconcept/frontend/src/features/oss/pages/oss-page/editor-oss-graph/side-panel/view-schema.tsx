@@ -22,9 +22,9 @@ export function ViewSchema({ schemaID, isMutable }: ViewSchemaProps) {
   const listHeight = useFitHeight('14.5rem', '10rem');
 
   return (
-    <div className='grid h-full relative cc-fade-in' style={{ gridTemplateRows: '1fr auto' }}>
+    <div className='grid h-full relative cc-fade-in mt-5' style={{ gridTemplateRows: '1fr auto' }}>
       <ToolbarConstituents
-        className='absolute -top-7 left-1'
+        className='absolute -top-6.5 left-1'
         schema={schema}
         activeCst={activeCst}
         isMutable={isMutable}

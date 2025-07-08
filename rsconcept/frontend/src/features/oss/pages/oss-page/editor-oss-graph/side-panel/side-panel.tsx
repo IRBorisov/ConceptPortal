@@ -50,21 +50,22 @@ export function SidePanel({ isMounted, className }: SidePanelProps) {
         icon={<IconClose size='1.25rem' />}
         className={clsx(
           'absolute z-pop transition-transform duration-move right-0 top-0',
-          noNavigationAnimation ? '-translate-x-4 translate-y-0' : 'translate-x-0 translate-y-2'
+          noNavigationAnimation ? '-translate-x-4 translate-y-0' : 'translate-x-0 translate-y-1'
         )}
         onClick={closePanel}
       />
 
-      <div
-        className={clsx(
-          'mt-0 mb-1',
-          'font-medium text-sm select-none self-center',
-          'transition-transform',
-          selectedSchema && 'translate-x-20'
-        )}
-      >
-        Содержание
-      </div>
+      {!selectedSchema ? (
+        <div
+          className={clsx(
+            'mt-0 mb-1',
+            'font-medium text-sm select-none self-center',
+            selectedSchema && 'translate-x-20'
+          )}
+        >
+          Содержание
+        </div>
+      ) : null}
 
       {!selectedOperation && !selectedBlock ? (
         <div className='text-center text-sm cc-fade-in'>Выделите операцию или блок для просмотра</div>

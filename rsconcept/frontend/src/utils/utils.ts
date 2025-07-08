@@ -180,7 +180,7 @@ export function sharePage() {
  * Show error message about not implemented function.
  */
 export function notImplemented() {
-  toast.error('Данная функция еще не реализована');
+  toast.error('Функционал в разработке');
   console.error('Not implemented');
 }
 
