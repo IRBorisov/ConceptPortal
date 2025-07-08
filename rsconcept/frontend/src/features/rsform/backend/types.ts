@@ -64,9 +64,6 @@ export type IConstituentaCreatedResponse = z.infer<typeof schemaConstituentaCrea
 /** Represents data, used in updating persistent attributes in {@link IConstituenta}. */
 export type IUpdateConstituentaDTO = z.infer<typeof schemaUpdateConstituenta>;
 
-/** Represents data, used in renaming {@link IConstituenta}. */
-export type IRenameConstituentaDTO = z.infer<typeof schemaRenameConstituenta>;
-
 /** Represents data, used in ordering a list of {@link IConstituenta}. */
 export interface IMoveConstituentsDTO {
   items: number[];
@@ -344,18 +341,14 @@ export const schemaConstituentaCreatedResponse = z.strictObject({
 export const schemaUpdateConstituenta = z.strictObject({
   target: z.number(),
   item_data: z.strictObject({
+    alias: z.string().optional(),
+    cst_type: schemaCstType.optional(),
     convention: z.string().optional(),
     definition_formal: z.string().optional(),
     definition_raw: z.string().optional(),
     term_raw: z.string().optional(),
     term_forms: z.array(z.strictObject({ text: z.string(), tags: z.string() })).optional()
   })
-});
-
-export const schemaRenameConstituenta = z.strictObject({
-  target: z.number(),
-  alias: z.string(),
-  cst_type: schemaCstType
 });
 
 export const schemaProduceStructureResponse = z.strictObject({

@@ -41,7 +41,6 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         if self.action in [
             'load_trs',
             'create_cst',
-            'rename_cst',
             'update_cst',
             'move_cst',
             'delete_multiple_cst',
@@ -102,7 +101,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         tags=['RSForm'],
         request=s.CstUpdateSerializer,
         responses={
-            c.HTTP_200_OK: s.CstInfoSerializer,
+            c.HTTP_200_OK: s.RSFormParseSerializer,
             c.HTTP_400_BAD_REQUEST: None,
             c.HTTP_403_FORBIDDEN: None,
             c.HTTP_404_NOT_FOUND: None
@@ -120,9 +119,22 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         with transaction.atomic():
             old_data = schema.update_cst(cst, data)
             PropagationFacade.after_update_cst(schema, cst, data, old_data)
+            if 'alias' in data and data['alias'] != cst.alias:
+                cst.refresh_from_db()
+                changed_type = 'cst_type' in data and cst.cst_type != data['cst_type']
+                mapping = {cst.alias: data['alias']}
+                cst.alias = data['alias']
+                if changed_type:
+                    cst.cst_type = data['cst_type']
+                cst.save()
+                schema.apply_mapping(mapping=mapping, change_aliases=False)
+                schema.save()
+                cst.refresh_from_db()
+                if changed_type:
+                    PropagationFacade.after_change_cst_type(schema, cst)
         return Response(
             status=c.HTTP_200_OK,
-            data=s.CstInfoSerializer(m.Constituenta.objects.get(pk=request.data['target'])).data
+            data=s.RSFormParseSerializer(schema.model).data
         )
 
     @extend_schema(
@@ -169,43 +181,6 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             }
         )
 
-    @extend_schema(
-        summary='rename constituenta',
-        tags=['Constituenta'],
-        request=s.CstRenameSerializer,
-        responses={
-            c.HTTP_200_OK: s.NewCstResponse,
-            c.HTTP_400_BAD_REQUEST: None,
-            c.HTTP_403_FORBIDDEN: None,
-            c.HTTP_404_NOT_FOUND: None
-        }
-    )
-    @action(detail=True, methods=['patch'], url_path='rename-cst')
-    def rename_cst(self, request: Request, pk) -> HttpResponse:
-        ''' Rename constituenta possibly changing type. '''
-        model = self._get_item()
-        serializer = s.CstRenameSerializer(data=request.data, context={'schema': model})
-        serializer.is_valid(raise_exception=True)
-        cst = cast(m.Constituenta, serializer.validated_data['target'])
-        changed_type = cst.cst_type != serializer.validated_data['cst_type']
-        mapping = {cst.alias: serializer.validated_data['alias']}
-        schema = m.RSForm(model)
-        with transaction.atomic():
-            cst.alias = serializer.validated_data['alias']
-            cst.cst_type = serializer.validated_data['cst_type']
-            cst.save()
-            schema.apply_mapping(mapping=mapping, change_aliases=False)
-            schema.save()
-            cst.refresh_from_db()
-            if changed_type:
-                PropagationFacade.after_change_cst_type(schema, cst)
-        return Response(
-            status=c.HTTP_200_OK,
-            data={
-                'new_cst': s.CstInfoSerializer(cst).data,
-                'schema': s.RSFormParseSerializer(schema.model).data
-            }
-        )
 
     @extend_schema(
         summary='execute substitutions',

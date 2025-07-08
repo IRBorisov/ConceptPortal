@@ -45,11 +45,12 @@ class CstUpdateSerializer(serializers.Serializer):
         class Meta:
             ''' serializer metadata. '''
             model = Constituenta
-            fields = 'convention', 'definition_formal', 'definition_raw', 'term_raw', 'term_forms'
+            fields = 'alias', 'cst_type', 'convention', 'definition_formal', 'definition_raw', 'term_raw', 'term_forms'
 
     target = PKField(
         many=False,
-        queryset=Constituenta.objects.all().only('convention', 'definition_formal', 'definition_raw', 'term_raw')
+        queryset=Constituenta.objects.all().only(
+            'alias', 'cst_type', 'convention', 'definition_formal', 'definition_raw', 'term_raw')
     )
     item_data = ConstituentaUpdateData()
 
@@ -60,6 +61,12 @@ class CstUpdateSerializer(serializers.Serializer):
             raise serializers.ValidationError({
                 f'{cst.pk}': msg.constituentaNotInRSform(schema.title)
             })
+        if 'alias' in attrs['item_data']:
+            new_alias = attrs['item_data']['alias']
+            if cst.alias != new_alias and RSForm(schema).constituents().filter(alias=new_alias).exists():
+                raise serializers.ValidationError({
+                    'alias': msg.aliasTaken(new_alias)
+                })
         return attrs
 
 
@@ -255,32 +262,6 @@ class CstTargetSerializer(serializers.Serializer):
                 raise serializers.ValidationError({
                     f'{cst.pk}': msg.constituentaNotInRSform(schema.title)
                 })
-        return attrs
-
-
-class CstRenameSerializer(serializers.Serializer):
-    ''' Serializer: Constituenta renaming. '''
-    target = PKField(many=False, queryset=Constituenta.objects.only('alias', 'cst_type', 'schema'))
-    alias = serializers.CharField()
-    cst_type = serializers.CharField()
-
-    def validate(self, attrs):
-        attrs = super().validate(attrs)
-        schema = cast(LibraryItem, self.context['schema'])
-        cst = cast(Constituenta, attrs['target'])
-        if cst.schema_id != schema.pk:
-            raise serializers.ValidationError({
-                f'{cst.pk}': msg.constituentaNotInRSform(schema.title)
-            })
-        new_alias = self.initial_data['alias']
-        if cst.alias == new_alias:
-            raise serializers.ValidationError({
-                'alias': msg.renameTrivial(new_alias)
-            })
-        if RSForm(schema).constituents().filter(alias=new_alias).exists():
-            raise serializers.ValidationError({
-                'alias': msg.aliasTaken(new_alias)
-            })
         return attrs
 
 

@@ -5,6 +5,7 @@ import { RSFormStats } from '@/features/rsform/components/rsform-stats';
 import { ViewConstituents } from '@/features/rsform/components/view-constituents';
 
 import { useFitHeight } from '@/stores/app-layout';
+import { notImplemented } from '@/utils/utils';
 
 import { ToolbarConstituents } from './toolbar-constituents';
 
@@ -27,6 +28,7 @@ export function ViewSchema({ schemaID, isMutable }: ViewSchemaProps) {
         schema={schema}
         activeCst={activeCst}
         isMutable={isMutable}
+        onEditActive={notImplemented}
         setActive={setActiveID}
         resetActive={() => setActiveID(null)}
       />

@@ -244,56 +244,6 @@ class TestRSFormViewset(EndpointTester):
         self.assertEqual(response.data['new_cst']['alias'], data['alias'])
 
 
-    @decl_endpoint('/api/rsforms/{item}/rename-cst', method='patch')
-    def test_rename_constituenta(self):
-        x1 = self.owned.insert_new(
-            alias='X1',
-            convention='Test',
-            term_raw='Test1',
-            term_resolved='Test1',
-            term_forms=[{'text': 'form1', 'tags': 'sing,datv'}]
-        )
-        x2_2 = self.unowned.insert_new('X2')
-        x3 = self.owned.insert_new(
-            alias='X3',
-            term_raw='Test3',
-            term_resolved='Test3',
-            definition_raw='Test1',
-            definition_resolved='Test2'
-        )
-
-        data = {'target': x2_2.pk, 'alias': 'D2', 'cst_type': CstType.TERM}
-        self.executeForbidden(data=data, item=self.unowned_id)
-        self.executeBadData(data=data, item=self.owned_id)
-
-        data = {'target': x1.pk, 'alias': x1.alias, 'cst_type': CstType.TERM}
-        self.executeBadData(data=data, item=self.owned_id)
-
-        data = {'target': x1.pk, 'alias': x3.alias}
-        self.executeBadData(data=data, item=self.owned_id)
-
-        d1 = self.owned.insert_new(
-            alias='D1',
-            term_raw='@{X1|plur}',
-            definition_formal='X1'
-        )
-        self.assertEqual(x1.order, 0)
-        self.assertEqual(x1.alias, 'X1')
-        self.assertEqual(x1.cst_type, CstType.BASE)
-
-        data = {'target': x1.pk, 'alias': 'D2', 'cst_type': CstType.TERM}
-        response = self.executeOK(data=data, item=self.owned_id)
-        self.assertEqual(response.data['new_cst']['alias'], 'D2')
-        self.assertEqual(response.data['new_cst']['cst_type'], CstType.TERM)
-        d1.refresh_from_db()
-        x1.refresh_from_db()
-        self.assertEqual(d1.term_resolved, '')
-        self.assertEqual(d1.term_raw, '@{D2|plur}')
-        self.assertEqual(x1.order, 0)
-        self.assertEqual(x1.alias, 'D2')
-        self.assertEqual(x1.cst_type, CstType.TERM)
-
-
     @decl_endpoint('/api/rsforms/{item}/substitute', method='patch')
     def test_substitute_multiple(self):
         self.set_params(item=self.owned_id)
@@ -507,12 +457,14 @@ class TestConstituentaAPI(EndpointTester):
 
     def setUp(self):
         super().setUp()
-        self.rsform_owned = RSForm.create(title='Test', alias='T1', owner=self.user)
-        self.rsform_unowned = RSForm.create(title='Test2', alias='T2')
+        self.owned = RSForm.create(title='Test', alias='T1', owner=self.user)
+        self.owned_id = self.owned.model.pk
+        self.unowned = RSForm.create(title='Test2', alias='T2')
+        self.unowned_id = self.unowned.model.pk
         self.cst1 = Constituenta.objects.create(
             alias='X1',
             cst_type=CstType.BASE,
-            schema=self.rsform_owned.model,
+            schema=self.owned.model,
             order=0,
             convention='Test',
             term_raw='Test1',
@@ -521,7 +473,7 @@ class TestConstituentaAPI(EndpointTester):
         self.cst2 = Constituenta.objects.create(
             alias='X2',
             cst_type=CstType.BASE,
-            schema=self.rsform_unowned.model,
+            schema=self.unowned.model,
             order=0,
             convention='Test1',
             term_raw='Test2',
@@ -529,7 +481,7 @@ class TestConstituentaAPI(EndpointTester):
         )
         self.cst3 = Constituenta.objects.create(
             alias='X3',
-            schema=self.rsform_owned.model,
+            schema=self.owned.model,
             order=1,
             term_raw='Test3',
             term_resolved='Test3',
@@ -541,18 +493,42 @@ class TestConstituentaAPI(EndpointTester):
     @decl_endpoint('/api/rsforms/{schema}/update-cst', method='patch')
     def test_partial_update(self):
         data = {'target': self.cst1.pk, 'item_data': {'convention': 'tt'}}
-        self.executeForbidden(data=data, schema=self.rsform_unowned.model.pk)
+        self.executeForbidden(data=data, schema=self.unowned_id)
 
         self.logout()
-        self.executeForbidden(data=data, schema=self.rsform_owned.model.pk)
+        self.executeForbidden(data=data, schema=self.owned_id)
 
         self.login()
-        response = self.executeOK(data=data, schema=self.rsform_owned.model.pk)
+        self.executeOK(data=data, schema=self.owned_id)
         self.cst1.refresh_from_db()
-        self.assertEqual(response.data['convention'], 'tt')
         self.assertEqual(self.cst1.convention, 'tt')
 
-        self.executeOK(data=data, schema=self.rsform_owned.model.pk)
+        self.executeOK(data=data, schema=self.owned_id)
+
+
+    @decl_endpoint('/api/rsforms/{schema}/update-cst', method='patch')
+    def test_partial_update_rename(self):
+        data = {'target': self.cst1.pk, 'item_data': {'alias': self.cst3.alias}}
+        self.executeBadData(data=data, schema=self.owned_id)
+
+        d1 = self.owned.insert_new(
+            alias='D1',
+            term_raw='@{X1|plur}',
+            definition_formal='X1'
+        )
+        self.assertEqual(self.cst1.order, 0)
+        self.assertEqual(self.cst1.alias, 'X1')
+        self.assertEqual(self.cst1.cst_type, CstType.BASE)
+
+        data = {'target': self.cst1.pk, 'item_data': {'alias': 'D2', 'cst_type': CstType.TERM}}
+        self.executeOK(data=data, schema=self.owned_id)
+        d1.refresh_from_db()
+        self.cst1.refresh_from_db()
+        self.assertEqual(d1.term_resolved, '')
+        self.assertEqual(d1.term_raw, '@{D2|plur}')
+        self.assertEqual(self.cst1.order, 0)
+        self.assertEqual(self.cst1.alias, 'D2')
+        self.assertEqual(self.cst1.cst_type, CstType.TERM)
 
 
     @decl_endpoint('/api/rsforms/{schema}/update-cst', method='patch')
@@ -564,11 +540,9 @@ class TestConstituentaAPI(EndpointTester):
                 'definition_raw': 'New def'
             }
         }
-        response = self.executeOK(data=data, schema=self.rsform_owned.model.pk)
+        self.executeOK(data=data, schema=self.owned_id)
         self.cst3.refresh_from_db()
-        self.assertEqual(response.data['term_resolved'], 'New term')
         self.assertEqual(self.cst3.term_resolved, 'New term')
-        self.assertEqual(response.data['definition_resolved'], 'New def')
         self.assertEqual(self.cst3.definition_resolved, 'New def')
 
 
@@ -581,12 +555,10 @@ class TestConstituentaAPI(EndpointTester):
                 'definition_raw': '@{X1|nomn,sing} @{X1|sing,datv}'
             }
         }
-        response = self.executeOK(data=data, schema=self.rsform_owned.model.pk)
+        self.executeOK(data=data, schema=self.owned_id)
         self.cst3.refresh_from_db()
         self.assertEqual(self.cst3.term_resolved, self.cst1.term_resolved)
-        self.assertEqual(response.data['term_resolved'], self.cst1.term_resolved)
         self.assertEqual(self.cst3.definition_resolved, f'{self.cst1.term_resolved} form1')
-        self.assertEqual(response.data['definition_resolved'], f'{self.cst1.term_resolved} form1')
 
     @decl_endpoint('/api/rsforms/{schema}/update-cst', method='patch')
     def test_update_term_forms(self):
@@ -597,25 +569,10 @@ class TestConstituentaAPI(EndpointTester):
                 'term_forms': [{'text': 'form1', 'tags': 'sing,datv'}]
             }
         }
-        response = self.executeOK(data=data, schema=self.rsform_owned.model.pk)
+        self.executeOK(data=data, schema=self.owned_id)
         self.cst3.refresh_from_db()
         self.assertEqual(self.cst3.definition_resolved, 'form1')
-        self.assertEqual(response.data['definition_resolved'], 'form1')
         self.assertEqual(self.cst3.term_forms, data['item_data']['term_forms'])
-        self.assertEqual(response.data['term_forms'], data['item_data']['term_forms'])
-
-
-    @decl_endpoint('/api/rsforms/{schema}/update-cst', method='patch')
-    def test_readonly_cst_fields(self):
-        data = {
-            'target': self.cst1.pk,
-            'item_data': {
-                'alias': 'X33'
-            }
-        }
-        response = self.executeOK(data=data, schema=self.rsform_owned.model.pk)
-        self.assertEqual(response.data['alias'], 'X1')
-        self.assertEqual(response.data['alias'], self.cst1.alias)
 
 
 class TestInlineSynthesis(EndpointTester):

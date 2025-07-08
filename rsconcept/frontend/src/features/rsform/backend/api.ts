@@ -6,7 +6,6 @@ import { infoMsg } from '@/utils/labels';
 
 import {
   type ICheckConstituentaDTO,
-  type IConstituentaBasicsDTO,
   type IConstituentaCreatedResponse,
   type IConstituentaList,
   type ICreateConstituentaDTO,
@@ -14,12 +13,10 @@ import {
   type IInlineSynthesisDTO,
   type IMoveConstituentsDTO,
   type IProduceStructureResponse,
-  type IRenameConstituentaDTO,
   type IRSFormDTO,
   type IRSFormUploadDTO,
   type ISubstitutionsDTO,
   type IUpdateConstituentaDTO,
-  schemaConstituentaBasics,
   schemaConstituentaCreatedResponse,
   schemaExpressionParse,
   schemaProduceStructureResponse,
@@ -74,8 +71,8 @@ export const rsformsApi = {
       }
     }),
   updateConstituenta: ({ itemID, data }: { itemID: number; data: IUpdateConstituentaDTO }) =>
-    axiosPatch<IUpdateConstituentaDTO, IConstituentaBasicsDTO>({
-      schema: schemaConstituentaBasics,
+    axiosPatch<IUpdateConstituentaDTO, IRSFormDTO>({
+      schema: schemaRSForm,
       endpoint: `/api/rsforms/${itemID}/update-cst`,
       request: {
         data: data,
@@ -89,15 +86,6 @@ export const rsformsApi = {
       request: {
         data: data,
         successMessage: infoMsg.constituentsDestroyed(data.items.length)
-      }
-    }),
-  renameConstituenta: ({ itemID, data }: { itemID: number; data: IRenameConstituentaDTO }) =>
-    axiosPatch<IRenameConstituentaDTO, IConstituentaCreatedResponse>({
-      schema: schemaConstituentaCreatedResponse,
-      endpoint: `/api/rsforms/${itemID}/rename-cst`,
-      request: {
-        data: data,
-        successMessage: infoMsg.changesSaved
       }
     }),
   substituteConstituents: ({ itemID, data }: { itemID: number; data: ISubstitutionsDTO }) =>

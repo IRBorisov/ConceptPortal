@@ -8,7 +8,15 @@ import { generateAlias } from '@/features/rsform/models/rsform-api';
 import { useCstSearchStore } from '@/features/rsform/stores/cst-search';
 
 import { MiniButton } from '@/components/control';
-import { IconClone, IconDestroy, IconMoveDown, IconMoveUp, IconNewItem, IconRSForm } from '@/components/icons';
+import {
+  IconClone,
+  IconDestroy,
+  IconEdit2,
+  IconMoveDown,
+  IconMoveUp,
+  IconNewItem,
+  IconRSForm
+} from '@/components/icons';
 import { cn } from '@/components/utils';
 import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER, prefixes } from '@/utils/constants';
@@ -20,6 +28,7 @@ interface ToolbarConstituentsProps {
   activeCst: IConstituenta | null;
   setActive: (cstID: number) => void;
   resetActive: () => void;
+  onEditActive: () => void;
   className?: string;
 }
 
@@ -28,6 +37,7 @@ export function ToolbarConstituents({
   activeCst,
   setActive,
   resetActive,
+  onEditActive,
   isMutable,
   className
 }: ToolbarConstituentsProps) {
@@ -158,6 +168,13 @@ export function ToolbarConstituents({
         title='Перейти к концептуальной схеме'
         icon={<IconRSForm size='1rem' className='icon-primary' />}
         onClick={navigateRSForm}
+      />
+
+      <MiniButton
+        title='Редактировать конституенту'
+        icon={<IconEdit2 size='1rem' className='icon-primary' />}
+        onClick={onEditActive}
+        disabled={!isMutable || isProcessing || !activeCst}
       />
 
       <MiniButton

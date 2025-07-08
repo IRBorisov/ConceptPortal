@@ -9,8 +9,8 @@ import { TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { type CstType, type IRenameConstituentaDTO, schemaRenameConstituenta } from '../backend/types';
-import { useRenameConstituenta } from '../backend/use-rename-constituenta';
+import { type CstType, type IUpdateConstituentaDTO, schemaUpdateConstituenta } from '../backend/types';
+import { useUpdateConstituenta } from '../backend/use-update-constituenta';
 import { SelectCstType } from '../components/select-cst-type';
 import { type IConstituenta, type IRSForm } from '../models/rsform';
 import { generateAlias, validateNewAlias } from '../models/rsform-api';
@@ -22,27 +22,29 @@ export interface DlgRenameCstProps {
 
 export function DlgRenameCst() {
   const { schema, target } = useDialogsStore(state => state.props as DlgRenameCstProps);
-  const { renameConstituenta: cstRename } = useRenameConstituenta();
+  const { updateConstituenta: cstUpdate } = useUpdateConstituenta();
 
-  const { register, setValue, handleSubmit, control } = useForm<IRenameConstituentaDTO>({
-    resolver: zodResolver(schemaRenameConstituenta),
+  const { register, setValue, handleSubmit, control } = useForm<IUpdateConstituentaDTO>({
+    resolver: zodResolver(schemaUpdateConstituenta),
     defaultValues: {
       target: target.id,
-      alias: target.alias,
-      cst_type: target.cst_type
+      item_data: {
+        alias: target.alias,
+        cst_type: target.cst_type
+      }
     }
   });
-  const alias = useWatch({ control, name: 'alias' });
-  const cst_type = useWatch({ control, name: 'cst_type' });
+  const alias = useWatch({ control, name: 'item_data.alias' })!;
+  const cst_type = useWatch({ control, name: 'item_data.cst_type' })!;
   const isValid = alias !== target.alias && validateNewAlias(alias, cst_type, schema);
 
-  function onSubmit(data: IRenameConstituentaDTO) {
-    return cstRename({ itemID: schema.id, data: data });
+  function onSubmit(data: IUpdateConstituentaDTO) {
+    return cstUpdate({ itemID: schema.id, data: data });
   }
 
   function handleChangeType(newType: CstType) {
-    setValue('cst_type', newType);
-    setValue('alias', generateAlias(newType, schema), { shouldValidate: true });
+    setValue('item_data.cst_type', newType);
+    setValue('item_data.alias', generateAlias(newType, schema), { shouldValidate: true });
   }
 
   return (
@@ -63,7 +65,7 @@ export function DlgRenameCst() {
       />
       <TextInput
         id='dlg_cst_alias' //
-        {...register('alias')}
+        {...register('item_data.alias')}
         dense
         label='Имя'
         className='w-28'

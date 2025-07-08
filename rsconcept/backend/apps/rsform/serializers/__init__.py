@@ -16,7 +16,6 @@ from .data_access import (
     CstInfoSerializer,
     CstListSerializer,
     CstMoveSerializer,
-    CstRenameSerializer,
     CstSubstituteSerializer,
     CstTargetSerializer,
     CstUpdateSerializer,

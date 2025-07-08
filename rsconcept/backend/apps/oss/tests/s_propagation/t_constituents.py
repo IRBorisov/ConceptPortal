@@ -112,18 +112,6 @@ class TestChangeConstituents(EndpointTester):
         self.assertEqual(inherited_cst.definition_formal, 'X1 = X2')
 
 
-    @decl_endpoint('/api/rsforms/{schema}/rename-cst', method='patch')
-    def test_rename_constituenta(self):
-        data = {'target': self.ks1X1.pk, 'alias': 'D21', 'cst_type': CstType.TERM}
-        response = self.executeOK(data=data, schema=self.ks1.model.pk)
-        self.ks1X1.refresh_from_db()
-        inherited_cst = Constituenta.objects.get(as_child__parent_id=self.ks1X1.pk)
-        self.assertEqual(self.ks1X1.alias, data['alias'])
-        self.assertEqual(self.ks1X1.cst_type, data['cst_type'])
-        self.assertEqual(inherited_cst.alias, 'D2')
-        self.assertEqual(inherited_cst.cst_type, data['cst_type'])
-
-
     @decl_endpoint('/api/rsforms/{schema}/update-cst', method='patch')
     def test_update_constituenta(self):
         d2 = self.ks3.insert_new('D2', cst_type=CstType.TERM, definition_raw='@{X1|sing,nomn}')

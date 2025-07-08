@@ -13,12 +13,16 @@ export const useUpdateConstituenta = () => {
   const mutation = useMutation({
     mutationKey: [KEYS.global_mutation, rsformsApi.baseKey, 'update-constituenta'],
     mutationFn: rsformsApi.updateConstituenta,
-    onSuccess: async (_, variables) => {
-      updateTimestamp(variables.itemID);
+    onSuccess: async (data, _) => {
+      client.setQueryData(rsformsApi.getRSFormQueryOptions({ itemID: data.id }).queryKey, data);
+      updateTimestamp(data.id);
 
       await Promise.allSettled([
         client.invalidateQueries({ queryKey: [KEYS.oss] }),
-        client.invalidateQueries({ queryKey: [rsformsApi.baseKey] })
+        client.invalidateQueries({
+          queryKey: [rsformsApi.baseKey],
+          predicate: query => query.queryKey.length > 2 && query.queryKey[2] !== String(data.id)
+        })
       ]);
     },
     onError: () => client.invalidateQueries()
