@@ -6,7 +6,7 @@ import { MiniButton } from '@/components/control';
 import { IconClose } from '@/components/icons';
 import { Loader } from '@/components/loader';
 import { cn } from '@/components/utils';
-import { useMainHeight } from '@/stores/app-layout';
+import { useAppLayoutStore, useMainHeight } from '@/stores/app-layout';
 import { usePreferencesStore } from '@/stores/preferences';
 import { PARAMETER } from '@/utils/constants';
 
@@ -22,6 +22,7 @@ interface SidePanelProps {
 }
 
 export function SidePanel({ isMounted, className }: SidePanelProps) {
+  const noNavigationAnimation = useAppLayoutStore(state => state.noNavigationAnimation);
   const { schema, isMutable, selectedItems } = useOssEdit();
   const selectedOperation =
     selectedItems.length === 1 && selectedItems[0].nodeType === NodeType.OPERATION ? selectedItems[0] : null;
@@ -47,7 +48,10 @@ export function SidePanel({ isMounted, className }: SidePanelProps) {
         aria-label='Закрыть'
         noPadding
         icon={<IconClose size='1.25rem' />}
-        className='absolute z-pop top-2 right-1'
+        className={clsx(
+          'absolute z-pop transition-transform duration-move right-0 top-0',
+          noNavigationAnimation ? '-translate-x-4 translate-y-0' : 'translate-x-0 translate-y-2'
+        )}
         onClick={closePanel}
       />
 
