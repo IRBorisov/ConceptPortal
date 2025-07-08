@@ -2,6 +2,7 @@ import { useReactFlow } from 'reactflow';
 
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
+import { type ILibraryItemReference } from '@/features/library';
 import { MiniSelectorOSS } from '@/features/library/components/mini-selector-oss';
 
 import { MiniButton } from '@/components/control';
@@ -61,7 +62,7 @@ export function ToolbarTermGraph() {
   }
 
   function handleDeleteCst() {
-    if (!canDeleteSelected || isProcessing) {
+    if (isProcessing) {
       return;
     }
     promptDeleteCst();
@@ -94,14 +95,13 @@ export function ToolbarTermGraph() {
     });
   }
 
+  function handleSelectOss(event: React.MouseEvent<HTMLElement>, newValue: ILibraryItemReference) {
+    navigateOss(newValue.id, event.ctrlKey || event.metaKey);
+  }
+
   return (
     <div className='cc-icons'>
-      {schema.oss.length > 0 ? (
-        <MiniSelectorOSS
-          items={schema.oss}
-          onSelect={(event, value) => navigateOss(value.id, event.ctrlKey || event.metaKey)}
-        />
-      ) : null}
+      {schema.oss.length > 0 ? <MiniSelectorOSS items={schema.oss} onSelect={handleSelectOss} /> : null}
       <MiniButton
         title='Настройки фильтрации узлов и связей'
         icon={<IconFilter size='1.25rem' className='icon-primary' />}

@@ -9,6 +9,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { PARAMETER } from '@/utils/constants';
 import { promptText } from '@/utils/labels';
+import { withPreventDefault } from '@/utils/utils';
 
 import { useDeleteBlock } from '../../../backend/use-delete-block';
 import { useMutatingOss } from '../../../backend/use-mutating-oss';
@@ -149,36 +150,26 @@ export function OssFlow() {
       return;
     }
     if (event.key === 'Escape') {
-      event.preventDefault();
-      event.stopPropagation();
-      resetSelectedElements();
+      withPreventDefault(resetSelectedElements)(event);
       return;
     }
     if (!isMutable) {
       return;
     }
     if ((event.ctrlKey || event.metaKey) && event.code === 'KeyS') {
-      event.preventDefault();
-      event.stopPropagation();
-      handleSavePositions();
+      withPreventDefault(handleSavePositions)(event);
       return;
     }
     if (event.altKey && event.code === 'Key1') {
-      event.preventDefault();
-      event.stopPropagation();
-      handleCreateBlock();
+      withPreventDefault(handleCreateBlock)(event);
       return;
     }
     if (event.altKey && event.code === 'Key2') {
-      event.preventDefault();
-      event.stopPropagation();
-      handleCreateOperation();
+      withPreventDefault(handleCreateOperation)(event);
       return;
     }
     if (event.key === 'Delete') {
-      event.preventDefault();
-      event.stopPropagation();
-      handleDeleteSelected();
+      withPreventDefault(handleDeleteSelected)(event);
       return;
     }
   }

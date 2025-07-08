@@ -6,6 +6,7 @@ import { type Edge, MarkerType, type Node, useEdgesState, useNodesState, useOnSe
 import { DiagramFlow, useReactFlow, useStoreApi } from '@/components/flow/diagram-flow';
 import { useMainHeight } from '@/stores/app-layout';
 import { PARAMETER } from '@/utils/constants';
+import { withPreventDefault } from '@/utils/utils';
 
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { ToolbarGraphSelection } from '../../../components/toolbar-graph-selection';
@@ -39,17 +40,8 @@ export function TGFlow() {
   const store = useStoreApi();
   const { addSelectedNodes } = store.getState();
   const isProcessing = useMutatingRSForm();
-  const {
-    isContentEditable,
-    schema,
-    selected,
-    setSelected,
-    canDeleteSelected,
-    promptDeleteCst,
-    focusCst,
-    setFocus,
-    deselectAll
-  } = useRSEdit();
+  const { isContentEditable, schema, selected, setSelected, promptDeleteCst, focusCst, setFocus, deselectAll } =
+    useRSEdit();
 
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges] = useEdgesState([]);
@@ -140,20 +132,14 @@ export function TGFlow() {
       return;
     }
     if (event.key === 'Escape') {
-      event.preventDefault();
-      event.stopPropagation();
-      setFocus(null);
+      withPreventDefault(() => setFocus(null))(event);
       return;
     }
     if (!isContentEditable) {
       return;
     }
     if (event.key === 'Delete') {
-      event.preventDefault();
-      event.stopPropagation();
-      if (canDeleteSelected) {
-        promptDeleteCst();
-      }
+      withPreventDefault(promptDeleteCst)(event);
       return;
     }
   }

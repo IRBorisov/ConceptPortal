@@ -18,6 +18,7 @@ import { usePreferencesStore } from '@/stores/preferences';
 import { APP_COLORS } from '@/styling/colors';
 import { CodeMirrorWrapper } from '@/utils/codemirror';
 import { PARAMETER } from '@/utils/constants';
+import { withPreventDefault } from '@/utils/utils';
 
 import { type IReferenceInputState } from '../../dialogs/dlg-edit-reference/dlg-edit-reference';
 import { ReferenceType } from '../../models/language';
@@ -117,6 +118,53 @@ export const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
       if (onBlur) onBlur(event);
     }
 
+    function onEditRef() {
+      const wrap = new CodeMirrorWrapper(thisRef.current as Required<ReactCodeMirrorRef>);
+      wrap.fixSelection(ReferenceTokens);
+      const nodes = wrap.getEnvelopingNodes(ReferenceTokens);
+
+      const data: IReferenceInputState = {
+        type: ReferenceType.ENTITY,
+        refRaw: '',
+        text: '',
+        mainRefs: [],
+        basePosition: 0
+      };
+
+      if (nodes.length !== 1) {
+        data.text = wrap.getSelectionText();
+      } else {
+        data.type = nodes[0].type.id === RefEntity ? ReferenceType.ENTITY : ReferenceType.SYNTACTIC;
+        data.refRaw = wrap.getSelectionText();
+      }
+
+      const selection = wrap.getSelection();
+      const mainNodes = wrap
+        .getAllNodes([RefEntity])
+        .filter(node => node.from >= selection.to || node.to <= selection.from);
+      data.mainRefs = mainNodes.map(node => wrap.getText(node.from, node.to));
+      data.basePosition = mainNodes.filter(node => node.to <= selection.from).length;
+
+      setIsEditing(true);
+      showEditReference({
+        schema: schema,
+        initial: data,
+        onCancel: () => {
+          setIsEditing(false);
+          setTimeout(() => {
+            thisRef.current?.view?.focus();
+          }, PARAMETER.minimalTimeout);
+        },
+        onSave: ref => {
+          wrap.replaceWith(referenceToString(ref));
+          setIsEditing(false);
+          setTimeout(() => {
+            thisRef.current?.view?.focus();
+          }, PARAMETER.minimalTimeout);
+        }
+      });
+    }
+
     function handleInput(event: React.KeyboardEvent<HTMLDivElement>) {
       if (!thisRef.current?.view) {
         event.preventDefault();
@@ -124,53 +172,8 @@ export const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
         return;
       }
       if ((event.ctrlKey || event.metaKey) && event.code === 'Space') {
-        event.preventDefault();
-        event.stopPropagation();
-
-        const wrap = new CodeMirrorWrapper(thisRef.current as Required<ReactCodeMirrorRef>);
-        wrap.fixSelection(ReferenceTokens);
-        const nodes = wrap.getEnvelopingNodes(ReferenceTokens);
-
-        const data: IReferenceInputState = {
-          type: ReferenceType.ENTITY,
-          refRaw: '',
-          text: '',
-          mainRefs: [],
-          basePosition: 0
-        };
-
-        if (nodes.length !== 1) {
-          data.text = wrap.getSelectionText();
-        } else {
-          data.type = nodes[0].type.id === RefEntity ? ReferenceType.ENTITY : ReferenceType.SYNTACTIC;
-          data.refRaw = wrap.getSelectionText();
-        }
-
-        const selection = wrap.getSelection();
-        const mainNodes = wrap
-          .getAllNodes([RefEntity])
-          .filter(node => node.from >= selection.to || node.to <= selection.from);
-        data.mainRefs = mainNodes.map(node => wrap.getText(node.from, node.to));
-        data.basePosition = mainNodes.filter(node => node.to <= selection.from).length;
-
-        setIsEditing(true);
-        showEditReference({
-          schema: schema,
-          initial: data,
-          onCancel: () => {
-            setIsEditing(false);
-            setTimeout(() => {
-              thisRef.current?.view?.focus();
-            }, PARAMETER.minimalTimeout);
-          },
-          onSave: ref => {
-            wrap.replaceWith(referenceToString(ref));
-            setIsEditing(false);
-            setTimeout(() => {
-              thisRef.current?.view?.focus();
-            }, PARAMETER.minimalTimeout);
-          }
-        });
+        withPreventDefault(onEditRef)(event);
+        return;
       }
     }
 

@@ -10,7 +10,7 @@ import { IconCSV } from '@/components/icons';
 import { SearchBar } from '@/components/input';
 import { useFitHeight } from '@/stores/app-layout';
 import { infoMsg } from '@/utils/labels';
-import { convertToCSV } from '@/utils/utils';
+import { convertToCSV, withPreventDefault } from '@/utils/utils';
 
 import { CstType } from '../../../backend/types';
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
@@ -34,7 +34,6 @@ export function EditorRSList() {
     moveUp,
     moveDown,
     cloneCst,
-    canDeleteSelected,
     promptDeleteCst,
     navigateCst
   } = useRSEdit();
@@ -74,27 +73,22 @@ export function EditorRSList() {
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     if (event.key === 'Escape') {
-      event.preventDefault();
-      event.stopPropagation();
-      deselectAll();
+      withPreventDefault(deselectAll)(event);
       return;
     }
     if (!isContentEditable || isProcessing) {
       return;
     }
-    if (event.key === 'Delete' && canDeleteSelected) {
-      event.preventDefault();
-      event.stopPropagation();
-      promptDeleteCst();
+    if (event.key === 'Delete') {
+      withPreventDefault(promptDeleteCst)(event);
       return;
     }
-    if (!event.altKey || event.shiftKey) {
-      return;
-    }
-    if (processAltKey(event.code)) {
-      event.preventDefault();
-      event.stopPropagation();
-      return;
+    if (event.altKey && !event.shiftKey) {
+      if (processAltKey(event.code)) {
+        event.preventDefault();
+        event.stopPropagation();
+        return;
+      }
     }
   }
 

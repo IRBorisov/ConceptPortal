@@ -5,6 +5,8 @@ import { Background, ReactFlow, type ReactFlowProps } from 'reactflow';
 
 export { useReactFlow, useStoreApi } from 'reactflow';
 
+import { withPreventDefault } from '@/utils/utils';
+
 import { cn } from '../utils';
 
 type DiagramFlowProps = {
@@ -48,9 +50,7 @@ export function DiagramFlow({
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     if (event.code === 'Space') {
-      event.preventDefault();
-      event.stopPropagation();
-      setSpaceMode(true);
+      withPreventDefault(() => setSpaceMode(true))(event);
     }
     onKeyDown?.(event);
   }

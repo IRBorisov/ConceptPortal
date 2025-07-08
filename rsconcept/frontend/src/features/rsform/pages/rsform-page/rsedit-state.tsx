@@ -241,6 +241,9 @@ export const RSEditState = ({
   }
 
   function promptDeleteCst() {
+    if (!canDeleteSelected) {
+      return;
+    }
     showDeleteCst({
       schema: schema,
       selected: selected,
