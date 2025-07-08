@@ -128,6 +128,9 @@ const DlgOssSettings = React.lazy(() =>
     default: module.DlgOssSettings
   }))
 );
+const DlgEditCst = React.lazy(() =>
+  import('@/features/rsform/dialogs/dlg-edit-cst').then(module => ({ default: module.DlgEditCst }))
+);
 
 export const GlobalDialogs = () => {
   const active = useDialogsStore(state => state.active);
@@ -188,5 +191,7 @@ export const GlobalDialogs = () => {
       return <DlgSubstituteCst />;
     case DialogType.UPLOAD_RSFORM:
       return <DlgUploadRSForm />;
+    case DialogType.EDIT_CONSTITUENTA:
+      return <DlgEditCst />;
   }
 };

@@ -15,6 +15,7 @@ import { type DlgRelocateConstituentsProps } from '@/features/oss/dialogs/dlg-re
 import { type DlgCreateCstProps } from '@/features/rsform/dialogs/dlg-create-cst/dlg-create-cst';
 import { type DlgCstTemplateProps } from '@/features/rsform/dialogs/dlg-cst-template/dlg-cst-template';
 import { type DlgDeleteCstProps } from '@/features/rsform/dialogs/dlg-delete-cst/dlg-delete-cst';
+import { type DlgEditCstProps } from '@/features/rsform/dialogs/dlg-edit-cst/dlg-edit-cst';
 import { type DlgEditReferenceProps } from '@/features/rsform/dialogs/dlg-edit-reference/dlg-edit-reference';
 import { type DlgEditWordFormsProps } from '@/features/rsform/dialogs/dlg-edit-word-forms/dlg-edit-word-forms';
 import { type DlgInlineSynthesisProps } from '@/features/rsform/dialogs/dlg-inline-synthesis/dlg-inline-synthesis';
@@ -45,6 +46,7 @@ export const DialogType = {
   CHANGE_INPUT_SCHEMA: 11,
   RELOCATE_CONSTITUENTS: 12,
   OSS_SETTINGS: 26,
+  EDIT_CONSTITUENTA: 27,
 
   CLONE_LIBRARY_ITEM: 13,
   UPLOAD_RSFORM: 14,
@@ -98,6 +100,7 @@ interface DialogsStore {
   showQR: (props: DlgShowQRProps) => void;
   showSubstituteCst: (props: DlgSubstituteCstProps) => void;
   showUploadRSForm: (props: DlgUploadRSFormProps) => void;
+  showEditCst: (props: DlgEditCstProps) => void;
 }
 
 export const useDialogsStore = create<DialogsStore>()(set => ({
@@ -135,5 +138,6 @@ export const useDialogsStore = create<DialogsStore>()(set => ({
   showRenameCst: props => set({ active: DialogType.RENAME_CONSTITUENTA, props: props }),
   showQR: props => set({ active: DialogType.SHOW_QR_CODE, props: props }),
   showSubstituteCst: props => set({ active: DialogType.SUBSTITUTE_CONSTITUENTS, props: props }),
-  showUploadRSForm: props => set({ active: DialogType.UPLOAD_RSFORM, props: props })
+  showUploadRSForm: props => set({ active: DialogType.UPLOAD_RSFORM, props: props }),
+  showEditCst: props => set({ active: DialogType.EDIT_CONSTITUENTA, props: props })
 }));

@@ -11,6 +11,7 @@ interface ViewConstituentsProps {
   schema: IRSForm;
   activeCst?: IConstituenta | null;
   onActivate?: (cst: IConstituenta) => void;
+  onDoubleClick?: (cst: IConstituenta) => void;
 
   className?: string;
   maxListHeight?: string;
@@ -23,6 +24,7 @@ export function ViewConstituents({
   schema,
   activeCst,
   onActivate,
+  onDoubleClick,
 
   className,
   maxListHeight,
@@ -43,6 +45,7 @@ export function ViewConstituents({
         onActivate={onActivate}
         maxHeight={maxListHeight}
         autoScroll={autoScroll}
+        onDoubleClick={onDoubleClick}
       />
     </aside>
   );

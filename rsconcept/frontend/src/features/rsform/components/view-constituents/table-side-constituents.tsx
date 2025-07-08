@@ -18,6 +18,7 @@ interface TableSideConstituentsProps {
   schema: IRSForm;
   activeCst?: IConstituenta | null;
   onActivate?: (cst: IConstituenta) => void;
+  onDoubleClick?: (cst: IConstituenta) => void;
 
   maxHeight?: string;
   autoScroll?: boolean;
@@ -29,6 +30,7 @@ export function TableSideConstituents({
   schema,
   activeCst,
   onActivate,
+  onDoubleClick,
   maxHeight,
   autoScroll = true
 }: TableSideConstituentsProps) {
@@ -102,6 +104,7 @@ export function TableSideConstituents({
         </NoData>
       }
       onRowClicked={onActivate ? cst => onActivate(cst) : undefined}
+      onRowDoubleClicked={onDoubleClick}
     />
   );
 }

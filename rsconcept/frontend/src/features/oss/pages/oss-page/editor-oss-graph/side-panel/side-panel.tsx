@@ -44,8 +44,7 @@ export function SidePanel({ isMounted, className }: SidePanelProps) {
       style={{ height: sidePanelHeight }}
     >
       <MiniButton
-        titleHtml='Закрыть панель'
-        aria-label='Закрыть'
+        title='Закрыть панель'
         noPadding
         icon={<IconClose size='1.25rem' />}
         className={clsx(
