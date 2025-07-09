@@ -43,7 +43,8 @@ export function ToolbarTermGraph() {
   const showTypeGraph = useDialogsStore(state => state.showShowTypeGraph);
   const showParams = useDialogsStore(state => state.showGraphParams);
   const filter = useTermGraphStore(state => state.filter);
-  const setFilter = useTermGraphStore(state => state.setFilter);
+  const toggleText = useTermGraphStore(state => state.toggleText);
+  const toggleClustering = useTermGraphStore(state => state.toggleClustering);
 
   const { fitView } = useReactFlow();
 
@@ -68,13 +69,6 @@ export function ToolbarTermGraph() {
     promptDeleteCst();
   }
 
-  function handleToggleNoText() {
-    setFilter({
-      ...filter,
-      noText: !filter.noText
-    });
-  }
-
   function handleFitView() {
     setTimeout(() => {
       fitView(flowOptions.fitViewOptions);
@@ -86,13 +80,6 @@ export function ToolbarTermGraph() {
     if (target) {
       setFocus(target);
     }
-  }
-
-  function handleFoldDerived() {
-    setFilter({
-      ...filter,
-      foldDerived: !filter.foldDerived
-    });
   }
 
   function handleSelectOss(event: React.MouseEvent<HTMLElement>, newValue: ILibraryItemReference) {
@@ -127,7 +114,7 @@ export function ToolbarTermGraph() {
             <IconTextOff size='1.25rem' className='icon-primary' />
           )
         }
-        onClick={handleToggleNoText}
+        onClick={toggleText}
       />
       <MiniButton
         title={!filter.foldDerived ? 'Скрыть порожденные' : 'Отобразить порожденные'}
@@ -138,7 +125,7 @@ export function ToolbarTermGraph() {
             <IconClusteringOff size='1.25rem' className='icon-primary' />
           )
         }
-        onClick={handleFoldDerived}
+        onClick={toggleClustering}
       />
       {isContentEditable ? (
         <MiniButton

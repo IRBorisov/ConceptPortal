@@ -131,6 +131,9 @@ const DlgOssSettings = React.lazy(() =>
 const DlgEditCst = React.lazy(() =>
   import('@/features/rsform/dialogs/dlg-edit-cst').then(module => ({ default: module.DlgEditCst }))
 );
+const DlgShowTermGraph = React.lazy(() =>
+  import('@/features/oss/dialogs/dlg-show-term-graph').then(module => ({ default: module.DlgShowTermGraph }))
+);
 
 export const GlobalDialogs = () => {
   const active = useDialogsStore(state => state.active);
@@ -193,5 +196,7 @@ export const GlobalDialogs = () => {
       return <DlgUploadRSForm />;
     case DialogType.EDIT_CONSTITUENTA:
       return <DlgEditCst />;
+    case DialogType.SHOW_TERM_GRAPH:
+      return <DlgShowTermGraph />;
   }
 };
