@@ -4,27 +4,19 @@ import { MiniButton } from '@/components/control';
 import { IconGraphInputs, IconGraphOutputs, IconReset } from '@/components/icons';
 import { cn } from '@/components/utils';
 
+import { useTermGraphStore } from '../../stores/term-graph';
+
 interface ToolbarFocusedCstProps {
   className?: string;
   focus: IConstituenta | null;
   resetFocus: () => void;
-
-  showInputs: boolean;
-  toggleShowInputs: () => void;
-
-  showOutputs: boolean;
-  toggleShowOutputs: () => void;
 }
 
-export function ToolbarFocusedCst({
-  focus,
-  resetFocus,
-  className,
-  showInputs,
-  toggleShowInputs,
-  showOutputs,
-  toggleShowOutputs
-}: ToolbarFocusedCstProps) {
+export function ToolbarFocusedCst({ focus, resetFocus, className }: ToolbarFocusedCstProps) {
+  const filter = useTermGraphStore(state => state.filter);
+  const toggleFocusInputs = useTermGraphStore(state => state.toggleFocusInputs);
+  const toggleFocusOutputs = useTermGraphStore(state => state.toggleFocusOutputs);
+
   if (!focus) {
     return null;
   }
@@ -44,14 +36,14 @@ export function ToolbarFocusedCst({
         onClick={resetFocus}
       />
       <MiniButton
-        title={showInputs ? 'Скрыть поставщиков' : 'Отобразить поставщиков'}
-        icon={<IconGraphInputs size='1.25rem' className={showInputs ? 'icon-green' : 'icon-primary'} />}
-        onClick={toggleShowInputs}
+        title={filter.focusShowInputs ? 'Скрыть поставщиков' : 'Отобразить поставщиков'}
+        icon={<IconGraphInputs size='1.25rem' className={filter.focusShowInputs ? 'icon-green' : 'icon-primary'} />}
+        onClick={toggleFocusInputs}
       />
       <MiniButton
-        title={showOutputs ? 'Скрыть потребителей' : 'Отобразить потребителей'}
-        icon={<IconGraphOutputs size='1.25rem' className={showOutputs ? 'icon-green' : 'icon-primary'} />}
-        onClick={toggleShowOutputs}
+        title={filter.focusShowOutputs ? 'Скрыть потребителей' : 'Отобразить потребителей'}
+        icon={<IconGraphOutputs size='1.25rem' className={filter.focusShowOutputs ? 'icon-green' : 'icon-primary'} />}
+        onClick={toggleFocusOutputs}
       />
     </div>
   );

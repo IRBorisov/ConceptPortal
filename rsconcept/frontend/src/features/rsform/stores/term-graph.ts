@@ -34,6 +34,8 @@ interface TermGraphStore {
   setFilter: (value: GraphFilterParams) => void;
   toggleFocusInputs: () => void;
   toggleFocusOutputs: () => void;
+  toggleText: () => void;
+  toggleClustering: () => void;
 
   foldHidden: boolean;
   toggleFoldHidden: () => void;
@@ -69,6 +71,8 @@ export const useTermGraphStore = create<TermGraphStore>()(
         set(state => ({ filter: { ...state.filter, focusShowInputs: !state.filter.focusShowInputs } })),
       toggleFocusOutputs: () =>
         set(state => ({ filter: { ...state.filter, focusShowOutputs: !state.filter.focusShowOutputs } })),
+      toggleText: () => set(state => ({ filter: { ...state.filter, noText: !state.filter.noText } })),
+      toggleClustering: () => set(state => ({ filter: { ...state.filter, foldDerived: !state.filter.foldDerived } })),
 
       foldHidden: false,
       toggleFoldHidden: () => set(state => ({ foldHidden: !state.foldHidden })),

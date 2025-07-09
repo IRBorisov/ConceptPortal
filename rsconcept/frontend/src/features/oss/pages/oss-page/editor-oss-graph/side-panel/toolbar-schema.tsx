@@ -24,7 +24,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER, prefixes } from '@/utils/constants';
 import { type RO } from '@/utils/meta';
 
-interface ToolbarConstituentsProps {
+interface ToolbarSchemaProps {
   schema: IRSForm;
   isMutable: boolean;
   activeCst: IConstituenta | null;
@@ -34,7 +34,7 @@ interface ToolbarConstituentsProps {
   className?: string;
 }
 
-export function ToolbarConstituents({
+export function ToolbarSchema({
   schema,
   activeCst,
   setActive,
@@ -42,7 +42,7 @@ export function ToolbarConstituents({
   onEditActive,
   isMutable,
   className
-}: ToolbarConstituentsProps) {
+}: ToolbarSchemaProps) {
   const router = useConceptNavigation();
   const isProcessing = useMutatingRSForm();
   const searchText = useCstSearchStore(state => state.query);
@@ -175,6 +175,10 @@ export function ToolbarConstituents({
     showTypeGraph({ items: typeInfo });
   }
 
+  function handleShowTermGraph() {
+    showTermGraph({ schema: schema });
+  }
+
   return (
     <div className={cn('flex gap-0.5', className)}>
       <MiniButton
@@ -225,7 +229,7 @@ export function ToolbarConstituents({
       <MiniButton
         icon={<IconTree size='1rem' className='hover:text-primary' />}
         title='Граф термов'
-        onClick={() => showTermGraph({ schema })}
+        onClick={handleShowTermGraph}
       />
       <MiniButton
         icon={<IconTypeGraph size='1rem' className='hover:text-primary' />}

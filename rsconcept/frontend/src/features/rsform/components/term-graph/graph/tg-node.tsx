@@ -3,6 +3,8 @@
 import { Handle, Position } from 'reactflow';
 import clsx from 'clsx';
 
+import { isBasicConcept } from '@/features/rsform/models/rsform-api';
+
 import { APP_COLORS } from '@/styling/colors';
 import { globalIDs } from '@/utils/constants';
 
@@ -67,5 +69,9 @@ export function TGNode(node: TGNodeInternal) {
 
 // ====== INTERNAL ======
 function describeCstNode(cst: IConstituenta) {
-  return `${cst.alias}: ${cst.term_resolved}</br>Типизация: ${labelCstTypification(cst)}`;
+  return `${cst.alias}: ${cst.term_resolved}</br><b>Типизация:</b> ${labelCstTypification(
+    cst
+  )}</br><b>Содержание:</b> ${
+    isBasicConcept(cst.cst_type) ? cst.convention : cst.definition_resolved || cst.definition_formal || cst.convention
+  }`;
 }

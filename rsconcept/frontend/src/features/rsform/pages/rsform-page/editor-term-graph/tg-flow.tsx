@@ -55,8 +55,6 @@ export function TGFlow() {
   const [edges, setEdges] = useEdgesState<Edge>([]);
 
   const filter = useTermGraphStore(state => state.filter);
-  const toggleFocusInputs = useTermGraphStore(state => state.toggleFocusInputs);
-  const toggleFocusOutputs = useTermGraphStore(state => state.toggleFocusOutputs);
   const { filteredGraph, hidden } = useFilteredGraph();
 
   function onSelectionChange({ nodes }: { nodes: Node[] }) {
@@ -170,14 +168,7 @@ export function TGFlow() {
     <div className='relative' tabIndex={-1} onKeyDown={handleKeyDown}>
       <div className='cc-tab-tools flex flex-col items-center rounded-b-2xl backdrop-blur-xs'>
         <ToolbarTermGraph />
-        <ToolbarFocusedCst
-          focus={focusCst}
-          resetFocus={() => setFocus(null)}
-          showInputs={filter.focusShowInputs}
-          toggleShowInputs={toggleFocusInputs}
-          showOutputs={filter.focusShowOutputs}
-          toggleShowOutputs={toggleFocusOutputs}
-        />
+        <ToolbarFocusedCst focus={focusCst} resetFocus={() => setFocus(null)} />
         {!focusCst ? (
           <ToolbarGraphSelection
             graph={schema.graph}

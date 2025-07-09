@@ -8,7 +8,7 @@ import { ViewConstituents } from '@/features/rsform/components/view-constituents
 import { useFitHeight } from '@/stores/app-layout';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { ToolbarConstituents } from './toolbar-constituents';
+import { ToolbarSchema } from './toolbar-schema';
 
 interface ViewSchemaProps {
   schemaID: number;
@@ -29,7 +29,7 @@ export function ViewSchema({ schemaID, isMutable }: ViewSchemaProps) {
 
   return (
     <div className='grid h-full relative cc-fade-in mt-5' style={{ gridTemplateRows: '1fr auto' }}>
-      <ToolbarConstituents
+      <ToolbarSchema
         className='absolute -top-6.5 left-1'
         schema={schema}
         activeCst={activeCst}
