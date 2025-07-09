@@ -1,11 +1,35 @@
+/**
+ * Module: Graph of Terms graphical representation.
+ */
 import { type Edge, type Node } from 'reactflow';
 import dagre from '@dagrejs/dagre';
 
 import { PARAMETER } from '@/utils/constants';
 
-import { type IConstituenta } from '../../../../models/rsform';
+import { type IConstituenta } from './rsform';
 
-export function applyLayout(nodes: Node<IConstituenta>[], edges: Edge[], subLabels: boolean) {
+export interface TGNodeState {
+  cst: IConstituenta;
+  focused: boolean;
+}
+
+/** Represents graph node. */
+export interface TGNodeData extends Node {
+  id: string;
+  data: TGNodeState;
+}
+
+/** Represents graph node internal data. */
+export interface TGNodeInternal {
+  id: string;
+  data: TGNodeState;
+  selected: boolean;
+  dragging: boolean;
+  xPos: number;
+  yPos: number;
+}
+
+export function applyLayout(nodes: Node<TGNodeState>[], edges: Edge[], subLabels: boolean) {
   const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
   dagreGraph.setGraph({
     rankdir: 'TB',

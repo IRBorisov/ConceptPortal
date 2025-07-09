@@ -1,15 +1,18 @@
 import { useLibrary } from '@/features/library/backend/use-library';
+import { type IRSForm } from '@/features/rsform/models/rsform';
 
 import { Tooltip } from '@/components/container';
 import { IconHelp } from '@/components/icons';
 import { globalIDs, prefixes } from '@/utils/constants';
 
 import { colorBgSchemas } from '../../../colors';
-import { useRSEdit } from '../rsedit-context';
 
-export function SchemasGuide() {
+interface SchemasGuideProps {
+  schema: IRSForm;
+}
+
+export function SchemasGuide({ schema }: SchemasGuideProps) {
   const libraryItems = useLibrary().items;
-  const schema = useRSEdit().schema;
 
   const schemas = (() => {
     const processed = new Set<number>();

@@ -17,7 +17,6 @@ import { OssFlowContext } from './oss-flow-context';
 const Z_BLOCK = 1;
 const Z_SCHEMA = 10;
 
-// TODO: decouple nodes and edges from controller callbacks
 export const OssFlowState = ({ children }: React.PropsWithChildren) => {
   const { schema, setSelected } = useOssEdit();
   const { fitView } = useReactFlow();
@@ -77,6 +76,7 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
         target: target.nodeID,
         type: edgeStraight ? 'straight' : 'simplebezier',
         animated: edgeAnimate,
+        focusable: false,
         targetHandle: source.x > target.x ? 'right' : 'left'
       };
     });

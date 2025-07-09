@@ -12,6 +12,7 @@ import { type DlgDeleteOperationProps } from '@/features/oss/dialogs/dlg-delete-
 import { type DlgEditBlockProps } from '@/features/oss/dialogs/dlg-edit-block';
 import { type DlgEditOperationProps } from '@/features/oss/dialogs/dlg-edit-operation/dlg-edit-operation';
 import { type DlgRelocateConstituentsProps } from '@/features/oss/dialogs/dlg-relocate-constituents';
+import { type DlgShowTermGraphProps } from '@/features/oss/dialogs/dlg-show-term-graph/dlg-show-term-graph';
 import { type DlgCreateCstProps } from '@/features/rsform/dialogs/dlg-create-cst/dlg-create-cst';
 import { type DlgCstTemplateProps } from '@/features/rsform/dialogs/dlg-cst-template/dlg-cst-template';
 import { type DlgDeleteCstProps } from '@/features/rsform/dialogs/dlg-delete-cst/dlg-delete-cst';
@@ -61,7 +62,8 @@ export const DialogType = {
   SHOW_QR_CODE: 21,
   SHOW_AST: 22,
   SHOW_TYPE_GRAPH: 23,
-  GRAPH_PARAMETERS: 24
+  GRAPH_PARAMETERS: 24,
+  SHOW_TERM_GRAPH: 25
 } as const;
 export type DialogType = (typeof DialogType)[keyof typeof DialogType];
 
@@ -88,6 +90,7 @@ interface DialogsStore {
   showInlineSynthesis: (props: DlgInlineSynthesisProps) => void;
   showShowAST: (props: DlgShowASTProps) => void;
   showShowTypeGraph: (props: DlgShowTypeGraphProps) => void;
+  showShowTermGraph: (props: DlgShowTermGraphProps) => void;
   showChangeInputSchema: (props: DlgChangeInputSchemaProps) => void;
   showChangeLocation: (props: DlgChangeLocationProps) => void;
   showCloneLibraryItem: (props: DlgCloneLibraryItemProps) => void;
@@ -127,6 +130,7 @@ export const useDialogsStore = create<DialogsStore>()(set => ({
   showInlineSynthesis: props => set({ active: DialogType.INLINE_SYNTHESIS, props: props }),
   showShowAST: props => set({ active: DialogType.SHOW_AST, props: props }),
   showShowTypeGraph: props => set({ active: DialogType.SHOW_TYPE_GRAPH, props: props }),
+  showShowTermGraph: props => set({ active: DialogType.SHOW_TERM_GRAPH, props: props }),
   showChangeInputSchema: props => set({ active: DialogType.CHANGE_INPUT_SCHEMA, props: props }),
   showChangeLocation: props => set({ active: DialogType.CHANGE_LOCATION, props: props }),
   showCloneLibraryItem: props => set({ active: DialogType.CLONE_LIBRARY_ITEM, props: props }),

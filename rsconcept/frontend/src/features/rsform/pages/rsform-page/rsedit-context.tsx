@@ -9,7 +9,7 @@ export const RSTabID = {
   CARD: 0,
   CST_LIST: 1,
   CST_EDIT: 2,
-  TERM_GRAPH: 3
+  GRAPH: 3
 } as const;
 export type RSTabID = (typeof RSTabID)[keyof typeof RSTabID];
 

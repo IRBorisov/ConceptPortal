@@ -277,7 +277,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
           id='cst_convention'
           {...register('item_data.convention')}
           fitContent
-          className='max-h-32'
+          className='disabled:min-h-9 max-h-32'
           spellCheck
           label={isBasic ? 'Конвенция' : 'Комментарий'}
           placeholder={disabled ? '' : isBasic ? 'Договоренность об интерпретации' : 'Пояснение разработчика'}

@@ -1,45 +1,40 @@
-'use client';
+import { type IConstituenta } from '@/features/rsform/models/rsform';
 
 import { MiniButton } from '@/components/control';
 import { IconGraphInputs, IconGraphOutputs, IconReset } from '@/components/icons';
+import { cn } from '@/components/utils';
 
-import { useTermGraphStore } from '../../../stores/term-graph';
-import { useRSEdit } from '../rsedit-context';
+interface ToolbarFocusedCstProps {
+  className?: string;
+  focus: IConstituenta | null;
+  resetFocus: () => void;
 
-export function ToolbarFocusedCst() {
-  const { setFocus, focusCst } = useRSEdit();
+  showInputs: boolean;
+  toggleShowInputs: () => void;
 
-  const filter = useTermGraphStore(state => state.filter);
-  const setFilter = useTermGraphStore(state => state.setFilter);
+  showOutputs: boolean;
+  toggleShowOutputs: () => void;
+}
 
-  function resetFocus() {
-    setFocus(null);
-  }
-
-  function handleShowInputs() {
-    setFilter({
-      ...filter,
-      focusShowInputs: !filter.focusShowInputs
-    });
-  }
-
-  function handleShowOutputs() {
-    setFilter({
-      ...filter,
-      focusShowOutputs: !filter.focusShowOutputs
-    });
-  }
-
-  if (!focusCst) {
+export function ToolbarFocusedCst({
+  focus,
+  resetFocus,
+  className,
+  showInputs,
+  toggleShowInputs,
+  showOutputs,
+  toggleShowOutputs
+}: ToolbarFocusedCstProps) {
+  if (!focus) {
     return null;
   }
 
   return (
-    <div className='flex items-center cc-icons'>
+    <div className={cn('flex items-center cc-icons', className)}>
       <div className='w-31 mt-0.5 text-right select-none text-(--acc-fg-purple)'>
         <span>
           Фокус
-          <b> {focusCst.alias} </b>
+          <b> {focus.alias} </b>
         </span>
       </div>
 
@@ -49,14 +44,14 @@ export function ToolbarFocusedCst() {
         onClick={resetFocus}
       />
       <MiniButton
-        title={filter.focusShowInputs ? 'Скрыть поставщиков' : 'Отобразить поставщиков'}
-        icon={<IconGraphInputs size='1.25rem' className={filter.focusShowInputs ? 'icon-green' : 'icon-primary'} />}
-        onClick={handleShowInputs}
+        title={showInputs ? 'Скрыть поставщиков' : 'Отобразить поставщиков'}
+        icon={<IconGraphInputs size='1.25rem' className={showInputs ? 'icon-green' : 'icon-primary'} />}
+        onClick={toggleShowInputs}
       />
       <MiniButton
-        title={filter.focusShowOutputs ? 'Скрыть потребителей' : 'Отобразить потребителей'}
-        icon={<IconGraphOutputs size='1.25rem' className={filter.focusShowOutputs ? 'icon-green' : 'icon-primary'} />}
-        onClick={handleShowOutputs}
+        title={showOutputs ? 'Скрыть потребителей' : 'Отобразить потребителей'}
+        icon={<IconGraphOutputs size='1.25rem' className={showOutputs ? 'icon-green' : 'icon-primary'} />}
+        onClick={toggleShowOutputs}
       />
     </div>
   );

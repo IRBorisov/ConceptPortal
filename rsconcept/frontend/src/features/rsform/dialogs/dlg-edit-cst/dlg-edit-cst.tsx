@@ -92,7 +92,6 @@ export function DlgEditCst() {
           title='Редактировать в КС'
           noPadding
           icon={<IconRSForm size='1.25rem' className='text-primary' />}
-          className=''
           onClick={navigateToTarget}
         />
         <MiniButton

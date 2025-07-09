@@ -8,45 +8,19 @@ import { globalIDs } from '@/utils/constants';
 
 import { colorBgGraphNode } from '../../../../colors';
 import { labelCstTypification } from '../../../../labels';
+import { type TGNodeInternal } from '../../../../models/graph-layout';
 import { type IConstituenta } from '../../../../models/rsform';
 import { useTermGraphStore } from '../../../../stores/term-graph';
-import { useRSEdit } from '../../rsedit-context';
 
 const DESCRIPTION_THRESHOLD = 15;
 const LABEL_THRESHOLD = 3;
 
-/**
- * Represents graph AST node internal data.
- */
-interface TGNodeInternal {
-  id: string;
-  data: IConstituenta;
-  selected: boolean;
-  dragging: boolean;
-  xPos: number;
-  yPos: number;
-}
-
 export function TGNode(node: TGNodeInternal) {
-  const { focusCst, setFocus, navigateCst } = useRSEdit();
   const filter = useTermGraphStore(state => state.filter);
   const coloring = useTermGraphStore(state => state.coloring);
-  const isFocused = focusCst?.id === node.data.id;
 
-  const label = node.data.alias;
-  const description = !filter.noText ? node.data.term_resolved : '';
-
-  function handleContextMenu(event: React.MouseEvent<HTMLElement>) {
-    event.stopPropagation();
-    event.preventDefault();
-    setFocus(isFocused ? null : node.data);
-  }
-
-  function handleDoubleClick(event: React.MouseEvent) {
-    event.preventDefault();
-    event.stopPropagation();
-    navigateCst(node.data.id);
-  }
+  const label = node.data.cst.alias;
+  const description = !filter.noText ? node.data.cst.term_resolved : '';
 
   return (
     <>
@@ -54,21 +28,19 @@ export function TGNode(node: TGNodeInternal) {
       <div
         className={clsx(
           'w-full h-full cursor-default flex items-center justify-center rounded-full',
-          isFocused && 'border-[2px] border-selected',
+          node.data.focused && 'border-[2px] border-selected',
           label.length > LABEL_THRESHOLD ? 'text-[12px]/[16px]' : 'text-[14px]/[20px]'
         )}
         style={{
           backgroundColor: node.selected
             ? APP_COLORS.bgActiveSelection
-            : isFocused
+            : node.data.focused
             ? APP_COLORS.bgPurple
-            : colorBgGraphNode(node.data, coloring)
+            : colorBgGraphNode(node.data.cst, coloring)
         }}
         data-tooltip-id={globalIDs.tooltip}
-        data-tooltip-html={describeCstNode(node.data)}
+        data-tooltip-html={describeCstNode(node.data.cst)}
         data-tooltip-hidden={node.dragging}
-        onContextMenu={handleContextMenu}
-        onDoubleClick={handleDoubleClick}
       >
         <div className='cc-node-label'>{label}</div>
       </div>
@@ -80,8 +52,6 @@ export function TGNode(node: TGNodeInternal) {
             'pointer-events-none',
             description.length > DESCRIPTION_THRESHOLD ? 'text-[10px]/[12px]' : 'text-[12px]/[16px]'
           )}
-          onContextMenu={handleContextMenu}
-          onDoubleClick={handleDoubleClick}
         >
           <div className='absolute top-0 px-[4px] left-0 text-center w-full line-clamp-3 hover:line-clamp-none'>
             {description}

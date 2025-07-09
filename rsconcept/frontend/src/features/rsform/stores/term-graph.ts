@@ -32,6 +32,8 @@ export interface GraphFilterParams {
 interface TermGraphStore {
   filter: GraphFilterParams;
   setFilter: (value: GraphFilterParams) => void;
+  toggleFocusInputs: () => void;
+  toggleFocusOutputs: () => void;
 
   foldHidden: boolean;
   toggleFoldHidden: () => void;
@@ -63,6 +65,10 @@ export const useTermGraphStore = create<TermGraphStore>()(
         allowTheorem: true
       },
       setFilter: value => set({ filter: value }),
+      toggleFocusInputs: () =>
+        set(state => ({ filter: { ...state.filter, focusShowInputs: !state.filter.focusShowInputs } })),
+      toggleFocusOutputs: () =>
+        set(state => ({ filter: { ...state.filter, focusShowOutputs: !state.filter.focusShowOutputs } })),
 
       foldHidden: false,
       toggleFoldHidden: () => set(state => ({ foldHidden: !state.foldHidden })),

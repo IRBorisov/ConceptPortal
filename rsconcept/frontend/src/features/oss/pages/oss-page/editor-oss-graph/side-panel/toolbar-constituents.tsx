@@ -23,7 +23,6 @@ import { cn } from '@/components/utils';
 import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER, prefixes } from '@/utils/constants';
 import { type RO } from '@/utils/meta';
-import { notImplemented } from '@/utils/utils';
 
 interface ToolbarConstituentsProps {
   schema: IRSForm;
@@ -52,6 +51,7 @@ export function ToolbarConstituents({
   const showCreateCst = useDialogsStore(state => state.showCreateCst);
   const showDeleteCst = useDialogsStore(state => state.showDeleteCst);
   const showTypeGraph = useDialogsStore(state => state.showShowTypeGraph);
+  const showTermGraph = useDialogsStore(state => state.showShowTermGraph);
   const { moveConstituents } = useMoveConstituents();
   const { createConstituenta } = useCreateConstituenta();
 
@@ -225,7 +225,7 @@ export function ToolbarConstituents({
       <MiniButton
         icon={<IconTree size='1rem' className='hover:text-primary' />}
         title='Граф термов'
-        onClick={notImplemented}
+        onClick={() => showTermGraph({ schema })}
       />
       <MiniButton
         icon={<IconTypeGraph size='1rem' className='hover:text-primary' />}

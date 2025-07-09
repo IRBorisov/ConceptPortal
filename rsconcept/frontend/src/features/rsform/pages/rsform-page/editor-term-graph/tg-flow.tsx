@@ -3,6 +3,8 @@
 import { useEffect, useRef } from 'react';
 import { type Edge, MarkerType, type Node, useEdgesState, useNodesState, useOnSelectionChange } from 'reactflow';
 
+import { applyLayout, type TGNodeData } from '@/features/rsform/models/graph-layout';
+
 import { DiagramFlow, useReactFlow, useStoreApi } from '@/components/flow/diagram-flow';
 import { useMainHeight } from '@/stores/app-layout';
 import { PARAMETER } from '@/utils/constants';
@@ -10,13 +12,11 @@ import { withPreventDefault } from '@/utils/utils';
 
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { ToolbarGraphSelection } from '../../../components/toolbar-graph-selection';
-import { type IConstituenta } from '../../../models/rsform';
 import { isBasicConcept } from '../../../models/rsform-api';
 import { useTermGraphStore } from '../../../stores/term-graph';
 import { useRSEdit } from '../rsedit-context';
 
 import { TGEdgeTypes } from './graph/tg-edge-types';
-import { applyLayout } from './graph/tg-layout';
 import { TGNodeTypes } from './graph/tg-node-types';
 import { SelectColoring } from './select-coloring';
 import { ToolbarFocusedCst } from './toolbar-focused-cst';
@@ -40,13 +40,24 @@ export function TGFlow() {
   const store = useStoreApi();
   const { addSelectedNodes } = store.getState();
   const isProcessing = useMutatingRSForm();
-  const { isContentEditable, schema, selected, setSelected, promptDeleteCst, focusCst, setFocus, deselectAll } =
-    useRSEdit();
+  const {
+    isContentEditable,
+    schema,
+    selected,
+    setSelected,
+    promptDeleteCst,
+    focusCst,
+    setFocus,
+    deselectAll,
+    navigateCst
+  } = useRSEdit();
 
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges] = useEdgesState([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
+  const [edges, setEdges] = useEdgesState<Edge>([]);
 
   const filter = useTermGraphStore(state => state.filter);
+  const toggleFocusInputs = useTermGraphStore(state => state.toggleFocusInputs);
+  const toggleFocusOutputs = useTermGraphStore(state => state.toggleFocusOutputs);
   const { filteredGraph, hidden } = useFilteredGraph();
 
   function onSelectionChange({ nodes }: { nodes: Node[] }) {
@@ -65,7 +76,7 @@ export function TGFlow() {
     if (!viewportInitialized) {
       return;
     }
-    const newNodes: Node<IConstituenta>[] = [];
+    const newNodes: Node[] = [];
     filteredGraph.nodes.forEach(node => {
       const cst = schema.cstByID.get(node.id);
       if (cst) {
@@ -73,7 +84,7 @@ export function TGFlow() {
           id: String(node.id),
           type: 'concept',
           position: { x: 0, y: 0 },
-          data: cst
+          data: { cst: cst, focused: focusCst?.id === cst.id }
         });
       }
     });
@@ -144,11 +155,30 @@ export function TGFlow() {
     }
   }
 
+  function handleNodeContextMenu(event: React.MouseEvent<Element>, node: TGNodeData) {
+    event.preventDefault();
+    event.stopPropagation();
+    setFocus(focusCst?.id === node.data.cst.id ? null : node.data.cst);
+  }
+
+  function handleNodeDoubleClick(event: React.MouseEvent<Element>, node: TGNodeData) {
+    event.preventDefault();
+    event.stopPropagation();
+    navigateCst(node.data.cst.id);
+  }
+
   return (
     <div className='relative' tabIndex={-1} onKeyDown={handleKeyDown}>
       <div className='cc-tab-tools flex flex-col items-center rounded-b-2xl backdrop-blur-xs'>
         <ToolbarTermGraph />
-        <ToolbarFocusedCst />
+        <ToolbarFocusedCst
+          focus={focusCst}
+          resetFocus={() => setFocus(null)}
+          showInputs={filter.focusShowInputs}
+          toggleShowInputs={toggleFocusInputs}
+          showOutputs={filter.focusShowOutputs}
+          toggleShowOutputs={toggleFocusOutputs}
+        />
         {!focusCst ? (
           <ToolbarGraphSelection
             graph={schema.graph}
@@ -167,7 +197,7 @@ export function TGFlow() {
         <span className='px-2 pb-1 select-none whitespace-nowrap backdrop-blur-xs rounded-xl w-fit'>
           Выбор {selected.length} из {schema.stats?.count_all ?? 0}
         </span>
-        <SelectColoring />
+        <SelectColoring schema={schema} />
         <ViewHidden items={hidden} />
       </div>
 
@@ -180,6 +210,8 @@ export function TGFlow() {
         nodeTypes={TGNodeTypes}
         edgeTypes={TGEdgeTypes}
         onContextMenu={event => event.preventDefault()}
+        onNodeContextMenu={handleNodeContextMenu}
+        onNodeDoubleClick={handleNodeDoubleClick}
       />
     </div>
   );

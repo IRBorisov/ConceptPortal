@@ -14,7 +14,7 @@ export function useFilteredGraph() {
 }
 
 // ====== Internals =========
-function produceFilteredGraph(schema: IRSForm, params: GraphFilterParams, focusCst: IConstituenta | null) {
+export function produceFilteredGraph(schema: IRSForm, params: GraphFilterParams, focusCst: IConstituenta | null) {
   const filtered = schema.graph.clone();
   const allowedTypes: CstType[] = (() => {
     const result: CstType[] = [];
