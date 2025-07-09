@@ -6,11 +6,11 @@ import clsx from 'clsx';
 import { APP_COLORS } from '@/styling/colors';
 import { globalIDs } from '@/utils/constants';
 
-import { colorBgGraphNode } from '../../../../colors';
-import { labelCstTypification } from '../../../../labels';
-import { type TGNodeInternal } from '../../../../models/graph-layout';
-import { type IConstituenta } from '../../../../models/rsform';
-import { useTermGraphStore } from '../../../../stores/term-graph';
+import { colorBgGraphNode } from '../../../colors';
+import { labelCstTypification } from '../../../labels';
+import { type TGNodeInternal } from '../../../models/graph-api';
+import { type IConstituenta } from '../../../models/rsform';
+import { useTermGraphStore } from '../../../stores/term-graph';
 
 const DESCRIPTION_THRESHOLD = 15;
 const LABEL_THRESHOLD = 3;

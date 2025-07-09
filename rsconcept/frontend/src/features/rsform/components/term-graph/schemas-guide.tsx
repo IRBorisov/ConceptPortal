@@ -5,7 +5,7 @@ import { Tooltip } from '@/components/container';
 import { IconHelp } from '@/components/icons';
 import { globalIDs, prefixes } from '@/utils/constants';
 
-import { colorBgSchemas } from '../../../colors';
+import { colorBgSchemas } from '../../colors';
 
 interface SchemasGuideProps {
   schema: IRSForm;

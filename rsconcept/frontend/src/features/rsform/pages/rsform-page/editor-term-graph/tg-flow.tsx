@@ -3,23 +3,22 @@
 import { useEffect, useRef } from 'react';
 import { type Edge, MarkerType, type Node, useEdgesState, useNodesState, useOnSelectionChange } from 'reactflow';
 
-import { applyLayout, type TGNodeData } from '@/features/rsform/models/graph-layout';
-
 import { DiagramFlow, useReactFlow, useStoreApi } from '@/components/flow/diagram-flow';
 import { useMainHeight } from '@/stores/app-layout';
 import { PARAMETER } from '@/utils/constants';
 import { withPreventDefault } from '@/utils/utils';
 
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
+import { TGEdgeTypes } from '../../../components/term-graph/graph/tg-edge-types';
+import { TGNodeTypes } from '../../../components/term-graph/graph/tg-node-types';
+import { SelectColoring } from '../../../components/term-graph/select-coloring';
+import { ToolbarFocusedCst } from '../../../components/term-graph/toolbar-focused-cst';
 import { ToolbarGraphSelection } from '../../../components/toolbar-graph-selection';
+import { applyLayout, type TGNodeData } from '../../../models/graph-api';
 import { isBasicConcept } from '../../../models/rsform-api';
 import { useTermGraphStore } from '../../../stores/term-graph';
 import { useRSEdit } from '../rsedit-context';
 
-import { TGEdgeTypes } from './graph/tg-edge-types';
-import { TGNodeTypes } from './graph/tg-node-types';
-import { SelectColoring } from './select-coloring';
-import { ToolbarFocusedCst } from './toolbar-focused-cst';
 import { ToolbarTermGraph } from './toolbar-term-graph';
 import { useFilteredGraph } from './use-filtered-graph';
 import { ViewHidden } from './view-hidden';

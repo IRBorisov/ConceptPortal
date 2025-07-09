@@ -5,8 +5,8 @@ import { type IRSForm } from '@/features/rsform/models/rsform';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/input/select';
 import { cn } from '@/components/utils';
 
-import { mapLabelColoring } from '../../../labels';
-import { useTermGraphStore } from '../../../stores/term-graph';
+import { mapLabelColoring } from '../../labels';
+import { useTermGraphStore } from '../../stores/term-graph';
 
 import { SchemasGuide } from './schemas-guide';
 
