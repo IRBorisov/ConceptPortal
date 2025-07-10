@@ -6,7 +6,7 @@ import { MiniButton } from '@/components/control';
 import { IconClustering, IconClusteringOff, IconFitImage, IconText, IconTextOff } from '@/components/icons';
 import { PARAMETER } from '@/utils/constants';
 
-import { flowOptions } from './tg-readonly-flow';
+import { flowOptions } from '../../pages/oss-page/editor-oss-graph/oss-flow';
 
 export default function ToolbarGraphFilter() {
   const filter = useTermGraphStore(state => state.filter);
