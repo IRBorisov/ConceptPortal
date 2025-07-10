@@ -29,7 +29,7 @@ export function DlgDeleteOperation() {
       target: target.id,
       layout: layout,
       keep_constituents: false,
-      delete_schema: false
+      delete_schema: true
     }
   });
 
@@ -49,20 +49,6 @@ export function DlgDeleteOperation() {
       <TextInput disabled dense noBorder id='operation_alias' label='Операция' value={target.alias} />
       <Controller
         control={control}
-        name='keep_constituents'
-        render={({ field }) => (
-          <Checkbox
-            label='Сохранить наследованные конституенты'
-            titleHtml='Наследованные конституенты <br/>превратятся в дописанные'
-            value={field.value}
-            onChange={field.onChange}
-            disabled={target.result === null}
-          />
-        )}
-      />
-
-      <Controller
-        control={control}
         name='delete_schema'
         render={({ field }) => (
           <Checkbox
@@ -75,6 +61,19 @@ export function DlgDeleteOperation() {
             value={field.value}
             onChange={field.onChange}
             disabled={target.is_import || target.result === null}
+          />
+        )}
+      />
+      <Controller
+        control={control}
+        name='keep_constituents'
+        render={({ field }) => (
+          <Checkbox
+            label='Сохранить наследованные конституенты'
+            titleHtml='Наследованные конституенты <br/>превратятся в дописанные'
+            value={field.value}
+            onChange={field.onChange}
+            disabled={target.result === null}
           />
         )}
       />
