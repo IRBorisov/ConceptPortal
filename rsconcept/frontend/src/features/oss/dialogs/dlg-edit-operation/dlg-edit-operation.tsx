@@ -18,7 +18,7 @@ import { type LayoutManager } from '../../models/oss-layout-api';
 
 import { TabArguments } from './tab-arguments';
 import { TabOperation } from './tab-operation';
-import { TabSynthesis } from './tab-synthesis';
+import { TabSubstitutions } from './tab-substitutions';
 
 export interface DlgEditOperationProps {
   manager: LayoutManager;
@@ -28,7 +28,7 @@ export interface DlgEditOperationProps {
 export const TabID = {
   CARD: 0,
   ARGUMENTS: 1,
-  SUBSTITUTION: 2
+  SUBSTITUTIONS: 2
 } as const;
 export type TabID = (typeof TabID)[keyof typeof TabID];
 
@@ -73,7 +73,7 @@ export function DlgEditOperation() {
       onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
       className='w-160 px-6 h-128'
       helpTopic={HelpTopic.UI_SUBSTITUTIONS}
-      hideHelpWhen={() => activeTab !== TabID.SUBSTITUTION}
+      hideHelpWhen={() => activeTab !== TabID.SUBSTITUTIONS}
     >
       <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>
         <TabList className='mb-3 mx-auto w-fit flex border divide-x rounded-none'>
@@ -109,7 +109,7 @@ export function DlgEditOperation() {
           {target.operation_type === OperationType.SYNTHESIS ? (
             <TabPanel>
               <Suspense fallback={<Loader />}>
-                <TabSynthesis />
+                <TabSubstitutions />
               </Suspense>
             </TabPanel>
           ) : null}

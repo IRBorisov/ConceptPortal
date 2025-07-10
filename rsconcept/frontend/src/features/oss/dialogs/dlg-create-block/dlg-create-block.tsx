@@ -49,10 +49,12 @@ export function DlgCreateBlock() {
         description: '',
         parent: initialParent
       },
-      position_x: defaultX,
-      position_y: defaultY,
-      width: BLOCK_NODE_MIN_WIDTH,
-      height: BLOCK_NODE_MIN_HEIGHT,
+      position: {
+        x: defaultX,
+        y: defaultY,
+        width: BLOCK_NODE_MIN_WIDTH,
+        height: BLOCK_NODE_MIN_HEIGHT
+      },
       children_blocks: initialChildren.filter(item => item.nodeType === NodeType.BLOCK).map(item => item.id),
       children_operations: initialChildren.filter(item => item.nodeType === NodeType.OPERATION).map(item => item.id),
       layout: manager.layout
@@ -66,13 +68,9 @@ export function DlgCreateBlock() {
   const isValid = !!title && !manager.oss.blocks.some(block => block.title === title);
 
   function onSubmit(data: ICreateBlockDTO) {
-    const rectangle = manager.newBlockPosition(data);
-    data.position_x = rectangle.x;
-    data.position_y = rectangle.y;
-    data.width = rectangle.width;
-    data.height = rectangle.height;
+    data.position = manager.newBlockPosition(data);
     data.layout = manager.layout;
-    void createBlock({ itemID: manager.oss.id, data: data }).then(response => onCreate?.(response.new_block.id));
+    void createBlock({ itemID: manager.oss.id, data: data }).then(response => onCreate?.(response.new_block));
   }
 
   return (

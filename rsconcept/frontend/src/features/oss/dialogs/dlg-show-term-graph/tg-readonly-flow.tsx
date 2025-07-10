@@ -9,13 +9,22 @@ import { SelectColoring } from '@/features/rsform/components/term-graph/select-c
 import { ToolbarFocusedCst } from '@/features/rsform/components/term-graph/toolbar-focused-cst';
 import { applyLayout, produceFilteredGraph, type TGNodeData } from '@/features/rsform/models/graph-api';
 import { type IConstituenta, type IRSForm } from '@/features/rsform/models/rsform';
-import { flowOptions } from '@/features/rsform/pages/rsform-page/editor-term-graph/tg-flow';
 import { useTermGraphStore } from '@/features/rsform/stores/term-graph';
 
 import { DiagramFlow, useReactFlow } from '@/components/flow/diagram-flow';
 import { PARAMETER } from '@/utils/constants';
 
 import ToolbarGraphFilter from './toolbar-graph-filter';
+
+export const flowOptions = {
+  fitView: true,
+  fitViewOptions: { padding: 0.3, duration: PARAMETER.zoomDuration },
+  edgesFocusable: false,
+  nodesFocusable: false,
+  nodesConnectable: false,
+  maxZoom: 3,
+  minZoom: 0.25
+} as const;
 
 export interface TGReadonlyFlowProps {
   schema: IRSForm;

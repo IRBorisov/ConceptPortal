@@ -3,18 +3,18 @@ from rest_framework import serializers
 
 from apps.library.serializers import LibraryItemSerializer
 
-from .data_access import BlockSerializer, OperationSchemaSerializer, OperationSerializer
+from .data_access import OperationSchemaSerializer
 
 
 class OperationCreatedResponse(serializers.Serializer):
     ''' Serializer: Create operation response. '''
-    new_operation = OperationSerializer()
+    new_operation = serializers.IntegerField()
     oss = OperationSchemaSerializer()
 
 
 class BlockCreatedResponse(serializers.Serializer):
     ''' Serializer: Create block response. '''
-    new_block = BlockSerializer()
+    new_block = serializers.IntegerField()
     oss = OperationSchemaSerializer()
 
 

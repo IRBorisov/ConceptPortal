@@ -8,9 +8,11 @@ import {
   type IBlockCreatedResponse,
   type IConstituentaReference,
   type ICreateBlockDTO,
-  type ICreateOperationDTO,
+  type ICreateSchemaDTO,
+  type ICreateSynthesisDTO,
   type IDeleteBlockDTO,
   type IDeleteOperationDTO,
+  type IImportSchemaDTO,
   type IInputCreatedResponse,
   type IMoveItemsDTO,
   type IOperationCreatedResponse,
@@ -83,13 +85,40 @@ export const ossApi = {
       }
     }),
 
-  createOperation: ({ itemID, data }: { itemID: number; data: ICreateOperationDTO }) =>
-    axiosPost<ICreateOperationDTO, IOperationCreatedResponse>({
+  createSchema: ({ itemID, data }: { itemID: number; data: ICreateSchemaDTO }) =>
+    axiosPost<ICreateSchemaDTO, IOperationCreatedResponse>({
       schema: schemaOperationCreatedResponse,
-      endpoint: `/api/oss/${itemID}/create-operation`,
+      endpoint: `/api/oss/${itemID}/create-schema`,
       request: {
         data: data,
-        successMessage: response => infoMsg.newOperation(response.new_operation.alias)
+        successMessage: response => {
+          const alias = response.oss.operations.find(op => op.id === response.new_operation)?.alias;
+          return infoMsg.newOperation(alias ?? 'ОШИБКА');
+        }
+      }
+    }),
+  createSynthesis: ({ itemID, data }: { itemID: number; data: ICreateSynthesisDTO }) =>
+    axiosPost<ICreateSynthesisDTO, IOperationCreatedResponse>({
+      schema: schemaOperationCreatedResponse,
+      endpoint: `/api/oss/${itemID}/create-synthesis`,
+      request: {
+        data: data,
+        successMessage: response => {
+          const alias = response.oss.operations.find(op => op.id === response.new_operation)?.alias;
+          return infoMsg.newOperation(alias ?? 'ОШИБКА');
+        }
+      }
+    }),
+  importSchema: ({ itemID, data }: { itemID: number; data: IImportSchemaDTO }) =>
+    axiosPost<IImportSchemaDTO, IOperationCreatedResponse>({
+      schema: schemaOperationCreatedResponse,
+      endpoint: `/api/oss/${itemID}/import-schema`,
+      request: {
+        data: data,
+        successMessage: response => {
+          const alias = response.oss.operations.find(op => op.id === response.new_operation)?.alias;
+          return infoMsg.newOperation(alias ?? 'ОШИБКА');
+        }
       }
     }),
   updateOperation: ({ itemID, data }: { itemID: number; data: IUpdateOperationDTO }) =>

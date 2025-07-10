@@ -21,7 +21,8 @@ import {
   IconNewItem,
   IconReset,
   IconSave,
-  IconSettings
+  IconSettings,
+  IconSynthesis
 } from '@/components/icons';
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
@@ -184,13 +185,13 @@ export function ToolbarOssGraph({
               <DropdownButton
                 text='Импорт КС'
                 titleHtml={prepareTooltip('Импорт концептуальной схемы', 'Alt + 3')}
-                icon={<IconDownload size='1.25rem' className='text-constructive' />}
+                icon={<IconDownload size='1.25rem' className='text-primary' />}
                 onClick={onImportSchema}
               />
               <DropdownButton
                 text='Синтез'
                 titleHtml={prepareTooltip('Синтез концептуальных схем', 'Alt + 4')}
-                icon={<IconConceptBlock size='1.25rem' className='text-primary' />}
+                icon={<IconSynthesis size='1.25rem' className='text-primary' />}
                 onClick={onCreateSynthesis}
               />
               {user.is_staff ? (

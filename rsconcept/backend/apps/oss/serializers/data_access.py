@@ -13,7 +13,7 @@ from apps.rsform.serializers import SubstitutionSerializerBase
 from shared import messages as msg
 
 from ..models import Argument, Block, Inheritance, Operation, OperationSchema, OperationType
-from .basics import NodeSerializer, SubstitutionExSerializer
+from .basics import NodeSerializer, PositionSerializer, SubstitutionExSerializer
 
 
 class OperationSerializer(serializers.ModelSerializer):
@@ -58,10 +58,7 @@ class CreateBlockSerializer(serializers.Serializer):
         child=NodeSerializer()
     )
     item_data = BlockCreateData()
-    width = serializers.FloatField()
-    height = serializers.FloatField()
-    position_x = serializers.FloatField()
-    position_y = serializers.FloatField()
+    position = PositionSerializer()
     children_operations = PKField(many=True, queryset=Operation.objects.all().only('oss_id'))
     children_blocks = PKField(many=True, queryset=Block.objects.all().only('oss_id'))
 
@@ -193,30 +190,21 @@ class MoveItemsSerializer(serializers.Serializer):
         return attrs
 
 
-class CreateOperationSerializer(serializers.Serializer):
-    ''' Serializer: Operation creation. '''
-    class CreateOperationData(serializers.ModelSerializer):
-        ''' Serializer: Operation creation data. '''
-        alias = serializers.CharField()
-        operation_type = serializers.ChoiceField(OperationType.choices)
+class CreateOperationData(serializers.ModelSerializer):
+    ''' Serializer: Operation creation data. '''
+    alias = serializers.CharField()
 
-        class Meta:
-            ''' serializer metadata. '''
-            model = Operation
-            fields = \
-                'alias', 'operation_type', 'title', \
-                'description', 'result', 'parent'
+    class Meta:
+        ''' serializer metadata. '''
+        model = Operation
+        fields = 'alias', 'title', 'description', 'parent'
 
-    layout = serializers.ListField(
-        child=NodeSerializer()
-    )
+
+class CreateSchemaSerializer(serializers.Serializer):
+    ''' Serializer: Schema creation for new operation. '''
+    layout = serializers.ListField(child=NodeSerializer())
     item_data = CreateOperationData()
-    width = serializers.FloatField()
-    height = serializers.FloatField()
-    position_x = serializers.FloatField()
-    position_y = serializers.FloatField()
-    create_schema = serializers.BooleanField(default=False, required=False)
-    arguments = PKField(many=True, queryset=Operation.objects.all().only('pk'), required=False)
+    position = PositionSerializer()
 
     def validate(self, attrs):
         oss = cast(LibraryItem, self.context['oss'])
@@ -225,14 +213,82 @@ class CreateOperationSerializer(serializers.Serializer):
             raise serializers.ValidationError({
                 'parent': msg.parentNotInOSS()
             })
+        return attrs
 
-        if 'arguments' not in attrs:
-            return attrs
+
+class ImportSchemaSerializer(serializers.Serializer):
+    ''' Serializer: Import schema to new operation. '''
+    layout = serializers.ListField(child=NodeSerializer())
+    item_data = CreateOperationData()
+    position = PositionSerializer()
+
+    source = PKField(
+        many=False,
+        queryset=LibraryItem.objects.filter(item_type=LibraryItemType.RSFORM)
+    )  # type: ignore
+    clone_source = serializers.BooleanField()
+
+    def validate(self, attrs):
+        oss = cast(LibraryItem, self.context['oss'])
+        parent = attrs['item_data'].get('parent')
+        if parent is not None and parent.oss_id != oss.pk:
+            raise serializers.ValidationError({
+                'parent': msg.parentNotInOSS()
+            })
+        return attrs
+
+
+class CreateSynthesisSerializer(serializers.Serializer):
+    ''' Serializer: Synthesis operation creation. '''
+    layout = serializers.ListField(child=NodeSerializer())
+    item_data = CreateOperationData()
+    position = PositionSerializer()
+
+    arguments = PKField(
+        many=True,
+        queryset=Operation.objects.all().only('pk')
+    )
+    substitutions = serializers.ListField(
+        child=SubstitutionSerializerBase(),
+    )
+
+    def validate(self, attrs):
+        oss = cast(LibraryItem, self.context['oss'])
+        parent = attrs['item_data'].get('parent')
+        if parent is not None and parent.oss_id != oss.pk:
+            raise serializers.ValidationError({
+                'parent': msg.parentNotInOSS()
+            })
         for operation in attrs['arguments']:
             if operation.oss_id != oss.pk:
                 raise serializers.ValidationError({
                     'arguments': msg.operationNotInOSS()
                 })
+
+        schemas = [arg.result_id for arg in attrs['arguments'] if arg.result is not None]
+        substitutions = attrs['substitutions']
+        to_delete = {x['original'].pk for x in substitutions}
+        deleted = set()
+        for item in substitutions:
+            original_cst = cast(Constituenta, item['original'])
+            substitution_cst = cast(Constituenta, item['substitution'])
+            if original_cst.schema_id not in schemas:
+                raise serializers.ValidationError({
+                    f'{original_cst.pk}': msg.constituentaNotFromOperation()
+                })
+            if substitution_cst.schema_id not in schemas:
+                raise serializers.ValidationError({
+                    f'{substitution_cst.pk}': msg.constituentaNotFromOperation()
+                })
+            if original_cst.pk in deleted or substitution_cst.pk in to_delete:
+                raise serializers.ValidationError({
+                    f'{original_cst.pk}': msg.substituteDouble(original_cst.alias)
+                })
+            if original_cst.schema_id == substitution_cst.schema_id:
+                raise serializers.ValidationError({
+                    'alias': msg.substituteTrivial(original_cst.alias)
+                })
+            deleted.add(original_cst.pk)
         return attrs
 
 

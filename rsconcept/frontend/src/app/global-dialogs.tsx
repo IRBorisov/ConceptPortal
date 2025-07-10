@@ -20,9 +20,9 @@ const DlgCloneLibraryItem = React.lazy(() =>
 const DlgCreateCst = React.lazy(() =>
   import('@/features/rsform/dialogs/dlg-create-cst').then(module => ({ default: module.DlgCreateCst }))
 );
-const DlgCreateOperation = React.lazy(() =>
-  import('@/features/oss/dialogs/dlg-create-operation').then(module => ({
-    default: module.DlgCreateOperation
+const DlgCreateSynthesis = React.lazy(() =>
+  import('@/features/oss/dialogs/dlg-create-synthesis').then(module => ({
+    default: module.DlgCreateSynthesis
   }))
 );
 const DlgCreateVersion = React.lazy(() =>
@@ -134,6 +134,12 @@ const DlgEditCst = React.lazy(() =>
 const DlgShowTermGraph = React.lazy(() =>
   import('@/features/oss/dialogs/dlg-show-term-graph').then(module => ({ default: module.DlgShowTermGraph }))
 );
+const DlgCreateSchema = React.lazy(() =>
+  import('@/features/oss/dialogs/dlg-create-schema').then(module => ({ default: module.DlgCreateSchema }))
+);
+const DlgImportSchema = React.lazy(() =>
+  import('@/features/oss/dialogs/dlg-import-schema').then(module => ({ default: module.DlgImportSchema }))
+);
 
 export const GlobalDialogs = () => {
   const active = useDialogsStore(state => state.active);
@@ -146,8 +152,8 @@ export const GlobalDialogs = () => {
       return <DlgCstTemplate />;
     case DialogType.CREATE_CONSTITUENTA:
       return <DlgCreateCst />;
-    case DialogType.CREATE_OPERATION:
-      return <DlgCreateOperation />;
+    case DialogType.CREATE_SYNTHESIS:
+      return <DlgCreateSynthesis />;
     case DialogType.CREATE_BLOCK:
       return <DlgCreateBlock />;
     case DialogType.EDIT_BLOCK:
@@ -198,5 +204,9 @@ export const GlobalDialogs = () => {
       return <DlgEditCst />;
     case DialogType.SHOW_TERM_GRAPH:
       return <DlgShowTermGraph />;
+    case DialogType.CREATE_SCHEMA:
+      return <DlgCreateSchema />;
+    case DialogType.IMPORT_SCHEMA:
+      return <DlgImportSchema />;
   }
 };

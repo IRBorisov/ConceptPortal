@@ -70,9 +70,10 @@ class TestOssOperations(EndpointTester):
         }])
 
 
-    @decl_endpoint('/api/oss/{item}/create-operation', method='post')
-    def test_create_operation(self):
+    @decl_endpoint('/api/oss/{item}/create-schema', method='post')
+    def test_create_schema(self):
         self.populateData()
+        Editor.add(self.owned.model.pk, self.user2.pk)
         self.executeBadData(item=self.owned_id)
 
         data = {
@@ -80,47 +81,50 @@ class TestOssOperations(EndpointTester):
                 'alias': 'Test3',
                 'title': 'Test title',
                 'description': 'Тест кириллицы',
-
+                'parent': None
             },
             'layout': self.layout_data,
-            'position_x': 1,
-            'position_y': 1,
-            'width': 500,
-            'height': 50
-
+            'position': {
+                'x': 1,
+                'y': 1,
+                'width': 500,
+                'height': 50
+            }
         }
-        self.executeBadData(data=data)
-
-        data['item_data']['operation_type'] = 'invalid'
-        self.executeBadData(data=data)
-
-        data['item_data']['operation_type'] = OperationType.INPUT
         self.executeNotFound(data=data, item=self.invalid_id)
 
         response = self.executeCreated(data=data, item=self.owned_id)
         self.assertEqual(len(response.data['oss']['operations']), 4)
-        new_operation = response.data['new_operation']
+        new_operation_id = response.data['new_operation']
+        new_operation = next(op for op in response.data['oss']['operations'] if op['id'] == new_operation_id)
         layout = response.data['oss']['layout']
-        item = [item for item in layout if item['nodeID'] == 'o' + str(new_operation['id'])][0]
+        operation_node = [item for item in layout if item['nodeID'] == 'o' + str(new_operation_id)][0]
+        schema = LibraryItem.objects.get(pk=new_operation['result'])
         self.assertEqual(new_operation['alias'], data['item_data']['alias'])
-        self.assertEqual(new_operation['operation_type'], data['item_data']['operation_type'])
+        self.assertEqual(new_operation['operation_type'], OperationType.INPUT)
         self.assertEqual(new_operation['title'], data['item_data']['title'])
         self.assertEqual(new_operation['description'], data['item_data']['description'])
-        self.assertEqual(new_operation['result'], None)
         self.assertEqual(new_operation['parent'], None)
-        self.assertEqual(item['x'], data['position_x'])
-        self.assertEqual(item['y'], data['position_y'])
-        self.assertEqual(item['width'], data['width'])
-        self.assertEqual(item['height'], data['height'])
-        self.operation1.refresh_from_db()
+        self.assertNotEqual(new_operation['result'], None)
+        self.assertEqual(operation_node['x'], data['position']['x'])
+        self.assertEqual(operation_node['y'], data['position']['y'])
+        self.assertEqual(operation_node['width'], data['position']['width'])
+        self.assertEqual(operation_node['height'], data['position']['height'])
+        self.assertEqual(schema.alias, data['item_data']['alias'])
+        self.assertEqual(schema.title, data['item_data']['title'])
+        self.assertEqual(schema.description, data['item_data']['description'])
+        self.assertEqual(schema.visible, False)
+        self.assertEqual(schema.access_policy, self.owned.model.access_policy)
+        self.assertEqual(schema.location, self.owned.model.location)
+        self.assertIn(self.user2, schema.getQ_editors())
 
         self.executeForbidden(data=data, item=self.unowned_id)
         self.toggle_admin(True)
         self.executeCreated(data=data, item=self.unowned_id)
 
 
-    @decl_endpoint('/api/oss/{item}/create-operation', method='post')
-    def test_create_operation_parent(self):
+    @decl_endpoint('/api/oss/{item}/create-schema', method='post')
+    def test_create_schema_parent(self):
         self.populateData()
         data = {
             'item_data': {
@@ -128,14 +132,15 @@ class TestOssOperations(EndpointTester):
                 'alias': 'Test3',
                 'title': 'Test title',
                 'description': '',
-                'operation_type': OperationType.INPUT
 
             },
             'layout': self.layout_data,
-            'position_x': 1,
-            'position_y': 1,
-            'width': 500,
-            'height': 50
+            'position': {
+                'x': 1,
+                'y': 1,
+                'width': 500,
+                'height': 50
+            }
 
         }
         self.executeBadData(data=data, item=self.owned_id)
@@ -147,90 +152,40 @@ class TestOssOperations(EndpointTester):
         block_owned = self.owned.create_block(title='TestBlock2')
         data['item_data']['parent'] = block_owned.id
         response = self.executeCreated(data=data, item=self.owned_id)
+        new_operation_id = response.data['new_operation']
+        new_operation = next(op for op in response.data['oss']['operations'] if op['id'] == new_operation_id)
         self.assertEqual(len(response.data['oss']['operations']), 4)
-        new_operation = response.data['new_operation']
         self.assertEqual(new_operation['parent'], block_owned.id)
 
 
-    @decl_endpoint('/api/oss/{item}/create-operation', method='post')
-    def test_create_operation_arguments(self):
+    @decl_endpoint('/api/oss/{item}/create-synthesis', method='post')
+    def test_create_synthesis(self):
         self.populateData()
-        data = {
-            'item_data': {
-                'alias': 'Test4',
-                'operation_type': OperationType.SYNTHESIS
-            },
-            'layout': self.layout_data,
-            'position_x': 1,
-            'position_y': 1,
-            'width': 500,
-            'height': 50,
-            'arguments': [self.operation1.pk, self.operation3.pk]
-        }
-        response = self.executeCreated(data=data, item=self.owned_id)
-        self.owned.refresh_from_db()
-        new_operation = response.data['new_operation']
-        arguments = self.owned.arguments()
-        self.assertTrue(arguments.filter(operation__id=new_operation['id'], argument=self.operation1))
-        self.assertTrue(arguments.filter(operation__id=new_operation['id'], argument=self.operation3))
-
-
-    @decl_endpoint('/api/oss/{item}/create-operation', method='post')
-    def test_create_operation_result(self):
-        self.populateData()
-
-        self.operation1.result = None
-        self.operation1.save()
-
-        data = {
-            'item_data': {
-                'alias': 'Test4',
-                'operation_type': OperationType.INPUT,
-                'result': self.ks1.model.pk
-            },
-            'layout': self.layout_data,
-            'position_x': 1,
-            'position_y': 1,
-            'width': 500,
-            'height': 50
-        }
-        response = self.executeCreated(data=data, item=self.owned_id)
-        new_operation = response.data['new_operation']
-        self.assertEqual(new_operation['result'], self.ks1.model.pk)
-
-
-    @decl_endpoint('/api/oss/{item}/create-operation', method='post')
-    def test_create_operation_schema(self):
-        self.populateData()
-        Editor.add(self.owned.model.pk, self.user2.pk)
         data = {
             'item_data': {
                 'alias': 'Test4',
                 'title': 'Test title',
-                'description': 'Comment',
-                'operation_type': OperationType.INPUT,
-                'result': self.ks1.model.pk
+                'description': '',
+                'parent': None
             },
-            'create_schema': True,
             'layout': self.layout_data,
-            'position_x': 1,
-            'position_y': 1,
-            'width': 500,
-            'height': 50
+            'position': {
+                'x': 1,
+                'y': 1,
+                'width': 500,
+                'height': 50
+            },
+            'arguments': [self.operation1.pk, self.operation3.pk],
+            'substitutions': []
         }
-        self.executeBadData(data=data, item=self.owned_id)
-        data['item_data']['result'] = None
         response = self.executeCreated(data=data, item=self.owned_id)
         self.owned.refresh_from_db()
-        new_operation = response.data['new_operation']
-        schema = LibraryItem.objects.get(pk=new_operation['result'])
-        self.assertEqual(schema.alias, data['item_data']['alias'])
-        self.assertEqual(schema.title, data['item_data']['title'])
-        self.assertEqual(schema.description, data['item_data']['description'])
-        self.assertEqual(schema.visible, False)
-        self.assertEqual(schema.access_policy, self.owned.model.access_policy)
-        self.assertEqual(schema.location, self.owned.model.location)
-        self.assertIn(self.user2, schema.getQ_editors())
+        new_operation_id = response.data['new_operation']
+        new_operation = next(op for op in response.data['oss']['operations'] if op['id'] == new_operation_id)
+        arguments = self.owned.arguments()
+        self.assertTrue(arguments.filter(operation__id=new_operation_id, argument=self.operation1))
+        self.assertTrue(arguments.filter(operation__id=new_operation_id, argument=self.operation3))
+        self.assertNotEqual(new_operation['result'], None)
 
 
     @decl_endpoint('/api/oss/{item}/delete-operation', method='patch')
@@ -497,3 +452,141 @@ class TestOssOperations(EndpointTester):
         self.assertEqual(len(items), 1)
         self.assertEqual(items[0].alias, 'X1')
         self.assertEqual(items[0].term_resolved, self.ks2X1.term_resolved)
+
+    @decl_endpoint('/api/oss/{item}/import-schema', method='post')
+    def test_import_schema(self):
+        self.populateData()
+        target_ks = RSForm.create(
+            alias='KS_Target',
+            title='Target',
+            owner=self.user
+        )
+        data = {
+            'item_data': {
+                'alias': 'ImportedAlias',
+                'title': 'Imported Title',
+                'description': 'Imported Description',
+                'parent': None
+            },
+            'layout': self.layout_data,
+            'position': {
+                'x': 10,
+                'y': 20,
+                'width': 300,
+                'height': 60
+            },
+            'source': target_ks.model.pk,
+            'clone_source': False
+        }
+        response = self.executeCreated(data=data, item=self.owned_id)
+        new_operation_id = response.data['new_operation']
+        new_operation = next(op for op in response.data['oss']['operations'] if op['id'] == new_operation_id)
+        layout = response.data['oss']['layout']
+        operation_node = [item for item in layout if item['nodeID'] == 'o' + str(new_operation_id)][0]
+        schema = LibraryItem.objects.get(pk=new_operation['result'])
+        self.assertEqual(new_operation['alias'], data['item_data']['alias'])
+        self.assertEqual(new_operation['title'], data['item_data']['title'])
+        self.assertEqual(new_operation['description'], data['item_data']['description'])
+        self.assertEqual(new_operation['operation_type'], OperationType.INPUT)
+        self.assertEqual(schema.pk, target_ks.model.pk)  # Not a clone
+        self.assertEqual(operation_node['x'], data['position']['x'])
+        self.assertEqual(operation_node['y'], data['position']['y'])
+        self.assertEqual(operation_node['width'], data['position']['width'])
+        self.assertEqual(operation_node['height'], data['position']['height'])
+        self.assertEqual(schema.visible, target_ks.model.visible)
+        self.assertEqual(schema.access_policy, target_ks.model.access_policy)
+        self.assertEqual(schema.location, target_ks.model.location)
+
+    @decl_endpoint('/api/oss/{item}/import-schema', method='post')
+    def test_import_schema_clone(self):
+        self.populateData()
+        # Use ks2 as the source RSForm
+        data = {
+            'item_data': {
+                'alias': 'ClonedAlias',
+                'title': 'Cloned Title',
+                'description': 'Cloned Description',
+                'parent': None
+            },
+            'layout': self.layout_data,
+            'position': {
+                'x': 42,
+                'y': 1337,
+                'width': 400,
+                'height': 80
+            },
+            'source': self.ks2.model.pk,
+            'clone_source': True
+        }
+        response = self.executeCreated(data=data, item=self.owned_id)
+        new_operation_id = response.data['new_operation']
+        new_operation = next(op for op in response.data['oss']['operations'] if op['id'] == new_operation_id)
+        layout = response.data['oss']['layout']
+        operation_node = [item for item in layout if item['nodeID'] == 'o' + str(new_operation_id)][0]
+        schema = LibraryItem.objects.get(pk=new_operation['result'])
+        self.assertEqual(new_operation['alias'], data['item_data']['alias'])
+        self.assertEqual(new_operation['title'], data['item_data']['title'])
+        self.assertEqual(new_operation['description'], data['item_data']['description'])
+        self.assertEqual(new_operation['operation_type'], OperationType.INPUT)
+        self.assertNotEqual(schema.pk, self.ks2.model.pk)  # Should be a clone
+        self.assertEqual(schema.alias, data['item_data']['alias'])
+        self.assertEqual(schema.title, data['item_data']['title'])
+        self.assertEqual(schema.description, data['item_data']['description'])
+        self.assertEqual(operation_node['x'], data['position']['x'])
+        self.assertEqual(operation_node['y'], data['position']['y'])
+        self.assertEqual(operation_node['width'], data['position']['width'])
+        self.assertEqual(operation_node['height'], data['position']['height'])
+        self.assertEqual(schema.visible, False)
+        self.assertEqual(schema.access_policy, self.owned.model.access_policy)
+        self.assertEqual(schema.location, self.owned.model.location)
+
+    @decl_endpoint('/api/oss/{item}/import-schema', method='post')
+    def test_import_schema_bad_data(self):
+        self.populateData()
+        # Missing source
+        data = {
+            'item_data': {
+                'alias': 'Bad',
+                'title': 'Bad',
+                'description': 'Bad',
+                'parent': None
+            },
+            'layout': self.layout_data,
+            'position': {
+                'x': 0, 'y': 0, 'width': 1, 'height': 1
+            },
+            # 'source' missing
+            'clone_source': False
+        }
+        self.executeBadData(data=data, item=self.owned_id)
+        # Invalid source
+        data['source'] = self.invalid_id
+        self.executeBadData(data=data, item=self.owned_id)
+        # Invalid OSS
+        data['source'] = self.ks1.model.pk
+        self.executeNotFound(data=data, item=self.invalid_id)
+
+    @decl_endpoint('/api/oss/{item}/import-schema', method='post')
+    def test_import_schema_permissions(self):
+        self.populateData()
+        data = {
+            'item_data': {
+                'alias': 'PermTest',
+                'title': 'PermTest',
+                'description': 'PermTest',
+                'parent': None
+            },
+            'layout': self.layout_data,
+            'position': {
+                'x': 5, 'y': 5, 'width': 10, 'height': 10
+            },
+            'source': self.ks1.model.pk,
+            'clone_source': False
+        }
+        # Not an editor
+        self.logout()
+        self.executeForbidden(data=data, item=self.owned_id)
+        # As admin
+        self.login()
+        self.toggle_admin(True)
+        self.executeCreated(data=data, item=self.owned_id)

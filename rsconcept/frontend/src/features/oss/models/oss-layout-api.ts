@@ -1,4 +1,11 @@
-import { type ICreateBlockDTO, type ICreateOperationDTO, type INodePosition, type IOssLayout } from '../backend/types';
+import {
+  type ICreateBlockDTO,
+  type ICreateSchemaDTO,
+  type ICreateSynthesisDTO,
+  type IImportSchemaDTO,
+  type INodePosition,
+  type IOssLayout
+} from '../backend/types';
 
 import { type IOperationSchema } from './oss';
 import { type Position2D, type Rectangle2D } from './oss-layout';
@@ -24,11 +31,11 @@ export class LayoutManager {
   }
 
   /** Calculate insert position for a new {@link IOperation} */
-  newOperationPosition(data: ICreateOperationDTO): Rectangle2D {
-    const result = { x: data.position_x, y: data.position_y, width: data.width, height: data.height };
+  newOperationPosition(data: ICreateSchemaDTO | ICreateSynthesisDTO | IImportSchemaDTO): Rectangle2D {
+    const result = { ...data.position };
     const parentNode = this.layout.find(pos => pos.nodeID === `b${data.item_data.parent}`) ?? null;
     const operations = this.layout.filter(pos => pos.nodeID.startsWith('o'));
-    if (data.arguments.length !== 0) {
+    if ('arguments' in data && data.arguments.length !== 0) {
       const pos = calculatePositionFromArgs(
         operations.filter(node => data.arguments.includes(Number(node.nodeID.slice(1))))
       );
@@ -59,20 +66,16 @@ export class LayoutManager {
       .filter(node => !!node);
     const parentNode = this.layout.find(pos => pos.nodeID === `b${data.item_data.parent}`) ?? null;
 
-    let result: Rectangle2D = { x: data.position_x, y: data.position_y, width: data.width, height: data.height };
+    let result: Rectangle2D = { ...data.position };
 
     if (block_nodes.length !== 0 || operation_nodes.length !== 0) {
-      result = calculatePositionFromChildren(
-        { x: data.position_x, y: data.position_y, width: data.width, height: data.height },
-        operation_nodes,
-        block_nodes
-      );
+      result = calculatePositionFromChildren(data.position, operation_nodes, block_nodes);
     } else if (parentNode) {
       result = {
         x: parentNode.x + MIN_DISTANCE,
         y: parentNode.y + MIN_DISTANCE,
-        width: data.width,
-        height: data.height
+        width: data.position.width,
+        height: data.position.height
       };
     } else {
       result = this.calculatePositionForFreeBlock(result);

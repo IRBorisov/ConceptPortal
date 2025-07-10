@@ -1,8 +1,8 @@
 ''' Endpoints for OSS. '''
+from copy import deepcopy
 from typing import Optional, cast
 
 from django.db import transaction
-from django.db.models import Q
 from django.http import HttpResponse
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import generics, serializers
@@ -23,6 +23,28 @@ from .. import models as m
 from .. import serializers as s
 
 
+def _create_clone(prototype: LibraryItem, operation: m.Operation, oss: LibraryItem) -> LibraryItem:
+    ''' Create clone of prototype schema for operation. '''
+    prototype_schema = RSForm(prototype)
+    clone = deepcopy(prototype)
+    clone.pk = None
+    clone.owner = oss.owner
+    clone.title = operation.title
+    clone.alias = operation.alias
+    clone.description = operation.description
+    clone.visible = False
+    clone.read_only = False
+    clone.access_policy = oss.access_policy
+    clone.location = oss.location
+    clone.save()
+    for cst in prototype_schema.constituents():
+        cst_copy = deepcopy(cst)
+        cst_copy.pk = None
+        cst_copy.schema = clone
+        cst_copy.save()
+    return clone
+
+
 @extend_schema(tags=['OSS'])
 @extend_schema_view()
 class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.RetrieveAPIView):
@@ -41,7 +63,9 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
             'update_block',
             'delete_block',
             'move_items',
-            'create_operation',
+            'create_schema',
+            'import_schema',
+            'create_synthesis',
             'update_operation',
             'delete_operation',
             'create_input',
@@ -116,16 +140,17 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
 
         oss = m.OperationSchema(self.get_object())
         layout = serializer.validated_data['layout']
+        position = serializer.validated_data['position']
         children_blocks: list[m.Block] = serializer.validated_data['children_blocks']
         children_operations: list[m.Operation] = serializer.validated_data['children_operations']
         with transaction.atomic():
             new_block = oss.create_block(**serializer.validated_data['item_data'])
             layout.append({
                 'nodeID': 'b' + str(new_block.pk),
-                'x': serializer.validated_data['position_x'],
-                'y': serializer.validated_data['position_y'],
-                'width': serializer.validated_data['width'],
-                'height': serializer.validated_data['height'],
+                'x': position['x'],
+                'y': position['y'],
+                'width': position['width'],
+                'height': position['height'],
             })
             oss.update_layout(layout)
             if len(children_blocks) > 0:
@@ -140,7 +165,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         return Response(
             status=c.HTTP_201_CREATED,
             data={
-                'new_block': s.BlockSerializer(new_block).data,
+                'new_block': new_block.pk,
                 'oss': s.OperationSchemaSerializer(oss.model).data
             }
         )
@@ -251,9 +276,9 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         )
 
     @extend_schema(
-        summary='create operation',
+        summary='create empty conceptual schema',
         tags=['OSS'],
-        request=s.CreateOperationSerializer(),
+        request=s.CreateSchemaSerializer(),
         responses={
             c.HTTP_201_CREATED: s.OperationCreatedResponse,
             c.HTTP_400_BAD_REQUEST: None,
@@ -261,10 +286,10 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
             c.HTTP_404_NOT_FOUND: None
         }
     )
-    @action(detail=True, methods=['post'], url_path='create-operation')
-    def create_operation(self, request: Request, pk) -> HttpResponse:
-        ''' Create Operation. '''
-        serializer = s.CreateOperationSerializer(
+    @action(detail=True, methods=['post'], url_path='create-schema')
+    def create_schema(self, request: Request, pk) -> HttpResponse:
+        ''' Create schema. '''
+        serializer = s.CreateSchemaSerializer(
             data=request.data,
             context={'oss': self.get_object()}
         )
@@ -272,43 +297,124 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
 
         oss = m.OperationSchema(self.get_object())
         layout = serializer.validated_data['layout']
+        position = serializer.validated_data['position']
+        data = serializer.validated_data['item_data']
+        data['operation_type'] = m.OperationType.INPUT
         with transaction.atomic():
             new_operation = oss.create_operation(**serializer.validated_data['item_data'])
             layout.append({
                 'nodeID': 'o' + str(new_operation.pk),
-                'x': serializer.validated_data['position_x'],
-                'y': serializer.validated_data['position_y'],
-                'width': serializer.validated_data['width'],
-                'height': serializer.validated_data['height']
+                'x': position['x'],
+                'y': position['y'],
+                'width': position['width'],
+                'height': position['height']
             })
             oss.update_layout(layout)
+            oss.create_input(new_operation)
 
-            schema = new_operation.result
-            if schema is not None:
-                connected_operations = \
-                    m.Operation.objects \
-                    .filter(Q(result=schema) & ~Q(pk=new_operation.pk)) \
-                    .only('operation_type', 'oss_id')
-                for operation in connected_operations:
-                    if operation.operation_type != m.OperationType.INPUT:
-                        raise serializers.ValidationError({
-                            'item_data': msg.operationResultFromAnotherOSS()
-                        })
-                    if operation.oss_id == new_operation.oss_id:
-                        raise serializers.ValidationError({
-                            'item_data': msg.operationInputAlreadyConnected()
-                        })
-            if new_operation.operation_type == m.OperationType.INPUT and serializer.validated_data['create_schema']:
-                oss.create_input(new_operation)
-            if new_operation.operation_type != m.OperationType.INPUT and 'arguments' in serializer.validated_data:
-                oss.set_arguments(
-                    target=new_operation.pk,
-                    arguments=serializer.validated_data['arguments']
-                )
         return Response(
             status=c.HTTP_201_CREATED,
             data={
-                'new_operation': s.OperationSerializer(new_operation).data,
+                'new_operation': new_operation.pk,
+                'oss': s.OperationSchemaSerializer(oss.model).data
+            }
+        )
+
+
+    @extend_schema(
+        summary='import conceptual schema to new OSS operation',
+        tags=['OSS'],
+        request=s.ImportSchemaSerializer(),
+        responses={
+            c.HTTP_201_CREATED: s.OperationCreatedResponse,
+            c.HTTP_400_BAD_REQUEST: None,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
+    )
+    @action(detail=True, methods=['post'], url_path='import-schema')
+    def import_schema(self, request: Request, pk) -> HttpResponse:
+        ''' Create operation with existing schema. '''
+        serializer = s.ImportSchemaSerializer(
+            data=request.data,
+            context={'oss': self.get_object()}
+        )
+        serializer.is_valid(raise_exception=True)
+
+        oss = m.OperationSchema(self.get_object())
+        layout = serializer.validated_data['layout']
+        position = serializer.validated_data['position']
+        data = serializer.validated_data['item_data']
+        data['operation_type'] = m.OperationType.INPUT
+        if not serializer.validated_data['clone_source']:
+            data['result'] = serializer.validated_data['source']
+        with transaction.atomic():
+            new_operation = oss.create_operation(**serializer.validated_data['item_data'])
+            layout.append({
+                'nodeID': 'o' + str(new_operation.pk),
+                'x': position['x'],
+                'y': position['y'],
+                'width': position['width'],
+                'height': position['height']
+            })
+            oss.update_layout(layout)
+
+            if serializer.validated_data['clone_source']:
+                prototype: LibraryItem = serializer.validated_data['source']
+                new_operation.result = _create_clone(prototype, new_operation, oss.model)
+                new_operation.save(update_fields=["result"])
+
+        return Response(
+            status=c.HTTP_201_CREATED,
+            data={
+                'new_operation': new_operation.pk,
+                'oss': s.OperationSchemaSerializer(oss.model).data
+            }
+        )
+
+    @extend_schema(
+        summary='create synthesis operation',
+        tags=['OSS'],
+        request=s.CreateSynthesisSerializer(),
+        responses={
+            c.HTTP_201_CREATED: s.OperationCreatedResponse,
+            c.HTTP_400_BAD_REQUEST: None,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
+    )
+    @action(detail=True, methods=['post'], url_path='create-synthesis')
+    def create_synthesis(self, request: Request, pk) -> HttpResponse:
+        ''' Create Synthesis operation from arguments. '''
+        serializer = s.CreateSynthesisSerializer(
+            data=request.data,
+            context={'oss': self.get_object()}
+        )
+        serializer.is_valid(raise_exception=True)
+
+        oss = m.OperationSchema(self.get_object())
+        layout = serializer.validated_data['layout']
+        position = serializer.validated_data['position']
+        data = serializer.validated_data['item_data']
+        data['operation_type'] = m.OperationType.SYNTHESIS
+        with transaction.atomic():
+            new_operation = oss.create_operation(**serializer.validated_data['item_data'])
+            layout.append({
+                'nodeID': 'o' + str(new_operation.pk),
+                'x': position['x'],
+                'y': position['y'],
+                'width': position['width'],
+                'height': position['height']
+            })
+            oss.set_arguments(new_operation.pk, serializer.validated_data['arguments'])
+            oss.set_substitutions(new_operation.pk, serializer.validated_data['substitutions'])
+            oss.execute_operation(new_operation)
+            oss.update_layout(layout)
+
+        return Response(
+            status=c.HTTP_201_CREATED,
+            data={
+                'new_operation': new_operation.pk,
                 'oss': s.OperationSchemaSerializer(oss.model).data
             }
         )

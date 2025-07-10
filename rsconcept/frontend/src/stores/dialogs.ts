@@ -7,10 +7,12 @@ import { type DlgEditEditorsProps } from '@/features/library/dialogs/dlg-edit-ed
 import { type DlgEditVersionsProps } from '@/features/library/dialogs/dlg-edit-versions/dlg-edit-versions';
 import { type DlgChangeInputSchemaProps } from '@/features/oss/dialogs/dlg-change-input-schema';
 import { type DlgCreateBlockProps } from '@/features/oss/dialogs/dlg-create-block/dlg-create-block';
-import { type DlgCreateOperationProps } from '@/features/oss/dialogs/dlg-create-operation/dlg-create-operation';
+import { type DlgCreateSchemaProps } from '@/features/oss/dialogs/dlg-create-schema';
+import { type DlgCreateSynthesisProps } from '@/features/oss/dialogs/dlg-create-synthesis/dlg-create-synthesis';
 import { type DlgDeleteOperationProps } from '@/features/oss/dialogs/dlg-delete-operation';
 import { type DlgEditBlockProps } from '@/features/oss/dialogs/dlg-edit-block';
 import { type DlgEditOperationProps } from '@/features/oss/dialogs/dlg-edit-operation/dlg-edit-operation';
+import { type DlgImportSchemaProps } from '@/features/oss/dialogs/dlg-import-schema';
 import { type DlgRelocateConstituentsProps } from '@/features/oss/dialogs/dlg-relocate-constituents';
 import { type DlgShowTermGraphProps } from '@/features/oss/dialogs/dlg-show-term-graph/dlg-show-term-graph';
 import { type DlgCreateCstProps } from '@/features/rsform/dialogs/dlg-create-cst/dlg-create-cst';
@@ -41,7 +43,7 @@ export const DialogType = {
   CREATE_BLOCK: 7,
   EDIT_BLOCK: 8,
 
-  CREATE_OPERATION: 9,
+  CREATE_SYNTHESIS: 9,
   EDIT_OPERATION: 10,
   DELETE_OPERATION: 11,
   CHANGE_INPUT_SCHEMA: 12,
@@ -63,7 +65,9 @@ export const DialogType = {
   SHOW_AST: 25,
   SHOW_TYPE_GRAPH: 26,
   GRAPH_PARAMETERS: 27,
-  SHOW_TERM_GRAPH: 28
+  SHOW_TERM_GRAPH: 28,
+  CREATE_SCHEMA: 29,
+  IMPORT_SCHEMA: 30
 } as const;
 export type DialogType = (typeof DialogType)[keyof typeof DialogType];
 
@@ -79,7 +83,7 @@ interface DialogsStore {
   showCstTemplate: (props: DlgCstTemplateProps) => void;
   showCreateCst: (props: DlgCreateCstProps) => void;
   showCreateBlock: (props: DlgCreateBlockProps) => void;
-  showCreateOperation: (props: DlgCreateOperationProps) => void;
+  showCreateOperation: (props: DlgCreateSynthesisProps) => void;
   showDeleteCst: (props: DlgDeleteCstProps) => void;
   showEditEditors: (props: DlgEditEditorsProps) => void;
   showEditOperation: (props: DlgEditOperationProps) => void;
@@ -104,6 +108,8 @@ interface DialogsStore {
   showSubstituteCst: (props: DlgSubstituteCstProps) => void;
   showUploadRSForm: (props: DlgUploadRSFormProps) => void;
   showEditCst: (props: DlgEditCstProps) => void;
+  showCreateSchema: (props: DlgCreateSchemaProps) => void;
+  showImportSchema: (props: DlgImportSchemaProps) => void;
 }
 
 export const useDialogsStore = create<DialogsStore>()(set => ({
@@ -118,7 +124,7 @@ export const useDialogsStore = create<DialogsStore>()(set => ({
 
   showCstTemplate: props => set({ active: DialogType.CONSTITUENTA_TEMPLATE, props: props }),
   showCreateCst: props => set({ active: DialogType.CREATE_CONSTITUENTA, props: props }),
-  showCreateOperation: props => set({ active: DialogType.CREATE_OPERATION, props: props }),
+  showCreateOperation: props => set({ active: DialogType.CREATE_SYNTHESIS, props: props }),
   showCreateBlock: props => set({ active: DialogType.CREATE_BLOCK, props: props }),
   showDeleteCst: props => set({ active: DialogType.DELETE_CONSTITUENTA, props: props }),
   showEditEditors: props => set({ active: DialogType.EDIT_EDITORS, props: props }),
@@ -143,5 +149,7 @@ export const useDialogsStore = create<DialogsStore>()(set => ({
   showQR: props => set({ active: DialogType.SHOW_QR_CODE, props: props }),
   showSubstituteCst: props => set({ active: DialogType.SUBSTITUTE_CONSTITUENTS, props: props }),
   showUploadRSForm: props => set({ active: DialogType.UPLOAD_RSFORM, props: props }),
-  showEditCst: props => set({ active: DialogType.EDIT_CONSTITUENTA, props: props })
+  showEditCst: props => set({ active: DialogType.EDIT_CONSTITUENTA, props: props }),
+  showCreateSchema: props => set({ active: DialogType.CREATE_SCHEMA, props: props }),
+  showImportSchema: props => set({ active: DialogType.IMPORT_SCHEMA, props: props })
 }));

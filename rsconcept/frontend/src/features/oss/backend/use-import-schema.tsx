@@ -5,14 +5,14 @@ import { useUpdateTimestamp } from '@/features/library/backend/use-update-timest
 import { KEYS } from '@/backend/configuration';
 
 import { ossApi } from './api';
-import { type ICreateOperationDTO } from './types';
+import { type IImportSchemaDTO } from './types';
 
-export const useCreateOperation = () => {
+export const useImportSchema = () => {
   const client = useQueryClient();
   const { updateTimestamp } = useUpdateTimestamp();
   const mutation = useMutation({
-    mutationKey: [KEYS.global_mutation, ossApi.baseKey, 'create-operation'],
-    mutationFn: ossApi.createOperation,
+    mutationKey: [KEYS.global_mutation, ossApi.baseKey, 'import-schema'],
+    mutationFn: ossApi.importSchema,
     onSuccess: response => {
       client.setQueryData(ossApi.getOssQueryOptions({ itemID: response.oss.id }).queryKey, response.oss);
       updateTimestamp(response.oss.id);
@@ -20,6 +20,6 @@ export const useCreateOperation = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    createOperation: (data: { itemID: number; data: ICreateOperationDTO }) => mutation.mutateAsync(data)
+    importSchema: (data: { itemID: number; data: IImportSchemaDTO }) => mutation.mutateAsync(data)
   };
 };

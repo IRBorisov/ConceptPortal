@@ -65,8 +65,10 @@ export function OssFlow() {
 
   const showCreateOperation = useDialogsStore(state => state.showCreateOperation);
   const showCreateBlock = useDialogsStore(state => state.showCreateBlock);
+  const showCreateSchema = useDialogsStore(state => state.showCreateSchema);
   const showDeleteOperation = useDialogsStore(state => state.showDeleteOperation);
   const showEditBlock = useDialogsStore(state => state.showEditBlock);
+  const showImportSchema = useDialogsStore(state => state.showImportSchema);
 
   const { isOpen: isContextMenuOpen, menuProps, openContextMenu, hideContextMenu } = useContextMenu();
   const { handleDragStart, handleDrag, handleDragStop } = useDragging({ hideContextMenu });
@@ -97,6 +99,28 @@ export function OssFlow() {
       initialChildren:
         parent !== null && selectedItems.length === 1 && parent === selectedItems[0].id ? [] : selectedItems,
       initialParent: parent,
+      onCreate: resetView
+    });
+  }
+
+  function handleCreateSchema() {
+    const targetPosition = screenToFlowPosition({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
+    showCreateSchema({
+      manager: new LayoutManager(schema, getLayout()),
+      defaultX: targetPosition.x,
+      defaultY: targetPosition.y,
+      initialParent: extractBlockParent(selectedItems),
+      onCreate: resetView
+    });
+  }
+
+  function handleImportSchema() {
+    const targetPosition = screenToFlowPosition({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
+    showImportSchema({
+      manager: new LayoutManager(schema, getLayout()),
+      defaultX: targetPosition.x,
+      defaultY: targetPosition.y,
+      initialParent: extractBlockParent(selectedItems),
       onCreate: resetView
     });
   }
@@ -194,8 +218,8 @@ export function OssFlow() {
       <ToolbarOssGraph
         className='absolute z-pop top-8 right-1/2 translate-x-1/2'
         onCreateBlock={handleCreateBlock}
-        onCreateSchema={handleCreateOperation}
-        onImportSchema={handleCreateOperation}
+        onCreateSchema={handleCreateSchema}
+        onImportSchema={handleImportSchema}
         onCreateSynthesis={handleCreateOperation}
         onDelete={handleDeleteSelected}
         onResetPositions={resetGraph}

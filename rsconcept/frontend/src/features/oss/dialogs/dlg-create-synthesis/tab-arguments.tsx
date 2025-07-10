@@ -3,19 +3,19 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { Label, TextArea, TextInput } from '@/components/input';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { type ICreateOperationDTO } from '../../backend/types';
+import { type ICreateSynthesisDTO } from '../../backend/types';
 import { PickMultiOperation } from '../../components/pick-multi-operation';
 import { SelectParent } from '../../components/select-parent';
 
-import { type DlgCreateOperationProps } from './dlg-create-operation';
+import { type DlgCreateSynthesisProps } from './dlg-create-synthesis';
 
-export function TabSynthesisOperation() {
-  const { manager } = useDialogsStore(state => state.props as DlgCreateOperationProps);
+export function TabArguments() {
+  const { manager } = useDialogsStore(state => state.props as DlgCreateSynthesisProps);
   const {
     register,
     control,
     formState: { errors }
-  } = useFormContext<ICreateOperationDTO>();
+  } = useFormContext<ICreateSynthesisDTO>();
   const inputs = useWatch({ control, name: 'arguments' });
 
   return (

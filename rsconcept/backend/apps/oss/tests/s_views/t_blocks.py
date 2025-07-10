@@ -73,10 +73,12 @@ class TestOssBlocks(EndpointTester):
                 'description': 'Тест кириллицы',
             },
             'layout': self.layout_data,
-            'position_x': 1337,
-            'position_y': 1337,
-            'width': 0.42,
-            'height': 0.42,
+            'position': {
+                'x': 1337,
+                'y': 1337,
+                'width': 0.42,
+                'height': 0.42
+            },
             'children_operations': [],
             'children_blocks': []
         }
@@ -86,14 +88,11 @@ class TestOssBlocks(EndpointTester):
         self.assertEqual(len(response.data['oss']['blocks']), 3)
         new_block = response.data['new_block']
         layout = response.data['oss']['layout']
-        item = [item for item in layout if item['nodeID'] == 'b' + str(new_block['id'])][0]
-        self.assertEqual(new_block['title'], data['item_data']['title'])
-        self.assertEqual(new_block['description'], data['item_data']['description'])
-        self.assertEqual(new_block['parent'], None)
-        self.assertEqual(item['x'], data['position_x'])
-        self.assertEqual(item['y'], data['position_y'])
-        self.assertEqual(item['width'], data['width'])
-        self.assertEqual(item['height'], data['height'])
+        block_node = [item for item in layout if item['nodeID'] == 'b' + str(new_block)][0]
+        self.assertEqual(block_node['x'], data['position']['x'])
+        self.assertEqual(block_node['y'], data['position']['y'])
+        self.assertEqual(block_node['width'], data['position']['width'])
+        self.assertEqual(block_node['height'], data['position']['height'])
         self.operation1.refresh_from_db()
 
         self.executeForbidden(data=data, item=self.unowned_id)
@@ -111,10 +110,12 @@ class TestOssBlocks(EndpointTester):
                 'parent': self.invalid_id
             },
             'layout': self.layout_data,
-            'position_x': 1337,
-            'position_y': 1337,
-            'width': 0.42,
-            'height': 0.42,
+            'position': {
+                'x': 1337,
+                'y': 1337,
+                'width': 0.42,
+                'height': 0.42
+            },
             'children_operations': [],
             'children_blocks': []
         }
@@ -126,7 +127,8 @@ class TestOssBlocks(EndpointTester):
         data['item_data']['parent'] = self.block1.pk
         response = self.executeCreated(data=data)
         new_block = response.data['new_block']
-        self.assertEqual(new_block['parent'], self.block1.pk)
+        block_data = next((block for block in response.data['oss']['blocks'] if block['id'] == new_block), None)
+        self.assertEqual(block_data['parent'], self.block1.pk)
 
 
     @decl_endpoint('/api/oss/{item}/create-block', method='post')
@@ -138,10 +140,12 @@ class TestOssBlocks(EndpointTester):
                 'description': 'Тест кириллицы',
             },
             'layout': self.layout_data,
-            'position_x': 1337,
-            'position_y': 1337,
-            'width': 0.42,
-            'height': 0.42,
+            'position': {
+                'x': 1337,
+                'y': 1337,
+                'width': 0.42,
+                'height': 0.42
+            },
             'children_operations': [self.invalid_id],
             'children_blocks': []
         }
@@ -162,8 +166,8 @@ class TestOssBlocks(EndpointTester):
         new_block = response.data['new_block']
         self.operation1.refresh_from_db()
         self.block1.refresh_from_db()
-        self.assertEqual(self.operation1.parent.pk, new_block['id'])
-        self.assertEqual(self.block1.parent.pk, new_block['id'])
+        self.assertEqual(self.operation1.parent.pk, new_block)
+        self.assertEqual(self.block1.parent.pk, new_block)
 
 
     @decl_endpoint('/api/oss/{item}/create-block', method='post')
@@ -176,10 +180,12 @@ class TestOssBlocks(EndpointTester):
                 'parent': self.block2.pk
             },
             'layout': self.layout_data,
-            'position_x': 1337,
-            'position_y': 1337,
-            'width': 0.42,
-            'height': 0.42,
+            'position': {
+                'x': 1337,
+                'y': 1337,
+                'width': 0.42,
+                'height': 0.42
+            },
             'children_operations': [],
             'children_blocks': [self.block1.pk]
         }
