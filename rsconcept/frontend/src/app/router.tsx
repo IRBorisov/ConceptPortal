@@ -84,6 +84,10 @@ export const Router = createBrowserRouter([
       {
         path: `${routes.database_schema}`,
         lazy: () => import('@/features/home/database-schema-page')
+      },
+      {
+        path: '*',
+        element: <NotFoundPage />
       }
     ]
   }
