@@ -19,7 +19,8 @@ export const routes = {
   rsforms: 'rsforms',
   oss: 'oss',
   icons: 'icons',
-  database_schema: 'database-schema'
+  database_schema: 'database-schema',
+  prompt_templates: 'prompt-templates'
 } as const;
 
 /** Internal navigation URLs. */
@@ -37,6 +38,7 @@ export const urls = {
   library: `/${routes.library}`,
   library_filter: (strategy: string) => `/library?filter=${strategy}`,
   create_schema: `/${routes.create_schema}`,
+  prompt_templates: `/${routes.prompt_templates}`,
   manuals: `/${routes.manuals}`,
   help_topic: (topic: string) => `/manuals?topic=${topic}`,
   schema: (id: number | string, version?: number | string) =>

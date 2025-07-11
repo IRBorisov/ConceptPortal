@@ -9,11 +9,11 @@ import { useConceptNavigation } from './navigation-context';
 import { UserButton } from './user-button';
 import { UserDropdown } from './user-dropdown';
 
-export function UserMenu() {
+export function MenuUser() {
   const router = useConceptNavigation();
   const menu = useDropdown();
   return (
-    <div ref={menu.ref} onBlur={menu.handleBlur} className='flex items-center justify-start relative h-full pr-2'>
+    <div ref={menu.ref} onBlur={menu.handleBlur} className='flex items-center justify-start relative h-full'>
       <Suspense fallback={<Loader circular scale={1.5} />}>
         <UserButton
           onLogin={() => router.push({ path: urls.login, force: true })}

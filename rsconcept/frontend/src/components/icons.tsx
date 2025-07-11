@@ -63,6 +63,8 @@ export { PiFileCsv        as IconCSV }            from 'react-icons/pi';
 
 // ==== User status =======
 export { LuCircleUserRound as IconUser }          from 'react-icons/lu';
+export { FaUserAstronaut  as IconAssistant }      from 'react-icons/fa6';
+export { IoChatbubblesOutline as IconChat }       from 'react-icons/io5';
 export { FaCircleUser     as IconUser2 }          from 'react-icons/fa6';
 export { TbUserEdit       as IconEditor }         from 'react-icons/tb';
 export { TbUserSearch     as IconUserSearch }     from 'react-icons/tb';

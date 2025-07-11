@@ -8,10 +8,11 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { urls } from '../urls';
 
 import { Logo } from './logo';
+import { MenuAI } from './menu-ai';
+import { MenuUser } from './menu-user';
 import { NavigationButton } from './navigation-button';
 import { useConceptNavigation } from './navigation-context';
 import { ToggleNavigation } from './toggle-navigation';
-import { UserMenu } from './user-menu';
 
 export function Navigation() {
   const { push } = useConceptNavigation();
@@ -41,11 +42,13 @@ export function Navigation() {
         <div className='flex items-center mr-auto cursor-pointer' onClick={!size.isSmall ? navigateHome : undefined}>
           <Logo />
         </div>
-        <div className='flex gap-2 items-center'>
+        <div className='flex gap-2 items-center pr-2'>
           <NavigationButton text='Новая схема' icon={<IconNewItem2 size='1.5rem' />} onClick={navigateCreateNew} />
           <NavigationButton text='Библиотека' icon={<IconLibrary2 size='1.5rem' />} onClick={navigateLibrary} />
           <NavigationButton text='Справка' icon={<IconManuals size='1.5rem' />} onClick={navigateHelp} />
-          <UserMenu />
+
+          <MenuAI />
+          <MenuUser />
         </div>
       </div>
     </nav>

@@ -24,7 +24,7 @@ export function NavigationButton({ icon, title, hideTitle, className, style, onC
       style={style}
     >
       {icon ? icon : null}
-      {text ? <span className='hidden sm:inline'>{text}</span> : null}
+      {text ? <span className='hidden md:inline'>{text}</span> : null}
     </button>
   );
 }

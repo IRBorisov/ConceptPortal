@@ -140,6 +140,9 @@ const DlgCreateSchema = React.lazy(() =>
 const DlgImportSchema = React.lazy(() =>
   import('@/features/oss/dialogs/dlg-import-schema').then(module => ({ default: module.DlgImportSchema }))
 );
+const DlgAIPromptDialog = React.lazy(() =>
+  import('@/features/ai/dialogs/dlg-ai-prompt').then(module => ({ default: module.DlgAIPromptDialog }))
+);
 
 export const GlobalDialogs = () => {
   const active = useDialogsStore(state => state.active);
@@ -208,5 +211,7 @@ export const GlobalDialogs = () => {
       return <DlgCreateSchema />;
     case DialogType.IMPORT_SCHEMA:
       return <DlgImportSchema />;
+    case DialogType.AI_PROMPT:
+      return <DlgAIPromptDialog />;
   }
 };
