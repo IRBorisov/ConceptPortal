@@ -9,22 +9,24 @@ import {
   SubstitutionErrorType
 } from './models/oss';
 
+const labelOperationTypeRecord: Record<OperationType, string> = {
+  [OperationType.INPUT]: 'Загрузка',
+  [OperationType.SYNTHESIS]: 'Синтез'
+};
+
+const describeOperationTypeRecord: Record<OperationType, string> = {
+  [OperationType.INPUT]: 'Загрузка концептуальной схемы в ОСС',
+  [OperationType.SYNTHESIS]: 'Синтез концептуальных схем'
+};
+
 /** Retrieves label for {@link OperationType}. */
 export function labelOperationType(itemType: OperationType): string {
-  // prettier-ignore
-  switch (itemType) {
-    case OperationType.INPUT:     return 'Загрузка';
-    case OperationType.SYNTHESIS: return 'Синтез';
-  }
+  return labelOperationTypeRecord[itemType] ?? `UNKNOWN OPERATION TYPE: ${itemType}`;
 }
 
 /** Retrieves description for {@link OperationType}. */
 export function describeOperationType(itemType: OperationType): string {
-  // prettier-ignore
-  switch (itemType) {
-    case OperationType.INPUT:     return 'Загрузка концептуальной схемы в ОСС';
-    case OperationType.SYNTHESIS: return 'Синтез концептуальных схем';
-  }
+  return describeOperationTypeRecord[itemType] ?? `UNKNOWN OPERATION TYPE: ${itemType}`;
 }
 
 /** Generates error description for {@link ISubstitutionErrorDescription}. */

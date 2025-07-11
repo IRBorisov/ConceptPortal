@@ -5,8 +5,8 @@ import { type IRSForm } from '@/features/rsform/models/rsform';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/input/select';
 import { cn } from '@/components/utils';
 
-import { mapLabelColoring } from '../../labels';
-import { useTermGraphStore } from '../../stores/term-graph';
+import { labelColoring } from '../../labels';
+import { graphColorings, useTermGraphStore } from '../../stores/term-graph';
 
 import { SchemasGuide } from './schemas-guide';
 
@@ -34,9 +34,9 @@ export function SelectColoring({ className, schema }: SelectColoringProps) {
           <SelectValue placeholder='Цветовая схема' />
         </SelectTrigger>
         <SelectContent alignOffset={-1} sideOffset={-4}>
-          {[...mapLabelColoring.entries()].map(item => (
-            <SelectItem key={`coloring-${item[0]}`} value={item[0]}>
-              {item[1]}
+          {graphColorings.map(mode => (
+            <SelectItem key={`coloring-${mode}`} value={mode}>
+              {labelColoring(mode)}
             </SelectItem>
           ))}
         </SelectContent>

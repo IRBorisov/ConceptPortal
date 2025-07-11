@@ -1,10 +1,12 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+export const graphColorings = ['none', 'status', 'type', 'schemas'] as const;
+
 /**
  * Represents graph node coloring scheme.
  */
-export type GraphColoring = 'none' | 'status' | 'type' | 'schemas';
+export type GraphColoring = (typeof graphColorings)[number];
 
 /**
  * Represents parameters for GraphEditor.

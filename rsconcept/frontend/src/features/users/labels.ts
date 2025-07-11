@@ -1,31 +1,29 @@
 import { UserRole } from './stores/role';
 
+const labelUserRoleRecord: Record<UserRole, string> = {
+  [UserRole.READER]: 'Читатель',
+  [UserRole.EDITOR]: 'Редактор',
+  [UserRole.OWNER]: 'Владелец',
+  [UserRole.ADMIN]: 'Администратор'
+};
+
+const describeUserRoleRecord: Record<UserRole, string> = {
+  [UserRole.READER]: 'Режим читателя',
+  [UserRole.EDITOR]: 'Режим редактирования',
+  [UserRole.OWNER]: 'Режим владельца',
+  [UserRole.ADMIN]: 'Режим администратора'
+};
+
 /**
  * Retrieves label for {@link UserRole}.
  */
 export function labelUserRole(mode: UserRole): string {
-  // prettier-ignore
-  switch (mode) {
-    case UserRole.READER:     return 'Читатель';
-    case UserRole.EDITOR:     return 'Редактор';
-    case UserRole.OWNER:      return 'Владелец';
-    case UserRole.ADMIN:      return 'Администратор';
-  }
+  return labelUserRoleRecord[mode] ?? `UNKNOWN USER ROLE: ${mode}`;
 }
 
 /**
  * Retrieves description for {@link UserRole}.
  */
 export function describeUserRole(mode: UserRole): string {
-  // prettier-ignore
-  switch (mode) {
-    case UserRole.READER:
-      return 'Режим запрещает редактирование';
-    case UserRole.EDITOR:
-      return 'Режим редактирования';
-    case UserRole.OWNER:
-      return 'Режим владельца';
-    case UserRole.ADMIN:
-      return 'Режим администратора';
-  }
+  return describeUserRoleRecord[mode] ?? `UNKNOWN USER ROLE: ${mode}`;
 }

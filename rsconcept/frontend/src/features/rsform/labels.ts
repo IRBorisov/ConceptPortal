@@ -16,6 +16,254 @@ import { type IArgumentInfo, type ISyntaxTreeNode } from './models/rslang';
 import { CstMatchMode, DependencyMode } from './stores/cst-search';
 import { type GraphColoring } from './stores/term-graph';
 
+// --- Records for label/describe functions ---
+const labelCstTypeRecord: Record<CstType, string> = {
+  [CstType.BASE]: 'Базисное множество',
+  [CstType.CONSTANT]: 'Константное множество',
+  [CstType.STRUCTURED]: 'Родовая структура',
+  [CstType.AXIOM]: 'Аксиома',
+  [CstType.TERM]: 'Терм',
+  [CstType.FUNCTION]: 'Терм-функция',
+  [CstType.PREDICATE]: 'Предикат-функция',
+  [CstType.THEOREM]: 'Теорема'
+};
+
+const labelReferenceTypeRecord: Record<ReferenceType, string> = {
+  [ReferenceType.ENTITY]: 'Использование термина',
+  [ReferenceType.SYNTACTIC]: 'Связывание слов'
+};
+
+const labelCstClassRecord: Record<CstClass, string> = {
+  [CstClass.BASIC]: 'базовый',
+  [CstClass.DERIVED]: 'производный',
+  [CstClass.STATEMENT]: 'утверждение',
+  [CstClass.TEMPLATE]: 'шаблон'
+};
+
+const describeCstClassRecord: Record<CstClass, string> = {
+  [CstClass.BASIC]: 'неопределяемое понятие',
+  [CstClass.DERIVED]: 'определяемое понятие',
+  [CstClass.STATEMENT]: 'логическое утверждение',
+  [CstClass.TEMPLATE]: 'шаблон определения'
+};
+
+const labelColoringRecord: Record<GraphColoring, string> = {
+  none: 'Цвет: Моно',
+  status: 'Цвет: Статус',
+  type: 'Цвет: Класс',
+  schemas: 'Цвет: Схемы'
+};
+
+const labelCstMatchModeRecord: Record<CstMatchMode, string> = {
+  [CstMatchMode.ALL]: 'общий',
+  [CstMatchMode.EXPR]: 'выражение',
+  [CstMatchMode.TERM]: 'термин',
+  [CstMatchMode.TEXT]: 'текст',
+  [CstMatchMode.NAME]: 'имя'
+};
+
+const describeCstMatchModeRecord: Record<CstMatchMode, string> = {
+  [CstMatchMode.ALL]: 'все атрибуты',
+  [CstMatchMode.EXPR]: 'формальное определение',
+  [CstMatchMode.TERM]: 'термин',
+  [CstMatchMode.TEXT]: 'определение и конвенция',
+  [CstMatchMode.NAME]: 'только имена'
+};
+
+const describeCstSourceRecord: Record<DependencyMode, string> = {
+  [DependencyMode.ALL]: 'все конституенты',
+  [DependencyMode.OUTPUTS]: 'прямые исходящие',
+  [DependencyMode.INPUTS]: 'прямые входящие',
+  [DependencyMode.EXPAND_OUTPUTS]: 'цепочка исходящих',
+  [DependencyMode.EXPAND_INPUTS]: 'цепочка входящих'
+};
+
+const labelExpressionStatusRecord: Record<ExpressionStatus, string> = {
+  [ExpressionStatus.VERIFIED]: 'корректно',
+  [ExpressionStatus.INCORRECT]: 'ошибка',
+  [ExpressionStatus.INCALCULABLE]: 'невычислимо',
+  [ExpressionStatus.PROPERTY]: 'неразмерное',
+  [ExpressionStatus.UNKNOWN]: 'не проверено',
+  [ExpressionStatus.UNDEFINED]: 'N/A'
+};
+
+const describeExpressionStatusRecord: Record<ExpressionStatus, string> = {
+  [ExpressionStatus.VERIFIED]: 'выражение корректно и вычислимо',
+  [ExpressionStatus.INCORRECT]: 'ошибка в выражении',
+  [ExpressionStatus.INCALCULABLE]: 'интерпретация не вычисляется',
+  [ExpressionStatus.PROPERTY]: 'только проверка принадлежности',
+  [ExpressionStatus.UNKNOWN]: 'требует проверки выражения',
+  [ExpressionStatus.UNDEFINED]: 'произошла ошибка при проверке'
+};
+
+const labelGrammemeRecord: Partial<Record<Grammeme, string>> = {
+  [Grammeme.NOUN]: 'ЧР: сущ',
+  [Grammeme.VERB]: 'ЧР: глагол',
+  [Grammeme.INFN]: 'ЧР: глагол инф',
+  [Grammeme.ADJF]: 'ЧР: прил',
+  [Grammeme.PRTF]: 'ЧР: прич',
+  [Grammeme.ADJS]: 'ЧР: кр прил',
+  [Grammeme.PRTS]: 'ЧР: кр прич',
+  [Grammeme.COMP]: 'ЧР: компаратив',
+  [Grammeme.GRND]: 'ЧР: деепричастие',
+  [Grammeme.NUMR]: 'ЧР: число',
+  [Grammeme.ADVB]: 'ЧР: наречие',
+  [Grammeme.NPRO]: 'ЧР: местоимение',
+  [Grammeme.PRED]: 'ЧР: предикатив',
+  [Grammeme.PREP]: 'ЧР: предлог',
+  [Grammeme.CONJ]: 'ЧР: союз',
+  [Grammeme.PRCL]: 'ЧР: частица',
+  [Grammeme.INTJ]: 'ЧР: междометие',
+  [Grammeme.Abbr]: 'ЧР: аббревиатура',
+  [Grammeme.sing]: 'Число: един',
+  [Grammeme.plur]: 'Число: множ',
+  [Grammeme.nomn]: 'Падеж: имен',
+  [Grammeme.gent]: 'Падеж: род',
+  [Grammeme.datv]: 'Падеж: дат',
+  [Grammeme.accs]: 'Падеж: вин',
+  [Grammeme.ablt]: 'Падеж: твор',
+  [Grammeme.loct]: 'Падеж: пред',
+  [Grammeme.masc]: 'Род: муж',
+  [Grammeme.femn]: 'Род: жен',
+  [Grammeme.neut]: 'Род: ср',
+  [Grammeme.perf]: 'Совершенный: да',
+  [Grammeme.impf]: 'Совершенный: нет',
+  [Grammeme.tran]: 'Переходный: да',
+  [Grammeme.intr]: 'Переходный: нет',
+  [Grammeme.pres]: 'Время: настоящее',
+  [Grammeme.past]: 'Время: прошедшее',
+  [Grammeme.futr]: 'Время: будущее',
+  [Grammeme.per1]: 'Лицо: 1',
+  [Grammeme.per2]: 'Лицо: 2',
+  [Grammeme.per3]: 'Лицо: 3',
+  [Grammeme.impr]: 'Повелительный: да',
+  [Grammeme.indc]: 'Повелительный: нет',
+  [Grammeme.incl]: 'Включающий: да',
+  [Grammeme.excl]: 'Включающий: нет',
+  [Grammeme.pssv]: 'Страдательный: да',
+  [Grammeme.actv]: 'Страдательный: нет',
+  [Grammeme.anim]: 'Одушевленный: да',
+  [Grammeme.inan]: 'Одушевленный: нет',
+  [Grammeme.Infr]: 'Стиль: неформальный',
+  [Grammeme.Slng]: 'Стиль: жаргон',
+  [Grammeme.Arch]: 'Стиль: устаревший',
+  [Grammeme.Litr]: 'Стиль: литературный'
+};
+
+const rsDefinitionPlaceholderRecord: Record<CstType, string> = {
+  [CstType.STRUCTURED]: 'Пример: ℬ(X1×D2)',
+  [CstType.TERM]: 'Пример: D{ξ∈S1 | Pr1(ξ)∩Pr2(ξ)=∅}',
+  [CstType.THEOREM]: 'Пример: D11=∅',
+  [CstType.AXIOM]: 'Пример: D11=∅',
+  [CstType.FUNCTION]: 'Пример: [α∈X1, β∈ℬ(X1×X2)] Pr2(Fi1[{α}](β))',
+  [CstType.PREDICATE]: 'Пример: [α∈X1, β∈ℬ(X1)] α∈β & card(β)>1',
+  [CstType.CONSTANT]: 'Формальное выражение',
+  [CstType.BASE]: 'Формальное выражение'
+};
+
+const cstTypeShortcutKeyRecord: Record<CstType, string> = {
+  [CstType.BASE]: '1',
+  [CstType.STRUCTURED]: '2',
+  [CstType.TERM]: '3',
+  [CstType.AXIOM]: '4',
+  [CstType.FUNCTION]: 'Q',
+  [CstType.PREDICATE]: 'W',
+  [CstType.CONSTANT]: '5',
+  [CstType.THEOREM]: '6'
+};
+
+const labelTokenRecord: Partial<Record<TokenID, string>> = {
+  [TokenID.BOOLEAN]: 'ℬ()',
+  [TokenID.DECART]: '×',
+  [TokenID.PUNCTUATION_PL]: '( )',
+  [TokenID.PUNCTUATION_SL]: '[ ]',
+  [TokenID.QUANTOR_UNIVERSAL]: '∀',
+  [TokenID.QUANTOR_EXISTS]: '∃',
+  [TokenID.LOGIC_NOT]: '¬',
+  [TokenID.LOGIC_AND]: '&',
+  [TokenID.LOGIC_OR]: '∨',
+  [TokenID.LOGIC_IMPLICATION]: '⇒',
+  [TokenID.LOGIC_EQUIVALENT]: '⇔',
+  [TokenID.LIT_EMPTYSET]: '∅',
+  [TokenID.LIT_WHOLE_NUMBERS]: 'Z',
+  [TokenID.MULTIPLY]: '*',
+  [TokenID.EQUAL]: '=',
+  [TokenID.NOTEQUAL]: '≠',
+  [TokenID.GREATER_OR_EQ]: '≥',
+  [TokenID.LESSER_OR_EQ]: '≤',
+  [TokenID.SET_IN]: '∈',
+  [TokenID.SET_NOT_IN]: '∉',
+  [TokenID.SUBSET_OR_EQ]: '⊆',
+  [TokenID.SUBSET]: '⊂',
+  [TokenID.NOT_SUBSET]: '⊄',
+  [TokenID.SET_INTERSECTION]: '∩',
+  [TokenID.SET_UNION]: '∪',
+  [TokenID.SET_MINUS]: '\\',
+  [TokenID.SET_SYMMETRIC_MINUS]: '∆',
+  [TokenID.NT_DECLARATIVE_EXPR]: 'D{}',
+  [TokenID.NT_IMPERATIVE_EXPR]: 'I{}',
+  [TokenID.NT_RECURSIVE_FULL]: 'R{}',
+  [TokenID.BIGPR]: 'Pr1()',
+  [TokenID.SMALLPR]: 'pr1()',
+  [TokenID.FILTER]: 'Fi1[]()',
+  [TokenID.REDUCE]: 'red()',
+  [TokenID.CARD]: 'card()',
+  [TokenID.BOOL]: 'bool()',
+  [TokenID.DEBOOL]: 'debool()',
+  [TokenID.ASSIGN]: ':=',
+  [TokenID.ITERATE]: ':∈'
+};
+
+const describeTokenRecord: Partial<Record<TokenID, string>> = {
+  [TokenID.BOOLEAN]: prepareTooltip('Булеан', 'Alt + E / Shift + B'),
+  [TokenID.DECART]: prepareTooltip('Декартово произведение', 'Alt + Shift + E / Shift + 8'),
+  [TokenID.PUNCTUATION_PL]: prepareTooltip('Скобки () вокруг выражения', 'Alt + Shift + 9'),
+  [TokenID.PUNCTUATION_SL]: prepareTooltip('Скобки [] вокруг выражения', 'Alt + ['),
+  [TokenID.QUANTOR_UNIVERSAL]: prepareTooltip('Квантор всеобщности', '`'),
+  [TokenID.QUANTOR_EXISTS]: prepareTooltip('Квантор существования', 'Shift + `'),
+  [TokenID.LOGIC_NOT]: prepareTooltip('Отрицание', 'Alt + `'),
+  [TokenID.LOGIC_AND]: prepareTooltip('Конъюнкция', 'Alt + 3 ~ Shift + 7'),
+  [TokenID.LOGIC_OR]: prepareTooltip('Дизъюнкция', 'Alt + Shift + 3'),
+  [TokenID.LOGIC_IMPLICATION]: prepareTooltip('Импликация', 'Alt + 4'),
+  [TokenID.LOGIC_EQUIVALENT]: prepareTooltip('Эквивалентность', 'Alt + Shift + 4'),
+  [TokenID.LIT_EMPTYSET]: prepareTooltip('Пустое множество', 'Alt + X'),
+  [TokenID.LIT_WHOLE_NUMBERS]: prepareTooltip('Целые числа', 'Alt + Z'),
+  [TokenID.EQUAL]: prepareTooltip('Равенство'),
+  [TokenID.MULTIPLY]: prepareTooltip('Умножение чисел', 'Alt + 8'),
+  [TokenID.NOTEQUAL]: prepareTooltip('Неравенство', 'Alt + Shift + `'),
+  [TokenID.GREATER_OR_EQ]: prepareTooltip('Больше или равно', 'Alt + Shift + 7'),
+  [TokenID.LESSER_OR_EQ]: prepareTooltip('Меньше или равно', 'Alt + Shift + 8'),
+  [TokenID.SET_IN]: prepareTooltip('Быть элементом (принадлежит)', 'Alt + 1'),
+  [TokenID.SET_NOT_IN]: prepareTooltip('Не принадлежит', 'Alt + Shift + 1'),
+  [TokenID.SUBSET_OR_EQ]: prepareTooltip('Быть частью (нестрогое подмножество)', 'Alt + 2'),
+  [TokenID.SUBSET]: prepareTooltip('Строгое подмножество', 'Alt + 7'),
+  [TokenID.NOT_SUBSET]: prepareTooltip('Не подмножество', 'Alt + Shift + 2'),
+  [TokenID.SET_INTERSECTION]: prepareTooltip('Пересечение', 'Alt + A'),
+  [TokenID.SET_UNION]: prepareTooltip('Объединение', 'Alt + S'),
+  [TokenID.SET_MINUS]: prepareTooltip('Разность множеств', 'Alt + 5'),
+  [TokenID.SET_SYMMETRIC_MINUS]: prepareTooltip('Симметрическая разность', 'Alt + Shift + 5'),
+  [TokenID.NT_DECLARATIVE_EXPR]: prepareTooltip('Декларативное определение', 'Alt + D'),
+  [TokenID.NT_IMPERATIVE_EXPR]: prepareTooltip('Императивное определение', 'Alt + G'),
+  [TokenID.NT_RECURSIVE_FULL]: prepareTooltip('Рекурсивное определение (цикл)', 'Alt + T'),
+  [TokenID.BIGPR]: prepareTooltip('Большая проекция', 'Alt + Q'),
+  [TokenID.SMALLPR]: prepareTooltip('Малая проекция', 'Alt + W'),
+  [TokenID.FILTER]: prepareTooltip('Фильтр', 'Alt + F'),
+  [TokenID.REDUCE]: prepareTooltip('Множество-сумма', 'Alt + R'),
+  [TokenID.CARD]: prepareTooltip('Мощность', 'Alt + C'),
+  [TokenID.BOOL]: prepareTooltip('Синглетон', 'Alt + B'),
+  [TokenID.DEBOOL]: prepareTooltip('Десинглетон', 'Alt + V'),
+  [TokenID.ASSIGN]: prepareTooltip('Присвоение', 'Alt + Shift + 6'),
+  [TokenID.ITERATE]: prepareTooltip('Перебор элементов множества', 'Alt + 6')
+};
+
+const labelCstSourceRecord: Record<DependencyMode, string> = {
+  [DependencyMode.ALL]: 'не ограничен',
+  [DependencyMode.OUTPUTS]: 'потребители',
+  [DependencyMode.INPUTS]: 'поставщики',
+  [DependencyMode.EXPAND_OUTPUTS]: 'зависимые',
+  [DependencyMode.EXPAND_INPUTS]: 'влияющие'
+};
+
 /**
  * Generates description for {@link IConstituenta}.
  */
@@ -74,284 +322,98 @@ export function labelVersion(value: CurrentVersion, items: RO<IVersionInfo[]>) {
  * Retrieves label for {@link TokenID}.
  */
 export function labelToken(id: TokenID): string {
-  // prettier-ignore
-  switch (id) {
-    case TokenID.BOOLEAN: return 'ℬ()';
-    case TokenID.DECART: return '×';
-    case TokenID.PUNCTUATION_PL: return '( )';
-    case TokenID.PUNCTUATION_SL: return '[ ]';
-    case TokenID.QUANTOR_UNIVERSAL: return '∀';
-    case TokenID.QUANTOR_EXISTS: return '∃';
-    case TokenID.LOGIC_NOT: return '¬';
-    case TokenID.LOGIC_AND: return '&';
-    case TokenID.LOGIC_OR: return '∨';
-    case TokenID.LOGIC_IMPLICATION: return '⇒';
-    case TokenID.LOGIC_EQUIVALENT: return '⇔';
-    case TokenID.LIT_EMPTYSET: return '∅';
-    case TokenID.LIT_WHOLE_NUMBERS: return 'Z';
-    case TokenID.MULTIPLY: return '*';
-    case TokenID.EQUAL: return '=';
-    case TokenID.NOTEQUAL: return '≠';
-    case TokenID.GREATER_OR_EQ: return '≥';
-    case TokenID.LESSER_OR_EQ: return '≤';
-    case TokenID.SET_IN: return '∈';
-    case TokenID.SET_NOT_IN: return '∉';
-    case TokenID.SUBSET_OR_EQ: return '⊆';
-    case TokenID.SUBSET: return '⊂';
-    case TokenID.NOT_SUBSET: return '⊄';
-    case TokenID.SET_INTERSECTION: return '∩';
-    case TokenID.SET_UNION: return '∪';
-    case TokenID.SET_MINUS: return '\\';
-    case TokenID.SET_SYMMETRIC_MINUS: return '∆';
-    case TokenID.NT_DECLARATIVE_EXPR: return 'D{}';
-    case TokenID.NT_IMPERATIVE_EXPR: return 'I{}';
-    case TokenID.NT_RECURSIVE_FULL: return 'R{}';
-    case TokenID.BIGPR: return 'Pr1()';
-    case TokenID.SMALLPR: return 'pr1()';
-    case TokenID.FILTER: return 'Fi1[]()';
-    case TokenID.REDUCE: return 'red()';
-    case TokenID.CARD: return 'card()';
-    case TokenID.BOOL: return 'bool()';
-    case TokenID.DEBOOL: return 'debool()';
-    case TokenID.ASSIGN: return ':=';
-    case TokenID.ITERATE: return ':∈';
-  }
-  return `no label: ${id}`;
+  return labelTokenRecord[id] ?? `no label: ${id}`;
 }
 
-/**
- * Return shortcut description for {@link CstType}.
- */
+/** Return shortcut description for {@link CstType}. */
 export function getCstTypeShortcut(type: CstType) {
-  const prefix = labelCstType(type) + ' [Alt + ';
-  // prettier-ignore
-  switch (type) {
-    case CstType.BASE: return prefix + '1]';
-    case CstType.STRUCTURED: return prefix + '2]';
-    case CstType.TERM: return prefix + '3]';
-    case CstType.AXIOM: return prefix + '4]';
-    case CstType.FUNCTION: return prefix + 'Q]';
-    case CstType.PREDICATE: return prefix + 'W]';
-    case CstType.CONSTANT: return prefix + '5]';
-    case CstType.THEOREM: return prefix + '6]';
-  }
+  const key = cstTypeShortcutKeyRecord[type];
+  return key ? `${labelCstType(type)} [Alt + ${key}]` : labelCstType(type);
 }
 
 /** Generates placeholder for RS definition based on {@link CstType}. */
 export function getRSDefinitionPlaceholder(type: CstType): string {
-  switch (type) {
-    case CstType.STRUCTURED:
-      return 'Пример: ℬ(X1×D2)';
-    case CstType.TERM:
-      return 'Пример: D{ξ∈S1 | Pr1(ξ)∩Pr2(ξ)=∅}';
-    case CstType.THEOREM:
-    case CstType.AXIOM:
-      return 'Пример: D11=∅';
-    case CstType.FUNCTION:
-      return 'Пример: [α∈X1, β∈ℬ(X1×X2)] Pr2(Fi1[{α}](β))';
-    case CstType.PREDICATE:
-      return 'Пример: [α∈X1, β∈ℬ(X1)] α∈β & card(β)>1';
-  }
-  return 'Формальное выражение';
+  return rsDefinitionPlaceholderRecord[type] ?? 'Формальное выражение';
 }
 
 /**
  * Generates description for {@link TokenID}.
  */
 export function describeToken(id: TokenID): string {
-  // prettier-ignore
-  switch (id) {
-    case TokenID.BOOLEAN: return prepareTooltip('Булеан', 'Alt + E / Shift + B');
-    case TokenID.DECART: return prepareTooltip('Декартово произведение', 'Alt + Shift + E / Shift + 8');
-    case TokenID.PUNCTUATION_PL: return prepareTooltip('Скобки () вокруг выражения', 'Alt + Shift + 9');
-    case TokenID.PUNCTUATION_SL: return prepareTooltip('Скобки [] вокруг выражения', 'Alt + [');
-    case TokenID.QUANTOR_UNIVERSAL: return prepareTooltip('Квантор всеобщности', '`');
-    case TokenID.QUANTOR_EXISTS: return prepareTooltip('Квантор существования', 'Shift + `');
-    case TokenID.LOGIC_NOT: return prepareTooltip('Отрицание', 'Alt + `');
-    case TokenID.LOGIC_AND: return prepareTooltip('Конъюнкция', 'Alt + 3 ~ Shift + 7');
-    case TokenID.LOGIC_OR: return prepareTooltip('Дизъюнкция', 'Alt + Shift + 3');
-    case TokenID.LOGIC_IMPLICATION: return prepareTooltip('Импликация', 'Alt + 4');
-    case TokenID.LOGIC_EQUIVALENT: return prepareTooltip('Эквивалентность', 'Alt + Shift + 4');
-    case TokenID.LIT_EMPTYSET: return prepareTooltip('Пустое множество', 'Alt + X');
-    case TokenID.LIT_WHOLE_NUMBERS: return prepareTooltip('Целые числа', 'Alt + Z');
-    case TokenID.EQUAL: return prepareTooltip('Равенство');
-    case TokenID.MULTIPLY: return prepareTooltip('Умножение чисел', 'Alt + 8');
-    case TokenID.NOTEQUAL: return prepareTooltip('Неравенство', 'Alt + Shift + `');
-    case TokenID.GREATER_OR_EQ: return prepareTooltip('Больше или равно', 'Alt + Shift + 7');
-    case TokenID.LESSER_OR_EQ: return prepareTooltip('Меньше или равно', 'Alt + Shift + 8');
-    case TokenID.SET_IN: return prepareTooltip('Быть элементом (принадлежит)', 'Alt + 1');
-    case TokenID.SET_NOT_IN: return prepareTooltip('Не принадлежит', 'Alt + Shift + 1');
-    case TokenID.SUBSET_OR_EQ: return prepareTooltip('Быть частью (нестрогое подмножество)', 'Alt + 2');
-    case TokenID.SUBSET: return prepareTooltip('Строгое подмножество', 'Alt + 7');
-    case TokenID.NOT_SUBSET: return prepareTooltip('Не подмножество', 'Alt + Shift + 2');
-    case TokenID.SET_INTERSECTION: return prepareTooltip('Пересечение', 'Alt + A');
-    case TokenID.SET_UNION: return prepareTooltip('Объединение', 'Alt + S');
-    case TokenID.SET_MINUS: return prepareTooltip('Разность множеств', 'Alt + 5');
-    case TokenID.SET_SYMMETRIC_MINUS: return prepareTooltip('Симметрическая разность', 'Alt + Shift + 5');
-    case TokenID.NT_DECLARATIVE_EXPR: return prepareTooltip('Декларативное определение', 'Alt + D');
-    case TokenID.NT_IMPERATIVE_EXPR: return prepareTooltip('Императивное определение', 'Alt + G');
-    case TokenID.NT_RECURSIVE_FULL: return prepareTooltip('Рекурсивное определение (цикл)', 'Alt + T');
-    case TokenID.BIGPR: return prepareTooltip('Большая проекция', 'Alt + Q');
-    case TokenID.SMALLPR: return prepareTooltip('Малая проекция', 'Alt + W');
-    case TokenID.FILTER: return prepareTooltip('Фильтр', 'Alt + F');
-    case TokenID.REDUCE: return prepareTooltip('Множество-сумма', 'Alt + R');
-    case TokenID.CARD: return prepareTooltip('Мощность', 'Alt + C');
-    case TokenID.BOOL: return prepareTooltip('Синглетон', 'Alt + B');
-    case TokenID.DEBOOL: return prepareTooltip('Десинглетон', 'Alt + V');
-    case TokenID.ASSIGN: return prepareTooltip('Присвоение', 'Alt + Shift + 6');
-    case TokenID.ITERATE: return prepareTooltip('Перебор элементов множества', 'Alt + 6');
-  }
-  return `no description: ${id}`;
+  return describeTokenRecord[id] ?? `no description: ${id}`;
 }
 
 /**
  * Retrieves label for {@link CstMatchMode}.
  */
 export function labelCstMatchMode(mode: CstMatchMode): string {
-  // prettier-ignore
-  switch (mode) {
-    case CstMatchMode.ALL: return 'общий';
-    case CstMatchMode.EXPR: return 'выражение';
-    case CstMatchMode.TERM: return 'термин';
-    case CstMatchMode.TEXT: return 'текст';
-    case CstMatchMode.NAME: return 'имя';
-  }
+  return labelCstMatchModeRecord[mode] ?? `UNKNOWN MATCH MODE: ${mode}`;
 }
 
 /**
  * Retrieves description for {@link CstMatchMode}.
  */
 export function describeCstMatchMode(mode: CstMatchMode): string {
-  // prettier-ignore
-  switch (mode) {
-    case CstMatchMode.ALL: return 'все атрибуты';
-    case CstMatchMode.EXPR: return 'формальное определение';
-    case CstMatchMode.TERM: return 'термин';
-    case CstMatchMode.TEXT: return 'определение и конвенция';
-    case CstMatchMode.NAME: return 'только имена';
-  }
+  return describeCstMatchModeRecord[mode] ?? `UNKNOWN MATCH MODE: ${mode}`;
 }
 
-/**
- * Retrieves label for {@link DependencyMode}.
- */
+/** Retrieves label for {@link DependencyMode}. */
 export function labelCstSource(mode: DependencyMode): string {
-  // prettier-ignore
-  switch (mode) {
-    case DependencyMode.ALL: return 'не ограничен';
-    case DependencyMode.OUTPUTS: return 'потребители';
-    case DependencyMode.INPUTS: return 'поставщики';
-    case DependencyMode.EXPAND_OUTPUTS: return 'зависимые';
-    case DependencyMode.EXPAND_INPUTS: return 'влияющие';
-  }
+  return labelCstSourceRecord[mode];
 }
 
 /**
  * Retrieves description for {@link DependencyMode}.
  */
 export function describeCstSource(mode: DependencyMode): string {
-  // prettier-ignore
-  switch (mode) {
-    case DependencyMode.ALL: return 'все конституенты';
-    case DependencyMode.OUTPUTS: return 'прямые исходящие';
-    case DependencyMode.INPUTS: return 'прямые входящие';
-    case DependencyMode.EXPAND_OUTPUTS: return 'цепочка исходящих';
-    case DependencyMode.EXPAND_INPUTS: return 'цепочка входящих';
-  }
+  return describeCstSourceRecord[mode] ?? `UNKNOWN DEPENDENCY MODE: ${mode}`;
 }
 
-/**
- * Retrieves label for {@link GraphColoring}.
- */
-export const mapLabelColoring = new Map<GraphColoring, string>([
-  ['none', 'Цвет: Моно'],
-  ['status', 'Цвет: Статус'],
-  ['type', 'Цвет: Класс'],
-  ['schemas', 'Цвет: Схемы']
-]);
+/** Retrieves label for {@link GraphColoring}. */
+export function labelColoring(mode: GraphColoring): string {
+  return labelColoringRecord[mode] ?? `UNKNOWN COLORING: ${mode}`;
+}
 
 /**
  * Retrieves label for {@link ExpressionStatus}.
  */
 export function labelExpressionStatus(status: ExpressionStatus): string {
-  // prettier-ignore
-  switch (status) {
-    case ExpressionStatus.VERIFIED: return 'корректно';
-    case ExpressionStatus.INCORRECT: return 'ошибка';
-    case ExpressionStatus.INCALCULABLE: return 'невычислимо';
-    case ExpressionStatus.PROPERTY: return 'неразмерное';
-    case ExpressionStatus.UNKNOWN: return 'не проверено';
-    case ExpressionStatus.UNDEFINED: return 'N/A';
-  }
+  return labelExpressionStatusRecord[status] ?? `UNKNOWN EXPRESSION STATUS: ${status}`;
 }
 
 /**
  * Retrieves description for {@link ExpressionStatus}.
  */
 export function describeExpressionStatus(status: ExpressionStatus): string {
-  // prettier-ignore
-  switch (status) {
-    case ExpressionStatus.VERIFIED: return 'выражение корректно и вычислимо';
-    case ExpressionStatus.INCORRECT: return 'ошибка в выражении';
-    case ExpressionStatus.INCALCULABLE: return 'интерпретация не вычисляется';
-    case ExpressionStatus.PROPERTY: return 'только проверка принадлежности';
-    case ExpressionStatus.UNKNOWN: return 'требует проверки выражения';
-    case ExpressionStatus.UNDEFINED: return 'произошла ошибка при проверке';
-  }
+  return describeExpressionStatusRecord[status] ?? `UNKNOWN EXPRESSION STATUS: ${status}`;
 }
 
 /**
  * Retrieves label for {@link CstType}.
  */
 export function labelCstType(target: CstType): string {
-  // prettier-ignore
-  switch (target) {
-    case CstType.BASE: return 'Базисное множество';
-    case CstType.CONSTANT: return 'Константное множество';
-    case CstType.STRUCTURED: return 'Родовая структура';
-    case CstType.AXIOM: return 'Аксиома';
-    case CstType.TERM: return 'Терм';
-    case CstType.FUNCTION: return 'Терм-функция';
-    case CstType.PREDICATE: return 'Предикат-функция';
-    case CstType.THEOREM: return 'Теорема';
-  }
+  return labelCstTypeRecord[target] ?? `UNKNOWN CST TYPE: ${target}`;
 }
 
 /**
  * Retrieves label for {@link ReferenceType}.
  */
 export function labelReferenceType(target: ReferenceType): string {
-  // prettier-ignore
-  switch (target) {
-    case ReferenceType.ENTITY: return 'Использование термина';
-    case ReferenceType.SYNTACTIC: return 'Связывание слов';
-  }
+  return labelReferenceTypeRecord[target] ?? `UNKNOWN REFERENCE TYPE: ${target}`;
 }
 
 /**
  * Retrieves label for {@link CstClass}.
  */
 export function labelCstClass(target: CstClass): string {
-  // prettier-ignore
-  switch (target) {
-    case CstClass.BASIC: return 'базовый';
-    case CstClass.DERIVED: return 'производный';
-    case CstClass.STATEMENT: return 'утверждение';
-    case CstClass.TEMPLATE: return 'шаблон';
-  }
+  return labelCstClassRecord[target] ?? `UNKNOWN CST CLASS: ${target}`;
 }
 
 /**
  * Retrieves description for {@link CstClass}.
  */
 export function describeCstClass(target: CstClass): string {
-  // prettier-ignore
-  switch (target) {
-    case CstClass.BASIC: return 'неопределяемое понятие';
-    case CstClass.DERIVED: return 'определяемое понятие';
-    case CstClass.STATEMENT: return 'логическое утверждение';
-    case CstClass.TEMPLATE: return 'шаблон определения';
-  }
+  return describeCstClassRecord[target] ?? `UNKNOWN CST CLASS: ${target}`;
 }
 
 /**
@@ -388,6 +450,13 @@ export function labelCstTypification(cst: RO<IConstituenta>): string {
     resultType: cst.parse.typification,
     args: cst.parse.args
   });
+}
+
+/**
+ * Generates label for grammeme.
+ */
+export function labelGrammeme(gram: Grammeme): string {
+  return labelGrammemeRecord[gram] ?? `Неизв: ${gram as string}`;
 }
 
 /**
@@ -466,85 +535,10 @@ export function labelSyntaxTree(node: RO<ISyntaxTreeNode>): string {
     case TokenID.ITERATE:
       return labelToken(node.typeID);
   }
-  // node
   if (node.data.value) {
     return node.data.value as string;
   }
   return 'UNKNOWN ' + String(node.typeID);
-}
-
-/**
- * Generates label for grammeme.
- */
-export function labelGrammeme(gram: Grammeme): string {
-  // prettier-ignore
-  switch (gram) {
-    default: return `Неизв: ${gram as string}`;
-
-    case Grammeme.NOUN: return 'ЧР: сущ';
-    case Grammeme.VERB: return 'ЧР: глагол';
-    case Grammeme.INFN: return 'ЧР: глагол инф';
-    case Grammeme.ADJF: return 'ЧР: прил';
-    case Grammeme.PRTF: return 'ЧР: прич';
-    case Grammeme.ADJS: return 'ЧР: кр прил';
-    case Grammeme.PRTS: return 'ЧР: кр прич';
-    case Grammeme.COMP: return 'ЧР: компаратив';
-    case Grammeme.GRND: return 'ЧР: деепричастие';
-    case Grammeme.NUMR: return 'ЧР: число';
-    case Grammeme.ADVB: return 'ЧР: наречие';
-    case Grammeme.NPRO: return 'ЧР: местоимение';
-    case Grammeme.PRED: return 'ЧР: предикатив';
-    case Grammeme.PREP: return 'ЧР: предлог';
-    case Grammeme.CONJ: return 'ЧР: союз';
-    case Grammeme.PRCL: return 'ЧР: частица';
-    case Grammeme.INTJ: return 'ЧР: междометие';
-    case Grammeme.Abbr: return 'ЧР: аббревиатура';
-
-    case Grammeme.sing: return 'Число: един';
-    case Grammeme.plur: return 'Число: множ';
-
-    case Grammeme.nomn: return 'Падеж: имен';
-    case Grammeme.gent: return 'Падеж: род';
-    case Grammeme.datv: return 'Падеж: дат';
-    case Grammeme.accs: return 'Падеж: вин';
-    case Grammeme.ablt: return 'Падеж: твор';
-    case Grammeme.loct: return 'Падеж: пред';
-
-    case Grammeme.masc: return 'Род: муж';
-    case Grammeme.femn: return 'Род: жен';
-    case Grammeme.neut: return 'Род: ср';
-
-    case Grammeme.perf: return 'Совершенный: да';
-    case Grammeme.impf: return 'Совершенный: нет';
-
-    case Grammeme.tran: return 'Переходный: да';
-    case Grammeme.intr: return 'Переходный: нет';
-
-    case Grammeme.pres: return 'Время: настоящее';
-    case Grammeme.past: return 'Время: прошедшее';
-    case Grammeme.futr: return 'Время: будущее';
-
-    case Grammeme.per1: return 'Лицо: 1';
-    case Grammeme.per2: return 'Лицо: 2';
-    case Grammeme.per3: return 'Лицо: 3';
-
-    case Grammeme.impr: return 'Повелительный: да';
-    case Grammeme.indc: return 'Повелительный: нет';
-
-    case Grammeme.incl: return 'Включающий: да';
-    case Grammeme.excl: return 'Включающий: нет';
-
-    case Grammeme.pssv: return 'Страдательный: да';
-    case Grammeme.actv: return 'Страдательный: нет';
-
-    case Grammeme.anim: return 'Одушевленный: да';
-    case Grammeme.inan: return 'Одушевленный: нет';
-
-    case Grammeme.Infr: return 'Стиль: неформальный';
-    case Grammeme.Slng: return 'Стиль: жаргон';
-    case Grammeme.Arch: return 'Стиль: устаревший';
-    case Grammeme.Litr: return 'Стиль: литературный';
-  }
 }
 
 /**
