@@ -76,6 +76,7 @@ INSTALLED_APPS = [
     'apps.library',
     'apps.rsform',
     'apps.oss',
+    'apps.prompt',
 
     'drf_spectacular',
     'drf_spectacular_sidecar',

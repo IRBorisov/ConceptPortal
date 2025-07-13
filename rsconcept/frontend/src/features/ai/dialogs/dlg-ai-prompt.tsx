@@ -13,12 +13,14 @@ const mockPrompts: IPromptTemplate[] = [
     id: 1,
     owner: null,
     label: 'Greeting',
+    is_shared: true,
     description: 'A simple greeting prompt.',
     text: 'Hello, ${name}! How can I assist you today?'
   },
   {
     id: 2,
     owner: null,
+    is_shared: true,
     label: 'Summary',
     description: 'Summarize the following text.',
     text: 'Please summarize the following: ${text}'

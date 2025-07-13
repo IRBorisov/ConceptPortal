@@ -123,21 +123,20 @@ export function applyFilterCategory(start: IConstituenta, schema: IRSForm): ICon
   );
 }
 
-/**
- * Prefix for alias indicating {@link CstType}.
- */
+const cstTypePrefixRecord: Record<CstType, string> = {
+  [CstType.BASE]: 'X',
+  [CstType.CONSTANT]: 'C',
+  [CstType.STRUCTURED]: 'S',
+  [CstType.AXIOM]: 'A',
+  [CstType.TERM]: 'D',
+  [CstType.FUNCTION]: 'F',
+  [CstType.PREDICATE]: 'P',
+  [CstType.THEOREM]: 'T'
+};
+
+/** Prefix for alias indicating {@link CstType}. */
 export function getCstTypePrefix(type: CstType): string {
-  // prettier-ignore
-  switch (type) {
-    case CstType.BASE: return 'X';
-    case CstType.CONSTANT: return 'C';
-    case CstType.STRUCTURED: return 'S';
-    case CstType.AXIOM: return 'A';
-    case CstType.TERM: return 'D';
-    case CstType.FUNCTION: return 'F';
-    case CstType.PREDICATE: return 'P';
-    case CstType.THEOREM: return 'T';
-  }
+  return cstTypePrefixRecord[type];
 }
 
 /**

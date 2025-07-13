@@ -144,3 +144,19 @@ def passwordsNotMatch():
 
 def emailAlreadyTaken():
     return 'Пользователь с данным email уже существует'
+
+
+def promptLabelTaken(label: str):
+    return f'Шаблон с меткой "{label}" уже существует у пользователя.'
+
+
+def promptNotOwner():
+    return 'Вы не являетесь владельцем этого шаблона.'
+
+
+def promptSharedPermissionDenied():
+    return 'Только администратор может сделать шаблон общедоступным.'
+
+
+def promptNotFound():
+    return 'Шаблон не найден.'
