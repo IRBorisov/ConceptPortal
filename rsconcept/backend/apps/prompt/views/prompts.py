@@ -7,7 +7,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from ..models import PromptTemplate
-from ..serializers import PromptTemplateSerializer
+from ..serializers import PromptTemplateListSerializer, PromptTemplateSerializer
 
 
 class IsOwnerOrAdmin(permissions.BasePermission):
@@ -48,5 +48,5 @@ class PromptTemplateViewSet(viewsets.ModelViewSet):
         owned = PromptTemplate.objects.filter(owner=user)
         shared = PromptTemplate.objects.filter(is_shared=True)
         templates = (owned | shared).distinct()
-        serializer = self.get_serializer(templates, many=True)
+        serializer = PromptTemplateListSerializer(templates, many=True)
         return Response(serializer.data)

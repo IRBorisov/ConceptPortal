@@ -1,2 +1,2 @@
 ''' Serializers for persistent data manipulation (AI Prompts). '''
-from .data_access import PromptTemplateSerializer
+from .data_access import PromptTemplateListSerializer, PromptTemplateSerializer

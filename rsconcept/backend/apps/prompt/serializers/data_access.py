@@ -37,3 +37,12 @@ class PromptTemplateSerializer(serializers.ModelSerializer):
             if validated_data['is_shared'] and not (user.is_superuser or user.is_staff):
                 raise serializers.ValidationError(msg.promptSharedPermissionDenied())
         return super().update(instance, validated_data)
+
+
+class PromptTemplateListSerializer(serializers.ModelSerializer):
+    '''Serializer for listing PromptTemplates without the 'text' field.'''
+    class Meta:
+        ''' serializer metadata. '''
+        model = PromptTemplate
+        fields = ['id', 'owner', 'is_shared', 'label', 'description']
+        read_only_fields = ['id', 'owner']

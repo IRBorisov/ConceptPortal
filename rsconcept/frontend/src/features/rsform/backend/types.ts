@@ -89,9 +89,7 @@ export interface ICheckConstituentaDTO {
 /** Represents data, used in merging multiple {@link IConstituenta}. */
 export type ISubstitutionsDTO = z.infer<typeof schemaSubstitutions>;
 
-/**
- * Represents Constituenta list.
- */
+/** Represents Constituenta list. */
 export interface IConstituentaList {
   items: number[];
 }

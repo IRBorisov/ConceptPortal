@@ -16,6 +16,7 @@ export const KEYS = {
   library: 'library',
   users: 'users',
   cctext: 'cctext',
+  prompts: 'prompts',
   global_mutation: 'global_mutation',
 
   composite: {

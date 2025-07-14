@@ -98,6 +98,8 @@ class TestPromptTemplateViewSet(EndpointTester):
         labels = [item['label'] for item in response.data]
         self.assertIn('Mine', labels)
         self.assertIn('Shared', labels)
+        for item in response.data:
+            self.assertNotIn('text', item)
 
 
     @decl_endpoint('/api/prompts/{item}/', method='patch')
