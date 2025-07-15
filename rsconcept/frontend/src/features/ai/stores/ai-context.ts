@@ -2,6 +2,7 @@ import { create } from 'zustand';
 
 import { type IBlock, type IOperationSchema } from '@/features/oss/models/oss';
 import { type IConstituenta, type IRSForm } from '@/features/rsform';
+import { labelCstTypification } from '@/features/rsform/labels';
 
 import { PromptVariableType } from '../models/prompting';
 
@@ -55,10 +56,23 @@ export function evaluatePromptVariable(variableType: PromptVariableType, context
     case PromptVariableType.OSS:
       return context.currentOSS?.title ?? '';
     case PromptVariableType.SCHEMA:
-      return context.currentSchema?.title ?? '';
+      return context.currentSchema ? generateSchemaPrompt(context.currentSchema) : '';
     case PromptVariableType.BLOCK:
       return context.currentBlock?.title ?? '';
     case PromptVariableType.CONSTITUENTA:
       return context.currentConstituenta?.alias ?? '';
   }
+}
+
+// ====== Internals =========
+function generateSchemaPrompt(schema: IRSForm): string {
+  let body = `Название концептуальной схемы: ${schema.title}\n`;
+  body += `[${schema.alias}] Описание: "${schema.description}"\n\n`;
+  body += 'Понятия:\n';
+  schema.items.forEach(item => {
+    body += `${item.alias} - "${labelCstTypification(item)}" - "${item.term_resolved}" - "${
+      item.definition_formal
+    }" - "${item.definition_resolved}" - "${item.convention}"\n`;
+  });
+  return body;
 }

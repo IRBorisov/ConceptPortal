@@ -25,7 +25,7 @@ export function MenuAI() {
     event.preventDefault();
     event.stopPropagation();
     menu.hide();
-    showAIPrompt({});
+    showAIPrompt();
   }
 
   return (

@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { urls, useConceptNavigation } from '@/app';
+import { useAIStore } from '@/features/ai/stores/ai-context';
 import { useAuthSuspense } from '@/features/auth';
 import { useLibrarySearchStore } from '@/features/library';
 import { useDeleteItem } from '@/features/library/backend/use-delete-item';
@@ -68,6 +69,8 @@ export const RSEditState = ({
   const showCreateCst = useDialogsStore(state => state.showCreateCst);
   const showDeleteCst = useDialogsStore(state => state.showDeleteCst);
   const showCstTemplate = useDialogsStore(state => state.showCstTemplate);
+  const setCurrentSchema = useAIStore(state => state.setCurrentSchema);
+  const setCurrentConstituenta = useAIStore(state => state.setCurrentConstituenta);
 
   useAdjustRole({
     isOwner: isOwned,
@@ -75,6 +78,16 @@ export const RSEditState = ({
     isStaff: user.is_staff,
     adminMode: adminMode
   });
+
+  useEffect(() => {
+    setCurrentSchema(schema);
+    return () => setCurrentSchema(null);
+  }, [schema, setCurrentSchema]);
+
+  useEffect(() => {
+    setCurrentConstituenta(activeCst);
+    return () => setCurrentConstituenta(null);
+  }, [activeCst, setCurrentConstituenta]);
 
   function handleSetFocus(newValue: IConstituenta | null) {
     setFocusCst(newValue);

@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { urls, useConceptNavigation } from '@/app';
+import { useAIStore } from '@/features/ai/stores/ai-context';
 import { useAuthSuspense } from '@/features/auth';
 import { useLibrarySearchStore } from '@/features/library';
 import { useDeleteItem } from '@/features/library/backend/use-delete-item';
@@ -30,6 +31,7 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
   const role = useRoleStore(state => state.role);
   const setSearchLocation = useLibrarySearchStore(state => state.setLocation);
   const searchLocation = useLibrarySearchStore(state => state.location);
+  const setCurrentOSS = useAIStore(state => state.setCurrentOSS);
 
   const { user } = useAuthSuspense();
   const { schema } = useOssSuspense({ itemID: itemID });
@@ -49,6 +51,11 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
     isStaff: user.is_staff,
     adminMode: adminMode
   });
+
+  useEffect(() => {
+    setCurrentOSS(schema);
+    return () => setCurrentOSS(null);
+  }, [schema, setCurrentOSS]);
 
   function navigateTab(tab: OssTabID) {
     const url = urls.oss_props({
