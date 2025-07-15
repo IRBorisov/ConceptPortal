@@ -59,7 +59,7 @@ export function TabEditTemplate({ activeID }: TabEditTemplateProps) {
         />
       ) : null}
       <FormPromptTemplate
-        className='mt-12 xs:mt-4 w-100 md:w-180 min-w-70'
+        className='mt-8 xs:mt-0 w-100 md:w-180 min-w-70'
         isMutable={isMutable}
         promptTemplate={promptTemplate}
         toggleReset={toggleReset}

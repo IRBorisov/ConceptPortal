@@ -221,6 +221,20 @@
   }
 }
 
+@utility cc-prompt-result {
+  transition-property: clip-path, height;
+  transition-duration: var(--duration-move);
+  transition-timing-function: var(--ease-in-out);
+
+  clip-path: inset(0% 0% 100% 0%);
+  height: 0;
+
+  &.open {
+    clip-path: inset(0% 0% 0% 0%);
+    height: 100%;
+  }
+}
+
 @utility cc-parsing-result {
   transition-property: clip-path, padding, margin, border, height;
   transition-duration: var(--duration-move);

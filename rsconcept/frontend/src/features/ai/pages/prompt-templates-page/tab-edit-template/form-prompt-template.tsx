@@ -1,18 +1,23 @@
 'use no memo'; // TODO: remove when react hook forms are compliant with react compiler
 'use client';
 
-import { useRef } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { useRef, useState } from 'react';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import clsx from 'clsx';
+import { useDebounce } from 'use-debounce';
 
 import { useMutatingPrompts } from '@/features/ai/backend/use-mutating-prompts';
 import { useUpdatePromptTemplate } from '@/features/ai/backend/use-update-prompt-template';
+import { generateSample } from '@/features/ai/models/prompting-api';
 import { useAuthSuspense } from '@/features/auth';
 
+import { MiniButton } from '@/components/control';
+import { IconSample } from '@/components/icons';
 import { Checkbox, TextArea, TextInput } from '@/components/input';
 import { cn } from '@/components/utils';
 import { useModificationStore } from '@/stores/modification';
-import { globalIDs } from '@/utils/constants';
+import { globalIDs, PARAMETER } from '@/utils/constants';
 
 import {
   type IPromptTemplate,
@@ -33,6 +38,8 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
   const isProcessing = useMutatingPrompts();
   const setIsModified = useModificationStore(state => state.setIsModified);
   const { updatePromptTemplate } = useUpdatePromptTemplate();
+  const [sampleResult, setSampleResult] = useState<string | null>(null);
+  const [debouncedResult] = useDebounce(sampleResult, PARAMETER.moveDuration);
 
   const {
     control,
@@ -50,6 +57,7 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
       is_shared: promptTemplate.is_shared
     }
   });
+  const text = useWatch({ control, name: 'text' });
 
   const prevReset = useRef(toggleReset);
   const prevTemplate = useRef(promptTemplate);
@@ -63,6 +71,7 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
       text: promptTemplate.text,
       is_shared: promptTemplate.is_shared
     });
+    setSampleResult(null);
   }
 
   const prevDirty = useRef(isDirty);
@@ -81,7 +90,7 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
   return (
     <form
       id={globalIDs.prompt_editor}
-      className={cn('flex flex-col gap-3 px-6', className)}
+      className={cn('flex flex-col gap-3 px-6 py-2', className)}
       onSubmit={event => void handleSubmit(onSubmit)(event)}
     >
       <TextInput
@@ -101,26 +110,44 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
       <TextArea
         id='prompt_text'
         label='Содержание' //
+        fitContent
+        className='disabled:min-h-9 max-h-64'
         {...register('text')}
         error={errors.text}
         disabled={isProcessing || !isMutable}
       />
+      <div className='flex justify-between'>
+        <Controller
+          name='is_shared'
+          control={control}
+          render={({ field }) => (
+            <Checkbox
+              id='prompt_is_shared'
+              label='Общий шаблон'
+              value={field.value}
+              onChange={field.onChange}
+              onBlur={field.onBlur}
+              ref={field.ref}
+              disabled={isProcessing || !isMutable || !user.is_staff}
+            />
+          )}
+        />
+        <MiniButton
+          title='Сгенерировать пример запроса'
+          icon={<IconSample size='1.25rem' className='icon-primary' />}
+          onClick={() => setSampleResult(!!sampleResult ? null : generateSample(text))}
+        />
+      </div>
 
-      <Controller
-        name='is_shared'
-        control={control}
-        render={({ field }) => (
-          <Checkbox
-            id='prompt_is_shared'
-            label='Общий шаблон'
-            value={field.value}
-            onChange={field.onChange}
-            onBlur={field.onBlur}
-            ref={field.ref}
-            disabled={isProcessing || !isMutable || !user.is_staff}
-          />
-        )}
-      />
+      <div className={clsx('cc-prompt-result overflow-y-hidden', sampleResult !== null && 'open')}>
+        <TextArea
+          fitContent
+          className='mt-3 max-h-64 min-h-12'
+          label='Пример запроса'
+          value={sampleResult ?? debouncedResult ?? ''}
+          disabled
+        />
+      </div>
     </form>
   );
 }

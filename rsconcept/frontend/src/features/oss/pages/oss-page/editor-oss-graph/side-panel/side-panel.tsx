@@ -30,7 +30,7 @@ export function SidePanel({ isMounted, className }: SidePanelProps) {
     selectedItems.length === 1 && selectedItems[0].nodeType === NodeType.BLOCK ? selectedItems[0] : null;
   const selectedSchema = selectedOperation?.result ?? null;
 
-  const debouncedMounted = useDebounce(isMounted, PARAMETER.moveDuration);
+  const [debouncedMounted] = useDebounce(isMounted, PARAMETER.moveDuration);
   const closePanel = usePreferencesStore(state => state.toggleShowOssSidePanel);
   const sidePanelHeight = useMainHeight();
 
