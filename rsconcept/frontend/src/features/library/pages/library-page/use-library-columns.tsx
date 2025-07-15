@@ -53,7 +53,7 @@ export function useLibraryColumns() {
       enableSorting: true,
       sortingFn: 'text'
     }),
-    columnHelper.accessor(item => item.owner ?? 0, {
+    columnHelper.accessor('owner', {
       id: 'owner',
       header: 'Владелец',
       size: 400,

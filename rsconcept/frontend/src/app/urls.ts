@@ -39,6 +39,8 @@ export const urls = {
   library_filter: (strategy: string) => `/library?filter=${strategy}`,
   create_schema: `/${routes.create_schema}`,
   prompt_templates: `/${routes.prompt_templates}`,
+  prompt_template: (active: number | null, tab: number) =>
+    `/prompt-templates?tab=${tab}${active ? `&active=${active}` : ''}`,
   manuals: `/${routes.manuals}`,
   help_topic: (topic: string) => `/manuals?topic=${topic}`,
   schema: (id: number | string, version?: number | string) =>

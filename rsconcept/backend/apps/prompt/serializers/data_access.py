@@ -17,7 +17,10 @@ class PromptTemplateSerializer(serializers.ModelSerializer):
 
     def validate_label(self, value):
         user = self.context['request'].user
-        if PromptTemplate.objects.filter(owner=user, label=value).exists():
+        queryset = PromptTemplate.objects.filter(owner=user, label=value)
+        if self.instance is not None:
+            queryset = queryset.exclude(pk=self.instance.pk)
+        if queryset.exists():
             raise serializers.ValidationError(msg.promptLabelTaken(value))
         return value
 

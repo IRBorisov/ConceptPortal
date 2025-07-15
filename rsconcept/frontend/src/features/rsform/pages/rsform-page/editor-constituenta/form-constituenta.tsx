@@ -1,7 +1,7 @@
 'use no memo'; // TODO: remove when react hook forms are compliant with react compiler
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -121,15 +121,13 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
   }
 
   const prevDirty = useRef(isDirty);
-  useEffect(() => {
-    if (prevDirty.current !== isDirty) {
-      prevDirty.current = isDirty;
-      setIsModified(isDirty);
-    }
-  }, [isDirty, setIsModified]);
+  if (prevDirty.current !== isDirty) {
+    prevDirty.current = isDirty;
+    setIsModified(isDirty);
+  }
 
   function onSubmit(data: IUpdateConstituentaDTO) {
-    return cstUpdate({ itemID: schema.id, data }).then(() => {
+    void cstUpdate({ itemID: schema.id, data }).then(() => {
       setIsModified(false);
       reset({ ...data });
     });

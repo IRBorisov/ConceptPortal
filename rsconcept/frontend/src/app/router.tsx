@@ -1,5 +1,6 @@
 import { createBrowserRouter } from 'react-router';
 
+import { prefetchAvailableTemplates } from '@/features/ai/backend/use-available-templates';
 import { prefetchAuth } from '@/features/auth/backend/use-auth';
 import { LoginPage } from '@/features/auth/pages/login-page';
 import { HomePage } from '@/features/home/home-page';
@@ -84,6 +85,11 @@ export const Router = createBrowserRouter([
       {
         path: `${routes.database_schema}`,
         lazy: () => import('@/features/home/database-schema-page')
+      },
+      {
+        path: routes.prompt_templates,
+        loader: prefetchAvailableTemplates,
+        lazy: () => import('@/features/ai/pages/prompt-templates-page')
       },
       {
         path: '*',

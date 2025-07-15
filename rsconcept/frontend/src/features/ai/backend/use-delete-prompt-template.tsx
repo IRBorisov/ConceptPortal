@@ -1,13 +1,15 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { KEYS } from '@/backend/configuration';
+
 import { promptsApi } from './api';
 
 export function useDeletePromptTemplate() {
   const client = useQueryClient();
   const mutation = useMutation({
-    mutationKey: [promptsApi.baseKey, 'delete'],
+    mutationKey: [KEYS.global_mutation, promptsApi.baseKey, 'delete'],
     mutationFn: promptsApi.deletePromptTemplate,
-    onSuccess: (_data, id) => {
+    onSuccess: (_, id) => {
       void client.invalidateQueries({ queryKey: [promptsApi.baseKey] });
       void client.invalidateQueries({ queryKey: [promptsApi.baseKey, id] });
     }

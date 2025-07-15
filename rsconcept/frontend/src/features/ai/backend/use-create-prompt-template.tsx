@@ -1,11 +1,13 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { KEYS } from '@/backend/configuration';
+
 import { promptsApi } from './api';
 
 export function useCreatePromptTemplate() {
   const client = useQueryClient();
   const mutation = useMutation({
-    mutationKey: [promptsApi.baseKey, 'create'],
+    mutationKey: [KEYS.global_mutation, promptsApi.baseKey, 'create'],
     mutationFn: promptsApi.createPromptTemplate,
     onSuccess: () => {
       void client.invalidateQueries({ queryKey: [promptsApi.baseKey] });

@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 
 import { type DlgAIPromptDialogProps } from '@/features/ai/dialogs/dlg-ai-prompt';
+import { type DlgCreatePromptTemplateProps } from '@/features/ai/dialogs/dlg-create-prompt-template';
 import { type DlgChangeLocationProps } from '@/features/library/dialogs/dlg-change-location';
 import { type DlgCloneLibraryItemProps } from '@/features/library/dialogs/dlg-clone-library-item';
 import { type DlgCreateVersionProps } from '@/features/library/dialogs/dlg-create-version';
@@ -69,7 +70,9 @@ export const DialogType = {
   SHOW_TERM_GRAPH: 28,
   CREATE_SCHEMA: 29,
   IMPORT_SCHEMA: 30,
-  AI_PROMPT: 31
+
+  AI_PROMPT: 31,
+  CREATE_PROMPT_TEMPLATE: 32
 } as const;
 export type DialogType = (typeof DialogType)[keyof typeof DialogType];
 
@@ -113,6 +116,7 @@ interface DialogsStore {
   showCreateSchema: (props: DlgCreateSchemaProps) => void;
   showImportSchema: (props: DlgImportSchemaProps) => void;
   showAIPrompt: (props: DlgAIPromptDialogProps) => void;
+  showCreatePromptTemplate: (props: DlgCreatePromptTemplateProps) => void;
 }
 
 export const useDialogsStore = create<DialogsStore>()(set => ({
@@ -155,5 +159,6 @@ export const useDialogsStore = create<DialogsStore>()(set => ({
   showEditCst: props => set({ active: DialogType.EDIT_CONSTITUENTA, props: props }),
   showCreateSchema: props => set({ active: DialogType.CREATE_SCHEMA, props: props }),
   showImportSchema: props => set({ active: DialogType.IMPORT_SCHEMA, props: props }),
-  showAIPrompt: (props: DlgAIPromptDialogProps) => set({ active: DialogType.AI_PROMPT, props: props })
+  showAIPrompt: (props: DlgAIPromptDialogProps) => set({ active: DialogType.AI_PROMPT, props: props }),
+  showCreatePromptTemplate: props => set({ active: DialogType.CREATE_PROMPT_TEMPLATE, props: props })
 }));
