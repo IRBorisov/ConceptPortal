@@ -4,6 +4,7 @@ from django.db import models
 from drf_spectacular.utils import extend_schema
 from rest_framework import permissions, viewsets
 from rest_framework.decorators import action
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from ..models import PromptTemplate
@@ -15,6 +16,9 @@ class IsOwnerOrAdmin(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:
+            # Allow unauthenticated users to view only shared templates
+            if not request.user or not request.user.is_authenticated:
+                return obj.is_shared
             return obj.is_shared or obj.owner == request.user
         return obj.owner == request.user or request.user.is_staff or request.user.is_superuser
 
@@ -25,6 +29,11 @@ class PromptTemplateViewSet(viewsets.ModelViewSet):
     queryset = PromptTemplate.objects.all()
     serializer_class = PromptTemplateSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrAdmin]
+
+    def get_permissions(self):
+        if self.action in ['available', 'retrieve']:
+            return [AllowAny()]
+        return [permission() for permission in self.permission_classes]
 
     def get_queryset(self):
         user = self.request.user
@@ -45,8 +54,11 @@ class PromptTemplateViewSet(viewsets.ModelViewSet):
     def available(self, request):
         '''Return user-owned and shared prompt templates.'''
         user = request.user
-        owned = PromptTemplate.objects.filter(owner=user)
-        shared = PromptTemplate.objects.filter(is_shared=True)
-        templates = (owned | shared).distinct()
+        if user.is_authenticated:
+            owned = PromptTemplate.objects.filter(owner=user)
+            shared = PromptTemplate.objects.filter(is_shared=True)
+            templates = (owned | shared).distinct()
+        else:
+            templates = PromptTemplate.objects.filter(is_shared=True)
         serializer = PromptTemplateListSerializer(templates, many=True)
         return Response(serializer.data)
