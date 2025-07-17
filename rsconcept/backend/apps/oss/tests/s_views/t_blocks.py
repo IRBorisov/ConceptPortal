@@ -266,3 +266,36 @@ class TestOssBlocks(EndpointTester):
 
         data['layout'] = self.layout_data
         self.executeOK(data=data)
+
+
+    @decl_endpoint('/api/oss/{item}/update-block', method='patch')
+    def test_update_block_cyclic_parent(self):
+        self.populateData()
+        # block1 -> block2
+        # Try to set block1's parent to block2 (should fail, direct cycle)
+        data = {
+            'target': self.block1.pk,
+            'item_data': {
+                'title': self.block1.title,
+                'description': self.block1.description,
+                'parent': self.block2.pk
+            },
+        }
+        self.executeBadData(data=data, item=self.owned_id)
+
+        # Create a deeper hierarchy: block1 -> block2 -> block3
+        self.block3 = self.owned.create_block(title='3', parent=self.block2)
+        # Try to set block1's parent to block3 (should fail, indirect cycle)
+        data['item_data']['parent'] = self.block3.pk
+        self.executeBadData(data=data, item=self.owned_id)
+
+        # Setting block2's parent to block1 (valid, as block1 is not a descendant)
+        data = {
+            'target': self.block2.pk,
+            'item_data': {
+                'title': self.block2.title,
+                'description': self.block2.description,
+                'parent': self.block1.pk
+            },
+        }
+        self.executeOK(data=data, item=self.owned_id)

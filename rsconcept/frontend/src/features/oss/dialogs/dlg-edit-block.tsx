@@ -66,14 +66,18 @@ export function DlgEditBlock() {
       <Controller
         name='item_data.parent'
         control={control}
-        render={({ field }) => (
-          <SelectParent
-            items={manager.oss.blocks.filter(block => block.id !== target.id)}
-            value={field.value ? manager.oss.blockByID.get(field.value) ?? null : null}
-            placeholder='Родительский блок'
-            onChange={value => field.onChange(value ? value.id : null)}
-          />
-        )}
+        render={({ field }) => {
+          const descendantNodeIDs = manager.oss.hierarchy.expandAllOutputs([target.nodeID]);
+          descendantNodeIDs.push(target.nodeID);
+          return (
+            <SelectParent
+              items={manager.oss.blocks.filter(block => !descendantNodeIDs.includes(block.nodeID))}
+              value={field.value ? manager.oss.blockByID.get(field.value) ?? null : null}
+              placeholder='Родительский блок'
+              onChange={value => field.onChange(value ? value.id : null)}
+            />
+          );
+        }}
       />
 
       <TextArea

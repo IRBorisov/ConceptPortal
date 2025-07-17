@@ -123,7 +123,7 @@ class UpdateBlockSerializer(StrictSerializer):
                 raise serializers.ValidationError({
                     'parent': msg.parentNotInOSS()
                 })
-            if parent == attrs['target']:
+            if attrs['target'].pk in _collect_ancestors(parent):
                 raise serializers.ValidationError({
                     'parent': msg.blockCyclicHierarchy()
                 })
