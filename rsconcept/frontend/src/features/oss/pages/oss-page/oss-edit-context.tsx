@@ -24,6 +24,7 @@ interface IOssEditContext {
   canDeleteOperation: (target: IOperation) => boolean;
   deleteSchema: () => void;
   setSelected: React.Dispatch<React.SetStateAction<string[]>>;
+  deselectAll: () => void;
 }
 
 export const OssEditContext = createContext<IOssEditContext | null>(null);

@@ -216,7 +216,7 @@ export function OssFlow() {
       <ContextMenu isOpen={isContextMenuOpen} onHide={hideContextMenu} {...menuProps} />
 
       <ToolbarOssGraph
-        className='absolute z-pop top-8 right-1/2 translate-x-1/2'
+        className='cc-tab-tools'
         onCreateBlock={handleCreateBlock}
         onCreateSchema={handleCreateSchema}
         onImportSchema={handleImportSchema}

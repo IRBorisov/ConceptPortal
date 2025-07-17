@@ -110,7 +110,8 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
 
         canDeleteOperation,
         deleteSchema,
-        setSelected
+        setSelected,
+        deselectAll: () => setSelected([])
       }}
     >
       {children}

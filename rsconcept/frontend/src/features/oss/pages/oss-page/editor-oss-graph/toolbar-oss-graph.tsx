@@ -113,7 +113,7 @@ export function ToolbarOssGraph({
   return (
     <div
       className={cn(
-        'flex flex-col items-center pt-1',
+        'cc-tab-tools flex flex-col items-center',
         'rounded-b-2xl',
         'hover:bg-background backdrop-blur-xs',
         className
