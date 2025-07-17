@@ -7,6 +7,7 @@ git reset --hard origin/main
 /bin/bash "${BACKUP_SCRIPT}"
 
 docker compose --file "${COMPOSE_FILE}" up --build --detach
+docker compose --file "${COMPOSE_FILE}" restart
 
 # Use this to prune caches
 # docker system prune -a -f
