@@ -9,19 +9,20 @@ from rest_framework.serializers import PrimaryKeyRelatedField as PKField
 
 from apps.library.models import LibraryItem
 from apps.library.serializers import (
-    LibraryItemBaseSerializer,
+    LibraryItemBaseNonStrictSerializer,
     LibraryItemDetailsSerializer,
     LibraryItemReferenceSerializer
 )
 from apps.oss.models import Inheritance
 from shared import messages as msg
+from shared.serializers import StrictModelSerializer, StrictSerializer
 
 from ..models import Constituenta, CstType, RSForm
 from .basics import CstParseSerializer, InheritanceDataSerializer
 from .io_pyconcept import PyConceptAdapter
 
 
-class CstBaseSerializer(serializers.ModelSerializer):
+class CstBaseSerializer(StrictModelSerializer):
     ''' Serializer: Constituenta all data. '''
     class Meta:
         ''' serializer metadata. '''
@@ -30,7 +31,7 @@ class CstBaseSerializer(serializers.ModelSerializer):
         read_only_fields = ('id',)
 
 
-class CstInfoSerializer(serializers.ModelSerializer):
+class CstInfoSerializer(StrictModelSerializer):
     ''' Serializer: Constituenta public information. '''
     class Meta:
         ''' serializer metadata. '''
@@ -38,9 +39,9 @@ class CstInfoSerializer(serializers.ModelSerializer):
         exclude = ('order', 'schema')
 
 
-class CstUpdateSerializer(serializers.Serializer):
+class CstUpdateSerializer(StrictSerializer):
     ''' Serializer: Constituenta update. '''
-    class ConstituentaUpdateData(serializers.ModelSerializer):
+    class ConstituentaUpdateData(StrictModelSerializer):
         ''' Serializer: Operation creation data. '''
         class Meta:
             ''' serializer metadata. '''
@@ -70,7 +71,7 @@ class CstUpdateSerializer(serializers.Serializer):
         return attrs
 
 
-class CstDetailsSerializer(serializers.ModelSerializer):
+class CstDetailsSerializer(StrictModelSerializer):
     ''' Serializer: Constituenta data including parse. '''
     parse = CstParseSerializer()
 
@@ -80,7 +81,7 @@ class CstDetailsSerializer(serializers.ModelSerializer):
         exclude = ('order',)
 
 
-class CstCreateSerializer(serializers.ModelSerializer):
+class CstCreateSerializer(StrictModelSerializer):
     ''' Serializer: Constituenta creation. '''
     insert_after = PKField(
         many=False,
@@ -100,7 +101,7 @@ class CstCreateSerializer(serializers.ModelSerializer):
             'insert_after', 'term_forms'
 
 
-class RSFormSerializer(serializers.ModelSerializer):
+class RSFormSerializer(StrictModelSerializer):
     ''' Serializer: Detailed data for RSForm. '''
     editors = serializers.ListField(
         child=serializers.IntegerField()
@@ -208,7 +209,7 @@ class RSFormSerializer(serializers.ModelSerializer):
                     validated_data=new_cst.validated_data
                 )
 
-        loaded_item = LibraryItemBaseSerializer(data=data)
+        loaded_item = LibraryItemBaseNonStrictSerializer(data=data)
         loaded_item.is_valid(raise_exception=True)
         loaded_item.update(
             instance=cast(LibraryItem, self.instance),
@@ -216,7 +217,7 @@ class RSFormSerializer(serializers.ModelSerializer):
         )
 
 
-class RSFormParseSerializer(serializers.ModelSerializer):
+class RSFormParseSerializer(StrictModelSerializer):
     ''' Serializer: Detailed data for RSForm including parse. '''
     editors = serializers.ListField(
         child=serializers.IntegerField()
@@ -250,7 +251,7 @@ class RSFormParseSerializer(serializers.ModelSerializer):
         return data
 
 
-class CstTargetSerializer(serializers.Serializer):
+class CstTargetSerializer(StrictSerializer):
     ''' Serializer: Target single Constituenta. '''
     target = PKField(many=False, queryset=Constituenta.objects.all())
 
@@ -265,7 +266,7 @@ class CstTargetSerializer(serializers.Serializer):
         return attrs
 
 
-class CstListSerializer(serializers.Serializer):
+class CstListSerializer(StrictSerializer):
     ''' Serializer: List of constituents from one origin. '''
     items = PKField(many=True, queryset=Constituenta.objects.all().only('schema_id'))
 
@@ -287,13 +288,13 @@ class CstMoveSerializer(CstListSerializer):
     move_to = serializers.IntegerField()
 
 
-class SubstitutionSerializerBase(serializers.Serializer):
+class SubstitutionSerializerBase(StrictSerializer):
     ''' Serializer: Basic substitution. '''
     original = PKField(many=False, queryset=Constituenta.objects.only('alias', 'schema_id'))
     substitution = PKField(many=False, queryset=Constituenta.objects.only('alias', 'schema_id'))
 
 
-class CstSubstituteSerializer(serializers.Serializer):
+class CstSubstituteSerializer(StrictSerializer):
     ''' Serializer: Constituenta substitution. '''
     substitutions = serializers.ListField(
         child=SubstitutionSerializerBase(),
@@ -326,7 +327,7 @@ class CstSubstituteSerializer(serializers.Serializer):
         return attrs
 
 
-class InlineSynthesisSerializer(serializers.Serializer):
+class InlineSynthesisSerializer(StrictSerializer):
     ''' Serializer: Inline synthesis operation input. '''
     receiver = PKField(many=False, queryset=LibraryItem.objects.all().only('owner_id'))
     source = PKField(many=False, queryset=LibraryItem.objects.all().only('owner_id'))  # type: ignore

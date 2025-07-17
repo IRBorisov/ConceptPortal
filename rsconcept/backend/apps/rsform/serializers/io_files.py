@@ -4,6 +4,7 @@ from rest_framework import serializers
 
 from apps.library.models import LibraryItem
 from shared import messages as msg
+from shared.serializers import StrictSerializer
 
 from ..models import Constituenta, RSForm
 from ..utils import fix_old_references
@@ -15,12 +16,12 @@ _TRS_VERSION = 16
 _TRS_HEADER = 'Exteor 4.8.13.1000 - 30/05/2022'
 
 
-class FileSerializer(serializers.Serializer):
+class FileSerializer(StrictSerializer):
     ''' Serializer: File input. '''
     file = serializers.FileField(allow_empty_file=False)
 
 
-class RSFormUploadSerializer(serializers.Serializer):
+class RSFormUploadSerializer(StrictSerializer):
     ''' Upload data for RSForm serializer. '''
     file = serializers.FileField()
     load_metadata = serializers.BooleanField()

@@ -51,7 +51,8 @@ export function FormRSForm() {
       description: schema.description,
       visible: schema.visible,
       read_only: schema.read_only
-    }
+    },
+    mode: 'onChange'
   });
   const visible = useWatch({ control, name: 'visible' });
   const readOnly = useWatch({ control, name: 'read_only' });

@@ -11,12 +11,13 @@ from apps.library.serializers import LibraryItemDetailsSerializer
 from apps.rsform.models import Constituenta
 from apps.rsform.serializers import SubstitutionSerializerBase
 from shared import messages as msg
+from shared.serializers import StrictModelSerializer, StrictSerializer
 
 from ..models import Argument, Block, Inheritance, Operation, OperationSchema, OperationType
 from .basics import NodeSerializer, PositionSerializer, SubstitutionExSerializer
 
 
-class OperationSerializer(serializers.ModelSerializer):
+class OperationSerializer(StrictModelSerializer):
     ''' Serializer: Operation data. '''
     is_import = serializers.BooleanField(default=False, required=False)
 
@@ -27,7 +28,7 @@ class OperationSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'oss')
 
 
-class BlockSerializer(serializers.ModelSerializer):
+class BlockSerializer(StrictModelSerializer):
     ''' Serializer: Block data. '''
     class Meta:
         ''' serializer metadata. '''
@@ -36,7 +37,7 @@ class BlockSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'oss')
 
 
-class ArgumentSerializer(serializers.ModelSerializer):
+class ArgumentSerializer(StrictModelSerializer):
     ''' Serializer: Operation data. '''
     class Meta:
         ''' serializer metadata. '''
@@ -44,9 +45,9 @@ class ArgumentSerializer(serializers.ModelSerializer):
         fields = ('operation', 'argument')
 
 
-class CreateBlockSerializer(serializers.Serializer):
+class CreateBlockSerializer(StrictSerializer):
     ''' Serializer: Block creation. '''
-    class BlockCreateData(serializers.ModelSerializer):
+    class BlockCreateData(StrictModelSerializer):
         ''' Serializer: Block creation data. '''
 
         class Meta:
@@ -92,9 +93,9 @@ class CreateBlockSerializer(serializers.Serializer):
         return attrs
 
 
-class UpdateBlockSerializer(serializers.Serializer):
+class UpdateBlockSerializer(StrictSerializer):
     ''' Serializer: Block update. '''
-    class UpdateBlockData(serializers.ModelSerializer):
+    class UpdateBlockData(StrictModelSerializer):
         ''' Serializer: Block update data. '''
         class Meta:
             ''' serializer metadata. '''
@@ -129,7 +130,7 @@ class UpdateBlockSerializer(serializers.Serializer):
         return attrs
 
 
-class DeleteBlockSerializer(serializers.Serializer):
+class DeleteBlockSerializer(StrictSerializer):
     ''' Serializer: Delete block. '''
     layout = serializers.ListField(
         child=NodeSerializer()
@@ -146,7 +147,7 @@ class DeleteBlockSerializer(serializers.Serializer):
         return attrs
 
 
-class MoveItemsSerializer(serializers.Serializer):
+class MoveItemsSerializer(StrictSerializer):
     ''' Serializer: Move items to another parent. '''
     layout = serializers.ListField(
         child=NodeSerializer()
@@ -190,7 +191,7 @@ class MoveItemsSerializer(serializers.Serializer):
         return attrs
 
 
-class CreateOperationData(serializers.ModelSerializer):
+class CreateOperationData(StrictModelSerializer):
     ''' Serializer: Operation creation data. '''
     alias = serializers.CharField()
 
@@ -200,7 +201,7 @@ class CreateOperationData(serializers.ModelSerializer):
         fields = 'alias', 'title', 'description', 'parent'
 
 
-class CreateSchemaSerializer(serializers.Serializer):
+class CreateSchemaSerializer(StrictSerializer):
     ''' Serializer: Schema creation for new operation. '''
     layout = serializers.ListField(child=NodeSerializer())
     item_data = CreateOperationData()
@@ -216,7 +217,7 @@ class CreateSchemaSerializer(serializers.Serializer):
         return attrs
 
 
-class ImportSchemaSerializer(serializers.Serializer):
+class ImportSchemaSerializer(StrictSerializer):
     ''' Serializer: Import schema to new operation. '''
     layout = serializers.ListField(child=NodeSerializer())
     item_data = CreateOperationData()
@@ -238,7 +239,7 @@ class ImportSchemaSerializer(serializers.Serializer):
         return attrs
 
 
-class CreateSynthesisSerializer(serializers.Serializer):
+class CreateSynthesisSerializer(StrictSerializer):
     ''' Serializer: Synthesis operation creation. '''
     layout = serializers.ListField(child=NodeSerializer())
     item_data = CreateOperationData()
@@ -292,9 +293,9 @@ class CreateSynthesisSerializer(serializers.Serializer):
         return attrs
 
 
-class UpdateOperationSerializer(serializers.Serializer):
+class UpdateOperationSerializer(StrictSerializer):
     ''' Serializer: Operation update. '''
-    class UpdateOperationData(serializers.ModelSerializer):
+    class UpdateOperationData(StrictModelSerializer):
         ''' Serializer: Operation update data. '''
         class Meta:
             ''' serializer metadata. '''
@@ -369,7 +370,7 @@ class UpdateOperationSerializer(serializers.Serializer):
         return attrs
 
 
-class DeleteOperationSerializer(serializers.Serializer):
+class DeleteOperationSerializer(StrictSerializer):
     ''' Serializer: Delete operation. '''
     layout = serializers.ListField(
         child=NodeSerializer()
@@ -388,7 +389,7 @@ class DeleteOperationSerializer(serializers.Serializer):
         return attrs
 
 
-class TargetOperationSerializer(serializers.Serializer):
+class TargetOperationSerializer(StrictSerializer):
     ''' Serializer: Target single operation. '''
     layout = serializers.ListField(
         child=NodeSerializer()
@@ -405,7 +406,7 @@ class TargetOperationSerializer(serializers.Serializer):
         return attrs
 
 
-class SetOperationInputSerializer(serializers.Serializer):
+class SetOperationInputSerializer(StrictSerializer):
     ''' Serializer: Set input schema for operation. '''
     layout = serializers.ListField(
         child=NodeSerializer()
@@ -432,7 +433,7 @@ class SetOperationInputSerializer(serializers.Serializer):
         return attrs
 
 
-class OperationSchemaSerializer(serializers.ModelSerializer):
+class OperationSchemaSerializer(StrictModelSerializer):
     ''' Serializer: Detailed data for OSS. '''
     operations = serializers.ListField(
         child=OperationSerializer()
@@ -489,7 +490,7 @@ class OperationSchemaSerializer(serializers.ModelSerializer):
         return result
 
 
-class RelocateConstituentsSerializer(serializers.Serializer):
+class RelocateConstituentsSerializer(StrictSerializer):
     ''' Serializer: Relocate constituents. '''
     destination = PKField(
         many=False,

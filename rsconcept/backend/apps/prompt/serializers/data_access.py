@@ -3,11 +3,12 @@
 from rest_framework import serializers
 
 from shared import messages as msg
+from shared.serializers import StrictModelSerializer
 
 from ..models import PromptTemplate
 
 
-class PromptTemplateSerializer(serializers.ModelSerializer):
+class PromptTemplateSerializer(StrictModelSerializer):
     '''Serializer for PromptTemplate, enforcing permissions and ownership logic.'''
     class Meta:
         ''' serializer metadata. '''
@@ -42,7 +43,7 @@ class PromptTemplateSerializer(serializers.ModelSerializer):
         return super().update(instance, validated_data)
 
 
-class PromptTemplateListSerializer(serializers.ModelSerializer):
+class PromptTemplateListSerializer(StrictModelSerializer):
     '''Serializer for listing PromptTemplates without the 'text' field.'''
     class Meta:
         ''' serializer metadata. '''

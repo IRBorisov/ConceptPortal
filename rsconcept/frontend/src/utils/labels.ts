@@ -5,6 +5,8 @@
  * Description is a long description used in tooltips.
  */
 
+import { limits } from './constants';
+
 /**
  * UI info descriptors.
  */
@@ -48,6 +50,11 @@ export const infoMsg = {
  */
 export const errorMsg = {
   astFailed: 'Невозможно построить дерево разбора',
+  aliasLength: `до ${limits.len_alias} символов`,
+  emailLength: `до ${limits.len_email} символов`,
+  titleLength: `до ${limits.len_title} символов`,
+  descriptionLength: `до ${limits.len_description} символов`,
+  textLength: `до ${limits.len_text} символов`,
   typeStructureFailed: 'Структура отсутствует',
   passwordsMismatch: 'Пароли не совпадают',
   passwordsSame: 'Пароль совпадает со старым',

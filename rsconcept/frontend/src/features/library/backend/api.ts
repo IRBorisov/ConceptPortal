@@ -118,10 +118,10 @@ export const libraryApi = {
         successMessage: infoMsg.itemDestroyed
       }
     }),
-  cloneItem: (data: ICloneLibraryItemDTO) =>
+  cloneItem: ({ itemID, data }: { itemID: number; data: ICloneLibraryItemDTO }) =>
     axiosPost<ICloneLibraryItemDTO, IRSFormDTO>({
       schema: schemaRSForm,
-      endpoint: `/api/library/${data.id}/clone`,
+      endpoint: `/api/library/${itemID}/clone`,
       request: {
         data: data,
         successMessage: newSchema => infoMsg.cloneComplete(newSchema.alias)

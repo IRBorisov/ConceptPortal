@@ -1,8 +1,10 @@
 ''' Basic serializers that do not interact with database. '''
 from rest_framework import serializers
 
+from shared.serializers import StrictSerializer
 
-class PositionSerializer(serializers.Serializer):
+
+class PositionSerializer(StrictSerializer):
     ''' Serializer: Position data. '''
     x = serializers.FloatField()
     y = serializers.FloatField()
@@ -10,7 +12,7 @@ class PositionSerializer(serializers.Serializer):
     height = serializers.FloatField()
 
 
-class NodeSerializer(serializers.Serializer):
+class NodeSerializer(StrictSerializer):
     ''' Oss node serializer. '''
     nodeID = serializers.CharField()
     x = serializers.FloatField()
@@ -19,12 +21,12 @@ class NodeSerializer(serializers.Serializer):
     height = serializers.FloatField()
 
 
-class LayoutSerializer(serializers.Serializer):
+class LayoutSerializer(StrictSerializer):
     ''' Serializer: Layout data. '''
     data = serializers.ListField(child=NodeSerializer())  # type: ignore
 
 
-class SubstitutionExSerializer(serializers.Serializer):
+class SubstitutionExSerializer(StrictSerializer):
     ''' Serializer: Substitution extended data. '''
     operation = serializers.IntegerField()
     original = serializers.IntegerField()

@@ -39,15 +39,14 @@ export function DlgCloneLibraryItem() {
   } = useForm<ICloneLibraryItemDTO>({
     resolver: zodResolver(schemaCloneLibraryItem),
     defaultValues: {
-      id: base.id,
-      item_type: base.item_type,
-      title: cloneTitle(base),
-      alias: base.alias,
-      description: base.description,
-      visible: true,
-      read_only: false,
-      access_policy: AccessPolicy.PUBLIC,
-      location: initialLocation,
+      item_data: {
+        title: cloneTitle(base),
+        alias: base.alias,
+        description: base.description,
+        visible: true,
+        access_policy: AccessPolicy.PUBLIC,
+        location: initialLocation
+      },
       items: []
     },
     mode: 'onChange',
@@ -55,7 +54,10 @@ export function DlgCloneLibraryItem() {
   });
 
   function onSubmit(data: ICloneLibraryItemDTO) {
-    return cloneItem(data).then(newSchema => router.pushAsync({ path: urls.schema(newSchema.id), force: true }));
+    return cloneItem({
+      itemID: base.id,
+      data: data
+    }).then(newSchema => router.pushAsync({ path: urls.schema(newSchema.id), force: true }));
   }
 
   return (
@@ -69,18 +71,24 @@ export function DlgCloneLibraryItem() {
       <TextInput
         id='dlg_full_name' //
         label='Название'
-        {...register('title')}
-        error={errors.title}
+        {...register('item_data.title')}
+        error={errors.item_data?.title}
       />
 
       <div className='flex justify-between gap-3'>
-        <TextInput id='dlg_alias' label='Сокращение' className='w-64' {...register('alias')} error={errors.alias} />
+        <TextInput
+          id='dlg_alias'
+          label='Сокращение'
+          className='w-64'
+          {...register('item_data.alias')}
+          error={errors.item_data?.alias}
+        />
         <div className='flex flex-col gap-2'>
           <Label text='Доступ' className='self-center select-none' />
           <div className='ml-auto cc-icons'>
             <Controller
               control={control}
-              name='access_policy'
+              name='item_data.access_policy'
               render={({ field }) => (
                 <SelectAccessPolicy
                   value={field.value} //
@@ -91,7 +99,7 @@ export function DlgCloneLibraryItem() {
             />
             <Controller
               control={control}
-              name='visible'
+              name='item_data.visible'
               render={({ field }) => (
                 <MiniButton
                   title={field.value ? 'Библиотека: отображать' : 'Библиотека: скрывать'}
@@ -107,19 +115,24 @@ export function DlgCloneLibraryItem() {
 
       <Controller
         control={control}
-        name='location'
+        name='item_data.location'
         render={({ field }) => (
           <PickLocation
             value={field.value} //
             rows={2}
             onChange={field.onChange}
-            className={!!errors.location ? '-mb-6' : undefined}
-            error={errors.location}
+            error={errors.item_data?.location}
           />
         )}
       />
 
-      <TextArea id='dlg_comment' {...register('description')} label='Описание' rows={4} error={errors.description} />
+      <TextArea
+        id='dlg_comment'
+        {...register('item_data.description')}
+        label='Описание'
+        rows={4}
+        error={errors.item_data?.description}
+      />
 
       {selected.length > 0 ? (
         <Controller

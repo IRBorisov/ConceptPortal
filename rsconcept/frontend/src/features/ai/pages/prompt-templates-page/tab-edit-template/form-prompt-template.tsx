@@ -7,9 +7,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import clsx from 'clsx';
 import { useDebounce } from 'use-debounce';
 
-import { useMutatingPrompts } from '@/features/ai/backend/use-mutating-prompts';
-import { useUpdatePromptTemplate } from '@/features/ai/backend/use-update-prompt-template';
-import { generateSample } from '@/features/ai/models/prompting-api';
 import { useAuthSuspense } from '@/features/auth';
 
 import { MiniButton } from '@/components/control';
@@ -24,6 +21,9 @@ import {
   type IUpdatePromptTemplateDTO,
   schemaUpdatePromptTemplate
 } from '../../../backend/types';
+import { useMutatingPrompts } from '../../../backend/use-mutating-prompts';
+import { useUpdatePromptTemplate } from '../../../backend/use-update-prompt-template';
+import { generateSample } from '../../../models/prompting-api';
 
 interface FormPromptTemplateProps {
   promptTemplate: IPromptTemplate;
@@ -55,7 +55,8 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
       description: promptTemplate.description,
       text: promptTemplate.text,
       is_shared: promptTemplate.is_shared
-    }
+    },
+    mode: 'onChange'
   });
   const text = useWatch({ control, name: 'text' });
 

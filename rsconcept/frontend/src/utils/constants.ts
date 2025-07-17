@@ -4,22 +4,22 @@
 
 /** Global application Parameters. The place where magic numbers are put to rest. */
 export const PARAMETER = {
-  smallScreen: 640, // == tailwind:sm
+  smallScreen: 640, // Tailwind CSS 'sm' breakpoint for small screens (in pixels)
 
-  minimalTimeout: 10, // milliseconds delay for fast updates
-  refreshTimeout: 100, // milliseconds delay for post-refresh actions
-  notificationDelay: 300, // milliseconds delay for notifications
-  zoomDuration: 500, // milliseconds animation duration
-  navigationPopupDelay: 300, // milliseconds delay for navigation popup
+  minimalTimeout: 10, // Minimum delay for rapid UI updates (in milliseconds)
+  refreshTimeout: 100, // Delay after refresh actions to allow UI to settle (in milliseconds)
+  notificationDelay: 300, // Duration to display notifications (in milliseconds)
+  zoomDuration: 500, // Duration of zoom animations (in milliseconds)
+  navigationPopupDelay: 300, // Delay before showing navigation popups (in milliseconds)
 
-  moveDuration: 500, // milliseconds - duration of move animation
+  moveDuration: 500, // Duration of move animations (in milliseconds)
 
-  ossImageWidth: 1280, // pixels - size of OSS image
-  ossImageHeight: 960, // pixels - size of OSS image
+  ossImageWidth: 1280, // Default width for OSS images (in pixels)
+  ossImageHeight: 960, // Default height for OSS images (in pixels)
 
-  graphHandleSize: 3, // pixels - size of graph connection handle
-  graphNodePadding: 5, // pixels - padding of graph node
-  graphNodeRadius: 20, // pixels - radius of graph node
+  graphHandleSize: 3, // Size of graph connection handles (in pixels)
+  graphNodePadding: 5, // Padding inside graph nodes (in pixels)
+  graphNodeRadius: 20, // Radius of graph nodes (in pixels)
 
   logicLabel: 'LOGIC',
   errorNodeLabel: '[ERROR]',
@@ -28,7 +28,12 @@ export const PARAMETER = {
 
 /** Numeric limitations. */
 export const limits = {
-  location_len: 500
+  len_alias: 255,
+  len_email: 320,
+  len_title: 500,
+  len_location: 500,
+  len_description: 10000,
+  len_text: 20000
 } as const;
 
 /** Exteor file extension for RSForm. */

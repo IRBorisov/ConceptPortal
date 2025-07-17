@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { schemaLibraryItem } from '@/features/library/backend/types';
 import { schemaSubstituteConstituents } from '@/features/rsform/backend/types';
 
+import { limits } from '@/utils/constants';
 import { errorMsg } from '@/utils/labels';
 
 /** Represents {@link IOperation} type. */
@@ -92,11 +93,18 @@ export const schemaOperation = z.strictObject({
   result: z.number().nullable()
 });
 
-export const schemaOperationData = schemaOperation.pick({
-  alias: true,
-  title: true,
-  description: true,
-  parent: true
+const schemaOperationData = schemaOperation
+  .pick({
+    parent: true
+  })
+  .extend({
+    alias: z.string().max(limits.len_alias, errorMsg.aliasLength).nonempty(errorMsg.requiredField),
+    title: z.string().max(limits.len_title, errorMsg.titleLength),
+    description: z.string().max(limits.len_description, errorMsg.descriptionLength)
+  });
+
+const schemaBlockData = schemaOperationData.omit({ alias: true }).extend({
+  title: z.string().max(limits.len_alias, errorMsg.aliasLength).nonempty(errorMsg.requiredField)
 });
 
 export const schemaBlock = z.strictObject({
@@ -144,11 +152,7 @@ export const schemaOperationSchema = schemaLibraryItem.extend({
 
 export const schemaCreateBlock = z.strictObject({
   layout: schemaOssLayout,
-  item_data: z.strictObject({
-    title: z.string(),
-    description: z.string(),
-    parent: z.number().nullable()
-  }),
+  item_data: schemaBlockData,
   position: schemaPosition,
   children_operations: z.array(z.number()),
   children_blocks: z.array(z.number())
@@ -162,11 +166,7 @@ export const schemaBlockCreatedResponse = z.strictObject({
 export const schemaUpdateBlock = z.strictObject({
   target: z.number(),
   layout: schemaOssLayout,
-  item_data: z.strictObject({
-    title: z.string(),
-    description: z.string(),
-    parent: z.number().nullable()
-  })
+  item_data: schemaBlockData
 });
 
 export const schemaDeleteBlock = z.strictObject({
@@ -191,12 +191,7 @@ export const schemaCreateSynthesis = z.strictObject({
 export const schemaImportSchema = z.strictObject({
   layout: schemaOssLayout,
   item_data: schemaOperationData,
-  position: z.strictObject({
-    x: z.number(),
-    y: z.number(),
-    width: z.number(),
-    height: z.number()
-  }),
+  position: schemaPosition,
   source: z.number(),
   clone_source: z.boolean()
 });
@@ -209,12 +204,7 @@ export const schemaOperationCreatedResponse = z.strictObject({
 export const schemaUpdateOperation = z.strictObject({
   target: z.number(),
   layout: schemaOssLayout,
-  item_data: z.strictObject({
-    alias: z.string().nonempty(errorMsg.requiredField),
-    title: z.string(),
-    description: z.string(),
-    parent: z.number().nullable()
-  }),
+  item_data: schemaOperationData,
   arguments: z.array(z.number()),
   substitutions: z.array(schemaSubstituteConstituents)
 });

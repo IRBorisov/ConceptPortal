@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 import { schemaLibraryItem, schemaVersionInfo } from '@/features/library/backend/types';
 
+import { limits } from '@/utils/constants';
 import { errorMsg } from '@/utils/labels';
 
 /** Represents {@link IConstituenta} type. */
@@ -320,14 +321,14 @@ export const schemaVersionCreatedResponse = z.strictObject({
 export const schemaCreateConstituenta = schemaConstituentaBasics
   .pick({
     cst_type: true,
-    alias: true,
-    convention: true,
-    definition_formal: true,
-    definition_raw: true,
-    term_raw: true,
     term_forms: true
   })
   .extend({
+    alias: z.string().max(limits.len_alias, errorMsg.aliasLength).nonempty(errorMsg.requiredField),
+    convention: z.string().max(limits.len_description, errorMsg.descriptionLength),
+    definition_formal: z.string().max(limits.len_description, errorMsg.descriptionLength),
+    definition_raw: z.string().max(limits.len_description, errorMsg.descriptionLength),
+    term_raw: z.string().max(limits.len_description, errorMsg.descriptionLength),
     insert_after: z.number().nullable()
   });
 
@@ -339,13 +340,20 @@ export const schemaConstituentaCreatedResponse = z.strictObject({
 export const schemaUpdateConstituenta = z.strictObject({
   target: z.number(),
   item_data: z.strictObject({
-    alias: z.string().optional(),
+    alias: z.string().max(limits.len_alias, errorMsg.aliasLength).nonempty(errorMsg.requiredField).optional(),
     cst_type: schemaCstType.optional(),
-    convention: z.string().optional(),
-    definition_formal: z.string().optional(),
-    definition_raw: z.string().optional(),
-    term_raw: z.string().optional(),
-    term_forms: z.array(z.strictObject({ text: z.string(), tags: z.string() })).optional()
+    convention: z.string().max(limits.len_description, errorMsg.descriptionLength).optional(),
+    definition_formal: z.string().max(limits.len_description, errorMsg.descriptionLength).optional(),
+    definition_raw: z.string().max(limits.len_description, errorMsg.descriptionLength).optional(),
+    term_raw: z.string().max(limits.len_description, errorMsg.descriptionLength).optional(),
+    term_forms: z
+      .array(
+        z.strictObject({
+          text: z.string().max(limits.len_description, errorMsg.descriptionLength),
+          tags: z.string().max(limits.len_alias, errorMsg.aliasLength)
+        })
+      )
+      .optional()
   })
 });
 

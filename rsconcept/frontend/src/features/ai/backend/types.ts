@@ -1,5 +1,8 @@
 import { z } from 'zod';
 
+import { limits } from '@/utils/constants';
+import { errorMsg } from '@/utils/labels';
+
 /** Represents AI prompt. */
 export type IPromptTemplate = IPromptTemplateDTO;
 
@@ -28,20 +31,22 @@ export const schemaPromptTemplate = z.strictObject({
   is_shared: z.boolean()
 });
 
-export const schemaCreatePromptTemplate = schemaPromptTemplate.pick({
-  label: true,
-  description: true,
-  text: true,
-  is_shared: true
+const schemaPromptTemplateInput = schemaPromptTemplate
+  .pick({
+    is_shared: true,
+    owner: true
+  })
+  .extend({
+    label: z.string().max(limits.len_alias, errorMsg.aliasLength).nonempty(errorMsg.requiredField),
+    description: z.string().max(limits.len_description, errorMsg.descriptionLength),
+    text: z.string().max(limits.len_text, errorMsg.textLength)
+  });
+
+export const schemaCreatePromptTemplate = schemaPromptTemplateInput.omit({
+  owner: true
 });
 
-export const schemaUpdatePromptTemplate = schemaPromptTemplate.pick({
-  owner: true,
-  label: true,
-  description: true,
-  text: true,
-  is_shared: true
-});
+export const schemaUpdatePromptTemplate = schemaPromptTemplateInput;
 
 export const schemaPromptTemplateInfo = schemaPromptTemplate.pick({
   id: true,

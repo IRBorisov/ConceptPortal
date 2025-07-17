@@ -14,6 +14,6 @@ export const useCloneItem = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    cloneItem: (data: ICloneLibraryItemDTO) => mutation.mutateAsync(data)
+    cloneItem: (data: { itemID: number; data: ICloneLibraryItemDTO }) => mutation.mutateAsync(data)
   };
 };

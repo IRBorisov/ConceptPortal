@@ -61,7 +61,7 @@ export function nextVersion(version: string): string {
  * Validation location against regexp.
  */
 export function validateLocation(location: string): boolean {
-  return location.length <= limits.location_len && LOCATION_REGEXP.test(location);
+  return location.length <= limits.len_location && LOCATION_REGEXP.test(location);
 }
 
 /**

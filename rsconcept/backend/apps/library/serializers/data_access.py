@@ -4,11 +4,13 @@ from rest_framework import serializers
 from rest_framework.serializers import PrimaryKeyRelatedField as PKField
 
 from apps.rsform.models import Constituenta
+from shared import messages
+from shared.serializers import StrictModelSerializer, StrictSerializer
 
 from ..models import LibraryItem, Version
 
 
-class LibraryItemBaseSerializer(serializers.ModelSerializer):
+class LibraryItemBaseSerializer(StrictModelSerializer):
     ''' Serializer: LibraryItem entry full access. '''
     class Meta:
         ''' serializer metadata. '''
@@ -17,7 +19,16 @@ class LibraryItemBaseSerializer(serializers.ModelSerializer):
         read_only_fields = ('id',)
 
 
-class LibraryItemReferenceSerializer(serializers.ModelSerializer):
+class LibraryItemBaseNonStrictSerializer(serializers.ModelSerializer):
+    ''' Serializer: LibraryItem entry full access and no strict validation. '''
+    class Meta:
+        ''' serializer metadata. '''
+        model = LibraryItem
+        fields = '__all__'
+        read_only_fields = ('id',)
+
+
+class LibraryItemReferenceSerializer(StrictModelSerializer):
     ''' Serializer: reference to LibraryItem. '''
     class Meta:
         ''' serializer metadata. '''
@@ -25,7 +36,7 @@ class LibraryItemReferenceSerializer(serializers.ModelSerializer):
         fields = 'id', 'alias'
 
 
-class LibraryItemSerializer(serializers.ModelSerializer):
+class LibraryItemSerializer(StrictModelSerializer):
     ''' Serializer: LibraryItem entry limited access. '''
     class Meta:
         ''' serializer metadata. '''
@@ -34,17 +45,27 @@ class LibraryItemSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'item_type', 'owner', 'location', 'access_policy')
 
 
-class LibraryItemCloneSerializer(serializers.ModelSerializer):
+class LibraryItemCloneSerializer(StrictSerializer):
     ''' Serializer: LibraryItem cloning. '''
-    items = PKField(many=True, required=False, queryset=Constituenta.objects.all().only('pk'))
+    class ItemCloneData(StrictModelSerializer):
+        ''' Serialize: LibraryItem cloning data. '''
+        class Meta:
+            ''' serializer metadata. '''
+            model = LibraryItem
+            exclude = ['id', 'item_type', 'owner', 'read_only']
 
-    class Meta:
-        ''' serializer metadata. '''
-        model = LibraryItem
-        exclude = ['id', 'item_type', 'owner']
+    items = PKField(many=True, queryset=Constituenta.objects.all().only('pk', 'schema_id'))
+    item_data = ItemCloneData()
+
+    def validate_items(self, value):
+        schema = self.context.get('schema')
+        invalid = [item.pk for item in value if item.schema_id != schema.id]
+        if invalid:
+            raise serializers.ValidationError(messages.constituentsInvalid(invalid))
+        return value
 
 
-class VersionSerializer(serializers.ModelSerializer):
+class VersionSerializer(StrictModelSerializer):
     ''' Serializer: Version data. '''
     class Meta:
         ''' serializer metadata. '''
@@ -53,7 +74,7 @@ class VersionSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'item', 'time_create')
 
 
-class VersionInnerSerializer(serializers.ModelSerializer):
+class VersionInnerSerializer(StrictModelSerializer):
     ''' Serializer: Version data for list of versions. '''
     class Meta:
         ''' serializer metadata. '''
@@ -62,7 +83,7 @@ class VersionInnerSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'item', 'time_create')
 
 
-class VersionCreateSerializer(serializers.ModelSerializer):
+class VersionCreateSerializer(StrictModelSerializer):
     ''' Serializer: Version create data. '''
     items = PKField(many=True, required=False, default=None, queryset=Constituenta.objects.all().only('pk'))
 
@@ -72,7 +93,7 @@ class VersionCreateSerializer(serializers.ModelSerializer):
         fields = 'version', 'description', 'items'
 
 
-class LibraryItemDetailsSerializer(serializers.ModelSerializer):
+class LibraryItemDetailsSerializer(StrictModelSerializer):
     ''' Serializer: LibraryItem detailed data. '''
     editors = serializers.SerializerMethodField()
     versions = serializers.SerializerMethodField()
@@ -90,11 +111,11 @@ class LibraryItemDetailsSerializer(serializers.ModelSerializer):
         return [VersionInnerSerializer(item).data for item in instance.getQ_versions().order_by('pk')]
 
 
-class UserTargetSerializer(serializers.Serializer):
+class UserTargetSerializer(StrictSerializer):
     ''' Serializer: Target single User. '''
     user = PKField(many=False, queryset=User.objects.all().only('pk'))
 
 
-class UsersListSerializer(serializers.Serializer):
+class UsersListSerializer(StrictSerializer):
     ''' Serializer: List of Users. '''
     users = PKField(many=True, queryset=User.objects.all().only('pk'))

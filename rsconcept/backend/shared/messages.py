@@ -2,6 +2,14 @@
 # pylint: skip-file
 
 
+def fieldNotAllowed():
+    return 'Недопустимое поле'
+
+
+def constituentsInvalid(constituents: list[int]):
+    return f'некорректные конституенты для схемы: {constituents}'
+
+
 def constituentaNotInRSform(title: str):
     return f'Конституента не принадлежит схеме: {title}'
 

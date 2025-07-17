@@ -4,26 +4,28 @@ from typing import cast
 from cctext import EntityReference, Reference, ReferenceType, Resolver, SyntacticReference
 from rest_framework import serializers
 
+from shared.serializers import StrictSerializer
 
-class ExpressionSerializer(serializers.Serializer):
+
+class ExpressionSerializer(StrictSerializer):
     ''' Serializer: RSLang expression. '''
     expression = serializers.CharField()
 
 
-class ConstituentaCheckSerializer(serializers.Serializer):
+class ConstituentaCheckSerializer(StrictSerializer):
     ''' Serializer: RSLang expression. '''
     alias = serializers.CharField()
     definition_formal = serializers.CharField(allow_blank=True)
     cst_type = serializers.CharField()
 
 
-class WordFormSerializer(serializers.Serializer):
+class WordFormSerializer(StrictSerializer):
     ''' Serializer: inflect request. '''
     text = serializers.CharField()
     grams = serializers.CharField()
 
 
-class MultiFormSerializer(serializers.Serializer):
+class MultiFormSerializer(StrictSerializer):
     ''' Serializer: inflect request. '''
     items = serializers.ListField(
         child=WordFormSerializer()
@@ -41,18 +43,18 @@ class MultiFormSerializer(serializers.Serializer):
         return result
 
 
-class TextSerializer(serializers.Serializer):
+class TextSerializer(StrictSerializer):
     ''' Serializer: Text with references. '''
     text = serializers.CharField()
 
 
-class FunctionArgSerializer(serializers.Serializer):
+class FunctionArgSerializer(StrictSerializer):
     ''' Serializer: RSLang function argument type. '''
     alias = serializers.CharField()
     typification = serializers.CharField()
 
 
-class CstParseSerializer(serializers.Serializer):
+class CstParseSerializer(StrictSerializer):
     ''' Serializer: Constituenta parse result. '''
     status = serializers.CharField()
     valueClass = serializers.CharField()
@@ -63,7 +65,7 @@ class CstParseSerializer(serializers.Serializer):
     )
 
 
-class ErrorDescriptionSerializer(serializers.Serializer):
+class ErrorDescriptionSerializer(StrictSerializer):
     ''' Serializer: RSError description. '''
     errorType = serializers.IntegerField()
     position = serializers.IntegerField()
@@ -73,13 +75,13 @@ class ErrorDescriptionSerializer(serializers.Serializer):
     )
 
 
-class NodeDataSerializer(serializers.Serializer):
+class NodeDataSerializer(StrictSerializer):
     ''' Serializer: Node data. '''
     dataType = serializers.CharField()
     value = serializers.CharField()
 
 
-class ASTNodeSerializer(serializers.Serializer):
+class ASTNodeSerializer(StrictSerializer):
     ''' Serializer: Syntax tree node. '''
     uid = serializers.IntegerField()
     parent = serializers.IntegerField()  # type: ignore
@@ -89,7 +91,7 @@ class ASTNodeSerializer(serializers.Serializer):
     data = NodeDataSerializer()  # type: ignore
 
 
-class ExpressionParseSerializer(serializers.Serializer):
+class ExpressionParseSerializer(StrictSerializer):
     ''' Serializer: RSlang expression parse result. '''
     parseResult = serializers.BooleanField()
     prefixLen = serializers.IntegerField()
@@ -108,13 +110,13 @@ class ExpressionParseSerializer(serializers.Serializer):
     )
 
 
-class TextPositionSerializer(serializers.Serializer):
+class TextPositionSerializer(StrictSerializer):
     ''' Serializer: Text position. '''
     start = serializers.IntegerField()
     finish = serializers.IntegerField()
 
 
-class ReferenceDataSerializer(serializers.Serializer):
+class ReferenceDataSerializer(StrictSerializer):
     ''' Serializer: Reference data - Union of all references. '''
     offset = serializers.IntegerField()
     nominal = serializers.CharField()
@@ -122,7 +124,7 @@ class ReferenceDataSerializer(serializers.Serializer):
     form = serializers.CharField()
 
 
-class ReferenceSerializer(serializers.Serializer):
+class ReferenceSerializer(StrictSerializer):
     ''' Serializer: Language reference. '''
     type = serializers.CharField()
     data = ReferenceDataSerializer()  # type: ignore
@@ -130,7 +132,7 @@ class ReferenceSerializer(serializers.Serializer):
     pos_output = TextPositionSerializer()
 
 
-class InheritanceDataSerializer(serializers.Serializer):
+class InheritanceDataSerializer(StrictSerializer):
     ''' Serializer: inheritance data. '''
     child = serializers.IntegerField()
     child_source = serializers.IntegerField()
@@ -138,7 +140,7 @@ class InheritanceDataSerializer(serializers.Serializer):
     parent_source = serializers.IntegerField()
 
 
-class ResolverSerializer(serializers.Serializer):
+class ResolverSerializer(StrictSerializer):
     ''' Serializer: Resolver results serializer. '''
     input = serializers.CharField()
     output = serializers.CharField()

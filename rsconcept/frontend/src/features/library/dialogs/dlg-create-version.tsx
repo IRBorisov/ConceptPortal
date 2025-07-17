@@ -26,16 +26,22 @@ export function DlgCreateVersion() {
   );
   const { createVersion: versionCreate } = useCreateVersion();
 
-  const { register, handleSubmit, control } = useForm<ICreateVersionDTO>({
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors }
+  } = useForm<ICreateVersionDTO>({
     resolver: zodResolver(schemaCreateVersion),
     defaultValues: {
       version: versions.length > 0 ? nextVersion(versions[versions.length - 1].version) : '1.0.0',
       description: '',
       items: []
-    }
+    },
+    mode: 'onChange'
   });
   const version = useWatch({ control, name: 'version' });
-  const canSubmit = !versions.find(ver => ver.version === version);
+  const canSubmit = !!version && !versions.find(ver => ver.version === version);
 
   function onSubmit(data: ICreateVersionDTO) {
     return versionCreate({ itemID, data }).then(onCreate);
@@ -50,7 +56,7 @@ export function DlgCreateVersion() {
       submitText='Создать'
       onSubmit={event => void handleSubmit(onSubmit)(event)}
     >
-      <TextInput id='dlg_version' {...register('version')} dense label='Версия' className='w-64' />
+      <TextInput id='dlg_version' {...register('version')} label='Версия' className='w-64' error={errors.version} />
       <TextArea id='dlg_description' {...register('description')} spellCheck label='Описание' rows={3} />
       {selected.length > 0 ? (
         <Controller

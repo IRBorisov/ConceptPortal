@@ -22,17 +22,23 @@ export function DlgCreatePromptTemplate() {
   const { items: templates } = useAvailableTemplatesSuspense();
   const { user } = useAuthSuspense();
 
-  const { handleSubmit, control, register } = useForm<ICreatePromptTemplateDTO>({
+  const {
+    handleSubmit,
+    control,
+    register,
+    formState: { errors }
+  } = useForm<ICreatePromptTemplateDTO>({
     resolver: zodResolver(schemaCreatePromptTemplate),
     defaultValues: {
       label: '',
       description: '',
       text: '',
       is_shared: false
-    }
+    },
+    mode: 'onChange'
   });
   const label = useWatch({ control, name: 'label' });
-  const isValid = label !== '' && !templates.find(template => template.label === label);
+  const isValid = !!label && !templates.find(template => template.label === label);
 
   function onSubmit(data: ICreatePromptTemplateDTO) {
     void createPromptTemplate(data).then(onCreate);
@@ -47,8 +53,8 @@ export function DlgCreatePromptTemplate() {
       submitInvalidTooltip='Введите уникальное название шаблона'
       className='cc-column w-140 max-h-120 py-2 px-6'
     >
-      <TextInput id='dlg_prompt_label' {...register('label')} label='Название шаблона' />
-      <TextArea id='dlg_prompt_description' {...register('description')} label='Описание' />
+      <TextInput id='dlg_prompt_label' {...register('label')} label='Название шаблона' error={errors.label} />
+      <TextArea id='dlg_prompt_description' {...register('description')} label='Описание' error={errors.description} />
       {user.is_staff ? (
         <Controller
           name='is_shared'

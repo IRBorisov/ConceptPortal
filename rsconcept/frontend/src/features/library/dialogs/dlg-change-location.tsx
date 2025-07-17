@@ -47,7 +47,7 @@ export function DlgChangeLocation() {
       overflowVisible
       header='Изменение расположения'
       submitText='Переместить'
-      submitInvalidTooltip={`Допустимы буквы, цифры, подчерк, пробел и "!". Сегмент пути не может начинаться и заканчиваться пробелом. Общая длина (с корнем) не должна превышать ${limits.location_len}`}
+      submitInvalidTooltip={`Допустимы буквы, цифры, подчерк, пробел и "!". Сегмент пути не может начинаться и заканчиваться пробелом. Общая длина (с корнем) не должна превышать ${limits.len_location}`}
       canSubmit={isValid && isDirty}
       onSubmit={event => void handleSubmit(onSubmit)(event)}
       className='w-130 pb-3 px-6 h-36'

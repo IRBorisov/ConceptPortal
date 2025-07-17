@@ -44,7 +44,7 @@ export function EditorRSFormCard() {
     <div
       onKeyDown={handleInput}
       className={clsx(
-        'relative md:w-fit md:max-w-fit max-w-128',
+        'relative md:w-fit md:max-w-fit max-w-136',
         'flex px-6 pt-8',
         isNarrow && 'flex-col md:items-center'
       )}

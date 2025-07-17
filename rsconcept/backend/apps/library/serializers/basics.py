@@ -2,11 +2,12 @@
 from rest_framework import serializers
 
 from shared import messages as msg
+from shared.serializers import StrictSerializer
 
 from ..models import AccessPolicy, validate_location
 
 
-class LocationSerializer(serializers.Serializer):
+class LocationSerializer(StrictSerializer):
     ''' Serializer: Item location. '''
     location = serializers.CharField(max_length=500)
 
@@ -19,7 +20,7 @@ class LocationSerializer(serializers.Serializer):
         return attrs
 
 
-class RenameLocationSerializer(serializers.Serializer):
+class RenameLocationSerializer(StrictSerializer):
     ''' Serializer: rename location. '''
     target = serializers.CharField(max_length=500)
     new_location = serializers.CharField(max_length=500)
@@ -37,7 +38,7 @@ class RenameLocationSerializer(serializers.Serializer):
         return attrs
 
 
-class AccessPolicySerializer(serializers.Serializer):
+class AccessPolicySerializer(StrictSerializer):
     ''' Serializer: Constituenta renaming. '''
     access_policy = serializers.CharField()
 

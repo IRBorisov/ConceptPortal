@@ -2,6 +2,7 @@
 
 from .basics import AccessPolicySerializer, LocationSerializer, RenameLocationSerializer
 from .data_access import (
+    LibraryItemBaseNonStrictSerializer,
     LibraryItemBaseSerializer,
     LibraryItemCloneSerializer,
     LibraryItemDetailsSerializer,

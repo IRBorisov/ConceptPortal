@@ -151,22 +151,24 @@ class LibraryViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'], url_path='clone')
     def clone(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Create deep copy of library item. '''
-        serializer = s.LibraryItemCloneSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
         item = self._get_item()
         if item.item_type != m.LibraryItemType.RSFORM:
             return Response(status=c.HTTP_400_BAD_REQUEST)
 
+        serializer = s.LibraryItemCloneSerializer(data=request.data, context={'schema': item})
+        serializer.is_valid(raise_exception=True)
+
+        data = serializer.validated_data['item_data']
         clone = deepcopy(item)
         clone.pk = None
         clone.owner = cast(User, self.request.user)
-        clone.title = serializer.validated_data['title']
-        clone.alias = serializer.validated_data.get('alias', '')
-        clone.description = serializer.validated_data.get('description', '')
-        clone.visible = serializer.validated_data.get('visible', True)
+        clone.title = data['title']
+        clone.alias = data.get('alias', '')
+        clone.description = data.get('description', '')
+        clone.visible = data.get('visible', True)
         clone.read_only = False
-        clone.access_policy = serializer.validated_data.get('access_policy', m.AccessPolicy.PUBLIC)
-        clone.location = serializer.validated_data.get('location', m.LocationHead.USER)
+        clone.access_policy = data.get('access_policy', m.AccessPolicy.PUBLIC)
+        clone.location = data.get('location', m.LocationHead.USER)
 
         with transaction.atomic():
             clone.save()

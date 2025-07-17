@@ -345,13 +345,12 @@ class TestLibraryViewset(EndpointTester):
             term_resolved='люди'
         )
 
-        data = {'title': 'Title1337'}
+        data = {'item_data': {'title': 'Title1337'}, 'items': []}
         self.executeNotFound(data=data, item=self.invalid_item)
         self.executeCreated(data=data, item=self.unowned.pk)
 
-        data = {'title': 'Title1338'}
         response = self.executeCreated(data=data, item=self.owned.pk)
-        self.assertEqual(response.data['title'], data['title'])
+        self.assertEqual(response.data['title'], data['item_data']['title'])
         self.assertEqual(len(response.data['items']), 2)
         self.assertEqual(response.data['items'][0]['alias'], x12.alias)
         self.assertEqual(response.data['items'][0]['term_raw'], x12.term_raw)
@@ -359,14 +358,14 @@ class TestLibraryViewset(EndpointTester):
         self.assertEqual(response.data['items'][1]['term_raw'], d2.term_raw)
         self.assertEqual(response.data['items'][1]['term_resolved'], d2.term_resolved)
 
-        data = {'title': 'Title1340', 'items': []}
+        data = {'item_data': {'title': 'Title1340'}, 'items': []}
         response = self.executeCreated(data=data, item=self.owned.pk)
-        self.assertEqual(response.data['title'], data['title'])
+        self.assertEqual(response.data['title'], data['item_data']['title'])
         self.assertEqual(len(response.data['items']), 2)
 
-        data = {'title': 'Title1341', 'items': [x12.pk]}
+        data = {'item_data': {'title': 'Title1341'}, 'items': [x12.pk]}
         response = self.executeCreated(data=data, item=self.owned.pk)
-        self.assertEqual(response.data['title'], data['title'])
+        self.assertEqual(response.data['title'], data['item_data']['title'])
         self.assertEqual(len(response.data['items']), 1)
         self.assertEqual(response.data['items'][0]['alias'], x12.alias)
         self.assertEqual(response.data['items'][0]['term_raw'], x12.term_raw)

@@ -5,18 +5,19 @@ from rest_framework import serializers
 
 from apps.library.models import Editor
 from shared import messages as msg
+from shared.serializers import StrictModelSerializer, StrictSerializer
 
 from . import models
 
 
-class NonFieldErrorSerializer(serializers.Serializer):
+class NonFieldErrorSerializer(StrictSerializer):
     ''' Serializer: list of non-field errors. '''
     non_field_errors = serializers.ListField(
         child=serializers.CharField()
     )
 
 
-class LoginSerializer(serializers.Serializer):
+class LoginSerializer(StrictSerializer):
     ''' Serializer: User authentication by login/password. '''
     username = serializers.CharField(
         label='Имя пользователя',
@@ -54,7 +55,7 @@ class LoginSerializer(serializers.Serializer):
         return attrs
 
 
-class AuthSerializer(serializers.Serializer):
+class AuthSerializer(StrictSerializer):
     ''' Serializer: Authorization data. '''
     id = serializers.IntegerField()
     username = serializers.CharField()
@@ -77,7 +78,7 @@ class AuthSerializer(serializers.Serializer):
             }
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(StrictModelSerializer):
     ''' Serializer: User data. '''
     id = serializers.IntegerField(read_only=True)
 
@@ -105,7 +106,7 @@ class UserSerializer(serializers.ModelSerializer):
         return attrs
 
 
-class UserInfoSerializer(serializers.ModelSerializer):
+class UserInfoSerializer(StrictModelSerializer):
     ''' Serializer: User open information. '''
     id = serializers.IntegerField(read_only=True)
 
@@ -119,13 +120,13 @@ class UserInfoSerializer(serializers.ModelSerializer):
         ]
 
 
-class ChangePasswordSerializer(serializers.Serializer):
+class ChangePasswordSerializer(StrictSerializer):
     ''' Serializer: Change password. '''
     old_password = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True)
 
 
-class SignupSerializer(serializers.ModelSerializer):
+class SignupSerializer(StrictModelSerializer):
     ''' Serializer: Create user profile. '''
     id = serializers.IntegerField(read_only=True)
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])

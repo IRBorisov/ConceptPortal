@@ -8,7 +8,6 @@ import { urls, useConceptNavigation } from '@/app';
 
 import { Button, MiniButton, SubmitButton } from '@/components/control';
 import { IconDownload } from '@/components/icons';
-import { InfoError } from '@/components/info-error';
 import { Label, TextArea, TextInput } from '@/components/input';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';
 
@@ -28,7 +27,7 @@ import { useLibrarySearchStore } from '../../stores/library-search';
 
 export function FormCreateItem() {
   const router = useConceptNavigation();
-  const { createItem, isPending, error: serverError, reset: clearServerError } = useCreateItem();
+  const { createItem, isPending, reset: clearServerError } = useCreateItem();
 
   const searchLocation = useLibrarySearchStore(state => state.location);
   const setSearchLocation = useLibrarySearchStore(state => state.setLocation);
@@ -203,7 +202,6 @@ export function FormCreateItem() {
             value={field.value} //
             rows={2}
             onChange={field.onChange}
-            className={!!errors.location ? '-mb-6' : undefined}
             error={errors.location}
           />
         )}
@@ -221,7 +219,6 @@ export function FormCreateItem() {
         <SubmitButton text='Создать схему' loading={isPending} className='min-w-40' />
         <Button text='Отмена' className='min-w-40' onClick={() => handleCancel()} />
       </div>
-      {serverError ? <InfoError error={serverError} /> : null}
     </form>
   );
 }

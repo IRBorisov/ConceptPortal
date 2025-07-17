@@ -53,7 +53,7 @@ export function DlgEditVersions() {
   const versionName = useWatch({ control, name: 'version' });
 
   const isValid = useMemo(
-    () => schema.versions.every(ver => ver.id === versionID || ver.version != versionName),
+    () => !!versionName && schema.versions.every(ver => ver.id === versionID || ver.version != versionName),
     [schema, versionID, versionName]
   );
 

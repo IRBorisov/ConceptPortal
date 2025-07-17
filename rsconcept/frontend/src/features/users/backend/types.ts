@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { patterns } from '@/utils/constants';
+import { limits, patterns } from '@/utils/constants';
 import { errorMsg } from '@/utils/labels';
 
 /** Represents user profile for viewing and editing. */
@@ -29,20 +29,24 @@ export const schemaUserProfile = schemaUser.omit({ is_staff: true });
 
 export const schemaUserInfo = schemaUser.omit({ username: true, email: true, is_staff: true });
 
-export const schemaUserSignup = z
-  .object({
-    username: z.string().nonempty(errorMsg.requiredField).regex(RegExp(patterns.login), errorMsg.loginFormat),
-    email: z.string().email(errorMsg.emailField),
-    first_name: z.string(),
-    last_name: z.string(),
+const schemaUserInput = z.strictObject({
+  username: z
+    .string()
+    .nonempty(errorMsg.requiredField)
+    .regex(RegExp(patterns.login), errorMsg.loginFormat)
+    .max(limits.len_alias, errorMsg.aliasLength),
+  email: z.string().email(errorMsg.emailField).max(limits.len_email, errorMsg.emailLength),
+  first_name: z.string().max(limits.len_alias, errorMsg.aliasLength),
+  last_name: z.string().max(limits.len_alias, errorMsg.aliasLength)
+});
 
-    password: z.string().nonempty(errorMsg.requiredField),
-    password2: z.string().nonempty(errorMsg.requiredField)
+export const schemaUserSignup = schemaUserInput
+  .extend({
+    password: z.string().max(limits.len_alias, errorMsg.aliasLength).nonempty(errorMsg.requiredField),
+    password2: z.string().max(limits.len_alias, errorMsg.aliasLength).nonempty(errorMsg.requiredField)
   })
   .refine(schema => schema.password === schema.password2, { path: ['password2'], message: errorMsg.passwordsMismatch });
 
-export const schemaUpdateProfile = z.strictObject({
-  email: z.string().email(errorMsg.emailField),
-  first_name: z.string(),
-  last_name: z.string()
+export const schemaUpdateProfile = schemaUserInput.omit({
+  username: true
 });

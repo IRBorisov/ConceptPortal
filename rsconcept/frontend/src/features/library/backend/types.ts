@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { limits } from '@/utils/constants';
 import { errorMsg } from '@/utils/labels';
 
 import { validateLocation } from '../models/library-api';
@@ -61,9 +62,11 @@ export const schemaAccessPolicy = z.enum(Object.values(AccessPolicy) as [AccessP
 export const schemaLibraryItem = z.strictObject({
   id: z.coerce.number(),
   item_type: schemaLibraryItemType,
-  title: z.string(),
+
   alias: z.string().nonempty(),
+  title: z.string(),
   description: z.string(),
+
   visible: z.boolean(),
   read_only: z.boolean(),
   location: z.string(),
@@ -76,58 +79,51 @@ export const schemaLibraryItem = z.strictObject({
 
 export const schemaLibraryItemArray = z.array(schemaLibraryItem);
 
-export const schemaCloneLibraryItem = schemaLibraryItem
+const schemaInputLibraryItem = schemaLibraryItem
   .pick({
-    id: true,
     item_type: true,
-    title: true,
-    alias: true,
-    description: true,
     visible: true,
     read_only: true,
-    location: true,
     access_policy: true
   })
   .extend({
-    title: z.string().nonempty(errorMsg.requiredField),
-    alias: z.string().nonempty(errorMsg.requiredField),
-    location: z.string().refine(data => validateLocation(data), { message: errorMsg.invalidLocation }),
-
-    items: z.array(z.number())
+    alias: z.string().max(limits.len_alias, errorMsg.aliasLength).nonempty(errorMsg.requiredField),
+    title: z.string().max(limits.len_title, errorMsg.titleLength).nonempty(errorMsg.requiredField),
+    description: z.string().max(limits.len_description, errorMsg.descriptionLength),
+    location: z.string().refine(data => validateLocation(data), { message: errorMsg.invalidLocation })
   });
 
-export const schemaCreateLibraryItem = z
-  .object({
-    item_type: schemaLibraryItemType,
-    title: z.string().optional(),
-    alias: z.string().optional(),
-    description: z.string(),
-    visible: z.boolean(),
-    read_only: z.boolean(),
-    location: z.string().refine(data => validateLocation(data), { message: errorMsg.invalidLocation }),
-    access_policy: schemaAccessPolicy,
+export const schemaCloneLibraryItem = z.strictObject({
+  items: z.array(z.number()),
+  item_data: schemaInputLibraryItem.omit({ item_type: true, read_only: true })
+});
+
+export const schemaCreateLibraryItem = schemaInputLibraryItem
+  .extend({
+    alias: z.string().max(limits.len_alias, errorMsg.aliasLength).optional(),
+    title: z.string().max(limits.len_title, errorMsg.titleLength).optional(),
+    description: z.string().max(limits.len_description, errorMsg.descriptionLength).optional(),
 
     file: z.instanceof(File).optional(),
     fileName: z.string().optional()
   })
-  .refine(data => !!data.file || !!data.title, {
-    path: ['title'],
-    message: errorMsg.requiredField
-  })
   .refine(data => !!data.file || !!data.alias, {
     path: ['alias'],
     message: errorMsg.requiredField
+  })
+  .refine(data => !!data.file || !!data.title, {
+    path: ['title'],
+    message: errorMsg.requiredField
   });
 
-export const schemaUpdateLibraryItem = z.strictObject({
-  id: z.number(),
-  item_type: schemaLibraryItemType,
-  title: z.string().nonempty(errorMsg.requiredField),
-  alias: z.string().nonempty(errorMsg.requiredField),
-  description: z.string(),
-  visible: z.boolean(),
-  read_only: z.boolean()
-});
+export const schemaUpdateLibraryItem = schemaInputLibraryItem
+  .omit({
+    location: true,
+    access_policy: true
+  })
+  .extend({
+    id: z.number()
+  });
 
 export const schemaVersionInfo = z.strictObject({
   id: z.coerce.number(),
@@ -136,18 +132,19 @@ export const schemaVersionInfo = z.strictObject({
   time_create: z.string().datetime({ offset: true })
 });
 
+const schemaVersionInput = z.strictObject({
+  version: z.string().max(limits.len_alias, errorMsg.aliasLength).nonempty(errorMsg.requiredField),
+  description: z.string().max(limits.len_description, errorMsg.descriptionLength)
+});
+
 export const schemaVersionExInfo = schemaVersionInfo.extend({
   item: z.number()
 });
 
-export const schemaUpdateVersion = z.strictObject({
-  id: z.number(),
-  version: z.string().nonempty(errorMsg.requiredField),
-  description: z.string()
+export const schemaUpdateVersion = schemaVersionInput.extend({
+  id: z.number()
 });
 
-export const schemaCreateVersion = z.strictObject({
-  version: z.string(),
-  description: z.string(),
+export const schemaCreateVersion = schemaVersionInput.extend({
   items: z.array(z.number())
 });

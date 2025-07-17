@@ -21,7 +21,8 @@ export function EditorPassword() {
     clearErrors,
     formState: { errors }
   } = useForm<IChangePasswordDTO>({
-    resolver: zodResolver(schemaChangePassword)
+    resolver: zodResolver(schemaChangePassword),
+    mode: 'onChange'
   });
 
   function resetErrors() {

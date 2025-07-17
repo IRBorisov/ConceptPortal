@@ -5,7 +5,7 @@ import clsx from 'clsx';
 
 import { useAuthSuspense } from '@/features/auth';
 
-import { TextArea } from '@/components/input';
+import { ErrorField, TextArea } from '@/components/input';
 import { type Styling } from '@/components/props';
 
 import { LocationHead } from '../../models/library';
@@ -56,8 +56,8 @@ export function PickLocation({
         rows={rows}
         value={value.substring(3)}
         onChange={event => onChange(combineLocation(value.substring(0, 2), event.target.value))}
-        error={error}
       />
+      <ErrorField className='absolute bottom-1 right-4' error={error} />
     </div>
   );
 }
