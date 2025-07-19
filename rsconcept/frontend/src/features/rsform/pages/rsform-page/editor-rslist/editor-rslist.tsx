@@ -1,16 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { toast } from 'react-toastify';
-import fileDownload from 'js-file-download';
 
-import { MiniButton } from '@/components/control';
+import { ExportDropdown } from '@/components/control/export-dropdown';
 import { type RowSelectionState } from '@/components/data-table';
-import { IconCSV } from '@/components/icons';
 import { SearchBar } from '@/components/input';
 import { useFitHeight } from '@/stores/app-layout';
-import { infoMsg } from '@/utils/labels';
-import { convertToCSV, withPreventDefault } from '@/utils/utils';
+import { withPreventDefault } from '@/utils/utils';
 
 import { CstType } from '../../../backend/types';
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
@@ -46,19 +42,6 @@ export function EditorRSList() {
   const rowSelection: RowSelectionState = Object.fromEntries(
     filtered.map((cst, index) => [String(index), selected.includes(cst.id)])
   );
-
-  function handleDownloadCSV() {
-    if (filtered.length === 0) {
-      toast.error(infoMsg.noDataToExport);
-      return;
-    }
-    const blob = convertToCSV(filtered);
-    try {
-      fileDownload(blob, `${schema.alias}.csv`, 'text/csv;charset=utf-8;');
-    } catch (error) {
-      console.error(error);
-    }
-  }
 
   function handleRowSelection(updater: React.SetStateAction<RowSelectionState>) {
     const newRowSelection = typeof updater === 'function' ? updater(rowSelection) : updater;
@@ -140,11 +123,11 @@ export function EditorRSList() {
         />
       </div>
 
-      <MiniButton
+      <ExportDropdown
+        data={filtered}
+        filename={schema.alias}
         className='absolute z-pop right-4 hidden sm:block top-18'
-        title='Выгрузить в формате CSV'
-        icon={<IconCSV size='1.25rem' className='text-constructive' />}
-        onClick={handleDownloadCSV}
+        disabled={filtered.length === 0}
       />
 
       <TableRSList

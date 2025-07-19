@@ -61,6 +61,7 @@ export { BiLastPage       as IconPageLast }       from 'react-icons/bi';
 export { TbCalendarPlus   as IconDateCreate }     from 'react-icons/tb';
 export { TbCalendarRepeat as IconDateUpdate }     from 'react-icons/tb';
 export { PiFileCsv        as IconCSV }            from 'react-icons/pi';
+export { BsFiletypeJson   as IconJSON }           from 'react-icons/bs';
 
 // ==== User status =======
 export { LuCircleUserRound as IconUser }          from 'react-icons/lu';

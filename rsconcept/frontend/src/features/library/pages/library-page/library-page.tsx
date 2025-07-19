@@ -1,13 +1,7 @@
 'use client';
 
-import { toast } from 'react-toastify';
-import fileDownload from 'js-file-download';
-
-import { MiniButton } from '@/components/control';
-import { IconCSV } from '@/components/icons';
+import { ExportDropdown } from '@/components/control/export-dropdown';
 import { useDialogsStore } from '@/stores/dialogs';
-import { infoMsg } from '@/utils/labels';
-import { convertToCSV } from '@/utils/utils';
 
 import { useApplyLibraryFilter } from '../../backend/use-apply-library-filter';
 import { useLibrarySuspense } from '../../backend/use-library';
@@ -38,28 +32,14 @@ export function LibraryPage() {
     }).then(() => setLocation(newLocation));
   }
 
-  function handleDownloadCSV() {
-    if (filtered.length === 0) {
-      toast.error(infoMsg.noDataToExport);
-      return;
-    }
-    const blob = convertToCSV(filtered);
-    try {
-      fileDownload(blob, 'library.csv', 'text/csv;charset=utf-8;');
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
   return (
     <>
       <ToolbarSearch className='top-0 h-9' total={libraryItems.length} filtered={filtered.length} />
       <div className='relative flex'>
-        <MiniButton
-          title='Выгрузить в формате CSV'
+        <ExportDropdown
+          data={filtered}
+          filename='library'
           className='absolute z-tooltip -top-8 right-6 hidden sm:block'
-          icon={<IconCSV size='1.25rem' className='text-muted-foreground hover:text-constructive' />}
-          onClick={handleDownloadCSV}
         />
 
         <ViewSideLocation
