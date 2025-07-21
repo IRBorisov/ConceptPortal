@@ -8,6 +8,7 @@ git reset --hard origin/main
 
 docker compose --file "${COMPOSE_FILE}" up --build --detach
 docker compose --file "${COMPOSE_FILE}" restart
+docker compose --file "${COMPOSE_FILE}" restart nginx
 
 # Use this to prune caches
 # docker system prune -a -f
