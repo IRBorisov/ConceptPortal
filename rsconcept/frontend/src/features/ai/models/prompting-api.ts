@@ -1,3 +1,10 @@
+import { type IBlock, type IOperationSchema, NodeType } from '@/features/oss/models/oss';
+import { CstType, type IConstituenta, type IRSForm } from '@/features/rsform';
+import { labelCstTypification } from '@/features/rsform/labels';
+import { isBasicConcept } from '@/features/rsform/models/rsform-api';
+
+import { PARAMETER } from '@/utils/constants';
+
 import { mockPromptVariable } from '../labels';
 
 /** Extracts a list of variables (as string[]) from a target string.
@@ -25,5 +32,96 @@ export function generateSample(target: string): string {
     const escapedVar = variable.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     result = result.replace(new RegExp(`\\{\\{${escapedVar}\\}\\}`, 'g'), mockText);
   }
+  return result;
+}
+
+/** Generates a prompt for a schema variable. */
+export function varSchema(schema: IRSForm): string {
+  let result = `Название концептуальной схемы: ${schema.title}\n`;
+  result += `[${schema.alias}] Описание: "${schema.description}"\n\n`;
+  result += 'Понятия:\n';
+  schema.items.forEach(item => {
+    result += `${item.alias} - "${labelCstTypification(item)}" - "${item.term_resolved}" - "${
+      item.definition_formal
+    }" - "${item.definition_resolved}" - "${item.convention}"\n`;
+  });
+  return result;
+}
+
+/** Generates a prompt for a schema thesaurus variable. */
+export function varSchemaThesaurus(schema: IRSForm): string {
+  let result = `Название концептуальной схемы: ${schema.title}\n`;
+  result += `[${schema.alias}] Описание: "${schema.description}"\n\n`;
+  result += 'Термины:\n';
+  schema.items.forEach(item => {
+    if (item.cst_type === CstType.AXIOM || item.cst_type === CstType.THEOREM) {
+      return;
+    }
+    if (isBasicConcept(item.cst_type)) {
+      result += `${item.term_resolved} - "${item.convention}"\n`;
+    } else {
+      result += `${item.term_resolved} - "${item.definition_resolved}"\n`;
+    }
+  });
+  return result;
+}
+
+/** Generates a prompt for a OSS variable. */
+export function varOSS(oss: IOperationSchema): string {
+  let result = `Название операционной схемы: ${oss.title}\n`;
+  result += `Сокращение: ${oss.alias}\n`;
+  result += `Описание: ${oss.description}\n`;
+  result += `Блоки: ${oss.blocks.length}\n`;
+  oss.hierarchy.topologicalOrder().forEach(blockID => {
+    const block = oss.itemByNodeID.get(blockID);
+    if (block?.nodeType !== NodeType.BLOCK) {
+      return;
+    }
+    result += `\nБлок ${block.id}: ${block.title}\n`;
+    result += `Описание: ${block.description}\n`;
+    result += `Предок: "${block.parent}"\n`;
+  });
+  result += `Операции: ${oss.operations.length}\n`;
+  oss.operations.forEach(operation => {
+    result += `\nОперация ${operation.id}: ${operation.alias}\n`;
+    result += `Название: ${operation.title}\n`;
+    result += `Описание: ${operation.description}\n`;
+    result += `Блок: ${operation.parent}\n`;
+  });
+  return result;
+}
+
+/** Generates a prompt for a block variable. */
+export function varBlock(target: IBlock, oss: IOperationSchema): string {
+  const blocks = oss.blocks.filter(block => block.parent === target.id);
+  const operations = oss.operations.filter(operation => operation.parent === target.id);
+  let result = `Название блока: ${target.title}\n`;
+  result += `Описание: "${target.description}"\n`;
+  result += '\nСодержание\n';
+  result += `Блоки: ${blocks.length}\n`;
+  blocks.forEach(block => {
+    result += `\nБлок ${block.id}: ${block.title}\n`;
+    result += `Описание: "${block.description}"\n`;
+  });
+  result += `Операции: ${operations.length}\n`;
+  operations.forEach(operation => {
+    result += `\nОперация ${operation.id}: ${operation.alias}\n`;
+    result += `Название: "${operation.title}"\n`;
+    result += `Описание: "${operation.description}"\n`;
+  });
+  return result;
+}
+
+/** Generates a prompt for a constituenta variable. */
+export function varConstituenta(cst: IConstituenta): string {
+  return JSON.stringify(cst, null, PARAMETER.indentJSON);
+}
+
+/** Generates a prompt for a constituenta syntax tree variable. */
+export function varSyntaxTree(cst: IConstituenta): string {
+  let result = `Конституента: ${cst.alias}\n`;
+  result += `Формальное выражение: ${cst.definition_formal}\n`;
+  result += `Дерево синтаксического разбора:\n`;
+  result += JSON.stringify(cst.parse.syntaxTree, null, PARAMETER.indentJSON);
   return result;
 }

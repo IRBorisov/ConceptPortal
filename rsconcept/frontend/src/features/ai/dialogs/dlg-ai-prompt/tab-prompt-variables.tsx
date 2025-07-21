@@ -1,18 +1,16 @@
 'use client';
 
-import { usePromptTemplateSuspense } from '../../backend/use-prompt-template';
 import { describePromptVariable } from '../../labels';
 import { PromptVariableType } from '../../models/prompting';
 import { extractPromptVariables } from '../../models/prompting-api';
 import { useAvailableVariables } from '../../stores/use-available-variables';
 
 interface TabPromptVariablesProps {
-  promptID: number;
+  template: string;
 }
 
-export function TabPromptVariables({ promptID }: TabPromptVariablesProps) {
-  const { promptTemplate } = usePromptTemplateSuspense(promptID);
-  const variables = extractPromptVariables(promptTemplate.text);
+export function TabPromptVariables({ template }: TabPromptVariablesProps) {
+  const variables = extractPromptVariables(template);
   const availableTypes = useAvailableVariables();
   return (
     <ul>

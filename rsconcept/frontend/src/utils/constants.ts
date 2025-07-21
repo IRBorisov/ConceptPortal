@@ -21,6 +21,8 @@ export const PARAMETER = {
   graphNodePadding: 5, // Padding inside graph nodes (in pixels)
   graphNodeRadius: 20, // Radius of graph nodes (in pixels)
 
+  indentJSON: 2, // Number of spaces for JSON indentation
+
   logicLabel: 'LOGIC',
   errorNodeLabel: '[ERROR]',
   exteorVersion: '4.9.7'

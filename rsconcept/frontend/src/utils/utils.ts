@@ -5,6 +5,7 @@
 import { toast } from 'react-toastify';
 import { type AxiosError, type AxiosHeaderValue, type AxiosResponse, isAxiosError } from 'axios';
 
+import { PARAMETER } from './constants';
 import { infoMsg, promptText } from './labels';
 
 /**
@@ -160,7 +161,7 @@ export function convertToCSV(targetObj: readonly object[]): Blob {
  * Convert object or array to JSON Blob.
  */
 export function convertToJSON(targetObj: unknown): Blob {
-  const jsonString = JSON.stringify(targetObj, null, 2);
+  const jsonString = JSON.stringify(targetObj, null, PARAMETER.indentJSON);
   return new Blob([jsonString], { type: 'application/json;charset=utf-8;' });
 }
 

@@ -16,7 +16,7 @@ import { promptText } from '@/utils/labels';
 
 import { OperationType } from '../../backend/types';
 import { useOssSuspense } from '../../backend/use-oss';
-import { type IOperation } from '../../models/oss';
+import { type IOperation, NodeType } from '../../models/oss';
 
 import { OssEditContext, type OssTabID } from './oss-edit-context';
 
@@ -32,6 +32,7 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
   const setSearchLocation = useLibrarySearchStore(state => state.setLocation);
   const searchLocation = useLibrarySearchStore(state => state.location);
   const setCurrentOSS = useAIStore(state => state.setCurrentOSS);
+  const setCurrentBlock = useAIStore(state => state.setCurrentBlock);
 
   const { user } = useAuthSuspense();
   const { schema } = useOssSuspense({ itemID: itemID });
@@ -56,6 +57,15 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
     setCurrentOSS(schema);
     return () => setCurrentOSS(null);
   }, [schema, setCurrentOSS]);
+
+  useEffect(() => {
+    const selectedBlock = selectedItems.find(item => item.nodeType === NodeType.BLOCK);
+    if (selectedBlock) {
+      setCurrentBlock(selectedBlock);
+      return () => setCurrentBlock(null);
+    }
+    setCurrentBlock(null);
+  }, [selectedItems, setCurrentBlock]);
 
   function navigateTab(tab: OssTabID) {
     const url = urls.oss_props({

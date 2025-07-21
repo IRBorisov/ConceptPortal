@@ -2,9 +2,16 @@ import { create } from 'zustand';
 
 import { type IBlock, type IOperationSchema } from '@/features/oss/models/oss';
 import { type IConstituenta, type IRSForm } from '@/features/rsform';
-import { labelCstTypification } from '@/features/rsform/labels';
 
 import { PromptVariableType } from '../models/prompting';
+import {
+  varBlock,
+  varConstituenta,
+  varOSS,
+  varSchema,
+  varSchemaThesaurus,
+  varSyntaxTree
+} from '../models/prompting-api';
 
 interface AIContextStore {
   currentOSS: IOperationSchema | null;
@@ -40,10 +47,12 @@ export function makeVariableSelector(variableType: PromptVariableType) {
     case PromptVariableType.OSS:
       return (state: AIContextStore) => ({ currentOSS: state.currentOSS });
     case PromptVariableType.SCHEMA:
+    case PromptVariableType.SCHEMA_THESAURUS:
       return (state: AIContextStore) => ({ currentSchema: state.currentSchema });
     case PromptVariableType.BLOCK:
-      return (state: AIContextStore) => ({ currentBlock: state.currentBlock });
+      return (state: AIContextStore) => ({ currentBlock: state.currentBlock, currentOSS: state.currentOSS });
     case PromptVariableType.CONSTITUENTA:
+    case PromptVariableType.CONSTITUENTA_SYNTAX_TREE:
       return (state: AIContextStore) => ({ currentConstituenta: state.currentConstituenta });
     default:
       return () => ({});
@@ -54,25 +63,18 @@ export function makeVariableSelector(variableType: PromptVariableType) {
 export function evaluatePromptVariable(variableType: PromptVariableType, context: Partial<AIContextStore>): string {
   switch (variableType) {
     case PromptVariableType.OSS:
-      return context.currentOSS?.title ?? '';
+      return context.currentOSS ? varOSS(context.currentOSS) : `!${variableType}!`;
     case PromptVariableType.SCHEMA:
-      return context.currentSchema ? generateSchemaPrompt(context.currentSchema) : '';
+      return context.currentSchema ? varSchema(context.currentSchema) : `!${variableType}!`;
+    case PromptVariableType.SCHEMA_THESAURUS:
+      return context.currentSchema ? varSchemaThesaurus(context.currentSchema) : `!${variableType}!`;
     case PromptVariableType.BLOCK:
-      return context.currentBlock?.title ?? '';
+      return context.currentBlock && context.currentOSS
+        ? varBlock(context.currentBlock, context.currentOSS)
+        : `!${variableType}!`;
     case PromptVariableType.CONSTITUENTA:
-      return context.currentConstituenta?.alias ?? '';
+      return context.currentConstituenta ? varConstituenta(context.currentConstituenta) : `!${variableType}!`;
+    case PromptVariableType.CONSTITUENTA_SYNTAX_TREE:
+      return context.currentConstituenta ? varSyntaxTree(context.currentConstituenta) : `!${variableType}!`;
   }
-}
-
-// ====== Internals =========
-function generateSchemaPrompt(schema: IRSForm): string {
-  let body = `Название концептуальной схемы: ${schema.title}\n`;
-  body += `[${schema.alias}] Описание: "${schema.description}"\n\n`;
-  body += 'Понятия:\n';
-  schema.items.forEach(item => {
-    body += `${item.alias} - "${labelCstTypification(item)}" - "${item.term_resolved}" - "${
-      item.definition_formal
-    }" - "${item.definition_resolved}" - "${item.convention}"\n`;
-  });
-  return body;
 }
