@@ -3,6 +3,8 @@
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
+import { HelpTopic } from '@/features/help';
+
 import { TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
@@ -56,6 +58,7 @@ export function DlgEditBlock() {
       canSubmit={isValid}
       onSubmit={event => void handleSubmit(onSubmit)(event)}
       className='w-160 px-6 pb-2 h-fit cc-column'
+      helpTopic={HelpTopic.CC_STRUCTURING}
     >
       <TextInput
         id='operation_title' //

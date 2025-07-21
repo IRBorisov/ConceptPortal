@@ -26,6 +26,7 @@ export const HelpTopic = {
   CC_CONSTITUENTA: 'concept-constituenta',
   CC_RELATIONS: 'concept-relations',
   CC_SYNTHESIS: 'concept-synthesis',
+  CC_STRUCTURING: 'concept-structuring',
   CC_OSS: 'concept-operations-schema',
   CC_PROPAGATION: 'concept-change-propagation',
 
@@ -39,6 +40,7 @@ export const HelpTopic = {
   TERM_CONTROL: 'terminology-control',
   ACCESS: 'access',
   VERSIONS: 'versions',
+  ASSISTANT: 'assistant',
 
   INFO: 'documentation',
   INFO_RULES: 'rules',
@@ -79,6 +81,7 @@ export const topicParent = new Map<HelpTopic, HelpTopic>([
   [HelpTopic.CC_CONSTITUENTA, HelpTopic.CONCEPTUAL],
   [HelpTopic.CC_RELATIONS, HelpTopic.CONCEPTUAL],
   [HelpTopic.CC_SYNTHESIS, HelpTopic.CONCEPTUAL],
+  [HelpTopic.CC_STRUCTURING, HelpTopic.CONCEPTUAL],
   [HelpTopic.CC_OSS, HelpTopic.CONCEPTUAL],
   [HelpTopic.CC_PROPAGATION, HelpTopic.CONCEPTUAL],
 

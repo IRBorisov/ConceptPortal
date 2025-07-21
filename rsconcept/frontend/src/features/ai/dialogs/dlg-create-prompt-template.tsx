@@ -2,6 +2,7 @@ import { Controller, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { useAuthSuspense } from '@/features/auth';
+import { HelpTopic } from '@/features/help';
 
 import { Checkbox, TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
@@ -52,6 +53,7 @@ export function DlgCreatePromptTemplate() {
       onSubmit={event => void handleSubmit(onSubmit)(event)}
       submitInvalidTooltip='Введите уникальное название шаблона'
       className='cc-column w-140 max-h-120 py-2 px-6'
+      helpTopic={HelpTopic.ASSISTANT}
     >
       <TextInput id='dlg_prompt_label' {...register('label')} label='Название шаблона' error={errors.label} />
       <TextArea id='dlg_prompt_description' {...register('description')} label='Описание' error={errors.description} />

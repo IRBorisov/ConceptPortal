@@ -88,12 +88,12 @@ const labelExpressionStatusRecord: Record<ExpressionStatus, string> = {
 };
 
 const describeExpressionStatusRecord: Record<ExpressionStatus, string> = {
-  [ExpressionStatus.VERIFIED]: 'выражение корректно и вычислимо',
-  [ExpressionStatus.INCORRECT]: 'ошибка в выражении',
+  [ExpressionStatus.VERIFIED]: 'корректно и вычислимо',
+  [ExpressionStatus.INCORRECT]: 'обнаружена ошибка',
   [ExpressionStatus.INCALCULABLE]: 'интерпретация не вычисляется',
   [ExpressionStatus.PROPERTY]: 'только проверка принадлежности',
-  [ExpressionStatus.UNKNOWN]: 'требует проверки выражения',
-  [ExpressionStatus.UNDEFINED]: 'произошла ошибка при проверке'
+  [ExpressionStatus.UNKNOWN]: 'требуется проверка',
+  [ExpressionStatus.UNDEFINED]: 'ошибка при проверке'
 };
 
 const labelGrammemeRecord: Partial<Record<Grammeme, string>> = {

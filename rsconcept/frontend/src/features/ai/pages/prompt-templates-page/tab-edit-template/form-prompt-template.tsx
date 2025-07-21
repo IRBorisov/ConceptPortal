@@ -137,6 +137,7 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
           title='Сгенерировать пример запроса'
           icon={<IconSample size='1.25rem' className='icon-primary' />}
           onClick={() => setSampleResult(!!sampleResult ? null : generateSample(text))}
+          disabled={!text}
         />
       </div>
 

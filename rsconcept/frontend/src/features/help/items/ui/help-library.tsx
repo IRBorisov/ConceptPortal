@@ -1,4 +1,5 @@
 import {
+  IconDownload,
   IconFilterReset,
   IconFolder,
   IconFolderClosed,
@@ -24,7 +25,7 @@ export function HelpLibrary() {
   return (
     <div>
       <h1>Библиотека схем</h1>
-      <p>
+      <p className='m-0'>
         В библиотеке собраны <IconRSForm size='1rem' className='inline-icon' />{' '}
         <LinkTopic text='концептуальные схемы' topic={HelpTopic.CC_SYSTEM} /> (КС) <br />и
         <IconOSS size='1rem' className='inline-icon' />{' '}
@@ -43,6 +44,9 @@ export function HelpLibrary() {
         </li>
         <li>Фильтры атрибутов три позиции: да/нет/не применять</li>
         <li>
+          <IconLeftClose size='1rem' className='inline-icon' /> отображение Проводника
+        </li>
+        <li>
           <IconShow size='1rem' className='inline-icon' /> фильтры атрибутов применяются по клику
         </li>
         <li>
@@ -55,22 +59,16 @@ export function HelpLibrary() {
           <IconFilterReset size='1rem' className='inline-icon' /> сбросить фильтры
         </li>
         <li>
-          <IconLeftClose size='1rem' className='inline-icon' /> отображение Проводника
-        </li>
-        <li>
           <IconSortAsc size='1rem' className='inline-icon' />
           <IconSortDesc size='1rem' className='inline-icon' /> сортировка по клику на заголовок таблицы
+        </li>
+        <li>
+          <IconDownload size='1rem' className='inline-icon' /> выгрузка таблицы в файл
         </li>
       </ul>
 
       <h2>Проводник</h2>
       <ul>
-        <li>
-          <IconFolderEdit size='1rem' className='inline-icon' /> переименовать выбранную
-        </li>
-        <li>
-          <IconSubfolders size='1rem' className='inline-icon icon-green' /> схемы во вложенных папках
-        </li>
         <li>
           <kbd>клик</kbd> по папке отображает справа схемы в ней
         </li>
@@ -83,6 +81,12 @@ export function HelpLibrary() {
         </li>
         <li>
           <kbd>клик</kbd> по иконке сворачивает/разворачивает вложенные
+        </li>
+        <li>
+          <IconFolderEdit size='1rem' className='inline-icon' /> переименовать выбранную
+        </li>
+        <li>
+          <IconSubfolders size='1rem' className='inline-icon' /> схемы во вложенных папках
         </li>
         <li>
           <IconFolderEmpty size='1rem' className='inline-icon text-foreground' /> папка без схем

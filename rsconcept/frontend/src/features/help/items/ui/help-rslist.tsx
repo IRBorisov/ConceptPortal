@@ -3,6 +3,7 @@ import {
   IconAlias,
   IconClone,
   IconDestroy,
+  IconDownload,
   IconMoveDown,
   IconMoveUp,
   IconNewItem,
@@ -64,6 +65,9 @@ export function HelpRSList() {
         </li>
         <li>
           <IconDestroy className='inline-icon icon-red' /> удаление выделенных: <kbd>Delete</kbd>
+        </li>
+        <li>
+          <IconDownload className='inline-icon' /> выгрузка таблицы в файл
         </li>
       </ul>
 

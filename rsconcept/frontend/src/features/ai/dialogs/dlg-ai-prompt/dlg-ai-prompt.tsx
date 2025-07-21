@@ -1,5 +1,7 @@
 import { Suspense, useState } from 'react';
 
+import { HelpTopic } from '@/features/help';
+
 import { ComboBox } from '@/components/input/combo-box';
 import { Loader } from '@/components/loader';
 import { ModalView } from '@/components/modal';
@@ -14,7 +16,11 @@ export function DlgAIPromptDialog() {
   const { items: prompts } = useAvailableTemplatesSuspense();
 
   return (
-    <ModalView header='Генератор запросом LLM' className='w-100 sm:w-160 px-6 flex flex-col h-120'>
+    <ModalView
+      header='Генератор запросом LLM'
+      className='w-100 sm:w-160 px-6 flex flex-col h-120'
+      helpTopic={HelpTopic.ASSISTANT}
+    >
       <ComboBox
         id='prompt-select'
         items={prompts}

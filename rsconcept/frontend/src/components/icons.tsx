@@ -83,7 +83,7 @@ export { TbGps            as IconCoordinates }    from 'react-icons/tb';
 export { IoLibrary        as IconLibrary2 }       from 'react-icons/io5';
 export { BiDiamond        as IconTemplates }      from 'react-icons/bi';
 export { TbHexagons       as IconOSS }            from 'react-icons/tb';
-export { BiScreenshot     as IconConceptBlock }   from 'react-icons/bi';
+export { MdOutlineSelectAll as IconConceptBlock } from 'react-icons/md';
 export { TbHexagon        as IconRSForm }         from 'react-icons/tb';
 export { TbAssembly       as IconRSFormOwned }    from 'react-icons/tb';
 export { TbBallFootball   as IconRSFormImported } from 'react-icons/tb';

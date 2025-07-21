@@ -1,6 +1,8 @@
 import { Suspense } from 'react';
 
 import { urls, useConceptNavigation } from '@/app';
+import { HelpTopic } from '@/features/help';
+import { BadgeHelp } from '@/features/help/components/badge-help';
 
 import { Loader } from '@/components/loader';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
@@ -59,6 +61,9 @@ export function TemplatesTabs({ activeID, tab }: TemplatesTabsProps) {
         <TabLabel label='Список' />
         <TabLabel label='Шаблон' />
         <TabLabel label='Переменные' />
+        <div className='flex px-1'>
+          <BadgeHelp topic={HelpTopic.ASSISTANT} offset={5} />
+        </div>
       </TabList>
       <div className='overflow-x-hidden'>
         <TabPanel>

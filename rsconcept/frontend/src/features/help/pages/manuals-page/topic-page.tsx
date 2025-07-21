@@ -3,10 +3,12 @@ import { useWindowSize } from '@/hooks/use-window-size';
 import { HelpConceptOSS } from '../../items/cc/help-concept-oss';
 import { HelpConceptPropagation } from '../../items/cc/help-concept-propagation';
 import { HelpConceptRelations } from '../../items/cc/help-concept-relations';
+import { HelpConceptStructuring } from '../../items/cc/help-concept-structuring';
 import { HelpConceptSynthesis } from '../../items/cc/help-concept-synthesis';
 import { HelpConceptSystem } from '../../items/cc/help-concept-system';
 import { HelpCstAttributes } from '../../items/cc/help-cst-attributes';
 import { HelpAccess } from '../../items/help-access';
+import { HelpAssistant } from '../../items/help-assistant';
 import { HelpConcept } from '../../items/help-concept';
 import { HelpExteor } from '../../items/help-exteor';
 import { HelpInfo } from '../../items/help-info';
@@ -77,6 +79,7 @@ export function TopicPage({ topic }: TopicPageProps) {
   if (topic === HelpTopic.CC_CONSTITUENTA) return <HelpCstAttributes />;
   if (topic === HelpTopic.CC_RELATIONS) return <HelpConceptRelations />;
   if (topic === HelpTopic.CC_SYNTHESIS) return <HelpConceptSynthesis />;
+  if (topic === HelpTopic.CC_STRUCTURING) return <HelpConceptStructuring />;
   if (topic === HelpTopic.CC_OSS) return <HelpConceptOSS />;
   if (topic === HelpTopic.CC_PROPAGATION) return <HelpConceptPropagation />;
 
@@ -90,6 +93,7 @@ export function TopicPage({ topic }: TopicPageProps) {
   if (topic === HelpTopic.TERM_CONTROL) return <HelpTerminologyControl />;
   if (topic === HelpTopic.ACCESS) return <HelpAccess />;
   if (topic === HelpTopic.VERSIONS) return <HelpVersions />;
+  if (topic === HelpTopic.ASSISTANT) return <HelpAssistant />;
 
   if (topic === HelpTopic.INFO) return <HelpInfo />;
   if (topic === HelpTopic.INFO_RULES) return <HelpRules />;

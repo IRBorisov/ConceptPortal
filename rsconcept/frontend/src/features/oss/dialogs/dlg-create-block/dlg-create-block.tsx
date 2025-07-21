@@ -80,7 +80,7 @@ export function DlgCreateBlock() {
       canSubmit={isValid}
       onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
       className='w-160 px-6 h-110'
-      helpTopic={HelpTopic.CC_OSS}
+      helpTopic={HelpTopic.CC_STRUCTURING}
     >
       <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>
         <TabList className='z-pop mx-auto -mb-5 flex border divide-x rounded-none'>
