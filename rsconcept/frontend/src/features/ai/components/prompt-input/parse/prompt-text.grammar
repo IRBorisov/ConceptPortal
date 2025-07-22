@@ -1,0 +1,39 @@
+@precedence {
+  text @right
+  p1
+  p2
+  p3
+}
+
+@top Text { textItem* }
+
+@skip { space }
+
+@tokens {
+  space { @whitespace+ }
+  variable { $[a-zA-Z_]$[a-zA-Z0-9_.-]* }
+  word { ![@{|}! \t\n]+ }
+
+  @precedence { word, space }
+}
+
+textItem {
+  !p1 Variable |
+  !p2 Error |
+  !p3 Filler
+}
+
+Filler { word_enum }
+Error { "!" word_enum "!" }
+word_enum {
+  word |
+  word !text word_enum
+}
+
+Variable {
+  "{{" variable "}}"
+}
+
+@detectDelim
+
+@external propSource highlighting from "./highlight"

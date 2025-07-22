@@ -1,5 +1,8 @@
 import { TextArea } from '@/components/input';
 
+import { PromptInput } from '../../components/prompt-input';
+import { useAvailableVariables } from '../../stores/use-available-variables';
+
 interface TabPromptEditProps {
   label: string;
   description: string;
@@ -8,6 +11,7 @@ interface TabPromptEditProps {
 }
 
 export function TabPromptEdit({ label, description, text, setText }: TabPromptEditProps) {
+  const availableVariables = useAvailableVariables();
   return (
     <div className='cc-column'>
       <div className='flex flex-col gap-2'>
@@ -20,13 +24,13 @@ export function TabPromptEdit({ label, description, text, setText }: TabPromptEd
           rows={1}
         />
         <TextArea id='prompt-description' label='Описание' value={description} disabled noResize rows={3} />
-        <TextArea
+        <PromptInput
           id='prompt-text' //
           label='Текст шаблона'
           value={text}
-          onChange={event => setText(event.target.value)}
-          noResize
-          rows={8}
+          onChange={setText}
+          maxHeight='10rem'
+          availableVariables={availableVariables}
         />
       </div>
     </div>

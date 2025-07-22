@@ -26,6 +26,34 @@ import { RSLanguage } from './rslang';
 import { getSymbolSubstitute, RSTextWrapper } from './text-editing';
 import { rsHoverTooltip } from './tooltip';
 
+const editorSetup: BasicSetupOptions = {
+  highlightSpecialChars: false,
+  history: true,
+  drawSelection: false,
+  syntaxHighlighting: false,
+  defaultKeymap: true,
+  historyKeymap: true,
+
+  lineNumbers: false,
+  highlightActiveLineGutter: false,
+  foldGutter: false,
+  dropCursor: true,
+  allowMultipleSelections: false,
+  indentOnInput: false,
+  bracketMatching: false,
+  closeBrackets: false,
+  autocompletion: false,
+  rectangularSelection: false,
+  crosshairCursor: false,
+  highlightActiveLine: false,
+  highlightSelectionMatches: false,
+  closeBracketsKeymap: false,
+  searchKeymap: false,
+  foldKeymap: false,
+  completionKeymap: false,
+  lintKeymap: false
+};
+
 interface RSInputProps
   extends Pick<
     ReactCodeMirrorProps,
@@ -63,7 +91,6 @@ export const RSInput = forwardRef<ReactCodeMirrorRef, RSInputProps>(
       className,
       style,
 
-      onChange,
       onAnalyze,
       ...restProps
     },
@@ -169,7 +196,6 @@ export const RSInput = forwardRef<ReactCodeMirrorRef, RSInputProps>(
           theme={customTheme}
           extensions={editorExtensions}
           indentWithTab={false}
-          onChange={onChange}
           editable={!disabled}
           onKeyDown={handleInput}
           {...restProps}
@@ -178,32 +204,3 @@ export const RSInput = forwardRef<ReactCodeMirrorRef, RSInputProps>(
     );
   }
 );
-
-// ======= Internal ==========
-const editorSetup: BasicSetupOptions = {
-  highlightSpecialChars: false,
-  history: true,
-  drawSelection: false,
-  syntaxHighlighting: false,
-  defaultKeymap: true,
-  historyKeymap: true,
-
-  lineNumbers: false,
-  highlightActiveLineGutter: false,
-  foldGutter: false,
-  dropCursor: true,
-  allowMultipleSelections: false,
-  indentOnInput: false,
-  bracketMatching: false,
-  closeBrackets: false,
-  autocompletion: false,
-  rectangularSelection: false,
-  crosshairCursor: false,
-  highlightActiveLine: false,
-  highlightSelectionMatches: false,
-  closeBracketsKeymap: false,
-  searchKeymap: false,
-  foldKeymap: false,
-  completionKeymap: false,
-  lintKeymap: false
-};

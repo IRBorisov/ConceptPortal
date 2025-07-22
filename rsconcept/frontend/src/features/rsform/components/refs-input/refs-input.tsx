@@ -30,6 +30,34 @@ import { refsNavigation } from './click-navigation';
 import { NaturalLanguage, ReferenceTokens } from './parse';
 import { refsHoverTooltip } from './tooltip';
 
+const editorSetup: BasicSetupOptions = {
+  highlightSpecialChars: false,
+  history: true,
+  drawSelection: false,
+  syntaxHighlighting: false,
+  defaultKeymap: true,
+  historyKeymap: true,
+
+  lineNumbers: false,
+  highlightActiveLineGutter: false,
+  foldGutter: false,
+  dropCursor: true,
+  allowMultipleSelections: false,
+  indentOnInput: false,
+  bracketMatching: false,
+  closeBrackets: false,
+  autocompletion: false,
+  rectangularSelection: false,
+  crosshairCursor: false,
+  highlightActiveLine: false,
+  highlightSelectionMatches: false,
+  closeBracketsKeymap: false,
+  searchKeymap: false,
+  foldKeymap: false,
+  completionKeymap: false,
+  lintKeymap: false
+};
+
 interface RefsInputInputProps
   extends Pick<
     ReactCodeMirrorProps,
@@ -199,32 +227,3 @@ export const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
     );
   }
 );
-
-// ======= Internal ==========
-const editorSetup: BasicSetupOptions = {
-  highlightSpecialChars: false,
-  history: true,
-  drawSelection: false,
-  syntaxHighlighting: false,
-  defaultKeymap: true,
-  historyKeymap: true,
-
-  lineNumbers: false,
-  highlightActiveLineGutter: false,
-  foldGutter: false,
-  dropCursor: true,
-  allowMultipleSelections: false,
-  indentOnInput: false,
-  bracketMatching: false,
-  closeBrackets: false,
-  autocompletion: false,
-  rectangularSelection: false,
-  crosshairCursor: false,
-  highlightActiveLine: false,
-  highlightSelectionMatches: false,
-  closeBracketsKeymap: false,
-  searchKeymap: false,
-  foldKeymap: false,
-  completionKeymap: false,
-  lintKeymap: false
-};

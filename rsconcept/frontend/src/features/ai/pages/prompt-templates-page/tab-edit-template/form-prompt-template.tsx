@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import clsx from 'clsx';
 import { useDebounce } from 'use-debounce';
 
+import { PromptInput } from '@/features/ai/components/prompt-input';
 import { useAuthSuspense } from '@/features/auth';
 
 import { MiniButton } from '@/components/control';
@@ -88,6 +89,11 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
     });
   }
 
+  function handleChangeText(newValue: string, onChange: (newValue: string) => void) {
+    setSampleResult(null);
+    onChange(newValue);
+  }
+
   return (
     <form
       id={globalIDs.prompt_editor}
@@ -108,14 +114,21 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
         error={errors.description}
         disabled={isProcessing || !isMutable}
       />
-      <TextArea
-        id='prompt_text'
-        label='Содержание' //
-        fitContent
-        className='disabled:min-h-9 max-h-64'
-        {...register('text')}
-        error={errors.text}
-        disabled={isProcessing || !isMutable}
+
+      <Controller
+        control={control}
+        name='text'
+        render={({ field }) => (
+          <PromptInput
+            id='prompt_text'
+            label='Содержание'
+            placeholder='Пример: Предложи дополнение для КС {{schema}}'
+            className='disabled:min-h-9 max-h-64'
+            value={field.value}
+            onChange={newValue => handleChangeText(newValue, field.onChange)}
+            disabled={isProcessing || !isMutable}
+          />
+        )}
       />
       <div className='flex justify-between'>
         <Controller
