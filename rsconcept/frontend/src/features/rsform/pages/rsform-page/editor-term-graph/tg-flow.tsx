@@ -166,7 +166,7 @@ export function TGFlow() {
 
   return (
     <div className='relative' tabIndex={-1} onKeyDown={handleKeyDown}>
-      <div className='flex flex-col items-center rounded-b-2xl backdrop-blur-xs'>
+      <div className='cc-tab-tools flex flex-col items-center rounded-b-2xl backdrop-blur-xs'>
         <ToolbarTermGraph />
         <ToolbarFocusedCst focus={focusCst} resetFocus={() => setFocus(null)} />
         {!focusCst ? (

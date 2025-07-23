@@ -119,10 +119,10 @@ export function DlgRelocateConstituents() {
       helpTopic={HelpTopic.UI_RELOCATE_CST}
     >
       <div className='flex flex-col border'>
-        <div className='flex gap-1 items-center bg-input border-b rounded-t-md'>
+        <div className='flex justify-between gap-1 items-center bg-input border-b rounded-t-md max-w-full'>
           <SelectLibraryItem
             noBorder
-            className='w-1/2 shrink-1'
+            className='w-69'
             placeholder='Исходная схема'
             items={sourceSchemas}
             value={source}
@@ -135,7 +135,7 @@ export function DlgRelocateConstituents() {
           />
           <SelectLibraryItem
             noBorder
-            className='w-1/2 shrink-1'
+            className='w-69'
             placeholder='Целевая схема'
             items={destinationSchemas}
             value={destinationItem}

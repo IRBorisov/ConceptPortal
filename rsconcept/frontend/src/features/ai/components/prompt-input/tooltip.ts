@@ -62,7 +62,7 @@ function domTooltipVariable(varName: string, isAvailable: boolean): TooltipView 
   dom.className = clsx(
     'max-h-100 max-w-100 min-w-40',
     'dense',
-    'px-2 py-1 flex flex-col',
+    'p-2 flex flex-col',
     'rounded-md shadow-md',
     'cc-scroll-y',
     'text-sm bg-card',

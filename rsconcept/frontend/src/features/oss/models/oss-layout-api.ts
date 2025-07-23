@@ -180,7 +180,7 @@ export class LayoutManager {
       const rootElements = this.oss.hierarchy.rootNodes();
       const positions = this.layout.filter(pos => rootElements.includes(pos.nodeID));
       preventOverlap(newPosition, positions);
-    } else if (!rectanglesOverlap(target, parent)) {
+    } else if (!rectanglesStrictOverlap(target, parent)) {
       newPosition.x = parent.x + MIN_DISTANCE;
       newPosition.y = parent.y + MIN_DISTANCE;
 
@@ -200,6 +200,10 @@ function rectanglesOverlap(a: Rectangle2D, b: Rectangle2D): boolean {
     a.y + a.height + MIN_DISTANCE <= b.y ||
     b.y + b.height + MIN_DISTANCE <= a.y
   );
+}
+
+function rectanglesStrictOverlap(a: Rectangle2D, b: Rectangle2D): boolean {
+  return !(a.x + a.width <= b.x || b.x + b.width <= a.x || a.y + a.height <= b.y || b.y + b.height <= a.y);
 }
 
 function preventOverlap(

@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
+import { useAIStore } from '@/features/ai/stores/ai-context';
 import { type IConstituenta } from '@/features/rsform';
 import { useRSFormSuspense } from '@/features/rsform/backend/use-rsform';
 import { RSFormStats } from '@/features/rsform/components/rsform-stats';
@@ -20,8 +21,14 @@ export function ViewSchema({ schemaID, isMutable }: ViewSchemaProps) {
   const [activeID, setActiveID] = useState<number | null>(null);
   const activeCst = activeID ? schema.cstByID.get(activeID) ?? null : null;
   const showEditCst = useDialogsStore(state => state.showEditCst);
+  const setCurrentSchema = useAIStore(state => state.setCurrentSchema);
 
   const listHeight = useFitHeight('14.5rem', '10rem');
+
+  useEffect(() => {
+    setCurrentSchema(schema);
+    return () => setCurrentSchema(null);
+  }, [schema, setCurrentSchema]);
 
   function handleEditCst(cst: IConstituenta) {
     showEditCst({ schema: schema, target: cst });

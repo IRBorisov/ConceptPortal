@@ -34,6 +34,8 @@ export interface OperationInternalNode {
   data: {
     label: string;
     operation: IOperation;
+    isParent: boolean;
+    isChild: boolean;
   };
   selected: boolean;
   dragging: boolean;
@@ -47,6 +49,8 @@ export interface BlockInternalNode {
   data: {
     label: string;
     block: IBlock;
+    isParent: boolean;
+    isChild: boolean;
   };
   selected: boolean;
   dragging: boolean;

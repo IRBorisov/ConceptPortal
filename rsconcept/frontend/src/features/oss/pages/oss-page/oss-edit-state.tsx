@@ -33,6 +33,7 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
   const searchLocation = useLibrarySearchStore(state => state.location);
   const setCurrentOSS = useAIStore(state => state.setCurrentOSS);
   const setCurrentBlock = useAIStore(state => state.setCurrentBlock);
+  const setCurrentOperation = useAIStore(state => state.setCurrentOperation);
 
   const { user } = useAuthSuspense();
   const { schema } = useOssSuspense({ itemID: itemID });
@@ -66,6 +67,15 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
     }
     setCurrentBlock(null);
   }, [selectedItems, setCurrentBlock]);
+
+  useEffect(() => {
+    const selectedOperation = selectedItems.find(item => item.nodeType === NodeType.OPERATION);
+    if (selectedOperation) {
+      setCurrentOperation(selectedOperation);
+      return () => setCurrentOperation(null);
+    }
+    setCurrentOperation(null);
+  }, [selectedItems, setCurrentOperation]);
 
   function navigateTab(tab: OssTabID) {
     const url = urls.oss_props({

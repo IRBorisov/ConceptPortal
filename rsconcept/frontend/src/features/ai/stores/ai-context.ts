@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-import { type IBlock, type IOperationSchema } from '@/features/oss/models/oss';
+import { type IBlock, type IOperation, type IOperationSchema } from '@/features/oss/models/oss';
 import { type IConstituenta, type IRSForm } from '@/features/rsform';
 
 import { PromptVariableType } from '../models/prompting';
@@ -25,6 +25,9 @@ interface AIContextStore {
   currentBlock: IBlock | null;
   setCurrentBlock: (value: IBlock | null) => void;
 
+  currentOperation: IOperation | null;
+  setCurrentOperation: (value: IOperation | null) => void;
+
   currentConstituenta: IConstituenta | null;
   setCurrentConstituenta: (value: IConstituenta | null) => void;
 }
@@ -38,6 +41,9 @@ export const useAIStore = create<AIContextStore>()(set => ({
 
   currentBlock: null,
   setCurrentBlock: value => set({ currentBlock: value }),
+
+  currentOperation: null,
+  setCurrentOperation: value => set({ currentOperation: value }),
 
   currentConstituenta: null,
   setCurrentConstituenta: value => set({ currentConstituenta: value })
