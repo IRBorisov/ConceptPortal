@@ -1,4 +1,3 @@
-import { toast } from 'react-toastify';
 import fileDownload from 'js-file-download';
 
 import { urls, useConceptNavigation } from '@/app';
@@ -18,20 +17,18 @@ import {
   IconNewItem,
   IconOSS,
   IconQR,
-  IconRobot,
   IconShare,
   IconUpload
 } from '@/components/icons';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';
-import { infoMsg, tooltipText } from '@/utils/labels';
+import { tooltipText } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 import { generatePageQR, promptUnsaved, sharePage } from '@/utils/utils';
 
 import { useDownloadRSForm } from '../../backend/use-download-rsform';
 import { useMutatingRSForm } from '../../backend/use-mutating-rsform';
-import { generatePrompt } from '../../models/rslang-api';
 
 import { useRSEdit } from './rsedit-context';
 
@@ -111,16 +108,6 @@ export function MenuMain() {
     sharePage();
   }
 
-  function handleCopyPrompt() {
-    menu.hide();
-
-    const prompt = generatePrompt(schema);
-    navigator.clipboard
-      .writeText(prompt)
-      .then(() => toast.success(infoMsg.promptReady))
-      .catch(console.error);
-  }
-
   function handleShowQR() {
     menu.hide();
     showQR({ target: generatePageQR() });
@@ -151,12 +138,6 @@ export function MenuMain() {
           title='Показать QR-код схемы'
           icon={<IconQR size='1rem' className='icon-primary' />}
           onClick={handleShowQR}
-        />
-        <DropdownButton
-          text='Запрос LLM'
-          title='Генерировать запрос для LLM'
-          icon={<IconRobot size='1rem' className='icon-primary' />}
-          onClick={handleCopyPrompt}
         />
         {!isAnonymous ? (
           <DropdownButton

@@ -2,6 +2,7 @@ import { type IBlock, type IOperationSchema, NodeType } from '@/features/oss/mod
 import { CstType, type IConstituenta, type IRSForm } from '@/features/rsform';
 import { labelCstTypification } from '@/features/rsform/labels';
 import { isBasicConcept } from '@/features/rsform/models/rsform-api';
+import { TypificationGraph } from '@/features/rsform/models/typification-graph';
 
 import { PARAMETER } from '@/utils/constants';
 
@@ -41,9 +42,9 @@ export function varSchema(schema: IRSForm): string {
   result += `[${schema.alias}] Описание: "${schema.description}"\n\n`;
   result += 'Понятия:\n';
   schema.items.forEach(item => {
-    result += `${item.alias} - "${labelCstTypification(item)}" - "${item.term_resolved}" - "${
+    result += `\n${item.alias} - "${labelCstTypification(item)}" - "${item.term_resolved}" - "${
       item.definition_formal
-    }" - "${item.definition_resolved}" - "${item.convention}"\n`;
+    }" - "${item.definition_resolved}" - "${item.convention}"`;
   });
   return result;
 }
@@ -58,11 +59,34 @@ export function varSchemaThesaurus(schema: IRSForm): string {
       return;
     }
     if (isBasicConcept(item.cst_type)) {
-      result += `${item.term_resolved} - "${item.convention}"\n`;
+      result += `\n${item.term_resolved} - "${item.convention}"`;
     } else {
-      result += `${item.term_resolved} - "${item.definition_resolved}"\n`;
+      result += `\n${item.term_resolved} - "${item.definition_resolved}"`;
     }
   });
+  return result;
+}
+
+/** Generates a prompt for a schema graph variable. */
+export function varSchemaGraph(schema: IRSForm): string {
+  let result = `Название концептуальной схемы: ${schema.title}\n`;
+  result += `[${schema.alias}] Описание: "${schema.description}"\n\n`;
+  result += 'Узлы графа\n';
+  result += JSON.stringify(schema.items, null, PARAMETER.indentJSON);
+  result += '\n\nСвязи графа';
+  schema.graph.nodes.forEach(node => (result += `\n${node.id} -> ${node.outputs.join(', ')}`));
+  return result;
+}
+
+/** Generates a prompt for a schema type graph variable. */
+export function varSchemaTypeGraph(schema: IRSForm): string {
+  const graph = new TypificationGraph();
+  schema.items.forEach(item => graph.addConstituenta(item.alias, item.parse.typification, item.parse.args));
+
+  let result = `Название концептуальной схемы: ${schema.title}\n`;
+  result += `[${schema.alias}] Описание: "${schema.description}"\n\n`;
+  result += 'Ступени\n';
+  result += JSON.stringify(graph.nodes, null, PARAMETER.indentJSON);
   return result;
 }
 
@@ -86,7 +110,7 @@ export function varOSS(oss: IOperationSchema): string {
     result += `\nОперация ${operation.id}: ${operation.alias}\n`;
     result += `Название: ${operation.title}\n`;
     result += `Описание: ${operation.description}\n`;
-    result += `Блок: ${operation.parent}\n`;
+    result += `Блок: ${operation.parent}`;
   });
   return result;
 }
@@ -107,7 +131,7 @@ export function varBlock(target: IBlock, oss: IOperationSchema): string {
   operations.forEach(operation => {
     result += `\nОперация ${operation.id}: ${operation.alias}\n`;
     result += `Название: "${operation.title}"\n`;
-    result += `Описание: "${operation.description}"\n`;
+    result += `Описание: "${operation.description}"`;
   });
   return result;
 }

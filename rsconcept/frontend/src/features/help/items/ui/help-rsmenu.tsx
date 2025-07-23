@@ -12,7 +12,6 @@ import {
   IconOwner,
   IconQR,
   IconReader,
-  IconRobot,
   IconShare,
   IconUpload
 } from '@/components/icons';
@@ -58,9 +57,6 @@ export function HelpRSMenu() {
             </li>
             <li>
               <IconQR className='inline-icon' /> Отобразить QR-код схемы
-            </li>
-            <li>
-              <IconRobot className='inline-icon' /> Генерировать запрос для LLM
             </li>
             <li>
               <IconClone className='inline-icon icon-green' /> Клонировать – создать копию схемы

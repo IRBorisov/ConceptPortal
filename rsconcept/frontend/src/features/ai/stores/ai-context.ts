@@ -9,7 +9,9 @@ import {
   varConstituenta,
   varOSS,
   varSchema,
+  varSchemaGraph,
   varSchemaThesaurus,
+  varSchemaTypeGraph,
   varSyntaxTree
 } from '../models/prompting-api';
 
@@ -68,6 +70,10 @@ export function evaluatePromptVariable(variableType: PromptVariableType, context
       return context.currentSchema ? varSchema(context.currentSchema) : `!${variableType}!`;
     case PromptVariableType.SCHEMA_THESAURUS:
       return context.currentSchema ? varSchemaThesaurus(context.currentSchema) : `!${variableType}!`;
+    case PromptVariableType.SCHEMA_GRAPH:
+      return context.currentSchema ? varSchemaGraph(context.currentSchema) : `!${variableType}!`;
+    case PromptVariableType.SCHEMA_TYPE_GRAPH:
+      return context.currentSchema ? varSchemaTypeGraph(context.currentSchema) : `!${variableType}!`;
     case PromptVariableType.BLOCK:
       return context.currentBlock && context.currentOSS
         ? varBlock(context.currentBlock, context.currentOSS)

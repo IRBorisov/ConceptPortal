@@ -5,6 +5,8 @@ const describePromptVariableRecord: Record<PromptVariableType, string> = {
   [PromptVariableType.OSS]: 'Текущая операционная схема',
   [PromptVariableType.SCHEMA]: 'Текущая концептуальная схема',
   [PromptVariableType.SCHEMA_THESAURUS]: 'Термины и определения текущей концептуальной схемы',
+  [PromptVariableType.SCHEMA_GRAPH]: 'Граф связей определений конституент',
+  [PromptVariableType.SCHEMA_TYPE_GRAPH]: 'Граф ступеней концептуальной схемы',
   [PromptVariableType.CONSTITUENTA]: 'Текущая конституента',
   [PromptVariableType.CONSTITUENTA_SYNTAX_TREE]: 'Синтаксическое дерево конституенты'
 };
@@ -14,6 +16,8 @@ const mockPromptVariableRecord: Record<PromptVariableType, string> = {
   [PromptVariableType.OSS]: 'Пример: Текущая операционная схема',
   [PromptVariableType.SCHEMA]: 'Пример: Текущая концептуальная схема',
   [PromptVariableType.SCHEMA_THESAURUS]: 'Пример\nТермин1 - Определение1\nТермин2 - Определение2',
+  [PromptVariableType.SCHEMA_GRAPH]: 'Пример: Граф связей определений конституент',
+  [PromptVariableType.SCHEMA_TYPE_GRAPH]: 'Пример: Граф ступеней концептуальной схемы',
   [PromptVariableType.CONSTITUENTA]: 'Пример: Текущая конституента',
   [PromptVariableType.CONSTITUENTA_SYNTAX_TREE]: 'Пример синтаксического дерева конституенты'
 };
