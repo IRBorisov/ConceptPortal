@@ -13,10 +13,9 @@ export const useUpdateConstituenta = () => {
   const mutation = useMutation({
     mutationKey: [KEYS.global_mutation, rsformsApi.baseKey, 'update-constituenta'],
     mutationFn: rsformsApi.updateConstituenta,
-    onSuccess: async (data, _) => {
+    onSuccess: async data => {
+      updateTimestamp(data.id, data.time_update);
       client.setQueryData(rsformsApi.getRSFormQueryOptions({ itemID: data.id }).queryKey, data);
-      updateTimestamp(data.id);
-
       await Promise.allSettled([
         client.invalidateQueries({ queryKey: [KEYS.oss] }),
         client.invalidateQueries({

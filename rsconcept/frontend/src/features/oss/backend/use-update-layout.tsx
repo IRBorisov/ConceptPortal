@@ -3,10 +3,9 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useUpdateTimestamp } from '@/features/library/backend/use-update-timestamp';
 
 import { KEYS } from '@/backend/configuration';
-import { type RO } from '@/utils/meta';
 
 import { ossApi } from './api';
-import { type IOperationSchemaDTO, type IOssLayout } from './types';
+import { type IOssLayout } from './types';
 
 export const useUpdateLayout = () => {
   const client = useQueryClient();
@@ -14,18 +13,9 @@ export const useUpdateLayout = () => {
   const mutation = useMutation({
     mutationKey: [KEYS.global_mutation, ossApi.baseKey, 'update-layout'],
     mutationFn: ossApi.updateLayout,
-    onSuccess: (_, variables) => {
-      updateTimestamp(variables.itemID);
-      client.setQueryData(
-        ossApi.getOssQueryOptions({ itemID: variables.itemID }).queryKey,
-        (prev: RO<IOperationSchemaDTO> | undefined) =>
-          !prev
-            ? prev
-            : {
-                ...prev,
-                layout: variables.data
-              }
-      );
+    onSuccess: data => {
+      updateTimestamp(data.id, data.time_update);
+      client.setQueryData(KEYS.composite.ossItem({ itemID: data.id }), data);
     },
     onError: () => client.invalidateQueries()
   });

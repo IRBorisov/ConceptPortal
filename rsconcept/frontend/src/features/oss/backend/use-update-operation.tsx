@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { type ILibraryItem } from '@/features/library';
+import { useUpdateTimestamp } from '@/features/library/backend/use-update-timestamp';
 
 import { KEYS } from '@/backend/configuration';
 
@@ -9,10 +10,12 @@ import { type IUpdateOperationDTO } from './types';
 
 export const useUpdateOperation = () => {
   const client = useQueryClient();
+  const { updateTimestamp } = useUpdateTimestamp();
   const mutation = useMutation({
     mutationKey: [KEYS.global_mutation, ossApi.baseKey, 'update-operation'],
     mutationFn: ossApi.updateOperation,
     onSuccess: (data, variables) => {
+      updateTimestamp(data.id, data.time_update);
       client.setQueryData(KEYS.composite.ossItem({ itemID: data.id }), data);
       const schemaID = data.operations.find(item => item.id === variables.data.target)?.result;
       if (!schemaID) {

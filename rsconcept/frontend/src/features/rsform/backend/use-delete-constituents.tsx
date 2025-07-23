@@ -14,9 +14,8 @@ export const useDeleteConstituents = () => {
     mutationKey: [KEYS.global_mutation, rsformsApi.baseKey, 'delete-constituents'],
     mutationFn: rsformsApi.deleteConstituents,
     onSuccess: async data => {
+      updateTimestamp(data.id, data.time_update);
       client.setQueryData(rsformsApi.getRSFormQueryOptions({ itemID: data.id }).queryKey, data);
-      updateTimestamp(data.id);
-
       await Promise.allSettled([
         client.invalidateQueries({ queryKey: [KEYS.oss] }),
         client.invalidateQueries({

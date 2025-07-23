@@ -14,8 +14,8 @@ export const useMoveConstituents = () => {
     mutationKey: [KEYS.global_mutation, rsformsApi.baseKey, 'move-constituents'],
     mutationFn: rsformsApi.moveConstituents,
     onSuccess: data => {
+      updateTimestamp(data.id, data.time_update);
       client.setQueryData(rsformsApi.getRSFormQueryOptions({ itemID: data.id }).queryKey, data);
-      updateTimestamp(data.id);
     },
     onError: () => client.invalidateQueries()
   });

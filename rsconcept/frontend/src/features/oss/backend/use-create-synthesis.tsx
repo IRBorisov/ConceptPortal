@@ -13,9 +13,9 @@ export const useCreateSynthesis = () => {
   const mutation = useMutation({
     mutationKey: [KEYS.global_mutation, ossApi.baseKey, 'create-synthesis'],
     mutationFn: ossApi.createSynthesis,
-    onSuccess: response => {
-      client.setQueryData(ossApi.getOssQueryOptions({ itemID: response.oss.id }).queryKey, response.oss);
-      updateTimestamp(response.oss.id);
+    onSuccess: data => {
+      updateTimestamp(data.oss.id, data.oss.time_update);
+      client.setQueryData(ossApi.getOssQueryOptions({ itemID: data.oss.id }).queryKey, data.oss);
     },
     onError: () => client.invalidateQueries()
   });

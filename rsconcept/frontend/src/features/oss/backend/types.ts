@@ -28,6 +28,9 @@ export type IOperationSchemaDTO = z.infer<typeof schemaOperationSchema>;
 /** Represents {@link IOperationSchema} layout. */
 export type IOssLayout = z.infer<typeof schemaOssLayout>;
 
+/** Represents {@link IOperationSchema} layout for data transfer. */
+export type IOssLayoutDTO = z.infer<typeof schemaOssLayoutData>;
+
 /** Represents {@link IBlock} data, used in Create action. */
 export type ICreateBlockDTO = z.infer<typeof schemaCreateBlock>;
 
@@ -135,6 +138,10 @@ export const schemaNodePosition = schemaPosition.extend({
 });
 
 export const schemaOssLayout = z.array(schemaNodePosition);
+
+export const schemaOssLayoutData = z.strictObject({
+  data: schemaOssLayout
+});
 
 export const schemaOperationSchema = schemaLibraryItem.extend({
   editors: z.number().array(),

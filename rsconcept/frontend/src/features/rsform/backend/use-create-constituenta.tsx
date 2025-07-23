@@ -14,9 +14,8 @@ export const useCreateConstituenta = () => {
     mutationKey: [KEYS.global_mutation, rsformsApi.baseKey, 'create-constituenta'],
     mutationFn: rsformsApi.createConstituenta,
     onSuccess: async data => {
+      updateTimestamp(data.schema.id, data.schema.time_update);
       client.setQueryData(rsformsApi.getRSFormQueryOptions({ itemID: data.schema.id }).queryKey, data.schema);
-      updateTimestamp(data.schema.id);
-
       await Promise.allSettled([
         client.invalidateQueries({ queryKey: [KEYS.oss] }),
         client.invalidateQueries({

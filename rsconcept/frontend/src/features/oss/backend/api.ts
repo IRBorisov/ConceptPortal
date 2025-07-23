@@ -18,6 +18,7 @@ import {
   type IOperationCreatedResponse,
   type IOperationSchemaDTO,
   type IOssLayout,
+  type IOssLayoutDTO,
   type IRelocateConstituentsDTO,
   type ITargetOperation,
   type IUpdateBlockDTO,
@@ -49,7 +50,7 @@ export const ossApi = {
   },
 
   updateLayout: ({ itemID, data, isSilent }: { itemID: number; data: IOssLayout; isSilent?: boolean }) =>
-    axiosPatch({
+    axiosPatch<IOssLayoutDTO, IOperationSchemaDTO>({
       endpoint: `/api/oss/${itemID}/update-layout`,
       request: {
         data: { data: data },
