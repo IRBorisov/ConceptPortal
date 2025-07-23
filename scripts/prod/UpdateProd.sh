@@ -6,8 +6,7 @@ git reset --hard origin/main
 
 /bin/bash "${BACKUP_SCRIPT}"
 
-docker compose --file "${COMPOSE_FILE}" up --build --detach
-docker compose --file "${COMPOSE_FILE}" restart
+docker compose --file "${COMPOSE_FILE}" up --build --detach --force-recreate
 docker compose --file "${COMPOSE_FILE}" restart nginx
 
 # Use this to prune caches
