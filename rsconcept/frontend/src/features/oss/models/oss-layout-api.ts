@@ -34,8 +34,10 @@ export class LayoutManager {
   newOperationPosition(data: ICreateSchemaDTO | ICreateSynthesisDTO | IImportSchemaDTO): Rectangle2D {
     const result = { ...data.position };
     const parentNode = this.layout.find(pos => pos.nodeID === `b${data.item_data.parent}`) ?? null;
+    const parentID = parentNode ? data.item_data.parent : null;
     const operations = this.layout.filter(pos => pos.nodeID.startsWith('o'));
-    if ('arguments' in data && data.arguments.length !== 0) {
+    const hasArguments = 'arguments' in data && data.arguments.length !== 0;
+    if (hasArguments) {
       const pos = calculatePositionFromArgs(
         operations.filter(node => data.arguments.includes(Number(node.nodeID.slice(1))))
       );
@@ -49,6 +51,16 @@ export class LayoutManager {
       result.x = pos.x;
       result.y = pos.y;
     }
+
+    const siblingBlocks = this.oss.blocks.filter(block => block.parent === parentID).map(block => block.nodeID);
+    preventOverlap(
+      result,
+      this.layout.filter(node => siblingBlocks.includes(node.nodeID)),
+      {
+        moveX: !hasArguments,
+        moveY: hasArguments
+      }
+    );
 
     preventOverlap(result, operations);
     this.extendParentBounds(parentNode, result);
@@ -65,6 +77,7 @@ export class LayoutManager {
       .map(id => this.layout.find(operation => operation.nodeID === `o${id}`))
       .filter(node => !!node);
     const parentNode = this.layout.find(pos => pos.nodeID === `b${data.item_data.parent}`) ?? null;
+    const parentID = parentNode ? data.item_data.parent : null;
 
     let result: Rectangle2D = { ...data.position };
 
@@ -82,25 +95,11 @@ export class LayoutManager {
     }
 
     if (block_nodes.length === 0 && operation_nodes.length === 0) {
-      if (parentNode) {
-        const siblings = this.oss.blocks
-          .filter(block => block.parent === data.item_data.parent)
-          .map(block => block.nodeID);
-        if (siblings.length > 0) {
-          preventOverlap(
-            result,
-            this.layout.filter(node => siblings.includes(node.nodeID))
-          );
-        }
-      } else {
-        const rootBlocks = this.oss.blocks.filter(block => block.parent === null).map(block => block.nodeID);
-        if (rootBlocks.length > 0) {
-          preventOverlap(
-            result,
-            this.layout.filter(node => rootBlocks.includes(node.nodeID))
-          );
-        }
-      }
+      const siblings = this.oss.blocks.filter(block => block.parent === parentID).map(block => block.nodeID);
+      preventOverlap(
+        result,
+        this.layout.filter(node => siblings.includes(node.nodeID))
+      );
     }
 
     this.extendParentBounds(parentNode, result);
@@ -203,15 +202,26 @@ function rectanglesOverlap(a: Rectangle2D, b: Rectangle2D): boolean {
   );
 }
 
-function preventOverlap(target: Rectangle2D, fixedRectangles: Rectangle2D[]) {
+function preventOverlap(
+  target: Rectangle2D,
+  fixedRectangles: Rectangle2D[],
+  options: { moveX?: boolean; moveY?: boolean } = { moveX: true, moveY: true }
+) {
+  if ((!options.moveX && !options.moveY) || fixedRectangles.length === 0) {
+    return;
+  }
   let hasOverlap: boolean;
   do {
     hasOverlap = false;
     for (const fixed of fixedRectangles) {
       if (rectanglesOverlap(target, fixed)) {
         hasOverlap = true;
-        target.x += MIN_DISTANCE;
-        target.y += MIN_DISTANCE;
+        if (options.moveX) {
+          target.x += MIN_DISTANCE;
+        }
+        if (options.moveY) {
+          target.y += MIN_DISTANCE;
+        }
         break;
       }
     }
