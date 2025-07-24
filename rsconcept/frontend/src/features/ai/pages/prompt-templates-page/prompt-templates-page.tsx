@@ -14,7 +14,7 @@ import { useModificationStore } from '@/stores/modification';
 import { PromptTabID, TemplatesTabs } from './templates-tabs';
 
 const paramsSchema = z.strictObject({
-  tab: z.preprocess(v => (v ? Number(v) : undefined), z.nativeEnum(PromptTabID).default(PromptTabID.LIST)),
+  tab: z.preprocess(v => (v ? Number(v) : undefined), z.enum(PromptTabID).default(PromptTabID.LIST)),
   active: z.preprocess(v => (v ? Number(v) : undefined), z.number().nullable().default(null))
 });
 

@@ -21,6 +21,7 @@ export function DescribeError({ error }: { error: ErrorData }) {
     return (
       <div>
         <p>Ошибка валидации данных</p>
+        {/* eslint-disable-next-line @typescript-eslint/no-base-to-string */}
         <PrettyJson data={JSON.parse(error.toString()) as unknown} />;
       </div>
     );

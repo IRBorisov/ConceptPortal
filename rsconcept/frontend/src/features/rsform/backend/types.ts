@@ -269,8 +269,8 @@ export const schemaCstType = z.enum(Object.values(CstType) as [CstType, ...CstTy
 export const schemaSyntax = z.enum(Object.values(Syntax) as [Syntax, ...Syntax[]]);
 export const schemaValueClass = z.enum(Object.values(ValueClass) as [ValueClass, ...ValueClass[]]);
 export const schemaParsingStatus = z.enum(Object.values(ParsingStatus) as [ParsingStatus, ...ParsingStatus[]]);
-export const schemaTokenID = z.nativeEnum(TokenID);
-export const schemaRSErrorType = z.nativeEnum(RSErrorType);
+export const schemaTokenID = z.enum(TokenID);
+export const schemaRSErrorType = z.enum(RSErrorType);
 
 export const schemaConstituentaBasics = z.strictObject({
   id: z.coerce.number(),

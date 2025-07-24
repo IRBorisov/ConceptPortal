@@ -40,7 +40,7 @@ const schemaEditReferenceState = z
       entity: z.string(),
       grams: z.array(schemaGrammeme)
     }),
-    syntactic: z.strictObject({ offset: z.coerce.number(), nominal: z.string() })
+    syntactic: z.strictObject({ offset: z.number(), nominal: z.string() })
   })
   .refine(
     data =>
@@ -92,7 +92,21 @@ export function DlgEditReference() {
   }
 
   function handleChangeTab(tab: number) {
-    methods.setValue('type', tab === TabID.ENTITY ? ReferenceType.ENTITY : ReferenceType.SYNTACTIC);
+    const type = tab === TabID.ENTITY ? ReferenceType.ENTITY : ReferenceType.SYNTACTIC;
+    methods.setValue('type', type);
+    if (type === ReferenceType.ENTITY) {
+      methods.setValue('entity', initEntityReference(initial));
+      methods.setValue('syntactic', {
+        offset: 0,
+        nominal: ''
+      });
+    } else {
+      methods.setValue('syntactic', initSyntacticReference(initial));
+      methods.setValue('entity', {
+        entity: '',
+        grams: []
+      });
+    }
     setActiveTab(tab as TabID);
   }
 

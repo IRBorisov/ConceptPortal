@@ -26,7 +26,7 @@ const paramsSchema = z.strictObject({
     .number()
     .nullish()
     .transform(v => v ?? undefined),
-  tab: z.preprocess(v => (v ? Number(v) : undefined), z.nativeEnum(RSTabID).default(RSTabID.CARD)),
+  tab: z.preprocess(v => (v ? Number(v) : undefined), z.enum(RSTabID).default(RSTabID.CARD)),
   activeID: z.coerce
     .number()
     .nullish()

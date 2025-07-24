@@ -22,7 +22,7 @@ import { OssTabs } from './oss-tabs';
 
 const paramsSchema = z.strictObject({
   id: z.coerce.number(),
-  tab: z.preprocess(v => (v ? Number(v) : undefined), z.nativeEnum(OssTabID).default(OssTabID.GRAPH))
+  tab: z.preprocess(v => (v ? Number(v) : undefined), z.enum(OssTabID).default(OssTabID.GRAPH))
 });
 
 export function OssPage() {
