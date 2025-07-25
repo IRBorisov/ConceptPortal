@@ -446,10 +446,11 @@ export function getRelocateCandidates(
     return [];
   }
 
-  const addedCst = schema.items.filter(item => !item.is_inherited);
   if (node.outputs.includes(destination)) {
-    return addedCst;
+    return schema.items;
   }
+
+  const addedCst = schema.items.filter(item => !item.is_inherited).map(cst => cst.id);
 
   const unreachableBases: number[] = [];
   for (const cst of schema.items.filter(item => item.is_inherited)) {
@@ -466,5 +467,7 @@ export function getRelocateCandidates(
     unreachableBases.push(cst.id);
   }
   const unreachable = schema.graph.expandAllOutputs(unreachableBases);
-  return addedCst.filter(cst => !unreachable.includes(cst.id));
+  return schema.items.filter(
+    cst => cst.parent_schema === destinationSchema || (addedCst.includes(cst.id) && !unreachable.includes(cst.id))
+  );
 }

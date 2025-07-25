@@ -35,18 +35,14 @@ export function DlgRelocateConstituents() {
   const { updateLayout: updatePositions } = useUpdateLayout();
   const { relocateConstituents } = useRelocateConstituents();
 
-  const {
-    handleSubmit,
-    control,
-    setValue,
-    formState: { isValid }
-  } = useForm<IRelocateConstituentsDTO>({
+  const { handleSubmit, control, setValue } = useForm<IRelocateConstituentsDTO>({
     resolver: zodResolver(schemaRelocateConstituents),
     defaultValues: {
       items: []
     },
     mode: 'onChange'
   });
+  const selected = useWatch({ control, name: 'items' });
   const destination = useWatch({ control, name: 'destination' });
   const destinationItem = destination ? libraryItems.find(item => item.id === destination) ?? null : null;
 
@@ -77,6 +73,11 @@ export function DlgRelocateConstituents() {
     return getRelocateCandidates(operation.id, destinationOperation!.id, sourceData.schema, oss);
   })();
 
+  const moveTarget = filteredConstituents
+    .filter(item => !item.is_inherited && selected.includes(item.id))
+    .map(item => item.id);
+  const isValid = moveTarget.length > 0;
+
   function toggleDirection() {
     setDirectionUp(prev => !prev);
     setValue('destination', null);
@@ -98,6 +99,7 @@ export function DlgRelocateConstituents() {
   }
 
   function onSubmit(data: IRelocateConstituentsDTO) {
+    data.items = moveTarget;
     if (!layout || JSON.stringify(layout) === JSON.stringify(oss.layout)) {
       return relocateConstituents(data);
     } else {
@@ -114,6 +116,7 @@ export function DlgRelocateConstituents() {
       header='Перенос конституент'
       submitText='Переместить'
       canSubmit={isValid && destinationItem !== undefined}
+      submitInvalidTooltip='Необходимо выбрать хотя бы одну собственную конституенту'
       onSubmit={event => void handleSubmit(onSubmit)(event)}
       className='w-160 h-132 py-3 px-6'
       helpTopic={HelpTopic.UI_RELOCATE_CST}

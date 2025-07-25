@@ -180,8 +180,7 @@ export const ossApi = {
     }),
 
   relocateConstituents: (data: IRelocateConstituentsDTO) =>
-    axiosPost<IRelocateConstituentsDTO, IOperationSchemaDTO>({
-      schema: schemaOperationSchema,
+    axiosPost<IRelocateConstituentsDTO>({
       endpoint: `/api/oss/relocate-constituents`,
       request: {
         data: data,

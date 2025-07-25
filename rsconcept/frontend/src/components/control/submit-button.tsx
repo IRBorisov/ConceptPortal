@@ -1,3 +1,5 @@
+import { globalIDs } from '@/utils/constants';
+
 import { type Button } from '../props';
 import { cn } from '../utils';
 
@@ -15,7 +17,17 @@ interface SubmitButtonProps extends Button {
 /**
  * Displays submit type button with icon and text.
  */
-export function SubmitButton({ text = 'ОК', icon, disabled, loading, className, ...restProps }: SubmitButtonProps) {
+export function SubmitButton({
+  text = 'ОК',
+  icon,
+  title,
+  titleHtml,
+  hideTitle,
+  disabled,
+  loading,
+  className,
+  ...restProps
+}: SubmitButtonProps) {
   return (
     <button
       type='submit'
@@ -28,6 +40,10 @@ export function SubmitButton({ text = 'ОК', icon, disabled, loading, className
         loading && 'cursor-progress',
         className
       )}
+      data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}
+      data-tooltip-html={titleHtml}
+      data-tooltip-content={title}
+      data-tooltip-hidden={hideTitle}
       disabled={disabled || loading}
       {...restProps}
     >
