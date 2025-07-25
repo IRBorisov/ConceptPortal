@@ -19,7 +19,7 @@ const SIDELIST_LAYOUT_THRESHOLD = 768; // px
 
 export function EditorOssCard() {
   const { schema, isMutable, deleteSchema } = useOssEdit();
-  const { isModified } = useModificationStore();
+  const isModified = useModificationStore(state => state.isModified);
   const showOSSStats = usePreferencesStore(state => state.showOSSStats);
   const windowSize = useWindowSize();
   const isNarrow = !!windowSize.width && windowSize.width <= SIDELIST_LAYOUT_THRESHOLD;

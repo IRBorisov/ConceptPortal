@@ -64,7 +64,7 @@ export function ToolbarConstituenta({
 
   const showList = usePreferencesStore(state => state.showCstSideList);
   const toggleList = usePreferencesStore(state => state.toggleShowCstSideList);
-  const { isModified } = useModificationStore();
+  const isModified = useModificationStore(state => state.isModified);
   const isProcessing = useMutatingRSForm();
 
   function viewPredecessor(target: number) {

@@ -39,7 +39,7 @@ export function ToolbarItemCard({
 }: ToolbarItemCardProps) {
   const role = useRoleStore(state => state.role);
   const router = useConceptNavigation();
-  const { isModified } = useModificationStore();
+  const isModified = useModificationStore(state => state.isModified);
   const isProcessing = useMutatingLibrary();
   const canSave = isModified && !isProcessing;
 

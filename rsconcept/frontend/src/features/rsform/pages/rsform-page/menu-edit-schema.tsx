@@ -29,7 +29,7 @@ import { useRSEdit } from './rsedit-context';
 
 export function MenuEditSchema() {
   const { isAnonymous } = useAuthSuspense();
-  const { isModified } = useModificationStore();
+  const isModified = useModificationStore(state => state.isModified);
   const router = useConceptNavigation();
   const menu = useDropdown();
   const { schema, activeCst, setSelected, isArchive, isContentEditable, promptTemplate, deselectAll } = useRSEdit();

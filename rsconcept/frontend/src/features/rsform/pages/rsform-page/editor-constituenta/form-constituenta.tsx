@@ -42,7 +42,8 @@ interface FormConstituentaProps {
 }
 
 export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst, onOpenEdit }: FormConstituentaProps) {
-  const { isModified, setIsModified } = useModificationStore();
+  const isModified = useModificationStore(state => state.isModified);
+  const setIsModified = useModificationStore(state => state.setIsModified);
   const isProcessing = useMutatingRSForm();
 
   const { updateConstituenta: cstUpdate } = useUpdateConstituenta();

@@ -47,7 +47,7 @@ export function RSFormPage() {
     activeID: query.get('active')
   });
 
-  const { isModified } = useModificationStore();
+  const isModified = useModificationStore(state => state.isModified);
   useBlockNavigation(isModified);
 
   if (!urlData.id) {

@@ -43,7 +43,7 @@ export function EditorLibraryItem({ schema, isAttachedToOSS }: EditorLibraryItem
   const setGlobalLocation = useLibrarySearchStore(state => state.setLocation);
 
   const isProcessing = useMutatingLibrary();
-  const { isModified } = useModificationStore();
+  const isModified = useModificationStore(state => state.isModified);
 
   const { setOwner } = useSetOwner();
   const { setLocation } = useSetLocation();

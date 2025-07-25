@@ -19,7 +19,7 @@ const SIDELIST_LAYOUT_THRESHOLD = 768; // px
 
 export function EditorRSFormCard() {
   const { schema, isMutable, deleteSchema, isAttachedToOSS } = useRSEdit();
-  const { isModified } = useModificationStore();
+  const isModified = useModificationStore(state => state.isModified);
   const showRSFormStats = usePreferencesStore(state => state.showRSFormStats);
   const windowSize = useWindowSize();
   const isNarrow = !!windowSize.width && windowSize.width <= SIDELIST_LAYOUT_THRESHOLD;

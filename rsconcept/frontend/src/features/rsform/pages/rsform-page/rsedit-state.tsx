@@ -47,7 +47,7 @@ export const RSEditState = ({
 
   const { user } = useAuthSuspense();
   const { schema } = useRSFormSuspense({ itemID: itemID, version: activeVersion });
-  const { isModified } = useModificationStore();
+  const isModified = useModificationStore(state => state.isModified);
 
   const isOwned = !!user.id && user.id === schema.owner;
   const isArchive = !!activeVersion;

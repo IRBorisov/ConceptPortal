@@ -3,6 +3,7 @@ import { Outlet } from 'react-router';
 import clsx from 'clsx';
 
 import { ModalLoader } from '@/components/modal';
+import { useBrowserNavigation } from '@/hooks/use-browser-navigation';
 import { useAppLayoutStore, useMainHeight, useViewportHeight } from '@/stores/app-layout';
 import { useDialogsStore } from '@/stores/dialogs';
 
@@ -16,6 +17,8 @@ import { MutationErrors } from './mutation-errors';
 import { Navigation } from './navigation';
 
 export function ApplicationLayout() {
+  useBrowserNavigation();
+
   const mainHeight = useMainHeight();
   const viewportHeight = useViewportHeight();
   const noNavigationAnimation = useAppLayoutStore(state => state.noNavigationAnimation);

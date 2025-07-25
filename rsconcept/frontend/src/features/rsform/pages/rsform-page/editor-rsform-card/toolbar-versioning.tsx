@@ -20,7 +20,7 @@ interface ToolbarVersioningProps {
 }
 
 export function ToolbarVersioning({ blockReload, className }: ToolbarVersioningProps) {
-  const { isModified } = useModificationStore();
+  const isModified = useModificationStore(state => state.isModified);
   const { restoreVersion: versionRestore } = useRestoreVersion();
   const { schema, isMutable, isContentEditable, navigateVersion, activeVersion, selected } = useRSEdit();
 

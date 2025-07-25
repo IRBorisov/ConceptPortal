@@ -26,7 +26,7 @@ export function PromptTemplatesPage() {
     active: query.get('active')
   });
 
-  const { isModified } = useModificationStore();
+  const isModified = useModificationStore(state => state.isModified);
   useBlockNavigation(isModified);
 
   return (

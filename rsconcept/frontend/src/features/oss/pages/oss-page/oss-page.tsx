@@ -37,7 +37,7 @@ export function OssPage() {
     tab: query.get('tab')
   });
 
-  const { isModified } = useModificationStore();
+  const isModified = useModificationStore(state => state.isModified);
   useBlockNavigation(isModified);
 
   if (!urlData.id) {

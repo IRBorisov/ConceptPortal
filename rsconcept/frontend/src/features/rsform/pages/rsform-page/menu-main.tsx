@@ -40,7 +40,7 @@ export function MenuMain() {
   const { user, isAnonymous } = useAuthSuspense();
 
   const role = useRoleStore(state => state.role);
-  const { isModified } = useModificationStore();
+  const isModified = useModificationStore(state => state.isModified);
 
   const { download } = useDownloadRSForm();
 

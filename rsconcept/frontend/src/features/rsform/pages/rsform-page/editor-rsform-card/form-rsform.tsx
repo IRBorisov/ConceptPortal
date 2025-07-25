@@ -30,7 +30,7 @@ import { ToolbarVersioning } from './toolbar-versioning';
 export function FormRSForm() {
   const router = useConceptNavigation();
   const { updateItem: updateSchema } = useUpdateItem();
-  const { setIsModified } = useModificationStore();
+  const setIsModified = useModificationStore(state => state.setIsModified);
   const isProcessing = useMutatingRSForm();
   const { schema, isAttachedToOSS, isContentEditable } = useRSEdit();
 

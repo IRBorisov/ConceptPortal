@@ -20,7 +20,8 @@ import { useOssEdit } from '../oss-edit-context';
 
 export function FormOSS() {
   const { updateItem: updateOss } = useUpdateItem();
-  const { isModified, setIsModified } = useModificationStore();
+  const isModified = useModificationStore(state => state.isModified);
+  const setIsModified = useModificationStore(state => state.setIsModified);
   const isProcessing = useMutatingOss();
   const { schema, isMutable } = useOssEdit();
 

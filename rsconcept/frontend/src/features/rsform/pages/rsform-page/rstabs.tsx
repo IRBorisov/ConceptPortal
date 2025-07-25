@@ -24,7 +24,7 @@ export function RSTabs({ activeID, activeTab }: RSTabsProps) {
   const router = useConceptNavigation();
 
   const hideFooter = useAppLayoutStore(state => state.hideFooter);
-  const { setIsModified } = useModificationStore();
+  const setIsModified = useModificationStore(state => state.setIsModified);
   const { schema, selected, setSelected, deselectAll, navigateRSForm } = useRSEdit();
 
   useLayoutEffect(() => {
