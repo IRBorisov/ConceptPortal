@@ -36,25 +36,24 @@ export function SelectGraphFilter({ value, dense, className, onChange, ...restPr
         onClick={menu.toggle}
       />
       <Dropdown stretchLeft isOpen={menu.isOpen} margin='mt-3'>
-        {Object.values(DependencyMode)
-          .filter(value => !isNaN(Number(value)))
-          .map((value, index) => {
-            const source = value as DependencyMode;
-            return (
-              <DropdownButton
-                key={`${prefixes.cst_source_list}${index}`}
-                className={!dense ? 'w-72' : undefined}
-                icon={<IconDependencyMode value={source} size='1rem' />}
-                onClick={() => handleChange(source)}
-              >
-                {!dense ? (
-                  <span>
-                    <b>{labelCstSource(source)}:</b> {describeCstSource(source)}
-                  </span>
-                ) : null}
-              </DropdownButton>
-            );
-          })}
+        {Object.values(DependencyMode).map((value, index) => {
+          const source = value as DependencyMode;
+          return (
+            <DropdownButton
+              key={`${prefixes.cst_source_list}${index}`}
+              className={!dense ? 'w-72' : undefined}
+              title={dense ? labelCstSource(source) : undefined}
+              icon={<IconDependencyMode value={source} size='1rem' />}
+              onClick={() => handleChange(source)}
+            >
+              {!dense ? (
+                <span>
+                  <b>{labelCstSource(source)}:</b> {describeCstSource(source)}
+                </span>
+              ) : null}
+            </DropdownButton>
+          );
+        })}
       </Dropdown>
     </div>
   );

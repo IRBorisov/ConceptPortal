@@ -8,7 +8,7 @@ import { useTermGraphStore } from '../../stores/term-graph';
 
 interface ToolbarFocusedCstProps {
   className?: string;
-  focus: IConstituenta | null;
+  focus: IConstituenta;
   resetFocus: () => void;
 }
 
@@ -16,10 +16,6 @@ export function ToolbarFocusedCst({ focus, resetFocus, className }: ToolbarFocus
   const filter = useTermGraphStore(state => state.filter);
   const toggleFocusInputs = useTermGraphStore(state => state.toggleFocusInputs);
   const toggleFocusOutputs = useTermGraphStore(state => state.toggleFocusOutputs);
-
-  if (!focus) {
-    return null;
-  }
 
   return (
     <div className={cn('flex items-center cc-icons', className)}>

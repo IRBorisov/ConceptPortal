@@ -35,25 +35,24 @@ export function SelectMatchMode({ value, dense, className, onChange, ...restProp
         onClick={menu.toggle}
       />
       <Dropdown stretchLeft isOpen={menu.isOpen} margin='mt-3'>
-        {Object.values(CstMatchMode)
-          .filter(value => !isNaN(Number(value)))
-          .map((value, index) => {
-            const matchMode = value as CstMatchMode;
-            return (
-              <DropdownButton
-                key={`${prefixes.cst_source_list}${index}`}
-                className={!dense ? 'w-80' : undefined}
-                icon={<IconCstMatchMode value={matchMode} size='1rem' />}
-                onClick={() => handleChange(matchMode)}
-              >
-                {!dense ? (
-                  <span>
-                    <b>{labelCstMatchMode(matchMode)}:</b> {describeCstMatchMode(matchMode)}
-                  </span>
-                ) : null}
-              </DropdownButton>
-            );
-          })}
+        {Object.values(CstMatchMode).map((value, index) => {
+          const matchMode = value as CstMatchMode;
+          return (
+            <DropdownButton
+              key={`${prefixes.cst_source_list}${index}`}
+              className={!dense ? 'w-80' : undefined}
+              title={dense ? labelCstMatchMode(matchMode) : undefined}
+              icon={<IconCstMatchMode value={matchMode} size='1rem' />}
+              onClick={() => handleChange(matchMode)}
+            >
+              {!dense ? (
+                <span>
+                  <b>{labelCstMatchMode(matchMode)}:</b> {describeCstMatchMode(matchMode)}
+                </span>
+              ) : null}
+            </DropdownButton>
+          );
+        })}
       </Dropdown>
     </div>
   );

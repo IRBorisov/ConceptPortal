@@ -55,7 +55,7 @@ const labelColoringRecord: Record<GraphColoring, string> = {
 };
 
 const labelCstMatchModeRecord: Record<CstMatchMode, string> = {
-  [CstMatchMode.ALL]: 'общий',
+  [CstMatchMode.ALL]: 'фильтр',
   [CstMatchMode.EXPR]: 'выражение',
   [CstMatchMode.TERM]: 'термин',
   [CstMatchMode.TEXT]: 'текст',
@@ -68,6 +68,14 @@ const describeCstMatchModeRecord: Record<CstMatchMode, string> = {
   [CstMatchMode.TERM]: 'термин',
   [CstMatchMode.TEXT]: 'определение и конвенция',
   [CstMatchMode.NAME]: 'только имена'
+};
+
+const labelCstSourceRecord: Record<DependencyMode, string> = {
+  [DependencyMode.ALL]: 'граф',
+  [DependencyMode.OUTPUTS]: 'потребители',
+  [DependencyMode.INPUTS]: 'поставщики',
+  [DependencyMode.EXPAND_OUTPUTS]: 'зависимые',
+  [DependencyMode.EXPAND_INPUTS]: 'влияющие'
 };
 
 const describeCstSourceRecord: Record<DependencyMode, string> = {
@@ -254,14 +262,6 @@ const describeTokenRecord: Partial<Record<TokenID, string>> = {
   [TokenID.DEBOOL]: prepareTooltip('Десинглетон', 'Alt + V'),
   [TokenID.ASSIGN]: prepareTooltip('Присвоение', 'Alt + Shift + 6'),
   [TokenID.ITERATE]: prepareTooltip('Перебор элементов множества', 'Alt + 6')
-};
-
-const labelCstSourceRecord: Record<DependencyMode, string> = {
-  [DependencyMode.ALL]: 'не ограничен',
-  [DependencyMode.OUTPUTS]: 'потребители',
-  [DependencyMode.INPUTS]: 'поставщики',
-  [DependencyMode.EXPAND_OUTPUTS]: 'зависимые',
-  [DependencyMode.EXPAND_INPUTS]: 'влияющие'
 };
 
 /**

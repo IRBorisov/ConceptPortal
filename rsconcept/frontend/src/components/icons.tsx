@@ -106,6 +106,7 @@ export { LuDatabase       as IconDatabase }       from 'react-icons/lu';
 export { LuView           as IconDBStructure }    from 'react-icons/lu';  
 export { LuPlaneTakeoff   as IconRESTapi }        from 'react-icons/lu';
 export { LuImage          as IconImage }          from 'react-icons/lu';
+export { PiFediverseLogo  as IconGraphSelection } from 'react-icons/pi';
 export { GoVersions       as IconVersions }       from 'react-icons/go';
 export { LuAtSign         as IconTerm }           from 'react-icons/lu';
 export { LuSubscript      as IconAlias }          from 'react-icons/lu';

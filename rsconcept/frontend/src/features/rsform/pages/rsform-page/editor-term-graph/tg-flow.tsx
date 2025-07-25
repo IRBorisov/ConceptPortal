@@ -168,8 +168,12 @@ export function TGFlow() {
     <div className='relative' tabIndex={-1} onKeyDown={handleKeyDown}>
       <div className='cc-tab-tools flex flex-col items-center rounded-b-2xl backdrop-blur-xs'>
         <ToolbarTermGraph />
-        <ToolbarFocusedCst focus={focusCst} resetFocus={() => setFocus(null)} />
-        {!focusCst ? (
+        {focusCst ? (
+          <ToolbarFocusedCst
+            focus={focusCst} //
+            resetFocus={() => setFocus(null)}
+          />
+        ) : (
           <ToolbarGraphSelection
             graph={schema.graph}
             isCore={cstID => {
@@ -180,7 +184,7 @@ export function TGFlow() {
             value={selected}
             onChange={handleSetSelected}
           />
-        ) : null}
+        )}
       </div>
 
       <div className='absolute z-pop top-24 sm:top-16 left-2 sm:left-3 w-54 flex flex-col pointer-events-none'>

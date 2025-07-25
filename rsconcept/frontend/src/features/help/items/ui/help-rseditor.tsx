@@ -4,6 +4,7 @@ import {
   IconDestroy,
   IconEdit,
   IconFilter,
+  IconGraphSelection,
   IconKeyboard,
   IconLeftOpen,
   IconMoveDown,
@@ -13,7 +14,6 @@ import {
   IconPredecessor,
   IconReset,
   IconSave,
-  IconSettings,
   IconStatusOK,
   IconTree,
   IconTypeGraph
@@ -66,8 +66,10 @@ export function HelpRSEditor() {
               <IconMoveUp className='inline-icon' /> <kbd>Alt + вверх/вниз</kbd>
             </li>
             <li>
-              <IconFilter className='inline-icon' />
-              <IconSettings className='inline-icon' /> фильтрация по графу термов
+              <IconFilter className='inline-icon' /> фильтрация по атрибутам
+            </li>
+            <li>
+              <IconGraphSelection className='inline-icon' /> фильтрация по графу термов
             </li>
             <li>
               <IconChild className='inline-icon' /> отображение наследованных

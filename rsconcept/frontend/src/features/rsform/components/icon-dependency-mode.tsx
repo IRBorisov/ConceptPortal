@@ -4,7 +4,7 @@ import {
   IconGraphExpand,
   IconGraphInputs,
   IconGraphOutputs,
-  IconSettings
+  IconGraphSelection
 } from '@/components/icons';
 
 import { DependencyMode } from '../stores/cst-search';
@@ -13,7 +13,7 @@ import { DependencyMode } from '../stores/cst-search';
 export function IconDependencyMode({ value, size = '1.25rem', className }: DomIconProps<DependencyMode>) {
   switch (value) {
     case DependencyMode.ALL:
-      return <IconSettings size={size} className={className} />;
+      return <IconGraphSelection size={size} className={className} />;
     case DependencyMode.OUTPUTS:
       return <IconGraphOutputs size={size} className={className ?? 'text-primary'} />;
     case DependencyMode.INPUTS:
