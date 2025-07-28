@@ -101,18 +101,15 @@ export function DlgEditOperation() {
             <TabOperation />
           </TabPanel>
 
-          {target.operation_type === OperationType.SYNTHESIS ? (
-            <TabPanel>
-              <TabArguments />
-            </TabPanel>
-          ) : null}
-          {target.operation_type === OperationType.SYNTHESIS ? (
-            <TabPanel>
+          <TabPanel>{target.operation_type === OperationType.SYNTHESIS ? <TabArguments /> : null}</TabPanel>
+
+          <TabPanel>
+            {target.operation_type === OperationType.SYNTHESIS ? (
               <Suspense fallback={<Loader />}>
                 <TabSubstitutions />
               </Suspense>
-            </TabPanel>
-          ) : null}
+            ) : null}
+          </TabPanel>
         </FormProvider>
       </Tabs>
     </ModalForm>

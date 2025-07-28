@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { type Edge, MarkerType, type Node, useEdgesState, useNodesState, useOnSelectionChange } from 'reactflow';
 
-import { DiagramFlow, useReactFlow, useStoreApi } from '@/components/flow/diagram-flow';
+import { DiagramFlow, useReactFlow } from '@/components/flow/diagram-flow';
 import { useMainHeight } from '@/stores/app-layout';
 import { PARAMETER } from '@/utils/constants';
 import { withPreventDefault } from '@/utils/utils';
@@ -12,10 +12,7 @@ import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { TGEdgeTypes } from '../../../components/term-graph/graph/tg-edge-types';
 import { TGNodeTypes } from '../../../components/term-graph/graph/tg-node-types';
 import { SelectColoring } from '../../../components/term-graph/select-coloring';
-import { ToolbarFocusedCst } from '../../../components/term-graph/toolbar-focused-cst';
-import { ToolbarGraphSelection } from '../../../components/toolbar-graph-selection';
 import { applyLayout, type TGNodeData } from '../../../models/graph-api';
-import { isBasicConcept } from '../../../models/rsform-api';
 import { useTermGraphStore } from '../../../stores/term-graph';
 import { useRSEdit } from '../rsedit-context';
 
@@ -36,20 +33,9 @@ export const flowOptions = {
 export function TGFlow() {
   const mainHeight = useMainHeight();
   const { fitView, viewportInitialized } = useReactFlow();
-  const store = useStoreApi();
-  const { addSelectedNodes } = store.getState();
   const isProcessing = useMutatingRSForm();
-  const {
-    isContentEditable,
-    schema,
-    selected,
-    setSelected,
-    promptDeleteCst,
-    focusCst,
-    setFocus,
-    deselectAll,
-    navigateCst
-  } = useRSEdit();
+  const { isContentEditable, schema, selected, setSelected, promptDeleteCst, focusCst, setFocus, navigateCst } =
+    useRSEdit();
 
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges] = useEdgesState<Edge>([]);
@@ -59,11 +45,8 @@ export function TGFlow() {
 
   function onSelectionChange({ nodes }: { nodes: Node[] }) {
     const ids = nodes.map(node => Number(node.id));
-    if (ids.length === 0) {
-      deselectAll();
-    } else {
-      setSelected(prev => [...prev.filter(nodeID => !filteredGraph.hasNode(nodeID)), ...ids]);
-    }
+
+    setSelected(prev => [...prev.filter(nodeID => !filteredGraph.hasNode(nodeID)), ...ids]);
   }
   useOnSelectionChange({
     onChange: onSelectionChange
@@ -130,11 +113,6 @@ export function TGFlow() {
     );
   }
 
-  function handleSetSelected(newSelection: number[]) {
-    setSelected(newSelection);
-    addSelectedNodes(newSelection.map(id => String(id)));
-  }
-
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     if (isProcessing) {
       return;
@@ -166,26 +144,7 @@ export function TGFlow() {
 
   return (
     <div className='relative' tabIndex={-1} onKeyDown={handleKeyDown}>
-      <div className='cc-tab-tools flex flex-col items-center rounded-b-2xl backdrop-blur-xs'>
-        <ToolbarTermGraph />
-        {focusCst ? (
-          <ToolbarFocusedCst
-            focus={focusCst} //
-            resetFocus={() => setFocus(null)}
-          />
-        ) : (
-          <ToolbarGraphSelection
-            graph={schema.graph}
-            isCore={cstID => {
-              const cst = schema.cstByID.get(cstID);
-              return !!cst && isBasicConcept(cst.cst_type);
-            }}
-            isOwned={schema.inheritance.length > 0 ? cstID => !schema.cstByID.get(cstID)?.is_inherited : undefined}
-            value={selected}
-            onChange={handleSetSelected}
-          />
-        )}
-      </div>
+      <ToolbarTermGraph className='cc-tab-tools' />
 
       <div className='absolute z-pop top-24 sm:top-16 left-2 sm:left-3 w-54 flex flex-col pointer-events-none'>
         <span className='px-2 pb-1 select-none whitespace-nowrap backdrop-blur-xs rounded-xl w-fit'>

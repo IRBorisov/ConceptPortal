@@ -73,7 +73,7 @@ export function DlgCreateSynthesis() {
 
   return (
     <ModalForm
-      header='Создание операции'
+      header='Создание операции синтеза'
       submitText='Создать'
       canSubmit={isValid}
       onSubmit={event => void methods.handleSubmit(onSubmit)(event)}

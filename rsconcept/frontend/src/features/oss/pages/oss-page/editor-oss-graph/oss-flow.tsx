@@ -77,7 +77,7 @@ export function OssFlow() {
     void updateLayout({ itemID: schema.id, data: getLayout() });
   }
 
-  function handleCreateOperation() {
+  function handleCreateSynthesis() {
     const targetPosition = screenToFlowPosition({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
     showCreateOperation({
       manager: new LayoutManager(schema, getLayout()),
@@ -184,13 +184,23 @@ export function OssFlow() {
       withPreventDefault(handleSavePositions)(event);
       return;
     }
-    if (event.altKey && event.code === 'Key1') {
-      withPreventDefault(handleCreateBlock)(event);
-      return;
-    }
-    if (event.altKey && event.code === 'Key2') {
-      withPreventDefault(handleCreateOperation)(event);
-      return;
+    if (event.altKey) {
+      if (event.code === 'Digit1') {
+        withPreventDefault(handleCreateBlock)(event);
+        return;
+      }
+      if (event.code === 'Digit2') {
+        withPreventDefault(handleCreateSynthesis)(event);
+        return;
+      }
+      if (event.code === 'Digit3') {
+        withPreventDefault(handleImportSchema)(event);
+        return;
+      }
+      if (event.code === 'Digit4') {
+        withPreventDefault(handleCreateSynthesis)(event);
+        return;
+      }
     }
     if (event.key === 'Delete') {
       withPreventDefault(handleDeleteSelected)(event);
@@ -220,7 +230,7 @@ export function OssFlow() {
         onCreateBlock={handleCreateBlock}
         onCreateSchema={handleCreateSchema}
         onImportSchema={handleImportSchema}
-        onCreateSynthesis={handleCreateOperation}
+        onCreateSynthesis={handleCreateSynthesis}
         onDelete={handleDeleteSelected}
         onResetPositions={resetGraph}
         openContextMenu={openContextMenu}

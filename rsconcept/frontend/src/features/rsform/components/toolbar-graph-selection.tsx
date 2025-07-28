@@ -1,4 +1,5 @@
 import { MiniButton } from '@/components/control';
+import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import {
   IconGraphCollapse,
   IconGraphCore,
@@ -7,6 +8,7 @@ import {
   IconGraphInverse,
   IconGraphMaximize,
   IconGraphOutputs,
+  IconGraphSelection,
   IconPredecessor,
   IconReset
 } from '@/components/icons';
@@ -31,6 +33,7 @@ export function ToolbarGraphSelection({
   onChange,
   ...restProps
 }: ToolbarGraphSelectionProps) {
+  const menu = useDropdown();
   const emptySelection = selected.length === 0;
 
   function handleSelectCore() {
@@ -43,61 +46,77 @@ export function ToolbarGraphSelection({
   }
 
   return (
-    <div className={cn('cc-icons', className)} {...restProps}>
+    <div className={cn('cc-icons items-center', className)} {...restProps}>
       <MiniButton
         title='Сбросить выделение'
         icon={<IconReset size='1.25rem' className='icon-primary' />}
         onClick={() => onChange([])}
         disabled={emptySelection}
       />
+      <div ref={menu.ref} onBlur={menu.handleBlur} className='flex items-center relative'>
+        <MiniButton
+          title='Выделить...'
+          hideTitle={menu.isOpen}
+          icon={<IconGraphSelection size='1.25rem' className='icon-primary' />}
+          onClick={menu.toggle}
+          disabled={emptySelection}
+        />
+        <Dropdown isOpen={menu.isOpen} className='-translate-x-1/2'>
+          <DropdownButton
+            text='Влияющие'
+            title='Выделить все влияющие'
+            icon={<IconGraphCollapse size='1.25rem' className='icon-primary' />}
+            onClick={() => onChange([...selected, ...graph.expandAllInputs(selected)])}
+            disabled={emptySelection}
+          />
+          <DropdownButton
+            text='Зависимые'
+            title='Выделить все зависимые'
+            icon={<IconGraphExpand size='1.25rem' className='icon-primary' />}
+            onClick={() => onChange([...selected, ...graph.expandAllOutputs(selected)])}
+            disabled={emptySelection}
+          />
+
+          <DropdownButton
+            text='Поставщики'
+            title='Выделить поставщиков'
+            icon={<IconGraphInputs size='1.25rem' className='icon-primary' />}
+            onClick={() => onChange([...selected, ...graph.expandInputs(selected)])}
+            disabled={emptySelection}
+          />
+          <DropdownButton
+            text='Потребители'
+            title='Выделить потребителей'
+            icon={<IconGraphOutputs size='1.25rem' className='icon-primary' />}
+            onClick={() => onChange([...selected, ...graph.expandOutputs(selected)])}
+            disabled={emptySelection}
+          />
+          <DropdownButton
+            text='Максимизация'
+            titleHtml='<b>Максимизация</b> <br/>дополнение выделения конституентами, <br/>зависимыми только от выделенных'
+            aria-label='Максимизация - дополнение выделения конституентами, зависимыми только от выделенных'
+            icon={<IconGraphMaximize size='1.25rem' className='icon-primary' />}
+            onClick={() => onChange(graph.maximizePart(selected))}
+            disabled={emptySelection}
+          />
+        </Dropdown>
+      </div>
+
       <MiniButton
-        title='Выделить все влияющие'
-        icon={<IconGraphCollapse size='1.25rem' className='icon-primary' />}
-        onClick={() => onChange([...selected, ...graph.expandAllInputs(selected)])}
-        disabled={emptySelection}
+        title='Выделить ядро'
+        icon={<IconGraphCore size='1.25rem' className='icon-primary' />}
+        onClick={handleSelectCore}
       />
       <MiniButton
-        title='Выделить все зависимые'
-        icon={<IconGraphExpand size='1.25rem' className='icon-primary' />}
-        onClick={() => onChange([...selected, ...graph.expandAllOutputs(selected)])}
-        disabled={emptySelection}
-      />
-      <MiniButton
-        titleHtml='<b>Максимизация</b> <br/>дополнение выделения конституентами, <br/>зависимыми только от выделенных'
-        aria-label='Максимизация - дополнение выделения конституентами, зависимыми только от выделенных'
-        icon={<IconGraphMaximize size='1.25rem' className='icon-primary' />}
-        onClick={() => onChange(graph.maximizePart(selected))}
-        disabled={emptySelection}
-      />
-      <MiniButton
-        title='Выделить поставщиков'
-        icon={<IconGraphInputs size='1.25rem' className='icon-primary' />}
-        onClick={() => onChange([...selected, ...graph.expandInputs(selected)])}
-        disabled={emptySelection}
-      />
-      <MiniButton
-        title='Выделить потребителей'
-        icon={<IconGraphOutputs size='1.25rem' className='icon-primary' />}
-        onClick={() => onChange([...selected, ...graph.expandOutputs(selected)])}
-        disabled={emptySelection}
+        title='Выделить собственные'
+        icon={<IconPredecessor size='1.25rem' className='icon-primary' />}
+        onClick={handleSelectOwned}
       />
       <MiniButton
         title='Инвертировать'
         icon={<IconGraphInverse size='1.25rem' className='icon-primary' />}
         onClick={() => onChange([...graph.nodes.keys()].filter(item => !selected.includes(item)))}
       />
-      <MiniButton
-        title='Выделить ядро'
-        icon={<IconGraphCore size='1.25rem' className='icon-primary' />}
-        onClick={handleSelectCore}
-      />
-      {isOwned ? (
-        <MiniButton
-          title='Выделить собственные'
-          icon={<IconPredecessor size='1.25rem' className='icon-primary' />}
-          onClick={handleSelectOwned}
-        />
-      ) : null}
     </div>
   );
 }

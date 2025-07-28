@@ -12,6 +12,7 @@ import {
   IconGraphInputs,
   IconGraphMaximize,
   IconGraphOutputs,
+  IconGraphSelection,
   IconNewItem,
   IconOSS,
   IconPredecessor,
@@ -101,6 +102,9 @@ export function HelpRSGraphTerm() {
         <div className='dense w-84'>
           <h2>Выделение</h2>
           <ul>
+            <li>
+              <IconGraphSelection className='inline-icon' /> выделить связанные...
+            </li>
             <li>
               <IconGraphCollapse className='inline-icon' /> все влияющие
             </li>
