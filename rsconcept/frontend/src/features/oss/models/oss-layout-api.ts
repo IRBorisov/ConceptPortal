@@ -7,7 +7,7 @@ import {
   type IOssLayout
 } from '../backend/types';
 
-import { type IOperationSchema } from './oss';
+import { type IOperationSchema, NodeType } from './oss';
 import { type Position2D, type Rectangle2D } from './oss-layout';
 
 export const GRID_SIZE = 10; // pixels - size of OSS grid
@@ -130,6 +130,100 @@ export class LayoutManager {
     }
 
     this.extendParentBounds(parentNode, targetNode);
+  }
+
+  /** Calculate closest node to the left */
+  selectLeft(targetID: string): string | null {
+    const targetNode = this.layout.find(pos => pos.nodeID === targetID);
+    if (!targetNode) {
+      return null;
+    }
+    const operationNodes = this.layout.filter(pos => pos.nodeID !== targetID && pos.nodeID.startsWith('o'));
+    const leftNodes = operationNodes.filter(pos => pos.x <= targetNode.x);
+    if (leftNodes.length === 0) {
+      return null;
+    }
+    const similarYNodes = leftNodes.filter(pos => Math.abs(pos.y - targetNode.y) <= MIN_DISTANCE);
+    let closestNode: typeof targetNode | null = null;
+    if (similarYNodes.length > 0) {
+      closestNode = similarYNodes.reduce((prev, curr) => (curr.x > prev.x ? curr : prev));
+    } else {
+      closestNode = findClosestNodeByDistance(leftNodes, targetNode);
+    }
+    return closestNode?.nodeID ?? null;
+  }
+
+  /** Calculate closest node to the right */
+  selectRight(targetID: string): string | null {
+    const targetNode = this.layout.find(pos => pos.nodeID === targetID);
+    if (!targetNode) {
+      return null;
+    }
+    const operationNodes = this.layout.filter(pos => pos.nodeID !== targetID && pos.nodeID.startsWith('o'));
+    const rightNodes = operationNodes.filter(pos => pos.x >= targetNode.x);
+    if (rightNodes.length === 0) {
+      return null;
+    }
+    const similarYNodes = rightNodes.filter(pos => Math.abs(pos.y - targetNode.y) <= MIN_DISTANCE);
+    let closestNode: typeof targetNode | null = null;
+    if (similarYNodes.length > 0) {
+      closestNode = similarYNodes.reduce((prev, curr) => (curr.x < prev.x ? curr : prev));
+    } else {
+      closestNode = findClosestNodeByDistance(rightNodes, targetNode);
+    }
+    return closestNode?.nodeID ?? null;
+  }
+
+  /** Calculate closest node upwards */
+  selectUp(targetID: string): string | null {
+    const targetNode = this.layout.find(pos => pos.nodeID === targetID);
+    if (!targetNode) {
+      return null;
+    }
+
+    const operationNodes = this.layout.filter(pos => pos.nodeID !== targetID && pos.nodeID.startsWith('o'));
+    const upperNodes = operationNodes.filter(pos => pos.y <= targetNode.y - MIN_DISTANCE);
+    const targetOperation = this.oss.itemByNodeID.get(targetID);
+    if (upperNodes.length === 0 || !targetOperation || targetOperation.nodeType === NodeType.BLOCK) {
+      return null;
+    }
+
+    const predecessors = this.oss.graph.expandAllInputs([targetOperation.id]);
+    const predecessorNodes = upperNodes.filter(pos => predecessors.includes(Number(pos.nodeID.slice(1))));
+
+    let closestNode: typeof targetNode | null = null;
+    if (predecessorNodes.length > 0) {
+      closestNode = findClosestNodeByDistance(predecessorNodes, targetNode);
+    } else {
+      closestNode = findClosestNodeByDistance(upperNodes, targetNode);
+    }
+    return closestNode?.nodeID ?? null;
+  }
+
+  /** Calculate closest node downwards */
+  selectDown(targetID: string): string | null {
+    const targetNode = this.layout.find(pos => pos.nodeID === targetID);
+    if (!targetNode) {
+      return null;
+    }
+
+    const operationNodes = this.layout.filter(pos => pos.nodeID !== targetID && pos.nodeID.startsWith('o'));
+    const lowerNodes = operationNodes.filter(pos => pos.y >= targetNode.y - MIN_DISTANCE);
+    const targetOperation = this.oss.itemByNodeID.get(targetID);
+    if (lowerNodes.length === 0 || !targetOperation || targetOperation.nodeType === NodeType.BLOCK) {
+      return null;
+    }
+
+    const descendants = this.oss.graph.expandAllOutputs([targetOperation.id]);
+    const descendantsNodes = lowerNodes.filter(pos => descendants.includes(Number(pos.nodeID.slice(1))));
+
+    let closestNode: typeof targetNode | null = null;
+    if (descendantsNodes.length > 0) {
+      closestNode = findClosestNodeByDistance(descendantsNodes, targetNode);
+    } else {
+      closestNode = findClosestNodeByDistance(lowerNodes, targetNode);
+    }
+    return closestNode?.nodeID ?? null;
   }
 
   private extendParentBounds(parent: INodePosition | null, child: Rectangle2D) {
@@ -263,4 +357,17 @@ function calculatePositionFromChildren(
     width: right - left,
     height: bottom - top
   };
+}
+
+function findClosestNodeByDistance(nodes: INodePosition[], target: INodePosition): INodePosition | null {
+  let minDist = Infinity;
+  let minNode = null;
+  for (const curr of nodes) {
+    const currDist = Math.hypot(curr.x - target.x, curr.y - target.y);
+    if (currDist < minDist) {
+      minDist = currDist;
+      minNode = curr;
+    }
+  }
+  return minNode;
 }

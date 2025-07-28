@@ -45,7 +45,8 @@ export const flowOptions = {
 
 export function OssFlow() {
   const mainHeight = useMainHeight();
-  const { navigateOperationSchema, schema, selected, selectedItems, isMutable, canDeleteOperation } = useOssEdit();
+  const { navigateOperationSchema, schema, selected, setSelected, selectedItems, isMutable, canDeleteOperation } =
+    useOssEdit();
   const { screenToFlowPosition } = useReactFlow();
   const { containMovement, nodes, onNodesChange, edges, onEdgesChange, resetGraph, resetView } = useOssFlow();
   const store = useStoreApi();
@@ -169,6 +170,53 @@ export function OssFlow() {
     }
   }
 
+  function handleSelectLeft() {
+    const selectedOperation = selectedItems.find(item => item.nodeType === NodeType.OPERATION);
+    if (!selectedOperation) {
+      return;
+    }
+    const manager = new LayoutManager(schema, getLayout());
+    const newNodeID = manager.selectLeft(selectedOperation.nodeID);
+    if (newNodeID) {
+      setSelected([newNodeID]);
+    }
+  }
+
+  function handleSelectRight() {
+    const selectedOperation = selectedItems.find(item => item.nodeType === NodeType.OPERATION);
+    if (!selectedOperation) {
+      return;
+    }
+    const manager = new LayoutManager(schema, getLayout());
+    const newNodeID = manager.selectRight(selectedOperation.nodeID);
+    if (newNodeID) {
+      setSelected([newNodeID]);
+    }
+  }
+  function handleSelectUp() {
+    const selectedOperation = selectedItems.find(item => item.nodeType === NodeType.OPERATION);
+    if (!selectedOperation) {
+      return;
+    }
+    const manager = new LayoutManager(schema, getLayout());
+    const newNodeID = manager.selectUp(selectedOperation.nodeID);
+    if (newNodeID) {
+      setSelected([newNodeID]);
+    }
+  }
+
+  function handleSelectDown() {
+    const selectedOperation = selectedItems.find(item => item.nodeType === NodeType.OPERATION);
+    if (!selectedOperation) {
+      return;
+    }
+    const manager = new LayoutManager(schema, getLayout());
+    const newNodeID = manager.selectDown(selectedOperation.nodeID);
+    if (newNodeID) {
+      setSelected([newNodeID]);
+    }
+  }
+
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     if (isProcessing) {
       return;
@@ -202,8 +250,25 @@ export function OssFlow() {
         return;
       }
     }
-    if (event.key === 'Delete') {
+    if (event.code === 'Delete') {
       withPreventDefault(handleDeleteSelected)(event);
+      return;
+    }
+
+    if (event.code === 'ArrowLeft') {
+      withPreventDefault(handleSelectLeft)(event);
+      return;
+    }
+    if (event.code === 'ArrowRight') {
+      withPreventDefault(handleSelectRight)(event);
+      return;
+    }
+    if (event.code === 'ArrowUp') {
+      withPreventDefault(handleSelectUp)(event);
+      return;
+    }
+    if (event.code === 'ArrowDown') {
+      withPreventDefault(handleSelectDown)(event);
       return;
     }
   }

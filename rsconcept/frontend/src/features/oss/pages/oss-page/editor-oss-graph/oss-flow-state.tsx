@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { type Edge, type Node, useEdgesState, useNodesState, useOnSelectionChange, useReactFlow } from 'reactflow';
 
 import { PARAMETER } from '@/utils/constants';
@@ -18,8 +18,8 @@ const Z_BLOCK = 1;
 const Z_SCHEMA = 10;
 
 export const OssFlowState = ({ children }: React.PropsWithChildren) => {
-  const { schema, setSelected } = useOssEdit();
-  const { fitView } = useReactFlow();
+  const { schema, selected, setSelected } = useOssEdit();
+  const { fitView, viewportInitialized } = useReactFlow();
   const edgeAnimate = useOSSGraphStore(state => state.edgeAnimate);
   const edgeStraight = useOSSGraphStore(state => state.edgeStraight);
 
@@ -93,6 +93,20 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
 
   function resetView() {
     setTimeout(() => fitView(flowOptions.fitViewOptions), PARAMETER.refreshTimeout);
+  }
+
+  const prevSelected = useRef<string[]>([]);
+  if (
+    viewportInitialized &&
+    (prevSelected.current.length !== selected.length || prevSelected.current.some((id, i) => id !== selected[i]))
+  ) {
+    prevSelected.current = selected;
+    setNodes(prev =>
+      prev.map(node => ({
+        ...node,
+        selected: selected.includes(node.id)
+      }))
+    );
   }
 
   return (
