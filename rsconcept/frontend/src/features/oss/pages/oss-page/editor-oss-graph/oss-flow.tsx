@@ -86,7 +86,10 @@ export function OssFlow() {
       defaultY: targetPosition.y,
       initialInputs: selectedItems.filter(item => item?.nodeType === NodeType.OPERATION).map(item => item.id),
       initialParent: extractBlockParent(selectedItems),
-      onCreate: resetView
+      onCreate: newID => {
+        resetView();
+        setTimeout(() => setSelected([`o${newID}`]), PARAMETER.minimalTimeout);
+      }
     });
   }
 
@@ -100,7 +103,10 @@ export function OssFlow() {
       initialChildren:
         parent !== null && selectedItems.length === 1 && parent === selectedItems[0].id ? [] : selectedItems,
       initialParent: parent,
-      onCreate: resetView
+      onCreate: newID => {
+        resetView();
+        setTimeout(() => setSelected([`b${newID}`]), PARAMETER.minimalTimeout);
+      }
     });
   }
 
@@ -111,7 +117,10 @@ export function OssFlow() {
       defaultX: targetPosition.x,
       defaultY: targetPosition.y,
       initialParent: extractBlockParent(selectedItems),
-      onCreate: resetView
+      onCreate: newID => {
+        resetView();
+        setTimeout(() => setSelected([`o${newID}`]), PARAMETER.minimalTimeout);
+      }
     });
   }
 
@@ -122,7 +131,10 @@ export function OssFlow() {
       defaultX: targetPosition.x,
       defaultY: targetPosition.y,
       initialParent: extractBlockParent(selectedItems),
-      onCreate: resetView
+      onCreate: newID => {
+        resetView();
+        setTimeout(() => setSelected([`o${newID}`]), PARAMETER.minimalTimeout);
+      }
     });
   }
 
