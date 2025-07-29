@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+import { toggleTristateFlag } from '@/utils/utils';
+
 /** Represents graph dependency mode. */
 export const DependencyMode = {
   ALL: 0,
@@ -31,8 +33,11 @@ interface CstSearchStore {
   source: DependencyMode;
   setSource: (value: DependencyMode) => void;
 
-  includeInherited: boolean;
+  isInherited: boolean | null;
   toggleInherited: () => void;
+
+  isCrucial: boolean | null;
+  toggleCrucial: () => void;
 }
 
 export const useCstSearchStore = create<CstSearchStore>()(
@@ -44,15 +49,18 @@ export const useCstSearchStore = create<CstSearchStore>()(
       setMatch: value => set({ match: value }),
       source: DependencyMode.ALL,
       setSource: value => set({ source: value }),
-      includeInherited: true,
-      toggleInherited: () => set(state => ({ includeInherited: !state.includeInherited }))
+      isInherited: null,
+      toggleInherited: () => set(state => ({ isInherited: toggleTristateFlag(state.isInherited) })),
+      isCrucial: null,
+      toggleCrucial: () => set(state => ({ isCrucial: toggleTristateFlag(state.isCrucial) }))
     }),
     {
       version: 1,
       partialize: state => ({
         match: state.match,
         source: state.source,
-        includeInherited: state.includeInherited
+        isInherited: state.isInherited,
+        isCrucial: state.isCrucial
       }),
       name: 'portal.constituenta.search'
     }

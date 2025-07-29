@@ -6,11 +6,13 @@ export function useFilteredItems(schema: IRSForm, activeCst?: IConstituenta | nu
   const query = useCstSearchStore(state => state.query);
   const filterMatch = useCstSearchStore(state => state.match);
   const filterSource = useCstSearchStore(state => state.source);
-  const includeInherited = useCstSearchStore(state => state.includeInherited);
+  const showInherited = useCstSearchStore(state => state.isInherited);
+  const showCrucial = useCstSearchStore(state => state.isCrucial);
 
   const graphFiltered = activeCst ? applyGraphQuery(schema, activeCst.id, filterSource) : schema.items;
   const queryFiltered = query ? graphFiltered.filter(cst => matchConstituenta(cst, query, filterMatch)) : graphFiltered;
-  const items = !includeInherited ? queryFiltered.filter(cst => !cst.is_inherited) : queryFiltered;
+  let items = showInherited !== null ? queryFiltered.filter(cst => cst.is_inherited === showInherited) : queryFiltered;
+  items = showCrucial !== null ? items.filter(cst => cst.crucial === showCrucial) : items;
   return items;
 }
 
