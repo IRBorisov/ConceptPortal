@@ -169,7 +169,7 @@ This readme file is used mostly to document project dependencies and conventions
 
 This is the build for local Development
 
-- Install Python 3.12, NodeJS, VSCode, Docker Desktop
+- Install Docker Desktop, Python 3.12, NodeJS, VSCode or other compatible IDE
 - copy import wheels from ConceptCore to rsconcept/backend/import
 - run scripts/dev/LocalEnvSetup.ps1
 - use VSCode configs in root folder to start development
