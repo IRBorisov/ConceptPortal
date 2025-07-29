@@ -116,7 +116,8 @@ export function PickMultiConstituenta({
             const cst = schema.cstByID.get(cstID);
             return !!cst && isBasicConcept(cst.cst_type);
           }}
-          isOwned={cstID => !schema.cstByID.get(cstID)?.is_inherited}
+          isCrucial={cstID => schema.cstByID.get(cstID)?.crucial ?? false}
+          isInherited={cstID => schema.cstByID.get(cstID)?.is_inherited ?? false}
           value={value}
           onChange={onChange}
           className='w-fit'

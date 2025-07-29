@@ -42,6 +42,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             'load_trs',
             'create_cst',
             'update_cst',
+            'update_crucial',
             'move_cst',
             'delete_multiple_cst',
             'substitute',
@@ -135,6 +136,36 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         return Response(
             status=c.HTTP_200_OK,
             data=s.RSFormParseSerializer(schema.model).data
+        )
+
+    @extend_schema(
+        summary='update crucial attributes of a given list of constituents',
+        tags=['RSForm'],
+        request=s.CrucialUpdateSerializer,
+        responses={
+            c.HTTP_200_OK: s.RSFormParseSerializer,
+            c.HTTP_400_BAD_REQUEST: None,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
+    )
+    @action(detail=True, methods=['patch'], url_path='update-crucial')
+    def update_crucial(self, request: Request, pk) -> HttpResponse:
+        ''' Update crucial attributes of a given list of constituents. '''
+        model = self._get_item()
+        serializer = s.CrucialUpdateSerializer(data=request.data, partial=True, context={'schema': model})
+        serializer.is_valid(raise_exception=True)
+        value: bool = serializer.validated_data['value']
+
+        with transaction.atomic():
+            for cst in serializer.validated_data['target']:
+                cst.crucial = value
+                cst.save(update_fields=['crucial'])
+            model.save(update_fields=['time_update'])
+
+        return Response(
+            status=c.HTTP_200_OK,
+            data=s.RSFormParseSerializer(model).data
         )
 
     @extend_schema(

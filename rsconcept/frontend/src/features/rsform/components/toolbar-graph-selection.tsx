@@ -1,6 +1,9 @@
 import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import {
+  IconChild,
+  IconContextSelection,
+  IconCrucial,
   IconGraphCollapse,
   IconGraphCore,
   IconGraphExpand,
@@ -8,7 +11,7 @@ import {
   IconGraphInverse,
   IconGraphMaximize,
   IconGraphOutputs,
-  IconGraphSelection,
+  IconGroupSelection,
   IconPredecessor,
   IconReset
 } from '@/components/icons';
@@ -21,7 +24,8 @@ interface ToolbarGraphSelectionProps extends Styling {
   onChange: (newSelection: number[]) => void;
   graph: Graph;
   isCore: (item: number) => boolean;
-  isOwned?: (item: number) => boolean;
+  isCrucial: (item: number) => boolean;
+  isInherited: (item: number) => boolean;
 }
 
 export function ToolbarGraphSelection({
@@ -29,20 +33,66 @@ export function ToolbarGraphSelection({
   graph,
   value: selected,
   isCore,
-  isOwned,
+  isInherited,
+  isCrucial,
   onChange,
   ...restProps
 }: ToolbarGraphSelectionProps) {
-  const menu = useDropdown();
+  const selectedMenu = useDropdown();
+  const groupMenu = useDropdown();
   const emptySelection = selected.length === 0;
 
+  function handleSelectReset() {
+    onChange([]);
+  }
+
   function handleSelectCore() {
+    groupMenu.hide();
     const core = [...graph.nodes.keys()].filter(isCore);
     onChange([...core, ...graph.expandInputs(core)]);
   }
 
   function handleSelectOwned() {
-    if (isOwned) onChange([...graph.nodes.keys()].filter(isOwned));
+    groupMenu.hide();
+    onChange([...graph.nodes.keys()].filter((item: number) => !isInherited(item)));
+  }
+
+  function handleSelectInherited() {
+    groupMenu.hide();
+    onChange([...graph.nodes.keys()].filter(isInherited));
+  }
+
+  function handleSelectCrucial() {
+    groupMenu.hide();
+    onChange([...graph.nodes.keys()].filter(isCrucial));
+  }
+
+  function handleExpandOutputs() {
+    onChange([...selected, ...graph.expandOutputs(selected)]);
+  }
+
+  function handleExpandInputs() {
+    onChange([...selected, ...graph.expandInputs(selected)]);
+  }
+
+  function handleSelectMaximize() {
+    selectedMenu.hide();
+    onChange(graph.maximizePart(selected));
+  }
+
+  function handleSelectInvert() {
+    selectedMenu.hide();
+    onChange([...graph.nodes.keys()].filter(item => !selected.includes(item)));
+  }
+
+  function handleSelectAllInputs() {
+    selectedMenu.hide();
+    onChange([...graph.expandInputs(selected)]);
+  }
+
+  function handleSelectAllOutputs() {
+    selectedMenu.hide();
+    onChange([...graph.expandOutputs(selected)]);
   }
 
   return (
@@ -50,73 +100,99 @@ export function ToolbarGraphSelection({
       <MiniButton
         title='Сбросить выделение'
         icon={<IconReset size='1.25rem' className='icon-primary' />}
-        onClick={() => onChange([])}
+        onClick={handleSelectReset}
         disabled={emptySelection}
       />
-      <div ref={menu.ref} onBlur={menu.handleBlur} className='flex items-center relative'>
+
+      <div ref={selectedMenu.ref} onBlur={selectedMenu.handleBlur} className='flex items-center relative'>
         <MiniButton
-          title='Выделить...'
-          hideTitle={menu.isOpen}
-          icon={<IconGraphSelection size='1.25rem' className='icon-primary' />}
-          onClick={menu.toggle}
+          title='Выделить на основе выбранных...'
+          hideTitle={selectedMenu.isOpen}
+          icon={<IconContextSelection size='1.25rem' className='icon-primary' />}
+          onClick={selectedMenu.toggle}
           disabled={emptySelection}
         />
-        <Dropdown isOpen={menu.isOpen} className='-translate-x-1/2'>
-          <DropdownButton
-            text='Влияющие'
-            title='Выделить все влияющие'
-            icon={<IconGraphCollapse size='1.25rem' className='icon-primary' />}
-            onClick={() => onChange([...selected, ...graph.expandAllInputs(selected)])}
-            disabled={emptySelection}
-          />
-          <DropdownButton
-            text='Зависимые'
-            title='Выделить все зависимые'
-            icon={<IconGraphExpand size='1.25rem' className='icon-primary' />}
-            onClick={() => onChange([...selected, ...graph.expandAllOutputs(selected)])}
-            disabled={emptySelection}
-          />
-
+        <Dropdown isOpen={selectedMenu.isOpen} className='-translate-x-1/2'>
           <DropdownButton
             text='Поставщики'
             title='Выделить поставщиков'
             icon={<IconGraphInputs size='1.25rem' className='icon-primary' />}
-            onClick={() => onChange([...selected, ...graph.expandInputs(selected)])}
+            onClick={handleExpandInputs}
             disabled={emptySelection}
           />
           <DropdownButton
             text='Потребители'
             title='Выделить потребителей'
             icon={<IconGraphOutputs size='1.25rem' className='icon-primary' />}
-            onClick={() => onChange([...selected, ...graph.expandOutputs(selected)])}
+            onClick={handleExpandOutputs}
             disabled={emptySelection}
           />
+
+          <DropdownButton
+            text='Влияющие'
+            title='Выделить все влияющие'
+            icon={<IconGraphCollapse size='1.25rem' className='icon-primary' />}
+            onClick={handleSelectAllInputs}
+            disabled={emptySelection}
+          />
+          <DropdownButton
+            text='Зависимые'
+            title='Выделить все зависимые'
+            icon={<IconGraphExpand size='1.25rem' className='icon-primary' />}
+            onClick={handleSelectAllOutputs}
+            disabled={emptySelection}
+          />
+
           <DropdownButton
             text='Максимизация'
             titleHtml='<b>Максимизация</b> <br/>дополнение выделения конституентами, <br/>зависимыми только от выделенных'
             aria-label='Максимизация - дополнение выделения конституентами, зависимыми только от выделенных'
             icon={<IconGraphMaximize size='1.25rem' className='icon-primary' />}
-            onClick={() => onChange(graph.maximizePart(selected))}
+            onClick={handleSelectMaximize}
             disabled={emptySelection}
+          />
+          <DropdownButton
+            text='Инвертировать'
+            icon={<IconGraphInverse size='1.25rem' className='icon-primary' />}
+            onClick={handleSelectInvert}
           />
         </Dropdown>
       </div>
 
-      <MiniButton
-        title='Выделить ядро'
-        icon={<IconGraphCore size='1.25rem' className='icon-primary' />}
-        onClick={handleSelectCore}
-      />
-      <MiniButton
-        title='Выделить собственные'
-        icon={<IconPredecessor size='1.25rem' className='icon-primary' />}
-        onClick={handleSelectOwned}
-      />
-      <MiniButton
-        title='Инвертировать'
-        icon={<IconGraphInverse size='1.25rem' className='icon-primary' />}
-        onClick={() => onChange([...graph.nodes.keys()].filter(item => !selected.includes(item)))}
-      />
+      <div ref={groupMenu.ref} onBlur={groupMenu.handleBlur} className='flex items-center relative'>
+        <MiniButton
+          title='Выделить группу...'
+          hideTitle={groupMenu.isOpen}
+          icon={<IconGroupSelection size='1.25rem' className='icon-primary' />}
+          onClick={groupMenu.toggle}
+        />
+        <Dropdown isOpen={groupMenu.isOpen} className='-translate-x-1/2'>
+          <DropdownButton
+            text='ядро'
+            title='Выделить ядро'
+            icon={<IconGraphCore size='1.25rem' className='icon-primary' />}
+            onClick={handleSelectCore}
+          />
+          <DropdownButton
+            text='ключевые'
+            title='Выделить ключевые'
+            icon={<IconCrucial size='1.25rem' className='icon-primary' />}
+            onClick={handleSelectCrucial}
+          />
+          <DropdownButton
+            text='собственные'
+            title='Выделить собственные'
+            icon={<IconPredecessor size='1.25rem' className='icon-primary' />}
+            onClick={handleSelectOwned}
+          />
+          <DropdownButton
+            text='наследники'
+            title='Выделить наследников'
+            icon={<IconChild size='1.25rem' className='icon-primary' />}
+            onClick={handleSelectInherited}
+          />
+        </Dropdown>
+      </div>
     </div>
   );
 }

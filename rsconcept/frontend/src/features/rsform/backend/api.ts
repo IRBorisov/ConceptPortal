@@ -17,6 +17,7 @@ import {
   type IRSFormUploadDTO,
   type ISubstitutionsDTO,
   type IUpdateConstituentaDTO,
+  type IUpdateCrucialDTO,
   schemaConstituentaCreatedResponse,
   schemaExpressionParse,
   schemaProduceStructureResponse,
@@ -74,6 +75,15 @@ export const rsformsApi = {
     axiosPatch<IUpdateConstituentaDTO, IRSFormDTO>({
       schema: schemaRSForm,
       endpoint: `/api/rsforms/${itemID}/update-cst`,
+      request: {
+        data: data,
+        successMessage: infoMsg.changesSaved
+      }
+    }),
+  updateCrucial: ({ itemID, data }: { itemID: number; data: IUpdateCrucialDTO }) =>
+    axiosPatch<IUpdateCrucialDTO, IRSFormDTO>({
+      schema: schemaRSForm,
+      endpoint: `/api/rsforms/${itemID}/update-crucial`,
       request: {
         data: data,
         successMessage: infoMsg.changesSaved

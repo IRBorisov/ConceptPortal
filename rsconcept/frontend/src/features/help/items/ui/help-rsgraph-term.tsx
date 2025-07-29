@@ -1,6 +1,9 @@
 import { Divider } from '@/components/container';
 import {
+  IconChild,
   IconClustering,
+  IconContextSelection,
+  IconCrucial,
   IconDestroy,
   IconEdit,
   IconFilter,
@@ -12,7 +15,7 @@ import {
   IconGraphInputs,
   IconGraphMaximize,
   IconGraphOutputs,
-  IconGraphSelection,
+  IconGroupSelection,
   IconNewItem,
   IconOSS,
   IconPredecessor,
@@ -103,7 +106,7 @@ export function HelpRSGraphTerm() {
           <h2>Выделение</h2>
           <ul>
             <li>
-              <IconGraphSelection className='inline-icon' /> выделить связанные...
+              <IconContextSelection className='inline-icon' /> выделить связанные...
             </li>
             <li>
               <IconGraphCollapse className='inline-icon' /> все влияющие
@@ -121,11 +124,21 @@ export function HelpRSGraphTerm() {
               <IconGraphOutputs className='inline-icon' /> исходящие напрямую
             </li>
             <li>
+              <IconGroupSelection className='inline-icon' /> выделить группы...
+            </li>
+            <li>
               <IconGraphCore className='inline-icon' /> выделить <LinkTopic text='Ядро' topic={HelpTopic.CC_SYSTEM} />
+            </li>
+            <li>
+              <IconCrucial className='inline-icon' /> выделить ключевые
             </li>
             <li>
               <IconPredecessor className='inline-icon' /> выделить{' '}
               <LinkTopic text='собственные' topic={HelpTopic.CC_PROPAGATION} />
+            </li>
+            <li>
+              <IconChild className='inline-icon' /> выделить{' '}
+              <LinkTopic text='наследники' topic={HelpTopic.CC_PROPAGATION} />
             </li>
           </ul>
         </div>

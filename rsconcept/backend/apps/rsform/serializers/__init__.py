@@ -12,6 +12,7 @@ from .basics import (
     WordFormSerializer
 )
 from .data_access import (
+    CrucialUpdateSerializer,
     CstCreateSerializer,
     CstInfoSerializer,
     CstListSerializer,

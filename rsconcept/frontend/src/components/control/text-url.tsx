@@ -30,7 +30,7 @@ export function TextURL({ text, href, title, color = 'text-primary', onClick }: 
     );
   } else if (onClick) {
     return (
-      <button type='button' tabIndex={-1} className={design} onClick={onClick}>
+      <button type='button' tabIndex={-1} className={design} title={title} onClick={onClick}>
         {text}
       </button>
     );

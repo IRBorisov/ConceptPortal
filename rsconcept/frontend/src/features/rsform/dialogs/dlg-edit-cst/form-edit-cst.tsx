@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
+import { MiniButton } from '@/components/control';
 import { TextArea, TextInput } from '@/components/input';
 
 import { CstType, type IUpdateConstituentaDTO } from '../../backend/types';
+import { IconCrucialValue } from '../../components/icon-crucial-value';
 import { SelectCstType } from '../../components/select-cst-type';
 import { getRSDefinitionPlaceholder, labelCstTypification } from '../../labels';
 import { type IConstituenta, type IRSForm } from '../../models/rsform';
@@ -26,6 +28,7 @@ export function FormEditCst({ target, schema }: FormEditCstProps) {
 
   const cst_type = useWatch({ control, name: 'item_data.cst_type' }) ?? CstType.BASE;
   const convention = useWatch({ control, name: 'item_data.convention' });
+  const crucial = useWatch({ control, name: 'item_data.crucial' }) ?? false;
   const isBasic = isBasicConcept(cst_type);
   const isElementary = isBaseSet(cst_type);
   const isFunction = isFunctional(cst_type);
@@ -37,9 +40,18 @@ export function FormEditCst({ target, schema }: FormEditCstProps) {
     setForceComment(false);
   }
 
+  function handleToggleCrucial() {
+    setValue('item_data.crucial', !crucial);
+  }
+
   return (
     <>
       <div className='flex items-center self-center gap-3'>
+        <MiniButton
+          title='Ключевая конституента'
+          icon={<IconCrucialValue size='1.25rem' value={crucial} />}
+          onClick={handleToggleCrucial}
+        />
         <SelectCstType
           id='dlg_cst_type' //
           value={cst_type}

@@ -1,10 +1,10 @@
 import {
   IconChild,
   IconClone,
+  IconContextSelection,
+  IconCrucial,
   IconDestroy,
-  IconEdit,
   IconFilter,
-  IconGraphSelection,
   IconKeyboard,
   IconLeftOpen,
   IconMoveDown,
@@ -27,6 +27,13 @@ export function HelpRSEditor() {
   return (
     <div className='dense'>
       <h1>Редактор конституенты</h1>
+
+      <ul>
+        <li>
+          <IconCrucial className='inline-icon' /> статус ключевой конституенты
+        </li>
+      </ul>
+
       <div className='flex flex-col sm:flex-row sm:gap-3'>
         <div>
           <h2>Команды</h2>
@@ -69,7 +76,7 @@ export function HelpRSEditor() {
               <IconFilter className='inline-icon' /> фильтрация по атрибутам
             </li>
             <li>
-              <IconGraphSelection className='inline-icon' /> фильтрация по графу термов
+              <IconContextSelection className='inline-icon' /> фильтрация по графу термов
             </li>
             <li>
               <IconChild className='inline-icon' /> отображение наследованных
@@ -114,8 +121,7 @@ export function HelpRSEditor() {
       <h2>Термин и Текстовое определение</h2>
       <ul>
         <li>
-          <IconEdit className='inline-icon' /> редактирование{' '}
-          <LinkTopic text='Имени' topic={HelpTopic.CC_CONSTITUENTA} /> /{' '}
+          <kbd>Клик</kbd> редактирование <LinkTopic text='Имени' topic={HelpTopic.CC_CONSTITUENTA} /> /{' '}
           <LinkTopic text='Термина' topic={HelpTopic.CC_CONSTITUENTA} />
         </li>
         <li>

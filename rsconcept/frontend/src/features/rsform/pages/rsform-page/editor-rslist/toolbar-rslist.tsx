@@ -3,11 +3,13 @@
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 import { MiniSelectorOSS } from '@/features/library/components/mini-selector-oss';
+import { useUpdateCrucial } from '@/features/rsform/backend/use-update-crucial';
 
 import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import {
   IconClone,
+  IconCrucial,
   IconDestroy,
   IconMoveDown,
   IconMoveUp,
@@ -31,10 +33,12 @@ interface ToolbarRSListProps {
 
 export function ToolbarRSList({ className }: ToolbarRSListProps) {
   const isProcessing = useMutatingRSForm();
+  const { updateCrucial } = useUpdateCrucial();
   const menu = useDropdown();
   const {
     schema,
     selected,
+    activeCst,
     navigateOss,
     deselectAll,
     createCst,
@@ -45,6 +49,19 @@ export function ToolbarRSList({ className }: ToolbarRSListProps) {
     moveUp,
     moveDown
   } = useRSEdit();
+
+  function handleToggleCrucial() {
+    if (!activeCst) {
+      return;
+    }
+    void updateCrucial({
+      itemID: schema.id,
+      data: {
+        target: selected,
+        value: !activeCst.crucial
+      }
+    });
+  }
 
   return (
     <div className={cn('cc-icons items-start outline-hidden', className)}>
@@ -74,6 +91,13 @@ export function ToolbarRSList({ className }: ToolbarRSListProps) {
         icon={<IconMoveDown size='1.25rem' className='icon-primary' />}
         onClick={moveDown}
         disabled={isProcessing || selected.length === 0 || selected.length === schema.items.length}
+      />
+      <MiniButton
+        title='Ключевая конституента'
+        aria-label='Переключатель статуса ключевой конституенты'
+        icon={<IconCrucial size='1.25rem' className='icon-primary' />}
+        onClick={handleToggleCrucial}
+        disabled={isProcessing || selected.length === 0}
       />
       <div ref={menu.ref} onBlur={menu.handleBlur} className='relative'>
         <MiniButton

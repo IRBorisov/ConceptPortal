@@ -1,4 +1,4 @@
-import { IconChild } from '@/components/icons';
+import { IconChild, IconCrucial } from '@/components/icons';
 import { cn } from '@/components/utils';
 
 import { labelCstTypification } from '../labels';
@@ -15,6 +15,7 @@ export function InfoConstituenta({ data, className, ...restProps }: InfoConstitu
       <h2 className='cursor-default' title={data.is_inherited ? ' наследник' : undefined}>
         {data.alias}
         {data.is_inherited ? <IconChild size='1rem' className='inline-icon align-middle ml-1 mt-1' /> : null}
+        {data.crucial ? <IconCrucial size='1rem' className='inline-icon align-middle mt-1' /> : null}
       </h2>
       {data.term_resolved ? (
         <p>

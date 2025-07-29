@@ -8,5 +8,5 @@ from . import models
 class ConstituentaAdmin(admin.ModelAdmin):
     ''' Admin model: Constituenta. '''
     ordering = ['schema', 'order']
-    list_display = ['schema', 'order', 'alias', 'term_resolved', 'definition_resolved']
+    list_display = ['schema', 'order', 'alias', 'term_resolved', 'definition_resolved', 'crucial']
     search_fields = ['term_resolved', 'definition_resolved']

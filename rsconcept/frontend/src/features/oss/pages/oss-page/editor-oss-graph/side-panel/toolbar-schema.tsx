@@ -77,6 +77,7 @@ export function ToolbarSchema({
     const targetType = activeCst?.cst_type ?? CstType.BASE;
     const data: ICreateConstituentaDTO = {
       insert_after: activeCst?.id ?? null,
+      crucial: false,
       cst_type: targetType,
       alias: generateAlias(targetType, schema),
       term_raw: '',
@@ -96,6 +97,7 @@ export function ToolbarSchema({
       itemID: schema.id,
       data: {
         insert_after: activeCst.id,
+        crucial: activeCst.crucial,
         cst_type: activeCst.cst_type,
         alias: generateAlias(activeCst.cst_type, schema),
         term_raw: activeCst.term_raw,

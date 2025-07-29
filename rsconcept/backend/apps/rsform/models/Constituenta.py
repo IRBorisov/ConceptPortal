@@ -4,6 +4,7 @@ import re
 from cctext import extract_entities
 from django.db.models import (
     CASCADE,
+    BooleanField,
     CharField,
     ForeignKey,
     JSONField,
@@ -102,6 +103,10 @@ class Constituenta(Model):
         verbose_name='Текстовое определение',
         default='',
         blank=True
+    )
+    crucial = BooleanField(
+        verbose_name='Ключевая',
+        default=False
     )
 
     class Meta:

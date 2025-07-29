@@ -46,12 +46,13 @@ class CstUpdateSerializer(StrictSerializer):
         class Meta:
             ''' serializer metadata. '''
             model = Constituenta
-            fields = 'alias', 'cst_type', 'convention', 'definition_formal', 'definition_raw', 'term_raw', 'term_forms'
+            fields = 'alias', 'cst_type', 'convention', 'crucial', 'definition_formal', \
+                'definition_raw', 'term_raw', 'term_forms'
 
     target = PKField(
         many=False,
         queryset=Constituenta.objects.all().only(
-            'alias', 'cst_type', 'convention', 'definition_formal', 'definition_raw', 'term_raw')
+            'alias', 'cst_type', 'convention', 'crucial', 'definition_formal', 'definition_raw', 'term_raw')
     )
     item_data = ConstituentaUpdateData()
 
@@ -67,6 +68,24 @@ class CstUpdateSerializer(StrictSerializer):
             if cst.alias != new_alias and RSForm(schema).constituents().filter(alias=new_alias).exists():
                 raise serializers.ValidationError({
                     'alias': msg.aliasTaken(new_alias)
+                })
+        return attrs
+
+
+class CrucialUpdateSerializer(StrictSerializer):
+    ''' Serializer: update crucial status. '''
+    target = PKField(
+        many=True,
+        queryset=Constituenta.objects.all().only('crucial', 'schema_id')
+    )
+    value = serializers.BooleanField()
+
+    def validate(self, attrs):
+        schema = cast(LibraryItem, self.context['schema'])
+        for cst in attrs['target']:
+            if schema and cst.schema_id != schema.pk:
+                raise serializers.ValidationError({
+                    f'{cst.pk}': msg.constituentaNotInRSform(schema.title)
                 })
         return attrs
 
@@ -96,7 +115,7 @@ class CstCreateSerializer(StrictModelSerializer):
         ''' serializer metadata. '''
         model = Constituenta
         fields = \
-            'alias', 'cst_type', 'convention', \
+            'alias', 'cst_type', 'convention', 'crucial', \
             'term_raw', 'definition_raw', 'definition_formal', \
             'insert_after', 'term_forms'
 

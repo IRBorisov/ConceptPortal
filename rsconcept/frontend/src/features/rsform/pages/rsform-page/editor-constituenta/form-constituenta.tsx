@@ -6,8 +6,12 @@ import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { zodResolver } from '@hookform/resolvers/zod';
 
+import { useUpdateCrucial } from '@/features/rsform/backend/use-update-crucial';
+import { IconCrucialValue } from '@/features/rsform/components/icon-crucial-value';
+
 import { MiniButton, SubmitButton } from '@/components/control';
-import { IconChild, IconEdit, IconPredecessor, IconSave } from '@/components/icons';
+import { TextButton } from '@/components/control/text-button';
+import { IconChild, IconPredecessor, IconSave } from '@/components/icons';
 import { TextArea } from '@/components/input';
 import { Indicator } from '@/components/view';
 import { useDialogsStore } from '@/stores/dialogs';
@@ -46,7 +50,8 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
   const setIsModified = useModificationStore(state => state.setIsModified);
   const isProcessing = useMutatingRSForm();
 
-  const { updateConstituenta: cstUpdate } = useUpdateConstituenta();
+  const { updateConstituenta } = useUpdateConstituenta();
+  const { updateCrucial } = useUpdateCrucial();
   const showTypification = useDialogsStore(state => state.showShowTypeGraph);
   const showEditTerm = useDialogsStore(state => state.showEditWordForms);
   const showRenameCst = useDialogsStore(state => state.showRenameCst);
@@ -128,7 +133,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
   }
 
   function onSubmit(data: IUpdateConstituentaDTO) {
-    void cstUpdate({ itemID: schema.id, data }).then(() => {
+    void updateConstituenta({ itemID: schema.id, data }).then(() => {
       setIsModified(false);
       reset({ ...data });
     });
@@ -158,33 +163,48 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
     showRenameCst({ schema: schema, target: activeCst });
   }
 
-  return (
-    <form id={id} className='relative cc-column mt-1 px-6 py-1' onSubmit={event => void handleSubmit(onSubmit)(event)}>
-      {!disabled || isProcessing ? (
-        <MiniButton
-          title={isModified ? tooltipText.unsaved : 'Редактировать словоформы термина'}
-          aria-label='Редактировать словоформы термина'
-          onClick={handleEditTermForms}
-          className='absolute z-pop top-0 left-[calc(7ch+4px)]'
-          icon={<IconEdit size='1rem' className='icon-primary' />}
-          disabled={isModified}
-        />
-      ) : null}
+  function handleToggleCrucial() {
+    void updateCrucial({
+      itemID: schema.id,
+      data: {
+        target: [activeCst.id],
+        value: !activeCst.crucial
+      }
+    });
+  }
 
-      <div className='absolute z-pop top-0 left-[calc(7ch+4px+3rem)] flex select-none'>
-        <div className='pt-1 text-sm font-medium min-w-16 whitespace-nowrap select-text cursor-default'>
-          <span>Имя </span>
-          <span className='ml-1'>{activeCst?.alias ?? ''}</span>
+  return (
+    <form
+      id={id}
+      className='relative cc-column mt-1 px-6 pb-1 pt-8'
+      onSubmit={event => void handleSubmit(onSubmit)(event)}
+    >
+      <div className='absolute z-pop top-0 left-6 flex select-text font-medium whitespace-nowrap pt-1'>
+        <TextButton
+          text='Термин' //
+          title={disabled ? undefined : isModified ? tooltipText.unsaved : 'Редактировать словоформы термина'}
+          onClick={handleEditTermForms}
+          disabled={isModified || disabled}
+        />
+
+        <MiniButton
+          title={activeCst.crucial ? 'Ключевая: да' : 'Ключевая: нет'}
+          className='ml-6 mr-1 -mt-0.75'
+          aria-label='Переключатель статуса ключевой конституенты'
+          icon={<IconCrucialValue size='1rem' value={activeCst.crucial} />}
+          onClick={handleToggleCrucial}
+          disabled={disabled || isProcessing || isModified}
+        />
+
+        <TextButton
+          text='Имя' //
+          title={disabled ? undefined : isModified ? tooltipText.unsaved : 'Переименовать конституенту'}
+          onClick={handleRenameCst}
+          disabled={isModified || disabled}
+        />
+        <div className='ml-2 text-sm font-medium whitespace-nowrap select-text cursor-default'>
+          {activeCst?.alias ?? ''}
         </div>
-        {!disabled || isProcessing ? (
-          <MiniButton
-            title={isModified ? tooltipText.unsaved : 'Переименовать конституенту'}
-            aria-label='Переименовать конституенту'
-            onClick={handleRenameCst}
-            icon={<IconEdit size='1rem' className='icon-primary' />}
-            disabled={isModified}
-          />
-        ) : null}
       </div>
 
       <Controller
@@ -193,7 +213,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
         render={({ field }) => (
           <RefsInput
             id='cst_term'
-            label='Термин'
+            aria-label='Термин'
             maxHeight='8rem'
             placeholder={disabled ? '' : 'Обозначение для текстовых определений'}
             schema={schema}
@@ -285,14 +305,10 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
       ) : null}
 
       {!showConvention && (!disabled || isProcessing) ? (
-        <button
-          type='button'
-          tabIndex={-1}
-          className='self-start cc-label text-primary hover:underline select-none'
+        <TextButton
+          text='Добавить комментарий' //
           onClick={() => setForceComment(true)}
-        >
-          Добавить комментарий
-        </button>
+        />
       ) : null}
 
       {!disabled || isProcessing ? (

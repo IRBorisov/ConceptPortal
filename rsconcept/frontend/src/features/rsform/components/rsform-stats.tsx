@@ -1,6 +1,7 @@
 import {
   IconChild,
   IconConvention,
+  IconCrucial,
   IconCstAxiom,
   IconCstBaseSet,
   IconCstConstSet,
@@ -113,6 +114,12 @@ export function RSFormStats({ className, stats }: RSFormStatsProps) {
         value={stats.count_theorem}
       />
 
+      <ValueStats
+        id='count_crucial'
+        title='Ключевые'
+        icon={<IconCrucial size='1.25rem' />}
+        value={stats.count_crucial}
+      />
       <ValueStats
         id='count_text_term'
         title='Термины'

@@ -183,6 +183,7 @@ export class RSFormLoader {
     const items = this.schema.items;
     return {
       count_all: items.length,
+      count_crucial: items.reduce((sum, cst) => sum + (cst.crucial ? 1 : 0), 0),
       count_errors: items.reduce((sum, cst) => sum + (cst.parse.status === ParsingStatus.INCORRECT ? 1 : 0), 0),
       count_property: items.reduce((sum, cst) => sum + (cst.parse.valueClass === ValueClass.PROPERTY ? 1 : 0), 0),
       count_incalculable: items.reduce(

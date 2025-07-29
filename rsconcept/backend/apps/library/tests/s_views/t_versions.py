@@ -84,15 +84,18 @@ class TestVersionViews(EndpointTester):
             alias='A1',
             cst_type='axiom',
             definition_formal='X1=X1',
-            order=1
+            order=1,
+            crucial=True
         )
         version_id = self._create_version({'version': '1.0.0', 'description': 'test'})
         a1.definition_formal = 'X1=X2'
+        a1.crucial = False
         a1.save()
 
         response = self.executeOK(schema=self.owned_id, version=version_id)
         loaded_a1 = response.data['items'][1]
         self.assertEqual(loaded_a1['definition_formal'], 'X1=X1')
+        self.assertEqual(loaded_a1['crucial'], True)
         self.assertEqual(loaded_a1['parse']['status'], 'verified')
 
 

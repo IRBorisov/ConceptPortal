@@ -40,12 +40,20 @@ export function generateSample(target: string): string {
 export function varSchema(schema: IRSForm): string {
   let result = `Название концептуальной схемы: ${schema.title}\n`;
   result += `[${schema.alias}] Описание: "${schema.description}"\n\n`;
-  result += 'Понятия:\n';
+  result += 'Конституенты:\n';
   schema.items.forEach(item => {
     result += `\n${item.alias} - "${labelCstTypification(item)}" - "${item.term_resolved}" - "${
       item.definition_formal
     }" - "${item.definition_resolved}" - "${item.convention}"`;
   });
+  if (schema.stats.count_crucial > 0) {
+    result +=
+      '\nКлючевые конституенты: ' +
+      schema.items
+        .filter(cst => cst.crucial)
+        .map(cst => cst.alias)
+        .join(', ');
+  }
   return result;
 }
 

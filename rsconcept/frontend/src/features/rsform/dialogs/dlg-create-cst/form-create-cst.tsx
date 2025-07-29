@@ -6,9 +6,11 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 
+import { MiniButton } from '@/components/control';
 import { TextArea, TextInput } from '@/components/input';
 
 import { CstType, type ICreateConstituentaDTO } from '../../backend/types';
+import { IconCrucialValue } from '../../components/icon-crucial-value';
 import { RSInput } from '../../components/rs-input';
 import { SelectCstType } from '../../components/select-cst-type';
 import { getRSDefinitionPlaceholder } from '../../labels';
@@ -30,6 +32,7 @@ export function FormCreateCst({ schema }: FormCreateCstProps) {
 
   const cst_type = useWatch({ control, name: 'cst_type' });
   const convention = useWatch({ control, name: 'convention' });
+  const crucial = useWatch({ control, name: 'crucial' });
   const isBasic = isBasicConcept(cst_type);
   const isElementary = isBaseSet(cst_type);
   const isFunction = isFunctional(cst_type);
@@ -41,9 +44,18 @@ export function FormCreateCst({ schema }: FormCreateCstProps) {
     setForceComment(false);
   }
 
+  function handleToggleCrucial() {
+    setValue('crucial', !crucial);
+  }
+
   return (
     <>
       <div className='flex items-center self-center gap-3'>
+        <MiniButton
+          title='Ключевая конституента'
+          icon={<IconCrucialValue size='1.25rem' value={crucial} />}
+          onClick={handleToggleCrucial}
+        />
         <SelectCstType
           id='dlg_cst_type' //
           value={cst_type}

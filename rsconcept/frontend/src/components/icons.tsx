@@ -106,9 +106,9 @@ export { LuDatabase       as IconDatabase }       from 'react-icons/lu';
 export { LuView           as IconDBStructure }    from 'react-icons/lu';  
 export { LuPlaneTakeoff   as IconRESTapi }        from 'react-icons/lu';
 export { LuImage          as IconImage }          from 'react-icons/lu';
-export { PiFediverseLogo  as IconGraphSelection } from 'react-icons/pi';
 export { GoVersions       as IconVersions }       from 'react-icons/go';
 export { LuAtSign         as IconTerm }           from 'react-icons/lu';
+export { MdTaskAlt        as IconCrucial }        from 'react-icons/md';
 export { LuSubscript      as IconAlias }          from 'react-icons/lu';
 export { TbMathFunction   as IconFormula }        from 'react-icons/tb';
 export { BiFontFamily     as IconText }           from 'react-icons/bi';
@@ -150,9 +150,11 @@ export { GrConnect        as IconConnect }        from 'react-icons/gr';
 export { BiPlayCircle     as IconExecute }        from 'react-icons/bi';
 
 // ======== Graph UI =======
+export { PiFediverseLogo  as IconContextSelection } from 'react-icons/pi';
+export { ImMakeGroup      as IconGroupSelection } from 'react-icons/im';
 export { BiCollapse       as IconGraphCollapse }  from 'react-icons/bi';
 export { BiExpand         as IconGraphExpand }    from 'react-icons/bi';
-export { LuMaximize       as IconGraphMaximize }  from 'react-icons/lu';
+export { TiArrowMaximise  as IconGraphMaximize }  from 'react-icons/ti';
 export { BiGitBranch      as IconGraphInputs }    from 'react-icons/bi';
 export { TbEarScan        as IconGraphInverse }   from 'react-icons/tb';
 export { BiGitMerge       as IconGraphOutputs }   from 'react-icons/bi';

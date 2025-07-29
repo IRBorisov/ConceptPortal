@@ -41,11 +41,11 @@ export function StatusBar({ className, isModified, processing, activeCst, parseD
   })();
 
   return (
-    <div className={cn('pl-34 xs:pl-8 flex gap-1', className)}>
+    <div className={cn('pl-22 xs:pl-8 flex gap-1', className)}>
       <div
         tabIndex={0}
         className={clsx(
-          'w-40 h-7',
+          'w-32 h-7',
           'px-2 flex items-center justify-center',
           'border',
           'select-none',
@@ -64,9 +64,9 @@ export function StatusBar({ className, isModified, processing, activeCst, parseD
           </div>
         ) : null}
         {!processing ? (
-          <div className='cc-fade-in flex items-center gap-2'>
+          <div className='cc-fade-in flex items-center gap-1'>
             <IconExpressionStatus size='1rem' value={status} />
-            <span className='pb-0.5 font-controls pr-2'>{labelExpressionStatus(status)}</span>
+            <span className='font-controls pr-1 text-sm'>{labelExpressionStatus(status)}</span>
           </div>
         ) : null}
       </div>

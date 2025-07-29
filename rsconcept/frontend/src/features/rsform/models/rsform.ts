@@ -47,6 +47,7 @@ export interface TermForm {
 /** Represents Constituenta. */
 export interface IConstituenta {
   id: number;
+  crucial: boolean;
   alias: string;
   convention: string;
   cst_type: CstType;
@@ -102,6 +103,8 @@ export interface IConstituenta {
 /** Represents {@link IRSForm} statistics. */
 export interface IRSFormStats {
   count_all: number;
+  count_crucial: number;
+
   count_errors: number;
   count_property: number;
   count_incalculable: number;

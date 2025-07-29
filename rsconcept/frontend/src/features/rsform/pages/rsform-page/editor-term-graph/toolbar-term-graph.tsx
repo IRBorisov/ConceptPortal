@@ -172,7 +172,8 @@ export function ToolbarTermGraph({ className }: ToolbarTermGraphProps) {
               const cst = schema.cstByID.get(cstID);
               return !!cst && isBasicConcept(cst.cst_type);
             }}
-            isOwned={schema.inheritance.length > 0 ? cstID => !schema.cstByID.get(cstID)?.is_inherited : undefined}
+            isCrucial={cstID => schema.cstByID.get(cstID)?.crucial ?? false}
+            isInherited={cstID => schema.cstByID.get(cstID)?.is_inherited ?? false}
             value={selected}
             onChange={handleSetSelected}
           />

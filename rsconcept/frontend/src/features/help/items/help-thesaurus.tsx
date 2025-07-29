@@ -1,6 +1,7 @@
 import {
   IconChild,
   IconConsolidation,
+  IconCrucial,
   IconCstAxiom,
   IconCstBaseSet,
   IconCstConstSet,
@@ -90,6 +91,11 @@ export function HelpThesaurus() {
         связывающим введенные понятия. <LinkTopic text='Аттрибутами конституенты' topic={HelpTopic.CC_CONSTITUENTA} /> в
         родоструктурной экспликации являются Термин, Конвенция, Типизация (Структура), Формальное определение, Текстовое
         определение, Комментарий.
+      </p>
+      <p>
+        <IconCrucial size='1rem' className='inline-icon' /> Ключевая конституента используется как маркер для
+        обозначения содержательно значимых конституент. Ключевые конституенты выделяются визуально и используются при
+        фильтрации.
       </p>
 
       <br />

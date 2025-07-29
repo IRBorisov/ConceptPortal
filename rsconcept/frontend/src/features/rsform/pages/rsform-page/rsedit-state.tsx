@@ -225,6 +225,7 @@ export const RSEditState = ({
       definition_formal: definition ?? '',
       definition_raw: '',
       convention: '',
+      crucial: false,
       term_forms: []
     };
     if (skipDialog) {
@@ -248,6 +249,7 @@ export const RSEditState = ({
         definition_formal: activeCst.definition_formal,
         definition_raw: activeCst.definition_raw,
         convention: activeCst.convention,
+        crucial: activeCst.crucial,
         term_forms: activeCst.term_forms
       }
     }).then(onCreateCst);

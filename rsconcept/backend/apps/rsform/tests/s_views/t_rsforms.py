@@ -225,7 +225,9 @@ class TestRSFormViewset(EndpointTester):
             'cst_type': CstType.BASE,
             'insert_after': x2.pk,
             'term_raw': 'test',
-            'term_forms': [{'text': 'form1', 'tags': 'sing,datv'}]
+            'term_forms': [{'text': 'form1', 'tags': 'sing,datv'}],
+            'definition_formal': 'invalid',
+            'crucial': True
         }
         response = self.executeCreated(data=data, item=self.owned_id)
         self.assertEqual(response.data['new_cst']['alias'], data['alias'])
@@ -233,6 +235,8 @@ class TestRSFormViewset(EndpointTester):
         self.assertEqual(x4.order, 2)
         self.assertEqual(x4.term_raw, data['term_raw'])
         self.assertEqual(x4.term_forms, data['term_forms'])
+        self.assertEqual(x4.definition_formal, data['definition_formal'])
+        self.assertEqual(x4.crucial, data['crucial'])
 
         data = {
             'alias': 'X5',
@@ -573,6 +577,19 @@ class TestConstituentaAPI(EndpointTester):
         self.cst3.refresh_from_db()
         self.assertEqual(self.cst3.definition_resolved, 'form1')
         self.assertEqual(self.cst3.term_forms, data['item_data']['term_forms'])
+
+    @decl_endpoint('/api/rsforms/{schema}/update-crucial', method='patch')
+    def test_update_crucial(self):
+        data = {'target': [self.cst1.pk], 'value': True}
+        self.executeForbidden(data=data, schema=self.unowned_id)
+
+        self.logout()
+        self.executeForbidden(data=data, schema=self.owned_id)
+
+        self.login()
+        self.executeOK(data=data, schema=self.owned_id)
+        self.cst1.refresh_from_db()
+        self.assertEqual(self.cst1.crucial, True)
 
 
 class TestInlineSynthesis(EndpointTester):

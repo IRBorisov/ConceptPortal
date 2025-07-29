@@ -80,6 +80,7 @@ export function ViewHidden({ items }: ViewHiddenProps) {
               type='button'
               className={clsx(
                 'cc-view-hidden-item w-12 rounded-md text-center select-none',
+                cst.crucial && 'text-primary',
                 localSelected.includes(cstID) && 'selected',
                 cst.is_inherited && 'inherited'
               )}

@@ -30,6 +30,7 @@ export function TGNode(node: TGNodeInternal) {
       <div
         className={clsx(
           'w-full h-full cursor-default flex items-center justify-center rounded-full',
+          node.data.cst.crucial && 'text-primary',
           node.data.focused && 'border-[2px] border-selected',
           label.length > LABEL_THRESHOLD ? 'text-[12px]/[16px]' : 'text-[14px]/[20px]'
         )}
@@ -50,6 +51,7 @@ export function TGNode(node: TGNodeInternal) {
       {description ? (
         <div
           className={clsx(
+            node.data.cst.crucial && 'text-primary',
             'mt-[4px] w-[150px] px-[4px] text-center translate-x-[calc(-50%+20px)]',
             'pointer-events-none',
             description.length > DESCRIPTION_THRESHOLD ? 'text-[10px]/[12px]' : 'text-[12px]/[16px]'
@@ -69,9 +71,11 @@ export function TGNode(node: TGNodeInternal) {
 
 // ====== INTERNAL ======
 function describeCstNode(cst: IConstituenta) {
-  return `${cst.alias}: ${cst.term_resolved}</br><b>Типизация:</b> ${labelCstTypification(
-    cst
-  )}</br><b>Содержание:</b> ${
-    isBasicConcept(cst.cst_type) ? cst.convention : cst.definition_resolved || cst.definition_formal || cst.convention
+  const contents = isBasicConcept(cst.cst_type)
+    ? cst.convention
+    : cst.definition_resolved || cst.definition_formal || cst.convention;
+  const typification = labelCstTypification(cst);
+  return `${cst.alias}: ${cst.term_resolved}</br><b>Типизация:</b> ${typification}</br><b>Содержание:</b> ${
+    contents ? contents : 'отсутствует'
   }`;
 }

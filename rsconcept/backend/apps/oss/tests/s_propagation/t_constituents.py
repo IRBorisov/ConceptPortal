@@ -121,7 +121,8 @@ class TestChangeConstituents(EndpointTester):
                 'term_raw': 'Test1',
                 'definition_formal': r'X4\X4',
                 'definition_raw': '@{X5|sing,datv}',
-                'convention': 'test'
+                'convention': 'test',
+                'crucial': True,
             }
         }
         response = self.executeOK(data=data, schema=self.ks1.model.pk)
@@ -132,9 +133,11 @@ class TestChangeConstituents(EndpointTester):
         self.assertEqual(self.ks1X1.definition_formal, data['item_data']['definition_formal'])
         self.assertEqual(self.ks1X1.definition_raw, data['item_data']['definition_raw'])
         self.assertEqual(self.ks1X1.convention, data['item_data']['convention'])
+        self.assertEqual(self.ks1X1.crucial, data['item_data']['crucial'])
         self.assertEqual(d2.definition_resolved, data['item_data']['term_raw'])
         self.assertEqual(inherited_cst.term_raw, data['item_data']['term_raw'])
         self.assertEqual(inherited_cst.convention, data['item_data']['convention'])
+        self.assertEqual(inherited_cst.crucial, False)
         self.assertEqual(inherited_cst.definition_formal, r'X1\X1')
         self.assertEqual(inherited_cst.definition_raw, r'@{X2|sing,datv}')
 

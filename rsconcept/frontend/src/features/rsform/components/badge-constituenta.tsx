@@ -26,6 +26,7 @@ export function BadgeConstituenta({ value, prefixID }: BadgeConstituentaProps) {
       className={clsx(
         'cc-badge-constituenta',
         value.is_inherited && 'border-dashed',
+        value.crucial && 'cc-badge-inner-shadow',
         value.cst_class === CstClass.BASIC ? 'bg-accent-green25' : 'bg-input'
       )}
       style={{

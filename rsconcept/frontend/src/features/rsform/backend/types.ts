@@ -65,6 +65,9 @@ export type IConstituentaCreatedResponse = z.infer<typeof schemaConstituentaCrea
 /** Represents data, used in updating persistent attributes in {@link IConstituenta}. */
 export type IUpdateConstituentaDTO = z.infer<typeof schemaUpdateConstituenta>;
 
+/** Represents data, used in batch updating crucial attributes in {@link IConstituenta}. */
+export type IUpdateCrucialDTO = z.infer<typeof schemaUpdateCrucial>;
+
 /** Represents data, used in ordering a list of {@link IConstituenta}. */
 export interface IMoveConstituentsDTO {
   items: number[];
@@ -276,6 +279,7 @@ export const schemaConstituentaBasics = z.strictObject({
   id: z.coerce.number(),
   alias: z.string().nonempty(errorMsg.requiredField),
   convention: z.string(),
+  crucial: z.boolean(),
   cst_type: schemaCstType,
   definition_formal: z.string(),
   definition_raw: z.string(),
@@ -321,7 +325,8 @@ export const schemaVersionCreatedResponse = z.strictObject({
 export const schemaCreateConstituenta = schemaConstituentaBasics
   .pick({
     cst_type: true,
-    term_forms: true
+    term_forms: true,
+    crucial: true
   })
   .extend({
     alias: z.string().max(limits.len_alias, errorMsg.aliasLength).nonempty(errorMsg.requiredField),
@@ -342,6 +347,7 @@ export const schemaUpdateConstituenta = z.strictObject({
   item_data: z.strictObject({
     alias: z.string().max(limits.len_alias, errorMsg.aliasLength).nonempty(errorMsg.requiredField).optional(),
     cst_type: schemaCstType.optional(),
+    crucial: z.boolean().optional(),
     convention: z.string().max(limits.len_description, errorMsg.descriptionLength).optional(),
     definition_formal: z.string().max(limits.len_description, errorMsg.descriptionLength).optional(),
     definition_raw: z.string().max(limits.len_description, errorMsg.descriptionLength).optional(),
@@ -355,6 +361,11 @@ export const schemaUpdateConstituenta = z.strictObject({
       )
       .optional()
   })
+});
+
+export const schemaUpdateCrucial = z.strictObject({
+  target: z.array(z.number()),
+  value: z.boolean()
 });
 
 export const schemaProduceStructureResponse = z.strictObject({

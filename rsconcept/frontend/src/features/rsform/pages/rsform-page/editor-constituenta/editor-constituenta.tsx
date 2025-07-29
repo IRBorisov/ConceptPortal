@@ -107,7 +107,7 @@ export function EditorConstituenta() {
         isNarrow={isNarrow}
       />
 
-      <div className='mx-0 min-w-140 md:mx-auto pt-8 md:w-195 shrink-0 xs:pt-0'>
+      <div className='mx-0 min-w-120 md:mx-auto pt-8 md:w-195 shrink-0 xs:pt-0'>
         {activeCst ? (
           <FormConstituenta
             key={activeCst.id}

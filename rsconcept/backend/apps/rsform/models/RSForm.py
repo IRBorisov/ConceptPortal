@@ -144,6 +144,7 @@ class RSForm:
             self.cache.ensure_loaded()
             position = self.cache.constituents.index(self.cache.by_id[insert_after.pk]) + 1
         result = self.insert_new(data['alias'], data['cst_type'], position)
+        result.crucial = data.get('crucial', False)
         result.convention = data.get('convention', '')
         result.definition_formal = data.get('definition_formal', '')
         result.term_forms = data.get('term_forms', [])
@@ -247,6 +248,9 @@ class RSForm:
             else:
                 old_data['convention'] = cst.convention
                 cst.convention = data['convention']
+        if 'crucial' in data:
+            cst.crucial = data['crucial']
+            del data['crucial']
         if 'definition_formal' in data:
             if cst.definition_formal == data['definition_formal']:
                 del data['definition_formal']
