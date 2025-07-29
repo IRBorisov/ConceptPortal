@@ -20,7 +20,7 @@ export const schemaUser = z.strictObject({
   id: z.coerce.number(),
   username: z.string().nonempty(errorMsg.requiredField),
   is_staff: z.boolean(),
-  email: z.string().email(errorMsg.emailField),
+  email: z.email(errorMsg.emailField),
   first_name: z.string(),
   last_name: z.string()
 });
@@ -35,7 +35,7 @@ const schemaUserInput = z.strictObject({
     .nonempty(errorMsg.requiredField)
     .regex(RegExp(patterns.login), errorMsg.loginFormat)
     .max(limits.len_alias, errorMsg.aliasLength),
-  email: z.string().email(errorMsg.emailField).max(limits.len_email, errorMsg.emailLength),
+  email: z.email(errorMsg.emailField).max(limits.len_email, errorMsg.emailLength),
   first_name: z.string().max(limits.len_alias, errorMsg.aliasLength),
   last_name: z.string().max(limits.len_alias, errorMsg.aliasLength)
 });
