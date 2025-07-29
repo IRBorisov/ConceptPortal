@@ -122,7 +122,7 @@ export function EditorConstituenta() {
       </div>
       <ViewConstituents
         className={clsx(
-          'cc-animate-sidebar',
+          'cc-animate-sidebar min-h-55',
           isNarrow ? 'mt-3 mx-6 rounded-md overflow-hidden' : 'mt-9 rounded-l-md rounded-r-none overflow-visible',
           showList ? 'max-w-full' : 'opacity-0 max-w-0'
         )}

@@ -33,10 +33,9 @@ export function ViewConstituents({
   autoScroll
 }: ViewConstituentsProps) {
   return (
-    <aside className={cn(!noBorder && 'border', className)}>
+    <div className={cn(!noBorder && 'border', className)}>
       <ConstituentsSearch
-        schema={schema} //
-        dense={dense}
+        dense={dense} //
         hideGraphFilter={!activeCst}
       />
       <TableSideConstituents
@@ -47,6 +46,6 @@ export function ViewConstituents({
         autoScroll={autoScroll}
         onDoubleClick={onDoubleClick}
       />
-    </aside>
+    </div>
   );
 }

@@ -31,7 +31,7 @@ interface ToolbarGraphSelectionProps extends Styling {
 export function ToolbarGraphSelection({
   className,
   graph,
-  value: selected,
+  value,
   isCore,
   isInherited,
   isCrucial,
@@ -40,7 +40,7 @@ export function ToolbarGraphSelection({
 }: ToolbarGraphSelectionProps) {
   const selectedMenu = useDropdown();
   const groupMenu = useDropdown();
-  const emptySelection = selected.length === 0;
+  const emptySelection = value.length === 0;
 
   function handleSelectReset() {
     onChange([]);
@@ -68,31 +68,31 @@ export function ToolbarGraphSelection({
   }
 
   function handleExpandOutputs() {
-    onChange([...selected, ...graph.expandOutputs(selected)]);
+    onChange([...value, ...graph.expandOutputs(value)]);
   }
 
   function handleExpandInputs() {
-    onChange([...selected, ...graph.expandInputs(selected)]);
+    onChange([...value, ...graph.expandInputs(value)]);
   }
 
   function handleSelectMaximize() {
     selectedMenu.hide();
-    onChange(graph.maximizePart(selected));
+    onChange(graph.maximizePart(value));
   }
 
   function handleSelectInvert() {
     selectedMenu.hide();
-    onChange([...graph.nodes.keys()].filter(item => !selected.includes(item)));
+    onChange([...graph.nodes.keys()].filter(item => !value.includes(item)));
   }
 
   function handleSelectAllInputs() {
     selectedMenu.hide();
-    onChange([...graph.expandInputs(selected)]);
+    onChange([...value, ...graph.expandInputs(value)]);
   }
 
   function handleSelectAllOutputs() {
     selectedMenu.hide();
-    onChange([...graph.expandOutputs(selected)]);
+    onChange([...value, ...graph.expandOutputs(value)]);
   }
 
   return (
@@ -166,7 +166,7 @@ export function ToolbarGraphSelection({
           icon={<IconGroupSelection size='1.25rem' className='icon-primary' />}
           onClick={groupMenu.toggle}
         />
-        <Dropdown isOpen={groupMenu.isOpen} className='-translate-x-1/2'>
+        <Dropdown isOpen={groupMenu.isOpen} stretchLeft>
           <DropdownButton
             text='ядро'
             title='Выделить ядро'

@@ -36,6 +36,7 @@ export function DlgEditCst() {
       target: target.id,
       item_data: {
         alias: target.alias,
+        crucial: target.crucial,
         cst_type: target.cst_type,
         convention: target.convention,
         definition_formal: target.definition_formal,
