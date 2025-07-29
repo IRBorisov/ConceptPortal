@@ -102,7 +102,7 @@ export function toggleTristateFlag(prev: boolean | null): boolean | null {
  */
 export function tripleToggleColor(value: boolean | null): string | undefined {
   if (value === null) {
-    return undefined;
+    return '';
   }
   return value ? 'text-constructive' : 'text-destructive';
 }
