@@ -217,6 +217,26 @@ class CreateSchemaSerializer(StrictSerializer):
         return attrs
 
 
+class CloneSchemaSerializer(StrictSerializer):
+    ''' Serializer: Clone schema. '''
+    layout = serializers.ListField(child=NodeSerializer())
+    source_operation = PKField(many=False, queryset=Operation.objects.all())
+    position = PositionSerializer()
+
+    def validate(self, attrs):
+        oss = cast(LibraryItem, self.context['oss'])
+        source_operation = cast(Operation, attrs['source_operation'])
+        if source_operation.oss_id != oss.pk:
+            raise serializers.ValidationError({
+                'source_operation': msg.operationNotInOSS()
+            })
+        if source_operation.result is None:
+            raise serializers.ValidationError({
+                'source_operation': msg.operationResultEmpty(source_operation.alias)
+            })
+        return attrs
+
+
 class ImportSchemaSerializer(StrictSerializer):
     ''' Serializer: Import schema to new operation. '''
     layout = serializers.ListField(child=NodeSerializer())

@@ -4,6 +4,7 @@ from .basics import LayoutSerializer, SubstitutionExSerializer
 from .data_access import (
     ArgumentSerializer,
     BlockSerializer,
+    CloneSchemaSerializer,
     CreateBlockSerializer,
     CreateSchemaSerializer,
     CreateSynthesisSerializer,

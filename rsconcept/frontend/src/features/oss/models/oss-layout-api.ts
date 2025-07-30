@@ -106,6 +106,21 @@ export class LayoutManager {
     return result;
   }
 
+  /** Calculate insert position for a new clone of {@link IOperation} */
+  newClonePosition(targetID: string): Rectangle2D | null {
+    const targetNode = this.layout.find(pos => pos.nodeID === targetID);
+    if (!targetNode) {
+      return null;
+    } else {
+      return {
+        x: targetNode.x + targetNode.width / 2 + GRID_SIZE,
+        y: targetNode.y + targetNode.height / 2 + GRID_SIZE,
+        width: OPERATION_NODE_WIDTH,
+        height: OPERATION_NODE_HEIGHT
+      };
+    }
+  }
+
   /** Update layout when parent changes */
   onChangeParent(targetID: string, newParent: string | null) {
     const targetNode = this.layout.find(pos => pos.nodeID === targetID);

@@ -50,6 +50,7 @@ export type IMoveItemsDTO = z.infer<typeof schemaMoveItems>;
 export type ICreateSchemaDTO = z.infer<typeof schemaCreateSchema>;
 export type ICreateSynthesisDTO = z.infer<typeof schemaCreateSynthesis>;
 export type IImportSchemaDTO = z.infer<typeof schemaImportSchema>;
+export type ICloneSchemaDTO = z.infer<typeof schemaCloneSchema>;
 
 /** Represents data response when creating {@link IOperation}. */
 export type IOperationCreatedResponse = z.infer<typeof schemaOperationCreatedResponse>;
@@ -184,6 +185,12 @@ export const schemaDeleteBlock = z.strictObject({
 export const schemaCreateSchema = z.strictObject({
   layout: schemaOssLayout,
   item_data: schemaOperationData,
+  position: schemaPosition
+});
+
+export const schemaCloneSchema = z.strictObject({
+  layout: schemaOssLayout,
+  source_operation: z.number(),
   position: schemaPosition
 });
 

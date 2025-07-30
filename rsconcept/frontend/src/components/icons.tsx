@@ -129,6 +129,7 @@ export { BiStopCircle     as IconStatusIncalculable } from 'react-icons/bi';
 export { BiPauseCircle    as IconStatusProperty } from 'react-icons/bi';
 export { LuPower          as IconKeepAliasOn }    from 'react-icons/lu';
 export { LuPowerOff       as IconKeepAliasOff }   from 'react-icons/lu';
+export { VscReferences    as IconPhantom }        from 'react-icons/vsc';
 
 // ===== Domain actions =====
 export { BiUpvote         as IconMoveUp }         from 'react-icons/bi';

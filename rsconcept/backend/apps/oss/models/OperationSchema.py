@@ -56,6 +56,7 @@ class OperationSchema:
     def refresh_from_db(self) -> None:
         ''' Model wrapper. '''
         self.model.refresh_from_db()
+        self.cache = OssCache(self)
 
     def operations(self) -> QuerySet[Operation]:
         ''' Get QuerySet containing all operations of current OSS. '''

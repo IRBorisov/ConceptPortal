@@ -6,6 +6,7 @@ import { infoMsg } from '@/utils/labels';
 
 import {
   type IBlockCreatedResponse,
+  type ICloneSchemaDTO,
   type IConstituentaReference,
   type ICreateBlockDTO,
   type ICreateSchemaDTO,
@@ -90,6 +91,18 @@ export const ossApi = {
     axiosPost<ICreateSchemaDTO, IOperationCreatedResponse>({
       schema: schemaOperationCreatedResponse,
       endpoint: `/api/oss/${itemID}/create-schema`,
+      request: {
+        data: data,
+        successMessage: response => {
+          const alias = response.oss.operations.find(op => op.id === response.new_operation)?.alias;
+          return infoMsg.newOperation(alias ?? 'ОШИБКА');
+        }
+      }
+    }),
+  cloneSchema: ({ itemID, data }: { itemID: number; data: ICloneSchemaDTO }) =>
+    axiosPost<ICloneSchemaDTO, IOperationCreatedResponse>({
+      schema: schemaOperationCreatedResponse,
+      endpoint: `/api/oss/${itemID}/clone-schema`,
       request: {
         data: data,
         successMessage: response => {

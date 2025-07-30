@@ -90,6 +90,10 @@ def operationNotSynthesis(title: str):
     return f'Операция не является Синтезом: {title}'
 
 
+def operationResultEmpty(title: str):
+    return f'Результат операции пуст: {title}'
+
+
 def operationResultNotEmpty(title: str):
     return f'Результат операции не пуст: {title}'
 

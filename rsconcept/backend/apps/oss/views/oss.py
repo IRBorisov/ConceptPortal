@@ -64,6 +64,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
             'delete_block',
             'move_items',
             'create_schema',
+            'clone_schema',
             'import_schema',
             'create_synthesis',
             'update_operation',
@@ -318,6 +319,76 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
             })
             oss.update_layout(layout)
             oss.create_input(new_operation)
+            oss.save(update_fields=['time_update'])
+
+        return Response(
+            status=c.HTTP_201_CREATED,
+            data={
+                'new_operation': new_operation.pk,
+                'oss': s.OperationSchemaSerializer(oss.model).data
+            }
+        )
+
+
+    @extend_schema(
+        summary='clone conceptual schema - result of a target operation',
+        tags=['OSS'],
+        request=s.CloneSchemaSerializer(),
+        responses={
+            c.HTTP_201_CREATED: s.OperationCreatedResponse,
+            c.HTTP_400_BAD_REQUEST: None,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
+    )
+    @action(detail=True, methods=['post'], url_path='clone-schema')
+    def clone_schema(self, request: Request, pk) -> HttpResponse:
+        ''' Clone schema. '''
+        serializer = s.CloneSchemaSerializer(
+            data=request.data,
+            context={'oss': self.get_object()}
+        )
+        serializer.is_valid(raise_exception=True)
+
+        oss = m.OperationSchema(self.get_object())
+        layout = serializer.validated_data['layout']
+        position = serializer.validated_data['position']
+        with transaction.atomic():
+            source = cast(m.Operation, serializer.validated_data['source_operation'])
+            alias = '+' + source.alias
+            title = '+' + source.title
+            source_schema = RSForm(cast(LibraryItem, source.result))
+
+            new_schema = deepcopy(source_schema.model)
+            new_schema.pk = None
+            new_schema.owner = oss.model.owner
+            new_schema.title = title
+            new_schema.alias = alias
+            new_schema.save()
+
+            for cst in source_schema.constituents():
+                cst.pk = None
+                cst.schema = new_schema
+                cst.save()
+
+            new_operation = source
+            new_operation.pk = None
+            new_operation.alias = alias
+            new_operation.title = title
+            new_operation.operation_type = m.OperationType.INPUT
+            new_operation.result = None
+            new_operation.save()
+
+            layout.append({
+                'nodeID': 'o' + str(new_operation.pk),
+                'x': position['x'],
+                'y': position['y'],
+                'width': position['width'],
+                'height': position['height']
+            })
+            oss.refresh_from_db()
+            oss.set_input(new_operation.pk, new_schema)
+            oss.update_layout(layout)
             oss.save(update_fields=['time_update'])
 
         return Response(

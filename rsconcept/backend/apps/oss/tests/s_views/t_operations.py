@@ -123,6 +123,49 @@ class TestOssOperations(EndpointTester):
         self.executeCreated(data=data, item=self.unowned_id)
 
 
+    @decl_endpoint('/api/oss/{item}/clone-schema', method='post')
+    def test_clone_schema(self):
+        self.populateData()
+
+        data = {
+            'source_operation': self.operation1.pk,
+            'layout': self.layout_data,
+            'position': {
+                'x': 2,
+                'y': 2,
+                'width': 400,
+                'height': 60
+            }
+        }
+        self.executeNotFound(data=data, item=self.invalid_id)
+        self.executeForbidden(data=data, item=self.unowned_id)
+
+        response = self.executeCreated(data=data, item=self.owned_id)
+        self.assertIn('new_operation', response.data)
+        self.assertIn('oss', response.data)
+        new_operation_id = response.data['new_operation']
+        oss_data = response.data['oss']
+        new_operation = next(op for op in oss_data['operations'] if op['id'] == new_operation_id)
+        self.assertEqual(new_operation['operation_type'], OperationType.INPUT)
+        self.assertTrue(new_operation['alias'].startswith('+'))
+        self.assertTrue(new_operation['title'].startswith('+'))
+        self.assertIsNotNone(new_operation['result'])
+        self.assertEqual(new_operation['parent'], None)
+
+        layout = oss_data['layout']
+        operation_node = [item for item in layout if item['nodeID'] == 'o' + str(new_operation_id)][0]
+        self.assertEqual(operation_node['x'], data['position']['x'])
+        self.assertEqual(operation_node['y'], data['position']['y'])
+        self.assertEqual(operation_node['width'], data['position']['width'])
+        self.assertEqual(operation_node['height'], data['position']['height'])
+
+        new_schema = LibraryItem.objects.get(pk=new_operation['result'])
+        self.assertEqual(new_schema.alias, new_operation['alias'])
+        self.assertEqual(new_schema.title, new_operation['title'])
+        self.assertEqual(new_schema.description, new_operation['description'])
+        self.assertEqual(self.ks1.constituents().count(), RSForm(new_schema).constituents().count())
+
+
     @decl_endpoint('/api/oss/{item}/create-schema', method='post')
     def test_create_schema_parent(self):
         self.populateData()

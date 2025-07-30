@@ -2,20 +2,24 @@
 import { toast } from 'react-toastify';
 
 import { useLibrary } from '@/features/library/backend/use-library';
+import { useCloneSchema } from '@/features/oss/backend/use-clone-schema';
 
 import { DropdownButton } from '@/components/dropdown';
 import {
   IconChild,
+  IconClone,
   IconConnect,
   IconDestroy,
   IconEdit2,
   IconExecute,
   IconNewRSForm,
+  IconPhantom,
   IconRSForm
 } from '@/components/icons';
 import { useDialogsStore } from '@/stores/dialogs';
+import { PARAMETER } from '@/utils/constants';
 import { errorMsg } from '@/utils/labels';
-import { prepareTooltip } from '@/utils/utils';
+import { notImplemented, prepareTooltip } from '@/utils/utils';
 
 import { OperationType } from '../../../../backend/types';
 import { useCreateInput } from '../../../../backend/use-create-input';
@@ -33,12 +37,13 @@ interface MenuOperationProps {
 
 export function MenuOperation({ operation, onHide }: MenuOperationProps) {
   const { items: libraryItems } = useLibrary();
-  const { schema, navigateOperationSchema, isMutable, canDeleteOperation } = useOssEdit();
+  const { schema, setSelected, navigateOperationSchema, isMutable, canDeleteOperation } = useOssEdit();
   const isProcessing = useMutatingOss();
   const getLayout = useGetLayout();
 
   const { createInput: inputCreate } = useCreateInput();
   const { executeOperation: operationExecute } = useExecuteOperation();
+  const { cloneSchema } = useCloneSchema();
 
   const showEditInput = useDialogsStore(state => state.showChangeInputSchema);
   const showRelocateConstituents = useDialogsStore(state => state.showRelocateConstituents);
@@ -147,6 +152,31 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
     });
   }
 
+  function handleCreatePhantom() {
+    onHide();
+    notImplemented();
+  }
+
+  function handleClone() {
+    onHide();
+
+    const layout = getLayout();
+    const manager = new LayoutManager(schema, layout);
+    const newPosition = manager.newClonePosition(operation.nodeID);
+    if (!newPosition) {
+      return;
+    }
+
+    void cloneSchema({
+      itemID: schema.id,
+      data: {
+        source_operation: operation.id,
+        layout: layout,
+        position: newPosition
+      }
+    }).then(response => setTimeout(() => setSelected([`o${response.new_operation}`]), PARAMETER.refreshTimeout));
+  }
+
   return (
     <>
       <DropdownButton
@@ -162,7 +192,7 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
           text='Открыть схему'
           titleHtml={prepareTooltip('Открыть привязанную КС', 'Двойной клик')}
           aria-label='Открыть привязанную КС'
-          icon={<IconRSForm size='1rem' className='icon-green' />}
+          icon={<IconRSForm size='1rem' className='icon-primary' />}
           onClick={handleOpenSchema}
           disabled={isProcessing}
         />
@@ -208,6 +238,26 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
           icon={<IconChild size='1rem' className='icon-green' />}
           onClick={handleRelocateConstituents}
           disabled={isProcessing}
+        />
+      ) : null}
+
+      {isMutable ? (
+        <DropdownButton
+          text='Создать ссылку'
+          title='Создать ссылку на результат операции'
+          icon={<IconPhantom size='1rem' className='icon-green' />}
+          onClick={handleCreatePhantom}
+          disabled={isProcessing}
+        />
+      ) : null}
+
+      {isMutable ? (
+        <DropdownButton
+          text='Клонировать'
+          title='Создать и загрузить копию концептуальной схемы'
+          icon={<IconClone size='1rem' className='icon-green' />}
+          onClick={handleClone}
+          disabled={isProcessing || !operation?.result}
         />
       ) : null}
 
