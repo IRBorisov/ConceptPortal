@@ -4,18 +4,23 @@ import { CstType, type IConstituentaBasicsDTO, type ICreateConstituentaDTO } fro
 import { useCreateConstituenta } from '@/features/rsform/backend/use-create-constituenta';
 import { useMoveConstituents } from '@/features/rsform/backend/use-move-constituents';
 import { useMutatingRSForm } from '@/features/rsform/backend/use-mutating-rsform';
+import { useResetAliases } from '@/features/rsform/backend/use-reset-aliases';
+import { useRestoreOrder } from '@/features/rsform/backend/use-restore-order';
 import { generateAlias } from '@/features/rsform/models/rsform-api';
 import { useCstSearchStore } from '@/features/rsform/stores/cst-search';
 
 import { MiniButton } from '@/components/control';
+import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import {
   IconClone,
   IconDestroy,
   IconEdit2,
+  IconGenerateNames,
   IconMoveDown,
   IconMoveUp,
   IconNewItem,
   IconRSForm,
+  IconSortList,
   IconTree,
   IconTypeGraph
 } from '@/components/icons';
@@ -43,6 +48,7 @@ export function ToolbarSchema({
   isMutable,
   className
 }: ToolbarSchemaProps) {
+  const menuSchema = useDropdown();
   const router = useConceptNavigation();
   const isProcessing = useMutatingRSForm();
   const searchText = useCstSearchStore(state => state.query);
@@ -54,6 +60,8 @@ export function ToolbarSchema({
   const showTermGraph = useDialogsStore(state => state.showShowTermGraph);
   const { moveConstituents } = useMoveConstituents();
   const { createConstituenta } = useCreateConstituenta();
+  const { resetAliases } = useResetAliases();
+  const { restoreOrder } = useRestoreOrder();
 
   function navigateRSForm() {
     router.push({ path: urls.schema(schema.id) });
@@ -181,14 +189,50 @@ export function ToolbarSchema({
     showTermGraph({ schema: schema });
   }
 
+  function handleReindex() {
+    menuSchema.hide();
+    void resetAliases({ itemID: schema.id });
+  }
+
+  function handleRestoreOrder() {
+    menuSchema.hide();
+    void restoreOrder({ itemID: schema.id });
+  }
+
   return (
     <div className={cn('flex gap-0.5', className)}>
-      <MiniButton
-        title='Перейти к концептуальной схеме'
-        icon={<IconRSForm size='1rem' className='icon-primary' />}
-        onClick={navigateRSForm}
-      />
-
+      <div ref={menuSchema.ref} onBlur={menuSchema.handleBlur} className='flex relative items-center'>
+        <MiniButton
+          title='Редактирование концептуальной схемы'
+          hideTitle={menuSchema.isOpen}
+          icon={<IconRSForm size='1rem' className='icon-primary' />}
+          onClick={menuSchema.toggle}
+        />
+        <Dropdown isOpen={menuSchema.isOpen} margin='mt-0.5'>
+          <DropdownButton
+            text='Упорядочить список'
+            titleHtml='Упорядочить список, исходя из <br/>логики типов и связей конституент'
+            aria-label='Упорядочить список, исходя из логики типов и связей конституент'
+            icon={<IconSortList size='1rem' className='icon-primary' />}
+            onClick={handleRestoreOrder}
+            disabled={!isMutable || isProcessing}
+          />
+          <DropdownButton
+            text='Порядковые имена'
+            titleHtml='Присвоить порядковые имена <br/>и обновить выражения'
+            aria-label='Присвоить порядковые имена и обновить выражения'
+            icon={<IconGenerateNames size='1rem' className='icon-primary' />}
+            onClick={handleReindex}
+            disabled={!isMutable || isProcessing}
+          />
+          <DropdownButton
+            title='Перейти к концептуальной схеме'
+            text='перейти к схеме'
+            icon={<IconRSForm size='1rem' className='icon-primary' />}
+            onClick={navigateRSForm}
+          />
+        </Dropdown>
+      </div>
       <MiniButton
         title='Редактировать конституенту'
         icon={<IconEdit2 size='1rem' className='icon-primary' />}

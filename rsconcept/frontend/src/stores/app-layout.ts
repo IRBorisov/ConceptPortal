@@ -10,6 +10,9 @@ interface AppLayoutStore {
 
   noFooter: boolean;
   hideFooter: (value?: boolean) => void;
+
+  toastBottom: boolean;
+  setToastBottom: (value: boolean) => void;
 }
 
 export const useAppLayoutStore = create<AppLayoutStore>()(set => ({
@@ -26,7 +29,10 @@ export const useAppLayoutStore = create<AppLayoutStore>()(set => ({
     }),
 
   noFooter: false,
-  hideFooter: value => set({ noFooter: value ?? true })
+  hideFooter: value => set({ noFooter: value ?? true }),
+
+  toastBottom: false,
+  setToastBottom: value => set({ toastBottom: value })
 }));
 
 /** Utility function that returns the height of the main area. */

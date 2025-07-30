@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import { Suspense, useEffect } from 'react';
 import clsx from 'clsx';
 import { useDebounce } from 'use-debounce';
 
@@ -23,6 +23,7 @@ interface SidePanelProps {
 
 export function SidePanel({ isMounted, className }: SidePanelProps) {
   const noNavigationAnimation = useAppLayoutStore(state => state.noNavigationAnimation);
+  const setToastBottom = useAppLayoutStore(state => state.setToastBottom);
   const { schema, isMutable, selectedItems } = useOssEdit();
   const selectedOperation =
     selectedItems.length === 1 && selectedItems[0].nodeType === NodeType.OPERATION ? selectedItems[0] : null;
@@ -32,7 +33,13 @@ export function SidePanel({ isMounted, className }: SidePanelProps) {
 
   const [debouncedMounted] = useDebounce(isMounted, PARAMETER.moveDuration);
   const closePanel = usePreferencesStore(state => state.toggleShowOssSidePanel);
+  const showPanel = usePreferencesStore(state => state.showOssSidePanel);
   const sidePanelHeight = useMainHeight();
+
+  useEffect(() => {
+    setToastBottom(showPanel);
+    return () => setToastBottom(false);
+  }, [setToastBottom, showPanel]);
 
   return (
     <aside

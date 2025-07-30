@@ -23,6 +23,7 @@ export function ApplicationLayout() {
   const viewportHeight = useViewportHeight();
   const noNavigationAnimation = useAppLayoutStore(state => state.noNavigationAnimation);
   const noNavigation = useAppLayoutStore(state => state.noNavigation);
+  const toastBottom = useAppLayoutStore(state => state.toastBottom);
   const noFooter = useAppLayoutStore(state => state.noFooter);
   const activeDialog = useDialogsStore(state => state.active);
 
@@ -35,6 +36,8 @@ export function ApplicationLayout() {
           autoClose={3000}
           draggable={false}
           pauseOnFocusLoss={false}
+          position={toastBottom ? 'bottom-right' : 'top-right'}
+          newestOnTop={toastBottom}
         />
 
         <Suspense fallback={<ModalLoader />}>
