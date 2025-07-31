@@ -1,5 +1,7 @@
 ''' Models: Operation in OSS. '''
 # pylint: disable=duplicate-code
+from typing import Optional
+
 from django.db.models import (
     CASCADE,
     SET_NULL,
@@ -11,7 +13,10 @@ from django.db.models import (
     TextField
 )
 
+from apps.library.models import LibraryItem
+
 from .Argument import Argument
+from .Reference import Reference
 from .Substitution import Substitution
 
 
@@ -19,6 +24,7 @@ class OperationType(TextChoices):
     ''' Type of operation. '''
     INPUT = 'input'
     SYNTHESIS = 'synthesis'
+    REFERENCE = 'reference'
 
 
 class Operation(Model):
@@ -76,9 +82,37 @@ class Operation(Model):
         return f'Операция {self.alias}'
 
     def getQ_arguments(self) -> QuerySet[Argument]:
-        ''' Operation arguments. '''
+        ''' Operation Arguments for current operation. '''
         return Argument.objects.filter(operation=self)
+
+    def getQ_as_argument(self) -> QuerySet[Argument]:
+        ''' Operation Arguments where the operation is used as an argument. '''
+        return Argument.objects.filter(argument=self)
 
     def getQ_substitutions(self) -> QuerySet[Substitution]:
         ''' Operation substitutions. '''
         return Substitution.objects.filter(operation=self)
+
+    def getQ_references(self) -> QuerySet[Reference]:
+        ''' Operation references. '''
+        return Reference.objects.filter(target=self)
+
+    def getQ_reference_target(self) -> list['Operation']:
+        ''' Operation target for current reference. '''
+        return [x.target for x in Reference.objects.filter(reference=self)]
+
+    def setQ_result(self, result: Optional[LibraryItem]) -> None:
+        ''' Set result schema. '''
+        if result == self.result:
+            return
+        self.result = result
+        self.save(update_fields=['result'])
+        for reference in self.getQ_references():
+            reference.reference.result = result
+            reference.reference.save(update_fields=['result'])
+
+    def delete(self, *args, **kwargs):
+        ''' Delete operation. '''
+        for ref in self.getQ_references():
+            ref.reference.delete()
+        super().delete(*args, **kwargs)

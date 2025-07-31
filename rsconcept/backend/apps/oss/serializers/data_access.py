@@ -234,6 +234,30 @@ class CloneSchemaSerializer(StrictSerializer):
             raise serializers.ValidationError({
                 'source_operation': msg.operationResultEmpty(source_operation.alias)
             })
+        if source_operation.operation_type == OperationType.REFERENCE:
+            raise serializers.ValidationError({
+                'source_operation': msg.referenceTypeNotAllowed()
+            })
+        return attrs
+
+
+class CreateReferenceSerializer(StrictSerializer):
+    ''' Serializer: Create reference operation. '''
+    layout = serializers.ListField(child=NodeSerializer())
+    target = PKField(many=False, queryset=Operation.objects.all())
+    position = PositionSerializer()
+
+    def validate(self, attrs):
+        oss = cast(LibraryItem, self.context['oss'])
+        target = cast(Operation, attrs['target'])
+        if target.oss_id != oss.pk:
+            raise serializers.ValidationError({
+                'target_operation': msg.operationNotInOSS()
+            })
+        if target.operation_type == OperationType.REFERENCE:
+            raise serializers.ValidationError({
+                'target_operation': msg.referenceTypeNotAllowed()
+            })
         return attrs
 
 
@@ -267,7 +291,7 @@ class CreateSynthesisSerializer(StrictSerializer):
 
     arguments = PKField(
         many=True,
-        queryset=Operation.objects.all().only('pk')
+        queryset=Operation.objects.all().only('pk', 'result_id')
     )
     substitutions = serializers.ListField(
         child=SubstitutionSerializerBase(),
@@ -391,11 +415,11 @@ class UpdateOperationSerializer(StrictSerializer):
 
 
 class DeleteOperationSerializer(StrictSerializer):
-    ''' Serializer: Delete operation. '''
+    ''' Serializer: Delete non-reference operation. '''
     layout = serializers.ListField(
         child=NodeSerializer()
     )
-    target = PKField(many=False, queryset=Operation.objects.all().only('oss_id', 'result'))
+    target = PKField(many=False, queryset=Operation.objects.all().only('oss_id', 'operation_type', 'result'))
     keep_constituents = serializers.BooleanField(default=False, required=False)
     delete_schema = serializers.BooleanField(default=False, required=False)
 
@@ -405,6 +429,32 @@ class DeleteOperationSerializer(StrictSerializer):
         if operation.oss_id != oss.pk:
             raise serializers.ValidationError({
                 'target': msg.operationNotInOSS()
+            })
+        if operation.operation_type == OperationType.REFERENCE:
+            raise serializers.ValidationError({
+                'target': msg.referenceTypeNotAllowed()
+            })
+        return attrs
+
+
+class DeleteReferenceSerializer(StrictSerializer):
+    ''' Serializer: Delete reference operation. '''
+    layout = serializers.ListField(
+        child=NodeSerializer()
+    )
+    target = PKField(many=False, queryset=Operation.objects.all().only('oss_id', 'operation_type'))
+    keep_connections = serializers.BooleanField(default=False, required=False)
+
+    def validate(self, attrs):
+        oss = cast(LibraryItem, self.context['oss'])
+        operation = cast(Operation, attrs['target'])
+        if operation.oss_id != oss.pk:
+            raise serializers.ValidationError({
+                'target': msg.operationNotInOSS()
+            })
+        if operation.operation_type != OperationType.REFERENCE:
+            raise serializers.ValidationError({
+                'target': msg.referenceTypeRequired()
             })
         return attrs
 

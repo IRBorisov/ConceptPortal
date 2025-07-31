@@ -22,7 +22,8 @@ from .Argument import Argument
 from .Block import Block
 from .Inheritance import Inheritance
 from .Layout import Layout
-from .Operation import Operation
+from .Operation import Operation, OperationType
+from .Reference import Reference
 from .Substitution import Substitution
 
 CstMapping = dict[str, Optional[Constituenta]]
@@ -105,11 +106,40 @@ class OperationSchema:
         self.save(update_fields=['time_update'])
         return result
 
+    def create_reference(self, target: Operation) -> Operation:
+        ''' Create Reference Operation. '''
+        result = Operation.objects.create(
+            oss=self.model,
+            operation_type=OperationType.REFERENCE,
+            result=target.result,
+            parent=target.parent
+        )
+        Reference.objects.create(reference=result, target=target)
+        self.save(update_fields=['time_update'])
+        return result
+
     def create_block(self, **kwargs) -> Block:
         ''' Create Block. '''
         result = Block.objects.create(oss=self.model, **kwargs)
         self.save(update_fields=['time_update'])
         return result
+
+    def delete_reference(self, target: Operation, keep_connections: bool = False):
+        ''' Delete Reference Operation. '''
+        if keep_connections:
+            referred_operations = target.getQ_reference_target()
+            if len(referred_operations) == 1:
+                referred_operation = referred_operations[0]
+                for arg in target.getQ_as_argument():
+                    arg.pk = None
+                    arg.argument = referred_operation
+                    arg.save()
+        else:
+            pass
+            # if target.result_id is not None:
+            #     self.before_delete_cst(schema, schema.cache.constituents)  # TODO: use operation instead of schema
+        target.delete()
+        self.save(update_fields=['time_update'])
 
     def delete_operation(self, target: int, keep_constituents: bool = False):
         ''' Delete Operation. '''
@@ -167,12 +197,12 @@ class OperationSchema:
                 self.before_delete_cst(old_schema, old_schema.cache.constituents)
             self.cache.remove_schema(old_schema)
 
-        operation.result = schema
+        operation.setQ_result(schema)
         if schema is not None:
             operation.alias = schema.alias
             operation.title = schema.title
             operation.description = schema.description
-        operation.save(update_fields=['result', 'alias', 'title', 'description'])
+        operation.save(update_fields=['alias', 'title', 'description'])
 
         if schema is not None and has_children:
             rsform = RSForm(schema)
@@ -263,8 +293,7 @@ class OperationSchema:
             location=self.model.location
         )
         Editor.set(schema.model.pk, self.model.getQ_editors().values_list('pk', flat=True))
-        operation.result = schema.model
-        operation.save()
+        operation.setQ_result(schema.model)
         self.save(update_fields=['time_update'])
         return schema
 
@@ -926,6 +955,7 @@ class OssCache:
         self.inheritance[target.operation_id].remove(target)
 
     def unfold_sub(self, sub: Substitution) -> tuple[RSForm, RSForm, Constituenta, Constituenta]:
+        ''' Unfold substitution into original and substitution forms. '''
         operation = self.operation_by_id[sub.operation_id]
         parents = self.graph.inputs[operation.pk]
         original_cst = None

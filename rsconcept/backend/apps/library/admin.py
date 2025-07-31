@@ -1,10 +1,12 @@
 ''' Admin view: Library. '''
 from typing import cast
+
 from django.contrib import admin
 
 from . import models
 
 
+@admin.register(models.LibraryItem)
 class LibraryItemAdmin(admin.ModelAdmin):
     ''' Admin model: LibraryItem. '''
     date_hierarchy = 'time_update'
@@ -17,6 +19,7 @@ class LibraryItemAdmin(admin.ModelAdmin):
     search_fields = ['alias', 'title', 'location']
 
 
+@admin.register(models.LibraryTemplate)
 class LibraryTemplateAdmin(admin.ModelAdmin):
     ''' Admin model: LibraryTemplate. '''
     list_display = ['id', 'alias']
@@ -29,6 +32,7 @@ class LibraryTemplateAdmin(admin.ModelAdmin):
             return 'N/A'
 
 
+@admin.register(models.Editor)
 class EditorAdmin(admin.ModelAdmin):
     ''' Admin model: Editors. '''
     list_display = ['id', 'item', 'editor']
@@ -38,16 +42,10 @@ class EditorAdmin(admin.ModelAdmin):
     ]
 
 
+@admin.register(models.Version)
 class VersionAdmin(admin.ModelAdmin):
     ''' Admin model: Versions. '''
     list_display = ['id', 'item', 'version', 'description', 'time_create']
     search_fields = [
         'item__title', 'item__alias'
     ]
-
-
-
-admin.site.register(models.LibraryItem, LibraryItemAdmin)
-admin.site.register(models.LibraryTemplate, LibraryTemplateAdmin)
-admin.site.register(models.Version, VersionAdmin)
-admin.site.register(models.Editor, EditorAdmin)

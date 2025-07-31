@@ -86,6 +86,14 @@ def operationInputAlreadyConnected():
     return 'Схема уже подключена к другой операции'
 
 
+def referenceTypeNotAllowed():
+    return 'Ссылки не поддерживаются'
+
+
+def referenceTypeRequired():
+    return 'Операция должна быть ссылкой'
+
+
 def operationNotSynthesis(title: str):
     return f'Операция не является Синтезом: {title}'
 

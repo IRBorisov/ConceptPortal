@@ -66,9 +66,11 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
             'create_schema',
             'clone_schema',
             'import_schema',
+            'create_reference',
             'create_synthesis',
             'update_operation',
             'delete_operation',
+            'delete_reference',
             'create_input',
             'set_input',
             'execute_operation',
@@ -453,6 +455,51 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
             }
         )
 
+
+    @extend_schema(
+        summary='create reference for operation',
+        tags=['OSS'],
+        request=s.CreateReferenceSerializer(),
+        responses={
+            c.HTTP_201_CREATED: s.OperationCreatedResponse,
+            c.HTTP_400_BAD_REQUEST: None,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
+    )
+    @action(detail=True, methods=['post'], url_path='create-reference')
+    def create_reference(self, request: Request, pk) -> HttpResponse:
+        ''' Clone schema. '''
+        serializer = s.CreateReferenceSerializer(
+            data=request.data,
+            context={'oss': self.get_object()}
+        )
+        serializer.is_valid(raise_exception=True)
+
+        oss = m.OperationSchema(self.get_object())
+        layout = serializer.validated_data['layout']
+        position = serializer.validated_data['position']
+        with transaction.atomic():
+            target = cast(m.Operation, serializer.validated_data['target'])
+            new_operation = oss.create_reference(target)
+            layout.append({
+                'nodeID': 'o' + str(new_operation.pk),
+                'x': position['x'],
+                'y': position['y'],
+                'width': position['width'],
+                'height': position['height']
+            })
+            oss.update_layout(layout)
+            oss.save(update_fields=['time_update'])
+
+        return Response(
+            status=c.HTTP_201_CREATED,
+            data={
+                'new_operation': new_operation.pk,
+                'oss': s.OperationSchemaSerializer(oss.model).data
+            }
+        )
+
     @extend_schema(
         summary='create synthesis operation',
         tags=['OSS'],
@@ -590,6 +637,39 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
                     old_schema.visible = True
                     old_schema.save(update_fields=['visible'])
             oss.save(update_fields=['time_update'])
+
+        return Response(
+            status=c.HTTP_200_OK,
+            data=s.OperationSchemaSerializer(oss.model).data
+        )
+
+    @extend_schema(
+        summary='delete reference',
+        tags=['OSS'],
+        request=s.DeleteReferenceSerializer(),
+        responses={
+            c.HTTP_200_OK: s.OperationSchemaSerializer,
+            c.HTTP_400_BAD_REQUEST: None,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
+    )
+    @action(detail=True, methods=['patch'], url_path='delete-reference')
+    def delete_reference(self, request: Request, pk) -> HttpResponse:
+        ''' Endpoint: Delete Reference Operation. '''
+        serializer = s.DeleteReferenceSerializer(
+            data=request.data,
+            context={'oss': self.get_object()}
+        )
+        serializer.is_valid(raise_exception=True)
+
+        oss = m.OperationSchema(self.get_object())
+        operation = cast(m.Operation, serializer.validated_data['target'])
+        layout = serializer.validated_data['layout']
+        layout = [x for x in layout if x['nodeID'] != 'o' + str(operation.pk)]
+        with transaction.atomic():
+            oss.update_layout(layout)
+            oss.delete_reference(operation, serializer.validated_data['keep_connections'])
 
         return Response(
             status=c.HTTP_200_OK,

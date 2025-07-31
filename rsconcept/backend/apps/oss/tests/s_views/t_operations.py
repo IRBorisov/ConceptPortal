@@ -1,6 +1,6 @@
 ''' Testing API: Operation Schema - operations manipulation. '''
 from apps.library.models import AccessPolicy, Editor, LibraryItem, LibraryItemType
-from apps.oss.models import Operation, OperationSchema, OperationType
+from apps.oss.models import Operation, OperationSchema, OperationType, Reference
 from apps.rsform.models import Constituenta, RSForm
 from shared.EndpointTester import EndpointTester, decl_endpoint
 
@@ -54,6 +54,11 @@ class TestOssOperations(EndpointTester):
             alias='3',
             operation_type=OperationType.SYNTHESIS
         )
+        self.unowned_operation = self.unowned.create_operation(
+            alias='42',
+            operation_type=OperationType.INPUT,
+            result=None
+        )
         self.layout_data = [
             {'nodeID': 'o' + str(self.operation1.pk), 'x': 0, 'y': 0, 'width': 150, 'height': 40},
             {'nodeID': 'o' + str(self.operation2.pk), 'x': 0, 'y': 0, 'width': 150, 'height': 40},
@@ -68,7 +73,6 @@ class TestOssOperations(EndpointTester):
             'original': self.ks1X1,
             'substitution': self.ks2X1
         }])
-
 
     @decl_endpoint('/api/oss/{item}/create-schema', method='post')
     def test_create_schema(self):
@@ -165,6 +169,10 @@ class TestOssOperations(EndpointTester):
         self.assertEqual(new_schema.description, new_operation['description'])
         self.assertEqual(self.ks1.constituents().count(), RSForm(new_schema).constituents().count())
 
+        unrelated_data = dict(data)
+        unrelated_data['source_operation'] = self.unowned_operation.pk
+        self.executeBadData(data=unrelated_data, item=self.owned_id)
+
 
     @decl_endpoint('/api/oss/{item}/create-schema', method='post')
     def test_create_schema_parent(self):
@@ -199,6 +207,37 @@ class TestOssOperations(EndpointTester):
         new_operation = next(op for op in response.data['oss']['operations'] if op['id'] == new_operation_id)
         self.assertEqual(len(response.data['oss']['operations']), 4)
         self.assertEqual(new_operation['parent'], block_owned.id)
+
+
+    @decl_endpoint('/api/oss/{item}/create-reference', method='post')
+    def test_create_reference(self):
+        self.populateData()
+        data = {
+            'target': self.invalid_id,
+            'layout': self.layout_data,
+            'position': {
+                'x': 10,
+                'y': 20,
+                'width': 100,
+                'height': 40
+            }
+        }
+        self.executeBadData(data=data, item=self.owned_id)
+
+        data['target'] = self.unowned_operation.pk
+        self.executeBadData(data=data, item=self.owned_id)
+
+        data['target'] = self.operation1.pk
+        response = self.executeCreated(data=data, item=self.owned_id)
+        self.owned.refresh_from_db()
+        new_operation_id = response.data['new_operation']
+        new_operation = next(op for op in response.data['oss']['operations'] if op['id'] == new_operation_id)
+        self.assertEqual(new_operation['operation_type'], OperationType.REFERENCE)
+        self.assertEqual(new_operation['parent'], self.operation1.parent_id)
+        self.assertEqual(new_operation['result'], self.operation1.result_id)
+        ref = Reference.objects.filter(reference_id=new_operation_id, target_id=self.operation1.pk).first()
+        self.assertIsNotNone(ref)
+        self.assertTrue(Operation.objects.filter(pk=new_operation_id, oss=self.owned.model).exists())
 
 
     @decl_endpoint('/api/oss/{item}/create-synthesis', method='post')
@@ -242,6 +281,9 @@ class TestOssOperations(EndpointTester):
         }
         self.executeBadData(data=data)
 
+        data['target'] = self.unowned_operation.pk
+        self.executeBadData(data=data, item=self.owned_id)
+
         data['target'] = self.operation1.pk
         self.toggle_admin(True)
         self.executeBadData(data=data, item=self.unowned_id)
@@ -254,6 +296,39 @@ class TestOssOperations(EndpointTester):
         deleted_items = [item for item in layout if item['nodeID'] == 'o' + str(data['target'])]
         self.assertEqual(len(response.data['operations']), 2)
         self.assertEqual(len(deleted_items), 0)
+
+
+    @decl_endpoint('/api/oss/{item}/delete-operation', method='patch')
+    def test_delete_reference_operation_invalid(self):
+        self.populateData()
+        reference_operation = self.owned.create_reference(self.operation1)
+        data = {
+            'layout': self.layout_data,
+            'target': reference_operation.pk
+        }
+        self.executeBadData(data=data, item=self.owned_id)
+
+
+    @decl_endpoint('/api/oss/{item}/delete-reference', method='patch')
+    def test_delete_reference_operation(self):
+        self.populateData()
+        data = {
+            'layout': self.layout_data,
+            'target': self.invalid_id
+        }
+        self.executeBadData(data=data, item=self.owned_id)
+
+        reference_operation = self.owned.create_reference(self.operation1)
+        self.assertEqual(len(self.operation1.getQ_references()), 1)
+        data['target'] = reference_operation.pk
+        self.executeForbidden(data=data, item=self.unowned_id)
+
+        data['target'] = self.operation1.pk
+        self.executeBadData(data=data, item=self.owned_id)
+
+        data['target'] = reference_operation.pk
+        self.executeOK(data=data, item=self.owned_id)
+        self.assertEqual(len(self.operation1.getQ_references()), 0)
 
 
     @decl_endpoint('/api/oss/{item}/create-input', method='patch')
@@ -290,6 +365,9 @@ class TestOssOperations(EndpointTester):
 
         data['target'] = self.operation3.pk
         self.executeBadData(data=data)
+
+        data['target'] = self.unowned_operation.pk
+        self.executeBadData(data=data, item=self.owned_id)
 
 
     @decl_endpoint('/api/oss/{item}/set-input', method='patch')
@@ -411,6 +489,10 @@ class TestOssOperations(EndpointTester):
         data['layout'] = self.layout_data
         self.executeOK(data=data)
 
+        data_bad = dict(data)
+        data_bad['target'] = self.unowned_operation.pk
+        self.executeBadData(data=data_bad, item=self.owned_id)
+
 
     @decl_endpoint('/api/oss/{item}/update-operation', method='patch')
     def test_update_operation_sync(self):
@@ -418,7 +500,7 @@ class TestOssOperations(EndpointTester):
         self.executeBadData(item=self.owned_id)
 
         data = {
-            'target': self.operation1.pk,
+            'target': self.unowned_operation.pk,
             'item_data': {
                 'alias': 'Test3 mod',
                 'title': 'Test title mod',
@@ -426,7 +508,9 @@ class TestOssOperations(EndpointTester):
             },
             'layout': self.layout_data
         }
+        self.executeBadData(data=data, item=self.owned_id)
 
+        data['target'] = self.operation1.pk
         response = self.executeOK(data=data)
         self.operation1.refresh_from_db()
         self.assertEqual(self.operation1.alias, data['item_data']['alias'])
@@ -435,6 +519,11 @@ class TestOssOperations(EndpointTester):
         self.assertEqual(self.operation1.result.alias, data['item_data']['alias'])
         self.assertEqual(self.operation1.result.title, data['item_data']['title'])
         self.assertEqual(self.operation1.result.description, data['item_data']['description'])
+
+        # Try to update an operation from an unrelated OSS (should fail)
+        data_bad = dict(data)
+        data_bad['target'] = self.unowned_operation.pk
+        self.executeBadData(data=data_bad, item=self.owned_id)
 
 
     @decl_endpoint('/api/oss/{item}/update-operation', method='patch')
@@ -476,6 +565,9 @@ class TestOssOperations(EndpointTester):
             'target': self.operation1.pk
         }
         self.executeBadData(data=data)
+
+        data['target'] = self.unowned_operation.pk
+        self.executeBadData(data=data, item=self.owned_id)
 
         data['target'] = self.operation3.pk
         self.toggle_admin(True)
@@ -582,6 +674,7 @@ class TestOssOperations(EndpointTester):
         self.assertEqual(schema.visible, False)
         self.assertEqual(schema.access_policy, self.owned.model.access_policy)
         self.assertEqual(schema.location, self.owned.model.location)
+
 
     @decl_endpoint('/api/oss/{item}/import-schema', method='post')
     def test_import_schema_bad_data(self):

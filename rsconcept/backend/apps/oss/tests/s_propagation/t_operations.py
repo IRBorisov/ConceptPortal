@@ -8,7 +8,6 @@ from shared.EndpointTester import EndpointTester, decl_endpoint
 class TestChangeOperations(EndpointTester):
     ''' Testing Operations change propagation in OSS. '''
 
-
     def setUp(self):
         super().setUp()
         self.owned = OperationSchema.create(

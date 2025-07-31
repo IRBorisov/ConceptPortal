@@ -4,6 +4,7 @@ from django.contrib import admin
 from . import models
 
 
+@admin.register(models.Operation)
 class OperationAdmin(admin.ModelAdmin):
     ''' Admin model: Operation. '''
     ordering = ['oss']
@@ -19,6 +20,7 @@ class OperationAdmin(admin.ModelAdmin):
     search_fields = ['id', 'operation_type', 'title', 'alias']
 
 
+@admin.register(models.Block)
 class BlockAdmin(admin.ModelAdmin):
     ''' Admin model: Block. '''
     ordering = ['oss']
@@ -26,6 +28,7 @@ class BlockAdmin(admin.ModelAdmin):
     search_fields = ['oss']
 
 
+@admin.register(models.Layout)
 class LayoutAdmin(admin.ModelAdmin):
     ''' Admin model: Layout. '''
     ordering = ['oss']
@@ -33,6 +36,7 @@ class LayoutAdmin(admin.ModelAdmin):
     search_fields = ['oss']
 
 
+@admin.register(models.Argument)
 class ArgumentAdmin(admin.ModelAdmin):
     ''' Admin model: Operation arguments. '''
     ordering = ['operation']
@@ -40,6 +44,7 @@ class ArgumentAdmin(admin.ModelAdmin):
     search_fields = ['id', 'operation', 'argument']
 
 
+@admin.register(models.Substitution)
 class SynthesisSubstitutionAdmin(admin.ModelAdmin):
     ''' Admin model:  Substitutions as part of Synthesis operation. '''
     ordering = ['operation']
@@ -47,6 +52,7 @@ class SynthesisSubstitutionAdmin(admin.ModelAdmin):
     search_fields = ['id', 'operation', 'original', 'substitution']
 
 
+@admin.register(models.Inheritance)
 class InheritanceAdmin(admin.ModelAdmin):
     ''' Admin model: Inheritance. '''
     ordering = ['operation']
@@ -54,9 +60,9 @@ class InheritanceAdmin(admin.ModelAdmin):
     search_fields = ['id', 'operation', 'parent', 'child']
 
 
-admin.site.register(models.Operation, OperationAdmin)
-admin.site.register(models.Block, BlockAdmin)
-admin.site.register(models.Layout, LayoutAdmin)
-admin.site.register(models.Argument, ArgumentAdmin)
-admin.site.register(models.Substitution, SynthesisSubstitutionAdmin)
-admin.site.register(models.Inheritance, InheritanceAdmin)
+@admin.register(models.Reference)
+class ReferenceAdmin(admin.ModelAdmin):
+    ''' Admin model: Reference. '''
+    ordering = ['reference', 'target']
+    list_display = ['id', 'reference', 'target']
+    search_fields = ['id', 'reference', 'target']
