@@ -85,7 +85,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             insert_after = None
         else:
             insert_after = data['insert_after']
-        schema = m.RSForm(self._get_item())
+        schema = m.RSFormCached(self._get_item())
         with transaction.atomic():
             new_cst = schema.create_cst(data, insert_after)
             PropagationFacade.after_create_cst(schema, [new_cst])
@@ -115,7 +115,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         serializer = s.CstUpdateSerializer(data=request.data, partial=True, context={'schema': model})
         serializer.is_valid(raise_exception=True)
         cst = cast(m.Constituenta, serializer.validated_data['target'])
-        schema = m.RSForm(model)
+        schema = m.RSFormCached(model)
         data = serializer.validated_data['item_data']
         with transaction.atomic():
             old_data = schema.update_cst(cst, data)
@@ -199,7 +199,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
                 status=c.HTTP_400_BAD_REQUEST,
                 data={f'{cst.pk}': msg.constituentaNoStructure()}
             )
-        schema = m.RSForm(model)
+        schema = m.RSFormCached(model)
 
         with transaction.atomic():
             new_cst = schema.produce_structure(cst, cst_parse)
@@ -233,7 +233,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             context={'schema': model}
         )
         serializer.is_valid(raise_exception=True)
-        schema = m.RSForm(model)
+        schema = m.RSFormCached(model)
         substitutions: list[tuple[m.Constituenta, m.Constituenta]] = []
         with transaction.atomic():
             for substitution in serializer.validated_data['substitutions']:
@@ -268,7 +268,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         )
         serializer.is_valid(raise_exception=True)
         cst_list: list[m.Constituenta] = serializer.validated_data['items']
-        schema = m.RSForm(model)
+        schema = m.RSFormCached(model)
         with transaction.atomic():
             PropagationFacade.before_delete_cst(schema, cst_list)
             schema.delete_cst(cst_list)
@@ -321,7 +321,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     def reset_aliases(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Recreate all aliases based on order. '''
         model = self._get_item()
-        schema = m.RSForm(model)
+        schema = m.RSFormCached(model)
         schema.reset_aliases()
         return Response(
             status=c.HTTP_200_OK,
@@ -342,7 +342,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     def restore_order(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Restore order based on types and Term graph. '''
         model = self._get_item()
-        m.RSForm(model).restore_order()
+        m.RSFormCached(model).restore_order()
         return Response(
             status=c.HTTP_200_OK,
             data=s.RSFormParseSerializer(model).data
@@ -437,7 +437,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         serializer = s.ExpressionSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         expression = serializer.validated_data['expression']
-        pySchema = s.PyConceptAdapter(m.RSForm(self.get_object()))
+        pySchema = s.PyConceptAdapter(pk)
         result = pyconcept.check_expression(json.dumps(pySchema.data), expression)
         return Response(
             status=c.HTTP_200_OK,
@@ -462,7 +462,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         alias = serializer.validated_data['alias']
         cst_type = cast(m.CstType, serializer.validated_data['cst_type'])
 
-        pySchema = s.PyConceptAdapter(m.RSForm(self.get_object()))
+        pySchema = s.PyConceptAdapter(pk)
         result = pyconcept.check_constituenta(json.dumps(pySchema.data), alias, expression, cst_type)
         return Response(
             status=c.HTTP_200_OK,
@@ -484,7 +484,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         serializer = s.TextSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         text = serializer.validated_data['text']
-        resolver = m.RSForm(self.get_object()).resolver()
+        resolver = m.RSForm.spawn_resolver(pk)
         resolver.resolve(text)
         return Response(
             status=c.HTTP_200_OK,
@@ -504,7 +504,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     def export_trs(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Download Exteor compatible file. '''
         model = self._get_item()
-        data = s.RSFormTRSSerializer(m.RSForm(model)).data
+        data = s.generate_trs(model)
         file = utility.write_zipped_json(data, utils.EXTEOR_INNER_FILENAME)
         filename = utils.filename_for_schema(model.alias)
         response = HttpResponse(file, content_type='application/zip')
@@ -624,10 +624,11 @@ def inline_synthesis(request: Request) -> HttpResponse:
     )
     serializer.is_valid(raise_exception=True)
 
-    receiver = m.RSForm(serializer.validated_data['receiver'])
+    receiver = m.RSFormCached(serializer.validated_data['receiver'])
     items = cast(list[m.Constituenta], serializer.validated_data['items'])
     if len(items) == 0:
-        items = list(m.RSForm(serializer.validated_data['source']).constituents().order_by('order'))
+        source = cast(LibraryItem, serializer.validated_data['source'])
+        items = list(m.Constituenta.objects.filter(schema=source).order_by('order'))
 
     with transaction.atomic():
         new_items = receiver.insert_copy(items)

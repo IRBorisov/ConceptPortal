@@ -52,7 +52,10 @@ class CstUpdateSerializer(StrictSerializer):
     target = PKField(
         many=False,
         queryset=Constituenta.objects.all().only(
-            'alias', 'cst_type', 'convention', 'crucial', 'definition_formal', 'definition_raw', 'term_raw')
+            'schema_id',
+            'alias', 'cst_type', 'convention', 'crucial',
+            'definition_formal', 'definition_raw', 'term_raw'
+        )
     )
     item_data = ConstituentaUpdateData()
 
@@ -65,7 +68,7 @@ class CstUpdateSerializer(StrictSerializer):
             })
         if 'alias' in attrs['item_data']:
             new_alias = attrs['item_data']['alias']
-            if cst.alias != new_alias and RSForm(schema).constituents().filter(alias=new_alias).exists():
+            if cst.alias != new_alias and Constituenta.objects.filter(schema=schema, alias=new_alias).exists():
                 raise serializers.ValidationError({
                     'alias': msg.aliasTaken(new_alias)
                 })
@@ -161,7 +164,7 @@ class RSFormSerializer(StrictModelSerializer):
         result['items'] = []
         result['oss'] = []
         result['inheritance'] = []
-        for cst in RSForm(instance).constituents().defer('order').order_by('order'):
+        for cst in Constituenta.objects.filter(schema=instance).defer('order').order_by('order'):
             result['items'].append(CstInfoSerializer(cst).data)
         for oss in LibraryItem.objects.filter(operations__result=instance).only('alias'):
             result['oss'].append({
@@ -199,7 +202,7 @@ class RSFormSerializer(StrictModelSerializer):
         ids: list[int] = [item['id'] for item in items]
         processed: list[int] = []
 
-        for cst in schema.constituents():
+        for cst in schema.constituentsQ():
             if not cst.pk in ids:
                 cst.delete()
             else:
@@ -216,7 +219,7 @@ class RSFormSerializer(StrictModelSerializer):
 
         for cst_data in items:
             if cst_data['id'] not in processed:
-                cst = schema.insert_new(cst_data['alias'])
+                cst = schema.insert_last(cst_data['alias'])
                 old_id = cst_data['id']
                 cst_data['id'] = cst.pk
                 cst_data['schema'] = cast(LibraryItem, self.instance).pk

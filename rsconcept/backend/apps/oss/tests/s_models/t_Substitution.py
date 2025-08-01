@@ -15,9 +15,9 @@ class TestSynthesisSubstitution(TestCase):
         self.oss = OperationSchema.create(alias='T1')
 
         self.ks1 = RSForm.create(alias='KS1', title='Test1')
-        self.ks1X1 = self.ks1.insert_new('X1', term_resolved='X1_1')
+        self.ks1X1 = self.ks1.insert_last('X1', term_resolved='X1_1')
         self.ks2 = RSForm.create(alias='KS2', title='Test2')
-        self.ks2X1 = self.ks2.insert_new('X2', term_resolved='X1_2')
+        self.ks2X1 = self.ks2.insert_last('X2', term_resolved='X1_2')
 
         self.operation1 = Operation.objects.create(
             oss=self.oss.model,

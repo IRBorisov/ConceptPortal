@@ -14,7 +14,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 
 from apps.oss.models import Layout, Operation, OperationSchema, PropagationFacade
-from apps.rsform.models import RSForm
+from apps.rsform.models import RSFormCached
 from apps.rsform.serializers import RSFormParseSerializer
 from apps.users.models import User
 from shared import permissions
@@ -172,7 +172,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
             clone.location = data.get('location', m.LocationHead.USER)
             clone.save()
             need_filter = 'items' in request.data and len(request.data['items']) > 0
-            for cst in RSForm(item).constituents():
+            for cst in RSFormCached(item).constituentsQ():
                 if not need_filter or cst.pk in request.data['items']:
                     cst.pk = None
                     cst.schema = clone

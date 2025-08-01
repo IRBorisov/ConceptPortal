@@ -6,20 +6,20 @@ import pyconcept
 
 from shared import messages as msg
 
-from ..models import RSForm
+from ..models import Constituenta
 
 
 class PyConceptAdapter:
     ''' RSForm adapter for interacting with pyconcept module. '''
 
-    def __init__(self, data: Union[RSForm, dict]):
+    def __init__(self, data: Union[int, dict]):
         try:
             if 'items' in cast(dict, data):
                 self.data = self._prepare_request_raw(cast(dict, data))
             else:
-                self.data = self._prepare_request(cast(RSForm, data))
+                self.data = self._prepare_request(cast(int, data))
         except TypeError:
-            self.data = self._prepare_request(cast(RSForm, data))
+            self.data = self._prepare_request(cast(int, data))
         self._checked_data: Optional[dict] = None
 
     def parse(self) -> dict:
@@ -30,11 +30,11 @@ class PyConceptAdapter:
             raise ValueError(msg.pyconceptFailure())
         return self._checked_data
 
-    def _prepare_request(self, schema: RSForm) -> dict:
+    def _prepare_request(self, schemaID: int) -> dict:
         result: dict = {
             'items': []
         }
-        items = schema.constituents().order_by('order')
+        items = Constituenta.objects.filter(schema_id=schemaID).order_by('order')
         for cst in items:
             result['items'].append({
                 'entityUID': cst.pk,

@@ -23,18 +23,18 @@ class TestChangeSubstitutions(EndpointTester):
             title='Test1',
             owner=self.user
         )
-        self.ks1X1 = self.ks1.insert_new('X1', convention='KS1X1')
-        self.ks1X2 = self.ks1.insert_new('X2', convention='KS1X2')
-        self.ks1D1 = self.ks1.insert_new('D1', definition_formal='X1 X2', convention='KS1D1')
+        self.ks1X1 = self.ks1.insert_last('X1', convention='KS1X1')
+        self.ks1X2 = self.ks1.insert_last('X2', convention='KS1X2')
+        self.ks1D1 = self.ks1.insert_last('D1', definition_formal='X1 X2', convention='KS1D1')
 
         self.ks2 = RSForm.create(
             alias='KS2',
             title='Test2',
             owner=self.user
         )
-        self.ks2X1 = self.ks2.insert_new('X1', convention='KS2X1')
-        self.ks2X2 = self.ks2.insert_new('X2', convention='KS2X2')
-        self.ks2S1 = self.ks2.insert_new(
+        self.ks2X1 = self.ks2.insert_last('X1', convention='KS2X1')
+        self.ks2X2 = self.ks2.insert_last('X2', convention='KS2X2')
+        self.ks2S1 = self.ks2.insert_last(
             alias='S1',
             definition_formal=r'X1',
             convention='KS2S1'
@@ -45,8 +45,8 @@ class TestChangeSubstitutions(EndpointTester):
             title='Test3',
             owner=self.user
         )
-        self.ks3X1 = self.ks3.insert_new('X1', convention='KS3X1')
-        self.ks3D1 = self.ks3.insert_new(
+        self.ks3X1 = self.ks3.insert_last('X1', convention='KS3X1')
+        self.ks3D1 = self.ks3.insert_last(
             alias='D1',
             definition_formal='X1 X1',
             convention='KS3D1'
@@ -83,7 +83,7 @@ class TestChangeSubstitutions(EndpointTester):
         self.ks4X1 = Constituenta.objects.get(as_child__parent_id=self.ks1X2.pk)
         self.ks4S1 = Constituenta.objects.get(as_child__parent_id=self.ks2S1.pk)
         self.ks4D1 = Constituenta.objects.get(as_child__parent_id=self.ks1D1.pk)
-        self.ks4D2 = self.ks4.insert_new(
+        self.ks4D2 = self.ks4.insert_last(
             alias='D2',
             definition_formal=r'X1 X2 X3 S1 D1',
             convention='KS4D2'
@@ -101,7 +101,7 @@ class TestChangeSubstitutions(EndpointTester):
         self.owned.execute_operation(self.operation5)
         self.operation5.refresh_from_db()
         self.ks5 = RSForm(self.operation5.result)
-        self.ks5D4 = self.ks5.insert_new(
+        self.ks5D4 = self.ks5.insert_last(
             alias='D4',
             definition_formal=r'X1 X2 X3 S1 D1 D2 D3',
             convention='KS5D4'
@@ -120,11 +120,11 @@ class TestChangeSubstitutions(EndpointTester):
 
 
     def test_oss_setup(self):
-        self.assertEqual(self.ks1.constituents().count(), 3)
-        self.assertEqual(self.ks2.constituents().count(), 3)
-        self.assertEqual(self.ks3.constituents().count(), 2)
-        self.assertEqual(self.ks4.constituents().count(), 6)
-        self.assertEqual(self.ks5.constituents().count(), 8)
+        self.assertEqual(self.ks1.constituentsQ().count(), 3)
+        self.assertEqual(self.ks2.constituentsQ().count(), 3)
+        self.assertEqual(self.ks3.constituentsQ().count(), 2)
+        self.assertEqual(self.ks4.constituentsQ().count(), 6)
+        self.assertEqual(self.ks5.constituentsQ().count(), 8)
         self.assertEqual(self.ks4D1.definition_formal, 'S1 X1')
 
 
@@ -186,7 +186,7 @@ class TestChangeSubstitutions(EndpointTester):
         self.assertEqual(subs1_2.count(), 0)
         subs3_4 = self.operation5.getQ_substitutions()
         self.assertEqual(subs3_4.count(), 1)
-        self.assertEqual(self.ks5.constituents().count(), 7)
+        self.assertEqual(self.ks5.constituentsQ().count(), 7)
         self.assertEqual(self.ks4D2.definition_formal, r'X1 X2 X3 S1 DEL')
         self.assertEqual(self.ks5D4.definition_formal, r'X1 X2 X3 S1 DEL D2 D3')
 
@@ -202,7 +202,7 @@ class TestChangeSubstitutions(EndpointTester):
         self.assertEqual(subs1_2.count(), 0)
         subs3_4 = self.operation5.getQ_substitutions()
         self.assertEqual(subs3_4.count(), 1)
-        self.assertEqual(self.ks5.constituents().count(), 7)
+        self.assertEqual(self.ks5.constituentsQ().count(), 7)
         self.assertEqual(self.ks4D1.definition_formal, r'X4 X1')
         self.assertEqual(self.ks4D2.definition_formal, r'X1 X2 DEL DEL D1')
         self.assertEqual(self.ks5D4.definition_formal, r'X1 DEL X3 DEL D1 D2 D3')

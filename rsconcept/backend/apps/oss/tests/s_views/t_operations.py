@@ -24,7 +24,7 @@ class TestOssOperations(EndpointTester):
             title='Test1',
             owner=self.user
         )
-        self.ks1X1 = self.ks1.insert_new(
+        self.ks1X1 = self.ks1.insert_last(
             'X1',
             term_raw='X1_1',
             term_resolved='X1_1'
@@ -34,7 +34,7 @@ class TestOssOperations(EndpointTester):
             title='Test2',
             owner=self.user
         )
-        self.ks2X1 = self.ks2.insert_new(
+        self.ks2X1 = self.ks2.insert_last(
             'X2',
             term_raw='X1_2',
             term_resolved='X1_2'
@@ -167,7 +167,7 @@ class TestOssOperations(EndpointTester):
         self.assertEqual(new_schema.alias, new_operation['alias'])
         self.assertEqual(new_schema.title, new_operation['title'])
         self.assertEqual(new_schema.description, new_operation['description'])
-        self.assertEqual(self.ks1.constituents().count(), RSForm(new_schema).constituents().count())
+        self.assertEqual(self.ks1.constituentsQ().count(), RSForm(new_schema).constituentsQ().count())
 
         unrelated_data = dict(data)
         unrelated_data['source_operation'] = self.unowned_operation.pk
@@ -446,7 +446,7 @@ class TestOssOperations(EndpointTester):
         self.executeBadData(item=self.owned_id)
 
         ks3 = RSForm.create(alias='KS3', title='Test3', owner=self.user)
-        ks3x1 = ks3.insert_new('X1', term_resolved='X1_1')
+        ks3x1 = ks3.insert_last('X1', term_resolved='X1_1')
 
         data = {
             'target': self.operation3.pk,
@@ -530,7 +530,7 @@ class TestOssOperations(EndpointTester):
     def test_update_operation_invalid_substitution(self):
         self.populateData()
 
-        self.ks1X2 = self.ks1.insert_new('X2')
+        self.ks1X2 = self.ks1.insert_last('X2')
 
         data = {
             'target': self.operation3.pk,
@@ -583,7 +583,7 @@ class TestOssOperations(EndpointTester):
         self.assertEqual(schema.description, self.operation3.description)
         self.assertEqual(schema.title, self.operation3.title)
         self.assertEqual(schema.visible, False)
-        items = list(RSForm(schema).constituents())
+        items = list(RSForm(schema).constituentsQ())
         self.assertEqual(len(items), 1)
         self.assertEqual(items[0].alias, 'X1')
         self.assertEqual(items[0].term_resolved, self.ks2X1.term_resolved)

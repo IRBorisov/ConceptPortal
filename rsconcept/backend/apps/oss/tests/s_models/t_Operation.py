@@ -3,7 +3,6 @@ from django.test import TestCase
 
 from apps.library.models import LibraryItem, LibraryItemType
 from apps.oss.models import Operation, OperationSchema, OperationType
-from apps.rsform.models import RSForm
 
 
 class TestOperation(TestCase):

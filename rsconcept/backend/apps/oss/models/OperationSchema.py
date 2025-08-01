@@ -12,7 +12,7 @@ from apps.rsform.models import (
     INSERT_LAST,
     Constituenta,
     CstType,
-    RSForm,
+    RSFormCached,
     extract_globals,
     replace_entities,
     replace_globals
@@ -42,12 +42,6 @@ class OperationSchema:
         ''' Create LibraryItem via OperationSchema. '''
         model = LibraryItem.objects.create(item_type=LibraryItemType.OPERATION_SCHEMA, **kwargs)
         Layout.objects.create(oss=model, data=[])
-        return OperationSchema(model)
-
-    @staticmethod
-    def from_id(pk: int) -> 'OperationSchema':
-        ''' Get LibraryItem by pk. '''
-        model = LibraryItem.objects.get(pk=pk)
         return OperationSchema(model)
 
     def save(self, *args, **kwargs) -> None:
@@ -205,8 +199,8 @@ class OperationSchema:
         operation.save(update_fields=['alias', 'title', 'description'])
 
         if schema is not None and has_children:
-            rsform = RSForm(schema)
-            self.after_create_cst(rsform, list(rsform.constituents().order_by('order')))
+            rsform = RSFormCached(schema)
+            self.after_create_cst(rsform, list(rsform.constituentsQ().order_by('order')))
         self.save(update_fields=['time_update'])
 
     def set_arguments(self, target: int, arguments: list[Operation]) -> None:
@@ -281,9 +275,9 @@ class OperationSchema:
         if len(added) > 0 or len(deleted) > 0:
             self.save(update_fields=['time_update'])
 
-    def create_input(self, operation: Operation) -> RSForm:
+    def create_input(self, operation: Operation) -> RSFormCached:
         ''' Create input RSForm for given Operation. '''
-        schema = RSForm.create(
+        schema = RSFormCached.create(
             owner=self.model.owner,
             alias=operation.alias,
             title=operation.title,
@@ -312,8 +306,8 @@ class OperationSchema:
         parents: dict = {}
         children: dict = {}
         for operand in schemas:
-            schema = RSForm(operand)
-            items = list(schema.constituents().order_by('order'))
+            schema = RSFormCached(operand)
+            items = list(schema.constituentsQ().order_by('order'))
             new_items = receiver.insert_copy(items)
             for (i, cst) in enumerate(new_items):
                 parents[cst.pk] = items[i]
@@ -326,7 +320,7 @@ class OperationSchema:
             translated_substitutions.append((original, replacement))
         receiver.substitute(translated_substitutions)
 
-        for cst in receiver.constituents().order_by('order'):
+        for cst in receiver.constituentsQ().order_by('order'):
             parent = parents.get(cst.pk)
             assert parent is not None
             Inheritance.objects.create(
@@ -340,11 +334,11 @@ class OperationSchema:
         receiver.resolve_all_text()
 
         if len(self.cache.graph.outputs[operation.pk]) > 0:
-            self.after_create_cst(receiver, list(receiver.constituents().order_by('order')))
+            self.after_create_cst(receiver, list(receiver.constituentsQ().order_by('order')))
         self.save(update_fields=['time_update'])
         return True
 
-    def relocate_down(self, source: RSForm, destination: RSForm, items: list[Constituenta]):
+    def relocate_down(self, source: RSFormCached, destination: RSFormCached, items: list[Constituenta]):
         ''' Move list of Constituents to destination Schema inheritor. '''
         self.cache.ensure_loaded()
         self.cache.insert_schema(source)
@@ -358,7 +352,8 @@ class OperationSchema:
             self.cache.remove_inheritance(item)
         Inheritance.objects.filter(operation_id=operation.pk, parent__in=items).delete()
 
-    def relocate_up(self, source: RSForm, destination: RSForm, items: list[Constituenta]) -> list[Constituenta]:
+    def relocate_up(self, source: RSFormCached, destination: RSFormCached,
+                    items: list[Constituenta]) -> list[Constituenta]:
         ''' Move list of Constituents upstream to destination Schema. '''
         self.cache.ensure_loaded()
         self.cache.insert_schema(source)
@@ -385,7 +380,7 @@ class OperationSchema:
         return new_items
 
     def after_create_cst(
-        self, source: RSForm,
+        self, source: RSFormCached,
         cst_list: list[Constituenta],
         exclude: Optional[list[int]] = None
     ) -> None:
@@ -404,13 +399,13 @@ class OperationSchema:
         operation = self.cache.get_operation(source.model.pk)
         self._cascade_inherit_cst(operation.pk, source, cst_list, alias_mapping, exclude)
 
-    def after_change_cst_type(self, source: RSForm, target: Constituenta) -> None:
+    def after_change_cst_type(self, source: RSFormCached, target: Constituenta) -> None:
         ''' Trigger cascade resolutions when Constituenta type is changed. '''
         self.cache.insert_schema(source)
         operation = self.cache.get_operation(source.model.pk)
         self._cascade_change_cst_type(operation.pk, target.pk, cast(CstType, target.cst_type))
 
-    def after_update_cst(self, source: RSForm, target: Constituenta, data: dict, old_data: dict) -> None:
+    def after_update_cst(self, source: RSFormCached, target: Constituenta, data: dict, old_data: dict) -> None:
         ''' Trigger cascade resolutions when Constituenta data is changed. '''
         self.cache.insert_schema(source)
         operation = self.cache.get_operation(source.model.pk)
@@ -428,13 +423,13 @@ class OperationSchema:
             mapping=alias_mapping
         )
 
-    def before_delete_cst(self, source: RSForm, target: list[Constituenta]) -> None:
+    def before_delete_cst(self, source: RSFormCached, target: list[Constituenta]) -> None:
         ''' Trigger cascade resolutions before Constituents are deleted. '''
         self.cache.insert_schema(source)
         operation = self.cache.get_operation(source.model.pk)
         self._cascade_delete_inherited(operation.pk, target)
 
-    def before_substitute(self, source: RSForm, substitutions: CstSubstitution) -> None:
+    def before_substitute(self, source: RSFormCached, substitutions: CstSubstitution) -> None:
         ''' Trigger cascade resolutions before Constituents are substituted. '''
         self.cache.insert_schema(source)
         operation = self.cache.get_operation(source.model.pk)
@@ -461,14 +456,14 @@ class OperationSchema:
             self._execute_inherit_cst(
                 target_operation=target.pk,
                 source=parent_schema,
-                items=list(parent_schema.constituents().order_by('order')),
+                items=list(parent_schema.constituentsQ().order_by('order')),
                 mapping={}
             )
 
     # pylint: disable=too-many-arguments, too-many-positional-arguments
     def _cascade_inherit_cst(
         self, target_operation: int,
-        source: RSForm,
+        source: RSFormCached,
         items: list[Constituenta],
         mapping: CstMapping,
         exclude: Optional[list[int]] = None
@@ -483,7 +478,7 @@ class OperationSchema:
     def _execute_inherit_cst(
         self,
         target_operation: int,
-        source: RSForm,
+        source: RSFormCached,
         items: list[Constituenta],
         mapping: CstMapping
     ) -> None:
@@ -604,7 +599,7 @@ class OperationSchema:
         mapping: CstMapping,
         target: list[int],
         operation: int,
-        schema: RSForm
+        schema: RSFormCached
     ) -> None:
         alias_mapping = OperationSchema._produce_alias_mapping(mapping)
         schema.apply_partial_mapping(alias_mapping, target)
@@ -635,7 +630,7 @@ class OperationSchema:
                 result[alias] = cst.alias
         return result
 
-    def _transform_mapping(self, mapping: CstMapping, operation: Operation, schema: RSForm) -> CstMapping:
+    def _transform_mapping(self, mapping: CstMapping, operation: Operation, schema: RSFormCached) -> CstMapping:
         if len(mapping) == 0:
             return mapping
         result: CstMapping = {}
@@ -655,8 +650,8 @@ class OperationSchema:
     def _determine_insert_position(
         self, prototype_id: int,
         operation: Operation,
-        source: RSForm,
-        destination: RSForm
+        source: RSFormCached,
+        destination: RSFormCached
     ) -> int:
         ''' Determine insert_after for new constituenta. '''
         prototype = source.cache.by_id[prototype_id]
@@ -705,7 +700,7 @@ class OperationSchema:
         self,
         target: CstSubstitution,
         operation: int,
-        schema: RSForm
+        schema: RSFormCached
     ) -> CstSubstitution:
         result: CstSubstitution = []
         for current_sub in target:
@@ -742,7 +737,7 @@ class OperationSchema:
                 result.append((schema.cache.by_id[new_original_id], schema.cache.by_id[new_substitution_id]))
         return result
 
-    def _undo_substitutions_cst(self, target: list[Constituenta], operation: Operation, schema: RSForm) -> None:
+    def _undo_substitutions_cst(self, target: list[Constituenta], operation: Operation, schema: RSFormCached) -> None:
         target_ids = [cst.pk for cst in target]
         to_process = []
         for sub in self.cache.substitutions[operation.pk]:
@@ -753,7 +748,7 @@ class OperationSchema:
 
     def _undo_substitution(
         self,
-        schema: RSForm,
+        schema: RSFormCached,
         target: Substitution,
         ignore_parents: Optional[list[int]] = None
     ) -> None:
@@ -788,7 +783,7 @@ class OperationSchema:
         mapping = {substitution_inheritor.alias: new_original}
         self._cascade_partial_mapping(mapping, dependant, operation_id, schema)
 
-    def _process_added_substitutions(self, schema: Optional[RSForm], added: list[Substitution]) -> None:
+    def _process_added_substitutions(self, schema: Optional[RSFormCached], added: list[Substitution]) -> None:
         if len(added) == 0:
             return
         if schema is None:
@@ -816,8 +811,8 @@ class OssCache:
 
     def __init__(self, oss: OperationSchema):
         self._oss = oss
-        self._schemas: list[RSForm] = []
-        self._schema_by_id: dict[int, RSForm] = {}
+        self._schemas: list[RSFormCached] = []
+        self._schema_by_id: dict[int, RSFormCached] = {}
 
         self.operations = list(oss.operations().only('result_id'))
         self.operation_by_id = {operation.pk: operation for operation in self.operations}
@@ -844,14 +839,14 @@ class OssCache:
         for item in self._oss.inheritance().only('operation_id', 'parent_id', 'child_id'):
             self.inheritance[item.operation_id].append(item)
 
-    def get_schema(self, operation: Operation) -> Optional[RSForm]:
+    def get_schema(self, operation: Operation) -> Optional[RSFormCached]:
         ''' Get schema by Operation. '''
         if operation.result_id is None:
             return None
         if operation.result_id in self._schema_by_id:
             return self._schema_by_id[operation.result_id]
         else:
-            schema = RSForm.from_id(operation.result_id)
+            schema = RSFormCached.from_id(operation.result_id)
             schema.cache.ensure_loaded()
             self._insert_new(schema)
             return schema
@@ -885,7 +880,7 @@ class OssCache:
                 return self.get_inheritor(sub.substitution_id, operation)
         return self.get_inheritor(parent_cst, operation)
 
-    def insert_schema(self, schema: RSForm) -> None:
+    def insert_schema(self, schema: RSFormCached) -> None:
         ''' Insert new schema. '''
         if not self._schema_by_id.get(schema.model.pk):
             schema.cache.ensure_loaded()
@@ -924,7 +919,7 @@ class OssCache:
         for item in inherit_to_delete:
             self.inheritance[operation].remove(item)
 
-    def remove_schema(self, schema: RSForm) -> None:
+    def remove_schema(self, schema: RSFormCached) -> None:
         ''' Remove schema from cache. '''
         self._schemas.remove(schema)
         del self._schema_by_id[schema.model.pk]
@@ -954,7 +949,7 @@ class OssCache:
         ''' Remove inheritance from cache. '''
         self.inheritance[target.operation_id].remove(target)
 
-    def unfold_sub(self, sub: Substitution) -> tuple[RSForm, RSForm, Constituenta, Constituenta]:
+    def unfold_sub(self, sub: Substitution) -> tuple[RSFormCached, RSFormCached, Constituenta, Constituenta]:
         ''' Unfold substitution into original and substitution forms. '''
         operation = self.operation_by_id[sub.operation_id]
         parents = self.graph.inputs[operation.pk]
@@ -976,6 +971,6 @@ class OssCache:
             raise ValueError(f'Parent schema for Substitution-{sub.pk} not found.')
         return original_schema, substitution_schema, original_cst, substitution_cst
 
-    def _insert_new(self, schema: RSForm) -> None:
+    def _insert_new(self, schema: RSFormCached) -> None:
         self._schemas.append(schema)
         self._schema_by_id[schema.model.pk] = schema

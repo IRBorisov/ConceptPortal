@@ -25,7 +25,7 @@ class TestOssViewset(EndpointTester):
             title='Test1',
             owner=self.user
         )
-        self.ks1X1 = self.ks1.insert_new(
+        self.ks1X1 = self.ks1.insert_last(
             'X1',
             term_raw='X1_1',
             term_resolved='X1_1'
@@ -35,7 +35,7 @@ class TestOssViewset(EndpointTester):
             title='Test2',
             owner=self.user
         )
-        self.ks2X1 = self.ks2.insert_new(
+        self.ks2X1 = self.ks2.insert_last(
             'X2',
             term_raw='X1_2',
             term_resolved='X1_2'
@@ -148,7 +148,7 @@ class TestOssViewset(EndpointTester):
     @decl_endpoint('/api/oss/get-predecessor', method='post')
     def test_get_predecessor(self):
         self.populateData()
-        self.ks1X2 = self.ks1.insert_new('X2')
+        self.ks1X2 = self.ks1.insert_last('X2')
 
         self.owned.execute_operation(self.operation3)
         self.operation3.refresh_from_db()
@@ -223,13 +223,13 @@ class TestOssViewset(EndpointTester):
     @decl_endpoint('/api/oss/relocate-constituents', method='post')
     def test_relocate_constituents(self):
         self.populateData()
-        self.ks1X2 = self.ks1.insert_new('X2', convention='test')
+        self.ks1X2 = self.ks1.insert_last('X2', convention='test')
 
         self.owned.execute_operation(self.operation3)
         self.operation3.refresh_from_db()
         self.ks3 = RSForm(self.operation3.result)
         self.ks3X2 = Constituenta.objects.get(as_child__parent_id=self.ks1X2.pk)
-        self.ks3X10 = self.ks3.insert_new('X10', convention='test2')
+        self.ks3X10 = self.ks3.insert_last('X10', convention='test2')
 
         # invalid destination
         data = {

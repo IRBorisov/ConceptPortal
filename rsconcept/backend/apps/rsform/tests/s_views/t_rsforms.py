@@ -73,12 +73,12 @@ class TestRSFormViewset(EndpointTester):
 
     @decl_endpoint('/api/rsforms/{item}/details', method='get')
     def test_details(self):
-        x1 = self.owned.insert_new(
+        x1 = self.owned.insert_last(
             alias='X1',
             term_raw='человек',
             term_resolved='человек'
         )
-        x2 = self.owned.insert_new(
+        x2 = self.owned.insert_last(
             alias='X2',
             term_raw='@{X1|plur}',
             term_resolved='люди'
@@ -115,7 +115,7 @@ class TestRSFormViewset(EndpointTester):
 
     @decl_endpoint('/api/rsforms/{item}/check-expression', method='post')
     def test_check_expression(self):
-        self.owned.insert_new('X1')
+        self.owned.insert_last('X1')
         data = {'expression': 'X1=X1'}
         response = self.executeOK(data=data, item=self.owned_id)
         self.assertEqual(response.data['parseResult'], True)
@@ -129,7 +129,7 @@ class TestRSFormViewset(EndpointTester):
 
     @decl_endpoint('/api/rsforms/{item}/check-constituenta', method='post')
     def test_check_constituenta(self):
-        self.owned.insert_new('X1')
+        self.owned.insert_last('X1')
         data = {'definition_formal': 'X1=X1', 'alias': 'A111', 'cst_type': CstType.AXIOM}
         response = self.executeOK(data=data, item=self.owned_id)
         self.assertEqual(response.data['parseResult'], True)
@@ -141,7 +141,7 @@ class TestRSFormViewset(EndpointTester):
 
     @decl_endpoint('/api/rsforms/{item}/check-constituenta', method='post')
     def test_check_constituenta_error(self):
-        self.owned.insert_new('X1')
+        self.owned.insert_last('X1')
         data = {'definition_formal': 'X1=X1', 'alias': 'D111', 'cst_type': CstType.TERM}
         response = self.executeOK(data=data, item=self.owned_id)
         self.assertEqual(response.data['parseResult'], False)
@@ -149,7 +149,7 @@ class TestRSFormViewset(EndpointTester):
 
     @decl_endpoint('/api/rsforms/{item}/resolve', method='post')
     def test_resolve(self):
-        x1 = self.owned.insert_new(
+        x1 = self.owned.insert_last(
             alias='X1',
             term_resolved='синий слон'
         )
@@ -191,7 +191,7 @@ class TestRSFormViewset(EndpointTester):
     @decl_endpoint('/api/rsforms/{item}/export-trs', method='get')
     def test_export_trs(self):
         schema = RSForm.create(title='Test')
-        schema.insert_new('X1')
+        schema.insert_last('X1')
         response = self.executeOK(item=schema.model.pk)
         self.assertEqual(response.headers['Content-Disposition'], 'attachment; filename=Schema.trs')
         with io.BytesIO(response.content) as stream:
@@ -206,8 +206,8 @@ class TestRSFormViewset(EndpointTester):
         self.executeForbidden(data=data, item=self.unowned_id)
 
         data = {'alias': 'X3'}
-        self.owned.insert_new('X1')
-        x2 = self.owned.insert_new('X2')
+        self.owned.insert_last('X1')
+        x2 = self.owned.insert_last('X2')
         self.executeBadData(item=self.owned_id)
         self.executeBadData(data=data, item=self.owned_id)
 
@@ -251,11 +251,11 @@ class TestRSFormViewset(EndpointTester):
     @decl_endpoint('/api/rsforms/{item}/substitute', method='patch')
     def test_substitute_multiple(self):
         self.set_params(item=self.owned_id)
-        x1 = self.owned.insert_new('X1')
-        x2 = self.owned.insert_new('X2')
-        d1 = self.owned.insert_new('D1')
-        d2 = self.owned.insert_new('D2')
-        d3 = self.owned.insert_new(
+        x1 = self.owned.insert_last('X1')
+        x2 = self.owned.insert_last('X2')
+        d1 = self.owned.insert_last('D1')
+        d2 = self.owned.insert_last('D2')
+        d3 = self.owned.insert_last(
             alias='D3',
             definition_formal=r'X1 \ X2'
         )
@@ -318,19 +318,19 @@ class TestRSFormViewset(EndpointTester):
         data = {'items': [1337]}
         self.executeBadData(data=data)
 
-        x1 = self.owned.insert_new('X1')
-        x2 = self.owned.insert_new('X2')
+        x1 = self.owned.insert_last('X1')
+        x2 = self.owned.insert_last('X2')
 
         data = {'items': [x1.pk]}
         response = self.executeOK(data=data)
         x2.refresh_from_db()
         self.owned.refresh_from_db()
         self.assertEqual(len(response.data['items']), 1)
-        self.assertEqual(self.owned.constituents().count(), 1)
+        self.assertEqual(self.owned.constituentsQ().count(), 1)
         self.assertEqual(x2.alias, 'X2')
         self.assertEqual(x2.order, 0)
 
-        x3 = self.unowned.insert_new('X1')
+        x3 = self.unowned.insert_last('X1')
         data = {'items': [x3.pk]}
         self.executeBadData(data=data, item=self.owned_id)
 
@@ -342,8 +342,8 @@ class TestRSFormViewset(EndpointTester):
         data = {'items': [1337], 'move_to': 0}
         self.executeBadData(data=data)
 
-        x1 = self.owned.insert_new('X1')
-        x2 = self.owned.insert_new('X2')
+        x1 = self.owned.insert_last('X1')
+        x2 = self.owned.insert_last('X2')
 
         data = {'items': [x2.pk], 'move_to': 0}
         response = self.executeOK(data=data)
@@ -353,7 +353,7 @@ class TestRSFormViewset(EndpointTester):
         self.assertEqual(x1.order, 1)
         self.assertEqual(x2.order, 0)
 
-        x3 = self.unowned.insert_new('X1')
+        x3 = self.unowned.insert_last('X1')
         data = {'items': [x3.pk], 'move_to': 0}
         self.executeBadData(data=data)
 
@@ -365,9 +365,9 @@ class TestRSFormViewset(EndpointTester):
         response = self.executeOK()
         self.assertEqual(response.data['id'], self.owned_id)
 
-        x2 = self.owned.insert_new('X2')
-        x1 = self.owned.insert_new('X1')
-        d11 = self.owned.insert_new('D11')
+        x2 = self.owned.insert_last('X2')
+        x1 = self.owned.insert_last('X1')
+        d11 = self.owned.insert_last('D11')
 
         response = self.executeOK()
         x1.refresh_from_db()
@@ -388,7 +388,7 @@ class TestRSFormViewset(EndpointTester):
         self.set_params(item=self.owned_id)
         self.owned.model.title = 'Test11'
         self.owned.save()
-        x1 = self.owned.insert_new('X1')
+        x1 = self.owned.insert_last('X1')
         work_dir = os.path.dirname(os.path.abspath(__file__))
         with open(f'{work_dir}/data/sample-rsform.trs', 'rb') as file:
             data = {'file': file, 'load_metadata': False}
@@ -397,31 +397,31 @@ class TestRSFormViewset(EndpointTester):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(self.owned.model.title, 'Test11')
         self.assertEqual(len(response.data['items']), 25)
-        self.assertEqual(self.owned.constituents().count(), 25)
+        self.assertEqual(self.owned.constituentsQ().count(), 25)
         self.assertFalse(Constituenta.objects.filter(pk=x1.pk).exists())
 
 
     @decl_endpoint('/api/rsforms/{item}/produce-structure', method='patch')
     def test_produce_structure(self):
         self.set_params(item=self.owned_id)
-        x1 = self.owned.insert_new('X1')
-        s1 = self.owned.insert_new(
+        x1 = self.owned.insert_last('X1')
+        s1 = self.owned.insert_last(
             alias='S1',
             definition_formal='ℬ(X1×X1)'
         )
-        s2 = self.owned.insert_new(
+        s2 = self.owned.insert_last(
             alias='S2',
             definition_formal='invalid'
         )
-        s3 = self.owned.insert_new(
+        s3 = self.owned.insert_last(
             alias='S3',
             definition_formal='X1×(X1×ℬℬ(X1))×ℬ(X1×X1)'
         )
-        a1 = self.owned.insert_new(
+        a1 = self.owned.insert_last(
             alias='A1',
             definition_formal='1=1'
         )
-        f1 = self.owned.insert_new(
+        f1 = self.owned.insert_last(
             alias='F10',
             definition_formal='[α∈X1, β∈X1] Fi1[{α,β}](S1)'
         )
@@ -515,7 +515,7 @@ class TestConstituentaAPI(EndpointTester):
         data = {'target': self.cst1.pk, 'item_data': {'alias': self.cst3.alias}}
         self.executeBadData(data=data, schema=self.owned_id)
 
-        d1 = self.owned.insert_new(
+        d1 = self.owned.insert_last(
             alias='D1',
             term_raw='@{X1|plur}',
             definition_formal='X1'
@@ -629,15 +629,15 @@ class TestInlineSynthesis(EndpointTester):
 
 
     def test_inline_synthesis(self):
-        ks1_x1 = self.schema1.insert_new('X1', term_raw='KS1X1')  # -> delete
-        ks1_x2 = self.schema1.insert_new('X2', term_raw='KS1X2')  # -> X2
-        ks1_s1 = self.schema1.insert_new('S1', definition_formal='X2', term_raw='KS1S1')  # -> S1
-        ks1_d1 = self.schema1.insert_new('D1', definition_formal=r'S1\X1\X2')  # -> D1
-        ks2_x1 = self.schema2.insert_new('X1', term_raw='KS2X1')  # -> delete
-        ks2_x2 = self.schema2.insert_new('X2', term_raw='KS2X2')  # -> X4
-        ks2_s1 = self.schema2.insert_new('S1', definition_formal='X2×X2', term_raw='KS2S1')  # -> S2
-        ks2_d1 = self.schema2.insert_new('D1', definition_formal=r'S1\X1\X2')  # -> D2
-        ks2_a1 = self.schema2.insert_new('A1', definition_formal='1=1')  # -> not included in items
+        ks1_x1 = self.schema1.insert_last('X1', term_raw='KS1X1')  # -> delete
+        ks1_x2 = self.schema1.insert_last('X2', term_raw='KS1X2')  # -> X2
+        ks1_s1 = self.schema1.insert_last('S1', definition_formal='X2', term_raw='KS1S1')  # -> S1
+        ks1_d1 = self.schema1.insert_last('D1', definition_formal=r'S1\X1\X2')  # -> D1
+        ks2_x1 = self.schema2.insert_last('X1', term_raw='KS2X1')  # -> delete
+        ks2_x2 = self.schema2.insert_last('X2', term_raw='KS2X2')  # -> X4
+        ks2_s1 = self.schema2.insert_last('S1', definition_formal='X2×X2', term_raw='KS2S1')  # -> S2
+        ks2_d1 = self.schema2.insert_last('D1', definition_formal=r'S1\X1\X2')  # -> D2
+        ks2_a1 = self.schema2.insert_last('A1', definition_formal='1=1')  # -> not included in items
 
         data = {
             'receiver': self.schema1.model.pk,

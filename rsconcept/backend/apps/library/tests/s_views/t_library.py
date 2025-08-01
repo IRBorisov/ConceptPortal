@@ -334,12 +334,12 @@ class TestLibraryViewset(EndpointTester):
     @decl_endpoint('/api/library/{item}/clone', method='post')
     def test_clone_rsform(self):
         schema = RSForm(self.owned)
-        x12 = schema.insert_new(
+        x12 = schema.insert_last(
             alias='X12',
             term_raw='человек',
             term_resolved='человек'
         )
-        d2 = schema.insert_new(
+        d2 = schema.insert_last(
             alias='D2',
             term_raw='@{X12|plur}',
             term_resolved='люди'

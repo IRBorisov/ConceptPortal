@@ -14,7 +14,7 @@ from rest_framework.response import Response
 
 from apps.library.models import LibraryItem, LibraryItemType
 from apps.library.serializers import LibraryItemSerializer
-from apps.rsform.models import Constituenta, RSForm
+from apps.rsform.models import Constituenta, RSFormCached
 from apps.rsform.serializers import CstTargetSerializer
 from shared import messages as msg
 from shared import permissions
@@ -25,7 +25,6 @@ from .. import serializers as s
 
 def _create_clone(prototype: LibraryItem, operation: m.Operation, oss: LibraryItem) -> LibraryItem:
     ''' Create clone of prototype schema for operation. '''
-    prototype_schema = RSForm(prototype)
     clone = deepcopy(prototype)
     clone.pk = None
     clone.owner = oss.owner
@@ -37,7 +36,7 @@ def _create_clone(prototype: LibraryItem, operation: m.Operation, oss: LibraryIt
     clone.access_policy = oss.access_policy
     clone.location = oss.location
     clone.save()
-    for cst in prototype_schema.constituents():
+    for cst in Constituenta.objects.filter(schema_id=prototype.pk):
         cst_copy = deepcopy(cst)
         cst_copy.pk = None
         cst_copy.schema = clone
@@ -359,16 +358,17 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
             source = cast(m.Operation, serializer.validated_data['source_operation'])
             alias = '+' + source.alias
             title = '+' + source.title
-            source_schema = RSForm(cast(LibraryItem, source.result))
+            source_schema = cast(LibraryItem, source.result)
+            constituents = Constituenta.objects.filter(schema_id=source_schema.pk)
 
-            new_schema = deepcopy(source_schema.model)
+            new_schema = source_schema
             new_schema.pk = None
             new_schema.owner = oss.model.owner
             new_schema.title = title
             new_schema.alias = alias
             new_schema.save()
 
-            for cst in source_schema.constituents():
+            for cst in constituents:
                 cst.pk = None
                 cst.schema = new_schema
                 cst.save()
@@ -862,8 +862,8 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
 
         data = serializer.validated_data
         oss = m.OperationSchema(LibraryItem.objects.get(pk=data['oss']))
-        source = RSForm(LibraryItem.objects.get(pk=data['source']))
-        destination = RSForm(LibraryItem.objects.get(pk=data['destination']))
+        source = RSFormCached(LibraryItem.objects.get(pk=data['source']))
+        destination = RSFormCached(LibraryItem.objects.get(pk=data['destination']))
 
         with transaction.atomic():
             if data['move_down']:

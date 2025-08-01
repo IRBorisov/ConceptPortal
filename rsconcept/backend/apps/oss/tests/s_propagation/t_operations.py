@@ -22,18 +22,18 @@ class TestChangeOperations(EndpointTester):
             title='Test1',
             owner=self.user
         )
-        self.ks1X1 = self.ks1.insert_new('X1', convention='KS1X1')
-        self.ks1X2 = self.ks1.insert_new('X2', convention='KS1X2')
-        self.ks1D1 = self.ks1.insert_new('D1', definition_formal='X1 X2', convention='KS1D1')
+        self.ks1X1 = self.ks1.insert_last('X1', convention='KS1X1')
+        self.ks1X2 = self.ks1.insert_last('X2', convention='KS1X2')
+        self.ks1D1 = self.ks1.insert_last('D1', definition_formal='X1 X2', convention='KS1D1')
 
         self.ks2 = RSForm.create(
             alias='KS2',
             title='Test2',
             owner=self.user
         )
-        self.ks2X1 = self.ks2.insert_new('X1', convention='KS2X1')
-        self.ks2X2 = self.ks2.insert_new('X2', convention='KS2X2')
-        self.ks2S1 = self.ks2.insert_new(
+        self.ks2X1 = self.ks2.insert_last('X1', convention='KS2X1')
+        self.ks2X2 = self.ks2.insert_last('X2', convention='KS2X2')
+        self.ks2S1 = self.ks2.insert_last(
             alias='S1',
             definition_formal=r'X1',
             convention='KS2S1'
@@ -44,8 +44,8 @@ class TestChangeOperations(EndpointTester):
             title='Test3',
             owner=self.user
         )
-        self.ks3X1 = self.ks3.insert_new('X1', convention='KS3X1')
-        self.ks3D1 = self.ks3.insert_new(
+        self.ks3X1 = self.ks3.insert_last('X1', convention='KS3X1')
+        self.ks3D1 = self.ks3.insert_last(
             alias='D1',
             definition_formal='X1 X1',
             convention='KS3D1'
@@ -82,7 +82,7 @@ class TestChangeOperations(EndpointTester):
         self.ks4X1 = Constituenta.objects.get(as_child__parent_id=self.ks1X2.pk)
         self.ks4S1 = Constituenta.objects.get(as_child__parent_id=self.ks2S1.pk)
         self.ks4D1 = Constituenta.objects.get(as_child__parent_id=self.ks1D1.pk)
-        self.ks4D2 = self.ks4.insert_new(
+        self.ks4D2 = self.ks4.insert_last(
             alias='D2',
             definition_formal=r'X1 X2 X3 S1 D1',
             convention='KS4D2'
@@ -100,7 +100,7 @@ class TestChangeOperations(EndpointTester):
         self.owned.execute_operation(self.operation5)
         self.operation5.refresh_from_db()
         self.ks5 = RSForm(self.operation5.result)
-        self.ks5D4 = self.ks5.insert_new(
+        self.ks5D4 = self.ks5.insert_last(
             alias='D4',
             definition_formal=r'X1 X2 X3 S1 D1 D2 D3',
             convention='KS5D4'
@@ -119,11 +119,11 @@ class TestChangeOperations(EndpointTester):
 
 
     def test_oss_setup(self):
-        self.assertEqual(self.ks1.constituents().count(), 3)
-        self.assertEqual(self.ks2.constituents().count(), 3)
-        self.assertEqual(self.ks3.constituents().count(), 2)
-        self.assertEqual(self.ks4.constituents().count(), 6)
-        self.assertEqual(self.ks5.constituents().count(), 8)
+        self.assertEqual(self.ks1.constituentsQ().count(), 3)
+        self.assertEqual(self.ks2.constituentsQ().count(), 3)
+        self.assertEqual(self.ks3.constituentsQ().count(), 2)
+        self.assertEqual(self.ks4.constituentsQ().count(), 6)
+        self.assertEqual(self.ks5.constituentsQ().count(), 8)
         self.assertEqual(self.ks4D1.definition_formal, 'S1 X1')
 
 
@@ -141,8 +141,8 @@ class TestChangeOperations(EndpointTester):
         self.assertEqual(subs1_2.count(), 0)
         subs3_4 = self.operation5.getQ_substitutions()
         self.assertEqual(subs3_4.count(), 1)
-        self.assertEqual(self.ks4.constituents().count(), 4)
-        self.assertEqual(self.ks5.constituents().count(), 6)
+        self.assertEqual(self.ks4.constituentsQ().count(), 4)
+        self.assertEqual(self.ks5.constituentsQ().count(), 6)
         self.assertEqual(self.ks4D1.definition_formal, r'X4 X1')
         self.assertEqual(self.ks4D2.definition_formal, r'X1 DEL DEL DEL D1')
         self.assertEqual(self.ks5D4.definition_formal, r'DEL DEL X3 DEL D1 D2 D3')
@@ -165,8 +165,8 @@ class TestChangeOperations(EndpointTester):
         self.assertEqual(subs1_2.count(), 0)
         subs3_4 = self.operation5.getQ_substitutions()
         self.assertEqual(subs3_4.count(), 1)
-        self.assertEqual(self.ks4.constituents().count(), 4)
-        self.assertEqual(self.ks5.constituents().count(), 6)
+        self.assertEqual(self.ks4.constituentsQ().count(), 4)
+        self.assertEqual(self.ks5.constituentsQ().count(), 6)
         self.assertEqual(self.ks4D1.definition_formal, r'X4 X1')
         self.assertEqual(self.ks4D2.definition_formal, r'X1 DEL DEL DEL D1')
         self.assertEqual(self.ks5D4.definition_formal, r'DEL DEL X3 DEL D1 D2 D3')
@@ -179,9 +179,9 @@ class TestChangeOperations(EndpointTester):
             title='Test6',
             owner=self.user
         )
-        ks6X1 = ks6.insert_new('X1', convention='KS6X1')
-        ks6X2 = ks6.insert_new('X2', convention='KS6X2')
-        ks6D1 = ks6.insert_new('D1', definition_formal='X1 X2', convention='KS6D1')
+        ks6X1 = ks6.insert_last('X1', convention='KS6X1')
+        ks6X2 = ks6.insert_last('X2', convention='KS6X2')
+        ks6D1 = ks6.insert_last('D1', definition_formal='X1 X2', convention='KS6D1')
 
         data = {
             'layout': self.layout_data,
@@ -200,8 +200,8 @@ class TestChangeOperations(EndpointTester):
         self.assertEqual(subs1_2.count(), 0)
         subs3_4 = self.operation5.getQ_substitutions()
         self.assertEqual(subs3_4.count(), 1)
-        self.assertEqual(self.ks4.constituents().count(), 7)
-        self.assertEqual(self.ks5.constituents().count(), 9)
+        self.assertEqual(self.ks4.constituentsQ().count(), 7)
+        self.assertEqual(self.ks5.constituentsQ().count(), 9)
         self.assertEqual(ks4Dks6.definition_formal, r'X5 X6')
         self.assertEqual(self.ks4D1.definition_formal, r'X4 X1')
         self.assertEqual(self.ks4D2.definition_formal, r'X1 DEL DEL DEL D1')
@@ -219,8 +219,8 @@ class TestChangeOperations(EndpointTester):
         self.assertEqual(subs1_2.count(), 0)
         subs3_4 = self.operation5.getQ_substitutions()
         self.assertEqual(subs3_4.count(), 0)
-        self.assertEqual(self.ks4.constituents().count(), 4)
-        self.assertEqual(self.ks5.constituents().count(), 7)
+        self.assertEqual(self.ks4.constituentsQ().count(), 4)
+        self.assertEqual(self.ks5.constituentsQ().count(), 7)
         self.assertEqual(self.ks4D2.definition_formal, r'DEL X2 X3 S1 DEL')
         self.assertEqual(self.ks5D4.definition_formal, r'X1 X2 X3 S1 DEL D2 D3')
 
@@ -241,8 +241,8 @@ class TestChangeOperations(EndpointTester):
         self.assertEqual(subs1_2.count(), 0)
         subs3_4 = self.operation5.getQ_substitutions()
         self.assertEqual(subs3_4.count(), 0)
-        self.assertEqual(self.ks4.constituents().count(), 4)
-        self.assertEqual(self.ks5.constituents().count(), 7)
+        self.assertEqual(self.ks4.constituentsQ().count(), 4)
+        self.assertEqual(self.ks5.constituentsQ().count(), 7)
         self.assertEqual(self.ks4D2.definition_formal, r'DEL X2 X3 S1 DEL')
         self.assertEqual(self.ks5D4.definition_formal, r'X1 X2 X3 S1 DEL D2 D3')
 
@@ -263,8 +263,8 @@ class TestChangeOperations(EndpointTester):
         self.assertEqual(subs1_2.count(), 0)
         subs3_4 = self.operation5.getQ_substitutions()
         self.assertEqual(subs3_4.count(), 1)
-        self.assertEqual(self.ks4.constituents().count(), 6)
-        self.assertEqual(self.ks5.constituents().count(), 8)
+        self.assertEqual(self.ks4.constituentsQ().count(), 6)
+        self.assertEqual(self.ks5.constituentsQ().count(), 8)
         self.assertEqual(self.ks4D2.definition_formal, r'X1 X2 X3 S1 D1')
         self.assertEqual(self.ks5D4.definition_formal, r'X1 X2 X3 S1 D1 D2 D3')
 
@@ -286,9 +286,9 @@ class TestChangeOperations(EndpointTester):
         self.assertEqual(subs1_2.count(), 0)
         subs3_4 = self.operation5.getQ_substitutions()
         self.assertEqual(subs3_4.count(), 1)
-        self.assertEqual(self.ks1.constituents().count(), 3)
-        self.assertEqual(self.ks4.constituents().count(), 6)
-        self.assertEqual(self.ks5.constituents().count(), 8)
+        self.assertEqual(self.ks1.constituentsQ().count(), 3)
+        self.assertEqual(self.ks4.constituentsQ().count(), 6)
+        self.assertEqual(self.ks5.constituentsQ().count(), 8)
         self.assertEqual(self.ks4D2.definition_formal, r'X1 X2 X3 S1 D1')
         self.assertEqual(self.ks5D4.definition_formal, r'X1 X2 X3 S1 D1 D2 D3')
         self.assertFalse(Constituenta.objects.filter(as_child__parent_id=self.ks1D1.pk).exists())
@@ -324,8 +324,8 @@ class TestChangeOperations(EndpointTester):
         self.assertEqual(subs1_2.count(), 2)
         subs3_4 = self.operation5.getQ_substitutions()
         self.assertEqual(subs3_4.count(), 1)
-        self.assertEqual(self.ks4.constituents().count(), 5)
-        self.assertEqual(self.ks5.constituents().count(), 7)
+        self.assertEqual(self.ks4.constituentsQ().count(), 5)
+        self.assertEqual(self.ks5.constituentsQ().count(), 7)
         self.assertEqual(self.ks4D2.definition_formal, r'X1 D1 X3 S1 D1')
         self.assertEqual(self.ks5D4.definition_formal, r'D1 X2 X3 S1 D1 D2 D3')
 
@@ -350,8 +350,8 @@ class TestChangeOperations(EndpointTester):
         self.assertEqual(subs1_2.count(), 0)
         subs3_4 = self.operation5.getQ_substitutions()
         self.assertEqual(subs3_4.count(), 1)
-        self.assertEqual(self.ks4.constituents().count(), 4)
-        self.assertEqual(self.ks5.constituents().count(), 6)
+        self.assertEqual(self.ks4.constituentsQ().count(), 4)
+        self.assertEqual(self.ks5.constituentsQ().count(), 6)
         self.assertEqual(self.ks4D2.definition_formal, r'X1 DEL DEL DEL D1')
         self.assertEqual(self.ks5D4.definition_formal, r'DEL DEL X3 DEL D1 D2 D3')
 
@@ -363,8 +363,8 @@ class TestChangeOperations(EndpointTester):
         self.assertEqual(subs1_2.count(), 0)
         subs3_4 = self.operation5.getQ_substitutions()
         self.assertEqual(subs3_4.count(), 1)
-        self.assertEqual(self.ks4.constituents().count(), 7)
-        self.assertEqual(self.ks5.constituents().count(), 9)
+        self.assertEqual(self.ks4.constituentsQ().count(), 7)
+        self.assertEqual(self.ks5.constituentsQ().count(), 9)
         self.assertEqual(self.ks4D2.definition_formal, r'X1 DEL DEL DEL D1')
         self.assertEqual(self.ks5D4.definition_formal, r'DEL DEL X3 DEL D1 D2 D3')
 
@@ -375,7 +375,7 @@ class TestChangeOperations(EndpointTester):
         self.operation4.refresh_from_db()
         self.ks5.refresh_from_db()
         self.assertEqual(self.operation4.result, None)
-        self.assertEqual(self.ks5.constituents().count(), 3)
+        self.assertEqual(self.ks5.constituentsQ().count(), 3)
 
         data = {
             'target': self.operation4.pk,
@@ -385,13 +385,13 @@ class TestChangeOperations(EndpointTester):
         self.operation4.refresh_from_db()
         self.ks5.refresh_from_db()
         self.assertNotEqual(self.operation4.result, None)
-        self.assertEqual(self.ks5.constituents().count(), 8)
+        self.assertEqual(self.ks5.constituentsQ().count(), 8)
 
 
     @decl_endpoint('/api/oss/relocate-constituents', method='post')
     def test_relocate_constituents_up(self):
-        ks1_old_count = self.ks1.constituents().count()
-        ks4_old_count = self.ks4.constituents().count()
+        ks1_old_count = self.ks1.constituentsQ().count()
+        ks4_old_count = self.ks4.constituentsQ().count()
         operation6 = self.owned.create_operation(
             alias='6',
             operation_type=OperationType.SYNTHESIS
@@ -400,8 +400,8 @@ class TestChangeOperations(EndpointTester):
         self.owned.execute_operation(operation6)
         operation6.refresh_from_db()
         ks6 = RSForm(operation6.result)
-        ks6A1 = ks6.insert_new('A1')
-        ks6_old_count = ks6.constituents().count()
+        ks6A1 = ks6.insert_last('A1')
+        ks6_old_count = ks6.constituentsQ().count()
 
         data = {
             'destination': self.ks1.model.pk,
@@ -413,15 +413,15 @@ class TestChangeOperations(EndpointTester):
         self.ks1.refresh_from_db()
         self.ks4.refresh_from_db()
 
-        self.assertEqual(ks6.constituents().count(), ks6_old_count)
-        self.assertEqual(self.ks1.constituents().count(), ks1_old_count + 1)
-        self.assertEqual(self.ks4.constituents().count(), ks4_old_count + 1)
+        self.assertEqual(ks6.constituentsQ().count(), ks6_old_count)
+        self.assertEqual(self.ks1.constituentsQ().count(), ks1_old_count + 1)
+        self.assertEqual(self.ks4.constituentsQ().count(), ks4_old_count + 1)
 
 
     @decl_endpoint('/api/oss/relocate-constituents', method='post')
     def test_relocate_constituents_down(self):
-        ks1_old_count = self.ks1.constituents().count()
-        ks4_old_count = self.ks4.constituents().count()
+        ks1_old_count = self.ks1.constituentsQ().count()
+        ks4_old_count = self.ks4.constituentsQ().count()
 
         operation6 = self.owned.create_operation(
             alias='6',
@@ -431,7 +431,7 @@ class TestChangeOperations(EndpointTester):
         self.owned.execute_operation(operation6)
         operation6.refresh_from_db()
         ks6 = RSForm(operation6.result)
-        ks6_old_count = ks6.constituents().count()
+        ks6_old_count = ks6.constituentsQ().count()
 
         data = {
             'destination': ks6.model.pk,
@@ -445,8 +445,8 @@ class TestChangeOperations(EndpointTester):
         self.ks4D2.refresh_from_db()
         self.ks5D4.refresh_from_db()
 
-        self.assertEqual(ks6.constituents().count(), ks6_old_count)
-        self.assertEqual(self.ks1.constituents().count(), ks1_old_count - 1)
-        self.assertEqual(self.ks4.constituents().count(), ks4_old_count - 1)
+        self.assertEqual(ks6.constituentsQ().count(), ks6_old_count)
+        self.assertEqual(self.ks1.constituentsQ().count(), ks1_old_count - 1)
+        self.assertEqual(self.ks4.constituentsQ().count(), ks4_old_count - 1)
         self.assertEqual(self.ks4D2.definition_formal, r'DEL X2 X3 S1 D1')
         self.assertEqual(self.ks5D4.definition_formal, r'X1 X2 X3 S1 D1 D2 D3')

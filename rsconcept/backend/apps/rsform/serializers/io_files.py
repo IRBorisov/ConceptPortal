@@ -6,7 +6,7 @@ from apps.library.models import LibraryItem
 from shared import messages as msg
 from shared.serializers import StrictSerializer
 
-from ..models import Constituenta, RSForm
+from ..models import Constituenta, RSFormCached
 from ..utils import fix_old_references
 
 _CST_TYPE = 'constituenta'
@@ -27,53 +27,49 @@ class RSFormUploadSerializer(StrictSerializer):
     load_metadata = serializers.BooleanField()
 
 
+def generate_trs(schema: LibraryItem) -> dict:
+    ''' Generate TRS file for RSForm. '''
+    items = []
+    for cst in Constituenta.objects.filter(schema=schema).order_by('order'):
+        items.append(
+            {
+                'entityUID': cst.pk,
+                'type': _CST_TYPE,
+                'cstType': cst.cst_type,
+                'alias': cst.alias,
+                'convention': cst.convention,
+                'term': {
+                    'raw': cst.term_raw,
+                    'resolved': cst.term_resolved,
+                    'forms': cst.term_forms
+                },
+                'definition': {
+                    'formal': cst.definition_formal,
+                    'text': {
+                        'raw': cst.definition_raw,
+                        'resolved': cst.definition_resolved
+                    },
+                },
+            }
+        )
+    return {
+        'type': _TRS_TYPE,
+        'title': schema.title,
+        'alias': schema.alias,
+        'comment': schema.description,
+        'items': items,
+        'claimed': False,
+        'selection': [],
+        'version': _TRS_VERSION,
+        'versionInfo': _TRS_HEADER
+    }
+
+
 class RSFormTRSSerializer(serializers.Serializer):
     ''' Serializer: TRS file production and loading for RSForm. '''
 
-    def to_representation(self, instance: RSForm) -> dict:
-        result = self._prepare_json_rsform(instance.model)
-        items = instance.constituents().order_by('order')
-        for cst in items:
-            result['items'].append(self._prepare_json_constituenta(cst))
-        return result
-
     @staticmethod
-    def _prepare_json_rsform(schema: LibraryItem) -> dict:
-        return {
-            'type': _TRS_TYPE,
-            'title': schema.title,
-            'alias': schema.alias,
-            'comment': schema.description,
-            'items': [],
-            'claimed': False,
-            'selection': [],
-            'version': _TRS_VERSION,
-            'versionInfo': _TRS_HEADER
-        }
-
-    @staticmethod
-    def _prepare_json_constituenta(cst: Constituenta) -> dict:
-        return {
-            'entityUID': cst.pk,
-            'type': _CST_TYPE,
-            'cstType': cst.cst_type,
-            'alias': cst.alias,
-            'convention': cst.convention,
-            'term': {
-                'raw': cst.term_raw,
-                'resolved': cst.term_resolved,
-                'forms': cst.term_forms
-            },
-            'definition': {
-                'formal': cst.definition_formal,
-                'text': {
-                    'raw': cst.definition_raw,
-                    'resolved': cst.definition_resolved
-                },
-            },
-        }
-
-    def from_versioned_data(self, data: dict) -> dict:
+    def load_versioned_data(data: dict) -> dict:
         ''' Load data from version. '''
         result = {
             'type': _TRS_TYPE,
@@ -127,7 +123,7 @@ class RSFormTRSSerializer(serializers.Serializer):
             result['description'] = data.get('description', '')
         if 'id' in data:
             result['id'] = data['id']
-            self.instance = RSForm.from_id(result['id'])
+            self.instance = RSFormCached.from_id(result['id'])
         return result
 
     def validate(self, attrs: dict):
@@ -140,8 +136,8 @@ class RSFormTRSSerializer(serializers.Serializer):
         return attrs
 
     @transaction.atomic
-    def create(self, validated_data: dict) -> RSForm:
-        self.instance: RSForm = RSForm.create(
+    def create(self, validated_data: dict) -> RSFormCached:
+        self.instance: RSFormCached = RSFormCached.create(
             owner=validated_data.get('owner', None),
             alias=validated_data['alias'],
             title=validated_data['title'],
@@ -167,7 +163,7 @@ class RSFormTRSSerializer(serializers.Serializer):
         return self.instance
 
     @transaction.atomic
-    def update(self, instance: RSForm, validated_data) -> RSForm:
+    def update(self, instance: RSFormCached, validated_data) -> RSFormCached:
         if 'alias' in validated_data:
             instance.model.alias = validated_data['alias']
         if 'title' in validated_data:
@@ -176,7 +172,7 @@ class RSFormTRSSerializer(serializers.Serializer):
             instance.model.description = validated_data['description']
 
         order = 0
-        prev_constituents = instance.constituents()
+        prev_constituents = instance.constituentsQ()
         loaded_ids = set()
         for cst_data in validated_data['items']:
             uid = int(cst_data['entityUID'])

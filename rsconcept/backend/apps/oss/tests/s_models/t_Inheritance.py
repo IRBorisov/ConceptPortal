@@ -20,8 +20,8 @@ class TestInheritance(TestCase):
             operation_type=OperationType.INPUT,
             result=self.ks1.model
         )
-        self.ks1_x1 = self.ks1.insert_new('X1')
-        self.ks2_x1 = self.ks2.insert_new('X1')
+        self.ks1_x1 = self.ks1.insert_last('X1')
+        self.ks2_x1 = self.ks2.insert_last('X1')
         self.inheritance = Inheritance.objects.create(
             operation=self.operation,
             parent=self.ks1_x1,

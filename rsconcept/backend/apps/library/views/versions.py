@@ -69,7 +69,7 @@ def export_file(request: Request, pk: int) -> HttpResponse:
         version = m.Version.objects.get(pk=pk)
     except m.Version.DoesNotExist:
         return Response(status=c.HTTP_404_NOT_FOUND)
-    data = RSFormTRSSerializer(version.item).from_versioned_data(version.data)
+    data = RSFormTRSSerializer.load_versioned_data(version.data)
     file = utility.write_zipped_json(data, utils.EXTEOR_INNER_FILENAME)
     filename = utils.filename_for_schema(data['alias'])
     response = HttpResponse(file, content_type='application/zip')

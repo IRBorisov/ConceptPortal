@@ -22,16 +22,16 @@ class TestChangeConstituents(EndpointTester):
             title='Test1',
             owner=self.user
         )
-        self.ks1X1 = self.ks1.insert_new('X4')
-        self.ks1X2 = self.ks1.insert_new('X5')
+        self.ks1X1 = self.ks1.insert_last('X4')
+        self.ks1X2 = self.ks1.insert_last('X5')
 
         self.ks2 = RSForm.create(
             alias='KS2',
             title='Test2',
             owner=self.user
         )
-        self.ks2X1 = self.ks2.insert_new('X1')
-        self.ks2D1 = self.ks2.insert_new(
+        self.ks2X1 = self.ks2.insert_last('X1')
+        self.ks2D1 = self.ks2.insert_last(
             alias='D1',
             definition_formal=r'X1\X1'
         )
@@ -55,7 +55,7 @@ class TestChangeConstituents(EndpointTester):
         self.owned.execute_operation(self.operation3)
         self.operation3.refresh_from_db()
         self.ks3 = RSForm(self.operation3.result)
-        self.assertEqual(self.ks3.constituents().count(), 4)
+        self.assertEqual(self.ks3.constituentsQ().count(), 4)
 
         self.layout_data = [
             {'nodeID': 'o' + str(self.operation1.pk), 'x': 0, 'y': 0, 'width': 150, 'height': 40},
@@ -105,8 +105,8 @@ class TestChangeConstituents(EndpointTester):
         response = self.executeCreated(data=data, schema=self.ks1.model.pk)
         new_cst = Constituenta.objects.get(pk=response.data['new_cst']['id'])
         inherited_cst = Constituenta.objects.get(as_child__parent_id=new_cst.pk)
-        self.assertEqual(self.ks1.constituents().count(), 3)
-        self.assertEqual(self.ks3.constituents().count(), 5)
+        self.assertEqual(self.ks1.constituentsQ().count(), 3)
+        self.assertEqual(self.ks3.constituentsQ().count(), 5)
         self.assertEqual(inherited_cst.alias, 'X4')
         self.assertEqual(inherited_cst.order, 2)
         self.assertEqual(inherited_cst.definition_formal, 'X1 = X2')
@@ -114,7 +114,7 @@ class TestChangeConstituents(EndpointTester):
 
     @decl_endpoint('/api/rsforms/{schema}/update-cst', method='patch')
     def test_update_constituenta(self):
-        d2 = self.ks3.insert_new('D2', cst_type=CstType.TERM, definition_raw='@{X1|sing,nomn}')
+        d2 = self.ks3.insert_last('D2', cst_type=CstType.TERM, definition_raw='@{X1|sing,nomn}')
         data = {
             'target': self.ks1X1.pk,
             'item_data': {
@@ -148,15 +148,15 @@ class TestChangeConstituents(EndpointTester):
         response = self.executeOK(data=data, schema=self.ks2.model.pk)
         inherited_cst = Constituenta.objects.get(as_child__parent_id=self.ks2D1.pk)
         self.ks2D1.refresh_from_db()
-        self.assertEqual(self.ks2.constituents().count(), 1)
-        self.assertEqual(self.ks3.constituents().count(), 3)
+        self.assertEqual(self.ks2.constituentsQ().count(), 1)
+        self.assertEqual(self.ks3.constituentsQ().count(), 3)
         self.assertEqual(self.ks2D1.definition_formal, r'DEL\DEL')
         self.assertEqual(inherited_cst.definition_formal, r'DEL\DEL')
 
 
     @decl_endpoint('/api/rsforms/{schema}/substitute', method='patch')
     def test_substitute(self):
-        d2 = self.ks3.insert_new('D2', cst_type=CstType.TERM, definition_formal=r'X1\X2\X3')
+        d2 = self.ks3.insert_last('D2', cst_type=CstType.TERM, definition_formal=r'X1\X2\X3')
         data = {'substitutions': [{
             'original': self.ks1X1.pk,
             'substitution': self.ks1X2.pk
@@ -164,7 +164,7 @@ class TestChangeConstituents(EndpointTester):
         self.executeOK(data=data, schema=self.ks1.model.pk)
         self.ks1X2.refresh_from_db()
         d2.refresh_from_db()
-        self.assertEqual(self.ks1.constituents().count(), 1)
-        self.assertEqual(self.ks3.constituents().count(), 4)
+        self.assertEqual(self.ks1.constituentsQ().count(), 1)
+        self.assertEqual(self.ks3.constituentsQ().count(), 4)
         self.assertEqual(self.ks1X2.order, 0)
         self.assertEqual(d2.definition_formal, r'X2\X2\X3')

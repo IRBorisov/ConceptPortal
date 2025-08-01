@@ -20,7 +20,7 @@ class TestVersionViews(EndpointTester):
         self.owned_id = self.owned.model.pk
         self.unowned = RSForm.create(title='Test2', alias='T2')
         self.unowned_id = self.unowned.model.pk
-        self.x1 = self.owned.insert_new(
+        self.x1 = self.owned.insert_last(
             alias='X1',
             convention='testStart'
         )
@@ -44,7 +44,7 @@ class TestVersionViews(EndpointTester):
 
     @decl_endpoint('/api/library/{schema}/create-version', method='post')
     def test_create_version_filter(self):
-        x2 = self.owned.insert_new('X2')
+        x2 = self.owned.insert_last('X2')
         data = {'version': '1.0.0', 'description': 'test', 'items': [x2.pk]}
         response = self.executeCreated(data=data, schema=self.owned_id)
         version = Version.objects.get(pk=response.data['version'])
@@ -154,14 +154,14 @@ class TestVersionViews(EndpointTester):
     @decl_endpoint('/api/versions/{version}/restore', method='patch')
     def test_restore_version(self):
         x1 = self.x1
-        x2 = self.owned.insert_new('X2')
-        d1 = self.owned.insert_new('D1', term_raw='TestTerm')
+        x2 = self.owned.insert_last('X2')
+        d1 = self.owned.insert_last('D1', term_raw='TestTerm')
         data = {'version': '1.0.0', 'description': 'test'}
         version_id = self._create_version(data=data)
         invalid_id = version_id + 1337
 
         self.owned.delete_cst([d1])
-        x3 = self.owned.insert_new('X3')
+        x3 = self.owned.insert_last('X3')
         x1.order = x3.order
         x1.convention = 'Test2'
         x1.term_raw = 'Test'
