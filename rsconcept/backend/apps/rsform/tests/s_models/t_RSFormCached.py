@@ -1,7 +1,7 @@
 ''' Testing models: api_RSForm. '''
 from django.forms import ValidationError
 
-from apps.rsform.models import Constituenta, CstType, RSFormCached
+from apps.rsform.models import Constituenta, CstType, OrderManager, RSFormCached
 from apps.users.models import User
 from shared.DBTester import DBTester
 
@@ -31,68 +31,10 @@ class TestRSFormCached(DBTester):
         self.assertEqual(schema1.constituentsQ().count(), 2)
 
 
-    def test_insert_at(self):
-        x1 = self.schema.insert_new('X1')
-        self.assertEqual(x1.order, 0)
-        self.assertEqual(x1.schema, self.schema.model)
-
-        x2 = self.schema.insert_new('X2', position=0)
-        x1.refresh_from_db()
-        self.assertEqual(x2.order, 0)
-        self.assertEqual(x2.schema, self.schema.model)
-        self.assertEqual(x1.order, 1)
-
-        x3 = self.schema.insert_new('X3', position=3)
-        x2.refresh_from_db()
-        x1.refresh_from_db()
-        self.assertEqual(x3.order, 2)
-        self.assertEqual(x3.schema, self.schema.model)
-        self.assertEqual(x2.order, 0)
-        self.assertEqual(x1.order, 1)
-
-        x4 = self.schema.insert_new('X4', position=2)
-        x3.refresh_from_db()
-        x2.refresh_from_db()
-        x1.refresh_from_db()
-        self.assertEqual(x4.order, 2)
-        self.assertEqual(x4.schema, self.schema.model)
-        self.assertEqual(x3.order, 3)
-        self.assertEqual(x2.order, 0)
-        self.assertEqual(x1.order, 1)
-
-
-    def test_insert_at_invalid_position(self):
-        with self.assertRaises(ValidationError):
-            self.schema.insert_new('X5', position=-2)
-
-
-    def test_insert_at_invalid_alias(self):
-        self.schema.insert_new('X1')
-        with self.assertRaises(ValidationError):
-            self.schema.insert_new('X1')
-
-
-    def test_insert_at_reorder(self):
-        self.schema.insert_new('X1')
-        d1 = self.schema.insert_new('D1')
-        d2 = self.schema.insert_new('D2', position=0)
-        d1.refresh_from_db()
-        self.assertEqual(d1.order, 2)
-        self.assertEqual(d2.order, 0)
-
-        x2 = self.schema.insert_new('X2', position=3)
-        self.assertEqual(x2.order, 3)
-
-
     def test_insert_last(self):
-        x1 = self.schema.insert_new('X1')
+        x1 = self.schema.insert_last('X1')
         self.assertEqual(x1.order, 0)
         self.assertEqual(x1.schema, self.schema.model)
-
-        x2 = self.schema.insert_new('X2')
-        self.assertEqual(x2.order, 1)
-        self.assertEqual(x2.schema, self.schema.model)
-        self.assertEqual(x1.order, 0)
 
 
     def test_create_cst(self):
@@ -104,8 +46,8 @@ class TestRSFormCached(DBTester):
             'convention': 'convention'
         }
 
-        x1 = self.schema.insert_new('X1')
-        x2 = self.schema.insert_new('X2')
+        x1 = self.schema.insert_last('X1')
+        x2 = self.schema.insert_last('X2')
         x3 = self.schema.create_cst(data=data, insert_after=x1)
         x2.refresh_from_db()
 
@@ -117,7 +59,7 @@ class TestRSFormCached(DBTester):
 
 
     def test_create_cst_resolve(self):
-        x1 = self.schema.insert_new(
+        x1 = self.schema.insert_last(
             alias='X1',
             term_raw='@{X2|datv}',
             definition_raw='@{X1|datv} @{X2|datv}'
@@ -136,11 +78,11 @@ class TestRSFormCached(DBTester):
 
 
     def test_insert_copy(self):
-        x1 = self.schema.insert_new(
+        x1 = self.schema.insert_last(
             alias='X10',
             convention='Test'
         )
-        s1 = self.schema.insert_new(
+        s1 = self.schema.insert_last(
             alias='S11',
             definition_formal=x1.alias,
             definition_raw='@{X10|plur}'
@@ -167,9 +109,9 @@ class TestRSFormCached(DBTester):
 
 
     def test_delete_cst(self):
-        x1 = self.schema.insert_new('X1')
-        x2 = self.schema.insert_new('X2')
-        d1 = self.schema.insert_new(
+        x1 = self.schema.insert_last('X1')
+        x2 = self.schema.insert_last('X2')
+        d1 = self.schema.insert_last(
             alias='D1',
             definition_formal='X1 = X2',
             definition_raw='@{X1|sing}',
@@ -188,9 +130,9 @@ class TestRSFormCached(DBTester):
 
 
     def test_apply_mapping(self):
-        x1 = self.schema.insert_new('X1')
-        x2 = self.schema.insert_new('X11')
-        d1 = self.schema.insert_new(
+        x1 = self.schema.insert_last('X1')
+        x2 = self.schema.insert_last('X11')
+        d1 = self.schema.insert_last(
             alias='D1',
             definition_formal='X1 = X11 = X2',
             definition_raw='@{X11|sing}',
@@ -207,15 +149,15 @@ class TestRSFormCached(DBTester):
 
 
     def test_substitute(self):
-        x1 = self.schema.insert_new(
+        x1 = self.schema.insert_last(
             alias='X1',
             term_raw='Test'
         )
-        x2 = self.schema.insert_new(
+        x2 = self.schema.insert_last(
             alias='X2',
             term_raw='Test2'
         )
-        d1 = self.schema.insert_new(
+        d1 = self.schema.insert_last(
             alias='D1',
             definition_formal=x1.alias
         )
@@ -229,47 +171,47 @@ class TestRSFormCached(DBTester):
 
 
     def test_restore_order(self):
-        d2 = self.schema.insert_new(
+        d2 = self.schema.insert_last(
             alias='D2',
             definition_formal=r'D{ξ∈S1 | 1=1}',
         )
-        d1 = self.schema.insert_new(
+        d1 = self.schema.insert_last(
             alias='D1',
             definition_formal=r'Pr1(S1)\X1',
         )
-        x1 = self.schema.insert_new('X1')
-        x2 = self.schema.insert_new('X2')
-        s1 = self.schema.insert_new(
+        x1 = self.schema.insert_last('X1')
+        x2 = self.schema.insert_last('X2')
+        s1 = self.schema.insert_last(
             alias='S1',
             definition_formal='ℬ(X1×X1)'
         )
-        c1 = self.schema.insert_new('C1')
-        s2 = self.schema.insert_new(
+        c1 = self.schema.insert_last('C1')
+        s2 = self.schema.insert_last(
             alias='S2',
             definition_formal='ℬ(X2×D1)'
         )
-        a1 = self.schema.insert_new(
+        a1 = self.schema.insert_last(
             alias='A1',
             definition_formal=r'D3=∅',
         )
-        d3 = self.schema.insert_new(
+        d3 = self.schema.insert_last(
             alias='D3',
             definition_formal=r'Pr2(S2)',
         )
-        f1 = self.schema.insert_new(
+        f1 = self.schema.insert_last(
             alias='F1',
             definition_formal=r'[α∈ℬ(X1)] D{σ∈S1 | α⊆pr1(σ)}',
         )
-        d4 = self.schema.insert_new(
+        d4 = self.schema.insert_last(
             alias='D4',
             definition_formal=r'Pr2(D3)',
         )
-        f2 = self.schema.insert_new(
+        f2 = self.schema.insert_last(
             alias='F2',
             definition_formal=r'[α∈ℬ(X1)] X1\α',
         )
 
-        self.schema.restore_order()
+        OrderManager(self.schema).restore_order()
         x1.refresh_from_db()
         x2.refresh_from_db()
         c1.refresh_from_db()
@@ -298,13 +240,13 @@ class TestRSFormCached(DBTester):
 
 
     def test_reset_aliases(self):
-        x1 = self.schema.insert_new(
+        x1 = self.schema.insert_last(
             alias='X11',
             term_raw='человек',
             term_resolved='человек'
         )
-        x2 = self.schema.insert_new('X21')
-        d1 = self.schema.insert_new(
+        x2 = self.schema.insert_last('X21')
+        d1 = self.schema.insert_last(
             alias='D11',
             definition_formal='X21=X21',
             term_raw='@{X21|sing}',
@@ -323,47 +265,3 @@ class TestRSFormCached(DBTester):
         self.assertEqual(d1.term_raw, '@{X2|sing}')
         self.assertEqual(d1.definition_raw, '@{X1|datv}')
         self.assertEqual(d1.definition_resolved, 'test')
-
-
-    def test_on_term_change(self):
-        x1 = self.schema.insert_new(
-            alias='X1',
-            term_raw='человек',
-            term_resolved='человек',
-            definition_raw='одному @{X1|datv}',
-            definition_resolved='одному человеку',
-        )
-        x2 = self.schema.insert_new(
-            alias='X2',
-            term_raw='сильный @{X1|sing}',
-            term_resolved='сильный человек',
-            definition_raw=x1.definition_raw,
-            definition_resolved=x1.definition_resolved
-        )
-        x3 = self.schema.insert_new(
-            alias='X3',
-            definition_raw=x1.definition_raw,
-            definition_resolved=x1.definition_resolved
-        )
-        d1 = self.schema.insert_new(
-            alias='D1',
-            definition_raw='очень @{X2|sing}',
-            definition_resolved='очень сильный человек'
-        )
-
-        x1.term_raw = 'слон'
-        x1.term_resolved = 'слон'
-        x1.save()
-
-        self.schema.after_term_change([x1.pk])
-        x1.refresh_from_db()
-        x2.refresh_from_db()
-        x3.refresh_from_db()
-        d1.refresh_from_db()
-
-        self.assertEqual(x1.term_raw, 'слон')
-        self.assertEqual(x1.term_resolved, 'слон')
-        self.assertEqual(x1.definition_resolved, 'одному слону')
-        self.assertEqual(x2.definition_resolved, x1.definition_resolved)
-        self.assertEqual(x3.definition_resolved, x1.definition_resolved)
-        self.assertEqual(d1.definition_resolved, 'очень сильный слон')

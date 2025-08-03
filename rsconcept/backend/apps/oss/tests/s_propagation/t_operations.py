@@ -113,7 +113,7 @@ class TestChangeOperations(EndpointTester):
             {'nodeID': 'o' + str(self.operation4.pk), 'x': 0, 'y': 0, 'width': 150, 'height': 40},
             {'nodeID': 'o' + str(self.operation5.pk), 'x': 0, 'y': 0, 'width': 150, 'height': 40}
         ]
-        layout = self.owned.layout()
+        layout = OperationSchema.layoutQ(self.owned_id)
         layout.data = self.layout_data
         layout.save()
 
@@ -279,7 +279,7 @@ class TestChangeOperations(EndpointTester):
         }
 
         self.executeOK(data=data, item=self.owned_id)
-        self.ks1.refresh_from_db()
+        self.ks1.model.refresh_from_db()
         self.ks4D2.refresh_from_db()
         self.ks5D4.refresh_from_db()
         subs1_2 = self.operation4.getQ_substitutions()
@@ -373,7 +373,7 @@ class TestChangeOperations(EndpointTester):
     def test_execute_middle_operation(self):
         self.client.delete(f'/api/library/{self.ks4.model.pk}')
         self.operation4.refresh_from_db()
-        self.ks5.refresh_from_db()
+        self.ks5.model.refresh_from_db()
         self.assertEqual(self.operation4.result, None)
         self.assertEqual(self.ks5.constituentsQ().count(), 3)
 
@@ -383,7 +383,7 @@ class TestChangeOperations(EndpointTester):
         }
         self.executeOK(data=data, item=self.owned_id)
         self.operation4.refresh_from_db()
-        self.ks5.refresh_from_db()
+        self.ks5.model.refresh_from_db()
         self.assertNotEqual(self.operation4.result, None)
         self.assertEqual(self.ks5.constituentsQ().count(), 8)
 
@@ -409,9 +409,9 @@ class TestChangeOperations(EndpointTester):
         }
 
         self.executeOK(data=data)
-        ks6.refresh_from_db()
-        self.ks1.refresh_from_db()
-        self.ks4.refresh_from_db()
+        ks6.model.refresh_from_db()
+        self.ks1.model.refresh_from_db()
+        self.ks4.model.refresh_from_db()
 
         self.assertEqual(ks6.constituentsQ().count(), ks6_old_count)
         self.assertEqual(self.ks1.constituentsQ().count(), ks1_old_count + 1)
@@ -439,9 +439,9 @@ class TestChangeOperations(EndpointTester):
         }
 
         self.executeOK(data=data)
-        ks6.refresh_from_db()
-        self.ks1.refresh_from_db()
-        self.ks4.refresh_from_db()
+        ks6.model.refresh_from_db()
+        self.ks1.model.refresh_from_db()
+        self.ks4.model.refresh_from_db()
         self.ks4D2.refresh_from_db()
         self.ks5D4.refresh_from_db()
 

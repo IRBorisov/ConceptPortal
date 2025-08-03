@@ -70,7 +70,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
             PropagationFacade.before_delete_schema(instance)
             super().perform_destroy(instance)
         if instance.item_type == m.LibraryItemType.OPERATION_SCHEMA:
-            schemas = list(OperationSchema(instance).owned_schemas())
+            schemas = list(OperationSchema.owned_schemasQ(instance))
             super().perform_destroy(instance)
             for schema in schemas:
                 self.perform_destroy(schema)
@@ -204,7 +204,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
 
         with transaction.atomic():
             if item.item_type == m.LibraryItemType.OPERATION_SCHEMA:
-                owned_schemas = OperationSchema(item).owned_schemas().only('owner')
+                owned_schemas = OperationSchema.owned_schemasQ(item).only('owner')
                 for schema in owned_schemas:
                     schema.owner_id = new_owner
                 m.LibraryItem.objects.bulk_update(owned_schemas, ['owner'])
@@ -238,7 +238,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
 
         with transaction.atomic():
             if item.item_type == m.LibraryItemType.OPERATION_SCHEMA:
-                owned_schemas = OperationSchema(item).owned_schemas().only('location')
+                owned_schemas = OperationSchema.owned_schemasQ(item).only('location')
                 for schema in owned_schemas:
                     schema.location = location
                 m.LibraryItem.objects.bulk_update(owned_schemas, ['location'])
@@ -270,7 +270,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
 
         with transaction.atomic():
             if item.item_type == m.LibraryItemType.OPERATION_SCHEMA:
-                owned_schemas = OperationSchema(item).owned_schemas().only('access_policy')
+                owned_schemas = OperationSchema.owned_schemasQ(item).only('access_policy')
                 for schema in owned_schemas:
                     schema.access_policy = new_policy
                 m.LibraryItem.objects.bulk_update(owned_schemas, ['access_policy'])
@@ -300,7 +300,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
         with transaction.atomic():
             added, deleted = m.Editor.set_and_return_diff(item.pk, editors)
             if len(added) >= 0 or len(deleted) >= 0:
-                owned_schemas = OperationSchema(item).owned_schemas().only('pk')
+                owned_schemas = OperationSchema.owned_schemasQ(item).only('pk')
                 if owned_schemas.exists():
                     m.Editor.objects.filter(
                         item__in=owned_schemas,

@@ -1,7 +1,7 @@
 ''' Models: RSForm API. '''
 # pylint: disable=duplicate-code
 
-from typing import Iterable, Optional
+from typing import Iterable, Optional, cast
 
 from cctext import Entity, Resolver, TermForm, split_grams
 from django.core.exceptions import ValidationError
@@ -10,8 +10,9 @@ from django.db.models import QuerySet
 from apps.library.models import LibraryItem, LibraryItemType, Version
 from shared import messages as msg
 
-from .api_RSLanguage import guess_type
-from .Constituenta import Constituenta, CstType
+from ..graph import Graph
+from .api_RSLanguage import get_type_prefix, guess_type
+from .Constituenta import Constituenta, CstType, extract_entities, extract_globals
 
 INSERT_LAST: int = -1
 DELETED_ALIAS = 'DEL'
@@ -31,7 +32,7 @@ class RSForm:
         return RSForm(model)
 
     @staticmethod
-    def spawn_resolver(schemaID: int) -> Resolver:
+    def resolver_from_schema(schemaID: int) -> Resolver:
         ''' Create resolver for text references based on schema terms. '''
         result = Resolver({})
         constituents = Constituenta.objects.filter(schema_id=schemaID).only('alias', 'term_resolved', 'term_forms')
@@ -47,13 +48,145 @@ class RSForm:
             result.context[cst.alias] = entity
         return result
 
-    def refresh_from_db(self) -> None:
-        ''' Model wrapper. '''
-        self.model.refresh_from_db()
+    @staticmethod
+    def resolver_from_list(cst_list: Iterable[Constituenta]) -> Resolver:
+        ''' Create resolver for text references based on list of constituents. '''
+        result = Resolver({})
+        for cst in cst_list:
+            entity = Entity(
+                alias=cst.alias,
+                nominal=cst.term_resolved,
+                manual_forms=[
+                    TermForm(text=form['text'], grams=split_grams(form['tags']))
+                    for form in cst.term_forms
+                ]
+            )
+            result.context[cst.alias] = entity
+        return result
 
-    def save(self, *args, **kwargs) -> None:
-        ''' Model wrapper. '''
-        self.model.save(*args, **kwargs)
+    @staticmethod
+    def graph_formal(cst_list: Iterable[Constituenta],
+                     cst_by_alias: Optional[dict[str, Constituenta]] = None) -> Graph[int]:
+        ''' Graph based on formal definitions. '''
+        result: Graph[int] = Graph()
+        if cst_by_alias is None:
+            cst_by_alias = {cst.alias: cst for cst in cst_list}
+        for cst in cst_list:
+            result.add_node(cst.pk)
+        for cst in cst_list:
+            for alias in extract_globals(cst.definition_formal):
+                child = cst_by_alias.get(alias)
+                if child is not None:
+                    result.add_edge(src=child.pk, dest=cst.pk)
+        return result
+
+    @staticmethod
+    def graph_term(cst_list: Iterable[Constituenta],
+                   cst_by_alias: Optional[dict[str, Constituenta]] = None) -> Graph[int]:
+        ''' Graph based on term texts. '''
+        result: Graph[int] = Graph()
+        if cst_by_alias is None:
+            cst_by_alias = {cst.alias: cst for cst in cst_list}
+        for cst in cst_list:
+            result.add_node(cst.pk)
+        for cst in cst_list:
+            for alias in extract_entities(cst.term_raw):
+                child = cst_by_alias.get(alias)
+                if child is not None:
+                    result.add_edge(src=child.pk, dest=cst.pk)
+        return result
+
+    @staticmethod
+    def graph_text(cst_list: Iterable[Constituenta],
+                   cst_by_alias: Optional[Optional[dict[str, Constituenta]]] = None) -> Graph[int]:
+        ''' Graph based on definition texts. '''
+        result: Graph[int] = Graph()
+        if cst_by_alias is None:
+            cst_by_alias = {cst.alias: cst for cst in cst_list}
+        for cst in cst_list:
+            result.add_node(cst.pk)
+        for cst in cst_list:
+            for alias in extract_entities(cst.definition_raw):
+                child = cst_by_alias.get(alias)
+                if child is not None:
+                    result.add_edge(src=child.pk, dest=cst.pk)
+        return result
+
+    @staticmethod
+    def save_order(cst_list: Iterable[Constituenta]) -> None:
+        ''' Save order for constituents list. '''
+        order = 0
+        changed: list[Constituenta] = []
+        for cst in cst_list:
+            if cst.order != order:
+                cst.order = order
+                changed.append(cst)
+            order += 1
+        Constituenta.objects.bulk_update(changed, ['order'])
+
+    @staticmethod
+    def shift_positions(start: int, shift: int, cst_list: list[Constituenta]) -> None:
+        ''' Shift positions of constituents. '''
+        if shift == 0:
+            return
+        update_list = cst_list[start:]
+        for cst in update_list:
+            cst.order += shift
+        Constituenta.objects.bulk_update(update_list, ['order'])
+
+    @staticmethod
+    def apply_mapping(mapping: dict[str, str], cst_list: Iterable[Constituenta],
+                      change_aliases: bool = False) -> None:
+        ''' Apply rename mapping. '''
+        update_list: list[Constituenta] = []
+        for cst in cst_list:
+            if cst.apply_mapping(mapping, change_aliases):
+                update_list.append(cst)
+        Constituenta.objects.bulk_update(update_list, ['alias', 'definition_formal', 'term_raw', 'definition_raw'])
+
+    @staticmethod
+    def resolve_term_change(cst_list: Iterable[Constituenta], changed: list[int],
+                            cst_by_alias: Optional[Optional[dict[str, Constituenta]]] = None,
+                            cst_by_id: Optional[Optional[dict[int, Constituenta]]] = None,
+                            resolver: Optional[Resolver] = None) -> None:
+        ''' Trigger cascade resolutions when term changes. '''
+        if cst_by_alias is None:
+            cst_by_alias = {cst.alias: cst for cst in cst_list}
+        if cst_by_id is None:
+            cst_by_id = {cst.pk: cst for cst in cst_list}
+
+        graph_terms = RSForm.graph_term(cst_list, cst_by_alias)
+        expansion = graph_terms.expand_outputs(changed)
+        expanded_change = changed + expansion
+        update_list: list[Constituenta] = []
+
+        if resolver is None:
+            resolver = RSForm.resolver_from_list(cst_list)
+
+        if len(expansion) > 0:
+            for cst_id in graph_terms.topological_order():
+                if cst_id not in expansion:
+                    continue
+                cst = cst_by_id[cst_id]
+                resolved = resolver.resolve(cst.term_raw)
+                if resolved == resolver.context[cst.alias].get_nominal():
+                    continue
+                cst.set_term_resolved(resolved)
+                update_list.append(cst)
+                resolver.context[cst.alias] = Entity(cst.alias, resolved)
+        Constituenta.objects.bulk_update(update_list, ['term_resolved'])
+
+        graph_defs = RSForm.graph_text(cst_list, cst_by_alias)
+        update_defs = set(expansion + graph_defs.expand_outputs(expanded_change)).union(changed)
+        update_list = []
+        if len(update_defs) == 0:
+            return
+        for cst_id in update_defs:
+            cst = cst_by_id[cst_id]
+            resolved = resolver.resolve(cst.definition_raw)
+            cst.definition_resolved = resolved
+            update_list.append(cst)
+        Constituenta.objects.bulk_update(update_list, ['definition_resolved'])
 
     def constituentsQ(self) -> QuerySet[Constituenta]:
         ''' Get QuerySet containing all constituents of current RSForm. '''
@@ -70,7 +203,7 @@ class RSForm:
             raise ValidationError(msg.aliasTaken(alias))
         if cst_type is None:
             cst_type = guess_type(alias)
-        position = self.constituentsQ().count()
+        position = Constituenta.objects.filter(schema=self.model).count()
         result = Constituenta.objects.create(
             schema=self.model,
             order=position,
@@ -78,7 +211,6 @@ class RSForm:
             cst_type=cst_type,
             **kwargs
         )
-        self.model.save(update_fields=['time_update'])
         return result
 
     def move_cst(self, target: list[Constituenta], destination: int) -> None:
@@ -100,25 +232,43 @@ class RSForm:
                 cst.order = destination + size + count_bot
                 count_bot += 1
         Constituenta.objects.bulk_update(cst_list, ['order'])
-        self.save(update_fields=['time_update'])
 
-    def delete_cst(self, target: Iterable[Constituenta]) -> None:
-        ''' Delete multiple constituents. Do not check if listCst are from this schema. '''
-        mapping = {cst.alias: DELETED_ALIAS for cst in target}
-        self.apply_mapping(mapping)
-        Constituenta.objects.filter(pk__in=[cst.pk for cst in target]).delete()
-        self._reset_order()
-        self.save(update_fields=['time_update'])
+    def reset_aliases(self) -> None:
+        ''' Recreate all aliases based on constituents order. '''
+        bases = cast(dict[str, int], {})
+        mapping = cast(dict[str, str], {})
+        for cst_type in CstType.values:
+            bases[cst_type] = 1
+        cst_list = Constituenta.objects.filter(schema=self.model).only(
+            'alias', 'cst_type', 'definition_formal',
+            'term_raw', 'definition_raw'
+        ).order_by('order')
+        for cst in cst_list:
+            alias = f'{get_type_prefix(cst.cst_type)}{bases[cst.cst_type]}'
+            bases[cst.cst_type] += 1
+            if cst.alias != alias:
+                mapping[cst.alias] = alias
+        RSForm.apply_mapping(mapping, cst_list, change_aliases=True)
 
-    def apply_mapping(self, mapping: dict[str, str], change_aliases: bool = False) -> None:
-        ''' Apply rename mapping. '''
-        update_list: list[Constituenta] = []
-        constituents = self.constituentsQ().only('alias', 'definition_formal', 'term_raw', 'definition_raw')
-        for cst in constituents:
-            if cst.apply_mapping(mapping, change_aliases):
-                update_list.append(cst)
-        Constituenta.objects.bulk_update(update_list, ['alias', 'definition_formal', 'term_raw', 'definition_raw'])
-        self.save(update_fields=['time_update'])
+    def substitute(self, substitutions: list[tuple[Constituenta, Constituenta]]) -> None:
+        ''' Execute constituenta substitution. '''
+        if len(substitutions) < 1:
+            return
+        mapping = {}
+        deleted: list[int] = []
+        replacements: list[int] = []
+        for original, substitution in substitutions:
+            mapping[original.alias] = substitution.alias
+            deleted.append(original.pk)
+            replacements.append(substitution.pk)
+        Constituenta.objects.filter(pk__in=deleted).delete()
+        cst_list = Constituenta.objects.filter(schema=self.model).only(
+            'alias', 'cst_type', 'definition_formal',
+            'term_raw', 'definition_raw', 'order', 'term_forms', 'term_resolved'
+        ).order_by('order')
+        RSForm.save_order(cst_list)
+        RSForm.apply_mapping(mapping, cst_list, change_aliases=False)
+        RSForm.resolve_term_change(cst_list, replacements)
 
     def create_version(self, version: str, description: str, data) -> Version:
         ''' Creates version for current state. '''
@@ -128,14 +278,3 @@ class RSForm:
             description=description,
             data=data
         )
-
-    def _reset_order(self) -> None:
-        order = 0
-        changed: list[Constituenta] = []
-        cst_list = self.constituentsQ().only('order').order_by('order')
-        for cst in cst_list:
-            if cst.order != order:
-                cst.order = order
-                changed.append(cst)
-            order += 1
-        Constituenta.objects.bulk_update(changed, ['order'])

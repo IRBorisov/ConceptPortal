@@ -64,7 +64,7 @@ class TestChangeAttributes(EndpointTester):
             {'nodeID': 'o' + str(self.operation2.pk), 'x': 0, 'y': 0, 'width': 150, 'height': 40},
             {'nodeID': 'o' + str(self.operation3.pk), 'x': 0, 'y': 0, 'width': 150, 'height': 40},
         ]
-        layout = self.owned.layout()
+        layout = OperationSchema.layoutQ(self.owned_id)
         layout.data = self.layout_data
         layout.save()
 
@@ -75,10 +75,10 @@ class TestChangeAttributes(EndpointTester):
 
         self.executeOK(data=data, item=self.owned_id)
 
-        self.owned.refresh_from_db()
-        self.ks1.refresh_from_db()
-        self.ks2.refresh_from_db()
-        self.ks3.refresh_from_db()
+        self.owned.model.refresh_from_db()
+        self.ks1.model.refresh_from_db()
+        self.ks2.model.refresh_from_db()
+        self.ks3.model.refresh_from_db()
         self.assertEqual(self.owned.model.owner, self.user3)
         self.assertEqual(self.ks1.model.owner, self.user)
         self.assertEqual(self.ks2.model.owner, self.user2)
@@ -91,10 +91,10 @@ class TestChangeAttributes(EndpointTester):
 
         self.executeOK(data=data, item=self.owned_id)
 
-        self.owned.refresh_from_db()
-        self.ks1.refresh_from_db()
-        self.ks2.refresh_from_db()
-        self.ks3.refresh_from_db()
+        self.owned.model.refresh_from_db()
+        self.ks1.model.refresh_from_db()
+        self.ks2.model.refresh_from_db()
+        self.ks3.model.refresh_from_db()
         self.assertEqual(self.owned.model.location, data['location'])
         self.assertNotEqual(self.ks1.model.location, data['location'])
         self.assertNotEqual(self.ks2.model.location, data['location'])
@@ -107,10 +107,10 @@ class TestChangeAttributes(EndpointTester):
 
         self.executeOK(data=data, item=self.owned_id)
 
-        self.owned.refresh_from_db()
-        self.ks1.refresh_from_db()
-        self.ks2.refresh_from_db()
-        self.ks3.refresh_from_db()
+        self.owned.model.refresh_from_db()
+        self.ks1.model.refresh_from_db()
+        self.ks2.model.refresh_from_db()
+        self.ks3.model.refresh_from_db()
         self.assertEqual(self.owned.model.access_policy, data['access_policy'])
         self.assertNotEqual(self.ks1.model.access_policy, data['access_policy'])
         self.assertNotEqual(self.ks2.model.access_policy, data['access_policy'])
@@ -126,10 +126,10 @@ class TestChangeAttributes(EndpointTester):
 
         self.executeOK(data=data, item=self.owned_id)
 
-        self.owned.refresh_from_db()
-        self.ks1.refresh_from_db()
-        self.ks2.refresh_from_db()
-        self.ks3.refresh_from_db()
+        self.owned.model.refresh_from_db()
+        self.ks1.model.refresh_from_db()
+        self.ks2.model.refresh_from_db()
+        self.ks3.model.refresh_from_db()
         self.assertEqual(list(self.owned.model.getQ_editors()), [self.user3])
         self.assertEqual(list(self.ks1.model.getQ_editors()), [self.user, self.user2])
         self.assertEqual(list(self.ks2.model.getQ_editors()), [])
@@ -162,7 +162,7 @@ class TestChangeAttributes(EndpointTester):
         }
 
         response = self.executeOK(data=data, item=self.owned_id)
-        self.ks3.refresh_from_db()
+        self.ks3.model.refresh_from_db()
         self.assertEqual(self.ks3.model.alias, data['item_data']['alias'])
         self.assertEqual(self.ks3.model.title, data['item_data']['title'])
         self.assertEqual(self.ks3.model.description, data['item_data']['description'])

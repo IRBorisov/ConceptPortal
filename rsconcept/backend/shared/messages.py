@@ -142,10 +142,6 @@ def exteorFileVersionNotSupported():
     return 'Некорректный формат файла Экстеор. Сохраните файл в новой версии'
 
 
-def invalidPosition():
-    return 'Invalid position: should be positive integer'
-
-
 def constituentaNoStructure():
     return 'Указанная конституента не обладает теоретико-множественной типизацией'
 

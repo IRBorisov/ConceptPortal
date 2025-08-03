@@ -67,7 +67,7 @@ class TestVersionViews(EndpointTester):
         self.executeNotFound(schema=self.unowned_id, version=version_id)
 
         self.owned.model.alias = 'NewName'
-        self.owned.save()
+        self.owned.model.save()
         self.x1.alias = 'X33'
         self.x1.save()
 
@@ -160,7 +160,7 @@ class TestVersionViews(EndpointTester):
         version_id = self._create_version(data=data)
         invalid_id = version_id + 1337
 
-        self.owned.delete_cst([d1])
+        Constituenta.objects.get(pk=d1.pk).delete()
         x3 = self.owned.insert_last('X3')
         x1.order = x3.order
         x1.convention = 'Test2'

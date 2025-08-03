@@ -23,3 +23,10 @@ class Layout(Model):
 
     def __str__(self) -> str:
         return f'Схема расположения {self.oss.alias}'
+
+    @staticmethod
+    def update_data(itemID: int, data: dict) -> None:
+        ''' Update layout data. '''
+        layout = Layout.objects.get(oss_id=itemID)
+        layout.data = data
+        layout.save()

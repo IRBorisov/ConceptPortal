@@ -147,7 +147,6 @@ class RSFormTRSSerializer(serializers.Serializer):
             access_policy=validated_data['access_policy'],
             location=validated_data['location']
         )
-        self.instance.save()
         order = 0
         for cst_data in validated_data['items']:
             cst = Constituenta(
@@ -200,7 +199,7 @@ class RSFormTRSSerializer(serializers.Serializer):
                 prev_cst.delete()
 
         instance.resolve_all_text()
-        instance.save()
+        instance.model.save()
         return instance
 
     @staticmethod

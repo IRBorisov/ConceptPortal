@@ -62,7 +62,7 @@ class TestChangeConstituents(EndpointTester):
             {'nodeID': 'o' + str(self.operation2.pk), 'x': 0, 'y': 0, 'width': 150, 'height': 40},
             {'nodeID': 'o' + str(self.operation3.pk), 'x': 0, 'y': 0, 'width': 150, 'height': 40},
         ]
-        layout = self.owned.layout()
+        layout = OperationSchema.layoutQ(self.owned_id)
         layout.data = self.layout_data
         layout.save()
 

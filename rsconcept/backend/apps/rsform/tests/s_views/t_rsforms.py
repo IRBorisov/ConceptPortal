@@ -324,7 +324,7 @@ class TestRSFormViewset(EndpointTester):
         data = {'items': [x1.pk]}
         response = self.executeOK(data=data)
         x2.refresh_from_db()
-        self.owned.refresh_from_db()
+        self.owned.model.refresh_from_db()
         self.assertEqual(len(response.data['items']), 1)
         self.assertEqual(self.owned.constituentsQ().count(), 1)
         self.assertEqual(x2.alias, 'X2')
@@ -387,13 +387,13 @@ class TestRSFormViewset(EndpointTester):
     def test_load_trs(self):
         self.set_params(item=self.owned_id)
         self.owned.model.title = 'Test11'
-        self.owned.save()
+        self.owned.model.save()
         x1 = self.owned.insert_last('X1')
         work_dir = os.path.dirname(os.path.abspath(__file__))
         with open(f'{work_dir}/data/sample-rsform.trs', 'rb') as file:
             data = {'file': file, 'load_metadata': False}
             response = self.client.patch(self.endpoint, data=data, format='multipart')
-        self.owned.refresh_from_db()
+        self.owned.model.refresh_from_db()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(self.owned.model.title, 'Test11')
         self.assertEqual(len(response.data['items']), 25)

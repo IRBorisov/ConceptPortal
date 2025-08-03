@@ -56,7 +56,7 @@ class TestOssBlocks(EndpointTester):
             {'nodeID': 'b' + str(self.block2.pk), 'x': 0, 'y': 0, 'width': 0.5, 'height': 0.5},
         ]
 
-        layout = self.owned.layout()
+        layout = OperationSchema.layoutQ(self.owned_id)
         layout.data = self.layout_data
         layout.save()
 

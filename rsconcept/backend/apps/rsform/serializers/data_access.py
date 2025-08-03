@@ -197,7 +197,8 @@ class RSFormSerializer(StrictModelSerializer):
 
     def restore_from_version(self, data: dict):
         ''' Load data from version. '''
-        schema = RSForm(cast(LibraryItem, self.instance))
+        instance = cast(LibraryItem, self.instance)
+        schema = RSForm(instance)
         items: list[dict] = data['items']
         ids: list[int] = [item['id'] for item in items]
         processed: list[int] = []
@@ -207,7 +208,7 @@ class RSFormSerializer(StrictModelSerializer):
                 cst.delete()
             else:
                 cst_data = next(x for x in items if x['id'] == cst.pk)
-                cst_data['schema'] = cast(LibraryItem, self.instance).pk
+                cst_data['schema'] = instance.pk
                 new_cst = CstBaseSerializer(data=cst_data)
                 new_cst.is_valid(raise_exception=True)
                 new_cst.validated_data['order'] = ids.index(cst.pk)
@@ -222,7 +223,7 @@ class RSFormSerializer(StrictModelSerializer):
                 cst = schema.insert_last(cst_data['alias'])
                 old_id = cst_data['id']
                 cst_data['id'] = cst.pk
-                cst_data['schema'] = cast(LibraryItem, self.instance).pk
+                cst_data['schema'] = instance.pk
                 new_cst = CstBaseSerializer(data=cst_data)
                 new_cst.is_valid(raise_exception=True)
                 new_cst.validated_data['order'] = ids.index(old_id)

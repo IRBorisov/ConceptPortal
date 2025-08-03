@@ -13,7 +13,7 @@ from apps.rsform.serializers import SubstitutionSerializerBase
 from shared import messages as msg
 from shared.serializers import StrictModelSerializer, StrictSerializer
 
-from ..models import Argument, Block, Inheritance, Operation, OperationSchema, OperationType
+from ..models import Argument, Block, Inheritance, Layout, Operation, OperationType, Substitution
 from .basics import NodeSerializer, PositionSerializer, SubstitutionExSerializer
 
 
@@ -529,13 +529,12 @@ class OperationSchemaSerializer(StrictModelSerializer):
     def to_representation(self, instance: LibraryItem):
         result = LibraryItemDetailsSerializer(instance).data
         del result['versions']
-        oss = OperationSchema(instance)
-        result['layout'] = oss.layout().data
+        result['layout'] = Layout.objects.get(oss=instance).data
         result['operations'] = []
         result['blocks'] = []
         result['arguments'] = []
         result['substitutions'] = []
-        for operation in oss.operations().order_by('pk'):
+        for operation in Operation.objects.filter(oss=instance).order_by('pk'):
             operation_data = OperationSerializer(operation).data
             operation_result = operation.result
             operation_data['is_import'] = \
@@ -543,11 +542,11 @@ class OperationSchemaSerializer(StrictModelSerializer):
                 (operation_result.owner_id != instance.owner_id or
                  operation_result.location != instance.location)
             result['operations'].append(operation_data)
-        for block in oss.blocks().order_by('pk'):
+        for block in Block.objects.filter(oss=instance).order_by('pk'):
             result['blocks'].append(BlockSerializer(block).data)
-        for argument in oss.arguments().order_by('order'):
+        for argument in Argument.objects.filter(operation__oss=instance).order_by('order'):
             result['arguments'].append(ArgumentSerializer(argument).data)
-        for substitution in oss.substitutions().values(
+        for substitution in Substitution.objects.filter(operation__oss=instance).values(
             'operation',
             'original',
             'substitution',

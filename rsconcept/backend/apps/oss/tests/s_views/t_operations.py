@@ -1,6 +1,6 @@
 ''' Testing API: Operation Schema - operations manipulation. '''
 from apps.library.models import AccessPolicy, Editor, LibraryItem, LibraryItemType
-from apps.oss.models import Operation, OperationSchema, OperationType, Reference
+from apps.oss.models import Argument, Operation, OperationSchema, OperationType, Reference
 from apps.rsform.models import Constituenta, RSForm
 from shared.EndpointTester import EndpointTester, decl_endpoint
 
@@ -64,7 +64,7 @@ class TestOssOperations(EndpointTester):
             {'nodeID': 'o' + str(self.operation2.pk), 'x': 0, 'y': 0, 'width': 150, 'height': 40},
             {'nodeID': 'o' + str(self.operation3.pk), 'x': 0, 'y': 0, 'width': 150, 'height': 40},
         ]
-        layout = self.owned.layout()
+        layout = OperationSchema.layoutQ(self.owned_id)
         layout.data = self.layout_data
         layout.save()
 
@@ -229,7 +229,7 @@ class TestOssOperations(EndpointTester):
 
         data['target'] = self.operation1.pk
         response = self.executeCreated(data=data, item=self.owned_id)
-        self.owned.refresh_from_db()
+        self.owned.model.refresh_from_db()
         new_operation_id = response.data['new_operation']
         new_operation = next(op for op in response.data['oss']['operations'] if op['id'] == new_operation_id)
         self.assertEqual(new_operation['operation_type'], OperationType.REFERENCE)
@@ -261,10 +261,10 @@ class TestOssOperations(EndpointTester):
             'substitutions': []
         }
         response = self.executeCreated(data=data, item=self.owned_id)
-        self.owned.refresh_from_db()
+        self.owned.model.refresh_from_db()
         new_operation_id = response.data['new_operation']
         new_operation = next(op for op in response.data['oss']['operations'] if op['id'] == new_operation_id)
-        arguments = self.owned.arguments()
+        arguments = Argument.objects.filter(operation__oss=self.owned.model)
         self.assertTrue(arguments.filter(operation__id=new_operation_id, argument=self.operation1))
         self.assertTrue(arguments.filter(operation__id=new_operation_id, argument=self.operation3))
         self.assertNotEqual(new_operation['result'], None)
@@ -396,7 +396,7 @@ class TestOssOperations(EndpointTester):
         self.ks1.model.alias = 'Test42'
         self.ks1.model.title = 'Test421'
         self.ks1.model.description = 'TestComment42'
-        self.ks1.save()
+        self.ks1.model.save()
         response = self.executeOK(data=data)
         self.operation1.refresh_from_db()
         self.assertEqual(self.operation1.result, self.ks1.model)

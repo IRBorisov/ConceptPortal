@@ -47,6 +47,7 @@ class VersionViewset(
         item = version.item
         with transaction.atomic():
             RSFormSerializer(item).restore_from_version(version.data)
+            item.save(update_fields=['time_update'])
         return Response(
             status=c.HTTP_200_OK,
             data=RSFormParseSerializer(item).data

@@ -117,11 +117,11 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         ''' Endpoint: Update schema layout. '''
         serializer = s.LayoutSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        oss = m.OperationSchema(self.get_object())
+        item = self._get_item()
         with transaction.atomic():
-            oss.update_layout(serializer.validated_data['data'])
-            oss.save(update_fields=['time_update'])
-        return Response(status=c.HTTP_200_OK, data=s.OperationSchemaSerializer(oss.model).data)
+            m.Layout.update_data(pk, serializer.validated_data['data'])
+            item.save(update_fields=['time_update'])
+        return Response(status=c.HTTP_200_OK, data=s.OperationSchemaSerializer(item).data)
 
     @extend_schema(
         summary='create block',
@@ -137,13 +137,14 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     @action(detail=True, methods=['post'], url_path='create-block')
     def create_block(self, request: Request, pk) -> HttpResponse:
         ''' Create Block. '''
+        item = self._get_item()
         serializer = s.CreateBlockSerializer(
             data=request.data,
-            context={'oss': self.get_object()}
+            context={'oss': item}
         )
         serializer.is_valid(raise_exception=True)
 
-        oss = m.OperationSchema(self.get_object())
+        oss = m.OperationSchema(item)
         layout = serializer.validated_data['layout']
         position = serializer.validated_data['position']
         children_blocks: list[m.Block] = serializer.validated_data['children_blocks']
@@ -157,7 +158,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
                 'width': position['width'],
                 'height': position['height'],
             })
-            oss.update_layout(layout)
+            m.Layout.update_data(pk, layout)
             if len(children_blocks) > 0:
                 for block in children_blocks:
                     block.parent = new_block
@@ -166,13 +167,13 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
                 for operation in children_operations:
                     operation.parent = new_block
                 m.Operation.objects.bulk_update(children_operations, ['parent'])
-            oss.save(update_fields=['time_update'])
+            item.save(update_fields=['time_update'])
 
         return Response(
             status=c.HTTP_201_CREATED,
             data={
                 'new_block': new_block.pk,
-                'oss': s.OperationSchemaSerializer(oss.model).data
+                'oss': s.OperationSchemaSerializer(item).data
             }
         )
 
@@ -190,17 +191,15 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     @action(detail=True, methods=['patch'], url_path='update-block')
     def update_block(self, request: Request, pk) -> HttpResponse:
         ''' Update Block. '''
+        item = self._get_item()
         serializer = s.UpdateBlockSerializer(
             data=request.data,
-            context={'oss': self.get_object()}
+            context={'oss': item}
         )
         serializer.is_valid(raise_exception=True)
 
         block: m.Block = cast(m.Block, serializer.validated_data['target'])
-        oss = m.OperationSchema(self.get_object())
         with transaction.atomic():
-            if 'layout' in serializer.validated_data:
-                oss.update_layout(serializer.validated_data['layout'])
             if 'title' in serializer.validated_data['item_data']:
                 block.title = serializer.validated_data['item_data']['title']
             if 'description' in serializer.validated_data['item_data']:
@@ -208,10 +207,13 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
             if 'parent' in serializer.validated_data['item_data']:
                 block.parent = serializer.validated_data['item_data']['parent']
             block.save(update_fields=['title', 'description', 'parent'])
-            oss.save(update_fields=['time_update'])
+            if 'layout' in serializer.validated_data:
+                layout = serializer.validated_data['layout']
+                m.Layout.update_data(pk, layout)
+            item.save(update_fields=['time_update'])
         return Response(
             status=c.HTTP_200_OK,
-            data=s.OperationSchemaSerializer(oss.model).data
+            data=s.OperationSchemaSerializer(item).data
         )
 
     @extend_schema(
@@ -228,24 +230,25 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     @action(detail=True, methods=['patch'], url_path='delete-block')
     def delete_block(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Delete Block. '''
+        item = self._get_item()
         serializer = s.DeleteBlockSerializer(
             data=request.data,
-            context={'oss': self.get_object()}
+            context={'oss': item}
         )
         serializer.is_valid(raise_exception=True)
 
-        oss = m.OperationSchema(self.get_object())
+        oss = m.OperationSchema(item)
         block = cast(m.Block, serializer.validated_data['target'])
         layout = serializer.validated_data['layout']
         layout = [x for x in layout if x['nodeID'] != 'b' + str(block.pk)]
         with transaction.atomic():
             oss.delete_block(block)
-            oss.update_layout(layout)
-            oss.save(update_fields=['time_update'])
+            m.Layout.update_data(pk, layout)
+            item.save(update_fields=['time_update'])
 
         return Response(
             status=c.HTTP_200_OK,
-            data=s.OperationSchemaSerializer(oss.model).data
+            data=s.OperationSchemaSerializer(item).data
         )
 
     @extend_schema(
@@ -262,26 +265,27 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     @action(detail=True, methods=['patch'], url_path='move-items')
     def move_items(self, request: Request, pk) -> HttpResponse:
         ''' Move items to another parent. '''
+        item = self._get_item()
         serializer = s.MoveItemsSerializer(
             data=request.data,
-            context={'oss': self.get_object()}
+            context={'oss': item}
         )
         serializer.is_valid(raise_exception=True)
 
-        oss = m.OperationSchema(self.get_object())
+        layout = serializer.validated_data['layout']
         with transaction.atomic():
-            oss.update_layout(serializer.validated_data['layout'])
+            m.Layout.update_data(pk, layout)
             for operation in serializer.validated_data['operations']:
                 operation.parent = serializer.validated_data['destination']
                 operation.save(update_fields=['parent'])
             for block in serializer.validated_data['blocks']:
                 block.parent = serializer.validated_data['destination']
                 block.save(update_fields=['parent'])
-            oss.save(update_fields=['time_update'])
+            item.save(update_fields=['time_update'])
 
         return Response(
             status=c.HTTP_200_OK,
-            data=s.OperationSchemaSerializer(oss.model).data
+            data=s.OperationSchemaSerializer(item).data
         )
 
     @extend_schema(
@@ -298,13 +302,14 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     @action(detail=True, methods=['post'], url_path='create-schema')
     def create_schema(self, request: Request, pk) -> HttpResponse:
         ''' Create schema. '''
+        item = self._get_item()
         serializer = s.CreateSchemaSerializer(
             data=request.data,
-            context={'oss': self.get_object()}
+            context={'oss': item}
         )
         serializer.is_valid(raise_exception=True)
 
-        oss = m.OperationSchema(self.get_object())
+        oss = m.OperationSchema(item)
         layout = serializer.validated_data['layout']
         position = serializer.validated_data['position']
         data = serializer.validated_data['item_data']
@@ -318,15 +323,15 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
                 'width': position['width'],
                 'height': position['height']
             })
-            oss.update_layout(layout)
+            m.Layout.update_data(pk, layout)
             oss.create_input(new_operation)
-            oss.save(update_fields=['time_update'])
+            item.save(update_fields=['time_update'])
 
         return Response(
             status=c.HTTP_201_CREATED,
             data={
                 'new_operation': new_operation.pk,
-                'oss': s.OperationSchemaSerializer(oss.model).data
+                'oss': s.OperationSchemaSerializer(item).data
             }
         )
 
@@ -345,13 +350,13 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     @action(detail=True, methods=['post'], url_path='clone-schema')
     def clone_schema(self, request: Request, pk) -> HttpResponse:
         ''' Clone schema. '''
+        item = self._get_item()
         serializer = s.CloneSchemaSerializer(
             data=request.data,
-            context={'oss': self.get_object()}
+            context={'oss': item}
         )
         serializer.is_valid(raise_exception=True)
 
-        oss = m.OperationSchema(self.get_object())
         layout = serializer.validated_data['layout']
         position = serializer.validated_data['position']
         with transaction.atomic():
@@ -363,7 +368,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
 
             new_schema = source_schema
             new_schema.pk = None
-            new_schema.owner = oss.model.owner
+            new_schema.owner = item.owner
             new_schema.title = title
             new_schema.alias = alias
             new_schema.save()
@@ -380,6 +385,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
             new_operation.operation_type = m.OperationType.INPUT
             new_operation.result = None
             new_operation.save()
+            new_operation.setQ_result(new_schema)
 
             layout.append({
                 'nodeID': 'o' + str(new_operation.pk),
@@ -388,16 +394,14 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
                 'width': position['width'],
                 'height': position['height']
             })
-            oss.refresh_from_db()
-            oss.set_input(new_operation.pk, new_schema)
-            oss.update_layout(layout)
-            oss.save(update_fields=['time_update'])
+            m.Layout.update_data(pk, layout)
+            item.save(update_fields=['time_update'])
 
         return Response(
             status=c.HTTP_201_CREATED,
             data={
                 'new_operation': new_operation.pk,
-                'oss': s.OperationSchemaSerializer(oss.model).data
+                'oss': s.OperationSchemaSerializer(item).data
             }
         )
 
@@ -416,13 +420,14 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     @action(detail=True, methods=['post'], url_path='import-schema')
     def import_schema(self, request: Request, pk) -> HttpResponse:
         ''' Create operation with existing schema. '''
+        item = self._get_item()
         serializer = s.ImportSchemaSerializer(
             data=request.data,
-            context={'oss': self.get_object()}
+            context={'oss': item}
         )
         serializer.is_valid(raise_exception=True)
 
-        oss = m.OperationSchema(self.get_object())
+        oss = m.OperationSchema(item)
         layout = serializer.validated_data['layout']
         position = serializer.validated_data['position']
         data = serializer.validated_data['item_data']
@@ -438,20 +443,20 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
                 'width': position['width'],
                 'height': position['height']
             })
-            oss.update_layout(layout)
+            m.Layout.update_data(pk, layout)
 
             if serializer.validated_data['clone_source']:
                 prototype: LibraryItem = serializer.validated_data['source']
-                new_operation.result = _create_clone(prototype, new_operation, oss.model)
+                new_operation.result = _create_clone(prototype, new_operation, item)
                 new_operation.save(update_fields=["result"])
 
-            oss.save(update_fields=['time_update'])
+            item.save(update_fields=['time_update'])
 
         return Response(
             status=c.HTTP_201_CREATED,
             data={
                 'new_operation': new_operation.pk,
-                'oss': s.OperationSchemaSerializer(oss.model).data
+                'oss': s.OperationSchemaSerializer(item).data
             }
         )
 
@@ -470,13 +475,14 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     @action(detail=True, methods=['post'], url_path='create-reference')
     def create_reference(self, request: Request, pk) -> HttpResponse:
         ''' Clone schema. '''
+        item = self._get_item()
         serializer = s.CreateReferenceSerializer(
             data=request.data,
-            context={'oss': self.get_object()}
+            context={'oss': item}
         )
         serializer.is_valid(raise_exception=True)
 
-        oss = m.OperationSchema(self.get_object())
+        oss = m.OperationSchema(item)
         layout = serializer.validated_data['layout']
         position = serializer.validated_data['position']
         with transaction.atomic():
@@ -489,14 +495,14 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
                 'width': position['width'],
                 'height': position['height']
             })
-            oss.update_layout(layout)
-            oss.save(update_fields=['time_update'])
+            m.Layout.update_data(pk, layout)
+            item.save(update_fields=['time_update'])
 
         return Response(
             status=c.HTTP_201_CREATED,
             data={
                 'new_operation': new_operation.pk,
-                'oss': s.OperationSchemaSerializer(oss.model).data
+                'oss': s.OperationSchemaSerializer(item).data
             }
         )
 
@@ -514,13 +520,14 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     @action(detail=True, methods=['post'], url_path='create-synthesis')
     def create_synthesis(self, request: Request, pk) -> HttpResponse:
         ''' Create Synthesis operation from arguments. '''
+        item = self._get_item()
         serializer = s.CreateSynthesisSerializer(
             data=request.data,
-            context={'oss': self.get_object()}
+            context={'oss': item}
         )
         serializer.is_valid(raise_exception=True)
 
-        oss = m.OperationSchema(self.get_object())
+        oss = m.OperationSchema(item)
         layout = serializer.validated_data['layout']
         position = serializer.validated_data['position']
         data = serializer.validated_data['item_data']
@@ -537,14 +544,14 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
             oss.set_arguments(new_operation.pk, serializer.validated_data['arguments'])
             oss.set_substitutions(new_operation.pk, serializer.validated_data['substitutions'])
             oss.execute_operation(new_operation)
-            oss.update_layout(layout)
-            oss.save(update_fields=['time_update'])
+            m.Layout.update_data(pk, layout)
+            item.save(update_fields=['time_update'])
 
         return Response(
             status=c.HTTP_201_CREATED,
             data={
                 'new_operation': new_operation.pk,
-                'oss': s.OperationSchemaSerializer(oss.model).data
+                'oss': s.OperationSchemaSerializer(item).data
             }
         )
 
@@ -562,17 +569,19 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     @action(detail=True, methods=['patch'], url_path='update-operation')
     def update_operation(self, request: Request, pk) -> HttpResponse:
         ''' Update Operation arguments and parameters. '''
+        item = self._get_item()
         serializer = s.UpdateOperationSerializer(
             data=request.data,
-            context={'oss': self.get_object()}
+            context={'oss': item}
         )
         serializer.is_valid(raise_exception=True)
 
         operation: m.Operation = cast(m.Operation, serializer.validated_data['target'])
-        oss = m.OperationSchema(self.get_object())
+        oss = m.OperationSchemaCached(item)
         with transaction.atomic():
             if 'layout' in serializer.validated_data:
-                oss.update_layout(serializer.validated_data['layout'])
+                layout = serializer.validated_data['layout']
+                m.Layout.update_data(pk, layout)
             if 'alias' in serializer.validated_data['item_data']:
                 operation.alias = serializer.validated_data['item_data']['alias']
             if 'title' in serializer.validated_data['item_data']:
@@ -594,11 +603,11 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
                 oss.set_arguments(operation.pk, serializer.validated_data['arguments'])
             if 'substitutions' in serializer.validated_data:
                 oss.set_substitutions(operation.pk, serializer.validated_data['substitutions'])
-            oss.save(update_fields=['time_update'])
+            item.save(update_fields=['time_update'])
 
         return Response(
             status=c.HTTP_200_OK,
-            data=s.OperationSchemaSerializer(oss.model).data
+            data=s.OperationSchemaSerializer(item).data
         )
 
     @extend_schema(
@@ -615,32 +624,33 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     @action(detail=True, methods=['patch'], url_path='delete-operation')
     def delete_operation(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Delete Operation. '''
+        item = self._get_item()
         serializer = s.DeleteOperationSerializer(
             data=request.data,
-            context={'oss': self.get_object()}
+            context={'oss': item}
         )
         serializer.is_valid(raise_exception=True)
 
-        oss = m.OperationSchema(self.get_object())
+        oss = m.OperationSchemaCached(item)
         operation = cast(m.Operation, serializer.validated_data['target'])
         old_schema = operation.result
         layout = serializer.validated_data['layout']
         layout = [x for x in layout if x['nodeID'] != 'o' + str(operation.pk)]
         with transaction.atomic():
             oss.delete_operation(operation.pk, serializer.validated_data['keep_constituents'])
-            oss.update_layout(layout)
+            m.Layout.update_data(pk, layout)
             if old_schema is not None:
                 if serializer.validated_data['delete_schema']:
                     m.PropagationFacade.before_delete_schema(old_schema)
                     old_schema.delete()
-                elif old_schema.is_synced(oss.model):
+                elif old_schema.is_synced(item):
                     old_schema.visible = True
                     old_schema.save(update_fields=['visible'])
-            oss.save(update_fields=['time_update'])
+            item.save(update_fields=['time_update'])
 
         return Response(
             status=c.HTTP_200_OK,
-            data=s.OperationSchemaSerializer(oss.model).data
+            data=s.OperationSchemaSerializer(item).data
         )
 
     @extend_schema(
@@ -657,23 +667,25 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     @action(detail=True, methods=['patch'], url_path='delete-reference')
     def delete_reference(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Delete Reference Operation. '''
+        item = self._get_item()
         serializer = s.DeleteReferenceSerializer(
             data=request.data,
-            context={'oss': self.get_object()}
+            context={'oss': item}
         )
         serializer.is_valid(raise_exception=True)
 
-        oss = m.OperationSchema(self.get_object())
+        oss = m.OperationSchemaCached(item)
         operation = cast(m.Operation, serializer.validated_data['target'])
         layout = serializer.validated_data['layout']
         layout = [x for x in layout if x['nodeID'] != 'o' + str(operation.pk)]
         with transaction.atomic():
-            oss.update_layout(layout)
+            m.Layout.update_data(pk, layout)
             oss.delete_reference(operation, serializer.validated_data['keep_connections'])
+            item.save(update_fields=['time_update'])
 
         return Response(
             status=c.HTTP_200_OK,
-            data=s.OperationSchemaSerializer(oss.model).data
+            data=s.OperationSchemaSerializer(item).data
         )
 
     @extend_schema(
@@ -690,9 +702,10 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     @action(detail=True, methods=['patch'], url_path='create-input')
     def create_input(self, request: Request, pk) -> HttpResponse:
         ''' Create input RSForm. '''
+        item = self._get_item()
         serializer = s.TargetOperationSerializer(
             data=request.data,
-            context={'oss': self.get_object()}
+            context={'oss': item}
         )
         serializer.is_valid(raise_exception=True)
 
@@ -706,17 +719,18 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
                 'target': msg.operationResultNotEmpty(operation.alias)
             })
 
-        oss = m.OperationSchema(self.get_object())
+        oss = m.OperationSchema(item)
+        layout = serializer.validated_data['layout']
         with transaction.atomic():
-            oss.update_layout(serializer.validated_data['layout'])
+            m.Layout.update_data(pk, layout)
             schema = oss.create_input(operation)
-            oss.save(update_fields=['time_update'])
+            item.save(update_fields=['time_update'])
 
         return Response(
             status=c.HTTP_200_OK,
             data={
                 'new_schema': LibraryItemSerializer(schema.model).data,
-                'oss': s.OperationSchemaSerializer(oss.model).data
+                'oss': s.OperationSchemaSerializer(item).data
             }
         )
 
@@ -734,12 +748,14 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     @action(detail=True, methods=['patch'], url_path='set-input')
     def set_input(self, request: Request, pk) -> HttpResponse:
         ''' Set input schema for target operation. '''
+        item = self._get_item()
         serializer = s.SetOperationInputSerializer(
             data=request.data,
-            context={'oss': self.get_object()}
+            context={'oss': item}
         )
         serializer.is_valid(raise_exception=True)
 
+        layout = serializer.validated_data['layout']
         target_operation: m.Operation = cast(m.Operation, serializer.validated_data['target'])
         schema: Optional[LibraryItem] = serializer.validated_data['input']
         if schema is not None:
@@ -753,20 +769,20 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
                     raise serializers.ValidationError({
                         'input': msg.operationInputAlreadyConnected()
                     })
-        oss = m.OperationSchema(self.get_object())
+        oss = m.OperationSchemaCached(item)
         old_schema = target_operation.result
         with transaction.atomic():
             if old_schema is not None:
-                if old_schema.is_synced(oss.model):
+                if old_schema.is_synced(item):
                     old_schema.visible = True
                     old_schema.save(update_fields=['visible'])
-            oss.update_layout(serializer.validated_data['layout'])
+            m.Layout.update_data(pk, layout)
             oss.set_input(target_operation.pk, schema)
-            oss.save(update_fields=['time_update'])
+            item.save(update_fields=['time_update'])
 
         return Response(
             status=c.HTTP_200_OK,
-            data=s.OperationSchemaSerializer(oss.model).data
+            data=s.OperationSchemaSerializer(item).data
         )
 
     @extend_schema(
@@ -783,9 +799,10 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     @action(detail=True, methods=['post'], url_path='execute-operation')
     def execute_operation(self, request: Request, pk) -> HttpResponse:
         ''' Execute operation. '''
+        item = self._get_item()
         serializer = s.TargetOperationSerializer(
             data=request.data,
-            context={'oss': self.get_object()}
+            context={'oss': item}
         )
         serializer.is_valid(raise_exception=True)
 
@@ -799,15 +816,16 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
                 'target': msg.operationResultNotEmpty(operation.alias)
             })
 
-        oss = m.OperationSchema(self.get_object())
+        oss = m.OperationSchemaCached(item)
+        layout = serializer.validated_data['layout']
         with transaction.atomic():
-            oss.update_layout(serializer.validated_data['layout'])
             oss.execute_operation(operation)
-            oss.save(update_fields=['time_update'])
+            m.Layout.update_data(pk, layout)
+            item.save(update_fields=['time_update'])
 
         return Response(
             status=c.HTTP_200_OK,
-            data=s.OperationSchemaSerializer(oss.model).data
+            data=s.OperationSchemaSerializer(item).data
         )
 
     @extend_schema(
@@ -861,7 +879,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         serializer.is_valid(raise_exception=True)
 
         data = serializer.validated_data
-        oss = m.OperationSchema(LibraryItem.objects.get(pk=data['oss']))
+        oss = m.OperationSchemaCached(LibraryItem.objects.get(pk=data['oss']))
         source = RSFormCached(LibraryItem.objects.get(pk=data['source']))
         destination = RSFormCached(LibraryItem.objects.get(pk=data['destination']))
 

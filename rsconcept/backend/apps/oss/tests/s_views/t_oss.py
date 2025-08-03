@@ -60,7 +60,7 @@ class TestOssViewset(EndpointTester):
             {'nodeID': 'o' + str(self.operation2.pk), 'x': 0, 'y': 0, 'width': 150, 'height': 40},
             {'nodeID': 'o' + str(self.operation3.pk), 'x': 0, 'y': 0, 'width': 150, 'height': 40}
         ]
-        layout = self.owned.layout()
+        layout = OperationSchema.layoutQ(self.owned_id)
         layout.data = self.layout_data
         layout.save()
 
@@ -138,8 +138,8 @@ class TestOssViewset(EndpointTester):
 
         self.toggle_admin(False)
         self.executeOK(data=data, item=self.owned_id)
-        self.owned.refresh_from_db()
-        self.assertEqual(self.owned.layout().data, data['data'])
+        self.owned.model.refresh_from_db()
+        self.assertEqual(OperationSchema.layoutQ(self.owned_id).data, data['data'])
 
         self.executeForbidden(data=data, item=self.unowned_id)
         self.executeForbidden(data=data, item=self.private_id)
