@@ -233,6 +233,17 @@ class RSForm:
                 count_bot += 1
         Constituenta.objects.bulk_update(cst_list, ['order'])
 
+    def delete_cst(self, target: list[Constituenta]) -> None:
+        ''' Delete multiple constituents. '''
+        ids = [cst.pk for cst in target]
+        mapping = {cst.alias: DELETED_ALIAS for cst in target}
+        Constituenta.objects.filter(pk__in=ids).delete()
+        all_cst = Constituenta.objects.filter(schema=self.model).only(
+            'alias', 'definition_formal', 'term_raw', 'definition_raw', 'order'
+        ).order_by('order')
+        RSForm.apply_mapping(mapping, all_cst, change_aliases=False)
+        RSForm.save_order(all_cst)
+
     def reset_aliases(self) -> None:
         ''' Recreate all aliases based on constituents order. '''
         bases = cast(dict[str, int], {})

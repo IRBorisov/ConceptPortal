@@ -153,12 +153,12 @@ class RSFormCached:
         return result
 
     # pylint: disable=too-many-branches
-    def update_cst(self, target: Constituenta, data: dict) -> dict:
+    def update_cst(self, target: int, data: dict) -> dict:
         ''' Update persistent attributes of a given constituenta. Return old values. '''
         self.cache.ensure_loaded_terms()
-        cst = self.cache.by_id.get(target.pk)
+        cst = self.cache.by_id.get(target)
         if cst is None:
-            raise ValidationError(msg.constituentaNotInRSform(target.alias))
+            raise ValidationError(msg.constituentaNotInRSform(str(target)))
 
         old_data = {}
         term_changed = False
@@ -211,13 +211,14 @@ class RSFormCached:
             )
         return old_data
 
-    def delete_cst(self, target: Iterable[Constituenta]) -> None:
+    def delete_cst(self, target: list[int]) -> None:
         ''' Delete multiple constituents. '''
-        mapping = {cst.alias: DELETED_ALIAS for cst in target}
         self.cache.ensure_loaded()
-        self.cache.remove_multi(target)
+        cst_list = [self.cache.by_id[cst_id] for cst_id in target]
+        mapping = {cst.alias: DELETED_ALIAS for cst in cst_list}
+        self.cache.remove_multi(cst_list)
         self.apply_mapping(mapping)
-        Constituenta.objects.filter(pk__in=[cst.pk for cst in target]).delete()
+        Constituenta.objects.filter(pk__in=target).delete()
         RSForm.save_order(self.cache.constituents)
 
     def substitute(self, substitutions: list[tuple[Constituenta, Constituenta]]) -> None:

@@ -2,7 +2,7 @@
 from typing import Optional
 
 from apps.library.models import LibraryItem, LibraryItemType
-from apps.rsform.models import Constituenta, RSFormCached
+from apps.rsform.models import Constituenta, CstType, RSFormCached
 
 from .OperationSchemaCached import CstSubstitution, OperationSchemaCached
 
@@ -25,17 +25,18 @@ class PropagationFacade:
                 OperationSchemaCached(host).after_create_cst(source, new_cst)
 
     @staticmethod
-    def after_change_cst_type(target: Constituenta, exclude: Optional[list[int]] = None) -> None:
+    def after_change_cst_type(sourceID: int, target: int, new_type: CstType,
+                              exclude: Optional[list[int]] = None) -> None:
         ''' Trigger cascade resolutions when constituenta type is changed. '''
-        hosts = _get_oss_hosts(target.schema.pk)
+        hosts = _get_oss_hosts(sourceID)
         for host in hosts:
             if exclude is None or host.pk not in exclude:
-                OperationSchemaCached(host).after_change_cst_type(target)
+                OperationSchemaCached(host).after_change_cst_type(sourceID, target, new_type)
 
     @staticmethod
     def after_update_cst(
         source: RSFormCached,
-        target: Constituenta,
+        target: int,
         data: dict,
         old_data: dict,
         exclude: Optional[list[int]] = None
@@ -47,13 +48,13 @@ class PropagationFacade:
                 OperationSchemaCached(host).after_update_cst(source, target, data, old_data)
 
     @staticmethod
-    def before_delete_cst(source: RSFormCached, target: list[Constituenta],
+    def before_delete_cst(sourceID: int, target: list[int],
                           exclude: Optional[list[int]] = None) -> None:
         ''' Trigger cascade resolutions before constituents are deleted. '''
-        hosts = _get_oss_hosts(source.model.pk)
+        hosts = _get_oss_hosts(sourceID)
         for host in hosts:
             if exclude is None or host.pk not in exclude:
-                OperationSchemaCached(host).before_delete_cst(source, target)
+                OperationSchemaCached(host).before_delete_cst(sourceID, target)
 
     @staticmethod
     def before_substitute(sourceID: int, substitutions: CstSubstitution,
@@ -75,5 +76,5 @@ class PropagationFacade:
         if len(hosts) == 0:
             return
 
-        schema = RSFormCached(item)
-        PropagationFacade.before_delete_cst(schema, list(schema.constituentsQ().order_by('order')), exclude)
+        ids = list(Constituenta.objects.filter(schema=item).order_by('order').values_list('pk', flat=True))
+        PropagationFacade.before_delete_cst(item.pk, ids, exclude)

@@ -118,7 +118,7 @@ class TestRSFormCached(DBTester):
             term_raw='@{X2|plur}'
         )
 
-        self.schema.delete_cst([x1])
+        self.schema.delete_cst([x1.pk])
         x2.refresh_from_db()
         d1.refresh_from_db()
         self.assertEqual(self.schema.constituentsQ().count(), 2)

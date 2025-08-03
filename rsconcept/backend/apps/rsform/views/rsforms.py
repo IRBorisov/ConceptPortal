@@ -86,11 +86,13 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             insert_after = None
         else:
             insert_after = data['insert_after']
-        schema = m.RSFormCached(item)
+
         with transaction.atomic():
+            schema = m.RSFormCached(item)
             new_cst = schema.create_cst(data, insert_after)
             PropagationFacade.after_create_cst(schema, [new_cst])
             item.save(update_fields=['time_update'])
+
         return Response(
             status=c.HTTP_201_CREATED,
             data={
@@ -117,11 +119,12 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         serializer = s.CstUpdateSerializer(data=request.data, partial=True, context={'schema': item})
         serializer.is_valid(raise_exception=True)
         cst = cast(m.Constituenta, serializer.validated_data['target'])
-        schema = m.RSFormCached(item)
         data = serializer.validated_data['item_data']
+
         with transaction.atomic():
-            old_data = schema.update_cst(cst, data)
-            PropagationFacade.after_update_cst(schema, cst, data, old_data)
+            schema = m.RSFormCached(item)
+            old_data = schema.update_cst(cst.pk, data)
+            PropagationFacade.after_update_cst(schema, cst.pk, data, old_data)
             if 'alias' in data and data['alias'] != cst.alias:
                 cst.refresh_from_db()
                 changed_type = 'cst_type' in data and cst.cst_type != data['cst_type']
@@ -131,9 +134,8 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
                     cst.cst_type = data['cst_type']
                 cst.save()
                 schema.apply_mapping(mapping=mapping, change_aliases=False)
-                cst.refresh_from_db()
                 if changed_type:
-                    PropagationFacade.after_change_cst_type(cst)
+                    PropagationFacade.after_change_cst_type(item.pk, cst.pk, cast(m.CstType, cst.cst_type))
                 item.save(update_fields=['time_update'])
         return Response(
             status=c.HTTP_200_OK,
@@ -202,8 +204,8 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
                 data={f'{cst.pk}': msg.constituentaNoStructure()}
             )
 
-        schema = m.RSFormCached(item)
         with transaction.atomic():
+            schema = m.RSFormCached(item)
             new_cst = schema.produce_structure(cst, cst_parse)
             PropagationFacade.after_create_cst(schema, new_cst)
             item.save(update_fields=['time_update'])
@@ -214,7 +216,6 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
                 'schema': s.RSFormParseSerializer(item).data
             }
         )
-
 
     @extend_schema(
         summary='execute substitutions',
@@ -236,9 +237,10 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             context={'schema': item}
         )
         serializer.is_valid(raise_exception=True)
-        schema = m.RSForm(item)
         substitutions: list[tuple[m.Constituenta, m.Constituenta]] = []
+
         with transaction.atomic():
+            schema = m.RSForm(item)
             for substitution in serializer.validated_data['substitutions']:
                 original = cast(m.Constituenta, substitution['original'])
                 replacement = cast(m.Constituenta, substitution['substitution'])
@@ -246,6 +248,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             PropagationFacade.before_substitute(item.pk, substitutions)
             schema.substitute(substitutions)
             item.save(update_fields=['time_update'])
+
         return Response(
             status=c.HTTP_200_OK,
             data=s.RSFormParseSerializer(item).data
@@ -272,14 +275,16 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         )
         serializer.is_valid(raise_exception=True)
         cst_list: list[m.Constituenta] = serializer.validated_data['items']
-        schema = m.RSFormCached(item)
+
         with transaction.atomic():
-            PropagationFacade.before_delete_cst(schema, cst_list)
+            schema = m.RSForm(item)
+            PropagationFacade.before_delete_cst(item.pk, [cst.pk for cst in cst_list])
             schema.delete_cst(cst_list)
             item.save(update_fields=['time_update'])
+
         return Response(
             status=c.HTTP_200_OK,
-            data=s.RSFormParseSerializer(schema.model).data
+            data=s.RSFormParseSerializer(item).data
         )
 
     @extend_schema(
@@ -302,13 +307,15 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             context={'schema': item}
         )
         serializer.is_valid(raise_exception=True)
-        schema = m.RSForm(item)
+
         with transaction.atomic():
+            schema = m.RSForm(item)
             schema.move_cst(
                 target=serializer.validated_data['items'],
                 destination=serializer.validated_data['move_to']
             )
             item.save(update_fields=['time_update'])
+
         return Response(
             status=c.HTTP_200_OK,
             data=s.RSFormParseSerializer(item).data
@@ -328,10 +335,12 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     def reset_aliases(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Recreate all aliases based on order. '''
         item = self._get_item()
-        schema = m.RSForm(item)
+
         with transaction.atomic():
+            schema = m.RSForm(item)
             schema.reset_aliases()
             item.save(update_fields=['time_update'])
+
         return Response(
             status=c.HTTP_200_OK,
             data=s.RSFormParseSerializer(item).data
@@ -351,9 +360,11 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     def restore_order(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Restore order based on types and Term graph. '''
         item = self._get_item()
+
         with transaction.atomic():
             m.OrderManager(m.RSFormCached(item)).restore_order()
             item.save(update_fields=['time_update'])
+
         return Response(
             status=c.HTTP_200_OK,
             data=s.RSFormParseSerializer(item).data
