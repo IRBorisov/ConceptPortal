@@ -73,14 +73,14 @@ export function FormCreateItem() {
       setValue('fileName', event.target.files[0].name, { shouldValidate: true });
     } else {
       setValue('file', undefined);
-      setValue('fileName', '');
+      setValue('fileName', undefined);
     }
   }
 
   function handleItemTypeChange(value: LibraryItemType) {
     if (value !== LibraryItemType.RSFORM) {
       setValue('file', undefined);
-      setValue('fileName', '');
+      setValue('fileName', undefined);
     }
     setValue('item_type', value, { shouldValidate: true });
   }
