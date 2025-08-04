@@ -16,6 +16,7 @@ from .data_access import (
     MoveItemsSerializer,
     OperationSchemaSerializer,
     OperationSerializer,
+    ReferenceSerializer,
     RelocateConstituentsSerializer,
     SetOperationInputSerializer,
     TargetOperationSerializer,

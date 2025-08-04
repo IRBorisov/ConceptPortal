@@ -13,7 +13,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 
 import { type IUpdateOperationDTO, OperationType, schemaUpdateOperation } from '../../backend/types';
 import { useUpdateOperation } from '../../backend/use-update-operation';
-import { type IOperation } from '../../models/oss';
+import { type IOperationInput, type IOperationSynthesis } from '../../models/oss';
 import { type LayoutManager } from '../../models/oss-layout-api';
 
 import { TabArguments } from './tab-arguments';
@@ -22,7 +22,7 @@ import { TabSubstitutions } from './tab-substitutions';
 
 export interface DlgEditOperationProps {
   manager: LayoutManager;
-  target: IOperation;
+  target: IOperationInput | IOperationSynthesis;
 }
 
 export const TabID = {
@@ -46,11 +46,14 @@ export function DlgEditOperation() {
         description: target.description,
         parent: target.parent
       },
-      arguments: target.arguments,
-      substitutions: target.substitutions.map(sub => ({
-        original: sub.original,
-        substitution: sub.substitution
-      })),
+      arguments: target.operation_type === OperationType.SYNTHESIS ? target.arguments : [],
+      substitutions:
+        target.operation_type === OperationType.SYNTHESIS
+          ? target.substitutions.map(sub => ({
+              original: sub.original,
+              substitution: sub.substitution
+            }))
+          : [],
       layout: manager.layout
     },
     mode: 'onChange'

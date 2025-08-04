@@ -9,7 +9,8 @@ import { errorMsg } from '@/utils/labels';
 /** Represents {@link IOperation} type. */
 export const OperationType = {
   INPUT: 'input',
-  SYNTHESIS: 'synthesis'
+  SYNTHESIS: 'synthesis',
+  REFERENCE: 'reference'
 } as const;
 export type OperationType = (typeof OperationType)[keyof typeof OperationType];
 
@@ -48,6 +49,7 @@ export type IMoveItemsDTO = z.infer<typeof schemaMoveItems>;
 
 /** Represents {@link IOperation} data, used in Create action. */
 export type ICreateSchemaDTO = z.infer<typeof schemaCreateSchema>;
+export type ICreateReferenceDTO = z.infer<typeof schemaCreateReference>;
 export type ICreateSynthesisDTO = z.infer<typeof schemaCreateSynthesis>;
 export type IImportSchemaDTO = z.infer<typeof schemaImportSchema>;
 export type ICloneSchemaDTO = z.infer<typeof schemaCloneSchema>;
@@ -60,6 +62,9 @@ export type IUpdateOperationDTO = z.infer<typeof schemaUpdateOperation>;
 
 /** Represents {@link IOperation} data, used in Delete action. */
 export type IDeleteOperationDTO = z.infer<typeof schemaDeleteOperation>;
+
+/** Represents {@link IOperation} reference type data, used in Delete action. */
+export type IDeleteReferenceDTO = z.infer<typeof schemaDeleteReference>;
 
 /** Represents target {@link IOperation}. */
 export interface ITargetOperation {
@@ -119,6 +124,11 @@ export const schemaBlock = z.strictObject({
   parent: z.number().nullable()
 });
 
+const schemaReference = z.strictObject({
+  target: z.number(),
+  reference: z.number()
+});
+
 export const schemaPosition = z.strictObject({
   x: z.number(),
   y: z.number(),
@@ -148,6 +158,7 @@ export const schemaOperationSchema = schemaLibraryItem.extend({
   editors: z.number().array(),
   operations: z.array(schemaOperation),
   blocks: z.array(schemaBlock),
+  references: z.array(schemaReference),
   layout: schemaOssLayout,
   arguments: z
     .object({
@@ -185,6 +196,12 @@ export const schemaDeleteBlock = z.strictObject({
 export const schemaCreateSchema = z.strictObject({
   layout: schemaOssLayout,
   item_data: schemaOperationData,
+  position: schemaPosition
+});
+
+export const schemaCreateReference = z.strictObject({
+  target: z.number(),
+  layout: schemaOssLayout,
   position: schemaPosition
 });
 
@@ -228,6 +245,13 @@ export const schemaDeleteOperation = z.strictObject({
   layout: schemaOssLayout,
   keep_constituents: z.boolean(),
   delete_schema: z.boolean()
+});
+
+export const schemaDeleteReference = z.strictObject({
+  target: z.number(),
+  layout: schemaOssLayout,
+  keep_constituents: z.boolean(),
+  keep_connections: z.boolean()
 });
 
 export const schemaMoveItems = z.strictObject({

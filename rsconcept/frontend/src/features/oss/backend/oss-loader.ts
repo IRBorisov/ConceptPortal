@@ -27,9 +27,10 @@ export class OssLoader {
   private itemByNodeID = new Map<string, IOssItem>();
   private blockByID = new Map<number, IBlock>();
   private schemaIDs: number[] = [];
+  private extendedGraph = new Graph();
 
   constructor(input: RO<IOperationSchemaDTO>) {
-    this.oss = structuredClone(input) as IOperationSchema;
+    this.oss = structuredClone(input) as unknown as IOperationSchema;
   }
 
   produceOSS(): IOperationSchema {
@@ -47,6 +48,7 @@ export class OssLoader {
     result.hierarchy = this.hierarchy;
     result.schemas = this.schemaIDs;
     result.stats = this.calculateStats();
+    result.extendedGraph = this.extendedGraph;
     return result;
   }
 
@@ -57,6 +59,7 @@ export class OssLoader {
       this.itemByNodeID.set(operation.nodeID, operation);
       this.operationByID.set(operation.id, operation);
       this.graph.addNode(operation.id);
+      this.extendedGraph.addNode(operation.id);
       this.hierarchy.addNode(operation.nodeID);
       if (operation.parent) {
         this.hierarchy.addEdge(constructNodeID(NodeType.BLOCK, operation.parent), operation.nodeID);
@@ -75,7 +78,13 @@ export class OssLoader {
   }
 
   private createGraph() {
-    this.oss.arguments.forEach(argument => this.graph.addEdge(argument.argument, argument.operation));
+    this.oss.arguments.forEach(argument => {
+      this.graph.addEdge(argument.argument, argument.operation);
+      this.extendedGraph.addEdge(argument.argument, argument.operation);
+    });
+    this.oss.references.forEach(reference => {
+      this.extendedGraph.addEdge(reference.target, reference.reference);
+    });
   }
 
   private extractSchemas() {
@@ -83,16 +92,37 @@ export class OssLoader {
   }
 
   private inferOperationAttributes() {
+    const referenceCounts = new Map<number, number>();
+
     this.graph.topologicalOrder().forEach(operationID => {
       const operation = this.operationByID.get(operationID)!;
       const position = this.oss.layout.find(item => item.nodeID === operation.nodeID);
       operation.x = position?.x ?? 0;
       operation.y = position?.y ?? 0;
-      operation.is_consolidation = this.inferConsolidation(operationID);
-      operation.substitutions = this.oss.substitutions.filter(item => item.operation === operationID);
-      operation.arguments = this.oss.arguments
-        .filter(item => item.operation === operationID)
-        .map(item => item.argument);
+      switch (operation.operation_type) {
+        case OperationType.INPUT:
+          break;
+        case OperationType.SYNTHESIS:
+          operation.is_consolidation = this.inferConsolidation(operationID);
+          operation.substitutions = this.oss.substitutions.filter(item => item.operation === operationID);
+          operation.arguments = this.oss.arguments
+            .filter(item => item.operation === operationID)
+            .map(item => item.argument);
+          break;
+        case OperationType.REFERENCE:
+          const ref = this.oss.references.find(item => item.reference === operationID);
+          const target = !!ref ? this.operationByID.get(ref.target) : null;
+          if (!target || !ref) {
+            throw new Error(`Reference ${operationID} not found`);
+          }
+          const refCount = (referenceCounts.get(target.id) ?? 0) + 1;
+          referenceCounts.set(target.id, refCount);
+          operation.target = ref.target;
+          operation.alias = `[${refCount}] ${target.alias}`;
+          operation.title = target.title;
+          operation.description = target.description;
+          break;
+      }
     });
   }
 
@@ -107,13 +137,13 @@ export class OssLoader {
   }
 
   private inferConsolidation(operationID: number): boolean {
-    const inputs = this.graph.expandInputs([operationID]);
+    const inputs = this.extendedGraph.expandInputs([operationID]);
     if (inputs.length === 0) {
       return false;
     }
     const ancestors = [...inputs];
     inputs.forEach(input => {
-      ancestors.push(...this.graph.expandAllInputs([input]));
+      ancestors.push(...this.extendedGraph.expandAllInputs([input]));
     });
     const unique = new Set(ancestors);
     return unique.size < ancestors.length;
@@ -126,8 +156,11 @@ export class OssLoader {
       count_inputs: operations.filter(item => item.operation_type === OperationType.INPUT).length,
       count_synthesis: operations.filter(item => item.operation_type === OperationType.SYNTHESIS).length,
       count_schemas: this.schemaIDs.length,
-      count_owned: operations.filter(item => !!item.result && !item.is_import).length,
-      count_block: this.oss.blocks.length
+      count_owned: operations.filter(
+        item => !!item.result && (item.operation_type !== OperationType.INPUT || !item.is_import)
+      ).length,
+      count_block: this.oss.blocks.length,
+      count_references: this.oss.references.length
     };
   }
 }

@@ -22,6 +22,8 @@ interface NodeCoreProps {
 
 export function NodeCore({ node }: NodeCoreProps) {
   const { selectedItems, schema } = useOssEdit();
+  const opType = node.data.operation.operation_type;
+
   const focus = selectedItems.length === 1 ? selectedItems[0] : null;
   const isChild = (!!focus && schema.hierarchy.at(focus.nodeID)?.outputs.includes(node.data.operation.nodeID)) ?? false;
 
@@ -36,6 +38,7 @@ export function NodeCore({ node }: NodeCoreProps) {
       className={cn(
         'cc-node-operation h-[40px] w-[150px]',
         'relative flex items-center justify-center p-[2px]',
+        opType === OperationType.REFERENCE && 'border-dashed',
         isChild && 'border-accent-orange'
       )}
     >
@@ -45,7 +48,7 @@ export function NodeCore({ node }: NodeCoreProps) {
           title={hasFile ? 'Связанная КС' : 'Нет связанной КС'}
           icon={<IconRSForm className={hasFile ? 'text-constructive' : 'text-destructive'} size='12px' />}
         />
-        {node.data.operation.is_consolidation ? (
+        {opType === OperationType.SYNTHESIS && node.data.operation.is_consolidation ? (
           <Indicator
             noPadding
             titleHtml='<b>Внимание!</b><br />Ромбовидный синтез</br/>Возможны дубликаты конституент'
@@ -66,11 +69,11 @@ export function NodeCore({ node }: NodeCoreProps) {
         </div>
       ) : null}
 
-      {node.data.operation.operation_type === OperationType.INPUT ? (
+      {opType === OperationType.INPUT ? (
         <div className='absolute top-[3px] right-1/2 translate-x-1/2 border-t w-[30px]' />
       ) : null}
 
-      {node.data.operation.is_import ? (
+      {opType === OperationType.INPUT && node.data.operation.is_import ? (
         <div className='absolute left-[3px] top-1/2 -translate-y-1/2 border-r rounded-none bg-input h-[22px]' />
       ) : null}
 

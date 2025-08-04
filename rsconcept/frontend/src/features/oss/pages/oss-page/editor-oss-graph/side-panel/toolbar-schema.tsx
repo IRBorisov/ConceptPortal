@@ -227,7 +227,7 @@ export function ToolbarSchema({
           />
           <DropdownButton
             title='Перейти к концептуальной схеме'
-            text='перейти к схеме'
+            text='Открыть КС'
             icon={<IconRSForm size='1rem' className='icon-primary' />}
             onClick={navigateRSForm}
           />

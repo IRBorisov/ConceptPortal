@@ -95,6 +95,8 @@ export { TbHexagonLetterD as IconCstTerm }        from 'react-icons/tb';
 export { TbHexagonLetterF as IconCstFunction }    from 'react-icons/tb';
 export { TbHexagonLetterP as IconCstPredicate }   from 'react-icons/tb';
 export { TbHexagonLetterT as IconCstTheorem }     from 'react-icons/tb';
+export { PiArrowsMergeFill as IconSynthesis }     from 'react-icons/pi';
+export { VscReferences    as IconReference }      from 'react-icons/vsc';
 export { LuNewspaper      as IconDefinition }     from 'react-icons/lu';
 export { LuDna            as IconTerminology }    from 'react-icons/lu';
 export { FaRegHandshake   as IconConvention }     from 'react-icons/fa6';
@@ -129,7 +131,6 @@ export { BiStopCircle     as IconStatusIncalculable } from 'react-icons/bi';
 export { BiPauseCircle    as IconStatusProperty } from 'react-icons/bi';
 export { LuPower          as IconKeepAliasOn }    from 'react-icons/lu';
 export { LuPowerOff       as IconKeepAliasOff }   from 'react-icons/lu';
-export { VscReferences    as IconPhantom }        from 'react-icons/vsc';
 
 // ===== Domain actions =====
 export { BiUpvote         as IconMoveUp }         from 'react-icons/bi';
@@ -144,7 +145,6 @@ export { BiDuplicate      as IconClone }          from 'react-icons/bi';
 export { LuReplace        as IconReplace }        from 'react-icons/lu';
 export { FaSortAmountDownAlt as IconSortList }    from 'react-icons/fa';
 export { LuNetwork        as IconGenerateStructure } from 'react-icons/lu';
-export { LuCombine        as IconSynthesis }      from 'react-icons/lu';
 export { LuBookCopy       as IconInlineSynthesis } from 'react-icons/lu';
 export { LuWandSparkles   as IconGenerateNames }  from 'react-icons/lu';
 export { GrConnect        as IconConnect }        from 'react-icons/gr';

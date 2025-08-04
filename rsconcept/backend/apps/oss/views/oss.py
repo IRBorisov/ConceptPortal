@@ -683,7 +683,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         with transaction.atomic():
             oss = m.OperationSchemaCached(item)
             m.Layout.update_data(pk, layout)
-            oss.delete_reference(operation, serializer.validated_data['keep_connections'])
+            oss.delete_reference(operation.pk, serializer.validated_data['keep_connections'])
             item.save(update_fields=['time_update'])
 
         return Response(

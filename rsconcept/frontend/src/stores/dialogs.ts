@@ -11,6 +11,7 @@ import { type DlgCreateBlockProps } from '@/features/oss/dialogs/dlg-create-bloc
 import { type DlgCreateSchemaProps } from '@/features/oss/dialogs/dlg-create-schema';
 import { type DlgCreateSynthesisProps } from '@/features/oss/dialogs/dlg-create-synthesis/dlg-create-synthesis';
 import { type DlgDeleteOperationProps } from '@/features/oss/dialogs/dlg-delete-operation';
+import { type DlgDeleteReferenceProps } from '@/features/oss/dialogs/dlg-delete-reference';
 import { type DlgEditBlockProps } from '@/features/oss/dialogs/dlg-edit-block';
 import { type DlgEditOperationProps } from '@/features/oss/dialogs/dlg-edit-operation/dlg-edit-operation';
 import { type DlgImportSchemaProps } from '@/features/oss/dialogs/dlg-import-schema';
@@ -47,31 +48,32 @@ export const DialogType = {
   CREATE_SYNTHESIS: 9,
   EDIT_OPERATION: 10,
   DELETE_OPERATION: 11,
-  CHANGE_INPUT_SCHEMA: 12,
-  RELOCATE_CONSTITUENTS: 13,
-  OSS_SETTINGS: 14,
-  EDIT_CONSTITUENTA: 15,
+  DELETE_REFERENCE: 12,
+  CHANGE_INPUT_SCHEMA: 13,
+  RELOCATE_CONSTITUENTS: 14,
+  OSS_SETTINGS: 15,
+  EDIT_CONSTITUENTA: 16,
 
-  CLONE_LIBRARY_ITEM: 16,
-  UPLOAD_RSFORM: 17,
-  EDIT_EDITORS: 18,
-  EDIT_VERSIONS: 19,
-  CHANGE_LOCATION: 20,
+  CLONE_LIBRARY_ITEM: 17,
+  UPLOAD_RSFORM: 18,
+  EDIT_EDITORS: 19,
+  EDIT_VERSIONS: 20,
+  CHANGE_LOCATION: 21,
 
-  EDIT_REFERENCE: 21,
-  EDIT_WORD_FORMS: 22,
-  INLINE_SYNTHESIS: 23,
+  EDIT_REFERENCE: 22,
+  EDIT_WORD_FORMS: 23,
+  INLINE_SYNTHESIS: 24,
 
-  SHOW_QR_CODE: 24,
-  SHOW_AST: 25,
-  SHOW_TYPE_GRAPH: 26,
-  GRAPH_PARAMETERS: 27,
-  SHOW_TERM_GRAPH: 28,
-  CREATE_SCHEMA: 29,
-  IMPORT_SCHEMA: 30,
+  SHOW_QR_CODE: 25,
+  SHOW_AST: 26,
+  SHOW_TYPE_GRAPH: 27,
+  GRAPH_PARAMETERS: 28,
+  SHOW_TERM_GRAPH: 29,
+  CREATE_SCHEMA: 30,
+  IMPORT_SCHEMA: 31,
 
-  AI_PROMPT: 31,
-  CREATE_PROMPT_TEMPLATE: 32
+  AI_PROMPT: 32,
+  CREATE_PROMPT_TEMPLATE: 33
 } as const;
 export type DialogType = (typeof DialogType)[keyof typeof DialogType];
 
@@ -104,6 +106,7 @@ interface DialogsStore {
   showCloneLibraryItem: (props: DlgCloneLibraryItemProps) => void;
   showCreateVersion: (props: DlgCreateVersionProps) => void;
   showDeleteOperation: (props: DlgDeleteOperationProps) => void;
+  showDeleteReference: (props: DlgDeleteReferenceProps) => void;
   showGraphParams: () => void;
   showOssOptions: () => void;
   showRelocateConstituents: (props: DlgRelocateConstituentsProps) => void;
@@ -148,6 +151,7 @@ export const useDialogsStore = create<DialogsStore>()(set => ({
   showCloneLibraryItem: props => set({ active: DialogType.CLONE_LIBRARY_ITEM, props: props }),
   showCreateVersion: props => set({ active: DialogType.CREATE_VERSION, props: props }),
   showDeleteOperation: props => set({ active: DialogType.DELETE_OPERATION, props: props }),
+  showDeleteReference: props => set({ active: DialogType.DELETE_REFERENCE, props: props }),
   showGraphParams: () => set({ active: DialogType.GRAPH_PARAMETERS, props: null }),
   showOssOptions: () => set({ active: DialogType.OSS_SETTINGS, props: null }),
   showRelocateConstituents: props => set({ active: DialogType.RELOCATE_CONSTITUENTS, props: props }),

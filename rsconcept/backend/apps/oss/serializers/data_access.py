@@ -13,7 +13,16 @@ from apps.rsform.serializers import SubstitutionSerializerBase
 from shared import messages as msg
 from shared.serializers import StrictModelSerializer, StrictSerializer
 
-from ..models import Argument, Block, Inheritance, Layout, Operation, OperationType, Substitution
+from ..models import (
+    Argument,
+    Block,
+    Inheritance,
+    Layout,
+    Operation,
+    OperationType,
+    Reference,
+    Substitution
+)
 from .basics import NodeSerializer, PositionSerializer, SubstitutionExSerializer
 
 
@@ -43,6 +52,14 @@ class ArgumentSerializer(StrictModelSerializer):
         ''' serializer metadata. '''
         model = Argument
         fields = ('operation', 'argument')
+
+
+class ReferenceSerializer(StrictModelSerializer):
+    ''' Serializer: Reference data. '''
+    class Meta:
+        ''' serializer metadata. '''
+        model = Reference
+        fields = ('reference', 'target')
 
 
 class CreateBlockSerializer(StrictSerializer):
@@ -444,6 +461,7 @@ class DeleteReferenceSerializer(StrictSerializer):
     )
     target = PKField(many=False, queryset=Operation.objects.all().only('oss_id', 'operation_type'))
     keep_connections = serializers.BooleanField(default=False, required=False)
+    keep_constituents = serializers.BooleanField(default=False, required=False)
 
     def validate(self, attrs):
         oss = cast(LibraryItem, self.context['oss'])
@@ -517,6 +535,9 @@ class OperationSchemaSerializer(StrictModelSerializer):
     substitutions = serializers.ListField(
         child=SubstitutionExSerializer()
     )
+    references = serializers.ListField(
+        child=ReferenceSerializer()
+    )
     layout = serializers.ListField(
         child=NodeSerializer()
     )
@@ -534,6 +555,7 @@ class OperationSchemaSerializer(StrictModelSerializer):
         result['blocks'] = []
         result['arguments'] = []
         result['substitutions'] = []
+        result['references'] = []
         for operation in Operation.objects.filter(oss=instance).order_by('pk'):
             operation_data = OperationSerializer(operation).data
             operation_result = operation.result
@@ -556,6 +578,9 @@ class OperationSchemaSerializer(StrictModelSerializer):
             substitution_term=F('substitution__term_resolved'),
         ).order_by('pk'):
             result['substitutions'].append(substitution)
+        for reference in Reference.objects.filter(target__oss=instance).order_by('pk'):
+            result['references'].append(ReferenceSerializer(reference).data)
+
         return result
 
 

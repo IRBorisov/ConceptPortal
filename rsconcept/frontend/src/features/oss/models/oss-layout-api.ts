@@ -4,7 +4,8 @@ import {
   type ICreateSynthesisDTO,
   type IImportSchemaDTO,
   type INodePosition,
-  type IOssLayout
+  type IOssLayout,
+  OperationType
 } from '../backend/types';
 
 import { type IOperationSchema, NodeType } from './oss';
@@ -258,7 +259,11 @@ export class LayoutManager {
     }
 
     const freeInputs = this.oss.operations
-      .filter(operation => operation.arguments.length === 0 && operation.parent === null)
+      .filter(
+        operation =>
+          operation.parent === null &&
+          (operation.operation_type !== OperationType.SYNTHESIS || operation.arguments.length === 0)
+      )
       .map(operation => operation.nodeID);
     let inputsPositions = this.layout.filter(pos => freeInputs.includes(pos.nodeID));
     if (inputsPositions.length === 0) {

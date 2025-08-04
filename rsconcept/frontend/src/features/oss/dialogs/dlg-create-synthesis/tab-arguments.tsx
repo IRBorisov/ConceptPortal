@@ -18,6 +18,9 @@ export function TabArguments() {
   } = useFormContext<ICreateSynthesisDTO>();
   const inputs = useWatch({ control, name: 'arguments' });
 
+  const references = manager.oss.references.filter(item => inputs.includes(item.target)).map(item => item.reference);
+  const filtered = manager.oss.operations.filter(item => !references.includes(item.id));
+
   return (
     <div className='cc-fade-in cc-column'>
       <TextInput
@@ -64,7 +67,7 @@ export function TabArguments() {
           name='arguments'
           control={control}
           render={({ field }) => (
-            <PickMultiOperation items={manager.oss.operations} value={field.value} onChange={field.onChange} rows={6} />
+            <PickMultiOperation items={filtered} value={field.value} onChange={field.onChange} rows={6} />
           )}
         />
       </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { HelpTopic } from '@/features/help';
@@ -9,32 +9,33 @@ import { Checkbox, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { type IDeleteOperationDTO, type IOssLayout, OperationType, schemaDeleteOperation } from '../backend/types';
-import { useDeleteOperation } from '../backend/use-delete-operation';
-import { type IOperationInput, type IOperationSchema, type IOperationSynthesis } from '../models/oss';
+import { type IDeleteReferenceDTO, type IOssLayout, schemaDeleteReference } from '../backend/types';
+import { useDeleteReference } from '../backend/use-delete-reference';
+import { type IOperationReference, type IOperationSchema } from '../models/oss';
 
-export interface DlgDeleteOperationProps {
+export interface DlgDeleteReferenceProps {
   oss: IOperationSchema;
-  target: IOperationInput | IOperationSynthesis;
+  target: IOperationReference;
   layout: IOssLayout;
 }
 
-export function DlgDeleteOperation() {
-  const { oss, target, layout } = useDialogsStore(state => state.props as DlgDeleteOperationProps);
-  const { deleteOperation } = useDeleteOperation();
+export function DlgDeleteReference() {
+  const { oss, target, layout } = useDialogsStore(state => state.props as DlgDeleteReferenceProps);
+  const { deleteReference } = useDeleteReference();
 
-  const { handleSubmit, control } = useForm<IDeleteOperationDTO>({
-    resolver: zodResolver(schemaDeleteOperation),
+  const { handleSubmit, control } = useForm<IDeleteReferenceDTO>({
+    resolver: zodResolver(schemaDeleteReference),
     defaultValues: {
       target: target.id,
       layout: layout,
       keep_constituents: false,
-      delete_schema: true
+      keep_connections: false
     }
   });
+  const keep_connections = useWatch({ control, name: 'keep_connections' });
 
-  function onSubmit(data: IDeleteOperationDTO) {
-    return deleteOperation({ itemID: oss.id, data: data });
+  function onSubmit(data: IDeleteReferenceDTO) {
+    return deleteReference({ itemID: oss.id, data: data });
   }
 
   return (
@@ -49,18 +50,14 @@ export function DlgDeleteOperation() {
       <TextInput disabled dense noBorder id='operation_alias' label='Операция' value={target.alias} />
       <Controller
         control={control}
-        name='delete_schema'
+        name='keep_connections'
         render={({ field }) => (
           <Checkbox
-            label='Удалить схему'
-            titleHtml={
-              (target.operation_type === OperationType.INPUT && target.is_import) || target.result === null
-                ? 'Привязанную схему нельзя удалить'
-                : 'Удалить схему вместе с операцией'
-            }
+            label='Переадресовать связи на оригинал'
+            titleHtml='Связи аргументов будут перенаправлены на оригинал ссылки'
             value={field.value}
             onChange={field.onChange}
-            disabled={(target.operation_type === OperationType.INPUT && target.is_import) || target.result === null}
+            disabled={target.result === null}
           />
         )}
       />
@@ -73,7 +70,7 @@ export function DlgDeleteOperation() {
             titleHtml='Наследованные конституенты <br/>превратятся в дописанные'
             value={field.value}
             onChange={field.onChange}
-            disabled={target.result === null}
+            disabled={target.result === null || keep_connections}
           />
         )}
       />

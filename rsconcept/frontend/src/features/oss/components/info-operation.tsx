@@ -47,12 +47,12 @@ export function InfoOperation({ operation }: InfoOperationProps) {
       <p>
         <b>Тип:</b> {labelOperationType(operation.operation_type)}
       </p>
-      {operation.is_import ? (
+      {operation.operation_type === OperationType.INPUT && operation.is_import ? (
         <p>
           <b>КС не принадлежит ОСС</b>
         </p>
       ) : null}
-      {operation.is_consolidation ? (
+      {operation.operation_type === OperationType.SYNTHESIS && operation.is_consolidation ? (
         <p>
           <b>Ромбовидный синтез</b>
         </p>
@@ -69,7 +69,7 @@ export function InfoOperation({ operation }: InfoOperationProps) {
           {operation.description}
         </p>
       ) : null}
-      {operation.substitutions.length > 0 ? (
+      {operation.operation_type === OperationType.SYNTHESIS && operation.substitutions.length > 0 ? (
         <DataTable
           dense
           noHeader

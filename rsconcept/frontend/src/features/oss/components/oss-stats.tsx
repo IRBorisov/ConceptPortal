@@ -1,6 +1,7 @@
 import {
   IconConceptBlock,
   IconDownload,
+  IconReference,
   IconRSForm,
   IconRSFormImported,
   IconRSFormOwned,
@@ -18,14 +19,16 @@ interface OssStatsProps {
 
 export function OssStats({ className, stats }: OssStatsProps) {
   return (
-    <aside className={cn('grid grid-cols-4 gap-1 justify-items-end h-min select-none', className)}>
+    <aside className={cn('grid grid-cols-3 gap-1 justify-items-end h-min select-none', className)}>
       <div id='count_operations' className='w-fit flex gap-3 hover:cursor-default '>
         <span>Всего</span>
         <span>{stats.count_all}</span>
       </div>
       <ValueStats id='count_block' title='Блоки' icon={<IconConceptBlock size='1.25rem' />} value={stats.count_block} />
+
       <ValueStats
         id='count_inputs'
+        className='col-start-1'
         title='Загрузка'
         icon={<IconDownload size='1.25rem' />}
         value={stats.count_inputs}
@@ -35,6 +38,12 @@ export function OssStats({ className, stats }: OssStatsProps) {
         title='Синтез'
         icon={<IconSynthesis size='1.25rem' />}
         value={stats.count_synthesis}
+      />
+      <ValueStats
+        id='count_references'
+        title='Синтез'
+        icon={<IconReference size='1.25rem' />}
+        value={stats.count_references}
       />
 
       <ValueStats

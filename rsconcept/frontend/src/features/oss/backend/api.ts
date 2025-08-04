@@ -9,10 +9,12 @@ import {
   type ICloneSchemaDTO,
   type IConstituentaReference,
   type ICreateBlockDTO,
+  type ICreateReferenceDTO,
   type ICreateSchemaDTO,
   type ICreateSynthesisDTO,
   type IDeleteBlockDTO,
   type IDeleteOperationDTO,
+  type IDeleteReferenceDTO,
   type IImportSchemaDTO,
   type IInputCreatedResponse,
   type IMoveItemsDTO,
@@ -84,6 +86,28 @@ export const ossApi = {
       request: {
         data: data,
         successMessage: infoMsg.blockDestroyed
+      }
+    }),
+
+  createReference: ({ itemID, data }: { itemID: number; data: ICreateReferenceDTO }) =>
+    axiosPost<ICreateReferenceDTO, IOperationCreatedResponse>({
+      schema: schemaOperationCreatedResponse,
+      endpoint: `/api/oss/${itemID}/create-reference`,
+      request: {
+        data: data,
+        successMessage: response => {
+          const alias = response.oss.operations.find(op => op.id === response.new_operation)?.alias;
+          return infoMsg.newOperation(alias ?? 'ОШИБКА');
+        }
+      }
+    }),
+  deleteReference: ({ itemID, data }: { itemID: number; data: IDeleteReferenceDTO }) =>
+    axiosPatch<IDeleteReferenceDTO, IOperationSchemaDTO>({
+      schema: schemaOperationSchema,
+      endpoint: `/api/oss/${itemID}/delete-reference`,
+      request: {
+        data: data,
+        successMessage: infoMsg.operationDestroyed
       }
     }),
 

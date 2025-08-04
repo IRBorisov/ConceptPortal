@@ -6,6 +6,7 @@ import { TextArea, TextInput } from '@/components/input';
 
 import { CstType, type IUpdateConstituentaDTO } from '../../backend/types';
 import { IconCrucialValue } from '../../components/icon-crucial-value';
+import { RSInput } from '../../components/rs-input';
 import { SelectCstType } from '../../components/select-cst-type';
 import { getRSDefinitionPlaceholder, labelCstTypification } from '../../labels';
 import { type IConstituenta, type IRSForm } from '../../models/rsform';
@@ -97,9 +98,9 @@ export function FormEditCst({ target, schema }: FormEditCstProps) {
         name='item_data.definition_formal'
         render={({ field }) =>
           !!field.value || (!isElementary && !target.is_inherited) ? (
-            <TextArea
+            <RSInput
               id='dlg_cst_expression'
-              fitContent
+              noTooltip
               label={
                 cst_type === CstType.STRUCTURED
                   ? 'Область определения'
@@ -109,9 +110,9 @@ export function FormEditCst({ target, schema }: FormEditCstProps) {
               }
               placeholder={getRSDefinitionPlaceholder(cst_type)}
               className='max-h-15'
+              schema={schema}
               value={field.value}
               onChange={field.onChange}
-              error={errors.item_data?.definition_formal}
               disabled={target.is_inherited}
             />
           ) : (

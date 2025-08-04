@@ -47,10 +47,10 @@ export function ContextMenu({ isOpen, item, cursorX, cursorY, onHide }: ContextM
         margin={cursorY >= window.innerHeight - MENU_HEIGHT ? 'mb-3' : 'mt-3'}
       >
         {!!item ? (
-          item.nodeType === NodeType.OPERATION ? (
-            <MenuOperation operation={item} onHide={onHide} />
-          ) : (
+          item.nodeType === NodeType.BLOCK ? (
             <MenuBlock block={item} onHide={onHide} />
+          ) : (
+            <MenuOperation operation={item} onHide={onHide} />
           )
         ) : null}
       </Dropdown>

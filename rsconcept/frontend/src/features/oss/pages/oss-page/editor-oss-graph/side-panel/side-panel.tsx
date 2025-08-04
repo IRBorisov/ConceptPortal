@@ -10,6 +10,7 @@ import { useAppLayoutStore, useMainHeight } from '@/stores/app-layout';
 import { usePreferencesStore } from '@/stores/preferences';
 import { PARAMETER } from '@/utils/constants';
 
+import { OperationType } from '../../../../backend/types';
 import { NodeType } from '../../../../models/oss';
 import { useOssEdit } from '../../oss-edit-context';
 
@@ -80,7 +81,12 @@ export function SidePanel({ isMounted, className }: SidePanelProps) {
         <div className='text-center text-sm cc-fade-in'>Отсутствует концептуальная схема для выбранной операции</div>
       ) : selectedOperation && selectedSchema && debouncedMounted ? (
         <Suspense fallback={<Loader />}>
-          <ViewSchema schemaID={selectedSchema} isMutable={isMutable && !selectedOperation.is_import} />
+          <ViewSchema
+            schemaID={selectedSchema}
+            isMutable={
+              isMutable && (selectedOperation.operation_type !== OperationType.INPUT || !selectedOperation.is_import)
+            }
+          />
         </Suspense>
       ) : null}
       {selectedBlock ? <BlockStats target={selectedBlock} oss={schema} /> : null}

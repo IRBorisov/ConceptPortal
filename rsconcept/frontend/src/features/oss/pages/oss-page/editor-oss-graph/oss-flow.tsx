@@ -11,6 +11,7 @@ import { PARAMETER } from '@/utils/constants';
 import { promptText } from '@/utils/labels';
 import { withPreventDefault } from '@/utils/utils';
 
+import { OperationType } from '../../../backend/types';
 import { useDeleteBlock } from '../../../backend/use-delete-block';
 import { useMutatingOss } from '../../../backend/use-mutating-oss';
 import { useUpdateLayout } from '../../../backend/use-update-layout';
@@ -68,6 +69,7 @@ export function OssFlow() {
   const showCreateBlock = useDialogsStore(state => state.showCreateBlock);
   const showCreateSchema = useDialogsStore(state => state.showCreateSchema);
   const showDeleteOperation = useDialogsStore(state => state.showDeleteOperation);
+  const showDeleteReference = useDialogsStore(state => state.showDeleteReference);
   const showEditBlock = useDialogsStore(state => state.showEditBlock);
   const showImportSchema = useDialogsStore(state => state.showImportSchema);
 
@@ -150,11 +152,22 @@ export function OssFlow() {
       if (!canDeleteOperation(item)) {
         return;
       }
-      showDeleteOperation({
-        oss: schema,
-        target: item,
-        layout: getLayout()
-      });
+      switch (item.operation_type) {
+        case OperationType.REFERENCE:
+          showDeleteReference({
+            oss: schema,
+            target: item,
+            layout: getLayout()
+          });
+          break;
+        case OperationType.INPUT:
+        case OperationType.SYNTHESIS:
+          showDeleteOperation({
+            oss: schema,
+            target: item,
+            layout: getLayout()
+          });
+      }
     } else {
       if (!window.confirm(promptText.deleteBlock)) {
         return;

@@ -45,6 +45,11 @@ const DlgDeleteOperation = React.lazy(() =>
     default: module.DlgDeleteOperation
   }))
 );
+const DlgDeleteReference = React.lazy(() =>
+  import('@/features/oss/dialogs/dlg-delete-reference').then(module => ({
+    default: module.DlgDeleteReference
+  }))
+);
 const DlgEditEditors = React.lazy(() =>
   import('@/features/library/dialogs/dlg-edit-editors').then(module => ({
     default: module.DlgEditEditors
@@ -196,6 +201,8 @@ export const GlobalDialogs = () => {
       return <DlgCreateVersion />;
     case DialogType.DELETE_OPERATION:
       return <DlgDeleteOperation />;
+    case DialogType.DELETE_REFERENCE:
+      return <DlgDeleteReference />;
     case DialogType.GRAPH_PARAMETERS:
       return <DlgGraphParams />;
     case DialogType.RELOCATE_CONSTITUENTS:

@@ -23,6 +23,7 @@ from apps.rsform.models import (
 from .Argument import Argument
 from .Inheritance import Inheritance
 from .Operation import Operation, OperationType
+from .Reference import Reference
 from .Substitution import Substitution
 
 CstMapping = dict[str, Optional[Constituenta]]
@@ -36,32 +37,31 @@ class OperationSchemaCached:
         self.model = model
         self.cache = OssCache(self)
 
-    def delete_reference(self, target: Operation, keep_connections: bool = False):
+    def delete_reference(self, target: int, keep_connections: bool = False, keep_constituents: bool = False):
         ''' Delete Reference Operation. '''
-        if keep_connections:
-            referred_operations = target.getQ_reference_target()
-            if len(referred_operations) == 1:
-                referred_operation = referred_operations[0]
-                for arg in target.getQ_as_argument():
-                    arg.pk = None
-                    arg.argument = referred_operation
-                    arg.save()
-        else:
-            pass
-            # if target.result_id is not None:
-            #     self.before_delete_cst(schema, schema.cache.constituents)  # TODO: use operation instead of schema
-        target.delete()
+        if not keep_connections:
+            self.delete_operation(target, keep_constituents)
+            return
+        self.cache.ensure_loaded_subs()
+        operation = self.cache.operation_by_id[target]
+        reference_target = self.cache.reference_target.get(target)
+        if reference_target:
+            for arg in operation.getQ_as_argument():
+                arg.argument_id = reference_target
+                arg.save()
+        self.cache.remove_operation(target)
+        operation.delete()
+
 
     def delete_operation(self, target: int, keep_constituents: bool = False):
         ''' Delete Operation. '''
         self.cache.ensure_loaded_subs()
         operation = self.cache.operation_by_id[target]
-        schema = self.cache.get_schema(operation)
         children = self.cache.graph.outputs[target]
-        if schema is not None and len(children) > 0:
-            ids = [cst.pk for cst in schema.cache.constituents]
+        if operation.result is not None and len(children) > 0:
+            ids = list(Constituenta.objects.filter(schema=operation.result).values_list('pk', flat=True))
             if not keep_constituents:
-                self.before_delete_cst(schema.model.pk, ids)
+                self._cascade_delete_inherited(operation.pk, ids)
             else:
                 inheritance_to_delete: list[Inheritance] = []
                 for child_id in children:
@@ -707,17 +707,23 @@ class OssCache:
         self._schemas: list[RSFormCached] = []
         self._schema_by_id: dict[int, RSFormCached] = {}
 
-        self.operations = list(Operation.objects.filter(oss=oss.model).only('result_id'))
+        self.operations = list(Operation.objects.filter(oss=oss.model).only('result_id', 'operation_type'))
         self.operation_by_id = {operation.pk: operation for operation in self.operations}
         self.graph = Graph[int]()
         for operation in self.operations:
             self.graph.add_node(operation.pk)
+
+        references = Reference.objects.filter(reference__oss=self._oss.model).only('reference_id', 'target_id')
+        self.reference_target = {ref.reference_id: ref.target_id for ref in references}
         arguments = Argument.objects \
             .filter(operation__oss=self._oss.model) \
             .only('operation_id', 'argument_id') \
             .order_by('order')
         for argument in arguments:
             self.graph.add_edge(argument.argument_id, argument.operation_id)
+            target = self.reference_target.get(argument.argument_id)
+            if target is not None:
+                self.graph.add_edge(target, argument.operation_id)
 
         self.is_loaded_subs = False
         self.substitutions: dict[int, list[Substitution]] = {}
@@ -785,18 +791,12 @@ class OssCache:
             schema.cache.ensure_loaded()
             self._insert_new(schema)
 
-    def insert_operation(self, operation: Operation) -> None:
-        ''' Insert new operation. '''
-        self.operations.append(operation)
-        self.operation_by_id[operation.pk] = operation
-        self.graph.add_node(operation.pk)
-        if self.is_loaded_subs:
-            self.substitutions[operation.pk] = []
-            self.inheritance[operation.pk] = []
-
     def insert_argument(self, argument: Argument) -> None:
         ''' Insert new argument. '''
         self.graph.add_edge(argument.argument_id, argument.operation_id)
+        target = self.reference_target.get(argument.argument_id)
+        if target is not None:
+            self.graph.add_edge(target, argument.operation_id)
 
     def insert_inheritance(self, inheritance: Inheritance) -> None:
         ''' Insert new inheritance. '''
@@ -832,6 +832,8 @@ class OssCache:
             del self._schema_by_id[target.result_id]
         self.operations.remove(self.operation_by_id[operation])
         del self.operation_by_id[operation]
+        if operation in self.reference_target:
+            del self.reference_target[operation]
         if self.is_loaded_subs:
             del self.substitutions[operation]
             del self.inheritance[operation]
@@ -839,6 +841,10 @@ class OssCache:
     def remove_argument(self, argument: Argument) -> None:
         ''' Remove argument from cache. '''
         self.graph.remove_edge(argument.argument_id, argument.operation_id)
+        target = self.reference_target.get(argument.argument_id)
+        if target is not None:
+            if not Argument.objects.filter(argument_id=target, operation_id=argument.operation_id).exists():
+                self.graph.remove_edge(target, argument.operation_id)
 
     def remove_substitution(self, target: Substitution) -> None:
         ''' Remove substitution from cache. '''

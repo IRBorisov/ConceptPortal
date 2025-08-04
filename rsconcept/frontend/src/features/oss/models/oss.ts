@@ -8,7 +8,8 @@ import {
   type IBlockDTO,
   type ICstSubstituteInfo,
   type IOperationDTO,
-  type IOperationSchemaDTO
+  type IOperationSchemaDTO,
+  type OperationType
 } from '../backend/types';
 
 /** Represents OSS node type. */
@@ -18,26 +19,50 @@ export const NodeType = {
 } as const;
 export type NodeType = (typeof NodeType)[keyof typeof NodeType];
 
-/** Represents Operation. */
-export interface IOperation extends IOperationDTO {
+/** Represents OSS graph node. */
+export interface IOssNode {
   nodeID: string;
-  nodeType: typeof NodeType.OPERATION;
+  nodeType: NodeType;
+  parent: number | null;
   x: number;
   y: number;
+  width: number;
+  height: number;
+}
+
+/** Represents Operation common attributes. */
+export interface IOperationBase
+  extends IOssNode,
+    Pick<IOperationDTO, 'alias' | 'title' | 'description' | 'id' | 'operation_type' | 'result'> {
+  nodeType: typeof NodeType.OPERATION;
+}
+
+/** Represents Input Operation. */
+export interface IOperationInput extends IOperationBase {
+  operation_type: typeof OperationType.INPUT;
   is_import: boolean;
+}
+
+/** Represents Reference Operation. */
+export interface IOperationReference extends IOperationBase {
+  operation_type: typeof OperationType.REFERENCE;
+  target: number;
+}
+
+/** Represents Synthesis Operation. */
+export interface IOperationSynthesis extends IOperationBase {
+  operation_type: typeof OperationType.SYNTHESIS;
   is_consolidation: boolean; // aka 'diamond synthesis'
   substitutions: ICstSubstituteInfo[];
   arguments: number[];
 }
 
+/** Represents Operation. */
+export type IOperation = IOperationInput | IOperationReference | IOperationSynthesis;
+
 /** Represents Block. */
-export interface IBlock extends IBlockDTO {
-  nodeID: string;
+export interface IBlock extends IOssNode, IBlockDTO {
   nodeType: typeof NodeType.BLOCK;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
 }
 
 /** Represents item of OperationSchema. */
@@ -51,14 +76,16 @@ export interface IOperationSchemaStats {
   count_schemas: number;
   count_owned: number;
   count_block: number;
+  count_references: number;
 }
 
 /** Represents OperationSchema. */
-export interface IOperationSchema extends IOperationSchemaDTO {
+export interface IOperationSchema extends Omit<IOperationSchemaDTO, 'operations'> {
   operations: IOperation[];
   blocks: IBlock[];
 
   graph: Graph;
+  extendedGraph: Graph;
   hierarchy: Graph<string>;
   schemas: number[];
   stats: IOperationSchemaStats;

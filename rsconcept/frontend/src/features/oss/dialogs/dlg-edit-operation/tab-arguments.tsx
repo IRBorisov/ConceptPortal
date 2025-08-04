@@ -1,5 +1,5 @@
 'use client';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { Label } from '@/components/input';
 import { useDialogsStore } from '@/stores/dialogs';
@@ -12,7 +12,12 @@ import { type DlgEditOperationProps } from './dlg-edit-operation';
 export function TabArguments() {
   const { control, setValue } = useFormContext<IUpdateOperationDTO>();
   const { manager, target } = useDialogsStore(state => state.props as DlgEditOperationProps);
-  const potentialCycle = [target.id, ...manager.oss.graph.expandAllOutputs([target.id])];
+  const args = useWatch({ control, name: 'arguments' });
+
+  const references = manager.oss.references
+    .filter(item => args.includes(item.target) || item.target === target.id)
+    .map(item => item.reference);
+  const potentialCycle = [target.id, ...references, ...manager.oss.graph.expandAllOutputs([target.id])];
   const filtered = manager.oss.operations.filter(item => !potentialCycle.includes(item.id));
 
   function handleChangeArguments(prev: number[], newValue: number[]) {

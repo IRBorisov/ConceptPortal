@@ -109,7 +109,7 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
   }
 
   function canDeleteOperation(target: IOperation) {
-    if (target.operation_type === OperationType.INPUT) {
+    if (target.operation_type === OperationType.INPUT || target.operation_type === OperationType.REFERENCE) {
       return true;
     }
     return schema.graph.expandOutputs([target.id]).length === 0;

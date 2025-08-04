@@ -11,12 +11,14 @@ import {
 
 const labelOperationTypeRecord: Record<OperationType, string> = {
   [OperationType.INPUT]: 'Загрузка',
-  [OperationType.SYNTHESIS]: 'Синтез'
+  [OperationType.SYNTHESIS]: 'Синтез',
+  [OperationType.REFERENCE]: 'Ссылка'
 };
 
 const describeOperationTypeRecord: Record<OperationType, string> = {
   [OperationType.INPUT]: 'Загрузка концептуальной схемы в ОСС',
-  [OperationType.SYNTHESIS]: 'Синтез концептуальных схем'
+  [OperationType.SYNTHESIS]: 'Синтез концептуальных схем',
+  [OperationType.REFERENCE]: 'Создание ссылки на результат операции'
 };
 
 /** Retrieves label for {@link OperationType}. */
