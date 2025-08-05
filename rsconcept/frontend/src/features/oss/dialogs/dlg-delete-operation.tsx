@@ -17,10 +17,11 @@ export interface DlgDeleteOperationProps {
   oss: IOperationSchema;
   target: IOperationInput | IOperationSynthesis;
   layout: IOssLayout;
+  beforeDelete?: () => void;
 }
 
 export function DlgDeleteOperation() {
-  const { oss, target, layout } = useDialogsStore(state => state.props as DlgDeleteOperationProps);
+  const { oss, target, layout, beforeDelete } = useDialogsStore(state => state.props as DlgDeleteOperationProps);
   const { deleteOperation } = useDeleteOperation();
 
   const { handleSubmit, control } = useForm<IDeleteOperationDTO>({
@@ -34,7 +35,7 @@ export function DlgDeleteOperation() {
   });
 
   function onSubmit(data: IDeleteOperationDTO) {
-    return deleteOperation({ itemID: oss.id, data: data });
+    return deleteOperation({ itemID: oss.id, data: data, beforeUpdate: beforeDelete });
   }
 
   return (

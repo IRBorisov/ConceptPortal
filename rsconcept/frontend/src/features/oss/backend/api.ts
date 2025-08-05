@@ -79,7 +79,7 @@ export const ossApi = {
         successMessage: infoMsg.changesSaved
       }
     }),
-  deleteBlock: ({ itemID, data }: { itemID: number; data: IDeleteBlockDTO }) =>
+  deleteBlock: ({ itemID, data }: { itemID: number; data: IDeleteBlockDTO; beforeUpdate?: () => void }) =>
     axiosPatch<IDeleteBlockDTO, IOperationSchemaDTO>({
       schema: schemaOperationSchema,
       endpoint: `/api/oss/${itemID}/delete-block`,
@@ -101,7 +101,7 @@ export const ossApi = {
         }
       }
     }),
-  deleteReference: ({ itemID, data }: { itemID: number; data: IDeleteReferenceDTO }) =>
+  deleteReference: ({ itemID, data }: { itemID: number; data: IDeleteReferenceDTO; beforeUpdate?: () => void }) =>
     axiosPatch<IDeleteReferenceDTO, IOperationSchemaDTO>({
       schema: schemaOperationSchema,
       endpoint: `/api/oss/${itemID}/delete-reference`,
@@ -168,7 +168,7 @@ export const ossApi = {
         successMessage: infoMsg.changesSaved
       }
     }),
-  deleteOperation: ({ itemID, data }: { itemID: number; data: IDeleteOperationDTO }) =>
+  deleteOperation: ({ itemID, data }: { itemID: number; data: IDeleteOperationDTO; beforeUpdate?: () => void }) =>
     axiosPatch<IDeleteOperationDTO, IOperationSchemaDTO>({
       schema: schemaOperationSchema,
       endpoint: `/api/oss/${itemID}/delete-operation`,

@@ -46,8 +46,16 @@ export const flowOptions = {
 
 export function OssFlow() {
   const mainHeight = useMainHeight();
-  const { navigateOperationSchema, schema, selected, setSelected, selectedItems, isMutable, canDeleteOperation } =
-    useOssEdit();
+  const {
+    navigateOperationSchema,
+    schema,
+    selected,
+    setSelected,
+    selectedItems,
+    isMutable,
+    deselectAll,
+    canDeleteOperation
+  } = useOssEdit();
   const { screenToFlowPosition } = useReactFlow();
   const { containMovement, nodes, onNodesChange, edges, onEdgesChange, resetGraph, resetView } = useOssFlow();
   const store = useStoreApi();
@@ -157,7 +165,8 @@ export function OssFlow() {
           showDeleteReference({
             oss: schema,
             target: item,
-            layout: getLayout()
+            layout: getLayout(),
+            beforeDelete: deselectAll
           });
           break;
         case OperationType.INPUT:
@@ -165,14 +174,19 @@ export function OssFlow() {
           showDeleteOperation({
             oss: schema,
             target: item,
-            layout: getLayout()
+            layout: getLayout(),
+            beforeDelete: deselectAll
           });
       }
     } else {
       if (!window.confirm(promptText.deleteBlock)) {
         return;
       }
-      void deleteBlock({ itemID: schema.id, data: { target: item.id, layout: getLayout() } });
+      void deleteBlock({
+        itemID: schema.id,
+        data: { target: item.id, layout: getLayout() },
+        beforeUpdate: deselectAll
+      });
     }
   }
 

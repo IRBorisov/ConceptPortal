@@ -17,10 +17,11 @@ export interface DlgDeleteReferenceProps {
   oss: IOperationSchema;
   target: IOperationReference;
   layout: IOssLayout;
+  beforeDelete?: () => void;
 }
 
 export function DlgDeleteReference() {
-  const { oss, target, layout } = useDialogsStore(state => state.props as DlgDeleteReferenceProps);
+  const { oss, target, layout, beforeDelete } = useDialogsStore(state => state.props as DlgDeleteReferenceProps);
   const { deleteReference } = useDeleteReference();
 
   const { handleSubmit, control } = useForm<IDeleteReferenceDTO>({
@@ -35,7 +36,7 @@ export function DlgDeleteReference() {
   const keep_connections = useWatch({ control, name: 'keep_connections' });
 
   function onSubmit(data: IDeleteReferenceDTO) {
-    return deleteReference({ itemID: oss.id, data: data });
+    return deleteReference({ itemID: oss.id, data: data, beforeUpdate: beforeDelete });
   }
 
   return (

@@ -38,7 +38,7 @@ interface MenuOperationProps {
 
 export function MenuOperation({ operation, onHide }: MenuOperationProps) {
   const { items: libraryItems } = useLibrary();
-  const { schema, setSelected, navigateOperationSchema, isMutable, canDeleteOperation } = useOssEdit();
+  const { schema, setSelected, navigateOperationSchema, isMutable, canDeleteOperation, deselectAll } = useOssEdit();
   const isProcessing = useMutatingOss();
   const getLayout = useGetLayout();
 
@@ -115,7 +115,8 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
         showDeleteReference({
           oss: schema,
           target: operation,
-          layout: getLayout()
+          layout: getLayout(),
+          beforeDelete: deselectAll
         });
         break;
       case OperationType.INPUT:
@@ -123,7 +124,8 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
         showDeleteOperation({
           oss: schema,
           target: operation,
-          layout: getLayout()
+          layout: getLayout(),
+          beforeDelete: deselectAll
         });
     }
   }

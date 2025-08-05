@@ -26,6 +26,7 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
   const [containMovement, setContainMovement] = useState(false);
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
+  const prevSelected = useRef<string[]>([]);
 
   function onSelectionChange({ nodes }: { nodes: Node[] }) {
     const ids = nodes.map(node => node.id);
@@ -39,19 +40,21 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
     onChange: onSelectionChange
   });
 
-  const resetGraph = useCallback(() => {
+  const reloadData = useCallback(() => {
     const newNodes: Node[] = schema.hierarchy.topologicalOrder().map(nodeID => {
       const item = schema.itemByNodeID.get(nodeID)!;
       if (item.nodeType === NodeType.BLOCK) {
         return {
           id: nodeID,
           type: 'block',
+          selected: prevSelected.current.includes(item.nodeID),
           data: { label: item.title, block: item },
           position: computeRelativePosition(schema, { x: item.x, y: item.y }, item.parent),
           style: {
             width: item.width,
             height: item.height
           },
+
           parentId: item.parent ? constructNodeID(NodeType.BLOCK, item.parent) : undefined,
           zIndex: Z_BLOCK
         };
@@ -59,6 +62,7 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
         return {
           id: item.nodeID,
           type: item.operation_type.toString(),
+          selected: prevSelected.current.includes(item.nodeID),
           data: { label: item.alias, operation: item },
           position: computeRelativePosition(schema, { x: item.x, y: item.y }, item.parent),
           parentId: item.parent ? constructNodeID(NodeType.BLOCK, item.parent) : undefined,
@@ -83,19 +87,23 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
 
     setNodes(newNodes);
     setEdges(newEdges);
-
-    setTimeout(() => fitView(flowOptions.fitViewOptions), PARAMETER.refreshTimeout);
-  }, [schema, setNodes, setEdges, edgeAnimate, edgeStraight, fitView]);
+  }, [schema, setNodes, setEdges, edgeAnimate, edgeStraight]);
 
   useEffect(() => {
-    resetGraph();
-  }, [schema, edgeAnimate, edgeStraight, resetGraph]);
+    reloadData();
+  }, [schema, edgeAnimate, edgeStraight, reloadData]);
 
   function resetView() {
     setTimeout(() => fitView(flowOptions.fitViewOptions), PARAMETER.refreshTimeout);
   }
 
-  const prevSelected = useRef<string[]>([]);
+  function resetGraph() {
+    setSelected([]);
+    prevSelected.current = [];
+    reloadData();
+    setTimeout(() => fitView(flowOptions.fitViewOptions), PARAMETER.refreshTimeout);
+  }
+
   if (
     viewportInitialized &&
     (prevSelected.current.length !== selected.length || prevSelected.current.some((id, i) => id !== selected[i]))
