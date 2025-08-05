@@ -1,3 +1,5 @@
+'use client';
+
 import { ErrorBoundary } from 'react-error-boundary';
 import { isAxiosError } from 'axios';
 import { z } from 'zod';

@@ -1,3 +1,5 @@
+'use client';
+
 import fileDownload from 'js-file-download';
 
 import { urls, useConceptNavigation } from '@/app';

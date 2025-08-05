@@ -1,3 +1,4 @@
+'use client';
 'use no memo';
 
 import { useCallback } from 'react';

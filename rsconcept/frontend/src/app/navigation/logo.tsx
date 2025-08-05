@@ -1,3 +1,5 @@
+'use client';
+
 import { useWindowSize } from '@/hooks/use-window-size';
 import { usePreferencesStore } from '@/stores/preferences';
 

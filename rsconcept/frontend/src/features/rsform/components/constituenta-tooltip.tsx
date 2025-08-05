@@ -1,3 +1,5 @@
+'use client';
+
 import { Tooltip } from '@/components/container';
 import { globalIDs } from '@/utils/constants';
 

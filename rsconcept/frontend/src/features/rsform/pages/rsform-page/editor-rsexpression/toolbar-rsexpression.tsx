@@ -1,3 +1,5 @@
+'use client';
+
 import { IconShowKeyboard } from '@/features/rsform/components/icon-show-keyboard';
 
 import { MiniButton } from '@/components/control';

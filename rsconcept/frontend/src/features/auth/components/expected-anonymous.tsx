@@ -1,3 +1,5 @@
+'use client';
+
 import { urls, useConceptNavigation } from '@/app';
 
 import { TextURL } from '@/components/control';

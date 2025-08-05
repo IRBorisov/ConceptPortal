@@ -1,3 +1,5 @@
+'use client';
+
 import { urls, useConceptNavigation } from '@/app';
 import { useDeletePromptTemplate } from '@/features/ai/backend/use-delete-prompt-template';
 import { useMutatingPrompts } from '@/features/ai/backend/use-mutating-prompts';

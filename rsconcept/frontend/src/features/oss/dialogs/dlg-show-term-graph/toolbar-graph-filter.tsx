@@ -1,3 +1,5 @@
+'use client';
+
 import { useReactFlow } from 'reactflow';
 
 import { useTermGraphStore } from '@/features/rsform/stores/term-graph';

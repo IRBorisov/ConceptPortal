@@ -1,3 +1,5 @@
+'use client';
+
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { Label, TextArea, TextInput } from '@/components/input';

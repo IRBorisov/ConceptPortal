@@ -1,3 +1,5 @@
+'use client';
+
 import { TextArea } from '@/components/input';
 
 import { PromptInput } from '../../components/prompt-input';

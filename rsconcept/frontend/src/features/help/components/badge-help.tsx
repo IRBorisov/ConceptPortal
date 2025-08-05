@@ -1,3 +1,5 @@
+'use client';
+
 import React, { Suspense } from 'react';
 
 import { type PlacesType, Tooltip } from '@/components/container';

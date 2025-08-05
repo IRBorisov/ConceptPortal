@@ -1,3 +1,5 @@
+'use client';
+
 import { useNavigation } from 'react-router';
 import { useDebounce } from 'use-debounce';
 

@@ -1,3 +1,5 @@
+'use client';
+
 import { urls, useConceptNavigation } from '@/app';
 import { type IConstituenta, type IRSForm } from '@/features/rsform';
 import { CstType, type IConstituentaBasicsDTO, type ICreateConstituentaDTO } from '@/features/rsform/backend/types';

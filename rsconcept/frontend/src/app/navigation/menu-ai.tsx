@@ -1,3 +1,5 @@
+'use client';
+
 import { useAuth } from '@/features/auth/backend/use-auth';
 
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';

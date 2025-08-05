@@ -1,3 +1,5 @@
+'use client';
+
 import { urls, useConceptNavigation } from '@/app';
 import { type IPromptTemplate } from '@/features/ai/backend/types';
 import { useLabelUser } from '@/features/users';

@@ -1,3 +1,5 @@
+'use client';
+
 import { Suspense, useEffect } from 'react';
 import clsx from 'clsx';
 import { useDebounce } from 'use-debounce';

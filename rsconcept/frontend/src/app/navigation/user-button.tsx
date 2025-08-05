@@ -1,3 +1,5 @@
+'use client';
+
 import { useAuthSuspense } from '@/features/auth';
 
 import { IconLogin, IconUser2 } from '@/components/icons';

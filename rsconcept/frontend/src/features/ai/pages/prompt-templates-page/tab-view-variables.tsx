@@ -1,3 +1,5 @@
+'use client';
+
 import { useFitHeight } from '@/stores/app-layout';
 
 import { describePromptVariable } from '../../labels';

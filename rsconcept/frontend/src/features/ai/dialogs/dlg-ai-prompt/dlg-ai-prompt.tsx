@@ -1,3 +1,5 @@
+'use client';
+
 import { Suspense, useState } from 'react';
 
 import { HelpTopic } from '@/features/help';

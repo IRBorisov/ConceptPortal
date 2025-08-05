@@ -1,3 +1,5 @@
+'use client';
+
 import { type IConstituenta } from '@/features/rsform/models/rsform';
 
 import { MiniButton } from '@/components/control';

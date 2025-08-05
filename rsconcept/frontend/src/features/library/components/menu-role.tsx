@@ -1,3 +1,5 @@
+'use client';
+
 import { urls, useConceptNavigation } from '@/app';
 import { useAuthSuspense } from '@/features/auth';
 import { useRoleStore, UserRole } from '@/features/users';

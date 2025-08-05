@@ -1,3 +1,5 @@
+'use client';
+
 import { ToastContainer, type ToastContainerProps } from 'react-toastify';
 
 import { usePreferencesStore } from '@/stores/preferences';

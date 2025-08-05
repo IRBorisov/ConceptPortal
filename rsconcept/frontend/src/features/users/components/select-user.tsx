@@ -1,5 +1,3 @@
-'use client';
-
 import { ComboBox } from '@/components/input/combo-box';
 import { type Styling } from '@/components/props';
 

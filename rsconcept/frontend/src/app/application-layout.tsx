@@ -1,3 +1,5 @@
+'use client';
+
 import { Suspense } from 'react';
 import { Outlet } from 'react-router';
 import clsx from 'clsx';

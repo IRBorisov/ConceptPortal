@@ -1,3 +1,5 @@
+'use client';
+
 import { useReactFlow, useStoreApi } from 'reactflow';
 
 import { HelpTopic } from '@/features/help';

@@ -1,3 +1,5 @@
+'use client';
+
 import clsx from 'clsx';
 
 import { IconLibrary2, IconManuals, IconNewItem2 } from '@/components/icons';

@@ -1,3 +1,5 @@
+'use client';
+
 import { useNavigate, useRouteError } from 'react-router';
 
 import { Button } from '@/components/control';

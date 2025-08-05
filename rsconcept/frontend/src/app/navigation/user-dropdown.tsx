@@ -1,3 +1,5 @@
+'use client';
+
 import { useAuthSuspense } from '@/features/auth';
 import { useLogout } from '@/features/auth/backend/use-logout';
 
