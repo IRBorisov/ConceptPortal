@@ -17,6 +17,7 @@ import {
   IconGraphOutputs,
   IconOSS,
   IconPredecessor,
+  IconReference,
   IconRSForm,
   IconRSFormImported,
   IconRSFormOwned,
@@ -266,6 +267,10 @@ export function HelpThesaurus() {
 
       <ul>
         <b>Типы операций в ОСС</b>
+        <li>
+          <IconReference size='1rem' className='inline-icon' />
+          {'\u2009'}отсылка на результат другой операции.
+        </li>
         <li>
           <IconDownload size='1rem' className='inline-icon' />
           {'\u2009'}загрузка КС из библиотеки.

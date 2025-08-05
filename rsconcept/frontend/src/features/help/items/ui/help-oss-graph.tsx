@@ -3,7 +3,7 @@ import {
   IconAnimation,
   IconAnimationOff,
   IconChild,
-  IconConceptBlock,
+  IconClone,
   IconConnect,
   IconConsolidation,
   IconCoordinates,
@@ -17,6 +17,7 @@ import {
   IconLineWave,
   IconNewItem,
   IconNewRSForm,
+  IconReference,
   IconReset,
   IconRSForm,
   IconSave,
@@ -61,10 +62,6 @@ export function HelpOssGraph() {
             <li>
               <IconCoordinates className='inline-icon' /> Отображение координат
             </li>
-            <li>черта сверху - Загрузка</li>
-            <li>
-              черта слева - КС <LinkTopic text='внешняя' topic={HelpTopic.CC_OSS} />
-            </li>
           </ul>
         </div>
 
@@ -83,16 +80,13 @@ export function HelpOssGraph() {
               <kbd>Двойной клик</kbd> – переход к связанной <LinkTopic text='КС' topic={HelpTopic.CC_SYSTEM} />
             </li>
             <li>
-              <IconConceptBlock className='inline-icon icon-green' /> Новый блок
-            </li>
-            <li>
-              <IconNewItem className='inline-icon icon-green' /> Новая операция
+              <IconNewItem className='inline-icon icon-green' /> Новый узел
             </li>
             <li>
               <IconEdit2 className='inline-icon' /> Редактирование узла
             </li>
             <li>
-              <IconDestroy className='inline-icon icon-red' /> <kbd>Delete</kbd> – удалить выбранные
+              <IconDestroy className='inline-icon icon-red' /> <kbd>Delete</kbd> – удалить выбранный
             </li>
           </ul>
         </div>
@@ -105,8 +99,21 @@ export function HelpOssGraph() {
           <h2>Общие</h2>
           <ul>
             <li>
-              <IconSave className='inline-icon' /> Сохранить положения
+              <IconSave className='inline-icon' /> Сохранить положения узлов
             </li>
+            <li>
+              <IconRSForm className='inline-icon icon-green' /> Статус связанной{' '}
+              <LinkTopic text='КС' topic={HelpTopic.CC_SYSTEM} />
+            </li>
+            <li>
+              <IconConsolidation className='inline-icon' />{' '}
+              <LinkTopic text='Ромбовидный синтез' topic={HelpTopic.CC_OSS} />
+            </li>
+            <li>черта сверху - Загрузка</li>
+            <li>
+              черта слева - КС <LinkTopic text='внешняя' topic={HelpTopic.CC_OSS} />
+            </li>
+
             <li>
               <kbd>Space</kbd> – перемещение экрана
             </li>
@@ -125,18 +132,11 @@ export function HelpOssGraph() {
           <h2>Контекстное меню</h2>
           <ul>
             <li>
-              <IconRSForm className='inline-icon icon-green' /> Статус связанной{' '}
-              <LinkTopic text='КС' topic={HelpTopic.CC_SYSTEM} />
-            </li>
-            <li>
-              <IconConsolidation className='inline-icon' />{' '}
-              <LinkTopic text='Ромбовидный синтез' topic={HelpTopic.CC_OSS} />
-            </li>
-            <li>
               <IconNewRSForm className='inline-icon icon-green' /> Создать пустую КС для загрузки
             </li>
+
             <li>
-              <IconConnect className='inline-icon' /> Выбрать КС для загрузки
+              <IconConnect className='inline-icon' /> Задать КС для загрузки
             </li>
             <li>
               <IconChild className='inline-icon icon-green' />{' '}
@@ -144,6 +144,18 @@ export function HelpOssGraph() {
             </li>
             <li>
               <IconExecute className='inline-icon icon-green' /> Активировать операцию
+            </li>
+            <li>
+              <IconReference className='inline-icon icon-green' /> Создать ссылку
+            </li>
+            <li>
+              <IconClone className='inline-icon icon-green' /> Клонировать КС и загрузить
+            </li>
+            <li>
+              <IconRSForm className='inline-icon' /> Открыть привязанную КС
+            </li>
+            <li>
+              <IconReference className='inline-icon' /> Выделить отсылаемую операцию
             </li>
           </ul>
         </div>
