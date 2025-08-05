@@ -74,7 +74,7 @@ export function FormEditCst({ target, schema }: FormEditCstProps) {
         fitContent
         spellCheck
         label='Термин'
-        className='max-h-15'
+        className='max-h-15 disabled:min-h-9'
         {...register('item_data.term_raw')}
         error={errors.item_data?.term_raw}
       />
@@ -158,7 +158,7 @@ export function FormEditCst({ target, schema }: FormEditCstProps) {
           fitContent
           spellCheck
           label={isBasic ? 'Конвенция' : 'Комментарий'}
-          className='max-h-20'
+          className='max-h-20 disabled:min-h-9'
           {...register('item_data.convention')}
           error={errors.item_data?.convention}
           disabled={isBasic && target.is_inherited}
