@@ -1,6 +1,6 @@
 ''' Testing API: Propagate changes through references in OSS. '''
 
-from apps.oss.models import OperationSchema, OperationType
+from apps.oss.models import Inheritance, OperationSchema, OperationType
 from apps.rsform.models import Constituenta, CstType, RSForm
 from shared.EndpointTester import EndpointTester, decl_endpoint
 
@@ -79,8 +79,8 @@ class ReferencePropagationTestCase(EndpointTester):
         )
         self.owned.set_arguments(self.operation5.pk, [self.operation4, self.operation3])
         self.owned.set_substitutions(self.operation5.pk, [{
-            'original': self.ks4X1,
-            'substitution': self.ks1X2
+            'original': self.ks1X2,
+            'substitution': self.ks4X1
         }])
         self.owned.execute_operation(self.operation5)
         self.operation5.refresh_from_db()
@@ -97,8 +97,8 @@ class ReferencePropagationTestCase(EndpointTester):
         )
         self.owned.set_arguments(self.operation6.pk, [self.operation2, self.operation3])
         self.owned.set_substitutions(self.operation6.pk, [{
-            'original': self.ks2X1,
-            'substitution': self.ks1X1
+            'original': self.ks2X2,
+            'substitution': self.ks1X2
         }])
         self.owned.execute_operation(self.operation6)
         self.operation6.refresh_from_db()
@@ -143,4 +143,64 @@ class ReferencePropagationTestCase(EndpointTester):
         self.assertEqual(self.ks6.constituentsQ().count(), 4)
         self.assertEqual(self.ks5.constituentsQ().count(), 5)
 
-# TODO: add more tests
+
+    @decl_endpoint('/api/rsforms/{schema}/create-cst', method='post')
+    def test_create_constituenta(self):
+        data = {
+            'alias': 'X3',
+            'cst_type': CstType.BASE,
+        }
+        response = self.executeCreated(data=data, schema=self.ks1.model.pk)
+        new_cst = Constituenta.objects.get(pk=response.data['new_cst']['id'])
+        inherited = Constituenta.objects.filter(as_child__parent_id=new_cst.pk)
+        self.assertEqual(self.ks1.constituentsQ().count(), 4)
+        self.assertEqual(self.ks4.constituentsQ().count(), 7)
+        self.assertEqual(self.ks5.constituentsQ().count(), 11)
+        self.assertEqual(self.ks6.constituentsQ().count(), 7)
+        self.assertEqual(inherited.count(), 3)
+
+
+    @decl_endpoint('/api/rsforms/{schema}/delete-multiple-cst', method='patch')
+    def test_delete_constituenta(self):
+        data = {'items': [self.ks1X1.pk]}
+        response = self.executeOK(data=data, schema=self.ks1.model.pk)
+        self.ks4D2.refresh_from_db()
+        self.ks5D4.refresh_from_db()
+        self.ks6D2.refresh_from_db()
+        self.assertEqual(self.ks4D2.definition_formal, r'X1 X2 X3 S1 D1')
+        self.assertEqual(self.ks5D4.definition_formal, r'X1 X2 X3 DEL S1 D1 D2 D3')
+        self.assertEqual(self.ks6D2.definition_formal, r'X1 DEL X3 S1 D1')
+        self.assertEqual(self.ks4.constituentsQ().count(), 6)
+        self.assertEqual(self.ks5.constituentsQ().count(), 8)
+        self.assertEqual(self.ks6.constituentsQ().count(), 5)
+
+
+    @decl_endpoint('/api/oss/{item}/delete-reference', method='patch')
+    def test_delete_reference_redirection(self):
+        data = {
+            'layout': self.layout_data,
+            'target': self.operation3.pk,
+            'keep_connections': True,
+            'keep_constituents': False
+        }
+        self.executeOK(data=data, item=self.owned_id)
+        self.assertEqual(self.ks4.constituentsQ().count(), 6)
+        self.assertEqual(self.ks5.constituentsQ().count(), 9)
+        self.assertEqual(self.ks6.constituentsQ().count(), 6)
+
+    @decl_endpoint('/api/oss/{item}/delete-reference', method='patch')
+    def test_delete_reference_constituents(self):
+        data = {
+            'layout': self.layout_data,
+            'target': self.operation3.pk,
+            'keep_connections': False,
+            'keep_constituents': True
+        }
+        ks5X4 = Constituenta.objects.get(schema=self.ks5.model, alias='X4')
+        self.assertEqual(Inheritance.objects.filter(child=ks5X4).count(), 1)
+
+        self.executeOK(data=data, item=self.owned_id)
+        self.assertEqual(self.ks4.constituentsQ().count(), 6)
+        self.assertEqual(self.ks5.constituentsQ().count(), 9)
+        self.assertEqual(self.ks6.constituentsQ().count(), 7)
+        self.assertEqual(Inheritance.objects.filter(child=ks5X4).count(), 0)

@@ -677,13 +677,15 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         )
         serializer.is_valid(raise_exception=True)
         operation = cast(m.Operation, serializer.validated_data['target'])
+        keep_connections = serializer.validated_data['keep_connections']
+        keep_constituents = serializer.validated_data['keep_constituents']
         layout = serializer.validated_data['layout']
         layout = [x for x in layout if x['nodeID'] != 'o' + str(operation.pk)]
 
         with transaction.atomic():
             oss = m.OperationSchemaCached(item)
             m.Layout.update_data(pk, layout)
-            oss.delete_reference(operation.pk, serializer.validated_data['keep_connections'])
+            oss.delete_reference(operation.pk, keep_connections, keep_constituents)
             item.save(update_fields=['time_update'])
 
         return Response(
