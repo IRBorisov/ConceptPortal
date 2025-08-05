@@ -327,7 +327,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
                 'height': position['height']
             })
             m.Layout.update_data(pk, layout)
-            oss.create_input(new_operation)
+            m.OperationSchema.create_input(item, new_operation)
             item.save(update_fields=['time_update'])
 
         return Response(
@@ -723,9 +723,8 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         layout = serializer.validated_data['layout']
 
         with transaction.atomic():
-            oss = m.OperationSchema(item)
             m.Layout.update_data(pk, layout)
-            schema = oss.create_input(operation)
+            schema = m.OperationSchema.create_input(item, operation)
             item.save(update_fields=['time_update'])
 
         return Response(

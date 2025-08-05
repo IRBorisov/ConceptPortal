@@ -141,6 +141,6 @@ class ReferencePropagationTestCase(EndpointTester):
         }
         self.executeOK(data=data, item=self.owned_id)
         self.assertEqual(self.ks6.constituentsQ().count(), 4)
-       # self.assertEqual(self.ks5.constituentsQ().count(), 5)
+        self.assertEqual(self.ks5.constituentsQ().count(), 5)
 
 # TODO: add more tests
