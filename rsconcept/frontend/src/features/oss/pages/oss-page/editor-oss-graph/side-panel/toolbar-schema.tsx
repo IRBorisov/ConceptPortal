@@ -1,6 +1,8 @@
 'use client';
 
 import { urls, useConceptNavigation } from '@/app';
+import { HelpTopic } from '@/features/help';
+import { BadgeHelp } from '@/features/help/components/badge-help';
 import { type IConstituenta, type IRSForm } from '@/features/rsform';
 import { CstType, type IConstituentaBasicsDTO, type ICreateConstituentaDTO } from '@/features/rsform/backend/types';
 import { useCreateConstituenta } from '@/features/rsform/backend/use-create-constituenta';
@@ -284,6 +286,8 @@ export function ToolbarSchema({
         title='Граф ступеней'
         onClick={handleShowTypeGraph}
       />
+
+      <BadgeHelp topic={HelpTopic.UI_OSS_SIDEBAR} size='1rem' contentClass='sm:max-w-100' offset={4} />
     </div>
   );
 }

@@ -16,7 +16,8 @@ const labelHelpTopicRecord: Record<HelpTopic, string> = {
   [HelpTopic.UI_TYPE_GRAPH]: 'Граф ступеней',
   [HelpTopic.UI_CST_STATUS]: 'Статус конституенты',
   [HelpTopic.UI_CST_CLASS]: 'Класс конституенты',
-  [HelpTopic.UI_OSS_GRAPH]: 'Граф синтеза',
+  [HelpTopic.UI_OSS_GRAPH]: 'Операционная схема',
+  [HelpTopic.UI_OSS_SIDEBAR]: 'Боковая панель',
   [HelpTopic.UI_SUBSTITUTIONS]: 'Отождествления',
   [HelpTopic.UI_RELOCATE_CST]: 'Перенос конституент',
 
@@ -67,6 +68,7 @@ const describeHelpTopicRecord: Record<HelpTopic, string> = {
   [HelpTopic.UI_CST_STATUS]: 'нотация статуса конституенты',
   [HelpTopic.UI_CST_CLASS]: 'нотация класса конституенты',
   [HelpTopic.UI_OSS_GRAPH]: 'графическая форма <br/>операционной схемы синтеза',
+  [HelpTopic.UI_OSS_SIDEBAR]: 'боковая панель для редактирования содержания выбранной операции',
   [HelpTopic.UI_SUBSTITUTIONS]: 'таблица отождествлений конституент',
   [HelpTopic.UI_RELOCATE_CST]: 'перенос конституент<br/>в рамках ОСС',
 

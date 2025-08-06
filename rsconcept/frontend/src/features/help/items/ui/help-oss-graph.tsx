@@ -30,7 +30,7 @@ import { HelpTopic } from '../../models/help-topic';
 export function HelpOssGraph() {
   return (
     <div className='flex flex-col'>
-      <h1 className='sm:pr-24'>Граф синтеза</h1>
+      <h1 className='sm:pr-24'>Операционная схема</h1>
       <div className='flex flex-col sm:flex-row'>
         <div className='sm:w-64'>
           <h2>Настройка графа</h2>

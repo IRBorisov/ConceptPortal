@@ -32,6 +32,7 @@ import { HelpCstStatus } from '../../items/ui/help-cst-status';
 import { HelpFormulaTree } from '../../items/ui/help-formula-tree';
 import { HelpLibrary } from '../../items/ui/help-library';
 import { HelpOssGraph } from '../../items/ui/help-oss-graph';
+import { HelpOssSidebar } from '../../items/ui/help-oss-sidebar';
 import { HelpRelocateCst } from '../../items/ui/help-relocate-cst';
 import { HelpRSCard } from '../../items/ui/help-rscard';
 import { HelpRSEditor } from '../../items/ui/help-rseditor';
@@ -71,6 +72,7 @@ export function TopicPage({ topic }: TopicPageProps) {
   if (topic === HelpTopic.UI_CST_STATUS) return <HelpCstStatus />;
   if (topic === HelpTopic.UI_CST_CLASS) return <HelpCstClass />;
   if (topic === HelpTopic.UI_OSS_GRAPH) return <HelpOssGraph />;
+  if (topic === HelpTopic.UI_OSS_SIDEBAR) return <HelpOssSidebar />;
   if (topic === HelpTopic.UI_SUBSTITUTIONS) return <HelpSubstitutions />;
   if (topic === HelpTopic.UI_RELOCATE_CST) return <HelpRelocateCst />;
 

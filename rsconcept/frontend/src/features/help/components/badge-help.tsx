@@ -26,6 +26,9 @@ interface BadgeHelpProps extends Styling {
   /** Classname for padding. */
   padding?: string;
 
+  /** Size class for the tooltip. */
+  size?: string;
+
   /** Place of the tooltip in relation to the cursor. */
   place?: PlacesType;
 
@@ -36,7 +39,15 @@ interface BadgeHelpProps extends Styling {
 /**
  * Display help icon with a manual page tooltip.
  */
-export function BadgeHelp({ topic, padding = 'p-1', className, contentClass, style, ...restProps }: BadgeHelpProps) {
+export function BadgeHelp({
+  topic,
+  padding = 'p-1',
+  size = '1.25rem',
+  className,
+  contentClass,
+  style,
+  ...restProps
+}: BadgeHelpProps) {
   const showHelp = usePreferencesStore(state => state.showHelp);
 
   if (!showHelp) {
@@ -44,7 +55,7 @@ export function BadgeHelp({ topic, padding = 'p-1', className, contentClass, sty
   }
   return (
     <div tabIndex={-1} id={`help-${topic}`} className={cn(padding, className)} style={style}>
-      <IconHelp size='1.25rem' className='text-muted-foreground hover:text-primary cc-animate-color' />
+      <IconHelp size={size} className='text-muted-foreground hover:text-primary cc-animate-color' />
       <Tooltip
         clickable
         anchorSelect={`#help-${topic}`}

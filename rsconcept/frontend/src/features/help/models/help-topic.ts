@@ -18,6 +18,7 @@ export const HelpTopic = {
   UI_CST_STATUS: 'ui-rsform-cst-status',
   UI_CST_CLASS: 'ui-rsform-cst-class',
   UI_OSS_GRAPH: 'ui-oss-graph',
+  UI_OSS_SIDEBAR: 'ui-oss-sidebar',
   UI_SUBSTITUTIONS: 'ui-substitutions',
   UI_RELOCATE_CST: 'ui-relocate-cst',
 
@@ -73,6 +74,7 @@ export const topicParent = new Map<HelpTopic, HelpTopic>([
   [HelpTopic.UI_CST_STATUS, HelpTopic.INTERFACE],
   [HelpTopic.UI_CST_CLASS, HelpTopic.INTERFACE],
   [HelpTopic.UI_OSS_GRAPH, HelpTopic.INTERFACE],
+  [HelpTopic.UI_OSS_SIDEBAR, HelpTopic.INTERFACE],
   [HelpTopic.UI_SUBSTITUTIONS, HelpTopic.INTERFACE],
   [HelpTopic.UI_RELOCATE_CST, HelpTopic.INTERFACE],
 
