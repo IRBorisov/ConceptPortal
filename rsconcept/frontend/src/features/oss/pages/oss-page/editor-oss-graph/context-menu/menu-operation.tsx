@@ -246,10 +246,7 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
           disabled={isProcessing}
         />
       ) : null}
-      {isMutable &&
-      !operation.result &&
-      operation.operation_type === OperationType.SYNTHESIS &&
-      operation.arguments.length === 0 ? (
+      {isMutable && !operation.result && operation.operation_type === OperationType.INPUT ? (
         <DropdownButton
           text='Создать схему'
           title='Создать пустую схему'
@@ -267,7 +264,10 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
           disabled={isProcessing}
         />
       ) : null}
-      {isMutable && !operation.result && operation.operation_type === OperationType.SYNTHESIS ? (
+      {isMutable &&
+      !operation.result &&
+      operation.operation_type === OperationType.SYNTHESIS &&
+      operation.arguments.length > 0 ? (
         <DropdownButton
           text='Активировать синтез'
           titleHtml={

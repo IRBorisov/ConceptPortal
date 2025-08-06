@@ -23,5 +23,5 @@ export function BlockStats({ target, oss }: BlockStatsProps) {
     count_references: operations.filter(item => item.operation_type === OperationType.REPLICA).length
   };
 
-  return <OssStats stats={blockStats} className='pr-3' />;
+  return <OssStats stats={blockStats} className='pr-6 py-2 -ml-4' />;
 }

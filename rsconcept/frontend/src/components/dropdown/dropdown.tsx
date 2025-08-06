@@ -45,7 +45,6 @@ export function Dropdown({
         margin,
         className
       )}
-      aria-hidden={!isOpen}
       inert={!isOpen}
       {...restProps}
     >

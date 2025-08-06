@@ -28,7 +28,7 @@ export function ConstituentsSearch({ dense, hideGraphFilter }: ConstituentsSearc
   const toggleCrucial = useCstSearchStore(state => state.toggleCrucial);
 
   return (
-    <div className='flex border-b bg-input rounded-t-md'>
+    <div className='flex border-b bg-input rounded-t-md pr-1'>
       <SearchBar
         id='constituents_search'
         noBorder

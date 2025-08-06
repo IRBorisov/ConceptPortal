@@ -69,7 +69,7 @@ export function ViewHidden({ items }: ViewHiddenProps) {
           'cc-scroll-y',
           !isFolded && 'open'
         )}
-        aria-hidden={isFolded}
+        inert={isFolded}
         style={{ maxHeight: hiddenHeight }}
       >
         {items.map(cstID => {
