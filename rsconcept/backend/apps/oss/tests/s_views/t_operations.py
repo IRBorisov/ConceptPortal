@@ -270,6 +270,37 @@ class TestOssOperations(EndpointTester):
         self.assertNotEqual(new_operation['result'], None)
 
 
+    @decl_endpoint('/api/oss/{item}/create-synthesis', method='post')
+    def test_create_synthesis_replicas(self):
+        self.populateData()
+        operation4 = self.owned.create_replica(self.operation1)
+        operation5 = self.owned.create_replica(self.operation1)
+        data = {
+            'item_data': {
+                'alias': 'Test5',
+                'title': 'Test title',
+                'description': '',
+                'parent': None
+            },
+            'layout': self.layout_data,
+            'position': {
+                'x': 1,
+                'y': 1,
+                'width': 500,
+                'height': 50
+            },
+            'arguments': [self.operation1.pk, operation4.pk],
+            'substitutions': []
+        }
+        self.executeBadData(data=data, item=self.owned_id)
+
+        data['arguments'] = [operation4.pk, operation5.pk]
+        self.executeBadData(data=data, item=self.owned_id)
+
+        data['arguments'] = [operation4.pk, self.operation3.pk]
+        self.executeCreated(data=data, item=self.owned_id)
+
+
     @decl_endpoint('/api/oss/{item}/delete-operation', method='patch')
     def test_delete_operation(self):
         self.populateData()

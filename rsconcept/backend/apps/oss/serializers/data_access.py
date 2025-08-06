@@ -328,6 +328,10 @@ class CreateSynthesisSerializer(StrictSerializer):
                 })
 
         schemas = [arg.result_id for arg in attrs['arguments'] if arg.result is not None]
+        if len(schemas) != len(set(schemas)):
+            raise serializers.ValidationError({
+                'arguments': msg.duplicateSchemasInArguments()
+            })
         substitutions = attrs['substitutions']
         to_delete = {x['original'].pk for x in substitutions}
         deleted = set()
@@ -375,6 +379,7 @@ class UpdateOperationSerializer(StrictSerializer):
         required=False
     )
 
+    # pylint: disable=too-many-branches
     def validate(self, attrs):
         oss = cast(LibraryItem, self.context['oss'])
         parent = attrs['item_data'].get('parent')
@@ -405,6 +410,10 @@ class UpdateOperationSerializer(StrictSerializer):
         if 'substitutions' not in attrs:
             return attrs
         schemas = [arg.result_id for arg in attrs['arguments'] if arg.result is not None]
+        if len(schemas) != len(set(schemas)):
+            raise serializers.ValidationError({
+                'arguments': msg.duplicateSchemasInArguments()
+            })
         substitutions = attrs['substitutions']
         to_delete = {x['original'].pk for x in substitutions}
         deleted = set()

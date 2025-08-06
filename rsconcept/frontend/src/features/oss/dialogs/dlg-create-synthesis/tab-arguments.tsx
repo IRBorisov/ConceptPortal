@@ -20,8 +20,11 @@ export function TabArguments() {
   } = useFormContext<ICreateSynthesisDTO>();
   const inputs = useWatch({ control, name: 'arguments' });
 
-  const references = manager.oss.replicas.filter(item => inputs.includes(item.original)).map(item => item.replica);
-  const filtered = manager.oss.operations.filter(item => !references.includes(item.id));
+  const replicas = manager.oss.replicas
+    .filter(item => inputs.includes(item.original))
+    .map(item => item.replica)
+    .concat(manager.oss.replicas.filter(item => inputs.includes(item.replica)).map(item => item.original));
+  const filtered = manager.oss.operations.filter(item => !replicas.includes(item.id));
 
   return (
     <div className='cc-fade-in cc-column'>
