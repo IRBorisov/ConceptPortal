@@ -41,7 +41,7 @@ export function OssStats({ className, stats }: OssStatsProps) {
       />
       <ValueStats
         id='count_references'
-        title='Синтез'
+        title='Реплика'
         icon={<IconReference size='1.25rem' />}
         value={stats.count_references}
       />

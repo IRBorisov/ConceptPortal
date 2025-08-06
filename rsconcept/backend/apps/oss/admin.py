@@ -60,9 +60,9 @@ class InheritanceAdmin(admin.ModelAdmin):
     search_fields = ['id', 'operation', 'parent', 'child']
 
 
-@admin.register(models.Reference)
-class ReferenceAdmin(admin.ModelAdmin):
-    ''' Admin model: Reference. '''
-    ordering = ['reference', 'target']
-    list_display = ['id', 'reference', 'target']
-    search_fields = ['id', 'reference', 'target']
+@admin.register(models.Replica)
+class ReplicaAdmin(admin.ModelAdmin):
+    ''' Admin model: Replica. '''
+    ordering = ['replica', 'original']
+    list_display = ['id', 'replica', 'original']
+    search_fields = ['id', 'replica', 'original']

@@ -16,7 +16,7 @@ from django.db.models import (
 from apps.library.models import LibraryItem
 
 from .Argument import Argument
-from .Reference import Reference
+from .Replica import Replica
 from .Substitution import Substitution
 
 
@@ -24,7 +24,7 @@ class OperationType(TextChoices):
     ''' Type of operation. '''
     INPUT = 'input'
     SYNTHESIS = 'synthesis'
-    REFERENCE = 'reference'
+    REPLICA = 'replica'
 
 
 class Operation(Model):
@@ -93,13 +93,13 @@ class Operation(Model):
         ''' Operation substitutions. '''
         return Substitution.objects.filter(operation=self)
 
-    def getQ_references(self) -> QuerySet[Reference]:
-        ''' Operation references. '''
-        return Reference.objects.filter(target=self)
+    def getQ_replicas(self) -> QuerySet[Replica]:
+        ''' Operation replicas. '''
+        return Replica.objects.filter(original=self)
 
-    def getQ_reference_target(self) -> list['Operation']:
-        ''' Operation target for current reference. '''
-        return [x.target for x in Reference.objects.filter(reference=self)]
+    def getQ_replica_original(self) -> list['Operation']:
+        ''' Operation source for current replica. '''
+        return [x.original for x in Replica.objects.filter(replica=self)]
 
     def setQ_result(self, result: Optional[LibraryItem]) -> None:
         ''' Set result schema. '''
@@ -107,12 +107,12 @@ class Operation(Model):
             return
         self.result = result
         self.save(update_fields=['result'])
-        for reference in self.getQ_references():
-            reference.reference.result = result
-            reference.reference.save(update_fields=['result'])
+        for rep in self.getQ_replicas():
+            rep.replica.result = result
+            rep.replica.save(update_fields=['result'])
 
     def delete(self, *args, **kwargs):
         ''' Delete operation. '''
-        for ref in self.getQ_references():
-            ref.reference.delete()
+        for rep in self.getQ_replicas():
+            rep.replica.delete()
         super().delete(*args, **kwargs)

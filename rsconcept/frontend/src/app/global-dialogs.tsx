@@ -46,8 +46,8 @@ const DlgDeleteOperation = React.lazy(() =>
   }))
 );
 const DlgDeleteReference = React.lazy(() =>
-  import('@/features/oss/dialogs/dlg-delete-reference').then(module => ({
-    default: module.DlgDeleteReference
+  import('@/features/oss/dialogs/dlg-delete-replica').then(module => ({
+    default: module.DlgDeleteReplica
   }))
 );
 const DlgEditEditors = React.lazy(() =>

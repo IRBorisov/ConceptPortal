@@ -4,7 +4,7 @@ import { type OperationInternalNode } from '../../../../models/oss-layout';
 
 import { NodeCore } from './node-core';
 
-export function ReferenceNode(node: OperationInternalNode) {
+export function ReplicaNode(node: OperationInternalNode) {
   return (
     <>
       <NodeCore node={node} />

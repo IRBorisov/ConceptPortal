@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 
 import { useLibrary } from '@/features/library/backend/use-library';
 import { useCloneSchema } from '@/features/oss/backend/use-clone-schema';
-import { useCreateReference } from '@/features/oss/backend/use-create-reference';
+import { useCreateReference } from '@/features/oss/backend/use-create-replica';
 
 import { DropdownButton } from '@/components/dropdown';
 import {
@@ -46,7 +46,7 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
   const { createInput: inputCreate } = useCreateInput();
   const { executeOperation: operationExecute } = useExecuteOperation();
   const { cloneSchema } = useCloneSchema();
-  const { createReference } = useCreateReference();
+  const { createReplica: createReference } = useCreateReference();
 
   const showEditInput = useDialogsStore(state => state.showChangeInputSchema);
   const showRelocateConstituents = useDialogsStore(state => state.showRelocateConstituents);
@@ -96,7 +96,7 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
   }
 
   function handleEditOperation() {
-    if (!operation || operation.operation_type === OperationType.REFERENCE) {
+    if (!operation || operation.operation_type === OperationType.REPLICA) {
       return;
     }
     onHide();
@@ -112,7 +112,7 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
     }
     onHide();
     switch (operation.operation_type) {
-      case OperationType.REFERENCE:
+      case OperationType.REPLICA:
         showDeleteReference({
           oss: schema,
           target: operation,
@@ -211,7 +211,7 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
 
   function handleSelectTarget() {
     onHide();
-    if (operation.operation_type !== OperationType.REFERENCE) {
+    if (operation.operation_type !== OperationType.REPLICA) {
       return;
     }
     setSelected([`o${operation.target}`]);
@@ -219,7 +219,7 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
 
   return (
     <>
-      {operation.operation_type !== OperationType.REFERENCE ? (
+      {operation.operation_type !== OperationType.REPLICA ? (
         <DropdownButton
           text='Редактировать'
           title='Редактировать операцию'
@@ -282,7 +282,7 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
         />
       ) : null}
 
-      {isMutable && operation.result && operation.operation_type !== OperationType.REFERENCE ? (
+      {isMutable && operation.result && operation.operation_type !== OperationType.REPLICA ? (
         <DropdownButton
           text='Конституенты'
           titleHtml='Перенос конституент</br>между схемами'
@@ -293,17 +293,17 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
         />
       ) : null}
 
-      {isMutable && operation.operation_type !== OperationType.REFERENCE ? (
+      {isMutable && operation.operation_type !== OperationType.REPLICA ? (
         <DropdownButton
-          text='Создать ссылку'
-          title='Создать ссылку на результат операции'
+          text='Создать реплику'
+          title='Создать реплику результата операции'
           icon={<IconReference size='1rem' className='icon-green' />}
           onClick={handleCreateReference}
           disabled={isProcessing}
         />
       ) : null}
 
-      {isMutable && operation.operation_type !== OperationType.REFERENCE ? (
+      {isMutable && operation.operation_type !== OperationType.REPLICA ? (
         <DropdownButton
           text='Клонировать'
           title='Создать и загрузить копию концептуальной схемы'

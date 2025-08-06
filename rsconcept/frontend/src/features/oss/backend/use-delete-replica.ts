@@ -6,14 +6,14 @@ import { KEYS } from '@/backend/configuration';
 import { PARAMETER } from '@/utils/constants';
 
 import { ossApi } from './api';
-import { type IDeleteReferenceDTO } from './types';
+import { type IDeleteReplicaDTO } from './types';
 
-export const useDeleteReference = () => {
+export const useDeleteReplica = () => {
   const client = useQueryClient();
   const { updateTimestamp } = useUpdateTimestamp();
   const mutation = useMutation({
-    mutationKey: [KEYS.global_mutation, ossApi.baseKey, 'delete-reference'],
-    mutationFn: ossApi.deleteReference,
+    mutationKey: [KEYS.global_mutation, ossApi.baseKey, 'delete-replica'],
+    mutationFn: ossApi.deleteReplica,
     onSuccess: async (data, variables) => {
       if (variables.beforeUpdate) {
         variables.beforeUpdate();
@@ -29,7 +29,7 @@ export const useDeleteReference = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    deleteReference: (data: { itemID: number; data: IDeleteReferenceDTO; beforeUpdate?: () => void }) => {
+    deleteReplica: (data: { itemID: number; data: IDeleteReplicaDTO; beforeUpdate?: () => void }) => {
       mutation.mutate(data);
     }
   };

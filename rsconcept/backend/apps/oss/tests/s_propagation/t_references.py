@@ -50,7 +50,7 @@ class ReferencePropagationTestCase(EndpointTester):
             operation_type=OperationType.INPUT,
             result=self.ks2.model
         )
-        self.operation3 = self.owned.create_reference(self.operation1)
+        self.operation3 = self.owned.create_replica(self.operation1)
 
         self.operation4 = self.owned.create_operation(
             alias='4',
@@ -175,8 +175,8 @@ class ReferencePropagationTestCase(EndpointTester):
         self.assertEqual(self.ks6.constituentsQ().count(), 5)
 
 
-    @decl_endpoint('/api/oss/{item}/delete-reference', method='patch')
-    def test_delete_reference_redirection(self):
+    @decl_endpoint('/api/oss/{item}/delete-replica', method='patch')
+    def test_delete_replica_redirection(self):
         data = {
             'layout': self.layout_data,
             'target': self.operation3.pk,
@@ -188,8 +188,8 @@ class ReferencePropagationTestCase(EndpointTester):
         self.assertEqual(self.ks5.constituentsQ().count(), 9)
         self.assertEqual(self.ks6.constituentsQ().count(), 6)
 
-    @decl_endpoint('/api/oss/{item}/delete-reference', method='patch')
-    def test_delete_reference_constituents(self):
+    @decl_endpoint('/api/oss/{item}/delete-replica', method='patch')
+    def test_delete_replica_constituents(self):
         data = {
             'layout': self.layout_data,
             'target': self.operation3.pk,

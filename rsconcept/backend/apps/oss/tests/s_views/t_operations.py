@@ -1,6 +1,6 @@
 ''' Testing API: Operation Schema - operations manipulation. '''
 from apps.library.models import AccessPolicy, Editor, LibraryItem, LibraryItemType
-from apps.oss.models import Argument, Operation, OperationSchema, OperationType, Reference
+from apps.oss.models import Argument, Operation, OperationSchema, OperationType, Replica
 from apps.rsform.models import Constituenta, RSForm
 from shared.EndpointTester import EndpointTester, decl_endpoint
 
@@ -209,8 +209,8 @@ class TestOssOperations(EndpointTester):
         self.assertEqual(new_operation['parent'], block_owned.id)
 
 
-    @decl_endpoint('/api/oss/{item}/create-reference', method='post')
-    def test_create_reference(self):
+    @decl_endpoint('/api/oss/{item}/create-replica', method='post')
+    def test_create_replica(self):
         self.populateData()
         data = {
             'target': self.invalid_id,
@@ -232,10 +232,10 @@ class TestOssOperations(EndpointTester):
         self.owned.model.refresh_from_db()
         new_operation_id = response.data['new_operation']
         new_operation = next(op for op in response.data['oss']['operations'] if op['id'] == new_operation_id)
-        self.assertEqual(new_operation['operation_type'], OperationType.REFERENCE)
+        self.assertEqual(new_operation['operation_type'], OperationType.REPLICA)
         self.assertEqual(new_operation['parent'], self.operation1.parent_id)
         self.assertEqual(new_operation['result'], self.operation1.result_id)
-        ref = Reference.objects.filter(reference_id=new_operation_id, target_id=self.operation1.pk).first()
+        ref = Replica.objects.filter(replica_id=new_operation_id, original_id=self.operation1.pk).first()
         self.assertIsNotNone(ref)
         self.assertTrue(Operation.objects.filter(pk=new_operation_id, oss=self.owned.model).exists())
 
@@ -301,7 +301,7 @@ class TestOssOperations(EndpointTester):
     @decl_endpoint('/api/oss/{item}/delete-operation', method='patch')
     def test_delete_reference_operation_invalid(self):
         self.populateData()
-        reference_operation = self.owned.create_reference(self.operation1)
+        reference_operation = self.owned.create_replica(self.operation1)
         data = {
             'layout': self.layout_data,
             'target': reference_operation.pk
@@ -309,8 +309,8 @@ class TestOssOperations(EndpointTester):
         self.executeBadData(data=data, item=self.owned_id)
 
 
-    @decl_endpoint('/api/oss/{item}/delete-reference', method='patch')
-    def test_delete_reference_operation(self):
+    @decl_endpoint('/api/oss/{item}/delete-replica', method='patch')
+    def test_delete_replica_operation(self):
         self.populateData()
         data = {
             'layout': self.layout_data,
@@ -318,8 +318,8 @@ class TestOssOperations(EndpointTester):
         }
         self.executeBadData(data=data, item=self.owned_id)
 
-        reference_operation = self.owned.create_reference(self.operation1)
-        self.assertEqual(len(self.operation1.getQ_references()), 1)
+        reference_operation = self.owned.create_replica(self.operation1)
+        self.assertEqual(len(self.operation1.getQ_replicas()), 1)
         data['target'] = reference_operation.pk
         self.executeForbidden(data=data, item=self.unowned_id)
 
@@ -328,7 +328,7 @@ class TestOssOperations(EndpointTester):
 
         data['target'] = reference_operation.pk
         self.executeOK(data=data, item=self.owned_id)
-        self.assertEqual(len(self.operation1.getQ_references()), 0)
+        self.assertEqual(len(self.operation1.getQ_replicas()), 0)
 
 
     @decl_endpoint('/api/oss/{item}/create-input', method='patch')

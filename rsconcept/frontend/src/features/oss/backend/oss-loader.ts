@@ -82,8 +82,8 @@ export class OssLoader {
       this.graph.addEdge(argument.argument, argument.operation);
       this.extendedGraph.addEdge(argument.argument, argument.operation);
     });
-    this.oss.references.forEach(reference => {
-      this.extendedGraph.addEdge(reference.target, reference.reference);
+    this.oss.replicas.forEach(reference => {
+      this.extendedGraph.addEdge(reference.original, reference.replica);
     });
   }
 
@@ -109,18 +109,18 @@ export class OssLoader {
             .filter(item => item.operation === operationID)
             .map(item => item.argument);
           break;
-        case OperationType.REFERENCE:
-          const ref = this.oss.references.find(item => item.reference === operationID);
-          const target = !!ref ? this.operationByID.get(ref.target) : null;
-          if (!target || !ref) {
-            throw new Error(`Reference ${operationID} not found`);
+        case OperationType.REPLICA:
+          const replication = this.oss.replicas.find(item => item.replica === operationID);
+          const original = !!replication ? this.operationByID.get(replication.original) : null;
+          if (!original || !replication) {
+            throw new Error(`Replica ${operationID} not found`);
           }
-          const refCount = (referenceCounts.get(target.id) ?? 0) + 1;
-          referenceCounts.set(target.id, refCount);
-          operation.target = ref.target;
-          operation.alias = `[${refCount}] ${target.alias}`;
-          operation.title = target.title;
-          operation.description = target.description;
+          const refCount = (referenceCounts.get(original.id) ?? 0) + 1;
+          referenceCounts.set(original.id, refCount);
+          operation.target = replication.original;
+          operation.alias = `[${refCount}] ${original.alias}`;
+          operation.title = original.title;
+          operation.description = original.description;
           break;
       }
     });
@@ -160,7 +160,7 @@ export class OssLoader {
         item => !!item.result && (item.operation_type !== OperationType.INPUT || !item.is_import)
       ).length,
       count_block: this.oss.blocks.length,
-      count_references: this.oss.references.length
+      count_references: this.oss.replicas.length
     };
   }
 }

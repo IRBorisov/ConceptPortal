@@ -20,7 +20,7 @@ export function TabArguments() {
   } = useFormContext<ICreateSynthesisDTO>();
   const inputs = useWatch({ control, name: 'arguments' });
 
-  const references = manager.oss.references.filter(item => inputs.includes(item.target)).map(item => item.reference);
+  const references = manager.oss.replicas.filter(item => inputs.includes(item.original)).map(item => item.replica);
   const filtered = manager.oss.operations.filter(item => !references.includes(item.id));
 
   return (

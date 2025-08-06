@@ -20,7 +20,7 @@ export function BlockStats({ target, oss }: BlockStatsProps) {
       item => !!item.result && (item.operation_type !== OperationType.INPUT || !item.is_import)
     ).length,
     count_block: contents.length - operations.length,
-    count_references: operations.filter(item => item.operation_type === OperationType.REFERENCE).length
+    count_references: operations.filter(item => item.operation_type === OperationType.REPLICA).length
   };
 
   return <OssStats stats={blockStats} className='pr-3' />;

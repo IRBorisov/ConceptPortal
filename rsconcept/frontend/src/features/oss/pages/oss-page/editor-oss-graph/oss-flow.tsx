@@ -161,7 +161,7 @@ export function OssFlow() {
         return;
       }
       switch (item.operation_type) {
-        case OperationType.REFERENCE:
+        case OperationType.REPLICA:
           showDeleteReference({
             oss: schema,
             target: item,

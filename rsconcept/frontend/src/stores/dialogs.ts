@@ -11,7 +11,7 @@ import { type DlgCreateBlockProps } from '@/features/oss/dialogs/dlg-create-bloc
 import { type DlgCreateSchemaProps } from '@/features/oss/dialogs/dlg-create-schema';
 import { type DlgCreateSynthesisProps } from '@/features/oss/dialogs/dlg-create-synthesis/dlg-create-synthesis';
 import { type DlgDeleteOperationProps } from '@/features/oss/dialogs/dlg-delete-operation';
-import { type DlgDeleteReferenceProps } from '@/features/oss/dialogs/dlg-delete-reference';
+import { type DlgDeleteReplicaProps } from '@/features/oss/dialogs/dlg-delete-replica';
 import { type DlgEditBlockProps } from '@/features/oss/dialogs/dlg-edit-block';
 import { type DlgEditOperationProps } from '@/features/oss/dialogs/dlg-edit-operation/dlg-edit-operation';
 import { type DlgImportSchemaProps } from '@/features/oss/dialogs/dlg-import-schema';
@@ -106,7 +106,7 @@ interface DialogsStore {
   showCloneLibraryItem: (props: DlgCloneLibraryItemProps) => void;
   showCreateVersion: (props: DlgCreateVersionProps) => void;
   showDeleteOperation: (props: DlgDeleteOperationProps) => void;
-  showDeleteReference: (props: DlgDeleteReferenceProps) => void;
+  showDeleteReference: (props: DlgDeleteReplicaProps) => void;
   showGraphParams: () => void;
   showOssOptions: () => void;
   showRelocateConstituents: (props: DlgRelocateConstituentsProps) => void;

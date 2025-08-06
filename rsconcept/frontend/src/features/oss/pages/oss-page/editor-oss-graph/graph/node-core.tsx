@@ -38,7 +38,7 @@ export function NodeCore({ node }: NodeCoreProps) {
       className={cn(
         'cc-node-operation h-[40px] w-[150px]',
         'relative flex items-center justify-center p-[2px]',
-        opType === OperationType.REFERENCE && 'border-dashed',
+        opType === OperationType.REPLICA && 'border-dashed',
         isChild && 'border-accent-orange'
       )}
     >

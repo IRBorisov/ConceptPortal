@@ -43,9 +43,9 @@ export interface IOperationInput extends IOperationBase {
   is_import: boolean;
 }
 
-/** Represents Reference Operation. */
-export interface IOperationReference extends IOperationBase {
-  operation_type: typeof OperationType.REFERENCE;
+/** Represents Replica Operation. */
+export interface IOperationReplica extends IOperationBase {
+  operation_type: typeof OperationType.REPLICA;
   target: number;
 }
 
@@ -58,7 +58,7 @@ export interface IOperationSynthesis extends IOperationBase {
 }
 
 /** Represents Operation. */
-export type IOperation = IOperationInput | IOperationReference | IOperationSynthesis;
+export type IOperation = IOperationInput | IOperationReplica | IOperationSynthesis;
 
 /** Represents Block. */
 export interface IBlock extends IOssNode, IBlockDTO {

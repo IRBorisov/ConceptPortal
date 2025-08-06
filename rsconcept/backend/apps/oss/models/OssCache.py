@@ -8,7 +8,7 @@ from apps.rsform.models import RSFormCached
 from .Argument import Argument
 from .Inheritance import Inheritance
 from .Operation import Operation, OperationType
-from .Reference import Reference
+from .Replica import Replica
 from .Substitution import Substitution
 
 
@@ -28,8 +28,8 @@ class OssCache:
             self.graph.add_node(operation.pk)
             self.extend_graph.add_node(operation.pk)
 
-        references = Reference.objects.filter(reference__oss_id=self._item_id).only('reference_id', 'target_id')
-        self.reference_target = {ref.reference_id: ref.target_id for ref in references}
+        replicas = Replica.objects.filter(replica__oss_id=self._item_id).only('replica_id', 'original_id')
+        self.replica_original = {rep.replica_id: rep.original_id for rep in replicas}
         arguments = Argument.objects \
             .filter(operation__oss_id=self._item_id) \
             .only('operation_id', 'argument_id') \
@@ -37,9 +37,9 @@ class OssCache:
         for argument in arguments:
             self.graph.add_edge(argument.argument_id, argument.operation_id)
             self.extend_graph.add_edge(argument.argument_id, argument.operation_id)
-            target = self.reference_target.get(argument.argument_id)
-            if target is not None:
-                self.extend_graph.add_edge(target, argument.operation_id)
+            original = self.replica_original.get(argument.argument_id)
+            if original is not None:
+                self.extend_graph.add_edge(original, argument.operation_id)
 
         self.is_loaded_subs = False
         self.substitutions: dict[int, list[Substitution]] = {}
@@ -85,7 +85,7 @@ class OssCache:
     def get_operation(self, schemaID: int) -> Operation:
         ''' Get operation by schema. '''
         for operation in self.operations:
-            if operation.result_id == schemaID and operation.operation_type != OperationType.REFERENCE:
+            if operation.result_id == schemaID and operation.operation_type != OperationType.REPLICA:
                 return operation
         raise ValueError(f'Operation for schema {schemaID} not found')
 
@@ -121,7 +121,7 @@ class OssCache:
         ''' Insert new argument. '''
         self.graph.add_edge(argument.argument_id, argument.operation_id)
         self.extend_graph.add_edge(argument.argument_id, argument.operation_id)
-        target = self.reference_target.get(argument.argument_id)
+        target = self.replica_original.get(argument.argument_id)
         if target is not None:
             self.extend_graph.add_edge(target, argument.operation_id)
 
@@ -160,8 +160,8 @@ class OssCache:
             del self._schema_by_id[target.result_id]
         self.operations.remove(self.operation_by_id[operation])
         del self.operation_by_id[operation]
-        if operation in self.reference_target:
-            del self.reference_target[operation]
+        if operation in self.replica_original:
+            del self.replica_original[operation]
         if self.is_loaded_subs:
             del self.substitutions[operation]
             del self.inheritance[operation]
@@ -170,7 +170,7 @@ class OssCache:
         ''' Remove argument from cache. '''
         self.graph.remove_edge(argument.argument_id, argument.operation_id)
         self.extend_graph.remove_edge(argument.argument_id, argument.operation_id)
-        target = self.reference_target.get(argument.argument_id)
+        target = self.replica_original.get(argument.argument_id)
         if target is not None:
             if not Argument.objects.filter(argument_id=target, operation_id=argument.operation_id).exists():
                 self.extend_graph.remove_edge(target, argument.operation_id)

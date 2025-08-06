@@ -11,7 +11,7 @@ from .Block import Block
 from .Inheritance import Inheritance
 from .Layout import Layout
 from .Operation import Operation, OperationType
-from .Reference import Reference
+from .Replica import Replica
 from .Substitution import Substitution
 
 
@@ -67,15 +67,15 @@ class OperationSchema:
         result = Operation.objects.create(oss=self.model, **kwargs)
         return result
 
-    def create_reference(self, target: Operation) -> Operation:
-        ''' Create Reference Operation. '''
+    def create_replica(self, target: Operation) -> Operation:
+        ''' Create Replica Operation. '''
         result = Operation.objects.create(
             oss=self.model,
-            operation_type=OperationType.REFERENCE,
+            operation_type=OperationType.REPLICA,
             result=target.result,
             parent=target.parent
         )
-        Reference.objects.create(reference=result, target=target)
+        Replica.objects.create(replica=result, original=target)
         return result
 
     def create_block(self, **kwargs) -> Block:

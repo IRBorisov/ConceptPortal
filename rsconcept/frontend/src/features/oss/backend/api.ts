@@ -9,12 +9,12 @@ import {
   type ICloneSchemaDTO,
   type IConstituentaReference,
   type ICreateBlockDTO,
-  type ICreateReferenceDTO,
+  type ICreateReplicaDTO,
   type ICreateSchemaDTO,
   type ICreateSynthesisDTO,
   type IDeleteBlockDTO,
   type IDeleteOperationDTO,
-  type IDeleteReferenceDTO,
+  type IDeleteReplicaDTO,
   type IImportSchemaDTO,
   type IInputCreatedResponse,
   type IMoveItemsDTO,
@@ -89,10 +89,10 @@ export const ossApi = {
       }
     }),
 
-  createReference: ({ itemID, data }: { itemID: number; data: ICreateReferenceDTO }) =>
-    axiosPost<ICreateReferenceDTO, IOperationCreatedResponse>({
+  createReplica: ({ itemID, data }: { itemID: number; data: ICreateReplicaDTO }) =>
+    axiosPost<ICreateReplicaDTO, IOperationCreatedResponse>({
       schema: schemaOperationCreatedResponse,
-      endpoint: `/api/oss/${itemID}/create-reference`,
+      endpoint: `/api/oss/${itemID}/create-replica`,
       request: {
         data: data,
         successMessage: response => {
@@ -101,10 +101,10 @@ export const ossApi = {
         }
       }
     }),
-  deleteReference: ({ itemID, data }: { itemID: number; data: IDeleteReferenceDTO; beforeUpdate?: () => void }) =>
-    axiosPatch<IDeleteReferenceDTO, IOperationSchemaDTO>({
+  deleteReplica: ({ itemID, data }: { itemID: number; data: IDeleteReplicaDTO; beforeUpdate?: () => void }) =>
+    axiosPatch<IDeleteReplicaDTO, IOperationSchemaDTO>({
       schema: schemaOperationSchema,
-      endpoint: `/api/oss/${itemID}/delete-reference`,
+      endpoint: `/api/oss/${itemID}/delete-replica`,
       request: {
         data: data,
         successMessage: infoMsg.operationDestroyed

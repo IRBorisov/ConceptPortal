@@ -8,5 +8,5 @@ from .Operation import Operation, OperationType
 from .OperationSchema import OperationSchema
 from .OperationSchemaCached import OperationSchemaCached
 from .PropagationFacade import PropagationFacade
-from .Reference import Reference
+from .Replica import Replica
 from .Substitution import Substitution

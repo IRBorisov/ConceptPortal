@@ -1,5 +1,6 @@
 import {
   IconChild,
+  IconConceptBlock,
   IconConsolidation,
   IconCrucial,
   IconCstAxiom,
@@ -254,12 +255,19 @@ export function HelpThesaurus() {
       </p>
       <p>Граф синтеза – ориентированный граф, где вершины — операции, а ребра — зависимости по результатам операций.</p>
       <p>
+        <IconConceptBlock className='inline-icon' />
+        {'\u2009'}
         <LinkTopic text='Концептуальный блок' topic={HelpTopic.CC_STRUCTURING} /> – номинально выделенная часть
         предметной области, формирующая границы для отнесения концептуальных схем в ОСС к различным аспектам предметной
         области.
       </p>
 
       <p>Операция – выделенная часть ОСС, определяющая способ получения КС в рамках ОСС.</p>
+      <p>
+        <IconReference className='inline-icon' />
+        {'\u2009'}Реплика – способ дублирования графического представления результата некоторой операции для улучшения
+        визуального отображения путем сокращения длины связей между вершинами.
+      </p>
       <p>
         <IconConsolidation className='inline-icon' />
         {'\u2009'}Ромбовидный синтез – операция, где используются КС, имеющие общих предков.
@@ -269,7 +277,7 @@ export function HelpThesaurus() {
         <b>Типы операций в ОСС</b>
         <li>
           <IconReference size='1rem' className='inline-icon' />
-          {'\u2009'}отсылка на результат другой операции.
+          {'\u2009'}репликация результата другой операции.
         </li>
         <li>
           <IconDownload size='1rem' className='inline-icon' />

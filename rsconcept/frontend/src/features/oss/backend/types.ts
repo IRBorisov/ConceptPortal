@@ -10,7 +10,7 @@ import { errorMsg } from '@/utils/labels';
 export const OperationType = {
   INPUT: 'input',
   SYNTHESIS: 'synthesis',
-  REFERENCE: 'reference'
+  REPLICA: 'replica'
 } as const;
 export type OperationType = (typeof OperationType)[keyof typeof OperationType];
 
@@ -49,7 +49,7 @@ export type IMoveItemsDTO = z.infer<typeof schemaMoveItems>;
 
 /** Represents {@link IOperation} data, used in Create action. */
 export type ICreateSchemaDTO = z.infer<typeof schemaCreateSchema>;
-export type ICreateReferenceDTO = z.infer<typeof schemaCreateReference>;
+export type ICreateReplicaDTO = z.infer<typeof schemaCreateReplica>;
 export type ICreateSynthesisDTO = z.infer<typeof schemaCreateSynthesis>;
 export type IImportSchemaDTO = z.infer<typeof schemaImportSchema>;
 export type ICloneSchemaDTO = z.infer<typeof schemaCloneSchema>;
@@ -64,7 +64,7 @@ export type IUpdateOperationDTO = z.infer<typeof schemaUpdateOperation>;
 export type IDeleteOperationDTO = z.infer<typeof schemaDeleteOperation>;
 
 /** Represents {@link IOperation} reference type data, used in Delete action. */
-export type IDeleteReferenceDTO = z.infer<typeof schemaDeleteReference>;
+export type IDeleteReplicaDTO = z.infer<typeof schemaDeleteReplica>;
 
 /** Represents target {@link IOperation}. */
 export interface ITargetOperation {
@@ -124,9 +124,9 @@ export const schemaBlock = z.strictObject({
   parent: z.number().nullable()
 });
 
-const schemaReference = z.strictObject({
-  target: z.number(),
-  reference: z.number()
+const schemaReplica = z.strictObject({
+  original: z.number(),
+  replica: z.number()
 });
 
 export const schemaPosition = z.strictObject({
@@ -158,7 +158,7 @@ export const schemaOperationSchema = schemaLibraryItem.extend({
   editors: z.number().array(),
   operations: z.array(schemaOperation),
   blocks: z.array(schemaBlock),
-  references: z.array(schemaReference),
+  replicas: z.array(schemaReplica),
   layout: schemaOssLayout,
   arguments: z
     .object({
@@ -199,7 +199,7 @@ export const schemaCreateSchema = z.strictObject({
   position: schemaPosition
 });
 
-export const schemaCreateReference = z.strictObject({
+export const schemaCreateReplica = z.strictObject({
   target: z.number(),
   layout: schemaOssLayout,
   position: schemaPosition
@@ -247,7 +247,7 @@ export const schemaDeleteOperation = z.strictObject({
   delete_schema: z.boolean()
 });
 
-export const schemaDeleteReference = z.strictObject({
+export const schemaDeleteReplica = z.strictObject({
   target: z.number(),
   layout: schemaOssLayout,
   keep_constituents: z.boolean(),

@@ -5,14 +5,14 @@ import { useUpdateTimestamp } from '@/features/library/backend/use-update-timest
 import { KEYS } from '@/backend/configuration';
 
 import { ossApi } from './api';
-import { type ICreateReferenceDTO } from './types';
+import { type ICreateReplicaDTO } from './types';
 
 export const useCreateReference = () => {
   const client = useQueryClient();
   const { updateTimestamp } = useUpdateTimestamp();
   const mutation = useMutation({
-    mutationKey: [KEYS.global_mutation, ossApi.baseKey, 'create-reference'],
-    mutationFn: ossApi.createReference,
+    mutationKey: [KEYS.global_mutation, ossApi.baseKey, 'create-replica'],
+    mutationFn: ossApi.createReplica,
     onSuccess: data => {
       updateTimestamp(data.oss.id, data.oss.time_update);
       client.setQueryData(ossApi.getOssQueryOptions({ itemID: data.oss.id }).queryKey, data.oss);
@@ -20,6 +20,6 @@ export const useCreateReference = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    createReference: (data: { itemID: number; data: ICreateReferenceDTO }) => mutation.mutateAsync(data)
+    createReplica: (data: { itemID: number; data: ICreateReplicaDTO }) => mutation.mutateAsync(data)
   };
 };

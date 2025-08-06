@@ -33,7 +33,7 @@ export function HelpRSGraphTerm() {
     <div className='flex flex-col'>
       <h1>Граф термов</h1>
       <div className='flex flex-col sm:flex-row'>
-        <div className='sm:w-56'>
+        <div className='sm:w-60'>
           <h2>Настройка графа</h2>
           <ul>
             <li>Цвет – покраска узлов</li>
@@ -51,11 +51,11 @@ export function HelpRSGraphTerm() {
 
         <Divider vertical margins='mx-3 mt-3' className='hidden sm:block' />
 
-        <div className='sm:w-84'>
+        <div className='sm:w-80'>
           <h2>Изменение узлов</h2>
           <ul>
             <li>Клик на узел – выделение</li>
-            <li>Левый клик – выбор фокус-конституенты</li>
+            <li>Левый клик – фокус-конституента</li>
             <li>
               <IconReset className='inline-icon' /> Esc – сбросить выделение
             </li>
@@ -75,7 +75,7 @@ export function HelpRSGraphTerm() {
       <Divider margins='my-3' className='hidden sm:block' />
 
       <div className='flex flex-col-reverse mb-3 sm:flex-row'>
-        <div className='sm:w-56'>
+        <div className='sm:w-60'>
           <h2>Общие</h2>
           <ul>
             <li>

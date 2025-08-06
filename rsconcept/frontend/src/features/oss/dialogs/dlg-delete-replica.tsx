@@ -9,23 +9,23 @@ import { Checkbox, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { type IDeleteReferenceDTO, type IOssLayout, schemaDeleteReference } from '../backend/types';
-import { useDeleteReference } from '../backend/use-delete-reference';
-import { type IOperationReference, type IOperationSchema } from '../models/oss';
+import { type IDeleteReplicaDTO, type IOssLayout, schemaDeleteReplica } from '../backend/types';
+import { useDeleteReplica } from '../backend/use-delete-replica';
+import { type IOperationReplica, type IOperationSchema } from '../models/oss';
 
-export interface DlgDeleteReferenceProps {
+export interface DlgDeleteReplicaProps {
   oss: IOperationSchema;
-  target: IOperationReference;
+  target: IOperationReplica;
   layout: IOssLayout;
   beforeDelete?: () => void;
 }
 
-export function DlgDeleteReference() {
-  const { oss, target, layout, beforeDelete } = useDialogsStore(state => state.props as DlgDeleteReferenceProps);
-  const { deleteReference } = useDeleteReference();
+export function DlgDeleteReplica() {
+  const { oss, target, layout, beforeDelete } = useDialogsStore(state => state.props as DlgDeleteReplicaProps);
+  const { deleteReplica: deleteReference } = useDeleteReplica();
 
-  const { handleSubmit, control } = useForm<IDeleteReferenceDTO>({
-    resolver: zodResolver(schemaDeleteReference),
+  const { handleSubmit, control } = useForm<IDeleteReplicaDTO>({
+    resolver: zodResolver(schemaDeleteReplica),
     defaultValues: {
       target: target.id,
       layout: layout,
@@ -35,14 +35,14 @@ export function DlgDeleteReference() {
   });
   const keep_connections = useWatch({ control, name: 'keep_connections' });
 
-  function onSubmit(data: IDeleteReferenceDTO) {
+  function onSubmit(data: IDeleteReplicaDTO) {
     return deleteReference({ itemID: oss.id, data: data, beforeUpdate: beforeDelete });
   }
 
   return (
     <ModalForm
       overflowVisible
-      header='Удаление операции'
+      header='Удаление реплики'
       submitText='Подтвердить удаление'
       onSubmit={event => void handleSubmit(onSubmit)(event)}
       className='w-140 pb-3 px-6 cc-column select-none'
@@ -55,7 +55,7 @@ export function DlgDeleteReference() {
         render={({ field }) => (
           <Checkbox
             label='Переадресовать связи на оригинал'
-            titleHtml='Связи аргументов будут перенаправлены на оригинал ссылки'
+            titleHtml='Связи аргументов будут перенаправлены на оригинал реплики'
             value={field.value}
             onChange={field.onChange}
             disabled={target.result === null}

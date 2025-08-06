@@ -146,7 +146,7 @@ export function HelpOssGraph() {
               <IconExecute className='inline-icon icon-green' /> Активировать операцию
             </li>
             <li>
-              <IconReference className='inline-icon icon-green' /> Создать ссылку
+              <IconReference className='inline-icon icon-green' /> Создать реплику
             </li>
             <li>
               <IconClone className='inline-icon icon-green' /> Клонировать КС и загрузить
@@ -155,7 +155,7 @@ export function HelpOssGraph() {
               <IconRSForm className='inline-icon' /> Открыть привязанную КС
             </li>
             <li>
-              <IconReference className='inline-icon' /> Выделить отсылаемую операцию
+              <IconReference className='inline-icon' /> Выделить оригинал реплики
             </li>
           </ul>
         </div>

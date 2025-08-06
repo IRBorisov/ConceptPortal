@@ -20,7 +20,7 @@ from ..models import (
     Layout,
     Operation,
     OperationType,
-    Reference,
+    Replica,
     Substitution
 )
 from .basics import NodeSerializer, PositionSerializer, SubstitutionExSerializer
@@ -54,12 +54,12 @@ class ArgumentSerializer(StrictModelSerializer):
         fields = ('operation', 'argument')
 
 
-class ReferenceSerializer(StrictModelSerializer):
-    ''' Serializer: Reference data. '''
+class ReplicaSerializer(StrictModelSerializer):
+    ''' Serializer: Replica data. '''
     class Meta:
         ''' serializer metadata. '''
-        model = Reference
-        fields = ('reference', 'target')
+        model = Replica
+        fields = ('replica', 'original')
 
 
 class CreateBlockSerializer(StrictSerializer):
@@ -251,15 +251,15 @@ class CloneSchemaSerializer(StrictSerializer):
             raise serializers.ValidationError({
                 'source_operation': msg.operationResultEmpty(source_operation.alias)
             })
-        if source_operation.operation_type == OperationType.REFERENCE:
+        if source_operation.operation_type == OperationType.REPLICA:
             raise serializers.ValidationError({
-                'source_operation': msg.referenceTypeNotAllowed()
+                'source_operation': msg.replicaNotAllowed()
             })
         return attrs
 
 
-class CreateReferenceSerializer(StrictSerializer):
-    ''' Serializer: Create reference operation. '''
+class CreateReplicaSerializer(StrictSerializer):
+    ''' Serializer: Create Replica operation. '''
     layout = serializers.ListField(child=NodeSerializer())
     target = PKField(many=False, queryset=Operation.objects.all())
     position = PositionSerializer()
@@ -269,11 +269,11 @@ class CreateReferenceSerializer(StrictSerializer):
         target = cast(Operation, attrs['target'])
         if target.oss_id != oss.pk:
             raise serializers.ValidationError({
-                'target_operation': msg.operationNotInOSS()
+                'target': msg.operationNotInOSS()
             })
-        if target.operation_type == OperationType.REFERENCE:
+        if target.operation_type == OperationType.REPLICA:
             raise serializers.ValidationError({
-                'target_operation': msg.referenceTypeNotAllowed()
+                'target': msg.replicaNotAllowed()
             })
         return attrs
 
@@ -432,7 +432,7 @@ class UpdateOperationSerializer(StrictSerializer):
 
 
 class DeleteOperationSerializer(StrictSerializer):
-    ''' Serializer: Delete non-reference operation. '''
+    ''' Serializer: Delete non-replica operation. '''
     layout = serializers.ListField(
         child=NodeSerializer()
     )
@@ -447,15 +447,15 @@ class DeleteOperationSerializer(StrictSerializer):
             raise serializers.ValidationError({
                 'target': msg.operationNotInOSS()
             })
-        if operation.operation_type == OperationType.REFERENCE:
+        if operation.operation_type == OperationType.REPLICA:
             raise serializers.ValidationError({
-                'target': msg.referenceTypeNotAllowed()
+                'target': msg.replicaNotAllowed()
             })
         return attrs
 
 
-class DeleteReferenceSerializer(StrictSerializer):
-    ''' Serializer: Delete reference operation. '''
+class DeleteReplicaSerializer(StrictSerializer):
+    ''' Serializer: Delete Replica operation. '''
     layout = serializers.ListField(
         child=NodeSerializer()
     )
@@ -470,9 +470,9 @@ class DeleteReferenceSerializer(StrictSerializer):
             raise serializers.ValidationError({
                 'target': msg.operationNotInOSS()
             })
-        if operation.operation_type != OperationType.REFERENCE:
+        if operation.operation_type != OperationType.REPLICA:
             raise serializers.ValidationError({
-                'target': msg.referenceTypeRequired()
+                'target': msg.replicaRequired()
             })
         return attrs
 
@@ -535,8 +535,8 @@ class OperationSchemaSerializer(StrictModelSerializer):
     substitutions = serializers.ListField(
         child=SubstitutionExSerializer()
     )
-    references = serializers.ListField(
-        child=ReferenceSerializer()
+    replicas = serializers.ListField(
+        child=ReplicaSerializer()
     )
     layout = serializers.ListField(
         child=NodeSerializer()
@@ -555,7 +555,7 @@ class OperationSchemaSerializer(StrictModelSerializer):
         result['blocks'] = []
         result['arguments'] = []
         result['substitutions'] = []
-        result['references'] = []
+        result['replicas'] = []
         for operation in Operation.objects.filter(oss=instance).order_by('pk'):
             operation_data = OperationSerializer(operation).data
             operation_result = operation.result
@@ -578,8 +578,8 @@ class OperationSchemaSerializer(StrictModelSerializer):
             substitution_term=F('substitution__term_resolved'),
         ).order_by('pk'):
             result['substitutions'].append(substitution)
-        for reference in Reference.objects.filter(target__oss=instance).order_by('pk'):
-            result['references'].append(ReferenceSerializer(reference).data)
+        for replication in Replica.objects.filter(original__oss=instance).order_by('pk'):
+            result['replicas'].append(ReplicaSerializer(replication).data)
 
         return result
 

@@ -86,12 +86,12 @@ def operationInputAlreadyConnected():
     return 'Схема уже подключена к другой операции'
 
 
-def referenceTypeNotAllowed():
-    return 'Ссылки не поддерживаются'
+def replicaNotAllowed():
+    return 'Реплики не поддерживаются'
 
 
-def referenceTypeRequired():
-    return 'Операция должна быть ссылкой'
+def replicaRequired():
+    return 'Операция должна быть репликацией'
 
 
 def operationNotSynthesis(title: str):

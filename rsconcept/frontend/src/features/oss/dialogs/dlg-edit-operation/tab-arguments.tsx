@@ -15,9 +15,9 @@ export function TabArguments() {
   const { manager, target } = useDialogsStore(state => state.props as DlgEditOperationProps);
   const args = useWatch({ control, name: 'arguments' });
 
-  const references = manager.oss.references
-    .filter(item => args.includes(item.target) || item.target === target.id)
-    .map(item => item.reference);
+  const references = manager.oss.replicas
+    .filter(item => args.includes(item.original) || item.original === target.id)
+    .map(item => item.replica);
   const potentialCycle = [target.id, ...references, ...manager.oss.graph.expandAllOutputs([target.id])];
   const filtered = manager.oss.operations.filter(item => !potentialCycle.includes(item.id));
 

@@ -24,17 +24,17 @@ class OperationSchemaCached:
         self.cache = OssCache(model.pk)
         self.engine = PropagationEngine(self.cache)
 
-    def delete_reference(self, target: int, keep_connections: bool = False, keep_constituents: bool = False):
-        ''' Delete Reference Operation. '''
+    def delete_replica(self, target: int, keep_connections: bool = False, keep_constituents: bool = False):
+        ''' Delete Replica Operation. '''
         if not keep_connections:
             self.delete_operation(target, keep_constituents)
             return
         self.cache.ensure_loaded_subs()
         operation = self.cache.operation_by_id[target]
-        reference_target = self.cache.reference_target.get(target)
-        if reference_target:
+        original = self.cache.replica_original.get(target)
+        if original:
             for arg in operation.getQ_as_argument():
-                arg.argument_id = reference_target
+                arg.argument_id = original
                 arg.save()
         self.cache.remove_operation(target)
         operation.delete()

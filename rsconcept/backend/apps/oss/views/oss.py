@@ -65,11 +65,11 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
             'create_schema',
             'clone_schema',
             'import_schema',
-            'create_reference',
+            'create_replica',
             'create_synthesis',
             'update_operation',
             'delete_operation',
-            'delete_reference',
+            'delete_replica',
             'create_input',
             'set_input',
             'execute_operation',
@@ -465,9 +465,9 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
 
 
     @extend_schema(
-        summary='create reference for operation',
+        summary='create replica for operation',
         tags=['OSS'],
-        request=s.CreateReferenceSerializer(),
+        request=s.CreateReplicaSerializer(),
         responses={
             c.HTTP_201_CREATED: s.OperationCreatedResponse,
             c.HTTP_400_BAD_REQUEST: None,
@@ -475,11 +475,11 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
             c.HTTP_404_NOT_FOUND: None
         }
     )
-    @action(detail=True, methods=['post'], url_path='create-reference')
-    def create_reference(self, request: Request, pk) -> HttpResponse:
-        ''' Clone schema. '''
+    @action(detail=True, methods=['post'], url_path='create-replica')
+    def create_replica(self, request: Request, pk) -> HttpResponse:
+        ''' Replicate schema. '''
         item = self._get_item()
-        serializer = s.CreateReferenceSerializer(
+        serializer = s.CreateReplicaSerializer(
             data=request.data,
             context={'oss': item}
         )
@@ -490,7 +490,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         with transaction.atomic():
             oss = m.OperationSchema(item)
             target = cast(m.Operation, serializer.validated_data['target'])
-            new_operation = oss.create_reference(target)
+            new_operation = oss.create_replica(target)
             layout.append({
                 'nodeID': 'o' + str(new_operation.pk),
                 'x': position['x'],
@@ -657,9 +657,9 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         )
 
     @extend_schema(
-        summary='delete reference',
+        summary='delete replica',
         tags=['OSS'],
-        request=s.DeleteReferenceSerializer(),
+        request=s.DeleteReplicaSerializer(),
         responses={
             c.HTTP_200_OK: s.OperationSchemaSerializer,
             c.HTTP_400_BAD_REQUEST: None,
@@ -667,11 +667,11 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
             c.HTTP_404_NOT_FOUND: None
         }
     )
-    @action(detail=True, methods=['patch'], url_path='delete-reference')
-    def delete_reference(self, request: Request, pk) -> HttpResponse:
-        ''' Endpoint: Delete Reference Operation. '''
+    @action(detail=True, methods=['patch'], url_path='delete-replica')
+    def delete_replica(self, request: Request, pk) -> HttpResponse:
+        ''' Endpoint: Delete Replica Operation. '''
         item = self._get_item()
-        serializer = s.DeleteReferenceSerializer(
+        serializer = s.DeleteReplicaSerializer(
             data=request.data,
             context={'oss': item}
         )
@@ -685,7 +685,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         with transaction.atomic():
             oss = m.OperationSchemaCached(item)
             m.Layout.update_data(pk, layout)
-            oss.delete_reference(operation.pk, keep_connections, keep_constituents)
+            oss.delete_replica(operation.pk, keep_connections, keep_constituents)
             item.save(update_fields=['time_update'])
 
         return Response(
