@@ -250,7 +250,6 @@ export class LayoutManager {
     const borderY = child.y + child.height + MIN_DISTANCE;
     parent.width = Math.max(parent.width, borderX - parent.x);
     parent.height = Math.max(parent.height, borderY - parent.y);
-    // TODO: cascade update
   }
 
   private calculatePositionForFreeOperation(initial: Position2D): Position2D {

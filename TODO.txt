@@ -1,33 +1,29 @@
-!! This is not complete list of TODOs !!
-For more specific TODOs see comments in code
-
 [Bugs - PENDING]
 - 
 
 [Functionality - PENDING]
+- Export PDF (Items list, Graph)
+- Save react-flow to vector image
 - Landing page
 - Design first user experience
+- Video guides
 - Demo sandbox for anonymous users
-- Save react-flow to vector image
+
+- Implement rslang and rsmodel functionality in the frontend
+- Allow manual setup for typification and value class
 
 User profile: 
 - Settings server persistency
-- Profile pictures
+- Profile pictures (avatars)
 - Custom LibraryItem lists
 - Custom user filters and sharing filters
-- Personal prompt templates
 
 - Static analyzer for RSForm as a whole: check term duplication and empty conventions
-- OSS clone and versioning
-- Clone with saving info connection
-- Semantic diff for library items
 
 - Focus on codemirror editor when label is clicked (need React 19 ref for clean code solution)
 - Draggable rows in constituents table
 
 - Search functionality for Help Manuals - use google search integration filtered by site?
-- Export PDF (Items list, Graph)
-- ARIA (accessibility considerations) - for now machine reading not supported
 - Internationalization - at least english version. Consider react.intl
 - Sitemap for better SEO and crawler optimization
 
