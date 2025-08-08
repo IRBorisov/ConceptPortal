@@ -21,10 +21,6 @@ export const useDeleteBlock = () => {
       }
       updateTimestamp(data.id, data.time_update);
       client.setQueryData(ossApi.getOssQueryOptions({ itemID: data.id }).queryKey, data);
-      await Promise.allSettled([
-        client.invalidateQueries({ queryKey: KEYS.composite.libraryList }),
-        client.invalidateQueries({ queryKey: [KEYS.rsform] })
-      ]);
     },
     onError: () => client.invalidateQueries()
   });

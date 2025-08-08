@@ -1,7 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { useUpdateTimestamp } from '@/features/library/backend/use-update-timestamp';
-
 import { KEYS } from '@/backend/configuration';
 import { PARAMETER } from '@/utils/constants';
 
@@ -10,7 +8,6 @@ import { type IDeleteOperationDTO } from './types';
 
 export const useDeleteOperation = () => {
   const client = useQueryClient();
-  const { updateTimestamp } = useUpdateTimestamp();
   const mutation = useMutation({
     mutationKey: [KEYS.global_mutation, ossApi.baseKey, 'delete-operation'],
     mutationFn: ossApi.deleteOperation,
@@ -19,7 +16,6 @@ export const useDeleteOperation = () => {
         variables.beforeUpdate();
         await new Promise(resolve => setTimeout(resolve, PARAMETER.minimalTimeout));
       }
-      updateTimestamp(data.id, data.time_update);
       client.setQueryData(ossApi.getOssQueryOptions({ itemID: data.id }).queryKey, data);
       await Promise.allSettled([
         client.invalidateQueries({ queryKey: KEYS.composite.libraryList }),

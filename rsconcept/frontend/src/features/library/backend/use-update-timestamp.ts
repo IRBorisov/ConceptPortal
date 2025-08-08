@@ -9,11 +9,11 @@ export function useUpdateTimestamp() {
   const client = useQueryClient();
   const libraryKey = useLibraryListKey();
   return {
-    updateTimestamp: (target: number, timestamp?: string) =>
+    updateTimestamp: (target: number, timestamp: string) =>
       client.setQueryData(
         libraryKey, //
         (prev: RO<ILibraryItem[]> | undefined) =>
-          prev?.map(item => (item.id === target ? { ...item, time_update: timestamp ?? Date() } : item))
+          prev?.map(item => (item.id === target ? { ...item, time_update: timestamp } : item))
       )
   };
 }

@@ -16,13 +16,10 @@ export const useCreateConstituenta = () => {
     onSuccess: async data => {
       updateTimestamp(data.schema.id, data.schema.time_update);
       client.setQueryData(rsformsApi.getRSFormQueryOptions({ itemID: data.schema.id }).queryKey, data.schema);
-      await Promise.allSettled([
-        client.invalidateQueries({ queryKey: [KEYS.oss] }),
-        client.invalidateQueries({
-          queryKey: [rsformsApi.baseKey],
-          predicate: query => query.queryKey.length > 2 && query.queryKey[2] !== String(data.schema.id)
-        })
-      ]);
+      await client.invalidateQueries({
+        queryKey: [rsformsApi.baseKey],
+        predicate: query => query.queryKey.length > 2 && query.queryKey[2] !== String(data.schema.id)
+      });
     },
     onError: () => client.invalidateQueries()
   });

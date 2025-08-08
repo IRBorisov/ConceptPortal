@@ -13,13 +13,9 @@ export const useMoveItems = () => {
   const mutation = useMutation({
     mutationKey: [KEYS.global_mutation, ossApi.baseKey, 'move-items'],
     mutationFn: ossApi.moveItems,
-    onSuccess: async data => {
+    onSuccess: data => {
       updateTimestamp(data.id, data.time_update);
       client.setQueryData(ossApi.getOssQueryOptions({ itemID: data.id }).queryKey, data);
-      await Promise.allSettled([
-        client.invalidateQueries({ queryKey: KEYS.composite.libraryList }),
-        client.invalidateQueries({ queryKey: [KEYS.rsform] })
-      ]);
     },
     onError: () => client.invalidateQueries()
   });
