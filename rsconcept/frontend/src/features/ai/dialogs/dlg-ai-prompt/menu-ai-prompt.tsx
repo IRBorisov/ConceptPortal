@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { urls, useConceptNavigation } from '@/app';
 
 import { MiniButton } from '@/components/control';
-import { IconClone, IconEdit2 } from '@/components/icons';
+import { IconClone, IconEdit } from '@/components/icons';
 import { useDialogsStore } from '@/stores/dialogs';
 import { infoMsg } from '@/utils/labels';
 
@@ -36,7 +36,7 @@ export function MenuAIPrompt({ promptID, generatedPrompt }: MenuAIPromptProps) {
         title='Редактировать шаблон'
         noHover
         noPadding
-        icon={<IconEdit2 size='1.25rem' />}
+        icon={<IconEdit size='1.25rem' />}
         className='h-full pl-2 text-muted-foreground hover:text-primary cc-animate-color bg-transparent'
         onClick={navigatePrompt}
       />

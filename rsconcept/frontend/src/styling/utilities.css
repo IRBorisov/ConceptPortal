@@ -132,6 +132,18 @@
   scroll-snap-type: y mandatory;
 }
 
+@utility cc-scroll-stable {
+  scrollbar-gutter: stable;
+}
+
+@utility cc-scroll-left {
+  direction: rtl;
+
+  & > * {
+    direction: ltr;
+  }
+}
+
 @utility cc-shadow-border {
   box-shadow: 0 1px 2px 0 var(--color-border);
 }

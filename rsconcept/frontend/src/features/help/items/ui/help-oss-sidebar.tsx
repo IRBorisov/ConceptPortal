@@ -1,7 +1,7 @@
 import {
   IconClone,
   IconDestroy,
-  IconEdit2,
+  IconEdit,
   IconGenerateNames,
   IconLeftOpen,
   IconMoveDown,
@@ -40,7 +40,7 @@ export function HelpOssSidebar() {
           <IconGenerateNames className='inline-icon' /> перенумеровать
         </li>
         <li>
-          <IconEdit2 className='inline-icon' /> редактировать конституенты
+          <IconEdit className='inline-icon' /> редактировать конституенты
         </li>
         <li>
           <IconNewItem className='inline-icon icon-green' /> новая конституента

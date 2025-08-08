@@ -18,7 +18,7 @@ import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import {
   IconClone,
   IconDestroy,
-  IconEdit2,
+  IconEdit,
   IconGenerateNames,
   IconMoveDown,
   IconMoveUp,
@@ -239,7 +239,7 @@ export function ToolbarSchema({
       </div>
       <MiniButton
         title='Редактировать конституенту'
-        icon={<IconEdit2 size='1rem' className='icon-primary' />}
+        icon={<IconEdit size='1rem' className='icon-primary' />}
         onClick={onEditActive}
         disabled={!isMutable || isProcessing || !activeCst}
       />

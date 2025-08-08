@@ -1,7 +1,7 @@
 'use client';
 
 import { DropdownButton } from '@/components/dropdown';
-import { IconDestroy, IconEdit2 } from '@/components/icons';
+import { IconDestroy, IconEdit } from '@/components/icons';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { useDeleteBlock } from '../../../../backend/use-delete-block';
@@ -45,7 +45,7 @@ export function MenuBlock({ block, onHide }: MenuBlockProps) {
       <DropdownButton
         text='Редактировать'
         title='Редактировать блок'
-        icon={<IconEdit2 size='1rem' className='icon-primary' />}
+        icon={<IconEdit size='1rem' className='icon-primary' />}
         onClick={handleEditBlock}
         disabled={!isMutable || isProcessing}
       />

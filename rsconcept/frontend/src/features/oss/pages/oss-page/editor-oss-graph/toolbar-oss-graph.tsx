@@ -15,7 +15,7 @@ import {
   IconConceptBlock,
   IconDestroy,
   IconDownload,
-  IconEdit2,
+  IconEdit,
   IconFilter,
   IconFitImage,
   IconNewItem,
@@ -156,7 +156,7 @@ export function ToolbarOssGraph({
             aria-label='Редактировать выбранную'
             titleHtml={prepareTooltip('Редактировать выбранную', isIOS() ? '' : 'Правый клик')}
             hideTitle={isContextMenuOpen || menu.isOpen}
-            icon={<IconEdit2 size='1.25rem' className='icon-primary' />}
+            icon={<IconEdit size='1.25rem' className='icon-primary' />}
             onClick={handleEditItem}
             disabled={selectedItems.length !== 1 || isProcessing}
           />

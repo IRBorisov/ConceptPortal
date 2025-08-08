@@ -86,6 +86,7 @@ export function ViewSideLocation({ isVisible, onRenameLocation }: ViewSideLocati
         </div>
       </div>
       <SelectLocation
+        className='cc-scroll-left cc-scroll-stable'
         value={location}
         prefix={prefixes.folders_list}
         onClick={handleClickFolder}

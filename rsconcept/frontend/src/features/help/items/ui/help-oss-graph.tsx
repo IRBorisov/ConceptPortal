@@ -8,7 +8,7 @@ import {
   IconConsolidation,
   IconCoordinates,
   IconDestroy,
-  IconEdit2,
+  IconEdit,
   IconExecute,
   IconFitImage,
   IconGrid,
@@ -83,7 +83,7 @@ export function HelpOssGraph() {
               <IconNewItem className='inline-icon icon-green' /> Новый узел
             </li>
             <li>
-              <IconEdit2 className='inline-icon' /> Редактирование узла
+              <IconEdit className='inline-icon' /> Редактирование узла
             </li>
             <li>
               <IconDestroy className='inline-icon icon-red' /> <kbd>Delete</kbd> – удалить выбранный

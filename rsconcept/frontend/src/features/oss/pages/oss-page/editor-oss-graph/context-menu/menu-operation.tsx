@@ -12,7 +12,7 @@ import {
   IconClone,
   IconConnect,
   IconDestroy,
-  IconEdit2,
+  IconEdit,
   IconExecute,
   IconNewRSForm,
   IconReference,
@@ -223,7 +223,7 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
         <DropdownButton
           text='Редактировать'
           title='Редактировать операцию'
-          icon={<IconEdit2 size='1rem' className='icon-primary' />}
+          icon={<IconEdit size='1rem' className='icon-primary' />}
           onClick={handleEditOperation}
           disabled={!isMutable || isProcessing}
         />

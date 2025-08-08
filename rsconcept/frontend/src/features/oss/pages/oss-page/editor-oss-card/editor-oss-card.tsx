@@ -58,14 +58,14 @@ export function EditorOssCard() {
         isNarrow={isNarrow}
       />
 
-      <div className='cc-column px-3 mx-0 md:mx-auto'>
+      <div className='cc-column mx-0 md:mx-auto'>
         <FormOSS key={schema.id} />
         <EditorLibraryItem schema={schema} isAttachedToOSS={false} />
       </div>
 
       <OssStats
         className={clsx(
-          'w-80 md:w-56 mt-3 md:mt-8 mx-auto md:ml-8 md:mr-0',
+          'w-80 md:w-56 mt-3 md:mt-8 mx-auto md:ml-5 md:mr-0',
           'cc-animate-sidebar',
           showOSSStats ? 'max-w-full' : 'opacity-0 max-w-0'
         )}

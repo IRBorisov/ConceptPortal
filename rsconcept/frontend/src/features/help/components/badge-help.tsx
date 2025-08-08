@@ -63,11 +63,19 @@ export function BadgeHelp({
         className={cn('max-w-120', contentClass)}
         {...restProps}
       >
-        <Suspense fallback={<Loader />}>
-          <div className='absolute right-1 text-sm top-2 bg-' onClick={event => event.stopPropagation()}>
-            <TextURL text='Справка...' href={`/manuals?topic=${topic}`} />
+        <Suspense
+          fallback={
+            <div className={cn('w-full min-w-80', contentClass)}>
+              <Loader />
+            </div>
+          }
+        >
+          <div className='cc-fade-in'>
+            <div className='absolute right-2 text-sm top-1' onClick={event => event.stopPropagation()}>
+              <TextURL text='Справка' href={`/manuals?topic=${topic}`} />
+            </div>
+            <TopicPage topic={topic} />
           </div>
-          <TopicPage topic={topic} />
         </Suspense>
       </Tooltip>
     </div>
