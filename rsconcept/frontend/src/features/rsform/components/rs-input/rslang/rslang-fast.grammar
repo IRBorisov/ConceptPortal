@@ -42,7 +42,7 @@
   debool            { "debool" }
   red               { "red" }
 
-  Global            { $[XCSDAT]$[0-9]+ }
+  Global            { $[XCSDATN]$[0-9]+ }
   Function          { "F"$[0-9]+ }
   Predicate         { "P"$[0-9]+ }
   Radical           { "R"$[0-9]+ }

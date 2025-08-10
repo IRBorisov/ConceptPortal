@@ -10,3 +10,11 @@ class ConstituentaAdmin(admin.ModelAdmin):
     ordering = ['schema', 'order']
     list_display = ['schema', 'order', 'alias', 'term_resolved', 'definition_resolved', 'crucial']
     search_fields = ['term_resolved', 'definition_resolved']
+
+
+@admin.register(models.Association)
+class AssociationAdmin(admin.ModelAdmin):
+    ''' Admin model: Association. '''
+    ordering = ['container__schema', 'container', 'associate']
+    list_display = ['container__schema__alias', 'container__alias', 'associate__alias']
+    search_fields = ['container', 'associate']

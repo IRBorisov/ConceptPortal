@@ -299,7 +299,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
 
         with transaction.atomic():
             added, deleted = m.Editor.set_and_return_diff(item.pk, editors)
-            if len(added) >= 0 or len(deleted) >= 0:
+            if added or deleted:
                 owned_schemas = OperationSchema.owned_schemasQ(item).only('pk')
                 if owned_schemas.exists():
                     m.Editor.objects.filter(

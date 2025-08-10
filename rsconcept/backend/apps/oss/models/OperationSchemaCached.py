@@ -45,7 +45,7 @@ class OperationSchemaCached:
         self.cache.ensure_loaded_subs()
         operation = self.cache.operation_by_id[target]
         children = self.cache.extend_graph.outputs[target]
-        if operation.result is not None and len(children) > 0:
+        if operation.result is not None and children:
             ids = list(Constituenta.objects.filter(schema=operation.result).values_list('pk', flat=True))
             if not keep_constituents:
                 self.engine.on_delete_inherited(operation.pk, ids)

@@ -133,7 +133,7 @@ class ReferenceSerializer(StrictSerializer):
 
 
 class InheritanceDataSerializer(StrictSerializer):
-    ''' Serializer: inheritance data. '''
+    ''' Serializer: Inheritance data. '''
     child = serializers.IntegerField()
     child_source = serializers.IntegerField()
     parent = serializers.IntegerField()  # type: ignore

@@ -47,7 +47,7 @@ class BlockSerializer(StrictModelSerializer):
 
 
 class ArgumentSerializer(StrictModelSerializer):
-    ''' Serializer: Operation data. '''
+    ''' Serializer: Operation arguments. '''
     class Meta:
         ''' serializer metadata. '''
         model = Argument
@@ -55,7 +55,7 @@ class ArgumentSerializer(StrictModelSerializer):
 
 
 class ReplicaSerializer(StrictModelSerializer):
-    ''' Serializer: Replica data. '''
+    ''' Serializer: Replica relation. '''
     class Meta:
         ''' serializer metadata. '''
         model = Replica

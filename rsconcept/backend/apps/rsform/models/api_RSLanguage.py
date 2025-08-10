@@ -37,6 +37,7 @@ def get_type_prefix(cst_type: str) -> str:
         case CstType.FUNCTION: return 'F'
         case CstType.PREDICATE: return 'P'
         case CstType.THEOREM: return 'T'
+        case CstType.NOMINAL: return 'N'
     return 'X'
 
 

@@ -17,9 +17,17 @@ from apps.oss.models import Inheritance
 from shared import messages as msg
 from shared.serializers import StrictModelSerializer, StrictSerializer
 
-from ..models import Constituenta, CstType, RSForm
+from ..models import Association, Constituenta, CstType, RSForm
 from .basics import CstParseSerializer, InheritanceDataSerializer
 from .io_pyconcept import PyConceptAdapter
+
+
+class AssociationSerializer(StrictModelSerializer):
+    ''' Serializer: Association relation. '''
+    class Meta:
+        ''' serializer metadata. '''
+        model = Association
+        fields = ('argument', 'operation')
 
 
 class CstBaseSerializer(StrictModelSerializer):
@@ -134,6 +142,9 @@ class RSFormSerializer(StrictModelSerializer):
     inheritance = serializers.ListField(
         child=InheritanceDataSerializer()
     )
+    association = serializers.ListField(
+        child=AssociationSerializer()
+    )
     oss = serializers.ListField(
         child=LibraryItemReferenceSerializer()
     )
@@ -164,12 +175,18 @@ class RSFormSerializer(StrictModelSerializer):
         result['items'] = []
         result['oss'] = []
         result['inheritance'] = []
+        result['association'] = []
         for cst in Constituenta.objects.filter(schema=instance).defer('order').order_by('order'):
             result['items'].append(CstInfoSerializer(cst).data)
         for oss in LibraryItem.objects.filter(operations__result=instance).only('alias'):
             result['oss'].append({
                 'id': oss.pk,
                 'alias': oss.alias
+            })
+        for assoc in Association.objects.filter(container__schema=instance).only('container_id', 'associate_id'):
+            result['association'].append({
+                'container': assoc.container_id,
+                'associate': assoc.associate_id
             })
         return result
 
@@ -200,37 +217,38 @@ class RSFormSerializer(StrictModelSerializer):
         instance = cast(LibraryItem, self.instance)
         schema = RSForm(instance)
         items: list[dict] = data['items']
-        ids: list[int] = [item['id'] for item in items]
-        processed: list[int] = []
+        stored_ids: list[int] = [item['id'] for item in items]
+        id_map: dict[int, int] = {}
 
-        for cst in schema.constituentsQ():
-            if not cst.pk in ids:
-                cst.delete()
+        for existing_cst in schema.constituentsQ():
+            if not existing_cst.pk in stored_ids:
+                existing_cst.delete()
             else:
-                cst_data = next(x for x in items if x['id'] == cst.pk)
+                cst_data = next(x for x in items if x['id'] == existing_cst.pk)
                 cst_data['schema'] = instance.pk
-                new_cst = CstBaseSerializer(data=cst_data)
-                new_cst.is_valid(raise_exception=True)
-                new_cst.validated_data['order'] = ids.index(cst.pk)
-                new_cst.update(
-                    instance=cst,
-                    validated_data=new_cst.validated_data
+                cst_serializer = CstBaseSerializer(data=cst_data)
+                cst_serializer.is_valid(raise_exception=True)
+                cst_serializer.validated_data['order'] = stored_ids.index(existing_cst.pk)
+                cst_serializer.update(
+                    instance=existing_cst,
+                    validated_data=cst_serializer.validated_data
                 )
-                processed.append(cst.pk)
+                id_map[cst_data['id']] = existing_cst.pk
 
         for cst_data in items:
-            if cst_data['id'] not in processed:
-                cst = schema.insert_last(cst_data['alias'])
+            if cst_data['id'] not in id_map:
                 old_id = cst_data['id']
-                cst_data['id'] = cst.pk
+                inserted_cst = schema.insert_last(cst_data['alias'])
+                cst_data['id'] = inserted_cst.pk
                 cst_data['schema'] = instance.pk
-                new_cst = CstBaseSerializer(data=cst_data)
-                new_cst.is_valid(raise_exception=True)
-                new_cst.validated_data['order'] = ids.index(old_id)
-                new_cst.update(
-                    instance=cst,
-                    validated_data=new_cst.validated_data
+                cst_serializer = CstBaseSerializer(data=cst_data)
+                cst_serializer.is_valid(raise_exception=True)
+                cst_serializer.validated_data['order'] = stored_ids.index(old_id)
+                cst_serializer.update(
+                    instance=inserted_cst,
+                    validated_data=cst_serializer.validated_data
                 )
+                id_map[old_id] = inserted_cst.pk
 
         loaded_item = LibraryItemBaseNonStrictSerializer(data=data)
         loaded_item.is_valid(raise_exception=True)
@@ -238,6 +256,23 @@ class RSFormSerializer(StrictModelSerializer):
             instance=cast(LibraryItem, self.instance),
             validated_data=loaded_item.validated_data
         )
+
+        Association.objects.filter(container__schema=instance).delete()
+        associations_to_create: list[Association] = []
+        for assoc in data.get('association', []):
+            old_container_id = assoc['container']
+            old_associate_id = assoc['associate']
+            container_id = id_map.get(old_container_id)
+            associate_id = id_map.get(old_associate_id)
+            if container_id and associate_id:
+                associations_to_create.append(
+                    Association(
+                        container_id=container_id,
+                        associate_id=associate_id
+                    )
+                )
+        if associations_to_create:
+            Association.objects.bulk_create(associations_to_create)
 
 
 class RSFormParseSerializer(StrictModelSerializer):

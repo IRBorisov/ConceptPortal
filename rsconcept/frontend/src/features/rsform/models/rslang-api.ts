@@ -16,7 +16,7 @@ import { type AliasMapping, type IArgumentValue, RSErrorClass, type SyntaxTree }
 
 // cspell:disable
 const LOCALS_REGEXP = /[_a-zα-ω][a-zα-ω]*\d*/g;
-const GLOBALS_REGEXP = /[XCSADFPT]\d+/g;
+const GLOBALS_REGEXP = /[XCSADFPTN]\d+/g;
 const COMPLEX_SYMBOLS_REGEXP = /[∀∃×ℬ;|:]/g;
 const TYPIFICATION_SET = /^ℬ+\([ℬ\(X\d+\)×]*\)$/g;
 // cspell:enable

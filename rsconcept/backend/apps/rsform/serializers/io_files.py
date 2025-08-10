@@ -6,11 +6,11 @@ from apps.library.models import LibraryItem
 from shared import messages as msg
 from shared.serializers import StrictSerializer
 
-from ..models import Constituenta, RSFormCached
+from ..models import Constituenta, CstType, RSFormCached
 from ..utils import fix_old_references
 
-_CST_TYPE = 'constituenta'
-_TRS_TYPE = 'rsform'
+_ENTITY_CONSTITUENTA = 'constituenta'
+_ENTITY_SCHEMA = 'rsform'
 _TRS_VERSION_MIN = 16
 _TRS_VERSION = 16
 _TRS_HEADER = 'Exteor 4.8.13.1000 - 30/05/2022'
@@ -30,11 +30,11 @@ class RSFormUploadSerializer(StrictSerializer):
 def generate_trs(schema: LibraryItem) -> dict:
     ''' Generate TRS file for RSForm. '''
     items = []
-    for cst in Constituenta.objects.filter(schema=schema).order_by('order'):
+    for cst in Constituenta.objects.filter(schema=schema).exclude(cst_type=CstType.NOMINAL).order_by('order'):
         items.append(
             {
                 'entityUID': cst.pk,
-                'type': _CST_TYPE,
+                'type': _ENTITY_CONSTITUENTA,
                 'cstType': cst.cst_type,
                 'alias': cst.alias,
                 'convention': cst.convention,
@@ -53,7 +53,7 @@ def generate_trs(schema: LibraryItem) -> dict:
             }
         )
     return {
-        'type': _TRS_TYPE,
+        'type': _ENTITY_SCHEMA,
         'title': schema.title,
         'alias': schema.alias,
         'comment': schema.description,
@@ -72,7 +72,7 @@ class RSFormTRSSerializer(serializers.Serializer):
     def load_versioned_data(data: dict) -> dict:
         ''' Load data from version. '''
         result = {
-            'type': _TRS_TYPE,
+            'type': _ENTITY_SCHEMA,
             'title': data['title'],
             'alias': data['alias'],
             'comment': data['description'],
@@ -85,7 +85,7 @@ class RSFormTRSSerializer(serializers.Serializer):
         for cst in data['items']:
             result['items'].append({
                 'entityUID': cst['id'],
-                'type': _CST_TYPE,
+                'type': _ENTITY_CONSTITUENTA,
                 'cstType': cst['cst_type'],
                 'alias': cst['alias'],
                 'convention': cst['convention'],

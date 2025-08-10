@@ -16,9 +16,9 @@ from django.db.models import (
 
 from ..utils import apply_pattern
 
-_RE_GLOBALS = r'[XCSADFPT]\d+'  # cspell:disable-line
+_RE_GLOBALS = r'[XCSADFPTN]\d+'  # cspell:disable-line
 _REF_ENTITY_PATTERN = re.compile(r'@{([^0-9\-].*?)\|.*?}')
-_GLOBAL_ID_PATTERN = re.compile(r'([XCSADFPT][0-9]+)')  # cspell:disable-line
+_GLOBAL_ID_PATTERN = re.compile(r'([XCSADFPTN][0-9]+)')  # cspell:disable-line
 
 
 def extract_globals(expression: str) -> set[str]:
@@ -38,6 +38,7 @@ def replace_entities(expression: str, mapping: dict[str, str]) -> str:
 
 class CstType(TextChoices):
     ''' Type of constituenta. '''
+    NOMINAL = 'nominal'
     BASE = 'basic'
     CONSTANT = 'constant'
     STRUCTURED = 'structure'
