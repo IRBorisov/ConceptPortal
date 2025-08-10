@@ -43,7 +43,7 @@ class TestLibraryViewset(EndpointTester):
             'title': 'Title',
             'alias': 'alias',
         }
-        response = self.executeCreated(data=data)
+        response = self.executeCreated(data)
         self.assertEqual(response.data['owner'], self.user.pk)
         self.assertEqual(response.data['item_type'], LibraryItemType.RSFORM)
         self.assertEqual(response.data['title'], data['title'])
@@ -57,7 +57,7 @@ class TestLibraryViewset(EndpointTester):
             'visible': False,
             'read_only': True
         }
-        response = self.executeCreated(data=data)
+        response = self.executeCreated(data)
         oss = LibraryItem.objects.get(pk=response.data['id'])
         self.assertEqual(oss.owner, self.user)
         self.assertEqual(response.data['owner'], self.user.pk)
@@ -70,25 +70,25 @@ class TestLibraryViewset(EndpointTester):
 
         self.logout()
         data = {'title': 'Title2'}
-        self.executeForbidden(data=data)
+        self.executeForbidden(data)
 
 
     @decl_endpoint('/api/library/{item}', method='patch')
     def test_update(self):
         data = {'title': 'New Title'}
-        self.executeNotFound(data=data, item=self.invalid_item)
-        self.executeForbidden(data=data, item=self.unowned.pk)
+        self.executeNotFound(data, item=self.invalid_item)
+        self.executeForbidden(data, item=self.unowned.pk)
 
         self.toggle_editor(self.unowned, True)
-        response = self.executeOK(data=data, item=self.unowned.pk)
+        response = self.executeOK(data, item=self.unowned.pk)
         self.assertEqual(response.data['title'], data['title'])
 
         self.unowned.access_policy = AccessPolicy.PRIVATE
         self.unowned.save()
-        self.executeForbidden(data=data, item=self.unowned.pk)
+        self.executeForbidden(data, item=self.unowned.pk)
 
         data = {'title': 'New Title'}
-        response = self.executeOK(data=data, item=self.owned.pk)
+        response = self.executeOK(data, item=self.owned.pk)
         self.assertEqual(response.data['title'], data['title'])
         self.assertEqual(response.data['alias'], self.owned.alias)
 
@@ -98,7 +98,7 @@ class TestLibraryViewset(EndpointTester):
             'access_policy': AccessPolicy.PROTECTED,
             'location': LocationHead.LIBRARY
         }
-        response = self.executeOK(data=data, item=self.owned.pk)
+        response = self.executeOK(data, item=self.owned.pk)
         self.assertEqual(response.data['title'], data['title'])
         self.assertEqual(response.data['owner'], self.owned.owner.pk)
         self.assertEqual(response.data['access_policy'], self.owned.access_policy)
@@ -111,22 +111,22 @@ class TestLibraryViewset(EndpointTester):
         time_update = self.owned.time_update
 
         data = {'user': self.user.pk}
-        self.executeNotFound(data=data, item=self.invalid_item)
-        self.executeForbidden(data=data, item=self.unowned.pk)
-        self.executeOK(data=data, item=self.owned.pk)
+        self.executeNotFound(data, item=self.invalid_item)
+        self.executeForbidden(data, item=self.unowned.pk)
+        self.executeOK(data, item=self.owned.pk)
         self.owned.refresh_from_db()
         self.assertEqual(self.owned.owner, self.user)
 
         data = {'user': self.user2.pk}
-        self.executeOK(data=data, item=self.owned.pk)
+        self.executeOK(data, item=self.owned.pk)
         self.owned.refresh_from_db()
         self.assertEqual(self.owned.owner, self.user2)
         self.assertEqual(self.owned.time_update, time_update)
-        self.executeForbidden(data=data, item=self.owned.pk)
+        self.executeForbidden(data, item=self.owned.pk)
 
         self.toggle_admin(True)
         data = {'user': self.user.pk}
-        self.executeOK(data=data, item=self.owned.pk)
+        self.executeOK(data, item=self.owned.pk)
         self.owned.refresh_from_db()
         self.assertEqual(self.owned.owner, self.user)
 
@@ -135,20 +135,20 @@ class TestLibraryViewset(EndpointTester):
         time_update = self.owned.time_update
 
         data = {'access_policy': 'invalid'}
-        self.executeBadData(data=data, item=self.owned.pk)
+        self.executeBadData(data, item=self.owned.pk)
 
         data = {'access_policy': AccessPolicy.PRIVATE}
-        self.executeNotFound(data=data, item=self.invalid_item)
-        self.executeForbidden(data=data, item=self.unowned.pk)
-        self.executeOK(data=data, item=self.owned.pk)
+        self.executeNotFound(data, item=self.invalid_item)
+        self.executeForbidden(data, item=self.unowned.pk)
+        self.executeOK(data, item=self.owned.pk)
         self.owned.refresh_from_db()
         self.assertEqual(self.owned.access_policy, data['access_policy'])
 
         self.toggle_editor(self.unowned, True)
-        self.executeForbidden(data=data, item=self.unowned.pk)
+        self.executeForbidden(data, item=self.unowned.pk)
 
         self.toggle_admin(True)
-        self.executeOK(data=data, item=self.unowned.pk)
+        self.executeOK(data, item=self.unowned.pk)
         self.unowned.refresh_from_db()
         self.assertEqual(self.unowned.access_policy, data['access_policy'])
 
@@ -157,29 +157,29 @@ class TestLibraryViewset(EndpointTester):
         time_update = self.owned.time_update
 
         data = {'location': 'invalid'}
-        self.executeBadData(data=data, item=self.owned.pk)
+        self.executeBadData(data, item=self.owned.pk)
 
         data = {'location': '/U/temp'}
-        self.executeNotFound(data=data, item=self.invalid_item)
-        self.executeForbidden(data=data, item=self.unowned.pk)
-        self.executeOK(data=data, item=self.owned.pk)
+        self.executeNotFound(data, item=self.invalid_item)
+        self.executeForbidden(data, item=self.unowned.pk)
+        self.executeOK(data, item=self.owned.pk)
         self.owned.refresh_from_db()
         self.assertEqual(self.owned.location, data['location'])
 
         data = {'location': LocationHead.LIBRARY}
-        self.executeForbidden(data=data, item=self.owned.pk)
+        self.executeForbidden(data, item=self.owned.pk)
 
         data = {'location': '/U/temp'}
         self.toggle_editor(self.unowned, True)
-        self.executeForbidden(data=data, item=self.unowned.pk)
+        self.executeForbidden(data, item=self.unowned.pk)
 
         self.toggle_admin(True)
         data = {'location': LocationHead.LIBRARY}
-        self.executeOK(data=data, item=self.owned.pk)
+        self.executeOK(data, item=self.owned.pk)
         self.owned.refresh_from_db()
         self.assertEqual(self.owned.location, data['location'])
 
-        self.executeOK(data=data, item=self.unowned.pk)
+        self.executeOK(data, item=self.unowned.pk)
         self.unowned.refresh_from_db()
         self.assertEqual(self.unowned.location, data['location'])
 
@@ -201,12 +201,12 @@ class TestLibraryViewset(EndpointTester):
             'new_location': '/S/temp2'
         }
 
-        self.executeBadData(data={})
-        self.executeBadData(data={'target:': '/S/temp'})
-        self.executeBadData(data={'new_location:': '/S/temp'})
-        self.executeBadData(data={'target:': 'invalid', 'new_location': '/S/temp'})
-        self.executeBadData(data={'target:': '/S/temp', 'new_location': 'invalid'})
-        self.executeOK(data=data)
+        self.executeBadData({})
+        self.executeBadData({'target:': '/S/temp'})
+        self.executeBadData({'new_location:': '/S/temp'})
+        self.executeBadData({'target:': 'invalid', 'new_location': '/S/temp'})
+        self.executeBadData({'target:': '/S/temp', 'new_location': 'invalid'})
+        self.executeOK(data)
         self.owned.refresh_from_db()
         self.unowned.refresh_from_db()
         owned2.refresh_from_db()
@@ -215,7 +215,7 @@ class TestLibraryViewset(EndpointTester):
         self.assertEqual(owned2.location, '/S/temp2/123')
 
         self.toggle_admin(True)
-        self.executeOK(data=data)
+        self.executeOK(data)
         self.unowned.refresh_from_db()
         self.assertEqual(self.unowned.location, '/S/temp2')
 
@@ -232,7 +232,7 @@ class TestLibraryViewset(EndpointTester):
         }
 
         self.toggle_admin(True)
-        self.executeOK(data=data)
+        self.executeOK(data)
         self.owned.refresh_from_db()
         self.unowned.refresh_from_db()
         self.assertEqual(self.owned.location, '/U/temp2')
@@ -243,30 +243,30 @@ class TestLibraryViewset(EndpointTester):
         time_update = self.owned.time_update
 
         data = {'users': [self.invalid_user]}
-        self.executeBadData(data=data, item=self.owned.pk)
+        self.executeBadData(data, item=self.owned.pk)
 
         data = {'users': [self.user.pk]}
-        self.executeNotFound(data=data, item=self.invalid_item)
-        self.executeForbidden(data=data, item=self.unowned.pk)
+        self.executeNotFound(data, item=self.invalid_item)
+        self.executeForbidden(data, item=self.unowned.pk)
 
-        self.executeOK(data=data, item=self.owned.pk)
+        self.executeOK(data, item=self.owned.pk)
         self.owned.refresh_from_db()
         self.assertEqual(self.owned.time_update, time_update)
         self.assertEqual(list(self.owned.getQ_editors()), [self.user])
 
-        self.executeOK(data=data)
+        self.executeOK(data)
         self.assertEqual(list(self.owned.getQ_editors()), [self.user])
 
         data = {'users': [self.user2.pk]}
-        self.executeOK(data=data)
+        self.executeOK(data)
         self.assertEqual(list(self.owned.getQ_editors()), [self.user2])
 
         data = {'users': []}
-        self.executeOK(data=data)
+        self.executeOK(data)
         self.assertEqual(list(self.owned.getQ_editors()), [])
 
         data = {'users': [self.user2.pk, self.user.pk]}
-        self.executeOK(data=data)
+        self.executeOK(data)
         self.assertEqual(set(self.owned.getQ_editors()), set([self.user2, self.user]))
 
 
@@ -345,10 +345,10 @@ class TestLibraryViewset(EndpointTester):
         )
 
         data = {'item_data': {'title': 'Title1337'}, 'items': []}
-        self.executeNotFound(data=data, item=self.invalid_item)
-        self.executeCreated(data=data, item=self.unowned.pk)
+        self.executeNotFound(data, item=self.invalid_item)
+        self.executeCreated(data, item=self.unowned.pk)
 
-        response = self.executeCreated(data=data, item=self.owned.pk)
+        response = self.executeCreated(data, item=self.owned.pk)
         self.assertEqual(response.data['title'], data['item_data']['title'])
         self.assertEqual(len(response.data['items']), 2)
         self.assertEqual(response.data['items'][0]['alias'], x12.alias)
@@ -358,12 +358,12 @@ class TestLibraryViewset(EndpointTester):
         self.assertEqual(response.data['items'][1]['term_resolved'], d2.term_resolved)
 
         data = {'item_data': {'title': 'Title1340'}, 'items': []}
-        response = self.executeCreated(data=data, item=self.owned.pk)
+        response = self.executeCreated(data, item=self.owned.pk)
         self.assertEqual(response.data['title'], data['item_data']['title'])
         self.assertEqual(len(response.data['items']), 2)
 
         data = {'item_data': {'title': 'Title1341'}, 'items': [x12.pk]}
-        response = self.executeCreated(data=data, item=self.owned.pk)
+        response = self.executeCreated(data, item=self.owned.pk)
         self.assertEqual(response.data['title'], data['item_data']['title'])
         self.assertEqual(len(response.data['items']), 1)
         self.assertEqual(response.data['items'][0]['alias'], x12.alias)

@@ -79,7 +79,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     def create_cst(self, request: Request, pk) -> HttpResponse:
         ''' Create Constituenta. '''
         item = self._get_item()
-        serializer = s.CstCreateSerializer(data=request.data)
+        serializer = s.CstCreateSerializer(data=request.data, context={'schema': item})
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
         if 'insert_after' not in data:
@@ -232,10 +232,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     def substitute(self, request: Request, pk) -> HttpResponse:
         ''' Substitute occurrences of constituenta with another one. '''
         item = self._get_item()
-        serializer = s.CstSubstituteSerializer(
-            data=request.data,
-            context={'schema': item}
-        )
+        serializer = s.CstSubstituteSerializer(data=request.data, context={'schema': item})
         serializer.is_valid(raise_exception=True)
         substitutions: list[tuple[m.Constituenta, m.Constituenta]] = []
 
@@ -269,10 +266,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     def delete_multiple_cst(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Delete multiple Constituents. '''
         item = self._get_item()
-        serializer = s.CstListSerializer(
-            data=request.data,
-            context={'schema': item}
-        )
+        serializer = s.CstListSerializer(data=request.data, context={'schema': item})
         serializer.is_valid(raise_exception=True)
         cst_list: list[m.Constituenta] = serializer.validated_data['items']
 
@@ -302,10 +296,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     def move_cst(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Move multiple Constituents. '''
         item = self._get_item()
-        serializer = s.CstMoveSerializer(
-            data=request.data,
-            context={'schema': item}
-        )
+        serializer = s.CstMoveSerializer(data=request.data, context={'schema': item})
         serializer.is_valid(raise_exception=True)
 
         with transaction.atomic():
@@ -397,10 +388,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             )
         data['id'] = item.pk
 
-        serializer = s.RSFormTRSSerializer(
-            data=data,
-            context={'load_meta': load_metadata}
-        )
+        serializer = s.RSFormTRSSerializer(data=data, context={'load_meta': load_metadata})
         serializer.is_valid(raise_exception=True)
         result: m.RSForm = serializer.save()
         return Response(
@@ -558,10 +546,7 @@ class TrsImportView(views.APIView):
             )
         owner = cast(User, self.request.user)
         _prepare_rsform_data(data, request, owner)
-        serializer = s.RSFormTRSSerializer(
-            data=data,
-            context={'load_meta': True}
-        )
+        serializer = s.RSFormTRSSerializer(data=data, context={'load_meta': True})
         serializer.is_valid(raise_exception=True)
         schema: m.RSForm = serializer.save()
         return Response(
@@ -640,10 +625,7 @@ def _prepare_rsform_data(data: dict, request: Request, owner: Union[User, None])
 @api_view(['PATCH'])
 def inline_synthesis(request: Request) -> HttpResponse:
     ''' Endpoint: Inline synthesis. '''
-    serializer = s.InlineSynthesisSerializer(
-        data=request.data,
-        context={'user': request.user}
-    )
+    serializer = s.InlineSynthesisSerializer(data=request.data, context={'user': request.user})
     serializer.is_valid(raise_exception=True)
 
     receiver = m.RSFormCached(serializer.validated_data['receiver'])

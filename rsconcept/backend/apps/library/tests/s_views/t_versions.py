@@ -32,11 +32,11 @@ class TestVersionViews(EndpointTester):
         invalid_id = 1338
         data = {'version': '1.0.0', 'description': 'test'}
 
-        self.executeNotFound(data=data, schema=invalid_id)
-        self.executeForbidden(data=data, schema=self.unowned_id)
-        self.executeBadData(data=invalid_data, schema=self.owned_id)
+        self.executeNotFound(data, schema=invalid_id)
+        self.executeForbidden(data, schema=self.unowned_id)
+        self.executeBadData(invalid_data, schema=self.owned_id)
 
-        response = self.executeCreated(data=data, schema=self.owned_id)
+        response = self.executeCreated(data, schema=self.owned_id)
         self.assertTrue('version' in response.data)
         self.assertTrue('schema' in response.data)
         self.assertTrue(response.data['version'] in [v['id'] for v in response.data['schema']['versions']])
@@ -46,7 +46,7 @@ class TestVersionViews(EndpointTester):
     def test_create_version_filter(self):
         x2 = self.owned.insert_last('X2')
         data = {'version': '1.0.0', 'description': 'test', 'items': [x2.pk]}
-        response = self.executeCreated(data=data, schema=self.owned_id)
+        response = self.executeCreated(data, schema=self.owned_id)
         version = Version.objects.get(pk=response.data['version'])
         items = version.data['items']
         self.assertTrue('version' in response.data)
@@ -102,7 +102,7 @@ class TestVersionViews(EndpointTester):
     @decl_endpoint('/api/versions/{version}', method='get')
     def test_access_version(self):
         data = {'version': '1.0.0', 'description': 'test'}
-        version_id = self._create_version(data=data)
+        version_id = self._create_version(data)
         invalid_id = version_id + 1337
 
         self.executeNotFound(version=invalid_id)
@@ -116,14 +116,14 @@ class TestVersionViews(EndpointTester):
 
         data = {'version': '1.2.0', 'description': 'test1'}
         self.method = 'patch'
-        self.executeForbidden(data=data)
+        self.executeForbidden(data)
 
         self.method = 'delete'
         self.executeForbidden()
 
         self.client.force_authenticate(user=self.user)
         self.method = 'patch'
-        self.executeOK(data=data)
+        self.executeOK(data)
         response = self.get()
         self.assertEqual(response.data['version'], data['version'])
         self.assertEqual(response.data['description'], data['description'])
@@ -157,7 +157,7 @@ class TestVersionViews(EndpointTester):
         x2 = self.owned.insert_last('X2')
         d1 = self.owned.insert_last('D1', term_raw='TestTerm')
         data = {'version': '1.0.0', 'description': 'test'}
-        version_id = self._create_version(data=data)
+        version_id = self._create_version(data)
         invalid_id = version_id + 1337
 
         Constituenta.objects.get(pk=d1.pk).delete()
@@ -186,7 +186,7 @@ class TestVersionViews(EndpointTester):
     def _create_version(self, data) -> int:
         response = self.client.post(
             f'/api/library/{self.owned_id}/create-version',
-            data=data, format='json'
+            data, format='json'
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         return response.data['version']  # type: ignore

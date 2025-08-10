@@ -121,6 +121,11 @@ class CstCreateSerializer(StrictModelSerializer):
     )
     alias = serializers.CharField(max_length=8)
     cst_type = serializers.ChoiceField(CstType.choices)
+    associations = PKField(
+        many=True,
+        required=False,
+        queryset=Constituenta.objects.all().only('schema_id', 'pk')
+    )
 
     class Meta:
         ''' serializer metadata. '''
@@ -128,7 +133,22 @@ class CstCreateSerializer(StrictModelSerializer):
         fields = \
             'alias', 'cst_type', 'convention', 'crucial', \
             'term_raw', 'definition_raw', 'definition_formal', \
-            'insert_after', 'term_forms'
+            'insert_after', 'term_forms', 'associations'
+
+    def validate(self, attrs):
+        schema = cast(LibraryItem, self.context['schema'])
+        insert_after = attrs.get('insert_after')
+        if insert_after and insert_after.schema_id != schema.pk:
+            raise serializers.ValidationError({
+                'insert_after': msg.constituentaNotInRSform(schema.title)
+            })
+        associations = attrs.get('associations', [])
+        for assoc in associations:
+            if assoc.schema_id != schema.pk:
+                raise serializers.ValidationError({
+                    'associations': msg.constituentaNotInRSform(schema.title)
+                })
+        return attrs
 
 
 class RSFormSerializer(StrictModelSerializer):

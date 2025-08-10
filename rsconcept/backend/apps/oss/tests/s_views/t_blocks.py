@@ -81,9 +81,9 @@ class TestOssBlocks(EndpointTester):
             'children_operations': [],
             'children_blocks': []
         }
-        self.executeNotFound(data=data, item=self.invalid_id)
+        self.executeNotFound(data, item=self.invalid_id)
 
-        response = self.executeCreated(data=data, item=self.owned_id)
+        response = self.executeCreated(data, item=self.owned_id)
         self.assertEqual(len(response.data['oss']['blocks']), 3)
         new_block = response.data['new_block']
         layout = response.data['oss']['layout']
@@ -94,9 +94,9 @@ class TestOssBlocks(EndpointTester):
         self.assertEqual(block_node['height'], data['position']['height'])
         self.operation1.refresh_from_db()
 
-        self.executeForbidden(data=data, item=self.unowned_id)
+        self.executeForbidden(data, item=self.unowned_id)
         self.toggle_admin(True)
-        self.executeCreated(data=data, item=self.unowned_id)
+        self.executeCreated(data, item=self.unowned_id)
 
 
     @decl_endpoint('/api/oss/{item}/create-block', method='post')
@@ -118,13 +118,13 @@ class TestOssBlocks(EndpointTester):
             'children_operations': [],
             'children_blocks': []
         }
-        self.executeBadData(data=data, item=self.owned_id)
+        self.executeBadData(data, item=self.owned_id)
 
         data['item_data']['parent'] = self.block3.pk
-        self.executeBadData(data=data)
+        self.executeBadData(data)
 
         data['item_data']['parent'] = self.block1.pk
-        response = self.executeCreated(data=data)
+        response = self.executeCreated(data)
         new_block = response.data['new_block']
         block_data = next((block for block in response.data['oss']['blocks'] if block['id'] == new_block), None)
         self.assertEqual(block_data['parent'], self.block1.pk)
@@ -148,20 +148,20 @@ class TestOssBlocks(EndpointTester):
             'children_operations': [self.invalid_id],
             'children_blocks': []
         }
-        self.executeBadData(data=data, item=self.owned_id)
+        self.executeBadData(data, item=self.owned_id)
 
         data['children_operations'] = [self.operation3.pk]
-        self.executeBadData(data=data)
+        self.executeBadData(data)
 
         data['children_operations'] = [self.block1.pk]
-        self.executeBadData(data=data)
+        self.executeBadData(data)
 
         data['children_operations'] = [self.operation1.pk]
         data['children_blocks'] = [self.operation1.pk]
-        self.executeBadData(data=data)
+        self.executeBadData(data)
 
         data['children_blocks'] = [self.block1.pk]
-        response = self.executeCreated(data=data)
+        response = self.executeCreated(data)
         new_block = response.data['new_block']
         self.operation1.refresh_from_db()
         self.block1.refresh_from_db()
@@ -188,13 +188,13 @@ class TestOssBlocks(EndpointTester):
             'children_operations': [],
             'children_blocks': [self.block1.pk]
         }
-        self.executeBadData(data=data, item=self.owned_id)
+        self.executeBadData(data, item=self.owned_id)
 
         data['item_data']['parent'] = self.block1.pk
-        self.executeBadData(data=data)
+        self.executeBadData(data)
 
         data['children_blocks'] = [self.block2.pk]
-        self.executeCreated(data=data)
+        self.executeCreated(data)
 
 
     @decl_endpoint('/api/oss/{item}/delete-block', method='patch')
@@ -206,26 +206,26 @@ class TestOssBlocks(EndpointTester):
         data = {
             'layout': self.layout_data
         }
-        self.executeBadData(data=data)
+        self.executeBadData(data)
 
         data['target'] = self.operation1.pk
-        self.executeBadData(data=data)
+        self.executeBadData(data)
 
         data['target'] = self.block3.pk
-        self.executeBadData(data=data)
+        self.executeBadData(data)
 
         data['target'] = self.block2.pk
         self.logout()
-        self.executeForbidden(data=data)
+        self.executeForbidden(data)
 
         self.login()
-        response = self.executeOK(data=data)
+        response = self.executeOK(data)
         self.operation2.refresh_from_db()
         self.assertEqual(len(response.data['blocks']), 1)
         self.assertEqual(self.operation2.parent.pk, self.block1.pk)
 
         data['target'] = self.block1.pk
-        response = self.executeOK(data=data)
+        response = self.executeOK(data)
         self.operation1.refresh_from_db()
         self.operation2.refresh_from_db()
         self.assertEqual(len(response.data['blocks']), 0)
@@ -246,25 +246,25 @@ class TestOssBlocks(EndpointTester):
                 'parent': None
             },
         }
-        self.executeBadData(data=data)
+        self.executeBadData(data)
 
         data['target'] = self.block3.pk
         self.toggle_admin(True)
-        self.executeBadData(data=data)
+        self.executeBadData(data)
 
         data['target'] = self.block2.pk
         self.logout()
-        self.executeForbidden(data=data)
+        self.executeForbidden(data)
 
         self.login()
-        response = self.executeOK(data=data)
+        response = self.executeOK(data)
         self.block2.refresh_from_db()
         self.assertEqual(self.block2.title, data['item_data']['title'])
         self.assertEqual(self.block2.description, data['item_data']['description'])
         self.assertEqual(self.block2.parent, data['item_data']['parent'])
 
         data['layout'] = self.layout_data
-        self.executeOK(data=data)
+        self.executeOK(data)
 
 
     @decl_endpoint('/api/oss/{item}/update-block', method='patch')
@@ -280,13 +280,13 @@ class TestOssBlocks(EndpointTester):
                 'parent': self.block2.pk
             },
         }
-        self.executeBadData(data=data, item=self.owned_id)
+        self.executeBadData(data, item=self.owned_id)
 
         # Create a deeper hierarchy: block1 -> block2 -> block3
         self.block3 = self.owned.create_block(title='3', parent=self.block2)
         # Try to set block1's parent to block3 (should fail, indirect cycle)
         data['item_data']['parent'] = self.block3.pk
-        self.executeBadData(data=data, item=self.owned_id)
+        self.executeBadData(data, item=self.owned_id)
 
         # Setting block2's parent to block1 (valid, as block1 is not a descendant)
         data = {
@@ -297,4 +297,4 @@ class TestOssBlocks(EndpointTester):
                 'parent': self.block1.pk
             },
         }
-        self.executeOK(data=data, item=self.owned_id)
+        self.executeOK(data, item=self.owned_id)

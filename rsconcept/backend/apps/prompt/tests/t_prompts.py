@@ -24,7 +24,7 @@ class TestPromptTemplateViewSet(EndpointTester):
             'text': 'prompt text',
             'is_shared': False
         }
-        response = self.executeCreated(data=data)
+        response = self.executeCreated(data)
         self.assertEqual(response.data['label'], 'Test')
         self.assertEqual(response.data['owner'], self.user.pk)
 
@@ -38,7 +38,7 @@ class TestPromptTemplateViewSet(EndpointTester):
             'text': 'prompt text',
             'is_shared': True
         }
-        response = self.executeCreated(data=data)
+        response = self.executeCreated(data)
         self.assertTrue(response.data['is_shared'])
 
 
@@ -50,21 +50,21 @@ class TestPromptTemplateViewSet(EndpointTester):
             'text': 'prompt text',
             'is_shared': True
         }
-        response = self.executeBadData(data=data)
+        response = self.executeBadData(data)
         self.assertIn('is_shared', response.data)
 
 
     @decl_endpoint('/api/prompts/{item}/', method='patch')
     def test_update_prompt_owner(self):
         prompt = PromptTemplate.objects.create(owner=self.user, label='ToUpdate', description='', text='t')
-        response = self.executeOK(data={'label': 'Updated'}, item=prompt.id)
+        response = self.executeOK({'label': 'Updated'}, item=prompt.id)
         self.assertEqual(response.data['label'], 'Updated')
 
 
     @decl_endpoint('/api/prompts/{item}/', method='patch')
     def test_update_prompt_not_owner_forbidden(self):
         prompt = PromptTemplate.objects.create(owner=self.admin, label='Other', description='', text='t')
-        response = self.executeForbidden(data={'label': 'Updated'}, item=prompt.id)
+        response = self.executeForbidden({'label': 'Updated'}, item=prompt.id)
 
 
     @decl_endpoint('/api/prompts/{item}/', method='delete')
@@ -112,4 +112,4 @@ class TestPromptTemplateViewSet(EndpointTester):
             is_shared=True
         )
         self.client.force_authenticate(user=self.user)
-        response = self.executeForbidden(data={'label': 'Nope'}, item=prompt.id)
+        response = self.executeForbidden({'label': 'Nope'}, item=prompt.id)

@@ -73,7 +73,7 @@ class TestChangeAttributes(EndpointTester):
     def test_set_owner(self):
         data = {'user': self.user3.pk}
 
-        self.executeOK(data=data, item=self.owned_id)
+        self.executeOK(data, item=self.owned_id)
 
         self.owned.model.refresh_from_db()
         self.ks1.model.refresh_from_db()
@@ -89,7 +89,7 @@ class TestChangeAttributes(EndpointTester):
     def test_set_location(self):
         data = {'location': '/U/temp'}
 
-        self.executeOK(data=data, item=self.owned_id)
+        self.executeOK(data, item=self.owned_id)
 
         self.owned.model.refresh_from_db()
         self.ks1.model.refresh_from_db()
@@ -105,7 +105,7 @@ class TestChangeAttributes(EndpointTester):
     def test_set_access_policy(self):
         data = {'access_policy': AccessPolicy.PROTECTED}
 
-        self.executeOK(data=data, item=self.owned_id)
+        self.executeOK(data, item=self.owned_id)
 
         self.owned.model.refresh_from_db()
         self.ks1.model.refresh_from_db()
@@ -124,7 +124,7 @@ class TestChangeAttributes(EndpointTester):
         Editor.set(self.ks3.model.pk, [self.user2.pk, self.user.pk])
         data = {'users': [self.user3.pk]}
 
-        self.executeOK(data=data, item=self.owned_id)
+        self.executeOK(data, item=self.owned_id)
 
         self.owned.model.refresh_from_db()
         self.ks1.model.refresh_from_db()
@@ -140,7 +140,7 @@ class TestChangeAttributes(EndpointTester):
     def test_sync_from_result(self):
         data = {'alias': 'KS111', 'title': 'New Title', 'description': 'New description'}
 
-        self.executeOK(data=data, item=self.ks1.model.pk)
+        self.executeOK(data, item=self.ks1.model.pk)
         self.operation1.refresh_from_db()
 
         self.assertEqual(self.operation1.result, self.ks1.model)
@@ -161,7 +161,7 @@ class TestChangeAttributes(EndpointTester):
             'layout': self.layout_data
         }
 
-        response = self.executeOK(data=data, item=self.owned_id)
+        response = self.executeOK(data, item=self.owned_id)
         self.ks3.model.refresh_from_db()
         self.assertEqual(self.ks3.model.alias, data['item_data']['alias'])
         self.assertEqual(self.ks3.model.title, data['item_data']['title'])

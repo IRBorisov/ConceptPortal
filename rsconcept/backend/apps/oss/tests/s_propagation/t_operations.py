@@ -133,7 +133,7 @@ class TestChangeOperations(EndpointTester):
             'layout': self.layout_data,
             'target': self.operation2.pk
         }
-        self.executeOK(data=data, item=self.owned_id)
+        self.executeOK(data, item=self.owned_id)
         self.ks4D1.refresh_from_db()
         self.ks4D2.refresh_from_db()
         self.ks5D4.refresh_from_db()
@@ -155,7 +155,7 @@ class TestChangeOperations(EndpointTester):
             'target': self.operation2.pk,
             'input': None
         }
-        self.executeOK(data=data, item=self.owned_id)
+        self.executeOK(data, item=self.owned_id)
         self.ks4D1.refresh_from_db()
         self.ks4D2.refresh_from_db()
         self.ks5D4.refresh_from_db()
@@ -188,7 +188,7 @@ class TestChangeOperations(EndpointTester):
             'target': self.operation2.pk,
             'input': ks6.model.pk
         }
-        self.executeOK(data=data, item=self.owned_id)
+        self.executeOK(data, item=self.owned_id)
         ks4Dks6 = Constituenta.objects.get(as_child__parent_id=ks6D1.pk)
         self.ks4D1.refresh_from_db()
         self.ks4D2.refresh_from_db()
@@ -234,7 +234,7 @@ class TestChangeOperations(EndpointTester):
             'delete_schema': True
         }
 
-        self.executeOK(data=data, item=self.owned_id)
+        self.executeOK(data, item=self.owned_id)
         self.ks4D2.refresh_from_db()
         self.ks5D4.refresh_from_db()
         subs1_2 = self.operation4.getQ_substitutions()
@@ -256,7 +256,7 @@ class TestChangeOperations(EndpointTester):
             'delete_schema': True
         }
 
-        self.executeOK(data=data, item=self.owned_id)
+        self.executeOK(data, item=self.owned_id)
         self.ks4D2.refresh_from_db()
         self.ks5D4.refresh_from_db()
         subs1_2 = self.operation4.getQ_substitutions()
@@ -278,7 +278,7 @@ class TestChangeOperations(EndpointTester):
             'delete_schema': False
         }
 
-        self.executeOK(data=data, item=self.owned_id)
+        self.executeOK(data, item=self.owned_id)
         self.ks1.model.refresh_from_db()
         self.ks4D2.refresh_from_db()
         self.ks5D4.refresh_from_db()
@@ -317,7 +317,7 @@ class TestChangeOperations(EndpointTester):
             ]
         }
 
-        self.executeOK(data=data, item=self.owned_id)
+        self.executeOK(data, item=self.owned_id)
         self.ks4D2.refresh_from_db()
         self.ks5D4.refresh_from_db()
         subs1_2 = self.operation4.getQ_substitutions()
@@ -343,7 +343,7 @@ class TestChangeOperations(EndpointTester):
             'arguments': [self.operation1.pk],
         }
 
-        self.executeOK(data=data, item=self.owned_id)
+        self.executeOK(data, item=self.owned_id)
         self.ks4D2.refresh_from_db()
         self.ks5D4.refresh_from_db()
         subs1_2 = self.operation4.getQ_substitutions()
@@ -356,7 +356,7 @@ class TestChangeOperations(EndpointTester):
         self.assertEqual(self.ks5D4.definition_formal, r'DEL DEL X3 DEL D1 D2 D3')
 
         data['arguments'] = [self.operation1.pk, self.operation2.pk]
-        self.executeOK(data=data, item=self.owned_id)
+        self.executeOK(data, item=self.owned_id)
         self.ks4D2.refresh_from_db()
         self.ks5D4.refresh_from_db()
         subs1_2 = self.operation4.getQ_substitutions()
@@ -381,7 +381,7 @@ class TestChangeOperations(EndpointTester):
             'target': self.operation4.pk,
             'layout': self.layout_data
         }
-        self.executeOK(data=data, item=self.owned_id)
+        self.executeOK(data, item=self.owned_id)
         self.operation4.refresh_from_db()
         self.ks5.model.refresh_from_db()
         self.assertNotEqual(self.operation4.result, None)
@@ -408,7 +408,7 @@ class TestChangeOperations(EndpointTester):
             'items': [ks6A1.pk]
         }
 
-        self.executeOK(data=data)
+        self.executeOK(data)
         ks6.model.refresh_from_db()
         self.ks1.model.refresh_from_db()
         self.ks4.model.refresh_from_db()
@@ -438,7 +438,7 @@ class TestChangeOperations(EndpointTester):
             'items': [self.ks1X2.pk]
         }
 
-        self.executeOK(data=data)
+        self.executeOK(data)
         ks6.model.refresh_from_db()
         self.ks1.model.refresh_from_db()
         self.ks4.model.refresh_from_db()

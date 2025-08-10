@@ -48,7 +48,7 @@ class TestRSFormCached(DBTester):
 
         x1 = self.schema.insert_last('X1')
         x2 = self.schema.insert_last('X2')
-        x3 = self.schema.create_cst(data=data, insert_after=x1)
+        x3 = self.schema.create_cst(data, insert_after=x1)
         x2.refresh_from_db()
 
         self.assertEqual(x3.alias, data['alias'])

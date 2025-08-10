@@ -139,7 +139,7 @@ class ReferencePropagationTestCase(EndpointTester):
             'layout': self.layout_data,
             'target': self.operation1.pk
         }
-        self.executeOK(data=data, item=self.owned_id)
+        self.executeOK(data, item=self.owned_id)
         self.assertEqual(self.ks6.constituentsQ().count(), 4)
         self.assertEqual(self.ks5.constituentsQ().count(), 5)
 
@@ -150,7 +150,7 @@ class ReferencePropagationTestCase(EndpointTester):
             'alias': 'X3',
             'cst_type': CstType.BASE,
         }
-        response = self.executeCreated(data=data, schema=self.ks1.model.pk)
+        response = self.executeCreated(data, schema=self.ks1.model.pk)
         new_cst = Constituenta.objects.get(pk=response.data['new_cst']['id'])
         inherited = Constituenta.objects.filter(as_child__parent_id=new_cst.pk)
         self.assertEqual(self.ks1.constituentsQ().count(), 4)
@@ -163,7 +163,7 @@ class ReferencePropagationTestCase(EndpointTester):
     @decl_endpoint('/api/rsforms/{schema}/delete-multiple-cst', method='patch')
     def test_delete_constituenta(self):
         data = {'items': [self.ks1X1.pk]}
-        response = self.executeOK(data=data, schema=self.ks1.model.pk)
+        response = self.executeOK(data, schema=self.ks1.model.pk)
         self.ks4D2.refresh_from_db()
         self.ks5D4.refresh_from_db()
         self.ks6D2.refresh_from_db()
@@ -183,7 +183,7 @@ class ReferencePropagationTestCase(EndpointTester):
             'keep_connections': True,
             'keep_constituents': False
         }
-        self.executeOK(data=data, item=self.owned_id)
+        self.executeOK(data, item=self.owned_id)
         self.assertEqual(self.ks4.constituentsQ().count(), 6)
         self.assertEqual(self.ks5.constituentsQ().count(), 9)
         self.assertEqual(self.ks6.constituentsQ().count(), 6)
@@ -199,7 +199,7 @@ class ReferencePropagationTestCase(EndpointTester):
         ks5X4 = Constituenta.objects.get(schema=self.ks5.model, alias='X4')
         self.assertEqual(Inheritance.objects.filter(child=ks5X4).count(), 1)
 
-        self.executeOK(data=data, item=self.owned_id)
+        self.executeOK(data, item=self.owned_id)
         self.assertEqual(self.ks4.constituentsQ().count(), 6)
         self.assertEqual(self.ks5.constituentsQ().count(), 9)
         self.assertEqual(self.ks6.constituentsQ().count(), 7)

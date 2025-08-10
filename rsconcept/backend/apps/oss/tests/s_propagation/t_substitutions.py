@@ -134,7 +134,7 @@ class TestChangeSubstitutions(EndpointTester):
             'original': self.ks1X1.pk,
             'substitution': self.ks1X2.pk
         }]}
-        self.executeOK(data=data, schema=self.ks1.model.pk)
+        self.executeOK(data, schema=self.ks1.model.pk)
         self.ks4D1.refresh_from_db()
         self.ks4D2.refresh_from_db()
         self.ks5D4.refresh_from_db()
@@ -159,7 +159,7 @@ class TestChangeSubstitutions(EndpointTester):
                 'substitution': self.ks2X1.pk
             }]
         }
-        self.executeOK(data=data, schema=self.ks2.model.pk)
+        self.executeOK(data, schema=self.ks2.model.pk)
         self.ks4D1.refresh_from_db()
         self.ks4D2.refresh_from_db()
         self.ks5D4.refresh_from_db()
@@ -179,7 +179,7 @@ class TestChangeSubstitutions(EndpointTester):
     @decl_endpoint('/api/rsforms/{schema}/delete-multiple-cst', method='patch')
     def test_delete_original(self):
         data = {'items': [self.ks1X1.pk, self.ks1D1.pk]}
-        self.executeOK(data=data, schema=self.ks1.model.pk)
+        self.executeOK(data, schema=self.ks1.model.pk)
         self.ks4D2.refresh_from_db()
         self.ks5D4.refresh_from_db()
         subs1_2 = self.operation4.getQ_substitutions()
@@ -194,7 +194,7 @@ class TestChangeSubstitutions(EndpointTester):
     @decl_endpoint('/api/rsforms/{schema}/delete-multiple-cst', method='patch')
     def test_delete_substitution(self):
         data = {'items': [self.ks2S1.pk, self.ks2X2.pk]}
-        self.executeOK(data=data, schema=self.ks2.model.pk)
+        self.executeOK(data, schema=self.ks2.model.pk)
         self.ks4D1.refresh_from_db()
         self.ks4D2.refresh_from_db()
         self.ks5D4.refresh_from_db()

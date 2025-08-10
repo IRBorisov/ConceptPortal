@@ -102,7 +102,7 @@ class TestChangeConstituents(EndpointTester):
             'cst_type': CstType.BASE,
             'definition_formal': 'X4 = X5'
         }
-        response = self.executeCreated(data=data, schema=self.ks1.model.pk)
+        response = self.executeCreated(data, schema=self.ks1.model.pk)
         new_cst = Constituenta.objects.get(pk=response.data['new_cst']['id'])
         inherited_cst = Constituenta.objects.get(as_child__parent_id=new_cst.pk)
         self.assertEqual(self.ks1.constituentsQ().count(), 3)
@@ -125,7 +125,7 @@ class TestChangeConstituents(EndpointTester):
                 'crucial': True,
             }
         }
-        response = self.executeOK(data=data, schema=self.ks1.model.pk)
+        response = self.executeOK(data, schema=self.ks1.model.pk)
         self.ks1X1.refresh_from_db()
         d2.refresh_from_db()
         inherited_cst = Constituenta.objects.get(as_child__parent_id=self.ks1X1.pk)
@@ -145,7 +145,7 @@ class TestChangeConstituents(EndpointTester):
     @decl_endpoint('/api/rsforms/{schema}/delete-multiple-cst', method='patch')
     def test_delete_constituenta(self):
         data = {'items': [self.ks2X1.pk]}
-        response = self.executeOK(data=data, schema=self.ks2.model.pk)
+        response = self.executeOK(data, schema=self.ks2.model.pk)
         inherited_cst = Constituenta.objects.get(as_child__parent_id=self.ks2D1.pk)
         self.ks2D1.refresh_from_db()
         self.assertEqual(self.ks2.constituentsQ().count(), 1)
@@ -161,7 +161,7 @@ class TestChangeConstituents(EndpointTester):
             'original': self.ks1X1.pk,
             'substitution': self.ks1X2.pk
         }]}
-        self.executeOK(data=data, schema=self.ks1.model.pk)
+        self.executeOK(data, schema=self.ks1.model.pk)
         self.ks1X2.refresh_from_db()
         d2.refresh_from_db()
         self.assertEqual(self.ks1.constituentsQ().count(), 1)

@@ -140,10 +140,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     def create_block(self, request: Request, pk) -> HttpResponse:
         ''' Create Block. '''
         item = self._get_item()
-        serializer = s.CreateBlockSerializer(
-            data=request.data,
-            context={'oss': item}
-        )
+        serializer = s.CreateBlockSerializer(data=request.data, context={'oss': item})
         serializer.is_valid(raise_exception=True)
         layout = serializer.validated_data['layout']
         position = serializer.validated_data['position']
@@ -194,10 +191,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     def update_block(self, request: Request, pk) -> HttpResponse:
         ''' Update Block. '''
         item = self._get_item()
-        serializer = s.UpdateBlockSerializer(
-            data=request.data,
-            context={'oss': item}
-        )
+        serializer = s.UpdateBlockSerializer(data=request.data, context={'oss': item})
         serializer.is_valid(raise_exception=True)
         block: m.Block = cast(m.Block, serializer.validated_data['target'])
 
@@ -234,10 +228,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     def delete_block(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Delete Block. '''
         item = self._get_item()
-        serializer = s.DeleteBlockSerializer(
-            data=request.data,
-            context={'oss': item}
-        )
+        serializer = s.DeleteBlockSerializer(data=request.data, context={'oss': item})
         serializer.is_valid(raise_exception=True)
         block = cast(m.Block, serializer.validated_data['target'])
         layout = serializer.validated_data['layout']
@@ -269,10 +260,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     def move_items(self, request: Request, pk) -> HttpResponse:
         ''' Move items to another parent. '''
         item = self._get_item()
-        serializer = s.MoveItemsSerializer(
-            data=request.data,
-            context={'oss': item}
-        )
+        serializer = s.MoveItemsSerializer(data=request.data, context={'oss': item})
         serializer.is_valid(raise_exception=True)
         layout = serializer.validated_data['layout']
 
@@ -306,10 +294,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     def create_schema(self, request: Request, pk) -> HttpResponse:
         ''' Create schema. '''
         item = self._get_item()
-        serializer = s.CreateSchemaSerializer(
-            data=request.data,
-            context={'oss': item}
-        )
+        serializer = s.CreateSchemaSerializer(data=request.data, context={'oss': item})
         serializer.is_valid(raise_exception=True)
         layout = serializer.validated_data['layout']
         position = serializer.validated_data['position']
@@ -354,10 +339,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     def clone_schema(self, request: Request, pk) -> HttpResponse:
         ''' Clone schema. '''
         item = self._get_item()
-        serializer = s.CloneSchemaSerializer(
-            data=request.data,
-            context={'oss': item}
-        )
+        serializer = s.CloneSchemaSerializer(data=request.data, context={'oss': item})
         serializer.is_valid(raise_exception=True)
         layout = serializer.validated_data['layout']
         position = serializer.validated_data['position']
@@ -424,10 +406,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     def import_schema(self, request: Request, pk) -> HttpResponse:
         ''' Create operation with existing schema. '''
         item = self._get_item()
-        serializer = s.ImportSchemaSerializer(
-            data=request.data,
-            context={'oss': item}
-        )
+        serializer = s.ImportSchemaSerializer(data=request.data, context={'oss': item})
         serializer.is_valid(raise_exception=True)
         layout = serializer.validated_data['layout']
         position = serializer.validated_data['position']
@@ -479,10 +458,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     def create_replica(self, request: Request, pk) -> HttpResponse:
         ''' Replicate schema. '''
         item = self._get_item()
-        serializer = s.CreateReplicaSerializer(
-            data=request.data,
-            context={'oss': item}
-        )
+        serializer = s.CreateReplicaSerializer(data=request.data, context={'oss': item})
         serializer.is_valid(raise_exception=True)
         layout = serializer.validated_data['layout']
         position = serializer.validated_data['position']
@@ -524,10 +500,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     def create_synthesis(self, request: Request, pk) -> HttpResponse:
         ''' Create Synthesis operation from arguments. '''
         item = self._get_item()
-        serializer = s.CreateSynthesisSerializer(
-            data=request.data,
-            context={'oss': item}
-        )
+        serializer = s.CreateSynthesisSerializer(data=request.data, context={'oss': item})
         serializer.is_valid(raise_exception=True)
         layout = serializer.validated_data['layout']
         position = serializer.validated_data['position']
@@ -573,10 +546,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     def update_operation(self, request: Request, pk) -> HttpResponse:
         ''' Update Operation arguments and parameters. '''
         item = self._get_item()
-        serializer = s.UpdateOperationSerializer(
-            data=request.data,
-            context={'oss': item}
-        )
+        serializer = s.UpdateOperationSerializer(data=request.data, context={'oss': item})
         serializer.is_valid(raise_exception=True)
         operation: m.Operation = cast(m.Operation, serializer.validated_data['target'])
 
@@ -628,10 +598,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     def delete_operation(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Delete Operation. '''
         item = self._get_item()
-        serializer = s.DeleteOperationSerializer(
-            data=request.data,
-            context={'oss': item}
-        )
+        serializer = s.DeleteOperationSerializer(data=request.data, context={'oss': item})
         serializer.is_valid(raise_exception=True)
         operation = cast(m.Operation, serializer.validated_data['target'])
         old_schema = operation.result
@@ -671,10 +638,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     def delete_replica(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Delete Replica Operation. '''
         item = self._get_item()
-        serializer = s.DeleteReplicaSerializer(
-            data=request.data,
-            context={'oss': item}
-        )
+        serializer = s.DeleteReplicaSerializer(data=request.data, context={'oss': item})
         serializer.is_valid(raise_exception=True)
         operation = cast(m.Operation, serializer.validated_data['target'])
         keep_connections = serializer.validated_data['keep_connections']
@@ -708,10 +672,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     def create_input(self, request: Request, pk) -> HttpResponse:
         ''' Create input RSForm. '''
         item = self._get_item()
-        serializer = s.TargetOperationSerializer(
-            data=request.data,
-            context={'oss': item}
-        )
+        serializer = s.TargetOperationSerializer(data=request.data, context={'oss': item})
         serializer.is_valid(raise_exception=True)
         operation: m.Operation = cast(m.Operation, serializer.validated_data['target'])
         if len(operation.getQ_arguments()) > 0:
@@ -752,10 +713,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     def set_input(self, request: Request, pk) -> HttpResponse:
         ''' Set input schema for target operation. '''
         item = self._get_item()
-        serializer = s.SetOperationInputSerializer(
-            data=request.data,
-            context={'oss': item}
-        )
+        serializer = s.SetOperationInputSerializer(data=request.data, context={'oss': item})
         serializer.is_valid(raise_exception=True)
 
         layout = serializer.validated_data['layout']
@@ -804,10 +762,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     def execute_operation(self, request: Request, pk) -> HttpResponse:
         ''' Execute operation. '''
         item = self._get_item()
-        serializer = s.TargetOperationSerializer(
-            data=request.data,
-            context={'oss': item}
-        )
+        serializer = s.TargetOperationSerializer(data=request.data, context={'oss': item})
         serializer.is_valid(raise_exception=True)
         operation: m.Operation = cast(m.Operation, serializer.validated_data['target'])
         if operation.operation_type != m.OperationType.SYNTHESIS:

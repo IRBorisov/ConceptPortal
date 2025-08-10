@@ -21,5 +21,5 @@ def write_zipped_json(json_data: dict, json_filename: str) -> bytes:
     content = BytesIO()
     data = json.dumps(json_data, indent=4, ensure_ascii=False)
     with ZipFile(content, 'w') as archive:
-        archive.writestr(json_filename, data=data)
+        archive.writestr(json_filename, data)
     return content.getvalue()

@@ -95,9 +95,9 @@ class TestOssOperations(EndpointTester):
                 'height': 50
             }
         }
-        self.executeNotFound(data=data, item=self.invalid_id)
+        self.executeNotFound(data, item=self.invalid_id)
 
-        response = self.executeCreated(data=data, item=self.owned_id)
+        response = self.executeCreated(data, item=self.owned_id)
         self.assertEqual(len(response.data['oss']['operations']), 4)
         new_operation_id = response.data['new_operation']
         new_operation = next(op for op in response.data['oss']['operations'] if op['id'] == new_operation_id)
@@ -122,9 +122,9 @@ class TestOssOperations(EndpointTester):
         self.assertEqual(schema.location, self.owned.model.location)
         self.assertIn(self.user2, schema.getQ_editors())
 
-        self.executeForbidden(data=data, item=self.unowned_id)
+        self.executeForbidden(data, item=self.unowned_id)
         self.toggle_admin(True)
-        self.executeCreated(data=data, item=self.unowned_id)
+        self.executeCreated(data, item=self.unowned_id)
 
 
     @decl_endpoint('/api/oss/{item}/clone-schema', method='post')
@@ -141,10 +141,10 @@ class TestOssOperations(EndpointTester):
                 'height': 60
             }
         }
-        self.executeNotFound(data=data, item=self.invalid_id)
-        self.executeForbidden(data=data, item=self.unowned_id)
+        self.executeNotFound(data, item=self.invalid_id)
+        self.executeForbidden(data, item=self.unowned_id)
 
-        response = self.executeCreated(data=data, item=self.owned_id)
+        response = self.executeCreated(data, item=self.owned_id)
         self.assertIn('new_operation', response.data)
         self.assertIn('oss', response.data)
         new_operation_id = response.data['new_operation']
@@ -171,7 +171,7 @@ class TestOssOperations(EndpointTester):
 
         unrelated_data = dict(data)
         unrelated_data['source_operation'] = self.unowned_operation.pk
-        self.executeBadData(data=unrelated_data, item=self.owned_id)
+        self.executeBadData(unrelated_data, item=self.owned_id)
 
 
     @decl_endpoint('/api/oss/{item}/create-schema', method='post')
@@ -194,15 +194,15 @@ class TestOssOperations(EndpointTester):
             }
 
         }
-        self.executeBadData(data=data, item=self.owned_id)
+        self.executeBadData(data, item=self.owned_id)
 
         block_unowned = self.unowned.create_block(title='TestBlock1')
         data['item_data']['parent'] = block_unowned.id
-        self.executeBadData(data=data, item=self.owned_id)
+        self.executeBadData(data, item=self.owned_id)
 
         block_owned = self.owned.create_block(title='TestBlock2')
         data['item_data']['parent'] = block_owned.id
-        response = self.executeCreated(data=data, item=self.owned_id)
+        response = self.executeCreated(data, item=self.owned_id)
         new_operation_id = response.data['new_operation']
         new_operation = next(op for op in response.data['oss']['operations'] if op['id'] == new_operation_id)
         self.assertEqual(len(response.data['oss']['operations']), 4)
@@ -222,13 +222,13 @@ class TestOssOperations(EndpointTester):
                 'height': 40
             }
         }
-        self.executeBadData(data=data, item=self.owned_id)
+        self.executeBadData(data, item=self.owned_id)
 
         data['target'] = self.unowned_operation.pk
-        self.executeBadData(data=data, item=self.owned_id)
+        self.executeBadData(data, item=self.owned_id)
 
         data['target'] = self.operation1.pk
-        response = self.executeCreated(data=data, item=self.owned_id)
+        response = self.executeCreated(data, item=self.owned_id)
         self.owned.model.refresh_from_db()
         new_operation_id = response.data['new_operation']
         new_operation = next(op for op in response.data['oss']['operations'] if op['id'] == new_operation_id)
@@ -260,7 +260,7 @@ class TestOssOperations(EndpointTester):
             'arguments': [self.operation1.pk, self.operation3.pk],
             'substitutions': []
         }
-        response = self.executeCreated(data=data, item=self.owned_id)
+        response = self.executeCreated(data, item=self.owned_id)
         self.owned.model.refresh_from_db()
         new_operation_id = response.data['new_operation']
         new_operation = next(op for op in response.data['oss']['operations'] if op['id'] == new_operation_id)
@@ -292,13 +292,13 @@ class TestOssOperations(EndpointTester):
             'arguments': [self.operation1.pk, operation4.pk],
             'substitutions': []
         }
-        self.executeBadData(data=data, item=self.owned_id)
+        self.executeBadData(data, item=self.owned_id)
 
         data['arguments'] = [operation4.pk, operation5.pk]
-        self.executeBadData(data=data, item=self.owned_id)
+        self.executeBadData(data, item=self.owned_id)
 
         data['arguments'] = [operation4.pk, self.operation3.pk]
-        self.executeCreated(data=data, item=self.owned_id)
+        self.executeCreated(data, item=self.owned_id)
 
 
     @decl_endpoint('/api/oss/{item}/delete-operation', method='patch')
@@ -310,19 +310,19 @@ class TestOssOperations(EndpointTester):
         data = {
             'layout': self.layout_data
         }
-        self.executeBadData(data=data)
+        self.executeBadData(data)
 
         data['target'] = self.unowned_operation.pk
-        self.executeBadData(data=data, item=self.owned_id)
+        self.executeBadData(data, item=self.owned_id)
 
         data['target'] = self.operation1.pk
         self.toggle_admin(True)
-        self.executeBadData(data=data, item=self.unowned_id)
+        self.executeBadData(data, item=self.unowned_id)
         self.logout()
-        self.executeForbidden(data=data, item=self.owned_id)
+        self.executeForbidden(data, item=self.owned_id)
 
         self.login()
-        response = self.executeOK(data=data)
+        response = self.executeOK(data)
         layout = response.data['layout']
         deleted_items = [item for item in layout if item['nodeID'] == 'o' + str(data['target'])]
         self.assertEqual(len(response.data['operations']), 2)
@@ -337,7 +337,7 @@ class TestOssOperations(EndpointTester):
             'layout': self.layout_data,
             'target': reference_operation.pk
         }
-        self.executeBadData(data=data, item=self.owned_id)
+        self.executeBadData(data, item=self.owned_id)
 
 
     @decl_endpoint('/api/oss/{item}/delete-replica', method='patch')
@@ -347,18 +347,18 @@ class TestOssOperations(EndpointTester):
             'layout': self.layout_data,
             'target': self.invalid_id
         }
-        self.executeBadData(data=data, item=self.owned_id)
+        self.executeBadData(data, item=self.owned_id)
 
         reference_operation = self.owned.create_replica(self.operation1)
         self.assertEqual(len(self.operation1.getQ_replicas()), 1)
         data['target'] = reference_operation.pk
-        self.executeForbidden(data=data, item=self.unowned_id)
+        self.executeForbidden(data, item=self.unowned_id)
 
         data['target'] = self.operation1.pk
-        self.executeBadData(data=data, item=self.owned_id)
+        self.executeBadData(data, item=self.owned_id)
 
         data['target'] = reference_operation.pk
-        self.executeOK(data=data, item=self.owned_id)
+        self.executeOK(data, item=self.owned_id)
         self.assertEqual(len(self.operation1.getQ_replicas()), 0)
 
 
@@ -370,22 +370,22 @@ class TestOssOperations(EndpointTester):
         data = {
             'layout': self.layout_data
         }
-        self.executeBadData(data=data)
+        self.executeBadData(data)
 
         data['target'] = self.operation1.pk
         self.toggle_admin(True)
-        self.executeBadData(data=data, item=self.unowned_id)
+        self.executeBadData(data, item=self.unowned_id)
         self.logout()
-        self.executeForbidden(data=data, item=self.owned_id)
+        self.executeForbidden(data, item=self.owned_id)
 
         self.login()
-        self.executeBadData(data=data, item=self.owned_id)
+        self.executeBadData(data, item=self.owned_id)
 
         self.operation1.result = None
         self.operation1.description = 'TestComment'
         self.operation1.title = 'TestTitle'
         self.operation1.save()
-        response = self.executeOK(data=data)
+        response = self.executeOK(data)
         self.operation1.refresh_from_db()
 
         new_schema = response.data['new_schema']
@@ -395,10 +395,10 @@ class TestOssOperations(EndpointTester):
         self.assertEqual(new_schema['description'], self.operation1.description)
 
         data['target'] = self.operation3.pk
-        self.executeBadData(data=data)
+        self.executeBadData(data)
 
         data['target'] = self.unowned_operation.pk
-        self.executeBadData(data=data, item=self.owned_id)
+        self.executeBadData(data, item=self.owned_id)
 
 
     @decl_endpoint('/api/oss/{item}/set-input', method='patch')
@@ -409,17 +409,17 @@ class TestOssOperations(EndpointTester):
         data = {
             'layout': self.layout_data
         }
-        self.executeBadData(data=data)
+        self.executeBadData(data)
 
         data['target'] = self.operation1.pk
         data['input'] = None
         self.toggle_admin(True)
-        self.executeBadData(data=data, item=self.unowned_id)
+        self.executeBadData(data, item=self.unowned_id)
         self.logout()
-        self.executeForbidden(data=data, item=self.owned_id)
+        self.executeForbidden(data, item=self.owned_id)
 
         self.login()
-        response = self.executeOK(data=data)
+        response = self.executeOK(data)
         self.operation1.refresh_from_db()
         self.assertEqual(self.operation1.result, None)
 
@@ -428,7 +428,7 @@ class TestOssOperations(EndpointTester):
         self.ks1.model.title = 'Test421'
         self.ks1.model.description = 'TestComment42'
         self.ks1.model.save()
-        response = self.executeOK(data=data)
+        response = self.executeOK(data)
         self.operation1.refresh_from_db()
         self.assertEqual(self.operation1.result, self.ks1.model)
         self.assertEqual(self.operation1.alias, self.ks1.model.alias)
@@ -446,7 +446,7 @@ class TestOssOperations(EndpointTester):
             'target': self.operation1.pk,
             'input': self.ks2.model.pk
         }
-        self.executeBadData(data=data, item=self.owned_id)
+        self.executeBadData(data, item=self.owned_id)
 
         self.ks2.model.visible = False
         self.ks2.model.save(update_fields=['visible'])
@@ -455,7 +455,7 @@ class TestOssOperations(EndpointTester):
             'target': self.operation2.pk,
             'input': None
         }
-        self.executeOK(data=data, item=self.owned_id)
+        self.executeOK(data, item=self.owned_id)
         self.operation2.refresh_from_db()
         self.ks2.model.refresh_from_db()
         self.assertEqual(self.operation2.result, None)
@@ -466,7 +466,7 @@ class TestOssOperations(EndpointTester):
             'target': self.operation1.pk,
             'input': self.ks2.model.pk
         }
-        self.executeOK(data=data, item=self.owned_id)
+        self.executeOK(data, item=self.owned_id)
         self.operation1.refresh_from_db()
         self.assertEqual(self.operation1.result, self.ks2.model)
 
@@ -494,16 +494,16 @@ class TestOssOperations(EndpointTester):
                 }
             ]
         }
-        self.executeBadData(data=data)
+        self.executeBadData(data)
 
         data['substitutions'][0]['substitution'] = self.ks2X1.pk
         self.toggle_admin(True)
-        self.executeBadData(data=data, item=self.unowned_id)
+        self.executeBadData(data, item=self.unowned_id)
         self.logout()
-        self.executeForbidden(data=data, item=self.owned_id)
+        self.executeForbidden(data, item=self.owned_id)
 
         self.login()
-        response = self.executeOK(data=data)
+        response = self.executeOK(data)
         self.operation3.refresh_from_db()
         self.assertEqual(self.operation3.alias, data['item_data']['alias'])
         self.assertEqual(self.operation3.title, data['item_data']['title'])
@@ -518,11 +518,11 @@ class TestOssOperations(EndpointTester):
         self.assertEqual(sub.substitution.pk, data['substitutions'][0]['substitution'])
 
         data['layout'] = self.layout_data
-        self.executeOK(data=data)
+        self.executeOK(data)
 
         data_bad = dict(data)
         data_bad['target'] = self.unowned_operation.pk
-        self.executeBadData(data=data_bad, item=self.owned_id)
+        self.executeBadData(data_bad, item=self.owned_id)
 
 
     @decl_endpoint('/api/oss/{item}/update-operation', method='patch')
@@ -539,10 +539,10 @@ class TestOssOperations(EndpointTester):
             },
             'layout': self.layout_data
         }
-        self.executeBadData(data=data, item=self.owned_id)
+        self.executeBadData(data, item=self.owned_id)
 
         data['target'] = self.operation1.pk
-        response = self.executeOK(data=data)
+        response = self.executeOK(data)
         self.operation1.refresh_from_db()
         self.assertEqual(self.operation1.alias, data['item_data']['alias'])
         self.assertEqual(self.operation1.title, data['item_data']['title'])
@@ -554,7 +554,7 @@ class TestOssOperations(EndpointTester):
         # Try to update an operation from an unrelated OSS (should fail)
         data_bad = dict(data)
         data_bad['target'] = self.unowned_operation.pk
-        self.executeBadData(data=data_bad, item=self.owned_id)
+        self.executeBadData(data_bad, item=self.owned_id)
 
 
     @decl_endpoint('/api/oss/{item}/update-operation', method='patch')
@@ -583,7 +583,7 @@ class TestOssOperations(EndpointTester):
                 }
             ]
         }
-        self.executeBadData(data=data, item=self.owned_id)
+        self.executeBadData(data, item=self.owned_id)
 
 
     @decl_endpoint('/api/oss/{item}/execute-operation', method='post')
@@ -595,19 +595,19 @@ class TestOssOperations(EndpointTester):
             'layout': self.layout_data,
             'target': self.operation1.pk
         }
-        self.executeBadData(data=data)
+        self.executeBadData(data)
 
         data['target'] = self.unowned_operation.pk
-        self.executeBadData(data=data, item=self.owned_id)
+        self.executeBadData(data, item=self.owned_id)
 
         data['target'] = self.operation3.pk
         self.toggle_admin(True)
-        self.executeBadData(data=data, item=self.unowned_id)
+        self.executeBadData(data, item=self.unowned_id)
         self.logout()
-        self.executeForbidden(data=data, item=self.owned_id)
+        self.executeForbidden(data, item=self.owned_id)
 
         self.login()
-        self.executeOK(data=data)
+        self.executeOK(data)
         self.operation3.refresh_from_db()
         schema = self.operation3.result
         self.assertEqual(schema.alias, self.operation3.alias)
@@ -644,7 +644,7 @@ class TestOssOperations(EndpointTester):
             'source': target_ks.model.pk,
             'clone_source': False
         }
-        response = self.executeCreated(data=data, item=self.owned_id)
+        response = self.executeCreated(data, item=self.owned_id)
         new_operation_id = response.data['new_operation']
         new_operation = next(op for op in response.data['oss']['operations'] if op['id'] == new_operation_id)
         layout = response.data['oss']['layout']
@@ -684,7 +684,7 @@ class TestOssOperations(EndpointTester):
             'source': self.ks2.model.pk,
             'clone_source': True
         }
-        response = self.executeCreated(data=data, item=self.owned_id)
+        response = self.executeCreated(data, item=self.owned_id)
         new_operation_id = response.data['new_operation']
         new_operation = next(op for op in response.data['oss']['operations'] if op['id'] == new_operation_id)
         layout = response.data['oss']['layout']
@@ -725,13 +725,13 @@ class TestOssOperations(EndpointTester):
             # 'source' missing
             'clone_source': False
         }
-        self.executeBadData(data=data, item=self.owned_id)
+        self.executeBadData(data, item=self.owned_id)
         # Invalid source
         data['source'] = self.invalid_id
-        self.executeBadData(data=data, item=self.owned_id)
+        self.executeBadData(data, item=self.owned_id)
         # Invalid OSS
         data['source'] = self.ks1.model.pk
-        self.executeNotFound(data=data, item=self.invalid_id)
+        self.executeNotFound(data, item=self.invalid_id)
 
     @decl_endpoint('/api/oss/{item}/import-schema', method='post')
     def test_import_schema_permissions(self):
@@ -752,8 +752,8 @@ class TestOssOperations(EndpointTester):
         }
         # Not an editor
         self.logout()
-        self.executeForbidden(data=data, item=self.owned_id)
+        self.executeForbidden(data, item=self.owned_id)
         # As admin
         self.login()
         self.toggle_admin(True)
-        self.executeCreated(data=data, item=self.owned_id)
+        self.executeCreated(data, item=self.owned_id)

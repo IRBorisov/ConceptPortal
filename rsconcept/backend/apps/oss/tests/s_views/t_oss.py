@@ -126,7 +126,7 @@ class TestOssViewset(EndpointTester):
         self.executeBadData(item=self.owned_id)
 
         data = {'data': []}
-        self.executeOK(data=data)
+        self.executeOK(data)
 
         data = {'data': [
             {'nodeID': 'o' + str(self.operation1.pk), 'x': 42.1, 'y': 1337, 'width': 150, 'height': 40},
@@ -134,15 +134,15 @@ class TestOssViewset(EndpointTester):
             {'nodeID': 'o' + str(self.operation3.pk), 'x': 36.1, 'y': 1435, 'width': 150, 'height': 40}
         ]}
         self.toggle_admin(True)
-        self.executeOK(data=data, item=self.unowned_id)
+        self.executeOK(data, item=self.unowned_id)
 
         self.toggle_admin(False)
-        self.executeOK(data=data, item=self.owned_id)
+        self.executeOK(data, item=self.owned_id)
         self.owned.model.refresh_from_db()
         self.assertEqual(OperationSchema.layoutQ(self.owned_id).data, data['data'])
 
-        self.executeForbidden(data=data, item=self.unowned_id)
-        self.executeForbidden(data=data, item=self.private_id)
+        self.executeForbidden(data, item=self.unowned_id)
+        self.executeForbidden(data, item=self.private_id)
 
 
     @decl_endpoint('/api/oss/get-predecessor', method='post')
@@ -155,13 +155,13 @@ class TestOssViewset(EndpointTester):
         self.ks3 = RSForm(self.operation3.result)
         self.ks3X2 = Constituenta.objects.get(as_child__parent_id=self.ks1X2.pk)
 
-        self.executeBadData(data={'target': self.invalid_id})
+        self.executeBadData({'target': self.invalid_id})
 
-        response = self.executeOK(data={'target': self.ks1X1.pk})
+        response = self.executeOK({'target': self.ks1X1.pk})
         self.assertEqual(response.data['id'], self.ks1X1.pk)
         self.assertEqual(response.data['schema'], self.ks1.model.pk)
 
-        response = self.executeOK(data={'target': self.ks3X2.pk})
+        response = self.executeOK({'target': self.ks3X2.pk})
         self.assertEqual(response.data['id'], self.ks1X2.pk)
         self.assertEqual(response.data['schema'], self.ks1.model.pk)
 
@@ -180,10 +180,10 @@ class TestOssViewset(EndpointTester):
             'operations': [self.operation1.pk, self.operation2.pk],
             'destination': block2.pk
         }
-        self.executeBadData(data=data)
+        self.executeBadData(data)
 
         data['destination'] = block1.pk
-        self.executeOK(data=data)
+        self.executeOK(data)
         self.operation1.refresh_from_db()
         self.operation2.refresh_from_db()
         block2.refresh_from_db()
@@ -193,7 +193,7 @@ class TestOssViewset(EndpointTester):
         self.assertEqual(block2.parent.pk, block1.pk)
 
         data['destination'] = None
-        self.executeOK(data=data)
+        self.executeOK(data)
         self.operation1.refresh_from_db()
         self.operation2.refresh_from_db()
         block2.refresh_from_db()
@@ -217,7 +217,7 @@ class TestOssViewset(EndpointTester):
             'operations': [],
             'destination': block3.pk
         }
-        self.executeBadData(data=data)
+        self.executeBadData(data)
 
 
     @decl_endpoint('/api/oss/relocate-constituents', method='post')
@@ -236,35 +236,35 @@ class TestOssViewset(EndpointTester):
             'destination': self.invalid_id,
             'items': []
         }
-        self.executeBadData(data=data)
+        self.executeBadData(data)
 
         # empty items
         data = {
             'destination': self.ks1.model.pk,
             'items': []
         }
-        self.executeBadData(data=data)
+        self.executeBadData(data)
 
         # source == destination
         data = {
             'destination': self.ks1.model.pk,
             'items': [self.ks1X1.pk]
         }
-        self.executeBadData(data=data)
+        self.executeBadData(data)
 
         # moving inherited
         data = {
             'destination': self.ks1.model.pk,
             'items': [self.ks3X2.pk]
         }
-        self.executeBadData(data=data)
+        self.executeBadData(data)
 
         # source and destination are not connected
         data = {
             'destination': self.ks2.model.pk,
             'items': [self.ks1X1.pk]
         }
-        self.executeBadData(data=data)
+        self.executeBadData(data)
 
         data = {
             'destination': self.ks3.model.pk,
@@ -272,14 +272,14 @@ class TestOssViewset(EndpointTester):
         }
         self.ks3X2.refresh_from_db()
         self.assertEqual(self.ks3X2.convention, 'test')
-        self.executeOK(data=data)
+        self.executeOK(data)
         self.assertFalse(Constituenta.objects.filter(as_child__parent_id=self.ks1X2.pk).exists())
 
         data = {
             'destination': self.ks1.model.pk,
             'items': [self.ks3X10.pk]
         }
-        self.executeOK(data=data)
+        self.executeOK(data)
         self.assertTrue(Constituenta.objects.filter(as_parent__child_id=self.ks3X10.pk).exists())
         self.ks1X3 = Constituenta.objects.get(as_parent__child_id=self.ks3X10.pk)
         self.assertEqual(self.ks1X3.convention, 'test2')
