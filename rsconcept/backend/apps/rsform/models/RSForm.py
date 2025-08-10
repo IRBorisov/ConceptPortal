@@ -158,12 +158,12 @@ class RSForm:
         graph_terms = RSForm.graph_term(cst_list, cst_by_alias)
         expansion = graph_terms.expand_outputs(changed)
         expanded_change = changed + expansion
-        update_list: list[Constituenta] = []
 
         if resolver is None:
             resolver = RSForm.resolver_from_list(cst_list)
 
-        if len(expansion) > 0:
+        if expansion:
+            resolved_terms: list[Constituenta] = []
             for cst_id in graph_terms.topological_order():
                 if cst_id not in expansion:
                     continue
@@ -172,21 +172,20 @@ class RSForm:
                 if resolved == resolver.context[cst.alias].get_nominal():
                     continue
                 cst.set_term_resolved(resolved)
-                update_list.append(cst)
+                resolved_terms.append(cst)
                 resolver.context[cst.alias] = Entity(cst.alias, resolved)
-        Constituenta.objects.bulk_update(update_list, ['term_resolved'])
+            Constituenta.objects.bulk_update(resolved_terms, ['term_resolved'])
 
         graph_defs = RSForm.graph_text(cst_list, cst_by_alias)
         update_defs = set(expansion + graph_defs.expand_outputs(expanded_change)).union(changed)
-        update_list = []
-        if len(update_defs) == 0:
-            return
-        for cst_id in update_defs:
-            cst = cst_by_id[cst_id]
-            resolved = resolver.resolve(cst.definition_raw)
-            cst.definition_resolved = resolved
-            update_list.append(cst)
-        Constituenta.objects.bulk_update(update_list, ['definition_resolved'])
+        if update_defs:
+            resolved_defs: list[Constituenta] = []
+            for cst_id in update_defs:
+                cst = cst_by_id[cst_id]
+                resolved = resolver.resolve(cst.definition_raw)
+                cst.definition_resolved = resolved
+                resolved_defs.append(cst)
+            Constituenta.objects.bulk_update(resolved_defs, ['definition_resolved'])
 
     def constituentsQ(self) -> QuerySet[Constituenta]:
         ''' Get QuerySet containing all constituents of current RSForm. '''
@@ -263,7 +262,7 @@ class RSForm:
 
     def substitute(self, substitutions: list[tuple[Constituenta, Constituenta]]) -> None:
         ''' Execute constituenta substitution. '''
-        if len(substitutions) < 1:
+        if not substitutions:
             return
         mapping = {}
         deleted: list[int] = []

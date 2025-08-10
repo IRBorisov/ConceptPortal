@@ -161,11 +161,11 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
                 'height': position['height'],
             })
             m.Layout.update_data(pk, layout)
-            if len(children_blocks) > 0:
+            if children_blocks:
                 for block in children_blocks:
                     block.parent = new_block
                 m.Block.objects.bulk_update(children_blocks, ['parent'])
-            if len(children_operations) > 0:
+            if children_operations:
                 for operation in children_operations:
                     operation.parent = new_block
                 m.Operation.objects.bulk_update(children_operations, ['parent'])

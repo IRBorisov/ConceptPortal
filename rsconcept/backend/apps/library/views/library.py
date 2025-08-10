@@ -171,7 +171,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
             clone.access_policy = data.get('access_policy', m.AccessPolicy.PUBLIC)
             clone.location = data.get('location', m.LocationHead.USER)
             clone.save()
-            need_filter = 'items' in request.data and len(request.data['items']) > 0
+            need_filter = 'items' in request.data and request.data['items']
             for cst in RSFormCached(item).constituentsQ():
                 if not need_filter or cst.pk in request.data['items']:
                     cst.pk = None

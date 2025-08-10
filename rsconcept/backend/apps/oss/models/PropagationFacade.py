@@ -60,7 +60,7 @@ class PropagationFacade:
     def before_substitute(sourceID: int, substitutions: CstSubstitution,
                           exclude: Optional[list[int]] = None) -> None:
         ''' Trigger cascade resolutions before constituents are substituted. '''
-        if len(substitutions) == 0:
+        if not substitutions:
             return
         hosts = _get_oss_hosts(sourceID)
         for host in hosts:
@@ -73,8 +73,10 @@ class PropagationFacade:
         if item.item_type != LibraryItemType.RSFORM:
             return
         hosts = _get_oss_hosts(item.pk)
-        if len(hosts) == 0:
+        if not hosts:
             return
 
         ids = list(Constituenta.objects.filter(schema=item).order_by('order').values_list('pk', flat=True))
-        PropagationFacade.before_delete_cst(item.pk, ids, exclude)
+        for host in hosts:
+            if exclude is None or host.pk not in exclude:
+                OperationSchemaCached(host).before_delete_cst(item.pk, ids)

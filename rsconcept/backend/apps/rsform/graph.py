@@ -110,7 +110,7 @@ class Graph(Generic[ItemType]):
         order = self.topological_order()
         order.reverse()
         for node_id in order:
-            if len(self.inputs[node_id]) == 0:
+            if not self.inputs[node_id]:
                 continue
             for parent in self.inputs[node_id]:
                 result[parent] = result[parent] + [id for id in result[node_id] if id not in result[parent]]
@@ -124,7 +124,7 @@ class Graph(Generic[ItemType]):
             if node_id in marked:
                 continue
             to_visit: list[ItemType] = [node_id]
-            while len(to_visit) > 0:
+            while to_visit:
                 node = to_visit[-1]
                 if node in marked:
                     if node not in result:
@@ -132,7 +132,7 @@ class Graph(Generic[ItemType]):
                     to_visit.remove(node)
                 else:
                     marked.add(node)
-                    if len(self.outputs[node]) <= 0:
+                    if not self.outputs[node]:
                         continue
                     for child_id in self.outputs[node]:
                         if child_id not in marked:

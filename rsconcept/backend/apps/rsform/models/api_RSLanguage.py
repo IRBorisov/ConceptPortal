@@ -79,7 +79,7 @@ def guess_type(alias: str) -> CstType:
 def _get_structure_prefix(alias: str, expression: str, parse: dict) -> Tuple[str, str]:
     ''' Generate prefix and alias for structure generation. '''
     args = parse['args']
-    if len(args) == 0:
+    if not args:
         return (alias, '')
     prefix = expression[0:expression.find(']')] + '] '
     newAlias = alias + '[' + ','.join([arg['alias'] for arg in args]) + ']'

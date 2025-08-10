@@ -223,7 +223,7 @@ class RSFormCached:
 
     def substitute(self, substitutions: list[tuple[Constituenta, Constituenta]]) -> None:
         ''' Execute constituenta substitution. '''
-        if len(substitutions) < 1:
+        if not substitutions:
             return
         self.cache.ensure_loaded_terms()
         mapping = {}

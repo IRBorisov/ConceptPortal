@@ -48,7 +48,7 @@ class OrderManager:
                 continue
             result.append(cst)
             children = self._semantic[cst.pk]['children']
-            if len(children) == 0:
+            if not children:
                 continue
             for child in self._items:
                 if child.pk in children:

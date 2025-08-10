@@ -27,7 +27,7 @@ class PropagationEngine:
     def on_change_cst_type(self, operation_id: int, cst_id: int, ctype: CstType) -> None:
         ''' Trigger cascade resolutions when Constituenta type is changed. '''
         children = self.cache.extend_graph.outputs[operation_id]
-        if len(children) == 0:
+        if not children:
             return
         self.cache.ensure_loaded_subs()
         for child_id in children:
@@ -52,7 +52,7 @@ class PropagationEngine:
     ) -> None:
         ''' Trigger cascade resolutions when Constituenta is inherited. '''
         children = self.cache.extend_graph.outputs[target_operation]
-        if len(children) == 0:
+        if not children:
             return
         for child_id in children:
             if not exclude or child_id not in exclude:
@@ -96,7 +96,7 @@ class PropagationEngine:
     ) -> None:
         ''' Trigger cascade resolutions when Constituenta data is changed. '''
         children = self.cache.extend_graph.outputs[operation]
-        if len(children) == 0:
+        if not children:
             return
         self.cache.ensure_loaded_subs()
         for child_id in children:
@@ -112,10 +112,10 @@ class PropagationEngine:
             if successor is None:
                 continue
             new_data = map_cst_update_data(successor, data, old_data, alias_mapping)
-            if len(new_data) == 0:
+            if not new_data:
                 continue
             new_old_data = child_schema.update_cst(successor.pk, new_data)
-            if len(new_old_data) == 0:
+            if not new_old_data:
                 continue
             new_mapping = {alias_mapping[alias]: cst for alias, cst in new_mapping.items()}
             self.on_update_cst(
@@ -129,7 +129,7 @@ class PropagationEngine:
     def on_before_substitute(self, substitutions: CstSubstitution, operation: Operation) -> None:
         ''' Trigger cascade resolutions when Constituenta substitution is executed. '''
         children = self.cache.extend_graph.outputs[operation.pk]
-        if len(children) == 0:
+        if not children:
             return
         self.cache.ensure_loaded_subs()
         for child_id in children:
@@ -138,7 +138,7 @@ class PropagationEngine:
             if child_schema is None:
                 continue
             new_substitutions = self._transform_substitutions(substitutions, child_id, child_schema)
-            if len(new_substitutions) == 0:
+            if not new_substitutions:
                 continue
             self.on_before_substitute(new_substitutions, child_operation)
             child_schema.substitute(new_substitutions)
@@ -146,7 +146,7 @@ class PropagationEngine:
     def on_delete_inherited(self, operation: int, target: list[int]) -> None:
         ''' Trigger cascade resolutions when Constituenta inheritance is deleted. '''
         children = self.cache.extend_graph.outputs[operation]
-        if len(children) == 0:
+        if not children:
             return
         self.cache.ensure_loaded_subs()
         for child_id in children:
@@ -161,7 +161,7 @@ class PropagationEngine:
         self.undo_substitutions_cst(parent_ids, operation, schema)
         target_ids = self.cache.get_inheritors_list(parent_ids, operation_id)
         self.on_delete_inherited(operation_id, target_ids)
-        if len(target_ids) > 0:
+        if target_ids:
             self.cache.remove_cst(operation_id, target_ids)
             schema.delete_cst(target_ids)
 
@@ -204,7 +204,7 @@ class PropagationEngine:
             assert new_original_id is not None
             new_original = schema.cache.by_id[new_original_id]
 
-        if len(dependant) > 0:
+        if dependant:
             substitution_id = self.cache.get_inheritor(target.substitution_id, operation_id)
             assert substitution_id is not None
             substitution_inheritor = schema.cache.by_id[substitution_id]
@@ -231,7 +231,7 @@ class PropagationEngine:
         return prev_index + 1
 
     def _transform_mapping(self, mapping: CstMapping, operation: Operation, schema: RSFormCached) -> CstMapping:
-        if len(mapping) == 0:
+        if not mapping:
             return mapping
         result: CstMapping = {}
         for alias, cst in mapping.items():
@@ -299,7 +299,7 @@ class PropagationEngine:
         alias_mapping = cst_mapping_to_alias(mapping)
         schema.apply_partial_mapping(alias_mapping, target)
         children = self.cache.extend_graph.outputs[operation]
-        if len(children) == 0:
+        if not children:
             return
         self.cache.ensure_loaded_subs()
         for child_id in children:
@@ -311,6 +311,6 @@ class PropagationEngine:
             if not new_mapping:
                 continue
             new_target = self.cache.get_inheritors_list(target, child_id)
-            if len(new_target) == 0:
+            if not new_target:
                 continue
             self._on_partial_mapping(new_mapping, new_target, child_id, child_schema)

@@ -69,7 +69,7 @@ class OperationSchemaCached:
     def set_input(self, target: int, schema: Optional[LibraryItem]) -> None:
         ''' Set input schema for operation. '''
         operation = self.cache.operation_by_id[target]
-        has_children = len(self.cache.extend_graph.outputs[target]) > 0
+        has_children = bool(self.cache.extend_graph.outputs[target])
         old_schema = self.cache.get_schema(operation)
         if schema is None and old_schema is None or \
                 (schema is not None and old_schema is not None and schema.pk == old_schema.model.pk):
@@ -105,7 +105,7 @@ class OperationSchemaCached:
                 processed.append(current.argument)
                 current.order = arguments.index(current.argument)
                 updated.append(current)
-        if len(deleted) > 0:
+        if deleted:
             self.before_delete_arguments(operation, [x.argument for x in deleted])
             for deleted_arg in deleted:
                 self.cache.remove_argument(deleted_arg)
@@ -119,7 +119,7 @@ class OperationSchemaCached:
                 new_arg = Argument.objects.create(operation=operation, argument=arg, order=order)
                 self.cache.insert_argument(new_arg)
                 added.append(arg)
-        if len(added) > 0:
+        if added:
             self.after_create_arguments(operation, added)
 
     def set_substitutions(self, target: int, substitutes: list[dict]) -> None:
@@ -134,11 +134,11 @@ class OperationSchemaCached:
                 x for x in substitutes
                 if x['original'] == current.original and x['substitution'] == current.substitution
             ]
-            if len(subs) == 0:
+            if not subs:
                 deleted.append(current)
             else:
                 processed.append(subs[0])
-        if len(deleted) > 0:
+        if deleted:
             if schema is not None:
                 for sub in deleted:
                     self.engine.undo_substitution(schema, sub)
@@ -169,7 +169,7 @@ class OperationSchemaCached:
             .order_by('order')
             if arg.argument.result_id is not None
         ]
-        if len(schemas) == 0:
+        if not schemas:
             return False
         substitutions = operation.getQ_substitutions()
         receiver = OperationSchema.create_input(self.model, self.cache.operation_by_id[operation.pk])
@@ -204,7 +204,7 @@ class OperationSchemaCached:
         receiver.reset_aliases()
         receiver.resolve_all_text()
 
-        if len(self.cache.extend_graph.outputs[operation.pk]) > 0:
+        if self.cache.extend_graph.outputs[operation.pk]:
             receiver_items = list(Constituenta.objects.filter(schema=receiver.model).order_by('order'))
             self.after_create_cst(receiver, receiver_items)
         receiver.model.save(update_fields=['time_update'])
@@ -320,7 +320,7 @@ class OperationSchemaCached:
 
     def _on_add_substitutions(self, schema: Optional[RSFormCached], added: list[Substitution]) -> None:
         ''' Trigger cascade resolutions when Constituenta substitution is added. '''
-        if len(added) == 0:
+        if not added:
             return
         if schema is None:
             for sub in added:

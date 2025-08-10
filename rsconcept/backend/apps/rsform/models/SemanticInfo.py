@@ -126,7 +126,7 @@ class SemanticInfo:
         return sources
 
     def _need_check_head(self, sources: set[int], head: str) -> bool:
-        if len(sources) == 0:
+        if not sources:
             return True
         elif len(sources) != 1:
             return False

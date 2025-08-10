@@ -129,7 +129,7 @@ class OperationSchema:
             .order_by('order')
             if arg.argument.result_id is not None
         ]
-        if len(schemas) == 0:
+        if not schemas:
             return
         substitutions = operation.getQ_substitutions()
         receiver = OperationSchema.create_input(self.model, operation)

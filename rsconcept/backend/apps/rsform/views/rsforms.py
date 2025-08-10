@@ -648,7 +648,7 @@ def inline_synthesis(request: Request) -> HttpResponse:
 
     receiver = m.RSFormCached(serializer.validated_data['receiver'])
     items = cast(list[m.Constituenta], serializer.validated_data['items'])
-    if len(items) == 0:
+    if not items:
         source = cast(LibraryItem, serializer.validated_data['source'])
         items = list(m.Constituenta.objects.filter(schema=source).order_by('order'))
 
