@@ -1,11 +1,13 @@
 'use client';
 
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import clsx from 'clsx';
 
 import { HelpTopic } from '@/features/help';
+import { SubstitutionValidator } from '@/features/oss/models/oss-api';
 
-import { ErrorField } from '@/components/input';
+import { ErrorField, TextArea } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
@@ -34,6 +36,10 @@ export function DlgSubstituteCst() {
     },
     mode: 'onChange'
   });
+  const substitutions = useWatch({ control, name: 'substitutions' });
+
+  const validator = new SubstitutionValidator([schema], substitutions);
+  const isCorrect = validator.validate();
 
   function onSubmit(data: ISubstitutionsDTO) {
     return cstSubstitute({ itemID: schema.id, data: data }).then(() => onSubstitute(data));
@@ -62,7 +68,13 @@ export function DlgSubstituteCst() {
           />
         )}
       />
-      <ErrorField className='mt-2' error={errors.substitutions} />
+      <ErrorField className='-mt-6 px-3' error={errors.substitutions} />
+      <TextArea
+        disabled
+        value={validator.msg}
+        rows={4}
+        className={clsx('mt-3', isCorrect ? '' : 'border-(--acc-fg-red) border-2')}
+      />
     </ModalForm>
   );
 }

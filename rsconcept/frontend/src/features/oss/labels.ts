@@ -42,6 +42,8 @@ export function describeSubstitutionError(error: RO<ISubstitutionErrorDescriptio
       return `Ошибка ${error.params[0]} -> ${error.params[1]}: замена структурного понятия базисным множеством`;
     case SubstitutionErrorType.invalidConstant:
       return `Ошибка ${error.params[0]} -> ${error.params[1]}: подстановка константного множества возможна только вместо другого константного`;
+    case SubstitutionErrorType.invalidNominal:
+      return `Ошибка ${error.params[0]} -> ${error.params[1]}: подстановка номеноида возможна только вместо другого номеноида`;
     case SubstitutionErrorType.invalidClasses:
       return `Ошибка ${error.params[0]} -> ${error.params[1]}: классы конституент не совпадают`;
     case SubstitutionErrorType.typificationCycle:

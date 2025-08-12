@@ -112,7 +112,8 @@ export const SubstitutionErrorType = {
   unequalTypification: 7,
   unequalExpressions: 8,
   unequalArgsCount: 9,
-  unequalArgs: 10
+  unequalArgs: 10,
+  invalidNominal: 11
 } as const;
 
 export type SubstitutionErrorType = (typeof SubstitutionErrorType)[keyof typeof SubstitutionErrorType];

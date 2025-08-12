@@ -183,8 +183,18 @@ export class SubstitutionValidator {
         return this.reportError(SubstitutionErrorType.incorrectCst, [substitution.alias, original.alias]);
       }
       switch (substitution.cst_type) {
+        case CstType.NOMINAL: {
+          if (original.cst_type !== CstType.NOMINAL) {
+            return this.reportError(SubstitutionErrorType.invalidNominal, [substitution.alias, original.alias]);
+          }
+          break;
+        }
         case CstType.BASE: {
-          if (original.cst_type !== CstType.BASE && original.cst_type !== CstType.CONSTANT) {
+          if (
+            original.cst_type !== CstType.BASE &&
+            original.cst_type !== CstType.CONSTANT &&
+            original.cst_type !== CstType.NOMINAL
+          ) {
             return this.reportError(SubstitutionErrorType.invalidBasic, [substitution.alias, original.alias]);
           }
           break;
@@ -295,7 +305,11 @@ export class SubstitutionValidator {
     }
     for (const item of this.substitutions) {
       const original = this.cstByID.get(item.original)!;
-      if (original.cst_type === CstType.BASE || original.cst_type === CstType.CONSTANT) {
+      if (
+        original.cst_type === CstType.BASE ||
+        original.cst_type === CstType.CONSTANT ||
+        original.cst_type === CstType.NOMINAL
+      ) {
         continue;
       }
       const substitution = this.cstByID.get(item.substitution)!;
