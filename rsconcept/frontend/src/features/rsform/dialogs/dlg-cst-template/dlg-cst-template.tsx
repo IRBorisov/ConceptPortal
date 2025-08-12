@@ -19,7 +19,7 @@ import {
   schemaCreateConstituenta
 } from '../../backend/types';
 import { useCreateConstituenta } from '../../backend/use-create-constituenta';
-import { type IRSForm } from '../../models/rsform';
+import { useRSFormSuspense } from '../../backend/use-rsform';
 import { generateAlias, validateNewAlias } from '../../models/rsform-api';
 import { FormCreateCst } from '../dlg-create-cst/form-create-cst';
 
@@ -28,7 +28,7 @@ import { TabTemplate } from './tab-template';
 import { TemplateState } from './template-state';
 
 export interface DlgCstTemplateProps {
-  schema: IRSForm;
+  schemaID: number;
   onCreate: (data: RO<IConstituentaBasicsDTO>) => void;
   insertAfter?: number;
 }
@@ -41,8 +41,9 @@ export const TabID = {
 export type TabID = (typeof TabID)[keyof typeof TabID];
 
 export function DlgCstTemplate() {
-  const { schema, onCreate, insertAfter } = useDialogsStore(state => state.props as DlgCstTemplateProps);
+  const { schemaID, onCreate, insertAfter } = useDialogsStore(state => state.props as DlgCstTemplateProps);
   const { createConstituenta: cstCreate } = useCreateConstituenta();
+  const { schema } = useRSFormSuspense({ itemID: schemaID });
 
   const methods = useForm<ICreateConstituentaDTO>({
     resolver: zodResolver(schemaCreateConstituenta),
@@ -92,7 +93,7 @@ export function DlgCstTemplate() {
             </TabPanel>
 
             <TabPanel>
-              <TabArguments />
+              <TabArguments schema={schema} />
             </TabPanel>
 
             <TabPanel>

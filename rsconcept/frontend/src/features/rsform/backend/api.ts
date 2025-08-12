@@ -5,7 +5,7 @@ import { DELAYS, KEYS } from '@/backend/configuration';
 import { infoMsg } from '@/utils/labels';
 
 import {
-  type IAssociationDataDTO,
+  type IAssociation,
   type IAssociationTargetDTO,
   type ICheckConstituentaDTO,
   type IConstituentaCreatedResponse,
@@ -154,8 +154,8 @@ export const rsformsApi = {
       request: { data: data }
     }),
 
-  createAssociation: ({ itemID, data }: { itemID: number; data: IAssociationDataDTO }) =>
-    axiosPost<IAssociationDataDTO, IRSFormDTO>({
+  createAssociation: ({ itemID, data }: { itemID: number; data: IAssociation }) =>
+    axiosPost<IAssociation, IRSFormDTO>({
       schema: schemaRSForm,
       endpoint: `/api/rsforms/${itemID}/create-association`,
       request: {
@@ -163,8 +163,8 @@ export const rsformsApi = {
         successMessage: infoMsg.changesSaved
       }
     }),
-  deleteAssociation: ({ itemID, data }: { itemID: number; data: IAssociationDataDTO }) =>
-    axiosPatch<IAssociationDataDTO, IRSFormDTO>({
+  deleteAssociation: ({ itemID, data }: { itemID: number; data: IAssociation }) =>
+    axiosPatch<IAssociation, IRSFormDTO>({
       schema: schemaRSForm,
       endpoint: `/api/rsforms/${itemID}/delete-association`,
       request: {

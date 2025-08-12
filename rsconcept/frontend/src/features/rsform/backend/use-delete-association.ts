@@ -5,7 +5,7 @@ import { useUpdateTimestamp } from '@/features/library/backend/use-update-timest
 import { KEYS } from '@/backend/configuration';
 
 import { rsformsApi } from './api';
-import { type IAssociationDataDTO } from './types';
+import { type IAssociation } from './types';
 
 export const useDeleteAssociation = () => {
   const client = useQueryClient();
@@ -24,6 +24,6 @@ export const useDeleteAssociation = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    deleteAssociation: (data: { itemID: number; data: IAssociationDataDTO }) => mutation.mutateAsync(data)
+    deleteAssociation: (data: { itemID: number; data: IAssociation }) => mutation.mutateAsync(data)
   };
 };

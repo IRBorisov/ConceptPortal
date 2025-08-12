@@ -15,21 +15,23 @@ import { useGenerateLexeme } from '../../backend/cctext/use-generate-lexeme';
 import { useInflectText } from '../../backend/cctext/use-inflect-text';
 import { useIsProcessingCctext } from '../../backend/cctext/use-is-processing-cctext';
 import { useParseText } from '../../backend/cctext/use-parse-text';
+import { useRSFormSuspense } from '../../backend/use-rsform';
 import { useUpdateConstituenta } from '../../backend/use-update-constituenta';
 import { SelectMultiGrammeme } from '../../components/select-multi-grammeme';
 import { type Grammeme, type IWordForm, supportedGrammemes } from '../../models/language';
 import { parseGrammemes, wordFormEquals } from '../../models/language-api';
-import { type IConstituenta } from '../../models/rsform';
 
 import { TableWordForms } from './table-word-forms';
 
 export interface DlgEditWordFormsProps {
   itemID: number;
-  target: IConstituenta;
+  targetID: number;
 }
 
 export function DlgEditWordForms() {
-  const { itemID, target } = useDialogsStore(state => state.props as DlgEditWordFormsProps);
+  const { itemID, targetID } = useDialogsStore(state => state.props as DlgEditWordFormsProps);
+  const { schema } = useRSFormSuspense({ itemID: itemID });
+  const target = schema.cstByID.get(targetID)!;
   const { updateConstituenta: cstUpdate } = useUpdateConstituenta();
 
   const isProcessing = useIsProcessingCctext();

@@ -95,7 +95,7 @@ export interface ICheckConstituentaDTO {
 export type ISubstitutionsDTO = z.infer<typeof schemaSubstitutions>;
 
 /** Represents data for creating or deleting an association. */
-export type IAssociationDataDTO = z.infer<typeof schemaAssociationData>;
+export type IAssociation = z.infer<typeof schemaAssociation>;
 
 /** Represents data for clearing all associations for a target constituenta. */
 export type IAssociationTargetDTO = z.infer<typeof schemaAssociationTarget>;
@@ -308,6 +308,11 @@ export const schemaConstituenta = schemaConstituentaBasics.extend({
     .optional()
 });
 
+export const schemaAssociation = z.strictObject({
+  container: z.number(),
+  associate: z.number()
+});
+
 export const schemaRSForm = schemaLibraryItem.extend({
   editors: z.array(z.number()),
 
@@ -315,7 +320,7 @@ export const schemaRSForm = schemaLibraryItem.extend({
   versions: z.array(schemaVersionInfo),
 
   items: z.array(schemaConstituenta),
-  association: z.array(z.strictObject({ container: z.number(), associate: z.number() })),
+  association: z.array(schemaAssociation),
   inheritance: z.array(
     z.strictObject({
       child: z.number(),
@@ -390,11 +395,6 @@ export const schemaSubstituteConstituents = z.strictObject({
 
 export const schemaSubstitutions = z.strictObject({
   substitutions: z.array(schemaSubstituteConstituents).min(1, { message: errorMsg.emptySubstitutions })
-});
-
-export const schemaAssociationData = z.strictObject({
-  container: z.number(),
-  associate: z.number()
 });
 
 export const schemaAssociationTarget = z.strictObject({

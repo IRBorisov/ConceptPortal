@@ -14,20 +14,21 @@ import {
   schemaCreateConstituenta
 } from '../../backend/types';
 import { useCreateConstituenta } from '../../backend/use-create-constituenta';
-import { type IRSForm } from '../../models/rsform';
+import { useRSFormSuspense } from '../../backend/use-rsform';
 import { validateNewAlias } from '../../models/rsform-api';
 
 import { FormCreateCst } from './form-create-cst';
 
 export interface DlgCreateCstProps {
   initial: ICreateConstituentaDTO;
-  schema: IRSForm;
+  schemaID: number;
   onCreate: (data: RO<IConstituentaBasicsDTO>) => void;
 }
 
 export function DlgCreateCst() {
-  const { initial, schema, onCreate } = useDialogsStore(state => state.props as DlgCreateCstProps);
+  const { initial, schemaID, onCreate } = useDialogsStore(state => state.props as DlgCreateCstProps);
   const { createConstituenta: cstCreate } = useCreateConstituenta();
+  const { schema } = useRSFormSuspense({ itemID: schemaID });
 
   const methods = useForm<ICreateConstituentaDTO>({
     resolver: zodResolver(schemaCreateConstituenta),

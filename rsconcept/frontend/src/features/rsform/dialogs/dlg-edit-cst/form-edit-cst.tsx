@@ -5,12 +5,16 @@ import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 
 import { MiniButton } from '@/components/control';
-import { TextArea, TextInput } from '@/components/input';
+import { Label, TextArea, TextInput } from '@/components/input';
 
 import { CstType, type IUpdateConstituentaDTO } from '../../backend/types';
+import { useClearAssociations } from '../../backend/use-clear-associations';
+import { useCreateAssociation } from '../../backend/use-create-association';
+import { useDeleteAssociation } from '../../backend/use-delete-association';
 import { IconCrucialValue } from '../../components/icon-crucial-value';
 import { RSInput } from '../../components/rs-input';
 import { SelectCstType } from '../../components/select-cst-type';
+import { SelectMultiConstituenta } from '../../components/select-multi-constituenta';
 import { getRSDefinitionPlaceholder, labelCstTypification, labelRSExpression } from '../../labels';
 import { type IConstituenta, type IRSForm } from '../../models/rsform';
 import { generateAlias, isBaseSet, isBasicConcept } from '../../models/rsform-api';
@@ -21,6 +25,10 @@ interface FormEditCstProps {
 }
 
 export function FormEditCst({ target, schema }: FormEditCstProps) {
+  const { createAssociation } = useCreateAssociation();
+  const { deleteAssociation } = useDeleteAssociation();
+  const { clearAssociations } = useClearAssociations();
+
   const {
     setValue,
     control,
@@ -36,6 +44,7 @@ export function FormEditCst({ target, schema }: FormEditCstProps) {
   const isBasic = isBasicConcept(cst_type) || cst_type === CstType.NOMINAL;
   const isElementary = isBaseSet(cst_type);
   const showConvention = !!convention || forceComment || isBasic;
+  const associations = target.associations.map(id => schema.cstByID.get(id)!);
 
   function handleTypeChange(newValue: CstType) {
     setValue('item_data.cst_type', newValue);
@@ -45,6 +54,35 @@ export function FormEditCst({ target, schema }: FormEditCstProps) {
 
   function handleToggleCrucial() {
     setValue('item_data.crucial', !crucial);
+  }
+
+  function handleAddAssociation(item: IConstituenta) {
+    void createAssociation({
+      itemID: schema.id,
+      data: {
+        container: target.id,
+        associate: item.id
+      }
+    });
+  }
+
+  function handleRemoveAssociation(item: IConstituenta) {
+    void deleteAssociation({
+      itemID: schema.id,
+      data: {
+        container: target.id,
+        associate: item.id
+      }
+    });
+  }
+
+  function handleClearAssociations() {
+    void clearAssociations({
+      itemID: schema.id,
+      data: {
+        target: target.id
+      }
+    });
   }
 
   return (
@@ -82,6 +120,20 @@ export function FormEditCst({ target, schema }: FormEditCstProps) {
         {...register('item_data.term_raw')}
         error={errors.item_data?.term_raw}
       />
+
+      {target.cst_type === CstType.NOMINAL || target.associations.length > 0 ? (
+        <div className='flex flex-col gap-1'>
+          <Label text='Ассоциируемые конституенты' />
+          <SelectMultiConstituenta
+            items={schema.items.filter(item => item.id !== target.id)}
+            value={associations}
+            onAdd={handleAddAssociation}
+            onClear={handleClearAssociations}
+            onRemove={handleRemoveAssociation}
+            placeholder={'Выберите конституенты'}
+          />
+        </div>
+      ) : null}
 
       {cst_type !== CstType.NOMINAL ? (
         <TextArea

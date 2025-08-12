@@ -1,5 +1,7 @@
 'use client';
 
+import assert from 'assert';
+
 import { useRef, useState } from 'react';
 import { ChevronDownIcon } from 'lucide-react';
 
@@ -9,19 +11,31 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { cn } from '../utils';
 
-interface ComboMultiProps<Option> extends Styling {
+interface ComboMultiPropsBase<Option> extends Styling {
   id?: string;
   items?: Option[];
   value: Option[];
-  onChange: (newValue: Option[]) => void;
 
   idFunc: (item: Option) => string;
   labelValueFunc: (item: Option) => string;
   labelOptionFunc: (item: Option) => string;
 
+  disabled?: boolean;
   placeholder?: string;
   noSearch?: boolean;
 }
+
+interface ComboMultiPropsFull<Option> extends ComboMultiPropsBase<Option> {
+  onChange: (newValue: Option[]) => void;
+}
+
+interface ComboMultiPropsSplit<Option> extends ComboMultiPropsBase<Option> {
+  onClear: () => void;
+  onAdd: (item: Option) => void;
+  onRemove: (item: Option) => void;
+}
+
+type ComboMultiProps<Option> = ComboMultiPropsFull<Option> | ComboMultiPropsSplit<Option>;
 
 /**
  * Displays a combo-box component with multiple selection.
@@ -30,14 +44,15 @@ export function ComboMulti<Option>({
   id,
   items,
   value,
-  onChange,
   labelValueFunc,
   labelOptionFunc,
   idFunc,
   placeholder,
   className,
   style,
-  noSearch
+  disabled,
+  noSearch,
+  ...restProps
 }: ComboMultiProps<Option>) {
   const [open, setOpen] = useState(false);
   const [popoverWidth, setPopoverWidth] = useState<number | undefined>(undefined);
@@ -54,19 +69,34 @@ export function ComboMulti<Option>({
     if (value.includes(newValue)) {
       handleRemoveValue(newValue);
     } else {
-      onChange([...value, newValue]);
+      if ('onAdd' in restProps && typeof restProps.onAdd === 'function') {
+        restProps.onAdd(newValue);
+      } else {
+        assert('onChange' in restProps);
+        restProps.onChange([...value, newValue]);
+      }
       setOpen(false);
     }
   }
 
   function handleRemoveValue(delValue: Option) {
-    onChange(value.filter(v => v !== delValue));
+    if ('onRemove' in restProps && typeof restProps.onRemove === 'function') {
+      restProps.onRemove(delValue);
+    } else {
+      assert('onChange' in restProps);
+      restProps.onChange(value.filter(v => v !== delValue));
+    }
     setOpen(false);
   }
 
   function handleClear(event: React.MouseEvent<SVGElement>) {
     event.stopPropagation();
-    onChange([]);
+    if ('onClear' in restProps && typeof restProps.onClear === 'function') {
+      restProps.onClear();
+    } else {
+      assert('onChange' in restProps);
+      restProps.onChange([]);
+    }
     setOpen(false);
   }
 
@@ -81,7 +111,7 @@ export function ComboMulti<Option>({
           className={cn(
             'relative h-9',
             'flex gap-2 px-3 py-2 items-center justify-between',
-            'bg-input disabled:opacity-50',
+            'bg-input disabled:bg-transparent',
             'cursor-pointer disabled:cursor-auto',
             'whitespace-nowrap',
             'focus-outline border',
@@ -91,32 +121,39 @@ export function ComboMulti<Option>({
             className
           )}
           style={style}
+          disabled={disabled}
         >
-          <div className='flex flex-wrap gap-1 items-center'>
+          <div className='flex flex-wrap gap-2 items-center'>
             {value.length === 0 ? <div className='text-muted-foreground'>{placeholder}</div> : null}
             {value.map(item => (
               <div key={idFunc(item)} className='flex px-1 items-center border rounded-lg bg-accent text-sm'>
                 {labelValueFunc(item)}
-                <IconRemove
-                  tabIndex={-1}
-                  size='1rem'
-                  className='cc-remove cc-hover-pulse'
-                  onClick={event => {
-                    event.stopPropagation();
-                    handleRemoveValue(item);
-                  }}
-                />
+                {!disabled ? (
+                  <IconRemove
+                    tabIndex={-1}
+                    size='1rem'
+                    className='cc-remove cc-hover-pulse'
+                    onClick={
+                      disabled
+                        ? undefined
+                        : event => {
+                            event.stopPropagation();
+                            handleRemoveValue(item);
+                          }
+                    }
+                  />
+                ) : null}
               </div>
             ))}
           </div>
 
           <ChevronDownIcon className={cn('text-muted-foreground', !!value && 'opacity-0')} />
-          {!!value ? (
+          {!!value && !disabled ? (
             <IconRemove
               tabIndex={-1}
               size='1rem'
               className='cc-remove absolute pointer-events-auto right-3 cc-hover-pulse hover:text-primary'
-              onClick={handleClear}
+              onClick={value.length === 0 ? undefined : handleClear}
             />
           ) : null}
         </button>
@@ -127,16 +164,19 @@ export function ComboMulti<Option>({
           <CommandList>
             <CommandEmpty>Список пуст</CommandEmpty>
             <CommandGroup>
-              {items?.map(item => (
-                <CommandItem
-                  key={idFunc(item)}
-                  value={labelOptionFunc(item)}
-                  onSelect={() => handleAddValue(item)}
-                  className={cn(value === item && 'bg-selected text-selected-foreground')}
-                >
-                  {labelOptionFunc(item)}
-                </CommandItem>
-              ))}
+              {items
+                ?.filter(item => !value.includes(item))
+                .map(item => (
+                  <CommandItem
+                    key={idFunc(item)}
+                    value={labelOptionFunc(item)}
+                    onSelect={() => handleAddValue(item)}
+                    disabled={disabled}
+                    className={cn(value === item && 'bg-selected text-selected-foreground')}
+                  >
+                    {labelOptionFunc(item)}
+                  </CommandItem>
+                ))}
             </CommandGroup>
           </CommandList>
         </Command>

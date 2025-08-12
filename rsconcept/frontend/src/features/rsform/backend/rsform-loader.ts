@@ -21,6 +21,8 @@ import { CstType, type IRSFormDTO, ParsingStatus, ValueClass } from './types';
 export class RSFormLoader {
   private schema: IRSForm;
   private graph: Graph = new Graph();
+  private association_graph: Graph = new Graph();
+  private full_graph: Graph = new Graph();
   private cstByAlias = new Map<string, IConstituenta>();
   private cstByID = new Map<number, IConstituenta>();
 
@@ -39,6 +41,8 @@ export class RSFormLoader {
     result.graph = this.graph;
     result.cstByAlias = this.cstByAlias;
     result.cstByID = this.cstByID;
+    result.association_graph = this.association_graph;
+    result.full_graph = this.full_graph;
     return result;
   }
 
@@ -47,6 +51,8 @@ export class RSFormLoader {
       this.cstByAlias.set(cst.alias, cst);
       this.cstByID.set(cst.id, cst);
       this.graph.addNode(cst.id);
+      this.association_graph.addNode(cst.id);
+      this.full_graph.addNode(cst.id);
     });
   }
 
@@ -57,6 +63,7 @@ export class RSFormLoader {
         const source = this.cstByAlias.get(alias);
         if (source) {
           this.graph.addEdge(source.id, cst.id);
+          this.full_graph.addEdge(source.id, cst.id);
         }
       });
     });
@@ -83,6 +90,7 @@ export class RSFormLoader {
       cst.is_template = inferTemplate(cst.definition_formal);
       cst.cst_class = inferClass(cst.cst_type, cst.is_template);
       cst.spawn = [];
+      cst.associations = [];
       cst.spawn_alias = [];
       cst.parent_schema = schemaByCst.get(cst.id);
       cst.parent_schema_index = cst.parent_schema ? parents.indexOf(cst.parent_schema) + 1 : 0;
@@ -101,6 +109,12 @@ export class RSFormLoader {
         parent.spawn.push(cst.id);
         parent.spawn_alias.push(cst.alias);
       }
+    });
+    this.schema.association.forEach(assoc => {
+      const container = this.cstByID.get(assoc.container)!;
+      container.associations.push(assoc.associate);
+      this.full_graph.addEdge(container.id, assoc.associate);
+      this.association_graph.addEdge(container.id, assoc.associate);
     });
   }
 

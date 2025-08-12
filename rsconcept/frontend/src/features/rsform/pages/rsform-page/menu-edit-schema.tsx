@@ -60,7 +60,7 @@ export function MenuEditSchema() {
       return;
     }
     showSubstituteCst({
-      schema: schema,
+      schemaID: schema.id,
       onSubstitute: data => setSelected(prev => prev.filter(id => !data.substitutions.find(sub => sub.original === id)))
     });
   }
@@ -94,7 +94,7 @@ export function MenuEditSchema() {
       return;
     }
     showInlineSynthesis({
-      receiver: schema,
+      receiverID: schema.id,
       onSynthesis: () => deselectAll()
     });
   }

@@ -5,6 +5,7 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { Label, TextInput } from '@/components/input';
 import { useDialogsStore } from '@/stores/dialogs';
 
+import { useRSFormSuspense } from '../../backend/use-rsform';
 import { PickConstituenta } from '../../components/pick-constituenta';
 import { SelectMultiGrammeme } from '../../components/select-multi-grammeme';
 import { SelectWordForm } from '../../components/select-word-form';
@@ -15,7 +16,8 @@ import { CstMatchMode } from '../../stores/cst-search';
 import { type DlgEditReferenceProps, type IEditReferenceState } from './dlg-edit-reference';
 
 export function TabEntityReference() {
-  const { schema, initial } = useDialogsStore(state => state.props as DlgEditReferenceProps);
+  const { schemaID, initial } = useDialogsStore(state => state.props as DlgEditReferenceProps);
+  const { schema } = useRSFormSuspense({ itemID: schemaID });
   const { setValue, control, register } = useFormContext<IEditReferenceState>();
   const alias = useWatch({ control, name: 'entity.entity' });
 

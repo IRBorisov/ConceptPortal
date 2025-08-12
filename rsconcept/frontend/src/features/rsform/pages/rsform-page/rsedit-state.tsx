@@ -231,7 +231,7 @@ export const RSEditState = ({
     if (skipDialog) {
       void cstCreate({ itemID: schema.id, data }).then(onCreateCst);
     } else {
-      showCreateCst({ schema: schema, onCreate: onCreateCst, initial: data });
+      showCreateCst({ schemaID: schema.id, onCreate: onCreateCst, initial: data });
     }
   }
 
@@ -260,7 +260,7 @@ export const RSEditState = ({
       return;
     }
     showDeleteCst({
-      schema: schema,
+      schemaID: schema.id,
       selected: selected,
       afterDelete: (schema, deleted) => {
         const isEmpty = deleted.length === schema.items.length;
@@ -281,7 +281,7 @@ export const RSEditState = ({
     if (isModified && !promptUnsaved()) {
       return;
     }
-    showCstTemplate({ schema: schema, onCreate: onCreateCst, insertAfter: activeCst?.id });
+    showCstTemplate({ schemaID: schema.id, onCreate: onCreateCst, insertAfter: activeCst?.id });
   }
 
   return (

@@ -20,7 +20,6 @@ import {
   supportedGrammemes
 } from '../../models/language';
 import { parseEntityReference, parseGrammemes, parseSyntacticReference } from '../../models/language-api';
-import { type IRSForm } from '../../models/rsform';
 
 import { TabEntityReference } from './tab-entity-reference';
 import { TabSyntacticReference } from './tab-syntactic-reference';
@@ -51,7 +50,7 @@ const schemaEditReferenceState = z
 export type IEditReferenceState = z.infer<typeof schemaEditReferenceState>;
 
 export interface DlgEditReferenceProps {
-  schema: IRSForm;
+  schemaID: number;
   initial: IReferenceInputState;
   onSave: (newRef: IReference) => void;
   onCancel: () => void;

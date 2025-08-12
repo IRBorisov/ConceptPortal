@@ -12,18 +12,19 @@ import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { type ISubstitutionsDTO, schemaSubstitutions } from '../backend/types';
+import { useRSFormSuspense } from '../backend/use-rsform';
 import { useSubstituteConstituents } from '../backend/use-substitute-constituents';
 import { PickSubstitutions } from '../components/pick-substitutions';
-import { type IRSForm } from '../models/rsform';
 
 export interface DlgSubstituteCstProps {
-  schema: IRSForm;
+  schemaID: number;
   onSubstitute: (data: ISubstitutionsDTO) => void;
 }
 
 export function DlgSubstituteCst() {
-  const { onSubstitute, schema } = useDialogsStore(state => state.props as DlgSubstituteCstProps);
+  const { onSubstitute, schemaID } = useDialogsStore(state => state.props as DlgSubstituteCstProps);
   const { substituteConstituents: cstSubstitute } = useSubstituteConstituents();
+  const { schema } = useRSFormSuspense({ itemID: schemaID });
 
   const {
     handleSubmit,

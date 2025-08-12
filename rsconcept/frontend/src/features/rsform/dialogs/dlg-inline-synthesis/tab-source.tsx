@@ -7,16 +7,17 @@ import { useLibrary } from '@/features/library/backend/use-library';
 import { PickSchema } from '@/features/library/components/pick-schema';
 
 import { TextInput } from '@/components/input';
-import { useDialogsStore } from '@/stores/dialogs';
 
 import { type IInlineSynthesisDTO } from '../../backend/types';
+import { type IRSForm } from '../../models/rsform';
 import { sortItemsForInlineSynthesis } from '../../models/rsform-api';
 
-import { type DlgInlineSynthesisProps } from './dlg-inline-synthesis';
+interface TabSourceProps {
+  receiver: IRSForm;
+}
 
-export function TabSource() {
+export function TabSource({ receiver }: TabSourceProps) {
   const { items: libraryItems } = useLibrary();
-  const { receiver } = useDialogsStore(state => state.props as DlgInlineSynthesisProps);
   const { setValue, control } = useFormContext<IInlineSynthesisDTO>();
   const sourceID = useWatch({ control, name: 'source' });
 

@@ -98,7 +98,7 @@ export function ToolbarSchema({
       convention: '',
       term_forms: []
     };
-    showCreateCst({ schema: schema, onCreate: onCreateCst, initial: data });
+    showCreateCst({ schemaID: schema.id, onCreate: onCreateCst, initial: data });
   }
 
   function cloneCst() {
@@ -126,7 +126,7 @@ export function ToolbarSchema({
       return;
     }
     showDeleteCst({
-      schema: schema,
+      schemaID: schema.id,
       selected: [activeCst.id],
       afterDelete: resetActive
     });
@@ -192,7 +192,7 @@ export function ToolbarSchema({
   }
 
   function handleShowTermGraph() {
-    showTermGraph({ schema: schema });
+    showTermGraph({ schemaID: schema.id });
   }
 
   function handleReindex() {

@@ -33,7 +33,7 @@ export function ViewSchema({ schemaID, isMutable }: ViewSchemaProps) {
   }, [schema, setCurrentSchema]);
 
   function handleEditCst(cst: IConstituenta) {
-    showEditCst({ schema: schema, target: cst });
+    showEditCst({ schemaID: schema.id, targetID: cst.id });
   }
 
   return (

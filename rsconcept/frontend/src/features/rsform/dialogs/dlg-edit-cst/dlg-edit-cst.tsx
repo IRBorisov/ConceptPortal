@@ -13,20 +13,22 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { errorMsg } from '@/utils/labels';
 
 import { type IUpdateConstituentaDTO, schemaUpdateConstituenta } from '../../backend/types';
+import { useRSFormSuspense } from '../../backend/use-rsform';
 import { useUpdateConstituenta } from '../../backend/use-update-constituenta';
-import { type IConstituenta, type IRSForm } from '../../models/rsform';
 import { validateNewAlias } from '../../models/rsform-api';
 import { RSTabID } from '../../pages/rsform-page/rsedit-context';
 
 import { FormEditCst } from './form-edit-cst';
 
 export interface DlgEditCstProps {
-  schema: IRSForm;
-  target: IConstituenta;
+  schemaID: number;
+  targetID: number;
 }
 
 export function DlgEditCst() {
-  const { schema, target } = useDialogsStore(state => state.props as DlgEditCstProps);
+  const { schemaID, targetID } = useDialogsStore(state => state.props as DlgEditCstProps);
+  const { schema } = useRSFormSuspense({ itemID: schemaID });
+  const target = schema.cstByID.get(targetID)!;
   const hideDialog = useDialogsStore(state => state.hideDialog);
   const { updateConstituenta } = useUpdateConstituenta();
   const router = useConceptNavigation();

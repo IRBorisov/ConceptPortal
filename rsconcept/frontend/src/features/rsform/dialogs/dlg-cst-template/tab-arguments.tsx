@@ -8,21 +8,22 @@ import { MiniButton } from '@/components/control';
 import { DataTable, type IConditionalStyle } from '@/components/data-table';
 import { IconAccept, IconRemove, IconReset } from '@/components/icons';
 import { NoData } from '@/components/view';
-import { useDialogsStore } from '@/stores/dialogs';
 
 import { type ICreateConstituentaDTO } from '../../backend/types';
 import { PickConstituenta } from '../../components/pick-constituenta';
 import { RSInput } from '../../components/rs-input';
-import { type IConstituenta } from '../../models/rsform';
+import { type IConstituenta, type IRSForm } from '../../models/rsform';
 import { type IArgumentValue } from '../../models/rslang';
 
-import { type DlgCstTemplateProps } from './dlg-cst-template';
 import { useTemplateContext } from './template-context';
 
 const argumentsHelper = createColumnHelper<IArgumentValue>();
 
-export function TabArguments() {
-  const { schema } = useDialogsStore(state => state.props as DlgCstTemplateProps);
+interface TabArgumentsProps {
+  schema: IRSForm;
+}
+
+export function TabArguments({ schema }: TabArgumentsProps) {
   const { control } = useFormContext<ICreateConstituentaDTO>();
   const { args, onChangeArguments } = useTemplateContext();
   const definition = useWatch({ control, name: 'definition_formal' });

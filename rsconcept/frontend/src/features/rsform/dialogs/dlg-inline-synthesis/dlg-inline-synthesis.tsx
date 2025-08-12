@@ -11,14 +11,14 @@ import { useDialogsStore } from '@/stores/dialogs';
 
 import { type IInlineSynthesisDTO, schemaInlineSynthesis } from '../../backend/types';
 import { useInlineSynthesis } from '../../backend/use-inline-synthesis';
-import { type IRSForm } from '../../models/rsform';
+import { useRSFormSuspense } from '../../backend/use-rsform';
 
 import { TabConstituents } from './tab-constituents';
 import { TabSource } from './tab-source';
 import { TabSubstitutions } from './tab-substitutions';
 
 export interface DlgInlineSynthesisProps {
-  receiver: IRSForm;
+  receiverID: number;
   onSynthesis: () => void;
 }
 
@@ -30,9 +30,10 @@ export const TabID = {
 export type TabID = (typeof TabID)[keyof typeof TabID];
 
 export function DlgInlineSynthesis() {
-  const { receiver, onSynthesis } = useDialogsStore(state => state.props as DlgInlineSynthesisProps);
+  const { receiverID, onSynthesis } = useDialogsStore(state => state.props as DlgInlineSynthesisProps);
   const [activeTab, setActiveTab] = useState<TabID>(TabID.SCHEMA);
   const { inlineSynthesis } = useInlineSynthesis();
+  const { schema: receiver } = useRSFormSuspense({ itemID: receiverID });
 
   const methods = useForm<IInlineSynthesisDTO>({
     resolver: zodResolver(schemaInlineSynthesis),
@@ -81,7 +82,7 @@ export function DlgInlineSynthesis() {
 
         <FormProvider {...methods}>
           <TabPanel>
-            <TabSource />
+            <TabSource receiver={receiver} />
           </TabPanel>
 
           <TabPanel>
@@ -95,7 +96,7 @@ export function DlgInlineSynthesis() {
           <TabPanel>
             {!!sourceID ? (
               <Suspense fallback={<Loader />}>
-                <TabSubstitutions />
+                <TabSubstitutions receiver={receiver} />
               </Suspense>
             ) : null}
           </TabPanel>

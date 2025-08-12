@@ -25,8 +25,17 @@ const SIDELIST_LAYOUT_THRESHOLD = 1000; // px
 const COLUMN_DENSE_SEARCH_THRESHOLD = 1100;
 
 export function EditorConstituenta() {
-  const { schema, activeCst, isContentEditable, selected, setSelected, moveUp, moveDown, cloneCst, navigateCst } =
-    useRSEdit();
+  const {
+    schema, //
+    activeCst,
+    isContentEditable,
+    selected,
+    setSelected,
+    moveUp,
+    moveDown,
+    cloneCst,
+    navigateCst
+  } = useRSEdit();
   const windowSize = useWindowSize();
   const mainHeight = useMainHeight();
 

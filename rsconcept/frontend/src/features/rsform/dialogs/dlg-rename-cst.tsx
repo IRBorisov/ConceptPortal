@@ -10,24 +10,26 @@ import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { type CstType, type IUpdateConstituentaDTO, schemaUpdateConstituenta } from '../backend/types';
+import { useRSFormSuspense } from '../backend/use-rsform';
 import { useUpdateConstituenta } from '../backend/use-update-constituenta';
 import { SelectCstType } from '../components/select-cst-type';
-import { type IConstituenta, type IRSForm } from '../models/rsform';
 import { generateAlias, validateNewAlias } from '../models/rsform-api';
 
 export interface DlgRenameCstProps {
-  schema: IRSForm;
-  target: IConstituenta;
+  schemaID: number;
+  targetID: number;
 }
 
 export function DlgRenameCst() {
-  const { schema, target } = useDialogsStore(state => state.props as DlgRenameCstProps);
+  const { schemaID, targetID } = useDialogsStore(state => state.props as DlgRenameCstProps);
   const { updateConstituenta: cstUpdate } = useUpdateConstituenta();
+  const { schema } = useRSFormSuspense({ itemID: schemaID });
+  const target = schema.cstByID.get(targetID)!;
 
   const { register, setValue, handleSubmit, control } = useForm<IUpdateConstituentaDTO>({
     resolver: zodResolver(schemaUpdateConstituenta),
     defaultValues: {
-      target: target.id,
+      target: targetID,
       item_data: {
         alias: target.alias,
         cst_type: target.cst_type
@@ -39,7 +41,7 @@ export function DlgRenameCst() {
   const isValid = alias !== target.alias && validateNewAlias(alias, cst_type, schema);
 
   function onSubmit(data: IUpdateConstituentaDTO) {
-    return cstUpdate({ itemID: schema.id, data: data });
+    return cstUpdate({ itemID: schemaID, data: data });
   }
 
   function handleChangeType(newType: CstType) {

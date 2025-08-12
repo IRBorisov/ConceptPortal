@@ -2,16 +2,16 @@
 
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
-import { useDialogsStore } from '@/stores/dialogs';
-
 import { type IInlineSynthesisDTO } from '../../backend/types';
 import { useRSFormSuspense } from '../../backend/use-rsform';
 import { PickSubstitutions } from '../../components/pick-substitutions';
+import { type IRSForm } from '../../models/rsform';
 
-import { type DlgInlineSynthesisProps } from './dlg-inline-synthesis';
+interface TabSubstitutionsProps {
+  receiver: IRSForm;
+}
 
-export function TabSubstitutions() {
-  const { receiver } = useDialogsStore(state => state.props as DlgInlineSynthesisProps);
+export function TabSubstitutions({ receiver }: TabSubstitutionsProps) {
   const { control } = useFormContext<IInlineSynthesisDTO>();
   const sourceID = useWatch({ control, name: 'source' });
   const selected = useWatch({ control, name: 'items' });

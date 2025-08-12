@@ -175,7 +175,7 @@ export const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
 
       setIsEditing(true);
       showEditReference({
-        schema: schema,
+        schemaID: schema.id,
         initial: data,
         onCancel: () => {
           setIsEditing(false);

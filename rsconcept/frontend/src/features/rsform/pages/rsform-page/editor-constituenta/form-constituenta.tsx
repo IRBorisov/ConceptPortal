@@ -6,13 +6,10 @@ import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { useUpdateCrucial } from '@/features/rsform/backend/use-update-crucial';
-import { IconCrucialValue } from '@/features/rsform/components/icon-crucial-value';
-
 import { MiniButton, SubmitButton } from '@/components/control';
 import { TextButton } from '@/components/control/text-button';
 import { IconChild, IconPredecessor, IconSave } from '@/components/icons';
-import { TextArea } from '@/components/input';
+import { Label, TextArea } from '@/components/input';
 import { Indicator } from '@/components/view';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
@@ -27,9 +24,15 @@ import {
   ParsingStatus,
   schemaUpdateConstituenta
 } from '../../../backend/types';
+import { useClearAssociations } from '../../../backend/use-clear-associations';
+import { useCreateAssociation } from '../../../backend/use-create-association';
+import { useDeleteAssociation } from '../../../backend/use-delete-association';
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { useUpdateConstituenta } from '../../../backend/use-update-constituenta';
+import { useUpdateCrucial } from '../../../backend/use-update-crucial';
+import { IconCrucialValue } from '../../../components/icon-crucial-value';
 import { RefsInput } from '../../../components/refs-input';
+import { SelectMultiConstituenta } from '../../../components/select-multi-constituenta';
 import {
   getRSDefinitionPlaceholder,
   labelCstTypification,
@@ -57,6 +60,9 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
 
   const { updateConstituenta } = useUpdateConstituenta();
   const { updateCrucial } = useUpdateCrucial();
+  const { createAssociation } = useCreateAssociation();
+  const { deleteAssociation } = useDeleteAssociation();
+  const { clearAssociations } = useClearAssociations();
   const showTypification = useDialogsStore(state => state.showShowTypeGraph);
   const showEditTerm = useDialogsStore(state => state.showEditWordForms);
   const showRenameCst = useDialogsStore(state => state.showRenameCst);
@@ -104,6 +110,11 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
           }
         : null,
     [activeCst, localParse]
+  );
+
+  const associations = useMemo(
+    () => activeCst.associations.map(id => schema.cstByID.get(id)!),
+    [activeCst.associations, schema.cstByID]
   );
 
   const isBasic = isBasicConcept(activeCst.cst_type) || activeCst.cst_type === CstType.NOMINAL;
@@ -168,11 +179,11 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
     if (isModified && !promptUnsaved()) {
       return;
     }
-    showEditTerm({ itemID: schema.id, target: activeCst });
+    showEditTerm({ itemID: schema.id, targetID: activeCst.id });
   }
 
   function handleRenameCst() {
-    showRenameCst({ schema: schema, target: activeCst });
+    showRenameCst({ schemaID: schema.id, targetID: activeCst.id });
   }
 
   function handleToggleCrucial() {
@@ -181,6 +192,35 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
       data: {
         target: [activeCst.id],
         value: !activeCst.crucial
+      }
+    });
+  }
+
+  function handleAddAssociation(item: IConstituenta) {
+    void createAssociation({
+      itemID: schema.id,
+      data: {
+        container: activeCst.id,
+        associate: item.id
+      }
+    });
+  }
+
+  function handleRemoveAssociation(item: IConstituenta) {
+    void deleteAssociation({
+      itemID: schema.id,
+      data: {
+        container: activeCst.id,
+        associate: item.id
+      }
+    });
+  }
+
+  function handleClearAssociations() {
+    void clearAssociations({
+      itemID: schema.id,
+      data: {
+        target: activeCst.id
       }
     });
   }
@@ -238,6 +278,21 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
           />
         )}
       />
+
+      {activeCst.cst_type === CstType.NOMINAL || activeCst.associations.length > 0 ? (
+        <div className='flex flex-col gap-1'>
+          <Label text='Ассоциируемые конституенты' />
+          <SelectMultiConstituenta
+            items={schema.items.filter(item => item.id !== activeCst.id)}
+            value={associations}
+            onAdd={handleAddAssociation}
+            onClear={handleClearAssociations}
+            onRemove={handleRemoveAssociation}
+            disabled={disabled || isModified}
+            placeholder={disabled ? '' : 'Выберите конституенты'}
+          />
+        </div>
+      ) : null}
 
       {activeCst.cst_type !== CstType.NOMINAL ? (
         <TextArea

@@ -3,7 +3,7 @@
 import { ReactFlowProvider } from 'reactflow';
 
 import { urls, useConceptNavigation } from '@/app';
-import { type IRSForm } from '@/features/rsform';
+import { useRSFormSuspense } from '@/features/rsform/backend/use-rsform';
 import { RSTabID } from '@/features/rsform/pages/rsform-page/rsedit-context';
 
 import { MiniButton } from '@/components/control';
@@ -14,11 +14,12 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { TGReadonlyFlow } from './tg-readonly-flow';
 
 export interface DlgShowTermGraphProps {
-  schema: IRSForm;
+  schemaID: number;
 }
 
 export function DlgShowTermGraph() {
-  const { schema } = useDialogsStore(state => state.props as DlgShowTermGraphProps);
+  const { schemaID } = useDialogsStore(state => state.props as DlgShowTermGraphProps);
+  const { schema } = useRSFormSuspense({ itemID: schemaID });
   const hideDialog = useDialogsStore(state => state.hideDialog);
   const router = useConceptNavigation();
 
