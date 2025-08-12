@@ -30,6 +30,25 @@ class AssociationSerializer(StrictModelSerializer):
         fields = ('container', 'associate')
 
 
+class AssociationDataSerializer(StrictSerializer):
+    ''' Serializer: Association data. '''
+    container = PKField(many=False, queryset=Constituenta.objects.all().only('schema_id'))
+    associate = PKField(many=False, queryset=Constituenta.objects.all().only('schema_id'))
+
+    def validate(self, attrs):
+        schema = cast(LibraryItem, self.context['schema'])
+        if schema and attrs['container'].schema_id != schema.id:
+            raise serializers.ValidationError({
+                'container': msg.constituentaNotInRSform(schema.title)
+            })
+        if schema and attrs['associate'].schema_id != schema.id:
+            raise serializers.ValidationError({
+                'associate': msg.constituentaNotInRSform(schema.title)
+            })
+
+        return attrs
+
+
 class CstBaseSerializer(StrictModelSerializer):
     ''' Serializer: Constituenta all data. '''
     class Meta:

@@ -94,6 +94,12 @@ export interface ICheckConstituentaDTO {
 /** Represents data, used in merging multiple {@link IConstituenta}. */
 export type ISubstitutionsDTO = z.infer<typeof schemaSubstitutions>;
 
+/** Represents data for creating or deleting an association. */
+export type IAssociationDataDTO = z.infer<typeof schemaAssociationData>;
+
+/** Represents data for clearing all associations for a target constituenta. */
+export type IAssociationTargetDTO = z.infer<typeof schemaAssociationTarget>;
+
 /** Represents Constituenta list. */
 export interface IConstituentaList {
   items: number[];
@@ -384,6 +390,15 @@ export const schemaSubstituteConstituents = z.strictObject({
 
 export const schemaSubstitutions = z.strictObject({
   substitutions: z.array(schemaSubstituteConstituents).min(1, { message: errorMsg.emptySubstitutions })
+});
+
+export const schemaAssociationData = z.strictObject({
+  container: z.number(),
+  associate: z.number()
+});
+
+export const schemaAssociationTarget = z.strictObject({
+  target: z.number()
 });
 
 export const schemaInlineSynthesis = z.strictObject({

@@ -49,6 +49,9 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             'restore_order',
             'reset_aliases',
             'produce_structure',
+            'add_association',
+            'delete_association',
+            'clear_associations'
         ]:
             permission_list = [permissions.ItemEditor]
         elif self.action in [
@@ -275,6 +278,104 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             PropagationFacade.before_delete_cst(item.pk, [cst.pk for cst in cst_list])
             schema.delete_cst(cst_list)
             item.save(update_fields=['time_update'])
+
+        return Response(
+            status=c.HTTP_200_OK,
+            data=s.RSFormParseSerializer(item).data
+        )
+
+    @extend_schema(
+        summary='create Association',
+        tags=['Constituenta'],
+        request=s.AssociationDataSerializer,
+        responses={
+            c.HTTP_201_CREATED: s.RSFormParseSerializer,
+            c.HTTP_400_BAD_REQUEST: None,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
+    )
+    @action(detail=True, methods=['post'], url_path='create-association')
+    def create_association(self, request: Request, pk) -> HttpResponse:
+        ''' Create Association. '''
+        item = self._get_item()
+        serializer = s.AssociationDataSerializer(data=request.data, context={'schema': item})
+        serializer.is_valid(raise_exception=True)
+
+        with transaction.atomic():
+            new_association = m.Association.objects.create(
+                container=serializer.validated_data['container'],
+                associate=serializer.validated_data['associate']
+            )
+            PropagationFacade.after_create_association(item.pk, [new_association])
+            item.save(update_fields=['time_update'])
+
+        return Response(
+            status=c.HTTP_201_CREATED,
+            data=s.RSFormParseSerializer(item).data
+        )
+
+    @extend_schema(
+        summary='delete Association',
+        tags=['RSForm'],
+        request=s.AssociationDataSerializer,
+        responses={
+            c.HTTP_200_OK: s.RSFormParseSerializer,
+            c.HTTP_400_BAD_REQUEST: None,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
+    )
+    @action(detail=True, methods=['patch'], url_path='delete-association')
+    def delete_association(self, request: Request, pk) -> HttpResponse:
+        ''' Endpoint: Delete Association. '''
+        item = self._get_item()
+        serializer = s.AssociationDataSerializer(data=request.data, context={'schema': item})
+        serializer.is_valid(raise_exception=True)
+
+        with transaction.atomic():
+            target = list(m.Association.objects.filter(
+                container=serializer.validated_data['container'],
+                associate=serializer.validated_data['associate']
+            ))
+            if not target:
+                raise ValidationError({
+                    'container': msg.invalidAssociation()
+                })
+
+            PropagationFacade.before_delete_association(item.pk, target)
+            m.Association.objects.filter(pk__in=[assoc.pk for assoc in target]).delete()
+            item.save(update_fields=['time_update'])
+
+        return Response(
+            status=c.HTTP_200_OK,
+            data=s.RSFormParseSerializer(item).data
+        )
+
+    @extend_schema(
+        summary='delete all associations for target constituenta',
+        tags=['RSForm'],
+        request=s.CstTargetSerializer,
+        responses={
+            c.HTTP_200_OK: s.RSFormParseSerializer,
+            c.HTTP_400_BAD_REQUEST: None,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
+    )
+    @action(detail=True, methods=['patch'], url_path='clear-associations')
+    def clear_associations(self, request: Request, pk) -> HttpResponse:
+        ''' Endpoint: Delete Associations for target Constituenta. '''
+        item = self._get_item()
+        serializer = s.CstTargetSerializer(data=request.data, context={'schema': item})
+        serializer.is_valid(raise_exception=True)
+
+        with transaction.atomic():
+            target = list(m.Association.objects.filter(container=serializer.validated_data['target']))
+            if target:
+                PropagationFacade.before_delete_association(item.pk, target)
+                m.Association.objects.filter(pk__in=[assoc.pk for assoc in target]).delete()
+                item.save(update_fields=['time_update'])
 
         return Response(
             status=c.HTTP_200_OK,

@@ -142,6 +142,10 @@ def typificationInvalidStr():
     return 'Invalid typification string'
 
 
+def invalidAssociation():
+    return f'Ассоциация не найдена'
+
+
 def exteorFileVersionNotSupported():
     return 'Некорректный формат файла Экстеор. Сохраните файл в новой версии'
 

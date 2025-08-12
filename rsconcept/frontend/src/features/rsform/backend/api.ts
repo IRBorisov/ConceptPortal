@@ -5,6 +5,8 @@ import { DELAYS, KEYS } from '@/backend/configuration';
 import { infoMsg } from '@/utils/labels';
 
 import {
+  type IAssociationDataDTO,
+  type IAssociationTargetDTO,
   type ICheckConstituentaDTO,
   type IConstituentaCreatedResponse,
   type IConstituentaList,
@@ -150,5 +152,33 @@ export const rsformsApi = {
       schema: schemaExpressionParse,
       endpoint: `/api/rsforms/${itemID}/check-constituenta`,
       request: { data: data }
+    }),
+
+  createAssociation: ({ itemID, data }: { itemID: number; data: IAssociationDataDTO }) =>
+    axiosPost<IAssociationDataDTO, IRSFormDTO>({
+      schema: schemaRSForm,
+      endpoint: `/api/rsforms/${itemID}/create-association`,
+      request: {
+        data: data,
+        successMessage: infoMsg.changesSaved
+      }
+    }),
+  deleteAssociation: ({ itemID, data }: { itemID: number; data: IAssociationDataDTO }) =>
+    axiosPatch<IAssociationDataDTO, IRSFormDTO>({
+      schema: schemaRSForm,
+      endpoint: `/api/rsforms/${itemID}/delete-association`,
+      request: {
+        data: data,
+        successMessage: infoMsg.changesSaved
+      }
+    }),
+  clearAssociations: ({ itemID, data }: { itemID: number; data: IAssociationTargetDTO }) =>
+    axiosPatch<IAssociationTargetDTO, IRSFormDTO>({
+      schema: schemaRSForm,
+      endpoint: `/api/rsforms/${itemID}/clear-associations`,
+      request: {
+        data: data,
+        successMessage: infoMsg.changesSaved
+      }
     })
 } as const;

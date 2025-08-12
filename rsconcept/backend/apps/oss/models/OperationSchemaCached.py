@@ -4,7 +4,7 @@
 from typing import Optional
 
 from apps.library.models import LibraryItem
-from apps.rsform.models import Constituenta, CstType, OrderManager, RSFormCached
+from apps.rsform.models import Association, Constituenta, CstType, OrderManager, RSFormCached
 
 from .Argument import Argument
 from .Inheritance import Inheritance
@@ -283,15 +283,15 @@ class OperationSchemaCached:
             mapping=alias_mapping
         )
 
-    def before_delete_cst(self, sourceID: int, target: list[int]) -> None:
+    def before_delete_cst(self, operationID: int, target: list[int]) -> None:
         ''' Trigger cascade resolutions before Constituents are deleted. '''
-        operation = self.cache.get_operation(sourceID)
+        operation = self.cache.get_operation(operationID)
         self.engine.on_delete_inherited(operation.pk, target)
 
     def before_substitute(self, schemaID: int, substitutions: CstSubstitution) -> None:
         ''' Trigger cascade resolutions before Constituents are substituted. '''
         operation = self.cache.get_operation(schemaID)
-        self.engine.on_before_substitute(substitutions, operation)
+        self.engine.on_before_substitute(operation.pk, substitutions)
 
     def before_delete_arguments(self, target: Operation, arguments: list[Operation]) -> None:
         ''' Trigger cascade resolutions before arguments are deleted. '''
@@ -317,6 +317,17 @@ class OperationSchemaCached:
                 items=list(parent_schema.constituentsQ().order_by('order')),
                 mapping={}
             )
+
+    def after_create_association(self, schemaID: int, associations: list[Association],
+                                 exclude: Optional[list[int]] = None) -> None:
+        ''' Trigger cascade resolutions when association is created. '''
+        operation = self.cache.get_operation(schemaID)
+        self.engine.on_inherit_association(operation.pk, associations, exclude)
+
+    def before_delete_association(self, schemaID: int, associations: list[Association]) -> None:
+        ''' Trigger cascade resolutions when association is deleted. '''
+        operation = self.cache.get_operation(schemaID)
+        self.engine.on_delete_association(operation.pk, associations)
 
     def _on_add_substitutions(self, schema: Optional[RSFormCached], added: list[Substitution]) -> None:
         ''' Trigger cascade resolutions when Constituenta substitution is added. '''

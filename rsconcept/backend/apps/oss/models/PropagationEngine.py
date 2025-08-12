@@ -3,7 +3,7 @@ from typing import Optional
 
 from rest_framework.serializers import ValidationError
 
-from apps.rsform.models import INSERT_LAST, Constituenta, CstType, RSFormCached
+from apps.rsform.models import INSERT_LAST, Association, Constituenta, CstType, RSFormCached
 
 from .Inheritance import Inheritance
 from .Operation import Operation
@@ -126,9 +126,41 @@ class PropagationEngine:
                 mapping=new_mapping
             )
 
-    def on_before_substitute(self, substitutions: CstSubstitution, operation: Operation) -> None:
+    def on_inherit_association(self, operationID: int,
+                               items: list[Association],
+                               exclude: Optional[list[int]] = None) -> None:
+        ''' Trigger cascade resolutions when association is inherited. '''
+        children = self.cache.extend_graph.outputs[operationID]
+        if not children:
+            return
+        for child_id in children:
+            if not exclude or child_id not in exclude:
+                self.inherit_association(child_id, items)
+
+    def inherit_association(self, target: int, items: list[Association]) -> None:
+        ''' Execute inheritance of Associations. '''
+        operation = self.cache.operation_by_id[target]
+        if operation.result is None:
+            return
+
+        self.cache.ensure_loaded_subs()
+        new_associations: list[Association] = []
+        for assoc in items:
+            new_container = self.cache.get_inheritor(assoc.container_id, target)
+            new_associate = self.cache.get_inheritor(assoc.associate_id, target)
+            if new_container is None or new_associate is None:
+                continue
+            new_associations.append(Association(
+                container_id=new_container,
+                associate_id=new_associate
+            ))
+        if new_associations:
+            new_associations = Association.objects.bulk_create(new_associations)
+            self.on_inherit_association(target, new_associations)
+
+    def on_before_substitute(self, operationID: int, substitutions: CstSubstitution) -> None:
         ''' Trigger cascade resolutions when Constituenta substitution is executed. '''
-        children = self.cache.extend_graph.outputs[operation.pk]
+        children = self.cache.extend_graph.outputs[operationID]
         if not children:
             return
         self.cache.ensure_loaded_subs()
@@ -140,8 +172,36 @@ class PropagationEngine:
             new_substitutions = self._transform_substitutions(substitutions, child_id, child_schema)
             if not new_substitutions:
                 continue
-            self.on_before_substitute(new_substitutions, child_operation)
+            self.on_before_substitute(child_operation.pk, new_substitutions)
             child_schema.substitute(new_substitutions)
+
+    def on_delete_association(self, operationID: int, associations: list[Association]) -> None:
+        ''' Trigger cascade resolutions when association is deleted. '''
+        children = self.cache.extend_graph.outputs[operationID]
+        if not children:
+            return
+        self.cache.ensure_loaded_subs()
+        for child_id in children:
+            child_operation = self.cache.operation_by_id[child_id]
+            child_schema = self.cache.get_schema(child_operation)
+            if child_schema is None:
+                continue
+
+            deleted: list[Association] = []
+            for assoc in associations:
+                new_container = self.cache.get_inheritor(assoc.container_id, child_id)
+                new_associate = self.cache.get_inheritor(assoc.associate_id, child_id)
+                if new_container is None or new_associate is None:
+                    continue
+                deleted_assoc = Association.objects.filter(
+                    container=new_container,
+                    associate=new_associate
+                )
+                if deleted_assoc.exists():
+                    deleted.append(deleted_assoc[0])
+            if deleted:
+                self.on_delete_association(child_id, deleted)
+                Association.objects.filter(pk__in=[assoc.pk for assoc in deleted]).delete()
 
     def on_delete_inherited(self, operation: int, target: list[int]) -> None:
         ''' Trigger cascade resolutions when Constituenta inheritance is deleted. '''
