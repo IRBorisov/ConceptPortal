@@ -69,6 +69,7 @@ export function produceFilteredGraph(schema: IRSForm, params: GraphFilterParams,
     if (params.allowPredicate) result.push(CstType.PREDICATE);
     if (params.allowConstant) result.push(CstType.CONSTANT);
     if (params.allowTheorem) result.push(CstType.THEOREM);
+    if (params.allowNominal) result.push(CstType.NOMINAL);
     return result;
   })();
 

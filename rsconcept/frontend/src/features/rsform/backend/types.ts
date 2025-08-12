@@ -7,6 +7,7 @@ import { errorMsg } from '@/utils/labels';
 
 /** Represents {@link IConstituenta} type. */
 export const CstType = {
+  NOMINAL: 'nominal',
   BASE: 'basic',
   STRUCTURED: 'structure',
   TERM: 'term',
@@ -276,7 +277,7 @@ export const schemaTokenID = z.enum(TokenID);
 export const schemaRSErrorType = z.enum(RSErrorType);
 
 export const schemaConstituentaBasics = z.strictObject({
-  id: z.coerce.number(),
+  id: z.number(),
   alias: z.string().nonempty(errorMsg.requiredField),
   convention: z.string(),
   crucial: z.boolean(),
@@ -290,31 +291,34 @@ export const schemaConstituentaBasics = z.strictObject({
 });
 
 export const schemaConstituenta = schemaConstituentaBasics.extend({
-  parse: z.strictObject({
-    status: schemaParsingStatus,
-    valueClass: schemaValueClass,
-    typification: z.string(),
-    syntaxTree: z.string(),
-    args: z.array(z.strictObject({ alias: z.string(), typification: z.string() }))
-  })
+  parse: z
+    .strictObject({
+      status: schemaParsingStatus,
+      valueClass: schemaValueClass,
+      typification: z.string(),
+      syntaxTree: z.string(),
+      args: z.array(z.strictObject({ alias: z.string(), typification: z.string() }))
+    })
+    .optional()
 });
 
 export const schemaRSForm = schemaLibraryItem.extend({
-  editors: z.array(z.coerce.number()),
+  editors: z.array(z.number()),
 
-  version: z.coerce.number().optional(),
+  version: z.number().optional(),
   versions: z.array(schemaVersionInfo),
 
   items: z.array(schemaConstituenta),
+  association: z.array(z.strictObject({ container: z.number(), associate: z.number() })),
   inheritance: z.array(
     z.strictObject({
-      child: z.coerce.number(),
-      child_source: z.coerce.number(),
-      parent: z.coerce.number(),
-      parent_source: z.coerce.number()
+      child: z.number(),
+      child_source: z.number(),
+      parent: z.number(),
+      parent_source: z.number()
     })
   ),
-  oss: z.array(z.strictObject({ id: z.coerce.number(), alias: z.string() }))
+  oss: z.array(z.strictObject({ id: z.number(), alias: z.string() }))
 });
 
 export const schemaVersionCreatedResponse = z.strictObject({

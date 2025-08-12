@@ -196,11 +196,21 @@ export function colorFgCstStatus(status: ExpressionStatus): string {
 export function colorBgCstClass(cstClass: CstClass): string {
   // prettier-ignore
   switch (cstClass) {
+    case CstClass.NOMINAL: return APP_COLORS.bgOrange;
     case CstClass.BASIC: return APP_COLORS.bgGreen;
     case CstClass.DERIVED: return APP_COLORS.bgBlue;
     case CstClass.STATEMENT: return APP_COLORS.bgRed;
     case CstClass.TEMPLATE: return APP_COLORS.bgTeal;
   }
+}
+
+/** Determines background color for {@link IConstituenta} badge. */
+export function colorBgBadge(item: IConstituenta) {
+  switch (item.cst_class) {
+    case CstClass.BASIC:
+      return 'bg-accent-green25';
+  }
+  return 'bg-input';
 }
 
 /** Determines background color for {@link IConstituenta} depending on its parent schema index. */

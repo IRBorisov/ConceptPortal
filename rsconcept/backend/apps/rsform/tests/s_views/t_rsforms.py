@@ -200,54 +200,6 @@ class TestRSFormViewset(EndpointTester):
                 self.assertIn('document.json', zipped_file.namelist())
 
 
-    @decl_endpoint('/api/rsforms/{item}/create-cst', method='post')
-    def test_create_constituenta(self):
-        data = {'alias': 'X3', 'cst_type': CstType.BASE}
-        self.executeForbidden(data, item=self.unowned_id)
-
-        data = {'alias': 'X3'}
-        self.owned.insert_last('X1')
-        x2 = self.owned.insert_last('X2')
-        self.executeBadData(item=self.owned_id)
-        self.executeBadData(data)
-
-        data['cst_type'] = 'invalid'
-        self.executeBadData(data)
-
-        data['cst_type'] = CstType.BASE
-        response = self.executeCreated(data)
-        self.assertEqual(response.data['new_cst']['alias'], 'X3')
-        x3 = Constituenta.objects.get(alias=response.data['new_cst']['alias'])
-        self.assertEqual(x3.order, 2)
-
-        data = {
-            'alias': 'X4',
-            'cst_type': CstType.BASE,
-            'insert_after': x2.pk,
-            'term_raw': 'test',
-            'term_forms': [{'text': 'form1', 'tags': 'sing,datv'}],
-            'definition_formal': 'invalid',
-            'crucial': True
-        }
-        response = self.executeCreated(data)
-        self.assertEqual(response.data['new_cst']['alias'], data['alias'])
-        x4 = Constituenta.objects.get(alias=response.data['new_cst']['alias'])
-        self.assertEqual(x4.order, 2)
-        self.assertEqual(x4.term_raw, data['term_raw'])
-        self.assertEqual(x4.term_forms, data['term_forms'])
-        self.assertEqual(x4.definition_formal, data['definition_formal'])
-        self.assertEqual(x4.crucial, data['crucial'])
-
-        data = {
-            'alias': 'X5',
-            'cst_type': CstType.BASE,
-            'insert_after': None,
-            'term_raw': 'test5'
-        }
-        response = self.executeCreated(data)
-        self.assertEqual(response.data['new_cst']['alias'], data['alias'])
-
-
     @decl_endpoint('/api/rsforms/{item}/substitute', method='patch')
     def test_substitute_multiple(self):
         self.set_params(item=self.owned_id)

@@ -175,7 +175,11 @@ export class SubstitutionValidator {
       if (!original || !substitution) {
         return this.reportError(SubstitutionErrorType.invalidIDs, []);
       }
-      if (original.parse.status === ParsingStatus.INCORRECT || substitution.parse.status === ParsingStatus.INCORRECT) {
+      if (
+        substitution.parse &&
+        original.parse &&
+        (original.parse.status === ParsingStatus.INCORRECT || substitution.parse.status === ParsingStatus.INCORRECT)
+      ) {
         return this.reportError(SubstitutionErrorType.incorrectCst, [substitution.alias, original.alias]);
       }
       switch (substitution.cst_type) {
@@ -247,6 +251,9 @@ export class SubstitutionValidator {
           continue;
         }
         graph.addNode(cst.id);
+        if (!cst.parse) {
+          continue;
+        }
         const parents = extractGlobals(cst.parse.typification);
         for (const arg of cst.parse.args) {
           for (const alias of extractGlobals(arg.typification)) {
@@ -297,6 +304,13 @@ export class SubstitutionValidator {
           this.reportError(SubstitutionErrorType.unequalExpressions, [substitution.alias, original.alias]);
           // Note: do not interrupt the validation process. Only warn about the problem.
         }
+      }
+
+      if (!!original.parse !== !!substitution.parse) {
+        return this.reportError(SubstitutionErrorType.unequalTypification, [substitution.alias, original.alias]);
+      }
+      if (!original.parse || !substitution.parse) {
+        continue;
       }
 
       const originalType = applyTypificationMapping(
@@ -365,7 +379,7 @@ export class SubstitutionValidator {
 
       const substitution = this.cstByID.get(item.substitution)!;
       let substitutionText = '';
-      if (substitution.cst_type === original.cst_type) {
+      if (substitution.cst_type === original.cst_type || !substitution.parse) {
         substitutionText = baseMappings.get(substitution.schema)![substitution.alias];
       } else {
         substitutionText = applyAliasMapping(substitution.parse.typification, baseMappings.get(substitution.schema)!);

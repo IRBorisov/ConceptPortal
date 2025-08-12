@@ -95,6 +95,7 @@ export function inferClass(type: CstType, isTemplate: boolean = false): CstClass
   }
   // prettier-ignore
   switch (type) {
+    case CstType.NOMINAL:     return CstClass.NOMINAL;
     case CstType.BASE:        return CstClass.BASIC;
     case CstType.CONSTANT:    return CstClass.BASIC;
     case CstType.STRUCTURED:  return CstClass.BASIC;
@@ -124,6 +125,7 @@ export function applyFilterCategory(start: IConstituenta, schema: IRSForm): ICon
 }
 
 const cstTypePrefixRecord: Record<CstType, string> = {
+  [CstType.NOMINAL]: 'N',
   [CstType.BASE]: 'X',
   [CstType.CONSTANT]: 'C',
   [CstType.STRUCTURED]: 'S',
@@ -148,6 +150,7 @@ export function guessCstType(hint: string, defaultType: CstType = CstType.TERM):
   }
   // prettier-ignore
   switch (hint) {
+    case 'N': return CstType.NOMINAL;
     case 'X': return CstType.BASE;
     case 'C': return CstType.CONSTANT;
     case 'S': return CstType.STRUCTURED;
@@ -166,6 +169,7 @@ export function guessCstType(hint: string, defaultType: CstType = CstType.TERM):
 export function isBasicConcept(type: CstType): boolean {
   // prettier-ignore
   switch (type) {
+    case CstType.NOMINAL: return true;
     case CstType.BASE: return true;
     case CstType.CONSTANT: return true;
     case CstType.STRUCTURED: return true;
@@ -183,6 +187,7 @@ export function isBasicConcept(type: CstType): boolean {
 export function isBaseSet(type: CstType): boolean {
   // prettier-ignore
   switch (type) {
+    case CstType.NOMINAL: return false;
     case CstType.BASE: return true;
     case CstType.CONSTANT: return true;
     case CstType.STRUCTURED: return false;
@@ -200,6 +205,7 @@ export function isBaseSet(type: CstType): boolean {
 export function isFunctional(type: CstType): boolean {
   // prettier-ignore
   switch (type) {
+    case CstType.NOMINAL: return false;
     case CstType.BASE: return false;
     case CstType.CONSTANT: return false;
     case CstType.STRUCTURED: return false;
@@ -215,7 +221,13 @@ export function isFunctional(type: CstType): boolean {
  * Evaluate if {@link IConstituenta} can be used produce structure.
  */
 export function canProduceStructure(cst: RO<IConstituenta>): boolean {
-  return !!cst.parse.typification && cst.cst_type !== CstType.BASE && cst.cst_type !== CstType.CONSTANT;
+  return (
+    !!cst.parse &&
+    !!cst.parse.typification &&
+    cst.cst_type !== CstType.BASE &&
+    cst.cst_type !== CstType.CONSTANT &&
+    cst.cst_type !== CstType.NOMINAL
+  );
 }
 
 /**

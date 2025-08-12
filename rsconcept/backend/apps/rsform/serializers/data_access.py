@@ -27,7 +27,7 @@ class AssociationSerializer(StrictModelSerializer):
     class Meta:
         ''' serializer metadata. '''
         model = Association
-        fields = ('argument', 'operation')
+        fields = ('container', 'associate')
 
 
 class CstBaseSerializer(StrictModelSerializer):
@@ -121,11 +121,6 @@ class CstCreateSerializer(StrictModelSerializer):
     )
     alias = serializers.CharField(max_length=8)
     cst_type = serializers.ChoiceField(CstType.choices)
-    associations = PKField(
-        many=True,
-        required=False,
-        queryset=Constituenta.objects.all().only('schema_id', 'pk')
-    )
 
     class Meta:
         ''' serializer metadata. '''
@@ -133,7 +128,7 @@ class CstCreateSerializer(StrictModelSerializer):
         fields = \
             'alias', 'cst_type', 'convention', 'crucial', \
             'term_raw', 'definition_raw', 'definition_formal', \
-            'insert_after', 'term_forms', 'associations'
+            'insert_after', 'term_forms'
 
     def validate(self, attrs):
         schema = cast(LibraryItem, self.context['schema'])
@@ -142,12 +137,6 @@ class CstCreateSerializer(StrictModelSerializer):
             raise serializers.ValidationError({
                 'insert_after': msg.constituentaNotInRSform(schema.title)
             })
-        associations = attrs.get('associations', [])
-        for assoc in associations:
-            if assoc.schema_id != schema.pk:
-                raise serializers.ValidationError({
-                    'associations': msg.constituentaNotInRSform(schema.title)
-                })
         return attrs
 
 
@@ -322,6 +311,8 @@ class RSFormParseSerializer(StrictModelSerializer):
     def _parse_data(self, data: dict) -> dict:
         parse = PyConceptAdapter(data).parse()
         for cst_data in data['items']:
+            if cst_data['cst_type'] == CstType.NOMINAL:
+                continue
             cst_data['parse'] = next(
                 cst['parse'] for cst in parse['items']
                 if cst['id'] == cst_data['id']

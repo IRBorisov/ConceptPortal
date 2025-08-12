@@ -2,12 +2,14 @@
 
 import { Controller, useForm } from 'react-hook-form';
 
+import { MiniButton } from '@/components/control';
 import { Checkbox } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 
 import { CstType } from '../backend/types';
+import { IconCstType } from '../components/icon-cst-type';
 import { labelCstType } from '../labels';
-import { type GraphFilterParams, useTermGraphStore } from '../stores/term-graph';
+import { cstTypeToFilterKey, type GraphFilterParams, useTermGraphStore } from '../stores/term-graph';
 
 export function DlgGraphParams() {
   const params = useTermGraphStore(state => state.filter);
@@ -71,47 +73,32 @@ export function DlgGraphParams() {
         />
       </div>
       <div className='flex flex-col gap-1'>
-        <h1 className='mb-2'>Типы конституент</h1>
-        <Controller
-          control={control}
-          name='allowBase'
-          render={({ field }) => <Checkbox {...field} label={labelCstType(CstType.BASE)} />}
-        />
-        <Controller
-          control={control}
-          name='allowStruct'
-          render={({ field }) => <Checkbox {...field} label={labelCstType(CstType.STRUCTURED)} />}
-        />
-        <Controller
-          control={control}
-          name='allowTerm'
-          render={({ field }) => <Checkbox {...field} label={labelCstType(CstType.TERM)} />}
-        />
-        <Controller
-          control={control}
-          name='allowAxiom'
-          render={({ field }) => <Checkbox {...field} label={labelCstType(CstType.AXIOM)} />}
-        />
-        <Controller
-          control={control}
-          name='allowFunction'
-          render={({ field }) => <Checkbox {...field} label={labelCstType(CstType.FUNCTION)} />}
-        />
-        <Controller
-          control={control}
-          name='allowPredicate'
-          render={({ field }) => <Checkbox {...field} label={labelCstType(CstType.PREDICATE)} />}
-        />
-        <Controller
-          control={control}
-          name='allowConstant'
-          render={({ field }) => <Checkbox {...field} label={labelCstType(CstType.CONSTANT)} />}
-        />
-        <Controller
-          control={control}
-          name='allowTheorem'
-          render={({ field }) => <Checkbox {...field} label={labelCstType(CstType.THEOREM)} />}
-        />
+        <h1 className='mb-1'>Типы конституент</h1>
+        <div>
+          {Object.values(CstType).map(cstType => {
+            const fieldName = cstTypeToFilterKey[cstType];
+            return (
+              <Controller
+                key={fieldName}
+                control={control}
+                name={fieldName}
+                render={({ field }) => (
+                  <MiniButton
+                    onClick={() => field.onChange(!field.value)}
+                    title={labelCstType(cstType)}
+                    icon={
+                      <IconCstType
+                        size='2rem'
+                        value={cstType}
+                        className={field.value ? 'text-constructive' : 'text-destructive'}
+                      />
+                    }
+                  />
+                )}
+              />
+            );
+          })}
+        </div>
       </div>
     </ModalForm>
   );

@@ -18,6 +18,7 @@ import { type GraphColoring } from './stores/term-graph';
 
 // --- Records for label/describe functions ---
 const labelCstTypeRecord: Record<CstType, string> = {
+  [CstType.NOMINAL]: 'Номеноид',
   [CstType.BASE]: 'Базисное множество',
   [CstType.CONSTANT]: 'Константное множество',
   [CstType.STRUCTURED]: 'Родовая структура',
@@ -34,6 +35,7 @@ const labelReferenceTypeRecord: Record<ReferenceType, string> = {
 };
 
 const labelCstClassRecord: Record<CstClass, string> = {
+  [CstClass.NOMINAL]: 'номинальный',
   [CstClass.BASIC]: 'базовый',
   [CstClass.DERIVED]: 'производный',
   [CstClass.STATEMENT]: 'утверждение',
@@ -41,6 +43,7 @@ const labelCstClassRecord: Record<CstClass, string> = {
 };
 
 const describeCstClassRecord: Record<CstClass, string> = {
+  [CstClass.NOMINAL]: 'номинальная сущность',
   [CstClass.BASIC]: 'неопределяемое понятие',
   [CstClass.DERIVED]: 'определяемое понятие',
   [CstClass.STATEMENT]: 'логическое утверждение',
@@ -158,15 +161,28 @@ const labelGrammemeRecord: Partial<Record<Grammeme, string>> = {
   [Grammeme.Litr]: 'Стиль: литературный'
 };
 
+const labelRSExpressionsRecord: Record<CstType, string> = {
+  [CstType.NOMINAL]: 'Определяющие конституенты',
+  [CstType.BASE]: 'Формальное определение',
+  [CstType.CONSTANT]: 'Формальное определение',
+  [CstType.STRUCTURED]: 'Область определения',
+  [CstType.TERM]: 'Формальное определение',
+  [CstType.THEOREM]: 'Формальное определение',
+  [CstType.AXIOM]: 'Формальное определение',
+  [CstType.FUNCTION]: 'Определение функции',
+  [CstType.PREDICATE]: 'Определение функции'
+};
+
 const rsDefinitionPlaceholderRecord: Record<CstType, string> = {
+  [CstType.NOMINAL]: 'Например, X1 D1 N1',
+  [CstType.BASE]: 'Не предусмотрено',
+  [CstType.CONSTANT]: 'Не предусмотрено',
   [CstType.STRUCTURED]: 'Пример: ℬ(X1×D2)',
   [CstType.TERM]: 'Пример: D{ξ∈S1 | Pr1(ξ)∩Pr2(ξ)=∅}',
   [CstType.THEOREM]: 'Пример: D11=∅',
   [CstType.AXIOM]: 'Пример: D11=∅',
   [CstType.FUNCTION]: 'Пример: [α∈X1, β∈ℬ(X1×X2)] Pr2(Fi1[{α}](β))',
-  [CstType.PREDICATE]: 'Пример: [α∈X1, β∈ℬ(X1)] α∈β & card(β)>1',
-  [CstType.CONSTANT]: 'Формальное выражение',
-  [CstType.BASE]: 'Формальное выражение'
+  [CstType.PREDICATE]: 'Пример: [α∈X1, β∈ℬ(X1)] α∈β & card(β)>1'
 };
 
 const cstTypeShortcutKeyRecord: Record<CstType, string> = {
@@ -177,7 +193,8 @@ const cstTypeShortcutKeyRecord: Record<CstType, string> = {
   [CstType.FUNCTION]: 'Q',
   [CstType.PREDICATE]: 'W',
   [CstType.CONSTANT]: '5',
-  [CstType.THEOREM]: '6'
+  [CstType.THEOREM]: '6',
+  [CstType.NOMINAL]: '7'
 };
 
 const labelTokenRecord: Partial<Record<TokenID, string>> = {
@@ -331,6 +348,11 @@ export function getCstTypeShortcut(type: CstType) {
   return key ? `${labelCstType(type)} [Alt + ${key}]` : labelCstType(type);
 }
 
+/** Generates label for RS expression based on {@link CstType}. */
+export function labelRSExpression(type: CstType): string {
+  return labelRSExpressionsRecord[type] ?? 'Формальное выражение';
+}
+
 /** Generates placeholder for RS definition based on {@link CstType}. */
 export function getRSDefinitionPlaceholder(type: CstType): string {
   return rsDefinitionPlaceholderRecord[type] ?? 'Формальное выражение';
@@ -445,6 +467,9 @@ export function labelTypification({
  * Generates label for {@link IConstituenta} typification.
  */
 export function labelCstTypification(cst: RO<IConstituenta>): string {
+  if (!cst.parse) {
+    return 'N/A';
+  }
   return labelTypification({
     isValid: cst.parse.status === ParsingStatus.VERIFIED,
     resultType: cst.parse.typification,

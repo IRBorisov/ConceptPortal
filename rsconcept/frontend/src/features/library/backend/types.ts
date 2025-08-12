@@ -60,7 +60,7 @@ export const schemaLibraryItemType = z.enum(Object.values(LibraryItemType) as [L
 export const schemaAccessPolicy = z.enum(Object.values(AccessPolicy) as [AccessPolicy, ...AccessPolicy[]]);
 
 export const schemaLibraryItem = z.strictObject({
-  id: z.coerce.number(),
+  id: z.number(),
   item_type: schemaLibraryItemType,
 
   alias: z.string().nonempty(),
@@ -72,9 +72,9 @@ export const schemaLibraryItem = z.strictObject({
   location: z.string(),
   access_policy: schemaAccessPolicy,
 
-  time_create: z.string().datetime({ offset: true }),
-  time_update: z.string().datetime({ offset: true }),
-  owner: z.coerce.number().nullable()
+  time_create: z.iso.datetime({ offset: true }),
+  time_update: z.iso.datetime({ offset: true }),
+  owner: z.number().nullable()
 });
 
 export const schemaLibraryItemArray = z.array(schemaLibraryItem);
@@ -126,10 +126,10 @@ export const schemaUpdateLibraryItem = schemaInputLibraryItem
   });
 
 export const schemaVersionInfo = z.strictObject({
-  id: z.coerce.number(),
+  id: z.number(),
   version: z.string(),
   description: z.string(),
-  time_create: z.string().datetime({ offset: true })
+  time_create: z.iso.datetime({ offset: true })
 });
 
 const schemaVersionInput = z.strictObject({

@@ -96,6 +96,7 @@ export function EditorRSList() {
       case 'KeyW':      createCst(CstType.PREDICATE, true); return true;
       case 'Digit5':    createCst(CstType.CONSTANT, true); return true;
       case 'Digit6':    createCst(CstType.THEOREM, true); return true;
+      case 'Digit7':    createCst(CstType.NOMINAL, true); return true;
     }
     return false;
   }

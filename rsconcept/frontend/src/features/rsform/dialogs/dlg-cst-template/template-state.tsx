@@ -37,7 +37,7 @@ export const TemplateState = ({ children }: React.PropsWithChildren) => {
   function onChangePrototype(newPrototype: IConstituenta) {
     setPrototype(newPrototype);
     setArguments(
-      newPrototype.parse.args.map(arg => ({
+      newPrototype.parse!.args.map(arg => ({
         alias: arg.alias,
         typification: arg.typification,
         value: ''

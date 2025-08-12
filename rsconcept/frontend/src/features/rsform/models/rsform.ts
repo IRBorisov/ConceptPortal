@@ -20,6 +20,7 @@ export const CATEGORY_CST_TYPE = CstType.THEOREM;
 
 /** Represents Constituenta classification in terms of system of concepts. */
 export const CstClass = {
+  NOMINAL: 'nominal',
   BASIC: 'basic',
   DERIVED: 'derived',
   STATEMENT: 'statement',
@@ -58,7 +59,7 @@ export interface IConstituenta {
   term_resolved: string;
   term_forms: TermForm[];
 
-  parse: {
+  parse?: {
     status: ParsingStatus;
     valueClass: ValueClass;
     typification: string;
@@ -122,6 +123,7 @@ export interface IRSFormStats {
   count_function: number;
   count_predicate: number;
   count_theorem: number;
+  count_nominal: number;
 }
 
 /** Represents inheritance data for {@link IRSForm}. */

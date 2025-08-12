@@ -30,9 +30,14 @@ import {
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { useUpdateConstituenta } from '../../../backend/use-update-constituenta';
 import { RefsInput } from '../../../components/refs-input';
-import { getRSDefinitionPlaceholder, labelCstTypification, labelTypification } from '../../../labels';
+import {
+  getRSDefinitionPlaceholder,
+  labelCstTypification,
+  labelRSExpression,
+  labelTypification
+} from '../../../labels';
 import { type IConstituenta, type IRSForm } from '../../../models/rsform';
-import { isBaseSet, isBasicConcept, isFunctional } from '../../../models/rsform-api';
+import { isBaseSet, isBasicConcept } from '../../../models/rsform-api';
 import { EditorRSExpression } from '../editor-rsexpression';
 
 interface FormConstituentaProps {
@@ -90,15 +95,18 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
   );
 
   const typeInfo = useMemo(
-    () => ({
-      alias: activeCst.alias,
-      result: localParse ? localParse.typification : activeCst.parse.typification,
-      args: localParse ? localParse.args : activeCst.parse.args
-    }),
+    () =>
+      activeCst.parse
+        ? {
+            alias: activeCst.alias,
+            result: localParse ? localParse.typification : activeCst.parse.typification,
+            args: localParse ? localParse.args : activeCst.parse.args
+          }
+        : null,
     [activeCst, localParse]
   );
 
-  const isBasic = isBasicConcept(activeCst.cst_type);
+  const isBasic = isBasicConcept(activeCst.cst_type) || activeCst.cst_type === CstType.NOMINAL;
   const isElementary = isBaseSet(activeCst.cst_type);
   const showConvention = !!activeCst.convention || forceComment || isBasic;
 
@@ -140,7 +148,11 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
   }
 
   function handleTypeGraph(event: React.MouseEvent<Element>) {
-    if ((localParse && !localParse.parseResult) || activeCst.parse.status !== ParsingStatus.VERIFIED) {
+    if (
+      (localParse && !localParse.parseResult) ||
+      !activeCst.parse ||
+      activeCst.parse.status !== ParsingStatus.VERIFIED
+    ) {
       toast.error(errorMsg.typeStructureFailed);
       return;
     }
@@ -227,19 +239,21 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
         )}
       />
 
-      <TextArea
-        id='cst_typification'
-        fitContent
-        dense
-        noResize
-        noBorder
-        noOutline
-        transparent
-        readOnly
-        label='Типизация'
-        value={typification}
-        className='cursor-default'
-      />
+      {activeCst.cst_type !== CstType.NOMINAL ? (
+        <TextArea
+          id='cst_typification'
+          fitContent
+          dense
+          noResize
+          noBorder
+          noOutline
+          transparent
+          readOnly
+          label='Типизация'
+          value={typification}
+          className='cursor-default'
+        />
+      ) : null}
 
       {!!activeCst.definition_formal || !isElementary ? (
         <Controller
@@ -248,13 +262,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
           render={({ field }) => (
             <EditorRSExpression
               id='cst_expression'
-              label={
-                activeCst.cst_type === CstType.STRUCTURED
-                  ? 'Область определения'
-                  : isFunctional(activeCst.cst_type)
-                  ? 'Определение функции'
-                  : 'Формальное определение'
-              }
+              label={labelRSExpression(activeCst.cst_type)}
               placeholder={disabled ? '' : getRSDefinitionPlaceholder(activeCst.cst_type)}
               value={field.value ?? ''}
               activeCst={activeCst}

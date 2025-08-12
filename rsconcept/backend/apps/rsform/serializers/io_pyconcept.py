@@ -6,7 +6,7 @@ import pyconcept
 
 from shared import messages as msg
 
-from ..models import Constituenta
+from ..models import Constituenta, CstType
 
 
 class PyConceptAdapter:
@@ -34,7 +34,7 @@ class PyConceptAdapter:
         result: dict = {
             'items': []
         }
-        items = Constituenta.objects.filter(schema_id=schemaID).order_by('order')
+        items = Constituenta.objects.filter(schema_id=schemaID).exclude(cst_type=CstType.NOMINAL).order_by('order')
         for cst in items:
             result['items'].append({
                 'entityUID': cst.pk,
@@ -51,6 +51,8 @@ class PyConceptAdapter:
             'items': []
         }
         for cst in data['items']:
+            if cst['cst_type'] == CstType.NOMINAL:
+                continue
             result['items'].append({
                 'entityUID': cst['id'],
                 'cstType': cst['cst_type'],

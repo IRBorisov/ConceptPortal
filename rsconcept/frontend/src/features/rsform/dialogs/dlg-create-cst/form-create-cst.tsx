@@ -13,9 +13,9 @@ import { CstType, type ICreateConstituentaDTO } from '../../backend/types';
 import { IconCrucialValue } from '../../components/icon-crucial-value';
 import { RSInput } from '../../components/rs-input';
 import { SelectCstType } from '../../components/select-cst-type';
-import { getRSDefinitionPlaceholder } from '../../labels';
+import { getRSDefinitionPlaceholder, labelRSExpression } from '../../labels';
 import { type IRSForm } from '../../models/rsform';
-import { generateAlias, isBaseSet, isBasicConcept, isFunctional } from '../../models/rsform-api';
+import { generateAlias, isBaseSet, isBasicConcept } from '../../models/rsform-api';
 
 interface FormCreateCstProps {
   schema: IRSForm;
@@ -33,9 +33,8 @@ export function FormCreateCst({ schema }: FormCreateCstProps) {
   const cst_type = useWatch({ control, name: 'cst_type' });
   const convention = useWatch({ control, name: 'convention' });
   const crucial = useWatch({ control, name: 'crucial' });
-  const isBasic = isBasicConcept(cst_type);
+  const isBasic = isBasicConcept(cst_type) || cst_type === CstType.NOMINAL;
   const isElementary = isBaseSet(cst_type);
-  const isFunction = isFunctional(cst_type);
   const showConvention = !!convention || forceComment || isBasic;
 
   function handleTypeChange(target: CstType) {
@@ -91,13 +90,7 @@ export function FormCreateCst({ schema }: FormCreateCstProps) {
             <RSInput
               id='dlg_cst_expression'
               noTooltip
-              label={
-                cst_type === CstType.STRUCTURED
-                  ? 'Область определения'
-                  : isFunction
-                  ? 'Определение функции'
-                  : 'Формальное определение'
-              }
+              label={labelRSExpression(cst_type)}
               placeholder={getRSDefinitionPlaceholder(cst_type)}
               value={field.value}
               onChange={field.onChange}

@@ -23,10 +23,12 @@ export function InfoConstituenta({ data, className, ...restProps }: InfoConstitu
           {data.term_resolved || data.term_raw}
         </p>
       ) : null}
-      <p className='break-all'>
-        <b>Типизация: </b>
-        <span className='font-math'>{labelCstTypification(data)}</span>
-      </p>
+      {data.parse ? (
+        <p className='break-all'>
+          <b>Типизация: </b>
+          <span className='font-math'>{labelCstTypification(data)}</span>
+        </p>
+      ) : null}
       {data.definition_formal ? (
         <p className='break-all'>
           <b>Выражение: </b>

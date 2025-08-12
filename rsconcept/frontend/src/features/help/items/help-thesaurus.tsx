@@ -7,6 +7,7 @@ import {
   IconCstBaseSet,
   IconCstConstSet,
   IconCstFunction,
+  IconCstNominal,
   IconCstPredicate,
   IconCstStructured,
   IconCstTerm,
@@ -118,6 +119,11 @@ export function HelpThesaurus() {
 
       <ul>
         <b>Типы конституент</b>
+        <li>
+          <IconCstNominal size='1rem' className='inline-icon' />
+          {'\u2009'}Номеноид (N#) – предметная сущность, не имеющая четкого определения, используемая для ассоциативной
+          группировки конституент и предварительной фиксации содержательных отношений.
+        </li>
         <li>
           <IconCstBaseSet size='1rem' className='inline-icon' />
           {'\u2009'}Базисное множество (X#) – неопределяемое понятие, представленное множеством различимых элементов.

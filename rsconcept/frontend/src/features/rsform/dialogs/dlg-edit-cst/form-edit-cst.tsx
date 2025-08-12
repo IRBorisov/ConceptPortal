@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
+import { HelpTopic } from '@/features/help';
+import { BadgeHelp } from '@/features/help/components/badge-help';
+
 import { MiniButton } from '@/components/control';
 import { TextArea, TextInput } from '@/components/input';
 
@@ -8,9 +11,9 @@ import { CstType, type IUpdateConstituentaDTO } from '../../backend/types';
 import { IconCrucialValue } from '../../components/icon-crucial-value';
 import { RSInput } from '../../components/rs-input';
 import { SelectCstType } from '../../components/select-cst-type';
-import { getRSDefinitionPlaceholder, labelCstTypification } from '../../labels';
+import { getRSDefinitionPlaceholder, labelCstTypification, labelRSExpression } from '../../labels';
 import { type IConstituenta, type IRSForm } from '../../models/rsform';
-import { generateAlias, isBaseSet, isBasicConcept, isFunctional } from '../../models/rsform-api';
+import { generateAlias, isBaseSet, isBasicConcept } from '../../models/rsform-api';
 
 interface FormEditCstProps {
   schema: IRSForm;
@@ -30,9 +33,8 @@ export function FormEditCst({ target, schema }: FormEditCstProps) {
   const cst_type = useWatch({ control, name: 'item_data.cst_type' }) ?? CstType.BASE;
   const convention = useWatch({ control, name: 'item_data.convention' });
   const crucial = useWatch({ control, name: 'item_data.crucial' }) ?? false;
-  const isBasic = isBasicConcept(cst_type);
+  const isBasic = isBasicConcept(cst_type) || cst_type === CstType.NOMINAL;
   const isElementary = isBaseSet(cst_type);
-  const isFunction = isFunctional(cst_type);
   const showConvention = !!convention || forceComment || isBasic;
 
   function handleTypeChange(newValue: CstType) {
@@ -67,6 +69,7 @@ export function FormEditCst({ target, schema }: FormEditCstProps) {
           {...register('item_data.alias')}
           error={errors.item_data?.alias}
         />
+        <BadgeHelp topic={HelpTopic.CC_CONSTITUENTA} offset={16} contentClass='sm:max-w-160' />
       </div>
 
       <TextArea
@@ -75,23 +78,26 @@ export function FormEditCst({ target, schema }: FormEditCstProps) {
         spellCheck
         label='Термин'
         className='max-h-15 disabled:min-h-9'
+        placeholder='Обозначение для текстовых определений'
         {...register('item_data.term_raw')}
         error={errors.item_data?.term_raw}
       />
 
-      <TextArea
-        id='cst_typification'
-        fitContent
-        dense
-        noResize
-        noBorder
-        noOutline
-        transparent
-        readOnly
-        label='Типизация'
-        value={labelCstTypification(target)}
-        className='cursor-default'
-      />
+      {cst_type !== CstType.NOMINAL ? (
+        <TextArea
+          id='cst_typification'
+          fitContent
+          dense
+          noResize
+          noBorder
+          noOutline
+          transparent
+          readOnly
+          label='Типизация'
+          value={labelCstTypification(target)}
+          className='cursor-default'
+        />
+      ) : null}
 
       <Controller
         control={control}
@@ -101,13 +107,7 @@ export function FormEditCst({ target, schema }: FormEditCstProps) {
             <RSInput
               id='dlg_cst_expression'
               noTooltip
-              label={
-                cst_type === CstType.STRUCTURED
-                  ? 'Область определения'
-                  : isFunction
-                  ? 'Определение функции'
-                  : 'Формальное определение'
-              }
+              label={labelRSExpression(cst_type)}
               placeholder={getRSDefinitionPlaceholder(cst_type)}
               className='max-h-15'
               schema={schema}
@@ -131,6 +131,7 @@ export function FormEditCst({ target, schema }: FormEditCstProps) {
               fitContent
               spellCheck
               label='Текстовое определение'
+              placeholder='Текстовая интерпретация формального выражения'
               className='max-h-15'
               value={field.value}
               onChange={field.onChange}
@@ -158,6 +159,7 @@ export function FormEditCst({ target, schema }: FormEditCstProps) {
           fitContent
           spellCheck
           label={isBasic ? 'Конвенция' : 'Комментарий'}
+          placeholder={isBasic ? 'Договоренность об интерпретации' : 'Пояснение разработчика'}
           className='max-h-20 disabled:min-h-9'
           {...register('item_data.convention')}
           error={errors.item_data?.convention}

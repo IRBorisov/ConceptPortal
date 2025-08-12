@@ -17,7 +17,7 @@ export type IUpdateProfileDTO = z.infer<typeof schemaUpdateProfile>;
 
 // ========= SCHEMAS ========
 export const schemaUser = z.strictObject({
-  id: z.coerce.number(),
+  id: z.number(),
   username: z.string().nonempty(errorMsg.requiredField),
   is_staff: z.boolean(),
   email: z.email(errorMsg.emailField),

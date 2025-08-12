@@ -6,6 +6,7 @@ import {
   IconCstBaseSet,
   IconCstConstSet,
   IconCstFunction,
+  IconCstNominal,
   IconCstPredicate,
   IconCstStructured,
   IconCstTerm,
@@ -14,7 +15,6 @@ import {
   IconPredecessor,
   IconStatusError,
   IconStatusIncalculable,
-  IconStatusOK,
   IconStatusProperty,
   IconTerminology
 } from '@/components/icons';
@@ -49,17 +49,10 @@ export function RSFormStats({ className, stats }: RSFormStatsProps) {
       />
 
       <ValueStats
-        id='count_ok'
-        title='Корректные'
-        className='col-start-1'
-        icon={<IconStatusOK size='1.25rem' />}
-        value={stats.count_all - stats.count_errors - stats.count_property - stats.count_incalculable}
-      />
-      <ValueStats
         id='count_property'
         title='Неразмерные'
         icon={<IconStatusProperty size='1.25rem' />}
-        value={stats.count_errors}
+        value={stats.count_property}
       />
       <ValueStats
         id='count_incalculable'
@@ -72,6 +65,12 @@ export function RSFormStats({ className, stats }: RSFormStatsProps) {
         title='Некорректные'
         icon={<IconStatusError size='1.25rem' className={stats.count_errors > 0 ? 'text-destructive' : undefined} />}
         value={stats.count_errors}
+      />
+      <ValueStats
+        id='count_nominal'
+        title='Номеноиды'
+        icon={<IconCstNominal size='1.25rem' className={stats.count_nominal > 0 ? 'text-destructive' : undefined} />}
+        value={stats.count_nominal}
       />
 
       <ValueStats

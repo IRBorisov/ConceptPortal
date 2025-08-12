@@ -181,11 +181,13 @@ export function ToolbarSchema({
   }
 
   function handleShowTypeGraph() {
-    const typeInfo = schema.items.map(item => ({
-      alias: item.alias,
-      result: item.parse.typification,
-      args: item.parse.args
-    }));
+    const typeInfo = schema.items
+      .filter(item => !!item.parse)
+      .map(item => ({
+        alias: item.alias,
+        result: item.parse!.typification,
+        args: item.parse!.args
+      }));
     showTypeGraph({ items: typeInfo });
   }
 

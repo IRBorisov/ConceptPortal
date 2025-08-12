@@ -89,7 +89,9 @@ export function varSchemaGraph(schema: IRSForm): string {
 /** Generates a prompt for a schema type graph variable. */
 export function varSchemaTypeGraph(schema: IRSForm): string {
   const graph = new TypificationGraph();
-  schema.items.forEach(item => graph.addConstituenta(item.alias, item.parse.typification, item.parse.args));
+  schema.items.forEach(item => {
+    if (item.parse) graph.addConstituenta(item.alias, item.parse.typification, item.parse.args);
+  });
 
   let result = `Название концептуальной схемы: ${schema.title}\n`;
   result += `[${schema.alias}] Описание: "${schema.description}"\n\n`;
@@ -154,6 +156,6 @@ export function varSyntaxTree(cst: IConstituenta): string {
   let result = `Конституента: ${cst.alias}\n`;
   result += `Формальное выражение: ${cst.definition_formal}\n`;
   result += `Дерево синтаксического разбора:\n`;
-  result += JSON.stringify(cst.parse.syntaxTree, null, PARAMETER.indentJSON);
+  result += cst.parse ? JSON.stringify(cst.parse.syntaxTree, null, PARAMETER.indentJSON) : 'не определено';
   return result;
 }

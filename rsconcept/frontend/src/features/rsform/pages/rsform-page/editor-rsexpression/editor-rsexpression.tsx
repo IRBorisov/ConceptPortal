@@ -155,6 +155,21 @@ export function EditorRSExpression({
     }
   }
 
+  if (!activeCst.parse) {
+    return (
+      <RSInput
+        value={value}
+        schema={schema}
+        minHeight='3.75rem'
+        maxHeight='8rem'
+        onChange={handleChange}
+        onOpenEdit={onOpenEdit}
+        disabled={disabled}
+        {...restProps}
+      />
+    );
+  }
+
   return (
     <div className='relative'>
       <ToolbarRSExpression

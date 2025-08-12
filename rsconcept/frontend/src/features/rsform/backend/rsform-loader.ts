@@ -5,7 +5,7 @@
 import { Graph } from '@/models/graph';
 import { type RO } from '@/utils/meta';
 
-import { type IConstituenta, type IRSForm, type IRSFormStats } from '../models/rsform';
+import { ExpressionStatus, type IConstituenta, type IRSForm, type IRSFormStats } from '../models/rsform';
 import { inferClass, inferStatus, inferTemplate, isBaseSet, isFunctional } from '../models/rsform-api';
 import { extractGlobals, isSimpleExpression, splitTemplateDefinition } from '../models/rslang-api';
 
@@ -25,7 +25,7 @@ export class RSFormLoader {
   private cstByID = new Map<number, IConstituenta>();
 
   constructor(input: RO<IRSFormDTO>) {
-    this.schema = structuredClone(input) as IRSForm;
+    this.schema = structuredClone(input) as unknown as IRSForm;
     this.schema.version = input.version ?? 'latest';
   }
 
@@ -79,7 +79,7 @@ export class RSFormLoader {
     order.forEach(cstID => {
       const cst = this.cstByID.get(cstID)!;
       cst.schema = this.schema.id;
-      cst.status = inferStatus(cst.parse.status, cst.parse.valueClass);
+      cst.status = cst.parse ? inferStatus(cst.parse.status, cst.parse.valueClass) : ExpressionStatus.UNKNOWN;
       cst.is_template = inferTemplate(cst.definition_formal);
       cst.cst_class = inferClass(cst.cst_type, cst.is_template);
       cst.spawn = [];
@@ -184,11 +184,20 @@ export class RSFormLoader {
     return {
       count_all: items.length,
       count_crucial: items.reduce((sum, cst) => sum + (cst.crucial ? 1 : 0), 0),
-      count_errors: items.reduce((sum, cst) => sum + (cst.parse.status === ParsingStatus.INCORRECT ? 1 : 0), 0),
-      count_property: items.reduce((sum, cst) => sum + (cst.parse.valueClass === ValueClass.PROPERTY ? 1 : 0), 0),
+      count_errors: items.reduce(
+        (sum, cst) => sum + (cst.parse && cst.parse.status === ParsingStatus.INCORRECT ? 1 : 0),
+        0
+      ),
+      count_property: items.reduce(
+        (sum, cst) => sum + (cst.parse && cst.parse.valueClass === ValueClass.PROPERTY ? 1 : 0),
+        0
+      ),
       count_incalculable: items.reduce(
         (sum, cst) =>
-          sum + (cst.parse.status === ParsingStatus.VERIFIED && cst.parse.valueClass === ValueClass.INVALID ? 1 : 0),
+          sum +
+          (cst.parse && cst.parse.status === ParsingStatus.VERIFIED && cst.parse.valueClass === ValueClass.INVALID
+            ? 1
+            : 0),
         0
       ),
       count_inherited: items.reduce((sum, cst) => sum + (cst.is_inherited ? 1 : 0), 0),
@@ -204,7 +213,8 @@ export class RSFormLoader {
       count_term: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.TERM ? 1 : 0), 0),
       count_function: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.FUNCTION ? 1 : 0), 0),
       count_predicate: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.PREDICATE ? 1 : 0), 0),
-      count_theorem: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.THEOREM ? 1 : 0), 0)
+      count_theorem: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.THEOREM ? 1 : 0), 0),
+      count_nominal: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.NOMINAL ? 1 : 0), 0)
     };
   }
 }

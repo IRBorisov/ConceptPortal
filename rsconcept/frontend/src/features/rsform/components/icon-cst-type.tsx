@@ -1,4 +1,4 @@
-import { type DomIconProps } from '@/components/icons';
+import { type DomIconProps, IconCstNominal } from '@/components/icons';
 import {
   IconCstAxiom,
   IconCstBaseSet,
@@ -15,6 +15,8 @@ import { CstType } from '../backend/types';
 /** Icon for constituenta type. */
 export function IconCstType({ value, size = '1.25rem', className }: DomIconProps<CstType>) {
   switch (value) {
+    case CstType.NOMINAL:
+      return <IconCstNominal size={size} className={className ?? 'text-primary'} />;
     case CstType.BASE:
       return <IconCstBaseSet size={size} className={className ?? 'text-constructive'} />;
     case CstType.CONSTANT:

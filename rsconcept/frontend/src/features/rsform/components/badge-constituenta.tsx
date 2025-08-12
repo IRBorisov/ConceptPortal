@@ -4,8 +4,8 @@ import clsx from 'clsx';
 
 import { globalIDs } from '@/utils/constants';
 
-import { colorFgCstStatus } from '../colors';
-import { CstClass, type IConstituenta } from '../models/rsform';
+import { colorBgBadge, colorFgCstStatus } from '../colors';
+import { type IConstituenta } from '../models/rsform';
 import { useCstTooltipStore } from '../stores/cst-tooltip';
 
 interface BadgeConstituentaProps {
@@ -29,7 +29,7 @@ export function BadgeConstituenta({ value, prefixID }: BadgeConstituentaProps) {
         'cc-badge-constituenta',
         value.is_inherited && 'border-dashed',
         value.crucial && 'cc-badge-inner-shadow',
-        value.cst_class === CstClass.BASIC ? 'bg-accent-green25' : 'bg-input'
+        colorBgBadge(value)
       )}
       style={{
         borderColor: colorFgCstStatus(value.status),

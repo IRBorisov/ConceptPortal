@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+import { CstType } from '../backend/types';
+
 export const graphColorings = ['none', 'status', 'type', 'schemas'] as const;
 
 /**
@@ -29,7 +31,20 @@ export interface GraphFilterParams {
   allowPredicate: boolean;
   allowConstant: boolean;
   allowTheorem: boolean;
+  allowNominal: boolean;
 }
+
+export const cstTypeToFilterKey: Record<CstType, keyof GraphFilterParams> = {
+  [CstType.BASE]: 'allowBase',
+  [CstType.STRUCTURED]: 'allowStruct',
+  [CstType.TERM]: 'allowTerm',
+  [CstType.AXIOM]: 'allowAxiom',
+  [CstType.FUNCTION]: 'allowFunction',
+  [CstType.PREDICATE]: 'allowPredicate',
+  [CstType.CONSTANT]: 'allowConstant',
+  [CstType.THEOREM]: 'allowTheorem',
+  [CstType.NOMINAL]: 'allowNominal'
+};
 
 interface TermGraphStore {
   filter: GraphFilterParams;
@@ -66,7 +81,8 @@ export const useTermGraphStore = create<TermGraphStore>()(
         allowFunction: true,
         allowPredicate: true,
         allowConstant: true,
-        allowTheorem: true
+        allowTheorem: true,
+        allowNominal: true
       },
       setFilter: value => set({ filter: value }),
       toggleFocusInputs: () =>

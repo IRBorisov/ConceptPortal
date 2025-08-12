@@ -30,7 +30,7 @@ interface StatusBarProps {
 
 export function StatusBar({ className, isModified, processing, activeCst, parseData, onAnalyze }: StatusBarProps) {
   const status = (() => {
-    if (isModified) {
+    if (isModified || !activeCst.parse) {
       return ExpressionStatus.UNKNOWN;
     }
     if (parseData) {
