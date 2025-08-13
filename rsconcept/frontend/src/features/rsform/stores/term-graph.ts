@@ -4,16 +4,18 @@ import { persist } from 'zustand/middleware';
 import { CstType } from '../backend/types';
 
 export const graphColorings = ['none', 'status', 'type', 'schemas'] as const;
+export const graphTypes = ['full', 'association', 'definition'] as const;
 
-/**
- * Represents graph node coloring scheme.
- */
+/** Represents graph node coloring scheme. */
 export type GraphColoring = (typeof graphColorings)[number];
 
-/**
- * Represents parameters for GraphEditor.
- */
+/** Represents graph type. */
+export type GraphType = (typeof graphTypes)[number];
+
+/** Represents parameters for GraphEditor. */
 export interface GraphFilterParams {
+  graphType: GraphType;
+
   noHermits: boolean;
   noTransitive: boolean;
   noTemplates: boolean;
@@ -49,10 +51,12 @@ export const cstTypeToFilterKey: Record<CstType, keyof GraphFilterParams> = {
 interface TermGraphStore {
   filter: GraphFilterParams;
   setFilter: (value: GraphFilterParams) => void;
+  setGraphType: (value: GraphType) => void;
   toggleFocusInputs: () => void;
   toggleFocusOutputs: () => void;
   toggleText: () => void;
   toggleClustering: () => void;
+  toggleGraphType: () => void;
 
   foldHidden: boolean;
   toggleFoldHidden: () => void;
@@ -65,6 +69,8 @@ export const useTermGraphStore = create<TermGraphStore>()(
   persist(
     set => ({
       filter: {
+        graphType: 'full',
+
         noTemplates: false,
         noHermits: true,
         noTransitive: true,
@@ -85,12 +91,25 @@ export const useTermGraphStore = create<TermGraphStore>()(
         allowNominal: true
       },
       setFilter: value => set({ filter: value }),
+      setGraphType: value => set(state => ({ filter: { ...state.filter, graphType: value } })),
       toggleFocusInputs: () =>
         set(state => ({ filter: { ...state.filter, focusShowInputs: !state.filter.focusShowInputs } })),
       toggleFocusOutputs: () =>
         set(state => ({ filter: { ...state.filter, focusShowOutputs: !state.filter.focusShowOutputs } })),
       toggleText: () => set(state => ({ filter: { ...state.filter, noText: !state.filter.noText } })),
       toggleClustering: () => set(state => ({ filter: { ...state.filter, foldDerived: !state.filter.foldDerived } })),
+      toggleGraphType: () =>
+        set(state => ({
+          filter: {
+            ...state.filter,
+            graphType:
+              state.filter.graphType === 'full'
+                ? 'association'
+                : state.filter.graphType === 'association'
+                ? 'definition'
+                : 'full'
+          }
+        })),
 
       foldHidden: false,
       toggleFoldHidden: () => set(state => ({ foldHidden: !state.foldHidden })),
@@ -99,7 +118,7 @@ export const useTermGraphStore = create<TermGraphStore>()(
       setColoring: value => set({ coloring: value })
     }),
     {
-      version: 1,
+      version: 3,
       name: 'portal.termGraph'
     }
   )

@@ -7,11 +7,14 @@ import { type IConstituenta, type IRSForm } from '@/features/rsform';
 import { TGEdgeTypes } from '@/features/rsform/components/term-graph/graph/tg-edge-types';
 import { TGNodeTypes } from '@/features/rsform/components/term-graph/graph/tg-node-types';
 import { SelectColoring } from '@/features/rsform/components/term-graph/select-coloring';
+import { SelectGraphType } from '@/features/rsform/components/term-graph/select-graph-type';
 import { ToolbarFocusedCst } from '@/features/rsform/components/term-graph/toolbar-focused-cst';
+import { ViewHidden } from '@/features/rsform/components/term-graph/view-hidden';
 import { applyLayout, produceFilteredGraph, type TGNodeData } from '@/features/rsform/models/graph-api';
 import { useTermGraphStore } from '@/features/rsform/stores/term-graph';
 
 import { DiagramFlow, useReactFlow } from '@/components/flow/diagram-flow';
+import { useFitHeight } from '@/stores/app-layout';
 import { PARAMETER } from '@/utils/constants';
 
 import ToolbarGraphFilter from './toolbar-graph-filter';
@@ -35,6 +38,8 @@ export function TGReadonlyFlow({ schema }: TGReadonlyFlowProps) {
 
   const filter = useTermGraphStore(state => state.filter);
   const filteredGraph = produceFilteredGraph(schema, filter, focusCst);
+  const hidden = schema.items.filter(cst => !filteredGraph.hasNode(cst.id)).map(cst => cst.id);
+  const hiddenHeight = useFitHeight('15.5rem + 2px', '4rem');
 
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges] = useEdgesState<Edge>([]);
@@ -102,7 +107,9 @@ export function TGReadonlyFlow({ schema }: TGReadonlyFlowProps) {
         ) : null}
       </div>
       <div className='absolute z-pop top-24 sm:top-16 left-2 sm:left-3 w-54 flex flex-col pointer-events-none'>
-        <SelectColoring schema={schema} />
+        <SelectColoring className='rounded-b-none' schema={schema} />
+        <SelectGraphType className='rounded-none border-t-0' />
+        <ViewHidden items={hidden} listHeight={hiddenHeight} schema={schema} setFocus={setFocusCst} />
       </div>
 
       <DiagramFlow

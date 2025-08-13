@@ -4,21 +4,24 @@ import { useEffect, useRef } from 'react';
 import { type Edge, MarkerType, type Node, useEdgesState, useNodesState, useOnSelectionChange } from 'reactflow';
 
 import { DiagramFlow, useReactFlow } from '@/components/flow/diagram-flow';
-import { useMainHeight } from '@/stores/app-layout';
+import { useWindowSize } from '@/hooks/use-window-size';
+import { useFitHeight, useMainHeight } from '@/stores/app-layout';
 import { PARAMETER } from '@/utils/constants';
 import { withPreventDefault } from '@/utils/utils';
 
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
+import { colorGraphEdge } from '../../../colors';
 import { TGEdgeTypes } from '../../../components/term-graph/graph/tg-edge-types';
 import { TGNodeTypes } from '../../../components/term-graph/graph/tg-node-types';
 import { SelectColoring } from '../../../components/term-graph/select-coloring';
-import { applyLayout, type TGNodeData } from '../../../models/graph-api';
+import { SelectGraphType } from '../../../components/term-graph/select-graph-type';
+import { ViewHidden } from '../../../components/term-graph/view-hidden';
+import { applyLayout, inferEdgeType, type TGNodeData } from '../../../models/graph-api';
 import { useTermGraphStore } from '../../../stores/term-graph';
 import { useRSEdit } from '../rsedit-context';
 
 import { ToolbarTermGraph } from './toolbar-term-graph';
 import { useFilteredGraph } from './use-filtered-graph';
-import { ViewHidden } from './view-hidden';
 
 export const flowOptions = {
   fitView: true,
@@ -31,17 +34,28 @@ export const flowOptions = {
 } as const;
 
 export function TGFlow() {
+  const { isSmall } = useWindowSize();
   const mainHeight = useMainHeight();
   const { fitView, viewportInitialized } = useReactFlow();
   const isProcessing = useMutatingRSForm();
-  const { isContentEditable, schema, selected, setSelected, promptDeleteCst, focusCst, setFocus, navigateCst } =
-    useRSEdit();
+  const {
+    isContentEditable,
+    schema,
+    selected,
+    setSelected,
+    promptDeleteCst,
+    focusCst,
+    setFocus,
+    toggleSelect,
+    navigateCst
+  } = useRSEdit();
 
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges] = useEdgesState<Edge>([]);
 
   const filter = useTermGraphStore(state => state.filter);
   const { filteredGraph, hidden } = useFilteredGraph();
+  const hiddenHeight = useFitHeight(isSmall ? '15rem + 2px' : '13.5rem + 2px', '4rem');
 
   function onSelectionChange({ nodes }: { nodes: Node[] }) {
     const ids = nodes.map(node => Number(node.id));
@@ -73,17 +87,21 @@ export function TGFlow() {
     let edgeID = 1;
     filteredGraph.nodes.forEach(source => {
       source.outputs.forEach(target => {
-        if (newNodes.find(node => node.id === String(target))) {
+        const edgeType = inferEdgeType(schema, source.id, target);
+        if (edgeType && newNodes.find(node => node.id === String(target))) {
+          const color = filter.graphType === 'full' ? colorGraphEdge(edgeType) : colorGraphEdge(filter.graphType);
           newEdges.push({
             id: String(edgeID),
             source: String(source.id),
             target: String(target),
             type: 'termEdge',
+            style: { stroke: color },
             focusable: false,
             markerEnd: {
               type: MarkerType.ArrowClosed,
               width: 20,
-              height: 20
+              height: 20,
+              color: color
             }
           });
           edgeID += 1;
@@ -97,7 +115,17 @@ export function TGFlow() {
     setEdges(newEdges);
 
     setTimeout(() => fitView(flowOptions.fitViewOptions), PARAMETER.minimalTimeout);
-  }, [schema, filteredGraph, setNodes, setEdges, filter.noText, fitView, viewportInitialized, focusCst]);
+  }, [
+    schema,
+    filteredGraph,
+    setNodes,
+    setEdges,
+    filter.noText,
+    fitView,
+    viewportInitialized,
+    focusCst,
+    filter.graphType
+  ]);
 
   const prevSelected = useRef<number[]>([]);
   if (
@@ -150,8 +178,19 @@ export function TGFlow() {
         <span className='px-2 pb-1 select-none whitespace-nowrap backdrop-blur-xs rounded-xl w-fit'>
           Выбор {selected.length} из {schema.stats?.count_all ?? 0}
         </span>
-        <SelectColoring schema={schema} />
-        <ViewHidden items={hidden} />
+
+        <SelectColoring className='rounded-b-none' schema={schema} />
+        <SelectGraphType className='rounded-none border-t-0' />
+
+        <ViewHidden
+          items={hidden}
+          listHeight={hiddenHeight}
+          schema={schema}
+          selected={selected}
+          toggleSelect={toggleSelect}
+          setFocus={setFocus}
+          onActivate={navigateCst}
+        />
       </div>
 
       <DiagramFlow

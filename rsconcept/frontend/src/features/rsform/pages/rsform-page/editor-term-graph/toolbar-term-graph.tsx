@@ -156,11 +156,6 @@ export function ToolbarTermGraph({ className }: ToolbarTermGraphProps) {
           onClick={toggleClustering}
         />
 
-        <MiniButton
-          icon={<IconTypeGraph size='1.25rem' className='icon-primary' />}
-          title='Граф ступеней'
-          onClick={handleShowTypeGraph}
-        />
         <BadgeHelp topic={HelpTopic.UI_GRAPH_TERM} contentClass='sm:max-w-160' offset={4} />
       </div>
       <div className='cc-icons items-center'>
@@ -198,6 +193,11 @@ export function ToolbarTermGraph({ className }: ToolbarTermGraphProps) {
             disabled={!canDeleteSelected || isProcessing}
           />
         ) : null}
+        <MiniButton
+          icon={<IconTypeGraph size='1.25rem' className='icon-primary' />}
+          title='Граф ступеней'
+          onClick={handleShowTypeGraph}
+        />
       </div>
     </div>
   );

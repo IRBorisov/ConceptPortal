@@ -5,7 +5,7 @@ import { TokenID } from './backend/types';
 import { CstClass, ExpressionStatus, type IConstituenta } from './models/rsform';
 import { type ISyntaxTreeNode } from './models/rslang';
 import { type TypificationGraphNode } from './models/typification-graph';
-import { type GraphColoring } from './stores/term-graph';
+import { type GraphColoring, type GraphType } from './stores/term-graph';
 
 /** Represents Brackets highlights theme. */
 export const BRACKETS_THEME = {
@@ -251,4 +251,15 @@ export function colorBgTMGraphNode(node: TypificationGraphNode): string {
     return APP_COLORS.bgTeal;
   }
   return APP_COLORS.bgOrange;
+}
+
+export function colorGraphEdge(edgeType: GraphType): string {
+  switch (edgeType) {
+    case 'full':
+      return APP_COLORS.bgGreen;
+    case 'definition':
+      return APP_COLORS.border;
+    case 'association':
+      return APP_COLORS.bgPurple;
+  }
 }

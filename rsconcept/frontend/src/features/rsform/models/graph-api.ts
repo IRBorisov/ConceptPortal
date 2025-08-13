@@ -7,7 +7,7 @@ import dagre from '@dagrejs/dagre';
 import { PARAMETER } from '@/utils/constants';
 
 import { CstType } from '../backend/types';
-import { type GraphFilterParams } from '../stores/term-graph';
+import { type GraphFilterParams, type GraphType } from '../stores/term-graph';
 
 import { type IConstituenta, type IRSForm } from './rsform';
 
@@ -57,8 +57,27 @@ export function applyLayout(nodes: Node<TGNodeState>[], edges: Edge[], subLabels
   });
 }
 
+export function inferEdgeType(schema: IRSForm, source: number, target: number): GraphType | null {
+  const isDefinition = schema.graph.hasEdge(source, target);
+  const isAssociation = schema.association_graph.hasEdge(source, target);
+  if (!isDefinition && !isAssociation) {
+    return null;
+  } else if (isDefinition && isAssociation) {
+    return 'full';
+  } else if (isDefinition) {
+    return 'definition';
+  } else {
+    return 'association';
+  }
+}
+
 export function produceFilteredGraph(schema: IRSForm, params: GraphFilterParams, focusCst: IConstituenta | null) {
-  const filtered = schema.graph.clone();
+  const filtered =
+    params.graphType === 'full'
+      ? schema.full_graph.clone()
+      : params.graphType === 'association'
+      ? schema.association_graph.clone()
+      : schema.graph.clone();
   const allowedTypes: CstType[] = (() => {
     const result: CstType[] = [];
     if (params.allowBase) result.push(CstType.BASE);
@@ -73,9 +92,6 @@ export function produceFilteredGraph(schema: IRSForm, params: GraphFilterParams,
     return result;
   })();
 
-  if (params.noHermits) {
-    filtered.removeIsolated();
-  }
   if (params.noTemplates) {
     schema.items.forEach(cst => {
       if (cst !== focusCst && cst.is_template) {
@@ -96,6 +112,9 @@ export function produceFilteredGraph(schema: IRSForm, params: GraphFilterParams,
         filtered.foldNode(cst.id);
       }
     });
+  }
+  if (params.noHermits) {
+    filtered.removeIsolated();
   }
   if (focusCst) {
     const includes: number[] = [

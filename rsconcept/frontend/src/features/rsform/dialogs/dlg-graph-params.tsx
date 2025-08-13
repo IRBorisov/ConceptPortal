@@ -39,6 +39,13 @@ export function DlgGraphParams() {
         />
         <Controller
           control={control}
+          name='foldDerived'
+          render={({ field }) => (
+            <Checkbox {...field} label='Скрыть порожденные' title='Не отображать порожденные понятия' />
+          )}
+        />
+        <Controller
+          control={control}
           name='noHermits'
           render={({ field }) => <Checkbox {...field} label='Скрыть несвязанные' title='Неиспользуемые конституенты' />}
         />
@@ -62,13 +69,6 @@ export function DlgGraphParams() {
               label='Транзитивная редукция'
               titleHtml='Удалить связи, образующие <br/>транзитивные пути в графе'
             />
-          )}
-        />
-        <Controller
-          control={control}
-          name='foldDerived'
-          render={({ field }) => (
-            <Checkbox {...field} label='Свернуть порожденные' title='Не отображать порожденные понятия' />
           )}
         />
       </div>

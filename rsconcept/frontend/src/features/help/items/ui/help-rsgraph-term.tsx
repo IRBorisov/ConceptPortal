@@ -20,7 +20,6 @@ import {
   IconOSS,
   IconPredecessor,
   IconReset,
-  IconRotate3D,
   IconText,
   IconTypeGraph
 } from '@/components/icons';
@@ -38,13 +37,13 @@ export function HelpRSGraphTerm() {
           <ul>
             <li>Цвет – покраска узлов</li>
             <li>
+              Связи – выбор типов <LinkTopic text='связей' topic={HelpTopic.CC_RELATIONS} />
+            </li>
+            <li>
               <IconText className='inline-icon' /> Отображение текста
             </li>
             <li>
               <IconClustering className='inline-icon' /> Скрыть порожденные
-            </li>
-            <li>
-              <IconRotate3D className='inline-icon' /> Вращение 3D
             </li>
           </ul>
         </div>

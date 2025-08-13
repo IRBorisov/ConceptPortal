@@ -4,35 +4,44 @@ import clsx from 'clsx';
 
 import { MiniButton } from '@/components/control';
 import { IconDropArrow, IconDropArrowUp } from '@/components/icons';
-import { useWindowSize } from '@/hooks/use-window-size';
-import { useFitHeight } from '@/stores/app-layout';
 import { globalIDs, prefixes } from '@/utils/constants';
 
-import { colorBgGraphNode } from '../../../colors';
-import { type IConstituenta } from '../../../models/rsform';
-import { useCstTooltipStore } from '../../../stores/cst-tooltip';
-import { useTermGraphStore } from '../../../stores/term-graph';
-import { useRSEdit } from '../rsedit-context';
+import { colorBgGraphNode } from '../../colors';
+import { type IConstituenta, type IRSForm } from '../../models/rsform';
+import { useCstTooltipStore } from '../../stores/cst-tooltip';
+import { useTermGraphStore } from '../../stores/term-graph';
 
 interface ViewHiddenProps {
   items: number[];
+  listHeight?: string;
+
+  schema: IRSForm;
+  selected?: number[];
+  toggleSelect?: (id: number) => void;
+  setFocus: (cst: IConstituenta) => void;
+  onActivate?: (id: number) => void;
 }
 
-export function ViewHidden({ items }: ViewHiddenProps) {
-  const { isSmall } = useWindowSize();
+export function ViewHidden({
+  items,
+  listHeight,
+  schema,
+  selected,
+  toggleSelect,
+  setFocus,
+  onActivate
+}: ViewHiddenProps) {
   const coloring = useTermGraphStore(state => state.coloring);
-  const { navigateCst, setFocus, schema, selected, toggleSelect } = useRSEdit();
 
-  const localSelected = items.filter(id => selected.includes(id));
+  const localSelected = selected ? items.filter(id => selected.includes(id)) : [];
   const isFolded = useTermGraphStore(state => state.foldHidden);
   const toggleFolded = useTermGraphStore(state => state.toggleFoldHidden);
   const setActiveCst = useCstTooltipStore(state => state.setActiveCst);
-  const hiddenHeight = useFitHeight(isSmall ? '10.4rem + 2px' : '12.5rem + 2px');
 
   function handleClick(event: React.MouseEvent<Element>, cstID: number) {
     event.preventDefault();
     event.stopPropagation();
-    toggleSelect(cstID);
+    toggleSelect?.(cstID);
   }
 
   function handleContextMenu(event: React.MouseEvent<HTMLElement>, target: IConstituenta) {
@@ -56,7 +65,7 @@ export function ViewHidden({ items }: ViewHiddenProps) {
 
       <div className={clsx('py-2 bg-input border-x', isFolded && 'border-b rounded-b-md')}>
         <div className={clsx('w-fit select-none cc-view-hidden-header', !isFolded && 'open')}>
-          {`Скрытые [${localSelected.length} | ${items.length}]`}
+          {localSelected ? `Скрытые [${localSelected.length} | ${items.length}]` : 'Скрытые'}
         </div>
       </div>
 
@@ -70,7 +79,7 @@ export function ViewHidden({ items }: ViewHiddenProps) {
           !isFolded && 'open'
         )}
         inert={isFolded}
-        style={{ maxHeight: hiddenHeight }}
+        style={{ maxHeight: listHeight }}
       >
         {items.map(cstID => {
           const cst = schema.cstByID.get(cstID)!;
@@ -87,7 +96,7 @@ export function ViewHidden({ items }: ViewHiddenProps) {
               style={{ backgroundColor: colorBgGraphNode(cst, coloring) }}
               onClick={event => handleClick(event, cstID)}
               onContextMenu={event => handleContextMenu(event, cst)}
-              onDoubleClick={() => navigateCst(cstID)}
+              onDoubleClick={() => onActivate?.(cstID)}
               data-tooltip-id={globalIDs.constituenta_tooltip}
               onMouseEnter={() => setActiveCst(cst)}
             >
