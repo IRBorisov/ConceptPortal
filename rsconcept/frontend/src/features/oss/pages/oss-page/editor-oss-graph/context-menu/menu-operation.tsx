@@ -101,8 +101,9 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
     }
     onHide();
     showEditOperation({
-      manager: new LayoutManager(schema, getLayout()),
-      target: operation
+      layout: getLayout(),
+      ossID: schema.id,
+      targetID: operation.id
     });
   }
 
@@ -114,8 +115,8 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
     switch (operation.operation_type) {
       case OperationType.REPLICA:
         showDeleteReference({
-          oss: schema,
-          target: operation,
+          ossID: schema.id,
+          targetID: operation.id,
           layout: getLayout(),
           beforeDelete: deselectAll
         });
@@ -123,8 +124,8 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
       case OperationType.INPUT:
       case OperationType.SYNTHESIS:
         showDeleteOperation({
-          oss: schema,
-          target: operation,
+          ossID: schema.id,
+          targetID: operation.id,
           layout: getLayout(),
           beforeDelete: deselectAll
         });
@@ -163,8 +164,8 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
     }
     onHide();
     showRelocateConstituents({
-      oss: schema,
-      initialTarget: operation,
+      ossID: schema.id,
+      targetID: operation.id,
       layout: getLayout()
     });
   }

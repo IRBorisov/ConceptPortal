@@ -11,18 +11,19 @@ import { ModalForm } from '@/components/modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { type IUpdateOperationDTO, OperationType, schemaUpdateOperation } from '../../backend/types';
+import { type IOssLayout, type IUpdateOperationDTO, OperationType, schemaUpdateOperation } from '../../backend/types';
+import { useOssSuspense } from '../../backend/use-oss';
 import { useUpdateOperation } from '../../backend/use-update-operation';
-import { type IOperationInput, type IOperationSynthesis } from '../../models/oss';
-import { type LayoutManager } from '../../models/oss-layout-api';
+import { LayoutManager } from '../../models/oss-layout-api';
 
 import { TabArguments } from './tab-arguments';
 import { TabOperation } from './tab-operation';
 import { TabSubstitutions } from './tab-substitutions';
 
 export interface DlgEditOperationProps {
-  manager: LayoutManager;
-  target: IOperationInput | IOperationSynthesis;
+  ossID: number;
+  layout: IOssLayout;
+  targetID: number;
 }
 
 export const TabID = {
@@ -33,13 +34,17 @@ export const TabID = {
 export type TabID = (typeof TabID)[keyof typeof TabID];
 
 export function DlgEditOperation() {
-  const { manager, target } = useDialogsStore(state => state.props as DlgEditOperationProps);
+  const { ossID, layout, targetID } = useDialogsStore(state => state.props as DlgEditOperationProps);
   const { updateOperation } = useUpdateOperation();
+
+  const { schema } = useOssSuspense({ itemID: ossID });
+  const manager = new LayoutManager(schema, layout);
+  const target = manager.oss.operationByID.get(targetID)!;
 
   const methods = useForm<IUpdateOperationDTO>({
     resolver: zodResolver(schemaUpdateOperation),
     defaultValues: {
-      target: target.id,
+      target: targetID,
       item_data: {
         alias: target.alias,
         title: target.title,
@@ -101,15 +106,17 @@ export function DlgEditOperation() {
 
         <FormProvider {...methods}>
           <TabPanel>
-            <TabOperation />
+            <TabOperation oss={schema} />
           </TabPanel>
 
-          <TabPanel>{target.operation_type === OperationType.SYNTHESIS ? <TabArguments /> : null}</TabPanel>
+          <TabPanel>
+            {target.operation_type === OperationType.SYNTHESIS ? <TabArguments oss={schema} target={target} /> : null}
+          </TabPanel>
 
           <TabPanel>
             {target.operation_type === OperationType.SYNTHESIS ? (
               <Suspense fallback={<Loader />}>
-                <TabSubstitutions />
+                <TabSubstitutions oss={schema} />
               </Suspense>
             ) : null}
           </TabPanel>

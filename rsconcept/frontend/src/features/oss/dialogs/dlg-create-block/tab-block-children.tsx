@@ -3,34 +3,34 @@
 import { useFormContext, useWatch } from 'react-hook-form';
 
 import { Label } from '@/components/input';
-import { useDialogsStore } from '@/stores/dialogs';
 
 import { type ICreateBlockDTO } from '../../backend/types';
 import { PickContents } from '../../components/pick-contents';
-import { type IOssItem, NodeType } from '../../models/oss';
+import { type IOperationSchema, type IOssItem, NodeType } from '../../models/oss';
 
-import { type DlgCreateBlockProps } from './dlg-create-block';
+interface TabBlockChildrenProps {
+  oss: IOperationSchema;
+}
 
-export function TabBlockChildren() {
+export function TabBlockChildren({ oss }: TabBlockChildrenProps) {
   const { setValue, control } = useFormContext<ICreateBlockDTO>();
-  const { manager } = useDialogsStore(state => state.props as DlgCreateBlockProps);
   const parent = useWatch({ control, name: 'item_data.parent' });
   const children_blocks = useWatch({ control, name: 'children_blocks' });
   const children_operations = useWatch({ control, name: 'children_operations' });
 
-  const parentItem = parent ? manager.oss.blockByID.get(parent) : null;
+  const parentItem = parent ? oss.blockByID.get(parent) : null;
   const internalBlocks = parentItem
-    ? manager.oss.hierarchy
+    ? oss.hierarchy
         .expandAllInputs([parentItem.nodeID])
-        .map(id => manager.oss.itemByNodeID.get(id))
+        .map(id => oss.itemByNodeID.get(id))
         .filter(item => item !== null && item?.nodeType === NodeType.BLOCK)
     : [];
 
   const exclude = parentItem ? [parentItem, ...internalBlocks] : [];
 
   const value = [
-    ...children_blocks.map(id => manager.oss.blockByID.get(id)!),
-    ...children_operations.map(id => manager.oss.operationByID.get(id)!)
+    ...children_blocks.map(id => oss.blockByID.get(id)!),
+    ...children_operations.map(id => oss.operationByID.get(id)!)
   ];
 
   function handleChangeSelected(newValue: IOssItem[]) {
@@ -50,7 +50,7 @@ export function TabBlockChildren() {
     <div className='cc-fade-in cc-column'>
       <Label text={`Выбор содержания: [ ${value.length} ]`} />
       <PickContents
-        schema={manager.oss}
+        schema={oss}
         exclude={exclude}
         value={value}
         onChange={newValue => handleChangeSelected(newValue)}

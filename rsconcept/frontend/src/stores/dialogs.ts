@@ -93,7 +93,7 @@ interface DialogsStore {
   showCstTemplate: (props: DlgCstTemplateProps) => void;
   showCreateCst: (props: DlgCreateCstProps) => void;
   showCreateBlock: (props: DlgCreateBlockProps) => void;
-  showCreateOperation: (props: DlgCreateSynthesisProps) => void;
+  showCreateSynthesis: (props: DlgCreateSynthesisProps) => void;
   showDeleteCst: (props: DlgDeleteCstProps) => void;
   showEditEditors: (props: DlgEditEditorsProps) => void;
   showEditOperation: (props: DlgEditOperationProps) => void;
@@ -138,7 +138,7 @@ export const useDialogsStore = create<DialogsStore>()(set => ({
   showVideo: props => set({ active: DialogType.SHOW_VIDEO, props: props }),
   showCstTemplate: props => set({ active: DialogType.CONSTITUENTA_TEMPLATE, props: props }),
   showCreateCst: props => set({ active: DialogType.CREATE_CONSTITUENTA, props: props }),
-  showCreateOperation: props => set({ active: DialogType.CREATE_SYNTHESIS, props: props }),
+  showCreateSynthesis: props => set({ active: DialogType.CREATE_SYNTHESIS, props: props }),
   showCreateBlock: props => set({ active: DialogType.CREATE_BLOCK, props: props }),
   showDeleteCst: props => set({ active: DialogType.DELETE_CONSTITUENTA, props: props }),
   showEditEditors: props => set({ active: DialogType.EDIT_EDITORS, props: props }),

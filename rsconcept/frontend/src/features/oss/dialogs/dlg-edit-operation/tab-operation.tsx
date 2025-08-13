@@ -1,15 +1,16 @@
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { TextArea, TextInput } from '@/components/input';
-import { useDialogsStore } from '@/stores/dialogs';
 
 import { type IUpdateOperationDTO } from '../../backend/types';
 import { SelectParent } from '../../components/select-parent';
+import { type IOperationSchema } from '../../models/oss';
 
-import { type DlgEditOperationProps } from './dlg-edit-operation';
+interface TabOperationProps {
+  oss: IOperationSchema;
+}
 
-export function TabOperation() {
-  const { manager } = useDialogsStore(state => state.props as DlgEditOperationProps);
+export function TabOperation({ oss }: TabOperationProps) {
   const {
     register,
     control,
@@ -37,8 +38,8 @@ export function TabOperation() {
         control={control}
         render={({ field }) => (
           <SelectParent
-            items={manager.oss.blocks}
-            value={field.value ? manager.oss.blockByID.get(field.value) ?? null : null}
+            items={oss.blocks}
+            value={field.value ? oss.blockByID.get(field.value) ?? null : null}
             placeholder='Родительский блок'
             onChange={value => field.onChange(value ? value.id : null)}
           />

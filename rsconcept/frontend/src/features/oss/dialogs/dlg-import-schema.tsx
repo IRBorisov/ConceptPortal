@@ -12,14 +12,16 @@ import { Checkbox, TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { type IImportSchemaDTO, schemaImportSchema } from '../backend/types';
+import { type IImportSchemaDTO, type IOssLayout, schemaImportSchema } from '../backend/types';
 import { useImportSchema } from '../backend/use-import-schema';
+import { useOssSuspense } from '../backend/use-oss';
 import { SelectParent } from '../components/select-parent';
 import { sortItemsForOSS } from '../models/oss-api';
-import { type LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '../models/oss-layout-api';
+import { LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '../models/oss-layout-api';
 
 export interface DlgImportSchemaProps {
-  manager: LayoutManager;
+  ossID: number;
+  layout: IOssLayout;
   defaultX: number;
   defaultY: number;
   initialParent: number | null;
@@ -29,9 +31,16 @@ export interface DlgImportSchemaProps {
 export function DlgImportSchema() {
   const { importSchema } = useImportSchema();
 
-  const { manager, initialParent, onCreate, defaultX, defaultY } = useDialogsStore(
-    state => state.props as DlgImportSchemaProps
-  );
+  const {
+    ossID, //
+    layout,
+    initialParent,
+    onCreate,
+    defaultX,
+    defaultY
+  } = useDialogsStore(state => state.props as DlgImportSchemaProps);
+  const { schema } = useOssSuspense({ itemID: ossID });
+  const manager = new LayoutManager(schema, layout);
   const { items: libraryItems } = useLibrary();
   const sortedItems = sortItemsForOSS(manager.oss, libraryItems);
 

@@ -9,13 +9,15 @@ import { TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { type ICreateSchemaDTO, schemaCreateSchema } from '../backend/types';
+import { type ICreateSchemaDTO, type IOssLayout, schemaCreateSchema } from '../backend/types';
 import { useCreateSchema } from '../backend/use-create-schema';
+import { useOssSuspense } from '../backend/use-oss';
 import { SelectParent } from '../components/select-parent';
-import { type LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '../models/oss-layout-api';
+import { LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '../models/oss-layout-api';
 
 export interface DlgCreateSchemaProps {
-  manager: LayoutManager;
+  ossID: number;
+  layout: IOssLayout;
   defaultX: number;
   defaultY: number;
   initialParent: number | null;
@@ -25,9 +27,17 @@ export interface DlgCreateSchemaProps {
 export function DlgCreateSchema() {
   const { createSchema } = useCreateSchema();
 
-  const { manager, initialParent, onCreate, defaultX, defaultY } = useDialogsStore(
-    state => state.props as DlgCreateSchemaProps
-  );
+  const {
+    ossID, //
+    layout,
+    initialParent,
+    onCreate,
+    defaultX,
+    defaultY
+  } = useDialogsStore(state => state.props as DlgCreateSchemaProps);
+
+  const { schema } = useOssSuspense({ itemID: ossID });
+  const manager = new LayoutManager(schema, layout);
 
   const {
     control,

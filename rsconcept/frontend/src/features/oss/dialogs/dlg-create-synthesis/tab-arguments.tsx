@@ -3,16 +3,17 @@
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { Label, TextArea, TextInput } from '@/components/input';
-import { useDialogsStore } from '@/stores/dialogs';
 
 import { type ICreateSynthesisDTO } from '../../backend/types';
 import { PickMultiOperation } from '../../components/pick-multi-operation';
 import { SelectParent } from '../../components/select-parent';
+import { type IOperationSchema } from '../../models/oss';
 
-import { type DlgCreateSynthesisProps } from './dlg-create-synthesis';
+interface TabArgumentsProps {
+  oss: IOperationSchema;
+}
 
-export function TabArguments() {
-  const { manager } = useDialogsStore(state => state.props as DlgCreateSynthesisProps);
+export function TabArguments({ oss }: TabArgumentsProps) {
   const {
     register,
     control,
@@ -20,11 +21,11 @@ export function TabArguments() {
   } = useFormContext<ICreateSynthesisDTO>();
   const inputs = useWatch({ control, name: 'arguments' });
 
-  const replicas = manager.oss.replicas
+  const replicas = oss.replicas
     .filter(item => inputs.includes(item.original))
     .map(item => item.replica)
-    .concat(manager.oss.replicas.filter(item => inputs.includes(item.replica)).map(item => item.original));
-  const filtered = manager.oss.operations.filter(item => !replicas.includes(item.id));
+    .concat(oss.replicas.filter(item => inputs.includes(item.replica)).map(item => item.original));
+  const filtered = oss.operations.filter(item => !replicas.includes(item.id));
 
   return (
     <div className='cc-fade-in cc-column'>
@@ -48,8 +49,8 @@ export function TabArguments() {
             control={control}
             render={({ field }) => (
               <SelectParent
-                items={manager.oss.blocks}
-                value={field.value ? manager.oss.blockByID.get(field.value) ?? null : null}
+                items={oss.blocks}
+                value={field.value ? oss.blockByID.get(field.value) ?? null : null}
                 placeholder='Родительский блок'
                 onChange={value => field.onChange(value ? value.id : null)}
               />

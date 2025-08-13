@@ -73,7 +73,7 @@ export function OssFlow() {
 
   const [mouseCoords, setMouseCoords] = useState<Position2D>({ x: 0, y: 0 });
 
-  const showCreateOperation = useDialogsStore(state => state.showCreateOperation);
+  const showCreateOperation = useDialogsStore(state => state.showCreateSynthesis);
   const showCreateBlock = useDialogsStore(state => state.showCreateBlock);
   const showCreateSchema = useDialogsStore(state => state.showCreateSchema);
   const showDeleteOperation = useDialogsStore(state => state.showDeleteOperation);
@@ -91,7 +91,8 @@ export function OssFlow() {
   function handleCreateSynthesis() {
     const targetPosition = screenToFlowPosition({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
     showCreateOperation({
-      manager: new LayoutManager(schema, getLayout()),
+      ossID: schema.id,
+      layout: getLayout(),
       defaultX: targetPosition.x,
       defaultY: targetPosition.y,
       initialInputs: selectedItems.filter(item => item?.nodeType === NodeType.OPERATION).map(item => item.id),
@@ -106,12 +107,18 @@ export function OssFlow() {
   function handleCreateBlock() {
     const targetPosition = screenToFlowPosition({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
     const parent = extractBlockParent(selectedItems);
+    const needChildren = parent === null || selectedItems.length !== 1 || parent !== selectedItems[0].id;
     showCreateBlock({
-      manager: new LayoutManager(schema, getLayout()),
+      ossID: schema.id,
+      layout: getLayout(),
       defaultX: targetPosition.x,
       defaultY: targetPosition.y,
-      initialChildren:
-        parent !== null && selectedItems.length === 1 && parent === selectedItems[0].id ? [] : selectedItems,
+      childrenBlocks: !needChildren
+        ? []
+        : selectedItems.filter(item => item.nodeType === NodeType.BLOCK).map(item => item.id),
+      childrenOperations: !needChildren
+        ? []
+        : selectedItems.filter(item => item.nodeType === NodeType.OPERATION).map(item => item.id),
       initialParent: parent,
       onCreate: newID => {
         resetView();
@@ -123,7 +130,8 @@ export function OssFlow() {
   function handleCreateSchema() {
     const targetPosition = screenToFlowPosition({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
     showCreateSchema({
-      manager: new LayoutManager(schema, getLayout()),
+      ossID: schema.id,
+      layout: getLayout(),
       defaultX: targetPosition.x,
       defaultY: targetPosition.y,
       initialParent: extractBlockParent(selectedItems),
@@ -137,7 +145,8 @@ export function OssFlow() {
   function handleImportSchema() {
     const targetPosition = screenToFlowPosition({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
     showImportSchema({
-      manager: new LayoutManager(schema, getLayout()),
+      ossID: schema.id,
+      layout: getLayout(),
       defaultX: targetPosition.x,
       defaultY: targetPosition.y,
       initialParent: extractBlockParent(selectedItems),
@@ -163,8 +172,8 @@ export function OssFlow() {
       switch (item.operation_type) {
         case OperationType.REPLICA:
           showDeleteReference({
-            oss: schema,
-            target: item,
+            ossID: schema.id,
+            targetID: item.id,
             layout: getLayout(),
             beforeDelete: deselectAll
           });
@@ -172,8 +181,8 @@ export function OssFlow() {
         case OperationType.INPUT:
         case OperationType.SYNTHESIS:
           showDeleteOperation({
-            oss: schema,
-            target: item,
+            ossID: schema.id,
+            targetID: item.id,
             layout: getLayout(),
             beforeDelete: deselectAll
           });
@@ -198,8 +207,9 @@ export function OssFlow() {
       const block = schema.blockByID.get(-Number(node.id));
       if (block) {
         showEditBlock({
-          manager: new LayoutManager(schema, getLayout()),
-          target: block
+          ossID: schema.id,
+          layout: getLayout(),
+          targetID: block.id
         });
       }
     } else {

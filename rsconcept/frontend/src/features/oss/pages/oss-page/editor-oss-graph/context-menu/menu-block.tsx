@@ -7,7 +7,6 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { useDeleteBlock } from '../../../../backend/use-delete-block';
 import { useMutatingOss } from '../../../../backend/use-mutating-oss';
 import { type IBlock } from '../../../../models/oss';
-import { LayoutManager } from '../../../../models/oss-layout-api';
 import { useOssEdit } from '../../oss-edit-context';
 import { useGetLayout } from '../use-get-layout';
 
@@ -30,8 +29,9 @@ export function MenuBlock({ block, onHide }: MenuBlockProps) {
     }
     onHide();
     showEditBlock({
-      manager: new LayoutManager(schema, getLayout()),
-      target: block
+      layout: getLayout(),
+      ossID: schema.id,
+      targetID: block.id
     });
   }
 

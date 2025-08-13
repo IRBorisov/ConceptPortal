@@ -9,20 +9,24 @@ import { TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { type IUpdateBlockDTO, schemaUpdateBlock } from '../backend/types';
+import { type IOssLayout, type IUpdateBlockDTO, schemaUpdateBlock } from '../backend/types';
+import { useOssSuspense } from '../backend/use-oss';
 import { useUpdateBlock } from '../backend/use-update-block';
 import { SelectParent } from '../components/select-parent';
-import { type IBlock } from '../models/oss';
-import { type LayoutManager } from '../models/oss-layout-api';
+import { LayoutManager } from '../models/oss-layout-api';
 
 export interface DlgEditBlockProps {
-  manager: LayoutManager;
-  target: IBlock;
+  ossID: number;
+  layout: IOssLayout;
+  targetID: number;
 }
 
 export function DlgEditBlock() {
-  const { manager, target } = useDialogsStore(state => state.props as DlgEditBlockProps);
+  const { ossID, targetID, layout } = useDialogsStore(state => state.props as DlgEditBlockProps);
   const { updateBlock } = useUpdateBlock();
+  const { schema } = useOssSuspense({ itemID: ossID });
+  const manager = new LayoutManager(schema, layout);
+  const target = manager.oss.blockByID.get(targetID)!;
 
   const {
     handleSubmit,

@@ -6,21 +6,22 @@ import { useRSForms } from '@/features/rsform/backend/use-rsforms';
 import { PickSubstitutions } from '@/features/rsform/components/pick-substitutions';
 
 import { TextArea } from '@/components/input';
-import { useDialogsStore } from '@/stores/dialogs';
 
 import { type ICreateSynthesisDTO } from '../../backend/types';
+import { type IOperationSchema } from '../../models/oss';
 import { SubstitutionValidator } from '../../models/oss-api';
 
-import { type DlgCreateSynthesisProps } from './dlg-create-synthesis';
+interface TabSubstitutionsProps {
+  oss: IOperationSchema;
+}
 
-export function TabSubstitutions() {
-  const { manager } = useDialogsStore(state => state.props as DlgCreateSynthesisProps);
+export function TabSubstitutions({ oss }: TabSubstitutionsProps) {
   const { control } = useFormContext<ICreateSynthesisDTO>();
   const inputs = useWatch({ control, name: 'arguments' });
   const substitutions = useWatch({ control, name: 'substitutions' });
 
   const schemasIDs = inputs
-    .map(id => manager.oss.operationByID.get(id)!)
+    .map(id => oss.operationByID.get(id)!)
     .map(operation => operation.result)
     .filter(id => id !== null);
   const schemas = useRSForms(schemasIDs);

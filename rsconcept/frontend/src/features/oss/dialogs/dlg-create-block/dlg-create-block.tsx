@@ -10,18 +10,20 @@ import { ModalForm } from '@/components/modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { type ICreateBlockDTO, schemaCreateBlock } from '../../backend/types';
+import { type ICreateBlockDTO, type IOssLayout, schemaCreateBlock } from '../../backend/types';
 import { useCreateBlock } from '../../backend/use-create-block';
-import { type IOssItem, NodeType } from '../../models/oss';
-import { type LayoutManager } from '../../models/oss-layout-api';
+import { useOssSuspense } from '../../backend/use-oss';
+import { LayoutManager } from '../../models/oss-layout-api';
 import { BLOCK_NODE_MIN_HEIGHT, BLOCK_NODE_MIN_WIDTH } from '../../pages/oss-page/editor-oss-graph/graph/block-node';
 
 import { TabBlockCard } from './tab-block-card';
 import { TabBlockChildren } from './tab-block-children';
 
 export interface DlgCreateBlockProps {
-  manager: LayoutManager;
-  initialChildren: IOssItem[];
+  ossID: number;
+  layout: IOssLayout;
+  childrenBlocks: number[];
+  childrenOperations: number[];
   initialParent: number | null;
   defaultX: number;
   defaultY: number;
@@ -37,9 +39,19 @@ export type TabID = (typeof TabID)[keyof typeof TabID];
 export function DlgCreateBlock() {
   const { createBlock } = useCreateBlock();
 
-  const { manager, initialChildren, initialParent, onCreate, defaultX, defaultY } = useDialogsStore(
-    state => state.props as DlgCreateBlockProps
-  );
+  const {
+    ossID, //
+    layout,
+    childrenBlocks,
+    childrenOperations,
+    initialParent,
+    onCreate,
+    defaultX,
+    defaultY
+  } = useDialogsStore(state => state.props as DlgCreateBlockProps);
+
+  const { schema } = useOssSuspense({ itemID: ossID });
+  const manager = new LayoutManager(schema, layout);
 
   const methods = useForm<ICreateBlockDTO>({
     resolver: zodResolver(schemaCreateBlock),
@@ -55,8 +67,8 @@ export function DlgCreateBlock() {
         width: BLOCK_NODE_MIN_WIDTH,
         height: BLOCK_NODE_MIN_HEIGHT
       },
-      children_blocks: initialChildren.filter(item => item.nodeType === NodeType.BLOCK).map(item => item.id),
-      children_operations: initialChildren.filter(item => item.nodeType === NodeType.OPERATION).map(item => item.id),
+      children_blocks: childrenBlocks,
+      children_operations: childrenOperations,
       layout: manager.layout
     },
     mode: 'onChange'
@@ -93,11 +105,11 @@ export function DlgCreateBlock() {
 
         <FormProvider {...methods}>
           <TabPanel>
-            <TabBlockCard />
+            <TabBlockCard oss={schema} />
           </TabPanel>
 
           <TabPanel>
-            <TabBlockChildren />
+            <TabBlockChildren oss={schema} />
           </TabPanel>
         </FormProvider>
       </Tabs>

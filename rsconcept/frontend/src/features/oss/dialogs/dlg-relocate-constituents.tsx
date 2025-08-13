@@ -17,23 +17,26 @@ import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { type IOssLayout, type IRelocateConstituentsDTO, schemaRelocateConstituents } from '../backend/types';
+import { useOssSuspense } from '../backend/use-oss';
 import { useRelocateConstituents } from '../backend/use-relocate-constituents';
 import { useUpdateLayout } from '../backend/use-update-layout';
 import { IconRelocationUp } from '../components/icon-relocation-up';
-import { type IOperation, type IOperationSchema } from '../models/oss';
 import { getRelocateCandidates } from '../models/oss-api';
 
 export interface DlgRelocateConstituentsProps {
-  oss: IOperationSchema;
-  initialTarget?: IOperation;
+  ossID: number;
+  targetID?: number;
   layout?: IOssLayout;
 }
 
 export function DlgRelocateConstituents() {
-  const { oss, initialTarget, layout } = useDialogsStore(state => state.props as DlgRelocateConstituentsProps);
+  const { ossID, targetID, layout } = useDialogsStore(state => state.props as DlgRelocateConstituentsProps);
   const { items: libraryItems } = useLibrary();
   const { updateLayout: updatePositions } = useUpdateLayout();
   const { relocateConstituents } = useRelocateConstituents();
+
+  const { schema: oss } = useOssSuspense({ itemID: ossID });
+  const initialTarget = targetID ? oss.operationByID.get(targetID)! : undefined;
 
   const { handleSubmit, control, setValue } = useForm<IRelocateConstituentsDTO>({
     resolver: zodResolver(schemaRelocateConstituents),

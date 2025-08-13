@@ -11,23 +11,26 @@ import { useDialogsStore } from '@/stores/dialogs';
 
 import { type IDeleteReplicaDTO, type IOssLayout, schemaDeleteReplica } from '../backend/types';
 import { useDeleteReplica } from '../backend/use-delete-replica';
-import { type IOperationReplica, type IOperationSchema } from '../models/oss';
+import { useOssSuspense } from '../backend/use-oss';
 
 export interface DlgDeleteReplicaProps {
-  oss: IOperationSchema;
-  target: IOperationReplica;
+  ossID: number;
+  targetID: number;
   layout: IOssLayout;
   beforeDelete?: () => void;
 }
 
 export function DlgDeleteReplica() {
-  const { oss, target, layout, beforeDelete } = useDialogsStore(state => state.props as DlgDeleteReplicaProps);
+  const { ossID, targetID, layout, beforeDelete } = useDialogsStore(state => state.props as DlgDeleteReplicaProps);
   const { deleteReplica: deleteReference } = useDeleteReplica();
+
+  const { schema } = useOssSuspense({ itemID: ossID });
+  const target = schema.operationByID.get(targetID)!;
 
   const { handleSubmit, control } = useForm<IDeleteReplicaDTO>({
     resolver: zodResolver(schemaDeleteReplica),
     defaultValues: {
-      target: target.id,
+      target: targetID,
       layout: layout,
       keep_constituents: false,
       keep_connections: false
@@ -36,7 +39,7 @@ export function DlgDeleteReplica() {
   const keep_connections = useWatch({ control, name: 'keep_connections' });
 
   function onSubmit(data: IDeleteReplicaDTO) {
-    return deleteReference({ itemID: oss.id, data: data, beforeUpdate: beforeDelete });
+    return deleteReference({ itemID: ossID, data: data, beforeUpdate: beforeDelete });
   }
 
   return (

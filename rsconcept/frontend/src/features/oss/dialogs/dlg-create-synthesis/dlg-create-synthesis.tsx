@@ -11,15 +11,17 @@ import { ModalForm } from '@/components/modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { type ICreateSynthesisDTO, schemaCreateSynthesis } from '../../backend/types';
+import { type ICreateSynthesisDTO, type IOssLayout, schemaCreateSynthesis } from '../../backend/types';
 import { useCreateSynthesis } from '../../backend/use-create-synthesis';
-import { type LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '../../models/oss-layout-api';
+import { useOssSuspense } from '../../backend/use-oss';
+import { LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '../../models/oss-layout-api';
 
 import { TabArguments } from './tab-arguments';
 import { TabSubstitutions } from './tab-substitutions';
 
 export interface DlgCreateSynthesisProps {
-  manager: LayoutManager;
+  ossID: number;
+  layout: IOssLayout;
   initialParent: number | null;
   initialInputs: number[];
   defaultX: number;
@@ -36,9 +38,17 @@ export type TabID = (typeof TabID)[keyof typeof TabID];
 export function DlgCreateSynthesis() {
   const { createSynthesis } = useCreateSynthesis();
 
-  const { manager, initialInputs, initialParent, onCreate, defaultX, defaultY } = useDialogsStore(
-    state => state.props as DlgCreateSynthesisProps
-  );
+  const {
+    ossID, //
+    layout,
+    initialInputs,
+    initialParent,
+    onCreate,
+    defaultX,
+    defaultY
+  } = useDialogsStore(state => state.props as DlgCreateSynthesisProps);
+  const { schema } = useOssSuspense({ itemID: ossID });
+  const manager = new LayoutManager(schema, layout);
 
   const methods = useForm<ICreateSynthesisDTO>({
     resolver: zodResolver(schemaCreateSynthesis),
@@ -87,7 +97,7 @@ export function DlgCreateSynthesis() {
         </TabList>
         <FormProvider {...methods}>
           <TabPanel>
-            <TabArguments />
+            <TabArguments oss={schema} />
           </TabPanel>
           <TabPanel>
             <Suspense
@@ -97,7 +107,7 @@ export function DlgCreateSynthesis() {
                 </div>
               }
             >
-              <TabSubstitutions />
+              <TabSubstitutions oss={schema} />
             </Suspense>
           </TabPanel>
         </FormProvider>

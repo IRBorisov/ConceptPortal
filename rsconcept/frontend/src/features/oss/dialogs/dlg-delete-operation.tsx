@@ -11,23 +11,26 @@ import { useDialogsStore } from '@/stores/dialogs';
 
 import { type IDeleteOperationDTO, type IOssLayout, OperationType, schemaDeleteOperation } from '../backend/types';
 import { useDeleteOperation } from '../backend/use-delete-operation';
-import { type IOperationInput, type IOperationSchema, type IOperationSynthesis } from '../models/oss';
+import { useOssSuspense } from '../backend/use-oss';
 
 export interface DlgDeleteOperationProps {
-  oss: IOperationSchema;
-  target: IOperationInput | IOperationSynthesis;
+  ossID: number;
+  targetID: number;
   layout: IOssLayout;
   beforeDelete?: () => void;
 }
 
 export function DlgDeleteOperation() {
-  const { oss, target, layout, beforeDelete } = useDialogsStore(state => state.props as DlgDeleteOperationProps);
+  const { ossID, targetID, layout, beforeDelete } = useDialogsStore(state => state.props as DlgDeleteOperationProps);
   const { deleteOperation } = useDeleteOperation();
+
+  const { schema } = useOssSuspense({ itemID: ossID });
+  const target = schema.operationByID.get(targetID)!;
 
   const { handleSubmit, control } = useForm<IDeleteOperationDTO>({
     resolver: zodResolver(schemaDeleteOperation),
     defaultValues: {
-      target: target.id,
+      target: targetID,
       layout: layout,
       keep_constituents: false,
       delete_schema: true
@@ -35,7 +38,7 @@ export function DlgDeleteOperation() {
   });
 
   function onSubmit(data: IDeleteOperationDTO) {
-    return deleteOperation({ itemID: oss.id, data: data, beforeUpdate: beforeDelete });
+    return deleteOperation({ itemID: ossID, data: data, beforeUpdate: beforeDelete });
   }
 
   return (
