@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 
 import { type DlgCreatePromptTemplateProps } from '@/features/ai/dialogs/dlg-create-prompt-template';
+import { type DlgShowVideoProps } from '@/features/help/dialogs/dlg-show-video/dlg-show-video';
 import { type DlgChangeLocationProps } from '@/features/library/dialogs/dlg-change-location';
 import { type DlgCloneLibraryItemProps } from '@/features/library/dialogs/dlg-clone-library-item';
 import { type DlgCreateVersionProps } from '@/features/library/dialogs/dlg-create-version';
@@ -73,7 +74,9 @@ export const DialogType = {
   IMPORT_SCHEMA: 31,
 
   AI_PROMPT: 32,
-  CREATE_PROMPT_TEMPLATE: 33
+  CREATE_PROMPT_TEMPLATE: 33,
+
+  SHOW_VIDEO: 34
 } as const;
 export type DialogType = (typeof DialogType)[keyof typeof DialogType];
 
@@ -86,6 +89,7 @@ interface DialogsStore {
   props: unknown;
   hideDialog: () => void;
 
+  showVideo: (props: DlgShowVideoProps) => void;
   showCstTemplate: (props: DlgCstTemplateProps) => void;
   showCreateCst: (props: DlgCreateCstProps) => void;
   showCreateBlock: (props: DlgCreateBlockProps) => void;
@@ -131,6 +135,7 @@ export const useDialogsStore = create<DialogsStore>()(set => ({
     });
   },
 
+  showVideo: props => set({ active: DialogType.SHOW_VIDEO, props: props }),
   showCstTemplate: props => set({ active: DialogType.CONSTITUENTA_TEMPLATE, props: props }),
   showCreateCst: props => set({ active: DialogType.CREATE_CONSTITUENTA, props: props }),
   showCreateOperation: props => set({ active: DialogType.CREATE_SYNTHESIS, props: props }),

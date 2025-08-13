@@ -1,4 +1,5 @@
 import { TextURL } from '@/components/control';
+import { IconVideo } from '@/components/icons';
 import { external_urls, prefixes } from '@/utils/constants';
 
 import { LinkTopic } from '../components/link-topic';
@@ -11,13 +12,17 @@ export function HelpMain() {
       <h1>Портал</h1>
       <p>
         Портал позволяет анализировать предметные области, формально записывать системы определений и синтезировать их с
-        помощью математического аппарата <LinkTopic text='Родов структур' topic={HelpTopic.RSLANG} />
+        помощью математического аппарата <LinkTopic text='Родов структур' topic={HelpTopic.RSLANG} />.
       </p>
       <p>
         Такие системы называются <LinkTopic text='Концептуальными схемами' topic={HelpTopic.CC_SYSTEM} /> и состоят из
         отдельных <LinkTopic text='Конституент' topic={HelpTopic.CC_CONSTITUENTA} />, которым даны формальные
         определения. Концептуальные схемы могут связываться путем синтеза в{' '}
         <LinkTopic text='Операционной схеме синтеза' topic={HelpTopic.CC_OSS} />.
+      </p>
+      <p>
+        Значок <IconVideo className='inline-icon' /> при нажатии отображает видео о различных темах и подробностях
+        работы Портала. Просмотр видео доступен на Youtube и ВКонтакте.
       </p>
 
       <details>

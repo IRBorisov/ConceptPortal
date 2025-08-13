@@ -4,6 +4,11 @@ import { persist } from 'zustand/middleware';
 
 import { PARAMETER } from '@/utils/constants';
 
+export const videoPlayerTypes = ['vk', 'youtube'] as const;
+
+/** Represents video player type. */
+export type VideoPlayerType = (typeof videoPlayerTypes)[number];
+
 interface PreferencesStore {
   darkMode: boolean;
   toggleDarkMode: () => void;
@@ -31,6 +36,9 @@ interface PreferencesStore {
 
   showOssSidePanel: boolean;
   toggleShowOssSidePanel: () => void;
+
+  preferredPlayer: VideoPlayerType;
+  setPreferredPlayer: (value: VideoPlayerType) => void;
 }
 
 export const usePreferencesStore = create<PreferencesStore>()(
@@ -66,7 +74,7 @@ export const usePreferencesStore = create<PreferencesStore>()(
       adminMode: false,
       toggleAdminMode: () => set(state => ({ adminMode: !state.adminMode })),
 
-      libraryPagination: 50,
+      libraryPagination: 20,
       setLibraryPagination: value => set({ libraryPagination: value }),
 
       showCstSideList: true,
@@ -82,10 +90,13 @@ export const usePreferencesStore = create<PreferencesStore>()(
       toggleShowExpressionControls: () => set(state => ({ showExpressionControls: !state.showExpressionControls })),
 
       showOssSidePanel: false,
-      toggleShowOssSidePanel: () => set(state => ({ showOssSidePanel: !state.showOssSidePanel }))
+      toggleShowOssSidePanel: () => set(state => ({ showOssSidePanel: !state.showOssSidePanel })),
+
+      preferredPlayer: 'vk',
+      setPreferredPlayer: value => set({ preferredPlayer: value })
     }),
     {
-      version: 1,
+      version: 2,
       name: 'portal.preferences'
     }
   )

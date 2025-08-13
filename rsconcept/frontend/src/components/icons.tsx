@@ -39,6 +39,7 @@ export { RiMenuFoldFill   as IconMenuFold }       from 'react-icons/ri';
 export { RiMenuUnfoldFill as IconMenuUnfold }     from 'react-icons/ri';
 export { LuMoon           as IconDarkTheme }      from 'react-icons/lu';
 export { LuSun            as IconLightTheme }     from 'react-icons/lu';
+export { IoVideocamOutline as IconVideo }         from 'react-icons/io5';
 export { LuFolderTree     as IconFolderTree }     from 'react-icons/lu';
 export { LuFolder         as IconFolder }         from 'react-icons/lu';
 export { LuFolderSearch   as IconFolderSearch }   from 'react-icons/lu';

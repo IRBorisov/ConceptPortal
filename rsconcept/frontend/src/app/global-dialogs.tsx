@@ -4,6 +4,9 @@ import React from 'react';
 
 import { DialogType, useDialogsStore } from '@/stores/dialogs';
 
+const DlgShowVideo = React.lazy(() =>
+  import('@/features/help/dialogs/dlg-show-video').then(module => ({ default: module.DlgShowVideo }))
+);
 const DlgChangeInputSchema = React.lazy(() =>
   import('@/features/oss/dialogs/dlg-change-input-schema').then(module => ({ default: module.DlgChangeInputSchema }))
 );
@@ -161,6 +164,8 @@ export const GlobalDialogs = () => {
     return null;
   }
   switch (active) {
+    case DialogType.SHOW_VIDEO:
+      return <DlgShowVideo />;
     case DialogType.CONSTITUENTA_TEMPLATE:
       return <DlgCstTemplate />;
     case DialogType.CREATE_CONSTITUENTA:

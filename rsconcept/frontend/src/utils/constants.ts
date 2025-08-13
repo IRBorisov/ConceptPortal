@@ -53,11 +53,6 @@ export const resources = {
   db_schema: '/db_schema.svg'
 } as const;
 
-/** Youtube IDs for embedding. */
-export const youtube = {
-  intro: '0Ty9mu9sOJo'
-} as const;
-
 /** External URLs. */
 export const external_urls = {
   concept: 'https://www.acconcept.ru/',
@@ -75,6 +70,23 @@ export const external_urls = {
   mail_portal: 'mailto:portal@acconcept.ru',
   restAPI: 'https://api.portal.acconcept.ru'
 } as const;
+
+/** Youtube and VK IDs for embedding. */
+export interface IVideo {
+  /** Youtube ID. */
+  youtube: string;
+
+  /** VK ID. */
+  vk: string;
+}
+
+/** Youtube and VK IDs for embedding. */
+export const videos = {
+  explication: {
+    youtube: '0Ty9mu9sOJo',
+    vk: 'oid=-232112636&id=456239017'
+  }
+};
 
 /** Global element ID. */
 export const globalIDs = {
