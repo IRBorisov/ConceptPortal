@@ -287,7 +287,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     @extend_schema(
         summary='create Association',
         tags=['Constituenta'],
-        request=s.AssociationDataSerializer,
+        request=s.AssociationCreateSerializer,
         responses={
             c.HTTP_201_CREATED: s.RSFormParseSerializer,
             c.HTTP_400_BAD_REQUEST: None,
@@ -299,13 +299,15 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     def create_association(self, request: Request, pk) -> HttpResponse:
         ''' Create Association. '''
         item = self._get_item()
-        serializer = s.AssociationDataSerializer(data=request.data, context={'schema': item})
+        serializer = s.AssociationCreateSerializer(data=request.data, context={'schema': item})
         serializer.is_valid(raise_exception=True)
+        container = serializer.validated_data['container']
+        associate = serializer.validated_data['associate']
 
         with transaction.atomic():
             new_association = m.Association.objects.create(
-                container=serializer.validated_data['container'],
-                associate=serializer.validated_data['associate']
+                container=container,
+                associate=associate
             )
             PropagationFacade.after_create_association(item.pk, [new_association])
             item.save(update_fields=['time_update'])

@@ -49,6 +49,23 @@ class AssociationDataSerializer(StrictSerializer):
         return attrs
 
 
+class AssociationCreateSerializer(AssociationDataSerializer):
+    ''' Serializer: Data for creating new association. '''
+
+    def validate(self, attrs):
+        attrs = super().validate(attrs)
+        if attrs['container'].pk == attrs['associate'].pk:
+            raise serializers.ValidationError({
+                'container': msg.associationSelf()
+            })
+        if Association.objects.filter(container=attrs['container'], associate=attrs['associate']).exists():
+            raise serializers.ValidationError({
+                'associate': msg.associationAlreadyExists()
+            })
+
+        return attrs
+
+
 class CstBaseSerializer(StrictModelSerializer):
     ''' Serializer: Constituenta all data. '''
     class Meta:

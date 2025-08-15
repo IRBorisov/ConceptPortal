@@ -140,16 +140,26 @@ class PropagationEngine:
     def inherit_association(self, target: int, items: list[Association]) -> None:
         ''' Execute inheritance of Associations. '''
         operation = self.cache.operation_by_id[target]
-        if operation.result is None:
+        if operation.result is None or not items:
             return
 
         self.cache.ensure_loaded_subs()
+
+        existing_associations = set(
+            Association.objects.filter(
+                container__schema_id=operation.result_id,
+            ).values_list('container_id', 'associate_id')
+        )
+
         new_associations: list[Association] = []
         for assoc in items:
             new_container = self.cache.get_inheritor(assoc.container_id, target)
             new_associate = self.cache.get_inheritor(assoc.associate_id, target)
-            if new_container is None or new_associate is None:
+            if new_container is None or new_associate is None \
+                    or new_associate == new_container \
+                    or (new_container, new_associate) in existing_associations:
                 continue
+
             new_associations.append(Association(
                 container_id=new_container,
                 associate_id=new_associate

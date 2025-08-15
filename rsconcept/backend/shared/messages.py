@@ -10,6 +10,14 @@ def constituentsInvalid(constituents: list[int]):
     return f'некорректные конституенты для схемы: {constituents}'
 
 
+def associationSelf():
+    return 'Рефлексивная ассоциация не допускается'
+
+
+def associationAlreadyExists():
+    return 'Отношение уже существует'
+
+
 def constituentaNotInRSform(title: str):
     return f'Конституента не принадлежит схеме: {title}'
 
