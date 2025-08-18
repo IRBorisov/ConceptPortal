@@ -47,7 +47,7 @@ export function HelpRSLangOperations() {
       </h2>
       <p>
         Порождение полной совокупности термов, раскрывающих структуру выбранной конституенты. Операция применима к
-        терм-функциям, термам и родовым структурам с <LinkTopic text='типизацией' topic={HelpTopic.RSL_TYPES} />{' '}
+        терм-функциям, термам и родовым структурам с <LinkTopic text='типизацией' topic={HelpTopic.RSL_TYPIFICATION} />{' '}
         множество и кортеж.
         <br />
         <code>{'Generate(S1∈ℬ(X1×ℬ(X1))) = {Pr1(S1), Pr2(S1), red(Pr2(S1))}'}</code>

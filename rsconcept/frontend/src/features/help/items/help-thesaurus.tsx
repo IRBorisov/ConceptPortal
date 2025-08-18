@@ -137,7 +137,7 @@ export function HelpThesaurus() {
           <IconCstStructured size='1rem' className='inline-icon' />
           {'\u2009'}родовая структура (S#) – неопределяемое понятие, имеющее структуру, построенную на базисных
           множествах и константных множеств. Содержание родовой структуры формируется{' '}
-          <LinkTopic text='отношением типизации' topic={HelpTopic.RSL_TYPES} />, аксиомами и конвенцией.
+          <LinkTopic text='отношением типизации' topic={HelpTopic.RSL_TYPIFICATION} />, аксиомами и конвенцией.
         </li>
         <li>
           <IconCstAxiom size='1rem' className='inline-icon' />
