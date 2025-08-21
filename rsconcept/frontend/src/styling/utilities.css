@@ -28,6 +28,7 @@
 
 @utility cc-hover-pulse {
   &:hover:not(:disabled) {
+    transform-origin: center;
     animation: pulse-scale var(--duration-cycle) infinite;
     animation-delay: var(--duration-select);
   }

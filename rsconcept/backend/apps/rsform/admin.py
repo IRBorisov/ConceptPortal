@@ -12,9 +12,9 @@ class ConstituentaAdmin(admin.ModelAdmin):
     search_fields = ['term_resolved', 'definition_resolved']
 
 
-@admin.register(models.Association)
+@admin.register(models.Attribution)
 class AssociationAdmin(admin.ModelAdmin):
     ''' Admin model: Association. '''
-    ordering = ['container__schema', 'container', 'associate']
-    list_display = ['container__schema__alias', 'container__alias', 'associate__alias']
-    search_fields = ['container', 'associate']
+    ordering = ['container__schema', 'container', 'attribute']
+    list_display = ['container__schema__alias', 'container__alias', 'attribute__alias']
+    search_fields = ['container', 'attribute']

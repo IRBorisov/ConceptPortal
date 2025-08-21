@@ -24,9 +24,9 @@ import {
   ParsingStatus,
   schemaUpdateConstituenta
 } from '../../../backend/types';
-import { useClearAssociations } from '../../../backend/use-clear-associations';
-import { useCreateAssociation } from '../../../backend/use-create-association';
-import { useDeleteAssociation } from '../../../backend/use-delete-association';
+import { useClearAttributions } from '../../../backend/use-clear-attributions';
+import { useCreateAttribution } from '../../../backend/use-create-attribution';
+import { useDeleteAttribution } from '../../../backend/use-delete-attribution';
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { useUpdateConstituenta } from '../../../backend/use-update-constituenta';
 import { useUpdateCrucial } from '../../../backend/use-update-crucial';
@@ -60,9 +60,9 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
 
   const { updateConstituenta } = useUpdateConstituenta();
   const { updateCrucial } = useUpdateCrucial();
-  const { createAssociation } = useCreateAssociation();
-  const { deleteAssociation } = useDeleteAssociation();
-  const { clearAssociations } = useClearAssociations();
+  const { createAttribution } = useCreateAttribution();
+  const { deleteAttribution } = useDeleteAttribution();
+  const { clearAttributions } = useClearAttributions();
   const showTypification = useDialogsStore(state => state.showShowTypeGraph);
   const showEditTerm = useDialogsStore(state => state.showEditWordForms);
   const showRenameCst = useDialogsStore(state => state.showRenameCst);
@@ -113,8 +113,8 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
   );
 
   const associations = useMemo(
-    () => activeCst.associations.map(id => schema.cstByID.get(id)!),
-    [activeCst.associations, schema.cstByID]
+    () => activeCst.attributes.map(id => schema.cstByID.get(id)!),
+    [activeCst.attributes, schema.cstByID]
   );
 
   const isBasic = isBasicConcept(activeCst.cst_type) || activeCst.cst_type === CstType.NOMINAL;
@@ -196,28 +196,28 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
     });
   }
 
-  function handleAddAssociation(item: IConstituenta) {
-    void createAssociation({
+  function handleAddAttribution(item: IConstituenta) {
+    void createAttribution({
       itemID: schema.id,
       data: {
         container: activeCst.id,
-        associate: item.id
+        attribute: item.id
       }
     });
   }
 
-  function handleRemoveAssociation(item: IConstituenta) {
-    void deleteAssociation({
+  function handleRemoveAttribution(item: IConstituenta) {
+    void deleteAttribution({
       itemID: schema.id,
       data: {
         container: activeCst.id,
-        associate: item.id
+        attribute: item.id
       }
     });
   }
 
-  function handleClearAssociations() {
-    void clearAssociations({
+  function handleClearAttributions() {
+    void clearAttributions({
       itemID: schema.id,
       data: {
         target: activeCst.id
@@ -279,15 +279,15 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
         )}
       />
 
-      {activeCst.cst_type === CstType.NOMINAL || activeCst.associations.length > 0 ? (
+      {activeCst.cst_type === CstType.NOMINAL || activeCst.attributes.length > 0 ? (
         <div className='flex flex-col gap-1'>
-          <Label text='Ассоциируемые конституенты' />
+          <Label text='Атрибутирующие конституенты' />
           <SelectMultiConstituenta
             items={schema.items.filter(item => item.id !== activeCst.id)}
             value={associations}
-            onAdd={handleAddAssociation}
-            onClear={handleClearAssociations}
-            onRemove={handleRemoveAssociation}
+            onAdd={handleAddAttribution}
+            onClear={handleClearAttributions}
+            onRemove={handleRemoveAttribution}
             disabled={disabled || isModified}
             placeholder={disabled ? '' : 'Выберите конституенты'}
           />

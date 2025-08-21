@@ -5,8 +5,8 @@ import { DELAYS, KEYS } from '@/backend/configuration';
 import { infoMsg } from '@/utils/labels';
 
 import {
-  type IAssociation,
-  type IAssociationTargetDTO,
+  type IAttribution,
+  type IAttributionTargetDTO,
   type ICheckConstituentaDTO,
   type IConstituentaCreatedResponse,
   type IConstituentaList,
@@ -154,28 +154,28 @@ export const rsformsApi = {
       request: { data: data }
     }),
 
-  createAssociation: ({ itemID, data }: { itemID: number; data: IAssociation }) =>
-    axiosPost<IAssociation, IRSFormDTO>({
+  createAttribution: ({ itemID, data }: { itemID: number; data: IAttribution }) =>
+    axiosPost<IAttribution, IRSFormDTO>({
       schema: schemaRSForm,
-      endpoint: `/api/rsforms/${itemID}/create-association`,
+      endpoint: `/api/rsforms/${itemID}/create-attribution`,
       request: {
         data: data,
         successMessage: infoMsg.changesSaved
       }
     }),
-  deleteAssociation: ({ itemID, data }: { itemID: number; data: IAssociation }) =>
-    axiosPatch<IAssociation, IRSFormDTO>({
+  deleteAttribution: ({ itemID, data }: { itemID: number; data: IAttribution }) =>
+    axiosPatch<IAttribution, IRSFormDTO>({
       schema: schemaRSForm,
-      endpoint: `/api/rsforms/${itemID}/delete-association`,
+      endpoint: `/api/rsforms/${itemID}/delete-attribution`,
       request: {
         data: data,
         successMessage: infoMsg.changesSaved
       }
     }),
-  clearAssociations: ({ itemID, data }: { itemID: number; data: IAssociationTargetDTO }) =>
-    axiosPatch<IAssociationTargetDTO, IRSFormDTO>({
+  clearAttributions: ({ itemID, data }: { itemID: number; data: IAttributionTargetDTO }) =>
+    axiosPatch<IAttributionTargetDTO, IRSFormDTO>({
       schema: schemaRSForm,
-      endpoint: `/api/rsforms/${itemID}/clear-associations`,
+      endpoint: `/api/rsforms/${itemID}/clear-attributions`,
       request: {
         data: data,
         successMessage: infoMsg.changesSaved

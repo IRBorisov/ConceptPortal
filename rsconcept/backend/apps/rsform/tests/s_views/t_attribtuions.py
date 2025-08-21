@@ -1,4 +1,4 @@
-''' Testing API: Association. '''
+''' Testing API: Attribution. '''
 import io
 import os
 from zipfile import ZipFile
@@ -7,13 +7,13 @@ from cctext import ReferenceType
 from rest_framework import status
 
 from apps.library.models import AccessPolicy, LibraryItem, LibraryItemType, LocationHead
-from apps.rsform.models import Association, Constituenta, CstType, RSForm
+from apps.rsform.models import Attribution, Constituenta, CstType, RSForm
 from shared.EndpointTester import EndpointTester, decl_endpoint
 from shared.testing_utils import response_contains
 
 
-class TestAssociationsEndpoints(EndpointTester):
-    ''' Testing basic Association API. '''
+class TestAttributionsEndpoints(EndpointTester):
+    ''' Testing basic Attribution API. '''
 
     def setUp(self):
         super().setUp()
@@ -28,73 +28,73 @@ class TestAssociationsEndpoints(EndpointTester):
         self.invalid_id = self.n2.pk + 1337
 
 
-    @decl_endpoint('/api/rsforms/{item}/create-association', method='post')
-    def test_create_association(self):
+    @decl_endpoint('/api/rsforms/{item}/create-attribution', method='post')
+    def test_create_attribution(self):
         self.executeBadData({}, item=self.owned_id)
 
-        data = {'container': self.n1.pk, 'associate': self.invalid_id}
+        data = {'container': self.n1.pk, 'attribute': self.invalid_id}
         self.executeBadData(data, item=self.owned_id)
 
-        data['associate'] = self.unowned_cst.pk
+        data['attribute'] = self.unowned_cst.pk
         self.executeBadData(data, item=self.owned_id)
 
-        data['associate'] = data['container']
+        data['attribute'] = data['container']
         self.executeBadData(data, item=self.owned_id)
 
-        data = {'container': self.n1.pk, 'associate': self.x1.pk}
+        data = {'container': self.n1.pk, 'attribute': self.x1.pk}
         self.executeBadData(data, item=self.unowned_id)
 
         response = self.executeCreated(data, item=self.owned_id)
-        associations = response.data['association']
+        associations = response.data['attribution']
         self.assertEqual(len(associations), 1)
         self.assertEqual(associations[0]['container'], self.n1.pk)
-        self.assertEqual(associations[0]['associate'], self.x1.pk)
+        self.assertEqual(associations[0]['attribute'], self.x1.pk)
 
 
-    @decl_endpoint('/api/rsforms/{item}/create-association', method='post')
-    def test_create_association_duplicate(self):
-        data = {'container': self.n1.pk, 'associate': self.x1.pk}
+    @decl_endpoint('/api/rsforms/{item}/create-attribution', method='post')
+    def test_create_attribution_duplicate(self):
+        data = {'container': self.n1.pk, 'attribute': self.x1.pk}
         self.executeCreated(data, item=self.owned_id)
         self.executeBadData(data, item=self.owned_id)
 
 
-    @decl_endpoint('/api/rsforms/{item}/delete-association', method='patch')
-    def test_delete_association(self):
-        data = {'container': self.n1.pk, 'associate': self.x1.pk}
+    @decl_endpoint('/api/rsforms/{item}/delete-attribution', method='patch')
+    def test_delete_attribution(self):
+        data = {'container': self.n1.pk, 'attribute': self.x1.pk}
         self.executeForbidden(data, item=self.unowned_id)
         self.executeBadData(data, item=self.owned_id)
 
-        Association.objects.create(
+        Attribution.objects.create(
             container=self.n1,
-            associate=self.x1
+            attribute=self.x1
         )
         self.executeForbidden(data, item=self.unowned_id)
         response = self.executeOK(data, item=self.owned_id)
-        associations = response.data['association']
-        self.assertEqual(len(associations), 0)
+        attributions = response.data['attribution']
+        self.assertEqual(len(attributions), 0)
 
 
-    @decl_endpoint('/api/rsforms/{item}/clear-associations', method='patch')
-    def test_clear_associations(self):
+    @decl_endpoint('/api/rsforms/{item}/clear-attributions', method='patch')
+    def test_clear_attributions(self):
         data = {'target': self.n1.pk}
         self.executeForbidden(data, item=self.unowned_id)
         self.executeNotFound(data, item=self.invalid_id)
         self.executeOK(data, item=self.owned_id)
 
-        Association.objects.create(
+        Attribution.objects.create(
             container=self.n1,
-            associate=self.x1
+            attribute=self.x1
         )
-        Association.objects.create(
+        Attribution.objects.create(
             container=self.n1,
-            associate=self.n2
+            attribute=self.n2
         )
-        Association.objects.create(
+        Attribution.objects.create(
             container=self.n2,
-            associate=self.n1
+            attribute=self.n1
         )
         response = self.executeOK(data, item=self.owned_id)
-        associations = response.data['association']
+        associations = response.data['attribution']
         self.assertEqual(len(associations), 1)
         self.assertEqual(associations[0]['container'], self.n2.pk)
-        self.assertEqual(associations[0]['associate'], self.n1.pk)
+        self.assertEqual(associations[0]['attribute'], self.n1.pk)

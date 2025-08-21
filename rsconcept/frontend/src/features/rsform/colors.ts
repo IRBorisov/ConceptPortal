@@ -259,7 +259,7 @@ export function colorGraphEdge(edgeType: GraphType): string {
       return APP_COLORS.bgGreen;
     case 'definition':
       return APP_COLORS.border;
-    case 'association':
+    case 'attribution':
       return APP_COLORS.bgPurple;
   }
 }

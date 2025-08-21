@@ -18,7 +18,7 @@ import { type GraphColoring, type GraphType } from './stores/term-graph';
 
 // --- Records for label/describe functions ---
 const labelCstTypeRecord: Record<CstType, string> = {
-  [CstType.NOMINAL]: 'Номеноид',
+  [CstType.NOMINAL]: 'Номиноид',
   [CstType.BASE]: 'Базисное множество',
   [CstType.CONSTANT]: 'Константное множество',
   [CstType.STRUCTURED]: 'Родовая структура',
@@ -60,7 +60,7 @@ const labelColoringRecord: Record<GraphColoring, string> = {
 const labelGraphTypeRecord: Record<GraphType, string> = {
   full: 'Связи: Все',
   definition: 'Связи: Определения',
-  association: 'Связи: Ассоциации'
+  attribution: 'Связи: Атрибутирование'
 };
 
 const labelCstMatchModeRecord: Record<CstMatchMode, string> = {

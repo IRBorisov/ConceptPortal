@@ -49,9 +49,9 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             'restore_order',
             'reset_aliases',
             'produce_structure',
-            'add_association',
-            'delete_association',
-            'clear_associations'
+            'add_attribution',
+            'delete_attribution',
+            'clear_attributions'
         ]:
             permission_list = [permissions.ItemEditor]
         elif self.action in [
@@ -285,9 +285,9 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         )
 
     @extend_schema(
-        summary='create Association',
+        summary='create Attribution',
         tags=['Constituenta'],
-        request=s.AssociationCreateSerializer,
+        request=s.AttributionCreateSerializer,
         responses={
             c.HTTP_201_CREATED: s.RSFormParseSerializer,
             c.HTTP_400_BAD_REQUEST: None,
@@ -295,21 +295,21 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             c.HTTP_404_NOT_FOUND: None
         }
     )
-    @action(detail=True, methods=['post'], url_path='create-association')
-    def create_association(self, request: Request, pk) -> HttpResponse:
-        ''' Create Association. '''
+    @action(detail=True, methods=['post'], url_path='create-attribution')
+    def create_attribution(self, request: Request, pk) -> HttpResponse:
+        ''' Create Attribution. '''
         item = self._get_item()
-        serializer = s.AssociationCreateSerializer(data=request.data, context={'schema': item})
+        serializer = s.AttributionCreateSerializer(data=request.data, context={'schema': item})
         serializer.is_valid(raise_exception=True)
         container = serializer.validated_data['container']
-        associate = serializer.validated_data['associate']
+        attribute = serializer.validated_data['attribute']
 
         with transaction.atomic():
-            new_association = m.Association.objects.create(
+            new_association = m.Attribution.objects.create(
                 container=container,
-                associate=associate
+                attribute=attribute
             )
-            PropagationFacade.after_create_association(item.pk, [new_association])
+            PropagationFacade.after_create_attribution(item.pk, [new_association])
             item.save(update_fields=['time_update'])
 
         return Response(
@@ -320,7 +320,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     @extend_schema(
         summary='delete Association',
         tags=['RSForm'],
-        request=s.AssociationDataSerializer,
+        request=s.AttributionDataSerializer,
         responses={
             c.HTTP_200_OK: s.RSFormParseSerializer,
             c.HTTP_400_BAD_REQUEST: None,
@@ -328,25 +328,25 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             c.HTTP_404_NOT_FOUND: None
         }
     )
-    @action(detail=True, methods=['patch'], url_path='delete-association')
-    def delete_association(self, request: Request, pk) -> HttpResponse:
-        ''' Endpoint: Delete Association. '''
+    @action(detail=True, methods=['patch'], url_path='delete-attribution')
+    def delete_attribution(self, request: Request, pk) -> HttpResponse:
+        ''' Endpoint: Delete Attribution. '''
         item = self._get_item()
-        serializer = s.AssociationDataSerializer(data=request.data, context={'schema': item})
+        serializer = s.AttributionDataSerializer(data=request.data, context={'schema': item})
         serializer.is_valid(raise_exception=True)
 
         with transaction.atomic():
-            target = list(m.Association.objects.filter(
+            target = list(m.Attribution.objects.filter(
                 container=serializer.validated_data['container'],
-                associate=serializer.validated_data['associate']
+                attribute=serializer.validated_data['attribute']
             ))
             if not target:
                 raise ValidationError({
                     'container': msg.invalidAssociation()
                 })
 
-            PropagationFacade.before_delete_association(item.pk, target)
-            m.Association.objects.filter(pk__in=[assoc.pk for assoc in target]).delete()
+            PropagationFacade.before_delete_attribution(item.pk, target)
+            m.Attribution.objects.filter(pk__in=[assoc.pk for assoc in target]).delete()
             item.save(update_fields=['time_update'])
 
         return Response(
@@ -355,7 +355,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         )
 
     @extend_schema(
-        summary='delete all associations for target constituenta',
+        summary='delete all Attributions for target constituenta',
         tags=['RSForm'],
         request=s.CstTargetSerializer,
         responses={
@@ -365,18 +365,18 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             c.HTTP_404_NOT_FOUND: None
         }
     )
-    @action(detail=True, methods=['patch'], url_path='clear-associations')
-    def clear_associations(self, request: Request, pk) -> HttpResponse:
+    @action(detail=True, methods=['patch'], url_path='clear-attributions')
+    def clear_attributions(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Delete Associations for target Constituenta. '''
         item = self._get_item()
         serializer = s.CstTargetSerializer(data=request.data, context={'schema': item})
         serializer.is_valid(raise_exception=True)
 
         with transaction.atomic():
-            target = list(m.Association.objects.filter(container=serializer.validated_data['target']))
+            target = list(m.Attribution.objects.filter(container=serializer.validated_data['target']))
             if target:
-                PropagationFacade.before_delete_association(item.pk, target)
-                m.Association.objects.filter(pk__in=[assoc.pk for assoc in target]).delete()
+                PropagationFacade.before_delete_attribution(item.pk, target)
+                m.Attribution.objects.filter(pk__in=[assoc.pk for assoc in target]).delete()
                 item.save(update_fields=['time_update'])
 
         return Response(

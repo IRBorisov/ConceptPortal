@@ -8,9 +8,9 @@ import { MiniButton } from '@/components/control';
 import { Label, TextArea, TextInput } from '@/components/input';
 
 import { CstType, type IUpdateConstituentaDTO } from '../../backend/types';
-import { useClearAssociations } from '../../backend/use-clear-associations';
-import { useCreateAssociation } from '../../backend/use-create-association';
-import { useDeleteAssociation } from '../../backend/use-delete-association';
+import { useClearAttributions } from '../../backend/use-clear-attributions';
+import { useCreateAttribution } from '../../backend/use-create-attribution';
+import { useDeleteAttribution } from '../../backend/use-delete-attribution';
 import { IconCrucialValue } from '../../components/icon-crucial-value';
 import { RSInput } from '../../components/rs-input';
 import { SelectCstType } from '../../components/select-cst-type';
@@ -25,9 +25,9 @@ interface FormEditCstProps {
 }
 
 export function FormEditCst({ target, schema }: FormEditCstProps) {
-  const { createAssociation } = useCreateAssociation();
-  const { deleteAssociation } = useDeleteAssociation();
-  const { clearAssociations } = useClearAssociations();
+  const { createAttribution } = useCreateAttribution();
+  const { deleteAttribution } = useDeleteAttribution();
+  const { clearAttributions } = useClearAttributions();
 
   const {
     setValue,
@@ -44,7 +44,7 @@ export function FormEditCst({ target, schema }: FormEditCstProps) {
   const isBasic = isBasicConcept(cst_type) || cst_type === CstType.NOMINAL;
   const isElementary = isBaseSet(cst_type);
   const showConvention = !!convention || forceComment || isBasic;
-  const associations = target.associations.map(id => schema.cstByID.get(id)!);
+  const attributions = target.attributes.map(id => schema.cstByID.get(id)!);
 
   function handleTypeChange(newValue: CstType) {
     setValue('item_data.cst_type', newValue);
@@ -56,28 +56,28 @@ export function FormEditCst({ target, schema }: FormEditCstProps) {
     setValue('item_data.crucial', !crucial);
   }
 
-  function handleAddAssociation(item: IConstituenta) {
-    void createAssociation({
+  function handleAddAttribution(item: IConstituenta) {
+    void createAttribution({
       itemID: schema.id,
       data: {
         container: target.id,
-        associate: item.id
+        attribute: item.id
       }
     });
   }
 
-  function handleRemoveAssociation(item: IConstituenta) {
-    void deleteAssociation({
+  function handleRemoveAttribution(item: IConstituenta) {
+    void deleteAttribution({
       itemID: schema.id,
       data: {
         container: target.id,
-        associate: item.id
+        attribute: item.id
       }
     });
   }
 
-  function handleClearAssociations() {
-    void clearAssociations({
+  function handleClearAttributions() {
+    void clearAttributions({
       itemID: schema.id,
       data: {
         target: target.id
@@ -121,15 +121,15 @@ export function FormEditCst({ target, schema }: FormEditCstProps) {
         error={errors.item_data?.term_raw}
       />
 
-      {target.cst_type === CstType.NOMINAL || target.associations.length > 0 ? (
+      {target.cst_type === CstType.NOMINAL || target.attributes.length > 0 ? (
         <div className='flex flex-col gap-1'>
-          <Label text='Ассоциируемые конституенты' />
+          <Label text='Атрибутирующие конституенты' />
           <SelectMultiConstituenta
             items={schema.items.filter(item => item.id !== target.id)}
-            value={associations}
-            onAdd={handleAddAssociation}
-            onClear={handleClearAssociations}
-            onRemove={handleRemoveAssociation}
+            value={attributions}
+            onAdd={handleAddAttribution}
+            onClear={handleClearAttributions}
+            onRemove={handleRemoveAttribution}
             placeholder={'Выберите конституенты'}
           />
         </div>

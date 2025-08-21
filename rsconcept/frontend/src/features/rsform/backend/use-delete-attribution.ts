@@ -5,14 +5,14 @@ import { useUpdateTimestamp } from '@/features/library/backend/use-update-timest
 import { KEYS } from '@/backend/configuration';
 
 import { rsformsApi } from './api';
-import { type IAssociation } from './types';
+import { type IAttribution } from './types';
 
-export const useCreateAssociation = () => {
+export const useDeleteAttribution = () => {
   const client = useQueryClient();
   const { updateTimestamp } = useUpdateTimestamp();
   const mutation = useMutation({
-    mutationKey: [KEYS.global_mutation, rsformsApi.baseKey, 'create-association'],
-    mutationFn: rsformsApi.createAssociation,
+    mutationKey: [KEYS.global_mutation, rsformsApi.baseKey, 'delete-attribution'],
+    mutationFn: rsformsApi.deleteAttribution,
     onSuccess: async data => {
       updateTimestamp(data.id, data.time_update);
       client.setQueryData(rsformsApi.getRSFormQueryOptions({ itemID: data.id }).queryKey, data);
@@ -24,6 +24,6 @@ export const useCreateAssociation = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    createAssociation: (data: { itemID: number; data: IAssociation }) => mutation.mutateAsync(data)
+    deleteAttribution: (data: { itemID: number; data: IAttribution }) => mutation.mutateAsync(data)
   };
 };

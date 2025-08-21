@@ -2,7 +2,7 @@
 from typing import Optional
 
 from apps.library.models import LibraryItem, LibraryItemType
-from apps.rsform.models import Association, Constituenta, CstType, RSFormCached
+from apps.rsform.models import Attribution, Constituenta, CstType, RSFormCached
 
 from .OperationSchemaCached import CstSubstitution, OperationSchemaCached
 
@@ -82,20 +82,20 @@ class PropagationFacade:
                 OperationSchemaCached(host).before_delete_cst(item.pk, ids)
 
     @staticmethod
-    def after_create_association(sourceID: int, associations: list[Association],
+    def after_create_attribution(sourceID: int, associations: list[Attribution],
                                  exclude: Optional[list[int]] = None) -> None:
-        ''' Trigger cascade resolutions when association is created. '''
+        ''' Trigger cascade resolutions when Attribution is created. '''
         hosts = _get_oss_hosts(sourceID)
         for host in hosts:
             if exclude is None or host.pk not in exclude:
-                OperationSchemaCached(host).after_create_association(sourceID, associations)
+                OperationSchemaCached(host).after_create_attribution(sourceID, associations)
 
     @staticmethod
-    def before_delete_association(sourceID: int,
-                                  associations: list[Association],
+    def before_delete_attribution(sourceID: int,
+                                  associations: list[Attribution],
                                   exclude: Optional[list[int]] = None) -> None:
-        ''' Trigger cascade resolutions before association is deleted. '''
+        ''' Trigger cascade resolutions before Attribution is deleted. '''
         hosts = _get_oss_hosts(sourceID)
         for host in hosts:
             if exclude is None or host.pk not in exclude:
-                OperationSchemaCached(host).before_delete_association(sourceID, associations)
+                OperationSchemaCached(host).before_delete_attribution(sourceID, associations)

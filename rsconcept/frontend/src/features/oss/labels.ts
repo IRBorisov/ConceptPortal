@@ -43,7 +43,7 @@ export function describeSubstitutionError(error: RO<ISubstitutionErrorDescriptio
     case SubstitutionErrorType.invalidConstant:
       return `Ошибка ${error.params[0]} -> ${error.params[1]}: подстановка константного множества возможна только вместо другого константного`;
     case SubstitutionErrorType.invalidNominal:
-      return `Ошибка ${error.params[0]} -> ${error.params[1]}: подстановка номеноида возможна только вместо другого номеноида`;
+      return `Ошибка ${error.params[0]} -> ${error.params[1]}: подстановка номиноида возможна только вместо другого номиноида`;
     case SubstitutionErrorType.invalidClasses:
       return `Ошибка ${error.params[0]} -> ${error.params[1]}: классы конституент не совпадают`;
     case SubstitutionErrorType.typificationCycle:

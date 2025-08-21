@@ -68,7 +68,7 @@ export function RSFormStats({ className, stats }: RSFormStatsProps) {
       />
       <ValueStats
         id='count_nominal'
-        title='Номеноиды'
+        title='Номиноиды'
         icon={<IconCstNominal size='1.25rem' className={stats.count_nominal > 0 ? 'text-destructive' : undefined} />}
         value={stats.count_nominal}
       />

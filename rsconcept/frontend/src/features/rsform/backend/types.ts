@@ -94,11 +94,11 @@ export interface ICheckConstituentaDTO {
 /** Represents data, used in merging multiple {@link IConstituenta}. */
 export type ISubstitutionsDTO = z.infer<typeof schemaSubstitutions>;
 
-/** Represents data for creating or deleting an association. */
-export type IAssociation = z.infer<typeof schemaAssociation>;
+/** Represents data for creating or deleting an Attribution. */
+export type IAttribution = z.infer<typeof schemaAttribution>;
 
 /** Represents data for clearing all associations for a target constituenta. */
-export type IAssociationTargetDTO = z.infer<typeof schemaAssociationTarget>;
+export type IAttributionTargetDTO = z.infer<typeof schemaAttributionTarget>;
 
 /** Represents Constituenta list. */
 export interface IConstituentaList {
@@ -308,9 +308,9 @@ export const schemaConstituenta = schemaConstituentaBasics.extend({
     .optional()
 });
 
-export const schemaAssociation = z.strictObject({
+export const schemaAttribution = z.strictObject({
   container: z.number(),
-  associate: z.number()
+  attribute: z.number()
 });
 
 export const schemaRSForm = schemaLibraryItem.extend({
@@ -320,7 +320,7 @@ export const schemaRSForm = schemaLibraryItem.extend({
   versions: z.array(schemaVersionInfo),
 
   items: z.array(schemaConstituenta),
-  association: z.array(schemaAssociation),
+  attribution: z.array(schemaAttribution),
   inheritance: z.array(
     z.strictObject({
       child: z.number(),
@@ -397,7 +397,7 @@ export const schemaSubstitutions = z.strictObject({
   substitutions: z.array(schemaSubstituteConstituents).min(1, { message: errorMsg.emptySubstitutions })
 });
 
-export const schemaAssociationTarget = z.strictObject({
+export const schemaAttributionTarget = z.strictObject({
   target: z.number()
 });
 

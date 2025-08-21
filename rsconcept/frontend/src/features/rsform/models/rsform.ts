@@ -11,7 +11,7 @@ import {
 
 import { type Graph } from '@/models/graph';
 
-import { CstType, type IAssociation, type ParsingStatus, type ValueClass } from '../backend/types';
+import { CstType, type IAttribution, type ParsingStatus, type ValueClass } from '../backend/types';
 
 import { type IArgumentInfo } from './rslang';
 
@@ -58,7 +58,7 @@ export interface IConstituenta {
   term_raw: string;
   term_resolved: string;
   term_forms: TermForm[];
-  associations: number[];
+  attributes: number[];
 
   parse?: {
     status: ParsingStatus;
@@ -142,12 +142,12 @@ export interface IRSForm extends ILibraryItemData {
 
   items: IConstituenta[];
   inheritance: IInheritanceInfo[];
-  association: IAssociation[];
+  attribution: IAttribution[];
   oss: ILibraryItemReference[];
 
   stats: IRSFormStats;
   graph: Graph;
-  association_graph: Graph;
+  attribution_graph: Graph;
   full_graph: Graph;
   cstByAlias: Map<string, IConstituenta>;
   cstByID: Map<number, IConstituenta>;

@@ -17,23 +17,23 @@ from apps.oss.models import Inheritance
 from shared import messages as msg
 from shared.serializers import StrictModelSerializer, StrictSerializer
 
-from ..models import Association, Constituenta, CstType, RSForm
+from ..models import Attribution, Constituenta, CstType, RSForm
 from .basics import CstParseSerializer, InheritanceDataSerializer
 from .io_pyconcept import PyConceptAdapter
 
 
-class AssociationSerializer(StrictModelSerializer):
-    ''' Serializer: Association relation. '''
+class AttributionSerializer(StrictModelSerializer):
+    ''' Serializer: Attribution relation. '''
     class Meta:
         ''' serializer metadata. '''
-        model = Association
-        fields = ('container', 'associate')
+        model = Attribution
+        fields = ('container', 'attribute')
 
 
-class AssociationDataSerializer(StrictSerializer):
-    ''' Serializer: Association data. '''
+class AttributionDataSerializer(StrictSerializer):
+    ''' Serializer: Attribution data. '''
     container = PKField(many=False, queryset=Constituenta.objects.all().only('schema_id'))
-    associate = PKField(many=False, queryset=Constituenta.objects.all().only('schema_id'))
+    attribute = PKField(many=False, queryset=Constituenta.objects.all().only('schema_id'))
 
     def validate(self, attrs):
         schema = cast(LibraryItem, self.context['schema'])
@@ -41,26 +41,26 @@ class AssociationDataSerializer(StrictSerializer):
             raise serializers.ValidationError({
                 'container': msg.constituentaNotInRSform(schema.title)
             })
-        if schema and attrs['associate'].schema_id != schema.id:
+        if schema and attrs['attribute'].schema_id != schema.id:
             raise serializers.ValidationError({
-                'associate': msg.constituentaNotInRSform(schema.title)
+                'attribute': msg.constituentaNotInRSform(schema.title)
             })
 
         return attrs
 
 
-class AssociationCreateSerializer(AssociationDataSerializer):
-    ''' Serializer: Data for creating new association. '''
+class AttributionCreateSerializer(AttributionDataSerializer):
+    ''' Serializer: Data for creating new Attribution. '''
 
     def validate(self, attrs):
         attrs = super().validate(attrs)
-        if attrs['container'].pk == attrs['associate'].pk:
+        if attrs['container'].pk == attrs['attribute'].pk:
             raise serializers.ValidationError({
                 'container': msg.associationSelf()
             })
-        if Association.objects.filter(container=attrs['container'], associate=attrs['associate']).exists():
+        if Attribution.objects.filter(container=attrs['container'], attribute=attrs['attribute']).exists():
             raise serializers.ValidationError({
-                'associate': msg.associationAlreadyExists()
+                'attribute': msg.associationAlreadyExists()
             })
 
         return attrs
@@ -187,8 +187,8 @@ class RSFormSerializer(StrictModelSerializer):
     inheritance = serializers.ListField(
         child=InheritanceDataSerializer()
     )
-    association = serializers.ListField(
-        child=AssociationSerializer()
+    attribution = serializers.ListField(
+        child=AttributionSerializer()
     )
     oss = serializers.ListField(
         child=LibraryItemReferenceSerializer()
@@ -220,7 +220,7 @@ class RSFormSerializer(StrictModelSerializer):
         result['items'] = []
         result['oss'] = []
         result['inheritance'] = []
-        result['association'] = []
+        result['attribution'] = []
         for cst in Constituenta.objects.filter(schema=instance).defer('order').order_by('order'):
             result['items'].append(CstInfoSerializer(cst).data)
         for oss in LibraryItem.objects.filter(operations__result=instance).only('alias'):
@@ -228,10 +228,10 @@ class RSFormSerializer(StrictModelSerializer):
                 'id': oss.pk,
                 'alias': oss.alias
             })
-        for assoc in Association.objects.filter(container__schema=instance).only('container_id', 'associate_id'):
-            result['association'].append({
+        for assoc in Attribution.objects.filter(container__schema=instance).only('container_id', 'attribute_id'):
+            result['attribution'].append({
                 'container': assoc.container_id,
-                'associate': assoc.associate_id
+                'attribute': assoc.attribute_id
             })
         return result
 
@@ -302,22 +302,22 @@ class RSFormSerializer(StrictModelSerializer):
             validated_data=loaded_item.validated_data
         )
 
-        Association.objects.filter(container__schema=instance).delete()
-        associations_to_create: list[Association] = []
-        for assoc in data.get('association', []):
+        Attribution.objects.filter(container__schema=instance).delete()
+        attributions_to_create: list[Attribution] = []
+        for assoc in data.get('attribution', []):
             old_container_id = assoc['container']
-            old_associate_id = assoc['associate']
+            old_attribute_id = assoc['attribute']
             container_id = id_map.get(old_container_id)
-            associate_id = id_map.get(old_associate_id)
-            if container_id and associate_id:
-                associations_to_create.append(
-                    Association(
+            attribute_id = id_map.get(old_attribute_id)
+            if container_id and attribute_id:
+                attributions_to_create.append(
+                    Attribution(
                         container_id=container_id,
-                        associate_id=associate_id
+                        attribute_id=attribute_id
                     )
                 )
-        if associations_to_create:
-            Association.objects.bulk_create(associations_to_create)
+        if attributions_to_create:
+            Attribution.objects.bulk_create(attributions_to_create)
 
 
 class RSFormParseSerializer(StrictModelSerializer):

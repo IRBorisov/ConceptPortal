@@ -41,7 +41,7 @@ export class RSFormLoader {
     result.graph = this.graph;
     result.cstByAlias = this.cstByAlias;
     result.cstByID = this.cstByID;
-    result.association_graph = this.association_graph;
+    result.attribution_graph = this.association_graph;
     result.full_graph = this.full_graph;
     return result;
   }
@@ -90,7 +90,7 @@ export class RSFormLoader {
       cst.is_template = inferTemplate(cst.definition_formal);
       cst.cst_class = inferClass(cst.cst_type, cst.is_template);
       cst.spawn = [];
-      cst.associations = [];
+      cst.attributes = [];
       cst.spawn_alias = [];
       cst.parent_schema = schemaByCst.get(cst.id);
       cst.parent_schema_index = cst.parent_schema ? parents.indexOf(cst.parent_schema) + 1 : 0;
@@ -110,11 +110,11 @@ export class RSFormLoader {
         parent.spawn_alias.push(cst.alias);
       }
     });
-    this.schema.association.forEach(assoc => {
+    this.schema.attribution.forEach(assoc => {
       const container = this.cstByID.get(assoc.container)!;
-      container.associations.push(assoc.associate);
-      this.full_graph.addEdge(container.id, assoc.associate);
-      this.association_graph.addEdge(container.id, assoc.associate);
+      container.attributes.push(assoc.attribute);
+      this.full_graph.addEdge(container.id, assoc.attribute);
+      this.association_graph.addEdge(container.id, assoc.attribute);
     });
   }
 

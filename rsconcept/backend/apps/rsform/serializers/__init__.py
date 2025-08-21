@@ -12,8 +12,8 @@ from .basics import (
     WordFormSerializer
 )
 from .data_access import (
-    AssociationCreateSerializer,
-    AssociationDataSerializer,
+    AttributionCreateSerializer,
+    AttributionDataSerializer,
     CrucialUpdateSerializer,
     CstCreateSerializer,
     CstInfoSerializer,

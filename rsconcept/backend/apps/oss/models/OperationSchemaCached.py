@@ -4,7 +4,7 @@
 from typing import Optional
 
 from apps.library.models import LibraryItem
-from apps.rsform.models import Association, Constituenta, CstType, OrderManager, RSFormCached
+from apps.rsform.models import Attribution, Constituenta, CstType, OrderManager, RSFormCached
 
 from .Argument import Argument
 from .Inheritance import Inheritance
@@ -318,16 +318,16 @@ class OperationSchemaCached:
                 mapping={}
             )
 
-    def after_create_association(self, schemaID: int, associations: list[Association],
+    def after_create_attribution(self, schemaID: int, associations: list[Attribution],
                                  exclude: Optional[list[int]] = None) -> None:
-        ''' Trigger cascade resolutions when association is created. '''
+        ''' Trigger cascade resolutions when Attribution is created. '''
         operation = self.cache.get_operation(schemaID)
-        self.engine.on_inherit_association(operation.pk, associations, exclude)
+        self.engine.on_inherit_attribution(operation.pk, associations, exclude)
 
-    def before_delete_association(self, schemaID: int, associations: list[Association]) -> None:
-        ''' Trigger cascade resolutions when association is deleted. '''
+    def before_delete_attribution(self, schemaID: int, associations: list[Attribution]) -> None:
+        ''' Trigger cascade resolutions when Attribution is deleted. '''
         operation = self.cache.get_operation(schemaID)
-        self.engine.on_delete_association(operation.pk, associations)
+        self.engine.on_delete_attribution(operation.pk, associations)
 
     def _on_add_substitutions(self, schema: Optional[RSFormCached], added: list[Substitution]) -> None:
         ''' Trigger cascade resolutions when Constituenta substitution is added. '''

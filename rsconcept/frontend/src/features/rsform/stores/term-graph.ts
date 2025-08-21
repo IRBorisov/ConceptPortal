@@ -4,7 +4,7 @@ import { persist } from 'zustand/middleware';
 import { CstType } from '../backend/types';
 
 export const graphColorings = ['none', 'status', 'type', 'schemas'] as const;
-export const graphTypes = ['full', 'association', 'definition'] as const;
+export const graphTypes = ['full', 'attribution', 'definition'] as const;
 
 /** Represents graph node coloring scheme. */
 export type GraphColoring = (typeof graphColorings)[number];
@@ -104,8 +104,8 @@ export const useTermGraphStore = create<TermGraphStore>()(
             ...state.filter,
             graphType:
               state.filter.graphType === 'full'
-                ? 'association'
-                : state.filter.graphType === 'association'
+                ? 'attribution'
+                : state.filter.graphType === 'attribution'
                 ? 'definition'
                 : 'full'
           }
