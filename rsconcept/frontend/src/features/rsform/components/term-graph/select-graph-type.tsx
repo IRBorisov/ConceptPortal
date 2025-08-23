@@ -14,7 +14,7 @@ export function SelectGraphType({ className }: SelectGraphTypeProps) {
 
   return (
     <div className={cn('relative border select-none bg-input pointer-events-auto', className)}>
-      <Select onValueChange={setGraphType} defaultValue={graphType}>
+      <Select onValueChange={setGraphType} value={graphType}>
         <SelectTrigger noBorder className='w-full'>
           <SelectValue placeholder='Цветовая схема' />
         </SelectTrigger>

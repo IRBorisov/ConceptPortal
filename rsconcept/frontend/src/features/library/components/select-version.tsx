@@ -35,7 +35,7 @@ export function SelectVersion({
     }
   }
   return (
-    <Select onValueChange={handleSelect} defaultValue={String(value)}>
+    <Select onValueChange={handleSelect} value={String(value)}>
       <SelectTrigger id={id} className={cn('min-w-48', className)} {...restProps}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>

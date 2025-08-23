@@ -16,7 +16,7 @@ interface SelectCstTypeProps extends Styling {
 
 export function SelectCstType({ id, value, onChange, className, disabled = false, ...restProps }: SelectCstTypeProps) {
   return (
-    <Select onValueChange={onChange} defaultValue={value} disabled={disabled}>
+    <Select onValueChange={onChange} value={value} disabled={disabled}>
       <SelectTrigger id={id} className={cn('w-66', className)} {...restProps}>
         <SelectValue />
       </SelectTrigger>

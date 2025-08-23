@@ -27,7 +27,7 @@ export function SelectPagination<TData>({ id, table, paginationOptions, onChange
   );
 
   return (
-    <Select onValueChange={handlePaginationOptionsChange} defaultValue={String(table.getState().pagination.pageSize)}>
+    <Select onValueChange={handlePaginationOptionsChange} value={String(table.getState().pagination.pageSize)}>
       <SelectTrigger
         id={id}
         aria-label='Выбор количества строчек на странице'

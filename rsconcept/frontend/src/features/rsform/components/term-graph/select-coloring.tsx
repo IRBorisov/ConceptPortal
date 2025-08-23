@@ -27,7 +27,7 @@ export function SelectColoring({ className, schema }: SelectColoringProps) {
         {coloring === 'schemas' ? <SchemasGuide schema={schema} /> : null}
       </div>
 
-      <Select onValueChange={setColoring} defaultValue={coloring}>
+      <Select onValueChange={setColoring} value={coloring}>
         <SelectTrigger noBorder className='w-full'>
           <SelectValue placeholder='Цветовая схема' />
         </SelectTrigger>
