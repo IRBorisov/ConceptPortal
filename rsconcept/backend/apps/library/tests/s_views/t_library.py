@@ -9,7 +9,7 @@ from apps.library.models import (
     LibraryTemplate,
     LocationHead
 )
-from apps.rsform.models import RSForm
+from apps.rsform.models import Attribution, RSForm
 from shared.EndpointTester import EndpointTester, decl_endpoint
 from shared.testing_utils import response_contains
 
@@ -343,6 +343,7 @@ class TestLibraryViewset(EndpointTester):
             term_raw='@{X12|plur}',
             term_resolved='люди'
         )
+        Attribution.objects.create(container=d2, attribute=x12)
 
         data = {'item_data': {'title': 'Title1337'}, 'items': []}
         self.executeNotFound(data, item=self.invalid_item)
@@ -351,6 +352,7 @@ class TestLibraryViewset(EndpointTester):
         response = self.executeCreated(data, item=self.owned.pk)
         self.assertEqual(response.data['title'], data['item_data']['title'])
         self.assertEqual(len(response.data['items']), 2)
+        self.assertEqual(len(response.data['attribution']), 1)
         self.assertEqual(response.data['items'][0]['alias'], x12.alias)
         self.assertEqual(response.data['items'][0]['term_raw'], x12.term_raw)
         self.assertEqual(response.data['items'][0]['term_resolved'], x12.term_resolved)
