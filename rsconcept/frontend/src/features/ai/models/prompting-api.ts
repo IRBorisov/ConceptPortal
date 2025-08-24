@@ -4,6 +4,7 @@ import { labelCstTypification } from '@/features/rsform/labels';
 import { isBasicConcept } from '@/features/rsform/models/rsform-api';
 import { TypificationGraph } from '@/features/rsform/models/typification-graph';
 
+import { type Graph } from '@/models/graph';
 import { PARAMETER } from '@/utils/constants';
 
 import { mockPromptVariable } from '../labels';
@@ -38,30 +39,24 @@ export function generateSample(target: string): string {
 
 /** Generates a prompt for a schema variable. */
 export function varSchema(schema: IRSForm): string {
-  let result = `Название концептуальной схемы: ${schema.title}\n`;
-  result += `[${schema.alias}] Описание: "${schema.description}"\n\n`;
-  result += 'Конституенты:\n';
+  let result = stringifySchemaIntro(schema);
+  result += '\n\nКонституенты:';
   schema.items.forEach(item => {
     result += `\n${item.alias} - "${labelCstTypification(item)}" - "${item.term_resolved}" - "${
       item.definition_formal
     }" - "${item.definition_resolved}" - "${item.convention}"`;
   });
-  if (schema.stats.count_crucial > 0) {
-    result +=
-      '\nКлючевые конституенты: ' +
-      schema.items
-        .filter(cst => cst.crucial)
-        .map(cst => cst.alias)
-        .join(', ');
-  }
+  result += `\n${stringifyCrucial(schema.items.filter(cst => cst.crucial))}`;
+  result += '\n\nСвязи "атрибутирован":';
+  const attributionGraph = stringifyGraph(schema.attribution_graph, schema);
+  result += attributionGraph ? attributionGraph : ' отсутствуют';
   return result;
 }
 
 /** Generates a prompt for a schema thesaurus variable. */
 export function varSchemaThesaurus(schema: IRSForm): string {
-  let result = `Название концептуальной схемы: ${schema.title}\n`;
-  result += `[${schema.alias}] Описание: "${schema.description}"\n\n`;
-  result += 'Термины:\n';
+  let result = stringifySchemaIntro(schema);
+  result += '\n\nТермины:';
   schema.items.forEach(item => {
     if (item.cst_type === CstType.AXIOM || item.cst_type === CstType.THEOREM) {
       return;
@@ -77,12 +72,27 @@ export function varSchemaThesaurus(schema: IRSForm): string {
 
 /** Generates a prompt for a schema graph variable. */
 export function varSchemaGraph(schema: IRSForm): string {
-  let result = `Название концептуальной схемы: ${schema.title}\n`;
-  result += `[${schema.alias}] Описание: "${schema.description}"\n\n`;
-  result += 'Узлы графа\n';
-  result += JSON.stringify(schema.items, null, PARAMETER.indentJSON);
-  result += '\n\nСвязи графа';
-  schema.graph.nodes.forEach(node => (result += `\n${node.id} -> ${node.outputs.join(', ')}`));
+  let result = stringifySchemaIntro(schema);
+  result += '\n\nУзлы графа\n';
+  result += JSON.stringify(
+    schema.items.map(cst => ({
+      alias: cst.alias,
+      term: cst.term_resolved,
+      definition: cst.definition_resolved,
+      convention: cst.convention,
+      crucial: cst.crucial
+    })),
+    null,
+    PARAMETER.indentJSON
+  );
+
+  result += '\n\nСвязи "входит в определение"';
+  const definitionGraph = stringifyGraph(schema.graph, schema);
+  result += definitionGraph ? definitionGraph : ' отсутствуют';
+
+  result += '\n\nСвязи "атрибутирован"';
+  const attributionGraph = stringifyGraph(schema.attribution_graph, schema);
+  result += attributionGraph ? attributionGraph : ' отсутствуют';
   return result;
 }
 
@@ -93,34 +103,31 @@ export function varSchemaTypeGraph(schema: IRSForm): string {
     if (item.parse) graph.addConstituenta(item.alias, item.parse.typification, item.parse.args);
   });
 
-  let result = `Название концептуальной схемы: ${schema.title}\n`;
-  result += `[${schema.alias}] Описание: "${schema.description}"\n\n`;
-  result += 'Ступени\n';
+  let result = stringifySchemaIntro(schema);
+  result += '\n\nСтупени\n';
   result += JSON.stringify(graph.nodes, null, PARAMETER.indentJSON);
   return result;
 }
 
 /** Generates a prompt for a OSS variable. */
 export function varOSS(oss: IOperationSchema): string {
-  let result = `Название операционной схемы: ${oss.title}\n`;
-  result += `Сокращение: ${oss.alias}\n`;
-  result += `Описание: ${oss.description}\n`;
-  result += `Блоки: ${oss.blocks.length}\n`;
+  let result = stringifyOSSIntro(oss);
+  result += `\n\nБлоки: ${oss.blocks.length}\n`;
   oss.hierarchy.topologicalOrder().forEach(blockID => {
     const block = oss.itemByNodeID.get(blockID);
     if (block?.nodeType !== NodeType.BLOCK) {
       return;
     }
-    result += `\nБлок ${block.id}: ${block.title}\n`;
-    result += `Описание: ${block.description}\n`;
-    result += `Предок: "${block.parent}"\n`;
+    result += `\n\nБлок ${block.id}: ${block.title}`;
+    result += `\nОписание: ${block.description}`;
+    result += `\nПредок: "${block.parent ?? 'отсутствует'}"`;
   });
-  result += `Операции: ${oss.operations.length}\n`;
+  result += `\n\nОперации: ${oss.operations.length}`;
   oss.operations.forEach(operation => {
-    result += `\nОперация ${operation.id}: ${operation.alias}\n`;
-    result += `Название: ${operation.title}\n`;
-    result += `Описание: ${operation.description}\n`;
-    result += `Блок: ${operation.parent}`;
+    result += `\n\nОперация ${operation.id}: ${operation.alias}`;
+    result += `\nНазвание: ${operation.title}`;
+    result += `\nОписание: ${operation.description}`;
+    result += `\nБлок: ${operation.parent ?? 'отсутствует'}`;
   });
   return result;
 }
@@ -129,19 +136,19 @@ export function varOSS(oss: IOperationSchema): string {
 export function varBlock(target: IBlock, oss: IOperationSchema): string {
   const blocks = oss.blocks.filter(block => block.parent === target.id);
   const operations = oss.operations.filter(operation => operation.parent === target.id);
-  let result = `Название блока: ${target.title}\n`;
-  result += `Описание: "${target.description}"\n`;
-  result += '\nСодержание\n';
-  result += `Блоки: ${blocks.length}\n`;
+  let result = `Название блока: ${target.title}`;
+  result += `\nОписание: "${target.description}"`;
+  result += '\n\nСодержание';
+  result += `\nБлоки: ${blocks.length}`;
   blocks.forEach(block => {
-    result += `\nБлок ${block.id}: ${block.title}\n`;
-    result += `Описание: "${block.description}"\n`;
+    result += `\n\nБлок ${block.id}: ${block.title}`;
+    result += `\nОписание: "${block.description}"`;
   });
-  result += `Операции: ${operations.length}\n`;
+  result += `\n\nОперации: ${operations.length}`;
   operations.forEach(operation => {
-    result += `\nОперация ${operation.id}: ${operation.alias}\n`;
-    result += `Название: "${operation.title}"\n`;
-    result += `Описание: "${operation.description}"`;
+    result += `\n\nОперация ${operation.id}: ${operation.alias}`;
+    result += `\nНазвание: "${operation.title}"`;
+    result += `\nОписание: "${operation.description}"`;
   });
   return result;
 }
@@ -153,9 +160,49 @@ export function varConstituenta(cst: IConstituenta): string {
 
 /** Generates a prompt for a constituenta syntax tree variable. */
 export function varSyntaxTree(cst: IConstituenta): string {
-  let result = `Конституента: ${cst.alias}\n`;
-  result += `Формальное выражение: ${cst.definition_formal}\n`;
-  result += `Дерево синтаксического разбора:\n`;
+  let result = `Конституента: ${cst.alias}`;
+  result += `\nФормальное выражение: ${cst.definition_formal}`;
+  result += `\nДерево синтаксического разбора:\n`;
   result += cst.parse ? JSON.stringify(cst.parse.syntaxTree, null, PARAMETER.indentJSON) : 'не определено';
+  return result;
+}
+
+// ==== Internal functions ====
+function stringifyGraph(graph: Graph<number>, schema: IRSForm): string {
+  let result = '';
+  graph.nodes.forEach(node => {
+    if (node.outputs.length > 0) {
+      result += `\n${schema.items.find(cst => cst.id === node.id)!.alias} -> ${node.outputs
+        .map(id => schema.items.find(cst => cst.id === id)!.alias)
+        .join(', ')}`;
+    }
+  });
+  return result;
+}
+
+function stringifySchemaIntro(schema: IRSForm): string {
+  let result = `Концептуальная схема: ${schema.title}`;
+  result += `\nКраткое название: ${schema.alias}`;
+  if (schema.description) {
+    result += `\nОписание: "${schema.description}"`;
+  }
+  return result;
+}
+
+function stringifyOSSIntro(schema: IOperationSchema): string {
+  let result = `Операционная схема: ${schema.title}`;
+  result += `\nКраткое название: ${schema.alias}`;
+  if (schema.description) {
+    result += `\nОписание: "${schema.description}"`;
+  }
+  return result;
+}
+
+function stringifyCrucial(cstList: IConstituenta[]): string {
+  let result = 'Ключевые конституенты: ';
+  if (cstList.length === 0) {
+    return result + 'отсутствуют';
+  }
+  result += cstList.map(cst => cst.alias).join(', ');
   return result;
 }
