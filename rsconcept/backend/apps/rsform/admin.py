@@ -13,8 +13,8 @@ class ConstituentaAdmin(admin.ModelAdmin):
 
 
 @admin.register(models.Attribution)
-class AssociationAdmin(admin.ModelAdmin):
-    ''' Admin model: Association. '''
+class AttributionAdmin(admin.ModelAdmin):
+    ''' Admin model: Attribution. '''
     ordering = ['container__schema', 'container', 'attribute']
     list_display = ['container__schema__alias', 'container__alias', 'attribute__alias']
     search_fields = ['container', 'attribute']

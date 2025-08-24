@@ -1,4 +1,4 @@
-''' Testing models: Association. '''
+''' Testing models: Attribution. '''
 from django.db.utils import IntegrityError
 from django.test import TestCase
 
