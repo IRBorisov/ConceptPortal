@@ -59,12 +59,13 @@ export function SelectLocation({ value, dense, prefix, onClick, className, style
             tabIndex={-1}
             key={`${prefix}${index}`}
             className={clsx(
-              !dense && 'h-7 sm:h-8',
+              !dense && 'min-h-7 sm:min-h-8',
               'pr-3 py-1 flex items-center gap-2',
               'cc-scroll-row',
               'cc-hover-bg cc-animate-color duration-fade',
               'cursor-pointer',
               'leading-3 sm:leading-4',
+              'flex-shrink-0',
               activeNode === item && 'cc-selected'
             )}
             style={{ paddingLeft: `${(item.rank > 5 ? 5 : item.rank) * 0.5 + 0.5}rem` }}
