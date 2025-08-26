@@ -334,7 +334,12 @@ export function OssFlow() {
   }
 
   return (
-    <div tabIndex={-1} className='relative' onMouseMove={showCoordinates ? handleMouseMove : undefined}>
+    <div
+      tabIndex={-1}
+      className='relative'
+      onMouseMove={showCoordinates ? handleMouseMove : undefined}
+      onKeyDown={handleKeyDown}
+    >
       {showCoordinates ? <CoordinateDisplay mouseCoords={mouseCoords} className='absolute top-1 right-2' /> : null}
 
       <ContextMenu isOpen={isContextMenuOpen} onHide={hideContextMenu} {...menuProps} />
@@ -356,7 +361,6 @@ export function OssFlow() {
         {...flowOptions}
         className={clsx(!containMovement && 'cursor-relocate')}
         height={mainHeight}
-        onKeyDown={handleKeyDown}
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}

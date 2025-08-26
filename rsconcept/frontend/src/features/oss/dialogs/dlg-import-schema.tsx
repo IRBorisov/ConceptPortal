@@ -102,7 +102,7 @@ export function DlgImportSchema() {
       submitText='Создать'
       canSubmit={isValid}
       onSubmit={event => void handleSubmit(onSubmit)(event)}
-      className='w-180 px-6 cc-column'
+      className='w-180 px-6 pb-3 cc-column'
       helpTopic={HelpTopic.CC_OSS}
     >
       <Controller
@@ -132,7 +132,7 @@ export function DlgImportSchema() {
         error={errors.item_data?.title}
       />
       <div className='flex gap-6'>
-        <div className='grid gap-1'>
+        <div className='flex flex-col gap-3 justify-between'>
           <TextInput
             id='operation_alias' //
             label='Сокращение'
@@ -157,7 +157,7 @@ export function DlgImportSchema() {
         <TextArea
           id='operation_comment' //
           label='Описание'
-          rows={3}
+          rows={4}
           disabled={!clone_source}
           {...register('item_data.description')}
         />

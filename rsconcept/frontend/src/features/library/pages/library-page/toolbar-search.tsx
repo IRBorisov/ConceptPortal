@@ -48,6 +48,10 @@ export function ToolbarSearch({ className, total, filtered }: ToolbarSearchProps
     return items.some(item => item.owner === userID);
   }
 
+  function handleSelectUser(userID: number | null) {
+    setFilterUser(userID);
+  }
+
   return (
     <div className={cn('flex gap-3 border-b text-sm bg-input items-center', className)}>
       <div className='ml-3 min-w-18 sm:min-w-30 select-none whitespace-nowrap'>
@@ -73,7 +77,7 @@ export function ToolbarSearch({ className, total, filtered }: ToolbarSearchProps
             icon={<IconUserSearch size='1.25rem' className={userActive ? 'icon-green' : 'icon-primary'} />}
             onClick={userMenu.toggle}
           />
-          <Dropdown isOpen={userMenu.isOpen}>
+          <Dropdown isOpen={userMenu.isOpen} margin='mt-1'>
             <DropdownButton
               text='Я - Владелец'
               title='Фильтровать схемы, в которых текущий пользователь является владельцем'
@@ -93,7 +97,7 @@ export function ToolbarSearch({ className, total, filtered }: ToolbarSearchProps
               className='min-w-60 mx-1 mb-1 cc-hover-bg select-none'
               filter={filterNonEmptyUsers}
               value={filterUser}
-              onChange={setFilterUser}
+              onChange={handleSelectUser}
             />
           </Dropdown>
         </div>

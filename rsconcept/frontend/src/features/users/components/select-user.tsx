@@ -43,6 +43,7 @@ export function SelectUser({ filter, noAnonymous, placeholder = 'Выбор по
     <ComboBox
       items={sorted}
       placeholder={placeholder}
+      clearable={true}
       idFunc={user => String(user)}
       labelValueFunc={user => getUserLabel(user)}
       labelOptionFunc={user => getUserLabel(user)}

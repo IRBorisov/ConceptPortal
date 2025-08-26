@@ -74,11 +74,11 @@ export function DlgCreateSchema() {
 
   return (
     <ModalForm
-      header='Создание операции: Пустая КС'
+      header='Создание операции: Новая схема'
       submitText='Создать'
       canSubmit={isValid}
       onSubmit={event => void handleSubmit(onSubmit)(event)}
-      className='w-180 px-6 cc-column'
+      className='w-180 px-6 pb-3 cc-column'
       helpTopic={HelpTopic.CC_OSS}
     >
       <TextInput
@@ -88,7 +88,7 @@ export function DlgCreateSchema() {
         error={errors.item_data?.title}
       />
       <div className='flex gap-6'>
-        <div className='grid gap-1'>
+        <div className='flex flex-col justify-between gap-3'>
           <TextInput
             id='operation_alias' //
             label='Сокращение'
@@ -113,7 +113,7 @@ export function DlgCreateSchema() {
           id='operation_comment' //
           label='Описание'
           noResize
-          rows={3}
+          rows={4}
           {...register('item_data.description')}
         />
       </div>
