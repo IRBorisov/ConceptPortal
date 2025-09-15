@@ -27,6 +27,8 @@
 } */
 
 @theme inline {
+  --spacing: 0.25rem;
+
   /* stylelint-disable-next-line custom-property-pattern */
   --color-*: initial;
   --color-transparent: transparent;
