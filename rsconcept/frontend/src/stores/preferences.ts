@@ -75,7 +75,8 @@ export const usePreferencesStore = create<PreferencesStore>()(
       toggleAdminMode: () => set(state => ({ adminMode: !state.adminMode })),
 
       libraryPagination: 20,
-      setLibraryPagination: value => set({ libraryPagination: value }),
+      setLibraryPagination: value =>
+        set(state => (state.libraryPagination === value ? state : { libraryPagination: value })),
 
       showCstSideList: true,
       toggleShowCstSideList: () => set(state => ({ showCstSideList: !state.showCstSideList })),
@@ -93,7 +94,7 @@ export const usePreferencesStore = create<PreferencesStore>()(
       toggleShowOssSidePanel: () => set(state => ({ showOssSidePanel: !state.showOssSidePanel })),
 
       preferredPlayer: 'vk',
-      setPreferredPlayer: value => set({ preferredPlayer: value })
+      setPreferredPlayer: value => set(state => (state.preferredPlayer === value ? state : { preferredPlayer: value }))
     }),
     {
       version: 2,

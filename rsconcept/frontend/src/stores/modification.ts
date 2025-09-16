@@ -7,5 +7,5 @@ interface ModificationStore {
 
 export const useModificationStore = create<ModificationStore>()(set => ({
   isModified: false,
-  setIsModified: value => set({ isModified: value })
+  setIsModified: value => set(state => (state.isModified === value ? state : { isModified: value }))
 }));

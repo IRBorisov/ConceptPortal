@@ -29,10 +29,14 @@ export const useAppLayoutStore = create<AppLayoutStore>()(set => ({
     }),
 
   noFooter: false,
-  hideFooter: value => set({ noFooter: value ?? true }),
+  hideFooter: value =>
+    set(state => {
+      const next = value ?? true;
+      return state.noFooter === next ? state : { noFooter: next };
+    }),
 
   toastBottom: false,
-  setToastBottom: value => set({ toastBottom: value })
+  setToastBottom: value => set(state => (state.toastBottom === value ? state : { toastBottom: value }))
 }));
 
 /** Utility function that returns the height of the main area. */

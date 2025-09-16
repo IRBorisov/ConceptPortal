@@ -8,6 +8,6 @@ interface TransitionState {
 
 export const useAppTransitionStore = create<TransitionState>(set => ({
   isNavigating: false,
-  startNavigation: () => set({ isNavigating: true }),
-  endNavigation: () => set({ isNavigating: false })
+  startNavigation: () => set(state => (state.isNavigating ? state : { isNavigating: true })),
+  endNavigation: () => set(state => (!state.isNavigating ? state : { isNavigating: false }))
 }));

@@ -9,7 +9,7 @@ interface DraggingStore {
 
 export const useDraggingStore = create<DraggingStore>()(set => ({
   isDragging: false,
-  setIsDragging: value => set({ isDragging: value }),
+  setIsDragging: value => set(state => (state.isDragging === value ? state : { isDragging: value })),
   dropTarget: null,
-  setDropTarget: value => set({ dropTarget: value })
+  setDropTarget: value => set(state => (state.dropTarget === value ? state : { dropTarget: value }))
 }));

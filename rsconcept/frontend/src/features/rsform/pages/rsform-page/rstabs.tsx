@@ -24,6 +24,7 @@ export function RSTabs({ activeID, activeTab }: RSTabsProps) {
   const router = useConceptNavigation();
 
   const hideFooter = useAppLayoutStore(state => state.hideFooter);
+  const isModified = useModificationStore(state => state.isModified);
   const setIsModified = useModificationStore(state => state.setIsModified);
   const { schema, selected, setSelected, deselectAll, navigateRSForm } = useRSEdit();
 
@@ -36,19 +37,39 @@ export function RSTabs({ activeID, activeTab }: RSTabsProps) {
   }, [schema.title]);
 
   useLayoutEffect(() => {
-    hideFooter(activeTab !== RSTabID.CARD);
-    setIsModified(false);
+    const nextNoFooter = activeTab !== RSTabID.CARD;
+    hideFooter(nextNoFooter);
+
+    if (isModified) {
+      setIsModified(false);
+    }
+
     if (activeTab === RSTabID.CST_EDIT) {
+      let nextSelected: number[] = [];
       if (activeID && schema.cstByID.has(activeID)) {
-        setSelected([activeID]);
+        nextSelected = [activeID];
       } else if (schema.items.length > 0) {
-        setSelected([schema.items[0].id]);
-      } else {
-        deselectAll();
+        nextSelected = [schema.items[0].id];
+      }
+
+      const isSameSelection =
+        nextSelected.length === selected.length && nextSelected.every((value, index) => value === selected[index]);
+
+      if (!isSameSelection) {
+        if (nextSelected.length === 0) {
+          if (selected.length !== 0) {
+            deselectAll();
+          }
+        } else {
+          setSelected(nextSelected);
+        }
       }
     }
+  }, [activeTab, activeID, selected, schema, hideFooter, isModified, setIsModified, setSelected, deselectAll]);
+
+  useLayoutEffect(() => {
     return () => hideFooter(false);
-  }, [activeTab, activeID, setSelected, deselectAll, schema, hideFooter, setIsModified]);
+  }, [hideFooter]);
 
   function onSelectTab(index: number, last: number, event: Event) {
     if (last === index) {
