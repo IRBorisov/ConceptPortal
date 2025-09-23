@@ -24,7 +24,6 @@ export function RSTabs({ activeID, activeTab }: RSTabsProps) {
   const router = useConceptNavigation();
 
   const hideFooter = useAppLayoutStore(state => state.hideFooter);
-  const isModified = useModificationStore(state => state.isModified);
   const setIsModified = useModificationStore(state => state.setIsModified);
   const { schema, selected, setSelected, deselectAll, navigateRSForm } = useRSEdit();
 
@@ -39,10 +38,6 @@ export function RSTabs({ activeID, activeTab }: RSTabsProps) {
   useLayoutEffect(() => {
     const nextNoFooter = activeTab !== RSTabID.CARD;
     hideFooter(nextNoFooter);
-
-    if (isModified) {
-      setIsModified(false);
-    }
 
     if (activeTab === RSTabID.CST_EDIT) {
       let nextSelected: number[] = [];
@@ -65,7 +60,7 @@ export function RSTabs({ activeID, activeTab }: RSTabsProps) {
         }
       }
     }
-  }, [activeTab, activeID, selected, schema, hideFooter, isModified, setIsModified, setSelected, deselectAll]);
+  }, [activeTab, activeID, selected, schema, hideFooter, setSelected, deselectAll]);
 
   useLayoutEffect(() => {
     return () => hideFooter(false);
@@ -75,6 +70,7 @@ export function RSTabs({ activeID, activeTab }: RSTabsProps) {
     if (last === index) {
       return;
     }
+    setIsModified(false);
     if (event.type == 'keydown') {
       const kbEvent = event as KeyboardEvent;
       if (kbEvent.altKey) {

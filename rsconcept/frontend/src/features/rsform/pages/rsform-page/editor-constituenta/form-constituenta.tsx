@@ -1,7 +1,7 @@
 'use no memo'; // TODO: remove when react hook forms are compliant with react compiler
 'use client';
 
-import { useMemo, useRef, useState } from 'react';
+import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -144,6 +144,8 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
     setForceComment(false);
     setLocalParse(null);
   }
+
+  useLayoutEffect(() => setIsModified(false), [activeCst.id, setIsModified]);
 
   const prevDirty = useRef(isDirty);
   if (prevDirty.current !== isDirty) {
