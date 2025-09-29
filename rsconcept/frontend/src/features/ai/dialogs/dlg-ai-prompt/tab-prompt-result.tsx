@@ -11,7 +11,7 @@ export function TabPromptResult({ prompt }: TabPromptResultProps) {
       value={prompt}
       placeholder='Текст шаблона пуст'
       disabled
-      className='w-full h-100'
+      className='w-full h-88'
     />
   );
 }

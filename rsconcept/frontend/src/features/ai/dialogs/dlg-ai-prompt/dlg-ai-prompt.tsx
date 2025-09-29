@@ -20,7 +20,7 @@ export function DlgAIPromptDialog() {
   return (
     <ModalView
       header='Генератор запросом LLM'
-      className='w-100 sm:w-160 px-6 flex flex-col h-120'
+      className='w-100 sm:w-160 px-6 flex flex-col h-110'
       helpTopic={HelpTopic.ASSISTANT}
     >
       <ComboBox
