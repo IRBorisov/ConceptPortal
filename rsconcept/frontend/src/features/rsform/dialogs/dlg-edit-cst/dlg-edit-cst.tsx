@@ -35,6 +35,7 @@ export function DlgEditCst() {
   const { findPredecessor } = useFindPredecessor();
 
   const methods = useForm<IUpdateConstituentaDTO>({
+    mode: 'onChange',
     resolver: zodResolver(schemaUpdateConstituenta),
     defaultValues: {
       target: target.id,
@@ -53,7 +54,9 @@ export function DlgEditCst() {
 
   const alias = useWatch({ control: methods.control, name: 'item_data.alias' })!;
   const cst_type = useWatch({ control: methods.control, name: 'item_data.cst_type' })!;
-  const isValid = (alias === target.alias && cst_type == target.cst_type) || validateNewAlias(alias, cst_type, schema);
+  const canSubmit =
+    (methods.formState.isValid && alias === target.alias && cst_type == target.cst_type) ||
+    validateNewAlias(alias, cst_type, schema);
 
   function onSubmit(data: IUpdateConstituentaDTO) {
     return updateConstituenta({ itemID: schema.id, data });
@@ -86,7 +89,7 @@ export function DlgEditCst() {
   return (
     <ModalForm
       header='Редактирование конституенты'
-      canSubmit={isValid}
+      canSubmit={canSubmit}
       onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
       submitInvalidTooltip={errorMsg.aliasInvalid}
       submitText='Сохранить'

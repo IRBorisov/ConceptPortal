@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
+import { useTemplatesSuspense } from '@/features/library/backend/use-templates';
+
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { type ICreateConstituentaDTO } from '../../backend/types';
@@ -18,8 +20,10 @@ import { TemplateContext } from './template-context';
 export const TemplateState = ({ children }: React.PropsWithChildren) => {
   const { schemaID } = useDialogsStore(state => state.props as DlgCstTemplateProps);
   const { schema } = useRSFormSuspense({ itemID: schemaID });
+  const { templates } = useTemplatesSuspense();
   const { setValue } = useFormContext<ICreateConstituentaDTO>();
-  const [templateID, setTemplateID] = useState<number | null>(null);
+
+  const [templateID, setTemplateID] = useState<number | null>(templates.length > 0 ? templates[0].id : null);
   const [args, setArguments] = useState<IArgumentValue[]>([]);
   const [prototype, setPrototype] = useState<IConstituenta | null>(null);
   const [filterCategory, setFilterCategory] = useState<IConstituenta | null>(null);
@@ -32,8 +36,8 @@ export const TemplateState = ({ children }: React.PropsWithChildren) => {
 
     const newType = inferTemplatedType(prototype.cst_type, newArgs);
     setValue('definition_formal', substituteTemplateArgs(prototype.definition_formal, newArgs));
-    setValue('cst_type', newType);
-    setValue('alias', generateAlias(newType, schema));
+    setValue('cst_type', newType, { shouldValidate: true });
+    setValue('alias', generateAlias(newType, schema), { shouldValidate: true });
   }
 
   function onChangePrototype(newPrototype: IConstituenta) {
@@ -45,8 +49,8 @@ export const TemplateState = ({ children }: React.PropsWithChildren) => {
         value: ''
       }))
     );
-    setValue('cst_type', newPrototype.cst_type);
-    setValue('alias', generateAlias(newPrototype.cst_type, schema));
+    setValue('cst_type', newPrototype.cst_type, { shouldValidate: true });
+    setValue('alias', generateAlias(newPrototype.cst_type, schema), { shouldValidate: true });
     setValue('definition_formal', newPrototype.definition_formal);
     setValue('term_raw', newPrototype.term_raw);
     setValue('definition_raw', newPrototype.definition_raw);

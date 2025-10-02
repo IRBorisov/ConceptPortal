@@ -31,7 +31,8 @@ export function DlgDeleteCst() {
     [selected, schema.inheritance]
   );
 
-  function handleSubmit() {
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
     const deleted = expandOut ? selected.concat(expansion) : selected;
     void cstDelete({ itemID: schemaID, data: { items: deleted } }).then(() => afterDelete?.(schema, deleted));
   }

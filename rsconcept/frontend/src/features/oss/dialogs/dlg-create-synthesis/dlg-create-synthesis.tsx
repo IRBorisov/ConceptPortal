@@ -73,7 +73,8 @@ export function DlgCreateSynthesis() {
   });
   const alias = useWatch({ control: methods.control, name: 'item_data.alias' });
   const [activeTab, setActiveTab] = useState<TabID>(TabID.ARGUMENTS);
-  const isValid = !!alias && !manager.oss.operations.some(operation => operation.alias === alias);
+  const canSubmit =
+    methods.formState.isValid && !!alias && !manager.oss.operations.some(operation => operation.alias === alias);
 
   function onSubmit(data: ICreateSynthesisDTO) {
     data.position = manager.newOperationPosition(data);
@@ -85,7 +86,7 @@ export function DlgCreateSynthesis() {
     <ModalForm
       header='Создание операции синтеза'
       submitText='Создать'
-      canSubmit={isValid}
+      canSubmit={canSubmit}
       onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
       className='w-180 px-6 h-128'
       helpTopic={HelpTopic.CC_OSS}

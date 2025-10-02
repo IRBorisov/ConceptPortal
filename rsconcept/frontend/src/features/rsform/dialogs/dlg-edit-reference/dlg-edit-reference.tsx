@@ -76,6 +76,8 @@ export function DlgEditReference() {
     mode: 'onChange'
   });
 
+  const canSubmit = methods.formState.isValid;
+
   function onSubmit(data: IEditReferenceState) {
     if (data.type === ReferenceType.ENTITY) {
       onSave({
@@ -113,7 +115,7 @@ export function DlgEditReference() {
     <ModalForm
       header='Редактирование ссылки'
       submitText='Сохранить ссылку'
-      canSubmit={methods.formState.isValid}
+      canSubmit={canSubmit}
       onCancel={onCancel}
       onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
       className='w-160 px-6 h-128'

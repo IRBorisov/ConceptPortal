@@ -27,11 +27,6 @@ export function TabTemplate() {
   const { schema: templateSchema } = useRSForm({ itemID: templateID ?? undefined });
   const selectedTemplate = templates.find(item => item.id === templateID);
 
-  if (!templateID) {
-    onChangeTemplateID(templates[0].id);
-    return null;
-  }
-
   const filteredData = !templateSchema
     ? []
     : !filterCategory

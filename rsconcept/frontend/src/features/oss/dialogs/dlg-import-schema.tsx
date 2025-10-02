@@ -49,7 +49,7 @@ export function DlgImportSchema() {
     register,
     handleSubmit,
     setValue,
-    formState: { errors }
+    formState: { errors, isValid }
   } = useForm<IImportSchemaDTO>({
     resolver: zodResolver(schemaImportSchema),
     defaultValues: {
@@ -73,7 +73,7 @@ export function DlgImportSchema() {
   });
   const alias = useWatch({ control: control, name: 'item_data.alias' });
   const clone_source = useWatch({ control: control, name: 'clone_source' });
-  const isValid = !!alias && !manager.oss.operations.some(operation => operation.alias === alias);
+  const canSubmit = isValid && !!alias && !manager.oss.operations.some(operation => operation.alias === alias);
 
   function onSubmit(data: IImportSchemaDTO) {
     data.position = manager.newOperationPosition(data);
@@ -100,7 +100,7 @@ export function DlgImportSchema() {
     <ModalForm
       header='Создание операции: Загрузка'
       submitText='Создать'
-      canSubmit={isValid}
+      canSubmit={canSubmit}
       onSubmit={event => void handleSubmit(onSubmit)(event)}
       className='w-180 px-6 pb-3 cc-column'
       helpTopic={HelpTopic.CC_OSS}

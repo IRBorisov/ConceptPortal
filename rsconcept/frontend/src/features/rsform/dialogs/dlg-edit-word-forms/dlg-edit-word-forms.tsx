@@ -49,7 +49,8 @@ export function DlgEditWordForms() {
     }))
   );
 
-  function handleSubmit() {
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
     void cstUpdate({
       itemID: itemID,
       data: {

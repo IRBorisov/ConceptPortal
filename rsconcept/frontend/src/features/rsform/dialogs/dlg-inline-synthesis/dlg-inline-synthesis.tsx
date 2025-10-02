@@ -46,6 +46,7 @@ export function DlgInlineSynthesis() {
     mode: 'onChange'
   });
   const sourceID = useWatch({ control: methods.control, name: 'source' });
+  const canSubmit = methods.formState.isValid && sourceID !== null;
 
   function onSubmit(data: IInlineSynthesisDTO) {
     return inlineSynthesis(data).then(onSynthesis);
@@ -56,7 +57,7 @@ export function DlgInlineSynthesis() {
       header='Импорт концептуальной схем'
       submitText='Добавить конституенты'
       className='w-160 h-132 px-6'
-      canSubmit={methods.formState.isValid && sourceID !== null}
+      canSubmit={canSubmit}
       onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
     >
       <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>

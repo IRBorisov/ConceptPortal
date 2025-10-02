@@ -31,12 +31,13 @@ export function DlgCreateCst() {
   const { schema } = useRSFormSuspense({ itemID: schemaID });
 
   const methods = useForm<ICreateConstituentaDTO>({
+    mode: 'onChange',
     resolver: zodResolver(schemaCreateConstituenta),
     defaultValues: { ...initial }
   });
   const alias = useWatch({ control: methods.control, name: 'alias' });
   const cst_type = useWatch({ control: methods.control, name: 'cst_type' });
-  const isValid = validateNewAlias(alias, cst_type, schema);
+  const canSubmit = methods.formState.isValid && validateNewAlias(alias, cst_type, schema);
 
   function onSubmit(data: ICreateConstituentaDTO) {
     return cstCreate({ itemID: schema.id, data }).then(onCreate);
@@ -45,7 +46,7 @@ export function DlgCreateCst() {
   return (
     <ModalForm
       header='Создание конституенты'
-      canSubmit={isValid}
+      canSubmit={canSubmit}
       onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
       submitInvalidTooltip={errorMsg.aliasInvalid}
       submitText='Создать'

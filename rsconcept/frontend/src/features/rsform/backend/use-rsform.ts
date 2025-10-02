@@ -18,7 +18,7 @@ export function useRSFormSuspense({ itemID, version }: { itemID: number; version
   const { data } = useSuspenseQuery({
     ...rsformsApi.getRSFormQueryOptions({ itemID, version })
   });
-  const schema = new RSFormLoader(data!).produceRSForm();
+  const schema = new RSFormLoader(data).produceRSForm();
   return { schema };
 }
 

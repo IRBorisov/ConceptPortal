@@ -64,6 +64,7 @@ export function DlgEditOperation() {
     mode: 'onChange'
   });
   const [activeTab, setActiveTab] = useState<TabID>(TabID.CARD);
+  const canSubmit = methods.formState.isValid;
 
   function onSubmit(data: IUpdateOperationDTO) {
     if (data.item_data.parent !== target.parent) {
@@ -77,7 +78,7 @@ export function DlgEditOperation() {
     <ModalForm
       header='Редактирование операции'
       submitText='Сохранить'
-      canSubmit={methods.formState.isValid}
+      canSubmit={canSubmit}
       onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
       className='w-160 px-6 h-128'
       helpTopic={HelpTopic.UI_SUBSTITUTIONS}

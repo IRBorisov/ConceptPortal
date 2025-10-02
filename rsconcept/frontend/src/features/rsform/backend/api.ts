@@ -34,13 +34,12 @@ export const rsformsApi = {
       queryKey: KEYS.composite.rsItem({ itemID, version }),
       staleTime: DELAYS.staleShort,
       queryFn: meta =>
-        !itemID
-          ? undefined
-          : axiosGet<IRSFormDTO>({
-              schema: schemaRSForm,
-              endpoint: version ? `/api/library/${itemID}/versions/${version}` : `/api/rsforms/${itemID}/details`,
-              options: { signal: meta.signal }
-            })
+        axiosGet<IRSFormDTO>({
+          schema: schemaRSForm,
+          endpoint: version ? `/api/library/${itemID}/versions/${version}` : `/api/rsforms/${itemID}/details`,
+          options: { signal: meta.signal }
+        }),
+      enabled: !!itemID
     });
   },
 

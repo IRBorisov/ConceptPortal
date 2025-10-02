@@ -80,6 +80,7 @@ export function DlgRelocateConstituents() {
     .filter(item => !item.is_inherited && selected.includes(item.id))
     .map(item => item.id);
   const isValid = moveTarget.length > 0;
+  const canSubmit = isValid && destinationItem !== undefined;
 
   function toggleDirection() {
     setDirectionUp(prev => !prev);
@@ -118,7 +119,7 @@ export function DlgRelocateConstituents() {
     <ModalForm
       header='Перенос конституент'
       submitText='Переместить'
-      canSubmit={isValid && destinationItem !== undefined}
+      canSubmit={canSubmit}
       submitInvalidTooltip='Необходимо выбрать хотя бы одну собственную конституенту'
       onSubmit={event => void handleSubmit(onSubmit)(event)}
       className='w-160 h-132 py-3 px-6'

@@ -18,7 +18,7 @@ export function useOssSuspense({ itemID }: { itemID: number }) {
   const { data } = useSuspenseQuery({
     ...ossApi.getOssQueryOptions({ itemID })
   });
-  const schema = new OssLoader(data!).produceOSS();
+  const schema = new OssLoader(data).produceOSS();
   return { schema };
 }
 

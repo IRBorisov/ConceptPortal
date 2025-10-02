@@ -42,13 +42,12 @@ export const ossApi = {
       queryKey: KEYS.composite.ossItem({ itemID }),
       staleTime: DELAYS.staleShort,
       queryFn: meta =>
-        !itemID
-          ? undefined
-          : axiosGet<IOperationSchemaDTO>({
-              schema: schemaOperationSchema,
-              endpoint: `/api/oss/${itemID}/details`,
-              options: { signal: meta.signal }
-            })
+        axiosGet<IOperationSchemaDTO>({
+          schema: schemaOperationSchema,
+          endpoint: `/api/oss/${itemID}/details`,
+          options: { signal: meta.signal }
+        }),
+      enabled: !!itemID
     });
   },
 

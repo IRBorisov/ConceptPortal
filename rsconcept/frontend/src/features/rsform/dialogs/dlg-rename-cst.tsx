@@ -26,7 +26,14 @@ export function DlgRenameCst() {
   const { schema } = useRSFormSuspense({ itemID: schemaID });
   const target = schema.cstByID.get(targetID)!;
 
-  const { register, setValue, handleSubmit, control } = useForm<IUpdateConstituentaDTO>({
+  const {
+    register,
+    setValue,
+    handleSubmit,
+    control,
+    formState: { isValid }
+  } = useForm<IUpdateConstituentaDTO>({
+    mode: 'onChange',
     resolver: zodResolver(schemaUpdateConstituenta),
     defaultValues: {
       target: targetID,
@@ -38,7 +45,7 @@ export function DlgRenameCst() {
   });
   const alias = useWatch({ control, name: 'item_data.alias' })!;
   const cst_type = useWatch({ control, name: 'item_data.cst_type' })!;
-  const isValid = alias !== target.alias && validateNewAlias(alias, cst_type, schema);
+  const canSubmit = isValid && alias !== target.alias && validateNewAlias(alias, cst_type, schema);
 
   function onSubmit(data: IUpdateConstituentaDTO) {
     return cstUpdate({ itemID: schemaID, data: data });
@@ -54,7 +61,7 @@ export function DlgRenameCst() {
       header='Переименование конституенты'
       submitText='Переименовать'
       submitInvalidTooltip='Введите незанятое имя, соответствующее типу'
-      canSubmit={isValid}
+      canSubmit={canSubmit}
       onSubmit={event => void handleSubmit(onSubmit)(event)}
       className='w-120 py-6 pr-3 pl-6 flex gap-3 justify-center items-center'
       helpTopic={HelpTopic.CC_CONSTITUENTA}

@@ -13,14 +13,13 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { type RO } from '@/utils/meta';
 
 import {
-  CstType,
   type IConstituentaBasicsDTO,
   type ICreateConstituentaDTO,
   schemaCreateConstituenta
 } from '../../backend/types';
 import { useCreateConstituenta } from '../../backend/use-create-constituenta';
 import { useRSFormSuspense } from '../../backend/use-rsform';
-import { generateAlias, validateNewAlias } from '../../models/rsform-api';
+import { validateNewAlias } from '../../models/rsform-api';
 import { FormCreateCst } from '../dlg-create-cst/form-create-cst';
 
 import { TabArguments } from './tab-arguments';
@@ -46,11 +45,13 @@ export function DlgCstTemplate() {
   const { schema } = useRSFormSuspense({ itemID: schemaID });
 
   const methods = useForm<ICreateConstituentaDTO>({
+    mode: 'onChange',
     resolver: zodResolver(schemaCreateConstituenta),
     defaultValues: {
-      cst_type: CstType.TERM,
       insert_after: insertAfter ?? null,
-      alias: generateAlias(CstType.TERM, schema),
+      crucial: false,
+      cst_type: undefined,
+      alias: '',
       convention: '',
       definition_formal: '',
       definition_raw: '',
@@ -60,7 +61,7 @@ export function DlgCstTemplate() {
   });
   const alias = useWatch({ control: methods.control, name: 'alias' });
   const cst_type = useWatch({ control: methods.control, name: 'cst_type' });
-  const isValid = validateNewAlias(alias, cst_type, schema);
+  const canSubmit = methods.formState.isValid && validateNewAlias(alias, cst_type, schema);
 
   const [activeTab, setActiveTab] = useState<TabID>(TabID.TEMPLATE);
 
@@ -73,7 +74,7 @@ export function DlgCstTemplate() {
       header='Создание конституенты из шаблона'
       submitText='Создать'
       className='w-172 h-140 px-6'
-      canSubmit={isValid}
+      canSubmit={canSubmit}
       onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
       helpTopic={HelpTopic.RSL_TEMPLATES}
     >

@@ -41,7 +41,7 @@ export function DlgCreatePromptTemplate() {
     mode: 'onChange'
   });
   const label = useWatch({ control, name: 'label' });
-  const isValid = !!label && !templates.find(template => template.label === label);
+  const canSubmit = !!label && !templates.find(template => template.label === label);
 
   function onSubmit(data: ICreatePromptTemplateDTO) {
     void createPromptTemplate(data).then(onCreate);
@@ -51,7 +51,7 @@ export function DlgCreatePromptTemplate() {
     <ModalForm
       header='Создание шаблона'
       submitText='Создать'
-      canSubmit={isValid}
+      canSubmit={canSubmit}
       onSubmit={event => void handleSubmit(onSubmit)(event)}
       submitInvalidTooltip='Введите уникальное название шаблона'
       className='cc-column w-140 max-h-120 py-2 px-6'

@@ -77,7 +77,7 @@ export function DlgCreateBlock() {
   const children_blocks = useWatch({ control: methods.control, name: 'children_blocks' });
   const children_operations = useWatch({ control: methods.control, name: 'children_operations' });
   const [activeTab, setActiveTab] = useState<TabID>(TabID.CARD);
-  const isValid = !!title && !manager.oss.blocks.some(block => block.title === title);
+  const canSubmit = methods.formState.isValid && !!title && !manager.oss.blocks.some(block => block.title === title);
 
   function onSubmit(data: ICreateBlockDTO) {
     data.position = manager.newBlockPosition(data);
@@ -89,7 +89,7 @@ export function DlgCreateBlock() {
     <ModalForm
       header='Создание блока'
       submitText='Создать'
-      canSubmit={isValid}
+      canSubmit={canSubmit}
       onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
       className='w-160 px-6 h-110'
       helpTopic={HelpTopic.CC_STRUCTURING}

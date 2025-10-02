@@ -26,7 +26,8 @@ export function DlgEditEditors() {
   const [selected, setSelected] = useState<number[]>(initial);
   const { users } = useUsers();
 
-  function handleSubmit() {
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
     void setEditors({ itemID: itemID, editors: selected });
   }
 
