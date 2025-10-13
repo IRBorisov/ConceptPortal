@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import clsx from 'clsx';
 
 import { MiniButton } from '@/components/control';
@@ -24,25 +24,43 @@ export function SelectLocation({ value, dense, prefix, onClick, className, style
   const { folders } = useFolders();
   const activeNode = folders.at(value);
   const items = folders.getTree();
-  const [folded, setFolded] = useState<FolderNode[]>(items);
+  const baseFolded = useMemo(
+    () => items.filter(item => item !== activeNode && !activeNode?.hasPredecessor(item)),
+    [items, activeNode]
+  );
 
-  useEffect(() => {
-    setFolded(items.filter(item => item !== activeNode && !activeNode?.hasPredecessor(item)));
-  }, [items, activeNode]);
+  // Manual overrides: true => force folded, false => force unfolded
+  const [manualOverrides, setManualOverrides] = useState<Map<FolderNode, boolean>>(new Map());
+
+  const folded = useMemo(() => {
+    const set = new Set<FolderNode>(baseFolded);
+    manualOverrides.forEach((isFolded, node) => {
+      if (isFolded) {
+        set.add(node);
+      } else {
+        set.delete(node);
+      }
+    });
+    return Array.from(set);
+  }, [baseFolded, manualOverrides]);
 
   function onFoldItem(target: FolderNode, showChildren: boolean) {
-    setFolded(prev =>
-      items.filter(item => {
-        if (item === target) {
-          return !showChildren;
+    setManualOverrides(prev => {
+      const next = new Map(prev);
+      if (showChildren) {
+        // Currently folded -> unfold target only
+        next.set(target, false);
+      } else {
+        // Currently unfolded -> fold target and all its descendants
+        next.set(target, true);
+        for (const item of items) {
+          if (item !== target && item.hasPredecessor(target)) {
+            next.set(item, true);
+          }
         }
-        if (!showChildren && item.hasPredecessor(target)) {
-          return true;
-        } else {
-          return prev.includes(item);
-        }
-      })
-    );
+      }
+      return next;
+    });
   }
 
   function handleClickFold(event: React.MouseEvent<Element>, target: FolderNode, showChildren: boolean) {

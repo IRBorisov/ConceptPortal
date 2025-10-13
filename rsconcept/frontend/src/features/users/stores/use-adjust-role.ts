@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { useRoleStore } from './role';
 
@@ -13,9 +13,11 @@ export function useAdjustRole(input: AdjustRoleProps) {
   const adjustRole = useRoleStore(state => state.adjustRole);
   const lastInput = useRef<string | null>(null);
 
-  const serializedInput = JSON.stringify(input);
-  if (lastInput.current !== serializedInput) {
-    lastInput.current = serializedInput;
-    adjustRole(input);
-  }
+  useEffect(() => {
+    const serializedInput = JSON.stringify(input);
+    if (lastInput.current !== serializedInput) {
+      lastInput.current = serializedInput;
+      adjustRole(input);
+    }
+  }, [input, adjustRole]);
 }

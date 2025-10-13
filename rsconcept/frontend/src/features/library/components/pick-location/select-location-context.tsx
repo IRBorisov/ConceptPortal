@@ -25,29 +25,29 @@ export function SelectLocationContext({
   dropdownHeight = 'h-50',
   ...restProps
 }: SelectLocationContextProps) {
-  const menu = useDropdown();
+  const { elementRef, handleBlur, isOpen, toggle, hide } = useDropdown();
 
   function handleClick(event: React.MouseEvent<Element>, newValue: string) {
     event.preventDefault();
     event.stopPropagation();
-    menu.hide();
+    hide();
     onChange(newValue);
   }
 
   return (
     <div
-      ref={menu.ref} //
-      onBlur={menu.handleBlur}
+      ref={elementRef} //
+      onBlur={handleBlur}
       className={clsx('text-right self-start select-none', className)}
       {...restProps}
     >
       <MiniButton
         title={title}
-        hideTitle={menu.isOpen}
+        hideTitle={isOpen}
         icon={<IconFolderTree size='1.25rem' className='icon-primary' />}
-        onClick={() => menu.toggle()}
+        onClick={toggle}
       />
-      <Dropdown isOpen={menu.isOpen} className={clsx('w-80 z-tooltip', dropdownHeight)}>
+      <Dropdown isOpen={isOpen} className={clsx('w-80 z-tooltip', dropdownHeight)}>
         <SelectLocation
           value={value}
           prefix={prefixes.folders_list}

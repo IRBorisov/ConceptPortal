@@ -19,17 +19,13 @@ export function useTransitionTracker(delay: number = DEFAULT_DEBOUNCE_DELAY): bo
 
     if (navigation.location) {
       timeout = setTimeout(() => setShowPending(true), delay);
-    } else {
-      setShowPending(false);
-      if (timeout) {
-        clearTimeout(timeout);
-      }
     }
 
     return () => {
       if (timeout) {
         clearTimeout(timeout);
       }
+      setShowPending(false);
     };
   }, [navigation.location, delay]);
 

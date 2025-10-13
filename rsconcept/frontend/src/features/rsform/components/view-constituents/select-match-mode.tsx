@@ -17,24 +17,30 @@ interface SelectMatchModeProps extends Styling {
 }
 
 export function SelectMatchMode({ value, dense, className, onChange, ...restProps }: SelectMatchModeProps) {
-  const menu = useDropdown();
+  const {
+    elementRef: menuRef,
+    isOpen: isMenuOpen,
+    toggle: toggleMenu,
+    handleBlur: handleMenuBlur,
+    hide: hideMenu
+  } = useDropdown();
 
   function handleChange(newValue: CstMatchMode) {
-    menu.hide();
+    hideMenu();
     onChange(newValue);
   }
 
   return (
-    <div ref={menu.ref} onBlur={menu.handleBlur} className={cn('relative', className)} {...restProps}>
+    <div ref={menuRef} onBlur={handleMenuBlur} className={cn('relative', className)} {...restProps}>
       <SelectorButton
         titleHtml='Настройка фильтрации <br/>по проверяемым атрибутам'
-        hideTitle={menu.isOpen}
+        hideTitle={isMenuOpen}
         className='h-full pr-2'
         icon={<IconCstMatchMode value={value} size='1rem' />}
         text={!dense ? labelCstMatchMode(value) : undefined}
-        onClick={menu.toggle}
+        onClick={toggleMenu}
       />
-      <Dropdown stretchLeft isOpen={menu.isOpen} margin='mt-3'>
+      <Dropdown stretchLeft isOpen={isMenuOpen} margin='mt-3'>
         {Object.values(CstMatchMode).map((value, index) => {
           const matchMode = value as CstMatchMode;
           return (

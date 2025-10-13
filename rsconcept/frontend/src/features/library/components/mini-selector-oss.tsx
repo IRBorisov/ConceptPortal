@@ -17,31 +17,26 @@ interface MiniSelectorOSSProps extends Styling {
 }
 
 export function MiniSelectorOSS({ items, onSelect, className, ...restProps }: MiniSelectorOSSProps) {
-  const ossMenu = useDropdown();
+  const { elementRef: ossRef, isOpen: isOssOpen, toggle: toggleOss, handleBlur: handleOssBlur } = useDropdown();
 
   function onToggle(event: React.MouseEvent<HTMLElement>) {
     if (items.length > 1) {
-      ossMenu.toggle();
+      toggleOss();
     } else {
       onSelect(event, items[0]);
     }
   }
 
   return (
-    <div
-      ref={ossMenu.ref}
-      onBlur={ossMenu.handleBlur}
-      className={clsx('relative flex items-center', className)}
-      {...restProps}
-    >
+    <div ref={ossRef} onBlur={handleOssBlur} className={clsx('relative flex items-center', className)} {...restProps}>
       <MiniButton
         title='Операционные схемы'
         icon={<IconOSS size='1.25rem' className='icon-primary' />}
-        hideTitle={ossMenu.isOpen}
+        hideTitle={isOssOpen}
         onClick={onToggle}
       />
       {items.length > 1 ? (
-        <Dropdown isOpen={ossMenu.isOpen} margin='mt-1'>
+        <Dropdown isOpen={isOssOpen} margin='mt-1'>
           <Label text='Список ОСС' className='border-b px-3 py-1' />
           {items.map((reference, index) => (
             <DropdownButton

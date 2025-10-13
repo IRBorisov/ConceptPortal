@@ -50,7 +50,13 @@ export function MenuMain() {
   const showClone = useDialogsStore(state => state.showCloneLibraryItem);
   const showUpload = useDialogsStore(state => state.showUploadRSForm);
 
-  const menu = useDropdown();
+  const {
+    elementRef: menuRef,
+    isOpen: isMenuOpen,
+    toggle: toggleMenu,
+    handleBlur: handleMenuBlur,
+    hide: hideMenu
+  } = useDropdown();
 
   function calculateCloneLocation() {
     const location = schema.location;
@@ -65,12 +71,12 @@ export function MenuMain() {
   }
 
   function handleDelete() {
-    menu.hide();
+    hideMenu();
     deleteSchema();
   }
 
   function handleDownload() {
-    menu.hide();
+    hideMenu();
     if (isModified && !promptUnsaved()) {
       return;
     }
@@ -88,12 +94,12 @@ export function MenuMain() {
   }
 
   function handleUpload() {
-    menu.hide();
+    hideMenu();
     showUpload({ itemID: schema.id });
   }
 
   function handleClone() {
-    menu.hide();
+    hideMenu();
     if (isModified && !promptUnsaved()) {
       return;
     }
@@ -106,27 +112,27 @@ export function MenuMain() {
   }
 
   function handleShare() {
-    menu.hide();
+    hideMenu();
     sharePage();
   }
 
   function handleShowQR() {
-    menu.hide();
+    hideMenu();
     showQR({ target: generatePageQR() });
   }
 
   return (
-    <div ref={menu.ref} onBlur={menu.handleBlur} className='relative'>
+    <div ref={menuRef} onBlur={handleMenuBlur} className='relative'>
       <MiniButton
         noHover
         noPadding
         title='Меню'
-        hideTitle={menu.isOpen}
+        hideTitle={isMenuOpen}
         icon={<IconMenu size='1.25rem' />}
         className='h-full pl-2 text-muted-foreground hover:text-primary cc-animate-color bg-transparent'
-        onClick={menu.toggle}
+        onClick={toggleMenu}
       />
-      <Dropdown isOpen={menu.isOpen} margin='mt-3'>
+      <Dropdown isOpen={isMenuOpen} margin='mt-3'>
         <DropdownButton
           text='Поделиться'
           titleHtml={tooltipText.shareItem(schema.access_policy === AccessPolicy.PUBLIC)}

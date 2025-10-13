@@ -24,7 +24,12 @@ interface ToolbarSearchProps {
 
 export function ToolbarSearch({ className, total, filtered }: ToolbarSearchProps) {
   const { items } = useLibrarySuspense();
-  const userMenu = useDropdown();
+  const {
+    elementRef: userElementRef,
+    handleBlur: userHandleBlur,
+    isOpen: isUserOpen,
+    toggle: toggleUser
+  } = useDropdown();
 
   const query = useLibrarySearchStore(state => state.query);
   const setQuery = useLibrarySearchStore(state => state.setQuery);
@@ -70,14 +75,14 @@ export function ToolbarSearch({ className, total, filtered }: ToolbarSearchProps
           onClick={toggleVisible}
         />
 
-        <div ref={userMenu.ref} onBlur={userMenu.handleBlur} className='relative flex'>
+        <div ref={userElementRef} onBlur={userHandleBlur} className='relative flex'>
           <MiniButton
             title='Поиск пользователя'
-            hideTitle={userMenu.isOpen}
+            hideTitle={isUserOpen}
             icon={<IconUserSearch size='1.25rem' className={userActive ? 'icon-green' : 'icon-primary'} />}
-            onClick={userMenu.toggle}
+            onClick={toggleUser}
           />
-          <Dropdown isOpen={userMenu.isOpen} margin='mt-1'>
+          <Dropdown isOpen={isUserOpen} margin='mt-1'>
             <DropdownButton
               text='Я - Владелец'
               title='Фильтровать схемы, в которых текущий пользователь является владельцем'

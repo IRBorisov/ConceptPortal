@@ -53,9 +53,15 @@ export function EditorLibraryItem({ schema, isAttachedToOSS }: EditorLibraryItem
   const showEditEditors = useDialogsStore(state => state.showEditEditors);
   const showEditLocation = useDialogsStore(state => state.showChangeLocation);
 
-  const ownerSelector = useDropdown();
+  const {
+    elementRef: ownerRef,
+    isOpen: isOwnerOpen,
+    toggle: toggleOwner,
+    handleBlur: handleOwnerBlur,
+    hide: hideOwner
+  } = useDropdown();
   const onSelectUser = function (newValue: number) {
-    ownerSelector.hide();
+    hideOwner();
     if (newValue === schema.owner) {
       return;
     }
@@ -103,12 +109,12 @@ export function EditorLibraryItem({ schema, isAttachedToOSS }: EditorLibraryItem
         />
       </div>
 
-      <div className='relative' ref={ownerSelector.ref} onBlur={ownerSelector.handleBlur}>
+      <div className='relative' ref={ownerRef} onBlur={handleOwnerBlur}>
         <SelectUser
           className='absolute -top-2 right-0 w-100 text-sm'
           value={schema.owner}
           onChange={user => user && onSelectUser(user)}
-          hidden={!ownerSelector.isOpen}
+          hidden={!isOwnerOpen}
         />
 
         <ValueIcon
@@ -116,7 +122,7 @@ export function EditorLibraryItem({ schema, isAttachedToOSS }: EditorLibraryItem
           icon={<IconOwner size='1.25rem' className='icon-primary' />}
           value={getUserLabel(schema.owner)}
           title={isAttachedToOSS ? 'Владелец наследуется от ОСС' : 'Владелец'}
-          onClick={ownerSelector.toggle}
+          onClick={toggleOwner}
           disabled={isModified || isProcessing || isAttachedToOSS || role < UserRole.OWNER}
         />
       </div>

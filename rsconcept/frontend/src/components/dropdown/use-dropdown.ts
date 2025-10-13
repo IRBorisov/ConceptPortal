@@ -4,11 +4,11 @@ import { useRef, useState } from 'react';
 
 export function useDropdown() {
   const [isOpen, setIsOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+  const elementRef = useRef<HTMLDivElement>(null);
 
   function handleBlur(event: React.FocusEvent<HTMLDivElement>) {
     const nextTarget = event.relatedTarget as Node | null;
-    if (nextTarget && ref.current?.contains(nextTarget)) {
+    if (nextTarget && elementRef.current?.contains(nextTarget)) {
       return;
     }
 
@@ -23,7 +23,7 @@ export function useDropdown() {
   }
 
   return {
-    ref,
+    elementRef,
     isOpen,
     setIsOpen,
     handleBlur,

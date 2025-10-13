@@ -128,10 +128,14 @@ export function TGFlow() {
   ]);
 
   const prevSelected = useRef<number[]>([]);
-  if (
-    viewportInitialized &&
-    (prevSelected.current.length !== selected.length || prevSelected.current.some((id, i) => id !== selected[i]))
-  ) {
+
+  useEffect(() => {
+    if (!viewportInitialized) return;
+    const hasChanged =
+      prevSelected.current.length !== selected.length || prevSelected.current.some((id, i) => id !== selected[i]);
+
+    if (!hasChanged) return;
+
     prevSelected.current = selected;
     setNodes(prev =>
       prev.map(node => ({
@@ -139,7 +143,7 @@ export function TGFlow() {
         selected: selected.includes(Number(node.id))
       }))
     );
-  }
+  }, [viewportInitialized, selected, setNodes]);
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     if (isProcessing) {

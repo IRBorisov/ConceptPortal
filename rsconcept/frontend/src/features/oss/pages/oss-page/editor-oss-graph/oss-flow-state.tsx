@@ -104,10 +104,13 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
     setTimeout(() => fitView(flowOptions.fitViewOptions), PARAMETER.refreshTimeout);
   }
 
-  if (
-    viewportInitialized &&
-    (prevSelected.current.length !== selected.length || prevSelected.current.some((id, i) => id !== selected[i]))
-  ) {
+  useEffect(() => {
+    if (!viewportInitialized) return;
+    const hasChanged =
+      prevSelected.current.length !== selected.length || prevSelected.current.some((id, i) => id !== selected[i]);
+
+    if (!hasChanged) return;
+
     prevSelected.current = selected;
     setNodes(prev =>
       prev.map(node => ({
@@ -115,7 +118,7 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
         selected: selected.includes(node.id)
       }))
     );
-  }
+  }, [viewportInitialized, selected, setNodes]);
 
   return (
     <OssFlowContext

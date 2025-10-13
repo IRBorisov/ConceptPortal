@@ -38,8 +38,20 @@ export function ToolbarGraphSelection({
   onChange,
   ...restProps
 }: ToolbarGraphSelectionProps) {
-  const selectedMenu = useDropdown();
-  const groupMenu = useDropdown();
+  const {
+    elementRef: selectedElementRef,
+    handleBlur: selectedHandleBlur,
+    isOpen: isSelectedOpen,
+    toggle: toggleSelected,
+    hide: hideSelected
+  } = useDropdown();
+  const {
+    elementRef: groupElementRef,
+    handleBlur: groupHandleBlur,
+    isOpen: isGroupOpen,
+    toggle: toggleGroup,
+    hide: hideGroup
+  } = useDropdown();
   const emptySelection = value.length === 0;
 
   function handleSelectReset() {
@@ -47,23 +59,23 @@ export function ToolbarGraphSelection({
   }
 
   function handleSelectCore() {
-    groupMenu.hide();
+    hideGroup();
     const core = [...graph.nodes.keys()].filter(isCore);
     onChange([...core, ...graph.expandInputs(core)]);
   }
 
   function handleSelectOwned() {
-    groupMenu.hide();
+    hideGroup();
     onChange([...graph.nodes.keys()].filter((item: number) => !isInherited(item)));
   }
 
   function handleSelectInherited() {
-    groupMenu.hide();
+    hideGroup();
     onChange([...graph.nodes.keys()].filter(isInherited));
   }
 
   function handleSelectCrucial() {
-    groupMenu.hide();
+    hideGroup();
     onChange([...graph.nodes.keys()].filter(isCrucial));
   }
 
@@ -76,22 +88,22 @@ export function ToolbarGraphSelection({
   }
 
   function handleSelectMaximize() {
-    selectedMenu.hide();
+    hideSelected();
     onChange(graph.maximizePart(value));
   }
 
   function handleSelectInvert() {
-    selectedMenu.hide();
+    hideSelected();
     onChange([...graph.nodes.keys()].filter(item => !value.includes(item)));
   }
 
   function handleSelectAllInputs() {
-    selectedMenu.hide();
+    hideSelected();
     onChange([...value, ...graph.expandAllInputs(value)]);
   }
 
   function handleSelectAllOutputs() {
-    selectedMenu.hide();
+    hideSelected();
     onChange([...value, ...graph.expandAllOutputs(value)]);
   }
 
@@ -104,15 +116,15 @@ export function ToolbarGraphSelection({
         disabled={emptySelection}
       />
 
-      <div ref={selectedMenu.ref} onBlur={selectedMenu.handleBlur} className='flex items-center relative'>
+      <div ref={selectedElementRef} onBlur={selectedHandleBlur} className='flex items-center relative'>
         <MiniButton
           title='Выделить на основе выбранных...'
-          hideTitle={selectedMenu.isOpen}
+          hideTitle={isSelectedOpen}
           icon={<IconContextSelection size='1.25rem' className='icon-primary' />}
-          onClick={selectedMenu.toggle}
+          onClick={toggleSelected}
           disabled={emptySelection}
         />
-        <Dropdown isOpen={selectedMenu.isOpen} className='-translate-x-1/2'>
+        <Dropdown isOpen={isSelectedOpen} className='-translate-x-1/2'>
           <DropdownButton
             text='Поставщики'
             title='Выделить поставщиков'
@@ -159,14 +171,14 @@ export function ToolbarGraphSelection({
         </Dropdown>
       </div>
 
-      <div ref={groupMenu.ref} onBlur={groupMenu.handleBlur} className='flex items-center relative'>
+      <div ref={groupElementRef} onBlur={groupHandleBlur} className='flex items-center relative'>
         <MiniButton
           title='Выделить группу...'
-          hideTitle={groupMenu.isOpen}
+          hideTitle={isGroupOpen}
           icon={<IconGroupSelection size='1.25rem' className='icon-primary' />}
-          onClick={groupMenu.toggle}
+          onClick={toggleGroup}
         />
-        <Dropdown isOpen={groupMenu.isOpen} stretchLeft>
+        <Dropdown isOpen={isGroupOpen} stretchLeft>
           <DropdownButton
             text='ядро'
             title='Выделить ядро'

@@ -1,7 +1,7 @@
 'use no memo'; // TODO: remove when react hook forms are compliant with react compiler
 'use client';
 
-import { useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -121,17 +121,9 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
   const isElementary = isBaseSet(activeCst.cst_type);
   const showConvention = !!activeCst.convention || forceComment || isBasic;
 
-  const prevActiveCstID = useRef(activeCst.id);
-  const prevToggleReset = useRef(toggleReset);
-  const prevSchema = useRef(schema);
-  if (
-    prevActiveCstID.current !== activeCst.id ||
-    prevToggleReset.current !== toggleReset ||
-    prevSchema.current !== schema
-  ) {
-    prevActiveCstID.current = activeCst.id;
-    prevToggleReset.current = toggleReset;
-    prevSchema.current = schema;
+  useLayoutEffect(() => setIsModified(false), [activeCst.id, setIsModified]);
+
+  useEffect(() => {
     reset({
       target: activeCst.id,
       item_data: {
@@ -141,17 +133,30 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
         definition_formal: activeCst.definition_formal
       }
     });
-    setForceComment(false);
-    setLocalParse(null);
-  }
+  }, [
+    activeCst.id,
+    activeCst.convention,
+    activeCst.term_raw,
+    activeCst.definition_raw,
+    activeCst.definition_formal,
+    toggleReset,
+    schema,
+    reset
+  ]);
 
-  useLayoutEffect(() => setIsModified(false), [activeCst.id, setIsModified]);
+  useEffect(() => {
+    // TODO: suspect this is too complex solution
+    const timeoutId = setTimeout(() => {
+      setForceComment(false);
+      setLocalParse(null);
+    }, 0);
 
-  const prevDirty = useRef(isDirty);
-  if (prevDirty.current !== isDirty) {
-    prevDirty.current = isDirty;
+    return () => clearTimeout(timeoutId);
+  }, [activeCst.id, toggleReset, schema]);
+
+  useEffect(() => {
     setIsModified(isDirty);
-  }
+  }, [isDirty, setIsModified]);
 
   function onSubmit(data: IUpdateConstituentaDTO) {
     void updateConstituenta({ itemID: schema.id, data }).then(() => {

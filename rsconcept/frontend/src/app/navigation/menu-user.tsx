@@ -13,17 +13,23 @@ import { UserDropdown } from './user-dropdown';
 
 export function MenuUser() {
   const router = useConceptNavigation();
-  const menu = useDropdown();
+  const {
+    elementRef: menuRef,
+    isOpen: isMenuOpen,
+    toggle: toggleMenu,
+    handleBlur: handleMenuBlur,
+    hide: hideMenu
+  } = useDropdown();
   return (
-    <div ref={menu.ref} onBlur={menu.handleBlur} className='flex items-center justify-start relative h-full'>
+    <div ref={menuRef} onBlur={handleMenuBlur} className='flex items-center justify-start relative h-full'>
       <Suspense fallback={<Loader circular scale={1.5} />}>
         <UserButton
           onLogin={() => router.push({ path: urls.login, force: true })}
-          onClickUser={menu.toggle}
-          isOpen={menu.isOpen}
+          onClickUser={toggleMenu}
+          isOpen={isMenuOpen}
         />
       </Suspense>
-      <UserDropdown isOpen={menu.isOpen} hideDropdown={() => menu.hide()} />
+      <UserDropdown isOpen={isMenuOpen} hideDropdown={() => hideMenu()} />
     </div>
   );
 }

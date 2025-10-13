@@ -24,31 +24,31 @@ export function SelectLocationHead({
   className,
   ...restProps
 }: SelectLocationHeadProps) {
-  const menu = useDropdown();
+  const { elementRef, handleBlur, isOpen, toggle, hide } = useDropdown();
 
   function handleChange(newValue: LocationHead) {
-    menu.hide();
+    hide();
     onChange(newValue);
   }
 
   return (
     <div
-      ref={menu.ref} //
-      onBlur={menu.handleBlur}
+      ref={elementRef} //
+      onBlur={handleBlur}
       className={cn('text-right relative', className)}
       {...restProps}
     >
       <SelectorButton
         tabIndex={-1}
         title={describeLocationHead(value)}
-        hideTitle={menu.isOpen}
+        hideTitle={isOpen}
         className='h-full'
         icon={<IconLocationHead value={value} size='1rem' />}
         text={labelLocationHead(value)}
-        onClick={menu.toggle}
+        onClick={toggle}
       />
 
-      <Dropdown isOpen={menu.isOpen} stretchLeft margin='mt-2'>
+      <Dropdown isOpen={isOpen} stretchLeft margin='mt-2'>
         {Object.values(LocationHead)
           .filter(head => !excluded.includes(head))
           .map((head, index) => {

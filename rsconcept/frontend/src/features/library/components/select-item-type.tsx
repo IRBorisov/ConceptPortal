@@ -26,27 +26,27 @@ export function SelectItemType({
   onChange,
   ...restProps
 }: SelectItemTypeProps) {
-  const menu = useDropdown();
+  const { elementRef, handleBlur, isOpen, toggle, hide } = useDropdown();
 
   function handleChange(newValue: LibraryItemType) {
-    menu.hide();
+    hide();
     if (newValue !== value) {
       onChange(newValue);
     }
   }
 
   return (
-    <div ref={menu.ref} onBlur={menu.handleBlur} className={cn('relative', className)} {...restProps}>
+    <div ref={elementRef} onBlur={handleBlur} className={cn('relative', className)} {...restProps}>
       <SelectorButton
         title={describeLibraryItemType(value)}
-        hideTitle={menu.isOpen}
+        hideTitle={isOpen}
         className='h-full px-2 py-1 rounded-lg'
         icon={<IconLibraryItemType value={value} size='1.25rem' />}
         text={labelLibraryItemType(value)}
-        onClick={menu.toggle}
+        onClick={toggle}
         disabled={disabled}
       />
-      <Dropdown isOpen={menu.isOpen} stretchLeft={stretchLeft} margin='mt-1'>
+      <Dropdown isOpen={isOpen} stretchLeft={stretchLeft} margin='mt-1'>
         {Object.values(LibraryItemType).map((item, index) => (
           <DropdownButton
             key={`${prefixes.policy_list}${index}`}

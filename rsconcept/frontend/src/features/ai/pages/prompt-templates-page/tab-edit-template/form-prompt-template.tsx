@@ -1,7 +1,7 @@
 'use no memo'; // TODO: remove when react hook forms are compliant with react compiler
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import clsx from 'clsx';
@@ -63,24 +63,25 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
 
   const prevReset = useRef(toggleReset);
   const prevTemplate = useRef(promptTemplate);
-  if (prevTemplate.current !== promptTemplate || prevReset.current !== toggleReset) {
-    prevTemplate.current = promptTemplate;
-    prevReset.current = toggleReset;
-    reset({
-      owner: promptTemplate.owner,
-      label: promptTemplate.label,
-      description: promptTemplate.description,
-      text: promptTemplate.text,
-      is_shared: promptTemplate.is_shared
-    });
-    setSampleResult(null);
-  }
 
-  const prevDirty = useRef(isDirty);
-  if (prevDirty.current !== isDirty) {
-    prevDirty.current = isDirty;
+  useEffect(() => {
+    if (prevTemplate.current !== promptTemplate || prevReset.current !== toggleReset) {
+      prevTemplate.current = promptTemplate;
+      prevReset.current = toggleReset;
+      reset({
+        owner: promptTemplate.owner,
+        label: promptTemplate.label,
+        description: promptTemplate.description,
+        text: promptTemplate.text,
+        is_shared: promptTemplate.is_shared
+      });
+      return () => setSampleResult(null);
+    }
+  }, [promptTemplate, toggleReset, reset, setSampleResult]);
+
+  useEffect(() => {
     setIsModified(isDirty);
-  }
+  }, [isDirty, setIsModified]);
 
   function onSubmit(data: IUpdatePromptTemplateDTO) {
     return updatePromptTemplate({ id: promptTemplate.id, data }).then(() => {

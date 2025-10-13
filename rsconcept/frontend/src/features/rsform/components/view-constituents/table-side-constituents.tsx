@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/data-table';
 import { NoData, TextContent } from '@/components/view';
@@ -37,21 +37,24 @@ export function TableSideConstituents({
   const items = useFilteredItems(schema, activeCst);
 
   const prevActiveCstID = useRef<number | null>(null);
-  if (autoScroll && prevActiveCstID.current !== activeCst?.id) {
-    prevActiveCstID.current = activeCst?.id ?? null;
-    if (!!activeCst) {
-      setTimeout(() => {
-        const element = document.getElementById(`${prefixes.cst_side_table}${activeCst.id}`);
-        if (element) {
-          element.scrollIntoView({
-            behavior: 'smooth',
-            block: 'center',
-            inline: 'end'
-          });
-        }
-      }, PARAMETER.refreshTimeout);
+
+  useEffect(() => {
+    if (autoScroll && prevActiveCstID.current !== activeCst?.id) {
+      prevActiveCstID.current = activeCst?.id ?? null;
+      if (!!activeCst) {
+        setTimeout(() => {
+          const element = document.getElementById(`${prefixes.cst_side_table}${activeCst.id}`);
+          if (element) {
+            element.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center',
+              inline: 'end'
+            });
+          }
+        }, PARAMETER.refreshTimeout);
+      }
     }
-  }
+  }, [autoScroll, activeCst]);
 
   const columns = [
     columnHelper.accessor('alias', {

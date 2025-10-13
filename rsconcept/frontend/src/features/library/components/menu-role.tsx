@@ -19,13 +19,19 @@ interface MenuRoleProps {
 export function MenuRole({ isOwned, isEditor }: MenuRoleProps) {
   const { user, isAnonymous } = useAuthSuspense();
   const router = useConceptNavigation();
-  const accessMenu = useDropdown();
+  const {
+    elementRef: accessMenuRef,
+    isOpen: isAccessOpen,
+    toggle: toggleAccess,
+    handleBlur: handleAccessBlur,
+    hide: hideAccess
+  } = useDropdown();
 
   const role = useRoleStore(state => state.role);
   const setRole = useRoleStore(state => state.setRole);
 
   function handleChangeMode(newMode: UserRole) {
-    accessMenu.hide();
+    hideAccess();
     setRole(newMode);
   }
 
@@ -34,7 +40,7 @@ export function MenuRole({ isOwned, isEditor }: MenuRoleProps) {
       <MiniButton
         noPadding
         titleHtml='<b>Анонимный режим</b><br />Войти в Портал'
-        hideTitle={accessMenu.isOpen}
+        hideTitle={isAccessOpen}
         className='h-full pr-2 pl-3 bg-transparent'
         icon={<IconAlert size='1.25rem' className='icon-red' />}
         onClick={() => router.push({ path: urls.login })}
@@ -43,17 +49,17 @@ export function MenuRole({ isOwned, isEditor }: MenuRoleProps) {
   }
 
   return (
-    <div ref={accessMenu.ref} onBlur={accessMenu.handleBlur} className='relative'>
+    <div ref={accessMenuRef} onBlur={handleAccessBlur} className='relative'>
       <MiniButton
         noHover
         noPadding
         title={`Режим ${labelUserRole(role)}`}
-        hideTitle={accessMenu.isOpen}
+        hideTitle={isAccessOpen}
         className='h-full pr-2 text-muted-foreground hover:text-primary cc-animate-color'
         icon={<IconRole value={role} size='1.25rem' className='' />}
-        onClick={accessMenu.toggle}
+        onClick={toggleAccess}
       />
-      <Dropdown isOpen={accessMenu.isOpen} margin='mt-3'>
+      <Dropdown isOpen={isAccessOpen} margin='mt-3'>
         <DropdownButton
           text={labelUserRole(UserRole.READER)}
           title={describeUserRole(UserRole.READER)}

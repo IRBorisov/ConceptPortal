@@ -14,34 +14,40 @@ import { useConceptNavigation } from './navigation-context';
 
 export function MenuAI() {
   const router = useConceptNavigation();
-  const menu = useDropdown();
+  const {
+    elementRef: menuRef,
+    isOpen: isMenuOpen,
+    toggle: toggleMenu,
+    handleBlur: handleMenuBlur,
+    hide: hideMenu
+  } = useDropdown();
   const { user } = useAuth();
   const showAIPrompt = useDialogsStore(state => state.showAIPrompt);
 
   function navigateTemplates(event: React.MouseEvent<Element>) {
-    menu.hide();
+    hideMenu();
     router.push({ path: urls.prompt_templates, newTab: event.ctrlKey || event.metaKey });
   }
 
   function handleCreatePrompt(event: React.MouseEvent<Element>) {
     event.preventDefault();
     event.stopPropagation();
-    menu.hide();
+    hideMenu();
     showAIPrompt();
   }
 
   return (
-    <div ref={menu.ref} onBlur={menu.handleBlur} className='flex items-center justify-start relative h-full'>
+    <div ref={menuRef} onBlur={handleMenuBlur} className='flex items-center justify-start relative h-full'>
       <NavigationButton
         title='ИИ помощник' //
-        hideTitle={menu.isOpen}
-        aria-expanded={menu.isOpen}
+        hideTitle={isMenuOpen}
+        aria-expanded={isMenuOpen}
         aria-controls={globalIDs.ai_dropdown}
         icon={<IconAssistant size='1.5rem' />}
-        onClick={menu.toggle}
+        onClick={toggleMenu}
       />
 
-      <Dropdown id={globalIDs.ai_dropdown} className='min-w-[12ch] max-w-48' stretchLeft isOpen={menu.isOpen}>
+      <Dropdown id={globalIDs.ai_dropdown} className='min-w-[12ch] max-w-48' stretchLeft isOpen={isMenuOpen}>
         <DropdownButton
           text='Запрос'
           title='Создать запрос'

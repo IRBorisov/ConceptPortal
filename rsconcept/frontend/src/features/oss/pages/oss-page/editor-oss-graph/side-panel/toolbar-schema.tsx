@@ -52,7 +52,7 @@ export function ToolbarSchema({
   isMutable,
   className
 }: ToolbarSchemaProps) {
-  const menuSchema = useDropdown();
+  const { elementRef, isOpen, handleBlur, toggle, hide } = useDropdown();
   const router = useConceptNavigation();
   const isProcessing = useMutatingRSForm();
   const searchText = useCstSearchStore(state => state.query);
@@ -196,25 +196,25 @@ export function ToolbarSchema({
   }
 
   function handleReindex() {
-    menuSchema.hide();
+    hide();
     void resetAliases({ itemID: schema.id });
   }
 
   function handleRestoreOrder() {
-    menuSchema.hide();
+    hide();
     void restoreOrder({ itemID: schema.id });
   }
 
   return (
     <div className={cn('flex gap-0.5', className)}>
-      <div ref={menuSchema.ref} onBlur={menuSchema.handleBlur} className='flex relative items-center'>
+      <div ref={elementRef} onBlur={handleBlur} className='flex relative items-center'>
         <MiniButton
           title='Редактирование концептуальной схемы'
-          hideTitle={menuSchema.isOpen}
+          hideTitle={isOpen}
           icon={<IconRSForm size='1rem' className='icon-primary' />}
-          onClick={menuSchema.toggle}
+          onClick={toggle}
         />
-        <Dropdown isOpen={menuSchema.isOpen} margin='mt-0.5'>
+        <Dropdown isOpen={isOpen} margin='mt-0.5'>
           <DropdownButton
             text='Упорядочить список'
             titleHtml='Упорядочить список, исходя из <br/>логики типов и связей конституент'

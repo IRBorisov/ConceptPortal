@@ -71,7 +71,7 @@ export function ToolbarOssGraph({
   const getLayout = useGetLayout();
   const { updateLayout } = useUpdateLayout();
   const { user } = useAuthSuspense();
-  const menu = useDropdown();
+  const { elementRef: menuRef, isOpen: isMenuOpen, toggle: toggleMenu, handleBlur: handleMenuBlur } = useDropdown();
 
   const showOptions = useDialogsStore(state => state.showOssOptions);
   const showSidePanel = usePreferencesStore(state => state.showOssSidePanel);
@@ -84,7 +84,7 @@ export function ToolbarOssGraph({
 
   function handleMenuToggle() {
     hideContextMenu();
-    menu.toggle();
+    toggleMenu();
   }
 
   function handleShowOptions() {
@@ -147,7 +147,7 @@ export function ToolbarOssGraph({
           <MiniButton
             aria-label='Сохранить изменения'
             titleHtml={prepareTooltip('Сохранить изменения', isMac() ? '⌘ + S' : 'Ctrl + S')}
-            hideTitle={menu.isOpen}
+            hideTitle={isMenuOpen}
             icon={<IconSave size='1.25rem' className='icon-primary' />}
             onClick={handleSavePositions}
             disabled={isProcessing}
@@ -155,20 +155,20 @@ export function ToolbarOssGraph({
           <MiniButton
             aria-label='Редактировать выбранную'
             titleHtml={prepareTooltip('Редактировать выбранную', isIOS() ? '' : 'Правый клик')}
-            hideTitle={isContextMenuOpen || menu.isOpen}
+            hideTitle={isContextMenuOpen || isMenuOpen}
             icon={<IconEdit size='1.25rem' className='icon-primary' />}
             onClick={handleEditItem}
             disabled={selectedItems.length !== 1 || isProcessing}
           />
-          <div ref={menu.ref} onBlur={menu.handleBlur} className='relative'>
+          <div ref={menuRef} onBlur={handleMenuBlur} className='relative'>
             <MiniButton
               title='Добавить...'
-              hideTitle={menu.isOpen}
+              hideTitle={isMenuOpen}
               icon={<IconNewItem size='1.25rem' className='icon-green' />}
               onClick={handleMenuToggle}
               disabled={isProcessing}
             />
-            <Dropdown isOpen={menu.isOpen} className='-translate-x-1/2'>
+            <Dropdown isOpen={isMenuOpen} className='-translate-x-1/2'>
               <DropdownButton
                 text='Новый блок'
                 titleHtml={prepareTooltip('Новый блок', 'Alt + 1')}
@@ -216,7 +216,7 @@ export function ToolbarOssGraph({
           <MiniButton
             aria-label='Удалить выбранную'
             titleHtml={prepareTooltip('Удалить выбранную', 'Delete')}
-            hideTitle={menu.isOpen}
+            hideTitle={isMenuOpen}
             icon={<IconDestroy size='1.25rem' className='icon-red' />}
             onClick={onDelete}
             disabled={

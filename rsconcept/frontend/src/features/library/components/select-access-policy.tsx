@@ -28,26 +28,26 @@ export function SelectAccessPolicy({
   onChange,
   ...restProps
 }: SelectAccessPolicyProps) {
-  const menu = useDropdown();
+  const { elementRef, handleBlur, isOpen, toggle, hide } = useDropdown();
 
   function handleChange(newValue: AccessPolicy) {
-    menu.hide();
+    hide();
     if (newValue !== value) {
       onChange(newValue);
     }
   }
 
   return (
-    <div ref={menu.ref} onBlur={menu.handleBlur} className={clsx('relative', className)} {...restProps}>
+    <div ref={elementRef} onBlur={handleBlur} className={clsx('relative', className)} {...restProps}>
       <MiniButton
         title={`Доступ: ${labelAccessPolicy(value)}`}
-        hideTitle={menu.isOpen}
+        hideTitle={isOpen}
         className='h-full'
         icon={<IconAccessPolicy value={value} size='1.25rem' />}
-        onClick={menu.toggle}
+        onClick={toggle}
         disabled={disabled}
       />
-      <Dropdown isOpen={menu.isOpen} stretchLeft={stretchLeft} margin='mt-1'>
+      <Dropdown isOpen={isOpen} stretchLeft={stretchLeft} margin='mt-1'>
         {Object.values(AccessPolicy).map((item, index) => (
           <DropdownButton
             key={`${prefixes.policy_list}${index}`}

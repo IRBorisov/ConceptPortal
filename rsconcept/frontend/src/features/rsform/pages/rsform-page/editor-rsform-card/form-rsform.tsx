@@ -1,7 +1,7 @@
 'use no memo'; // TODO: remove when react hook forms are compliant with react compiler
 'use client';
 
-import { useRef } from 'react';
+import { useEffect } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -57,9 +57,7 @@ export function FormRSForm() {
   const visible = useWatch({ control, name: 'visible' });
   const readOnly = useWatch({ control, name: 'read_only' });
 
-  const prevSchema = useRef(schema);
-  if (prevSchema.current !== schema) {
-    prevSchema.current = schema;
+  useEffect(() => {
     reset({
       id: schema.id,
       item_type: LibraryItemType.RSFORM,
@@ -69,13 +67,11 @@ export function FormRSForm() {
       visible: schema.visible,
       read_only: schema.read_only
     });
-  }
+  }, [schema, reset]);
 
-  const prevDirty = useRef(isDirty);
-  if (prevDirty.current !== isDirty) {
-    prevDirty.current = isDirty;
+  useEffect(() => {
     setIsModified(isDirty);
-  }
+  }, [isDirty, setIsModified]);
 
   function handleSelectVersion(version: CurrentVersion) {
     router.push({ path: urls.schema(schema.id, version === 'latest' ? undefined : version) });

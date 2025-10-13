@@ -33,7 +33,7 @@ export function ExportDropdown<T extends object = object>({
   filename = 'export',
   className
 }: ExportDropdownProps<T>) {
-  const { ref, isOpen, toggle, handleBlur, hide } = useDropdown();
+  const { elementRef: ref, isOpen, toggle, handleBlur, hide } = useDropdown();
 
   function handleExport(format: 'csv' | 'json') {
     if (!data || data.length === 0) {

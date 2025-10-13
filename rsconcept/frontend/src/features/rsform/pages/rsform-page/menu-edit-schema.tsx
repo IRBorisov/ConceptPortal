@@ -33,7 +33,13 @@ export function MenuEditSchema() {
   const { isAnonymous } = useAuthSuspense();
   const isModified = useModificationStore(state => state.isModified);
   const router = useConceptNavigation();
-  const menu = useDropdown();
+  const {
+    elementRef: menuRef,
+    isOpen: isMenuOpen,
+    toggle: toggleMenu,
+    handleBlur: handleMenuBlur,
+    hide: hideMenu
+  } = useDropdown();
   const { schema, activeCst, setSelected, isArchive, isContentEditable, promptTemplate, deselectAll } = useRSEdit();
   const isProcessing = useMutatingRSForm();
 
@@ -45,17 +51,17 @@ export function MenuEditSchema() {
   const showSubstituteCst = useDialogsStore(state => state.showSubstituteCst);
 
   function handleReindex() {
-    menu.hide();
+    hideMenu();
     void resetAliases({ itemID: schema.id });
   }
 
   function handleRestoreOrder() {
-    menu.hide();
+    hideMenu();
     void restoreOrder({ itemID: schema.id });
   }
 
   function handleSubstituteCst() {
-    menu.hide();
+    hideMenu();
     if (isModified && !promptUnsaved()) {
       return;
     }
@@ -66,12 +72,12 @@ export function MenuEditSchema() {
   }
 
   function handleTemplates() {
-    menu.hide();
+    hideMenu();
     promptTemplate();
   }
 
   function handleProduceStructure(targetCst: IConstituenta | null) {
-    menu.hide();
+    hideMenu();
     if (!targetCst) {
       return;
     }
@@ -89,7 +95,7 @@ export function MenuEditSchema() {
   }
 
   function handleInlineSynthesis() {
-    menu.hide();
+    hideMenu();
     if (isModified && !promptUnsaved()) {
       return;
     }
@@ -108,7 +114,7 @@ export function MenuEditSchema() {
       <MiniButton
         noPadding
         titleHtml='<b>Архив</b>: Редактирование запрещено<br />Перейти к актуальной версии'
-        hideTitle={menu.isOpen}
+        hideTitle={isMenuOpen}
         className='h-full px-3 bg-transparent'
         icon={<IconArchive size='1.25rem' className='icon-primary' />}
         onClick={event => router.push({ path: urls.schema(schema.id), newTab: event.ctrlKey || event.metaKey })}
@@ -117,17 +123,17 @@ export function MenuEditSchema() {
   }
 
   return (
-    <div ref={menu.ref} onBlur={menu.handleBlur} className='relative'>
+    <div ref={menuRef} onBlur={handleMenuBlur} className='relative'>
       <MiniButton
         noHover
         noPadding
         title='Редактирование'
-        hideTitle={menu.isOpen}
+        hideTitle={isMenuOpen}
         className='h-full px-3 text-muted-foreground hover:text-primary cc-animate-color'
         icon={<IconEdit2 size='1.25rem' />}
-        onClick={menu.toggle}
+        onClick={toggleMenu}
       />
-      <Dropdown isOpen={menu.isOpen} margin='mt-3'>
+      <Dropdown isOpen={isMenuOpen} margin='mt-3'>
         <DropdownButton
           text='Шаблоны'
           title='Создать конституенту из шаблона'

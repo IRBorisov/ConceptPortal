@@ -26,15 +26,21 @@ export function MenuMain() {
 
   const showQR = useDialogsStore(state => state.showQR);
 
-  const menu = useDropdown();
+  const {
+    elementRef: menuRef,
+    isOpen: isMenuOpen,
+    toggle: toggleMenu,
+    handleBlur: handleMenuBlur,
+    hide: hideMenu
+  } = useDropdown();
 
   function handleDelete() {
-    menu.hide();
+    hideMenu();
     deleteSchema();
   }
 
   function handleShare() {
-    menu.hide();
+    hideMenu();
     sharePage();
   }
 
@@ -43,22 +49,22 @@ export function MenuMain() {
   }
 
   function handleShowQR() {
-    menu.hide();
+    hideMenu();
     showQR({ target: generatePageQR() });
   }
 
   return (
-    <div ref={menu.ref} onBlur={menu.handleBlur} className='relative'>
+    <div ref={menuRef} onBlur={handleMenuBlur} className='relative'>
       <MiniButton
         noHover
         noPadding
         title='Меню'
-        hideTitle={menu.isOpen}
+        hideTitle={isMenuOpen}
         icon={<IconMenu size='1.25rem' />}
         className='h-full px-2 text-muted-foreground hover:text-primary cc-animate-color'
-        onClick={menu.toggle}
+        onClick={toggleMenu}
       />
-      <Dropdown isOpen={menu.isOpen} margin='mt-3'>
+      <Dropdown isOpen={isMenuOpen} margin='mt-3'>
         <DropdownButton
           text='Поделиться'
           title='Скопировать ссылку в буфер обмена'

@@ -45,7 +45,13 @@ export function PickSchema({
   ...restProps
 }: PickSchemaProps) {
   const intl = useIntl();
-  const locationMenu = useDropdown();
+  const {
+    elementRef: locationRef,
+    isOpen: isLocationOpen,
+    toggle: toggleLocation,
+    handleBlur: handleLocationBlur,
+    hide: hideLocationMenu
+  } = useDropdown();
 
   const [filterText, setFilterText] = useState(initialFilter);
   const [filterLocation, setFilterLocation] = useState('');
@@ -99,7 +105,7 @@ export function PickSchema({
   function handleLocationClick(event: React.MouseEvent<Element>, newValue: string) {
     event.preventDefault();
     event.stopPropagation();
-    locationMenu.hide();
+    hideLocationMenu();
     setFilterLocation(newValue);
   }
 
@@ -113,14 +119,14 @@ export function PickSchema({
           query={filterText}
           onChangeQuery={newValue => setFilterText(newValue)}
         />
-        <div className='relative' ref={locationMenu.ref} onBlur={locationMenu.handleBlur}>
+        <div className='relative' ref={locationRef} onBlur={handleLocationBlur}>
           <MiniButton
             title='Фильтр по расположению'
             icon={<IconFolderTree size='1.25rem' className={!!filterLocation ? 'icon-green' : 'icon-primary'} />}
             className='mt-1'
-            onClick={() => locationMenu.toggle()}
+            onClick={toggleLocation}
           />
-          <Dropdown isOpen={locationMenu.isOpen} stretchLeft className='w-80 h-50'>
+          <Dropdown isOpen={isLocationOpen} stretchLeft className='w-80 h-50'>
             <SelectLocation
               value={filterLocation}
               prefix={prefixes.folders_list}
