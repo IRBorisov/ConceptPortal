@@ -87,12 +87,12 @@ export function ToolbarGraphSelection({
 
   function handleSelectAllInputs() {
     selectedMenu.hide();
-    onChange([...value, ...graph.expandInputs(value)]);
+    onChange([...value, ...graph.expandAllInputs(value)]);
   }
 
   function handleSelectAllOutputs() {
     selectedMenu.hide();
-    onChange([...value, ...graph.expandOutputs(value)]);
+    onChange([...value, ...graph.expandAllOutputs(value)]);
   }
 
   return (

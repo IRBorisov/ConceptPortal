@@ -33,6 +33,7 @@ import { useTermGraphStore } from '../../../stores/term-graph';
 import { useRSEdit } from '../rsedit-context';
 
 import { flowOptions } from './tg-flow';
+import { useFilteredGraph } from './use-filtered-graph';
 
 interface ToolbarTermGraphProps {
   className?: string;
@@ -57,6 +58,7 @@ export function ToolbarTermGraph({ className }: ToolbarTermGraphProps) {
   const filter = useTermGraphStore(state => state.filter);
   const toggleText = useTermGraphStore(state => state.toggleText);
   const toggleClustering = useTermGraphStore(state => state.toggleClustering);
+  const { filteredGraph } = useFilteredGraph();
 
   const { fitView } = useReactFlow();
   const store = useStoreApi();
@@ -166,7 +168,7 @@ export function ToolbarTermGraph({ className }: ToolbarTermGraphProps) {
           />
         ) : (
           <ToolbarGraphSelection
-            graph={schema.graph}
+            graph={filteredGraph}
             isCore={cstID => {
               const cst = schema.cstByID.get(cstID);
               return !!cst && isBasicConcept(cst.cst_type);

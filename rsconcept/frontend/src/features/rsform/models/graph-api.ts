@@ -116,6 +116,7 @@ export function produceFilteredGraph(schema: IRSForm, params: GraphFilterParams,
   if (params.noHermits) {
     filtered.removeIsolated();
   }
+
   if (focusCst) {
     const includes: number[] = [
       focusCst.id,
@@ -129,6 +130,7 @@ export function produceFilteredGraph(schema: IRSForm, params: GraphFilterParams,
       }
     });
   }
+
   if (params.noTransitive) {
     filtered.transitiveReduction();
   }

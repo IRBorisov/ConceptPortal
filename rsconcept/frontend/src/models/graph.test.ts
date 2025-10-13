@@ -78,6 +78,143 @@ describe('Testing Graph editing', () => {
     expect(graph.hasEdge(2, 3)).toBeTruthy();
     expect(graph.hasEdge(1, 3)).toBeFalsy();
   });
+
+  test('transitive reduction - empty graph', () => {
+    const graph = new Graph();
+    expect(() => graph.transitiveReduction()).not.toThrow();
+    expect(graph.nodes.size).toBe(0);
+  });
+
+  test('transitive reduction - single node', () => {
+    const graph = new Graph([[1]]);
+    graph.transitiveReduction();
+    expect(graph.hasNode(1)).toBeTruthy();
+    expect(graph.nodes.get(1)!.outputs.length).toBe(0);
+    expect(graph.nodes.get(1)!.inputs.length).toBe(0);
+  });
+
+  test('transitive reduction - linear chain', () => {
+    const graph = new Graph([
+      [1, 2],
+      [2, 3],
+      [3, 4],
+      [4, 5]
+    ]);
+    graph.transitiveReduction();
+    expect(graph.hasEdge(1, 2)).toBeTruthy();
+    expect(graph.hasEdge(2, 3)).toBeTruthy();
+    expect(graph.hasEdge(3, 4)).toBeTruthy();
+    expect(graph.hasEdge(4, 5)).toBeTruthy();
+    expect(graph.hasEdge(1, 3)).toBeFalsy();
+    expect(graph.hasEdge(1, 4)).toBeFalsy();
+    expect(graph.hasEdge(1, 5)).toBeFalsy();
+    expect(graph.hasEdge(2, 4)).toBeFalsy();
+    expect(graph.hasEdge(2, 5)).toBeFalsy();
+    expect(graph.hasEdge(3, 5)).toBeFalsy();
+  });
+
+  test('transitive reduction - diamond pattern', () => {
+    const graph = new Graph([
+      [1, 2],
+      [1, 3],
+      [2, 4],
+      [3, 4]
+    ]);
+    graph.transitiveReduction();
+    expect(graph.hasEdge(1, 2)).toBeTruthy();
+    expect(graph.hasEdge(1, 3)).toBeTruthy();
+    expect(graph.hasEdge(2, 4)).toBeTruthy();
+    expect(graph.hasEdge(3, 4)).toBeTruthy();
+    expect(graph.hasEdge(1, 4)).toBeFalsy();
+  });
+
+  test('transitive reduction - complex transitive relationships', () => {
+    const graph = new Graph([
+      [6, 7],
+      [5, 7],
+      [4, 6],
+      [3, 5],
+      [2, 5],
+      [1, 4],
+      [1, 3],
+      [1, 2]
+    ]);
+    graph.transitiveReduction();
+    expect(graph.hasEdge(1, 2)).toBeTruthy();
+    expect(graph.hasEdge(1, 3)).toBeTruthy();
+    expect(graph.hasEdge(1, 4)).toBeTruthy();
+    expect(graph.hasEdge(2, 5)).toBeTruthy();
+    expect(graph.hasEdge(3, 5)).toBeTruthy();
+    expect(graph.hasEdge(4, 6)).toBeTruthy();
+    expect(graph.hasEdge(5, 7)).toBeTruthy();
+    expect(graph.hasEdge(6, 7)).toBeTruthy();
+
+    expect(graph.hasEdge(1, 5)).toBeFalsy();
+    expect(graph.hasEdge(1, 7)).toBeFalsy();
+    expect(graph.hasEdge(2, 7)).toBeFalsy();
+    expect(graph.hasEdge(3, 7)).toBeFalsy();
+    expect(graph.hasEdge(4, 7)).toBeFalsy();
+  });
+
+  test('transitive reduction - disconnected components', () => {
+    const graph = new Graph([
+      [1, 2],
+      [2, 3],
+      [4, 5],
+      [5, 6],
+      [4, 6] // This should be removed
+    ]);
+    graph.transitiveReduction();
+    expect(graph.hasEdge(1, 2)).toBeTruthy();
+    expect(graph.hasEdge(2, 3)).toBeTruthy();
+    expect(graph.hasEdge(4, 5)).toBeTruthy();
+    expect(graph.hasEdge(5, 6)).toBeTruthy();
+    expect(graph.hasEdge(4, 6)).toBeFalsy();
+  });
+
+  test('transitive reduction - multiple paths same length', () => {
+    const graph = new Graph([
+      [3, 4],
+      [2, 4],
+      [1, 3],
+      [1, 2]
+    ]);
+    graph.transitiveReduction();
+    expect(graph.hasEdge(1, 2)).toBeTruthy();
+    expect(graph.hasEdge(1, 3)).toBeTruthy();
+    expect(graph.hasEdge(2, 4)).toBeTruthy();
+    expect(graph.hasEdge(3, 4)).toBeTruthy();
+  });
+
+  test('transitive reduction - already reduced graph', () => {
+    const graph = new Graph([
+      [1, 2],
+      [2, 3]
+    ]);
+    const originalEdgeCount = 2;
+    graph.transitiveReduction();
+    expect(graph.hasEdge(1, 2)).toBeTruthy();
+    expect(graph.hasEdge(2, 3)).toBeTruthy();
+    expect(graph.hasEdge(1, 3)).toBeFalsy();
+    // Should still have 2 edges
+    let edgeCount = 0;
+    graph.nodes.forEach(node => (edgeCount += node.outputs.length));
+    expect(edgeCount).toBe(originalEdgeCount);
+  });
+
+  test('transitive reduction - preserves all nodes', () => {
+    const graph = new Graph([
+      [1, 2],
+      [1, 3],
+      [2, 3]
+    ]);
+    const originalNodeCount = graph.nodes.size;
+    graph.transitiveReduction();
+    expect(graph.nodes.size).toBe(originalNodeCount);
+    expect(graph.hasNode(1)).toBeTruthy();
+    expect(graph.hasNode(2)).toBeTruthy();
+    expect(graph.hasNode(3)).toBeTruthy();
+  });
 });
 
 describe('Testing Graph sort', () => {
