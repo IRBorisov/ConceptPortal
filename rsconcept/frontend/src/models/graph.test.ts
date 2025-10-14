@@ -61,6 +61,45 @@ describe('Testing Graph editing', () => {
     expect(graph.hasEdge(2, 5)).toBeTruthy();
   });
 
+  test('folding a non-existent node should not change the graph', () => {
+    const graph = new Graph([
+      [1, 2],
+      [2, 3]
+    ]);
+    const clone = graph.clone();
+    graph.foldNode(99); // Node 99 does not exist
+    expect(graph.nodes.size).toBe(clone.nodes.size);
+    expect([...graph.nodes.keys()]).toEqual([...clone.nodes.keys()]);
+    expect(graph.hasEdge(1, 2)).toBeTruthy();
+    expect(graph.hasEdge(2, 3)).toBeTruthy();
+  });
+
+  test('folding a node with no inputs', () => {
+    const graph = new Graph([
+      [1, 2],
+      [1, 3]
+    ]);
+    graph.foldNode(1);
+    expect(graph.hasNode(1)).toBeFalsy();
+    expect(graph.nodes.size).toBe(2); // Nodes 2 and 3 remain
+    expect(graph.hasNode(2)).toBeTruthy();
+    expect(graph.hasNode(3)).toBeTruthy();
+  });
+
+  test('folding a node with no outputs', () => {
+    const graph = new Graph([
+      [1, 3],
+      [2, 3]
+    ]);
+    graph.foldNode(3);
+    expect(graph.hasNode(3)).toBeFalsy();
+    expect(graph.nodes.size).toBe(2); // Nodes 1 and 2 remain
+    expect(graph.hasNode(1)).toBeTruthy();
+    expect(graph.hasNode(2)).toBeTruthy();
+    expect(graph.nodes.get(1)!.outputs.length).toBe(0);
+    expect(graph.nodes.get(2)!.outputs.length).toBe(0);
+  });
+
   test('removing isolated nodes', () => {
     const graph = new Graph([[9, 1], [9, 2], [2, 1], [4, 3], [5, 9], [7], [8]]);
     graph.removeIsolated();
