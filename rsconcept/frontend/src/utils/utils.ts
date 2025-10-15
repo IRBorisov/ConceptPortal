@@ -112,7 +112,7 @@ export function tripleToggleColor(value: boolean | null): string | undefined {
  */
 export function extractErrorMessage(error: Error | AxiosError): string {
   if (isAxiosError(error)) {
-    if (error.response && error.response.status === 400) {
+    if (error.response?.status === 400) {
       const data = error.response.data as Record<string, unknown>;
       const keys = Object.keys(data);
       if (keys.length === 1) {
@@ -130,7 +130,7 @@ export function extractErrorMessage(error: Error | AxiosError): string {
  * Convert array of objects to CSV Blob.
  */
 export function convertToCSV(targetObj: readonly object[]): Blob {
-  if (!targetObj || targetObj.length === 0) {
+  if (!targetObj?.length) {
     return new Blob([], { type: 'text/csv;charset=utf-8;' });
   }
   const separator = ',';

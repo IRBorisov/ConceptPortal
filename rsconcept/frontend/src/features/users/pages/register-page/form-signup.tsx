@@ -156,7 +156,7 @@ export function FormSignup() {
 
 // ====== Internals =========
 function ServerError({ error }: { error: ErrorData }): React.ReactElement {
-  if (isAxiosError(error) && error.response && error.response.status === 400) {
+  if (isAxiosError(error) && error.response?.status === 400) {
     if ('email' in error.response.data) {
       return (
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access

@@ -93,7 +93,7 @@ export function LoginPage() {
 
 // ====== Internals =========
 function ServerError({ error }: { error: ErrorData }): React.ReactElement | null {
-  if (isAxiosError(error) && error.response && error.response.status === 400) {
+  if (isAxiosError(error) && error.response?.status === 400) {
     return (
       <div className='text-sm select-text text-destructive'>
         На Портале отсутствует такое сочетание имени пользователя и пароля

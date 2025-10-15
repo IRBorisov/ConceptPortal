@@ -77,7 +77,7 @@ export function EditorPassword() {
 
 // ====== Internals =========
 function ServerError({ error }: { error: ErrorData }): React.ReactElement {
-  if (isAxiosError(error) && error.response && error.response.status === 400) {
+  if (isAxiosError(error) && error.response?.status === 400) {
     return <div className='text-sm select-text text-destructive'>Неверно введен старый пароль</div>;
   }
   throw error as Error;

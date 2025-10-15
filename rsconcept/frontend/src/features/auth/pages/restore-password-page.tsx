@@ -53,7 +53,7 @@ export function Component() {
 
 // ====== Internals =========
 function ServerError({ error }: { error: ErrorData }): React.ReactElement {
-  if (isAxiosError(error) && error.response && error.response.status === 400) {
+  if (isAxiosError(error) && error.response?.status === 400) {
     return (
       <div className='mx-auto mt-6 text-sm select-text text-destructive'>Данный email не используется на Портале.</div>
     );

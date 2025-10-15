@@ -36,7 +36,7 @@ export function ExportDropdown<T extends object = object>({
   const { elementRef: ref, isOpen, toggle, handleBlur, hide } = useDropdown();
 
   function handleExport(format: 'csv' | 'json') {
-    if (!data || data.length === 0) {
+    if (!data?.length) {
       toast.error(infoMsg.noDataToExport);
       return;
     }

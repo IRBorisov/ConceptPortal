@@ -10,7 +10,7 @@
     "dev": "vite --host",
     "build": "tsc && vite build",
     "lint": "stylelint \"src/**/*.css\" && eslint . --report-unused-disable-directives --max-warnings 0",
-    "lintFix": "eslint . --report-unused-disable-directives --max-warnings 1 --fix",
+    "lintFix": "eslint . --report-unused-disable-directives --max-warnings 0 --fix",
     "preview": "vite preview --port 3000"
   },
   "dependencies": {
@@ -19,7 +19,7 @@
     "@lezer/lr": "^1.4.2",
     "@radix-ui/react-popover": "^1.1.15",
     "@radix-ui/react-select": "^2.2.6",
-    "@tanstack/react-query": "^5.90.2",
+    "@tanstack/react-query": "^5.90.3",
     "@tanstack/react-query-devtools": "^5.90.2",
     "@tanstack/react-table": "^8.21.3",
     "@uiw/codemirror-themes": "^4.25.2",
@@ -58,7 +58,7 @@
     "@types/jest": "^30.0.0",
     "@types/node": "^24.7.2",
     "@types/react": "^19.2.2",
-    "@types/react-dom": "^19.2.1",
+    "@types/react-dom": "^19.2.2",
     "@typescript-eslint/eslint-plugin": "^8.0.1",
     "@typescript-eslint/parser": "^8.0.1",
     "@vitejs/plugin-react": "^5.0.4",
@@ -73,14 +73,14 @@
     "globals": "^16.4.0",
     "jest": "^30.2.0",
     "stylelint": "^16.25.0",
-    "stylelint-config-recommended": "^16.0.0",
-    "stylelint-config-standard": "^38.0.0",
+    "stylelint-config-recommended": "^17.0.0",
+    "stylelint-config-standard": "^39.0.1",
     "stylelint-config-tailwindcss": "^1.0.0",
     "tailwindcss": "^4.0.7",
     "ts-jest": "^29.4.5",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.46.0",
-    "vite": "^7.1.9"
+    "typescript-eslint": "^8.46.1",
+    "vite": "^7.1.10"
   },
   "jest": {
     "preset": "ts-jest",

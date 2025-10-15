@@ -82,6 +82,7 @@ export function useDataTable<TData extends RowData>({
     pageSize: paginationPerPage
   });
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     state: {
       pagination: pagination,
