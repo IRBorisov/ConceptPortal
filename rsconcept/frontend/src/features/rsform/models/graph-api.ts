@@ -57,11 +57,11 @@ export function applyLayout(nodes: Node<TGNodeState>[], edges: Edge[], subLabels
   });
 }
 
-export function inferEdgeType(schema: IRSForm, source: number, target: number): GraphType | null {
+export function inferEdgeType(schema: IRSForm, source: number, target: number): GraphType {
   const isDefinition = schema.graph.hasEdge(source, target);
   const isAttribution = schema.attribution_graph.hasEdge(source, target);
   if (!isDefinition && !isAttribution) {
-    return null;
+    return 'definition';
   } else if (isDefinition && isAttribution) {
     return 'full';
   } else if (isDefinition) {

@@ -88,7 +88,7 @@ export function TGFlow() {
     filteredGraph.nodes.forEach(source => {
       source.outputs.forEach(target => {
         const edgeType = inferEdgeType(schema, source.id, target);
-        if (edgeType && newNodes.find(node => node.id === String(target))) {
+        if (newNodes.find(node => node.id === String(target))) {
           const color = filter.graphType === 'full' ? colorGraphEdge(edgeType) : colorGraphEdge(filter.graphType);
           newEdges.push({
             id: String(edgeID),
