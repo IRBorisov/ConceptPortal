@@ -18,7 +18,7 @@ export function OperationTooltip() {
       clickable
       id={globalIDs.operation_tooltip}
       layer='z-topmost'
-      className='max-w-140 dense max-h-120! overflow-y-auto!'
+      className='max-w-100 lg:max-w-140 dense max-h-80 lg:max-h-120! overflow-y-auto!'
       hidden={!hoverItem}
     >
       {hoverItem && isOperationNode ? <InfoOperation operation={hoverItem} /> : null}
