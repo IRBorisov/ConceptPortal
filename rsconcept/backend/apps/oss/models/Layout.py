@@ -25,7 +25,7 @@ class Layout(Model):
         return f'Схема расположения {self.oss.alias}'
 
     @staticmethod
-    def update_data(itemID: int, data: dict) -> None:
+    def update_data(itemID: int, data: list) -> None:
         ''' Update layout data. '''
         layout = Layout.objects.get(oss_id=itemID)
         layout.data = data

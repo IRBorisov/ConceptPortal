@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { type ReactCodeMirrorRef } from '@uiw/react-codemirror';
 
@@ -71,11 +71,10 @@ export function EditorRSExpression({
 
   const { checkConstituenta: checkInternal, isPending } = useCheckConstituenta();
 
-  const resetCallback = useCallback(() => {
+  useResetOnChange([activeCst, toggleReset], () => {
     setIsModified(false);
     setParseData(null);
-  }, []);
-  useResetOnChange([activeCst, toggleReset], resetCallback);
+  });
 
   function checkConstituenta(
     expression: string,
