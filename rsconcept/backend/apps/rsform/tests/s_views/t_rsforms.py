@@ -238,9 +238,53 @@ class TestRSFormViewset(EndpointTester):
                 'substitution': d2.pk
             }
         ]}
-        response = self.executeOK(data, item=self.owned_id)
+        self.executeOK(data, item=self.owned_id)
         d3.refresh_from_db()
         self.assertEqual(d3.definition_formal, r'D1 \ D2')
+
+
+    @decl_endpoint('/api/rsforms/{item}/substitute', method='patch')
+    def test_substitute_with_attributions(self):
+        self.set_params(item=self.owned_id)
+
+        # Create two base items
+        x1 = self.owned.insert_last('X1')
+        x2 = self.owned.insert_last('X2')
+
+        # Create two attributes to be attributions
+        a1 = self.owned.insert_last('A1', cst_type=CstType.BASE)
+        a2 = self.owned.insert_last('A2', cst_type=CstType.BASE)
+
+        # Create attributions: X1 -> A1, X2 -> A2
+        Attribution = self.owned.constituentsQ().model._meta.apps.get_model('rsform', 'Attribution')
+        Attribution.objects.create(container=x1, attribute=a1)
+        Attribution.objects.create(container=x2, attribute=a2)
+
+        # Substitute x1 with x2
+        data = {
+            'substitutions': [{
+                'original': x1.pk,
+                'substitution': x2.pk
+            }]
+        }
+        self.executeOK(data, item=self.owned_id)
+
+        # Fetch updated attributions
+        attributions = Attribution.objects.filter(
+            container__in=[x1.pk, x2.pk],
+            attribute__in=[a1.pk, a2.pk]
+        )
+        self.assertEqual(len(attributions), 2)
+
+        # Confirm the attribution with container originally x1 is now x2, and there are no duplicates
+        containers = set()
+        attributes = set()
+        for attr in attributions:
+            containers.add(attr.container_id)
+            attributes.add(attr.attribute_id)
+        self.assertIn(x2.pk, containers)
+        self.assertIn(a1.pk, attributes)
+        self.assertIn(a2.pk, attributes)
 
 
     @decl_endpoint('/api/rsforms/{item}/create-cst', method='post')

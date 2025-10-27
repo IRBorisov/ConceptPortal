@@ -12,6 +12,7 @@ from apps.library.models import LibraryItem, LibraryItemType
 from shared import messages as msg
 
 from .api_RSLanguage import generate_structure, get_type_prefix, guess_type
+from .Attribution import Attribution
 from .Constituenta import Constituenta, CstType
 from .RSForm import DELETED_ALIAS, INSERT_LAST, RSForm
 
@@ -149,6 +150,9 @@ class RSFormCached:
             position = position + 1
 
         new_cst = Constituenta.objects.bulk_create(result)
+
+        # TODO: duplicate attributions
+
         self.cache.insert_multi(new_cst)
         return result
 
@@ -233,6 +237,25 @@ class RSFormCached:
             mapping[original.alias] = substitution.alias
             deleted.append(original)
             replacements.append(substitution.pk)
+
+        attributions = list(Attribution.objects.filter(container__schema=self.model))
+        if attributions:
+            orig_to_sub = {original.pk: substitution.pk for original, substitution in substitutions}
+            orig_pks = set(orig_to_sub.keys())
+
+            for attr in attributions:
+                if attr.container_id not in orig_pks and attr.attribute_id not in orig_pks:
+                    continue
+
+                container_id = orig_to_sub.get(attr.container_id)
+                container_id = container_id if container_id is not None else attr.container_id
+                attr_id = orig_to_sub.get(attr.attribute_id)
+                attr_id = attr_id if attr_id is not None else attr.attribute_id
+                if not any(a.container_id == container_id and a.attribute_id == attr_id for a in attributions):
+                    attr.attribute_id = attr_id
+                    attr.container_id = container_id
+                    attr.save()
+
         self.cache.remove_multi(deleted)
         Constituenta.objects.filter(pk__in=[cst.pk for cst in deleted]).delete()
         RSForm.save_order(self.cache.constituents)

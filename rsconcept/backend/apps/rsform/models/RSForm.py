@@ -12,6 +12,7 @@ from shared import messages as msg
 
 from ..graph import Graph
 from .api_RSLanguage import get_type_prefix, guess_type
+from .Attribution import Attribution
 from .Constituenta import Constituenta, CstType, extract_entities, extract_globals
 
 INSERT_LAST: int = -1
@@ -271,6 +272,25 @@ class RSForm:
             mapping[original.alias] = substitution.alias
             deleted.append(original.pk)
             replacements.append(substitution.pk)
+
+        attributions = list(Attribution.objects.filter(container__schema=self.model))
+        if attributions:
+            orig_to_sub = {original.pk: substitution.pk for original, substitution in substitutions}
+            orig_pks = set(orig_to_sub.keys())
+
+            for attr in attributions:
+                if attr.container_id not in orig_pks and attr.attribute_id not in orig_pks:
+                    continue
+
+                container_id = orig_to_sub.get(attr.container_id)
+                container_id = container_id if container_id is not None else attr.container_id
+                attr_id = orig_to_sub.get(attr.attribute_id)
+                attr_id = attr_id if attr_id is not None else attr.attribute_id
+                if not any(a.container_id == container_id and a.attribute_id == attr_id for a in attributions):
+                    attr.attribute_id = attr_id
+                    attr.container_id = container_id
+                    attr.save()
+
         Constituenta.objects.filter(pk__in=deleted).delete()
         cst_list = Constituenta.objects.filter(schema=self.model).only(
             'alias', 'cst_type', 'definition_formal',
