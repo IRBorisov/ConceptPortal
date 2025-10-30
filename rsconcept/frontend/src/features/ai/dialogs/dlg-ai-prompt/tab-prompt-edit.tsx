@@ -31,7 +31,7 @@ export function TabPromptEdit({ label, description, text, setText }: TabPromptEd
           label='Текст шаблона'
           value={text}
           onChange={setText}
-          maxHeight='10rem'
+          maxHeight='9.5rem'
           availableVariables={availableVariables}
         />
       </div>
