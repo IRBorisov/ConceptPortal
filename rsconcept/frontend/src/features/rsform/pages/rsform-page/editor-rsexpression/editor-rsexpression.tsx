@@ -187,7 +187,7 @@ export function EditorRSExpression({
         isModified={isModified}
         activeCst={activeCst}
         parseData={parseData}
-        onAnalyze={handleCheckExpression}
+        onAnalyze={() => handleCheckExpression()}
       />
 
       <RSInput
