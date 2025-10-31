@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { type ReactCodeMirrorRef } from '@uiw/react-codemirror';
 
@@ -71,10 +71,12 @@ export function EditorRSExpression({
 
   const { checkConstituenta: checkInternal, isPending } = useCheckConstituenta();
 
-  useResetOnChange([activeCst, toggleReset], () => {
+  const resetHandler = useCallback(() => {
     setIsModified(false);
     setParseData(null);
-  });
+  }, []);
+
+  useResetOnChange([activeCst, toggleReset], resetHandler);
 
   function checkConstituenta(
     expression: string,
@@ -195,7 +197,7 @@ export function EditorRSExpression({
         minHeight='3.75rem'
         maxHeight='8rem'
         onChange={handleChange}
-        onAnalyze={handleCheckExpression}
+        onAnalyze={() => handleCheckExpression()}
         onOpenEdit={onOpenEdit}
         disabled={disabled}
         {...restProps}
