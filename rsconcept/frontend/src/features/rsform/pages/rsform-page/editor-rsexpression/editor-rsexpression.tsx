@@ -133,7 +133,7 @@ export function EditorRSExpression({
     }
     const text = new RSTextWrapper(rsInput.current as Required<ReactCodeMirrorRef>);
     if (id === TokenID.ID_LOCAL) {
-      text.insertChar(key ?? 'unknown_local');
+      text.replaceWith(key ?? 'unknown_local');
     } else {
       text.insertToken(id);
     }

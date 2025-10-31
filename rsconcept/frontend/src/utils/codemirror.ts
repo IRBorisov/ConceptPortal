@@ -123,6 +123,11 @@ export class CodeMirrorWrapper {
     this.ref = object;
   }
 
+  getPrevSymbol(): string {
+    const selection = this.getSelection();
+    return this.getText(selection.from - 1, selection.from);
+  }
+
   getText(from: number, to: number): string {
     return this.ref.view.state.doc.sliceString(from, to);
   }
@@ -147,10 +152,6 @@ export class CodeMirrorWrapper {
         head: to
       }
     });
-  }
-
-  insertChar(key: string) {
-    this.replaceWith(key);
   }
 
   replaceWith(data: string) {

@@ -6,6 +6,24 @@ import { CodeMirrorWrapper } from '@/utils/codemirror';
 
 import { TokenID } from '../../backend/types';
 
+/* Determines whether an input key is a potential ligature. */
+export function isPotentialLigature(text: string): boolean {
+  return text == '=';
+}
+
+/* Determines symbol for ligature replacement. */
+export function getLigatureSymbol(prevSymbol: string, text: string): string | undefined {
+  if (text == '=') {
+    // prettier-ignore
+    switch (prevSymbol) {
+    case '!': return '≠';
+    case '>': return '≥';
+    case '<': return '≤';
+  }
+  }
+  return undefined;
+}
+
 export function getSymbolSubstitute(keyCode: string, shiftPressed: boolean): string | undefined {
   // prettier-ignore
   if (shiftPressed) {
@@ -172,7 +190,12 @@ export class RSTextWrapper extends CodeMirrorWrapper {
         this.replaceWith('∃');
         return true;
       case TokenID.SET_IN:
-        this.replaceWith('∈');
+        if (this.getPrevSymbol() == '!') {
+          this.setSelection(selection.from - 1, selection.to);
+          this.replaceWith('∉');
+        } else {
+          this.replaceWith('∈');
+        }
         return true;
       case TokenID.SET_NOT_IN:
         this.replaceWith('∉');
@@ -184,7 +207,12 @@ export class RSTextWrapper extends CodeMirrorWrapper {
         this.replaceWith('&');
         return true;
       case TokenID.SUBSET_OR_EQ:
-        this.replaceWith('⊆');
+        if (this.getPrevSymbol() == '!') {
+          this.setSelection(selection.from - 1, selection.to);
+          this.replaceWith('⊄');
+        } else {
+          this.replaceWith('⊆');
+        }
         return true;
       case TokenID.LOGIC_IMPLICATION:
         this.replaceWith('⇒');
@@ -208,13 +236,23 @@ export class RSTextWrapper extends CodeMirrorWrapper {
         this.replaceWith('Z');
         return true;
       case TokenID.SUBSET:
-        this.replaceWith('⊂');
+        if (this.getPrevSymbol() == '!') {
+          this.setSelection(selection.from - 1, selection.to);
+          this.replaceWith('⊄');
+        } else {
+          this.replaceWith('⊂');
+        }
         return true;
       case TokenID.NOT_SUBSET:
         this.replaceWith('⊄');
         return true;
       case TokenID.EQUAL:
-        this.replaceWith('=');
+        if (this.getPrevSymbol() == '!') {
+          this.setSelection(selection.from - 1, selection.to);
+          this.replaceWith('≠');
+        } else {
+          this.replaceWith('=');
+        }
         return true;
       case TokenID.NOTEQUAL:
         this.replaceWith('≠');

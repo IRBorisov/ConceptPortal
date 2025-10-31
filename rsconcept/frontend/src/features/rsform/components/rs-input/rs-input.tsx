@@ -23,7 +23,7 @@ import { extractGlobals } from '../../models/rslang-api';
 import { ccBracketMatching } from './bracket-matching';
 import { rsNavigation } from './click-navigation';
 import { RSLanguage } from './rslang';
-import { getSymbolSubstitute, RSTextWrapper } from './text-editing';
+import { getLigatureSymbol, getSymbolSubstitute, isPotentialLigature, RSTextWrapper } from './text-editing';
 import { rsHoverTooltip } from './tooltip';
 
 const editorSetup: BasicSetupOptions = {
@@ -130,56 +130,77 @@ export const RSInput = forwardRef<ReactCodeMirrorRef, RSInputProps>(
       ...(noTooltip || !schema ? [] : [rsHoverTooltip(schema, onOpenEdit !== undefined)])
     ];
 
+    function handleAutoComplete(text: RSTextWrapper): boolean {
+      const selection = text.getSelection();
+      if (!selection.empty || !schema) {
+        return false;
+      }
+      const wordRange = text.getWord(selection.from);
+      if (!wordRange) {
+        return false;
+      }
+      const word = text.getText(wordRange.from, wordRange.to);
+      if (word.length > 2 && (word.startsWith('Pr') || word.startsWith('pr'))) {
+        text.setSelection(wordRange.from, wordRange.from + 2);
+        if (word.startsWith('Pr')) {
+          text.replaceWith('pr');
+        } else {
+          text.replaceWith('Pr');
+        }
+        return true;
+      }
+      const hint = text.getText(selection.from - 1, selection.from);
+      const type = guessCstType(hint);
+      if (hint === getCstTypePrefix(type)) {
+        text.setSelection(selection.from - 1, selection.from);
+      }
+      const takenAliases = [...extractGlobals(thisRef.current?.view?.state.doc.toString() ?? '')];
+      const newAlias = generateAlias(type, schema, takenAliases);
+      text.replaceWith(newAlias);
+      return true;
+    }
+
+    function processInput(event: React.KeyboardEvent<HTMLDivElement>): boolean {
+      const text = new RSTextWrapper(thisRef.current as Required<ReactCodeMirrorRef>);
+      if ((event.ctrlKey || event.metaKey) && event.code === 'Space') {
+        return handleAutoComplete(text);
+      }
+
+      if (event.altKey) {
+        return text.processAltKey(event.code, event.shiftKey);
+      }
+
+      if (!(event.ctrlKey || event.metaKey)) {
+        if (isPotentialLigature(event.key)) {
+          const selection = text.getSelection();
+          const prevSymbol = text.getText(selection.from - 1, selection.from);
+          const newSymbol = getLigatureSymbol(prevSymbol, event.key);
+          if (newSymbol) {
+            text.setSelection(selection.from - 1, selection.to);
+            text.replaceWith(newSymbol);
+          }
+          return !!newSymbol;
+        } else {
+          const newSymbol = getSymbolSubstitute(event.code, event.shiftKey);
+          if (newSymbol) {
+            text.replaceWith(newSymbol);
+          }
+          return !!newSymbol;
+        }
+      }
+
+      if (event.code === 'KeyQ' && onAnalyze) {
+        onAnalyze();
+        return true;
+      }
+      return false;
+    }
+
     function handleInput(event: React.KeyboardEvent<HTMLDivElement>) {
       if (!thisRef.current) {
         return;
       }
-      const text = new RSTextWrapper(thisRef.current as Required<ReactCodeMirrorRef>);
-      if ((event.ctrlKey || event.metaKey) && event.code === 'Space') {
-        const selection = text.getSelection();
-        if (!selection.empty || !schema) {
-          return;
-        }
-        const wordRange = text.getWord(selection.from);
-        if (wordRange) {
-          const word = text.getText(wordRange.from, wordRange.to);
-          if (word.length > 2 && (word.startsWith('Pr') || word.startsWith('pr'))) {
-            text.setSelection(wordRange.from, wordRange.from + 2);
-            if (word.startsWith('Pr')) {
-              text.replaceWith('pr');
-            } else {
-              text.replaceWith('Pr');
-            }
-            event.preventDefault();
-            event.stopPropagation();
-            return;
-          }
-        }
-
-        const hint = text.getText(selection.from - 1, selection.from);
-        const type = guessCstType(hint);
-        if (hint === getCstTypePrefix(type)) {
-          text.setSelection(selection.from - 1, selection.from);
-        }
-        const takenAliases = [...extractGlobals(thisRef.current.view?.state.doc.toString() ?? '')];
-        const newAlias = generateAlias(type, schema, takenAliases);
-        text.replaceWith(newAlias);
-        event.preventDefault();
-        event.stopPropagation();
-      } else if (event.altKey) {
-        if (text.processAltKey(event.code, event.shiftKey)) {
-          event.preventDefault();
-          event.stopPropagation();
-        }
-      } else if (!(event.ctrlKey || event.metaKey)) {
-        const newSymbol = getSymbolSubstitute(event.code, event.shiftKey);
-        if (newSymbol) {
-          text.replaceWith(newSymbol);
-          event.preventDefault();
-          event.stopPropagation();
-        }
-      } else if (event.code === 'KeyQ' && onAnalyze) {
-        onAnalyze();
+      if (processInput(event)) {
         event.preventDefault();
         event.stopPropagation();
       }
