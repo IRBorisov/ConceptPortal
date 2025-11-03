@@ -11,7 +11,7 @@ export function Logo() {
     <img
       alt=''
       aria-hidden
-      className='max-h-7 w-fit max-w-46'
+      className='max-h-7 w-fit max-w-46 cursor-pointer'
       src={size.isSmall ? '/logo_sign.svg' : !darkMode ? '/logo_full.svg' : '/logo_full_dark.svg'}
     />
   );
