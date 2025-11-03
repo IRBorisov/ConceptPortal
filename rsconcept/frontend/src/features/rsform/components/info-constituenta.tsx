@@ -11,7 +11,7 @@ interface InfoConstituentaProps extends React.ComponentProps<'div'> {
 
 export function InfoConstituenta({ data, className, ...restProps }: InfoConstituentaProps) {
   return (
-    <div className={cn('dense min-w-60 break-words', className)} {...restProps}>
+    <div className={cn('dense min-w-60 wrap-break-word', className)} {...restProps}>
       <h2 className='cursor-default' title={data.is_inherited ? ' наследник' : undefined}>
         {data.alias}
         {data.is_inherited ? <IconChild size='1rem' className='inline-icon align-middle ml-1 mt-1' /> : null}

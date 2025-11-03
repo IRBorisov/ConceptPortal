@@ -10,7 +10,7 @@ export const GlobalTooltips = () => {
         layer='z-topmost'
         place='bottom-start'
         offset={24}
-        className='max-w-80 break-words rounded-lg! select-none'
+        className='max-w-80 wrap-break-word rounded-lg! select-none'
       />
       <Tooltip
         float

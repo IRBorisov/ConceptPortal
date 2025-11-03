@@ -7,7 +7,7 @@ const invalidVarMark = Decoration.mark({
 });
 
 const validMark = Decoration.mark({
-  class: 'text-(--acc-fg-purple)'
+  class: 'text-accent-purple-foreground'
 });
 
 class MarkVariablesPlugin {

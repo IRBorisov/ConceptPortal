@@ -75,7 +75,7 @@ export function TableRSList({
       minSize: 150,
       maxSize: 200,
       cell: props => (
-        <div className='w-40 text-xs break-words'>{truncateToSymbol(props.getValue(), TYPIFICATION_TRUNCATE)}</div>
+        <div className='w-40 text-xs wrap-break-word'>{truncateToSymbol(props.getValue(), TYPIFICATION_TRUNCATE)}</div>
       )
     }),
     columnHelper.accessor(cst => cst.term_resolved || cst.term_raw || '', {

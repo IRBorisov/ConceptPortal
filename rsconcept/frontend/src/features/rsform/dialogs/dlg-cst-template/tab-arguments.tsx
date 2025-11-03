@@ -78,7 +78,7 @@ export function TabArguments({ schema }: TabArgumentsProps) {
     argumentsHelper.accessor(arg => arg.typification, {
       id: 'type',
       enableHiding: true,
-      cell: props => <div className='w-36 text-sm break-words'>{props.getValue()}</div>
+      cell: props => <div className='w-36 text-sm wrap-break-word'>{props.getValue()}</div>
     }),
     argumentsHelper.display({
       id: 'actions',

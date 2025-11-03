@@ -73,7 +73,7 @@ export function TableSideConstituents({
       cell: props => (
         <TextContent
           noTooltip
-          className={props.getValue().includes('×') ? 'break-all' : 'break-words'}
+          className={props.getValue().includes('×') ? 'break-all' : 'wrap-break-word'}
           text={props.getValue()}
           maxLength={DESCRIPTION_MAX_SYMBOLS}
         />

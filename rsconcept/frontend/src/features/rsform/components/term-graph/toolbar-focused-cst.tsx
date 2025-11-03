@@ -21,7 +21,7 @@ export function ToolbarFocusedCst({ focus, resetFocus, className }: ToolbarFocus
 
   return (
     <div className={cn('flex items-center cc-icons', className)}>
-      <div className='w-31 mt-0.5 text-right select-none text-(--acc-fg-purple)'>
+      <div className='w-31 mt-0.5 text-right select-none text-accent-purple-foreground'>
         <span>
           Фокус
           <b> {focus.alias} </b>

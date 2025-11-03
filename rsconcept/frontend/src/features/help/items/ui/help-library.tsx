@@ -34,7 +34,7 @@ export function HelpLibrary() {
 
       <ul>
         <li>
-          <span className='text-(--acc-fg-green)'>зеленым текстом</span> выделены ОСС
+          <span className='text-accent-green-foreground'>зеленым текстом</span> выделены ОСС
         </li>
         <li>
           <kbd>клик</kbd> по строке - переход к редактированию схемы

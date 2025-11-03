@@ -44,7 +44,7 @@ export function SchemasGuide({ schema }: SchemasGuideProps) {
       <Tooltip
         anchorSelect={`#${globalIDs.graph_schemas}`}
         place='right'
-        className='z-topmost grid max-w-100 break-words text-base'
+        className='z-topmost grid max-w-100 wrap-break-word text-base'
       >
         <div className='inline-flex items-center gap-2'>
           <span className='w-3 h-3 border rounded-full' style={{ backgroundColor: colorBgSchemas(0) }} />

@@ -13,23 +13,23 @@ export function HelpFormulaTree() {
 
       <h2>Виды узлов</h2>
       <p className='m-0'>
-        <span className='cc-sample-color bg-(--acc-bg-green)' />
+        <span className='cc-sample-color bg-accent-green' />
         объявление идентификатора
       </p>
       <p className='m-0'>
-        <span className='cc-sample-color bg-(--acc-bg-teal)' />
+        <span className='cc-sample-color bg-accent-teal' />
         глобальный идентификатор
       </p>
       <p className='m-0'>
-        <span className='cc-sample-color bg-(--acc-bg-orange)' />
+        <span className='cc-sample-color bg-accent-orange' />
         логическое выражение
       </p>
       <p className='m-0'>
-        <span className='cc-sample-color bg-(--acc-bg-blue)' />
+        <span className='cc-sample-color bg-accent-blue' />
         типизированное выражение
       </p>
       <p className='m-0'>
-        <span className='cc-sample-color bg-(--acc-bg-red)' />
+        <span className='cc-sample-color bg-accent-red' />
         присвоение и итерация
       </p>
       <p className='m-0'>
