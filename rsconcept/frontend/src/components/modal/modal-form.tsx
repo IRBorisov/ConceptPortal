@@ -5,10 +5,11 @@ import { BadgeHelp } from '@/features/help/components/badge-help';
 
 import { useEscapeKey } from '@/hooks/use-escape-key';
 import { useDialogsStore } from '@/stores/dialogs';
+import { globalIDs } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/utils';
 
 import { Button, MiniButton, SubmitButton } from '../control';
-import { IconClose } from '../icons';
+import { IconAlert, IconClose } from '../icons';
 import { type Styling } from '../props';
 import { cn } from '../utils';
 
@@ -33,7 +34,7 @@ interface ModalFormProps extends ModalProps {
   submitText?: string;
 
   /** Tooltip for the submit button when the form is invalid. */
-  submitInvalidTooltip?: string;
+  validationHint?: string;
 
   /** Indicates that submit button is enabled. */
   canSubmit?: boolean;
@@ -60,7 +61,7 @@ export function ModalForm({
 
   canSubmit = true,
   submitText = 'Продолжить',
-  submitInvalidTooltip,
+  validationHint,
   beforeSubmit,
   onSubmit,
   onCancel,
@@ -121,7 +122,7 @@ export function ModalForm({
         <div
           className={cn(
             '@container/modal',
-            'max-h-[calc(100svh-8rem)] max-w-[100svw] xs:max-w-[calc(100svw-2rem)]',
+            'max-h-[calc(100svh-8rem)] max-w-svw xs:max-w-[calc(100svw-2rem)]',
             'overscroll-contain outline-hidden',
             overflowVisible ? 'overflow-visible' : 'overflow-auto',
             className
@@ -131,14 +132,18 @@ export function ModalForm({
           {children}
         </div>
 
-        <div className='z-pop my-2 flex gap-12 justify-center text-sm'>
-          <SubmitButton
-            autoFocus
-            text={submitText}
-            title={!canSubmit ? submitInvalidTooltip : ''}
-            className='min-w-28'
-            disabled={!canSubmit}
-          />
+        <div className='z-pop my-2 flex gap-12 justify-center text-sm relative'>
+          {validationHint ? (
+            <div className='absolute top-0.5 text-muted-foreground'>
+              <IconAlert
+                size='1.5rem'
+                className={canSubmit ? 'hover:icon-green' : 'hover:icon-red'}
+                data-tooltip-id={globalIDs.tooltip}
+                data-tooltip-html={validationHint}
+              />
+            </div>
+          ) : null}
+          <SubmitButton autoFocus text={submitText} className='min-w-28' disabled={!canSubmit} />
           <Button text='Отмена' aria-label='Закрыть' className='min-w-28' onClick={handleCancel} />
         </div>
       </form>

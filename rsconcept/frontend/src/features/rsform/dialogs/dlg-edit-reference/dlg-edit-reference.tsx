@@ -10,6 +10,7 @@ import { HelpTopic } from '@/features/help';
 import { ModalForm } from '@/components/modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useDialogsStore } from '@/stores/dialogs';
+import { hintMsg } from '@/utils/labels';
 
 import { labelReferenceType } from '../../labels';
 import {
@@ -116,6 +117,7 @@ export function DlgEditReference() {
       header='Редактирование ссылки'
       submitText='Сохранить ссылку'
       canSubmit={canSubmit}
+      validationHint={canSubmit ? '' : hintMsg.referenceInvalid}
       onCancel={onCancel}
       onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
       className='w-160 px-6 h-128'

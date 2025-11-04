@@ -10,6 +10,7 @@ import { Loader } from '@/components/loader';
 import { ModalForm } from '@/components/modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useDialogsStore } from '@/stores/dialogs';
+import { hintMsg } from '@/utils/labels';
 
 import { type ICreateSynthesisDTO, type IOssLayout, schemaCreateSynthesis } from '../../backend/types';
 import { useCreateSynthesis } from '../../backend/use-create-synthesis';
@@ -73,8 +74,17 @@ export function DlgCreateSynthesis() {
   });
   const alias = useWatch({ control: methods.control, name: 'item_data.alias' });
   const [activeTab, setActiveTab] = useState<TabID>(TabID.ARGUMENTS);
-  const canSubmit =
-    methods.formState.isValid && !!alias && !manager.oss.operations.some(operation => operation.alias === alias);
+  const { canSubmit, hint } = (() => {
+    if (!methods.formState.isValid) {
+      return { canSubmit: false, hint: hintMsg.formInvalid };
+    } else if (!alias) {
+      return { canSubmit: false, hint: hintMsg.aliasEmpty };
+    } else if (manager.oss.operations.some(operation => operation.alias === alias)) {
+      return { canSubmit: false, hint: hintMsg.schemaAliasTaken };
+    } else {
+      return { canSubmit: true, hint: '' };
+    }
+  })();
 
   function onSubmit(data: ICreateSynthesisDTO) {
     data.position = manager.newOperationPosition(data);
@@ -87,6 +97,7 @@ export function DlgCreateSynthesis() {
       header='Создание операции синтеза'
       submitText='Создать'
       canSubmit={canSubmit}
+      validationHint={hint}
       onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
       className='w-180 px-6 h-128'
       helpTopic={HelpTopic.CC_OSS}

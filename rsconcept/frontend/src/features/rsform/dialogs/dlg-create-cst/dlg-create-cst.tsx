@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
-import { errorMsg } from '@/utils/labels';
+import { hintMsg } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 
 import {
@@ -37,7 +37,15 @@ export function DlgCreateCst() {
   });
   const alias = useWatch({ control: methods.control, name: 'alias' });
   const cst_type = useWatch({ control: methods.control, name: 'cst_type' });
-  const canSubmit = methods.formState.isValid && validateNewAlias(alias, cst_type, schema);
+  const { canSubmit, hint } = (() => {
+    if (!methods.formState.isValid) {
+      return { canSubmit: false, hint: hintMsg.formInvalid };
+    } else if (!validateNewAlias(alias, cst_type, schema)) {
+      return { canSubmit: false, hint: hintMsg.aliasInvalid };
+    } else {
+      return { canSubmit: true, hint: '' };
+    }
+  })();
 
   function onSubmit(data: ICreateConstituentaDTO) {
     return cstCreate({ itemID: schema.id, data }).then(onCreate);
@@ -48,7 +56,7 @@ export function DlgCreateCst() {
       header='Создание конституенты'
       canSubmit={canSubmit}
       onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
-      submitInvalidTooltip={errorMsg.aliasInvalid}
+      validationHint={hint}
       submitText='Создать'
       className='cc-column w-140 max-h-120 py-2 px-6'
     >

@@ -10,6 +10,7 @@ import { SubstitutionValidator } from '@/features/oss/models/oss-api';
 import { ErrorField, TextArea } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
+import { hintMsg } from '@/utils/labels';
 
 import { type ISubstitutionsDTO, schemaSubstitutions } from '../backend/types';
 import { useRSFormSuspense } from '../backend/use-rsform';
@@ -50,8 +51,8 @@ export function DlgSubstituteCst() {
     <ModalForm
       header='Отождествление'
       submitText='Отождествить'
-      submitInvalidTooltip='Выберите две различные конституенты'
       canSubmit={isValid}
+      validationHint={isValid ? '' : hintMsg.substitutionsEmpty}
       onSubmit={event => void handleSubmit(onSubmit)(event)}
       className='w-160 px-6 pb-3'
       helpTopic={HelpTopic.UI_SUBSTITUTIONS}
@@ -74,7 +75,7 @@ export function DlgSubstituteCst() {
         disabled
         value={validator.msg}
         rows={4}
-        className={clsx('mt-3', isCorrect ? '' : 'border-(--acc-fg-red) border-2')}
+        className={clsx('mt-3', isCorrect ? '' : 'border-accent-red-foreground border-2')}
       />
     </ModalForm>
   );

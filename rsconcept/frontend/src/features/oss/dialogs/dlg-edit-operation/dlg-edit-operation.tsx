@@ -10,6 +10,7 @@ import { Loader } from '@/components/loader';
 import { ModalForm } from '@/components/modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useDialogsStore } from '@/stores/dialogs';
+import { hintMsg } from '@/utils/labels';
 
 import { type IOssLayout, type IUpdateOperationDTO, OperationType, schemaUpdateOperation } from '../../backend/types';
 import { useOssSuspense } from '../../backend/use-oss';
@@ -79,6 +80,7 @@ export function DlgEditOperation() {
       header='Редактирование операции'
       submitText='Сохранить'
       canSubmit={canSubmit}
+      validationHint={hintMsg.formInvalid}
       onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
       className='w-160 px-6 h-128'
       helpTopic={HelpTopic.UI_SUBSTITUTIONS}

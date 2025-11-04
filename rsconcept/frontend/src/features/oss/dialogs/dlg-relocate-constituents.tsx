@@ -15,6 +15,7 @@ import { MiniButton } from '@/components/control';
 import { Loader } from '@/components/loader';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
+import { hintMsg } from '@/utils/labels';
 
 import { type IOssLayout, type IRelocateConstituentsDTO, schemaRelocateConstituents } from '../backend/types';
 import { useOssSuspense } from '../backend/use-oss';
@@ -120,7 +121,7 @@ export function DlgRelocateConstituents() {
       header='Перенос конституент'
       submitText='Переместить'
       canSubmit={canSubmit}
-      submitInvalidTooltip='Необходимо выбрать хотя бы одну собственную конституенту'
+      validationHint={canSubmit ? '' : hintMsg.relocateEmpty}
       onSubmit={event => void handleSubmit(onSubmit)(event)}
       className='w-160 h-132 py-3 px-6'
       helpTopic={HelpTopic.UI_RELOCATE_CST}

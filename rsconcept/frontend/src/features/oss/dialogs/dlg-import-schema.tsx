@@ -11,6 +11,7 @@ import { PickSchema } from '@/features/library/components/pick-schema';
 import { Checkbox, TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
+import { hintMsg } from '@/utils/labels';
 
 import { type IImportSchemaDTO, type IOssLayout, schemaImportSchema } from '../backend/types';
 import { useImportSchema } from '../backend/use-import-schema';
@@ -73,7 +74,17 @@ export function DlgImportSchema() {
   });
   const alias = useWatch({ control: control, name: 'item_data.alias' });
   const clone_source = useWatch({ control: control, name: 'clone_source' });
-  const canSubmit = isValid && !!alias && !manager.oss.operations.some(operation => operation.alias === alias);
+  const { canSubmit, hint } = (() => {
+    if (!isValid) {
+      return { canSubmit: false, hint: hintMsg.formInvalid };
+    } else if (!alias) {
+      return { canSubmit: false, hint: hintMsg.aliasEmpty };
+    } else if (manager.oss.operations.some(operation => operation.alias === alias)) {
+      return { canSubmit: false, hint: hintMsg.schemaAliasTaken };
+    } else {
+      return { canSubmit: true, hint: '' };
+    }
+  })();
 
   function onSubmit(data: IImportSchemaDTO) {
     data.position = manager.newOperationPosition(data);
@@ -101,6 +112,7 @@ export function DlgImportSchema() {
       header='Создание операции: Загрузка'
       submitText='Создать'
       canSubmit={canSubmit}
+      validationHint={hint}
       onSubmit={event => void handleSubmit(onSubmit)(event)}
       className='w-180 px-6 pb-3 cc-column'
       helpTopic={HelpTopic.CC_OSS}

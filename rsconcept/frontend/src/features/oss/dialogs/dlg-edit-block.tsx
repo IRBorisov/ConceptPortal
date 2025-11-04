@@ -67,6 +67,7 @@ export function DlgEditBlock() {
       <TextInput
         id='operation_title' //
         label='Название'
+        placeholder='Введите название'
         {...register('item_data.title')}
         error={errors.item_data?.title}
       />

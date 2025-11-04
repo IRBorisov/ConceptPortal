@@ -8,6 +8,7 @@ import { Loader } from '@/components/loader';
 import { ModalForm } from '@/components/modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useDialogsStore } from '@/stores/dialogs';
+import { hintMsg } from '@/utils/labels';
 
 import { type IInlineSynthesisDTO, schemaInlineSynthesis } from '../../backend/types';
 import { useInlineSynthesis } from '../../backend/use-inline-synthesis';
@@ -58,6 +59,7 @@ export function DlgInlineSynthesis() {
       submitText='Добавить конституенты'
       className='w-160 h-132 px-6'
       canSubmit={canSubmit}
+      validationHint={canSubmit ? '' : hintMsg.sourceEmpty}
       onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
     >
       <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>

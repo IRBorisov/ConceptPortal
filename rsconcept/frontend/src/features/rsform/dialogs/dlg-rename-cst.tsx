@@ -8,6 +8,7 @@ import { HelpTopic } from '@/features/help';
 import { TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
+import { hintMsg } from '@/utils/labels';
 
 import { type CstType, type IUpdateConstituentaDTO, schemaUpdateConstituenta } from '../backend/types';
 import { useRSFormSuspense } from '../backend/use-rsform';
@@ -60,8 +61,8 @@ export function DlgRenameCst() {
     <ModalForm
       header='Переименование конституенты'
       submitText='Переименовать'
-      submitInvalidTooltip='Введите незанятое имя, соответствующее типу'
       canSubmit={canSubmit}
+      validationHint={canSubmit ? '' : hintMsg.aliasInvalid}
       onSubmit={event => void handleSubmit(onSubmit)(event)}
       className='w-120 py-6 pr-3 pl-6 flex gap-3 justify-center items-center'
       helpTopic={HelpTopic.CC_CONSTITUENTA}

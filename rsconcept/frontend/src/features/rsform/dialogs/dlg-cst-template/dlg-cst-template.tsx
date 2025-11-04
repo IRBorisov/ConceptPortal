@@ -10,6 +10,7 @@ import { Loader } from '@/components/loader';
 import { ModalForm } from '@/components/modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useDialogsStore } from '@/stores/dialogs';
+import { hintMsg } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 
 import {
@@ -61,7 +62,17 @@ export function DlgCstTemplate() {
   });
   const alias = useWatch({ control: methods.control, name: 'alias' });
   const cst_type = useWatch({ control: methods.control, name: 'cst_type' });
-  const canSubmit = methods.formState.isValid && validateNewAlias(alias, cst_type, schema);
+  const { canSubmit, hint } = (() => {
+    if (!cst_type) {
+      return { canSubmit: false, hint: hintMsg.templateInvalid };
+    } else if (!methods.formState.isValid) {
+      return { canSubmit: false, hint: hintMsg.formInvalid };
+    } else if (!validateNewAlias(alias, cst_type, schema)) {
+      return { canSubmit: false, hint: hintMsg.aliasInvalid };
+    } else {
+      return { canSubmit: true, hint: '' };
+    }
+  })();
 
   const [activeTab, setActiveTab] = useState<TabID>(TabID.TEMPLATE);
 
@@ -76,6 +87,7 @@ export function DlgCstTemplate() {
       className='w-172 h-140 px-6'
       canSubmit={canSubmit}
       onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
+      validationHint={hint}
       helpTopic={HelpTopic.RSL_TEMPLATES}
     >
       <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>

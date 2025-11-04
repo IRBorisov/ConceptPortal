@@ -9,6 +9,7 @@ import { HelpTopic } from '@/features/help';
 import { ModalForm } from '@/components/modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useDialogsStore } from '@/stores/dialogs';
+import { hintMsg } from '@/utils/labels';
 
 import { type ICreateBlockDTO, type IOssLayout, schemaCreateBlock } from '../../backend/types';
 import { useCreateBlock } from '../../backend/use-create-block';
@@ -77,7 +78,17 @@ export function DlgCreateBlock() {
   const children_blocks = useWatch({ control: methods.control, name: 'children_blocks' });
   const children_operations = useWatch({ control: methods.control, name: 'children_operations' });
   const [activeTab, setActiveTab] = useState<TabID>(TabID.CARD);
-  const canSubmit = methods.formState.isValid && !!title && !manager.oss.blocks.some(block => block.title === title);
+  const { canSubmit, hint } = (() => {
+    if (!methods.formState.isValid) {
+      return { canSubmit: false, hint: hintMsg.formInvalid };
+    } else if (!title) {
+      return { canSubmit: false, hint: hintMsg.titleEmpty };
+    } else if (manager.oss.blocks.some(block => block.title === title)) {
+      return { canSubmit: false, hint: hintMsg.blockTitleTaken };
+    } else {
+      return { canSubmit: true, hint: '' };
+    }
+  })();
 
   function onSubmit(data: ICreateBlockDTO) {
     data.position = manager.newBlockPosition(data);
@@ -90,6 +101,7 @@ export function DlgCreateBlock() {
       header='Создание блока'
       submitText='Создать'
       canSubmit={canSubmit}
+      validationHint={hint}
       onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
       className='w-160 px-6 h-110'
       helpTopic={HelpTopic.CC_STRUCTURING}

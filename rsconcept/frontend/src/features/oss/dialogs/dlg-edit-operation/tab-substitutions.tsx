@@ -45,7 +45,12 @@ export function TabSubstitutions({ oss }: TabSubstitutionsProps) {
         )}
       />
 
-      <TextArea disabled value={validator.msg} rows={4} className={isCorrect ? '' : 'border-(--acc-fg-red) border-2'} />
+      <TextArea
+        disabled
+        value={validator.msg}
+        rows={4}
+        className={isCorrect ? '' : 'border-accent-red-foreground border-2'}
+      />
     </div>
   );
 }

@@ -32,6 +32,7 @@ export function TabArguments({ oss }: TabArgumentsProps) {
       <TextInput
         id='operation_title'
         label='Название'
+        placeholder='Введите название'
         {...register('item_data.title')}
         error={errors.item_data?.title}
       />
@@ -40,6 +41,7 @@ export function TabArguments({ oss }: TabArgumentsProps) {
           <TextInput
             id='operation_alias' //
             label='Сокращение'
+            placeholder='Введите сокращение'
             className='w-80'
             {...register('item_data.alias')}
             error={errors.item_data?.alias}

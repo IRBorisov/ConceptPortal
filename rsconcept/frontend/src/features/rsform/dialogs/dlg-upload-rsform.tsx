@@ -6,6 +6,7 @@ import { Checkbox, FileInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';
+import { hintMsg } from '@/utils/labels';
 
 import { useUploadTRS } from '../backend/use-upload-trs';
 
@@ -42,6 +43,7 @@ export function DlgUploadRSForm() {
     <ModalForm
       header='Импорт схемы из Экстеора'
       canSubmit={!!file}
+      validationHint={!!file ? '' : hintMsg.fileEmpty}
       onSubmit={handleSubmit}
       submitText='Загрузить'
       className='w-100 px-6'

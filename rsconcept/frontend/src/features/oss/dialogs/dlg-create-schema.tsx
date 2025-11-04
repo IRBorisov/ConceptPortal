@@ -8,6 +8,7 @@ import { HelpTopic } from '@/features/help';
 import { TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
+import { hintMsg } from '@/utils/labels';
 
 import { type ICreateSchemaDTO, type IOssLayout, schemaCreateSchema } from '../backend/types';
 import { useCreateSchema } from '../backend/use-create-schema';
@@ -64,7 +65,17 @@ export function DlgCreateSchema() {
     mode: 'onChange'
   });
   const alias = useWatch({ control: control, name: 'item_data.alias' });
-  const canSubmit = isValid && !!alias && !manager.oss.operations.some(operation => operation.alias === alias);
+  const { canSubmit, hint } = (() => {
+    if (!isValid) {
+      return { canSubmit: false, hint: hintMsg.formInvalid };
+    } else if (!alias) {
+      return { canSubmit: false, hint: hintMsg.aliasEmpty };
+    } else if (manager.oss.operations.some(operation => operation.alias === alias)) {
+      return { canSubmit: false, hint: hintMsg.schemaAliasTaken };
+    } else {
+      return { canSubmit: true, hint: '' };
+    }
+  })();
 
   function onSubmit(data: ICreateSchemaDTO) {
     data.position = manager.newOperationPosition(data);
@@ -77,6 +88,7 @@ export function DlgCreateSchema() {
       header='Создание операции: Новая схема'
       submitText='Создать'
       canSubmit={canSubmit}
+      validationHint={hint}
       onSubmit={event => void handleSubmit(onSubmit)(event)}
       className='w-180 px-6 pb-3 cc-column'
       helpTopic={HelpTopic.CC_OSS}
@@ -84,6 +96,7 @@ export function DlgCreateSchema() {
       <TextInput
         id='operation_title' //
         label='Название'
+        placeholder='Введите название'
         {...register('item_data.title')}
         error={errors.item_data?.title}
       />
@@ -93,6 +106,7 @@ export function DlgCreateSchema() {
             id='operation_alias' //
             label='Сокращение'
             className='w-80'
+            placeholder='Введите сокращение'
             {...register('item_data.alias')}
             error={errors.item_data?.alias}
           />

@@ -10,7 +10,7 @@ import { MiniButton } from '@/components/control';
 import { IconChild, IconRSForm } from '@/components/icons';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
-import { errorMsg } from '@/utils/labels';
+import { hintMsg } from '@/utils/labels';
 
 import { type IUpdateConstituentaDTO, schemaUpdateConstituenta } from '../../backend/types';
 import { useRSFormSuspense } from '../../backend/use-rsform';
@@ -91,7 +91,7 @@ export function DlgEditCst() {
       header='Редактирование конституенты'
       canSubmit={canSubmit}
       onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
-      submitInvalidTooltip={errorMsg.aliasInvalid}
+      validationHint={canSubmit ? '' : hintMsg.aliasInvalid}
       submitText='Сохранить'
       className='cc-column w-140 max-h-120 py-2 px-6'
     >

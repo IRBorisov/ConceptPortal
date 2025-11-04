@@ -12,7 +12,7 @@ import { IconReset, IconSave } from '@/components/icons';
 import { TextArea, TextInput } from '@/components/input';
 import { ModalView } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
-import { errorMsg } from '@/utils/labels';
+import { hintMsg } from '@/utils/labels';
 
 import { type IUpdateVersionDTO, schemaUpdateVersion } from '../../backend/types';
 import { useDeleteVersion } from '../../backend/use-delete-version';
@@ -106,7 +106,7 @@ export function DlgEditVersions() {
         <div className='cc-icons h-fit'>
           <MiniButton
             type='submit'
-            title={isValid ? 'Сохранить изменения' : errorMsg.versionTaken}
+            title={isValid ? 'Сохранить изменения' : hintMsg.versionTaken}
             aria-label='Сохранить изменения'
             icon={<IconSave size='1.25rem' className='icon-primary' />}
             disabled={!isDirty || !isValid || isProcessing}

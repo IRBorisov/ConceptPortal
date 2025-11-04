@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Checkbox, TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
-import { errorMsg } from '@/utils/labels';
+import { hintMsg } from '@/utils/labels';
 
 import { type ICreateVersionDTO, type IVersionInfo, schemaCreateVersion } from '../backend/types';
 import { useCreateVersion } from '../backend/use-create-version';
@@ -41,7 +41,15 @@ export function DlgCreateVersion() {
     mode: 'onChange'
   });
   const version = useWatch({ control, name: 'version' });
-  const canSubmit = !!version && !versions.find(ver => ver.version === version);
+  const { canSubmit, hint } = (() => {
+    if (!version) {
+      return { canSubmit: false, hint: hintMsg.versionEmpty };
+    } else if (versions.find(ver => ver.version === version)) {
+      return { canSubmit: false, hint: hintMsg.versionTaken };
+    } else {
+      return { canSubmit: true, hint: '' };
+    }
+  })();
 
   function onSubmit(data: ICreateVersionDTO) {
     return versionCreate({ itemID, data }).then(onCreate);
@@ -52,7 +60,7 @@ export function DlgCreateVersion() {
       header='Создание версии'
       className='cc-column w-120 py-2 px-6'
       canSubmit={canSubmit}
-      submitInvalidTooltip={errorMsg.versionTaken}
+      validationHint={hint}
       submitText='Создать'
       onSubmit={event => void handleSubmit(onSubmit)(event)}
     >

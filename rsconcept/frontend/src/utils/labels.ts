@@ -68,11 +68,29 @@ export const errorMsg = {
   privacyNotAccepted: 'Примите политику обработки персональных данных',
   loginFormat: 'Имя пользователя должно содержать только буквы и цифры',
   invalidLocation: 'Некорректный формат пути',
-  versionTaken: 'Версия с таким шифром уже существует',
   emptySubstitutions: 'Выберите хотя бы одно отождествление',
-  aliasInvalid: 'Введите незанятое имя, соответствующее типу',
   invalidResponse: 'Некорректный ответ сервера'
 } as const;
+
+/**
+ * UI hint descriptors.
+ */
+export const hintMsg = {
+  templateInvalid: 'Выберите шаблон конституенты',
+  formInvalid: 'Форма заполнена некорректно',
+  aliasInvalid: 'Введите незанятое имя, соответствующее типу',
+  aliasEmpty: 'Введите сокращение',
+  titleEmpty: 'Введите название',
+  blockTitleTaken: 'Блок с таким названием уже существует',
+  schemaAliasTaken: 'Схема с таким именем уже существует',
+  versionEmpty: 'Введите шифр версии',
+  versionTaken: 'Версия с таким шифром уже существует',
+  relocateEmpty: 'Необходимо выбрать хотя бы одну собственную конституенту',
+  substitutionsEmpty: 'Выберите две различные конституенты',
+  sourceEmpty: 'Выберите схему источник',
+  referenceInvalid: 'Выберите тип ссылки и заполните все поля',
+  fileEmpty: 'Выберите файл для загрузки'
+};
 
 /**
  * UI tooltip descriptors.

@@ -53,7 +53,7 @@ export function DlgCreatePromptTemplate() {
       submitText='Создать'
       canSubmit={canSubmit}
       onSubmit={event => void handleSubmit(onSubmit)(event)}
-      submitInvalidTooltip='Введите уникальное название шаблона'
+      validationHint={canSubmit ? '' : 'Введите уникальное название шаблона'}
       className='cc-column w-140 max-h-120 py-2 px-6'
       helpTopic={HelpTopic.ASSISTANT}
     >
