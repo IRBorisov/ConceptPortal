@@ -160,7 +160,7 @@ export function ToolbarTermGraph({ className }: ToolbarTermGraphProps) {
 
         <BadgeHelp topic={HelpTopic.UI_GRAPH_TERM} contentClass='sm:max-w-160' offset={4} />
       </div>
-      <div className='cc-icons items-center'>
+      <div className='cc-icons items-start'>
         {focusCst ? (
           <ToolbarFocusedCst
             focus={focusCst} //

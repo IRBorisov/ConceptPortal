@@ -100,11 +100,9 @@ export function TGReadonlyFlow({ schema }: TGReadonlyFlowProps) {
 
   return (
     <div className='relative w-full h-full flex flex-col'>
-      <div className='cc-tab-tools flex flex-col mt-2 items-center rounded-b-2xl backdrop-blur-xs'>
+      <div className='cc-tab-tools flex mt-2 items-start rounded-b-2xl backdrop-blur-xs'>
+        {focusCst ? <ToolbarFocusedCst focus={focusCst} resetFocus={() => setFocusCst(null)} /> : null}
         <ToolbarGraphFilter />
-        {focusCst ? (
-          <ToolbarFocusedCst className='-translate-x-9' focus={focusCst} resetFocus={() => setFocusCst(null)} />
-        ) : null}
       </div>
       <div className='absolute z-pop top-24 sm:top-16 left-2 sm:left-3 w-54 flex flex-col pointer-events-none'>
         <SelectColoring className='rounded-b-none' schema={schema} />
