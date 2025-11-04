@@ -1,5 +1,7 @@
 'use client';
 
+import clsx from 'clsx';
+
 import { type HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 
@@ -132,18 +134,24 @@ export function ModalForm({
           {children}
         </div>
 
-        <div className='z-pop my-2 flex gap-12 justify-center text-sm relative'>
+        <div className={clsx('z-pop relative', 'my-2', 'flex justify-center', 'text-sm', !validationHint && 'gap-12')}>
+          <SubmitButton autoFocus text={submitText} className='min-w-28' disabled={!canSubmit} />
           {validationHint ? (
-            <div className='absolute top-0.5 text-muted-foreground'>
+            <div
+              className={clsx(
+                'pt-0.5 w-12',
+                'text-muted-foreground cc-animate-color duration-fade',
+                canSubmit ? 'hover:text-constructive' : 'hover:text-destructive'
+              )}
+            >
               <IconAlert
                 size='1.5rem'
-                className={canSubmit ? 'hover:icon-green' : 'hover:icon-red'}
+                className='mx-auto'
                 data-tooltip-id={globalIDs.tooltip}
                 data-tooltip-html={validationHint}
               />
             </div>
           ) : null}
-          <SubmitButton autoFocus text={submitText} className='min-w-28' disabled={!canSubmit} />
           <Button text='Отмена' aria-label='Закрыть' className='min-w-28' onClick={handleCancel} />
         </div>
       </form>
