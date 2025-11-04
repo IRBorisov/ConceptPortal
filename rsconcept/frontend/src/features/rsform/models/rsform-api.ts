@@ -200,7 +200,7 @@ export function isBaseSet(type: CstType): boolean {
 }
 
 /**
- * Evaluate if {@link CstType} is function.
+ * Evaluate if {@link CstType} is a function.
  */
 export function isFunctional(type: CstType): boolean {
   // prettier-ignore
@@ -214,6 +214,24 @@ export function isFunctional(type: CstType): boolean {
     case CstType.FUNCTION: return true;
     case CstType.PREDICATE: return true;
     case CstType.THEOREM: return false;
+  }
+}
+
+/**
+ * Evaluate if {@link CstType} is logical.
+ */
+export function isLogical(type: CstType): boolean {
+  // prettier-ignore
+  switch (type) {
+    case CstType.NOMINAL: return false;
+    case CstType.BASE: return false;
+    case CstType.CONSTANT: return false;
+    case CstType.STRUCTURED: return false;
+    case CstType.AXIOM: return true;
+    case CstType.TERM: return false;
+    case CstType.FUNCTION: return false;
+    case CstType.PREDICATE: return false;
+    case CstType.THEOREM: return true;
   }
 }
 

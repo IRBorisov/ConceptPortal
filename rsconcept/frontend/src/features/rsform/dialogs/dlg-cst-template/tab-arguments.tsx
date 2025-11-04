@@ -6,13 +6,14 @@ import { createColumnHelper } from '@tanstack/react-table';
 
 import { MiniButton } from '@/components/control';
 import { DataTable, type IConditionalStyle } from '@/components/data-table';
-import { IconAccept, IconRemove, IconReset } from '@/components/icons';
+import { IconReset } from '@/components/icons';
 import { NoData } from '@/components/view';
 
 import { type ICreateConstituentaDTO } from '../../backend/types';
 import { PickConstituenta } from '../../components/pick-constituenta';
 import { RSInput } from '../../components/rs-input';
 import { type IConstituenta, type IRSForm } from '../../models/rsform';
+import { isFunctional, isLogical } from '../../models/rsform-api';
 import { type IArgumentValue } from '../../models/rslang';
 
 import { useTemplateContext } from './template-context';
@@ -31,18 +32,13 @@ export function TabArguments({ schema }: TabArgumentsProps) {
   const [selectedCst, setSelectedCst] = useState<IConstituenta | null>(null);
   const [selectedArgument, setSelectedArgument] = useState<IArgumentValue | null>(args.length > 0 ? args[0] : null);
 
-  const [argumentValue, setArgumentValue] = useState('');
-
   function handleSelectArgument(arg: IArgumentValue) {
     setSelectedArgument(arg);
-    if (arg.value) {
-      setArgumentValue(arg.value);
-    }
   }
 
   function handleSelectConstituenta(cst: IConstituenta) {
     setSelectedCst(cst);
-    setArgumentValue(cst.alias);
+    handleAssignArgument(selectedArgument!, cst.alias);
   }
 
   function handleClearArgument(target: IArgumentValue) {
@@ -51,48 +47,56 @@ export function TabArguments({ schema }: TabArgumentsProps) {
     setSelectedArgument(newArg);
   }
 
-  function handleReset() {
-    setArgumentValue(selectedArgument?.value ?? '');
-  }
-
   function handleAssignArgument(target: IArgumentValue, argValue: string) {
     const newArg = { ...target, value: argValue };
     onChangeArguments(args.map(arg => (arg.alias !== target.alias ? arg : newArg)));
     setSelectedArgument(newArg);
   }
 
+  function cstFilter(cst: IConstituenta) {
+    return cst.id === selectedCst?.id || (!isFunctional(cst.cst_type) && !isLogical(cst.cst_type));
+  }
+
+  const filteredItems = schema.items.filter(cstFilter);
+
   const columns = [
     argumentsHelper.accessor('alias', {
       id: 'alias',
+      header: 'Имя',
       size: 40,
       minSize: 40,
       maxSize: 40,
-      cell: props => <div className='text-center'>{props.getValue()}</div>
+      cell: props => <div className='text-center pr-2'>{props.getValue()}</div>
     }),
     argumentsHelper.accessor(arg => arg.value || 'свободный аргумент', {
       id: 'value',
+      header: 'Значение',
       size: 200,
       minSize: 200,
       maxSize: 200
     }),
     argumentsHelper.accessor(arg => arg.typification, {
       id: 'type',
+      header: 'Типизация',
       enableHiding: true,
       cell: props => <div className='w-36 text-sm wrap-break-word'>{props.getValue()}</div>
     }),
     argumentsHelper.display({
       id: 'actions',
       size: 0,
-      cell: props =>
-        props.row.original.value ? (
-          <MiniButton
-            title='Очистить значение'
-            noPadding
-            className='align-middle'
-            icon={<IconRemove size='1.25rem' className='cc-remove' />}
-            onClick={() => handleClearArgument(props.row.original)}
-          />
-        ) : null
+      cell: props => (
+        <div className='w-6 flex justify-center'>
+          {props.row.original.value ? (
+            <MiniButton
+              title='Очистить значение'
+              noPadding
+              className='align-middle'
+              icon={<IconReset size='1rem' className='cc-remove' />}
+              onClick={() => handleClearArgument(props.row.original)}
+            />
+          ) : null}
+        </div>
+      )
     })
   ];
 
@@ -108,8 +112,7 @@ export function TabArguments({ schema }: TabArgumentsProps) {
       <DataTable
         dense
         noFooter
-        noHeader
-        className='h-23 cc-scroll-y text-sm border select-none'
+        className='h-31 cc-scroll-y text-sm border select-none'
         data={args}
         columns={columns}
         conditionalRowStyles={conditionalRowStyles}
@@ -117,36 +120,12 @@ export function TabArguments({ schema }: TabArgumentsProps) {
         onRowClicked={handleSelectArgument}
       />
 
-      <div className='my-3 flex gap-2 justify-center items-center select-none'>
-        <span
-          title='Выберите аргумент из списка сверху и значение из списка снизу'
-          className='font-semibold text-center'
-        >
-          {selectedArgument?.alias || 'ARG'}
-        </span>
-        <span>=</span>
-        <RSInput noTooltip className='w-48' value={argumentValue} onChange={newValue => setArgumentValue(newValue)} />
-        <div className='flex'>
-          <MiniButton
-            title='Подставить значение аргумента'
-            className='py-0'
-            icon={<IconAccept size='1.5rem' className='icon-green' />}
-            onClick={() => handleAssignArgument(selectedArgument!, argumentValue)}
-            disabled={!argumentValue || !selectedArgument}
-          />
-          <MiniButton
-            title='Очистить поле'
-            className='py-0'
-            onClick={handleReset}
-            icon={<IconReset size='1.5rem' className='icon-primary' />}
-          />
-        </div>
-      </div>
+      <h2>Конституенты</h2>
 
       <PickConstituenta
         id='dlg_argument_picker'
         value={selectedCst}
-        items={schema.items}
+        items={filteredItems}
         onChange={handleSelectConstituenta}
         rows={7}
       />
