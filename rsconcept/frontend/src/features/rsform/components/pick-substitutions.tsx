@@ -58,18 +58,26 @@ export function PickSubstitutions({
   const [rightArgument, setRightArgument] = useState<ILibraryItem | null>(
     schemas.length === 1 && allowSelfSubstitution ? schemas[0] : null
   );
-  const leftItems = !leftArgument
-    ? []
-    : (leftArgument as IRSForm).items.filter(
-        cst => !value.find(item => item.original === cst.id) && (!filterCst || filterCst(cst))
-      );
 
   const [leftCst, setLeftCst] = useState<IConstituenta | null>(null);
   const [rightCst, setRightCst] = useState<IConstituenta | null>(null);
+
+  const leftItems = !leftArgument
+    ? []
+    : (leftArgument as IRSForm).items.filter(
+        cst =>
+          cst.id !== rightCst?.id && //
+          !value.find(item => item.original === cst.id) &&
+          (!filterCst || filterCst(cst))
+      );
+
   const rightItems = !rightArgument
     ? []
     : (rightArgument as IRSForm).items.filter(
-        cst => !value.find(item => item.original === cst.id) && (!filterCst || filterCst(cst))
+        cst =>
+          cst.id !== leftCst?.id && //
+          !value.find(item => item.original === cst.id) &&
+          (!filterCst || filterCst(cst))
       );
 
   const [deleteRight, setDeleteRight] = useState(true);

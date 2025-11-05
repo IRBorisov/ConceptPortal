@@ -86,7 +86,7 @@ export const hintMsg = {
   versionEmpty: 'Введите шифр версии',
   versionTaken: 'Версия с таким шифром уже существует',
   relocateEmpty: 'Необходимо выбрать хотя бы одну собственную конституенту',
-  substitutionsEmpty: 'Выберите две различные конституенты',
+  substitutionsEmpty: 'Добавьте хотя бы одно отождествление',
   sourceEmpty: 'Выберите схему источник',
   referenceInvalid: 'Выберите тип ссылки и заполните все поля',
   fileEmpty: 'Выберите файл для загрузки'
