@@ -14,7 +14,7 @@ from rest_framework.response import Response
 
 from apps.library.models import LibraryItem, LibraryItemType
 from apps.library.serializers import LibraryItemSerializer
-from apps.rsform.models import Constituenta, RSFormCached
+from apps.rsform.models import Attribution, Constituenta, RSFormCached
 from apps.rsform.serializers import CstTargetSerializer
 from shared import messages as msg
 from shared import permissions
@@ -36,11 +36,24 @@ def _create_clone(prototype: LibraryItem, operation: m.Operation, oss: LibraryIt
     clone.access_policy = oss.access_policy
     clone.location = oss.location
     clone.save()
+
+    cst_map: dict[int, int] = {}
+    cst_list: list[int] = []
+
     for cst in Constituenta.objects.filter(schema_id=prototype.pk):
+        old_pk = cst.pk
         cst_copy = deepcopy(cst)
         cst_copy.pk = None
         cst_copy.schema = clone
         cst_copy.save()
+        cst_map[old_pk] = cst_copy.pk
+        cst_list.append(old_pk)
+
+    for attr in Attribution.objects.filter(container__in=cst_list, attribute__in=cst_list):
+        attr.pk = None
+        attr.container_id = cst_map[attr.container_id]
+        attr.attribute_id = cst_map[attr.attribute_id]
+        attr.save()
     return clone
 
 
