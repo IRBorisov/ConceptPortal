@@ -1,4 +1,6 @@
 ''' Testing API: Library. '''
+from typing import Any
+
 from rest_framework import status
 
 from apps.library.models import (
@@ -358,6 +360,8 @@ class TestLibraryViewset(EndpointTester):
         self.assertEqual(response.data['items'][0]['term_resolved'], x12.term_resolved)
         self.assertEqual(response.data['items'][1]['term_raw'], d2.term_raw)
         self.assertEqual(response.data['items'][1]['term_resolved'], d2.term_resolved)
+        self.assertEqual(response.data['attribution'][0]['attribute'], response.data['items'][0]['id'])
+        self.assertEqual(response.data['attribution'][0]['container'], response.data['items'][1]['id'])
 
         data = {'item_data': {'title': 'Title1340'}, 'items': []}
         response = self.executeCreated(data, item=self.owned.pk)
@@ -371,3 +375,27 @@ class TestLibraryViewset(EndpointTester):
         self.assertEqual(response.data['items'][0]['alias'], x12.alias)
         self.assertEqual(response.data['items'][0]['term_raw'], x12.term_raw)
         self.assertEqual(response.data['items'][0]['term_resolved'], x12.term_resolved)
+
+
+    @decl_endpoint('/api/library/{item}/clone', method='post')
+    def test_clone_rsform_partial(self):
+        schema = RSForm(self.owned)
+        x1 = schema.insert_last(alias='X1')
+        x2 = schema.insert_last(alias='X2')
+        d1 = schema.insert_last(alias='D1')
+
+        Attribution.objects.create(container=x2, attribute=x1)
+        Attribution.objects.create(container=d1, attribute=x2)
+
+        # Only clone x2 and d1
+        data = {'item_data': {'title': 'Cloned'}, 'items': [x2.pk, d1.pk]}
+        response = self.executeCreated(data, item=self.owned.pk)
+        self.assertEqual(response.data['title'], data['item_data']['title'])
+        self.assertEqual(len(response.data['items']), 2)
+
+        aliases = set[Any](item['alias'] for item in response.data['items'])
+        self.assertIn(x2.alias, aliases)
+        self.assertIn(d1.alias, aliases)
+        self.assertEqual(len(response.data['attribution']), 1)
+        self.assertEqual(response.data['attribution'][0]['container'], response.data['items'][1]['id'])
+        self.assertEqual(response.data['attribution'][0]['attribute'], response.data['items'][0]['id'])
