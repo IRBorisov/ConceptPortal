@@ -130,6 +130,7 @@
 
   code {
     font-family: var(--font-math);
+    font-variant-ligatures: none;
   }
 
   li {
@@ -164,12 +165,14 @@
 
   summary::before {
     font-family: var(--font-math);
+    font-variant-ligatures: none;
     padding-right: 0.5rem;
     content: '+';
   }
 
   details[open] summary::before {
     font-family: var(--font-math);
+    font-variant-ligatures: none;
     padding-right: 0.5rem;
     content: '-';
   }

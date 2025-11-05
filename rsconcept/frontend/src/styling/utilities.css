@@ -13,6 +13,7 @@
 
 @utility font-math {
   font-family: var(--font-math);
+  font-variant-ligatures: none;
 }
 
 @utility cc-selected {
