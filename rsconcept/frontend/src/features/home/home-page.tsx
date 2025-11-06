@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect } from 'react';
+
 import { urls, useConceptNavigation } from '@/app';
 import { useAuthSuspense } from '@/features/auth';
 
@@ -9,12 +11,14 @@ export function HomePage() {
   const router = useConceptNavigation();
   const { isAnonymous } = useAuthSuspense();
 
-  if (isAnonymous) {
+  useEffect(() => {
     // Note: Timeout is needed to let router initialize
-    setTimeout(() => router.replace({ path: urls.login }), PARAMETER.minimalTimeout);
-  } else {
-    setTimeout(() => router.replace({ path: urls.library }), PARAMETER.minimalTimeout);
-  }
+    const timeoutId = setTimeout(() => {
+      router.replace({ path: isAnonymous ? urls.login : urls.library });
+    }, PARAMETER.minimalTimeout);
+
+    return () => clearTimeout(timeoutId);
+  }, [router, isAnonymous]);
 
   return null;
 }
