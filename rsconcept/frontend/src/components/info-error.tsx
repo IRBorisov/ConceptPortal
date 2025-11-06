@@ -70,7 +70,9 @@ export function DescribeError({ error }: { error: ErrorData }) {
   let sanitizedHtml: string | null = null;
   if (isHtml) {
     sanitizedHtml = DOMPurify.sanitize(error.response.data as string, {
-      USE_PROFILES: { html: true }
+      USE_PROFILES: { html: true },
+      ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'ul', 'li', 'br'],
+      ALLOWED_ATTR: []
     });
   }
   return (

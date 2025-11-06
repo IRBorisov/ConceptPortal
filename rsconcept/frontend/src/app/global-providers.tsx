@@ -10,7 +10,7 @@ export function GlobalProviders({ children }: React.PropsWithChildren) {
   <IntlProvider locale='ru' defaultLocale='ru'>
   <QueryClientProvider client={queryClient}>
   
-    <ReactQueryDevtools initialIsOpen={false} />
+    {import.meta.env.DEV ? <ReactQueryDevtools initialIsOpen={false} /> : null}
     {children}
   
   </QueryClientProvider>

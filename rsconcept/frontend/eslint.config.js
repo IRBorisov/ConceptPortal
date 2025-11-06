@@ -72,7 +72,6 @@ export default [
     settings: { react: { version: 'detect' } },
     rules: {
       ...basicRules,
-      'react-refresh/only-export-components': ['off', { allowConstantExport: true }],
       'simple-import-sort/imports': [
         'warn',
         {
