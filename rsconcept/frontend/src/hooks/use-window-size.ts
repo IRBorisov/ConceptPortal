@@ -23,11 +23,15 @@ export function useWindowSize() {
       return;
     }
     function handleResize() {
-      setWindowSize(getSize());
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+        isSmall: window.innerWidth < PARAMETER.smallScreen
+      });
     }
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [isClient, getSize]);
+  }, [isClient]);
 
   return windowSize;
 }
