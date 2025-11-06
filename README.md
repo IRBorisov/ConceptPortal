@@ -30,6 +30,7 @@ This readme file is used mostly to document project dependencies and conventions
   <pre>
   - axios
   - clsx
+  - dompurify
   - react-icons
   - react-router
   - react-toastify

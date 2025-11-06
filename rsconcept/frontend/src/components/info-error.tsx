@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import DOMPurify from 'dompurify';
 import { ZodError } from 'zod';
 
 import { type AxiosError, isAxiosError } from '@/backend/api-transport';
@@ -18,11 +19,17 @@ export function DescribeError({ error }: { error: ErrorData }) {
   } else if (typeof error === 'string') {
     return <p>{error}</p>;
   } else if (error instanceof ZodError) {
+    let errorData: unknown;
+    try {
+      /* eslint-disable-next-line @typescript-eslint/no-base-to-string */
+      errorData = JSON.parse(error.toString());
+    } catch {
+      errorData = { message: error.message, issues: error.issues };
+    }
     return (
       <div>
         <p>Ошибка валидации данных</p>
-        {/* eslint-disable-next-line @typescript-eslint/no-base-to-string */}
-        <PrettyJson data={JSON.parse(error.toString()) as unknown} />;
+        <PrettyJson data={errorData} />
       </div>
     );
   } else if (!isAxiosError(error)) {
@@ -60,6 +67,12 @@ export function DescribeError({ error }: { error: ErrorData }) {
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const isHtml = isResponseHtml(error.response);
+  let sanitizedHtml: string | null = null;
+  if (isHtml) {
+    sanitizedHtml = DOMPurify.sanitize(error.response.data as string, {
+      USE_PROFILES: { html: true }
+    });
+  }
   return (
     <div>
       <p className='underline'>Ошибка</p>
@@ -67,8 +80,11 @@ export function DescribeError({ error }: { error: ErrorData }) {
       {error.response.data && (
         <>
           <p className='mt-2 underline'>Описание</p>
-          {isHtml ? <div dangerouslySetInnerHTML={{ __html: error.response.data as TrustedHTML }} /> : null}
-          {!isHtml ? <PrettyJson data={error.response.data as object} /> : null}
+          {isHtml && sanitizedHtml ? (
+            <div dangerouslySetInnerHTML={{ __html: sanitizedHtml }} />
+          ) : (
+            <PrettyJson data={error.response.data as object} />
+          )}
         </>
       )}
     </div>
