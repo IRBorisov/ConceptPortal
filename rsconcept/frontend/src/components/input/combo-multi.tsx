@@ -1,7 +1,5 @@
 'use client';
 
-import assert from 'assert';
-
 import { useRef, useState } from 'react';
 import { ChevronDownIcon } from 'lucide-react';
 
@@ -71,9 +69,10 @@ export function ComboMulti<Option>({
     } else {
       if ('onAdd' in restProps && typeof restProps.onAdd === 'function') {
         restProps.onAdd(newValue);
-      } else {
-        assert('onChange' in restProps);
+      } else if ('onChange' in restProps && typeof restProps.onChange === 'function') {
         restProps.onChange([...value, newValue]);
+      } else {
+        throw new Error('onChange is not defined');
       }
       setOpen(false);
     }
@@ -82,9 +81,10 @@ export function ComboMulti<Option>({
   function handleRemoveValue(delValue: Option) {
     if ('onRemove' in restProps && typeof restProps.onRemove === 'function') {
       restProps.onRemove(delValue);
-    } else {
-      assert('onChange' in restProps);
+    } else if ('onChange' in restProps && typeof restProps.onChange === 'function') {
       restProps.onChange(value.filter(v => v !== delValue));
+    } else {
+      throw new Error('onChange is not defined');
     }
     setOpen(false);
   }
@@ -93,9 +93,10 @@ export function ComboMulti<Option>({
     event.stopPropagation();
     if ('onClear' in restProps && typeof restProps.onClear === 'function') {
       restProps.onClear();
-    } else {
-      assert('onChange' in restProps);
+    } else if ('onChange' in restProps && typeof restProps.onChange === 'function') {
       restProps.onChange([]);
+    } else {
+      throw new Error('onChange is not defined');
     }
     setOpen(false);
   }
