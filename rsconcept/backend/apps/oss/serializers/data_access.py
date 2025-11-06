@@ -602,7 +602,7 @@ class RelocateConstituentsSerializer(StrictSerializer):
     items = PKField(
         many=True,
         allow_empty=False,
-        queryset=Constituenta.objects.all()
+        queryset=Constituenta.objects.all().only('schema_id')
     )
 
     def validate(self, attrs):

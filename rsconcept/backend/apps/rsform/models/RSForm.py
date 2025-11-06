@@ -15,7 +15,6 @@ from .api_RSLanguage import get_type_prefix, guess_type
 from .Attribution import Attribution
 from .Constituenta import Constituenta, CstType, extract_entities, extract_globals
 
-INSERT_LAST: int = -1
 DELETED_ALIAS = 'DEL'
 
 

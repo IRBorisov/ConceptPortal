@@ -436,7 +436,7 @@ class InlineSynthesisSerializer(StrictSerializer):
     ''' Serializer: Inline synthesis operation input. '''
     receiver = PKField(many=False, queryset=LibraryItem.objects.all().only('owner_id'))
     source = PKField(many=False, queryset=LibraryItem.objects.all().only('owner_id'))  # type: ignore
-    items = PKField(many=True, queryset=Constituenta.objects.all())
+    items = PKField(many=True, queryset=Constituenta.objects.all().only('schema_id'))
     substitutions = serializers.ListField(
         child=SubstitutionSerializerBase()
     )

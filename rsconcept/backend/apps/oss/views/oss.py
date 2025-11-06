@@ -14,47 +14,13 @@ from rest_framework.response import Response
 
 from apps.library.models import LibraryItem, LibraryItemType
 from apps.library.serializers import LibraryItemSerializer
-from apps.rsform.models import Attribution, Constituenta, RSFormCached
+from apps.rsform.models import Constituenta, RSFormCached
 from apps.rsform.serializers import CstTargetSerializer
 from shared import messages as msg
 from shared import permissions
 
 from .. import models as m
 from .. import serializers as s
-
-
-def _create_clone(prototype: LibraryItem, operation: m.Operation, oss: LibraryItem) -> LibraryItem:
-    ''' Create clone of prototype schema for operation. '''
-    clone = deepcopy(prototype)
-    clone.pk = None
-    clone.owner = oss.owner
-    clone.title = operation.title
-    clone.alias = operation.alias
-    clone.description = operation.description
-    clone.visible = False
-    clone.read_only = False
-    clone.access_policy = oss.access_policy
-    clone.location = oss.location
-    clone.save()
-
-    cst_map: dict[int, int] = {}
-    cst_list: list[int] = []
-
-    for cst in Constituenta.objects.filter(schema_id=prototype.pk):
-        old_pk = cst.pk
-        cst_copy = deepcopy(cst)
-        cst_copy.pk = None
-        cst_copy.schema = clone
-        cst_copy.save()
-        cst_map[old_pk] = cst_copy.pk
-        cst_list.append(old_pk)
-
-    for attr in Attribution.objects.filter(container__in=cst_list, attribute__in=cst_list):
-        attr.pk = None
-        attr.container_id = cst_map[attr.container_id]
-        attr.attribute_id = cst_map[attr.attribute_id]
-        attr.save()
-    return clone
 
 
 @extend_schema(tags=['OSS'])
@@ -442,7 +408,21 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
 
             if serializer.validated_data['clone_source']:
                 prototype: LibraryItem = serializer.validated_data['source']
-                new_operation.result = _create_clone(prototype, new_operation, item)
+
+                schema_clone = deepcopy(prototype)
+                schema_clone.pk = None
+                schema_clone.owner = item.owner
+                schema_clone.title = new_operation.title
+                schema_clone.alias = new_operation.alias
+                schema_clone.description = new_operation.description
+                schema_clone.visible = False
+                schema_clone.read_only = False
+                schema_clone.access_policy = item.access_policy
+                schema_clone.location = item.location
+                schema_clone.save()
+                RSFormCached(schema_clone).insert_from(prototype.pk)
+
+                new_operation.result = schema_clone
                 new_operation.save(update_fields=["result"])
 
             item.save(update_fields=['time_update'])
@@ -860,7 +840,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
                 m.PropagationFacade.before_delete_cst(data['source'], ids)
                 source.delete_cst(ids)
             else:
-                new_items = oss.relocate_up(source, destination, data['items'])
+                new_items = oss.relocate_up(source, destination, ids)
                 m.PropagationFacade.after_create_cst(destination, new_items, exclude=[oss.model.pk])
 
         return Response(status=c.HTTP_200_OK)

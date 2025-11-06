@@ -14,7 +14,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 
 from apps.oss.models import Layout, Operation, OperationSchema, PropagationFacade
-from apps.rsform.models import Attribution, RSFormCached
+from apps.rsform.models import RSFormCached
 from apps.rsform.serializers import RSFormParseSerializer
 from apps.users.models import User
 from shared import permissions
@@ -172,22 +172,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
             clone.location = data.get('location', m.LocationHead.USER)
             clone.save()
 
-            cst_map: dict[int, int] = {}
-            cst_list: list[int] = []
-            need_filter = 'items' in request.data and request.data['items']
-            for cst in RSFormCached(item).constituentsQ():
-                if not need_filter or cst.pk in request.data['items']:
-                    old_pk = cst.pk
-                    cst.pk = None
-                    cst.schema = clone
-                    cst.save()
-                    cst_map[old_pk] = cst.pk
-                    cst_list.append(old_pk)
-            for attr in Attribution.objects.filter(container__in=cst_list, attribute__in=cst_list):
-                attr.pk = None
-                attr.container_id = cst_map[attr.container_id]
-                attr.attribute_id = cst_map[attr.attribute_id]
-                attr.save()
+            RSFormCached(clone).insert_from(item.pk, request.data['items'] if 'items' in request.data else None)
 
             return Response(
                 status=c.HTTP_201_CREATED,

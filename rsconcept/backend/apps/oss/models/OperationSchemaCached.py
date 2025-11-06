@@ -178,11 +178,10 @@ class OperationSchemaCached:
         parents: dict = {}
         children: dict = {}
         for operand in schemas:
-            items = list(Constituenta.objects.filter(schema_id=operand).order_by('order'))
-            new_items = receiver.insert_copy(items)
-            for (i, cst) in enumerate(new_items):
-                parents[cst.pk] = items[i]
-                children[items[i].pk] = cst
+            new_items = receiver.insert_from(operand)
+            for (old_cst, new_cst) in new_items:
+                parents[new_cst.pk] = old_cst
+                children[old_cst.pk] = new_cst
 
         translated_substitutions: list[tuple[Constituenta, Constituenta]] = []
         for sub in substitutions:
@@ -223,7 +222,7 @@ class OperationSchemaCached:
         Inheritance.objects.filter(operation_id=operation.pk, parent_id__in=items).delete()
 
     def relocate_up(self, source: RSFormCached, destination: RSFormCached,
-                    items: list[Constituenta]) -> list[Constituenta]:
+                    item_ids: list[int]) -> list[Constituenta]:
         ''' Move list of Constituents upstream to destination Schema. '''
         self.cache.ensure_loaded_subs()
         self.cache.insert_schema(source)
@@ -237,17 +236,18 @@ class OperationSchemaCached:
                 destination_cst = destination.cache.by_id[item.parent_id]
                 alias_mapping[source_cst.alias] = destination_cst.alias
 
-        new_items = destination.insert_copy(items, initial_mapping=alias_mapping)
-        for index, cst in enumerate(new_items):
+        new_items = destination.insert_from(source.model.pk, item_ids, alias_mapping)
+        for (cst, new_cst) in new_items:
             new_inheritance = Inheritance.objects.create(
                 operation=operation,
-                child=items[index],
-                parent=cst
+                child=cst,
+                parent=new_cst
             )
             self.cache.insert_inheritance(new_inheritance)
-        self.after_create_cst(destination, new_items, exclude=[operation.pk])
+        new_constituents = [item[1] for item in new_items]
+        self.after_create_cst(destination, new_constituents, exclude=[operation.pk])
         destination.model.save(update_fields=['time_update'])
-        return new_items
+        return new_constituents
 
     def after_create_cst(
         self, source: RSFormCached,

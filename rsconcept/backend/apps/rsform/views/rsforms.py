@@ -732,25 +732,24 @@ def inline_synthesis(request: Request) -> HttpResponse:
     serializer.is_valid(raise_exception=True)
 
     receiver = m.RSFormCached(serializer.validated_data['receiver'])
-    items = cast(list[m.Constituenta], serializer.validated_data['items'])
-    if not items:
-        source = cast(LibraryItem, serializer.validated_data['source'])
-        items = list(m.Constituenta.objects.filter(schema=source).order_by('order'))
+    target_cst = cast(list[m.Constituenta], serializer.validated_data['items'])
+    source = cast(LibraryItem, serializer.validated_data['source'])
+    target_ids = [item.pk for item in target_cst] if target_cst else None
 
     with transaction.atomic():
-        new_items = receiver.insert_copy(items)
-        PropagationFacade.after_create_cst(receiver, new_items)
+        new_items = receiver.insert_from(source.pk, target_ids)
+        target_ids = [item[0].pk for item in new_items]
+        mapping_ids = {cst.pk: new_cst for (cst, new_cst) in new_items}
+        PropagationFacade.after_create_cst(receiver, [item[1] for item in new_items])
 
         substitutions: list[tuple[m.Constituenta, m.Constituenta]] = []
         for substitution in serializer.validated_data['substitutions']:
             original = cast(m.Constituenta, substitution['original'])
             replacement = cast(m.Constituenta, substitution['substitution'])
-            if original in items:
-                index = next(i for (i, cst) in enumerate(items) if cst.pk == original.pk)
-                original = new_items[index]
+            if original.pk in target_ids:
+                original = mapping_ids[original.pk]
             else:
-                index = next(i for (i, cst) in enumerate(items) if cst.pk == replacement.pk)
-                replacement = new_items[index]
+                replacement = mapping_ids[replacement.pk]
             substitutions.append((original, replacement))
 
         PropagationFacade.before_substitute(receiver.model.pk, substitutions)

@@ -54,7 +54,7 @@ class LibraryItemCloneSerializer(StrictSerializer):
             model = LibraryItem
             exclude = ['id', 'item_type', 'owner', 'read_only']
 
-    items = PKField(many=True, queryset=Constituenta.objects.all().only('pk', 'schema_id'))
+    items = PKField(many=True, queryset=Constituenta.objects.all().only('schema_id'))
     item_data = ItemCloneData()
 
     def validate_items(self, value):

@@ -137,11 +137,10 @@ class OperationSchema:
         parents: dict = {}
         children: dict = {}
         for operand in schemas:
-            items = list(Constituenta.objects.filter(schema_id=operand).order_by('order'))
-            new_items = receiver.insert_copy(items)
-            for (i, cst) in enumerate(new_items):
-                parents[cst.pk] = items[i]
-                children[items[i].pk] = cst
+            new_items = receiver.insert_from(operand)
+            for (old_cst, new_cst) in new_items:
+                parents[new_cst.pk] = old_cst
+                children[old_cst.pk] = new_cst
 
         translated_substitutions: list[tuple[Constituenta, Constituenta]] = []
         for sub in substitutions:

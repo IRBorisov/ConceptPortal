@@ -3,7 +3,7 @@ from typing import Optional
 
 from rest_framework.serializers import ValidationError
 
-from apps.rsform.models import INSERT_LAST, Attribution, Constituenta, CstType, RSFormCached
+from apps.rsform.models import Attribution, Constituenta, CstType, RSFormCached
 
 from .Inheritance import Inheritance
 from .Operation import Operation
@@ -76,11 +76,11 @@ class PropagationEngine:
         alias_mapping = cst_mapping_to_alias(new_mapping)
         insert_where = self._determine_insert_position(items[0].pk, operation, source, destination)
         new_cst_list = destination.insert_copy(items, insert_where, alias_mapping)
-        for index, cst in enumerate(new_cst_list):
+        for (cst, new_cst) in zip(items, new_cst_list):
             new_inheritance = Inheritance.objects.create(
                 operation=operation,
-                child=cst,
-                parent=items[index]
+                child=new_cst,
+                parent=cst
             )
             self.cache.insert_inheritance(new_inheritance)
         new_mapping = {alias_mapping[alias]: cst for alias, cst in new_mapping.items()}
@@ -145,28 +145,28 @@ class PropagationEngine:
 
         self.cache.ensure_loaded_subs()
 
-        existing_associations = set(
+        existing_attributions = set(
             Attribution.objects.filter(
                 container__schema_id=operation.result_id,
             ).values_list('container_id', 'attribute_id')
         )
 
-        new_associations: list[Attribution] = []
-        for assoc in items:
-            new_container = self.cache.get_inheritor(assoc.container_id, target)
-            new_attribute = self.cache.get_inheritor(assoc.attribute_id, target)
+        new_attributions: list[Attribution] = []
+        for attrib in items:
+            new_container = self.cache.get_inheritor(attrib.container_id, target)
+            new_attribute = self.cache.get_inheritor(attrib.attribute_id, target)
             if new_container is None or new_attribute is None \
                     or new_attribute == new_container \
-                    or (new_container, new_attribute) in existing_associations:
+                    or (new_container, new_attribute) in existing_attributions:
                 continue
 
-            new_associations.append(Attribution(
+            new_attributions.append(Attribution(
                 container_id=new_container,
                 attribute_id=new_attribute
             ))
-        if new_associations:
-            new_associations = Attribution.objects.bulk_create(new_associations)
-            self.on_inherit_attribution(target, new_associations)
+        if new_attributions:
+            new_attributions = Attribution.objects.bulk_create(new_attributions)
+            self.on_inherit_attribution(target, new_attributions)
 
     def on_before_substitute(self, operationID: int, substitutions: CstSubstitution) -> None:
         ''' Trigger cascade resolutions when Constituenta substitution is executed. '''
@@ -286,7 +286,7 @@ class PropagationEngine:
         operation: Operation,
         source: RSFormCached,
         destination: RSFormCached
-    ) -> int:
+    ) -> Optional[int]:
         ''' Determine insert_after for new constituenta. '''
         prototype = source.cache.by_id[prototype_id]
         prototype_index = source.cache.constituents.index(prototype)
@@ -295,7 +295,7 @@ class PropagationEngine:
         prev_cst = source.cache.constituents[prototype_index - 1]
         inherited_prev_id = self.cache.get_successor(prev_cst.pk, operation.pk)
         if inherited_prev_id is None:
-            return INSERT_LAST
+            return None
         prev_cst = destination.cache.by_id[inherited_prev_id]
         prev_index = destination.cache.constituents.index(prev_cst)
         return prev_index + 1

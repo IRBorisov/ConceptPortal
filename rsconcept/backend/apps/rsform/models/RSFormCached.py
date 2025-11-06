@@ -14,7 +14,7 @@ from shared import messages as msg
 from .api_RSLanguage import generate_structure, get_type_prefix, guess_type
 from .Attribution import Attribution
 from .Constituenta import Constituenta, CstType
-from .RSForm import DELETED_ALIAS, INSERT_LAST, RSForm
+from .RSForm import DELETED_ALIAS, RSForm
 
 
 class RSFormCached:
@@ -76,7 +76,7 @@ class RSFormCached:
     def create_cst(self, data: dict, insert_after: Optional[Constituenta] = None) -> Constituenta:
         ''' Create constituenta from data. '''
         self.cache.ensure_loaded_terms()
-        if insert_after is not None:
+        if insert_after:
             position = self.cache.by_id[insert_after.pk].order + 1
         else:
             position = len(self.cache.constituents)
@@ -109,52 +109,77 @@ class RSFormCached:
         RSForm.resolve_term_change(self.cache.constituents, [result.pk], self.cache.by_alias, self.cache.by_id)
         return result
 
+    def insert_from(
+        self, sourceID: int,
+        items_list: Optional[list[int]] = None,
+        initial_mapping: Optional[dict[str, str]] = None
+    ) -> list[tuple[Constituenta, Constituenta]]:
+        ''' Insert copy of constituents from source schema. '''
+        if not items_list:
+            items = list(Constituenta.objects.filter(schema_id=sourceID).order_by('order'))
+        else:
+            items = list(Constituenta.objects.filter(pk__in=items_list, schema_id=sourceID).order_by('order'))
+        if not items:
+            return []
+        new_constituents = self.insert_copy(items=items, initial_mapping=initial_mapping)
+        return list(zip(items, new_constituents))
+
     def insert_copy(
         self,
         items: list[Constituenta],
-        position: int = INSERT_LAST,
+        position: Optional[int] = None,
         initial_mapping: Optional[dict[str, str]] = None
     ) -> list[Constituenta]:
         ''' Insert copy of target constituents updating references. '''
-        count = len(items)
-        if count == 0:
+        if not items:
             return []
 
         self.cache.ensure_loaded()
-        lastPosition = len(self.cache.constituents)
-        if position == INSERT_LAST:
-            position = lastPosition
+        last_position = len(self.cache.constituents)
+        if not position:
+            position = last_position
         else:
-            position = max(0, min(position, lastPosition))
-        RSForm.shift_positions(position, count, self.cache.constituents)
+            position = max(0, min(position, last_position))
 
-        indices: dict[str, int] = {}
-        for (value, _) in CstType.choices:
-            indices[value] = -1
+        was_empty = last_position == 0
+        if not was_empty and position != last_position:
+            RSForm.shift_positions(position, len(items), self.cache.constituents)
 
-        mapping: dict[str, str] = initial_mapping.copy() if initial_mapping else {}
-        for cst in items:
-            if indices[cst.cst_type] == -1:
-                indices[cst.cst_type] = self._get_max_index(cst.cst_type)
-            indices[cst.cst_type] = indices[cst.cst_type] + 1
-            newAlias = f'{get_type_prefix(cst.cst_type)}{indices[cst.cst_type]}'
-            mapping[cst.alias] = newAlias
+        mapping_alias: dict[str, str] = initial_mapping.copy() if initial_mapping else {}
+        if not was_empty:
+            indices: dict[str, int] = {}
+            for (value, _) in CstType.choices:
+                indices[value] = self._get_max_index(value)
 
-        result = deepcopy(items)
-        for cst in result:
+            for cst in items:
+                indices[cst.cst_type] = indices[cst.cst_type] + 1
+                newAlias = f'{get_type_prefix(cst.cst_type)}{indices[cst.cst_type]}'
+                mapping_alias[cst.alias] = newAlias
+
+        source_ids = [cst.id for cst in items]
+        new_constituents = deepcopy(items)
+        for cst in new_constituents:
             cst.pk = None
             cst.schema = self.model
             cst.order = position
-            cst.alias = mapping[cst.alias]
-            cst.apply_mapping(mapping)
+            if mapping_alias:
+                cst.alias = mapping_alias[cst.alias]
+                cst.apply_mapping(mapping_alias)
             position = position + 1
 
-        new_cst = Constituenta.objects.bulk_create(result)
+        new_constituents = Constituenta.objects.bulk_create(new_constituents)
 
-        # TODO: duplicate attributions
+        mapping_id: dict[int, int] = {source_ids[i]: new_constituents[i].id for i in range(len(source_ids))}
+        attributions = list(Attribution.objects.filter(container__in=source_ids, attribute__in=source_ids))
+        for attr in attributions:
+            attr.pk = None
+            attr.container_id = mapping_id[attr.container_id]
+            attr.attribute_id = mapping_id[attr.attribute_id]
 
-        self.cache.insert_multi(new_cst)
-        return result
+        Attribution.objects.bulk_create(attributions)
+
+        self.cache.insert_multi(new_constituents)
+        return new_constituents
 
     # pylint: disable=too-many-branches
     def update_cst(self, target: int, data: dict) -> dict:
