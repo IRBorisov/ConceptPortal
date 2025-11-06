@@ -27,6 +27,11 @@ axiosInstance.interceptors.request.use(config => {
     .split('; ')
     .find(row => row.startsWith('csrftoken='))
     ?.split('=')[1];
+
+  if (!token && config.method !== 'get') {
+    console.warn('CSRF token not found for non-GET request');
+  }
+
   if (token) {
     config.headers['x-csrftoken'] = token;
   }
