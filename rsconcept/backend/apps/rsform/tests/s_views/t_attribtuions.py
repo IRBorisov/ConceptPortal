@@ -45,10 +45,10 @@ class TestAttributionsEndpoints(EndpointTester):
         self.executeBadData(data, item=self.unowned_id)
 
         response = self.executeCreated(data, item=self.owned_id)
-        associations = response.data['attribution']
-        self.assertEqual(len(associations), 1)
-        self.assertEqual(associations[0]['container'], self.n1.pk)
-        self.assertEqual(associations[0]['attribute'], self.x1.pk)
+        attributions = response.data['attribution']
+        self.assertEqual(len(attributions), 1)
+        self.assertEqual(attributions[0]['container'], self.n1.pk)
+        self.assertEqual(attributions[0]['attribute'], self.x1.pk)
 
 
     @decl_endpoint('/api/rsforms/{item}/create-attribution', method='post')
@@ -94,7 +94,7 @@ class TestAttributionsEndpoints(EndpointTester):
             attribute=self.n1
         )
         response = self.executeOK(data, item=self.owned_id)
-        associations = response.data['attribution']
-        self.assertEqual(len(associations), 1)
-        self.assertEqual(associations[0]['container'], self.n2.pk)
-        self.assertEqual(associations[0]['attribute'], self.n1.pk)
+        attributions = response.data['attribution']
+        self.assertEqual(len(attributions), 1)
+        self.assertEqual(attributions[0]['container'], self.n2.pk)
+        self.assertEqual(attributions[0]['attribute'], self.n1.pk)

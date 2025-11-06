@@ -112,7 +112,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
     [activeCst, localParse]
   );
 
-  const associations = useMemo(
+  const attributions = useMemo(
     () => activeCst.attributes.map(id => schema.cstByID.get(id)!),
     [activeCst.attributes, schema.cstByID]
   );
@@ -291,7 +291,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
           <Label text='Атрибутирующие конституенты' />
           <SelectMultiConstituenta
             items={schema.items.filter(item => item.id !== activeCst.id)}
-            value={associations}
+            value={attributions}
             onAdd={handleAddAttribution}
             onClear={handleClearAttributions}
             onRemove={handleRemoveAttribution}

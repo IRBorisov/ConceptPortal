@@ -185,7 +185,7 @@ class PropagationEngine:
             self.on_before_substitute(child_operation.pk, new_substitutions)
             child_schema.substitute(new_substitutions)
 
-    def on_delete_attribution(self, operationID: int, associations: list[Attribution]) -> None:
+    def on_delete_attribution(self, operationID: int, attributions: list[Attribution]) -> None:
         ''' Trigger cascade resolutions when Attribution is deleted. '''
         children = self.cache.extend_graph.outputs[operationID]
         if not children:
@@ -198,7 +198,7 @@ class PropagationEngine:
                 continue
 
             deleted: list[Attribution] = []
-            for attr in associations:
+            for attr in attributions:
                 new_container = self.cache.get_inheritor(attr.container_id, child_id)
                 new_attribute = self.cache.get_inheritor(attr.attribute_id, child_id)
                 if new_container is None or new_attribute is None:
@@ -211,7 +211,7 @@ class PropagationEngine:
                     deleted.append(deleted_assoc[0])
             if deleted:
                 self.on_delete_attribution(child_id, deleted)
-                Attribution.objects.filter(pk__in=[assoc.pk for assoc in deleted]).delete()
+                Attribution.objects.filter(pk__in=[attrib.pk for attrib in deleted]).delete()
 
     def on_delete_inherited(self, operation: int, target: list[int]) -> None:
         ''' Trigger cascade resolutions when Constituenta inheritance is deleted. '''

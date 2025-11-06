@@ -82,20 +82,20 @@ class PropagationFacade:
                 OperationSchemaCached(host).before_delete_cst(item.pk, ids)
 
     @staticmethod
-    def after_create_attribution(sourceID: int, associations: list[Attribution],
+    def after_create_attribution(sourceID: int, attributions: list[Attribution],
                                  exclude: Optional[list[int]] = None) -> None:
         ''' Trigger cascade resolutions when Attribution is created. '''
         hosts = _get_oss_hosts(sourceID)
         for host in hosts:
             if exclude is None or host.pk not in exclude:
-                OperationSchemaCached(host).after_create_attribution(sourceID, associations)
+                OperationSchemaCached(host).after_create_attribution(sourceID, attributions)
 
     @staticmethod
     def before_delete_attribution(sourceID: int,
-                                  associations: list[Attribution],
+                                  attributions: list[Attribution],
                                   exclude: Optional[list[int]] = None) -> None:
         ''' Trigger cascade resolutions before Attribution is deleted. '''
         hosts = _get_oss_hosts(sourceID)
         for host in hosts:
             if exclude is None or host.pk not in exclude:
-                OperationSchemaCached(host).before_delete_attribution(sourceID, associations)
+                OperationSchemaCached(host).before_delete_attribution(sourceID, attributions)

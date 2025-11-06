@@ -97,7 +97,7 @@ export type ISubstitutionsDTO = z.infer<typeof schemaSubstitutions>;
 /** Represents data for creating or deleting an Attribution. */
 export type IAttribution = z.infer<typeof schemaAttribution>;
 
-/** Represents data for clearing all associations for a target constituenta. */
+/** Represents data for clearing all attributions for a target constituenta. */
 export type IAttributionTargetDTO = z.infer<typeof schemaAttributionTarget>;
 
 /** Represents Constituenta list. */

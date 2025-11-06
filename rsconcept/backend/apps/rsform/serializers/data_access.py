@@ -228,10 +228,10 @@ class RSFormSerializer(StrictModelSerializer):
                 'id': oss.pk,
                 'alias': oss.alias
             })
-        for assoc in Attribution.objects.filter(container__schema=instance).only('container_id', 'attribute_id'):
+        for attrib in Attribution.objects.filter(container__schema=instance).only('container_id', 'attribute_id'):
             result['attribution'].append({
-                'container': assoc.container_id,
-                'attribute': assoc.attribute_id
+                'container': attrib.container_id,
+                'attribute': attrib.attribute_id
             })
         return result
 
@@ -304,9 +304,9 @@ class RSFormSerializer(StrictModelSerializer):
 
         Attribution.objects.filter(container__schema=instance).delete()
         attributions_to_create: list[Attribution] = []
-        for assoc in data.get('attribution', []):
-            old_container_id = assoc['container']
-            old_attribute_id = assoc['attribute']
+        for attrib in data.get('attribution', []):
+            old_container_id = attrib['container']
+            old_attribute_id = attrib['attribute']
             container_id = id_map.get(old_container_id)
             attribute_id = id_map.get(old_attribute_id)
             if container_id and attribute_id:

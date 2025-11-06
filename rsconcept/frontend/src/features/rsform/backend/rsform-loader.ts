@@ -110,11 +110,11 @@ export class RSFormLoader {
         parent.spawn_alias.push(cst.alias);
       }
     });
-    this.schema.attribution.forEach(assoc => {
-      const container = this.cstByID.get(assoc.container)!;
-      container.attributes.push(assoc.attribute);
-      this.full_graph.addEdge(container.id, assoc.attribute);
-      this.association_graph.addEdge(container.id, assoc.attribute);
+    this.schema.attribution.forEach(attrib => {
+      const container = this.cstByID.get(attrib.container)!;
+      container.attributes.push(attrib.attribute);
+      this.full_graph.addEdge(container.id, attrib.attribute);
+      this.association_graph.addEdge(container.id, attrib.attribute);
     });
   }
 

@@ -318,16 +318,16 @@ class OperationSchemaCached:
                 mapping={}
             )
 
-    def after_create_attribution(self, schemaID: int, associations: list[Attribution],
+    def after_create_attribution(self, schemaID: int, attributions: list[Attribution],
                                  exclude: Optional[list[int]] = None) -> None:
         ''' Trigger cascade resolutions when Attribution is created. '''
         operation = self.cache.get_operation(schemaID)
-        self.engine.on_inherit_attribution(operation.pk, associations, exclude)
+        self.engine.on_inherit_attribution(operation.pk, attributions, exclude)
 
-    def before_delete_attribution(self, schemaID: int, associations: list[Attribution]) -> None:
+    def before_delete_attribution(self, schemaID: int, attributions: list[Attribution]) -> None:
         ''' Trigger cascade resolutions when Attribution is deleted. '''
         operation = self.cache.get_operation(schemaID)
-        self.engine.on_delete_attribution(operation.pk, associations)
+        self.engine.on_delete_attribution(operation.pk, attributions)
 
     def _on_add_substitutions(self, schema: Optional[RSFormCached], added: list[Substitution]) -> None:
         ''' Trigger cascade resolutions when Constituenta substitution is added. '''

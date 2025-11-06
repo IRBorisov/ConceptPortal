@@ -346,7 +346,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
                 })
 
             PropagationFacade.before_delete_attribution(item.pk, target)
-            m.Attribution.objects.filter(pk__in=[assoc.pk for assoc in target]).delete()
+            m.Attribution.objects.filter(pk__in=[attrib.pk for attrib in target]).delete()
             item.save(update_fields=['time_update'])
 
         return Response(
@@ -376,7 +376,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             target = list(m.Attribution.objects.filter(container=serializer.validated_data['target']))
             if target:
                 PropagationFacade.before_delete_attribution(item.pk, target)
-                m.Attribution.objects.filter(pk__in=[assoc.pk for assoc in target]).delete()
+                m.Attribution.objects.filter(pk__in=[attrib.pk for attrib in target]).delete()
                 item.save(update_fields=['time_update'])
 
         return Response(
