@@ -52,9 +52,13 @@ export function EditorConstituenta() {
   const role = useRoleStore(state => state.role);
   const listHeight = useFitHeight(!isNarrow ? '8.2rem' : role !== UserRole.READER ? '42rem' : '35rem', '10rem');
 
+  const prevActiveCstId = useRef<number | null>(null);
   useEffect(() => {
-    if (activeCst && selected.length !== 1) {
-      setSelected([activeCst.id]);
+    if (activeCst && prevActiveCstId.current !== activeCst.id) {
+      prevActiveCstId.current = activeCst.id;
+      if (selected.length !== 1 || selected[0] !== activeCst.id) {
+        setSelected([activeCst.id]);
+      }
     }
   }, [activeCst, selected, setSelected]);
 
