@@ -1,7 +1,5 @@
 ''' Testing models: api_RSForm. '''
-from django.forms import ValidationError
-
-from apps.rsform.models import Constituenta, CstType, OrderManager, RSFormCached
+from apps.rsform.models import Attribution, Constituenta, CstType, OrderManager, RSFormCached
 from apps.users.models import User
 from shared.DBTester import DBTester
 
@@ -168,6 +166,24 @@ class TestRSFormCached(DBTester):
         self.assertEqual(self.schema.constituentsQ().count(), 2)
         self.assertEqual(x2.term_raw, 'Test2')
         self.assertEqual(d1.definition_formal, x2.alias)
+
+
+    def test_substitute_attributions(self):
+        x1 = self.schema.insert_last(alias='X1')
+        x2 = self.schema.insert_last(alias='X2')
+        d1 = self.schema.insert_last(alias='D1')
+        d2 = self.schema.insert_last(alias='D2')
+
+        Attribution.objects.create(container=x1, attribute=d2)
+        Attribution.objects.create(container=x2, attribute=d2)
+        Attribution.objects.create(container=x1, attribute=x2)
+        Attribution.objects.create(container=x1, attribute=d1)
+
+        self.schema.substitute([(x1, x2)])
+        self.assertEqual(self.schema.constituentsQ().count(), 3)
+        self.assertEqual(Attribution.objects.filter(container__schema=self.schema.model).count(), 2)
+        self.assertTrue(Attribution.objects.filter(container=x2, attribute=d2).exists())
+        self.assertTrue(Attribution.objects.filter(container=x2, attribute=d1).exists())
 
 
     def test_restore_order(self):

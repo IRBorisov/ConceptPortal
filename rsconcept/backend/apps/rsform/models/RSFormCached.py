@@ -276,7 +276,8 @@ class RSFormCached:
                 container_id = container_id if container_id is not None else attr.container_id
                 attr_id = orig_to_sub.get(attr.attribute_id)
                 attr_id = attr_id if attr_id is not None else attr.attribute_id
-                if not any(a.container_id == container_id and a.attribute_id == attr_id for a in attributions):
+                if attr_id != container_id and not any(
+                        a.container_id == container_id and a.attribute_id == attr_id for a in attributions):
                     attr.attribute_id = attr_id
                     attr.container_id = container_id
                     attr.save()
