@@ -135,10 +135,10 @@ class PropagationEngine:
             return
         for child_id in children:
             if not exclude or child_id not in exclude:
-                self.inherit_association(child_id, items)
+                self.inherit_attribution(child_id, items)
 
-    def inherit_association(self, target: int, items: list[Attribution]) -> None:
-        ''' Execute inheritance of Associations. '''
+    def inherit_attribution(self, target: int, items: list[Attribution]) -> None:
+        ''' Execute inheritance of Attributions. '''
         operation = self.cache.operation_by_id[target]
         if operation.result is None or not items:
             return
@@ -153,8 +153,8 @@ class PropagationEngine:
 
         new_attributions: list[Attribution] = []
         for attrib in items:
-            new_container = self.cache.get_inheritor(attrib.container_id, target)
-            new_attribute = self.cache.get_inheritor(attrib.attribute_id, target)
+            new_container = self.cache.get_successor(attrib.container_id, target)
+            new_attribute = self.cache.get_successor(attrib.attribute_id, target)
             if new_container is None or new_attribute is None \
                     or new_attribute == new_container \
                     or (new_container, new_attribute) in existing_attributions:
@@ -199,8 +199,8 @@ class PropagationEngine:
 
             deleted: list[Attribution] = []
             for attr in attributions:
-                new_container = self.cache.get_inheritor(attr.container_id, child_id)
-                new_attribute = self.cache.get_inheritor(attr.attribute_id, child_id)
+                new_container = self.cache.get_successor(attr.container_id, child_id)
+                new_attribute = self.cache.get_successor(attr.attribute_id, child_id)
                 if new_container is None or new_attribute is None:
                     continue
                 deleted_assoc = Attribution.objects.filter(

@@ -49,7 +49,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             'restore_order',
             'reset_aliases',
             'produce_structure',
-            'add_attribution',
+            'create_attribution',
             'delete_attribution',
             'clear_attributions'
         ]:

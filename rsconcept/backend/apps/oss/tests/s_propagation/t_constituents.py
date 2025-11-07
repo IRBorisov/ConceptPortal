@@ -1,7 +1,7 @@
 ''' Testing API: Change constituents in OSS. '''
 
 from apps.oss.models import OperationSchema, OperationType
-from apps.rsform.models import Constituenta, CstType, RSForm
+from apps.rsform.models import Attribution, Constituenta, CstType, RSForm
 from shared.EndpointTester import EndpointTester, decl_endpoint
 
 
@@ -125,7 +125,7 @@ class TestChangeConstituents(EndpointTester):
                 'crucial': True,
             }
         }
-        response = self.executeOK(data, schema=self.ks1.model.pk)
+        self.executeOK(data, schema=self.ks1.model.pk)
         self.ks1X1.refresh_from_db()
         d2.refresh_from_db()
         inherited_cst = Constituenta.objects.get(as_child__parent_id=self.ks1X1.pk)
@@ -145,7 +145,7 @@ class TestChangeConstituents(EndpointTester):
     @decl_endpoint('/api/rsforms/{schema}/delete-multiple-cst', method='patch')
     def test_delete_constituenta(self):
         data = {'items': [self.ks2X1.pk]}
-        response = self.executeOK(data, schema=self.ks2.model.pk)
+        self.executeOK(data, schema=self.ks2.model.pk)
         inherited_cst = Constituenta.objects.get(as_child__parent_id=self.ks2D1.pk)
         self.ks2D1.refresh_from_db()
         self.assertEqual(self.ks2.constituentsQ().count(), 1)
@@ -168,3 +168,30 @@ class TestChangeConstituents(EndpointTester):
         self.assertEqual(self.ks3.constituentsQ().count(), 4)
         self.assertEqual(self.ks1X2.order, 0)
         self.assertEqual(d2.definition_formal, r'X2\X2\X3')
+
+
+    @decl_endpoint('/api/rsforms/{schema}/create-attribution', method='post')
+    def test_create_attribution(self):
+        data = {'container': self.ks1X1.pk, 'attribute': self.ks1X2.pk}
+        self.executeCreated(data, schema=self.ks1.model.pk)
+        x1_child = Constituenta.objects.get(as_child__parent_id=self.ks1X1.pk)
+        x2_child = Constituenta.objects.get(as_child__parent_id=self.ks1X2.pk)
+        self.assertTrue(Attribution.objects.filter(container=x1_child, attribute=x2_child).exists())
+
+
+    @decl_endpoint('/api/rsforms/{schema}/create-attribution', method='post')
+    def test_create_attribution_substitution(self):
+        self.operation3.result.delete()
+        self.owned.set_substitutions(self.operation3.pk, [{
+            'original': self.ks1X1,
+            'substitution': self.ks2X1
+        }])
+        self.owned.execute_operation(self.operation3)
+        self.operation3.refresh_from_db()
+        self.ks3 = RSForm(self.operation3.result)
+
+        data = {'container': self.ks1X1.pk, 'attribute': self.ks1X2.pk}
+        self.executeCreated(data, schema=self.ks1.model.pk)
+        x1_child = Constituenta.objects.get(as_child__parent_id=self.ks2X1.pk)
+        x2_child = Constituenta.objects.get(as_child__parent_id=self.ks1X2.pk)
+        self.assertTrue(Attribution.objects.filter(container=x1_child, attribute=x2_child).exists())

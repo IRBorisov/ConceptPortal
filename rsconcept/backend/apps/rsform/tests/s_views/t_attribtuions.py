@@ -42,7 +42,7 @@ class TestAttributionsEndpoints(EndpointTester):
         self.executeBadData(data, item=self.owned_id)
 
         data = {'container': self.n1.pk, 'attribute': self.x1.pk}
-        self.executeBadData(data, item=self.unowned_id)
+        self.executeForbidden(data, item=self.unowned_id)
 
         response = self.executeCreated(data, item=self.owned_id)
         attributions = response.data['attribution']
