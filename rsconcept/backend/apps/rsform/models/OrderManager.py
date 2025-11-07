@@ -22,14 +22,11 @@ class OrderManager:
         self._fix_semantic_children()
         self._override_order()
 
-    def _fix_topological(self) -> None:
-        sorted_ids = self._semantic.graph.sort_stable([cst.pk for cst in self._items])
-        sorted_items = [next(cst for cst in self._items if cst.pk == id) for id in sorted_ids]
-        self._items = sorted_items
-
     def _fix_kernel(self) -> None:
         result = [cst for cst in self._items if cst.cst_type == CstType.BASE]
         result = result + [cst for cst in self._items if cst.cst_type == CstType.CONSTANT]
+        result = result + \
+            [cst for cst in self._items if result.count(cst) == 0 and len(self._semantic.graph.inputs[cst.pk]) == 0]
         kernel = [
             cst.pk for cst in self._items if
             cst.cst_type in [CstType.STRUCTURED, CstType.AXIOM] or
@@ -39,6 +36,11 @@ class OrderManager:
         result = result + [cst for cst in self._items if result.count(cst) == 0 and cst.pk in kernel]
         result = result + [cst for cst in self._items if result.count(cst) == 0]
         self._items = result
+
+    def _fix_topological(self) -> None:
+        sorted_ids = self._semantic.graph.sort_stable([cst.pk for cst in self._items])
+        sorted_items = [next(cst for cst in self._items if cst.pk == id) for id in sorted_ids]
+        self._items = sorted_items
 
     def _fix_semantic_children(self) -> None:
         result: list[Constituenta] = []

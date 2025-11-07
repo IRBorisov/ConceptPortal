@@ -1,4 +1,4 @@
-''' Testing models: api_RSForm. '''
+''' Testing models: RSFormCached. '''
 from apps.rsform.models import Attribution, Constituenta, CstType, OrderManager, RSFormCached
 from apps.users.models import User
 from shared.DBTester import DBTester
@@ -106,6 +106,25 @@ class TestRSFormCached(DBTester):
         self.assertEqual(s2.definition_raw, '@{X11|plur}')
 
 
+    def test_insert_from(self):
+        self.schema.insert_last('X2')
+        self.schema.insert_last('D2')
+        self.schema.insert_last('X3')
+        self.schema.insert_last(
+            alias='D1',
+            definition_formal='X2 = X3'
+        )
+        test_ks = RSFormCached.create(title='Test')
+        test_ks.insert_from(self.schema.model.pk)
+        items = Constituenta.objects.filter(schema=test_ks.model).order_by('order')
+        self.assertEqual(len(items), 4)
+        self.assertEqual(items[0].alias, 'X2')
+        self.assertEqual(items[1].alias, 'D2')
+        self.assertEqual(items[2].alias, 'X3')
+        self.assertEqual(items[3].alias, 'D1')
+        self.assertEqual(items[3].definition_formal, 'X2 = X3')
+
+
     def test_delete_cst(self):
         x1 = self.schema.insert_last('X1')
         x2 = self.schema.insert_last('X2')
@@ -210,6 +229,10 @@ class TestRSFormCached(DBTester):
             alias='A1',
             definition_formal=r'D3=∅',
         )
+        a2 = self.schema.insert_last(
+            alias='A2',
+            definition_formal=r'P1[S1]',
+        )
         d3 = self.schema.insert_last(
             alias='D3',
             definition_formal=r'Pr2(S2)',
@@ -226,6 +249,10 @@ class TestRSFormCached(DBTester):
             alias='F2',
             definition_formal=r'[α∈ℬ(X1)] X1\α',
         )
+        p1 = self.schema.insert_last(
+            alias='P1',
+            definition_formal=r'[α∈ℬ(R1)] card(α)=0',
+        )
 
         OrderManager(self.schema).restore_order()
         x1.refresh_from_db()
@@ -240,19 +267,23 @@ class TestRSFormCached(DBTester):
         f1.refresh_from_db()
         f2.refresh_from_db()
         a1.refresh_from_db()
+        a2.refresh_from_db()
+        p1.refresh_from_db()
 
         self.assertEqual(x1.order, 0)
         self.assertEqual(x2.order, 1)
         self.assertEqual(c1.order, 2)
-        self.assertEqual(s1.order, 3)
-        self.assertEqual(d1.order, 4)
-        self.assertEqual(s2.order, 5)
-        self.assertEqual(d3.order, 6)
-        self.assertEqual(a1.order, 7)
-        self.assertEqual(d4.order, 8)
-        self.assertEqual(d2.order, 9)
-        self.assertEqual(f1.order, 10)
-        self.assertEqual(f2.order, 11)
+        self.assertEqual(p1.order, 3)
+        self.assertEqual(s1.order, 4)
+        self.assertEqual(a2.order, 5)
+        self.assertEqual(d1.order, 6)
+        self.assertEqual(s2.order, 7)
+        self.assertEqual(d3.order, 8)
+        self.assertEqual(a1.order, 9)
+        self.assertEqual(d4.order, 10)
+        self.assertEqual(d2.order, 11)
+        self.assertEqual(f1.order, 12)
+        self.assertEqual(f2.order, 13)
 
 
     def test_reset_aliases(self):

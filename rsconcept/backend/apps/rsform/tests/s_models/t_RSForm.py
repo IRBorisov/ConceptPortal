@@ -1,4 +1,4 @@
-''' Testing models: api_RSForm. '''
+''' Testing models: RSForm. '''
 from django.forms import ValidationError
 
 from apps.rsform.models import Constituenta, CstType, RSForm
