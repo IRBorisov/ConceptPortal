@@ -8,6 +8,7 @@ from apps.rsform.models import Attribution, Constituenta, CstType, RSFormCached
 from .Inheritance import Inheritance
 from .Operation import Operation
 from .OssCache import OssCache
+from .PropagationContext import PropagationContext
 from .Substitution import Substitution
 from .utils import (
     CstMapping,
@@ -21,8 +22,9 @@ from .utils import (
 class PropagationEngine:
     ''' OSS changes propagation engine. '''
 
-    def __init__(self, cache: OssCache):
+    def __init__(self, cache: OssCache, context: PropagationContext) -> None:
         self.cache = cache
+        self.context = context
 
     def on_change_cst_type(self, operation_id: int, cst_id: int, ctype: CstType) -> None:
         ''' Trigger cascade resolutions when Constituenta type is changed. '''
@@ -35,7 +37,7 @@ class PropagationEngine:
             successor_id = self.cache.get_inheritor(cst_id, child_id)
             if successor_id is None:
                 continue
-            child_schema = self.cache.get_schema(child_operation)
+            child_schema = self.cache.get_result(child_operation)
             if child_schema is None:
                 continue
             if child_schema.change_cst_type(successor_id, ctype):
@@ -67,7 +69,7 @@ class PropagationEngine:
     ) -> None:
         ''' Execute inheritance of Constituenta. '''
         operation = self.cache.operation_by_id[target_operation]
-        destination = self.cache.get_schema(operation)
+        destination = self.cache.get_result(operation)
         if destination is None:
             return
 
@@ -104,7 +106,7 @@ class PropagationEngine:
             successor_id = self.cache.get_inheritor(cst_id, child_id)
             if successor_id is None:
                 continue
-            child_schema = self.cache.get_schema(child_operation)
+            child_schema = self.cache.get_result(child_operation)
             assert child_schema is not None
             new_mapping = self._transform_mapping(mapping, child_operation, child_schema)
             alias_mapping = cst_mapping_to_alias(new_mapping)
@@ -176,7 +178,7 @@ class PropagationEngine:
         self.cache.ensure_loaded_subs()
         for child_id in children:
             child_operation = self.cache.operation_by_id[child_id]
-            child_schema = self.cache.get_schema(child_operation)
+            child_schema = self.cache.get_result(child_operation)
             if child_schema is None:
                 continue
             new_substitutions = self._transform_substitutions(substitutions, child_id, child_schema)
@@ -193,7 +195,7 @@ class PropagationEngine:
         self.cache.ensure_loaded_subs()
         for child_id in children:
             child_operation = self.cache.operation_by_id[child_id]
-            child_schema = self.cache.get_schema(child_operation)
+            child_schema = self.cache.get_result(child_operation)
             if child_schema is None:
                 continue
 
@@ -213,26 +215,26 @@ class PropagationEngine:
                 self.on_delete_attribution(child_id, deleted)
                 Attribution.objects.filter(pk__in=[attrib.pk for attrib in deleted]).delete()
 
-    def on_delete_inherited(self, operation: int, target: list[int]) -> None:
+    def on_delete_inherited(self, operationID: int, target: list[int]) -> None:
         ''' Trigger cascade resolutions when Constituenta inheritance is deleted. '''
-        children = self.cache.extend_graph.outputs[operation]
+        children = self.cache.extend_graph.outputs[operationID]
         if not children:
             return
         self.cache.ensure_loaded_subs()
         for child_id in children:
             self.delete_inherited(child_id, target)
 
-    def delete_inherited(self, operation_id: int, parent_ids: list[int]) -> None:
+    def delete_inherited(self, operationID: int, parents: list[int]) -> None:
         ''' Execute deletion of Constituenta inheritance. '''
-        operation = self.cache.operation_by_id[operation_id]
-        schema = self.cache.get_schema(operation)
+        operation = self.cache.operation_by_id[operationID]
+        schema = self.cache.get_result(operation)
         if schema is None:
             return
-        self.undo_substitutions_cst(parent_ids, operation, schema)
-        target_ids = self.cache.get_inheritors_list(parent_ids, operation_id)
-        self.on_delete_inherited(operation_id, target_ids)
+        self.undo_substitutions_cst(parents, operation, schema)
+        target_ids = self.cache.get_inheritors_list(parents, operationID)
+        self.on_delete_inherited(operationID, target_ids)
         if target_ids:
-            self.cache.remove_cst(operation_id, target_ids)
+            self.cache.remove_cst(operationID, target_ids)
             schema.delete_cst(target_ids)
 
     def undo_substitutions_cst(self, target_ids: list[int], operation: Operation, schema: RSFormCached) -> None:
@@ -254,7 +256,7 @@ class PropagationEngine:
         if ignore_parents is None:
             ignore_parents = []
         operation_id = target.operation_id
-        original_schema = self.cache.get_schema_by_id(target.original.schema_id)
+        original_schema = self.context.get_schema(target.original.schema_id)
         dependant = []
         for cst_id in original_schema.get_dependant([target.original_id]):
             if cst_id not in ignore_parents:
@@ -374,7 +376,7 @@ class PropagationEngine:
         self.cache.ensure_loaded_subs()
         for child_id in children:
             child_operation = self.cache.operation_by_id[child_id]
-            child_schema = self.cache.get_schema(child_operation)
+            child_schema = self.cache.get_result(child_operation)
             if child_schema is None:
                 continue
             new_mapping = self._transform_mapping(mapping, child_operation, child_schema)

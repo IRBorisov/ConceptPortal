@@ -220,8 +220,9 @@ class TestOssViewset(EndpointTester):
         self.executeBadData(data)
 
 
-    @decl_endpoint('/api/oss/relocate-constituents', method='post')
+    @decl_endpoint('/api/oss/{item}/relocate-constituents', method='post')
     def test_relocate_constituents(self):
+        self.set_params(item=self.owned_id)
         self.populateData()
         self.ks1X2 = self.ks1.insert_last('X2', convention='test')
 

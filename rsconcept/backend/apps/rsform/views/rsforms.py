@@ -91,9 +91,10 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             insert_after = data['insert_after']
 
         with transaction.atomic():
-            schema = m.RSFormCached(item)
+            propagation = PropagationFacade()
+            schema = propagation.get_schema(item.pk)
             new_cst = schema.create_cst(data, insert_after)
-            PropagationFacade.after_create_cst(schema, [new_cst])
+            propagation.after_create_cst([new_cst])
             item.save(update_fields=['time_update'])
 
         return Response(
@@ -125,9 +126,10 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         data = serializer.validated_data['item_data']
 
         with transaction.atomic():
-            schema = m.RSFormCached(item)
+            propagation = PropagationFacade()
+            schema = propagation.get_schema(item.pk)
             old_data = schema.update_cst(cst.pk, data)
-            PropagationFacade.after_update_cst(schema, cst.pk, data, old_data)
+            propagation.after_update_cst(item.pk, cst.pk, data, old_data)
             if 'alias' in data and data['alias'] != cst.alias:
                 cst.refresh_from_db()
                 changed_type = 'cst_type' in data and cst.cst_type != data['cst_type']
@@ -138,7 +140,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
                 cst.save()
                 schema.apply_mapping(mapping=mapping, change_aliases=False)
                 if changed_type:
-                    PropagationFacade.after_change_cst_type(item.pk, cst.pk, cast(m.CstType, cst.cst_type))
+                    propagation.after_change_cst_type(item.pk, cst.pk, cast(m.CstType, cst.cst_type))
                 item.save(update_fields=['time_update'])
         return Response(
             status=c.HTTP_200_OK,
@@ -208,9 +210,10 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             )
 
         with transaction.atomic():
-            schema = m.RSFormCached(item)
+            propagation = PropagationFacade()
+            schema = propagation.get_schema(item.pk)
             new_cst = schema.produce_structure(cst, cst_parse)
-            PropagationFacade.after_create_cst(schema, new_cst)
+            propagation.after_create_cst(new_cst)
             item.save(update_fields=['time_update'])
         return Response(
             status=c.HTTP_200_OK,
@@ -245,7 +248,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
                 original = cast(m.Constituenta, substitution['original'])
                 replacement = cast(m.Constituenta, substitution['substitution'])
                 substitutions.append((original, replacement))
-            PropagationFacade.before_substitute(item.pk, substitutions)
+            PropagationFacade().before_substitute(item.pk, substitutions)
             schema.substitute(substitutions)
             item.save(update_fields=['time_update'])
 
@@ -275,7 +278,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
 
         with transaction.atomic():
             schema = m.RSForm(item)
-            PropagationFacade.before_delete_cst(item.pk, [cst.pk for cst in cst_list])
+            PropagationFacade().before_delete_cst(item.pk, [cst.pk for cst in cst_list])
             schema.delete_cst(cst_list)
             item.save(update_fields=['time_update'])
 
@@ -305,11 +308,11 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         attribute = serializer.validated_data['attribute']
 
         with transaction.atomic():
-            new_association = m.Attribution.objects.create(
+            new_attribution = m.Attribution.objects.create(
                 container=container,
                 attribute=attribute
             )
-            PropagationFacade.after_create_attribution(item.pk, [new_association])
+            PropagationFacade().after_create_attribution(item.pk, [new_attribution])
             item.save(update_fields=['time_update'])
 
         return Response(
@@ -345,7 +348,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
                     'container': msg.invalidAssociation()
                 })
 
-            PropagationFacade.before_delete_attribution(item.pk, target)
+            PropagationFacade().before_delete_attribution(item.pk, target)
             m.Attribution.objects.filter(pk__in=[attrib.pk for attrib in target]).delete()
             item.save(update_fields=['time_update'])
 
@@ -375,7 +378,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         with transaction.atomic():
             target = list(m.Attribution.objects.filter(container=serializer.validated_data['target']))
             if target:
-                PropagationFacade.before_delete_attribution(item.pk, target)
+                PropagationFacade().before_delete_attribution(item.pk, target)
                 m.Attribution.objects.filter(pk__in=[attrib.pk for attrib in target]).delete()
                 item.save(update_fields=['time_update'])
 
@@ -456,7 +459,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         item = self._get_item()
 
         with transaction.atomic():
-            m.OrderManager(m.RSFormCached(item)).restore_order()
+            m.OrderManager(m.RSFormCached(item.pk)).restore_order()
             item.save(update_fields=['time_update'])
 
         return Response(
@@ -493,10 +496,10 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
 
         serializer = s.RSFormTRSSerializer(data=data, context={'load_meta': load_metadata})
         serializer.is_valid(raise_exception=True)
-        result: m.RSForm = serializer.save()
+        result: m.RSFormCached = serializer.save()
         return Response(
             status=c.HTTP_200_OK,
-            data=s.RSFormParseSerializer(result.model).data
+            data=s.RSFormParseSerializer(LibraryItem.objects.get(pk=result.pk)).data
         )
 
     @extend_schema(
@@ -651,10 +654,10 @@ class TrsImportView(views.APIView):
         _prepare_rsform_data(data, request, owner)
         serializer = s.RSFormTRSSerializer(data=data, context={'load_meta': True})
         serializer.is_valid(raise_exception=True)
-        schema: m.RSForm = serializer.save()
+        schema: m.RSFormCached = serializer.save()
         return Response(
             status=c.HTTP_201_CREATED,
-            data=LibraryItemSerializer(schema.model).data
+            data=LibraryItemSerializer(LibraryItem.objects.get(pk=schema.pk)).data
         )
 
 
@@ -687,10 +690,10 @@ def create_rsform(request: Request) -> HttpResponse:
     _prepare_rsform_data(data, request, owner)
     serializer_rsform = s.RSFormTRSSerializer(data=data, context={'load_meta': True})
     serializer_rsform.is_valid(raise_exception=True)
-    schema: m.RSForm = serializer_rsform.save()
+    schema: m.RSFormCached = serializer_rsform.save()
     return Response(
         status=c.HTTP_201_CREATED,
-        data=LibraryItemSerializer(schema.model).data
+        data=LibraryItemSerializer(LibraryItem.objects.get(pk=schema.pk)).data
     )
 
 
@@ -731,16 +734,18 @@ def inline_synthesis(request: Request) -> HttpResponse:
     serializer = s.InlineSynthesisSerializer(data=request.data, context={'user': request.user})
     serializer.is_valid(raise_exception=True)
 
-    receiver = m.RSFormCached(serializer.validated_data['receiver'])
+    item = cast(LibraryItem, serializer.validated_data['receiver'])
     target_cst = cast(list[m.Constituenta], serializer.validated_data['items'])
     source = cast(LibraryItem, serializer.validated_data['source'])
     target_ids = [item.pk for item in target_cst] if target_cst else None
 
     with transaction.atomic():
+        propagation = PropagationFacade()
+        receiver = propagation.get_schema(item.pk)
         new_items = receiver.insert_from(source.pk, target_ids)
         target_ids = [item[0].pk for item in new_items]
         mapping_ids = {cst.pk: new_cst for (cst, new_cst) in new_items}
-        PropagationFacade.after_create_cst(receiver, [item[1] for item in new_items])
+        propagation.after_create_cst([item[1] for item in new_items])
 
         substitutions: list[tuple[m.Constituenta, m.Constituenta]] = []
         for substitution in serializer.validated_data['substitutions']:
@@ -752,11 +757,11 @@ def inline_synthesis(request: Request) -> HttpResponse:
                 replacement = mapping_ids[replacement.pk]
             substitutions.append((original, replacement))
 
-        PropagationFacade.before_substitute(receiver.model.pk, substitutions)
+        propagation.before_substitute(receiver.pk, substitutions)
         receiver.substitute(substitutions)
-        receiver.model.save(update_fields=['time_update'])
+        item.save(update_fields=['time_update'])
 
     return Response(
         status=c.HTTP_200_OK,
-        data=s.RSFormParseSerializer(receiver.model).data
+        data=s.RSFormParseSerializer(item).data
     )

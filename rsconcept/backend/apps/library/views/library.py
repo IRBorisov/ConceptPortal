@@ -67,7 +67,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
 
     def perform_destroy(self, instance: m.LibraryItem) -> None:
         if instance.item_type == m.LibraryItemType.RSFORM:
-            PropagationFacade.before_delete_schema(instance)
+            PropagationFacade().before_delete_schema(instance.pk)
             super().perform_destroy(instance)
         if instance.item_type == m.LibraryItemType.OPERATION_SCHEMA:
             schemas = list(OperationSchema.owned_schemasQ(instance))
@@ -172,7 +172,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
             clone.location = data.get('location', m.LocationHead.USER)
             clone.save()
 
-            RSFormCached(clone).insert_from(item.pk, request.data['items'] if 'items' in request.data else None)
+            RSFormCached(clone.pk).insert_from(item.pk, request.data['items'] if 'items' in request.data else None)
 
             return Response(
                 status=c.HTTP_201_CREATED,

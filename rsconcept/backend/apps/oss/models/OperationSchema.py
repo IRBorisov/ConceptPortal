@@ -18,7 +18,7 @@ from .Substitution import Substitution
 class OperationSchema:
     ''' Operations schema API wrapper. No caching, propagation and minimal side effects. '''
 
-    def __init__(self, model: LibraryItem):
+    def __init__(self, model: LibraryItem) -> None:
         self.model = model
 
     @staticmethod
@@ -43,19 +43,18 @@ class OperationSchema:
         return Layout.objects.get(oss_id=itemID)
 
     @staticmethod
-    def create_input(oss: LibraryItem, operation: Operation) -> RSFormCached:
+    def create_input(oss_id: int, operation: Operation) -> LibraryItem:
         ''' Create input RSForm for given Operation. '''
-        schema = RSFormCached.create(
-            owner=oss.owner,
-            alias=operation.alias,
-            title=operation.title,
-            description=operation.description,
-            visible=False,
-            access_policy=oss.access_policy,
-            location=oss.location
-        )
-        Editor.set(schema.model.pk, oss.getQ_editors().values_list('pk', flat=True))
-        operation.setQ_result(schema.model)
+        oss = LibraryItem.objects.get(pk=oss_id)
+        schema = LibraryItem.objects.create(item_type=LibraryItemType.RSFORM, owner=oss.owner,
+                                            alias=operation.alias,
+                                            title=operation.title,
+                                            description=operation.description,
+                                            visible=False,
+                                            access_policy=oss.access_policy,
+                                            location=oss.location)
+        Editor.set(schema.pk, oss.getQ_editors().values_list('pk', flat=True))
+        operation.setQ_result(schema)
         return schema
 
     def refresh_from_db(self) -> None:
@@ -132,7 +131,7 @@ class OperationSchema:
         if not schemas:
             return
         substitutions = operation.getQ_substitutions()
-        receiver = OperationSchema.create_input(self.model, operation)
+        receiver = RSFormCached(OperationSchema.create_input(self.model.pk, operation).pk)
 
         parents: dict = {}
         children: dict = {}
@@ -149,7 +148,7 @@ class OperationSchema:
             translated_substitutions.append((original, replacement))
         receiver.substitute(translated_substitutions)
 
-        for cst in Constituenta.objects.filter(schema=receiver.model).order_by('order'):
+        for cst in Constituenta.objects.filter(schema_id=receiver.pk).order_by('order'):
             parent = parents.get(cst.pk)
             assert parent is not None
             Inheritance.objects.create(

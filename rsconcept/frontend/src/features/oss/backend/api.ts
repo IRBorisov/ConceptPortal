@@ -215,9 +215,9 @@ export const ossApi = {
       }
     }),
 
-  relocateConstituents: (data: IRelocateConstituentsDTO) =>
+  relocateConstituents: ({ itemID, data }: { itemID: number; data: IRelocateConstituentsDTO }) =>
     axiosPost<IRelocateConstituentsDTO>({
-      endpoint: `/api/oss/relocate-constituents`,
+      endpoint: `/api/oss/${itemID}/relocate-constituents`,
       request: {
         data: data,
         successMessage: infoMsg.changesSaved

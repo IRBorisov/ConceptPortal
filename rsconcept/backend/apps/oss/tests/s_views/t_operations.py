@@ -1,6 +1,12 @@
 ''' Testing API: Operation Schema - operations manipulation. '''
 from apps.library.models import Editor, LibraryItem
-from apps.oss.models import Argument, Operation, OperationSchema, OperationType, Replica
+from apps.oss.models import (
+    Argument,
+    Operation,
+    OperationSchema,
+    OperationType,
+    Replica
+)
 from apps.rsform.models import Attribution, RSForm
 from shared.EndpointTester import EndpointTester, decl_endpoint
 

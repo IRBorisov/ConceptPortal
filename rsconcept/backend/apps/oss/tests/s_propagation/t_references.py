@@ -163,7 +163,7 @@ class ReferencePropagationTestCase(EndpointTester):
     @decl_endpoint('/api/rsforms/{schema}/delete-multiple-cst', method='patch')
     def test_delete_constituenta(self):
         data = {'items': [self.ks1X1.pk]}
-        response = self.executeOK(data, schema=self.ks1.model.pk)
+        self.executeOK(data, schema=self.ks1.model.pk)
         self.ks4D2.refresh_from_db()
         self.ks5D4.refresh_from_db()
         self.ks6D2.refresh_from_db()

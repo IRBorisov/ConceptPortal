@@ -1,6 +1,5 @@
 ''' Testing API: Operation Schema - blocks manipulation. '''
-from apps.library.models import AccessPolicy, Editor, LibraryItem, LibraryItemType
-from apps.oss.models import Operation, OperationSchema, OperationType
+from apps.oss.models import OperationSchema, OperationType
 from shared.EndpointTester import EndpointTester, decl_endpoint
 
 

@@ -19,6 +19,6 @@ export const useRelocateConstituents = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    relocateConstituents: (data: IRelocateConstituentsDTO) => mutation.mutateAsync(data)
+    relocateConstituents: (data: { itemID: number; data: IRelocateConstituentsDTO }) => mutation.mutateAsync(data)
   };
 };

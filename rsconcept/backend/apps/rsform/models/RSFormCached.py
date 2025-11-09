@@ -20,21 +20,15 @@ from .RSForm import DELETED_ALIAS, RSForm
 class RSFormCached:
     ''' RSForm cached. Caching allows to avoid querying for each method call. '''
 
-    def __init__(self, model: LibraryItem):
-        self.model = model
+    def __init__(self, item_id: int) -> None:
+        self.pk = item_id
         self.cache: _RSFormCache = _RSFormCache(self)
 
     @staticmethod
     def create(**kwargs) -> 'RSFormCached':
         ''' Create LibraryItem via RSForm. '''
         model = LibraryItem.objects.create(item_type=LibraryItemType.RSFORM, **kwargs)
-        return RSFormCached(model)
-
-    @staticmethod
-    def from_id(pk: int) -> 'RSFormCached':
-        ''' Get LibraryItem by pk. '''
-        model = LibraryItem.objects.get(pk=pk)
-        return RSFormCached(model)
+        return RSFormCached(model.pk)
 
     def get_dependant(self, target: Iterable[int]) -> set[int]:
         ''' Get list of constituents depending on target (only 1st degree). '''
@@ -51,7 +45,7 @@ class RSFormCached:
 
     def constituentsQ(self) -> QuerySet[Constituenta]:
         ''' Get QuerySet containing all constituents of current RSForm. '''
-        return Constituenta.objects.filter(schema=self.model)
+        return Constituenta.objects.filter(schema_id=self.pk)
 
     def insert_last(
         self,
@@ -62,9 +56,9 @@ class RSFormCached:
         ''' Insert new constituenta at last position. '''
         if cst_type is None:
             cst_type = guess_type(alias)
-        position = Constituenta.objects.filter(schema=self.model).count()
+        position = Constituenta.objects.filter(schema_id=self.pk).count()
         result = Constituenta.objects.create(
-            schema=self.model,
+            schema_id=self.pk,
             order=position,
             alias=alias,
             cst_type=cst_type,
@@ -83,7 +77,7 @@ class RSFormCached:
         RSForm.shift_positions(position, 1, self.cache.constituents)
 
         result = Constituenta.objects.create(
-            schema=self.model,
+            schema_id=self.pk,
             order=position,
             alias=data['alias'],
             cst_type=data['cst_type'],
@@ -160,7 +154,7 @@ class RSFormCached:
         new_constituents = deepcopy(items)
         for cst in new_constituents:
             cst.pk = None
-            cst.schema = self.model
+            cst.schema_id = self.pk
             cst.order = position
             if mapping_alias:
                 cst.alias = mapping_alias[cst.alias]
@@ -263,7 +257,7 @@ class RSFormCached:
             deleted.append(original)
             replacements.append(substitution.pk)
 
-        attributions = list(Attribution.objects.filter(container__schema=self.model))
+        attributions = list(Attribution.objects.filter(container__schema_id=self.pk))
         if attributions:
             orig_to_sub = {original.pk: substitution.pk for original, substitution in substitutions}
             orig_pks = set(orig_to_sub.keys())
@@ -374,7 +368,7 @@ class RSFormCached:
         prefix = get_type_prefix(cst_type)
         for text in expressions:
             new_item = Constituenta.objects.create(
-                schema=self.model,
+                schema_id=self.pk,
                 order=position,
                 alias=f'{prefix}{free_index}',
                 definition_formal=text,
@@ -392,7 +386,7 @@ class RSFormCached:
         cst_list: Iterable[Constituenta] = []
         if not self.cache.is_loaded:
             cst_list = Constituenta.objects \
-                .filter(schema=self.model, cst_type=cst_type) \
+                .filter(schema_id=self.pk, cst_type=cst_type) \
                 .only('alias')
         else:
             cst_list = [cst for cst in self.cache.constituents if cst.cst_type == cst_type]
@@ -406,7 +400,7 @@ class RSFormCached:
 class _RSFormCache:
     ''' Cache for RSForm constituents. '''
 
-    def __init__(self, schema: 'RSFormCached'):
+    def __init__(self, schema: 'RSFormCached') -> None:
         self._schema = schema
         self.constituents: list[Constituenta] = []
         self.by_id: dict[int, Constituenta] = {}

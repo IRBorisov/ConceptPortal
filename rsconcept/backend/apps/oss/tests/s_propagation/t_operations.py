@@ -1,7 +1,7 @@
 ''' Testing API: Change substitutions in OSS. '''
 
 from apps.oss.models import OperationSchema, OperationType
-from apps.rsform.models import Constituenta, CstType, RSForm
+from apps.rsform.models import Constituenta, RSForm
 from shared.EndpointTester import EndpointTester, decl_endpoint
 
 
@@ -388,7 +388,7 @@ class TestChangeOperations(EndpointTester):
         self.assertEqual(self.ks5.constituentsQ().count(), 8)
 
 
-    @decl_endpoint('/api/oss/relocate-constituents', method='post')
+    @decl_endpoint('/api/oss/{item}/relocate-constituents', method='post')
     def test_relocate_constituents_up(self):
         ks1_old_count = self.ks1.constituentsQ().count()
         ks4_old_count = self.ks4.constituentsQ().count()
@@ -408,7 +408,7 @@ class TestChangeOperations(EndpointTester):
             'items': [ks6A1.pk]
         }
 
-        self.executeOK(data)
+        self.executeOK(data, item=self.owned_id)
         ks6.model.refresh_from_db()
         self.ks1.model.refresh_from_db()
         self.ks4.model.refresh_from_db()
@@ -418,7 +418,7 @@ class TestChangeOperations(EndpointTester):
         self.assertEqual(self.ks4.constituentsQ().count(), ks4_old_count + 1)
 
 
-    @decl_endpoint('/api/oss/relocate-constituents', method='post')
+    @decl_endpoint('/api/oss/{item}/relocate-constituents', method='post')
     def test_relocate_constituents_down(self):
         ks1_old_count = self.ks1.constituentsQ().count()
         ks4_old_count = self.ks4.constituentsQ().count()
@@ -438,7 +438,7 @@ class TestChangeOperations(EndpointTester):
             'items': [self.ks1X2.pk]
         }
 
-        self.executeOK(data)
+        self.executeOK(data, item=self.owned_id)
         ks6.model.refresh_from_db()
         self.ks1.model.refresh_from_db()
         self.ks4.model.refresh_from_db()

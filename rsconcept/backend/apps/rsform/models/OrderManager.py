@@ -8,7 +8,7 @@ from .SemanticInfo import SemanticInfo
 class OrderManager:
     ''' Ordering helper class '''
 
-    def __init__(self, schema: RSFormCached):
+    def __init__(self, schema: RSFormCached) -> None:
         self._semantic = SemanticInfo(schema)
         self._items = schema.cache.constituents
         self._cst_by_ID = schema.cache.by_id

@@ -8,6 +8,7 @@ from apps.rsform.models import RSFormCached
 from .Argument import Argument
 from .Inheritance import Inheritance
 from .Operation import Operation, OperationType
+from .PropagationContext import PropagationContext
 from .Replica import Replica
 from .Substitution import Substitution
 
@@ -15,10 +16,9 @@ from .Substitution import Substitution
 class OssCache:
     ''' Cache for OSS data. '''
 
-    def __init__(self, item_id: int):
+    def __init__(self, item_id: int, context: PropagationContext) -> None:
         self._item_id = item_id
-        self._schemas: list[RSFormCached] = []
-        self._schema_by_id: dict[int, RSFormCached] = {}
+        self._context = context
 
         self.operations = list(Operation.objects.filter(oss_id=item_id).only('result_id', 'operation_type'))
         self.operation_by_id = {operation.pk: operation for operation in self.operations}
@@ -60,27 +60,11 @@ class OssCache:
                 'operation_id', 'parent_id', 'child_id'):
             self.inheritance[item.operation_id].append(item)
 
-    def get_schema(self, operation: Operation) -> Optional[RSFormCached]:
+    def get_result(self, operation: Operation) -> Optional[RSFormCached]:
         ''' Get schema by Operation. '''
         if operation.result_id is None:
             return None
-        if operation.result_id in self._schema_by_id:
-            return self._schema_by_id[operation.result_id]
-        else:
-            schema = RSFormCached.from_id(operation.result_id)
-            schema.cache.ensure_loaded()
-            self._insert_new(schema)
-            return schema
-
-    def get_schema_by_id(self, target: int) -> RSFormCached:
-        ''' Get schema by Operation. '''
-        if target in self._schema_by_id:
-            return self._schema_by_id[target]
-        else:
-            schema = RSFormCached.from_id(target)
-            schema.cache.ensure_loaded()
-            self._insert_new(schema)
-            return schema
+        return self._context.get_schema(operation.result_id)
 
     def get_operation(self, schemaID: int) -> Operation:
         ''' Get operation by schema. '''
@@ -111,12 +95,6 @@ class OssCache:
                 return self.get_inheritor(sub.substitution_id, operation)
         return self.get_inheritor(parent_cst, operation)
 
-    def insert_schema(self, schema: RSFormCached) -> None:
-        ''' Insert new schema. '''
-        if not self._schema_by_id.get(schema.model.pk):
-            schema.cache.ensure_loaded()
-            self._insert_new(schema)
-
     def insert_argument(self, argument: Argument) -> None:
         ''' Insert new argument. '''
         self.graph.add_edge(argument.argument_id, argument.operation_id)
@@ -145,19 +123,12 @@ class OssCache:
         for item in inherit_to_delete:
             self.inheritance[operation].remove(item)
 
-    def remove_schema(self, schema: RSFormCached) -> None:
-        ''' Remove schema from cache. '''
-        self._schemas.remove(schema)
-        del self._schema_by_id[schema.model.pk]
-
     def remove_operation(self, operation: int) -> None:
         ''' Remove operation from cache. '''
         target = self.operation_by_id[operation]
         self.graph.remove_node(operation)
         self.extend_graph.remove_node(operation)
-        if target.result_id in self._schema_by_id:
-            self._schemas.remove(self._schema_by_id[target.result_id])
-            del self._schema_by_id[target.result_id]
+        self._context.invalidate(target.result_id)
         self.operations.remove(self.operation_by_id[operation])
         del self.operation_by_id[operation]
         if operation in self.replica_original:
@@ -182,7 +153,3 @@ class OssCache:
     def remove_inheritance(self, target: Inheritance) -> None:
         ''' Remove inheritance from cache. '''
         self.inheritance[target.operation_id].remove(target)
-
-    def _insert_new(self, schema: RSFormCached) -> None:
-        self._schemas.append(schema)
-        self._schema_by_id[schema.model.pk] = schema

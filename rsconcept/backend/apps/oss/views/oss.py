@@ -14,7 +14,7 @@ from rest_framework.response import Response
 
 from apps.library.models import LibraryItem, LibraryItemType
 from apps.library.serializers import LibraryItemSerializer
-from apps.rsform.models import Constituenta, RSFormCached
+from apps.rsform.models import Constituenta
 from apps.rsform.serializers import CstTargetSerializer
 from shared import messages as msg
 from shared import permissions
@@ -291,7 +291,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
                 'height': position['height']
             })
             m.Layout.update_data(pk, layout)
-            m.OperationSchema.create_input(item, new_operation)
+            m.OperationSchema.create_input(item.pk, new_operation)
             item.save(update_fields=['time_update'])
 
         return Response(
@@ -420,7 +420,8 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
                 schema_clone.access_policy = item.access_policy
                 schema_clone.location = item.location
                 schema_clone.save()
-                RSFormCached(schema_clone).insert_from(prototype.pk)
+
+                m.PropagationFacade().get_schema(schema_clone.pk).insert_from(prototype.pk)
 
                 new_operation.result = schema_clone
                 new_operation.save(update_fields=["result"])
@@ -544,7 +545,8 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         operation: m.Operation = cast(m.Operation, serializer.validated_data['target'])
 
         with transaction.atomic():
-            oss = m.OperationSchemaCached(item)
+            propagation = m.PropagationFacade()
+            oss = propagation.get_oss(item.pk)
             if 'layout' in serializer.validated_data:
                 layout = serializer.validated_data['layout']
                 m.Layout.update_data(pk, layout)
@@ -599,12 +601,13 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         layout = [x for x in layout if x['nodeID'] != 'o' + str(operation.pk)]
 
         with transaction.atomic():
-            oss = m.OperationSchemaCached(item)
+            propagation = m.PropagationFacade()
+            oss = propagation.get_oss(item.pk)
             oss.delete_operation(operation.pk, serializer.validated_data['keep_constituents'])
             m.Layout.update_data(pk, layout)
             if old_schema is not None:
                 if serializer.validated_data['delete_schema']:
-                    m.PropagationFacade.before_delete_schema(old_schema)
+                    propagation.before_delete_schema(old_schema.pk)
                     old_schema.delete()
                 elif old_schema.is_synced(item):
                     old_schema.visible = True
@@ -640,7 +643,8 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         layout = [x for x in layout if x['nodeID'] != 'o' + str(operation.pk)]
 
         with transaction.atomic():
-            oss = m.OperationSchemaCached(item)
+            propagation = m.PropagationFacade()
+            oss = propagation.get_oss(item.pk)
             m.Layout.update_data(pk, layout)
             oss.delete_replica(operation.pk, keep_connections, keep_constituents)
             item.save(update_fields=['time_update'])
@@ -680,13 +684,13 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
 
         with transaction.atomic():
             m.Layout.update_data(pk, layout)
-            schema = m.OperationSchema.create_input(item, operation)
+            schema = m.OperationSchema.create_input(item.pk, operation)
             item.save(update_fields=['time_update'])
 
         return Response(
             status=c.HTTP_200_OK,
             data={
-                'new_schema': LibraryItemSerializer(schema.model).data,
+                'new_schema': LibraryItemSerializer(schema).data,
                 'oss': s.OperationSchemaSerializer(item).data
             }
         )
@@ -726,7 +730,8 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         old_schema = target_operation.result
 
         with transaction.atomic():
-            oss = m.OperationSchemaCached(item)
+            propagation = m.PropagationFacade()
+            oss = propagation.get_oss(item.pk)
             if old_schema is not None:
                 if old_schema.is_synced(item):
                     old_schema.visible = True
@@ -769,7 +774,8 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
         layout = serializer.validated_data['layout']
 
         with transaction.atomic():
-            oss = m.OperationSchemaCached(item)
+            propagation = m.PropagationFacade()
+            oss = propagation.get_oss(item.pk)
             oss.execute_operation(operation)
             m.Layout.update_data(pk, layout)
             item.save(update_fields=['time_update'])
@@ -823,24 +829,27 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
             c.HTTP_404_NOT_FOUND: None
         }
     )
-    @action(detail=False, methods=['post'], url_path='relocate-constituents')
-    def relocate_constituents(self, request: Request) -> Response:
+    @action(detail=True, methods=['post'], url_path='relocate-constituents')
+    def relocate_constituents(self, request: Request, pk) -> Response:
         ''' Relocate constituents from one schema to another. '''
+        item = self._get_item()
         serializer = s.RelocateConstituentsSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
         ids = [cst.pk for cst in data['items']]
+        destinationID = data['destination']
 
         with transaction.atomic():
-            oss = m.OperationSchemaCached(LibraryItem.objects.get(pk=data['oss']))
-            source = RSFormCached(LibraryItem.objects.get(pk=data['source']))
-            destination = RSFormCached(LibraryItem.objects.get(pk=data['destination']))
+            propagation = m.PropagationFacade()
+            oss = propagation.get_oss(item.pk)
+            source = propagation.get_schema(data['source'])
             if data['move_down']:
-                oss.relocate_down(source, destination, ids)
-                m.PropagationFacade.before_delete_cst(data['source'], ids)
+                oss.relocate_down(destinationID, ids)
+                propagation.before_delete_cst(source.pk, ids)
                 source.delete_cst(ids)
             else:
-                new_items = oss.relocate_up(source, destination, ids)
-                m.PropagationFacade.after_create_cst(destination, new_items, exclude=[oss.model.pk])
+                new_items = oss.relocate_up(source.pk, destinationID, ids)
+                propagation.after_create_cst(new_items, exclude=[oss.pk])
+                item.save(update_fields=['time_update'])
 
         return Response(status=c.HTTP_200_OK)

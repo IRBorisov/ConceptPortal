@@ -1,6 +1,6 @@
 ''' Testing API: Change attributes of OSS and RSForms. '''
 from apps.library.models import AccessPolicy, Editor, LibraryItem, LocationHead
-from apps.oss.models import Operation, OperationSchema, OperationType
+from apps.oss.models import OperationSchema, OperationType
 from apps.rsform.models import RSForm
 from apps.users.models import User
 from shared.EndpointTester import EndpointTester, decl_endpoint

@@ -1,7 +1,7 @@
 ''' Testing API: Change substitutions in OSS. '''
 
 from apps.oss.models import OperationSchema, OperationType
-from apps.rsform.models import Constituenta, CstType, RSForm
+from apps.rsform.models import Constituenta, RSForm
 from shared.EndpointTester import EndpointTester, decl_endpoint
 
 

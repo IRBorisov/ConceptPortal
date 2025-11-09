@@ -16,7 +16,7 @@ from .RSFormCached import RSFormCached
 class SemanticInfo:
     ''' Semantic information derived from constituents. '''
 
-    def __init__(self, schema: RSFormCached):
+    def __init__(self, schema: RSFormCached) -> None:
         schema.cache.ensure_loaded()
         self._items = schema.cache.constituents
         self._cst_by_ID = schema.cache.by_id

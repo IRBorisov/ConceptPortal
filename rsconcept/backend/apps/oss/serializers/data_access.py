@@ -609,8 +609,6 @@ class RelocateConstituentsSerializer(StrictSerializer):
         attrs['destination'] = attrs['destination'].id
         attrs['source'] = attrs['items'][0].schema_id
 
-        # TODO: check permissions for editing source and destination
-
         if attrs['source'] == attrs['destination']:
             raise serializers.ValidationError({
                 'destination': msg.sourceEqualDestination()
@@ -624,15 +622,6 @@ class RelocateConstituentsSerializer(StrictSerializer):
             raise serializers.ValidationError({
                 'items': msg.RelocatingInherited()
             })
-
-        oss = LibraryItem.objects \
-            .filter(operations__result_id=attrs['destination']) \
-            .filter(operations__result_id=attrs['source']).only('id')
-        if not oss.exists():
-            raise serializers.ValidationError({
-                'destination': msg.schemasNotConnected()
-            })
-        attrs['oss'] = oss[0].pk
 
         if Argument.objects.filter(
             operation__result_id=attrs['destination'],

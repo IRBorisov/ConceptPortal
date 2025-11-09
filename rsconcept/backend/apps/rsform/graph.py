@@ -8,7 +8,7 @@ ItemType = TypeVar("ItemType")
 class Graph(Generic[ItemType]):
     ''' Directed graph. '''
 
-    def __init__(self, graph: Optional[dict[ItemType, list[ItemType]]] = None):
+    def __init__(self, graph: Optional[dict[ItemType, list[ItemType]]] = None) -> None:
         if graph is None:
             self.outputs: dict[ItemType, list[ItemType]] = {}
             self.inputs: dict[ItemType, list[ItemType]] = {}

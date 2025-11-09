@@ -123,7 +123,7 @@ class RSFormTRSSerializer(serializers.Serializer):
             result['description'] = data.get('description', '')
         if 'id' in data:
             result['id'] = data['id']
-            self.instance = RSFormCached.from_id(result['id'])
+            self.instance = RSFormCached(result['id'])
         return result
 
     def validate(self, attrs: dict):
@@ -151,7 +151,7 @@ class RSFormTRSSerializer(serializers.Serializer):
         for cst_data in validated_data['items']:
             cst = Constituenta(
                 alias=cst_data['alias'],
-                schema=self.instance.model,
+                schema_id=self.instance.pk,
                 order=order,
                 cst_type=cst_data['cstType'],
             )
@@ -163,12 +163,13 @@ class RSFormTRSSerializer(serializers.Serializer):
 
     @transaction.atomic
     def update(self, instance: RSFormCached, validated_data) -> RSFormCached:
+        model = LibraryItem.objects.get(pk=instance.pk)
         if 'alias' in validated_data:
-            instance.model.alias = validated_data['alias']
+            model.alias = validated_data['alias']
         if 'title' in validated_data:
-            instance.model.title = validated_data['title']
+            model.title = validated_data['title']
         if 'description' in validated_data:
-            instance.model.description = validated_data['description']
+            model.description = validated_data['description']
 
         order = 0
         prev_constituents = instance.constituentsQ()
@@ -185,7 +186,7 @@ class RSFormTRSSerializer(serializers.Serializer):
             else:
                 cst = Constituenta(
                     alias=cst_data['alias'],
-                    schema=instance.model,
+                    schema_id=instance.pk,
                     order=order,
                     cst_type=cst_data['cstType'],
                 )
@@ -199,7 +200,7 @@ class RSFormTRSSerializer(serializers.Serializer):
                 prev_cst.delete()
 
         instance.resolve_all_text()
-        instance.model.save()
+        model.save()
         return instance
 
     @staticmethod

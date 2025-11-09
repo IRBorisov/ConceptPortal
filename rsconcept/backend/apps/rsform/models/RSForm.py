@@ -21,7 +21,7 @@ DELETED_ALIAS = 'DEL'
 class RSForm:
     ''' RSForm wrapper. No caching, each mutation requires querying. '''
 
-    def __init__(self, model: LibraryItem):
+    def __init__(self, model: LibraryItem) -> None:
         assert model.item_type == LibraryItemType.RSFORM
         self.model = model
 

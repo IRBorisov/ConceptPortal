@@ -22,8 +22,8 @@ class TestRSFormCached(DBTester):
         self.assertFalse(schema1.constituentsQ().exists())
         self.assertFalse(schema2.constituentsQ().exists())
 
-        Constituenta.objects.create(alias='X1', schema=schema1.model, order=0)
-        Constituenta.objects.create(alias='X2', schema=schema1.model, order=1)
+        Constituenta.objects.create(alias='X1', schema_id=schema1.pk, order=0)
+        Constituenta.objects.create(alias='X2', schema_id=schema1.pk, order=1)
         self.assertTrue(schema1.constituentsQ().exists())
         self.assertFalse(schema2.constituentsQ().exists())
         self.assertEqual(schema1.constituentsQ().count(), 2)
@@ -32,7 +32,7 @@ class TestRSFormCached(DBTester):
     def test_insert_last(self):
         x1 = self.schema.insert_last('X1')
         self.assertEqual(x1.order, 0)
-        self.assertEqual(x1.schema, self.schema.model)
+        self.assertEqual(x1.schema_id, self.schema.pk)
 
 
     def test_create_cst(self):
@@ -115,8 +115,8 @@ class TestRSFormCached(DBTester):
             definition_formal='X2 = X3'
         )
         test_ks = RSFormCached.create(title='Test')
-        test_ks.insert_from(self.schema.model.pk)
-        items = Constituenta.objects.filter(schema=test_ks.model).order_by('order')
+        test_ks.insert_from(self.schema.pk)
+        items = Constituenta.objects.filter(schema_id=test_ks.pk).order_by('order')
         self.assertEqual(len(items), 4)
         self.assertEqual(items[0].alias, 'X2')
         self.assertEqual(items[1].alias, 'D2')
@@ -200,7 +200,7 @@ class TestRSFormCached(DBTester):
 
         self.schema.substitute([(x1, x2)])
         self.assertEqual(self.schema.constituentsQ().count(), 3)
-        self.assertEqual(Attribution.objects.filter(container__schema=self.schema.model).count(), 2)
+        self.assertEqual(Attribution.objects.filter(container__schema_id=self.schema.pk).count(), 2)
         self.assertTrue(Attribution.objects.filter(container=x2, attribute=d2).exists())
         self.assertTrue(Attribution.objects.filter(container=x2, attribute=d1).exists())
 

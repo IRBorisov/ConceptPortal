@@ -106,13 +106,13 @@ export function DlgRelocateConstituents() {
   function onSubmit(data: IRelocateConstituentsDTO) {
     data.items = moveTarget;
     if (!layout || JSON.stringify(layout) === JSON.stringify(oss.layout)) {
-      return relocateConstituents(data);
+      return relocateConstituents({ itemID: oss.id, data: data });
     } else {
       return updatePositions({
         isSilent: true,
         itemID: oss.id,
         data: layout
-      }).then(() => relocateConstituents(data));
+      }).then(() => relocateConstituents({ itemID: oss.id, data: data }));
     }
   }
 

@@ -12,7 +12,7 @@ from ..models import Constituenta, CstType
 class PyConceptAdapter:
     ''' RSForm adapter for interacting with pyconcept module. '''
 
-    def __init__(self, data: Union[int, dict]):
+    def __init__(self, data: Union[int, dict]) -> None:
         try:
             if 'items' in cast(dict, data):
                 self.data = self._prepare_request_raw(cast(dict, data))
