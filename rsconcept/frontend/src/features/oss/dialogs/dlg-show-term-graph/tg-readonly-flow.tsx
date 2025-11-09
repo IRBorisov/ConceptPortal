@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { type Edge, MarkerType, type Node, useEdgesState, useNodesState } from 'reactflow';
 
 import { type IConstituenta, type IRSForm } from '@/features/rsform';
+import { FocusLabel } from '@/features/rsform/components/term-graph/focus-label';
 import { TGEdgeTypes } from '@/features/rsform/components/term-graph/graph/tg-edge-types';
 import { TGNodeTypes } from '@/features/rsform/components/term-graph/graph/tg-node-types';
 import { SelectColoring } from '@/features/rsform/components/term-graph/select-coloring';
@@ -100,9 +101,10 @@ export function TGReadonlyFlow({ schema }: TGReadonlyFlowProps) {
 
   return (
     <div className='relative w-full h-full flex flex-col'>
-      <div className='cc-tab-tools flex mt-2 items-start rounded-b-2xl backdrop-blur-xs'>
-        {focusCst ? <ToolbarFocusedCst focus={focusCst} resetFocus={() => setFocusCst(null)} /> : null}
+      <div className='cc-tab-tools mt-2 flex flex-col items-center  rounded-b-2xl backdrop-blur-xs'>
         <ToolbarGraphFilter />
+        {focusCst ? <ToolbarFocusedCst resetFocus={() => setFocusCst(null)} /> : null}
+        {focusCst ? <FocusLabel label={focusCst.alias} /> : null}
       </div>
       <div className='absolute z-pop top-24 sm:top-16 left-2 sm:left-3 w-54 flex flex-col pointer-events-none'>
         <SelectColoring className='rounded-b-none' schema={schema} />

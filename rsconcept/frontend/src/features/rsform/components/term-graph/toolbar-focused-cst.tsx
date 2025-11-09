@@ -1,9 +1,5 @@
 'use client';
 
-import clsx from 'clsx';
-
-import { type IConstituenta } from '@/features/rsform/models/rsform';
-
 import { MiniButton } from '@/components/control';
 import { IconGraphInputs, IconGraphOutputs, IconReset } from '@/components/icons';
 import { cn } from '@/components/utils';
@@ -12,11 +8,10 @@ import { useTermGraphStore } from '../../stores/term-graph';
 
 interface ToolbarFocusedCstProps {
   className?: string;
-  focus: IConstituenta;
   resetFocus: () => void;
 }
 
-export function ToolbarFocusedCst({ focus, resetFocus, className }: ToolbarFocusedCstProps) {
+export function ToolbarFocusedCst({ resetFocus, className }: ToolbarFocusedCstProps) {
   const filter = useTermGraphStore(state => state.filter);
   const toggleFocusInputs = useTermGraphStore(state => state.toggleFocusInputs);
   const toggleFocusOutputs = useTermGraphStore(state => state.toggleFocusOutputs);
@@ -39,21 +34,6 @@ export function ToolbarFocusedCst({ focus, resetFocus, className }: ToolbarFocus
           icon={<IconGraphOutputs size='1.25rem' className={filter.focusShowOutputs ? 'icon-green' : 'icon-primary'} />}
           onClick={toggleFocusOutputs}
         />
-      </div>
-      <div
-        className={clsx(
-          'translate-x-1/2',
-          'w-full text-right',
-          'px-1',
-          'select-none',
-          'hover:bg-background',
-          'text-accent-purple-foreground rounded-md'
-        )}
-      >
-        <span aria-label='Фокус-конституента' className='whitespace-nowrap'>
-          Фокус
-          <b> {focus.alias} </b>
-        </span>
       </div>
     </div>
   );

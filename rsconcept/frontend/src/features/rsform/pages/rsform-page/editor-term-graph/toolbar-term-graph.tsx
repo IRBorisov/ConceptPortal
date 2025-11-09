@@ -6,6 +6,7 @@ import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 import { type ILibraryItemReference } from '@/features/library';
 import { MiniSelectorOSS } from '@/features/library/components/mini-selector-oss';
+import { FocusLabel } from '@/features/rsform/components/term-graph/focus-label';
 import { ToolbarFocusedCst } from '@/features/rsform/components/term-graph/toolbar-focused-cst';
 import { ToolbarGraphSelection } from '@/features/rsform/components/toolbar-graph-selection';
 import { isBasicConcept } from '@/features/rsform/models/rsform-api';
@@ -162,10 +163,7 @@ export function ToolbarTermGraph({ className }: ToolbarTermGraphProps) {
       </div>
       <div className='cc-icons items-start'>
         {focusCst ? (
-          <ToolbarFocusedCst
-            focus={focusCst} //
-            resetFocus={() => setFocus(null)}
-          />
+          <ToolbarFocusedCst resetFocus={() => setFocus(null)} />
         ) : (
           <ToolbarGraphSelection
             graph={filteredGraph}
@@ -201,6 +199,7 @@ export function ToolbarTermGraph({ className }: ToolbarTermGraphProps) {
           onClick={handleShowTypeGraph}
         />
       </div>
+      {focusCst ? <FocusLabel label={focusCst.alias} /> : null}
     </div>
   );
 }
