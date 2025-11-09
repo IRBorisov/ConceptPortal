@@ -14,15 +14,27 @@ if (typeof window !== 'undefined' && import.meta.env.DEV) {
 }
 
 if (typeof window !== 'undefined') {
-  window.addEventListener('error', (event: ErrorEvent) => {
-    const error = event.error as Error;
-    if (
-      error instanceof Error &&
-      typeof error.message === 'string' &&
-      error.message.includes('Failed to fetch dynamically imported module')
-    ) {
+  function handleStaleBundleError(error: unknown): boolean {
+    if (error instanceof Error && error.message.includes('Failed to fetch dynamically imported module')) {
       console.warn('Detected stale bundle — reloading...');
       window.location.reload();
+      return true;
+    }
+    if (typeof error === 'string' && error.includes('Failed to fetch dynamically imported module')) {
+      console.warn('Detected stale bundle — reloading...');
+      window.location.reload();
+      return true;
+    }
+    return false;
+  }
+
+  window.addEventListener('error', (event: ErrorEvent) => {
+    handleStaleBundleError(event.error);
+  });
+
+  window.addEventListener('unhandledrejection', (event: PromiseRejectionEvent) => {
+    if (handleStaleBundleError(event.reason)) {
+      event.preventDefault();
     }
   });
 }
