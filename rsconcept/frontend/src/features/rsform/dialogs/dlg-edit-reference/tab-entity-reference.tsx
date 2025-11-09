@@ -15,6 +15,17 @@ import { CstMatchMode } from '../../stores/cst-search';
 
 import { type DlgEditReferenceProps, type IEditReferenceState } from './dlg-edit-reference';
 
+function prepareSelectionPrompt(text: string | undefined): string {
+  if (!text) {
+    return '';
+  }
+  if (text.includes(' ')) {
+    text = text.substring(0, text.indexOf(' '));
+  }
+  text = text.substring(0, text.length - 3);
+  return text;
+}
+
 export function TabEntityReference() {
   const { schemaID, initial } = useDialogsStore(state => state.props as DlgEditReferenceProps);
   const { schema } = useRSFormSuspense({ itemID: schemaID });
@@ -32,7 +43,7 @@ export function TabEntityReference() {
     <div className='cc-fade-in cc-column'>
       <PickConstituenta
         id='dlg_reference_entity_picker'
-        initialFilter={initial.text}
+        initialFilter={prepareSelectionPrompt(initial.text)}
         value={selectedCst}
         items={schema.items}
         onChange={handleSelectConstituenta}
