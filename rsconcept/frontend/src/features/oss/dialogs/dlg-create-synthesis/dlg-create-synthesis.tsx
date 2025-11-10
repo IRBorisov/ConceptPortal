@@ -75,12 +75,12 @@ export function DlgCreateSynthesis() {
   const alias = useWatch({ control: methods.control, name: 'item_data.alias' });
   const [activeTab, setActiveTab] = useState<TabID>(TabID.ARGUMENTS);
   const { canSubmit, hint } = (() => {
-    if (!methods.formState.isValid) {
-      return { canSubmit: false, hint: hintMsg.formInvalid };
-    } else if (!alias) {
+    if (!alias) {
       return { canSubmit: false, hint: hintMsg.aliasEmpty };
     } else if (manager.oss.operations.some(operation => operation.alias === alias)) {
       return { canSubmit: false, hint: hintMsg.schemaAliasTaken };
+    } else if (!methods.formState.isValid) {
+      return { canSubmit: false, hint: hintMsg.formInvalid };
     } else {
       return { canSubmit: true, hint: '' };
     }

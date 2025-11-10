@@ -38,10 +38,10 @@ export function DlgCreateCst() {
   const alias = useWatch({ control: methods.control, name: 'alias' });
   const cst_type = useWatch({ control: methods.control, name: 'cst_type' });
   const { canSubmit, hint } = (() => {
-    if (!methods.formState.isValid) {
-      return { canSubmit: false, hint: hintMsg.formInvalid };
-    } else if (!validateNewAlias(alias, cst_type, schema)) {
+    if (!validateNewAlias(alias, cst_type, schema)) {
       return { canSubmit: false, hint: hintMsg.aliasInvalid };
+    } else if (!methods.formState.isValid) {
+      return { canSubmit: false, hint: hintMsg.formInvalid };
     } else {
       return { canSubmit: true, hint: '' };
     }

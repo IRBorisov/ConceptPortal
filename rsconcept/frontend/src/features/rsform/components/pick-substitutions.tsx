@@ -86,7 +86,12 @@ export function PickSubstitutions({
   const [ignores, setIgnores] = useState<ISubstituteConstituents[]>([]);
   const filteredSuggestions =
     suggestions?.filter(
-      item => !ignores.find(ignore => ignore.original === item.original && ignore.substitution === item.substitution)
+      item =>
+        !ignores.find(
+          ignore =>
+            (ignore.original === item.original && ignore.substitution === item.substitution) ||
+            (ignore.original === item.substitution && ignore.substitution === item.original)
+        )
     ) ?? [];
 
   const substitutionData: IMultiSubstitution[] = [
@@ -201,7 +206,7 @@ export function PickSubstitutions({
       size: 0,
       cell: props =>
         props.row.original.is_suggestion ? (
-          <div className='max-w-fit'>
+          <div className='flex max-w-fit'>
             <MiniButton
               title='Принять предложение'
               icon={<IconAccept size='1rem' className='icon-green' />}

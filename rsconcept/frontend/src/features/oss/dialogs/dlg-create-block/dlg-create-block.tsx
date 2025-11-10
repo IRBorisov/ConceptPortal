@@ -79,12 +79,12 @@ export function DlgCreateBlock() {
   const children_operations = useWatch({ control: methods.control, name: 'children_operations' });
   const [activeTab, setActiveTab] = useState<TabID>(TabID.CARD);
   const { canSubmit, hint } = (() => {
-    if (!methods.formState.isValid) {
-      return { canSubmit: false, hint: hintMsg.formInvalid };
-    } else if (!title) {
+    if (!title) {
       return { canSubmit: false, hint: hintMsg.titleEmpty };
     } else if (manager.oss.blocks.some(block => block.title === title)) {
       return { canSubmit: false, hint: hintMsg.blockTitleTaken };
+    } else if (!methods.formState.isValid) {
+      return { canSubmit: false, hint: hintMsg.formInvalid };
     } else {
       return { canSubmit: true, hint: '' };
     }

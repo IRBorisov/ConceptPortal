@@ -66,12 +66,12 @@ export function DlgCreateSchema() {
   });
   const alias = useWatch({ control: control, name: 'item_data.alias' });
   const { canSubmit, hint } = (() => {
-    if (!isValid) {
-      return { canSubmit: false, hint: hintMsg.formInvalid };
-    } else if (!alias) {
+    if (!alias) {
       return { canSubmit: false, hint: hintMsg.aliasEmpty };
     } else if (manager.oss.operations.some(operation => operation.alias === alias)) {
       return { canSubmit: false, hint: hintMsg.schemaAliasTaken };
+    } else if (!isValid) {
+      return { canSubmit: false, hint: hintMsg.formInvalid };
     } else {
       return { canSubmit: true, hint: '' };
     }

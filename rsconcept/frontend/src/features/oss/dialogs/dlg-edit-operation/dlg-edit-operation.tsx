@@ -80,7 +80,7 @@ export function DlgEditOperation() {
       header='Редактирование операции'
       submitText='Сохранить'
       canSubmit={canSubmit}
-      validationHint={hintMsg.formInvalid}
+      validationHint={canSubmit ? '' : hintMsg.formInvalid}
       onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
       className='w-160 px-6 h-128'
       helpTopic={HelpTopic.UI_SUBSTITUTIONS}

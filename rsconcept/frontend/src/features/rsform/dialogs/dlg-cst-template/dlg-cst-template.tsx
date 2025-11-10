@@ -65,10 +65,10 @@ export function DlgCstTemplate() {
   const { canSubmit, hint } = (() => {
     if (!cst_type) {
       return { canSubmit: false, hint: hintMsg.templateInvalid };
-    } else if (!methods.formState.isValid) {
-      return { canSubmit: false, hint: hintMsg.formInvalid };
     } else if (!validateNewAlias(alias, cst_type, schema)) {
       return { canSubmit: false, hint: hintMsg.aliasInvalid };
+    } else if (!methods.formState.isValid) {
+      return { canSubmit: false, hint: hintMsg.formInvalid };
     } else {
       return { canSubmit: true, hint: '' };
     }
