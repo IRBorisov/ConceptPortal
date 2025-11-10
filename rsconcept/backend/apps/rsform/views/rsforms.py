@@ -16,7 +16,7 @@ from rest_framework.serializers import ValidationError
 
 from apps.library.models import AccessPolicy, LibraryItem, LibraryItemType, LocationHead
 from apps.library.serializers import LibraryItemSerializer
-from apps.oss.models import PropagationFacade
+from apps.oss.models import Inheritance, PropagationFacade
 from apps.users.models import User
 from shared import messages as msg
 from shared import permissions, utility
@@ -308,6 +308,11 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         attribute = serializer.validated_data['attribute']
 
         with transaction.atomic():
+            if Inheritance.check_share_origin(container.pk, attribute.pk):
+                raise ValidationError({
+                    'container': msg.deleteInheritedAttribution()
+                })
+
             new_attribution = m.Attribution.objects.create(
                 container=container,
                 attribute=attribute
@@ -321,7 +326,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         )
 
     @extend_schema(
-        summary='delete Association',
+        summary='delete Attribution',
         tags=['RSForm'],
         request=s.AttributionDataSerializer,
         responses={
@@ -339,17 +344,22 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         serializer.is_valid(raise_exception=True)
 
         with transaction.atomic():
-            target = list(m.Attribution.objects.filter(
+            target_query = m.Attribution.objects.filter(
                 container=serializer.validated_data['container'],
                 attribute=serializer.validated_data['attribute']
-            ))
-            if not target:
+            )
+            attr = target_query.first()
+            if not attr:
                 raise ValidationError({
-                    'container': msg.invalidAssociation()
+                    'container': msg.missingAttribution()
+                })
+            if Inheritance.check_share_origin(request.data['container'], request.data['attribute']):
+                raise ValidationError({
+                    'container': msg.deleteInheritedAttribution()
                 })
 
-            PropagationFacade().before_delete_attribution(item.pk, target)
-            m.Attribution.objects.filter(pk__in=[attrib.pk for attrib in target]).delete()
+            PropagationFacade().before_delete_attribution(item.pk, [attr])
+            attr.delete()
             item.save(update_fields=['time_update'])
 
         return Response(
@@ -376,10 +386,14 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         serializer.is_valid(raise_exception=True)
 
         with transaction.atomic():
-            target = list(m.Attribution.objects.filter(container=serializer.validated_data['target']))
-            if target:
-                PropagationFacade().before_delete_attribution(item.pk, target)
-                m.Attribution.objects.filter(pk__in=[attrib.pk for attrib in target]).delete()
+            attributions = list(m.Attribution.objects.filter(container=serializer.validated_data['target']))
+            to_delete: list[m.Attribution] = []
+            for attrib in attributions:
+                if not Inheritance.check_share_origin(attrib.container.pk, attrib.attribute.pk):
+                    to_delete.append(attrib)
+            if to_delete:
+                PropagationFacade().before_delete_attribution(item.pk, to_delete)
+                m.Attribution.objects.filter(pk__in=[attrib.pk for attrib in to_delete]).delete()
                 item.save(update_fields=['time_update'])
 
         return Response(

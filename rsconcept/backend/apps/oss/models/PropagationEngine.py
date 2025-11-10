@@ -205,15 +205,27 @@ class PropagationEngine:
                 new_attribute = self.cache.get_successor(attr.attribute_id, child_id)
                 if new_container is None or new_attribute is None:
                     continue
-                deleted_assoc = Attribution.objects.filter(
+                deleted_attr = Attribution.objects.filter(
                     container=new_container,
                     attribute=new_attribute
-                )
-                if deleted_assoc.exists():
-                    deleted.append(deleted_assoc[0])
+                ).first()
+                if not deleted_attr:
+                    continue
+
+                if not self._has_alternative_attribution(child_id, attr.container_id, attr.attribute_id):
+                    deleted.append(deleted_attr)
+
             if deleted:
                 self.on_delete_attribution(child_id, deleted)
                 Attribution.objects.filter(pk__in=[attrib.pk for attrib in deleted]).delete()
+
+    def _has_alternative_attribution(self, operationID: int, container: int, attribute: int) -> bool:
+        ''' Check if there is an alternative attribution among substitutions. '''
+        container_partners = self.cache.get_substitution_partners(container, operationID)
+        attribute_partners = self.cache.get_substitution_partners(attribute, operationID)
+        if not container_partners or not attribute_partners:
+            return False
+        return Attribution.objects.filter(container__in=container_partners, attribute__in=attribute_partners).exists()
 
     def on_delete_inherited(self, operationID: int, target: list[int]) -> None:
         ''' Trigger cascade resolutions when Constituenta inheritance is deleted. '''

@@ -150,8 +150,16 @@ def typificationInvalidStr():
     return 'Invalid typification string'
 
 
-def invalidAssociation():
-    return f'Ассоциация не найдена'
+def missingAttribution():
+    return f'Атрибутирование не найдено'
+
+
+def deleteInheritedAttribution():
+    return f'Попытка удалить наследованное атрибутирование'
+
+
+def createdInheritedAttribution():
+    return f'Попытка установить атрибутирование между наследниками из одной КС'
 
 
 def exteorFileVersionNotSupported():

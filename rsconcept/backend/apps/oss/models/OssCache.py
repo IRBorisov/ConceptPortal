@@ -95,6 +95,16 @@ class OssCache:
                 return self.get_inheritor(sub.substitution_id, operation)
         return self.get_inheritor(parent_cst, operation)
 
+    def get_substitution_partners(self, cst: int, operation: int) -> list[int]:
+        ''' Get originals or substitutes for target constituent in target operation. '''
+        result = []
+        for sub in self.substitutions[operation]:
+            if sub.original_id == cst:
+                result.append(sub.substitution_id)
+            elif sub.substitution_id == cst:
+                result.append(sub.original_id)
+        return result
+
     def insert_argument(self, argument: Argument) -> None:
         ''' Insert new argument. '''
         self.graph.add_edge(argument.argument_id, argument.operation_id)
