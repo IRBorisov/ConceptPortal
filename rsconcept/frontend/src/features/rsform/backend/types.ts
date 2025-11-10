@@ -51,10 +51,8 @@ export type IRSFormDTO = z.infer<typeof schemaRSForm>;
 
 /** Represents data, used for uploading {@link IRSForm} as file. */
 export interface IRSFormUploadDTO {
-  itemID: number;
   load_metadata: boolean;
   file: File;
-  fileName: string;
 }
 
 /** Represents {@link IConstituenta} data, used in creation process. */

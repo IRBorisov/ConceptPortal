@@ -24,9 +24,10 @@ export function DlgUploadRSForm() {
     if (file) {
       void upload({
         itemID: itemID,
-        load_metadata: loadMetadata,
-        file: file,
-        fileName: file.name
+        data: {
+          load_metadata: loadMetadata,
+          file: file
+        }
       });
     }
   };

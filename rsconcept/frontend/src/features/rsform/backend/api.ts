@@ -48,10 +48,10 @@ export const rsformsApi = {
       endpoint: version ? `/api/versions/${version}/export-file` : `/api/rsforms/${itemID}/export-trs`,
       options: { responseType: 'blob' }
     }),
-  upload: (data: IRSFormUploadDTO) =>
+  upload: ({ itemID, data }: { itemID: number; data: IRSFormUploadDTO }) =>
     axiosPatch<IRSFormUploadDTO, IRSFormDTO>({
       schema: schemaRSForm,
-      endpoint: `/api/rsforms/${data.itemID}/load-trs`,
+      endpoint: `/api/rsforms/${itemID}/load-trs`,
       request: {
         data: data,
         successMessage: infoMsg.uploadSuccess

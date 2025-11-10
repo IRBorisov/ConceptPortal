@@ -29,6 +29,6 @@ export const useUploadTRS = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    upload: (data: IRSFormUploadDTO) => mutation.mutateAsync(data)
+    upload: (data: { itemID: number; data: IRSFormUploadDTO }) => mutation.mutateAsync(data)
   };
 };
