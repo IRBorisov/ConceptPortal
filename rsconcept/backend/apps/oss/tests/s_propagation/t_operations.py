@@ -1,7 +1,7 @@
 ''' Testing API: Change substitutions in OSS. '''
 
 from apps.oss.models import OperationSchema, OperationType
-from apps.rsform.models import Constituenta, RSForm
+from apps.rsform.models import Attribution, Constituenta, RSForm
 from shared.EndpointTester import EndpointTester, decl_endpoint
 
 
@@ -25,6 +25,7 @@ class TestChangeOperations(EndpointTester):
         self.ks1X1 = self.ks1.insert_last('X1', convention='KS1X1')
         self.ks1X2 = self.ks1.insert_last('X2', convention='KS1X2')
         self.ks1D1 = self.ks1.insert_last('D1', definition_formal='X1 X2', convention='KS1D1')
+        Attribution.objects.create(container=self.ks1X1, attribute=self.ks1X2)
 
         self.ks2 = RSForm.create(
             alias='KS2',
@@ -38,6 +39,7 @@ class TestChangeOperations(EndpointTester):
             definition_formal=r'X1',
             convention='KS2S1'
         )
+        Attribution.objects.create(container=self.ks2S1, attribute=self.ks2X1)
 
         self.ks3 = RSForm.create(
             alias='KS3',
@@ -80,6 +82,7 @@ class TestChangeOperations(EndpointTester):
         self.operation4.refresh_from_db()
         self.ks4 = RSForm(self.operation4.result)
         self.ks4X1 = Constituenta.objects.get(as_child__parent_id=self.ks1X2.pk)
+        self.ks4X2 = Constituenta.objects.get(as_child__parent_id=self.ks2X1.pk)
         self.ks4S1 = Constituenta.objects.get(as_child__parent_id=self.ks2S1.pk)
         self.ks4D1 = Constituenta.objects.get(as_child__parent_id=self.ks1D1.pk)
         self.ks4D2 = self.ks4.insert_last(
@@ -87,6 +90,7 @@ class TestChangeOperations(EndpointTester):
             definition_formal=r'X1 X2 X3 S1 D1',
             convention='KS4D2'
         )
+        Attribution.objects.create(container=self.ks4S1, attribute=self.ks4D2)
 
         self.operation5 = self.owned.create_operation(
             alias='5',
@@ -179,8 +183,8 @@ class TestChangeOperations(EndpointTester):
             title='Test6',
             owner=self.user
         )
-        ks6X1 = ks6.insert_last('X1', convention='KS6X1')
-        ks6X2 = ks6.insert_last('X2', convention='KS6X2')
+        ks6.insert_last('X1', convention='KS6X1')
+        ks6.insert_last('X2', convention='KS6X2')
         ks6D1 = ks6.insert_last('D1', definition_formal='X1 X2', convention='KS6D1')
 
         data = {
@@ -328,6 +332,35 @@ class TestChangeOperations(EndpointTester):
         self.assertEqual(self.ks5.constituentsQ().count(), 7)
         self.assertEqual(self.ks4D2.definition_formal, r'X1 D1 X3 S1 D1')
         self.assertEqual(self.ks5D4.definition_formal, r'D1 X2 X3 S1 D1 D2 D3')
+
+
+    @decl_endpoint('/api/oss/{item}/update-operation', method='patch')
+    def test_change_substitutions_attribution(self):
+        self.assertTrue(Attribution.objects.filter(container=self.ks4S1, attribute=self.ks4X1).exists())
+        self.assertTrue(Attribution.objects.filter(container=self.ks4S1, attribute=self.ks4X2).exists())
+        self.assertTrue(Attribution.objects.filter(container=self.ks4S1, attribute=self.ks4D2).exists())
+
+        data = {
+            'target': self.operation4.pk,
+            'item_data': {
+                'alias': 'Test4 mod',
+                'title': 'Test title mod',
+                'description': 'Comment mod'
+            },
+            'layout': self.layout_data,
+            'arguments': [self.operation1.pk, self.operation2.pk],
+            'substitutions': []
+        }
+
+        self.executeOK(data, item=self.owned_id)
+        self.assertEqual(self.operation4.getQ_substitutions().count(), 0)
+        x3 = Constituenta.objects.get(as_child__parent_id=self.ks1X1.pk)
+        self.assertTrue(Attribution.objects.filter(container=self.ks4S1, attribute=self.ks4X2).exists())
+        self.assertFalse(Attribution.objects.filter(container=x3, attribute=self.ks4X2).exists())
+        self.assertTrue(Attribution.objects.filter(container=self.ks4S1, attribute=self.ks4D2).exists())
+        self.assertFalse(Attribution.objects.filter(container=x3, attribute=self.ks4D2).exists())
+        self.assertFalse(Attribution.objects.filter(container=self.ks4S1, attribute=self.ks4X1).exists())
+        self.assertTrue(Attribution.objects.filter(container=x3, attribute=self.ks4X1).exists())
 
 
     @decl_endpoint('/api/oss/{item}/update-operation', method='patch')
