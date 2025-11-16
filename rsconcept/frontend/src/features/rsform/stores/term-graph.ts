@@ -153,20 +153,8 @@ export const useTermGraphStore = create<TermGraphStore>()(
         }))
     }),
     {
-      version: 4,
-      name: 'portal.termGraph',
-      migrate: (state, version) => {
-        if (!state) {
-          return state;
-        }
-        if (version < 4) {
-          return {
-            ...state,
-            mode: InteractionMode.explore
-          };
-        }
-        return state;
-      }
+      version: 5,
+      name: 'portal.termGraph'
     }
   )
 );
