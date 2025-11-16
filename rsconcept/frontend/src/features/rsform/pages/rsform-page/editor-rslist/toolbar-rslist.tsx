@@ -37,7 +37,7 @@ export function ToolbarRSList({ className }: ToolbarRSListProps) {
   const { elementRef: menuRef, isOpen: isMenuOpen, toggle: toggleMenu, handleBlur: handleMenuBlur } = useDropdown();
   const {
     schema,
-    selected,
+    selectedCst: selected,
     activeCst,
     navigateOss,
     deselectAll,
@@ -45,7 +45,7 @@ export function ToolbarRSList({ className }: ToolbarRSListProps) {
     createCstDefault,
     cloneCst,
     canDeleteSelected,
-    promptDeleteCst,
+    promptDeleteSelected: promptDeleteCst,
     moveUp,
     moveDown
   } = useRSEdit();

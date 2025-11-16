@@ -113,8 +113,10 @@ export class RSFormLoader {
     this.schema.attribution.forEach(attrib => {
       const container = this.cstByID.get(attrib.container)!;
       container.attributes.push(attrib.attribute);
-      this.full_graph.addEdge(container.id, attrib.attribute);
-      this.association_graph.addEdge(container.id, attrib.attribute);
+      if (!this.full_graph.hasEdge(attrib.attribute, attrib.container)) {
+        this.full_graph.addEdge(attrib.container, attrib.attribute);
+      }
+      this.association_graph.addEdge(attrib.container, attrib.attribute);
     });
   }
 

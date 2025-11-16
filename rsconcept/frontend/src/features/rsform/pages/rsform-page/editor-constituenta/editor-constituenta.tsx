@@ -29,8 +29,8 @@ export function EditorConstituenta() {
     schema, //
     activeCst,
     isContentEditable,
-    selected,
-    setSelected,
+    selectedCst,
+    setSelectedCst,
     moveUp,
     moveDown,
     cloneCst,
@@ -56,11 +56,11 @@ export function EditorConstituenta() {
   useEffect(() => {
     if (activeCst && prevActiveCstId.current !== activeCst.id) {
       prevActiveCstId.current = activeCst.id;
-      if (selected.length !== 1 || selected[0] !== activeCst.id) {
-        setSelected([activeCst.id]);
+      if (selectedCst.length !== 1 || selectedCst[0] !== activeCst.id) {
+        setSelectedCst([activeCst.id]);
       }
     }
-  }, [activeCst, selected, setSelected]);
+  }, [activeCst, selectedCst, setSelectedCst]);
 
   useEffect(() => {
     // Trigger tooltip re-initialization after component mounts and tab becomes visible

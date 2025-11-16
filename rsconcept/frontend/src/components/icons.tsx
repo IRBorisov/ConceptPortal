@@ -133,6 +133,9 @@ export { BiStopCircle     as IconStatusIncalculable } from 'react-icons/bi';
 export { BiPauseCircle    as IconStatusProperty } from 'react-icons/bi';
 export { LuPower          as IconKeepAliasOn }    from 'react-icons/lu';
 export { LuPowerOff       as IconKeepAliasOff }   from 'react-icons/lu';
+export { LuAtSign         as IconLinkDefinition } from 'react-icons/lu';
+export { LuAsterisk       as IconLinkAttribution } from 'react-icons/lu';
+export { LuLink2          as IconLinkAll }        from 'react-icons/lu';
 
 // ===== Domain actions =====
 export { BiUpvote         as IconMoveUp }         from 'react-icons/bi';
@@ -153,6 +156,7 @@ export { GrConnect        as IconConnect }        from 'react-icons/gr';
 export { BiPlayCircle     as IconExecute }        from 'react-icons/bi';
 
 // ======== Graph UI =======
+export { LuSlice          as IconEditorMode }     from 'react-icons/lu';
 export { PiFediverseLogo  as IconContextSelection } from 'react-icons/pi';
 export { ImMakeGroup      as IconGroupSelection } from 'react-icons/im';
 export { BiCollapse       as IconGraphCollapse }  from 'react-icons/bi';

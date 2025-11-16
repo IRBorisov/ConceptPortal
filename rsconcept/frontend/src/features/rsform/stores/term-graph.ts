@@ -3,18 +3,33 @@ import { persist } from 'zustand/middleware';
 
 import { CstType } from '../backend/types';
 
-export const graphColorings = ['none', 'status', 'type', 'schemas'] as const;
-export const graphTypes = ['full', 'attribution', 'definition'] as const;
+/** Represents graph editing mode mode. */
+export const InteractionMode = {
+  explore: 'explore',
+  edit: 'edit'
+} as const;
+export type InteractionMode = (typeof InteractionMode)[keyof typeof InteractionMode];
 
 /** Represents graph node coloring scheme. */
-export type GraphColoring = (typeof graphColorings)[number];
+export const TGColoring = {
+  none: 'none',
+  status: 'status',
+  type: 'type',
+  schemas: 'schemas'
+} as const;
+export type TGColoring = (typeof TGColoring)[keyof typeof TGColoring];
 
-/** Represents graph type. */
-export type GraphType = (typeof graphTypes)[number];
+/** Represents graph edge type. */
+export const TGEdgeType = {
+  full: 'full',
+  definition: 'definition',
+  attribution: 'attribution'
+} as const;
+export type TGEdgeType = (typeof TGEdgeType)[keyof typeof TGEdgeType];
 
 /** Represents parameters for GraphEditor. */
 export interface GraphFilterParams {
-  graphType: GraphType;
+  graphType: TGEdgeType;
 
   noHermits: boolean;
   noTransitive: boolean;
@@ -51,7 +66,7 @@ export const cstTypeToFilterKey: Record<CstType, keyof GraphFilterParams> = {
 interface TermGraphStore {
   filter: GraphFilterParams;
   setFilter: (value: GraphFilterParams) => void;
-  setGraphType: (value: GraphType) => void;
+  setGraphType: (value: TGEdgeType) => void;
   toggleFocusInputs: () => void;
   toggleFocusOutputs: () => void;
   toggleText: () => void;
@@ -61,15 +76,28 @@ interface TermGraphStore {
   foldHidden: boolean;
   toggleFoldHidden: () => void;
 
-  coloring: GraphColoring;
-  setColoring: (value: GraphColoring) => void;
+  coloring: TGColoring;
+  setColoring: (value: TGColoring) => void;
+
+  mode: InteractionMode;
+  setMode: (value: InteractionMode) => void;
+  toggleMode: () => void;
+}
+
+interface TGConnectionStore {
+  connectionType: TGEdgeType;
+  setConnectionType: (value: TGEdgeType) => void;
+  toggleConnectionType: () => void;
+
+  start: string | null;
+  setStart: (value: string | null) => void;
 }
 
 export const useTermGraphStore = create<TermGraphStore>()(
   persist(
     set => ({
       filter: {
-        graphType: 'full',
+        graphType: TGEdgeType.full,
 
         noTemplates: false,
         noHermits: true,
@@ -103,11 +131,11 @@ export const useTermGraphStore = create<TermGraphStore>()(
           filter: {
             ...state.filter,
             graphType:
-              state.filter.graphType === 'full'
-                ? 'attribution'
-                : state.filter.graphType === 'attribution'
-                ? 'definition'
-                : 'full'
+              state.filter.graphType === TGEdgeType.full
+                ? TGEdgeType.attribution
+                : state.filter.graphType === TGEdgeType.attribution
+                ? TGEdgeType.definition
+                : TGEdgeType.full
           }
         })),
 
@@ -115,11 +143,41 @@ export const useTermGraphStore = create<TermGraphStore>()(
       toggleFoldHidden: () => set(state => ({ foldHidden: !state.foldHidden })),
 
       coloring: 'type',
-      setColoring: value => set({ coloring: value })
+      setColoring: value => set({ coloring: value }),
+
+      mode: InteractionMode.explore,
+      setMode: value => set({ mode: value }),
+      toggleMode: () =>
+        set(state => ({
+          mode: state.mode === InteractionMode.explore ? InteractionMode.edit : InteractionMode.explore
+        }))
     }),
     {
-      version: 3,
-      name: 'portal.termGraph'
+      version: 4,
+      name: 'portal.termGraph',
+      migrate: (state, version) => {
+        if (!state) {
+          return state;
+        }
+        if (version < 4) {
+          return {
+            ...state,
+            mode: InteractionMode.explore
+          };
+        }
+        return state;
+      }
     }
   )
 );
+
+export const useTGConnectionStore = create<TGConnectionStore>()(set => ({
+  connectionType: TGEdgeType.attribution,
+  setConnectionType: value => set({ connectionType: value }),
+  toggleConnectionType: () =>
+    set(state => ({
+      connectionType: state.connectionType === TGEdgeType.attribution ? TGEdgeType.definition : TGEdgeType.attribution
+    })),
+  start: null,
+  setStart: value => set({ start: value })
+}));

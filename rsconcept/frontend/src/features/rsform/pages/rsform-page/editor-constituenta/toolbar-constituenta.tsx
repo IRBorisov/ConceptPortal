@@ -57,7 +57,7 @@ export function ToolbarConstituenta({
     createCstDefault,
     cloneCst,
     canDeleteSelected,
-    promptDeleteCst,
+    promptDeleteSelected,
     moveUp,
     moveDown
   } = useRSEdit();
@@ -124,7 +124,7 @@ export function ToolbarConstituenta({
           />
           <MiniButton
             title='Удалить редактируемую конституенту'
-            onClick={promptDeleteCst}
+            onClick={promptDeleteSelected}
             icon={<IconDestroy size='1.25rem' className='icon-red' />}
             disabled={disabled || !canDeleteSelected}
           />

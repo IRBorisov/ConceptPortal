@@ -14,7 +14,7 @@ import { Grammeme, ReferenceType } from './models/language';
 import { CstClass, ExpressionStatus, type IConstituenta } from './models/rsform';
 import { type IArgumentInfo, type ISyntaxTreeNode } from './models/rslang';
 import { CstMatchMode, DependencyMode } from './stores/cst-search';
-import { type GraphColoring, type GraphType } from './stores/term-graph';
+import { type InteractionMode, type TGColoring, type TGEdgeType } from './stores/term-graph';
 
 // --- Records for label/describe functions ---
 const labelCstTypeRecord: Record<CstType, string> = {
@@ -50,14 +50,19 @@ const describeCstClassRecord: Record<CstClass, string> = {
   [CstClass.TEMPLATE]: 'шаблон определения'
 };
 
-const labelColoringRecord: Record<GraphColoring, string> = {
+const labelGraphModeRecord: Record<InteractionMode, string> = {
+  explore: 'Режим: Просмотр',
+  edit: 'Режим: Редактор'
+};
+
+const labelColoringRecord: Record<TGColoring, string> = {
   none: 'Цвет: Моно',
   status: 'Цвет: Статус',
   type: 'Цвет: Класс',
   schemas: 'Цвет: Схемы'
 };
 
-const labelGraphTypeRecord: Record<GraphType, string> = {
+const labelGraphTypeRecord: Record<TGEdgeType, string> = {
   full: 'Связи: Все',
   definition: 'Связи: Определения',
   attribution: 'Связи: Атрибутирование'
@@ -397,13 +402,18 @@ export function describeCstSource(mode: DependencyMode): string {
   return describeCstSourceRecord[mode] ?? `UNKNOWN DEPENDENCY MODE: ${mode}`;
 }
 
-/** Retrieves label for {@link GraphColoring}. */
-export function labelColoring(mode: GraphColoring): string {
+/** Retrieves label for {@link TGColoring}. */
+export function labelColoring(mode: TGColoring): string {
   return labelColoringRecord[mode] ?? `UNKNOWN COLORING: ${mode}`;
 }
 
-/** Retrieves label for {@link GraphType}. */
-export function labelGraphType(mode: GraphType): string {
+/** Retrieves label for {@link InteractionMode}. */
+export function labelGraphMode(mode: InteractionMode): string {
+  return labelGraphModeRecord[mode] ?? `UNKNOWN GRAPH MODE: ${mode}`;
+}
+
+/** Retrieves label for {@link TGEdgeType}. */
+export function labelEdgeType(mode: TGEdgeType): string {
   return labelGraphTypeRecord[mode] ?? `UNKNOWN GRAPH TYPE: ${mode}`;
 }
 

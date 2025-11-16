@@ -4,10 +4,11 @@
 import { type Edge, type Node } from 'reactflow';
 import dagre from '@dagrejs/dagre';
 
+import { type Graph } from '@/models/graph';
 import { PARAMETER } from '@/utils/constants';
 
 import { CstType } from '../backend/types';
-import { type GraphFilterParams, type GraphType } from '../stores/term-graph';
+import { type GraphFilterParams, TGEdgeType } from '../stores/term-graph';
 
 import { type IConstituenta, type IRSForm } from './rsform';
 
@@ -57,27 +58,25 @@ export function applyLayout(nodes: Node<TGNodeState>[], edges: Edge[], subLabels
   });
 }
 
-export function inferEdgeType(schema: IRSForm, source: number, target: number): GraphType {
+export function inferEdgeType(schema: IRSForm, source: number, target: number): TGEdgeType {
   const isDefinition = schema.graph.hasEdge(source, target);
   const isAttribution = schema.attribution_graph.hasEdge(source, target);
   if (!isDefinition && !isAttribution) {
-    return 'definition';
+    return TGEdgeType.definition;
   } else if (isDefinition && isAttribution) {
-    return 'full';
+    return TGEdgeType.full;
   } else if (isDefinition) {
-    return 'definition';
+    return TGEdgeType.definition;
   } else {
-    return 'attribution';
+    return TGEdgeType.attribution;
   }
 }
 
-export function produceFilteredGraph(schema: IRSForm, params: GraphFilterParams, focusCst: IConstituenta | null) {
-  const filtered =
-    params.graphType === 'full'
-      ? schema.full_graph.clone()
-      : params.graphType === 'attribution'
-      ? schema.attribution_graph.clone()
-      : schema.graph.clone();
+export function produceFilteredGraph(
+  schema: IRSForm,
+  params: GraphFilterParams,
+  focusCst: IConstituenta | null
+): Graph<number> {
   const allowedTypes: CstType[] = (() => {
     const result: CstType[] = [];
     if (params.allowBase) result.push(CstType.BASE);
@@ -92,29 +91,58 @@ export function produceFilteredGraph(schema: IRSForm, params: GraphFilterParams,
     return result;
   })();
 
+  if (params.graphType === TGEdgeType.attribution) {
+    return applyToGraph(schema.attribution_graph.clone(), schema, params, allowedTypes, focusCst);
+  }
+  if (params.graphType === TGEdgeType.definition) {
+    return applyToGraph(schema.graph.clone(), schema, params, allowedTypes, focusCst);
+  }
+
+  const definitionGraph = applyToGraph(schema.graph.clone(), schema, params, allowedTypes, focusCst);
+  const attributionGraph = applyToGraph(schema.attribution_graph.clone(), schema, params, allowedTypes, focusCst);
+
+  for (const node of attributionGraph.nodes) {
+    definitionGraph.addNode(node[0]);
+    for (const target of node[1].outputs) {
+      if (!definitionGraph.hasEdge(target, node[0])) {
+        definitionGraph.addEdge(node[0], target);
+      }
+    }
+  }
+  return definitionGraph;
+}
+
+// ===== Internals =====
+function applyToGraph(
+  target: Graph<number>,
+  schema: IRSForm,
+  params: GraphFilterParams,
+  allowedTypes: CstType[],
+  focusCst: IConstituenta | null
+): Graph<number> {
   if (params.noTemplates) {
     schema.items.forEach(cst => {
       if (cst !== focusCst && cst.is_template) {
-        filtered.foldNode(cst.id);
+        target.foldNode(cst.id);
       }
     });
   }
   if (allowedTypes.length < Object.values(CstType).length) {
     schema.items.forEach(cst => {
       if (cst !== focusCst && !allowedTypes.includes(cst.cst_type)) {
-        filtered.foldNode(cst.id);
+        target.foldNode(cst.id);
       }
     });
   }
   if (!focusCst && params.foldDerived) {
     schema.items.forEach(cst => {
       if (cst.spawner) {
-        filtered.foldNode(cst.id);
+        target.foldNode(cst.id);
       }
     });
   }
   if (params.noHermits) {
-    filtered.removeIsolated();
+    target.removeIsolated();
   }
 
   if (focusCst) {
@@ -126,14 +154,14 @@ export function produceFilteredGraph(schema: IRSForm, params: GraphFilterParams,
     ];
     schema.items.forEach(cst => {
       if (!includes.includes(cst.id)) {
-        filtered.foldNode(cst.id);
+        target.foldNode(cst.id);
       }
     });
   }
 
   if (params.noTransitive) {
-    filtered.transitiveReduction();
+    target.transitiveReduction();
   }
 
-  return filtered;
+  return target;
 }

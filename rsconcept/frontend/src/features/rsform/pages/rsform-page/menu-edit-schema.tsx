@@ -40,7 +40,15 @@ export function MenuEditSchema() {
     handleBlur: handleMenuBlur,
     hide: hideMenu
   } = useDropdown();
-  const { schema, activeCst, setSelected, isArchive, isContentEditable, promptTemplate, deselectAll } = useRSEdit();
+  const {
+    schema,
+    activeCst,
+    setSelectedCst: setSelected,
+    isArchive,
+    isContentEditable,
+    promptTemplate,
+    deselectAll
+  } = useRSEdit();
   const isProcessing = useMutatingRSForm();
 
   const { resetAliases } = useResetAliases();

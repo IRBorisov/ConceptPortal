@@ -6,9 +6,12 @@ import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 import { type ILibraryItemReference } from '@/features/library';
 import { MiniSelectorOSS } from '@/features/library/components/mini-selector-oss';
+import { IconEdgeType } from '@/features/rsform/components/icon-edge-type';
+import { IconGraphMode } from '@/features/rsform/components/icon-graph-mode';
 import { FocusLabel } from '@/features/rsform/components/term-graph/focus-label';
 import { ToolbarFocusedCst } from '@/features/rsform/components/term-graph/toolbar-focused-cst';
 import { ToolbarGraphSelection } from '@/features/rsform/components/toolbar-graph-selection';
+import { labelEdgeType, labelGraphMode } from '@/features/rsform/labels';
 import { isBasicConcept } from '@/features/rsform/models/rsform-api';
 
 import { MiniButton } from '@/components/control';
@@ -27,35 +30,43 @@ import {
 import { cn } from '@/components/utils';
 import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER } from '@/utils/constants';
+import { prepareTooltip } from '@/utils/utils';
 
 import { CstType } from '../../../backend/types';
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
-import { useTermGraphStore } from '../../../stores/term-graph';
+import { InteractionMode, useTermGraphStore, useTGConnectionStore } from '../../../stores/term-graph';
 import { useRSEdit } from '../rsedit-context';
 
-import { flowOptions } from './tg-flow';
+import { fitViewOptions } from './tg-flow';
 import { useFilteredGraph } from './use-filtered-graph';
 
 interface ToolbarTermGraphProps {
   className?: string;
+
+  onDeleteSelected: () => void;
 }
 
-export function ToolbarTermGraph({ className }: ToolbarTermGraphProps) {
+export function ToolbarTermGraph({ className, onDeleteSelected }: ToolbarTermGraphProps) {
   const isProcessing = useMutatingRSForm();
   const {
     schema,
-    selected,
-    setSelected,
+    selectedCst,
+    setSelectedCst,
     setFocus,
     navigateOss,
     isContentEditable,
     canDeleteSelected,
     createCst,
-    promptDeleteCst,
-    focusCst
+    focusCst,
+    deselectAll
   } = useRSEdit();
+
   const showTypeGraph = useDialogsStore(state => state.showShowTypeGraph);
   const showParams = useDialogsStore(state => state.showGraphParams);
+  const mode = useTermGraphStore(state => state.mode);
+  const toggleMode = useTermGraphStore(state => state.toggleMode);
+  const edgeType = useTGConnectionStore(state => state.connectionType);
+  const toggleEdgeType = useTGConnectionStore(state => state.toggleConnectionType);
   const filter = useTermGraphStore(state => state.filter);
   const toggleText = useTermGraphStore(state => state.toggleText);
   const toggleClustering = useTermGraphStore(state => state.toggleClustering);
@@ -77,25 +88,18 @@ export function ToolbarTermGraph({ className }: ToolbarTermGraphProps) {
   }
 
   function handleCreateCst() {
-    const definition = selected.map(id => schema.cstByID.get(id)!.alias).join(' ');
-    createCst(selected.length === 0 ? CstType.BASE : CstType.TERM, false, definition);
-  }
-
-  function handleDeleteCst() {
-    if (isProcessing) {
-      return;
-    }
-    promptDeleteCst();
+    const definition = selectedCst.map(id => schema.cstByID.get(id)!.alias).join(' ');
+    createCst(selectedCst.length === 0 ? CstType.BASE : CstType.TERM, false, definition);
   }
 
   function handleFitView() {
     setTimeout(() => {
-      fitView(flowOptions.fitViewOptions);
+      fitView(fitViewOptions);
     }, PARAMETER.minimalTimeout);
   }
 
   function handleSetFocus() {
-    const target = schema.cstByID.get(selected[0]);
+    const target = schema.cstByID.get(selectedCst[0]);
     if (target) {
       setFocus(target);
     }
@@ -106,8 +110,13 @@ export function ToolbarTermGraph({ className }: ToolbarTermGraphProps) {
   }
 
   function handleSetSelected(newSelection: number[]) {
-    setSelected(newSelection);
+    setSelectedCst(newSelection);
     addSelectedNodes(newSelection.map(id => String(id)));
+  }
+
+  function handleToggleMode() {
+    toggleMode();
+    deselectAll();
   }
 
   return (
@@ -128,16 +137,16 @@ export function ToolbarTermGraph({ className }: ToolbarTermGraphProps) {
         <MiniButton
           title='Задать фокус конституенту'
           icon={<IconFocus size='1.25rem' className='icon-primary' />}
-          disabled={selected.length !== 1}
+          disabled={selectedCst.length !== 1}
           onClick={handleSetFocus}
         />
         <MiniButton
-          title='Граф целиком'
+          titleHtml={prepareTooltip('Граф целиком', 'G')}
           icon={<IconFitImage size='1.25rem' className='icon-primary' />}
           onClick={handleFitView}
         />
         <MiniButton
-          title={!filter.noText ? 'Скрыть текст' : 'Отобразить текст'}
+          titleHtml={prepareTooltip(!filter.noText ? 'Скрыть текст' : 'Отобразить текст', 'T')}
           icon={
             !filter.noText ? (
               <IconText size='1.25rem' className='icon-green' />
@@ -162,9 +171,8 @@ export function ToolbarTermGraph({ className }: ToolbarTermGraphProps) {
         <BadgeHelp topic={HelpTopic.UI_GRAPH_TERM} contentClass='sm:max-w-160' offset={4} />
       </div>
       <div className='cc-icons items-start'>
-        {focusCst ? (
-          <ToolbarFocusedCst resetFocus={() => setFocus(null)} />
-        ) : (
+        {focusCst ? <ToolbarFocusedCst resetFocus={() => setFocus(null)} /> : null}
+        {!focusCst && mode === InteractionMode.explore ? (
           <ToolbarGraphSelection
             graph={filteredGraph}
             isCore={cstID => {
@@ -173,10 +181,26 @@ export function ToolbarTermGraph({ className }: ToolbarTermGraphProps) {
             }}
             isCrucial={cstID => schema.cstByID.get(cstID)?.crucial ?? false}
             isInherited={cstID => schema.cstByID.get(cstID)?.is_inherited ?? false}
-            value={selected}
+            value={selectedCst}
             onChange={handleSetSelected}
           />
-        )}
+        ) : null}
+        {isContentEditable ? (
+          <MiniButton
+            titleHtml={prepareTooltip(labelGraphMode(mode), 'Q')}
+            onClick={handleToggleMode}
+            icon={
+              <IconGraphMode value={mode} size='1.25rem' className={mode === 'edit' ? 'icon-green' : 'icon-primary'} />
+            }
+          />
+        ) : null}
+        {isContentEditable && mode === InteractionMode.edit ? (
+          <MiniButton
+            titleHtml={prepareTooltip(labelEdgeType(edgeType), 'E')}
+            onClick={toggleEdgeType}
+            icon={<IconEdgeType value={edgeType} size='1.25rem' className='icon-primary' />}
+          />
+        ) : null}
         {isContentEditable ? (
           <MiniButton
             title='Новая конституента'
@@ -189,10 +213,11 @@ export function ToolbarTermGraph({ className }: ToolbarTermGraphProps) {
           <MiniButton
             title='Удалить выбранные'
             icon={<IconDestroy size='1.25rem' className='icon-red' />}
-            onClick={handleDeleteCst}
+            onClick={onDeleteSelected}
             disabled={!canDeleteSelected || isProcessing}
           />
         ) : null}
+
         <MiniButton
           icon={<IconTypeGraph size='1.25rem' className='icon-primary' />}
           title='Граф ступеней'

@@ -36,7 +36,7 @@ import { useRSEdit } from './rsedit-context';
 
 export function MenuMain() {
   const router = useConceptNavigation();
-  const { schema, selected, deleteSchema, isArchive, isMutable, isContentEditable } = useRSEdit();
+  const { schema, selectedCst, deleteSchema, isArchive, isMutable, isContentEditable } = useRSEdit();
   const isProcessing = useMutatingRSForm();
 
   const { user, isAnonymous } = useAuthSuspense();
@@ -106,7 +106,7 @@ export function MenuMain() {
     showClone({
       base: schema,
       initialLocation: calculateCloneLocation(),
-      selected: selected,
+      selected: selectedCst,
       totalCount: schema.items.length
     });
   }

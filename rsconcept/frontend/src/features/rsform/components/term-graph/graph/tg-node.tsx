@@ -12,7 +12,7 @@ import { colorBgGraphNode } from '../../../colors';
 import { labelCstTypification } from '../../../labels';
 import { type TGNodeInternal } from '../../../models/graph-api';
 import { type IConstituenta } from '../../../models/rsform';
-import { useTermGraphStore } from '../../../stores/term-graph';
+import { useTermGraphStore, useTGConnectionStore } from '../../../stores/term-graph';
 
 const DESCRIPTION_THRESHOLD = 15;
 const LABEL_THRESHOLD = 3;
@@ -20,34 +20,51 @@ const LABEL_THRESHOLD = 3;
 export function TGNode(node: TGNodeInternal) {
   const filter = useTermGraphStore(state => state.filter);
   const coloring = useTermGraphStore(state => state.coloring);
+  const connectionStart = useTGConnectionStore(state => state.start);
+  const isConnecting = connectionStart !== null;
 
   const label = node.data.cst.alias;
   const description = !filter.noText ? node.data.cst.term_resolved : '';
 
   return (
     <>
-      <Handle type='target' position={Position.Top} className='opacity-0' />
-      <div
-        className={clsx(
-          'w-full h-full cursor-default flex items-center justify-center rounded-full',
-          node.data.cst.crucial && 'text-primary',
-          node.data.focused && 'border-[2px] border-selected',
-          label.length > LABEL_THRESHOLD ? 'text-[12px]/[16px]' : 'text-[14px]/[20px]'
-        )}
-        style={{
-          backgroundColor: node.selected
-            ? APP_COLORS.bgActiveSelection
-            : node.data.focused
-            ? APP_COLORS.bgPurple
-            : colorBgGraphNode(node.data.cst, coloring)
-        }}
-        data-tooltip-id={globalIDs.tooltip}
-        data-tooltip-html={describeCstNode(node.data.cst)}
-        data-tooltip-hidden={node.dragging}
-      >
-        <div className='cc-node-label'>{label}</div>
+      <div className='relative h-full w-full pointer-events-auto!'>
+        {connectionStart !== node.id ? (
+          <Handle
+            type='target'
+            position={Position.Top}
+            className='rf-handle rf-handle-target'
+            isConnectableStart={false}
+          />
+        ) : null}
+        {!isConnecting ? (
+          <Handle
+            type='source'
+            position={Position.Bottom}
+            className={clsx('rf-handle rf-handle-source', isConnecting && 'pointer-events-none')}
+          />
+        ) : null}
+        <div
+          className={clsx(
+            'w-full h-full cursor-default flex items-center justify-center rounded-full',
+            node.data.cst.crucial && 'text-primary',
+            node.data.focused && 'border-2 border-selected',
+            label.length > LABEL_THRESHOLD ? 'text-[12px]/[16px]' : 'text-[14px]/[20px]'
+          )}
+          style={{
+            backgroundColor: node.selected
+              ? APP_COLORS.bgActiveSelection
+              : node.data.focused
+              ? APP_COLORS.bgPurple
+              : colorBgGraphNode(node.data.cst, coloring)
+          }}
+          data-tooltip-id={globalIDs.tooltip}
+          data-tooltip-html={describeCstNode(node.data.cst)}
+          data-tooltip-hidden={node.dragging}
+        >
+          <div className='cc-node-label'>{label}</div>
+        </div>
       </div>
-      <Handle type='source' position={Position.Bottom} className='opacity-0' />
       {description ? (
         <div
           className={clsx(

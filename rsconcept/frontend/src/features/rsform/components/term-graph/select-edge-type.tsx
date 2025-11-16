@@ -1,14 +1,14 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/input/select';
 import { cn } from '@/components/utils';
 
-import { labelGraphType } from '../../labels';
-import { graphTypes, useTermGraphStore } from '../../stores/term-graph';
+import { labelEdgeType } from '../../labels';
+import { TGEdgeType, useTermGraphStore } from '../../stores/term-graph';
 
-interface SelectGraphTypeProps {
+interface SelectEdgeTypeProps {
   className?: string;
 }
 
-export function SelectGraphType({ className }: SelectGraphTypeProps) {
+export function SelectEdgeType({ className }: SelectEdgeTypeProps) {
   const graphType = useTermGraphStore(state => state.filter.graphType);
   const setGraphType = useTermGraphStore(state => state.setGraphType);
 
@@ -19,9 +19,9 @@ export function SelectGraphType({ className }: SelectGraphTypeProps) {
           <SelectValue placeholder='Цветовая схема' />
         </SelectTrigger>
         <SelectContent alignOffset={-1} sideOffset={-4}>
-          {graphTypes.map(mode => (
-            <SelectItem key={`graphType-${mode}`} value={mode}>
-              {labelGraphType(mode)}
+          {Object.values(TGEdgeType).map(value => (
+            <SelectItem key={`graphType-${value}`} value={value}>
+              {labelEdgeType(value)}
             </SelectItem>
           ))}
         </SelectContent>

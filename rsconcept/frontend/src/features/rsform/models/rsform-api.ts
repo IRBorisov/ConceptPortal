@@ -325,3 +325,13 @@ export function sortItemsForInlineSynthesis(receiver: IRSForm, items: readonly I
   }
   return result;
 }
+
+/** Remove alias from expression. */
+export function removeAliasReference(expression: string, alias: string): string {
+  return expression.replaceAll(new RegExp(`\\b${alias}\\b`, 'g'), 'DEL');
+}
+
+/** Add alias to expression. */
+export function addAliasReference(expression: string, alias: string): string {
+  return expression + ' ' + alias;
+}

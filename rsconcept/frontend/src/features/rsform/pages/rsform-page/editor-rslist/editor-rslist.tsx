@@ -22,15 +22,15 @@ export function EditorRSList() {
   const {
     isContentEditable,
     schema,
-    selected,
+    selectedCst,
     deselectAll,
-    setSelected,
+    setSelectedCst,
     createCst,
     createCstDefault,
     moveUp,
     moveDown,
     cloneCst,
-    promptDeleteCst,
+    promptDeleteSelected,
     navigateCst
   } = useRSEdit();
 
@@ -40,7 +40,7 @@ export function EditorRSList() {
     : schema.items;
 
   const rowSelection: RowSelectionState = Object.fromEntries(
-    filtered.map((cst, index) => [String(index), selected.includes(cst.id)])
+    filtered.map((cst, index) => [String(index), selectedCst.includes(cst.id)])
   );
 
   function handleRowSelection(updater: React.SetStateAction<RowSelectionState>) {
@@ -51,7 +51,7 @@ export function EditorRSList() {
         newSelection.push(cst.id);
       }
     });
-    setSelected(prev => [...prev.filter(cst_id => !filtered.find(cst => cst.id === cst_id)), ...newSelection]);
+    setSelectedCst(prev => [...prev.filter(cst_id => !filtered.find(cst => cst.id === cst_id)), ...newSelection]);
   }
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
@@ -63,7 +63,7 @@ export function EditorRSList() {
       return;
     }
     if (event.key === 'Delete') {
-      withPreventDefault(promptDeleteCst)(event);
+      withPreventDefault(promptDeleteSelected)(event);
       return;
     }
     if (event.altKey && !event.shiftKey) {
@@ -76,7 +76,7 @@ export function EditorRSList() {
   }
 
   function processAltKey(code: string): boolean {
-    if (selected.length > 0) {
+    if (selectedCst.length > 0) {
       // prettier-ignore
       switch (code) {
         case 'ArrowUp': moveUp(); return true;
@@ -112,7 +112,7 @@ export function EditorRSList() {
       <div className='flex items-center border-b'>
         {isContentEditable ? (
           <div className='px-2'>
-            Выбор {selected.length} из {schema.stats?.count_all}
+            Выбор {selectedCst.length} из {schema.stats?.count_all}
           </div>
         ) : null}
         <SearchBar

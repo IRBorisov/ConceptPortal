@@ -15,7 +15,8 @@ export type RSTabID = (typeof RSTabID)[keyof typeof RSTabID];
 
 interface IRSEditContext {
   schema: IRSForm;
-  selected: number[];
+  selectedCst: number[];
+  selectedEdges: string[];
   focusCst: IConstituenta | null;
   activeCst: IConstituenta | null;
   activeVersion?: number;
@@ -35,10 +36,11 @@ interface IRSEditContext {
   deleteSchema: () => void;
 
   setFocus: (newValue: IConstituenta | null) => void;
-  setSelected: React.Dispatch<React.SetStateAction<number[]>>;
-  select: (target: number) => void;
-  deselect: (target: number) => void;
-  toggleSelect: (target: number) => void;
+  setSelectedCst: React.Dispatch<React.SetStateAction<number[]>>;
+  setSelectedEdges: React.Dispatch<React.SetStateAction<string[]>>;
+  selectCst: (target: number) => void;
+  deselectCst: (target: number) => void;
+  toggleSelectCst: (target: number) => void;
   deselectAll: () => void;
 
   moveUp: () => void;
@@ -46,7 +48,7 @@ interface IRSEditContext {
   createCst: (type: CstType, skipDialog: boolean, definition?: string) => void;
   createCstDefault: () => void;
   cloneCst: () => void;
-  promptDeleteCst: () => void;
+  promptDeleteSelected: () => void;
   promptTemplate: () => void;
 }
 

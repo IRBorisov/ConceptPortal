@@ -22,7 +22,7 @@ interface ToolbarVersioningProps {
 export function ToolbarVersioning({ blockReload, className }: ToolbarVersioningProps) {
   const isModified = useModificationStore(state => state.isModified);
   const { restoreVersion: versionRestore } = useRestoreVersion();
-  const { schema, isMutable, isContentEditable, navigateVersion, activeVersion, selected } = useRSEdit();
+  const { schema, isMutable, isContentEditable, navigateVersion, activeVersion, selectedCst } = useRSEdit();
 
   const showCreateVersion = useDialogsStore(state => state.showCreateVersion);
   const showEditVersions = useDialogsStore(state => state.showEditVersions);
@@ -41,7 +41,7 @@ export function ToolbarVersioning({ blockReload, className }: ToolbarVersioningP
     showCreateVersion({
       itemID: schema.id,
       versions: schema.versions,
-      selected: selected,
+      selected: selectedCst,
       totalCount: schema.items.length,
       onCreate: newVersion => navigateVersion(newVersion)
     });

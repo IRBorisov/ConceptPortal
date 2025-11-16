@@ -12,6 +12,9 @@ import { infoMsg, promptText } from './labels';
  * Check if error is stale bundle error.
  */
 export function isStaleBundleError(error: unknown): boolean {
+  if (import.meta.env.DEV) {
+    return false;
+  }
   if (error instanceof Error) {
     return error.message.includes('Failed to fetch dynamically imported module');
   }

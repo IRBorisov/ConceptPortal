@@ -19,8 +19,33 @@
     border-color: var(--color-muted-foreground);
   }
 
-  .space-mode & {
+  .mode-space & {
     pointer-events: none !important;
+  }
+}
+
+.rf-handle {
+  position: absolute;
+  width: 100% !important;
+  height: 100% !important;
+  opacity: 0;
+
+  top: 0 !important;
+}
+
+.rf-handle-target {
+  .mode-edit & {
+    cursor: crosshair !important;
+  }
+
+  .mode-explore & {
+    pointer-events: none;
+  }
+}
+
+.rf-handle-source {
+  .mode-explore & {
+    pointer-events: none;
   }
 }
 
@@ -38,7 +63,7 @@
     color: var(--color-foreground);
   }
 
-  .space-mode & {
+  .mode-space & {
     pointer-events: none !important;
   }
 }
@@ -46,7 +71,7 @@
 .react-flow__pane {
   cursor: inherit;
 
-  .space-mode & {
+  .mode-space & {
     cursor: grab;
 
     &.dragging {
@@ -57,6 +82,14 @@
 
 .react-flow__edge {
   cursor: inherit;
+
+  &.selected {
+    filter: drop-shadow(0 0 4px var(--color-primary));
+  }
+
+  .mode-edit & {
+    cursor: pointer;
+  }
 }
 
 .react-flow__attribution {
@@ -70,7 +103,7 @@
 }
 
 [class*='react-flow__node-'] {
-  .space-mode & {
+  .mode-space & {
     box-shadow: none;
     pointer-events: none !important;
   }

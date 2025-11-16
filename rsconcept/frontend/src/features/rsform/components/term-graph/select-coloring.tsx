@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { cn } from '@/components/utils';
 
 import { labelColoring } from '../../labels';
-import { graphColorings, useTermGraphStore } from '../../stores/term-graph';
+import { TGColoring, useTermGraphStore } from '../../stores/term-graph';
 
 import { SchemasGuide } from './schemas-guide';
 
@@ -22,9 +22,9 @@ export function SelectColoring({ className, schema }: SelectColoringProps) {
   return (
     <div className={cn('relative select-none bg-input border pointer-events-auto', className)}>
       <div className='absolute z-pop right-10 h-9 flex items-center'>
-        {coloring === 'status' ? <BadgeHelp topic={HelpTopic.UI_CST_STATUS} contentClass='min-w-100' /> : null}
-        {coloring === 'type' ? <BadgeHelp topic={HelpTopic.UI_CST_CLASS} contentClass='min-w-100' /> : null}
-        {coloring === 'schemas' ? <SchemasGuide schema={schema} /> : null}
+        {coloring === TGColoring.status ? <BadgeHelp topic={HelpTopic.UI_CST_STATUS} contentClass='min-w-100' /> : null}
+        {coloring === TGColoring.type ? <BadgeHelp topic={HelpTopic.UI_CST_CLASS} contentClass='min-w-100' /> : null}
+        {coloring === TGColoring.schemas ? <SchemasGuide schema={schema} /> : null}
       </div>
 
       <Select onValueChange={setColoring} value={coloring}>
@@ -32,9 +32,9 @@ export function SelectColoring({ className, schema }: SelectColoringProps) {
           <SelectValue placeholder='Цветовая схема' />
         </SelectTrigger>
         <SelectContent alignOffset={-1} sideOffset={-4}>
-          {graphColorings.map(mode => (
-            <SelectItem key={`coloring-${mode}`} value={mode}>
-              {labelColoring(mode)}
+          {Object.values(TGColoring).map(value => (
+            <SelectItem key={`coloring-${value}`} value={value}>
+              {labelColoring(value)}
             </SelectItem>
           ))}
         </SelectContent>

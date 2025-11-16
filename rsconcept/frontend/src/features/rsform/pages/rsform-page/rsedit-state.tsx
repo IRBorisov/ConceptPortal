@@ -20,10 +20,13 @@ import { promptUnsaved } from '@/utils/utils';
 
 import { CstType, type IConstituentaBasicsDTO, type ICreateConstituentaDTO } from '../../backend/types';
 import { useCreateConstituenta } from '../../backend/use-create-constituenta';
+import { useDeleteAttribution } from '../../backend/use-delete-attribution';
 import { useMoveConstituents } from '../../backend/use-move-constituents';
 import { useRSFormSuspense } from '../../backend/use-rsform';
+import { useUpdateConstituenta } from '../../backend/use-update-constituenta';
 import { type IConstituenta } from '../../models/rsform';
-import { generateAlias } from '../../models/rsform-api';
+import { generateAlias, removeAliasReference } from '../../models/rsform-api';
+import { InteractionMode, useTermGraphStore } from '../../stores/term-graph';
 
 import { RSEditContext, RSTabID } from './rsedit-context';
 
@@ -55,16 +58,22 @@ export const RSEditState = ({
   const isContentEditable = isMutable && !isArchive;
   const isAttachedToOSS = schema.oss.length > 0;
   const isEditor = !!user.id && schema.editors.includes(user.id);
+  const mode = useTermGraphStore(state => state.mode);
 
-  const [selected, setSelected] = useState<number[]>([]);
-  const canDeleteSelected = selected.length > 0 && selected.every(id => !schema.cstByID.get(id)?.is_inherited);
+  const [selectedCst, setSelectedCst] = useState<number[]>([]);
+  const [selectedEdges, setSelectedEdges] = useState<string[]>([]);
+  const canDeleteSelected =
+    (selectedCst.length > 0 && selectedCst.every(id => !schema.cstByID.get(id)?.is_inherited)) ||
+    (selectedEdges.length === 1 && mode === InteractionMode.edit);
   const [focusCst, setFocusCst] = useState<IConstituenta | null>(null);
 
-  const activeCst = selected.length === 0 ? null : schema.cstByID.get(selected[selected.length - 1])!;
+  const activeCst = selectedCst.length === 0 ? null : schema.cstByID.get(selectedCst[selectedCst.length - 1])!;
 
   const { createConstituenta: cstCreate } = useCreateConstituenta();
   const { moveConstituents: cstMove } = useMoveConstituents();
   const { deleteItem } = useDeleteItem();
+  const { deleteAttribution } = useDeleteAttribution();
+  const { updateConstituenta } = useUpdateConstituenta();
 
   const showCreateCst = useDialogsStore(state => state.showCreateCst);
   const showDeleteCst = useDialogsStore(state => state.showDeleteCst);
@@ -91,7 +100,7 @@ export const RSEditState = ({
 
   function handleSetFocus(newValue: IConstituenta | null) {
     setFocusCst(newValue);
-    setSelected([]);
+    deselectAll();
   }
 
   function navigateVersion(versionID?: number) {
@@ -151,7 +160,7 @@ export const RSEditState = ({
   }
 
   function onCreateCst(newCst: RO<IConstituentaBasicsDTO>) {
-    setSelected([newCst.id]);
+    setSelectedCst([newCst.id]);
     navigateRSForm({ tab: activeTab, activeID: newCst.id });
     if (activeTab === RSTabID.CST_LIST) {
       setTimeout(() => {
@@ -168,11 +177,11 @@ export const RSEditState = ({
   }
 
   function moveUp() {
-    if (selected.length === 0) {
+    if (selectedCst.length === 0) {
       return;
     }
     const currentIndex = schema.items.reduce((prev, cst, index) => {
-      if (!selected.includes(cst.id)) {
+      if (!selectedCst.includes(cst.id)) {
         return prev;
       } else if (prev === -1) {
         return index;
@@ -183,19 +192,19 @@ export const RSEditState = ({
     void cstMove({
       itemID: itemID,
       data: {
-        items: selected,
+        items: selectedCst,
         move_to: target
       }
     });
   }
 
   function moveDown() {
-    if (selected.length === 0) {
+    if (selectedCst.length === 0) {
       return;
     }
     let count = 0;
     const currentIndex = schema.items.reduce((prev, cst, index) => {
-      if (!selected.includes(cst.id)) {
+      if (!selectedCst.includes(cst.id)) {
         return prev;
       } else {
         count += 1;
@@ -209,7 +218,7 @@ export const RSEditState = ({
     void cstMove({
       itemID: itemID,
       data: {
-        items: selected,
+        items: selectedCst,
         move_to: target
       }
     });
@@ -255,17 +264,28 @@ export const RSEditState = ({
     }).then(onCreateCst);
   }
 
-  function promptDeleteCst() {
+  function promptDeleteSelected() {
     if (!canDeleteSelected) {
+      return;
+    }
+    if (mode === InteractionMode.explore || selectedEdges.length === 0) {
+      deleteSelectedCst();
+    } else {
+      deleteSelectedEdge();
+    }
+  }
+
+  function deleteSelectedCst() {
+    if (!selectedCst.length) {
       return;
     }
     showDeleteCst({
       schemaID: schema.id,
-      selected: selected,
+      selected: selectedCst,
       afterDelete: (schema, deleted) => {
         const isEmpty = deleted.length === schema.items.length;
         const nextActive = isEmpty ? null : getNextActiveOnDelete(activeCst?.id ?? null, schema.items, deleted);
-        setSelected(nextActive ? [nextActive] : []);
+        setSelectedCst(nextActive ? [nextActive] : []);
         if (!nextActive) {
           navigateRSForm({ tab: RSTabID.CST_LIST });
         } else if (activeTab === RSTabID.CST_EDIT) {
@@ -277,6 +297,42 @@ export const RSEditState = ({
     });
   }
 
+  function deleteSelectedEdge() {
+    if (!selectedEdges.length) {
+      return;
+    }
+    const ids = selectedEdges[0].split('-');
+    const sourceID = Number(ids[0]);
+    const targetID = Number(ids[1]);
+    if (schema.attribution_graph.hasEdge(sourceID, targetID)) {
+      void deleteAttribution({
+        itemID: schema.id,
+        data: {
+          container: sourceID,
+          attribute: targetID
+        }
+      });
+    } else if (schema.graph.hasEdge(sourceID, targetID)) {
+      const sourceCst = schema.cstByID.get(sourceID);
+      const targetCst = schema.cstByID.get(targetID);
+      if (!targetCst || !sourceCst) {
+        throw new Error('Constituents not found');
+      }
+      const newExpressions = removeAliasReference(targetCst.definition_formal, sourceCst.alias);
+      void updateConstituenta({
+        itemID: schema.id,
+        data: {
+          target: targetID,
+          item_data: {
+            definition_formal: newExpressions
+          }
+        }
+      });
+    } else {
+      throw new Error('Graph edge not found');
+    }
+  }
+
   function promptTemplate() {
     if (isModified && !promptUnsaved()) {
       return;
@@ -284,12 +340,18 @@ export const RSEditState = ({
     showCstTemplate({ schemaID: schema.id, onCreate: onCreateCst, insertAfter: activeCst?.id });
   }
 
+  function deselectAll() {
+    setSelectedCst([]);
+    setSelectedEdges([]);
+  }
+
   return (
     <RSEditContext
       value={{
         schema,
         focusCst,
-        selected,
+        selectedCst,
+        selectedEdges,
         activeCst,
         activeVersion,
 
@@ -308,19 +370,20 @@ export const RSEditState = ({
         deleteSchema,
 
         setFocus: handleSetFocus,
-        setSelected,
-        select: (target: number) => setSelected(prev => [...prev, target]),
-        deselect: (target: number) => setSelected(prev => prev.filter(id => id !== target)),
-        toggleSelect: (target: number) =>
-          setSelected(prev => (prev.includes(target) ? prev.filter(id => id !== target) : [...prev, target])),
-        deselectAll: () => setSelected([]),
+        setSelectedCst: setSelectedCst,
+        setSelectedEdges: setSelectedEdges,
+        selectCst: (target: number) => setSelectedCst(prev => [...prev, target]),
+        deselectCst: (target: number) => setSelectedCst(prev => prev.filter(id => id !== target)),
+        toggleSelectCst: (target: number) =>
+          setSelectedCst(prev => (prev.includes(target) ? prev.filter(id => id !== target) : [...prev, target])),
+        deselectAll: deselectAll,
 
         moveUp,
         moveDown,
         createCst,
         createCstDefault: () => createCst(null, false),
         cloneCst,
-        promptDeleteCst,
+        promptDeleteSelected: promptDeleteSelected,
 
         promptTemplate
       }}

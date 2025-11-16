@@ -251,7 +251,7 @@
 @utility cc-graph-interactive {
   pointer-events: auto;
 
-  .space-mode & {
+  .mode-space & {
     pointer-events: none;
   }
 }

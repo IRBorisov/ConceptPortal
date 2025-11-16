@@ -70,7 +70,7 @@ export function DiagramFlow({
   return (
     <div
       tabIndex={-1}
-      className={cn('relative cc-mask-sides max-w-480 w-[100dvw]', spaceMode && 'space-mode', className)}
+      className={cn('relative cc-mask-sides max-w-480 w-dvw', spaceMode && 'mode-space', className)}
       style={{ ...style, height: height }}
       onKeyDown={handleKeyDown}
       onKeyUp={handleKeyUp}

@@ -25,7 +25,7 @@ export function RSTabs({ activeID, activeTab }: RSTabsProps) {
 
   const hideFooter = useAppLayoutStore(state => state.hideFooter);
   const setIsModified = useModificationStore(state => state.setIsModified);
-  const { schema, selected, setSelected, deselectAll, navigateRSForm } = useRSEdit();
+  const { schema, selectedCst, setSelectedCst, setSelectedEdges, deselectAll, navigateRSForm } = useRSEdit();
 
   useLayoutEffect(() => {
     const oldTitle = document.title;
@@ -48,19 +48,20 @@ export function RSTabs({ activeID, activeTab }: RSTabsProps) {
       }
 
       const isSameSelection =
-        nextSelected.length === selected.length && nextSelected.every((value, index) => value === selected[index]);
+        nextSelected.length === selectedCst.length &&
+        nextSelected.every((value, index) => value === selectedCst[index]);
 
       if (!isSameSelection) {
         if (nextSelected.length === 0) {
-          if (selected.length !== 0) {
+          if (selectedCst.length !== 0) {
             deselectAll();
           }
         } else {
-          setSelected(nextSelected);
+          setSelectedCst(nextSelected);
         }
       }
     }
-  }, [activeTab, activeID, selected, schema, hideFooter, setSelected, deselectAll]);
+  }, [activeTab, activeID, selectedCst, schema, hideFooter, setSelectedCst, deselectAll]);
 
   useLayoutEffect(() => {
     return () => hideFooter(false);
@@ -71,6 +72,7 @@ export function RSTabs({ activeID, activeTab }: RSTabsProps) {
       return;
     }
     setIsModified(false);
+    setSelectedEdges([]);
     if (event.type == 'keydown') {
       const kbEvent = event as KeyboardEvent;
       if (kbEvent.altKey) {
@@ -83,7 +85,7 @@ export function RSTabs({ activeID, activeTab }: RSTabsProps) {
         }
       }
     }
-    navigateRSForm({ tab: index as RSTabID, activeID: selected.length > 0 ? selected.at(-1) : undefined });
+    navigateRSForm({ tab: index as RSTabID, activeID: selectedCst.length > 0 ? selectedCst.at(-1) : undefined });
   }
 
   return (

@@ -69,7 +69,8 @@ export const errorMsg = {
   loginFormat: 'Имя пользователя должно содержать только буквы и цифры',
   invalidLocation: 'Некорректный формат пути',
   emptySubstitutions: 'Выберите хотя бы одно отождествление',
-  invalidResponse: 'Некорректный ответ сервера'
+  invalidResponse: 'Некорректный ответ сервера',
+  connectionExists: 'Связь уже существует'
 } as const;
 
 /**

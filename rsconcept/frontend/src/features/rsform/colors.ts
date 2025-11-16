@@ -5,7 +5,7 @@ import { TokenID } from './backend/types';
 import { CstClass, ExpressionStatus, type IConstituenta } from './models/rsform';
 import { type ISyntaxTreeNode } from './models/rslang';
 import { type TypificationGraphNode } from './models/typification-graph';
-import { type GraphColoring, type GraphType } from './stores/term-graph';
+import { TGColoring, TGEdgeType } from './stores/term-graph';
 
 /** Represents Brackets highlights theme. */
 export const BRACKETS_THEME = {
@@ -229,14 +229,14 @@ export function colorBgSchemas(schema_index: number): string {
 }
 
 /** Determines graph color for {@link IConstituenta}. */
-export function colorBgGraphNode(cst: IConstituenta, coloringScheme: GraphColoring): string {
-  if (coloringScheme === 'type') {
+export function colorBgGraphNode(cst: IConstituenta, coloringScheme: TGColoring): string {
+  if (coloringScheme === TGColoring.type) {
     return colorBgCstClass(cst.cst_class);
   }
-  if (coloringScheme === 'status') {
+  if (coloringScheme === TGColoring.status) {
     return colorBgCstStatus(cst.status);
   }
-  if (coloringScheme === 'schemas') {
+  if (coloringScheme === TGColoring.schemas) {
     return colorBgSchemas(cst.parent_schema_index);
   }
   return APP_COLORS.bgGreen50;
@@ -253,13 +253,13 @@ export function colorBgTMGraphNode(node: TypificationGraphNode): string {
   return APP_COLORS.bgOrange;
 }
 
-export function colorGraphEdge(edgeType: GraphType): string {
+export function colorGraphEdge(edgeType: TGEdgeType): string {
   switch (edgeType) {
-    case 'full':
+    case TGEdgeType.full:
       return APP_COLORS.bgGreen;
-    case 'definition':
+    case TGEdgeType.definition:
       return APP_COLORS.border;
-    case 'attribution':
+    case TGEdgeType.attribution:
       return APP_COLORS.bgPurple;
   }
 }

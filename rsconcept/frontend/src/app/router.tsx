@@ -112,7 +112,7 @@ function parseOssURL(id: string | undefined) {
 
 function fallbackLoader() {
   return (
-    <div className='flex justify-center items-center h-[100dvh]'>
+    <div className='flex justify-center items-center h-dvh'>
       <Loader scale={6} />
     </div>
   );
