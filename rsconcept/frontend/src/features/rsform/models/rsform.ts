@@ -148,7 +148,6 @@ export interface IRSForm extends ILibraryItemData {
   stats: IRSFormStats;
   graph: Graph;
   attribution_graph: Graph;
-  full_graph: Graph;
   cstByAlias: Map<string, IConstituenta>;
   cstByID: Map<number, IConstituenta>;
 }

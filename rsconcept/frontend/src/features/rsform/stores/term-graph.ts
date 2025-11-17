@@ -72,6 +72,7 @@ interface TermGraphStore {
   toggleText: () => void;
   toggleClustering: () => void;
   toggleGraphType: () => void;
+  toggleHermits: () => void;
 
   foldHidden: boolean;
   toggleFoldHidden: () => void;
@@ -125,6 +126,7 @@ export const useTermGraphStore = create<TermGraphStore>()(
       toggleFocusOutputs: () =>
         set(state => ({ filter: { ...state.filter, focusShowOutputs: !state.filter.focusShowOutputs } })),
       toggleText: () => set(state => ({ filter: { ...state.filter, noText: !state.filter.noText } })),
+      toggleHermits: () => set(state => ({ filter: { ...state.filter, noHermits: !state.filter.noHermits } })),
       toggleClustering: () => set(state => ({ filter: { ...state.filter, foldDerived: !state.filter.foldDerived } })),
       toggleGraphType: () =>
         set(state => ({

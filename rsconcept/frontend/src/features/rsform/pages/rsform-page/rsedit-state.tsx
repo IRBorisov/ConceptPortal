@@ -26,7 +26,6 @@ import { useRSFormSuspense } from '../../backend/use-rsform';
 import { useUpdateConstituenta } from '../../backend/use-update-constituenta';
 import { type IConstituenta } from '../../models/rsform';
 import { generateAlias, removeAliasReference } from '../../models/rsform-api';
-import { InteractionMode, useTermGraphStore } from '../../stores/term-graph';
 
 import { RSEditContext, RSTabID } from './rsedit-context';
 
@@ -58,13 +57,12 @@ export const RSEditState = ({
   const isContentEditable = isMutable && !isArchive;
   const isAttachedToOSS = schema.oss.length > 0;
   const isEditor = !!user.id && schema.editors.includes(user.id);
-  const mode = useTermGraphStore(state => state.mode);
 
   const [selectedCst, setSelectedCst] = useState<number[]>([]);
   const [selectedEdges, setSelectedEdges] = useState<string[]>([]);
   const canDeleteSelected =
     (selectedCst.length > 0 && selectedCst.every(id => !schema.cstByID.get(id)?.is_inherited)) ||
-    (selectedEdges.length === 1 && mode === InteractionMode.edit);
+    (selectedCst.length === 0 && selectedEdges.length === 1);
   const [focusCst, setFocusCst] = useState<IConstituenta | null>(null);
 
   const activeCst = selectedCst.length === 0 ? null : schema.cstByID.get(selectedCst[selectedCst.length - 1])!;
@@ -268,9 +266,9 @@ export const RSEditState = ({
     if (!canDeleteSelected) {
       return;
     }
-    if (mode === InteractionMode.explore || selectedEdges.length === 0) {
+    if (selectedCst.length > 0) {
       deleteSelectedCst();
-    } else {
+    } else if (selectedEdges.length === 1) {
       deleteSelectedEdge();
     }
   }

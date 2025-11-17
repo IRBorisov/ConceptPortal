@@ -29,6 +29,7 @@ export function TermGraphEdge({ id, markerEnd, style, ...props }: EdgeProps) {
   return (
     <>
       <path id={id} className='react-flow__edge-path' d={path} markerEnd={markerEnd} style={style} />
+      <path d={path} className='rf-edge-events cursor-pointer!' />
     </>
   );
 }

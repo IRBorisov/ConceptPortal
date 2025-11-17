@@ -157,7 +157,7 @@ export function ToolbarTermGraph({ className, onDeleteSelected }: ToolbarTermGra
           onClick={toggleText}
         />
         <MiniButton
-          title={!filter.foldDerived ? 'Скрыть порожденные' : 'Отобразить порожденные'}
+          titleHtml={prepareTooltip(!filter.foldDerived ? 'Скрыть порожденные' : 'Отобразить порожденные', 'V')}
           icon={
             !filter.foldDerived ? (
               <IconClustering size='1.25rem' className='icon-green' />
@@ -174,6 +174,7 @@ export function ToolbarTermGraph({ className, onDeleteSelected }: ToolbarTermGra
         {focusCst ? <ToolbarFocusedCst resetFocus={() => setFocus(null)} /> : null}
         {!focusCst && mode === InteractionMode.explore ? (
           <ToolbarGraphSelection
+            tipHotkeys
             graph={filteredGraph}
             isCore={cstID => {
               const cst = schema.cstByID.get(cstID);
@@ -203,7 +204,7 @@ export function ToolbarTermGraph({ className, onDeleteSelected }: ToolbarTermGra
         ) : null}
         {isContentEditable ? (
           <MiniButton
-            title='Новая конституента'
+            titleHtml={prepareTooltip('Новая конституента', 'R')}
             icon={<IconNewItem size='1.25rem' className='icon-green' />}
             onClick={handleCreateCst}
             disabled={isProcessing}
@@ -211,7 +212,7 @@ export function ToolbarTermGraph({ className, onDeleteSelected }: ToolbarTermGra
         ) : null}
         {isContentEditable ? (
           <MiniButton
-            title='Удалить выбранные'
+            titleHtml={prepareTooltip('Удалить выбранные', 'Delete, `')}
             icon={<IconDestroy size='1.25rem' className='icon-red' />}
             onClick={onDeleteSelected}
             disabled={!canDeleteSelected || isProcessing}

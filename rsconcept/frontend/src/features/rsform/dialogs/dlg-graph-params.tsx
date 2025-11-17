@@ -5,6 +5,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { MiniButton } from '@/components/control';
 import { Checkbox } from '@/components/input';
 import { ModalForm } from '@/components/modal';
+import { prepareTooltip } from '@/utils/utils';
 
 import { CstType } from '../backend/types';
 import { IconCstType } from '../components/icon-cst-type';
@@ -35,19 +36,31 @@ export function DlgGraphParams() {
         <Controller
           control={control}
           name='noText'
-          render={({ field }) => <Checkbox {...field} label='Скрыть текст' title='Не отображать термины' />}
+          render={({ field }) => (
+            <Checkbox {...field} label='Скрыть текст' titleHtml={prepareTooltip('Не отображать термины', 'T')} />
+          )}
         />
         <Controller
           control={control}
           name='foldDerived'
           render={({ field }) => (
-            <Checkbox {...field} label='Скрыть порожденные' title='Не отображать порожденные понятия' />
+            <Checkbox
+              {...field}
+              label='Скрыть порожденные'
+              titleHtml={prepareTooltip('Не отображать порожденные понятия', 'V')}
+            />
           )}
         />
         <Controller
           control={control}
           name='noHermits'
-          render={({ field }) => <Checkbox {...field} label='Скрыть несвязанные' title='Неиспользуемые конституенты' />}
+          render={({ field }) => (
+            <Checkbox
+              {...field}
+              label='Скрыть несвязанные'
+              titleHtml={prepareTooltip('Неиспользуемые конституенты', 'B')}
+            />
+          )}
         />
         <Controller
           control={control}
@@ -72,9 +85,9 @@ export function DlgGraphParams() {
           )}
         />
       </div>
-      <div className='flex flex-col gap-1'>
+      <div className='flex flex-col items-center gap-1'>
         <h1 className='mb-1'>Типы конституент</h1>
-        <div>
+        <div className='grid grid-cols-3'>
           {Object.values(CstType).map(cstType => {
             const fieldName = cstTypeToFilterKey[cstType];
             return (

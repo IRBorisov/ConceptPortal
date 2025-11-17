@@ -18,6 +18,7 @@ import {
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
 import { type Graph } from '@/models/graph';
+import { prepareTooltip } from '@/utils/utils';
 
 interface ToolbarGraphSelectionProps extends Styling {
   value: number[];
@@ -26,12 +27,14 @@ interface ToolbarGraphSelectionProps extends Styling {
   isCore: (item: number) => boolean;
   isCrucial: (item: number) => boolean;
   isInherited: (item: number) => boolean;
+  tipHotkeys?: boolean;
 }
 
 export function ToolbarGraphSelection({
   className,
   graph,
   value,
+  tipHotkeys,
   isCore,
   isInherited,
   isCrucial,
@@ -110,7 +113,8 @@ export function ToolbarGraphSelection({
   return (
     <div className={cn('cc-icons items-center', className)} {...restProps}>
       <MiniButton
-        title='Сбросить выделение'
+        title={!tipHotkeys ? 'Сбросить выделение' : undefined}
+        titleHtml={tipHotkeys ? prepareTooltip('Сбросить выделение', 'Esc') : undefined}
         icon={<IconReset size='1.25rem' className='icon-primary' />}
         onClick={handleSelectReset}
         disabled={emptySelection}
@@ -127,14 +131,16 @@ export function ToolbarGraphSelection({
         <Dropdown isOpen={isSelectedOpen} className='-translate-x-1/2'>
           <DropdownButton
             text='Поставщики'
-            title='Выделить поставщиков'
+            title={!tipHotkeys ? 'Выделить поставщиков' : undefined}
+            titleHtml={tipHotkeys ? prepareTooltip('Выделить поставщиков', '1') : undefined}
             icon={<IconGraphInputs size='1.25rem' className='icon-primary' />}
             onClick={handleExpandInputs}
             disabled={emptySelection}
           />
           <DropdownButton
             text='Потребители'
-            title='Выделить потребителей'
+            title={!tipHotkeys ? 'Выделить потребителей' : undefined}
+            titleHtml={tipHotkeys ? prepareTooltip('Выделить потребителей', '2') : undefined}
             icon={<IconGraphOutputs size='1.25rem' className='icon-primary' />}
             onClick={handleExpandOutputs}
             disabled={emptySelection}
@@ -142,14 +148,16 @@ export function ToolbarGraphSelection({
 
           <DropdownButton
             text='Влияющие'
-            title='Выделить все влияющие'
+            title={!tipHotkeys ? 'Выделить все влияющие' : undefined}
+            titleHtml={tipHotkeys ? prepareTooltip('Выделить все влияющие', '3') : undefined}
             icon={<IconGraphCollapse size='1.25rem' className='icon-primary' />}
             onClick={handleSelectAllInputs}
             disabled={emptySelection}
           />
           <DropdownButton
             text='Зависимые'
-            title='Выделить все зависимые'
+            title={!tipHotkeys ? 'Выделить все зависимые' : undefined}
+            titleHtml={tipHotkeys ? prepareTooltip('Выделить все зависимые', '4') : undefined}
             icon={<IconGraphExpand size='1.25rem' className='icon-primary' />}
             onClick={handleSelectAllOutputs}
             disabled={emptySelection}
@@ -157,7 +165,14 @@ export function ToolbarGraphSelection({
 
           <DropdownButton
             text='Максимизация'
-            titleHtml='<b>Максимизация</b> <br/>дополнение выделения конституентами, <br/>зависимыми только от выделенных'
+            titleHtml={
+              !tipHotkeys
+                ? '<b>Максимизация</b> <br/>дополнение выделения конституентами, <br/>зависимыми только от выделенных'
+                : prepareTooltip(
+                    'Максимизация - дополнение выделения конституентами, зависимыми только от выделенных',
+                    '5'
+                  )
+            }
             aria-label='Максимизация - дополнение выделения конституентами, зависимыми только от выделенных'
             icon={<IconGraphMaximize size='1.25rem' className='icon-primary' />}
             onClick={handleSelectMaximize}
@@ -165,6 +180,7 @@ export function ToolbarGraphSelection({
           />
           <DropdownButton
             text='Инвертировать'
+            titleHtml={tipHotkeys ? prepareTooltip('Инвертировать', '6') : undefined}
             icon={<IconGraphInverse size='1.25rem' className='icon-primary' />}
             onClick={handleSelectInvert}
           />
@@ -181,25 +197,29 @@ export function ToolbarGraphSelection({
         <Dropdown isOpen={isGroupOpen} stretchLeft>
           <DropdownButton
             text='ядро'
-            title='Выделить ядро'
+            title={!tipHotkeys ? 'Выделить ядро' : undefined}
+            titleHtml={tipHotkeys ? prepareTooltip('Выделить ядро', 'Z') : undefined}
             icon={<IconGraphCore size='1.25rem' className='icon-primary' />}
             onClick={handleSelectCore}
           />
           <DropdownButton
             text='ключевые'
-            title='Выделить ключевые'
+            title={!tipHotkeys ? 'Выделить ключевые' : undefined}
+            titleHtml={tipHotkeys ? prepareTooltip('Выделить ключевые', 'X') : undefined}
             icon={<IconCrucial size='1.25rem' className='icon-primary' />}
             onClick={handleSelectCrucial}
           />
           <DropdownButton
             text='собственные'
-            title='Выделить собственные'
+            title={!tipHotkeys ? 'Выделить собственные' : undefined}
+            titleHtml={tipHotkeys ? prepareTooltip('Выделить собственные', 'C') : undefined}
             icon={<IconPredecessor size='1.25rem' className='icon-primary' />}
             onClick={handleSelectOwned}
           />
           <DropdownButton
             text='наследники'
-            title='Выделить наследников'
+            title={!tipHotkeys ? 'Выделить наследников' : undefined}
+            titleHtml={tipHotkeys ? prepareTooltip('Выделить наследников', 'Y') : undefined}
             icon={<IconChild size='1.25rem' className='icon-primary' />}
             onClick={handleSelectInherited}
           />

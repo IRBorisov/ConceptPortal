@@ -200,7 +200,7 @@ export function colorBgCstClass(cstClass: CstClass): string {
     case CstClass.BASIC: return APP_COLORS.bgGreen;
     case CstClass.DERIVED: return APP_COLORS.bgBlue;
     case CstClass.STATEMENT: return APP_COLORS.bgRed;
-    case CstClass.TEMPLATE: return APP_COLORS.bgTeal;
+    case CstClass.TEMPLATE: return APP_COLORS.bgPurple;
   }
 }
 

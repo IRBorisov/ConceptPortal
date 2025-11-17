@@ -84,11 +84,26 @@
   cursor: inherit;
 
   &.selected {
-    filter: drop-shadow(0 0 4px var(--color-primary));
+    filter: drop-shadow(0 0 4px var(--color-primary)) drop-shadow(0 0 6px var(--color-primary));
+
+    .dark & {
+      filter: drop-shadow(0 0 4px var(--color-accent-orange-foreground))
+        drop-shadow(0 0 6px var(--color-accent-orange-foreground));
+    }
   }
 
-  .mode-edit & {
-    cursor: pointer;
+  .mode-space & {
+    pointer-events: none;
+  }
+}
+
+.rf-edge-events {
+  pointer-events: stroke;
+  stroke-width: 6;
+  stroke: transparent;
+
+  .mode-space & {
+    pointer-events: none;
   }
 }
 

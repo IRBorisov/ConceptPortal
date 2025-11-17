@@ -15,13 +15,14 @@ import {
 import clsx from 'clsx';
 
 import { DiagramFlow, useReactFlow } from '@/components/flow/diagram-flow';
+import { useContinuousPan } from '@/components/flow/use-continous-panning';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight, useMainHeight } from '@/stores/app-layout';
 import { PARAMETER } from '@/utils/constants';
 import { errorMsg } from '@/utils/labels';
 import { withPreventDefault } from '@/utils/utils';
 
-import { ParsingStatus } from '../../../backend/types';
+import { CstType, ParsingStatus } from '../../../backend/types';
 import { useCreateAttribution } from '../../../backend/use-create-attribution';
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { useUpdateConstituenta } from '../../../backend/use-update-constituenta';
@@ -33,7 +34,7 @@ import { SelectColoring } from '../../../components/term-graph/select-coloring';
 import { SelectEdgeType } from '../../../components/term-graph/select-edge-type';
 import { ViewHidden } from '../../../components/term-graph/view-hidden';
 import { applyLayout, inferEdgeType, type TGNodeData } from '../../../models/graph-api';
-import { addAliasReference } from '../../../models/rsform-api';
+import { addAliasReference, isBasicConcept } from '../../../models/rsform-api';
 import { InteractionMode, TGEdgeType, useTermGraphStore, useTGConnectionStore } from '../../../stores/term-graph';
 import { useRSEdit } from '../rsedit-context';
 
@@ -55,6 +56,9 @@ export function TGFlow() {
   const { isSmall } = useWindowSize();
   const mainHeight = useMainHeight();
   const { fitView, viewportInitialized } = useReactFlow();
+  const flowRef = useRef<HTMLDivElement>(null);
+
+  useContinuousPan(flowRef);
 
   const mode = useTermGraphStore(state => state.mode);
   const toggleMode = useTermGraphStore(state => state.toggleMode);
@@ -62,6 +66,8 @@ export function TGFlow() {
   const setConnectionStart = useTGConnectionStore(state => state.setStart);
   const connectionType = useTGConnectionStore(state => state.connectionType);
   const toggleText = useTermGraphStore(state => state.toggleText);
+  const toggleClustering = useTermGraphStore(state => state.toggleClustering);
+  const toggleHermits = useTermGraphStore(state => state.toggleHermits);
 
   const { createAttribution } = useCreateAttribution();
   const { updateConstituenta } = useUpdateConstituenta();
@@ -79,7 +85,8 @@ export function TGFlow() {
     navigateCst,
     selectedEdges,
     setSelectedEdges,
-    deselectAll
+    deselectAll,
+    createCst
   } = useRSEdit();
 
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
@@ -90,14 +97,9 @@ export function TGFlow() {
   const hiddenHeight = useFitHeight(isSmall ? '15rem + 2px' : '13.5rem + 2px', '4rem');
 
   function onSelectionChange({ nodes, edges }: { nodes: Node[]; edges: Edge[] }) {
-    if (mode === InteractionMode.explore) {
-      const ids = nodes.map(node => Number(node.id));
-      setSelectedCst(prev => [...prev.filter(nodeID => !filteredGraph.hasNode(nodeID)), ...ids]);
-      setSelectedEdges([]);
-    } else {
-      setSelectedCst([]);
-      setSelectedEdges(edges.map(edge => edge.id));
-    }
+    const ids = nodes.map(node => Number(node.id));
+    setSelectedCst(prev => [...prev.filter(nodeID => !filteredGraph.hasNode(nodeID)), ...ids]);
+    setSelectedEdges(edges.map(edge => edge.id));
   }
   useOnSelectionChange({
     onChange: onSelectionChange
@@ -294,14 +296,118 @@ export function TGFlow() {
     deselectAll();
   }
 
+  function handleCreateCst() {
+    const definition = selectedCst.map(id => schema.cstByID.get(id)!.alias).join(' ');
+    createCst(selectedCst.length === 0 ? CstType.BASE : CstType.TERM, false, definition);
+  }
+
+  function handleSelectCore() {
+    const isCore = (cstID: number) => {
+      const cst = schema.cstByID.get(cstID);
+      return !!cst && isBasicConcept(cst.cst_type);
+    };
+    const core = [...filteredGraph.nodes.keys()].filter(isCore);
+    setSelectedCst([...core, ...filteredGraph.expandInputs(core)]);
+  }
+
+  function handleSelectOwned() {
+    setSelectedCst([...filteredGraph.nodes.keys()].filter(cstID => !schema.cstByID.get(cstID)?.is_inherited));
+  }
+
+  function handleSelectInherited() {
+    setSelectedCst([...filteredGraph.nodes.keys()].filter(cstID => schema.cstByID.get(cstID)?.is_inherited ?? false));
+  }
+
+  function handleSelectCrucial() {
+    setSelectedCst([...filteredGraph.nodes.keys()].filter(cstID => schema.cstByID.get(cstID)?.crucial ?? false));
+  }
+
+  function handleExpandOutputs() {
+    setSelectedCst(prev => [...prev, ...filteredGraph.expandOutputs(prev)]);
+  }
+
+  function handleExpandInputs() {
+    setSelectedCst(prev => [...prev, ...filteredGraph.expandInputs(prev)]);
+  }
+
+  function handleSelectMaximize() {
+    setSelectedCst(prev => filteredGraph.maximizePart(prev));
+  }
+
+  function handleSelectInvert() {
+    setSelectedCst(prev => [...filteredGraph.nodes.keys()].filter(item => !prev.includes(item)));
+  }
+
+  function handleSelectAllInputs() {
+    setSelectedCst(prev => [...prev, ...filteredGraph.expandAllInputs(prev)]);
+  }
+
+  function handleSelectAllOutputs() {
+    setSelectedCst(prev => [...prev, ...filteredGraph.expandAllOutputs(prev)]);
+  }
+
+  function handleSelectionHotkey(eventCode: string): boolean {
+    if (eventCode === 'Escape') {
+      setFocus(null);
+      return true;
+    }
+    if (eventCode === 'Digit1') {
+      handleExpandInputs();
+      return true;
+    }
+    if (eventCode === 'Digit2') {
+      handleExpandOutputs();
+      return true;
+    }
+    if (eventCode === 'Digit3') {
+      handleSelectAllInputs();
+      return true;
+    }
+    if (eventCode === 'Digit4') {
+      handleSelectAllOutputs();
+      return true;
+    }
+    if (eventCode === 'Digit5') {
+      handleSelectMaximize();
+      return true;
+    }
+    if (eventCode === 'Digit6') {
+      handleSelectInvert();
+      return true;
+    }
+    if (eventCode === 'KeyZ') {
+      handleSelectCore();
+      return true;
+    }
+    if (eventCode === 'KeyX') {
+      handleSelectCrucial();
+      return true;
+    }
+    if (eventCode === 'KeyC') {
+      handleSelectOwned();
+      return true;
+    }
+    if (eventCode === 'KeyY') {
+      handleSelectInherited();
+      return true;
+    }
+
+    return false;
+  }
+
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     if (isProcessing) {
       return;
     }
-    if (event.code === 'Escape') {
-      withPreventDefault(() => setFocus(null))(event);
+    if (event.shiftKey || event.ctrlKey || event.metaKey || event.altKey) {
       return;
     }
+    if (handleSelectionHotkey(event.code)) {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+
     if (event.code === 'KeyG') {
       withPreventDefault(() => fitView(flowOptions.fitViewOptions))(event);
       return;
@@ -310,8 +416,16 @@ export function TGFlow() {
       withPreventDefault(toggleText)(event);
       return;
     }
+    if (event.code === 'KeyV') {
+      withPreventDefault(toggleClustering)(event);
+      return;
+    }
+    if (event.code === 'KeyB') {
+      withPreventDefault(toggleHermits)(event);
+      return;
+    }
 
-    if (isContentEditable && !event.shiftKey && !event.ctrlKey && !event.metaKey && !event.altKey) {
+    if (isContentEditable) {
       if (event.code === 'KeyQ') {
         withPreventDefault(handleToggleMode)(event);
         return;
@@ -320,7 +434,11 @@ export function TGFlow() {
         withPreventDefault(toggleEdgeType)(event);
         return;
       }
-      if (event.code === 'Delete') {
+      if (event.code === 'KeyR') {
+        withPreventDefault(handleCreateCst)(event);
+        return;
+      }
+      if (event.code === 'Delete' || event.code === 'Backquote') {
         withPreventDefault(handleDeleteSelected)(event);
         return;
       }
@@ -329,6 +447,7 @@ export function TGFlow() {
 
   return (
     <div
+      ref={flowRef}
       className={clsx('relative', mode === InteractionMode.explore ? 'mode-explore' : 'mode-edit')}
       tabIndex={-1}
       onKeyDown={handleKeyDown}

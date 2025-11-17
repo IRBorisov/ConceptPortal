@@ -1,3 +1,7 @@
+import { IconEdgeType } from '@/features/rsform/components/icon-edge-type';
+import { IconGraphMode } from '@/features/rsform/components/icon-graph-mode';
+import { InteractionMode, TGEdgeType } from '@/features/rsform/stores/term-graph';
+
 import { Divider } from '@/components/container';
 import {
   IconChild,
@@ -81,6 +85,9 @@ export function HelpRSGraphTerm() {
               <kbd>Space</kbd> – перемещение экрана
             </li>
             <li>
+              <kbd>WASD</kbd> - направленное перемещение
+            </li>
+            <li>
               <IconOSS className='inline-icon' /> переход к связанной <LinkTopic text='ОСС' topic={HelpTopic.CC_OSS} />
             </li>
             <li>
@@ -95,6 +102,18 @@ export function HelpRSGraphTerm() {
             <li>
               <IconTypeGraph className='inline-icon' /> Открыть{' '}
               <LinkTopic text='граф ступеней' topic={HelpTopic.UI_TYPE_GRAPH} />
+            </li>
+            <li>
+              <IconGraphMode value={InteractionMode.explore} className='inline-icon' /> Просмотр графа
+            </li>
+            <li>
+              <IconGraphMode value={InteractionMode.edit} className='inline-icon icon-green' /> Редактирование связей
+            </li>
+            <li>
+              <IconEdgeType value={TGEdgeType.attribution} className='inline-icon' /> Атрибутирование
+            </li>
+            <li>
+              <IconEdgeType value={TGEdgeType.definition} className='inline-icon' /> Определение
             </li>
           </ul>
         </div>

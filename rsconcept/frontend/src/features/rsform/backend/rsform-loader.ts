@@ -22,7 +22,6 @@ export class RSFormLoader {
   private schema: IRSForm;
   private graph: Graph = new Graph();
   private association_graph: Graph = new Graph();
-  private full_graph: Graph = new Graph();
   private cstByAlias = new Map<string, IConstituenta>();
   private cstByID = new Map<number, IConstituenta>();
 
@@ -42,7 +41,6 @@ export class RSFormLoader {
     result.cstByAlias = this.cstByAlias;
     result.cstByID = this.cstByID;
     result.attribution_graph = this.association_graph;
-    result.full_graph = this.full_graph;
     return result;
   }
 
@@ -52,7 +50,6 @@ export class RSFormLoader {
       this.cstByID.set(cst.id, cst);
       this.graph.addNode(cst.id);
       this.association_graph.addNode(cst.id);
-      this.full_graph.addNode(cst.id);
     });
   }
 
@@ -63,7 +60,6 @@ export class RSFormLoader {
         const source = this.cstByAlias.get(alias);
         if (source) {
           this.graph.addEdge(source.id, cst.id);
-          this.full_graph.addEdge(source.id, cst.id);
         }
       });
     });
@@ -113,9 +109,6 @@ export class RSFormLoader {
     this.schema.attribution.forEach(attrib => {
       const container = this.cstByID.get(attrib.container)!;
       container.attributes.push(attrib.attribute);
-      if (!this.full_graph.hasEdge(attrib.attribute, attrib.container)) {
-        this.full_graph.addEdge(attrib.container, attrib.attribute);
-      }
       this.association_graph.addEdge(attrib.container, attrib.attribute);
     });
   }

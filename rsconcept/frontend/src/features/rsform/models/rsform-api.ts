@@ -328,7 +328,8 @@ export function sortItemsForInlineSynthesis(receiver: IRSForm, items: readonly I
 
 /** Remove alias from expression. */
 export function removeAliasReference(expression: string, alias: string): string {
-  return expression.replaceAll(new RegExp(`\\b${alias}\\b`, 'g'), 'DEL');
+  const result = expression.replaceAll(new RegExp(`\\b${alias}\\b`, 'g'), 'DEL');
+  return result === 'DEL' ? '' : result;
 }
 
 /** Add alias to expression. */
