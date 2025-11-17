@@ -9,7 +9,7 @@ import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight, useMainHeight } from '@/stores/app-layout';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
-import { globalIDs, PARAMETER } from '@/utils/constants';
+import { globalIDs } from '@/utils/constants';
 
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { ViewConstituents } from '../../../components/view-constituents';
@@ -43,7 +43,6 @@ export function EditorConstituenta() {
   const { isModified } = useModificationStore();
 
   const [toggleReset, setToggleReset] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
 
   const isProcessing = useMutatingRSForm();
   const disabled = !activeCst || !isContentEditable || isProcessing;
@@ -61,35 +60,6 @@ export function EditorConstituenta() {
       }
     }
   }, [activeCst, selectedCst, setSelectedCst]);
-
-  useEffect(() => {
-    // Trigger tooltip re-initialization after component mounts and tab becomes visible
-    // This ensures tooltips work when loading the page directly with this tab active
-    // React-tabs hides inactive panels with CSS (display: none), so react-tooltip v5
-    // needs to re-scan the DOM when elements become visible
-    const timeoutId = setTimeout(() => {
-      if (!containerRef.current) {
-        return;
-      }
-
-      // Force react-tooltip to re-scan by temporarily removing and re-adding data-tooltip-id
-      // This triggers react-tooltip's internal MutationObserver to re-register the elements
-      const tooltipElements = containerRef.current.querySelectorAll('[data-tooltip-id]');
-      tooltipElements.forEach(element => {
-        if (element instanceof HTMLElement) {
-          const tooltipId = element.getAttribute('data-tooltip-id');
-          if (tooltipId) {
-            element.removeAttribute('data-tooltip-id');
-            requestAnimationFrame(() => {
-              element.setAttribute('data-tooltip-id', tooltipId);
-            });
-          }
-        }
-      });
-    }, PARAMETER.minimalTimeout);
-
-    return () => clearTimeout(timeoutId);
-  }, []);
 
   function handleInput(event: React.KeyboardEvent<HTMLDivElement>) {
     if (disabled) {
@@ -130,7 +100,6 @@ export function EditorConstituenta() {
 
   return (
     <div
-      ref={containerRef}
       tabIndex={-1}
       className={clsx(
         'relative ',

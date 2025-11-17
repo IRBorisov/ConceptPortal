@@ -1,10 +1,11 @@
 'use client';
 
-import { useLayoutEffect } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 
 import { useConceptNavigation } from '@/app/navigation/navigation-context';
 
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
+import { useResetAttribute } from '@/hooks/use-reset-attribute';
 import { useAppLayoutStore } from '@/stores/app-layout';
 
 import { EditorOssCard } from './editor-oss-card';
@@ -21,6 +22,9 @@ export function OssTabs({ activeTab }: OssTabsProps) {
   const { schema, navigateTab, deselectAll } = useOssEdit();
 
   const hideFooter = useAppLayoutStore(state => state.hideFooter);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  useResetAttribute(containerRef, 'data-tooltip-id');
 
   useLayoutEffect(() => {
     const oldTitle = document.title;
@@ -68,7 +72,7 @@ export function OssTabs({ activeTab }: OssTabsProps) {
         <TabLabel label='Граф' />
       </TabList>
 
-      <div className='overflow-x-hidden'>
+      <div ref={containerRef} className='overflow-x-hidden'>
         <TabPanel>
           <EditorOssCard />
         </TabPanel>

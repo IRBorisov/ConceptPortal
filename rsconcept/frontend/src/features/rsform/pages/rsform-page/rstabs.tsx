@@ -1,10 +1,11 @@
 'use client';
 
-import { useLayoutEffect } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 
 import { useConceptNavigation } from '@/app/navigation/navigation-context';
 
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
+import { useResetAttribute } from '@/hooks/use-reset-attribute';
 import { useAppLayoutStore } from '@/stores/app-layout';
 import { useModificationStore } from '@/stores/modification';
 
@@ -88,6 +89,9 @@ export function RSTabs({ activeID, activeTab }: RSTabsProps) {
     navigateRSForm({ tab: index as RSTabID, activeID: selectedCst.length > 0 ? selectedCst.at(-1) : undefined });
   }
 
+  const containerRef = useRef<HTMLDivElement>(null);
+  useResetAttribute(containerRef, 'data-tooltip-id');
+
   return (
     <Tabs
       selectedIndex={activeTab}
@@ -104,7 +108,7 @@ export function RSTabs({ activeID, activeTab }: RSTabsProps) {
         <TabLabel label='Граф' />
       </TabList>
 
-      <div className='overflow-x-hidden'>
+      <div ref={containerRef} className='overflow-x-hidden'>
         <TabPanel>
           <EditorRSFormCard />
         </TabPanel>
