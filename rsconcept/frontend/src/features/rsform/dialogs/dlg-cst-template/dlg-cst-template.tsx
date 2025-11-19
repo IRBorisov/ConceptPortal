@@ -94,7 +94,7 @@ export function DlgCstTemplate() {
         <TabList className='mb-3 mx-auto flex border divide-x rounded-none'>
           <TabLabel label='Шаблон' title='Выбор шаблона выражения' className='w-32' />
           <TabLabel label='Аргументы' title='Подстановка аргументов шаблона' className='w-32' />
-          <TabLabel label='Конституента' title='Редактирование конституенты' className='w-32' />
+          <TabLabel label='Редактор' title='Редактирование конституенты' className='w-32' />
         </TabList>
 
         <FormProvider {...methods}>

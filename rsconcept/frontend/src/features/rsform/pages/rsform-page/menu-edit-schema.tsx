@@ -177,9 +177,9 @@ export function MenuEditSchema() {
           disabled={!isContentEditable || isProcessing}
         />
         <DropdownButton
-          text='Порождение структуры'
-          titleHtml='Раскрыть структуру типизации <br/>выделенной конституенты'
-          aria-label='Раскрыть структуру типизации выделенной конституенты'
+          text='Раскрытие структуры'
+          titleHtml='Породить внутренние понятия<br/> по структуре типизации<br/> выделенной конституенты'
+          aria-label='Породить внутренние понятия по структуре типизации выделенной конституенты'
           icon={<IconGenerateStructure size='1rem' className='icon-primary' />}
           onClick={() => handleProduceStructure(activeCst)}
           disabled={!isContentEditable || isProcessing || !activeCst || !canProduceStructure(activeCst)}

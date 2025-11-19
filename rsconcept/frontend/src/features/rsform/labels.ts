@@ -63,9 +63,9 @@ const labelColoringRecord: Record<TGColoring, string> = {
 };
 
 const labelGraphTypeRecord: Record<TGEdgeType, string> = {
-  full: 'Связи: Все',
-  definition: 'Связи: Определения',
-  attribution: 'Связи: Атрибутирование'
+  full: 'Связь: Все',
+  definition: 'Связь: Определение',
+  attribution: 'Связь: Атрибутирование'
 };
 
 const labelCstMatchModeRecord: Record<CstMatchMode, string> = {

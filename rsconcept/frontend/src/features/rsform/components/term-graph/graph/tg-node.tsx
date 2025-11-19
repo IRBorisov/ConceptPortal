@@ -28,7 +28,12 @@ export function TGNode(node: TGNodeInternal) {
 
   return (
     <>
-      <div className='relative h-full w-full pointer-events-auto!'>
+      <div
+        className='relative h-full w-full pointer-events-auto!'
+        data-tooltip-id={globalIDs.tooltip}
+        data-tooltip-html={describeCstNode(node.data.cst)}
+        data-tooltip-hidden={node.dragging}
+      >
         {connectionStart !== node.id ? (
           <Handle
             type='target'
@@ -58,9 +63,6 @@ export function TGNode(node: TGNodeInternal) {
               ? APP_COLORS.bgDefault
               : colorBgGraphNode(node.data.cst, coloring)
           }}
-          data-tooltip-id={globalIDs.tooltip}
-          data-tooltip-html={describeCstNode(node.data.cst)}
-          data-tooltip-hidden={node.dragging}
         >
           <div className='cc-node-label'>{label}</div>
         </div>

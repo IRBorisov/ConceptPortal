@@ -55,11 +55,7 @@ export function DlgGraphParams() {
           control={control}
           name='noHermits'
           render={({ field }) => (
-            <Checkbox
-              {...field}
-              label='Скрыть несвязанные'
-              titleHtml={prepareTooltip('Неиспользуемые конституенты', 'H')}
-            />
+            <Checkbox {...field} label='Скрыть свободные' titleHtml={prepareTooltip('Конституенты без связей', 'H')} />
           )}
         />
         <Controller

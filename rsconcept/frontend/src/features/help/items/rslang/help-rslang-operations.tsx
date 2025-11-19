@@ -43,7 +43,7 @@ export function HelpRSLangOperations() {
       </p>
 
       <h2>
-        <IconGenerateStructure size='1.25rem' className='inline-icon' /> Порождение структуры
+        <IconGenerateStructure size='1.25rem' className='inline-icon' /> Раскрытие структуры
       </h2>
       <p>
         Порождение полной совокупности термов, раскрывающих структуру выбранной конституенты. Операция применима к
