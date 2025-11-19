@@ -11,6 +11,12 @@
     "no-duplicate-selectors": true,
     "no-empty-source": true,
     "no-invalid-position-declaration": [true, { "ignoreAtRules": ["starting-style"] }],
+    "declaration-block-no-redundant-longhand-properties": [
+      true,
+      {
+        "ignoreShorthands": ["transition"]
+      }
+    ],
 
     "import-notation": null,
     "at-rule-empty-line-before": null,

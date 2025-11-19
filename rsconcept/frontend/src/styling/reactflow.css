@@ -82,6 +82,11 @@
 
 .react-flow__edge {
   cursor: inherit;
+  opacity: 1;
+
+  transition-property: opacity;
+  transition-timing-function: var(--transition-bezier);
+  transition-duration: var(--duration-move);
 
   &.selected {
     filter: drop-shadow(0 0 4px var(--color-primary)) drop-shadow(0 0 6px var(--color-primary));
@@ -94,6 +99,10 @@
 
   .mode-space & {
     pointer-events: none;
+  }
+
+  .rf-animation & {
+    opacity: 0;
   }
 }
 
@@ -126,6 +135,13 @@
   transition-property: box-shadow;
   transition-timing-function: var(--transition-bezier);
   transition-duration: var(--duration-select);
+
+  .rf-animation & {
+    transition-property: transform;
+    transition-timing-function: var(--transition-bezier);
+    transition-duration: var(--duration-transform);
+    will-change: transform;
+  }
 
   &:hover:not(.selected) {
     box-shadow: 0 0 0 2px var(--color-selected);
@@ -196,7 +212,9 @@
 
   width: 40px;
   height: 40px;
+}
 
+.rf-node-outline {
   outline-offset: -2px;
   outline-style: solid;
   outline-color: transparent;
@@ -205,7 +223,7 @@
   transition-timing-function: var(--transition-bezier);
   transition-duration: var(--duration-select);
 
-  &.selected {
+  .selected & {
     outline-offset: 4px;
     outline-color: var(--color-graph-selected);
     border-color: transparent;

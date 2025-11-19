@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { type Edge, MarkerType, type Node, useEdgesState, useNodesState } from 'reactflow';
+import clsx from 'clsx';
 
 import { type IConstituenta, type IRSForm } from '@/features/rsform';
 import { colorGraphEdge } from '@/features/rsform/colors';
@@ -16,6 +17,7 @@ import { applyLayout, inferEdgeType, produceFilteredGraph, type TGNodeData } fro
 import { useTermGraphStore } from '@/features/rsform/stores/term-graph';
 
 import { DiagramFlow, useReactFlow } from '@/components/flow/diagram-flow';
+import { useContinuousPan } from '@/components/flow/use-continuous-panning';
 import { useFitHeight } from '@/stores/app-layout';
 import { PARAMETER } from '@/utils/constants';
 
@@ -37,6 +39,10 @@ export interface TGReadonlyFlowProps {
 
 export function TGReadonlyFlow({ schema }: TGReadonlyFlowProps) {
   const [focusCst, setFocusCst] = useState<IConstituenta | null>(null);
+  const flowRef = useRef<HTMLDivElement>(null);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  useContinuousPan(flowRef);
 
   const filter = useTermGraphStore(state => state.filter);
   const filteredGraph = produceFilteredGraph(schema, filter, focusCst);
@@ -89,10 +95,32 @@ export function TGReadonlyFlow({ schema }: TGReadonlyFlowProps) {
 
     applyLayout(newNodes, newEdges, !filter.noText);
 
-    setNodes(newNodes);
-    setEdges(newEdges);
+    const startAnimationFrame = requestAnimationFrame(() => {
+      setIsAnimating(true);
+    });
 
-    setTimeout(() => fitView(flowOptions.fitViewOptions), PARAMETER.minimalTimeout);
+    const stateChangeTimeout = setTimeout(() => {
+      setNodes(prev =>
+        !prev
+          ? newNodes
+          : newNodes.map(node => ({ ...node, selected: prev.find(item => item.id === node.id)?.selected ?? false }))
+      );
+      setEdges(prev =>
+        !prev
+          ? newEdges
+          : newEdges.map(edge => ({ ...edge, selected: prev.find(item => item.id === edge.id)?.selected ?? false }))
+      );
+    }, PARAMETER.minimalTimeout);
+
+    const animationStopTimeout = setTimeout(() => {
+      setIsAnimating(false);
+    }, PARAMETER.graphLayoutDuration);
+
+    return () => {
+      cancelAnimationFrame(startAnimationFrame);
+      clearTimeout(animationStopTimeout);
+      clearTimeout(stateChangeTimeout);
+    };
   }, [
     schema,
     filteredGraph,
@@ -105,6 +133,13 @@ export function TGReadonlyFlow({ schema }: TGReadonlyFlowProps) {
     focusCst
   ]);
 
+  useEffect(() => {
+    setTimeout(
+      () => fitView({ ...flowOptions.fitViewOptions, duration: PARAMETER.graphLayoutDuration }),
+      4 * PARAMETER.minimalTimeout
+    );
+  }, [schema.id, filter.noText, filter.graphType, focusCst, fitView]);
+
   function handleNodeContextMenu(event: React.MouseEvent<Element>, node: TGNodeData) {
     event.preventDefault();
     event.stopPropagation();
@@ -112,7 +147,7 @@ export function TGReadonlyFlow({ schema }: TGReadonlyFlowProps) {
   }
 
   return (
-    <div className='relative w-full h-full flex flex-col'>
+    <div ref={flowRef} className={clsx('relative w-full h-full flex flex-col', isAnimating && 'rf-animation')}>
       <div className='cc-tab-tools mt-2 flex flex-col items-center  rounded-b-2xl backdrop-blur-xs'>
         <ToolbarGraphFilter />
         {focusCst ? <ToolbarFocusedCst resetFocus={() => setFocusCst(null)} /> : null}

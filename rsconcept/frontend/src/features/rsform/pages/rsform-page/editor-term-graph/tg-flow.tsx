@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import {
   type Connection,
@@ -18,6 +18,7 @@ import { DiagramFlow, useReactFlow } from '@/components/flow/diagram-flow';
 import { useContinuousPan } from '@/components/flow/use-continuous-panning';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight, useMainHeight } from '@/stores/app-layout';
+import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER } from '@/utils/constants';
 import { errorMsg } from '@/utils/labels';
 import { withPreventDefault } from '@/utils/utils';
@@ -58,6 +59,7 @@ export function TGFlow() {
   const mainHeight = useMainHeight();
   const { fitView, viewportInitialized } = useReactFlow();
   const flowRef = useRef<HTMLDivElement>(null);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   useContinuousPan(flowRef);
 
@@ -70,6 +72,7 @@ export function TGFlow() {
   const toggleClustering = useTermGraphStore(state => state.toggleClustering);
   const toggleHermits = useTermGraphStore(state => state.toggleHermits);
 
+  const showEditCst = useDialogsStore(state => state.showEditCst);
   const { createAttribution } = useCreateAttribution();
   const { updateConstituenta } = useUpdateConstituenta();
   const { updateCrucial } = useUpdateCrucial();
@@ -111,6 +114,7 @@ export function TGFlow() {
     return setConnectionStart(null);
   }, [setConnectionStart]);
 
+  const prevNodesRef = useRef<Node[]>([]);
   useEffect(() => {
     if (!viewportInitialized) {
       return;
@@ -156,16 +160,57 @@ export function TGFlow() {
     });
 
     applyLayout(newNodes, newEdges, !filter.noText);
-    setNodes(prev =>
-      !prev
-        ? newNodes
-        : newNodes.map(node => ({ ...node, selected: prev.find(item => item.id === node.id)?.selected ?? false }))
-    );
-    setEdges(prev =>
-      !prev
-        ? newEdges
-        : newEdges.map(edge => ({ ...edge, selected: prev.find(item => item.id === edge.id)?.selected ?? false }))
-    );
+
+    const positionsChanged =
+      prevNodesRef.current.some(prevNode => {
+        const newNode = newNodes.find(n => n.id === prevNode.id);
+        return !newNode || newNode.position.x !== prevNode.position.x || newNode.position.y !== prevNode.position.y;
+      }) || newNodes.some(node => !prevNodesRef.current.find(prevNode => prevNode.id === node.id));
+
+    if (!positionsChanged) {
+      setNodes(prev =>
+        newNodes.map(node => ({
+          ...node,
+          selected: prev.find(item => item.id === node.id)?.selected ?? false
+        }))
+      );
+      setEdges(prev =>
+        newEdges.map(edge => ({
+          ...edge,
+          selected: prev.find(item => item.id === edge.id)?.selected ?? false
+        }))
+      );
+      return;
+    }
+
+    const startAnimationFrame = requestAnimationFrame(() => {
+      setIsAnimating(true);
+    });
+
+    const stateChangeTimeout = setTimeout(() => {
+      setNodes(prev =>
+        !prev
+          ? newNodes
+          : newNodes.map(node => ({ ...node, selected: prev.find(item => item.id === node.id)?.selected ?? false }))
+      );
+      setEdges(prev =>
+        !prev
+          ? newEdges
+          : newEdges.map(edge => ({ ...edge, selected: prev.find(item => item.id === edge.id)?.selected ?? false }))
+      );
+    }, PARAMETER.minimalTimeout);
+
+    const animationStopTimeout = setTimeout(() => {
+      setIsAnimating(false);
+    }, PARAMETER.graphLayoutDuration);
+
+    prevNodesRef.current = newNodes;
+
+    return () => {
+      cancelAnimationFrame(startAnimationFrame);
+      clearTimeout(animationStopTimeout);
+      clearTimeout(stateChangeTimeout);
+    };
   }, [
     schema,
     filteredGraph,
@@ -179,7 +224,10 @@ export function TGFlow() {
   ]);
 
   useEffect(() => {
-    setTimeout(() => fitView(flowOptions.fitViewOptions), PARAMETER.minimalTimeout);
+    setTimeout(
+      () => fitView({ ...flowOptions.fitViewOptions, duration: PARAMETER.graphLayoutDuration }),
+      PARAMETER.refreshTimeout
+    );
   }, [schema.id, filter.noText, filter.graphType, focusCst, fitView]);
 
   const prevSelectedNodes = useRef<number[]>([]);
@@ -343,6 +391,13 @@ export function TGFlow() {
     createCst(selectedCst.length === 0 ? CstType.BASE : CstType.TERM, false, definition);
   }
 
+  function handelFastEdit() {
+    if (selectedCst.length !== 1) {
+      return;
+    }
+    showEditCst({ schemaID: schema.id, targetID: selectedCst[0] });
+  }
+
   function handleSelectCore() {
     const isCore = (cstID: number) => {
       const cst = schema.cstByID.get(cstID);
@@ -458,11 +513,11 @@ export function TGFlow() {
       withPreventDefault(toggleText)(event);
       return;
     }
-    if (event.code === 'KeyV') {
+    if (event.code === 'KeyB') {
       withPreventDefault(toggleClustering)(event);
       return;
     }
-    if (event.code === 'KeyB') {
+    if (event.code === 'KeyH') {
       withPreventDefault(toggleHermits)(event);
       return;
     }
@@ -484,6 +539,10 @@ export function TGFlow() {
         withPreventDefault(handleCreateCst)(event);
         return;
       }
+      if (event.code === 'KeyV') {
+        withPreventDefault(handelFastEdit)(event);
+        return;
+      }
       if (event.code === 'Delete' || event.code === 'Backquote') {
         withPreventDefault(handleDeleteSelected)(event);
         return;
@@ -494,7 +553,11 @@ export function TGFlow() {
   return (
     <div
       ref={flowRef}
-      className={clsx('relative', mode === InteractionMode.explore ? 'mode-explore' : 'mode-edit')}
+      className={clsx(
+        'relative',
+        mode === InteractionMode.explore ? 'mode-explore' : 'mode-edit',
+        isAnimating && 'rf-animation'
+      )}
       tabIndex={-1}
       onKeyDown={handleKeyDown}
     >

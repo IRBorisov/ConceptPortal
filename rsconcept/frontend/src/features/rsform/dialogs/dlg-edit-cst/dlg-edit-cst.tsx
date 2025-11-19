@@ -97,7 +97,7 @@ export function DlgEditCst() {
     >
       <div className='cc-icons absolute z-pop left-2 top-2'>
         <MiniButton
-          title='Редактировать в КС'
+          title='Детальное редактирование'
           noPadding
           icon={<IconRSForm size='1.25rem' className='text-primary' />}
           onClick={navigateToTarget}

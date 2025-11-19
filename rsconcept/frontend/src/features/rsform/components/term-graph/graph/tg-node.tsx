@@ -46,7 +46,7 @@ export function TGNode(node: TGNodeInternal) {
         ) : null}
         <div
           className={clsx(
-            'w-full h-full cursor-default flex items-center justify-center rounded-full',
+            'w-full h-full cursor-default flex items-center justify-center rounded-full rf-node-outline',
             node.data.cst.crucial && 'text-primary',
             node.data.focused && 'border-2 border-selected',
             label.length > LABEL_THRESHOLD ? 'text-[12px]/[16px]' : 'text-[14px]/[20px]'

@@ -47,7 +47,7 @@ export function DlgGraphParams() {
             <Checkbox
               {...field}
               label='Скрыть порожденные'
-              titleHtml={prepareTooltip('Не отображать порожденные понятия', 'V')}
+              titleHtml={prepareTooltip('Не отображать порожденные понятия', 'B')}
             />
           )}
         />
@@ -58,7 +58,7 @@ export function DlgGraphParams() {
             <Checkbox
               {...field}
               label='Скрыть несвязанные'
-              titleHtml={prepareTooltip('Неиспользуемые конституенты', 'B')}
+              titleHtml={prepareTooltip('Неиспользуемые конституенты', 'H')}
             />
           )}
         />
