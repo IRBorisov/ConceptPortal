@@ -26,6 +26,7 @@ import { CstType, ParsingStatus } from '../../../backend/types';
 import { useCreateAttribution } from '../../../backend/use-create-attribution';
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { useUpdateConstituenta } from '../../../backend/use-update-constituenta';
+import { useUpdateCrucial } from '../../../backend/use-update-crucial';
 import { colorGraphEdge } from '../../../colors';
 import { TGConnectionLine } from '../../../components/term-graph/graph/tg-connection';
 import { TGEdgeTypes } from '../../../components/term-graph/graph/tg-edge-types';
@@ -71,6 +72,7 @@ export function TGFlow() {
 
   const { createAttribution } = useCreateAttribution();
   const { updateConstituenta } = useUpdateConstituenta();
+  const { updateCrucial } = useUpdateCrucial();
 
   const isProcessing = useMutatingRSForm();
   const {
@@ -154,8 +156,16 @@ export function TGFlow() {
     });
 
     applyLayout(newNodes, newEdges, !filter.noText);
-    setNodes(newNodes);
-    setEdges(newEdges);
+    setNodes(prev =>
+      !prev
+        ? newNodes
+        : newNodes.map(node => ({ ...node, selected: prev.find(item => item.id === node.id)?.selected ?? false }))
+    );
+    setEdges(prev =>
+      !prev
+        ? newEdges
+        : newEdges.map(edge => ({ ...edge, selected: prev.find(item => item.id === edge.id)?.selected ?? false }))
+    );
   }, [
     schema,
     filteredGraph,
@@ -314,6 +324,20 @@ export function TGFlow() {
     deselectAll();
   }
 
+  function handleToggleCrucial() {
+    if (selectedCst.length === 0) {
+      return;
+    }
+    const isCrucial = !schema.cstByID.get(selectedCst[0])!.crucial;
+    void updateCrucial({
+      itemID: schema.id,
+      data: {
+        target: selectedCst,
+        value: isCrucial
+      }
+    });
+  }
+
   function handleCreateCst() {
     const definition = selectedCst.map(id => schema.cstByID.get(id)!.alias).join(' ');
     createCst(selectedCst.length === 0 ? CstType.BASE : CstType.TERM, false, definition);
@@ -444,6 +468,10 @@ export function TGFlow() {
     }
 
     if (isContentEditable) {
+      if (event.code === 'KeyF') {
+        withPreventDefault(handleToggleCrucial)(event);
+        return;
+      }
       if (event.code === 'KeyQ') {
         withPreventDefault(handleToggleMode)(event);
         return;
@@ -470,7 +498,11 @@ export function TGFlow() {
       tabIndex={-1}
       onKeyDown={handleKeyDown}
     >
-      <ToolbarTermGraph className='cc-tab-tools' onDeleteSelected={handleDeleteSelected} />
+      <ToolbarTermGraph
+        className='cc-tab-tools'
+        onDeleteSelected={handleDeleteSelected}
+        onToggleCrucial={handleToggleCrucial}
+      />
 
       <div className='absolute z-pop top-24 sm:top-16 left-2 sm:left-3 w-54 flex flex-col pointer-events-none'>
         <span className='px-2 pb-1 select-none whitespace-nowrap backdrop-blur-xs rounded-xl w-fit'>

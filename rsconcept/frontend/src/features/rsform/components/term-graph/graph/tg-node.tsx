@@ -55,7 +55,7 @@ export function TGNode(node: TGNodeInternal) {
             backgroundColor: node.selected
               ? APP_COLORS.bgActiveSelection
               : node.data.focused
-              ? APP_COLORS.bgPurple
+              ? APP_COLORS.bgDefault
               : colorBgGraphNode(node.data.cst, coloring)
           }}
           data-tooltip-id={globalIDs.tooltip}

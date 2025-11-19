@@ -1,3 +1,4 @@
+import { IconCrucialValue } from '@/features/rsform/components/icon-crucial-value';
 import { IconEdgeType } from '@/features/rsform/components/icon-edge-type';
 import { IconGraphMode } from '@/features/rsform/components/icon-graph-mode';
 import { InteractionMode, TGEdgeType } from '@/features/rsform/stores/term-graph';
@@ -60,13 +61,16 @@ export function HelpRSGraphTerm() {
             <li>Клик на узел – выделение</li>
             <li>Левый клик – фокус-конституента</li>
             <li>
-              <IconReset className='inline-icon' /> Esc – сбросить выделение
+              <IconReset className='inline-icon' /> <kbd>Esc</kbd> – сбросить выделение
             </li>
             <li>
               <IconEdit className='inline-icon' /> Двойной клик – редактирование
             </li>
             <li>
-              <IconDestroy className='inline-icon icon-red' /> Delete – удалить выбранные
+              <IconCrucialValue value={true} className='inline-icon' /> <kbd>F</kbd> – переключение статуса ключевой
+            </li>
+            <li>
+              <IconDestroy className='inline-icon icon-red' /> <kbd>Delete</kbd> – удалить выбранные
             </li>
             <li>
               <IconNewItem className='inline-icon icon-green' /> Новая со ссылками на выделенные

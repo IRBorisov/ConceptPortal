@@ -6,18 +6,12 @@ import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 import { type ILibraryItemReference } from '@/features/library';
 import { MiniSelectorOSS } from '@/features/library/components/mini-selector-oss';
-import { IconEdgeType } from '@/features/rsform/components/icon-edge-type';
-import { IconGraphMode } from '@/features/rsform/components/icon-graph-mode';
-import { FocusLabel } from '@/features/rsform/components/term-graph/focus-label';
-import { ToolbarFocusedCst } from '@/features/rsform/components/term-graph/toolbar-focused-cst';
-import { ToolbarGraphSelection } from '@/features/rsform/components/toolbar-graph-selection';
-import { labelEdgeType, labelGraphMode } from '@/features/rsform/labels';
-import { isBasicConcept } from '@/features/rsform/models/rsform-api';
 
 import { MiniButton } from '@/components/control';
 import {
   IconClustering,
   IconClusteringOff,
+  IconCrucial,
   IconDestroy,
   IconFilter,
   IconFitImage,
@@ -34,6 +28,13 @@ import { prepareTooltip } from '@/utils/utils';
 
 import { CstType } from '../../../backend/types';
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
+import { IconEdgeType } from '../../../components/icon-edge-type';
+import { IconGraphMode } from '../../../components/icon-graph-mode';
+import { FocusLabel } from '../../../components/term-graph/focus-label';
+import { ToolbarFocusedCst } from '../../../components/term-graph/toolbar-focused-cst';
+import { ToolbarGraphSelection } from '../../../components/toolbar-graph-selection';
+import { labelEdgeType, labelGraphMode } from '../../../labels';
+import { isBasicConcept } from '../../../models/rsform-api';
 import { InteractionMode, useTermGraphStore, useTGConnectionStore } from '../../../stores/term-graph';
 import { useRSEdit } from '../rsedit-context';
 
@@ -44,9 +45,10 @@ interface ToolbarTermGraphProps {
   className?: string;
 
   onDeleteSelected: () => void;
+  onToggleCrucial: () => void;
 }
 
-export function ToolbarTermGraph({ className, onDeleteSelected }: ToolbarTermGraphProps) {
+export function ToolbarTermGraph({ className, onDeleteSelected, onToggleCrucial }: ToolbarTermGraphProps) {
   const isProcessing = useMutatingRSForm();
   const {
     schema,
@@ -184,6 +186,15 @@ export function ToolbarTermGraph({ className, onDeleteSelected }: ToolbarTermGra
             isInherited={cstID => schema.cstByID.get(cstID)?.is_inherited ?? false}
             value={selectedCst}
             onChange={handleSetSelected}
+          />
+        ) : null}
+        {isContentEditable ? (
+          <MiniButton
+            titleHtml={prepareTooltip('Ключевая конституента', 'F')}
+            aria-label='Переключатель статуса ключевой конституенты'
+            icon={<IconCrucial size='1.25rem' className='icon-primary' />}
+            onClick={onToggleCrucial}
+            disabled={isProcessing || selectedCst.length === 0}
           />
         ) : null}
         {isContentEditable ? (
