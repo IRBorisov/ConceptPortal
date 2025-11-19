@@ -86,7 +86,7 @@ export interface IConstituenta {
    */
   parent_schema_index: number;
   /** {@link LibraryItem} that contains parent of this inherited {@link IConstituenta}. */
-  parent_schema?: number;
+  parent_schema: number | null;
   /** Indicates if this {@link IConstituenta} is inherited. */
   is_inherited: boolean;
   /** Indicates if this {@link IConstituenta} has children that are inherited. */

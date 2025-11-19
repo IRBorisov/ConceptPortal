@@ -148,7 +148,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         )
 
     @extend_schema(
-        summary='update crucial attributes of a given list of constituents',
+        summary='update crucial attribute of a given list of constituents',
         tags=['RSForm'],
         request=s.CrucialUpdateSerializer,
         responses={
@@ -160,7 +160,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     )
     @action(detail=True, methods=['patch'], url_path='update-crucial')
     def update_crucial(self, request: Request, pk) -> HttpResponse:
-        ''' Update crucial attributes of a given list of constituents. '''
+        ''' Update crucial attribute of a given list of constituents. '''
         item = self._get_item()
         serializer = s.CrucialUpdateSerializer(data=request.data, partial=True, context={'schema': item})
         serializer.is_valid(raise_exception=True)

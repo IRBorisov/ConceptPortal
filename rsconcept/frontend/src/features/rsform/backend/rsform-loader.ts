@@ -88,7 +88,7 @@ export class RSFormLoader {
       cst.spawn = [];
       cst.attributes = [];
       cst.spawn_alias = [];
-      cst.parent_schema = schemaByCst.get(cst.id);
+      cst.parent_schema = schemaByCst.get(cst.id) ?? null;
       cst.parent_schema_index = cst.parent_schema ? parents.indexOf(cst.parent_schema) + 1 : 0;
       cst.is_inherited = inherit_children.has(cst.id);
       cst.has_inherited_children = inherit_parents.has(cst.id);

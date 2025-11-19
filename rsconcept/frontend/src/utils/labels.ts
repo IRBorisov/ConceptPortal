@@ -70,7 +70,11 @@ export const errorMsg = {
   invalidLocation: 'Некорректный формат пути',
   emptySubstitutions: 'Выберите хотя бы одно отождествление',
   invalidResponse: 'Некорректный ответ сервера',
-  connectionExists: 'Связь уже существует'
+  connectionExists: 'Связь уже существует',
+  cyclingEdge: 'Связь образует цикл',
+  changeInheritedDefinition: 'Нельзя изменить определение наследника',
+  addInheritedEdge: 'Новая связь между наследниками из одной схемы не допускается',
+  deleteInheritedEdge: 'Нельзя удалить связь между наследниками из одной схемы'
 } as const;
 
 /**

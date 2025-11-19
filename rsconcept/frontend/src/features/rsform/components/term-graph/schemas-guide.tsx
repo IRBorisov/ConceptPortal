@@ -19,7 +19,7 @@ export function SchemasGuide({ schema }: SchemasGuideProps) {
     const aliases: string[] = [];
     const indexes: number[] = [];
     schema.items.forEach(cst => {
-      if (cst.parent_schema && !processed.has(cst.parent_schema)) {
+      if (cst.parent_schema !== null && !processed.has(cst.parent_schema)) {
         const item = libraryItems.find(item => item.id === cst.parent_schema);
         if (item) {
           aliases.push(item.alias);

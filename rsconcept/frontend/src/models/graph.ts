@@ -149,6 +149,10 @@ export class Graph<NodeID = number> {
     return !!sourceNode.outputs.find(id => id === destination);
   }
 
+  isReachable(source: NodeID, destination: NodeID): boolean {
+    return this.expandAllOutputs([source]).includes(destination);
+  }
+
   rootNodes(): NodeID[] {
     return [...this.nodes.keys()].filter(id => !this.nodes.get(id)?.inputs.length);
   }

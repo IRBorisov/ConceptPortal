@@ -56,6 +56,7 @@ class TestChangeConstituents(EndpointTester):
         self.operation3.refresh_from_db()
         self.ks3 = RSForm(self.operation3.result)
         self.assertEqual(self.ks3.constituentsQ().count(), 4)
+        self.ks3X1 = Constituenta.objects.get(as_child__parent_id=self.ks1X1.pk)
 
         self.layout_data = [
             {'nodeID': 'o' + str(self.operation1.pk), 'x': 0, 'y': 0, 'width': 150, 'height': 40},
@@ -140,6 +141,29 @@ class TestChangeConstituents(EndpointTester):
         self.assertEqual(inherited_cst.crucial, False)
         self.assertEqual(inherited_cst.definition_formal, r'X1\X1')
         self.assertEqual(inherited_cst.definition_raw, r'@{X2|sing,datv}')
+
+
+    @decl_endpoint('/api/rsforms/{item}/update-cst', method='patch')
+    def test_update_constituenta_inherited(self):
+        data = {
+            'target': self.ks3X1.pk,
+            'item_data': {
+                'definition_formal': r'123',
+            }
+        }
+        self.executeBadData(data, item=self.ks3.model.pk)
+
+        data = {
+            'target': self.ks3X1.pk,
+            'item_data': {
+                'term_raw': r'42',
+                'convention': r'1337',
+            }
+        }
+        self.executeOK(data, item=self.ks3.model.pk)
+        self.ks3X1.refresh_from_db()
+        self.assertEqual(self.ks3X1.term_raw, data['item_data']['term_raw'])
+        self.assertEqual(self.ks3X1.convention, data['item_data']['convention'])
 
 
     @decl_endpoint('/api/rsforms/{item}/delete-multiple-cst', method='patch')

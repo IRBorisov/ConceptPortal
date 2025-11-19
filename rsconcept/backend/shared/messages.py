@@ -22,6 +22,10 @@ def constituentaNotInRSform(title: str):
     return f'Конституента не принадлежит схеме: {title}'
 
 
+def changeInheritedDefinition():
+    return 'Нельзя изменить определение наследника'
+
+
 def constituentaNotFromOperation():
     return 'Конституента не соответствую аргументам операции'
 

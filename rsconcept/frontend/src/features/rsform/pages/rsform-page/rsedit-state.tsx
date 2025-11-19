@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 import { urls, useConceptNavigation } from '@/app';
 import { useAIStore } from '@/features/ai/stores/ai-context';
@@ -14,7 +15,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { PARAMETER, prefixes } from '@/utils/constants';
-import { promptText } from '@/utils/labels';
+import { errorMsg, promptText } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 import { promptUnsaved } from '@/utils/utils';
 
@@ -302,7 +303,16 @@ export const RSEditState = ({
     const ids = selectedEdges[0].split('-');
     const sourceID = Number(ids[0]);
     const targetID = Number(ids[1]);
+    const sourceCst = schema.cstByID.get(sourceID);
+    const targetCst = schema.cstByID.get(targetID);
+    if (!targetCst || !sourceCst) {
+      throw new Error('Constituents not found');
+    }
     if (schema.attribution_graph.hasEdge(sourceID, targetID)) {
+      if (targetCst.parent_schema !== null && targetCst.parent_schema === sourceCst.parent_schema) {
+        toast.error(errorMsg.deleteInheritedEdge);
+        return;
+      }
       void deleteAttribution({
         itemID: schema.id,
         data: {
@@ -311,10 +321,9 @@ export const RSEditState = ({
         }
       });
     } else if (schema.graph.hasEdge(sourceID, targetID)) {
-      const sourceCst = schema.cstByID.get(sourceID);
-      const targetCst = schema.cstByID.get(targetID);
-      if (!targetCst || !sourceCst) {
-        throw new Error('Constituents not found');
+      if (targetCst.is_inherited) {
+        toast.error(errorMsg.changeInheritedDefinition);
+        return;
       }
       const newExpressions = removeAliasReference(targetCst.definition_formal, sourceCst.alias);
       void updateConstituenta({

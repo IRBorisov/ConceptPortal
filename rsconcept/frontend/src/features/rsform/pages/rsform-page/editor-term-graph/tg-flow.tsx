@@ -15,7 +15,7 @@ import {
 import clsx from 'clsx';
 
 import { DiagramFlow, useReactFlow } from '@/components/flow/diagram-flow';
-import { useContinuousPan } from '@/components/flow/use-continous-panning';
+import { useContinuousPan } from '@/components/flow/use-continuous-panning';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight, useMainHeight } from '@/stores/app-layout';
 import { PARAMETER } from '@/utils/constants';
@@ -255,20 +255,26 @@ export function TGFlow() {
 
     const sourceID = Number(connection.source);
     const targetID = Number(connection.target);
-    if (
-      (connectionType === TGEdgeType.attribution && schema.attribution_graph.hasEdge(sourceID, targetID)) ||
-      (connectionType === TGEdgeType.definition && schema.graph.hasEdge(sourceID, targetID))
-    ) {
-      toast.info(errorMsg.connectionExists);
-      return;
+    const sourceCst = schema.cstByID.get(sourceID);
+    const targetCst = schema.cstByID.get(targetID);
+    if (!targetCst || !sourceCst) {
+      throw new Error('Constituents not found');
     }
 
     if (connectionType === TGEdgeType.definition) {
-      const sourceCst = schema.cstByID.get(sourceID);
-      const targetCst = schema.cstByID.get(targetID);
-      if (!targetCst || !sourceCst) {
-        throw new Error('Constituents not found');
+      if (targetCst.is_inherited) {
+        toast.error(errorMsg.changeInheritedDefinition);
+        return;
       }
+      if (schema.graph.hasEdge(sourceID, targetID)) {
+        toast.error(errorMsg.connectionExists);
+        return;
+      }
+      if (schema.graph.isReachable(targetID, sourceID)) {
+        toast.error(errorMsg.cyclingEdge);
+        return;
+      }
+
       const newExpressions = addAliasReference(targetCst.definition_formal, sourceCst.alias);
       void updateConstituenta({
         itemID: schema.id,
@@ -279,8 +285,20 @@ export function TGFlow() {
           }
         }
       });
-      return;
     } else {
+      if (schema.attribution_graph.hasEdge(sourceID, targetID)) {
+        toast.error(errorMsg.connectionExists);
+        return;
+      }
+      if (schema.attribution_graph.isReachable(targetID, sourceID)) {
+        toast.error(errorMsg.cyclingEdge);
+        return;
+      }
+      if (targetCst.parent_schema !== null && targetCst.parent_schema === sourceCst.parent_schema) {
+        toast.error(errorMsg.addInheritedEdge);
+        return;
+      }
+
       void createAttribution({
         itemID: schema.id,
         data: {
