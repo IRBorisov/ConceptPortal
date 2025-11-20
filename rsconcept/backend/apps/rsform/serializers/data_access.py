@@ -116,7 +116,8 @@ class CstUpdateSerializer(StrictSerializer):
                 raise serializers.ValidationError({
                     'alias': msg.aliasTaken(new_alias)
                 })
-        if 'definition_formal' in attrs['item_data'] and cst.definition_formal != attrs['item_data']['definition_formal']:
+        if 'definition_formal' in attrs['item_data'] \
+                and cst.definition_formal != attrs['item_data']['definition_formal']:
             if Inheritance.objects.filter(child=cst).exists():
                 raise serializers.ValidationError({
                     'definition_formal': msg.changeInheritedDefinition()

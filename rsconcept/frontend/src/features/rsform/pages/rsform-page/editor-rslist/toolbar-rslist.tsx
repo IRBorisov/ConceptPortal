@@ -37,7 +37,7 @@ export function ToolbarRSList({ className }: ToolbarRSListProps) {
   const { elementRef: menuRef, isOpen: isMenuOpen, toggle: toggleMenu, handleBlur: handleMenuBlur } = useDropdown();
   const {
     schema,
-    selectedCst: selected,
+    selectedCst,
     activeCst,
     navigateOss,
     deselectAll,
@@ -57,7 +57,7 @@ export function ToolbarRSList({ className }: ToolbarRSListProps) {
     void updateCrucial({
       itemID: schema.id,
       data: {
-        target: selected,
+        target: selectedCst,
         value: !activeCst.crucial
       }
     });
@@ -76,28 +76,28 @@ export function ToolbarRSList({ className }: ToolbarRSListProps) {
         aria-label='Сбросить выделение'
         icon={<IconReset size='1.25rem' className='icon-primary' />}
         onClick={deselectAll}
-        disabled={selected.length === 0}
+        disabled={selectedCst.length === 0}
       />
       <MiniButton
         titleHtml={prepareTooltip('Переместить вверх', 'Alt + вверх')}
         aria-label='Переместить вверх'
         icon={<IconMoveUp size='1.25rem' className='icon-primary' />}
         onClick={moveUp}
-        disabled={isProcessing || selected.length === 0 || selected.length === schema.items.length}
+        disabled={isProcessing || selectedCst.length === 0 || selectedCst.length === schema.items.length}
       />
       <MiniButton
         titleHtml={prepareTooltip('Переместить вниз', 'Alt + вниз')}
         aria-label='Переместить вниз'
         icon={<IconMoveDown size='1.25rem' className='icon-primary' />}
         onClick={moveDown}
-        disabled={isProcessing || selected.length === 0 || selected.length === schema.items.length}
+        disabled={isProcessing || selectedCst.length === 0 || selectedCst.length === schema.items.length}
       />
       <MiniButton
         title='Ключевая конституента'
         aria-label='Переключатель статуса ключевой конституенты'
         icon={<IconCrucial size='1.25rem' className='icon-primary' />}
         onClick={handleToggleCrucial}
-        disabled={isProcessing || selected.length === 0}
+        disabled={isProcessing || selectedCst.length === 0}
       />
       <div ref={menuRef} onBlur={handleMenuBlur} className='relative'>
         <MiniButton
@@ -131,7 +131,7 @@ export function ToolbarRSList({ className }: ToolbarRSListProps) {
         aria-label='Клонировать конституенту'
         icon={<IconClone size='1.25rem' className='icon-green' />}
         onClick={cloneCst}
-        disabled={isProcessing || selected.length !== 1}
+        disabled={isProcessing || selectedCst.length !== 1}
       />
       <MiniButton
         titleHtml={prepareTooltip('Удалить выбранные', 'Delete')}

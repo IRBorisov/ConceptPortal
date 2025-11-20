@@ -26,54 +26,45 @@ import {
 } from '@/components/icons';
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
-import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { isIOS, isMac, notImplemented, prepareTooltip } from '@/utils/utils';
 
 import { useMutatingOss } from '../../../backend/use-mutating-oss';
-import { useUpdateLayout } from '../../../backend/use-update-layout';
 import { NodeType } from '../../../models/oss';
 import { useOssEdit } from '../oss-edit-context';
 
 import { useOssFlow } from './oss-flow-context';
-import { useGetLayout } from './use-get-layout';
+import { useHandleActions } from './use-handle-actions';
 
 interface ToolbarOssGraphProps extends Styling {
-  onCreateBlock: () => void;
-  onCreateSchema: () => void;
-  onImportSchema: () => void;
-  onCreateSynthesis: () => void;
-  onDelete: () => void;
-  onResetPositions: () => void;
-
   isContextMenuOpen: boolean;
   openContextMenu: (node: OssNode, clientX: number, clientY: number) => void;
   hideContextMenu: () => void;
 }
 
 export function ToolbarOssGraph({
-  onCreateBlock,
-  onCreateSchema,
-  onImportSchema,
-  onCreateSynthesis,
-  onDelete,
-  onResetPositions,
-
   isContextMenuOpen,
   openContextMenu,
   hideContextMenu,
   className,
   ...restProps
 }: ToolbarOssGraphProps) {
-  const { schema, selectedItems, isMutable, canDeleteOperation: canDelete } = useOssEdit();
+  const { selectedItems, isMutable, canDeleteOperation: canDelete } = useOssEdit();
   const isProcessing = useMutatingOss();
   const { resetView, nodes } = useOssFlow();
-  const getLayout = useGetLayout();
-  const { updateLayout } = useUpdateLayout();
   const { user } = useAuthSuspense();
   const { elementRef: menuRef, isOpen: isMenuOpen, toggle: toggleMenu, handleBlur: handleMenuBlur } = useDropdown();
+  const {
+    handleSavePositions,
+    handleCreateSynthesis,
+    handleCreateBlock,
+    handleCreateSchema,
+    handleImportSchema,
+    handleDeleteSelected,
+    handleResetPositions,
+    handleShowOptions
+  } = useHandleActions();
 
-  const showOptions = useDialogsStore(state => state.showOssOptions);
   const showSidePanel = usePreferencesStore(state => state.showOssSidePanel);
   const toggleShowSidePanel = usePreferencesStore(state => state.toggleShowOssSidePanel);
 
@@ -85,14 +76,6 @@ export function ToolbarOssGraph({
   function handleMenuToggle() {
     hideContextMenu();
     toggleMenu();
-  }
-
-  function handleShowOptions() {
-    showOptions();
-  }
-
-  function handleSavePositions() {
-    void updateLayout({ itemID: schema.id, data: getLayout() });
   }
 
   function handleEditItem(event: React.MouseEvent<HTMLButtonElement>) {
@@ -123,7 +106,7 @@ export function ToolbarOssGraph({
         <MiniButton
           title='Сбросить изменения'
           icon={<IconReset size='1.25rem' className='icon-primary' />}
-          onClick={onResetPositions}
+          onClick={handleResetPositions}
         />
         <MiniButton
           title='Сбросить вид'
@@ -173,25 +156,25 @@ export function ToolbarOssGraph({
                 text='Новый блок'
                 titleHtml={prepareTooltip('Новый блок', 'Alt + 1')}
                 icon={<IconConceptBlock size='1.25rem' className='text-constructive' />}
-                onClick={onCreateBlock}
+                onClick={handleCreateBlock}
               />
               <DropdownButton
                 text='Новая КС'
                 titleHtml={prepareTooltip('Новая концептуальная схема', 'Alt + 2')}
                 icon={<IconNewItem size='1.25rem' className='text-constructive' />}
-                onClick={onCreateSchema}
+                onClick={handleCreateSchema}
               />
               <DropdownButton
                 text='Импорт КС'
                 titleHtml={prepareTooltip('Импорт концептуальной схемы', 'Alt + 3')}
                 icon={<IconDownload size='1.25rem' className='text-primary' />}
-                onClick={onImportSchema}
+                onClick={handleImportSchema}
               />
               <DropdownButton
                 text='Синтез'
                 titleHtml={prepareTooltip('Синтез концептуальных схем', 'Alt + 4')}
                 icon={<IconSynthesis size='1.25rem' className='text-primary' />}
-                onClick={onCreateSynthesis}
+                onClick={handleCreateSynthesis}
               />
               {user.is_staff ? (
                 <DropdownButton
@@ -218,7 +201,7 @@ export function ToolbarOssGraph({
             titleHtml={prepareTooltip('Удалить выбранную', 'Delete')}
             hideTitle={isMenuOpen}
             icon={<IconDestroy size='1.25rem' className='icon-red' />}
-            onClick={onDelete}
+            onClick={handleDeleteSelected}
             disabled={
               isProcessing ||
               (!selectedOperation && !selectedBlock) ||

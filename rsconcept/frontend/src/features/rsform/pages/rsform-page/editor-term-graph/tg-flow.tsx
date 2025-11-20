@@ -18,16 +18,13 @@ import { DiagramFlow, useReactFlow } from '@/components/flow/diagram-flow';
 import { useContinuousPan } from '@/components/flow/use-continuous-panning';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight, useMainHeight } from '@/stores/app-layout';
-import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER } from '@/utils/constants';
 import { errorMsg } from '@/utils/labels';
-import { withPreventDefault } from '@/utils/utils';
 
-import { CstType, ParsingStatus } from '../../../backend/types';
+import { ParsingStatus } from '../../../backend/types';
 import { useCreateAttribution } from '../../../backend/use-create-attribution';
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { useUpdateConstituenta } from '../../../backend/use-update-constituenta';
-import { useUpdateCrucial } from '../../../backend/use-update-crucial';
 import { colorGraphEdge } from '../../../colors';
 import { TGConnectionLine } from '../../../components/term-graph/graph/tg-connection';
 import { TGEdgeTypes } from '../../../components/term-graph/graph/tg-edge-types';
@@ -36,18 +33,17 @@ import { SelectColoring } from '../../../components/term-graph/select-coloring';
 import { SelectEdgeType } from '../../../components/term-graph/select-edge-type';
 import { ViewHidden } from '../../../components/term-graph/view-hidden';
 import { applyLayout, inferEdgeType, type TGNodeData } from '../../../models/graph-api';
-import { addAliasReference, isBasicConcept } from '../../../models/rsform-api';
+import { addAliasReference } from '../../../models/rsform-api';
 import { InteractionMode, TGEdgeType, useTermGraphStore, useTGConnectionStore } from '../../../stores/term-graph';
 import { useRSEdit } from '../rsedit-context';
 
 import { ToolbarTermGraph } from './toolbar-term-graph';
 import { useFilteredGraph } from './use-filtered-graph';
-
-export const fitViewOptions = { padding: 0.3, duration: PARAMETER.zoomDuration };
+import { useHandleActions } from './use-handle-actions';
 
 const flowOptions = {
   fitView: true,
-  fitViewOptions: fitViewOptions,
+  fitViewOptions: { padding: 0.3, duration: PARAMETER.graphLayoutDuration },
   edgesFocusable: true,
   nodesFocusable: false,
   maxZoom: 3,
@@ -64,18 +60,12 @@ export function TGFlow() {
   useContinuousPan(flowRef);
 
   const mode = useTermGraphStore(state => state.mode);
-  const toggleMode = useTermGraphStore(state => state.toggleMode);
-  const toggleEdgeType = useTGConnectionStore(state => state.toggleConnectionType);
+
   const setConnectionStart = useTGConnectionStore(state => state.setStart);
   const connectionType = useTGConnectionStore(state => state.connectionType);
-  const toggleText = useTermGraphStore(state => state.toggleText);
-  const toggleClustering = useTermGraphStore(state => state.toggleClustering);
-  const toggleHermits = useTermGraphStore(state => state.toggleHermits);
 
-  const showEditCst = useDialogsStore(state => state.showEditCst);
   const { createAttribution } = useCreateAttribution();
   const { updateConstituenta } = useUpdateConstituenta();
-  const { updateCrucial } = useUpdateCrucial();
 
   const isProcessing = useMutatingRSForm();
   const {
@@ -83,15 +73,12 @@ export function TGFlow() {
     schema,
     selectedCst,
     setSelectedCst,
-    promptDeleteSelected,
     focusCst,
     setFocus,
     toggleSelectCst,
     navigateCst,
     selectedEdges,
-    setSelectedEdges,
-    deselectAll,
-    createCst
+    setSelectedEdges
   } = useRSEdit();
 
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
@@ -100,6 +87,7 @@ export function TGFlow() {
   const filter = useTermGraphStore(state => state.filter);
   const { filteredGraph, hidden } = useFilteredGraph();
   const hiddenHeight = useFitHeight(isSmall ? '15rem + 2px' : '13.5rem + 2px', '4rem');
+  const { handleKeyDown } = useHandleActions(filteredGraph);
 
   function onSelectionChange({ nodes, edges }: { nodes: Node[]; edges: Edge[] }) {
     const ids = nodes.map(node => Number(node.id));
@@ -224,10 +212,7 @@ export function TGFlow() {
   ]);
 
   useEffect(() => {
-    setTimeout(
-      () => fitView({ ...flowOptions.fitViewOptions, duration: PARAMETER.graphLayoutDuration }),
-      PARAMETER.refreshTimeout
-    );
+    setTimeout(() => fitView(flowOptions.fitViewOptions), PARAMETER.refreshTimeout);
   }, [schema.id, filter.noText, filter.graphType, focusCst, fitView]);
 
   const prevSelectedNodes = useRef<number[]>([]);
@@ -268,13 +253,6 @@ export function TGFlow() {
       }))
     );
   }, [selectedEdges, setEdges]);
-
-  function handleDeleteSelected() {
-    if (isProcessing) {
-      return;
-    }
-    promptDeleteSelected();
-  }
 
   function handleNodeContextMenu(event: React.MouseEvent<Element>, node: TGNodeData) {
     event.preventDefault();
@@ -367,189 +345,6 @@ export function TGFlow() {
     }
   }
 
-  function handleToggleMode() {
-    toggleMode();
-    deselectAll();
-  }
-
-  function handleToggleCrucial() {
-    if (selectedCst.length === 0) {
-      return;
-    }
-    const isCrucial = !schema.cstByID.get(selectedCst[0])!.crucial;
-    void updateCrucial({
-      itemID: schema.id,
-      data: {
-        target: selectedCst,
-        value: isCrucial
-      }
-    });
-  }
-
-  function handleCreateCst() {
-    const definition = selectedCst.map(id => schema.cstByID.get(id)!.alias).join(' ');
-    createCst(selectedCst.length === 0 ? CstType.BASE : CstType.TERM, false, definition);
-  }
-
-  function handelFastEdit() {
-    if (selectedCst.length !== 1) {
-      return;
-    }
-    showEditCst({ schemaID: schema.id, targetID: selectedCst[0] });
-  }
-
-  function handleSelectCore() {
-    const isCore = (cstID: number) => {
-      const cst = schema.cstByID.get(cstID);
-      return !!cst && isBasicConcept(cst.cst_type);
-    };
-    const core = [...filteredGraph.nodes.keys()].filter(isCore);
-    setSelectedCst([...core, ...filteredGraph.expandInputs(core)]);
-  }
-
-  function handleSelectOwned() {
-    setSelectedCst([...filteredGraph.nodes.keys()].filter(cstID => !schema.cstByID.get(cstID)?.is_inherited));
-  }
-
-  function handleSelectInherited() {
-    setSelectedCst([...filteredGraph.nodes.keys()].filter(cstID => schema.cstByID.get(cstID)?.is_inherited ?? false));
-  }
-
-  function handleSelectCrucial() {
-    setSelectedCst([...filteredGraph.nodes.keys()].filter(cstID => schema.cstByID.get(cstID)?.crucial ?? false));
-  }
-
-  function handleExpandOutputs() {
-    setSelectedCst(prev => [...prev, ...filteredGraph.expandOutputs(prev)]);
-  }
-
-  function handleExpandInputs() {
-    setSelectedCst(prev => [...prev, ...filteredGraph.expandInputs(prev)]);
-  }
-
-  function handleSelectMaximize() {
-    setSelectedCst(prev => filteredGraph.maximizePart(prev));
-  }
-
-  function handleSelectInvert() {
-    setSelectedCst(prev => [...filteredGraph.nodes.keys()].filter(item => !prev.includes(item)));
-  }
-
-  function handleSelectAllInputs() {
-    setSelectedCst(prev => [...prev, ...filteredGraph.expandAllInputs(prev)]);
-  }
-
-  function handleSelectAllOutputs() {
-    setSelectedCst(prev => [...prev, ...filteredGraph.expandAllOutputs(prev)]);
-  }
-
-  function handleSelectionHotkey(eventCode: string): boolean {
-    if (eventCode === 'Escape') {
-      setFocus(null);
-      return true;
-    }
-    if (eventCode === 'Digit1') {
-      handleExpandInputs();
-      return true;
-    }
-    if (eventCode === 'Digit2') {
-      handleExpandOutputs();
-      return true;
-    }
-    if (eventCode === 'Digit3') {
-      handleSelectAllInputs();
-      return true;
-    }
-    if (eventCode === 'Digit4') {
-      handleSelectAllOutputs();
-      return true;
-    }
-    if (eventCode === 'Digit5') {
-      handleSelectMaximize();
-      return true;
-    }
-    if (eventCode === 'Digit6') {
-      handleSelectInvert();
-      return true;
-    }
-    if (eventCode === 'KeyZ') {
-      handleSelectCore();
-      return true;
-    }
-    if (eventCode === 'KeyX') {
-      handleSelectCrucial();
-      return true;
-    }
-    if (eventCode === 'KeyC') {
-      handleSelectOwned();
-      return true;
-    }
-    if (eventCode === 'KeyY') {
-      handleSelectInherited();
-      return true;
-    }
-
-    return false;
-  }
-
-  function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
-    if (isProcessing) {
-      return;
-    }
-    if (event.shiftKey || event.ctrlKey || event.metaKey || event.altKey) {
-      return;
-    }
-    if (handleSelectionHotkey(event.code)) {
-      event.preventDefault();
-      event.stopPropagation();
-      return;
-    }
-
-    if (event.code === 'KeyG') {
-      withPreventDefault(() => fitView(flowOptions.fitViewOptions))(event);
-      return;
-    }
-    if (event.code === 'KeyT') {
-      withPreventDefault(toggleText)(event);
-      return;
-    }
-    if (event.code === 'KeyB') {
-      withPreventDefault(toggleClustering)(event);
-      return;
-    }
-    if (event.code === 'KeyH') {
-      withPreventDefault(toggleHermits)(event);
-      return;
-    }
-
-    if (isContentEditable) {
-      if (event.code === 'KeyF') {
-        withPreventDefault(handleToggleCrucial)(event);
-        return;
-      }
-      if (event.code === 'KeyQ') {
-        withPreventDefault(handleToggleMode)(event);
-        return;
-      }
-      if (event.code === 'KeyE' && mode === InteractionMode.edit) {
-        withPreventDefault(toggleEdgeType)(event);
-        return;
-      }
-      if (event.code === 'KeyR') {
-        withPreventDefault(handleCreateCst)(event);
-        return;
-      }
-      if (event.code === 'KeyV') {
-        withPreventDefault(handelFastEdit)(event);
-        return;
-      }
-      if (event.code === 'Delete' || event.code === 'Backquote') {
-        withPreventDefault(handleDeleteSelected)(event);
-        return;
-      }
-    }
-  }
-
   return (
     <div
       ref={flowRef}
@@ -561,11 +356,7 @@ export function TGFlow() {
       tabIndex={-1}
       onKeyDown={handleKeyDown}
     >
-      <ToolbarTermGraph
-        className='cc-tab-tools'
-        onDeleteSelected={handleDeleteSelected}
-        onToggleCrucial={handleToggleCrucial}
-      />
+      <ToolbarTermGraph className='cc-tab-tools' graph={filteredGraph} />
 
       <div className='absolute z-pop top-24 sm:top-16 left-2 sm:left-3 w-54 flex flex-col pointer-events-none'>
         <span className='px-2 pb-1 select-none whitespace-nowrap backdrop-blur-xs rounded-xl w-fit'>
