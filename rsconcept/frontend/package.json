@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "generate": "lezer-generator src/features/rsform/components/rs-input/rslang/rslang-fast.grammar -o src/features/rsform/components/rs-input/rslang/parser.ts && lezer-generator src/features/rsform/components/rs-input/rslang/rslang-ast.grammar -o src/features/rsform/components/rs-input/rslang/parser-ast.ts && lezer-generator src/features/rsform/components/refs-input/parse/refs-text.grammar -o src/features/rsform/components/refs-input/parse/parser.ts && lezer-generator src/features/ai/components/prompt-input/parse/prompt-text.grammar -o src/features/ai/components/prompt-input/parse/parser.ts",
-    "test": "jest",
+    "test": "vitest",
     "test:e2e": "playwright test",
     "dev": "vite --host",
     "build": "tsc && vite build",
@@ -56,7 +56,6 @@
     "@lezer/generator": "^1.8.0",
     "@playwright/test": "^1.56.1",
     "@tailwindcss/vite": "^4.1.17",
-    "@types/jest": "^30.0.0",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
@@ -71,31 +70,14 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "globals": "^16.5.0",
-    "jest": "^30.2.0",
     "stylelint": "^16.25.0",
     "stylelint-config-recommended": "^17.0.0",
     "stylelint-config-standard": "^39.0.1",
     "stylelint-config-tailwindcss": "^1.0.0",
     "tailwindcss": "^4.0.7",
-    "ts-jest": "^29.4.5",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.46.4",
-    "vite": "^7.2.2"
-  },
-  "jest": {
-    "preset": "ts-jest",
-    "testEnvironment": "node",
-    "testPathIgnorePatterns": [
-      "<rootDir>/tests/"
-    ],
-    "transform": {
-      "node_modules/variables/.+\\.(j|t)sx?$": "ts-jest"
-    },
-    "transformIgnorePatterns": [
-      "node_modules/(?!variables/.*)"
-    ],
-    "moduleNameMapper": {
-      "^@/(.*)$": "<rootDir>/src/$1"
-    }
+    "vite": "^7.2.2",
+    "vitest": "^4.0.12"
   }
 }

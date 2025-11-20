@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { Case, Grammeme, NounGrams, Plurality, VerbGrams } from './language';
 import {
   getCompatibleGrams,
@@ -9,7 +11,7 @@ import {
 } from './language-api';
 
 describe('Testing wordform equality', () => {
-  test('empty input', () => {
+  it('empty input', () => {
     expect(wordFormEquals({ text: '', grams: [] }, { text: '', grams: [] })).toEqual(true);
     expect(wordFormEquals({ text: '', grams: [] }, { text: '11', grams: [] })).toEqual(true);
     expect(wordFormEquals({ text: '11', grams: [] }, { text: '', grams: [] })).toEqual(true);
@@ -20,7 +22,7 @@ describe('Testing wordform equality', () => {
     expect(wordFormEquals({ text: '11', grams: [] }, { text: '11', grams: ['nomn'] })).toEqual(false);
   });
 
-  test('regular grammemes', () => {
+  it('regular grammemes', () => {
     expect(wordFormEquals({ text: '', grams: ['nomn'] }, { text: '', grams: ['nomn'] })).toEqual(true);
     expect(wordFormEquals({ text: '', grams: ['nomn'] }, { text: '', grams: ['sing'] })).toEqual(false);
     expect(wordFormEquals({ text: '', grams: ['nomn', 'sing'] }, { text: '', grams: ['nomn', 'sing'] })).toEqual(true);
@@ -43,7 +45,7 @@ describe('Testing wordform equality', () => {
 });
 
 describe('Testing grammeme ordering', () => {
-  test('regular grammemes', () => {
+  it('regular grammemes', () => {
     expect(grammemeCompare('NOUN', 'NOUN')).toEqual(0);
     expect(grammemeCompare('NOUN', Grammeme.NOUN)).toEqual(0);
 
@@ -65,42 +67,42 @@ describe('Testing grammeme ordering', () => {
 });
 
 describe('Testing grammeme parsing', () => {
-  test('empty input', () => {
+  it('empty input', () => {
     expect(parseGrammemes('')).toStrictEqual([]);
     expect(parseGrammemes(' ')).toStrictEqual([]);
     expect(parseGrammemes(' , ')).toStrictEqual([]);
   });
 
-  test('regular grammemes', () => {
+  it('regular grammemes', () => {
     expect(parseGrammemes('NOUN')).toStrictEqual([Grammeme.NOUN]);
     expect(parseGrammemes('sing,nomn')).toStrictEqual([Grammeme.sing, Grammeme.nomn]);
     expect(parseGrammemes('nomn,sing')).toStrictEqual([Grammeme.sing, Grammeme.nomn]);
   });
 
-  test('custom grammemes', () => {
+  it('custom grammemes', () => {
     expect(parseGrammemes('nomn,invalid,sing')).toStrictEqual([Grammeme.sing, Grammeme.nomn, 'invalid']);
     expect(parseGrammemes('invalid,test')).toStrictEqual(['invalid', 'test']);
   });
 });
 
 describe('Testing grammeme compatibility', () => {
-  test('empty input', () => {
+  it('empty input', () => {
     expect(getCompatibleGrams([])).toStrictEqual([...VerbGrams, ...NounGrams]);
   });
 
-  test('regular grammemes', () => {
+  it('regular grammemes', () => {
     expect(getCompatibleGrams([Grammeme.NOUN])).toStrictEqual([...Case, ...Plurality]);
   });
 });
 
 describe('Testing reference parsing', () => {
-  test('entity reference', () => {
+  it('entity reference', () => {
     expect(parseEntityReference('@{ X1 | NOUN,sing }')).toStrictEqual({ entity: 'X1', form: 'NOUN,sing' });
     expect(parseEntityReference('@{X1|NOUN,sing}')).toStrictEqual({ entity: 'X1', form: 'NOUN,sing' });
     expect(parseEntityReference('@{X111|NOUN,sing}')).toStrictEqual({ entity: 'X111', form: 'NOUN,sing' });
   });
 
-  test('syntactic reference', () => {
+  it('syntactic reference', () => {
     expect(parseSyntacticReference('@{1|test test}')).toStrictEqual({ offset: 1, nominal: 'test test' });
     expect(parseSyntacticReference('@{101|test test}')).toStrictEqual({ offset: 101, nominal: 'test test' });
     expect(parseSyntacticReference('@{-1|test test}')).toStrictEqual({ offset: -1, nominal: 'test test' });

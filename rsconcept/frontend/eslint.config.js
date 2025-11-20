@@ -45,6 +45,7 @@ export default [
       '**/public/**',
       '**/dist/**',
       'vite.config.ts',
+      'vitest.config.ts',
       'eslint.config.js',
       'playwright.config.ts'
     ]

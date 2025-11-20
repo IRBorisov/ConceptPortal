@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { AccessPolicy, type ILibraryItem, LibraryItemType } from '../backend/types';
 
 import { LocationHead } from './library';
@@ -34,13 +36,13 @@ describe('Testing matching LibraryItem', () => {
     visible: true
   };
 
-  test('empty input', () => {
+  it('empty input', () => {
     expect(matchLibraryItem(itemEmpty, '')).toEqual(true);
     expect(matchLibraryItem(itemEmpty, '12')).toEqual(false);
     expect(matchLibraryItem(itemEmpty, ' ')).toEqual(false);
   });
 
-  test('regular input', () => {
+  it('regular input', () => {
     expect(matchLibraryItem(item1, item1.title)).toEqual(true);
     expect(matchLibraryItem(item1, item1.alias)).toEqual(true);
     expect(matchLibraryItem(item1, item1.title + '@invalid')).toEqual(false);
@@ -71,6 +73,7 @@ const validateLocationData = [
   ['/S/1234', 'true'],
   ['/S/1/!asdf/тест тест', 'true']
 ];
+
 describe('Testing location validation', () => {
   it.each(validateLocationData)('isValid %p', (input: string, expected: string) => {
     const result = validateLocation(input);

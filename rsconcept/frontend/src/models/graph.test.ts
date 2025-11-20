@@ -1,12 +1,14 @@
+import { describe, expect, it } from 'vitest';
+
 import { Graph } from './graph';
 
 describe('Testing Graph construction', () => {
-  test('empty Graph should be empty', () => {
+  it('empty Graph should be empty', () => {
     const graph = new Graph();
     expect(graph.nodes.size).toBe(0);
   });
 
-  test('adding edges should create nodes', () => {
+  it('adding edges should create nodes', () => {
     const graph = new Graph();
     graph.addEdge(13, 37);
     expect([...graph.nodes.keys()]).toStrictEqual([13, 37]);
@@ -15,13 +17,13 @@ describe('Testing Graph construction', () => {
     expect([...graph.nodes.keys()]).toStrictEqual([13, 37, 38]);
   });
 
-  test('creating from array', () => {
+  it('creating from array', () => {
     const graph = new Graph([[1, 2], [3], [4, 1]]);
     expect([...graph.nodes.keys()]).toStrictEqual([1, 2, 3, 4]);
     expect([...graph.nodes.get(1)!.outputs]).toStrictEqual([2]);
   });
 
-  test('cloning', () => {
+  it('cloning', () => {
     const graph = new Graph([[1, 2], [3], [4, 1]]);
     const clone = graph.clone();
     expect([...graph.nodes.keys()]).toStrictEqual([...clone.nodes.keys()]);
@@ -34,7 +36,7 @@ describe('Testing Graph construction', () => {
 });
 
 describe('Testing Graph editing', () => {
-  test('removing edges should not remove nodes', () => {
+  it('removing edges should not remove nodes', () => {
     const graph = new Graph([[1, 2], [3], [4, 1]]);
     expect(graph.hasEdge(4, 1)).toBeTruthy();
 
@@ -45,7 +47,7 @@ describe('Testing Graph editing', () => {
     expect(graph.hasEdge(4, 1)).toBeFalsy();
   });
 
-  test('folding node redirects edges', () => {
+  it('folding node redirects edges', () => {
     const graph = new Graph([
       [1, 3],
       [2, 3],
@@ -61,7 +63,7 @@ describe('Testing Graph editing', () => {
     expect(graph.hasEdge(2, 5)).toBeTruthy();
   });
 
-  test('folding a non-existent node should not change the graph', () => {
+  it('folding a non-existent node should not change the graph', () => {
     const graph = new Graph([
       [1, 2],
       [2, 3]
@@ -74,7 +76,7 @@ describe('Testing Graph editing', () => {
     expect(graph.hasEdge(2, 3)).toBeTruthy();
   });
 
-  test('folding a node with no inputs', () => {
+  it('folding a node with no inputs', () => {
     const graph = new Graph([
       [1, 2],
       [1, 3]
@@ -86,7 +88,7 @@ describe('Testing Graph editing', () => {
     expect(graph.hasNode(3)).toBeTruthy();
   });
 
-  test('folding a node with no outputs', () => {
+  it('folding a node with no outputs', () => {
     const graph = new Graph([
       [1, 3],
       [2, 3]
@@ -100,13 +102,13 @@ describe('Testing Graph editing', () => {
     expect(graph.nodes.get(2)!.outputs.length).toBe(0);
   });
 
-  test('removing isolated nodes', () => {
+  it('removing isolated nodes', () => {
     const graph = new Graph([[9, 1], [9, 2], [2, 1], [4, 3], [5, 9], [7], [8]]);
     graph.removeIsolated();
     expect([...graph.nodes.keys()]).toStrictEqual([9, 1, 2, 4, 3, 5]);
   });
 
-  test('transitive reduction', () => {
+  it('transitive reduction', () => {
     const graph = new Graph([
       [1, 3],
       [1, 2],
@@ -118,13 +120,13 @@ describe('Testing Graph editing', () => {
     expect(graph.hasEdge(1, 3)).toBeFalsy();
   });
 
-  test('transitive reduction - empty graph', () => {
+  it('transitive reduction - empty graph', () => {
     const graph = new Graph();
     expect(() => graph.transitiveReduction()).not.toThrow();
     expect(graph.nodes.size).toBe(0);
   });
 
-  test('transitive reduction - single node', () => {
+  it('transitive reduction - single node', () => {
     const graph = new Graph([[1]]);
     graph.transitiveReduction();
     expect(graph.hasNode(1)).toBeTruthy();
@@ -132,7 +134,7 @@ describe('Testing Graph editing', () => {
     expect(graph.nodes.get(1)!.inputs.length).toBe(0);
   });
 
-  test('transitive reduction - linear chain', () => {
+  it('transitive reduction - linear chain', () => {
     const graph = new Graph([
       [1, 2],
       [2, 3],
@@ -152,7 +154,7 @@ describe('Testing Graph editing', () => {
     expect(graph.hasEdge(3, 5)).toBeFalsy();
   });
 
-  test('transitive reduction - diamond pattern', () => {
+  it('transitive reduction - diamond pattern', () => {
     const graph = new Graph([
       [1, 2],
       [1, 3],
@@ -167,7 +169,7 @@ describe('Testing Graph editing', () => {
     expect(graph.hasEdge(1, 4)).toBeFalsy();
   });
 
-  test('transitive reduction - complex transitive relationships', () => {
+  it('transitive reduction - complex transitive relationships', () => {
     const graph = new Graph([
       [6, 7],
       [5, 7],
@@ -195,7 +197,7 @@ describe('Testing Graph editing', () => {
     expect(graph.hasEdge(4, 7)).toBeFalsy();
   });
 
-  test('transitive reduction - disconnected components', () => {
+  it('transitive reduction - disconnected components', () => {
     const graph = new Graph([
       [1, 2],
       [2, 3],
@@ -211,7 +213,7 @@ describe('Testing Graph editing', () => {
     expect(graph.hasEdge(4, 6)).toBeFalsy();
   });
 
-  test('transitive reduction - multiple paths same length', () => {
+  it('transitive reduction - multiple paths same length', () => {
     const graph = new Graph([
       [3, 4],
       [2, 4],
@@ -225,7 +227,7 @@ describe('Testing Graph editing', () => {
     expect(graph.hasEdge(3, 4)).toBeTruthy();
   });
 
-  test('transitive reduction - already reduced graph', () => {
+  it('transitive reduction - already reduced graph', () => {
     const graph = new Graph([
       [1, 2],
       [2, 3]
@@ -241,7 +243,7 @@ describe('Testing Graph editing', () => {
     expect(edgeCount).toBe(originalEdgeCount);
   });
 
-  test('transitive reduction - preserves all nodes', () => {
+  it('transitive reduction - preserves all nodes', () => {
     const graph = new Graph([
       [1, 2],
       [1, 3],
@@ -257,7 +259,7 @@ describe('Testing Graph editing', () => {
 });
 
 describe('Testing Graph sort', () => {
-  test('topological order', () => {
+  it('topological order', () => {
     const graph = new Graph([
       [9, 1],
       [9, 2],
@@ -270,7 +272,7 @@ describe('Testing Graph sort', () => {
 });
 
 describe('Testing Graph queries', () => {
-  test('expand outputs', () => {
+  it('expand outputs', () => {
     const graph = new Graph([
       [1, 2], //
       [2, 3],
@@ -289,7 +291,7 @@ describe('Testing Graph queries', () => {
     expect(graph.expandAllOutputs([2, 5])).toStrictEqual([3, 6, 1]);
   });
 
-  test('expand into unique array', () => {
+  it('expand into unique array', () => {
     const graph = new Graph([
       [1, 2],
       [1, 3],
@@ -299,7 +301,7 @@ describe('Testing Graph queries', () => {
     expect(graph.expandAllOutputs([1])).toStrictEqual([2, 3, 5]);
   });
 
-  test('expand inputs', () => {
+  it('expand inputs', () => {
     const graph = new Graph([
       [1, 2], //
       [2, 3],
@@ -316,7 +318,7 @@ describe('Testing Graph queries', () => {
     expect(graph.expandAllInputs([6])).toStrictEqual([5, 2, 1]);
   });
 
-  test('maximize part', () => {
+  it('maximize part', () => {
     const graph = new Graph([
       [1, 7], //
       [1, 3],
@@ -336,14 +338,14 @@ describe('Testing Graph queries', () => {
     expect(graph.maximizePart([3, 1])).toStrictEqual([3, 1, 7, 5, 6]);
   });
 
-  test('find elementary cycle', () => {
+  it('find elementary cycle', () => {
     const graph = new Graph([
       [1, 1] //
     ]);
     expect(graph.findCycle()).toStrictEqual([1, 1]);
   });
 
-  test('find cycle acyclic', () => {
+  it('find cycle acyclic', () => {
     const graph = new Graph([
       [1, 2], //
       [2]
@@ -351,7 +353,7 @@ describe('Testing Graph queries', () => {
     expect(graph.findCycle()).toStrictEqual(null);
   });
 
-  test('find cycle typical', () => {
+  it('find cycle typical', () => {
     const graph = new Graph([
       [1, 2], //
       [1, 4],
@@ -363,7 +365,7 @@ describe('Testing Graph queries', () => {
     expect(graph.findCycle()).toStrictEqual([1, 2, 3, 1]);
   });
 
-  test('find cycle acyclic 2 components', () => {
+  it('find cycle acyclic 2 components', () => {
     const graph = new Graph([
       [0, 1], //
       [2, 3],

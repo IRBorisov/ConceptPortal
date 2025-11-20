@@ -26,11 +26,11 @@
 
 .rf-handle {
   position: absolute;
-  width: 100% !important;
-  height: 100% !important;
+  width: calc(100% + 6px) !important;
+  height: calc(100% + 6px) !important;
   opacity: 0;
 
-  top: 0 !important;
+  top: -3px !important;
 }
 
 .rf-handle-target {

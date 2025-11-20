@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { printTree } from '@/utils/codemirror';
 
 import { parser } from './parser';
@@ -47,10 +49,12 @@ const testData = [
 ];
 
 describe('Testing RSParser', () => {
-  it.each(testData)('Parse %p', (input: string, expectedTree: string) => {
-    // NOTE: use strict parser to determine exact error position
-    // const tree = parser.configure({strict: true}).parse(input);
-    const tree = parser.parse(input);
-    expect(printTree(tree)).toBe(expectedTree);
+  testData.forEach(([input, expectedTree]) => {
+    it(`Parse "${input}"`, () => {
+      // NOTE: use strict parser to determine exact error position
+      // const tree = parser.configure({strict: true}).parse(input);
+      const tree = parser.parse(input);
+      expect(printTree(tree)).toBe(expectedTree);
+    });
   });
 });

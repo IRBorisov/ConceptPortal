@@ -1,12 +1,14 @@
+import { describe, expect, it } from 'vitest';
+
 import { FolderTree } from './folder-tree';
 
 describe('Testing Tree construction', () => {
-  test('empty Tree should be empty', () => {
+  it('empty Tree should be empty', () => {
     const tree = new FolderTree();
     expect(tree.roots.size).toBe(0);
   });
 
-  test('constructing from paths', () => {
+  it('constructing from paths', () => {
     const tree = new FolderTree(['/S', '/S/project1/123', '/U']);
     expect(tree.roots.size).toBe(2);
     expect(tree.roots.get('S')?.children.size).toBe(1);
@@ -14,12 +16,12 @@ describe('Testing Tree construction', () => {
 });
 
 describe('Testing Tree editing', () => {
-  test('add invalid path', () => {
+  it('add invalid path', () => {
     const tree = new FolderTree();
     expect(() => tree.addPath('invalid')).toThrow(Error);
   });
 
-  test('add valid path', () => {
+  it('add valid path', () => {
     const tree = new FolderTree();
     const node = tree.addPath('/S/test');
     expect(node.getPath()).toBe('/S/test');
@@ -31,7 +33,7 @@ describe('Testing Tree editing', () => {
     expect(node.parent?.filesTotal).toBe(1);
   });
 
-  test('incrementing counter', () => {
+  it('incrementing counter', () => {
     const tree = new FolderTree();
     const node1 = tree.addPath('/S/test', 0);
     expect(node1.filesInside).toBe(0);

@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { printTree } from '@/utils/codemirror';
 
 import { parser } from './parser';
@@ -21,10 +23,11 @@ const testData = [
   ['!err! {{variable}} word', '[Text[Error][Variable][Filler]]']
 ] as const;
 
-/** Test prompt grammar parser with various prompt inputs */
 describe('Prompt grammar parser', () => {
-  it.each(testData)('Parse %p', (input: string, expectedTree: string) => {
-    const tree = parser.parse(input);
-    expect(printTree(tree)).toBe(expectedTree);
+  testData.forEach(([input, expectedTree]) => {
+    it(`Parse "${input}"`, () => {
+      const tree = parser.parse(input);
+      expect(printTree(tree)).toBe(expectedTree);
+    });
   });
 });
