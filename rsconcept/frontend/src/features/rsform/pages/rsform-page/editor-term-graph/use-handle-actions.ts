@@ -276,6 +276,7 @@ export function useHandleActions(graph: Graph<number>) {
     handleToggleEdgeType: toggleEdgeType,
     handleToggleText: toggleText,
     handleToggleClustering: toggleClustering,
-    handleToggleHermits: toggleHermits
+    handleToggleHermits: toggleHermits,
+    handelFastEdit
   };
 }

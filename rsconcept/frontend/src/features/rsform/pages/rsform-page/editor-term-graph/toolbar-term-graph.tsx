@@ -13,6 +13,7 @@ import {
   IconClusteringOff,
   IconCrucial,
   IconDestroy,
+  IconEdit2,
   IconFilter,
   IconFitImage,
   IconFocus,
@@ -59,7 +60,8 @@ export function ToolbarTermGraph({ className, graph }: ToolbarTermGraphProps) {
     handleDeleteSelected,
     handleToggleEdgeType,
     handleToggleText,
-    handleToggleClustering
+    handleToggleClustering,
+    handelFastEdit
   } = useHandleActions(graph);
 
   const showParams = useDialogsStore(state => state.showGraphParams);
@@ -127,25 +129,17 @@ export function ToolbarTermGraph({ className, graph }: ToolbarTermGraphProps) {
           }
           onClick={handleToggleClustering}
         />
+        <MiniButton
+          icon={<IconTypeGraph size='1.25rem' className='icon-primary' />}
+          title='Граф ступеней'
+          onClick={handleShowTypeGraph}
+        />
 
         <BadgeHelp topic={HelpTopic.UI_GRAPH_TERM} contentClass='sm:max-w-160' offset={4} />
       </div>
       <div className='cc-icons items-start'>
         {focusCst ? <ToolbarFocusedCst resetFocus={() => setFocus(null)} /> : null}
-        {!focusCst && mode === InteractionMode.explore ? (
-          <ToolbarGraphSelection
-            tipHotkeys
-            graph={graph}
-            isCore={cstID => {
-              const cst = schema.cstByID.get(cstID);
-              return !!cst && isBasicConcept(cst.cst_type);
-            }}
-            isCrucial={cstID => schema.cstByID.get(cstID)?.crucial ?? false}
-            isInherited={cstID => schema.cstByID.get(cstID)?.is_inherited ?? false}
-            value={selectedCst}
-            onChange={handleSetSelected}
-          />
-        ) : null}
+
         {isContentEditable ? (
           <MiniButton
             titleHtml={prepareTooltip('Ключевая конституента', 'F')}
@@ -164,11 +158,12 @@ export function ToolbarTermGraph({ className, graph }: ToolbarTermGraphProps) {
             }
           />
         ) : null}
-        {isContentEditable && mode === InteractionMode.edit ? (
+        {isContentEditable ? (
           <MiniButton
             titleHtml={prepareTooltip(labelEdgeType(edgeType), 'E')}
             onClick={handleToggleEdgeType}
             icon={<IconEdgeType value={edgeType} size='1.25rem' className='icon-primary' />}
+            disabled={mode !== InteractionMode.edit}
           />
         ) : null}
         {isContentEditable ? (
@@ -181,19 +176,35 @@ export function ToolbarTermGraph({ className, graph }: ToolbarTermGraphProps) {
         ) : null}
         {isContentEditable ? (
           <MiniButton
+            titleHtml={prepareTooltip('Редактировать конституенту', 'V')}
+            icon={<IconEdit2 size='1.25rem' className='icon-primary' />}
+            onClick={handelFastEdit}
+            disabled={isProcessing || selectedCst.length !== 1}
+          />
+        ) : null}
+        {isContentEditable ? (
+          <MiniButton
             titleHtml={prepareTooltip('Удалить выбранные', 'Delete, `')}
             icon={<IconDestroy size='1.25rem' className='icon-red' />}
             onClick={handleDeleteSelected}
             disabled={!canDeleteSelected || isProcessing}
           />
         ) : null}
-
-        <MiniButton
-          icon={<IconTypeGraph size='1.25rem' className='icon-primary' />}
-          title='Граф ступеней'
-          onClick={handleShowTypeGraph}
-        />
       </div>
+      {!focusCst && mode === InteractionMode.explore ? (
+        <ToolbarGraphSelection
+          tipHotkeys
+          graph={graph}
+          isCore={cstID => {
+            const cst = schema.cstByID.get(cstID);
+            return !!cst && isBasicConcept(cst.cst_type);
+          }}
+          isCrucial={cstID => schema.cstByID.get(cstID)?.crucial ?? false}
+          isInherited={cstID => schema.cstByID.get(cstID)?.is_inherited ?? false}
+          value={selectedCst}
+          onChange={handleSetSelected}
+        />
+      ) : null}
       {focusCst ? <FocusLabel label={focusCst.alias} /> : null}
     </div>
   );
