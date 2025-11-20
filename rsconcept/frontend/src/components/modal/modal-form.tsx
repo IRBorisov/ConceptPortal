@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
 import clsx from 'clsx';
 
 import { type HelpTopic } from '@/features/help';
@@ -73,6 +74,14 @@ export function ModalForm({
   ...restProps
 }: React.PropsWithChildren<ModalFormProps>) {
   const hideDialog = useDialogsStore(state => state.hideDialog);
+
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+  useEffect(() => {
+    previousFocusRef.current = document.activeElement as HTMLElement | null;
+    return () => {
+      previousFocusRef.current?.focus();
+    };
+  }, []);
 
   function handleCancel() {
     onCancel?.();

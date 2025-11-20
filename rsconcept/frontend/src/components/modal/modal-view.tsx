@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
 import clsx from 'clsx';
 
 import { BadgeHelp } from '@/features/help/components/badge-help';
@@ -35,6 +36,14 @@ export function ModalView({
 }: React.PropsWithChildren<ModalViewProps>) {
   const hideDialog = useDialogsStore(state => state.hideDialog);
   useEscapeKey(hideDialog);
+
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+  useEffect(() => {
+    previousFocusRef.current = document.activeElement as HTMLElement | null;
+    return () => {
+      previousFocusRef.current?.focus();
+    };
+  }, []);
 
   return (
     <div className='cc-modal-wrapper'>
