@@ -89,10 +89,26 @@ export function TGFlow() {
   const hiddenHeight = useFitHeight(isSmall ? '15rem + 2px' : '13.5rem + 2px', '4rem');
   const { handleKeyDown } = useHandleActions(filteredGraph);
 
+  const suppressRFSelection = useRef(false);
   function onSelectionChange({ nodes, edges }: { nodes: Node[]; edges: Edge[] }) {
-    const ids = nodes.map(node => Number(node.id));
-    setSelectedCst(prev => [...prev.filter(nodeID => !filteredGraph.hasNode(nodeID)), ...ids]);
-    setSelectedEdges(edges.map(edge => edge.id));
+    if (suppressRFSelection.current) {
+      return;
+    }
+    const selectedNodes = nodes.map(node => Number(node.id));
+    const selectedEdges = edges.map(edge => edge.id);
+
+    setSelectedCst(prev => {
+      if (prev.length === selectedNodes.length && prev.every((id, i) => id === selectedNodes[i])) {
+        return prev;
+      }
+      return [...prev.filter(nodeID => !filteredGraph.hasNode(nodeID)), ...selectedNodes];
+    });
+    setSelectedEdges(prev => {
+      if (prev.length === selectedEdges.length && prev.every((id, i) => id === selectedEdges[i])) {
+        return prev;
+      }
+      return selectedEdges;
+    });
   }
   useOnSelectionChange({
     onChange: onSelectionChange
@@ -215,9 +231,10 @@ export function TGFlow() {
     setTimeout(() => fitView(flowOptions.fitViewOptions), PARAMETER.refreshTimeout);
   }, [schema.id, filter.noText, filter.graphType, focusCst, fitView]);
 
+  const readyForUpdate = nodes.length === filteredGraph.nodes.size;
   const prevSelectedNodes = useRef<number[]>([]);
   useEffect(() => {
-    if (!viewportInitialized) {
+    if (!viewportInitialized || !readyForUpdate) {
       return;
     }
     const hasChanged =
@@ -227,6 +244,8 @@ export function TGFlow() {
       return;
     }
 
+    suppressRFSelection.current = true;
+
     prevSelectedNodes.current = selectedCst;
     setNodes(prev =>
       prev.map(node => ({
@@ -234,16 +253,26 @@ export function TGFlow() {
         selected: selectedCst.includes(Number(node.id))
       }))
     );
-  }, [viewportInitialized, selectedCst, setNodes]);
+
+    const frame = requestAnimationFrame(() => {
+      suppressRFSelection.current = false;
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [viewportInitialized, selectedCst, setNodes, readyForUpdate]);
 
   const prevSelectedEdges = useRef<string[]>([]);
   useEffect(() => {
+    if (!viewportInitialized || !readyForUpdate) {
+      return;
+    }
     const hasChanged =
       prevSelectedEdges.current.length !== selectedEdges.length ||
       prevSelectedEdges.current.some((id, i) => id !== selectedEdges[i]);
     if (!hasChanged) {
       return;
     }
+
+    suppressRFSelection.current = true;
 
     prevSelectedEdges.current = selectedEdges;
     setEdges(prev =>
@@ -252,7 +281,12 @@ export function TGFlow() {
         selected: selectedEdges.includes(edge.id)
       }))
     );
-  }, [selectedEdges, setEdges]);
+
+    const frame = requestAnimationFrame(() => {
+      suppressRFSelection.current = false;
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [selectedEdges, setEdges, readyForUpdate, viewportInitialized]);
 
   function handleNodeContextMenu(event: React.MouseEvent<Element>, node: TGNodeData) {
     event.preventDefault();

@@ -93,7 +93,7 @@ export function EditorConstituenta() {
     switch (code) {
       case 'ArrowUp': moveUp(); return true;
       case 'ArrowDown': moveDown(); return true;
-      case 'KeyV': cloneCst(); return true;
+      case 'KeyV': void cloneCst(); return true;
     }
     return false;
   }

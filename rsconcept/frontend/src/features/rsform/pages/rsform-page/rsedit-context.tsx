@@ -45,9 +45,9 @@ interface IRSEditContext {
 
   moveUp: () => void;
   moveDown: () => void;
-  createCst: (type: CstType, skipDialog: boolean, definition?: string) => void;
-  createCstDefault: () => void;
-  cloneCst: () => void;
+  createCst: (type?: CstType, definition?: string) => Promise<number>;
+  promptCreateCst: (type?: CstType, definition?: string) => Promise<number | null>;
+  cloneCst: () => Promise<number>;
   promptDeleteSelected: () => void;
   promptTemplate: () => void;
 }

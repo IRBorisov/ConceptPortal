@@ -42,7 +42,7 @@ export function ToolbarRSList({ className }: ToolbarRSListProps) {
     navigateOss,
     deselectAll,
     createCst,
-    createCstDefault,
+    promptCreateCst,
     cloneCst,
     canDeleteSelected,
     promptDeleteSelected: promptDeleteCst,
@@ -113,7 +113,7 @@ export function ToolbarRSList({ className }: ToolbarRSListProps) {
               key={`${prefixes.csttype_list}${typeStr}`}
               text={labelCstType(typeStr as CstType)}
               icon={<IconCstType value={typeStr as CstType} size='1.25rem' />}
-              onClick={() => createCst(typeStr as CstType, true)}
+              onClick={() => void createCst(typeStr as CstType)}
               titleHtml={getCstTypeShortcut(typeStr as CstType)}
             />
           ))}
@@ -123,14 +123,14 @@ export function ToolbarRSList({ className }: ToolbarRSListProps) {
         titleHtml={prepareTooltip('Добавить новую конституенту...', 'Alt + `')}
         aria-label='Добавить новую конституенту'
         icon={<IconNewItem size='1.25rem' className='icon-green' />}
-        onClick={createCstDefault}
+        onClick={() => void promptCreateCst()}
         disabled={isProcessing}
       />
       <MiniButton
         titleHtml={prepareTooltip('Клонировать конституенту', 'Alt + V')}
         aria-label='Клонировать конституенту'
         icon={<IconClone size='1.25rem' className='icon-green' />}
-        onClick={cloneCst}
+        onClick={() => void cloneCst()}
         disabled={isProcessing || selectedCst.length !== 1}
       />
       <MiniButton

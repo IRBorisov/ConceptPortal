@@ -223,7 +223,7 @@ export const RSEditState = ({
     });
   }
 
-  function createCst(type: CstType | null, skipDialog: boolean, definition?: string) {
+  function promptCreateCst(type?: CstType, definition?: string): Promise<number | null> {
     const targetType = type ?? activeCst?.cst_type ?? CstType.BASE;
     const data: ICreateConstituentaDTO = {
       insert_after: activeCst?.id ?? null,
@@ -236,18 +236,47 @@ export const RSEditState = ({
       crucial: false,
       term_forms: []
     };
-    if (skipDialog) {
-      void cstCreate({ itemID: schema.id, data }).then(onCreateCst);
-    } else {
-      showCreateCst({ schemaID: schema.id, onCreate: onCreateCst, initial: data });
-    }
+    return new Promise(resolve => {
+      showCreateCst({
+        schemaID: schema.id,
+        initial: data,
+
+        onCreate: newCst => {
+          onCreateCst(newCst);
+          resolve(newCst.id);
+        },
+
+        onCancel: () => {
+          resolve(null);
+        }
+      });
+    });
+  }
+
+  function createCst(type?: CstType, definition?: string): Promise<number> {
+    const targetType = type ?? activeCst?.cst_type ?? CstType.BASE;
+    const data: ICreateConstituentaDTO = {
+      insert_after: activeCst?.id ?? null,
+      cst_type: targetType,
+      alias: generateAlias(targetType, schema),
+      term_raw: '',
+      definition_formal: definition ?? '',
+      definition_raw: '',
+      convention: '',
+      crucial: false,
+      term_forms: []
+    };
+    return cstCreate({ itemID: schema.id, data }).then(newCst => {
+      onCreateCst(newCst);
+      return newCst.id;
+    });
   }
 
   function cloneCst() {
     if (!activeCst) {
-      return;
+      throw new Error('No active cst');
     }
-    void cstCreate({
+    return cstCreate({
       itemID: schema.id,
       data: {
         insert_after: activeCst.id,
@@ -260,7 +289,10 @@ export const RSEditState = ({
         crucial: activeCst.crucial,
         term_forms: activeCst.term_forms
       }
-    }).then(onCreateCst);
+    }).then(newCst => {
+      onCreateCst(newCst);
+      return newCst.id;
+    });
   }
 
   function promptDeleteSelected() {
@@ -388,9 +420,9 @@ export const RSEditState = ({
         moveUp,
         moveDown,
         createCst,
-        createCstDefault: () => createCst(null, false),
+        promptCreateCst,
         cloneCst,
-        promptDeleteSelected: promptDeleteSelected,
+        promptDeleteSelected,
 
         promptTemplate
       }}

@@ -26,7 +26,7 @@ export function EditorRSList() {
     deselectAll,
     setSelectedCst,
     createCst,
-    createCstDefault,
+    promptCreateCst,
     moveUp,
     moveDown,
     cloneCst,
@@ -81,22 +81,22 @@ export function EditorRSList() {
       switch (code) {
         case 'ArrowUp': moveUp(); return true;
         case 'ArrowDown':  moveDown(); return true;
-        case 'KeyV':    cloneCst(); return true;
+        case 'KeyV':    void cloneCst(); return true;
       }
     }
     // prettier-ignore
     switch (code) {
-      case 'Backquote': createCstDefault(); return true;
+      case 'Backquote': void promptCreateCst(); return true;
       
-      case 'Digit1':    createCst(CstType.BASE, true); return true;
-      case 'Digit2':    createCst(CstType.STRUCTURED, true); return true;
-      case 'Digit3':    createCst(CstType.TERM, true); return true;
-      case 'Digit4':    createCst(CstType.AXIOM, true); return true;
-      case 'KeyQ':      createCst(CstType.FUNCTION, true); return true;
-      case 'KeyW':      createCst(CstType.PREDICATE, true); return true;
-      case 'Digit5':    createCst(CstType.CONSTANT, true); return true;
-      case 'Digit6':    createCst(CstType.THEOREM, true); return true;
-      case 'Digit7':    createCst(CstType.NOMINAL, true); return true;
+      case 'Digit1':    void createCst(CstType.BASE); return true;
+      case 'Digit2':    void createCst(CstType.STRUCTURED); return true;
+      case 'Digit3':    void createCst(CstType.TERM); return true;
+      case 'Digit4':    void createCst(CstType.AXIOM); return true;
+      case 'KeyQ':      void createCst(CstType.FUNCTION); return true;
+      case 'KeyW':      void createCst(CstType.PREDICATE); return true;
+      case 'Digit5':    void createCst(CstType.CONSTANT); return true;
+      case 'Digit6':    void createCst(CstType.THEOREM); return true;
+      case 'Digit7':    void createCst(CstType.NOMINAL); return true;
     }
     return false;
   }
@@ -138,7 +138,7 @@ export function EditorRSList() {
         selected={rowSelection}
         setSelected={handleRowSelection}
         onEdit={navigateCst}
-        onCreateNew={createCstDefault}
+        onCreateNew={() => void promptCreateCst()}
       />
     </div>
   );

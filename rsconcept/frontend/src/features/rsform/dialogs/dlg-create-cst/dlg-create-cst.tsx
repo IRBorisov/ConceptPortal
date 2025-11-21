@@ -23,10 +23,11 @@ export interface DlgCreateCstProps {
   initial: ICreateConstituentaDTO;
   schemaID: number;
   onCreate: (data: RO<IConstituentaBasicsDTO>) => void;
+  onCancel?: () => void;
 }
 
 export function DlgCreateCst() {
-  const { initial, schemaID, onCreate } = useDialogsStore(state => state.props as DlgCreateCstProps);
+  const { initial, schemaID, onCreate, onCancel } = useDialogsStore(state => state.props as DlgCreateCstProps);
   const { createConstituenta: cstCreate } = useCreateConstituenta();
   const { schema } = useRSFormSuspense({ itemID: schemaID });
 
@@ -55,6 +56,7 @@ export function DlgCreateCst() {
     <ModalForm
       header='Создание конституенты'
       canSubmit={canSubmit}
+      onCancel={onCancel}
       onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
       validationHint={hint}
       submitText='Создать'

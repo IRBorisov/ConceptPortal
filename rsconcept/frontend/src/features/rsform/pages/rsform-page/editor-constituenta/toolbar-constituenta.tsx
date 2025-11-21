@@ -53,8 +53,7 @@ export function ToolbarConstituenta({
     schema,
     navigateOss,
     isContentEditable,
-    createCst,
-    createCstDefault,
+    promptCreateCst,
     cloneCst,
     canDeleteSelected,
     promptDeleteSelected,
@@ -112,14 +111,14 @@ export function ToolbarConstituenta({
           <MiniButton
             title='Создать конституенту после данной'
             icon={<IconNewItem size='1.25rem' className='icon-green' />}
-            onClick={() => (activeCst ? createCst(activeCst.cst_type, false) : createCstDefault())}
+            onClick={() => void (activeCst ? promptCreateCst(activeCst.cst_type) : promptCreateCst())}
             disabled={!isContentEditable || isProcessing}
           />
           <MiniButton
             titleHtml={isModified ? tooltipText.unsaved : prepareTooltip('Клонировать конституенту', 'Alt + V')}
             aria-label='Клонировать конституенту'
             icon={<IconClone size='1.25rem' className='icon-green' />}
-            onClick={cloneCst}
+            onClick={() => void cloneCst()}
             disabled={disabled || isModified}
           />
           <MiniButton

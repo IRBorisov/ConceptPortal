@@ -1,5 +1,6 @@
 import { useReactFlow } from 'reactflow';
 
+import { useScrollToNode } from '@/components/flow/use-scroll-to-node';
 import { type Graph } from '@/models/graph';
 import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER } from '@/utils/constants';
@@ -18,13 +19,14 @@ export const fitViewOptions = { padding: 0.3, duration: PARAMETER.zoomDuration }
 export function useHandleActions(graph: Graph<number>) {
   const isProcessing = useMutatingRSForm();
   const { fitView } = useReactFlow();
+  const scrollToNode = useScrollToNode();
   const {
     schema,
     selectedCst,
     isContentEditable,
     setSelectedCst,
     deselectAll,
-    createCst,
+    promptCreateCst,
     setFocus,
     promptDeleteSelected
   } = useRSEdit();
@@ -78,9 +80,22 @@ export function useHandleActions(graph: Graph<number>) {
     });
   }
 
+  function panToCst(cstID: number) {
+    setTimeout(
+      () =>
+        scrollToNode(String(cstID), {
+          duration: PARAMETER.moveDuration,
+          padding: fitViewOptions.padding,
+          maxZoom: 1.5
+        }),
+      PARAMETER.moveDuration
+    );
+  }
+
   function handleCreateCst() {
     const definition = selectedCst.map(id => schema.cstByID.get(id)!.alias).join(' ');
-    createCst(selectedCst.length === 0 ? CstType.BASE : CstType.TERM, false, definition);
+    const hintType = selectedCst.length === 0 ? CstType.BASE : CstType.TERM;
+    void promptCreateCst(hintType, definition).then(newID => newID && panToCst(newID));
   }
 
   function handleDeleteSelected() {
