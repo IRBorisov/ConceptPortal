@@ -248,6 +248,21 @@
   transition-duration: var(--duration-move);
 }
 
+@utility duration-transform {
+  --tw-duration: var(--duration-transform);
+  transition-duration: var(--duration-transform);
+}
+
+@utility duration-cycle {
+  --tw-duration: var(--duration-cycle);
+  transition-duration: var(--duration-cycle);
+}
+
+@utility delay-move {
+  --tw-delay: var(--duration-move);
+  transition-delay: var(--duration-move);
+}
+
 @utility cc-graph-interactive {
   pointer-events: auto;
 

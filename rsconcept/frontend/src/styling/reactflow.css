@@ -127,14 +127,17 @@
 }
 
 [class*='react-flow__node-'] {
-  .mode-space & {
-    box-shadow: none;
-    pointer-events: none !important;
-  }
+  cursor: default;
 
   transition-property: box-shadow;
   transition-timing-function: var(--transition-bezier);
   transition-duration: var(--duration-select);
+
+  .mode-space & {
+    cursor: inherit;
+    box-shadow: none !important;
+    pointer-events: none !important;
+  }
 
   .rf-animation & {
     transition-property: transform;
@@ -151,7 +154,6 @@
 
 .react-flow__node-token {
   font-size: 14px;
-  cursor: default;
 
   border: 1px solid;
   border-color: var(--color-border);
@@ -177,7 +179,6 @@
 
 .react-flow__node-step {
   font-size: 14px;
-  cursor: default;
 
   color: var(--color-foreground);
   border: 1px solid;
@@ -203,11 +204,8 @@
 }
 
 .react-flow__node-concept {
-  cursor: default;
   font-size: 14px;
 
-  border: 1px solid;
-  border-color: var(--color-border);
   border-radius: 100%;
 
   width: 40px;

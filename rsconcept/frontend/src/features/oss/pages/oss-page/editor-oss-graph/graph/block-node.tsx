@@ -33,7 +33,7 @@ export function BlockNode(node: BlockInternalNode) {
       {showCoordinates ? (
         <div
           className={clsx(
-            'absolute top-full mt-[4px] right-[1px]',
+            'absolute top-full mt-[4px] right-px',
             'text-[7px]/[8px] font-math',
             'text-muted-foreground hover:text-foreground'
           )}

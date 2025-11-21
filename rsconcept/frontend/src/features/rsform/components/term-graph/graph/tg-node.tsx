@@ -29,7 +29,7 @@ export function TGNode(node: TGNodeInternal) {
   return (
     <>
       <div
-        className='relative h-full w-full pointer-events-auto!'
+        className='relative h-full w-full pointer-events-auto! border rounded-full cc-fade-in duration-transform delay-move'
         data-tooltip-id={globalIDs.tooltip}
         data-tooltip-html={describeCstNode(node.data.cst)}
       >
@@ -50,7 +50,7 @@ export function TGNode(node: TGNodeInternal) {
         ) : null}
         <div
           className={clsx(
-            'w-full h-full cursor-default flex items-center justify-center rounded-full rf-node-outline',
+            'w-full h-full flex items-center justify-center rounded-full rf-node-outline',
             node.data.cst.crucial && 'text-primary',
             node.data.focused && 'border-2 border-selected',
             label.length > LABEL_THRESHOLD ? 'text-[12px]/[16px]' : 'text-[14px]/[20px]'
@@ -72,6 +72,7 @@ export function TGNode(node: TGNodeInternal) {
             node.data.cst.crucial && 'text-primary',
             'mt-[4px] w-[150px] px-[4px] text-center translate-x-[calc(-50%+20px)]',
             'pointer-events-none',
+            'cc-fade-in duration-transform delay-move',
             description.length > DESCRIPTION_THRESHOLD ? 'text-[10px]/[12px]' : 'text-[12px]/[16px]'
           )}
         >

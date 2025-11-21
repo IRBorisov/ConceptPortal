@@ -18,11 +18,22 @@ interface MGraphNodeInternal {
   yPos: number;
 }
 
+function getNodeLabel(node: MGraphNodeInternal) {
+  if (node.data.annotations.length === 0) {
+    return node.data.rank === 0 ? node.data.text : '';
+  } else if (node.data.rank === 0) {
+    return `${node.data.text} | ${node.data.annotations.length}`;
+  } else {
+    return node.data.annotations.length;
+  }
+}
+
 export function MGraphNode(node: MGraphNodeInternal) {
   const tooltipText =
     `<span class="font-math">${node.data.text}</span>` +
     '<br/>' +
     (node.data.annotations.length === 0 ? '' : `<b>Конституенты</b> ${node.data.annotations.join(' ')}`);
+  const nodeLabel = getNodeLabel(node);
 
   return (
     <>
@@ -33,7 +44,7 @@ export function MGraphNode(node: MGraphNodeInternal) {
         data-tooltip-html={tooltipText}
         style={{ backgroundColor: colorBgTMGraphNode(node.data) }}
       >
-        {node.data.rank === 0 ? node.data.text : node.data.annotations.length > 0 ? node.data.annotations.length : ''}
+        {nodeLabel}
       </div>
       <Handle type='target' position={Position.Bottom} className='opacity-0' />
     </>
