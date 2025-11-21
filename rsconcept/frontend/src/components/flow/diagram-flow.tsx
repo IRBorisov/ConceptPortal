@@ -1,10 +1,11 @@
 'use client';
 
 import { type ReactNode, useState } from 'react';
-import { Background, ReactFlow, type ReactFlowProps } from 'reactflow';
+import { Background, type Node, ReactFlow, type ReactFlowProps } from 'reactflow';
 
 export { useReactFlow, useStoreApi } from 'reactflow';
 
+import { useTooltipsStore } from '@/stores/tooltips';
 import { withPreventDefault } from '@/utils/utils';
 
 import { cn } from '../utils';
@@ -47,16 +48,22 @@ export function DiagramFlow({
   ...restProps
 }: DiagramFlowProps) {
   const [spaceMode, setSpaceMode] = useState(false);
+  const showTooltips = useTooltipsStore(state => state.showTooltips);
+  const hideTooltips = useTooltipsStore(state => state.hideTooltips);
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     if (event.code === 'Space') {
-      withPreventDefault(() => setSpaceMode(true))(event);
+      if (!spaceMode) {
+        hideTooltips();
+        withPreventDefault(() => setSpaceMode(true))(event);
+      }
     }
     onKeyDown?.(event);
   }
 
   function handleKeyUp(event: React.KeyboardEvent<HTMLDivElement>) {
     if (event.code === 'Space') {
+      showTooltips();
       setSpaceMode(false);
     }
     onKeyUp?.(event);
@@ -65,6 +72,16 @@ export function DiagramFlow({
   function handleContextMenu(event: React.MouseEvent<HTMLDivElement>) {
     event.preventDefault();
     onContextMenu?.(event);
+  }
+
+  function handleNodeDragStart(event: React.MouseEvent<Element>, node: Node, nodes: Node[]) {
+    hideTooltips();
+    onNodeDragStart?.(event, node, nodes);
+  }
+
+  function handleNodeDragStop(event: React.MouseEvent<Element>, node: Node, nodes: Node[]) {
+    showTooltips();
+    onNodeDragStop?.(event, node, nodes);
   }
 
   return (
@@ -84,9 +101,9 @@ export function DiagramFlow({
         nodesDraggable={!spaceMode && nodesDraggable}
         nodesFocusable={!spaceMode && nodesFocusable}
         edgesFocusable={!spaceMode && edgesFocusable}
-        onNodeDragStart={spaceMode ? undefined : onNodeDragStart}
+        onNodeDragStart={spaceMode ? undefined : handleNodeDragStart}
         onNodeDrag={spaceMode ? undefined : onNodeDrag}
-        onNodeDragStop={spaceMode ? undefined : onNodeDragStop}
+        onNodeDragStop={spaceMode ? undefined : handleNodeDragStop}
         onNodeContextMenu={spaceMode ? undefined : onNodeContextMenu}
         onNodeMouseEnter={spaceMode ? undefined : onNodeMouseEnter}
         onNodeMouseLeave={spaceMode ? undefined : onNodeMouseLeave}

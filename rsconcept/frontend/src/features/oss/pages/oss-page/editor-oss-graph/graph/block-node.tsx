@@ -63,7 +63,6 @@ export function BlockNode(node: BlockInternalNode) {
             'cc-graph-interactive'
           )}
           data-tooltip-id={globalIDs.operation_tooltip}
-          data-tooltip-hidden={node.dragging}
           onMouseEnter={() => setHover(node.data.block)}
         >
           {node.data.label}

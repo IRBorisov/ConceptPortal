@@ -83,7 +83,6 @@ export function NodeCore({ node }: NodeCoreProps) {
           longLabel ? 'text-[12px]/[16px]' : 'text-[14px]/[20px]'
         )}
         data-tooltip-id={globalIDs.operation_tooltip}
-        data-tooltip-hidden={node.dragging}
         onMouseEnter={() => setHover(node.data.operation)}
       >
         {node.data.label}

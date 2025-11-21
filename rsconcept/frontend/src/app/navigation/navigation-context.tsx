@@ -3,6 +3,8 @@
 import { createContext, use, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 
+import { useTooltipsStore } from '@/stores/tooltips';
+
 export interface NavigationProps {
   path: string;
   newTab?: boolean;
@@ -36,6 +38,7 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
 
   const isBlocked = useRef(false);
   const [internalNavigation, setInternalNavigation] = useState(false);
+  const enableTooltips = useTooltipsStore(state => state.showTooltips);
 
   function validate() {
     return !isBlocked.current || confirm('Изменения не сохранены. Вы уверены что хотите совершить переход?');
@@ -51,7 +54,9 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
     } else if (props.force || validate()) {
       isBlocked.current = false;
       setInternalNavigation(true);
-      Promise.resolve(router(props.path, { viewTransition: true })).catch(console.error);
+      Promise.resolve(router(props.path, { viewTransition: true }))
+        .then(enableTooltips)
+        .catch(console.error);
     }
   }
 
@@ -61,6 +66,7 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
     } else if (props.force || validate()) {
       isBlocked.current = false;
       setInternalNavigation(true);
+      enableTooltips();
       return router(props.path, { viewTransition: true });
     }
   }
@@ -68,27 +74,30 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
   function replace(props: Omit<NavigationProps, 'newTab'>) {
     if (props.force || validate()) {
       isBlocked.current = false;
-      Promise.resolve(router(props.path, { replace: true, viewTransition: true })).catch(console.error);
+      Promise.resolve(router(props.path, { replace: true, viewTransition: true }))
+        .then(enableTooltips)
+        .catch(console.error);
     }
   }
 
   function replaceAsync(props: Omit<NavigationProps, 'newTab'>): void | Promise<void> {
     if (props.force || validate()) {
       isBlocked.current = false;
+      enableTooltips();
       return router(props.path, { replace: true, viewTransition: true });
     }
   }
 
   function back(force?: boolean) {
     if (force || validate()) {
-      Promise.resolve(router(-1)).catch(console.error);
+      Promise.resolve(router(-1)).then(enableTooltips).catch(console.error);
       isBlocked.current = false;
     }
   }
 
   function forward(force?: boolean) {
     if (force || validate()) {
-      Promise.resolve(router(1)).catch(console.error);
+      Promise.resolve(router(1)).then(enableTooltips).catch(console.error);
       isBlocked.current = false;
     }
   }

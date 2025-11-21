@@ -31,7 +31,6 @@ export function MGraphNode(node: MGraphNodeInternal) {
         className='cc-node-label w-full h-full cursor-default flex items-center justify-center rounded-full'
         data-tooltip-id={globalIDs.tooltip}
         data-tooltip-html={tooltipText}
-        data-tooltip-hidden={node.dragging}
         style={{ backgroundColor: colorBgTMGraphNode(node.data) }}
       >
         {node.data.rank === 0 ? node.data.text : node.data.annotations.length > 0 ? node.data.annotations.length : ''}

@@ -32,7 +32,6 @@ export function TGNode(node: TGNodeInternal) {
         className='relative h-full w-full pointer-events-auto!'
         data-tooltip-id={globalIDs.tooltip}
         data-tooltip-html={describeCstNode(node.data.cst)}
-        data-tooltip-hidden={node.dragging}
       >
         {connectionStart !== node.id ? (
           <Handle

@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom';
 import { type ITooltip, Tooltip as TooltipImpl } from 'react-tooltip';
 
 import { usePreferencesStore } from '@/stores/preferences';
+import { useTooltipsStore } from '@/stores/tooltips';
 
 import { cn } from '../utils';
 
@@ -29,6 +30,7 @@ export function Tooltip({
   className,
   ...restProps
 }: TooltipProps) {
+  const tooltipsEnabled = useTooltipsStore(state => state.tooltipsEnabled);
   const darkMode = usePreferencesStore(state => state.darkMode);
   if (typeof window === 'undefined') {
     return null;
@@ -45,6 +47,7 @@ export function Tooltip({
         'overflow-y-auto overflow-x-hidden sm:overflow-hidden overscroll-contain',
         'border shadow-md',
         'text-pretty',
+        !tooltipsEnabled && 'hidden',
         layer,
         className
       )}
