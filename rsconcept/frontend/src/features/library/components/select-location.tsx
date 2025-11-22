@@ -7,6 +7,7 @@ import { MiniButton } from '@/components/control';
 import { IconFolder, IconFolderClosed, IconFolderEmpty, IconFolderOpened } from '@/components/icons';
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
+import { useSingleAndDoubleClick } from '@/hooks/use-discriminate-clicks';
 
 import { useFolders } from '../backend/use-folders';
 import { labelFolderNode } from '../labels';
@@ -14,13 +15,22 @@ import { type FolderNode } from '../models/folder-tree';
 
 interface SelectLocationProps extends Styling {
   value: string;
-  onClick: (event: React.MouseEvent<Element>, target: FolderNode) => void;
+  onSelect: (target: FolderNode) => void;
+  onControlClick?: (target: FolderNode) => void;
 
   prefix: string;
   dense?: boolean;
 }
 
-export function SelectLocation({ value, dense, prefix, onClick, className, style }: SelectLocationProps) {
+export function SelectLocation({
+  value,
+  dense,
+  prefix,
+  onSelect,
+  onControlClick,
+  className,
+  style
+}: SelectLocationProps) {
   const { folders } = useFolders();
   const activeNode = folders.at(value);
   const items = folders.getTree();
@@ -63,11 +73,31 @@ export function SelectLocation({ value, dense, prefix, onClick, className, style
     });
   }
 
-  function handleClickFold(event: React.MouseEvent<Element>, target: FolderNode, showChildren: boolean) {
+  function onClickFold(event: React.MouseEvent<Element>, target: FolderNode) {
     event.preventDefault();
     event.stopPropagation();
-    onFoldItem(target, showChildren);
+    if (onControlClick && (event.ctrlKey || event.metaKey)) {
+      onControlClick(target);
+      return;
+    }
+    if (target.filesInside === target.filesTotal) {
+      onSelect(target);
+    } else {
+      onFoldItem(target, folded.includes(target));
+    }
   }
+
+  function onDoubleClick(event: React.MouseEvent<Element>, target: FolderNode) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (onControlClick && (event.ctrlKey || event.metaKey)) {
+      onControlClick(target);
+      return;
+    }
+    onSelect(target);
+  }
+
+  const { handleClick, handleDoubleClick } = useSingleAndDoubleClick(onClickFold, onDoubleClick);
 
   return (
     <div className={cn('flex flex-col cc-scroll-y', className)} style={style}>
@@ -83,11 +113,12 @@ export function SelectLocation({ value, dense, prefix, onClick, className, style
               'cc-hover-bg cc-animate-color duration-fade',
               'cursor-pointer',
               'leading-3 sm:leading-4',
-              'flex-shrink-0',
+              'shrink-0',
               activeNode === item && 'cc-selected'
             )}
             style={{ paddingLeft: `${(item.rank > 5 ? 5 : item.rank) * 0.5 + 0.5}rem` }}
-            onClick={event => onClick(event, item)}
+            onClick={event => handleClick(event, item)}
+            onDoubleClick={event => handleDoubleClick(event, item)}
           >
             {item.children.size > 0 ? (
               <MiniButton
@@ -104,7 +135,7 @@ export function SelectLocation({ value, dense, prefix, onClick, className, style
                   )
                 }
                 aria-label='Отображение вложенных папок'
-                onClick={event => handleClickFold(event, item, folded.includes(item))}
+                onClick={event => onClickFold(event, item)}
               />
             ) : (
               <div>

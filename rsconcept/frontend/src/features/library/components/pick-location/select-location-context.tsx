@@ -27,9 +27,7 @@ export function SelectLocationContext({
 }: SelectLocationContextProps) {
   const { elementRef, handleBlur, isOpen, toggle, hide } = useDropdown();
 
-  function handleClick(event: React.MouseEvent<Element>, newValue: string) {
-    event.preventDefault();
-    event.stopPropagation();
+  function handleClick(newValue: string) {
     hide();
     onChange(newValue);
   }
@@ -52,7 +50,7 @@ export function SelectLocationContext({
           value={value}
           prefix={prefixes.folders_list}
           dense
-          onClick={(event, target) => handleClick(event, target.getPath())}
+          onSelect={target => handleClick(target.getPath())}
         />
       </Dropdown>
     </div>

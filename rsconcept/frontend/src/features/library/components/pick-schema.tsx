@@ -102,9 +102,7 @@ export function PickSchema({
     }
   ];
 
-  function handleLocationClick(event: React.MouseEvent<Element>, newValue: string) {
-    event.preventDefault();
-    event.stopPropagation();
+  function handleLocationClick(newValue: string) {
     hideLocationMenu();
     setFilterLocation(newValue);
   }
@@ -131,7 +129,7 @@ export function PickSchema({
               value={filterLocation}
               prefix={prefixes.folders_list}
               dense
-              onClick={(event, target) => handleLocationClick(event, target.getPath())}
+              onSelect={target => handleLocationClick(target.getPath())}
             />
           </Dropdown>
         </div>

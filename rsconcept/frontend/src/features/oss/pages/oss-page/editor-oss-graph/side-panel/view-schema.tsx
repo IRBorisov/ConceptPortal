@@ -59,7 +59,7 @@ export function ViewSchema({ schemaID, isMutable }: ViewSchemaProps) {
         onDoubleClick={isMutable ? handleEditCst : undefined}
       />
 
-      <RSFormStats className='pr-4 py-2 ml-[-1rem]' stats={schema.stats} />
+      <RSFormStats className='pr-4 py-2 -ml-4' stats={schema.stats} />
     </div>
   );
 }

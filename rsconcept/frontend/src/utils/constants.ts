@@ -14,6 +14,7 @@ export const PARAMETER = {
 
   moveDuration: 500, // Duration of move animations (in milliseconds)
   graphLayoutDuration: 1000, // Duration of graph layout animations (in milliseconds)
+  clickDelay: 250, // Delay before click actions (in milliseconds)
 
   ossImageWidth: 1280, // Default width for OSS images (in pixels)
   ossImageHeight: 960, // Default height for OSS images (in pixels)

@@ -47,24 +47,22 @@ export function ViewSideLocation({ isVisible, onRenameLocation }: ViewSideLocati
 
   const maxHeight = useFitHeight('4.5rem');
 
-  function handleClickFolder(event: React.MouseEvent<Element>, target: FolderNode) {
-    event.preventDefault();
-    event.stopPropagation();
-    if (event.ctrlKey || event.metaKey) {
-      navigator.clipboard
-        .writeText(target.getPath())
-        .then(() => toast.success(infoMsg.pathReady))
-        .catch(console.error);
-    } else {
-      setLocation(target.getPath());
-    }
+  function handleSelectFolder(target: FolderNode) {
+    setLocation(target.getPath());
+  }
+
+  function handleCopyPath(target: FolderNode) {
+    navigator.clipboard
+      .writeText(target.getPath())
+      .then(() => toast.success(infoMsg.pathReady))
+      .catch(console.error);
   }
 
   return (
     <div
       className={clsx(
         'max-w-40 sm:max-w-60 flex flex-col text:xs sm:text-sm select-none cc-side-location',
-        isVisible && 'open min-w-[10rem] sm:min-w-[15rem]'
+        isVisible && 'open min-w-40 sm:min-w-60'
       )}
     >
       <div className='h-8 flex justify-between items-center pr-1 pl-0.5'>
@@ -89,7 +87,8 @@ export function ViewSideLocation({ isVisible, onRenameLocation }: ViewSideLocati
         className='cc-scroll-left cc-scroll-stable'
         value={location}
         prefix={prefixes.folders_list}
-        onClick={handleClickFolder}
+        onSelect={handleSelectFolder}
+        onControlClick={handleCopyPath}
         style={{ maxHeight: maxHeight }}
       />
     </div>
