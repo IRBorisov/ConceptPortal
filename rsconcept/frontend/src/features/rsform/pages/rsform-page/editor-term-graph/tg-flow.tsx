@@ -54,9 +54,9 @@ export function TGFlow() {
   const { isSmall } = useWindowSize();
   const mainHeight = useMainHeight();
   const { fitView, viewportInitialized } = useReactFlow();
-  const flowRef = useRef<HTMLDivElement>(null);
   const [isAnimating, setIsAnimating] = useState(false);
 
+  const flowRef = useRef<HTMLDivElement>(null);
   useContinuousPan(flowRef);
 
   const mode = useTermGraphStore(state => state.mode);
@@ -89,7 +89,7 @@ export function TGFlow() {
   const hiddenHeight = useFitHeight(isSmall ? '15rem + 2px' : '13.5rem + 2px', '4rem');
   const { handleKeyDown } = useHandleActions(filteredGraph);
 
-  const suppressRFSelection = useRef(false);
+  const suppressRFSelection = useRef<boolean>(false);
   function onSelectionChange({ nodes, edges }: { nodes: Node[]; edges: Edge[] }) {
     if (suppressRFSelection.current) {
       return;

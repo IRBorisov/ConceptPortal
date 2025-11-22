@@ -10,6 +10,7 @@ import {
 } from '@/components/icons';
 import { Checkbox } from '@/components/input';
 import { ModalView } from '@/components/modal';
+import { prepareTooltip } from '@/utils/utils';
 
 import { useOSSGraphStore } from '../stores/oss-graph';
 
@@ -38,6 +39,7 @@ export function DlgOssSettings() {
         value={showGrid}
         onChange={toggleShowGrid}
         aria-label='Переключатель отображения сетки'
+        titleHtml={prepareTooltip('Переключатель отображения сетки', 'X')}
         label={`Отображение сетки: ${showGrid ? 'Вкл' : 'Выкл'}`}
         customIcon={checked => <IconGrid size={ICON_SIZE} className={checked ? 'icon-green' : 'icon-primary'} />}
       />
@@ -58,6 +60,7 @@ export function DlgOssSettings() {
         value={edgeStraight}
         onChange={toggleEdgeStraight}
         aria-label='Переключатель формы связей'
+        titleHtml={prepareTooltip('Переключатель формы связей', 'T')}
         label={`Связи: ${edgeStraight ? 'Прямые' : 'Безье'}`}
         customIcon={checked =>
           checked ? (

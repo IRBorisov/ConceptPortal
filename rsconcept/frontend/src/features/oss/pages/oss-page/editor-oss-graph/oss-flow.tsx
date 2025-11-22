@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import clsx from 'clsx';
 
 import { DiagramFlow, useReactFlow } from '@/components/flow/diagram-flow';
+import { useContinuousPan } from '@/components/flow/use-continuous-panning';
 import { useMainHeight } from '@/stores/app-layout';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
@@ -43,6 +44,9 @@ export function OssFlow() {
   const { navigateOperationSchema, schema } = useOssEdit();
   const { screenToFlowPosition } = useReactFlow();
   const { containMovement, nodes, onNodesChange, edges, onEdgesChange } = useOssFlow();
+
+  const flowRef = useRef<HTMLDivElement>(null);
+  useContinuousPan(flowRef);
 
   const showGrid = useOSSGraphStore(state => state.showGrid);
   const showCoordinates = useOSSGraphStore(state => state.showCoordinates);
@@ -90,6 +94,7 @@ export function OssFlow() {
 
   return (
     <div
+      ref={flowRef}
       tabIndex={-1}
       className='relative'
       onMouseMove={showCoordinates ? handleMouseMove : undefined}

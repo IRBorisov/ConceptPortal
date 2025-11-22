@@ -1,6 +1,7 @@
 import { useReactFlow, useStoreApi } from 'reactflow';
 
 import { useDialogsStore } from '@/stores/dialogs';
+import { usePreferencesStore } from '@/stores/preferences';
 import { PARAMETER } from '@/utils/constants';
 import { promptText } from '@/utils/labels';
 import { withPreventDefault } from '@/utils/utils';
@@ -11,6 +12,7 @@ import { useMutatingOss } from '../../../backend/use-mutating-oss';
 import { useUpdateLayout } from '../../../backend/use-update-layout';
 import { type IOssItem, NodeType } from '../../../models/oss';
 import { LayoutManager } from '../../../models/oss-layout-api';
+import { useOSSGraphStore } from '../../../stores/oss-graph';
 import { useOssEdit } from '../oss-edit-context';
 
 import { useOssFlow } from './oss-flow-context';
@@ -23,6 +25,9 @@ export function useHandleActions() {
   const isProcessing = useMutatingOss();
   const store = useStoreApi();
   const { resetSelectedElements } = store.getState();
+  const toggleShowSidePanel = usePreferencesStore(state => state.toggleShowOssSidePanel);
+  const toggleShowGrid = useOSSGraphStore(state => state.toggleShowGrid);
+  const toggleEdgeStraight = useOSSGraphStore(state => state.toggleEdgeStraight);
 
   const getLayout = useGetLayout();
   const { updateLayout } = useUpdateLayout();
@@ -36,8 +41,20 @@ export function useHandleActions() {
   const showImportSchema = useDialogsStore(state => state.showImportSchema);
   const showOptions = useDialogsStore(state => state.showOssOptions);
 
+  function handleShowSidePanel() {
+    toggleShowSidePanel();
+  }
+
   function handleShowOptions() {
     showOptions();
+  }
+
+  function handleToggleGrid() {
+    toggleShowGrid();
+  }
+
+  function handleToggleEdge() {
+    toggleEdgeStraight();
   }
 
   function handleSavePositions() {
@@ -77,8 +94,10 @@ export function useHandleActions() {
         : selectedItems.filter(item => item.nodeType === NodeType.OPERATION).map(item => item.id),
       initialParent: parent,
       onCreate: newID => {
-        resetView();
-        setTimeout(() => setSelected([`b${newID}`]), PARAMETER.minimalTimeout);
+        setTimeout(() => {
+          resetView();
+          setSelected([`b${newID}`]);
+        }, PARAMETER.minimalTimeout);
       }
     });
   }
@@ -210,6 +229,27 @@ export function useHandleActions() {
       withPreventDefault(resetSelectedElements)(event);
       return;
     }
+    if (event.code === 'KeyG') {
+      withPreventDefault(resetView)(event);
+      return;
+    }
+    if (event.code === 'KeyV') {
+      withPreventDefault(handleShowSidePanel)(event);
+      return;
+    }
+    if (event.code === 'KeyZ') {
+      withPreventDefault(resetGraph)(event);
+      return;
+    }
+    if (event.code === 'KeyX') {
+      withPreventDefault(handleToggleGrid)(event);
+      return;
+    }
+    if (event.code === 'KeyT') {
+      withPreventDefault(handleToggleEdge)(event);
+      return;
+    }
+
     if (!isMutable) {
       return;
     }
@@ -217,25 +257,24 @@ export function useHandleActions() {
       withPreventDefault(handleSavePositions)(event);
       return;
     }
-    if (event.altKey) {
-      if (event.code === 'Digit1') {
-        withPreventDefault(handleCreateBlock)(event);
-        return;
-      }
-      if (event.code === 'Digit2') {
-        withPreventDefault(handleCreateSynthesis)(event);
-        return;
-      }
-      if (event.code === 'Digit3') {
-        withPreventDefault(handleImportSchema)(event);
-        return;
-      }
-      if (event.code === 'Digit4') {
-        withPreventDefault(handleCreateSynthesis)(event);
-        return;
-      }
+    if (event.code === 'Digit1') {
+      withPreventDefault(handleCreateBlock)(event);
+      return;
     }
-    if (event.code === 'Delete') {
+    if (event.code === 'Digit2') {
+      withPreventDefault(handleCreateSynthesis)(event);
+      return;
+    }
+    if (event.code === 'Digit3') {
+      withPreventDefault(handleImportSchema)(event);
+      return;
+    }
+    if (event.code === 'Digit4') {
+      withPreventDefault(handleCreateSynthesis)(event);
+      return;
+    }
+
+    if (event.code === 'Delete' || event.code === 'Backquote') {
       withPreventDefault(handleDeleteSelected)(event);
       return;
     }
@@ -261,6 +300,9 @@ export function useHandleActions() {
   return {
     handleKeyDown,
 
+    handleToggleEdge,
+    handleToggleGrid,
+    handleFitView: resetView,
     handleSelectLeft,
     handleSelectRight,
     handleSelectUp,
@@ -272,7 +314,8 @@ export function useHandleActions() {
     handleImportSchema,
     handleDeleteSelected,
     handleResetPositions: resetGraph,
-    handleShowOptions
+    handleShowOptions,
+    handleShowSidePanel
   };
 }
 

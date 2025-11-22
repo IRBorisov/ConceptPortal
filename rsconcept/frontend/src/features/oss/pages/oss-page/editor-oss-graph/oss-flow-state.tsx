@@ -28,12 +28,13 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const prevSelected = useRef<string[]>([]);
 
+  const suppressRFSelection = useRef<boolean>(false);
   function onSelectionChange({ nodes }: { nodes: Node[] }) {
+    if (suppressRFSelection.current) {
+      return;
+    }
     const ids = nodes.map(node => node.id);
-    setSelected(prev => [
-      ...prev.filter(nodeID => ids.includes(nodeID)),
-      ...ids.filter(nodeID => !prev.includes(nodeID))
-    ]);
+    setSelected(prev => (prev.length === ids.length && prev.every((id, i) => id === ids[i]) ? prev : ids));
   }
 
   useOnSelectionChange({
@@ -105,11 +106,16 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
   }
 
   useEffect(() => {
-    if (!viewportInitialized) return;
+    if (!viewportInitialized) {
+      return;
+    }
     const hasChanged =
       prevSelected.current.length !== selected.length || prevSelected.current.some((id, i) => id !== selected[i]);
+    if (!hasChanged) {
+      return;
+    }
 
-    if (!hasChanged) return;
+    suppressRFSelection.current = true;
 
     prevSelected.current = selected;
     setNodes(prev =>
@@ -118,6 +124,11 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
         selected: selected.includes(node.id)
       }))
     );
+
+    const frame = requestAnimationFrame(() => {
+      suppressRFSelection.current = false;
+    });
+    return () => cancelAnimationFrame(frame);
   }, [viewportInitialized, selected, setNodes]);
 
   return (
