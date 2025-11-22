@@ -48,7 +48,7 @@ export function Navigation() {
           noNavigationAnimation ? '-translate-y-6 max-h-0' : 'max-h-12'
         )}
       >
-        <div className='flex items-center shrink-0' onClick={!size.isSmall ? navigateHome : undefined}>
+        <div className='cc-fade-in flex items-center shrink-0' onClick={!size.isSmall ? navigateHome : undefined}>
           <Logo />
         </div>
         {schemaTitle ? <SchemaTitle isRSForm={!!currentSchema} title={schemaTitle} /> : null}

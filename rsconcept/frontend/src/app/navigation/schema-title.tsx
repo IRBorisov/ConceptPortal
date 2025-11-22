@@ -13,7 +13,7 @@ export function SchemaTitle({ isRSForm, title }: SchemaTitleProps) {
     <div
       tabIndex={-1}
       className={clsx(
-        'min-w-0 overflow-hidden max-w-fit',
+        'cc-fade-in min-w-0 overflow-hidden max-w-fit',
         'flex flex-1 items-center gap-2',
         'text-md text-muted-foreground pointer-events-auto'
       )}
