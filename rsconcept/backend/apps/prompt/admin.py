@@ -2,11 +2,13 @@
 from django.contrib import admin
 
 from . import models
+from shared.ExportCsvMixin import ExportCsvMixin
 
 
 @admin.register(models.PromptTemplate)
-class PromptTemplateAdmin(admin.ModelAdmin):
+class PromptTemplateAdmin(ExportCsvMixin, admin.ModelAdmin):
     ''' Admin model: PromptTemplate. '''
     list_display = ('id', 'label', 'owner', 'is_shared')
     list_filter = ('is_shared', 'owner')
     search_fields = ('label', 'description', 'text')
+    actions = ['export_as_csv']

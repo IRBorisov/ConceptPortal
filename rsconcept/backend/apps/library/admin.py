@@ -3,11 +3,13 @@ from typing import cast
 
 from django.contrib import admin
 
+from shared.ExportCsvMixin import ExportCsvMixin
+
 from . import models
 
 
 @admin.register(models.LibraryItem)
-class LibraryItemAdmin(admin.ModelAdmin):
+class LibraryItemAdmin(ExportCsvMixin, admin.ModelAdmin):
     ''' Admin model: LibraryItem. '''
     date_hierarchy = 'time_update'
     list_display = [
@@ -17,6 +19,7 @@ class LibraryItemAdmin(admin.ModelAdmin):
     ]
     list_filter = ['visible', 'read_only', 'access_policy', 'location', 'time_update']
     search_fields = ['alias', 'title', 'location']
+    actions = ['export_as_csv']
 
 
 @admin.register(models.LibraryTemplate)
@@ -33,13 +36,14 @@ class LibraryTemplateAdmin(admin.ModelAdmin):
 
 
 @admin.register(models.Editor)
-class EditorAdmin(admin.ModelAdmin):
+class EditorAdmin(ExportCsvMixin, admin.ModelAdmin):
     ''' Admin model: Editors. '''
     list_display = ['id', 'item', 'editor']
     search_fields = [
         'item__title', 'item__alias',
         'editor__username', 'editor__first_name', 'editor__last_name'
     ]
+    actions = ['export_as_csv']
 
 
 @admin.register(models.Version)

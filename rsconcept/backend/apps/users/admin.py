@@ -3,12 +3,14 @@ from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 
+from shared.ExportCsvMixin import ExportCsvMixin
+
 User = get_user_model()
 admin.site.unregister(User)
 
 
 @admin.register(User)
-class CustomUserAdmin(UserAdmin):
+class CustomUserAdmin(ExportCsvMixin, UserAdmin):
     ''' Admin model: User. '''
     fieldsets = UserAdmin.fieldsets
     list_display = (
@@ -23,3 +25,4 @@ class CustomUserAdmin(UserAdmin):
     ordering = ['date_joined', 'username']
     search_fields = ['email', 'first_name', 'last_name', 'username']
     list_filter = ['is_staff', 'is_superuser', 'is_active']
+    actions = ['export_as_csv']
