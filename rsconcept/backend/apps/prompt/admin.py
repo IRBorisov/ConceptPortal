@@ -1,8 +1,9 @@
 ''' Admin view: Prompts for AI helper. '''
 from django.contrib import admin
 
-from . import models
 from shared.ExportCsvMixin import ExportCsvMixin
+
+from . import models
 
 
 @admin.register(models.PromptTemplate)

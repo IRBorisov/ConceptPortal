@@ -30,11 +30,14 @@ const inlinePackages = [
   '@hookform/resolvers'
 ];
 
-// Rollup warnings that should not be displayed
-const warningsToIgnore = [
-  ['SOURCEMAP_ERROR', "Can't resolve original location of error"],
-  ['MODULE_LEVEL_DIRECTIVE', 'Module level directives cause errors when bundled']
-];
+// Rollup warnings that should not be displayed (not used in Vitest)
+const isVitest = process.env.VITEST === 'true' || process.env.NODE_ENV === 'test';
+const warningsToIgnore = !isVitest
+  ? [
+      ['SOURCEMAP_ERROR', "Can't resolve original location of error"],
+      ['MODULE_LEVEL_DIRECTIVE', 'Module level directives cause errors when bundled']
+    ]
+  : [];
 
 // https://vitejs.dev/config/
 export default ({ mode }: { mode: string }) => {
