@@ -1,7 +1,7 @@
-import { type ConnectionLineComponentProps, getStraightPath } from 'reactflow';
+import { type ConnectionLineComponentProps, getStraightPath } from '@xyflow/react';
 
-import { colorGraphEdge } from '@/features/rsform/colors';
-import { useTGConnectionStore } from '@/features/rsform/stores/term-graph';
+import { colorGraphEdge } from '../../../colors';
+import { useTGConnectionStore } from '../../../stores/term-graph';
 
 export function TGConnectionLine({ fromX, fromY, toX, toY }: ConnectionLineComponentProps) {
   const [edgePath] = getStraightPath({
@@ -16,7 +16,7 @@ export function TGConnectionLine({ fromX, fromY, toX, toY }: ConnectionLineCompo
 
   return (
     <g>
-      <path style={{ stroke: color }} className='stroke-2' fill='none' d={edgePath} />
+      <path style={{ stroke: color }} className='rf-connection-line' fill='none' d={edgePath} />
     </g>
   );
 }

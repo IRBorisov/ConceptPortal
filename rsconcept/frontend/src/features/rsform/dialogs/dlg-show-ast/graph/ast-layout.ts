@@ -1,5 +1,5 @@
-import { type Edge, type Node } from 'reactflow';
 import dagre from '@dagrejs/dagre';
+import { type Edge, type Node } from '@xyflow/react';
 
 import { PARAMETER } from '@/utils/constants';
 

@@ -6,7 +6,6 @@ import { useAuthSuspense } from '@/features/auth/backend/use-auth';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 import { IconShowSidebar } from '@/features/library/components/icon-show-sidebar';
-import { type OssNode } from '@/features/oss/models/oss-layout';
 
 import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
@@ -33,12 +32,13 @@ import { useMutatingOss } from '../../../backend/use-mutating-oss';
 import { NodeType } from '../../../models/oss';
 import { useOssEdit } from '../oss-edit-context';
 
+import { type OGNode } from './graph/og-models';
 import { useOssFlow } from './oss-flow-context';
 import { useHandleActions } from './use-handle-actions';
 
 interface ToolbarOssGraphProps extends Styling {
   isContextMenuOpen: boolean;
-  openContextMenu: (node: OssNode, clientX: number, clientY: number) => void;
+  openContextMenu: (node: OGNode, clientX: number, clientY: number) => void;
   hideContextMenu: () => void;
 }
 

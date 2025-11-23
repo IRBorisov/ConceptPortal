@@ -1,4 +1,4 @@
-import { type EdgeProps, getStraightPath } from 'reactflow';
+import { type EdgeProps, getStraightPath } from '@xyflow/react';
 
 import { PARAMETER } from '@/utils/constants';
 

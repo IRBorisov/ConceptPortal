@@ -1,7 +1,7 @@
 'use client';
 
 import { toast } from 'react-toastify';
-import { ReactFlowProvider } from 'reactflow';
+import { ReactFlowProvider } from '@xyflow/react';
 
 import { HelpTopic } from '@/features/help';
 

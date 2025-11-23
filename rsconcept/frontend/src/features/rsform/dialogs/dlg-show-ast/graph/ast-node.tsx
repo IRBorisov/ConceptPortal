@@ -1,27 +1,16 @@
 'use client';
 
-import { Handle, Position } from 'reactflow';
+import { Handle, type NodeProps, Position } from '@xyflow/react';
 import clsx from 'clsx';
 
 import { colorBgSyntaxTree } from '../../../colors';
 import { labelSyntaxTree } from '../../../labels';
-import { type ISyntaxTreeNode } from '../../../models/rslang';
+
+import { type ASTNode } from './ast-models';
 
 const LABEL_THRESHOLD = 3;
 
-/**
- * Represents graph AST node internal data.
- */
-interface ASTNodeInternal {
-  id: string;
-  data: ISyntaxTreeNode;
-  dragging: boolean;
-  selected: boolean;
-  xPos: number;
-  yPos: number;
-}
-
-export function ASTNode(node: ASTNodeInternal) {
+export function ASTNodeComponent(node: NodeProps<ASTNode>) {
   const label = labelSyntaxTree(node.data);
 
   return (

@@ -1,15 +1,16 @@
 'use client';
 
 import { useEffect } from 'react';
-import { type Edge, useEdgesState, useNodesState } from 'reactflow';
+import { useEdgesState, useNodesState } from '@xyflow/react';
 
 import { DiagramFlow } from '@/components/flow/diagram-flow';
 
 import { type TypificationGraph } from '../../models/typification-graph';
 
-import { TMGraphEdgeTypes } from './graph/mgraph-edge-types';
+import { MGraphEdgeTypes } from './graph/mgraph-edge-types';
 import { applyLayout } from './graph/mgraph-layout';
-import { TMGraphNodeTypes } from './graph/mgraph-node-types';
+import { type MGEdge, type MGNode } from './graph/mgraph-models';
+import { MGraphNodeTypes } from './graph/mgraph-node-types';
 
 const flowOptions = {
   fitView: true,
@@ -26,8 +27,8 @@ interface MGraphFlowProps {
 }
 
 export function MGraphFlow({ data }: MGraphFlowProps) {
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges] = useEdgesState([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<MGNode>([]);
+  const [edges, setEdges] = useEdgesState<MGEdge>([]);
 
   useEffect(() => {
     const newNodes = data.nodes.map(node => ({
@@ -37,13 +38,12 @@ export function MGraphFlow({ data }: MGraphFlowProps) {
       type: 'step'
     }));
 
-    const newEdges: Edge[] = [];
+    const newEdges: MGEdge[] = [];
     data.nodes.forEach(node => {
       const visited = new Set<number>();
       const edges = new Map<number, number>();
       node.parents.forEach((parent, index) => {
         if (visited.has(parent)) {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
           newEdges.at(edges.get(parent)!)!.data!.indices.push(index + 1);
         } else {
           newEdges.push({
@@ -72,8 +72,8 @@ export function MGraphFlow({ data }: MGraphFlowProps) {
       nodes={nodes}
       edges={edges}
       onNodesChange={onNodesChange}
-      nodeTypes={TMGraphNodeTypes}
-      edgeTypes={TMGraphEdgeTypes}
+      nodeTypes={MGraphNodeTypes}
+      edgeTypes={MGraphEdgeTypes}
     />
   );
 }

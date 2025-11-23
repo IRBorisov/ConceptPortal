@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react';
-import { useReactFlow } from 'reactflow';
+import { useReactFlow } from '@xyflow/react';
 
 interface PanOptions {
   panSpeed: number;
@@ -25,7 +25,7 @@ export function useContinuousPan(
     if (keysPressed.current.has('KeyA')) x += options.panSpeed;
     if (keysPressed.current.has('KeyD')) x -= options.panSpeed;
 
-    setViewport({ x, y, zoom: viewport.zoom }, { duration: 0 });
+    void setViewport({ x, y, zoom: viewport.zoom }, { duration: 0 });
     // eslint-disable-next-line react-hooks/immutability
     rafRef.current = requestAnimationFrame(() => panLoop());
   }, [options.panSpeed, getViewport, setViewport]);

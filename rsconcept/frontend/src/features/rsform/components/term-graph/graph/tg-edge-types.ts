@@ -1,7 +1,7 @@
-import { type EdgeTypes } from 'reactflow';
+import { type EdgeTypes } from '@xyflow/react';
 
-import { TermGraphEdge } from './tg-edge';
+import { TGEdgeComponent } from './tg-edge';
 
 export const TGEdgeTypes: EdgeTypes = {
-  termEdge: TermGraphEdge
+  termEdge: TGEdgeComponent
 } as const;

@@ -1,5 +1,6 @@
 'use client';
 
+import { type NodeProps } from '@xyflow/react';
 import clsx from 'clsx';
 
 import { IconConsolidation, IconRSForm } from '@/components/icons';
@@ -8,19 +9,16 @@ import { Indicator } from '@/components/view';
 import { globalIDs } from '@/utils/constants';
 
 import { OperationType } from '../../../../backend/types';
-import { type OperationInternalNode } from '../../../../models/oss-layout';
 import { useOperationTooltipStore } from '../../../../stores/operation-tooltip';
 import { useOSSGraphStore } from '../../../../stores/oss-graph';
 import { useOssEdit } from '../../oss-edit-context';
 
+import { type OGOperationNode } from './og-models';
+
 // characters - threshold for long labels - small font
 const LONG_LABEL_CHARS = 14;
 
-interface NodeCoreProps {
-  node: OperationInternalNode;
-}
-
-export function NodeCore({ node }: NodeCoreProps) {
+export function NodeCoreComponent({ node }: { node: NodeProps<OGOperationNode> }) {
   const { selectedItems, schema } = useOssEdit();
   const opType = node.data.operation.operation_type;
 
@@ -65,7 +63,7 @@ export function NodeCore({ node }: NodeCoreProps) {
             node.selected && 'translate-y-[6px]'
           )}
         >
-          {`X: ${node.xPos.toFixed(0)} Y: ${node.yPos.toFixed(0)}`}
+          {`X: ${node.positionAbsoluteX.toFixed(0)} Y: ${node.positionAbsoluteY.toFixed(0)}`}
         </div>
       ) : null}
 

@@ -1,4 +1,4 @@
-import { type EdgeTypes } from 'reactflow';
+import { type EdgeTypes } from '@xyflow/react';
 
 import { DynamicEdge } from '@/components/flow/dynamic-edge';
 

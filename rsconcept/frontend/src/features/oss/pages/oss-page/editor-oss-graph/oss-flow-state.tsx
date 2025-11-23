@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { type Edge, type Node, useEdgesState, useNodesState, useOnSelectionChange, useReactFlow } from 'reactflow';
+import { type Edge, useEdgesState, useNodesState, useOnSelectionChange, useReactFlow } from '@xyflow/react';
 
 import { PARAMETER } from '@/utils/constants';
 
@@ -11,6 +11,7 @@ import { type Position2D } from '../../../models/oss-layout';
 import { useOSSGraphStore } from '../../../stores/oss-graph';
 import { useOssEdit } from '../oss-edit-context';
 
+import { type OGNode, type OperationNodeType } from './graph/og-models';
 import { flowOptions } from './oss-flow';
 import { OssFlowContext } from './oss-flow-context';
 
@@ -24,12 +25,12 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
   const edgeStraight = useOSSGraphStore(state => state.edgeStraight);
 
   const [containMovement, setContainMovement] = useState(false);
-  const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<OGNode>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const prevSelected = useRef<string[]>([]);
 
   const suppressRFSelection = useRef<boolean>(false);
-  function onSelectionChange({ nodes }: { nodes: Node[] }) {
+  function onSelectionChange({ nodes }: { nodes: OGNode[] }) {
     if (suppressRFSelection.current) {
       return;
     }
@@ -42,7 +43,7 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
   });
 
   const reloadData = useCallback(() => {
-    const newNodes: Node[] = schema.hierarchy.topologicalOrder().map(nodeID => {
+    const newNodes: OGNode[] = schema.hierarchy.topologicalOrder().map(nodeID => {
       const item = schema.itemByNodeID.get(nodeID)!;
       if (item.nodeType === NodeType.BLOCK) {
         return {
@@ -62,7 +63,7 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
       } else {
         return {
           id: item.nodeID,
-          type: item.operation_type.toString(),
+          type: item.operation_type.toString() as OperationNodeType,
           selected: prevSelected.current.includes(item.nodeID),
           data: { label: item.alias, operation: item },
           position: computeRelativePosition(schema, { x: item.x, y: item.y }, item.parent),
@@ -95,14 +96,14 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
   }, [schema, edgeAnimate, edgeStraight, reloadData]);
 
   function resetView() {
-    setTimeout(() => fitView(flowOptions.fitViewOptions), PARAMETER.refreshTimeout);
+    setTimeout(() => void fitView(flowOptions.fitViewOptions), PARAMETER.refreshTimeout);
   }
 
   function resetGraph() {
     setSelected([]);
     prevSelected.current = [];
     reloadData();
-    setTimeout(() => fitView(flowOptions.fitViewOptions), PARAMETER.refreshTimeout);
+    setTimeout(() => void fitView(flowOptions.fitViewOptions), PARAMETER.refreshTimeout);
   }
 
   useEffect(() => {

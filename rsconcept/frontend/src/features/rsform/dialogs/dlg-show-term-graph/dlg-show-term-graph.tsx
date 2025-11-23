@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactFlowProvider } from 'reactflow';
+import { ReactFlowProvider } from '@xyflow/react';
 
 import { urls, useConceptNavigation } from '@/app';
 import { useRSFormSuspense } from '@/features/rsform/backend/use-rsform';

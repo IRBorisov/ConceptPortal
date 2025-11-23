@@ -1,6 +1,6 @@
 'use client';
 
-import { useReactFlow } from 'reactflow';
+import { useReactFlow } from '@xyflow/react';
 
 import { useTermGraphStore } from '@/features/rsform/stores/term-graph';
 
@@ -18,7 +18,7 @@ export default function ToolbarGraphFilter() {
 
   function handleFitView() {
     setTimeout(() => {
-      fitView(flowOptions.fitViewOptions);
+      void fitView(flowOptions.fitViewOptions);
     }, PARAMETER.minimalTimeout);
   }
 

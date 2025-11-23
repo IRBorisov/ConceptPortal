@@ -1,4 +1,4 @@
-import { StraightEdge } from 'reactflow';
+import { StraightEdge } from '@xyflow/react';
 
 import { type MGraphEdgeProps } from './cartesian-edge';
 

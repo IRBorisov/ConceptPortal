@@ -1,19 +1,24 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { type Edge, MarkerType, type Node, useEdgesState, useNodesState } from 'reactflow';
+import { type Edge, MarkerType, type Node, useEdgesState, useNodesState } from '@xyflow/react';
 import clsx from 'clsx';
 
 import { type IConstituenta, type IRSForm } from '@/features/rsform';
 import { colorGraphEdge } from '@/features/rsform/colors';
 import { FocusLabel } from '@/features/rsform/components/term-graph/focus-label';
 import { TGEdgeTypes } from '@/features/rsform/components/term-graph/graph/tg-edge-types';
+import {
+  applyLayout,
+  inferEdgeType,
+  produceFilteredGraph,
+  type TGNode
+} from '@/features/rsform/components/term-graph/graph/tg-models';
 import { TGNodeTypes } from '@/features/rsform/components/term-graph/graph/tg-node-types';
 import { SelectColoring } from '@/features/rsform/components/term-graph/select-coloring';
 import { SelectEdgeType } from '@/features/rsform/components/term-graph/select-edge-type';
 import { ToolbarFocusedCst } from '@/features/rsform/components/term-graph/toolbar-focused-cst';
 import { ViewHidden } from '@/features/rsform/components/term-graph/view-hidden';
-import { applyLayout, inferEdgeType, produceFilteredGraph, type TGNodeData } from '@/features/rsform/models/graph-api';
 import { useTermGraphStore } from '@/features/rsform/stores/term-graph';
 
 import { DiagramFlow, useReactFlow } from '@/components/flow/diagram-flow';
@@ -49,7 +54,7 @@ export function TGReadonlyFlow({ schema }: TGReadonlyFlowProps) {
   const hidden = schema.items.filter(cst => !filteredGraph.hasNode(cst.id)).map(cst => cst.id);
   const hiddenHeight = useFitHeight('15.5rem + 2px', '4rem');
 
-  const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<TGNode>([]);
   const [edges, setEdges] = useEdgesState<Edge>([]);
   const { fitView, viewportInitialized } = useReactFlow();
 
@@ -58,7 +63,7 @@ export function TGReadonlyFlow({ schema }: TGReadonlyFlowProps) {
       return;
     }
     const nodeIDs = Array.from(filteredGraph.nodes.keys());
-    const newNodes: Node[] = nodeIDs.map(nodeID => {
+    const newNodes: TGNode[] = nodeIDs.map(nodeID => {
       const cst = schema.cstByID.get(nodeID);
       if (!cst) {
         throw new Error(`Node not found ${nodeID}`);
@@ -135,15 +140,16 @@ export function TGReadonlyFlow({ schema }: TGReadonlyFlowProps) {
 
   useEffect(() => {
     setTimeout(
-      () => fitView({ ...flowOptions.fitViewOptions, duration: PARAMETER.graphLayoutDuration }),
+      () => void fitView({ ...flowOptions.fitViewOptions, duration: PARAMETER.graphLayoutDuration }),
       4 * PARAMETER.minimalTimeout
     );
   }, [schema.id, filter.noText, filter.graphType, focusCst, fitView]);
 
-  function handleNodeContextMenu(event: React.MouseEvent<Element>, node: TGNodeData) {
+  function handleNodeContextMenu(event: React.MouseEvent<Element>, node: Node) {
+    console.log(node);
     event.preventDefault();
     event.stopPropagation();
-    setFocusCst(focusCst?.id === node.data.cst.id ? null : node.data.cst);
+    setFocusCst(focusCst?.id === (node as TGNode).data.cst.id ? null : (node as TGNode).data.cst);
   }
 
   return (
@@ -161,7 +167,6 @@ export function TGReadonlyFlow({ schema }: TGReadonlyFlowProps) {
 
       <DiagramFlow
         {...flowOptions}
-        height='100%'
         className='cc-mask-sides w-full h-full'
         nodes={nodes}
         onNodesChange={onNodesChange}

@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactFlowProvider } from 'reactflow';
+import { ReactFlowProvider } from '@xyflow/react';
 
 import { OssFlow } from './oss-flow';
 import { OssFlowState } from './oss-flow-state';

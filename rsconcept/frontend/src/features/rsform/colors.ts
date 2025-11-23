@@ -4,7 +4,7 @@ import { PARAMETER } from '@/utils/constants';
 import { TokenID } from './backend/types';
 import { CstClass, ExpressionStatus, type IConstituenta } from './models/rsform';
 import { type ISyntaxTreeNode } from './models/rslang';
-import { type TypificationGraphNode } from './models/typification-graph';
+import { type TypificationNodeData } from './models/typification-graph';
 import { TGColoring, TGEdgeType } from './stores/term-graph';
 
 /** Represents Brackets highlights theme. */
@@ -242,8 +242,8 @@ export function colorBgGraphNode(cst: IConstituenta, coloringScheme: TGColoring)
   return APP_COLORS.bgGreen50;
 }
 
-/** Determines m-graph color for {@link TypificationGraphNode}. */
-export function colorBgTMGraphNode(node: TypificationGraphNode): string {
+/** Determines m-graph color for {@link TypificationNodeData}. */
+export function colorBgTMGraphNode(node: TypificationNodeData): string {
   if (node.rank === 0) {
     return APP_COLORS.bgControls;
   }

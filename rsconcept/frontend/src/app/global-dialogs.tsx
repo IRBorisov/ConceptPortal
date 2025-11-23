@@ -140,7 +140,7 @@ const DlgEditCst = React.lazy(() =>
   import('@/features/rsform/dialogs/dlg-edit-cst').then(module => ({ default: module.DlgEditCst }))
 );
 const DlgShowTermGraph = React.lazy(() =>
-  import('@/features/oss/dialogs/dlg-show-term-graph').then(module => ({ default: module.DlgShowTermGraph }))
+  import('@/features/rsform/dialogs/dlg-show-term-graph').then(module => ({ default: module.DlgShowTermGraph }))
 );
 const DlgCreateSchema = React.lazy(() =>
   import('@/features/oss/dialogs/dlg-create-schema').then(module => ({ default: module.DlgCreateSchema }))

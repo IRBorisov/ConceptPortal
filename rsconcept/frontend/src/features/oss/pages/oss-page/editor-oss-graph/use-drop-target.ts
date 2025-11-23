@@ -1,4 +1,4 @@
-import { useReactFlow } from 'reactflow';
+import { useReactFlow } from '@xyflow/react';
 
 import { NodeType } from '@/features/oss/models/oss';
 

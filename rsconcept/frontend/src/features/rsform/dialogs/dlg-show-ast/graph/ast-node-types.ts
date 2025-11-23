@@ -1,7 +1,7 @@
-import { type NodeTypes } from 'reactflow';
+import { type NodeTypes } from '@xyflow/react';
 
-import { ASTNode } from './ast-node';
+import { ASTNodeComponent } from './ast-node';
 
 export const ASTNodeTypes: NodeTypes = {
-  token: ASTNode
+  token: ASTNodeComponent
 } as const;

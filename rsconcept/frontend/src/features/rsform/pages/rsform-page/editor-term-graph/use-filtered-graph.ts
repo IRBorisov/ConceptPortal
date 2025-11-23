@@ -1,4 +1,4 @@
-import { produceFilteredGraph } from '../../../models/graph-api';
+import { produceFilteredGraph } from '../../../components/term-graph/graph/tg-models';
 import { useTermGraphStore } from '../../../stores/term-graph';
 import { useRSEdit } from '../rsedit-context';
 

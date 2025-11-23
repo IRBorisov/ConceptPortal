@@ -17,7 +17,6 @@ import { type DlgEditBlockProps } from '@/features/oss/dialogs/dlg-edit-block';
 import { type DlgEditOperationProps } from '@/features/oss/dialogs/dlg-edit-operation/dlg-edit-operation';
 import { type DlgImportSchemaProps } from '@/features/oss/dialogs/dlg-import-schema';
 import { type DlgRelocateConstituentsProps } from '@/features/oss/dialogs/dlg-relocate-constituents';
-import { type DlgShowTermGraphProps } from '@/features/oss/dialogs/dlg-show-term-graph/dlg-show-term-graph';
 import { type DlgCreateCstProps } from '@/features/rsform/dialogs/dlg-create-cst/dlg-create-cst';
 import { type DlgCstTemplateProps } from '@/features/rsform/dialogs/dlg-cst-template/dlg-cst-template';
 import { type DlgDeleteCstProps } from '@/features/rsform/dialogs/dlg-delete-cst/dlg-delete-cst';
@@ -28,6 +27,7 @@ import { type DlgInlineSynthesisProps } from '@/features/rsform/dialogs/dlg-inli
 import { type DlgRenameCstProps } from '@/features/rsform/dialogs/dlg-rename-cst';
 import { type DlgShowASTProps } from '@/features/rsform/dialogs/dlg-show-ast/dlg-show-ast';
 import { type DlgShowQRProps } from '@/features/rsform/dialogs/dlg-show-qr';
+import { type DlgShowTermGraphProps } from '@/features/rsform/dialogs/dlg-show-term-graph/dlg-show-term-graph';
 import { type DlgShowTypeGraphProps } from '@/features/rsform/dialogs/dlg-show-type-graph/dlg-show-type-graph';
 import { type DlgSubstituteCstProps } from '@/features/rsform/dialogs/dlg-substitute-cst';
 import { type DlgUploadRSFormProps } from '@/features/rsform/dialogs/dlg-upload-rsform';

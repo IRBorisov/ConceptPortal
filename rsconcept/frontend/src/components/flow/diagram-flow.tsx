@@ -1,25 +1,28 @@
 'use client';
 
 import { type ReactNode, useState } from 'react';
-import { Background, type Node, ReactFlow, type ReactFlowProps } from 'reactflow';
+import { Background, type Edge, type Node, ReactFlow, type ReactFlowProps } from '@xyflow/react';
 
-export { useReactFlow, useStoreApi } from 'reactflow';
+export { useReactFlow, useStoreApi } from '@xyflow/react';
 
 import { useTooltipsStore } from '@/stores/tooltips';
 import { withPreventDefault } from '@/utils/utils';
 
 import { cn } from '../utils';
 
-type DiagramFlowProps = {
+type DiagramFlowProps<NodeType extends Node = Node, EdgeType extends Edge = Edge> = Omit<
+  ReactFlowProps<NodeType, EdgeType>,
+  'height'
+> & {
   children?: ReactNode;
   height?: number | string;
   showGrid?: boolean;
   gridSize?: number;
   onKeyDown?: (event: React.KeyboardEvent<HTMLDivElement>) => void;
   onKeyUp?: (event: React.KeyboardEvent<HTMLDivElement>) => void;
-} & ReactFlowProps;
+};
 
-export function DiagramFlow({
+export function DiagramFlow<NodeType extends Node = Node, EdgeType extends Edge = Edge>({
   children,
   className,
   style,
@@ -46,7 +49,7 @@ export function DiagramFlow({
   onNodeDragStop,
   onContextMenu,
   ...restProps
-}: DiagramFlowProps) {
+}: DiagramFlowProps<NodeType, EdgeType>) {
   const [spaceMode, setSpaceMode] = useState(false);
   const showTooltips = useTooltipsStore(state => state.showTooltips);
   const hideTooltips = useTooltipsStore(state => state.hideTooltips);
@@ -74,12 +77,12 @@ export function DiagramFlow({
     onContextMenu?.(event);
   }
 
-  function handleNodeDragStart(event: React.MouseEvent<Element>, node: Node, nodes: Node[]) {
+  function handleNodeDragStart(event: React.MouseEvent<Element>, node: NodeType, nodes: NodeType[]) {
     hideTooltips();
     onNodeDragStart?.(event, node, nodes);
   }
 
-  function handleNodeDragStop(event: React.MouseEvent<Element>, node: Node, nodes: Node[]) {
+  function handleNodeDragStop(event: React.MouseEvent<Element>, node: NodeType, nodes: NodeType[]) {
     showTooltips();
     onNodeDragStop?.(event, node, nodes);
   }
@@ -87,13 +90,14 @@ export function DiagramFlow({
   return (
     <div
       tabIndex={-1}
-      className={cn('relative cc-mask-sides max-w-480 w-dvw', spaceMode && 'mode-space', className)}
+      className={cn('relative cc-mask-sides h-full max-w-480 w-dvw', spaceMode && 'mode-space', className)}
       style={{ ...style, height: height }}
       onKeyDown={handleKeyDown}
       onKeyUp={handleKeyUp}
     >
       <ReactFlow
         {...restProps}
+        elementsSelectable={!spaceMode}
         onNodesChange={spaceMode ? undefined : onNodesChange}
         onEdgesChange={spaceMode ? undefined : onEdgesChange}
         onNodeClick={spaceMode ? undefined : onNodeClick}

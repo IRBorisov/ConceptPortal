@@ -7,10 +7,8 @@ import { type RO } from '@/utils/meta';
 
 import { type IArgumentInfo } from './rslang';
 
-/**
- * Represents a single node of a {@link TypificationGraph}.
- */
-export interface TypificationGraphNode {
+/** Represents a single node of a {@link TypificationGraph}. */
+export interface TypificationNodeData extends Record<string, unknown> {
   id: number;
   rank: number;
   text: string;
@@ -18,16 +16,14 @@ export interface TypificationGraphNode {
   annotations: string[];
 }
 
-/**
- * Represents a typification multi-graph.
- */
+/** Represents a typification multi-graph. */
 export class TypificationGraph {
   /** List of nodes. */
-  nodes: TypificationGraphNode[] = [];
+  nodes: TypificationNodeData[] = [];
   /** Map of nodes by ID. */
-  nodeById = new Map<number, TypificationGraphNode>();
+  nodeById = new Map<number, TypificationNodeData>();
   /** Map of nodes by alias. */
-  nodeByAlias = new Map<string, TypificationGraphNode>();
+  nodeByAlias = new Map<string, TypificationNodeData>();
 
   /**
    * Adds a constituent to the graph.
@@ -46,13 +42,13 @@ export class TypificationGraph {
     this.addAliasAnnotation(combinedNode.id, alias);
   }
 
-  addBaseNode(baseAlias: string): TypificationGraphNode {
+  addBaseNode(baseAlias: string): TypificationNodeData {
     const existingNode = this.nodes.find(node => node.text === baseAlias);
     if (existingNode) {
       return existingNode;
     }
 
-    const node: TypificationGraphNode = {
+    const node: TypificationNodeData = {
       id: this.nodes.length,
       text: baseAlias,
       rank: 0,
@@ -64,7 +60,7 @@ export class TypificationGraph {
     return node;
   }
 
-  addBooleanNode(parent: number): TypificationGraphNode {
+  addBooleanNode(parent: number): TypificationNodeData {
     const existingNode = this.nodes.find(node => node.parents.length === 1 && node.parents[0] === parent);
     if (existingNode) {
       return existingNode;
@@ -76,7 +72,7 @@ export class TypificationGraph {
     }
 
     const text = parentNode.parents.length === 1 ? `ℬ${parentNode.text}` : `ℬ(${parentNode.text})`;
-    const node: TypificationGraphNode = {
+    const node: TypificationNodeData = {
       id: this.nodes.length,
       rank: parentNode.rank + 1,
       text: text,
@@ -88,7 +84,7 @@ export class TypificationGraph {
     return node;
   }
 
-  addCartesianNode(parents: number[]): TypificationGraphNode {
+  addCartesianNode(parents: number[]): TypificationNodeData {
     const existingNode = this.nodes.find(
       node => node.parents.length === parents.length && node.parents.every((p, i) => p === parents[i])
     );
@@ -102,7 +98,7 @@ export class TypificationGraph {
     }
 
     const text = parentNodes.map(node => (node!.parents.length > 1 ? `(${node!.text})` : node!.text)).join('×');
-    const node: TypificationGraphNode = {
+    const node: TypificationNodeData = {
       id: this.nodes.length,
       text: text,
       rank: Math.max(...parentNodes.map(parent => parent!.rank)) + 1,
@@ -123,7 +119,7 @@ export class TypificationGraph {
     this.nodeByAlias.set(alias, nodeToAnnotate);
   }
 
-  private processArguments(args: RO<IArgumentInfo[]>): TypificationGraphNode | null {
+  private processArguments(args: RO<IArgumentInfo[]>): TypificationNodeData | null {
     if (args.length === 0) {
       return null;
     }
@@ -134,7 +130,7 @@ export class TypificationGraph {
     return this.addCartesianNode(argsNodes.map(node => node.id));
   }
 
-  private processResult(result: string): TypificationGraphNode | null {
+  private processResult(result: string): TypificationNodeData | null {
     if (!result || result === PARAMETER.logicLabel) {
       return null;
     }
@@ -142,9 +138,9 @@ export class TypificationGraph {
   }
 
   private combineResults(
-    result: TypificationGraphNode | null,
-    args: TypificationGraphNode | null
-  ): TypificationGraphNode | null {
+    result: TypificationNodeData | null,
+    args: TypificationNodeData | null
+  ): TypificationNodeData | null {
     if (!result && !args) {
       return null;
     }
@@ -158,7 +154,7 @@ export class TypificationGraph {
     return this.addBooleanNode(argsAndResult.id);
   }
 
-  private parseToNode(typification: string): TypificationGraphNode {
+  private parseToNode(typification: string): TypificationNodeData {
     const tokens = this.tokenize(typification);
     return this.parseTokens(tokens);
   }
@@ -183,8 +179,8 @@ export class TypificationGraph {
     return tokens;
   }
 
-  private parseTokens(tokens: string[], isBoolean: boolean = false): TypificationGraphNode {
-    const stack: TypificationGraphNode[] = [];
+  private parseTokens(tokens: string[], isBoolean: boolean = false): TypificationNodeData {
+    const stack: TypificationNodeData[] = [];
     let isCartesian = false;
     while (tokens.length > 0) {
       const token = tokens.shift();

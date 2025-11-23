@@ -1,7 +1,7 @@
-import { type Edge, type Node } from 'reactflow';
 import dagre from '@dagrejs/dagre';
+import { type Edge, type Node } from '@xyflow/react';
 
-import { type TypificationGraphNode } from '../../../models/typification-graph';
+import { type TypificationNodeData } from '../../../models/typification-graph';
 
 const NODE_WIDTH = 44;
 const NODE_HEIGHT = 44;
@@ -11,7 +11,7 @@ const VERT_SEPARATION = 40;
 const BOOLEAN_WEIGHT = 2;
 const CARTESIAN_WEIGHT = 1;
 
-export function applyLayout(nodes: Node<TypificationGraphNode>[], edges: Edge[]) {
+export function applyLayout(nodes: Node<TypificationNodeData>[], edges: Edge[]) {
   const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
   dagreGraph.setGraph({
     rankdir: 'BT',

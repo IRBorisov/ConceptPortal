@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { type Edge, MarkerType, type Node, useEdgesState, useNodesState } from 'reactflow';
+import { type Edge, MarkerType, useEdgesState, useNodesState } from '@xyflow/react';
 
 import { DiagramFlow } from '@/components/flow/diagram-flow';
 import { type RO } from '@/utils/meta';
@@ -10,6 +10,7 @@ import { type SyntaxTree } from '../../models/rslang';
 
 import { ASTEdgeTypes } from './graph/ast-edge-types';
 import { applyLayout } from './graph/ast-layout';
+import { type ASTNode } from './graph/ast-models';
 import { ASTNodeTypes } from './graph/ast-node-types';
 
 const flowOptions = {
@@ -24,14 +25,14 @@ const flowOptions = {
 
 interface ASTFlowProps {
   data: RO<SyntaxTree>;
-  onNodeEnter: (node: Node) => void;
-  onNodeLeave: (node: Node) => void;
+  onNodeEnter: (node: ASTNode) => void;
+  onNodeLeave: (node: ASTNode) => void;
   onChangeDragging: (value: boolean) => void;
 }
 
 export function ASTFlow({ data, onNodeEnter, onNodeLeave, onChangeDragging }: ASTFlowProps) {
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges] = useEdgesState([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<ASTNode>([]);
+  const [edges, setEdges] = useEdgesState<Edge>([]);
 
   useEffect(() => {
     const newNodes = data.map(node => ({

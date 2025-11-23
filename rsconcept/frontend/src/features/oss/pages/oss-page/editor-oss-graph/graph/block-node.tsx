@@ -1,21 +1,22 @@
 'use client';
 
-import { NodeResizeControl } from 'reactflow';
+import { type NodeProps, NodeResizeControl } from '@xyflow/react';
 import clsx from 'clsx';
 
 import { IconResize } from '@/components/icons';
 import { useDraggingStore } from '@/stores/dragging';
 import { globalIDs } from '@/utils/constants';
 
-import { type BlockInternalNode } from '../../../../models/oss-layout';
 import { useOperationTooltipStore } from '../../../../stores/operation-tooltip';
 import { useOSSGraphStore } from '../../../../stores/oss-graph';
 import { useOssEdit } from '../../oss-edit-context';
 
+import { type OGBlockNode } from './og-models';
+
 export const BLOCK_NODE_MIN_WIDTH = 160;
 export const BLOCK_NODE_MIN_HEIGHT = 100;
 
-export function BlockNode(node: BlockInternalNode) {
+export function BlockNodeComponent(node: NodeProps<OGBlockNode>) {
   const { selectedItems, schema } = useOssEdit();
   const dropTarget = useDraggingStore(state => state.dropTarget);
   const isDragging = useDraggingStore(state => state.isDragging);
@@ -38,7 +39,7 @@ export function BlockNode(node: BlockInternalNode) {
             'text-muted-foreground hover:text-foreground'
           )}
         >
-          {`X: ${node.xPos.toFixed(0)} Y: ${node.yPos.toFixed(0)}`}
+          {`X: ${node.positionAbsoluteX.toFixed(0)} Y: ${node.positionAbsoluteY.toFixed(0)}`}
         </div>
       ) : null}
       <div

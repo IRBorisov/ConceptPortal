@@ -1,18 +1,17 @@
 'use client';
 
-import { Handle, Position } from 'reactflow';
+import { Handle, type NodeProps, Position } from '@xyflow/react';
 
-import { type OperationInternalNode } from '../../../../models/oss-layout';
+import { NodeCoreComponent } from './node-core';
+import { type OGOperationNode } from './og-models';
 
-import { NodeCore } from './node-core';
-
-export function SynthesisNode(node: OperationInternalNode) {
+export function SynthesisNode(node: NodeProps<OGOperationNode>) {
   return (
     <>
       <Handle type='target' position={Position.Top} id='left' style={{ left: 40, top: -2 }} />
       <Handle type='target' position={Position.Top} id='right' style={{ right: 40, left: 'auto', top: -2 }} />
-      <NodeCore node={node} />
-      <Handle type='source' position={Position.Bottom} className='-translate-y-[1px]' />
+      <NodeCoreComponent node={node} />
+      <Handle type='source' position={Position.Bottom} className='-translate-y-px' />
     </>
   );
 }

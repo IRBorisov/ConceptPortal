@@ -1,15 +1,17 @@
 'use client';
 
 import { createContext, use } from 'react';
-import { type Edge, type EdgeChange, type Node, type NodeChange } from 'reactflow';
+import { type Edge, type EdgeChange, type NodeChange } from '@xyflow/react';
+
+import { type OGNode } from './graph/og-models';
 
 interface IOssFlowContext {
   containMovement: boolean;
   setContainMovement: React.Dispatch<React.SetStateAction<boolean>>;
 
-  nodes: Node[];
-  setNodes: React.Dispatch<React.SetStateAction<Node[]>>;
-  onNodesChange: (changes: NodeChange[]) => void;
+  nodes: OGNode[];
+  setNodes: React.Dispatch<React.SetStateAction<OGNode[]>>;
+  onNodesChange: (changes: NodeChange<OGNode>[]) => void;
   edges: Edge[];
   setEdges: React.Dispatch<React.SetStateAction<Edge[]>>;
   onEdgesChange: (changes: EdgeChange[]) => void;

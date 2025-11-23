@@ -1,4 +1,4 @@
-import { type Node } from 'reactflow';
+import { type Node } from '@xyflow/react';
 
 import { useThrottleCallback } from '@/hooks/use-throttle-callback';
 import { useDraggingStore } from '@/stores/dragging';

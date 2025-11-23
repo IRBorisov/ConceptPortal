@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ReactFlowProvider } from 'reactflow';
+import { ReactFlowProvider } from '@xyflow/react';
 import clsx from 'clsx';
 import { useDebounce } from 'use-debounce';
 

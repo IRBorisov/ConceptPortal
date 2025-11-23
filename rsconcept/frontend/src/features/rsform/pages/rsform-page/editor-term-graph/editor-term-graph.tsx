@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { ReactFlowProvider } from 'reactflow';
+import { ReactFlowProvider } from '@xyflow/react';
 
 import { InteractionMode, useTermGraphStore } from '../../../stores/term-graph';
 import { useRSEdit } from '../rsedit-context';

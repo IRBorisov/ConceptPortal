@@ -1,4 +1,4 @@
-import { useReactFlow, useStoreApi } from 'reactflow';
+import { useReactFlow, useStoreApi } from '@xyflow/react';
 
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';

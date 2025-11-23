@@ -1,37 +1,23 @@
 /**
  * Module: Graph of Terms graphical representation.
  */
-import { type Edge, type Node } from 'reactflow';
 import dagre from '@dagrejs/dagre';
+import { type Edge, type Node } from '@xyflow/react';
 
 import { type Graph } from '@/models/graph';
 import { PARAMETER } from '@/utils/constants';
 
-import { CstType } from '../backend/types';
-import { type GraphFilterParams, TGEdgeType } from '../stores/term-graph';
+import { CstType } from '../../../backend/types';
+import { type IConstituenta, type IRSForm } from '../../../models/rsform';
+import { type GraphFilterParams, TGEdgeType } from '../../../stores/term-graph';
 
-import { type IConstituenta, type IRSForm } from './rsform';
-
-export interface TGNodeState {
+export interface TGNodeState extends Record<string, unknown> {
   cst: IConstituenta;
   focused: boolean;
 }
 
 /** Represents graph node. */
-export interface TGNodeData extends Node {
-  id: string;
-  data: TGNodeState;
-}
-
-/** Represents graph node internal data. */
-export interface TGNodeInternal {
-  id: string;
-  data: TGNodeState;
-  selected: boolean;
-  dragging: boolean;
-  xPos: number;
-  yPos: number;
-}
+export type TGNode = Node<TGNodeState>;
 
 export function applyLayout(nodes: Node<TGNodeState>[], edges: Edge[], subLabels: boolean) {
   const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));

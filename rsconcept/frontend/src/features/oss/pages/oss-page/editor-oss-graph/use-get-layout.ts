@@ -1,4 +1,4 @@
-import { type Node, useReactFlow } from 'reactflow';
+import { type Node, useReactFlow } from '@xyflow/react';
 
 import { type IOssLayout } from '../../../backend/types';
 import { type IOperationSchema } from '../../../models/oss';
@@ -29,8 +29,8 @@ export function useGetLayout() {
         .map(node => ({
           nodeID: node.id,
           ...computeAbsolutePosition(node, schema, nodeById),
-          width: node.width ?? BLOCK_NODE_MIN_WIDTH,
-          height: node.height ?? BLOCK_NODE_MIN_HEIGHT
+          width: node.measured?.width ?? BLOCK_NODE_MIN_WIDTH,
+          height: node.measured?.height ?? BLOCK_NODE_MIN_HEIGHT
         }))
     ];
   };

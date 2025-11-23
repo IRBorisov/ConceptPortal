@@ -1,7 +1,7 @@
 /**
 * Module: react-flow base style overrides.
 */
-@import 'reactflow/dist/style.css';
+@import '@xyflow/react/dist/style.css';
 
 /* stylelint-disable selector-class-pattern */
 
@@ -25,12 +25,16 @@
 }
 
 .rf-handle {
-  position: absolute;
   width: calc(100% + 6px) !important;
   height: calc(100% + 6px) !important;
-  opacity: 0;
 
-  top: -3px !important;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  opacity: 0;
+  border: 0;
 }
 
 .rf-handle-target {
@@ -71,6 +75,10 @@
 .react-flow__pane {
   cursor: inherit;
 
+  &.draggable {
+    cursor: inherit;
+  }
+
   .mode-space & {
     cursor: grab;
 
@@ -78,6 +86,10 @@
       cursor: grabbing;
     }
   }
+}
+
+.react-flow__node.draggable {
+  cursor: inherit;
 }
 
 .react-flow__edge {
@@ -114,6 +126,21 @@
   .mode-space & {
     pointer-events: none;
   }
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: -14;
+  }
+}
+
+.rf-connection-line {
+  stroke-width: 3px;
+  stroke-linecap: round;
+  stroke-dasharray: 7 7;
+
+  animation: dash 1s linear infinite;
+  filter: drop-shadow(0 0 3px var(--color-primary));
 }
 
 .react-flow__attribution {

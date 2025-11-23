@@ -1,7 +1,7 @@
-import { type NodeTypes } from 'reactflow';
+import { type NodeTypes } from '@xyflow/react';
 
-import { TGNode } from './tg-node';
+import { TGNodeComponent } from './tg-node';
 
 export const TGNodeTypes: NodeTypes = {
-  concept: TGNode
+  concept: TGNodeComponent
 } as const;

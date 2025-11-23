@@ -1,7 +1,7 @@
-import { type NodeTypes } from 'reactflow';
+import { type NodeTypes } from '@xyflow/react';
 
-import { MGraphNode } from './mgraph-node';
+import { MGraphNodeComponent } from './mgraph-node';
 
-export const TMGraphNodeTypes: NodeTypes = {
-  step: MGraphNode
+export const MGraphNodeTypes: NodeTypes = {
+  step: MGraphNodeComponent
 } as const;

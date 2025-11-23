@@ -1,6 +1,6 @@
 'use client';
 
-import { useStoreApi } from 'reactflow';
+import { useStoreApi } from '@xyflow/react';
 
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';

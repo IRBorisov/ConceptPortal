@@ -1,4 +1,4 @@
-import { useReactFlow } from 'reactflow';
+import { useReactFlow } from '@xyflow/react';
 
 import { useScrollToNode } from '@/components/flow/use-scroll-to-node';
 import { type Graph } from '@/models/graph';
@@ -158,7 +158,7 @@ export function useHandleActions(graph: Graph<number>) {
   }
 
   function handleFitView() {
-    fitView(fitViewOptions);
+    void fitView(fitViewOptions);
   }
 
   function handleSelectionHotkey(eventCode: string): boolean {

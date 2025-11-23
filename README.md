@@ -41,7 +41,6 @@ This readme file is used mostly to document project dependencies and conventions
   - react-zoom-pan-pinch
   - react-hook-form
   - react-scan
-  - reactflow
   - js-file-download
   - use-debounce
   - qrcode.react
@@ -55,6 +54,7 @@ This readme file is used mostly to document project dependencies and conventions
   - @uiw/codemirror-themes
   - @lezer/lr
   - @dagrejs/dagre
+  - @xyflow/react
   </pre>
 </details>
 <details>

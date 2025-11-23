@@ -11,7 +11,7 @@ import {
   useEdgesState,
   useNodesState,
   useOnSelectionChange
-} from 'reactflow';
+} from '@xyflow/react';
 import clsx from 'clsx';
 
 import { DiagramFlow, useReactFlow } from '@/components/flow/diagram-flow';
@@ -28,11 +28,11 @@ import { useUpdateConstituenta } from '../../../backend/use-update-constituenta'
 import { colorGraphEdge } from '../../../colors';
 import { TGConnectionLine } from '../../../components/term-graph/graph/tg-connection';
 import { TGEdgeTypes } from '../../../components/term-graph/graph/tg-edge-types';
+import { applyLayout, inferEdgeType, type TGNode } from '../../../components/term-graph/graph/tg-models';
 import { TGNodeTypes } from '../../../components/term-graph/graph/tg-node-types';
 import { SelectColoring } from '../../../components/term-graph/select-coloring';
 import { SelectEdgeType } from '../../../components/term-graph/select-edge-type';
 import { ViewHidden } from '../../../components/term-graph/view-hidden';
-import { applyLayout, inferEdgeType, type TGNodeData } from '../../../models/graph-api';
 import { addAliasReference } from '../../../models/rsform-api';
 import { InteractionMode, TGEdgeType, useTermGraphStore, useTGConnectionStore } from '../../../stores/term-graph';
 import { useRSEdit } from '../rsedit-context';
@@ -59,7 +59,7 @@ export function TGFlow() {
   const flowRef = useRef<HTMLDivElement>(null);
   useContinuousPan(flowRef);
 
-  const mode = useTermGraphStore(state => state.mode);
+  const interactionMode = useTermGraphStore(state => state.mode);
 
   const setConnectionStart = useTGConnectionStore(state => state.setStart);
   const connectionType = useTGConnectionStore(state => state.connectionType);
@@ -81,7 +81,7 @@ export function TGFlow() {
     setSelectedEdges
   } = useRSEdit();
 
-  const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<TGNode>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
 
   const filter = useTermGraphStore(state => state.filter);
@@ -118,17 +118,18 @@ export function TGFlow() {
     return setConnectionStart(null);
   }, [setConnectionStart]);
 
-  const prevNodesRef = useRef<Node[]>([]);
+  const prevNodesRef = useRef<TGNode[]>([]);
   useEffect(() => {
     if (!viewportInitialized) {
       return;
     }
     const nodeIDs = Array.from(filteredGraph.nodes.keys());
-    const newNodes: Node[] = nodeIDs.map(nodeID => {
+    const newNodes: TGNode[] = nodeIDs.map(nodeID => {
       const cst = schema.cstByID.get(nodeID);
       if (!cst) {
         throw new Error(`Node not found ${nodeID}`);
       }
+
       return {
         id: String(nodeID),
         type: 'concept',
@@ -228,7 +229,7 @@ export function TGFlow() {
   ]);
 
   useEffect(() => {
-    setTimeout(() => fitView(flowOptions.fitViewOptions), PARAMETER.refreshTimeout);
+    setTimeout(() => void fitView(flowOptions.fitViewOptions), PARAMETER.refreshTimeout);
   }, [schema.id, filter.noText, filter.graphType, focusCst, fitView]);
 
   const readyForUpdate = nodes.length === filteredGraph.nodes.size;
@@ -288,22 +289,19 @@ export function TGFlow() {
     return () => cancelAnimationFrame(frame);
   }, [selectedEdges, setEdges, readyForUpdate, viewportInitialized]);
 
-  function handleNodeContextMenu(event: React.MouseEvent<Element>, node: TGNodeData) {
+  function handleNodeContextMenu(event: React.MouseEvent<Element>, node: TGNode) {
     event.preventDefault();
     event.stopPropagation();
     setFocus(focusCst?.id === node.data.cst.id ? null : node.data.cst);
   }
 
-  function handleNodeDoubleClick(event: React.MouseEvent<Element>, node: TGNodeData) {
+  function handleNodeDoubleClick(event: React.MouseEvent<Element>, node: TGNode) {
     event.preventDefault();
     event.stopPropagation();
     navigateCst(node.data.cst.id);
   }
 
-  function handleConnectStart(
-    event: React.MouseEvent<Element> | React.TouchEvent<Element>,
-    params: OnConnectStartParams
-  ) {
+  function handleConnectStart(event: MouseEvent | TouchEvent, params: OnConnectStartParams) {
     event.preventDefault();
     event.stopPropagation();
     setConnectionStart(params.nodeId);
@@ -384,7 +382,7 @@ export function TGFlow() {
       ref={flowRef}
       className={clsx(
         'relative',
-        mode === InteractionMode.explore ? 'mode-explore' : 'mode-edit',
+        interactionMode === InteractionMode.explore ? 'mode-explore' : 'mode-edit',
         isAnimating && 'rf-animation'
       )}
       tabIndex={-1}
@@ -423,7 +421,7 @@ export function TGFlow() {
         onContextMenu={event => event.preventDefault()}
         onNodeContextMenu={handleNodeContextMenu}
         onNodeDoubleClick={handleNodeDoubleClick}
-        nodesConnectable={mode === InteractionMode.edit}
+        nodesConnectable={interactionMode === InteractionMode.edit}
         connectionLineComponent={TGConnectionLine}
         onConnectStart={handleConnectStart}
         onConnectEnd={handleConnectEnd}

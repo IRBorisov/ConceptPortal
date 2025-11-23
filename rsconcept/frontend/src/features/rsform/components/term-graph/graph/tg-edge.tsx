@@ -1,10 +1,10 @@
-import { type EdgeProps, getStraightPath } from 'reactflow';
+import { type EdgeProps, getStraightPath } from '@xyflow/react';
 
 import { PARAMETER } from '@/utils/constants';
 
 const RADIUS = PARAMETER.graphNodeRadius + PARAMETER.graphNodePadding;
 
-export function TermGraphEdge({ id, markerEnd, style, ...props }: EdgeProps) {
+export function TGEdgeComponent({ id, markerEnd, style, ...props }: EdgeProps) {
   const sourceY = props.sourceY - PARAMETER.graphNodeRadius;
   const targetY = props.targetY + PARAMETER.graphNodeRadius;
 

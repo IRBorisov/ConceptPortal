@@ -1,6 +1,6 @@
 'use client';
 
-import { Handle, Position } from 'reactflow';
+import { Handle, type NodeProps, Position } from '@xyflow/react';
 import clsx from 'clsx';
 
 import { isBasicConcept } from '@/features/rsform/models/rsform-api';
@@ -10,14 +10,15 @@ import { globalIDs } from '@/utils/constants';
 
 import { colorBgGraphNode } from '../../../colors';
 import { labelCstTypification } from '../../../labels';
-import { type TGNodeInternal } from '../../../models/graph-api';
 import { type IConstituenta } from '../../../models/rsform';
 import { useTermGraphStore, useTGConnectionStore } from '../../../stores/term-graph';
+
+import { type TGNode } from './tg-models';
 
 const DESCRIPTION_THRESHOLD = 15;
 const LABEL_THRESHOLD = 3;
 
-export function TGNode(node: TGNodeInternal) {
+export function TGNodeComponent(node: NodeProps<TGNode>) {
   const filter = useTermGraphStore(state => state.filter);
   const coloring = useTermGraphStore(state => state.coloring);
   const connectionStart = useTGConnectionStore(state => state.start);

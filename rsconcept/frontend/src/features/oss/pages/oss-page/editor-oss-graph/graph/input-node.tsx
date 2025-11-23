@@ -1,14 +1,13 @@
-import { Handle, Position } from 'reactflow';
+import { Handle, type NodeProps, Position } from '@xyflow/react';
 
-import { type OperationInternalNode } from '../../../../models/oss-layout';
+import { NodeCoreComponent } from './node-core';
+import { type OGOperationNode } from './og-models';
 
-import { NodeCore } from './node-core';
-
-export function InputNode(node: OperationInternalNode) {
+export function InputNodeComponent(node: NodeProps<OGOperationNode>) {
   return (
     <>
-      <NodeCore node={node} />
-      <Handle type='source' position={Position.Bottom} className='-translate-y-[1px]' />
+      <NodeCoreComponent node={node} />
+      <Handle type='source' position={Position.Bottom} className='-translate-y-px' />
     </>
   );
 }

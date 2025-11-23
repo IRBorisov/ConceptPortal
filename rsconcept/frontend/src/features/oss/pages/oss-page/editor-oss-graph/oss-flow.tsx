@@ -10,14 +10,15 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { PARAMETER } from '@/utils/constants';
 
-import { type OssNode, type Position2D } from '../../../models/oss-layout';
+import { type Position2D } from '../../../models/oss-layout';
 import { GRID_SIZE } from '../../../models/oss-layout-api';
 import { useOSSGraphStore } from '../../../stores/oss-graph';
 import { useOssEdit } from '../oss-edit-context';
 
 import { ContextMenu } from './context-menu/context-menu';
 import { useContextMenu } from './context-menu/use-context-menu';
-import { OssNodeTypes } from './graph/oss-node-types';
+import { type OGNode } from './graph/og-models';
+import { OssGraphNodeTypes } from './graph/og-node-types';
 import { CoordinateDisplay } from './coordinate-display';
 import { useOssFlow } from './oss-flow-context';
 import { SidePanel } from './side-panel';
@@ -32,6 +33,7 @@ export const flowOptions = {
   edgesFocusable: false,
   nodesFocusable: false,
   nodesConnectable: false,
+  elevateNodesOnSelect: true,
   maxZoom: 2,
   minZoom: 0.5,
   gridSize: GRID_SIZE,
@@ -61,12 +63,12 @@ export function OssFlow() {
   const { handleDragStart, handleDrag, handleDragStop } = useDragging({ hideContextMenu });
   const { handleKeyDown } = useHandleActions();
 
-  function handleNodeDoubleClick(event: React.MouseEvent<Element>, node: OssNode) {
+  function handleNodeDoubleClick(event: React.MouseEvent<Element>, node: OGNode) {
     event.preventDefault();
     event.stopPropagation();
 
     if (node.type === 'block') {
-      const block = schema.blockByID.get(-Number(node.id));
+      const block = node.data.block;
       if (block) {
         showEditBlock({
           ossID: schema.id,
@@ -86,7 +88,7 @@ export function OssFlow() {
     setMouseCoords(targetPosition);
   }
 
-  function handleNodeContextMenu(event: React.MouseEvent<Element>, node: OssNode) {
+  function handleNodeContextMenu(event: React.MouseEvent<Element>, node: OGNode) {
     event.preventDefault();
     event.stopPropagation();
     openContextMenu(node, event.clientX, event.clientY);
@@ -119,7 +121,7 @@ export function OssFlow() {
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
-        nodeTypes={OssNodeTypes}
+        nodeTypes={OssGraphNodeTypes}
         showGrid={showGrid}
         onClick={hideContextMenu}
         onNodeDoubleClick={handleNodeDoubleClick}

@@ -1,39 +1,30 @@
 'use client';
 
-import { Handle, Position } from 'reactflow';
+import { Handle, type NodeProps, Position } from '@xyflow/react';
 
 import { globalIDs } from '@/utils/constants';
 
 import { colorBgTMGraphNode } from '../../../colors';
-import { type TypificationGraphNode } from '../../../models/typification-graph';
+import { type TypificationNodeData } from '../../../models/typification-graph';
 
-/**
- * Represents graph TMGraph node internal data.
- */
-interface MGraphNodeInternal {
-  id: string;
-  data: TypificationGraphNode;
-  dragging: boolean;
-  xPos: number;
-  yPos: number;
-}
+import { type MGNode } from './mgraph-models';
 
-function getNodeLabel(node: MGraphNodeInternal) {
-  if (node.data.annotations.length === 0) {
-    return node.data.rank === 0 ? node.data.text : '';
-  } else if (node.data.rank === 0) {
-    return `${node.data.text} | ${node.data.annotations.length}`;
+function getNodeLabel(data: TypificationNodeData) {
+  if (data.annotations.length === 0) {
+    return data.rank === 0 ? data.text : '';
+  } else if (data.rank === 0) {
+    return `${data.text} | ${data.annotations.length}`;
   } else {
-    return node.data.annotations.length;
+    return data.annotations.length;
   }
 }
 
-export function MGraphNode(node: MGraphNodeInternal) {
+export function MGraphNodeComponent(node: NodeProps<MGNode>) {
   const tooltipText =
     `<span class="font-math">${node.data.text}</span>` +
     '<br/>' +
     (node.data.annotations.length === 0 ? '' : `<b>Конституенты</b> ${node.data.annotations.join(' ')}`);
-  const nodeLabel = getNodeLabel(node);
+  const nodeLabel = getNodeLabel(node.data);
 
   return (
     <>
