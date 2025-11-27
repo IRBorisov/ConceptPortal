@@ -8,10 +8,10 @@ import { type OGOperationNode } from './og-models';
 export function SynthesisNode(node: NodeProps<OGOperationNode>) {
   return (
     <>
-      <Handle type='target' position={Position.Top} id='left' style={{ left: 40, top: -2 }} />
-      <Handle type='target' position={Position.Top} id='right' style={{ right: 40, left: 'auto', top: -2 }} />
+      <Handle type='target' position={Position.Top} id='left' style={{ left: 40 }} />
+      <Handle type='target' position={Position.Top} id='right' style={{ right: 40, left: 'auto' }} />
       <NodeCoreComponent node={node} />
-      <Handle type='source' position={Position.Bottom} className='-translate-y-px' />
+      <Handle type='source' position={Position.Bottom} />
     </>
   );
 }
