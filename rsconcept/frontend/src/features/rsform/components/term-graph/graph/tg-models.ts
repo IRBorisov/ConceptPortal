@@ -20,24 +20,54 @@ export interface TGNodeState extends Record<string, unknown> {
 export type TGNode = Node<TGNodeState>;
 
 export function applyLayout(nodes: Node<TGNodeState>[], edges: Edge[], subLabels: boolean) {
+  const rankSeparation = subLabels ? 3 * PARAMETER.graphNodeRadius : 2 * PARAMETER.graphNodeRadius;
+  const nodeSeparation = subLabels ? 5 * PARAMETER.graphNodeRadius : 1 * PARAMETER.graphNodeRadius;
   const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
   dagreGraph.setGraph({
     rankdir: 'TB',
-    ranksep: subLabels ? 60 : 40,
-    nodesep: subLabels ? 100 : 20,
-    ranker: 'network-simplex'
+    ranksep: rankSeparation,
+    nodesep: nodeSeparation,
+    ranker: 'tight-tree'
   });
-  nodes.forEach(node => {
+
+  const isolated = nodes.filter(node => edges.every(edge => edge.source !== node.id && edge.target !== node.id));
+  const nonIsolated = nodes.filter(node => isolated.find(i => i.id === node.id) === undefined);
+
+  nonIsolated.forEach(node => {
     dagreGraph.setNode(node.id, { width: 2 * PARAMETER.graphNodeRadius, height: 2 * PARAMETER.graphNodeRadius });
   });
 
   edges.forEach(edge => {
-    dagreGraph.setEdge(edge.source, edge.target);
+    if (
+      isolated.find(i => i.id === edge.source) === undefined &&
+      isolated.find(i => i.id === edge.target) === undefined
+    ) {
+      dagreGraph.setEdge(edge.source, edge.target);
+    }
   });
 
   dagre.layout(dagreGraph);
 
-  nodes.forEach(node => {
+  if (isolated.length > 0) {
+    const maxY = Math.min(...nonIsolated.map(node => dagreGraph.node(node.id).y));
+
+    const cellWidth = nodeSeparation + 2 * PARAMETER.graphNodeRadius;
+    const cellHeight = rankSeparation + 2 * PARAMETER.graphNodeRadius;
+
+    const cols = 2 * Math.sqrt(isolated.length / 2);
+    const startX = -((cols - 1) * cellWidth) / 2;
+    const startY = maxY - cellHeight - rankSeparation;
+
+    isolated.forEach((node, i) => {
+      const row = Math.floor(i / cols);
+      const col = i % cols;
+
+      node.position.x = startX + col * cellWidth;
+      node.position.y = startY - row * cellHeight;
+    });
+  }
+
+  nonIsolated.forEach(node => {
     const nodeWithPosition = dagreGraph.node(node.id);
     node.position.x = nodeWithPosition.x - PARAMETER.graphNodeRadius;
     node.position.y = nodeWithPosition.y - PARAMETER.graphNodeRadius;
