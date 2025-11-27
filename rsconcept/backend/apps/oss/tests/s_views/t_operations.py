@@ -1,12 +1,6 @@
 ''' Testing API: Operation Schema - operations manipulation. '''
 from apps.library.models import Editor, LibraryItem
-from apps.oss.models import (
-    Argument,
-    Operation,
-    OperationSchema,
-    OperationType,
-    Replica
-)
+from apps.oss.models import Argument, Operation, OperationSchema, OperationType, Replica
 from apps.rsform.models import Attribution, RSForm
 from shared.EndpointTester import EndpointTester, decl_endpoint
 
@@ -17,7 +11,7 @@ class TestOssOperations(EndpointTester):
 
     def setUp(self):
         super().setUp()
-        self.owned = OperationSchema.create(title='Test', alias='T1', owner=self.user)
+        self.owned = OperationSchema.create(title='Test', alias='T1', owner=self.user, location='test')
         self.owned_id = self.owned.model.pk
         self.unowned = OperationSchema.create(title='Test2', alias='T2')
         self.unowned_id = self.unowned.model.pk
@@ -28,17 +22,19 @@ class TestOssOperations(EndpointTester):
         self.ks1 = RSForm.create(
             alias='KS1',
             title='Test1',
-            owner=self.user
+            owner=self.user,
+            location=self.owned.model.location
         )
         self.ks1X1 = self.ks1.insert_last(
             'X1',
             term_raw='X1_1',
-            term_resolved='X1_1'
+            term_resolved='X1_1',
         )
         self.ks2 = RSForm.create(
             alias='KS2',
             title='Test2',
-            owner=self.user
+            owner=self.user,
+            location=self.owned.model.location
         )
         self.ks2X1 = self.ks2.insert_last(
             'X2',
@@ -333,6 +329,35 @@ class TestOssOperations(EndpointTester):
         deleted_items = [item for item in layout if item['nodeID'] == 'o' + str(data['target'])]
         self.assertEqual(len(response.data['operations']), 2)
         self.assertEqual(len(deleted_items), 0)
+
+
+    @decl_endpoint('/api/oss/{item}/delete-operation', method='patch')
+    def test_delete_operation_imported(self):
+        self.populateData()
+        schema = RSForm.create(
+            alias='42',
+            title='42',
+            owner=self.user,
+            location='none'
+        )
+        operation = self.owned.create_operation(
+            alias='42',
+            operation_type=OperationType.INPUT,
+            result=schema.model
+        )
+
+        data = {
+            'target': operation.pk,
+            'layout': self.layout_data,
+            'delete_schema': True
+        }
+        self.executeBadData(data, item=self.owned_id)
+
+        schema.model.location = self.owned.model.location
+        schema.model.save()
+        self.executeOK(data)
+        self.assertFalse(Operation.objects.filter(pk=operation.pk).exists())
+        self.assertFalse(LibraryItem.objects.filter(pk=schema.model.pk).exists())
 
 
     @decl_endpoint('/api/oss/{item}/delete-operation', method='patch')

@@ -34,6 +34,10 @@ def operationNotInOSS():
     return 'Операция не принадлежит ОСС'
 
 
+def operationResultNotInOSS():
+    return 'Результат операции не принадлежит ОСС'
+
+
 def duplicateSchemasInArguments():
     return 'Аргументы не должны содержать повторяющиеся КС'
 

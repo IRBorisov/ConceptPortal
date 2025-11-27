@@ -1,6 +1,6 @@
 'use client';
 
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { HelpTopic } from '@/features/help';
@@ -33,9 +33,11 @@ export function DlgDeleteOperation() {
       target: targetID,
       layout: layout,
       keep_constituents: false,
-      delete_schema: true
+      delete_schema: target.operation_type !== OperationType.INPUT || !target.is_import
     }
   });
+
+  const deleteSchema = useWatch({ control, name: 'delete_schema' });
 
   function onSubmit(data: IDeleteOperationDTO) {
     return deleteOperation({ itemID: ossID, data: data, beforeUpdate: beforeDelete });
@@ -81,6 +83,11 @@ export function DlgDeleteOperation() {
           />
         )}
       />
+      {deleteSchema ? (
+        <div className='text-destructive'>
+          <b>Внимание!</b> Будет удалена также связанная схема
+        </div>
+      ) : null}
     </ModalForm>
   );
 }

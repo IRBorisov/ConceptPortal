@@ -456,6 +456,12 @@ class DeleteOperationSerializer(StrictSerializer):
             raise serializers.ValidationError({
                 'target': msg.operationNotInOSS()
             })
+        if operation.result is not None and attrs['delete_schema']:
+            if operation.result.location != oss.location or operation.result.owner != oss.owner:
+                raise serializers.ValidationError({
+                    'target': msg.operationResultNotInOSS()
+                })
+
         if operation.operation_type == OperationType.REPLICA:
             raise serializers.ValidationError({
                 'target': msg.replicaNotAllowed()
