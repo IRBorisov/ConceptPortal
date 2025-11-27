@@ -25,7 +25,7 @@ export function TGNodeComponent(node: NodeProps<TGNode>) {
   const isConnecting = connectionStart !== null;
 
   const label = node.data.cst.alias;
-  const description = !filter.noText ? node.data.cst.term_resolved : '';
+  const description = filter.noText ? '' : node.data.cst.term_resolved || node.data.cst.definition_resolved;
 
   return (
     <>

@@ -27,7 +27,7 @@ export function applyLayout(nodes: Node<TGNodeState>[], edges: Edge[], subLabels
     rankdir: 'TB',
     ranksep: rankSeparation,
     nodesep: nodeSeparation,
-    ranker: 'tight-tree'
+    ranker: 'longest-path'
   });
 
   const isolated = nodes.filter(node => edges.every(edge => edge.source !== node.id && edge.target !== node.id));
@@ -49,18 +49,23 @@ export function applyLayout(nodes: Node<TGNodeState>[], edges: Edge[], subLabels
   dagre.layout(dagreGraph);
 
   if (isolated.length > 0) {
-    const maxY = Math.min(...nonIsolated.map(node => dagreGraph.node(node.id).y));
+    const xs = nonIsolated.map(n => dagreGraph.node(n.id).x);
+    const maxY = nonIsolated.length ? Math.min(...nonIsolated.map(node => dagreGraph.node(node.id).y)) : 0;
+    const minX = nonIsolated.length ? Math.min(...xs) : 0;
+    const maxX = nonIsolated.length ? Math.max(...xs) : 0;
+    const midX = (minX + maxX) / 2;
 
     const cellWidth = nodeSeparation + 2 * PARAMETER.graphNodeRadius;
     const cellHeight = rankSeparation + 2 * PARAMETER.graphNodeRadius;
 
-    const cols = 2 * Math.sqrt(isolated.length / 2);
-    const startX = -((cols - 1) * cellWidth) / 2;
+    const cols = Math.ceil(2 * Math.sqrt(isolated.length / 2));
+    const width = (cols - 1) * cellWidth;
     const startY = maxY - cellHeight - rankSeparation;
+    const startX = midX - width / 2;
 
-    isolated.forEach((node, i) => {
-      const row = Math.floor(i / cols);
-      const col = i % cols;
+    isolated.forEach((node, index) => {
+      const row = Math.floor(index / cols);
+      const col = index % cols;
 
       node.position.x = startX + col * cellWidth;
       node.position.y = startY - row * cellHeight;

@@ -112,13 +112,7 @@ export function DlgCreateSynthesis() {
             <TabArguments oss={schema} />
           </TabPanel>
           <TabPanel>
-            <Suspense
-              fallback={
-                <div className='w-full h-full flex items-center justify-center'>
-                  <Loader circular />
-                </div>
-              }
-            >
+            <Suspense fallback={<Loader />}>
               <TabSubstitutions oss={schema} />
             </Suspense>
           </TabPanel>

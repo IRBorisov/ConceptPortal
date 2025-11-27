@@ -83,7 +83,7 @@ export const errorMsg = {
 export const hintMsg = {
   templateInvalid: 'Выберите шаблон конституенты',
   formInvalid: 'Форма заполнена некорректно',
-  aliasInvalid: 'Введите незанятое имя, соответствующее типу',
+  aliasInvalid: 'Введите незанятое имя,<br />соответствующее типу',
   aliasEmpty: 'Введите сокращение',
   titleEmpty: 'Введите название',
   blockTitleTaken: 'Блок с таким названием уже существует',
