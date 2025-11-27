@@ -507,10 +507,19 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
                 data={'file': msg.exteorFileCorrupted()}
             )
         data['id'] = item.pk
+        if Inheritance.objects.filter(child__schema_id=item.pk).exists():
+            raise ValidationError({
+                'data': msg.importIntoInherited()
+            })
 
         serializer = s.RSFormTRSSerializer(data=data, context={'load_meta': load_metadata})
         serializer.is_valid(raise_exception=True)
-        result: m.RSFormCached = serializer.save()
+
+        with transaction.atomic():
+            PropagationFacade().before_delete_schema(item.pk)
+            result: m.RSFormCached = serializer.save()
+            PropagationFacade().after_create_cst(list(result.constituentsQ().order_by('order')))
+
         return Response(
             status=c.HTTP_200_OK,
             data=s.RSFormParseSerializer(LibraryItem.objects.get(pk=result.pk)).data

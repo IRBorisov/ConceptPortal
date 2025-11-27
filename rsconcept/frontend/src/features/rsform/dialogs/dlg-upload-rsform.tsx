@@ -56,6 +56,9 @@ export function DlgUploadRSForm() {
         value={loadMetadata}
         onChange={value => setLoadMetadata(value)}
       />
+      <div className='text-destructive'>
+        <b>Внимание!</b> При загрузке из файла все конституенты текущей КС будут удалены
+      </div>
     </ModalForm>
   );
 }

@@ -27,7 +27,7 @@ export function applyLayout(nodes: Node<TGNodeState>[], edges: Edge[], subLabels
     rankdir: 'TB',
     ranksep: rankSeparation,
     nodesep: nodeSeparation,
-    ranker: 'longest-path'
+    ranker: 'network-simplex'
   });
 
   const isolated = nodes.filter(node => edges.every(edge => edge.source !== node.id && edge.target !== node.id));

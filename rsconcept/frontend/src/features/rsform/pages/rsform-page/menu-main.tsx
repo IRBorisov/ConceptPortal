@@ -40,6 +40,7 @@ export function MenuMain() {
   const isProcessing = useMutatingRSForm();
 
   const { user, isAnonymous } = useAuthSuspense();
+  const hasInheritance = schema.inheritance.some(item => item.child_source === schema.id);
 
   const role = useRoleStore(state => state.role);
   const isModified = useModificationStore(state => state.isModified);
@@ -164,7 +165,7 @@ export function MenuMain() {
           <DropdownButton
             text='Загрузить из Экстеор'
             icon={<IconUpload size='1rem' className='icon-red' />}
-            disabled={isProcessing || schema.oss.length !== 0}
+            disabled={isProcessing || hasInheritance}
             onClick={handleUpload}
           />
         ) : null}

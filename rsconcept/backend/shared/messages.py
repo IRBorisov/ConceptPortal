@@ -66,6 +66,10 @@ def exteorFileCorrupted():
     return 'Файл Экстеор не соответствует ожидаемому формату. Попробуйте сохранить файл в новой версии'
 
 
+def importIntoInherited():
+    return 'Нельзя импортировать в синтезированную КС'
+
+
 def previousResultMissing():
     return 'Отсутствует результат предыдущей операции'
 
