@@ -67,7 +67,7 @@ export function useLibraryColumns() {
     }),
     columnHelper.accessor('time_update', {
       id: 'time_update',
-      header: isSmall ? 'Дата' : 'Обновлена',
+      header: () => <span className='min-w-20'>{isSmall ? 'Дата' : 'Обновлена'}</span>,
       cell: props => (
         <span className='whitespace-nowrap'>
           {new Date(props.getValue()).toLocaleString(intl.locale, {

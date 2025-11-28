@@ -30,8 +30,8 @@ export function TableVersions({ processing, items, onDelete, selected, onSelect 
   const columns = [
     columnHelper.accessor('version', {
       id: 'version',
-      header: 'Версия',
-      cell: props => <div className='w-24 text-ellipsis'>{props.getValue()}</div>
+      header: () => <span className='min-w-24'>Версия</span>,
+      cell: props => <div className='text-ellipsis'>{props.getValue()}</div>
     }),
     columnHelper.accessor('description', {
       id: 'description',
@@ -43,7 +43,7 @@ export function TableVersions({ processing, items, onDelete, selected, onSelect 
     }),
     columnHelper.accessor('time_create', {
       id: 'time_create',
-      header: 'Дата создания',
+      header: () => <span className='min-w-26'>Дата создания</span>,
       cell: props => (
         <div className='whitespace-nowrap'>
           {new Date(props.getValue()).toLocaleString(intl.locale, {

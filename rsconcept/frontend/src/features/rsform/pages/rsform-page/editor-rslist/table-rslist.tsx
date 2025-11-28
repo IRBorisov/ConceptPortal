@@ -61,7 +61,7 @@ export function TableRSList({
   const columns = [
     columnHelper.accessor('alias', {
       id: 'alias',
-      header: () => <span className='pl-3'>Имя</span>,
+      header: () => <span className='pl-3 min-w-12'>Имя</span>,
       size: 65,
       minSize: 65,
       maxSize: 65,
@@ -69,7 +69,7 @@ export function TableRSList({
     }),
     columnHelper.accessor(cst => labelCstTypification(cst), {
       id: 'type',
-      header: 'Типизация',
+      header: () => <span className='min-w-40'>Типизация</span>,
       enableHiding: true,
       size: 150,
       minSize: 150,
@@ -80,7 +80,7 @@ export function TableRSList({
     }),
     columnHelper.accessor(cst => cst.term_resolved || cst.term_raw || '', {
       id: 'term',
-      header: 'Термин',
+      header: () => <span className='pl-3 min-w-30'>Термин</span>,
       size: 500,
       minSize: 150,
       maxSize: 500
