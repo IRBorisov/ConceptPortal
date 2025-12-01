@@ -146,7 +146,6 @@ export function TGReadonlyFlow({ schema }: TGReadonlyFlowProps) {
   }, [schema.id, filter.noText, filter.graphType, focusCst, fitView]);
 
   function handleNodeContextMenu(event: React.MouseEvent<Element>, node: Node) {
-    console.log(node);
     event.preventDefault();
     event.stopPropagation();
     setFocusCst(focusCst?.id === (node as TGNode).data.cst.id ? null : (node as TGNode).data.cst);

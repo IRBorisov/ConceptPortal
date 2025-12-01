@@ -23,13 +23,12 @@ export const pdfs = StyleSheet.create({
     flexDirection: 'row',
     borderBottomWidth: 0.5,
     borderLeftWidth: 0.5,
+    borderRightWidth: 0.5,
     borderColor: '#000'
   },
   headerRow: {
     flexDirection: 'row',
-    borderTopWidth: 0.5,
-    borderBottomWidth: 0.5,
-    borderLeftWidth: 0.5,
+    borderWidth: 0.5,
     borderColor: '#000',
 
     fontWeight: 'bold',

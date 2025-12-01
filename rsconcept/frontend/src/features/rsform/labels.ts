@@ -481,7 +481,7 @@ export function labelTypification({
     return resultType;
   }
   const argsText = args.map(arg => arg.typification).join(', ');
-  return `[${argsText}] 🠖 ${resultType}`;
+  return `[${argsText}] → ${resultType}`;
 }
 
 /**

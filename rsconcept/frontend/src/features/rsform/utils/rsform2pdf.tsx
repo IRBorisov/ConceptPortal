@@ -2,10 +2,11 @@ import { Document, Font, Page, pdf, Text, View } from '@react-pdf/renderer';
 
 import { type RO } from '@/utils/meta';
 
+import { labelCstTypification } from '../labels';
 import { type IConstituenta } from '../models/rsform';
 
 import { pdfs } from './pdf-styles';
-import { addSpaces } from './pdf-utils';
+import { addSpaces, addSpacesTypification } from './pdf-utils';
 
 export function cstListToFile(data: RO<IConstituenta[]>): Promise<Blob> {
   return pdf(<CstListDocument data={data} />).toBlob();
@@ -68,7 +69,7 @@ function CstTable({ data }: { data: RO<IConstituenta[]> }) {
           <Text style={{ ...pdfs.cell, width: '82mm' }}>Формальное выражение</Text>
           <Text style={{ ...pdfs.cell, width: '38mm' }}>Типизация</Text>
           <Text style={{ ...pdfs.cell, width: '40mm' }}>Термин</Text>
-          <Text style={{ ...pdfs.cell, width: '82mm' }}>Схемная интерпретация / Термин</Text>
+          <Text style={{ ...pdfs.cell, width: '82mm', borderRightWidth: 0 }}>Схемная интерпретация / Термин</Text>
         </View>
 
         {/* Table Rows */}
@@ -77,17 +78,14 @@ function CstTable({ data }: { data: RO<IConstituenta[]> }) {
             <Text style={{ ...pdfs.cell, width: '13mm', fontFamily: 'CodeMath', textAlign: 'center' }}>
               {cst.alias}
             </Text>
-            <Text
-              style={{ ...pdfs.cell, borderWidth: 0.5, width: '82mm', fontFamily: 'CodeMath' }}
-              hyphenationCallback={word => [word]}
-            >
+            <Text style={{ ...pdfs.cell, width: '82mm', fontFamily: 'CodeMath' }} hyphenationCallback={word => [word]}>
               {addSpaces(cst.definition_formal)}
             </Text>
             <Text style={{ ...pdfs.cell, width: '38mm', fontFamily: 'CodeMath' }}>
-              {cst.parse?.typification ? addSpaces(cst.parse.typification) : ''}
+              {addSpacesTypification(labelCstTypification(cst))}
             </Text>
             <Text style={{ ...pdfs.cell, width: '40mm' }}>{cst.term_resolved}</Text>
-            <Text style={{ ...pdfs.cell, width: '82mm' }}>{getCommentColumnText(cst)}</Text>
+            <Text style={{ ...pdfs.cell, width: '82mm', borderRightWidth: 0 }}>{getCommentColumnText(cst)}</Text>
           </View>
         ))}
       </View>
