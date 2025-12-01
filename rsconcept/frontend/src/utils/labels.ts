@@ -74,7 +74,8 @@ export const errorMsg = {
   cyclingEdge: 'Связь образует цикл',
   changeInheritedDefinition: 'Нельзя изменить определение наследника',
   addInheritedEdge: 'Новая связь между наследниками из одной схемы не допускается',
-  deleteInheritedEdge: 'Нельзя удалить связь между наследниками из одной схемы'
+  deleteInheritedEdge: 'Нельзя удалить связь между наследниками из одной схемы',
+  pdfError: 'Не удалось создать PDF-файл'
 } as const;
 
 /**

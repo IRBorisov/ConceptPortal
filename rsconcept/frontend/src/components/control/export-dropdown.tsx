@@ -3,14 +3,22 @@
 import { toast } from 'react-toastify';
 import fileDownload from 'js-file-download';
 
-import { infoMsg } from '@/utils/labels';
+import { errorMsg, infoMsg } from '@/utils/labels';
 import { convertToCSV, convertToJSON } from '@/utils/utils';
 
 import { Dropdown, DropdownButton, useDropdown } from '../dropdown';
-import { IconCSV, IconDownload, IconJSON } from '../icons';
+import { IconCSV, IconDownload, IconJSON, IconPDF } from '../icons';
 import { cn } from '../utils';
 
 import { MiniButton } from './mini-button';
+
+/** Represents export type. */
+export const ExportType = {
+  CSV: 'csv',
+  JSON: 'json',
+  PDF: 'pdf'
+} as const;
+export type ExportType = (typeof ExportType)[keyof typeof ExportType];
 
 interface ExportDropdownProps<T extends object = object> {
   /** Disabled state */
@@ -25,28 +33,45 @@ interface ExportDropdownProps<T extends object = object> {
   /** Optional button className */
 
   className?: string;
+
+  csvConverter?: (data: readonly Readonly<T>[]) => Blob;
+  jsonConverter?: (data: readonly Readonly<T>[]) => Blob;
+  pdfConverter?: (data: readonly Readonly<T>[]) => Promise<Blob>;
 }
 
 export function ExportDropdown<T extends object = object>({
   disabled,
   data,
   filename = 'export',
-  className
+  className,
+  csvConverter = convertToCSV,
+  jsonConverter = convertToJSON,
+  pdfConverter
 }: ExportDropdownProps<T>) {
   const { elementRef: ref, isOpen, toggle, handleBlur, hide } = useDropdown();
 
-  function handleExport(format: 'csv' | 'json') {
+  function handleExport(format: ExportType) {
     if (!data?.length) {
       toast.error(infoMsg.noDataToExport);
       return;
     }
     try {
-      if (format === 'csv') {
-        const blob = convertToCSV(data);
+      if (format === ExportType.CSV) {
+        const blob = csvConverter(data);
         fileDownload(blob, `${filename}.csv`, 'text/csv;charset=utf-8;');
-      } else {
-        const blob = convertToJSON(data);
+      } else if (format === ExportType.JSON) {
+        const blob = jsonConverter(data);
         fileDownload(blob, `${filename}.json`, 'application/json;charset=utf-8;');
+      } else {
+        if (!pdfConverter) {
+          throw new Error('PDF converter is not defined');
+        }
+        void pdfConverter(data)
+          .then(blob => fileDownload(blob, `${filename}.pdf`, 'application/pdf;charset=utf-8;'))
+          .catch(error => {
+            toast.error(errorMsg.pdfError);
+            throw error;
+          });
       }
     } catch (error) {
       console.error(error);
@@ -68,15 +93,23 @@ export function ExportDropdown<T extends object = object>({
         <DropdownButton
           icon={<IconCSV size='1rem' className='mr-1 icon-green' />}
           text='CSV'
-          onClick={() => handleExport('csv')}
+          onClick={() => handleExport(ExportType.CSV)}
           className='w-full justify-start'
         />
         <DropdownButton
           icon={<IconJSON size='1rem' className='mr-1 icon-green' />}
           text='JSON'
-          onClick={() => handleExport('json')}
+          onClick={() => handleExport(ExportType.JSON)}
           className='w-full justify-start'
         />
+        {pdfConverter ? (
+          <DropdownButton
+            icon={<IconPDF size='1rem' className='mr-1 icon-green' />}
+            text='PDF'
+            onClick={() => handleExport(ExportType.PDF)}
+            className='w-full justify-start'
+          />
+        ) : null}
       </Dropdown>
     </div>
   );

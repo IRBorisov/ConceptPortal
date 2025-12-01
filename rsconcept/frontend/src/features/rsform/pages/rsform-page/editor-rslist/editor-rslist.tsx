@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import clsx from 'clsx';
 
+import { cstListToFile } from '@/features/rsform/utils/rsform2pdf';
+
 import { ExportDropdown } from '@/components/control/export-dropdown';
 import { type RowSelectionState } from '@/components/data-table';
 import { SearchBar } from '@/components/input';
@@ -130,6 +132,7 @@ export function EditorRSList() {
         filename={schema.alias}
         className='absolute z-pop right-4 hidden sm:block top-18'
         disabled={filtered.length === 0}
+        pdfConverter={cstListToFile}
       />
 
       <TableRSList

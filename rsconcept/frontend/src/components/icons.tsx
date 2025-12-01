@@ -63,6 +63,7 @@ export { TbCalendarPlus   as IconDateCreate }     from 'react-icons/tb';
 export { TbCalendarRepeat as IconDateUpdate }     from 'react-icons/tb';
 export { PiFileCsv        as IconCSV }            from 'react-icons/pi';
 export { BsFiletypeJson   as IconJSON }           from 'react-icons/bs';
+export { FaRegFilePdf     as IconPDF }            from 'react-icons/fa6';
 
 // ==== User status =======
 export { LuCircleUserRound as IconUser }          from 'react-icons/lu';

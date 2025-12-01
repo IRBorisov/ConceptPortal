@@ -55,6 +55,7 @@ This readme file is used mostly to document project dependencies and conventions
   - @lezer/lr
   - @dagrejs/dagre
   - @xyflow/react
+  - @react-pdf/renderer
   </pre>
 </details>
 <details>
