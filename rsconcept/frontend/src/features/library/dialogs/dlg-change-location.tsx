@@ -62,7 +62,7 @@ export function DlgChangeLocation() {
         render={({ field }) => (
           <PickLocation
             dropdownHeight='h-38' //
-            value={field.value}
+            value={field.value ?? ''}
             onChange={field.onChange}
             error={errors.location}
           />

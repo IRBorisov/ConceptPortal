@@ -125,7 +125,7 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
             label='Содержание'
             placeholder='Пример: Предложи дополнение для КС {{schema}}'
             className='disabled:min-h-9 max-h-64'
-            value={field.value}
+            value={field.value ?? ''}
             onChange={newValue => handleChangeText(newValue, field.onChange)}
             disabled={isProcessing || !isMutable}
           />
@@ -139,7 +139,7 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
             <Checkbox
               id='prompt_is_shared'
               label='Общий шаблон'
-              value={field.value}
+              value={field.value ?? false}
               onChange={field.onChange}
               onBlur={field.onBlur}
               ref={field.ref}

@@ -37,7 +37,13 @@ export function DlgGraphParams() {
           control={control}
           name='noText'
           render={({ field }) => (
-            <Checkbox {...field} label='Скрыть текст' titleHtml={prepareTooltip('Не отображать термины', 'T')} />
+            <Checkbox
+              value={field.value ?? false}
+              onChange={field.onChange}
+              onBlur={field.onBlur}
+              label='Скрыть текст'
+              titleHtml={prepareTooltip('Не отображать термины', 'T')}
+            />
           )}
         />
         <Controller
@@ -45,7 +51,9 @@ export function DlgGraphParams() {
           name='foldDerived'
           render={({ field }) => (
             <Checkbox
-              {...field}
+              value={field.value ?? false}
+              onChange={field.onChange}
+              onBlur={field.onBlur}
               label='Скрыть порожденные'
               titleHtml={prepareTooltip('Не отображать порожденные понятия', 'B')}
             />
@@ -55,7 +63,13 @@ export function DlgGraphParams() {
           control={control}
           name='noHermits'
           render={({ field }) => (
-            <Checkbox {...field} label='Скрыть свободные' titleHtml={prepareTooltip('Конституенты без связей', 'H')} />
+            <Checkbox
+              value={field.value ?? false}
+              onChange={field.onChange}
+              onBlur={field.onBlur}
+              label='Скрыть свободные'
+              titleHtml={prepareTooltip('Конституенты без связей', 'H')}
+            />
           )}
         />
         <Controller
@@ -63,7 +77,9 @@ export function DlgGraphParams() {
           name='noTemplates'
           render={({ field }) => (
             <Checkbox
-              {...field}
+              value={field.value ?? false}
+              onChange={field.onChange}
+              onBlur={field.onBlur}
               label='Скрыть шаблоны'
               titleHtml='Терм-функции и предикат-функции <br/>с параметризованными аргументами'
             />
@@ -74,7 +90,9 @@ export function DlgGraphParams() {
           name='noTransitive'
           render={({ field }) => (
             <Checkbox
-              {...field}
+              value={field.value ?? false}
+              onChange={field.onChange}
+              onBlur={field.onBlur}
               label='Транзитивная редукция'
               titleHtml='Удалить связи, образующие <br/>транзитивные пути в графе'
             />

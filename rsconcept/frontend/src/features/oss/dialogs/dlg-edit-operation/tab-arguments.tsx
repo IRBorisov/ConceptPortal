@@ -38,11 +38,11 @@ export function TabArguments({ oss, target }: TabArgumentsProps) {
         control={control}
         render={({ field }) => (
           <>
-            <Label text={`Выбор аргументов: [ ${field.value.length} ]`} />
+            <Label text={`Выбор аргументов: [ ${field.value?.length} ]`} />
             <PickMultiOperation
               items={filtered}
-              value={field.value}
-              onChange={newValue => handleChangeArguments(field.value, newValue)}
+              value={field.value ?? []}
+              onChange={newValue => handleChangeArguments(field.value ?? [], newValue)}
               rows={8}
             />
           </>

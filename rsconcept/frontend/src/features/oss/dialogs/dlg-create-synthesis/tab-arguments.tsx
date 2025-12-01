@@ -75,7 +75,7 @@ export function TabArguments({ oss }: TabArgumentsProps) {
           name='arguments'
           control={control}
           render={({ field }) => (
-            <PickMultiOperation items={filtered} value={field.value} onChange={field.onChange} rows={6} />
+            <PickMultiOperation items={filtered} value={field.value ?? []} onChange={field.onChange} rows={6} />
           )}
         />
       </div>

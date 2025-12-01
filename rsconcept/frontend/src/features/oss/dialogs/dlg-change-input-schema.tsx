@@ -74,7 +74,7 @@ export function DlgChangeInputSchema() {
           <PickSchema
             items={sortedItems}
             itemType={LibraryItemType.RSFORM}
-            value={field.value}
+            value={field.value ?? null}
             onChange={field.onChange}
             rows={14}
             baseFilter={baseFilter}

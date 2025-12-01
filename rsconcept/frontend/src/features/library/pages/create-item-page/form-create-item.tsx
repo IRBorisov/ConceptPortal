@@ -157,7 +157,7 @@ export function FormCreateItem() {
             name='item_type'
             render={({ field }) => (
               <SelectItemType
-                value={field.value} //
+                value={field.value ?? LibraryItemType.RSFORM} //
                 onChange={handleItemTypeChange}
               />
             )}
@@ -172,7 +172,7 @@ export function FormCreateItem() {
               name='access_policy'
               render={({ field }) => (
                 <SelectAccessPolicy
-                  value={field.value} //
+                  value={field.value ?? AccessPolicy.PUBLIC} //
                   onChange={field.onChange}
                   stretchLeft
                 />
@@ -185,7 +185,7 @@ export function FormCreateItem() {
                 <MiniButton
                   title={field.value ? 'Библиотека: отображать' : 'Библиотека: скрывать'}
                   aria-label='Переключатель отображения библиотеки'
-                  icon={<IconItemVisibility value={field.value} />}
+                  icon={<IconItemVisibility value={field.value ?? true} />}
                   onClick={() => field.onChange(!field.value)}
                 />
               )}
@@ -199,7 +199,7 @@ export function FormCreateItem() {
         name='location'
         render={({ field }) => (
           <PickLocation
-            value={field.value} //
+            value={field.value ?? ''} //
             rows={2}
             onChange={field.onChange}
             error={errors.location}

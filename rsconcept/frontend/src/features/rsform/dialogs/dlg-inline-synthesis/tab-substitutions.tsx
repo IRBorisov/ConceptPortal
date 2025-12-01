@@ -25,7 +25,7 @@ export function TabSubstitutions({ receiver }: TabSubstitutionsProps) {
       control={control}
       render={({ field }) => (
         <PickSubstitutions
-          value={field.value}
+          value={field.value ?? []}
           onChange={field.onChange}
           allowSelfSubstitution={selfSubstitution}
           rows={10}

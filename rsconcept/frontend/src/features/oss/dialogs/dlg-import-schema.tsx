@@ -123,7 +123,7 @@ export function DlgImportSchema() {
         render={({ field }) => (
           <PickSchema
             items={sortedItems}
-            value={field.value}
+            value={field.value ?? 0}
             itemType={LibraryItemType.RSFORM}
             onChange={handleSetInput}
             rows={8}
@@ -134,7 +134,9 @@ export function DlgImportSchema() {
       <Controller
         control={control}
         name='clone_source'
-        render={({ field }) => <Checkbox label='Клонировать схему' value={field.value} onChange={field.onChange} />}
+        render={({ field }) => (
+          <Checkbox label='Клонировать схему' value={field.value ?? false} onChange={field.onChange} />
+        )}
       />
       <TextInput
         id='operation_title' //

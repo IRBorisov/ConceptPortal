@@ -77,7 +77,7 @@ export function TabEntityReference() {
       <Controller
         control={control}
         name='entity.grams'
-        render={({ field }) => <SelectWordForm value={field.value} onChange={field.onChange} />}
+        render={({ field }) => <SelectWordForm value={field.value ?? []} onChange={field.onChange} />}
       />
 
       <div className='flex items-center gap-4'>
@@ -90,7 +90,7 @@ export function TabEntityReference() {
               id='dlg_reference_grammemes'
               placeholder='Выберите граммемы'
               className='grow'
-              value={field.value}
+              value={field.value ?? []}
               onChange={field.onChange}
             />
           )}

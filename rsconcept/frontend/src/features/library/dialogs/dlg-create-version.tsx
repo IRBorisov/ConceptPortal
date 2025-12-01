@@ -74,7 +74,7 @@ export function DlgCreateVersion() {
             <Checkbox
               id='dlg_only_selected'
               label={`Только выбранные конституенты [${selected.length} из ${totalCount}]`}
-              value={field.value.length > 0}
+              value={field.value ? field.value.length > 0 : false}
               onChange={value => field.onChange(value ? selected : [])}
             />
           )}

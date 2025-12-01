@@ -67,7 +67,7 @@ export function DlgCreatePromptTemplate() {
             <Checkbox
               id='dlg_prompt_is_shared'
               label='Общий шаблон'
-              value={field.value}
+              value={field.value ?? false}
               onChange={field.onChange}
               onBlur={field.onBlur}
               ref={field.ref}

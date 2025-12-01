@@ -161,7 +161,7 @@ export function DlgRelocateConstituents() {
                 schema={sourceData.schema!}
                 items={filteredConstituents}
                 rows={12}
-                value={field.value}
+                value={field.value ?? []}
                 onChange={field.onChange}
               />
             )}

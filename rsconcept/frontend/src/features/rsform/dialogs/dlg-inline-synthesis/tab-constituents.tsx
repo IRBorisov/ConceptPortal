@@ -32,9 +32,9 @@ export function TabConstituents() {
           schema={schema}
           items={schema.items}
           rows={13}
-          value={field.value}
+          value={field.value ?? []}
           onChange={handleSelectItems}
-          className='w-144'
+          className='w-xl'
         />
       )}
     />

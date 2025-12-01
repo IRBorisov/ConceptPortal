@@ -63,7 +63,7 @@ export function DlgSubstituteCst() {
         render={({ field }) => (
           <PickSubstitutions
             allowSelfSubstitution
-            value={field.value}
+            value={field.value ?? []}
             onChange={field.onChange}
             rows={6}
             schemas={[schema]}

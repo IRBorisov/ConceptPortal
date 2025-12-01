@@ -38,7 +38,7 @@ export function TabSubstitutions({ oss }: TabSubstitutionsProps) {
           <PickSubstitutions
             schemas={schemas}
             rows={8}
-            value={field.value}
+            value={field.value ?? []}
             onChange={field.onChange}
             suggestions={validator.suggestions}
           />

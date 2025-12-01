@@ -91,7 +91,7 @@ export function DlgCloneLibraryItem() {
               name='item_data.access_policy'
               render={({ field }) => (
                 <SelectAccessPolicy
-                  value={field.value} //
+                  value={field.value ?? 'public'} //
                   onChange={field.onChange}
                   stretchLeft
                 />
@@ -104,7 +104,7 @@ export function DlgCloneLibraryItem() {
                 <MiniButton
                   title={field.value ? 'Библиотека: отображать' : 'Библиотека: скрывать'}
                   aria-label='Переключатель отображения библиотеки'
-                  icon={<IconItemVisibility value={field.value} />}
+                  icon={<IconItemVisibility value={field.value ?? true} />}
                   onClick={() => field.onChange(!field.value)}
                 />
               )}
@@ -118,7 +118,7 @@ export function DlgCloneLibraryItem() {
         name='item_data.location'
         render={({ field }) => (
           <PickLocation
-            value={field.value} //
+            value={field.value ?? ''} //
             rows={2}
             onChange={field.onChange}
             error={errors.item_data?.location}
@@ -142,7 +142,7 @@ export function DlgCloneLibraryItem() {
             <Checkbox
               id='dlg_only_selected'
               label={`Только выбранные конституенты [${selected.length} из ${totalCount}]`}
-              value={field.value.length > 0}
+              value={field.value ? field.value.length > 0 : false}
               onChange={value => field.onChange(value ? selected : [])}
             />
           )}
