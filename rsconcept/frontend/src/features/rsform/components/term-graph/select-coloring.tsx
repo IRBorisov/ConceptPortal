@@ -1,11 +1,11 @@
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
-import { type IRSForm } from '@/features/rsform/models/rsform';
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/input/select';
 import { cn } from '@/components/utils';
 
 import { labelColoring } from '../../labels';
+import { type IRSForm } from '../../models/rsform';
 import { TGColoring, useTermGraphStore } from '../../stores/term-graph';
 
 import { SchemasGuide } from './schemas-guide';

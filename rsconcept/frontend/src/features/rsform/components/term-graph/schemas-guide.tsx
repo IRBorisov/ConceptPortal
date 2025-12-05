@@ -1,11 +1,11 @@
 import { useLibrary } from '@/features/library/backend/use-library';
-import { type IRSForm } from '@/features/rsform/models/rsform';
 
 import { Tooltip } from '@/components/container';
 import { IconHelp } from '@/components/icons';
 import { globalIDs, prefixes } from '@/utils/constants';
 
 import { colorBgSchemas } from '../../colors';
+import { type IRSForm } from '../../models/rsform';
 
 interface SchemasGuideProps {
   schema: IRSForm;

@@ -1,6 +1,6 @@
 import { type Node } from '@xyflow/react';
 
-import { type IBlock, type IOperation } from '@/features/oss/models/oss';
+import { type IBlock, type IOperation } from '../../../../models/oss';
 
 export type OperationNodeType = 'input' | 'synthesis' | 'replica';
 

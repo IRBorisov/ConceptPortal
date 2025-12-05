@@ -2,11 +2,11 @@
 
 import { useReactFlow } from '@xyflow/react';
 
-import { useTermGraphStore } from '@/features/rsform/stores/term-graph';
-
 import { MiniButton } from '@/components/control';
 import { IconClustering, IconClusteringOff, IconFitImage, IconText, IconTextOff } from '@/components/icons';
 import { PARAMETER } from '@/utils/constants';
+
+import { useTermGraphStore } from '../../stores/term-graph';
 
 import { flowOptions } from './tg-readonly-flow';
 

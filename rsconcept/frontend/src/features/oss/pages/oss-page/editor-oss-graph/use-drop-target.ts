@@ -1,9 +1,8 @@
 import { useReactFlow } from '@xyflow/react';
 
-import { NodeType } from '@/features/oss/models/oss';
-
 import { useDraggingStore } from '@/stores/dragging';
 
+import { NodeType } from '../../../models/oss';
 import { useOssEdit } from '../oss-edit-context';
 
 /** Hook to encapsulate drop target logic. */

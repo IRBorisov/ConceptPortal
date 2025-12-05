@@ -3,14 +3,13 @@
 import { Handle, type NodeProps, Position } from '@xyflow/react';
 import clsx from 'clsx';
 
-import { isBasicConcept } from '@/features/rsform/models/rsform-api';
-
 import { APP_COLORS } from '@/styling/colors';
 import { globalIDs } from '@/utils/constants';
 
 import { colorBgGraphNode } from '../../../colors';
 import { labelCstTypification } from '../../../labels';
 import { type IConstituenta } from '../../../models/rsform';
+import { isBasicConcept } from '../../../models/rsform-api';
 import { useTermGraphStore, useTGConnectionStore } from '../../../stores/term-graph';
 
 import { type TGNode } from './tg-models';

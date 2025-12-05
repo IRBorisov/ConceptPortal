@@ -3,8 +3,6 @@
 import { useState } from 'react';
 import clsx from 'clsx';
 
-import { cstListToFile } from '@/features/rsform/utils/rsform2pdf';
-
 import { ExportDropdown } from '@/components/control/export-dropdown';
 import { type RowSelectionState } from '@/components/data-table';
 import { SearchBar } from '@/components/input';
@@ -15,6 +13,7 @@ import { CstType } from '../../../backend/types';
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { matchConstituenta } from '../../../models/rsform-api';
 import { CstMatchMode } from '../../../stores/cst-search';
+import { cstListToFile } from '../../../utils/rsform2pdf';
 import { useRSEdit } from '../rsedit-context';
 
 import { TableRSList } from './table-rslist';

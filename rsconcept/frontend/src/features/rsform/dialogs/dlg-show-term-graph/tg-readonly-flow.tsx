@@ -4,27 +4,27 @@ import { useEffect, useRef, useState } from 'react';
 import { type Edge, MarkerType, type Node, useEdgesState, useNodesState } from '@xyflow/react';
 import clsx from 'clsx';
 
-import { type IConstituenta, type IRSForm } from '@/features/rsform';
-import { colorGraphEdge } from '@/features/rsform/colors';
-import { FocusLabel } from '@/features/rsform/components/term-graph/focus-label';
-import { TGEdgeTypes } from '@/features/rsform/components/term-graph/graph/tg-edge-types';
+import { DiagramFlow, useReactFlow } from '@/components/flow/diagram-flow';
+import { useContinuousPan } from '@/components/flow/use-continuous-panning';
+import { useFitHeight } from '@/stores/app-layout';
+import { PARAMETER } from '@/utils/constants';
+
+import { colorGraphEdge } from '../../colors';
+import { FocusLabel } from '../../components/term-graph/focus-label';
+import { TGEdgeTypes } from '../../components/term-graph/graph/tg-edge-types';
 import {
   applyLayout,
   inferEdgeType,
   produceFilteredGraph,
   type TGNode
-} from '@/features/rsform/components/term-graph/graph/tg-models';
-import { TGNodeTypes } from '@/features/rsform/components/term-graph/graph/tg-node-types';
-import { SelectColoring } from '@/features/rsform/components/term-graph/select-coloring';
-import { SelectEdgeType } from '@/features/rsform/components/term-graph/select-edge-type';
-import { ToolbarFocusedCst } from '@/features/rsform/components/term-graph/toolbar-focused-cst';
-import { ViewHidden } from '@/features/rsform/components/term-graph/view-hidden';
-import { useTermGraphStore } from '@/features/rsform/stores/term-graph';
-
-import { DiagramFlow, useReactFlow } from '@/components/flow/diagram-flow';
-import { useContinuousPan } from '@/components/flow/use-continuous-panning';
-import { useFitHeight } from '@/stores/app-layout';
-import { PARAMETER } from '@/utils/constants';
+} from '../../components/term-graph/graph/tg-models';
+import { TGNodeTypes } from '../../components/term-graph/graph/tg-node-types';
+import { SelectColoring } from '../../components/term-graph/select-coloring';
+import { SelectEdgeType } from '../../components/term-graph/select-edge-type';
+import { ToolbarFocusedCst } from '../../components/term-graph/toolbar-focused-cst';
+import { ViewHidden } from '../../components/term-graph/view-hidden';
+import { type IConstituenta, type IRSForm } from '../../models/rsform';
+import { useTermGraphStore } from '../../stores/term-graph';
 
 import ToolbarGraphFilter from './toolbar-graph-filter';
 

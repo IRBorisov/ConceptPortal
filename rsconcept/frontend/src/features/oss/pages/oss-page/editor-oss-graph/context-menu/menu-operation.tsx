@@ -3,8 +3,6 @@
 import { toast } from 'react-toastify';
 
 import { useLibrary } from '@/features/library/backend/use-library';
-import { useCloneSchema } from '@/features/oss/backend/use-clone-schema';
-import { useCreateReference } from '@/features/oss/backend/use-create-replica';
 
 import { DropdownButton } from '@/components/dropdown';
 import {
@@ -24,7 +22,9 @@ import { errorMsg } from '@/utils/labels';
 import { prepareTooltip } from '@/utils/utils';
 
 import { OperationType } from '../../../../backend/types';
+import { useCloneSchema } from '../../../../backend/use-clone-schema';
 import { useCreateInput } from '../../../../backend/use-create-input';
+import { useCreateReference } from '../../../../backend/use-create-replica';
 import { useExecuteOperation } from '../../../../backend/use-execute-operation';
 import { useMutatingOss } from '../../../../backend/use-mutating-oss';
 import { type IOperation } from '../../../../models/oss';

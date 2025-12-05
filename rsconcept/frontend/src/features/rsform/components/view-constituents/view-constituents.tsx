@@ -1,8 +1,8 @@
 'use client';
 
-import { type IConstituenta, type IRSForm } from '@/features/rsform/models/rsform';
-
 import { cn } from '@/components/utils';
+
+import { type IConstituenta, type IRSForm } from '../../models/rsform';
 
 import { ConstituentsSearch } from './constituents-search';
 import { TableSideConstituents } from './table-side-constituents';

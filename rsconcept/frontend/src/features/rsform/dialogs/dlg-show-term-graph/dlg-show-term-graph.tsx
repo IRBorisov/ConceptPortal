@@ -3,13 +3,14 @@
 import { ReactFlowProvider } from '@xyflow/react';
 
 import { urls, useConceptNavigation } from '@/app';
-import { useRSFormSuspense } from '@/features/rsform/backend/use-rsform';
-import { RSTabID } from '@/features/rsform/pages/rsform-page/rsedit-context';
 
 import { MiniButton } from '@/components/control';
 import { IconRSForm } from '@/components/icons';
 import { ModalView } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
+
+import { useRSFormSuspense } from '../../backend/use-rsform';
+import { RSTabID } from '../../pages/rsform-page/rsedit-context';
 
 import { TGReadonlyFlow } from './tg-readonly-flow';
 

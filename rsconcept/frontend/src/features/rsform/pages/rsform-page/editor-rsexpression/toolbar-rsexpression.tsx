@@ -1,13 +1,12 @@
 'use client';
 
-import { IconShowKeyboard } from '@/features/rsform/components/icon-show-keyboard';
-
 import { MiniButton } from '@/components/control';
 import { IconTree, IconTypeGraph } from '@/components/icons';
 import { cn } from '@/components/utils';
 import { usePreferencesStore } from '@/stores/preferences';
 
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
+import { IconShowKeyboard } from '../../../components/icon-show-keyboard';
 
 interface ToolbarRSExpressionProps {
   className?: string;
