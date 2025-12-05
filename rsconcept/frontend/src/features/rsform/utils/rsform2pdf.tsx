@@ -25,11 +25,12 @@ function CstListDocument({ data }: { data: RO<IConstituenta[]> }) {
 const documentMetadata = {
   language: 'ru',
   creator: 'Concept Portal',
-  subject: 'Rubik (OFL 1.1), ConceptMath (based on Fira Code & Noto Sans Math, OFL 1.1)',
+  subject: 'Concept Text (based on DejaVu Sans, OFL 1.1), ConceptMath (based on Fira Code & Noto Sans Math, OFL 1.1)',
   producer:
     'Embedded Fonts & Licenses: ' +
-    'Rubik — © Google, licensed under SIL Open Font License 1.1. ' +
+    'Concept Text — based on DejaVu Sans. ' +
     'ConceptMath — based on glyphs from Fira Code and Noto Sans Math. ' +
+    'DejaVu Sans © 2003 by Bitstream. ' +
     'Fira Code © 2014–2020 The Fira Code Project Authors. ' +
     'Noto Sans Math © 2022 Google LLC. Both licensed under the SIL Open Font License 1.1. ' +
     'See http://scripts.sil.org/OFL for full terms.'
@@ -37,10 +38,10 @@ const documentMetadata = {
 
 function CDocument({ children }: { children: React.ReactNode }) {
   Font.register({
-    family: 'Rubik',
+    family: 'ConceptText',
     fonts: [
-      { src: '/fonts/Rubik-Regular.ttf', fontWeight: 'normal' },
-      { src: '/fonts/Rubik-Medium.ttf', fontWeight: 'bold' }
+      { src: '/fonts/ConceptText-Regular.ttf', fontWeight: 'normal' },
+      { src: '/fonts/ConceptText-Bold.ttf', fontWeight: 'bold' }
     ]
   });
   Font.register({

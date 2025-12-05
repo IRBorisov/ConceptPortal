@@ -7,7 +7,7 @@ export const pdfs = StyleSheet.create({
     paddingBottom: '20mm',
     paddingLeft: '20mm',
     paddingRight: '20mm',
-    fontFamily: 'Rubik',
+    fontFamily: 'ConceptText',
     fontSize: 11
   },
   footer: {
