@@ -15,8 +15,11 @@ export const pdfs = StyleSheet.create({
     bottom: '10mm',
     left: 0,
     right: 0,
-    textAlign: 'center',
-    fontSize: 10
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: '20mm',
+    fontSize: 10,
+    color: '#888'
   },
 
   row: {

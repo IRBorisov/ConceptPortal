@@ -1,5 +1,6 @@
 'use client';
 
+import { toast } from 'react-toastify';
 import fileDownload from 'js-file-download';
 
 import { urls, useConceptNavigation } from '@/app';
@@ -18,6 +19,7 @@ import {
   IconMenu,
   IconNewItem,
   IconOSS,
+  IconPDF,
   IconQR,
   IconShare,
   IconUpload
@@ -25,7 +27,7 @@ import {
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';
-import { tooltipText } from '@/utils/labels';
+import { errorMsg, tooltipText } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 import { generatePageQR, promptUnsaved, sharePage } from '@/utils/utils';
 
@@ -122,6 +124,20 @@ export function MenuMain() {
     showQR({ target: generatePageQR() });
   }
 
+  async function handleSavePDF() {
+    hideMenu();
+    const filename = schema.alias ?? 'Schema';
+    try {
+      const { createSchemaFile } = await import('../../utils/rsform2pdf');
+      const blob = await createSchemaFile(schema);
+      void createSchemaFile(schema);
+      fileDownload(blob, `${filename}.pdf`, 'application/pdf;charset=utf-8;');
+    } catch (error) {
+      toast.error(errorMsg.pdfError);
+      throw error;
+    }
+  }
+
   return (
     <div ref={menuRef} onBlur={handleMenuBlur} className='relative'>
       <MiniButton
@@ -156,6 +172,11 @@ export function MenuMain() {
             onClick={handleClone}
           />
         ) : null}
+        <DropdownButton
+          text='Экспорт в PDF'
+          icon={<IconPDF size='1rem' className='icon-primary' />}
+          onClick={() => void handleSavePDF()}
+        />
         <DropdownButton
           text='Выгрузить в Экстеор'
           icon={<IconDownload size='1rem' className='icon-primary' />}

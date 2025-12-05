@@ -1,62 +1,77 @@
-import { Document, Font, Page, pdf, Text, View } from '@react-pdf/renderer';
+import { Link, pdf, Text, View } from '@react-pdf/renderer';
 
+import { urls } from '@/app';
+
+import { CDocument } from '@/components/pdf/CDocument';
+import { external_urls } from '@/utils/constants';
 import { type RO } from '@/utils/meta';
 
+import { pdfs } from '../../../components/pdf/pdf-styles';
 import { labelCstTypification } from '../labels';
-import { type IConstituenta } from '../models/rsform';
+import { type IConstituenta, type IRSForm } from '../models/rsform';
 
-import { pdfs } from './pdf-styles';
 import { addSpaces, addSpacesTypification } from './pdf-utils';
 
+/** Renders a PDF file with a list of Constituenta.
+ * WARNING! Large library load, use lazy loading.
+ */
 export function cstListToFile(data: RO<IConstituenta[]>): Promise<Blob> {
   return pdf(<CstListDocument data={data} />).toBlob();
+}
+
+/** Renders a PDF file with target Schema.
+ * WARNING! Large library load, use lazy loading.
+ */
+export function createSchemaFile(data: IRSForm): Promise<Blob> {
+  return pdf(<SchemaDocument data={data} />).toBlob();
 }
 
 function CstListDocument({ data }: { data: RO<IConstituenta[]> }) {
   return (
     <CDocument>
       <CstTable data={data} />
-      <Text fixed style={pdfs.footer} render={({ pageNumber, totalPages }) => `${pageNumber} / ${totalPages}`} />
+      <Text
+        fixed
+        style={{ ...pdfs.footer, textAlign: 'center' }}
+        render={({ pageNumber, totalPages }) => `${pageNumber} / ${totalPages}`}
+      />
+    </CDocument>
+  );
+}
+
+function SchemaDocument({ data }: { data: IRSForm }) {
+  return (
+    <CDocument>
+      <SchemaTitle schema={data} />
+      <CstTable data={data.items} />
+      <SchemaFooter schema={data} />
     </CDocument>
   );
 }
 
 // ======== Internal components ========
-const documentMetadata = {
-  language: 'ru',
-  creator: 'Concept Portal',
-  subject: 'Concept Text (based on DejaVu Sans, OFL 1.1), ConceptMath (based on Fira Code & Noto Sans Math, OFL 1.1)',
-  producer:
-    'Embedded Fonts & Licenses: ' +
-    'Concept Text — based on DejaVu Sans. ' +
-    'ConceptMath — based on glyphs from Fira Code and Noto Sans Math. ' +
-    'DejaVu Sans © 2003 by Bitstream. ' +
-    'Fira Code © 2014–2020 The Fira Code Project Authors. ' +
-    'Noto Sans Math © 2022 Google LLC. Both licensed under the SIL Open Font License 1.1. ' +
-    'See http://scripts.sil.org/OFL for full terms.'
-};
-
-function CDocument({ children }: { children: React.ReactNode }) {
-  Font.register({
-    family: 'ConceptText',
-    fonts: [
-      { src: '/fonts/ConceptText-Regular.ttf', fontWeight: 'normal' },
-      { src: '/fonts/ConceptText-Bold.ttf', fontWeight: 'bold' }
-    ]
-  });
-  Font.register({
-    family: 'CodeMath',
-    fonts: [{ src: '/fonts/ConceptMath-Regular.ttf' }]
-  });
-
-  Font.registerHyphenationCallback(word => [word]);
-
+function SchemaTitle({ schema }: { schema: IRSForm }) {
+  const url = `${external_urls.portal}${urls.schema(schema.id)}`;
   return (
-    <Document {...documentMetadata}>
-      <Page size='A4' orientation='landscape' style={pdfs.page}>
-        {children}
-      </Page>
-    </Document>
+    <View style={{ marginBottom: 10 }}>
+      <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: '3mm' }}>Концептуальная схема {schema.title}</Text>
+      <Text style={{ fontSize: 12 }}>Сокращенное название: {schema.alias}</Text>
+      <Text style={{ fontSize: 12 }}>
+        Онлайн версия:{' '}
+        <Link src={url} style={{ textDecoration: 'underline' }}>
+          {url}
+        </Link>
+      </Text>
+    </View>
+  );
+}
+
+function SchemaFooter({ schema }: { schema: IRSForm }) {
+  return (
+    <View fixed style={pdfs.footer}>
+      <Text>КС {schema.alias}</Text>
+      <Text render={({ pageNumber, totalPages }) => `Лист ${pageNumber} / ${totalPages}`} />
+    </View>
   );
 }
 

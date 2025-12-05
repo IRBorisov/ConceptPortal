@@ -13,7 +13,6 @@ import { CstType } from '../../../backend/types';
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { matchConstituenta } from '../../../models/rsform-api';
 import { CstMatchMode } from '../../../stores/cst-search';
-import { cstListToFile } from '../../../utils/rsform2pdf';
 import { useRSEdit } from '../rsedit-context';
 
 import { TableRSList } from './table-rslist';
@@ -77,6 +76,11 @@ export function EditorRSList() {
     }
   }
 
+  async function createPDFList() {
+    const { cstListToFile } = await import('../../../utils/rsform2pdf');
+    return cstListToFile(schema.items);
+  }
+
   function processAltKey(code: string): boolean {
     if (selectedCst.length > 0) {
       // prettier-ignore
@@ -131,7 +135,7 @@ export function EditorRSList() {
         filename={schema.alias}
         className='absolute z-pop right-4 hidden sm:block top-18'
         disabled={filtered.length === 0}
-        pdfConverter={cstListToFile}
+        pdfConverter={createPDFList}
       />
 
       <TableRSList

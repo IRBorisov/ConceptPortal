@@ -10,6 +10,7 @@ import {
   IconEditor,
   IconMenu,
   IconOwner,
+  IconPDF,
   IconQR,
   IconReader,
   IconShare,
@@ -60,6 +61,9 @@ export function HelpRSMenu() {
             </li>
             <li>
               <IconClone className='inline-icon icon-green' /> Клонировать – создать копию схемы
+            </li>
+            <li>
+              <IconPDF className='inline-icon' /> Экспортировать в PDF – сохранить в файле формата PDF
             </li>
             <li>
               <IconDownload className='inline-icon' /> Выгрузить – сохранить в файле формата Экстеор
