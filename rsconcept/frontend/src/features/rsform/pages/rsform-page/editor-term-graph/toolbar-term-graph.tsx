@@ -63,7 +63,8 @@ export function ToolbarTermGraph({ className, graph }: ToolbarTermGraphProps) {
     handleToggleText,
     handleToggleClustering,
     handelFastEdit,
-    handleExportImage
+    handleExportImage,
+    isExportingImage
   } = useHandleActions(graph);
 
   const showParams = useDialogsStore(state => state.showGraphParams);
@@ -139,8 +140,8 @@ export function ToolbarTermGraph({ className, graph }: ToolbarTermGraphProps) {
         <MiniButton
           icon={<IconImage size='1.25rem' className='icon-primary' />}
           titleHtml={prepareTooltip('Сохранить изображение', 'H')}
-          onClick={() => void handleExportImage}
-          disabled={isProcessing}
+          onClick={() => void handleExportImage()}
+          disabled={isProcessing || isExportingImage}
         />
 
         <BadgeHelp topic={HelpTopic.UI_GRAPH_TERM} contentClass='sm:max-w-160' offset={4} />

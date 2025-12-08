@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useReactFlow } from '@xyflow/react';
 import { toSvg } from 'html-to-image';
 import fileDownload from 'js-file-download';
@@ -24,6 +25,7 @@ const IMAGE_PADDING_VERTICAL = 20;
 
 export function useHandleActions(graph: Graph<number>) {
   const isProcessing = useMutatingRSForm();
+  const [isExportingImage, setIsExportingImage] = useState(false);
   const { fitView, getNodesBounds, getNodes } = useReactFlow();
   const scrollToNode = useScrollToNode();
   const {
@@ -128,10 +130,20 @@ export function useHandleActions(graph: Graph<number>) {
   }
 
   async function handleExportImage() {
+    if (isExportingImage) {
+      return;
+    }
+
     const node = document.querySelector('.react-flow__viewport');
     if (!node || !(node instanceof HTMLElement)) {
       return;
     }
+
+    setIsExportingImage(true);
+
+    await new Promise(resolve => requestAnimationFrame(resolve));
+    await new Promise(resolve => requestAnimationFrame(resolve));
+    await new Promise(resolve => setTimeout(resolve, 10));
 
     try {
       const bounds = getNodesBounds(getNodes());
@@ -160,6 +172,8 @@ export function useHandleActions(graph: Graph<number>) {
       fileDownload(cleanSvgStr, 'image.svg');
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsExportingImage(false);
     }
   }
 
@@ -339,6 +353,7 @@ export function useHandleActions(graph: Graph<number>) {
     handleToggleClustering: toggleClustering,
     handleToggleHermits: toggleHermits,
     handelFastEdit,
-    handleExportImage
+    handleExportImage,
+    isExportingImage
   };
 }
