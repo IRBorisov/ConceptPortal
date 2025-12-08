@@ -17,6 +17,7 @@ import {
   IconFilter,
   IconFitImage,
   IconFocus,
+  IconImage,
   IconNewItem,
   IconText,
   IconTextOff,
@@ -61,7 +62,8 @@ export function ToolbarTermGraph({ className, graph }: ToolbarTermGraphProps) {
     handleToggleEdgeType,
     handleToggleText,
     handleToggleClustering,
-    handelFastEdit
+    handelFastEdit,
+    handleExportImage
   } = useHandleActions(graph);
 
   const showParams = useDialogsStore(state => state.showGraphParams);
@@ -133,6 +135,12 @@ export function ToolbarTermGraph({ className, graph }: ToolbarTermGraphProps) {
           icon={<IconTypeGraph size='1.25rem' className='icon-primary' />}
           title='Граф ступеней'
           onClick={handleShowTypeGraph}
+        />
+        <MiniButton
+          icon={<IconImage size='1.25rem' className='icon-primary' />}
+          titleHtml={prepareTooltip('Сохранить изображение', 'H')}
+          onClick={() => void handleExportImage}
+          disabled={isProcessing}
         />
 
         <BadgeHelp topic={HelpTopic.UI_GRAPH_TERM} contentClass='sm:max-w-160' offset={4} />

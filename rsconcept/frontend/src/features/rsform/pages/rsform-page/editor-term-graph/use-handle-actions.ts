@@ -1,9 +1,12 @@
 import { useReactFlow } from '@xyflow/react';
+import { toSvg } from 'html-to-image';
+import fileDownload from 'js-file-download';
 
 import { useScrollToNode } from '@/components/flow/use-scroll-to-node';
 import { type Graph } from '@/models/graph';
 import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER } from '@/utils/constants';
+import { cleanSvg } from '@/utils/svg';
 import { withPreventDefault } from '@/utils/utils';
 
 import { CstType } from '../../../backend/types';
@@ -16,9 +19,12 @@ import { useRSEdit } from '../rsedit-context';
 /** Options for graph fit view. */
 export const fitViewOptions = { padding: 0.3, duration: PARAMETER.zoomDuration };
 
+const IMAGE_PADDING_HORIZONTAL = 75;
+const IMAGE_PADDING_VERTICAL = 20;
+
 export function useHandleActions(graph: Graph<number>) {
   const isProcessing = useMutatingRSForm();
-  const { fitView } = useReactFlow();
+  const { fitView, getNodesBounds, getNodes } = useReactFlow();
   const scrollToNode = useScrollToNode();
   const {
     schema,
@@ -121,6 +127,42 @@ export function useHandleActions(graph: Graph<number>) {
     setSelectedCst([...core, ...graph.expandInputs(core)]);
   }
 
+  async function handleExportImage() {
+    const node = document.querySelector('.react-flow__viewport');
+    if (!node || !(node instanceof HTMLElement)) {
+      return;
+    }
+
+    try {
+      const bounds = getNodesBounds(getNodes());
+
+      const exportWidth = bounds.width + 2 * IMAGE_PADDING_HORIZONTAL;
+      const exportHeight = bounds.height + 2 * IMAGE_PADDING_VERTICAL;
+
+      const prefix = 'data:image/svg+xml;charset=utf-8,';
+
+      const svgString = await toSvg(node, {
+        skipFonts: true,
+        width: exportWidth,
+        height: exportHeight,
+        style: {
+          width: `${exportWidth}px`,
+          height: `${exportHeight}px`,
+          transform: `translate(${IMAGE_PADDING_HORIZONTAL}px, ${IMAGE_PADDING_VERTICAL}px)`
+        }
+      });
+
+      let rawSvg = svgString.startsWith(prefix) ? svgString.slice(prefix.length) : svgString;
+      rawSvg = decodeURIComponent(rawSvg);
+
+      const cleanSvgStr = cleanSvg(rawSvg);
+
+      fileDownload(cleanSvgStr, 'image.svg');
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   function handleSelectOwned() {
     setSelectedCst([...graph.nodes.keys()].filter(cstID => !schema.cstByID.get(cstID)?.is_inherited));
   }
@@ -204,6 +246,10 @@ export function useHandleActions(graph: Graph<number>) {
     }
     if (eventCode === 'KeyY') {
       handleSelectInherited();
+      return true;
+    }
+    if (eventCode === 'KeyH') {
+      void handleExportImage();
       return true;
     }
 
@@ -292,6 +338,7 @@ export function useHandleActions(graph: Graph<number>) {
     handleToggleText: toggleText,
     handleToggleClustering: toggleClustering,
     handleToggleHermits: toggleHermits,
-    handelFastEdit
+    handelFastEdit,
+    handleExportImage
   };
 }

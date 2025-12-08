@@ -31,6 +31,7 @@ This readme file is used mostly to document project dependencies and conventions
   - axios
   - clsx
   - dompurify
+  - html-to-image
   - react-icons
   - react-router
   - react-toastify
