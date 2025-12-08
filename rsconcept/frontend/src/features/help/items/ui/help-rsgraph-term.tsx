@@ -21,6 +21,7 @@ import {
   IconGraphMaximize,
   IconGraphOutputs,
   IconGroupSelection,
+  IconImage,
   IconNewItem,
   IconOSS,
   IconPredecessor,
@@ -45,10 +46,26 @@ export function HelpRSGraphTerm() {
               Связи – выбор типов <LinkTopic text='связей' topic={HelpTopic.CC_RELATIONS} />
             </li>
             <li>
+              <IconFilter className='inline-icon' /> Открыть настройки
+            </li>
+            <li>
+              <IconFocus className='inline-icon' /> Задать фокус
+            </li>
+            <li>
+              <IconFitImage className='inline-icon' /> Вписать в экран
+            </li>
+            <li>
               <IconText className='inline-icon' /> Отображение текста
             </li>
             <li>
               <IconClustering className='inline-icon' /> Скрыть порожденные
+            </li>
+            <li>
+              <IconTypeGraph className='inline-icon' /> Открыть{' '}
+              <LinkTopic text='граф ступеней' topic={HelpTopic.UI_TYPE_GRAPH} />
+            </li>
+            <li>
+              <IconImage className='inline-icon' /> Сохранить изображение
             </li>
           </ul>
         </div>
@@ -93,19 +110,6 @@ export function HelpRSGraphTerm() {
             </li>
             <li>
               <IconOSS className='inline-icon' /> переход к связанной <LinkTopic text='ОСС' topic={HelpTopic.CC_OSS} />
-            </li>
-            <li>
-              <IconFilter className='inline-icon' /> Открыть настройки
-            </li>
-            <li>
-              <IconFocus className='inline-icon' /> Задать фокус
-            </li>
-            <li>
-              <IconFitImage className='inline-icon' /> Вписать в экран
-            </li>
-            <li>
-              <IconTypeGraph className='inline-icon' /> Открыть{' '}
-              <LinkTopic text='граф ступеней' topic={HelpTopic.UI_TYPE_GRAPH} />
             </li>
             <li>
               <IconGraphMode value={InteractionMode.explore} className='inline-icon' /> Просмотр графа
