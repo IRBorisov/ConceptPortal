@@ -21,7 +21,6 @@ export function DescribeError({ error }: { error: ErrorData }) {
   } else if (error instanceof ZodError) {
     let errorData: unknown;
     try {
-      /* eslint-disable-next-line @typescript-eslint/no-base-to-string */
       errorData = JSON.parse(error.toString());
     } catch {
       errorData = { message: error.message, issues: error.issues };
