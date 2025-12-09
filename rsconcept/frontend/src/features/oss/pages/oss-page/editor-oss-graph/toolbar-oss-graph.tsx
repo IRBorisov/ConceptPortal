@@ -17,6 +17,7 @@ import {
   IconEdit2,
   IconFilter,
   IconFitImage,
+  IconImage,
   IconNewItem,
   IconReset,
   IconSave,
@@ -64,7 +65,9 @@ export function ToolbarOssGraph({
     handleDeleteSelected,
     handleResetPositions,
     handleShowOptions,
-    handleShowSidePanel
+    handleShowSidePanel,
+    handleExportImage,
+    isExportingImage
   } = useHandleActions();
 
   const showSidePanel = usePreferencesStore(state => state.showOssSidePanel);
@@ -123,6 +126,12 @@ export function ToolbarOssGraph({
           title='Настройки отображения'
           icon={<IconSettings size='1.25rem' className='icon-primary' />}
           onClick={handleShowOptions}
+        />
+        <MiniButton
+          icon={<IconImage size='1.25rem' className='icon-primary' />}
+          title='Сохранить изображение'
+          onClick={() => void handleExportImage()}
+          disabled={isProcessing || isExportingImage}
         />
         <BadgeHelp topic={HelpTopic.UI_OSS_GRAPH} contentClass='sm:max-w-160' offset={4} />
       </div>

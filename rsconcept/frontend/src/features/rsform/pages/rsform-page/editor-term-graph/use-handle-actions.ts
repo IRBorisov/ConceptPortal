@@ -25,7 +25,6 @@ const IMAGE_PADDING_VERTICAL = 20;
 
 export function useHandleActions(graph: Graph<number>) {
   const isProcessing = useMutatingRSForm();
-  const [isExportingImage, setIsExportingImage] = useState(false);
   const { fitView, getNodesBounds, getNodes } = useReactFlow();
   const scrollToNode = useScrollToNode();
   const {
@@ -50,6 +49,8 @@ export function useHandleActions(graph: Graph<number>) {
   const { updateCrucial } = useUpdateCrucial();
   const showEditCst = useDialogsStore(state => state.showEditCst);
   const showTypeGraph = useDialogsStore(state => state.showShowTypeGraph);
+
+  const [isExportingImage, setIsExportingImage] = useState(false);
 
   function handleShowTypeGraph() {
     const typeInfo = schema.items
@@ -160,7 +161,7 @@ export function useHandleActions(graph: Graph<number>) {
         style: {
           width: `${exportWidth}px`,
           height: `${exportHeight}px`,
-          transform: `translate(${IMAGE_PADDING_HORIZONTAL}px, ${IMAGE_PADDING_VERTICAL}px)`
+          transform: `translate(${IMAGE_PADDING_HORIZONTAL - bounds.x}px, ${IMAGE_PADDING_VERTICAL - bounds.y}px)`
         }
       });
 
@@ -169,7 +170,7 @@ export function useHandleActions(graph: Graph<number>) {
 
       const cleanSvgStr = cleanSvg(rawSvg);
 
-      fileDownload(cleanSvgStr, 'image.svg');
+      fileDownload(cleanSvgStr, 'graph.svg');
     } catch (error) {
       console.error(error);
     } finally {
@@ -260,10 +261,6 @@ export function useHandleActions(graph: Graph<number>) {
     }
     if (eventCode === 'KeyY') {
       handleSelectInherited();
-      return true;
-    }
-    if (eventCode === 'KeyH') {
-      void handleExportImage();
       return true;
     }
 

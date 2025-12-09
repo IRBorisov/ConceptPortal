@@ -77,6 +77,8 @@ export function NodeCoreComponent({ node }: { node: NodeProps<OGOperationNode> }
 
       <div
         className={clsx(
+          'w-full h-full',
+          'flex items-center justify-center',
           'text-center line-clamp-2 px-[4px] mr-[12px]',
           longLabel ? 'text-[12px]/[16px]' : 'text-[14px]/[20px]'
         )}

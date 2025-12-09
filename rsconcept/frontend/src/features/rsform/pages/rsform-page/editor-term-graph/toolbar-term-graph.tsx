@@ -139,7 +139,7 @@ export function ToolbarTermGraph({ className, graph }: ToolbarTermGraphProps) {
         />
         <MiniButton
           icon={<IconImage size='1.25rem' className='icon-primary' />}
-          titleHtml={prepareTooltip('Сохранить изображение', 'H')}
+          title='Сохранить изображение'
           onClick={() => void handleExportImage()}
           disabled={isProcessing || isExportingImage}
         />

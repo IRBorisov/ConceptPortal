@@ -1,9 +1,13 @@
+import { useState } from 'react';
 import { useReactFlow, useStoreApi } from '@xyflow/react';
+import { toSvg } from 'html-to-image';
+import fileDownload from 'js-file-download';
 
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { PARAMETER } from '@/utils/constants';
 import { promptText } from '@/utils/labels';
+import { cleanSvg } from '@/utils/svg';
 import { withPreventDefault } from '@/utils/utils';
 
 import { OperationType } from '../../../backend/types';
@@ -18,8 +22,11 @@ import { useOssEdit } from '../oss-edit-context';
 import { useOssFlow } from './oss-flow-context';
 import { useGetLayout } from './use-get-layout';
 
+const IMAGE_PADDING_HORIZONTAL = 40;
+const IMAGE_PADDING_VERTICAL = 20;
+
 export function useHandleActions() {
-  const { screenToFlowPosition } = useReactFlow();
+  const { screenToFlowPosition, getNodesBounds, getNodes } = useReactFlow();
   const { schema, selected, setSelected, selectedItems, isMutable, deselectAll, canDeleteOperation } = useOssEdit();
   const { resetView, resetGraph } = useOssFlow();
   const isProcessing = useMutatingOss();
@@ -40,6 +47,8 @@ export function useHandleActions() {
   const showDeleteReference = useDialogsStore(state => state.showDeleteReference);
   const showImportSchema = useDialogsStore(state => state.showImportSchema);
   const showOptions = useDialogsStore(state => state.showOssOptions);
+
+  const [isExportingImage, setIsExportingImage] = useState(false);
 
   function handleShowSidePanel() {
     toggleShowSidePanel();
@@ -221,6 +230,54 @@ export function useHandleActions() {
     }
   }
 
+  async function handleExportImage() {
+    if (isExportingImage) {
+      return;
+    }
+
+    const node = document.querySelector('.react-flow__viewport');
+    if (!node || !(node instanceof HTMLElement)) {
+      return;
+    }
+
+    setIsExportingImage(true);
+
+    await new Promise(resolve => requestAnimationFrame(resolve));
+    await new Promise(resolve => requestAnimationFrame(resolve));
+    await new Promise(resolve => setTimeout(resolve, 10));
+
+    try {
+      const bounds = getNodesBounds(getNodes());
+
+      const exportWidth = bounds.width + 2 * IMAGE_PADDING_HORIZONTAL;
+      const exportHeight = bounds.height + 2 * IMAGE_PADDING_VERTICAL;
+
+      const prefix = 'data:image/svg+xml;charset=utf-8,';
+
+      const svgString = await toSvg(node, {
+        skipFonts: true,
+        width: exportWidth,
+        height: exportHeight,
+        style: {
+          width: `${exportWidth}px`,
+          height: `${exportHeight}px`,
+          transform: `translate(${IMAGE_PADDING_HORIZONTAL - bounds.x}px, ${IMAGE_PADDING_VERTICAL - bounds.y}px)`
+        }
+      });
+
+      let rawSvg = svgString.startsWith(prefix) ? svgString.slice(prefix.length) : svgString;
+      rawSvg = decodeURIComponent(rawSvg);
+
+      const cleanSvgStr = cleanSvg(rawSvg, { defaultEdges: true });
+
+      fileDownload(cleanSvgStr, 'oss.svg');
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsExportingImage(false);
+    }
+  }
+
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     if (isProcessing) {
       return;
@@ -315,7 +372,9 @@ export function useHandleActions() {
     handleDeleteSelected,
     handleResetPositions: resetGraph,
     handleShowOptions,
-    handleShowSidePanel
+    handleShowSidePanel,
+    handleExportImage,
+    isExportingImage
   };
 }
 

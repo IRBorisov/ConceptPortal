@@ -12,6 +12,7 @@ import {
   IconExecute,
   IconFitImage,
   IconGrid,
+  IconImage,
   IconLeftOpen,
   IconLineStraight,
   IconLineWave,
@@ -43,6 +44,9 @@ export function HelpOssGraph() {
             </li>
             <li>
               <IconLeftOpen className='inline-icon' /> Панель содержания
+            </li>
+            <li>
+              <IconImage className='inline-icon' /> Сохранить изображение
             </li>
             <li>
               <IconSettings className='inline-icon' /> Диалог настроек

@@ -1,3 +1,21 @@
+const REMOVE_IDS = [
+  'react-flow__node-desc-react-flow-container',
+  'react-flow__edge-desc-react-flow-container',
+  'react-flow__aria-live-react-flow-container'
+];
+
+const REMOVE_ATTRIBUTES = [
+  'aria-roledescription',
+  'aria-label',
+  'data-message',
+  'data-id',
+  'data-testid',
+  'data-tooltip-html',
+  'data-tooltip-id',
+  'data-tooltip-content',
+  'aria-describedby'
+];
+
 const IGNORE_PROPS = [
   'animation',
   'text-size-adjust',
@@ -46,7 +64,12 @@ const IGNORE_PROPS = [
   'color-interpolation',
   'empty-cells',
   'overflow-inline',
-  'overflow-block'
+  'overflow-block',
+  'inline-size',
+  'block-size',
+  'inset-block',
+  'inset-inline',
+  'cursor'
 ];
 const ALLOW_NONE: string[] = [];
 const ALLOW_AUTO: string[] = [];
@@ -112,27 +135,19 @@ const ROOT_DECLS = [
   'line-height: 24px'
 ];
 
-const REMOVE_ATTRIBUTES = [
-  'aria-roledescription',
-  'aria-label',
-  'data-message',
-  'data-id',
-  'data-testid',
-  'data-tooltip-html',
-  'data-tooltip-id',
-  'aria-describedby'
-];
-
-const REMOVE_IDS = [
-  'react-flow__node-desc-react-flow-container',
-  'react-flow__edge-desc-react-flow-container',
-  'react-flow__aria-live-react-flow-container'
-];
-
 /** Cleans SVG string from useless elements. */
-export function cleanSvg(svgText: string): string {
+export function cleanSvg(svgText: string, options?: { defaultEdges?: boolean }): string {
   const parser = new DOMParser();
   const doc = parser.parseFromString(svgText, 'image/svg+xml');
+
+  // Target only <path> inside <g> with class "react-flow__edge"
+  if (options?.defaultEdges) {
+    doc.querySelectorAll('g.react-flow__edge path').forEach(p => {
+      if (!p.getAttribute('stroke')) {
+        p.setAttribute('stroke', 'oklch(0.65 0 0)');
+      }
+    });
+  }
 
   doc.querySelectorAll('[class]').forEach(el => el.removeAttribute('class'));
   REMOVE_ATTRIBUTES.forEach(attr => doc.querySelectorAll(`[${attr}]`).forEach(el => el.removeAttribute(attr)));
@@ -161,6 +176,7 @@ export function cleanSvg(svgText: string): string {
 
   doc.querySelectorAll('[style]').forEach(style => cleanStyle(style, usedVars));
 
+  doc.querySelectorAll('path[stroke-opacity="0"]').forEach(p => p.remove());
   doc.querySelectorAll('*').forEach(el => {
     if (isInvisible(el)) {
       el.remove();
