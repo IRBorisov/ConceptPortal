@@ -136,18 +136,9 @@ const ROOT_DECLS = [
 ];
 
 /** Cleans SVG string from useless elements. */
-export function cleanSvg(svgText: string, options?: { defaultEdges?: boolean }): string {
+export function cleanSvg(svgText: string): string {
   const parser = new DOMParser();
   const doc = parser.parseFromString(svgText, 'image/svg+xml');
-
-  // Target only <path> inside <g> with class "react-flow__edge"
-  if (options?.defaultEdges) {
-    doc.querySelectorAll('g.react-flow__edge path').forEach(p => {
-      if (!p.getAttribute('stroke')) {
-        p.setAttribute('stroke', 'oklch(0.65 0 0)');
-      }
-    });
-  }
 
   doc.querySelectorAll('[class]').forEach(el => el.removeAttribute('class'));
   REMOVE_ATTRIBUTES.forEach(attr => doc.querySelectorAll(`[${attr}]`).forEach(el => el.removeAttribute(attr)));

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { type Edge, useEdgesState, useNodesState, useOnSelectionChange, useReactFlow } from '@xyflow/react';
 
+import { APP_COLORS } from '@/styling/colors';
 import { PARAMETER } from '@/utils/constants';
 
 import { type IOperationSchema, NodeType } from '../../../models/oss';
@@ -83,7 +84,10 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
         type: edgeStraight ? 'straight' : 'simplebezier',
         animated: edgeAnimate,
         focusable: false,
-        targetHandle: source.x > target.x ? 'right' : 'left'
+        targetHandle: source.x > target.x ? 'right' : 'left',
+        style: {
+          stroke: APP_COLORS.border
+        }
       };
     });
 

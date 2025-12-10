@@ -306,7 +306,7 @@ export function useHandleActions() {
       let rawSvg = svgString.startsWith(prefix) ? svgString.slice(prefix.length) : svgString;
       rawSvg = decodeURIComponent(rawSvg);
 
-      const cleanSvgStr = cleanSvg(rawSvg, { defaultEdges: true });
+      const cleanSvgStr = cleanSvg(rawSvg);
 
       fileDownload(cleanSvgStr, 'oss.svg');
     } catch (error) {
