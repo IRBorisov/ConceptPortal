@@ -8,6 +8,7 @@ import { type ILibraryItemReference } from '@/features/library';
 import { MiniSelectorOSS } from '@/features/library/components/mini-selector-oss';
 
 import { MiniButton } from '@/components/control';
+import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import {
   IconClustering,
   IconClusteringOff,
@@ -19,6 +20,8 @@ import {
   IconFocus,
   IconImage,
   IconNewItem,
+  IconPNG,
+  IconSVG,
   IconText,
   IconTextOff,
   IconTypeGraph
@@ -48,8 +51,23 @@ interface ToolbarTermGraphProps {
 
 export function ToolbarTermGraph({ className, graph }: ToolbarTermGraphProps) {
   const isProcessing = useMutatingRSForm();
-  const { schema, selectedCst, setSelectedCst, setFocus, navigateOss, isContentEditable, canDeleteSelected, focusCst } =
-    useRSEdit();
+  const {
+    schema, //
+    selectedCst,
+    setSelectedCst,
+    setFocus,
+    navigateOss,
+    isContentEditable,
+    canDeleteSelected,
+    focusCst
+  } = useRSEdit();
+
+  const {
+    elementRef: exportRef,
+    isOpen: isExportOpen,
+    toggle: toggleExport,
+    handleBlur: handleExportBlur
+  } = useDropdown();
 
   const {
     handleShowTypeGraph,
@@ -63,7 +81,8 @@ export function ToolbarTermGraph({ className, graph }: ToolbarTermGraphProps) {
     handleToggleText,
     handleToggleClustering,
     handelFastEdit,
-    handleExportImage,
+    handleExportSVG,
+    handleExportPNG,
     isExportingImage
   } = useHandleActions(graph);
 
@@ -82,6 +101,16 @@ export function ToolbarTermGraph({ className, graph }: ToolbarTermGraphProps) {
   function handleSetSelected(newSelection: number[]) {
     setSelectedCst(newSelection);
     addSelectedNodes(newSelection.map(id => String(id)));
+  }
+
+  function handleExportSvgBtn() {
+    toggleExport();
+    void handleExportSVG();
+  }
+
+  function handleExportPngBtn() {
+    toggleExport();
+    void handleExportPNG();
   }
 
   return (
@@ -137,12 +166,29 @@ export function ToolbarTermGraph({ className, graph }: ToolbarTermGraphProps) {
           title='Граф ступеней'
           onClick={handleShowTypeGraph}
         />
-        <MiniButton
-          icon={<IconImage size='1.25rem' className='icon-primary' />}
-          title='Сохранить изображение'
-          onClick={() => void handleExportImage()}
-          disabled={isProcessing || isExportingImage}
-        />
+        <div ref={exportRef} onBlur={handleExportBlur} className='relative'>
+          <MiniButton
+            title='Сохранить изображение'
+            hideTitle={isExportOpen}
+            icon={<IconImage size='1.25rem' className='icon-primary' />}
+            onClick={toggleExport}
+            disabled={isProcessing || isExportingImage}
+          />
+          <Dropdown isOpen={isExportOpen} className='-translate-x-1/2'>
+            <DropdownButton
+              icon={<IconPNG size='1.25rem' className='icon-primary' />}
+              text='Сохранить PNG'
+              onClick={handleExportPngBtn}
+              disabled={isProcessing || isExportingImage}
+            />
+            <DropdownButton
+              icon={<IconSVG size='1.25rem' className='icon-primary' />}
+              text='Сохранить SVG'
+              onClick={handleExportSvgBtn}
+              disabled={isProcessing || isExportingImage}
+            />
+          </Dropdown>
+        </div>
 
         <BadgeHelp topic={HelpTopic.UI_GRAPH_TERM} contentClass='sm:max-w-160' offset={4} />
       </div>

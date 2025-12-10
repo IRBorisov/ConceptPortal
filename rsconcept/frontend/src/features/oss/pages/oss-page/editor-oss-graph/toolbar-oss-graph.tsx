@@ -19,9 +19,11 @@ import {
   IconFitImage,
   IconImage,
   IconNewItem,
+  IconPNG,
   IconReset,
   IconSave,
   IconSettings,
+  IconSVG,
   IconSynthesis
 } from '@/components/icons';
 import { type Styling } from '@/components/props';
@@ -54,7 +56,21 @@ export function ToolbarOssGraph({
   const isProcessing = useMutatingOss();
   const { nodes } = useOssFlow();
   const { user } = useAuthSuspense();
-  const { elementRef: menuRef, isOpen: isMenuOpen, toggle: toggleMenu, handleBlur: handleMenuBlur } = useDropdown();
+
+  const {
+    elementRef: menuRef, //
+    isOpen: isMenuOpen,
+    toggle: toggleMenu,
+    handleBlur: handleMenuBlur
+  } = useDropdown();
+
+  const {
+    elementRef: exportRef,
+    isOpen: isExportOpen,
+    toggle: toggleExport,
+    handleBlur: handleExportBlur
+  } = useDropdown();
+
   const {
     handleFitView,
     handleSavePositions,
@@ -66,7 +82,8 @@ export function ToolbarOssGraph({
     handleResetPositions,
     handleShowOptions,
     handleShowSidePanel,
-    handleExportImage,
+    handleExportSVG,
+    handleExportPNG,
     isExportingImage
   } = useHandleActions();
 
@@ -95,6 +112,16 @@ export function ToolbarOssGraph({
     if (node) {
       openContextMenu(node, event.clientX, event.clientY);
     }
+  }
+
+  function handleExportSvgBtn() {
+    toggleExport();
+    void handleExportSVG();
+  }
+
+  function handleExportPngBtn() {
+    toggleExport();
+    void handleExportPNG();
   }
 
   return (
@@ -127,12 +154,30 @@ export function ToolbarOssGraph({
           icon={<IconSettings size='1.25rem' className='icon-primary' />}
           onClick={handleShowOptions}
         />
-        <MiniButton
-          icon={<IconImage size='1.25rem' className='icon-primary' />}
-          title='Сохранить изображение'
-          onClick={() => void handleExportImage()}
-          disabled={isProcessing || isExportingImage}
-        />
+        <div ref={exportRef} onBlur={handleExportBlur} className='relative'>
+          <MiniButton
+            title='Сохранить изображение'
+            hideTitle={isExportOpen}
+            icon={<IconImage size='1.25rem' className='icon-primary' />}
+            onClick={toggleExport}
+            disabled={isProcessing || isExportingImage}
+          />
+          <Dropdown isOpen={isExportOpen} className='-translate-x-1/2'>
+            <DropdownButton
+              icon={<IconPNG size='1.25rem' className='icon-primary' />}
+              text='Сохранить PNG'
+              onClick={handleExportPngBtn}
+              disabled={isProcessing || isExportingImage}
+            />
+            <DropdownButton
+              icon={<IconSVG size='1.25rem' className='icon-primary' />}
+              text='Сохранить SVG'
+              onClick={handleExportSvgBtn}
+              disabled={isProcessing || isExportingImage}
+            />
+          </Dropdown>
+        </div>
+
         <BadgeHelp topic={HelpTopic.UI_OSS_GRAPH} contentClass='sm:max-w-160' offset={4} />
       </div>
       {isMutable ? (

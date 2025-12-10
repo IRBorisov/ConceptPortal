@@ -30,6 +30,11 @@ export const PARAMETER = {
   exteorVersion: '4.9.7'
 } as const;
 
+/** Export parameters. */
+export const EXPORTS = {
+  pngPixelRatio: 4
+};
+
 /** Numeric limitations. */
 export const limits = {
   len_alias: 255,
@@ -130,3 +135,6 @@ export const prefixes = {
   wordform_list: 'wordform_list_',
   rsedit_btn: 'rsedit_btn_'
 } as const;
+
+/** ReactFlow viewport class name. */
+export const REACTFLOW_VIEWPORT = 'react-flow__viewport';

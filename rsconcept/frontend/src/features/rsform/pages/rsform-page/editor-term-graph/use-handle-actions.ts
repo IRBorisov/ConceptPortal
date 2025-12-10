@@ -1,14 +1,16 @@
 import { useState } from 'react';
 import { useReactFlow } from '@xyflow/react';
-import { toSvg } from 'html-to-image';
+import { toPng, toSvg } from 'html-to-image';
 import fileDownload from 'js-file-download';
 
 import { useScrollToNode } from '@/components/flow/use-scroll-to-node';
 import { type Graph } from '@/models/graph';
 import { useDialogsStore } from '@/stores/dialogs';
-import { PARAMETER } from '@/utils/constants';
+import { usePreferencesStore } from '@/stores/preferences';
+import { APP_COLOR_CODES } from '@/styling/colors';
+import { EXPORTS, PARAMETER, REACTFLOW_VIEWPORT } from '@/utils/constants';
 import { cleanSvg } from '@/utils/svg';
-import { withPreventDefault } from '@/utils/utils';
+import { dataUrlToBlob, withPreventDefault } from '@/utils/utils';
 
 import { CstType } from '../../../backend/types';
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
@@ -24,6 +26,7 @@ const IMAGE_PADDING_HORIZONTAL = 75;
 const IMAGE_PADDING_VERTICAL = 20;
 
 export function useHandleActions(graph: Graph<number>) {
+  const darkMode = usePreferencesStore(state => state.darkMode);
   const isProcessing = useMutatingRSForm();
   const { fitView, getNodesBounds, getNodes } = useReactFlow();
   const scrollToNode = useScrollToNode();
@@ -130,12 +133,49 @@ export function useHandleActions(graph: Graph<number>) {
     setSelectedCst([...core, ...graph.expandInputs(core)]);
   }
 
-  async function handleExportImage() {
+  async function handleExportPNG() {
     if (isExportingImage) {
       return;
     }
 
-    const node = document.querySelector('.react-flow__viewport');
+    const node = document.querySelector(`.${REACTFLOW_VIEWPORT}`);
+    if (!node || !(node instanceof HTMLElement)) {
+      return;
+    }
+
+    setIsExportingImage(true);
+
+    await new Promise(resolve => requestAnimationFrame(resolve));
+    await new Promise(resolve => requestAnimationFrame(resolve));
+    await new Promise(resolve => setTimeout(resolve, 10));
+
+    const bounds = getNodesBounds(getNodes());
+    const exportWidth = bounds.width + 2 * IMAGE_PADDING_HORIZONTAL;
+    const exportHeight = bounds.height + 2 * IMAGE_PADDING_VERTICAL;
+
+    const dataUrl = await toPng(node, {
+      width: exportWidth,
+      height: exportHeight,
+      pixelRatio: EXPORTS.pngPixelRatio,
+      backgroundColor: darkMode ? APP_COLOR_CODES.bgDark : APP_COLOR_CODES.bgLight,
+      style: {
+        width: `${exportWidth}px`,
+        height: `${exportHeight}px`,
+        transform: `translate(${IMAGE_PADDING_HORIZONTAL - bounds.x}px, ${IMAGE_PADDING_VERTICAL - bounds.y}px)`
+      }
+    });
+    const blob = dataUrlToBlob(dataUrl);
+    fileDownload(blob, 'graph.png');
+
+    setIsExportingImage(false);
+  }
+
+  async function handleExportSVG() {
+    if (isExportingImage) {
+      return;
+    }
+
+    const node = document.querySelector(`.${REACTFLOW_VIEWPORT}`);
     if (!node || !(node instanceof HTMLElement)) {
       return;
     }
@@ -350,7 +390,8 @@ export function useHandleActions(graph: Graph<number>) {
     handleToggleClustering: toggleClustering,
     handleToggleHermits: toggleHermits,
     handelFastEdit,
-    handleExportImage,
+    handleExportSVG,
+    handleExportPNG,
     isExportingImage
   };
 }

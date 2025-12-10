@@ -243,3 +243,17 @@ export function isMac(): boolean {
   }
   return /Macintosh|MacIntel|MacPPC|Mac68K|Mac OS/i.test(navigator.userAgent);
 }
+
+/** Convert data URL to Blob. */
+export function dataUrlToBlob(dataUrl: string): Blob {
+  const arr = dataUrl.split(',');
+  const mimeMatch = /:(.*?);/.exec(arr[0]);
+  const mime = mimeMatch ? mimeMatch[1] : '';
+  const binary = atob(arr[1]);
+  let n = binary.length;
+  const u8arr = new Uint8Array(n);
+  while (n--) {
+    u8arr[n] = binary.charCodeAt(n);
+  }
+  return new Blob([u8arr], { type: mime });
+}

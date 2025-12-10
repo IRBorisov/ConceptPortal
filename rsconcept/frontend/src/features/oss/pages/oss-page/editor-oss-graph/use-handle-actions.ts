@@ -1,14 +1,15 @@
 import { useState } from 'react';
 import { useReactFlow, useStoreApi } from '@xyflow/react';
-import { toSvg } from 'html-to-image';
+import { toPng, toSvg } from 'html-to-image';
 import fileDownload from 'js-file-download';
 
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
-import { PARAMETER } from '@/utils/constants';
+import { APP_COLOR_CODES } from '@/styling/colors';
+import { EXPORTS, PARAMETER, REACTFLOW_VIEWPORT } from '@/utils/constants';
 import { promptText } from '@/utils/labels';
 import { cleanSvg } from '@/utils/svg';
-import { withPreventDefault } from '@/utils/utils';
+import { dataUrlToBlob, withPreventDefault } from '@/utils/utils';
 
 import { OperationType } from '../../../backend/types';
 import { useDeleteBlock } from '../../../backend/use-delete-block';
@@ -26,6 +27,7 @@ const IMAGE_PADDING_HORIZONTAL = 40;
 const IMAGE_PADDING_VERTICAL = 20;
 
 export function useHandleActions() {
+  const darkMode = usePreferencesStore(state => state.darkMode);
   const { screenToFlowPosition, getNodesBounds, getNodes } = useReactFlow();
   const { schema, selected, setSelected, selectedItems, isMutable, deselectAll, canDeleteOperation } = useOssEdit();
   const { resetView, resetGraph } = useOssFlow();
@@ -230,12 +232,49 @@ export function useHandleActions() {
     }
   }
 
-  async function handleExportImage() {
+  async function handleExportPNG() {
     if (isExportingImage) {
       return;
     }
 
-    const node = document.querySelector('.react-flow__viewport');
+    const node = document.querySelector(`.${REACTFLOW_VIEWPORT}`);
+    if (!node || !(node instanceof HTMLElement)) {
+      return;
+    }
+
+    setIsExportingImage(true);
+
+    await new Promise(resolve => requestAnimationFrame(resolve));
+    await new Promise(resolve => requestAnimationFrame(resolve));
+    await new Promise(resolve => setTimeout(resolve, 10));
+
+    const bounds = getNodesBounds(getNodes());
+    const exportWidth = bounds.width + 2 * IMAGE_PADDING_HORIZONTAL;
+    const exportHeight = bounds.height + 2 * IMAGE_PADDING_VERTICAL;
+
+    const dataUrl = await toPng(node, {
+      width: exportWidth,
+      height: exportHeight,
+      pixelRatio: EXPORTS.pngPixelRatio,
+      backgroundColor: darkMode ? APP_COLOR_CODES.bgDark : APP_COLOR_CODES.bgLight,
+      style: {
+        width: `${exportWidth}px`,
+        height: `${exportHeight}px`,
+        transform: `translate(${IMAGE_PADDING_HORIZONTAL - bounds.x}px, ${IMAGE_PADDING_VERTICAL - bounds.y}px)`
+      }
+    });
+    const blob = dataUrlToBlob(dataUrl);
+    fileDownload(blob, 'oss.png');
+
+    setIsExportingImage(false);
+  }
+
+  async function handleExportSVG() {
+    if (isExportingImage) {
+      return;
+    }
+
+    const node = document.querySelector(`.${REACTFLOW_VIEWPORT}`);
     if (!node || !(node instanceof HTMLElement)) {
       return;
     }
@@ -252,8 +291,6 @@ export function useHandleActions() {
       const exportWidth = bounds.width + 2 * IMAGE_PADDING_HORIZONTAL;
       const exportHeight = bounds.height + 2 * IMAGE_PADDING_VERTICAL;
 
-      const prefix = 'data:image/svg+xml;charset=utf-8,';
-
       const svgString = await toSvg(node, {
         skipFonts: true,
         width: exportWidth,
@@ -265,6 +302,7 @@ export function useHandleActions() {
         }
       });
 
+      const prefix = 'data:image/svg+xml;charset=utf-8,';
       let rawSvg = svgString.startsWith(prefix) ? svgString.slice(prefix.length) : svgString;
       rawSvg = decodeURIComponent(rawSvg);
 
@@ -373,7 +411,8 @@ export function useHandleActions() {
     handleResetPositions: resetGraph,
     handleShowOptions,
     handleShowSidePanel,
-    handleExportImage,
+    handleExportSVG,
+    handleExportPNG,
     isExportingImage
   };
 }

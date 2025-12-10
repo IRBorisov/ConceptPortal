@@ -37,3 +37,9 @@ export const APP_COLORS = {
   fgTeal:             'var(--acc-fg-teal)',
   fgOrange:           'var(--acc-fg-orange)'
 } as const
+
+/** Color codes for application. */
+export const APP_COLOR_CODES = {
+  bgLight: '#f8f8f8',
+  bgDark: '#1b1b1b'
+};

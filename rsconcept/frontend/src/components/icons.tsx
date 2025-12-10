@@ -62,8 +62,10 @@ export { BiLastPage       as IconPageLast }       from 'react-icons/bi';
 export { TbCalendarPlus   as IconDateCreate }     from 'react-icons/tb';
 export { TbCalendarRepeat as IconDateUpdate }     from 'react-icons/tb';
 export { PiFileCsv        as IconCSV }            from 'react-icons/pi';
+export { PiFileSvg        as IconSVG }            from 'react-icons/pi';
+export { PiFilePng        as IconPNG }            from 'react-icons/pi';
 export { BsFiletypeJson   as IconJSON }           from 'react-icons/bs';
-export { FaRegFilePdf     as IconPDF }            from 'react-icons/fa6';
+export { PiFilePdf        as IconPDF }            from 'react-icons/pi';
 
 // ==== User status =======
 export { LuCircleUserRound as IconUser }          from 'react-icons/lu';
