@@ -14,8 +14,6 @@ Font.register({
   fonts: [{ src: '/fonts/ConceptMath-Regular.ttf' }]
 });
 
-Font.registerHyphenationCallback(word => [word]);
-
 const documentMetadata = {
   language: 'ru',
   creator: 'Concept Portal',

@@ -10,7 +10,7 @@ import { pdfs } from '../../../components/pdf/pdf-styles';
 import { labelCstTypification } from '../labels';
 import { type IConstituenta, type IRSForm } from '../models/rsform';
 
-import { addSpaces, addSpacesTypification } from './pdf-utils';
+import { addSpaces, addSpacesTypification, hyphenateCyrillic } from './pdf-utils';
 
 /** Renders a PDF file with a list of Constituenta.
  * WARNING! Large library load, use lazy loading.
@@ -97,11 +97,15 @@ function CstTable({ data }: { data: RO<IConstituenta[]> }) {
             <Text style={{ ...pdfs.cell, width: '82mm', fontFamily: 'CodeMath' }} hyphenationCallback={word => [word]}>
               {addSpaces(cst.definition_formal)}
             </Text>
-            <Text style={{ ...pdfs.cell, width: '38mm', fontFamily: 'CodeMath' }}>
+            <Text style={{ ...pdfs.cell, width: '38mm', fontFamily: 'CodeMath' }} hyphenationCallback={word => [word]}>
               {addSpacesTypification(labelCstTypification(cst))}
             </Text>
-            <Text style={{ ...pdfs.cell, width: '40mm' }}>{cst.term_resolved}</Text>
-            <Text style={{ ...pdfs.cell, width: '82mm', borderRightWidth: 0 }}>{getCommentColumnText(cst)}</Text>
+            <Text style={{ ...pdfs.cell, width: '40mm' }} hyphenationCallback={hyphenateCyrillic}>
+              {cst.term_resolved}
+            </Text>
+            <Text style={{ ...pdfs.cell, width: '82mm', borderRightWidth: 0 }} hyphenationCallback={hyphenateCyrillic}>
+              {getCommentColumnText(cst)}
+            </Text>
           </View>
         ))}
       </View>

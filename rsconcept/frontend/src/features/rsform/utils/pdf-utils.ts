@@ -7,3 +7,11 @@ export function addSpacesTypification(text: string): string {
 export function addSpaces(text: string): string {
   return text.replace(/(?![A-Za-z])([^\s])/g, '$1\u200B');
 }
+
+/**
+ * Allows @react-pdf to break long Cyrillic words by returning one-char chunks.
+ * Falls back to the default behavior for non-Cyrillic words.
+ */
+export function hyphenateCyrillic(word: string): string[] {
+  return /[А-Яа-яЁё]/.test(word) ? word.split('') : [word];
+}
