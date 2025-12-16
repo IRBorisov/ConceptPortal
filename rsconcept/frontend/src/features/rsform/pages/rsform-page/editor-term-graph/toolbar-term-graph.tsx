@@ -166,7 +166,7 @@ export function ToolbarTermGraph({ className, graph }: ToolbarTermGraphProps) {
           title='Граф ступеней'
           onClick={handleShowTypeGraph}
         />
-        <div ref={exportRef} onBlur={handleExportBlur} className='relative'>
+        <div ref={exportRef} onBlur={handleExportBlur} className='flex relative'>
           <MiniButton
             title='Сохранить изображение'
             hideTitle={isExportOpen}

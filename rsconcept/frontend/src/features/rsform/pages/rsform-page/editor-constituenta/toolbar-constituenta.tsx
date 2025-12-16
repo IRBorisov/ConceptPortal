@@ -79,7 +79,7 @@ export function ToolbarConstituenta({
   }
 
   return (
-    <div className={cn('px-1 rounded-b-2xl backdrop-blur-xs cc-icons outline-hidden', className)}>
+    <div className={cn('px-1 rounded-b-2xl cc-icons outline-hidden', className)}>
       {schema.oss.length > 0 ? (
         <MiniSelectorOSS
           items={schema.oss}

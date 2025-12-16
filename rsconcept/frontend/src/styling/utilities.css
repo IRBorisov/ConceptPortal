@@ -29,7 +29,7 @@
 
 @utility cc-hover-pulse {
   &:hover:not(:disabled) {
-    transform: translateZ(0) scale(1);
+    transform: scale(1);
     transform-origin: center;
     animation: pulse-scale var(--duration-cycle) infinite;
     animation-delay: var(--duration-select);

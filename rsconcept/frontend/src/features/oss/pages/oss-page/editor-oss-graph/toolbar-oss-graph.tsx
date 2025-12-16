@@ -154,7 +154,7 @@ export function ToolbarOssGraph({
           icon={<IconSettings size='1.25rem' className='icon-primary' />}
           onClick={handleShowOptions}
         />
-        <div ref={exportRef} onBlur={handleExportBlur} className='relative'>
+        <div ref={exportRef} onBlur={handleExportBlur} className='relative flex'>
           <MiniButton
             title='Сохранить изображение'
             hideTitle={isExportOpen}
