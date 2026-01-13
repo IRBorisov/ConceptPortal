@@ -193,20 +193,11 @@ export class RSFormLoader {
     return {
       count_all: items.length,
       count_crucial: items.reduce((sum, cst) => sum + (cst.crucial ? 1 : 0), 0),
-      count_errors: items.reduce(
-        (sum, cst) => sum + (cst.parse && cst.parse.status === ParsingStatus.INCORRECT ? 1 : 0),
-        0
-      ),
-      count_property: items.reduce(
-        (sum, cst) => sum + (cst.parse && cst.parse.valueClass === ValueClass.PROPERTY ? 1 : 0),
-        0
-      ),
+      count_errors: items.reduce((sum, cst) => sum + (cst.parse?.status === ParsingStatus.INCORRECT ? 1 : 0), 0),
+      count_property: items.reduce((sum, cst) => sum + (cst.parse?.valueClass === ValueClass.PROPERTY ? 1 : 0), 0),
       count_incalculable: items.reduce(
         (sum, cst) =>
-          sum +
-          (cst.parse && cst.parse.status === ParsingStatus.VERIFIED && cst.parse.valueClass === ValueClass.INVALID
-            ? 1
-            : 0),
+          sum + (cst.parse?.status === ParsingStatus.VERIFIED && cst.parse.valueClass === ValueClass.INVALID ? 1 : 0),
         0
       ),
       count_inherited: items.reduce((sum, cst) => sum + (cst.is_inherited ? 1 : 0), 0),

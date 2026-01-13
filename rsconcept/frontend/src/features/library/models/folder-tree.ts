@@ -138,7 +138,7 @@ export class FolderTree {
 
 // ========= Internals =======
 function ChopPathHead(path: string) {
-  if (!path || path.at(0) !== '/') {
+  if (path?.at(0) !== '/') {
     return {
       head: '',
       tail: ''

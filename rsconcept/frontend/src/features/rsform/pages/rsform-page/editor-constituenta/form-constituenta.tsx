@@ -166,11 +166,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
   }
 
   function handleTypeGraph(event: React.MouseEvent<Element>) {
-    if (
-      (localParse && !localParse.parseResult) ||
-      !activeCst.parse ||
-      activeCst.parse.status !== ParsingStatus.VERIFIED
-    ) {
+    if ((localParse && !localParse.parseResult) || activeCst.parse?.status !== ParsingStatus.VERIFIED) {
       toast.error(errorMsg.typeStructureFailed);
       return;
     }
