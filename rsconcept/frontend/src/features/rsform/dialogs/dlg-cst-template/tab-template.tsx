@@ -8,12 +8,16 @@ import { ComboBox } from '@/components/input/combo-box';
 import { useRSForm } from '../../backend/use-rsform';
 import { PickConstituenta } from '../../components/pick-constituenta';
 import { RSInput } from '../../components/rs-input';
-import { CATEGORY_CST_TYPE } from '../../models/rsform';
-import { applyFilterCategory } from '../../models/rsform-api';
+import { CATEGORY_CST_TYPE, type IRSForm } from '../../models/rsform';
+import { applyFilterCategory, isTemplateCst } from '../../models/rsform-api';
 
 import { useTemplateContext } from './template-context';
 
-export function TabTemplate() {
+interface TabTemplateProps {
+  schema: IRSForm;
+}
+
+export function TabTemplate({ schema }: TabTemplateProps) {
   const {
     templateID, //
     filterCategory,
@@ -24,14 +28,13 @@ export function TabTemplate() {
   } = useTemplateContext();
 
   const { templates } = useTemplatesSuspense();
+  const templateOptions = [{ ...schema, title: 'Текущая схема' }, ...templates];
   const { schema: templateSchema } = useRSForm({ itemID: templateID ?? undefined });
-  const selectedTemplate = templates.find(item => item.id === templateID);
+  const selectedTemplate = templateOptions.find(item => item.id === templateID);
 
-  const filteredData = !templateSchema
-    ? []
-    : !filterCategory
-    ? templateSchema.items
-    : applyFilterCategory(filterCategory, templateSchema);
+  const constituents = templateSchema?.items.filter(isTemplateCst) ?? [];
+
+  const filteredData = !filterCategory ? constituents : applyFilterCategory(filterCategory, constituents);
 
   const prototypeInfo = !prototype
     ? ''
@@ -41,12 +44,14 @@ export function TabTemplate() {
     ? []
     : templateSchema.items.filter(cst => cst.cst_type === CATEGORY_CST_TYPE);
 
+  console.log(templateOptions);
+
   return (
     <div className='cc-fade-in'>
       <div className='flex gap-1 border-t border-x rounded-t-md bg-input'>
         <ComboBox
           value={selectedTemplate ?? null}
-          items={templates}
+          items={templateOptions}
           noBorder
           noSearch
           placeholder='Источник'

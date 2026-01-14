@@ -101,7 +101,7 @@ export function DlgCstTemplate() {
           <TemplateState>
             <TabPanel>
               <Suspense fallback={<Loader />}>
-                <TabTemplate />
+                <TabTemplate schema={schema} />
               </Suspense>
             </TabPanel>
 

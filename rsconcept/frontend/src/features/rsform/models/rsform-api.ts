@@ -107,21 +107,20 @@ export function inferClass(type: CstType, isTemplate: boolean = false): CstClass
   }
 }
 
-/**
- * Apply filter based on start {@link IConstituenta} type.
- */
-export function applyFilterCategory(start: IConstituenta, schema: IRSForm): IConstituenta[] {
-  const startIndex = schema.items.indexOf(start);
+/** Check if {@link IConstituenta} is a template or a category. */
+export function isTemplateCst(cst: IConstituenta): boolean {
+  return cst.cst_type === CstType.FUNCTION || cst.cst_type === CstType.PREDICATE || cst.cst_type === CstType.THEOREM;
+}
+
+/** Apply filter based on start {@link IConstituenta} type. */
+export function applyFilterCategory(start: IConstituenta, items: IConstituenta[]): IConstituenta[] {
+  const startIndex = items.indexOf(start);
   if (startIndex === -1) {
     return [];
   }
-  const nextCategoryIndex = schema.items.findIndex(
-    (cst, index) => index > startIndex && cst.cst_type === CATEGORY_CST_TYPE
-  );
+  const nextCategoryIndex = items.findIndex((cst, index) => index > startIndex && cst.cst_type === CATEGORY_CST_TYPE);
 
-  return schema.items.filter(
-    (_, index) => index >= startIndex && (nextCategoryIndex === -1 || index < nextCategoryIndex)
-  );
+  return items.filter((_, index) => index >= startIndex && (nextCategoryIndex === -1 || index < nextCategoryIndex));
 }
 
 const cstTypePrefixRecord: Record<CstType, string> = {
