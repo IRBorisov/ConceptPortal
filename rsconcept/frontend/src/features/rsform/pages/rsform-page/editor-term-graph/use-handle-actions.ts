@@ -24,6 +24,7 @@ export const fitViewOptions = { padding: 0.3, duration: PARAMETER.zoomDuration }
 
 const IMAGE_PADDING_HORIZONTAL = 75;
 const IMAGE_PADDING_VERTICAL = 20;
+const IMAGE_PADDING_TEXT = 30;
 
 export function useHandleActions(graph: Graph<number>) {
   const darkMode = usePreferencesStore(state => state.darkMode);
@@ -43,6 +44,7 @@ export function useHandleActions(graph: Graph<number>) {
 
   const mode = useTermGraphStore(state => state.mode);
 
+  const noText = useTermGraphStore(state => state.filter.noText);
   const toggleText = useTermGraphStore(state => state.toggleText);
   const toggleClustering = useTermGraphStore(state => state.toggleClustering);
   const toggleHermits = useTermGraphStore(state => state.toggleHermits);
@@ -151,7 +153,7 @@ export function useHandleActions(graph: Graph<number>) {
 
     const bounds = getNodesBounds(getNodes());
     const exportWidth = bounds.width + 2 * IMAGE_PADDING_HORIZONTAL;
-    const exportHeight = bounds.height + 2 * IMAGE_PADDING_VERTICAL;
+    const exportHeight = bounds.height + 2 * IMAGE_PADDING_VERTICAL + (noText ? 0 : IMAGE_PADDING_TEXT);
 
     const dataUrl = await toPng(node, {
       width: exportWidth,
@@ -190,7 +192,7 @@ export function useHandleActions(graph: Graph<number>) {
       const bounds = getNodesBounds(getNodes());
 
       const exportWidth = bounds.width + 2 * IMAGE_PADDING_HORIZONTAL;
-      const exportHeight = bounds.height + 2 * IMAGE_PADDING_VERTICAL;
+      const exportHeight = bounds.height + 2 * IMAGE_PADDING_VERTICAL + (noText ? 0 : IMAGE_PADDING_TEXT);
 
       const prefix = 'data:image/svg+xml;charset=utf-8,';
 
