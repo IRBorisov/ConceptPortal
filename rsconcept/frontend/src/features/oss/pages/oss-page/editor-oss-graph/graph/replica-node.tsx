@@ -7,7 +7,7 @@ export function ReplicaNode(node: NodeProps<OGOperationNode>) {
   return (
     <>
       <NodeCoreComponent node={node} />
-      <Handle type='source' position={Position.Bottom} className='-translate-y-px' />
+      <Handle type='source' position={Position.Bottom} className='-translate-y-px' isConnectableStart />
     </>
   );
 }

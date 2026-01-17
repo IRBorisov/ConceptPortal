@@ -75,7 +75,9 @@ export const errorMsg = {
   changeInheritedDefinition: 'Нельзя изменить определение наследника',
   addInheritedEdge: 'Новая связь между наследниками из одной схемы не допускается',
   deleteInheritedEdge: 'Нельзя удалить связь между наследниками из одной схемы',
-  pdfError: 'Не удалось создать PDF-файл'
+  pdfError: 'Не удалось создать PDF-файл',
+  ossSelfConnection: 'Нельзя использовать результат операции как ее операнд',
+  ossCycle: 'Нельзя создавать цикл в ОСС'
 } as const;
 
 /**

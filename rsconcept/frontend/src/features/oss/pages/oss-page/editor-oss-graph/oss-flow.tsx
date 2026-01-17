@@ -1,6 +1,8 @@
 'use client';
 
 import { useRef, useState } from 'react';
+import { toast } from 'react-toastify';
+import { type Connection } from '@xyflow/react';
 import clsx from 'clsx';
 
 import { DiagramFlow, useReactFlow } from '@/components/flow/diagram-flow';
@@ -9,7 +11,12 @@ import { useMainHeight } from '@/stores/app-layout';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { PARAMETER } from '@/utils/constants';
+import { errorMsg } from '@/utils/labels';
 
+import { type IUpdateOperationDTO, OperationType } from '../../../backend/types';
+import { useMutatingOss } from '../../../backend/use-mutating-oss';
+import { useUpdateOperation } from '../../../backend/use-update-operation';
+import { NodeType } from '../../../models/oss';
 import { type Position2D } from '../../../models/oss-layout';
 import { GRID_SIZE } from '../../../models/oss-layout-api';
 import { useOSSGraphStore } from '../../../stores/oss-graph';
@@ -17,6 +24,7 @@ import { useOssEdit } from '../oss-edit-context';
 
 import { ContextMenu } from './context-menu/context-menu';
 import { useContextMenu } from './context-menu/use-context-menu';
+import { OgConnectionLine } from './graph/og-connection';
 import { type OGNode } from './graph/og-models';
 import { OssGraphNodeTypes } from './graph/og-node-types';
 import { CoordinateDisplay } from './coordinate-display';
@@ -32,7 +40,7 @@ export const flowOptions = {
   fitViewOptions: { padding: 0.3, duration: PARAMETER.zoomDuration },
   edgesFocusable: false,
   nodesFocusable: false,
-  nodesConnectable: false,
+  nodesConnectable: true,
   elevateNodesOnSelect: true,
   maxZoom: 2,
   minZoom: 0.5,
@@ -43,7 +51,8 @@ export const flowOptions = {
 
 export function OssFlow() {
   const mainHeight = useMainHeight();
-  const { navigateOperationSchema, schema } = useOssEdit();
+  const { navigateOperationSchema, schema, isMutable } = useOssEdit();
+  const isProcessing = useMutatingOss();
   const { screenToFlowPosition } = useReactFlow();
   const { containMovement, nodes, onNodesChange, edges, onEdgesChange } = useOssFlow();
 
@@ -53,6 +62,7 @@ export function OssFlow() {
   const showGrid = useOSSGraphStore(state => state.showGrid);
   const showCoordinates = useOSSGraphStore(state => state.showCoordinates);
   const showPanel = usePreferencesStore(state => state.showOssSidePanel);
+  const { updateOperation } = useUpdateOperation();
 
   const getLayout = useGetLayout();
 
@@ -94,6 +104,52 @@ export function OssFlow() {
     openContextMenu(node, event.clientX, event.clientY);
   }
 
+  function handleConnect(connection: Connection) {
+    if (!isMutable || isProcessing) {
+      return;
+    }
+    if (!connection.source || !connection.target) {
+      return;
+    }
+    if (connection.source === connection.target) {
+      toast.error(errorMsg.ossSelfConnection);
+      return;
+    }
+
+    const source = schema.itemByNodeID.get(connection.source);
+    const target = schema.itemByNodeID.get(connection.target);
+    if (!source || target?.nodeType !== NodeType.OPERATION
+      || target.operation_type !== OperationType.SYNTHESIS
+    ) {
+      throw new Error('Item not found');
+    }
+    if (schema.extendedGraph.expandAllOutputs([target.id]).includes(source.id)) {
+      toast.error(errorMsg.ossCycle);
+      return;
+    }
+    if (schema.graph.hasEdge(source.id, target.id)) {
+      toast.error(errorMsg.connectionExists);
+      return;
+    }
+
+    const data: IUpdateOperationDTO = {
+      target: target.id,
+      item_data: {
+        parent: target.parent,
+        title: target.title,
+        description: target.description,
+        alias: target.alias
+      },
+      layout: getLayout(),
+      arguments: [...target.arguments, source.id],
+      substitutions: target.substitutions.map(sub => ({
+        original: sub.original,
+        substitution: sub.substitution
+      }))
+    };
+    void updateOperation({ itemID: schema.id, data });
+  }
+
   return (
     <div
       ref={flowRef}
@@ -130,6 +186,11 @@ export function OssFlow() {
         onNodeDragStart={handleDragStart}
         onNodeDrag={handleDrag}
         onNodeDragStop={handleDragStop}
+
+        connectionLineComponent={OgConnectionLine}
+        // onConnectStart={handleConnectStart}
+        // onConnectEnd={handleConnectEnd}
+        onConnect={handleConnect}
       />
 
       <SidePanel

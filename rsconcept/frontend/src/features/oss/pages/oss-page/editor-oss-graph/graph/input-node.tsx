@@ -7,7 +7,7 @@ export function InputNodeComponent(node: NodeProps<OGOperationNode>) {
   return (
     <>
       <NodeCoreComponent node={node} />
-      <Handle type='source' position={Position.Bottom} />
+      <Handle type='source' position={Position.Bottom} isConnectableStart />
     </>
   );
 }

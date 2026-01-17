@@ -20,7 +20,7 @@ const Z_BLOCK = 1;
 const Z_SCHEMA = 10;
 
 export const OssFlowState = ({ children }: React.PropsWithChildren) => {
-  const { schema, selected, setSelected } = useOssEdit();
+  const { schema, selected, setSelected, isMutable } = useOssEdit();
   const { fitView, viewportInitialized } = useReactFlow();
   const edgeAnimate = useOSSGraphStore(state => state.edgeAnimate);
   const edgeStraight = useOSSGraphStore(state => state.edgeStraight);
@@ -83,6 +83,7 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
         target: target.nodeID,
         type: edgeStraight ? 'straight' : 'simplebezier',
         animated: edgeAnimate,
+        selectable: isMutable,
         focusable: false,
         targetHandle: source.x > target.x ? 'right' : 'left',
         style: {
@@ -93,7 +94,7 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
 
     setNodes(newNodes);
     setEdges(newEdges);
-  }, [schema, setNodes, setEdges, edgeAnimate, edgeStraight]);
+  }, [schema, setNodes, setEdges, edgeAnimate, edgeStraight, isMutable]);
 
   useEffect(() => {
     reloadData();
