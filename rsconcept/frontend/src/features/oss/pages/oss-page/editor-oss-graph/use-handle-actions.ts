@@ -11,10 +11,11 @@ import { promptText } from '@/utils/labels';
 import { cleanSvg } from '@/utils/svg';
 import { dataUrlToBlob, withPreventDefault } from '@/utils/utils';
 
-import { OperationType } from '../../../backend/types';
+import { type IUpdateOperationDTO, OperationType } from '../../../backend/types';
 import { useDeleteBlock } from '../../../backend/use-delete-block';
 import { useMutatingOss } from '../../../backend/use-mutating-oss';
 import { useUpdateLayout } from '../../../backend/use-update-layout';
+import { useUpdateOperation } from '../../../backend/use-update-operation';
 import { type IOssItem, NodeType } from '../../../models/oss';
 import { LayoutManager } from '../../../models/oss-layout-api';
 import { useOSSGraphStore } from '../../../stores/oss-graph';
@@ -29,7 +30,16 @@ const IMAGE_PADDING_VERTICAL = 20;
 export function useHandleActions() {
   const darkMode = usePreferencesStore(state => state.darkMode);
   const { screenToFlowPosition, getNodesBounds, getNodes } = useReactFlow();
-  const { schema, selected, setSelected, selectedItems, isMutable, deselectAll, canDeleteOperation } = useOssEdit();
+  const {
+    schema,
+    selectedNodes,
+    selectedEdges,
+    setSelectedNodes,
+    selectedItems,
+    isMutable,
+    deselectAll,
+    canDeleteSelected
+  } = useOssEdit();
   const { resetView, resetGraph } = useOssFlow();
   const isProcessing = useMutatingOss();
   const store = useStoreApi();
@@ -41,6 +51,7 @@ export function useHandleActions() {
   const getLayout = useGetLayout();
   const { updateLayout } = useUpdateLayout();
   const { deleteBlock } = useDeleteBlock();
+  const { updateOperation } = useUpdateOperation();
 
   const showCreateOperation = useDialogsStore(state => state.showCreateSynthesis);
   const showCreateBlock = useDialogsStore(state => state.showCreateBlock);
@@ -83,7 +94,7 @@ export function useHandleActions() {
       initialParent: extractBlockParent(selectedItems),
       onCreate: newID => {
         resetView();
-        setTimeout(() => setSelected([`o${newID}`]), PARAMETER.minimalTimeout);
+        setTimeout(() => setSelectedNodes([`o${newID}`]), PARAMETER.minimalTimeout);
       }
     });
   }
@@ -107,7 +118,7 @@ export function useHandleActions() {
       onCreate: newID => {
         setTimeout(() => {
           resetView();
-          setSelected([`b${newID}`]);
+          setSelectedNodes([`b${newID}`]);
         }, PARAMETER.minimalTimeout);
       }
     });
@@ -123,7 +134,7 @@ export function useHandleActions() {
       initialParent: extractBlockParent(selectedItems),
       onCreate: newID => {
         resetView();
-        setTimeout(() => setSelected([`o${newID}`]), PARAMETER.minimalTimeout);
+        setTimeout(() => setSelectedNodes([`o${newID}`]), PARAMETER.minimalTimeout);
       }
     });
   }
@@ -138,23 +149,17 @@ export function useHandleActions() {
       initialParent: extractBlockParent(selectedItems),
       onCreate: newID => {
         resetView();
-        setTimeout(() => setSelected([`o${newID}`]), PARAMETER.minimalTimeout);
+        setTimeout(() => setSelectedNodes([`o${newID}`]), PARAMETER.minimalTimeout);
       }
     });
   }
 
-  function handleDeleteSelected() {
-    if (selected.length !== 1) {
-      return;
-    }
-    const item = schema.itemByNodeID.get(selected[0]);
+  function deleteNode(nodeID: string) {
+    const item = schema.itemByNodeID.get(nodeID);
     if (!item) {
       return;
     }
     if (item.nodeType === NodeType.OPERATION) {
-      if (!canDeleteOperation(item)) {
-        return;
-      }
       switch (item.operation_type) {
         case OperationType.REPLICA:
           showDeleteReference({
@@ -185,6 +190,53 @@ export function useHandleActions() {
     }
   }
 
+  function deleteEdge(edgeID: string) {
+    const source = schema.itemByNodeID.get(edgeID.split('-')[0]);
+    const target = schema.itemByNodeID.get(edgeID.split('-')[1]);
+    if (!source
+      || target?.nodeType !== NodeType.OPERATION
+      || target.operation_type !== OperationType.SYNTHESIS
+      || source.nodeType !== NodeType.OPERATION
+    ) {
+      return;
+    }
+    if (!window.confirm(promptText.deleteArgument)) {
+      return;
+    }
+
+    const newSubs = target.substitutions
+      .filter(sub => sub.original_schema !== source.result && sub.substitution_schema !== source.result)
+      .map(sub => ({
+        original: sub.original,
+        substitution: sub.substitution
+      }));
+
+    const data: IUpdateOperationDTO = {
+      target: target.id,
+      item_data: {
+        parent: target.parent,
+        title: target.title,
+        description: target.description,
+        alias: target.alias
+      },
+      layout: getLayout(),
+      arguments: target.arguments.filter(id => id !== source.id),
+      substitutions: newSubs
+    };
+    void updateOperation({ itemID: schema.id, data });
+  }
+
+  function handleDeleteSelected() {
+    if (!canDeleteSelected) {
+      return;
+    }
+    if (selectedNodes.length === 1) {
+      deleteNode(selectedNodes[0]);
+    } else if (selectedEdges.length === 1) {
+      deleteEdge(selectedEdges[0]);
+    }
+  }
+
   function handleSelectLeft() {
     const selectedOperation = selectedItems.find(item => item.nodeType === NodeType.OPERATION);
     if (!selectedOperation) {
@@ -193,7 +245,7 @@ export function useHandleActions() {
     const manager = new LayoutManager(schema, getLayout());
     const newNodeID = manager.selectLeft(selectedOperation.nodeID);
     if (newNodeID) {
-      setSelected([newNodeID]);
+      setSelectedNodes([newNodeID]);
     }
   }
 
@@ -205,7 +257,7 @@ export function useHandleActions() {
     const manager = new LayoutManager(schema, getLayout());
     const newNodeID = manager.selectRight(selectedOperation.nodeID);
     if (newNodeID) {
-      setSelected([newNodeID]);
+      setSelectedNodes([newNodeID]);
     }
   }
   function handleSelectUp() {
@@ -216,7 +268,7 @@ export function useHandleActions() {
     const manager = new LayoutManager(schema, getLayout());
     const newNodeID = manager.selectUp(selectedOperation.nodeID);
     if (newNodeID) {
-      setSelected([newNodeID]);
+      setSelectedNodes([newNodeID]);
     }
   }
 
@@ -228,7 +280,7 @@ export function useHandleActions() {
     const manager = new LayoutManager(schema, getLayout());
     const newNodeID = manager.selectDown(selectedOperation.nodeID);
     if (newNodeID) {
-      setSelected([newNodeID]);
+      setSelectedNodes([newNodeID]);
     }
   }
 

@@ -42,8 +42,9 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
   const isMutable = role > UserRole.READER && !schema.read_only;
   const isEditor = !!user.id && schema.editors.includes(user.id);
 
-  const [selected, setSelected] = useState<string[]>([]);
-  const selectedItems = selected.map(id => schema.itemByNodeID.get(id)).filter(item => !!item);
+  const [selectedNodes, setSelectedNodes] = useState<string[]>([]);
+  const selectedItems = selectedNodes.map(id => schema.itemByNodeID.get(id)).filter(item => !!item);
+  const [selectedEdges, setSelectedEdges] = useState<string[]>([]);
 
   const { deleteItem } = useDeleteItem();
 
@@ -53,6 +54,24 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
     isStaff: user.is_staff,
     adminMode: adminMode
   });
+
+  function canDeleteOperation(target: IOperation) {
+    if (target.operation_type === OperationType.INPUT || target.operation_type === OperationType.REPLICA) {
+      return true;
+    }
+    return schema.graph.expandOutputs([target.id]).length === 0;
+  }
+
+  const canDeleteSelected = (() => {
+    if (!isMutable) { return false; }
+    if (selectedNodes.length === 1) {
+      const item = schema.itemByNodeID.get(selectedNodes[0]);
+      if (item?.nodeType === NodeType.OPERATION) { return canDeleteOperation(item); }
+      return true;
+    }
+    if (selectedEdges.length === 1) { return true; }
+    return false;
+  })();
 
   useEffect(() => {
     setCurrentOSS(schema);
@@ -108,19 +127,19 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
     });
   }
 
-  function canDeleteOperation(target: IOperation) {
-    if (target.operation_type === OperationType.INPUT || target.operation_type === OperationType.REPLICA) {
-      return true;
-    }
-    return schema.graph.expandOutputs([target.id]).length === 0;
+  function deselectAll() {
+    setSelectedNodes([]);
+    setSelectedEdges([]);
   }
 
   return (
     <OssEditContext
       value={{
         schema,
-        selected,
+        selectedNodes,
+        selectedEdges,
         selectedItems,
+        canDeleteSelected,
 
         isOwned,
         isMutable,
@@ -130,8 +149,9 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
 
         canDeleteOperation,
         deleteSchema,
-        setSelected,
-        deselectAll: () => setSelected([])
+        setSelectedNodes,
+        setSelectedEdges,
+        deselectAll
       }}
     >
       {children}

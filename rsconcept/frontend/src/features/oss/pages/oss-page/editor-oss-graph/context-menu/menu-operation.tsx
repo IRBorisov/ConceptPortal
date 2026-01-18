@@ -39,7 +39,7 @@ interface MenuOperationProps {
 
 export function MenuOperation({ operation, onHide }: MenuOperationProps) {
   const { items: libraryItems } = useLibrary();
-  const { schema, setSelected, navigateOperationSchema, isMutable, canDeleteOperation, deselectAll } = useOssEdit();
+  const { schema, setSelectedNodes, navigateOperationSchema, isMutable, canDeleteOperation, deselectAll } = useOssEdit();
   const isProcessing = useMutatingOss();
   const getLayout = useGetLayout();
 
@@ -187,7 +187,7 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
         layout: layout,
         position: newPosition
       }
-    }).then(response => setTimeout(() => setSelected([`o${response.new_operation}`]), PARAMETER.refreshTimeout));
+    }).then(response => setTimeout(() => setSelectedNodes([`o${response.new_operation}`]), PARAMETER.refreshTimeout));
   }
 
   function handleClone() {
@@ -207,7 +207,7 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
         layout: layout,
         position: newPosition
       }
-    }).then(response => setTimeout(() => setSelected([`o${response.new_operation}`]), PARAMETER.refreshTimeout));
+    }).then(response => setTimeout(() => setSelectedNodes([`o${response.new_operation}`]), PARAMETER.refreshTimeout));
   }
 
   function handleSelectTarget() {
@@ -215,7 +215,7 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
     if (operation.operation_type !== OperationType.REPLICA) {
       return;
     }
-    setSelected([`o${operation.target}`]);
+    setSelectedNodes([`o${operation.target}`]);
   }
 
   return (
@@ -266,9 +266,9 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
         />
       ) : null}
       {isMutable &&
-      !operation.result &&
-      operation.operation_type === OperationType.SYNTHESIS &&
-      operation.arguments.length > 0 ? (
+        !operation.result &&
+        operation.operation_type === OperationType.SYNTHESIS &&
+        operation.arguments.length > 0 ? (
         <DropdownButton
           text='Активировать синтез'
           titleHtml={

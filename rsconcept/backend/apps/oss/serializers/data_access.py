@@ -587,8 +587,10 @@ class OperationSchemaSerializer(StrictModelSerializer):
             'operation',
             'original',
             'substitution',
+            original_schema=F('original__schema_id'),
             original_alias=F('original__alias'),
             original_term=F('original__term_resolved'),
+            substitution_schema=F('substitution__schema_id'),
             substitution_alias=F('substitution__alias'),
             substitution_term=F('substitution__term_resolved'),
         ).order_by('pk'):

@@ -8,7 +8,7 @@ import { useOssEdit } from '../oss-edit-context';
 /** Hook to encapsulate drop target logic. */
 export function useDropTarget() {
   const { getIntersectingNodes, screenToFlowPosition } = useReactFlow();
-  const { selectedItems, selected, schema } = useOssEdit();
+  const { selectedItems, selectedNodes: selected, schema } = useOssEdit();
   const dropTarget = useDraggingStore(state => state.dropTarget);
   const setDropTarget = useDraggingStore(state => state.setDropTarget);
 

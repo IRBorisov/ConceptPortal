@@ -52,7 +52,7 @@ export function ToolbarOssGraph({
   className,
   ...restProps
 }: ToolbarOssGraphProps) {
-  const { selectedItems, isMutable, canDeleteOperation: canDelete } = useOssEdit();
+  const { selectedItems, isMutable, canDeleteSelected } = useOssEdit();
   const isProcessing = useMutatingOss();
   const { nodes } = useOssFlow();
   const { user } = useAuthSuspense();
@@ -257,11 +257,7 @@ export function ToolbarOssGraph({
             hideTitle={isMenuOpen}
             icon={<IconDestroy size='1.25rem' className='icon-red' />}
             onClick={handleDeleteSelected}
-            disabled={
-              isProcessing ||
-              (!selectedOperation && !selectedBlock) ||
-              (!!selectedOperation && !canDelete(selectedOperation))
-            }
+            disabled={isProcessing || !canDeleteSelected}
           />
         </div>
       ) : null}

@@ -12,8 +12,10 @@ export type OssTabID = (typeof OssTabID)[keyof typeof OssTabID];
 
 interface IOssEditContext {
   schema: IOperationSchema;
-  selected: string[];
+  selectedNodes: string[];
+  selectedEdges: string[];
   selectedItems: IOssItem[];
+  canDeleteSelected: boolean;
 
   isOwned: boolean;
   isMutable: boolean;
@@ -23,7 +25,8 @@ interface IOssEditContext {
 
   canDeleteOperation: (target: IOperation) => boolean;
   deleteSchema: () => void;
-  setSelected: React.Dispatch<React.SetStateAction<string[]>>;
+  setSelectedNodes: React.Dispatch<React.SetStateAction<string[]>>;
+  setSelectedEdges: React.Dispatch<React.SetStateAction<string[]>>;
   deselectAll: () => void;
 }
 

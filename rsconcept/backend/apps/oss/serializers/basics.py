@@ -30,7 +30,9 @@ class SubstitutionExSerializer(StrictSerializer):
     ''' Serializer: Substitution extended data. '''
     operation = serializers.IntegerField()
     original = serializers.IntegerField()
+    original_schema = serializers.IntegerField()
     substitution = serializers.IntegerField()
+    substitution_schema = serializers.IntegerField()
     original_alias = serializers.CharField()
     original_term = serializers.CharField()
     substitution_alias = serializers.CharField()

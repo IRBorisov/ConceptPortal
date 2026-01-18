@@ -138,8 +138,10 @@ export const schemaPosition = z.strictObject({
 
 export const schemaCstSubstituteInfo = schemaSubstituteConstituents.extend({
   operation: z.number(),
+  original_schema: z.number(),
   original_alias: z.string(),
   original_term: z.string(),
+  substitution_schema: z.number(),
   substitution_alias: z.string(),
   substitution_term: z.string()
 });

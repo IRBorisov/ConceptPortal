@@ -20,7 +20,7 @@ const Z_BLOCK = 1;
 const Z_SCHEMA = 10;
 
 export const OssFlowState = ({ children }: React.PropsWithChildren) => {
-  const { schema, selected, setSelected, isMutable } = useOssEdit();
+  const { schema, selectedNodes, setSelectedNodes, setSelectedEdges, selectedEdges, isMutable } = useOssEdit();
   const { fitView, viewportInitialized } = useReactFlow();
   const edgeAnimate = useOSSGraphStore(state => state.edgeAnimate);
   const edgeStraight = useOSSGraphStore(state => state.edgeStraight);
@@ -28,15 +28,29 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
   const [containMovement, setContainMovement] = useState(false);
   const [nodes, setNodes, onNodesChange] = useNodesState<OGNode>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
-  const prevSelected = useRef<string[]>([]);
+  const prevSelectedNodes = useRef<string[]>([]);
+  const prevSelectedEdges = useRef<string[]>([]);
 
   const suppressRFSelection = useRef<boolean>(false);
-  function onSelectionChange({ nodes }: { nodes: OGNode[] }) {
+  function onSelectionChange({ nodes, edges }: { nodes: OGNode[]; edges: Edge[]; }) {
     if (suppressRFSelection.current) {
       return;
     }
-    const ids = nodes.map(node => node.id);
-    setSelected(prev => (prev.length === ids.length && prev.every((id, i) => id === ids[i]) ? prev : ids));
+    const newNodes = nodes.map(node => node.id);
+    const newEdges = edges.map(edge => edge.id);
+
+    setSelectedNodes(prev => {
+      if (prev.length === newNodes.length && prev.every((id, i) => id === newNodes[i])) {
+        return prev;
+      }
+      return newNodes;
+    });
+    setSelectedEdges(prev => {
+      if (prev.length === newEdges.length && prev.every((id, i) => id === newEdges[i])) {
+        return prev;
+      }
+      return newEdges;
+    });
   }
 
   useOnSelectionChange({
@@ -50,7 +64,7 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
         return {
           id: nodeID,
           type: 'block',
-          selected: prevSelected.current.includes(item.nodeID),
+          selected: prevSelectedNodes.current.includes(item.nodeID),
           data: { label: item.title, block: item },
           position: computeRelativePosition(schema, { x: item.x, y: item.y }, item.parent),
           style: {
@@ -65,7 +79,7 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
         return {
           id: item.nodeID,
           type: item.operation_type.toString() as OperationNodeType,
-          selected: prevSelected.current.includes(item.nodeID),
+          selected: prevSelectedNodes.current.includes(item.nodeID),
           data: { label: item.alias, operation: item },
           position: computeRelativePosition(schema, { x: item.x, y: item.y }, item.parent),
           parentId: item.parent ? constructNodeID(NodeType.BLOCK, item.parent) : undefined,
@@ -74,11 +88,11 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
       }
     });
 
-    const newEdges: Edge[] = schema.arguments.map((argument, index) => {
+    const newEdges: Edge[] = schema.arguments.map(argument => {
       const source = schema.operationByID.get(argument.argument)!;
       const target = schema.operationByID.get(argument.operation)!;
       return {
-        id: String(index),
+        id: `${source.nodeID}-${target.nodeID}`,
         source: source.nodeID,
         target: target.nodeID,
         type: edgeStraight ? 'straight' : 'simplebezier',
@@ -105,8 +119,8 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
   }
 
   function resetGraph() {
-    setSelected([]);
-    prevSelected.current = [];
+    setSelectedNodes([]);
+    prevSelectedNodes.current = [];
     reloadData();
     setTimeout(() => void fitView(flowOptions.fitViewOptions), PARAMETER.refreshTimeout);
   }
@@ -116,18 +130,18 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
       return;
     }
     const hasChanged =
-      prevSelected.current.length !== selected.length || prevSelected.current.some((id, i) => id !== selected[i]);
+      prevSelectedNodes.current.length !== selectedNodes.length || prevSelectedNodes.current.some((id, i) => id !== selectedNodes[i]);
     if (!hasChanged) {
       return;
     }
 
     suppressRFSelection.current = true;
 
-    prevSelected.current = selected;
+    prevSelectedNodes.current = selectedNodes;
     setNodes(prev =>
       prev.map(node => ({
         ...node,
-        selected: selected.includes(node.id)
+        selected: selectedNodes.includes(node.id)
       }))
     );
 
@@ -135,7 +149,35 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
       suppressRFSelection.current = false;
     });
     return () => cancelAnimationFrame(frame);
-  }, [viewportInitialized, selected, setNodes]);
+  }, [viewportInitialized, selectedNodes, setNodes]);
+
+
+  useEffect(() => {
+    if (!viewportInitialized) {
+      return;
+    }
+    const hasChanged =
+      prevSelectedEdges.current.length !== selectedEdges.length ||
+      prevSelectedEdges.current.some((id, i) => id !== selectedEdges[i]);
+    if (!hasChanged) {
+      return;
+    }
+
+    suppressRFSelection.current = true;
+
+    prevSelectedEdges.current = selectedEdges;
+    setEdges(prev =>
+      prev.map(edge => ({
+        ...edge,
+        selected: selectedEdges.includes(edge.id)
+      }))
+    );
+
+    const frame = requestAnimationFrame(() => {
+      suppressRFSelection.current = false;
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [selectedEdges, setEdges, viewportInitialized]);
 
   return (
     <OssFlowContext

@@ -23,7 +23,7 @@ export function useDragging({ hideContextMenu }: DraggingProps) {
   const setIsDragging = useDraggingStore(state => state.setIsDragging);
   const isDragging = useDraggingStore(state => state.isDragging);
   const getLayout = useGetLayout();
-  const { selected, schema } = useOssEdit();
+  const { selectedNodes: selected, schema } = useOssEdit();
   const dropTarget = useDropTarget();
   const { moveItems } = useMoveItems();
 

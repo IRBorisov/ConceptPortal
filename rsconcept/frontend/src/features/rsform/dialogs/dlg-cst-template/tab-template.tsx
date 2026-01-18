@@ -44,8 +44,6 @@ export function TabTemplate({ schema }: TabTemplateProps) {
     ? []
     : templateSchema.items.filter(cst => cst.cst_type === CATEGORY_CST_TYPE);
 
-  console.log(templateOptions);
-
   return (
     <div className='cc-fade-in'>
       <div className='flex gap-1 border-t border-x rounded-t-md bg-input'>
