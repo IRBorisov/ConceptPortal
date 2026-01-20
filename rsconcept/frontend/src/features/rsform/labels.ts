@@ -4,6 +4,7 @@
 
 import { PARAMETER } from '@/utils/constants';
 import { type RO } from '@/utils/meta';
+import { type FlatAstNode } from '@/utils/parsing';
 import { prepareTooltip } from '@/utils/utils';
 
 import { type IVersionInfo } from '../library/backend/types';
@@ -12,7 +13,7 @@ import { type CurrentVersion } from '../library/models/library';
 import { CstType, type IRSErrorDescription, ParsingStatus, RSErrorType, TokenID } from './backend/types';
 import { Grammeme, ReferenceType } from './models/language';
 import { CstClass, ExpressionStatus, type IConstituenta } from './models/rsform';
-import { type IArgumentInfo, type ISyntaxTreeNode } from './models/rslang';
+import { type IArgumentInfo } from './models/rslang/types';
 import { CstMatchMode, DependencyMode } from './stores/cst-search';
 import { type InteractionMode, type TGColoring, type TGEdgeType } from './stores/term-graph';
 
@@ -506,9 +507,9 @@ export function labelGrammeme(gram: Grammeme): string {
 }
 
 /**
- * Generates label for {@link ISyntaxTreeNode}.
+ * Generates label for {@link FlatAstNode}.
  */
-export function labelSyntaxTree(node: RO<ISyntaxTreeNode>): string {
+export function labelSyntaxTree(node: RO<FlatAstNode>): string {
   // prettier-ignore
   switch (node.typeID) {
     case TokenID.ID_LOCAL:

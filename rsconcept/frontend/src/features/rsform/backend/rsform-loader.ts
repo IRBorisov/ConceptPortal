@@ -7,7 +7,7 @@ import { type RO } from '@/utils/meta';
 
 import { ExpressionStatus, type IConstituenta, type IRSForm, type IRSFormStats } from '../models/rsform';
 import { inferClass, inferStatus, inferTemplate, isBaseSet, isFunctional } from '../models/rsform-api';
-import { extractGlobals, isSimpleExpression, splitTemplateDefinition } from '../models/rslang-api';
+import { extractGlobals, isSimpleExpression, splitTemplateDefinition } from '../models/rslang/api';
 
 import { CstType, type IRSFormDTO, ParsingStatus, ValueClass } from './types';
 

@@ -5,8 +5,7 @@ import { type Edge, MarkerType, useEdgesState, useNodesState } from '@xyflow/rea
 
 import { DiagramFlow } from '@/components/flow/diagram-flow';
 import { type RO } from '@/utils/meta';
-
-import { type SyntaxTree } from '../../models/rslang';
+import { type FlatAST } from '@/utils/parsing';
 
 import { ASTEdgeTypes } from './graph/ast-edge-types';
 import { applyLayout } from './graph/ast-layout';
@@ -24,7 +23,7 @@ const flowOptions = {
 } as const;
 
 interface ASTFlowProps {
-  data: RO<SyntaxTree>;
+  data: RO<FlatAST>;
   onNodeEnter: (node: ASTNode) => void;
   onNodeLeave: (node: ASTNode) => void;
   onChangeDragging: (value: boolean) => void;

@@ -3,7 +3,7 @@ import { type EditorState } from '@uiw/react-codemirror';
 
 import { findEnvelopingNodes } from '@/utils/codemirror';
 
-import { GlobalTokens } from './rslang';
+import { GlobalTokens } from './parse';
 
 /**
  * Retrieves globalID from position in Editor.

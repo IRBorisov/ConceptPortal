@@ -2,10 +2,9 @@ import dagre from '@dagrejs/dagre';
 import { type Edge, type Node } from '@xyflow/react';
 
 import { PARAMETER } from '@/utils/constants';
+import { type FlatAstNode } from '@/utils/parsing';
 
-import { type ISyntaxTreeNode } from '../../../models/rslang';
-
-export function applyLayout(nodes: Node<ISyntaxTreeNode>[], edges: Edge[]) {
+export function applyLayout(nodes: Node<FlatAstNode>[], edges: Edge[]) {
   const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
   dagreGraph.setGraph({
     rankdir: 'TB',

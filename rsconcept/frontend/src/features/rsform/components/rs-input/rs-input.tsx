@@ -18,11 +18,11 @@ import { APP_COLORS } from '@/styling/colors';
 
 import { type IRSForm } from '../../models/rsform';
 import { generateAlias, getCstTypePrefix, guessCstType } from '../../models/rsform-api';
-import { extractGlobals } from '../../models/rslang-api';
+import { extractGlobals } from '../../models/rslang/api';
 
 import { ccBracketMatching } from './bracket-matching';
 import { rsNavigation } from './click-navigation';
-import { RSLanguage } from './rslang';
+import { RSLanguage } from './parse';
 import { getLigatureSymbol, getSymbolSubstitute, isPotentialLigature, RSTextWrapper } from './text-editing';
 import { rsHoverTooltip } from './tooltip';
 

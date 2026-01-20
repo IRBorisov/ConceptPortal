@@ -5,22 +5,6 @@
 /** Represents alias mapping. */
 export type AliasMapping = Record<string, string>;
 
-/** Represents AST node. */
-export interface ISyntaxTreeNode extends Record<string, unknown> {
-  uid: number;
-  parent: number;
-  typeID: number;
-  start: number;
-  finish: number;
-  data: {
-    dataType: string;
-    value: unknown;
-  };
-}
-
-/** Represents Syntax tree for RSLang expression. */
-export type SyntaxTree = ISyntaxTreeNode[];
-
 /** Represents function argument definition. */
 export interface IArgumentInfo {
   alias: string;

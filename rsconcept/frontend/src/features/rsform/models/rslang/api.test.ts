@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { applyTypificationMapping, extractGlobals, isSimpleExpression, splitTemplateDefinition } from './rslang-api';
+import { applyTypificationMapping, extractGlobals, isSimpleExpression, splitTemplateDefinition } from './api';
 
 const globalsData: [string, string][] = [
   ['', ''],

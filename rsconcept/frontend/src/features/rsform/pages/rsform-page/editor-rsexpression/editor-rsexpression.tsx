@@ -9,6 +9,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { errorMsg } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
+import { buildTree, FlattenAst } from '@/utils/parsing';
 
 import {
   type ICheckConstituentaDTO,
@@ -19,11 +20,11 @@ import {
 import { useCheckConstituenta } from '../../../backend/use-check-constituenta';
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { RSInput } from '../../../components/rs-input';
-import { parser as rslangParser } from '../../../components/rs-input/rslang/parser-ast';
 import { RSTextWrapper } from '../../../components/rs-input/text-editing';
 import { type IConstituenta } from '../../../models/rsform';
 import { getDefinitionPrefix } from '../../../models/rsform-api';
-import { transformAST } from '../../../models/rslang-api';
+import { parser as rslangParser } from '../../../models/rslang/parser';
+import { normalizeAST } from '../../../models/rslang/transform';
 import { useRSEdit } from '../rsedit-context';
 
 import { ParsingResult } from './parsing-result';
@@ -144,8 +145,10 @@ export function EditorRSExpression({
   function handleShowAST(event: React.MouseEvent<Element>) {
     if (event.ctrlKey) {
       const tree = rslangParser.parse(value);
-      const ast = transformAST(tree);
-      showAST({ syntaxTree: ast, expression: value });
+      const ast = buildTree(tree.cursor());
+      normalizeAST(ast);
+      const flatAst = FlattenAst(ast);
+      showAST({ syntaxTree: flatAst, expression: value });
     } else {
       handleCheckExpression(parse => {
         if (!parse.astText) {

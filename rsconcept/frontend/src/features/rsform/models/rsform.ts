@@ -13,7 +13,7 @@ import { type Graph } from '@/models/graph';
 
 import { CstType, type IAttribution, type ParsingStatus, type ValueClass } from '../backend/types';
 
-import { type IArgumentInfo } from './rslang';
+import { type IArgumentInfo } from './rslang/types';
 
 // CstType constant for category dividers in TemplateSchemas
 export const CATEGORY_CST_TYPE = CstType.THEOREM;

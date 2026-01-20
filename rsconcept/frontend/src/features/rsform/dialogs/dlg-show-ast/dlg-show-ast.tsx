@@ -10,15 +10,14 @@ import { HelpTopic } from '@/features/help';
 import { ModalView } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { type RO } from '@/utils/meta';
-
-import { type SyntaxTree } from '../../models/rslang';
+import { type FlatAST } from '@/utils/parsing';
 
 import { ASTFlow } from './ast-flow';
 
 const NODE_POPUP_DELAY = 100;
 
 export interface DlgShowASTProps {
-  syntaxTree: RO<SyntaxTree>;
+  syntaxTree: RO<FlatAST>;
   expression: string;
 }
 

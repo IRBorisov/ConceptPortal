@@ -1,9 +1,9 @@
 import { APP_COLORS } from '@/styling/colors';
 import { PARAMETER } from '@/utils/constants';
+import { type FlatAstNode } from '@/utils/parsing';
 
 import { TokenID } from './backend/types';
 import { CstClass, ExpressionStatus, type IConstituenta } from './models/rsform';
-import { type ISyntaxTreeNode } from './models/rslang';
 import { type TypificationNodeData } from './models/typification-graph';
 import { TGColoring, TGEdgeType } from './stores/term-graph';
 
@@ -19,8 +19,8 @@ export const BRACKETS_THEME = {
   }
 } as const;
 
-/** Determines background color for {@link ISyntaxTreeNode} based on its type. */
-export function colorBgSyntaxTree(node: ISyntaxTreeNode): string {
+/** Determines background color for {@link FlatAstNode} based on its type. */
+export function colorBgSyntaxTree(node: FlatAstNode): string {
   switch (node.typeID) {
     case TokenID.PUNCTUATION_DEFINE:
     case TokenID.PUNCTUATION_STRUCT:

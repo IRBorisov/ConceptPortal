@@ -11,8 +11,8 @@ import { type ICreateConstituentaDTO } from '../../backend/types';
 import { useRSFormSuspense } from '../../backend/use-rsform';
 import { type IConstituenta } from '../../models/rsform';
 import { generateAlias } from '../../models/rsform-api';
-import { type IArgumentValue } from '../../models/rslang';
-import { inferTemplatedType, substituteTemplateArgs } from '../../models/rslang-api';
+import { inferTemplatedType, substituteTemplateArgs } from '../../models/rslang/api';
+import { type IArgumentValue } from '../../models/rslang/types';
 
 import { type DlgCstTemplateProps } from './dlg-cst-template';
 import { TemplateContext } from './template-context';

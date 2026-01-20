@@ -1,6 +1,6 @@
 import { type Node } from '@xyflow/react';
 
-import { type ISyntaxTreeNode } from '../../../models/rslang';
+import { type FlatAstNode } from '@/utils/parsing';
 
 /** Represents a single node of a Syntax tree. */
-export type ASTNode = Node<ISyntaxTreeNode>;
+export type ASTNode = Node<FlatAstNode>;

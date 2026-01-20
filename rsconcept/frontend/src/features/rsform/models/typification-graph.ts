@@ -5,7 +5,7 @@
 import { PARAMETER } from '@/utils/constants';
 import { type RO } from '@/utils/meta';
 
-import { type IArgumentInfo } from './rslang';
+import { type IArgumentInfo } from './rslang/types';
 
 /** Represents a single node of a {@link TypificationGraph}. */
 export interface TypificationNodeData extends Record<string, unknown> {
