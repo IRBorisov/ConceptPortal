@@ -18,7 +18,7 @@ import { APP_COLORS } from '@/styling/colors';
 
 import { type IRSForm } from '../../models/rsform';
 import { generateAlias, getCstTypePrefix, guessCstType } from '../../models/rsform-api';
-import { extractGlobals } from '../../models/rslang/api';
+import { extractGlobals } from '../../models/rslang';
 
 import { ccBracketMatching } from './bracket-matching';
 import { rsNavigation } from './click-navigation';

@@ -23,8 +23,7 @@ import { RSInput } from '../../../components/rs-input';
 import { RSTextWrapper } from '../../../components/rs-input/text-editing';
 import { type IConstituenta } from '../../../models/rsform';
 import { getDefinitionPrefix } from '../../../models/rsform-api';
-import { normalizeAST } from '../../../models/rslang/normalize';
-import { parser as rslangParser } from '../../../models/rslang/parser';
+import { normalizeAST, rslangParser } from '../../../models/rslang';
 import { useRSEdit } from '../rsedit-context';
 
 import { ParsingResult } from './parsing-result';

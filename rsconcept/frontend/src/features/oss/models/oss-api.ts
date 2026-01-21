@@ -17,7 +17,7 @@ import {
   applyTypificationMapping,
   extractGlobals,
   isSetTypification
-} from '@/features/rsform/models/rslang/api';
+} from '@/features/rsform/models/rslang';
 
 import { infoMsg } from '@/utils/labels';
 

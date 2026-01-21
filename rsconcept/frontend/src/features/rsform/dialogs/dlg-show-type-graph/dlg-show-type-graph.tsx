@@ -10,7 +10,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { errorMsg } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 
-import { type ITypeInfo } from '../../models/rslang/types';
+import { type ITypeInfo } from '../../models/rslang';
 import { TypificationGraph } from '../../models/typification-graph';
 
 import { MGraphFlow } from './mgraph-flow';

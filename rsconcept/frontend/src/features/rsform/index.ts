@@ -8,4 +8,4 @@ export {
   schemaVersionCreatedResponse
 } from './backend/types';
 export { CstClass, ExpressionStatus, type IConstituenta, type IRSForm } from './models/rsform';
-export { type AliasMapping } from './models/rslang/types';
+export { type AliasMapping } from './models/rslang';

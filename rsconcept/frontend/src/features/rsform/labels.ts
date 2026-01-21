@@ -13,7 +13,7 @@ import { type CurrentVersion } from '../library/models/library';
 import { CstType, type IRSErrorDescription, ParsingStatus, RSErrorType, TokenID } from './backend/types';
 import { Grammeme, ReferenceType } from './models/language';
 import { CstClass, ExpressionStatus, type IConstituenta } from './models/rsform';
-import { type IArgumentInfo } from './models/rslang/types';
+import { type IArgumentInfo } from './models/rslang';
 import { CstMatchMode, DependencyMode } from './stores/cst-search';
 import { type InteractionMode, type TGColoring, type TGEdgeType } from './stores/term-graph';
 

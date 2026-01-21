@@ -258,10 +258,6 @@ function normalizeNode(node: AstNode, input: string) {
   }
 }
 
-// Recursion {
-//   PrefixR "{" Variable ":=" Setexpr ("|" Logic)? "|" Setexpr "}"
-// }
-
 function clearData(node: AstNode) {
   node.data.value = null;
   node.data.dataType = 'null';

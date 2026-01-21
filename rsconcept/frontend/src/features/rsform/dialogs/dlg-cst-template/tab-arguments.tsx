@@ -14,7 +14,7 @@ import { PickConstituenta } from '../../components/pick-constituenta';
 import { RSInput } from '../../components/rs-input';
 import { type IConstituenta, type IRSForm } from '../../models/rsform';
 import { isFunctional, isLogical } from '../../models/rsform-api';
-import { type IArgumentValue } from '../../models/rslang/types';
+import { type IArgumentValue } from '../../models/rslang';
 
 import { useTemplateContext } from './template-context';
 
