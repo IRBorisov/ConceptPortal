@@ -4,14 +4,14 @@ import { Handle, type NodeProps, Position } from '@xyflow/react';
 import clsx from 'clsx';
 
 import { colorBgSyntaxTree } from '../../../colors';
-import { labelSyntaxTree } from '../../../labels';
+import { labelRSLangNode } from '../../../labels';
 
 import { type ASTNode } from './ast-models';
 
 const LABEL_THRESHOLD = 3;
 
 export function ASTNodeComponent(node: NodeProps<ASTNode>) {
-  const label = labelSyntaxTree(node.data);
+  const label = labelRSLangNode(node.data);
 
   return (
     <>

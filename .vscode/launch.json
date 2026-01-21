@@ -47,8 +47,19 @@
       "django": true
     },
     {
-      // Run Tests for frontend for current file in Debug mode
-      "name": "FE-DebugTestFile",
+      // Run Vitest Tests for frontend for current file in Debug mode
+      "name": "VT-DebugTestFile",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/rsconcept/frontend/node_modules/vitest/vitest.mjs",
+      "args": ["run", "${file}"],
+      "cwd": "${workspaceFolder}/rsconcept/frontend",
+      "autoAttachChildProcesses": true,
+      "console": "integratedTerminal"
+    },
+    {
+      // Run Playwright Tests for frontend for current file in Debug mode
+      "name": "PW-DebugTestFile",
       "type": "node",
       "request": "launch",
       "cwd": "${workspaceFolder}/rsconcept/frontend",
@@ -66,29 +77,8 @@
       "console": "integratedTerminal"
     },
     {
-      // Run Tests for frontned in Debug mode
-      "name": "Jest DebugAll",
-      "type": "node",
-      "request": "launch",
-      "runtimeExecutable": "${workspaceFolder}/rsconcept/frontend/node_modules/.bin/jest",
-      "args": [
-        "${fileBasenameNoExtension}",
-        "--runInBand",
-        "--watch",
-        "--coverage=false",
-        "--no-cache"
-      ],
-      "cwd": "${workspaceFolder}/rsconcept/frontend",
-      "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen",
-      "sourceMaps": true,
-      "windows": {
-        "program": "${workspaceFolder}/rsconcept/frontend/node_modules/jest/bin/jest"
-      }
-    },
-    {
       // Run Browser in Debug mode (Backend should be running)
-      "name": "FE-Debug",
+      "name": "PW-Debug",
       "type": "chrome",
       "request": "launch",
       "url": "http://localhost:3000/library",

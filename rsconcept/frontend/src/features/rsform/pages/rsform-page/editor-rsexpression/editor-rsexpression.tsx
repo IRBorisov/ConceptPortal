@@ -9,7 +9,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { errorMsg } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
-import { buildTree, FlattenAst } from '@/utils/parsing';
+import { buildTree, flattenAst } from '@/utils/parsing';
 
 import {
   type ICheckConstituentaDTO,
@@ -146,12 +146,12 @@ export function EditorRSExpression({
       const tree = rslangParser.parse(value);
       const ast = buildTree(tree.cursor());
       normalizeAST(ast, value);
-      const flatAst = FlattenAst(ast);
+      const flatAst = flattenAst(ast);
       showAST({ syntaxTree: flatAst, expression: value });
     } else if (event.altKey) {
       const tree = rslangParser.parse(value);
       const ast = buildTree(tree.cursor());
-      const flatAst = FlattenAst(ast);
+      const flatAst = flattenAst(ast);
       showAST({ syntaxTree: flatAst, expression: value });
     } else {
       handleCheckExpression(parse => {

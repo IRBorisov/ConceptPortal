@@ -4,7 +4,7 @@
 
 import { PARAMETER } from '@/utils/constants';
 import { type RO } from '@/utils/meta';
-import { type FlatAstNode } from '@/utils/parsing';
+import { type AstNodeBase } from '@/utils/parsing';
 import { prepareTooltip } from '@/utils/utils';
 
 import { type IVersionInfo } from '../library/backend/types';
@@ -210,7 +210,6 @@ const cstTypeShortcutKeyRecord: Record<CstType, string> = {
 };
 
 const labelTokenRecord: Partial<Record<TokenID, string>> = {
-  [TokenID.BOOLEAN]: 'ℬ()',
   [TokenID.DECART]: '×',
   [TokenID.PUNCTUATION_PL]: '( )',
   [TokenID.PUNCTUATION_SL]: '[ ]',
@@ -237,6 +236,7 @@ const labelTokenRecord: Partial<Record<TokenID, string>> = {
   [TokenID.SET_UNION]: '∪',
   [TokenID.SET_MINUS]: '\\',
   [TokenID.SET_SYMMETRIC_MINUS]: '∆',
+  [TokenID.BOOLEAN]: 'ℬ()',
   [TokenID.NT_DECLARATIVE_EXPR]: 'D{}',
   [TokenID.NT_IMPERATIVE_EXPR]: 'I{}',
   [TokenID.NT_RECURSIVE_FULL]: 'R{}',
@@ -506,10 +506,8 @@ export function labelGrammeme(gram: Grammeme): string {
   return labelGrammemeRecord[gram] ?? `Неизв: ${gram as string}`;
 }
 
-/**
- * Generates label for {@link FlatAstNode}.
- */
-export function labelSyntaxTree(node: RO<FlatAstNode>): string {
+/** Generates label for {@link AstNodeBase}. */
+export function labelRSLangNode(node: RO<AstNodeBase>): string {
   // prettier-ignore
   switch (node.typeID) {
     case TokenID.ID_LOCAL:
@@ -524,6 +522,17 @@ export function labelSyntaxTree(node: RO<FlatAstNode>): string {
     case TokenID.BIGPR: return 'Pr' + (node.data.value as string[]).toString();
     case TokenID.SMALLPR: return 'pr' + (node.data.value as string[]).toString();
     case TokenID.FILTER: return 'Fi' + (node.data.value as string[]).toString();
+
+    case TokenID.NT_DECLARATIVE_EXPR: return 'DECLARATIVE';
+    case TokenID.NT_IMPERATIVE_EXPR: return 'IMPERATIVE';
+    case TokenID.NT_RECURSIVE_FULL: return 'RECURSIVE';
+    case TokenID.NT_RECURSIVE_SHORT: return 'RECURSIVE';
+
+    case TokenID.BOOLEAN: return 'ℬ';
+    case TokenID.REDUCE: return 'red';
+    case TokenID.CARD: return 'card';
+    case TokenID.BOOL: return 'bool';
+    case TokenID.DEBOOL: return 'debool';
 
     case TokenID.PLUS: return '+';
     case TokenID.MINUS: return '-';
@@ -545,9 +554,6 @@ export function labelSyntaxTree(node: RO<FlatAstNode>): string {
 
     case TokenID.NT_FUNC_DEFINITION: return 'FUNCTION_DEFINE';
 
-    case TokenID.NT_RECURSIVE_SHORT: return labelToken(TokenID.NT_RECURSIVE_FULL);
-
-    case TokenID.BOOLEAN:
     case TokenID.DECART:
     case TokenID.QUANTOR_UNIVERSAL:
     case TokenID.QUANTOR_EXISTS:
@@ -571,13 +577,6 @@ export function labelSyntaxTree(node: RO<FlatAstNode>): string {
     case TokenID.SET_UNION:
     case TokenID.SET_MINUS:
     case TokenID.SET_SYMMETRIC_MINUS:
-    case TokenID.NT_DECLARATIVE_EXPR:
-    case TokenID.NT_IMPERATIVE_EXPR:
-    case TokenID.NT_RECURSIVE_FULL:
-    case TokenID.REDUCE:
-    case TokenID.CARD:
-    case TokenID.BOOL:
-    case TokenID.DEBOOL:
     case TokenID.ASSIGN:
     case TokenID.ITERATE:
       return labelToken(node.typeID);

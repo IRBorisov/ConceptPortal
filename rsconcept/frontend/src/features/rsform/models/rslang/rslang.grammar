@@ -7,6 +7,9 @@
 // ------------- Precedence Definitions --------------------
 ///////////////////////////////////////////////////////////
 @precedence {
+  quant @right,
+  not @right
+
   log_and @left,
   log_or @left,
   log_impl @left,
@@ -16,11 +19,7 @@
   plus @left minus @left,
 
   set_decart @left set_union @left set_intersect @left set_minus @left set_symminus @left,
-  set_bool @right,
-
-  quant @right,
-
-  not @right
+  set_bool @right  
 }
 
 ///////////////////////////////////////////////////////////

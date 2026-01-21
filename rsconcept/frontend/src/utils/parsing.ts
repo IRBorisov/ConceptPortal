@@ -6,29 +6,34 @@ import { type TreeCursor } from '@lezer/common';
 
 import { PARAMETER } from './constants';
 
-/** Represents AST structured node. */
-export interface AstNode extends Record<string, unknown> {
+/** Represents AST node data. */
+export interface AstNodeData extends Record<string, unknown> {
+  dataType: string;
+  value: unknown;
+}
+
+/** Represents AST structured node base. */
+export interface AstNodeBase {
   typeID: number;
+  data: AstNodeData;
+}
+
+/** Represents AST structured node. */
+export interface AstNode extends Record<string, unknown>, AstNodeBase {
   from: number;
   to: number;
   hasError: boolean;
   parenthesis?: boolean;
-  data: { dataType: string; value: unknown; };
   parent: AstNode | null;
   children: AstNode[];
 }
 
 /** Represents AST node. */
-export interface FlatAstNode extends Record<string, unknown> {
+export interface FlatAstNode extends Record<string, unknown>, AstNodeBase {
   uid: number;
-  typeID: number;
   parent: number;
-  start: number;
-  finish: number;
-  data: {
-    dataType: string;
-    value: unknown;
-  };
+  from: number;
+  to: number;
 }
 
 /** Represents Syntax tree flat representation. */
@@ -65,18 +70,28 @@ export function buildTree(cursor: TreeCursor, parent: AstNode | null = null): As
 }
 
 /** Flattens AST tree to a array form. */
-export function FlattenAst(node: AstNode, parent = 0, out: FlatAST = []): FlatAST {
+export function flattenAst(node: AstNode, parent = 0, out: FlatAST = []): FlatAST {
   const uid = out.length;
-  out.push({ uid, parent, typeID: node.typeID, start: node.from, finish: node.to, data: node.data });
+  out.push({ uid, parent, typeID: node.typeID, from: node.from, to: node.to, data: node.data });
   for (const child of node.children) {
-    FlattenAst(child, uid, out);
+    flattenAst(child, uid, out);
   }
   return out;
 };
 
+/** Visits AST tree in depth-first order. */
 export function visitAstDFS(node: AstNode, callback: (node: AstNode) => void) {
   for (const child of node.children) {
     visitAstDFS(child, callback);
   }
   callback(node);
+}
+
+/** Prints AST tree. */
+export function printAst(node: AstNode, printNode: (node: AstNode) => string): string {
+  let children: string = '';
+  for (const child of node.children) {
+    children += `${printAst(child, printNode)}`;
+  }
+  return `[${printNode(node)}${children}]`;
 }

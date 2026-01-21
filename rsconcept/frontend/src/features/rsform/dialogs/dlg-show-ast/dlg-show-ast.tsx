@@ -31,7 +31,7 @@ export function DlgShowAST() {
 
   return (
     <ModalView
-      className='relative w-[calc(100dvw-3rem)] h-[calc(100dvh-3rem)] cc-mask-sides'
+      className='relative w-[calc(100dvw-3rem)] h-[calc(100dvh-3rem)]'
       helpTopic={HelpTopic.UI_FORMULA_TREE}
       fullScreen
     >
@@ -46,23 +46,24 @@ export function DlgShowAST() {
         {!hoverNodeDebounced || isDragging ? expression : null}
         {!isDragging && hoverNodeDebounced ? (
           <div key={hoverNodeDebounced.uid}>
-            <span>{expression.slice(0, hoverNodeDebounced.start)}</span>
+            <span>{expression.slice(0, hoverNodeDebounced.from)}</span>
             <span className='bg-selected cc-animate-background starting:bg-background duration-move'>
-              {expression.slice(hoverNodeDebounced.start, hoverNodeDebounced.finish)}
+              {expression.slice(hoverNodeDebounced.from, hoverNodeDebounced.to)}
             </span>
-            <span>{expression.slice(hoverNodeDebounced.finish)}</span>
+            <span>{expression.slice(hoverNodeDebounced.to)}</span>
           </div>
         ) : null}
       </div>
-
-      <ReactFlowProvider>
-        <ASTFlow
-          data={syntaxTree}
-          onNodeEnter={node => setHoverID(Number(node.id))}
-          onNodeLeave={() => setHoverID(null)}
-          onChangeDragging={setIsDragging}
-        />
-      </ReactFlowProvider>
+      <div className='cc-mask-sides h-full w-full'>
+        <ReactFlowProvider>
+          <ASTFlow
+            data={syntaxTree}
+            onNodeEnter={node => setHoverID(Number(node.id))}
+            onNodeLeave={() => setHoverID(null)}
+            onChangeDragging={setIsDragging}
+          />
+        </ReactFlowProvider>
+      </div>
     </ModalView>
   );
 }

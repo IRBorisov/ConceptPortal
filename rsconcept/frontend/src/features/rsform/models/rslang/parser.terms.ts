@@ -39,4 +39,4 @@ export const
   Logic_binary = 71,
   Function_decl = 76,
   Arguments = 77,
-  Declaration = 78;
+  Declaration = 78
