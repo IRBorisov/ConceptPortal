@@ -146,8 +146,8 @@ Logic_predicates {
 }
 
 Logic_unary {
-  Negation { !not "¬" Logic } |
-  Predicate "[" Setexpr_enum "]" |
+  !not "¬" Logic |
+  Predicate "[" setexpr_enum "]" |
   Logic_quantor
 }
 
@@ -166,14 +166,14 @@ Logic_binary {
 
 // ------------------------- Set Expressions ----------------------------------
 Setexpr {
-  Literal |
+  literal |
   identifier |
   Setexpr_binary |
-  Setexpr_generators |
-  Function "[" Setexpr_enum "]" |
-  TextFunction "(" Setexpr ")"
+  setexpr_generators |
+  Function "[" setexpr_enum "]" |
+  textFunction "(" Setexpr ")"
 }
-TextFunction {
+textFunction {
   BigPr |
   SmallPr |
   Card |
@@ -181,15 +181,15 @@ TextFunction {
   Debool |
   Red
 }
-Setexpr_enum {
+setexpr_enum {
   Setexpr |
   Setexpr_enum_min2
 }
 Setexpr_enum_min2 {
-  Setexpr_enum "," Setexpr
+  setexpr_enum "," Setexpr
 }
 
-Literal {
+literal {
   Integer |
   EmptySet |
   IntegerSet
@@ -212,7 +212,7 @@ Setexpr_binary {
   "(" Setexpr_binary ")"
 }
 
-Setexpr_generators {
+setexpr_generators {
   Enumeration |
   Tuple |
   Boolean |
@@ -222,7 +222,7 @@ Setexpr_generators {
   Recursion
 }
 Enumeration {
-  "{" Setexpr_enum "}"
+  "{" setexpr_enum "}"
 }
 Tuple {
   "(" Setexpr_enum_min2 ")"
@@ -232,7 +232,7 @@ Boolean {
   !set_bool "ℬ" Boolean
 }
 Filter_expression {
-  Filter "[" Setexpr_enum "]" "(" Setexpr ")"
+  Filter "[" setexpr_enum "]" "(" Setexpr ")"
 }
 
 Declarative {

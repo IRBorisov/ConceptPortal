@@ -11,6 +11,8 @@ export interface AstNode extends Record<string, unknown> {
   typeID: number;
   from: number;
   to: number;
+  hasError: boolean;
+  parenthesis?: boolean;
   data: { dataType: string; value: unknown; };
   parent: AstNode | null;
   children: AstNode[];
@@ -19,8 +21,8 @@ export interface AstNode extends Record<string, unknown> {
 /** Represents AST node. */
 export interface FlatAstNode extends Record<string, unknown> {
   uid: number;
-  parent: number;
   typeID: number;
+  parent: number;
   start: number;
   finish: number;
   data: {
@@ -40,6 +42,7 @@ export function buildTree(cursor: TreeCursor, parent: AstNode | null = null): As
     typeID: node.type.id,
     from: node.from,
     to: node.to,
+    hasError: node.type.id === 0,
     data: {
       dataType: 'string',
       value: node.type.name == '⚠' ? PARAMETER.errorNodeLabel : node.type.name
@@ -50,14 +53,18 @@ export function buildTree(cursor: TreeCursor, parent: AstNode | null = null): As
 
   if (cursor.firstChild()) {
     do {
-      result.children.push(buildTree(cursor, result));
+      const child = buildTree(cursor, result);
+      if (child.hasError) {
+        result.hasError = true;
+      }
+      result.children.push(child);
     } while (cursor.nextSibling());
     cursor.parent();
   }
   return result;
 }
 
-
+/** Flattens AST tree to a array form. */
 export function FlattenAst(node: AstNode, parent = 0, out: FlatAST = []): FlatAST {
   const uid = out.length;
   out.push({ uid, parent, typeID: node.typeID, start: node.from, finish: node.to, data: node.data });
@@ -66,3 +73,10 @@ export function FlattenAst(node: AstNode, parent = 0, out: FlatAST = []): FlatAS
   }
   return out;
 };
+
+export function visitAstDFS(node: AstNode, callback: (node: AstNode) => void) {
+  for (const child of node.children) {
+    visitAstDFS(child, callback);
+  }
+  callback(node);
+}

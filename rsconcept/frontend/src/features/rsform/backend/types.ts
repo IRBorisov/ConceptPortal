@@ -115,6 +115,8 @@ export type IVersionCreatedResponse = z.infer<typeof schemaVersionCreatedRespons
 /** Represents RSLang token types. */
 export const TokenID = {
   // Global, local IDs and literals
+  ERROR: 0,
+
   ID_LOCAL: 258,
   ID_GLOBAL: 259,
   ID_FUNCTION: 260,

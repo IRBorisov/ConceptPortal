@@ -23,8 +23,8 @@ import { RSInput } from '../../../components/rs-input';
 import { RSTextWrapper } from '../../../components/rs-input/text-editing';
 import { type IConstituenta } from '../../../models/rsform';
 import { getDefinitionPrefix } from '../../../models/rsform-api';
+import { normalizeAST } from '../../../models/rslang/normalize';
 import { parser as rslangParser } from '../../../models/rslang/parser';
-import { normalizeAST } from '../../../models/rslang/transform';
 import { useRSEdit } from '../rsedit-context';
 
 import { ParsingResult } from './parsing-result';
@@ -143,10 +143,15 @@ export function EditorRSExpression({
   }
 
   function handleShowAST(event: React.MouseEvent<Element>) {
-    if (event.ctrlKey) {
+    if (event.ctrlKey || event.metaKey) {
       const tree = rslangParser.parse(value);
       const ast = buildTree(tree.cursor());
-      normalizeAST(ast);
+      normalizeAST(ast, value);
+      const flatAst = FlattenAst(ast);
+      showAST({ syntaxTree: flatAst, expression: value });
+    } else if (event.altKey) {
+      const tree = rslangParser.parse(value);
+      const ast = buildTree(tree.cursor());
       const flatAst = FlattenAst(ast);
       showAST({ syntaxTree: flatAst, expression: value });
     } else {
