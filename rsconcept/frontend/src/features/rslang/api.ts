@@ -3,9 +3,9 @@
  */
 import { type RO } from '@/utils/meta';
 
-import { CstType, type IRSErrorDescription, type RSErrorType } from '../../backend/types';
+import { CstType, type IRSErrorDescription } from '../rsform/backend/types';
 
-import { type AliasMapping, type IArgumentValue, RSErrorClass } from './types';
+import { type AliasMapping, type IArgumentValue, RSErrorClass, type RSErrorType } from './types';
 
 // cspell:disable
 const LOCALS_REGEXP = /[_a-zα-ω][a-zα-ω]*\d*/g;

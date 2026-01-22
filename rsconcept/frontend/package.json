@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "generate": "lezer-generator src/features/rsform/components/rs-input/parse/rslang-fast.grammar -o src/features/rsform/components/rs-input/parse/parser.ts && lezer-generator src/features/rsform/models/rslang/rslang.grammar -o src/features/rsform/models/rslang/parser.ts && lezer-generator src/features/rsform/components/refs-input/parse/refs-text.grammar -o src/features/rsform/components/refs-input/parse/parser.ts && lezer-generator src/features/ai/components/prompt-input/parse/prompt-text.grammar -o src/features/ai/components/prompt-input/parse/parser.ts",
+    "generate": "lezer-generator src/features/rsform/components/rs-input/parse/rslang-fast.grammar -o src/features/rsform/components/rs-input/parse/parser.ts && lezer-generator src/features/rslang/parser/rslang.grammar -o src/features/rslang/parser/parser.ts && lezer-generator src/features/rsform/components/refs-input/parse/refs-text.grammar -o src/features/rsform/components/refs-input/parse/parser.ts && lezer-generator src/features/ai/components/prompt-input/parse/prompt-text.grammar -o src/features/ai/components/prompt-input/parse/parser.ts",
     "test": "vitest",
     "test:e2e": "playwright test",
     "dev": "vite --host",

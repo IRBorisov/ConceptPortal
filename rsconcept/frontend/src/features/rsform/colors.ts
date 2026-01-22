@@ -2,7 +2,8 @@ import { APP_COLORS } from '@/styling/colors';
 import { PARAMETER } from '@/utils/constants';
 import { type FlatAstNode } from '@/utils/parsing';
 
-import { TokenID } from './backend/types';
+import { TokenID } from '../rslang/types';
+
 import { CstClass, ExpressionStatus, type IConstituenta } from './models/rsform';
 import { type TypificationNodeData } from './models/typification-graph';
 import { TGColoring, TGEdgeType } from './stores/term-graph';

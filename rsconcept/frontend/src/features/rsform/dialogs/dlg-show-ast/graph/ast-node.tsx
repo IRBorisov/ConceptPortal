@@ -3,8 +3,9 @@
 import { Handle, type NodeProps, Position } from '@xyflow/react';
 import clsx from 'clsx';
 
+import { labelRSLangNode } from '@/features/rslang/labels';
+
 import { colorBgSyntaxTree } from '../../../colors';
-import { labelRSLangNode } from '../../../labels';
 
 import { type ASTNode } from './ast-models';
 

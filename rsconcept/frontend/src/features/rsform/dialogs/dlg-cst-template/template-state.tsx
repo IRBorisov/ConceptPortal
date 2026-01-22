@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { useTemplatesSuspense } from '@/features/library/backend/use-templates';
+import { inferTemplatedType, substituteTemplateArgs } from '@/features/rslang/api';
+import { type IArgumentValue } from '@/features/rslang/types';
 
 import { useDialogsStore } from '@/stores/dialogs';
 
@@ -11,8 +13,6 @@ import { type ICreateConstituentaDTO } from '../../backend/types';
 import { useRSFormSuspense } from '../../backend/use-rsform';
 import { type IConstituenta } from '../../models/rsform';
 import { generateAlias } from '../../models/rsform-api';
-import { inferTemplatedType, substituteTemplateArgs } from '../../models/rslang';
-import { type IArgumentValue } from '../../models/rslang';
 
 import { type DlgCstTemplateProps } from './dlg-cst-template';
 import { TemplateContext } from './template-context';

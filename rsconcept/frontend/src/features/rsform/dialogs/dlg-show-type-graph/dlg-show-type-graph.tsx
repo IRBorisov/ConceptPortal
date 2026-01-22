@@ -4,13 +4,13 @@ import { toast } from 'react-toastify';
 import { ReactFlowProvider } from '@xyflow/react';
 
 import { HelpTopic } from '@/features/help';
+import { type ITypeInfo } from '@/features/rslang/types';
 
 import { ModalView } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { errorMsg } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 
-import { type ITypeInfo } from '../../models/rslang';
 import { TypificationGraph } from '../../models/typification-graph';
 
 import { MGraphFlow } from './mgraph-flow';

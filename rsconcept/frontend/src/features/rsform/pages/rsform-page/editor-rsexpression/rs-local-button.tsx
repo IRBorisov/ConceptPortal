@@ -1,9 +1,9 @@
 import clsx from 'clsx';
 
+import { TokenID } from '@/features/rslang/types';
+
 import { type Styling, type Titled } from '@/components/props';
 import { globalIDs } from '@/utils/constants';
-
-import { TokenID } from '../../../backend/types';
 
 interface RSLocalButtonProps extends Titled, Styling {
   text: string;

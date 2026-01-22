@@ -4,7 +4,6 @@
 
 import { type ILibraryItem } from '@/features/library';
 import {
-  type AliasMapping,
   CstClass,
   CstType,
   type IConstituenta,
@@ -12,12 +11,8 @@ import {
   type IRSForm,
   ParsingStatus
 } from '@/features/rsform';
-import {
-  applyAliasMapping,
-  applyTypificationMapping,
-  extractGlobals,
-  isSetTypification
-} from '@/features/rsform/models/rslang';
+import { applyAliasMapping, applyTypificationMapping, extractGlobals, isSetTypification } from '@/features/rslang/api';
+import { type AliasMapping } from '@/features/rslang/types';
 
 import { infoMsg } from '@/utils/labels';
 

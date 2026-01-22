@@ -1,10 +1,11 @@
 import clsx from 'clsx';
 
+import { getRSErrorPrefix } from '@/features/rslang/api';
+
 import { type RO } from '@/utils/meta';
 
 import { type IExpressionParseDTO, type IRSErrorDescription } from '../../../backend/types';
 import { describeRSError } from '../../../labels';
-import { getRSErrorPrefix } from '../../../models/rslang';
 
 interface ParsingResultProps {
   data: RO<IExpressionParseDTO> | null;

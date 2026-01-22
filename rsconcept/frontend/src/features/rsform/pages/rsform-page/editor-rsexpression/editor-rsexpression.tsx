@@ -4,6 +4,8 @@ import { useCallback, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { type ReactCodeMirrorRef } from '@uiw/react-codemirror';
 
+import { TokenID } from '@/features/rslang/types';
+
 import { useResetOnChange } from '@/hooks/use-reset-on-change';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
@@ -11,11 +13,11 @@ import { errorMsg } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 import { buildTree, flattenAst } from '@/utils/parsing';
 
+import { normalizeAST, rslangParser } from '../../../../rslang';
 import {
   type ICheckConstituentaDTO,
   type IExpressionParseDTO,
-  type IRSErrorDescription,
-  TokenID
+  type IRSErrorDescription
 } from '../../../backend/types';
 import { useCheckConstituenta } from '../../../backend/use-check-constituenta';
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
@@ -23,7 +25,6 @@ import { RSInput } from '../../../components/rs-input';
 import { RSTextWrapper } from '../../../components/rs-input/text-editing';
 import { type IConstituenta } from '../../../models/rsform';
 import { getDefinitionPrefix } from '../../../models/rsform-api';
-import { normalizeAST, rslangParser } from '../../../models/rslang';
 import { useRSEdit } from '../rsedit-context';
 
 import { ParsingResult } from './parsing-result';

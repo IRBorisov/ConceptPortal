@@ -1,9 +1,11 @@
 import clsx from 'clsx';
 
+import { labelToken } from '@/features/rslang/labels';
+import { type TokenID } from '@/features/rslang/types';
+
 import { globalIDs } from '@/utils/constants';
 
-import { type TokenID } from '../../../backend/types';
-import { describeToken, labelToken } from '../../../labels';
+import { describeToken } from '../../../labels';
 
 interface RSTokenButtonProps {
   token: TokenID;

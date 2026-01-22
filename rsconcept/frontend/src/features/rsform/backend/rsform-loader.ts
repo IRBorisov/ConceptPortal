@@ -2,12 +2,13 @@
  * Module: RSForm data loading and processing.
  */
 
+import { extractGlobals, isSimpleExpression, splitTemplateDefinition } from '@/features/rslang/api';
+
 import { Graph } from '@/models/graph';
 import { type RO } from '@/utils/meta';
 
 import { ExpressionStatus, type IConstituenta, type IRSForm, type IRSFormStats } from '../models/rsform';
 import { inferClass, inferStatus, inferTemplate, isBaseSet, isFunctional } from '../models/rsform-api';
-import { extractGlobals, isSimpleExpression, splitTemplateDefinition } from '../models/rslang';
 
 import { CstType, type IRSFormDTO, ParsingStatus, ValueClass } from './types';
 

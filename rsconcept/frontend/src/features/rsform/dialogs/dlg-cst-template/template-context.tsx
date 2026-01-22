@@ -2,8 +2,9 @@
 
 import { createContext, use } from 'react';
 
+import { type IArgumentValue } from '@/features/rslang/types';
+
 import { type IConstituenta } from '../../models/rsform';
-import { type IArgumentValue } from '../../models/rslang';
 
 interface ITemplateContext {
   args: IArgumentValue[];

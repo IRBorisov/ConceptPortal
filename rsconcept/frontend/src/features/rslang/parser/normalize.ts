@@ -4,7 +4,7 @@
 
 import { type AstNode, visitAstDFS } from '@/utils/parsing';
 
-import { TokenID } from '../../backend/types';
+import { TokenID } from '../types';
 
 import {
   Arguments,

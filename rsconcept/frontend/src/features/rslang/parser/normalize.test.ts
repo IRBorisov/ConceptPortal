@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { buildTree, printAst } from '@/utils/parsing';
 
-import { labelRSLangNode } from '../../labels';
+import { labelRSLangNode } from '../labels';
 
 import { normalizeAST } from './normalize';
 import { parser } from './parser';

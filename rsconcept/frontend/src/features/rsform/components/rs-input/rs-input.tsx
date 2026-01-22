@@ -12,13 +12,14 @@ import CodeMirror, {
 import clsx from 'clsx';
 import { EditorView } from 'codemirror';
 
+import { extractGlobals } from '@/features/rslang/api';
+
 import { Label } from '@/components/input';
 import { usePreferencesStore } from '@/stores/preferences';
 import { APP_COLORS } from '@/styling/colors';
 
 import { type IRSForm } from '../../models/rsform';
 import { generateAlias, getCstTypePrefix, guessCstType } from '../../models/rsform-api';
-import { extractGlobals } from '../../models/rslang';
 
 import { ccBracketMatching } from './bracket-matching';
 import { rsNavigation } from './click-navigation';

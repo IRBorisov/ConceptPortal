@@ -2,9 +2,9 @@
 
 import { type ReactCodeMirrorRef, type SelectionRange } from '@uiw/react-codemirror';
 
-import { CodeMirrorWrapper } from '@/utils/codemirror';
+import { TokenID } from '@/features/rslang/types';
 
-import { TokenID } from '../../backend/types';
+import { CodeMirrorWrapper } from '@/utils/codemirror';
 
 /* Determines whether an input key is a potential ligature. */
 export function isPotentialLigature(text: string): boolean {
@@ -16,10 +16,10 @@ export function getLigatureSymbol(prevSymbol: string, text: string): string | un
   if (text == '=') {
     // prettier-ignore
     switch (prevSymbol) {
-    case '!': return '≠';
-    case '>': return '≥';
-    case '<': return '≤';
-  }
+      case '!': return '≠';
+      case '>': return '≥';
+      case '<': return '≤';
+    }
   }
   return undefined;
 }
@@ -28,52 +28,52 @@ export function getSymbolSubstitute(keyCode: string, shiftPressed: boolean): str
   // prettier-ignore
   if (shiftPressed) {
     switch (keyCode) {
-    case 'Backquote':     return '∃';
-    case 'Backslash':     return '|';
-    case 'BracketLeft':   return '{';
-    case 'BracketRight':  return '}';
-    case 'Comma':         return '<';
-    case 'Period':        return '>';
+      case 'Backquote': return '∃';
+      case 'Backslash': return '|';
+      case 'BracketLeft': return '{';
+      case 'BracketRight': return '}';
+      case 'Comma': return '<';
+      case 'Period': return '>';
 
-    case 'Digit8': return '×';
-    case 'KeyB': return 'ℬ';
-    case 'KeyZ': return 'Z';
-    case 'KeyR': return 'R';
-    case 'KeyF': return 'F';
-    case 'KeyP': return 'P';
-    case 'KeyX': return 'X';
-    case 'KeyS': return 'S';
-    case 'KeyD': return 'D';
-    case 'KeyC': return 'C';
+      case 'Digit8': return '×';
+      case 'KeyB': return 'ℬ';
+      case 'KeyZ': return 'Z';
+      case 'KeyR': return 'R';
+      case 'KeyF': return 'F';
+      case 'KeyP': return 'P';
+      case 'KeyX': return 'X';
+      case 'KeyS': return 'S';
+      case 'KeyD': return 'D';
+      case 'KeyC': return 'C';
     }
   } else {
     switch (keyCode) {
-    case 'Backquote': return '∀';
+      case 'Backquote': return '∀';
 
-    case 'KeyQ': return 'μ';
-    case 'KeyW': return 'ω';
-    case 'KeyE': return 'ε';
-    case 'KeyR': return 'ρ';
-    case 'KeyT': return 'τ';
-    case 'KeyY': return 'π';
+      case 'KeyQ': return 'μ';
+      case 'KeyW': return 'ω';
+      case 'KeyE': return 'ε';
+      case 'KeyR': return 'ρ';
+      case 'KeyT': return 'τ';
+      case 'KeyY': return 'π';
 
-    case 'KeyA': return 'α';
-    case 'KeyS': return 'σ';
-    case 'KeyD': return 'δ';
-    case 'KeyF': return 'φ';
-    case 'KeyG': return 'γ';
-    case 'KeyH': return 'λ';
+      case 'KeyA': return 'α';
+      case 'KeyS': return 'σ';
+      case 'KeyD': return 'δ';
+      case 'KeyF': return 'φ';
+      case 'KeyG': return 'γ';
+      case 'KeyH': return 'λ';
 
-    case 'KeyZ': return 'ζ';
-    case 'KeyX': return 'ξ';
-    case 'KeyC': return 'ψ';
-    case 'KeyV': return 'θ';
-    case 'KeyB': return 'β';
-    case 'KeyN': return 'η';
+      case 'KeyZ': return 'ζ';
+      case 'KeyX': return 'ξ';
+      case 'KeyC': return 'ψ';
+      case 'KeyV': return 'θ';
+      case 'KeyB': return 'β';
+      case 'KeyN': return 'η';
 
-    case 'BracketLeft': return '[';
-    case 'BracketRight': return ']';
-    case 'Comma': return ',';
+      case 'BracketLeft': return '[';
+      case 'BracketRight': return ']';
+      case 'Comma': return ',';
     }
   }
   return undefined;

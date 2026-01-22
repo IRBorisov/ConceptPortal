@@ -603,6 +603,17 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
 
         pySchema = s.PyConceptAdapter(pk)
         result = pyconcept.check_constituenta(json.dumps(pySchema.data), alias, expression, cst_type)
+        result_dict = json.loads(result)
+
+        # Replace 'start' with 'from', 'finish' with 'to'
+        if 'ast' in result_dict and isinstance(result_dict['ast'], list):
+            for node in result_dict['ast']:
+                if 'start' in node:
+                    node['from'] = node.pop('start')
+                if 'finish' in node:
+                    node['to'] = node.pop('finish')
+
+        result = json.dumps(result_dict)
         return Response(
             status=c.HTTP_200_OK,
             data=json.loads(result)
