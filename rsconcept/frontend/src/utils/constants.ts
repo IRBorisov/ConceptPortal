@@ -26,7 +26,6 @@ export const PARAMETER = {
   indentJSON: 2, // Number of spaces for JSON indentation
 
   logicLabel: 'LOGIC',
-  errorNodeLabel: '[ERROR]',
   exteorVersion: '4.9.7'
 } as const;
 

@@ -7,8 +7,7 @@ import { type Edge, type Node } from '@xyflow/react';
 import { type Graph } from '@/models/graph';
 import { PARAMETER } from '@/utils/constants';
 
-import { CstType } from '../../../backend/types';
-import { type IConstituenta, type IRSForm } from '../../../models/rsform';
+import { CstType, type IConstituenta, type IRSForm } from '../../../models/rsform';
 import { type GraphFilterParams, TGEdgeType } from '../../../stores/term-graph';
 
 export interface TGNodeState extends Record<string, unknown> {

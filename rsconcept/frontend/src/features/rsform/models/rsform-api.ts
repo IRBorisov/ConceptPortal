@@ -3,14 +3,18 @@
  */
 
 import { BASIC_SCHEMAS, type ILibraryItem } from '@/features/library';
+import { RSLangAnalyzer, TypeClass } from '@/features/rslang';
+import { type AnalysisOutput } from '@/features/rslang/models/analyzer';
+import { ValueClass } from '@/features/rslang/models/calculation';
+import { type IArgumentValue } from '@/features/rslang/types';
 
 import { type RO } from '@/utils/meta';
 import { TextMatcher } from '@/utils/utils';
 
-import { CstType, ParsingStatus, ValueClass } from '../backend/types';
+import { ParsingStatus } from '../backend/types';
 import { CstMatchMode } from '../stores/cst-search';
 
-import { CATEGORY_CST_TYPE, CstClass, ExpressionStatus, type IConstituenta, type IRSForm } from './rsform';
+import { CATEGORY_CST_TYPE, CstClass, CstType, ExpressionStatus, type IConstituenta, type IRSForm } from './rsform';
 
 /**
  * Checks if a given target {@link IConstituenta} matches the specified query using the provided matching mode.
@@ -69,6 +73,17 @@ export function inferStatus(parse?: ParsingStatus, value?: ValueClass): Expressi
   return ExpressionStatus.VERIFIED;
 }
 
+/** Infers type of constituent for a given template and arguments. */
+export function inferTemplatedType(templateType: CstType, args: RO<IArgumentValue[]>): CstType {
+  if (args.length === 0 || args.some(arg => !arg.value)) {
+    return templateType;
+  } else if (templateType === CstType.PREDICATE) {
+    return CstType.AXIOM;
+  } else {
+    return CstType.TERM;
+  }
+}
+
 /**
  * Checks if given expression is a template.
  */
@@ -95,15 +110,15 @@ export function inferClass(type: CstType, isTemplate: boolean = false): CstClass
   }
   // prettier-ignore
   switch (type) {
-    case CstType.NOMINAL:     return CstClass.NOMINAL;
-    case CstType.BASE:        return CstClass.BASIC;
-    case CstType.CONSTANT:    return CstClass.BASIC;
-    case CstType.STRUCTURED:  return CstClass.BASIC;
-    case CstType.TERM:        return CstClass.DERIVED;
-    case CstType.FUNCTION:    return CstClass.DERIVED;
-    case CstType.AXIOM:       return CstClass.STATEMENT;
-    case CstType.PREDICATE:   return CstClass.DERIVED;
-    case CstType.THEOREM:     return CstClass.STATEMENT;
+    case CstType.NOMINAL: return CstClass.NOMINAL;
+    case CstType.BASE: return CstClass.BASIC;
+    case CstType.CONSTANT: return CstClass.BASIC;
+    case CstType.STRUCTURED: return CstClass.BASIC;
+    case CstType.TERM: return CstClass.DERIVED;
+    case CstType.FUNCTION: return CstClass.DERIVED;
+    case CstType.AXIOM: return CstClass.STATEMENT;
+    case CstType.PREDICATE: return CstClass.DERIVED;
+    case CstType.THEOREM: return CstClass.STATEMENT;
   }
 }
 
@@ -297,9 +312,7 @@ export function generateAlias(type: CstType, schema: IRSForm, takenAliases: stri
   return alias;
 }
 
-/**
- * Sorts library items relevant for InlineSynthesis with specified {@link IRSForm}.
- */
+/** Sorts library items relevant for InlineSynthesis with specified {@link IRSForm}. */
 export function sortItemsForInlineSynthesis(receiver: IRSForm, items: readonly ILibraryItem[]): ILibraryItem[] {
   const result = items.filter(item => item.location === receiver.location);
   for (const item of items) {
@@ -334,4 +347,69 @@ export function removeAliasReference(expression: string, alias: string): string 
 /** Add alias to expression. */
 export function addAliasReference(expression: string, alias: string): string {
   return expression + ' ' + alias;
+}
+
+/** Returns expected {@link TypeClass} of formal definition for {@link CstType}. */
+export function typeClassForCstType(cstType: CstType): TypeClass {
+  switch (cstType) {
+    case CstType.NOMINAL:
+    case CstType.BASE:
+    case CstType.CONSTANT:
+    case CstType.STRUCTURED:
+    case CstType.TERM:
+      return TypeClass.typification;
+    case CstType.FUNCTION:
+      return TypeClass.function;
+    case CstType.PREDICATE:
+      return TypeClass.predicate;
+    case CstType.AXIOM:
+    case CstType.THEOREM:
+      return TypeClass.logic;
+  }
+}
+
+export function getAnalysisFor(expression: string, cst: IConstituenta, schema: IRSForm): AnalysisOutput {
+  const analyzer = schema.analyzer ?? parseRSForm(schema);
+  return analyzer.check(expression, {
+    expected: typeClassForCstType(cst.cst_type),
+    isDomain: cst.cst_type === CstType.STRUCTURED,
+  });
+}
+
+export function parseRSForm(target: IRSForm): RSLangAnalyzer {
+  const analyzer = new RSLangAnalyzer();
+  target.analyzer = analyzer;
+  const order = target.graph.topologicalOrder();
+  order.forEach(cstID => {
+    const cst = target.cstByID.get(cstID)!;
+    parseCst(cst, analyzer);
+  });
+  return analyzer;
+}
+
+// ======= Internals ========
+function parseCst(target: IConstituenta, analyzer: RSLangAnalyzer) {
+  const cType = target.cst_type;
+  if (cType === CstType.NOMINAL) {
+    return;
+  }
+  if (cType === CstType.BASE) {
+    analyzer.addBase(target.alias);
+  } else if (cType === CstType.CONSTANT) {
+    analyzer.addBase(target.alias, true);
+  } else {
+    const parse = analyzer.check(target.definition_formal, {
+      expected: typeClassForCstType(cType),
+      isDomain: cType === CstType.STRUCTURED
+    });
+    if (parse.success && parse.type) {
+      analyzer.setType(target.alias, parse.type);
+    }
+    target.analysis = {
+      success: parse.success,
+      type: parse.type,
+      ast: parse.ast,
+      valueClass: parse.valueClass
+    };
+  }
 }

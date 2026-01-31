@@ -1,8 +1,7 @@
 import { APP_COLORS } from '@/styling/colors';
-import { PARAMETER } from '@/utils/constants';
 import { type FlatAstNode } from '@/utils/parsing';
 
-import { TokenID } from '../rslang/types';
+import { TokenID } from '../rslang';
 
 import { CstClass, ExpressionStatus, type IConstituenta } from './models/rsform';
 import { type TypificationNodeData } from './models/typification-graph';
@@ -23,6 +22,9 @@ export const BRACKETS_THEME = {
 /** Determines background color for {@link FlatAstNode} based on its type. */
 export function colorBgSyntaxTree(node: FlatAstNode): string {
   switch (node.typeID) {
+    case TokenID.ERROR:
+      return APP_COLORS.bgRed;
+
     case TokenID.PUNCTUATION_DEFINE:
     case TokenID.PUNCTUATION_STRUCT:
     case TokenID.ID_LOCAL:
@@ -146,9 +148,6 @@ export function colorBgSyntaxTree(node: FlatAstNode): string {
     case 'PrefixI':
     case 'PrefixR':
       return APP_COLORS.bgPurple;
-
-    case PARAMETER.errorNodeLabel:
-      return APP_COLORS.bgRed;
   }
   // node
   return APP_COLORS.bgPurple;

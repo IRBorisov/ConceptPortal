@@ -1,24 +1,14 @@
 import { z } from 'zod';
 
 import { schemaLibraryItem, schemaVersionInfo } from '@/features/library/backend/types';
-import { RSErrorType, TokenID } from '@/features/rslang/types';
+import { RSErrorCode } from '@/features/rslang';
+import { ValueClass } from '@/features/rslang/models/calculation';
+import { TokenID } from '@/features/rslang/models/language';
 
 import { limits } from '@/utils/constants';
 import { errorMsg } from '@/utils/labels';
 
-/** Represents {@link IConstituenta} type. */
-export const CstType = {
-  NOMINAL: 'nominal',
-  BASE: 'basic',
-  STRUCTURED: 'structure',
-  TERM: 'term',
-  AXIOM: 'axiom',
-  FUNCTION: 'function',
-  PREDICATE: 'predicate',
-  CONSTANT: 'constant',
-  THEOREM: 'theorem'
-} as const;
-export type CstType = (typeof CstType)[keyof typeof CstType];
+import { CstType } from '../models/rsform';
 
 /** Represents syntax type. */
 export const Syntax = {
@@ -27,14 +17,6 @@ export const Syntax = {
   MATH: 'math'
 } as const;
 export type Syntax = (typeof Syntax)[keyof typeof Syntax];
-
-/** Represents computability class. */
-export const ValueClass = {
-  INVALID: 'invalid', // incalculable
-  VALUE: 'value',
-  PROPERTY: 'property'
-} as const;
-export type ValueClass = (typeof ValueClass)[keyof typeof ValueClass];
 
 /** Represents parsing status. */
 export const ParsingStatus = {
@@ -119,7 +101,7 @@ export const schemaSyntax = z.enum(Object.values(Syntax) as [Syntax, ...Syntax[]
 export const schemaValueClass = z.enum(Object.values(ValueClass) as [ValueClass, ...ValueClass[]]);
 export const schemaParsingStatus = z.enum(Object.values(ParsingStatus) as [ParsingStatus, ...ParsingStatus[]]);
 export const schemaTokenID = z.enum(TokenID);
-export const schemaRSErrorType = z.enum(RSErrorType);
+export const schemaRSErrorType = z.enum(RSErrorCode);
 
 export const schemaConstituentaBasics = z.strictObject({
   id: z.number(),
@@ -266,7 +248,7 @@ export const schemaExpressionParse = z.strictObject({
     z.strictObject({
       uid: z.number(),
       parent: z.number(),
-      typeID: schemaTokenID,
+      typeID: z.number(),
       from: z.number(),
       to: z.number(),
       data: z.strictObject({ dataType: z.string(), value: z.unknown().refine(value => value !== undefined) })

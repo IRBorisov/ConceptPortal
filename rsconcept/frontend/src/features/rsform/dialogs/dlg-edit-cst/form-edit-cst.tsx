@@ -7,7 +7,7 @@ import { BadgeHelp } from '@/features/help/components/badge-help';
 import { MiniButton } from '@/components/control';
 import { Label, TextArea, TextInput } from '@/components/input';
 
-import { CstType, type IUpdateConstituentaDTO } from '../../backend/types';
+import { type IUpdateConstituentaDTO } from '../../backend/types';
 import { useClearAttributions } from '../../backend/use-clear-attributions';
 import { useCreateAttribution } from '../../backend/use-create-attribution';
 import { useDeleteAttribution } from '../../backend/use-delete-attribution';
@@ -16,7 +16,7 @@ import { RSInput } from '../../components/rs-input';
 import { SelectCstType } from '../../components/select-cst-type';
 import { SelectMultiConstituenta } from '../../components/select-multi-constituenta';
 import { getRSDefinitionPlaceholder, labelCstTypification, labelRSExpression } from '../../labels';
-import { type IConstituenta, type IRSForm } from '../../models/rsform';
+import { CstType, type IConstituenta, type IRSForm } from '../../models/rsform';
 import { generateAlias, isBaseSet, isBasicConcept } from '../../models/rsform-api';
 
 interface FormEditCstProps {

@@ -3,13 +3,14 @@
 import { useState } from 'react';
 import clsx from 'clsx';
 
+import { CstType } from '@/features/rsform/models/rsform';
+
 import { ExportDropdown } from '@/components/control/export-dropdown';
 import { type RowSelectionState } from '@/components/data-table';
 import { SearchBar } from '@/components/input';
 import { useFitHeight } from '@/stores/app-layout';
 import { withPreventDefault } from '@/utils/utils';
 
-import { CstType } from '../../../backend/types';
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { matchConstituenta } from '../../../models/rsform-api';
 import { CstMatchMode } from '../../../stores/cst-search';
@@ -86,23 +87,23 @@ export function EditorRSList() {
       // prettier-ignore
       switch (code) {
         case 'ArrowUp': moveUp(); return true;
-        case 'ArrowDown':  moveDown(); return true;
-        case 'KeyV':    void cloneCst(); return true;
+        case 'ArrowDown': moveDown(); return true;
+        case 'KeyV': void cloneCst(); return true;
       }
     }
     // prettier-ignore
     switch (code) {
       case 'Backquote': void promptCreateCst(); return true;
-      
-      case 'Digit1':    void createCst(CstType.BASE); return true;
-      case 'Digit2':    void createCst(CstType.STRUCTURED); return true;
-      case 'Digit3':    void createCst(CstType.TERM); return true;
-      case 'Digit4':    void createCst(CstType.AXIOM); return true;
-      case 'KeyQ':      void createCst(CstType.FUNCTION); return true;
-      case 'KeyW':      void createCst(CstType.PREDICATE); return true;
-      case 'Digit5':    void createCst(CstType.CONSTANT); return true;
-      case 'Digit6':    void createCst(CstType.THEOREM); return true;
-      case 'Digit7':    void createCst(CstType.NOMINAL); return true;
+
+      case 'Digit1': void createCst(CstType.BASE); return true;
+      case 'Digit2': void createCst(CstType.STRUCTURED); return true;
+      case 'Digit3': void createCst(CstType.TERM); return true;
+      case 'Digit4': void createCst(CstType.AXIOM); return true;
+      case 'KeyQ': void createCst(CstType.FUNCTION); return true;
+      case 'KeyW': void createCst(CstType.PREDICATE); return true;
+      case 'Digit5': void createCst(CstType.CONSTANT); return true;
+      case 'Digit6': void createCst(CstType.THEOREM); return true;
+      case 'Digit7': void createCst(CstType.NOMINAL); return true;
     }
     return false;
   }

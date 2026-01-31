@@ -3,9 +3,7 @@
  */
 import { type RO } from '@/utils/meta';
 
-import { CstType, type IRSErrorDescription } from '../rsform/backend/types';
-
-import { type AliasMapping, type IArgumentValue, RSErrorClass, type RSErrorType } from './types';
+import { type AliasMapping, type IArgumentValue } from './types';
 
 // cspell:disable
 const LOCALS_REGEXP = /[_a-zα-ω][a-zα-ω]*\d*/g;
@@ -27,17 +25,6 @@ export function isSimpleExpression(text: string): boolean {
 /** Check if expression is set typification. */
 export function isSetTypification(text: string): boolean {
   return !!text.match(TYPIFICATION_SET);
-}
-
-/** Infers type of constituent for a given template and arguments. */
-export function inferTemplatedType(templateType: CstType, args: RO<IArgumentValue[]>): CstType {
-  if (args.length === 0 || args.some(arg => !arg.value)) {
-    return templateType;
-  } else if (templateType === CstType.PREDICATE) {
-    return CstType.AXIOM;
-  } else {
-    return CstType.TERM;
-  }
 }
 
 /**
@@ -109,18 +96,6 @@ export function substituteTemplateArgs(expression: string, args: RO<IArgumentVal
     return body;
   } else {
     return `[${head}] ${body}`;
-  }
-}
-
-/** Generate ErrorID label. */
-export function getRSErrorPrefix(error: RO<IRSErrorDescription>): string {
-  const id = error.errorType.toString(16);
-  // prettier-ignore
-  switch (inferErrorClass(error.errorType)) {
-    case RSErrorClass.LEXER: return 'L' + id;
-    case RSErrorClass.PARSER: return 'P' + id;
-    case RSErrorClass.SEMANTIC: return 'S' + id;
-    case RSErrorClass.UNKNOWN: return 'U' + id;
   }
 }
 
@@ -204,21 +179,4 @@ function applyPattern(text: string, mapping: AliasMapping, pattern: RegExp): str
   }
   output += text.substring(posInput);
   return output;
-}
-
-const ERROR_LEXER_MASK = 512;
-const ERROR_PARSER_MASK = 1024;
-const ERROR_SEMANTIC_MASK = 2048;
-
-/** Infers error class from error type (code). */
-function inferErrorClass(error: RSErrorType): RSErrorClass {
-  if ((error & ERROR_LEXER_MASK) !== 0) {
-    return RSErrorClass.LEXER;
-  } else if ((error & ERROR_PARSER_MASK) !== 0) {
-    return RSErrorClass.PARSER;
-  } else if ((error & ERROR_SEMANTIC_MASK) !== 0) {
-    return RSErrorClass.SEMANTIC;
-  } else {
-    return RSErrorClass.UNKNOWN;
-  }
 }

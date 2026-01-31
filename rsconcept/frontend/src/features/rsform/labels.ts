@@ -8,11 +8,12 @@ import { prepareTooltip } from '@/utils/utils';
 
 import { type IVersionInfo } from '../library/backend/types';
 import { type CurrentVersion } from '../library/models/library';
-import { type IArgumentInfo, RSErrorType, TokenID } from '../rslang/types';
+import { TokenID } from '../rslang';
+import { type IArgumentInfo } from '../rslang/types';
 
-import { CstType, type IRSErrorDescription, ParsingStatus } from './backend/types';
+import { ParsingStatus } from './backend/types';
 import { Grammeme, ReferenceType } from './models/language';
-import { CstClass, ExpressionStatus, type IConstituenta } from './models/rsform';
+import { CstClass, CstType, ExpressionStatus, type IConstituenta } from './models/rsform';
 import { CstMatchMode, DependencyMode } from './stores/cst-search';
 import { type InteractionMode, type TGColoring, type TGEdgeType } from './stores/term-graph';
 
@@ -424,7 +425,7 @@ export function labelTypification({
     return 'N/A';
   }
   if (resultType === '' || resultType === PARAMETER.logicLabel) {
-    resultType = 'Logical';
+    resultType = 'Logic';
   }
   if (args.length === 0) {
     return resultType;
@@ -454,111 +455,3 @@ export function labelGrammeme(gram: Grammeme): string {
   return labelGrammemeRecord[gram] ?? `Неизв: ${gram as string}`;
 }
 
-/**
- * Generates error description for {@link IRSErrorDescription}.
- */
-export function describeRSError(error: RO<IRSErrorDescription>): string {
-  // prettier-ignore
-  switch (error.errorType) {
-    case RSErrorType.unknownSymbol:
-      return `Неизвестный символ: ${error.params[0]}`;
-    case RSErrorType.syntax:
-      return 'Неопределенная синтаксическая ошибка';
-    case RSErrorType.missingParenthesis:
-      return 'Некорректная конструкция языка родов структур, проверьте структуру выражения';
-    case RSErrorType.missingCurlyBrace:
-      return "Пропущен символ '}'";
-    case RSErrorType.invalidQuantifier:
-      return 'Некорректная кванторная декларация';
-    case RSErrorType.invalidImperative:
-      return 'Использование императивного синтаксиса вне императивного блока';
-    case RSErrorType.expectedArgDeclaration:
-      return 'Ожидалось объявление аргументов терм-функции';
-    case RSErrorType.expectedLocal:
-      return 'Ожидалось имя локальной переменной';
-
-    case RSErrorType.localDoubleDeclare:
-      return `Предупреждение! Повторное объявление локальной переменной ${error.params[0]}`;
-    case RSErrorType.localNotUsed:
-      return `Предупреждение! Переменная объявлена, но не использована: ${error.params[0]}`;
-    case RSErrorType.localUndeclared:
-      return `Использование необъявленной переменной: ${error.params[0]}`;
-    case RSErrorType.localShadowing:
-      return `Повторное объявление переменной: ${error.params[0]}`;
-
-    case RSErrorType.typesNotEqual:
-      return `Типизация операндов не совпадает! ${error.params[0]} != ${error.params[1]}`;
-    case RSErrorType.globalNotTyped:
-      return `Типизация конституенты не определена: ${error.params[0]}`;
-    case RSErrorType.invalidDecart:
-      return `τ(α×b) = 𝔅(𝔇τ(α)×𝔇τ(b)). Некорректная типизация аргумента: ${error.params[0]}`;
-    case RSErrorType.invalidBoolean:
-      return `τ(ℬ(a)) = 𝔅𝔅𝔇τ(a). Некорректная типизация аргумента: ${error.params[0]}`;
-    case RSErrorType.invalidTypeOperation:
-      return `Типизация операнда теоретико-множественной операции не корректна: ${error.params[0]}`;
-    case RSErrorType.invalidCard:
-      return `Некорректная типизация аргумента операции мощности: ${error.params[0]}`;
-    case RSErrorType.invalidDebool:
-      return `τ(debool(a)) = 𝔇τ(a). Некорректная типизация аргумента: ${error.params[0]}`;
-    case RSErrorType.globalFuncMissing:
-      return `Неизвестное имя функции: ${error.params[0]}`;
-    case RSErrorType.globalFuncWithoutArgs:
-      return `Некорректное использование имени функции без аргументов: ${error.params[0]}`;
-    case RSErrorType.invalidReduce:
-      return `τ(red(a)) = 𝔅𝔇𝔇τ(a). Некорректная типизация аргумента: ${error.params[0]}`;
-    case RSErrorType.invalidProjectionTuple:
-      return `Проекция не определена: ${error.params[0]} -> ${error.params[1]}`;
-    case RSErrorType.invalidProjectionSet:
-      return `τ(Pri(a)) = 𝔅𝒞i𝔇τ(a). Некорректная типизация аргумента: ${error.params[0]} -> ${error.params[1]}`;
-    case RSErrorType.invalidEnumeration:
-      return `Типизация элементов перечисления не совпадает: ${error.params[0]} != ${error.params[1]}`;
-    case RSErrorType.invalidBinding:
-      return `Количество переменных в кортеже не соответствует размерности декартова произведения`;
-    case RSErrorType.localOutOfScope:
-      return `Использование имени переменной вне области действия: ${error.params[0]}`;
-    case RSErrorType.invalidElementPredicate:
-      return `Несоответствие типизаций операндов для оператора: ${error.params[0]}${error.params[1]}${error.params[2]}`;
-    case RSErrorType.invalidEmptySetUsage:
-      return 'Бессмысленное использование пустого множества';
-    case RSErrorType.invalidArgsArity:
-      return `Неверное число аргументов терм-функции: ${error.params[0]} != ${error.params[1]}`;
-    case RSErrorType.invalidArgumentType:
-      return `Типизация аргумента терм-функции не соответствует объявленной: ${error.params[0]} != ${error.params[1]}`;
-    case RSErrorType.globalStructure:
-      return `Область определения родовой структуры не корректна`;
-    case RSErrorType.radicalUsage:
-      return `Радикалы запрещены вне деклараций терм-функции: ${error.params[0]}`;
-    case RSErrorType.invalidFilterArgumentType:
-      return `Типизация аргумента фильтра не корректна: ${error.params[0]}(${error.params[1]})`;
-    case RSErrorType.invalidFilterArity:
-      return `Количество параметров фильтра не соответствует количеству индексов`;
-    case RSErrorType.arithmeticNotSupported:
-      return `Тип не поддерживает арифметические операторы: ${error.params[0]}`;
-    case RSErrorType.typesNotCompatible:
-      return `Типы не совместимы для выбранной операции: ${error.params[0]} и ${error.params[1]}`;
-    case RSErrorType.orderingNotSupported:
-      return `Тип не поддерживает предикаты порядка: ${error.params[0]}`;
-    case RSErrorType.globalNoValue:
-      return `Используется неинтерпретируемый глобальный идентификатор: ${error.params[0]}`;
-    case RSErrorType.invalidPropertyUsage:
-      return `Использование неитерируемого множества в качестве значения`;
-    case RSErrorType.globalMissingAST:
-      return `Не удалось получить дерево разбора для глобального идентификатора: ${error.params[0]}`;
-    case RSErrorType.globalFuncNoInterpretation:
-      return 'Функция не интерпретируется для данных аргументов';
-
-    case RSErrorType.cstNonemptyBase:
-      return 'Непустое выражение базисного/константного множества';
-    case RSErrorType.cstEmptyDerived:
-      return 'Пустое выражение для сложного понятия или утверждения';
-    case RSErrorType.cstCallableNoArgs:
-      return 'Отсутствуют аргументы для параметризованной конституенты';
-    case RSErrorType.cstNonCallableHasArgs:
-      return 'Параметризованное выражение не подходит для данного типа конституенты';
-    case RSErrorType.cstExpectedLogical:
-      return 'Данный тип конституенты требует логического выражения';
-    case RSErrorType.cstExpectedTyped:
-      return 'Данный тип конституенты требует теоретико-множественного выражения';
-  }
-  return 'UNKNOWN ERROR';
-}

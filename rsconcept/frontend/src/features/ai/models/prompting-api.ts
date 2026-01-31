@@ -1,6 +1,7 @@
 import { type IBlock, type IOperationSchema, NodeType } from '@/features/oss/models/oss';
-import { CstType, type IConstituenta, type IRSForm } from '@/features/rsform';
+import { type IConstituenta, type IRSForm } from '@/features/rsform';
 import { labelCstTypification } from '@/features/rsform/labels';
+import { CstType } from '@/features/rsform/models/rsform';
 import { isBasicConcept } from '@/features/rsform/models/rsform-api';
 import { TypificationGraph } from '@/features/rsform/models/typification-graph';
 
@@ -42,9 +43,8 @@ export function varSchema(schema: IRSForm): string {
   let result = stringifySchemaIntro(schema);
   result += '\n\nКонституенты:';
   schema.items.forEach(item => {
-    result += `\n${item.alias} - "${labelCstTypification(item)}" - "${item.term_resolved}" - "${
-      item.definition_formal
-    }" - "${item.definition_resolved}" - "${item.convention}"`;
+    result += `\n${item.alias} - "${labelCstTypification(item)}" - "${item.term_resolved}" - "${item.definition_formal
+      }" - "${item.definition_resolved}" - "${item.convention}"`;
   });
   result += `\n${stringifyCrucial(schema.items.filter(cst => cst.crucial))}`;
   result += '\n\nСвязи "атрибутирован":';

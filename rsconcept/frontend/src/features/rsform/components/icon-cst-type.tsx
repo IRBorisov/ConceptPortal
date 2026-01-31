@@ -10,7 +10,7 @@ import {
   IconCstTheorem
 } from '@/components/icons';
 
-import { CstType } from '../backend/types';
+import { CstType } from '../models/rsform';
 
 /** Icon for constituenta type. */
 export function IconCstType({ value, size = '1.25rem', className }: DomIconProps<CstType>) {

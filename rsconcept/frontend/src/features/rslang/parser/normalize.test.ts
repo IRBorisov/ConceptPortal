@@ -29,6 +29,7 @@ const testData = [
   ['∀a∈X1 1=1', '[∀[a][X1][=[1][1]]]'],
   ['∃a∈X1 1=1', '[∃[a][X1][=[1][1]]]'],
   ['∀a∈X1 1=1 & 2=2', '[&[∀[a][X1][=[1][1]]][=[2][2]]]'],
+  ['∀a∈X1 a=a & a=a', '[&[∀[a][X1][=[a][a]]][=[a][a]]]'],
   ['∀a,b∈X1 1=2', '[∀[ENUM_DECLARE[a][b]][X1][=[1][2]]]'],
   ['∀(a,b),(c,d)∈S1 1=2', '[∀[ENUM_DECLARE[TUPLE_DECLARE[a][b]][TUPLE_DECLARE[c][d]]][S1][=[1][2]]]'],
   // Setexpr operators
@@ -78,6 +79,7 @@ const testData = [
   ['I{(a, b) | a:∈X1; b:=a}', '[IMPERATIVE[TUPLE[a][b]][:∈[a][X1]][:=[b][a]]]'],
   ['I{(a, b) | a:∈X1; b:=a; (a,b) ∈ S1}', '[IMPERATIVE[TUPLE[a][b]][:∈[a][X1]][:=[b][a]][∈[TUPLE[a][b]][S1]]]']
 ];
+
 describe('Testing AST normalization', () => {
   testData.forEach(([input, expectedTree]) => {
     it(`Parse "${input}"`, () => {

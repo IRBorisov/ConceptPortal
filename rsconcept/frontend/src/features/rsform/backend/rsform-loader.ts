@@ -3,14 +3,15 @@
  */
 
 import { extractGlobals, isSimpleExpression, splitTemplateDefinition } from '@/features/rslang/api';
+import { ValueClass } from '@/features/rslang/models/calculation';
 
 import { Graph } from '@/models/graph';
 import { type RO } from '@/utils/meta';
 
-import { ExpressionStatus, type IConstituenta, type IRSForm, type IRSFormStats } from '../models/rsform';
+import { CstType, ExpressionStatus, type IConstituenta, type IRSForm, type IRSFormStats } from '../models/rsform';
 import { inferClass, inferStatus, inferTemplate, isBaseSet, isFunctional } from '../models/rsform-api';
 
-import { CstType, type IRSFormDTO, ParsingStatus, ValueClass } from './types';
+import { type IRSFormDTO, ParsingStatus } from './types';
 
 /**
  * Loads data into an {@link IRSForm} based on {@link IRSFormDTO}.
@@ -38,6 +39,7 @@ export class RSFormLoader {
 
     const result = this.schema;
     result.stats = this.calculateStats();
+    result.analyzer = null;
     result.graph = this.graph;
     result.cstByAlias = this.cstByAlias;
     result.cstByID = this.cstByID;

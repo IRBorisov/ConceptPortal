@@ -18,7 +18,6 @@ import { type RO } from '@/utils/meta';
 import { promptUnsaved } from '@/utils/utils';
 
 import {
-  CstType,
   type IExpressionParseDTO,
   type IUpdateConstituentaDTO,
   ParsingStatus,
@@ -39,7 +38,7 @@ import {
   labelRSExpression,
   labelTypification
 } from '../../../labels';
-import { type IConstituenta, type IRSForm } from '../../../models/rsform';
+import { CstType, type IConstituenta, type IRSForm } from '../../../models/rsform';
 import { isBaseSet, isBasicConcept } from '../../../models/rsform-api';
 import { EditorRSExpression } from '../editor-rsexpression';
 
@@ -92,10 +91,10 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
     () =>
       localParse
         ? labelTypification({
-            isValid: localParse.parseResult,
-            resultType: localParse.typification,
-            args: localParse.args
-          })
+          isValid: localParse.parseResult,
+          resultType: localParse.typification,
+          args: localParse.args
+        })
         : labelCstTypification(activeCst),
     [localParse, activeCst]
   );
@@ -104,10 +103,10 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
     () =>
       activeCst.parse
         ? {
-            alias: activeCst.alias,
-            result: localParse ? localParse.typification : activeCst.parse.typification,
-            args: localParse ? localParse.args : activeCst.parse.args
-          }
+          alias: activeCst.alias,
+          result: localParse ? localParse.typification : activeCst.parse.typification,
+          args: localParse ? localParse.args : activeCst.parse.args
+        }
         : null,
     [activeCst, localParse]
   );

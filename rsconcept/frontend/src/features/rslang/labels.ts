@@ -1,7 +1,13 @@
 import { type RO } from '@/utils/meta';
 import { type AstNodeBase } from '@/utils/parsing';
 
-import { TokenID } from './types';
+import { type IRSErrorDescription, RSErrorCode } from './models/error';
+import { TokenID } from './models/language';
+import { type ExpressionType, TypeClass, TypeID } from './models/typification';
+
+const INTEGER_TYPE_NAME = 'Z';
+const ANY_TYPE_NAME = 'R0';
+const LOGIC_TYPE_NAME = 'Logic';
 
 const labelTokenRecord: Partial<Record<TokenID, string>> = {
   [TokenID.DECART]: '×',
@@ -54,6 +60,7 @@ export function labelToken(id: TokenID): string {
 export function labelRSLangNode(node: RO<AstNodeBase>): string {
   // prettier-ignore
   switch (node.typeID) {
+    case TokenID.ERROR: return '[ERROR]';
     case TokenID.ID_LOCAL:
     case TokenID.ID_GLOBAL:
     case TokenID.ID_FUNCTION:
@@ -129,4 +136,152 @@ export function labelRSLangNode(node: RO<AstNodeBase>): string {
     return node.data.value as string;
   }
   return 'UNKNOWN ' + String(node.typeID);
+}
+
+/** Generates error description for {@link IRSErrorDescription}. */
+export function describeRSError(error: RO<IRSErrorDescription>): string {
+  // prettier-ignore
+  switch (error.errorType) {
+    case RSErrorCode.unknownSymbol:
+      return `Неизвестный символ: ${error.params[0]}`;
+    case RSErrorCode.syntax:
+      return 'Неопределенная синтаксическая ошибка';
+    case RSErrorCode.missingParenthesis:
+      return 'Некорректная конструкция языка родов структур, проверьте структуру выражения';
+    case RSErrorCode.missingCurlyBrace:
+      return "Пропущен символ '}'";
+    case RSErrorCode.invalidQuantifier:
+      return 'Некорректная кванторная декларация';
+    case RSErrorCode.invalidImperative:
+      return 'Использование императивного синтаксиса вне императивного блока';
+    case RSErrorCode.expectedArgDeclaration:
+      return 'Ожидалось объявление аргументов терм-функции';
+    case RSErrorCode.expectedLocal:
+      return 'Ожидалось имя локальной переменной';
+    case RSErrorCode.expectedType:
+      return `Некорректный тип выражения. Ожидаемый тип: ${error.params[0]}`;
+
+    case RSErrorCode.localDoubleDeclare:
+      return `Предупреждение! Повторное объявление локальной переменной ${error.params[0]}`;
+    case RSErrorCode.localNotUsed:
+      return `Предупреждение! Переменная объявлена, но не использована: ${error.params[0]}`;
+    case RSErrorCode.localUndeclared:
+      return `Использование необъявленной переменной: ${error.params[0]}`;
+    case RSErrorCode.localShadowing:
+      return `Повторное объявление переменной: ${error.params[0]}`;
+
+    case RSErrorCode.typesNotEqual:
+      return `Типизация операндов не совпадает! ${error.params[0]} != ${error.params[1]}`;
+    case RSErrorCode.globalNotTyped:
+      return `Типизация конституенты не определена: ${error.params[0]}`;
+    case RSErrorCode.invalidDecart:
+      return `τ(α×b) = 𝔅(𝔇τ(α)×𝔇τ(b)). Некорректная типизация аргумента: ${error.params[0]}`;
+    case RSErrorCode.invalidBoolean:
+      return `τ(ℬ(a)) = 𝔅𝔅𝔇τ(a). Некорректная типизация аргумента: ${error.params[0]}`;
+    case RSErrorCode.invalidTypeOperation:
+      return `Типизация операнда теоретико-множественной операции не корректна: ${error.params[0]}`;
+    case RSErrorCode.invalidCard:
+      return `Некорректная типизация аргумента операции мощности: ${error.params[0]}`;
+    case RSErrorCode.invalidDebool:
+      return `τ(debool(a)) = 𝔇τ(a). Некорректная типизация аргумента: ${error.params[0]}`;
+    case RSErrorCode.globalFuncWithoutArgs:
+      return `Некорректное использование имени функции без аргументов: ${error.params[0]}`;
+    case RSErrorCode.invalidReduce:
+      return `τ(red(a)) = 𝔅𝔇𝔇τ(a). Некорректная типизация аргумента: ${error.params[0]}`;
+    case RSErrorCode.invalidProjectionTuple:
+      return `Проекция не определена: ${error.params[0]} -> ${error.params[1]}`;
+    case RSErrorCode.invalidProjectionSet:
+      return `τ(Pri(a)) = 𝔅𝒞i𝔇τ(a). Некорректная типизация аргумента: ${error.params[0]} -> ${error.params[1]}`;
+    case RSErrorCode.invalidEnumeration:
+      return `Типизация элементов перечисления не совпадает: ${error.params[0]} != ${error.params[1]}`;
+    case RSErrorCode.invalidCortegeDeclare:
+      return `Количество переменных в кортеже не соответствует размерности декартова произведения`;
+    case RSErrorCode.localOutOfScope:
+      return `Использование имени переменной вне области действия: ${error.params[0]}`;
+    case RSErrorCode.invalidElementPredicate:
+      return `Несоответствие типизаций операндов для оператора: ${error.params[0]}${error.params[1]}${error.params[2]}`;
+    case RSErrorCode.invalidEmptySetUsage:
+      return 'Бессмысленное использование пустого множества';
+    case RSErrorCode.invalidArgsArity:
+      return `Неверное число аргументов терм-функции: ${error.params[0]} != ${error.params[1]}`;
+    case RSErrorCode.invalidArgumentType:
+      return `Типизация аргумента терм-функции не соответствует объявленной: ${error.params[0]} != ${error.params[1]}`;
+    case RSErrorCode.globalStructure:
+      return `Область определения родовой структуры не корректна`;
+    case RSErrorCode.radicalUsage:
+      return `Радикалы запрещены вне деклараций терм-функции: ${error.params[0]}`;
+    case RSErrorCode.invalidFilterArgumentType:
+      return `Типизация аргумента фильтра не корректна: ${error.params[0]}(${error.params[1]})`;
+    case RSErrorCode.invalidFilterArity:
+      return `Количество параметров фильтра не соответствует количеству индексов`;
+    case RSErrorCode.arithmeticNotSupported:
+      return `Тип не поддерживает арифметические операторы: ${error.params[0]}`;
+    case RSErrorCode.typesNotCompatible:
+      return `Типы не совместимы для выбранной операции: ${error.params[0]} и ${error.params[1]}`;
+    case RSErrorCode.orderingNotSupported:
+      return `Тип не поддерживает предикаты порядка: ${error.params[0]}`;
+    case RSErrorCode.globalNoValue:
+      return `Используется неинтерпретируемый глобальный идентификатор: ${error.params[0]}`;
+    case RSErrorCode.invalidPropertyUsage:
+      return `Использование неитерируемого множества в качестве значения`;
+    case RSErrorCode.globalMissingAST:
+      return `Не удалось получить дерево разбора для глобального идентификатора: ${error.params[0]}`;
+    case RSErrorCode.globalFuncNoInterpretation:
+      return 'Функция не интерпретируется для данных аргументов';
+
+    case RSErrorCode.cstNonemptyBase:
+      return 'Непустое выражение базисного/константного множества';
+    case RSErrorCode.cstEmptyDerived:
+      return 'Пустое выражение для сложного понятия или утверждения';
+    case RSErrorCode.cstCallableNoArgs:
+      return 'Отсутствуют аргументы для параметризованной конституенты';
+    case RSErrorCode.cstNonCallableHasArgs:
+      return 'Параметризованное выражение не подходит для данного типа конституенты';
+    case RSErrorCode.cstExpectedLogical:
+      return 'Данный тип конституенты требует логического выражения';
+    case RSErrorCode.cstExpectedTyped:
+      return 'Данный тип конституенты требует теоретико-множественного выражения';
+  }
+  return 'UNKNOWN ERROR';
+}
+
+/** Converts expression type to string. */
+export function labelType(type: ExpressionType | null): string {
+  if (!type) {
+    return 'N/A';
+  }
+  switch (type.typeID) {
+    case TypeID.anyTypification:
+      return ANY_TYPE_NAME;
+    case TypeID.integer:
+      return INTEGER_TYPE_NAME;
+    case TypeID.basic:
+      return type.baseID;
+    case TypeID.tuple:
+      return type.factors.map(
+        factor => factor.typeID === TypeID.tuple ? `(${labelType(factor)})` : labelType(factor)
+      ).join('×');
+    case TypeID.collection:
+      return type.base.typeID === TypeID.collection ? `ℬ${labelType(type.base)}` : `ℬ(${labelType(type.base)})`;
+    case TypeID.logic:
+      return LOGIC_TYPE_NAME;
+    case TypeID.predicate:
+    case TypeID.function:
+      const argsText = type.args.map(arg => labelType(arg.type)).join(', ');
+      return `[${argsText}] → ${labelType(type.result)}`;
+  }
+}
+
+/** Generates label for type class. */
+export function labelTypeClass(type: TypeClass): string {
+  switch (type) {
+    case TypeClass.logic:
+      return 'Логический';
+    case TypeClass.typification:
+      return 'Теоретико-множественный';
+    case TypeClass.function:
+      return 'Терм-функция';
+    case TypeClass.predicate:
+      return 'Предикат-функция';
+  }
 }

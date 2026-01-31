@@ -2,8 +2,7 @@
 
 import { createContext, use } from 'react';
 
-import { type CstType } from '../../backend/types';
-import { type IConstituenta, type IRSForm } from '../../models/rsform';
+import { type CstType, type IConstituenta, type IRSForm } from '../../models/rsform';
 
 export const RSTabID = {
   CARD: 0,
@@ -29,7 +28,7 @@ interface IRSEditContext {
   canDeleteSelected: boolean;
 
   navigateVersion: (versionID?: number) => void;
-  navigateRSForm: ({ tab, activeID }: { tab: RSTabID; activeID?: number }) => void;
+  navigateRSForm: ({ tab, activeID }: { tab: RSTabID; activeID?: number; }) => void;
   navigateCst: (cstID: number) => void;
   navigateOss: (ossID: number, newTab?: boolean) => void;
 

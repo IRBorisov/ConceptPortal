@@ -10,10 +10,11 @@ import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { hintMsg } from '@/utils/labels';
 
-import { type CstType, type IUpdateConstituentaDTO, schemaUpdateConstituenta } from '../backend/types';
+import { type IUpdateConstituentaDTO, schemaUpdateConstituenta } from '../backend/types';
 import { useRSFormSuspense } from '../backend/use-rsform';
 import { useUpdateConstituenta } from '../backend/use-update-constituenta';
 import { SelectCstType } from '../components/select-cst-type';
+import { type CstType } from '../models/rsform';
 import { generateAlias, validateNewAlias } from '../models/rsform-api';
 
 export interface DlgRenameCstProps {

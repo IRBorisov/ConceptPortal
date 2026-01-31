@@ -3,6 +3,7 @@ import path from 'path';
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import { defineConfig, loadEnv, type PluginOption } from 'vite';
+import { visualizer } from "rollup-plugin-visualizer";
 
 import { dependencies } from './package.json';
 
@@ -34,13 +35,13 @@ const inlinePackages = [
 const isVitest = process.env.VITEST === 'true' || process.env.NODE_ENV === 'test';
 const warningsToIgnore = !isVitest
   ? [
-      ['SOURCEMAP_ERROR', "Can't resolve original location of error"],
-      ['MODULE_LEVEL_DIRECTIVE', 'Module level directives cause errors when bundled']
-    ]
+    ['SOURCEMAP_ERROR', "Can't resolve original location of error"],
+    ['MODULE_LEVEL_DIRECTIVE', 'Module level directives cause errors when bundled']
+  ]
   : [];
 
 // https://vitejs.dev/config/
-export default ({ mode }: { mode: string }) => {
+export default ({ mode }: { mode: string; }) => {
   process.env = {
     ...process.env,
     ...loadEnv(mode, process.cwd())
@@ -50,6 +51,11 @@ export default ({ mode }: { mode: string }) => {
 
     plugins: [
       tailwindcss(),
+      visualizer({
+        filename: 'stats.html',
+        emitFile: true,
+        template: 'treemap'
+      }),
 
       react({
         babel: {

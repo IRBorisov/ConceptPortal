@@ -25,7 +25,7 @@ interface StatusBarProps {
   isModified: boolean;
   parseData: RO<IExpressionParseDTO> | null;
   activeCst: IConstituenta;
-  onAnalyze: () => void;
+  onAnalyze: (event: React.MouseEvent<Element>) => void;
 }
 
 export function StatusBar({ className, isModified, processing, activeCst, parseData, onAnalyze }: StatusBarProps) {

@@ -3,6 +3,8 @@ import { useReactFlow } from '@xyflow/react';
 import { toPng, toSvg } from 'html-to-image';
 import fileDownload from 'js-file-download';
 
+import { CstType } from '@/features/rsform/models/rsform';
+
 import { useScrollToNode } from '@/components/flow/use-scroll-to-node';
 import { type Graph } from '@/models/graph';
 import { useDialogsStore } from '@/stores/dialogs';
@@ -12,7 +14,6 @@ import { EXPORTS, PARAMETER, REACTFLOW_VIEWPORT } from '@/utils/constants';
 import { cleanSvg } from '@/utils/svg';
 import { dataUrlToBlob, withPreventDefault } from '@/utils/utils';
 
-import { CstType } from '../../../backend/types';
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { useUpdateCrucial } from '../../../backend/use-update-crucial';
 import { isBasicConcept } from '../../../models/rsform-api';

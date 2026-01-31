@@ -4,7 +4,7 @@
 
 import { type TreeCursor } from '@lezer/common';
 
-import { PARAMETER } from './constants';
+export const TOKEN_ERROR = 0;
 
 /** Represents AST node data. */
 export interface AstNodeData extends Record<string, unknown> {
@@ -44,14 +44,13 @@ export function buildTree(cursor: TreeCursor, parent: AstNode | null = null): As
   const node = cursor.node;
 
   const result: AstNode = {
-    typeID: node.type.id,
+    typeID: node.type.isError ? 0 : node.type.id,
     from: node.from,
     to: node.to,
-    hasError: node.type.id === 0,
-    data: {
-      dataType: 'string',
-      value: node.type.name == '⚠' ? PARAMETER.errorNodeLabel : node.type.name
-    },
+    hasError: node.type.isError,
+    data: node.type.isError ?
+      { dataType: 'null', value: null } :
+      { dataType: 'string', value: node.type.name },
     parent,
     children: []
   };
@@ -70,7 +69,7 @@ export function buildTree(cursor: TreeCursor, parent: AstNode | null = null): As
 }
 
 /** Flattens AST tree to a array form. */
-export function flattenAst(node: AstNode, parent = 0, out: FlatAST = []): FlatAST {
+export function flattenAst(node: AstNode, parent = TOKEN_ERROR, out: FlatAST = []): FlatAST {
   const uid = out.length;
   out.push({ uid, parent, typeID: node.typeID, from: node.from, to: node.to, data: node.data });
   for (const child of node.children) {
@@ -94,4 +93,12 @@ export function printAst(node: AstNode, printNode: (node: AstNode) => string): s
     children += `${printAst(child, printNode)}`;
   }
   return `[${printNode(node)}${children}]`;
+}
+
+/** Extracts node text. */
+export function getNodeText(node: AstNode): string {
+  if (node.data.dataType === 'string' && typeof node.data.value === 'string') {
+    return node.data.value;
+  }
+  return `NO DATA NODE: ${node.typeID}`;
 }

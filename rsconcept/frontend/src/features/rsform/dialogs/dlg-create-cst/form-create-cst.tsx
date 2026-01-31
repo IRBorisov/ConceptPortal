@@ -9,12 +9,12 @@ import { BadgeHelp } from '@/features/help/components/badge-help';
 import { MiniButton } from '@/components/control';
 import { TextArea, TextInput } from '@/components/input';
 
-import { CstType, type ICreateConstituentaDTO } from '../../backend/types';
+import { type ICreateConstituentaDTO } from '../../backend/types';
 import { IconCrucialValue } from '../../components/icon-crucial-value';
 import { RSInput } from '../../components/rs-input';
 import { SelectCstType } from '../../components/select-cst-type';
 import { getRSDefinitionPlaceholder, labelRSExpression } from '../../labels';
-import { type IRSForm } from '../../models/rsform';
+import { CstType, type IRSForm } from '../../models/rsform';
 import { generateAlias, isBaseSet, isBasicConcept } from '../../models/rsform-api';
 
 interface FormCreateCstProps {

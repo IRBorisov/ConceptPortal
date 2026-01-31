@@ -3,8 +3,8 @@
 import { urls, useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
-import { type IConstituenta, type IRSForm } from '@/features/rsform';
-import { CstType, type IConstituentaBasicsDTO, type ICreateConstituentaDTO } from '@/features/rsform/backend/types';
+import { CstType, type IConstituenta, type IRSForm } from '@/features/rsform';
+import { type IConstituentaBasicsDTO, type ICreateConstituentaDTO } from '@/features/rsform/backend/types';
 import { useCreateConstituenta } from '@/features/rsform/backend/use-create-constituenta';
 import { useMoveConstituents } from '@/features/rsform/backend/use-move-constituents';
 import { useMutatingRSForm } from '@/features/rsform/backend/use-mutating-rsform';

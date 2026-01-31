@@ -4,7 +4,7 @@ import { printTree } from '@/utils/codemirror';
 
 import { parser } from './parser';
 
-const testData = [
+const testSuccess = [
   ['a1', '[Expression[Setexpr[Local]]]'],
   ['A1', '[Expression[Setexpr[Global]]]'],
   ['∅', '[Expression[Setexpr[EmptySet]]]'],
@@ -35,14 +35,27 @@ const testData = [
     '∀ξ1∈β (ξ1≠∅ & ∀ξ2∈β ξ1∩ξ2=∅)',
     '[Expression[Logic[Logic_unary[Logic_quantor[∀][Variable_pack[Variable[Local]]][∈][Setexpr[Local]][Logic[(][Logic[Logic_binary[Logic[Logic_predicates[Setexpr[Local]][≠][Setexpr[EmptySet]]]][&][Logic[Logic_unary[Logic_quantor[∀][Variable_pack[Variable[Local]]][∈][Setexpr[Local]][Logic[Logic_predicates[Setexpr[Setexpr_binary[Setexpr[Local]][∩][Setexpr[Local]]]][=][Setexpr[EmptySet]]]]]]]]][)]]]]]]'
   ],
-  ['∀α1∈α2 1=1', '[Expression[Logic[Logic_unary[Logic_quantor[∀][Variable_pack[Variable[Local]]][∈][Setexpr[Local]][Logic[Logic_predicates[Setexpr[Integer]][=][Setexpr[Integer]]]]]]]]']
+  ['∀α1∈α2 1=1', '[Expression[Logic[Logic_unary[Logic_quantor[∀][Variable_pack[Variable[Local]]][∈][Setexpr[Local]][Logic[Logic_predicates[Setexpr[Integer]][=][Setexpr[Integer]]]]]]]]'],
 ];
 
-describe('Testing RSParser', () => {
-  testData.forEach(([input, expectedTree]) => {
+const testError = [
+  ['', '[Expression[⚠]]'],
+  ['!', '[Expression[⚠]]'],
+  ['∀a∈X1 D{b∈S1| 1=1}', '[Expression[Logic[Logic_unary[Logic_quantor[∀][Variable_pack[Variable[Local]]][∈][Setexpr[Global]][Logic[Logic_predicates[Setexpr[Declarative[PrefixD][{][Variable[Local]][∈][Setexpr[Global]][|][Logic[Logic_predicates[Setexpr[Integer]][=][Setexpr[Integer]]]][}]]][⚠]]]]]]]']
+];
+
+describe('Testing RSParser correct inputs', () => {
+  testSuccess.forEach(([input, expectedTree]) => {
     it(`Parse "${input}"`, () => {
-      // NOTE: use strict parser to determine exact error position
-      // const tree = parser.configure({strict: true}).parse(input);
+      const tree = parser.parse(input);
+      expect(printTree(tree)).toBe(expectedTree);
+    });
+  });
+});
+
+describe('Testing RSParser error inputs', () => {
+  testError.forEach(([input, expectedTree]) => {
+    it(`Parse "${input}"`, () => {
       const tree = parser.parse(input);
       expect(printTree(tree)).toBe(expectedTree);
     });

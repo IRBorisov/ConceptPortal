@@ -2,8 +2,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
 
-import { CstType } from '../backend/types';
 import { labelCstType } from '../labels';
+import { CstType } from '../models/rsform';
 
 import { IconCstType } from './icon-cst-type';
 

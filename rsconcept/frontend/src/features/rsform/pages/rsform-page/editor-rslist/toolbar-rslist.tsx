@@ -3,6 +3,7 @@
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 import { MiniSelectorOSS } from '@/features/library/components/mini-selector-oss';
+import { CstType } from '@/features/rsform/models/rsform';
 
 import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
@@ -20,7 +21,6 @@ import { cn } from '@/components/utils';
 import { prefixes } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/utils';
 
-import { CstType } from '../../../backend/types';
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { useUpdateCrucial } from '../../../backend/use-update-crucial';
 import { IconCstType } from '../../../components/icon-cst-type';

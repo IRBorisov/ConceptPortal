@@ -4,27 +4,30 @@ import { useCallback, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { type ReactCodeMirrorRef } from '@uiw/react-codemirror';
 
-import { TokenID } from '@/features/rslang/types';
+import { labelRSLangNode, labelType } from '@/features/rslang/labels';
+import { isCritical } from '@/features/rslang/models/error';
+import { TokenID } from '@/features/rslang/models/language';
 
 import { useResetOnChange } from '@/hooks/use-reset-on-change';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { errorMsg } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
-import { buildTree, flattenAst } from '@/utils/parsing';
+import { buildTree, flattenAst, printAst } from '@/utils/parsing';
 
 import { normalizeAST, rslangParser } from '../../../../rslang';
 import {
   type ICheckConstituentaDTO,
   type IExpressionParseDTO,
-  type IRSErrorDescription
+  type IRSErrorDescription,
+  Syntax
 } from '../../../backend/types';
 import { useCheckConstituenta } from '../../../backend/use-check-constituenta';
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { RSInput } from '../../../components/rs-input';
 import { RSTextWrapper } from '../../../components/rs-input/text-editing';
 import { type IConstituenta } from '../../../models/rsform';
-import { getDefinitionPrefix } from '../../../models/rsform-api';
+import { getAnalysisFor, getDefinitionPrefix } from '../../../models/rsform-api';
 import { useRSEdit } from '../rsedit-context';
 
 import { ParsingResult } from './parsing-result';
@@ -47,6 +50,20 @@ interface EditorRSExpressionProps {
   onChangeLocalParse: (typification: RO<IExpressionParseDTO>) => void;
   onOpenEdit: (cstID: number) => void;
   onShowTypeGraph: (event: React.MouseEvent<Element>) => void;
+}
+
+function extractCstData(cst: IConstituenta) {
+  return {
+    id: cst.id,
+    alias: cst.alias,
+    type: cst.cst_type,
+    definition_formal: cst.definition_formal,
+    definition_raw: cst.definition_raw,
+    term_raw: cst.term_raw,
+    term_resolved: cst.term_resolved,
+    term_forms: cst.term_forms,
+    convention: cst.convention
+  };
 }
 
 export function EditorRSExpression({
@@ -77,7 +94,8 @@ export function EditorRSExpression({
     setParseData(null);
   }, []);
 
-  useResetOnChange([activeCst, toggleReset], resetHandler);
+  const cstHash = extractCstData(activeCst);
+  useResetOnChange([cstHash, toggleReset], resetHandler);
 
   function checkConstituenta(
     expression: string,
@@ -100,17 +118,46 @@ export function EditorRSExpression({
     setIsModified(newValue !== activeCst.definition_formal);
   }
 
-  function handleCheckExpression(callback?: (parse: RO<IExpressionParseDTO>) => void) {
-    checkConstituenta(value, activeCst, parse => {
-      onChangeLocalParse(parse);
-      if (parse.errors.length > 0) {
-        onShowError(parse.errors[0], parse.prefixLen);
+  function handleCheckExpression(event: React.MouseEvent<Element> | null, callback?: (parse: RO<IExpressionParseDTO>) => void) {
+    if (event?.ctrlKey || event?.metaKey) {
+      const parse = getAnalysisFor(value, activeCst, schema);
+      const old_parse: IExpressionParseDTO = {
+        parseResult: parse.success,
+        prefixLen: 0,
+        syntax: Syntax.MATH,
+        typification: labelType(parse.type),
+        valueClass: parse.valueClass,
+        errors: parse.errors.map(error => ({
+          errorType: error.code,
+          position: error.position,
+          isCritical: isCritical(error.code),
+          params: error.params ?? []
+        })),
+        astText: parse.ast ? printAst(parse.ast, node => labelRSLangNode(node)) : '',
+        ast: [],
+        args: []
+      };
+      onChangeLocalParse(old_parse);
+      setParseData(old_parse);
+      if (old_parse.errors.length > 0) {
+        onShowError(old_parse.errors[0], old_parse.prefixLen);
       } else {
         rsInput.current?.view?.focus();
       }
       setIsModified(false);
-      callback?.(parse);
-    });
+      callback?.(old_parse);
+    } else {
+      checkConstituenta(value, activeCst, parse => {
+        onChangeLocalParse(parse);
+        if (parse.errors.length > 0) {
+          onShowError(parse.errors[0], parse.prefixLen);
+        } else {
+          rsInput.current?.view?.focus();
+        }
+        setIsModified(false);
+        callback?.(parse);
+      });
+    }
   }
 
   function onShowError(error: RO<IRSErrorDescription>, prefixLen: number) {
@@ -155,7 +202,7 @@ export function EditorRSExpression({
       const flatAst = flattenAst(ast);
       showAST({ syntaxTree: flatAst, expression: value });
     } else {
-      handleCheckExpression(parse => {
+      handleCheckExpression(null, parse => {
         if (!parse.astText) {
           toast.error(errorMsg.astFailed);
         } else {
@@ -195,7 +242,7 @@ export function EditorRSExpression({
         isModified={isModified}
         activeCst={activeCst}
         parseData={parseData}
-        onAnalyze={() => handleCheckExpression()}
+        onAnalyze={(event) => handleCheckExpression(event)}
       />
 
       <RSInput
@@ -205,7 +252,7 @@ export function EditorRSExpression({
         minHeight='3.75rem'
         maxHeight='8rem'
         onChange={handleChange}
-        onAnalyze={() => handleCheckExpression()}
+        onAnalyze={() => handleCheckExpression(null)}
         onOpenEdit={onOpenEdit}
         disabled={disabled}
         {...restProps}

@@ -19,13 +19,13 @@ import { errorMsg, promptText } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 import { promptUnsaved } from '@/utils/utils';
 
-import { CstType, type IConstituentaBasicsDTO, type ICreateConstituentaDTO } from '../../backend/types';
+import { type IConstituentaBasicsDTO, type ICreateConstituentaDTO } from '../../backend/types';
 import { useCreateConstituenta } from '../../backend/use-create-constituenta';
 import { useDeleteAttribution } from '../../backend/use-delete-attribution';
 import { useMoveConstituents } from '../../backend/use-move-constituents';
 import { useRSFormSuspense } from '../../backend/use-rsform';
 import { useUpdateConstituenta } from '../../backend/use-update-constituenta';
-import { type IConstituenta } from '../../models/rsform';
+import { CstType, type IConstituenta } from '../../models/rsform';
 import { generateAlias, removeAliasReference } from '../../models/rsform-api';
 
 import { RSEditContext, RSTabID } from './rsedit-context';
@@ -110,7 +110,7 @@ export const RSEditState = ({
     router.push({ path: urls.oss(ossID), newTab: newTab });
   }
 
-  function navigateRSForm({ tab, activeID }: { tab: RSTabID; activeID?: number }) {
+  function navigateRSForm({ tab, activeID }: { tab: RSTabID; activeID?: number; }) {
     const data = {
       id: schema.id,
       tab: tab,

@@ -1,11 +1,11 @@
 import clsx from 'clsx';
 
-import { getRSErrorPrefix } from '@/features/rslang/api';
+import { describeRSError } from '@/features/rslang/labels';
+import { getRSErrorPrefix, isCritical } from '@/features/rslang/models/error';
 
 import { type RO } from '@/utils/meta';
 
 import { type IExpressionParseDTO, type IRSErrorDescription } from '../../../backend/types';
-import { describeRSError } from '../../../labels';
 
 interface ParsingResultProps {
   data: RO<IExpressionParseDTO> | null;
@@ -32,7 +32,7 @@ export function ParsingResult({ isOpen, data, disabled, onShowError }: ParsingRe
             onClick={disabled ? undefined : () => onShowError(error)}
           >
             <span className='mr-1 font-semibold underline'>
-              {error.isCritical ? 'Ошибка' : 'Предупреждение'} {`${getRSErrorPrefix(error)}:`}
+              {isCritical(error.errorType) ? 'Ошибка' : 'Предупреждение'} {`${getRSErrorPrefix(error)}:`}
             </span>
             <span>{` ${describeRSError(error)}`}</span>
           </p>

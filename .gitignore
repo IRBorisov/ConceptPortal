@@ -69,3 +69,4 @@ venv/
 rsconcept/frontend/public/privacy.pdf
 /rsconcept/frontend/playwright-report
 /rsconcept/frontend/test-results
+rsconcept/frontend/stats.html

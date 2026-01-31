@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-import { CstType } from '../backend/types';
+import { CstType } from '../models/rsform';
 
 /** Represents graph editing mode mode. */
 export const InteractionMode = {
@@ -136,8 +136,8 @@ export const useTermGraphStore = create<TermGraphStore>()(
               state.filter.graphType === TGEdgeType.full
                 ? TGEdgeType.attribution
                 : state.filter.graphType === TGEdgeType.attribution
-                ? TGEdgeType.definition
-                : TGEdgeType.full
+                  ? TGEdgeType.definition
+                  : TGEdgeType.full
           }
         })),
 

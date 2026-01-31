@@ -8,11 +8,28 @@ import {
   type ILibraryItemReference,
   type IVersionInfo
 } from '@/features/library';
+import { type ExpressionType, type RSLangAnalyzer } from '@/features/rslang';
+import { type ValueClass } from '@/features/rslang/models/calculation';
 
 import { type Graph } from '@/models/graph';
+import { type AstNode } from '@/utils/parsing';
 
 import { type IArgumentInfo } from '../../rslang/types';
-import { CstType, type IAttribution, type ParsingStatus, type ValueClass } from '../backend/types';
+import { type IAttribution, type ParsingStatus } from '../backend/types';
+
+/** Represents {@link IConstituenta} type. */
+export const CstType = {
+  NOMINAL: 'nominal',
+  BASE: 'basic',
+  STRUCTURED: 'structure',
+  TERM: 'term',
+  AXIOM: 'axiom',
+  FUNCTION: 'function',
+  PREDICATE: 'predicate',
+  CONSTANT: 'constant',
+  THEOREM: 'theorem'
+} as const;
+export type CstType = (typeof CstType)[keyof typeof CstType];
 
 // CstType constant for category dividers in TemplateSchemas
 export const CATEGORY_CST_TYPE = CstType.THEOREM;
@@ -44,6 +61,14 @@ export interface TermForm {
   tags: string;
 }
 
+/** Represents results of RSLang analysis. */
+export interface CstParse {
+  success: boolean;
+  valueClass: ValueClass;
+  type: ExpressionType | null;
+  ast: AstNode;
+}
+
 /** Represents Constituenta. */
 export interface IConstituenta {
   id: number;
@@ -66,6 +91,8 @@ export interface IConstituenta {
     syntaxTree: string;
     args: IArgumentInfo[];
   };
+
+  analysis?: CstParse;
 
   /** Identifier of {@link LibraryItem} containing this {@link IConstituenta}. */
   schema: number;
@@ -144,6 +171,7 @@ export interface IRSForm extends ILibraryItemData {
   attribution: IAttribution[];
   oss: ILibraryItemReference[];
 
+  analyzer: RSLangAnalyzer | null;
   stats: IRSFormStats;
   graph: Graph;
   attribution_graph: Graph;

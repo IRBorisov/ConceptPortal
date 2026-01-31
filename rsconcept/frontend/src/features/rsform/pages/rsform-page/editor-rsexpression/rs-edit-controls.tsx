@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import { TokenID } from '@/features/rslang/types';
+import { TokenID } from '@/features/rslang';
 
 import { prefixes } from '@/utils/constants';
 

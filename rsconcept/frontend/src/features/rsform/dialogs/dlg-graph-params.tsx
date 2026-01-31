@@ -7,9 +7,9 @@ import { Checkbox } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { prepareTooltip } from '@/utils/utils';
 
-import { CstType } from '../backend/types';
 import { IconCstType } from '../components/icon-cst-type';
 import { labelCstType } from '../labels';
+import { CstType } from '../models/rsform';
 import { cstTypeToFilterKey, type GraphFilterParams, useTermGraphStore } from '../stores/term-graph';
 
 export function DlgGraphParams() {
