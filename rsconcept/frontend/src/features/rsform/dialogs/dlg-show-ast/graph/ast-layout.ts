@@ -2,6 +2,12 @@ import dagre from '@dagrejs/dagre';
 import { type Edge, type Node } from '@xyflow/react';
 
 import { PARAMETER } from '@/utils/constants';
+
+/** Node data after dagre layout (x, y set by layout). */
+interface DagreLayoutNode {
+  x: number;
+  y: number;
+}
 import { type FlatAstNode } from '@/utils/parsing';
 
 export function applyLayout(nodes: Node<FlatAstNode>[], edges: Edge[]) {
@@ -23,7 +29,7 @@ export function applyLayout(nodes: Node<FlatAstNode>[], edges: Edge[]) {
   dagre.layout(dagreGraph);
 
   nodes.forEach(node => {
-    const nodeWithPosition = dagreGraph.node(node.id);
+    const nodeWithPosition = dagreGraph.node(node.id) as DagreLayoutNode;
     node.position.x = nodeWithPosition.x - PARAMETER.graphNodeRadius;
     node.position.y = nodeWithPosition.y - PARAMETER.graphNodeRadius;
   });

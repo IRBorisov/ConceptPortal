@@ -1,6 +1,6 @@
 'use client';
 
-import { ErrorBoundary } from 'react-error-boundary';
+import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
 import { useParams } from 'react-router';
 import { z } from 'zod';
 
@@ -9,7 +9,6 @@ import { ConstituentaTooltip } from '@/features/rsform/components/constituenta-t
 
 import { isAxiosError } from '@/backend/api-transport';
 import { TextURL } from '@/components/control';
-import { type ErrorData } from '@/components/info-error';
 import { useQueryStrings } from '@/hooks/use-query-strings';
 import { useResetModification } from '@/hooks/use-reset-modification';
 import { useModificationStore } from '@/stores/modification';
@@ -57,7 +56,7 @@ export function OssPage() {
 }
 
 // ====== Internals =========
-function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
+function ProcessError({ error }: FallbackProps): React.ReactElement {
   if (isAxiosError(error) && error.response) {
     if (error.response.status === 404) {
       return (
@@ -77,5 +76,5 @@ function ProcessError({ error }: { error: ErrorData }): React.ReactElement {
       );
     }
   }
-  throw error as Error;
+  throw error;
 }

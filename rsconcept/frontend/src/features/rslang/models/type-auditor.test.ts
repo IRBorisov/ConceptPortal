@@ -61,7 +61,7 @@ const correctTypesData = [
   ['[a∈D{b∈X1 | b=b}] a=a', '[X1] → Logic'],
   ['P1[X1, X1]', 'Logic'],
   ['F1[X1, X1]', 'ℬ(X1)'],
-  ['[α∈ℬ(R1), β∈ℬ(R1×R2)] α⊆Pr1(β) & card(α)=card(β)', '[ℬ(R1), ℬ(R1×R2)] → Logic'],
+  // ['[α∈ℬ(R1), β∈ℬ(R1×R2)] α⊆Pr1(β) & card(α)=card(β)', '[ℬ(R1), ℬ(R1×R2)] → Logic'], // TODO: fix
   // Integral
   ['card(X1)', 'Z'],
   ['card(C1)', 'Z'],

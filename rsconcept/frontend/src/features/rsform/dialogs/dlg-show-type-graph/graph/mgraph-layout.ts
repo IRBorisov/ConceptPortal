@@ -3,6 +3,12 @@ import { type Edge, type Node } from '@xyflow/react';
 
 import { type TypificationNodeData } from '../../../models/typification-graph';
 
+/** Node data after dagre layout (x, y set by layout). */
+interface DagreLayoutNode {
+  x: number;
+  y: number;
+}
+
 const NODE_WIDTH = 44;
 const NODE_HEIGHT = 44;
 const HOR_SEPARATION = 40;
@@ -30,7 +36,7 @@ export function applyLayout(nodes: Node<TypificationNodeData>[], edges: Edge[]) 
   dagre.layout(dagreGraph);
 
   nodes.forEach(node => {
-    const nodeWithPosition = dagreGraph.node(node.id);
+    const nodeWithPosition = dagreGraph.node(node.id) as DagreLayoutNode;
     node.position.x = nodeWithPosition.x - NODE_WIDTH / 2;
     node.position.y = nodeWithPosition.y - NODE_HEIGHT / 2;
   });

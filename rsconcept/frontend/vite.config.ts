@@ -28,7 +28,12 @@ const inlinePackages = [
   'zod',
   'zustand',
   '@tanstack/react-query',
-  '@hookform/resolvers'
+  '@hookform/resolvers',
+
+  'class-variance-authority',
+  'clsx',
+  'use-debounce',
+  'tailwind-merge'
 ];
 
 // Rollup warnings that should not be displayed (not used in Vitest)

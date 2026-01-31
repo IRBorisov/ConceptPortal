@@ -10,6 +10,12 @@ import { PARAMETER } from '@/utils/constants';
 import { CstType, type IConstituenta, type IRSForm } from '../../../models/rsform';
 import { type GraphFilterParams, TGEdgeType } from '../../../stores/term-graph';
 
+/** Node data after dagre layout (x, y set by layout). */
+interface DagreLayoutNode {
+  x: number;
+  y: number;
+}
+
 export interface TGNodeState extends Record<string, unknown> {
   cst: IConstituenta;
   focused: boolean;
@@ -48,8 +54,9 @@ export function applyLayout(nodes: Node<TGNodeState>[], edges: Edge[], subLabels
   dagre.layout(dagreGraph);
 
   if (isolated.length > 0) {
-    const xs = nonIsolated.map(n => dagreGraph.node(n.id).x);
-    const maxY = nonIsolated.length ? Math.min(...nonIsolated.map(node => dagreGraph.node(node.id).y)) : 0;
+    const getLayout = (id: string): DagreLayoutNode => dagreGraph.node(id) as DagreLayoutNode;
+    const xs = nonIsolated.map(n => getLayout(n.id).x);
+    const maxY = nonIsolated.length ? Math.min(...nonIsolated.map(node => getLayout(node.id).y)) : 0;
     const minX = nonIsolated.length ? Math.min(...xs) : 0;
     const maxX = nonIsolated.length ? Math.max(...xs) : 0;
     const midX = (minX + maxX) / 2;
@@ -72,7 +79,7 @@ export function applyLayout(nodes: Node<TGNodeState>[], edges: Edge[], subLabels
   }
 
   nonIsolated.forEach(node => {
-    const nodeWithPosition = dagreGraph.node(node.id);
+    const nodeWithPosition = dagreGraph.node(node.id) as DagreLayoutNode;
     node.position.x = nodeWithPosition.x - PARAMETER.graphNodeRadius;
     node.position.y = nodeWithPosition.y - PARAMETER.graphNodeRadius;
   });
