@@ -61,7 +61,8 @@ const correctTypesData = [
   ['[a∈D{b∈X1 | b=b}] a=a', '[X1] → Logic'],
   ['P1[X1, X1]', 'Logic'],
   ['F1[X1, X1]', 'ℬ(X1)'],
-  // ['[α∈ℬ(R1), β∈ℬ(R1×R2)] α⊆Pr1(β) & card(α)=card(β)', '[ℬ(R1), ℬ(R1×R2)] → Logic'], // TODO: fix
+  ['[β∈ℬ(R1×R2)] Pr1(β)', '[ℬ(R1×R2)] → ℬ(R1)'],
+  ['[α∈ℬ(R1), β∈ℬ(R1×R2)] α⊆Pr1(β) & card(α)=card(β)', '[ℬ(R1), ℬ(R1×R2)] → Logic'],
   // Integral
   ['card(X1)', 'Z'],
   ['card(C1)', 'Z'],
@@ -255,7 +256,7 @@ describe('TypeAuditor', () => {
     expect(errors[0]).toEqual(expectedError);
   }
 
-  // .filter(([input]) => input === 'D{t ∈ X1 | t=t} ∪ D{t∈ℬ(X1) | t⊄t}')
+  // .filter(([input]) => input === '[α∈ℬ(R1), β∈ℬ(R1×R2)] α⊆Pr1(β) & card(α)=card(β)')
   correctTypesData.forEach(([input, expectedType]) => {
     it(`Correct type for "${input}"`, () => expectType(input, expectedType));
   });

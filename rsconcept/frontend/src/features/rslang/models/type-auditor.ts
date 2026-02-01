@@ -620,15 +620,18 @@ export class TypeAuditor {
         components.push(component(argument, index));
       }
     }
-    return this.setCurrent(bool(tuple(components)));
+    if (components.length === 1) {
+      return this.setCurrent(bool(components[0]));
+    } else {
+      return this.setCurrent(bool(tuple(components)));
+    }
   }
 
   private visitProjectTuple(node: AstNode): boolean {
-    const maybeArgument = this.childTypification(node, 0);
-    if (maybeArgument === null) {
+    const argument = this.childTypification(node, 0);
+    if (argument === null) {
       return false;
     }
-    const argument = maybeArgument;
     if (argument.typeID === TypeID.anyTypification) {
       return this.setCurrent(argument);
     }
@@ -652,7 +655,11 @@ export class TypeAuditor {
         components.push(component(argument, index));
       }
     }
-    return this.setCurrent(tuple(components));
+    if (components.length === 1) {
+      return this.setCurrent(components[0]);
+    } else {
+      return this.setCurrent(tuple(components));
+    }
   }
 
   private visitFilter(node: AstNode): boolean {

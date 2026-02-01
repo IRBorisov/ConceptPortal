@@ -405,6 +405,9 @@ function parseCst(target: IConstituenta, analyzer: RSLangAnalyzer) {
     if (parse.success && parse.type) {
       analyzer.setType(target.alias, parse.type);
     }
+    if (target.parse?.status === ParsingStatus.VERIFIED !== parse.success) {
+      throw new Error('Parsing status mismatch');
+    }
     target.analysis = {
       success: parse.success,
       type: parse.type,

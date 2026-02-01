@@ -135,6 +135,9 @@ export function bool(base: Typification): EchelonCollection {
 
 /** Create tuple typification. */
 export function tuple(factors: Typification[]): EchelonTuple {
+  if (factors.length < 2) {
+    throw new Error('Tuple with less than two factors is not allowed');
+  }
   return { typeID: TypeID.tuple, factors };
 }
 
