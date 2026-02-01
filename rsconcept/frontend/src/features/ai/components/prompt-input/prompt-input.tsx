@@ -111,6 +111,7 @@ export const PromptInput = forwardRef<ReactCodeMirrorRef, PromptInputProps>(
     const autoCompleter = autocompletion({
       override: [variableCompletions(variables)],
       activateOnTyping: true,
+      aboveCursor: true,
       icons: false
     });
 

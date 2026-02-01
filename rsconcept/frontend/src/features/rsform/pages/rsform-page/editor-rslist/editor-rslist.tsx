@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import clsx from 'clsx';
 
+import { MiniSelectorOSS } from '@/features/library/components/mini-selector-oss';
 import { CstType } from '@/features/rsform/models/rsform';
 
 import { ExportDropdown } from '@/components/control/export-dropdown';
@@ -33,7 +34,8 @@ export function EditorRSList() {
     moveDown,
     cloneCst,
     promptDeleteSelected,
-    navigateCst
+    navigateCst,
+    navigateOss
   } = useRSEdit();
 
   const [filterText, setFilterText] = useState('');
@@ -121,6 +123,12 @@ export function EditorRSList() {
           <div className='px-2'>
             Выбор {selectedCst.length} из {schema.stats?.count_all}
           </div>
+        ) : null}
+        {!isContentEditable && schema.oss.length > 0 ? (
+          <MiniSelectorOSS
+            items={schema.oss}
+            onSelect={(event, value) => navigateOss(value.id, event.ctrlKey || event.metaKey)}
+          />
         ) : null}
         <SearchBar
           id='constituents_search'
