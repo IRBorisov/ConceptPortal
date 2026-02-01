@@ -120,32 +120,38 @@ export function EditorRSExpression({
 
   function handleCheckExpression(event: React.MouseEvent<Element> | null, callback?: (parse: RO<IExpressionParseDTO>) => void) {
     if (event?.ctrlKey || event?.metaKey) {
-      const parse = getAnalysisFor(value, activeCst, schema);
-      const old_parse: IExpressionParseDTO = {
-        parseResult: parse.success,
-        prefixLen: 0,
-        syntax: Syntax.MATH,
-        typification: labelType(parse.type),
-        valueClass: parse.valueClass,
-        errors: parse.errors.map(error => ({
-          errorType: error.code,
-          position: error.position,
-          isCritical: isCritical(error.code),
-          params: error.params ?? []
-        })),
-        astText: parse.ast ? printAst(parse.ast, node => labelRSLangNode(node)) : '',
-        ast: [],
-        args: []
-      };
-      onChangeLocalParse(old_parse);
-      setParseData(old_parse);
-      if (old_parse.errors.length > 0) {
-        onShowError(old_parse.errors[0], old_parse.prefixLen);
-      } else {
-        rsInput.current?.view?.focus();
+      try {
+        const parse = getAnalysisFor(value, activeCst, schema);
+        const old_parse: IExpressionParseDTO = {
+          parseResult: parse.success,
+          prefixLen: 0,
+          syntax: Syntax.MATH,
+          typification: labelType(parse.type),
+          valueClass: parse.valueClass,
+          errors: parse.errors.map(error => ({
+            errorType: error.code,
+            position: error.position,
+            isCritical: isCritical(error.code),
+            params: error.params ?? []
+          })),
+          astText: parse.ast ? printAst(parse.ast, node => labelRSLangNode(node)) : '',
+          ast: [],
+          args: []
+        };
+        onChangeLocalParse(old_parse);
+        setParseData(old_parse);
+        if (old_parse.errors.length > 0) {
+          onShowError(old_parse.errors[0], old_parse.prefixLen);
+        } else {
+          rsInput.current?.view?.focus();
+        }
+        setIsModified(false);
+        callback?.(old_parse);
+      } catch (err) {
+        const message = err instanceof Error ? err.message : String(err);
+        toast.error(message);
+        console.error(err);
       }
-      setIsModified(false);
-      callback?.(old_parse);
     } else {
       checkConstituenta(value, activeCst, parse => {
         onChangeLocalParse(parse);

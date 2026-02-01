@@ -909,6 +909,8 @@ function mangleRadicals(funcName: string, type: Typification): Typification {
   switch (type.typeID) {
     default:
       throw new Error(`Unexpected type: ${type.typeID}`);
+    case TypeID.integer:
+      return type;
     case TypeID.basic: {
       if (isRadical(type.baseID)) {
         return {
