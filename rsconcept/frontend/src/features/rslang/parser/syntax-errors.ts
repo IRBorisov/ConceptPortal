@@ -6,6 +6,7 @@ import { type AstNode, visitAstDFS } from '@/utils/parsing';
 
 import { type ErrorReporter, RSErrorCode } from '../models/error';
 import { TokenID } from '../models/language';
+
 export function extractSyntaxErrors(ast: AstNode, reporter: ErrorReporter) {
   visitAstDFS(ast, node => extractInternal(node, reporter));
 }

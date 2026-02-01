@@ -72,6 +72,7 @@ const testData = [
   ['a×(b×c)', '[×[a][×[b][c]]]'],
   // Term constructors
   ['D{a∈X1 | 1=2}', '[DECLARATIVE[a][X1][=[1][2]]]'],
+  ['{a∈X1 | 1=2}', '[DECLARATIVE[a][X1][=[1][2]]]'],
   ['D{(a,b)∈X1 | 1=2}', '[DECLARATIVE[TUPLE_DECLARE[a][b]][X1][=[1][2]]]'],
   ['R{a:=S1 | card(a)<10 | a \\ a}', '[RECURSIVE[a][S1][<[card[a]][10]][\\[a][a]]]'],
   ['R{a:=S1 | a \\ a}', '[RECURSIVE[a][S1][\\[a][a]]]'],

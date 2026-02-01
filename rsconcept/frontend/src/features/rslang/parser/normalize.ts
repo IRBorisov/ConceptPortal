@@ -13,7 +13,7 @@ import {
   Filter, Filter_expression, Function, Function_decl,
   Global, Imp_blocks, Imperative, Integer, IntegerSet,
   Local, Logic, Logic_binary, Logic_predicates,
-  Logic_quantor, Logic_unary, Predicate, Radical, Recursion, Red,
+  Logic_quantor, Logic_unary, Predicate, PrefixD, Radical, Recursion, Red,
   Setexpr, Setexpr_binary, Setexpr_enum_min2,
   SmallPr, Tuple, Variable, Variable_pack
 } from './parser.terms';
@@ -226,7 +226,11 @@ function normalizeNode(node: AstNode, input: string) {
     case Declarative:
       node.typeID = idRecord[node.typeID];
       clearData(node);
-      node.children = [node.children[2], node.children[4], node.children[6]];
+      if (node.children[0].typeID === PrefixD) {
+        node.children = [node.children[2], node.children[4], node.children[6]];
+      } else {
+        node.children = [node.children[1], node.children[3], node.children[5]];
+      }
       return;
 
     case Imp_blocks:
