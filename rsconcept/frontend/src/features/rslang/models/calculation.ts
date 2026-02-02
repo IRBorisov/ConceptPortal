@@ -7,3 +7,6 @@ export const ValueClass = {
   PROPERTY: 'property'
 } as const;
 export type ValueClass = (typeof ValueClass)[keyof typeof ValueClass];
+
+/** ValueClass context. */
+export type ValueContext = Map<string, ValueClass>;

@@ -5,7 +5,7 @@ import { normalizeAST } from '../parser/normalize';
 import { parser as rslangParser } from '../parser/parser';
 import { extractSyntaxErrors } from '../parser/syntax-errors';
 
-import { ValueClass } from './calculation';
+import { ValueClass, type ValueContext } from './calculation';
 import { RSErrorCode, type RSErrorDescription } from './error';
 import { TokenID } from './language';
 import { TypeAuditor } from './type-auditor';
@@ -14,13 +14,14 @@ import {
   type ExpressionType, type TypeClass, type TypeContext, TypeID
 } from './typification';
 import { getTypeClass } from './typification-api';
+import { ValueAuditor } from './value-auditor';
 
 export interface AnalysisOutput {
   success: boolean;
+  ast: AstNode | null;
   type: ExpressionType | null;
-  valueClass: ValueClass;
+  valueClass: ValueClass | null;
   errors: RSErrorDescription[];
-  ast: AstNode;
 }
 
 export interface AnalysisOptions {
@@ -30,18 +31,27 @@ export interface AnalysisOptions {
 
 export class RSLangAnalyzer {
   private typeContext: TypeContext = new Map<string, ExpressionType>();
+  private valueContext: ValueContext = new Map<string, ValueClass>();
   private typeAuditor: TypeAuditor = new TypeAuditor(this.typeContext);
+  private valueAuditor: ValueAuditor = new ValueAuditor(this.valueContext);
 
   public addBase(alias: string, isNumeric: boolean = false): void {
     if (isNumeric) {
       this.typeContext.set(alias, bool(constant(alias)));
+      this.valueContext.set(alias, ValueClass.VALUE);
     } else {
       this.typeContext.set(alias, bool(basic(alias)));
+      this.valueContext.set(alias, ValueClass.VALUE);
     }
   }
 
-  public setType(alias: string, type: ExpressionType): void {
-    this.typeContext.set(alias, type);
+  public setGlobal(alias: string, type: ExpressionType | null, value: ValueClass | null): void {
+    if (type) {
+      this.typeContext.set(alias, type);
+    }
+    if (value) {
+      this.valueContext.set(alias, value);
+    }
   }
 
   public check(expression: string, options?: AnalysisOptions): AnalysisOutput {
@@ -49,32 +59,40 @@ export class RSLangAnalyzer {
     const reporter = (error: RSErrorDescription) => {
       errors.push(error);
     };
+    if (expression.length === 0) {
+      reporter({ code: RSErrorCode.cstEmptyDerived, position: 0 });
+      return { success: false, type: null, valueClass: null, errors: errors, ast: null };
+    }
     const ast = this.parse(expression);
     if (ast.hasError) {
       extractSyntaxErrors(ast, reporter);
-      return { success: false, type: null, valueClass: ValueClass.INVALID, errors: errors, ast: ast };
+      return { success: false, type: null, valueClass: null, errors: errors, ast: ast };
     }
 
-    let type = this.typeAuditor.run(ast, reporter);
+    const type = this.typeAuditor.run(ast, reporter);
     if (type === null) {
-      return { success: false, type: null, valueClass: ValueClass.INVALID, errors: errors, ast: ast };
+      return { success: false, type: null, valueClass: null, errors: errors, ast: ast };
     }
 
     if (options?.isDomain) {
       if (!isStructureDomain(ast) || type.typeID !== TypeID.collection) {
         reporter({ code: RSErrorCode.globalStructure, position: ast.from });
-        return { success: false, type: null, valueClass: ValueClass.INVALID, errors: errors, ast: ast };
+        return { success: false, type: null, valueClass: null, errors: errors, ast: ast };
       }
-      type = debool(type);
+      return { success: true, type: debool(type), valueClass: ValueClass.VALUE, errors: errors, ast: ast };
     }
     if (options?.expected && getTypeClass(type.typeID) !== options.expected) {
       reporter({ code: RSErrorCode.expectedType, position: ast.from, params: [labelTypeClass(options.expected)] });
-      return { success: false, type: null, valueClass: ValueClass.INVALID, errors: errors, ast: ast };
+      return { success: false, type: null, valueClass: null, errors: errors, ast: ast };
     }
+    if (type === null) {
+      return { success: false, type: null, valueClass: null, errors: errors, ast: ast };
+    }
+    const value = this.valueAuditor.run(ast, reporter);
     return {
-      success: type !== null,
+      success: value !== null,
       type: type,
-      valueClass: ValueClass.VALUE,
+      valueClass: options?.isDomain ? ValueClass.VALUE : value,
       errors: errors,
       ast: ast
     };

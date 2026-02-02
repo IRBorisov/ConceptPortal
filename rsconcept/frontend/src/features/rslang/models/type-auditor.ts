@@ -151,7 +151,7 @@ export class TypeAuditor {
     return true;
   }
 
-  private onError(code: RSErrorCode, position: number, params: string[] = []): boolean {
+  private onError(code: RSErrorCode, position: number, params?: string[]): boolean {
     if (this.reporter) {
       this.reporter({ code, position, params });
     }

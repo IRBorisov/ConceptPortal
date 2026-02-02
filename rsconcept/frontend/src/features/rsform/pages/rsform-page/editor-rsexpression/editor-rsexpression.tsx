@@ -5,13 +5,13 @@ import { toast } from 'react-toastify';
 import { type ReactCodeMirrorRef } from '@uiw/react-codemirror';
 
 import { labelRSLangNode, labelType } from '@/features/rslang/labels';
+import { ValueClass } from '@/features/rslang/models/calculation';
 import { isCritical } from '@/features/rslang/models/error';
 import { TokenID } from '@/features/rslang/models/language';
 
 import { useResetOnChange } from '@/hooks/use-reset-on-change';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
-import { errorMsg } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 import { buildTree, flattenAst, printAst } from '@/utils/parsing';
 
@@ -27,7 +27,7 @@ import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { RSInput } from '../../../components/rs-input';
 import { RSTextWrapper } from '../../../components/rs-input/text-editing';
 import { type IConstituenta } from '../../../models/rsform';
-import { getAnalysisFor, getDefinitionPrefix } from '../../../models/rsform-api';
+import { getAnalysisFor } from '../../../models/rsform-api';
 import { useRSEdit } from '../rsedit-context';
 
 import { ParsingResult } from './parsing-result';
@@ -120,6 +120,17 @@ export function EditorRSExpression({
 
   function handleCheckExpression(event: React.MouseEvent<Element> | null, callback?: (parse: RO<IExpressionParseDTO>) => void) {
     if (event?.ctrlKey || event?.metaKey) {
+      checkConstituenta(value, activeCst, parse => {
+        onChangeLocalParse(parse);
+        if (parse.errors.length > 0) {
+          onShowError(parse.errors[0], parse.prefixLen);
+        } else {
+          rsInput.current?.view?.focus();
+        }
+        setIsModified(false);
+        callback?.(parse);
+      });
+    } else {
       try {
         const parse = getAnalysisFor(value, activeCst, schema);
         const old_parse: IExpressionParseDTO = {
@@ -127,7 +138,7 @@ export function EditorRSExpression({
           prefixLen: 0,
           syntax: Syntax.MATH,
           typification: labelType(parse.type),
-          valueClass: parse.valueClass,
+          valueClass: parse.valueClass ?? ValueClass.INVALID,
           errors: parse.errors.map(error => ({
             errorType: error.code,
             position: error.position,
@@ -152,17 +163,6 @@ export function EditorRSExpression({
         toast.error(message);
         console.error(err);
       }
-    } else {
-      checkConstituenta(value, activeCst, parse => {
-        onChangeLocalParse(parse);
-        if (parse.errors.length > 0) {
-          onShowError(parse.errors[0], parse.prefixLen);
-        } else {
-          rsInput.current?.view?.focus();
-        }
-        setIsModified(false);
-        callback?.(parse);
-      });
     }
   }
 
@@ -199,22 +199,14 @@ export function EditorRSExpression({
     if (event.ctrlKey || event.metaKey) {
       const tree = rslangParser.parse(value);
       const ast = buildTree(tree.cursor());
-      normalizeAST(ast, value);
-      const flatAst = flattenAst(ast);
-      showAST({ syntaxTree: flatAst, expression: value });
-    } else if (event.altKey) {
-      const tree = rslangParser.parse(value);
-      const ast = buildTree(tree.cursor());
       const flatAst = flattenAst(ast);
       showAST({ syntaxTree: flatAst, expression: value });
     } else {
-      handleCheckExpression(null, parse => {
-        if (!parse.astText) {
-          toast.error(errorMsg.astFailed);
-        } else {
-          showAST({ syntaxTree: parse.ast, expression: getDefinitionPrefix(activeCst) + value });
-        }
-      });
+      const tree = rslangParser.parse(value);
+      const ast = buildTree(tree.cursor());
+      normalizeAST(ast, value);
+      const flatAst = flattenAst(ast);
+      showAST({ syntaxTree: flatAst, expression: value });
     }
   }
 

@@ -147,9 +147,9 @@ export function describeRSError(error: RO<IRSErrorDescription>): string {
     case RSErrorCode.syntax:
       return 'Неопределенная синтаксическая ошибка';
     case RSErrorCode.missingParenthesis:
-      return 'Некорректная конструкция языка родов структур, проверьте структуру выражения';
+      return "Некорректная конструкция, пропущен символ ')'";
     case RSErrorCode.missingCurlyBrace:
-      return "Пропущен символ '}'";
+      return "Некорректная конструкция, пропущен символ '}'";
     case RSErrorCode.invalidQuantifier:
       return 'Некорректная кванторная декларация';
     case RSErrorCode.invalidImperative:

@@ -1,8 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
 import { printTree } from '@/utils/codemirror';
+import { buildTree } from '@/utils/parsing';
+
+import { RSErrorCode, type RSErrorDescription } from '../models/error';
 
 import { parser } from './parser';
+import { extractSyntaxErrors } from './syntax-errors';
 
 const testSuccess = [
   ['a1', '[Expression[Setexpr[Local]]]'],
@@ -44,6 +48,13 @@ const testError = [
   ['∀a∈X1 D{b∈S1| 1=1}', '[Expression[Logic[Logic_unary[Logic_quantor[∀][Variable_pack[Variable[Local]]][∈][Setexpr[Global]][Logic[Logic_predicates[Setexpr[Declarative[PrefixD][{][Variable[Local]][∈][Setexpr[Global]][|][Logic[Logic_predicates[Setexpr[Integer]][=][Setexpr[Integer]]]][}]]][⚠]]]]]]]']
 ];
 
+const testErrorData = [
+  ['(', { code: RSErrorCode.missingParenthesis, position: 1 }],
+  ['{X1', { code: RSErrorCode.missingCurlyBrace, position: 3 }],
+  ['∀∈X1 (1=1)', { code: RSErrorCode.expectedLocal, position: 1 }],
+  ['∀σ∈S2 ∀(ξ,δ,π)∈σ (ξ∈δ & δ∈{pr1(π), pr2(π)}', { code: RSErrorCode.missingParenthesis, position: 42 }],
+];
+
 describe('Testing RSParser correct inputs', () => {
   testSuccess.forEach(([input, expectedTree]) => {
     it(`Parse "${input}"`, () => {
@@ -53,11 +64,34 @@ describe('Testing RSParser correct inputs', () => {
   });
 });
 
-describe('Testing RSParser error inputs', () => {
+describe('Testing RSParser error inputs AST', () => {
   testError.forEach(([input, expectedTree]) => {
     it(`Parse "${input}"`, () => {
       const tree = parser.parse(input);
       expect(printTree(tree)).toBe(expectedTree);
     });
+  });
+});
+
+describe('Testing RSParser error data', () => {
+  testErrorData.forEach(([input, expectedError]) => {
+    it(`Parse "${input as string}"`, () => {
+      const tree = parser.parse(input as string);
+      const ast = buildTree(tree.cursor());
+      expect(ast.hasError).toBe(true);
+      const errors: RSErrorDescription[] = [];
+      extractSyntaxErrors(ast, error => (errors.push(error)));
+      expect(errors.length).toBe(1);
+      expect(errors[0]).toEqual(expectedError);
+    });
+  });
+
+  it('Quantor expressions', () => {
+    const tree = parser.parse('∀X1∈X1 (1=1)');
+    const ast = buildTree(tree.cursor());
+    const errors: RSErrorDescription[] = [];
+    extractSyntaxErrors(ast, error => (errors.push(error)));
+    expect(errors.length).toBe(2);
+    expect(errors[1]).toEqual({ code: RSErrorCode.expectedLocal, position: 3 });
   });
 });

@@ -402,9 +402,8 @@ function parseCst(target: IConstituenta, analyzer: RSLangAnalyzer) {
       expected: typeClassForCstType(cType),
       isDomain: cType === CstType.STRUCTURED
     });
-    if (parse.success && parse.type) {
-      analyzer.setType(target.alias, parse.type);
-    }
+
+    analyzer.setGlobal(target.alias, parse.type, parse.valueClass);
     if (target.parse?.status === ParsingStatus.VERIFIED !== parse.success) {
       throw new Error('Parsing status mismatch: ' + target.alias);
     }

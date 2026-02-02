@@ -64,9 +64,9 @@ export interface TermForm {
 /** Represents results of RSLang analysis. */
 export interface CstParse {
   success: boolean;
-  valueClass: ValueClass;
+  valueClass: ValueClass | null;
   type: ExpressionType | null;
-  ast: AstNode;
+  ast: AstNode | null;
 }
 
 /** Represents Constituenta. */
