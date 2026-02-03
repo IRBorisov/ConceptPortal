@@ -1,9 +1,9 @@
 import { type RO } from '@/utils/meta';
 import { type AstNodeBase } from '@/utils/parsing';
 
-import { type IRSErrorDescription, RSErrorCode } from './models/error';
-import { TokenID } from './models/language';
-import { type ExpressionType, TypeClass, TypeID } from './models/typification';
+import { TokenID } from './parser/token';
+import { type ExpressionType, TypeClass, TypeID } from './semantic/typification';
+import { RSErrorCode } from './error';
 
 const INTEGER_TYPE_NAME = 'Z';
 const ANY_TYPE_NAME = 'R0';
@@ -139,11 +139,11 @@ export function labelRSLangNode(node: RO<AstNodeBase>): string {
 }
 
 /** Generates error description for {@link IRSErrorDescription}. */
-export function describeRSError(error: RO<IRSErrorDescription>): string {
+export function describeRSError(code: RSErrorCode, params: readonly string[] = []): string {
   // prettier-ignore
-  switch (error.errorType) {
+  switch (code) {
     case RSErrorCode.unknownSymbol:
-      return `Неизвестный символ: ${error.params[0]}`;
+      return `Неизвестный символ: ${params[0]}`;
     case RSErrorCode.syntax:
       return 'Неопределенная синтаксическая ошибка';
     case RSErrorCode.missingParenthesis:
@@ -159,73 +159,73 @@ export function describeRSError(error: RO<IRSErrorDescription>): string {
     case RSErrorCode.expectedLocal:
       return 'Ожидалось имя локальной переменной';
     case RSErrorCode.expectedType:
-      return `Некорректный тип выражения. Ожидаемый тип: ${error.params[0]}`;
+      return `Некорректный тип выражения. Ожидаемый тип: ${params[0]}`;
 
     case RSErrorCode.localDoubleDeclare:
-      return `Предупреждение! Повторное объявление локальной переменной ${error.params[0]}`;
+      return `Предупреждение! Повторное объявление локальной переменной ${params[0]}`;
     case RSErrorCode.localNotUsed:
-      return `Предупреждение! Переменная объявлена, но не использована: ${error.params[0]}`;
+      return `Предупреждение! Переменная объявлена, но не использована: ${params[0]}`;
     case RSErrorCode.localUndeclared:
-      return `Использование необъявленной переменной: ${error.params[0]}`;
+      return `Использование необъявленной переменной: ${params[0]}`;
     case RSErrorCode.localShadowing:
-      return `Повторное объявление переменной: ${error.params[0]}`;
+      return `Повторное объявление переменной: ${params[0]}`;
 
     case RSErrorCode.typesNotEqual:
-      return `Типизация операндов не совпадает! ${error.params[0]} != ${error.params[1]}`;
+      return `Типизация операндов не совпадает! ${params[0]} != ${params[1]}`;
     case RSErrorCode.globalNotTyped:
-      return `Типизация конституенты не определена: ${error.params[0]}`;
+      return `Типизация конституенты не определена: ${params[0]}`;
     case RSErrorCode.invalidDecart:
-      return `τ(α×b) = 𝔅(𝔇τ(α)×𝔇τ(b)). Некорректная типизация аргумента: ${error.params[0]}`;
+      return `τ(α×b) = 𝔅(𝔇τ(α)×𝔇τ(b)). Некорректная типизация аргумента: ${params[0]}`;
     case RSErrorCode.invalidBoolean:
-      return `τ(ℬ(a)) = 𝔅𝔅𝔇τ(a). Некорректная типизация аргумента: ${error.params[0]}`;
+      return `τ(ℬ(a)) = 𝔅𝔅𝔇τ(a). Некорректная типизация аргумента: ${params[0]}`;
     case RSErrorCode.invalidTypeOperation:
-      return `Типизация операнда теоретико-множественной операции не корректна: ${error.params[0]}`;
+      return `Типизация операнда теоретико-множественной операции не корректна: ${params[0]}`;
     case RSErrorCode.invalidCard:
-      return `Некорректная типизация аргумента операции мощности: ${error.params[0]}`;
+      return `Некорректная типизация аргумента операции мощности: ${params[0]}`;
     case RSErrorCode.invalidDebool:
-      return `τ(debool(a)) = 𝔇τ(a). Некорректная типизация аргумента: ${error.params[0]}`;
+      return `τ(debool(a)) = 𝔇τ(a). Некорректная типизация аргумента: ${params[0]}`;
     case RSErrorCode.globalFuncWithoutArgs:
-      return `Некорректное использование имени функции без аргументов: ${error.params[0]}`;
+      return `Некорректное использование имени функции без аргументов: ${params[0]}`;
     case RSErrorCode.invalidReduce:
-      return `τ(red(a)) = 𝔅𝔇𝔇τ(a). Некорректная типизация аргумента: ${error.params[0]}`;
+      return `τ(red(a)) = 𝔅𝔇𝔇τ(a). Некорректная типизация аргумента: ${params[0]}`;
     case RSErrorCode.invalidProjectionTuple:
-      return `Проекция не определена: ${error.params[0]} -> ${error.params[1]}`;
+      return `Проекция не определена: ${params[0]} -> ${params[1]}`;
     case RSErrorCode.invalidProjectionSet:
-      return `τ(Pri(a)) = 𝔅𝒞i𝔇τ(a). Некорректная типизация аргумента: ${error.params[0]} -> ${error.params[1]}`;
+      return `τ(Pri(a)) = 𝔅𝒞i𝔇τ(a). Некорректная типизация аргумента: ${params[0]} -> ${params[1]}`;
     case RSErrorCode.invalidEnumeration:
-      return `Типизация элементов перечисления не совпадает: ${error.params[0]} != ${error.params[1]}`;
+      return `Типизация элементов перечисления не совпадает: ${params[0]} != ${params[1]}`;
     case RSErrorCode.invalidCortegeDeclare:
       return `Количество переменных в кортеже не соответствует размерности декартова произведения`;
     case RSErrorCode.localOutOfScope:
-      return `Использование имени переменной вне области действия: ${error.params[0]}`;
+      return `Использование имени переменной вне области действия: ${params[0]}`;
     case RSErrorCode.invalidElementPredicate:
-      return `Несоответствие типизаций операндов для оператора: ${error.params[0]}${error.params[1]}${error.params[2]}`;
+      return `Несоответствие типизаций операндов для оператора: ${params[0]}${params[1]}${params[2]}`;
     case RSErrorCode.invalidEmptySetUsage:
       return 'Бессмысленное использование пустого множества';
     case RSErrorCode.invalidArgsArity:
-      return `Неверное число аргументов терм-функции: ${error.params[0]} != ${error.params[1]}`;
+      return `Неверное число аргументов терм-функции: ${params[0]} != ${params[1]}`;
     case RSErrorCode.invalidArgumentType:
-      return `Типизация аргумента терм-функции не соответствует объявленной: ${error.params[0]} != ${error.params[1]}`;
+      return `Типизация аргумента терм-функции не соответствует объявленной: ${params[0]} != ${params[1]}`;
     case RSErrorCode.globalStructure:
       return `Область определения родовой структуры не корректна`;
     case RSErrorCode.radicalUsage:
-      return `Радикалы запрещены вне деклараций терм-функции: ${error.params[0]}`;
+      return `Радикалы запрещены вне деклараций терм-функции: ${params[0]}`;
     case RSErrorCode.invalidFilterArgumentType:
-      return `Типизация аргумента фильтра не корректна: ${error.params[0]}(${error.params[1]})`;
+      return `Типизация аргумента фильтра не корректна: ${params[0]}(${params[1]})`;
     case RSErrorCode.invalidFilterArity:
       return `Количество параметров фильтра не соответствует количеству индексов`;
     case RSErrorCode.arithmeticNotSupported:
-      return `Тип не поддерживает арифметические операторы: ${error.params[0]}`;
+      return `Тип не поддерживает арифметические операторы: ${params[0]}`;
     case RSErrorCode.typesNotCompatible:
-      return `Типы не совместимы для выбранной операции: ${error.params[0]} и ${error.params[1]}`;
+      return `Типы не совместимы для выбранной операции: ${params[0]} и ${params[1]}`;
     case RSErrorCode.orderingNotSupported:
-      return `Тип не поддерживает предикаты порядка: ${error.params[0]}`;
+      return `Тип не поддерживает предикаты порядка: ${params[0]}`;
     case RSErrorCode.globalNoValue:
-      return `Используется неинтерпретируемый глобальный идентификатор: ${error.params[0]}`;
+      return `Используется неинтерпретируемый глобальный идентификатор: ${params[0]}`;
     case RSErrorCode.invalidPropertyUsage:
       return `Использование неитерируемого множества в качестве значения`;
     case RSErrorCode.globalMissingAST:
-      return `Не удалось получить дерево разбора для глобального идентификатора: ${error.params[0]}`;
+      return `Не удалось получить дерево разбора для глобального идентификатора: ${params[0]}`;
     case RSErrorCode.globalFuncNoInterpretation:
       return 'Функция не интерпретируется для данных аргументов';
 

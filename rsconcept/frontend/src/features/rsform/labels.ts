@@ -9,11 +9,10 @@ import { prepareTooltip } from '@/utils/utils';
 import { type IVersionInfo } from '../library/backend/types';
 import { type CurrentVersion } from '../library/models/library';
 import { TokenID } from '../rslang';
-import { type IArgumentInfo } from '../rslang/types';
 
 import { ParsingStatus } from './backend/types';
 import { Grammeme, ReferenceType } from './models/language';
-import { CstClass, CstType, ExpressionStatus, type IConstituenta } from './models/rsform';
+import { CstClass, CstType, ExpressionStatus, type IArgumentInfo, type IConstituenta } from './models/rsform';
 import { CstMatchMode, DependencyMode } from './stores/cst-search';
 import { type InteractionMode, type TGColoring, type TGEdgeType } from './stores/term-graph';
 

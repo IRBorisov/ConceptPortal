@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { printTree } from '@/utils/codemirror';
 import { buildTree } from '@/utils/parsing';
 
-import { RSErrorCode, type RSErrorDescription } from '../models/error';
+import { RSErrorCode, type RSErrorDescription } from '../error';
 
 import { parser } from './parser';
 import { extractSyntaxErrors } from './syntax-errors';

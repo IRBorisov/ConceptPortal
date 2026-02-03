@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 
+import { getRSErrorPrefix, isCritical } from '@/features/rslang/error';
 import { describeRSError } from '@/features/rslang/labels';
-import { getRSErrorPrefix, isCritical } from '@/features/rslang/models/error';
 
 import { type RO } from '@/utils/meta';
 
@@ -32,9 +32,9 @@ export function ParsingResult({ isOpen, data, disabled, onShowError }: ParsingRe
             onClick={disabled ? undefined : () => onShowError(error)}
           >
             <span className='mr-1 font-semibold underline'>
-              {isCritical(error.errorType) ? 'Ошибка' : 'Предупреждение'} {`${getRSErrorPrefix(error)}:`}
+              {isCritical(error.errorType) ? 'Ошибка' : 'Предупреждение'} {`${getRSErrorPrefix(error.errorType)}:`}
             </span>
-            <span>{` ${describeRSError(error)}`}</span>
+            <span>{` ${describeRSError(error.errorType, error.params)}`}</span>
           </p>
         );
       })}

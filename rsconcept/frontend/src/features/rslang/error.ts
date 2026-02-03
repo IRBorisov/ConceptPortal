@@ -1,6 +1,4 @@
-import { type RO } from '@/utils/meta';
-
-import { type IRSErrorDescription } from '..';
+/** Module: Error types and functions. */
 
 /** Represents error class. */
 export const RSErrorClass = {
@@ -10,7 +8,6 @@ export const RSErrorClass = {
   UNKNOWN: 3
 } as const;
 export type RSErrorClass = (typeof RSErrorClass)[keyof typeof RSErrorClass];
-export { type IRSErrorDescription } from '../../rsform/backend/types';
 
 /** Represents RSLang expression error description. */
 export interface RSErrorDescription {
@@ -98,10 +95,10 @@ function inferErrorClass(error: RSErrorCode): RSErrorClass {
 }
 
 /** Generate ErrorID label. */
-export function getRSErrorPrefix(error: RO<IRSErrorDescription>): string {
-  const id = error.errorType.toString(16);
+export function getRSErrorPrefix(code: RSErrorCode): string {
+  const id = code.toString(16);
   // prettier-ignore
-  switch (inferErrorClass(error.errorType)) {
+  switch (inferErrorClass(code)) {
     case RSErrorClass.LEXER: return 'L' + id;
     case RSErrorClass.PARSER: return 'P' + id;
     case RSErrorClass.SEMANTIC: return 'S' + id;

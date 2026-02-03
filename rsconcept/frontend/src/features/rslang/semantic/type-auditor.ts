@@ -4,10 +4,10 @@
 
 import { type AstNode, getNodeText } from '@/utils/parsing';
 
+import { type ErrorReporter, RSErrorCode } from '../error';
 import { labelRSLangNode, labelToken, labelType } from '../labels';
+import { TokenID } from '../parser/token';
 
-import { type ErrorReporter, RSErrorCode } from './error';
-import { TokenID } from './language';
 import {
   type Argument, bool, component, debool, type EchelonTuple, EmptySetT,
   type ExpressionType, IntegerT, isRadical, isTypification, LogicT,

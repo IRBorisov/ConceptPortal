@@ -11,8 +11,7 @@ import {
   type IRSForm,
   ParsingStatus
 } from '@/features/rsform';
-import { applyAliasMapping, applyTypificationMapping, extractGlobals, isSetTypification } from '@/features/rslang/api';
-import { type AliasMapping } from '@/features/rslang/types';
+import { type AliasMapping, applyAliasMapping, applyTypificationMapping, extractGlobals, isSetTypification } from '@/features/rslang/api';
 
 import { infoMsg } from '@/utils/labels';
 

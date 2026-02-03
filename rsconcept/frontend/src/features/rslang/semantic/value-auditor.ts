@@ -7,9 +7,10 @@
 
 import { type AstNode, getNodeText } from '@/utils/parsing';
 
-import { ValueClass, type ValueContext } from './calculation';
-import { type ErrorReporter, RSErrorCode } from './error';
-import { TokenID } from './language';
+import { type ErrorReporter, RSErrorCode } from '../error';
+import { TokenID } from '../parser/token';
+
+import { ValueClass, type ValueContext } from './value-class';
 
 
 /** Value auditor for AST value class checking. */

@@ -4,8 +4,6 @@
 
 import { type AstNode, visitAstDFS } from '@/utils/parsing';
 
-import { TokenID } from '../models/language';
-
 import {
   Arguments,
   BigPr, Bool, Boolean, Card, Debool, Declaration, Declarative,
@@ -17,6 +15,7 @@ import {
   Setexpr, Setexpr_binary, Setexpr_enum_min2,
   SmallPr, Tuple, Variable, Variable_pack
 } from './parser.terms';
+import { TokenID } from './token';
 
 /** Normalizes AST to a simple form. */
 export function normalizeAST(ast: AstNode, input: string) {

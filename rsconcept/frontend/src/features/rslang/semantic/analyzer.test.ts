@@ -1,12 +1,11 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { RSErrorCode, type RSErrorDescription } from './error';;
-
+import { RSErrorCode, type RSErrorDescription } from '../error';
 import { labelType, labelTypeClass } from '../labels';
 
 import { type AnalysisOptions, RSLangAnalyzer } from './analyzer';
-import { ValueClass } from './calculation';
 import { basic, bool, tuple, TypeClass } from './typification';
+import { ValueClass } from './value-class';
 
 describe('RSLang analyzer', () => {
   let analyzer: RSLangAnalyzer;

@@ -4,10 +4,9 @@ import { useCallback, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { type ReactCodeMirrorRef } from '@uiw/react-codemirror';
 
+import { TokenID, ValueClass } from '@/features/rslang';
+import { isCritical } from '@/features/rslang/error';
 import { labelRSLangNode, labelType } from '@/features/rslang/labels';
-import { ValueClass } from '@/features/rslang/models/calculation';
-import { isCritical } from '@/features/rslang/models/error';
-import { TokenID } from '@/features/rslang/models/language';
 
 import { useResetOnChange } from '@/hooks/use-reset-on-change';
 import { useDialogsStore } from '@/stores/dialogs';

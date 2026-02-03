@@ -4,14 +4,13 @@ import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { useTemplatesSuspense } from '@/features/library/backend/use-templates';
-import { substituteTemplateArgs } from '@/features/rslang/api';
-import { type IArgumentValue } from '@/features/rslang/types';
+import { type AliasMapping, substituteTemplateArgs } from '@/features/rslang/api';
 
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { type ICreateConstituentaDTO } from '../../backend/types';
 import { useRSFormSuspense } from '../../backend/use-rsform';
-import { type IConstituenta } from '../../models/rsform';
+import { type IArgumentValue, type IConstituenta } from '../../models/rsform';
 import { generateAlias, inferTemplatedType } from '../../models/rsform-api';
 
 import { type DlgCstTemplateProps } from './dlg-cst-template';
@@ -35,7 +34,15 @@ export const TemplateState = ({ children }: React.PropsWithChildren) => {
     }
 
     const newType = inferTemplatedType(prototype.cst_type, newArgs);
-    setValue('definition_formal', substituteTemplateArgs(prototype.definition_formal, newArgs));
+
+    const mapping: AliasMapping = {};
+    newArgs
+      .filter(arg => !!arg.value)
+      .forEach(arg => {
+        mapping[arg.alias] = arg.value!;
+      });
+
+    setValue('definition_formal', substituteTemplateArgs(prototype.definition_formal, mapping));
     setValue('cst_type', newType, { shouldValidate: true });
     setValue('alias', generateAlias(newType, schema), { shouldValidate: true });
   }

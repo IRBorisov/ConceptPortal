@@ -1,13 +1,12 @@
 import { type AstNode, buildTree } from '@/utils/parsing';
 
+import { RSErrorCode, type RSErrorDescription } from '../error';
 import { labelTypeClass } from '../labels';
 import { normalizeAST } from '../parser/normalize';
 import { parser as rslangParser } from '../parser/parser';
 import { extractSyntaxErrors } from '../parser/syntax-errors';
+import { TokenID } from '../parser/token';
 
-import { ValueClass, type ValueContext } from './calculation';
-import { RSErrorCode, type RSErrorDescription } from './error';
-import { TokenID } from './language';
 import { TypeAuditor } from './type-auditor';
 import {
   basic, bool, constant, debool,
@@ -15,6 +14,7 @@ import {
 } from './typification';
 import { getTypeClass } from './typification-api';
 import { ValueAuditor } from './value-auditor';
+import { ValueClass, type ValueContext } from './value-class';
 
 export interface AnalysisOutput {
   success: boolean;

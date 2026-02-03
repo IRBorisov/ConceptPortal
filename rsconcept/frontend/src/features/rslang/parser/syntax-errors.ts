@@ -4,10 +4,10 @@
 
 import { type AstNode, visitAstDFS } from '@/utils/parsing';
 
-import { type ErrorReporter, RSErrorCode } from '../models/error';
-import { TokenID } from '../models/language';
+import { type ErrorReporter, RSErrorCode } from '../error';
 
 import { Variable } from './parser.terms';
+import { TokenID } from './token';
 
 export function extractSyntaxErrors(ast: AstNode, reporter: ErrorReporter) {
   visitAstDFS(ast, node => extractInternal(node, reporter));

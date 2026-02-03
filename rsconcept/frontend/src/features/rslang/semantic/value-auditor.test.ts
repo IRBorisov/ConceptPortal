@@ -2,12 +2,12 @@ import { beforeEach, describe, expect, it } from 'vitest';
 
 import { buildTree } from '@/utils/parsing';
 
+import { RSErrorCode, type RSErrorDescription } from '../error';
 import { normalizeAST } from '../parser/normalize';
 import { parser as rslangParser } from '../parser/parser';
 
-import { ValueClass, type ValueContext } from './calculation';
-import { RSErrorCode, type RSErrorDescription } from './error';
 import { ValueAuditor } from './value-auditor';
+import { ValueClass, type ValueContext } from './value-class';
 
 
 // Helper to build AST

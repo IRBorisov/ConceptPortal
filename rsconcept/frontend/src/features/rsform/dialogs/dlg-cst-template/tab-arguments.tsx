@@ -4,8 +4,6 @@ import { useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { createColumnHelper } from '@tanstack/react-table';
 
-import { type IArgumentValue } from '@/features/rslang/types';
-
 import { MiniButton } from '@/components/control';
 import { DataTable, type IConditionalStyle } from '@/components/data-table';
 import { IconReset } from '@/components/icons';
@@ -14,7 +12,7 @@ import { NoData } from '@/components/view';
 import { type ICreateConstituentaDTO } from '../../backend/types';
 import { PickConstituenta } from '../../components/pick-constituenta';
 import { RSInput } from '../../components/rs-input';
-import { type IConstituenta, type IRSForm } from '../../models/rsform';
+import { type IArgumentValue, type IConstituenta, type IRSForm } from '../../models/rsform';
 import { isFunctional, isLogical } from '../../models/rsform-api';
 
 import { useTemplateContext } from './template-context';

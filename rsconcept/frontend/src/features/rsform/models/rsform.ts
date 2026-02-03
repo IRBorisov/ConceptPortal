@@ -8,13 +8,11 @@ import {
   type ILibraryItemReference,
   type IVersionInfo
 } from '@/features/library';
-import { type ExpressionType, type RSLangAnalyzer } from '@/features/rslang';
-import { type ValueClass } from '@/features/rslang/models/calculation';
+import { type ExpressionType, type RSLangAnalyzer, type ValueClass } from '@/features/rslang';
 
 import { type Graph } from '@/models/graph';
 import { type AstNode } from '@/utils/parsing';
 
-import { type IArgumentInfo } from '../../rslang/types';
 import { type IAttribution, type ParsingStatus } from '../backend/types';
 
 /** Represents {@link IConstituenta} type. */
@@ -30,6 +28,25 @@ export const CstType = {
   THEOREM: 'theorem'
 } as const;
 export type CstType = (typeof CstType)[keyof typeof CstType];
+
+
+/** Represents function argument definition. */
+export interface IArgumentInfo {
+  alias: string;
+  typification: string;
+}
+
+/** Represents global identifier type info. */
+export interface ITypeInfo {
+  alias: string;
+  result: string;
+  args: IArgumentInfo[];
+}
+
+/** Represents function argument value. */
+export interface IArgumentValue extends IArgumentInfo {
+  value?: string;
+}
 
 // CstType constant for category dividers in TemplateSchemas
 export const CATEGORY_CST_TYPE = CstType.THEOREM;

@@ -3,7 +3,8 @@
  */
 import { type RO } from '@/utils/meta';
 
-import { type AliasMapping, type IArgumentValue } from './types';
+/** Represents alias mapping. */
+export type AliasMapping = Record<string, string>;
 
 // cspell:disable
 const LOCALS_REGEXP = /[_a-zα-ω][a-zα-ω]*\d*/g;
@@ -73,18 +74,10 @@ export function splitTemplateDefinition(target: string) {
  * It replaces template argument placeholders in the expression with their corresponding values
  * from the provided arguments.
  */
-export function substituteTemplateArgs(expression: string, args: RO<IArgumentValue[]>): string {
-  if (args.every(arg => !arg.value)) {
+export function substituteTemplateArgs(expression: string, mapping: AliasMapping): string {
+  if (Object.keys(mapping).length === 0) {
     return expression;
   }
-
-  const mapping: AliasMapping = {};
-  args
-    .filter(arg => !!arg.value)
-    .forEach(arg => {
-      mapping[arg.alias] = arg.value!;
-    });
-
   let { head, body } = splitTemplateDefinition(expression);
   body = applyPattern(body, mapping, LOCALS_REGEXP);
   const argTexts = head.split(',').map(text => text.trim());

@@ -3,10 +3,8 @@
  */
 
 import { BASIC_SCHEMAS, type ILibraryItem } from '@/features/library';
-import { RSLangAnalyzer, TypeClass } from '@/features/rslang';
-import { type AnalysisOutput } from '@/features/rslang/models/analyzer';
-import { ValueClass } from '@/features/rslang/models/calculation';
-import { type IArgumentValue } from '@/features/rslang/types';
+import { RSLangAnalyzer, TypeClass, ValueClass } from '@/features/rslang';
+import { type AnalysisOutput } from '@/features/rslang';
 
 import { type RO } from '@/utils/meta';
 import { TextMatcher } from '@/utils/utils';
@@ -14,7 +12,11 @@ import { TextMatcher } from '@/utils/utils';
 import { ParsingStatus } from '../backend/types';
 import { CstMatchMode } from '../stores/cst-search';
 
-import { CATEGORY_CST_TYPE, CstClass, CstType, ExpressionStatus, type IConstituenta, type IRSForm } from './rsform';
+import {
+  CATEGORY_CST_TYPE,
+  CstClass, CstType, ExpressionStatus,
+  type IArgumentValue, type IConstituenta, type IRSForm
+} from './rsform';
 
 /**
  * Checks if a given target {@link IConstituenta} matches the specified query using the provided matching mode.

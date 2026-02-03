@@ -2,8 +2,8 @@
  * Module: RSForm data loading and processing.
  */
 
+import { ValueClass } from '@/features/rslang';
 import { extractGlobals, isSimpleExpression, splitTemplateDefinition } from '@/features/rslang/api';
-import { ValueClass } from '@/features/rslang/models/calculation';
 
 import { Graph } from '@/models/graph';
 import { type RO } from '@/utils/meta';

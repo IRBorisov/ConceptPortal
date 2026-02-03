@@ -2,11 +2,10 @@ import { beforeEach, describe, expect, it } from 'vitest';
 
 import { buildTree } from '@/utils/parsing';
 
-import { parser as rslangParser } from '../parser/parser';
-
-import { RSErrorCode, type RSErrorDescription } from './error';;
+import { RSErrorCode, type RSErrorDescription } from '../error';
 import { labelType } from '../labels';
 import { normalizeAST } from '../parser/normalize';
+import { parser as rslangParser } from '../parser/parser';
 
 import { TypeAuditor } from './type-auditor';
 import { basic, bool, constant, LogicT, tuple, type TypeContext, TypeID } from './typification';
