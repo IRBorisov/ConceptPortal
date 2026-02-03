@@ -370,11 +370,11 @@ export function typeClassForCstType(cstType: CstType): TypeClass {
   }
 }
 
-export function getAnalysisFor(expression: string, cst: IConstituenta, schema: IRSForm): AnalysisOutput {
+export function getAnalysisFor(expression: string, cstType: CstType, schema: IRSForm): AnalysisOutput {
   const analyzer = schema.analyzer ?? parseRSForm(schema);
   return analyzer.check(expression, {
-    expected: typeClassForCstType(cst.cst_type),
-    isDomain: cst.cst_type === CstType.STRUCTURED,
+    expected: typeClassForCstType(cstType),
+    isDomain: cstType === CstType.STRUCTURED,
   });
 }
 

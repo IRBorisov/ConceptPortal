@@ -131,7 +131,7 @@ export function EditorRSExpression({
       });
     } else {
       try {
-        const parse = getAnalysisFor(value, activeCst, schema);
+        const parse = getAnalysisFor(value, activeCst.cst_type, schema);
         const old_parse: IExpressionParseDTO = {
           parseResult: parse.success,
           prefixLen: 0,

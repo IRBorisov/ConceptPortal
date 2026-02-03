@@ -2,10 +2,15 @@
  * Module: Multi-graph for typifications.
  */
 
-import { PARAMETER } from '@/utils/constants';
-import { type RO } from '@/utils/meta';
-
-import { type IArgumentInfo } from './rsform';
+import { TypeID, type Typification } from '@/features/rslang';
+import { labelType } from '@/features/rslang/labels';
+import {
+  bool,
+  type EchelonCollection,
+  type EchelonTuple,
+  type ExpressionType,
+  tuple
+} from '@/features/rslang/semantic/typification';
 
 /** Represents a single node of a {@link TypificationGraph}. */
 export interface TypificationNodeData extends Record<string, unknown> {
@@ -25,32 +30,48 @@ export class TypificationGraph {
   /** Map of nodes by alias. */
   nodeByAlias = new Map<string, TypificationNodeData>();
 
-  /**
-   * Adds a constituent to the graph.
-   *
-   * @param alias - The alias of the constituent.
-   * @param result - typification of the formal definition.
-   * @param args - arguments for term or predicate function.
-   */
-  addConstituenta(alias: string, result: string, args: RO<IArgumentInfo[]>): void {
-    const argsNode = this.processArguments(args);
-    const resultNode = this.processResult(result);
-    const combinedNode = this.combineResults(resultNode, argsNode);
-    if (!combinedNode) {
+  /** Adds an element to the graph. */
+  addElement(alias: string, type: ExpressionType): void {
+    const node = this.processType(type);
+    if (!node) {
       return;
     }
-    this.addAliasAnnotation(combinedNode.id, alias);
+    this.addAliasAnnotation(node.id, alias);
   }
 
-  addBaseNode(baseAlias: string): TypificationNodeData {
-    const existingNode = this.nodes.find(node => node.text === baseAlias);
+  private processType(type: ExpressionType): TypificationNodeData | null {
+    switch (type.typeID) {
+      case TypeID.logic:
+        return null;
+
+      case TypeID.anyTypification:
+      case TypeID.integer:
+      case TypeID.basic:
+        return this.addBaseNode(type);
+
+      case TypeID.collection: return this.addBooleanNode(type);
+      case TypeID.tuple: return this.addCartesianNode(type);
+
+      case TypeID.function:
+      case TypeID.predicate:
+        const combined = convertFunctionToTypification(type);
+        if (!combined) {
+          return null;
+        }
+        return this.processType(combined);
+    }
+  }
+
+  private addBaseNode(type: Typification): TypificationNodeData {
+    const text = labelType(type);
+    const existingNode = this.nodes.find(node => node.text === text);
     if (existingNode) {
       return existingNode;
     }
 
     const node: TypificationNodeData = {
       id: this.nodes.length,
-      text: baseAlias,
+      text: text,
       rank: 0,
       parents: [],
       annotations: []
@@ -60,23 +81,22 @@ export class TypificationGraph {
     return node;
   }
 
-  addBooleanNode(parent: number): TypificationNodeData {
-    const existingNode = this.nodes.find(node => node.parents.length === 1 && node.parents[0] === parent);
+  private addBooleanNode(type: EchelonCollection): TypificationNodeData | null {
+    const baseNode = this.processType(type.base);
+    if (!baseNode) {
+      return null;
+    }
+
+    const existingNode = this.nodes.find(node => node.parents.length === 1 && node.parents[0] === baseNode.id);
     if (existingNode) {
       return existingNode;
     }
 
-    const parentNode = this.nodeById.get(parent);
-    if (!parentNode) {
-      throw new Error(`Parent node ${parent} not found`);
-    }
-
-    const text = parentNode.parents.length === 1 ? `ℬ${parentNode.text}` : `ℬ(${parentNode.text})`;
     const node: TypificationNodeData = {
       id: this.nodes.length,
-      rank: parentNode.rank + 1,
-      text: text,
-      parents: [parent],
+      rank: baseNode.rank + 1,
+      text: labelType(type),
+      parents: [baseNode.id],
       annotations: []
     };
     this.nodes.push(node);
@@ -84,25 +104,24 @@ export class TypificationGraph {
     return node;
   }
 
-  addCartesianNode(parents: number[]): TypificationNodeData {
+  private addCartesianNode(type: EchelonTuple): TypificationNodeData | null {
+    const factors = type.factors.map(factor => this.processType(factor)).filter(factor => factor !== null);
+    if (factors.length !== type.factors.length) {
+      return null;
+    }
+
     const existingNode = this.nodes.find(
-      node => node.parents.length === parents.length && node.parents.every((p, i) => p === parents[i])
+      node => node.parents.length === factors.length && node.parents.every((p, i) => p === factors[i].id)
     );
     if (existingNode) {
       return existingNode;
     }
 
-    const parentNodes = parents.map(parent => this.nodeById.get(parent));
-    if (parentNodes.some(parent => !parent) || parents.length < 2) {
-      throw new Error(`Parent nodes ${parents.join(', ')} not found`);
-    }
-
-    const text = parentNodes.map(node => (node!.parents.length > 1 ? `(${node!.text})` : node!.text)).join('×');
     const node: TypificationNodeData = {
       id: this.nodes.length,
-      text: text,
-      rank: Math.max(...parentNodes.map(parent => parent!.rank)) + 1,
-      parents: parents,
+      text: labelType(type),
+      rank: Math.max(...factors.map(factor => factor.rank)) + 1,
+      parents: factors.map(factor => factor.id),
       annotations: []
     };
     this.nodes.push(node);
@@ -110,7 +129,7 @@ export class TypificationGraph {
     return node;
   }
 
-  addAliasAnnotation(node: number, alias: string): void {
+  private addAliasAnnotation(node: number, alias: string): void {
     const nodeToAnnotate = this.nodeById.get(node);
     if (!nodeToAnnotate) {
       throw new Error(`Node ${node} not found`);
@@ -118,98 +137,16 @@ export class TypificationGraph {
     nodeToAnnotate.annotations.push(alias);
     this.nodeByAlias.set(alias, nodeToAnnotate);
   }
+}
 
-  private processArguments(args: RO<IArgumentInfo[]>): TypificationNodeData | null {
-    if (args.length === 0) {
-      return null;
-    }
-    const argsNodes = args.map(argument => this.parseToNode(argument.typification));
-    if (args.length === 1) {
-      return argsNodes[0];
-    }
-    return this.addCartesianNode(argsNodes.map(node => node.id));
+function convertFunctionToTypification(type: ExpressionType): Typification | null {
+  if (!('args' in type) || type.args.length === 0) {
+    return null;
   }
-
-  private processResult(result: string): TypificationNodeData | null {
-    if (!result || result === PARAMETER.logicLabel) {
-      return null;
-    }
-    return this.parseToNode(result);
-  }
-
-  private combineResults(
-    result: TypificationNodeData | null,
-    args: TypificationNodeData | null
-  ): TypificationNodeData | null {
-    if (!result && !args) {
-      return null;
-    }
-    if (!result) {
-      return this.addBooleanNode(args!.id);
-    }
-    if (!args) {
-      return result;
-    }
-    const argsAndResult = this.addCartesianNode([args.id, result.id]);
-    return this.addBooleanNode(argsAndResult.id);
-  }
-
-  private parseToNode(typification: string): TypificationNodeData {
-    const tokens = this.tokenize(typification);
-    return this.parseTokens(tokens);
-  }
-
-  private tokenize(expression: string): string[] {
-    const tokens = [];
-    let currentToken = '';
-    for (const char of expression) {
-      if (['(', ')', '×', 'ℬ'].includes(char)) {
-        if (currentToken) {
-          tokens.push(currentToken);
-          currentToken = '';
-        }
-        tokens.push(char);
-      } else {
-        currentToken += char;
-      }
-    }
-    if (currentToken) {
-      tokens.push(currentToken);
-    }
-    return tokens;
-  }
-
-  private parseTokens(tokens: string[], isBoolean: boolean = false): TypificationNodeData {
-    const stack: TypificationNodeData[] = [];
-    let isCartesian = false;
-    while (tokens.length > 0) {
-      const token = tokens.shift();
-      if (!token) {
-        throw new Error('Unexpected end of expression');
-      }
-
-      if (isBoolean && token === '(') {
-        return this.parseTokens(tokens);
-      }
-
-      if (token === ')') {
-        break;
-      } else if (token === 'ℬ') {
-        const innerNode = this.parseTokens(tokens, true);
-        stack.push(this.addBooleanNode(innerNode.id));
-      } else if (token === '×') {
-        isCartesian = true;
-      } else if (token === '(') {
-        stack.push(this.parseTokens(tokens));
-      } else {
-        stack.push(this.addBaseNode(token));
-      }
-    }
-
-    if (isCartesian) {
-      return this.addCartesianNode(stack.map(node => node.id));
-    } else {
-      return stack.pop()!;
-    }
+  const args = type.args.length === 1 ? type.args[0].type : tuple(type.args.map(arg => arg.type));
+  if (type.result.typeID === TypeID.logic) {
+    return bool(args);
+  } else {
+    return bool(tuple([type.result, args]));
   }
 }

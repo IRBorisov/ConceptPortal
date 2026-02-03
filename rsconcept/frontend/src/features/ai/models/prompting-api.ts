@@ -2,7 +2,7 @@ import { type IBlock, type IOperationSchema, NodeType } from '@/features/oss/mod
 import { type IConstituenta, type IRSForm } from '@/features/rsform';
 import { labelCstTypification } from '@/features/rsform/labels';
 import { CstType } from '@/features/rsform/models/rsform';
-import { isBasicConcept } from '@/features/rsform/models/rsform-api';
+import { isBasicConcept, parseRSForm } from '@/features/rsform/models/rsform-api';
 import { TypificationGraph } from '@/features/rsform/models/typification-graph';
 
 import { type Graph } from '@/models/graph';
@@ -99,8 +99,9 @@ export function varSchemaGraph(schema: IRSForm): string {
 /** Generates a prompt for a schema type graph variable. */
 export function varSchemaTypeGraph(schema: IRSForm): string {
   const graph = new TypificationGraph();
+  parseRSForm(schema);
   schema.items.forEach(item => {
-    if (item.parse) graph.addConstituenta(item.alias, item.parse.typification, item.parse.args);
+    if (item.analysis?.type) graph.addElement(item.alias, item.analysis.type);
   });
 
   let result = stringifySchemaIntro(schema);

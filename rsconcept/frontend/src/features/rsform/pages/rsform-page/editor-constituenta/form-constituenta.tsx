@@ -1,10 +1,12 @@
 'use no memo'; // TODO: remove when react hook forms are compliant with react compiler
 'use client';
 
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { useEffect, useEffectEvent, useLayoutEffect, useMemo, useState } from 'react';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { zodResolver } from '@hookform/resolvers/zod';
+
+import { TypeID } from '@/features/rslang';
 
 import { MiniButton, SubmitButton } from '@/components/control';
 import { TextButton } from '@/components/control/text-button';
@@ -20,7 +22,6 @@ import { promptUnsaved } from '@/utils/utils';
 import {
   type IExpressionParseDTO,
   type IUpdateConstituentaDTO,
-  ParsingStatus,
   schemaUpdateConstituenta
 } from '../../../backend/types';
 import { useClearAttributions } from '../../../backend/use-clear-attributions';
@@ -39,7 +40,7 @@ import {
   labelTypification
 } from '../../../labels';
 import { CstType, type IConstituenta, type IRSForm } from '../../../models/rsform';
-import { isBaseSet, isBasicConcept } from '../../../models/rsform-api';
+import { getAnalysisFor, isBaseSet, isBasicConcept } from '../../../models/rsform-api';
 import { EditorRSExpression } from '../editor-rsexpression';
 
 interface FormConstituentaProps {
@@ -55,6 +56,7 @@ interface FormConstituentaProps {
 export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst, onOpenEdit }: FormConstituentaProps) {
   const isModified = useModificationStore(state => state.isModified);
   const setIsModified = useModificationStore(state => state.setIsModified);
+  const onModifiedEvent = useEffectEvent(setIsModified);
   const isProcessing = useMutatingRSForm();
 
   const { updateConstituenta } = useUpdateConstituenta();
@@ -84,6 +86,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
       }
     }
   });
+  const definition = useWatch({ control, name: 'item_data.definition_formal' });
   const [forceComment, setForceComment] = useState(false);
   const [localParse, setLocalParse] = useState<RO<IExpressionParseDTO> | null>(null);
 
@@ -99,18 +102,6 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
     [localParse, activeCst]
   );
 
-  const typeInfo = useMemo(
-    () =>
-      activeCst.parse
-        ? {
-          alias: activeCst.alias,
-          result: localParse ? localParse.typification : activeCst.parse.typification,
-          args: localParse ? localParse.args : activeCst.parse.args
-        }
-        : null,
-    [activeCst, localParse]
-  );
-
   const attributions = useMemo(
     () => activeCst.attributes.map(id => schema.cstByID.get(id)!),
     [activeCst.attributes, schema.cstByID]
@@ -120,7 +111,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
   const isElementary = isBaseSet(activeCst.cst_type);
   const showConvention = !!activeCst.convention || forceComment || isBasic;
 
-  useLayoutEffect(() => setIsModified(false), [activeCst.id, setIsModified]);
+  useLayoutEffect(() => onModifiedEvent(false), [activeCst.id]);
 
   useEffect(() => {
     reset({
@@ -149,13 +140,12 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
       setForceComment(false);
       setLocalParse(null);
     }, 0);
-
     return () => clearTimeout(timeoutId);
   }, [activeCst.id, toggleReset, schema]);
 
   useEffect(() => {
-    setIsModified(isDirty);
-  }, [isDirty, setIsModified]);
+    onModifiedEvent(isDirty);
+  }, [isDirty]);
 
   function onSubmit(data: IUpdateConstituentaDTO) {
     void updateConstituenta({ itemID: schema.id, data }).then(() => {
@@ -165,13 +155,19 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
   }
 
   function handleTypeGraph(event: React.MouseEvent<Element>) {
-    if ((localParse && !localParse.parseResult) || activeCst.parse?.status !== ParsingStatus.VERIFIED) {
+    event.stopPropagation();
+    event.preventDefault();
+
+    if (!definition) {
       toast.error(errorMsg.typeStructureFailed);
       return;
     }
-    event.stopPropagation();
-    event.preventDefault();
-    showTypification({ items: typeInfo ? [typeInfo] : [] });
+    const parse = getAnalysisFor(definition, activeCst.cst_type, schema);
+    if (!parse.type || parse.type.typeID === TypeID.logic) {
+      toast.error(errorMsg.typeStructureFailed);
+      return;
+    }
+    showTypification({ items: [{ alias: activeCst.alias, type: parse.type }] });
   }
 
   function handleEditTermForms() {

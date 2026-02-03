@@ -39,8 +39,7 @@ export interface IArgumentInfo {
 /** Represents global identifier type info. */
 export interface ITypeInfo {
   alias: string;
-  result: string;
-  args: IArgumentInfo[];
+  type: ExpressionType;
 }
 
 /** Represents function argument value. */

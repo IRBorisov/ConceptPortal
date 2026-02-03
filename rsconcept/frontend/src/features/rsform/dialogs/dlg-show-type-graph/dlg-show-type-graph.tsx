@@ -8,7 +8,6 @@ import { HelpTopic } from '@/features/help';
 import { ModalView } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { errorMsg } from '@/utils/labels';
-import { type RO } from '@/utils/meta';
 
 import { type ITypeInfo } from '../../models/rsform';
 import { TypificationGraph } from '../../models/typification-graph';
@@ -16,7 +15,7 @@ import { TypificationGraph } from '../../models/typification-graph';
 import { MGraphFlow } from './mgraph-flow';
 
 export interface DlgShowTypeGraphProps {
-  items: RO<ITypeInfo[]>;
+  items: ITypeInfo[];
 }
 
 export function DlgShowTypeGraph() {
@@ -24,7 +23,7 @@ export function DlgShowTypeGraph() {
   const hideDialog = useDialogsStore(state => state.hideDialog);
   const graph = (() => {
     const result = new TypificationGraph();
-    items.forEach(item => result.addConstituenta(item.alias, item.result, item.args));
+    items.forEach(item => result.addElement(item.alias, item.type));
     return result;
   })();
 
