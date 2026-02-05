@@ -207,9 +207,7 @@ function normalizeNode(node: AstNode, input: string) {
       return;
 
     case Variable:
-      if (node.children[0].typeID === TokenID.NT_TUPLE) {
-        node.children[0].typeID = TokenID.NT_TUPLE_DECL;
-      }
+      convertTupleDeclaration(node.children[0]);
       promoteSingleChild(node);
       return;
 
@@ -260,6 +258,16 @@ function normalizeNode(node: AstNode, input: string) {
         node.children = [node.children[2], node.children[4], node.children[6]];
       }
       return;
+  }
+}
+
+function convertTupleDeclaration(node: AstNode) {
+  if (node.typeID !== TokenID.NT_TUPLE) {
+    return;
+  }
+  node.typeID = TokenID.NT_TUPLE_DECL;
+  for (const child of node.children) {
+    convertTupleDeclaration(child);
   }
 }
 

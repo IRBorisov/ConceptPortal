@@ -79,7 +79,12 @@ const testData = [
   ['R{(a,b):=S1 | (a \\ a, b)}', '[RECURSIVE[TUPLE_DECLARE[a][b]][S1][TUPLE[\\[a][a]][b]]]'],
   ['I{(a, b) | a:∈X1; b:=a}', '[IMPERATIVE[TUPLE[a][b]][:∈[a][X1]][:=[b][a]]]'],
   ['I{(a, b) | (a,b):∈Z×Z}', '[IMPERATIVE[TUPLE[a][b]][:∈[TUPLE_DECLARE[a][b]][×[Z][Z]]]]'],
-  ['I{(a, b) | a:∈X1; b:=a; (a,b) ∈ S1}', '[IMPERATIVE[TUPLE[a][b]][:∈[a][X1]][:=[b][a]][∈[TUPLE[a][b]][S1]]]']
+  ['I{(a, b) | a:∈X1; b:=a; (a,b) ∈ S1}', '[IMPERATIVE[TUPLE[a][b]][:∈[a][X1]][:=[b][a]][∈[TUPLE[a][b]][S1]]]'],
+  // Functions
+  [
+    '[σ∈ℬ((R1×R1)×R1)] ∀((α1,α2),γ)∈σ ((α2,α1),γ)∈σ',
+    '[FUNCTION_DEFINE[ARGS[ARG[σ][ℬ[×[×[R1][R1]][R1]]]]][∀[TUPLE_DECLARE[TUPLE_DECLARE[α1][α2]][γ]][σ][∈[TUPLE[TUPLE[α2][α1]][γ]][σ]]]]'
+  ],
 ];
 
 // .filter(([input]) => input === 'I{(a, b) | (a,b):∈Z×Z}')
