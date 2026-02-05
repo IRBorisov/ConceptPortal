@@ -24,8 +24,6 @@ export class TypeAuditor {
 
   private context: TypeContext;
   private reporter?: ErrorReporter;
-
-  private currentType: ExpressionType | null = null;
   private locals: LocalContext;
 
   constructor(context: TypeContext) {
@@ -39,19 +37,53 @@ export class TypeAuditor {
     }
     this.reporter = reporter;
     this.clear();
-    const success = this.dispatchVisit(ast);
-    if (!success) {
-      return null;
-    }
-    return this.currentType;
+    return this.dispatchVisit(ast);
   }
 
   private clear(): void {
     this.locals = new LocalContext(this.onError.bind(this));
-    this.currentType = null;
   }
 
-  private dispatchVisit(node: AstNode): boolean {
+  private dispatchDeclare(node: AstNode, domain: Typification): boolean {
+    switch (node.typeID) {
+      case TokenID.ID_LOCAL:
+        return this.declareLocal(node, domain);
+      case TokenID.NT_TUPLE_DECL:
+        return this.declareTuple(node, domain);
+      case TokenID.NT_ENUM_DECL:
+        return this.declareEnumeration(node, domain);
+    }
+    return false;
+  }
+
+  private declareLocal(node: AstNode, domain: Typification): boolean {
+    const localName = getNodeText(node);
+    return this.locals.pushLocal(localName, domain, node.from);
+  }
+
+  private declareTuple(node: AstNode, domain: Typification): boolean {
+    if (domain.typeID !== TypeID.tuple || domain.factors.length !== node.children.length) {
+      this.onError(RSErrorCode.invalidCortegeDeclare, node.children[0].from);
+      return false;
+    }
+    for (let child = 0; child < node.children.length; child++) {
+      if (!this.visitChildDeclaration(node, child, component(domain, child + 1))) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  private declareEnumeration(node: AstNode, domain: Typification): boolean {
+    for (const child of node.children) {
+      if (!this.dispatchDeclare(child, domain)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  private dispatchVisit(node: AstNode): ExpressionType | null {
     switch (node.typeID) {
       case TokenID.ID_GLOBAL:
       case TokenID.ID_FUNCTION:
@@ -61,12 +93,10 @@ export class TypeAuditor {
       case TokenID.ID_LOCAL: return this.visitLocal(node);
       case TokenID.ID_RADICAL: return this.visitRadical(node);
 
-      case TokenID.LIT_INTEGER: return this.setCurrent(IntegerT);
-      case TokenID.LIT_WHOLE_NUMBERS: return this.setCurrent(bool(IntegerT));
+      case TokenID.LIT_INTEGER: return IntegerT;
+      case TokenID.LIT_WHOLE_NUMBERS: return bool(IntegerT);
       case TokenID.LIT_EMPTYSET: return this.visitEmptySet(node);
 
-      case TokenID.NT_TUPLE_DECL: return this.visitTupleDeclaration(node);
-      case TokenID.NT_ENUM_DECL: return this.visitEnumDeclaration(node);
       case TokenID.NT_ARGUMENTS: return this.visitArgumentsEnum(node);
       case TokenID.NT_ARG_DECL: return this.visitArgument(node);
 
@@ -140,68 +170,45 @@ export class TypeAuditor {
       case TokenID.NT_RECURSIVE_FULL:
       case TokenID.NT_RECURSIVE_SHORT:
         return this.visitRecursion(node);
-
-      default:
-        return false;
     }
+    return null;
   }
 
-  private setCurrent(type: ExpressionType | null): boolean {
-    this.currentType = type;
-    return true;
-  }
-
-  private onError(code: RSErrorCode, position: number, params?: string[]): boolean {
+  private onError(code: RSErrorCode, position: number, params?: string[]): null {
     if (this.reporter) {
       this.reporter({ code, position, params });
     }
-    return false;
+    return null;
   }
 
-  private visitChild(node: AstNode, index: number): boolean {
+  private visitChild(node: AstNode, index: number): ExpressionType | null {
     if (index >= node.children.length) {
-      return false;
+      return null;
     }
     return this.dispatchVisit(node.children[index]);
   }
 
   private visitChildDeclaration(node: AstNode, index: number, domain: Typification): boolean {
-    this.currentType = domain;
-    if (!this.visitChild(node, index)) {
+    if (index >= node.children.length) {
       return false;
     }
-    return this.setCurrent(null);
+    if (!this.dispatchDeclare(node.children[index], domain)) {
+      return false;
+    }
+    return true;
   }
 
-  private visitAllAndSetCurrent(node: AstNode, type: ExpressionType | null): boolean {
+  private visitAllAndReturn(node: AstNode, type: ExpressionType | null): ExpressionType | null {
     for (const child of node.children) {
-      if (type !== null) {
-        this.setCurrent(null);
-      }
       if (!this.dispatchVisit(child)) {
-        return false;
+        return null;
       }
     }
-    return this.setCurrent(type);
-  }
-
-  private childType(node: AstNode, index: number): ExpressionType | null {
-    if (index >= node.children.length) {
-      return null;
-    }
-    const savedType = this.currentType;
-    const visitSuccess = this.dispatchVisit(node.children[index]);
-    const result = this.currentType;
-    this.currentType = savedType;
-    if (!visitSuccess) {
-      return null;
-    } else {
-      return result;
-    }
+    return type;
   }
 
   private childTypification(node: AstNode, index: number): Typification | null {
-    const result = this.childType(node, index);
+    const result = this.visitChild(node, index);
     if (result === null || !isTypification(result)) {
       return null;
     } else {
@@ -224,35 +231,24 @@ export class TypeAuditor {
     return debool(result);
   }
 
-  private visitLocal(node: AstNode): boolean {
+  private visitLocal(node: AstNode): ExpressionType | null {
     const localName = getNodeText(node);
-    if (this.currentType !== null) {
-      if (!isTypification(this.currentType)) {
-        return false;
-      }
-      return this.locals.pushLocal(localName, this.currentType as Typification, node.from);
-    } else {
-      const local = this.locals.getLocalType(localName, node.from);
-      if (local === null) {
-        return false;
-      }
-      return this.setCurrent(local);
-    }
+    return this.locals.getLocalType(localName, node.from);
   }
 
-  private visitGlobal(node: AstNode): boolean {
+  private visitGlobal(node: AstNode): ExpressionType | null {
     const alias = getNodeText(node);
     const type = this.context.get(alias);
     if (!type) {
       return this.onError(RSErrorCode.globalNotTyped, node.from, [alias]);
     }
-    return this.setCurrent(type);
+    return type;
   }
 
-  private visitFunctionDefinition(node: AstNode): boolean {
+  private visitFunctionDefinition(node: AstNode): ExpressionType | null {
     this.locals.startScope();
     if (!this.visitChild(node, 0)) {
-      return false;
+      return null;
     }
 
     const args: Argument[] = [];
@@ -262,27 +258,27 @@ export class TypeAuditor {
       }
     }
 
-    const result = this.childType(node, 1);
+    const result = this.visitChild(node, 1);
     if (result === null || result.typeID === TypeID.function || result.typeID === TypeID.predicate) {
-      return false;
+      return null;
     }
     this.locals.endScope(node.from);
     if (result.typeID === TypeID.logic) {
-      return this.setCurrent({
+      return {
         typeID: TypeID.predicate,
         result: result,
         args: args
-      });
+      };
     } else {
-      return this.setCurrent({
+      return {
         typeID: TypeID.function,
         result: result,
         args: args
-      });
+      };
     }
   }
 
-  private visitFunctionCall(node: AstNode): boolean {
+  private visitFunctionCall(node: AstNode): ExpressionType | null {
     const funcName = getNodeText(node.children[0]);
     const funcType = this.context.get(funcName);
     if (funcType?.typeID !== TypeID.function && funcType?.typeID !== TypeID.predicate) {
@@ -290,28 +286,28 @@ export class TypeAuditor {
     }
     const substitutes = this.checkFuncArguments(node, funcName, funcType);
     if (substitutes === null) {
-      return false;
+      return null;
     }
     if (funcType.result.typeID === TypeID.logic) {
-      return this.setCurrent(funcType.result);
+      return funcType.result;
     } else {
       const result = mangleRadicals(funcName, funcType.result);
       if (substitutes.size > 0) {
         substituteBase(result, substitutes);
       }
-      return this.setCurrent(result);
+      return result;
     }
   }
 
-  private visitRadical(node: AstNode): boolean {
+  private visitRadical(node: AstNode): ExpressionType | null {
     const alias = getNodeText(node);
     if (!this.isInsideFuncArgument(node)) {
       return this.onError(RSErrorCode.radicalUsage, node.from, [alias]);
     }
-    return this.setCurrent(bool({ typeID: TypeID.basic, baseID: alias }));
+    return bool({ typeID: TypeID.basic, baseID: alias });
   }
 
-  private visitEmptySet(node: AstNode): boolean {
+  private visitEmptySet(node: AstNode): ExpressionType | null {
     const invalidParents: TokenID[] = [
       TokenID.CARD,
       TokenID.DEBOOL,
@@ -326,46 +322,31 @@ export class TypeAuditor {
     if (invalidParents.includes(node.parent?.typeID as TokenID)) {
       return this.onError(RSErrorCode.invalidEmptySetUsage, node.from);
     }
-    return this.setCurrent(EmptySetT);
+    return EmptySetT;
   }
 
-  private visitTupleDeclaration(node: AstNode): boolean {
-    const type = this.currentType;
-    if (!type || !isTypification(type)) {
-      return false;
-    }
-    if (type.typeID !== TypeID.tuple || type.factors.length !== node.children.length) {
-      return this.onError(RSErrorCode.invalidCortegeDeclare, node.children[0].from);
-    }
-    for (let child = 0; child < node.children.length; child++) {
-      this.currentType = component(type, child + 1);
-      if (!this.visitChild(node, child)) {
-        return false;
-      }
-    }
-    return this.setCurrent(type);
-  }
-
-  private visitArgument(node: AstNode): boolean {
+  private visitArgument(node: AstNode): ExpressionType | null {
     const domain = this.childTypeDebool(node, 1, RSErrorCode.invalidTypeOperation);
     if (domain === null) {
-      return false;
+      return null;
     }
-    this.currentType = domain;
-    return this.visitChild(node, 0) && this.setCurrent(null);
+    if (!this.visitChildDeclaration(node, 0, domain)) {
+      return null;
+    }
+    return domain;
   }
 
-  private visitCard(node: AstNode): boolean {
-    return (
-      this.childTypeDebool(node, 0, RSErrorCode.invalidCard) !== null &&
-      this.setCurrent(IntegerT)
-    );
+  private visitCard(node: AstNode): ExpressionType | null {
+    if (!this.childTypeDebool(node, 0, RSErrorCode.invalidCard)) {
+      return null;
+    }
+    return IntegerT;
   }
 
-  private visitArithmetic(node: AstNode): boolean {
+  private visitArithmetic(node: AstNode): ExpressionType | null {
     const type1 = this.childTypification(node, 0);
     if (type1 === null) {
-      return false;
+      return null;
     }
     if (!('isArithmetic' in type1 && type1.isArithmetic)) {
       return this.onError(RSErrorCode.arithmeticNotSupported, node.children[0].from, [labelType(type1)]);
@@ -373,7 +354,7 @@ export class TypeAuditor {
 
     const type2 = this.childTypification(node, 1);
     if (type2 === null) {
-      return false;
+      return null;
     }
     if (!('isArithmetic' in type2 && type2.isArithmetic)) {
       return this.onError(RSErrorCode.arithmeticNotSupported, node.children[1].from, [labelType(type2)]);
@@ -387,13 +368,13 @@ export class TypeAuditor {
         [labelType(type1), labelType(type2)]
       );
     }
-    return this.setCurrent(result);
+    return result;
   }
 
-  private visitIntegerPredicate(node: AstNode): boolean {
+  private visitIntegerPredicate(node: AstNode): ExpressionType | null {
     const type1 = this.childTypification(node, 0);
     if (type1 === null) {
-      return false;
+      return null;
     }
     if (!('isOrdered' in type1 && type1.isOrdered)) {
       return this.onError(
@@ -405,7 +386,7 @@ export class TypeAuditor {
 
     const type2 = this.childTypification(node, 1);
     if (type2 === null) {
-      return false;
+      return null;
     }
     if (!('isOrdered' in type2 && type2.isOrdered)) {
       return this.onError(
@@ -422,42 +403,42 @@ export class TypeAuditor {
         [labelType(type1), labelType(type2)]
       );
     }
-    return this.setCurrent(LogicT);
+    return LogicT;
   }
 
-  private visitQuantifier(node: AstNode): boolean {
+  private visitQuantifier(node: AstNode): ExpressionType | null {
     this.locals.startScope();
 
     const domain = this.childTypeDebool(node, 1, RSErrorCode.invalidTypeOperation);
     if (domain === null) {
-      return false;
+      return null;
     } else if (!this.visitChildDeclaration(node, 0, domain)) {
-      return false;
+      return null;
     } else if (!this.visitChild(node, 2)) {
-      return false;
+      return null;
     }
 
     this.locals.endScope(node.from);
-    return this.setCurrent(LogicT);
+    return LogicT;
   }
 
-  private visitNegation(node: AstNode): boolean {
-    return this.visitAllAndSetCurrent(node, LogicT);
+  private visitNegation(node: AstNode): ExpressionType | null {
+    return this.visitAllAndReturn(node, LogicT);
   }
 
-  private visitLogicBinary(node: AstNode): boolean {
-    return this.visitAllAndSetCurrent(node, LogicT);
+  private visitLogicBinary(node: AstNode): ExpressionType | null {
+    return this.visitAllAndReturn(node, LogicT);
   }
 
-  private visitEquals(node: AstNode): boolean {
+  private visitEquals(node: AstNode): ExpressionType | null {
     const type1 = this.childTypification(node, 0);
     if (type1 === null) {
-      return false;
+      return null;
     }
 
     const type2 = this.childTypification(node, 1);
     if (type2 === null) {
-      return false;
+      return null;
 
     }
     if (!checkCompatibility(type1, type2)) {
@@ -467,13 +448,13 @@ export class TypeAuditor {
         [labelType(type1), labelType(type2)]
       );
     }
-    return this.setCurrent(LogicT);
+    return LogicT;
   }
 
-  private visitSetexprPredicate(node: AstNode): boolean {
+  private visitSetexprPredicate(node: AstNode): ExpressionType | null {
     let type2 = this.childTypeDebool(node, 1, RSErrorCode.invalidTypeOperation);
     if (type2 === null) {
-      return false;
+      return null;
     }
     const isSubset = this.isSubset(node.typeID as TokenID);
     if (isSubset) {
@@ -481,70 +462,69 @@ export class TypeAuditor {
     }
     const type1 = this.childTypification(node, 0);
     if (type1 === null) {
-      return false;
+      return null;
     }
 
     if (!checkCompatibility(type1, type2)) {
       if (isSubset) {
-        this.onError(
+        return this.onError(
           RSErrorCode.typesNotEqual,
           node.children[1].from,
           [labelType(type1), labelType(type2)]
         );
       } else {
-        this.onError(
+        return this.onError(
           RSErrorCode.invalidElementPredicate,
           node.children[1].from,
           [labelType(type1), labelToken(node.typeID as TokenID), labelType(bool(type2))]
         );
       }
-      return false;
     }
-    return this.setCurrent(LogicT);
+    return LogicT;
   }
 
-  private visitDecart(node: AstNode): boolean {
+  private visitDecart(node: AstNode): ExpressionType | null {
     const factors: Typification[] = [];
     for (let child = 0; child < node.children.length; child++) {
       const type = this.childTypeDebool(node, child, RSErrorCode.invalidDecart);
       if (type === null) {
-        return false;
+        return null;
       } else {
         factors.push(type);
       }
     }
-    return this.setCurrent(bool(tuple(factors)));
+    return bool(tuple(factors));
   }
 
-  private visitBoolean(node: AstNode): boolean {
+  private visitBoolean(node: AstNode): ExpressionType | null {
     const type = this.childTypeDebool(node, 0, RSErrorCode.invalidBoolean);
     if (type === null) {
-      return false;
+      return null;
     }
-    return this.setCurrent(bool(bool(type)));
+    return bool(bool(type));
   }
 
-  private visitTuple(node: AstNode): boolean {
+  private visitTuple(node: AstNode): ExpressionType | null {
     const components: Typification[] = [];
     for (let child = 0; child < node.children.length; child++) {
       const type = this.childTypification(node, child);
       if (type === null) {
-        return false;
+        return null;
       }
       components.push(type);
     }
-    return this.setCurrent(tuple(components));
+    return tuple(components);
   }
 
-  private visitEnumeration(node: AstNode): boolean {
+  private visitEnumeration(node: AstNode): ExpressionType | null {
     let type: ExpressionType | null = this.childTypification(node, 0);
     if (type === null) {
-      return false;
+      return null;
     }
     for (let child = 1; child < node.children.length; child++) {
       const childType = this.childTypification(node, child);
       if (childType === null) {
-        return false;
+        return null;
       }
 
       const merge = mergeTypifications(type, childType);
@@ -556,30 +536,26 @@ export class TypeAuditor {
       }
       type = merge;
     }
-    return this.setCurrent(bool(type));
+    return bool(type);
   }
 
-  private visitBool(node: AstNode): boolean {
+  private visitBool(node: AstNode): ExpressionType | null {
     return this.visitEnumeration(node);
   }
 
-  private visitDebool(node: AstNode): boolean {
-    const type = this.childTypeDebool(node, 0, RSErrorCode.invalidDebool);
-    if (type === null) {
-      return false;
-    }
-    return this.setCurrent(type);
+  private visitDebool(node: AstNode): ExpressionType | null {
+    return this.childTypeDebool(node, 0, RSErrorCode.invalidDebool);
   }
 
-  private visitSetexprBinary(node: AstNode): boolean {
+  private visitSetexprBinary(node: AstNode): ExpressionType | null {
     const type1 = this.childTypeDebool(node, 0, RSErrorCode.invalidTypeOperation);
     if (type1 === null) {
-      return false;
+      return null;
     }
 
     const type2 = this.childTypeDebool(node, 1, RSErrorCode.invalidTypeOperation);
     if (type2 === null) {
-      return false;
+      return null;
     }
 
     const result = mergeTypifications(type1, type2);
@@ -589,16 +565,16 @@ export class TypeAuditor {
         node.children[1].from,
         [labelType(bool(type1)), labelType(bool(type2))]);
     }
-    return this.setCurrent(bool(result));
+    return bool(result);
   }
 
-  private visitProjectSet(node: AstNode): boolean {
+  private visitProjectSet(node: AstNode): ExpressionType | null {
     const argument = this.childTypeDebool(node, 0, RSErrorCode.invalidProjectionSet);
     if (argument === null) {
-      return false;
+      return null;
     }
     if (argument.typeID === TypeID.anyTypification) {
-      return this.setCurrent(EmptySetT);
+      return EmptySetT;
     }
     if (argument.typeID !== TypeID.tuple) {
       return this.onError(
@@ -621,19 +597,19 @@ export class TypeAuditor {
       }
     }
     if (components.length === 1) {
-      return this.setCurrent(bool(components[0]));
+      return bool(components[0]);
     } else {
-      return this.setCurrent(bool(tuple(components)));
+      return bool(tuple(components));
     }
   }
 
-  private visitProjectTuple(node: AstNode): boolean {
+  private visitProjectTuple(node: AstNode): ExpressionType | null {
     const argument = this.childTypification(node, 0);
     if (argument === null) {
-      return false;
+      return null;
     }
     if (argument.typeID === TypeID.anyTypification) {
-      return this.setCurrent(argument);
+      return argument;
     }
     if (argument.typeID !== TypeID.tuple) {
       return this.onError(
@@ -656,13 +632,13 @@ export class TypeAuditor {
       }
     }
     if (components.length === 1) {
-      return this.setCurrent(components[0]);
+      return components[0];
     } else {
-      return this.setCurrent(tuple(components));
+      return tuple(components);
     }
   }
 
-  private visitFilter(node: AstNode): boolean {
+  private visitFilter(node: AstNode): ExpressionType | null {
     const indices = getNodeIndices(node);
     const tupleParam = indices.length === node.children.length - 1;
     if (!tupleParam && node.children.length > 2) {
@@ -671,12 +647,12 @@ export class TypeAuditor {
 
     const argument = this.childTypification(node, node.children.length - 1);
     if (argument === null) {
-      return false;
+      return null;
     }
     if (argument.typeID === TypeID.anyTypification ||
       (argument.typeID === TypeID.collection && argument.base.typeID === TypeID.anyTypification)
     ) {
-      return this.setCurrent(EmptySetT);
+      return EmptySetT;
     }
     if (argument.typeID !== TypeID.collection || argument.base.typeID !== TypeID.tuple) {
       return this.onError(
@@ -703,7 +679,7 @@ export class TypeAuditor {
       for (let child = 0; child + 1 < node.children.length; child++) {
         const param = this.childTypification(node, child);
         if (param === null) {
-          return false;
+          return null;
         }
         if (param.typeID !== TypeID.collection || !checkCompatibility(bases[child], debool(param))) {
           return this.onError(
@@ -716,7 +692,7 @@ export class TypeAuditor {
     } else {
       const param = this.childTypification(node, 0);
       if (param === null) {
-        return false;
+        return null;
       }
       const paramType = param;
       const expected = bool(tuple(bases));
@@ -728,18 +704,18 @@ export class TypeAuditor {
         );
       }
     }
-    return this.setCurrent(argument);
+    return argument;
   }
 
-  private visitReduce(node: AstNode): boolean {
+  private visitReduce(node: AstNode): ExpressionType | null {
     const argument = this.childTypification(node, 0);
     if (argument === null) {
-      return false;
+      return null;
     }
     if (argument.typeID === TypeID.anyTypification ||
       (argument.typeID === TypeID.collection && argument.base.typeID === TypeID.anyTypification)
     ) {
-      return this.setCurrent(EmptySetT);
+      return EmptySetT;
     }
     if (argument.typeID !== TypeID.collection || argument.base.typeID !== TypeID.collection) {
       return this.onError(
@@ -748,74 +724,78 @@ export class TypeAuditor {
         [labelType(argument)]
       );
     }
-    return this.setCurrent(debool(argument));
+    return debool(argument);
   }
 
-  private visitEnumDeclaration(node: AstNode): boolean {
-    return this.visitAllAndSetCurrent(node, null);
+  private visitArgumentsEnum(node: AstNode): ExpressionType | null {
+    return this.visitAllAndReturn(node, LogicT);
   }
 
-  private visitArgumentsEnum(node: AstNode): boolean {
-    return this.visitAllAndSetCurrent(node, null);
-  }
-
-  private visitDeclarative(node: AstNode): boolean {
+  private visitDeclarative(node: AstNode): ExpressionType | null {
     this.locals.startScope();
 
     const domain = this.childTypeDebool(node, 1, RSErrorCode.invalidTypeOperation);
     if (domain === null) {
-      return false;
+      return null;
     } else if (!this.visitChildDeclaration(node, 0, domain)) {
-      return false;
+      return null;
     } else if (!this.visitChild(node, 2)) {
-      return false;
+      return null;
     }
 
     this.locals.endScope(node.from);
-    return this.setCurrent(bool(domain));
+    return bool(domain);
   }
 
-  private visitImperative(node: AstNode): boolean {
+  private visitImperative(node: AstNode): ExpressionType | null {
     this.locals.startScope();
 
     for (let child = 1; child < node.children.length; child++) {
-      if (!this.visitChild(node, child)) {
-        return false;
+      if (this.visitChild(node, child) === null) {
+        return null;
       }
-      this.setCurrent(null);
     }
 
     const type = this.childTypification(node, 0);
     if (type === null) {
-      return false;
+      return null;
     }
 
     this.locals.endScope(node.from);
-    return this.setCurrent(bool(type));
+    return bool(type);
   }
 
-  private visitIterate(node: AstNode): boolean {
+  private visitIterate(node: AstNode): ExpressionType | null {
     const domain = this.childTypeDebool(node, 1, RSErrorCode.invalidTypeOperation);
-    return domain !== null && this.visitChildDeclaration(node, 0, domain);
+    if (domain === null) {
+      return null;
+    }
+    if (!this.visitChildDeclaration(node, 0, domain)) {
+      return null;
+    }
+    return LogicT;
   }
 
-  private visitAssign(node: AstNode): boolean {
+  private visitAssign(node: AstNode): ExpressionType | null {
     const domain = this.childTypification(node, 1);
     if (domain === null) {
-      return false;
+      return null;
     }
-    return this.visitChildDeclaration(node, 0, domain);
+    if (!this.visitChildDeclaration(node, 0, domain)) {
+      return null;
+    }
+    return LogicT;
   }
 
-  private visitRecursion(node: AstNode): boolean {
+  private visitRecursion(node: AstNode): ExpressionType | null {
     this.locals.startScope();
 
     const initType = this.childTypification(node, 1);
     if (initType === null) {
-      return false;
+      return null;
     }
     if (!this.visitChildDeclaration(node, 0, initType)) {
-      return false;
+      return null;
     }
 
     const isFull = node.typeID === TokenID.NT_RECURSIVE_FULL;
@@ -823,7 +803,7 @@ export class TypeAuditor {
 
     let iterationValue = this.childTypification(node, iterationIndex);
     if (iterationValue === null) {
-      return false;
+      return null;
     }
     if (!checkCompatibility(iterationValue, initType)) {
       return this.onError(
@@ -839,11 +819,11 @@ export class TypeAuditor {
         this.locals.clearUnused();
         this.locals.startScope();
         if (!this.visitChildDeclaration(node, 0, iterationValue)) {
-          return false;
+          return null;
         }
         const newIteration = this.childTypification(node, iterationIndex);
         if (newIteration === null) {
-          return false;
+          return null;
         }
         if (checkEquality(newIteration, iterationValue)) {
           break;
@@ -854,12 +834,12 @@ export class TypeAuditor {
 
     if (isFull) {
       if (!this.visitChild(node, 2)) {
-        return false;
+        return null;
       }
     }
 
     this.locals.endScope(node.from);
-    return this.setCurrent(iterationValue);
+    return iterationValue;
   }
 
   private isSubset(token: TokenID): boolean {
@@ -867,12 +847,11 @@ export class TypeAuditor {
   }
 
   private isInsideFuncArgument(node: AstNode): boolean {
-    const predecessors = [];
     while (node.parent && node.parent !== node) {
-      predecessors.push(node);
+      if (node.typeID === TokenID.NT_ARGUMENTS) return true;
       node = node.parent;
     }
-    return predecessors.some(n => n.typeID === TokenID.NT_ARGUMENTS);
+    return false;
   }
 
   private checkFuncArguments(node: AstNode, alias: string, type: Parametrized): Map<string, Typification> | null {
@@ -949,11 +928,11 @@ interface LocalData {
 
 /** Local variables context. */
 class LocalContext {
-  private onError: (code: RSErrorCode, position: number, params: string[]) => boolean;
+  private onError: (code: RSErrorCode, position: number, params: string[]) => null;
 
   public data: LocalData[] = [];
 
-  constructor(onError: (code: RSErrorCode, position: number, params: string[]) => boolean) {
+  constructor(onError: (code: RSErrorCode, position: number, params: string[]) => null) {
     this.onError = onError;
   }
 
