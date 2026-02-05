@@ -68,6 +68,15 @@ export const RSErrorCode = {
   globalMissingAST: 0x8842,           // 34882
   globalFuncNoInterpretation: 0x8843, // 34883
 
+  // Value evaluation (runtime)
+  valueUnknownError: 0x8a00,          // 35328
+  valueTypedOverflow: 0x8a01,         // 35329
+  valueBooleanLimit: 0x8a02,          // 35330
+  valueGlobalMissing: 0x8a03,         // 35331
+  valueIterationsLimit: 0x8a04,       // 35332
+  valueInvalidDebool: 0x8a05,         // 35333
+  valueIterateInfinity: 0x8a06,       // 35334
+
   cstNonemptyBase: 0x8860,            // 34912
   cstEmptyDerived: 0x8861,            // 34913
   cstCallableNoArgs: 0x8862,          // 34914

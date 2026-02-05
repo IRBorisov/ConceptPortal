@@ -102,3 +102,11 @@ export function getNodeText(node: AstNode): string {
   }
   return `NO DATA NODE: ${node.typeID}`;
 }
+
+/** Extracts node indices. */
+export function getNodeIndices(node: AstNode): number[] {
+  if (node.data.dataType === 'string[]' && Array.isArray(node.data.value)) {
+    return (node.data.value as string[]).map(s => parseInt(s, 10)).filter(n => !isNaN(n));
+  }
+  return [];
+}

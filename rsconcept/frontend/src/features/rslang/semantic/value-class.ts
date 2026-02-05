@@ -9,4 +9,4 @@ export const ValueClass = {
 export type ValueClass = (typeof ValueClass)[keyof typeof ValueClass];
 
 /** ValueClass context. */
-export type ValueContext = Map<string, ValueClass>;
+export type ValueClassContext = Map<string, ValueClass>;

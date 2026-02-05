@@ -14,7 +14,7 @@ import {
 } from './typification';
 import { getTypeClass } from './typification-api';
 import { ValueAuditor } from './value-auditor';
-import { ValueClass, type ValueContext } from './value-class';
+import { ValueClass, type ValueClassContext } from './value-class';
 
 export interface AnalysisOutput {
   success: boolean;
@@ -31,7 +31,7 @@ export interface AnalysisOptions {
 
 export class RSLangAnalyzer {
   private typeContext: TypeContext = new Map<string, ExpressionType>();
-  private valueContext: ValueContext = new Map<string, ValueClass>();
+  private valueContext: ValueClassContext = new Map<string, ValueClass>();
   private typeAuditor: TypeAuditor = new TypeAuditor(this.typeContext);
   private valueAuditor: ValueAuditor = new ValueAuditor(this.valueContext);
 

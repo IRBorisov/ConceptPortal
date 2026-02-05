@@ -2,7 +2,7 @@
  * Module: Type auditor for AST type checking.
  */
 
-import { type AstNode, getNodeText } from '@/utils/parsing';
+import { type AstNode, getNodeIndices, getNodeText } from '@/utils/parsing';
 
 import { type ErrorReporter, RSErrorCode } from '../error';
 import { labelRSLangNode, labelToken, labelType } from '../labels';
@@ -782,9 +782,9 @@ export class TypeAuditor {
       if (!this.visitChild(node, child)) {
         return false;
       }
+      this.setCurrent(null);
     }
 
-    this.setCurrent(null);
     const type = this.childTypification(node, 0);
     if (type === null) {
       return false;
@@ -937,13 +937,6 @@ function mangleRadicals(funcName: string, type: Typification): Typification {
       };
     }
   }
-}
-
-function getNodeIndices(node: AstNode): number[] {
-  if (node.data.dataType === 'string[]' && Array.isArray(node.data.value)) {
-    return (node.data.value as string[]).map(s => parseInt(s, 10)).filter(n => !isNaN(n));
-  }
-  return [];
 }
 
 /** Local variable data. */

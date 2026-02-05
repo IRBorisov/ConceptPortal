@@ -7,7 +7,7 @@ import { normalizeAST } from '../parser/normalize';
 import { parser as rslangParser } from '../parser/parser';
 
 import { ValueAuditor } from './value-auditor';
-import { ValueClass, type ValueContext } from './value-class';
+import { ValueClass, type ValueClassContext } from './value-class';
 
 
 // Helper to build AST
@@ -18,8 +18,8 @@ function buildAST(expression: string) {
 	return ast;
 }
 
-function setupValueContext(): ValueContext {
-	const context: ValueContext = new Map();
+function setupValueContext(): ValueClassContext {
+	const context: ValueClassContext = new Map();
 	context.set('X1', ValueClass.VALUE);
 	context.set('D1', ValueClass.VALUE);
 	context.set('D2', ValueClass.PROPERTY);
@@ -163,7 +163,7 @@ const errorData = [
 ];
 
 describe('ValueAuditor', () => {
-	let valueContext: ValueContext;
+	let valueContext: ValueClassContext;
 	let valueAuditor: ValueAuditor;
 	let errors: RSErrorDescription[];
 

@@ -10,17 +10,17 @@ import { type AstNode, getNodeText } from '@/utils/parsing';
 import { type ErrorReporter, RSErrorCode } from '../error';
 import { TokenID } from '../parser/token';
 
-import { ValueClass, type ValueContext } from './value-class';
+import { ValueClass, type ValueClassContext } from './value-class';
 
 
 /** Value auditor for AST value class checking. */
 export class ValueAuditor {
-  private context: ValueContext;
+  private context: ValueClassContext;
   private reporter?: ErrorReporter;
 
   private current: ValueClass | null = null;
 
-  constructor(context: ValueContext) {
+  constructor(context: ValueClassContext) {
     this.context = context;
   }
 

@@ -61,7 +61,7 @@ export type TypeContext = Map<string, ExpressionType>;
 /** Functional argument. */
 export interface Argument {
   alias: string;
-  type: Typification; // TODO: allow Functional arguments
+  type: Typification;
 }
 
 /** Type: Logic. */
