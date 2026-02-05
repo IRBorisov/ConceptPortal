@@ -234,7 +234,9 @@ function normalizeNode(node: AstNode, input: string) {
 
     case Imp_blocks:
       if (node.children.length === 1) {
-        promoteSingleChild(node);
+        if (node.parent?.typeID === Imp_blocks) {
+          promoteSingleChild(node);
+        }
       } else {
         processLeftEnum(node);
       }

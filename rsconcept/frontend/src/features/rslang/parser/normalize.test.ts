@@ -78,9 +78,11 @@ const testData = [
   ['R{a:=S1 | a \\ a}', '[RECURSIVE[a][S1][\\[a][a]]]'],
   ['R{(a,b):=S1 | (a \\ a, b)}', '[RECURSIVE[TUPLE_DECLARE[a][b]][S1][TUPLE[\\[a][a]][b]]]'],
   ['I{(a, b) | a:∈X1; b:=a}', '[IMPERATIVE[TUPLE[a][b]][:∈[a][X1]][:=[b][a]]]'],
+  ['I{(a, b) | (a,b):∈Z×Z}', '[IMPERATIVE[TUPLE[a][b]][:∈[TUPLE_DECLARE[a][b]][×[Z][Z]]]]'],
   ['I{(a, b) | a:∈X1; b:=a; (a,b) ∈ S1}', '[IMPERATIVE[TUPLE[a][b]][:∈[a][X1]][:=[b][a]][∈[TUPLE[a][b]][S1]]]']
 ];
 
+// .filter(([input]) => input === 'I{(a, b) | (a,b):∈Z×Z}')
 describe('Testing AST normalization', () => {
   testData.forEach(([input, expectedTree]) => {
     it(`Parse "${input}"`, () => {
