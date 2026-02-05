@@ -118,6 +118,7 @@ const errorData = [
 	// Logical
 	['D2=X1', { code: RSErrorCode.invalidPropertyUsage, position: 0 }],
 	['X1=D2', { code: RSErrorCode.invalidPropertyUsage, position: 3 }],
+	['∃a∈ℬ(X1) a=a', { code: RSErrorCode.invalidPropertyUsage, position: 3 }],
 	['∃a∈D2 a=a', { code: RSErrorCode.invalidPropertyUsage, position: 3 }],
 	['∀a∈D3 a=a', { code: RSErrorCode.globalNoValue, position: 3, params: ['D3'] }],
 	['∃a∈D3 a=a', { code: RSErrorCode.globalNoValue, position: 3, params: ['D3'] }],

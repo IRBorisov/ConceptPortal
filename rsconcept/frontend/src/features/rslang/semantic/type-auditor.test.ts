@@ -94,6 +94,7 @@ const correctTypesData = [
   ['∃(a,b)∈X1×X1 a=b', 'Logic'],
   ['∀a∈X1 R{b := a | b}=a', 'Logic'],
   ['∀a∈S1 R{(a1,a2) := a | (a1,a2)}=a', 'Logic'],
+  ['¬∃a∈ℬ(S1)\\{∅} P1[Pr1(a),Pr2(a)]', 'Logic'],
   // Set predicates
   ['X1=X1', 'Logic'],
   ['X1=∅', 'Logic'],

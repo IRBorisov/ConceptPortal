@@ -88,11 +88,10 @@ export class RSLangAnalyzer {
     if (type === null) {
       return { success: false, type: null, valueClass: null, errors: errors, ast: ast };
     }
-    const value = this.valueAuditor.run(ast, reporter);
     return {
-      success: value !== null,
+      success: true,
       type: type,
-      valueClass: options?.isDomain ? ValueClass.VALUE : value,
+      valueClass: options?.isDomain ? ValueClass.VALUE : this.valueAuditor.run(ast, reporter),
       errors: errors,
       ast: ast
     };

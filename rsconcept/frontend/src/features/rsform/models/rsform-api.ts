@@ -56,8 +56,8 @@ export function matchConstituenta(target: RO<IConstituenta>, query: string, mode
  * - `ExpressionStatus.PROPERTY` if value is `ValueClass.PROPERTY`.
  * - `ExpressionStatus.VERIFIED` if both parsing and value are valid.
  */
-export function inferStatus(parse?: ParsingStatus, value?: ValueClass): ExpressionStatus {
-  if (!parse || !value) {
+export function inferStatus(parse?: ParsingStatus, value?: ValueClass | null): ExpressionStatus {
+  if (!parse) {
     return ExpressionStatus.UNDEFINED;
   }
   if (parse === ParsingStatus.UNDEF) {
@@ -66,7 +66,7 @@ export function inferStatus(parse?: ParsingStatus, value?: ValueClass): Expressi
   if (parse === ParsingStatus.INCORRECT) {
     return ExpressionStatus.INCORRECT;
   }
-  if (value === ValueClass.INVALID) {
+  if (value === ValueClass.INVALID || value === null) {
     return ExpressionStatus.INCALCULABLE;
   }
   if (value === ValueClass.PROPERTY) {
