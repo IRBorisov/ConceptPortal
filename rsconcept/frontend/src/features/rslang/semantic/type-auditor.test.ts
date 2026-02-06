@@ -221,7 +221,7 @@ const errorData = [
   ['Fi3[X1](S1)', { code: RSErrorCode.invalidFilterArgumentType, position: 8, params: ['Fi3', 'ℬ(X1×X1)'] }],
   ['Fi1[X1,X1](S1)', { code: RSErrorCode.invalidFilterArity, position: 0 }],
   ['Fi1,2[X1](S1)', { code: RSErrorCode.typesNotEqual, position: 6, params: ['ℬ(X1)', 'ℬ(X1×X1)'] }],
-  ['red(X1)', { code: RSErrorCode.invalidReduce, position: 1, params: ['ℬ(X1)'] }],
+  ['red(X1)', { code: RSErrorCode.invalidReduce, position: 4, params: ['ℬ(X1)'] }],
   ['debool(S3)', { code: RSErrorCode.invalidDebool, position: 7, params: ['C1'] }],
   // Locals
   ['D{t ∈ X1 | 1=1}', { code: RSErrorCode.localNotUsed, position: 0, params: ['t'] }],

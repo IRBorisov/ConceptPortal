@@ -720,7 +720,7 @@ export class TypeAuditor {
     if (argument.typeID !== TypeID.collection || argument.base.typeID !== TypeID.collection) {
       return this.onError(
         RSErrorCode.invalidReduce,
-        node.from + 1,
+        node.children[0].from,
         [labelType(argument)]
       );
     }
@@ -874,7 +874,8 @@ export class TypeAuditor {
       if (!compareTemplated(substitutes, argType, childType)) {
         this.onError(
           RSErrorCode.invalidArgumentType,
-          node.children[child].from, [`${type.args[child - 1].alias}∈${labelType(argType)}`, labelType(childType)]
+          node.children[child].from,
+          [`${type.args[child - 1].alias}∈${labelType(argType)}`, labelType(childType)]
         );
         return null;
       }
