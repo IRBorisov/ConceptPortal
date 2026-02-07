@@ -18,8 +18,6 @@ export class ValueAuditor {
   private context: ValueClassContext;
   private reporter?: ErrorReporter;
 
-  private current: ValueClass | null = null;
-
   constructor(context: ValueClassContext) {
     this.context = context;
   }
@@ -32,19 +30,10 @@ export class ValueAuditor {
       return null;
     }
     this.reporter = reporter;
-    this.clear();
-    const success = this.dispatchVisit(ast);
-    if (!success) {
-      return null;
-    }
-    return this.current;
+    return this.dispatchVisit(ast);
   }
 
-  private clear(): void {
-    this.current = null;
-  }
-
-  private dispatchVisit(node: AstNode): boolean {
+  private dispatchVisit(node: AstNode): ValueClass | null {
     switch (node.typeID) {
       case TokenID.ID_GLOBAL:
       case TokenID.ID_FUNCTION:
@@ -53,26 +42,25 @@ export class ValueAuditor {
 
       case TokenID.ID_LOCAL:
       case TokenID.ID_RADICAL:
-        return this.setCurrent(ValueClass.VALUE);
-
       case TokenID.LIT_INTEGER:
       case TokenID.LIT_EMPTYSET:
-        return this.setCurrent(ValueClass.VALUE);
+        return ValueClass.VALUE;
+
       case TokenID.LIT_WHOLE_NUMBERS:
-        return this.setCurrent(ValueClass.PROPERTY);
+        return ValueClass.PROPERTY;
 
       case TokenID.NT_TUPLE_DECL:
       case TokenID.NT_ENUM_DECL:
-        return this.visitAllChildrenAndSetCurrent(node, ValueClass.VALUE);
+        return this.visitAllAndReturn(node, ValueClass.VALUE);
 
       case TokenID.NT_ARGUMENTS:
       case TokenID.NT_ARG_DECL:
-        return this.visitAllChildren(node);
+        return this.visitAllAndReturn(node, ValueClass.VALUE);
 
       case TokenID.PLUS:
       case TokenID.MINUS:
       case TokenID.MULTIPLY:
-        return this.visitAllChildrenAndSetCurrent(node, ValueClass.VALUE);
+        return this.visitAllAndReturn(node, ValueClass.VALUE);
 
       case TokenID.QUANTOR_UNIVERSAL:
       case TokenID.QUANTOR_EXISTS:
@@ -83,7 +71,7 @@ export class ValueAuditor {
       case TokenID.LOGIC_OR:
       case TokenID.LOGIC_IMPLICATION:
       case TokenID.LOGIC_EQUIVALENT:
-        return this.visitAllChildrenAndSetCurrent(node, ValueClass.VALUE);
+        return this.visitAllAndReturn(node, ValueClass.VALUE);
 
       case TokenID.EQUAL:
       case TokenID.NOTEQUAL:
@@ -93,7 +81,7 @@ export class ValueAuditor {
       case TokenID.LESSER:
       case TokenID.GREATER_OR_EQ:
       case TokenID.LESSER_OR_EQ:
-        return this.visitAllChildrenAndSetCurrent(node, ValueClass.VALUE);
+        return this.visitAllAndReturn(node, ValueClass.VALUE);
 
       case TokenID.SET_IN:
       case TokenID.SET_NOT_IN:
@@ -112,7 +100,7 @@ export class ValueAuditor {
         return this.assertAllValues(node);
 
       case TokenID.FILTER:
-        return this.visitAllChildren(node);
+        return this.visitFilter(node);
 
       case TokenID.CARD:
       case TokenID.BOOL:
@@ -129,7 +117,7 @@ export class ValueAuditor {
         return this.visitSetexprBinary(node);
 
       case TokenID.NT_FUNC_DEFINITION:
-        return this.visitAllChildren(node);
+        return this.visitFunctionDefinition(node);
       case TokenID.NT_FUNC_CALL:
         return this.visitFunctionCall(node);
 
@@ -144,151 +132,180 @@ export class ValueAuditor {
 
       case TokenID.ITERATE:
       case TokenID.ASSIGN:
-        return this.assertChildIsValue(node, 1);
-
-      default:
-        return false;
+        return this.visitIterateOrAssign(node);
     }
+    return null;
   }
 
-  private setCurrent(value: ValueClass | null): boolean {
-    this.current = value;
-    return true;
+  private onError(code: RSErrorCode, position: number, params?: string[]): null {
+    this.reporter?.({ code, position, params });
+    return null;
   }
 
-  private onError(code: RSErrorCode, position: number, params?: string[]): boolean {
-    if (this.reporter) {
-      this.reporter({ code, position, params });
-    }
-    return false;
-  }
-
-  private visitChild(node: AstNode, index: number): boolean {
-    if (index >= node.children.length) {
-      return false;
-    }
+  private visitChild(node: AstNode, index: number): ValueClass | null {
     return this.dispatchVisit(node.children[index]);
   }
 
-  private visitAllChildren(node: AstNode): boolean {
+  private visitAllAndReturn(node: AstNode, value: ValueClass): ValueClass | null {
     for (const child of node.children) {
-      if (!this.dispatchVisit(child)) {
-        return false;
+      if (this.dispatchVisit(child) === null) {
+        return null;
       }
     }
-    return true;
+    return value;
   }
 
-  private visitAllChildrenAndSetCurrent(node: AstNode, value: ValueClass): boolean {
-    return this.visitAllChildren(node) && this.setCurrent(value);
-  }
-
-  private assertChildIsValue(node: AstNode, index: number): boolean {
-    if (!this.visitChild(node, index)) {
-      return false;
+  private assertChildIsValue(node: AstNode, index: number): ValueClass | null {
+    const result = this.visitChild(node, index);
+    if (result === null) {
+      return null;
     }
-    if (this.current !== ValueClass.VALUE) {
+    if (result !== ValueClass.VALUE) {
       const child = node.children[index];
       return this.onError(RSErrorCode.invalidPropertyUsage, child?.from ?? node.from);
     }
-    return true;
+    return ValueClass.VALUE;
   }
 
-  private assertAllValues(node: AstNode): boolean {
+  private assertAllValues(node: AstNode): ValueClass | null {
     for (let i = 0; i < node.children.length; i++) {
-      if (!this.assertChildIsValue(node, i)) {
-        return false;
+      if (this.assertChildIsValue(node, i) === null) {
+        return null;
       }
     }
-    return true;
+    return ValueClass.VALUE;
   }
 
-  private visitFunctionCall(node: AstNode): boolean {
-    if (!this.visitChild(node, 0)) {
-      return false;
+  private visitFunctionDefinition(node: AstNode): ValueClass | null {
+    if (this.visitChild(node, 0) === null) {
+      return null;
     }
-    const result = this.current;
+    return this.visitChild(node, 1);
+  }
+
+  private visitFunctionCall(node: AstNode): ValueClass | null {
+    const result = this.visitChild(node, 0);
+    if (result === null) {
+      return null;
+    }
     for (let child = 1; child < node.children.length; child++) {
-      this.assertChildIsValue(node, child);
+      if (this.assertChildIsValue(node, child) === null) {
+        return null;
+      }
     }
-    return this.setCurrent(result);
+    return result;
   }
 
-  private visitGlobal(node: AstNode): boolean {
+  private visitGlobal(node: AstNode): ValueClass | null {
     const alias = getNodeText(node);
     const result = this.context.get(alias);
     if (!result || result === ValueClass.INVALID) {
       return this.onError(RSErrorCode.globalNoValue, node.from, [alias]);
     }
-    return this.setCurrent(result);
+    return result;
   }
 
-  private visitQuantifier(node: AstNode): boolean {
-    return this.assertChildIsValue(node, 1) && this.visitChild(node, 2);
+  private visitQuantifier(node: AstNode): ValueClass | null {
+    if (this.assertChildIsValue(node, 1) === null) {
+      return null;
+    }
+    if (this.visitChild(node, 2) === null) {
+      return null;
+    }
+    return ValueClass.VALUE;
   }
 
-  private visitSetexprPredicate(node: AstNode): boolean {
+  private visitSetexprPredicate(node: AstNode): ValueClass | null {
     const tokenId = node.typeID as TokenID;
     switch (tokenId) {
       case TokenID.SET_IN:
       case TokenID.SET_NOT_IN:
       case TokenID.SUBSET_OR_EQ:
-        return this.visitChild(node, 1) && this.assertChildIsValue(node, 0);
+        if (this.assertChildIsValue(node, 0) === null) {
+          return null;
+        }
+        if (this.visitChild(node, 1) === null) {
+          return null;
+        }
+        return ValueClass.VALUE;
 
       case TokenID.SUBSET:
       case TokenID.NOT_SUBSET:
         return this.assertAllValues(node);
-
-      default:
-        return this.visitChild(node, 1) && this.assertChildIsValue(node, 0);
     }
+    return null;
   }
 
-  private visitDeclarative(node: AstNode): boolean {
-    return this.visitChild(node, 2) && this.visitChild(node, 1);
+  private visitDeclarative(node: AstNode): ValueClass | null {
+    if (this.visitChild(node, 2) === null) {
+      return null;
+    }
+    return this.visitChild(node, 1);
   }
 
-  private visitImperative(node: AstNode): boolean {
+  private visitImperative(node: AstNode): ValueClass | null {
     for (let child = 1; child < node.children.length; child++) {
-      if (!this.visitChild(node, child)) {
-        return false;
+      if (this.visitChild(node, child) === null) {
+        return null;
       }
     }
     return this.assertChildIsValue(node, 0);
   }
 
-  private visitDecart(node: AstNode): boolean {
-    let type: ValueClass = ValueClass.VALUE;
+  private visitIterateOrAssign(node: AstNode): ValueClass | null {
+    if (this.visitChild(node, 0) === null) {
+      return null;
+    }
+    return this.assertChildIsValue(node, 1);
+  }
+
+  private visitDecart(node: AstNode): ValueClass | null {
+    let result: ValueClass = ValueClass.VALUE;
     for (let child = 0; child < node.children.length; child++) {
-      if (!this.visitChild(node, child)) {
-        return false;
+      const childClass = this.visitChild(node, child);
+      if (childClass === null) {
+        return null;
       }
-      if (this.current === ValueClass.PROPERTY) {
-        type = ValueClass.PROPERTY;
+      if (childClass === ValueClass.PROPERTY) {
+        result = ValueClass.PROPERTY;
       }
     }
-    return this.setCurrent(type);
+    return result;
   }
 
-  private visitBoolean(node: AstNode): boolean {
-    return this.visitChild(node, 0) && this.setCurrent(ValueClass.PROPERTY);
+  private visitBoolean(node: AstNode): ValueClass | null {
+    if (this.visitChild(node, 0) === null) {
+      return null;
+    }
+    return ValueClass.PROPERTY;
   }
 
-  private visitSetexprBinary(node: AstNode): boolean {
-    if (!this.visitChild(node, 0)) {
-      return false;
+  private visitFilter(node: AstNode): ValueClass | null {
+    let last: ValueClass | null = null;
+    for (const child of node.children) {
+      last = this.dispatchVisit(child);
+      if (last === null) {
+        return null;
+      }
     }
-    const firstValue = this.current === ValueClass.VALUE;
+    return last;
+  }
 
-    if (!this.visitChild(node, 1)) {
-      return false;
+  private visitSetexprBinary(node: AstNode): ValueClass | null {
+    const first = this.visitChild(node, 0);
+    if (first === null) {
+      return null;
     }
-    const secondValue = this.current === ValueClass.VALUE;
-
-    if (combineOperationValues(node.typeID as TokenID, firstValue, secondValue)) {
-      return this.setCurrent(ValueClass.VALUE);
+    const second = this.visitChild(node, 1);
+    if (second === null) {
+      return null;
     }
-    return this.setCurrent(ValueClass.PROPERTY);
+    const isValue = combineOperationValues(
+      node.typeID as TokenID,
+      first === ValueClass.VALUE,
+      second === ValueClass.VALUE
+    );
+    return isValue ? ValueClass.VALUE : ValueClass.PROPERTY;
   }
 }
 

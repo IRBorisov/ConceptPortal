@@ -175,9 +175,7 @@ export class TypeAuditor {
   }
 
   private onError(code: RSErrorCode, position: number, params?: string[]): null {
-    if (this.reporter) {
-      this.reporter({ code, position, params });
-    }
+    this.reporter?.({ code, position, params });
     return null;
   }
 
