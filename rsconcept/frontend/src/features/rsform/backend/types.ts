@@ -1,8 +1,7 @@
 import { z } from 'zod';
 
 import { schemaLibraryItem, schemaVersionInfo } from '@/features/library/backend/types';
-import { RSErrorCode, ValueClass } from '@/features/rslang';
-import { TokenID } from '@/features/rslang/parser/token';
+import { RSErrorCode, TokenID, ValueClass } from '@/features/rslang';
 
 import { limits } from '@/utils/constants';
 import { errorMsg } from '@/utils/labels';
