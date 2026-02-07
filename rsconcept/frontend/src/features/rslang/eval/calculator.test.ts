@@ -95,7 +95,6 @@ const correctValuesData = [
   ['debool({X1})=X1', '1'],
   ['∀a∈X1 debool({a})=a', '1'],
   ['∀a∈X1×X1 debool({a})=a', '1'],
-
   // Set predicates
   ['X1=X1', '1'],
   ['X1≠X1', '0'],
@@ -177,7 +176,43 @@ const correctValuesData = [
 ];
 
 const errorData = [
+  ['debool(X1)', { code: RSErrorCode.valueInvalidDebool, position: 0 }],
+  ['∀a∈Z a=a', { code: RSErrorCode.valueIterateInfinity, position: 3 }],
   ['ℬℬℬ(X1)', { code: RSErrorCode.valueBooleanLimit, position: 0, params: [String(BOOL_INFINITY)] }],
+  ['X1\\D1', { code: RSErrorCode.valueGlobalMissing, position: 3, params: ['D1'] }],
+  ['D1\\X1', { code: RSErrorCode.valueGlobalMissing, position: 0, params: ['D1'] }],
+  ['¬D1\\X1=X1', { code: RSErrorCode.valueGlobalMissing, position: 1, params: ['D1'] }],
+  ['card(D1)=1', { code: RSErrorCode.valueGlobalMissing, position: 5, params: ['D1'] }],
+  ['1=card(D1)', { code: RSErrorCode.valueGlobalMissing, position: 7, params: ['D1'] }],
+  ['card(D1)+1', { code: RSErrorCode.valueGlobalMissing, position: 5, params: ['D1'] }],
+  ['1+card(D1)', { code: RSErrorCode.valueGlobalMissing, position: 7, params: ['D1'] }],
+  ['card(D1)>1', { code: RSErrorCode.valueGlobalMissing, position: 5, params: ['D1'] }],
+  ['1>card(D1)', { code: RSErrorCode.valueGlobalMissing, position: 7, params: ['D1'] }],
+  ['card(D1)=1 & 1=1', { code: RSErrorCode.valueGlobalMissing, position: 5, params: ['D1'] }],
+  ['1=1 & card(D1)=1', { code: RSErrorCode.valueGlobalMissing, position: 11, params: ['D1'] }],
+  ['∀a∈D1 a=a', { code: RSErrorCode.valueGlobalMissing, position: 3, params: ['D1'] }],
+  ['∀a∈X1 a∈D1', { code: RSErrorCode.valueGlobalMissing, position: 8, params: ['D1'] }],
+  ['X1×D1', { code: RSErrorCode.valueGlobalMissing, position: 3, params: ['D1'] }],
+  ['D1×X1', { code: RSErrorCode.valueGlobalMissing, position: 0, params: ['D1'] }],
+  ['ℬ(D1)', { code: RSErrorCode.valueGlobalMissing, position: 2, params: ['D1'] }],
+  ['pr1(D1)', { code: RSErrorCode.valueGlobalMissing, position: 4, params: ['D1'] }],
+  ['Pr1(D1)', { code: RSErrorCode.valueGlobalMissing, position: 4, params: ['D1'] }],
+  ['bool(D1)', { code: RSErrorCode.valueGlobalMissing, position: 5, params: ['D1'] }],
+  ['debool(D1)', { code: RSErrorCode.valueGlobalMissing, position: 7, params: ['D1'] }],
+  ['red(D1)', { code: RSErrorCode.valueGlobalMissing, position: 4, params: ['D1'] }],
+  ['{D1}', { code: RSErrorCode.valueGlobalMissing, position: 1, params: ['D1'] }],
+  ['(D1, X1)', { code: RSErrorCode.valueGlobalMissing, position: 1, params: ['D1'] }],
+  ['D{t∈D1 | t=t}', { code: RSErrorCode.valueGlobalMissing, position: 4, params: ['D1'] }],
+  ['D{t∈X1 | t∈D1}', { code: RSErrorCode.valueGlobalMissing, position: 11, params: ['D1'] }],
+  ['D{a∈D1|a=X1}', { code: RSErrorCode.valueGlobalMissing, position: 4, params: ['D1'] }],
+  ['D{a∈X1|a=D1}', { code: RSErrorCode.valueGlobalMissing, position: 9, params: ['D1'] }],
+  ['R{a:=D1 | a∪X1}', { code: RSErrorCode.valueGlobalMissing, position: 5, params: ['D1'] }],
+  ['R{a:=X1 | a∪D1}', { code: RSErrorCode.valueGlobalMissing, position: 12, params: ['D1'] }],
+  ['R{a:=X1 | 1=1 | a∪D1}', { code: RSErrorCode.valueGlobalMissing, position: 18, params: ['D1'] }],
+  ['R{a:=X1 | D1=D1 | a∪X1}', { code: RSErrorCode.valueGlobalMissing, position: 10, params: ['D1'] }],
+  ['I{(a,b) | a:∈D1; b:=a; b≠a}', { code: RSErrorCode.valueGlobalMissing, position: 13, params: ['D1'] }],
+  ['I{(a,b) | a:∈X1; b:=a; b≠D1}', { code: RSErrorCode.valueGlobalMissing, position: 25, params: ['D1'] }],
+  ['I{(a,b) | a:∈X1; b:=D1; b≠a}', { code: RSErrorCode.valueGlobalMissing, position: 20, params: ['D1'] }],
 ];
 
 describe('Calculator', () => {

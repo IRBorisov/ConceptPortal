@@ -48,13 +48,6 @@ export interface CalculatorResult {
   iterations: number;
 }
 
-/** Imperative iteration block data. */
-interface IterationData {
-  childID: number;
-  domain: Value[];
-  valueID: number;
-}
-
 /** AST calculator - evaluates RS expressions via visitor pattern. */
 export class RSCalculator {
   private reporter?: ErrorReporter;
@@ -407,8 +400,11 @@ export class RSCalculator {
 
   private visitEquals(node: AstNode): Value | null {
     const v1 = this.visitChild(node, 0);
+    if (v1 === null) {
+      return null;
+    }
     const v2 = this.visitChild(node, 1);
-    if (v1 === null || v2 === null) {
+    if (v2 === null) {
       return null;
     }
     const areEqual = compare(v1, v2) === 0;
@@ -417,8 +413,11 @@ export class RSCalculator {
 
   private visitIntegerPredicate(node: AstNode): Value | null {
     const v1 = this.visitChild(node, 0);
+    if (v1 === null) {
+      return null;
+    }
     const v2 = this.visitChild(node, 1);
-    if (v1 === null || v2 === null) {
+    if (v2 === null) {
       return null;
     }
     const a = v1 as number;
@@ -436,8 +435,11 @@ export class RSCalculator {
 
   private visitSetexprPredicate(node: AstNode): Value | null {
     const v1 = this.visitChild(node, 0);
+    if (v1 === null) {
+      return null;
+    }
     const v2 = this.visitChild(node, 1);
-    if (v1 === null || v2 === null) {
+    if (v2 === null) {
       return null;
     }
     let result: boolean;
@@ -544,8 +546,11 @@ export class RSCalculator {
 
   private visitSetexprBinary(node: AstNode): Value | null {
     const v1 = this.visitChild(node, 0);
+    if (v1 === null) {
+      return null;
+    }
     const v2 = this.visitChild(node, 1);
-    if (v1 === null || v2 === null) {
+    if (v2 === null) {
       return null;
     }
     switch (node.typeID) {
@@ -790,6 +795,13 @@ export class RSCalculator {
 
     return current;
   }
+}
+
+/** Imperative iteration block data. */
+interface IterationData {
+  childID: number;
+  domain: Value[];
+  valueID: number;
 }
 
 /** Local variables context. */
