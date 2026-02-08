@@ -85,7 +85,7 @@ export function DlgDeleteOperation() {
       />
       {deleteSchema ? (
         <div className='text-destructive'>
-          <b>Внимание!</b> Будет удалена также связанная схема
+          <b>Внимание!</b> Будет также удалена связанная схема
         </div>
       ) : null}
     </ModalForm>

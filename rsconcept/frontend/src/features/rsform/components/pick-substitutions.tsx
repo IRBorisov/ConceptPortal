@@ -65,20 +65,20 @@ export function PickSubstitutions({
   const leftItems = !leftArgument
     ? []
     : (leftArgument as IRSForm).items.filter(
-        cst =>
-          cst.id !== rightCst?.id && //
-          !value.find(item => item.original === cst.id) &&
-          (!filterCst || filterCst(cst))
-      );
+      cst =>
+        cst.id !== rightCst?.id && //
+        !value.find(item => item.original === cst.id) &&
+        (!filterCst || filterCst(cst))
+    );
 
   const rightItems = !rightArgument
     ? []
     : (rightArgument as IRSForm).items.filter(
-        cst =>
-          cst.id !== leftCst?.id && //
-          !value.find(item => item.original === cst.id) &&
-          (!filterCst || filterCst(cst))
-      );
+      cst =>
+        cst.id !== leftCst?.id && //
+        !value.find(item => item.original === cst.id) &&
+        (!filterCst || filterCst(cst))
+    );
 
   const [deleteRight, setDeleteRight] = useState(true);
   const toggleDelete = () => setDeleteRight(prev => !prev);
@@ -110,6 +110,16 @@ export function PickSubstitutions({
       is_suggestion: true
     }))
   ];
+
+  function onChangeLeftArgument(item: ILibraryItem | null) {
+    setLeftArgument(item);
+    setLeftCst(null);
+  }
+
+  function onChangeRightArgument(item: ILibraryItem | null) {
+    setRightArgument(item);
+    setRightCst(null);
+  }
 
   function getSchemaByCst(id: number): IRSForm | undefined {
     for (const schema of schemas) {
@@ -247,7 +257,7 @@ export function PickSubstitutions({
             placeholder='Аргумент'
             items={allowSelfSubstitution ? schemas : schemas.filter(item => item.id !== rightArgument?.id)}
             value={leftArgument}
-            onChange={setLeftArgument}
+            onChange={onChangeLeftArgument}
           />
           <SelectConstituenta noBorder items={leftItems} value={leftCst} onChange={setLeftCst} />
         </div>
@@ -279,7 +289,7 @@ export function PickSubstitutions({
             placeholder='Аргумент'
             items={allowSelfSubstitution ? schemas : schemas.filter(item => item.id !== leftArgument?.id)}
             value={rightArgument}
-            onChange={setRightArgument}
+            onChange={onChangeRightArgument}
           />
           <SelectConstituenta noBorder items={rightItems} value={rightCst} onChange={setRightCst} />
         </div>

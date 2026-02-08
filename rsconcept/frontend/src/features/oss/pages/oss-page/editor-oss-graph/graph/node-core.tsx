@@ -18,7 +18,7 @@ import { type OGOperationNode } from './og-models';
 // characters - threshold for long labels - small font
 const LONG_LABEL_CHARS = 14;
 
-export function NodeCoreComponent({ node }: { node: NodeProps<OGOperationNode> }) {
+export function NodeCoreComponent({ node }: { node: NodeProps<OGOperationNode>; }) {
   const { selectedItems, schema } = useOssEdit();
   const opType = node.data.operation.operation_type;
 
@@ -80,7 +80,7 @@ export function NodeCoreComponent({ node }: { node: NodeProps<OGOperationNode> }
           'w-full h-full',
           'flex items-center justify-center',
           'text-center line-clamp-2 px-[4px] mr-[12px]',
-          longLabel ? 'text-[12px]/[16px]' : 'text-[14px]/[20px]'
+          longLabel ? 'text-[10px]/[14px]' : 'text-[14px]/[20px]'
         )}
         data-tooltip-id={globalIDs.operation_tooltip}
         onMouseEnter={() => setHover(node.data.operation)}
