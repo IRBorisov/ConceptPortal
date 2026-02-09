@@ -46,7 +46,9 @@ export function FormCreateItem() {
       access_policy: AccessPolicy.PUBLIC,
       visible: true,
       read_only: false,
-      location: !!searchLocation ? searchLocation : LocationHead.USER
+      location:
+        !!searchLocation && !searchLocation.startsWith(LocationHead.LIBRARY) ?
+          searchLocation : LocationHead.USER
     },
     mode: 'onChange'
   });

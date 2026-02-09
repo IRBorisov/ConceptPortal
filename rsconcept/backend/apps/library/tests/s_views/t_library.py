@@ -43,13 +43,14 @@ class TestLibraryViewset(EndpointTester):
     def test_create(self):
         data = {
             'title': 'Title',
-            'alias': 'alias',
+            'alias': 'alias'
         }
         response = self.executeCreated(data)
         self.assertEqual(response.data['owner'], self.user.pk)
         self.assertEqual(response.data['item_type'], LibraryItemType.RSFORM)
         self.assertEqual(response.data['title'], data['title'])
         self.assertEqual(response.data['alias'], data['alias'])
+        self.assertEqual(response.data['location'], LocationHead.USER)
 
         data = {
             'item_type': LibraryItemType.OPERATION_SCHEMA,

@@ -10,6 +10,7 @@ from rest_framework import generics
 from rest_framework import status as c
 from rest_framework import viewsets
 from rest_framework.decorators import action
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.request import Request
 from rest_framework.response import Response
 
@@ -37,6 +38,10 @@ class LibraryViewSet(viewsets.ModelViewSet):
         return s.LibraryItemSerializer
 
     def perform_create(self, serializer) -> None:
+        location = serializer.validated_data.get('location')
+        if location and location.startswith(m.LocationHead.LIBRARY) and not self.request.user.is_staff:
+            raise PermissionDenied()
+
         if not self.request.user.is_anonymous and 'owner' not in self.request.POST:
             serializer.save(owner=self.request.user)
         else:
