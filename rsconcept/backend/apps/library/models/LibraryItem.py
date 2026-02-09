@@ -22,6 +22,7 @@ class LibraryItemType(TextChoices):
     ''' Type of library items '''
     RSFORM = 'rsform'
     OPERATION_SCHEMA = 'oss'
+    RSMODEL = 'rsmodel'
 
 
 class AccessPolicy(TextChoices):

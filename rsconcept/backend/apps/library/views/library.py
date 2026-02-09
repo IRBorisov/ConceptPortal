@@ -16,6 +16,7 @@ from rest_framework.response import Response
 from apps.oss.models import Layout, Operation, OperationSchema, PropagationFacade
 from apps.rsform.models import RSFormCached
 from apps.rsform.serializers import RSFormParseSerializer
+from apps.rsmodel.models import RSModel
 from apps.users.models import User
 from shared import permissions
 
@@ -42,6 +43,9 @@ class LibraryViewSet(viewsets.ModelViewSet):
             serializer.save()
         if serializer.data.get('item_type') == m.LibraryItemType.OPERATION_SCHEMA:
             Layout.objects.create(oss=serializer.instance, data=[])
+        if serializer.data.get('item_type') == m.LibraryItemType.RSMODEL:
+            schema_id = self.request.data.get('schema_id')
+            RSModel.objects.create(model=serializer.instance, schema_id=schema_id)
 
     def perform_update(self, serializer) -> None:
         instance = serializer.save()
@@ -69,11 +73,15 @@ class LibraryViewSet(viewsets.ModelViewSet):
         if instance.item_type == m.LibraryItemType.RSFORM:
             PropagationFacade().before_delete_schema(instance.pk)
             super().perform_destroy(instance)
-        if instance.item_type == m.LibraryItemType.OPERATION_SCHEMA:
+        elif instance.item_type == m.LibraryItemType.OPERATION_SCHEMA:
             schemas = list(OperationSchema.owned_schemasQ(instance))
             super().perform_destroy(instance)
             for schema in schemas:
                 self.perform_destroy(schema)
+        elif instance.item_type == m.LibraryItemType.RSMODEL:
+            super().perform_destroy(instance)
+        else:
+            super().perform_destroy(instance)
 
     def get_permissions(self):
         if self.action in ['update', 'partial_update']:

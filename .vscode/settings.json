@@ -160,6 +160,8 @@
     "rsgraph",
     "rslang",
     "rslist",
+    "RSMODEL",
+    "rsmodels",
     "rstabs",
     "rstemplates",
     "setexpr",
