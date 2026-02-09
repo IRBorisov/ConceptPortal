@@ -4,7 +4,9 @@ import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { useTemplatesSuspense } from '@/features/library/backend/use-templates';
+import { TypeID } from '@/features/rslang';
 import { type AliasMapping, substituteTemplateArgs } from '@/features/rslang/api';
+import { labelType } from '@/features/rslang/labels';
 
 import { useDialogsStore } from '@/stores/dialogs';
 
@@ -49,13 +51,19 @@ export const TemplateState = ({ children }: React.PropsWithChildren) => {
 
   function onChangePrototype(newPrototype: IConstituenta) {
     setPrototype(newPrototype);
-    setArguments(
-      newPrototype.parse!.args.map(arg => ({
-        alias: arg.alias,
-        typification: arg.typification,
-        value: ''
-      }))
-    );
+    const typeID = newPrototype.analysis.type!.typeID;
+    if (typeID === TypeID.function || typeID === TypeID.predicate) {
+      setArguments(
+        newPrototype.analysis.type!.args.map(arg => ({
+          alias: arg.alias,
+          typification: labelType(arg.type),
+          value: ''
+        }))
+      );
+    } else {
+      setArguments([]);
+    }
+
     setValue('cst_type', newPrototype.cst_type, { shouldValidate: true });
     setValue('alias', generateAlias(newPrototype.cst_type, schema), { shouldValidate: true });
     setValue('definition_formal', newPrototype.definition_formal);

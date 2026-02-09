@@ -10,7 +10,7 @@ import { useMoveConstituents } from '@/features/rsform/backend/use-move-constitu
 import { useMutatingRSForm } from '@/features/rsform/backend/use-mutating-rsform';
 import { useResetAliases } from '@/features/rsform/backend/use-reset-aliases';
 import { useRestoreOrder } from '@/features/rsform/backend/use-restore-order';
-import { generateAlias, parseRSForm } from '@/features/rsform/models/rsform-api';
+import { generateAlias } from '@/features/rsform/models/rsform-api';
 import { useCstSearchStore } from '@/features/rsform/stores/cst-search';
 
 import { MiniButton } from '@/components/control';
@@ -181,12 +181,11 @@ export function ToolbarSchema({
   }
 
   function handleShowTypeGraph() {
-    parseRSForm(schema);
     const typeInfo = schema.items
-      .filter(item => !!item.analysis?.type)
+      .filter(item => item.analysis.type !== null)
       .map(item => ({
         alias: item.alias,
-        type: item.analysis!.type!,
+        type: item.analysis.type!,
       }));
     showTypeGraph({ items: typeInfo });
   }

@@ -1,8 +1,6 @@
 ''' Endpoints for RSForm. '''
-import json
 from typing import Union, cast
 
-import pyconcept
 from django.db import transaction
 from django.http import HttpResponse
 from drf_spectacular.utils import extend_schema, extend_schema_view
@@ -59,8 +57,6 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             'details',
             'export_trs',
             'resolve',
-            'check_expression',
-            'check_constituenta'
         ]:
             permission_list = [permissions.ItemAnyone]
         else:
@@ -201,7 +197,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
                 f'{cst.pk}': msg.constituentaNoStructure()
             })
 
-        schema_details = s.RSFormParseSerializer(item).data['items']
+        schema_details = s.PyConceptAdapter(item.pk).parse()['items']
         cst_parse = next(item for item in schema_details if item['id'] == cst.pk)['parse']
         if not cst_parse['typification']:
             return Response(
@@ -559,64 +555,6 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         return Response(
             status=c.HTTP_200_OK,
             data=serializer.data
-        )
-
-    @extend_schema(
-        summary='check RSLang expression',
-        tags=['RSForm', 'FormalLanguage'],
-        request=s.ExpressionSerializer,
-        responses={
-            c.HTTP_200_OK: s.ExpressionParseSerializer,
-            c.HTTP_404_NOT_FOUND: None
-        },
-    )
-    @action(detail=True, methods=['post'], url_path='check-expression')
-    def check_expression(self, request: Request, pk) -> HttpResponse:
-        ''' Endpoint: Check RSLang expression against schema context. '''
-        serializer = s.ExpressionSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        expression = serializer.validated_data['expression']
-        pySchema = s.PyConceptAdapter(pk)
-        result = pyconcept.check_expression(json.dumps(pySchema.data), expression)
-        return Response(
-            status=c.HTTP_200_OK,
-            data=json.loads(result)
-        )
-
-    @extend_schema(
-        summary='check expression for specific CstType',
-        tags=['RSForm', 'FormalLanguage'],
-        request=s.ConstituentaCheckSerializer,
-        responses={
-            c.HTTP_200_OK: s.ExpressionParseSerializer,
-            c.HTTP_404_NOT_FOUND: None
-        },
-    )
-    @action(detail=True, methods=['post'], url_path='check-constituenta')
-    def check_constituenta(self, request: Request, pk) -> HttpResponse:
-        ''' Endpoint: Check RSLang expression against Schema context. '''
-        serializer = s.ConstituentaCheckSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        expression = serializer.validated_data['definition_formal']
-        alias = serializer.validated_data['alias']
-        cst_type = cast(m.CstType, serializer.validated_data['cst_type'])
-
-        pySchema = s.PyConceptAdapter(pk)
-        result = pyconcept.check_constituenta(json.dumps(pySchema.data), alias, expression, cst_type)
-        result_dict = json.loads(result)
-
-        # Replace 'start' with 'from', 'finish' with 'to'
-        if 'ast' in result_dict and isinstance(result_dict['ast'], list):
-            for node in result_dict['ast']:
-                if 'start' in node:
-                    node['from'] = node.pop('start')
-                if 'finish' in node:
-                    node['to'] = node.pop('finish')
-
-        result = json.dumps(result_dict)
-        return Response(
-            status=c.HTTP_200_OK,
-            data=json.loads(result)
         )
 
     @extend_schema(

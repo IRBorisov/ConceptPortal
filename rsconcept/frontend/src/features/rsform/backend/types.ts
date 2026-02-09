@@ -8,22 +8,6 @@ import { errorMsg } from '@/utils/labels';
 
 import { CstType } from '../models/rsform';
 
-/** Represents syntax type. */
-export const Syntax = {
-  UNDEF: 'undefined',
-  ASCII: 'ascii',
-  MATH: 'math'
-} as const;
-export type Syntax = (typeof Syntax)[keyof typeof Syntax];
-
-/** Represents parsing status. */
-export const ParsingStatus = {
-  UNDEF: 'undefined',
-  VERIFIED: 'verified',
-  INCORRECT: 'incorrect'
-} as const;
-export type ParsingStatus = (typeof ParsingStatus)[keyof typeof ParsingStatus];
-
 /** Represents Constituenta basic persistent data. */
 export type IConstituentaBasicsDTO = z.infer<typeof schemaConstituentaBasics>;
 
@@ -63,13 +47,6 @@ export type ISubstituteConstituents = z.infer<typeof schemaSubstituteConstituent
 /** Represents input data for inline synthesis. */
 export type IInlineSynthesisDTO = z.infer<typeof schemaInlineSynthesis>;
 
-/** Represents {@link IConstituenta} data, used for checking expression. */
-export interface ICheckConstituentaDTO {
-  alias: string;
-  cst_type: CstType;
-  definition_formal: string;
-}
-
 /** Represents data, used in merging multiple {@link IConstituenta}. */
 export type ISubstitutionsDTO = z.infer<typeof schemaSubstitutions>;
 
@@ -84,20 +61,12 @@ export interface IConstituentaList {
   items: number[];
 }
 
-/** Represents parsing error description. */
-export type IRSErrorDescription = z.infer<typeof schemaRSErrorDescription>;
-
-/** Represents results of expression parse in RSLang. */
-export type IExpressionParseDTO = z.infer<typeof schemaExpressionParse>;
-
 /** Represents data response when creating {@link IVersionInfo}. */
 export type IVersionCreatedResponse = z.infer<typeof schemaVersionCreatedResponse>;
 
 // ========= SCHEMAS ========
 export const schemaCstType = z.enum(Object.values(CstType) as [CstType, ...CstType[]]);
-export const schemaSyntax = z.enum(Object.values(Syntax) as [Syntax, ...Syntax[]]);
 export const schemaValueClass = z.enum(Object.values(ValueClass) as [ValueClass, ...ValueClass[]]);
-export const schemaParsingStatus = z.enum(Object.values(ParsingStatus) as [ParsingStatus, ...ParsingStatus[]]);
 export const schemaTokenID = z.enum(TokenID);
 export const schemaRSErrorType = z.enum(RSErrorCode);
 
@@ -115,18 +84,6 @@ export const schemaConstituentaBasics = z.strictObject({
   term_forms: z.array(z.strictObject({ text: z.string(), tags: z.string() }))
 });
 
-export const schemaConstituenta = schemaConstituentaBasics.extend({
-  parse: z
-    .strictObject({
-      status: schemaParsingStatus,
-      valueClass: schemaValueClass,
-      typification: z.string(),
-      syntaxTree: z.string(),
-      args: z.array(z.strictObject({ alias: z.string(), typification: z.string() }))
-    })
-    .optional()
-});
-
 export const schemaAttribution = z.strictObject({
   container: z.number(),
   attribute: z.number()
@@ -138,7 +95,7 @@ export const schemaRSForm = schemaLibraryItem.extend({
   version: z.number().optional(),
   versions: z.array(schemaVersionInfo),
 
-  items: z.array(schemaConstituenta),
+  items: z.array(schemaConstituentaBasics),
   attribution: z.array(schemaAttribution),
   inheritance: z.array(
     z.strictObject({
@@ -234,28 +191,3 @@ export const schemaRSErrorDescription = z.strictObject({
   params: z.array(z.string())
 });
 
-export const schemaExpressionParse = z.strictObject({
-  parseResult: z.boolean(),
-  prefixLen: z.number(),
-  syntax: schemaSyntax,
-  typification: z.string(),
-  valueClass: schemaValueClass,
-  errors: z.array(schemaRSErrorDescription),
-  astText: z.string(),
-  ast: z.array(
-    z.strictObject({
-      uid: z.number(),
-      parent: z.number(),
-      typeID: z.number(),
-      from: z.number(),
-      to: z.number(),
-      data: z.strictObject({ dataType: z.string(), value: z.unknown().refine(value => value !== undefined) })
-    })
-  ),
-  args: z.array(
-    z.strictObject({
-      alias: z.string(),
-      typification: z.string()
-    })
-  )
-});

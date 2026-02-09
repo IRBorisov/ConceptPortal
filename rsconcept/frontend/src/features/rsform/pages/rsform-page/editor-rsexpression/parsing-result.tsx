@@ -1,21 +1,20 @@
 import clsx from 'clsx';
 
-import { getRSErrorPrefix, isCritical } from '@/features/rslang/error';
+import { type AnalysisFull } from '@/features/rslang';
+import { getRSErrorPrefix, isCritical, type RSErrorDescription } from '@/features/rslang/error';
 import { describeRSError } from '@/features/rslang/labels';
 
 import { type RO } from '@/utils/meta';
 
-import { type IExpressionParseDTO, type IRSErrorDescription } from '../../../backend/types';
-
 interface ParsingResultProps {
-  data: RO<IExpressionParseDTO> | null;
+  data: RO<AnalysisFull> | null;
   disabled?: boolean;
   isOpen: boolean;
-  onShowError: (error: RO<IRSErrorDescription>) => void;
+  onShowError: (error: RO<RSErrorDescription>) => void;
 }
 
 export function ParsingResult({ isOpen, data, disabled, onShowError }: ParsingResultProps) {
-  const errorCount = data ? data.errors.reduce((total, error) => (error.isCritical ? total + 1 : total), 0) : 0;
+  const errorCount = data ? data.errors.reduce((total, error) => (isCritical(error.code) ? total + 1 : total), 0) : 0;
   const warningsCount = data ? data.errors.length - errorCount : 0;
 
   return (
@@ -32,9 +31,9 @@ export function ParsingResult({ isOpen, data, disabled, onShowError }: ParsingRe
             onClick={disabled ? undefined : () => onShowError(error)}
           >
             <span className='mr-1 font-semibold underline'>
-              {isCritical(error.errorType) ? 'Ошибка' : 'Предупреждение'} {`${getRSErrorPrefix(error.errorType)}:`}
+              {isCritical(error.code) ? 'Ошибка' : 'Предупреждение'} {`${getRSErrorPrefix(error.code)}:`}
             </span>
-            <span>{` ${describeRSError(error.errorType, error.params)}`}</span>
+            <span>{` ${describeRSError(error.code, error.params)}`}</span>
           </p>
         );
       })}

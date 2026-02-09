@@ -2,16 +2,16 @@
  * Module: RSForm data loading and processing.
  */
 
-import { ValueClass } from '@/features/rslang';
+import { type AnalysisBase, RSLangAnalyzer } from '@/features/rslang';
 import { extractGlobals, isSimpleExpression, splitTemplateDefinition } from '@/features/rslang/api';
 
 import { Graph } from '@/models/graph';
 import { type RO } from '@/utils/meta';
 
-import { CstType, ExpressionStatus, type IConstituenta, type IRSForm, type IRSFormStats } from '../models/rsform';
-import { inferClass, inferStatus, inferTemplate, isBaseSet, isFunctional } from '../models/rsform-api';
+import { CstStatus, CstType, type IConstituenta, type IRSForm } from '../models/rsform';
+import { inferClass, inferStatus, inferTemplate, isBaseSet, isFunctional, typeClassForCstType } from '../models/rsform-api';
 
-import { type IRSFormDTO, ParsingStatus } from './types';
+import { type IRSFormDTO } from './types';
 
 /**
  * Loads data into an {@link IRSForm} based on {@link IRSFormDTO}.
@@ -26,6 +26,7 @@ export class RSFormLoader {
   private association_graph: Graph = new Graph();
   private cstByAlias = new Map<string, IConstituenta>();
   private cstByID = new Map<number, IConstituenta>();
+  private analyzer = new RSLangAnalyzer();
 
   constructor(input: RO<IRSFormDTO>) {
     this.schema = structuredClone(input) as unknown as IRSForm;
@@ -36,10 +37,10 @@ export class RSFormLoader {
     this.prepareLookups();
     this.createGraph();
     this.inferCstAttributes();
+    this.parseItems();
 
     const result = this.schema;
-    result.stats = this.calculateStats();
-    result.analyzer = null;
+    result.analyzer = this.analyzer;
     result.graph = this.graph;
     result.cstByAlias = this.cstByAlias;
     result.cstByID = this.cstByID;
@@ -85,7 +86,6 @@ export class RSFormLoader {
     order.forEach(cstID => {
       const cst = this.cstByID.get(cstID)!;
       cst.schema = this.schema.id;
-      cst.status = cst.parse ? inferStatus(cst.parse.status, cst.parse.valueClass) : ExpressionStatus.UNKNOWN;
       cst.is_template = inferTemplate(cst.definition_formal);
       cst.cst_class = inferClass(cst.cst_type, cst.is_template);
       cst.spawn = [];
@@ -191,33 +191,36 @@ export class RSFormLoader {
     return sources;
   }
 
-  private calculateStats(): IRSFormStats {
-    const items = this.schema.items;
+  private parseItems(): void {
+    const order = this.graph.topologicalOrder();
+    order.forEach(cstID => {
+      const cst = this.cstByID.get(cstID)!;
+      cst.analysis = parseCst(cst, this.analyzer);
+      cst.status = cst.cst_type === CstType.NOMINAL ? CstStatus.UNKNOWN : inferStatus(cst.analysis.success, cst.analysis.valueClass);
+    });
+  }
+}
+
+// ======= Internals ========
+function parseCst(target: IConstituenta, analyzer: RSLangAnalyzer): AnalysisBase {
+  const cType = target.cst_type;
+  if (cType === CstType.NOMINAL) {
     return {
-      count_all: items.length,
-      count_crucial: items.reduce((sum, cst) => sum + (cst.crucial ? 1 : 0), 0),
-      count_errors: items.reduce((sum, cst) => sum + (cst.parse?.status === ParsingStatus.INCORRECT ? 1 : 0), 0),
-      count_property: items.reduce((sum, cst) => sum + (cst.parse?.valueClass === ValueClass.PROPERTY ? 1 : 0), 0),
-      count_incalculable: items.reduce(
-        (sum, cst) =>
-          sum + (cst.parse?.status === ParsingStatus.VERIFIED && cst.parse.valueClass === ValueClass.INVALID ? 1 : 0),
-        0
-      ),
-      count_inherited: items.reduce((sum, cst) => sum + (cst.is_inherited ? 1 : 0), 0),
-
-      count_text_term: items.reduce((sum, cst) => sum + (cst.term_raw ? 1 : 0), 0),
-      count_definition: items.reduce((sum, cst) => sum + (cst.definition_raw ? 1 : 0), 0),
-      count_convention: items.reduce((sum, cst) => sum + (cst.convention ? 1 : 0), 0),
-
-      count_base: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.BASE ? 1 : 0), 0),
-      count_constant: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.CONSTANT ? 1 : 0), 0),
-      count_structured: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.STRUCTURED ? 1 : 0), 0),
-      count_axiom: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.AXIOM ? 1 : 0), 0),
-      count_term: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.TERM ? 1 : 0), 0),
-      count_function: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.FUNCTION ? 1 : 0), 0),
-      count_predicate: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.PREDICATE ? 1 : 0), 0),
-      count_theorem: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.THEOREM ? 1 : 0), 0),
-      count_nominal: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.NOMINAL ? 1 : 0), 0)
+      success: false,
+      type: null,
+      valueClass: null,
+      ast: null
     };
+  }
+  if (cType === CstType.BASE || cType === CstType.CONSTANT) {
+    analyzer.addBase(target.alias, cType === CstType.CONSTANT);
+    return analyzer.checkFast(target.alias);
+  } else {
+    const parse = analyzer.checkFast(target.definition_formal, {
+      expected: typeClassForCstType(cType),
+      isDomain: cType === CstType.STRUCTURED
+    });
+    analyzer.setGlobal(target.alias, parse.type, parse.valueClass);
+    return parse;
   }
 }

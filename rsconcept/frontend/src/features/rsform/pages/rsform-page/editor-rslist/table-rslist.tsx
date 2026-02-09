@@ -1,5 +1,7 @@
 'use client';
 
+import { labelType } from '@/features/rslang/labels';
+
 import { TextURL } from '@/components/control';
 import { createColumnHelper, DataTable, type RowSelectionState, type VisibilityState } from '@/components/data-table';
 import { NoData, TextContent } from '@/components/view';
@@ -8,7 +10,6 @@ import { prefixes } from '@/utils/constants';
 import { truncateToSymbol } from '@/utils/utils';
 
 import { BadgeConstituenta } from '../../../components/badge-constituenta';
-import { labelCstTypification } from '../../../labels';
 import { type IConstituenta } from '../../../models/rsform';
 
 interface TableRSListProps {
@@ -67,7 +68,7 @@ export function TableRSList({
       maxSize: 65,
       cell: props => <BadgeConstituenta value={props.row.original} prefixID={prefixes.cst_list} />
     }),
-    columnHelper.accessor(cst => labelCstTypification(cst), {
+    columnHelper.accessor(cst => labelType(cst.analysis.type), {
       id: 'type',
       header: () => <span className='min-w-40'>Типизация</span>,
       enableHiding: true,

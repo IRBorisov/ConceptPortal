@@ -3,11 +3,12 @@
 import { Handle, type NodeProps, Position } from '@xyflow/react';
 import clsx from 'clsx';
 
+import { labelType } from '@/features/rslang/labels';
+
 import { APP_COLORS } from '@/styling/colors';
 import { globalIDs } from '@/utils/constants';
 
 import { colorBgGraphNode } from '../../../colors';
-import { labelCstTypification } from '../../../labels';
 import { type IConstituenta } from '../../../models/rsform';
 import { isBasicConcept } from '../../../models/rsform-api';
 import { useTermGraphStore, useTGConnectionStore } from '../../../stores/term-graph';
@@ -59,8 +60,8 @@ export function TGNodeComponent(node: NodeProps<TGNode>) {
             backgroundColor: node.selected
               ? APP_COLORS.bgActiveSelection
               : node.data.focused
-              ? APP_COLORS.bgDefault
-              : colorBgGraphNode(node.data.cst, coloring)
+                ? APP_COLORS.bgDefault
+                : colorBgGraphNode(node.data.cst, coloring)
           }}
         >
           <div className='cc-node-label'>{label}</div>
@@ -93,8 +94,7 @@ function describeCstNode(cst: IConstituenta) {
   const contents = isBasicConcept(cst.cst_type)
     ? cst.convention
     : cst.definition_resolved || cst.definition_formal || cst.convention;
-  const typification = labelCstTypification(cst);
-  return `${cst.alias}: ${cst.term_resolved}</br>${
-    cst.parse ? `<b>Типизация:</b> ${typification}</br>` : ''
-  }<b>Содержание:</b> ${contents ? contents : 'отсутствует'}`;
+  const typification = labelType(cst.analysis?.type ?? null);
+  return `${cst.alias}: ${cst.term_resolved}</br>${cst.analysis ? `<b>Типизация:</b> ${typification}</br>` : ''
+    }<b>Содержание:</b> ${contents ? contents : 'отсутствует'}`;
 }

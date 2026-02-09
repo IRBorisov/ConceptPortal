@@ -2,7 +2,6 @@
 
 /** Represents computability class. */
 export const ValueClass = {
-  INVALID: 'invalid', // incalculable
   VALUE: 'value',
   PROPERTY: 'property'
 } as const;

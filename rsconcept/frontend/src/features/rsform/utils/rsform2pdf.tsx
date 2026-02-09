@@ -1,13 +1,13 @@
 import { Link, pdf, Text, View } from '@react-pdf/renderer';
 
 import { urls } from '@/app';
+import { labelType } from '@/features/rslang/labels';
 
 import { CDocument } from '@/components/pdf/CDocument';
 import { external_urls } from '@/utils/constants';
 import { type RO } from '@/utils/meta';
 
 import { pdfs } from '../../../components/pdf/pdf-styles';
-import { labelCstTypification } from '../labels';
 import { type IConstituenta, type IRSForm } from '../models/rsform';
 
 import { addSpaces, addSpacesTypification, hyphenateCyrillic } from './pdf-utils';
@@ -26,7 +26,7 @@ export function createSchemaFile(data: IRSForm): Promise<Blob> {
   return pdf(<SchemaDocument data={data} />).toBlob();
 }
 
-function CstListDocument({ data }: { data: RO<IConstituenta[]> }) {
+function CstListDocument({ data }: { data: RO<IConstituenta[]>; }) {
   return (
     <CDocument>
       <CstTable data={data} />
@@ -39,7 +39,7 @@ function CstListDocument({ data }: { data: RO<IConstituenta[]> }) {
   );
 }
 
-function SchemaDocument({ data }: { data: IRSForm }) {
+function SchemaDocument({ data }: { data: IRSForm; }) {
   return (
     <CDocument>
       <SchemaTitle schema={data} />
@@ -50,7 +50,7 @@ function SchemaDocument({ data }: { data: IRSForm }) {
 }
 
 // ======== Internal components ========
-function SchemaTitle({ schema }: { schema: IRSForm }) {
+function SchemaTitle({ schema }: { schema: IRSForm; }) {
   const url = `${external_urls.portal}${urls.schema(schema.id)}`;
   return (
     <View style={{ marginBottom: 10 }}>
@@ -66,7 +66,7 @@ function SchemaTitle({ schema }: { schema: IRSForm }) {
   );
 }
 
-function SchemaFooter({ schema }: { schema: IRSForm }) {
+function SchemaFooter({ schema }: { schema: IRSForm; }) {
   return (
     <View fixed style={pdfs.footer}>
       <Text>КС {schema.alias}</Text>
@@ -75,7 +75,7 @@ function SchemaFooter({ schema }: { schema: IRSForm }) {
   );
 }
 
-function CstTable({ data }: { data: RO<IConstituenta[]> }) {
+function CstTable({ data }: { data: RO<IConstituenta[]>; }) {
   return (
     <>
       <View style={{ flex: 1 }}>
@@ -98,7 +98,7 @@ function CstTable({ data }: { data: RO<IConstituenta[]> }) {
               {addSpaces(cst.definition_formal)}
             </Text>
             <Text style={{ ...pdfs.cell, width: '38mm', fontFamily: 'CodeMath' }} hyphenationCallback={word => [word]}>
-              {addSpacesTypification(labelCstTypification(cst))}
+              {addSpacesTypification(labelType(cst.analysis.type))}
             </Text>
             <Text style={{ ...pdfs.cell, width: '40mm' }} hyphenationCallback={hyphenateCyrillic}>
               {cst.term_resolved}

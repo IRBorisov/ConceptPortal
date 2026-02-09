@@ -6,21 +6,21 @@ import {
   IconStatusUnknown
 } from '@/components/icons';
 
-import { ExpressionStatus } from '../models/rsform';
+import { CstStatus } from '../models/rsform';
 
-export function IconExpressionStatus({ value, size = '1.25rem', className }: DomIconProps<ExpressionStatus>) {
+export function IconExpressionStatus({ value, size = '1.25rem', className }: DomIconProps<CstStatus>) {
   switch (value) {
-    case ExpressionStatus.VERIFIED:
-    case ExpressionStatus.PROPERTY:
+    case CstStatus.VERIFIED:
+    case CstStatus.PROPERTY:
       return <IconStatusOK size={size} className={className} />;
 
-    case ExpressionStatus.UNKNOWN:
+    case CstStatus.UNKNOWN:
       return <IconStatusUnknown size={size} className={className} />;
-    case ExpressionStatus.INCALCULABLE:
+    case CstStatus.INCALCULABLE:
       return <IconStatusIncalculable size={size} className={className} />;
 
-    case ExpressionStatus.INCORRECT:
-    case ExpressionStatus.UNDEFINED:
+    case CstStatus.INCORRECT:
+    case CstStatus.UNDEFINED:
       return <IconStatusError size={size} className={className} />;
   }
 }

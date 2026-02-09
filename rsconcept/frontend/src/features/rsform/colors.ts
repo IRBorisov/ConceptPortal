@@ -3,7 +3,7 @@ import { type FlatAstNode } from '@/utils/parsing';
 
 import { TokenID } from '../rslang';
 
-import { CstClass, ExpressionStatus, type IConstituenta } from './models/rsform';
+import { CstClass, CstStatus, type IConstituenta } from './models/rsform';
 import { type TypificationNodeData } from './models/typification-graph';
 import { TGColoring, TGEdgeType } from './stores/term-graph';
 
@@ -153,42 +153,42 @@ export function colorBgSyntaxTree(node: FlatAstNode): string {
   return APP_COLORS.bgPurple;
 }
 
-/** Determines background color for {@link ExpressionStatus}. */
-export function colorBgCstStatus(status: ExpressionStatus): string {
+/** Determines background color for {@link CstStatus}. */
+export function colorBgCstStatus(status: CstStatus): string {
   // prettier-ignore
   switch (status) {
-    case ExpressionStatus.VERIFIED: return APP_COLORS.bgGreen;
-    case ExpressionStatus.INCORRECT: return APP_COLORS.bgRed;
-    case ExpressionStatus.INCALCULABLE: return APP_COLORS.bgOrange;
-    case ExpressionStatus.PROPERTY: return APP_COLORS.bgTeal;
-    case ExpressionStatus.UNKNOWN: return APP_COLORS.bgSelected;
-    case ExpressionStatus.UNDEFINED: return APP_COLORS.bgBlue;
+    case CstStatus.VERIFIED: return APP_COLORS.bgGreen;
+    case CstStatus.INCORRECT: return APP_COLORS.bgRed;
+    case CstStatus.INCALCULABLE: return APP_COLORS.bgOrange;
+    case CstStatus.PROPERTY: return APP_COLORS.bgTeal;
+    case CstStatus.UNKNOWN: return APP_COLORS.bgSelected;
+    case CstStatus.UNDEFINED: return APP_COLORS.bgBlue;
   }
 }
 
-/** Determines statusbar color for {@link ExpressionStatus}. */
-export function colorStatusBar(status: ExpressionStatus): string {
+/** Determines statusbar color for {@link CstStatus}. */
+export function colorStatusBar(status: CstStatus): string {
   // prettier-ignore
   switch (status) {
-    case ExpressionStatus.VERIFIED: return APP_COLORS.bgGreen50;
-    case ExpressionStatus.INCORRECT: return APP_COLORS.bgRed;
-    case ExpressionStatus.INCALCULABLE: return APP_COLORS.bgOrange;
-    case ExpressionStatus.PROPERTY: return APP_COLORS.bgTeal;
-    case ExpressionStatus.UNKNOWN: return APP_COLORS.bgSelected;
-    case ExpressionStatus.UNDEFINED: return APP_COLORS.bgBlue;
+    case CstStatus.VERIFIED: return APP_COLORS.bgGreen50;
+    case CstStatus.INCORRECT: return APP_COLORS.bgRed;
+    case CstStatus.INCALCULABLE: return APP_COLORS.bgOrange;
+    case CstStatus.PROPERTY: return APP_COLORS.bgTeal;
+    case CstStatus.UNKNOWN: return APP_COLORS.bgSelected;
+    case CstStatus.UNDEFINED: return APP_COLORS.bgBlue;
   }
 }
 
-/** Determines foreground color for {@link ExpressionStatus}. */
-export function colorFgCstStatus(status: ExpressionStatus): string {
+/** Determines foreground color for {@link CstStatus}. */
+export function colorFgCstStatus(status: CstStatus): string {
   // prettier-ignore
   switch (status) {
-    case ExpressionStatus.VERIFIED: return APP_COLORS.fgGreen;
-    case ExpressionStatus.INCORRECT: return APP_COLORS.fgRed;
-    case ExpressionStatus.INCALCULABLE: return APP_COLORS.fgOrange;
-    case ExpressionStatus.PROPERTY: return APP_COLORS.fgTeal;
-    case ExpressionStatus.UNKNOWN: return APP_COLORS.fgBlue;
-    case ExpressionStatus.UNDEFINED: return APP_COLORS.fgBlue;
+    case CstStatus.VERIFIED: return APP_COLORS.fgGreen;
+    case CstStatus.INCORRECT: return APP_COLORS.fgRed;
+    case CstStatus.INCALCULABLE: return APP_COLORS.fgOrange;
+    case CstStatus.PROPERTY: return APP_COLORS.fgTeal;
+    case CstStatus.UNKNOWN: return APP_COLORS.fgBlue;
+    case CstStatus.UNDEFINED: return APP_COLORS.fgBlue;
   }
 }
 

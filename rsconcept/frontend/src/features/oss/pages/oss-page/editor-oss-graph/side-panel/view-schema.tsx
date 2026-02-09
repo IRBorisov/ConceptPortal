@@ -7,6 +7,7 @@ import { type IConstituenta } from '@/features/rsform';
 import { useRSFormSuspense } from '@/features/rsform/backend/use-rsform';
 import { RSFormStats } from '@/features/rsform/components/rsform-stats';
 import { ViewConstituents } from '@/features/rsform/components/view-constituents';
+import { calculateStats } from '@/features/rsform/models/rsform-api';
 
 import { useFitHeight } from '@/stores/app-layout';
 import { useDialogsStore } from '@/stores/dialogs';
@@ -24,6 +25,7 @@ export function ViewSchema({ schemaID, isMutable }: ViewSchemaProps) {
   const activeCst = activeID ? schema.cstByID.get(activeID) ?? null : null;
   const showEditCst = useDialogsStore(state => state.showEditCst);
   const setCurrentSchema = useAIStore(state => state.setCurrentSchema);
+  const stats = calculateStats(schema);
 
   const listHeight = useFitHeight('14.5rem', '10rem');
 
@@ -59,7 +61,7 @@ export function ViewSchema({ schemaID, isMutable }: ViewSchemaProps) {
         onDoubleClick={isMutable ? handleEditCst : undefined}
       />
 
-      <RSFormStats className='pr-4 py-2 -ml-4' stats={schema.stats} />
+      <RSFormStats className='pr-4 py-2 -ml-4' stats={stats} />
     </div>
   );
 }

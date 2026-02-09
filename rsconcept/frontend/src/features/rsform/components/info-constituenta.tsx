@@ -1,7 +1,8 @@
+import { labelType } from '@/features/rslang/labels';
+
 import { IconChild, IconCrucial } from '@/components/icons';
 import { cn } from '@/components/utils';
 
-import { labelCstTypification } from '../labels';
 import { type IConstituenta } from '../models/rsform';
 import { isBasicConcept } from '../models/rsform-api';
 
@@ -23,12 +24,10 @@ export function InfoConstituenta({ data, className, ...restProps }: InfoConstitu
           {data.term_resolved || data.term_raw}
         </p>
       ) : null}
-      {data.parse ? (
-        <p className='break-all'>
-          <b>Типизация: </b>
-          <span className='font-math'>{labelCstTypification(data)}</span>
-        </p>
-      ) : null}
+      <p className='break-all'>
+        <b>Типизация: </b>
+        <span className='font-math'>{labelType(data.analysis?.type ?? null)}</span>
+      </p>
       {data.definition_formal ? (
         <p className='break-all'>
           <b>Выражение: </b>

@@ -16,11 +16,14 @@ import { getTypeClass } from './typification-api';
 import { ValueAuditor } from './value-auditor';
 import { ValueClass, type ValueClassContext } from './value-class';
 
-export interface AnalysisOutput {
+export interface AnalysisBase {
   success: boolean;
   ast: AstNode | null;
   type: ExpressionType | null;
   valueClass: ValueClass | null;
+}
+
+export interface AnalysisFull extends AnalysisBase {
   errors: RSErrorDescription[];
 }
 
@@ -54,7 +57,38 @@ export class RSLangAnalyzer {
     }
   }
 
-  public check(expression: string, options?: AnalysisOptions): AnalysisOutput {
+  public checkFast(expression: string, options?: AnalysisOptions): AnalysisBase {
+    if (expression.length === 0) {
+      return { success: false, type: null, valueClass: null, ast: null };
+    }
+    const ast = this.parse(expression);
+    if (ast.hasError) {
+      return { success: false, type: null, valueClass: null, ast: ast };
+    }
+    const type = this.typeAuditor.run(ast);
+    if (type === null) {
+      return { success: false, type: null, valueClass: null, ast: ast };
+    }
+
+    if (options?.isDomain) {
+      if (!isStructureDomain(ast) || type.typeID !== TypeID.collection) {
+        return { success: false, type: null, valueClass: null, ast: ast };
+      }
+      return { success: true, type: debool(type), valueClass: ValueClass.VALUE, ast: ast };
+    }
+    if (options?.expected && getTypeClass(type.typeID) !== options.expected) {
+      return { success: false, type: null, valueClass: null, ast: ast };
+    }
+
+    return {
+      success: true,
+      type: type,
+      valueClass: options?.isDomain ? ValueClass.VALUE : this.valueAuditor.run(ast),
+      ast: ast
+    };
+  }
+
+  public checkFull(expression: string, options?: AnalysisOptions): AnalysisFull {
     const errors: RSErrorDescription[] = [];
     const reporter = (error: RSErrorDescription) => {
       errors.push(error);
@@ -85,9 +119,7 @@ export class RSLangAnalyzer {
       reporter({ code: RSErrorCode.expectedType, position: ast.from, params: [labelTypeClass(options.expected)] });
       return { success: false, type: null, valueClass: null, errors: errors, ast: ast };
     }
-    if (type === null) {
-      return { success: false, type: null, valueClass: null, errors: errors, ast: ast };
-    }
+
     return {
       success: true,
       type: type,

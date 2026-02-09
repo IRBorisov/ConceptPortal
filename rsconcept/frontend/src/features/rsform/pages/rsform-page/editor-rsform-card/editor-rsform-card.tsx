@@ -4,6 +4,7 @@ import clsx from 'clsx';
 
 import { EditorLibraryItem } from '@/features/library/components/editor-library-item';
 import { ToolbarItemCard } from '@/features/library/components/toolbar-item-card';
+import { calculateStats } from '@/features/rsform/models/rsform-api';
 
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useModificationStore } from '@/stores/modification';
@@ -23,6 +24,7 @@ export function EditorRSFormCard() {
   const showRSFormStats = usePreferencesStore(state => state.showRSFormStats);
   const windowSize = useWindowSize();
   const isNarrow = !!windowSize.width && windowSize.width <= SIDELIST_LAYOUT_THRESHOLD;
+  const stats = calculateStats(schema);
 
   function initiateSubmit() {
     const element = document.getElementById(globalIDs.library_item_editor) as HTMLFormElement;
@@ -70,7 +72,7 @@ export function EditorRSFormCard() {
           showRSFormStats ? 'max-w-full' : 'opacity-0 max-w-0'
         )}
       >
-        <RSFormStats stats={schema.stats} />
+        <RSFormStats stats={stats} />
       </aside>
     </div>
   );

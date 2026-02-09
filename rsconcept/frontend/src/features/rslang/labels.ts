@@ -138,7 +138,7 @@ export function labelRSLangNode(node: RO<AstNodeBase>): string {
   return 'UNKNOWN ' + String(node.typeID);
 }
 
-/** Generates error description for {@link IRSErrorDescription}. */
+/** Generates error description for {@link RSErrorCode}. */
 export function describeRSError(code: RSErrorCode, params: readonly string[] = []): string {
   // prettier-ignore
   switch (code) {
@@ -246,7 +246,7 @@ export function describeRSError(code: RSErrorCode, params: readonly string[] = [
 }
 
 /** Converts expression type to string. */
-export function labelType(type: ExpressionType | null): string {
+export function labelType(type: RO<ExpressionType> | null): string {
   if (!type) {
     return 'N/A';
   }

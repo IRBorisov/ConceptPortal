@@ -13,10 +13,6 @@ urlpatterns = [
     path('rsforms/create-detailed', views.create_rsform),
     path('rsforms/inline-synthesis', views.inline_synthesis),
 
-    path('rslang/parse-expression', views.parse_expression),
-    path('rslang/to-ascii', views.convert_to_ascii),
-    path('rslang/to-math', views.convert_to_math),
-
     path('cctext/inflect', views.inflect),
     path('cctext/generate-lexeme', views.generate_lexeme),
     path('cctext/parse', views.parse_text),

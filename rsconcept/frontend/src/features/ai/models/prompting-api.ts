@@ -1,9 +1,10 @@
 import { type IBlock, type IOperationSchema, NodeType } from '@/features/oss/models/oss';
 import { type IConstituenta, type IRSForm } from '@/features/rsform';
-import { labelCstTypification } from '@/features/rsform/labels';
 import { CstType } from '@/features/rsform/models/rsform';
-import { isBasicConcept, parseRSForm } from '@/features/rsform/models/rsform-api';
+import { isBasicConcept } from '@/features/rsform/models/rsform-api';
 import { TypificationGraph } from '@/features/rsform/models/typification-graph';
+import { labelType } from '@/features/rslang/labels';
+import { isTypification } from '@/features/rslang/semantic/typification';
 
 import { type Graph } from '@/models/graph';
 import { PARAMETER } from '@/utils/constants';
@@ -43,7 +44,7 @@ export function varSchema(schema: IRSForm): string {
   let result = stringifySchemaIntro(schema);
   result += '\n\nКонституенты:';
   schema.items.forEach(item => {
-    result += `\n${item.alias} - "${labelCstTypification(item)}" - "${item.term_resolved}" - "${item.definition_formal
+    result += `\n${item.alias} - "${labelType(item.analysis.type)}" - "${item.term_resolved}" - "${item.definition_formal
       }" - "${item.definition_resolved}" - "${item.convention}"`;
   });
   result += `\n${stringifyCrucial(schema.items.filter(cst => cst.crucial))}`;
@@ -99,9 +100,10 @@ export function varSchemaGraph(schema: IRSForm): string {
 /** Generates a prompt for a schema type graph variable. */
 export function varSchemaTypeGraph(schema: IRSForm): string {
   const graph = new TypificationGraph();
-  parseRSForm(schema);
   schema.items.forEach(item => {
-    if (item.analysis?.type) graph.addElement(item.alias, item.analysis.type);
+    if (item.analysis.type !== null && isTypification(item.analysis.type)) {
+      graph.addElement(item.alias, item.analysis.type);
+    }
   });
 
   let result = stringifySchemaIntro(schema);
@@ -164,7 +166,7 @@ export function varSyntaxTree(cst: IConstituenta): string {
   let result = `Конституента: ${cst.alias}`;
   result += `\nФормальное выражение: ${cst.definition_formal}`;
   result += `\nДерево синтаксического разбора:\n`;
-  result += cst.parse ? JSON.stringify(cst.parse.syntaxTree, null, PARAMETER.indentJSON) : 'не определено';
+  result += cst.analysis ? JSON.stringify(cst.analysis.ast, null, PARAMETER.indentJSON) : 'не определено';
   return result;
 }
 

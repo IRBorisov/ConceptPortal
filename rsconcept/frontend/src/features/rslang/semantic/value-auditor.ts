@@ -199,7 +199,7 @@ export class ValueAuditor {
   private visitGlobal(node: AstNode): ValueClass | null {
     const alias = getNodeText(node);
     const result = this.context.get(alias);
-    if (!result || result === ValueClass.INVALID) {
+    if (!result) {
       return this.onError(RSErrorCode.globalNoValue, node.from, [alias]);
     }
     return result;

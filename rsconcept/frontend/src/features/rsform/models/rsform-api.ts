@@ -3,19 +3,19 @@
  */
 
 import { BASIC_SCHEMAS, type ILibraryItem } from '@/features/library';
-import { RSLangAnalyzer, TypeClass, ValueClass } from '@/features/rslang';
-import { type AnalysisOutput } from '@/features/rslang';
+import { TypeClass, ValueClass } from '@/features/rslang';
+import { type AnalysisFull } from '@/features/rslang';
 
 import { type RO } from '@/utils/meta';
 import { TextMatcher } from '@/utils/utils';
 
-import { ParsingStatus } from '../backend/types';
 import { CstMatchMode } from '../stores/cst-search';
 
 import {
   CATEGORY_CST_TYPE,
-  CstClass, CstType, ExpressionStatus,
-  type IArgumentValue, type IConstituenta, type IRSForm
+  CstClass, CstStatus,
+  CstType, type IArgumentValue, type IConstituenta, type IRSForm,
+  type IRSFormStats
 } from './rsform';
 
 /**
@@ -50,29 +50,22 @@ export function matchConstituenta(target: RO<IConstituenta>, query: string, mode
  *
  * @returns The inferred expression status:
  * - `ExpressionStatus.UNDEFINED` if either parsing or value is not provided.
- * - `ExpressionStatus.UNKNOWN` if parsing status is `ParsingStatus.UNDEF`.
- * - `ExpressionStatus.INCORRECT` if parsing status is `ParsingStatus.INCORRECT`.
+ * - `ExpressionStatus.INCORRECT` if parsing failed.
  * - `ExpressionStatus.INCALCULABLE` if value is `ValueClass.INVALID`.
  * - `ExpressionStatus.PROPERTY` if value is `ValueClass.PROPERTY`.
  * - `ExpressionStatus.VERIFIED` if both parsing and value are valid.
  */
-export function inferStatus(parse?: ParsingStatus, value?: ValueClass | null): ExpressionStatus {
+export function inferStatus(parse: boolean, value?: ValueClass | null): CstStatus {
   if (!parse) {
-    return ExpressionStatus.UNDEFINED;
+    return CstStatus.INCORRECT;
   }
-  if (parse === ParsingStatus.UNDEF) {
-    return ExpressionStatus.UNKNOWN;
-  }
-  if (parse === ParsingStatus.INCORRECT) {
-    return ExpressionStatus.INCORRECT;
-  }
-  if (value === ValueClass.INVALID || value === null) {
-    return ExpressionStatus.INCALCULABLE;
+  if (value === null) {
+    return CstStatus.INCALCULABLE;
   }
   if (value === ValueClass.PROPERTY) {
-    return ExpressionStatus.PROPERTY;
+    return CstStatus.PROPERTY;
   }
-  return ExpressionStatus.VERIFIED;
+  return CstStatus.VERIFIED;
 }
 
 /** Infers type of constituent for a given template and arguments. */
@@ -256,8 +249,8 @@ export function isLogical(type: CstType): boolean {
  */
 export function canProduceStructure(cst: RO<IConstituenta>): boolean {
   return (
-    !!cst.parse &&
-    !!cst.parse.typification &&
+    !!cst.analysis?.success &&
+    cst.analysis.type !== null &&
     cst.cst_type !== CstType.BASE &&
     cst.cst_type !== CstType.CONSTANT &&
     cst.cst_type !== CstType.NOMINAL
@@ -370,50 +363,39 @@ export function typeClassForCstType(cstType: CstType): TypeClass {
   }
 }
 
-export function getAnalysisFor(expression: string, cstType: CstType, schema: IRSForm): AnalysisOutput {
-  const analyzer = schema.analyzer ?? parseRSForm(schema);
-  return analyzer.check(expression, {
+export function getAnalysisFor(expression: string, cstType: CstType, schema: IRSForm): AnalysisFull {
+  return schema.analyzer.checkFull(expression, {
     expected: typeClassForCstType(cstType),
     isDomain: cstType === CstType.STRUCTURED,
   });
 }
 
-export function parseRSForm(target: IRSForm): RSLangAnalyzer {
-  const analyzer = new RSLangAnalyzer();
-  target.analyzer = analyzer;
-  const order = target.graph.topologicalOrder();
-  order.forEach(cstID => {
-    const cst = target.cstByID.get(cstID)!;
-    parseCst(cst, analyzer);
-  });
-  return analyzer;
-}
+export function calculateStats(target: IRSForm): IRSFormStats {
+  const items = target.items;
+  return {
+    count_all: items.length,
+    count_crucial: items.reduce((sum, cst) => sum + (cst.crucial ? 1 : 0), 0),
+    count_errors: items.reduce((sum, cst) => sum + (!cst.analysis?.success ? 1 : 0), 0),
+    count_property: items.reduce((sum, cst) => sum + (cst.analysis?.valueClass === ValueClass.PROPERTY ? 1 : 0), 0),
+    count_incalculable: items.reduce(
+      (sum, cst) =>
+        sum + (cst.analysis?.success && cst.analysis.valueClass === null ? 1 : 0),
+      0
+    ),
+    count_inherited: items.reduce((sum, cst) => sum + (cst.is_inherited ? 1 : 0), 0),
 
-// ======= Internals ========
-function parseCst(target: IConstituenta, analyzer: RSLangAnalyzer) {
-  const cType = target.cst_type;
-  if (cType === CstType.NOMINAL) {
-    return;
-  }
-  if (cType === CstType.BASE) {
-    analyzer.addBase(target.alias);
-  } else if (cType === CstType.CONSTANT) {
-    analyzer.addBase(target.alias, true);
-  } else {
-    const parse = analyzer.check(target.definition_formal, {
-      expected: typeClassForCstType(cType),
-      isDomain: cType === CstType.STRUCTURED
-    });
+    count_text_term: items.reduce((sum, cst) => sum + (cst.term_raw ? 1 : 0), 0),
+    count_definition: items.reduce((sum, cst) => sum + (cst.definition_raw ? 1 : 0), 0),
+    count_convention: items.reduce((sum, cst) => sum + (cst.convention ? 1 : 0), 0),
 
-    analyzer.setGlobal(target.alias, parse.type, parse.valueClass);
-    if (target.parse?.status === ParsingStatus.VERIFIED !== parse.success) {
-      throw new Error('Parsing status mismatch: ' + target.alias);
-    }
-    target.analysis = {
-      success: parse.success,
-      type: parse.type,
-      ast: parse.ast,
-      valueClass: parse.valueClass
-    };
-  }
+    count_base: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.BASE ? 1 : 0), 0),
+    count_constant: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.CONSTANT ? 1 : 0), 0),
+    count_structured: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.STRUCTURED ? 1 : 0), 0),
+    count_axiom: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.AXIOM ? 1 : 0), 0),
+    count_term: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.TERM ? 1 : 0), 0),
+    count_function: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.FUNCTION ? 1 : 0), 0),
+    count_predicate: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.PREDICATE ? 1 : 0), 0),
+    count_theorem: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.THEOREM ? 1 : 0), 0),
+    count_nominal: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.NOMINAL ? 1 : 0), 0)
+  };
 }

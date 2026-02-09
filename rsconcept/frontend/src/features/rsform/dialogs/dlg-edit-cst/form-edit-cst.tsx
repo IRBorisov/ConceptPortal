@@ -3,6 +3,7 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
+import { labelType } from '@/features/rslang/labels';
 
 import { MiniButton } from '@/components/control';
 import { Label, TextArea, TextInput } from '@/components/input';
@@ -15,7 +16,7 @@ import { IconCrucialValue } from '../../components/icon-crucial-value';
 import { RSInput } from '../../components/rs-input';
 import { SelectCstType } from '../../components/select-cst-type';
 import { SelectMultiConstituenta } from '../../components/select-multi-constituenta';
-import { getRSDefinitionPlaceholder, labelCstTypification, labelRSExpression } from '../../labels';
+import { getRSDefinitionPlaceholder, labelRSExpression } from '../../labels';
 import { CstType, type IConstituenta, type IRSForm } from '../../models/rsform';
 import { generateAlias, isBaseSet, isBasicConcept } from '../../models/rsform-api';
 
@@ -146,7 +147,7 @@ export function FormEditCst({ target, schema }: FormEditCstProps) {
           transparent
           readOnly
           label='Типизация'
-          value={labelCstTypification(target)}
+          value={labelType(target.analysis.type)}
           className='cursor-default'
         />
       ) : null}

@@ -6,7 +6,8 @@ import { Controller, useForm, useWatch } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { TypeID } from '@/features/rslang';
+import { type AnalysisFull, TypeID } from '@/features/rslang';
+import { labelType } from '@/features/rslang/labels';
 
 import { MiniButton, SubmitButton } from '@/components/control';
 import { TextButton } from '@/components/control/text-button';
@@ -19,11 +20,7 @@ import { errorMsg, tooltipText } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 import { promptUnsaved } from '@/utils/utils';
 
-import {
-  type IExpressionParseDTO,
-  type IUpdateConstituentaDTO,
-  schemaUpdateConstituenta
-} from '../../../backend/types';
+import { type IUpdateConstituentaDTO, schemaUpdateConstituenta } from '../../../backend/types';
 import { useClearAttributions } from '../../../backend/use-clear-attributions';
 import { useCreateAttribution } from '../../../backend/use-create-attribution';
 import { useDeleteAttribution } from '../../../backend/use-delete-attribution';
@@ -35,9 +32,7 @@ import { RefsInput } from '../../../components/refs-input';
 import { SelectMultiConstituenta } from '../../../components/select-multi-constituenta';
 import {
   getRSDefinitionPlaceholder,
-  labelCstTypification,
-  labelRSExpression,
-  labelTypification
+  labelRSExpression
 } from '../../../labels';
 import { CstType, type IConstituenta, type IRSForm } from '../../../models/rsform';
 import { getAnalysisFor, isBaseSet, isBasicConcept } from '../../../models/rsform-api';
@@ -88,17 +83,13 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
   });
   const definition = useWatch({ control, name: 'item_data.definition_formal' });
   const [forceComment, setForceComment] = useState(false);
-  const [localParse, setLocalParse] = useState<RO<IExpressionParseDTO> | null>(null);
+  const [localParse, setLocalParse] = useState<RO<AnalysisFull> | null>(null);
 
   const typification = useMemo(
     () =>
       localParse
-        ? labelTypification({
-          isValid: localParse.parseResult,
-          resultType: localParse.typification,
-          args: localParse.args
-        })
-        : labelCstTypification(activeCst),
+        ? labelType(localParse.type)
+        : labelType(activeCst.analysis.type),
     [localParse, activeCst]
   );
 
@@ -321,7 +312,8 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
               activeCst={activeCst}
               toggleReset={toggleReset}
               onChange={newValue => field.onChange(newValue)}
-              onChangeLocalParse={setLocalParse}
+              analysis={localParse}
+              onAnalysis={setLocalParse}
               onOpenEdit={onOpenEdit}
               onShowTypeGraph={handleTypeGraph}
               disabled={disabled || activeCst.is_inherited}

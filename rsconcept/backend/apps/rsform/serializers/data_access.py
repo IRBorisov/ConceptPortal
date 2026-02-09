@@ -19,7 +19,6 @@ from shared.serializers import StrictModelSerializer, StrictSerializer
 
 from ..models import Attribution, Constituenta, CstType, RSForm
 from .basics import CstParseSerializer, InheritanceDataSerializer
-from .io_pyconcept import PyConceptAdapter
 
 
 class AttributionSerializer(StrictModelSerializer):
@@ -341,25 +340,12 @@ class RSFormParseSerializer(StrictModelSerializer):
         fields = '__all__'
 
     def to_representation(self, instance: LibraryItem):
-        result = RSFormSerializer(instance).data
-        return self._parse_data(result)
+        return RSFormSerializer(instance).data
 
     def from_versioned_data(self, version: int, data: dict) -> dict:
         ''' Load data from version and parse. '''
         item = cast(LibraryItem, self.instance)
-        result = RSFormSerializer(item).from_versioned_data(version, data)
-        return self._parse_data(result)
-
-    def _parse_data(self, data: dict) -> dict:
-        parse = PyConceptAdapter(data).parse()
-        for cst_data in data['items']:
-            if cst_data['cst_type'] == CstType.NOMINAL:
-                continue
-            cst_data['parse'] = next(
-                cst['parse'] for cst in parse['items']
-                if cst['id'] == cst_data['id']
-            )
-        return data
+        return RSFormSerializer(item).from_versioned_data(version, data)
 
 
 class CstTargetSerializer(StrictSerializer):

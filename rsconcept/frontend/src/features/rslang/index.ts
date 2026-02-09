@@ -2,7 +2,7 @@ export { RSErrorCode, type RSErrorDescription } from './error';
 export { normalizeAST } from './parser/normalize';
 export { parser as rslangParser } from './parser/parser';
 export { TokenID } from './parser/token';
-export { type AnalysisOutput, RSLangAnalyzer } from './semantic/analyzer';
+export { type AnalysisBase, type AnalysisFull, type AnalysisOptions, RSLangAnalyzer } from './semantic/analyzer';
 export {
   AnyTypificationT,
   EmptySetT,

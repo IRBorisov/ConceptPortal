@@ -4,29 +4,20 @@ import { useCallback, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { type ReactCodeMirrorRef } from '@uiw/react-codemirror';
 
-import { TokenID, ValueClass } from '@/features/rslang';
-import { isCritical } from '@/features/rslang/error';
-import { labelRSLangNode, labelType } from '@/features/rslang/labels';
+import { type AnalysisFull, type RSErrorDescription, TokenID } from '@/features/rslang';
 
 import { useResetOnChange } from '@/hooks/use-reset-on-change';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { type RO } from '@/utils/meta';
-import { buildTree, flattenAst, printAst } from '@/utils/parsing';
+import { buildTree, flattenAst } from '@/utils/parsing';
 
 import { normalizeAST, rslangParser } from '../../../../rslang';
-import {
-  type ICheckConstituentaDTO,
-  type IExpressionParseDTO,
-  type IRSErrorDescription,
-  Syntax
-} from '../../../backend/types';
-import { useCheckConstituenta } from '../../../backend/use-check-constituenta';
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { RSInput } from '../../../components/rs-input';
 import { RSTextWrapper } from '../../../components/rs-input/text-editing';
-import { type IConstituenta } from '../../../models/rsform';
-import { getAnalysisFor } from '../../../models/rsform-api';
+import { CstStatus, type IConstituenta } from '../../../models/rsform';
+import { getAnalysisFor, inferStatus } from '../../../models/rsform-api';
 import { useRSEdit } from '../rsedit-context';
 
 import { ParsingResult } from './parsing-result';
@@ -38,7 +29,7 @@ interface EditorRSExpressionProps {
   id?: string;
   value: string;
   onChange: (newValue: string) => void;
-
+  analysis: RO<AnalysisFull> | null;
   activeCst: IConstituenta;
 
   label: string;
@@ -46,7 +37,7 @@ interface EditorRSExpressionProps {
   disabled?: boolean;
   toggleReset?: boolean;
 
-  onChangeLocalParse: (typification: RO<IExpressionParseDTO>) => void;
+  onAnalysis: (typification: RO<AnalysisFull> | null) => void;
   onOpenEdit: (cstID: number) => void;
   onShowTypeGraph: (event: React.MouseEvent<Element>) => void;
 }
@@ -68,10 +59,11 @@ function extractCstData(cst: IConstituenta) {
 export function EditorRSExpression({
   activeCst,
   disabled,
+  analysis,
   value,
   toggleReset,
   onChange,
-  onChangeLocalParse,
+  onAnalysis,
   onOpenEdit,
   onShowTypeGraph,
   ...restProps
@@ -80,96 +72,64 @@ export function EditorRSExpression({
 
   const [isModified, setIsModified] = useState(false);
   const rsInput = useRef<ReactCodeMirrorRef>(null);
-  const [parseData, setParseData] = useState<RO<IExpressionParseDTO> | null>(null);
 
   const isProcessing = useMutatingRSForm();
   const showControls = usePreferencesStore(state => state.showExpressionControls);
   const showAST = useDialogsStore(state => state.showShowAST);
 
-  const { checkConstituenta: checkInternal, isPending } = useCheckConstituenta();
-
   const resetHandler = useCallback(() => {
     setIsModified(false);
-    setParseData(null);
-  }, []);
+    onAnalysis(null);
+  }, [onAnalysis]);
 
   const cstHash = extractCstData(activeCst);
   useResetOnChange([cstHash, toggleReset], resetHandler);
 
-  function checkConstituenta(
-    expression: string,
-    activeCst: IConstituenta,
-    onSuccess?: (data: RO<IExpressionParseDTO>) => void
-  ) {
-    const data: ICheckConstituentaDTO = {
-      definition_formal: expression,
-      alias: activeCst.alias,
-      cst_type: activeCst.cst_type
-    };
-    void checkInternal({ itemID: schema.id, data }).then(parse => {
-      setParseData(parse);
-      onSuccess?.(parse);
-    });
-  }
+  const status = (() => {
+    if (isModified) {
+      return CstStatus.UNKNOWN;
+    }
+    if (analysis) {
+      return inferStatus(analysis.success, analysis.valueClass);
+    } else {
+      return inferStatus(activeCst.analysis.success, activeCst.analysis.valueClass);
+    }
+  })();
 
   function handleChange(newValue: string) {
     onChange(newValue);
     setIsModified(newValue !== activeCst.definition_formal);
   }
 
-  function handleCheckExpression(event: React.MouseEvent<Element> | null, callback?: (parse: RO<IExpressionParseDTO>) => void) {
-    if (event?.ctrlKey || event?.metaKey) {
-      checkConstituenta(value, activeCst, parse => {
-        onChangeLocalParse(parse);
-        if (parse.errors.length > 0) {
-          onShowError(parse.errors[0], parse.prefixLen);
-        } else {
-          rsInput.current?.view?.focus();
-        }
-        setIsModified(false);
-        callback?.(parse);
-      });
-    } else {
-      try {
-        const parse = getAnalysisFor(value, activeCst.cst_type, schema);
-        const old_parse: IExpressionParseDTO = {
-          parseResult: parse.success,
-          prefixLen: 0,
-          syntax: Syntax.MATH,
-          typification: labelType(parse.type),
-          valueClass: parse.valueClass ?? ValueClass.INVALID,
-          errors: parse.errors.map(error => ({
-            errorType: error.code,
-            position: error.position,
-            isCritical: isCritical(error.code),
-            params: error.params ?? []
-          })),
-          astText: parse.ast ? printAst(parse.ast, node => labelRSLangNode(node)) : '',
-          ast: [],
-          args: []
-        };
-        onChangeLocalParse(old_parse);
-        setParseData(old_parse);
-        if (old_parse.errors.length > 0) {
-          onShowError(old_parse.errors[0], old_parse.prefixLen);
-        } else {
-          rsInput.current?.view?.focus();
-        }
-        setIsModified(false);
-        callback?.(old_parse);
-      } catch (err) {
-        const message = err instanceof Error ? err.message : String(err);
-        toast.error(message);
-        console.error(err);
+  function handleCheckExpression(
+    event: React.MouseEvent<Element> | null,
+    callback?: (parse: RO<AnalysisFull>) => void
+  ) {
+    event?.preventDefault();
+    event?.stopPropagation();
+    try {
+      const parse = getAnalysisFor(value, activeCst.cst_type, schema);
+      onAnalysis(parse);
+      if (parse.errors.length > 0) {
+        onShowError(parse.errors[0]);
+      } else {
+        rsInput.current?.view?.focus();
       }
+      setIsModified(false);
+      callback?.(parse);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      toast.error(message);
+      console.error(err);
     }
+
   }
 
-  function onShowError(error: RO<IRSErrorDescription>, prefixLen: number) {
+  function onShowError(error: RO<RSErrorDescription>) {
     if (!rsInput.current) {
       return;
     }
-    let errorPosition = error.position - prefixLen;
+    let errorPosition = error.position;
     if (errorPosition < 0) errorPosition = 0;
     rsInput.current?.view?.dispatch({
       selection: {
@@ -209,21 +169,6 @@ export function EditorRSExpression({
     }
   }
 
-  if (!activeCst.parse) {
-    return (
-      <RSInput
-        value={value}
-        schema={schema}
-        minHeight='3.75rem'
-        maxHeight='8rem'
-        onChange={handleChange}
-        onOpenEdit={onOpenEdit}
-        disabled={disabled}
-        {...restProps}
-      />
-    );
-  }
-
   return (
     <div className='relative'>
       <ToolbarRSExpression
@@ -235,10 +180,7 @@ export function EditorRSExpression({
 
       <StatusBar
         className='absolute -top-2 right-1/2 translate-x-1/2'
-        processing={isPending}
-        isModified={isModified}
-        activeCst={activeCst}
-        parseData={parseData}
+        status={status}
         onAnalyze={(event) => handleCheckExpression(event)}
       />
 
@@ -262,9 +204,9 @@ export function EditorRSExpression({
       />
 
       <ParsingResult
-        isOpen={!!parseData && parseData.errors.length > 0}
-        data={parseData}
-        onShowError={error => onShowError(error, parseData?.prefixLen ?? 0)}
+        isOpen={!!analysis && analysis.errors.length > 0}
+        data={analysis}
+        onShowError={error => onShowError(error)}
         disabled={disabled}
       />
     </div>

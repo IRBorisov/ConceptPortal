@@ -21,7 +21,6 @@ import { useFitHeight, useMainHeight } from '@/stores/app-layout';
 import { PARAMETER } from '@/utils/constants';
 import { errorMsg } from '@/utils/labels';
 
-import { ParsingStatus } from '../../../backend/types';
 import { useCreateAttribution } from '../../../backend/use-create-attribution';
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { useUpdateConstituenta } from '../../../backend/use-update-constituenta';
@@ -90,7 +89,7 @@ export function TGFlow() {
   const { handleKeyDown } = useHandleActions(filteredGraph);
 
   const suppressRFSelection = useRef<boolean>(false);
-  function onSelectionChange({ nodes, edges }: { nodes: Node[]; edges: Edge[] }) {
+  function onSelectionChange({ nodes, edges }: { nodes: Node[]; edges: Edge[]; }) {
     if (suppressRFSelection.current) {
       return;
     }
@@ -146,7 +145,7 @@ export function TGFlow() {
         const color =
           filter.graphType === TGEdgeType.full ? colorGraphEdge(edgeType) : colorGraphEdge(filter.graphType);
         const dashes =
-          edgeType === TGEdgeType.definition && target_cst.parse?.status !== ParsingStatus.VERIFIED ? '6 4' : '';
+          edgeType === TGEdgeType.definition && !target_cst.analysis.success ? '6 4' : '';
         newEdges.push({
           id: `${source.id}-${target}`,
           source: String(source.id),
@@ -392,7 +391,7 @@ export function TGFlow() {
 
       <div className='absolute z-pop top-24 sm:top-16 left-2 sm:left-3 w-54 flex flex-col pointer-events-none'>
         <span className='px-2 pb-1 select-none whitespace-nowrap backdrop-blur-xs rounded-xl w-fit'>
-          Выбор {selectedCst.length} из {schema.stats?.count_all ?? 0}
+          Выбор {selectedCst.length} из {schema.items.length}
         </span>
 
         <SelectColoring className='rounded-b-none' schema={schema} />

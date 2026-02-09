@@ -16,7 +16,7 @@ import { dataUrlToBlob, withPreventDefault } from '@/utils/utils';
 
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { useUpdateCrucial } from '../../../backend/use-update-crucial';
-import { isBasicConcept, parseRSForm } from '../../../models/rsform-api';
+import { isBasicConcept } from '../../../models/rsform-api';
 import { InteractionMode, useTermGraphStore, useTGConnectionStore } from '../../../stores/term-graph';
 import { useRSEdit } from '../rsedit-context';
 
@@ -59,12 +59,11 @@ export function useHandleActions(graph: Graph<number>) {
   const [isExportingImage, setIsExportingImage] = useState(false);
 
   function handleShowTypeGraph() {
-    parseRSForm(schema);
     const typeInfo = schema.items
       .filter(item => !!item.analysis?.type)
       .map(item => ({
         alias: item.alias,
-        type: item.analysis!.type!,
+        type: item.analysis.type!,
       }));
     showTypeGraph({ items: typeInfo });
   }

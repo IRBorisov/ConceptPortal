@@ -121,7 +121,7 @@ export function EditorRSList() {
       <div className={clsx('flex items-center border-b', !isContentEditable && 'justify-center pl-10')}>
         {isContentEditable ? (
           <div className='px-2'>
-            Выбор {selectedCst.length} из {schema.stats?.count_all}
+            Выбор {selectedCst.length} из {schema.items.length}
           </div>
         ) : null}
         {!isContentEditable && schema.oss.length > 0 ? (

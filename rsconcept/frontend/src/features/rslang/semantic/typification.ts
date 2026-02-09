@@ -60,61 +60,61 @@ export type TypeContext = Map<string, ExpressionType>;
 
 /** Functional argument. */
 export interface Argument {
-  alias: string;
-  type: Typification;
+  readonly alias: string;
+  readonly type: Typification;
 }
 
 /** Type: Logic. */
 export interface EchelonLogic {
-  typeID: typeof TypeID.logic;
+  readonly typeID: typeof TypeID.logic;
 }
 
 /** Type: AnyTyped. */
 export interface EchelonAnyTyped {
-  typeID: typeof TypeID.anyTypification;
+  readonly typeID: typeof TypeID.anyTypification;
 }
 
 /** Type: Integer. */
 export interface EchelonInteger {
-  typeID: typeof TypeID.integer;
-  isOrdered: true;
-  isArithmetic: true;
-  isIntegerCompatible: true;
+  readonly typeID: typeof TypeID.integer;
+  readonly isOrdered: true;
+  readonly isArithmetic: true;
+  readonly isIntegerCompatible: true;
 }
 
 /** Type: Element of basic set. */
 export interface EchelonBase {
-  typeID: typeof TypeID.basic;
-  baseID: string;
-  isOrdered?: boolean;
-  isArithmetic?: boolean;
-  isIntegerCompatible?: boolean;
+  readonly typeID: typeof TypeID.basic;
+  readonly baseID: string;
+  readonly isOrdered?: boolean;
+  readonly isArithmetic?: boolean;
+  readonly isIntegerCompatible?: boolean;
 }
 
 /** Type: Tuple. */
 export interface EchelonTuple {
-  typeID: typeof TypeID.tuple;
-  factors: Typification[];
+  readonly typeID: typeof TypeID.tuple;
+  readonly factors: readonly Typification[];
 }
 
 /** Type: Collection. */
 export interface EchelonCollection {
-  typeID: typeof TypeID.collection;
-  base: Typification;
+  readonly typeID: typeof TypeID.collection;
+  readonly base: Typification;
 }
 
 /** Type: Functional. */
 export interface EchelonFunctional {
-  typeID: typeof TypeID.function;
-  result: Typification;
-  args: Argument[];
+  readonly typeID: typeof TypeID.function;
+  readonly result: Typification;
+  readonly args: readonly Argument[];
 }
 
 /** Type: Predicate. */
 export interface EchelonPredicate {
-  typeID: typeof TypeID.predicate;
-  result: EchelonLogic;
-  args: Argument[];
+  readonly typeID: typeof TypeID.predicate;
+  readonly result: EchelonLogic;
+  readonly args: readonly Argument[];
 }
 
 /** Create basic element typification. */
@@ -126,7 +126,6 @@ export function basic(alias: string): EchelonBase {
 export function constant(alias: string): EchelonBase {
   return { typeID: TypeID.basic, baseID: alias, isOrdered: true, isArithmetic: true, isIntegerCompatible: true };
 }
-
 
 /** Create boolean typification. */
 export function bool(base: Typification): EchelonCollection {

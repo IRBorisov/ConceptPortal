@@ -8,12 +8,12 @@ import {
   type ILibraryItemReference,
   type IVersionInfo
 } from '@/features/library';
-import { type ExpressionType, type RSLangAnalyzer, type ValueClass } from '@/features/rslang';
+import { type AnalysisBase, type ExpressionType, type RSLangAnalyzer } from '@/features/rslang';
 
 import { type Graph } from '@/models/graph';
-import { type AstNode } from '@/utils/parsing';
+import { type RO } from '@/utils/meta';
 
-import { type IAttribution, type ParsingStatus } from '../backend/types';
+import { type IAttribution } from '../backend/types';
 
 /** Represents {@link IConstituenta} type. */
 export const CstType = {
@@ -61,7 +61,7 @@ export const CstClass = {
 export type CstClass = (typeof CstClass)[keyof typeof CstClass];
 
 /** Represents formal expression Status. */
-export const ExpressionStatus = {
+export const CstStatus = {
   VERIFIED: 'verified',
   INCORRECT: 'incorrect',
   INCALCULABLE: 'incalculable',
@@ -69,20 +69,12 @@ export const ExpressionStatus = {
   UNDEFINED: 'undefined',
   UNKNOWN: 'unknown'
 } as const;
-export type ExpressionStatus = (typeof ExpressionStatus)[keyof typeof ExpressionStatus];
+export type CstStatus = (typeof CstStatus)[keyof typeof CstStatus];
 
 /** Represents word form for natural language. */
 export interface TermForm {
   text: string;
   tags: string;
-}
-
-/** Represents results of RSLang analysis. */
-export interface CstParse {
-  success: boolean;
-  valueClass: ValueClass | null;
-  type: ExpressionType | null;
-  ast: AstNode | null;
 }
 
 /** Represents Constituenta. */
@@ -100,23 +92,15 @@ export interface IConstituenta {
   term_forms: TermForm[];
   attributes: number[];
 
-  parse?: {
-    status: ParsingStatus;
-    valueClass: ValueClass;
-    typification: string;
-    syntaxTree: string;
-    args: IArgumentInfo[];
-  };
-
-  analysis?: CstParse;
+  analysis: RO<AnalysisBase>;
 
   /** Identifier of {@link LibraryItem} containing this {@link IConstituenta}. */
   schema: number;
 
   /** {@link CstClass} of this {@link IConstituenta}. */
   cst_class: CstClass;
-  /** {@link ExpressionStatus} of this {@link IConstituenta}. */
-  status: ExpressionStatus;
+  /** {@link CstStatus} of this {@link IConstituenta}. */
+  status: CstStatus;
 
   /** Indicates if this {@link IConstituenta} is a template. */
   is_template: boolean;
@@ -187,8 +171,7 @@ export interface IRSForm extends ILibraryItemData {
   attribution: IAttribution[];
   oss: ILibraryItemReference[];
 
-  analyzer: RSLangAnalyzer | null;
-  stats: IRSFormStats;
+  analyzer: RSLangAnalyzer;
   graph: Graph;
   attribution_graph: Graph;
   cstByAlias: Map<string, IConstituenta>;

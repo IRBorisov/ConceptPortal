@@ -2,7 +2,6 @@
  * Generates description for {@link IConstituenta}.
  */
 
-import { PARAMETER } from '@/utils/constants';
 import { type RO } from '@/utils/meta';
 import { prepareTooltip } from '@/utils/utils';
 
@@ -10,9 +9,8 @@ import { type IVersionInfo } from '../library/backend/types';
 import { type CurrentVersion } from '../library/models/library';
 import { TokenID } from '../rslang';
 
-import { ParsingStatus } from './backend/types';
 import { Grammeme, ReferenceType } from './models/language';
-import { CstClass, CstType, ExpressionStatus, type IArgumentInfo, type IConstituenta } from './models/rsform';
+import { CstClass, CstStatus, CstType, type IConstituenta } from './models/rsform';
 import { CstMatchMode, DependencyMode } from './stores/cst-search';
 import { type InteractionMode, type TGColoring, type TGEdgeType } from './stores/term-graph';
 
@@ -100,22 +98,22 @@ const describeCstSourceRecord: Record<DependencyMode, string> = {
   [DependencyMode.EXPAND_INPUTS]: 'цепочка входящих'
 };
 
-const labelExpressionStatusRecord: Record<ExpressionStatus, string> = {
-  [ExpressionStatus.VERIFIED]: 'корректно',
-  [ExpressionStatus.INCORRECT]: 'ошибка',
-  [ExpressionStatus.INCALCULABLE]: 'невычислимо',
-  [ExpressionStatus.PROPERTY]: 'неразмерное',
-  [ExpressionStatus.UNKNOWN]: 'не проверено',
-  [ExpressionStatus.UNDEFINED]: 'N/A'
+const labelExpressionStatusRecord: Record<CstStatus, string> = {
+  [CstStatus.VERIFIED]: 'корректно',
+  [CstStatus.INCORRECT]: 'ошибка',
+  [CstStatus.INCALCULABLE]: 'невычислимо',
+  [CstStatus.PROPERTY]: 'неразмерное',
+  [CstStatus.UNKNOWN]: 'не проверено',
+  [CstStatus.UNDEFINED]: 'N/A'
 };
 
-const describeExpressionStatusRecord: Record<ExpressionStatus, string> = {
-  [ExpressionStatus.VERIFIED]: 'корректно и вычислимо',
-  [ExpressionStatus.INCORRECT]: 'обнаружена ошибка',
-  [ExpressionStatus.INCALCULABLE]: 'интерпретация не вычисляется',
-  [ExpressionStatus.PROPERTY]: 'только проверка принадлежности',
-  [ExpressionStatus.UNKNOWN]: 'требуется проверка',
-  [ExpressionStatus.UNDEFINED]: 'ошибка при проверке'
+const describeExpressionStatusRecord: Record<CstStatus, string> = {
+  [CstStatus.VERIFIED]: 'корректно и вычислимо',
+  [CstStatus.INCORRECT]: 'обнаружена ошибка',
+  [CstStatus.INCALCULABLE]: 'интерпретация не вычисляется',
+  [CstStatus.PROPERTY]: 'только проверка принадлежности',
+  [CstStatus.UNKNOWN]: 'требуется проверка',
+  [CstStatus.UNDEFINED]: 'ошибка при проверке'
 };
 
 const labelGrammemeRecord: Partial<Record<Grammeme, string>> = {
@@ -369,16 +367,16 @@ export function labelEdgeType(mode: TGEdgeType): string {
 }
 
 /**
- * Retrieves label for {@link ExpressionStatus}.
+ * Retrieves label for {@link CstStatus}.
  */
-export function labelExpressionStatus(status: ExpressionStatus): string {
+export function labelExpressionStatus(status: CstStatus): string {
   return labelExpressionStatusRecord[status] ?? `UNKNOWN EXPRESSION STATUS: ${status}`;
 }
 
 /**
- * Retrieves description for {@link ExpressionStatus}.
+ * Retrieves description for {@link CstStatus}.
  */
-export function describeExpressionStatus(status: ExpressionStatus): string {
+export function describeExpressionStatus(status: CstStatus): string {
   return describeExpressionStatusRecord[status] ?? `UNKNOWN EXPRESSION STATUS: ${status}`;
 }
 
@@ -408,43 +406,6 @@ export function labelCstClass(target: CstClass): string {
  */
 export function describeCstClass(target: CstClass): string {
   return describeCstClassRecord[target] ?? `UNKNOWN CST CLASS: ${target}`;
-}
-
-/** Generates label for typification. */
-export function labelTypification({
-  isValid,
-  resultType,
-  args
-}: {
-  isValid: boolean;
-  resultType: string;
-  args: RO<IArgumentInfo[]>;
-}): string {
-  if (!isValid) {
-    return 'N/A';
-  }
-  if (resultType === '' || resultType === PARAMETER.logicLabel) {
-    resultType = 'Logic';
-  }
-  if (args.length === 0) {
-    return resultType;
-  }
-  const argsText = args.map(arg => arg.typification).join(', ');
-  return `[${argsText}] → ${resultType}`;
-}
-
-/**
- * Generates label for {@link IConstituenta} typification.
- */
-export function labelCstTypification(cst: RO<IConstituenta>): string {
-  if (!cst.parse) {
-    return 'N/A';
-  }
-  return labelTypification({
-    isValid: cst.parse.status === ParsingStatus.VERIFIED,
-    resultType: cst.parse.typification,
-    args: cst.parse.args
-  });
 }
 
 /**

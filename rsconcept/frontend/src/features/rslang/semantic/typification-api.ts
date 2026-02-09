@@ -225,10 +225,13 @@ export function substituteBase(target: Typification, substitutes: Map<string, Ty
       for (const factor of target.factors) {
         substituteBase(factor, substitutes);
       }
-
       return;
     }
   }
+}
+
+export function extractBases(target: ExpressionType): Set<string> {
+  return new Set(extractBasesImpl(target));
 }
 
 // ===== Internals =====
@@ -250,5 +253,23 @@ function commonType(type1: Typification, type2: Typification): Typification | nu
     return type1;
   } else {
     return IntegerT;
+  }
+}
+
+function extractBasesImpl(target: ExpressionType): string[] {
+  switch (target.typeID) {
+    case TypeID.basic:
+      return [target.baseID];
+    case TypeID.collection:
+      return extractBasesImpl(target.base);
+    case TypeID.tuple:
+      return target.factors.reduce((result, factor) => result.concat(extractBasesImpl(factor)), [] as string[]);
+    case TypeID.function:
+      const result = extractBasesImpl(target.result);
+      return target.args.reduce((result, arg) => result.concat(extractBasesImpl(arg.type)), result);
+    case TypeID.predicate:
+      return target.args.reduce((result, arg) => result.concat(extractBasesImpl(arg.type)), [] as string[]);
+    default:
+      return [];
   }
 }

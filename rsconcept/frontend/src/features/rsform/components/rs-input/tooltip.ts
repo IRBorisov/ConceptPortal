@@ -2,7 +2,8 @@ import { type Extension } from '@codemirror/state';
 import { hoverTooltip, type TooltipView } from '@codemirror/view';
 import clsx from 'clsx';
 
-import { labelCstTypification } from '../../labels';
+import { labelType } from '@/features/rslang/labels';
+
 import { type IConstituenta, type IRSForm } from '../../models/rsform';
 import { isBasicConcept } from '../../models/rsform-api';
 
@@ -51,7 +52,7 @@ function domTooltipConstituenta(cst?: IConstituenta, canClick?: boolean): Toolti
     const alias = document.createElement('p');
     alias.className = 'font-math';
     alias.style.overflowWrap = 'anywhere';
-    alias.innerHTML = `<b>${cst.alias}:</b> ${labelCstTypification(cst)}`;
+    alias.innerHTML = `<b>${cst.alias}:</b> ${labelType(cst.analysis.type)}`;
     dom.appendChild(alias);
 
     if (cst.term_resolved) {

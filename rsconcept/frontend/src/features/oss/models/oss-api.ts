@@ -9,15 +9,15 @@ import {
   type IConstituenta,
   type ICstSubstitute,
   type IRSForm,
-  ParsingStatus
 } from '@/features/rsform';
 import {
   type AliasMapping,
   applyAliasMapping,
   applyTypificationMapping,
-  extractGlobals,
   isSetTypification
 } from '@/features/rslang/api';
+import { labelType } from '@/features/rslang/labels';
+import { extractBases } from '@/features/rslang/semantic/typification-api';
 
 import { infoMsg } from '@/utils/labels';
 
@@ -176,9 +176,9 @@ export class SubstitutionValidator {
         return this.reportError(SubstitutionErrorType.invalidIDs, []);
       }
       if (
-        substitution.parse &&
-        original.parse &&
-        (original.parse.status === ParsingStatus.INCORRECT || substitution.parse.status === ParsingStatus.INCORRECT)
+        substitution.analysis &&
+        original.analysis &&
+        (!original.analysis.success || !substitution.analysis.success)
       ) {
         return this.reportError(SubstitutionErrorType.incorrectCst, [substitution.alias, original.alias]);
       }
@@ -261,15 +261,10 @@ export class SubstitutionValidator {
           continue;
         }
         graph.addNode(cst.id);
-        if (!cst.parse) {
+        if (cst.analysis.type === null) {
           continue;
         }
-        const parents = extractGlobals(cst.parse.typification);
-        for (const arg of cst.parse.args) {
-          for (const alias of extractGlobals(arg.typification)) {
-            parents.add(alias);
-          }
-        }
+        const parents = extractBases(cst.analysis.type);
         if (parents.size === 0) {
           continue;
         }
@@ -320,42 +315,23 @@ export class SubstitutionValidator {
         }
       }
 
-      if (!!original.parse !== !!substitution.parse) {
+      if (original.analysis.success !== substitution.analysis.success) {
         return this.reportError(SubstitutionErrorType.unequalTypification, [substitution.alias, original.alias]);
       }
-      if (!original.parse || !substitution.parse) {
+      if (!original.analysis.success || !substitution.analysis.success) {
         continue;
       }
 
       const originalType = applyTypificationMapping(
-        applyAliasMapping(original.parse.typification, baseMappings.get(original.schema)!),
+        applyAliasMapping(labelType(original.analysis.type), baseMappings.get(original.schema)!),
         typeMappings
       );
       const substitutionType = applyTypificationMapping(
-        applyAliasMapping(substitution.parse.typification, baseMappings.get(substitution.schema)!),
+        applyAliasMapping(labelType(substitution.analysis.type), baseMappings.get(substitution.schema)!),
         typeMappings
       );
       if (originalType !== substitutionType) {
         return this.reportError(SubstitutionErrorType.unequalTypification, [substitution.alias, original.alias]);
-      }
-      if (original.parse.args.length === 0) {
-        continue;
-      }
-      if (substitution.parse.args.length !== original.parse.args.length) {
-        return this.reportError(SubstitutionErrorType.unequalArgsCount, [substitution.alias, original.alias]);
-      }
-      for (let i = 0; i < original.parse.args.length; ++i) {
-        const originalArg = applyTypificationMapping(
-          applyAliasMapping(original.parse.args[i].typification, baseMappings.get(original.schema)!),
-          typeMappings
-        );
-        const substitutionArg = applyTypificationMapping(
-          applyAliasMapping(substitution.parse.args[i].typification, baseMappings.get(substitution.schema)!),
-          typeMappings
-        );
-        if (originalArg !== substitutionArg) {
-          return this.reportError(SubstitutionErrorType.unequalArgs, [substitution.alias, original.alias]);
-        }
       }
     }
     return true;
@@ -393,16 +369,17 @@ export class SubstitutionValidator {
 
       const substitution = this.cstByID.get(item.substitution)!;
       let substitutionText = '';
-      if (substitution.cst_type === original.cst_type || !substitution.parse) {
+      if (substitution.cst_type === original.cst_type || !substitution.analysis.type) {
         substitutionText = baseMappings.get(substitution.schema)![substitution.alias];
       } else {
-        substitutionText = applyAliasMapping(substitution.parse.typification, baseMappings.get(substitution.schema)!);
+        const typeText = labelType(substitution.analysis.type);
+        substitutionText = applyAliasMapping(typeText, baseMappings.get(substitution.schema)!);
         substitutionText = applyTypificationMapping(substitutionText, result);
         if (!isSetTypification(substitutionText)) {
-          this.reportError(SubstitutionErrorType.baseSubstitutionNotSet, [
-            substitution.alias,
-            substitution.parse.typification
-          ]);
+          this.reportError(
+            SubstitutionErrorType.baseSubstitutionNotSet,
+            [substitution.alias, typeText]
+          );
           return null;
         }
         if (substitutionText.includes('×') || substitutionText.startsWith('ℬℬ')) {

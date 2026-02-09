@@ -11,7 +11,7 @@ describe('RSLang analyzer', () => {
   let analyzer: RSLangAnalyzer;
 
   function expectError(input: string, options: AnalysisOptions, expectedError: RSErrorDescription) {
-    const result = analyzer.check(input, options);
+    const result = analyzer.checkFull(input, options);
     expect(result.success).toBe(false);
     expect(result.errors.length).toBe(1);
     expect(result.errors[0]).toEqual(expectedError);
@@ -26,7 +26,7 @@ describe('RSLang analyzer', () => {
   });
 
   it('Empty expression', () => {
-    const result = analyzer.check('');
+    const result = analyzer.checkFull('');
     expect(result.success).toBe(false);
     expect(result.type).toBe(null);
     expect(result.valueClass).toBe(null);
@@ -35,7 +35,7 @@ describe('RSLang analyzer', () => {
   });
 
   it('Domain', () => {
-    const result = analyzer.check('ℬ(X1)', { isDomain: true });
+    const result = analyzer.checkFull('ℬ(X1)', { isDomain: true });
     expect(result.success).toBe(true);
     expect(labelType(result.type)).toBe('ℬ(X1)');
     expect(result.valueClass).toBe(ValueClass.VALUE);

@@ -96,7 +96,6 @@ class TestVersionViews(EndpointTester):
         loaded_a1 = response.data['items'][1]
         self.assertEqual(loaded_a1['definition_formal'], 'X1=X1')
         self.assertEqual(loaded_a1['crucial'], True)
-        self.assertEqual(loaded_a1['parse']['status'], 'verified')
 
 
     @decl_endpoint('/api/versions/{version}', method='get')
