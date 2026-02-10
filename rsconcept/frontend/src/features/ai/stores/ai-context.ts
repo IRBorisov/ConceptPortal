@@ -60,8 +60,12 @@ export function makeVariableSelector(variableType: PromptVariableType) {
     case PromptVariableType.BLOCK:
       return (state: AIContextStore) => ({ currentBlock: state.currentBlock, currentOSS: state.currentOSS });
     case PromptVariableType.CONSTITUENTA:
-    case PromptVariableType.CONSTITUENTA_SYNTAX_TREE:
       return (state: AIContextStore) => ({ currentConstituenta: state.currentConstituenta });
+    case PromptVariableType.CONSTITUENTA_SYNTAX_TREE:
+      return (state: AIContextStore) => ({
+        currentConstituenta: state.currentConstituenta,
+        currentSchema: state.currentSchema
+      });
     default:
       return () => ({});
   }
@@ -87,6 +91,7 @@ export function evaluatePromptVariable(variableType: PromptVariableType, context
     case PromptVariableType.CONSTITUENTA:
       return context.currentConstituenta ? varConstituenta(context.currentConstituenta) : `!${variableType}!`;
     case PromptVariableType.CONSTITUENTA_SYNTAX_TREE:
-      return context.currentConstituenta ? varSyntaxTree(context.currentConstituenta) : `!${variableType}!`;
+      return context.currentConstituenta && context.currentSchema ?
+        varSyntaxTree(context.currentConstituenta, context.currentSchema) : `!${variableType}!`;
   }
 }

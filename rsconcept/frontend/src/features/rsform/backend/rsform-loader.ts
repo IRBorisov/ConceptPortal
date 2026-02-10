@@ -205,12 +205,7 @@ export class RSFormLoader {
 function parseCst(target: IConstituenta, analyzer: RSLangAnalyzer): AnalysisBase {
   const cType = target.cst_type;
   if (cType === CstType.NOMINAL) {
-    return {
-      success: false,
-      type: null,
-      valueClass: null,
-      ast: null
-    };
+    return { success: false, type: null, valueClass: null };
   }
   if (cType === CstType.BASE || cType === CstType.CONSTANT) {
     analyzer.addBase(target.alias, cType === CstType.CONSTANT);

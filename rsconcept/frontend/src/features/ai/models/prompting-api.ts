@@ -162,11 +162,12 @@ export function varConstituenta(cst: IConstituenta): string {
 }
 
 /** Generates a prompt for a constituenta syntax tree variable. */
-export function varSyntaxTree(cst: IConstituenta): string {
+export function varSyntaxTree(cst: IConstituenta, schema: IRSForm): string {
+  const ast = schema.analyzer.checkFull(cst.definition_formal).ast;
   let result = `Конституента: ${cst.alias}`;
   result += `\nФормальное выражение: ${cst.definition_formal}`;
   result += `\nДерево синтаксического разбора:\n`;
-  result += cst.analysis ? JSON.stringify(cst.analysis.ast, null, PARAMETER.indentJSON) : 'не определено';
+  result += ast ? JSON.stringify(ast, null, PARAMETER.indentJSON) : 'не определено';
   return result;
 }
 
