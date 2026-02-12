@@ -5,6 +5,7 @@ import { useParams } from 'react-router';
 import { z } from 'zod';
 
 import { urls, useBlockNavigation, useConceptNavigation } from '@/app';
+import { OssTabID } from '@/app/navigation/navigation-context';
 import { ConstituentaTooltip } from '@/features/rsform/components/constituenta-tooltip';
 
 import { isAxiosError } from '@/backend/api-transport';
@@ -15,7 +16,6 @@ import { useModificationStore } from '@/stores/modification';
 
 import { OperationTooltip } from '../../components/tooltip-oss-item';
 
-import { OssTabID } from './oss-edit-context';
 import { OssEditState } from './oss-edit-state';
 import { OssTabs } from './oss-tabs';
 

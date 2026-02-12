@@ -2,7 +2,7 @@
 
 import { useLayoutEffect, useRef } from 'react';
 
-import { useConceptNavigation } from '@/app/navigation/navigation-context';
+import { OssTabID, useConceptNavigation } from '@/app/navigation/navigation-context';
 
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useResetAttribute } from '@/hooks/use-reset-attribute';
@@ -11,7 +11,7 @@ import { useAppLayoutStore } from '@/stores/app-layout';
 import { EditorOssCard } from './editor-oss-card';
 import { EditorOssGraph } from './editor-oss-graph';
 import { MenuOssTabs } from './menu-oss-tabs';
-import { OssTabID, useOssEdit } from './oss-edit-context';
+import { useOssEdit } from './oss-edit-context';
 
 interface OssTabsProps {
   activeTab: OssTabID;

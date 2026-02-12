@@ -4,12 +4,6 @@ import { createContext, use } from 'react';
 
 import { type Operation, type OperationSchema, type OssItem } from '../../models/oss';
 
-export const OssTabID = {
-  CARD: 0,
-  GRAPH: 1
-} as const;
-export type OssTabID = (typeof OssTabID)[keyof typeof OssTabID];
-
 interface IOssEditContext {
   schema: OperationSchema;
   selectedNodes: string[];

@@ -32,6 +32,13 @@ export const RSModelTabID = {
 } as const;
 export type RSModelTabID = (typeof RSModelTabID)[keyof typeof RSModelTabID];
 
+/** OSS Tabs IDs. */
+export const OssTabID = {
+  CARD: 0,
+  GRAPH: 1
+} as const;
+export type OssTabID = (typeof OssTabID)[keyof typeof OssTabID];
+
 /** Prompt Tabs IDs. */
 export const PromptTabID = {
   LIST: 0,
