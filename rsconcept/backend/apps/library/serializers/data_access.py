@@ -19,6 +19,28 @@ class LibraryItemBaseSerializer(StrictModelSerializer):
         read_only_fields = ('id',)
 
 
+class LibraryItemCreateSerializer(LibraryItemBaseSerializer):
+    ''' Serializer: LibraryItem creation data. '''
+    schema = serializers.PrimaryKeyRelatedField(
+        queryset=LibraryItem.objects.all(),
+        required=False,
+        allow_null=True,
+        write_only=True
+    )
+
+    def create(self, validated_data):
+        '''Create LibraryItem without passing auxiliary `schema` to model.'''
+        schema = validated_data.pop('schema', None)
+        self._schema = schema
+        return super().create(validated_data)
+
+    class Meta:
+        ''' serializer metadata. '''
+        model = LibraryItem
+        fields = '__all__'
+        read_only_fields = ('id',)
+
+
 class LibraryItemBaseNonStrictSerializer(serializers.ModelSerializer):
     ''' Serializer: LibraryItem entry full access and no strict validation. '''
     class Meta:

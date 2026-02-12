@@ -9,14 +9,14 @@ import { Checkbox, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { type IDeleteOperationDTO, type IOssLayout, OperationType, schemaDeleteOperation } from '../backend/types';
+import { type DeleteOperationDTO, OperationType, type OssLayout, schemaDeleteOperation } from '../backend/types';
 import { useDeleteOperation } from '../backend/use-delete-operation';
 import { useOssSuspense } from '../backend/use-oss';
 
 export interface DlgDeleteOperationProps {
   ossID: number;
   targetID: number;
-  layout: IOssLayout;
+  layout: OssLayout;
   beforeDelete?: () => void;
 }
 
@@ -27,7 +27,7 @@ export function DlgDeleteOperation() {
   const { schema } = useOssSuspense({ itemID: ossID });
   const target = schema.operationByID.get(targetID)!;
 
-  const { handleSubmit, control } = useForm<IDeleteOperationDTO>({
+  const { handleSubmit, control } = useForm<DeleteOperationDTO>({
     resolver: zodResolver(schemaDeleteOperation),
     defaultValues: {
       target: targetID,
@@ -39,7 +39,7 @@ export function DlgDeleteOperation() {
 
   const deleteSchema = useWatch({ control, name: 'delete_schema' });
 
-  function onSubmit(data: IDeleteOperationDTO) {
+  function onSubmit(data: DeleteOperationDTO) {
     return deleteOperation({ itemID: ossID, data: data, beforeUpdate: beforeDelete });
   }
 

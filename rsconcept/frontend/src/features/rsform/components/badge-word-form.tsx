@@ -1,10 +1,10 @@
-import { type IWordForm } from '../models/language';
+import { type WordForm } from '../models/language';
 
 import { BadgeGrammeme } from './badge-grammeme';
 
 interface BadgeWordFormProps {
   /** Word form to display. */
-  form: IWordForm;
+  form: WordForm;
 
   /** Prefix for grammemes keys. */
   keyPrefix?: string;

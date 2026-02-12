@@ -13,7 +13,7 @@ export const DependencyMode = {
 } as const;
 export type DependencyMode = (typeof DependencyMode)[keyof typeof DependencyMode];
 
-/** Represents {@link IConstituenta} matching mode. */
+/** Represents {@link Constituenta} matching mode. */
 export const CstMatchMode = {
   ALL: 1,
   EXPR: 2,

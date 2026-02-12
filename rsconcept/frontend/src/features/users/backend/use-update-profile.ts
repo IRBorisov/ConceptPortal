@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { KEYS } from '@/backend/configuration';
 
 import { usersApi } from './api';
-import { type IUpdateProfileDTO } from './types';
+import { type UpdateProfileDTO } from './types';
 
 export const useUpdateProfile = () => {
   const client = useQueryClient();
@@ -17,7 +17,7 @@ export const useUpdateProfile = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    updateProfile: (data: IUpdateProfileDTO) => mutation.mutateAsync(data),
+    updateProfile: (data: UpdateProfileDTO) => mutation.mutateAsync(data),
     isPending: mutation.isPending,
     error: mutation.error,
     reset: mutation.reset

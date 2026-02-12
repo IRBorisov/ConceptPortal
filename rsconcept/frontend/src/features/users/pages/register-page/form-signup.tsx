@@ -16,7 +16,7 @@ import { Checkbox, TextInput } from '@/components/input';
 import { PrettyJson } from '@/components/view';
 import { globalIDs, patterns } from '@/utils/constants';
 
-import { type IUserSignupDTO, schemaUserSignup } from '../../backend/types';
+import { schemaUserSignup, type UserSignupDTO } from '../../backend/types';
 import { useSignup } from '../../backend/use-signup';
 
 export function FormSignup() {
@@ -30,7 +30,7 @@ export function FormSignup() {
     handleSubmit,
     clearErrors,
     formState: { errors }
-  } = useForm<IUserSignupDTO>({
+  } = useForm<UserSignupDTO>({
     resolver: zodResolver(schemaUserSignup)
   });
 
@@ -43,11 +43,11 @@ export function FormSignup() {
     if (router.canBack()) {
       router.back();
     } else {
-      router.push({ path: urls.library });
+      router.gotoLibrary();
     }
   }
 
-  function onSubmit(data: IUserSignupDTO) {
+  function onSubmit(data: UserSignupDTO) {
     return signup(data).then(createdUser =>
       router.pushAsync({ path: urls.login_hint(createdUser.username), force: true })
     );
@@ -155,7 +155,7 @@ export function FormSignup() {
 }
 
 // ====== Internals =========
-function ServerError({ error }: { error: ErrorData }): React.ReactElement {
+function ServerError({ error }: { error: ErrorData; }): React.ReactElement {
   if (isAxiosError(error) && error.response?.status === 400) {
     if ('email' in error.response.data) {
       return (

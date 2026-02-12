@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { type IOperationSchemaDTO } from '@/features/oss';
-import { type IRSFormDTO } from '@/features/rsform';
+import { type OperationSchemaDTO } from '@/features/oss';
+import { type RSFormDTO } from '@/features/rsform';
 
 import { KEYS } from '@/backend/configuration';
 
@@ -14,7 +14,7 @@ export const useSetEditors = () => {
     mutationFn: libraryApi.setEditors,
     onSuccess: async (_, variables) => {
       const ossKey = KEYS.composite.ossItem({ itemID: variables.itemID });
-      const ossData: IOperationSchemaDTO | undefined = client.getQueryData(ossKey);
+      const ossData: OperationSchemaDTO | undefined = client.getQueryData(ossKey);
       if (ossData) {
         client.setQueryData(ossKey, { ...ossData, editors: variables.editors });
         await Promise.allSettled(
@@ -32,7 +32,7 @@ export const useSetEditors = () => {
       }
 
       const rsKey = KEYS.composite.rsItem({ itemID: variables.itemID });
-      client.setQueryData(rsKey, (prev: IRSFormDTO | undefined) =>
+      client.setQueryData(rsKey, (prev: RSFormDTO | undefined) =>
         !prev ? undefined : { ...prev, editors: variables.editors }
       );
     },
@@ -40,6 +40,6 @@ export const useSetEditors = () => {
   });
 
   return {
-    setEditors: (data: { itemID: number; editors: number[] }) => mutation.mutateAsync(data)
+    setEditors: (data: { itemID: number; editors: number[]; }) => mutation.mutateAsync(data)
   };
 };

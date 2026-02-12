@@ -1,11 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { type ILibraryItem } from '@/features/library';
+import { type LibraryItem } from '@/features/library';
 
 import { KEYS } from '@/backend/configuration';
 
 import { rsformsApi } from './api';
-import { type IRSFormUploadDTO } from './types';
+import { type RSFormUploadDTO } from './types';
 
 export const useUploadTRS = () => {
   const client = useQueryClient();
@@ -14,7 +14,7 @@ export const useUploadTRS = () => {
     mutationFn: rsformsApi.upload,
     onSuccess: async data => {
       client.setQueryData(KEYS.composite.rsItem({ itemID: data.id }), data);
-      client.setQueryData(KEYS.composite.libraryList, (prev: ILibraryItem[] | undefined) =>
+      client.setQueryData(KEYS.composite.libraryList, (prev: LibraryItem[] | undefined) =>
         prev?.map(item => (item.id === data.id ? data : item))
       );
 
@@ -29,6 +29,6 @@ export const useUploadTRS = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    upload: (data: { itemID: number; data: IRSFormUploadDTO }) => mutation.mutateAsync(data)
+    upload: (data: { itemID: number; data: RSFormUploadDTO; }) => mutation.mutateAsync(data)
   };
 };

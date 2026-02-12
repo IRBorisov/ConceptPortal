@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { KEYS } from '@/backend/configuration';
 
 import { libraryApi } from './api';
-import { type ICreateLibraryItemDTO } from './types';
+import { type CreateLibraryItemDTO } from './types';
 
 export const useCreateItem = () => {
   const client = useQueryClient();
@@ -14,7 +14,7 @@ export const useCreateItem = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    createItem: (data: ICreateLibraryItemDTO) => mutation.mutateAsync(data),
+    createItem: (data: CreateLibraryItemDTO) => mutation.mutateAsync(data),
     isPending: mutation.isPending,
     error: mutation.error,
     reset: mutation.reset

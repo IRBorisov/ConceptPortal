@@ -1,10 +1,10 @@
 import { create } from 'zustand';
 
-import { type IOssItem } from '../models/oss';
+import { type OssItem } from '../models/oss';
 
 interface OperationTooltipStore {
-  hoverItem: IOssItem | null;
-  setHoverItem: (value: IOssItem | null) => void;
+  hoverItem: OssItem | null;
+  setHoverItem: (value: OssItem | null) => void;
 }
 
 export const useOperationTooltipStore = create<OperationTooltipStore>()(set => ({

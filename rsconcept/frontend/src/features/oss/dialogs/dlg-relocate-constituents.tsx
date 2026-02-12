@@ -5,7 +5,7 @@ import { Controller, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { HelpTopic } from '@/features/help';
-import { type ILibraryItem } from '@/features/library';
+import { type LibraryItem } from '@/features/library';
 import { useLibrary } from '@/features/library/backend/use-library';
 import { SelectLibraryItem } from '@/features/library/components/select-library-item';
 import { useRSForm } from '@/features/rsform/backend/use-rsform';
@@ -17,7 +17,7 @@ import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { hintMsg } from '@/utils/labels';
 
-import { type IOssLayout, type IRelocateConstituentsDTO, schemaRelocateConstituents } from '../backend/types';
+import { type OssLayout, type RelocateConstituentsDTO, schemaRelocateConstituents } from '../backend/types';
 import { useOssSuspense } from '../backend/use-oss';
 import { useRelocateConstituents } from '../backend/use-relocate-constituents';
 import { useUpdateLayout } from '../backend/use-update-layout';
@@ -27,7 +27,7 @@ import { getRelocateCandidates } from '../models/oss-api';
 export interface DlgRelocateConstituentsProps {
   ossID: number;
   targetID?: number;
-  layout?: IOssLayout;
+  layout?: OssLayout;
 }
 
 export function DlgRelocateConstituents() {
@@ -39,7 +39,7 @@ export function DlgRelocateConstituents() {
   const { schema: oss } = useOssSuspense({ itemID: ossID });
   const initialTarget = targetID ? oss.operationByID.get(targetID)! : undefined;
 
-  const { handleSubmit, control, setValue } = useForm<IRelocateConstituentsDTO>({
+  const { handleSubmit, control, setValue } = useForm<RelocateConstituentsDTO>({
     resolver: zodResolver(schemaRelocateConstituents),
     defaultValues: {
       items: []
@@ -51,7 +51,7 @@ export function DlgRelocateConstituents() {
   const destinationItem = destination ? libraryItems.find(item => item.id === destination) ?? null : null;
 
   const [directionUp, setDirectionUp] = useState(true);
-  const [source, setSource] = useState<ILibraryItem | null>(
+  const [source, setSource] = useState<LibraryItem | null>(
     libraryItems.find(item => item.id === initialTarget?.result) ?? null
   );
 
@@ -88,13 +88,13 @@ export function DlgRelocateConstituents() {
     setValue('destination', null);
   }
 
-  function handleSelectSource(newValue: ILibraryItem | null) {
+  function handleSelectSource(newValue: LibraryItem | null) {
     setSource(newValue);
     setValue('destination', null);
     setValue('items', []);
   }
 
-  function handleSelectDestination(newValue: ILibraryItem | null) {
+  function handleSelectDestination(newValue: LibraryItem | null) {
     if (newValue) {
       setValue('destination', newValue.id);
     } else {
@@ -103,7 +103,7 @@ export function DlgRelocateConstituents() {
     setValue('items', []);
   }
 
-  function onSubmit(data: IRelocateConstituentsDTO) {
+  function onSubmit(data: RelocateConstituentsDTO) {
     data.items = moveTarget;
     if (!layout || JSON.stringify(layout) === JSON.stringify(oss.layout)) {
       return relocateConstituents({ itemID: oss.id, data: data });

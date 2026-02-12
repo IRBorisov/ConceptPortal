@@ -3,7 +3,7 @@
 import { Suspense } from 'react';
 import { useIntl } from 'react-intl';
 
-import { urls, useConceptNavigation } from '@/app';
+import { useConceptNavigation } from '@/app';
 import { useLabelUser, useRoleStore, UserRole } from '@/features/users';
 import { InfoUsers } from '@/features/users/components/info-users';
 import { SelectUser } from '@/features/users/components/select-user';
@@ -26,14 +26,14 @@ import { useModificationStore } from '@/stores/modification';
 import { prefixes } from '@/utils/constants';
 import { promptText } from '@/utils/labels';
 
-import { type ILibraryItemData } from '../backend/types';
+import { type LibraryItemData } from '../backend/types';
 import { useMutatingLibrary } from '../backend/use-mutating-library';
 import { useSetLocation } from '../backend/use-set-location';
 import { useSetOwner } from '../backend/use-set-owner';
 import { useLibrarySearchStore } from '../stores/library-search';
 
 interface EditorLibraryItemProps {
-  schema: ILibraryItemData;
+  schema: LibraryItemData;
   isAttachedToOSS: boolean;
 }
 
@@ -73,7 +73,7 @@ export function EditorLibraryItem({ schema, isAttachedToOSS }: EditorLibraryItem
 
   function handleOpenLibrary(event: React.MouseEvent<Element>) {
     setGlobalLocation(schema.location);
-    router.push({ path: urls.library, newTab: event.ctrlKey || event.metaKey });
+    router.gotoLibrary(event.ctrlKey || event.metaKey);
   }
 
   function handleEditLocation() {

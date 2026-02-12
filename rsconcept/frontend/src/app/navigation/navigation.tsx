@@ -11,12 +11,12 @@ import { useDialogsStore } from '@/stores/dialogs';
 
 import { urls } from '../urls';
 
+import { CurrentTitle } from './current-title';
 import { Logo } from './logo';
 import { MenuAI } from './menu-ai';
 import { MenuUser } from './menu-user';
 import { NavigationButton } from './navigation-button';
 import { useConceptNavigation } from './navigation-context';
-import { SchemaTitle } from './schema-title';
 import { ToggleNavigation } from './toggle-navigation';
 
 export function Navigation() {
@@ -25,8 +25,8 @@ export function Navigation() {
   const noNavigationAnimation = useAppLayoutStore(state => state.noNavigationAnimation);
   const activeDialog = useDialogsStore(state => state.active);
 
-  const currentSchema = useAIStore(state => state.currentSchema);
-  const currentOSS = useAIStore(state => state.currentOSS);
+  const currentSchema = useAIStore(state => state.schema);
+  const currentOSS = useAIStore(state => state.oss);
   const schemaTitle = currentSchema?.title || currentOSS?.title;
 
   const navigateHome = (event: React.MouseEvent<Element>) =>
@@ -51,9 +51,9 @@ export function Navigation() {
         <div className='cc-fade-in flex items-center shrink-0' onClick={!size.isSmall ? navigateHome : undefined}>
           <Logo />
         </div>
-        {schemaTitle ? <SchemaTitle isRSForm={!!currentSchema} title={schemaTitle} /> : null}
+        {schemaTitle ? <CurrentTitle itemType={currentSchema?.item_type ?? currentOSS!.item_type} title={schemaTitle} /> : null}
         <div className='flex gap-2 items-center pr-2 shrink-0'>
-          <NavigationButton text='Новая схема' icon={<IconNewItem2 size='1.5rem' />} onClick={navigateCreateNew} />
+          <NavigationButton text='Создать' icon={<IconNewItem2 size='1.5rem' />} onClick={navigateCreateNew} />
           <NavigationButton text='Библиотека' icon={<IconLibrary2 size='1.5rem' />} onClick={navigateLibrary} />
           <NavigationButton text='Справка' icon={<IconManuals size='1.5rem' />} onClick={navigateHelp} />
 

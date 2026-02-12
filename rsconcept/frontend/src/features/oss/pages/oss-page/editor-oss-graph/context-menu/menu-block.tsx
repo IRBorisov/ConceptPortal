@@ -6,12 +6,12 @@ import { useDialogsStore } from '@/stores/dialogs';
 
 import { useDeleteBlock } from '../../../../backend/use-delete-block';
 import { useMutatingOss } from '../../../../backend/use-mutating-oss';
-import { type IBlock } from '../../../../models/oss';
+import { type Block } from '../../../../models/oss';
 import { useOssEdit } from '../../oss-edit-context';
 import { useGetLayout } from '../use-get-layout';
 
 interface MenuBlockProps {
-  block: IBlock;
+  block: Block;
   onHide: () => void;
 }
 

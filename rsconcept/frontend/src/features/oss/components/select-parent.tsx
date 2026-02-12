@@ -3,17 +3,17 @@ import clsx from 'clsx';
 import { IconConceptBlock } from '@/components/icons';
 import { globalIDs } from '@/utils/constants';
 
-import { type IBlock } from '../models/oss';
+import { type Block } from '../models/oss';
 
 import { SelectBlock } from './select-block';
 
 interface SelectParentProps {
   id?: string;
-  value: IBlock | null;
-  onChange: (newValue: IBlock | null) => void;
+  value: Block | null;
+  onChange: (newValue: Block | null) => void;
 
   fullWidth?: boolean;
-  items?: IBlock[];
+  items?: Block[];
   placeholder?: string;
   noBorder?: boolean;
   popoverClassname?: string;

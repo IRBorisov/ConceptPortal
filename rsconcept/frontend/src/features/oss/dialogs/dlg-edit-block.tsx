@@ -9,7 +9,7 @@ import { TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { type IOssLayout, type IUpdateBlockDTO, schemaUpdateBlock } from '../backend/types';
+import { type OssLayout, schemaUpdateBlock, type UpdateBlockDTO } from '../backend/types';
 import { useOssSuspense } from '../backend/use-oss';
 import { useUpdateBlock } from '../backend/use-update-block';
 import { SelectParent } from '../components/select-parent';
@@ -17,7 +17,7 @@ import { LayoutManager } from '../models/oss-layout-api';
 
 export interface DlgEditBlockProps {
   ossID: number;
-  layout: IOssLayout;
+  layout: OssLayout;
   targetID: number;
 }
 
@@ -33,7 +33,7 @@ export function DlgEditBlock() {
     control,
     register,
     formState: { errors, isValid }
-  } = useForm<IUpdateBlockDTO>({
+  } = useForm<UpdateBlockDTO>({
     resolver: zodResolver(schemaUpdateBlock),
     defaultValues: {
       target: target.id,
@@ -47,7 +47,7 @@ export function DlgEditBlock() {
     mode: 'onChange'
   });
 
-  function onSubmit(data: IUpdateBlockDTO) {
+  function onSubmit(data: UpdateBlockDTO) {
     if (data.item_data.parent !== target.parent) {
       manager.onChangeParent(target.nodeID, data.item_data.parent === null ? null : `b${data.item_data.parent}`);
       data.layout = manager.layout;

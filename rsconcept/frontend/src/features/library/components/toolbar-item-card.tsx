@@ -1,9 +1,9 @@
 'use client';
 
-import { urls, useConceptNavigation } from '@/app';
+import { useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
-import { type IRSForm } from '@/features/rsform';
+import { type RSForm } from '@/features/rsform';
 import { useRoleStore, UserRole } from '@/features/users';
 
 import { MiniButton } from '@/components/control';
@@ -14,7 +14,7 @@ import { usePreferencesStore } from '@/stores/preferences';
 import { tooltipText } from '@/utils/labels';
 import { isMac, prepareTooltip, sharePage } from '@/utils/utils';
 
-import { AccessPolicy, type ILibraryItem, LibraryItemType } from '../backend/types';
+import { AccessPolicy, type LibraryItem, LibraryItemType } from '../backend/types';
 import { useMutatingLibrary } from '../backend/use-mutating-library';
 
 import { IconShowSidebar } from './icon-show-sidebar';
@@ -25,7 +25,7 @@ interface ToolbarItemCardProps {
   isNarrow: boolean;
   onSubmit: () => void;
   isMutable: boolean;
-  schema: ILibraryItem;
+  schema: LibraryItem;
   deleteSchema: () => void;
 }
 
@@ -54,14 +54,14 @@ export function ToolbarItemCard({
     if (schema.item_type !== LibraryItemType.RSFORM) {
       return null;
     }
-    const rsSchema = schema as IRSForm;
+    const rsSchema = schema as RSForm;
     if (rsSchema.oss.length <= 0) {
       return null;
     }
     return (
       <MiniSelectorOSS
         items={rsSchema.oss}
-        onSelect={(event, value) => router.push({ path: urls.oss(value.id), newTab: event.ctrlKey || event.metaKey })}
+        onSelect={(event, value) => router.gotoOss(value.id, event.ctrlKey || event.metaKey)}
       />
     );
   })();

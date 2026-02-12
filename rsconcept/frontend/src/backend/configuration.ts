@@ -21,7 +21,9 @@ export const KEYS = {
 
   composite: {
     libraryList: ['library', 'list'] as const,
-    ossItem: ({ itemID }: { itemID?: number }) => [KEYS.oss, 'item', itemID],
-    rsItem: ({ itemID, version }: { itemID?: number; version?: number }) => [KEYS.rsform, 'item', itemID, version ?? '']
+    ossItem: ({ itemID }: { itemID?: number | null; }) => [KEYS.oss, 'item', itemID],
+    modelItem: ({ itemID }: { itemID?: number | null; }) => [KEYS.rsform, 'model', itemID],
+    rsItem: ({ itemID, version }: { itemID?: number | null; version?: number; }) =>
+      [KEYS.rsform, 'schema', itemID, version ?? '']
   }
 } as const;

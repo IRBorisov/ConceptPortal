@@ -14,7 +14,7 @@ import { ModalView } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { hintMsg } from '@/utils/labels';
 
-import { type IUpdateVersionDTO, schemaUpdateVersion } from '../../backend/types';
+import { schemaUpdateVersion, type UpdateVersionDTO } from '../../backend/types';
 import { useDeleteVersion } from '../../backend/use-delete-version';
 import { useMutatingLibrary } from '../../backend/use-mutating-library';
 import { useUpdateVersion } from '../../backend/use-update-version';
@@ -40,7 +40,7 @@ export function DlgEditVersions() {
     control,
     reset,
     formState: { isDirty, errors: formErrors }
-  } = useForm<IUpdateVersionDTO>({
+  } = useForm<UpdateVersionDTO>({
     resolver: zodResolver(schemaUpdateVersion),
     defaultValues: {
       id: schema.versions[schema.versions.length - 1].id,
@@ -77,7 +77,7 @@ export function DlgEditVersions() {
     });
   }
 
-  function onUpdate(data: IUpdateVersionDTO) {
+  function onUpdate(data: UpdateVersionDTO) {
     if (!isDirty || isProcessing || !isValid) {
       return;
     }

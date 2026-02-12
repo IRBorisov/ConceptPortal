@@ -6,7 +6,7 @@ import { schemaSubstituteConstituents } from '@/features/rsform/backend/types';
 import { limits } from '@/utils/constants';
 import { errorMsg } from '@/utils/labels';
 
-/** Represents {@link IOperation} type. */
+/** Represents {@link Operation} type. */
 export const OperationType = {
   INPUT: 'input',
   SYNTHESIS: 'synthesis',
@@ -14,78 +14,78 @@ export const OperationType = {
 } as const;
 export type OperationType = (typeof OperationType)[keyof typeof OperationType];
 
-/** Represents {@link ICstSubstitute} extended data. */
-export type ICstSubstituteInfo = z.infer<typeof schemaCstSubstituteInfo>;
+/** Represents {@link CstSubstitute} extended data. */
+export type CstSubstituteInfo = z.infer<typeof schemaCstSubstituteInfo>;
 
-/** Represents {@link IOperation} data from server. */
-export type IOperationDTO = z.infer<typeof schemaOperation>;
+/** Represents {@link Operation} data from server. */
+export type OperationDTO = z.infer<typeof schemaOperation>;
 
-/** Represents {@link IBlock} data from server. */
-export type IBlockDTO = z.infer<typeof schemaBlock>;
+/** Represents {@link Block} data from server. */
+export type BlockDTO = z.infer<typeof schemaBlock>;
 
-/** Represents backend data for {@link IOperationSchema}. */
-export type IOperationSchemaDTO = z.infer<typeof schemaOperationSchema>;
+/** Represents backend data for {@link OperationSchema}. */
+export type OperationSchemaDTO = z.infer<typeof schemaOperationSchema>;
 
-/** Represents {@link IOperationSchema} layout. */
-export type IOssLayout = z.infer<typeof schemaOssLayout>;
+/** Represents {@link OperationSchema} layout. */
+export type OssLayout = z.infer<typeof schemaOssLayout>;
 
-/** Represents {@link IOperationSchema} layout for data transfer. */
+/** Represents {@link OperationSchema} layout for data transfer. */
 export type IOssLayoutDTO = z.infer<typeof schemaOssLayoutData>;
 
-/** Represents {@link IBlock} data, used in Create action. */
-export type ICreateBlockDTO = z.infer<typeof schemaCreateBlock>;
+/** Represents {@link Block} data, used in Create action. */
+export type CreateBlockDTO = z.infer<typeof schemaCreateBlock>;
 
-/** Represents data response when creating {@link IBlock}. */
-export type IBlockCreatedResponse = z.infer<typeof schemaBlockCreatedResponse>;
+/** Represents data response when creating {@link Block}. */
+export type BlockCreatedResponse = z.infer<typeof schemaBlockCreatedResponse>;
 
-/** Represents {@link IBlock} data, used in Update action. */
-export type IUpdateBlockDTO = z.infer<typeof schemaUpdateBlock>;
+/** Represents {@link Block} data, used in Update action. */
+export type UpdateBlockDTO = z.infer<typeof schemaUpdateBlock>;
 
-/** Represents {@link IBlock} data, used in Delete action. */
-export type IDeleteBlockDTO = z.infer<typeof schemaDeleteBlock>;
+/** Represents {@link Block} data, used in Delete action. */
+export type DeleteBlockDTO = z.infer<typeof schemaDeleteBlock>;
 
-/** Represents data, used to move {@link IOssItem} to another parent. */
-export type IMoveItemsDTO = z.infer<typeof schemaMoveItems>;
+/** Represents data, used to move {@link OssItem} to another parent. */
+export type MoveItemsDTO = z.infer<typeof schemaMoveItems>;
 
-/** Represents {@link IOperation} data, used in Create action. */
-export type ICreateSchemaDTO = z.infer<typeof schemaCreateSchema>;
-export type ICreateReplicaDTO = z.infer<typeof schemaCreateReplica>;
-export type ICreateSynthesisDTO = z.infer<typeof schemaCreateSynthesis>;
-export type IImportSchemaDTO = z.infer<typeof schemaImportSchema>;
-export type ICloneSchemaDTO = z.infer<typeof schemaCloneSchema>;
+/** Represents {@link Operation} data, used in Create action. */
+export type CreateSchemaDTO = z.infer<typeof schemaCreateSchema>;
+export type CreateReplicaDTO = z.infer<typeof schemaCreateReplica>;
+export type CreateSynthesisDTO = z.infer<typeof schemaCreateSynthesis>;
+export type ImportSchemaDTO = z.infer<typeof schemaImportSchema>;
+export type CloneSchemaDTO = z.infer<typeof schemaCloneSchema>;
 
-/** Represents data response when creating {@link IOperation}. */
-export type IOperationCreatedResponse = z.infer<typeof schemaOperationCreatedResponse>;
+/** Represents data response when creating {@link Operation}. */
+export type OperationCreatedResponse = z.infer<typeof schemaOperationCreatedResponse>;
 
-/** Represents {@link IOperation} data, used in Update action. */
-export type IUpdateOperationDTO = z.infer<typeof schemaUpdateOperation>;
+/** Represents {@link Operation} data, used in Update action. */
+export type UpdateOperationDTO = z.infer<typeof schemaUpdateOperation>;
 
-/** Represents {@link IOperation} data, used in Delete action. */
-export type IDeleteOperationDTO = z.infer<typeof schemaDeleteOperation>;
+/** Represents {@link Operation} data, used in Delete action. */
+export type DeleteOperationDTO = z.infer<typeof schemaDeleteOperation>;
 
-/** Represents {@link IOperation} reference type data, used in Delete action. */
-export type IDeleteReplicaDTO = z.infer<typeof schemaDeleteReplica>;
+/** Represents {@link Operation} reference type data, used in Delete action. */
+export type DeleteReplicaDTO = z.infer<typeof schemaDeleteReplica>;
 
-/** Represents target {@link IOperation}. */
-export interface ITargetOperation {
-  layout: IOssLayout;
+/** Represents target {@link Operation}. */
+export interface TargetOperation {
+  layout: OssLayout;
   target: number;
 }
 
-/** Represents data response when creating {@link IRSForm} for Input {@link IOperation}. */
-export type IInputCreatedResponse = z.infer<typeof schemaInputCreatedResponse>;
+/** Represents data response when creating {@link RSForm} for Input {@link Operation}. */
+export type InputCreatedResponse = z.infer<typeof schemaInputCreatedResponse>;
 
-/** Represents {@link IOperation} data, used in setInput action. */
-export type IUpdateInputDTO = z.infer<typeof schemaUpdateInput>;
+/** Represents {@link Operation} data, used in setInput action. */
+export type UpdateInputDTO = z.infer<typeof schemaUpdateInput>;
 
-/** Represents data, used relocating {@link IConstituenta}s between {@link ILibraryItem}s. */
-export type IRelocateConstituentsDTO = z.infer<typeof schemaRelocateConstituents>;
+/** Represents data, used relocating {@link Constituenta}s between {@link LibraryItem}s. */
+export type RelocateConstituentsDTO = z.infer<typeof schemaRelocateConstituents>;
 
-/** Represents {@link IConstituenta} reference. */
-export type IConstituentaReference = z.infer<typeof schemaConstituentaReference>;
+/** Represents {@link Constituenta} reference. */
+export type ConstituentaReference = z.infer<typeof schemaConstituentaReference>;
 
-/** Represents {@link IOperationSchema} node position. */
-export type INodePosition = z.infer<typeof schemaNodePosition>;
+/** Represents {@link OperationSchema} node position. */
+export type NodePosition = z.infer<typeof schemaNodePosition>;
 
 // ====== Schemas ======
 export const schemaOperationType = z.enum(Object.values(OperationType) as [OperationType, ...OperationType[]]);

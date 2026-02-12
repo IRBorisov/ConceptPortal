@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 
-import { urls, useConceptNavigation } from '@/app';
+import { useConceptNavigation } from '@/app';
 
 import { TextURL } from '@/components/control';
 import { DataTable, type IConditionalStyle, type VisibilityState } from '@/components/data-table';
@@ -11,13 +11,13 @@ import { useFitHeight } from '@/stores/app-layout';
 import { usePreferencesStore } from '@/stores/preferences';
 import { type RO } from '@/utils/meta';
 
-import { type ILibraryItem, LibraryItemType } from '../../backend/types';
+import { type LibraryItem, LibraryItemType } from '../../backend/types';
 import { useLibrarySearchStore } from '../../stores/library-search';
 
 import { useLibraryColumns } from './use-library-columns';
 
 interface TableLibraryItemsProps {
-  items: RO<ILibraryItem[]>;
+  items: RO<LibraryItem[]>;
 }
 
 export function TableLibraryItems({ items }: TableLibraryItemsProps) {
@@ -32,23 +32,33 @@ export function TableLibraryItems({ items }: TableLibraryItemsProps) {
 
   const columns = useLibraryColumns();
   const columnVisibility: VisibilityState = { owner: !isSmall };
-  const conditionalRowStyles: IConditionalStyle<ILibraryItem>[] = [
+  const conditionalRowStyles: IConditionalStyle<LibraryItem>[] = [
     {
-      when: (item: ILibraryItem) => item.item_type === LibraryItemType.OSS,
+      when: (item: LibraryItem) => item.item_type === LibraryItemType.OSS,
       className: 'text-accent-green-foreground'
+    },
+    {
+      when: (item: LibraryItem) => item.item_type === LibraryItemType.RSMODEL,
+      className: 'text-accent-purple-foreground'
     }
   ];
   const tableHeight = useFitHeight('2.25rem');
 
-  function handleOpenItem(item: ILibraryItem, event: React.MouseEvent<Element>) {
+  function handleOpenItem(item: LibraryItem, event: React.MouseEvent<Element>) {
     const selection = window.getSelection();
     if (!!selection && selection.toString().length > 0) {
       return;
     }
-    if (item.item_type === LibraryItemType.RSFORM) {
-      router.push({ path: urls.schema(item.id), newTab: event.ctrlKey || event.metaKey });
-    } else if (item.item_type === LibraryItemType.OSS) {
-      router.push({ path: urls.oss(item.id), newTab: event.ctrlKey || event.metaKey });
+    switch (item.item_type) {
+      case LibraryItemType.RSFORM:
+        router.gotoRSForm(item.id, undefined, event.ctrlKey || event.metaKey);
+        break;
+      case LibraryItemType.OSS:
+        router.gotoOss(item.id, event.ctrlKey || event.metaKey);
+        break;
+      case LibraryItemType.RSMODEL:
+        router.gotoRSModel(item.id, event.ctrlKey || event.metaKey);
+        break;
     }
   }
 
@@ -56,7 +66,7 @@ export function TableLibraryItems({ items }: TableLibraryItemsProps) {
     <DataTable
       id='library_data'
       columns={columns}
-      data={items as ILibraryItem[]}
+      data={items as LibraryItem[]}
       headPosition='0'
       className={clsx('cc-scroll-y h-fit text-xs sm:text-sm border-b', folderMode && 'border-l')}
       style={{ maxHeight: tableHeight }}

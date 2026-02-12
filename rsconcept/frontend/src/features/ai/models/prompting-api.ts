@@ -1,5 +1,5 @@
-import { type IBlock, type IOperationSchema, NodeType } from '@/features/oss/models/oss';
-import { type IConstituenta, type IRSForm } from '@/features/rsform';
+import { type Block, NodeType, type OperationSchema } from '@/features/oss/models/oss';
+import { type Constituenta, type RSForm } from '@/features/rsform';
 import { CstType } from '@/features/rsform/models/rsform';
 import { isBasicConcept } from '@/features/rsform/models/rsform-api';
 import { TypificationGraph } from '@/features/rsform/models/typification-graph';
@@ -40,7 +40,7 @@ export function generateSample(target: string): string {
 }
 
 /** Generates a prompt for a schema variable. */
-export function varSchema(schema: IRSForm): string {
+export function varSchema(schema: RSForm): string {
   let result = stringifySchemaIntro(schema);
   result += '\n\nКонституенты:';
   schema.items.forEach(item => {
@@ -55,7 +55,7 @@ export function varSchema(schema: IRSForm): string {
 }
 
 /** Generates a prompt for a schema thesaurus variable. */
-export function varSchemaThesaurus(schema: IRSForm): string {
+export function varSchemaThesaurus(schema: RSForm): string {
   let result = stringifySchemaIntro(schema);
   result += '\n\nТермины:';
   schema.items.forEach(item => {
@@ -72,7 +72,7 @@ export function varSchemaThesaurus(schema: IRSForm): string {
 }
 
 /** Generates a prompt for a schema graph variable. */
-export function varSchemaGraph(schema: IRSForm): string {
+export function varSchemaGraph(schema: RSForm): string {
   let result = stringifySchemaIntro(schema);
   result += '\n\nУзлы графа\n';
   result += JSON.stringify(
@@ -98,7 +98,7 @@ export function varSchemaGraph(schema: IRSForm): string {
 }
 
 /** Generates a prompt for a schema type graph variable. */
-export function varSchemaTypeGraph(schema: IRSForm): string {
+export function varSchemaTypeGraph(schema: RSForm): string {
   const graph = new TypificationGraph();
   schema.items.forEach(item => {
     if (item.analysis.type !== null && isTypification(item.analysis.type)) {
@@ -113,7 +113,7 @@ export function varSchemaTypeGraph(schema: IRSForm): string {
 }
 
 /** Generates a prompt for a OSS variable. */
-export function varOSS(oss: IOperationSchema): string {
+export function varOSS(oss: OperationSchema): string {
   let result = stringifyOSSIntro(oss);
   result += `\n\nБлоки: ${oss.blocks.length}\n`;
   oss.hierarchy.topologicalOrder().forEach(blockID => {
@@ -136,7 +136,7 @@ export function varOSS(oss: IOperationSchema): string {
 }
 
 /** Generates a prompt for a block variable. */
-export function varBlock(target: IBlock, oss: IOperationSchema): string {
+export function varBlock(target: Block, oss: OperationSchema): string {
   const blocks = oss.blocks.filter(block => block.parent === target.id);
   const operations = oss.operations.filter(operation => operation.parent === target.id);
   let result = `Название блока: ${target.title}`;
@@ -157,12 +157,12 @@ export function varBlock(target: IBlock, oss: IOperationSchema): string {
 }
 
 /** Generates a prompt for a constituenta variable. */
-export function varConstituenta(cst: IConstituenta): string {
+export function varConstituenta(cst: Constituenta): string {
   return JSON.stringify(cst, null, PARAMETER.indentJSON);
 }
 
 /** Generates a prompt for a constituenta syntax tree variable. */
-export function varSyntaxTree(cst: IConstituenta, schema: IRSForm): string {
+export function varSyntaxTree(cst: Constituenta, schema: RSForm): string {
   const ast = schema.analyzer.checkFull(cst.definition_formal).ast;
   let result = `Конституента: ${cst.alias}`;
   result += `\nФормальное выражение: ${cst.definition_formal}`;
@@ -172,7 +172,7 @@ export function varSyntaxTree(cst: IConstituenta, schema: IRSForm): string {
 }
 
 // ==== Internal functions ====
-function stringifyGraph(graph: Graph<number>, schema: IRSForm): string {
+function stringifyGraph(graph: Graph<number>, schema: RSForm): string {
   let result = '';
   graph.nodes.forEach(node => {
     if (node.outputs.length > 0) {
@@ -184,7 +184,7 @@ function stringifyGraph(graph: Graph<number>, schema: IRSForm): string {
   return result;
 }
 
-function stringifySchemaIntro(schema: IRSForm): string {
+function stringifySchemaIntro(schema: RSForm): string {
   let result = `Концептуальная схема: ${schema.title}`;
   result += `\nКраткое название: ${schema.alias}`;
   if (schema.description) {
@@ -193,7 +193,7 @@ function stringifySchemaIntro(schema: IRSForm): string {
   return result;
 }
 
-function stringifyOSSIntro(schema: IOperationSchema): string {
+function stringifyOSSIntro(schema: OperationSchema): string {
   let result = `Операционная схема: ${schema.title}`;
   result += `\nКраткое название: ${schema.alias}`;
   if (schema.description) {
@@ -202,7 +202,7 @@ function stringifyOSSIntro(schema: IOperationSchema): string {
   return result;
 }
 
-function stringifyCrucial(cstList: IConstituenta[]): string {
+function stringifyCrucial(cstList: Constituenta[]): string {
   let result = 'Ключевые конституенты: ';
   if (cstList.length === 0) {
     return result + 'отсутствуют';

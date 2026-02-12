@@ -8,17 +8,17 @@ import { PickSchema } from '@/features/library/components/pick-schema';
 
 import { TextInput } from '@/components/input';
 
-import { type IInlineSynthesisDTO } from '../../backend/types';
-import { type IRSForm } from '../../models/rsform';
+import { type InlineSynthesisDTO } from '../../backend/types';
+import { type RSForm } from '../../models/rsform';
 import { sortItemsForInlineSynthesis } from '../../models/rsform-api';
 
 interface TabSourceProps {
-  receiver: IRSForm;
+  receiver: RSForm;
 }
 
 export function TabSource({ receiver }: TabSourceProps) {
   const { items: libraryItems } = useLibrary();
-  const { setValue, control } = useFormContext<IInlineSynthesisDTO>();
+  const { setValue, control } = useFormContext<InlineSynthesisDTO>();
   const sourceID = useWatch({ control, name: 'source' });
 
   const selectedInfo = libraryItems.find(item => item.id === sourceID);

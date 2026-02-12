@@ -2,31 +2,31 @@
 
 import { useLayoutEffect, useRef } from 'react';
 
-import { useConceptNavigation } from '@/app/navigation/navigation-context';
+import { RSModelTabID, useConceptNavigation } from '@/app/navigation/navigation-context';
 
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useResetAttribute } from '@/hooks/use-reset-attribute';
 import { useAppLayoutStore } from '@/stores/app-layout';
 import { useModificationStore } from '@/stores/modification';
 
-import { EditorConstituenta } from './editor-constituenta';
-import { EditorRSFormCard } from './editor-rsform-card';
-import { EditorRSList } from './editor-rslist';
-import { EditorTermGraph } from './editor-term-graph';
-import { MenuRSTabs } from './menu-rstabs';
-import { RSTabID, useRSEdit } from './rsedit-context';
+import { EditorConstituenta } from '../rsform-page/editor-constituenta';
+import { EditorRSFormCard } from '../rsform-page/editor-rsform-card';
+import { EditorRSList } from '../rsform-page/editor-rslist';
+import { EditorTermGraph } from '../rsform-page/editor-term-graph';
+import { MenuRSTabs } from '../rsform-page/menu-rstabs';
+import { useRSEdit } from '../rsform-page/rsedit-context';
 
-interface RSTabsProps {
+interface RSModelTabsProps {
   activeID?: number;
-  activeTab: RSTabID;
+  activeTab: RSModelTabID;
 }
 
-export function RSTabs({ activeID, activeTab }: RSTabsProps) {
+export function RSModelTabs({ activeID, activeTab }: RSModelTabsProps) {
   const router = useConceptNavigation();
 
   const hideFooter = useAppLayoutStore(state => state.hideFooter);
   const setIsModified = useModificationStore(state => state.setIsModified);
-  const { schema, selectedCst, setSelectedCst, setSelectedEdges, deselectAll, navigateRSForm } = useRSEdit();
+  const { schema, selectedCst, setSelectedCst, setSelectedEdges, deselectAll } = useRSEdit();
 
   useLayoutEffect(() => {
     const oldTitle = document.title;
@@ -37,10 +37,10 @@ export function RSTabs({ activeID, activeTab }: RSTabsProps) {
   }, [schema.title]);
 
   useLayoutEffect(() => {
-    const nextNoFooter = activeTab !== RSTabID.CARD;
+    const nextNoFooter = activeTab !== RSModelTabID.CARD;
     hideFooter(nextNoFooter);
 
-    if (activeTab === RSTabID.CST_EDIT) {
+    if (activeTab === RSModelTabID.CST_EDIT) {
       let nextSelected: number[] = [];
       if (activeID && schema.cstByID.has(activeID)) {
         nextSelected = [activeID];
@@ -86,7 +86,7 @@ export function RSTabs({ activeID, activeTab }: RSTabsProps) {
         }
       }
     }
-    navigateRSForm({ tab: index as RSTabID, activeID: selectedCst.length > 0 ? selectedCst.at(-1) : undefined });
+    router.changeTab(index);
   }
 
   const containerRef = useRef<HTMLDivElement>(null);

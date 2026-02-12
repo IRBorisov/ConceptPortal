@@ -1,14 +1,14 @@
 import { ComboBox } from '@/components/input/combo-box';
 import { type Styling } from '@/components/props';
 
-import { type ILibraryItem } from '../backend/types';
+import { type LibraryItem } from '../backend/types';
 
 interface SelectLibraryItemProps extends Styling {
   id?: string;
-  value: ILibraryItem | null;
-  onChange: (newValue: ILibraryItem | null) => void;
+  value: LibraryItem | null;
+  onChange: (newValue: LibraryItem | null) => void;
 
-  items?: ILibraryItem[];
+  items?: LibraryItem[];
   placeholder?: string;
   noBorder?: boolean;
 }

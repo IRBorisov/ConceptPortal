@@ -5,7 +5,7 @@ import { useUpdateTimestamp } from '@/features/library/backend/use-update-timest
 import { KEYS } from '@/backend/configuration';
 
 import { rsformsApi } from './api';
-import { type IUpdateCrucialDTO } from './types';
+import { type UpdateCrucialDTO } from './types';
 
 export const useUpdateCrucial = () => {
   const client = useQueryClient();
@@ -20,6 +20,6 @@ export const useUpdateCrucial = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    updateCrucial: (data: { itemID: number; data: IUpdateCrucialDTO }) => mutation.mutateAsync(data)
+    updateCrucial: (data: { itemID: number; data: UpdateCrucialDTO; }) => mutation.mutateAsync(data)
   };
 };

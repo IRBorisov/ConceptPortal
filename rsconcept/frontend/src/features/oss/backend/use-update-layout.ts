@@ -5,7 +5,7 @@ import { useUpdateTimestamp } from '@/features/library/backend/use-update-timest
 import { KEYS } from '@/backend/configuration';
 
 import { ossApi } from './api';
-import { type IOssLayout } from './types';
+import { type OssLayout } from './types';
 
 export const useUpdateLayout = () => {
   const client = useQueryClient();
@@ -22,7 +22,7 @@ export const useUpdateLayout = () => {
   return {
     updateLayout: (data: {
       itemID: number; //
-      data: IOssLayout;
+      data: OssLayout;
       isSilent?: boolean;
     }) => mutation.mutateAsync(data)
   };

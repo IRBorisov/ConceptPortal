@@ -9,14 +9,14 @@ import { prefixes } from '@/utils/constants';
 
 import { useDeleteConstituents } from '../../backend/use-delete-constituents';
 import { useRSFormSuspense } from '../../backend/use-rsform';
-import { type IRSForm } from '../../models/rsform';
+import { type RSForm } from '../../models/rsform';
 
 import { ListConstituents } from './list-constituents';
 
 export interface DlgDeleteCstProps {
   schemaID: number;
   selected: number[];
-  afterDelete?: (initialSchema: IRSForm, deleted: number[]) => void;
+  afterDelete?: (initialSchema: RSForm, deleted: number[]) => void;
 }
 
 export function DlgDeleteCst() {

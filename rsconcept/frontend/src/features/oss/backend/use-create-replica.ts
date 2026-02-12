@@ -5,7 +5,7 @@ import { useUpdateTimestamp } from '@/features/library/backend/use-update-timest
 import { KEYS } from '@/backend/configuration';
 
 import { ossApi } from './api';
-import { type ICreateReplicaDTO } from './types';
+import { type CreateReplicaDTO } from './types';
 
 export const useCreateReference = () => {
   const client = useQueryClient();
@@ -20,6 +20,6 @@ export const useCreateReference = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    createReplica: (data: { itemID: number; data: ICreateReplicaDTO }) => mutation.mutateAsync(data)
+    createReplica: (data: { itemID: number; data: CreateReplicaDTO; }) => mutation.mutateAsync(data)
   };
 };

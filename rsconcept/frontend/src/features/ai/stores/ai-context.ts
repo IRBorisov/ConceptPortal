@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
-import { type IBlock, type IOperation, type IOperationSchema } from '@/features/oss/models/oss';
-import { type IConstituenta, type IRSForm } from '@/features/rsform';
+import { type Block, type Operation, type OperationSchema } from '@/features/oss/models/oss';
+import { type Constituenta, type RSForm } from '@/features/rsform';
 
 import { PromptVariableType } from '../models/prompting';
 import {
@@ -16,58 +16,60 @@ import {
 } from '../models/prompting-api';
 
 interface AIContextStore {
-  currentOSS: IOperationSchema | null;
-  setCurrentOSS: (value: IOperationSchema | null) => void;
+  oss: OperationSchema | null;
+  setOSS: (value: OperationSchema | null) => void;
 
-  currentSchema: IRSForm | null;
-  setCurrentSchema: (value: IRSForm | null) => void;
+  schema: RSForm | null;
+  setSchema: (value: RSForm | null) => void;
 
-  currentBlock: IBlock | null;
-  setCurrentBlock: (value: IBlock | null) => void;
+  block: Block | null;
+  setBlock: (value: Block | null) => void;
 
-  currentOperation: IOperation | null;
-  setCurrentOperation: (value: IOperation | null) => void;
+  operation: Operation | null;
+  setOperation: (value: Operation | null) => void;
 
-  currentConstituenta: IConstituenta | null;
-  setCurrentConstituenta: (value: IConstituenta | null) => void;
+  constituenta: Constituenta | null;
+  setConstituenta: (value: Constituenta | null) => void;
 }
 
 export const useAIStore = create<AIContextStore>()(set => ({
-  currentOSS: null,
-  setCurrentOSS: value => set({ currentOSS: value }),
+  oss: null,
+  setOSS: value => set({ oss: value }),
 
-  currentSchema: null,
-  setCurrentSchema: value => set({ currentSchema: value }),
+  schema: null,
+  setSchema: value => set({ schema: value }),
 
-  currentBlock: null,
-  setCurrentBlock: value => set({ currentBlock: value }),
+  block: null,
+  setBlock: value => set({ block: value }),
 
-  currentOperation: null,
-  setCurrentOperation: value => set({ currentOperation: value }),
+  operation: null,
+  setOperation: value => set({ operation: value }),
 
-  currentConstituenta: null,
-  setCurrentConstituenta: value => set({ currentConstituenta: value })
+  constituenta: null,
+  setConstituenta: value => set({ constituenta: value })
 }));
 
 /** Returns a selector function for Zustand based on variable type */
 export function makeVariableSelector(variableType: PromptVariableType) {
   switch (variableType) {
     case PromptVariableType.OSS:
-      return (state: AIContextStore) => ({ currentOSS: state.currentOSS });
+      return (state: AIContextStore) => ({ oss: state.oss });
+
     case PromptVariableType.SCHEMA:
     case PromptVariableType.SCHEMA_THESAURUS:
-      return (state: AIContextStore) => ({ currentSchema: state.currentSchema });
+      return (state: AIContextStore) => ({ schema: state.schema });
+
     case PromptVariableType.BLOCK:
-      return (state: AIContextStore) => ({ currentBlock: state.currentBlock, currentOSS: state.currentOSS });
+      return (state: AIContextStore) => ({ block: state.block, oss: state.oss });
+
     case PromptVariableType.CONSTITUENTA:
-      return (state: AIContextStore) => ({ currentConstituenta: state.currentConstituenta });
+      return (state: AIContextStore) => ({ constituenta: state.constituenta });
+
     case PromptVariableType.CONSTITUENTA_SYNTAX_TREE:
       return (state: AIContextStore) => ({
-        currentConstituenta: state.currentConstituenta,
-        currentSchema: state.currentSchema
+        constituenta: state.constituenta,
+        schema: state.schema
       });
-    default:
-      return () => ({});
   }
 }
 
@@ -75,23 +77,23 @@ export function makeVariableSelector(variableType: PromptVariableType) {
 export function evaluatePromptVariable(variableType: PromptVariableType, context: Partial<AIContextStore>): string {
   switch (variableType) {
     case PromptVariableType.OSS:
-      return context.currentOSS ? varOSS(context.currentOSS) : `!${variableType}!`;
+      return context.oss ? varOSS(context.oss) : `!${variableType}!`;
     case PromptVariableType.SCHEMA:
-      return context.currentSchema ? varSchema(context.currentSchema) : `!${variableType}!`;
+      return context.schema ? varSchema(context.schema) : `!${variableType}!`;
     case PromptVariableType.SCHEMA_THESAURUS:
-      return context.currentSchema ? varSchemaThesaurus(context.currentSchema) : `!${variableType}!`;
+      return context.schema ? varSchemaThesaurus(context.schema) : `!${variableType}!`;
     case PromptVariableType.SCHEMA_GRAPH:
-      return context.currentSchema ? varSchemaGraph(context.currentSchema) : `!${variableType}!`;
+      return context.schema ? varSchemaGraph(context.schema) : `!${variableType}!`;
     case PromptVariableType.SCHEMA_TYPE_GRAPH:
-      return context.currentSchema ? varSchemaTypeGraph(context.currentSchema) : `!${variableType}!`;
+      return context.schema ? varSchemaTypeGraph(context.schema) : `!${variableType}!`;
     case PromptVariableType.BLOCK:
-      return context.currentBlock && context.currentOSS
-        ? varBlock(context.currentBlock, context.currentOSS)
+      return context.block && context.oss
+        ? varBlock(context.block, context.oss)
         : `!${variableType}!`;
     case PromptVariableType.CONSTITUENTA:
-      return context.currentConstituenta ? varConstituenta(context.currentConstituenta) : `!${variableType}!`;
+      return context.constituenta ? varConstituenta(context.constituenta) : `!${variableType}!`;
     case PromptVariableType.CONSTITUENTA_SYNTAX_TREE:
-      return context.currentConstituenta && context.currentSchema ?
-        varSyntaxTree(context.currentConstituenta, context.currentSchema) : `!${variableType}!`;
+      return context.constituenta && context.schema ?
+        varSyntaxTree(context.constituenta, context.schema) : `!${variableType}!`;
   }
 }

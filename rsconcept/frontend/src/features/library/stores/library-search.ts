@@ -3,7 +3,8 @@ import { persist } from 'zustand/middleware';
 
 import { toggleTristateFlag } from '@/utils/utils';
 
-import { type ILibraryFilter, type LocationHead } from '../models/library';
+import { LibraryItemType } from '../backend/types';
+import { type LibraryFilter, type LocationHead } from '../models/library';
 
 interface LibrarySearchStore {
   folderMode: boolean;
@@ -23,6 +24,9 @@ interface LibrarySearchStore {
 
   head: LocationHead | null;
   setHead: (value: LocationHead | null) => void;
+
+  itemType: LibraryItemType | null;
+  toggleItemType: () => void;
 
   isVisible: boolean | null;
   toggleVisible: () => void;
@@ -60,6 +64,17 @@ export const useLibrarySearchStore = create<LibrarySearchStore>()(
       head: null,
       setHead: value => set({ head: value }),
 
+      itemType: null,
+      toggleItemType: () =>
+        set(state => {
+          const order: (LibraryItemType | null)[] = [
+            null, LibraryItemType.RSFORM, LibraryItemType.OSS, LibraryItemType.RSMODEL
+          ];
+          const currentIndex = order.indexOf(state.itemType);
+          const nextIndex = (currentIndex + 1) % order.length;
+          return { itemType: order[nextIndex] };
+        }),
+
       isVisible: true,
       toggleVisible: () => set(state => ({ isVisible: toggleTristateFlag(state.isVisible) })),
 
@@ -78,6 +93,7 @@ export const useLibrarySearchStore = create<LibrarySearchStore>()(
           path: '',
           location: '',
           head: null,
+          itemType: null,
           isVisible: true,
           isOwned: null,
           isEditor: null,
@@ -92,6 +108,7 @@ export const useLibrarySearchStore = create<LibrarySearchStore>()(
 
         location: state.location,
         head: state.head,
+        itemType: state.itemType,
         isVisible: state.isVisible,
         isOwned: state.isOwned,
         isEditor: state.isEditor,
@@ -107,6 +124,7 @@ export function useHasCustomFilter(): boolean {
   const path = useLibrarySearchStore(state => state.path);
   const query = useLibrarySearchStore(state => state.query);
   const head = useLibrarySearchStore(state => state.head);
+  const itemType = useLibrarySearchStore(state => state.itemType);
   const isEditor = useLibrarySearchStore(state => state.isEditor);
   const isOwned = useLibrarySearchStore(state => state.isOwned);
   const isVisible = useLibrarySearchStore(state => state.isVisible);
@@ -117,6 +135,7 @@ export function useHasCustomFilter(): boolean {
     !!query ||
     !!location ||
     head !== null ||
+    itemType !== null ||
     isEditor !== null ||
     isOwned !== null ||
     isVisible !== true ||
@@ -125,10 +144,11 @@ export function useHasCustomFilter(): boolean {
 }
 
 /** Utility function that returns the current library filter. */
-export function useCreateLibraryFilter(): ILibraryFilter {
+export function useCreateLibraryFilter(): LibraryFilter {
   const head = useLibrarySearchStore(state => state.head);
   const path = useLibrarySearchStore(state => state.path);
   const query = useLibrarySearchStore(state => state.query);
+  const itemType = useLibrarySearchStore(state => state.itemType);
   const isEditor = useLibrarySearchStore(state => state.isEditor);
   const isOwned = useLibrarySearchStore(state => state.isOwned);
   const isVisible = useLibrarySearchStore(state => state.isVisible);
@@ -140,6 +160,7 @@ export function useCreateLibraryFilter(): ILibraryFilter {
     head: head,
     path: path,
     query: query,
+    itemType: itemType,
     isEditor: isEditor,
     isOwned: isOwned,
     isVisible: isVisible,

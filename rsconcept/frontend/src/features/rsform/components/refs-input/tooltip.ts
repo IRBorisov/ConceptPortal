@@ -7,14 +7,14 @@ import { findContainedNodes } from '@/utils/codemirror';
 import { isMac } from '@/utils/utils';
 
 import { describeConstituentaTerm, labelGrammeme } from '../../labels';
-import { type IEntityReference, type ISyntacticReference } from '../../models/language';
+import { type EntityReference, type SyntacticReference } from '../../models/language';
 import { parseGrammemes } from '../../models/language-api';
-import { type IConstituenta, type IRSForm } from '../../models/rsform';
+import { type Constituenta, type RSForm } from '../../models/rsform';
 
 import { RefEntity } from './parse/parser.terms';
 import { findReferenceAt } from './utils';
 
-const tooltipProducer = (schema: IRSForm, canClick?: boolean) => {
+const tooltipProducer = (schema: RSForm, canClick?: boolean) => {
   return hoverTooltip((view, pos) => {
     const parse = findReferenceAt(pos, view.state);
     if (!parse) {
@@ -27,7 +27,7 @@ const tooltipProducer = (schema: IRSForm, canClick?: boolean) => {
         pos: parse.start,
         end: parse.end,
         above: false,
-        create: () => domTooltipEntityReference(parse.ref as IEntityReference, cst, canClick)
+        create: () => domTooltipEntityReference(parse.ref as EntityReference, cst, canClick)
       };
     } else {
       let masterText: string | null = null;
@@ -48,20 +48,20 @@ const tooltipProducer = (schema: IRSForm, canClick?: boolean) => {
         pos: parse.start,
         end: parse.end,
         above: false,
-        create: () => domTooltipSyntacticReference(parse.ref as ISyntacticReference, masterText, canClick)
+        create: () => domTooltipSyntacticReference(parse.ref as SyntacticReference, masterText, canClick)
       };
     }
   });
 };
 
-export function refsHoverTooltip(schema: IRSForm, canClick?: boolean): Extension {
+export function refsHoverTooltip(schema: RSForm, canClick?: boolean): Extension {
   return [tooltipProducer(schema, canClick)];
 }
 
 /**
- * Create DOM tooltip for {@link IEntityReference}.
+ * Create DOM tooltip for {@link EntityReference}.
  */
-function domTooltipEntityReference(ref: IEntityReference, cst: IConstituenta | null, canClick?: boolean): TooltipView {
+function domTooltipEntityReference(ref: EntityReference, cst: Constituenta | null, canClick?: boolean): TooltipView {
   const dom = document.createElement('div');
   dom.className = clsx(
     'max-h-100 max-w-100 min-w-40',
@@ -106,10 +106,10 @@ function domTooltipEntityReference(ref: IEntityReference, cst: IConstituenta | n
 }
 
 /**
- * Create DOM tooltip for {@link ISyntacticReference}.
+ * Create DOM tooltip for {@link SyntacticReference}.
  */
 function domTooltipSyntacticReference(
-  ref: ISyntacticReference,
+  ref: SyntacticReference,
   masterRef: string | null,
   canClick?: boolean
 ): TooltipView {

@@ -2,7 +2,7 @@
  * Module: API for formal representation for systems of concepts.
  */
 
-import { BASIC_SCHEMAS, type ILibraryItem } from '@/features/library';
+import { BASIC_SCHEMAS, type LibraryItem } from '@/features/library';
 import { TypeClass, ValueClass } from '@/features/rslang';
 import { type AnalysisFull } from '@/features/rslang';
 
@@ -12,20 +12,20 @@ import { TextMatcher } from '@/utils/utils';
 import { CstMatchMode } from '../stores/cst-search';
 
 import {
-  CATEGORY_CST_TYPE,
-  CstClass, CstStatus,
-  CstType, type IArgumentValue, type IConstituenta, type IRSForm,
-  type IRSFormStats
+  type ArgumentValue, CATEGORY_CST_TYPE,
+  type Constituenta, CstClass, CstStatus,
+  CstType, type RSForm,
+  type RSFormStats
 } from './rsform';
 
 /**
- * Checks if a given target {@link IConstituenta} matches the specified query using the provided matching mode.
+ * Checks if a given target {@link Constituenta} matches the specified query using the provided matching mode.
  *
  * @param target - The target object to be matched.
  * @param query - The query string used for matching.
  * @param mode - The matching mode to determine which properties to include in the matching process.
  */
-export function matchConstituenta(target: RO<IConstituenta>, query: string, mode: CstMatchMode): boolean {
+export function matchConstituenta(target: RO<Constituenta>, query: string, mode: CstMatchMode): boolean {
   const matcher = new TextMatcher(query);
   if ((mode === CstMatchMode.ALL || mode === CstMatchMode.NAME) && matcher.test(target.alias)) {
     return true;
@@ -69,7 +69,7 @@ export function inferStatus(parse: boolean, value?: ValueClass | null): CstStatu
 }
 
 /** Infers type of constituent for a given template and arguments. */
-export function inferTemplatedType(templateType: CstType, args: RO<IArgumentValue[]>): CstType {
+export function inferTemplatedType(templateType: CstType, args: RO<ArgumentValue[]>): CstType {
   if (args.length === 0 || args.some(arg => !arg.value)) {
     return templateType;
   } else if (templateType === CstType.PREDICATE) {
@@ -117,13 +117,13 @@ export function inferClass(type: CstType, isTemplate: boolean = false): CstClass
   }
 }
 
-/** Check if {@link IConstituenta} is a template or a category. */
-export function isTemplateCst(cst: IConstituenta): boolean {
+/** Check if {@link Constituenta} is a template or a category. */
+export function isTemplateCst(cst: Constituenta): boolean {
   return cst.cst_type === CstType.FUNCTION || cst.cst_type === CstType.PREDICATE || cst.cst_type === CstType.THEOREM;
 }
 
-/** Apply filter based on start {@link IConstituenta} type. */
-export function applyFilterCategory(start: IConstituenta, items: IConstituenta[]): IConstituenta[] {
+/** Apply filter based on start {@link Constituenta} type. */
+export function applyFilterCategory(start: Constituenta, items: Constituenta[]): Constituenta[] {
   const startIndex = items.indexOf(start);
   if (startIndex === -1) {
     return [];
@@ -245,9 +245,9 @@ export function isLogical(type: CstType): boolean {
 }
 
 /**
- * Evaluate if {@link IConstituenta} can be used produce structure.
+ * Evaluate if {@link Constituenta} can be used produce structure.
  */
-export function canProduceStructure(cst: RO<IConstituenta>): boolean {
+export function canProduceStructure(cst: RO<Constituenta>): boolean {
   return (
     !!cst.analysis?.success &&
     cst.analysis.type !== null &&
@@ -258,9 +258,9 @@ export function canProduceStructure(cst: RO<IConstituenta>): boolean {
 }
 
 /**
- * Validate new alias against {@link CstType} and {@link IRSForm}.
+ * Validate new alias against {@link CstType} and {@link RSForm}.
  */
-export function validateNewAlias(alias: string, type: CstType, schema: IRSForm): boolean {
+export function validateNewAlias(alias: string, type: CstType, schema: RSForm): boolean {
   if (alias.length < 2) {
     return false;
   }
@@ -278,16 +278,16 @@ export function validateNewAlias(alias: string, type: CstType, schema: IRSForm):
 }
 
 /**
- * Definition prefix for {@link IConstituenta}.
+ * Definition prefix for {@link Constituenta}.
  */
-export function getDefinitionPrefix(cst: IConstituenta): string {
+export function getDefinitionPrefix(cst: Constituenta): string {
   return cst.alias + (cst.cst_type === CstType.STRUCTURED ? '::=' : ':==');
 }
 
 /**
- * Generate alias for new {@link IConstituenta} of a given {@link CstType} for current {@link IRSForm}.
+ * Generate alias for new {@link Constituenta} of a given {@link CstType} for current {@link RSForm}.
  */
-export function generateAlias(type: CstType, schema: IRSForm, takenAliases: string[] = []): string {
+export function generateAlias(type: CstType, schema: RSForm, takenAliases: string[] = []): string {
   const prefix = getCstTypePrefix(type);
   if (schema.items.length <= 0) {
     return `${prefix}1`;
@@ -307,8 +307,8 @@ export function generateAlias(type: CstType, schema: IRSForm, takenAliases: stri
   return alias;
 }
 
-/** Sorts library items relevant for InlineSynthesis with specified {@link IRSForm}. */
-export function sortItemsForInlineSynthesis(receiver: IRSForm, items: readonly ILibraryItem[]): ILibraryItem[] {
+/** Sorts library items relevant for InlineSynthesis with specified {@link RSForm}. */
+export function sortItemsForInlineSynthesis(receiver: RSForm, items: readonly LibraryItem[]): LibraryItem[] {
   const result = items.filter(item => item.location === receiver.location);
   for (const item of items) {
     if (item.visible && item.owner === item.owner && !result.includes(item)) {
@@ -363,14 +363,14 @@ export function typeClassForCstType(cstType: CstType): TypeClass {
   }
 }
 
-export function getAnalysisFor(expression: string, cstType: CstType, schema: IRSForm): AnalysisFull {
+export function getAnalysisFor(expression: string, cstType: CstType, schema: RSForm): AnalysisFull {
   return schema.analyzer.checkFull(expression, {
     expected: typeClassForCstType(cstType),
     isDomain: cstType === CstType.STRUCTURED,
   });
 }
 
-export function calculateStats(target: IRSForm): IRSFormStats {
+export function calculateStats(target: RSForm): RSFormStats {
   const items = target.items;
   return {
     count_all: items.length,

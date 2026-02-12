@@ -9,16 +9,16 @@ import { BadgeHelp } from '@/features/help/components/badge-help';
 import { MiniButton } from '@/components/control';
 import { TextArea, TextInput } from '@/components/input';
 
-import { type ICreateConstituentaDTO } from '../../backend/types';
+import { type CreateConstituentaDTO } from '../../backend/types';
 import { IconCrucialValue } from '../../components/icon-crucial-value';
 import { RSInput } from '../../components/rs-input';
 import { SelectCstType } from '../../components/select-cst-type';
 import { getRSDefinitionPlaceholder, labelRSExpression } from '../../labels';
-import { CstType, type IRSForm } from '../../models/rsform';
+import { CstType, type RSForm } from '../../models/rsform';
 import { generateAlias, isBaseSet, isBasicConcept } from '../../models/rsform-api';
 
 interface FormCreateCstProps {
-  schema: IRSForm;
+  schema: RSForm;
 }
 
 export function FormCreateCst({ schema }: FormCreateCstProps) {
@@ -27,7 +27,7 @@ export function FormCreateCst({ schema }: FormCreateCstProps) {
     register,
     control,
     formState: { errors }
-  } = useFormContext<ICreateConstituentaDTO>();
+  } = useFormContext<CreateConstituentaDTO>();
   const [forceComment, setForceComment] = useState(false);
 
   const cst_type = useWatch({ control, name: 'cst_type' });

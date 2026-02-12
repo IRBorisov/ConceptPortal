@@ -14,6 +14,8 @@ import {
 } from '@xyflow/react';
 import clsx from 'clsx';
 
+import { useConceptNavigation } from '@/app';
+
 import { DiagramFlow, useReactFlow } from '@/components/flow/diagram-flow';
 import { useContinuousPan } from '@/components/flow/use-continuous-panning';
 import { useWindowSize } from '@/hooks/use-window-size';
@@ -50,6 +52,7 @@ const flowOptions = {
 } as const;
 
 export function TGFlow() {
+  const router = useConceptNavigation();
   const { isSmall } = useWindowSize();
   const mainHeight = useMainHeight();
   const { fitView, viewportInitialized } = useReactFlow();
@@ -75,7 +78,6 @@ export function TGFlow() {
     focusCst,
     setFocus,
     toggleSelectCst,
-    navigateCst,
     selectedEdges,
     setSelectedEdges
   } = useRSEdit();
@@ -297,7 +299,7 @@ export function TGFlow() {
   function handleNodeDoubleClick(event: React.MouseEvent<Element>, node: TGNode) {
     event.preventDefault();
     event.stopPropagation();
-    navigateCst(node.data.cst.id);
+    router.gotoEditActive(node.data.cst.id);
   }
 
   function handleConnectStart(event: MouseEvent | TouchEvent, params: OnConnectStartParams) {
@@ -404,7 +406,7 @@ export function TGFlow() {
           selected={selectedCst}
           toggleSelect={toggleSelectCst}
           setFocus={setFocus}
-          onActivate={navigateCst}
+          onActivate={cstID => router.gotoEditActive(cstID)}
         />
       </div>
 

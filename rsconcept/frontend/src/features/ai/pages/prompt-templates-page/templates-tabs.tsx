@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 
-import { urls, useConceptNavigation } from '@/app';
+import { useConceptNavigation } from '@/app';
+import { type PromptTabID } from '@/app/navigation/navigation-context';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 
@@ -11,13 +12,6 @@ import { MenuTemplates } from './menu-templates';
 import { TabEditTemplate } from './tab-edit-template';
 import { TabListTemplates } from './tab-list-templates';
 import { TabViewVariables } from './tab-view-variables';
-
-export const PromptTabID = {
-  LIST: 0,
-  EDIT: 1,
-  VARIABLES: 2
-} as const;
-export type PromptTabID = (typeof PromptTabID)[keyof typeof PromptTabID];
 
 interface TemplatesTabsProps {
   activeID: number | null;
@@ -51,7 +45,7 @@ export function TemplatesTabs({ activeID, tab }: TemplatesTabsProps) {
         }
       }
     }
-    router.replace({ path: urls.prompt_template(activeID, index as PromptTabID) });
+    router.changeTab(index);
   }
 
   return (

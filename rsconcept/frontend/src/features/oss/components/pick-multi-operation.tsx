@@ -9,29 +9,29 @@ import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
 import { NoData } from '@/components/view';
 
-import { type IOperation } from '../models/oss';
+import { type Operation } from '../models/oss';
 
 import { SelectOperation } from './select-operation';
 
 interface PickMultiOperationProps extends Styling {
   value: number[];
   onChange: (newValue: number[]) => void;
-  items: IOperation[];
+  items: Operation[];
   rows?: number;
 }
 
-const columnHelper = createColumnHelper<IOperation>();
+const columnHelper = createColumnHelper<Operation>();
 
 export function PickMultiOperation({ rows, items, value, onChange, className, ...restProps }: PickMultiOperationProps) {
   const selectedItems = value.map(itemID => items.find(item => item.id === itemID)!);
   const nonSelectedItems = items.filter(item => !value.includes(item.id));
-  const [lastSelected, setLastSelected] = useState<IOperation | null>(null);
+  const [lastSelected, setLastSelected] = useState<Operation | null>(null);
 
   function handleDelete(operation: number) {
     onChange(value.filter(item => item !== operation));
   }
 
-  function handleSelect(operation: IOperation | null) {
+  function handleSelect(operation: Operation | null) {
     if (operation) {
       setLastSelected(operation);
       onChange([...value, operation.id]);

@@ -1,1 +1,1 @@
-export { type IOperationSchemaDTO } from './backend/types';
+export { type OperationSchemaDTO } from './backend/types';

@@ -4,16 +4,16 @@ import { limits, patterns } from '@/utils/constants';
 import { errorMsg } from '@/utils/labels';
 
 /** Represents user profile for viewing and editing. */
-export type IUserProfile = z.infer<typeof schemaUserProfile>;
+export type UserProfile = z.infer<typeof schemaUserProfile>;
 
 /** Represents user reference information. */
-export type IUserInfo = z.infer<typeof schemaUserInfo>;
+export type UserInfo = z.infer<typeof schemaUserInfo>;
 
 /** Represents signup data, used to create users. */
-export type IUserSignupDTO = z.infer<typeof schemaUserSignup>;
+export type UserSignupDTO = z.infer<typeof schemaUserSignup>;
 
 /** Represents user data, intended to update user profile in persistent storage. */
-export type IUpdateProfileDTO = z.infer<typeof schemaUpdateProfile>;
+export type UpdateProfileDTO = z.infer<typeof schemaUpdateProfile>;
 
 // ========= SCHEMAS ========
 export const schemaUser = z.strictObject({

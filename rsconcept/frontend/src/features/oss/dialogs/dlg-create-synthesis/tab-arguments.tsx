@@ -4,13 +4,13 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { Label, TextArea, TextInput } from '@/components/input';
 
-import { type ICreateSynthesisDTO } from '../../backend/types';
+import { type CreateSynthesisDTO } from '../../backend/types';
 import { PickMultiOperation } from '../../components/pick-multi-operation';
 import { SelectParent } from '../../components/select-parent';
-import { type IOperationSchema } from '../../models/oss';
+import { type OperationSchema } from '../../models/oss';
 
 interface TabArgumentsProps {
-  oss: IOperationSchema;
+  oss: OperationSchema;
 }
 
 export function TabArguments({ oss }: TabArgumentsProps) {
@@ -18,7 +18,7 @@ export function TabArguments({ oss }: TabArgumentsProps) {
     register,
     control,
     formState: { errors }
-  } = useFormContext<ICreateSynthesisDTO>();
+  } = useFormContext<CreateSynthesisDTO>();
   const inputs = useWatch({ control, name: 'arguments' });
 
   const replicas = oss.replicas

@@ -2,16 +2,16 @@
 
 import { cn } from '@/components/utils';
 
-import { type IConstituenta, type IRSForm } from '../../models/rsform';
+import { type Constituenta, type RSForm } from '../../models/rsform';
 
 import { ConstituentsSearch } from './constituents-search';
 import { TableSideConstituents } from './table-side-constituents';
 
 interface ViewConstituentsProps {
-  schema: IRSForm;
-  activeCst?: IConstituenta | null;
-  onActivate?: (cst: IConstituenta) => void;
-  onDoubleClick?: (cst: IConstituenta) => void;
+  schema: RSForm;
+  activeCst?: Constituenta | null;
+  onActivate?: (cst: Constituenta) => void;
+  onDoubleClick?: (cst: Constituenta) => void;
 
   className?: string;
   maxListHeight?: string;

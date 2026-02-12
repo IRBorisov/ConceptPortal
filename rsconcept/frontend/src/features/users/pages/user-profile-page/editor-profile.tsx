@@ -10,7 +10,7 @@ import { SubmitButton } from '@/components/control';
 import { type ErrorData } from '@/components/info-error';
 import { TextInput } from '@/components/input';
 
-import { type IUpdateProfileDTO, schemaUpdateProfile } from '../../backend/types';
+import { schemaUpdateProfile, type UpdateProfileDTO } from '../../backend/types';
 import { useProfileSuspense } from '../../backend/use-profile';
 import { useUpdateProfile } from '../../backend/use-update-profile';
 
@@ -24,7 +24,7 @@ export function EditorProfile() {
     clearErrors,
     reset: resetForm,
     formState: { errors, isDirty }
-  } = useForm<IUpdateProfileDTO>({
+  } = useForm<UpdateProfileDTO>({
     resolver: zodResolver(schemaUpdateProfile),
     defaultValues: {
       first_name: profile.first_name,
@@ -41,7 +41,7 @@ export function EditorProfile() {
     clearErrors();
   }
 
-  function onSubmit(data: IUpdateProfileDTO) {
+  function onSubmit(data: UpdateProfileDTO) {
     return updateProfile(data).then(() => resetForm({ ...data }));
   }
 
@@ -83,7 +83,7 @@ export function EditorProfile() {
 }
 
 // ====== Internals =========
-function ServerError({ error }: { error: ErrorData }): React.ReactElement {
+function ServerError({ error }: { error: ErrorData; }): React.ReactElement {
   if (isAxiosError(error) && error.response?.status === 400) {
     if ('email' in error.response.data) {
       return (

@@ -8,7 +8,7 @@ import { labelType } from '@/features/rslang/labels';
 import { MiniButton } from '@/components/control';
 import { Label, TextArea, TextInput } from '@/components/input';
 
-import { type IUpdateConstituentaDTO } from '../../backend/types';
+import { type UpdateConstituentaDTO } from '../../backend/types';
 import { useClearAttributions } from '../../backend/use-clear-attributions';
 import { useCreateAttribution } from '../../backend/use-create-attribution';
 import { useDeleteAttribution } from '../../backend/use-delete-attribution';
@@ -17,12 +17,12 @@ import { RSInput } from '../../components/rs-input';
 import { SelectCstType } from '../../components/select-cst-type';
 import { SelectMultiConstituenta } from '../../components/select-multi-constituenta';
 import { getRSDefinitionPlaceholder, labelRSExpression } from '../../labels';
-import { CstType, type IConstituenta, type IRSForm } from '../../models/rsform';
+import { type Constituenta, CstType, type RSForm } from '../../models/rsform';
 import { generateAlias, isBaseSet, isBasicConcept } from '../../models/rsform-api';
 
 interface FormEditCstProps {
-  schema: IRSForm;
-  target: IConstituenta;
+  schema: RSForm;
+  target: Constituenta;
 }
 
 export function FormEditCst({ target, schema }: FormEditCstProps) {
@@ -35,7 +35,7 @@ export function FormEditCst({ target, schema }: FormEditCstProps) {
     control,
     register,
     formState: { errors }
-  } = useFormContext<IUpdateConstituentaDTO>();
+  } = useFormContext<UpdateConstituentaDTO>();
 
   const [forceComment, setForceComment] = useState(false);
 
@@ -57,7 +57,7 @@ export function FormEditCst({ target, schema }: FormEditCstProps) {
     setValue('item_data.crucial', !crucial);
   }
 
-  function handleAddAttribution(item: IConstituenta) {
+  function handleAddAttribution(item: Constituenta) {
     void createAttribution({
       itemID: schema.id,
       data: {
@@ -67,7 +67,7 @@ export function FormEditCst({ target, schema }: FormEditCstProps) {
     });
   }
 
-  function handleRemoveAttribution(item: IConstituenta) {
+  function handleRemoveAttribution(item: Constituenta) {
     void deleteAttribution({
       itemID: schema.id,
       data: {

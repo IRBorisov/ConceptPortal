@@ -1,14 +1,14 @@
 import { ComboBox } from '@/components/input/combo-box';
 import { type Styling } from '@/components/props';
 
-import { type IOperation } from '../models/oss';
+import { type Operation } from '../models/oss';
 
 interface SelectOperationProps extends Styling {
   id?: string;
-  value: IOperation | null;
-  onChange: (newValue: IOperation | null) => void;
+  value: Operation | null;
+  onChange: (newValue: Operation | null) => void;
 
-  items?: IOperation[];
+  items?: Operation[];
   placeholder?: string;
   noBorder?: boolean;
   popoverClassname?: string;

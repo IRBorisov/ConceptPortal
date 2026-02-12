@@ -9,7 +9,7 @@ import { cn } from '@/components/utils';
 import { NoData } from '@/components/view';
 
 import { describeConstituenta } from '../labels';
-import { type IConstituenta } from '../models/rsform';
+import { type Constituenta } from '../models/rsform';
 import { matchConstituenta } from '../models/rsform-api';
 import { CstMatchMode } from '../stores/cst-search';
 
@@ -17,19 +17,19 @@ import { BadgeConstituenta } from './badge-constituenta';
 
 interface PickConstituentaProps extends Styling {
   id?: string;
-  items: IConstituenta[];
-  value: IConstituenta | null;
-  onChange: (newValue: IConstituenta) => void;
+  items: Constituenta[];
+  value: Constituenta | null;
+  onChange: (newValue: Constituenta) => void;
 
   rows?: number;
 
   initialFilter?: string;
-  onBeginFilter?: (cst: IConstituenta) => boolean;
-  describeFunc?: (cst: IConstituenta) => string;
-  matchFunc?: (cst: IConstituenta, filter: string) => boolean;
+  onBeginFilter?: (cst: Constituenta) => boolean;
+  describeFunc?: (cst: Constituenta) => string;
+  matchFunc?: (cst: Constituenta, filter: string) => boolean;
 }
 
-const columnHelper = createColumnHelper<IConstituenta>();
+const columnHelper = createColumnHelper<Constituenta>();
 
 export function PickConstituenta({
   id,
@@ -64,9 +64,9 @@ export function PickConstituenta({
     })
   ];
 
-  const conditionalRowStyles: IConditionalStyle<IConstituenta>[] = [
+  const conditionalRowStyles: IConditionalStyle<Constituenta>[] = [
     {
-      when: (cst: IConstituenta) => cst.id === value?.id,
+      when: (cst: Constituenta) => cst.id === value?.id,
       className: 'bg-selected'
     }
   ];

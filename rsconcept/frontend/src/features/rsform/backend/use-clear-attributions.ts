@@ -5,7 +5,7 @@ import { useUpdateTimestamp } from '@/features/library/backend/use-update-timest
 import { KEYS } from '@/backend/configuration';
 
 import { rsformsApi } from './api';
-import { type IAttributionTargetDTO } from './types';
+import { type AttributionTargetDTO } from './types';
 
 export const useClearAttributions = () => {
   const client = useQueryClient();
@@ -24,6 +24,6 @@ export const useClearAttributions = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    clearAttributions: (data: { itemID: number; data: IAttributionTargetDTO }) => mutation.mutateAsync(data)
+    clearAttributions: (data: { itemID: number; data: AttributionTargetDTO; }) => mutation.mutateAsync(data)
   };
 };

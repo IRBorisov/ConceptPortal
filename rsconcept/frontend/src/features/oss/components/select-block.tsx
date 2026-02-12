@@ -1,14 +1,14 @@
 import { ComboBox } from '@/components/input/combo-box';
 import { type Styling } from '@/components/props';
 
-import { type IBlock } from '../models/oss';
+import { type Block } from '../models/oss';
 
 interface SelectBlockProps extends Styling {
   id?: string;
-  value: IBlock | null;
-  onChange: (newValue: IBlock | null) => void;
+  value: Block | null;
+  onChange: (newValue: Block | null) => void;
 
-  items?: IBlock[];
+  items?: Block[];
   placeholder?: string;
   noBorder?: boolean;
   popoverClassname?: string;

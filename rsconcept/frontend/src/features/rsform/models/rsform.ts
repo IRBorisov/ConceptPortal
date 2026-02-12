@@ -4,18 +4,18 @@
 
 import {
   type CurrentVersion,
-  type ILibraryItemData,
-  type ILibraryItemReference,
-  type IVersionInfo
+  type LibraryItemData,
+  type LibraryItemReference,
+  type VersionInfo
 } from '@/features/library';
 import { type AnalysisBase, type ExpressionType, type RSLangAnalyzer } from '@/features/rslang';
 
 import { type Graph } from '@/models/graph';
 import { type RO } from '@/utils/meta';
 
-import { type IAttribution } from '../backend/types';
+import { type Attribution } from '../backend/types';
 
-/** Represents {@link IConstituenta} type. */
+/** Represents {@link Constituenta} type. */
 export const CstType = {
   NOMINAL: 'nominal',
   BASE: 'basic',
@@ -31,19 +31,19 @@ export type CstType = (typeof CstType)[keyof typeof CstType];
 
 
 /** Represents function argument definition. */
-export interface IArgumentInfo {
+export interface ArgumentInfo {
   alias: string;
   typification: string;
 }
 
 /** Represents global identifier type info. */
-export interface ITypeInfo {
+export interface TypeInfo {
   alias: string;
   type: ExpressionType;
 }
 
 /** Represents function argument value. */
-export interface IArgumentValue extends IArgumentInfo {
+export interface ArgumentValue extends ArgumentInfo {
   value?: string;
 }
 
@@ -78,7 +78,7 @@ export interface TermForm {
 }
 
 /** Represents Constituenta. */
-export interface IConstituenta {
+export interface Constituenta {
   id: number;
   crucial: boolean;
   alias: string;
@@ -94,42 +94,42 @@ export interface IConstituenta {
 
   analysis: RO<AnalysisBase>;
 
-  /** Identifier of {@link LibraryItem} containing this {@link IConstituenta}. */
+  /** Identifier of {@link LibraryItem} containing this {@link Constituenta}. */
   schema: number;
 
-  /** {@link CstClass} of this {@link IConstituenta}. */
+  /** {@link CstClass} of this {@link Constituenta}. */
   cst_class: CstClass;
-  /** {@link CstStatus} of this {@link IConstituenta}. */
+  /** {@link CstStatus} of this {@link Constituenta}. */
   status: CstStatus;
 
-  /** Indicates if this {@link IConstituenta} is a template. */
+  /** Indicates if this {@link Constituenta} is a template. */
   is_template: boolean;
-  /** Indicates if this {@link IConstituenta} has a simple expression. */
+  /** Indicates if this {@link Constituenta} has a simple expression. */
   is_simple_expression: boolean;
 
   /** Index of {@link LibraryItem} that contains this cst (or inheritance parent).
    *  0 - not inherited, 1 - inherited by 1st schema, 2 - inherited by 2nd schema, etc.
    */
   parent_schema_index: number;
-  /** {@link LibraryItem} that contains parent of this inherited {@link IConstituenta}. */
+  /** {@link LibraryItem} that contains parent of this inherited {@link Constituenta}. */
   parent_schema: number | null;
-  /** Indicates if this {@link IConstituenta} is inherited. */
+  /** Indicates if this {@link Constituenta} is inherited. */
   is_inherited: boolean;
-  /** Indicates if this {@link IConstituenta} has children that are inherited. */
+  /** Indicates if this {@link Constituenta} has children that are inherited. */
   has_inherited_children: boolean;
 
-  /** {@link IConstituenta} that spawned this one. */
+  /** {@link Constituenta} that spawned this one. */
   spawner?: number;
-  /** Alias of {@link IConstituenta} that spawned this one. */
+  /** Alias of {@link Constituenta} that spawned this one. */
   spawner_alias?: string;
-  /** List of {@link IConstituenta} that are spawned by this one. */
+  /** List of {@link Constituenta} that are spawned by this one. */
   spawn: number[];
-  /** List of aliases of {@link IConstituenta} that are spawned by this one. */
+  /** List of aliases of {@link Constituenta} that are spawned by this one. */
   spawn_alias: string[];
 }
 
-/** Represents {@link IRSForm} statistics. */
-export interface IRSFormStats {
+/** Represents {@link RSForm} statistics. */
+export interface RSFormStats {
   count_all: number;
   count_crucial: number;
 
@@ -153,8 +153,8 @@ export interface IRSFormStats {
   count_nominal: number;
 }
 
-/** Represents inheritance data for {@link IRSForm}. */
-export interface IInheritanceInfo {
+/** Represents inheritance data for {@link RSForm}. */
+export interface InheritanceInfo {
   child: number;
   child_source: number;
   parent: number;
@@ -162,18 +162,19 @@ export interface IInheritanceInfo {
 }
 
 /** Represents formal explication for set of concepts. */
-export interface IRSForm extends ILibraryItemData {
+export interface RSForm extends LibraryItemData {
   version: CurrentVersion;
-  versions: IVersionInfo[];
+  versions: VersionInfo[];
 
-  items: IConstituenta[];
-  inheritance: IInheritanceInfo[];
-  attribution: IAttribution[];
-  oss: ILibraryItemReference[];
+  items: Constituenta[];
+  inheritance: InheritanceInfo[];
+  attribution: Attribution[];
+  oss: LibraryItemReference[];
+  models: LibraryItemReference[];
 
   analyzer: RSLangAnalyzer;
   graph: Graph;
   attribution_graph: Graph;
-  cstByAlias: Map<string, IConstituenta>;
-  cstByID: Map<number, IConstituenta>;
+  cstByAlias: Map<string, Constituenta>;
+  cstByID: Map<number, Constituenta>;
 }

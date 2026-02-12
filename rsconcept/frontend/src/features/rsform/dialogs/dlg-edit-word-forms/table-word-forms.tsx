@@ -6,20 +6,20 @@ import { IconRemove } from '@/components/icons';
 import { NoData } from '@/components/view';
 
 import { BadgeWordForm } from '../../components/badge-word-form';
-import { type IWordForm } from '../../models/language';
+import { type WordForm } from '../../models/language';
 
 interface TableWordFormsProps {
-  forms: IWordForm[];
-  setForms: React.Dispatch<React.SetStateAction<IWordForm[]>>;
-  onFormSelect?: (form: IWordForm) => void;
+  forms: WordForm[];
+  setForms: React.Dispatch<React.SetStateAction<WordForm[]>>;
+  onFormSelect?: (form: WordForm) => void;
 }
 
-const columnHelper = createColumnHelper<IWordForm>();
+const columnHelper = createColumnHelper<WordForm>();
 
 export function TableWordForms({ forms, setForms, onFormSelect }: TableWordFormsProps) {
   function handleDeleteRow(row: number) {
     setForms(prev => {
-      const newForms: IWordForm[] = [];
+      const newForms: WordForm[] = [];
       prev.forEach((form, index) => {
         if (index !== row) {
           newForms.push(form);

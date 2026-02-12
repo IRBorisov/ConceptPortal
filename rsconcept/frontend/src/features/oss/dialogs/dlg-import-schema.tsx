@@ -4,7 +4,7 @@ import { Controller, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { HelpTopic } from '@/features/help';
-import { type ILibraryItem, LibraryItemType } from '@/features/library';
+import { type LibraryItem, LibraryItemType } from '@/features/library';
 import { useLibrary } from '@/features/library/backend/use-library';
 import { PickSchema } from '@/features/library/components/pick-schema';
 
@@ -13,7 +13,7 @@ import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { hintMsg } from '@/utils/labels';
 
-import { type IImportSchemaDTO, type IOssLayout, schemaImportSchema } from '../backend/types';
+import { type ImportSchemaDTO, type OssLayout, schemaImportSchema } from '../backend/types';
 import { useImportSchema } from '../backend/use-import-schema';
 import { useOssSuspense } from '../backend/use-oss';
 import { SelectParent } from '../components/select-parent';
@@ -22,7 +22,7 @@ import { LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '../m
 
 export interface DlgImportSchemaProps {
   ossID: number;
-  layout: IOssLayout;
+  layout: OssLayout;
   defaultX: number;
   defaultY: number;
   initialParent: number | null;
@@ -51,7 +51,7 @@ export function DlgImportSchema() {
     handleSubmit,
     setValue,
     formState: { errors, isValid }
-  } = useForm<IImportSchemaDTO>({
+  } = useForm<ImportSchemaDTO>({
     resolver: zodResolver(schemaImportSchema),
     defaultValues: {
       item_data: {
@@ -86,13 +86,13 @@ export function DlgImportSchema() {
     }
   })();
 
-  function onSubmit(data: IImportSchemaDTO) {
+  function onSubmit(data: ImportSchemaDTO) {
     data.position = manager.newOperationPosition(data);
     data.layout = manager.layout;
     void importSchema({ itemID: manager.oss.id, data: data }).then(response => onCreate?.(response.new_operation));
   }
 
-  function baseFilter(item: ILibraryItem) {
+  function baseFilter(item: LibraryItem) {
     return !manager.oss.schemas.includes(item.id);
   }
 

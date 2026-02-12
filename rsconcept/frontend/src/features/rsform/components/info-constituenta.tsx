@@ -3,11 +3,11 @@ import { labelType } from '@/features/rslang/labels';
 import { IconChild, IconCrucial } from '@/components/icons';
 import { cn } from '@/components/utils';
 
-import { type IConstituenta } from '../models/rsform';
+import { type Constituenta } from '../models/rsform';
 import { isBasicConcept } from '../models/rsform-api';
 
 interface InfoConstituentaProps extends React.ComponentProps<'div'> {
-  data: IConstituenta;
+  data: Constituenta;
 }
 
 export function InfoConstituenta({ data, className, ...restProps }: InfoConstituentaProps) {

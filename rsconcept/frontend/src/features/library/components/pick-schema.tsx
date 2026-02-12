@@ -7,17 +7,18 @@ import { MiniButton } from '@/components/control';
 import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/data-table';
 import { Dropdown, useDropdown } from '@/components/dropdown';
 import { IconClose, IconFolderTree } from '@/components/icons';
-import { SearchBar } from '@/components/input';
-import { type Styling } from '@/components/props';
+import { ErrorField, SearchBar } from '@/components/input';
+import { type ErrorProcessing, type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
 import { prefixes } from '@/utils/constants';
+import { type RO } from '@/utils/meta';
 
-import { type ILibraryItem, type LibraryItemType } from '../backend/types';
+import { type LibraryItem, type LibraryItemType } from '../backend/types';
 import { matchLibraryItem } from '../models/library-api';
 
 import { SelectLocation } from './select-location';
 
-interface PickSchemaProps extends Styling {
+interface PickSchemaProps extends Styling, ErrorProcessing {
   id?: string;
   value: number | null;
   onChange: (newValue: number) => void;
@@ -25,12 +26,12 @@ interface PickSchemaProps extends Styling {
   initialFilter?: string;
   rows?: number;
 
-  items: ILibraryItem[];
+  items: RO<LibraryItem[]>;
   itemType: LibraryItemType;
-  baseFilter?: (target: ILibraryItem) => boolean;
+  baseFilter?: (target: LibraryItem) => boolean;
 }
 
-const columnHelper = createColumnHelper<ILibraryItem>();
+const columnHelper = createColumnHelper<LibraryItem>();
 
 export function PickSchema({
   id,
@@ -39,6 +40,7 @@ export function PickSchema({
   items,
   itemType,
   value,
+  error,
   onChange,
   baseFilter,
   className,
@@ -95,9 +97,9 @@ export function PickSchema({
     })
   ];
 
-  const conditionalRowStyles: IConditionalStyle<ILibraryItem>[] = [
+  const conditionalRowStyles: IConditionalStyle<LibraryItem>[] = [
     {
-      when: (item: ILibraryItem) => item.id === value,
+      when: (item: LibraryItem) => item.id === value,
       className: 'bg-selected'
     }
   ];
@@ -108,7 +110,8 @@ export function PickSchema({
   }
 
   return (
-    <div className={cn('border divide-y', className)} {...restProps}>
+    <div className={cn('border divide-y relative', className)} {...restProps}>
+      <ErrorField className='absolute -top-7 right-0 border-0' error={error} />
       <div className='flex justify-between bg-input items-center pr-1 rounded-t-md'>
         <SearchBar
           id={id ? `${id}__search` : undefined}

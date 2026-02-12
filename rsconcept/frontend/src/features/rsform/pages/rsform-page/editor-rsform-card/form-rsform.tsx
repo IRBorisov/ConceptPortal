@@ -5,12 +5,12 @@ import { useEffect } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { urls, useConceptNavigation } from '@/app';
+import { useConceptNavigation } from '@/app';
 import {
   type CurrentVersion,
-  type IUpdateLibraryItemDTO,
   LibraryItemType,
-  schemaUpdateLibraryItem
+  schemaUpdateLibraryItem,
+  type UpdateLibraryItemDTO
 } from '@/features/library';
 import { useUpdateItem } from '@/features/library/backend/use-update-item';
 import { SelectVersion } from '@/features/library/components/select-version';
@@ -41,7 +41,7 @@ export function FormRSForm() {
     setValue,
     reset,
     formState: { isDirty, errors }
-  } = useForm<IUpdateLibraryItemDTO>({
+  } = useForm<UpdateLibraryItemDTO>({
     resolver: zodResolver(schemaUpdateLibraryItem),
     defaultValues: {
       id: schema.id,
@@ -74,10 +74,10 @@ export function FormRSForm() {
   }, [isDirty, setIsModified]);
 
   function handleSelectVersion(version: CurrentVersion) {
-    router.push({ path: urls.schema(schema.id, version === 'latest' ? undefined : version) });
+    router.gotoRSForm(schema.id, version === 'latest' ? undefined : version);
   }
 
-  function onSubmit(data: IUpdateLibraryItemDTO) {
+  function onSubmit(data: UpdateLibraryItemDTO) {
     return updateSchema(data).then(() => reset({ ...data }));
   }
 

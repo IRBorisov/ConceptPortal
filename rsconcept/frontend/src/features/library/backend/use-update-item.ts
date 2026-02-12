@@ -1,13 +1,13 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { type IOperationSchemaDTO } from '@/features/oss';
-import { type IRSFormDTO } from '@/features/rsform';
+import { type OperationSchemaDTO } from '@/features/oss';
+import { type RSFormDTO } from '@/features/rsform';
 
 import { KEYS } from '@/backend/configuration';
 import { type RO } from '@/utils/meta';
 
 import { libraryApi } from './api';
-import { type ILibraryItem, type IUpdateLibraryItemDTO, LibraryItemType } from './types';
+import { type LibraryItem, LibraryItemType, type UpdateLibraryItemDTO } from './types';
 import { useLibraryListKey } from './use-library';
 
 export const useUpdateItem = () => {
@@ -16,19 +16,19 @@ export const useUpdateItem = () => {
   const mutation = useMutation({
     mutationKey: [KEYS.global_mutation, libraryApi.baseKey, 'update-item'],
     mutationFn: libraryApi.updateItem,
-    onSuccess: async (data: ILibraryItem) => {
+    onSuccess: async (data: LibraryItem) => {
       const itemKey =
         data.item_type === LibraryItemType.RSFORM
           ? KEYS.composite.rsItem({ itemID: data.id })
           : KEYS.composite.ossItem({ itemID: data.id });
-      client.setQueryData(libraryKey, (prev: RO<ILibraryItem[]> | undefined) =>
+      client.setQueryData(libraryKey, (prev: RO<LibraryItem[]> | undefined) =>
         prev?.map(item => (item.id === data.id ? data : item))
       );
-      client.setQueryData(itemKey, (prev: IRSFormDTO | IOperationSchemaDTO | undefined) =>
+      client.setQueryData(itemKey, (prev: RSFormDTO | OperationSchemaDTO | undefined) =>
         !prev ? undefined : { ...prev, ...data }
       );
       if (data.item_type === LibraryItemType.RSFORM) {
-        const schema: IRSFormDTO | undefined = client.getQueryData(itemKey);
+        const schema: RSFormDTO | undefined = client.getQueryData(itemKey);
         if (schema) {
           await Promise.allSettled(
             schema.oss.map(item => client.invalidateQueries({ queryKey: KEYS.composite.ossItem({ itemID: item.id }) }))
@@ -39,6 +39,6 @@ export const useUpdateItem = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    updateItem: (data: IUpdateLibraryItemDTO) => mutation.mutateAsync(data)
+    updateItem: (data: UpdateLibraryItemDTO) => mutation.mutateAsync(data)
   };
 };

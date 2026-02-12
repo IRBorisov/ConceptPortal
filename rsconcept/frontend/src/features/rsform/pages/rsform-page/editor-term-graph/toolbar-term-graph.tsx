@@ -2,9 +2,10 @@
 
 import { useStoreApi } from '@xyflow/react';
 
+import { useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
-import { type ILibraryItemReference } from '@/features/library';
+import { type LibraryItemReference } from '@/features/library';
 import { MiniSelectorOSS } from '@/features/library/components/mini-selector-oss';
 
 import { MiniButton } from '@/components/control';
@@ -50,13 +51,13 @@ interface ToolbarTermGraphProps {
 }
 
 export function ToolbarTermGraph({ className, graph }: ToolbarTermGraphProps) {
+  const router = useConceptNavigation();
   const isProcessing = useMutatingRSForm();
   const {
-    schema, //
+    schema,
     selectedCst,
     setSelectedCst,
     setFocus,
-    navigateOss,
     isContentEditable,
     canDeleteSelected,
     focusCst
@@ -94,8 +95,8 @@ export function ToolbarTermGraph({ className, graph }: ToolbarTermGraphProps) {
   const store = useStoreApi();
   const { addSelectedNodes } = store.getState();
 
-  function handleSelectOss(event: React.MouseEvent<HTMLElement>, newValue: ILibraryItemReference) {
-    navigateOss(newValue.id, event.ctrlKey || event.metaKey);
+  function handleSelectOss(event: React.MouseEvent<HTMLElement>, newValue: LibraryItemReference) {
+    router.gotoOss(newValue.id, event.ctrlKey || event.metaKey);
   }
 
   function handleSetSelected(newSelection: number[]) {

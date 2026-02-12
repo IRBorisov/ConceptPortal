@@ -215,7 +215,7 @@ export const VerbGrams = [
 /**
  * Represents specific wordform attached to {@link Grammeme}s.
  */
-export interface IWordForm {
+export interface WordForm {
   text: string;
   grams: Grammeme[];
 }
@@ -240,13 +240,13 @@ export const ReferenceType = {
 export type ReferenceType = (typeof ReferenceType)[keyof typeof ReferenceType];
 
 /** Represents entity reference payload. */
-export interface IEntityReference {
+export interface EntityReference {
   entity: string;
   form: string;
 }
 
 /** Represents syntactic reference payload. */
-export interface ISyntacticReference {
+export interface SyntacticReference {
   offset: number;
   nominal: string;
 }

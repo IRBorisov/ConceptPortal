@@ -1,15 +1,15 @@
 import { ComboBox } from '@/components/input/combo-box';
 
 import { describeConstituenta, describeConstituentaTerm } from '../labels';
-import { type IConstituenta } from '../models/rsform';
+import { type Constituenta } from '../models/rsform';
 
 interface SelectConstituentaProps {
   id?: string;
-  value: IConstituenta | null;
-  onChange: (newValue: IConstituenta | null) => void;
+  value: Constituenta | null;
+  onChange: (newValue: Constituenta | null) => void;
 
   className?: string;
-  items?: IConstituenta[];
+  items?: Constituenta[];
   placeholder?: string;
   noBorder?: boolean;
 }

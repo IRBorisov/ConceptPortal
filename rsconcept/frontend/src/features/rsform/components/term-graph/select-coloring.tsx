@@ -5,14 +5,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { cn } from '@/components/utils';
 
 import { labelColoring } from '../../labels';
-import { type IRSForm } from '../../models/rsform';
+import { type RSForm } from '../../models/rsform';
 import { TGColoring, useTermGraphStore } from '../../stores/term-graph';
 
 import { SchemasGuide } from './schemas-guide';
 
 interface SelectColoringProps {
   className?: string;
-  schema: IRSForm;
+  schema: RSForm;
 }
 
 export function SelectColoring({ className, schema }: SelectColoringProps) {

@@ -8,13 +8,13 @@ import { ComboBox } from '@/components/input/combo-box';
 import { useRSForm } from '../../backend/use-rsform';
 import { PickConstituenta } from '../../components/pick-constituenta';
 import { RSInput } from '../../components/rs-input';
-import { CATEGORY_CST_TYPE, type IRSForm } from '../../models/rsform';
+import { CATEGORY_CST_TYPE, type RSForm } from '../../models/rsform';
 import { applyFilterCategory, isTemplateCst } from '../../models/rsform-api';
 
 import { useTemplateContext } from './template-context';
 
 interface TabTemplateProps {
-  schema: IRSForm;
+  schema: RSForm;
 }
 
 export function TabTemplate({ schema }: TabTemplateProps) {

@@ -1,10 +1,10 @@
 'use client';
 
-import { urls, useConceptNavigation } from '@/app';
+import { useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
-import { CstType, type IConstituenta, type IRSForm } from '@/features/rsform';
-import { type IConstituentaBasicsDTO, type ICreateConstituentaDTO } from '@/features/rsform/backend/types';
+import { type Constituenta, CstType, type RSForm } from '@/features/rsform';
+import { type ConstituentaBasicsDTO, type CreateConstituentaDTO } from '@/features/rsform/backend/types';
 import { useCreateConstituenta } from '@/features/rsform/backend/use-create-constituenta';
 import { useMoveConstituents } from '@/features/rsform/backend/use-move-constituents';
 import { useMutatingRSForm } from '@/features/rsform/backend/use-mutating-rsform';
@@ -34,9 +34,9 @@ import { PARAMETER, prefixes } from '@/utils/constants';
 import { type RO } from '@/utils/meta';
 
 interface ToolbarSchemaProps {
-  schema: IRSForm;
+  schema: RSForm;
   isMutable: boolean;
-  activeCst: IConstituenta | null;
+  activeCst: Constituenta | null;
   setActive: (cstID: number) => void;
   resetActive: () => void;
   onEditActive: () => void;
@@ -67,11 +67,7 @@ export function ToolbarSchema({
   const { resetAliases } = useResetAliases();
   const { restoreOrder } = useRestoreOrder();
 
-  function navigateRSForm() {
-    router.push({ path: urls.schema(schema.id) });
-  }
-
-  function onCreateCst(newCst: RO<IConstituentaBasicsDTO>) {
+  function onCreateCst(newCst: RO<ConstituentaBasicsDTO>) {
     setActive(newCst.id);
     setTimeout(() => {
       const element = document.getElementById(`${prefixes.cst_list}${newCst.id}`);
@@ -87,7 +83,7 @@ export function ToolbarSchema({
 
   function createCst() {
     const targetType = activeCst?.cst_type ?? CstType.BASE;
-    const data: ICreateConstituentaDTO = {
+    const data: CreateConstituentaDTO = {
       insert_after: activeCst?.id ?? null,
       crucial: false,
       cst_type: targetType,
@@ -204,6 +200,12 @@ export function ToolbarSchema({
     void restoreOrder({ itemID: schema.id });
   }
 
+  function handleOpenSchema(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    event.preventDefault();
+    event.stopPropagation();
+    router.gotoRSForm(schema.id, undefined, event.ctrlKey || event.metaKey);
+  }
+
   return (
     <div className={cn('flex gap-0.5', className)}>
       <div ref={elementRef} onBlur={handleBlur} className='flex relative items-center'>
@@ -234,7 +236,7 @@ export function ToolbarSchema({
             title='Перейти к концептуальной схеме'
             text='Открыть КС'
             icon={<IconRSForm size='1rem' className='icon-primary' />}
-            onClick={navigateRSForm}
+            onClick={handleOpenSchema}
           />
         </Dropdown>
       </div>

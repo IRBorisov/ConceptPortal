@@ -2,12 +2,12 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 import { TextArea, TextInput } from '@/components/input';
 
-import { type IUpdateOperationDTO } from '../../backend/types';
+import { type UpdateOperationDTO } from '../../backend/types';
 import { SelectParent } from '../../components/select-parent';
-import { type IOperationSchema } from '../../models/oss';
+import { type OperationSchema } from '../../models/oss';
 
 interface TabOperationProps {
-  oss: IOperationSchema;
+  oss: OperationSchema;
 }
 
 export function TabOperation({ oss }: TabOperationProps) {
@@ -15,7 +15,7 @@ export function TabOperation({ oss }: TabOperationProps) {
     register,
     control,
     formState: { errors }
-  } = useFormContext<IUpdateOperationDTO>();
+  } = useFormContext<UpdateOperationDTO>();
 
   return (
     <div className='cc-fade-in cc-column'>

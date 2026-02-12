@@ -1,6 +1,6 @@
 'use client';
 
-import { urls, useConceptNavigation } from '@/app';
+import { useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 import { IconShowSidebar } from '@/features/library/components/icon-show-sidebar';
@@ -25,12 +25,12 @@ import { tooltipText } from '@/utils/labels';
 import { isMac, prepareTooltip } from '@/utils/utils';
 
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
-import { type IConstituenta } from '../../../models/rsform';
-import { RSTabID, useRSEdit } from '../rsedit-context';
+import { type Constituenta } from '../../../models/rsform';
+import { useRSEdit } from '../rsedit-context';
 
 interface ToolbarConstituentaProps {
   className?: string;
-  activeCst: IConstituenta | null;
+  activeCst: Constituenta | null;
   disabled: boolean;
   isNarrow: boolean;
 
@@ -51,7 +51,6 @@ export function ToolbarConstituenta({
   const { findPredecessor } = useFindPredecessor();
   const {
     schema,
-    navigateOss,
     isContentEditable,
     promptCreateCst,
     cloneCst,
@@ -66,15 +65,11 @@ export function ToolbarConstituenta({
   const isModified = useModificationStore(state => state.isModified);
   const isProcessing = useMutatingRSForm();
 
-  function viewPredecessor(target: number) {
+  function viewPredecessor(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, target: number) {
+    event.preventDefault();
+    event.stopPropagation();
     void findPredecessor(target).then(reference =>
-      router.push({
-        path: urls.schema_props({
-          id: reference.schema,
-          active: reference.id,
-          tab: RSTabID.CST_EDIT
-        })
-      })
+      router.gotoCstEdit(reference.schema, reference.id, event.ctrlKey || event.metaKey)
     );
   }
 
@@ -83,13 +78,13 @@ export function ToolbarConstituenta({
       {schema.oss.length > 0 ? (
         <MiniSelectorOSS
           items={schema.oss}
-          onSelect={(event, value) => navigateOss(value.id, event.ctrlKey || event.metaKey)}
+          onSelect={(event, value) => router.gotoOss(value.id, event.ctrlKey || event.metaKey)}
         />
       ) : null}
       {activeCst?.is_inherited ? (
         <MiniButton
           title='Перейти к исходной конституенте в ОСС'
-          onClick={() => viewPredecessor(activeCst.id)}
+          onClick={(event) => viewPredecessor(event, activeCst.id)}
           icon={<IconPredecessor size='1.25rem' className='icon-primary' />}
         />
       ) : null}

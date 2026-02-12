@@ -9,11 +9,11 @@ import { Label } from '@/components/input';
 import { type Styling } from '@/components/props';
 import { prefixes } from '@/utils/constants';
 
-import { type ILibraryItemReference } from '../models/library';
+import { type LibraryItemReference } from '../models/library';
 
 interface MiniSelectorOSSProps extends Styling {
-  items: ILibraryItemReference[];
-  onSelect: (event: React.MouseEvent<HTMLElement>, newValue: ILibraryItemReference) => void;
+  items: LibraryItemReference[];
+  onSelect: (event: React.MouseEvent<HTMLElement>, newValue: LibraryItemReference) => void;
 }
 
 export function MiniSelectorOSS({ items, onSelect, className, ...restProps }: MiniSelectorOSSProps) {

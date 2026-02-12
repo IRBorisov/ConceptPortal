@@ -3,7 +3,7 @@ import { type FlatAstNode } from '@/utils/parsing';
 
 import { TokenID } from '../rslang';
 
-import { CstClass, CstStatus, type IConstituenta } from './models/rsform';
+import { type Constituenta, CstClass, CstStatus } from './models/rsform';
 import { type TypificationNodeData } from './models/typification-graph';
 import { TGColoring, TGEdgeType } from './stores/term-graph';
 
@@ -192,7 +192,7 @@ export function colorFgCstStatus(status: CstStatus): string {
   }
 }
 
-/** Determines background color for {@link IConstituenta} depending on its {@link CstClass}. */
+/** Determines background color for {@link Constituenta} depending on its {@link CstClass}. */
 export function colorBgCstClass(cstClass: CstClass): string {
   // prettier-ignore
   switch (cstClass) {
@@ -204,8 +204,8 @@ export function colorBgCstClass(cstClass: CstClass): string {
   }
 }
 
-/** Determines background color for {@link IConstituenta} badge. */
-export function colorBgBadge(item: IConstituenta) {
+/** Determines background color for {@link Constituenta} badge. */
+export function colorBgBadge(item: Constituenta) {
   switch (item.cst_class) {
     case CstClass.BASIC:
       return 'bg-accent-green25';
@@ -213,7 +213,7 @@ export function colorBgBadge(item: IConstituenta) {
   return 'bg-input';
 }
 
-/** Determines background color for {@link IConstituenta} depending on its parent schema index. */
+/** Determines background color for {@link Constituenta} depending on its parent schema index. */
 export function colorBgSchemas(schema_index: number): string {
   if (schema_index === 0) {
     return APP_COLORS.bgGreen;
@@ -228,8 +228,8 @@ export function colorBgSchemas(schema_index: number): string {
   return APP_COLORS.bgBlue;
 }
 
-/** Determines graph color for {@link IConstituenta}. */
-export function colorBgGraphNode(cst: IConstituenta, coloringScheme: TGColoring): string {
+/** Determines graph color for {@link Constituenta}. */
+export function colorBgGraphNode(cst: Constituenta, coloringScheme: TGColoring): string {
   if (coloringScheme === TGColoring.type) {
     return colorBgCstClass(cst.cst_class);
   }

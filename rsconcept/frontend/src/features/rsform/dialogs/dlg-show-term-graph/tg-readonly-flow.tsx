@@ -23,7 +23,7 @@ import { SelectColoring } from '../../components/term-graph/select-coloring';
 import { SelectEdgeType } from '../../components/term-graph/select-edge-type';
 import { ToolbarFocusedCst } from '../../components/term-graph/toolbar-focused-cst';
 import { ViewHidden } from '../../components/term-graph/view-hidden';
-import { type IConstituenta, type IRSForm } from '../../models/rsform';
+import { type Constituenta, type RSForm } from '../../models/rsform';
 import { useTermGraphStore } from '../../stores/term-graph';
 
 import ToolbarGraphFilter from './toolbar-graph-filter';
@@ -39,11 +39,11 @@ export const flowOptions = {
 } as const;
 
 export interface TGReadonlyFlowProps {
-  schema: IRSForm;
+  schema: RSForm;
 }
 
 export function TGReadonlyFlow({ schema }: TGReadonlyFlowProps) {
-  const [focusCst, setFocusCst] = useState<IConstituenta | null>(null);
+  const [focusCst, setFocusCst] = useState<Constituenta | null>(null);
   const flowRef = useRef<HTMLDivElement>(null);
   const [isAnimating, setIsAnimating] = useState(false);
 

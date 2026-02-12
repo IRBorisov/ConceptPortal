@@ -1,5 +1,6 @@
 'use client';
 
+import { useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 import { MiniSelectorOSS } from '@/features/library/components/mini-selector-oss';
@@ -34,12 +35,12 @@ interface ToolbarRSListProps {
 export function ToolbarRSList({ className }: ToolbarRSListProps) {
   const isProcessing = useMutatingRSForm();
   const { updateCrucial } = useUpdateCrucial();
+  const router = useConceptNavigation();
   const { elementRef: menuRef, isOpen: isMenuOpen, toggle: toggleMenu, handleBlur: handleMenuBlur } = useDropdown();
   const {
     schema,
     selectedCst,
     activeCst,
-    navigateOss,
     deselectAll,
     createCst,
     promptCreateCst,
@@ -68,7 +69,7 @@ export function ToolbarRSList({ className }: ToolbarRSListProps) {
       {schema.oss.length > 0 ? (
         <MiniSelectorOSS
           items={schema.oss}
-          onSelect={(event, value) => navigateOss(value.id, event.ctrlKey || event.metaKey)}
+          onSelect={(event, value) => router.gotoOss(value.id, event.ctrlKey || event.metaKey)}
         />
       ) : null}
       <MiniButton

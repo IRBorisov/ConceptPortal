@@ -1,9 +1,9 @@
 'use client';
 
-import { type IBlock } from '../models/oss';
+import { type Block } from '../models/oss';
 
 interface InfoOperationProps {
-  block: IBlock;
+  block: Block;
 }
 
 export function InfoBlock({ block }: InfoOperationProps) {

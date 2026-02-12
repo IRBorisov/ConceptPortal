@@ -1,6 +1,7 @@
 'use client';
 
 import { urls, useConceptNavigation } from '@/app';
+import { PromptTabID } from '@/app/navigation/navigation-context';
 import { useDeletePromptTemplate } from '@/features/ai/backend/use-delete-prompt-template';
 import { useMutatingPrompts } from '@/features/ai/backend/use-mutating-prompts';
 
@@ -10,8 +11,6 @@ import { cn } from '@/components/utils';
 import { useModificationStore } from '@/stores/modification';
 import { promptText } from '@/utils/labels';
 import { isMac, prepareTooltip } from '@/utils/utils';
-
-import { PromptTabID } from '../templates-tabs';
 
 interface ToolbarTemplateProps {
   activeID: number;

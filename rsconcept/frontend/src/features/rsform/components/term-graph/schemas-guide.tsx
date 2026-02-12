@@ -5,10 +5,10 @@ import { IconHelp } from '@/components/icons';
 import { globalIDs, prefixes } from '@/utils/constants';
 
 import { colorBgSchemas } from '../../colors';
-import { type IRSForm } from '../../models/rsform';
+import { type RSForm } from '../../models/rsform';
 
 interface SchemasGuideProps {
-  schema: IRSForm;
+  schema: RSForm;
 }
 
 export function SchemasGuide({ schema }: SchemasGuideProps) {

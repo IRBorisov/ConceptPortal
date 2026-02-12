@@ -2,13 +2,13 @@
  * Module: API for OperationSystem.
  */
 
-import { type ILibraryItem } from '@/features/library';
+import { type LibraryItem } from '@/features/library';
 import {
+  type Constituenta,
   CstClass,
+  type CstSubstitute,
   CstType,
-  type IConstituenta,
-  type ICstSubstitute,
-  type IRSForm,
+  type RSForm,
 } from '@/features/rsform';
 import {
   type AliasMapping,
@@ -24,7 +24,7 @@ import { infoMsg } from '@/utils/labels';
 import { Graph } from '../../../models/graph';
 import { describeSubstitutionError } from '../labels';
 
-import { type IOperationSchema, NodeType, SubstitutionErrorType } from './oss';
+import { NodeType, type OperationSchema, SubstitutionErrorType } from './oss';
 
 const STARTING_SUB_INDEX = 900; // max semantic index for starting substitution
 
@@ -32,8 +32,8 @@ export function constructNodeID(type: NodeType, itemID: number): string {
   return type === NodeType.OPERATION ? 'o' + String(itemID) : 'b' + String(itemID);
 }
 
-/** Sorts library items relevant for the specified {@link IOperationSchema}. */
-export function sortItemsForOSS(oss: IOperationSchema, items: readonly ILibraryItem[]): ILibraryItem[] {
+/** Sorts library items relevant for the specified {@link OperationSchema}. */
+export function sortItemsForOSS(oss: OperationSchema, items: readonly LibraryItem[]): LibraryItem[] {
   const result = items.filter(item => item.location === oss.location);
   for (const item of items) {
     if (item.visible && item.owner === oss.owner && !result.includes(item)) {
@@ -58,19 +58,19 @@ type CrossMapping = Map<number, AliasMapping>;
 /** Validator for Substitution table. */
 export class SubstitutionValidator {
   public msg: string = '';
-  public suggestions: ICstSubstitute[] = [];
+  public suggestions: CstSubstitute[] = [];
 
-  private schemas: IRSForm[];
-  private substitutions: ICstSubstitute[];
+  private schemas: RSForm[];
+  private substitutions: CstSubstitute[];
   private constituents = new Set<number>();
   private originals = new Set<number>();
   private mapping: CrossMapping = new Map();
 
-  private cstByID = new Map<number, IConstituenta>();
-  private schemaByID = new Map<number, IRSForm>();
-  private schemaByCst = new Map<number, IRSForm>();
+  private cstByID = new Map<number, Constituenta>();
+  private schemaByID = new Map<number, RSForm>();
+  private schemaByCst = new Map<number, RSForm>();
 
-  constructor(schemas: IRSForm[], substitutions: ICstSubstitute[]) {
+  constructor(schemas: RSForm[], substitutions: CstSubstitute[]) {
     this.schemas = schemas;
     this.substitutions = substitutions;
     if (schemas.length === 0 || substitutions.length === 0) {
@@ -122,7 +122,7 @@ export class SubstitutionValidator {
   private calculateSuggestions(): void {
     const candidates = new Map<number, string>();
     const minors = new Set<number>();
-    const schemaByCst = new Map<number, IRSForm>();
+    const schemaByCst = new Map<number, RSForm>();
     for (const schema of this.schemas) {
       for (const cst of schema.items) {
         if (this.originals.has(cst.id)) {
@@ -397,7 +397,7 @@ export class SubstitutionValidator {
     return result;
   }
 
-  private checkEqual(left: IConstituenta, right: IConstituenta): boolean {
+  private checkEqual(left: Constituenta, right: Constituenta): boolean {
     const schema1 = this.schemaByID.get(left.schema)!;
     const inputs1 = schema1.graph.at(left.id)!.inputs;
     if (inputs1.some(id => !this.constituents.has(id))) {
@@ -439,9 +439,9 @@ export class SubstitutionValidator {
 export function getRelocateCandidates(
   source: number,
   destination: number,
-  schema: IRSForm,
-  oss: IOperationSchema
-): IConstituenta[] {
+  schema: RSForm,
+  oss: OperationSchema
+): Constituenta[] {
   const destinationSchema = oss.operationByID.get(destination)?.result;
   if (!destinationSchema) {
     return [];

@@ -10,7 +10,7 @@ import { Checkbox, Label, TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { AccessPolicy, type ICloneLibraryItemDTO, type ILibraryItem, schemaCloneLibraryItem } from '../backend/types';
+import { AccessPolicy, type CloneLibraryItemDTO, type LibraryItem, schemaCloneLibraryItem } from '../backend/types';
 import { useCloneItem } from '../backend/use-clone-item';
 import { IconItemVisibility } from '../components/icon-item-visibility';
 import { PickLocation } from '../components/pick-location';
@@ -18,7 +18,7 @@ import { SelectAccessPolicy } from '../components/select-access-policy';
 import { cloneTitle } from '../models/library-api';
 
 export interface DlgCloneLibraryItemProps {
-  base: ILibraryItem;
+  base: LibraryItem;
   initialLocation: string;
   selected: number[];
   totalCount: number;
@@ -36,7 +36,7 @@ export function DlgCloneLibraryItem() {
     handleSubmit,
     control,
     formState: { errors, isValid }
-  } = useForm<ICloneLibraryItemDTO>({
+  } = useForm<CloneLibraryItemDTO>({
     resolver: zodResolver(schemaCloneLibraryItem),
     defaultValues: {
       item_data: {
@@ -53,7 +53,7 @@ export function DlgCloneLibraryItem() {
     reValidateMode: 'onChange'
   });
 
-  function onSubmit(data: ICloneLibraryItemDTO) {
+  function onSubmit(data: CloneLibraryItemDTO) {
     return cloneItem({
       itemID: base.id,
       data: data

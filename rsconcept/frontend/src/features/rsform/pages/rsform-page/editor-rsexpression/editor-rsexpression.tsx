@@ -16,7 +16,7 @@ import { normalizeAST, rslangParser } from '../../../../rslang';
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { RSInput } from '../../../components/rs-input';
 import { RSTextWrapper } from '../../../components/rs-input/text-editing';
-import { CstStatus, type IConstituenta } from '../../../models/rsform';
+import { type Constituenta, CstStatus } from '../../../models/rsform';
 import { getAnalysisFor, inferStatus } from '../../../models/rsform-api';
 import { useRSEdit } from '../rsedit-context';
 
@@ -30,7 +30,7 @@ interface EditorRSExpressionProps {
   value: string;
   onChange: (newValue: string) => void;
   analysis: RO<AnalysisFull> | null;
-  activeCst: IConstituenta;
+  activeCst: Constituenta;
 
   label: string;
   placeholder?: string;
@@ -42,7 +42,7 @@ interface EditorRSExpressionProps {
   onShowTypeGraph: (event: React.MouseEvent<Element>) => void;
 }
 
-function extractCstData(cst: IConstituenta) {
+function extractCstData(cst: Constituenta) {
   return {
     id: cst.id,
     alias: cst.alias,

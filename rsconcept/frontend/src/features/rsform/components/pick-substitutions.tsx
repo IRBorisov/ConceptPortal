@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 
-import { type ILibraryItem } from '@/features/library';
+import { type LibraryItem } from '@/features/library';
 import { SelectLibraryItem } from '@/features/library/components/select-library-item';
 
 import { MiniButton } from '@/components/control';
@@ -14,31 +14,31 @@ import { cn } from '@/components/utils';
 import { NoData } from '@/components/view';
 import { errorMsg } from '@/utils/labels';
 
-import { type ISubstituteConstituents } from '../backend/types';
-import { type IConstituenta, type IRSForm } from '../models/rsform';
+import { type CstSubstitute } from '../backend/types';
+import { type Constituenta, type RSForm } from '../models/rsform';
 
 import { BadgeConstituenta } from './badge-constituenta';
 import { SelectConstituenta } from './select-constituenta';
 
 interface IMultiSubstitution {
-  original_source: ILibraryItem;
-  original: IConstituenta;
-  substitution: IConstituenta;
-  substitution_source: ILibraryItem;
+  original_source: LibraryItem;
+  original: Constituenta;
+  substitution: Constituenta;
+  substitution_source: LibraryItem;
   is_suggestion: boolean;
 }
 
 interface PickSubstitutionsProps extends Styling {
-  value: ISubstituteConstituents[];
-  onChange: (newValue: ISubstituteConstituents[]) => void;
+  value: CstSubstitute[];
+  onChange: (newValue: CstSubstitute[]) => void;
 
-  suggestions?: ISubstituteConstituents[];
+  suggestions?: CstSubstitute[];
 
   rows?: number;
   allowSelfSubstitution?: boolean;
 
-  schemas: IRSForm[];
-  filterCst?: (cst: IConstituenta) => boolean;
+  schemas: RSForm[];
+  filterCst?: (cst: Constituenta) => boolean;
 }
 
 const columnHelper = createColumnHelper<IMultiSubstitution>();
@@ -54,17 +54,17 @@ export function PickSubstitutions({
   className,
   ...restProps
 }: PickSubstitutionsProps) {
-  const [leftArgument, setLeftArgument] = useState<ILibraryItem | null>(schemas.length === 1 ? schemas[0] : null);
-  const [rightArgument, setRightArgument] = useState<ILibraryItem | null>(
+  const [leftArgument, setLeftArgument] = useState<LibraryItem | null>(schemas.length === 1 ? schemas[0] : null);
+  const [rightArgument, setRightArgument] = useState<LibraryItem | null>(
     schemas.length === 1 && allowSelfSubstitution ? schemas[0] : null
   );
 
-  const [leftCst, setLeftCst] = useState<IConstituenta | null>(null);
-  const [rightCst, setRightCst] = useState<IConstituenta | null>(null);
+  const [leftCst, setLeftCst] = useState<Constituenta | null>(null);
+  const [rightCst, setRightCst] = useState<Constituenta | null>(null);
 
   const leftItems = !leftArgument
     ? []
-    : (leftArgument as IRSForm).items.filter(
+    : (leftArgument as RSForm).items.filter(
       cst =>
         cst.id !== rightCst?.id && //
         !value.find(item => item.original === cst.id) &&
@@ -73,7 +73,7 @@ export function PickSubstitutions({
 
   const rightItems = !rightArgument
     ? []
-    : (rightArgument as IRSForm).items.filter(
+    : (rightArgument as RSForm).items.filter(
       cst =>
         cst.id !== leftCst?.id && //
         !value.find(item => item.original === cst.id) &&
@@ -83,7 +83,7 @@ export function PickSubstitutions({
   const [deleteRight, setDeleteRight] = useState(true);
   const toggleDelete = () => setDeleteRight(prev => !prev);
 
-  const [ignores, setIgnores] = useState<ISubstituteConstituents[]>([]);
+  const [ignores, setIgnores] = useState<CstSubstitute[]>([]);
   const filteredSuggestions =
     suggestions?.filter(
       item =>
@@ -111,17 +111,17 @@ export function PickSubstitutions({
     }))
   ];
 
-  function onChangeLeftArgument(item: ILibraryItem | null) {
+  function onChangeLeftArgument(item: LibraryItem | null) {
     setLeftArgument(item);
     setLeftCst(null);
   }
 
-  function onChangeRightArgument(item: ILibraryItem | null) {
+  function onChangeRightArgument(item: LibraryItem | null) {
     setRightArgument(item);
     setRightCst(null);
   }
 
-  function getSchemaByCst(id: number): IRSForm | undefined {
+  function getSchemaByCst(id: number): RSForm | undefined {
     for (const schema of schemas) {
       const cst = schema.cstByID.get(id);
       if (cst) {
@@ -131,7 +131,7 @@ export function PickSubstitutions({
     return undefined;
   }
 
-  function getConstituenta(id: number): IConstituenta | undefined {
+  function getConstituenta(id: number): Constituenta | undefined {
     for (const schema of schemas) {
       const cst = schema.cstByID.get(id);
       if (cst) {
@@ -145,7 +145,7 @@ export function PickSubstitutions({
     if (!leftCst || !rightCst) {
       return;
     }
-    const newSubstitution: ISubstituteConstituents = {
+    const newSubstitution: CstSubstitute = {
       original: deleteRight ? rightCst.id : leftCst.id,
       substitution: deleteRight ? leftCst.id : rightCst.id
     };

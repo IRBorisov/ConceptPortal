@@ -9,6 +9,7 @@ import { prefetchLibrary } from '@/features/library/backend/use-library';
 import { CreateItemPage } from '@/features/library/pages/create-item-page';
 import { prefetchOSS } from '@/features/oss/backend/use-oss';
 import { prefetchRSForm } from '@/features/rsform/backend/use-rsform';
+import { prefetchRSModel } from '@/features/rsform/backend/use-rsmodel';
 import { prefetchProfile } from '@/features/users/backend/use-profile';
 import { prefetchUsers } from '@/features/users/backend/use-users';
 
@@ -70,6 +71,11 @@ export const Router = createBrowserRouter([
         lazy: () => import('@/features/rsform/pages/rsform-page')
       },
       {
+        path: `${routes.models}/:id`,
+        loader: data => prefetchRSModel(parseRSModelURL(data.params.id)),
+        lazy: () => import('@/features/rsform/pages/rsmodel-page')
+      },
+      {
         path: `${routes.oss}/:id`,
         loader: data => prefetchOSS(parseOssURL(data.params.id)),
         lazy: () => import('@/features/oss/pages/oss-page')
@@ -107,6 +113,10 @@ function parseRSFormURL(id: string | undefined, url: string) {
 }
 
 function parseOssURL(id: string | undefined) {
+  return { itemID: id ? Number(id) : undefined };
+}
+
+function parseRSModelURL(id: string | undefined) {
   return { itemID: id ? Number(id) : undefined };
 }
 

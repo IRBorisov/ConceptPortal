@@ -10,9 +10,9 @@ import { labelType } from '@/features/rslang/labels';
 
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { type ICreateConstituentaDTO } from '../../backend/types';
+import { type CreateConstituentaDTO } from '../../backend/types';
 import { useRSFormSuspense } from '../../backend/use-rsform';
-import { type IArgumentValue, type IConstituenta } from '../../models/rsform';
+import { type ArgumentValue, type Constituenta } from '../../models/rsform';
 import { generateAlias, inferTemplatedType } from '../../models/rsform-api';
 
 import { type DlgCstTemplateProps } from './dlg-cst-template';
@@ -22,14 +22,14 @@ export const TemplateState = ({ children }: React.PropsWithChildren) => {
   const { schemaID } = useDialogsStore(state => state.props as DlgCstTemplateProps);
   const { schema } = useRSFormSuspense({ itemID: schemaID });
   const { templates } = useTemplatesSuspense();
-  const { setValue } = useFormContext<ICreateConstituentaDTO>();
+  const { setValue } = useFormContext<CreateConstituentaDTO>();
 
   const [templateID, setTemplateID] = useState<number | null>(templates.length > 0 ? templates[0].id : null);
-  const [args, setArguments] = useState<IArgumentValue[]>([]);
-  const [prototype, setPrototype] = useState<IConstituenta | null>(null);
-  const [filterCategory, setFilterCategory] = useState<IConstituenta | null>(null);
+  const [args, setArguments] = useState<ArgumentValue[]>([]);
+  const [prototype, setPrototype] = useState<Constituenta | null>(null);
+  const [filterCategory, setFilterCategory] = useState<Constituenta | null>(null);
 
-  function onChangeArguments(newArgs: IArgumentValue[]) {
+  function onChangeArguments(newArgs: ArgumentValue[]) {
     setArguments(newArgs);
     if (newArgs.length === 0 || !prototype) {
       return;
@@ -49,7 +49,7 @@ export const TemplateState = ({ children }: React.PropsWithChildren) => {
     setValue('alias', generateAlias(newType, schema), { shouldValidate: true });
   }
 
-  function onChangePrototype(newPrototype: IConstituenta) {
+  function onChangePrototype(newPrototype: Constituenta) {
     setPrototype(newPrototype);
     const typeID = newPrototype.analysis.type!.typeID;
     if (typeID === TypeID.function || typeID === TypeID.predicate) {

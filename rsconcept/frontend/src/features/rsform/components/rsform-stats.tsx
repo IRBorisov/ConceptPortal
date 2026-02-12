@@ -21,14 +21,14 @@ import {
 import { cn } from '@/components/utils';
 import { ValueStats } from '@/components/view';
 
-import { type IRSFormStats } from '../models/rsform';
+import { type RSFormStats } from '../models/rsform';
 
-interface RSFormStatsProps {
+interface RSFormStatsPaneProps {
   className?: string;
-  stats: IRSFormStats;
+  stats: RSFormStats;
 }
 
-export function RSFormStats({ className, stats }: RSFormStatsProps) {
+export function CardRSFormStats({ className, stats }: RSFormStatsPaneProps) {
   return (
     <div className={cn('h-min', 'grid grid-cols-4 gap-1 justify-items-end select-none', className)}>
       <div id='count_all' className='col-span-2 w-fit flex gap-3 hover:cursor-default'>

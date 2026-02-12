@@ -1,11 +1,11 @@
 import { useAuthSuspense } from '@/features/auth';
 
-import { type ILibraryFilter } from '../models/library';
+import { type LibraryFilter } from '../models/library';
 import { matchLibraryItem, matchLibraryItemLocation } from '../models/library-api';
 
 import { useLibrary } from './use-library';
 
-export function useApplyLibraryFilter(filter: ILibraryFilter) {
+export function useApplyLibraryFilter(filter: LibraryFilter) {
   const { items } = useLibrary();
   const { user } = useAuthSuspense();
 
@@ -33,6 +33,9 @@ export function useApplyLibraryFilter(filter: ILibraryFilter) {
   }
   if (filter.filterUser !== null) {
     result = result.filter(item => filter.filterUser === item.owner);
+  }
+  if (filter.itemType !== null) {
+    result = result.filter(item => item.item_type === filter.itemType);
   }
   if (!filter.folderMode && !!filter.path) {
     result = result.filter(item => matchLibraryItemLocation(item, filter.path));

@@ -3,7 +3,7 @@
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { urls, useConceptNavigation } from '@/app';
+import { useConceptNavigation } from '@/app';
 import { useFindPredecessor } from '@/features/oss/backend/use-find-predecessor';
 
 import { MiniButton } from '@/components/control';
@@ -12,11 +12,10 @@ import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { hintMsg } from '@/utils/labels';
 
-import { type IUpdateConstituentaDTO, schemaUpdateConstituenta } from '../../backend/types';
+import { schemaUpdateConstituenta, type UpdateConstituentaDTO } from '../../backend/types';
 import { useRSFormSuspense } from '../../backend/use-rsform';
 import { useUpdateConstituenta } from '../../backend/use-update-constituenta';
 import { validateNewAlias } from '../../models/rsform-api';
-import { RSTabID } from '../../pages/rsform-page/rsedit-context';
 
 import { FormEditCst } from './form-edit-cst';
 
@@ -34,7 +33,7 @@ export function DlgEditCst() {
   const router = useConceptNavigation();
   const { findPredecessor } = useFindPredecessor();
 
-  const methods = useForm<IUpdateConstituentaDTO>({
+  const methods = useForm<UpdateConstituentaDTO>({
     mode: 'onChange',
     resolver: zodResolver(schemaUpdateConstituenta),
     defaultValues: {
@@ -58,31 +57,19 @@ export function DlgEditCst() {
     (methods.formState.isValid && alias === target.alias && cst_type == target.cst_type) ||
     validateNewAlias(alias, cst_type, schema);
 
-  function onSubmit(data: IUpdateConstituentaDTO) {
+  function onSubmit(data: UpdateConstituentaDTO) {
     return updateConstituenta({ itemID: schema.id, data });
   }
 
   function navigateToTarget() {
     hideDialog();
-    router.push({
-      path: urls.schema_props({
-        id: schema.id,
-        tab: RSTabID.CST_EDIT,
-        active: target.id
-      })
-    });
+    router.gotoCstEdit(schema.id, target.id);
   }
 
   function editSource() {
     hideDialog();
     void findPredecessor(target.id).then(reference =>
-      router.push({
-        path: urls.schema_props({
-          id: reference.schema,
-          active: reference.id,
-          tab: RSTabID.CST_EDIT
-        })
-      })
+      router.gotoCstEdit(reference.schema, reference.id)
     );
   }
 

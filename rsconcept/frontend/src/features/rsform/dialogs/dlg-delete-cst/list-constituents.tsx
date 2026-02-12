@@ -1,9 +1,9 @@
 import { labelConstituenta } from '../../labels';
-import { type IRSForm } from '../../models/rsform';
+import { type RSForm } from '../../models/rsform';
 
 interface ListConstituentsProps {
   list: number[];
-  schema: IRSForm;
+  schema: RSForm;
   prefix: string;
   title?: string;
 }

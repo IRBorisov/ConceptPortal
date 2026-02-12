@@ -16,7 +16,7 @@ const schemaLocation = z.strictObject({
   location: z.string().refine(data => validateLocation(data), { message: errorMsg.invalidLocation })
 });
 
-type ILocationType = z.infer<typeof schemaLocation>;
+type LocationType = z.infer<typeof schemaLocation>;
 
 export interface DlgChangeLocationProps {
   initial: string;
@@ -30,7 +30,7 @@ export function DlgChangeLocation() {
     handleSubmit,
     control,
     formState: { errors, isValid, isDirty }
-  } = useForm<ILocationType>({
+  } = useForm<LocationType>({
     resolver: zodResolver(schemaLocation),
     defaultValues: {
       location: initial
@@ -38,7 +38,7 @@ export function DlgChangeLocation() {
     mode: 'onChange'
   });
 
-  function onSubmit(data: ILocationType) {
+  function onSubmit(data: LocationType) {
     onChangeLocation(data.location);
   }
 

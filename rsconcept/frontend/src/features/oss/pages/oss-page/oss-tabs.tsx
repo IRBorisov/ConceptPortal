@@ -19,7 +19,7 @@ interface OssTabsProps {
 
 export function OssTabs({ activeTab }: OssTabsProps) {
   const router = useConceptNavigation();
-  const { schema, navigateTab, deselectAll } = useOssEdit();
+  const { schema, deselectAll } = useOssEdit();
 
   const hideFooter = useAppLayoutStore(state => state.hideFooter);
 
@@ -55,7 +55,7 @@ export function OssTabs({ activeTab }: OssTabsProps) {
       }
     }
     deselectAll();
-    navigateTab(index as OssTabID);
+    router.changeTab(index);
   }
 
   return (

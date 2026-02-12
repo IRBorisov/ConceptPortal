@@ -11,12 +11,12 @@ import { promptText } from '@/utils/labels';
 import { cleanSvg } from '@/utils/svg';
 import { dataUrlToBlob, withPreventDefault } from '@/utils/utils';
 
-import { type IUpdateOperationDTO, OperationType } from '../../../backend/types';
+import { OperationType, type UpdateOperationDTO } from '../../../backend/types';
 import { useDeleteBlock } from '../../../backend/use-delete-block';
 import { useMutatingOss } from '../../../backend/use-mutating-oss';
 import { useUpdateLayout } from '../../../backend/use-update-layout';
 import { useUpdateOperation } from '../../../backend/use-update-operation';
-import { type IOssItem, NodeType } from '../../../models/oss';
+import { NodeType, type OssItem } from '../../../models/oss';
 import { LayoutManager } from '../../../models/oss-layout-api';
 import { useOSSGraphStore } from '../../../stores/oss-graph';
 import { useOssEdit } from '../oss-edit-context';
@@ -211,7 +211,7 @@ export function useHandleActions() {
         substitution: sub.substitution
       }));
 
-    const data: IUpdateOperationDTO = {
+    const data: UpdateOperationDTO = {
       target: target.id,
       item_data: {
         parent: target.parent,
@@ -470,7 +470,7 @@ export function useHandleActions() {
 }
 
 // -------- Internals --------
-function extractBlockParent(selectedItems: IOssItem[]): number | null {
+function extractBlockParent(selectedItems: OssItem[]): number | null {
   if (selectedItems.length === 1 && selectedItems[0].nodeType === NodeType.BLOCK) {
     return selectedItems[0].id;
   }

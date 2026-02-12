@@ -12,7 +12,7 @@ import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useDialogsStore } from '@/stores/dialogs';
 import { hintMsg } from '@/utils/labels';
 
-import { type IOssLayout, type IUpdateOperationDTO, OperationType, schemaUpdateOperation } from '../../backend/types';
+import { OperationType, type OssLayout, schemaUpdateOperation, type UpdateOperationDTO } from '../../backend/types';
 import { useOssSuspense } from '../../backend/use-oss';
 import { useUpdateOperation } from '../../backend/use-update-operation';
 import { LayoutManager } from '../../models/oss-layout-api';
@@ -23,7 +23,7 @@ import { TabSubstitutions } from './tab-substitutions';
 
 export interface DlgEditOperationProps {
   ossID: number;
-  layout: IOssLayout;
+  layout: OssLayout;
   targetID: number;
 }
 
@@ -42,7 +42,7 @@ export function DlgEditOperation() {
   const manager = new LayoutManager(schema, layout);
   const target = manager.oss.operationByID.get(targetID)!;
 
-  const methods = useForm<IUpdateOperationDTO>({
+  const methods = useForm<UpdateOperationDTO>({
     resolver: zodResolver(schemaUpdateOperation),
     defaultValues: {
       target: targetID,
@@ -56,9 +56,9 @@ export function DlgEditOperation() {
       substitutions:
         target.operation_type === OperationType.SYNTHESIS
           ? target.substitutions.map(sub => ({
-              original: sub.original,
-              substitution: sub.substitution
-            }))
+            original: sub.original,
+            substitution: sub.substitution
+          }))
           : [],
       layout: manager.layout
     },
@@ -67,7 +67,7 @@ export function DlgEditOperation() {
   const [activeTab, setActiveTab] = useState<TabID>(TabID.CARD);
   const canSubmit = methods.formState.isValid;
 
-  function onSubmit(data: IUpdateOperationDTO) {
+  function onSubmit(data: UpdateOperationDTO) {
     if (data.item_data.parent !== target.parent) {
       manager.onChangeParent(target.nodeID, data.item_data.parent === null ? null : `b${data.item_data.parent}`);
       data.layout = manager.layout;

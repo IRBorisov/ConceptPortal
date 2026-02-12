@@ -5,7 +5,7 @@ import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
 
 import { labelVersion } from '../../rsform/labels';
-import { type IVersionInfo } from '../backend/types';
+import { type VersionInfo } from '../backend/types';
 import { type CurrentVersion } from '../models/library';
 
 interface SelectVersionProps extends Styling {
@@ -13,7 +13,7 @@ interface SelectVersionProps extends Styling {
   value: CurrentVersion;
   onChange: (newValue: CurrentVersion) => void;
 
-  items: IVersionInfo[];
+  items: VersionInfo[];
   placeholder?: string;
   noBorder?: boolean;
 }

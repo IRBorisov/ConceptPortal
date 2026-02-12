@@ -6,14 +6,16 @@ import { SelectUser } from '@/features/users/components/select-user';
 
 import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
-import { IconEditor, IconFilterReset, IconOwner, IconUserSearch } from '@/components/icons';
+import { IconAnimationOff, IconEditor, IconFilterReset, IconOwner, IconUserSearch } from '@/components/icons';
 import { SearchBar } from '@/components/input';
 import { cn } from '@/components/utils';
 import { tripleToggleColor } from '@/utils/utils';
 
 import { useLibrarySuspense } from '../../backend/use-library';
 import { IconItemVisibility } from '../../components/icon-item-visibility';
+import { IconLibraryItemType } from '../../components/icon-library-item-type';
 import { IconShowSidebar } from '../../components/icon-show-sidebar';
+import { labelLibraryItemType } from '../../labels';
 import { useHasCustomFilter, useLibrarySearchStore } from '../../stores/library-search';
 
 interface ToolbarSearchProps {
@@ -43,11 +45,15 @@ export function ToolbarSearch({ className, total, filtered }: ToolbarSearchProps
   const toggleVisible = useLibrarySearchStore(state => state.toggleVisible);
   const filterUser = useLibrarySearchStore(state => state.filterUser);
   const setFilterUser = useLibrarySearchStore(state => state.setFilterUser);
+  const itemType = useLibrarySearchStore(state => state.itemType);
+  const toggleItemType = useLibrarySearchStore(state => state.toggleItemType);
 
   const resetFilter = useLibrarySearchStore(state => state.resetFilter);
   const hasCustomFilter = useHasCustomFilter();
 
   const userActive = isOwned !== null || isEditor !== null || filterUser !== null;
+
+  const itemTypeTitle = itemType ? `Тип: ${labelLibraryItemType(itemType)}` : 'Тип: все';
 
   function filterNonEmptyUsers(userID: number): boolean {
     return items.some(item => item.owner === userID);
@@ -73,6 +79,18 @@ export function ToolbarSearch({ className, total, filtered }: ToolbarSearchProps
           title='Видимость'
           icon={<IconItemVisibility value={true} className={tripleToggleColor(isVisible)} />}
           onClick={toggleVisible}
+        />
+
+        <MiniButton
+          title={itemTypeTitle}
+          icon={
+            itemType ? (
+              <IconLibraryItemType value={itemType} size='1.25rem' />
+            ) : (
+              <IconAnimationOff size='1.25rem' className='' />
+            )
+          }
+          onClick={toggleItemType}
         />
 
         <div ref={userElementRef} onBlur={userHandleBlur} className='relative flex'>

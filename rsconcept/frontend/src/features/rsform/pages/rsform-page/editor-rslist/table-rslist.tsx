@@ -10,10 +10,10 @@ import { prefixes } from '@/utils/constants';
 import { truncateToSymbol } from '@/utils/utils';
 
 import { BadgeConstituenta } from '../../../components/badge-constituenta';
-import { type IConstituenta } from '../../../models/rsform';
+import { type Constituenta } from '../../../models/rsform';
 
 interface TableRSListProps {
-  items?: IConstituenta[];
+  items?: Constituenta[];
   enableSelection: boolean;
   maxHeight?: string;
   selected: RowSelectionState;
@@ -34,7 +34,7 @@ const DEFINITION_MAX_SYMBOLS = 120;
 // characters - threshold for long typification - truncate
 const TYPIFICATION_TRUNCATE = 42;
 
-const columnHelper = createColumnHelper<IConstituenta>();
+const columnHelper = createColumnHelper<Constituenta>();
 
 export function TableRSList({
   items,
@@ -47,14 +47,14 @@ export function TableRSList({
 }: TableRSListProps) {
   const windowSize = useWindowSize();
 
-  function handleRowClicked(cst: IConstituenta, event: React.MouseEvent<Element>) {
+  function handleRowClicked(cst: Constituenta, event: React.MouseEvent<Element>) {
     if (event.altKey) {
       event.preventDefault();
       onEdit(cst.id);
     }
   }
 
-  function handleRowDoubleClicked(cst: IConstituenta, event: React.MouseEvent<Element>) {
+  function handleRowDoubleClicked(cst: Constituenta, event: React.MouseEvent<Element>) {
     event.preventDefault();
     onEdit(cst.id);
   }

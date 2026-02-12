@@ -4,16 +4,16 @@ import { useFormContext, useWatch } from 'react-hook-form';
 
 import { Label } from '@/components/input';
 
-import { type ICreateBlockDTO } from '../../backend/types';
+import { type CreateBlockDTO } from '../../backend/types';
 import { PickContents } from '../../components/pick-contents';
-import { type IOperationSchema, type IOssItem, NodeType } from '../../models/oss';
+import { NodeType, type OperationSchema, type OssItem } from '../../models/oss';
 
 interface TabBlockChildrenProps {
-  oss: IOperationSchema;
+  oss: OperationSchema;
 }
 
 export function TabBlockChildren({ oss }: TabBlockChildrenProps) {
-  const { setValue, control } = useFormContext<ICreateBlockDTO>();
+  const { setValue, control } = useFormContext<CreateBlockDTO>();
   const parent = useWatch({ control, name: 'item_data.parent' });
   const children_blocks = useWatch({ control, name: 'children_blocks' });
   const children_operations = useWatch({ control, name: 'children_operations' });
@@ -21,9 +21,9 @@ export function TabBlockChildren({ oss }: TabBlockChildrenProps) {
   const parentItem = parent ? oss.blockByID.get(parent) : null;
   const internalBlocks = parentItem
     ? oss.hierarchy
-        .expandAllInputs([parentItem.nodeID])
-        .map(id => oss.itemByNodeID.get(id))
-        .filter(item => item !== null && item?.nodeType === NodeType.BLOCK)
+      .expandAllInputs([parentItem.nodeID])
+      .map(id => oss.itemByNodeID.get(id))
+      .filter(item => item !== null && item?.nodeType === NodeType.BLOCK)
     : [];
 
   const exclude = parentItem ? [parentItem, ...internalBlocks] : [];
@@ -33,7 +33,7 @@ export function TabBlockChildren({ oss }: TabBlockChildrenProps) {
     ...children_operations.map(id => oss.operationByID.get(id)!)
   ];
 
-  function handleChangeSelected(newValue: IOssItem[]) {
+  function handleChangeSelected(newValue: OssItem[]) {
     setValue(
       'children_blocks',
       newValue.filter(item => item.nodeType === NodeType.BLOCK).map(item => item.id),

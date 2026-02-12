@@ -10,11 +10,11 @@ import {
 import { cn } from '@/components/utils';
 import { ValueStats } from '@/components/view';
 
-import { type IOperationSchemaStats } from '../models/oss';
+import { type OperationSchemaStats } from '../models/oss';
 
 interface OssStatsProps {
   className?: string;
-  stats: IOperationSchemaStats;
+  stats: OperationSchemaStats;
 }
 
 export function OssStats({ className, stats }: OssStatsProps) {

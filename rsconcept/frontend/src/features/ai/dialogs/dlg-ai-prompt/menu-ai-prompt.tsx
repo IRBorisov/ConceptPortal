@@ -2,14 +2,12 @@
 
 import { toast } from 'react-toastify';
 
-import { urls, useConceptNavigation } from '@/app';
+import { useConceptNavigation } from '@/app';
 
 import { MiniButton } from '@/components/control';
 import { IconClone, IconEdit } from '@/components/icons';
 import { useDialogsStore } from '@/stores/dialogs';
 import { infoMsg } from '@/utils/labels';
-
-import { PromptTabID } from '../../pages/prompt-templates-page/templates-tabs';
 
 interface MenuAIPromptProps {
   promptID: number;
@@ -22,7 +20,7 @@ export function MenuAIPrompt({ promptID, generatedPrompt }: MenuAIPromptProps) {
 
   function navigatePrompt() {
     hideDialog();
-    router.push({ path: urls.prompt_template(promptID, PromptTabID.EDIT) });
+    router.gotoPromptEdit(promptID);
   }
 
   function handleCopyPrompt() {

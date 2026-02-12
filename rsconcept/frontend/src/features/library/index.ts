@@ -1,11 +1,11 @@
 export {
   AccessPolicy,
-  type ILibraryItem,
-  type ILibraryItemData,
-  type IUpdateLibraryItemDTO,
-  type IVersionInfo,
+  type LibraryItem,
+  type LibraryItemData,
   LibraryItemType,
-  schemaUpdateLibraryItem
+  schemaUpdateLibraryItem,
+  type UpdateLibraryItemDTO,
+  type VersionInfo
 } from './backend/types';
-export { BASIC_SCHEMAS, type CurrentVersion, type ILibraryItemReference, LocationHead } from './models/library';
+export { BASIC_SCHEMAS, type CurrentVersion, type LibraryItemReference, LocationHead } from './models/library';
 export { useLibrarySearchStore } from './stores/library-search';

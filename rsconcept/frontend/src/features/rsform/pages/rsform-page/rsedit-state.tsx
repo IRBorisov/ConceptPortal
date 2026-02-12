@@ -20,27 +20,25 @@ import { errorMsg, promptText } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 import { promptUnsaved } from '@/utils/utils';
 
-import { type IConstituentaBasicsDTO, type ICreateConstituentaDTO } from '../../backend/types';
+import { type ConstituentaBasicsDTO, type CreateConstituentaDTO } from '../../backend/types';
 import { useCreateConstituenta } from '../../backend/use-create-constituenta';
 import { useDeleteAttribution } from '../../backend/use-delete-attribution';
 import { useMoveConstituents } from '../../backend/use-move-constituents';
 import { useRSFormSuspense } from '../../backend/use-rsform';
 import { useUpdateConstituenta } from '../../backend/use-update-constituenta';
-import { CstType, type IConstituenta } from '../../models/rsform';
+import { type Constituenta, CstType } from '../../models/rsform';
 import { generateAlias, removeAliasReference } from '../../models/rsform-api';
 
-import { RSEditContext, RSTabID } from './rsedit-context';
+import { RSEditContext } from './rsedit-context';
 
 interface RSEditStateProps {
   itemID: number;
-  activeTab: RSTabID;
   activeVersion?: number;
 }
 
 export const RSEditState = ({
   itemID,
   activeVersion,
-  activeTab,
   children
 }: React.PropsWithChildren<RSEditStateProps>) => {
   const router = useConceptNavigation();
@@ -77,7 +75,7 @@ export const RSEditState = ({
   const canDeleteSelected =
     (selectedCst.length > 0 && selectedCst.every(id => !schema.cstByID.get(id)?.is_inherited)) ||
     (selectedCst.length === 0 && selectedEdges.length === 1);
-  const [focusCst, setFocusCst] = useState<IConstituenta | null>(null);
+  const [focusCst, setFocusCst] = useState<Constituenta | null>(null);
 
   const activeCst = selectedCst.length === 0 ? null : schema.cstByID.get(selectedCst[selectedCst.length - 1])!;
 
@@ -90,8 +88,8 @@ export const RSEditState = ({
   const showCreateCst = useDialogsStore(state => state.showCreateCst);
   const showDeleteCst = useDialogsStore(state => state.showDeleteCst);
   const showCstTemplate = useDialogsStore(state => state.showCstTemplate);
-  const setCurrentSchema = useAIStore(state => state.setCurrentSchema);
-  const setCurrentConstituenta = useAIStore(state => state.setCurrentConstituenta);
+  const setCurrentSchema = useAIStore(state => state.setSchema);
+  const setCurrentConstituenta = useAIStore(state => state.setConstituenta);
 
   useAdjustRole({
     isOwner: isOwned,
@@ -110,45 +108,9 @@ export const RSEditState = ({
     return () => setCurrentConstituenta(null);
   }, [activeCst, setCurrentConstituenta]);
 
-  function handleSetFocus(newValue: IConstituenta | null) {
+  function handleSetFocus(newValue: Constituenta | null) {
     setFocusCst(newValue);
     deselectAll();
-  }
-
-  function navigateVersion(versionID?: number) {
-    router.push({ path: urls.schema(schema.id, versionID) });
-  }
-
-  function navigateOss(ossID: number, newTab?: boolean) {
-    router.push({ path: urls.oss(ossID), newTab: newTab });
-  }
-
-  function navigateRSForm({ tab, activeID }: { tab: RSTabID; activeID?: number; }) {
-    const data = {
-      id: schema.id,
-      tab: tab,
-      active: activeID,
-      version: activeVersion
-    };
-    const url = urls.schema_props(data);
-    if (activeID) {
-      if (tab === activeTab && tab !== RSTabID.CST_EDIT) {
-        router.replace({ path: url });
-      } else {
-        router.push({ path: url });
-      }
-    } else if (tab !== activeTab && tab === RSTabID.CST_EDIT && schema.items.length > 0) {
-      data.active = schema.items[0].id;
-      router.replace({ path: urls.schema_props(data) });
-    } else {
-      router.push({ path: url });
-    }
-  }
-
-  function navigateCst(cstID: number) {
-    if (cstID !== activeCst?.id || activeTab !== RSTabID.CST_EDIT) {
-      navigateRSForm({ tab: RSTabID.CST_EDIT, activeID: cstID });
-    }
   }
 
   function deleteSchema() {
@@ -171,21 +133,19 @@ export const RSEditState = ({
     });
   }
 
-  function onCreateCst(newCst: RO<IConstituentaBasicsDTO>) {
+  function onCreateCst(newCst: RO<ConstituentaBasicsDTO>) {
     setSelectedCst([newCst.id]);
-    navigateRSForm({ tab: activeTab, activeID: newCst.id });
-    if (activeTab === RSTabID.CST_LIST) {
-      setTimeout(() => {
-        const element = document.getElementById(`${prefixes.cst_list}${newCst.id}`);
-        if (element) {
-          element.scrollIntoView({
-            behavior: 'smooth',
-            block: 'nearest',
-            inline: 'end'
-          });
-        }
-      }, PARAMETER.refreshTimeout);
-    }
+    router.changeActive(newCst.id);
+    setTimeout(() => {
+      const element = document.getElementById(`${prefixes.cst_list}${newCst.id}`);
+      if (element) {
+        element.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+          inline: 'end'
+        });
+      }
+    }, PARAMETER.refreshTimeout);
   }
 
   function moveUp() {
@@ -238,7 +198,7 @@ export const RSEditState = ({
 
   function promptCreateCst(type?: CstType, definition?: string): Promise<number | null> {
     const targetType = type ?? activeCst?.cst_type ?? CstType.BASE;
-    const data: ICreateConstituentaDTO = {
+    const data: CreateConstituentaDTO = {
       insert_after: activeCst?.id ?? null,
       cst_type: targetType,
       alias: generateAlias(targetType, schema),
@@ -268,7 +228,7 @@ export const RSEditState = ({
 
   function createCst(type?: CstType, definition?: string): Promise<number> {
     const targetType = type ?? activeCst?.cst_type ?? CstType.BASE;
-    const data: ICreateConstituentaDTO = {
+    const data: CreateConstituentaDTO = {
       insert_after: activeCst?.id ?? null,
       cst_type: targetType,
       alias: generateAlias(targetType, schema),
@@ -331,11 +291,9 @@ export const RSEditState = ({
         const nextActive = isEmpty ? null : getNextActiveOnDelete(activeCst?.id ?? null, schema.items, deleted);
         setSelectedCst(nextActive ? [nextActive] : []);
         if (!nextActive) {
-          navigateRSForm({ tab: RSTabID.CST_LIST });
-        } else if (activeTab === RSTabID.CST_EDIT) {
-          navigateRSForm({ tab: activeTab, activeID: nextActive });
+          router.gotoCstList(schema.id);
         } else {
-          navigateRSForm({ tab: activeTab });
+          router.changeActive(nextActive);
         }
       }
     });
@@ -414,11 +372,6 @@ export const RSEditState = ({
         isAttachedToOSS,
         canDeleteSelected,
 
-        navigateVersion,
-        navigateRSForm,
-        navigateCst,
-        navigateOss,
-
         deleteSchema,
 
         setFocus: handleSetFocus,
@@ -446,7 +399,7 @@ export const RSEditState = ({
 };
 
 // ====== Internals =========
-function getNextActiveOnDelete(activeID: number | null, items: IConstituenta[], deleted: number[]): number | null {
+function getNextActiveOnDelete(activeID: number | null, items: Constituenta[], deleted: number[]): number | null {
   if (items.length === deleted.length) {
     return null;
   }

@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { type IUpdateLibraryItemDTO, LibraryItemType, schemaUpdateLibraryItem } from '@/features/library';
+import { LibraryItemType, schemaUpdateLibraryItem, type UpdateLibraryItemDTO } from '@/features/library';
 import { useUpdateItem } from '@/features/library/backend/use-update-item';
 import { ToolbarItemAccess } from '@/features/library/components/toolbar-item-access';
 
@@ -32,7 +32,7 @@ export function FormOSS() {
     setValue,
     reset,
     formState: { errors, isDirty }
-  } = useForm<IUpdateLibraryItemDTO>({
+  } = useForm<UpdateLibraryItemDTO>({
     resolver: zodResolver(schemaUpdateLibraryItem),
     defaultValues: {
       id: schema.id,
@@ -52,7 +52,7 @@ export function FormOSS() {
     setIsModified(isDirty);
   }, [isDirty, setIsModified]);
 
-  function onSubmit(data: IUpdateLibraryItemDTO) {
+  function onSubmit(data: UpdateLibraryItemDTO) {
     return updateOss(data).then(() => reset({ ...data }));
   }
 

@@ -5,36 +5,36 @@
 import { limits } from '@/utils/constants';
 import { TextMatcher } from '@/utils/utils';
 
-import { type ILibraryItem } from '../backend/types';
+import { type LibraryItem } from '../backend/types';
 
 const LOCATION_REGEXP = /^\/[PLUS]((\/[!\d\p{L}]([!\d\p{L}\- ]*[!\d\p{L}])?)*)?$/u; // cspell:disable-line
 
 /**
- * Checks if a given target {@link ILibraryItem} matches the specified query.
+ * Checks if a given target {@link LibraryItem} matches the specified query.
  *
  * @param target - item to be matched
  * @param query - text to be found in target attributes
  */
-export function matchLibraryItem(target: ILibraryItem, query: string): boolean {
+export function matchLibraryItem(target: LibraryItem, query: string): boolean {
   const matcher = new TextMatcher(query);
   return matcher.test(target.alias) || matcher.test(target.title) || matcher.test(target.description);
 }
 
 /**
- * Checks if a given target {@link ILibraryItem} location matches the specified query.
+ * Checks if a given target {@link LibraryItem} location matches the specified query.
  *
  * @param target - item to be matched
  * @param query - text to be found
  */
-export function matchLibraryItemLocation(target: ILibraryItem, path: string): boolean {
+export function matchLibraryItemLocation(target: LibraryItem, path: string): boolean {
   const matcher = new TextMatcher(path);
   return matcher.test(target.location);
 }
 
 /**
- * Generate title for clone {@link ILibraryItem}.
+ * Generate title for clone {@link LibraryItem}.
  */
-export function cloneTitle(target: ILibraryItem): string {
+export function cloneTitle(target: LibraryItem): string {
   if (!target.title.includes('[клон]')) {
     return target.title + ' [клон]';
   } else {
@@ -43,7 +43,7 @@ export function cloneTitle(target: ILibraryItem): string {
 }
 
 /**
- * Generate next version for {@link IVersionInfo}.
+ * Generate next version for {@link VersionInfo}.
  */
 export function nextVersion(version: string): string {
   const dot = version.lastIndexOf('.');

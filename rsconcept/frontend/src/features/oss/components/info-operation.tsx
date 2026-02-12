@@ -5,15 +5,15 @@ import { createColumnHelper } from '@tanstack/react-table';
 import { DataTable } from '@/components/data-table';
 import { IconPageRight } from '@/components/icons';
 
-import { type ICstSubstituteInfo, OperationType } from '../backend/types';
+import { type CstSubstituteInfo, OperationType } from '../backend/types';
 import { labelOperationType } from '../labels';
-import { type IOperation } from '../models/oss';
+import { type Operation } from '../models/oss';
 
 interface InfoOperationProps {
-  operation: IOperation;
+  operation: Operation;
 }
 
-const columnHelper = createColumnHelper<ICstSubstituteInfo>();
+const columnHelper = createColumnHelper<CstSubstituteInfo>();
 
 export function InfoOperation({ operation }: InfoOperationProps) {
   const columns = [

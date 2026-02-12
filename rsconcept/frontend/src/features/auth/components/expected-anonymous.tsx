@@ -20,7 +20,7 @@ export function ExpectedAnonymous() {
     <div className='flex flex-col items-center gap-3 py-6'>
       <p className='font-semibold'>{`Вы вошли в систему как ${user.username}`}</p>
       <div className='flex gap-3'>
-        <TextURL text='Новая схема' href='/library/create' />
+        <TextURL text='Создать' href='/library/create' />
         <span> | </span>
         <TextURL text='Библиотека' href='/library' />
         <span> | </span>

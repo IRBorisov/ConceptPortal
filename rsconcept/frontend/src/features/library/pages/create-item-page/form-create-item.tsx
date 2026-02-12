@@ -5,6 +5,7 @@ import { Controller, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { urls, useConceptNavigation } from '@/app';
+import { useAuthSuspense } from '@/features/auth';
 
 import { Button, MiniButton, SubmitButton } from '@/components/control';
 import { IconDownload } from '@/components/icons';
@@ -13,21 +14,25 @@ import { EXTEOR_TRS_FILE } from '@/utils/constants';
 
 import {
   AccessPolicy,
-  type ICreateLibraryItemDTO,
+  type CreateLibraryItemDTO,
   LibraryItemType,
   schemaCreateLibraryItem
 } from '../../backend/types';
 import { useCreateItem } from '../../backend/use-create-item';
+import { useLibrary } from '../../backend/use-library';
 import { IconItemVisibility } from '../../components/icon-item-visibility';
 import { PickLocation } from '../../components/pick-location';
+import { PickSchema } from '../../components/pick-schema';
 import { SelectAccessPolicy } from '../../components/select-access-policy';
 import { SelectItemType } from '../../components/select-item-type';
 import { LocationHead } from '../../models/library';
 import { useLibrarySearchStore } from '../../stores/library-search';
 
 export function FormCreateItem() {
+  const { user } = useAuthSuspense();
   const router = useConceptNavigation();
   const { createItem, isPending, reset: clearServerError } = useCreateItem();
+  const { items } = useLibrary();
 
   const searchLocation = useLibrarySearchStore(state => state.location);
   const setSearchLocation = useLibrarySearchStore(state => state.setLocation);
@@ -39,7 +44,7 @@ export function FormCreateItem() {
     setValue,
     control,
     formState: { errors }
-  } = useForm<ICreateLibraryItemDTO>({
+  } = useForm<CreateLibraryItemDTO>({
     resolver: zodResolver(schemaCreateLibraryItem),
     defaultValues: {
       item_type: LibraryItemType.RSFORM,
@@ -84,23 +89,32 @@ export function FormCreateItem() {
       setValue('file', undefined);
       setValue('fileName', undefined);
     }
+    if (value !== LibraryItemType.RSMODEL) {
+      setValue('schema', undefined);
+    }
     setValue('item_type', value, { shouldValidate: true });
   }
 
-  function onSubmit(data: ICreateLibraryItemDTO) {
+  function onSubmit(data: CreateLibraryItemDTO) {
     return createItem(data).then(newItem => {
       setSearchLocation(data.location);
-      if (newItem.item_type == LibraryItemType.RSFORM) {
-        router.push({ path: urls.schema(newItem.id), force: true });
-      } else {
-        router.push({ path: urls.oss(newItem.id), force: true });
+      switch (newItem.item_type) {
+        case LibraryItemType.RSFORM:
+          router.push({ path: urls.schema(newItem.id), force: true });
+          break;
+        case LibraryItemType.OSS:
+          router.push({ path: urls.oss(newItem.id), force: true });
+          break;
+        case LibraryItemType.RSMODEL:
+          router.push({ path: urls.model(newItem.id), force: true });
+          break;
       }
     });
   }
 
   return (
     <form
-      className='cc-column w-120 mx-auto px-6 py-3'
+      className='cc-column w-140 mx-auto px-6 py-3'
       onSubmit={event => void handleSubmit(onSubmit)(event)}
       onChange={resetErrors}
     >
@@ -130,7 +144,7 @@ export function FormCreateItem() {
             />
           </>
         ) : null}
-        Создание схемы
+        {itemType === LibraryItemType.RSMODEL ? 'Создание модели' : 'Создание схемы'}
       </h1>
 
       {file ? <Label className='text-wrap' text={`Загружен файл: ${file.name}`} /> : null}
@@ -149,11 +163,11 @@ export function FormCreateItem() {
           {...register('alias')}
           label='Сокращение'
           placeholder={file && 'Загрузить из файла'}
-          className='w-64'
+          className='w-84'
           error={errors.alias}
         />
         <div className='flex flex-col items-center gap-2'>
-          <Label text='Тип схемы' className='self-center select-none' />
+          <Label text='Что создать' className='self-center select-none' />
           <Controller
             control={control}
             name='item_type'
@@ -196,6 +210,27 @@ export function FormCreateItem() {
         </div>
       </div>
 
+      {itemType === LibraryItemType.RSMODEL ? (
+        <div>
+          <Label text='Концептуальная схема' />
+          <Controller
+            control={control}
+            name='schema'
+            render={({ field }) => (
+              <PickSchema
+                items={items}
+                itemType={LibraryItemType.RSFORM}
+                value={field.value ?? null}
+                onChange={field.onChange}
+                rows={6}
+                className='mt-2'
+                error={errors.schema}
+              />
+            )}
+          />
+        </div>
+      ) : null}
+
       <Controller
         control={control}
         name='location'
@@ -218,8 +253,12 @@ export function FormCreateItem() {
       />
 
       <div className='flex justify-around gap-6 py-3'>
-        <SubmitButton text='Создать схему' loading={isPending} className='min-w-40' />
-        <Button text='Отмена' className='min-w-40' onClick={() => handleCancel()} />
+        <SubmitButton
+          text={itemType === LibraryItemType.RSMODEL ? 'Создать модель' : 'Создать схему'}
+          loading={isPending} className='min-w-40'
+          disabled={itemType === LibraryItemType.RSMODEL && !user.is_staff}
+        />
+        <Button text='Отмена' className='min-w-40' onClick={handleCancel} />
       </div>
     </form>
   );

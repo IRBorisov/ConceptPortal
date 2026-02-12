@@ -4,12 +4,12 @@ import clsx from 'clsx';
 
 import { labelType } from '@/features/rslang/labels';
 
-import { type IConstituenta, type IRSForm } from '../../models/rsform';
+import { type Constituenta, type RSForm } from '../../models/rsform';
 import { isBasicConcept } from '../../models/rsform-api';
 
 import { findAliasAt } from './utils';
 
-const tooltipProducer = (schema: IRSForm, canClick?: boolean) => {
+const tooltipProducer = (schema: RSForm, canClick?: boolean) => {
   return hoverTooltip((view, pos) => {
     const { alias, start, end } = findAliasAt(pos, view.state);
     if (!alias) {
@@ -25,14 +25,14 @@ const tooltipProducer = (schema: IRSForm, canClick?: boolean) => {
   });
 };
 
-export function rsHoverTooltip(schema: IRSForm, canClick?: boolean): Extension {
+export function rsHoverTooltip(schema: RSForm, canClick?: boolean): Extension {
   return [tooltipProducer(schema, canClick)];
 }
 
 /**
  * Create DOM tooltip for {@link Constituenta}.
  */
-function domTooltipConstituenta(cst?: IConstituenta, canClick?: boolean): TooltipView {
+function domTooltipConstituenta(cst?: Constituenta, canClick?: boolean): TooltipView {
   const dom = document.createElement('div');
   dom.className = clsx(
     'max-h-100 max-w-100 min-w-40',

@@ -9,13 +9,13 @@ import { ModalView } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { errorMsg } from '@/utils/labels';
 
-import { type ITypeInfo } from '../../models/rsform';
+import { type TypeInfo } from '../../models/rsform';
 import { TypificationGraph } from '../../models/typification-graph';
 
 import { MGraphFlow } from './mgraph-flow';
 
 export interface DlgShowTypeGraphProps {
-  items: ITypeInfo[];
+  items: TypeInfo[];
 }
 
 export function DlgShowTypeGraph() {

@@ -198,6 +198,9 @@ class RSFormSerializer(StrictModelSerializer):
     oss = serializers.ListField(
         child=LibraryItemReferenceSerializer()
     )
+    models = serializers.ListField(
+        child=LibraryItemReferenceSerializer()
+    )
 
     class Meta:
         ''' serializer metadata. '''
@@ -224,6 +227,7 @@ class RSFormSerializer(StrictModelSerializer):
         result = LibraryItemDetailsSerializer(instance).data
         result['items'] = []
         result['oss'] = []
+        result['models'] = []
         result['inheritance'] = []
         result['attribution'] = []
         for cst in Constituenta.objects.filter(schema=instance).defer('order').order_by('order'):
@@ -232,6 +236,11 @@ class RSFormSerializer(StrictModelSerializer):
             result['oss'].append({
                 'id': oss.pk,
                 'alias': oss.alias
+            })
+        for model in LibraryItem.objects.filter(rsmodels__schema=instance).only('alias'):
+            result['models'].append({
+                'id': model.pk,
+                'alias': model.alias
             })
         for attrib in Attribution.objects.filter(container__schema=instance).only('container_id', 'attribute_id'):
             result['attribution'].append({

@@ -9,7 +9,7 @@ import { useRSFormSuspense } from '../../backend/use-rsform';
 import { PickConstituenta } from '../../components/pick-constituenta';
 import { SelectMultiGrammeme } from '../../components/select-multi-grammeme';
 import { SelectWordForm } from '../../components/select-word-form';
-import { type IConstituenta } from '../../models/rsform';
+import { type Constituenta } from '../../models/rsform';
 import { matchConstituenta } from '../../models/rsform-api';
 import { CstMatchMode } from '../../stores/cst-search';
 
@@ -35,7 +35,7 @@ export function TabEntityReference() {
   const selectedCst = schema.cstByAlias.get(alias) ?? null;
   const term = selectedCst?.term_resolved ?? '';
 
-  function handleSelectConstituenta(cst: IConstituenta) {
+  function handleSelectConstituenta(cst: Constituenta) {
     setValue('entity.entity', cst.alias, { shouldValidate: true });
   }
 

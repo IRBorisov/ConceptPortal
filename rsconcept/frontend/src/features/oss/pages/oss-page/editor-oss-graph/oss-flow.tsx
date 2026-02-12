@@ -5,6 +5,8 @@ import { toast } from 'react-toastify';
 import { type Connection } from '@xyflow/react';
 import clsx from 'clsx';
 
+import { useConceptNavigation } from '@/app';
+
 import { DiagramFlow, useReactFlow } from '@/components/flow/diagram-flow';
 import { useContinuousPan } from '@/components/flow/use-continuous-panning';
 import { useMainHeight } from '@/stores/app-layout';
@@ -13,7 +15,7 @@ import { usePreferencesStore } from '@/stores/preferences';
 import { PARAMETER } from '@/utils/constants';
 import { errorMsg } from '@/utils/labels';
 
-import { type IUpdateOperationDTO, OperationType } from '../../../backend/types';
+import { OperationType, type UpdateOperationDTO } from '../../../backend/types';
 import { useMutatingOss } from '../../../backend/use-mutating-oss';
 import { useUpdateOperation } from '../../../backend/use-update-operation';
 import { NodeType } from '../../../models/oss';
@@ -50,8 +52,9 @@ export const flowOptions = {
 } as const;
 
 export function OssFlow() {
+  const router = useConceptNavigation();
   const mainHeight = useMainHeight();
-  const { navigateOperationSchema, schema, isMutable } = useOssEdit();
+  const { schema, isMutable } = useOssEdit();
   const isProcessing = useMutatingOss();
   const { screenToFlowPosition } = useReactFlow();
   const { containMovement, nodes, onNodesChange, edges, onEdgesChange } = useOssFlow();
@@ -87,8 +90,8 @@ export function OssFlow() {
         });
       }
     } else {
-      if (node.data.operation) {
-        navigateOperationSchema(node.data.operation.id);
+      if (node.data.operation.result) {
+        router.gotoCstList(node.data.operation.result);
       }
     }
   }
@@ -132,7 +135,7 @@ export function OssFlow() {
       return;
     }
 
-    const data: IUpdateOperationDTO = {
+    const data: UpdateOperationDTO = {
       target: target.id,
       item_data: {
         parent: target.parent,

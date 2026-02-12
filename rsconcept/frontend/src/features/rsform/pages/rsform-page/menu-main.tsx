@@ -3,7 +3,7 @@
 import { toast } from 'react-toastify';
 import fileDownload from 'js-file-download';
 
-import { urls, useConceptNavigation } from '@/app';
+import { useConceptNavigation } from '@/app';
 import { useAuthSuspense } from '@/features/auth';
 import { AccessPolicy, LocationHead } from '@/features/library';
 import { useRoleStore, UserRole } from '@/features/users';
@@ -21,12 +21,13 @@ import {
   IconOSS,
   IconPDF,
   IconQR,
+  IconRSModel,
   IconShare,
   IconUpload
 } from '@/components/icons';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
-import { EXTEOR_TRS_FILE } from '@/utils/constants';
+import { EXTEOR_TRS_FILE, prefixes } from '@/utils/constants';
 import { errorMsg, tooltipText } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 import { generatePageQR, promptUnsaved, sharePage } from '@/utils/utils';
@@ -60,6 +61,9 @@ export function MenuMain() {
     handleBlur: handleMenuBlur,
     hide: hideMenu
   } = useDropdown();
+
+  const { elementRef: ossRef, isOpen: isOssOpen, toggle: toggleOss, handleBlur: handleOssBlur } = useDropdown();
+  const { elementRef: modelRef, isOpen: isModelOpen, toggle: toggleModel, handleBlur: handleModelBlur } = useDropdown();
 
   function calculateCloneLocation() {
     const location = schema.location;
@@ -138,6 +142,22 @@ export function MenuMain() {
     }
   }
 
+  function onOssToggle() {
+    if (schema.oss.length > 1) {
+      toggleOss();
+    } else {
+      router.gotoOss(schema.oss[0].id);
+    }
+  }
+
+  function onModelToggle() {
+    if (schema.models.length > 1) {
+      toggleModel();
+    } else {
+      router.gotoRSModel(schema.models[0].id);
+    }
+  }
+
   return (
     <div ref={menuRef} onBlur={handleMenuBlur} className='relative'>
       <MiniButton
@@ -205,20 +225,53 @@ export function MenuMain() {
           <DropdownButton
             text='Создать новую схему'
             icon={<IconNewItem size='1rem' className='icon-primary' />}
-            onClick={() => router.push({ path: urls.create_schema })}
+            onClick={() => router.gotoNewItem()}
           />
         ) : null}
         {schema.oss.length > 0 ? (
-          <DropdownButton
-            text='Перейти к ОСС'
-            icon={<IconOSS size='1rem' className='icon-primary' />}
-            onClick={() => router.push({ path: urls.oss(schema.oss[0].id) })}
-          />
+          <div ref={ossRef} onBlur={handleOssBlur} className='relative w-full'>
+            <DropdownButton
+              text='Перейти к ОСС'
+              className='w-full'
+              icon={<IconOSS size='1rem' className='icon-primary' />}
+              onClick={onOssToggle}
+            />
+            <Dropdown isOpen={isOssOpen} stretchTop stretchLeft margin='mt-1'>
+              {schema.oss.map((reference, index) => (
+                <DropdownButton
+                  key={`${prefixes.oss_list}${index}`}
+                  text={reference.alias}
+                  className='min-w-30'
+                  onClick={() => router.gotoOss(schema.oss[index].id)}
+                />
+              ))}
+            </Dropdown>
+          </div>
+        ) : null}
+        {schema.models.length > 0 ? (
+          <div ref={modelRef} onBlur={handleModelBlur} className='relative w-full'>
+            <DropdownButton
+              text='Перейти к модели'
+              className='w-full'
+              icon={<IconRSModel size='1rem' className='icon-primary' />}
+              onClick={onModelToggle}
+            />
+            <Dropdown isOpen={isModelOpen} stretchTop stretchLeft margin='mt-1'>
+              {schema.models.map((reference, index) => (
+                <DropdownButton
+                  key={`${prefixes.oss_list}${index}`}
+                  text={reference.alias}
+                  className='min-w-30'
+                  onClick={() => router.gotoRSModel(schema.models[index].id)}
+                />
+              ))}
+            </Dropdown>
+          </div>
         ) : null}
         <DropdownButton
           text='Библиотека'
           icon={<IconLibrary size='1rem' className='icon-primary' />}
-          onClick={() => router.push({ path: urls.library })}
+          onClick={() => router.gotoLibrary()}
         />
       </Dropdown>
     </div>

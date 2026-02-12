@@ -18,6 +18,7 @@ export const routes = {
   help: 'manuals',
   rsforms: 'rsforms',
   oss: 'oss',
+  models: 'models',
   icons: 'icons',
   database_schema: 'database-schema',
   prompt_templates: 'prompt-templates'
@@ -46,6 +47,7 @@ export const urls = {
   schema: (id: number | string, version?: number | string) =>
     `/rsforms/${id}` + (version !== undefined ? `?v=${version}` : ''),
   oss: (id: number | string, tab?: number) => `/oss/${id}` + (tab !== undefined ? `?tab=${tab}` : ''),
+  model: (id: number | string, tab?: number) => `/models/${id}` + (tab !== undefined ? `?tab=${tab}` : ''),
 
   schema_props: ({
     id,
@@ -63,7 +65,12 @@ export const urls = {
     return `/rsforms/${id}?${versionStr}tab=${tab}${activeStr}`;
   },
 
-  oss_props: ({ id, tab }: { id: number | string; tab: number }) => {
+  oss_props: ({ id, tab }: { id: number | string; tab: number; }) => {
     return `/oss/${id}?tab=${tab}`;
+  },
+
+  model_props: ({ id, tab, active }: { id: number | string; tab: number; active?: number | string; }) => {
+    const activeStr = active !== undefined ? `&active=${active}` : '';
+    return `/models/${id}?tab=${tab}${activeStr}`;
   }
 } as const;

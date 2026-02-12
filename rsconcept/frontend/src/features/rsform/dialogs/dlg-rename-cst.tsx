@@ -10,7 +10,7 @@ import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { hintMsg } from '@/utils/labels';
 
-import { type IUpdateConstituentaDTO, schemaUpdateConstituenta } from '../backend/types';
+import { schemaUpdateConstituenta, type UpdateConstituentaDTO } from '../backend/types';
 import { useRSFormSuspense } from '../backend/use-rsform';
 import { useUpdateConstituenta } from '../backend/use-update-constituenta';
 import { SelectCstType } from '../components/select-cst-type';
@@ -34,7 +34,7 @@ export function DlgRenameCst() {
     handleSubmit,
     control,
     formState: { isValid }
-  } = useForm<IUpdateConstituentaDTO>({
+  } = useForm<UpdateConstituentaDTO>({
     mode: 'onChange',
     resolver: zodResolver(schemaUpdateConstituenta),
     defaultValues: {
@@ -49,7 +49,7 @@ export function DlgRenameCst() {
   const cst_type = useWatch({ control, name: 'item_data.cst_type' })!;
   const canSubmit = isValid && alias !== target.alias && validateNewAlias(alias, cst_type, schema);
 
-  function onSubmit(data: IUpdateConstituentaDTO) {
+  function onSubmit(data: UpdateConstituentaDTO) {
     return cstUpdate({ itemID: schemaID, data: data });
   }
 

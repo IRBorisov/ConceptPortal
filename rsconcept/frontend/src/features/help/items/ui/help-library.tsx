@@ -1,4 +1,5 @@
 import {
+  IconAnimationOff,
   IconDownload,
   IconFilterReset,
   IconFolder,
@@ -34,7 +35,10 @@ export function HelpLibrary() {
 
       <ul>
         <li>
-          <span className='text-accent-green-foreground'>зеленым текстом</span> выделены ОСС
+          <span className='text-accent-green-foreground'>зеленым </span> выделены ОСС
+        </li>
+        <li>
+          <span className='text-accent-green-foreground'>фиолетовым </span> выделены модели
         </li>
         <li>
           <kbd>клик</kbd> по строке - переход к редактированию схемы
@@ -42,12 +46,14 @@ export function HelpLibrary() {
         <li>
           <kbd>{isMac() ? 'Cmd + клик' : 'Ctrl + клик'}</kbd> по строке откроет схему в новой вкладке
         </li>
-        <li>Фильтры атрибутов три позиции: да/нет/не применять</li>
         <li>
           <IconLeftClose size='1rem' className='inline-icon' /> отображение Проводника
         </li>
         <li>
           <IconShow size='1rem' className='inline-icon' /> фильтры атрибутов применяются по клику
+        </li>
+        <li>
+          <IconAnimationOff size='1rem' className='inline-icon' /> фильтр по типу
         </li>
         <li>
           <IconUserSearch size='1rem' className='inline-icon' /> фильтр по пользователю

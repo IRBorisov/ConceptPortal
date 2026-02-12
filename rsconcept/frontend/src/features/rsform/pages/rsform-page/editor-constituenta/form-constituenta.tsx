@@ -20,7 +20,7 @@ import { errorMsg, tooltipText } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 import { promptUnsaved } from '@/utils/utils';
 
-import { type IUpdateConstituentaDTO, schemaUpdateConstituenta } from '../../../backend/types';
+import { schemaUpdateConstituenta, type UpdateConstituentaDTO } from '../../../backend/types';
 import { useClearAttributions } from '../../../backend/use-clear-attributions';
 import { useCreateAttribution } from '../../../backend/use-create-attribution';
 import { useDeleteAttribution } from '../../../backend/use-delete-attribution';
@@ -34,7 +34,7 @@ import {
   getRSDefinitionPlaceholder,
   labelRSExpression
 } from '../../../labels';
-import { CstType, type IConstituenta, type IRSForm } from '../../../models/rsform';
+import { type Constituenta, CstType, type RSForm } from '../../../models/rsform';
 import { getAnalysisFor, isBaseSet, isBasicConcept } from '../../../models/rsform-api';
 import { EditorRSExpression } from '../editor-rsexpression';
 
@@ -43,8 +43,8 @@ interface FormConstituentaProps {
   disabled: boolean;
   toggleReset: boolean;
 
-  activeCst: IConstituenta;
-  schema: IRSForm;
+  activeCst: Constituenta;
+  schema: RSForm;
   onOpenEdit: (cstID: number) => void;
 }
 
@@ -69,7 +69,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
     control,
     reset,
     formState: { isDirty }
-  } = useForm<IUpdateConstituentaDTO>({
+  } = useForm<UpdateConstituentaDTO>({
     resolver: zodResolver(schemaUpdateConstituenta),
     defaultValues: {
       target: activeCst.id,
@@ -138,7 +138,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
     onModifiedEvent(isDirty);
   }, [isDirty]);
 
-  function onSubmit(data: IUpdateConstituentaDTO) {
+  function onSubmit(data: UpdateConstituentaDTO) {
     void updateConstituenta({ itemID: schema.id, data }).then(() => {
       setIsModified(false);
       reset({ ...data });
@@ -185,7 +185,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
     });
   }
 
-  function handleAddAttribution(item: IConstituenta) {
+  function handleAddAttribution(item: Constituenta) {
     void createAttribution({
       itemID: schema.id,
       data: {
@@ -195,7 +195,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
     });
   }
 
-  function handleRemoveAttribution(item: IConstituenta) {
+  function handleRemoveAttribution(item: Constituenta) {
     void deleteAttribution({
       itemID: schema.id,
       data: {

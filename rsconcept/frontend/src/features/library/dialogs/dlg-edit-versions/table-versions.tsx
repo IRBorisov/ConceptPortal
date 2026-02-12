@@ -6,17 +6,17 @@ import { MiniButton } from '@/components/control';
 import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/data-table';
 import { IconRemove } from '@/components/icons';
 
-import { type IVersionInfo } from '../../backend/types';
+import { type VersionInfo } from '../../backend/types';
 
 interface TableVersionsProps {
   processing: boolean;
-  items: IVersionInfo[];
+  items: VersionInfo[];
   selected?: number;
   onDelete: (versionID: number) => void;
   onSelect: (versionID: number) => void;
 }
 
-const columnHelper = createColumnHelper<IVersionInfo>();
+const columnHelper = createColumnHelper<VersionInfo>();
 
 export function TableVersions({ processing, items, onDelete, selected, onSelect }: TableVersionsProps) {
   const intl = useIntl();
@@ -72,9 +72,9 @@ export function TableVersions({ processing, items, onDelete, selected, onSelect 
     })
   ];
 
-  const conditionalRowStyles: IConditionalStyle<IVersionInfo>[] = [
+  const conditionalRowStyles: IConditionalStyle<VersionInfo>[] = [
     {
-      when: (version: IVersionInfo) => version.id === selected,
+      when: (version: VersionInfo) => version.id === selected,
       className: 'bg-selected'
     }
   ];

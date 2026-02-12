@@ -4,13 +4,13 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { TextArea, TextInput } from '@/components/input';
 
-import { type ICreateBlockDTO } from '../../backend/types';
+import { type CreateBlockDTO } from '../../backend/types';
 import { SelectParent } from '../../components/select-parent';
-import { type IOperationSchema, NodeType } from '../../models/oss';
+import { NodeType, type OperationSchema } from '../../models/oss';
 import { constructNodeID } from '../../models/oss-api';
 
 interface TabBlockCardProps {
-  oss: IOperationSchema;
+  oss: OperationSchema;
 }
 
 export function TabBlockCard({ oss }: TabBlockCardProps) {
@@ -18,7 +18,7 @@ export function TabBlockCard({ oss }: TabBlockCardProps) {
     register,
     control,
     formState: { errors }
-  } = useFormContext<ICreateBlockDTO>();
+  } = useFormContext<CreateBlockDTO>();
   const children_blocks = useWatch({ control, name: 'children_blocks' });
   const block_ids = children_blocks.map(id => constructNodeID(NodeType.BLOCK, id));
   const all_children = [...block_ids, ...oss.hierarchy.expandAllOutputs(block_ids)];

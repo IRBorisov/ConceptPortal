@@ -3,7 +3,7 @@
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { type ILibraryItem, LibraryItemType } from '@/features/library';
+import { type LibraryItem, LibraryItemType } from '@/features/library';
 import { useLibrary } from '@/features/library/backend/use-library';
 import { PickSchema } from '@/features/library/components/pick-schema';
 
@@ -13,22 +13,22 @@ import { Label } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { type IOssLayout, type IUpdateInputDTO, schemaUpdateInput } from '../backend/types';
+import { type OssLayout, schemaUpdateInput, type UpdateInputDTO } from '../backend/types';
 import { useUpdateInput } from '../backend/use-update-input';
-import { type IOperation, type IOperationSchema } from '../models/oss';
+import { type Operation, type OperationSchema } from '../models/oss';
 import { sortItemsForOSS } from '../models/oss-api';
 
 export interface DlgChangeInputSchemaProps {
-  oss: IOperationSchema;
-  target: IOperation;
-  layout: IOssLayout;
+  oss: OperationSchema;
+  target: Operation;
+  layout: OssLayout;
 }
 
 export function DlgChangeInputSchema() {
   const { oss, target, layout } = useDialogsStore(state => state.props as DlgChangeInputSchemaProps);
-  const { updateInput: inputUpdate } = useUpdateInput();
+  const { updateInput } = useUpdateInput();
 
-  const { setValue, handleSubmit, control } = useForm<IUpdateInputDTO>({
+  const { setValue, handleSubmit, control } = useForm<UpdateInputDTO>({
     resolver: zodResolver(schemaUpdateInput),
     defaultValues: {
       target: target.id,
@@ -40,12 +40,12 @@ export function DlgChangeInputSchema() {
   const { items } = useLibrary();
   const sortedItems = sortItemsForOSS(oss, items);
 
-  function baseFilter(item: ILibraryItem) {
+  function baseFilter(item: LibraryItem) {
     return !oss.schemas.includes(item.id) || item.id === target.result;
   }
 
-  function onSubmit(data: IUpdateInputDTO) {
-    return inputUpdate({ itemID: oss.id, data: data });
+  function onSubmit(data: UpdateInputDTO) {
+    return updateInput({ itemID: oss.id, data: data });
   }
 
   return (

@@ -7,7 +7,7 @@ import { NoData, TextContent } from '@/components/view';
 import { PARAMETER, prefixes } from '@/utils/constants';
 
 import { describeConstituenta } from '../../labels';
-import { type IConstituenta, type IRSForm } from '../../models/rsform';
+import { type Constituenta, type RSForm } from '../../models/rsform';
 import { BadgeConstituenta } from '../badge-constituenta';
 
 import { useFilteredItems } from './use-filtered-items';
@@ -15,16 +15,16 @@ import { useFilteredItems } from './use-filtered-items';
 const DESCRIPTION_MAX_SYMBOLS = 280;
 
 interface TableSideConstituentsProps {
-  schema: IRSForm;
-  activeCst?: IConstituenta | null;
-  onActivate?: (cst: IConstituenta) => void;
-  onDoubleClick?: (cst: IConstituenta) => void;
+  schema: RSForm;
+  activeCst?: Constituenta | null;
+  onActivate?: (cst: Constituenta) => void;
+  onDoubleClick?: (cst: Constituenta) => void;
 
   maxHeight?: string;
   autoScroll?: boolean;
 }
 
-const columnHelper = createColumnHelper<IConstituenta>();
+const columnHelper = createColumnHelper<Constituenta>();
 
 export function TableSideConstituents({
   schema,
@@ -81,17 +81,17 @@ export function TableSideConstituents({
     })
   ];
 
-  const conditionalRowStyles: IConditionalStyle<IConstituenta>[] = [
+  const conditionalRowStyles: IConditionalStyle<Constituenta>[] = [
     {
-      when: (cst: IConstituenta) => !!activeCst && cst.id === activeCst.id,
+      when: (cst: Constituenta) => !!activeCst && cst.id === activeCst.id,
       className: 'bg-selected'
     },
     {
-      when: (cst: IConstituenta) => !!activeCst && cst.spawner === activeCst.id && cst.id !== activeCst.id,
+      when: (cst: Constituenta) => !!activeCst && cst.spawner === activeCst.id && cst.id !== activeCst.id,
       className: 'bg-accent-orange50'
     },
     {
-      when: (cst: IConstituenta) => !!activeCst && cst.spawn.includes(activeCst.id),
+      when: (cst: Constituenta) => !!activeCst && cst.spawn.includes(activeCst.id),
       className: 'bg-accent-green50'
     }
   ];

@@ -2,22 +2,14 @@
 
 import { createContext, use } from 'react';
 
-import { type CstType, type IConstituenta, type IRSForm } from '../../models/rsform';
-
-export const RSTabID = {
-  CARD: 0,
-  CST_LIST: 1,
-  CST_EDIT: 2,
-  GRAPH: 3
-} as const;
-export type RSTabID = (typeof RSTabID)[keyof typeof RSTabID];
+import { type Constituenta, type CstType, type RSForm } from '../../models/rsform';
 
 interface IRSEditContext {
-  schema: IRSForm;
+  schema: RSForm;
   selectedCst: number[];
   selectedEdges: string[];
-  focusCst: IConstituenta | null;
-  activeCst: IConstituenta | null;
+  focusCst: Constituenta | null;
+  activeCst: Constituenta | null;
   activeVersion?: number;
 
   isOwned: boolean;
@@ -27,14 +19,9 @@ interface IRSEditContext {
   isAttachedToOSS: boolean;
   canDeleteSelected: boolean;
 
-  navigateVersion: (versionID?: number) => void;
-  navigateRSForm: ({ tab, activeID }: { tab: RSTabID; activeID?: number; }) => void;
-  navigateCst: (cstID: number) => void;
-  navigateOss: (ossID: number, newTab?: boolean) => void;
-
   deleteSchema: () => void;
 
-  setFocus: (newValue: IConstituenta | null) => void;
+  setFocus: (newValue: Constituenta | null) => void;
   setSelectedCst: React.Dispatch<React.SetStateAction<number[]>>;
   setSelectedEdges: React.Dispatch<React.SetStateAction<string[]>>;
   selectCst: (target: number) => void;

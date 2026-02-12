@@ -9,10 +9,10 @@ import { validateLocation } from './models/library-api';
 export function labelLocationHead(head: LocationHead): string {
   // prettier-ignore
   switch (head) {
-    case LocationHead.USER:      return '/U : личные';
-    case LocationHead.COMMON:    return '/S : общие';
-    case LocationHead.LIBRARY:   return '/L : примеры';
-    case LocationHead.PROJECTS:  return '/P : проекты';
+    case LocationHead.USER: return '/U : личные';
+    case LocationHead.COMMON: return '/S : общие';
+    case LocationHead.LIBRARY: return '/L : примеры';
+    case LocationHead.PROJECTS: return '/P : проекты';
   }
 }
 
@@ -22,10 +22,10 @@ export function labelLocationHead(head: LocationHead): string {
 export function describeLocationHead(head: LocationHead): string {
   // prettier-ignore
   switch (head) {
-    case LocationHead.USER:      return 'Личные схемы пользователя';
-    case LocationHead.COMMON:    return 'Рабочий каталог публичных схем';
-    case LocationHead.LIBRARY:   return 'Каталог неизменных схем-примеров';
-    case LocationHead.PROJECTS:  return 'Рабочий каталог проектных схем';
+    case LocationHead.USER: return 'Личные схемы пользователя';
+    case LocationHead.COMMON: return 'Рабочий каталог публичных схем';
+    case LocationHead.LIBRARY: return 'Каталог неизменных схем-примеров';
+    case LocationHead.PROJECTS: return 'Рабочий каталог проектных схем';
   }
 }
 
@@ -46,9 +46,9 @@ export function labelFolderNode(node: FolderNode): string {
 export function labelAccessPolicy(policy: AccessPolicy): string {
   // prettier-ignore
   switch (policy) {
-    case AccessPolicy.PRIVATE:     return 'Личный';
-    case AccessPolicy.PROTECTED:   return 'Защищенный';
-    case AccessPolicy.PUBLIC:      return 'Открытый';
+    case AccessPolicy.PRIVATE: return 'Личный';
+    case AccessPolicy.PROTECTED: return 'Защищенный';
+    case AccessPolicy.PUBLIC: return 'Открытый';
   }
 }
 
@@ -73,8 +73,9 @@ export function describeAccessPolicy(policy: AccessPolicy): string {
 export function labelLibraryItemType(itemType: LibraryItemType): string {
   // prettier-ignore
   switch (itemType) {
-    case LibraryItemType.RSFORM:  return 'КС';
-    case LibraryItemType.OSS:     return 'ОСС';
+    case LibraryItemType.RSFORM: return 'КС';
+    case LibraryItemType.OSS: return 'ОСС';
+    case LibraryItemType.RSMODEL: return 'Модель';
   }
 }
 
@@ -84,7 +85,8 @@ export function labelLibraryItemType(itemType: LibraryItemType): string {
 export function describeLibraryItemType(itemType: LibraryItemType): string {
   // prettier-ignore
   switch (itemType) {
-    case LibraryItemType.RSFORM:  return 'Концептуальная схема';
-    case LibraryItemType.OSS:     return 'Операционная схема синтеза';
+    case LibraryItemType.RSFORM: return 'Концептуальная схема';
+    case LibraryItemType.OSS: return 'Операционная схема синтеза';
+    case LibraryItemType.RSMODEL: return 'Концептуальная модель';
   }
 }

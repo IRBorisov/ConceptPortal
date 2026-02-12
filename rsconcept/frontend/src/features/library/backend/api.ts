@@ -1,10 +1,10 @@
 import { queryOptions } from '@tanstack/react-query';
 
 import {
-  type IRSFormDTO,
-  type IVersionCreatedResponse,
+  type RSFormDTO,
   schemaRSForm,
-  schemaVersionCreatedResponse
+  schemaVersionCreatedResponse,
+  type VersionCreatedResponse
 } from '@/features/rsform';
 
 import { axiosDelete, axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';
@@ -13,29 +13,29 @@ import { infoMsg } from '@/utils/labels';
 
 import {
   type AccessPolicy,
-  type ICloneLibraryItemDTO,
-  type ICreateLibraryItemDTO,
-  type ICreateVersionDTO,
-  type ILibraryItem,
-  type IRenameLocationDTO,
-  type IUpdateLibraryItemDTO,
-  type IUpdateVersionDTO,
-  type IVersionExInfo,
+  type CloneLibraryItemDTO,
+  type CreateLibraryItemDTO,
+  type CreateVersionDTO,
+  type LibraryItem,
+  type RenameLocationDTO,
   schemaLibraryItem,
   schemaLibraryItemArray,
-  schemaVersionExInfo
+  schemaVersionExInfo,
+  type UpdateLibraryItemDTO,
+  type UpdateVersionDTO,
+  type VersionExInfo
 } from './types';
 
 export const libraryApi = {
   baseKey: KEYS.library,
   libraryListKey: KEYS.composite.libraryList,
 
-  getLibraryQueryOptions: ({ isAdmin }: { isAdmin: boolean }) =>
+  getLibraryQueryOptions: ({ isAdmin }: { isAdmin: boolean; }) =>
     queryOptions({
       queryKey: [...libraryApi.libraryListKey, isAdmin ? 'admin' : 'user'],
       staleTime: DELAYS.staleMedium,
       queryFn: meta =>
-        axiosGet<ILibraryItem[]>({
+        axiosGet<LibraryItem[]>({
           schema: schemaLibraryItemArray,
           endpoint: isAdmin ? '/api/library/all' : '/api/library/active',
           options: { signal: meta.signal }
@@ -46,15 +46,15 @@ export const libraryApi = {
       queryKey: [libraryApi.baseKey, 'templates'],
       staleTime: DELAYS.staleMedium,
       queryFn: meta =>
-        axiosGet<ILibraryItem[]>({
+        axiosGet<LibraryItem[]>({
           schema: schemaLibraryItemArray,
           endpoint: '/api/library/templates',
           options: { signal: meta.signal }
         })
     }),
 
-  createItem: (data: ICreateLibraryItemDTO) =>
-    axiosPost<ICreateLibraryItemDTO, ILibraryItem>({
+  createItem: (data: CreateLibraryItemDTO) =>
+    axiosPost<CreateLibraryItemDTO, LibraryItem>({
       schema: schemaLibraryItem,
       endpoint: !data.file ? '/api/library' : '/api/rsforms/create-detailed',
       request: {
@@ -64,13 +64,13 @@ export const libraryApi = {
       options: !data.file
         ? undefined
         : {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
+          headers: {
+            'Content-Type': 'multipart/form-data'
           }
+        }
     }),
-  updateItem: (data: IUpdateLibraryItemDTO) =>
-    axiosPatch<IUpdateLibraryItemDTO, ILibraryItem>({
+  updateItem: (data: UpdateLibraryItemDTO) =>
+    axiosPatch<UpdateLibraryItemDTO, LibraryItem>({
       schema: schemaLibraryItem,
       endpoint: `/api/library/${data.id}`,
       request: {
@@ -78,7 +78,7 @@ export const libraryApi = {
         successMessage: infoMsg.changesSaved
       }
     }),
-  setOwner: ({ itemID, owner }: { itemID: number; owner: number }) =>
+  setOwner: ({ itemID, owner }: { itemID: number; owner: number; }) =>
     axiosPatch({
       endpoint: `/api/library/${itemID}/set-owner`,
       request: {
@@ -86,7 +86,7 @@ export const libraryApi = {
         successMessage: infoMsg.changesSaved
       }
     }),
-  setLocation: ({ itemID, location }: { itemID: number; location: string }) =>
+  setLocation: ({ itemID, location }: { itemID: number; location: string; }) =>
     axiosPatch({
       endpoint: `/api/library/${itemID}/set-location`,
       request: {
@@ -94,7 +94,7 @@ export const libraryApi = {
         successMessage: infoMsg.moveComplete
       }
     }),
-  setAccessPolicy: ({ itemID, policy }: { itemID: number; policy: AccessPolicy }) =>
+  setAccessPolicy: ({ itemID, policy }: { itemID: number; policy: AccessPolicy; }) =>
     axiosPatch({
       endpoint: `/api/library/${itemID}/set-access-policy`,
       request: {
@@ -102,7 +102,7 @@ export const libraryApi = {
         successMessage: infoMsg.changesSaved
       }
     }),
-  setEditors: ({ itemID, editors }: { itemID: number; editors: number[] }) =>
+  setEditors: ({ itemID, editors }: { itemID: number; editors: number[]; }) =>
     axiosPatch({
       endpoint: `/api/library/${itemID}/set-editors`,
       request: {
@@ -111,15 +111,15 @@ export const libraryApi = {
       }
     }),
 
-  deleteItem: (data: { target: number; beforeInvalidate?: () => void | Promise<void> }) =>
+  deleteItem: (data: { target: number; beforeInvalidate?: () => void | Promise<void>; }) =>
     axiosDelete({
       endpoint: `/api/library/${data.target}`,
       request: {
         successMessage: infoMsg.itemDestroyed
       }
     }),
-  cloneItem: ({ itemID, data }: { itemID: number; data: ICloneLibraryItemDTO }) =>
-    axiosPost<ICloneLibraryItemDTO, IRSFormDTO>({
+  cloneItem: ({ itemID, data }: { itemID: number; data: CloneLibraryItemDTO; }) =>
+    axiosPost<CloneLibraryItemDTO, RSFormDTO>({
       schema: schemaRSForm,
       endpoint: `/api/library/${itemID}/clone`,
       request: {
@@ -127,7 +127,7 @@ export const libraryApi = {
         successMessage: newSchema => infoMsg.cloneComplete(newSchema.alias)
       }
     }),
-  renameLocation: (data: IRenameLocationDTO) =>
+  renameLocation: (data: RenameLocationDTO) =>
     axiosPatch({
       endpoint: '/api/library/rename-location',
       request: {
@@ -136,8 +136,8 @@ export const libraryApi = {
       }
     }),
 
-  createVersion: ({ itemID, data }: { itemID: number; data: ICreateVersionDTO }) =>
-    axiosPost<ICreateVersionDTO, IVersionCreatedResponse>({
+  createVersion: ({ itemID, data }: { itemID: number; data: CreateVersionDTO; }) =>
+    axiosPost<CreateVersionDTO, VersionCreatedResponse>({
       schema: schemaVersionCreatedResponse,
       endpoint: `/api/library/${itemID}/create-version`,
       request: {
@@ -145,16 +145,16 @@ export const libraryApi = {
         successMessage: infoMsg.newVersion(data.version)
       }
     }),
-  restoreVersion: ({ versionID }: { versionID: number }) =>
-    axiosPatch<undefined, IRSFormDTO>({
+  restoreVersion: ({ versionID }: { versionID: number; }) =>
+    axiosPatch<undefined, RSFormDTO>({
       schema: schemaRSForm,
       endpoint: `/api/versions/${versionID}/restore`,
       request: {
         successMessage: infoMsg.versionRestored
       }
     }),
-  updateVersion: (data: { itemID: number; version: IUpdateVersionDTO }) =>
-    axiosPatch<IUpdateVersionDTO, IVersionExInfo>({
+  updateVersion: (data: { itemID: number; version: UpdateVersionDTO; }) =>
+    axiosPatch<UpdateVersionDTO, VersionExInfo>({
       schema: schemaVersionExInfo,
       endpoint: `/api/versions/${data.version.id}`,
       request: {
@@ -162,7 +162,7 @@ export const libraryApi = {
         successMessage: infoMsg.changesSaved
       }
     }),
-  deleteVersion: (data: { itemID: number; versionID: number }) =>
+  deleteVersion: (data: { itemID: number; versionID: number; }) =>
     axiosDelete({
       endpoint: `/api/versions/${data.versionID}`,
       request: {

@@ -3,9 +3,9 @@
 import { useEffect, useState } from 'react';
 
 import { useAIStore } from '@/features/ai/stores/ai-context';
-import { type IConstituenta } from '@/features/rsform';
+import { type Constituenta } from '@/features/rsform';
 import { useRSFormSuspense } from '@/features/rsform/backend/use-rsform';
-import { RSFormStats } from '@/features/rsform/components/rsform-stats';
+import { CardRSFormStats } from '@/features/rsform/components/rsform-stats';
 import { ViewConstituents } from '@/features/rsform/components/view-constituents';
 import { calculateStats } from '@/features/rsform/models/rsform-api';
 
@@ -24,7 +24,7 @@ export function ViewSchema({ schemaID, isMutable }: ViewSchemaProps) {
   const [activeID, setActiveID] = useState<number | null>(null);
   const activeCst = activeID ? schema.cstByID.get(activeID) ?? null : null;
   const showEditCst = useDialogsStore(state => state.showEditCst);
-  const setCurrentSchema = useAIStore(state => state.setCurrentSchema);
+  const setCurrentSchema = useAIStore(state => state.setSchema);
   const stats = calculateStats(schema);
 
   const listHeight = useFitHeight('14.5rem', '10rem');
@@ -34,7 +34,7 @@ export function ViewSchema({ schemaID, isMutable }: ViewSchemaProps) {
     return () => setCurrentSchema(null);
   }, [schema, setCurrentSchema]);
 
-  function handleEditCst(cst: IConstituenta) {
+  function handleEditCst(cst: Constituenta) {
     showEditCst({ schemaID: schema.id, targetID: cst.id });
   }
 
@@ -61,7 +61,7 @@ export function ViewSchema({ schemaID, isMutable }: ViewSchemaProps) {
         onDoubleClick={isMutable ? handleEditCst : undefined}
       />
 
-      <RSFormStats className='pr-4 py-2 -ml-4' stats={stats} />
+      <CardRSFormStats className='pr-4 py-2 -ml-4' stats={stats} />
     </div>
   );
 }

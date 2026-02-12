@@ -1,7 +1,7 @@
 import { ComboBox } from '@/components/input/combo-box';
 import { type Styling } from '@/components/props';
 
-import { type IUserInfo } from '../backend/types';
+import { type UserInfo } from '../backend/types';
 import { useLabelUser } from '../backend/use-label-user';
 import { useUsers } from '../backend/use-users';
 
@@ -16,7 +16,7 @@ interface SelectUserProps extends Styling {
   hidden?: boolean;
 }
 
-function compareUsers(a: IUserInfo, b: IUserInfo) {
+function compareUsers(a: UserInfo, b: UserInfo) {
   if (!a.last_name && !!b.last_name) {
     return 1;
   } else if (!!a.last_name && !b.last_name) {

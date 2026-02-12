@@ -7,7 +7,7 @@ import { IconDropArrow, IconDropArrowUp } from '@/components/icons';
 import { globalIDs, prefixes } from '@/utils/constants';
 
 import { colorBgGraphNode } from '../../colors';
-import { type IConstituenta, type IRSForm } from '../../models/rsform';
+import { type Constituenta, type RSForm } from '../../models/rsform';
 import { useCstTooltipStore } from '../../stores/cst-tooltip';
 import { useTermGraphStore } from '../../stores/term-graph';
 
@@ -15,10 +15,10 @@ interface ViewHiddenProps {
   items: number[];
   listHeight?: string;
 
-  schema: IRSForm;
+  schema: RSForm;
   selected?: number[];
   toggleSelect?: (id: number) => void;
-  setFocus: (cst: IConstituenta) => void;
+  setFocus: (cst: Constituenta) => void;
   onActivate?: (id: number) => void;
 }
 
@@ -44,7 +44,7 @@ export function ViewHidden({
     toggleSelect?.(cstID);
   }
 
-  function handleContextMenu(event: React.MouseEvent<HTMLElement>, target: IConstituenta) {
+  function handleContextMenu(event: React.MouseEvent<HTMLElement>, target: Constituenta) {
     event.stopPropagation();
     event.preventDefault();
     setFocus(target);

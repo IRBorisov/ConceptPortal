@@ -2,7 +2,7 @@
 
 import { ReactFlowProvider } from '@xyflow/react';
 
-import { urls, useConceptNavigation } from '@/app';
+import { useConceptNavigation } from '@/app';
 
 import { MiniButton } from '@/components/control';
 import { IconRSForm } from '@/components/icons';
@@ -10,7 +10,6 @@ import { ModalView } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { useRSFormSuspense } from '../../backend/use-rsform';
-import { RSTabID } from '../../pages/rsform-page/rsedit-context';
 
 import { TGReadonlyFlow } from './tg-readonly-flow';
 
@@ -24,14 +23,11 @@ export function DlgShowTermGraph() {
   const hideDialog = useDialogsStore(state => state.hideDialog);
   const router = useConceptNavigation();
 
-  function navigateToSchema() {
+  function handleOpenSchema(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    event.preventDefault();
+    event.stopPropagation();
     hideDialog();
-    router.push({
-      path: urls.schema_props({
-        id: schema.id,
-        tab: RSTabID.GRAPH
-      })
-    });
+    router.gotoTermGraph(schema.id, event.ctrlKey || event.metaKey);
   }
 
   return (
@@ -41,7 +37,7 @@ export function DlgShowTermGraph() {
         noPadding
         className='absolute z-pop top-2 left-2'
         icon={<IconRSForm size='1.25rem' className='text-primary' />}
-        onClick={navigateToSchema}
+        onClick={handleOpenSchema}
       />
       <ReactFlowProvider>
         <TGReadonlyFlow schema={schema} />

@@ -13,7 +13,7 @@ interface InfoErrorProps {
   error: ErrorData;
 }
 
-export function DescribeError({ error }: { error: ErrorData }) {
+export function DescribeError({ error }: { error: ErrorData; }) {
   if (!error) {
     return <p>Ошибки отсутствуют</p>;
   } else if (typeof error === 'string') {
@@ -35,10 +35,10 @@ export function DescribeError({ error }: { error: ErrorData }) {
     return (
       <div>
         <p>
-          <b>Error:</b> {error.name}
+          <b>Ошибка:</b> {error.name}
         </p>
         <p>
-          <b>Message:</b> {error.message}
+          <b>Описание:</b> {error.message}
         </p>
         {error.stack && <pre className='whitespace-pre-wrap p-2 overflow-x-auto wrap-break-word'>{error.stack}</pre>}
       </div>
@@ -70,7 +70,7 @@ export function DescribeError({ error }: { error: ErrorData }) {
   if (isHtml) {
     sanitizedHtml = DOMPurify.sanitize(error.response.data as string, {
       USE_PROFILES: { html: true },
-      ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'ul', 'li', 'br'],
+      ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'ul', 'li', 'br', 'p'],
       ALLOWED_ATTR: []
     });
   }
@@ -84,7 +84,11 @@ export function DescribeError({ error }: { error: ErrorData }) {
           {isHtml && sanitizedHtml ? (
             <div dangerouslySetInnerHTML={{ __html: sanitizedHtml }} />
           ) : (
-            <PrettyJson data={error.response.data as object} />
+            typeof error.response.data === 'string' ? (
+              <pre className="whitespace-pre-wrap p-2 overflow-x-auto wrap-break-words">{error.response.data}</pre>
+            ) : (
+              <PrettyJson data={error.response.data as object} />
+            )
           )}
         </>
       )}

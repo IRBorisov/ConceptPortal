@@ -5,6 +5,7 @@ import { useParams } from 'react-router';
 import { z } from 'zod';
 
 import { urls, useBlockNavigation, useConceptNavigation } from '@/app';
+import { RSTabID } from '@/app/navigation/navigation-context';
 
 import { isAxiosError } from '@/backend/api-transport';
 import { Divider } from '@/components/container';
@@ -16,9 +17,8 @@ import { useModificationStore } from '@/stores/modification';
 
 import { ConstituentaTooltip } from '../../components/constituenta-tooltip';
 
-import { RSTabID } from './rsedit-context';
 import { RSEditState } from './rsedit-state';
-import { RSTabs } from './rstabs';
+import { RSFormTabs } from './rsform-tabs';
 
 const paramsSchema = z.strictObject({
   id: z.coerce.number(),
@@ -61,8 +61,8 @@ export function RSFormPage() {
       )}
     >
       <ConstituentaTooltip />
-      <RSEditState itemID={urlData.id} activeVersion={urlData.version} activeTab={urlData.tab}>
-        <RSTabs activeID={urlData.activeID} activeTab={urlData.tab} />
+      <RSEditState itemID={urlData.id} activeVersion={urlData.version}>
+        <RSFormTabs activeID={urlData.activeID} activeTab={urlData.tab} />
       </RSEditState>
     </ErrorBoundary>
   );

@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { KEYS } from '@/backend/configuration';
 
 import { libraryApi } from './api';
-import { type ICloneLibraryItemDTO } from './types';
+import { type CloneLibraryItemDTO } from './types';
 
 export const useCloneItem = () => {
   const client = useQueryClient();
@@ -14,6 +14,6 @@ export const useCloneItem = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    cloneItem: (data: { itemID: number; data: ICloneLibraryItemDTO }) => mutation.mutateAsync(data)
+    cloneItem: (data: { itemID: number; data: CloneLibraryItemDTO; }) => mutation.mutateAsync(data)
   };
 };

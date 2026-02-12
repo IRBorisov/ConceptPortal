@@ -6,12 +6,12 @@ import { DELAYS, KEYS } from '@/backend/configuration';
 import { infoMsg } from '@/utils/labels';
 
 import {
-  type IUpdateProfileDTO,
-  type IUserInfo,
-  type IUserProfile,
-  type IUserSignupDTO,
   schemaUserInfo,
-  schemaUserProfile
+  schemaUserProfile,
+  type UpdateProfileDTO,
+  type UserInfo,
+  type UserProfile,
+  type UserSignupDTO
 } from './types';
 
 export const usersApi = {
@@ -22,7 +22,7 @@ export const usersApi = {
       queryKey: [usersApi.baseKey, 'list'],
       staleTime: DELAYS.staleMedium,
       queryFn: meta =>
-        axiosGet<IUserInfo[]>({
+        axiosGet<UserInfo[]>({
           schema: z.array(schemaUserInfo),
           endpoint: '/users/api/active-users',
           options: { signal: meta.signal }
@@ -33,15 +33,15 @@ export const usersApi = {
       queryKey: [usersApi.baseKey, 'profile'],
       staleTime: DELAYS.staleShort,
       queryFn: meta =>
-        axiosGet<IUserProfile>({
+        axiosGet<UserProfile>({
           schema: schemaUserProfile,
           endpoint: '/users/api/profile',
           options: { signal: meta.signal }
         })
     }),
 
-  signup: (data: IUserSignupDTO) =>
-    axiosPost<IUserSignupDTO, IUserProfile>({
+  signup: (data: UserSignupDTO) =>
+    axiosPost<UserSignupDTO, UserProfile>({
       schema: schemaUserProfile,
       endpoint: '/users/api/signup',
       request: {
@@ -50,8 +50,8 @@ export const usersApi = {
       }
     }),
 
-  updateProfile: (data: IUpdateProfileDTO) =>
-    axiosPatch<IUpdateProfileDTO, IUserProfile>({
+  updateProfile: (data: UpdateProfileDTO) =>
+    axiosPatch<UpdateProfileDTO, UserProfile>({
       schema: schemaUserProfile,
       endpoint: '/users/api/profile',
       request: {

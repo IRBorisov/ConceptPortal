@@ -1,5 +1,6 @@
 'use client';
 
+import { useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 import { useRestoreVersion } from '@/features/library/backend/use-restore-version';
@@ -20,9 +21,10 @@ interface ToolbarVersioningProps {
 }
 
 export function ToolbarVersioning({ blockReload, className }: ToolbarVersioningProps) {
+  const router = useConceptNavigation();
   const isModified = useModificationStore(state => state.isModified);
   const { restoreVersion: versionRestore } = useRestoreVersion();
-  const { schema, isMutable, isContentEditable, navigateVersion, activeVersion, selectedCst } = useRSEdit();
+  const { schema, isMutable, isContentEditable, activeVersion, selectedCst } = useRSEdit();
 
   const showCreateVersion = useDialogsStore(state => state.showCreateVersion);
   const showEditVersions = useDialogsStore(state => state.showEditVersions);
@@ -31,7 +33,7 @@ export function ToolbarVersioning({ blockReload, className }: ToolbarVersioningP
     if (schema.version === 'latest' || !window.confirm(promptText.restoreArchive)) {
       return;
     }
-    void versionRestore({ versionID: schema.version }).then(() => navigateVersion());
+    void versionRestore({ versionID: schema.version }).then(() => router.gotoRSForm(schema.id));
   }
 
   function handleCreateVersion() {
@@ -43,7 +45,7 @@ export function ToolbarVersioning({ blockReload, className }: ToolbarVersioningP
       versions: schema.versions,
       selected: selectedCst,
       totalCount: schema.items.length,
-      onCreate: newVersion => navigateVersion(newVersion)
+      onCreate: newVersion => router.gotoRSForm(schema.id, newVersion)
     });
   }
 
@@ -51,7 +53,7 @@ export function ToolbarVersioning({ blockReload, className }: ToolbarVersioningP
     showEditVersions({
       itemID: schema.id,
       afterDelete: targetVersion => {
-        if (targetVersion === activeVersion) navigateVersion();
+        if (targetVersion === activeVersion) router.gotoRSForm(schema.id);
       }
     });
   }
@@ -65,8 +67,8 @@ export function ToolbarVersioning({ blockReload, className }: ToolbarVersioningP
               blockReload
                 ? 'Невозможно откатить КС, <br>прикрепленную к операционной схеме'
                 : !isContentEditable
-                ? 'Откатить к версии'
-                : 'Переключитесь на <br/>неактуальную версию'
+                  ? 'Откатить к версии'
+                  : 'Переключитесь на <br/>неактуальную версию'
             }
             aria-label='Откатить к выбранной версии'
             onClick={handleRestoreVersion}

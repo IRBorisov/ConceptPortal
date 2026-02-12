@@ -1,6 +1,6 @@
 'use client';
 
-import { urls, useConceptNavigation } from '@/app';
+import { useConceptNavigation } from '@/app';
 import { type IPromptTemplate } from '@/features/ai/backend/types';
 import { useLabelUser } from '@/features/users';
 
@@ -12,9 +12,6 @@ import { type RO } from '@/utils/meta';
 
 import { useAvailableTemplatesSuspense } from '../../backend/use-available-templates';
 import { BadgeSharedTemplate } from '../../components/badge-shared-template';
-
-import { PromptTabID } from './templates-tabs';
-
 const columnHelper = createColumnHelper<RO<IPromptTemplate>>();
 
 interface TabListTemplatesProps {
@@ -30,14 +27,14 @@ export function TabListTemplates({ activeID }: TabListTemplatesProps) {
   function handleRowDoubleClicked(row: RO<IPromptTemplate>, event: React.MouseEvent<Element>) {
     event.preventDefault();
     event.stopPropagation();
-    router.push({ path: urls.prompt_template(row.id, PromptTabID.EDIT), newTab: event.ctrlKey || event.metaKey });
+    router.gotoPromptEdit(row.id, event.ctrlKey || event.metaKey);
   }
 
   function handleRowClicked(row: RO<IPromptTemplate>, event: React.MouseEvent<Element>) {
     if (row.id === activeID) {
       return;
     }
-    router.push({ path: urls.prompt_template(row.id, PromptTabID.LIST), newTab: event.ctrlKey || event.metaKey });
+    router.gotoPromptList(row.id, event.ctrlKey || event.metaKey);
   }
 
   function handleCreateNew() {

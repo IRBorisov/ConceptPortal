@@ -5,44 +5,44 @@ import { DELAYS, KEYS } from '@/backend/configuration';
 import { infoMsg } from '@/utils/labels';
 
 import {
-  type IBlockCreatedResponse,
-  type ICloneSchemaDTO,
-  type IConstituentaReference,
-  type ICreateBlockDTO,
-  type ICreateReplicaDTO,
-  type ICreateSchemaDTO,
-  type ICreateSynthesisDTO,
-  type IDeleteBlockDTO,
-  type IDeleteOperationDTO,
-  type IDeleteReplicaDTO,
-  type IImportSchemaDTO,
-  type IInputCreatedResponse,
-  type IMoveItemsDTO,
-  type IOperationCreatedResponse,
-  type IOperationSchemaDTO,
-  type IOssLayout,
+  type BlockCreatedResponse,
+  type CloneSchemaDTO,
+  type ConstituentaReference,
+  type CreateBlockDTO,
+  type CreateReplicaDTO,
+  type CreateSchemaDTO,
+  type CreateSynthesisDTO,
+  type DeleteBlockDTO,
+  type DeleteOperationDTO,
+  type DeleteReplicaDTO,
+  type ImportSchemaDTO,
+  type InputCreatedResponse,
   type IOssLayoutDTO,
-  type IRelocateConstituentsDTO,
-  type ITargetOperation,
-  type IUpdateBlockDTO,
-  type IUpdateInputDTO,
-  type IUpdateOperationDTO,
+  type MoveItemsDTO,
+  type OperationCreatedResponse,
+  type OperationSchemaDTO,
+  type OssLayout,
+  type RelocateConstituentsDTO,
   schemaBlockCreatedResponse,
   schemaConstituentaReference,
   schemaInputCreatedResponse,
   schemaOperationCreatedResponse,
-  schemaOperationSchema
+  schemaOperationSchema,
+  type TargetOperation,
+  type UpdateBlockDTO,
+  type UpdateInputDTO,
+  type UpdateOperationDTO
 } from './types';
 
 export const ossApi = {
   baseKey: KEYS.oss,
 
-  getOssQueryOptions: ({ itemID }: { itemID?: number }) => {
+  getOssQueryOptions: ({ itemID }: { itemID?: number; }) => {
     return queryOptions({
       queryKey: KEYS.composite.ossItem({ itemID }),
       staleTime: DELAYS.staleShort,
       queryFn: meta =>
-        axiosGet<IOperationSchemaDTO>({
+        axiosGet<OperationSchemaDTO>({
           schema: schemaOperationSchema,
           endpoint: `/api/oss/${itemID}/details`,
           options: { signal: meta.signal }
@@ -51,8 +51,8 @@ export const ossApi = {
     });
   },
 
-  updateLayout: ({ itemID, data, isSilent }: { itemID: number; data: IOssLayout; isSilent?: boolean }) =>
-    axiosPatch<IOssLayoutDTO, IOperationSchemaDTO>({
+  updateLayout: ({ itemID, data, isSilent }: { itemID: number; data: OssLayout; isSilent?: boolean; }) =>
+    axiosPatch<IOssLayoutDTO, OperationSchemaDTO>({
       endpoint: `/api/oss/${itemID}/update-layout`,
       request: {
         data: { data: data },
@@ -60,8 +60,8 @@ export const ossApi = {
       }
     }),
 
-  createBlock: ({ itemID, data }: { itemID: number; data: ICreateBlockDTO }) =>
-    axiosPost<ICreateBlockDTO, IBlockCreatedResponse>({
+  createBlock: ({ itemID, data }: { itemID: number; data: CreateBlockDTO; }) =>
+    axiosPost<CreateBlockDTO, BlockCreatedResponse>({
       schema: schemaBlockCreatedResponse,
       endpoint: `/api/oss/${itemID}/create-block`,
       request: {
@@ -69,8 +69,8 @@ export const ossApi = {
         successMessage: infoMsg.changesSaved
       }
     }),
-  updateBlock: ({ itemID, data }: { itemID: number; data: IUpdateBlockDTO }) =>
-    axiosPatch<IUpdateBlockDTO, IOperationSchemaDTO>({
+  updateBlock: ({ itemID, data }: { itemID: number; data: UpdateBlockDTO; }) =>
+    axiosPatch<UpdateBlockDTO, OperationSchemaDTO>({
       schema: schemaOperationSchema,
       endpoint: `/api/oss/${itemID}/update-block`,
       request: {
@@ -78,8 +78,8 @@ export const ossApi = {
         successMessage: infoMsg.changesSaved
       }
     }),
-  deleteBlock: ({ itemID, data }: { itemID: number; data: IDeleteBlockDTO; beforeUpdate?: () => void }) =>
-    axiosPatch<IDeleteBlockDTO, IOperationSchemaDTO>({
+  deleteBlock: ({ itemID, data }: { itemID: number; data: DeleteBlockDTO; beforeUpdate?: () => void; }) =>
+    axiosPatch<DeleteBlockDTO, OperationSchemaDTO>({
       schema: schemaOperationSchema,
       endpoint: `/api/oss/${itemID}/delete-block`,
       request: {
@@ -88,8 +88,8 @@ export const ossApi = {
       }
     }),
 
-  createReplica: ({ itemID, data }: { itemID: number; data: ICreateReplicaDTO }) =>
-    axiosPost<ICreateReplicaDTO, IOperationCreatedResponse>({
+  createReplica: ({ itemID, data }: { itemID: number; data: CreateReplicaDTO; }) =>
+    axiosPost<CreateReplicaDTO, OperationCreatedResponse>({
       schema: schemaOperationCreatedResponse,
       endpoint: `/api/oss/${itemID}/create-replica`,
       request: {
@@ -100,8 +100,8 @@ export const ossApi = {
         }
       }
     }),
-  deleteReplica: ({ itemID, data }: { itemID: number; data: IDeleteReplicaDTO; beforeUpdate?: () => void }) =>
-    axiosPatch<IDeleteReplicaDTO, IOperationSchemaDTO>({
+  deleteReplica: ({ itemID, data }: { itemID: number; data: DeleteReplicaDTO; beforeUpdate?: () => void; }) =>
+    axiosPatch<DeleteReplicaDTO, OperationSchemaDTO>({
       schema: schemaOperationSchema,
       endpoint: `/api/oss/${itemID}/delete-replica`,
       request: {
@@ -110,8 +110,8 @@ export const ossApi = {
       }
     }),
 
-  createSchema: ({ itemID, data }: { itemID: number; data: ICreateSchemaDTO }) =>
-    axiosPost<ICreateSchemaDTO, IOperationCreatedResponse>({
+  createSchema: ({ itemID, data }: { itemID: number; data: CreateSchemaDTO; }) =>
+    axiosPost<CreateSchemaDTO, OperationCreatedResponse>({
       schema: schemaOperationCreatedResponse,
       endpoint: `/api/oss/${itemID}/create-schema`,
       request: {
@@ -122,8 +122,8 @@ export const ossApi = {
         }
       }
     }),
-  cloneSchema: ({ itemID, data }: { itemID: number; data: ICloneSchemaDTO }) =>
-    axiosPost<ICloneSchemaDTO, IOperationCreatedResponse>({
+  cloneSchema: ({ itemID, data }: { itemID: number; data: CloneSchemaDTO; }) =>
+    axiosPost<CloneSchemaDTO, OperationCreatedResponse>({
       schema: schemaOperationCreatedResponse,
       endpoint: `/api/oss/${itemID}/clone-schema`,
       request: {
@@ -134,8 +134,8 @@ export const ossApi = {
         }
       }
     }),
-  createSynthesis: ({ itemID, data }: { itemID: number; data: ICreateSynthesisDTO }) =>
-    axiosPost<ICreateSynthesisDTO, IOperationCreatedResponse>({
+  createSynthesis: ({ itemID, data }: { itemID: number; data: CreateSynthesisDTO; }) =>
+    axiosPost<CreateSynthesisDTO, OperationCreatedResponse>({
       schema: schemaOperationCreatedResponse,
       endpoint: `/api/oss/${itemID}/create-synthesis`,
       request: {
@@ -146,8 +146,8 @@ export const ossApi = {
         }
       }
     }),
-  importSchema: ({ itemID, data }: { itemID: number; data: IImportSchemaDTO }) =>
-    axiosPost<IImportSchemaDTO, IOperationCreatedResponse>({
+  importSchema: ({ itemID, data }: { itemID: number; data: ImportSchemaDTO; }) =>
+    axiosPost<ImportSchemaDTO, OperationCreatedResponse>({
       schema: schemaOperationCreatedResponse,
       endpoint: `/api/oss/${itemID}/import-schema`,
       request: {
@@ -158,8 +158,8 @@ export const ossApi = {
         }
       }
     }),
-  updateOperation: ({ itemID, data }: { itemID: number; data: IUpdateOperationDTO }) =>
-    axiosPatch<IUpdateOperationDTO, IOperationSchemaDTO>({
+  updateOperation: ({ itemID, data }: { itemID: number; data: UpdateOperationDTO; }) =>
+    axiosPatch<UpdateOperationDTO, OperationSchemaDTO>({
       schema: schemaOperationSchema,
       endpoint: `/api/oss/${itemID}/update-operation`,
       request: {
@@ -167,8 +167,8 @@ export const ossApi = {
         successMessage: infoMsg.changesSaved
       }
     }),
-  deleteOperation: ({ itemID, data }: { itemID: number; data: IDeleteOperationDTO; beforeUpdate?: () => void }) =>
-    axiosPatch<IDeleteOperationDTO, IOperationSchemaDTO>({
+  deleteOperation: ({ itemID, data }: { itemID: number; data: DeleteOperationDTO; beforeUpdate?: () => void; }) =>
+    axiosPatch<DeleteOperationDTO, OperationSchemaDTO>({
       schema: schemaOperationSchema,
       endpoint: `/api/oss/${itemID}/delete-operation`,
       request: {
@@ -177,8 +177,8 @@ export const ossApi = {
       }
     }),
 
-  createInput: ({ itemID, data }: { itemID: number; data: ITargetOperation }) =>
-    axiosPatch<ITargetOperation, IInputCreatedResponse>({
+  createInput: ({ itemID, data }: { itemID: number; data: TargetOperation; }) =>
+    axiosPatch<TargetOperation, InputCreatedResponse>({
       schema: schemaInputCreatedResponse,
       endpoint: `/api/oss/${itemID}/create-input`,
       request: {
@@ -186,8 +186,8 @@ export const ossApi = {
         successMessage: infoMsg.newLibraryItem
       }
     }),
-  updateInput: ({ itemID, data }: { itemID: number; data: IUpdateInputDTO }) =>
-    axiosPatch<IUpdateInputDTO, IOperationSchemaDTO>({
+  updateInput: ({ itemID, data }: { itemID: number; data: UpdateInputDTO; }) =>
+    axiosPatch<UpdateInputDTO, OperationSchemaDTO>({
       schema: schemaOperationSchema,
       endpoint: `/api/oss/${itemID}/set-input`,
       request: {
@@ -195,8 +195,8 @@ export const ossApi = {
         successMessage: infoMsg.changesSaved
       }
     }),
-  executeOperation: ({ itemID, data }: { itemID: number; data: ITargetOperation }) =>
-    axiosPost<ITargetOperation, IOperationSchemaDTO>({
+  executeOperation: ({ itemID, data }: { itemID: number; data: TargetOperation; }) =>
+    axiosPost<TargetOperation, OperationSchemaDTO>({
       schema: schemaOperationSchema,
       endpoint: `/api/oss/${itemID}/execute-operation`,
       request: {
@@ -205,8 +205,8 @@ export const ossApi = {
       }
     }),
 
-  moveItems: ({ itemID, data }: { itemID: number; data: IMoveItemsDTO }) =>
-    axiosPatch<IMoveItemsDTO, IOperationSchemaDTO>({
+  moveItems: ({ itemID, data }: { itemID: number; data: MoveItemsDTO; }) =>
+    axiosPatch<MoveItemsDTO, OperationSchemaDTO>({
       schema: schemaOperationSchema,
       endpoint: `/api/oss/${itemID}/move-items`,
       request: {
@@ -215,8 +215,8 @@ export const ossApi = {
       }
     }),
 
-  relocateConstituents: ({ itemID, data }: { itemID: number; data: IRelocateConstituentsDTO }) =>
-    axiosPost<IRelocateConstituentsDTO>({
+  relocateConstituents: ({ itemID, data }: { itemID: number; data: RelocateConstituentsDTO; }) =>
+    axiosPost<RelocateConstituentsDTO>({
       endpoint: `/api/oss/${itemID}/relocate-constituents`,
       request: {
         data: data,
@@ -224,7 +224,7 @@ export const ossApi = {
       }
     }),
   getPredecessor: (cstID: number) =>
-    axiosPost<{ target: number }, IConstituentaReference>({
+    axiosPost<{ target: number; }, ConstituentaReference>({
       schema: schemaConstituentaReference,
       endpoint: '/api/oss/get-predecessor',
       request: { data: { target: cstID } }

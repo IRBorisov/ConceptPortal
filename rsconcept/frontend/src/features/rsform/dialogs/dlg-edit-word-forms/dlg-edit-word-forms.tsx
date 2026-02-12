@@ -18,7 +18,7 @@ import { useParseText } from '../../backend/cctext/use-parse-text';
 import { useRSFormSuspense } from '../../backend/use-rsform';
 import { useUpdateConstituenta } from '../../backend/use-update-constituenta';
 import { SelectMultiGrammeme } from '../../components/select-multi-grammeme';
-import { type Grammeme, type IWordForm, supportedGrammemes } from '../../models/language';
+import { type Grammeme, supportedGrammemes, type WordForm } from '../../models/language';
 import { parseGrammemes, wordFormEquals } from '../../models/language-api';
 
 import { TableWordForms } from './table-word-forms';
@@ -42,7 +42,7 @@ export function DlgEditWordForms() {
   const [inputText, setInputText] = useState(target.term_resolved);
   const [inputGrams, setInputGrams] = useState<Grammeme[]>([]);
 
-  const [forms, setForms] = useState<IWordForm[]>(
+  const [forms, setForms] = useState<WordForm[]>(
     target.term_forms.map(term => ({
       text: term.text,
       grams: parseGrammemes(term.tags)
@@ -66,14 +66,14 @@ export function DlgEditWordForms() {
   }
 
   function handleAddForm() {
-    const newForm: IWordForm = {
+    const newForm: WordForm = {
       text: inputText,
       grams: inputGrams
     };
     setForms(forms => [newForm, ...forms.filter(value => !wordFormEquals(value, newForm))]);
   }
 
-  function handleSelectForm(form: IWordForm) {
+  function handleSelectForm(form: WordForm) {
     setInputText(form.text);
     setInputGrams(supportedGrammemes.filter(gram => form.grams.find(test => test === gram)));
   }
@@ -99,10 +99,10 @@ export function DlgEditWordForms() {
       }
     }
     void generateLexeme({ text: inputText }).then(response => {
-      const lexeme: IWordForm[] = [];
+      const lexeme: WordForm[] = [];
       response.items.forEach(form => {
         const grams = parseGrammemes(form.grams).filter(gram => supportedGrammemes.find(item => item === gram));
-        const newForm: IWordForm = {
+        const newForm: WordForm = {
           text: form.text,
           grams: grams
         };

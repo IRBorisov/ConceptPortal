@@ -1,8 +1,8 @@
-import { type IConstituenta, type IRSForm } from '../../models/rsform';
+import { type Constituenta, type RSForm } from '../../models/rsform';
 import { matchConstituenta } from '../../models/rsform-api';
 import { DependencyMode, useCstSearchStore } from '../../stores/cst-search';
 
-export function useFilteredItems(schema: IRSForm, activeCst?: IConstituenta | null): IConstituenta[] {
+export function useFilteredItems(schema: RSForm, activeCst?: Constituenta | null): Constituenta[] {
   const query = useCstSearchStore(state => state.query);
   const filterMatch = useCstSearchStore(state => state.match);
   const filterSource = useCstSearchStore(state => state.source);
@@ -17,9 +17,9 @@ export function useFilteredItems(schema: IRSForm, activeCst?: IConstituenta | nu
 }
 
 /**
- * Filter list of  {@link ILibraryItem} to a given graph query.
+ * Filter list of  {@link LibraryItem} to a given graph query.
  */
-function applyGraphQuery(target: IRSForm, pivot: number, mode: DependencyMode): IConstituenta[] {
+function applyGraphQuery(target: RSForm, pivot: number, mode: DependencyMode): Constituenta[] {
   if (mode === DependencyMode.ALL) {
     return target.items;
   }

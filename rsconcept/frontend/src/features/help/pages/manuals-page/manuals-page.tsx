@@ -27,7 +27,7 @@ export function ManualsPage() {
   }
 
   return (
-    <div className='flex mx-auto max-w-320' role='manuals' style={{ minHeight: mainHeight }}>
+    <div className='flex mx-auto max-w-7xl' role='manuals' style={{ minHeight: mainHeight }}>
       <TopicsList activeTopic={activeTopic} onChangeTopic={topic => onSelectTopic(topic)} />
       <ViewTopic topic={activeTopic} />
     </div>

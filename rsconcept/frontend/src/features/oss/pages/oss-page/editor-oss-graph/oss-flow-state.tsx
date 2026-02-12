@@ -6,7 +6,7 @@ import { type Edge, useEdgesState, useNodesState, useOnSelectionChange, useReact
 import { APP_COLORS } from '@/styling/colors';
 import { PARAMETER } from '@/utils/constants';
 
-import { type IOperationSchema, NodeType } from '../../../models/oss';
+import { NodeType, type OperationSchema } from '../../../models/oss';
 import { constructNodeID } from '../../../models/oss-api';
 import { type Position2D } from '../../../models/oss-layout';
 import { useOSSGraphStore } from '../../../stores/oss-graph';
@@ -202,7 +202,7 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
 };
 
 // ====== Internals =========
-function computeRelativePosition(schema: IOperationSchema, position: Position2D, parent: number | null): Position2D {
+function computeRelativePosition(schema: OperationSchema, position: Position2D, parent: number | null): Position2D {
   if (!parent) {
     return position;
   }

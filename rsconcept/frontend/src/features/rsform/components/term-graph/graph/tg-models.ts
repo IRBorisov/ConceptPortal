@@ -7,7 +7,7 @@ import { type Edge, type Node } from '@xyflow/react';
 import { type Graph } from '@/models/graph';
 import { PARAMETER } from '@/utils/constants';
 
-import { CstType, type IConstituenta, type IRSForm } from '../../../models/rsform';
+import { type Constituenta, CstType, type RSForm } from '../../../models/rsform';
 import { type GraphFilterParams, TGEdgeType } from '../../../stores/term-graph';
 
 /** Node data after dagre layout (x, y set by layout). */
@@ -17,7 +17,7 @@ interface DagreLayoutNode {
 }
 
 export interface TGNodeState extends Record<string, unknown> {
-  cst: IConstituenta;
+  cst: Constituenta;
   focused: boolean;
 }
 
@@ -85,7 +85,7 @@ export function applyLayout(nodes: Node<TGNodeState>[], edges: Edge[], subLabels
   });
 }
 
-export function inferEdgeType(schema: IRSForm, source: number, target: number): TGEdgeType {
+export function inferEdgeType(schema: RSForm, source: number, target: number): TGEdgeType {
   const isDefinition = schema.graph.hasEdge(source, target);
   const isAttribution = schema.attribution_graph.hasEdge(source, target);
   if (!isDefinition && !isAttribution) {
@@ -100,9 +100,9 @@ export function inferEdgeType(schema: IRSForm, source: number, target: number): 
 }
 
 export function produceFilteredGraph(
-  schema: IRSForm,
+  schema: RSForm,
   params: GraphFilterParams,
-  focusCst: IConstituenta | null
+  focusCst: Constituenta | null
 ): Graph<number> {
   const allowedTypes: CstType[] = (() => {
     const result: CstType[] = [];
@@ -142,10 +142,10 @@ export function produceFilteredGraph(
 // ===== Internals =====
 function applyToGraph(
   target: Graph<number>,
-  schema: IRSForm,
+  schema: RSForm,
   params: GraphFilterParams,
   allowedTypes: CstType[],
-  focusCst: IConstituenta | null
+  focusCst: Constituenta | null
 ): Graph<number> {
   if (params.noTemplates) {
     schema.items.forEach(cst => {

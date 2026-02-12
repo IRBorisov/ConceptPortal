@@ -9,14 +9,14 @@ import { Checkbox, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { type IDeleteReplicaDTO, type IOssLayout, schemaDeleteReplica } from '../backend/types';
+import { type DeleteReplicaDTO, type OssLayout, schemaDeleteReplica } from '../backend/types';
 import { useDeleteReplica } from '../backend/use-delete-replica';
 import { useOssSuspense } from '../backend/use-oss';
 
 export interface DlgDeleteReplicaProps {
   ossID: number;
   targetID: number;
-  layout: IOssLayout;
+  layout: OssLayout;
   beforeDelete?: () => void;
 }
 
@@ -27,7 +27,7 @@ export function DlgDeleteReplica() {
   const { schema } = useOssSuspense({ itemID: ossID });
   const target = schema.operationByID.get(targetID)!;
 
-  const { handleSubmit, control } = useForm<IDeleteReplicaDTO>({
+  const { handleSubmit, control } = useForm<DeleteReplicaDTO>({
     resolver: zodResolver(schemaDeleteReplica),
     defaultValues: {
       target: targetID,
@@ -38,7 +38,7 @@ export function DlgDeleteReplica() {
   });
   const keep_connections = useWatch({ control, name: 'keep_connections' });
 
-  function onSubmit(data: IDeleteReplicaDTO) {
+  function onSubmit(data: DeleteReplicaDTO) {
     return deleteReference({ itemID: ossID, data: data, beforeUpdate: beforeDelete });
   }
 

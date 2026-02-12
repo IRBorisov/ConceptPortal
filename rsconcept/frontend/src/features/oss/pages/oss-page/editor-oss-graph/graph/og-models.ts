@@ -1,19 +1,19 @@
 import { type Node } from '@xyflow/react';
 
-import { type IBlock, type IOperation } from '../../../../models/oss';
+import { type Block, type Operation } from '../../../../models/oss';
 
 export type OperationNodeType = 'input' | 'synthesis' | 'replica';
 
-/** Represents graph OSS {@link IOperation} node data. */
+/** Represents graph OSS {@link Operation} node data. */
 export interface OperationNodeData extends Record<string, unknown> {
   label: string;
-  operation: IOperation;
+  operation: Operation;
 }
 
-/** Represents graph OSS {@link IBlock} node data. */
+/** Represents graph OSS {@link Block} node data. */
 export interface BlockNodeData extends Record<string, unknown> {
   label: string;
-  block: IBlock;
+  block: Block;
 }
 
 /** Represents graph OSS node data. */

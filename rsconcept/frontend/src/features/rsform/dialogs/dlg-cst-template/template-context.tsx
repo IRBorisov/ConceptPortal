@@ -2,18 +2,18 @@
 
 import { createContext, use } from 'react';
 
-import { type IArgumentValue, type IConstituenta } from '../../models/rsform';
+import { type ArgumentValue, type Constituenta } from '../../models/rsform';
 
 interface ITemplateContext {
-  args: IArgumentValue[];
-  prototype: IConstituenta | null;
+  args: ArgumentValue[];
+  prototype: Constituenta | null;
   templateID: number | null;
-  filterCategory: IConstituenta | null;
+  filterCategory: Constituenta | null;
 
-  onChangeArguments: (newArgs: IArgumentValue[]) => void;
-  onChangePrototype: (newPrototype: IConstituenta) => void;
+  onChangeArguments: (newArgs: ArgumentValue[]) => void;
+  onChangePrototype: (newPrototype: Constituenta) => void;
   onChangeTemplateID: (newTemplateID: number | null) => void;
-  onChangeFilterCategory: (newFilterCategory: IConstituenta | null) => void;
+  onChangeFilterCategory: (newFilterCategory: Constituenta | null) => void;
 }
 
 export const TemplateContext = createContext<ITemplateContext | null>(null);

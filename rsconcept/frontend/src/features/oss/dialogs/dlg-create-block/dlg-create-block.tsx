@@ -11,7 +11,7 @@ import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useDialogsStore } from '@/stores/dialogs';
 import { hintMsg } from '@/utils/labels';
 
-import { type ICreateBlockDTO, type IOssLayout, schemaCreateBlock } from '../../backend/types';
+import { type CreateBlockDTO, type OssLayout, schemaCreateBlock } from '../../backend/types';
 import { useCreateBlock } from '../../backend/use-create-block';
 import { useOssSuspense } from '../../backend/use-oss';
 import { LayoutManager } from '../../models/oss-layout-api';
@@ -22,7 +22,7 @@ import { TabBlockChildren } from './tab-block-children';
 
 export interface DlgCreateBlockProps {
   ossID: number;
-  layout: IOssLayout;
+  layout: OssLayout;
   childrenBlocks: number[];
   childrenOperations: number[];
   initialParent: number | null;
@@ -54,7 +54,7 @@ export function DlgCreateBlock() {
   const { schema } = useOssSuspense({ itemID: ossID });
   const manager = new LayoutManager(schema, layout);
 
-  const methods = useForm<ICreateBlockDTO>({
+  const methods = useForm<CreateBlockDTO>({
     resolver: zodResolver(schemaCreateBlock),
     defaultValues: {
       item_data: {
@@ -90,7 +90,7 @@ export function DlgCreateBlock() {
     }
   })();
 
-  function onSubmit(data: ICreateBlockDTO) {
+  function onSubmit(data: CreateBlockDTO) {
     data.position = manager.newBlockPosition(data);
     data.layout = manager.layout;
     void createBlock({ itemID: manager.oss.id, data: data }).then(response => onCreate?.(response.new_block));

@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
-import { AccessPolicy, type ILibraryItem, LibraryItemType } from '../backend/types';
+import { AccessPolicy, type LibraryItem, LibraryItemType } from '../backend/types';
 
 import { LocationHead } from './library';
 import { matchLibraryItem, validateLocation } from './library-api';
 
 describe('Testing matching LibraryItem', () => {
-  const item1: ILibraryItem = {
+  const item1: LibraryItem = {
     id: 42,
     item_type: LibraryItemType.RSFORM,
     title: 'Item1',
@@ -21,7 +21,7 @@ describe('Testing matching LibraryItem', () => {
     visible: true
   };
 
-  const itemEmpty: ILibraryItem = {
+  const itemEmpty: LibraryItem = {
     id: -1,
     item_type: LibraryItemType.RSFORM,
     title: '',

@@ -1,10 +1,10 @@
 import { OperationType } from '../../../../backend/types';
 import { OssStats } from '../../../../components/oss-stats';
-import { type IBlock, type IOperationSchema, NodeType } from '../../../../models/oss';
+import { type Block, NodeType, type OperationSchema } from '../../../../models/oss';
 
 interface BlockStatsProps {
-  target: IBlock;
-  oss: IOperationSchema;
+  target: Block;
+  oss: OperationSchema;
 }
 
 export function BlockStats({ target, oss }: BlockStatsProps) {

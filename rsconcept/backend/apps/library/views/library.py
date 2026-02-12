@@ -34,7 +34,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         if self.action == 'create':
-            return s.LibraryItemBaseSerializer
+            return s.LibraryItemCreateSerializer
         return s.LibraryItemSerializer
 
     def perform_create(self, serializer) -> None:
@@ -49,8 +49,8 @@ class LibraryViewSet(viewsets.ModelViewSet):
         if serializer.data.get('item_type') == m.LibraryItemType.OPERATION_SCHEMA:
             Layout.objects.create(oss=serializer.instance, data=[])
         if serializer.data.get('item_type') == m.LibraryItemType.RSMODEL:
-            schema_id = self.request.data.get('schema_id')
-            RSModel.objects.create(model=serializer.instance, schema_id=schema_id)
+            schema = getattr(serializer, '_schema')
+            RSModel.objects.create(model=serializer.instance, schema=schema)
 
     def perform_update(self, serializer) -> None:
         instance = serializer.save()

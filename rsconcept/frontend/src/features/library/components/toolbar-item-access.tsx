@@ -10,7 +10,7 @@ import { MiniButton } from '@/components/control';
 import { IconImmutable, IconMutable } from '@/components/icons';
 import { Label } from '@/components/input';
 
-import { type AccessPolicy, type ILibraryItem } from '../backend/types';
+import { type AccessPolicy, type LibraryItem } from '../backend/types';
 import { useMutatingLibrary } from '../backend/use-mutating-library';
 import { useSetAccessPolicy } from '../backend/use-set-access-policy';
 
@@ -22,7 +22,7 @@ interface ToolbarItemAccessProps {
   toggleVisible: () => void;
   readOnly: boolean;
   toggleReadOnly: () => void;
-  schema: ILibraryItem;
+  schema: LibraryItem;
   isAttachedToOSS: boolean;
   className?: string;
 }

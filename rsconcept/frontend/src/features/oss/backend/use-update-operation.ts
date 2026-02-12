@@ -1,12 +1,12 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { type ILibraryItem } from '@/features/library';
+import { type LibraryItem } from '@/features/library';
 import { useUpdateTimestamp } from '@/features/library/backend/use-update-timestamp';
 
 import { KEYS } from '@/backend/configuration';
 
 import { ossApi } from './api';
-import { type IUpdateOperationDTO } from './types';
+import { type UpdateOperationDTO } from './types';
 
 export const useUpdateOperation = () => {
   const client = useQueryClient();
@@ -21,12 +21,12 @@ export const useUpdateOperation = () => {
       if (!schemaID) {
         return;
       }
-      client.setQueryData(KEYS.composite.libraryList, (prev: ILibraryItem[] | undefined) =>
+      client.setQueryData(KEYS.composite.libraryList, (prev: LibraryItem[] | undefined) =>
         !prev
           ? undefined
           : prev.map(item =>
-              item.id === schemaID ? { ...item, ...variables.data.item_data, time_update: Date() } : item
-            )
+            item.id === schemaID ? { ...item, ...variables.data.item_data, time_update: Date() } : item
+          )
       );
       await client.invalidateQueries({
         queryKey: KEYS.composite.rsItem({ itemID: schemaID })
@@ -35,6 +35,6 @@ export const useUpdateOperation = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    updateOperation: (data: { itemID: number; data: IUpdateOperationDTO }) => mutation.mutateAsync(data)
+    updateOperation: (data: { itemID: number; data: UpdateOperationDTO; }) => mutation.mutateAsync(data)
   };
 };

@@ -8,7 +8,8 @@ import { validateLocation } from '../models/library-api';
 /** Represents type of library items. */
 export const LibraryItemType = {
   RSFORM: 'rsform',
-  OSS: 'oss'
+  OSS: 'oss',
+  RSMODEL: 'rsmodel'
 } as const;
 export type LibraryItemType = (typeof LibraryItemType)[keyof typeof LibraryItemType];
 
@@ -21,39 +22,39 @@ export const AccessPolicy = {
 export type AccessPolicy = (typeof AccessPolicy)[keyof typeof AccessPolicy];
 
 /** Represents library item common data typical for all item types. */
-export type ILibraryItem = z.infer<typeof schemaLibraryItem>;
+export type LibraryItem = z.infer<typeof schemaLibraryItem>;
 
-/** Represents {@link ILibraryItem} data loaded for both OSS and RSForm. */
-export interface ILibraryItemData extends ILibraryItem {
+/** Represents {@link LibraryItem} data loaded for both OSS and RSForm. */
+export interface LibraryItemData extends LibraryItem {
   editors: number[];
 }
 
 /** Represents update data for renaming Location. */
-export interface IRenameLocationDTO {
+export interface RenameLocationDTO {
   target: string;
   new_location: string;
 }
 
 /** Represents library item version information. */
-export type IVersionInfo = z.infer<typeof schemaVersionInfo>;
+export type VersionInfo = z.infer<typeof schemaVersionInfo>;
 
 /** Represents library item version extended information. */
-export type IVersionExInfo = z.infer<typeof schemaVersionExInfo>;
+export type VersionExInfo = z.infer<typeof schemaVersionExInfo>;
 
-/** Represents data, used for cloning {@link IRSForm}. */
-export type ICloneLibraryItemDTO = z.infer<typeof schemaCloneLibraryItem>;
+/** Represents data, used for cloning {@link RSForm}. */
+export type CloneLibraryItemDTO = z.infer<typeof schemaCloneLibraryItem>;
 
-/** Represents data, used for creating {@link IRSForm}. */
-export type ICreateLibraryItemDTO = z.infer<typeof schemaCreateLibraryItem>;
+/** Represents data, used for creating {@link RSForm}. */
+export type CreateLibraryItemDTO = z.infer<typeof schemaCreateLibraryItem>;
 
-/** Represents update data for editing {@link ILibraryItem}. */
-export type IUpdateLibraryItemDTO = z.infer<typeof schemaUpdateLibraryItem>;
+/** Represents update data for editing {@link LibraryItem}. */
+export type UpdateLibraryItemDTO = z.infer<typeof schemaUpdateLibraryItem>;
 
 /** Create version metadata in persistent storage. */
-export type ICreateVersionDTO = z.infer<typeof schemaCreateVersion>;
+export type CreateVersionDTO = z.infer<typeof schemaCreateVersion>;
 
 /** Represents version data, intended to update version metadata in persistent storage. */
-export type IUpdateVersionDTO = z.infer<typeof schemaUpdateVersion>;
+export type UpdateVersionDTO = z.infer<typeof schemaUpdateVersion>;
 
 // ======= SCHEMAS =========
 export const schemaLibraryItemType = z.enum(Object.values(LibraryItemType) as [LibraryItemType, ...LibraryItemType[]]);
@@ -104,6 +105,7 @@ export const schemaCreateLibraryItem = schemaInputLibraryItem
     title: z.string().max(limits.len_title, errorMsg.titleLength).optional(),
     description: z.string().max(limits.len_description, errorMsg.descriptionLength).optional(),
 
+    schema: z.number().optional(),
     file: z.instanceof(File).optional(),
     fileName: z.string().optional()
   })
@@ -113,6 +115,9 @@ export const schemaCreateLibraryItem = schemaInputLibraryItem
   })
   .refine(data => !!data.file || !!data.title, {
     path: ['title'],
+    message: errorMsg.requiredField
+  }).refine(data => data.item_type !== LibraryItemType.RSMODEL || !!data.schema, {
+    path: ['schema'],
     message: errorMsg.requiredField
   });
 

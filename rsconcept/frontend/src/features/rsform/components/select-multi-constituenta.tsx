@@ -2,15 +2,15 @@ import { ComboMulti } from '@/components/input/combo-multi';
 import { type Styling } from '@/components/props';
 
 import { labelConstituenta } from '../labels';
-import { type IConstituenta } from '../models/rsform';
+import { type Constituenta } from '../models/rsform';
 
 interface SelectMultiCstProps extends Styling {
   id?: string;
-  value: IConstituenta[];
-  items: IConstituenta[];
+  value: Constituenta[];
+  items: Constituenta[];
   onClear: () => void;
-  onAdd: (item: IConstituenta) => void;
-  onRemove: (item: IConstituenta) => void;
+  onAdd: (item: Constituenta) => void;
+  onRemove: (item: Constituenta) => void;
 
   placeholder?: string;
   disabled?: boolean;

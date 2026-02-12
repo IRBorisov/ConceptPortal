@@ -2,12 +2,12 @@
 
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
-import { type IInlineSynthesisDTO } from '../../backend/types';
+import { type InlineSynthesisDTO } from '../../backend/types';
 import { useRSFormSuspense } from '../../backend/use-rsform';
 import { PickMultiConstituenta } from '../../components/pick-multi-constituenta';
 
 export function TabConstituents() {
-  const { setValue, control } = useFormContext<IInlineSynthesisDTO>();
+  const { setValue, control } = useFormContext<InlineSynthesisDTO>();
   const sourceID = useWatch({ control, name: 'source' });
   const substitutions = useWatch({ control, name: 'substitutions' });
 

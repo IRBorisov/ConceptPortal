@@ -8,32 +8,32 @@ import { extractGlobals, isSimpleExpression, splitTemplateDefinition } from '@/f
 import { Graph } from '@/models/graph';
 import { type RO } from '@/utils/meta';
 
-import { CstStatus, CstType, type IConstituenta, type IRSForm } from '../models/rsform';
+import { type Constituenta, CstStatus, CstType, type RSForm } from '../models/rsform';
 import { inferClass, inferStatus, inferTemplate, isBaseSet, isFunctional, typeClassForCstType } from '../models/rsform-api';
 
-import { type IRSFormDTO } from './types';
+import { type RSFormDTO } from './types';
 
 /**
- * Loads data into an {@link IRSForm} based on {@link IRSFormDTO}.
+ * Loads data into an {@link RSForm} based on {@link RSFormDTO}.
  *
  * @remarks
- * This function processes the provided input, initializes the IRSForm, and calculates statistics
+ * This function processes the provided input, initializes the RSForm, and calculates statistics
  * based on the loaded data. It also establishes dependencies between concepts in the graph.
  */
 export class RSFormLoader {
-  private schema: IRSForm;
+  private schema: RSForm;
   private graph: Graph = new Graph();
   private association_graph: Graph = new Graph();
-  private cstByAlias = new Map<string, IConstituenta>();
-  private cstByID = new Map<number, IConstituenta>();
+  private cstByAlias = new Map<string, Constituenta>();
+  private cstByID = new Map<number, Constituenta>();
   private analyzer = new RSLangAnalyzer();
 
-  constructor(input: RO<IRSFormDTO>) {
-    this.schema = structuredClone(input) as unknown as IRSForm;
+  constructor(input: RO<RSFormDTO>) {
+    this.schema = structuredClone(input) as unknown as RSForm;
     this.schema.version = input.version ?? 'latest';
   }
 
-  produceRSForm(): IRSForm {
+  produceRSForm(): RSForm {
     this.prepareLookups();
     this.createGraph();
     this.inferCstAttributes();
@@ -116,7 +116,7 @@ export class RSFormLoader {
     });
   }
 
-  private inferSimpleExpression(target: IConstituenta): boolean {
+  private inferSimpleExpression(target: Constituenta): boolean {
     if (target.cst_type === CstType.STRUCTURED || isBaseSet(target.cst_type)) {
       return false;
     }
@@ -134,7 +134,7 @@ export class RSFormLoader {
     return isSimpleExpression(expression);
   }
 
-  private inferParent(target: IConstituenta): number | undefined {
+  private inferParent(target: Constituenta): number | undefined {
     const sources = this.extractSources(target);
     if (sources.size !== 1 || sources.has(target.id)) {
       return undefined;
@@ -147,7 +147,7 @@ export class RSFormLoader {
     return parent_id;
   }
 
-  private extractSources(target: IConstituenta): Set<number> {
+  private extractSources(target: Constituenta): Set<number> {
     const sources = new Set<number>();
     if (!isFunctional(target.cst_type)) {
       const node = this.graph.at(target.id)!;
@@ -202,7 +202,7 @@ export class RSFormLoader {
 }
 
 // ======= Internals ========
-function parseCst(target: IConstituenta, analyzer: RSLangAnalyzer): AnalysisBase {
+function parseCst(target: Constituenta, analyzer: RSLangAnalyzer): AnalysisBase {
   const cType = target.cst_type;
   if (cType === CstType.NOMINAL) {
     return { success: false, type: null, valueClass: null };

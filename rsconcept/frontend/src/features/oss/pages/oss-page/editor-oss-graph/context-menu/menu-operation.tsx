@@ -2,6 +2,7 @@
 
 import { toast } from 'react-toastify';
 
+import { useConceptNavigation } from '@/app';
 import { useLibrary } from '@/features/library/backend/use-library';
 
 import { DropdownButton } from '@/components/dropdown';
@@ -27,19 +28,20 @@ import { useCreateInput } from '../../../../backend/use-create-input';
 import { useCreateReference } from '../../../../backend/use-create-replica';
 import { useExecuteOperation } from '../../../../backend/use-execute-operation';
 import { useMutatingOss } from '../../../../backend/use-mutating-oss';
-import { type IOperation } from '../../../../models/oss';
+import { type Operation } from '../../../../models/oss';
 import { LayoutManager } from '../../../../models/oss-layout-api';
 import { useOssEdit } from '../../oss-edit-context';
 import { useGetLayout } from '../use-get-layout';
 
 interface MenuOperationProps {
-  operation: IOperation;
+  operation: Operation;
   onHide: () => void;
 }
 
 export function MenuOperation({ operation, onHide }: MenuOperationProps) {
+  const router = useConceptNavigation();
   const { items: libraryItems } = useLibrary();
-  const { schema, setSelectedNodes, navigateOperationSchema, isMutable, canDeleteOperation, deselectAll } = useOssEdit();
+  const { schema, setSelectedNodes, isMutable, canDeleteOperation, deselectAll } = useOssEdit();
   const isProcessing = useMutatingOss();
   const getLayout = useGetLayout();
 
@@ -80,7 +82,9 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
       return;
     }
     onHide();
-    navigateOperationSchema(operation.id);
+    if (operation.result) {
+      router.gotoCstList(operation.result);
+    }
   }
 
   function handleEditSchema() {

@@ -9,60 +9,66 @@ import { errorMsg } from '@/utils/labels';
 import { CstType } from '../models/rsform';
 
 /** Represents Constituenta basic persistent data. */
-export type IConstituentaBasicsDTO = z.infer<typeof schemaConstituentaBasics>;
+export type ConstituentaBasicsDTO = z.infer<typeof schemaConstituentaBasics>;
 
-/** Represents data for {@link IRSForm} provided by backend. */
-export type IRSFormDTO = z.infer<typeof schemaRSForm>;
+/** Represents data for {@link RSForm} provided by backend. */
+export type RSFormDTO = z.infer<typeof schemaRSForm>;
 
-/** Represents data, used for uploading {@link IRSForm} as file. */
-export interface IRSFormUploadDTO {
+/** Represents data for {@link RSModel} provided by backend. */
+export type RSModelDTO = z.infer<typeof schemaRSModel>;
+
+/** Represents data for {@link Constituenta} provided by backend. */
+export type ConstituentaData = z.infer<typeof schemaConstituentaData>;
+
+/** Represents data, used for uploading {@link RSForm} as file. */
+export interface RSFormUploadDTO {
   load_metadata: boolean;
   file: File;
 }
 
-/** Represents {@link IConstituenta} data, used in creation process. */
-export type ICreateConstituentaDTO = z.infer<typeof schemaCreateConstituenta>;
+/** Represents {@link Constituenta} data, used in creation process. */
+export type CreateConstituentaDTO = z.infer<typeof schemaCreateConstituenta>;
 
-/** Represents data response when creating {@link IConstituenta}. */
-export type IConstituentaCreatedResponse = z.infer<typeof schemaConstituentaCreatedResponse>;
+/** Represents data response when creating {@link Constituenta}. */
+export type ConstituentaCreatedResponse = z.infer<typeof schemaConstituentaCreatedResponse>;
 
-/** Represents data, used in updating persistent attributes in {@link IConstituenta}. */
-export type IUpdateConstituentaDTO = z.infer<typeof schemaUpdateConstituenta>;
+/** Represents data, used in updating persistent attributes in {@link Constituenta}. */
+export type UpdateConstituentaDTO = z.infer<typeof schemaUpdateConstituenta>;
 
-/** Represents data, used in batch updating crucial attributes in {@link IConstituenta}. */
-export type IUpdateCrucialDTO = z.infer<typeof schemaUpdateCrucial>;
+/** Represents data, used in batch updating crucial attributes in {@link Constituenta}. */
+export type UpdateCrucialDTO = z.infer<typeof schemaUpdateCrucial>;
 
-/** Represents data, used in ordering a list of {@link IConstituenta}. */
-export interface IMoveConstituentsDTO {
+/** Represents data, used in ordering a list of {@link Constituenta}. */
+export interface MoveConstituentsDTO {
   items: number[];
   move_to: number; // Note: 0-base index
 }
 
-/** Represents data response when creating producing structure of {@link IConstituenta}. */
-export type IProduceStructureResponse = z.infer<typeof schemaProduceStructureResponse>;
+/** Represents data response when creating producing structure of {@link Constituenta}. */
+export type ProduceStructureResponse = z.infer<typeof schemaProduceStructureResponse>;
 
-/** Represents data, used in merging single {@link IConstituenta}. */
-export type ISubstituteConstituents = z.infer<typeof schemaSubstituteConstituents>;
+/** Represents data, used in merging single {@link Constituenta}. */
+export type CstSubstitute = z.infer<typeof schemaSubstituteConstituents>;
 
 /** Represents input data for inline synthesis. */
-export type IInlineSynthesisDTO = z.infer<typeof schemaInlineSynthesis>;
+export type InlineSynthesisDTO = z.infer<typeof schemaInlineSynthesis>;
 
-/** Represents data, used in merging multiple {@link IConstituenta}. */
-export type ISubstitutionsDTO = z.infer<typeof schemaSubstitutions>;
+/** Represents data, used in merging multiple {@link Constituenta}. */
+export type SubstitutionsDTO = z.infer<typeof schemaSubstitutions>;
 
 /** Represents data for creating or deleting an Attribution. */
-export type IAttribution = z.infer<typeof schemaAttribution>;
+export type Attribution = z.infer<typeof schemaAttribution>;
 
 /** Represents data for clearing all attributions for a target constituenta. */
-export type IAttributionTargetDTO = z.infer<typeof schemaAttributionTarget>;
+export type AttributionTargetDTO = z.infer<typeof schemaAttributionTarget>;
 
 /** Represents Constituenta list. */
-export interface IConstituentaList {
+export interface ConstituentaList {
   items: number[];
 }
 
-/** Represents data response when creating {@link IVersionInfo}. */
-export type IVersionCreatedResponse = z.infer<typeof schemaVersionCreatedResponse>;
+/** Represents data response when creating {@link VersionInfo}. */
+export type VersionCreatedResponse = z.infer<typeof schemaVersionCreatedResponse>;
 
 // ========= SCHEMAS ========
 export const schemaCstType = z.enum(Object.values(CstType) as [CstType, ...CstType[]]);
@@ -105,7 +111,32 @@ export const schemaRSForm = schemaLibraryItem.extend({
       parent_source: z.number()
     })
   ),
-  oss: z.array(z.strictObject({ id: z.number(), alias: z.string() }))
+  oss: z.array(z.strictObject({ id: z.number(), alias: z.string() })),
+  models: z.array(z.strictObject({ id: z.number(), alias: z.string() }))
+});
+
+type RecursiveArray = (number | RecursiveArray)[];
+const RecursiveArraySchema: z.ZodType<RecursiveArray> = z.lazy(() =>
+  z.array(
+    z.union([
+      z.number(),
+      RecursiveArraySchema
+    ])
+  )
+);
+
+export const schemaConstituentaData = z.strictObject({
+  cst_id: z.number(),
+  value: z.union([
+    z.record(z.number(), z.string()),
+    RecursiveArraySchema
+  ])
+});
+
+export const schemaRSModel = schemaLibraryItem.extend({
+  editors: z.array(z.number()),
+  schema: z.number(),
+  items: z.array(schemaConstituentaData)
 });
 
 export const schemaVersionCreatedResponse = z.strictObject({

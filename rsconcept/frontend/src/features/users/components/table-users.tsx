@@ -2,14 +2,14 @@ import { MiniButton } from '@/components/control';
 import { createColumnHelper, DataTable } from '@/components/data-table';
 import { IconRemove } from '@/components/icons';
 
-import { type IUserInfo } from '../backend/types';
+import { type UserInfo } from '../backend/types';
 
 interface TableUsersProps {
-  items: IUserInfo[];
+  items: UserInfo[];
   onDelete: (target: number) => void;
 }
 
-const columnHelper = createColumnHelper<IUserInfo>();
+const columnHelper = createColumnHelper<UserInfo>();
 
 export function TableUsers({ items, onDelete }: TableUsersProps) {
   const columns = [

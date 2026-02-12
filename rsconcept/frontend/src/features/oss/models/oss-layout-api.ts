@@ -1,14 +1,14 @@
 import {
-  type ICreateBlockDTO,
-  type ICreateSchemaDTO,
-  type ICreateSynthesisDTO,
-  type IImportSchemaDTO,
-  type INodePosition,
-  type IOssLayout,
-  OperationType
+  type CreateBlockDTO,
+  type CreateSchemaDTO,
+  type CreateSynthesisDTO,
+  type ImportSchemaDTO,
+  type NodePosition,
+  OperationType,
+  type OssLayout
 } from '../backend/types';
 
-import { type IOperationSchema, NodeType } from './oss';
+import { NodeType, type OperationSchema } from './oss';
 import { type Position2D, type Rectangle2D } from './oss-layout';
 
 export const GRID_SIZE = 10; // pixels - size of OSS grid
@@ -17,12 +17,12 @@ const MIN_DISTANCE = 2 * GRID_SIZE; // pixels - minimum distance between nodes
 export const OPERATION_NODE_WIDTH = 150;
 export const OPERATION_NODE_HEIGHT = 40;
 
-/** Layout manipulations for {@link IOperationSchema}. */
+/** Layout manipulations for {@link OperationSchema}. */
 export class LayoutManager {
-  public oss: IOperationSchema;
-  public layout: IOssLayout;
+  public oss: OperationSchema;
+  public layout: OssLayout;
 
-  constructor(oss: IOperationSchema, layout?: IOssLayout) {
+  constructor(oss: OperationSchema, layout?: OssLayout) {
     this.oss = oss;
     if (layout) {
       this.layout = layout;
@@ -31,8 +31,8 @@ export class LayoutManager {
     }
   }
 
-  /** Calculate insert position for a new {@link IOperation} */
-  newOperationPosition(data: ICreateSchemaDTO | ICreateSynthesisDTO | IImportSchemaDTO): Rectangle2D {
+  /** Calculate insert position for a new {@link Operation} */
+  newOperationPosition(data: CreateSchemaDTO | CreateSynthesisDTO | ImportSchemaDTO): Rectangle2D {
     const result = { ...data.position };
     const parentNode = this.layout.find(pos => pos.nodeID === `b${data.item_data.parent}`) ?? null;
     const parentID = parentNode ? data.item_data.parent : null;
@@ -69,8 +69,8 @@ export class LayoutManager {
     return result;
   }
 
-  /** Calculate insert position for a new {@link IBlock} */
-  newBlockPosition(data: ICreateBlockDTO): Rectangle2D {
+  /** Calculate insert position for a new {@link Block} */
+  newBlockPosition(data: CreateBlockDTO): Rectangle2D {
     const block_nodes = data.children_blocks
       .map(id => this.layout.find(block => block.nodeID === `b${id}`))
       .filter(node => !!node);
@@ -107,7 +107,7 @@ export class LayoutManager {
     return result;
   }
 
-  /** Calculate insert position for a new clone of {@link IOperation} */
+  /** Calculate insert position for a new clone of {@link Operation} */
   newClonePosition(targetID: string): Rectangle2D | null {
     const targetNode = this.layout.find(pos => pos.nodeID === targetID);
     if (!targetNode) {
@@ -242,7 +242,7 @@ export class LayoutManager {
     return closestNode?.nodeID ?? null;
   }
 
-  private extendParentBounds(parent: INodePosition | null, child: Rectangle2D) {
+  private extendParentBounds(parent: NodePosition | null, child: Rectangle2D) {
     if (!parent) {
       return;
     }
@@ -287,7 +287,7 @@ export class LayoutManager {
     return { ...initial, x: maxX + MIN_DISTANCE, y: minY };
   }
 
-  private calculateOffsetForParentChange(target: INodePosition, parent: INodePosition | null): Position2D {
+  private calculateOffsetForParentChange(target: NodePosition, parent: NodePosition | null): Position2D {
     const newPosition = { ...target };
     if (parent === null) {
       const rootElements = this.oss.hierarchy.rootNodes();
@@ -322,7 +322,7 @@ function rectanglesStrictOverlap(a: Rectangle2D, b: Rectangle2D): boolean {
 function preventOverlap(
   target: Rectangle2D,
   fixedRectangles: Rectangle2D[],
-  options: { moveX?: boolean; moveY?: boolean } = { moveX: true, moveY: true }
+  options: { moveX?: boolean; moveY?: boolean; } = { moveX: true, moveY: true }
 ) {
   if ((!options.moveX && !options.moveY) || fixedRectangles.length === 0) {
     return;
@@ -345,7 +345,7 @@ function preventOverlap(
   } while (hasOverlap);
 }
 
-function calculatePositionFromArgs(args: INodePosition[]): Position2D {
+function calculatePositionFromArgs(args: NodePosition[]): Position2D {
   const maxY = Math.max(...args.map(node => node.y));
   const minX = Math.min(...args.map(node => node.x));
   const maxX = Math.max(...args.map(node => node.x));
@@ -357,8 +357,8 @@ function calculatePositionFromArgs(args: INodePosition[]): Position2D {
 
 function calculatePositionFromChildren(
   initial: Rectangle2D,
-  operations: INodePosition[],
-  blocks: INodePosition[]
+  operations: NodePosition[],
+  blocks: NodePosition[]
 ): Rectangle2D {
   const allNodes = [...blocks, ...operations];
   if (allNodes.length === 0) {
@@ -378,7 +378,7 @@ function calculatePositionFromChildren(
   };
 }
 
-function findClosestNodeByDistance(nodes: INodePosition[], target: INodePosition): INodePosition | null {
+function findClosestNodeByDistance(nodes: NodePosition[], target: NodePosition): NodePosition | null {
   let minDist = Infinity;
   let minNode = null;
   for (const curr of nodes) {

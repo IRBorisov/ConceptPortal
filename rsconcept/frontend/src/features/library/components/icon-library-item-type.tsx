@@ -1,4 +1,4 @@
-import { type DomIconProps, IconOSS, IconRSForm } from '@/components/icons';
+import { type DomIconProps, IconOSS, IconRSForm, IconRSModel } from '@/components/icons';
 
 import { LibraryItemType } from '../backend/types';
 
@@ -9,5 +9,7 @@ export function IconLibraryItemType({ value, size = '1.25rem', className }: DomI
       return <IconRSForm size={size} className={className ?? 'text-primary'} />;
     case LibraryItemType.OSS:
       return <IconOSS size={size} className={className ?? 'text-constructive'} />;
+    case LibraryItemType.RSMODEL:
+      return <IconRSModel size={size} className={className ?? 'text-accent-orange'} />;
   }
 }

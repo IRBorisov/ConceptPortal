@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 
 import { cctextApi } from './api';
-import { type IWordFormDTO } from './types';
+import { type WordFormDTO } from './types';
 
 export const useInflectText = () => {
   const mutation = useMutation({
@@ -9,6 +9,6 @@ export const useInflectText = () => {
     mutationFn: cctextApi.inflectText
   });
   return {
-    inflectText: (data: IWordFormDTO) => mutation.mutateAsync(data)
+    inflectText: (data: WordFormDTO) => mutation.mutateAsync(data)
   };
 };

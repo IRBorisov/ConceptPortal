@@ -5,6 +5,7 @@ import { isAxiosError } from 'axios';
 import { z } from 'zod';
 
 import { useBlockNavigation } from '@/app';
+import { PromptTabID } from '@/app/navigation/navigation-context';
 import { routes } from '@/app/urls';
 import { RequireAuth } from '@/features/auth/components/require-auth';
 
@@ -13,7 +14,7 @@ import { type ErrorData } from '@/components/info-error';
 import { useQueryStrings } from '@/hooks/use-query-strings';
 import { useModificationStore } from '@/stores/modification';
 
-import { PromptTabID, TemplatesTabs } from './templates-tabs';
+import { TemplatesTabs } from './templates-tabs';
 
 const paramsSchema = z.strictObject({
   tab: z.preprocess(v => (v ? Number(v) : undefined), z.enum(PromptTabID).default(PromptTabID.LIST)),
@@ -43,7 +44,7 @@ export function PromptTemplatesPage() {
 }
 
 // ====== Internals =========
-function ProcessError({ error, itemID }: { error: ErrorData; itemID?: number | null }): React.ReactElement | null {
+function ProcessError({ error, itemID }: { error: ErrorData; itemID?: number | null; }): React.ReactElement | null {
   if (isAxiosError(error) && error.response) {
     if (error.response.status === 404) {
       return (

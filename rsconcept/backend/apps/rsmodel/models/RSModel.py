@@ -8,14 +8,14 @@ class RSModel(Model):
         verbose_name='Модель',
         to='library.LibraryItem',
         on_delete=CASCADE,
-        related_name='rsmodel_data',
+        related_name='rsmodels',
         primary_key=True
     )
     schema = ForeignKey(
         verbose_name='Концептуальная схема',
         to='library.LibraryItem',
         on_delete=CASCADE,
-        related_name='rsmodels',
+        related_name='base_schema',
         null=True,
         blank=True
     )

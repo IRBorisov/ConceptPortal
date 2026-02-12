@@ -4,17 +4,17 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { Label } from '@/components/input';
 
-import { type IUpdateOperationDTO } from '../../backend/types';
+import { type UpdateOperationDTO } from '../../backend/types';
 import { PickMultiOperation } from '../../components/pick-multi-operation';
-import { type IOperationInput, type IOperationSchema, type IOperationSynthesis } from '../../models/oss';
+import { type OperationInput, type OperationSchema, type OperationSynthesis } from '../../models/oss';
 
 interface TabArgumentsProps {
-  oss: IOperationSchema;
-  target: IOperationInput | IOperationSynthesis;
+  oss: OperationSchema;
+  target: OperationInput | OperationSynthesis;
 }
 
 export function TabArguments({ oss, target }: TabArgumentsProps) {
-  const { control, setValue } = useFormContext<IUpdateOperationDTO>();
+  const { control, setValue } = useFormContext<UpdateOperationDTO>();
   const args = useWatch({ control, name: 'arguments' });
 
   const replicas = oss.replicas

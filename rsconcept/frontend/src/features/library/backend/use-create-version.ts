@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { KEYS } from '@/backend/configuration';
 
 import { libraryApi } from './api';
-import { type ICreateVersionDTO } from './types';
+import { type CreateVersionDTO } from './types';
 
 export const useCreateVersion = () => {
   const client = useQueryClient();
@@ -16,7 +16,7 @@ export const useCreateVersion = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    createVersion: (data: { itemID: number; data: ICreateVersionDTO }) =>
+    createVersion: (data: { itemID: number; data: CreateVersionDTO; }) =>
       mutation.mutateAsync(data).then(response => response.version)
   };
 };

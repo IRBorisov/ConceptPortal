@@ -1,16 +1,16 @@
 /**
- * Generates description for {@link IConstituenta}.
+ * Generates description for {@link Constituenta}.
  */
 
 import { type RO } from '@/utils/meta';
 import { prepareTooltip } from '@/utils/utils';
 
-import { type IVersionInfo } from '../library/backend/types';
+import { type VersionInfo } from '../library/backend/types';
 import { type CurrentVersion } from '../library/models/library';
 import { TokenID } from '../rslang';
 
 import { Grammeme, ReferenceType } from './models/language';
-import { CstClass, CstStatus, CstType, type IConstituenta } from './models/rsform';
+import { type Constituenta, CstClass, CstStatus, CstType } from './models/rsform';
 import { CstMatchMode, DependencyMode } from './stores/cst-search';
 import { type InteractionMode, type TGColoring, type TGEdgeType } from './stores/term-graph';
 
@@ -249,9 +249,9 @@ const describeTokenRecord: Partial<Record<TokenID, string>> = {
 };
 
 /**
- * Generates description for {@link IConstituenta}.
+ * Generates description for {@link Constituenta}.
  */
-export function describeConstituenta(cst: RO<IConstituenta>): string {
+export function describeConstituenta(cst: RO<Constituenta>): string {
   if (cst.cst_type === CstType.STRUCTURED) {
     return (
       cst.term_resolved ||
@@ -274,9 +274,9 @@ export function describeConstituenta(cst: RO<IConstituenta>): string {
 }
 
 /**
- * Generates description for term of a given {@link IConstituenta}.
+ * Generates description for term of a given {@link Constituenta}.
  */
-export function describeConstituentaTerm(cst: RO<IConstituenta> | null): string {
+export function describeConstituentaTerm(cst: RO<Constituenta> | null): string {
   if (!cst) {
     return '!Конституента отсутствует!';
   }
@@ -288,16 +288,16 @@ export function describeConstituentaTerm(cst: RO<IConstituenta> | null): string 
 }
 
 /**
- * Generates label for {@link IConstituenta}.
+ * Generates label for {@link Constituenta}.
  */
-export function labelConstituenta(cst: RO<IConstituenta>) {
+export function labelConstituenta(cst: RO<Constituenta>) {
   return `${cst.alias}: ${describeConstituenta(cst)}`;
 }
 
 /**
- * Generates label for {@link IVersionInfo} of {@link IRSForm}.
+ * Generates label for {@link VersionInfo} of {@link RSForm}.
  */
-export function labelVersion(value: CurrentVersion, items: RO<IVersionInfo[]>) {
+export function labelVersion(value: CurrentVersion, items: RO<VersionInfo[]>) {
   const version = items.find(ver => ver.id === value);
   return version ? version.version : 'актуальная';
 }

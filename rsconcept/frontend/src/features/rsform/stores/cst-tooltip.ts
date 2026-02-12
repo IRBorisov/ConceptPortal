@@ -1,10 +1,10 @@
 import { create } from 'zustand';
 
-import { type IConstituenta } from '../models/rsform';
+import { type Constituenta } from '../models/rsform';
 
 interface CstTooltipStore {
-  activeCst: IConstituenta | null;
-  setActiveCst: (value: IConstituenta | null) => void;
+  activeCst: Constituenta | null;
+  setActiveCst: (value: Constituenta | null) => void;
 }
 
 export const useCstTooltipStore = create<CstTooltipStore>()(set => ({

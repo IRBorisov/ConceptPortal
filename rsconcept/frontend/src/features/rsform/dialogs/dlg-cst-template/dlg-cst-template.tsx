@@ -14,8 +14,8 @@ import { hintMsg } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 
 import {
-  type IConstituentaBasicsDTO,
-  type ICreateConstituentaDTO,
+  type ConstituentaBasicsDTO,
+  type CreateConstituentaDTO,
   schemaCreateConstituenta
 } from '../../backend/types';
 import { useCreateConstituenta } from '../../backend/use-create-constituenta';
@@ -29,7 +29,7 @@ import { TemplateState } from './template-state';
 
 export interface DlgCstTemplateProps {
   schemaID: number;
-  onCreate: (data: RO<IConstituentaBasicsDTO>) => void;
+  onCreate: (data: RO<ConstituentaBasicsDTO>) => void;
   insertAfter?: number;
 }
 
@@ -45,7 +45,7 @@ export function DlgCstTemplate() {
   const { createConstituenta: cstCreate } = useCreateConstituenta();
   const { schema } = useRSFormSuspense({ itemID: schemaID });
 
-  const methods = useForm<ICreateConstituentaDTO>({
+  const methods = useForm<CreateConstituentaDTO>({
     mode: 'onChange',
     resolver: zodResolver(schemaCreateConstituenta),
     defaultValues: {
@@ -76,7 +76,7 @@ export function DlgCstTemplate() {
 
   const [activeTab, setActiveTab] = useState<TabID>(TabID.TEMPLATE);
 
-  function onSubmit(data: ICreateConstituentaDTO) {
+  function onSubmit(data: CreateConstituentaDTO) {
     return cstCreate({ itemID: schema.id, data }).then(onCreate);
   }
 

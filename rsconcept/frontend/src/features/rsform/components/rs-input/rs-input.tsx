@@ -18,7 +18,7 @@ import { Label } from '@/components/input';
 import { usePreferencesStore } from '@/stores/preferences';
 import { APP_COLORS } from '@/styling/colors';
 
-import { type IRSForm } from '../../models/rsform';
+import { type RSForm } from '../../models/rsform';
 import { generateAlias, getCstTypePrefix, guessCstType } from '../../models/rsform-api';
 
 import { ccBracketMatching } from './bracket-matching';
@@ -74,7 +74,7 @@ interface RSInputProps
   noTooltip?: boolean;
   onChange?: (newValue: string) => void;
   onAnalyze?: () => void;
-  schema?: IRSForm;
+  schema?: RSForm;
   onOpenEdit?: (cstID: number) => void;
 }
 

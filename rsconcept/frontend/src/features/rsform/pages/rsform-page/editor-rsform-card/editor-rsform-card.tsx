@@ -11,7 +11,7 @@ import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { globalIDs } from '@/utils/constants';
 
-import { RSFormStats } from '../../../components/rsform-stats';
+import { CardRSFormStats } from '../../../components/rsform-stats';
 import { useRSEdit } from '../rsedit-context';
 
 import { FormRSForm } from './form-rsform';
@@ -72,7 +72,7 @@ export function EditorRSFormCard() {
           showRSFormStats ? 'max-w-full' : 'opacity-0 max-w-0'
         )}
       >
-        <RSFormStats stats={stats} />
+        <CardRSFormStats stats={stats} />
       </aside>
     </div>
   );

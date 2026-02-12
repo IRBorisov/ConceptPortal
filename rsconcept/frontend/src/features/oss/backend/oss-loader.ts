@@ -6,34 +6,34 @@ import { Graph } from '@/models/graph';
 import { type RO } from '@/utils/meta';
 
 import {
-  type IBlock,
-  type IOperation,
-  type IOperationSchema,
-  type IOperationSchemaStats,
-  type IOssItem,
-  NodeType
+  type Block,
+  NodeType,
+  type Operation,
+  type OperationSchema,
+  type OperationSchemaStats,
+  type OssItem
 } from '../models/oss';
 import { constructNodeID } from '../models/oss-api';
 import { BLOCK_NODE_MIN_HEIGHT, BLOCK_NODE_MIN_WIDTH } from '../pages/oss-page/editor-oss-graph/graph/block-node';
 
-import { type IOperationSchemaDTO, OperationType } from './types';
+import { type OperationSchemaDTO, OperationType } from './types';
 
-/** Loads data into an {@link IOperationSchema} based on {@link IOperationSchemaDTO}. */
+/** Loads data into an {@link OperationSchema} based on {@link OperationSchemaDTO}. */
 export class OssLoader {
-  private oss: IOperationSchema;
+  private oss: OperationSchema;
   private graph: Graph = new Graph();
   private hierarchy: Graph<string> = new Graph<string>();
-  private operationByID = new Map<number, IOperation>();
-  private itemByNodeID = new Map<string, IOssItem>();
-  private blockByID = new Map<number, IBlock>();
+  private operationByID = new Map<number, Operation>();
+  private itemByNodeID = new Map<string, OssItem>();
+  private blockByID = new Map<number, Block>();
   private schemaIDs: number[] = [];
   private extendedGraph = new Graph();
 
-  constructor(input: RO<IOperationSchemaDTO>) {
-    this.oss = structuredClone(input) as unknown as IOperationSchema;
+  constructor(input: RO<OperationSchemaDTO>) {
+    this.oss = structuredClone(input) as unknown as OperationSchema;
   }
 
-  produceOSS(): IOperationSchema {
+  produceOSS(): OperationSchema {
     const result = this.oss;
     this.prepareLookups();
     this.createGraph();
@@ -149,7 +149,7 @@ export class OssLoader {
     return unique.size < ancestors.length;
   }
 
-  private calculateStats(): IOperationSchemaStats {
+  private calculateStats(): OperationSchemaStats {
     const operations = this.oss.operations;
     return {
       count_all: this.oss.operations.length + this.oss.blocks.length,

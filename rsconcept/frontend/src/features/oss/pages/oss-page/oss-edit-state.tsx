@@ -7,7 +7,6 @@ import { useAIStore } from '@/features/ai/stores/ai-context';
 import { useAuthSuspense } from '@/features/auth';
 import { useLibrarySearchStore } from '@/features/library';
 import { useDeleteItem } from '@/features/library/backend/use-delete-item';
-import { RSTabID } from '@/features/rsform/pages/rsform-page/rsedit-context';
 import { useRoleStore, UserRole } from '@/features/users';
 import { useAdjustRole } from '@/features/users/stores/use-adjust-role';
 
@@ -16,9 +15,9 @@ import { promptText } from '@/utils/labels';
 
 import { OperationType } from '../../backend/types';
 import { useOssSuspense } from '../../backend/use-oss';
-import { type IOperation, NodeType } from '../../models/oss';
+import { NodeType, type Operation } from '../../models/oss';
 
-import { OssEditContext, type OssTabID } from './oss-edit-context';
+import { OssEditContext } from './oss-edit-context';
 
 interface OssEditStateProps {
   itemID: number;
@@ -31,9 +30,9 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
   const role = useRoleStore(state => state.role);
   const setSearchLocation = useLibrarySearchStore(state => state.setLocation);
   const searchLocation = useLibrarySearchStore(state => state.location);
-  const setCurrentOSS = useAIStore(state => state.setCurrentOSS);
-  const setCurrentBlock = useAIStore(state => state.setCurrentBlock);
-  const setCurrentOperation = useAIStore(state => state.setCurrentOperation);
+  const setCurrentOSS = useAIStore(state => state.setOSS);
+  const setCurrentBlock = useAIStore(state => state.setBlock);
+  const setCurrentOperation = useAIStore(state => state.setOperation);
 
   const { user } = useAuthSuspense();
   const { schema } = useOssSuspense({ itemID: itemID });
@@ -55,7 +54,7 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
     adminMode: adminMode
   });
 
-  function canDeleteOperation(target: IOperation) {
+  function canDeleteOperation(target: Operation) {
     if (target.operation_type === OperationType.INPUT || target.operation_type === OperationType.REPLICA) {
       return true;
     }
@@ -96,22 +95,6 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
     setCurrentOperation(null);
   }, [selectedItems, setCurrentOperation]);
 
-  function navigateTab(tab: OssTabID) {
-    const url = urls.oss_props({
-      id: schema.id,
-      tab: tab
-    });
-    router.push({ path: url });
-  }
-
-  function navigateOperationSchema(target: number) {
-    const node = schema.operationByID.get(target);
-    if (!node?.result) {
-      return;
-    }
-    router.push({ path: urls.schema_props({ id: node.result, tab: RSTabID.CST_LIST }) });
-  }
-
   function deleteSchema() {
     if (!window.confirm(promptText.deleteOSS)) {
       return;
@@ -143,9 +126,6 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
 
         isOwned,
         isMutable,
-
-        navigateTab,
-        navigateOperationSchema,
 
         canDeleteOperation,
         deleteSchema,

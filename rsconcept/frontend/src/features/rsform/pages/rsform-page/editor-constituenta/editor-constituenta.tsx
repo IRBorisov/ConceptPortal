@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 
+import { useConceptNavigation } from '@/app';
 import { useRoleStore, UserRole } from '@/features/users';
 
 import { useWindowSize } from '@/hooks/use-window-size';
@@ -25,16 +26,16 @@ const SIDELIST_LAYOUT_THRESHOLD = 1000; // px
 const COLUMN_DENSE_SEARCH_THRESHOLD = 1100;
 
 export function EditorConstituenta() {
+  const router = useConceptNavigation();
   const {
-    schema, //
+    schema,
     activeCst,
     isContentEditable,
     selectedCst,
     setSelectedCst,
     moveUp,
     moveDown,
-    cloneCst,
-    navigateCst
+    cloneCst
   } = useRSEdit();
   const windowSize = useWindowSize();
   const mainHeight = useMainHeight();
@@ -128,7 +129,7 @@ export function EditorConstituenta() {
             toggleReset={toggleReset}
             activeCst={activeCst}
             schema={schema}
-            onOpenEdit={navigateCst}
+            onOpenEdit={(cstID) => router.changeActive(cstID)}
             disabled={disabled}
           />
         ) : null}
@@ -141,7 +142,7 @@ export function EditorConstituenta() {
         )}
         schema={schema}
         activeCst={activeCst}
-        onActivate={cst => navigateCst(cst.id)}
+        onActivate={cst => router.changeActive(cst.id)}
         dense={!!windowSize.width && windowSize.width < COLUMN_DENSE_SEARCH_THRESHOLD}
         maxListHeight={listHeight}
         autoScroll={!isNarrow}

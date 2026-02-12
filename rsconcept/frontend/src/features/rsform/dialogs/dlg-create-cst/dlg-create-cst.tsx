@@ -9,8 +9,8 @@ import { hintMsg } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 
 import {
-  type IConstituentaBasicsDTO,
-  type ICreateConstituentaDTO,
+  type ConstituentaBasicsDTO,
+  type CreateConstituentaDTO,
   schemaCreateConstituenta
 } from '../../backend/types';
 import { useCreateConstituenta } from '../../backend/use-create-constituenta';
@@ -20,9 +20,9 @@ import { validateNewAlias } from '../../models/rsform-api';
 import { FormCreateCst } from './form-create-cst';
 
 export interface DlgCreateCstProps {
-  initial: ICreateConstituentaDTO;
+  initial: CreateConstituentaDTO;
   schemaID: number;
-  onCreate: (data: RO<IConstituentaBasicsDTO>) => void;
+  onCreate: (data: RO<ConstituentaBasicsDTO>) => void;
   onCancel?: () => void;
 }
 
@@ -31,7 +31,7 @@ export function DlgCreateCst() {
   const { createConstituenta: cstCreate } = useCreateConstituenta();
   const { schema } = useRSFormSuspense({ itemID: schemaID });
 
-  const methods = useForm<ICreateConstituentaDTO>({
+  const methods = useForm<CreateConstituentaDTO>({
     mode: 'onChange',
     resolver: zodResolver(schemaCreateConstituenta),
     defaultValues: { ...initial }
@@ -48,7 +48,7 @@ export function DlgCreateCst() {
     }
   })();
 
-  function onSubmit(data: ICreateConstituentaDTO) {
+  function onSubmit(data: CreateConstituentaDTO) {
     return cstCreate({ itemID: schema.id, data }).then(onCreate);
   }
 

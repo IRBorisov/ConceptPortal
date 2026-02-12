@@ -1,17 +1,15 @@
 ''' Testing API: Library. '''
 from typing import Any
 
-from rest_framework import status
-
 from apps.library.models import (
     AccessPolicy,
-    Editor,
     LibraryItem,
     LibraryItemType,
     LibraryTemplate,
     LocationHead
 )
 from apps.rsform.models import Attribution, RSForm
+from apps.rsmodel.models import RSModel
 from shared.EndpointTester import EndpointTester, decl_endpoint
 from shared.testing_utils import response_contains
 
@@ -74,6 +72,34 @@ class TestLibraryViewset(EndpointTester):
         self.logout()
         data = {'title': 'Title2'}
         self.executeForbidden(data)
+
+
+    @decl_endpoint('/api/library', method='post')
+    def test_create_model(self):
+        """Test creating a LibraryItem with item_type=RSMODEL."""
+        data = {
+            'item_type': LibraryItemType.RSMODEL,
+            'title': 'Model Item',
+            'alias': 'model_alias',
+            'description': 'Test model creation',
+            'access_policy': AccessPolicy.PUBLIC,
+            'visible': True,
+            'read_only': False,
+            'schema': self.owned.pk
+        }
+        response = self.executeCreated(data)
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.data['owner'], self.user.pk)
+        self.assertEqual(response.data['item_type'], data['item_type'])
+        self.assertEqual(response.data['title'], data['title'])
+        self.assertEqual(response.data['alias'], data['alias'])
+        self.assertEqual(response.data['description'], data['description'])
+        self.assertEqual(response.data['access_policy'], data['access_policy'])
+        self.assertEqual(response.data['visible'], data['visible'])
+        self.assertEqual(response.data['read_only'], data['read_only'])
+        model_instance = RSModel.objects.filter(model_id=response.data['id']).first()
+        self.assertIsNotNone(model_instance)
+        self.assertEqual(model_instance.schema_id, data['schema'])
 
 
     @decl_endpoint('/api/library/{item}', method='patch')

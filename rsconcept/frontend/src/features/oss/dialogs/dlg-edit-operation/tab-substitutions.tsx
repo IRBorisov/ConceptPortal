@@ -7,16 +7,16 @@ import { PickSubstitutions } from '@/features/rsform/components/pick-substitutio
 
 import { TextArea } from '@/components/input';
 
-import { type IUpdateOperationDTO } from '../../backend/types';
-import { type IOperationSchema } from '../../models/oss';
+import { type UpdateOperationDTO } from '../../backend/types';
+import { type OperationSchema } from '../../models/oss';
 import { SubstitutionValidator } from '../../models/oss-api';
 
 interface TabSubstitutionsProps {
-  oss: IOperationSchema;
+  oss: OperationSchema;
 }
 
 export function TabSubstitutions({ oss }: TabSubstitutionsProps) {
-  const { control } = useFormContext<IUpdateOperationDTO>();
+  const { control } = useFormContext<UpdateOperationDTO>();
   const inputs = useWatch({ control, name: 'arguments' });
   const substitutions = useWatch({ control, name: 'substitutions' });
 

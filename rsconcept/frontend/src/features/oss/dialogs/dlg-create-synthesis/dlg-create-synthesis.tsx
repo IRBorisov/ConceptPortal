@@ -12,7 +12,7 @@ import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useDialogsStore } from '@/stores/dialogs';
 import { hintMsg } from '@/utils/labels';
 
-import { type ICreateSynthesisDTO, type IOssLayout, schemaCreateSynthesis } from '../../backend/types';
+import { type CreateSynthesisDTO, type OssLayout, schemaCreateSynthesis } from '../../backend/types';
 import { useCreateSynthesis } from '../../backend/use-create-synthesis';
 import { useOssSuspense } from '../../backend/use-oss';
 import { LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '../../models/oss-layout-api';
@@ -22,7 +22,7 @@ import { TabSubstitutions } from './tab-substitutions';
 
 export interface DlgCreateSynthesisProps {
   ossID: number;
-  layout: IOssLayout;
+  layout: OssLayout;
   initialParent: number | null;
   initialInputs: number[];
   defaultX: number;
@@ -51,7 +51,7 @@ export function DlgCreateSynthesis() {
   const { schema } = useOssSuspense({ itemID: ossID });
   const manager = new LayoutManager(schema, layout);
 
-  const methods = useForm<ICreateSynthesisDTO>({
+  const methods = useForm<CreateSynthesisDTO>({
     resolver: zodResolver(schemaCreateSynthesis),
     defaultValues: {
       item_data: {
@@ -86,7 +86,7 @@ export function DlgCreateSynthesis() {
     }
   })();
 
-  function onSubmit(data: ICreateSynthesisDTO) {
+  function onSubmit(data: CreateSynthesisDTO) {
     data.position = manager.newOperationPosition(data);
     data.layout = manager.layout;
     void createSynthesis({ itemID: manager.oss.id, data: data }).then(response => onCreate?.(response.new_operation));

@@ -2,10 +2,10 @@ import { type RO } from '@/utils/meta';
 
 import { OperationType } from './backend/types';
 import {
-  type IOperation,
-  type IOssItem,
-  type ISubstitutionErrorDescription,
   NodeType,
+  type Operation,
+  type OssItem,
+  type SubstitutionErrorDescription,
   SubstitutionErrorType
 } from './models/oss';
 
@@ -31,8 +31,8 @@ export function describeOperationType(itemType: OperationType): string {
   return describeOperationTypeRecord[itemType] ?? `UNKNOWN OPERATION TYPE: ${itemType}`;
 }
 
-/** Generates error description for {@link ISubstitutionErrorDescription}. */
-export function describeSubstitutionError(error: RO<ISubstitutionErrorDescription>): string {
+/** Generates error description for {@link SubstitutionErrorDescription}. */
+export function describeSubstitutionError(error: RO<SubstitutionErrorDescription>): string {
   switch (error.errorType) {
     case SubstitutionErrorType.invalidIDs:
       return 'Ошибка в идентификаторах схем';
@@ -62,10 +62,10 @@ export function describeSubstitutionError(error: RO<ISubstitutionErrorDescriptio
   return 'UNKNOWN ERROR';
 }
 
-/** Retrieves label for {@link IOssItem}. */
-export function labelOssItem(item: RO<IOssItem>): string {
+/** Retrieves label for {@link OssItem}. */
+export function labelOssItem(item: RO<OssItem>): string {
   if (item.nodeType === NodeType.OPERATION) {
-    return `${(item as IOperation).alias}: ${item.title}`;
+    return `${(item as Operation).alias}: ${item.title}`;
   } else {
     return `Блок: ${item.title}`;
   }

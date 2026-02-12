@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { globalIDs } from '@/utils/constants';
 
 import { colorBgBadge, colorFgCstStatus } from '../colors';
-import { type IConstituenta } from '../models/rsform';
+import { type Constituenta } from '../models/rsform';
 import { useCstTooltipStore } from '../stores/cst-tooltip';
 
 interface BadgeConstituentaProps {
@@ -13,7 +13,7 @@ interface BadgeConstituentaProps {
   prefixID?: string;
 
   /** Constituenta to display. */
-  value: IConstituenta;
+  value: Constituenta;
 }
 
 /**

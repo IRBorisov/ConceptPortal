@@ -8,13 +8,13 @@ import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { hintMsg } from '@/utils/labels';
 
-import { type ICreateVersionDTO, type IVersionInfo, schemaCreateVersion } from '../backend/types';
+import { type CreateVersionDTO, schemaCreateVersion, type VersionInfo } from '../backend/types';
 import { useCreateVersion } from '../backend/use-create-version';
 import { nextVersion } from '../models/library-api';
 
 export interface DlgCreateVersionProps {
   itemID: number;
-  versions: IVersionInfo[];
+  versions: VersionInfo[];
   onCreate: (newVersion: number) => void;
   selected: number[];
   totalCount: number;
@@ -31,7 +31,7 @@ export function DlgCreateVersion() {
     handleSubmit,
     control,
     formState: { errors }
-  } = useForm<ICreateVersionDTO>({
+  } = useForm<CreateVersionDTO>({
     resolver: zodResolver(schemaCreateVersion),
     defaultValues: {
       version: versions.length > 0 ? nextVersion(versions[versions.length - 1].version) : '1.0.0',
@@ -51,7 +51,7 @@ export function DlgCreateVersion() {
     }
   })();
 
-  function onSubmit(data: ICreateVersionDTO) {
+  function onSubmit(data: CreateVersionDTO) {
     return versionCreate({ itemID, data }).then(onCreate);
   }
 

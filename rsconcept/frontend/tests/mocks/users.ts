@@ -1,14 +1,14 @@
 import { type Page } from '@playwright/test';
 
 import {
-  type IUpdateProfileDTO,
-  type IUserInfo,
-  type IUserProfile,
-  type IUserSignupDTO
+  type UpdateProfileDTO,
+  type UserInfo,
+  type UserProfile,
+  type UserSignupDTO
 } from '../../src/features/users/backend/types';
 import { BACKEND_URL } from './constants';
 
-const dataActiveUsers: IUserInfo[] = [
+const dataActiveUsers: UserInfo[] = [
   {
     id: 1,
     first_name: 'Admin',
@@ -21,7 +21,7 @@ const dataActiveUsers: IUserInfo[] = [
   }
 ];
 
-let dataUserProfile: IUserProfile = {
+let dataUserProfile: UserProfile = {
   id: 1,
   username: 'admin',
   email: 'admin@example.com',
@@ -43,7 +43,7 @@ export async function setupUserProfile(page: Page) {
 
 export async function setupUserSignup(page: Page) {
   await page.route(`${BACKEND_URL}/users/api/signup`, async route => {
-    const data = route.request().postDataJSON() as IUserSignupDTO;
+    const data = route.request().postDataJSON() as UserSignupDTO;
     const newID = dataActiveUsers.length + 1;
     dataActiveUsers.push({
       id: newID,
@@ -65,7 +65,7 @@ export async function setupUserProfileUpdate(page: Page) {
   await page.route(`${BACKEND_URL}/users/api/profile`, async route => {
     dataUserProfile = {
       ...dataUserProfile,
-      ...(route.request().postDataJSON() as IUpdateProfileDTO)
+      ...(route.request().postDataJSON() as UpdateProfileDTO)
     };
     await route.fulfill({ json: dataUserProfile });
   });

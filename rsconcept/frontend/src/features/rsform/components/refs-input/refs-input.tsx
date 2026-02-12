@@ -23,7 +23,7 @@ import { withPreventDefault } from '@/utils/utils';
 import { type IReferenceInputState } from '../../dialogs/dlg-edit-reference/dlg-edit-reference';
 import { ReferenceType } from '../../models/language';
 import { referenceToString } from '../../models/language-api';
-import { type IRSForm } from '../../models/rsform';
+import { type RSForm } from '../../models/rsform';
 
 import { RefEntity } from './parse/parser.terms';
 import { refsNavigation } from './click-navigation';
@@ -75,7 +75,7 @@ interface RefsInputInputProps
   resolved: string;
   onChange: (newValue: string) => void;
 
-  schema: IRSForm;
+  schema: RSForm;
   onOpenEdit?: (cstID: number) => void;
 
   label?: string;

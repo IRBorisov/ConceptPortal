@@ -4,7 +4,7 @@ import { useRef } from 'react';
 
 import { Dropdown } from '@/components/dropdown';
 
-import { type IOssItem, NodeType } from '../../../../models/oss';
+import { NodeType, type OssItem } from '../../../../models/oss';
 
 import { MenuBlock } from './menu-block';
 import { MenuOperation } from './menu-operation';
@@ -14,7 +14,7 @@ const MENU_WIDTH = 200;
 const MENU_HEIGHT = 200;
 
 export interface ContextMenuData {
-  item: IOssItem | null;
+  item: OssItem | null;
   cursorX: number;
   cursorY: number;
 }

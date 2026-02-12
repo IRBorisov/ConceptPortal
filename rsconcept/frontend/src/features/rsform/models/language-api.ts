@@ -3,21 +3,21 @@
  */
 
 import {
+  type EntityReference,
   Grammeme,
   GrammemeGroups,
-  type IEntityReference,
   type IReference,
-  type ISyntacticReference,
-  type IWordForm,
   NounGrams,
   ReferenceType,
-  VerbGrams
+  type SyntacticReference,
+  VerbGrams,
+  type WordForm
 } from './language';
 
 /**
- * Equality comparator for {@link IWordForm}. Compares a set of Grammemes attached to wordforms
+ * Equality comparator for {@link WordForm}. Compares a set of Grammemes attached to wordforms
  */
-export function wordFormEquals(left: IWordForm, right: IWordForm): boolean {
+export function wordFormEquals(left: WordForm, right: WordForm): boolean {
   if (left.grams.length !== right.grams.length) {
     return false;
   }
@@ -93,11 +93,11 @@ export function getCompatibleGrams(input: Grammeme[]): Grammeme[] {
 }
 
 /**
- * Extracts {@link IEntityReference} from string representation.
+ * Extracts {@link EntityReference} from string representation.
  *
  * @param text - Reference text in a valid pattern. Must fit format '\@\{GLOBAL_ID|GRAMMEMES\}'
  */
-export function parseEntityReference(text: string): IEntityReference {
+export function parseEntityReference(text: string): EntityReference {
   const blocks = text.slice(2, text.length - 1).split('|');
   return {
     entity: blocks[0].trim(),
@@ -106,11 +106,11 @@ export function parseEntityReference(text: string): IEntityReference {
 }
 
 /**
- * Extracts {@link ISyntacticReference} from string representation.
+ * Extracts {@link SyntacticReference} from string representation.
  *
  * @param text - Reference text in a valid pattern. Must fit format '\@\{OFFSET|NOMINAL_FORM\}'
  */
-export function parseSyntacticReference(text: string): ISyntacticReference {
+export function parseSyntacticReference(text: string): SyntacticReference {
   const blocks = text.slice(2, text.length - 1).split('|');
   return {
     offset: Number(blocks[0].trim()),
@@ -124,11 +124,11 @@ export function parseSyntacticReference(text: string): ISyntacticReference {
 export function referenceToString(ref: IReference): string {
   switch (ref.type) {
     case ReferenceType.ENTITY: {
-      const entity = ref.data as IEntityReference;
+      const entity = ref.data as EntityReference;
       return `@{${entity.entity}|${entity.form}}`;
     }
     case ReferenceType.SYNTACTIC: {
-      const syntactic = ref.data as ISyntacticReference;
+      const syntactic = ref.data as SyntacticReference;
       return `@{${syntactic.offset}|${syntactic.nominal}}`;
     }
   }

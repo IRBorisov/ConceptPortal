@@ -1,6 +1,6 @@
 'use client';
 
-import { urls, useConceptNavigation } from '@/app';
+import { useConceptNavigation } from '@/app';
 import { useAuthSuspense } from '@/features/auth';
 import { useRoleStore, UserRole } from '@/features/users';
 
@@ -45,7 +45,11 @@ export function MenuMain() {
   }
 
   function handleCreateNew() {
-    router.push({ path: urls.create_schema });
+    router.gotoNewItem();
+  }
+
+  function handleOpenLibrary() {
+    router.gotoLibrary();
   }
 
   function handleShowQR() {
@@ -98,7 +102,7 @@ export function MenuMain() {
         <DropdownButton
           text='Библиотека'
           icon={<IconLibrary size='1rem' className='icon-primary' />}
-          onClick={() => router.push({ path: urls.library })}
+          onClick={handleOpenLibrary}
         />
       </Dropdown>
     </div>

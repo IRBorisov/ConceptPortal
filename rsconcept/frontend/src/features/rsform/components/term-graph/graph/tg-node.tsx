@@ -9,7 +9,7 @@ import { APP_COLORS } from '@/styling/colors';
 import { globalIDs } from '@/utils/constants';
 
 import { colorBgGraphNode } from '../../../colors';
-import { type IConstituenta } from '../../../models/rsform';
+import { type Constituenta } from '../../../models/rsform';
 import { isBasicConcept } from '../../../models/rsform-api';
 import { useTermGraphStore, useTGConnectionStore } from '../../../stores/term-graph';
 
@@ -90,7 +90,7 @@ export function TGNodeComponent(node: NodeProps<TGNode>) {
 }
 
 // ====== INTERNAL ======
-function describeCstNode(cst: IConstituenta) {
+function describeCstNode(cst: Constituenta) {
   const contents = isBasicConcept(cst.cst_type)
     ? cst.convention
     : cst.definition_resolved || cst.definition_formal || cst.convention;

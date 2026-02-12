@@ -47,10 +47,12 @@ export function ErrorFallback() {
   }
 
   return (
-    <div className='flex flex-col gap-3 my-3 items-center antialiased' role='alert'>
+    <div className='flex flex-col gap-3 my-3 mx-6 antialiased' role='alert'>
       <h1 className='my-2'>Что-то пошло не так!</h1>
-      <Button onClick={resetErrorBoundary} text='Вернуться на главную' />
-      <InfoError error={error as Error} />
+      <Button onClick={resetErrorBoundary} className='w-fit mx-auto' text='Вернуться на главную' />
+      <div className='max-w-[100vws] overflow-auto'>
+        <InfoError error={error as Error} />
+      </div>
     </div>
   );
 }

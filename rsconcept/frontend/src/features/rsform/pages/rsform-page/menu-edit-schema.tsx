@@ -1,6 +1,6 @@
 'use client';
 
-import { urls, useConceptNavigation } from '@/app';
+import { useConceptNavigation } from '@/app';
 import { useAuthSuspense } from '@/features/auth';
 
 import { Divider } from '@/components/container';
@@ -24,7 +24,7 @@ import { useMutatingRSForm } from '../../backend/use-mutating-rsform';
 import { useProduceStructure } from '../../backend/use-produce-structure';
 import { useResetAliases } from '../../backend/use-reset-aliases';
 import { useRestoreOrder } from '../../backend/use-restore-order';
-import { type IConstituenta } from '../../models/rsform';
+import { type Constituenta } from '../../models/rsform';
 import { canProduceStructure } from '../../models/rsform-api';
 
 import { useRSEdit } from './rsedit-context';
@@ -84,7 +84,7 @@ export function MenuEditSchema() {
     promptTemplate();
   }
 
-  function handleProduceStructure(targetCst: IConstituenta | null) {
+  function handleProduceStructure(targetCst: Constituenta | null) {
     hideMenu();
     if (!targetCst) {
       return;
@@ -125,7 +125,7 @@ export function MenuEditSchema() {
         hideTitle={isMenuOpen}
         className='h-full px-3 bg-transparent'
         icon={<IconArchive size='1.25rem' className='icon-primary' />}
-        onClick={event => router.push({ path: urls.schema(schema.id), newTab: event.ctrlKey || event.metaKey })}
+        onClick={event => router.gotoRSForm(schema.id, undefined, event.ctrlKey || event.metaKey)}
       />
     );
   }

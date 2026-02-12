@@ -10,7 +10,7 @@ import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useDialogsStore } from '@/stores/dialogs';
 import { hintMsg } from '@/utils/labels';
 
-import { type IInlineSynthesisDTO, schemaInlineSynthesis } from '../../backend/types';
+import { type InlineSynthesisDTO, schemaInlineSynthesis } from '../../backend/types';
 import { useInlineSynthesis } from '../../backend/use-inline-synthesis';
 import { useRSFormSuspense } from '../../backend/use-rsform';
 
@@ -36,7 +36,7 @@ export function DlgInlineSynthesis() {
   const { inlineSynthesis } = useInlineSynthesis();
   const { schema: receiver } = useRSFormSuspense({ itemID: receiverID });
 
-  const methods = useForm<IInlineSynthesisDTO>({
+  const methods = useForm<InlineSynthesisDTO>({
     resolver: zodResolver(schemaInlineSynthesis),
     defaultValues: {
       receiver: receiver.id,
@@ -49,7 +49,7 @@ export function DlgInlineSynthesis() {
   const sourceID = useWatch({ control: methods.control, name: 'source' });
   const canSubmit = methods.formState.isValid && sourceID !== null;
 
-  function onSubmit(data: IInlineSynthesisDTO) {
+  function onSubmit(data: InlineSynthesisDTO) {
     return inlineSynthesis(data).then(onSynthesis);
   }
 

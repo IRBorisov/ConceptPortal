@@ -9,50 +9,50 @@ import { DataTable, type IConditionalStyle } from '@/components/data-table';
 import { IconReset } from '@/components/icons';
 import { NoData } from '@/components/view';
 
-import { type ICreateConstituentaDTO } from '../../backend/types';
+import { type CreateConstituentaDTO } from '../../backend/types';
 import { PickConstituenta } from '../../components/pick-constituenta';
 import { RSInput } from '../../components/rs-input';
-import { type IArgumentValue, type IConstituenta, type IRSForm } from '../../models/rsform';
+import { type ArgumentValue, type Constituenta, type RSForm } from '../../models/rsform';
 import { isFunctional, isLogical } from '../../models/rsform-api';
 
 import { useTemplateContext } from './template-context';
 
-const argumentsHelper = createColumnHelper<IArgumentValue>();
+const argumentsHelper = createColumnHelper<ArgumentValue>();
 
 interface TabArgumentsProps {
-  schema: IRSForm;
+  schema: RSForm;
 }
 
 export function TabArguments({ schema }: TabArgumentsProps) {
-  const { control } = useFormContext<ICreateConstituentaDTO>();
+  const { control } = useFormContext<CreateConstituentaDTO>();
   const { args, onChangeArguments } = useTemplateContext();
   const definition = useWatch({ control, name: 'definition_formal' });
 
-  const [selectedCst, setSelectedCst] = useState<IConstituenta | null>(null);
-  const [selectedArgument, setSelectedArgument] = useState<IArgumentValue | null>(args.length > 0 ? args[0] : null);
+  const [selectedCst, setSelectedCst] = useState<Constituenta | null>(null);
+  const [selectedArgument, setSelectedArgument] = useState<ArgumentValue | null>(args.length > 0 ? args[0] : null);
 
-  function handleSelectArgument(arg: IArgumentValue) {
+  function handleSelectArgument(arg: ArgumentValue) {
     setSelectedArgument(arg);
   }
 
-  function handleSelectConstituenta(cst: IConstituenta) {
+  function handleSelectConstituenta(cst: Constituenta) {
     setSelectedCst(cst);
     handleAssignArgument(selectedArgument!, cst.alias);
   }
 
-  function handleClearArgument(target: IArgumentValue) {
+  function handleClearArgument(target: ArgumentValue) {
     const newArg = { ...target, value: '' };
     onChangeArguments(args.map(arg => (arg.alias !== target.alias ? arg : newArg)));
     setSelectedArgument(newArg);
   }
 
-  function handleAssignArgument(target: IArgumentValue, argValue: string) {
+  function handleAssignArgument(target: ArgumentValue, argValue: string) {
     const newArg = { ...target, value: argValue };
     onChangeArguments(args.map(arg => (arg.alias !== target.alias ? arg : newArg)));
     setSelectedArgument(newArg);
   }
 
-  function cstFilter(cst: IConstituenta) {
+  function cstFilter(cst: Constituenta) {
     return cst.id === selectedCst?.id || (!isFunctional(cst.cst_type) && !isLogical(cst.cst_type));
   }
 
@@ -99,9 +99,9 @@ export function TabArguments({ schema }: TabArgumentsProps) {
     })
   ];
 
-  const conditionalRowStyles: IConditionalStyle<IArgumentValue>[] = [
+  const conditionalRowStyles: IConditionalStyle<ArgumentValue>[] = [
     {
-      when: (arg: IArgumentValue) => arg.alias === selectedArgument?.alias,
+      when: (arg: ArgumentValue) => arg.alias === selectedArgument?.alias,
       className: 'bg-selected'
     }
   ];

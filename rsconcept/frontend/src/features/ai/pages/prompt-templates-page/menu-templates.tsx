@@ -1,12 +1,10 @@
 'use client';
 
-import { urls, useConceptNavigation } from '@/app';
+import { useConceptNavigation } from '@/app';
 
 import { MiniButton } from '@/components/control';
 import { IconNewItem } from '@/components/icons';
 import { useDialogsStore } from '@/stores/dialogs';
-
-import { PromptTabID } from './templates-tabs';
 
 export function MenuTemplates() {
   const router = useConceptNavigation();
@@ -14,7 +12,7 @@ export function MenuTemplates() {
 
   function handleNewTemplate() {
     showCreatePromptTemplate({
-      onCreate: data => router.push({ path: urls.prompt_template(data.id, PromptTabID.EDIT) })
+      onCreate: data => router.gotoPromptEdit(data.id)
     });
   }
 

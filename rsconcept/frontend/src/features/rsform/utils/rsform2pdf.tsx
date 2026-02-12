@@ -8,25 +8,25 @@ import { external_urls } from '@/utils/constants';
 import { type RO } from '@/utils/meta';
 
 import { pdfs } from '../../../components/pdf/pdf-styles';
-import { type IConstituenta, type IRSForm } from '../models/rsform';
+import { type Constituenta, type RSForm } from '../models/rsform';
 
 import { addSpaces, addSpacesTypification, hyphenateCyrillic } from './pdf-utils';
 
 /** Renders a PDF file with a list of Constituenta.
  * WARNING! Large library load, use lazy loading.
  */
-export function cstListToFile(data: RO<IConstituenta[]>): Promise<Blob> {
+export function cstListToFile(data: RO<Constituenta[]>): Promise<Blob> {
   return pdf(<CstListDocument data={data} />).toBlob();
 }
 
 /** Renders a PDF file with target Schema.
  * WARNING! Large library load, use lazy loading.
  */
-export function createSchemaFile(data: IRSForm): Promise<Blob> {
+export function createSchemaFile(data: RSForm): Promise<Blob> {
   return pdf(<SchemaDocument data={data} />).toBlob();
 }
 
-function CstListDocument({ data }: { data: RO<IConstituenta[]>; }) {
+function CstListDocument({ data }: { data: RO<Constituenta[]>; }) {
   return (
     <CDocument>
       <CstTable data={data} />
@@ -39,7 +39,7 @@ function CstListDocument({ data }: { data: RO<IConstituenta[]>; }) {
   );
 }
 
-function SchemaDocument({ data }: { data: IRSForm; }) {
+function SchemaDocument({ data }: { data: RSForm; }) {
   return (
     <CDocument>
       <SchemaTitle schema={data} />
@@ -50,7 +50,7 @@ function SchemaDocument({ data }: { data: IRSForm; }) {
 }
 
 // ======== Internal components ========
-function SchemaTitle({ schema }: { schema: IRSForm; }) {
+function SchemaTitle({ schema }: { schema: RSForm; }) {
   const url = `${external_urls.portal}${urls.schema(schema.id)}`;
   return (
     <View style={{ marginBottom: 10 }}>
@@ -66,7 +66,7 @@ function SchemaTitle({ schema }: { schema: IRSForm; }) {
   );
 }
 
-function SchemaFooter({ schema }: { schema: IRSForm; }) {
+function SchemaFooter({ schema }: { schema: RSForm; }) {
   return (
     <View fixed style={pdfs.footer}>
       <Text>КС {schema.alias}</Text>
@@ -75,7 +75,7 @@ function SchemaFooter({ schema }: { schema: IRSForm; }) {
   );
 }
 
-function CstTable({ data }: { data: RO<IConstituenta[]>; }) {
+function CstTable({ data }: { data: RO<Constituenta[]>; }) {
   return (
     <>
       <View style={{ flex: 1 }}>
@@ -113,7 +113,7 @@ function CstTable({ data }: { data: RO<IConstituenta[]>; }) {
   );
 }
 
-function getCommentColumnText(cst: RO<IConstituenta>) {
+function getCommentColumnText(cst: RO<Constituenta>) {
   let result = cst.definition_resolved;
   if (cst.convention) {
     if (result) {

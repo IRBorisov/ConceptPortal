@@ -10,7 +10,7 @@ import { NoData } from '@/components/view';
 import { Graph } from '@/models/graph';
 
 import { describeConstituenta } from '../labels';
-import { type IConstituenta, type IRSForm } from '../models/rsform';
+import { type Constituenta, type RSForm } from '../models/rsform';
 import { isBasicConcept, matchConstituenta } from '../models/rsform-api';
 import { CstMatchMode } from '../stores/cst-search';
 
@@ -22,14 +22,14 @@ interface PickMultiConstituentaProps extends Styling {
   value: number[];
   onChange: (newValue: number[]) => void;
 
-  schema: IRSForm;
-  items: IConstituenta[];
+  schema: RSForm;
+  items: Constituenta[];
 
   rows?: number;
   noBorder?: boolean;
 }
 
-const columnHelper = createColumnHelper<IConstituenta>();
+const columnHelper = createColumnHelper<Constituenta>();
 
 export function PickMultiConstituenta({
   id,

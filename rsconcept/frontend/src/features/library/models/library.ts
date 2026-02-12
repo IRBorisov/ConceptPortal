@@ -2,6 +2,8 @@
  * Module: Models for LibraryItem.
  */
 
+import { type LibraryItemType } from '../backend/types';
+
 /**
  * Represents valid location headers.
  */
@@ -16,9 +18,9 @@ export type LocationHead = (typeof LocationHead)[keyof typeof LocationHead];
 export const BASIC_SCHEMAS = '/L/Базовые';
 
 /**
- * Represents {@link ILibraryItem} minimal reference data.
+ * Represents {@link LibraryItem} minimal reference data.
  */
-export interface ILibraryItemReference {
+export interface LibraryItemReference {
   id: number;
   alias: string;
 }
@@ -26,7 +28,7 @@ export interface ILibraryItemReference {
 /**
  * Represents Library filter parameters.
  */
-export interface ILibraryFilter {
+export interface LibraryFilter {
   query: string;
 
   folderMode: boolean;
@@ -35,6 +37,7 @@ export interface ILibraryFilter {
   head: LocationHead | null;
   location: string;
 
+  itemType: LibraryItemType | null;
   isVisible: boolean | null;
   isOwned: boolean | null;
   isEditor: boolean | null;

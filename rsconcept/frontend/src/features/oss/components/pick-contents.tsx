@@ -11,20 +11,20 @@ import { cn } from '@/components/utils';
 import { NoData } from '@/components/view';
 
 import { labelOssItem } from '../labels';
-import { type IOperationSchema, type IOssItem, NodeType } from '../models/oss';
+import { NodeType, type OperationSchema, type OssItem } from '../models/oss';
 
 const SELECTION_CLEAR_TIMEOUT = 1000;
 
 interface PickContentsProps extends Styling {
-  value: IOssItem[];
-  onChange: (newValue: IOssItem[]) => void;
-  schema: IOperationSchema;
+  value: OssItem[];
+  onChange: (newValue: OssItem[]) => void;
+  schema: OperationSchema;
   rows?: number;
-  exclude?: IOssItem[];
+  exclude?: OssItem[];
   disallowBlocks?: boolean;
 }
 
-const columnHelper = createColumnHelper<IOssItem>();
+const columnHelper = createColumnHelper<OssItem>();
 
 export function PickContents({
   rows,
@@ -36,17 +36,17 @@ export function PickContents({
   className,
   ...restProps
 }: PickContentsProps) {
-  const [lastSelected, setLastSelected] = useState<IOssItem | null>(null);
-  const items: IOssItem[] = [
+  const [lastSelected, setLastSelected] = useState<OssItem | null>(null);
+  const items: OssItem[] = [
     ...(disallowBlocks ? [] : schema.blocks.filter(item => !value.includes(item) && !exclude?.includes(item))),
     ...schema.operations.filter(item => !value.includes(item) && !exclude?.includes(item))
   ];
 
-  function handleDelete(target: IOssItem) {
+  function handleDelete(target: OssItem) {
     onChange(value.filter(item => item !== target));
   }
 
-  function handleSelect(target: IOssItem | null) {
+  function handleSelect(target: OssItem | null) {
     if (target) {
       setLastSelected(target);
       onChange([...value, target]);
@@ -54,7 +54,7 @@ export function PickContents({
     }
   }
 
-  function handleMoveUp(target: IOssItem) {
+  function handleMoveUp(target: OssItem) {
     const index = value.indexOf(target);
     if (index > 0) {
       const newSelected = [...value];
@@ -64,7 +64,7 @@ export function PickContents({
     }
   }
 
-  function handleMoveDown(target: IOssItem) {
+  function handleMoveDown(target: OssItem) {
     const index = value.indexOf(target);
     if (index < value.length - 1) {
       const newSelected = [...value];

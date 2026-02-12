@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { KEYS } from '@/backend/configuration';
 
 import { ossApi } from './api';
-import { type ITargetOperation } from './types';
+import { type TargetOperation } from './types';
 
 export const useExecuteOperation = () => {
   const client = useQueryClient();
@@ -20,6 +20,6 @@ export const useExecuteOperation = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    executeOperation: (data: { itemID: number; data: ITargetOperation }) => mutation.mutateAsync(data)
+    executeOperation: (data: { itemID: number; data: TargetOperation; }) => mutation.mutateAsync(data)
   };
 };

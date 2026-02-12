@@ -12,14 +12,14 @@ import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { hintMsg } from '@/utils/labels';
 
-import { type ISubstitutionsDTO, schemaSubstitutions } from '../backend/types';
+import { schemaSubstitutions, type SubstitutionsDTO } from '../backend/types';
 import { useRSFormSuspense } from '../backend/use-rsform';
 import { useSubstituteConstituents } from '../backend/use-substitute-constituents';
 import { PickSubstitutions } from '../components/pick-substitutions';
 
 export interface DlgSubstituteCstProps {
   schemaID: number;
-  onSubstitute: (data: ISubstitutionsDTO) => void;
+  onSubstitute: (data: SubstitutionsDTO) => void;
 }
 
 export function DlgSubstituteCst() {
@@ -31,7 +31,7 @@ export function DlgSubstituteCst() {
     handleSubmit,
     control,
     formState: { errors, isValid }
-  } = useForm<ISubstitutionsDTO>({
+  } = useForm<SubstitutionsDTO>({
     resolver: zodResolver(schemaSubstitutions),
     defaultValues: {
       substitutions: []
@@ -43,7 +43,7 @@ export function DlgSubstituteCst() {
   const validator = new SubstitutionValidator([schema], substitutions);
   const isCorrect = validator.validate();
 
-  function onSubmit(data: ISubstitutionsDTO) {
+  function onSubmit(data: SubstitutionsDTO) {
     return cstSubstitute({ itemID: schema.id, data: data }).then(() => onSubstitute(data));
   }
 

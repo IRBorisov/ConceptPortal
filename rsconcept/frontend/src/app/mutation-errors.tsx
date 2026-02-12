@@ -20,12 +20,12 @@ export function MutationErrors() {
   hideDialog();
 
   return (
-    <div className='cc-modal-wrapper'>
+    <div className='cc-modal-wrapper '>
       <ModalBackdrop onHide={resetErrors} />
       <div
         className={clsx(
-          'z-pop', //
-          'flex flex-col px-10 py-3 items-center',
+          'z-pop max-h-[calc(100svh-8rem)] max-w-svw xs:max-w-[calc(100svw-4rem)]',
+          'flex flex-col px-6 py-3 items-center',
           'border rounded-xl bg-background'
         )}
         role='alertdialog'
@@ -33,15 +33,15 @@ export function MutationErrors() {
         <h1 className='py-2 select-none'>Ошибка при обработке</h1>
         <div
           className={clsx(
-            'max-h-[calc(100svh-8rem)] max-w-[calc(100svw-2rem)]',
-            'px-3 flex flex-col',
+            'max-h-full max-w-full',
+            'flex flex-col',
             'text-destructive text-sm font-semibold select-text',
             'overflow-auto'
           )}
         >
           <DescribeError error={mutationErrors[0]} />
         </div>
-        <Button onClick={resetErrors} className='w-fit' text='Закрыть' />
+        <Button onClick={resetErrors} className='w-fit mt-3' text='Закрыть' />
       </div>
     </div>
   );

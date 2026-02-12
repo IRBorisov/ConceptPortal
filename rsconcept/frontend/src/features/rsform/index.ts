@@ -1,8 +1,8 @@
 export {
-  type ISubstituteConstituents as ICstSubstitute,
-  type IRSFormDTO,
-  type IVersionCreatedResponse,
+  type CstSubstitute,
+  type RSFormDTO,
   schemaRSForm,
-  schemaVersionCreatedResponse
+  schemaVersionCreatedResponse,
+  type VersionCreatedResponse
 } from './backend/types';
-export { CstClass, CstType, CstStatus as ExpressionStatus, type IConstituenta, type IRSForm } from './models/rsform';
+export { type Constituenta, CstClass, CstStatus, CstType, type RSForm } from './models/rsform';

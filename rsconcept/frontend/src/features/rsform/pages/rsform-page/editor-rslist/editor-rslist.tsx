@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import clsx from 'clsx';
 
+import { useConceptNavigation } from '@/app';
 import { MiniSelectorOSS } from '@/features/library/components/mini-selector-oss';
 import { CstType } from '@/features/rsform/models/rsform';
 
@@ -21,6 +22,7 @@ import { TableRSList } from './table-rslist';
 import { ToolbarRSList } from './toolbar-rslist';
 
 export function EditorRSList() {
+  const router = useConceptNavigation();
   const isProcessing = useMutatingRSForm();
   const {
     isContentEditable,
@@ -34,8 +36,6 @@ export function EditorRSList() {
     moveDown,
     cloneCst,
     promptDeleteSelected,
-    navigateCst,
-    navigateOss
   } = useRSEdit();
 
   const [filterText, setFilterText] = useState('');
@@ -127,7 +127,7 @@ export function EditorRSList() {
         {!isContentEditable && schema.oss.length > 0 ? (
           <MiniSelectorOSS
             items={schema.oss}
-            onSelect={(event, value) => navigateOss(value.id, event.ctrlKey || event.metaKey)}
+            onSelect={(event, value) => router.gotoOss(value.id, event.ctrlKey || event.metaKey)}
           />
         ) : null}
         <SearchBar
@@ -153,7 +153,7 @@ export function EditorRSList() {
         enableSelection={isContentEditable}
         selected={rowSelection}
         setSelected={handleRowSelection}
-        onEdit={navigateCst}
+        onEdit={cstID => router.gotoEditActive(cstID)}
         onCreateNew={() => void promptCreateCst()}
       />
     </div>

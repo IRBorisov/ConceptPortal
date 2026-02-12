@@ -10,7 +10,7 @@ import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { hintMsg } from '@/utils/labels';
 
-import { type ICreateSchemaDTO, type IOssLayout, schemaCreateSchema } from '../backend/types';
+import { type CreateSchemaDTO, type OssLayout, schemaCreateSchema } from '../backend/types';
 import { useCreateSchema } from '../backend/use-create-schema';
 import { useOssSuspense } from '../backend/use-oss';
 import { SelectParent } from '../components/select-parent';
@@ -18,7 +18,7 @@ import { LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '../m
 
 export interface DlgCreateSchemaProps {
   ossID: number;
-  layout: IOssLayout;
+  layout: OssLayout;
   defaultX: number;
   defaultY: number;
   initialParent: number | null;
@@ -45,7 +45,7 @@ export function DlgCreateSchema() {
     register,
     handleSubmit,
     formState: { errors, isValid }
-  } = useForm<ICreateSchemaDTO>({
+  } = useForm<CreateSchemaDTO>({
     resolver: zodResolver(schemaCreateSchema),
     defaultValues: {
       item_data: {
@@ -77,7 +77,7 @@ export function DlgCreateSchema() {
     }
   })();
 
-  function onSubmit(data: ICreateSchemaDTO) {
+  function onSubmit(data: CreateSchemaDTO) {
     data.position = manager.newOperationPosition(data);
     data.layout = manager.layout;
     void createSchema({ itemID: manager.oss.id, data: data }).then(response => onCreate?.(response.new_operation));
