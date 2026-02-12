@@ -47,10 +47,17 @@ export function varSchema(schema: RSForm): string {
     result += `\n${item.alias} - "${labelType(item.analysis.type)}" - "${item.term_resolved}" - "${item.definition_formal
       }" - "${item.definition_resolved}" - "${item.convention}"`;
   });
-  result += `\n${stringifyCrucial(schema.items.filter(cst => cst.crucial))}`;
-  result += '\n\nСвязи "атрибутирован":';
+
+  const crucial = schema.items.filter(cst => cst.crucial);
+  if (crucial.length > 0) {
+    result += `\n${stringifyCrucial(schema.items.filter(cst => cst.crucial))}`;
+  }
+
   const attributionGraph = stringifyGraph(schema.attribution_graph, schema);
-  result += attributionGraph ? attributionGraph : ' отсутствуют';
+  if (attributionGraph) {
+    result += '\n\nСвязи "атрибутирования":';
+    result += attributionGraph ? attributionGraph : ' отсутствуют';
+  }
   return result;
 }
 
