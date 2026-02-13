@@ -57,6 +57,10 @@ export class RSLangAnalyzer {
     }
   }
 
+  public getType(alias: string): ExpressionType | null {
+    return this.typeContext.get(alias) ?? null;
+  }
+
   public checkFast(expression: string, options?: AnalysisOptions): AnalysisBase {
     if (expression.length === 0) {
       return { success: false, type: null, valueClass: null };

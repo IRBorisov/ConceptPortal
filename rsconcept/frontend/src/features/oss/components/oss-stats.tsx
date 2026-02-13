@@ -22,7 +22,7 @@ export function OssStats({ className, stats }: OssStatsProps) {
     <aside className={cn('grid grid-cols-3 gap-1 justify-items-end h-min select-none', className)}>
       <div id='count_operations' className='w-fit flex gap-3 hover:cursor-default col-span-2'>
         <span>Всего</span>
-        <span>{stats.count_all}</span>
+        <span className='font-math'>{stats.count_all}</span>
       </div>
       <ValueStats
         id='count_block' //

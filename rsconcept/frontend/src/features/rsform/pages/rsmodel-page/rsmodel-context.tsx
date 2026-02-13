@@ -2,16 +2,15 @@
 
 import { createContext, use } from 'react';
 
-import { type RO } from '@/utils/meta';
-
-import { type RSModelDTO } from '../../backend/types';
+import { type RSModel } from '../../models/rsmodel';
 
 interface IRSModelContext {
-  model: RO<RSModelDTO>;
+  model: RSModel;
+  isMutable: boolean;
 }
 
 export const RSModelContext = createContext<IRSModelContext | null>(null);
-export const useRSModel = () => {
+export const useRSModelEdit = () => {
   const context = use(RSModelContext);
   if (context === null) {
     throw new Error('useRSModel has to be used within <RSModelState>');

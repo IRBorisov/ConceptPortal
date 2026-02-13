@@ -14,9 +14,7 @@ import {
   type WordForm
 } from './language';
 
-/**
- * Equality comparator for {@link WordForm}. Compares a set of Grammemes attached to wordforms
- */
+/** Equality comparator for {@link WordForm}. Compares a set of Grammemes attached to wordforms. */
 export function wordFormEquals(left: WordForm, right: WordForm): boolean {
   if (left.grams.length !== right.grams.length) {
     return false;
@@ -29,9 +27,7 @@ export function wordFormEquals(left: WordForm, right: WordForm): boolean {
   return true;
 }
 
-/**
- * Compares {@link Grammeme} based on Grammeme enum and alpha order for strings.
- */
+/** Compares {@link Grammeme} based on Grammeme enum and alpha order for strings. */
 export function grammemeCompare(left: Grammeme, right: Grammeme): number {
   const indexLeft = Object.values(Grammeme).findIndex(gram => gram === left);
   const indexRight = Object.values(Grammeme).findIndex(gram => gram === right);
@@ -46,27 +42,22 @@ export function grammemeCompare(left: Grammeme, right: Grammeme): number {
   }
 }
 
-/**
- * Transforms {@link Grammeme} enumeration to {@link Grammeme}.
- */
+/** Transforms {@link Grammeme} enumeration to {@link Grammeme}. */
 export function parseGrammemes(termForm: string): Grammeme[] {
   const result: Grammeme[] = [];
-  const chunks = termForm.split(',');
-  chunks.forEach(chunk => {
+  for (const chunk of termForm.split(',')) {
     const gram = chunk.trim();
     if (gram !== '') {
       result.push(gram as Grammeme);
     }
-  });
+  }
   return result.sort(grammemeCompare);
 }
 
-/**
- * Creates a list of compatible {@link Grammeme}s.
- */
+/** Creates a list of compatible {@link Grammeme}s. */
 export function getCompatibleGrams(input: Grammeme[]): Grammeme[] {
   let result: Grammeme[] = [];
-  input.forEach(gram => {
+  for (const gram of input) {
     if (!result.includes(gram)) {
       if (NounGrams.includes(gram)) {
         result.push(...NounGrams);
@@ -75,15 +66,15 @@ export function getCompatibleGrams(input: Grammeme[]): Grammeme[] {
         result.push(...VerbGrams);
       }
     }
-  });
+  }
 
-  input.forEach(gram =>
-    GrammemeGroups.forEach(group => {
+  for (const gram of input) {
+    for (const group of GrammemeGroups) {
       if (group.includes(gram)) {
         result = result.filter(item => !group.includes(item));
       }
-    })
-  );
+    }
+  }
 
   if (result.length === 0) {
     return [...new Set<Grammeme>([...VerbGrams, ...NounGrams])];
@@ -118,9 +109,7 @@ export function parseSyntacticReference(text: string): SyntacticReference {
   };
 }
 
-/**
- * Transforms {@link IReference} to string representation.
- */
+/** Transforms {@link IReference} to string representation. */
 export function referenceToString(ref: IReference): string {
   switch (ref.type) {
     case ReferenceType.ENTITY: {

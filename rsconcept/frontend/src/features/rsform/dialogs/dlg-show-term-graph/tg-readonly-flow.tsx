@@ -77,8 +77,8 @@ export function TGReadonlyFlow({ schema }: TGReadonlyFlowProps) {
     });
 
     const newEdges: Edge[] = [];
-    filteredGraph.nodes.forEach(source => {
-      source.outputs.forEach(target => {
+    for (const source of filteredGraph.nodes.values()) {
+      for (const target of source.outputs) {
         const edgeType = inferEdgeType(schema, source.id, target);
         const color = filter.graphType === 'full' ? colorGraphEdge(edgeType) : colorGraphEdge(filter.graphType);
         newEdges.push({
@@ -95,8 +95,8 @@ export function TGReadonlyFlow({ schema }: TGReadonlyFlowProps) {
             color: color
           }
         });
-      });
-    });
+      }
+    }
 
     applyLayout(newNodes, newEdges, !filter.noText);
 

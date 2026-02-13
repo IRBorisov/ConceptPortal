@@ -101,10 +101,9 @@ export default ({ mode }: { mode: string; }) => {
 function renderChunks(deps: Record<string, string>) {
   const chunks = {};
   Object.keys(deps).forEach(key => {
-    if (inlinePackages.includes(key)) {
-      return;
+    if (!inlinePackages.includes(key)) {
+      chunks[key] = [key];
     }
-    chunks[key] = [key];
   });
   return chunks;
 }

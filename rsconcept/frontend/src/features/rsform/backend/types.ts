@@ -126,7 +126,8 @@ const RecursiveArraySchema: z.ZodType<RecursiveArray> = z.lazy(() =>
 );
 
 export const schemaConstituentaData = z.strictObject({
-  cst_id: z.number(),
+  id: z.number(),
+  type: z.string(),
   value: z.union([
     z.record(z.number(), z.string()),
     RecursiveArraySchema
@@ -135,7 +136,7 @@ export const schemaConstituentaData = z.strictObject({
 
 export const schemaRSModel = schemaLibraryItem.extend({
   editors: z.array(z.number()),
-  schema: z.number(),
+  schema: schemaRSForm,
   items: z.array(schemaConstituentaData)
 });
 

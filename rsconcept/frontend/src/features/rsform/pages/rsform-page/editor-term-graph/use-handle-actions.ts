@@ -18,7 +18,7 @@ import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { useUpdateCrucial } from '../../../backend/use-update-crucial';
 import { isBasicConcept } from '../../../models/rsform-api';
 import { InteractionMode, useTermGraphStore, useTGConnectionStore } from '../../../stores/term-graph';
-import { useRSEdit } from '../rsedit-context';
+import { useRSFormEdit } from '../rsedit-context';
 
 /** Options for graph fit view. */
 export const fitViewOptions = { padding: 0.3, duration: PARAMETER.zoomDuration };
@@ -41,7 +41,7 @@ export function useHandleActions(graph: Graph<number>) {
     promptCreateCst,
     setFocus,
     promptDeleteSelected
-  } = useRSEdit();
+  } = useRSFormEdit();
 
   const mode = useTermGraphStore(state => state.mode);
 

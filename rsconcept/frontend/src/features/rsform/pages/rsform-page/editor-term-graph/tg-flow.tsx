@@ -36,7 +36,7 @@ import { SelectEdgeType } from '../../../components/term-graph/select-edge-type'
 import { ViewHidden } from '../../../components/term-graph/view-hidden';
 import { addAliasReference } from '../../../models/rsform-api';
 import { InteractionMode, TGEdgeType, useTermGraphStore, useTGConnectionStore } from '../../../stores/term-graph';
-import { useRSEdit } from '../rsedit-context';
+import { useRSFormEdit } from '../rsedit-context';
 
 import { ToolbarTermGraph } from './toolbar-term-graph';
 import { useFilteredGraph } from './use-filtered-graph';
@@ -80,7 +80,7 @@ export function TGFlow() {
     toggleSelectCst,
     selectedEdges,
     setSelectedEdges
-  } = useRSEdit();
+  } = useRSFormEdit();
 
   const [nodes, setNodes, onNodesChange] = useNodesState<TGNode>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
@@ -140,8 +140,8 @@ export function TGFlow() {
     });
 
     const newEdges: Edge[] = [];
-    filteredGraph.nodes.forEach(source => {
-      source.outputs.forEach(target => {
+    for (const source of filteredGraph.nodes.values()) {
+      for (const target of source.outputs) {
         const edgeType = inferEdgeType(schema, source.id, target);
         const target_cst = schema.cstByID.get(target)!;
         const color =
@@ -162,8 +162,8 @@ export function TGFlow() {
             color: color
           }
         });
-      });
-    });
+      }
+    }
 
     applyLayout(newNodes, newEdges, !filter.noText);
 

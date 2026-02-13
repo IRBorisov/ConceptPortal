@@ -14,7 +14,7 @@ import { EditorRSFormCard } from './editor-rsform-card';
 import { EditorRSList } from './editor-rslist';
 import { EditorTermGraph } from './editor-term-graph';
 import { MenuRSTabs } from './menu-rstabs';
-import { useRSEdit } from './rsedit-context';
+import { useRSFormEdit } from './rsedit-context';
 
 interface RSFormTabsProps {
   activeID?: number;
@@ -26,7 +26,7 @@ export function RSFormTabs({ activeID, activeTab }: RSFormTabsProps) {
 
   const hideFooter = useAppLayoutStore(state => state.hideFooter);
   const setIsModified = useModificationStore(state => state.setIsModified);
-  const { schema, selectedCst, setSelectedCst, setSelectedEdges, deselectAll } = useRSEdit();
+  const { schema, selectedCst, setSelectedCst, setSelectedEdges, deselectAll } = useRSFormEdit();
 
   useLayoutEffect(() => {
     const oldTitle = document.title;

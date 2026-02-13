@@ -43,10 +43,10 @@ export function generateSample(target: string): string {
 export function varSchema(schema: RSForm): string {
   let result = stringifySchemaIntro(schema);
   result += '\n\nКонституенты:';
-  schema.items.forEach(item => {
+  for (const item of schema.items) {
     result += `\n${item.alias} - "${labelType(item.analysis.type)}" - "${item.term_resolved}" - "${item.definition_formal
       }" - "${item.definition_resolved}" - "${item.convention}"`;
-  });
+  }
 
   const crucial = schema.items.filter(cst => cst.crucial);
   if (crucial.length > 0) {
@@ -65,16 +65,16 @@ export function varSchema(schema: RSForm): string {
 export function varSchemaThesaurus(schema: RSForm): string {
   let result = stringifySchemaIntro(schema);
   result += '\n\nТермины:';
-  schema.items.forEach(item => {
+  for (const item of schema.items) {
     if (item.cst_type === CstType.AXIOM || item.cst_type === CstType.THEOREM) {
-      return;
+      continue;
     }
     if (isBasicConcept(item.cst_type)) {
       result += `\n${item.term_resolved} - "${item.convention}"`;
     } else {
       result += `\n${item.term_resolved} - "${item.definition_resolved}"`;
     }
-  });
+  }
   return result;
 }
 
@@ -107,11 +107,11 @@ export function varSchemaGraph(schema: RSForm): string {
 /** Generates a prompt for a schema type graph variable. */
 export function varSchemaTypeGraph(schema: RSForm): string {
   const graph = new TypificationGraph();
-  schema.items.forEach(item => {
+  for (const item of schema.items) {
     if (item.analysis.type !== null && isTypification(item.analysis.type)) {
       graph.addElement(item.alias, item.analysis.type);
     }
-  });
+  }
 
   let result = stringifySchemaIntro(schema);
   result += '\n\nСтупени\n';
@@ -123,22 +123,22 @@ export function varSchemaTypeGraph(schema: RSForm): string {
 export function varOSS(oss: OperationSchema): string {
   let result = stringifyOSSIntro(oss);
   result += `\n\nБлоки: ${oss.blocks.length}\n`;
-  oss.hierarchy.topologicalOrder().forEach(blockID => {
+  for (const blockID of oss.hierarchy.topologicalOrder()) {
     const block = oss.itemByNodeID.get(blockID);
     if (block?.nodeType !== NodeType.BLOCK) {
-      return;
+      continue;
     }
     result += `\n\nБлок ${block.id}: ${block.title}`;
     result += `\nОписание: ${block.description}`;
     result += `\nПредок: "${block.parent ?? 'отсутствует'}"`;
-  });
+  }
   result += `\n\nОперации: ${oss.operations.length}`;
-  oss.operations.forEach(operation => {
+  for (const operation of oss.operations) {
     result += `\n\nОперация ${operation.id}: ${operation.alias}`;
     result += `\nНазвание: ${operation.title}`;
     result += `\nОписание: ${operation.description}`;
     result += `\nБлок: ${operation.parent ?? 'отсутствует'}`;
-  });
+  }
   return result;
 }
 
@@ -150,16 +150,16 @@ export function varBlock(target: Block, oss: OperationSchema): string {
   result += `\nОписание: "${target.description}"`;
   result += '\n\nСодержание';
   result += `\nБлоки: ${blocks.length}`;
-  blocks.forEach(block => {
+  for (const block of blocks) {
     result += `\n\nБлок ${block.id}: ${block.title}`;
     result += `\nОписание: "${block.description}"`;
-  });
+  }
   result += `\n\nОперации: ${operations.length}`;
-  operations.forEach(operation => {
+  for (const operation of operations) {
     result += `\n\nОперация ${operation.id}: ${operation.alias}`;
     result += `\nНазвание: "${operation.title}"`;
     result += `\nОписание: "${operation.description}"`;
-  });
+  }
   return result;
 }
 
@@ -181,13 +181,13 @@ export function varSyntaxTree(cst: Constituenta, schema: RSForm): string {
 // ==== Internal functions ====
 function stringifyGraph(graph: Graph<number>, schema: RSForm): string {
   let result = '';
-  graph.nodes.forEach(node => {
+  for (const node of graph.nodes.values()) {
     if (node.outputs.length > 0) {
       result += `\n${schema.items.find(cst => cst.id === node.id)!.alias} -> ${node.outputs
         .map(id => schema.items.find(cst => cst.id === id)!.alias)
         .join(', ')}`;
     }
-  });
+  }
   return result;
 }
 

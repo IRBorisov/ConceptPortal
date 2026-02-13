@@ -3,6 +3,7 @@ from rest_framework import serializers
 
 from apps.library.models import LibraryItem
 from apps.library.serializers import LibraryItemDetailsSerializer
+from apps.rsform.serializers import RSFormSerializer
 from shared.serializers import StrictModelSerializer
 
 from ..models import ConstituentData, RSModel
@@ -18,35 +19,32 @@ class RSModelConstituentSerializer(StrictModelSerializer):
 
 
 class RSModelSerializer(StrictModelSerializer):
-    ''' Serializer: Detailed data for RSModel (schema_id + constituents). '''
+    ''' Serializer: Detailed data for RSModel. '''
     editors = serializers.ListField(
         child=serializers.IntegerField()
     )
-    schema_id = serializers.SerializerMethodField()
-    constituents = serializers.ListField(
+    items = serializers.ListField(
         child=serializers.DictField()
     )
+    schema = serializers.SerializerMethodField()
 
     class Meta:
         ''' serializer metadata. '''
         model = LibraryItem
         fields = '__all__'
 
-    def get_schema_id(self, instance: LibraryItem):
-        ''' Schema (RSForm) id or null. '''
-        try:
-            data = RSModel.objects.get(model=instance)
-            return data.schema_id
-        except RSModel.DoesNotExist:
-            return None
+    def get_schema(self, instance: LibraryItem):
+        model = RSModel.objects.get(model=instance)
+        return RSFormSerializer(model.schema).data
 
     def to_representation(self, instance: LibraryItem) -> dict:
         result = LibraryItemDetailsSerializer(instance).data
-        result['schema_id'] = self.get_schema_id(instance)
-        result['constituents'] = []
+        del result['versions']
+        result['schema'] = self.get_schema(instance)
+        result['items'] = []
         for binding in ConstituentData.objects.filter(model=instance).select_related('constituent'):
-            result['constituents'].append({
-                'constituent_id': binding.constituent_id,
-                'data': binding.data
+            result['items'].append({
+                'id': binding.constituent_id,
+                'value': binding.data
             })
         return result

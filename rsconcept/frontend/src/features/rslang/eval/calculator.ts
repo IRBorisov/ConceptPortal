@@ -52,17 +52,24 @@ export interface CalculatorResult {
 export class RSCalculator {
   private reporter?: ErrorReporter;
   private locals: LocalContext = new LocalContext();
-  private context: ValueContext;
-  private treeContext: ASTContext;
+  private context: ValueContext = new Map();
+  private treeContext: ASTContext = new Map();
 
   private iterationCounter = 0;
 
-  constructor(context: ValueContext, treeContext: ASTContext) {
-    this.context = context;
-    this.treeContext = treeContext;
+  public setValue(alias: string, value: Value): void {
+    this.context.set(alias, value);
   }
 
-  evaluate(ast: AstNode, reporter?: ErrorReporter): CalculatorResult {
+  public getValue(alias: string): Value | null {
+    return this.context.get(alias) ?? null;
+  }
+
+  public setAST(alias: string, ast: AstNode): void {
+    this.treeContext.set(alias, ast);
+  }
+
+  public evaluate(ast: AstNode, reporter?: ErrorReporter): CalculatorResult {
     if (ast.hasError) {
       return { success: false, value: null, iterations: 0 };
     }

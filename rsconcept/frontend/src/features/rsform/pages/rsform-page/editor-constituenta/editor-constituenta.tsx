@@ -14,7 +14,7 @@ import { globalIDs } from '@/utils/constants';
 
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { ViewConstituents } from '../../../components/view-constituents';
-import { useRSEdit } from '../rsedit-context';
+import { useRSFormEdit } from '../rsedit-context';
 
 import { FormConstituenta } from './form-constituenta';
 import { ToolbarConstituenta } from './toolbar-constituenta';
@@ -36,7 +36,7 @@ export function EditorConstituenta() {
     moveUp,
     moveDown,
     cloneCst
-  } = useRSEdit();
+  } = useRSFormEdit();
   const windowSize = useWindowSize();
   const mainHeight = useMainHeight();
 

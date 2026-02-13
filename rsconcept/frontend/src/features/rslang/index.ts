@@ -1,4 +1,6 @@
 export { RSErrorCode, type RSErrorDescription } from './error';
+export { RSCalculator } from './eval/calculator';
+export { type Value } from './eval/value';
 export { normalizeAST } from './parser/normalize';
 export { parser as rslangParser } from './parser/parser';
 export { TokenID } from './parser/token';

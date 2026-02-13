@@ -28,32 +28,14 @@ class RSModelViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Ret
 
     def get_permissions(self):
         ''' Determine permission class. '''
-        if self.action in ['contents', 'details']:
+        if self.action in ['details']:
             permission_list = [permissions.ItemAnyone]
         else:
             permission_list = [permissions.Anyone]
         return [permission() for permission in permission_list]
 
     @extend_schema(
-        summary='get model db contents (schema_id + constituents)',
-        tags=['RSModel'],
-        request=None,
-        responses={
-            c.HTTP_200_OK: s.RSModelSerializer,
-            c.HTTP_404_NOT_FOUND: None
-        }
-    )
-    @action(detail=True, methods=['get'], url_path='contents')
-    def contents(self, request: Request, pk) -> Response:
-        ''' Endpoint: View model db contents. '''
-        serializer = s.RSModelSerializer(self._get_item())
-        return Response(
-            status=c.HTTP_200_OK,
-            data=serializer.data
-        )
-
-    @extend_schema(
-        summary='get model details (same as contents)',
+        summary='get model details',
         tags=['RSModel'],
         request=None,
         responses={

@@ -18,7 +18,7 @@ import { RSInput } from '../../../components/rs-input';
 import { RSTextWrapper } from '../../../components/rs-input/text-editing';
 import { type Constituenta, CstStatus } from '../../../models/rsform';
 import { getAnalysisFor, inferStatus } from '../../../models/rsform-api';
-import { useRSEdit } from '../rsedit-context';
+import { useRSFormEdit } from '../rsedit-context';
 
 import { ParsingResult } from './parsing-result';
 import { RSEditorControls } from './rs-edit-controls';
@@ -68,7 +68,7 @@ export function EditorRSExpression({
   onShowTypeGraph,
   ...restProps
 }: EditorRSExpressionProps) {
-  const schema = useRSEdit().schema;
+  const schema = useRSFormEdit().schema;
 
   const [isModified, setIsModified] = useState(false);
   const rsInput = useRef<ReactCodeMirrorRef>(null);

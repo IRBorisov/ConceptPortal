@@ -7,32 +7,29 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import { useConceptNavigation } from '@/app';
 import {
-  type CurrentVersion,
   LibraryItemType,
   schemaUpdateLibraryItem,
   type UpdateLibraryItemDTO
 } from '@/features/library';
 import { useUpdateItem } from '@/features/library/backend/use-update-item';
-import { SelectVersion } from '@/features/library/components/select-version';
 import { ToolbarItemAccess } from '@/features/library/components/toolbar-item-access';
 
 import { SubmitButton } from '@/components/control';
-import { IconSave } from '@/components/icons';
-import { Label, TextArea, TextInput } from '@/components/input';
+import { IconRSForm, IconSave } from '@/components/icons';
+import { TextArea, TextInput } from '@/components/input';
+import { ValueIcon } from '@/components/view';
 import { useModificationStore } from '@/stores/modification';
 import { globalIDs } from '@/utils/constants';
 
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
-import { useRSFormEdit } from '../rsedit-context';
+import { useRSModelEdit } from '../rsmodel-context';
 
-import { ToolbarVersioning } from './toolbar-versioning';
-
-export function FormRSForm() {
+export function FormRSModel() {
   const router = useConceptNavigation();
   const { updateItem: updateSchema } = useUpdateItem();
   const setIsModified = useModificationStore(state => state.setIsModified);
   const isProcessing = useMutatingRSForm();
-  const { schema, isAttachedToOSS, isContentEditable } = useRSFormEdit();
+  const { model, isMutable } = useRSModelEdit();
 
   const {
     register,
@@ -44,13 +41,13 @@ export function FormRSForm() {
   } = useForm<UpdateLibraryItemDTO>({
     resolver: zodResolver(schemaUpdateLibraryItem),
     defaultValues: {
-      id: schema.id,
-      item_type: LibraryItemType.RSFORM,
-      title: schema.title,
-      alias: schema.alias,
-      description: schema.description,
-      visible: schema.visible,
-      read_only: schema.read_only
+      id: model.id,
+      item_type: LibraryItemType.RSMODEL,
+      title: model.title,
+      alias: model.alias,
+      description: model.description,
+      visible: model.visible,
+      read_only: model.read_only
     },
     mode: 'onChange'
   });
@@ -59,26 +56,26 @@ export function FormRSForm() {
 
   useEffect(() => {
     reset({
-      id: schema.id,
-      item_type: LibraryItemType.RSFORM,
-      title: schema.title,
-      alias: schema.alias,
-      description: schema.description,
-      visible: schema.visible,
-      read_only: schema.read_only
+      id: model.id,
+      item_type: LibraryItemType.RSMODEL,
+      title: model.title,
+      alias: model.alias,
+      description: model.description,
+      visible: model.visible,
+      read_only: model.read_only
     });
-  }, [schema, reset]);
+  }, [model, reset]);
 
   useEffect(() => {
     setIsModified(isDirty);
   }, [isDirty, setIsModified]);
 
-  function handleSelectVersion(version: CurrentVersion) {
-    router.gotoRSForm(schema.id, version === 'latest' ? undefined : version);
-  }
-
   function onSubmit(data: UpdateLibraryItemDTO) {
     return updateSchema(data).then(() => reset({ ...data }));
+  }
+
+  function handleNavigateSchema() {
+    router.gotoRSForm(model.schema.id);
   }
 
   return (
@@ -93,42 +90,26 @@ export function FormRSForm() {
         label='Название'
         className='mb-3'
         error={errors.title}
-        disabled={!isContentEditable}
+        disabled={!isMutable}
       />
-      <div className='flex justify-between gap-3 mb-3'>
+      <div className='flex justify-between gap-3 mb-3 items-center'>
         <TextInput
           id='schema_alias'
           {...register('alias')}
           label='Сокращение'
           className='w-64'
           error={errors.alias}
-          disabled={!isContentEditable}
+          disabled={!isMutable}
         />
-        <div className='relative flex flex-col gap-2'>
-          <ToolbarVersioning
-            className='absolute -top-2 right-2' //
-            blockReload={schema.oss.length > 0}
-          />
-
-          <Label text='Версия' className='select-none w-fit -mt-1' />
-          <SelectVersion
-            id='schema_version'
-            className='select-none'
-            value={schema.version} //
-            items={schema.versions}
-            onChange={handleSelectVersion}
-          />
-
-          <ToolbarItemAccess
-            className='absolute top-18 right-2'
-            visible={visible}
-            toggleVisible={() => setValue('visible', !visible, { shouldDirty: true })}
-            readOnly={readOnly}
-            toggleReadOnly={() => setValue('read_only', !readOnly, { shouldDirty: true })}
-            schema={schema}
-            isAttachedToOSS={isAttachedToOSS}
-          />
-        </div>
+        <ToolbarItemAccess
+          className='mt-6 mr-2'
+          visible={visible}
+          toggleVisible={() => setValue('visible', !visible, { shouldDirty: true })}
+          readOnly={readOnly}
+          toggleReadOnly={() => setValue('read_only', !readOnly, { shouldDirty: true })}
+          schema={model}
+          isAttachedToOSS={false}
+        />
       </div>
 
       <TextArea
@@ -137,9 +118,9 @@ export function FormRSForm() {
         label='Описание'
         rows={3}
         error={errors.description}
-        disabled={!isContentEditable || isProcessing}
+        disabled={!isMutable || isProcessing}
       />
-      {isContentEditable || isDirty ? (
+      {isMutable || isDirty ? (
         <SubmitButton
           text='Сохранить изменения'
           className='self-center mt-4'
@@ -148,6 +129,15 @@ export function FormRSForm() {
           disabled={!isDirty}
         />
       ) : null}
+
+      <ValueIcon
+        className='mt-3'
+        icon={<IconRSForm size='1.25rem' className='icon-primary' />}
+        value={model.schema.alias}
+        title='Концептуальная схема'
+        onClick={handleNavigateSchema}
+        disabled={false}
+      />
     </form>
   );
 }

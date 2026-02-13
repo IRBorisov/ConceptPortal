@@ -42,7 +42,7 @@ export function ASTFlow({ data, onNodeEnter, onNodeLeave, onChangeDragging }: AS
     }));
 
     const newEdges: Edge[] = [];
-    data.forEach(node => {
+    for (const node of data) {
       if (node.parent !== node.uid) {
         newEdges.push({
           id: String(node.uid),
@@ -57,7 +57,7 @@ export function ASTFlow({ data, onNodeEnter, onNodeLeave, onChangeDragging }: AS
           }
         });
       }
-    });
+    }
 
     applyLayout(newNodes, newEdges);
 

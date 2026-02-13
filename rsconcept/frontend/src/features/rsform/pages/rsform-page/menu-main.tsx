@@ -35,11 +35,11 @@ import { generatePageQR, promptUnsaved, sharePage } from '@/utils/utils';
 import { useDownloadRSForm } from '../../backend/use-download-rsform';
 import { useMutatingRSForm } from '../../backend/use-mutating-rsform';
 
-import { useRSEdit } from './rsedit-context';
+import { useRSFormEdit } from './rsedit-context';
 
 export function MenuMain() {
   const router = useConceptNavigation();
-  const { schema, selectedCst, deleteSchema, isArchive, isMutable, isContentEditable } = useRSEdit();
+  const { schema, selectedCst, deleteSchema, isArchive, isMutable, isContentEditable } = useRSFormEdit();
   const isProcessing = useMutatingRSForm();
 
   const { user, isAnonymous } = useAuthSuspense();

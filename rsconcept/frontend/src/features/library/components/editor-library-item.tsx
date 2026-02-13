@@ -33,11 +33,11 @@ import { useSetOwner } from '../backend/use-set-owner';
 import { useLibrarySearchStore } from '../stores/library-search';
 
 interface EditorLibraryItemProps {
-  schema: LibraryItemData;
+  item: LibraryItemData;
   isAttachedToOSS: boolean;
 }
 
-export function EditorLibraryItem({ schema, isAttachedToOSS }: EditorLibraryItemProps) {
+export function EditorLibraryItem({ item, isAttachedToOSS }: EditorLibraryItemProps) {
   const getUserLabel = useLabelUser();
   const role = useRoleStore(state => state.role);
   const intl = useIntl();
@@ -62,31 +62,31 @@ export function EditorLibraryItem({ schema, isAttachedToOSS }: EditorLibraryItem
   } = useDropdown();
   const onSelectUser = function (newValue: number) {
     hideOwner();
-    if (newValue === schema.owner) {
+    if (newValue === item.owner) {
       return;
     }
     if (!window.confirm(promptText.ownerChange)) {
       return;
     }
-    void setOwner({ itemID: schema.id, owner: newValue });
+    void setOwner({ itemID: item.id, owner: newValue });
   };
 
   function handleOpenLibrary(event: React.MouseEvent<Element>) {
-    setGlobalLocation(schema.location);
+    setGlobalLocation(item.location);
     router.gotoLibrary(event.ctrlKey || event.metaKey);
   }
 
   function handleEditLocation() {
     showEditLocation({
-      initial: schema.location,
-      onChangeLocation: newLocation => void setLocation({ itemID: schema.id, location: newLocation })
+      initial: item.location,
+      onChangeLocation: newLocation => void setLocation({ itemID: item.id, location: newLocation })
     });
   }
 
   function handleEditEditors() {
     showEditEditors({
-      itemID: schema.id,
-      initialEditors: schema.editors
+      itemID: item.id,
+      initialEditors: item.editors
     });
   }
 
@@ -102,7 +102,7 @@ export function EditorLibraryItem({ schema, isAttachedToOSS }: EditorLibraryItem
         <ValueIcon
           className='text-ellipsis grow'
           icon={<IconFolderEdit size='1.25rem' className='icon-primary' />}
-          value={schema.location}
+          value={item.location}
           title={isAttachedToOSS ? 'Путь наследуется от ОСС' : 'Путь'}
           onClick={handleEditLocation}
           disabled={isModified || isProcessing || isAttachedToOSS || role < UserRole.OWNER}
@@ -112,7 +112,7 @@ export function EditorLibraryItem({ schema, isAttachedToOSS }: EditorLibraryItem
       <div className='relative' ref={ownerRef} onBlur={handleOwnerBlur}>
         <SelectUser
           className='absolute -top-2 right-0 w-100 text-sm'
-          value={schema.owner}
+          value={item.owner}
           onChange={user => user && onSelectUser(user)}
           hidden={!isOwnerOpen}
         />
@@ -120,7 +120,7 @@ export function EditorLibraryItem({ schema, isAttachedToOSS }: EditorLibraryItem
         <ValueIcon
           className='sm:mb-1'
           icon={<IconOwner size='1.25rem' className='icon-primary' />}
-          value={getUserLabel(schema.owner)}
+          value={getUserLabel(item.owner)}
           title={isAttachedToOSS ? 'Владелец наследуется от ОСС' : 'Владелец'}
           onClick={toggleOwner}
           disabled={isModified || isProcessing || isAttachedToOSS || role < UserRole.OWNER}
@@ -132,13 +132,13 @@ export function EditorLibraryItem({ schema, isAttachedToOSS }: EditorLibraryItem
           id='editor_stats'
           dense
           icon={<IconEditor size='1.25rem' className='icon-primary' />}
-          value={schema.editors.length}
+          value={item.editors.length}
           onClick={handleEditEditors}
           disabled={isModified || isProcessing || role < UserRole.OWNER}
         />
         <Tooltip anchorSelect='#editor_stats'>
           <Suspense fallback={<Loader scale={2} />}>
-            <InfoUsers items={schema.editors} prefix={prefixes.user_editors} header='Редакторы' />
+            <InfoUsers items={item.editors} prefix={prefixes.user_editors} header='Редакторы' />
           </Suspense>
         </Tooltip>
 
@@ -146,14 +146,14 @@ export function EditorLibraryItem({ schema, isAttachedToOSS }: EditorLibraryItem
           title='Дата обновления'
           dense
           icon={<IconDateUpdate size='1.25rem' />}
-          value={new Date(schema.time_update).toLocaleString(intl.locale)}
+          value={new Date(item.time_update).toLocaleString(intl.locale)}
         />
 
         <ValueIcon
           title='Дата создания'
           dense
           icon={<IconDateCreate size='1.25rem' />}
-          value={new Date(schema.time_create).toLocaleString(intl.locale, {
+          value={new Date(item.time_create).toLocaleString(intl.locale, {
             year: '2-digit',
             month: '2-digit',
             day: '2-digit'

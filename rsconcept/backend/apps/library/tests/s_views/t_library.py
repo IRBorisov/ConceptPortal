@@ -161,8 +161,6 @@ class TestLibraryViewset(EndpointTester):
 
     @decl_endpoint('/api/library/{item}/set-access-policy', method='patch')
     def test_set_access_policy(self):
-        time_update = self.owned.time_update
-
         data = {'access_policy': 'invalid'}
         self.executeBadData(data, item=self.owned.pk)
 
@@ -183,8 +181,6 @@ class TestLibraryViewset(EndpointTester):
 
     @decl_endpoint('/api/library/{item}/set-location', method='patch')
     def test_set_location(self):
-        time_update = self.owned.time_update
-
         data = {'location': 'invalid'}
         self.executeBadData(data, item=self.owned.pk)
 

@@ -9,17 +9,18 @@ import { Graph } from '@/models/graph';
 import { type RO } from '@/utils/meta';
 
 import { type Constituenta, CstStatus, CstType, type RSForm } from '../models/rsform';
-import { inferClass, inferStatus, inferTemplate, isBaseSet, isFunctional, typeClassForCstType } from '../models/rsform-api';
+import {
+  inferClass,
+  inferStatus,
+  inferTemplate,
+  isBaseSet,
+  isFunctional,
+  typeClassForCstType
+} from '../models/rsform-api';
 
 import { type RSFormDTO } from './types';
 
-/**
- * Loads data into an {@link RSForm} based on {@link RSFormDTO}.
- *
- * @remarks
- * This function processes the provided input, initializes the RSForm, and calculates statistics
- * based on the loaded data. It also establishes dependencies between concepts in the graph.
- */
+/** Loads data into an {@link RSForm} based on {@link RSFormDTO}. */
 export class RSFormLoader {
   private schema: RSForm;
   private graph: Graph = new Graph();
@@ -49,41 +50,40 @@ export class RSFormLoader {
   }
 
   private prepareLookups() {
-    this.schema.items.forEach(cst => {
+    for (const cst of this.schema.items) {
       this.cstByAlias.set(cst.alias, cst);
       this.cstByID.set(cst.id, cst);
       this.graph.addNode(cst.id);
       this.association_graph.addNode(cst.id);
-    });
+    }
   }
 
   private createGraph() {
-    this.schema.items.forEach(cst => {
-      const dependencies = extractGlobals(cst.definition_formal);
-      dependencies.forEach(alias => {
+    for (const cst of this.schema.items) {
+      for (const alias of extractGlobals(cst.definition_formal)) {
         const source = this.cstByAlias.get(alias);
         if (source) {
           this.graph.addEdge(source.id, cst.id);
         }
-      });
-    });
+      }
+    }
   }
 
   private inferCstAttributes() {
     const schemaByCst = new Map<number, number>();
     const parents: number[] = [];
-    this.schema.inheritance.forEach(item => {
+    for (const item of this.schema.inheritance) {
       if (item.child_source === this.schema.id) {
         schemaByCst.set(item.child, item.parent_source);
         if (!parents.includes(item.parent_source)) {
           parents.push(item.parent_source);
         }
       }
-    });
+    }
     const inherit_children = new Set(this.schema.inheritance.map(item => item.child));
     const inherit_parents = new Set(this.schema.inheritance.map(item => item.parent));
     const order = this.graph.topologicalOrder();
-    order.forEach(cstID => {
+    for (const cstID of order) {
       const cst = this.cstByID.get(cstID)!;
       cst.schema = this.schema.id;
       cst.is_template = inferTemplate(cst.definition_formal);
@@ -99,8 +99,8 @@ export class RSFormLoader {
       if (cst.is_simple_expression && cst.cst_type !== CstType.STRUCTURED) {
         cst.spawner = this.inferParent(cst);
       }
-    });
-    order.forEach(cstID => {
+    }
+    for (const cstID of order) {
       const cst = this.cstByID.get(cstID)!;
       if (cst.spawner) {
         const parent = this.cstByID.get(cst.spawner)!;
@@ -108,12 +108,12 @@ export class RSFormLoader {
         parent.spawn.push(cst.id);
         parent.spawn_alias.push(cst.alias);
       }
-    });
-    this.schema.attribution.forEach(attrib => {
+    }
+    for (const attrib of this.schema.attribution) {
       const container = this.cstByID.get(attrib.container)!;
       container.attributes.push(attrib.attribute);
       this.association_graph.addEdge(attrib.container, attrib.attribute);
-    });
+    }
   }
 
   private inferSimpleExpression(target: Constituenta): boolean {
@@ -151,23 +151,23 @@ export class RSFormLoader {
     const sources = new Set<number>();
     if (!isFunctional(target.cst_type)) {
       const node = this.graph.at(target.id)!;
-      node.inputs.forEach(id => {
+      for (const id of node.inputs) {
         const parent = this.cstByID.get(id)!;
         if (!parent.is_template || !parent.is_simple_expression) {
           sources.add(parent.spawner ?? id);
         }
-      });
+      }
       return sources;
     }
 
     const expression = splitTemplateDefinition(target.definition_formal);
     const bodyDependencies = extractGlobals(expression.body);
-    bodyDependencies.forEach(alias => {
+    for (const alias of bodyDependencies) {
       const parent = this.cstByAlias.get(alias);
       if (parent && (!parent.is_template || !parent.is_simple_expression)) {
         sources.add(this.cstByID.get(parent.id)!.spawner ?? parent.id);
       }
-    });
+    }
     const needCheckHead = () => {
       if (sources.size === 0) {
         return true;
@@ -181,27 +181,29 @@ export class RSFormLoader {
     };
     if (needCheckHead()) {
       const headDependencies = extractGlobals(expression.head);
-      headDependencies.forEach(alias => {
+      for (const alias of headDependencies) {
         const parent = this.cstByAlias.get(alias);
         if (parent && !isBaseSet(parent.cst_type) && (!parent.is_template || !parent.is_simple_expression)) {
           sources.add(parent.spawner ?? parent.id);
         }
-      });
+      }
     }
     return sources;
   }
 
   private parseItems(): void {
     const order = this.graph.topologicalOrder();
-    order.forEach(cstID => {
+    for (const cstID of order) {
       const cst = this.cstByID.get(cstID)!;
       cst.analysis = parseCst(cst, this.analyzer);
       cst.status = cst.cst_type === CstType.NOMINAL ? CstStatus.UNKNOWN : inferStatus(cst.analysis.success, cst.analysis.valueClass);
-    });
+    }
   }
 }
 
-// ======= Internals ========
+// ====== Internals =========
+
+/** Parse {@link Constituenta} for {@link RSForm}. */
 function parseCst(target: Constituenta, analyzer: RSLangAnalyzer): AnalysisBase {
   const cType = target.cst_type;
   if (cType === CstType.NOMINAL) {

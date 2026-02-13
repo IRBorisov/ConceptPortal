@@ -25,9 +25,10 @@ export function Navigation() {
   const noNavigationAnimation = useAppLayoutStore(state => state.noNavigationAnimation);
   const activeDialog = useDialogsStore(state => state.active);
 
-  const currentSchema = useAIStore(state => state.schema);
   const currentOSS = useAIStore(state => state.oss);
-  const schemaTitle = currentSchema?.title || currentOSS?.title;
+  const currentModel = useAIStore(state => state.model);
+  const currentSchema = useAIStore(state => state.schema);
+  const currentItem = currentOSS || currentModel || currentSchema;
 
   const navigateHome = (event: React.MouseEvent<Element>) =>
     push({ path: urls.home, newTab: event.ctrlKey || event.metaKey });
@@ -51,7 +52,7 @@ export function Navigation() {
         <div className='cc-fade-in flex items-center shrink-0' onClick={!size.isSmall ? navigateHome : undefined}>
           <Logo />
         </div>
-        {schemaTitle ? <CurrentTitle itemType={currentSchema?.item_type ?? currentOSS!.item_type} title={schemaTitle} /> : null}
+        {currentItem ? <CurrentTitle itemType={currentItem.item_type} title={currentItem.title} /> : null}
         <div className='flex gap-2 items-center pr-2 shrink-0'>
           <NavigationButton text='Создать' icon={<IconNewItem2 size='1.5rem' />} onClick={navigateCreateNew} />
           <NavigationButton text='Библиотека' icon={<IconLibrary2 size='1.5rem' />} onClick={navigateLibrary} />

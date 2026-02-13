@@ -28,6 +28,9 @@ interface PreferencesStore {
   showRSFormStats: boolean;
   toggleShowRSFormStats: () => void;
 
+  showRSModelStats: boolean;
+  toggleShowRSModelStats: () => void;
+
   showOSSStats: boolean;
   toggleShowOSSStats: () => void;
 
@@ -83,6 +86,9 @@ export const usePreferencesStore = create<PreferencesStore>()(
 
       showRSFormStats: true,
       toggleShowRSFormStats: () => set(state => ({ showRSFormStats: !state.showRSFormStats })),
+
+      showRSModelStats: true,
+      toggleShowRSModelStats: () => set(state => ({ showRSModelStats: !state.showRSModelStats })),
 
       showOSSStats: true,
       toggleShowOSSStats: () => set(state => ({ showOSSStats: !state.showOSSStats })),

@@ -22,7 +22,7 @@ export function ValueStats({ id, icon, value, className, title, titleHtml, hideT
   const isSmall = String(value).length < SMALL_THRESHOLD;
   return (
     <div
-      className={clsx('flex items-center gap-1', 'text-right', 'hover:cursor-default', className)}
+      className={clsx('flex items-center gap-1', 'text-right font-math', 'hover:cursor-default', className)}
       data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}
       data-tooltip-html={titleHtml}
       data-tooltip-content={title}

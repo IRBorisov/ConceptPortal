@@ -13,7 +13,7 @@ import { useModificationStore } from '@/stores/modification';
 import { promptText } from '@/utils/labels';
 import { promptUnsaved } from '@/utils/utils';
 
-import { useRSEdit } from '../rsedit-context';
+import { useRSFormEdit } from '../rsedit-context';
 
 interface ToolbarVersioningProps {
   blockReload?: boolean;
@@ -24,7 +24,7 @@ export function ToolbarVersioning({ blockReload, className }: ToolbarVersioningP
   const router = useConceptNavigation();
   const isModified = useModificationStore(state => state.isModified);
   const { restoreVersion: versionRestore } = useRestoreVersion();
-  const { schema, isMutable, isContentEditable, activeVersion, selectedCst } = useRSEdit();
+  const { schema, isMutable, isContentEditable, activeVersion, selectedCst } = useRSFormEdit();
 
   const showCreateVersion = useDialogsStore(state => state.showCreateVersion);
   const showEditVersions = useDialogsStore(state => state.showEditVersions);

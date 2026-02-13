@@ -25,17 +25,17 @@ interface ToolbarItemCardProps {
   isNarrow: boolean;
   onSubmit: () => void;
   isMutable: boolean;
-  schema: LibraryItem;
-  deleteSchema: () => void;
+  item: LibraryItem;
+  deleteItem: () => void;
 }
 
 export function ToolbarItemCard({
   className,
   isNarrow,
-  schema,
+  item,
   onSubmit,
   isMutable,
-  deleteSchema
+  deleteItem
 }: ToolbarItemCardProps) {
   const role = useRoleStore(state => state.role);
   const router = useConceptNavigation();
@@ -45,16 +45,23 @@ export function ToolbarItemCard({
 
   const showRSFormStats = usePreferencesStore(state => state.showRSFormStats);
   const toggleShowRSFormStats = usePreferencesStore(state => state.toggleShowRSFormStats);
+  const showRSModelStats = usePreferencesStore(state => state.showRSModelStats);
+  const toggleShowRSModelStats = usePreferencesStore(state => state.toggleShowRSModelStats);
   const showOSSStats = usePreferencesStore(state => state.showOSSStats);
   const toggleShowOSSStats = usePreferencesStore(state => state.toggleShowOSSStats);
-  const isRSForm = schema.item_type === LibraryItemType.RSFORM;
-  const isOSS = schema.item_type === LibraryItemType.OSS;
+
+  const showValue =
+    item.item_type === LibraryItemType.RSFORM ? showRSFormStats :
+      item.item_type === LibraryItemType.RSMODEL ? showRSModelStats : showOSSStats;
+  const toggleShow =
+    item.item_type === LibraryItemType.RSFORM ? toggleShowRSFormStats :
+      item.item_type === LibraryItemType.RSMODEL ? toggleShowRSModelStats : toggleShowOSSStats;
 
   const ossSelector = (() => {
-    if (schema.item_type !== LibraryItemType.RSFORM) {
+    if (item.item_type !== LibraryItemType.RSFORM) {
       return null;
     }
-    const rsSchema = schema as RSForm;
+    const rsSchema = item as RSForm;
     if (rsSchema.oss.length <= 0) {
       return null;
     }
@@ -79,29 +86,26 @@ export function ToolbarItemCard({
         />
       ) : null}
       <MiniButton
-        titleHtml={tooltipText.shareItem(schema.access_policy === AccessPolicy.PUBLIC)}
-        aria-label='Поделиться схемой'
+        titleHtml={tooltipText.shareItem(item.access_policy === AccessPolicy.PUBLIC)}
+        aria-label='Поделиться'
         icon={<IconShare size='1.25rem' className='icon-primary' />}
         onClick={sharePage}
-        disabled={schema.access_policy !== AccessPolicy.PUBLIC}
+        disabled={item.access_policy !== AccessPolicy.PUBLIC}
       />
       {isMutable ? (
         <MiniButton
-          title='Удалить схему'
+          title='Удалить'
           icon={<IconDestroy size='1.25rem' className='icon-red' />}
-          onClick={deleteSchema}
+          onClick={deleteItem}
           disabled={!isMutable || isProcessing || role < UserRole.OWNER}
         />
       ) : null}
-      {(isRSForm || isOSS) && (
-        <MiniButton
-          title='Отображение статистики'
-          icon={
-            <IconShowSidebar value={isRSForm ? showRSFormStats : showOSSStats} isBottom={isNarrow} size='1.25rem' />
-          }
-          onClick={isRSForm ? toggleShowRSFormStats : toggleShowOSSStats}
-        />
-      )}
+
+      <MiniButton
+        title='Отображение статистики'
+        icon={<IconShowSidebar value={showValue} isBottom={isNarrow} size='1.25rem' />}
+        onClick={toggleShow}
+      />
       <BadgeHelp topic={HelpTopic.UI_RS_CARD} offset={4} />
     </div>
   );

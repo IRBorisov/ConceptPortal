@@ -6,8 +6,8 @@ import { RSErrorCode, type RSErrorDescription } from '../error';
 import { normalizeAST } from '../parser/normalize';
 import { parser as rslangParser } from '../parser/parser';
 
-import { type ASTContext, RSCalculator } from './calculator';
-import { BOOL_INFINITY, TUPLE_ID, type ValueContext } from './value';
+import { RSCalculator } from './calculator';
+import { BOOL_INFINITY, TUPLE_ID } from './value';
 import { printValue } from './value-api';
 
 
@@ -19,21 +19,17 @@ function buildAST(expression: string) {
   return ast;
 }
 
-function setupValueContext(): ValueContext {
-  const context: ValueContext = new Map();
-  context.set('X1', [1, 2, 3]);
-  context.set('X2', [1, 2, 3]);
-  context.set('S1', [1, 2]);
-  context.set('S2', [[1, 2, 3], []]);
-  context.set('S3', [[TUPLE_ID, 1, 1]]);
-  context.set('S4', 1);
-  return context;
+function setupValueContext(calculator: RSCalculator): void {
+  calculator.setValue('X1', [1, 2, 3]);
+  calculator.setValue('X2', [1, 2, 3]);
+  calculator.setValue('S1', [1, 2]);
+  calculator.setValue('S2', [[1, 2, 3], []]);
+  calculator.setValue('S3', [[TUPLE_ID, 1, 1]]);
+  calculator.setValue('S4', 1);
 }
 
-function setupTreeContext(): ASTContext {
-  const context: ASTContext = new Map();
-  context.set('F1', buildAST('[a∈ℬ(R1), b∈ℬ(R1×R2)] a∩Pr1(b)'));
-  return context;
+function setupTreeContext(calculator: RSCalculator): void {
+  calculator.setAST('F1', buildAST('[a∈ℬ(R1), b∈ℬ(R1×R2)] a∩Pr1(b)'));
 }
 
 const correctValuesData = [
@@ -216,15 +212,13 @@ const errorData = [
 ];
 
 describe('Calculator', () => {
-  let valueContext: ValueContext;
-  let treeContext: ASTContext;
   let calculator: RSCalculator;
   let errors: RSErrorDescription[];
 
   beforeEach(() => {
-    valueContext = setupValueContext();
-    treeContext = setupTreeContext();
-    calculator = new RSCalculator(valueContext, treeContext);
+    calculator = new RSCalculator();
+    setupTreeContext(calculator);
+    setupValueContext(calculator);
     errors = [];
   });
 
@@ -257,7 +251,7 @@ describe('Calculator', () => {
 
   it('Function', () => {
     const funcAst = buildAST('[a∈ℬ(R1), b∈Z] a\\a');
-    treeContext.set('F1', funcAst);
+    calculator.setAST('F1', funcAst);
     expectValue('F1[F1[X1, 0], 1]', '{}');
   });
 });

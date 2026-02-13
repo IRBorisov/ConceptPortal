@@ -100,7 +100,7 @@ export function DlgEditWordForms() {
     }
     void generateLexeme({ text: inputText }).then(response => {
       const lexeme: WordForm[] = [];
-      response.items.forEach(form => {
+      for (const form of response.items) {
         const grams = parseGrammemes(form.grams).filter(gram => supportedGrammemes.find(item => item === gram));
         const newForm: WordForm = {
           text: form.text,
@@ -109,7 +109,7 @@ export function DlgEditWordForms() {
         if (grams.length === 2 && !lexeme.some(test => wordFormEquals(test, newForm))) {
           lexeme.push(newForm);
         }
-      });
+      }
       setForms(lexeme);
     });
   }

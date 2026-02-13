@@ -10,11 +10,12 @@ import { useAppLayoutStore } from '@/stores/app-layout';
 import { useModificationStore } from '@/stores/modification';
 
 import { EditorConstituenta } from '../rsform-page/editor-constituenta';
-import { EditorRSFormCard } from '../rsform-page/editor-rsform-card';
 import { EditorRSList } from '../rsform-page/editor-rslist';
 import { EditorTermGraph } from '../rsform-page/editor-term-graph';
 import { MenuRSTabs } from '../rsform-page/menu-rstabs';
-import { useRSEdit } from '../rsform-page/rsedit-context';
+import { useRSFormEdit } from '../rsform-page/rsedit-context';
+
+import { EditorModelCard } from './editor-rsmodel-card';
 
 interface RSModelTabsProps {
   activeID?: number;
@@ -26,7 +27,7 @@ export function RSModelTabs({ activeID, activeTab }: RSModelTabsProps) {
 
   const hideFooter = useAppLayoutStore(state => state.hideFooter);
   const setIsModified = useModificationStore(state => state.setIsModified);
-  const { schema, selectedCst, setSelectedCst, setSelectedEdges, deselectAll } = useRSEdit();
+  const { schema, selectedCst, setSelectedCst, setSelectedEdges, deselectAll } = useRSFormEdit();
 
   useLayoutEffect(() => {
     const oldTitle = document.title;
@@ -110,7 +111,7 @@ export function RSModelTabs({ activeID, activeTab }: RSModelTabsProps) {
 
       <div ref={containerRef} className='overflow-x-hidden'>
         <TabPanel>
-          <EditorRSFormCard />
+          <EditorModelCard />
         </TabPanel>
 
         <TabPanel>

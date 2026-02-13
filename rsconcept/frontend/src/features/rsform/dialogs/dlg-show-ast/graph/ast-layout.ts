@@ -18,19 +18,20 @@ export function applyLayout(nodes: Node<FlatAstNode>[], edges: Edge[]) {
     nodesep: 40,
     ranker: 'network-simplex'
   });
-  nodes.forEach(node => {
-    dagreGraph.setNode(node.id, { width: 2 * PARAMETER.graphNodeRadius, height: 2 * PARAMETER.graphNodeRadius });
-  });
 
-  edges.forEach(edge => {
+  for (const node of nodes) {
+    dagreGraph.setNode(node.id, { width: 2 * PARAMETER.graphNodeRadius, height: 2 * PARAMETER.graphNodeRadius });
+  }
+
+  for (const edge of edges) {
     dagreGraph.setEdge(edge.source, edge.target);
-  });
+  }
 
   dagre.layout(dagreGraph);
 
-  nodes.forEach(node => {
+  for (const node of nodes) {
     const nodeWithPosition = dagreGraph.node(node.id) as DagreLayoutNode;
     node.position.x = nodeWithPosition.x - PARAMETER.graphNodeRadius;
     node.position.y = nodeWithPosition.y - PARAMETER.graphNodeRadius;
-  });
+  }
 }

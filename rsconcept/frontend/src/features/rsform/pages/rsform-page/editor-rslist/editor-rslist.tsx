@@ -16,7 +16,7 @@ import { withPreventDefault } from '@/utils/utils';
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { matchConstituenta } from '../../../models/rsform-api';
 import { CstMatchMode } from '../../../stores/cst-search';
-import { useRSEdit } from '../rsedit-context';
+import { useRSFormEdit } from '../rsedit-context';
 
 import { TableRSList } from './table-rslist';
 import { ToolbarRSList } from './toolbar-rslist';
@@ -36,7 +36,7 @@ export function EditorRSList() {
     moveDown,
     cloneCst,
     promptDeleteSelected,
-  } = useRSEdit();
+  } = useRSFormEdit();
 
   const [filterText, setFilterText] = useState('');
   const filtered = filterText

@@ -3,8 +3,7 @@
  */
 
 import { BASIC_SCHEMAS, type LibraryItem } from '@/features/library';
-import { TypeClass, ValueClass } from '@/features/rslang';
-import { type AnalysisFull } from '@/features/rslang';
+import { type AnalysisFull, TypeClass, ValueClass } from '@/features/rslang';
 
 import { type RO } from '@/utils/meta';
 import { TextMatcher } from '@/utils/utils';
@@ -79,9 +78,7 @@ export function inferTemplatedType(templateType: CstType, args: RO<ArgumentValue
   }
 }
 
-/**
- * Checks if given expression is a template.
- */
+/** Checks if given expression is a template. */
 export function inferTemplate(expression: string): boolean {
   const match = expression.match(/R\d+/g);
   return (match && match?.length > 0) ?? false;
@@ -150,9 +147,7 @@ export function getCstTypePrefix(type: CstType): string {
   return cstTypePrefixRecord[type];
 }
 
-/**
- * Guess {@link CstType} from user input hint.
- */
+/** Guess {@link CstType} from user input hint. */
 export function guessCstType(hint: string, defaultType: CstType = CstType.TERM): CstType {
   if (hint.length !== 1) {
     return defaultType;
@@ -172,9 +167,7 @@ export function guessCstType(hint: string, defaultType: CstType = CstType.TERM):
   return defaultType;
 }
 
-/**
- * Evaluate if {@link CstType} is basic concept.
- */
+/** Evaluate if {@link CstType} is basic concept. */
 export function isBasicConcept(type: CstType): boolean {
   // prettier-ignore
   switch (type) {
@@ -190,9 +183,7 @@ export function isBasicConcept(type: CstType): boolean {
   }
 }
 
-/**
- * Evaluate if {@link CstType} is base set or constant set.
- */
+/** Evaluate if {@link CstType} is base set or constant set. */
 export function isBaseSet(type: CstType): boolean {
   // prettier-ignore
   switch (type) {
@@ -208,9 +199,7 @@ export function isBaseSet(type: CstType): boolean {
   }
 }
 
-/**
- * Evaluate if {@link CstType} is a function.
- */
+/** Evaluate if {@link CstType} is a function. */
 export function isFunctional(type: CstType): boolean {
   // prettier-ignore
   switch (type) {
@@ -226,9 +215,7 @@ export function isFunctional(type: CstType): boolean {
   }
 }
 
-/**
- * Evaluate if {@link CstType} is logical.
- */
+/** Evaluate if {@link CstType} is logical. */
 export function isLogical(type: CstType): boolean {
   // prettier-ignore
   switch (type) {
@@ -244,9 +231,7 @@ export function isLogical(type: CstType): boolean {
   }
 }
 
-/**
- * Evaluate if {@link Constituenta} can be used produce structure.
- */
+/** Evaluate if {@link Constituenta} can be used produce structure. */
 export function canProduceStructure(cst: RO<Constituenta>): boolean {
   return (
     !!cst.analysis?.success &&
@@ -257,9 +242,7 @@ export function canProduceStructure(cst: RO<Constituenta>): boolean {
   );
 }
 
-/**
- * Validate new alias against {@link CstType} and {@link RSForm}.
- */
+/** Validate new alias against {@link CstType} and {@link RSForm}. */
 export function validateNewAlias(alias: string, type: CstType, schema: RSForm): boolean {
   if (alias.length < 2) {
     return false;
@@ -363,6 +346,7 @@ export function typeClassForCstType(cstType: CstType): TypeClass {
   }
 }
 
+/** Analyze expression for {@link RSForm}. */
 export function getAnalysisFor(expression: string, cstType: CstType, schema: RSForm): AnalysisFull {
   return schema.analyzer.checkFull(expression, {
     expected: typeClassForCstType(cstType),
@@ -370,7 +354,8 @@ export function getAnalysisFor(expression: string, cstType: CstType, schema: RSF
   });
 }
 
-export function calculateStats(target: RSForm): RSFormStats {
+/** Calculate statistics for {@link RSForm}. */
+export function calculateSchemaStats(target: RSForm): RSFormStats {
   const items = target.items;
   return {
     count_all: items.length,

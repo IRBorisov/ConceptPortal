@@ -5,7 +5,7 @@ from rest_framework import routers
 from . import views
 
 router = routers.SimpleRouter(trailing_slash=False)
-router.register('rsmodels', views.RSModelViewSet, 'RSModel')
+router.register('models', views.RSModelViewSet, 'RSModel')
 
 urlpatterns = [
     path('', include(router.urls)),

@@ -5,11 +5,11 @@ import { MenuRole } from '@/features/library/components/menu-role';
 
 import { MenuEditSchema } from './menu-edit-schema';
 import { MenuMain } from './menu-main';
-import { useRSEdit } from './rsedit-context';
+import { useRSFormEdit } from './rsedit-context';
 
 export function MenuRSTabs() {
   const { user } = useAuthSuspense();
-  const { schema, isOwned } = useRSEdit();
+  const { schema, isOwned } = useRSFormEdit();
 
   return (
     <div className='flex border-r-2'>

@@ -49,11 +49,9 @@ export function RSModelPage() {
     return null;
   }
   return (
-    <ErrorBoundary
-      FallbackComponent={({ error }) => (
-        <ProcessError error={error as ErrorData} />
-      )}
-    >
+    <ErrorBoundary FallbackComponent={({ error }) => (
+      <ProcessError error={error as ErrorData} />
+    )}>
       <ConstituentaTooltip />
       <RSModelState itemID={urlData.id} >
         <RSModelTabs activeID={urlData.activeID} activeTab={urlData.tab} />

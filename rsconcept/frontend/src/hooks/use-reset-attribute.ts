@@ -18,7 +18,7 @@ export function useResetAttribute(elementRef: React.RefObject<HTMLElement | null
       // Force react-tooltip to re-scan by temporarily removing and re-adding data-tooltip-id
       // This triggers react-tooltip's internal MutationObserver to re-register the elements
       const tooltipElements = elementRef.current.querySelectorAll(`[${attribute}]`);
-      tooltipElements.forEach(element => {
+      for (const element of tooltipElements) {
         if (element instanceof HTMLElement) {
           const value = element.getAttribute(attribute);
           if (value) {
@@ -28,7 +28,7 @@ export function useResetAttribute(elementRef: React.RefObject<HTMLElement | null
             });
           }
         }
-      });
+      }
     }, PARAMETER.minimalTimeout);
 
     return () => clearTimeout(timeoutId);

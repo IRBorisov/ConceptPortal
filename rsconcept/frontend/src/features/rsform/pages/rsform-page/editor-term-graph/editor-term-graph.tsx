@@ -2,13 +2,13 @@ import { useEffect } from 'react';
 import { ReactFlowProvider } from '@xyflow/react';
 
 import { InteractionMode, useTermGraphStore } from '../../../stores/term-graph';
-import { useRSEdit } from '../rsedit-context';
+import { useRSFormEdit } from '../rsedit-context';
 
 import { TGFlow } from './tg-flow';
 
 export function EditorTermGraph() {
   const setMode = useTermGraphStore(state => state.setMode);
-  const { isContentEditable } = useRSEdit();
+  const { isContentEditable } = useRSFormEdit();
 
   useEffect(() => {
     if (!isContentEditable) {

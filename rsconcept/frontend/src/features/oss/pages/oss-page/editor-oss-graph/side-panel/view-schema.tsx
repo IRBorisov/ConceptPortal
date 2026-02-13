@@ -7,7 +7,7 @@ import { type Constituenta } from '@/features/rsform';
 import { useRSFormSuspense } from '@/features/rsform/backend/use-rsform';
 import { CardRSFormStats } from '@/features/rsform/components/rsform-stats';
 import { ViewConstituents } from '@/features/rsform/components/view-constituents';
-import { calculateStats } from '@/features/rsform/models/rsform-api';
+import { calculateSchemaStats } from '@/features/rsform/models/rsform-api';
 
 import { useFitHeight } from '@/stores/app-layout';
 import { useDialogsStore } from '@/stores/dialogs';
@@ -25,7 +25,7 @@ export function ViewSchema({ schemaID, isMutable }: ViewSchemaProps) {
   const activeCst = activeID ? schema.cstByID.get(activeID) ?? null : null;
   const showEditCst = useDialogsStore(state => state.showEditCst);
   const setCurrentSchema = useAIStore(state => state.setSchema);
-  const stats = calculateStats(schema);
+  const stats = calculateSchemaStats(schema);
 
   const listHeight = useFitHeight('14.5rem', '10rem');
 

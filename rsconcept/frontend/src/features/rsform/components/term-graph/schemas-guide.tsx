@@ -18,7 +18,7 @@ export function SchemasGuide({ schema }: SchemasGuideProps) {
     const processed = new Set<number>();
     const aliases: string[] = [];
     const indexes: number[] = [];
-    schema.items.forEach(cst => {
+    for (const cst of schema.items) {
       if (cst.parent_schema !== null && !processed.has(cst.parent_schema)) {
         const item = libraryItems.find(item => item.id === cst.parent_schema);
         if (item) {
@@ -29,7 +29,7 @@ export function SchemasGuide({ schema }: SchemasGuideProps) {
         processed.add(cst.parent_schema);
         indexes.push(cst.parent_schema_index);
       }
-    });
+    }
     const result: string[] = [];
     for (let i = 1; i <= aliases.length; i++) {
       const trueIndex = indexes.findIndex(index => index === i);
@@ -59,4 +59,4 @@ export function SchemasGuide({ schema }: SchemasGuideProps) {
       </Tooltip>
     </div>
   );
-}
+};

@@ -1,5 +1,5 @@
-''' Models: RSModel constituent binding (model, constituent, data). '''
-from django.db.models import CASCADE, ForeignKey, JSONField, Model
+''' Models: RSModel constituent binding. '''
+from django.db.models import CASCADE, ForeignKey, JSONField, Model, TextField
 
 
 class ConstituentData(Model):
@@ -15,6 +15,9 @@ class ConstituentData(Model):
         to='rsform.Constituenta',
         on_delete=CASCADE,
         related_name='rsmodel_bindings'
+    )
+    type = TextField(
+        verbose_name='Тип данных',
     )
     data = JSONField(
         verbose_name='Данные',

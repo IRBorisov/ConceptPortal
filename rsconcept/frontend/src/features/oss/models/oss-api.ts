@@ -77,16 +77,16 @@ export class SubstitutionValidator {
       return;
     }
 
-    schemas.forEach(schema => {
+    for (const schema of schemas) {
       this.schemaByID.set(schema.id, schema);
       this.mapping.set(schema.id, {});
-      schema.items.forEach(item => {
+      for (const item of schema.items) {
         this.cstByID.set(item.id, item);
         this.schemaByCst.set(item.id, schema);
-      });
-    });
+      }
+    }
     let index = STARTING_SUB_INDEX;
-    substitutions.forEach(item => {
+    for (const item of substitutions) {
       this.constituents.add(item.original);
       this.constituents.add(item.substitution);
       this.originals.add(item.original);
@@ -99,7 +99,7 @@ export class SubstitutionValidator {
       const newAlias = `${substitution.alias[0]}${index}`;
       this.mapping.get(original.schema)![original.alias] = newAlias;
       this.mapping.get(substitution.schema)![substitution.alias] = newAlias;
-    });
+    }
   }
 
   public validate(): boolean {

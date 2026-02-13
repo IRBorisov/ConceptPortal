@@ -26,7 +26,7 @@ import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { useUpdateCrucial } from '../../../backend/use-update-crucial';
 import { IconCstType } from '../../../components/icon-cst-type';
 import { getCstTypeShortcut, labelCstType } from '../../../labels';
-import { useRSEdit } from '../rsedit-context';
+import { useRSFormEdit } from '../rsedit-context';
 
 interface ToolbarRSListProps {
   className?: string;
@@ -49,7 +49,7 @@ export function ToolbarRSList({ className }: ToolbarRSListProps) {
     promptDeleteSelected: promptDeleteCst,
     moveUp,
     moveDown
-  } = useRSEdit();
+  } = useRSFormEdit();
 
   function handleToggleCrucial() {
     if (!activeCst) {

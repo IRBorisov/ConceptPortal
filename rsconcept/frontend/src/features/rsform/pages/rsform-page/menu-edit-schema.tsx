@@ -27,7 +27,7 @@ import { useRestoreOrder } from '../../backend/use-restore-order';
 import { type Constituenta } from '../../models/rsform';
 import { canProduceStructure } from '../../models/rsform-api';
 
-import { useRSEdit } from './rsedit-context';
+import { useRSFormEdit } from './rsedit-context';
 
 export function MenuEditSchema() {
   const { isAnonymous } = useAuthSuspense();
@@ -48,7 +48,7 @@ export function MenuEditSchema() {
     isContentEditable,
     promptTemplate,
     deselectAll
-  } = useRSEdit();
+  } = useRSFormEdit();
   const isProcessing = useMutatingRSForm();
 
   const { resetAliases } = useResetAliases();

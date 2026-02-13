@@ -52,15 +52,15 @@ export function EditorOssCard() {
       <ToolbarItemCard
         className='cc-tab-tools'
         onSubmit={initiateSubmit}
-        schema={schema}
+        item={schema}
         isMutable={isMutable}
-        deleteSchema={deleteSchema}
+        deleteItem={deleteSchema}
         isNarrow={isNarrow}
       />
 
       <div className='cc-column mx-0 md:mx-auto'>
         <FormOSS key={schema.id} />
-        <EditorLibraryItem schema={schema} isAttachedToOSS={false} />
+        <EditorLibraryItem item={schema} isAttachedToOSS={false} />
       </div>
 
       <OssStats

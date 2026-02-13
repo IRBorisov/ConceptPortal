@@ -2,6 +2,7 @@ import { create } from 'zustand';
 
 import { type Block, type Operation, type OperationSchema } from '@/features/oss/models/oss';
 import { type Constituenta, type RSForm } from '@/features/rsform';
+import { type RSModel } from '@/features/rsform/models/rsmodel';
 
 import { PromptVariableType } from '../models/prompting';
 import {
@@ -22,6 +23,9 @@ interface AIContextStore {
   schema: RSForm | null;
   setSchema: (value: RSForm | null) => void;
 
+  model: RSModel | null;
+  setModel: (value: RSModel | null) => void;
+
   block: Block | null;
   setBlock: (value: Block | null) => void;
 
@@ -38,6 +42,9 @@ export const useAIStore = create<AIContextStore>()(set => ({
 
   schema: null,
   setSchema: value => set({ schema: value }),
+
+  model: null,
+  setModel: value => set({ model: value }),
 
   block: null,
   setBlock: value => set({ block: value }),

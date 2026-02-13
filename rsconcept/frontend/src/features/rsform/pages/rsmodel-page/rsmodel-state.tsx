@@ -1,5 +1,12 @@
 'use client';
 
+import { useEffect } from 'react';
+
+import { useAIStore } from '@/features/ai/stores/ai-context';
+import { useRoleStore, UserRole } from '@/features/users';
+
+import { RSModelLoader } from '../../backend/rsmodel-loader';
+import { useRSFormSuspense } from '../../backend/use-rsform';
 import { useRSModelSuspense } from '../../backend/use-rsmodel';
 import { RSEditState } from '../rsform-page/rsedit-state';
 
@@ -9,19 +16,29 @@ interface RSModelStateProps {
   itemID: number;
 }
 
-export const RSModelState = ({
-  itemID,
-  children
-}: React.PropsWithChildren<RSModelStateProps>) => {
-  const { model } = useRSModelSuspense({ itemID: itemID });
+export const RSModelState = ({ itemID, children }: React.PropsWithChildren<RSModelStateProps>) => {
+  const { model: modelData } = useRSModelSuspense({ itemID: itemID });
+  const { schema } = useRSFormSuspense({ itemID: modelData.schema.id });
+  const model = new RSModelLoader(modelData, schema).produce();
+
+  const role = useRoleStore(state => state.role);
+  const isMutable = role > UserRole.READER && !schema.read_only;
+
+  const setCurrentModel = useAIStore(state => state.setModel);
+
+  useEffect(() => {
+    setCurrentModel(model);
+    return () => setCurrentModel(null);
+  }, [model, setCurrentModel]);
 
   return (
     <RSModelContext
       value={{
-        model
+        model,
+        isMutable
       }}
     >
-      <RSEditState itemID={model.schema}>
+      <RSEditState itemID={modelData.schema.id}>
         {children}
       </RSEditState>
     </RSModelContext>

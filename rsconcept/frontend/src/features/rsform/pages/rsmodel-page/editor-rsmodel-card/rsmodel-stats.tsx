@@ -1,4 +1,7 @@
+import { type RSModelStats } from '@/features/rsform/models/rsmodel';
+
 import {
+  IconAxiomFalse,
   IconChild,
   IconConvention,
   IconCrucial,
@@ -12,6 +15,9 @@ import {
   IconCstTerm,
   IconCstTheorem,
   IconDefinition,
+  IconEmptyTerm,
+  IconMissingBase,
+  IconNotCalculated,
   IconPredecessor,
   IconStatusError,
   IconStatusIncalculable,
@@ -21,14 +27,12 @@ import {
 import { cn } from '@/components/utils';
 import { ValueStats } from '@/components/view';
 
-import { type RSFormStats } from '../models/rsform';
-
-interface CardRSFormStatsProps {
+interface CardRSModelStatsProps {
   className?: string;
-  stats: RSFormStats;
+  stats: RSModelStats;
 }
 
-export function CardRSFormStats({ className, stats }: CardRSFormStatsProps) {
+export function CardRSModelStats({ className, stats }: CardRSModelStatsProps) {
   return (
     <div className={cn('h-min', 'grid grid-cols-4 gap-1 justify-items-end select-none', className)}>
       <div id='count_all' className='col-span-2 w-fit flex gap-3 hover:cursor-default'>
@@ -143,6 +147,34 @@ export function CardRSFormStats({ className, stats }: CardRSFormStatsProps) {
           />
         }
         value={stats.count_convention}
+      />
+      <ValueStats
+        id='count_missing_base'
+        title='Отсутствующие базовые интерпретации'
+        icon={
+          <IconMissingBase
+            size='1.25rem'
+            className={stats.count_missing_base > 0 ? 'text-destructive' : undefined} />
+        }
+        value={stats.count_missing_base}
+      />
+      <ValueStats
+        id='count_false_axioms'
+        title='Невыполненные аксиомы'
+        icon={<IconAxiomFalse size='1.25rem' className={stats.count_false_axioms > 0 ? 'text-destructive' : undefined} />}
+        value={stats.count_false_axioms}
+      />
+      <ValueStats
+        id='count_invalid_calculations'
+        title='Невычислимые конституенты'
+        icon={<IconNotCalculated size='1.25rem' className={stats.count_invalid_calculations > 0 ? 'text-destructive' : undefined} />}
+        value={stats.count_invalid_calculations}
+      />
+      <ValueStats
+        id='count_empty_terms'
+        title='Пустые термы'
+        icon={<IconEmptyTerm size='1.25rem' />}
+        value={stats.count_empty_terms}
       />
     </div>
   );

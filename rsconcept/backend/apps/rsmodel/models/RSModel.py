@@ -1,6 +1,8 @@
 ''' Models: RSModel attributes. '''
 from django.db.models import CASCADE, ForeignKey, Model, OneToOneField
 
+from apps.library.models import LibraryItem, LibraryItemType
+
 
 class RSModel(Model):
     ''' Attributes for an RSModel library item. '''
@@ -19,6 +21,12 @@ class RSModel(Model):
         null=True,
         blank=True
     )
+
+    @staticmethod
+    def create(schema: LibraryItem, **kwargs) -> 'RSModel':
+        ''' Create LibraryItem via RSModel. '''
+        model = LibraryItem.objects.create(item_type=LibraryItemType.RSMODEL, **kwargs)
+        return RSModel.objects.create(model=model, schema=schema)
 
     class Meta:
         ''' Model metadata. '''

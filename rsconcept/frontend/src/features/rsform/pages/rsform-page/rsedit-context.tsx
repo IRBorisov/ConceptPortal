@@ -39,7 +39,7 @@ interface IRSEditContext {
 }
 
 export const RSEditContext = createContext<IRSEditContext | null>(null);
-export const useRSEdit = () => {
+export const useRSFormEdit = () => {
   const context = use(RSEditContext);
   if (context === null) {
     throw new Error('useRSEdit has to be used within <RSEditState>');

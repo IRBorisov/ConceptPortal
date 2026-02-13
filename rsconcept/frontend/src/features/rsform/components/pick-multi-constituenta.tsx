@@ -54,12 +54,12 @@ export function PickMultiConstituenta({
       return schema.graph;
     }
     const newGraph = new Graph();
-    schema.graph.nodes.forEach(node => {
+    for (const node of schema.graph.nodes.values()) {
       newGraph.addNode(node.id);
-      node.outputs.forEach(output => {
+      for (const output of node.outputs) {
         newGraph.addEdge(node.id, output);
-      });
-    });
+      }
+    }
     schema.items
       .filter(item => items.find(cst => cst.id === item.id) === undefined)
       .forEach(item => {

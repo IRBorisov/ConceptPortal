@@ -41,7 +41,7 @@ import { ToolbarGraphSelection } from '../../../components/toolbar-graph-selecti
 import { labelEdgeType, labelGraphMode } from '../../../labels';
 import { isBasicConcept } from '../../../models/rsform-api';
 import { InteractionMode, useTermGraphStore, useTGConnectionStore } from '../../../stores/term-graph';
-import { useRSEdit } from '../rsedit-context';
+import { useRSFormEdit } from '../rsedit-context';
 
 import { useHandleActions } from './use-handle-actions';
 
@@ -61,7 +61,7 @@ export function ToolbarTermGraph({ className, graph }: ToolbarTermGraphProps) {
     isContentEditable,
     canDeleteSelected,
     focusCst
-  } = useRSEdit();
+  } = useRSFormEdit();
 
   const {
     elementRef: exportRef,

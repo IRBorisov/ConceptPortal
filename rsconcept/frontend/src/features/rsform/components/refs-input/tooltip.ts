@@ -83,14 +83,14 @@ function domTooltipEntityReference(ref: EntityReference, cst: Constituenta | nul
 
   const grams = document.createElement('div');
   grams.className = 'flex flex-wrap gap-1 mt-1';
-  parseGrammemes(ref.form).forEach(gramStr => {
+  for (const gramStr of parseGrammemes(ref.form)) {
     const gram = document.createElement('div');
     gram.id = `tooltip-${gramStr}`;
     gram.className = 'min-w-12 px-1 border rounded-lg text-sm text-center whitespace-nowrap bg-accent';
     gram.style.borderWidth = '1px';
     gram.innerText = labelGrammeme(gramStr);
     grams.appendChild(gram);
-  });
+  }
   dom.appendChild(grams);
 
   if (canClick) {

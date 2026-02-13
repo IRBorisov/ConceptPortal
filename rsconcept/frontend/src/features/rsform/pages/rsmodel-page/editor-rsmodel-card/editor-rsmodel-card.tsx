@@ -4,27 +4,28 @@ import clsx from 'clsx';
 
 import { EditorLibraryItem } from '@/features/library/components/editor-library-item';
 import { ToolbarItemCard } from '@/features/library/components/toolbar-item-card';
-import { calculateSchemaStats } from '@/features/rsform/models/rsform-api';
 
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { globalIDs } from '@/utils/constants';
+import { notImplemented } from '@/utils/utils';
 
-import { CardRSFormStats } from '../../../components/rsform-stats';
-import { useRSFormEdit } from '../rsedit-context';
+import { calculateModelStats } from '../../../models/rsmodel-api';
+import { useRSModelEdit } from '../rsmodel-context';
 
-import { FormRSForm } from './form-rsform';
+import { FormRSModel } from './form-rsmodel';
+import { CardRSModelStats } from './rsmodel-stats';
 
 const SIDELIST_LAYOUT_THRESHOLD = 768; // px
 
-export function EditorRSFormCard() {
-  const { schema, isMutable, deleteSchema, isAttachedToOSS } = useRSFormEdit();
+export function EditorModelCard() {
+  const { model, isMutable } = useRSModelEdit();
   const isModified = useModificationStore(state => state.isModified);
-  const showRSFormStats = usePreferencesStore(state => state.showRSFormStats);
+  const showStats = usePreferencesStore(state => state.showRSModelStats);
   const windowSize = useWindowSize();
   const isNarrow = !!windowSize.width && windowSize.width <= SIDELIST_LAYOUT_THRESHOLD;
-  const stats = calculateSchemaStats(schema);
+  const stats = calculateModelStats(model);
 
   function initiateSubmit() {
     const element = document.getElementById(globalIDs.library_item_editor) as HTMLFormElement;
@@ -42,6 +43,10 @@ export function EditorRSFormCard() {
     }
   }
 
+  function handleDelete() {
+    notImplemented(); // TODO: implement
+  }
+
   return (
     <div
       onKeyDown={handleInput}
@@ -54,25 +59,25 @@ export function EditorRSFormCard() {
       <ToolbarItemCard
         className='cc-tab-tools'
         onSubmit={initiateSubmit}
-        item={schema}
+        item={model}
         isMutable={isMutable}
-        deleteItem={deleteSchema}
+        deleteItem={handleDelete}
         isNarrow={isNarrow}
       />
 
       <div className='cc-column mx-0 md:mx-auto'>
-        <FormRSForm key={schema.id} />
-        <EditorLibraryItem item={schema} isAttachedToOSS={isAttachedToOSS} />
+        <FormRSModel key={model.id} />
+        <EditorLibraryItem item={model} isAttachedToOSS={false} />
       </div>
 
       <aside
         className={clsx(
           'w-80 md:w-56 mt-3 md:mt-8 mx-auto md:ml-5 md:mr-0',
           'cc-animate-sidebar',
-          showRSFormStats ? 'max-w-full' : 'opacity-0 max-w-0'
+          showStats ? 'max-w-full' : 'opacity-0 max-w-0'
         )}
       >
-        <CardRSFormStats stats={stats} />
+        <CardRSModelStats stats={stats} />
       </aside>
     </div>
   );

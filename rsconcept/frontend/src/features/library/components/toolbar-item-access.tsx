@@ -46,7 +46,7 @@ export function ToolbarItemAccess({
   }
 
   return (
-    <div className={clsx('w-46 flex', className)}>
+    <div className={clsx('w-46 flex h-fit', className)}>
       <Label text='Доступ' className='self-center select-none' />
       <div className='ml-auto cc-icons'>
         <SelectAccessPolicy

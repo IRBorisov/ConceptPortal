@@ -26,7 +26,7 @@ import { isMac, prepareTooltip } from '@/utils/utils';
 
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { type Constituenta } from '../../../models/rsform';
-import { useRSEdit } from '../rsedit-context';
+import { useRSFormEdit } from '../rsedit-context';
 
 interface ToolbarConstituentaProps {
   className?: string;
@@ -58,7 +58,7 @@ export function ToolbarConstituenta({
     promptDeleteSelected,
     moveUp,
     moveDown
-  } = useRSEdit();
+  } = useRSFormEdit();
 
   const showList = usePreferencesStore(state => state.showCstSideList);
   const toggleList = usePreferencesStore(state => state.toggleShowCstSideList);

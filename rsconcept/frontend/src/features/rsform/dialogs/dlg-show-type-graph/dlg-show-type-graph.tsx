@@ -23,7 +23,9 @@ export function DlgShowTypeGraph() {
   const hideDialog = useDialogsStore(state => state.hideDialog);
   const graph = (() => {
     const result = new TypificationGraph();
-    items.forEach(item => result.addElement(item.alias, item.type));
+    for (const item of items) {
+      result.addElement(item.alias, item.type);
+    }
     return result;
   })();
 
@@ -45,4 +47,4 @@ export function DlgShowTypeGraph() {
       </ReactFlowProvider>
     </ModalView>
   );
-}
+};
