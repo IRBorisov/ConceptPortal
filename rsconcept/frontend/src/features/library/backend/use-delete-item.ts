@@ -17,6 +17,7 @@ export const useDeleteItem = () => {
         () =>
           void Promise.allSettled([
             client.invalidateQueries({ queryKey: [KEYS.oss] }),
+            client.resetQueries({ queryKey: KEYS.composite.modelItem({ itemID: variables.target }) }),
             client.resetQueries({ queryKey: KEYS.composite.rsItem({ itemID: variables.target }) }),
             client.resetQueries({ queryKey: KEYS.composite.ossItem({ itemID: variables.target }) })
           ]),
@@ -26,7 +27,9 @@ export const useDeleteItem = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    deleteItem: (data: { target: number; beforeInvalidate?: () => void | Promise<void> }) => mutation.mutateAsync(data),
+    deleteItem: (
+      data: { target: number; beforeInvalidate?: () => void | Promise<void>; }
+    ) => mutation.mutateAsync(data),
     isPending: mutation.isPending
   };
 };

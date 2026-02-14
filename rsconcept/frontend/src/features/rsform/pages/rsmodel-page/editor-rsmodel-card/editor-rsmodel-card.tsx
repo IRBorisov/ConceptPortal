@@ -2,6 +2,9 @@
 
 import clsx from 'clsx';
 
+import { urls, useConceptNavigation } from '@/app';
+import { useLibrarySearchStore } from '@/features/library';
+import { useDeleteItem } from '@/features/library/backend/use-delete-item';
 import { EditorLibraryItem } from '@/features/library/components/editor-library-item';
 import { ToolbarItemCard } from '@/features/library/components/toolbar-item-card';
 
@@ -9,7 +12,7 @@ import { useWindowSize } from '@/hooks/use-window-size';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { globalIDs } from '@/utils/constants';
-import { notImplemented } from '@/utils/utils';
+import { promptText } from '@/utils/labels';
 
 import { calculateModelStats } from '../../../models/rsmodel-api';
 import { useRSModelEdit } from '../rsmodel-context';
@@ -20,12 +23,18 @@ import { CardRSModelStats } from './rsmodel-stats';
 const SIDELIST_LAYOUT_THRESHOLD = 768; // px
 
 export function EditorModelCard() {
+  const router = useConceptNavigation();
   const { model, isMutable } = useRSModelEdit();
   const isModified = useModificationStore(state => state.isModified);
-  const showStats = usePreferencesStore(state => state.showRSModelStats);
   const windowSize = useWindowSize();
   const isNarrow = !!windowSize.width && windowSize.width <= SIDELIST_LAYOUT_THRESHOLD;
+  const showStats = usePreferencesStore(state => state.showRSModelStats);
   const stats = calculateModelStats(model);
+
+  const setSearchLocation = useLibrarySearchStore(state => state.setLocation);
+  const searchLocation = useLibrarySearchStore(state => state.location);
+
+  const { deleteItem } = useDeleteItem();
 
   function initiateSubmit() {
     const element = document.getElementById(globalIDs.library_item_editor) as HTMLFormElement;
@@ -44,7 +53,18 @@ export function EditorModelCard() {
   }
 
   function handleDelete() {
-    notImplemented(); // TODO: implement
+    if (!window.confirm(promptText.deleteLibraryItem)) {
+      return;
+    }
+    void deleteItem({
+      target: model.id,
+      beforeInvalidate: () => {
+        if (searchLocation === model.location) {
+          setSearchLocation('');
+        }
+        return router.pushAsync({ path: urls.library, force: true });
+      }
+    });
   }
 
   return (

@@ -77,6 +77,9 @@ class LibraryViewSet(viewsets.ModelViewSet):
     def perform_destroy(self, instance: m.LibraryItem) -> None:
         if instance.item_type == m.LibraryItemType.RSFORM:
             PropagationFacade().before_delete_schema(instance.pk)
+            model_bindings = RSModel.objects.filter(schema=instance)
+            for binding in model_bindings:
+                self.perform_destroy(binding.model)
             super().perform_destroy(instance)
         elif instance.item_type == m.LibraryItemType.OPERATION_SCHEMA:
             schemas = list(OperationSchema.owned_schemasQ(instance))

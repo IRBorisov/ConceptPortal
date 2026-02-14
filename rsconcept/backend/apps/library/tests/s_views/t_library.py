@@ -294,7 +294,6 @@ class TestLibraryViewset(EndpointTester):
         self.executeOK(data)
         self.assertEqual(set(self.owned.getQ_editors()), set([self.user2, self.user]))
 
-
     @decl_endpoint('/api/library/{item}', method='delete')
     def test_destroy(self):
         self.executeNoContent(item=self.owned.pk)
@@ -302,6 +301,18 @@ class TestLibraryViewset(EndpointTester):
         self.toggle_admin(True)
         self.executeNoContent(item=self.unowned.pk)
 
+    @decl_endpoint('/api/library/{item}', method='delete')
+    def test_destroy_schema_trigger_model(self):
+        model = LibraryItem.objects.create(
+            item_type=LibraryItemType.RSMODEL,
+            title='Test42',
+            alias='T42',
+            owner=self.user
+        )
+        RSModel.objects.create(model=model, schema=self.owned)
+        self.executeNoContent(item=self.owned.pk)
+        self.assertFalse(LibraryItem.objects.filter(pk=self.owned.pk).exists())
+        self.assertFalse(LibraryItem.objects.filter(pk=model.pk).exists())
 
     @decl_endpoint('/api/library/active', method='get')
     def test_retrieve_common(self):
