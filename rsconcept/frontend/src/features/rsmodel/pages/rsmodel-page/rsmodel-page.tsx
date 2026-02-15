@@ -6,6 +6,7 @@ import { z } from 'zod';
 
 import { urls, useBlockNavigation, useConceptNavigation } from '@/app';
 import { RSModelTabID } from '@/app/navigation/navigation-context';
+import { ConstituentaTooltip } from '@/features/rsform/components/constituenta-tooltip';
 
 import { isAxiosError } from '@/backend/api-transport';
 import { TextURL } from '@/components/control';
@@ -13,8 +14,6 @@ import { type ErrorData } from '@/components/info-error';
 import { useQueryStrings } from '@/hooks/use-query-strings';
 import { useResetModification } from '@/hooks/use-reset-modification';
 import { useModificationStore } from '@/stores/modification';
-
-import { ConstituentaTooltip } from '../../components/constituenta-tooltip';
 
 import { RSModelState } from './rsmodel-state';
 import { RSModelTabs } from './rsmodel-tabs';

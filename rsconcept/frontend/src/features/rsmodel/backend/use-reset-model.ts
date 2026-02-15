@@ -4,14 +4,14 @@ import { useUpdateTimestamp } from '@/features/library/backend/use-update-timest
 
 import { KEYS } from '@/backend/configuration';
 
-import { rsformsApi } from './api';
+import { rsmodelApi } from './api';
 
 export const useResetModel = () => {
   const client = useQueryClient();
   const { updateTimestamp } = useUpdateTimestamp();
   const mutation = useMutation({
-    mutationKey: [KEYS.global_mutation, rsformsApi.baseKey, 'reset-model'],
-    mutationFn: rsformsApi.resetModel,
+    mutationKey: [KEYS.global_mutation, rsmodelApi.baseKey, 'reset-model'],
+    mutationFn: rsmodelApi.resetModel,
     onSuccess: (_, context) => {
       updateTimestamp(context.itemID, new Date(Date.now()).toISOString());
     },

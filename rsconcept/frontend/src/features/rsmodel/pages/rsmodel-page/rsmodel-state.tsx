@@ -3,12 +3,12 @@
 import { useEffect } from 'react';
 
 import { useAIStore } from '@/features/ai/stores/ai-context';
+import { useRSFormSuspense } from '@/features/rsform/backend/use-rsform';
+import { RSEditState } from '@/features/rsform/pages/rsform-page/rsedit-state';
 import { useRoleStore, UserRole } from '@/features/users';
 
 import { RSModelLoader } from '../../backend/rsmodel-loader';
-import { useRSFormSuspense } from '../../backend/use-rsform';
 import { useRSModelSuspense } from '../../backend/use-rsmodel';
-import { RSEditState } from '../rsform-page/rsedit-state';
 
 import { RSModelContext } from './rsmodel-context';
 

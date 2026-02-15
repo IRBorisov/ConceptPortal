@@ -1,4 +1,6 @@
-import { calculateSchemaStats } from './rsform-api';
+
+import { calculateSchemaStats } from '@/features/rsform/models/rsform-api';
+
 import { type RSModel, type RSModelStats } from './rsmodel';
 
 /** Calculate statistics for {@link RSModel}. */

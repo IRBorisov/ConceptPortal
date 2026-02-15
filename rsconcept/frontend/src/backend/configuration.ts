@@ -13,6 +13,7 @@ export const KEYS = {
   oss: 'oss',
   auth: 'auth',
   rsform: 'rsform',
+  rsmodel: 'rsmodel',
   library: 'library',
   users: 'users',
   cctext: 'cctext',
@@ -22,8 +23,8 @@ export const KEYS = {
   composite: {
     libraryList: ['library', 'list'] as const,
     ossItem: ({ itemID }: { itemID?: number | null; }) => [KEYS.oss, 'item', itemID],
-    modelItem: ({ itemID }: { itemID?: number | null; }) => [KEYS.rsform, 'model', itemID],
+    modelItem: ({ itemID }: { itemID?: number | null; }) => [KEYS.rsmodel, 'item', itemID],
     rsItem: ({ itemID, version }: { itemID?: number | null; version?: number; }) =>
-      [KEYS.rsform, 'schema', itemID, version ?? '']
+      [KEYS.rsform, 'item', itemID, version ?? '']
   }
 } as const;

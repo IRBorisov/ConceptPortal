@@ -3,17 +3,16 @@
 import { useLayoutEffect, useRef } from 'react';
 
 import { RSModelTabID, useConceptNavigation } from '@/app/navigation/navigation-context';
+import { EditorConstituenta } from '@/features/rsform/pages/rsform-page/editor-constituenta';
+import { EditorRSList } from '@/features/rsform/pages/rsform-page/editor-rslist';
+import { EditorTermGraph } from '@/features/rsform/pages/rsform-page/editor-term-graph';
+import { MenuRSTabs } from '@/features/rsform/pages/rsform-page/menu-rstabs';
+import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
 
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useResetAttribute } from '@/hooks/use-reset-attribute';
 import { useAppLayoutStore } from '@/stores/app-layout';
 import { useModificationStore } from '@/stores/modification';
-
-import { EditorConstituenta } from '../rsform-page/editor-constituenta';
-import { EditorRSList } from '../rsform-page/editor-rslist';
-import { EditorTermGraph } from '../rsform-page/editor-term-graph';
-import { MenuRSTabs } from '../rsform-page/menu-rstabs';
-import { useRSFormEdit } from '../rsform-page/rsedit-context';
 
 import { EditorModelCard } from './editor-rsmodel-card';
 

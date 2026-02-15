@@ -2,7 +2,7 @@ import { create } from 'zustand';
 
 import { type Block, type Operation, type OperationSchema } from '@/features/oss/models/oss';
 import { type Constituenta, type RSForm } from '@/features/rsform';
-import { type RSModel } from '@/features/rsform/models/rsmodel';
+import { type RSModel } from '@/features/rsmodel';
 
 import { PromptVariableType } from '../models/prompting';
 import {

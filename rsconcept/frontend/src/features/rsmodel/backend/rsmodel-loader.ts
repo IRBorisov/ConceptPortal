@@ -1,9 +1,9 @@
+import { CstType, type RSForm } from '@/features/rsform';
+import { getAnalysisFor, isBasicConcept, isFunctional } from '@/features/rsform/models/rsform-api';
 import { RSCalculator, TypeID, type Value, } from '@/features/rslang';
 
 import { type RO } from '@/utils/meta';
 
-import { CstType, type RSForm } from '../models/rsform';
-import { getAnalysisFor, isBasicConcept, isFunctional } from '../models/rsform-api';
 import { type BasicBinding, type BasicsContext, type RSModel, TYPE_BASIC } from '../models/rsmodel';
 
 import { type RSModelDTO } from './types';

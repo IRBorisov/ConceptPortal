@@ -1,5 +1,3 @@
-import { type RSModelStats } from '@/features/rsform/models/rsmodel';
-
 import {
   IconAxiomFalse,
   IconChild,
@@ -26,6 +24,8 @@ import {
 } from '@/components/icons';
 import { cn } from '@/components/utils';
 import { ValueStats } from '@/components/view';
+
+import { type RSModelStats } from '../../../models/rsmodel';
 
 interface CardRSModelStatsProps {
   className?: string;

@@ -4,21 +4,21 @@ import { useUpdateTimestamp } from '@/features/library/backend/use-update-timest
 
 import { KEYS } from '@/backend/configuration';
 
-import { rsformsApi } from './api';
-import { type ConstituentaList } from './types';
+import { rsmodelApi } from './api';
+import { type ConstituentaDataDTO } from './types';
 
-export const useClearValues = () => {
+export const useSetValue = () => {
   const client = useQueryClient();
   const { updateTimestamp } = useUpdateTimestamp();
   const mutation = useMutation({
-    mutationKey: [KEYS.global_mutation, rsformsApi.baseKey, 'clear-values'],
-    mutationFn: rsformsApi.clearValues,
+    mutationKey: [KEYS.global_mutation, rsmodelApi.baseKey, 'clear-values'],
+    mutationFn: rsmodelApi.setValue,
     onSuccess: (_, context) => {
       updateTimestamp(context.itemID, new Date(Date.now()).toISOString());
     },
     onError: () => client.invalidateQueries()
   });
   return {
-    clearValues: (data: { itemID: number; data: ConstituentaList; }) => mutation.mutateAsync(data)
+    setCstValue: (data: { itemID: number; data: ConstituentaDataDTO; }) => mutation.mutateAsync(data)
   };
 };

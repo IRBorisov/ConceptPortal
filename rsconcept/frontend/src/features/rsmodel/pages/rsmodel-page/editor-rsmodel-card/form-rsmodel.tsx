@@ -21,14 +21,14 @@ import { ValueIcon } from '@/components/view';
 import { useModificationStore } from '@/stores/modification';
 import { globalIDs } from '@/utils/constants';
 
-import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
+import { useMutatingRSModel } from '../../../backend/use-mutating-rsmodel';
 import { useRSModelEdit } from '../rsmodel-context';
 
 export function FormRSModel() {
   const router = useConceptNavigation();
   const { updateItem: updateSchema } = useUpdateItem();
   const setIsModified = useModificationStore(state => state.setIsModified);
-  const isProcessing = useMutatingRSForm();
+  const isProcessing = useMutatingRSModel();
   const { model, isMutable } = useRSModelEdit();
 
   const {
