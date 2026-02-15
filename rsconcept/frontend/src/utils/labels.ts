@@ -42,7 +42,9 @@ export const infoMsg = {
   blockDestroyed: 'Блок удален',
   operationExecuted: 'Операция выполнена',
   allOperationExecuted: 'Все операции выполнены',
-  constituentsDestroyed: (count: number) => `Конституенты удалены: ${count}`
+  constituentsDestroyed: (count: number) => `Конституенты удалены: ${count}`,
+  dataCleared: (count: number) => `Данные очищены: ${count}`,
+  modelCleared: 'Модель очищена'
 } as const;
 
 /**

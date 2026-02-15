@@ -71,6 +71,9 @@ class EndpointTester(DBTester):
     def login(self):
         self.client.force_authenticate(user=self.user)
 
+    def login2(self):
+        self.client.force_authenticate(user=self.user2)
+
     def logout(self):
         self.client.logout()
 

@@ -18,7 +18,10 @@ export type RSFormDTO = z.infer<typeof schemaRSForm>;
 export type RSModelDTO = z.infer<typeof schemaRSModel>;
 
 /** Represents data for {@link Constituenta} provided by backend. */
-export type ConstituentaData = z.infer<typeof schemaConstituentaData>;
+export type ConstituentaValue = z.infer<typeof schemaConstituentaValue>;
+
+/** Represents data for {@link Constituenta} provided to backend. */
+export type ConstituentaDataDTO = z.infer<typeof schemaConstituentaData>;
 
 /** Represents data, used for uploading {@link RSForm} as file. */
 export interface RSFormUploadDTO {
@@ -125,7 +128,7 @@ const RecursiveArraySchema: z.ZodType<RecursiveArray> = z.lazy(() =>
   )
 );
 
-export const schemaConstituentaData = z.strictObject({
+export const schemaConstituentaValue = z.strictObject({
   id: z.number(),
   type: z.string(),
   value: z.union([
@@ -134,10 +137,19 @@ export const schemaConstituentaData = z.strictObject({
   ])
 });
 
+export const schemaConstituentaData = z.strictObject({
+  target: z.number(),
+  type: z.string(),
+  data: z.union([
+    z.record(z.number(), z.string()),
+    RecursiveArraySchema
+  ])
+});
+
 export const schemaRSModel = schemaLibraryItem.extend({
   editors: z.array(z.number()),
   schema: schemaRSForm,
-  items: z.array(schemaConstituentaData)
+  items: z.array(schemaConstituentaValue)
 });
 
 export const schemaVersionCreatedResponse = z.strictObject({

@@ -8,6 +8,7 @@ import {
   type Attribution,
   type AttributionTargetDTO,
   type ConstituentaCreatedResponse,
+  type ConstituentaDataDTO,
   type ConstituentaList,
   type CreateConstituentaDTO,
   type InlineSynthesisDTO,
@@ -184,5 +185,27 @@ export const rsformsApi = {
         data: data,
         successMessage: infoMsg.changesSaved
       }
-    })
+    }),
+
+  setValue: ({ itemID, data }: { itemID: number; data: ConstituentaDataDTO; }) =>
+    axiosPatch<ConstituentaDataDTO>({
+      endpoint: `/api/models/${itemID}/set-value`,
+      request: {
+        data: data,
+        successMessage: infoMsg.changesSaved
+      }
+    }),
+  clearValues: ({ itemID, data }: { itemID: number; data: ConstituentaList; }) =>
+    axiosPatch<ConstituentaList>({
+      endpoint: `/api/models/${itemID}/clear-values`,
+      request: {
+        data: data,
+        successMessage: infoMsg.dataCleared(data.items.length)
+      }
+    }),
+  resetModel: ({ itemID }: { itemID: number; }) =>
+    axiosPatch<undefined>({
+      endpoint: `/api/models/${itemID}/reset-all`,
+      request: { successMessage: infoMsg.modelCleared }
+    }),
 } as const;
