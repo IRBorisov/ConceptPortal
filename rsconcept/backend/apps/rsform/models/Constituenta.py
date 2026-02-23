@@ -1,7 +1,4 @@
 ''' Models: Constituenta. '''
-import re
-
-from cctext import extract_entities
 from django.db.models import (
     CASCADE,
     BooleanField,
@@ -14,26 +11,7 @@ from django.db.models import (
     TextField
 )
 
-from ..utils import apply_pattern
-
-_RE_GLOBALS = r'[XCSADFPTN]\d+'  # cspell:disable-line
-_REF_ENTITY_PATTERN = re.compile(r'@{([^0-9\-].*?)\|.*?}')
-_GLOBAL_ID_PATTERN = re.compile(r'([XCSADFPTN][0-9]+)')  # cspell:disable-line
-
-
-def extract_globals(expression: str) -> set[str]:
-    ''' Extract all global aliases from expression. '''
-    return set(re.findall(_RE_GLOBALS, expression))
-
-
-def replace_globals(expression: str, mapping: dict[str, str]) -> str:
-    ''' Replace all global aliases in expression. '''
-    return apply_pattern(expression, mapping, _GLOBAL_ID_PATTERN)
-
-
-def replace_entities(expression: str, mapping: dict[str, str]) -> str:
-    ''' Replace all entity references in expression. '''
-    return apply_pattern(expression, mapping, _REF_ENTITY_PATTERN)
+from ..utils import extract_globals, extract_entities, replace_entities, replace_globals
 
 
 class CstType(TextChoices):

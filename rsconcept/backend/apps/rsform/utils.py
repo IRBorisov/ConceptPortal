@@ -6,6 +6,9 @@ EXTEOR_INNER_FILENAME = 'document.json'
 
 # Old style reference pattern
 _REF_OLD_PATTERN = re.compile(r'@{([^0-9\-][^\}\|\{]*?)\|([^\}\|\{]*?)\|([^\}\|\{]*?)}')
+_RE_GLOBALS = r'[XCSADFPTN]\d+'  # cspell:disable-line
+_REF_ENTITY_PATTERN = re.compile(r'@{([^0-9\-].*?)\|.*?}')
+_GLOBAL_ID_PATTERN = re.compile(r'([XCSADFPTN][0-9]+)')  # cspell:disable-line
 
 
 def apply_pattern(text: str, mapping: dict[str, str], pattern: re.Pattern[str]) -> str:
@@ -46,3 +49,28 @@ def filename_for_schema(alias: str) -> str:
         # are not supported by some browsers
         return 'Schema.trs'
     return alias + '.trs'
+
+
+def extract_globals(expression: str) -> set[str]:
+    ''' Extract all global aliases from expression. '''
+    return set(re.findall(_RE_GLOBALS, expression))
+
+
+def extract_entities(text: str) -> list[str]:
+    ''' Extract list of entities that are referenced. '''
+    result: list[str] = []
+    for segment in re.finditer(_REF_ENTITY_PATTERN, text):
+        entity = segment.group(1)
+        if entity not in result:
+            result.append(entity)
+    return result
+
+
+def replace_globals(expression: str, mapping: dict[str, str]) -> str:
+    ''' Replace all global aliases in expression. '''
+    return apply_pattern(expression, mapping, _GLOBAL_ID_PATTERN)
+
+
+def replace_entities(expression: str, mapping: dict[str, str]) -> str:
+    ''' Replace all entity references in expression. '''
+    return apply_pattern(expression, mapping, _REF_ENTITY_PATTERN)

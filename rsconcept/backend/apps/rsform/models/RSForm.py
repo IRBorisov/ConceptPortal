@@ -11,9 +11,10 @@ from apps.library.models import LibraryItem, LibraryItemType, Version
 from shared import messages as msg
 
 from ..graph import Graph
+from ..utils import extract_entities, extract_globals
 from .api_RSLanguage import get_type_prefix, guess_type
 from .Attribution import Attribution
-from .Constituenta import Constituenta, CstType, extract_entities, extract_globals
+from .Constituenta import Constituenta, CstType
 
 DELETED_ALIAS = 'DEL'
 

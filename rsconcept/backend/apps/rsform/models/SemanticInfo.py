@@ -1,6 +1,7 @@
 ''' Models: RSForm semantic information. '''
 from typing import cast
 
+from ..utils import extract_globals
 from .api_RSLanguage import (
     infer_template,
     is_base_set,
@@ -8,7 +9,7 @@ from .api_RSLanguage import (
     is_simple_expression,
     split_template
 )
-from .Constituenta import Constituenta, CstType, extract_globals
+from .Constituenta import Constituenta, CstType
 from .RSForm import RSForm
 from .RSFormCached import RSFormCached
 

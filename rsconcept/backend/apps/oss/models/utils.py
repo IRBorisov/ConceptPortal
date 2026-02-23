@@ -2,16 +2,8 @@
 
 from typing import Optional
 
-from cctext import extract_entities
-
-from apps.rsform.models import (
-    DELETED_ALIAS,
-    Constituenta,
-    RSFormCached,
-    extract_globals,
-    replace_entities,
-    replace_globals
-)
+from apps.rsform.models import DELETED_ALIAS, Constituenta, RSFormCached
+from apps.rsform.utils import extract_entities, extract_globals, replace_entities, replace_globals
 
 CstMapping = dict[str, Optional[Constituenta]]
 CstSubstitution = list[tuple[Constituenta, Constituenta]]
