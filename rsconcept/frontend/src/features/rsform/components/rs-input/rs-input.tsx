@@ -113,7 +113,7 @@ export const RSInput = forwardRef<ReactCodeMirrorRef, RSInputProps>(
       },
       styles: [
         { tag: tags.name, color: APP_COLORS.fgPurple, cursor: schema ? 'default' : cursor }, // GlobalID
-        { tag: tags.variableName, color: APP_COLORS.fgGreen }, // LocalID
+        { tag: tags.variableName, color: APP_COLORS.fgGreen, cursor: schema ? 'default' : cursor }, // LocalID
         { tag: tags.propertyName, color: APP_COLORS.fgTeal }, // Radical
         { tag: tags.keyword, color: APP_COLORS.fgBlue }, // keywords
         { tag: tags.literal, color: APP_COLORS.fgBlue }, // literals

@@ -6,14 +6,14 @@ import { type NodeType, type Tree, type TreeCursor } from '@lezer/common';
 import { type ReactCodeMirrorRef, type SelectionRange } from '@uiw/react-codemirror';
 
 /** Represents syntax tree node data. */
-interface SyntaxNode {
+export interface CMSyntaxNode {
   type: NodeType;
   from: number;
   to: number;
 }
 
 /** Represents syntax tree cursor data. */
-interface CursorNode extends SyntaxNode {
+interface CursorNode extends CMSyntaxNode {
   isLeaf: boolean;
 }
 
@@ -77,8 +77,8 @@ export function findEnvelopingNodes(
   to: number,
   tree: Tree,
   filter?: readonly number[]
-): SyntaxNode[] {
-  const result: SyntaxNode[] = [];
+): CMSyntaxNode[] {
+  const result: CMSyntaxNode[] = [];
   tree.cursor().iterate(node => {
     if ((!filter || filter.includes(node.type.id)) && node.to >= from && node.from <= to) {
       result.push({
@@ -97,8 +97,8 @@ export function findContainedNodes(
   finish: number,
   tree: Tree,
   filter?: readonly number[]
-): SyntaxNode[] {
-  const result: SyntaxNode[] = [];
+): CMSyntaxNode[] {
+  const result: CMSyntaxNode[] = [];
   tree.cursor().iterate(node => {
     if ((!filter || filter.includes(node.type.id)) && node.to <= finish && node.from >= start) {
       result.push({
@@ -180,7 +180,7 @@ export class CodeMirrorWrapper {
   /**
    * Access list of SyntaxNodes contained in current selection.
    */
-  getContainedNodes(tokenFilter?: readonly number[]): SyntaxNode[] {
+  getContainedNodes(tokenFilter?: readonly number[]): CMSyntaxNode[] {
     const selection = this.getSelection();
     return findContainedNodes(selection.from, selection.to, syntaxTree(this.ref.view.state), tokenFilter);
   }
@@ -188,7 +188,7 @@ export class CodeMirrorWrapper {
   /**
    * Access list of SyntaxNodes enveloping current selection.
    */
-  getEnvelopingNodes(tokenFilter?: readonly number[]): SyntaxNode[] {
+  getEnvelopingNodes(tokenFilter?: readonly number[]): CMSyntaxNode[] {
     const selection = this.getSelection();
     return findEnvelopingNodes(selection.from, selection.to, syntaxTree(this.ref.view.state), tokenFilter);
   }
@@ -196,7 +196,7 @@ export class CodeMirrorWrapper {
   /**
    * Access list of SyntaxNodes contained in documents.
    */
-  getAllNodes(tokenFilter?: readonly number[]): SyntaxNode[] {
+  getAllNodes(tokenFilter?: readonly number[]): CMSyntaxNode[] {
     return findContainedNodes(0, this.ref.view.state.doc.length, syntaxTree(this.ref.view.state), tokenFilter);
   }
 

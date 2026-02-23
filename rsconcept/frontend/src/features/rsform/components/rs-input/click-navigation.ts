@@ -17,7 +17,7 @@ const navigationProducer = (schema: RSForm, onOpenEdit: (cstID: number) => void)
         return;
       }
 
-      const { alias } = findAliasAt(pos, view.state);
+      const alias = findAliasAt(pos, view.state)?.alias;
       if (!alias) {
         return;
       }

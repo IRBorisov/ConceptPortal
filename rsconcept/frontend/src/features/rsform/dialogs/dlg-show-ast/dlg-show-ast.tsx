@@ -40,7 +40,7 @@ export function DlgShowAST() {
           'absolute z-pop top-2 right-1/2 translate-x-1/2 max-w-[60ch]',
           'px-2 rounded-2xl',
           'backdrop-blur-xs bg-background/90',
-          'text-lg text-center'
+          'font-math text-md text-center'
         )}
       >
         {!hoverNodeDebounced || isDragging ? expression : null}
