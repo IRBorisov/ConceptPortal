@@ -25,16 +25,19 @@ export class TypeAuditor {
   private context: TypeContext;
   private reporter?: ErrorReporter;
   private locals: LocalContext;
+  private annotate: boolean;
 
   constructor(context: TypeContext) {
+    this.annotate = false;
     this.context = context;
     this.locals = new LocalContext(this.onError.bind(this));
   }
 
-  run(ast: AstNode, reporter?: ErrorReporter): ExpressionType | null {
+  run(ast: AstNode, annotateTypes: boolean, reporter?: ErrorReporter): ExpressionType | null {
     if (ast.hasError) {
       return null;
     }
+    this.annotate = annotateTypes;
     this.reporter = reporter;
     this.clear();
     return this.dispatchVisit(ast);
@@ -45,6 +48,17 @@ export class TypeAuditor {
   }
 
   private dispatchDeclare(node: AstNode, domain: Typification): boolean {
+    const result = this.processDeclare(node, domain);
+    if (result === true && this.annotate) {
+      node.annotation = {
+        ...(typeof node.annotation === 'object' && node.annotation !== null ? node.annotation : {}),
+        rsType: domain
+      };
+    }
+    return result;
+  }
+
+  private processDeclare(node: AstNode, domain: Typification): boolean {
     switch (node.typeID) {
       case TokenID.ID_LOCAL:
         return this.declareLocal(node, domain);
@@ -84,6 +98,17 @@ export class TypeAuditor {
   }
 
   private dispatchVisit(node: AstNode): ExpressionType | null {
+    const result = this.processVisit(node);
+    if (result !== null && this.annotate) {
+      node.annotation = {
+        ...(node.annotation ? node.annotation : {}),
+        rsType: result
+      };
+    }
+    return result;
+  }
+
+  private processVisit(node: AstNode): ExpressionType | null {
     switch (node.typeID) {
       case TokenID.ID_GLOBAL:
       case TokenID.ID_FUNCTION:

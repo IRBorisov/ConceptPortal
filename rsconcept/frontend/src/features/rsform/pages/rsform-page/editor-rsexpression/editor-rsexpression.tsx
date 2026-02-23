@@ -9,10 +9,11 @@ import { type AnalysisFull, type RSErrorDescription, TokenID } from '@/features/
 import { useResetOnChange } from '@/hooks/use-reset-on-change';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
+import { errorMsg } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 import { buildTree, flattenAst } from '@/utils/parsing';
 
-import { normalizeAST, rslangParser } from '../../../../rslang';
+import { rslangParser } from '../../../../rslang';
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { RSInput } from '../../../components/rs-input';
 import { RSTextWrapper } from '../../../components/rs-input/text-editing';
@@ -161,10 +162,12 @@ export function EditorRSExpression({
       const flatAst = flattenAst(ast);
       showAST({ syntaxTree: flatAst, expression: value });
     } else {
-      const tree = rslangParser.parse(value);
-      const ast = buildTree(tree.cursor());
-      normalizeAST(ast, value);
-      const flatAst = flattenAst(ast);
+      const parse = schema.analyzer.checkFull(value, { annotateTypes: true });
+      if (!parse.ast) {
+        toast.error(errorMsg.invalidParse);
+        return;
+      }
+      const flatAst = flattenAst(parse.ast);
       showAST({ syntaxTree: flatAst, expression: value });
     }
   }

@@ -30,6 +30,7 @@ export interface AnalysisFull extends AnalysisBase {
 export interface AnalysisOptions {
   expected?: TypeClass;
   isDomain?: boolean;
+  annotateTypes?: boolean;
 }
 
 export class RSLangAnalyzer {
@@ -69,7 +70,7 @@ export class RSLangAnalyzer {
     if (ast.hasError) {
       return { success: false, type: null, valueClass: null };
     }
-    const type = this.typeAuditor.run(ast);
+    const type = this.typeAuditor.run(ast, options?.annotateTypes ?? false);
     if (type === null) {
       return { success: false, type: null, valueClass: null };
     }
@@ -106,7 +107,7 @@ export class RSLangAnalyzer {
       return { success: false, type: null, valueClass: null, errors: errors, ast: ast };
     }
 
-    const type = this.typeAuditor.run(ast, reporter);
+    const type = this.typeAuditor.run(ast, options?.annotateTypes ?? false, reporter);
     if (type === null) {
       return { success: false, type: null, valueClass: null, errors: errors, ast: ast };
     }

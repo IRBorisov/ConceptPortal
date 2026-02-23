@@ -246,14 +246,14 @@ describe('TypeAuditor', () => {
   function expectType(input: string, expectedType: string) {
     const ast = buildAST(input);
     expect(ast.hasError).toBe(false);
-    const result = auditor.run(ast, error => (errors.push(error)));
+    const result = auditor.run(ast, false, error => (errors.push(error)));
     expect(labelType(result)).toBe(expectedType);
   }
 
   function expectError(input: string, expectedError: RSErrorDescription) {
     const ast = buildAST(input);
     expect(ast.hasError).toBe(false);
-    auditor.run(ast, error => (errors.push(error)));
+    auditor.run(ast, false, error => (errors.push(error)));
     expect(errors.length).toBe(1);
     expect(errors[0]).toEqual(expectedError);
   }

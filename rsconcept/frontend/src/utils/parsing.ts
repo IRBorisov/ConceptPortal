@@ -16,6 +16,7 @@ export interface AstNodeData extends Record<string, unknown> {
 export interface AstNodeBase {
   typeID: number;
   data: AstNodeData;
+  annotation?: Record<string, unknown>;
 }
 
 /** Represents AST structured node. */
@@ -71,7 +72,15 @@ export function buildTree(cursor: TreeCursor, parent: AstNode | null = null): As
 /** Flattens AST tree to a array form. */
 export function flattenAst(node: AstNode, parent = TOKEN_ERROR, out: FlatAST = []): FlatAST {
   const uid = out.length;
-  out.push({ uid, parent, typeID: node.typeID, from: node.from, to: node.to, data: node.data });
+  out.push({
+    uid: uid,
+    parent: parent,
+    typeID: node.typeID,
+    from: node.from,
+    to: node.to,
+    data: node.data,
+    annotation: node.annotation
+  });
   for (const child of node.children) {
     flattenAst(child, uid, out);
   }
