@@ -18,12 +18,13 @@ RUN apt-get update -qq && \
         libstdc++6 && \
     curl -sS https://bootstrap.pypa.io/get-pip.py | python3.12 && \
     python3.12 -m pip install --upgrade pip && \
-    python3.12 -m pip install wheel && \
+    python3.12 -m pip install --upgrade setuptools wheel && \
+    rm -rf /usr/lib/python3/dist-packages/pkg_resources* /usr/lib/python3.12/pkgutil.pyc && \
     apt-get autoclean -y && \
     apt-get autoremove -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
-
+    
 # ========= Builder ==============
 FROM python-base AS builder
 
