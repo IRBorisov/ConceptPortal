@@ -4,6 +4,17 @@ import { type RSCalculator } from '@/features/rslang';
 
 export const TYPE_BASIC = 'basic';
 
+/** Evaluation status enumeration. */
+export const EvalStatus = {
+  NO_EVAL: 1,         // не вычисляется
+  NOT_PROCESSED: 2,   // Интерпретация не вычислялась
+  EVAL_FAIL: 3,       // Ошибка при вычислении
+  AXIOM_FALSE: 4,     // Значение аксиомы = FALSE
+  EMPTY_SET: 5,       // Значение пусто
+  HAS_DATA: 6         // Интерпретация вычислена и не пуста
+} as const;
+export type EvalStatus = (typeof EvalStatus)[keyof typeof EvalStatus];
+
 /** Represents basic element binding. */
 export type BasicBinding = Record<number, string>;
 
@@ -25,12 +36,3 @@ export interface RSModelStats extends RSFormStats {
   count_empty_terms: number;
 }
 
-// //! Evaluation status enumeration
-// enum class EvalStatus : uint8_t {
-//   UNKNOWN = 0, //
-//   NEVER_CALCULATED = 1, // Интерпретация не вычислялась
-//   INCALCULABLE = 2, // Невозможно вычислить
-//   AXIOM_FAIL = 3, // Значение аксиомы = FALSE (только для аксиом)
-//   EMPTY = 4, // Значение пусто (только для множеств)
-//   HAS_DATA = 5, // Интерпретация вычислена и непуста
-// };
