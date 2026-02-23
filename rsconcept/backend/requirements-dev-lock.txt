@@ -1,5 +1,5 @@
 tzdata==2025.3
-Django==6.0.1
+Django==6.0.2
 djangorestframework==3.16.1
 django-cors-headers==4.9.0
 django-filter==25.2
@@ -7,15 +7,15 @@ drf-spectacular==0.29.0
 drf-spectacular-sidecar==2026.1.1
 coreapi==2.3.3
 django-rest-passwordreset==1.5.0
-cctext==0.1.4
+cctext==0.1.5
 pyconcept==0.1.12
 
 psycopg2-binary==2.9.11
 gunicorn==25.1.0
 
-djangorestframework-stubs==3.16.7
+djangorestframework-stubs==3.16.8
 django-extensions==4.1
-django-stubs==5.2.8
+django-stubs==5.2.9
 mypy==1.19.1
-pylint==4.0.4
-coverage==7.13.1
+pylint==4.0.5
+coverage==7.13.4
