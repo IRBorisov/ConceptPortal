@@ -3,7 +3,7 @@
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { type InlineSynthesisDTO } from '../../backend/types';
-import { useRSFormSuspense } from '../../backend/use-rsform';
+import { useRSForm } from '../../backend/use-rsform';
 import { PickMultiConstituenta } from '../../components/pick-multi-constituenta';
 
 export function TabConstituents() {
@@ -11,7 +11,7 @@ export function TabConstituents() {
   const sourceID = useWatch({ control, name: 'source' });
   const substitutions = useWatch({ control, name: 'substitutions' });
 
-  const { schema } = useRSFormSuspense({ itemID: sourceID! });
+  const { schema } = useRSForm({ itemID: sourceID! });
 
   function handleSelectItems(newValue: number[]) {
     setValue('items', newValue, { shouldValidate: true });

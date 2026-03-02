@@ -14,7 +14,7 @@ import {
   schemaCreateConstituenta
 } from '../../backend/types';
 import { useCreateConstituenta } from '../../backend/use-create-constituenta';
-import { useRSFormSuspense } from '../../backend/use-rsform';
+import { useRSForm } from '../../backend/use-rsform';
 import { validateNewAlias } from '../../models/rsform-api';
 
 import { FormCreateCst } from './form-create-cst';
@@ -29,7 +29,7 @@ export interface DlgCreateCstProps {
 export function DlgCreateCst() {
   const { initial, schemaID, onCreate, onCancel } = useDialogsStore(state => state.props as DlgCreateCstProps);
   const { createConstituenta: cstCreate } = useCreateConstituenta();
-  const { schema } = useRSFormSuspense({ itemID: schemaID });
+  const { schema } = useRSForm({ itemID: schemaID });
 
   const methods = useForm<CreateConstituentaDTO>({
     mode: 'onChange',

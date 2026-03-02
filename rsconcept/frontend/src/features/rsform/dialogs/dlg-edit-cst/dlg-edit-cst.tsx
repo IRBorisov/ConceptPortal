@@ -13,7 +13,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { hintMsg } from '@/utils/labels';
 
 import { schemaUpdateConstituenta, type UpdateConstituentaDTO } from '../../backend/types';
-import { useRSFormSuspense } from '../../backend/use-rsform';
+import { useRSForm } from '../../backend/use-rsform';
 import { useUpdateConstituenta } from '../../backend/use-update-constituenta';
 import { validateNewAlias } from '../../models/rsform-api';
 
@@ -26,7 +26,7 @@ export interface DlgEditCstProps {
 
 export function DlgEditCst() {
   const { schemaID, targetID } = useDialogsStore(state => state.props as DlgEditCstProps);
-  const { schema } = useRSFormSuspense({ itemID: schemaID });
+  const { schema } = useRSForm({ itemID: schemaID });
   const target = schema.cstByID.get(targetID)!;
   const hideDialog = useDialogsStore(state => state.hideDialog);
   const { updateConstituenta } = useUpdateConstituenta();

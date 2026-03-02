@@ -1,14 +1,14 @@
 'use client';
 
-import { useAuthSuspense } from '@/features/auth';
+import { useAuth } from '@/features/auth';
 import { MenuRole } from '@/features/library/components/menu-role';
 
 import { MenuEditSchema } from './menu-edit-schema';
 import { MenuMain } from './menu-main';
 import { useRSFormEdit } from './rsedit-context';
 
-export function MenuRSTabs() {
-  const { user } = useAuthSuspense();
+export function MenuRSForm() {
+  const { user } = useAuth();
   const { schema, isOwned } = useRSFormEdit();
 
   return (

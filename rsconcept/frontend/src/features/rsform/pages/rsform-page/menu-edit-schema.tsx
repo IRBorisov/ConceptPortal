@@ -1,7 +1,7 @@
 'use client';
 
 import { useConceptNavigation } from '@/app';
-import { useAuthSuspense } from '@/features/auth';
+import { useAuth } from '@/features/auth';
 
 import { Divider } from '@/components/container';
 import { MiniButton } from '@/components/control';
@@ -30,7 +30,7 @@ import { canProduceStructure } from '../../models/rsform-api';
 import { useRSFormEdit } from './rsedit-context';
 
 export function MenuEditSchema() {
-  const { isAnonymous } = useAuthSuspense();
+  const { isAnonymous } = useAuth();
   const isModified = useModificationStore(state => state.isModified);
   const router = useConceptNavigation();
   const {

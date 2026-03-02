@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import clsx from 'clsx';
 
-import { useAuthSuspense } from '@/features/auth';
+import { useAuth } from '@/features/auth';
 
 import { useModificationStore } from '@/stores/modification';
 import { globalIDs } from '@/utils/constants';
@@ -21,7 +21,7 @@ export function TabEditTemplate({ activeID }: TabEditTemplateProps) {
   const { promptTemplate } = usePromptTemplateSuspense(activeID);
   const isModified = useModificationStore(state => state.isModified);
   const setIsModified = useModificationStore(state => state.setIsModified);
-  const { user } = useAuthSuspense();
+  const { user } = useAuth();
   const isMutable = user.is_staff || promptTemplate.owner === user.id;
   const [toggleReset, setToggleReset] = useState(false);
 

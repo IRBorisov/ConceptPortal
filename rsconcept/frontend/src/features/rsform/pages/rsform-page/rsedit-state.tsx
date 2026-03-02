@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 
 import { urls, useConceptNavigation } from '@/app';
 import { useAIStore } from '@/features/ai/stores/ai-context';
-import { useAuthSuspense } from '@/features/auth';
+import { useAuth } from '@/features/auth';
 import { useLibrarySearchStore } from '@/features/library';
 import { useDeleteItem } from '@/features/library/backend/use-delete-item';
 import { useLibrarySuspense } from '@/features/library/backend/use-library';
@@ -24,7 +24,7 @@ import { type ConstituentaBasicsDTO, type CreateConstituentaDTO } from '../../ba
 import { useCreateConstituenta } from '../../backend/use-create-constituenta';
 import { useDeleteAttribution } from '../../backend/use-delete-attribution';
 import { useMoveConstituents } from '../../backend/use-move-constituents';
-import { useRSFormSuspense } from '../../backend/use-rsform';
+import { useRSForm } from '../../backend/use-rsform';
 import { useUpdateConstituenta } from '../../backend/use-update-constituenta';
 import { type Constituenta, CstType } from '../../models/rsform';
 import { generateAlias, removeAliasReference } from '../../models/rsform-api';
@@ -47,8 +47,8 @@ export const RSEditState = ({
   const setSearchLocation = useLibrarySearchStore(state => state.setLocation);
   const searchLocation = useLibrarySearchStore(state => state.location);
 
-  const { user } = useAuthSuspense();
-  const { schema } = useRSFormSuspense({ itemID: itemID, version: activeVersion });
+  const { user } = useAuth();
+  const { schema } = useRSForm({ itemID: itemID, version: activeVersion });
   const { items: library } = useLibrarySuspense();
   const isModified = useModificationStore(state => state.isModified);
 

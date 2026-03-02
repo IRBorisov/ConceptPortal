@@ -3,7 +3,7 @@
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { useAuthSuspense } from '@/features/auth';
+import { useAuth } from '@/features/auth';
 import { HelpTopic } from '@/features/help';
 
 import { Checkbox, TextArea, TextInput } from '@/components/input';
@@ -23,7 +23,7 @@ export function DlgCreatePromptTemplate() {
   const { onCreate } = useDialogsStore(state => state.props as DlgCreatePromptTemplateProps);
   const { createPromptTemplate } = useCreatePromptTemplate();
   const { items: templates } = useAvailableTemplatesSuspense();
-  const { user } = useAuthSuspense();
+  const { user } = useAuth();
 
   const {
     handleSubmit,

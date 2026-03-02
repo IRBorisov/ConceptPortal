@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuthSuspense } from '@/features/auth';
+import { useAuth } from '@/features/auth';
 import { MenuRole } from '@/features/library/components/menu-role';
 
 import { MenuMain } from './menu-main';
@@ -8,7 +8,7 @@ import { useOssEdit } from './oss-edit-context';
 
 export function MenuOssTabs() {
   const { isOwned, schema } = useOssEdit();
-  const { user } = useAuthSuspense();
+  const { user } = useAuth();
   return (
     <div className='flex border-r-2'>
       <MenuMain />

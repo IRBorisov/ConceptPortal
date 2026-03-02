@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import { useAuthSuspense } from '@/features/auth/backend/use-auth';
+import { useAuth } from '@/features/auth/backend/use-auth';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 import { IconShowSidebar } from '@/features/library/components/icon-show-sidebar';
@@ -55,7 +55,7 @@ export function ToolbarOssGraph({
   const { selectedItems, isMutable, canDeleteSelected } = useOssEdit();
   const isProcessing = useMutatingOss();
   const { nodes } = useOssFlow();
-  const { user } = useAuthSuspense();
+  const { user } = useAuth();
 
   const {
     elementRef: menuRef, //

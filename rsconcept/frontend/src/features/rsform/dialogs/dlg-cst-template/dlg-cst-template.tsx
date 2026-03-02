@@ -19,7 +19,7 @@ import {
   schemaCreateConstituenta
 } from '../../backend/types';
 import { useCreateConstituenta } from '../../backend/use-create-constituenta';
-import { useRSFormSuspense } from '../../backend/use-rsform';
+import { useRSForm } from '../../backend/use-rsform';
 import { validateNewAlias } from '../../models/rsform-api';
 import { FormCreateCst } from '../dlg-create-cst/form-create-cst';
 
@@ -43,7 +43,7 @@ export type TabID = (typeof TabID)[keyof typeof TabID];
 export function DlgCstTemplate() {
   const { schemaID, onCreate, insertAfter } = useDialogsStore(state => state.props as DlgCstTemplateProps);
   const { createConstituenta: cstCreate } = useCreateConstituenta();
-  const { schema } = useRSFormSuspense({ itemID: schemaID });
+  const { schema } = useRSForm({ itemID: schemaID });
 
   const methods = useForm<CreateConstituentaDTO>({
     mode: 'onChange',

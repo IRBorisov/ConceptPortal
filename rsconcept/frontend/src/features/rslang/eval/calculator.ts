@@ -43,7 +43,6 @@ export type ASTContext = Map<string, AstNode>;
 
 /** Result of calculator evaluation. */
 export interface CalculatorResult {
-  success: boolean;
   value: Value | null;
   iterations: number;
 }
@@ -61,6 +60,10 @@ export class RSCalculator {
     this.context.set(alias, value);
   }
 
+  public resetValue(alias: string): void {
+    this.context.delete(alias);
+  }
+
   public getValue(alias: string): Value | null {
     return this.context.get(alias) ?? null;
   }
@@ -71,16 +74,12 @@ export class RSCalculator {
 
   public evaluate(ast: AstNode, reporter?: ErrorReporter): CalculatorResult {
     if (ast.hasError) {
-      return { success: false, value: null, iterations: 0 };
+      return { value: null, iterations: 0 };
     }
     this.reporter = reporter;
     this.clear();
     const result = this.dispatchVisit(ast);
-    if (result === null) {
-      return { success: false, value: null, iterations: this.iterationCounter };
-    }
     return {
-      success: true,
       value: result,
       iterations: this.iterationCounter
     };

@@ -13,7 +13,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { hintMsg } from '@/utils/labels';
 
 import { schemaSubstitutions, type SubstitutionsDTO } from '../backend/types';
-import { useRSFormSuspense } from '../backend/use-rsform';
+import { useRSForm } from '../backend/use-rsform';
 import { useSubstituteConstituents } from '../backend/use-substitute-constituents';
 import { PickSubstitutions } from '../components/pick-substitutions';
 
@@ -25,7 +25,7 @@ export interface DlgSubstituteCstProps {
 export function DlgSubstituteCst() {
   const { onSubstitute, schemaID } = useDialogsStore(state => state.props as DlgSubstituteCstProps);
   const { substituteConstituents: cstSubstitute } = useSubstituteConstituents();
-  const { schema } = useRSFormSuspense({ itemID: schemaID });
+  const { schema } = useRSForm({ itemID: schemaID });
 
   const {
     handleSubmit,

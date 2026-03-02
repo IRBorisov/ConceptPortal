@@ -11,7 +11,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { hintMsg } from '@/utils/labels';
 
 import { schemaUpdateConstituenta, type UpdateConstituentaDTO } from '../backend/types';
-import { useRSFormSuspense } from '../backend/use-rsform';
+import { useRSForm } from '../backend/use-rsform';
 import { useUpdateConstituenta } from '../backend/use-update-constituenta';
 import { SelectCstType } from '../components/select-cst-type';
 import { type CstType } from '../models/rsform';
@@ -25,7 +25,7 @@ export interface DlgRenameCstProps {
 export function DlgRenameCst() {
   const { schemaID, targetID } = useDialogsStore(state => state.props as DlgRenameCstProps);
   const { updateConstituenta: cstUpdate } = useUpdateConstituenta();
-  const { schema } = useRSFormSuspense({ itemID: schemaID });
+  const { schema } = useRSForm({ itemID: schemaID });
   const target = schema.cstByID.get(targetID)!;
 
   const {

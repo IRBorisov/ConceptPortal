@@ -12,7 +12,7 @@ import { hintMsg } from '@/utils/labels';
 
 import { type InlineSynthesisDTO, schemaInlineSynthesis } from '../../backend/types';
 import { useInlineSynthesis } from '../../backend/use-inline-synthesis';
-import { useRSFormSuspense } from '../../backend/use-rsform';
+import { useRSForm } from '../../backend/use-rsform';
 
 import { TabConstituents } from './tab-constituents';
 import { TabSource } from './tab-source';
@@ -34,7 +34,7 @@ export function DlgInlineSynthesis() {
   const { receiverID, onSynthesis } = useDialogsStore(state => state.props as DlgInlineSynthesisProps);
   const [activeTab, setActiveTab] = useState<TabID>(TabID.SCHEMA);
   const { inlineSynthesis } = useInlineSynthesis();
-  const { schema: receiver } = useRSFormSuspense({ itemID: receiverID });
+  const { schema: receiver } = useRSForm({ itemID: receiverID });
 
   const methods = useForm<InlineSynthesisDTO>({
     resolver: zodResolver(schemaInlineSynthesis),

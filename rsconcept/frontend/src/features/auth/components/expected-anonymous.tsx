@@ -4,11 +4,11 @@ import { urls, useConceptNavigation } from '@/app';
 
 import { TextURL } from '@/components/control';
 
-import { useAuthSuspense } from '../backend/use-auth';
+import { useAuth } from '../backend/use-auth';
 import { useLogout } from '../backend/use-logout';
 
 export function ExpectedAnonymous() {
-  const { user } = useAuthSuspense();
+  const { user } = useAuth();
   const { logout } = useLogout();
   const router = useConceptNavigation();
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { urls, useConceptNavigation } from '@/app';
-import { useAuthSuspense } from '@/features/auth';
+import { useAuth } from '@/features/auth';
 import { useRoleStore, UserRole } from '@/features/users';
 import { describeUserRole, labelUserRole } from '@/features/users/labels';
 
@@ -17,7 +17,7 @@ interface MenuRoleProps {
 }
 
 export function MenuRole({ isOwned, isEditor }: MenuRoleProps) {
-  const { user, isAnonymous } = useAuthSuspense();
+  const { user, isAnonymous } = useAuth();
   const router = useConceptNavigation();
   const {
     elementRef: accessMenuRef,

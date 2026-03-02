@@ -2,23 +2,34 @@
 
 import { useConceptNavigation } from '@/app';
 import { useAuth } from '@/features/auth';
+import { AccessPolicy } from '@/features/library';
 import { useRoleStore, UserRole } from '@/features/users';
 
 import { Divider } from '@/components/container';
 import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
-import { IconDestroy, IconLibrary, IconMenu, IconNewItem, IconQR, IconShare } from '@/components/icons';
+import {
+  IconCalculateAll,
+  IconDestroy,
+  IconLibrary,
+  IconMenu,
+  IconNewItem,
+  IconQR,
+  IconRSForm,
+  IconShare
+} from '@/components/icons';
 import { useDialogsStore } from '@/stores/dialogs';
+import { tooltipText } from '@/utils/labels';
 import { generatePageQR, sharePage } from '@/utils/utils';
 
-import { useMutatingOss } from '../../backend/use-mutating-oss';
+import { useMutatingRSModel } from '../../backend/use-mutating-rsmodel';
 
-import { useOssEdit } from './oss-edit-context';
+import { useRSModelEdit } from './rsmodel-context';
 
 export function MenuMain() {
   const router = useConceptNavigation();
-  const { isMutable, deleteSchema } = useOssEdit();
-  const isProcessing = useMutatingOss();
+  const { model, deleteModel, isMutable, recalculateAll } = useRSModelEdit();
+  const isProcessing = useMutatingRSModel();
 
   const { isAnonymous } = useAuth();
 
@@ -36,7 +47,7 @@ export function MenuMain() {
 
   function handleDelete() {
     hideMenu();
-    deleteSchema();
+    deleteModel();
   }
 
   function handleShare() {
@@ -44,17 +55,21 @@ export function MenuMain() {
     sharePage();
   }
 
-  function handleCreateNew() {
-    router.gotoNewItem();
-  }
-
-  function handleOpenLibrary() {
-    router.gotoLibrary();
+  function handleRecalculate() {
+    hideMenu();
+    recalculateAll();
   }
 
   function handleShowQR() {
     hideMenu();
     showQR({ target: generatePageQR() });
+  }
+
+  function handleNavigateSchema(event: React.MouseEvent<HTMLButtonElement>) {
+    hideMenu();
+    event.preventDefault();
+    event.stopPropagation();
+    router.gotoRSForm(model.schema.id, undefined, event.ctrlKey || event.metaKey);
   }
 
   return (
@@ -65,15 +80,23 @@ export function MenuMain() {
         title='Меню'
         hideTitle={isMenuOpen}
         icon={<IconMenu size='1.25rem' />}
-        className='h-full px-2 text-muted-foreground hover:text-primary cc-animate-color'
+        className='h-full pl-2 text-muted-foreground hover:text-primary cc-animate-color bg-transparent'
         onClick={toggleMenu}
       />
       <Dropdown isOpen={isMenuOpen} margin='mt-3'>
         <DropdownButton
+          text='Пересчитать модель'
+          aria-label='Пересчитать все вычисления'
+          icon={<IconCalculateAll size='1rem' className='icon-green' />}
+          onClick={handleRecalculate}
+        />
+        <DropdownButton
           text='Поделиться'
-          title='Скопировать ссылку в буфер обмена'
+          titleHtml={tooltipText.shareItem(model.access_policy === AccessPolicy.PUBLIC)}
+          aria-label='Скопировать ссылку в буфер обмена'
           icon={<IconShare size='1rem' className='icon-primary' />}
           onClick={handleShare}
+          disabled={model.access_policy !== AccessPolicy.PUBLIC}
         />
         <DropdownButton
           text='QR-код'
@@ -83,26 +106,31 @@ export function MenuMain() {
         />
         {isMutable ? (
           <DropdownButton
-            text='Удалить схему'
+            text='Удалить модель'
             icon={<IconDestroy size='1rem' className='icon-red' />}
-            onClick={handleDelete}
             disabled={isProcessing || role < UserRole.OWNER}
+            onClick={handleDelete}
           />
         ) : null}
 
         <Divider margins='mx-3 my-1' />
 
+        <DropdownButton
+          text='Перейти к схеме'
+          icon={<IconRSForm size='1rem' className='icon-primary' />}
+          onClick={handleNavigateSchema}
+        />
         {!isAnonymous ? (
           <DropdownButton
             text='Создать новую схему'
             icon={<IconNewItem size='1rem' className='icon-primary' />}
-            onClick={handleCreateNew}
+            onClick={() => router.gotoNewItem()}
           />
         ) : null}
         <DropdownButton
           text='Библиотека'
           icon={<IconLibrary size='1rem' className='icon-primary' />}
-          onClick={handleOpenLibrary}
+          onClick={() => router.gotoLibrary()}
         />
       </Dropdown>
     </div>

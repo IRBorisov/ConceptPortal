@@ -3,7 +3,7 @@
  */
 
 /** Tuple ID for array distinction. */
-export const TUPLE_ID = -10_000;
+export const TUPLE_ID = -111;
 
 /** Boolean values: true. */
 export const VALUE_TRUE = 1;

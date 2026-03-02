@@ -8,7 +8,7 @@ import clsx from 'clsx';
 import { useDebounce } from 'use-debounce';
 
 import { PromptInput } from '@/features/ai/components/prompt-input';
-import { useAuthSuspense } from '@/features/auth';
+import { useAuth } from '@/features/auth';
 
 import { MiniButton } from '@/components/control';
 import { IconSample } from '@/components/icons';
@@ -35,7 +35,7 @@ interface FormPromptTemplateProps {
 
 /** Form for editing a prompt template. */
 export function FormPromptTemplate({ promptTemplate, className, isMutable, toggleReset }: FormPromptTemplateProps) {
-  const { user } = useAuthSuspense();
+  const { user } = useAuth();
   const isProcessing = useMutatingPrompts();
   const setIsModified = useModificationStore(state => state.setIsModified);
   const { updatePromptTemplate } = useUpdatePromptTemplate();

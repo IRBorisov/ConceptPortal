@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 
 import { useAIStore } from '@/features/ai/stores/ai-context';
 import { type Constituenta } from '@/features/rsform';
-import { useRSFormSuspense } from '@/features/rsform/backend/use-rsform';
+import { useRSForm } from '@/features/rsform/backend/use-rsform';
 import { CardRSFormStats } from '@/features/rsform/components/rsform-stats';
 import { ViewConstituents } from '@/features/rsform/components/view-constituents';
 import { calculateSchemaStats } from '@/features/rsform/models/rsform-api';
@@ -20,7 +20,7 @@ interface ViewSchemaProps {
 }
 
 export function ViewSchema({ schemaID, isMutable }: ViewSchemaProps) {
-  const { schema } = useRSFormSuspense({ itemID: schemaID });
+  const { schema } = useRSForm({ itemID: schemaID });
   const [activeID, setActiveID] = useState<number | null>(null);
   const activeCst = activeID ? schema.cstByID.get(activeID) ?? null : null;
   const showEditCst = useDialogsStore(state => state.showEditCst);

@@ -8,7 +8,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { prefixes } from '@/utils/constants';
 
 import { useDeleteConstituents } from '../../backend/use-delete-constituents';
-import { useRSFormSuspense } from '../../backend/use-rsform';
+import { useRSForm } from '../../backend/use-rsform';
 import { type RSForm } from '../../models/rsform';
 
 import { ListConstituents } from './list-constituents';
@@ -22,7 +22,7 @@ export interface DlgDeleteCstProps {
 export function DlgDeleteCst() {
   const { selected, schemaID, afterDelete } = useDialogsStore(state => state.props as DlgDeleteCstProps);
   const { deleteConstituents: cstDelete } = useDeleteConstituents();
-  const { schema } = useRSFormSuspense({ itemID: schemaID });
+  const { schema } = useRSForm({ itemID: schemaID });
 
   const [expandOut, setExpandOut] = useState(false);
   const expansion: number[] = schema.graph.expandAllOutputs(selected);

@@ -5,7 +5,7 @@ import { Controller, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { urls, useConceptNavigation } from '@/app';
-import { useAuthSuspense } from '@/features/auth';
+import { useAuth } from '@/features/auth';
 
 import { Button, MiniButton, SubmitButton } from '@/components/control';
 import { IconDownload } from '@/components/icons';
@@ -29,7 +29,7 @@ import { LocationHead } from '../../models/library';
 import { useLibrarySearchStore } from '../../stores/library-search';
 
 export function FormCreateItem() {
-  const { user } = useAuthSuspense();
+  const { user } = useAuth();
   const router = useConceptNavigation();
   const { createItem, isPending, reset: clearServerError } = useCreateItem();
   const { items } = useLibrary();

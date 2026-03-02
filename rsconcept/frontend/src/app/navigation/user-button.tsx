@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuthSuspense } from '@/features/auth';
+import { useAuth } from '@/features/auth';
 
 import { IconLogin, IconUser2 } from '@/components/icons';
 import { usePreferencesStore } from '@/stores/preferences';
@@ -15,7 +15,7 @@ interface UserButtonProps {
 }
 
 export function UserButton({ onLogin, onClickUser, isOpen }: UserButtonProps) {
-  const { user, isAnonymous } = useAuthSuspense();
+  const { user, isAnonymous } = useAuth();
   const adminMode = usePreferencesStore(state => state.adminMode);
   if (isAnonymous) {
     return (

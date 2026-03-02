@@ -3,7 +3,7 @@
 import { type FieldError } from 'react-hook-form';
 import clsx from 'clsx';
 
-import { useAuthSuspense } from '@/features/auth';
+import { useAuth } from '@/features/auth';
 
 import { ErrorField, TextArea } from '@/components/input';
 import { type Styling } from '@/components/props';
@@ -32,7 +32,7 @@ export function PickLocation({
   className,
   ...restProps
 }: PickLocationProps) {
-  const { user } = useAuthSuspense();
+  const { user } = useAuth();
 
   return (
     <div className={clsx('flex relative', className)} {...restProps}>

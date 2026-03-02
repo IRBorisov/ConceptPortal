@@ -13,7 +13,7 @@ import { useQueryStrings } from '@/hooks/use-query-strings';
 import { resources } from '@/utils/constants';
 
 import { type IUserLoginDTO, schemaUserLogin } from '../backend/types';
-import { useAuthSuspense } from '../backend/use-auth';
+import { useAuth } from '../backend/use-auth';
 import { useLogin } from '../backend/use-login';
 import { ExpectedAnonymous } from '../components/expected-anonymous';
 
@@ -32,7 +32,7 @@ export function LoginPage() {
     defaultValues: { username: initialName, password: '' }
   });
 
-  const { isAnonymous } = useAuthSuspense();
+  const { isAnonymous } = useAuth();
   const { login, isPending, error: serverError, reset: clearServerError } = useLogin();
 
   function onSubmit(data: IUserLoginDTO) {
@@ -92,7 +92,7 @@ export function LoginPage() {
 }
 
 // ====== Internals =========
-function ServerError({ error }: { error: ErrorData }): React.ReactElement | null {
+function ServerError({ error }: { error: ErrorData; }): React.ReactElement | null {
   if (isAxiosError(error) && error.response?.status === 400) {
     return (
       <div className='text-sm select-text text-destructive'>

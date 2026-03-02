@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 
 import { urls, useConceptNavigation } from '@/app';
 import { useAIStore } from '@/features/ai/stores/ai-context';
-import { useAuthSuspense } from '@/features/auth';
+import { useAuth } from '@/features/auth';
 import { useLibrarySearchStore } from '@/features/library';
 import { useDeleteItem } from '@/features/library/backend/use-delete-item';
 import { useRoleStore, UserRole } from '@/features/users';
@@ -34,7 +34,7 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
   const setCurrentBlock = useAIStore(state => state.setBlock);
   const setCurrentOperation = useAIStore(state => state.setOperation);
 
-  const { user } = useAuthSuspense();
+  const { user } = useAuth();
   const { schema } = useOssSuspense({ itemID: itemID });
 
   const isOwned = !!user.id && user.id === schema.owner;

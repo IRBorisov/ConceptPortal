@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuthSuspense } from '@/features/auth';
+import { useAuth } from '@/features/auth';
 import { useLogout } from '@/features/auth/backend/use-logout';
 
 import { Dropdown, DropdownButton } from '@/components/dropdown';
@@ -32,7 +32,7 @@ interface UserDropdownProps {
 
 export function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
   const router = useConceptNavigation();
-  const { user } = useAuthSuspense();
+  const { user } = useAuth();
   const { logout } = useLogout();
 
   const darkMode = usePreferencesStore(state => state.darkMode);

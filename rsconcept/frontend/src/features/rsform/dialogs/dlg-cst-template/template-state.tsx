@@ -11,7 +11,7 @@ import { labelType } from '@/features/rslang/labels';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { type CreateConstituentaDTO } from '../../backend/types';
-import { useRSFormSuspense } from '../../backend/use-rsform';
+import { useRSForm } from '../../backend/use-rsform';
 import { type ArgumentValue, type Constituenta } from '../../models/rsform';
 import { generateAlias, inferTemplatedType } from '../../models/rsform-api';
 
@@ -20,7 +20,7 @@ import { TemplateContext } from './template-context';
 
 export const TemplateState = ({ children }: React.PropsWithChildren) => {
   const { schemaID } = useDialogsStore(state => state.props as DlgCstTemplateProps);
-  const { schema } = useRSFormSuspense({ itemID: schemaID });
+  const { schema } = useRSForm({ itemID: schemaID });
   const { templates } = useTemplatesSuspense();
   const { setValue } = useFormContext<CreateConstituentaDTO>();
 

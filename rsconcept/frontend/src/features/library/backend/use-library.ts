@@ -1,6 +1,6 @@
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 
-import { useAuthSuspense } from '@/features/auth';
+import { useAuth } from '@/features/auth';
 
 import { queryClient } from '@/backend/query-client';
 import { usePreferencesStore } from '@/stores/preferences';
@@ -14,7 +14,7 @@ export function useLibraryListKey() {
 
 export function useLibrarySuspense() {
   const adminMode = usePreferencesStore(state => state.adminMode);
-  const { user } = useAuthSuspense();
+  const { user } = useAuth();
   const { data: items } = useSuspenseQuery({
     ...libraryApi.getLibraryQueryOptions({ isAdmin: user.is_staff && adminMode })
   });
@@ -23,7 +23,7 @@ export function useLibrarySuspense() {
 
 export function useLibrary() {
   const adminMode = usePreferencesStore(state => state.adminMode);
-  const { user } = useAuthSuspense();
+  const { user } = useAuth();
   const { data: items, isLoading } = useQuery({
     ...libraryApi.getLibraryQueryOptions({ isAdmin: user.is_staff && adminMode })
   });

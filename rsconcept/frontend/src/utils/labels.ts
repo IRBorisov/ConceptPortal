@@ -44,7 +44,8 @@ export const infoMsg = {
   allOperationExecuted: 'Все операции выполнены',
   constituentsDestroyed: (count: number) => `Конституенты удалены: ${count}`,
   dataCleared: (count: number) => `Данные очищены: ${count}`,
-  modelCleared: 'Модель очищена'
+  modelCleared: 'Модель очищена',
+  calculationSuccess: (timeSpent: string) => `Вычисления завершены за ${timeSpent} секунд`
 } as const;
 
 /**
@@ -116,10 +117,10 @@ export const tooltipText = {
  */
 export const promptText = {
   promptUnsaved: 'Присутствуют несохраненные изменения. Продолжить без их учета?',
-  deleteLibraryItem: 'Вы уверены, что хотите удалить данную схему?',
-  deleteBlock: 'Вы уверены, что хотите удалить данный блок?',
-  deleteArgument: 'Вы уверены, что хотите удалить аргументы операции?',
-  deleteTemplate: 'Вы уверены, что хотите удалить данный шаблон?',
+  deleteLibraryItem: 'Подтвердите удаление элемента библиотеки',
+  deleteBlock: 'Подтвердите удаление блока',
+  deleteArgument: 'Подтвердите удаление аргументов операции',
+  deleteTemplate: 'Подтвердите удаление шаблона',
   deleteOSS:
     'Внимание!!\nУдаление операционной схемы приведет к удалению всех операций и собственных концептуальных схем.\nДанное действие нельзя отменить.\nВы уверены, что хотите удалить данную ОСС?',
   generateWordforms: 'Данное действие приведет к перезаписи словоформ при совпадении граммем. Продолжить?',

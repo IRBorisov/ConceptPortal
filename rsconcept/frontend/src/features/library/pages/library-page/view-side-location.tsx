@@ -3,7 +3,7 @@
 import { toast } from 'react-toastify';
 import clsx from 'clsx';
 
-import { useAuthSuspense } from '@/features/auth';
+import { useAuth } from '@/features/auth';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 
@@ -25,7 +25,7 @@ interface ViewSideLocationProps {
 }
 
 export function ViewSideLocation({ isVisible, onRenameLocation }: ViewSideLocationProps) {
-  const { user, isAnonymous } = useAuthSuspense();
+  const { user, isAnonymous } = useAuth();
   const { items } = useLibrary();
 
   const location = useLibrarySearchStore(state => state.location);

@@ -3,7 +3,7 @@
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { type InlineSynthesisDTO } from '../../backend/types';
-import { useRSFormSuspense } from '../../backend/use-rsform';
+import { useRSForm } from '../../backend/use-rsform';
 import { PickSubstitutions } from '../../components/pick-substitutions';
 import { type RSForm } from '../../models/rsform';
 
@@ -16,7 +16,7 @@ export function TabSubstitutions({ receiver }: TabSubstitutionsProps) {
   const sourceID = useWatch({ control, name: 'source' });
   const selected = useWatch({ control, name: 'items' });
 
-  const { schema: source } = useRSFormSuspense({ itemID: sourceID! });
+  const { schema: source } = useRSForm({ itemID: sourceID! });
   const selfSubstitution = receiver.id === source.id;
 
   return (

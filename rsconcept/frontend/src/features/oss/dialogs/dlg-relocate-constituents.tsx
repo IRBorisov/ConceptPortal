@@ -12,7 +12,6 @@ import { useRSForm } from '@/features/rsform/backend/use-rsform';
 import { PickMultiConstituenta } from '@/features/rsform/components/pick-multi-constituenta';
 
 import { MiniButton } from '@/components/control';
-import { Loader } from '@/components/loader';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { hintMsg } from '@/utils/labels';
@@ -150,23 +149,20 @@ export function DlgRelocateConstituents() {
             onChange={handleSelectDestination}
           />
         </div>
-        {sourceData.isLoading ? <Loader /> : null}
-        {!sourceData.isLoading && sourceData.schema ? (
-          <Controller
-            name='items'
-            control={control}
-            render={({ field }) => (
-              <PickMultiConstituenta
-                noBorder
-                schema={sourceData.schema!}
-                items={filteredConstituents}
-                rows={12}
-                value={field.value ?? []}
-                onChange={field.onChange}
-              />
-            )}
-          />
-        ) : null}
+        <Controller
+          name='items'
+          control={control}
+          render={({ field }) => (
+            <PickMultiConstituenta
+              noBorder
+              schema={sourceData.schema}
+              items={filteredConstituents}
+              rows={12}
+              value={field.value ?? []}
+              onChange={field.onChange}
+            />
+          )}
+        />
       </div>
     </ModalForm>
   );

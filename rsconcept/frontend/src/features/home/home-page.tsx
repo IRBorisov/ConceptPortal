@@ -3,13 +3,13 @@
 import { useEffect } from 'react';
 
 import { urls, useConceptNavigation } from '@/app';
-import { useAuthSuspense } from '@/features/auth';
+import { useAuth } from '@/features/auth';
 
 import { PARAMETER } from '@/utils/constants';
 
 export function HomePage() {
   const router = useConceptNavigation();
-  const { isAnonymous } = useAuthSuspense();
+  const { isAnonymous } = useAuth();
 
   useEffect(() => {
     // Note: Timeout is needed to let router initialize

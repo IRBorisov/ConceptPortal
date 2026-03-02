@@ -1,4 +1,4 @@
-import { useAuthSuspense } from '@/features/auth';
+import { useAuth } from '@/features/auth';
 
 import { type LibraryFilter } from '../models/library';
 import { matchLibraryItem, matchLibraryItemLocation } from '../models/library-api';
@@ -7,7 +7,7 @@ import { useLibrary } from './use-library';
 
 export function useApplyLibraryFilter(filter: LibraryFilter) {
   const { items } = useLibrary();
-  const { user } = useAuthSuspense();
+  const { user } = useAuth();
 
   let result = items;
   if (!filter.folderMode && filter.head) {

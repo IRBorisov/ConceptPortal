@@ -1,2 +1,2 @@
 export * from './backend/types';
-export { useAuthSuspense } from './backend/use-auth';
+export { useAuth } from './backend/use-auth';

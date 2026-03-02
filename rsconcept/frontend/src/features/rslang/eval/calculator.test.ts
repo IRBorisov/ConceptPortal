@@ -226,7 +226,6 @@ describe('Calculator', () => {
     const ast = buildAST(input);
     expect(ast.hasError).toBe(false);
     const result = calculator.evaluate(ast, error => (errors.push(error)));
-    expect(result.success).toBe(true);
     expect(printValue(result.value)).toBe(expectedValue);
   }
 

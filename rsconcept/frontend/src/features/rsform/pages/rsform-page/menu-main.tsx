@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import fileDownload from 'js-file-download';
 
 import { useConceptNavigation } from '@/app';
-import { useAuthSuspense } from '@/features/auth';
+import { useAuth } from '@/features/auth';
 import { AccessPolicy, LocationHead } from '@/features/library';
 import { useRoleStore, UserRole } from '@/features/users';
 
@@ -42,7 +42,7 @@ export function MenuMain() {
   const { schema, selectedCst, deleteSchema, isArchive, isMutable, isContentEditable } = useRSFormEdit();
   const isProcessing = useMutatingRSForm();
 
-  const { user, isAnonymous } = useAuthSuspense();
+  const { user, isAnonymous } = useAuth();
   const hasInheritance = schema.inheritance.some(item => item.child_source === schema.id);
 
   const role = useRoleStore(state => state.role);

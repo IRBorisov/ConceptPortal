@@ -5,7 +5,7 @@ import { useMemo } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { useRSFormSuspense } from '@/features/rsform/backend/use-rsform';
+import { useRSForm } from '@/features/rsform/backend/use-rsform';
 
 import { MiniButton } from '@/components/control';
 import { IconReset, IconSave } from '@/components/icons';
@@ -29,7 +29,7 @@ export interface DlgEditVersionsProps {
 export function DlgEditVersions() {
   const { itemID, afterDelete } = useDialogsStore(state => state.props as DlgEditVersionsProps);
   const hideDialog = useDialogsStore(state => state.hideDialog);
-  const { schema } = useRSFormSuspense({ itemID });
+  const { schema } = useRSForm({ itemID });
   const isProcessing = useMutatingLibrary();
   const { deleteVersion: versionDelete } = useDeleteVersion();
   const { updateVersion: versionUpdate } = useUpdateVersion();

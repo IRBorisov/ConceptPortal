@@ -7,6 +7,10 @@ import { type RSModel } from '../../models/rsmodel';
 interface IRSModelContext {
   model: RSModel;
   isMutable: boolean;
+  isOwned: boolean;
+
+  deleteModel: () => void;
+  recalculateAll: () => void;
 }
 
 export const RSModelContext = createContext<IRSModelContext | null>(null);

@@ -13,7 +13,7 @@ import { EditorConstituenta } from './editor-constituenta';
 import { EditorRSFormCard } from './editor-rsform-card';
 import { EditorRSList } from './editor-rslist';
 import { EditorTermGraph } from './editor-term-graph';
-import { MenuRSTabs } from './menu-rstabs';
+import { MenuRSForm } from './menu-rsform';
 import { useRSFormEdit } from './rsedit-context';
 
 interface RSFormTabsProps {
@@ -100,7 +100,7 @@ export function RSFormTabs({ activeID, activeTab }: RSFormTabsProps) {
       className='relative flex flex-col min-w-fit items-center'
     >
       <TabList className='absolute z-sticky flex border-b-2 border-x-2 divide-x-2 bg-background'>
-        <MenuRSTabs />
+        <MenuRSForm />
 
         <TabLabel label='Паспорт' />
         <TabLabel label='Список' />

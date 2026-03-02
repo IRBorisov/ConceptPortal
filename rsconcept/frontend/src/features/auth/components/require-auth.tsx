@@ -2,10 +2,10 @@
 
 import { TextURL } from '@/components/control';
 
-import { useAuthSuspense } from '../backend/use-auth';
+import { useAuth } from '../backend/use-auth';
 
 export function RequireAuth({ children }: React.PropsWithChildren) {
-  const { isAnonymous } = useAuthSuspense();
+  const { isAnonymous } = useAuth();
 
   if (isAnonymous) {
     return (

@@ -6,7 +6,6 @@ import { RSModelTabID, useConceptNavigation } from '@/app/navigation/navigation-
 import { EditorConstituenta } from '@/features/rsform/pages/rsform-page/editor-constituenta';
 import { EditorRSList } from '@/features/rsform/pages/rsform-page/editor-rslist';
 import { EditorTermGraph } from '@/features/rsform/pages/rsform-page/editor-term-graph';
-import { MenuRSTabs } from '@/features/rsform/pages/rsform-page/menu-rstabs';
 import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
 
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
@@ -15,6 +14,8 @@ import { useAppLayoutStore } from '@/stores/app-layout';
 import { useModificationStore } from '@/stores/modification';
 
 import { EditorModelCard } from './editor-rsmodel-card';
+import { EditorValue } from './editor-value';
+import { MenuRSModel } from './menu-rsmodel';
 
 interface RSModelTabsProps {
   activeID?: number;
@@ -100,12 +101,13 @@ export function RSModelTabs({ activeID, activeTab }: RSModelTabsProps) {
       className='relative flex flex-col min-w-fit items-center'
     >
       <TabList className='absolute z-sticky flex border-b-2 border-x-2 divide-x-2 bg-background'>
-        <MenuRSTabs />
+        <MenuRSModel />
 
         <TabLabel label='Паспорт' />
         <TabLabel label='Список' />
         <TabLabel label='Понятие' />
         <TabLabel label='Граф' />
+        <TabLabel label='Данные' />
       </TabList>
 
       <div ref={containerRef} className='overflow-x-hidden'>
@@ -123,6 +125,10 @@ export function RSModelTabs({ activeID, activeTab }: RSModelTabsProps) {
 
         <TabPanel>
           <EditorTermGraph />
+        </TabPanel>
+
+        <TabPanel>
+          <EditorValue />
         </TabPanel>
       </div>
     </Tabs>
