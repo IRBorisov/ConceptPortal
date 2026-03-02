@@ -50,7 +50,7 @@ export function ApplicationLayout() {
         <Navigation />
 
         <div className='overflow-x-auto max-w-dvw' style={{ maxHeight: viewportHeight }} inert={activeDialog !== null}>
-          <main className='cc-scroll-y overflow-y-auto' style={{ minHeight: mainHeight }}>
+          <main className='cc-scroll-y overflow-y-auto' style={{ height: mainHeight }}>
             <GlobalLoader />
             <MutationErrors />
             <Outlet />

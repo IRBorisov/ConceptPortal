@@ -6,7 +6,7 @@ import * as icons from '@/components/icons';
 export function Component() {
   const iconsList = Object.keys(icons).filter(key => key.startsWith('Icon'));
   return (
-    <div className='flex flex-col items-center px-6 py-3'>
+    <div className='flex flex-col items-center px-6 py-3 event'>
       <h1 className='mb-6'>Всего иконок: {iconsList.length}</h1>
       <div className='grid grid-cols-4'>
         {iconsList.map((key, index) => (

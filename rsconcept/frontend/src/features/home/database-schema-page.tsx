@@ -16,9 +16,12 @@ export function Component() {
   }, [hideFooter]);
 
   return (
-    <div className='flex justify-center overflow-hidden' style={{ maxHeight: panelHeight }}>
+    <div className='relative w-full' style={{ height: panelHeight }}>
       <TransformWrapper>
-        <TransformComponent>
+        <TransformComponent
+          wrapperClass="!w-full !h-full"
+          contentClass="flex justify-center items-center"
+        >
           <img alt='Схема базы данных' src={resources.db_schema} className='w-fit h-fit' />
         </TransformComponent>
       </TransformWrapper>
