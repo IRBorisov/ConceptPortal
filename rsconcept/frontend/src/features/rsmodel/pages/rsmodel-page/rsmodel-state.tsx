@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { toast } from 'react-toastify';
 
 import { urls, useConceptNavigation } from '@/app';
@@ -29,7 +29,7 @@ export const RSModelState = ({ itemID, children }: React.PropsWithChildren<RSMod
   const { model: modelData } = useRSModelSuspense({ itemID: itemID });
   const { user } = useAuth();
   const { schema } = useRSForm({ itemID: modelData.schema.id });
-  const model = new RSModelLoader(modelData, schema).produce();
+  const model = useMemo(() => new RSModelLoader(modelData, schema).produce(), [modelData, schema]);
 
   const role = useRoleStore(state => state.role);
   const setSearchLocation = useLibrarySearchStore(state => state.setLocation);
@@ -77,7 +77,7 @@ export const RSModelState = ({ itemID, children }: React.PropsWithChildren<RSMod
           const parse = schema.analyzer.checkFull(cst.definition_formal);
           if (parse.success && parse.ast) {
             const result = model.calculator.evaluate(parse.ast);
-            if (result.value) {
+            if (result.value !== null) {
               model.calculator.setValue(cst.alias, result.value);
             }
           }

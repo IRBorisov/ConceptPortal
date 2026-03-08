@@ -28,7 +28,7 @@ export const RSModelTabID = {
   CST_LIST: 1,
   CST_EDIT: 2,
   GRAPH: 3,
-  DATA: 4
+  VALUE_EDIT: 4
 } as const;
 export type RSModelTabID = (typeof RSModelTabID)[keyof typeof RSModelTabID];
 

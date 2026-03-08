@@ -113,6 +113,8 @@ const correctValuesData = [
   ['S1⊆X1', '1'],
   ['X1⊆S1', '0'],
   // Constructors
+  ['(1,2)', '(1, 2)'],
+  ['{1,2}', '{1, 2}'],
   ['X1×∅', '{}'],
   ['X1×(X2\\X2)', '{}'],
   ['(X1\\X1)×X2', '{}'],
@@ -134,6 +136,7 @@ const correctValuesData = [
   ['I{(a, b) | a:∈X1; b:=a; b≠a}', '{}'],
   ['I{a | a:∈X1}', '{1, 2, 3}'],
   ['I{a | (a, b):∈X1×X1; b=b}', '{1, 2, 3}'],
+  ['red(I{σ | α:∈S2 ; β:∈α ; σ:={β}})', '{1, 2, 3}'],
   ['R{a:=X1 | a\\a}', '{}'],
   ['R{a:=∅ | a∪X1}', '{1, 2, 3}'],
   ['R{a:=X1\\X1 | a∪X1}', '{1, 2, 3}'],
@@ -239,7 +242,7 @@ describe('Calculator', () => {
     expect(errors[0]).toEqual(expectedError);
   }
 
-  // .filter(([input]) => input === 'R{(a,b):=(∅,0) | b < 3 | (a∪X1, b+1)}')
+  // .filter(([input]) => input === 'red(I{σ | α:∈S2 ; β:∈α ; σ:={β}})')
   correctValuesData.forEach(([input, expectedValue]) => {
     it(`Correct value for "${input}"`, () => expectValue(input, expectedValue));
   });

@@ -16,6 +16,7 @@ import { useModificationStore } from '@/stores/modification';
 import { EditorModelCard } from './editor-rsmodel-card';
 import { EditorValue } from './editor-value';
 import { MenuRSModel } from './menu-rsmodel';
+import { useRSModelEdit } from './rsmodel-context';
 
 interface RSModelTabsProps {
   activeID?: number;
@@ -28,20 +29,21 @@ export function RSModelTabs({ activeID, activeTab }: RSModelTabsProps) {
   const hideFooter = useAppLayoutStore(state => state.hideFooter);
   const setIsModified = useModificationStore(state => state.setIsModified);
   const { schema, selectedCst, setSelectedCst, setSelectedEdges, deselectAll } = useRSFormEdit();
+  const { model } = useRSModelEdit();
 
   useLayoutEffect(() => {
     const oldTitle = document.title;
-    document.title = schema.title;
+    document.title = model.title;
     return () => {
       document.title = oldTitle;
     };
-  }, [schema.title]);
+  }, [model.title]);
 
   useLayoutEffect(() => {
     const nextNoFooter = activeTab !== RSModelTabID.CARD;
     hideFooter(nextNoFooter);
 
-    if (activeTab === RSModelTabID.CST_EDIT) {
+    if (activeTab === RSModelTabID.CST_EDIT || activeTab === RSModelTabID.VALUE_EDIT) {
       let nextSelected: number[] = [];
       if (activeID && schema.cstByID.has(activeID)) {
         nextSelected = [activeID];

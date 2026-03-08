@@ -681,76 +681,84 @@ export class RSCalculator {
 
   private visitImperative(node: AstNode): Value | null {
     const result: Value[] = [];
-    const iterations: IterationData[] = [];
-    let current = 1;
+    const frames: IterationFrame[] = [];
+
+    let currentChild = 1;
+
+    // Advance to next iteration
+    const advanceIterator = (): boolean => {
+      while (frames.length > 0) {
+        const top = frames[frames.length - 1];
+        if (top.valueID < top.domain.length - 1) {
+          top.valueID++;
+          const nextValue = top.domain[top.valueID];
+          if (!this.tick(node.children[top.childID])) {
+            return false;
+          }
+          this.dispatchDeclare(
+            node.children[top.childID].children[0],
+            nextValue
+          );
+          currentChild = top.childID + 1;
+          return true;
+        }
+        frames.pop();
+      }
+      return false;
+    };
+
     while (true) {
-      if (current >= node.children.length) {
+      // Iteration end - create element and pop up stack
+      if (currentChild >= node.children.length) {
         const element = this.visitChild(node, 0);
         if (element === null) {
           return null;
         }
         result.push(element);
-        while (iterations.length > 0) {
-          const iteration = iterations[iterations.length - 1];
-          if (iteration.valueID === iteration.domain.length - 1) {
-            iterations.pop();
-          } else {
-            iteration.valueID++;
-            const newValue = iteration.domain[iteration.valueID];
-            if (!this.tick(node.children[iteration.childID])) {
-              return null;
-            }
-            this.dispatchDeclare(node.children[iteration.childID].children[0], newValue);
-            current = iteration.childID + 1;
-            break;
-          }
-        }
-        if (iterations.length === 0) {
+        if (!advanceIterator()) {
           break;
-        } else {
-          continue;
         }
+        continue;
       }
 
-      const child = node.children[current];
+      // Iteration node
+      const child = node.children[currentChild];
       if (child.typeID === TokenID.ITERATE) {
         const domain = this.visitChild(child, 1) as Value[];
         if (domain === null) {
           return null;
         }
+        if (domain.length === 0) {
+          if (!advanceIterator()) {
+            break;
+          }
+          continue;
+        }
         if (!this.tick(child)) {
           return null;
         }
-        iterations.push({ childID: current, domain: domain, valueID: 0 });
+        frames.push({
+          childID: currentChild,
+          domain,
+          valueID: 0
+        });
         this.dispatchDeclare(child.children[0], domain[0]);
-        current++;
+        currentChild++;
         continue;
       }
+
+      // Guard expression
       const value = this.dispatchVisit(child);
       if (value === null) {
         return null;
       }
       if (value === VALUE_FALSE) {
-        while (iterations.length > 0) {
-          const iteration = iterations[iterations.length - 1];
-          if (iteration.valueID === iteration.domain.length - 1) {
-            iterations.pop();
-          } else {
-            iteration.valueID++;
-            const newValue = iteration.domain[iteration.valueID];
-            if (!this.tick(node.children[iteration.childID])) {
-              return null;
-            }
-            this.dispatchDeclare(node.children[iteration.childID].children[0], newValue);
-            current = iteration.childID;
-            break;
-          }
-        }
-        if (iterations.length === 0) {
+        if (!advanceIterator()) {
           break;
         }
+        continue;
       }
-      current++;
+      currentChild++;
     }
     return set(result);
   }
@@ -802,7 +810,7 @@ export class RSCalculator {
 }
 
 /** Imperative iteration block data. */
-interface IterationData {
+interface IterationFrame {
   childID: number;
   domain: Value[];
   valueID: number;
