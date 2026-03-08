@@ -58,7 +58,12 @@ export const Router = createBrowserRouter([
       },
       {
         path: routes.library,
-        loader: () => Promise.allSettled([prefetchLibrary(), prefetchUsers()]),
+        loader: () => {
+          // start query, don't block route render
+          void prefetchLibrary();
+          void prefetchUsers();
+          return null;
+        },
         lazy: () => import('@/features/library/pages/library-page')
       },
       {
