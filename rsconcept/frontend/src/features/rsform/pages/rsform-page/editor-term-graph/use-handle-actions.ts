@@ -59,7 +59,9 @@ export function useHandleActions(graph: Graph<number>) {
   const [isExportingImage, setIsExportingImage] = useState(false);
 
   function handleShowTypeGraph() {
-    const typeInfo = schema.items
+    const items = selectedCst.length === 0 ? schema.items
+      : schema.items.filter(item => selectedCst.find(id => id === item.id));
+    const typeInfo = items
       .filter(item => !!item.analysis?.type)
       .map(item => ({
         alias: item.alias,

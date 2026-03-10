@@ -164,7 +164,7 @@ export function ToolbarTermGraph({ className, graph }: ToolbarTermGraphProps) {
         />
         <MiniButton
           icon={<IconTypeGraph size='1.25rem' className='icon-primary' />}
-          title='Граф ступеней'
+          title='Граф ступеней выделенных конституент'
           onClick={handleShowTypeGraph}
         />
         <div ref={exportRef} onBlur={handleExportBlur} className='flex relative'>
