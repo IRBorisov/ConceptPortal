@@ -5,7 +5,6 @@ import { Controller, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { urls, useConceptNavigation } from '@/app';
-import { useAuth } from '@/features/auth';
 
 import { Button, MiniButton, SubmitButton } from '@/components/control';
 import { IconDownload } from '@/components/icons';
@@ -29,7 +28,6 @@ import { LocationHead } from '../../models/library';
 import { useLibrarySearchStore } from '../../stores/library-search';
 
 export function FormCreateItem() {
-  const { user } = useAuth();
   const router = useConceptNavigation();
   const { createItem, isPending, reset: clearServerError } = useCreateItem();
   const { items } = useLibrary();
@@ -256,7 +254,6 @@ export function FormCreateItem() {
         <SubmitButton
           text={itemType === LibraryItemType.RSMODEL ? 'Создать модель' : 'Создать схему'}
           loading={isPending} className='min-w-40'
-          disabled={itemType === LibraryItemType.RSMODEL && !user.is_staff}
         />
         <Button text='Отмена' className='min-w-40' onClick={handleCancel} />
       </div>

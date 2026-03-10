@@ -8,7 +8,6 @@ from apps.library.models import LibraryItem
 from apps.library.serializers import LibraryItemDetailsSerializer
 from apps.rsform.models import Constituenta
 from apps.rsform.models.RSForm import msg
-from apps.rsform.serializers import RSFormSerializer
 from shared.serializers import StrictModelSerializer, StrictSerializer
 
 from ..models import ConstituentData, RSModel
@@ -40,7 +39,7 @@ class RSModelSerializer(StrictModelSerializer):
 
     def get_schema(self, instance: LibraryItem):
         model = RSModel.objects.get(model=instance)
-        return RSFormSerializer(model.schema).data
+        return model.schema_id
 
     def to_representation(self, instance: LibraryItem) -> dict:
         result = LibraryItemDetailsSerializer(instance).data

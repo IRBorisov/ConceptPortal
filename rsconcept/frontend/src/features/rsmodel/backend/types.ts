@@ -1,7 +1,6 @@
 import { z } from 'zod';
 
 import { schemaLibraryItem } from '@/features/library/backend/types';
-import { schemaRSForm } from '@/features/rsform';
 
 /** Represents data for {@link RSModel} provided by backend. */
 export type RSModelDTO = z.infer<typeof schemaRSModel>;
@@ -10,7 +9,7 @@ export type RSModelDTO = z.infer<typeof schemaRSModel>;
 export type ConstituentaValue = z.infer<typeof schemaConstituentaValue>;
 
 /** Represents data for {@link Constituenta} provided to backend. */
-export type ConstituentaDataDTO = z.infer<typeof schemaConstituentaData>;
+export type ConstituentaDataDTO = z.infer<typeof schemaUpdateValues>;
 
 // ========= SCHEMAS ========
 
@@ -29,21 +28,26 @@ export const schemaConstituentaValue = z.strictObject({
   type: z.string(),
   value: z.union([
     z.record(z.number(), z.string()),
+    z.number(),
     RecursiveArraySchema
   ])
 });
+
 
 export const schemaConstituentaData = z.strictObject({
   target: z.number(),
   type: z.string(),
   data: z.union([
     z.record(z.number(), z.string()),
+    z.number(),
     RecursiveArraySchema
   ])
 });
 
+export const schemaUpdateValues = z.array(schemaConstituentaData);
+
 export const schemaRSModel = schemaLibraryItem.extend({
   editors: z.array(z.number()),
-  schema: schemaRSForm,
+  schema: z.number(),
   items: z.array(schemaConstituentaValue)
 });

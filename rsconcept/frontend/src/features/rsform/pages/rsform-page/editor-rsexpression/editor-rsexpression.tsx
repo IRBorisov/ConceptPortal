@@ -17,11 +17,11 @@ import { rslangParser } from '../../../../rslang';
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { RSInput } from '../../../components/rs-input';
 import { RSTextWrapper } from '../../../components/rs-input/text-editing';
+import { ViewErrors } from '../../../components/view-errors';
 import { type Constituenta, CstStatus } from '../../../models/rsform';
 import { getAnalysisFor, inferStatus } from '../../../models/rsform-api';
 import { useRSFormEdit } from '../rsedit-context';
 
-import { ParsingResult } from './parsing-result';
 import { RSEditorControls } from './rs-edit-controls';
 import { StatusBar } from './status-bar';
 import { ToolbarRSExpression } from './toolbar-rsexpression';
@@ -206,9 +206,9 @@ export function EditorRSExpression({
         disabled={disabled}
       />
 
-      <ParsingResult
+      <ViewErrors
         isOpen={!!analysis && analysis.errors.length > 0}
-        data={analysis}
+        errors={analysis?.errors ?? null}
         onShowError={error => onShowError(error)}
         disabled={disabled}
       />

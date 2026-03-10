@@ -37,7 +37,7 @@ export class RSModelLoader {
       time_update: this.data.time_update,
       editors: [...this.data.editors],
 
-      schema: this.schema,
+      schema: this.schema.id,
       basicsContext: this.basicsContext,
       calculator: this.calculator
     };

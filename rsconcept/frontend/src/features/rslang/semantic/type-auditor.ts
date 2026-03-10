@@ -33,7 +33,7 @@ export class TypeAuditor {
     this.locals = new LocalContext(this.onError.bind(this));
   }
 
-  run(ast: AstNode, annotateTypes: boolean, reporter?: ErrorReporter): ExpressionType | null {
+  public run(ast: AstNode, annotateTypes: boolean, reporter?: ErrorReporter): ExpressionType | null {
     if (ast.hasError) {
       return null;
     }

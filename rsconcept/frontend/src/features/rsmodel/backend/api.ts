@@ -2,7 +2,7 @@ import { queryOptions } from '@tanstack/react-query';
 
 import { type ConstituentaList } from '@/features/rsform';
 
-import { axiosGet, axiosPatch } from '@/backend/api-transport';
+import { axiosGet, axiosPost } from '@/backend/api-transport';
 import { DELAYS, KEYS } from '@/backend/configuration';
 import { infoMsg } from '@/utils/labels';
 
@@ -30,7 +30,7 @@ export const rsmodelApi = {
   },
 
   setValue: ({ itemID, data }: { itemID: number; data: ConstituentaDataDTO; }) =>
-    axiosPatch<ConstituentaDataDTO>({
+    axiosPost<ConstituentaDataDTO>({
       endpoint: `/api/models/${itemID}/set-value`,
       request: {
         data: data,
@@ -38,7 +38,7 @@ export const rsmodelApi = {
       }
     }),
   clearValues: ({ itemID, data }: { itemID: number; data: ConstituentaList; }) =>
-    axiosPatch<ConstituentaList>({
+    axiosPost<ConstituentaList>({
       endpoint: `/api/models/${itemID}/clear-values`,
       request: {
         data: data,
@@ -46,7 +46,7 @@ export const rsmodelApi = {
       }
     }),
   resetModel: ({ itemID }: { itemID: number; }) =>
-    axiosPatch<undefined>({
+    axiosPost<undefined>({
       endpoint: `/api/models/${itemID}/reset-all`,
       request: { successMessage: infoMsg.modelCleared }
     }),

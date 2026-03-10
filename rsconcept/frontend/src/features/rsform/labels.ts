@@ -248,9 +248,7 @@ const describeTokenRecord: Partial<Record<TokenID, string>> = {
   [TokenID.ITERATE]: prepareTooltip('Перебор элементов множества', 'Alt + 6')
 };
 
-/**
- * Generates description for {@link Constituenta}.
- */
+/** Generates description for {@link Constituenta}. */
 export function describeConstituenta(cst: RO<Constituenta>): string {
   if (cst.cst_type === CstType.STRUCTURED) {
     return (
@@ -273,9 +271,7 @@ export function describeConstituenta(cst: RO<Constituenta>): string {
   }
 }
 
-/**
- * Generates description for term of a given {@link Constituenta}.
- */
+/** Generates description for term of a given {@link Constituenta}. */
 export function describeConstituentaTerm(cst: RO<Constituenta> | null): string {
   if (!cst) {
     return '!Конституента отсутствует!';
@@ -287,16 +283,12 @@ export function describeConstituentaTerm(cst: RO<Constituenta> | null): string {
   }
 }
 
-/**
- * Generates label for {@link Constituenta}.
- */
+/** Generates label for {@link Constituenta}. */
 export function labelConstituenta(cst: RO<Constituenta>) {
   return `${cst.alias}: ${describeConstituenta(cst)}`;
 }
 
-/**
- * Generates label for {@link VersionInfo} of {@link RSForm}.
- */
+/** Generates label for {@link VersionInfo} of {@link RSForm}. */
 export function labelVersion(value: CurrentVersion, items: RO<VersionInfo[]>) {
   const version = items.find(ver => ver.id === value);
   return version ? version.version : 'актуальная';
@@ -318,23 +310,17 @@ export function getRSDefinitionPlaceholder(type: CstType): string {
   return rsDefinitionPlaceholderRecord[type] ?? 'Формальное выражение';
 }
 
-/**
- * Generates description for {@link TokenID}.
- */
+/** Generates description for {@link TokenID}. */
 export function describeToken(id: TokenID): string {
   return describeTokenRecord[id] ?? `no description: ${id}`;
 }
 
-/**
- * Retrieves label for {@link CstMatchMode}.
- */
+/** Retrieves label for {@link CstMatchMode}. */
 export function labelCstMatchMode(mode: CstMatchMode): string {
   return labelCstMatchModeRecord[mode] ?? `UNKNOWN MATCH MODE: ${mode}`;
 }
 
-/**
- * Retrieves description for {@link CstMatchMode}.
- */
+/** Retrieves description for {@link CstMatchMode}. */
 export function describeCstMatchMode(mode: CstMatchMode): string {
   return describeCstMatchModeRecord[mode] ?? `UNKNOWN MATCH MODE: ${mode}`;
 }
@@ -344,9 +330,7 @@ export function labelCstSource(mode: DependencyMode): string {
   return labelCstSourceRecord[mode];
 }
 
-/**
- * Retrieves description for {@link DependencyMode}.
- */
+/** Retrieves description for {@link DependencyMode}. */
 export function describeCstSource(mode: DependencyMode): string {
   return describeCstSourceRecord[mode] ?? `UNKNOWN DEPENDENCY MODE: ${mode}`;
 }
@@ -366,51 +350,37 @@ export function labelEdgeType(mode: TGEdgeType): string {
   return labelGraphTypeRecord[mode] ?? `UNKNOWN GRAPH TYPE: ${mode}`;
 }
 
-/**
- * Retrieves label for {@link CstStatus}.
- */
+/** Retrieves label for {@link CstStatus}. */
 export function labelExpressionStatus(status: CstStatus): string {
   return labelExpressionStatusRecord[status] ?? `UNKNOWN EXPRESSION STATUS: ${status}`;
 }
 
-/**
- * Retrieves description for {@link CstStatus}.
- */
+/** Retrieves description for {@link CstStatus}. */
 export function describeExpressionStatus(status: CstStatus): string {
   return describeExpressionStatusRecord[status] ?? `UNKNOWN EXPRESSION STATUS: ${status}`;
 }
 
-/**
- * Retrieves label for {@link CstType}.
- */
+/** Retrieves label for {@link CstType}. */
 export function labelCstType(target: CstType): string {
   return labelCstTypeRecord[target] ?? `UNKNOWN CST TYPE: ${target}`;
 }
 
-/**
- * Retrieves label for {@link ReferenceType}.
- */
+/** Retrieves label for {@link ReferenceType}. */
 export function labelReferenceType(target: ReferenceType): string {
   return labelReferenceTypeRecord[target] ?? `UNKNOWN REFERENCE TYPE: ${target}`;
 }
 
-/**
- * Retrieves label for {@link CstClass}.
- */
+/** Retrieves label for {@link CstClass}. */
 export function labelCstClass(target: CstClass): string {
   return labelCstClassRecord[target] ?? `UNKNOWN CST CLASS: ${target}`;
 }
 
-/**
- * Retrieves description for {@link CstClass}.
- */
+/** Retrieves description for {@link CstClass}. */
 export function describeCstClass(target: CstClass): string {
   return describeCstClassRecord[target] ?? `UNKNOWN CST CLASS: ${target}`;
 }
 
-/**
- * Generates label for grammeme.
- */
+/** Generates label for grammeme. */
 export function labelGrammeme(gram: Grammeme): string {
   return labelGrammemeRecord[gram] ?? `Неизв: ${gram as string}`;
 }

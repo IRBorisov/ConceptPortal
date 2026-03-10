@@ -124,7 +124,7 @@ export function EditorConstituenta() {
       <div className='mx-0 min-w-120 md:mx-auto pt-8 md:w-195 shrink-0 xs:pt-0 min-h-6'>
         {activeCst ? (
           <FormConstituenta
-            key={activeCst.id}
+            key={`cst-${activeCst.id}`}
             id={globalIDs.constituenta_editor}
             toggleReset={toggleReset}
             activeCst={activeCst}

@@ -32,12 +32,7 @@ class TestRSModelViewset(EndpointTester):
         self.assertEqual(response.data['visible'], self.rsmodel.model.visible)
 
         schema = response.data['schema']
-        self.assertEqual(schema['id'], self.schema_id)
-        self.assertEqual(schema['title'], self.schema.model.title)
-        self.assertEqual(schema['alias'], self.schema.model.alias)
-        self.assertEqual(schema['location'], self.schema.model.location)
-        self.assertEqual(schema['access_policy'], self.schema.model.access_policy)
-        self.assertEqual(schema['visible'], self.schema.model.visible)
+        self.assertEqual(schema, self.schema_id)
 
         items = response.data['items']
         self.assertEqual(len(items), 1)
@@ -48,28 +43,28 @@ class TestRSModelViewset(EndpointTester):
     def test_set_value(self):
         x1 = self.schema.insert_last(alias='X1')
         cst_data = {'1': 'Петя', '2': 'Вася'}
-        payload = {
+        payload = [{
             'target': x1.pk,
             'type': 'basic',
             'data': cst_data
-        }
+        }]
         self.executeOK(item=self.model_id, data=payload)
         cdata = ConstituentData.objects.get(model=self.rsmodel.model, constituent=x1)
         self.assertEqual(cdata.type, 'basic')
         self.assertEqual(cdata.data, cst_data)
 
         self.executeNotFound(item=self.invalid_id, data=payload)
-        payload['target'] = self.invalid_id
+        payload[0]['target'] = self.invalid_id
 
         self.executeBadData(item=self.model_id, data=payload)
 
         schema2 = RSForm.create(title='Test2', alias='T2', owner=self.user)
         x2 = schema2.insert_last(alias='X1')
-        payload['target'] = x2.pk
+        payload[0]['target'] = x2.pk
         self.executeBadData(item=self.model_id, data=payload)
 
         self.login2()
-        payload['target'] = x1.pk
+        payload[0]['target'] = x1.pk
         self.executeForbidden(item=self.model_id, data=payload)
 
     @decl_endpoint('/api/models/{item}/clear-values', method='post')

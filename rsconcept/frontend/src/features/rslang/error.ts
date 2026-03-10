@@ -5,7 +5,8 @@ export const RSErrorClass = {
   LEXER: 0,
   PARSER: 1,
   SEMANTIC: 2,
-  UNKNOWN: 3
+  EVALUATION: 3,
+  UNKNOWN: 4
 } as const;
 export type RSErrorClass = (typeof RSErrorClass)[keyof typeof RSErrorClass];
 
@@ -86,13 +87,16 @@ export const RSErrorCode = {
 } as const;
 export type RSErrorCode = (typeof RSErrorCode)[keyof typeof RSErrorCode];
 
-const ERROR_LEXER_MASK = 512;
-const ERROR_PARSER_MASK = 1024;
-const ERROR_SEMANTIC_MASK = 2048;
+const ERROR_EVALUATION_MASK = 0x0a00;
+const ERROR_LEXER_MASK = 0x0200;
+const ERROR_PARSER_MASK = 0x0400;
+const ERROR_SEMANTIC_MASK = 0x0800;
 
 /** Infers error class from error type (code). */
 function inferErrorClass(error: RSErrorCode): RSErrorClass {
-  if ((error & ERROR_LEXER_MASK) !== 0) {
+  if ((error & ERROR_EVALUATION_MASK) !== 0) {
+    return RSErrorClass.EVALUATION;
+  } else if ((error & ERROR_LEXER_MASK) !== 0) {
     return RSErrorClass.LEXER;
   } else if ((error & ERROR_PARSER_MASK) !== 0) {
     return RSErrorClass.PARSER;
@@ -105,12 +109,13 @@ function inferErrorClass(error: RSErrorCode): RSErrorClass {
 
 /** Generate ErrorID label. */
 export function getRSErrorPrefix(code: RSErrorCode): string {
-  const id = code.toString(16);
+  const id = code.toString(16).toUpperCase();
   // prettier-ignore
   switch (inferErrorClass(code)) {
     case RSErrorClass.LEXER: return 'L' + id;
     case RSErrorClass.PARSER: return 'P' + id;
     case RSErrorClass.SEMANTIC: return 'S' + id;
+    case RSErrorClass.EVALUATION: return 'E' + id;
     case RSErrorClass.UNKNOWN: return 'U' + id;
   }
 }

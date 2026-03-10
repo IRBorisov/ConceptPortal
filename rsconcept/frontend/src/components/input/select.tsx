@@ -30,15 +30,15 @@ function SelectTrigger({
       data-slot='select-trigger'
       className={cn(
         'h-9',
-        'flex gap-2 px-3 py-2 items-center justify-between',
+        'flex gap-2 px-3 items-center justify-between',
         'bg-input disabled:opacity-50',
         'cursor-pointer disabled:cursor-auto',
         'whitespace-nowrap',
         'focus-outline',
-        'data-[placeholder]:text-muted-foreground',
+        'data-placeholder:text-muted-foreground',
         '*:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2',
         "[&_svg:not([class*='text-'])]:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
-        !noBorder && 'border',
+        !noBorder && 'border py-2',
         noBorder && 'rounded-md',
         className
       )}
@@ -69,7 +69,7 @@ function SelectContent({
           'overflow-x-hidden overflow-y-auto',
           'cc-animate-popover',
           position === 'popper' &&
-            'data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1',
+          'data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1',
           className
         )}
         position={position}
@@ -80,7 +80,7 @@ function SelectContent({
           className={cn(
             'p-1',
             position === 'popper' &&
-              'h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)] scroll-my-1'
+            'h-(--radix-select-trigger-height) w-full min-w-(--radix-select-trigger-width) scroll-my-1'
           )}
         >
           {children}
@@ -108,7 +108,7 @@ function SelectItem({ className, children, ...props }: React.ComponentProps<type
       className={cn(
         'relative',
         'flex py-1 pr-8 pl-2 items-center gap-2',
-        'cursor-default rounded-sm select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+        'cursor-default rounded-sm select-none data-disabled:pointer-events-none data-disabled:opacity-50',
         'outline-none focus:bg-accent focus:text-accent-foreground',
         '*:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2',
         "[&_svg:not([class*='text-'])]:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",

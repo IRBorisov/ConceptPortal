@@ -1,6 +1,9 @@
 'use client';
 
+import { type Constituenta } from '@/features/rsform';
+import { BadgeConstituenta } from '@/features/rsform/components/badge-constituenta';
 import { labelType } from '@/features/rslang/labels';
+import { BadgeEvaluation } from '@/features/rsmodel/components/bage-evaluation';
 
 import { TextURL } from '@/components/control';
 import { createColumnHelper, DataTable, type RowSelectionState, type VisibilityState } from '@/components/data-table';
@@ -9,10 +12,9 @@ import { useWindowSize } from '@/hooks/use-window-size';
 import { prefixes } from '@/utils/constants';
 import { truncateToSymbol } from '@/utils/utils';
 
-import { BadgeConstituenta } from '../../../components/badge-constituenta';
-import { type Constituenta } from '../../../models/rsform';
+import { useRSModelEdit } from '../rsmodel-context';
 
-interface TableRSListProps {
+interface TableModelListProps {
   items?: Constituenta[];
   enableSelection: boolean;
   maxHeight?: string;
@@ -24,9 +26,9 @@ interface TableRSListProps {
 }
 
 // Window width cutoff for columns
-const COLUMN_DEFINITION_HIDE_THRESHOLD = 1000;
-const COLUMN_TYPE_HIDE_THRESHOLD = 1200;
-const COLUMN_CONVENTION_HIDE_THRESHOLD = 1800;
+const COLUMN_DEFINITION_HIDE_THRESHOLD = 9500;
+const COLUMN_TYPE_HIDE_THRESHOLD = 1150;
+const COLUMN_CONVENTION_HIDE_THRESHOLD = 1700;
 
 const COMMENT_MAX_SYMBOLS = 100;
 const DEFINITION_MAX_SYMBOLS = 120;
@@ -36,7 +38,7 @@ const TYPIFICATION_TRUNCATE = 42;
 
 const columnHelper = createColumnHelper<Constituenta>();
 
-export function TableRSList({
+export function TableRSModelList({
   items,
   maxHeight,
   enableSelection,
@@ -44,7 +46,8 @@ export function TableRSList({
   setSelected,
   onEdit,
   onCreateNew
-}: TableRSListProps) {
+}: TableModelListProps) {
+  const { model, getEvalStatus } = useRSModelEdit();
   const windowSize = useWindowSize();
 
   function handleRowClicked(cst: Constituenta, event: React.MouseEvent<Element>) {
@@ -67,6 +70,18 @@ export function TableRSList({
       minSize: 65,
       maxSize: 65,
       cell: props => <BadgeConstituenta value={props.row.original} prefixID={prefixes.cst_list} />
+    }),
+    columnHelper.accessor(cst => cst, {
+      id: 'value',
+      header: 'Значение',
+      size: 60,
+      minSize: 60,
+      maxSize: 60,
+      cell: props => <BadgeEvaluation
+        cst={props.row.original}
+        model={model}
+        status={getEvalStatus(props.row.original.id)}
+      />
     }),
     columnHelper.accessor(cst => labelType(cst.analysis.type), {
       id: 'type',
