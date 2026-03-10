@@ -2,6 +2,9 @@
 
 import { useEffect, useRef } from 'react';
 
+import { EvalStatus, type RSModel } from '@/features/rsmodel';
+import { BadgeEvaluation } from '@/features/rsmodel/components/bage-evaluation';
+
 import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/data-table';
 import { NoData, TextContent } from '@/components/view';
 import { PARAMETER, prefixes } from '@/utils/constants';
@@ -16,7 +19,10 @@ const DESCRIPTION_MAX_SYMBOLS = 280;
 
 interface TableSideConstituentsProps {
   schema: RSForm;
+  model?: RSModel;
   activeCst?: Constituenta | null;
+  getEvalStatus?: (cstID: number) => EvalStatus;
+
   onActivate?: (cst: Constituenta) => void;
   onDoubleClick?: (cst: Constituenta) => void;
 
@@ -28,7 +34,9 @@ const columnHelper = createColumnHelper<Constituenta>();
 
 export function TableSideConstituents({
   schema,
+  model,
   activeCst,
+  getEvalStatus,
   onActivate,
   onDoubleClick,
   maxHeight,
@@ -62,8 +70,27 @@ export function TableSideConstituents({
       header: () => <span className='pl-3'>Имя</span>,
       size: 65,
       minSize: 65,
-      cell: props => <BadgeConstituenta value={props.row.original} prefixID={prefixes.cst_side_table} />
+      cell: props => <BadgeConstituenta
+        value={props.row.original}
+        prefixID={prefixes.cst_side_table}
+      />
     }),
+    ...(model
+      ? [
+        columnHelper.accessor(cst => cst, {
+          id: 'value',
+          header: 'Значение',
+          size: 60,
+          minSize: 60,
+          maxSize: 60,
+          cell: props => <BadgeEvaluation
+            cst={props.row.original}
+            model={model}
+            status={getEvalStatus?.(props.row.original.id) ?? EvalStatus.EVAL_FAIL}
+          />
+        })
+      ]
+      : []),
     columnHelper.accessor(cst => describeConstituenta(cst), {
       id: 'description',
       header: 'Описание',

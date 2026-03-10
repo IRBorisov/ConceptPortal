@@ -4,7 +4,6 @@ import { useLayoutEffect, useRef } from 'react';
 
 import { RSModelTabID, useConceptNavigation } from '@/app/navigation/navigation-context';
 import { EditorConstituenta } from '@/features/rsform/pages/rsform-page/editor-constituenta';
-import { EditorRSList } from '@/features/rsform/pages/rsform-page/editor-rslist';
 import { EditorTermGraph } from '@/features/rsform/pages/rsform-page/editor-term-graph';
 import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
 
@@ -13,6 +12,7 @@ import { useResetAttribute } from '@/hooks/use-reset-attribute';
 import { useAppLayoutStore } from '@/stores/app-layout';
 import { useModificationStore } from '@/stores/modification';
 
+import { EditorRSList } from './editor-rslist';
 import { EditorModelCard } from './editor-rsmodel-card';
 import { EditorValue } from './editor-value';
 import { MenuRSModel } from './menu-rsmodel';

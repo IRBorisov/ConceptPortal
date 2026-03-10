@@ -69,7 +69,7 @@ export function MenuMain() {
     hideMenu();
     event.preventDefault();
     event.stopPropagation();
-    router.gotoRSForm(model.schema.id, undefined, event.ctrlKey || event.metaKey);
+    router.gotoRSForm(model.schema, undefined, event.ctrlKey || event.metaKey);
   }
 
   return (

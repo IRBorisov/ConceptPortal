@@ -4,8 +4,11 @@ import { useState } from 'react';
 import clsx from 'clsx';
 
 import { useConceptNavigation } from '@/app';
-import { MiniSelectorOSS } from '@/features/library/components/mini-selector-oss';
 import { CstType } from '@/features/rsform/models/rsform';
+import { matchConstituenta } from '@/features/rsform/models/rsform-api';
+import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
+import { CstMatchMode } from '@/features/rsform/stores/cst-search';
+import { useMutatingRSModel } from '@/features/rsmodel/backend/use-mutating-rsmodel';
 
 import { ExportDropdown } from '@/components/control/export-dropdown';
 import { type RowSelectionState } from '@/components/data-table';
@@ -13,17 +16,12 @@ import { SearchBar } from '@/components/input';
 import { useFitHeight } from '@/stores/app-layout';
 import { withPreventDefault } from '@/utils/utils';
 
-import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
-import { matchConstituenta } from '../../../models/rsform-api';
-import { CstMatchMode } from '../../../stores/cst-search';
-import { useRSFormEdit } from '../rsedit-context';
-
-import { TableRSFormList } from './table-rsform-list';
+import { TableRSModelList } from './table-rsmodel-list';
 import { ToolbarRSList } from './toolbar-rslist';
 
 export function EditorRSList() {
   const router = useConceptNavigation();
-  const isProcessing = useMutatingRSForm();
+  const isProcessing = useMutatingRSModel();
   const {
     isContentEditable,
     schema,
@@ -80,7 +78,7 @@ export function EditorRSList() {
   }
 
   async function createPDFList() {
-    const { cstListToFile } = await import('../../../utils/rsform2pdf');
+    const { cstListToFile } = await import('@/features/rsform/utils/rsform2pdf');
     return cstListToFile(schema.items);
   }
 
@@ -115,7 +113,11 @@ export function EditorRSList() {
   return (
     <div tabIndex={-1} onKeyDown={handleKeyDown} className='relative pt-8'>
       {isContentEditable ? (
-        <ToolbarRSList className='cc-tab-tools right-4 md:right-1/2 -translate-x-1/2 md:translate-x-0 cc-animate-position' />
+        <ToolbarRSList className={clsx(
+          'cc-tab-tools',
+          'right-4 md:right-1/2 -translate-x-1/2 md:translate-x-0',
+          'cc-animate-position'
+        )} />
       ) : null}
 
       <div className={clsx('flex items-center border-b', !isContentEditable && 'justify-center pl-10')}>
@@ -123,12 +125,6 @@ export function EditorRSList() {
           <div className='px-2'>
             Выбор {selectedCst.length} из {schema.items.length}
           </div>
-        ) : null}
-        {!isContentEditable && schema.oss.length > 0 ? (
-          <MiniSelectorOSS
-            items={schema.oss}
-            onSelect={(event, value) => router.gotoOss(value.id, event.ctrlKey || event.metaKey)}
-          />
         ) : null}
         <SearchBar
           id='constituents_search'
@@ -147,7 +143,7 @@ export function EditorRSList() {
         pdfConverter={createPDFList}
       />
 
-      <TableRSFormList
+      <TableRSModelList
         items={filtered}
         maxHeight={tableHeight}
         enableSelection={isContentEditable}

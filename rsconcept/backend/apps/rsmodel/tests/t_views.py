@@ -32,12 +32,7 @@ class TestRSModelViewset(EndpointTester):
         self.assertEqual(response.data['visible'], self.rsmodel.model.visible)
 
         schema = response.data['schema']
-        self.assertEqual(schema['id'], self.schema_id)
-        self.assertEqual(schema['title'], self.schema.model.title)
-        self.assertEqual(schema['alias'], self.schema.model.alias)
-        self.assertEqual(schema['location'], self.schema.model.location)
-        self.assertEqual(schema['access_policy'], self.schema.model.access_policy)
-        self.assertEqual(schema['visible'], self.schema.model.visible)
+        self.assertEqual(schema, self.schema_id)
 
         items = response.data['items']
         self.assertEqual(len(items), 1)
@@ -48,11 +43,11 @@ class TestRSModelViewset(EndpointTester):
     def test_set_value(self):
         x1 = self.schema.insert_last(alias='X1')
         cst_data = {'1': 'Петя', '2': 'Вася'}
-        payload = {
+        payload = [{
             'target': x1.pk,
             'type': 'basic',
             'data': cst_data
-        }
+        }]
         self.executeOK(item=self.model_id, data=payload)
         cdata = ConstituentData.objects.get(model=self.rsmodel.model, constituent=x1)
         self.assertEqual(cdata.type, 'basic')

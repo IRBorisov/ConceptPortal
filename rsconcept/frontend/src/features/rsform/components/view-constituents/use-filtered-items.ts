@@ -16,9 +16,7 @@ export function useFilteredItems(schema: RSForm, activeCst?: Constituenta | null
   return items;
 }
 
-/**
- * Filter list of  {@link LibraryItem} to a given graph query.
- */
+/** Filter list of  {@link LibraryItem} to a given graph query. */
 function applyGraphQuery(target: RSForm, pivot: number, mode: DependencyMode): Constituenta[] {
   if (mode === DependencyMode.ALL) {
     return target.items;

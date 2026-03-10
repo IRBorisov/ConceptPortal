@@ -13,6 +13,7 @@ import {
 } from '@/features/library';
 import { useUpdateItem } from '@/features/library/backend/use-update-item';
 import { ToolbarItemAccess } from '@/features/library/components/toolbar-item-access';
+import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
 
 import { SubmitButton } from '@/components/control';
 import { IconRSForm, IconSave } from '@/components/icons';
@@ -26,10 +27,11 @@ import { useRSModelEdit } from '../rsmodel-context';
 
 export function FormRSModel() {
   const router = useConceptNavigation();
-  const { updateItem: updateSchema } = useUpdateItem();
+  const { updateItem } = useUpdateItem();
   const setIsModified = useModificationStore(state => state.setIsModified);
   const isProcessing = useMutatingRSModel();
   const { model, isMutable } = useRSModelEdit();
+  const { schema } = useRSFormEdit();
 
   const {
     register,
@@ -71,11 +73,11 @@ export function FormRSModel() {
   }, [isDirty, setIsModified]);
 
   function onSubmit(data: UpdateLibraryItemDTO) {
-    return updateSchema(data).then(() => reset({ ...data }));
+    return updateItem(data).then(() => reset({ ...data }));
   }
 
   function handleNavigateSchema() {
-    router.gotoRSForm(model.schema.id);
+    router.gotoRSForm(model.schema);
   }
 
   return (
@@ -133,7 +135,7 @@ export function FormRSModel() {
       <ValueIcon
         className='mt-3'
         icon={<IconRSForm size='1.25rem' className='icon-primary' />}
-        value={model.schema.alias}
+        value={schema.alias}
         title='Концептуальная схема'
         onClick={handleNavigateSchema}
         disabled={false}

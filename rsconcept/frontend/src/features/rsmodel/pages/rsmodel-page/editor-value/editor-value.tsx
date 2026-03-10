@@ -10,7 +10,6 @@ import { useRoleStore, UserRole } from '@/features/users';
 
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight, useMainHeight } from '@/stores/app-layout';
-import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { globalIDs } from '@/utils/constants';
 
@@ -18,7 +17,7 @@ import { useMutatingRSModel } from '../../../backend/use-mutating-rsmodel';
 import { useRSModelEdit } from '../rsmodel-context';
 
 import { FormValue } from './form-value';
-import { ToolbarConstituenta } from './toolbar-constituenta';
+import { ToolbarValue } from './toolbar-value';
 
 // Threshold window width to switch layout.
 const SIDELIST_LAYOUT_THRESHOLD = 1000; // px
@@ -33,17 +32,13 @@ export function EditorValue() {
     activeCst,
     isContentEditable,
     selectedCst,
-    setSelectedCst,
-    moveUp,
-    moveDown,
-    cloneCst
+    setSelectedCst
   } = useRSFormEdit();
-  const { model } = useRSModelEdit();
+  const { model, resetValue, getEvalStatus } = useRSModelEdit();
   const windowSize = useWindowSize();
   const mainHeight = useMainHeight();
 
-  const showList = usePreferencesStore(state => state.showCstSideList);
-  const { isModified } = useModificationStore();
+  const showList = usePreferencesStore(state => state.showValueSideList);
 
   const [toggleReset, setToggleReset] = useState(false);
 
@@ -64,41 +59,11 @@ export function EditorValue() {
     }
   }, [activeCst, selectedCst, setSelectedCst]);
 
-  function handleInput(event: React.KeyboardEvent<HTMLDivElement>) {
-    if (disabled) {
+  function handleClearValue() {
+    if (!activeCst) {
       return;
     }
-    if ((event.ctrlKey || event.metaKey) && event.code === 'KeyS') {
-      if (isModified) {
-        initiateSubmit();
-      }
-      event.preventDefault();
-      return;
-    }
-    if (!event.altKey || event.shiftKey) {
-      return;
-    }
-    if (processAltKey(event.code)) {
-      event.preventDefault();
-      return;
-    }
-  }
-
-  function initiateSubmit() {
-    const element = document.getElementById(globalIDs.constituenta_editor) as HTMLFormElement;
-    if (element) {
-      element.requestSubmit();
-    }
-  }
-
-  function processAltKey(code: string): boolean {
-    // prettier-ignore
-    switch (code) {
-      case 'ArrowUp': moveUp(); return true;
-      case 'ArrowDown': moveDown(); return true;
-      case 'KeyV': void cloneCst(); return true;
-    }
-    return false;
+    resetValue(activeCst.id);
   }
 
   return (
@@ -112,25 +77,24 @@ export function EditorValue() {
         isNarrow && 'flex-col md:items-center'
       )}
       style={{ maxHeight: mainHeight }}
-      onKeyDown={handleInput}
     >
-      <ToolbarConstituenta
+      <ToolbarValue
         className={clsx(
           'cc-tab-tools',
           'right-1/2 translate-x-0 xs:right-4 xs:-translate-x-1/2 md:right-1/2 md:translate-x-0',
           'cc-animate-position'
         )}
-        onSubmit={initiateSubmit}
-        onReset={() => setToggleReset(prev => !prev)}
         disabled={disabled}
         isNarrow={isNarrow}
+        onReset={() => setToggleReset(prev => !prev)}
+        onClearValue={handleClearValue}
       />
 
       <div className='mx-0 min-w-120 md:mx-auto pt-8 md:w-195 shrink-0 xs:pt-0 min-h-6'>
         {activeCst ? (
           <FormValue
-            key={activeCst.id}
-            id={globalIDs.constituenta_editor}
+            key={`data-${activeCst.id}`}
+            id={globalIDs.value_editor}
             activeCst={activeCst}
             toggleReset={toggleReset}
             model={model}
@@ -145,7 +109,9 @@ export function EditorValue() {
           showList ? 'max-w-full' : 'opacity-0 max-w-0'
         )}
         schema={schema}
+        model={model}
         activeCst={activeCst}
+        getEvalStatus={getEvalStatus}
         onActivate={cst => router.changeActive(cst.id)}
         dense={!!windowSize.width && windowSize.width < COLUMN_DENSE_SEARCH_THRESHOLD}
         maxListHeight={listHeight}

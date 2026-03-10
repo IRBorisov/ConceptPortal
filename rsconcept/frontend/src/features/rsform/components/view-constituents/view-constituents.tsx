@@ -1,5 +1,7 @@
 'use client';
 
+import { type EvalStatus, type RSModel } from '@/features/rsmodel';
+
 import { cn } from '@/components/utils';
 
 import { type Constituenta, type RSForm } from '../../models/rsform';
@@ -9,7 +11,10 @@ import { TableSideConstituents } from './table-side-constituents';
 
 interface ViewConstituentsProps {
   schema: RSForm;
+  model?: RSModel;
   activeCst?: Constituenta | null;
+  getEvalStatus?: (cstID: number) => EvalStatus;
+
   onActivate?: (cst: Constituenta) => void;
   onDoubleClick?: (cst: Constituenta) => void;
 
@@ -22,7 +27,10 @@ interface ViewConstituentsProps {
 
 export function ViewConstituents({
   schema,
+  model,
   activeCst,
+  getEvalStatus,
+
   onActivate,
   onDoubleClick,
 
@@ -40,7 +48,9 @@ export function ViewConstituents({
       />
       <TableSideConstituents
         schema={schema}
+        model={model}
         activeCst={activeCst}
+        getEvalStatus={getEvalStatus}
         onActivate={onActivate}
         maxHeight={maxListHeight}
         autoScroll={autoScroll}

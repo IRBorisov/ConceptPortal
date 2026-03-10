@@ -14,16 +14,12 @@ const describeUserRoleRecord: Record<UserRole, string> = {
   [UserRole.ADMIN]: 'Режим администратора'
 };
 
-/**
- * Retrieves label for {@link UserRole}.
- */
+/** Retrieves label for {@link UserRole}. */
 export function labelUserRole(mode: UserRole): string {
   return labelUserRoleRecord[mode] ?? `UNKNOWN USER ROLE: ${mode}`;
 }
 
-/**
- * Retrieves description for {@link UserRole}.
- */
+/** Retrieves description for {@link UserRole}. */
 export function describeUserRole(mode: UserRole): string {
   return describeUserRoleRecord[mode] ?? `UNKNOWN USER ROLE: ${mode}`;
 }

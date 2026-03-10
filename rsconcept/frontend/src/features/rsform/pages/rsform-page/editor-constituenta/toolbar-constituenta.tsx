@@ -81,14 +81,14 @@ export function ToolbarConstituenta({
           onSelect={(event, value) => router.gotoOss(value.id, event.ctrlKey || event.metaKey)}
         />
       ) : null}
-      {activeCst?.is_inherited ? (
+      {activeCst ? (
         <MiniButton
-          title='Перейти к исходной конституенте в ОСС'
+          title={activeCst.is_inherited ? 'Перейти к исходной конституенте в ОСС' : 'Конституента не имеет предка'}
           onClick={(event) => viewPredecessor(event, activeCst.id)}
           icon={<IconPredecessor size='1.25rem' className='icon-primary' />}
-        />
-      ) : null}
-      {isContentEditable ? (
+          disabled={!activeCst.is_inherited}
+        />) : null}
+      {isContentEditable && activeCst ? (
         <>
           <MiniButton
             titleHtml={prepareTooltip('Сохранить изменения', isMac() ? 'Cmd + S' : 'Ctrl + S')}
@@ -106,7 +106,7 @@ export function ToolbarConstituenta({
           <MiniButton
             title='Создать конституенту после данной'
             icon={<IconNewItem size='1.25rem' className='icon-green' />}
-            onClick={() => void (activeCst ? promptCreateCst(activeCst.cst_type) : promptCreateCst())}
+            onClick={() => void promptCreateCst(activeCst.cst_type)}
             disabled={!isContentEditable || isProcessing}
           />
           <MiniButton

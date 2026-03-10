@@ -48,10 +48,10 @@ export function TextArea({
         id={id}
         className={cn(
           'min-h-0',
-          'px-3 py-2',
+          'px-3',
           'leading-tight',
           'overflow-x-hidden overflow-y-auto',
-          !noBorder && 'border',
+          !noBorder && 'border py-2',
           fitContent && 'field-sizing-content',
           noResize && 'resize-none',
           transparent || disabled ? 'bg-transparent' : 'bg-input',

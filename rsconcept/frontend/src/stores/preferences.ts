@@ -25,6 +25,9 @@ interface PreferencesStore {
   showCstSideList: boolean;
   toggleShowCstSideList: () => void;
 
+  showValueSideList: boolean;
+  toggleShowValueSideList: () => void;
+
   showRSFormStats: boolean;
   toggleShowRSFormStats: () => void;
 
@@ -84,6 +87,9 @@ export const usePreferencesStore = create<PreferencesStore>()(
       showCstSideList: true,
       toggleShowCstSideList: () => set(state => ({ showCstSideList: !state.showCstSideList })),
 
+      showValueSideList: true,
+      toggleShowValueSideList: () => set(state => ({ showValueSideList: !state.showValueSideList })),
+
       showRSFormStats: true,
       toggleShowRSFormStats: () => set(state => ({ showRSFormStats: !state.showRSFormStats })),
 
@@ -103,7 +109,7 @@ export const usePreferencesStore = create<PreferencesStore>()(
       setPreferredPlayer: value => set(state => (state.preferredPlayer === value ? state : { preferredPlayer: value }))
     }),
     {
-      version: 2,
+      version: 3,
       name: 'portal.preferences'
     }
   )

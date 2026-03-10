@@ -163,6 +163,7 @@ export { LuWandSparkles   as IconGenerateNames }  from 'react-icons/lu';
 export { GrConnect        as IconConnect }        from 'react-icons/gr';
 export { BiPlayCircle     as IconExecute }        from 'react-icons/bi';
 export { LuClapperboard   as IconCalculateAll }   from 'react-icons/lu';
+export { GrClearOption    as IconClearData }      from 'react-icons/gr';
 
 // ======== Graph UI =======
 export { LuSlice          as IconEditorMode }     from 'react-icons/lu';

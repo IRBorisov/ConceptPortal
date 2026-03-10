@@ -3,21 +3,30 @@
 import { useEffect, useEffectEvent, useLayoutEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
+import { useConceptNavigation } from '@/app';
 import { type Constituenta } from '@/features/rsform';
+import { RSInput } from '@/features/rsform/components/rs-input';
+import { ViewErrors } from '@/features/rsform/components/view-errors';
+import { labelRSExpression } from '@/features/rsform/labels';
 import { isBaseSet } from '@/features/rsform/models/rsform-api';
-import { type Value } from '@/features/rslang';
+import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
+import { type CalculatorResult, type Value } from '@/features/rslang';
 import { labelType } from '@/features/rslang/labels';
-import { isInferrable } from '@/features/rsmodel/models/rsmodel-api';
+import { useCstValue } from '@/features/rsmodel/hooks/use-cst-value';
+import { labelValue } from '@/features/rsmodel/labels';
+import { isInferrable, isInterpretable } from '@/features/rsmodel/models/rsmodel-api';
 
 import { Button } from '@/components/control';
 import { IconSave } from '@/components/icons';
 import { TextArea } from '@/components/input';
 import { useModificationStore } from '@/stores/modification';
-import { infoMsg } from '@/utils/labels';
+import { type RO } from '@/utils/meta';
 
 import { useMutatingRSModel } from '../../../backend/use-mutating-rsmodel';
 import { type BasicBinding, type RSModel } from '../../../models/rsmodel';
 import { useRSModelEdit } from '../rsmodel-context';
+
+import { StatusBar } from './status-bar';
 
 interface FormValueProps {
   id?: string;
@@ -29,7 +38,9 @@ interface FormValueProps {
 }
 
 export function FormValue({ disabled, id, model, toggleReset, activeCst }: FormValueProps) {
-  const { isMutable } = useRSModelEdit();
+  const router = useConceptNavigation();
+  const { isMutable, setValue, setBasicValue, getEvalStatus, calculateCst } = useRSModelEdit();
+  const { schema } = useRSFormEdit();
   const isProcessing = useMutatingRSModel();
 
   const isModified = useModificationStore(state => state.isModified);
@@ -37,13 +48,18 @@ export function FormValue({ disabled, id, model, toggleReset, activeCst }: FormV
   const onModifiedEvent = useEffectEvent(setIsModified);
 
   const isBase = isBaseSet(activeCst.cst_type);
+  const cstInferrable = isInferrable(activeCst.cst_type);
+  const status = getEvalStatus(activeCst.id);
+  const [localEval, setLocalEval] = useState<RO<CalculatorResult> | null>(null);
+
+  const cstData = useCstValue(model, activeCst);
 
   const initialValue = isBase
     ? (model.basicsContext.get(activeCst.id) ?? ({} as BasicBinding))
     : model.calculator.getValue(activeCst.alias);
 
   const initialStr = initialValue ? JSON.stringify(initialValue, null, 2) : '';
-  const [value, setValue] = useState<string>(initialStr);
+  const [value, setStrValue] = useState<string>(initialStr);
 
   const isDirty = value !== initialStr;
 
@@ -51,7 +67,7 @@ export function FormValue({ disabled, id, model, toggleReset, activeCst }: FormV
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      setValue(initialStr);
+      setStrValue(initialStr);
     }, 0);
     return () => clearTimeout(timeoutId);
   }, [activeCst.id, initialStr, toggleReset, model]);
@@ -67,13 +83,12 @@ export function FormValue({ disabled, id, model, toggleReset, activeCst }: FormV
     try {
       if (isBase) {
         const parsedBinding = JSON.parse(value) as BasicBinding;
-        model.basicsContext.set(activeCst.id, parsedBinding);
-        model.calculator.setValue(activeCst.alias, Object.keys(parsedBinding).map(Number));
+        const valueBinding = Object.fromEntries(Object.entries(parsedBinding).map(([key, value]) => [Number(key), value]));
+        setBasicValue(activeCst.id, valueBinding);
       } else {
         const parsedValue = JSON.parse(value) as Value;
-        model.calculator.setValue(activeCst.alias, parsedValue);
+        setValue(activeCst.id, parsedValue);
       }
-      toast.success(infoMsg.changesSaved);
       setIsModified(false);
     } catch (error) {
       toast.error((error as Error).message);
@@ -81,28 +96,38 @@ export function FormValue({ disabled, id, model, toggleReset, activeCst }: FormV
     }
   }
 
+  function handleCalculate(event: React.MouseEvent<Element>) {
+    event.preventDefault();
+    event.stopPropagation();
+    const result = calculateCst(activeCst.id);
+    setLocalEval(result);
+  }
+
+  function handleOpenEdit(cstID: number) {
+    void router.changeActive(cstID);
+  }
+
   return (
     <div
       id={id}
-      className='relative mt-1 flex flex-col px-6 pb-1 pt-8'
+      className='relative mt-1 cc-column px-6 pb-1 pt-8'
     >
-      <div className='flex items-center'>
-        <div className='font-math font-medium whitespace-nowrap select-text cursor-default'>
+      <div className='flex items-start'>
+        <div className='font-math -mt-0.5 font-medium whitespace-nowrap select-text cursor-default'>
           {activeCst?.alias ?? ''}
         </div>
         <TextArea
-          id='cst_term'
           aria-label='Термин'
-          placeholder={disabled ? '' : 'Термин отсутствует'}
+          placeholder='Термин отсутствует'
           value={activeCst.term_resolved}
           disabled
           readOnly
           noBorder
           fitContent
+          noResize
         />
       </div>
       <TextArea
-        id='cst_typification'
         fitContent
         dense
         noResize
@@ -114,22 +139,48 @@ export function FormValue({ disabled, id, model, toggleReset, activeCst }: FormV
         value={labelType(activeCst.analysis.type)}
         className='cursor-default'
       />
-      <TextArea
-        id='cst_value'
-        value={value}
-        onChange={event => setValue(event.target.value)}
-        fitContent
-        rows={8}
-        spellCheck
-        label='Значение'
-        placeholder='Значение отсутствует'
-        disabled={!isMutable || isInferrable(activeCst.cst_type)}
+      {cstInferrable ? (
+        <RSInput
+          label={labelRSExpression(activeCst.cst_type)}
+          placeholder='Выражение отсутствует'
+          schema={schema}
+          value={activeCst.definition_formal}
+          disabled
+          onOpenEdit={handleOpenEdit}
+        />) : null}
+      <ViewErrors
+        className='-mt-3'
+        isOpen={!!localEval && localEval.errors.length > 0}
+        errors={localEval?.errors ?? null}
+        disabled={disabled}
       />
+
+      <div className='relative'>
+        <StatusBar
+          className='absolute -top-0.5 right-1/2 translate-x-1/2'
+          status={status}
+          onCalculate={cstInferrable ? (event) => handleCalculate(event) : undefined}
+        />
+        <div className='absolute top-0 right-1 font-math select-none'>
+          {labelValue(localEval ? localEval.value : cstData, activeCst.analysis.type)}
+        </div>
+
+        <TextArea
+          value={value}
+          onChange={event => setStrValue(event.target.value)}
+          fitContent
+          rows={8}
+          spellCheck
+          label='Значение'
+          placeholder={!isInterpretable(activeCst.cst_type) ? 'Значение для данного типа не предусмотрено' : 'Значение отсутствует'}
+          disabled={!isMutable || cstInferrable || !isInterpretable(activeCst.cst_type)}
+        />
+      </div>
 
       {!disabled || isProcessing ? (
         <Button
           text='Сохранить изменения'
-          className='mx-auto w-fit mt-3'
+          className='mx-auto w-fit'
           icon={<IconSave size='1.25rem' />}
           disabled={disabled || !isModified}
           onClick={onSaveValue}

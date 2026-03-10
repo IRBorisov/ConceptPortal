@@ -79,17 +79,18 @@ class RSModelViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Ret
     def set_value(self, request: Request, pk) -> Response:
         ''' Endpoint: Set value for a specific constituent in the model. '''
         item = self._get_item()
-        serializer = s.CstDataUpdateSerializer(data=request.data, context={'schema': self._get_schema()})
+        serializer = s.CstDataUpdateSerializer(data=request.data, context={'schema': self._get_schema()}, many=True)
         serializer.is_valid(raise_exception=True)
         validated_data = serializer.validated_data
 
         with transaction.atomic():
-            m.ConstituentData.objects.update_or_create(
-                model=item,
-                constituent=validated_data['target'],
-                type=validated_data['type'],
-                data=validated_data['data']
-            )
+            for cst_data in validated_data:
+                m.ConstituentData.objects.update_or_create(
+                    model=item,
+                    constituent=cst_data['target'],
+                    type=cst_data['type'],
+                    data=cst_data['data']
+                )
             item.save(update_fields=['time_update'])
         return Response(
             status=c.HTTP_200_OK

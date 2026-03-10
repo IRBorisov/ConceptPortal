@@ -49,10 +49,10 @@ export function TextInput({
       <input
         id={id}
         className={cn(
-          'min-w-0 py-2',
+          'min-w-0',
           'leading-tight truncate hover:text-clip',
           transparent || disabled ? 'bg-transparent' : 'bg-input',
-          !noBorder && 'border',
+          !noBorder && 'border py-2',
           !noOutline && 'focus-outline',
           (!noBorder || !disabled) && 'px-3',
           dense && 'grow max-w-full',

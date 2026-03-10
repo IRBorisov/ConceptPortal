@@ -241,6 +241,21 @@ export function describeRSError(code: RSErrorCode, params: readonly string[] = [
       return 'Данный тип конституенты требует логического выражения';
     case RSErrorCode.cstExpectedTyped:
       return 'Данный тип конституенты требует теоретико-множественного выражения';
+
+    case RSErrorCode.valueUnknownError:
+      return 'Неизвестная ошибка вычисления';
+    case RSErrorCode.valueTypedOverflow:
+      return `Превышен лимит количества элементов: ${params[0]}`;
+    case RSErrorCode.valueBooleanLimit:
+      return `Превышен лимит для основания булеана: ${params[0]}`;
+    case RSErrorCode.valueGlobalMissing:
+      return `Неизвестное значение конституенты ${params[0]}`;
+    case RSErrorCode.valueIterationsLimit:
+      return `Превышен лимит итераций ${params[0]}`;
+    case RSErrorCode.valueInvalidDebool:
+      return 'Некорректное взятие debool';
+    case RSErrorCode.valueIterateInfinity:
+      return 'Итерация на бесконечности';
   }
   return 'UNKNOWN ERROR';
 }
@@ -269,6 +284,32 @@ export function labelType(type: RO<ExpressionType> | null): string {
     case TypeID.function:
       const argsText = type.args.map(arg => labelType(arg.type)).join(', ');
       return `[${argsText}] → ${labelType(type.result)}`;
+  }
+}
+
+/** Converts expression type to normalized string. */
+export function normalizeType(type: RO<ExpressionType> | null): string {
+  if (!type) {
+    return 'N/A';
+  }
+  switch (type.typeID) {
+    case TypeID.anyTypification:
+      return ANY_TYPE_NAME;
+    case TypeID.integer:
+    case TypeID.basic:
+      return 'X1';
+    case TypeID.tuple:
+      return type.factors.map(
+        factor => factor.typeID === TypeID.tuple ? `(${normalizeType(factor)})` : normalizeType(factor)
+      ).join('×');
+    case TypeID.collection:
+      return type.base.typeID === TypeID.collection ? `ℬ${normalizeType(type.base)}` : `ℬ(${normalizeType(type.base)})`;
+    case TypeID.logic:
+      return LOGIC_TYPE_NAME;
+    case TypeID.predicate:
+    case TypeID.function:
+      const argsText = type.args.map(arg => normalizeType(arg.type)).join(', ');
+      return `[${argsText}] → ${normalizeType(type.result)}`;
   }
 }
 
