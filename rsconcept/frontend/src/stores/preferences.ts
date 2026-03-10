@@ -22,6 +22,9 @@ interface PreferencesStore {
   libraryPagination: number;
   setLibraryPagination: (value: number) => void;
 
+  showDataText: boolean;
+  toggleShowDataText: () => void;
+
   showCstSideList: boolean;
   toggleShowCstSideList: () => void;
 
@@ -83,6 +86,9 @@ export const usePreferencesStore = create<PreferencesStore>()(
       libraryPagination: 20,
       setLibraryPagination: value =>
         set(state => (state.libraryPagination === value ? state : { libraryPagination: value })),
+
+      showDataText: false,
+      toggleShowDataText: () => set(state => ({ showDataText: !state.showDataText })),
 
       showCstSideList: true,
       toggleShowCstSideList: () => set(state => ({ showCstSideList: !state.showCstSideList })),

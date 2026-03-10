@@ -17,7 +17,7 @@ import { useMutatingRSModel } from '../../../backend/use-mutating-rsmodel';
 import { useRSModelEdit } from '../rsmodel-context';
 
 import { FormValue } from './form-value';
-import { ToolbarValue } from './toolbar-value';
+import { ToolbarValueEditor } from './toolbar-value-editor';
 
 // Threshold window width to switch layout.
 const SIDELIST_LAYOUT_THRESHOLD = 1000; // px
@@ -78,7 +78,7 @@ export function EditorValue() {
       )}
       style={{ maxHeight: mainHeight }}
     >
-      <ToolbarValue
+      <ToolbarValueEditor
         className={clsx(
           'cc-tab-tools',
           'right-1/2 translate-x-0 xs:right-4 xs:-translate-x-1/2 md:right-1/2 md:translate-x-0',

@@ -4,29 +4,34 @@ import { useEffect, useEffectEvent, useLayoutEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { useConceptNavigation } from '@/app';
-import { type Constituenta } from '@/features/rsform';
+import { type Constituenta, CstType } from '@/features/rsform';
 import { RSInput } from '@/features/rsform/components/rs-input';
 import { ViewErrors } from '@/features/rsform/components/view-errors';
 import { labelRSExpression } from '@/features/rsform/labels';
 import { isBaseSet } from '@/features/rsform/models/rsform-api';
 import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
 import { type CalculatorResult, type Value } from '@/features/rslang';
+import { normalizeValue } from '@/features/rslang/eval/value-api';
 import { labelType } from '@/features/rslang/labels';
-import { useCstValue } from '@/features/rsmodel/hooks/use-cst-value';
-import { labelValue } from '@/features/rsmodel/labels';
-import { isInferrable, isInterpretable } from '@/features/rsmodel/models/rsmodel-api';
 
 import { Button } from '@/components/control';
 import { IconSave } from '@/components/icons';
 import { TextArea } from '@/components/input';
 import { useModificationStore } from '@/stores/modification';
+import { usePreferencesStore } from '@/stores/preferences';
+import { globalIDs } from '@/utils/constants';
 import { type RO } from '@/utils/meta';
 
 import { useMutatingRSModel } from '../../../backend/use-mutating-rsmodel';
+import { useCstValue } from '../../../hooks/use-cst-value';
+import { labelValue } from '../../../labels';
 import { type BasicBinding, type RSModel } from '../../../models/rsmodel';
+import { isInferrable, isInterpretable, prepareValueString } from '../../../models/rsmodel-api';
 import { useRSModelEdit } from '../rsmodel-context';
 
 import { StatusBar } from './status-bar';
+import { ToolbarExpression } from './toolbar-expression';
+import { ToolbarValue } from './toolbar-value';
 
 interface FormValueProps {
   id?: string;
@@ -42,10 +47,12 @@ export function FormValue({ disabled, id, model, toggleReset, activeCst }: FormV
   const { isMutable, setValue, setBasicValue, getEvalStatus, calculateCst } = useRSModelEdit();
   const { schema } = useRSFormEdit();
   const isProcessing = useMutatingRSModel();
+  const typification = activeCst.analysis.type;
 
   const isModified = useModificationStore(state => state.isModified);
   const setIsModified = useModificationStore(state => state.setIsModified);
   const onModifiedEvent = useEffectEvent(setIsModified);
+  const showDataText = usePreferencesStore(state => state.showDataText);
 
   const isBase = isBaseSet(activeCst.cst_type);
   const cstInferrable = isInferrable(activeCst.cst_type);
@@ -56,18 +63,18 @@ export function FormValue({ disabled, id, model, toggleReset, activeCst }: FormV
 
   const initialValue = isBase
     ? (model.basicsContext.get(activeCst.id) ?? ({} as BasicBinding))
-    : model.calculator.getValue(activeCst.alias);
+    : cstData;
 
-  const initialStr = initialValue ? JSON.stringify(initialValue, null, 2) : '';
-  const [value, setStrValue] = useState<string>(initialStr);
+  const initialStr = prepareValueString(initialValue, typification, schema, model, showDataText);
+  const [inputValue, setInputValue] = useState<string>(initialStr);
 
-  const isDirty = value !== initialStr;
+  const isDirty = inputValue !== initialStr;
 
   useLayoutEffect(() => onModifiedEvent(false), [activeCst.id]);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      setStrValue(initialStr);
+      setInputValue(initialStr);
     }, 0);
     return () => clearTimeout(timeoutId);
   }, [activeCst.id, initialStr, toggleReset, model]);
@@ -77,17 +84,22 @@ export function FormValue({ disabled, id, model, toggleReset, activeCst }: FormV
   }, [isDirty]);
 
   function onSaveValue() {
-    if (!value) {
+    if (!inputValue) {
       return;
     }
     try {
       if (isBase) {
-        const parsedBinding = JSON.parse(value) as BasicBinding;
+        const parsedBinding = JSON.parse(inputValue) as BasicBinding;
         const valueBinding = Object.fromEntries(Object.entries(parsedBinding).map(([key, value]) => [Number(key), value]));
         setBasicValue(activeCst.id, valueBinding);
+        const newValue = prepareValueString(valueBinding, typification, schema, model, showDataText);
+        setInputValue(newValue);
       } else {
-        const parsedValue = JSON.parse(value) as Value;
+        const parsedValue = JSON.parse(inputValue) as Value;
+        normalizeValue(parsedValue);
         setValue(activeCst.id, parsedValue);
+        const newValue = prepareValueString(parsedValue, typification, schema, model, showDataText);
+        setInputValue(newValue);
       }
       setIsModified(false);
     } catch (error) {
@@ -113,7 +125,7 @@ export function FormValue({ disabled, id, model, toggleReset, activeCst }: FormV
       className='relative mt-1 cc-column px-6 pb-1 pt-8'
     >
       <div className='flex items-start'>
-        <div className='font-math -mt-0.5 font-medium whitespace-nowrap select-text cursor-default'>
+        <div className='font-math -mt-0.5 font-medium whitespace-nowrap select-text cursor-default'        >
           {activeCst?.alias ?? ''}
         </div>
         <TextArea
@@ -136,18 +148,23 @@ export function FormValue({ disabled, id, model, toggleReset, activeCst }: FormV
         transparent
         readOnly
         label='Типизация'
-        value={labelType(activeCst.analysis.type)}
+        value={labelType(typification)}
         className='cursor-default'
       />
-      {cstInferrable ? (
-        <RSInput
-          label={labelRSExpression(activeCst.cst_type)}
-          placeholder='Выражение отсутствует'
-          schema={schema}
-          value={activeCst.definition_formal}
-          disabled
-          onOpenEdit={handleOpenEdit}
-        />) : null}
+      {cstInferrable || (activeCst.definition_formal && activeCst.cst_type !== CstType.STRUCTURED) ? (
+        <div className='relative'>
+          <ToolbarExpression
+            className='absolute -top-1 right-0'
+          />
+          <RSInput
+            label={labelRSExpression(activeCst.cst_type)}
+            placeholder='Выражение отсутствует'
+            schema={schema}
+            value={activeCst.definition_formal}
+            disabled
+            onOpenEdit={handleOpenEdit}
+          />
+        </div>) : null}
       <ViewErrors
         className='-mt-3'
         isOpen={!!localEval && localEval.errors.length > 0}
@@ -161,19 +178,30 @@ export function FormValue({ disabled, id, model, toggleReset, activeCst }: FormV
           status={status}
           onCalculate={cstInferrable ? (event) => handleCalculate(event) : undefined}
         />
-        <div className='absolute top-0 right-1 font-math select-none'>
-          {labelValue(localEval ? localEval.value : cstData, activeCst.analysis.type)}
+        <div className='absolute -top-0.5 left-24 select-none flex gap-2 items-center'>
+          <span
+            className='font-math'
+            tabIndex={-1}
+            data-tooltip-id={globalIDs.tooltip}
+            aria-label='Сокращенное значение выражения'
+            data-tooltip-content='Значение выражения'
+          >
+            {labelValue(localEval ? localEval.value : cstData, typification)}
+          </span>
         </div>
 
+        <ToolbarValue className='absolute -top-1 right-0' value={inputValue} />
+
         <TextArea
-          value={value}
-          onChange={event => setStrValue(event.target.value)}
+          value={inputValue}
+          onChange={event => setInputValue(event.target.value)}
           fitContent
+          className='max-h-100'
           rows={8}
           spellCheck
           label='Значение'
           placeholder={!isInterpretable(activeCst.cst_type) ? 'Значение для данного типа не предусмотрено' : 'Значение отсутствует'}
-          disabled={!isMutable || cstInferrable || !isInterpretable(activeCst.cst_type)}
+          disabled={!isMutable || cstInferrable || !isInterpretable(activeCst.cst_type) || (showDataText && !isBase)}
         />
       </div>
 

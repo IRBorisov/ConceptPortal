@@ -20,6 +20,7 @@ export const infoMsg = {
   moveComplete: 'Перемещение завершено',
   linkReady: 'Ссылка скопирована',
   promptReady: 'Текст скопирован',
+  valueReady: 'Значение скопировано',
   versionRestored: 'Загрузка версии завершена',
   locationRenamed: 'Ваши схемы перемещены',
   cloneComplete: (alias: string) => `Копия создана: ${alias}`,

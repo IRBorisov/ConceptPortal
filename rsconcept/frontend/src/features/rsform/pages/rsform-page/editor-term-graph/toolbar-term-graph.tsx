@@ -11,8 +11,6 @@ import { MiniSelectorOSS } from '@/features/library/components/mini-selector-oss
 import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import {
-  IconClustering,
-  IconClusteringOff,
   IconCrucial,
   IconDestroy,
   IconEdit2,
@@ -23,8 +21,6 @@ import {
   IconNewItem,
   IconPNG,
   IconSVG,
-  IconText,
-  IconTextOff,
   IconTypeGraph
 } from '@/components/icons';
 import { cn } from '@/components/utils';
@@ -34,6 +30,8 @@ import { prepareTooltip } from '@/utils/utils';
 
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { IconEdgeType } from '../../../components/icon-edge-type';
+import { IconEnableClustering } from '../../../components/icon-enable-clustering';
+import { IconEnableText } from '../../../components/icon-enable-text';
 import { IconGraphMode } from '../../../components/icon-graph-mode';
 import { FocusLabel } from '../../../components/term-graph/focus-label';
 import { ToolbarFocusedCst } from '../../../components/term-graph/toolbar-focused-cst';
@@ -142,24 +140,12 @@ export function ToolbarTermGraph({ className, graph }: ToolbarTermGraphProps) {
         />
         <MiniButton
           titleHtml={prepareTooltip(!filter.noText ? 'Скрыть текст' : 'Отобразить текст', 'T')}
-          icon={
-            !filter.noText ? (
-              <IconText size='1.25rem' className='icon-green' />
-            ) : (
-              <IconTextOff size='1.25rem' className='icon-primary' />
-            )
-          }
+          icon={<IconEnableText value={!filter.noText} size='1.25rem' />}
           onClick={handleToggleText}
         />
         <MiniButton
           titleHtml={prepareTooltip(!filter.foldDerived ? 'Скрыть порожденные' : 'Отобразить порожденные', 'V')}
-          icon={
-            !filter.foldDerived ? (
-              <IconClustering size='1.25rem' className='icon-green' />
-            ) : (
-              <IconClusteringOff size='1.25rem' className='icon-primary' />
-            )
-          }
+          icon={<IconEnableClustering value={!filter.foldDerived} size='1.25rem' />}
           onClick={handleToggleClustering}
         />
         <MiniButton

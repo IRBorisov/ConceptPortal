@@ -228,3 +228,20 @@ export function printValue(data: Value | null): string {
     return `{${data.map(printValue).join(', ')}}`;
   }
 }
+
+/** Normalize unsorted array of values. */
+export function normalizeValue(data: Value): void {
+  if (!Array.isArray(data) || data.length < 2 || data[0] === TUPLE_ID) {
+    return;
+  }
+
+  data.sort((a, b) => compare(a, b));
+  let i = 1;
+  while (i < data.length) {
+    if (compare(data[i - 1], data[i]) === 0) {
+      data.splice(i, 1);
+    } else {
+      i++;
+    }
+  }
+}

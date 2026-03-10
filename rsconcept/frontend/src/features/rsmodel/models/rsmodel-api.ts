@@ -1,10 +1,13 @@
 
-import { CstType, type RSForm } from '@/features/rsform';
-import { calculateSchemaStats, getAnalysisFor, isBasicConcept } from '@/features/rsform/models/rsform-api';
-import { type CalculatorResult, type Value } from '@/features/rslang';
-import { VALUE_TRUE } from '@/features/rslang/eval/value';
+import { toast } from 'react-toastify';
 
-import { EvalStatus, type RSModel, type RSModelStats } from './rsmodel';
+import { CstType, type RSForm } from '@/features/rsform';
+import { calculateSchemaStats, getAnalysisFor, isBaseSet, isBasicConcept } from '@/features/rsform/models/rsform-api';
+import { type CalculatorResult, type ExpressionType, TypeID, type Value } from '@/features/rslang';
+import { TUPLE_ID, VALUE_TRUE } from '@/features/rslang/eval/value';
+import { printValue } from '@/features/rslang/eval/value-api';
+
+import { type BasicBinding, EvalStatus, type RSModel, type RSModelStats } from './rsmodel';
 
 /** Calculate statistics for {@link RSModel}. */
 export function calculateModelStats(schema: RSForm, evalStatus: (cstID: number) => EvalStatus): RSModelStats {
@@ -60,15 +63,11 @@ export function isInferrable(type: CstType): boolean {
   }
 }
 
-
 /** Infers status of a given {@link Value} and {@link CstType}. */
 export function inferStatus(value: Value | null, cstType: CstType, wasCalculated: boolean = true): EvalStatus {
-  if (isBasicConcept(cstType)) {
+  if (isBaseSet(cstType) || cstType === CstType.STRUCTURED) {
     if (value === null || Array.isArray(value) && value.length === 0) {
       return EvalStatus.EMPTY;
-    }
-    if (cstType === CstType.AXIOM && value !== VALUE_TRUE) {
-      return EvalStatus.AXIOM_FALSE;
     }
     return EvalStatus.HAS_DATA;
   }
@@ -80,6 +79,9 @@ export function inferStatus(value: Value | null, cstType: CstType, wasCalculated
   }
   if (value === null) {
     return EvalStatus.EVAL_FAIL;
+  }
+  if (cstType === CstType.AXIOM && value !== VALUE_TRUE) {
+    return EvalStatus.AXIOM_FALSE;
   }
   if (Array.isArray(value) && value.length === 0) {
     return EvalStatus.EMPTY;
@@ -99,7 +101,17 @@ export function getEvaluationFor(
       errors: parse.errors
     };
   } else {
-    return model.calculator.evaluateFull(parse.ast);
+    try {
+      return model.calculator.evaluateFull(parse.ast);
+    } catch (error) {
+      toast.error((error as Error).message);
+      console.error(expression, error);
+      return {
+        value: null,
+        iterations: 0,
+        errors: []
+      };
+    }
   }
 }
 
@@ -111,7 +123,13 @@ export function fastEvaluation(
   if (!parse.success || !parse.ast) {
     return null;
   } else {
-    return model.calculator.evaluateFast(parse.ast);
+    try {
+      return model.calculator.evaluateFast(parse.ast);
+    } catch (error) {
+      toast.error((error as Error).message);
+      console.error(expression, error);
+      return null;
+    }
   }
 }
 
@@ -137,6 +155,7 @@ export function recalculateModel(schema: RSForm, model: RSModel): number[] {
   return processedIDs;
 }
 
+/** Calculates all predecessors of {@link target}. */
 export function prepareEvaluation(target: number, schema: RSForm, model: RSModel): number[] {
   const calculatedCst: number[] = [];
   const predecessors = schema.graph.expandAllInputs([target]);
@@ -154,4 +173,76 @@ export function prepareEvaluation(target: number, schema: RSForm, model: RSModel
     calculatedCst.push(cstID);
   }
   return predecessors;
+}
+
+/** Prepares string representation for {@link Value}. */
+export function prepareValueString(
+  value: Value | null | BasicBinding,
+  type: ExpressionType | null,
+  schema: RSForm,
+  model: RSModel,
+  dataText: boolean
+): string {
+  if (value === null) {
+    return '';
+  }
+  console.log(value);
+  if (!dataText || type === null || (value !== null && typeof value === 'object' && !Array.isArray(value))) {
+    return JSON.stringify(value, null, 2);
+  }
+  return prepareValueInternal(value as Value, type, schema, model);
+}
+
+// ========= Internal functions ==========
+function prepareValueInternal(value: Value, type: ExpressionType, schema: RSForm, model: RSModel): string {
+  switch (type.typeID) {
+    case TypeID.integer:
+      return String(value);
+    case TypeID.basic:
+      const cst = schema.cstByAlias.get(type.baseID);
+      if (!cst) {
+        return `UNKNOWN_ALIAS ${type.baseID}`;
+      }
+      if (typeof value !== 'number') {
+        return `EXPECTED_BASIC ${printValue(value)}`;
+      }
+      const binding = model.basicsContext.get(cst.id);
+      if (!binding) {
+        return `NO BINDING FOR ${cst.alias}`;
+      }
+      if (value in binding) {
+        const basicValue = binding[value];
+        return basicValue;
+      } else {
+        return `MISSING_ELEMENT ${value}`;
+      }
+    case TypeID.logic:
+      if (Array.isArray(value)) {
+        return `EXPECTED_LOGIC ${printValue(value)}`;
+      }
+      return value === VALUE_TRUE ? 'Истина' : 'Ложь';
+    case TypeID.tuple:
+      if (!Array.isArray(value) || value.length !== type.factors.length + 1 || value[0] !== TUPLE_ID) {
+        return `EXPECTED_TUPLE ${printValue(value)}`;
+      }
+      const components: string[] = [];
+      for (let i = 0; i < type.factors.length; i++) {
+        components.push(prepareValueInternal(value[i + 1], type.factors[i], schema, model));
+      }
+      return `(${components.join(', ')})`;
+    case TypeID.collection:
+      if (!Array.isArray(value) || (value.length > 1 && value[0] === TUPLE_ID)) {
+        return `EXPECTED_COLLECTION ${printValue(value)}`;
+      }
+      const elements: string[] = [];
+      for (const item of value) {
+        elements.push(prepareValueInternal(item, type.base, schema, model));
+      }
+      return `{${elements.join(', ')}}`;
+
+    case TypeID.anyTypification:
+    case TypeID.predicate:
+    case TypeID.function:
+      return 'UNEXPECTED_TYPE';
+  }
 }

@@ -2,6 +2,8 @@
  * Module: Structured data for RSLang expression evaluation.
  */
 
+import { printValue } from './value-api';
+
 /** Tuple ID for array distinction. */
 export const TUPLE_ID = -111;
 
@@ -35,7 +37,7 @@ export function compare(v1: Value, v2: Value): number {
     return v1 - v2;
   }
   if (!Array.isArray(v1) || !Array.isArray(v2)) {
-    throw new Error('Cannot compare different types');
+    throw new Error(`Cannot compare different types ${printValue(v1)} and ${printValue(v2)}`);
   }
   if (v1.length !== v2.length || v1.length === 0) {
     return v1.length - v2.length;

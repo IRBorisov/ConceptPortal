@@ -30,6 +30,7 @@ export { LuPanelLeftOpen  as IconLeftOpen }       from 'react-icons/lu';
 export { LuPanelLeftClose as IconLeftClose }      from 'react-icons/lu';
 export { LuPanelBottomOpen as IconBottomOpen }    from 'react-icons/lu';
 export { LuPanelBottomClose as IconBottomClose }  from 'react-icons/lu';
+export { LuClipboard      as IconClipboard }      from 'react-icons/lu';
 
 // ===== UI elements =======
 export { BiX              as IconClose }          from 'react-icons/bi';
@@ -139,6 +140,7 @@ export { LuThumbsUp       as IconStatusOK }       from 'react-icons/lu';
 export { BiHelpCircle     as IconStatusUnknown }  from 'react-icons/bi';
 export { BiStopCircle     as IconStatusIncalculable } from 'react-icons/bi';
 export { BiPauseCircle    as IconStatusProperty } from 'react-icons/bi';
+export { LuSquareFunction as IconStatusNoEval }   from 'react-icons/lu';
 export { LuPower          as IconKeepAliasOn }    from 'react-icons/lu';
 export { LuPowerOff       as IconKeepAliasOff }   from 'react-icons/lu';
 export { LuAtSign         as IconLinkDefinition } from 'react-icons/lu';
@@ -162,7 +164,8 @@ export { LuBookCopy       as IconInlineSynthesis } from 'react-icons/lu';
 export { LuWandSparkles   as IconGenerateNames }  from 'react-icons/lu';
 export { GrConnect        as IconConnect }        from 'react-icons/gr';
 export { BiPlayCircle     as IconExecute }        from 'react-icons/bi';
-export { LuClapperboard   as IconCalculateAll }   from 'react-icons/lu';
+export { LuCoffee         as IconCalculateAll }   from 'react-icons/lu';
+export { LuClapperboard   as IconCalculateOne }   from 'react-icons/lu';
 export { GrClearOption    as IconClearData }      from 'react-icons/gr';
 
 // ======== Graph UI =======

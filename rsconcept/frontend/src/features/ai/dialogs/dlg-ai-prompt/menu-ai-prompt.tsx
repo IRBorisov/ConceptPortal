@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { useConceptNavigation } from '@/app';
 
 import { MiniButton } from '@/components/control';
-import { IconClone, IconEdit } from '@/components/icons';
+import { IconClipboard, IconEdit } from '@/components/icons';
 import { useDialogsStore } from '@/stores/dialogs';
 import { infoMsg } from '@/utils/labels';
 
@@ -42,7 +42,7 @@ export function MenuAIPrompt({ promptID, generatedPrompt }: MenuAIPromptProps) {
         title='Скопировать результат в буфер обмена'
         noHover
         noPadding
-        icon={<IconClone size='1.25rem' />}
+        icon={<IconClipboard size='1.25rem' />}
         className='h-full pl-2 text-muted-foreground hover:text-constructive cc-animate-color bg-transparent'
         onClick={handleCopyPrompt}
         disabled={!generatedPrompt}

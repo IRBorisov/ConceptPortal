@@ -148,6 +148,7 @@ export const RSModelState = ({ itemID, children }: React.PropsWithChildren<RSMod
       model.calculator.setValue(cst.alias, result.value);
     }
     return result;
+
   }
 
   function recalculateAll() {
@@ -155,12 +156,7 @@ export const RSModelState = ({ itemID, children }: React.PropsWithChildren<RSMod
 
     setCalculatedList([]);
     let newList = [];
-    try {
-      newList = recalculateModel(schema, model);
-    } catch (error) {
-      toast.error((error as Error).message);
-      throw error;
-    }
+    newList = recalculateModel(schema, model);
     setCalculatedList(newList);
 
     const endTime = performance.now();

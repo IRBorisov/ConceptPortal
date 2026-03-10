@@ -8,10 +8,10 @@ import { EvalStatus } from './models/rsmodel';
 const labelEvalStatusRecord: Record<EvalStatus, string> = {
   [EvalStatus.NO_EVAL]: 'Без вычисления',
   [EvalStatus.NOT_PROCESSED]: 'Не вычислено',
-  [EvalStatus.EVAL_FAIL]: 'Ошибка вычисления',
+  [EvalStatus.EVAL_FAIL]: 'Ошибка',
   [EvalStatus.AXIOM_FALSE]: 'Нарушена аксиома',
   [EvalStatus.EMPTY]: 'Пустое значение',
-  [EvalStatus.HAS_DATA]: 'Есть значение'
+  [EvalStatus.HAS_DATA]: 'Вычислено'
 };
 
 /** Retrieves label for {@link EvalStatus}. */

@@ -5,9 +5,11 @@ import { type Value } from '@/features/rslang';
 
 import { type RSModel } from '../models/rsmodel';
 
-export function useCstValue(model: RSModel, cst: Constituenta): Value | null {
+const noop: () => void = () => undefined;
+
+export function useCstValue(model: RSModel, cst: Constituenta | null): Value | null {
   return useSyncExternalStore(
-    (cb) => model.calculator.subscribe(cst.alias, cb),
-    () => model.calculator.getValue(cst.alias)
+    (cb) => cst ? model.calculator.subscribe(cst.alias, cb) : noop,
+    () => cst ? model.calculator.getValue(cst.alias) : null
   );
 }
