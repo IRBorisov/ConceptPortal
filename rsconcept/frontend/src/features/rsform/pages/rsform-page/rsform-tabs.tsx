@@ -9,12 +9,12 @@ import { useResetAttribute } from '@/hooks/use-reset-attribute';
 import { useAppLayoutStore } from '@/stores/app-layout';
 import { useModificationStore } from '@/stores/modification';
 
-import { EditorConstituenta } from './editor-constituenta';
-import { EditorRSFormCard } from './editor-rsform-card';
-import { EditorRSList } from './editor-rslist';
-import { EditorTermGraph } from './editor-term-graph';
 import { MenuRSForm } from './menu-rsform';
 import { useRSFormEdit } from './rsedit-context';
+import { TabConstituenta } from './tab-constituenta';
+import { TabRSFormCard } from './tab-rsform-card';
+import { TabRSList } from './tab-rslist';
+import { TabTermGraph } from './tab-term-graph';
 
 interface RSFormTabsProps {
   activeID?: number;
@@ -110,19 +110,19 @@ export function RSFormTabs({ activeID, activeTab }: RSFormTabsProps) {
 
       <div ref={containerRef} className='overflow-x-hidden'>
         <TabPanel>
-          <EditorRSFormCard />
+          <TabRSFormCard />
         </TabPanel>
 
         <TabPanel>
-          <EditorRSList />
+          <TabRSList />
         </TabPanel>
 
         <TabPanel>
-          <EditorConstituenta />
+          <TabConstituenta />
         </TabPanel>
 
         <TabPanel>
-          <EditorTermGraph />
+          <TabTermGraph />
         </TabPanel>
       </div>
     </Tabs>

@@ -14,7 +14,7 @@ import {
   type OssItem
 } from '../models/oss';
 import { constructNodeID } from '../models/oss-api';
-import { BLOCK_NODE_MIN_HEIGHT, BLOCK_NODE_MIN_WIDTH } from '../pages/oss-page/editor-oss-graph/graph/block-node';
+import { BLOCK_NODE_MIN_HEIGHT, BLOCK_NODE_MIN_WIDTH } from '../pages/oss-page/tab-oss-graph/graph/block-node';
 
 import { type OperationSchemaDTO, OperationType } from './types';
 

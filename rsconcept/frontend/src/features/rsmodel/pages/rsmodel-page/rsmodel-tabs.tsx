@@ -3,20 +3,20 @@
 import { useLayoutEffect, useRef } from 'react';
 
 import { RSModelTabID, useConceptNavigation } from '@/app/navigation/navigation-context';
-import { EditorConstituenta } from '@/features/rsform/pages/rsform-page/editor-constituenta';
-import { EditorTermGraph } from '@/features/rsform/pages/rsform-page/editor-term-graph';
 import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
+import { TabConstituenta } from '@/features/rsform/pages/rsform-page/tab-constituenta';
+import { TabTermGraph } from '@/features/rsform/pages/rsform-page/tab-term-graph';
 
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useResetAttribute } from '@/hooks/use-reset-attribute';
 import { useAppLayoutStore } from '@/stores/app-layout';
 import { useModificationStore } from '@/stores/modification';
 
-import { EditorRSList } from './editor-rslist';
-import { EditorModelCard } from './editor-rsmodel-card';
-import { EditorValue } from './editor-value';
 import { MenuRSModel } from './menu-rsmodel';
 import { useRSModelEdit } from './rsmodel-context';
+import { TabModelCard } from './tab-model-card';
+import { TabRSList } from './tab-rslist';
+import { TabValue } from './tab-value';
 
 interface RSModelTabsProps {
   activeID?: number;
@@ -110,27 +110,29 @@ export function RSModelTabs({ activeID, activeTab }: RSModelTabsProps) {
         <TabLabel label='Понятие' />
         <TabLabel label='Граф' />
         <TabLabel label='Данные' />
+        <TabLabel label='Движок' />
+
       </TabList>
 
       <div ref={containerRef} className='overflow-x-hidden'>
         <TabPanel>
-          <EditorModelCard />
+          <TabModelCard />
         </TabPanel>
 
         <TabPanel>
-          <EditorRSList />
+          <TabRSList />
         </TabPanel>
 
         <TabPanel>
-          <EditorConstituenta />
+          <TabConstituenta />
         </TabPanel>
 
         <TabPanel>
-          <EditorTermGraph />
+          <TabTermGraph />
         </TabPanel>
 
         <TabPanel>
-          <EditorValue />
+          <TabValue />
         </TabPanel>
       </div>
     </Tabs>

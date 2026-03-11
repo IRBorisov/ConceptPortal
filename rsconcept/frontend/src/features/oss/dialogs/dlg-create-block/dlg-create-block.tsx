@@ -15,7 +15,7 @@ import { type CreateBlockDTO, type OssLayout, schemaCreateBlock } from '../../ba
 import { useCreateBlock } from '../../backend/use-create-block';
 import { useOssSuspense } from '../../backend/use-oss';
 import { LayoutManager } from '../../models/oss-layout-api';
-import { BLOCK_NODE_MIN_HEIGHT, BLOCK_NODE_MIN_WIDTH } from '../../pages/oss-page/editor-oss-graph/graph/block-node';
+import { BLOCK_NODE_MIN_HEIGHT, BLOCK_NODE_MIN_WIDTH } from '../../pages/oss-page/tab-oss-graph/graph/block-node';
 
 import { TabBlockCard } from './tab-block-card';
 import { TabBlockChildren } from './tab-block-children';

@@ -8,10 +8,10 @@ import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useResetAttribute } from '@/hooks/use-reset-attribute';
 import { useAppLayoutStore } from '@/stores/app-layout';
 
-import { EditorOssCard } from './editor-oss-card';
-import { EditorOssGraph } from './editor-oss-graph';
 import { MenuOssTabs } from './menu-oss-tabs';
 import { useOssEdit } from './oss-edit-context';
+import { TabOssCard } from './tab-oss-card';
+import { TabOssGraph } from './tab-oss-graph';
 
 interface OssTabsProps {
   activeTab: OssTabID;
@@ -74,11 +74,11 @@ export function OssTabs({ activeTab }: OssTabsProps) {
 
       <div ref={containerRef} className='overflow-x-hidden'>
         <TabPanel>
-          <EditorOssCard />
+          <TabOssCard />
         </TabPanel>
 
         <TabPanel>
-          <EditorOssGraph />
+          <TabOssGraph />
         </TabPanel>
       </div>
     </Tabs>
