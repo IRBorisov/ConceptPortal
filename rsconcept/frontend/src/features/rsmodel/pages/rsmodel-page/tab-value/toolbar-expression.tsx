@@ -3,6 +3,7 @@
 import { toast } from 'react-toastify';
 
 import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
+import { type ExpressionType } from '@/features/rslang';
 
 import { MiniButton } from '@/components/control';
 import { IconTree, IconTypeGraph } from '@/components/icons';
@@ -13,32 +14,31 @@ import { flattenAst } from '@/utils/parsing';
 
 interface ToolbarExpressionProps {
   className?: string;
+  expression: string;
+  type: ExpressionType | null;
 }
 
-export function ToolbarExpression({ className }: ToolbarExpressionProps) {
-  const { schema, activeCst } = useRSFormEdit();
+export function ToolbarExpression({ className, expression, type }: ToolbarExpressionProps) {
+  const { schema } = useRSFormEdit();
 
   const showAST = useDialogsStore(state => state.showShowAST);
   const showTypification = useDialogsStore(state => state.showShowTypeGraph);
 
   function handleShowAST() {
-    if (!activeCst) {
-      return;
-    }
-    const parse = schema.analyzer.checkFull(activeCst.definition_formal, { annotateTypes: true });
+    const parse = schema.analyzer.checkFull(expression, { annotateTypes: true });
     if (!parse.ast) {
       toast.error(errorMsg.invalidParse);
       return;
     }
     const flatAst = flattenAst(parse.ast);
-    showAST({ syntaxTree: flatAst, expression: activeCst.definition_formal });
+    showAST({ syntaxTree: flatAst, expression: expression });
   }
 
   function handleTypeGraph() {
-    if (!activeCst) {
+    if (!type) {
       return;
     }
-    showTypification({ items: [{ alias: activeCst.alias, type: activeCst.analysis.type! }] });
+    showTypification({ items: [{ alias: 'TARGET', type: type }] });
   }
 
   return (
@@ -47,13 +47,13 @@ export function ToolbarExpression({ className }: ToolbarExpressionProps) {
         title='Структура типизации'
         icon={<IconTypeGraph size='1.25rem' className='hover:text-primary' />}
         onClick={handleTypeGraph}
-        disabled={!activeCst?.analysis.type}
+        disabled={!type}
       />
       <MiniButton
         title='Структура выражения'
         onClick={handleShowAST}
         icon={<IconTree size='1.25rem' className='hover:text-primary' />}
-        disabled={!activeCst}
+        disabled={!type}
       />
     </div>
   );

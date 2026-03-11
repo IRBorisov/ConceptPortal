@@ -111,7 +111,7 @@ export function EditorRSExpression({
       const parse = getAnalysisFor(value, activeCst.cst_type, schema);
       onAnalysis(parse);
       if (parse.errors.length > 0) {
-        onShowError(parse.errors[0]);
+        handleShowError(parse.errors[0]);
       } else {
         rsInput.current?.view?.focus();
       }
@@ -125,7 +125,7 @@ export function EditorRSExpression({
 
   }
 
-  function onShowError(error: RO<RSErrorDescription>) {
+  function handleShowError(error: RO<RSErrorDescription>) {
     if (!rsInput.current) {
       return;
     }
@@ -208,7 +208,7 @@ export function EditorRSExpression({
       <ViewErrors
         isOpen={!!analysis && analysis.errors.length > 0}
         errors={analysis?.errors ?? null}
-        onShowError={error => onShowError(error)}
+        onShowError={error => handleShowError(error)}
         disabled={disabled}
       />
     </div>

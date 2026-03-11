@@ -155,6 +155,8 @@ export function FormValue({ disabled, id, model, toggleReset, activeCst }: FormV
         <div className='relative'>
           <ToolbarExpression
             className='absolute -top-1 right-0'
+            expression={activeCst.definition_formal}
+            type={activeCst.analysis.type}
           />
           <RSInput
             label={labelRSExpression(activeCst.cst_type)}

@@ -107,6 +107,7 @@ export const globalIDs = {
   prompt_editor: 'prompt_editor',
   graph_schemas: 'graph_schemas_tooltip',
   user_dropdown: 'user_dropdown',
+  evaluator: 'evaluator',
   ai_dropdown: 'ai_dropdown'
 } as const;
 

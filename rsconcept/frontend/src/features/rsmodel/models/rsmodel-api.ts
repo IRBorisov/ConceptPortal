@@ -7,6 +7,8 @@ import { type CalculatorResult, type ExpressionType, TypeID, type Value } from '
 import { TUPLE_ID, VALUE_TRUE } from '@/features/rslang/eval/value';
 import { printValue } from '@/features/rslang/eval/value-api';
 
+import { type RO } from '@/utils/meta';
+
 import { type BasicBinding, EvalStatus, type RSModel, type RSModelStats } from './rsmodel';
 
 /** Calculate statistics for {@link RSModel}. */
@@ -64,7 +66,7 @@ export function isInferrable(type: CstType): boolean {
 }
 
 /** Infers status of a given {@link Value} and {@link CstType}. */
-export function inferStatus(value: Value | null, cstType: CstType, wasCalculated: boolean = true): EvalStatus {
+export function inferStatus(value: RO<Value | null>, cstType: CstType, wasCalculated: boolean = true): EvalStatus {
   if (isBaseSet(cstType) || cstType === CstType.STRUCTURED) {
     if (value === null || Array.isArray(value) && value.length === 0) {
       return EvalStatus.EMPTY;
@@ -177,7 +179,7 @@ export function prepareEvaluation(target: number, schema: RSForm, model: RSModel
 
 /** Prepares string representation for {@link Value}. */
 export function prepareValueString(
-  value: Value | null | BasicBinding,
+  value: RO<Value | null | BasicBinding>,
   type: ExpressionType | null,
   schema: RSForm,
   model: RSModel,
@@ -186,9 +188,11 @@ export function prepareValueString(
   if (value === null) {
     return '';
   }
-  console.log(value);
   if (!dataText || type === null || (value !== null && typeof value === 'object' && !Array.isArray(value))) {
-    return JSON.stringify(value, null, 2);
+    return JSON.stringify(value, null, 2).replace(
+      /\[\s+([\d.,\s-]+)\s+\]/g,
+      (match) => match.replace(/\s+/g, ' ').replace(/\[ |\s\]/g, s => s.trim())
+    );
   }
   return prepareValueInternal(value as Value, type, schema, model);
 }

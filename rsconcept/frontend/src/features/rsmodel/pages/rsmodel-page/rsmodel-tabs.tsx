@@ -14,6 +14,7 @@ import { useModificationStore } from '@/stores/modification';
 
 import { MenuRSModel } from './menu-rsmodel';
 import { useRSModelEdit } from './rsmodel-context';
+import { TabEvaluator } from './tab-evaluator';
 import { TabModelCard } from './tab-model-card';
 import { TabRSList } from './tab-rslist';
 import { TabValue } from './tab-value';
@@ -43,7 +44,11 @@ export function RSModelTabs({ activeID, activeTab }: RSModelTabsProps) {
     const nextNoFooter = activeTab !== RSModelTabID.CARD;
     hideFooter(nextNoFooter);
 
-    if (activeTab === RSModelTabID.CST_EDIT || activeTab === RSModelTabID.VALUE_EDIT) {
+    if (
+      activeTab === RSModelTabID.CST_EDIT ||
+      activeTab === RSModelTabID.VALUE_EDIT ||
+      activeTab === RSModelTabID.EVALUATOR
+    ) {
       let nextSelected: number[] = [];
       if (activeID && schema.cstByID.has(activeID)) {
         nextSelected = [activeID];
@@ -133,6 +138,10 @@ export function RSModelTabs({ activeID, activeTab }: RSModelTabsProps) {
 
         <TabPanel>
           <TabValue />
+        </TabPanel>
+
+        <TabPanel>
+          <TabEvaluator />
         </TabPanel>
       </div>
     </Tabs>

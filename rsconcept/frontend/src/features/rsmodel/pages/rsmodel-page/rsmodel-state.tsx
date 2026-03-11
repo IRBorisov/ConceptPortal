@@ -22,7 +22,13 @@ import { useClearValues } from '../../backend/use-clear-values';
 import { useRSModel } from '../../backend/use-rsmodel';
 import { useSetValue } from '../../backend/use-set-value';
 import { type BasicBinding, EvalStatus } from '../../models/rsmodel';
-import { getEvaluationFor, inferStatus, isInferrable, prepareEvaluation, recalculateModel } from '../../models/rsmodel-api';
+import {
+  getEvaluationFor,
+  inferStatus,
+  isInferrable,
+  prepareEvaluation,
+  recalculateModel
+} from '../../models/rsmodel-api';
 
 import { RSModelContext } from './rsmodel-context';
 
@@ -161,7 +167,6 @@ export const RSModelState = ({ itemID, children }: React.PropsWithChildren<RSMod
 
     const endTime = performance.now();
     const timeSpent = ((endTime - startTime) / 1000).toFixed(2);
-
     toast.success(infoMsg.calculationSuccess(timeSpent));
   }
 

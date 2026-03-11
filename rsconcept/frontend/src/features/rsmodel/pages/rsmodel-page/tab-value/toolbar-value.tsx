@@ -28,12 +28,12 @@ export function ToolbarValue({ className, value }: ToolbarValueProps) {
     <div className={cn('cc-icons select-none', className)}>
       <MiniButton
         title='Скопировать значение в буфер обмена'
-        icon={<IconClipboard size='1.25rem' />}
+        icon={<IconClipboard size='1.25rem' className='hover:text-primary' />}
         onClick={handleClipboard}
       />
       <MiniButton
         title='Отображение данных в тексте'
-        icon={<IconShowDataText size='1.25rem' value={showDataText} />}
+        icon={<IconShowDataText size='1.25rem' className='hover:text-primary' value={showDataText} />}
         onClick={toggleDataText}
       />
     </div>

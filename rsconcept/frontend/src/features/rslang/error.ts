@@ -70,13 +70,13 @@ export const RSErrorCode = {
   globalFuncNoInterpretation: 0x8843, // 34883
 
   // Value evaluation (runtime)
-  valueUnknownError: 0x8a00,          // 35328
-  valueTypedOverflow: 0x8a01,         // 35329
-  valueBooleanLimit: 0x8a02,          // 35330
-  valueGlobalMissing: 0x8a03,         // 35331
-  valueIterationsLimit: 0x8a04,       // 35332
-  valueInvalidDebool: 0x8a05,         // 35333
-  valueIterateInfinity: 0x8a06,       // 35334
+  valueUnknownError: 0x8100,          // 35328
+  valueTypedOverflow: 0x8101,         // 35329
+  valueBooleanLimit: 0x8102,          // 35330
+  valueGlobalMissing: 0x8103,         // 35331
+  valueIterationsLimit: 0x8104,       // 35332
+  valueInvalidDebool: 0x8105,         // 35333
+  valueIterateInfinity: 0x8106,       // 35334
 
   cstNonemptyBase: 0x8860,            // 34912
   cstEmptyDerived: 0x8861,            // 34913
@@ -87,7 +87,7 @@ export const RSErrorCode = {
 } as const;
 export type RSErrorCode = (typeof RSErrorCode)[keyof typeof RSErrorCode];
 
-const ERROR_EVALUATION_MASK = 0x0a00;
+const ERROR_EVALUATION_MASK = 0x0100;
 const ERROR_LEXER_MASK = 0x0200;
 const ERROR_PARSER_MASK = 0x0400;
 const ERROR_SEMANTIC_MASK = 0x0800;

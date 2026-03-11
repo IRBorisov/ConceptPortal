@@ -10,9 +10,9 @@ import { globalIDs } from '@/utils/constants';
 import { isMac, prepareTooltip } from '@/utils/utils';
 
 import { colorStatusBar } from '../../colors';
-import { IconExpressionStatus } from '../icon-expression-status';
 import { labelExpressionStatus } from '../../labels';
 import { type CstStatus } from '../../models/rsform';
+import { IconExpressionStatus } from '../icon-expression-status';
 
 interface StatusBarProps {
   className?: string;

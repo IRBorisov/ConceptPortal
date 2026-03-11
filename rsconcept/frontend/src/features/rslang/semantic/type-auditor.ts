@@ -307,6 +307,13 @@ export class TypeAuditor {
     if (funcType?.typeID !== TypeID.function && funcType?.typeID !== TypeID.predicate) {
       return this.onError(RSErrorCode.globalNotTyped, node.from, [funcName]);
     }
+    if (this.annotate) {
+      node.children[0].annotation = {
+        ...(node.annotation ? node.annotation : {}),
+        rsType: funcType
+      };
+    }
+
     const substitutes = this.checkFuncArguments(node, funcName, funcType);
     if (substitutes === null) {
       return null;
