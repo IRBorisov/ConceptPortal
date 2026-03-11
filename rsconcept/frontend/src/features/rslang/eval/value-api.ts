@@ -2,29 +2,25 @@ import { BOOL_INFINITY, compare, EmptySetV, set, SET_INFINITY, tuple, TUPLE_ID, 
 
 /** Cartesian product of factor sets. */
 export function decartian(factors: Value[][]): Value[] | null {
-  const cardinality = factors.reduce((acc, factor) => acc * factor.length, 1);
+  const cardinality = factors.reduce((acc, f) => acc * f.length, 1);
   if (cardinality > SET_INFINITY) {
     return null;
-  } else if (cardinality === 0 || !factors.length) {
+  }
+  if (cardinality === 0 || factors.length === 0) {
     return EmptySetV;
   }
 
-  const result: Value[] = [];
-  const arrays = factors.map(f => [...f]);
-
-  function product(arrays: Value[][], prefix: Value[] = []): void {
-    if (arrays.length === 0) {
-      result.push(tuple(prefix));
-      return;
+  let accumulator: Value[][] = [[]];
+  for (const factor of factors) {
+    const next: Value[][] = [];
+    for (const prefix of accumulator) {
+      for (const value of factor) {
+        next.push([...prefix, value]);
+      }
     }
-    const [first, ...rest] = arrays;
-    for (const element of first) {
-      product(rest, [...prefix, element]);
-    }
+    accumulator = next;
   }
-
-  product(arrays);
-  return result;
+  return accumulator.map(tuple);
 }
 
 /** Boolean power set ℬ(X). No cache - materialized. */

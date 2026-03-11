@@ -802,6 +802,7 @@ class LocalContext {
 
   startScope(): void {
     this.callStack.push(this.data);
+    this.data = new Map<string, Value>();
   }
 
   endScope(): void {
