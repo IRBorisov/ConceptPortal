@@ -190,8 +190,8 @@ export function prepareValueString(
   }
   if (!dataText || type === null || (value !== null && typeof value === 'object' && !Array.isArray(value))) {
     return JSON.stringify(value, null, 2).replace(
-      /\[\s+([\d.,\s-]+)\s+\]/g,
-      (match) => match.replace(/\s+/g, ' ').replace(/\[ |\s\]/g, s => s.trim())
+      /\[\s*((?:\[\]|-?\d+(?:\.\d+)?)(?:,\s*(?:\[\]|-?\d+(?:\.\d+)?))*)\s*\]/g,
+      (_match: string, inner: string) => `[${inner.replace(/\s+/g, ' ')}]`
     );
   }
   return prepareValueInternal(value as Value, type, schema, model);

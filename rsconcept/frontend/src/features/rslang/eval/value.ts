@@ -14,7 +14,7 @@ export const VALUE_TRUE = 1;
 export const VALUE_FALSE = 0;
 
 /** Cardinality threshold for "infinite" sets (e.g. Z). */
-export const SET_INFINITY = 0x0fffffff;
+export const SET_INFINITY = 10_000_000;
 
 /** Cardinality threshold for Boolean power set. */
 export const BOOL_INFINITY = 12;

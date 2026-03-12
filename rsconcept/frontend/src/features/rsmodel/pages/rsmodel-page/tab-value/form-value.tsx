@@ -13,13 +13,14 @@ import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-contex
 import { type CalculatorResult, type Value } from '@/features/rslang';
 import { normalizeValue } from '@/features/rslang/eval/value-api';
 import { labelType } from '@/features/rslang/labels';
+import { ValueInput } from '@/features/rsmodel/components/value-input';
 
 import { Button } from '@/components/control';
 import { IconSave } from '@/components/icons';
 import { TextArea } from '@/components/input';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
-import { globalIDs } from '@/utils/constants';
+import { limits } from '@/utils/constants';
 import { type RO } from '@/utils/meta';
 
 import { useMutatingRSModel } from '../../../backend/use-mutating-rsmodel';
@@ -29,20 +30,17 @@ import { type BasicBinding, type RSModel } from '../../../models/rsmodel';
 import { isInferrable, isInterpretable, prepareValueString } from '../../../models/rsmodel-api';
 import { useRSModelEdit } from '../rsmodel-context';
 
-import { StatusBar } from './status-bar';
 import { ToolbarExpression } from './toolbar-expression';
-import { ToolbarValue } from './toolbar-value';
 
 interface FormValueProps {
   id?: string;
-  disabled: boolean;
   toggleReset: boolean;
 
   activeCst: Constituenta;
   model: RSModel;
 }
 
-export function FormValue({ disabled, id, model, toggleReset, activeCst }: FormValueProps) {
+export function FormValue({ id, model, toggleReset, activeCst }: FormValueProps) {
   const router = useConceptNavigation();
   const { isMutable, setValue, setBasicValue, getEvalStatus, calculateCst } = useRSModelEdit();
   const { schema } = useRSFormEdit();
@@ -67,7 +65,9 @@ export function FormValue({ disabled, id, model, toggleReset, activeCst }: FormV
 
   const initialStr = prepareValueString(initialValue, typification, schema, model, showDataText);
   const [inputValue, setInputValue] = useState<string>(initialStr);
+  const isTrimmed = inputValue.length > limits.len_data_str;
 
+  const isEditable = isMutable && (isBase || activeCst.cst_type === CstType.STRUCTURED);
   const isDirty = inputValue !== initialStr;
 
   useLayoutEffect(() => onModifiedEvent(false), [activeCst.id]);
@@ -171,48 +171,26 @@ export function FormValue({ disabled, id, model, toggleReset, activeCst }: FormV
         className='-mt-3'
         isOpen={!!localEval && localEval.errors.length > 0}
         errors={localEval?.errors ?? null}
-        disabled={disabled}
       />
 
-      <div className='relative'>
-        <StatusBar
-          className='absolute -top-0.5 right-1/2 translate-x-1/2'
-          status={status}
-          onCalculate={cstInferrable ? (event) => handleCalculate(event) : undefined}
-        />
-        <div className='absolute -top-0.5 left-24 select-none flex gap-2 items-center'>
-          <span
-            className='font-math'
-            tabIndex={-1}
-            data-tooltip-id={globalIDs.tooltip}
-            aria-label='Сокращенное значение выражения'
-            data-tooltip-content='Значение выражения'
-          >
-            {labelValue(localEval ? localEval.value : cstData, typification)}
-          </span>
-        </div>
+      <ValueInput
+        className='max-h-100'
+        rows={8}
+        value={inputValue}
+        valueLabel={labelValue(localEval ? localEval.value : cstData, typification)}
+        status={status}
+        placeholder={!isInterpretable(activeCst.cst_type) ? 'Значение для данного типа не предусмотрено' : 'Значение отсутствует'}
+        onCalculate={cstInferrable ? handleCalculate : undefined}
+        disabled={!isMutable || cstInferrable || !isInterpretable(activeCst.cst_type) || (showDataText && !isBase)}
+      />
 
-        <ToolbarValue className='absolute -top-1 right-0' value={inputValue} />
-
-        <TextArea
-          value={inputValue}
-          onChange={event => setInputValue(event.target.value)}
-          fitContent
-          className='max-h-100'
-          rows={8}
-          spellCheck
-          label='Значение'
-          placeholder={!isInterpretable(activeCst.cst_type) ? 'Значение для данного типа не предусмотрено' : 'Значение отсутствует'}
-          disabled={!isMutable || cstInferrable || !isInterpretable(activeCst.cst_type) || (showDataText && !isBase)}
-        />
-      </div>
-
-      {!disabled || isProcessing ? (
+      {isEditable ? (
         <Button
           text='Сохранить изменения'
           className='mx-auto w-fit'
+          colorSubmit
           icon={<IconSave size='1.25rem' />}
-          disabled={disabled || !isModified}
+          disabled={isTrimmed || isProcessing || !isModified}
           onClick={onSaveValue}
         />
       ) : null}

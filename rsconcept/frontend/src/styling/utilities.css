@@ -22,12 +22,14 @@
 }
 
 @utility cc-hover-bg {
+  &:focus-visible,
   &:hover:not(:disabled) {
     background-color: var(--color-accent);
   }
 }
 
 @utility cc-hover-pulse {
+  &:focus-visible,
   &:hover:not(:disabled) {
     transform: scale(1);
     transform-origin: center;
@@ -38,6 +40,7 @@
 }
 
 @utility cc-hover-text {
+  &:focus-visible,
   &:hover:not(:disabled) {
     color: var(--color-foreground);
     transition-delay: var(--duration-select);
@@ -45,6 +48,7 @@
 }
 
 @utility cc-hover-underline {
+  &:focus-visible,
   &:hover:not(:disabled) {
     text-decoration: underline;
   }
@@ -80,6 +84,7 @@
 @utility cc-remove {
   color: var(--color-muted-foreground);
 
+  &:focus-visible,
   &:hover:not(:disabled) {
     color: var(--color-destructive);
   }
@@ -211,7 +216,8 @@
 @utility cc-mask-sides {
   --mask-border-size: 2rem;
 
-  mask-image: linear-gradient(to top, transparent, black calc(var(--mask-border-size))),
+  mask-image:
+    linear-gradient(to top, transparent, black calc(var(--mask-border-size))),
     linear-gradient(to bottom, transparent, black calc(var(--mask-border-size))),
     linear-gradient(to left, transparent, black calc(var(--mask-border-size))),
     linear-gradient(to right, transparent, black calc(var(--mask-border-size)));
@@ -272,5 +278,7 @@
 }
 
 @utility cc-badge-inner-shadow {
-  box-shadow: inset 0 1px 3px 0, inset 0 -1px 3px 0;
+  box-shadow:
+    inset 0 1px 3px 0,
+    inset 0 -1px 3px 0;
 }

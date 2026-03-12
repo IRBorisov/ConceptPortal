@@ -13,7 +13,6 @@ import { useFitHeight, useMainHeight } from '@/stores/app-layout';
 import { usePreferencesStore } from '@/stores/preferences';
 import { globalIDs } from '@/utils/constants';
 
-import { useMutatingRSModel } from '../../../backend/use-mutating-rsmodel';
 import { useRSModelEdit } from '../rsmodel-context';
 
 import { FormValue } from './form-value';
@@ -30,7 +29,6 @@ export function TabValue() {
   const {
     schema,
     activeCst,
-    isContentEditable,
     selectedCst,
     setSelectedCst
   } = useRSFormEdit();
@@ -42,8 +40,6 @@ export function TabValue() {
 
   const [toggleReset, setToggleReset] = useState(false);
 
-  const isProcessing = useMutatingRSModel();
-  const disabled = !activeCst || !isContentEditable || isProcessing;
   const isNarrow = !!windowSize.width && windowSize.width <= SIDELIST_LAYOUT_THRESHOLD;
 
   const role = useRoleStore(state => state.role);
@@ -84,7 +80,6 @@ export function TabValue() {
           'right-1/2 translate-x-0 xs:right-4 xs:-translate-x-1/2 md:right-1/2 md:translate-x-0',
           'cc-animate-position'
         )}
-        disabled={disabled}
         isNarrow={isNarrow}
         onReset={() => setToggleReset(prev => !prev)}
         onClearValue={handleClearValue}
@@ -98,7 +93,6 @@ export function TabValue() {
             activeCst={activeCst}
             toggleReset={toggleReset}
             model={model}
-            disabled={disabled}
           />
         ) : null}
       </div>

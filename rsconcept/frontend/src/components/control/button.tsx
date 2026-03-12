@@ -7,6 +7,8 @@ interface ButtonProps extends Control, ButtonStyle {
   /** Icon to display first. */
   icon?: React.ReactNode;
 
+  colorSubmit?: boolean;
+
   /** Text to display second. */
   text?: string;
 
@@ -32,6 +34,7 @@ export function Button({
   noBorder,
   noOutline,
   className,
+  colorSubmit,
   ...restProps
 }: ButtonProps) {
   return (
@@ -39,11 +42,13 @@ export function Button({
       type='button'
       className={cn(
         'inline-flex gap-2 items-center justify-center',
-        'font-medium select-none disabled:cursor-auto disabled:opacity-75',
-        'bg-secondary text-secondary-foreground cc-hover-bg cc-animate-color',
+        'font-medium select-none disabled:cursor-auto',
+        'cc-animate-color',
+        !colorSubmit ? 'bg-secondary text-secondary-foreground cc-hover-bg' : 'cc-btn-primary',
+        !colorSubmit ? 'disabled:opacity-50' : 'disabled:opacity-75',
         dense ? 'px-1' : 'px-3 py-1',
         loading ? 'cursor-progress' : 'cursor-pointer',
-        noOutline ? 'outline-hidden focus-visible:bg-selected' : 'focus-outline',
+        !colorSubmit ? noOutline ? 'outline-hidden focus-visible:bg-selected' : 'focus-outline' : '',
         !noBorder && 'border rounded-sm',
         className
       )}

@@ -4,6 +4,7 @@ import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 import { IconShowSidebar } from '@/features/library/components/icon-show-sidebar';
 import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
+import { useMutatingRSModel } from '@/features/rsmodel/backend/use-mutating-rsmodel';
 import { useCstValue } from '@/features/rsmodel/hooks/use-cst-value';
 import { isInferrable } from '@/features/rsmodel/models/rsmodel-api';
 
@@ -17,7 +18,6 @@ import { useRSModelEdit } from '../rsmodel-context';
 
 interface ToolbarValueEditorProps {
   className?: string;
-  disabled: boolean;
   isNarrow: boolean;
 
   onClearValue: () => void;
@@ -26,13 +26,13 @@ interface ToolbarValueEditorProps {
 
 export function ToolbarValueEditor({
   className,
-  disabled,
   isNarrow,
   onClearValue,
   onReset
 }: ToolbarValueEditorProps) {
   const { isMutable, model, recalculateAll, calculateCst } = useRSModelEdit();
   const { activeCst } = useRSFormEdit();
+  const isProcessing = useMutatingRSModel();
 
   const value = useCstValue(model, activeCst);
   const hasValue = value !== null;
@@ -48,7 +48,7 @@ export function ToolbarValueEditor({
           title='Сбросить несохраненные изменения'
           icon={<IconReset size='1.25rem' className='icon-primary' />}
           onClick={onReset}
-          disabled={disabled || !isModified}
+          disabled={!isModified || isProcessing}
         />
       ) : null}
 
@@ -57,7 +57,7 @@ export function ToolbarValueEditor({
         aria-label='Вычислить текущую конституенту'
         icon={<IconCalculateOne size='1.25rem' className='icon-green' />}
         onClick={activeCst ? () => calculateCst(activeCst.id) : undefined}
-        disabled={disabled || !activeCst || isModified || !isInferrable(activeCst.cst_type)}
+        disabled={isProcessing || !activeCst || isModified || !isInferrable(activeCst.cst_type)}
       />
 
       <MiniButton
@@ -71,7 +71,7 @@ export function ToolbarValueEditor({
         title='Удалить значение текущей конституенты'
         icon={<IconClearData size='1.25rem' className='icon-red' />}
         onClick={onClearValue}
-        disabled={!activeCst || disabled || !hasValue || isInferrable(activeCst.cst_type)}
+        disabled={isProcessing || !activeCst || !hasValue || isInferrable(activeCst.cst_type)}
       /> : null}
 
       <MiniButton

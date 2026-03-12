@@ -13,20 +13,18 @@ import { ViewErrors } from '@/features/rsform/components/view-errors';
 import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
 import { type AnalysisFull, type CalculatorResult, type RSErrorDescription, TokenID } from '@/features/rslang';
 import { labelType } from '@/features/rslang/labels';
+import { ValueInput } from '@/features/rsmodel/components/value-input';
 
 import { TextArea } from '@/components/input';
 import { cn } from '@/components/utils';
 import { usePreferencesStore } from '@/stores/preferences';
-import { globalIDs } from '@/utils/constants';
 import { infoMsg } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 
 import { labelValue } from '../../../labels';
 import { inferStatus, prepareValueString } from '../../../models/rsmodel-api';
 import { useRSModelEdit } from '../rsmodel-context';
-import { StatusBar } from '../tab-value/status-bar';
 import { ToolbarExpression } from '../tab-value/toolbar-expression';
-import { ToolbarValue } from '../tab-value/toolbar-value';
 
 interface FormEvaluatorProps {
   id?: string;
@@ -148,37 +146,16 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
         errors={errors}
       />
 
-      <div className='relative'>
-        <StatusBar
-          className='absolute -top-0.5 right-1/2 translate-x-1/2'
-          status={status}
-          onCalculate={handleCalculate}
-        />
-        <div className='absolute -top-0.5 left-24 select-none flex gap-2 items-center'>
-          <span
-            className='font-math'
-            tabIndex={-1}
-            data-tooltip-id={globalIDs.tooltip}
-            aria-label='Сокращенное значение выражения'
-            data-tooltip-content='Значение выражения'
-          >
-            {labelValue(localEval?.value ?? null, localParse?.type ?? null)}
-          </span>
-        </div>
-
-        <ToolbarValue className='absolute -top-1 right-0' value={valueStr} />
-
-        <TextArea
-          value={valueStr}
-          fitContent
-          className='max-h-100'
-          rows={8}
-          spellCheck
-          label='Значение'
-          placeholder='Значение отсутствует'
-          disabled
-        />
-      </div>
+      <ValueInput
+        className='max-h-100'
+        rows={8}
+        value={valueStr}
+        valueLabel={labelValue(localEval?.value ?? null, localParse?.type ?? null)}
+        status={status}
+        placeholder='Значение отсутствует'
+        onCalculate={handleCalculate}
+        disabled
+      />
     </div>
   );
 }

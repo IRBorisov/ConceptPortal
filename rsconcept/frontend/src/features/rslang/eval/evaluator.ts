@@ -462,9 +462,6 @@ export class Evaluator {
     }
     const result = decartian(args as Value[][]);
     if (result === null) {
-      return null;
-    }
-    if (result.length >= SET_INFINITY) {
       this.onError(RSErrorCode.valueTypedOverflow, node.from, [String(SET_INFINITY)]);
       return null;
     }

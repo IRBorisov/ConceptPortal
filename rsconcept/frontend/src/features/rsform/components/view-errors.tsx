@@ -19,7 +19,8 @@ export function ViewErrors({ isOpen, errors, disabled, className, onShowError }:
   return (
     <div tabIndex={-1} className={cn('cc-parsing-result text-sm border dense cc-scroll-y', isOpen && 'open', className)}>
       <p>
-        Ошибок: <b>{errorCount}</b> | Предупреждений: <b>{warningsCount}</b>
+        <span>Ошибок: <b>{errorCount}</b> </span>
+        {warningsCount > 0 ? <span>| Предупреждений: <b>{warningsCount}</b></span> : null}
       </p>
       {errors?.map((error, index) => {
         return (

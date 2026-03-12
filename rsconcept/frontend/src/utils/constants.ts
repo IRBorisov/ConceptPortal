@@ -40,7 +40,8 @@ export const limits = {
   len_title: 500,
   len_location: 500,
   len_description: 10000,
-  len_text: 20000
+  len_text: 20000,
+  len_data_str: 50000,
 } as const;
 
 /** Exteor file extension for RSForm. */

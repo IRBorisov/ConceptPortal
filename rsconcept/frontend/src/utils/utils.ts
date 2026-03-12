@@ -234,9 +234,7 @@ export function isIOS(): boolean {
   );
 }
 
-/**
- * Utility to detect Mac device.
- */
+/** Utility to detect Mac device. */
 export function isMac(): boolean {
   if (typeof navigator === 'undefined') {
     return false;
@@ -256,4 +254,17 @@ export function dataUrlToBlob(dataUrl: string): Blob {
     u8arr[n] = binary.charCodeAt(n);
   }
   return new Blob([u8arr], { type: mime });
+}
+
+export function formatInteger(value: number | string): string {
+  if (typeof value === 'number') {
+    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '\u202F');
+  }
+
+  const match = /^(-?)(\d+)$/.exec(value);
+  if (!match) {
+    return value;
+  }
+
+  return value.replace(/\B(?=(\d{3})+(?!\d))/g, '\u202F');
 }
