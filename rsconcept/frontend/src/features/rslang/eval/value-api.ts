@@ -79,7 +79,8 @@ export function contains(setData: Value[], element: Value): boolean {
 
 /** Is A ⊆ B. */
 export function isSubsetOrEq(a: Value[], b: Value[]): boolean {
-  let i = 0, j = 0;
+  let i = 0,
+    j = 0;
   while (i < a.length && j < b.length) {
     const cmp = compare(a[i], b[j]);
     if (cmp === 0) {
@@ -106,7 +107,8 @@ export function reduce(target: Value[][]): Value[] {
 /** Union A ∪ B. */
 export function setUnion(set1: Value[], set2: Value[]): Value[] {
   const result: Value[] = [];
-  let i = 0, j = 0;
+  let i = 0,
+    j = 0;
   while (i < set1.length && j < set2.length) {
     const cmp = compare(set1[i], set2[j]);
     if (cmp < 0) {
@@ -153,7 +155,8 @@ export function setIntersection(set1: Value[], set2: Value[]): Value[] {
 /** Difference A \ B. */
 export function setDiff(set1: Value[], set2: Value[]): Value[] {
   const result: Value[] = [];
-  let i = 0, j = 0;
+  let i = 0,
+    j = 0;
   while (i < set1.length && j < set2.length) {
     const cmp = compare(set1[i], set2[j]);
     if (cmp < 0) {
@@ -176,7 +179,8 @@ export function setDiff(set1: Value[], set2: Value[]): Value[] {
 /** Symmetric difference A ∆ B. */
 export function setSymDiff(set1: Value[], set2: Value[]): Value[] {
   const result: Value[] = [];
-  let i = 0, j = 0;
+  let i = 0,
+    j = 0;
   while (i < set1.length && j < set2.length) {
     const cmp = compare(set1[i], set2[j]);
     if (cmp < 0) {
@@ -207,7 +211,7 @@ export function projection(target: Value[][], indices: number[]): Value[] {
     const newComponents = indices.map(idx => element[idx]);
     return indices.length === 1 ? newComponents[0] : tuple(newComponents);
   });
-  return projectedElements;
+  return set(projectedElements);
 }
 
 /** String representation for debugging. */

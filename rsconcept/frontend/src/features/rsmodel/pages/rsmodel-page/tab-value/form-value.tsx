@@ -59,9 +59,7 @@ export function FormValue({ id, model, toggleReset, activeCst }: FormValueProps)
 
   const cstData = useCstValue(model, activeCst);
 
-  const initialValue = isBase
-    ? (model.basicsContext.get(activeCst.id) ?? ({} as BasicBinding))
-    : cstData;
+  const initialValue = isBase ? model.basicsContext.get(activeCst.id) ?? ({} as BasicBinding) : cstData;
 
   const initialStr = prepareValueString(initialValue, typification, schema, model, showDataText);
   const [inputValue, setInputValue] = useState<string>(initialStr);
@@ -90,7 +88,9 @@ export function FormValue({ id, model, toggleReset, activeCst }: FormValueProps)
     try {
       if (isBase) {
         const parsedBinding = JSON.parse(inputValue) as BasicBinding;
-        const valueBinding = Object.fromEntries(Object.entries(parsedBinding).map(([key, value]) => [Number(key), value]));
+        const valueBinding = Object.fromEntries(
+          Object.entries(parsedBinding).map(([key, value]) => [Number(key), value])
+        );
         setBasicValue(activeCst.id, valueBinding);
         const newValue = prepareValueString(valueBinding, typification, schema, model, showDataText);
         setInputValue(newValue);
@@ -120,12 +120,9 @@ export function FormValue({ id, model, toggleReset, activeCst }: FormValueProps)
   }
 
   return (
-    <div
-      id={id}
-      className='relative mt-1 cc-column px-6 pb-1 pt-8'
-    >
+    <div id={id} className='relative mt-1 cc-column px-6 pb-1 pt-8'>
       <div className='flex items-start'>
-        <div className='font-math -mt-0.5 font-medium whitespace-nowrap select-text cursor-default'        >
+        <div className='font-math -mt-0.5 font-medium whitespace-nowrap select-text cursor-default'>
           {activeCst?.alias ?? ''}
         </div>
         <TextArea
@@ -166,7 +163,8 @@ export function FormValue({ id, model, toggleReset, activeCst }: FormValueProps)
             disabled
             onOpenEdit={handleOpenEdit}
           />
-        </div>) : null}
+        </div>
+      ) : null}
       <ViewErrors
         className='-mt-3'
         isOpen={!!localEval && localEval.errors.length > 0}
@@ -179,8 +177,11 @@ export function FormValue({ id, model, toggleReset, activeCst }: FormValueProps)
         value={inputValue}
         valueLabel={labelValue(localEval ? localEval.value : cstData, typification)}
         status={status}
-        placeholder={!isInterpretable(activeCst.cst_type) ? 'Значение для данного типа не предусмотрено' : 'Значение отсутствует'}
+        placeholder={
+          !isInterpretable(activeCst.cst_type) ? 'Значение для данного типа не предусмотрено' : 'Значение отсутствует'
+        }
         onCalculate={cstInferrable ? handleCalculate : undefined}
+        onChange={setInputValue}
         disabled={!isMutable || cstInferrable || !isInterpretable(activeCst.cst_type) || (showDataText && !isBase)}
       />
 

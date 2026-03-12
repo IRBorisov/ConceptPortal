@@ -35,10 +35,16 @@ export function ToolbarExpression({ className, expression, type }: ToolbarExpres
   }
 
   function handleTypeGraph() {
-    if (!type) {
+    let targetType = type;
+    if (!targetType) {
+      const parse = schema.analyzer.checkFull(expression, { annotateTypes: true });
+      targetType = parse.type;
+    }
+    if (!targetType) {
+      toast.error(errorMsg.typeStructureFailed);
       return;
     }
-    showTypification({ items: [{ alias: 'TARGET', type: type }] });
+    showTypification({ items: [{ alias: 'TARGET', type: targetType }] });
   }
 
   return (
@@ -47,13 +53,11 @@ export function ToolbarExpression({ className, expression, type }: ToolbarExpres
         title='Структура типизации'
         icon={<IconTypeGraph size='1.25rem' className='hover:text-primary' />}
         onClick={handleTypeGraph}
-        disabled={!type}
       />
       <MiniButton
         title='Структура выражения'
         onClick={handleShowAST}
         icon={<IconTree size='1.25rem' className='hover:text-primary' />}
-        disabled={!type}
       />
     </div>
   );
