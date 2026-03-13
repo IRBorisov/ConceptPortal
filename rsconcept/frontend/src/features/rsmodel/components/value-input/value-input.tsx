@@ -3,6 +3,7 @@
 import clsx from 'clsx';
 
 import { TextArea } from '@/components/input';
+import { cn } from '@/components/utils';
 import { globalIDs, limits } from '@/utils/constants';
 import { formatInteger } from '@/utils/utils';
 
@@ -64,7 +65,7 @@ export function ValueInput({
         value={value.slice(0, limits.len_data_str)}
         onChange={event => onChange?.(event.target.value)}
         fitContent
-        className={className}
+        className={cn(value ? 'font-math text-sm' : '', className)}
         rows={rows}
         spellCheck
         label='Значение'

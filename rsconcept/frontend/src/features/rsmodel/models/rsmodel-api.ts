@@ -7,7 +7,9 @@ import { type CalculatorResult, type ExpressionType, TypeID, type Value } from '
 import { TUPLE_ID, VALUE_TRUE } from '@/features/rslang/eval/value';
 import { printValue } from '@/features/rslang/eval/value-api';
 
+import { limits } from '@/utils/constants';
 import { type RO } from '@/utils/meta';
+import { concat, type Doc, group, indent, join, line, render, text } from '@/utils/text-printer';
 
 import { type BasicBinding, EvalStatus, type RSModel, type RSModelStats } from './rsmodel';
 
@@ -194,59 +196,84 @@ export function prepareValueString(
       (_match: string, inner: string) => `[${inner.replace(/\s+/g, ' ')}]`
     );
   }
-  return prepareValueInternal(value as Value, type, schema, model);
+  return render(prepareValueInternal(value as Value, type, schema, model), limits.data_line_width);
 }
 
 // ========= Internal functions ==========
-function prepareValueInternal(value: Value, type: ExpressionType, schema: RSForm, model: RSModel): string {
+function prepareValueInternal(value: Value, type: ExpressionType, schema: RSForm, model: RSModel): Doc {
   switch (type.typeID) {
     case TypeID.integer:
-      return String(value);
+      return text(String(value));
     case TypeID.basic:
       const cst = schema.cstByAlias.get(type.baseID);
       if (!cst) {
-        return `UNKNOWN_ALIAS ${type.baseID}`;
+        return text(`UNKNOWN_ALIAS ${type.baseID}`);
       }
       if (typeof value !== 'number') {
-        return `EXPECTED_BASIC ${printValue(value)}`;
+        return text(`EXPECTED_BASIC ${printValue(value)}`);
       }
       const binding = model.basicsContext.get(cst.id);
       if (!binding) {
-        return `NO BINDING FOR ${cst.alias}`;
+        return text(`NO BINDING FOR ${cst.alias}`);
       }
       if (value in binding) {
         const basicValue = binding[value];
-        return basicValue;
+        return text(basicValue);
       } else {
-        return `MISSING_ELEMENT ${value}`;
+        return text(`MISSING_ELEMENT ${value}`);
       }
     case TypeID.logic:
       if (Array.isArray(value)) {
-        return `EXPECTED_LOGIC ${printValue(value)}`;
+        return text(`EXPECTED_LOGIC ${printValue(value)}`);
       }
-      return value === VALUE_TRUE ? 'Истина' : 'Ложь';
+      return value === VALUE_TRUE ? text('Истина') : text('Ложь');
     case TypeID.tuple:
       if (!Array.isArray(value) || value.length !== type.factors.length + 1 || value[0] !== TUPLE_ID) {
-        return `EXPECTED_TUPLE ${printValue(value)}`;
+        return text(`EXPECTED_TUPLE ${printValue(value)}`);
       }
-      const components: string[] = [];
+      const components: Doc[] = [];
       for (let i = 0; i < type.factors.length; i++) {
         components.push(prepareValueInternal(value[i + 1], type.factors[i], schema, model));
       }
-      return `(${components.join(', ')})`;
+      return tupleDoc(components);
     case TypeID.collection:
       if (!Array.isArray(value) || (value.length > 1 && value[0] === TUPLE_ID)) {
-        return `EXPECTED_COLLECTION ${printValue(value)}`;
+        return text(`EXPECTED_COLLECTION ${printValue(value)}`);
       }
-      const elements: string[] = [];
+      const elements: Doc[] = [];
       for (const item of value) {
         elements.push(prepareValueInternal(item, type.base, schema, model));
       }
-      return `{${elements.join(', ')}}`;
+      return collectionDoc(elements);
 
     case TypeID.anyTypification:
     case TypeID.predicate:
     case TypeID.function:
-      return 'UNEXPECTED_TYPE';
+      return text('UNEXPECTED_TYPE');
   }
+}
+
+function tupleDoc(elements: Doc[]): Doc {
+  return group(
+    concat(
+      text("("),
+      indent(concat(line, join(concat(text(","), line), elements))),
+      line,
+      text(")")
+    )
+  );
+}
+
+function collectionDoc(elements: Doc[]): Doc {
+  if (elements.length === 0) {
+    return text("{}");
+  };
+  return group(
+    concat(
+      text("{"),
+      indent(concat(line, join(concat(text(","), line), elements))),
+      line,
+      text("}")
+    )
+  );
 }

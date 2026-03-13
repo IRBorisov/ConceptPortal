@@ -42,6 +42,7 @@ export const limits = {
   len_description: 10000,
   len_text: 20000,
   len_data_str: 50000,
+  data_line_width: 80,
 } as const;
 
 /** Exteor file extension for RSForm. */
