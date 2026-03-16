@@ -1,9 +1,7 @@
 
-import { toast } from 'react-toastify';
-
 import { CstType, type RSForm } from '@/features/rsform';
-import { calculateSchemaStats, getAnalysisFor, isBaseSet, isBasicConcept } from '@/features/rsform/models/rsform-api';
-import { type CalculatorResult, type ExpressionType, type RSCalculator, TypeID, type Value } from '@/features/rslang';
+import { calculateSchemaStats, isBaseSet, isBasicConcept } from '@/features/rsform/models/rsform-api';
+import { type ExpressionType, TypeID, type Value } from '@/features/rslang';
 import { compare, TUPLE_ID, VALUE_TRUE } from '@/features/rslang/eval/value';
 import { printValue } from '@/features/rslang/eval/value-api';
 
@@ -96,55 +94,6 @@ export function inferStatus(value: RO<Value | null>, cstType: CstType, wasCalcul
     return EvalStatus.EMPTY;
   }
   return EvalStatus.HAS_DATA;
-}
-
-/** Evaluates expression for {@link Constituenta}, including error handling. */
-export function getEvaluationFor(
-  expression: string, cstType: CstType, schema: RSForm, calculator: RSCalculator
-): CalculatorResult {
-  const parse = getAnalysisFor(expression, cstType, schema);
-  if (!parse.success || !parse.ast) {
-    return {
-      value: null,
-      iterations: 0,
-      errors: parse.errors
-    };
-  } else {
-    try {
-      const result = calculator.evaluateFull(parse.ast);
-      return {
-        value: result.value,
-        iterations: result.iterations,
-        errors: [...parse.errors, ...result.errors]
-      };
-    } catch (error) {
-      toast.error((error as Error).message);
-      console.error(expression, error);
-      return {
-        value: null,
-        iterations: 0,
-        errors: []
-      };
-    }
-  }
-}
-
-/** Evaluates expression for {@link RSModel}. */
-export function fastEvaluation(
-  expression: string, cstType: CstType, schema: RSForm, calculator: RSCalculator
-): Value | null {
-  const parse = getAnalysisFor(expression, cstType, schema);
-  if (!parse.success || !parse.ast) {
-    return null;
-  } else {
-    try {
-      return calculator.evaluateFast(parse.ast);
-    } catch (error) {
-      toast.error((error as Error).message);
-      console.error(expression, error);
-      return null;
-    }
-  }
 }
 
 /** Tries to fix value removing invalid base elements not present in the target value.

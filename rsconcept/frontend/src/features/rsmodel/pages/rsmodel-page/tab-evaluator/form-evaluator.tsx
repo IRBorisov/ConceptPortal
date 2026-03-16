@@ -12,6 +12,7 @@ import { RSTextWrapper } from '@/features/rsform/components/rs-input/text-editin
 import { ViewErrors } from '@/features/rsform/components/view-errors';
 import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
 import { type AnalysisFull, type CalculatorResult, type RSErrorDescription, TokenID } from '@/features/rslang';
+import { valueStub } from '@/features/rslang/eval/value-api';
 import { labelType } from '@/features/rslang/labels';
 import { ValueInput } from '@/features/rsmodel/components/value-input';
 
@@ -22,7 +23,7 @@ import { infoMsg } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 
 import { labelValue } from '../../../labels';
-import { fastEvaluation, inferStatus, prepareValueString } from '../../../models/rsmodel-api';
+import { inferStatus, prepareValueString } from '../../../models/rsmodel-api';
 import { useRSModelEdit } from '../rsmodel-context';
 import { ToolbarExpression } from '../tab-value/toolbar-expression';
 
@@ -46,6 +47,7 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
   const valueStr = prepareValueString(
     localEval?.value ?? null, localParse?.type ?? null, schema, engine.basics, showDataText
   );
+  const stub = localEval?.value ? valueStub(localEval?.value) : '';
   const isModified = evaluatedExpression !== expression;
   const status = inferStatus(localEval?.value ?? null, CstType.TERM, !isModified);
   const errors = [...(localParse?.errors ?? []), ...(localEval?.errors ?? [])];
@@ -79,18 +81,8 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
     }
 
     const startTime = performance.now();
-    try {
-      const value = fastEvaluation(expression, CstType.TERM, schema, engine.calculator);
-      const evaluation: CalculatorResult = {
-        value,
-        iterations: 0,
-        errors: []
-      };
-      setLocalEval(evaluation);
-    } catch (error) {
-      toast.error((error as Error).message);
-      console.error(error);
-    }
+    const evaluation = engine.evaluateAst(parse.ast);
+    setLocalEval(evaluation);
 
     const endTime = performance.now();
     const timeSpent = ((endTime - startTime) / 1000).toFixed(2);
@@ -157,6 +149,7 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
         className='max-h-100'
         rows={8}
         value={valueStr}
+        stub={stub}
         valueLabel={labelValue(localEval?.value ?? null, localParse?.type ?? null)}
         status={status}
         placeholder='Значение отсутствует'

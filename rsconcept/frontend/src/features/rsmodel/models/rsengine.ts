@@ -9,18 +9,19 @@ import { normalizeType } from '@/features/rslang/labels';
 
 import { errorMsg, infoMsg } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
+import { type AstNode } from '@/utils/parsing';
 
 import { type RSModelDTO } from '../backend/types';
 
 import { type BasicBinding, type BasicsContext, type EvalStatus, TYPE_BASIC } from './rsmodel';
-import { fastEvaluation, getEvaluationFor, inferStatus, isInferrable, tryFixValue } from './rsmodel-api';
+import { inferStatus, isInferrable, tryFixValue } from './rsmodel-api';
+
+const INVALID_TYPE_MARKER = 'INVALID';
 
 export interface RSEngineServices {
   setCstValue: (args: { itemID: number; data: { target: number; type: string; data: Value | BasicBinding; }[]; }) => Promise<unknown>;
   clearValues: (args: { itemID: number; data: { items: number[]; }; }) => Promise<unknown>;
 }
-
-const INVALID_TYPE_MARKER = 'INVALID';
 
 export class RSEngine {
   public modelID: number;
@@ -35,13 +36,11 @@ export class RSEngine {
   private statusSubscribers = new Map<number, Set<() => void>>();
 
   constructor(modelID: number, services: RSEngineServices) {
-    console.log(`Creating engine for ${modelID}...`);
     this.services = services;
     this.modelID = modelID;
   }
 
   public loadData(schema: RSForm, dto: RO<RSModelDTO>): void {
-    console.log(`Reloading data for ${this.modelID}...`);
     this.schema = schema;
     if (this.data !== dto) {
       this.data = dto;
@@ -203,6 +202,25 @@ export class RSEngine {
     this.basics.delete(cstID);
     this.calculatedSet.delete(cstID);
     this.notifyCst(cstID);
+  }
+
+  public evaluateExpression(expression: string, cstType: CstType): CalculatorResult {
+    return getEvaluationFor(expression, cstType, this.schema!, this.calculator);
+  }
+
+  public evaluateAst(ast: AstNode): CalculatorResult {
+    try {
+      const evaluation = this.calculator.evaluateFull(ast);
+      return evaluation;
+    } catch (error) {
+      toast.error((error as Error).message);
+      console.error(error);
+      return {
+        value: null,
+        iterations: 0,
+        errors: []
+      };
+    }
   }
 
   /** Calculates value for {@link Constituenta}. */
@@ -368,5 +386,55 @@ export class RSEngine {
     }
     this.notifyAll();
   }
+}
 
+// ==== Internal functions ==== /
+
+/** Evaluates expression for {@link Constituenta}, including error handling. */
+function getEvaluationFor(
+  expression: string, cstType: CstType, schema: RSForm, calculator: RSCalculator
+): CalculatorResult {
+  const parse = getAnalysisFor(expression, cstType, schema);
+  if (!parse.success || !parse.ast) {
+    return {
+      value: null,
+      iterations: 0,
+      errors: parse.errors
+    };
+  } else {
+    try {
+      const result = calculator.evaluateFull(parse.ast);
+      return {
+        value: result.value,
+        iterations: result.iterations,
+        errors: [...parse.errors, ...result.errors]
+      };
+    } catch (error) {
+      toast.error((error as Error).message);
+      console.error(expression, error);
+      return {
+        value: null,
+        iterations: 0,
+        errors: []
+      };
+    }
+  }
+}
+
+/** Evaluates expression for {@link RSModel}. */
+function fastEvaluation(
+  expression: string, cstType: CstType, schema: RSForm, calculator: RSCalculator
+): Value | null {
+  const parse = getAnalysisFor(expression, cstType, schema);
+  if (!parse.success || !parse.ast) {
+    return null;
+  } else {
+    try {
+      return calculator.evaluateFast(parse.ast);
+    } catch (error) {
+      toast.error((error as Error).message);
+      console.error(expression, error);
+      return null;
+    }
+  }
 }

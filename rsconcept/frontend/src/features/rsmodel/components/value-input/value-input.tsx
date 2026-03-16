@@ -18,6 +18,7 @@ interface ValueInputProps {
   disabled?: boolean;
 
   value: string;
+  stub?: string;
   valueLabel: string;
   placeholder?: string;
   status: EvalStatus;
@@ -29,7 +30,7 @@ interface ValueInputProps {
 /** Displays a badge with value cardinality and information tooltip. */
 export function ValueInput({
   className, rows, placeholder, disabled,
-  value, valueLabel, status,
+  value, stub, valueLabel, status,
   onChange, onCalculate
 }: ValueInputProps) {
   const isTrimmed = value.length > limits.len_data_str;
@@ -40,12 +41,12 @@ export function ValueInput({
         status={status}
         onCalculate={onCalculate}
       />
-      <div className='absolute -top-0.5 left-24 select-none flex gap-2 items-center'>
+      <div className='absolute -top-0.5 left-24 select-none'>
         <span
-          className='font-math'
           tabIndex={-1}
+          className='font-math'
+          aria-label='Мощность / значение выражения'
           data-tooltip-id={globalIDs.tooltip}
-          aria-label='Сокращенное значение выражения'
           data-tooltip-content='Значение выражения'
         >
           {formatInteger(valueLabel)}
@@ -59,7 +60,28 @@ export function ValueInput({
           {`${formatInteger(value.length)} / ${formatInteger(limits.len_data_str)}`}
         </div>) : null}
 
-      <ToolbarValue className='absolute -top-1 right-0' value={value} />
+      <ToolbarValue
+        className='absolute -top-1 right-0'
+        value={value}
+        disabled={disabled}
+        onChange={onChange}
+      />
+
+      {stub ?
+        (<div className={clsx(
+          'absolute -bottom-1 left-0 translate-y-full',
+          'select-text text-muted-foreground'
+        )}>
+          <span
+            tabIndex={-1}
+            className='font-math'
+            aria-label='Сокращенное обозначение выражения'
+            data-tooltip-id={globalIDs.tooltip}
+            data-tooltip-content='Сокращение выражения'
+          >
+            {stub}
+          </span>
+        </div>) : null}
 
       <TextArea
         value={value.slice(0, limits.len_data_str)}

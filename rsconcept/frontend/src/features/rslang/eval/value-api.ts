@@ -1,3 +1,6 @@
+import { type RO } from '@/utils/meta';
+import { applyHash_fnv1a } from '@/utils/utils';
+
 import { BOOL_INFINITY, compare, EmptySetV, set, SET_INFINITY, tuple, TUPLE_ID, type Value } from './value';
 
 /** Cartesian product of factor sets. */
@@ -215,7 +218,7 @@ export function projection(target: Value[][], indices: number[]): Value[] {
 }
 
 /** String representation for debugging. */
-export function printValue(data: Value | null): string {
+export function printValue(data: RO<Value> | null): string {
   if (!Array.isArray(data)) {
     return String(data);
   }
@@ -227,6 +230,16 @@ export function printValue(data: Value | null): string {
   } else {
     return `{${data.map(printValue).join(', ')}}`;
   }
+}
+
+/** Generates stub ID for value. */
+export function valueStub(value: RO<Value> | null): string {
+  if (!value) {
+    return '';
+  }
+  const str = printValue(value);
+  const hash = applyHash_fnv1a(str);
+  return hash.toString(16).padStart(8, '0').slice(0, 8);
 }
 
 /** Normalize unsorted array of values. */

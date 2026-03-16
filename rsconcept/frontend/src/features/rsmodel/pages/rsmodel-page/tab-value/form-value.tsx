@@ -10,7 +10,7 @@ import { ViewErrors } from '@/features/rsform/components/view-errors';
 import { labelRSExpression } from '@/features/rsform/labels';
 import { isBaseSet } from '@/features/rsform/models/rsform-api';
 import { type CalculatorResult, type Value } from '@/features/rslang';
-import { normalizeValue } from '@/features/rslang/eval/value-api';
+import { normalizeValue, valueStub } from '@/features/rslang/eval/value-api';
 import { labelType } from '@/features/rslang/labels';
 import { ValueInput } from '@/features/rsmodel/components/value-input';
 import { useCstStatus } from '@/features/rsmodel/hooks/use-cst-status';
@@ -56,6 +56,7 @@ export function FormValue({ id, toggleReset, activeCst }: FormValueProps) {
   const [localEval, setLocalEval] = useState<RO<CalculatorResult> | null>(null);
 
   const cstData = useCstValue(engine, activeCst);
+  const stub = valueStub(cstData);
 
   const initialValue = isBase ? engine.basics.get(activeCst.id) ?? ({} as BasicBinding) : cstData;
 
@@ -170,6 +171,7 @@ export function FormValue({ id, toggleReset, activeCst }: FormValueProps) {
         className='max-h-100'
         rows={8}
         value={inputValue}
+        stub={isDirty ? '' : stub}
         valueLabel={labelValue(localEval ? localEval.value : cstData, typification)}
         status={status}
         placeholder={

@@ -36,9 +36,7 @@ export class TextMatcher {
   }
 }
 
-/**
- * Truncate text to last word up to max symbols. Add ellipsis if truncated.
- */
+/** Truncate text to last word up to max symbols. Add ellipsis if truncated. */
 export function truncateToLastWord(text: string, maxSymbols: number): string {
   if (text.length <= maxSymbols) {
     return text;
@@ -51,9 +49,7 @@ export function truncateToLastWord(text: string, maxSymbols: number): string {
   return trimmedText.slice(0, lastSpaceIndex) + '...';
 }
 
-/**
- * Truncate text to max symbols. Add ellipsis if truncated.
- */
+/** Truncate text to max symbols. Add ellipsis if truncated. */
 export function truncateToSymbol(text: string, maxSymbols: number): string {
   if (text.length <= maxSymbols) {
     return text;
@@ -62,9 +58,7 @@ export function truncateToSymbol(text: string, maxSymbols: number): string {
   return trimmedText + '...';
 }
 
-/**
- * Check if Axios response is html.
- */
+/** Check if Axios response is html. */
 export function isResponseHtml(response?: AxiosResponse) {
   if (!response) {
     return false;
@@ -80,16 +74,12 @@ export function isResponseHtml(response?: AxiosResponse) {
   return header.includes('text/html');
 }
 
-/**
- * Prompt user of confirming discarding changes before continue.
- */
+/** Prompt user of confirming discarding changes before continue. */
 export function promptUnsaved(): boolean {
   return window.confirm(promptText.promptUnsaved);
 }
 
-/**
- * Toggle tristate flag: null - true - false.
- */
+/** Toggle tristate flag: null - true - false. */
 export function toggleTristateFlag(prev: boolean | null): boolean | null {
   if (prev === null) {
     return true;
@@ -97,9 +87,7 @@ export function toggleTristateFlag(prev: boolean | null): boolean | null {
   return prev ? false : null;
 }
 
-/**
- * Toggle tristate color: gray - green - red .
- */
+/** Toggle tristate color: gray - green - red . */
 export function tripleToggleColor(value: boolean | null): string | undefined {
   if (value === null) {
     return '';
@@ -107,9 +95,7 @@ export function tripleToggleColor(value: boolean | null): string | undefined {
   return value ? 'text-constructive' : 'text-destructive';
 }
 
-/**
- * Extract error message from error object.
- */
+/** Extract error message from error object. */
 export function extractErrorMessage(error: Error | AxiosError): string {
   if (isAxiosError(error)) {
     if (error.response?.status === 400) {
@@ -126,9 +112,7 @@ export function extractErrorMessage(error: Error | AxiosError): string {
   return error.message;
 }
 
-/**
- * Convert array of objects to CSV Blob.
- */
+/** Convert array of objects to CSV Blob. */
 export function convertToCSV(targetObj: readonly object[]): Blob {
   if (!targetObj?.length) {
     return new Blob([], { type: 'text/csv;charset=utf-8;' });
@@ -157,25 +141,19 @@ export function convertToCSV(targetObj: readonly object[]): Blob {
   return new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
 }
 
-/**
- * Convert object or array to JSON Blob.
- */
+/** Convert object or array to JSON Blob. */
 export function convertToJSON(targetObj: unknown): Blob {
   const jsonString = JSON.stringify(targetObj, null, PARAMETER.indentJSON);
   return new Blob([jsonString], { type: 'application/json;charset=utf-8;' });
 }
 
-/**
- * Generates a QR code for the current page.
- */
+/** Generates a QR code for the current page. */
 export function generatePageQR(): string {
   const currentRef = window.location.href;
   return currentRef.includes('?') ? currentRef + '&qr' : currentRef + '?qr';
 }
 
-/**
- * Copies sharable link to the current page.
- */
+/** Copies sharable link to the current page. */
 export function sharePage() {
   const currentRef = window.location.href;
   const url = currentRef.includes('?') ? currentRef + '&share' : currentRef + '?share';
@@ -185,17 +163,13 @@ export function sharePage() {
     .catch(console.error);
 }
 
-/**
- * Show error message about not implemented function.
- */
+/** Show error message about not implemented function. */
 export function notImplemented() {
   toast.error('Функционал в разработке');
   console.error('Not implemented');
 }
 
-/**
- * Wrap event handler to prevent default and stop propagation.
- */
+/** Wrap event handler to prevent default and stop propagation. */
 export function withPreventDefault<T extends React.SyntheticEvent>(handler: (event: T) => void) {
   return (event: T) => {
     event.preventDefault();
@@ -204,9 +178,7 @@ export function withPreventDefault<T extends React.SyntheticEvent>(handler: (eve
   };
 }
 
-/**
- * Remove html tags from target string.
- */
+/** Remove html tags from target string. */
 export function removeTags(target?: string): string {
   if (!target) {
     return '';
@@ -256,6 +228,7 @@ export function dataUrlToBlob(dataUrl: string): Blob {
   return new Blob([u8arr], { type: mime });
 }
 
+/** Formats integer value to string with thousands separators. */
 export function formatInteger(value: number | string): string {
   if (typeof value === 'number') {
     return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '\u202F');
@@ -267,4 +240,22 @@ export function formatInteger(value: number | string): string {
   }
 
   return value.replace(/\B(?=(\d{3})+(?!\d))/g, '\u202F');
+}
+
+/** 32-bit FNV-1a hash */
+export function applyHash_fnv1a(str: string): number {
+  let hash = 0x811c9dc5;
+
+  for (let i = 0; i < str.length; i++) {
+    hash ^= str.charCodeAt(i);
+    hash = Math.imul(hash, 0x01000193);
+  }
+
+  return hash >>> 0;
+}
+
+/** Generates stub ID for text. */
+export function generateStub(text: string): string {
+  const hash = applyHash_fnv1a(text);
+  return hash.toString(16).padStart(8, '0').slice(0, 8);
 }

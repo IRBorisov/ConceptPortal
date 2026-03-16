@@ -45,7 +45,7 @@ export function Button({
         'font-medium select-none disabled:cursor-auto',
         'cc-animate-color',
         !colorSubmit ? 'bg-secondary text-secondary-foreground cc-hover-bg' : 'cc-btn-primary',
-        !colorSubmit ? 'disabled:opacity-50' : 'disabled:opacity-75',
+        !colorSubmit ? 'disabled:opacity-75' : 'disabled:opacity-50',
         dense ? 'px-1' : 'px-3 py-1',
         loading ? 'cursor-progress' : 'cursor-pointer',
         !colorSubmit ? noOutline ? 'outline-hidden focus-visible:bg-selected' : 'focus-outline' : '',
