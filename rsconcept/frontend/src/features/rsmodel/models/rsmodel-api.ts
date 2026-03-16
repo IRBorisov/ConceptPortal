@@ -147,6 +147,78 @@ export function fastEvaluation(
   }
 }
 
+/** Tries to fix value removing invalid base elements not present in the target value.
+ * returns null if no fixing is possible.
+ * returns true if fixing was successful.
+ * returns false if fixing was not needed.
+ */
+export function tryFixValue(
+  value: Value,
+  type: ExpressionType,
+  targetAlias: string,
+  targetValue: Value[]
+): boolean | null {
+  switch (type.typeID) {
+    case TypeID.integer:
+      return false;
+    case TypeID.basic:
+      if (type.baseID !== targetAlias) {
+        return false;
+      }
+      if (typeof value !== 'number') {
+        return null;
+      }
+      if (!targetValue.includes(value)) {
+        return null;
+      }
+      return false;
+    case TypeID.tuple: {
+      if (!Array.isArray(value) || value.length !== type.factors.length + 1 || value[0] !== TUPLE_ID) {
+        return null;
+      }
+      let wasChanged = false;
+      for (let i = 0; i < type.factors.length; i++) {
+        const componentChanged = tryFixValue(value[i + 1], type.factors[i], targetAlias, targetValue);
+        if (componentChanged === null) {
+          return null;
+        }
+        if (componentChanged) {
+          wasChanged = true;
+        }
+      }
+      return wasChanged;
+    }
+    case TypeID.collection:
+      if (!Array.isArray(value) || (value.length > 1 && value[0] === TUPLE_ID)) {
+        return null;
+      }
+      let wasChanged = false;
+      const removeElements: Value[] = [];
+      for (const item of value) {
+        const elementChanged = tryFixValue(item, type.base, targetAlias, targetValue);
+        if (elementChanged === null || elementChanged === true) {
+          wasChanged = true;
+          if (elementChanged === null) {
+            removeElements.push(item);
+          }
+        }
+      }
+      for (const item of removeElements) {
+        const index = value.indexOf(item);
+        if (index !== -1) {
+          value.splice(index, 1);
+        }
+      }
+      return wasChanged;
+
+    case TypeID.logic:
+    case TypeID.anyTypification:
+    case TypeID.predicate:
+    case TypeID.function:
+      return null;
+  }
+}
+
 /** Prepares string representation for {@link Value}. */
 export function prepareValueString(
   value: RO<Value | null | BasicBinding>,

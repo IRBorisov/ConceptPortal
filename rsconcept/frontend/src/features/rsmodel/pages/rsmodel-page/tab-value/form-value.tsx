@@ -92,7 +92,7 @@ export function FormValue({ id, toggleReset, activeCst }: FormValueProps) {
       } else {
         const parsedValue = JSON.parse(inputValue) as Value;
         normalizeValue(parsedValue);
-        void engine.setValue(activeCst.id, parsedValue);
+        void engine.setStructureValue(activeCst.id, parsedValue);
         const newValue = prepareValueString(parsedValue, typification, schema, engine.basics, showDataText);
         setInputValue(newValue);
       }

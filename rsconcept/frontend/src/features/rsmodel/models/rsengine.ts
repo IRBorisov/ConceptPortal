@@ -11,7 +11,7 @@ import { type RO } from '@/utils/meta';
 import { type RSModelDTO } from '../backend/types';
 
 import { type BasicBinding, type BasicsContext, type EvalStatus, TYPE_BASIC } from './rsmodel';
-import { fastEvaluation, getEvaluationFor, inferStatus, isInferrable } from './rsmodel-api';
+import { fastEvaluation, getEvaluationFor, inferStatus, isInferrable, tryFixValue } from './rsmodel-api';
 
 export interface RSEngineServices {
   setCstValue: (args: { itemID: number; data: { target: number; type: string; data: Value | BasicBinding; }[]; }) => Promise<unknown>;
@@ -39,11 +39,12 @@ export class RSEngine {
   public loadData(schema: RSForm, dto: RO<RSModelDTO>): void {
     console.log(`Reloading data for ${this.modelID}...`);
     this.schema = schema;
-    this.data = dto;
-
-    this.clear();
-    this.prepareAst();
-    this.prepareValues();
+    if (this.data !== dto) {
+      this.data = dto;
+      this.clear();
+      this.prepareAst();
+      this.prepareValues();
+    }
     this.notifyAll();
   }
 
@@ -107,33 +108,79 @@ export class RSEngine {
   }
 
   /** Sets value for {@link Constituenta} from {@link Value}. */
-  public async setValue(cstID: number, data: Value): Promise<void> {
+  public async setStructureValue(cstID: number, data: Value): Promise<void> {
     const cst = this.schema?.cstByID.get(cstID);
-    if (!cst || isInferrable(cst.cst_type)) {
+    if (!this.schema || !cst || isInferrable(cst.cst_type)) {
       toast.error(errorMsg.invalidSetValue);
       return;
     }
+
     const type = cst.analysis.type;
     const payload = [{ target: cstID, type: type ? type.typeID.toString() : '', data }];
     await this.services.setCstValue({ itemID: this.modelID, data: payload });
+
     this.calculator.setValue(cst.alias, data);
-    this.notifyValue(cstID);
-    this.notifyStatus(cstID);
+    this.notifyCst(cstID);
+    this.cascadeReset([cstID]);
   }
 
   /** Sets value for {@link Constituenta} from {@link BasicBinding}. */
   public async setBasicValue(cstID: number, data: BasicBinding): Promise<void> {
     const cst = this.schema?.cstByID.get(cstID);
-    if (!cst || !isBaseSet(cst.cst_type)) {
+    if (!this.schema || !cst || !isBaseSet(cst.cst_type)) {
       toast.error(errorMsg.invalidSetValue);
       return;
     }
-    const payload = [{ target: cstID, type: TYPE_BASIC, data }];
-    await this.services.setCstValue({ itemID: this.modelID, data: payload });
+    const newValue = Object.keys(data).map(Number);
+
+    const updateList: Parameters<RSEngineServices['setCstValue']>[0]['data']
+      = [{ target: cstID, type: TYPE_BASIC, data }];
+    const resetList: number[] = [];
+    const dependencies = this.schema.graph.expandAllOutputs([cstID]);
+    for (const childID of dependencies) {
+      const child = this.schema.cstByID.get(childID)!;
+      if (child.cst_type === CstType.STRUCTURED && !!child.analysis.type) {
+        const value = this.calculator.getValue(child.alias);
+        if (value !== null) {
+          const fix = tryFixValue(value, child.analysis.type, cst.alias, newValue);
+          if (fix === null) {
+            resetList.push(childID);
+          } else if (fix === true) {
+            updateList.push({ target: childID, type: child.cst_type, data: value });
+          }
+        }
+      }
+    }
+
+    if (resetList.length > 0) {
+      await Promise.all([
+        this.services.setCstValue({ itemID: this.modelID, data: updateList }),
+        this.services.clearValues({ itemID: this.modelID, data: { items: resetList } }),
+      ]);
+    } else {
+      await this.services.setCstValue({ itemID: this.modelID, data: updateList });
+    }
+    const changed = [...resetList, ...updateList.map(item => item.target)];
+
     this.basics.set(cstID, data);
     this.calculator.setValue(cst.alias, Object.keys(data).map(Number));
-    this.notifyValue(cstID);
-    this.notifyStatus(cstID);
+
+    for (const item of resetList) {
+      this.calculator.resetValue(this.schema.cstByID.get(item)!.alias);
+      this.notifyCst(item);
+    }
+    for (const updateData of updateList) {
+      if (updateData.target !== cstID) {
+        this.calculator.setValue(
+          this.schema.cstByID.get(updateData.target)!.alias, updateData.data as unknown as Value
+        );
+        this.notifyCst(updateData.target);
+      }
+    }
+    for (const item of changed) {
+      this.notifyCst(item);
+    }
+    this.cascadeReset(changed);
   }
 
   /** Resets value for {@link Constituenta}. */
@@ -184,6 +231,11 @@ export class RSEngine {
     const end = performance.now();
     const timeSpent = ((end - start) / 1000).toFixed(2);
     toast.success(infoMsg.calculationSuccess(timeSpent));
+  }
+
+  private notifyCst(cstID: number) {
+    this.notifyStatus(cstID);
+    this.notifyValue(cstID);
   }
 
   /** Notify all subscribers about value change. */
@@ -250,6 +302,21 @@ export class RSEngine {
     }
   }
 
+  private cascadeReset(cstIDs: number[]): void {
+    if (!this.schema) {
+      return;
+    }
+    const dependencies = this.schema.graph.expandAllOutputs(cstIDs);
+    for (const cstID of dependencies) {
+      const cst = this.schema.cstByID.get(cstID);
+      if (!cst || !isInferrable(cst.cst_type)) {
+        continue;
+      }
+      this.calculator.resetValue(this.schema.cstByID.get(cstID)!.alias);
+      this.notifyCst(cstID);
+    }
+  }
+
   private prepareEvaluation(dependencies: number[]): void {
     for (const cstID of this.schema!.graph.topologicalOrder()) {
       if (dependencies.includes(cstID)) {
@@ -261,8 +328,7 @@ export class RSEngine {
           } else {
             this.calculator.resetValue(cst.alias);
           }
-          this.notifyValue(cstID);
-          this.notifyStatus(cstID);
+          this.notifyCst(cstID);
         }
         this.calculatedSet.add(cstID);
       }
