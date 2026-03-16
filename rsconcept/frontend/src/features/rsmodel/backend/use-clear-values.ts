@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useUpdateTimestamp } from '@/features/library/backend/use-update-timestamp';
-import { type ConstituentaList } from '@/features/rsform';
 
 import { KEYS } from '@/backend/configuration';
 
@@ -19,6 +18,6 @@ export const useClearValues = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    clearValues: (data: { itemID: number; data: ConstituentaList; }) => mutation.mutateAsync(data)
+    clearValues: mutation.mutateAsync
   };
 };

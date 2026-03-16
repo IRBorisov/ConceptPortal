@@ -28,7 +28,7 @@ import { useRSModelEdit } from './rsmodel-context';
 
 export function MenuMain() {
   const router = useConceptNavigation();
-  const { model, deleteModel, isMutable, recalculateAll } = useRSModelEdit();
+  const { model, deleteModel, isMutable, engine } = useRSModelEdit();
   const isProcessing = useMutatingRSModel();
 
   const { isAnonymous } = useAuth();
@@ -57,7 +57,7 @@ export function MenuMain() {
 
   function handleRecalculate() {
     hideMenu();
-    recalculateAll();
+    engine.recalculateAll();
   }
 
   function handleShowQR() {

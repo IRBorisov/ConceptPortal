@@ -25,6 +25,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { prefixes } from '@/utils/constants';
 import { promptText } from '@/utils/labels';
+import { type RO } from '@/utils/meta';
 
 import { type LibraryItemData } from '../backend/types';
 import { useMutatingLibrary } from '../backend/use-mutating-library';
@@ -33,7 +34,7 @@ import { useSetOwner } from '../backend/use-set-owner';
 import { useLibrarySearchStore } from '../stores/library-search';
 
 interface EditorLibraryItemProps {
-  item: LibraryItemData;
+  item: RO<LibraryItemData>;
   isAttachedToOSS: boolean;
 }
 

@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 
 import { CstType, type RSForm } from '@/features/rsform';
 import { calculateSchemaStats, getAnalysisFor, isBaseSet, isBasicConcept } from '@/features/rsform/models/rsform-api';
-import { type CalculatorResult, type ExpressionType, TypeID, type Value } from '@/features/rslang';
+import { type CalculatorResult, type ExpressionType, type RSCalculator, TypeID, type Value } from '@/features/rslang';
 import { TUPLE_ID, VALUE_TRUE } from '@/features/rslang/eval/value';
 import { printValue } from '@/features/rslang/eval/value-api';
 
@@ -11,28 +11,33 @@ import { limits } from '@/utils/constants';
 import { type RO } from '@/utils/meta';
 import { concat, type Doc, group, indent, join, line, render, text } from '@/utils/text-printer';
 
-import { type BasicBinding, EvalStatus, type RSModel, type RSModelStats } from './rsmodel';
+import { type RSEngine } from './rsengine';
+import { type BasicBinding, type BasicsContext, EvalStatus, type RSModelStats } from './rsmodel';
 
 /** Calculate statistics for {@link RSModel}. */
-export function calculateModelStats(schema: RSForm, evalStatus: (cstID: number) => EvalStatus): RSModelStats {
+export function calculateModelStats(schema: RSForm, engine: RSEngine): RSModelStats {
   const items = schema.items;
+  const statusByID = new Map<number, EvalStatus>();
+  for (const cst of items) {
+    statusByID.set(cst.id, engine.getCstStatus(cst.id));
+  }
   return {
     ...calculateSchemaStats(schema),
     count_missing_base: items.reduce(
       (sum, cst) => sum +
-        (evalStatus(cst.id) === EvalStatus.EMPTY && isBasicConcept(cst.cst_type) ? 1 : 0),
+        (statusByID.get(cst.id) === EvalStatus.EMPTY && isBasicConcept(cst.cst_type) ? 1 : 0),
       0),
     count_false_axioms: items.reduce(
       (sum, cst) => sum +
-        (evalStatus(cst.id) === EvalStatus.AXIOM_FALSE ? 1 : 0),
+        (statusByID.get(cst.id) === EvalStatus.AXIOM_FALSE ? 1 : 0),
       0),
     count_invalid_calculations: items.reduce(
       (sum, cst) => sum +
-        (evalStatus(cst.id) === EvalStatus.EVAL_FAIL || evalStatus(cst.id) === EvalStatus.NOT_PROCESSED ? 1 : 0),
+        (statusByID.get(cst.id) === EvalStatus.EVAL_FAIL || statusByID.get(cst.id) === EvalStatus.NOT_PROCESSED ? 1 : 0),
       0),
     count_empty_terms: items.reduce(
       (sum, cst) => sum +
-        (evalStatus(cst.id) === EvalStatus.EMPTY && cst.cst_type === CstType.TERM ? 1 : 0),
+        (statusByID.get(cst.id) === EvalStatus.EMPTY && cst.cst_type === CstType.TERM ? 1 : 0),
       0),
   };
 }
@@ -93,9 +98,9 @@ export function inferStatus(value: RO<Value | null>, cstType: CstType, wasCalcul
   return EvalStatus.HAS_DATA;
 }
 
-/** Evaluates expression for {@link RSModel}, including error handling. */
+/** Evaluates expression for {@link Constituenta}, including error handling. */
 export function getEvaluationFor(
-  expression: string, cstType: CstType, schema: RSForm, model: RSModel
+  expression: string, cstType: CstType, schema: RSForm, calculator: RSCalculator
 ): CalculatorResult {
   const parse = getAnalysisFor(expression, cstType, schema);
   if (!parse.success || !parse.ast) {
@@ -106,7 +111,12 @@ export function getEvaluationFor(
     };
   } else {
     try {
-      return model.calculator.evaluateFull(parse.ast);
+      const result = calculator.evaluateFull(parse.ast);
+      return {
+        value: result.value,
+        iterations: result.iterations,
+        errors: [...parse.errors, ...result.errors]
+      };
     } catch (error) {
       toast.error((error as Error).message);
       console.error(expression, error);
@@ -121,14 +131,14 @@ export function getEvaluationFor(
 
 /** Evaluates expression for {@link RSModel}. */
 export function fastEvaluation(
-  expression: string, cstType: CstType, schema: RSForm, model: RSModel
+  expression: string, cstType: CstType, schema: RSForm, calculator: RSCalculator
 ): Value | null {
   const parse = getAnalysisFor(expression, cstType, schema);
   if (!parse.success || !parse.ast) {
     return null;
   } else {
     try {
-      return model.calculator.evaluateFast(parse.ast);
+      return calculator.evaluateFast(parse.ast);
     } catch (error) {
       toast.error((error as Error).message);
       console.error(expression, error);
@@ -137,54 +147,12 @@ export function fastEvaluation(
   }
 }
 
-/** Recalculate model for all inferrable expressions. */
-export function recalculateModel(schema: RSForm, model: RSModel): number[] {
-  const processedIDs = [];
-  for (const cst of schema.cstByID.values()) {
-    if (isInferrable(cst.cst_type)) {
-      model.calculator.resetValue(cst.alias);
-    }
-  }
-
-  for (const cstID of schema.graph.topologicalOrder()) {
-    processedIDs.push(cstID);
-    const cst = schema.cstByID.get(cstID)!;
-    if (isInferrable(cst.cst_type)) {
-      const value = fastEvaluation(cst.definition_formal, cst.cst_type, schema, model);
-      if (value !== null) {
-        model.calculator.setValue(cst.alias, value);
-      }
-    }
-  }
-  return processedIDs;
-}
-
-/** Calculates all predecessors of {@link target}. */
-export function prepareEvaluation(target: number, schema: RSForm, model: RSModel): number[] {
-  const calculatedCst: number[] = [];
-  const predecessors = schema.graph.expandAllInputs([target]);
-  for (const cstID of schema.graph.topologicalOrder()) {
-    if (predecessors.includes(cstID)) {
-      const cst = schema.cstByID.get(cstID)!;
-      if (isInferrable(cst.cst_type)) {
-        calculatedCst.push(cstID);
-        const value = fastEvaluation(cst.definition_formal, cst.cst_type, schema, model);
-        if (value !== null) {
-          model.calculator.setValue(cst.alias, value);
-        }
-      }
-    }
-    calculatedCst.push(cstID);
-  }
-  return predecessors;
-}
-
 /** Prepares string representation for {@link Value}. */
 export function prepareValueString(
   value: RO<Value | null | BasicBinding>,
   type: ExpressionType | null,
   schema: RSForm,
-  model: RSModel,
+  dataContext: BasicsContext,
   dataText: boolean
 ): string {
   if (value === null) {
@@ -196,11 +164,11 @@ export function prepareValueString(
       (_match: string, inner: string) => `[${inner.replace(/\s+/g, ' ')}]`
     );
   }
-  return render(prepareValueInternal(value as Value, type, schema, model), limits.data_line_width);
+  return render(prepareValueInternal(value as Value, type, schema, dataContext), limits.data_line_width);
 }
 
 // ========= Internal functions ==========
-function prepareValueInternal(value: Value, type: ExpressionType, schema: RSForm, model: RSModel): Doc {
+function prepareValueInternal(value: Value, type: ExpressionType, schema: RSForm, dataContext: BasicsContext): Doc {
   switch (type.typeID) {
     case TypeID.integer:
       return text(String(value));
@@ -212,7 +180,7 @@ function prepareValueInternal(value: Value, type: ExpressionType, schema: RSForm
       if (typeof value !== 'number') {
         return text(`EXPECTED_BASIC ${printValue(value)}`);
       }
-      const binding = model.basicsContext.get(cst.id);
+      const binding = dataContext.get(cst.id);
       if (!binding) {
         return text(`NO BINDING FOR ${cst.alias}`);
       }
@@ -233,7 +201,7 @@ function prepareValueInternal(value: Value, type: ExpressionType, schema: RSForm
       }
       const components: Doc[] = [];
       for (let i = 0; i < type.factors.length; i++) {
-        components.push(prepareValueInternal(value[i + 1], type.factors[i], schema, model));
+        components.push(prepareValueInternal(value[i + 1], type.factors[i], schema, dataContext));
       }
       return tupleDoc(components);
     case TypeID.collection:
@@ -242,7 +210,7 @@ function prepareValueInternal(value: Value, type: ExpressionType, schema: RSForm
       }
       const elements: Doc[] = [];
       for (const item of value) {
-        elements.push(prepareValueInternal(item, type.base, schema, model));
+        elements.push(prepareValueInternal(item, type.base, schema, dataContext));
       }
       return collectionDoc(elements);
 

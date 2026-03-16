@@ -49,7 +49,7 @@ export function ToolbarRSList({ className }: ToolbarRSListProps) {
     moveUp,
     moveDown
   } = useRSFormEdit();
-  const { recalculateAll } = useRSModelEdit();
+  const { engine } = useRSModelEdit();
 
   function handleToggleCrucial() {
     if (!activeCst) {
@@ -77,7 +77,7 @@ export function ToolbarRSList({ className }: ToolbarRSListProps) {
         titleHtml='Пересчитать модель'
         aria-label='Пересчитать все вычисления'
         icon={<IconCalculateAll size='1.25rem' className='icon-green' />}
-        onClick={recalculateAll}
+        onClick={() => { engine.recalculateAll(); }}
       />
       <MiniButton
         titleHtml={prepareTooltip('Переместить вверх', 'Alt + вверх')}

@@ -2,24 +2,21 @@
 
 import { createContext, use } from 'react';
 
-import { type CalculatorResult, type Value } from '@/features/rslang';
+import { type RSForm } from '@/features/rsform';
 
-import { type BasicBinding, type EvalStatus, type RSModel } from '../../models/rsmodel';
+import { type RO } from '@/utils/meta';
+
+import { type RSModelDTO } from '../../backend/types';
+import { type RSEngine } from '../../models/rsengine';
 
 interface IRSModelContext {
-  model: RSModel;
+  model: RO<RSModelDTO>;
+  engine: RSEngine;
+  schema: RSForm;
   isMutable: boolean;
   isOwned: boolean;
 
-  setValue: (cstID: number, data: Value) => void;
-  setBasicValue: (cstID: number, data: BasicBinding) => void;
-  resetValue: (cstID: number) => void;
-  calculateCst: (cstID: number) => CalculatorResult;
-  getEvalStatus: (cstID: number) => EvalStatus;
-  getCstValue: (cstID: number) => Value | null;
-
   deleteModel: () => void;
-  recalculateAll: () => void;
 }
 
 export const RSModelContext = createContext<IRSModelContext | null>(null);

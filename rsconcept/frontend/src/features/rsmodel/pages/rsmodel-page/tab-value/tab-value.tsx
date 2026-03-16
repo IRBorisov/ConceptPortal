@@ -32,7 +32,7 @@ export function TabValue() {
     selectedCst,
     setSelectedCst
   } = useRSFormEdit();
-  const { model, resetValue, getEvalStatus } = useRSModelEdit();
+  const { engine } = useRSModelEdit();
   const windowSize = useWindowSize();
   const mainHeight = useMainHeight();
 
@@ -59,7 +59,7 @@ export function TabValue() {
     if (!activeCst) {
       return;
     }
-    resetValue(activeCst.id);
+    void engine.resetValue(activeCst.id);
   }
 
   return (
@@ -92,7 +92,6 @@ export function TabValue() {
             id={globalIDs.value_editor}
             activeCst={activeCst}
             toggleReset={toggleReset}
-            model={model}
           />
         ) : null}
       </div>
@@ -103,9 +102,8 @@ export function TabValue() {
           showList ? 'max-w-full' : 'opacity-0 max-w-0'
         )}
         schema={schema}
-        model={model}
+        engine={engine}
         activeCst={activeCst}
-        getEvalStatus={getEvalStatus}
         onActivate={cst => router.changeActive(cst.id)}
         dense={!!windowSize.width && windowSize.width < COLUMN_DENSE_SEARCH_THRESHOLD}
         maxListHeight={listHeight}

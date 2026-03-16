@@ -5,19 +5,20 @@ import { type Constituenta } from '@/features/rsform';
 import { globalIDs } from '@/utils/constants';
 
 import { colorFgEvalStatus } from '../colors';
+import { useCstStatus } from '../hooks/use-cst-status';
 import { useCstValue } from '../hooks/use-cst-value';
 import { labelEvalStatus, labelValue } from '../labels';
-import { type EvalStatus, type RSModel } from '../models/rsmodel';
+import { type RSEngine } from '../models/rsengine';
 
 interface BadgeEvaluationProps {
-  model: RSModel;
+  engine: RSEngine;
   cst: Constituenta;
-  status: EvalStatus;
 }
 
 /** Displays a badge with value cardinality and information tooltip. */
-export function BadgeEvaluation({ model, cst, status }: BadgeEvaluationProps) {
-  const value = useCstValue(model, cst);
+export function BadgeEvaluation({ engine, cst }: BadgeEvaluationProps) {
+  const value = useCstValue(engine, cst);
+  const status = useCstStatus(engine, cst);
   return (
     <div
       className='font-math text-md'

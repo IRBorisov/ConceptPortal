@@ -11,19 +11,20 @@ import { IconRemove } from '@/components/icons';
 import { Label } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
+import { type RO } from '@/utils/meta';
 
 import { useSetEditors } from '../../backend/use-set-editors';
 
 export interface DlgEditEditorsProps {
   itemID: number;
-  initialEditors: number[];
+  initialEditors: RO<number[]>;
 }
 
 export function DlgEditEditors() {
   const { initialEditors: initial, itemID } = useDialogsStore(state => state.props as DlgEditEditorsProps);
   const { setEditors } = useSetEditors();
 
-  const [selected, setSelected] = useState<number[]>(initial);
+  const [selected, setSelected] = useState<number[]>([...initial]);
   const { users } = useUsers();
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {

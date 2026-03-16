@@ -7,7 +7,6 @@ import { useLibrarySearchStore } from '@/features/library';
 import { useDeleteItem } from '@/features/library/backend/use-delete-item';
 import { EditorLibraryItem } from '@/features/library/components/editor-library-item';
 import { ToolbarItemCard } from '@/features/library/components/toolbar-item-card';
-import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
 
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useModificationStore } from '@/stores/modification';
@@ -25,13 +24,12 @@ const SIDELIST_LAYOUT_THRESHOLD = 768; // px
 
 export function TabModelCard() {
   const router = useConceptNavigation();
-  const { model, isMutable, getEvalStatus } = useRSModelEdit();
-  const { schema } = useRSFormEdit();
+  const { model, isMutable, engine, schema } = useRSModelEdit();
   const isModified = useModificationStore(state => state.isModified);
   const windowSize = useWindowSize();
   const isNarrow = !!windowSize.width && windowSize.width <= SIDELIST_LAYOUT_THRESHOLD;
   const showStats = usePreferencesStore(state => state.showRSModelStats);
-  const stats = calculateModelStats(schema, getEvalStatus);
+  const stats = calculateModelStats(schema, engine);
 
   const setSearchLocation = useLibrarySearchStore(state => state.setLocation);
   const searchLocation = useLibrarySearchStore(state => state.location);

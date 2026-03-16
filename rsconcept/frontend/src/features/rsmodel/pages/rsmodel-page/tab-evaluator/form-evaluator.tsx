@@ -22,7 +22,7 @@ import { infoMsg } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 
 import { labelValue } from '../../../labels';
-import { inferStatus, prepareValueString } from '../../../models/rsmodel-api';
+import { fastEvaluation, inferStatus, prepareValueString } from '../../../models/rsmodel-api';
 import { useRSModelEdit } from '../rsmodel-context';
 import { ToolbarExpression } from '../tab-value/toolbar-expression';
 
@@ -34,7 +34,7 @@ interface FormEvaluatorProps {
 export function FormEvaluator({ id, className }: FormEvaluatorProps) {
   const router = useConceptNavigation();
   const { schema, activeCst } = useRSFormEdit();
-  const { model } = useRSModelEdit();
+  const { engine } = useRSModelEdit();
 
   const showDataText = usePreferencesStore(state => state.showDataText);
 
@@ -43,7 +43,9 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
   const [expression, setExpression] = useState<string>(activeCst?.definition_formal ?? '');
   const [localEval, setLocalEval] = useState<RO<CalculatorResult> | null>(null);
   const [localParse, setLocalParse] = useState<RO<AnalysisFull> | null>(null);
-  const valueStr = prepareValueString(localEval?.value ?? null, localParse?.type ?? null, schema, model, showDataText);
+  const valueStr = prepareValueString(
+    localEval?.value ?? null, localParse?.type ?? null, schema, engine.basics, showDataText
+  );
   const isModified = evaluatedExpression !== expression;
   const status = inferStatus(localEval?.value ?? null, CstType.TERM, !isModified);
   const errors = [...(localParse?.errors ?? []), ...(localEval?.errors ?? [])];
@@ -78,7 +80,12 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
 
     const startTime = performance.now();
     try {
-      const evaluation = model.calculator.evaluateFull(parse.ast);
+      const value = fastEvaluation(expression, CstType.TERM, schema, engine.calculator);
+      const evaluation: CalculatorResult = {
+        value,
+        iterations: 0,
+        errors: []
+      };
       setLocalEval(evaluation);
     } catch (error) {
       toast.error((error as Error).message);

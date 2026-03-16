@@ -5,7 +5,6 @@ import { useUpdateTimestamp } from '@/features/library/backend/use-update-timest
 import { KEYS } from '@/backend/configuration';
 
 import { rsmodelApi } from './api';
-import { type ConstituentaDataDTO } from './types';
 
 export const useSetValue = () => {
   const client = useQueryClient();
@@ -19,6 +18,6 @@ export const useSetValue = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    setCstValue: (data: { itemID: number; data: ConstituentaDataDTO; }) => mutation.mutateAsync(data)
+    setCstValue: mutation.mutateAsync
   };
 };

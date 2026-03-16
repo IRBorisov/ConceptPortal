@@ -1,10 +1,11 @@
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
+import { type RO } from '@/utils/meta';
 
 import { useLabelUser } from '../backend/use-label-user';
 
 interface InfoUsersProps extends Styling {
-  items: number[];
+  items: RO<number[]>;
   prefix: string;
   header?: string;
 }

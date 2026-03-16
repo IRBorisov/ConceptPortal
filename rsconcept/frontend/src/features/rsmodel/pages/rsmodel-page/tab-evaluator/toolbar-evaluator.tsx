@@ -20,7 +20,7 @@ export function ToolbarEvaluator({
   className,
   isNarrow,
 }: ToolbarEvaluatorProps) {
-  const { recalculateAll } = useRSModelEdit();
+  const { engine } = useRSModelEdit();
 
   const showList = usePreferencesStore(state => state.showValueSideList);
   const toggleList = usePreferencesStore(state => state.toggleShowValueSideList);
@@ -31,7 +31,7 @@ export function ToolbarEvaluator({
         titleHtml='Пересчитать модель'
         aria-label='Пересчитать все вычисления'
         icon={<IconCalculateAll size='1.25rem' className='icon-green' />}
-        onClick={recalculateAll}
+        onClick={() => { engine.recalculateAll(); }}
       />
 
       <MiniButton

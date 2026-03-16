@@ -9,11 +9,11 @@ import { RSInput } from '@/features/rsform/components/rs-input';
 import { ViewErrors } from '@/features/rsform/components/view-errors';
 import { labelRSExpression } from '@/features/rsform/labels';
 import { isBaseSet } from '@/features/rsform/models/rsform-api';
-import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
 import { type CalculatorResult, type Value } from '@/features/rslang';
 import { normalizeValue } from '@/features/rslang/eval/value-api';
 import { labelType } from '@/features/rslang/labels';
 import { ValueInput } from '@/features/rsmodel/components/value-input';
+import { useCstStatus } from '@/features/rsmodel/hooks/use-cst-status';
 
 import { Button } from '@/components/control';
 import { IconSave } from '@/components/icons';
@@ -26,7 +26,7 @@ import { type RO } from '@/utils/meta';
 import { useMutatingRSModel } from '../../../backend/use-mutating-rsmodel';
 import { useCstValue } from '../../../hooks/use-cst-value';
 import { labelValue } from '../../../labels';
-import { type BasicBinding, type RSModel } from '../../../models/rsmodel';
+import { type BasicBinding } from '../../../models/rsmodel';
 import { isInferrable, isInterpretable, prepareValueString } from '../../../models/rsmodel-api';
 import { useRSModelEdit } from '../rsmodel-context';
 
@@ -37,13 +37,11 @@ interface FormValueProps {
   toggleReset: boolean;
 
   activeCst: Constituenta;
-  model: RSModel;
 }
 
-export function FormValue({ id, model, toggleReset, activeCst }: FormValueProps) {
+export function FormValue({ id, toggleReset, activeCst }: FormValueProps) {
   const router = useConceptNavigation();
-  const { isMutable, setValue, setBasicValue, getEvalStatus, calculateCst } = useRSModelEdit();
-  const { schema } = useRSFormEdit();
+  const { isMutable, engine, schema } = useRSModelEdit();
   const isProcessing = useMutatingRSModel();
   const typification = activeCst.analysis.type;
 
@@ -54,14 +52,14 @@ export function FormValue({ id, model, toggleReset, activeCst }: FormValueProps)
 
   const isBase = isBaseSet(activeCst.cst_type);
   const cstInferrable = isInferrable(activeCst.cst_type);
-  const status = getEvalStatus(activeCst.id);
+  const status = useCstStatus(engine, activeCst);
   const [localEval, setLocalEval] = useState<RO<CalculatorResult> | null>(null);
 
-  const cstData = useCstValue(model, activeCst);
+  const cstData = useCstValue(engine, activeCst);
 
-  const initialValue = isBase ? model.basicsContext.get(activeCst.id) ?? ({} as BasicBinding) : cstData;
+  const initialValue = isBase ? engine.basics.get(activeCst.id) ?? ({} as BasicBinding) : cstData;
 
-  const initialStr = prepareValueString(initialValue, typification, schema, model, showDataText);
+  const initialStr = prepareValueString(initialValue, typification, schema, engine.basics, showDataText);
   const [inputValue, setInputValue] = useState<string>(initialStr);
   const isTrimmed = inputValue.length > limits.len_data_str;
 
@@ -75,7 +73,7 @@ export function FormValue({ id, model, toggleReset, activeCst }: FormValueProps)
       setInputValue(initialStr);
     }, 0);
     return () => clearTimeout(timeoutId);
-  }, [activeCst.id, initialStr, toggleReset, model]);
+  }, [activeCst.id, initialStr, toggleReset]);
 
   useEffect(() => {
     onModifiedEvent(isDirty);
@@ -88,17 +86,14 @@ export function FormValue({ id, model, toggleReset, activeCst }: FormValueProps)
     try {
       if (isBase) {
         const parsedBinding = JSON.parse(inputValue) as BasicBinding;
-        const valueBinding = Object.fromEntries(
-          Object.entries(parsedBinding).map(([key, value]) => [Number(key), value])
-        );
-        setBasicValue(activeCst.id, valueBinding);
-        const newValue = prepareValueString(valueBinding, typification, schema, model, showDataText);
+        void engine.setBasicValue(activeCst.id, parsedBinding);
+        const newValue = prepareValueString(parsedBinding, typification, schema, engine.basics, showDataText);
         setInputValue(newValue);
       } else {
         const parsedValue = JSON.parse(inputValue) as Value;
         normalizeValue(parsedValue);
-        setValue(activeCst.id, parsedValue);
-        const newValue = prepareValueString(parsedValue, typification, schema, model, showDataText);
+        void engine.setValue(activeCst.id, parsedValue);
+        const newValue = prepareValueString(parsedValue, typification, schema, engine.basics, showDataText);
         setInputValue(newValue);
       }
       setIsModified(false);
@@ -111,7 +106,7 @@ export function FormValue({ id, model, toggleReset, activeCst }: FormValueProps)
   function handleCalculate(event: React.MouseEvent<Element>) {
     event.preventDefault();
     event.stopPropagation();
-    const result = calculateCst(activeCst.id);
+    const result = engine.calculateCst(activeCst.id);
     setLocalEval(result);
   }
 

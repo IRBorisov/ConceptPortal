@@ -30,11 +30,11 @@ export function ToolbarValueEditor({
   onClearValue,
   onReset
 }: ToolbarValueEditorProps) {
-  const { isMutable, model, recalculateAll, calculateCst } = useRSModelEdit();
+  const { isMutable, engine } = useRSModelEdit();
   const { activeCst } = useRSFormEdit();
   const isProcessing = useMutatingRSModel();
 
-  const value = useCstValue(model, activeCst);
+  const value = useCstValue(engine, activeCst ?? null);
   const hasValue = value !== null;
 
   const showList = usePreferencesStore(state => state.showValueSideList);
@@ -56,7 +56,7 @@ export function ToolbarValueEditor({
         titleHtml='Вычислить текущую'
         aria-label='Вычислить текущую конституенту'
         icon={<IconCalculateOne size='1.25rem' className='icon-green' />}
-        onClick={activeCst ? () => calculateCst(activeCst.id) : undefined}
+        onClick={activeCst ? () => { engine.calculateCst(activeCst.id); } : undefined}
         disabled={isProcessing || !activeCst || isModified || !isInferrable(activeCst.cst_type)}
       />
 
@@ -64,7 +64,7 @@ export function ToolbarValueEditor({
         titleHtml='Пересчитать модель'
         aria-label='Пересчитать все вычисления'
         icon={<IconCalculateAll size='1.25rem' className='icon-green' />}
-        onClick={recalculateAll}
+        onClick={() => { engine.recalculateAll(); }}
       />
 
       {isMutable ? <MiniButton

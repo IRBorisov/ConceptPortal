@@ -2,8 +2,8 @@
 
 import { useEffect, useRef } from 'react';
 
-import { EvalStatus, type RSModel } from '@/features/rsmodel';
-import { BadgeEvaluation } from '@/features/rsmodel/components/bage-evaluation';
+import { type RSEngine } from '@/features/rsmodel';
+import { BadgeEvaluation } from '@/features/rsmodel/components/badge-evaluation';
 
 import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/data-table';
 import { NoData, TextContent } from '@/components/view';
@@ -19,9 +19,8 @@ const DESCRIPTION_MAX_SYMBOLS = 280;
 
 interface TableSideConstituentsProps {
   schema: RSForm;
-  model?: RSModel;
+  engine?: RSEngine;
   activeCst?: Constituenta | null;
-  getEvalStatus?: (cstID: number) => EvalStatus;
 
   onActivate?: (cst: Constituenta) => void;
   onDoubleClick?: (cst: Constituenta) => void;
@@ -34,9 +33,8 @@ const columnHelper = createColumnHelper<Constituenta>();
 
 export function TableSideConstituents({
   schema,
-  model,
+  engine,
   activeCst,
-  getEvalStatus,
   onActivate,
   onDoubleClick,
   maxHeight,
@@ -75,7 +73,7 @@ export function TableSideConstituents({
         prefixID={prefixes.cst_side_table}
       />
     }),
-    ...(model
+    ...(engine
       ? [
         columnHelper.accessor(cst => cst, {
           id: 'value',
@@ -85,8 +83,7 @@ export function TableSideConstituents({
           maxSize: 60,
           cell: props => <BadgeEvaluation
             cst={props.row.original}
-            model={model}
-            status={getEvalStatus?.(props.row.original.id) ?? EvalStatus.EVAL_FAIL}
+            engine={engine}
           />
         })
       ]

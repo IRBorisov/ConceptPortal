@@ -3,7 +3,7 @@
 import { type Constituenta } from '@/features/rsform';
 import { BadgeConstituenta } from '@/features/rsform/components/badge-constituenta';
 import { labelType } from '@/features/rslang/labels';
-import { BadgeEvaluation } from '@/features/rsmodel/components/bage-evaluation';
+import { BadgeEvaluation } from '@/features/rsmodel/components/badge-evaluation';
 
 import { TextURL } from '@/components/control';
 import { createColumnHelper, DataTable, type RowSelectionState, type VisibilityState } from '@/components/data-table';
@@ -47,7 +47,7 @@ export function TableRSModelList({
   onEdit,
   onCreateNew
 }: TableModelListProps) {
-  const { model, getEvalStatus } = useRSModelEdit();
+  const { engine } = useRSModelEdit();
   const windowSize = useWindowSize();
 
   function handleRowClicked(cst: Constituenta, event: React.MouseEvent<Element>) {
@@ -79,8 +79,7 @@ export function TableRSModelList({
       maxSize: 60,
       cell: props => <BadgeEvaluation
         cst={props.row.original}
-        model={model}
-        status={getEvalStatus(props.row.original.id)}
+        engine={engine}
       />
     }),
     columnHelper.accessor(cst => labelType(cst.analysis.type), {

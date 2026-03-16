@@ -25,7 +25,7 @@ const COLUMN_DENSE_SEARCH_THRESHOLD = 1100;
 export function TabEvaluator() {
   const router = useConceptNavigation();
   const { schema, activeCst } = useRSFormEdit();
-  const { model, getEvalStatus } = useRSModelEdit();
+  const { engine } = useRSModelEdit();
   const windowSize = useWindowSize();
   const mainHeight = useMainHeight();
 
@@ -67,9 +67,8 @@ export function TabEvaluator() {
           showList ? 'max-w-full' : 'opacity-0 max-w-0'
         )}
         schema={schema}
-        model={model}
+        engine={engine}
         activeCst={activeCst}
-        getEvalStatus={getEvalStatus}
         onActivate={cst => router.changeActive(cst.id)}
         dense={!!windowSize.width && windowSize.width < COLUMN_DENSE_SEARCH_THRESHOLD}
         maxListHeight={listHeight}
