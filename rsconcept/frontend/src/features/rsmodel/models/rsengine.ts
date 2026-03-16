@@ -4,6 +4,8 @@ import { type RSForm } from '@/features/rsform';
 import { CstType } from '@/features/rsform';
 import { getAnalysisFor, isBaseSet, isBasicConcept, isFunctional } from '@/features/rsform/models/rsform-api';
 import { type CalculatorResult, RSCalculator, TypeID, type Value } from '@/features/rslang';
+import { compare } from '@/features/rslang/eval/value';
+import { normalizeType } from '@/features/rslang/labels';
 
 import { errorMsg, infoMsg } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
@@ -17,6 +19,8 @@ export interface RSEngineServices {
   setCstValue: (args: { itemID: number; data: { target: number; type: string; data: Value | BasicBinding; }[]; }) => Promise<unknown>;
   clearValues: (args: { itemID: number; data: { items: number[]; }; }) => Promise<unknown>;
 }
+
+const INVALID_TYPE_MARKER = 'INVALID';
 
 export class RSEngine {
   public modelID: number;
@@ -115,8 +119,8 @@ export class RSEngine {
       return;
     }
 
-    const type = cst.analysis.type;
-    const payload = [{ target: cstID, type: type ? type.typeID.toString() : '', data }];
+    const typeStr = cst.analysis.type ? normalizeType(cst.analysis.type) : INVALID_TYPE_MARKER;
+    const payload = [{ target: cstID, type: typeStr, data }];
     await this.services.setCstValue({ itemID: this.modelID, data: payload });
 
     this.calculator.setValue(cst.alias, data);
@@ -131,22 +135,27 @@ export class RSEngine {
       toast.error(errorMsg.invalidSetValue);
       return;
     }
+    const oldValue = this.calculator.getValue(cst.alias);
     const newValue = Object.keys(data).map(Number);
 
     const updateList: Parameters<RSEngineServices['setCstValue']>[0]['data']
       = [{ target: cstID, type: TYPE_BASIC, data }];
     const resetList: number[] = [];
-    const dependencies = this.schema.graph.expandAllOutputs([cstID]);
-    for (const childID of dependencies) {
-      const child = this.schema.cstByID.get(childID)!;
-      if (child.cst_type === CstType.STRUCTURED && !!child.analysis.type) {
-        const value = this.calculator.getValue(child.alias);
-        if (value !== null) {
-          const fix = tryFixValue(value, child.analysis.type, cst.alias, newValue);
-          if (fix === null) {
-            resetList.push(childID);
-          } else if (fix === true) {
-            updateList.push({ target: childID, type: child.cst_type, data: value });
+
+    if (oldValue !== null && compare(newValue, oldValue) !== 0) {
+      const dependencies = this.schema.graph.expandAllOutputs([cstID]);
+      for (const childID of dependencies) {
+        const child = this.schema.cstByID.get(childID)!;
+        if (child.cst_type === CstType.STRUCTURED && !!child.analysis.type) {
+          const value = this.calculator.getValue(child.alias);
+          if (value !== null) {
+            const fix = tryFixValue(value, child.analysis.type, cst.alias, newValue);
+            if (fix === null) {
+              resetList.push(childID);
+            } else if (fix === true) {
+              const typeStr = normalizeType(child.analysis.type);
+              updateList.push({ target: childID, type: typeStr, data: [...value as Value[]] });
+            }
           }
         }
       }
@@ -193,8 +202,7 @@ export class RSEngine {
     this.calculator.resetValue(cst.alias);
     this.basics.delete(cstID);
     this.calculatedSet.delete(cstID);
-    this.notifyValue(cstID);
-    this.notifyStatus(cstID);
+    this.notifyCst(cstID);
   }
 
   /** Calculates value for {@link Constituenta}. */
@@ -288,7 +296,11 @@ export class RSEngine {
         const data = item.value as BasicBinding;
         this.basics.set(cst.id, data);
         this.calculator.setValue(cst.alias, Object.keys(data).map(Number));
-      } else {
+      }
+    }
+    for (const item of this.data!.items) {
+      const cst = this.schema!.cstByID.get(item.id)!;
+      if (item.type !== TYPE_BASIC) {
         // TODO: check typification
         this.calculator.setValue(cst.alias, item.value as Value);
       }
@@ -312,6 +324,7 @@ export class RSEngine {
       if (!cst || !isInferrable(cst.cst_type)) {
         continue;
       }
+      this.calculatedSet.delete(cstID);
       this.calculator.resetValue(this.schema.cstByID.get(cstID)!.alias);
       this.notifyCst(cstID);
     }

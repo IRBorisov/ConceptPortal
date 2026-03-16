@@ -67,6 +67,69 @@ class TestRSModelViewset(EndpointTester):
         payload[0]['target'] = x1.pk
         self.executeForbidden(item=self.model_id, data=payload)
 
+    @decl_endpoint('/api/models/{item}/set-value', method='post')
+    def test_set_multiple_values(self):
+        x1 = self.schema.insert_last(alias='X1')
+        x2 = self.schema.insert_last(alias='X2')
+        s1 = self.schema.insert_last(alias='S1', definition_formal='X1')
+        cst_data1 = {'1': 'Петя', '2': 'Вася'}
+        cst_data2 = {'1': 'Кот', '2': 'Слон'}
+        cst_data3 = 1
+        payload = [
+            {
+                'target': x1.pk,
+                'type': 'basic',
+                'data': cst_data1,
+            },
+            {
+                'target': x2.pk,
+                'type': 'basic',
+                'data': cst_data2,
+            },
+            {
+                'target': s1.pk,
+                'type': 'X1',
+                'data': cst_data3,
+            }
+        ]
+        self.executeOK(item=self.model_id, data=payload)
+        cdata1 = ConstituentData.objects.get(model=self.rsmodel.model, constituent=x1)
+        cdata2 = ConstituentData.objects.get(model=self.rsmodel.model, constituent=x2)
+        cdata3 = ConstituentData.objects.get(model=self.rsmodel.model, constituent=s1)
+        self.assertEqual(cdata1.type, 'basic')
+        self.assertEqual(cdata1.data, cst_data1)
+        self.assertEqual(cdata2.type, 'basic')
+        self.assertEqual(cdata2.data, cst_data2)
+        self.assertEqual(cdata3.type, 'X1')
+        self.assertEqual(cdata3.data, cst_data3)
+
+    @decl_endpoint('/api/models/{item}/set-value', method='post')
+    def test_update_value(self):
+        x1 = self.schema.insert_last(alias='X1')
+        initial_data = {'1': 'Петя', '2': 'Вася'}
+        # Create initial value
+        payload = [{
+            'target': x1.pk,
+            'type': 'basic',
+            'data': initial_data,
+        }]
+        self.executeOK(item=self.model_id, data=payload)
+        cdata = ConstituentData.objects.get(model=self.rsmodel.model, constituent=x1)
+        self.assertEqual(cdata.type, 'basic')
+        self.assertEqual(cdata.data, initial_data)
+
+        # Update value
+        updated_data = {'1': 'Кот', '2': 'Слон'}
+        payload = [{
+            'target': x1.pk,
+            'type': 'basic',
+            'data': updated_data,
+        }]
+        self.executeOK(item=self.model_id, data=payload)
+        cdata_refreshed = ConstituentData.objects.get(model=self.rsmodel.model, constituent=x1)
+        self.assertEqual(cdata_refreshed.type, 'basic')
+        self.assertEqual(cdata_refreshed.data, updated_data)
+
     @decl_endpoint('/api/models/{item}/clear-values', method='post')
     def test_clear_values(self):
         x1 = self.schema.insert_last(alias='X1')

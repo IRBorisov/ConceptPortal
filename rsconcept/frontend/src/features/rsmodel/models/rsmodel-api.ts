@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { CstType, type RSForm } from '@/features/rsform';
 import { calculateSchemaStats, getAnalysisFor, isBaseSet, isBasicConcept } from '@/features/rsform/models/rsform-api';
 import { type CalculatorResult, type ExpressionType, type RSCalculator, TypeID, type Value } from '@/features/rslang';
-import { TUPLE_ID, VALUE_TRUE } from '@/features/rslang/eval/value';
+import { compare, TUPLE_ID, VALUE_TRUE } from '@/features/rslang/eval/value';
 import { printValue } from '@/features/rslang/eval/value-api';
 
 import { limits } from '@/utils/constants';
@@ -207,6 +207,17 @@ export function tryFixValue(
         const index = value.indexOf(item);
         if (index !== -1) {
           value.splice(index, 1);
+        }
+      }
+      if (wasChanged) {
+        value.sort((a, b) => compare(a, b));
+        let i = 1;
+        while (i < value.length) {
+          if (compare(value[i], value[i - 1]) === 0) {
+            value.splice(i, 1);
+          } else {
+            i++;
+          }
         }
       }
       return wasChanged;

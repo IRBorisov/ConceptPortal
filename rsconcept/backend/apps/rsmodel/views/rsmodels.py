@@ -88,8 +88,10 @@ class RSModelViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Ret
                 m.ConstituentData.objects.update_or_create(
                     model=item,
                     constituent=cst_data['target'],
-                    type=cst_data['type'],
-                    data=cst_data['data']
+                    defaults={
+                        'type': cst_data['type'],
+                        'data': cst_data['data']
+                    }
                 )
             item.save(update_fields=['time_update'])
         return Response(
