@@ -3,7 +3,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { KEYS } from '@/backend/configuration';
 
 import { authApi } from './api';
-import { type IUserLoginDTO } from './types';
 
 export const useLogin = () => {
   const client = useQueryClient();
@@ -14,7 +13,7 @@ export const useLogin = () => {
     onSuccess: () => client.resetQueries()
   });
   return {
-    login: (data: IUserLoginDTO) => mutation.mutateAsync(data),
+    login: mutation.mutateAsync,
     isPending: mutation.isPending,
     error: mutation.error,
     reset: mutation.reset

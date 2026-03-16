@@ -10,6 +10,6 @@ export const useDownloadRSForm = () => {
     mutationFn: rsformsApi.download
   });
   return {
-    download: (data: { itemID: number; version?: number }) => mutation.mutateAsync(data)
+    download: mutation.mutateAsync
   };
 };

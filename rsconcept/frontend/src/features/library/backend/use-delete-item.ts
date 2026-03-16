@@ -27,9 +27,7 @@ export const useDeleteItem = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    deleteItem: (
-      data: { target: number; beforeInvalidate?: () => void | Promise<void>; }
-    ) => mutation.mutateAsync(data),
+    deleteItem: mutation.mutateAsync,
     isPending: mutation.isPending
   };
 };

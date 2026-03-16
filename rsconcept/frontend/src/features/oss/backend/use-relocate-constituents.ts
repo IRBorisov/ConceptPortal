@@ -3,7 +3,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { KEYS } from '@/backend/configuration';
 
 import { ossApi } from './api';
-import { type RelocateConstituentsDTO } from './types';
 
 export const useRelocateConstituents = () => {
   const client = useQueryClient();
@@ -18,7 +17,5 @@ export const useRelocateConstituents = () => {
     },
     onError: () => client.invalidateQueries()
   });
-  return {
-    relocateConstituents: (data: { itemID: number; data: RelocateConstituentsDTO; }) => mutation.mutateAsync(data)
-  };
+  return { relocateConstituents: mutation.mutateAsync };
 };

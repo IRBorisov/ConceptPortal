@@ -3,7 +3,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { KEYS } from '@/backend/configuration';
 
 import { ossApi } from './api';
-import { type ImportSchemaDTO } from './types';
 
 export const useImportSchema = () => {
   const client = useQueryClient();
@@ -16,7 +15,5 @@ export const useImportSchema = () => {
     },
     onError: () => client.invalidateQueries()
   });
-  return {
-    importSchema: (data: { itemID: number; data: ImportSchemaDTO; }) => mutation.mutateAsync(data)
-  };
+  return { importSchema: mutation.mutateAsync };
 };

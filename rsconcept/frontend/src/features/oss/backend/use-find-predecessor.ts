@@ -9,7 +9,5 @@ export const useFindPredecessor = () => {
     mutationFn: ossApi.getPredecessor,
     onError: () => client.invalidateQueries()
   });
-  return {
-    findPredecessor: (target: number) => mutation.mutateAsync(target)
-  };
+  return { findPredecessor: mutation.mutateAsync };
 };

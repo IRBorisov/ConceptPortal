@@ -19,6 +19,6 @@ export const useRestoreOrder = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    restoreOrder: (data: { itemID: number }) => mutation.mutateAsync(data)
+    restoreOrder: mutation.mutateAsync
   };
 };

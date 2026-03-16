@@ -5,7 +5,6 @@ import { useUpdateTimestamp } from '@/features/library/backend/use-update-timest
 import { KEYS } from '@/backend/configuration';
 
 import { rsformsApi } from './api';
-import { type ConstituentaList } from './types';
 
 export const useDeleteConstituents = () => {
   const client = useQueryClient();
@@ -26,7 +25,5 @@ export const useDeleteConstituents = () => {
     },
     onError: () => client.invalidateQueries()
   });
-  return {
-    deleteConstituents: (data: { itemID: number; data: ConstituentaList; }) => mutation.mutateAsync(data)
-  };
+  return { deleteConstituents: mutation.mutateAsync };
 };

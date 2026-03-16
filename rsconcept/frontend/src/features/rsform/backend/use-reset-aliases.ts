@@ -26,6 +26,6 @@ export const useResetAliases = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    resetAliases: (data: { itemID: number }) => mutation.mutateAsync(data)
+    resetAliases: mutation.mutateAsync
   };
 };

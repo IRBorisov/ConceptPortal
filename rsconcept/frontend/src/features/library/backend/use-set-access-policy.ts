@@ -7,7 +7,7 @@ import { KEYS } from '@/backend/configuration';
 import { type RO } from '@/utils/meta';
 
 import { libraryApi } from './api';
-import { type AccessPolicy, type LibraryItem } from './types';
+import { type LibraryItem } from './types';
 import { useLibraryListKey } from './use-library';
 
 export const useSetAccessPolicy = () => {
@@ -47,7 +47,5 @@ export const useSetAccessPolicy = () => {
     onError: () => client.invalidateQueries()
   });
 
-  return {
-    setAccessPolicy: (data: { itemID: number; policy: AccessPolicy; }) => mutation.mutateAsync(data)
-  };
+  return { setAccessPolicy: mutation.mutateAsync };
 };

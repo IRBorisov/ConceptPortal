@@ -15,7 +15,5 @@ export const useRestoreVersion = () => {
     },
     onError: () => client.invalidateQueries()
   });
-  return {
-    restoreVersion: (data: { versionID: number }) => mutation.mutateAsync(data)
-  };
+  return { restoreVersion: mutation.mutateAsync };
 };

@@ -23,7 +23,5 @@ export const useDeleteVersion = () => {
     },
     onError: () => client.invalidateQueries()
   });
-  return {
-    deleteVersion: (data: { itemID: number; versionID: number; }) => mutation.mutateAsync(data)
-  };
+  return { deleteVersion: mutation.mutateAsync };
 };

@@ -3,7 +3,6 @@ import { useMutation } from '@tanstack/react-query';
 import { KEYS } from '@/backend/configuration';
 
 import { authApi } from './api';
-import { type IPasswordTokenDTO, type IResetPasswordDTO } from './types';
 
 export const useResetPassword = () => {
   const validateMutation = useMutation({
@@ -15,8 +14,8 @@ export const useResetPassword = () => {
     mutationFn: authApi.resetPassword
   });
   return {
-    validateToken: (data: IPasswordTokenDTO) => validateMutation.mutateAsync(data),
-    resetPassword: (data: IResetPasswordDTO) => resetMutation.mutateAsync(data),
+    validateToken: validateMutation.mutateAsync,
+    resetPassword: resetMutation.mutateAsync,
     isPending: resetMutation.isPending || validateMutation.isPending,
     error: resetMutation.error ?? validateMutation.error,
     reset: resetMutation.reset

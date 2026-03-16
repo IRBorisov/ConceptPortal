@@ -3,7 +3,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { KEYS } from '@/backend/configuration';
 
 import { ossApi } from './api';
-import { type CreateSynthesisDTO } from './types';
 
 export const useCreateSynthesis = () => {
   const client = useQueryClient();
@@ -16,7 +15,5 @@ export const useCreateSynthesis = () => {
     },
     onError: () => client.invalidateQueries()
   });
-  return {
-    createSynthesis: (data: { itemID: number; data: CreateSynthesisDTO; }) => mutation.mutateAsync(data)
-  };
+  return { createSynthesis: mutation.mutateAsync };
 };

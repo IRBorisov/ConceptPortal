@@ -5,7 +5,6 @@ import { useUpdateTimestamp } from '@/features/library/backend/use-update-timest
 import { KEYS } from '@/backend/configuration';
 
 import { rsformsApi } from './api';
-import { type InlineSynthesisDTO } from './types';
 
 export const useInlineSynthesis = () => {
   const client = useQueryClient();
@@ -27,6 +26,6 @@ export const useInlineSynthesis = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    inlineSynthesis: (data: InlineSynthesisDTO) => mutation.mutateAsync(data)
+    inlineSynthesis: mutation.mutateAsync
   };
 };

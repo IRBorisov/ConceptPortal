@@ -5,7 +5,6 @@ import { useUpdateTimestamp } from '@/features/library/backend/use-update-timest
 import { KEYS } from '@/backend/configuration';
 
 import { rsformsApi } from './api';
-import { type SubstitutionsDTO } from './types';
 
 export const useSubstituteConstituents = () => {
   const client = useQueryClient();
@@ -27,6 +26,6 @@ export const useSubstituteConstituents = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    substituteConstituents: (data: { itemID: number; data: SubstitutionsDTO; }) => mutation.mutateAsync(data)
+    substituteConstituents: mutation.mutateAsync
   };
 };

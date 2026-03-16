@@ -5,7 +5,6 @@ import { useUpdateTimestamp } from '@/features/library/backend/use-update-timest
 import { KEYS } from '@/backend/configuration';
 
 import { rsformsApi } from './api';
-import { type Attribution } from './types';
 
 export const useDeleteAttribution = () => {
   const client = useQueryClient();
@@ -24,6 +23,6 @@ export const useDeleteAttribution = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    deleteAttribution: (data: { itemID: number; data: Attribution; }) => mutation.mutateAsync(data)
+    deleteAttribution: mutation.mutateAsync
   };
 };

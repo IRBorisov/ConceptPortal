@@ -4,7 +4,6 @@ import { KEYS } from '@/backend/configuration';
 import { PARAMETER } from '@/utils/constants';
 
 import { ossApi } from './api';
-import { type DeleteOperationDTO } from './types';
 
 export const useDeleteOperation = () => {
   const client = useQueryClient();
@@ -24,9 +23,5 @@ export const useDeleteOperation = () => {
     },
     onError: () => client.invalidateQueries()
   });
-  return {
-    deleteOperation: (data: { itemID: number; data: DeleteOperationDTO; beforeUpdate?: () => void; }) => {
-      mutation.mutate(data);
-    }
-  };
+  return { deleteOperation: mutation.mutateAsync };
 };

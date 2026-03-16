@@ -6,7 +6,6 @@ import { useUpdateTimestamp } from '@/features/library/backend/use-update-timest
 import { KEYS } from '@/backend/configuration';
 
 import { ossApi } from './api';
-import { type UpdateOperationDTO } from './types';
 
 export const useUpdateOperation = () => {
   const client = useQueryClient();
@@ -34,7 +33,5 @@ export const useUpdateOperation = () => {
     },
     onError: () => client.invalidateQueries()
   });
-  return {
-    updateOperation: (data: { itemID: number; data: UpdateOperationDTO; }) => mutation.mutateAsync(data)
-  };
+  return { updateOperation: mutation.mutateAsync };
 };

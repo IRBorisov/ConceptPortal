@@ -17,7 +17,5 @@ export const useClearValues = () => {
     },
     onError: () => client.invalidateQueries()
   });
-  return {
-    clearValues: mutation.mutateAsync
-  };
+  return { clearValues: mutation.mutateAsync };
 };

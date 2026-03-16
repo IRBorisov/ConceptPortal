@@ -46,7 +46,5 @@ export const useSetOwner = () => {
     onError: () => client.invalidateQueries()
   });
 
-  return {
-    setOwner: (data: { itemID: number; owner: number; }) => mutation.mutateAsync(data)
-  };
+  return { setOwner: mutation.mutateAsync };
 };

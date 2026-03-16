@@ -17,7 +17,5 @@ export const useResetModel = () => {
     },
     onError: () => client.invalidateQueries()
   });
-  return {
-    resetModel: (data: { itemID: number; }) => mutation.mutateAsync(data)
-  };
+  return { resetModel: mutation.mutateAsync };
 };

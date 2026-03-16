@@ -4,7 +4,6 @@ import { KEYS } from '@/backend/configuration';
 import { PARAMETER } from '@/utils/constants';
 
 import { ossApi } from './api';
-import { type DeleteReplicaDTO } from './types';
 
 export const useDeleteReplica = () => {
   const client = useQueryClient();
@@ -24,9 +23,5 @@ export const useDeleteReplica = () => {
     },
     onError: () => client.invalidateQueries()
   });
-  return {
-    deleteReplica: (data: { itemID: number; data: DeleteReplicaDTO; beforeUpdate?: () => void; }) => {
-      mutation.mutate(data);
-    }
-  };
+  return { deleteReplica: mutation.mutateAsync };
 };

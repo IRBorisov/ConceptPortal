@@ -5,7 +5,6 @@ import { useUpdateTimestamp } from '@/features/library/backend/use-update-timest
 import { KEYS } from '@/backend/configuration';
 
 import { rsformsApi } from './api';
-import { type Attribution } from './types';
 
 export const useCreateAttribution = () => {
   const client = useQueryClient();
@@ -23,7 +22,5 @@ export const useCreateAttribution = () => {
     },
     onError: () => client.invalidateQueries()
   });
-  return {
-    createAttribution: (data: { itemID: number; data: Attribution; }) => mutation.mutateAsync(data)
-  };
+  return { createAttribution: mutation.mutateAsync };
 };

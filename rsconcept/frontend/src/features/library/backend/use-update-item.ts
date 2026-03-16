@@ -8,7 +8,7 @@ import { KEYS } from '@/backend/configuration';
 import { type RO } from '@/utils/meta';
 
 import { libraryApi } from './api';
-import { type LibraryItem, LibraryItemType, type UpdateLibraryItemDTO } from './types';
+import { type LibraryItem, LibraryItemType } from './types';
 import { useLibraryListKey } from './use-library';
 
 export const useUpdateItem = () => {
@@ -41,7 +41,5 @@ export const useUpdateItem = () => {
     },
     onError: () => client.invalidateQueries()
   });
-  return {
-    updateItem: (data: UpdateLibraryItemDTO) => mutation.mutateAsync(data)
-  };
+  return { updateItem: mutation.mutateAsync };
 };

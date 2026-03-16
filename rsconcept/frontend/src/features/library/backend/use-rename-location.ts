@@ -3,7 +3,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { KEYS } from '@/backend/configuration';
 
 import { libraryApi } from './api';
-import { type RenameLocationDTO } from './types';
 
 export const useRenameLocation = () => {
   const client = useQueryClient();
@@ -19,7 +18,5 @@ export const useRenameLocation = () => {
     },
     onError: () => client.invalidateQueries()
   });
-  return {
-    renameLocation: (data: RenameLocationDTO) => mutation.mutateAsync(data)
-  };
+  return { renameLocation: mutation.mutateAsync };
 };

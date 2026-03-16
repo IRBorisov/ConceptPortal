@@ -5,7 +5,6 @@ import { useUpdateTimestamp } from '@/features/library/backend/use-update-timest
 import { KEYS } from '@/backend/configuration';
 
 import { ossApi } from './api';
-import { type CreateBlockDTO } from './types';
 
 export const useCreateBlock = () => {
   const client = useQueryClient();
@@ -19,7 +18,5 @@ export const useCreateBlock = () => {
     },
     onError: () => client.invalidateQueries()
   });
-  return {
-    createBlock: (data: { itemID: number; data: CreateBlockDTO; }) => mutation.mutateAsync(data)
-  };
+  return { createBlock: mutation.mutateAsync };
 };

@@ -40,6 +40,6 @@ export const useSetEditors = () => {
   });
 
   return {
-    setEditors: (data: { itemID: number; editors: number[]; }) => mutation.mutateAsync(data)
+    setEditors: mutation.mutateAsync
   };
 };

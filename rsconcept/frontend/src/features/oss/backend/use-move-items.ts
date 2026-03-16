@@ -5,7 +5,6 @@ import { useUpdateTimestamp } from '@/features/library/backend/use-update-timest
 import { KEYS } from '@/backend/configuration';
 
 import { ossApi } from './api';
-import { type MoveItemsDTO } from './types';
 
 export const useMoveItems = () => {
   const client = useQueryClient();
@@ -19,7 +18,5 @@ export const useMoveItems = () => {
     },
     onError: () => client.invalidateQueries()
   });
-  return {
-    moveItems: (data: { itemID: number; data: MoveItemsDTO; }) => mutation.mutateAsync(data)
-  };
+  return { moveItems: mutation.mutateAsync };
 };

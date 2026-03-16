@@ -5,7 +5,6 @@ import { type RSFormDTO } from '@/features/rsform';
 import { KEYS } from '@/backend/configuration';
 
 import { libraryApi } from './api';
-import { type UpdateVersionDTO } from './types';
 
 export const useUpdateVersion = () => {
   const client = useQueryClient();
@@ -40,7 +39,5 @@ export const useUpdateVersion = () => {
     },
     onError: () => client.invalidateQueries()
   });
-  return {
-    updateVersion: (data: { itemID: number; version: UpdateVersionDTO; }) => mutation.mutateAsync(data)
-  };
+  return { updateVersion: mutation.mutateAsync };
 };

@@ -6,8 +6,6 @@ import { KEYS } from '@/backend/configuration';
 import { PARAMETER } from '@/utils/constants';
 
 import { ossApi } from './api';
-import { type DeleteBlockDTO } from './types';
-
 export const useDeleteBlock = () => {
   const client = useQueryClient();
   const { updateTimestamp } = useUpdateTimestamp();
@@ -24,9 +22,5 @@ export const useDeleteBlock = () => {
     },
     onError: () => client.invalidateQueries()
   });
-  return {
-    deleteBlock: (data: { itemID: number; data: DeleteBlockDTO; beforeUpdate?: () => void; }) => {
-      mutation.mutate(data);
-    }
-  };
+  return { deleteBlock: mutation.mutateAsync };
 };

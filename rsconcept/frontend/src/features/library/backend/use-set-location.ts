@@ -47,7 +47,5 @@ export const useSetLocation = () => {
     onError: () => client.invalidateQueries()
   });
 
-  return {
-    setLocation: (data: { itemID: number; location: string; }) => mutation.mutateAsync(data)
-  };
+  return { setLocation: mutation.mutateAsync };
 };

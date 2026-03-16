@@ -5,7 +5,6 @@ import { type LibraryItem } from '@/features/library';
 import { KEYS } from '@/backend/configuration';
 
 import { rsformsApi } from './api';
-import { type RSFormUploadDTO } from './types';
 
 export const useUploadTRS = () => {
   const client = useQueryClient();
@@ -29,6 +28,6 @@ export const useUploadTRS = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    upload: (data: { itemID: number; data: RSFormUploadDTO; }) => mutation.mutateAsync(data)
+    upload: mutation.mutateAsync
   };
 };

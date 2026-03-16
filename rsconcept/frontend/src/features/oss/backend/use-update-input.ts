@@ -3,7 +3,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { KEYS } from '@/backend/configuration';
 
 import { ossApi } from './api';
-import { type UpdateInputDTO } from './types';
 
 export const useUpdateInput = () => {
   const client = useQueryClient();
@@ -19,7 +18,5 @@ export const useUpdateInput = () => {
     },
     onError: () => client.invalidateQueries()
   });
-  return {
-    updateInput: (data: { itemID: number; data: UpdateInputDTO; }) => mutation.mutateAsync(data)
-  };
+  return { updateInput: mutation.mutateAsync };
 };

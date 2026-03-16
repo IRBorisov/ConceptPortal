@@ -5,7 +5,6 @@ import { useUpdateTimestamp } from '@/features/library/backend/use-update-timest
 import { KEYS } from '@/backend/configuration';
 
 import { rsformsApi } from './api';
-import { type MoveConstituentsDTO } from './types';
 
 export const useMoveConstituents = () => {
   const client = useQueryClient();
@@ -20,6 +19,6 @@ export const useMoveConstituents = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    moveConstituents: (data: { itemID: number; data: MoveConstituentsDTO; }) => mutation.mutateAsync(data)
+    moveConstituents: mutation.mutateAsync
   };
 };
