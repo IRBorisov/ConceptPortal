@@ -2,12 +2,15 @@
  * Module: API for calculations.
  */
 
+import { type RO } from '@/utils/meta';
 import { type AstNode } from '@/utils/parsing';
 
 import { type RSErrorDescription } from '../error';
+import { type ExpressionType } from '../semantic/typification';
 
 import { type ASTContext, Evaluator } from './evaluator';
 import { type Value, type ValueContext } from './value';
+import { validateValue } from './value-api';
 
 /** Maximum iterations to prevent infinite loops (recursion, quantifiers, etc.). */
 export const MAX_ITERATIONS = 100_000;
@@ -30,7 +33,7 @@ export class RSCalculator {
 
   private listeners = new Map<string, Set<Listener>>();
 
-  subscribe = (alias: string, listener: Listener) => {
+  public subscribe = (alias: string, listener: Listener) => {
     let notifyList = this.listeners.get(alias);
 
     if (!notifyList) {
@@ -46,15 +49,6 @@ export class RSCalculator {
       }
     };
   };
-
-  private notify(alias: string) {
-    const set = this.listeners.get(alias);
-    if (!set) return;
-
-    for (const l of set) {
-      l();
-    }
-  }
 
   public setValue(alias: string, value: Value): void {
     this.context.set(alias, value);
@@ -72,6 +66,10 @@ export class RSCalculator {
 
   public setAST(alias: string, ast: AstNode): void {
     this.treeContext.set(alias, ast);
+  }
+
+  public validate(value: RO<Value>, type: ExpressionType): boolean {
+    return validateValue(value, type, this.context);
   }
 
   public evaluateFast(ast: AstNode): Value | null {
@@ -97,5 +95,14 @@ export class RSCalculator {
       iterations: this.evaluator.iterationCounter,
       errors
     };
+  }
+
+  private notify(alias: string) {
+    const set = this.listeners.get(alias);
+    if (!set) return;
+
+    for (const l of set) {
+      l();
+    }
   }
 }

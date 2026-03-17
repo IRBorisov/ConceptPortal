@@ -1,7 +1,9 @@
 import { type RO } from '@/utils/meta';
 import { applyHash_fnv1a } from '@/utils/utils';
 
-import { BOOL_INFINITY, compare, EmptySetV, set, SET_INFINITY, tuple, TUPLE_ID, type Value } from './value';
+import { type ExpressionType, TypeID } from '../semantic/typification';
+
+import { BOOL_INFINITY, compare, EmptySetV, set, SET_INFINITY, tuple, TUPLE_ID, type Value, VALUE_FALSE, VALUE_TRUE, type ValueContext } from './value';
 
 /** Cartesian product of factor sets. */
 export function decartian(factors: Value[][]): Value[] | null {
@@ -257,4 +259,53 @@ export function normalizeValue(data: Value): void {
       i++;
     }
   }
+}
+
+/** Validates value for {@link ExpressionType} and value of basic sets. */
+export function validateValue(value: RO<Value>, type: RO<ExpressionType>, basics: ValueContext): boolean {
+  switch (type.typeID) {
+    case TypeID.integer:
+      return typeof value === 'number';
+    case TypeID.logic: {
+      if (typeof value !== 'number') {
+        return false;
+      }
+      return value === VALUE_TRUE || value === VALUE_FALSE;
+    }
+    case TypeID.basic: {
+      if (typeof value !== 'number') {
+        return false;
+      }
+      const domain = basics.get(type.baseID);
+      return !!domain && Array.isArray(domain) && domain.includes(value);
+    }
+
+    case TypeID.tuple: {
+      if (!Array.isArray(value) || value.length !== type.factors.length + 1 || value[0] !== TUPLE_ID) {
+        return false;
+      }
+      for (let i = 0; i < type.factors.length; i++) {
+        if (!validateValue(value[i + 1] as RO<Value>, type.factors[i], basics)) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    case TypeID.collection: {
+      if (!Array.isArray(value) || (value.length > 1 && value[0] === TUPLE_ID)) return false;
+      for (const item of value) {
+        if (!validateValue(item as RO<Value>, type.base, basics)) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    case TypeID.anyTypification:
+    case TypeID.predicate:
+    case TypeID.function:
+      return false;
+  }
+
 }

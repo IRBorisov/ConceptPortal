@@ -16,6 +16,7 @@ export function IconEvalStatus({ value, size = '1.25rem', className }: DomIconPr
     case EvalStatus.NOT_PROCESSED:
       return <IconStatusUnknown size={size} className={className} />;
 
+    case EvalStatus.INVALID_DATA:
     case EvalStatus.EVAL_FAIL:
     case EvalStatus.AXIOM_FALSE:
       return <IconStatusError size={size} className={className} />;

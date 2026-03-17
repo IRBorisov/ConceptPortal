@@ -10,10 +10,11 @@ export const TYPE_BASIC = 'basic';
 export const EvalStatus = {
   NO_EVAL: 1,         // не вычисляется
   NOT_PROCESSED: 2,   // Интерпретация не вычислялась
-  EVAL_FAIL: 3,       // Ошибка при вычислении
-  AXIOM_FALSE: 4,     // Значение аксиомы = FALSE
-  EMPTY: 5,           // Значение пусто
-  HAS_DATA: 6         // Интерпретация вычислена и не пуста
+  INVALID_DATA: 3,    // Неверные данные
+  EVAL_FAIL: 4,       // Ошибка при вычислении
+  AXIOM_FALSE: 5,     // Значение аксиомы = FALSE
+  EMPTY: 6,           // Значение пусто
+  HAS_DATA: 7         // Интерпретация вычислена и не пуста
 } as const;
 export type EvalStatus = (typeof EvalStatus)[keyof typeof EvalStatus];
 

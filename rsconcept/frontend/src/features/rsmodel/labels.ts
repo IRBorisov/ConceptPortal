@@ -8,6 +8,7 @@ import { EvalStatus } from './models/rsmodel';
 const labelEvalStatusRecord: Record<EvalStatus, string> = {
   [EvalStatus.NO_EVAL]: 'Без вычисления',
   [EvalStatus.NOT_PROCESSED]: 'Не вычислено',
+  [EvalStatus.INVALID_DATA]: 'Неверные данные',
   [EvalStatus.EVAL_FAIL]: 'Ошибка',
   [EvalStatus.AXIOM_FALSE]: 'Нарушена аксиома',
   [EvalStatus.EMPTY]: 'Пустое значение',

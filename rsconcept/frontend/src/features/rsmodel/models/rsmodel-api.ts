@@ -71,8 +71,16 @@ export function isInferrable(type: CstType): boolean {
 }
 
 /** Infers status of a given {@link Value} and {@link CstType}. */
-export function inferStatus(value: RO<Value | null>, cstType: CstType, wasCalculated: boolean = true): EvalStatus {
+export function inferStatus(
+  value: RO<Value | null>,
+  cstType: CstType,
+  wasCalculated: boolean = true,
+  isInvalid: boolean = false
+): EvalStatus {
   if (isBaseSet(cstType) || cstType === CstType.STRUCTURED) {
+    if (isInvalid) {
+      return EvalStatus.INVALID_DATA;
+    }
     if (value === null || Array.isArray(value) && value.length === 0) {
       return EvalStatus.EMPTY;
     }

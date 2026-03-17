@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 
 import { urls, useConceptNavigation } from '@/app';
 import { useAIStore } from '@/features/ai/stores/ai-context';
@@ -32,13 +32,14 @@ export const RSModelState = ({ itemID, children }: React.PropsWithChildren<RSMod
   const { setCstValue } = useSetValue();
   const { clearValues } = useClearValues();
 
-  const engine = useMemo(
-    () => new RSEngine(model.id, {
-      setCstValue,
-      clearValues
-    }),
-    [model.id, setCstValue, clearValues]
-  );
+  const [engine] = useState<RSEngine>(() => new RSEngine(model.id, {
+    setCstValue,
+    clearValues
+  }));
+
+  useEffect(() => {
+    engine.updateServices({ setCstValue, clearValues });
+  }, [engine, setCstValue, clearValues]);
 
   useEffect(() => {
     engine.loadData(schema, model);

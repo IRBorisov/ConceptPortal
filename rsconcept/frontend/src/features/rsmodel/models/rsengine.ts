@@ -19,10 +19,17 @@ import { inferStatus, isInferrable, tryFixValue } from './rsmodel-api';
 const INVALID_TYPE_MARKER = 'INVALID';
 
 export interface RSEngineServices {
-  setCstValue: (args: { itemID: number; data: { target: number; type: string; data: Value | BasicBinding; }[]; }) => Promise<unknown>;
-  clearValues: (args: { itemID: number; data: { items: number[]; }; }) => Promise<unknown>;
+  setCstValue: (args: {
+    itemID: number;
+    data: { target: number; type: string; data: Value | BasicBinding; }[];
+  }) => Promise<unknown>;
+  clearValues: (args: {
+    itemID: number;
+    data: { items: number[]; };
+  }) => Promise<unknown>;
 }
 
+/** Calculation engine for {@link RSModel}. */
 export class RSEngine {
   public modelID: number;
   public schema: RSForm | null = null;
@@ -31,6 +38,7 @@ export class RSEngine {
   public basics: BasicsContext = new Map<number, BasicBinding>();
 
   private services: RSEngineServices;
+  private invalidData = new Set<number>();
   private calculatedSet = new Set<number>();
   private valueSubscribers = new Map<number, Set<() => void>>();
   private statusSubscribers = new Map<number, Set<() => void>>();
@@ -40,6 +48,7 @@ export class RSEngine {
     this.modelID = modelID;
   }
 
+  /** Updates data for {@link RSEngine}. */
   public loadData(schema: RSForm, dto: RO<RSModelDTO>): void {
     this.schema = schema;
     if (this.data !== dto) {
@@ -49,6 +58,11 @@ export class RSEngine {
       this.prepareValues();
     }
     this.notifyAll();
+  }
+
+  /** Updates services for {@link RSEngine}. */
+  public updateServices(services: RSEngineServices): void {
+    this.services = services;
   }
 
   /** Gets value of {@link Constituenta}. */
@@ -67,7 +81,7 @@ export class RSEngine {
       return inferStatus(null, CstType.NOMINAL, false);
     }
     const value = this.calculator.getValue(cst.alias);
-    return inferStatus(value, cst.cst_type, this.calculatedSet.has(cstID));
+    return inferStatus(value, cst.cst_type, this.calculatedSet.has(cstID), this.invalidData.has(cstID));
   }
 
   /** Subscribe to value change of {@link Constituenta}. */
@@ -122,6 +136,11 @@ export class RSEngine {
     const payload = [{ target: cstID, type: typeStr, data }];
     await this.services.setCstValue({ itemID: this.modelID, data: payload });
 
+    if (!cst.analysis.type || !this.calculator.validate(data, cst.analysis.type)) {
+      this.invalidData.add(cstID);
+    } else {
+      this.invalidData.delete(cstID);
+    }
     this.calculator.setValue(cst.alias, data);
     this.notifyCst(cstID);
     this.cascadeReset([cstID]);
@@ -201,6 +220,7 @@ export class RSEngine {
     this.calculator.resetValue(cst.alias);
     this.basics.delete(cstID);
     this.calculatedSet.delete(cstID);
+    this.invalidData.delete(cstID);
     this.notifyCst(cstID);
   }
 
@@ -291,6 +311,7 @@ export class RSEngine {
 
   private clear(): void {
     this.basics.clear();
+    this.invalidData.clear();
     this.calculatedSet.clear();
   }
 
@@ -319,8 +340,10 @@ export class RSEngine {
     for (const item of this.data!.items) {
       const cst = this.schema!.cstByID.get(item.id)!;
       if (item.type !== TYPE_BASIC) {
-        // TODO: check typification
         this.calculator.setValue(cst.alias, item.value as Value);
+        if (!cst.analysis.type || !this.calculator.validate(item.value as Value, cst.analysis.type)) {
+          this.invalidData.add(item.id);
+        }
       }
     }
     for (const cst of this.schema!.items) {
@@ -379,6 +402,7 @@ export class RSEngine {
       const cst = this.schema!.cstByID.get(cstID)!;
       if (isInferrable(cst.cst_type)) {
         const value = fastEvaluation(cst.definition_formal, cst.cst_type, this.schema!, this.calculator);
+        this.calculatedSet.add(cstID);
         if (value !== null) {
           this.calculator.setValue(cst.alias, value);
         }
