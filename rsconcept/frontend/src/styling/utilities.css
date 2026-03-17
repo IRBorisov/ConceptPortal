@@ -31,11 +31,8 @@
 @utility cc-hover-pulse {
   &:focus-visible,
   &:hover:not(:disabled) {
-    transform: scale(1);
-    transform-origin: center;
-    animation: pulse-scale var(--duration-cycle) infinite;
+    animation: pulse-brightness var(--duration-cycle) infinite;
     animation-delay: var(--duration-select);
-    will-change: transform;
   }
 }
 

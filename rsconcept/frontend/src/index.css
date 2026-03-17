@@ -97,19 +97,16 @@
   --duration-cycle: 1000ms;
 
   /* Custom animations */
-  --animate-pulse-scale: pulse-scale 1s infinite;
+  --animate-pulse-brightness: pulse-brightness 1s infinite;
 
-  @keyframes pulse-scale {
-    0% {
-      transform: scale(1);
+  @keyframes pulse-brightness {
+    0%,
+    100% {
+      filter: brightness(1);
     }
 
     70% {
-      transform: scale(1.2);
-    }
-
-    100% {
-      transform: scale(1);
+      filter: brightness(1.25);
     }
   }
 
