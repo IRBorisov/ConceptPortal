@@ -170,7 +170,7 @@ export function TGFlow() {
     const positionsChanged =
       prevNodesRef.current.some(prevNode => {
         const newNode = newNodes.find(n => n.id === prevNode.id);
-        return !newNode || newNode.position.x !== prevNode.position.x || newNode.position.y !== prevNode.position.y;
+        return newNode?.position.x !== prevNode.position.x || newNode?.position.y !== prevNode.position.y;
       }) || newNodes.some(node => !prevNodesRef.current.find(prevNode => prevNode.id === node.id));
 
     if (!positionsChanged) {

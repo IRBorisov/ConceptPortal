@@ -22,14 +22,14 @@ export function PaginationTools<TData>({
   const buttonClass =
     'cc-hover-text cc-animate-color focus-outline rounded-md disabled:opacity-75 not-[:disabled]:cursor-pointer';
   return (
-    <div className='flex justify-end items-center my-2 text-muted-foreground text-sm select-none'>
+    <div className='pl-3 flex justify-end items-center my-2 text-muted-foreground text-sm select-none'>
       <span className='mr-3'>
         {`${table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1}
       -
       ${Math.min(
-        table.getFilteredRowModel().rows.length,
-        (table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize
-      )}
+          table.getFilteredRowModel().rows.length,
+          (table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize
+        )}
       из
       ${table.getFilteredRowModel().rows.length}`}
       </span>

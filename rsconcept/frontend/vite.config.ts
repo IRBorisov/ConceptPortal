@@ -40,8 +40,9 @@ const inlinePackages = [
 const isVitest = process.env.VITEST === 'true' || process.env.NODE_ENV === 'test';
 const warningsToIgnore = !isVitest
   ? [
-    ['SOURCEMAP_ERROR', "Can't resolve original location of error"],
-    ['MODULE_LEVEL_DIRECTIVE', 'Module level directives cause errors when bundled']
+    // obsolete warnings
+    // ['SOURCEMAP_ERROR', "Can't resolve original location of error"],
+    // ['MODULE_LEVEL_DIRECTIVE', 'Module level directives cause errors when bundled']
   ]
   : [];
 
@@ -67,7 +68,6 @@ export default ({ mode }: { mode: string; }) => {
           plugins: [['babel-plugin-react-compiler', reactCompilerConfig]]
         }
       }),
-      ,
       muteWarningsPlugin(warningsToIgnore)
     ],
     server: {
@@ -82,7 +82,16 @@ export default ({ mode }: { mode: string; }) => {
       sourcemap: false,
       rollupOptions: {
         output: {
-          manualChunks: { ...renderChunks(dependencies) }
+          manualChunks(id: string) {
+            if (!id.includes('node_modules')) {
+              return;
+            }
+            const pkg = Object.keys(dependencies).find(dep => id.includes(`/node_modules/${dep}/`));
+            if (!pkg || inlinePackages.includes(pkg)) {
+              return;
+            }
+            return pkg;
+          }
         }
       }
     },
@@ -98,16 +107,6 @@ export default ({ mode }: { mode: string; }) => {
 };
 
 // ======== Internals =======
-function renderChunks(deps: Record<string, string>) {
-  const chunks = {};
-  Object.keys(deps).forEach(key => {
-    if (!inlinePackages.includes(key)) {
-      chunks[key] = [key];
-    }
-  });
-  return chunks;
-}
-
 function muteWarningsPlugin(warningsToIgnore: string[][]): PluginOption {
   const mutedMessages = new Set();
   return {
@@ -127,12 +126,7 @@ function muteWarningsPlugin(warningsToIgnore: string[][]): PluginOption {
                 return;
               }
             }
-
-            if (userConfig.build?.rollupOptions?.onwarn) {
-              userConfig.build.rollupOptions.onwarn(warning, defaultHandler);
-            } else {
-              defaultHandler(warning);
-            }
+            defaultHandler(warning);
           }
         }
       }
