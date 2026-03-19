@@ -31,6 +31,7 @@ import { type DlgShowTermGraphProps } from '@/features/rsform/dialogs/dlg-show-t
 import { type DlgShowTypeGraphProps } from '@/features/rsform/dialogs/dlg-show-type-graph/dlg-show-type-graph';
 import { type DlgSubstituteCstProps } from '@/features/rsform/dialogs/dlg-substitute-cst';
 import { type DlgUploadRSFormProps } from '@/features/rsform/dialogs/dlg-upload-rsform';
+import { type DlgEditValueProps } from '@/features/rsmodel/dialogs/dlg-edit-value';
 
 /** Represents global dialog. */
 export const DialogType = {
@@ -76,7 +77,9 @@ export const DialogType = {
   AI_PROMPT: 32,
   CREATE_PROMPT_TEMPLATE: 33,
 
-  SHOW_VIDEO: 34
+  MODEL_EDIT_VALUE: 34,
+
+  SHOW_VIDEO: 35
 } as const;
 export type DialogType = (typeof DialogType)[keyof typeof DialogType];
 
@@ -121,6 +124,7 @@ interface DialogsStore {
   showEditCst: (props: DlgEditCstProps) => void;
   showCreateSchema: (props: DlgCreateSchemaProps) => void;
   showImportSchema: (props: DlgImportSchemaProps) => void;
+  showModelEditValue: (props: DlgEditValueProps) => void;
   showAIPrompt: () => void;
   showCreatePromptTemplate: (props: DlgCreatePromptTemplateProps) => void;
 }
@@ -167,6 +171,7 @@ export const useDialogsStore = create<DialogsStore>()(set => ({
   showEditCst: props => set({ active: DialogType.EDIT_CONSTITUENTA, props: props }),
   showCreateSchema: props => set({ active: DialogType.CREATE_SCHEMA, props: props }),
   showImportSchema: props => set({ active: DialogType.IMPORT_SCHEMA, props: props }),
+  showModelEditValue: props => set({ active: DialogType.MODEL_EDIT_VALUE, props: props }),
   showAIPrompt: () => set({ active: DialogType.AI_PROMPT, props: null }),
   showCreatePromptTemplate: props => set({ active: DialogType.CREATE_PROMPT_TEMPLATE, props: props })
 }));

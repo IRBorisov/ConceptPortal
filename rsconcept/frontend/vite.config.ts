@@ -40,9 +40,8 @@ const inlinePackages = [
 const isVitest = process.env.VITEST === 'true' || process.env.NODE_ENV === 'test';
 const warningsToIgnore = !isVitest
   ? [
-    // obsolete warnings
-    // ['SOURCEMAP_ERROR', "Can't resolve original location of error"],
-    // ['MODULE_LEVEL_DIRECTIVE', 'Module level directives cause errors when bundled']
+    ['SOURCEMAP_ERROR', "Can't resolve original location of error"],
+    ['MODULE_LEVEL_DIRECTIVE', 'Module level directives cause errors when bundled']
   ]
   : [];
 

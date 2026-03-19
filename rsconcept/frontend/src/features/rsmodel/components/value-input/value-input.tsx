@@ -2,6 +2,7 @@
 
 import clsx from 'clsx';
 
+import { TextButton } from '@/components/control/text-button';
 import { TextArea } from '@/components/input';
 import { cn } from '@/components/utils';
 import { globalIDs, limits } from '@/utils/constants';
@@ -23,7 +24,8 @@ interface ValueInputProps {
   placeholder?: string;
   status: EvalStatus;
 
-  onChange?: (newValue: string) => void;
+  onEditValue?: () => void;
+  onChangeStr?: (newValue: string) => void;
   onCalculate?: (event: React.MouseEvent<Element>) => void;
 }
 
@@ -31,11 +33,11 @@ interface ValueInputProps {
 export function ValueInput({
   className, rows, placeholder, disabled,
   value, stub, valueLabel, status,
-  onChange, onCalculate
+  onChangeStr, onEditValue, onCalculate
 }: ValueInputProps) {
   const isTrimmed = value.length > limits.len_data_str;
   return (
-    <div className='relative'>
+    <div className='relative flex flex-col gap-2'>
       <StatusBar
         className='absolute -top-0.5 right-1/2 translate-x-1/2'
         status={status}
@@ -69,7 +71,7 @@ export function ValueInput({
         className='absolute -top-1 right-0'
         value={value}
         disabled={disabled}
-        onChange={onChange}
+        onChange={onChangeStr}
       />
 
       {stub ?
@@ -88,14 +90,20 @@ export function ValueInput({
           </span>
         </div>) : null}
 
+      <TextButton
+        text='Значение'
+        title='Просмотр значения'
+        onClick={onEditValue}
+        hideTitle={!onEditValue}
+        disabled={!onEditValue}
+      />
       <TextArea
         value={value.slice(0, limits.len_data_str)}
-        onChange={event => onChange?.(event.target.value)}
+        onChange={event => onChangeStr?.(event.target.value)}
         fitContent
         className={cn(value ? 'font-math text-sm' : '', className)}
         rows={rows}
         spellCheck
-        label='Значение'
         placeholder={placeholder}
         disabled={isTrimmed || disabled}
       />
