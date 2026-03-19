@@ -12,16 +12,19 @@ import { isBaseSet } from '@/features/rsform/models/rsform-api';
 import { type CalculatorResult, type Value } from '@/features/rslang';
 import { normalizeValue, valueStub } from '@/features/rslang/eval/value-api';
 import { labelType } from '@/features/rslang/labels';
+import { isTypification, type Typification } from '@/features/rslang/semantic/typification';
 import { ValueInput } from '@/features/rsmodel/components/value-input';
 import { useCstStatus } from '@/features/rsmodel/hooks/use-cst-status';
 
 import { Button } from '@/components/control';
 import { IconSave } from '@/components/icons';
 import { TextArea } from '@/components/input';
+import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { limits } from '@/utils/constants';
 import { type RO } from '@/utils/meta';
+import { notImplemented } from '@/utils/utils';
 
 import { useMutatingRSModel } from '../../../backend/use-mutating-rsmodel';
 import { useCstValue } from '../../../hooks/use-cst-value';
@@ -49,6 +52,7 @@ export function FormValue({ id, toggleReset, activeCst }: FormValueProps) {
   const setIsModified = useModificationStore(state => state.setIsModified);
   const onModifiedEvent = useEffectEvent(setIsModified);
   const showDataText = usePreferencesStore(state => state.showDataText);
+  const showEditValue = useDialogsStore(state => state.showModelEditValue);
 
   const isBase = isBaseSet(activeCst.cst_type);
   const cstInferrable = isInferrable(activeCst.cst_type);
@@ -63,6 +67,7 @@ export function FormValue({ id, toggleReset, activeCst }: FormValueProps) {
   const initialStr = prepareValueString(initialValue, typification, schema, engine.basics, showDataText);
   const [inputValue, setInputValue] = useState<string>(initialStr);
   const isTrimmed = inputValue.length > limits.len_data_str;
+  const hasValueDialog = !isBase && !!typification && isTypification(typification) && cstData !== null;
 
   const isEditable = isMutable && (isBase || activeCst.cst_type === CstType.STRUCTURED);
   const isDirty = inputValue !== initialStr;
@@ -113,6 +118,15 @@ export function FormValue({ id, toggleReset, activeCst }: FormValueProps) {
 
   function handleOpenEdit(cstID: number) {
     void router.changeActive(cstID);
+  }
+
+  function handleEditValue() {
+    showEditValue({
+      initialValue: cstData!,
+      type: activeCst.analysis.type as Typification,
+      engine: engine,
+      onChange: !cstInferrable ? notImplemented : undefined
+    });
   }
 
   return (
@@ -178,7 +192,8 @@ export function FormValue({ id, toggleReset, activeCst }: FormValueProps) {
           !isInterpretable(activeCst.cst_type) ? 'Значение для данного типа не предусмотрено' : 'Значение отсутствует'
         }
         onCalculate={cstInferrable ? handleCalculate : undefined}
-        onChange={setInputValue}
+        onChangeStr={setInputValue}
+        onEditValue={hasValueDialog ? handleEditValue : undefined}
         disabled={!isMutable || cstInferrable || !isInterpretable(activeCst.cst_type) || (showDataText && !isBase)}
       />
 
