@@ -115,7 +115,7 @@ export function RSModelTabs({ activeID, activeTab }: RSModelTabsProps) {
         <TabLabel label='Понятие' />
         <TabLabel label='Граф' />
         <TabLabel label='Данные' />
-        <TabLabel label='Движок' />
+        <TabLabel label='Расчет' />
 
       </TabList>
 
