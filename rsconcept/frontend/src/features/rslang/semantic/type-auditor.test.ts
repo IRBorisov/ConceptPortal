@@ -212,6 +212,7 @@ const errorData = [
   ['Pr1(X1)', { code: RSErrorCode.invalidProjectionSet, position: 4, params: ['Pr1', 'ℬ(X1)'] }],
   ['Pr3(S1)', { code: RSErrorCode.invalidProjectionSet, position: 4, params: ['Pr3', 'ℬ(X1×X1)'] }],
   ['Pr1,3(S1)', { code: RSErrorCode.invalidProjectionSet, position: 6, params: ['Pr1,3', 'ℬ(X1×X1)'] }],
+  ['Pr1((1,2))', { code: RSErrorCode.invalidProjectionSet, position: 4, params: ['Z×Z'] }],
   ['pr1(X1)', { code: RSErrorCode.invalidProjectionTuple, position: 4, params: ['pr1', 'ℬ(X1)'] }],
   ['pr1(debool(X1))', { code: RSErrorCode.invalidProjectionTuple, position: 4, params: ['pr1', 'X1'] }],
   ['pr3(debool(S1))', { code: RSErrorCode.invalidProjectionTuple, position: 4, params: ['pr3', 'X1×X1'] }],

@@ -71,11 +71,11 @@ describe('RSCalculator', () => {
   });
 
   it('returns error for unknown variable', () => {
-    expectCalcFull('X11', { expectErrorCode: RSErrorCode.valueGlobalMissing });
+    expectCalcFull('X11', { expectErrorCode: RSErrorCode.calcGlobalMissing });
   });
 
   it('returns error for infinite quantifier', () => {
-    expectCalcFull('∀a∈Z a=a', { expectErrorCode: RSErrorCode.valueIterateInfinity });
+    expectCalcFull('∀a∈Z a=a', { expectErrorCode: RSErrorCode.iterateInfinity });
   });
 
   it('setValue, getValue, and resetValue behave as expected', () => {

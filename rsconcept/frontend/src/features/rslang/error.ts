@@ -22,13 +22,9 @@ export type ErrorReporter = (error: RSErrorDescription) => void;
 
 /** Represents RSLang expression error types. */
 export const RSErrorCode = {
-  unknownSymbol: 0x8203,              // 33283
   syntax: 0x8400,                     // 33792
   missingParenthesis: 0x8406,         // 33798
   missingCurlyBrace: 0x8407,          // 33799
-  invalidQuantifier: 0x8408,          // 33800
-  invalidImperative: 0x8409,          // 33801
-  expectedArgDeclaration: 0x8414,     // 33812
   expectedLocal: 0x8415,              // 33813
   expectedType: 0x8416,               // 33814
 
@@ -66,24 +62,18 @@ export const RSErrorCode = {
 
   globalNoValue: 0x8840,              // 34880
   invalidPropertyUsage: 0x8841,       // 34881
-  globalMissingAST: 0x8842,           // 34882
-  globalFuncNoInterpretation: 0x8843, // 34883
 
   // Value evaluation (runtime)
-  valueUnknownError: 0x8100,          // 35328
-  valueTypedOverflow: 0x8101,         // 35329
-  valueBooleanLimit: 0x8102,          // 35330
-  valueGlobalMissing: 0x8103,         // 35331
-  valueIterationsLimit: 0x8104,       // 35332
-  valueInvalidDebool: 0x8105,         // 35333
-  valueIterateInfinity: 0x8106,       // 35334
+  calcUnknownError: 0x8100,           // 35328
+  setOverflow: 0x8101,                // 35329
+  booleanBaseLimit: 0x8102,           // 35330
+  calcGlobalMissing: 0x8103,          // 35331
+  iterationsLimit: 0x8104,            // 35332
+  calcInvalidDebool: 0x8105,          // 35333
+  iterateInfinity: 0x8106,            // 35334
+  calculationNotSupported: 0x8107,    // 35335
 
-  cstNonemptyBase: 0x8860,            // 34912
   cstEmptyDerived: 0x8861,            // 34913
-  cstCallableNoArgs: 0x8862,          // 34914
-  cstNonCallableHasArgs: 0x8863,      // 34915
-  cstExpectedLogical: 0x8864,         // 34916
-  cstExpectedTyped: 0x8865            // 34917
 } as const;
 export type RSErrorCode = (typeof RSErrorCode)[keyof typeof RSErrorCode];
 

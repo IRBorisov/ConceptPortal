@@ -142,120 +142,100 @@ export function labelRSLangNode(node: RO<AstNodeBase>): string {
 export function describeRSError(code: RSErrorCode, params: readonly string[] = []): string {
   // prettier-ignore
   switch (code) {
-    case RSErrorCode.unknownSymbol:
-      return `Неизвестный символ: ${params[0]}`;
     case RSErrorCode.syntax:
       return 'Неопределенная синтаксическая ошибка';
     case RSErrorCode.missingParenthesis:
-      return "Некорректная конструкция, пропущен символ ')'";
+      return "Пропущена ')'";
     case RSErrorCode.missingCurlyBrace:
-      return "Некорректная конструкция, пропущен символ '}'";
-    case RSErrorCode.invalidQuantifier:
-      return 'Некорректная кванторная декларация';
-    case RSErrorCode.invalidImperative:
-      return 'Использование императивного синтаксиса вне императивного блока';
-    case RSErrorCode.expectedArgDeclaration:
-      return 'Ожидалось объявление аргументов терм-функции';
+      return "Пропущена '}'";
     case RSErrorCode.expectedLocal:
-      return 'Ожидалось имя локальной переменной';
+      return 'Ожидалось имя переменной';
     case RSErrorCode.expectedType:
-      return `Некорректный тип выражения. Ожидаемый тип: ${params[0]}`;
+      return `Ожидался тип: ${params[0]}`;
 
     case RSErrorCode.localDoubleDeclare:
-      return `Предупреждение! Повторное объявление локальной переменной ${params[0]}`;
+      return `Повторное объявление: ${params[0]}`;
     case RSErrorCode.localNotUsed:
-      return `Предупреждение! Переменная объявлена, но не использована: ${params[0]}`;
+      return `Неиспользованная переменная: ${params[0]}`;
     case RSErrorCode.localUndeclared:
-      return `Использование необъявленной переменной: ${params[0]}`;
+      return `Необъявленная переменная: ${params[0]}`;
     case RSErrorCode.localShadowing:
       return `Повторное объявление переменной: ${params[0]}`;
 
     case RSErrorCode.typesNotEqual:
-      return `Типизация операндов не совпадает! ${params[0]} != ${params[1]}`;
+      return `Типизации не совпадают: ${params[0]} ≠ ${params[1]}`;
     case RSErrorCode.globalNotTyped:
-      return `Типизация конституенты не определена: ${params[0]}`;
+      return `Нет типизации: ${params[0]}`;
     case RSErrorCode.invalidDecart:
-      return `τ(α×b) = 𝔅(𝔇τ(α)×𝔇τ(b)). Некорректная типизация аргумента: ${params[0]}`;
+      return `τ(α×b) = 𝔅(𝔇τ(α)×𝔇τ(b)). Некорректный аргумент: ${params[0]}`;
     case RSErrorCode.invalidBoolean:
-      return `τ(ℬ(a)) = 𝔅𝔅𝔇τ(a). Некорректная типизация аргумента: ${params[0]}`;
+      return `τ(ℬ(a)) = 𝔅𝔅𝔇τ(a). Некорректный аргумент: ${params[0]}`;
     case RSErrorCode.invalidTypeOperation:
-      return `Типизация операнда теоретико-множественной операции не корректна: ${params[0]}`;
+      return `Аргумент операции должен быть множеством: ${params[0]}`;
     case RSErrorCode.invalidCard:
-      return `Некорректная типизация аргумента операции мощности: ${params[0]}`;
+      return `Мощность только для множеств: ${params[0]}`;
     case RSErrorCode.invalidDebool:
-      return `τ(debool(a)) = 𝔇τ(a). Некорректная типизация аргумента: ${params[0]}`;
+      return `τ(debool(a)) = 𝔇τ(a). Некорректный аргумент: ${params[0]}`;
     case RSErrorCode.globalFuncWithoutArgs:
-      return `Некорректное использование имени функции без аргументов: ${params[0]}`;
+      return `Функция без аргументов: ${params[0]}`;
     case RSErrorCode.invalidReduce:
-      return `τ(red(a)) = 𝔅𝔇𝔇τ(a). Некорректная типизация аргумента: ${params[0]}`;
+      return `τ(red(a)) = 𝔅𝔇𝔇τ(a). Некорректный аргумент: ${params[0]}`;
     case RSErrorCode.invalidProjectionTuple:
-      return `Проекция не определена: ${params[0]} -> ${params[1]}`;
+      return `Проекция только для кортежа: ${params[0]} -> ${params[1] ?? 'не определено'}`;
     case RSErrorCode.invalidProjectionSet:
-      return `τ(Pri(a)) = 𝔅𝒞i𝔇τ(a). Некорректная типизация аргумента: ${params[0]} -> ${params[1]}`;
+      return `τ(Pri(a)) = 𝔅𝒞i𝔇τ(a). Некорректный аргумент: ${params[0]} -> ${params[1] ?? 'не определено'}`;
     case RSErrorCode.invalidEnumeration:
-      return `Типизация элементов перечисления не совпадает: ${params[0]} != ${params[1]}`;
+      return `Типизация элементов не совпадает: ${params[0]} ≠ ${params[1]}`;
     case RSErrorCode.invalidCortegeDeclare:
       return `Количество переменных в кортеже не соответствует размерности декартова произведения`;
     case RSErrorCode.localOutOfScope:
-      return `Использование имени переменной вне области действия: ${params[0]}`;
+      return `Использование переменной вне области видимости: ${params[0]}`;
     case RSErrorCode.invalidElementPredicate:
-      return `Несоответствие типизаций операндов для оператора: ${params[0]}${params[1]}${params[2]}`;
+      return `Несоответствие типизаций: ${params[0]}${params[1]}${params[2]}`;
     case RSErrorCode.invalidEmptySetUsage:
       return 'Бессмысленное использование пустого множества';
     case RSErrorCode.invalidArgsArity:
-      return `Неверное число аргументов терм-функции: ${params[0]} != ${params[1]}`;
+      return `Неверное число аргументов: ${params[0]} ≠ ${params[1]}`;
     case RSErrorCode.invalidArgumentType:
-      return `Типизация аргумента терм-функции не соответствует объявленной: ${params[0]} != ${params[1]}`;
+      return `Типизация аргумента не соответствует объявленной: ${params[0]} != ${params[1]}`;
     case RSErrorCode.globalStructure:
       return `Область определения родовой структуры не корректна`;
     case RSErrorCode.radicalUsage:
-      return `Радикалы запрещены вне деклараций терм-функции: ${params[0]}`;
+      return `Радикалы запрещены вне деклараций: ${params[0]}`;
     case RSErrorCode.invalidFilterArgumentType:
       return `Типизация аргумента фильтра не корректна: ${params[0]}(${params[1]})`;
     case RSErrorCode.invalidFilterArity:
       return `Количество параметров фильтра не соответствует количеству индексов`;
     case RSErrorCode.arithmeticNotSupported:
-      return `Тип не поддерживает арифметические операторы: ${params[0]}`;
+      return `Тип не поддерживает арифметику: ${params[0]}`;
     case RSErrorCode.typesNotCompatible:
       return `Типы не совместимы для выбранной операции: ${params[0]} и ${params[1]}`;
     case RSErrorCode.orderingNotSupported:
       return `Тип не поддерживает предикаты порядка: ${params[0]}`;
     case RSErrorCode.globalNoValue:
-      return `Используется неинтерпретируемый глобальный идентификатор: ${params[0]}`;
+      return `Невычислимый идентификатор: ${params[0]}`;
     case RSErrorCode.invalidPropertyUsage:
-      return `Использование неитерируемого множества в качестве значения`;
-    case RSErrorCode.globalMissingAST:
-      return `Не удалось получить дерево разбора для глобального идентификатора: ${params[0]}`;
-    case RSErrorCode.globalFuncNoInterpretation:
-      return 'Функция не интерпретируется для данных аргументов';
+      return `Неитерируемое множество в качестве значения`;
 
-    case RSErrorCode.cstNonemptyBase:
-      return 'Непустое выражение базисного/константного множества';
     case RSErrorCode.cstEmptyDerived:
       return 'Пустое выражение для сложного понятия или утверждения';
-    case RSErrorCode.cstCallableNoArgs:
-      return 'Отсутствуют аргументы для параметризованной конституенты';
-    case RSErrorCode.cstNonCallableHasArgs:
-      return 'Параметризованное выражение не подходит для данного типа конституенты';
-    case RSErrorCode.cstExpectedLogical:
-      return 'Данный тип конституенты требует логического выражения';
-    case RSErrorCode.cstExpectedTyped:
-      return 'Данный тип конституенты требует теоретико-множественного выражения';
 
-    case RSErrorCode.valueUnknownError:
+    case RSErrorCode.calcUnknownError:
       return 'Неизвестная ошибка вычисления';
-    case RSErrorCode.valueTypedOverflow:
+    case RSErrorCode.calculationNotSupported:
+      return 'Объявление функции не предполагает вычисления';
+    case RSErrorCode.setOverflow:
       return `Превышен лимит количества элементов: ${params[0]}`;
-    case RSErrorCode.valueBooleanLimit:
+    case RSErrorCode.booleanBaseLimit:
       return `Превышен лимит для основания булеана: ${params[0]}`;
-    case RSErrorCode.valueGlobalMissing:
-      return `Неизвестное значение конституенты ${params[0]}`;
-    case RSErrorCode.valueIterationsLimit:
+    case RSErrorCode.calcGlobalMissing:
+      return `Нет значения: ${params[0]}`;
+    case RSErrorCode.iterationsLimit:
       return `Превышен лимит итераций ${params[0]}`;
-    case RSErrorCode.valueInvalidDebool:
+    case RSErrorCode.calcInvalidDebool:
       return 'Некорректное взятие debool';
-    case RSErrorCode.valueIterateInfinity:
-      return 'Итерация на бесконечности';
+    case RSErrorCode.iterateInfinity:
+      return 'Итерация по бесконечности';
   }
   return 'UNKNOWN ERROR';
 }

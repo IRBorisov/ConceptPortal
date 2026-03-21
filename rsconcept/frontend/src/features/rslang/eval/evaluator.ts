@@ -76,7 +76,7 @@ export class Evaluator {
 
   private tick(node: AstNode): boolean {
     if (++this.iterationCounter > MAX_ITERATIONS) {
-      this.onError(RSErrorCode.valueIterationsLimit, node.from, [String(MAX_ITERATIONS)]);
+      this.onError(RSErrorCode.iterationsLimit, node.from, [String(MAX_ITERATIONS)]);
       return false;
     }
     return true;
@@ -120,7 +120,7 @@ export class Evaluator {
         return this.visitInteger(node);
 
       case TokenID.LIT_WHOLE_NUMBERS:
-        return this.onError(RSErrorCode.valueIterateInfinity, node.from);
+        return this.onError(RSErrorCode.iterateInfinity, node.from);
 
       case TokenID.LIT_EMPTYSET:
         return EmptySetV;
@@ -211,6 +211,9 @@ export class Evaluator {
       case TokenID.NT_RECURSIVE_FULL:
       case TokenID.NT_RECURSIVE_SHORT:
         return this.visitRecursion(node);
+
+      case TokenID.NT_FUNC_DEFINITION:
+        return this.onError(RSErrorCode.calculationNotSupported, node.from);
     }
     return null;
   }
@@ -223,7 +226,7 @@ export class Evaluator {
     const alias = getNodeText(node);
     const value = this.context.get(alias);
     if (!value) {
-      return this.onError(RSErrorCode.valueGlobalMissing, node.from, [alias]);
+      return this.onError(RSErrorCode.calcGlobalMissing, node.from, [alias]);
     }
     return value;
   }
@@ -237,7 +240,7 @@ export class Evaluator {
     const funcName = getNodeText(node.children[0]);
     const ast = this.treeContext.get(funcName);
     if (!ast) {
-      return this.onError(RSErrorCode.valueGlobalMissing, node.from, [funcName]);
+      return this.onError(RSErrorCode.calcGlobalMissing, node.from, [funcName]);
     }
 
     const args: Value[] = [];
@@ -462,7 +465,7 @@ export class Evaluator {
     }
     const result = decartian(args as Value[][]);
     if (result === null) {
-      this.onError(RSErrorCode.valueTypedOverflow, node.from, [String(SET_INFINITY)]);
+      this.onError(RSErrorCode.setOverflow, node.from, [String(SET_INFINITY)]);
       return null;
     }
     return result;
@@ -475,7 +478,7 @@ export class Evaluator {
     }
     const result = boolean(base);
     if (result === null) {
-      this.onError(RSErrorCode.valueBooleanLimit, node.from, [String(BOOL_INFINITY)]);
+      this.onError(RSErrorCode.booleanBaseLimit, node.from, [String(BOOL_INFINITY)]);
       return null;
     }
     return result;
@@ -519,7 +522,7 @@ export class Evaluator {
       return null;
     }
     if (target.length !== 1) {
-      return this.onError(RSErrorCode.valueInvalidDebool, node.from);
+      return this.onError(RSErrorCode.calcInvalidDebool, node.from);
     }
     return target[0];
   }

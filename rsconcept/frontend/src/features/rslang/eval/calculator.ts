@@ -5,7 +5,7 @@
 import { type RO } from '@/utils/meta';
 import { type AstNode } from '@/utils/parsing';
 
-import { type RSErrorDescription } from '../error';
+import { RSErrorCode, type RSErrorDescription } from '../error';
 import { type ExpressionType } from '../semantic/typification';
 
 import { type ASTContext, Evaluator } from './evaluator';
@@ -90,6 +90,9 @@ export class RSCalculator {
     }
 
     const value = this.evaluator.run(ast, reporter);
+    if (value === null && errors.length === 0) {
+      errors.push({ code: RSErrorCode.calcUnknownError, position: 0 });
+    }
     return {
       value,
       iterations: this.evaluator.iterationCounter,

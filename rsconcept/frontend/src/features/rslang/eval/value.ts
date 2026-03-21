@@ -17,7 +17,7 @@ export const VALUE_FALSE = 0;
 export const SET_INFINITY = 10_000_000;
 
 /** Cardinality threshold for Boolean power set. */
-export const BOOL_INFINITY = 12;
+export const BOOL_INFINITY = 18;
 
 /** Expression evaluation result: structured data. */
 export type Value = number | Value[];
