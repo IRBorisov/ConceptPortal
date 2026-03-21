@@ -56,10 +56,10 @@ export function MenuAI() {
         />
         <DropdownButton
           text='Шаблоны'
-          title={user?.is_staff ? 'Шаблоны запросов' : 'Доступно только зарегистрированным пользователям'}
+          title={user.id ? 'Шаблоны запросов' : 'Доступно только зарегистрированным пользователям'}
           icon={<IconTemplates size='1rem' />}
           onClick={navigateTemplates}
-          disabled={!user?.is_staff}
+          disabled={!user.id}
         />
       </Dropdown>
     </div>
