@@ -28,24 +28,43 @@ export type ValueContext = Map<string, Value>;
 /** Empty set ∅. */
 export const EmptySetV = [];
 
-/** Compare two structured data. */
+/** Compare two structured data without recursive calls. */
 export function compare(v1: Value, v2: Value): number {
-  if (v1 === v2) {
-    return 0;
-  }
-  if (!Array.isArray(v1) && !Array.isArray(v2)) {
-    return v1 - v2;
-  }
-  if (!Array.isArray(v1) || !Array.isArray(v2)) {
-    throw new Error(`Cannot compare different types ${printValue(v1)} and ${printValue(v2)}`);
-  }
-  if (v1.length !== v2.length || v1.length === 0) {
-    return v1.length - v2.length;
-  }
-  for (let i = 0; i < v1.length; i++) {
-    const cmp = compare(v1[i], v2[i]);
-    if (cmp) {
-      return cmp;
+  const stack1: Value[] = [v1];
+  const stack2: Value[] = [v2];
+
+  while (stack1.length > 0 && stack2.length > 0) {
+    const el1 = stack1.pop();
+    const el2 = stack2.pop();
+    if (el1 === el2) {
+      continue;
+    }
+
+    const type1 = typeof el1;
+    const type2 = typeof el2;
+    if (type1 === 'number' && type2 === 'number') {
+      const numDiff = (el1 as number) - (el2 as number);
+      if (numDiff !== 0) return numDiff;
+      continue;
+    }
+
+    const isArray1 = Array.isArray(el1);
+    const isArray2 = Array.isArray(el2);
+    if (!isArray1 || !isArray2) {
+      throw new Error(`Cannot compare different types ${printValue(el1!)} and ${printValue(el2!)}`);
+    }
+
+    const arr1 = el1 as Value[];
+    const arr2 = el2 as Value[];
+    const len1 = arr1.length;
+    const len2 = arr2.length;
+    if (len1 !== len2) {
+      return len1 - len2;
+    }
+
+    for (let i = len1 - 1; i >= 0; i--) {
+      stack1.push(arr1[i]);
+      stack2.push(arr2[i]);
     }
   }
   return 0;

@@ -241,23 +241,28 @@ export function extractBases(target: ExpressionType): Set<string> {
 
 /** Apply type path to typification. */
 export function applyPath(target: Typification, path: TypePath, index = 0): Typification | null {
-  if (path.length === index) {
-    return target;
-  }
-  switch (target.typeID) {
-    case TypeID.anyTypification:
-    case TypeID.integer:
-    case TypeID.basic:
-      return null;
-    case TypeID.collection:
-      return applyPath(target.base, path, index + 1);
-    case TypeID.tuple:
-      const factor = component(target, path[index]);
-      if (factor === null) {
+  let current: Typification | null = target;
+  let i = index;
+  while (i < path.length && current) {
+    switch (current.typeID) {
+      case TypeID.anyTypification:
+      case TypeID.integer:
+      case TypeID.basic:
         return null;
-      }
-      return applyPath(factor, path, index + 1);
+      case TypeID.collection:
+        current = current.base;
+        i++;
+        break;
+      case TypeID.tuple:
+        current = component(current, path[i]);
+        if (current === null) {
+          return null;
+        }
+        i++;
+        break;
+    }
   }
+  return current;
 }
 
 // ===== Internals =====

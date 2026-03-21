@@ -50,11 +50,14 @@ export class RSEngine {
 
   /** Updates data for {@link RSEngine}. */
   public loadData(schema: RSForm, dto: RO<RSModelDTO>): void {
+    const newSchema = this.schema !== schema;
     this.schema = schema;
+    if (newSchema) {
+      this.prepareAst();
+      // TODO: reset some values?
+    }
     if (this.data !== dto) {
       this.data = dto;
-      this.clear();
-      this.prepareAst();
       this.prepareValues();
     }
     this.notifyAll();
@@ -309,13 +312,8 @@ export class RSEngine {
     }
   }
 
-  private clear(): void {
-    this.basics.clear();
-    this.invalidData.clear();
-    this.calculatedSet.clear();
-  }
-
   private prepareAst(): void {
+    this.calculator.clearAllAst();
     const functions = this.schema!.items.filter(cst => isFunctional(cst.cst_type) && cst.analysis?.success);
     for (const cst of functions) {
       const fullAnalysis = getAnalysisFor(cst.definition_formal, cst.cst_type, this.schema!);
@@ -326,6 +324,10 @@ export class RSEngine {
   }
 
   private prepareValues(): void {
+    this.basics.clear();
+    this.invalidData.clear();
+    this.calculatedSet.clear();
+
     for (const item of this.data!.items) {
       const cst = this.schema!.cstByID.get(item.id)!;
       if (item.type === TYPE_BASIC) {

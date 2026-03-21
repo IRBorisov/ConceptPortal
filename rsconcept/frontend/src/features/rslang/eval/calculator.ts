@@ -60,6 +60,10 @@ export class RSCalculator {
     this.notify(alias);
   }
 
+  public clearAllAst(): void {
+    this.treeContext.clear();
+  }
+
   public getValue(alias: string): Value | null {
     return this.context.get(alias) ?? null;
   }

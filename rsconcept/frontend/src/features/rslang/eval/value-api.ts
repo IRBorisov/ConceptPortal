@@ -219,19 +219,26 @@ export function projection(target: Value[][], indices: number[]): Value[] {
   return set(projectedElements);
 }
 
-/** String representation for debugging. */
+/** Condensed string representation. */
 export function printValue(data: RO<Value> | null): string {
   if (!Array.isArray(data)) {
     return String(data);
   }
+  const len = data.length;
   if (data.length === 0) {
     return '{}';
   }
-  if (data[0] === TUPLE_ID) {
-    return `(${data.slice(1).map(printValue).join(', ')})`;
-  } else {
-    return `{${data.map(printValue).join(', ')}}`;
+
+  const isTuple = data[0] === TUPLE_ID;
+  const start = isTuple ? 1 : 0;
+
+  let result = isTuple ? '(' : '{';
+  for (let i = start; i < len; i++) {
+    if (i > start) result += ', ';
+    result += printValue(data[i] as RO<Value>);
   }
+  result += isTuple ? ')' : '}';
+  return result;
 }
 
 /** Generates stub ID for value. */
