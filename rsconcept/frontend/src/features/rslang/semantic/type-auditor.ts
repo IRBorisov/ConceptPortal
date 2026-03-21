@@ -81,7 +81,7 @@ export class TypeAuditor {
       return false;
     }
     for (let child = 0; child < node.children.length; child++) {
-      if (!this.visitChildDeclaration(node, child, component(domain, child + 1))) {
+      if (!this.visitChildDeclaration(node, child, component(domain, child + 1)!)) {
         return false;
       }
     }
@@ -617,13 +617,14 @@ export class TypeAuditor {
     const indices = getNodeIndices(node);
     const components: Typification[] = [];
     for (const index of indices) {
-      if (index < 1 || index > argument.factors.length) {
+      const newComponent = component(argument, index);
+      if (newComponent === null) {
         return this.onError(RSErrorCode.invalidProjectionSet,
           node.children[0].from,
           [labelRSLangNode(node), labelType(bool(argument))]
         );
       } else {
-        components.push(component(argument, index));
+        components.push(newComponent);
       }
     }
     if (components.length === 1) {
@@ -652,13 +653,14 @@ export class TypeAuditor {
     const indices = getNodeIndices(node);
     const components: Typification[] = [];
     for (const index of indices) {
-      if (index < 1 || index > argument.factors.length) {
+      const newComponent = component(argument, index);
+      if (newComponent === null) {
         return this.onError(
           RSErrorCode.invalidProjectionTuple,
           node.children[0].from,
           [labelRSLangNode(node), labelType(argument)]);
       } else {
-        components.push(component(argument, index));
+        components.push(newComponent);
       }
     }
     if (components.length === 1) {
@@ -695,14 +697,15 @@ export class TypeAuditor {
     const argBase = debool(argument) as EchelonTuple;
     const bases: Typification[] = [];
     for (const index of indices) {
-      if (index < 1 || index > argBase.factors.length) {
+      const newBase = component(argBase, index);
+      if (newBase === null) {
         return this.onError(
           RSErrorCode.invalidFilterArgumentType,
           node.children[node.children.length - 1].from,
           [labelRSLangNode(node), labelType(argument)]
         );
       }
-      bases.push(component(argBase, index));
+      bases.push(newBase);
     }
 
     if (tupleParam) {
@@ -939,7 +942,7 @@ function mangleRadicals(funcName: string, type: Typification): Typification {
     case TypeID.tuple: {
       const factors: Typification[] = [];
       for (let index = 1; index <= type.factors.length; ++index) {
-        factors.push(mangleRadicals(funcName, component(type, index)));
+        factors.push(mangleRadicals(funcName, component(type, index)!));
       }
       return {
         typeID: type.typeID,

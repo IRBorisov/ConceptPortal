@@ -240,23 +240,23 @@ export function extractBases(target: ExpressionType): Set<string> {
 }
 
 /** Apply type path to typification. */
-export function applyPath(target: Typification, path: TypePath): Typification | null {
+export function applyPath(target: Typification, path: TypePath, index = 0): Typification | null {
+  if (path.length === index) {
+    return target;
+  }
   switch (target.typeID) {
     case TypeID.anyTypification:
     case TypeID.integer:
     case TypeID.basic:
-      return path.length === 0 ? target : null;
+      return null;
     case TypeID.collection:
-      return path.length === 0 ? null : applyPath(target.base, path.slice(1) as TypePath);
+      return applyPath(target.base, path, index + 1);
     case TypeID.tuple:
-      if (path.length === 0) {
-        return null;
-      }
-      const factor = component(target, path[0]);
+      const factor = component(target, path[index]);
       if (factor === null) {
         return null;
       }
-      return applyPath(factor, path.slice(1) as TypePath);
+      return applyPath(factor, path, index + 1);
   }
 }
 

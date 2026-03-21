@@ -150,8 +150,8 @@ export function debool(target: EchelonCollection): Typification {
 }
 
 /** Extract component from tuple. */
-export function component(target: EchelonTuple, index: number): Typification {
-  return target.factors[index - 1];
+export function component(target: EchelonTuple, index: number): Typification | null {
+  return target.factors[index - 1] ?? null;
 }
 
 /** Checks if given type is typification. */
