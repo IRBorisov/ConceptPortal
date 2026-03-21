@@ -2,6 +2,8 @@
  * Module: Typification for RSLang.
  */
 
+import { type Branded } from '@/utils/meta';
+
 
 /** Typification structure enumeration. */
 export const TypeID = {
@@ -35,6 +37,8 @@ export const IntegerT = {
   isArithmetic: true,
   isIntegerCompatible: true
 } as const;
+
+export type TypePath = Branded<number[], 'TypePath'>;
 
 /** AnyTyped type object. */
 export const AnyTypificationT = { typeID: TypeID.anyTypification } as const;

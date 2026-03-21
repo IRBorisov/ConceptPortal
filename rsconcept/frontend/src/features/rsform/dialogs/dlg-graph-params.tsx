@@ -5,7 +5,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { MiniButton } from '@/components/control';
 import { Checkbox } from '@/components/input';
 import { ModalForm } from '@/components/modal';
-import { prepareTooltip } from '@/utils/utils';
+import { prepareTooltip } from '@/utils/format';
 
 import { IconCstType } from '../components/icon-cst-type';
 import { labelCstType } from '../labels';

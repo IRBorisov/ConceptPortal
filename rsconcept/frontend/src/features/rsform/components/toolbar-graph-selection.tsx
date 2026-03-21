@@ -18,7 +18,7 @@ import {
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
 import { type Graph } from '@/models/graph';
-import { prepareTooltip } from '@/utils/utils';
+import { prepareTooltip } from '@/utils/format';
 
 interface ToolbarGraphSelectionProps extends Styling {
   value: number[];
@@ -169,9 +169,9 @@ export function ToolbarGraphSelection({
               !tipHotkeys
                 ? '<b>Максимизация</b> <br/>дополнение выделения конституентами, <br/>зависимыми только от выделенных'
                 : prepareTooltip(
-                    'Максимизация - дополнение выделения конституентами, зависимыми только от выделенных',
-                    '5'
-                  )
+                  'Максимизация - дополнение выделения конституентами, зависимыми только от выделенных',
+                  '5'
+                )
             }
             aria-label='Максимизация - дополнение выделения конституентами, зависимыми только от выделенных'
             icon={<IconGraphMaximize size='1.25rem' className='icon-primary' />}

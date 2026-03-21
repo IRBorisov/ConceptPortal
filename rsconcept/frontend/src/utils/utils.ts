@@ -36,28 +36,6 @@ export class TextMatcher {
   }
 }
 
-/** Truncate text to last word up to max symbols. Add ellipsis if truncated. */
-export function truncateToLastWord(text: string, maxSymbols: number): string {
-  if (text.length <= maxSymbols) {
-    return text;
-  }
-  const trimmedText = text.slice(0, maxSymbols);
-  const lastSpaceIndex = trimmedText.lastIndexOf(' ');
-  if (lastSpaceIndex === -1) {
-    return trimmedText + '...';
-  }
-  return trimmedText.slice(0, lastSpaceIndex) + '...';
-}
-
-/** Truncate text to max symbols. Add ellipsis if truncated. */
-export function truncateToSymbol(text: string, maxSymbols: number): string {
-  if (text.length <= maxSymbols) {
-    return text;
-  }
-  const trimmedText = text.slice(0, maxSymbols);
-  return trimmedText + '...';
-}
-
 /** Check if Axios response is html. */
 export function isResponseHtml(response?: AxiosResponse) {
   if (!response) {
@@ -178,24 +156,7 @@ export function withPreventDefault<T extends React.SyntheticEvent>(handler: (eve
   };
 }
 
-/** Remove html tags from target string. */
-export function removeTags(target?: string): string {
-  if (!target) {
-    return '';
-  }
-  return target.toString().replace(/(<([^>]+)>)/gi, '');
-}
-
-/**
- * Generate HTML wrapper for control description including hotkey.
- */
-export function prepareTooltip(text: string, hotkey?: string) {
-  return hotkey ? `<kbd>[${hotkey}]</kbd><br/>${text}` : text;
-}
-
-/**
- * Utility to detect iOS/iPadOS.
- */
+/** Utility to detect iOS/iPadOS. */
 export function isIOS(): boolean {
   if (typeof navigator === 'undefined') {
     return false;
@@ -226,20 +187,6 @@ export function dataUrlToBlob(dataUrl: string): Blob {
     u8arr[n] = binary.charCodeAt(n);
   }
   return new Blob([u8arr], { type: mime });
-}
-
-/** Formats integer value to string with thousands separators. */
-export function formatInteger(value: number | string): string {
-  if (typeof value === 'number') {
-    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '\u202F');
-  }
-
-  const match = /^(-?)(\d+)$/.exec(value);
-  if (!match) {
-    return value;
-  }
-
-  return value.replace(/\B(?=(\d{3})+(?!\d))/g, '\u202F');
 }
 
 /** 32-bit FNV-1a hash */

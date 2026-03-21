@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 
 import { globalIDs } from '@/utils/constants';
-import { truncateToLastWord } from '@/utils/utils';
+import { truncateToLastWord } from '@/utils/format';
 
 import { type Styling } from '../props';
 

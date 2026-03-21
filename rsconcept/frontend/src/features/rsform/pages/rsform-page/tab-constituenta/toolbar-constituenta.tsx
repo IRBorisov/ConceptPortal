@@ -21,8 +21,9 @@ import {
 import { cn } from '@/components/utils';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
+import { prepareTooltip } from '@/utils/format';
 import { tooltipText } from '@/utils/labels';
-import { isMac, prepareTooltip } from '@/utils/utils';
+import { isMac } from '@/utils/utils';
 
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { type Constituenta } from '../../../models/rsform';

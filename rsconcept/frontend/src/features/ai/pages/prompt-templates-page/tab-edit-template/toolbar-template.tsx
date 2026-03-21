@@ -9,8 +9,9 @@ import { MiniButton } from '@/components/control';
 import { IconDestroy, IconReset, IconSave } from '@/components/icons';
 import { cn } from '@/components/utils';
 import { useModificationStore } from '@/stores/modification';
+import { prepareTooltip } from '@/utils/format';
 import { promptText } from '@/utils/labels';
-import { isMac, prepareTooltip } from '@/utils/utils';
+import { isMac } from '@/utils/utils';
 
 interface ToolbarTemplateProps {
   activeID: number;

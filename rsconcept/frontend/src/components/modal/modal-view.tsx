@@ -7,7 +7,7 @@ import { BadgeHelp } from '@/features/help/components/badge-help';
 
 import { useEscapeKey } from '@/hooks/use-escape-key';
 import { useDialogsStore } from '@/stores/dialogs';
-import { prepareTooltip } from '@/utils/utils';
+import { prepareTooltip } from '@/utils/format';
 
 import { Button, MiniButton } from '../control';
 import { IconClose } from '../icons';
@@ -72,7 +72,7 @@ export function ModalView({
             className={clsx(
               'px-12 py-2 select-none',
               fullScreen &&
-                'z-pop absolute top-0 right-1/2 translate-x-1/2 backdrop-blur-xs bg-background/90 rounded-2xl'
+              'z-pop absolute top-0 right-1/2 translate-x-1/2 backdrop-blur-xs bg-background/90 rounded-2xl'
             )}
           >
             {header}

@@ -11,8 +11,9 @@ import { IconDestroy, IconSave, IconShare } from '@/components/icons';
 import { cn } from '@/components/utils';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
+import { prepareTooltip } from '@/utils/format';
 import { tooltipText } from '@/utils/labels';
-import { isMac, prepareTooltip, sharePage } from '@/utils/utils';
+import { isMac, sharePage } from '@/utils/utils';
 
 import { AccessPolicy, type LibraryItem, LibraryItemType } from '../backend/types';
 import { useMutatingLibrary } from '../backend/use-mutating-library';

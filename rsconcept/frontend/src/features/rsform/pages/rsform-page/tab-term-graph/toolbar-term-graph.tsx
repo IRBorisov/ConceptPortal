@@ -26,7 +26,7 @@ import {
 import { cn } from '@/components/utils';
 import { type Graph } from '@/models/graph';
 import { useDialogsStore } from '@/stores/dialogs';
-import { prepareTooltip } from '@/utils/utils';
+import { prepareTooltip } from '@/utils/format';
 
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { IconEdgeType } from '../../../components/icon-edge-type';

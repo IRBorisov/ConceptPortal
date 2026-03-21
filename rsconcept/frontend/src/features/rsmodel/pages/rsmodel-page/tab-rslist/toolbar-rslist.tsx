@@ -23,7 +23,7 @@ import {
 } from '@/components/icons';
 import { cn } from '@/components/utils';
 import { prefixes } from '@/utils/constants';
-import { prepareTooltip } from '@/utils/utils';
+import { prepareTooltip } from '@/utils/format';
 
 import { useMutatingRSModel } from '../../../backend/use-mutating-rsmodel';
 import { useRSModelEdit } from '../rsmodel-context';

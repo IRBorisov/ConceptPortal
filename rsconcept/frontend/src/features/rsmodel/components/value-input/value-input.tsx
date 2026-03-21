@@ -6,7 +6,7 @@ import { TextButton } from '@/components/control/text-button';
 import { TextArea } from '@/components/input';
 import { cn } from '@/components/utils';
 import { globalIDs, limits } from '@/utils/constants';
-import { formatInteger } from '@/utils/utils';
+import { formatInteger } from '@/utils/format';
 
 import { type EvalStatus } from '../../models/rsmodel';
 

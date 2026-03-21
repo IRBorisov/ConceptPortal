@@ -6,12 +6,12 @@ export { parser as rslangParser } from './parser/parser';
 export { TokenID } from './parser/token';
 export { type AnalysisBase, type AnalysisFull, type AnalysisOptions, RSLangAnalyzer } from './semantic/analyzer';
 export {
-  AnyTypificationT,
-  EmptySetT,
+  AnyTypificationT, EmptySetT,
   type ExpressionType,
   LogicT,
   TypeClass,
   TypeID,
+  type TypePath,
   type Typification
 } from './semantic/typification';
 export { ValueClass } from './semantic/value-class';

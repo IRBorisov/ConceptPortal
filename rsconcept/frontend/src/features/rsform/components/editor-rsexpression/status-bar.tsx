@@ -7,7 +7,8 @@ import { BadgeHelp } from '@/features/help/components/badge-help';
 
 import { cn } from '@/components/utils';
 import { globalIDs } from '@/utils/constants';
-import { isMac, prepareTooltip } from '@/utils/utils';
+import { prepareTooltip } from '@/utils/format';
+import { isMac } from '@/utils/utils';
 
 import { colorStatusBar } from '../../colors';
 import { labelExpressionStatus } from '../../labels';

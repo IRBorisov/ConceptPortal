@@ -1,11 +1,13 @@
 /** 
  * Module: Typification API for RSLang.
  */
+
 import {
   bool,
+  component,
   type EchelonBase, type EchelonCollection,
   type EchelonTuple, type ExpressionType, IntegerT, isRadical, isTypification,
-  tuple, TypeClass, TypeID, type Typification
+  tuple, TypeClass, TypeID, type TypePath, type Typification
 } from './typification';
 
 /** Record map from typeID to typeClass. */
@@ -117,6 +119,7 @@ export function mergeTypifications(type1: Typification, type2: Typification): Ty
   }
 }
 
+/** Check compatibility of typifications. */
 export function checkCompatibility(type1: ExpressionType, type2: ExpressionType): boolean {
   if (type1 === type2) {
     return true;
@@ -159,6 +162,7 @@ export function checkCompatibility(type1: ExpressionType, type2: ExpressionType)
   }
 }
 
+/** Compare typification with substitutions. */
 export function compareTemplated(
   substitutes: Map<string, Typification>,
   arg: Typification,
@@ -230,8 +234,30 @@ export function substituteBase(target: Typification, substitutes: Map<string, Ty
   }
 }
 
+/** Extract bases from typification. */
 export function extractBases(target: ExpressionType): Set<string> {
   return new Set(extractBasesImpl(target));
+}
+
+/** Apply type path to typification. */
+export function applyPath(target: Typification, path: TypePath): Typification | null {
+  switch (target.typeID) {
+    case TypeID.anyTypification:
+    case TypeID.integer:
+    case TypeID.basic:
+      return path.length === 0 ? target : null;
+    case TypeID.collection:
+      return path.length === 0 ? null : applyPath(target.base, path.slice(1) as TypePath);
+    case TypeID.tuple:
+      if (path.length === 0) {
+        return null;
+      }
+      const factor = component(target, path[0]);
+      if (factor === null) {
+        return null;
+      }
+      return applyPath(factor, path.slice(1) as TypePath);
+  }
 }
 
 // ===== Internals =====

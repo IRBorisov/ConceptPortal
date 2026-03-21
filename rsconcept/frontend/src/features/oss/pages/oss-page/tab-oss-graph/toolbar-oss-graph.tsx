@@ -29,7 +29,8 @@ import {
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
 import { usePreferencesStore } from '@/stores/preferences';
-import { isIOS, isMac, notImplemented, prepareTooltip } from '@/utils/utils';
+import { prepareTooltip } from '@/utils/format';
+import { isIOS, isMac, notImplemented } from '@/utils/utils';
 
 import { useMutatingOss } from '../../../backend/use-mutating-oss';
 import { NodeType } from '../../../models/oss';

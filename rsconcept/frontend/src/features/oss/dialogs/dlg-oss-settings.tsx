@@ -10,7 +10,7 @@ import {
 } from '@/components/icons';
 import { Checkbox } from '@/components/input';
 import { ModalView } from '@/components/modal';
-import { prepareTooltip } from '@/utils/utils';
+import { prepareTooltip } from '@/utils/format';
 
 import { useOSSGraphStore } from '../stores/oss-graph';
 

@@ -19,8 +19,8 @@ import {
 } from '@/components/icons';
 import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER } from '@/utils/constants';
+import { prepareTooltip } from '@/utils/format';
 import { errorMsg } from '@/utils/labels';
-import { prepareTooltip } from '@/utils/utils';
 
 import { OperationType } from '../../../../backend/types';
 import { useCloneSchema } from '../../../../backend/use-clone-schema';

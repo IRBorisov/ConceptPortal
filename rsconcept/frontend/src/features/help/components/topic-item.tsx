@@ -1,4 +1,4 @@
-import { removeTags } from '@/utils/utils';
+import { removeTags } from '@/utils/format';
 
 import { describeHelpTopic, labelHelpTopic } from '../labels';
 import { type HelpTopic } from '../models/help-topic';

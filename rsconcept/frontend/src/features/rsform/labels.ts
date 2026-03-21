@@ -2,8 +2,8 @@
  * Generates description for {@link Constituenta}.
  */
 
+import { prepareTooltip } from '@/utils/format';
 import { type RO } from '@/utils/meta';
-import { prepareTooltip } from '@/utils/utils';
 
 import { type VersionInfo } from '../library/backend/types';
 import { type CurrentVersion } from '../library/models/library';

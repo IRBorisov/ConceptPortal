@@ -20,7 +20,7 @@ import {
 } from '@/components/icons';
 import { cn } from '@/components/utils';
 import { prefixes } from '@/utils/constants';
-import { prepareTooltip } from '@/utils/utils';
+import { prepareTooltip } from '@/utils/format';
 
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { useUpdateCrucial } from '../../../backend/use-update-crucial';

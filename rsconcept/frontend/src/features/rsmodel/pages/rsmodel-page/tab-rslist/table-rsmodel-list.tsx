@@ -10,7 +10,7 @@ import { createColumnHelper, DataTable, type RowSelectionState, type VisibilityS
 import { NoData, TextContent } from '@/components/view';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { prefixes } from '@/utils/constants';
-import { truncateToSymbol } from '@/utils/utils';
+import { truncateToSymbol } from '@/utils/format';
 
 import { useRSModelEdit } from '../rsmodel-context';
 

@@ -30,20 +30,20 @@ type HasDisallowedProps<T> = {
 
 // Detects if T is a class instance (has constructor)
 type IsClassInstance<T> = T extends object
-  ? T extends { constructor: new (...args: unknown[]) => unknown }
-    ? true
-    : false
+  ? T extends { constructor: new (...args: unknown[]) => unknown; }
+  ? true
+  : false
   : false;
 
 // The final check — should the object be rejected?
 type IsInvalid<T> = T extends object
   ? HasFunctionProps<T> extends true
-    ? true
-    : HasDisallowedProps<T> extends true
-    ? true
-    : IsClassInstance<T> extends true
-    ? true
-    : false
+  ? true
+  : HasDisallowedProps<T> extends true
+  ? true
+  : IsClassInstance<T> extends true
+  ? true
+  : false
   : false;
 
 /**
@@ -81,3 +81,10 @@ export function deepFreeze<T>(obj: T): RO<T> {
   // Return the frozen object
   return obj as RO<T>;
 }
+
+declare const brand: unique symbol;
+
+/** Branded strict type. No runtime consequences. */
+export type Branded<T, BrandT> = T & {
+  readonly [brand]: BrandT;
+};

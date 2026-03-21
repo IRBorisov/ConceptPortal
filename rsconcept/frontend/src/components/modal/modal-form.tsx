@@ -9,7 +9,7 @@ import { BadgeHelp } from '@/features/help/components/badge-help';
 import { useEscapeKey } from '@/hooks/use-escape-key';
 import { useDialogsStore } from '@/stores/dialogs';
 import { globalIDs } from '@/utils/constants';
-import { prepareTooltip } from '@/utils/utils';
+import { prepareTooltip } from '@/utils/format';
 
 import { Button, MiniButton, SubmitButton } from '../control';
 import { IconAlert, IconClose } from '../icons';
