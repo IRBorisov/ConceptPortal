@@ -350,5 +350,18 @@ export function convertPathToType(path: ValuePath, type: Typification): TypePath
     }
   }
   return result as TypePath;
+}
 
+/** Extracts value from a target by path. */
+export function extractValue(target: Value, path: ValuePath): Value | null {
+  let current: Value = target;
+  let i = 0;
+  while (i < path.length) {
+    if (!Array.isArray(current) || current.length <= path[i]) {
+      return null;
+    }
+    current = current[path[i]];
+    i++;
+  }
+  return current;
 }

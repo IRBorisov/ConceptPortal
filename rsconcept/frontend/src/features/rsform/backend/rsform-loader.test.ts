@@ -117,6 +117,6 @@ describe('RSFormLoader', () => {
     expect(d1!.is_simple_expression).toBe(true);
     expect(d1!.spawner).toBe(s1!.id);
     expect(d1!.spawner_alias).toBe('S1');
-    expect(d1!.spawner_path).toEqual([0, 1]);
+    expect(d1!.spawner_path).toEqual([0, 0, 1]);
   });
 });

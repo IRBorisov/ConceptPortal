@@ -1,6 +1,6 @@
 export { RSErrorCode, type RSErrorDescription } from './error';
 export { type CalculatorResult, RSCalculator } from './eval/calculator';
-export { type Value } from './eval/value';
+export { makeValuePath, type Value, type ValuePath } from './eval/value';
 export { normalizeAST } from './parser/normalize';
 export { parser as rslangParser } from './parser/parser';
 export { TokenID } from './parser/token';
@@ -12,6 +12,7 @@ export {
   AnyTypificationT, EmptySetT,
   type ExpressionType,
   LogicT,
+  makeTypePath,
   TypeClass,
   TypeID,
   type TypePath,

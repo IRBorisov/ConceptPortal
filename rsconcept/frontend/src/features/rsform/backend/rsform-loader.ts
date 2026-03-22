@@ -2,8 +2,9 @@
  * Module: RSForm data loading and processing.
  */
 
-import { type AnalysisFast, RSLangAnalyzer, TokenID, type TypePath } from '@/features/rslang';
+import { type AnalysisFast, makeTypePath, RSLangAnalyzer, TokenID, TypeID, type TypePath } from '@/features/rslang';
 import { extractGlobals, isSimpleExpression, splitTemplateDefinition } from '@/features/rslang/api';
+import { isTypification } from '@/features/rslang/semantic/typification';
 
 import { Graph } from '@/models/graph';
 import { type RO } from '@/utils/meta';
@@ -205,10 +206,11 @@ export class RSFormLoader {
       cst.status = cst.cst_type === CstType.NOMINAL
         ? CstStatus.UNKNOWN
         : inferStatus(cst.analysis.success, cst.analysis.valueClass);
-      if (cst.spawner && !!parse.ast && !!parse.type) {
+      if (cst.spawner && !!parse.ast && parse.type && isTypification(parse.type)) {
         const parents = this.graph.expandInputs([cstID]);
         if (parents.length === 1) {
-          const path = extractTypePath(parse.ast);
+          const spawner = this.cstByID.get(parents[0])!;
+          const path = extractTypePath(parse.ast, spawner.analysis.type?.typeID === TypeID.collection);
           if (path) {
             if (cst.spawner !== parents[0]) {
               const parent = this.cstByID.get(parents[0])!;
@@ -246,21 +248,24 @@ function parseCst(target: Constituenta, analyzer: RSLangAnalyzer): AnalysisFast 
   }
 }
 
-function extractTypePath(node: AstNode): TypePath | null {
+function extractTypePath(node: AstNode, isSet: boolean): TypePath | null {
   const result: number[] = [];
   let current = node;
   while (true) {
     switch (current.typeID) {
       default: return null;
       case TokenID.ID_GLOBAL:
-        return result.reverse() as TypePath;
+        if (isSet) {
+          result.push(0);
+        }
+        return makeTypePath(result.reverse());
       case TokenID.REDUCE:
         result.push(0);
         current = current.children[0];
         break;
       case TokenID.SMALLPR:
       case TokenID.BIGPR:
-        const indices = getNodeIndices(node);
+        const indices = getNodeIndices(current);
         if (indices.length !== 1) {
           return null;
         }

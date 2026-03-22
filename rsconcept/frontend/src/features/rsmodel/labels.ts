@@ -1,7 +1,8 @@
 import { type RO } from '@/utils/meta';
 
-import { type ExpressionType, TypeID } from '../rslang';
+import { type ExpressionType, TypeID, type TypePath, type Typification } from '../rslang';
 import { TUPLE_ID, type Value, VALUE_FALSE, VALUE_TRUE } from '../rslang/eval/value';
+import { labelType } from '../rslang/labels';
 
 import { EvalStatus } from './models/rsmodel';
 
@@ -40,5 +41,48 @@ export function labelValue(value: RO<Value | null>, type: ExpressionType | null)
     return 'C';
   } else {
     return value.length.toString();
+  }
+}
+
+/** Prints type with selected path. */
+export function printTypeCrumbs(type: RO<Typification>, path: TypePath, index: number = 0): string {
+  switch (type.typeID) {
+    case TypeID.anyTypification:
+    case TypeID.integer:
+    case TypeID.basic:
+      return labelType(type);
+
+    case TypeID.tuple:
+      const componentIndex = index < path.length ? path[index] : null;
+      let result = '';
+      for (let i = 0; i < type.factors.length; i++) {
+        if (i > 0) {
+          result += '×';
+        }
+        if (type.factors[i].typeID === TypeID.tuple) {
+          result += '(';
+        }
+        if (i + 1 !== componentIndex) {
+          result += labelType(type.factors[i]);
+        } else {
+          if (index + 1 === path.length) {
+            result += '->' + labelType(type.factors[i]) + '<-';
+          } else {
+            result += printTypeCrumbs(type.factors[i], path, index + 1);
+          }
+        }
+        if (type.factors[i].typeID === TypeID.tuple) {
+          result += ')';
+        }
+      }
+      return result;
+
+    case TypeID.collection:
+      if ((path.length === 0 && index === 0) || path.length === index) {
+        return `->${labelType(type)}<-`;
+      } else {
+        const baseStr = printTypeCrumbs(type.base, path, index + 1);
+        return type.base.typeID === TypeID.collection ? `ℬ${baseStr}` : `ℬ(${baseStr})`;
+      }
   }
 }

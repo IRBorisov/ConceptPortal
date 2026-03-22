@@ -8,11 +8,11 @@ import { type Constituenta, CstType } from '@/features/rsform';
 import { RSInput } from '@/features/rsform/components/rs-input';
 import { ViewErrors } from '@/features/rsform/components/view-errors';
 import { labelRSExpression } from '@/features/rsform/labels';
-import { isBaseSet } from '@/features/rsform/models/rsform-api';
+import { getStructureName, isBaseSet } from '@/features/rsform/models/rsform-api';
 import { type CalculatorResult, type Value } from '@/features/rslang';
 import { normalizeValue, valueStub } from '@/features/rslang/eval/value-api';
 import { labelType } from '@/features/rslang/labels';
-import { isTypification, type Typification } from '@/features/rslang/semantic/typification';
+import { isTypification, type TypePath, type Typification } from '@/features/rslang/semantic/typification';
 import { ValueInput } from '@/features/rsmodel/components/value-input';
 import { useCstStatus } from '@/features/rsmodel/hooks/use-cst-status';
 
@@ -125,7 +125,8 @@ export function FormValue({ id, toggleReset, activeCst }: FormValueProps) {
       initialValue: cstData!,
       type: activeCst.analysis.type as Typification,
       engine: engine,
-      onChange: !cstInferrable ? notImplemented : undefined
+      onChange: !cstInferrable ? notImplemented : undefined,
+      getHeaderText: (path: TypePath) => getStructureName(schema, activeCst, path)
     });
   }
 

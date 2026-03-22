@@ -1,78 +1,174 @@
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table';
 
 import { type RSForm } from '@/features/rsform';
-import { TypeID, type Typification, type Value } from '@/features/rslang';
+import { makeValuePath, TypeID, type Typification, type Value, type ValuePath } from '@/features/rslang';
 import { valueStub } from '@/features/rslang/eval/value-api';
+import { type EchelonCollection } from '@/features/rslang/semantic/typification';
+
+import { MiniButton } from '@/components/control';
+import { IconRemove } from '@/components/icons';
+import { globalIDs } from '@/utils/constants';
 
 import { type BasicsContext } from '../../models/rsmodel';
 import { prepareValueString } from '../../models/rsmodel-api';
 
 const columnHelper = createColumnHelper<Value>();
 
-// export interface ColumnServices {
-//   navigateValue: (path: number[]) => void;
-//   editElement: (path: number[]) => void;
-//   deleteElement: (path: number[]) => void;
-// }
+export interface ColumnServices {
+  schema: RSForm;
+  basics: BasicsContext;
+  showDataText: boolean;
+  getColumnText: (path: ValuePath) => string;
+  navigateValue: (path: ValuePath) => void;
+  editElement?: (path: ValuePath) => void;
+  deleteElement?: (path: ValuePath) => void;
+}
+
+interface ColumnState {
+  singleton: boolean;
+  path: ValuePath;
+  accessor: (value: Value) => Value;
+}
 
 export function createColumnsType(
   type: Typification,
-  schema: RSForm,
-  basics: BasicsContext,
-  showDataText: boolean,
-  path: string = 'val',
-  valueAccessor: (value: Value) => Value = value => value
+  services: ColumnServices
 ): ReturnType<typeof columnHelper.accessor>[] {
+  const state = {
+    singleton: type.typeID !== TypeID.collection,
+    path: makeValuePath([]),
+    accessor: (value: Value) => value
+  };
+  const columns = createColumnsInternal(state.singleton ? type : (type as EchelonCollection).base, services, state);
+  if (services.deleteElement && !state.singleton) {
+    columns.push(
+      columnHelper.display({
+        id: 'actions',
+        size: 0,
+        cell: props => (
+          <MiniButton
+            title='Удалить элемент'
+            className='align-middle w-fit'
+            noPadding
+            icon={<IconRemove size='1.25rem' className='cc-remove' />}
+            onClick={() => services.deleteElement!(makeValuePath([props.row.index]))}
+          />
+        )
+      })
+    );
+  }
+  return columns;
+}
+
+// ====== Internals ======
+
+function TitledHeader({ text, title, className }: { text: string, title?: string, className?: string; }) {
+  return (
+    <span
+      className={className}
+      data-tooltip-id={!!title ? globalIDs.tooltip : undefined}
+      data-tooltip-content={title}
+    >
+      {text}
+    </span>
+  );
+}
+
+function createColumnsInternal(
+  type: Typification,
+  services: ColumnServices,
+  state: ColumnState
+): ReturnType<typeof columnHelper.accessor>[] {
+  const pathStr = state.path.join('_');
+  const headerPath = state.singleton ? state.path : makeValuePath([0, ...state.path]);
+  const columnTitle = services.getColumnText(headerPath);
+  const elementPath = (rowIndex: number) => state.singleton ? state.path : makeValuePath([rowIndex, ...state.path]);
   switch (type.typeID) {
     case TypeID.integer: return [
-      columnHelper.accessor(value => valueAccessor(value) as number, {
-        id: `${path}_int`,
-        header: () => <span className='min-w-2'>Z</span>,
+      columnHelper.accessor(value => state.accessor(value) as number, {
+        id: `B${pathStr}_Z`,
+        header: () => <TitledHeader
+          className='min-w-2'
+          text='Z'
+          title={columnTitle}
+        />,
         size: 60,
         minSize: 60,
         maxSize: 60,
-        cell: props => props.getValue()
+        cell: props => <span
+          className={services.editElement ? 'cursor-pointer' : ''}
+          onClick={services.editElement ? () => services.editElement!(elementPath(props.row.index)) : undefined}
+        >
+          {props.getValue()}
+        </span>
       })
     ];
     case TypeID.basic: return [
-      columnHelper.accessor(value => valueAccessor(value) as number, {
-        id: `${path}_${type.baseID}`,
-        header: type.baseID,
-        size: showDataText ? 100 : 60,
-        minSize: showDataText ? 100 : 60,
-        maxSize: showDataText ? 100 : 60,
-        cell: props => prepareValueString(props.getValue(), type, schema, basics, showDataText)
+      columnHelper.accessor(value => state.accessor(value) as number, {
+        id: `${pathStr}_${type.baseID}`,
+        header: () => <TitledHeader
+          className='min-w-2'
+          text={type.baseID}
+          title={columnTitle}
+        />,
+        size: services.showDataText ? 100 : 60,
+        minSize: services.showDataText ? 100 : 60,
+        maxSize: services.showDataText ? 100 : 60,
+        cell: props => <span
+          className={services.editElement ? 'cursor-pointer' : ''}
+          onClick={services.editElement ? () => services.editElement!(elementPath(props.row.index)) : undefined}
+        >
+          {prepareValueString(
+            props.getValue(), type,
+            services.schema, services.basics, services.showDataText
+          )}
+        </span>
       })
     ];
     case TypeID.collection: return [
-      columnHelper.accessor(value => valueAccessor(value) as Value[], {
-        id: `${path}_card`,
-        header: () => <span className='min-w-4'>ℬ</span>,
+      columnHelper.accessor(value => state.accessor(value) as Value[], {
+        id: `${pathStr}_card`,
+        header: () => <TitledHeader
+          className='min-w-4'
+          text='ℬ'
+          title={columnTitle}
+        />,
         size: 60,
         minSize: 60,
         maxSize: 60,
-        cell: props => props.getValue().length
+        cell: props => <span
+          className='font-math cursor-pointer'
+          onClick={() => services.navigateValue(elementPath(props.row.index))}
+        >
+          {props.getValue().length}
+        </span>
       }),
-      columnHelper.accessor(value => valueAccessor(value) as Value[], {
-        id: `${path}_stub`,
+      columnHelper.accessor(value => state.accessor(value) as Value[], {
+        id: `${pathStr}_stub`,
         header: '',
         size: 80,
         minSize: 80,
         maxSize: 80,
-        cell: props => <span className='min-w-16'>{valueStub(props.getValue())}</span>
+        cell: props => <span
+          className='min-w-16 font-math cursor-pointer'
+          onClick={() => services.navigateValue(elementPath(props.row.index))}
+        >
+          {valueStub(props.getValue())}
+        </span>
       })
     ];
     case TypeID.tuple: {
       const components: ColumnDef<Value, unknown>[] = [];
       for (let i = 0; i < type.factors.length; i++) {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        components.push(...createColumnsType(
+        components.push(...createColumnsInternal(
           type.factors[i],
-          schema,
-          basics,
-          showDataText,
-          `${path}_${i}`,
-          value => ((valueAccessor(value) as Value[])[i + 1])
+          services,
+          {
+            singleton: state.singleton,
+            path: makeValuePath([...state.path, i + 1]),
+            accessor: value => ((state.accessor(value) as Value[])[i + 1])
+          }
         ));
       }
       return components;

@@ -41,6 +41,11 @@ export const IntegerT = {
 /** Type transformation path. */
 export type TypePath = Branded<number[], 'TypePath'>;
 
+/** Creates type path. */
+export function makeTypePath(path: number[]): TypePath {
+  return path as TypePath;
+}
+
 /** AnyTyped type object. */
 export const AnyTypificationT = { typeID: TypeID.anyTypification } as const;
 

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { type Typification, type Value } from '@/features/rslang';
+import { type TypePath, type Typification, type Value } from '@/features/rslang';
 import { labelType } from '@/features/rslang/labels';
 
 import { TextArea } from '@/components/input';
@@ -16,11 +16,15 @@ export interface DlgEditValueProps {
   initialValue: Value;
   type: Typification;
   engine: RSEngine;
+  getHeaderText?: (path: TypePath) => string;
   onChange?: (newValue: Value) => void;
 }
 
 export function DlgEditValue() {
-  const { initialValue, type, engine, onChange } = useDialogsStore(state => state.props as DlgEditValueProps);
+  const {
+    initialValue, type, engine,
+    onChange, getHeaderText
+  } = useDialogsStore(state => state.props as DlgEditValueProps);
   const [value, setValue] = useState<Value>(JSON.parse(JSON.stringify(initialValue)) as Value);
   const [isModified, setIsModified] = useState(false);
 
@@ -41,7 +45,7 @@ export function DlgEditValue() {
       submitText='Сохранить'
       canSubmit={!isModified && !!onChange}
       onSubmit={handleSubmit}
-      className='w-[calc(100dvw-3rem)] h-[calc(100svh-8rem)] pb-3 px-6 cc-column'
+      className='max-w-[calc(100dvw-3rem)] min-w-160 max-h-[calc(100svh-8rem)] min-h-160 pb-3 px-6 cc-column'
     >
       <TextArea
         fitContent
@@ -62,6 +66,7 @@ export function DlgEditValue() {
         value={value}
         engine={engine}
         onChange={handleChange}
+        getHeaderText={getHeaderText}
       />
 
     </ModalForm>

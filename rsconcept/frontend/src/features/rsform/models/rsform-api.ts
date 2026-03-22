@@ -3,7 +3,7 @@
  */
 
 import { BASIC_SCHEMAS, type LibraryItem } from '@/features/library';
-import { type AnalysisFull, TypeClass, ValueClass } from '@/features/rslang';
+import { type AnalysisFull, TypeClass, type TypePath, ValueClass } from '@/features/rslang';
 
 import { type RO } from '@/utils/meta';
 import { TextMatcher } from '@/utils/utils';
@@ -383,4 +383,28 @@ export function calculateSchemaStats(target: RSForm): RSFormStats {
     count_theorem: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.THEOREM ? 1 : 0), 0),
     count_nominal: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.NOMINAL ? 1 : 0), 0)
   };
+}
+
+/** Finds {@link Constituenta} by structure path. */
+export function findCstByStructure(schema: RSForm, target: Constituenta, path: TypePath): Constituenta | null {
+  for (const cst of schema.items) {
+    if (cst.spawner === target.id && cst.spawner_path) {
+      if (
+        cst.spawner_path.length === path.length &&
+        cst.spawner_path.every((v, i) => v === path[i])
+      ) {
+        return cst;
+      }
+    }
+  }
+  return null;
+}
+
+/** Retrieves name for piece of target {@link Constituenta} structure. */
+export function getStructureName(schema: RSForm, target: Constituenta, path: TypePath): string {
+  const representation = findCstByStructure(schema, target, path);
+  if (representation) {
+    return representation.term_resolved;
+  }
+  return '';
 }

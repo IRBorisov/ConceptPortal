@@ -30,6 +30,11 @@ export type ValueContext = Map<string, Value>;
 /** Value extraction path. */
 export type ValuePath = Branded<number[], 'ValuePath'>;
 
+/** Creates value path. */
+export function makeValuePath(path: number[]): ValuePath {
+  return path as ValuePath;
+}
+
 /** Empty set ∅. */
 export const EmptySetV = [];
 

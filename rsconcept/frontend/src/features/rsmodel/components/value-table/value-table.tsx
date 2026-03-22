@@ -2,20 +2,26 @@
 
 import { useState } from 'react';
 
-import { TypeID, type Typification, type Value } from '@/features/rslang';
+import { makeValuePath, TypeID, type Typification, type Value, type ValuePath } from '@/features/rslang';
+import { convertPathToType, extractValue, valueStub } from '@/features/rslang/eval/value-api';
+import { type TypePath } from '@/features/rslang/semantic/typification';
+import { applyPath } from '@/features/rslang/semantic/typification-api';
 
 import { MiniButton } from '@/components/control';
 import { DataTable } from '@/components/data-table';
-import { IconReset } from '@/components/icons';
+import { IconNewItem, IconReset } from '@/components/icons';
 import { cn } from '@/components/utils';
+import { NoData } from '@/components/view';
 import { useFitHeight } from '@/stores/app-layout';
 import { usePreferencesStore } from '@/stores/preferences';
+import { notImplemented } from '@/utils/utils';
 
+import { printTypeCrumbs } from '../../labels';
 // import { notImplemented } from '@/utils/utils';
 import { type RSEngine } from '../../models/rsengine';
 import { IconShowDataText } from '../icon-show-data-text';
 
-import { createColumnsType } from './value-columns';
+import { type ColumnServices, createColumnsType } from './value-columns';
 
 interface ValueTableProps {
   className?: string;
@@ -23,74 +29,141 @@ interface ValueTableProps {
   value: Value;
   type: Typification;
   heightMargin?: string;
+  getHeaderText?: (path: TypePath) => string;
   onChange?: (newValue: Value) => void;
 }
 
 /** Displays a badge with value cardinality and information tooltip. */
-export function ValueTable({ className, heightMargin, value, engine, type, onChange }: ValueTableProps) {
+export function ValueTable({ className, heightMargin, value, engine, getHeaderText, type, onChange }: ValueTableProps) {
   const [currentValue, setCurrentValue] = useState<Value>(value);
   const [currentType, setCurrentType] = useState<Typification>(type);
-  console.log('Edit enabled: ', !!onChange && !!setCurrentType && !!setCurrentValue);
+  const [path, setPath] = useState<ValuePath>(makeValuePath([]));
+  const typePath = convertPathToType(path, type);
 
   const showDataText = usePreferencesStore(state => state.showDataText);
   const toggleDataText = usePreferencesStore(state => state.toggleShowDataText);
 
-  const isArray = currentType.typeID === TypeID.collection;
-  const adjustedType = isArray ? currentType.base : currentType;
+  const typeStr = typePath ? printTypeCrumbs(type, typePath) : 'N/A';
+  const valueStr = (() => {
+    const stub = valueStub(currentValue);
+    if (currentType.typeID !== TypeID.collection) {
+      return stub;
+    } else {
+      return `${stub} | ${(currentValue as Value[]).length}`;
+    }
+  })();
 
   const tableHeight = useFitHeight(heightMargin ?? '');
 
-  // function handleNavigateValue(target: Value[], index: number = 0) {
-  //   console.log('Navigate to: ', target, index);
-  //   notImplemented();
-  // }
+  function handleNavigate(subPath: ValuePath) {
+    const newTypePath = convertPathToType(subPath, currentType);
+    if (newTypePath === null) {
+      console.error('Invalid navigation path - invalid type path');
+      return;
+    }
+    const newType = applyPath(currentType, newTypePath);
+    if (newType === null) {
+      console.error('Invalid navigation path - invalid new type');
+      return;
+    }
+    const newValue = extractValue(currentValue, subPath);
+    if (newValue === null) {
+      console.error('Invalid navigation path - invalid value');
+      return;
+    }
 
-  // function handleEditElement(target: Value, newValue: Value, index: number = 0) {
-  //   console.log('Edit element: ', target, newValue, index);
-  //   notImplemented();
-  // }
+    setCurrentType(newType);
+    setCurrentValue(newValue);
+    setPath(prev => makeValuePath([...prev, ...subPath]));
+  }
 
-  // function handleDeleteElement(target: Value) {
-  //   console.log('Delete element: ', target);
-  //   notImplemented();
-  // }
+  function handleEditElement(subPath: ValuePath) {
+    console.log('Edit element: ', subPath);
+    notImplemented();
+  }
+
+  function handleDeleteElement(subPath: ValuePath) {
+    console.log('Delete element: ', subPath);
+    notImplemented();
+  }
+
+  function handleAddElement() {
+    console.log('Add element');
+    notImplemented();
+  }
 
   function handleResetView() {
     setCurrentValue(value);
     setCurrentType(type);
+    setPath(makeValuePath([]));
   }
 
-  const columns = createColumnsType(adjustedType, engine.schema!, engine.basics, showDataText);
+  function getColumnText(subPath: ValuePath): string {
+    if (!getHeaderText) {
+      return '';
+    }
+    const vPath = makeValuePath([...path, ...subPath]);
+    const tPath = convertPathToType(vPath, type);
+    if (tPath === null) {
+      return '';
+    }
+    return getHeaderText(tPath);
+  }
+
+  const services: ColumnServices = {
+    schema: engine.schema!,
+    basics: engine.basics,
+    showDataText,
+    navigateValue: handleNavigate,
+    getColumnText: getColumnText,
+    editElement: onChange ? handleEditElement : undefined,
+    deleteElement: onChange ? handleDeleteElement : undefined
+  };
+
+  const columns = createColumnsType(currentType, services);
 
   return (
-    <div className={cn('relative overflow-auto w-fit', className)}>
-      <div className='flex justify-between'>
-        <span>Управление</span>
-        <div className='flex'>
-          <MiniButton
-            title='Сбросить вид'
-            icon={<IconReset size='1.25rem' className='icon-primary' />}
-            onClick={handleResetView}
-            disabled={currentType === type}
-          />
-          <MiniButton
-            title='Отображение данных в тексте'
-            icon={<IconShowDataText size='1.25rem' className='hover:text-primary' value={showDataText} />}
-            onClick={toggleDataText}
-          />
+    <div className={cn('relative w-full flex flex-col', className)}>
+      <div className='font-math select-none'>{typeStr}</div>
+      <div className='w-fit'>
+        <div className='flex justify-between'>
+          <span className='font-math'>{valueStr}</span>
+          <div className='cc-icons'>
+            <MiniButton
+              title='Значение целиком'
+              icon={<IconReset size='1.25rem' className='icon-primary' />}
+              onClick={handleResetView}
+              disabled={path.length === 0}
+            />
+            {onChange ? (<MiniButton
+              title='Добавить элемент'
+              icon={<IconNewItem size='1.25rem' className='icon-green' />}
+              onClick={handleAddElement}
+              disabled={currentType.typeID !== TypeID.collection}
+            />) : null}
+            <MiniButton
+              title='Отображение данных в тексте'
+              icon={<IconShowDataText size='1.25rem' className='hover:text-primary' value={showDataText} />}
+              onClick={toggleDataText}
+            />
+          </div>
         </div>
+        <DataTable
+          dense
+          columns={columns}
+          style={{ maxHeight: heightMargin ? tableHeight : undefined }}
+          className='cc-scroll-y text-sm select-none w-fit border min-w-60'
+          enablePagination
+          paginationPerPage={20}
+          paginationOptions={[20]}
+          data={currentType.typeID === TypeID.collection ? currentValue as Value[] : [currentValue]}
+          noDataComponent={
+            <NoData>
+              <p>Пустое множество</p>
+            </NoData>}
+          headPosition='0rem'
+        />
       </div>
-      <DataTable
-        dense
-        columns={columns}
-        style={{ maxHeight: heightMargin ? tableHeight : undefined }}
-        className='cc-scroll-y text-sm select-none w-fit border'
-        enablePagination
-        paginationPerPage={20}
-        paginationOptions={[20]}
-        data={isArray ? currentValue as Value[] : [currentValue]}
-        headPosition='0rem'
-      />
     </div>
   );
 }
