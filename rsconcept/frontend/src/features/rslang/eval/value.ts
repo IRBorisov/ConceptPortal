@@ -2,6 +2,8 @@
  * Module: Structured data for RSLang expression evaluation.
  */
 
+import { type Branded } from '@/utils/meta';
+
 import { printValue } from './value-api';
 
 /** Tuple ID for array distinction. */
@@ -24,6 +26,9 @@ export type Value = number | Value[];
 
 /** Values context. */
 export type ValueContext = Map<string, Value>;
+
+/** Value extraction path. */
+export type ValuePath = Branded<number[], 'ValuePath'>;
 
 /** Empty set ∅. */
 export const EmptySetV = [];

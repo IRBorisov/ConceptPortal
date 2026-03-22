@@ -38,6 +38,7 @@ export const IntegerT = {
   isIntegerCompatible: true
 } as const;
 
+/** Type transformation path. */
 export type TypePath = Branded<number[], 'TypePath'>;
 
 /** AnyTyped type object. */

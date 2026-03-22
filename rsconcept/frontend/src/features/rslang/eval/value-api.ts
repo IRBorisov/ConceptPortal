@@ -1,9 +1,9 @@
 import { type RO } from '@/utils/meta';
 import { applyHash_fnv1a } from '@/utils/utils';
 
-import { type ExpressionType, TypeID } from '../semantic/typification';
+import { type ExpressionType, TypeID, type TypePath, type Typification } from '../semantic/typification';
 
-import { BOOL_INFINITY, compare, EmptySetV, set, SET_INFINITY, tuple, TUPLE_ID, type Value, VALUE_FALSE, VALUE_TRUE, type ValueContext } from './value';
+import { BOOL_INFINITY, compare, EmptySetV, set, SET_INFINITY, tuple, TUPLE_ID, type Value, VALUE_FALSE, VALUE_TRUE, type ValueContext, type ValuePath } from './value';
 
 /** Cartesian product of factor sets. */
 export function decartian(factors: Value[][]): Value[] | null {
@@ -314,5 +314,41 @@ export function validateValue(value: RO<Value>, type: RO<ExpressionType>, basics
     case TypeID.function:
       return false;
   }
+}
+
+/** Converts value path to type path. */
+export function convertPathToType(path: ValuePath, type: Typification): TypePath | null {
+  const result: number[] = [];
+  if (path.length === 0) {
+    return result as TypePath;
+  }
+
+  let curType = type;
+  let index = 0;
+  while (index < path.length) {
+    switch (curType.typeID) {
+      case TypeID.collection: {
+        result.push(0);
+        curType = curType.base;
+        index++;
+        break;
+      }
+      case TypeID.tuple: {
+        const tupleIdx = path[index];
+        if (typeof tupleIdx !== 'number' || tupleIdx < 1 || tupleIdx > curType.factors.length) {
+          return null;
+        }
+        result.push(tupleIdx);
+        curType = curType.factors[tupleIdx - 1];
+        index++;
+        break;
+      }
+      case TypeID.basic:
+      case TypeID.integer:
+      case TypeID.anyTypification:
+        return null;
+    }
+  }
+  return result as TypePath;
 
 }

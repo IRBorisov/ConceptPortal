@@ -22,6 +22,10 @@ export interface AnalysisBase {
   valueClass: ValueClass | null;
 }
 
+export interface AnalysisFast extends AnalysisBase {
+  ast: AstNode | null;
+}
+
 export interface AnalysisFull extends AnalysisBase {
   ast: AstNode | null;
   errors: RSErrorDescription[];
@@ -62,33 +66,34 @@ export class RSLangAnalyzer {
     return this.typeContext.get(alias) ?? null;
   }
 
-  public checkFast(expression: string, options?: AnalysisOptions): AnalysisBase {
+  public checkFast(expression: string, options?: AnalysisOptions): AnalysisFast {
     if (expression.length === 0) {
-      return { success: false, type: null, valueClass: null };
+      return { success: false, type: null, valueClass: null, ast: null };
     }
     const ast = this.parse(expression);
     if (ast.hasError) {
-      return { success: false, type: null, valueClass: null };
+      return { success: false, type: null, valueClass: null, ast: ast };
     }
     const type = this.typeAuditor.run(ast, options?.annotateTypes ?? false);
     if (type === null) {
-      return { success: false, type: null, valueClass: null };
+      return { success: false, type: null, valueClass: null, ast: ast };
     }
 
     if (options?.isDomain) {
       if (!isStructureDomain(ast) || type.typeID !== TypeID.collection) {
-        return { success: false, type: null, valueClass: null };
+        return { success: false, type: null, valueClass: null, ast: ast };
       }
-      return { success: true, type: debool(type), valueClass: ValueClass.VALUE };
+      return { success: true, type: debool(type), valueClass: ValueClass.VALUE, ast: ast };
     }
     if (options?.expected && getTypeClass(type.typeID) !== options.expected) {
-      return { success: false, type: null, valueClass: null };
+      return { success: false, type: null, valueClass: null, ast: ast };
     }
 
     return {
       success: true,
       type: type,
-      valueClass: options?.isDomain ? ValueClass.VALUE : this.valueAuditor.run(ast)
+      valueClass: options?.isDomain ? ValueClass.VALUE : this.valueAuditor.run(ast),
+      ast: ast
     };
   }
 

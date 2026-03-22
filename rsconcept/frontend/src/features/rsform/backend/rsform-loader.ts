@@ -2,11 +2,12 @@
  * Module: RSForm data loading and processing.
  */
 
-import { type AnalysisBase, RSLangAnalyzer } from '@/features/rslang';
+import { type AnalysisFast, RSLangAnalyzer, TokenID, type TypePath } from '@/features/rslang';
 import { extractGlobals, isSimpleExpression, splitTemplateDefinition } from '@/features/rslang/api';
 
 import { Graph } from '@/models/graph';
 import { type RO } from '@/utils/meta';
+import { type AstNode, getNodeIndices } from '@/utils/parsing';
 
 import { type Constituenta, CstStatus, CstType, type RSForm } from '../models/rsform';
 import {
@@ -195,8 +196,31 @@ export class RSFormLoader {
     const order = this.graph.topologicalOrder();
     for (const cstID of order) {
       const cst = this.cstByID.get(cstID)!;
-      cst.analysis = parseCst(cst, this.analyzer);
-      cst.status = cst.cst_type === CstType.NOMINAL ? CstStatus.UNKNOWN : inferStatus(cst.analysis.success, cst.analysis.valueClass);
+      const parse = parseCst(cst, this.analyzer);
+      cst.analysis = {
+        success: parse.success,
+        type: parse.type,
+        valueClass: parse.valueClass,
+      };
+      cst.status = cst.cst_type === CstType.NOMINAL
+        ? CstStatus.UNKNOWN
+        : inferStatus(cst.analysis.success, cst.analysis.valueClass);
+      if (cst.spawner && !!parse.ast && !!parse.type) {
+        const parents = this.graph.expandInputs([cstID]);
+        if (parents.length === 1) {
+          const path = extractTypePath(parse.ast);
+          if (path) {
+            if (cst.spawner !== parents[0]) {
+              const parent = this.cstByID.get(parents[0])!;
+              if (parent.spawner_path) {
+                cst.spawner_path = [...parent.spawner_path, ...path] as TypePath;
+              }
+            } else {
+              cst.spawner_path = path;
+            }
+          }
+        }
+      }
     }
   }
 }
@@ -204,10 +228,10 @@ export class RSFormLoader {
 // ====== Internals =========
 
 /** Parse {@link Constituenta} for {@link RSForm}. */
-function parseCst(target: Constituenta, analyzer: RSLangAnalyzer): AnalysisBase {
+function parseCst(target: Constituenta, analyzer: RSLangAnalyzer): AnalysisFast {
   const cType = target.cst_type;
   if (cType === CstType.NOMINAL) {
-    return { success: false, type: null, valueClass: null };
+    return { success: false, type: null, valueClass: null, ast: null };
   }
   if (cType === CstType.BASE || cType === CstType.CONSTANT) {
     analyzer.addBase(target.alias, cType === CstType.CONSTANT);
@@ -219,5 +243,30 @@ function parseCst(target: Constituenta, analyzer: RSLangAnalyzer): AnalysisBase 
     });
     analyzer.setGlobal(target.alias, parse.type, parse.valueClass);
     return parse;
+  }
+}
+
+function extractTypePath(node: AstNode): TypePath | null {
+  const result: number[] = [];
+  let current = node;
+  while (true) {
+    switch (current.typeID) {
+      default: return null;
+      case TokenID.ID_GLOBAL:
+        return result.reverse() as TypePath;
+      case TokenID.REDUCE:
+        result.push(0);
+        current = current.children[0];
+        break;
+      case TokenID.SMALLPR:
+      case TokenID.BIGPR:
+        const indices = getNodeIndices(node);
+        if (indices.length !== 1) {
+          return null;
+        }
+        current = current.children[0];
+        result.push(indices[0]);
+        break;
+    }
   }
 }

@@ -8,7 +8,7 @@ import {
   type LibraryItemReference,
   type VersionInfo
 } from '@/features/library';
-import { type AnalysisBase, type ExpressionType, type RSLangAnalyzer } from '@/features/rslang';
+import { type AnalysisBase, type ExpressionType, type RSLangAnalyzer, type TypePath } from '@/features/rslang';
 
 import { type Graph } from '@/models/graph';
 import { type RO } from '@/utils/meta';
@@ -122,6 +122,9 @@ export interface Constituenta {
   spawner?: number;
   /** Alias of {@link Constituenta} that spawned this one. */
   spawner_alias?: string;
+  /** Structure path that spawned this one. */
+  spawner_path?: TypePath;
+
   /** List of {@link Constituenta} that are spawned by this one. */
   spawn: number[];
   /** List of aliases of {@link Constituenta} that are spawned by this one. */

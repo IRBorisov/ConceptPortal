@@ -54,6 +54,7 @@ export class RSEngine {
     this.schema = schema;
     if (newSchema) {
       this.prepareAst();
+      this.setupEmptySets();
       // TODO: reset some values?
     }
     if (this.data !== dto) {
@@ -348,6 +349,10 @@ export class RSEngine {
         }
       }
     }
+    this.setupEmptySets();
+  }
+
+  private setupEmptySets(): void {
     for (const cst of this.schema!.items) {
       if (isBasicConcept(cst.cst_type) && this.schema!.analyzer.getType(cst.alias)?.typeID === TypeID.collection) {
         if (this.calculator.getValue(cst.alias) === null) {
