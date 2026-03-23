@@ -10,7 +10,7 @@ import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { type OssLayout, schemaUpdateBlock, type UpdateBlockDTO } from '../backend/types';
-import { useOssSuspense } from '../backend/use-oss';
+import { useOss } from '../backend/use-oss';
 import { useUpdateBlock } from '../backend/use-update-block';
 import { SelectParent } from '../components/select-parent';
 import { LayoutManager } from '../models/oss-layout-api';
@@ -24,7 +24,7 @@ export interface DlgEditBlockProps {
 export function DlgEditBlock() {
   const { ossID, targetID, layout } = useDialogsStore(state => state.props as DlgEditBlockProps);
   const { updateBlock } = useUpdateBlock();
-  const { schema } = useOssSuspense({ itemID: ossID });
+  const { schema } = useOss({ itemID: ossID });
   const manager = new LayoutManager(schema, layout);
   const target = manager.oss.blockByID.get(targetID)!;
 

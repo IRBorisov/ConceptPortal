@@ -14,7 +14,7 @@ import { hintMsg } from '@/utils/labels';
 
 import { type CreateSynthesisDTO, type OssLayout, schemaCreateSynthesis } from '../../backend/types';
 import { useCreateSynthesis } from '../../backend/use-create-synthesis';
-import { useOssSuspense } from '../../backend/use-oss';
+import { useOss } from '../../backend/use-oss';
 import { LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '../../models/oss-layout-api';
 
 import { TabArguments } from './tab-arguments';
@@ -48,7 +48,7 @@ export function DlgCreateSynthesis() {
     defaultX,
     defaultY
   } = useDialogsStore(state => state.props as DlgCreateSynthesisProps);
-  const { schema } = useOssSuspense({ itemID: ossID });
+  const { schema } = useOss({ itemID: ossID });
   const manager = new LayoutManager(schema, layout);
 
   const methods = useForm<CreateSynthesisDTO>({

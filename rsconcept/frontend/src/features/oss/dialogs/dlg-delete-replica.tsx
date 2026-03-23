@@ -11,7 +11,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 
 import { type DeleteReplicaDTO, type OssLayout, schemaDeleteReplica } from '../backend/types';
 import { useDeleteReplica } from '../backend/use-delete-replica';
-import { useOssSuspense } from '../backend/use-oss';
+import { useOss } from '../backend/use-oss';
 
 export interface DlgDeleteReplicaProps {
   ossID: number;
@@ -24,7 +24,7 @@ export function DlgDeleteReplica() {
   const { ossID, targetID, layout, beforeDelete } = useDialogsStore(state => state.props as DlgDeleteReplicaProps);
   const { deleteReplica: deleteReference } = useDeleteReplica();
 
-  const { schema } = useOssSuspense({ itemID: ossID });
+  const { schema } = useOss({ itemID: ossID });
   const target = schema.operationByID.get(targetID)!;
 
   const { handleSubmit, control } = useForm<DeleteReplicaDTO>({

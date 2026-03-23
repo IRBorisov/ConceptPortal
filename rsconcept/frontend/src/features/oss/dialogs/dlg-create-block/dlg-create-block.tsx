@@ -13,7 +13,7 @@ import { hintMsg } from '@/utils/labels';
 
 import { type CreateBlockDTO, type OssLayout, schemaCreateBlock } from '../../backend/types';
 import { useCreateBlock } from '../../backend/use-create-block';
-import { useOssSuspense } from '../../backend/use-oss';
+import { useOss } from '../../backend/use-oss';
 import { LayoutManager } from '../../models/oss-layout-api';
 import { BLOCK_NODE_MIN_HEIGHT, BLOCK_NODE_MIN_WIDTH } from '../../pages/oss-page/tab-oss-graph/graph/block-node';
 
@@ -51,7 +51,7 @@ export function DlgCreateBlock() {
     defaultY
   } = useDialogsStore(state => state.props as DlgCreateBlockProps);
 
-  const { schema } = useOssSuspense({ itemID: ossID });
+  const { schema } = useOss({ itemID: ossID });
   const manager = new LayoutManager(schema, layout);
 
   const methods = useForm<CreateBlockDTO>({

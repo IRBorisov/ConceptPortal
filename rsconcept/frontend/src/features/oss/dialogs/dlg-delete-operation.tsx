@@ -11,7 +11,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 
 import { type DeleteOperationDTO, OperationType, type OssLayout, schemaDeleteOperation } from '../backend/types';
 import { useDeleteOperation } from '../backend/use-delete-operation';
-import { useOssSuspense } from '../backend/use-oss';
+import { useOss } from '../backend/use-oss';
 
 export interface DlgDeleteOperationProps {
   ossID: number;
@@ -24,7 +24,7 @@ export function DlgDeleteOperation() {
   const { ossID, targetID, layout, beforeDelete } = useDialogsStore(state => state.props as DlgDeleteOperationProps);
   const { deleteOperation } = useDeleteOperation();
 
-  const { schema } = useOssSuspense({ itemID: ossID });
+  const { schema } = useOss({ itemID: ossID });
   const target = schema.operationByID.get(targetID)!;
 
   const { handleSubmit, control } = useForm<DeleteOperationDTO>({

@@ -1,4 +1,4 @@
-import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { useAuth } from '@/features/auth';
 
@@ -12,22 +12,13 @@ export function useLibraryListKey() {
   return libraryApi.getLibraryQueryOptions({ isAdmin: adminMode }).queryKey;
 }
 
-export function useLibrarySuspense() {
+export function useLibrary() {
   const adminMode = usePreferencesStore(state => state.adminMode);
   const { user } = useAuth();
   const { data: items } = useSuspenseQuery({
     ...libraryApi.getLibraryQueryOptions({ isAdmin: user.is_staff && adminMode })
   });
   return { items };
-}
-
-export function useLibrary() {
-  const adminMode = usePreferencesStore(state => state.adminMode);
-  const { user } = useAuth();
-  const { data: items, isLoading } = useQuery({
-    ...libraryApi.getLibraryQueryOptions({ isAdmin: user.is_staff && adminMode })
-  });
-  return { items: items ?? [], isLoading };
 }
 
 export function prefetchLibrary() {

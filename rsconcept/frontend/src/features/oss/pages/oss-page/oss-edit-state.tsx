@@ -14,7 +14,7 @@ import { usePreferencesStore } from '@/stores/preferences';
 import { promptText } from '@/utils/labels';
 
 import { OperationType } from '../../backend/types';
-import { useOssSuspense } from '../../backend/use-oss';
+import { useOss } from '../../backend/use-oss';
 import { NodeType, type Operation } from '../../models/oss';
 
 import { OssEditContext } from './oss-edit-context';
@@ -35,7 +35,7 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
   const setCurrentOperation = useAIStore(state => state.setOperation);
 
   const { user } = useAuth();
-  const { schema } = useOssSuspense({ itemID: itemID });
+  const { schema } = useOss({ itemID: itemID });
 
   const isOwned = !!user.id && user.id === schema.owner;
   const isMutable = role > UserRole.READER && !schema.read_only;

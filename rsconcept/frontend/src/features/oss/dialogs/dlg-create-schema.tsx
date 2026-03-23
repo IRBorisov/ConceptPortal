@@ -12,7 +12,7 @@ import { hintMsg } from '@/utils/labels';
 
 import { type CreateSchemaDTO, type OssLayout, schemaCreateSchema } from '../backend/types';
 import { useCreateSchema } from '../backend/use-create-schema';
-import { useOssSuspense } from '../backend/use-oss';
+import { useOss } from '../backend/use-oss';
 import { SelectParent } from '../components/select-parent';
 import { LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '../models/oss-layout-api';
 
@@ -37,7 +37,7 @@ export function DlgCreateSchema() {
     defaultY
   } = useDialogsStore(state => state.props as DlgCreateSchemaProps);
 
-  const { schema } = useOssSuspense({ itemID: ossID });
+  const { schema } = useOss({ itemID: ossID });
   const manager = new LayoutManager(schema, layout);
 
   const {

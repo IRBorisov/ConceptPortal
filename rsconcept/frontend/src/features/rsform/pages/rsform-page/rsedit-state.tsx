@@ -8,7 +8,7 @@ import { useAIStore } from '@/features/ai/stores/ai-context';
 import { useAuth } from '@/features/auth';
 import { useLibrarySearchStore } from '@/features/library';
 import { useDeleteItem } from '@/features/library/backend/use-delete-item';
-import { useLibrarySuspense } from '@/features/library/backend/use-library';
+import { useLibrary } from '@/features/library/backend/use-library';
 import { useRoleStore, UserRole } from '@/features/users';
 import { useAdjustRole } from '@/features/users/stores/use-adjust-role';
 
@@ -49,7 +49,7 @@ export const RSEditState = ({
 
   const { user } = useAuth();
   const { schema } = useRSForm({ itemID: itemID, version: activeVersion });
-  const { items: library } = useLibrarySuspense();
+  const { items: library } = useLibrary();
   const isModified = useModificationStore(state => state.isModified);
 
   const isOwned = !!user.id && user.id === schema.owner;

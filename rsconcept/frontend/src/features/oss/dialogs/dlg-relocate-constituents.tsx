@@ -17,7 +17,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { hintMsg } from '@/utils/labels';
 
 import { type OssLayout, type RelocateConstituentsDTO, schemaRelocateConstituents } from '../backend/types';
-import { useOssSuspense } from '../backend/use-oss';
+import { useOss } from '../backend/use-oss';
 import { useRelocateConstituents } from '../backend/use-relocate-constituents';
 import { useUpdateLayout } from '../backend/use-update-layout';
 import { IconRelocationUp } from '../components/icon-relocation-up';
@@ -35,7 +35,7 @@ export function DlgRelocateConstituents() {
   const { updateLayout: updatePositions } = useUpdateLayout();
   const { relocateConstituents } = useRelocateConstituents();
 
-  const { schema: oss } = useOssSuspense({ itemID: ossID });
+  const { schema: oss } = useOss({ itemID: ossID });
   const initialTarget = targetID ? oss.operationByID.get(targetID)! : undefined;
 
   const { handleSubmit, control, setValue } = useForm<RelocateConstituentsDTO>({

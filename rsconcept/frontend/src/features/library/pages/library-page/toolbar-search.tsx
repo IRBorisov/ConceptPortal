@@ -11,7 +11,7 @@ import { SearchBar } from '@/components/input';
 import { cn } from '@/components/utils';
 import { tripleToggleColor } from '@/utils/utils';
 
-import { useLibrarySuspense } from '../../backend/use-library';
+import { useLibrary } from '../../backend/use-library';
 import { IconItemVisibility } from '../../components/icon-item-visibility';
 import { IconLibraryItemType } from '../../components/icon-library-item-type';
 import { IconShowSidebar } from '../../components/icon-show-sidebar';
@@ -25,7 +25,7 @@ interface ToolbarSearchProps {
 }
 
 export function ToolbarSearch({ className, total, filtered }: ToolbarSearchProps) {
-  const { items } = useLibrarySuspense();
+  const { items } = useLibrary();
   const {
     elementRef: userElementRef,
     handleBlur: userHandleBlur,

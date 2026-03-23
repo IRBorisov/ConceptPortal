@@ -15,7 +15,7 @@ import { hintMsg } from '@/utils/labels';
 
 import { type ImportSchemaDTO, type OssLayout, schemaImportSchema } from '../backend/types';
 import { useImportSchema } from '../backend/use-import-schema';
-import { useOssSuspense } from '../backend/use-oss';
+import { useOss } from '../backend/use-oss';
 import { SelectParent } from '../components/select-parent';
 import { sortItemsForOSS } from '../models/oss-api';
 import { LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '../models/oss-layout-api';
@@ -40,7 +40,7 @@ export function DlgImportSchema() {
     defaultX,
     defaultY
   } = useDialogsStore(state => state.props as DlgImportSchemaProps);
-  const { schema } = useOssSuspense({ itemID: ossID });
+  const { schema } = useOss({ itemID: ossID });
   const manager = new LayoutManager(schema, layout);
   const { items: libraryItems } = useLibrary();
   const sortedItems = sortItemsForOSS(manager.oss, libraryItems);

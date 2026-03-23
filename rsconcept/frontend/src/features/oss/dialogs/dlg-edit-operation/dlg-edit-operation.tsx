@@ -13,7 +13,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { hintMsg } from '@/utils/labels';
 
 import { OperationType, type OssLayout, schemaUpdateOperation, type UpdateOperationDTO } from '../../backend/types';
-import { useOssSuspense } from '../../backend/use-oss';
+import { useOss } from '../../backend/use-oss';
 import { useUpdateOperation } from '../../backend/use-update-operation';
 import { LayoutManager } from '../../models/oss-layout-api';
 
@@ -38,7 +38,7 @@ export function DlgEditOperation() {
   const { ossID, layout, targetID } = useDialogsStore(state => state.props as DlgEditOperationProps);
   const { updateOperation } = useUpdateOperation();
 
-  const { schema } = useOssSuspense({ itemID: ossID });
+  const { schema } = useOss({ itemID: ossID });
   const manager = new LayoutManager(schema, layout);
   const target = manager.oss.operationByID.get(targetID)!;
 

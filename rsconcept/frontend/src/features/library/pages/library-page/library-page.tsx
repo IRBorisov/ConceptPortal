@@ -4,7 +4,7 @@ import { ExportDropdown } from '@/components/control/export-dropdown';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { useApplyLibraryFilter } from '../../backend/use-apply-library-filter';
-import { useLibrarySuspense } from '../../backend/use-library';
+import { useLibrary } from '../../backend/use-library';
 import { useRenameLocation } from '../../backend/use-rename-location';
 import { useCreateLibraryFilter, useLibrarySearchStore } from '../../stores/library-search';
 
@@ -13,7 +13,7 @@ import { ToolbarSearch } from './toolbar-search';
 import { ViewSideLocation } from './view-side-location';
 
 export function LibraryPage() {
-  const { items: libraryItems } = useLibrarySuspense();
+  const { items: libraryItems } = useLibrary();
   const { renameLocation } = useRenameLocation();
 
   const folderMode = useLibrarySearchStore(state => state.folderMode);
