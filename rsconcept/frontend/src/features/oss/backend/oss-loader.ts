@@ -34,6 +34,7 @@ export class OssLoader {
   }
 
   produceOSS(): OperationSchema {
+    console.log('produceOSS', this.oss.id);
     const result = this.oss;
     this.prepareLookups();
     this.createGraph();

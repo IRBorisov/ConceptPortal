@@ -14,7 +14,7 @@ export const useUpdateLayout = () => {
     mutationFn: ossApi.updateLayout,
     onSuccess: data => {
       updateTimestamp(data.id, data.time_update);
-      client.setQueryData(KEYS.composite.ossItem({ itemID: data.id }), data);
+      client.setQueryData(KEYS.composite.oss({ itemID: data.id }), data);
     },
     onError: () => client.invalidateQueries()
   });

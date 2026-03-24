@@ -1,9 +1,15 @@
-import { queryOptions } from '@tanstack/react-query';
+import { type QueryClient, queryOptions } from '@tanstack/react-query';
+import equal from "fast-deep-equal";
 
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';
 import { DELAYS, KEYS } from '@/backend/configuration';
+import { queryClient } from '@/backend/query-client';
 import { infoMsg } from '@/utils/labels';
+import { type RO } from '@/utils/meta';
 
+import { type RSForm } from '../models/rsform';
+
+import { loadRSForm } from './rsform-loader';
 import {
   type Attribution,
   type AttributionTargetDTO,
@@ -23,19 +29,38 @@ import {
   type UpdateCrucialDTO
 } from './types';
 
+export function updateRSForm(data: RO<RSFormDTO>, client: QueryClient) {
+  const queryKey = rsformsApi.getRSFormQueryOptions({ itemID: data.id }).queryKey;
+  client.setQueryData(queryKey, (old) => {
+    if (!old || equal(old.raw, data)) {
+      return old;
+    }
+    return { raw: data, transformed: loadRSForm(data) };
+  });
+}
+
 export const rsformsApi = {
   baseKey: KEYS.rsform,
 
   getRSFormQueryOptions: ({ itemID, version }: { itemID?: number | null; version?: number; }) => {
+    const queryKey = KEYS.composite.schema({ itemID, version });
     return queryOptions({
-      queryKey: KEYS.composite.rsItem({ itemID, version }),
+      queryKey: queryKey,
       staleTime: DELAYS.staleShort,
-      queryFn: meta =>
-        axiosGet<RSFormDTO>({
+      queryFn: async (meta) => {
+        const raw = await axiosGet<RSFormDTO>({
           schema: schemaRSForm,
-          endpoint: version ? `/api/library/${itemID}/versions/${version}` : `/api/rsforms/${itemID}/details`,
+          endpoint: version
+            ? `/api/library/${itemID}/versions/${version}`
+            : `/api/rsforms/${itemID}/details`,
           options: { signal: meta.signal }
-        }),
+        });
+        const previous = queryClient.getQueryData<{ raw: RSFormDTO; transformed: RSForm; }>(queryKey);
+        if (previous && equal(previous.raw, raw)) {
+          return previous;
+        }
+        return { raw, transformed: loadRSForm(raw) };
+      },
       enabled: !!itemID
     });
   },

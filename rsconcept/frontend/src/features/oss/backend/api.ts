@@ -39,7 +39,7 @@ export const ossApi = {
 
   getOssQueryOptions: ({ itemID }: { itemID?: number; }) => {
     return queryOptions({
-      queryKey: KEYS.composite.ossItem({ itemID }),
+      queryKey: KEYS.composite.oss({ itemID }),
       staleTime: DELAYS.staleShort,
       queryFn: meta =>
         axiosGet<OperationSchemaDTO>({

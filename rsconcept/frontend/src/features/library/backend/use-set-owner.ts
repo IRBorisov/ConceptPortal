@@ -1,7 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { type OperationSchemaDTO } from '@/features/oss';
-import { type RSFormDTO } from '@/features/rsform';
+import { type RSForm } from '@/features/rsform';
+import { type RSModelDTO } from '@/features/rsmodel';
 
 import { KEYS } from '@/backend/configuration';
 import { type RO } from '@/utils/meta';
@@ -17,7 +18,7 @@ export const useSetOwner = () => {
     mutationKey: [KEYS.global_mutation, libraryApi.baseKey, 'set-owner'],
     mutationFn: libraryApi.setOwner,
     onSuccess: async (_, variables) => {
-      const ossKey = KEYS.composite.ossItem({ itemID: variables.itemID });
+      const ossKey = KEYS.composite.oss({ itemID: variables.itemID });
       const ossData: OperationSchemaDTO | undefined = client.getQueryData(ossKey);
       if (ossData) {
         client.setQueryData(ossKey, { ...ossData, owner: variables.owner });
@@ -28,15 +29,19 @@ export const useSetOwner = () => {
               if (!item.result) {
                 return;
               }
-              const itemKey = KEYS.composite.rsItem({ itemID: item.result });
+              const itemKey = KEYS.composite.schema({ itemID: item.result });
               return client.invalidateQueries({ queryKey: itemKey });
             })
             .filter(item => !!item)
         ]);
       }
 
-      const rsKey = KEYS.composite.rsItem({ itemID: variables.itemID });
-      client.setQueryData(rsKey, (prev: RSFormDTO | undefined) =>
+      const rsKey = KEYS.composite.schema({ itemID: variables.itemID });
+      client.setQueryData(rsKey, (prev: RSForm | undefined) =>
+        !prev ? undefined : { ...prev, owner: variables.owner }
+      );
+      const modelKey = KEYS.composite.model({ itemID: variables.itemID });
+      client.setQueryData(modelKey, (prev: RSModelDTO | undefined) =>
         !prev ? undefined : { ...prev, owner: variables.owner }
       );
       client.setQueryData(libraryKey, (prev: RO<LibraryItem[]> | undefined) =>

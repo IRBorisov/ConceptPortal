@@ -17,7 +17,7 @@ export const rsmodelApi = {
 
   getRSModelQueryOptions: ({ itemID }: { itemID?: number | null; }) => {
     return queryOptions({
-      queryKey: KEYS.composite.modelItem({ itemID }),
+      queryKey: KEYS.composite.model({ itemID }),
       staleTime: DELAYS.staleShort,
       queryFn: meta =>
         axiosGet<RSModelDTO>({

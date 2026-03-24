@@ -23,6 +23,11 @@ import {
 import { type RSFormDTO } from './types';
 
 /** Loads data into an {@link RSForm} based on {@link RSFormDTO}. */
+export function loadRSForm(data: RO<RSFormDTO>) {
+  return new RSFormLoader(data).produceRSForm();
+}
+
+/** Loads data into an {@link RSForm} based on {@link RSFormDTO}. */
 export class RSFormLoader {
   private schema: RSForm;
   private graph: Graph = new Graph();
@@ -37,6 +42,7 @@ export class RSFormLoader {
   }
 
   produceRSForm(): RSForm {
+    console.log('produceRSForm', this.schema.id);
     this.prepareLookups();
     this.createGraph();
     this.inferCstAttributes();

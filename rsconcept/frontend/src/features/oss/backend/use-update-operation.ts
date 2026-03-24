@@ -15,7 +15,7 @@ export const useUpdateOperation = () => {
     mutationFn: ossApi.updateOperation,
     onSuccess: async (data, variables) => {
       updateTimestamp(data.id, data.time_update);
-      client.setQueryData(KEYS.composite.ossItem({ itemID: data.id }), data);
+      client.setQueryData(KEYS.composite.oss({ itemID: data.id }), data);
       const schemaID = data.operations.find(item => item.id === variables.data.target)?.result;
       if (!schemaID) {
         return;
@@ -28,7 +28,7 @@ export const useUpdateOperation = () => {
           )
       );
       await client.invalidateQueries({
-        queryKey: KEYS.composite.rsItem({ itemID: schemaID })
+        queryKey: KEYS.composite.schema({ itemID: schemaID })
       });
     },
     onError: () => client.invalidateQueries()

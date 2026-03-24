@@ -4,7 +4,7 @@ import { useUpdateTimestamp } from '@/features/library/backend/use-update-timest
 
 import { KEYS } from '@/backend/configuration';
 
-import { rsformsApi } from './api';
+import { rsformsApi, updateRSForm } from './api';
 
 export const useInlineSynthesis = () => {
   const client = useQueryClient();
@@ -14,7 +14,7 @@ export const useInlineSynthesis = () => {
     mutationFn: rsformsApi.inlineSynthesis,
     onSuccess: async data => {
       updateTimestamp(data.id, data.time_update);
-      client.setQueryData(rsformsApi.getRSFormQueryOptions({ itemID: data.id }).queryKey, data);
+      updateRSForm(data, client);
       await Promise.allSettled([
         client.invalidateQueries({ queryKey: [KEYS.oss] }), // substitutions might have changed
         client.invalidateQueries({

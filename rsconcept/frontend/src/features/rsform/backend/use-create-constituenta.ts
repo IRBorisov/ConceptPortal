@@ -4,7 +4,7 @@ import { useUpdateTimestamp } from '@/features/library/backend/use-update-timest
 
 import { KEYS } from '@/backend/configuration';
 
-import { rsformsApi } from './api';
+import { rsformsApi, updateRSForm } from './api';
 import { type CreateConstituentaDTO } from './types';
 
 export const useCreateConstituenta = () => {
@@ -15,7 +15,7 @@ export const useCreateConstituenta = () => {
     mutationFn: rsformsApi.createConstituenta,
     onSuccess: async data => {
       updateTimestamp(data.schema.id, data.schema.time_update);
-      client.setQueryData(rsformsApi.getRSFormQueryOptions({ itemID: data.schema.id }).queryKey, data.schema);
+      updateRSForm(data.schema, client);
       await client.invalidateQueries({
         queryKey: [rsformsApi.baseKey],
         predicate: query => query.queryKey.length > 2 && query.queryKey[2] !== String(data.schema.id)

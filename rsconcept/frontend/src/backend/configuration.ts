@@ -22,9 +22,9 @@ export const KEYS = {
 
   composite: {
     libraryList: ['library', 'list'] as const,
-    ossItem: ({ itemID }: { itemID?: number | null; }) => [KEYS.oss, 'item', itemID],
-    modelItem: ({ itemID }: { itemID?: number | null; }) => [KEYS.rsmodel, 'item', itemID],
-    rsItem: ({ itemID, version }: { itemID?: number | null; version?: number; }) =>
+    oss: ({ itemID }: { itemID?: number | null; }) => [KEYS.oss, 'item', itemID],
+    model: ({ itemID }: { itemID?: number | null; }) => [KEYS.rsmodel, 'item', itemID],
+    schema: ({ itemID, version }: { itemID?: number | null; version?: number; }) =>
       [KEYS.rsform, 'item', itemID, version ?? '']
   }
 } as const;

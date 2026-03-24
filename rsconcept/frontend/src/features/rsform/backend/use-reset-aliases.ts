@@ -1,10 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useUpdateTimestamp } from '@/features/library/backend/use-update-timestamp';
+import { rsmodelApi } from '@/features/rsmodel/backend/api';
 
 import { KEYS } from '@/backend/configuration';
 
-import { rsformsApi } from './api';
+import { rsformsApi, updateRSForm } from './api';
 
 export const useResetAliases = () => {
   const client = useQueryClient();
@@ -14,9 +15,10 @@ export const useResetAliases = () => {
     mutationFn: rsformsApi.resetAliases,
     onSuccess: async data => {
       updateTimestamp(data.id, data.time_update);
-      client.setQueryData(rsformsApi.getRSFormQueryOptions({ itemID: data.id }).queryKey, data);
+      updateRSForm(data, client);
       await Promise.allSettled([
         client.invalidateQueries({ queryKey: [KEYS.oss] }), // substitutions might have changed
+        client.invalidateQueries({ queryKey: [rsmodelApi.baseKey] }),
         client.invalidateQueries({
           queryKey: [rsformsApi.baseKey],
           predicate: query => query.queryKey.length > 2 && query.queryKey[2] !== String(data.id)

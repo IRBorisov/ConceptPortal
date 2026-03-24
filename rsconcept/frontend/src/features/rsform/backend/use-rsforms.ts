@@ -3,7 +3,6 @@ import { useSuspenseQueries } from '@tanstack/react-query';
 import { DELAYS } from '../../../backend/configuration';
 
 import { rsformsApi } from './api';
-import { RSFormLoader } from './rsform-loader';
 
 export function useRSForms(itemIDs: number[]) {
   const results = useSuspenseQueries({
@@ -15,8 +14,7 @@ export function useRSForms(itemIDs: number[]) {
   });
 
   const schemas = results
-    .map(result => result.data)
-    .filter(data => data !== undefined)
-    .map(data => new RSFormLoader(data).produceRSForm());
+    .map(result => result.data.transformed)
+    .filter(data => data !== undefined);
   return schemas;
 }

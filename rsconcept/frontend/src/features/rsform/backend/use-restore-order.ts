@@ -4,7 +4,7 @@ import { useUpdateTimestamp } from '@/features/library/backend/use-update-timest
 
 import { KEYS } from '@/backend/configuration';
 
-import { rsformsApi } from './api';
+import { rsformsApi, updateRSForm } from './api';
 
 export const useRestoreOrder = () => {
   const client = useQueryClient();
@@ -14,7 +14,7 @@ export const useRestoreOrder = () => {
     mutationFn: rsformsApi.restoreOrder,
     onSuccess: data => {
       updateTimestamp(data.id, data.time_update);
-      client.setQueryData(rsformsApi.getRSFormQueryOptions({ itemID: data.id }).queryKey, data);
+      updateRSForm(data, client);
     },
     onError: () => client.invalidateQueries()
   });

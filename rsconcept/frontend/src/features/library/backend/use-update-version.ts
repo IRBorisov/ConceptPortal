@@ -12,7 +12,7 @@ export const useUpdateVersion = () => {
     mutationKey: [KEYS.global_mutation, libraryApi.baseKey, 'update-version'],
     mutationFn: libraryApi.updateVersion,
     onSuccess: (data, variables) => {
-      client.setQueryData(KEYS.composite.rsItem({ itemID: variables.itemID }), (prev: RSFormDTO | undefined) =>
+      client.setQueryData(KEYS.composite.schema({ itemID: variables.itemID }), (prev: RSFormDTO | undefined) =>
         !prev
           ? undefined
           : {
@@ -23,7 +23,7 @@ export const useUpdateVersion = () => {
           }
       );
       client.setQueryData(
-        KEYS.composite.rsItem({ itemID: variables.itemID, version: variables.version.id }),
+        KEYS.composite.schema({ itemID: variables.itemID, version: variables.version.id }),
         (prev: RSFormDTO | undefined) =>
           !prev
             ? undefined

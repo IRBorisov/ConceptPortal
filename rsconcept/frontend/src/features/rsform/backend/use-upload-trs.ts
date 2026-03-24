@@ -4,7 +4,7 @@ import { type LibraryItem } from '@/features/library';
 
 import { KEYS } from '@/backend/configuration';
 
-import { rsformsApi } from './api';
+import { rsformsApi, updateRSForm } from './api';
 
 export const useUploadTRS = () => {
   const client = useQueryClient();
@@ -12,7 +12,7 @@ export const useUploadTRS = () => {
     mutationKey: [KEYS.global_mutation, rsformsApi.baseKey, 'load-trs'],
     mutationFn: rsformsApi.upload,
     onSuccess: async data => {
-      client.setQueryData(KEYS.composite.rsItem({ itemID: data.id }), data);
+      updateRSForm(data, client);
       client.setQueryData(KEYS.composite.libraryList, (prev: LibraryItem[] | undefined) =>
         prev?.map(item => (item.id === data.id ? data : item))
       );

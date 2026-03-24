@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { type RSFormDTO } from '@/features/rsform';
+import { type RSForm } from '@/features/rsform';
 
 import { KEYS } from '@/backend/configuration';
 
@@ -12,7 +12,7 @@ export const useDeleteVersion = () => {
     mutationKey: [KEYS.global_mutation, libraryApi.baseKey, 'delete-version'],
     mutationFn: libraryApi.deleteVersion,
     onSuccess: (_, variables) => {
-      client.setQueryData(KEYS.composite.rsItem({ itemID: variables.itemID }), (prev: RSFormDTO | undefined) =>
+      client.setQueryData(KEYS.composite.schema({ itemID: variables.itemID }), (prev: RSForm | undefined) =>
         !prev
           ? undefined
           : {

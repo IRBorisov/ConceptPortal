@@ -4,7 +4,7 @@ import { useUpdateTimestamp } from '@/features/library/backend/use-update-timest
 
 import { KEYS } from '@/backend/configuration';
 
-import { rsformsApi } from './api';
+import { rsformsApi, updateRSForm } from './api';
 
 export const useCreateAttribution = () => {
   const client = useQueryClient();
@@ -14,7 +14,7 @@ export const useCreateAttribution = () => {
     mutationFn: rsformsApi.createAttribution,
     onSuccess: async data => {
       updateTimestamp(data.id, data.time_update);
-      client.setQueryData(rsformsApi.getRSFormQueryOptions({ itemID: data.id }).queryKey, data);
+      updateRSForm(data, client);
       await client.invalidateQueries({
         queryKey: [rsformsApi.baseKey],
         predicate: query => query.queryKey.length > 2 && query.queryKey[2] !== String(data.id)

@@ -17,9 +17,9 @@ export const useDeleteItem = () => {
         () =>
           void Promise.allSettled([
             client.invalidateQueries({ queryKey: [KEYS.oss] }),
-            client.resetQueries({ queryKey: KEYS.composite.modelItem({ itemID: variables.target }) }),
-            client.resetQueries({ queryKey: KEYS.composite.rsItem({ itemID: variables.target }) }),
-            client.resetQueries({ queryKey: KEYS.composite.ossItem({ itemID: variables.target }) })
+            client.resetQueries({ queryKey: KEYS.composite.model({ itemID: variables.target }) }),
+            client.resetQueries({ queryKey: KEYS.composite.schema({ itemID: variables.target }) }),
+            client.resetQueries({ queryKey: KEYS.composite.oss({ itemID: variables.target }) })
           ]),
         PARAMETER.refreshTimeout
       );
