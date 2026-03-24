@@ -95,7 +95,7 @@ export function TableRSModelList({
     }),
     columnHelper.accessor(cst => cst.term_resolved || cst.term_raw || '', {
       id: 'term',
-      header: () => <span className='pl-3 min-w-30'>Термин</span>,
+      header: () => <span className='min-w-30'>Термин</span>,
       size: 500,
       minSize: 150,
       maxSize: 500

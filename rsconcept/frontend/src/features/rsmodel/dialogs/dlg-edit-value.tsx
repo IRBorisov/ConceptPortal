@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import { type TypePath, type Typification, type Value } from '@/features/rslang';
+import { normalizeValue } from '@/features/rslang/eval/value-api';
 import { labelType } from '@/features/rslang/labels';
 
 import { TextArea } from '@/components/input';
@@ -13,11 +14,11 @@ import { ValueTable } from '../components/value-table';
 import { type RSEngine } from '../models/rsengine';
 
 export interface DlgEditValueProps {
-  initialValue: Value;
+  initialValue: Value | null;
   type: Typification;
   engine: RSEngine;
   getHeaderText?: (path: TypePath) => string;
-  onChange?: (newValue: Value) => void;
+  onChange?: (newValue: Value | null) => void;
 }
 
 export function DlgEditValue() {
@@ -25,10 +26,10 @@ export function DlgEditValue() {
     initialValue, type, engine,
     onChange, getHeaderText
   } = useDialogsStore(state => state.props as DlgEditValueProps);
-  const [value, setValue] = useState<Value>(JSON.parse(JSON.stringify(initialValue)) as Value);
+  const [value, setValue] = useState<Value | null>(onChange ? structuredClone(initialValue) : initialValue);
   const [isModified, setIsModified] = useState(false);
 
-  function handleChange(newValue: Value) {
+  function handleChange(newValue: Value | null) {
     if (value !== newValue) {
       setValue(newValue);
     }
@@ -36,6 +37,9 @@ export function DlgEditValue() {
   }
 
   function handleSubmit() {
+    if (value !== null) {
+      normalizeValue(value);
+    }
     onChange?.(value);
   }
 
@@ -43,9 +47,9 @@ export function DlgEditValue() {
     <ModalForm
       header='Редактор значения'
       submitText='Сохранить'
-      canSubmit={!isModified && !!onChange}
+      canSubmit={isModified && !!onChange}
       onSubmit={handleSubmit}
-      className='max-w-[calc(100dvw-3rem)] min-w-160 max-h-[calc(100svh-8rem)] min-h-160 pb-3 px-6 cc-column'
+      className='w-200 h-160 max-w-[calc(100dvw-3rem)] max-h-[calc(100svh-8rem)] pb-3 px-6 cc-column'
     >
       <TextArea
         fitContent

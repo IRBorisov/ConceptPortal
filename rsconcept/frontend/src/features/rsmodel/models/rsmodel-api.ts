@@ -228,7 +228,7 @@ function prepareValueInternal(value: Value, type: ExpressionType, schema: RSForm
         const basicValue = binding[value];
         return text(basicValue);
       } else {
-        return text(`MISSING_ELEMENT ${value}`);
+        return text(`NO_ELEM ${value}`);
       }
     case TypeID.logic:
       if (Array.isArray(value)) {

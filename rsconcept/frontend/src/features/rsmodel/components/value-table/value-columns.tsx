@@ -21,7 +21,7 @@ export interface ColumnServices {
   getColumnText: (path: ValuePath) => string;
   navigateValue: (path: ValuePath) => void;
   editElement?: (path: ValuePath) => void;
-  deleteElement?: (path: ValuePath) => void;
+  deleteElement?: (target: number) => void;
 }
 
 interface ColumnState {
@@ -40,7 +40,7 @@ export function createColumnsType(
     accessor: (value: Value) => value
   };
   const columns = createColumnsInternal(state.singleton ? type : (type as EchelonCollection).base, services, state);
-  if (services.deleteElement && !state.singleton) {
+  if (services.deleteElement) {
     columns.push(
       columnHelper.display({
         id: 'actions',
@@ -51,7 +51,7 @@ export function createColumnsType(
             className='align-middle w-fit'
             noPadding
             icon={<IconRemove size='1.25rem' className='cc-remove' />}
-            onClick={() => services.deleteElement!(makeValuePath([props.row.index]))}
+            onClick={() => services.deleteElement!(props.row.index)}
           />
         )
       })
@@ -111,9 +111,9 @@ function createColumnsInternal(
           text={type.baseID}
           title={columnTitle}
         />,
-        size: services.showDataText ? 100 : 60,
-        minSize: services.showDataText ? 100 : 60,
-        maxSize: services.showDataText ? 100 : 60,
+        size: services.showDataText ? 300 : 60,
+        minSize: services.showDataText ? 300 : 60,
+        maxSize: services.showDataText ? 300 : 60,
         cell: props => <span
           className={services.editElement ? 'cursor-pointer' : ''}
           onClick={services.editElement ? () => services.editElement!(elementPath(props.row.index)) : undefined}

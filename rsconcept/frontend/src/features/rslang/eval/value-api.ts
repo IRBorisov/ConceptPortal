@@ -365,3 +365,17 @@ export function extractValue(target: Value, path: ValuePath): Value | null {
   }
   return current;
 }
+
+/** Makes default value for a type. */
+export function makeDefaultValue(type: Typification): Value {
+  switch (type.typeID) {
+    case TypeID.anyTypification:
+    case TypeID.integer:
+    case TypeID.basic:
+      return -1;
+    case TypeID.collection:
+      return [];
+    case TypeID.tuple:
+      return tuple(type.factors.map(item => makeDefaultValue(item)));
+  }
+}

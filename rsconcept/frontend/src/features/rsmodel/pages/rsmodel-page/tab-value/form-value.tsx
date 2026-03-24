@@ -24,7 +24,6 @@ import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { limits } from '@/utils/constants';
 import { type RO } from '@/utils/meta';
-import { notImplemented } from '@/utils/utils';
 
 import { useMutatingRSModel } from '../../../backend/use-mutating-rsmodel';
 import { useCstValue } from '../../../hooks/use-cst-value';
@@ -38,7 +37,6 @@ import { ToolbarExpression } from './toolbar-expression';
 interface FormValueProps {
   id?: string;
   toggleReset: boolean;
-
   activeCst: Constituenta;
 }
 
@@ -67,7 +65,7 @@ export function FormValue({ id, toggleReset, activeCst }: FormValueProps) {
   const initialStr = prepareValueString(initialValue, typification, schema, engine.basics, showDataText);
   const [inputValue, setInputValue] = useState<string>(initialStr);
   const isTrimmed = inputValue.length > limits.len_data_str;
-  const hasValueDialog = !isBase && !!typification && isTypification(typification) && cstData !== null;
+  const hasValueDialog = !isBase && !!typification && isTypification(typification);
 
   const isEditable = isMutable && (isBase || activeCst.cst_type === CstType.STRUCTURED);
   const isDirty = inputValue !== initialStr;
@@ -85,24 +83,34 @@ export function FormValue({ id, toggleReset, activeCst }: FormValueProps) {
     onModifiedEvent(isDirty);
   }, [isDirty]);
 
+  function handleSetValue(newValue: Value | BasicBinding | null) {
+    if (newValue === null) {
+      void engine.resetValue(activeCst.id);
+      setIsModified(false);
+      return;
+    }
+    if (isBase) {
+      const binding = newValue as BasicBinding;
+      void engine.setBasicValue(activeCst.id, binding);
+      const value = prepareValueString(binding, typification, schema, engine.basics, showDataText);
+      setInputValue(value);
+    } else {
+      const parsedValue = newValue as Value;
+      normalizeValue(parsedValue);
+      void engine.setStructureValue(activeCst.id, parsedValue);
+      const value = prepareValueString(parsedValue, typification, schema, engine.basics, showDataText);
+      setInputValue(value);
+    }
+    setIsModified(false);
+  }
+
   function onSaveValue() {
     if (!inputValue) {
       return;
     }
     try {
-      if (isBase) {
-        const parsedBinding = JSON.parse(inputValue) as BasicBinding;
-        void engine.setBasicValue(activeCst.id, parsedBinding);
-        const newValue = prepareValueString(parsedBinding, typification, schema, engine.basics, showDataText);
-        setInputValue(newValue);
-      } else {
-        const parsedValue = JSON.parse(inputValue) as Value;
-        normalizeValue(parsedValue);
-        void engine.setStructureValue(activeCst.id, parsedValue);
-        const newValue = prepareValueString(parsedValue, typification, schema, engine.basics, showDataText);
-        setInputValue(newValue);
-      }
-      setIsModified(false);
+      const value = JSON.parse(inputValue) as Value | BasicBinding;
+      handleSetValue(value);
     } catch (error) {
       toast.error((error as Error).message);
       console.error(error);
@@ -125,7 +133,7 @@ export function FormValue({ id, toggleReset, activeCst }: FormValueProps) {
       initialValue: cstData!,
       type: activeCst.analysis.type as Typification,
       engine: engine,
-      onChange: !cstInferrable ? notImplemented : undefined,
+      onChange: !cstInferrable ? handleSetValue : undefined,
       getHeaderText: (path: TypePath) => getStructureName(schema, activeCst, path)
     });
   }
