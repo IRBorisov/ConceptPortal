@@ -24,14 +24,12 @@ export function DlgEditValue() {
     initialValue, type, engine,
     onChange, getHeaderText
   } = useDialogsStore(state => state.props as DlgEditValueProps);
-  const [value, setValue] = useState<Value | null>(onChange ? structuredClone(initialValue) : initialValue);
-  const [isModified, setIsModified] = useState(false);
+  const [value, setValue] = useState<Value | null>(initialValue);
 
   function handleChange(newValue: Value | null) {
     if (value !== newValue) {
       setValue(newValue);
     }
-    setIsModified(true);
   }
 
   function handleSubmit() {
@@ -45,7 +43,7 @@ export function DlgEditValue() {
     <ModalForm
       header={onChange ? 'Редактор значения' : 'Просмотр значения'}
       submitText='Сохранить'
-      canSubmit={isModified && !!onChange}
+      canSubmit={value !== initialValue && !!onChange}
       onSubmit={handleSubmit}
       className='w-230 h-155 max-w-[calc(100dvw-3rem)] max-h-[calc(100svh-8rem)] px-6 cc-column'
     >

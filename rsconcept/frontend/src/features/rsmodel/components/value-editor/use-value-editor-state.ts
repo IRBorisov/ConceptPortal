@@ -1,0 +1,132 @@
+'use client';
+
+import { useState } from 'react';
+
+import { type Constituenta } from '@/features/rsform';
+import { makeValuePath, TypeID, type TypePath, type Typification, type Value, type ValuePath } from '@/features/rslang';
+import { convertPathToType, extractValue } from '@/features/rslang/eval/value-api';
+import { applyPath } from '@/features/rslang/semantic/typification-api';
+
+import { type RSEngine } from '../../models/rsengine';
+import { addValueElement, deleteValueElement, updateValueElement } from '../../models/rsmodel-api';
+
+interface UseValueEditorStateArgs {
+  engine: RSEngine;
+  value: Value | null;
+  type: Typification;
+  onChange?: (newValue: Value | null) => void;
+}
+
+export interface ValueEditorResolvedState {
+  data: Value | null;
+  typePath: TypePath;
+  currentType: Typification;
+}
+
+export function useValueEditorState({ engine, value, type, onChange }: UseValueEditorStateArgs) {
+  const [path, setPath] = useState<ValuePath>(makeValuePath([]));
+  const [selectedPath, setSelectedPath] = useState<ValuePath | null>(null);
+  const [filter, setFilter] = useState('');
+
+  const { data, typePath, currentType } = resolveValueEditorState(value, path, type);
+  const selectedValue = selectedPath !== null && data !== null ? extractValue(data, selectedPath) : null;
+  const selectedCst = resolveSelectedConstituenta(engine, selectedPath, currentType);
+  const selectedBasics = selectedCst ? engine.basics.get(selectedCst.id) ?? null : null;
+
+  function handleNavigate(subPath: ValuePath) {
+    setPath(prev => makeValuePath([...prev, ...subPath]));
+    setSelectedPath(null);
+  }
+
+  function handleSelectElement(subPath: ValuePath | null) {
+    setSelectedPath(subPath);
+  }
+
+  function handleChangeSelected(newValue: number) {
+    if (!onChange) {
+      return;
+    }
+    const updatedValue = updateValueElement(value, makeValuePath([...path, ...(selectedPath ?? [])]), newValue);
+    if (updatedValue !== value) {
+      onChange(updatedValue);
+    }
+  }
+
+  function handleDeleteElement(target: number) {
+    if (!onChange) {
+      return;
+    }
+
+    const updatedValue = deleteValueElement(value, path, type, target);
+    setSelectedPath(null);
+    onChange(updatedValue);
+  }
+
+  function handleAddElement() {
+    if (!onChange) {
+      return;
+    }
+
+    const updatedValue = addValueElement(value, path, type, currentType);
+    setSelectedPath(null);
+    onChange(updatedValue);
+  }
+
+  function handleResetView() {
+    setPath(makeValuePath([]));
+    setSelectedPath(null);
+  }
+
+  return {
+    currentType,
+    data,
+    filter,
+    handleAddElement,
+    handleChangeSelected,
+    handleDeleteElement,
+    handleNavigate,
+    handleResetView,
+    handleSelectElement,
+    path,
+    typePath,
+    selectedBasics,
+    selectedCst,
+    selectedPath,
+    selectedValue,
+    setFilter
+  };
+}
+
+// ===== Internals =====
+function resolveSelectedConstituenta(
+  engine: RSEngine,
+  path: ValuePath | null,
+  baseType: Typification
+): Constituenta | null {
+  if (path === null) {
+    return null;
+  }
+
+  const typePath = convertPathToType(path, baseType);
+  if (typePath === null) {
+    return null;
+  }
+
+  const type = applyPath(baseType, typePath);
+  if (type?.typeID !== TypeID.basic) {
+    return null;
+  }
+
+  return engine.schema?.cstByAlias.get(type.baseID) ?? null;
+}
+
+function resolveValueEditorState(
+  value: Value | null,
+  path: ValuePath,
+  type: Typification
+): ValueEditorResolvedState {
+  const data = value === null ? null : extractValue(value, path);
+  const typePath = convertPathToType(path, type)!;
+  const currentType = applyPath(type, typePath)!;
+  return { data, typePath, currentType };
+}

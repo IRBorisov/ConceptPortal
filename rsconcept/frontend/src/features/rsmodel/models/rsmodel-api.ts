@@ -1,9 +1,10 @@
 
 import { CstType, type RSForm } from '@/features/rsform';
 import { calculateSchemaStats, isBaseSet, isBasicConcept } from '@/features/rsform/models/rsform-api';
-import { type ExpressionType, TypeID, type Value } from '@/features/rslang';
-import { compare, TUPLE_ID, VALUE_TRUE } from '@/features/rslang/eval/value';
-import { printValue } from '@/features/rslang/eval/value-api';
+import { type ExpressionType, TypeID, type Typification, type Value } from '@/features/rslang';
+import { compare, TUPLE_ID, VALUE_TRUE, type ValuePath } from '@/features/rslang/eval/value';
+import { extractValue, makeDefaultValue, printValue, setNestedValue } from '@/features/rslang/eval/value-api';
+import { type EchelonCollection } from '@/features/rslang/semantic/typification';
 
 import { limits } from '@/utils/constants';
 import { type RO } from '@/utils/meta';
@@ -206,6 +207,46 @@ export function prepareValueString(
   }
   return render(prepareValueInternal(value as Value, type, schema, dataContext), limits.data_line_width);
 }
+
+export function updateValueElement(
+  value: Value | null,
+  path: ValuePath,
+  newValue: number
+): Value | null {
+  return setNestedValue(value, path, newValue);
+}
+
+export function deleteValueElement(
+  value: Value | null,
+  path: ValuePath,
+  type: Typification,
+  target: number
+): Value | null {
+  if (path.length === 0 && type.typeID !== TypeID.collection) {
+    return null;
+  }
+
+  const arrayValue = extractValue(value!, path)! as Value[];
+  const updatedArray = [...arrayValue.slice(0, target), ...arrayValue.slice(target + 1)];
+  return setNestedValue(value, path, updatedArray);
+}
+
+export function addValueElement(
+  value: Value | null,
+  path: ValuePath,
+  type: Typification,
+  currentType: Typification
+): Value | null {
+  if (path.length === 0 && type.typeID !== TypeID.collection) {
+    return makeDefaultValue(type);
+  }
+
+  const newElem = makeDefaultValue((currentType as EchelonCollection).base);
+  const arrayValue = (extractValue(value!, path) as Value[] | null) ?? [];
+  const updatedArray = [newElem, ...arrayValue];
+  return setNestedValue(value, path, updatedArray);
+}
+
 
 // ========= Internal functions ==========
 function prepareValueInternal(value: Value, type: ExpressionType, schema: RSForm, dataContext: BasicsContext): Doc {

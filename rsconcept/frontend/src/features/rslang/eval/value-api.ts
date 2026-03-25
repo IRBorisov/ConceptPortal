@@ -3,7 +3,7 @@ import { applyHash_fnv1a } from '@/utils/utils';
 
 import { type ExpressionType, TypeID, type TypePath, type Typification } from '../semantic/typification';
 
-import { BOOL_INFINITY, compare, EmptySetV, set, SET_INFINITY, tuple, TUPLE_ID, type Value, VALUE_FALSE, VALUE_TRUE, type ValueContext, type ValuePath } from './value';
+import { BOOL_INFINITY, compare, EmptySetV, makeValuePath, set, SET_INFINITY, tuple, TUPLE_ID, type Value, VALUE_FALSE, VALUE_TRUE, type ValueContext, type ValuePath } from './value';
 
 /** Cartesian product of factor sets. */
 export function decartian(factors: Value[][]): Value[] | null {
@@ -378,4 +378,15 @@ export function makeDefaultValue(type: Typification): Value {
     case TypeID.tuple:
       return tuple(type.factors.map(item => makeDefaultValue(item)));
   }
+}
+
+/** Perform immutable deep copy update. */
+export function setNestedValue(target: Value | null, path: ValuePath, newVal: Value): Value {
+  if (path.length === 0) {
+    return newVal;
+  }
+  const [head, ...rest] = path;
+  const arr = Array.isArray(target) ? [...target] : [];
+  arr[head] = setNestedValue(arr[head], makeValuePath(rest), newVal);
+  return arr;
 }
