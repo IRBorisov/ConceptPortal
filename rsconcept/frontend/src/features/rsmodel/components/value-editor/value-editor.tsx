@@ -114,6 +114,7 @@ export function ValueEditor({ className, value, engine, getHeaderText, type, onC
               data={dataRows}
               dense
               columns={columns}
+              headPosition='0rem'
               skipWidthCalculation
               rows={18}
               className='cc-scroll-y text-sm select-none border min-w-60'
@@ -125,7 +126,6 @@ export function ValueEditor({ className, value, engine, getHeaderText, type, onC
                   <p>{currentType.typeID === TypeID.collection ? 'Пустое множество' : 'Значение отсутствует'}</p>
                 </NoData>
               }
-              headPosition='0rem'
             />
           </div>
         </div>

@@ -77,6 +77,13 @@ export function MenuMain() {
     return head === LocationHead.USER ? LocationHead.USER : location;
   }
 
+  function handleCreateModel(event: React.MouseEvent<HTMLElement>) {
+    event.preventDefault();
+    event.stopPropagation();
+    hideMenu();
+    router.gotoNewModel(schema.id, event.ctrlKey || event.metaKey);
+  }
+
   function handleDelete() {
     hideMenu();
     deleteSchema();
@@ -190,6 +197,14 @@ export function MenuMain() {
             icon={<IconClone size='1rem' className='icon-green' />}
             disabled={isArchive}
             onClick={handleClone}
+          />
+        ) : null}
+        {!isAnonymous ? (
+          <DropdownButton
+            text='Создать модель'
+            icon={<IconRSModel size='1rem' className='icon-green' />}
+            disabled={isArchive}
+            onClick={handleCreateModel}
           />
         ) : null}
         <DropdownButton

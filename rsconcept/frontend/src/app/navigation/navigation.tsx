@@ -37,7 +37,7 @@ export function Navigation() {
   const navigateHelp = (event: React.MouseEvent<Element>) =>
     push({ path: urls.manuals, newTab: event.ctrlKey || event.metaKey });
   const navigateCreateNew = (event: React.MouseEvent<Element>) =>
-    push({ path: urls.create_schema, newTab: event.ctrlKey || event.metaKey });
+    push({ path: urls.create_item, newTab: event.ctrlKey || event.metaKey });
 
   return (
     <nav className='z-navigation sticky top-0 left-0 right-0 select-none bg-background' inert={activeDialog !== null}>

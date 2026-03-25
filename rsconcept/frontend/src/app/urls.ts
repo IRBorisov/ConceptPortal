@@ -13,7 +13,7 @@ export const routes = {
   restore_password: 'restore-password',
   password_change: 'password-change',
   library: 'library',
-  create_schema: 'library/create',
+  create_item: 'library/create',
   manuals: 'manuals',
   help: 'manuals',
   rsforms: 'rsforms',
@@ -38,7 +38,8 @@ export const urls = {
   signup: `/${routes.signup}`,
   library: `/${routes.library}`,
   library_filter: (strategy: string) => `/library?filter=${strategy}`,
-  create_schema: `/${routes.create_schema}`,
+  create_item: `/${routes.create_item}`,
+  create_model: (schemaID: number) => `/${routes.create_item}?modelFrom=${schemaID}`,
   prompt_templates: `/${routes.prompt_templates}`,
   prompt_template: (active: number | null, tab: number) =>
     `/prompt-templates?tab=${tab}${active ? `&active=${active}` : ''}`,

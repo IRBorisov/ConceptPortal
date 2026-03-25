@@ -10,7 +10,7 @@ import { normalizeValue } from '@/features/rslang/eval/value-api';
 import { isTypification } from '@/features/rslang/semantic/typification';
 
 import { MiniButton } from '@/components/control';
-import { IconCalculateAll, IconCalculateOne, IconClearData, IconEdit, IconReset } from '@/components/icons';
+import { IconCalculateAll, IconCalculateOne, IconDatabase, IconDestroy, IconReset } from '@/components/icons';
 import { cn } from '@/components/utils';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
@@ -97,14 +97,14 @@ export function ToolbarValueTab({
 
       <MiniButton
         title='Просмотреть/Редактировать значение'
-        icon={<IconEdit size='1.25rem' className='icon-primary' />}
+        icon={<IconDatabase size='1.25rem' className='icon-primary' />}
         onClick={handleEditValue}
         disabled={!hasValueDialog}
       />
 
       {isMutable ? <MiniButton
         title='Удалить значение текущей конституенты'
-        icon={<IconClearData size='1.25rem' className='icon-red' />}
+        icon={<IconDestroy size='1.25rem' className='icon-red' />}
         onClick={onClearValue}
         disabled={isProcessing || !activeCst || !hasValue || isInferrable(activeCst.cst_type)}
       /> : null}

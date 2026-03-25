@@ -27,10 +27,15 @@ import { SelectItemType } from '../../components/select-item-type';
 import { LocationHead } from '../../models/library';
 import { useLibrarySearchStore } from '../../stores/library-search';
 
-export function FormCreateItem() {
+interface FormCreateItemProps {
+  modelFrom?: number;
+}
+
+export function FormCreateItem({ modelFrom }: FormCreateItemProps) {
   const router = useConceptNavigation();
   const { createItem, isPending, reset: clearServerError } = useCreateItem();
   const { items } = useLibrary();
+  const schemaItem = modelFrom ? items.find(item => item.id === modelFrom) : null;
 
   const searchLocation = useLibrarySearchStore(state => state.location);
   const setSearchLocation = useLibrarySearchStore(state => state.setLocation);
@@ -45,13 +50,17 @@ export function FormCreateItem() {
   } = useForm<CreateLibraryItemDTO>({
     resolver: zodResolver(schemaCreateLibraryItem),
     defaultValues: {
-      item_type: LibraryItemType.RSFORM,
+      item_type: modelFrom ? LibraryItemType.RSMODEL : LibraryItemType.RSFORM,
       access_policy: AccessPolicy.PUBLIC,
       visible: true,
       read_only: false,
+      schema: modelFrom,
+      title: schemaItem ? `Модель ${schemaItem.title}` : undefined,
+      alias: schemaItem ? `M${schemaItem.alias}` : undefined,
       location:
-        !!searchLocation && !searchLocation.startsWith(LocationHead.LIBRARY) ?
-          searchLocation : LocationHead.USER
+        schemaItem ? schemaItem.location :
+          !!searchLocation && !searchLocation.startsWith(LocationHead.LIBRARY) ?
+            searchLocation : LocationHead.USER
     },
     mode: 'onChange'
   });

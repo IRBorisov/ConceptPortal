@@ -74,6 +74,9 @@ interface INavigationContext {
   /** Navigate to New Item. */
   gotoNewItem: (newTab?: boolean) => void;
 
+  /** Navigate to New Model. */
+  gotoNewModel: (schemaID: number, newTab?: boolean) => void;
+
   /** Navigate to RSForm. */
   gotoRSForm: (schemaID: number, version?: string | number, newTab?: boolean) => void;
 
@@ -208,7 +211,11 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
   }
 
   function gotoNewItem(newTab?: boolean): void {
-    push({ path: urls.create_schema, newTab: newTab });
+    push({ path: urls.create_item, newTab: newTab });
+  }
+
+  function gotoNewModel(schemaID: number, newTab?: boolean): void {
+    push({ path: urls.create_model(schemaID), newTab: newTab });
   }
 
   function gotoLibrary(newTab?: boolean): void {
@@ -271,6 +278,7 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
 
         gotoLibrary,
         gotoNewItem,
+        gotoNewModel,
 
         gotoEditActive,
         gotoRSForm,

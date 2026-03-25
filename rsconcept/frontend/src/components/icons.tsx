@@ -164,9 +164,8 @@ export { LuBookCopy       as IconInlineSynthesis } from 'react-icons/lu';
 export { LuWandSparkles   as IconGenerateNames }  from 'react-icons/lu';
 export { GrConnect        as IconConnect }        from 'react-icons/gr';
 export { BiPlayCircle     as IconExecute }        from 'react-icons/bi';
-export { LuCoffee         as IconCalculateAll }   from 'react-icons/lu';
-export { LuClapperboard   as IconCalculateOne }   from 'react-icons/lu';
-export { GrClearOption    as IconClearData }      from 'react-icons/gr';
+export { LuFastForward    as IconCalculateAll }   from 'react-icons/lu';
+export { LuPlay           as IconCalculateOne }   from 'react-icons/lu';
 
 // ======== Graph UI =======
 export { LuSlice          as IconEditorMode }     from 'react-icons/lu';

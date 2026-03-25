@@ -67,7 +67,7 @@ export const Router = createBrowserRouter([
         lazy: () => import('@/features/library/pages/library-page')
       },
       {
-        path: routes.create_schema,
+        path: routes.create_item,
         element: <CreateItemPage />
       },
       {

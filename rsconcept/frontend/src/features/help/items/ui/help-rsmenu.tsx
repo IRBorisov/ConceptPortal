@@ -13,6 +13,7 @@ import {
   IconPDF,
   IconQR,
   IconReader,
+  IconRSModel,
   IconShare,
   IconUpload
 } from '@/components/icons';
@@ -61,6 +62,9 @@ export function HelpRSMenu() {
             </li>
             <li>
               <IconClone className='inline-icon icon-green' /> Клонировать – создать копию схемы
+            </li>
+            <li>
+              <IconRSModel className='inline-icon icon-green' /> Создать модель – создать модель на основе схемы
             </li>
             <li>
               <IconPDF className='inline-icon' /> Экспортировать в PDF – сохранить в файле формата PDF
