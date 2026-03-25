@@ -1,6 +1,7 @@
 'use client';
 
 import { useLayoutEffect, useRef } from 'react';
+import clsx from 'clsx';
 
 import { RSModelTabID, useConceptNavigation } from '@/app/navigation/navigation-context';
 import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
@@ -107,7 +108,11 @@ export function RSModelTabs({ activeID, activeTab }: RSModelTabsProps) {
       defaultFocus
       className='relative flex flex-col min-w-fit items-center'
     >
-      <TabList className='absolute z-sticky flex border-b-2 border-x-2 divide-x-2 bg-background'>
+      <TabList className={clsx(
+        'absolute z-sticky', 'flex self-start xs:self-auto',
+        'border-b-2 border-x-2 divide-x-2',
+        'bg-background'
+      )}>
         <MenuRSModel />
 
         <TabLabel label='Паспорт' />

@@ -47,7 +47,7 @@ export function DlgEditValue() {
       submitText='Сохранить'
       canSubmit={isModified && !!onChange}
       onSubmit={handleSubmit}
-      className='w-220 h-160 max-w-[calc(100dvw-3rem)] max-h-[calc(100svh-8rem)] pb-3 px-6 cc-column'
+      className='w-230 h-155 max-w-[calc(100dvw-3rem)] max-h-[calc(100svh-8rem)] px-6 cc-column'
     >
       <ValueEditor
         type={type}

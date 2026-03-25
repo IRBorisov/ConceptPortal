@@ -65,7 +65,10 @@ export function FormValue({ id, toggleReset, activeCst }: FormValueProps) {
   const initialStr = prepareValueString(initialValue, typification, schema, engine.basics, showDataText);
   const [inputValue, setInputValue] = useState<string>(initialStr);
   const isTrimmed = inputValue.length > limits.len_data_str;
-  const hasValueDialog = !isBase && !!typification && isTypification(typification);
+  const hasValueDialog = !isBase
+    && !!typification
+    && isTypification(typification) &&
+    (cstData != null || !cstInferrable);
 
   const isEditable = isMutable && (isBase || activeCst.cst_type === CstType.STRUCTURED);
   const isDirty = inputValue !== initialStr;
@@ -75,9 +78,10 @@ export function FormValue({ id, toggleReset, activeCst }: FormValueProps) {
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       setInputValue(initialStr);
+      setIsModified(false);
     }, 0);
     return () => clearTimeout(timeoutId);
-  }, [activeCst.id, initialStr, toggleReset]);
+  }, [activeCst.id, initialStr, setIsModified, toggleReset]);
 
   useEffect(() => {
     onModifiedEvent(isDirty);
@@ -86,10 +90,7 @@ export function FormValue({ id, toggleReset, activeCst }: FormValueProps) {
   function handleSetValue(newValue: Value | BasicBinding | null) {
     if (newValue === null) {
       void engine.resetValue(activeCst.id);
-      setIsModified(false);
-      return;
-    }
-    if (isBase) {
+    } else if (isBase) {
       const binding = newValue as BasicBinding;
       void engine.setBasicValue(activeCst.id, binding);
       const value = prepareValueString(binding, typification, schema, engine.basics, showDataText);
@@ -124,7 +125,7 @@ export function FormValue({ id, toggleReset, activeCst }: FormValueProps) {
     setLocalEval(result);
   }
 
-  function handleOpenEdit(cstID: number) {
+  function handleNavigateCst(cstID: number) {
     void router.changeActive(cstID);
   }
 
@@ -180,7 +181,7 @@ export function FormValue({ id, toggleReset, activeCst }: FormValueProps) {
             schema={schema}
             value={activeCst.definition_formal}
             disabled
-            onOpenEdit={handleOpenEdit}
+            onOpenEdit={handleNavigateCst}
           />
         </div>
       ) : null}
@@ -209,7 +210,7 @@ export function FormValue({ id, toggleReset, activeCst }: FormValueProps) {
       {isEditable ? (
         <Button
           text='Сохранить изменения'
-          className='mx-auto w-fit'
+          className='mx-auto w-fit mt-5 xs:mt-0'
           colorSubmit
           icon={<IconSave size='1.25rem' />}
           disabled={isTrimmed || isProcessing || !isModified}

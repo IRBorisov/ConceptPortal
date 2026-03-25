@@ -73,13 +73,13 @@ export function createColumnsType(
 
 function TitledHeader({ text, title, className }: { text: string, title?: string, className?: string; }) {
   return (
-    <span
+    <div
       className={className}
       data-tooltip-id={!!title ? globalIDs.tooltip : undefined}
       data-tooltip-content={title}
     >
       {text}
-    </span>
+    </div>
   );
 }
 
@@ -90,9 +90,9 @@ function BasicCell({ text, services, isSelected, path }: {
   path: ValuePath;
 }) {
   const needsTooltip = text.length > VALUE_TRUNCATE;
-  return <span
+  return <div
     className={clsx(
-      'px-1 truncate',
+      'px-1 truncate max-w-70',
       services.selectElement && 'cursor-pointer',
       isSelected && 'bg-selected outline-2 outline-primary-border'
     )}
@@ -101,7 +101,7 @@ function BasicCell({ text, services, isSelected, path }: {
     data-tooltip-id={needsTooltip ? globalIDs.tooltip : undefined}
   >
     {truncateToLastWord(text, VALUE_TRUNCATE)}
-  </span>;
+  </div>;
 }
 
 function createColumnsInternal(

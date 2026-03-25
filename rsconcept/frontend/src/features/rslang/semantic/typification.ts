@@ -161,13 +161,13 @@ export function component(target: EchelonTuple, index: number): Typification | n
 }
 
 /** Checks if given type is typification. */
-export function isTypification(type: ExpressionType): boolean {
+export function isTypification(type: ExpressionType | null): boolean {
   return (
-    type.typeID === TypeID.basic ||
-    type.typeID === TypeID.anyTypification ||
-    type.typeID === TypeID.integer ||
-    type.typeID === TypeID.collection ||
-    type.typeID === TypeID.tuple
+    type?.typeID === TypeID.basic ||
+    type?.typeID === TypeID.anyTypification ||
+    type?.typeID === TypeID.integer ||
+    type?.typeID === TypeID.collection ||
+    type?.typeID === TypeID.tuple
   );
 }
 
