@@ -11,6 +11,7 @@ interface TableBodyProps<TData> {
   table: Table<TData>;
   dense?: boolean;
   noHeader?: boolean;
+  skipWidthCalculation?: boolean;
   conditionalRowStyles?: IConditionalStyle<TData>[];
 
   lastSelected: string | null;
@@ -24,6 +25,7 @@ export function TableBody<TData>({
   table,
   dense,
   noHeader,
+  skipWidthCalculation,
   conditionalRowStyles,
   lastSelected,
   onChangeLastSelected,
@@ -59,6 +61,7 @@ export function TableBody<TData>({
           table={table}
           row={row}
           className={getRowClasses(row)?.join(' ')}
+          skipWidthCalculation={skipWidthCalculation}
           style={conditionalRowStyles ? { ...getRowStyles(row) } : undefined}
           noHeader={noHeader}
           dense={dense}

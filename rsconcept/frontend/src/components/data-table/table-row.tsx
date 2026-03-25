@@ -14,6 +14,7 @@ interface TableRowProps<TData> {
   row: Row<TData>;
 
   className?: string;
+  skipWidthCalculation?: boolean;
   style?: React.CSSProperties;
 
   noHeader?: boolean;
@@ -30,6 +31,7 @@ export function TableRow<TData>({
   table,
   row,
   className,
+  skipWidthCalculation,
   style,
   noHeader,
   dense,
@@ -76,8 +78,8 @@ export function TableRow<TData>({
         table.options.enableRowSelection && row.getIsSelected()
           ? 'cc-selected'
           : !hasBG
-          ? 'odd:bg-secondary even:bg-background'
-          : '',
+            ? 'odd:bg-secondary even:bg-background'
+            : '',
         className
       )}
       style={style}
@@ -98,7 +100,7 @@ export function TableRow<TData>({
             onRowClicked || onRowDoubleClicked ? 'cursor-pointer' : 'cursor-auto'
           )}
           style={{
-            width: noHeader && row.index === 0 ? `calc(var(--col-${cell.column.id}-size) * 1px)` : undefined
+            width: noHeader && row.index === 0 && !skipWidthCalculation ? `calc(var(--col-${cell.column.id}-size) * 1px)` : undefined
           }}
         >
           {flexRender(cell.column.columnDef.cell, cell.getContext())}

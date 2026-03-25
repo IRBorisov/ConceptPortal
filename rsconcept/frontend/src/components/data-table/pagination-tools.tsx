@@ -1,6 +1,7 @@
 'use no memo';
 
 import { type Table } from '@tanstack/react-table';
+import clsx from 'clsx';
 
 import { IconPageFirst, IconPageLast, IconPageLeft, IconPageRight } from '../icons';
 
@@ -19,11 +20,15 @@ export function PaginationTools<TData>({
   onChangePaginationOption,
   paginationOptions
 }: PaginationToolsProps<TData>) {
-  const buttonClass =
-    'cc-hover-text cc-animate-color focus-outline rounded-md disabled:opacity-75 not-[:disabled]:cursor-pointer';
+  const buttonClass = clsx(
+    '-my-1',
+    'cc-hover-text cc-animate-color',
+    'focus-outline rounded-md',
+    'disabled:opacity-75 not-[:disabled]:cursor-pointer'
+  );
   return (
-    <div className='pl-3 flex justify-end items-center my-2 text-muted-foreground text-sm select-none'>
-      <span className='mr-3'>
+    <div className='mr-3 pl-3 flex justify-end flex-wrap items-center my-2 text-muted-foreground text-sm select-none'>
+      <div>
         {`${table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1}
       -
       ${Math.min(
@@ -32,64 +37,66 @@ export function PaginationTools<TData>({
         )}
       из
       ${table.getFilteredRowModel().rows.length}`}
-      </span>
-      <div className='flex'>
-        <button
-          type='button'
-          aria-label='Первая страница'
-          className={buttonClass}
-          onClick={() => table.setPageIndex(0)}
-          disabled={!table.getCanPreviousPage()}
-        >
-          <IconPageFirst size='1.5rem' />
-        </button>
-        <button
-          type='button'
-          aria-label='Предыдущая страница'
-          className={buttonClass}
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          <IconPageLeft size='1.5rem' />
-        </button>
-        <input
-          id={id ? `${id}__page` : undefined}
-          title='Номер страницы. Выделите для ручного ввода'
-          aria-label='Номер страницы'
-          className='w-6 text-center bg-transparent focus-outline rounded-md'
-          value={table.getState().pagination.pageIndex + 1}
-          onChange={event => {
-            const page = event.target.value ? Number(event.target.value) - 1 : 0;
-            if (page + 1 <= table.getPageCount()) {
-              table.setPageIndex(page);
-            }
-          }}
-        />
-        <button
-          type='button'
-          aria-label='Следующая страница'
-          className={buttonClass}
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          <IconPageRight size='1.5rem' />
-        </button>
-        <button
-          type='button'
-          aria-label='Последняя страница'
-          className={buttonClass}
-          onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-          disabled={!table.getCanNextPage()}
-        >
-          <IconPageLast size='1.5rem' />
-        </button>
       </div>
-      <SelectPagination
-        id={id ? `${id}__per_page` : undefined}
-        table={table}
-        paginationOptions={paginationOptions}
-        onChange={onChangePaginationOption}
-      />
+      {table.getPageCount() > 1 ? (
+        <div className='flex'>
+          <button
+            type='button'
+            aria-label='Первая страница'
+            className={buttonClass}
+            onClick={() => table.setPageIndex(0)}
+            disabled={!table.getCanPreviousPage()}
+          >
+            <IconPageFirst size='1.5rem' />
+          </button>
+          <button
+            type='button'
+            aria-label='Предыдущая страница'
+            className={buttonClass}
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            <IconPageLeft size='1.5rem' />
+          </button>
+          <input
+            id={id ? `${id}__page` : undefined}
+            title='Номер страницы. Выделите для ручного ввода'
+            aria-label='Номер страницы'
+            className='w-6 text-center bg-transparent focus-outline rounded-md p-0'
+            value={table.getState().pagination.pageIndex + 1}
+            onChange={event => {
+              const page = event.target.value ? Number(event.target.value) - 1 : 0;
+              if (page + 1 <= table.getPageCount()) {
+                table.setPageIndex(page);
+              }
+            }}
+          />
+          <button
+            type='button'
+            aria-label='Следующая страница'
+            className={buttonClass}
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            <IconPageRight size='1.5rem' />
+          </button>
+          <button
+            type='button'
+            aria-label='Последняя страница'
+            className={buttonClass}
+            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+            disabled={!table.getCanNextPage()}
+          >
+            <IconPageLast size='1.5rem' />
+          </button>
+        </div>) : null}
+      {paginationOptions.length > 1 ?
+        (<SelectPagination
+          id={id ? `${id}__per_page` : undefined}
+          table={table}
+          paginationOptions={paginationOptions}
+          onChange={onChangePaginationOption}
+        />) : null}
     </div>
   );
 }

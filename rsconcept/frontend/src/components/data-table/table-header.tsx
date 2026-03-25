@@ -9,10 +9,13 @@ import { SortingIcon } from './sorting-icon';
 interface TableHeaderProps<TData> {
   table: Table<TData>;
   headPosition?: string;
+  skipWidthCalculation?: boolean;
   resetLastSelected: () => void;
 }
 
-export function TableHeader<TData>({ table, headPosition, resetLastSelected }: TableHeaderProps<TData>) {
+export function TableHeader<TData>({
+  table, headPosition, skipWidthCalculation, resetLastSelected
+}: TableHeaderProps<TData>) {
   return (
     <thead className='sticky bg-background cc-shadow-border' style={{ top: headPosition }}>
       {table.getHeaderGroups().map((headerGroup: HeaderGroup<TData>) => (
@@ -31,7 +34,7 @@ export function TableHeader<TData>({ table, headPosition, resetLastSelected }: T
                 'cc-table-header group',
                 table.options.enableSorting && header.column.getCanSort() ? 'cursor-pointer' : 'cursor-auto'
               )}
-              style={{ width: `calc(var(--header-${header?.id}-size) * 1px)` }}
+              style={skipWidthCalculation ? undefined : { width: `calc(var(--header-${header?.id}-size) * 1px)` }}
               onClick={table.options.enableSorting ? header.column.getToggleSortingHandler() : undefined}
             >
               {!header.isPlaceholder ? (

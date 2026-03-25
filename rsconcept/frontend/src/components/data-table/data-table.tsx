@@ -25,7 +25,7 @@ export { createColumnHelper, type RowSelectionState, type VisibilityState };
 
 export interface DataTableProps<TData extends RowData>
   extends Styling,
-    Pick<TableOptions<TData>, 'data' | 'columns' | 'onRowSelectionChange' | 'onColumnVisibilityChange'> {
+  Pick<TableOptions<TData>, 'data' | 'columns' | 'onRowSelectionChange' | 'onColumnVisibilityChange'> {
   /** Id of the component. */
   id?: string;
 
@@ -34,6 +34,9 @@ export interface DataTableProps<TData extends RowData>
 
   /** Number of rows to display. */
   rows?: number;
+
+  /** Skip width calculation for columns. */
+  skipWidthCalculation?: boolean;
 
   /** Height of the content. */
   contentHeight?: string;
@@ -105,6 +108,7 @@ export function DataTable<TData extends RowData>({
   contentHeight = '1.1875rem',
   headPosition,
   conditionalRowStyles,
+  skipWidthCalculation,
   noFooter,
   noHeader,
   onRowClicked,
@@ -135,6 +139,9 @@ export function DataTable<TData extends RowData>({
   }, [rows, dense, noHeader, contentHeight]);
 
   const columnSizeVars = useMemo(() => {
+    if (skipWidthCalculation) {
+      return {};
+    }
     const headers = table.getFlatHeaders();
     const colSizes: Record<string, number> = {};
     for (const header of headers) {
@@ -142,7 +149,7 @@ export function DataTable<TData extends RowData>({
       colSizes[`--col-${header.column.id}-size`] = header.column.getSize();
     }
     return colSizes;
-  }, [table]);
+  }, [table, skipWidthCalculation]);
 
   return (
     <div
@@ -153,13 +160,19 @@ export function DataTable<TData extends RowData>({
     >
       <table className='w-full' style={{ ...columnSizeVars }}>
         {!noHeader ? (
-          <TableHeader table={table} headPosition={headPosition} resetLastSelected={() => setLastSelected(null)} />
+          <TableHeader
+            table={table}
+            headPosition={headPosition}
+            resetLastSelected={() => setLastSelected(null)}
+            skipWidthCalculation={skipWidthCalculation}
+          />
         ) : null}
 
         <TableBody
           table={table}
           dense={dense}
           noHeader={noHeader}
+          skipWidthCalculation={skipWidthCalculation}
           conditionalRowStyles={conditionalRowStyles}
           lastSelected={lastSelected}
           onChangeLastSelected={setLastSelected}

@@ -23,6 +23,8 @@ export const PARAMETER = {
   graphNodePadding: 5, // Padding inside graph nodes (in pixels)
   graphNodeRadius: 20, // Radius of graph nodes (in pixels)
 
+  searchDebounce: 200, // ms to debounce search input
+
   indentJSON: 2, // Number of spaces for JSON indentation
 
   exteorVersion: '4.9.7'

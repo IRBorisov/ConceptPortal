@@ -4,13 +4,11 @@ import { useState } from 'react';
 
 import { type TypePath, type Typification, type Value } from '@/features/rslang';
 import { normalizeValue } from '@/features/rslang/eval/value-api';
-import { labelType } from '@/features/rslang/labels';
 
-import { TextArea } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { ValueTable } from '../components/value-table';
+import { ValueEditor } from '../components/value-editor';
 import { type RSEngine } from '../models/rsengine';
 
 export interface DlgEditValueProps {
@@ -45,34 +43,19 @@ export function DlgEditValue() {
 
   return (
     <ModalForm
-      header='Редактор значения'
+      header={onChange ? 'Редактор значения' : 'Просмотр значения'}
       submitText='Сохранить'
       canSubmit={isModified && !!onChange}
       onSubmit={handleSubmit}
-      className='w-200 h-160 max-w-[calc(100dvw-3rem)] max-h-[calc(100svh-8rem)] pb-3 px-6 cc-column'
+      className='w-220 h-160 max-w-[calc(100dvw-3rem)] max-h-[calc(100svh-8rem)] pb-3 px-6 cc-column'
     >
-      <TextArea
-        fitContent
-        dense
-        noResize
-        noBorder
-        noOutline
-        transparent
-        readOnly
-        label='Типизация'
-        value={labelType(type)}
-        className='cursor-default grow-0'
-      />
-
-      <ValueTable
-        heightMargin='10rem'
+      <ValueEditor
         type={type}
         value={value}
         engine={engine}
-        onChange={handleChange}
+        onChange={onChange ? handleChange : undefined}
         getHeaderText={getHeaderText}
       />
-
     </ModalForm>
   );
 }

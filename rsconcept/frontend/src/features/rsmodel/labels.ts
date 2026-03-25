@@ -13,7 +13,7 @@ const labelEvalStatusRecord: Record<EvalStatus, string> = {
   [EvalStatus.EVAL_FAIL]: 'Ошибка',
   [EvalStatus.AXIOM_FALSE]: 'Нарушена аксиома',
   [EvalStatus.EMPTY]: 'Пустое значение',
-  [EvalStatus.HAS_DATA]: 'Вычислено'
+  [EvalStatus.HAS_DATA]: 'ОК'
 };
 
 /** Retrieves label for {@link EvalStatus}. */

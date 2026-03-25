@@ -42,7 +42,6 @@ export class RSFormLoader {
   }
 
   produceRSForm(): RSForm {
-    console.log('produceRSForm', this.schema.id);
     this.prepareLookups();
     this.createGraph();
     this.inferCstAttributes();

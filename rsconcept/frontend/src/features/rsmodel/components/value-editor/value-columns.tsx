@@ -1,4 +1,6 @@
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table';
+import clsx from 'clsx';
+import equal from 'fast-deep-equal';
 
 import { type RSForm } from '@/features/rsform';
 import { makeValuePath, TypeID, type Typification, type Value, type ValuePath } from '@/features/rslang';
@@ -8,9 +10,12 @@ import { type EchelonCollection } from '@/features/rslang/semantic/typification'
 import { MiniButton } from '@/components/control';
 import { IconRemove } from '@/components/icons';
 import { globalIDs } from '@/utils/constants';
+import { truncateToLastWord } from '@/utils/format';
 
 import { type BasicsContext } from '../../models/rsmodel';
 import { prepareValueString } from '../../models/rsmodel-api';
+
+const VALUE_TRUNCATE = 45;
 
 const columnHelper = createColumnHelper<Value>();
 
@@ -20,7 +25,7 @@ export interface ColumnServices {
   showDataText: boolean;
   getColumnText: (path: ValuePath) => string;
   navigateValue: (path: ValuePath) => void;
-  editElement?: (path: ValuePath) => void;
+  selectElement?: (path: ValuePath | null) => void;
   deleteElement?: (target: number) => void;
 }
 
@@ -32,6 +37,7 @@ interface ColumnState {
 
 export function createColumnsType(
   type: Typification,
+  selectedPath: ValuePath | null,
   services: ColumnServices
 ): ReturnType<typeof columnHelper.accessor>[] {
   const state = {
@@ -39,7 +45,10 @@ export function createColumnsType(
     path: makeValuePath([]),
     accessor: (value: Value) => value
   };
-  const columns = createColumnsInternal(state.singleton ? type : (type as EchelonCollection).base, services, state);
+  const columns = createColumnsInternal(
+    state.singleton ? type : (type as EchelonCollection).base,
+    selectedPath, services, state
+  );
   if (services.deleteElement) {
     columns.push(
       columnHelper.display({
@@ -74,8 +83,30 @@ function TitledHeader({ text, title, className }: { text: string, title?: string
   );
 }
 
+function BasicCell({ text, services, isSelected, path }: {
+  text: string,
+  services: ColumnServices,
+  isSelected: boolean,
+  path: ValuePath;
+}) {
+  const needsTooltip = text.length > VALUE_TRUNCATE;
+  return <span
+    className={clsx(
+      'px-1 truncate',
+      services.selectElement && 'cursor-pointer',
+      isSelected && 'bg-selected outline-2 outline-primary-border'
+    )}
+    onClick={services.selectElement ? () => services.selectElement!(isSelected ? null : path) : undefined}
+    data-tooltip-content={needsTooltip ? text : undefined}
+    data-tooltip-id={needsTooltip ? globalIDs.tooltip : undefined}
+  >
+    {truncateToLastWord(text, VALUE_TRUNCATE)}
+  </span>;
+}
+
 function createColumnsInternal(
   type: Typification,
+  selectedPath: ValuePath | null,
   services: ColumnServices,
   state: ColumnState
 ): ReturnType<typeof columnHelper.accessor>[] {
@@ -88,48 +119,50 @@ function createColumnsInternal(
       columnHelper.accessor(value => state.accessor(value) as number, {
         id: `B${pathStr}_Z`,
         header: () => <TitledHeader
-          className='min-w-2'
+          className='min-w-2 px-1'
           text='Z'
           title={columnTitle}
         />,
         size: 60,
         minSize: 60,
         maxSize: 60,
-        cell: props => <span
-          className={services.editElement ? 'cursor-pointer' : ''}
-          onClick={services.editElement ? () => services.editElement!(elementPath(props.row.index)) : undefined}
-        >
-          {props.getValue()}
-        </span>
+        cell: props =>
+          <BasicCell
+            text={props.getValue().toString()}
+            services={services}
+            isSelected={equal(elementPath(props.row.index), selectedPath)}
+            path={elementPath(props.row.index)}
+          />
       })
     ];
     case TypeID.basic: return [
       columnHelper.accessor(value => state.accessor(value) as number, {
         id: `${pathStr}_${type.baseID}`,
         header: () => <TitledHeader
-          className='min-w-2'
+          className='min-w-2 px-1'
           text={type.baseID}
           title={columnTitle}
         />,
         size: services.showDataText ? 300 : 60,
         minSize: services.showDataText ? 300 : 60,
         maxSize: services.showDataText ? 300 : 60,
-        cell: props => <span
-          className={services.editElement ? 'cursor-pointer' : ''}
-          onClick={services.editElement ? () => services.editElement!(elementPath(props.row.index)) : undefined}
-        >
-          {prepareValueString(
-            props.getValue(), type,
-            services.schema, services.basics, services.showDataText
-          )}
-        </span>
+        cell: props =>
+          <BasicCell
+            text={prepareValueString(
+              props.getValue(), type,
+              services.schema, services.basics, services.showDataText
+            )}
+            services={services}
+            isSelected={equal(elementPath(props.row.index), selectedPath)}
+            path={elementPath(props.row.index)}
+          />
       })
     ];
     case TypeID.collection: return [
       columnHelper.accessor(value => state.accessor(value) as Value[], {
         id: `${pathStr}_card`,
         header: () => <TitledHeader
-          className='min-w-4'
+          className='w-4'
           text='ℬ'
           title={columnTitle}
         />,
@@ -163,6 +196,7 @@ function createColumnsInternal(
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         components.push(...createColumnsInternal(
           type.factors[i],
+          selectedPath,
           services,
           {
             singleton: state.singleton,
