@@ -23,6 +23,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { limits } from '@/utils/constants';
+import { errorMsg } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 
 import { useMutatingRSModel } from '../../../backend/use-mutating-rsmodel';
@@ -51,6 +52,7 @@ export function FormValue({ id, toggleReset, activeCst }: FormValueProps) {
   const onModifiedEvent = useEffectEvent(setIsModified);
   const showDataText = usePreferencesStore(state => state.showDataText);
   const showEditValue = useDialogsStore(state => state.showModelEditValue);
+  const showViewValue = useDialogsStore(state => state.showModelViewValue);
 
   const isBase = isBaseSet(activeCst.cst_type);
   const cstInferrable = isInferrable(activeCst.cst_type);
@@ -130,13 +132,26 @@ export function FormValue({ id, toggleReset, activeCst }: FormValueProps) {
   }
 
   function handleEditValue() {
-    showEditValue({
-      initialValue: cstData!,
-      type: activeCst.analysis.type as Typification,
-      engine: engine,
-      onChange: !cstInferrable ? handleSetValue : undefined,
-      getHeaderText: (path: TypePath) => getStructureName(schema, activeCst, path)
-    });
+    const type = activeCst.analysis.type as Typification;
+    const getHeaderText = (path: TypePath) => getStructureName(schema, activeCst, path);
+    if (!cstInferrable && isMutable) {
+      showEditValue({
+        initialValue: cstData,
+        type: type,
+        engine: engine,
+        onChange: handleSetValue,
+        getHeaderText: getHeaderText
+      });
+    } else if (!cstData) {
+      toast.error(errorMsg.valueNull);
+    } else {
+      showViewValue({
+        value: cstData,
+        type: type,
+        engine: engine,
+        getHeaderText: getHeaderText
+      });
+    }
   }
 
   return (
@@ -192,8 +207,8 @@ export function FormValue({ id, toggleReset, activeCst }: FormValueProps) {
       />
 
       <ValueInput
-        className='max-h-100'
-        rows={8}
+        className='max-h-120'
+        rows={10}
         value={inputValue}
         stub={isDirty ? '' : stub}
         valueLabel={labelValue(localEval ? localEval.value : cstData, typification)}

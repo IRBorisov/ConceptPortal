@@ -1,14 +1,11 @@
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table';
 import clsx from 'clsx';
-import equal from 'fast-deep-equal';
 
 import { type RSForm } from '@/features/rsform';
 import { makeValuePath, TypeID, type Typification, type Value, type ValuePath } from '@/features/rslang';
 import { testInvalid, valueStub } from '@/features/rslang/eval/value-api';
 import { type EchelonCollection, IntegerT } from '@/features/rslang/semantic/typification';
 
-import { MiniButton } from '@/components/control';
-import { IconRemove } from '@/components/icons';
 import { globalIDs } from '@/utils/constants';
 import { truncateToLastWord } from '@/utils/format';
 
@@ -16,8 +13,8 @@ import { type BasicsContext } from '../../models/rsmodel';
 import { prepareValueString } from '../../models/rsmodel-api';
 import { type ValueMatcher } from '../../models/value-matcher';
 
-const VALUE_TRUNCATE = 45;
-const VALUE_TRUNCATE_LONG = 80;
+const VALUE_TRUNCATE = 50;
+const VALUE_TRUNCATE_LONG = 90;
 
 const columnHelper = createColumnHelper<Value>();
 
@@ -25,13 +22,11 @@ export interface ColumnServices {
   schema: RSForm;
   basics: BasicsContext;
   showDataText: boolean;
+  isSingleton: boolean;
   matcher: ValueMatcher | null;
   indexMap: Map<number, number>;
-  isSingleton: boolean;
   getColumnText: (path: ValuePath) => string;
   navigateValue: (path: ValuePath) => void;
-  selectElement?: (path: ValuePath | null) => void;
-  deleteElement?: (target: number) => void;
 }
 
 interface ColumnState {
@@ -41,41 +36,20 @@ interface ColumnState {
 
 export function createColumnsType(
   type: Typification,
-  selectedPath: ValuePath | null,
   services: ColumnServices
 ): ReturnType<typeof columnHelper.accessor>[] {
   const state = {
     path: makeValuePath([]),
     accessor: (value: Value) => value
   };
-  const columns = createColumnsInternal(
-    services.isSingleton ? type : (type as EchelonCollection).base,
-    selectedPath, services, state
+  return createColumnsInternal(
+    services.isSingleton ? type : (type as EchelonCollection).base, services, state
   );
-  if (services.deleteElement) {
-    columns.push(
-      columnHelper.display({
-        id: 'actions',
-        size: 0,
-        cell: props => (
-          <MiniButton
-            title='Удалить элемент'
-            className='align-middle w-fit'
-            noPadding
-            icon={<IconRemove size='1.25rem' className='cc-remove' />}
-            onClick={() => services.deleteElement!(props.row.index)}
-          />
-        )
-      })
-    );
-  }
-  return columns;
 }
 
 // ====== Internals ======
 function createColumnsInternal(
   type: Typification,
-  selectedPath: ValuePath | null,
   services: ColumnServices,
   state: ColumnState
 ): ReturnType<typeof columnHelper.accessor>[] {
@@ -101,8 +75,6 @@ function createColumnsInternal(
           <IntegerCell
             value={props.getValue()}
             services={services}
-            isSelected={equal(elementPath(props.row.index), selectedPath)}
-            path={elementPath(props.row.index)}
           />
       })
     ];
@@ -114,14 +86,13 @@ function createColumnsInternal(
           text={type.baseID}
           title={columnTitle}
         />,
-        size: services.showDataText ? 250 : 60,
-        minSize: services.showDataText ? 250 : 60,
-        maxSize: services.showDataText ? 250 : 60,
+        size: services.showDataText ? 300 : 60,
+        minSize: services.showDataText ? 300 : 60,
+        maxSize: services.showDataText ? 300 : 60,
         cell: props =>
           <BasicCell
             value={props.getValue()}
             services={services}
-            isSelected={equal(elementPath(props.row.index), selectedPath)}
             isInvalid={testInvalid(props.getValue())}
             type={type}
             path={elementPath(props.row.index)}
@@ -166,7 +137,6 @@ function createColumnsInternal(
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         components.push(...createColumnsInternal(
           type.factors[i],
-          selectedPath,
           services,
           {
             path: makeValuePath([...state.path, i + 1]),
@@ -192,35 +162,29 @@ function TitledHeader({ text, title, className }: { text: string, title?: string
   );
 }
 
-function IntegerCell({ value, services, isSelected, isInvalid, path }: {
+function IntegerCell({ value, isInvalid, services }: {
   value: number,
-  services: ColumnServices,
-  isSelected: boolean,
   isInvalid?: boolean,
-  path: ValuePath;
+  services: ColumnServices;
 }) {
   const isMatch = services.matcher?.match(value, IntegerT) ?? false;
   return <div
     className={clsx(
-      'px-1 w-fit',
-      services.selectElement && 'cursor-pointer',
-      isSelected && 'bg-selected outline-2 outline-primary-border',
-      !isSelected && isInvalid && 'bg-accent-orange50 outline-2 outline-accent-orange',
-      !isSelected && isMatch && 'bg-accent-green50 outline-2 outline-accent-green'
+      'px-1',
+      isInvalid && 'bg-accent-orange50 outline-2 outline-accent-orange',
+      isMatch && 'bg-accent-green50 outline-2 outline-accent-green'
     )}
-    onClick={services.selectElement ? () => services.selectElement!(isSelected ? null : path) : undefined}
   >
     {value}
   </div>;
 }
 
-function BasicCell({ value, type, services, isSelected, isInvalid, path }: {
+function BasicCell({ value, type, path, services, isInvalid }: {
   value: number,
   type: Typification,
   services: ColumnServices,
-  isSelected: boolean,
-  isInvalid?: boolean,
   path: ValuePath;
+  isInvalid?: boolean;
 }) {
   const text = prepareValueString(
     value, type,
@@ -232,13 +196,10 @@ function BasicCell({ value, type, services, isSelected, isInvalid, path }: {
   return <div
     className={clsx(
       'px-1 w-fit truncate',
-      isSingleColumn ? 'max-w-150' : 'max-w-68',
-      services.selectElement && 'cursor-pointer',
-      isSelected && 'bg-selected outline-2 outline-primary-border',
-      !isSelected && isInvalid && 'bg-accent-orange50 outline-2 outline-accent-orange',
-      !isSelected && isMatch && 'bg-accent-green50 outline-2 outline-accent-green'
+      isSingleColumn ? 'max-w-160' : 'max-w-75',
+      isInvalid && 'bg-accent-orange50 outline-2 outline-accent-orange',
+      isMatch && 'bg-accent-green50 outline-2 outline-accent-green'
     )}
-    onClick={services.selectElement ? () => services.selectElement!(isSelected ? null : path) : undefined}
     data-tooltip-content={needsTooltip ? text : undefined}
     data-tooltip-id={needsTooltip ? globalIDs.tooltip : undefined}
   >

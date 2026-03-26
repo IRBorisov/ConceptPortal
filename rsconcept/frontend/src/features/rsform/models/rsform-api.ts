@@ -4,6 +4,8 @@
 
 import { BASIC_SCHEMAS, type LibraryItem } from '@/features/library';
 import { type AnalysisFull, TypeClass, type TypePath, ValueClass } from '@/features/rslang';
+import { isTypification, TypeID, type Typification } from '@/features/rslang/semantic/typification';
+import { applyPath } from '@/features/rslang/semantic/typification-api';
 
 import { type RO } from '@/utils/meta';
 import { TextMatcher } from '@/utils/utils';
@@ -404,7 +406,17 @@ export function findCstByStructure(schema: RSForm, target: Constituenta, path: T
 export function getStructureName(schema: RSForm, target: Constituenta, path: TypePath): string {
   const representation = findCstByStructure(schema, target, path);
   if (representation) {
-    return representation.term_resolved;
+    return `${representation.alias}: ${representation.term_resolved}`;
+  }
+  if (!isTypification(target.analysis.type)) {
+    return '';
+  }
+  const type = applyPath(target.analysis.type as Typification, path);
+  if (type?.typeID === TypeID.basic) {
+    const cst = schema.cstByAlias.get(type.baseID);
+    if (cst?.term_resolved) {
+      return `${cst.alias}: ${cst.term_resolved}`;
+    }
   }
   return '';
 }

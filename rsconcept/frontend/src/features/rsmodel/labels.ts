@@ -2,6 +2,7 @@ import { type RO } from '@/utils/meta';
 
 import { type ExpressionType, TypeID, type TypePath, type Typification } from '../rslang';
 import { TUPLE_ID, type Value, VALUE_FALSE, VALUE_TRUE } from '../rslang/eval/value';
+import { valueStub } from '../rslang/eval/value-api';
 import { labelType } from '../rslang/labels';
 
 import { EvalStatus } from './models/rsmodel';
@@ -42,6 +43,15 @@ export function labelValue(value: RO<Value | null>, type: ExpressionType | null)
   } else {
     return value.length.toString();
   }
+}
+
+/** Generates small description for {@link Value}. */
+export function describeValue(data: Value | null, currentType: Typification): string {
+  const stub = valueStub(data);
+  if (currentType.typeID !== TypeID.collection) {
+    return stub;
+  }
+  return `${stub} | ${(data as Value[]).length}`;
 }
 
 /** Prints type with selected path. */

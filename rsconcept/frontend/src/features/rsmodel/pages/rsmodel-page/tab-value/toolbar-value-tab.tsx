@@ -1,5 +1,7 @@
 'use client';
 
+import { toast } from 'react-toastify';
+
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 import { IconShowSidebar } from '@/features/library/components/icon-show-sidebar';
@@ -15,6 +17,7 @@ import { cn } from '@/components/utils';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
+import { errorMsg } from '@/utils/labels';
 
 import { useMutatingRSModel } from '../../../backend/use-mutating-rsmodel';
 import { useCstValue } from '../../../hooks/use-cst-value';
@@ -47,6 +50,7 @@ export function ToolbarValueTab({
   const isModified = useModificationStore(state => state.isModified);
 
   const showEditValue = useDialogsStore(state => state.showModelEditValue);
+  const showViewValue = useDialogsStore(state => state.showModelViewValue);
   const hasValueDialog = activeCst &&
     !isBaseSet(activeCst.cst_type) &&
     isTypification(activeCst.analysis.type) &&
@@ -67,13 +71,26 @@ export function ToolbarValueTab({
       console.error('Invalid active cst');
       return;
     }
-    showEditValue({
-      initialValue: value,
-      type: activeCst.analysis.type as Typification,
-      engine: engine,
-      onChange: !isInferrable(activeCst.cst_type) ? handleSetValue : undefined,
-      getHeaderText: (path: TypePath) => getStructureName(schema, activeCst, path)
-    });
+    const type = activeCst.analysis.type as Typification;
+    const getHeaderText = (path: TypePath) => getStructureName(schema, activeCst, path);
+    if (!isInferrable(activeCst.cst_type) && isMutable) {
+      showEditValue({
+        initialValue: value,
+        type: type,
+        engine: engine,
+        onChange: handleSetValue,
+        getHeaderText: getHeaderText
+      });
+    } else if (!value) {
+      toast.error(errorMsg.valueNull);
+    } else {
+      showViewValue({
+        value: value,
+        type: type,
+        engine: engine,
+        getHeaderText: getHeaderText
+      });
+    }
   }
 
   return (

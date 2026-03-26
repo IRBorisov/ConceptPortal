@@ -16,7 +16,7 @@ export interface DlgEditValueProps {
   type: Typification;
   engine: RSEngine;
   getHeaderText?: (path: TypePath) => string;
-  onChange?: (newValue: Value | null) => void;
+  onChange: (newValue: Value | null) => void;
 }
 
 export function DlgEditValue() {
@@ -36,22 +36,23 @@ export function DlgEditValue() {
     if (value !== null) {
       normalizeValue(value);
     }
-    onChange?.(value);
+    onChange(value);
   }
 
   return (
     <ModalForm
-      header={onChange ? 'Редактор значения' : 'Просмотр значения'}
+      header='Редактор значения'
       submitText='Сохранить'
       canSubmit={value !== initialValue && !!onChange}
       onSubmit={handleSubmit}
-      className='w-230 h-155 max-w-[calc(100dvw-3rem)] max-h-[calc(100svh-8rem)] px-6 cc-column'
+      className='w-230 h-155 max-w-[calc(100dvw-3rem)] max-h-[calc(100svh-8rem)] px-6'
     >
       <ValueEditor
         type={type}
+        rows={17}
         value={value}
         engine={engine}
-        onChange={onChange ? handleChange : undefined}
+        onChange={handleChange}
         getHeaderText={getHeaderText}
       />
     </ModalForm>

@@ -1,7 +1,7 @@
 'use client';
 
 import { makeValuePath, TypeID, type Typification, type Value, type ValuePath } from '@/features/rslang';
-import { convertPathToType, valueStub } from '@/features/rslang/eval/value-api';
+import { convertPathToType } from '@/features/rslang/eval/value-api';
 import { type TypePath } from '@/features/rslang/semantic/typification';
 
 import { MiniButton } from '@/components/control';
@@ -13,7 +13,7 @@ import { NoData, Text } from '@/components/view';
 import { usePreferencesStore } from '@/stores/preferences';
 
 import { useValueMatcher } from '../../hooks/use-value-matcher';
-import { printTypeCrumbs } from '../../labels';
+import { describeValue, printTypeCrumbs } from '../../labels';
 import { type RSEngine } from '../../models/rsengine';
 import { IconShowDataText } from '../icon-show-data-text';
 
@@ -23,15 +23,15 @@ import { type ColumnServices, createColumnsType } from './value-columns';
 
 interface ValueEditorProps {
   className?: string;
+  rows?: number;
   engine: RSEngine;
   value: Value | null;
   type: Typification;
   getHeaderText?: (path: TypePath) => string;
-  onChange?: (newValue: Value | null) => void;
+  onChange: (newValue: Value | null) => void;
 }
 
-/** Displays a badge with value cardinality and information tooltip. */
-export function ValueEditor({ className, value, engine, getHeaderText, type, onChange }: ValueEditorProps) {
+export function ValueEditor({ className, rows, value, engine, getHeaderText, type, onChange }: ValueEditorProps) {
   const {
     path,
     data,
@@ -53,8 +53,8 @@ export function ValueEditor({ className, value, engine, getHeaderText, type, onC
   const showDataText = usePreferencesStore(state => state.showDataText);
   const toggleDataText = usePreferencesStore(state => state.toggleShowDataText);
 
-  const typeStr = getValueTypeLabel(type, typePath);
-  const valueStr = getValueSummary(data, currentType);
+  const typeStr = printTypeCrumbs(type, typePath);
+  const valueStr = describeValue(data, currentType);
 
   const dataRows =
     data === null ? [] :
@@ -80,12 +80,13 @@ export function ValueEditor({ className, value, engine, getHeaderText, type, onC
     schema: engine.schema!,
     basics: engine.basics,
     matcher: matcher,
+    isSingleton: currentType.typeID !== TypeID.collection,
     indexMap: indexMap,
     showDataText,
     navigateValue: handleNavigate,
     getColumnText: subPath => resolveColumnText(path, subPath, type, getHeaderText),
-    selectElement: onChange ? handleSelectElement : undefined,
-    deleteElement: onChange ? handleDeleteElement : undefined
+    selectElement: handleSelectElement,
+    deleteElement: handleDeleteElement
   };
 
   const columns = createColumnsType(currentType, selectedPath, services);
@@ -114,14 +115,12 @@ export function ValueEditor({ className, value, engine, getHeaderText, type, onC
                 onClick={handleResetView}
                 disabled={path.length === 0}
               />
-              {onChange ? (
-                <MiniButton
-                  title='Добавить элемент'
-                  icon={<IconNewItem size='1.25rem' className='icon-green' />}
-                  onClick={handleAddElement}
-                  disabled={currentType.typeID !== TypeID.collection && value !== null}
-                />
-              ) : null}
+              <MiniButton
+                title='Добавить элемент'
+                icon={<IconNewItem size='1.25rem' className='icon-green' />}
+                onClick={handleAddElement}
+                disabled={currentType.typeID !== TypeID.collection && value !== null}
+              />
               <MiniButton
                 title='Отображение данных в тексте'
                 icon={<IconShowDataText size='1.25rem' className='hover:text-primary' value={showDataText} />}
@@ -136,30 +135,29 @@ export function ValueEditor({ className, value, engine, getHeaderText, type, onC
               columns={columns}
               headPosition='0rem'
               skipWidthCalculation
-              rows={18}
+              rows={rows}
+              contentHeight='1.29rem'
               className='cc-scroll-y text-sm select-none border min-w-60'
               enablePagination
               paginationPerPage={20}
               paginationOptions={[20]}
               noDataComponent={
                 <NoData>
-                  <p>{currentType.typeID === TypeID.collection ? 'Пустое множество' : 'Значение отсутствует'}</p>
+                  <p>Значение отсутствует</p>
                 </NoData>
               }
             />
           </div>
         </div>
-        {!!onChange ? (
-          <PickElement
-            className='shrink-0 w-60'
-            alias={selectedCst?.alias ?? ''}
-            term={selectedCst?.term_resolved ?? ''}
-            binding={selectedBasics}
-            isInteger={selectedValue !== null && selectedCst === null}
-            value={selectedValue as number | null}
-            onChange={handleChangeSelected}
-          />
-        ) : null}
+        <PickElement
+          className='shrink-0 w-60'
+          alias={selectedCst?.alias ?? ''}
+          term={selectedCst?.term_resolved ?? ''}
+          binding={selectedBasics}
+          isInteger={selectedValue !== null && selectedCst === null}
+          value={selectedValue as number | null}
+          onChange={handleChangeSelected}
+        />
       </div>
     </div>
   );
@@ -175,24 +173,10 @@ function resolveColumnText(
   if (!getHeaderText) {
     return '';
   }
-
   const valuePath = makeValuePath([...basePath, ...subPath]);
   const typePath = convertPathToType(valuePath, type);
   if (typePath === null) {
     return '';
   }
-
   return getHeaderText(typePath);
-}
-
-function getValueTypeLabel(type: Typification, typePath: TypePath): string {
-  return printTypeCrumbs(type, typePath);
-}
-
-function getValueSummary(data: Value | null, currentType: Typification): string {
-  const stub = valueStub(data);
-  if (currentType.typeID !== TypeID.collection) {
-    return stub;
-  }
-  return `${stub} | ${(data as Value[]).length}`;
 }

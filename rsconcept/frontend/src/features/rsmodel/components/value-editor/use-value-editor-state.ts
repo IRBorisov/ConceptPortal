@@ -3,18 +3,12 @@
 import { useState } from 'react';
 
 import { type Constituenta } from '@/features/rsform';
-import { makeValuePath, TypeID, type TypePath, type Typification, type Value, type ValuePath } from '@/features/rslang';
+import { makeValuePath, TypeID, type Typification, type Value, type ValuePath } from '@/features/rslang';
 import { convertPathToType, extractValue } from '@/features/rslang/eval/value-api';
 import { applyPath } from '@/features/rslang/semantic/typification-api';
 
 import { type RSEngine } from '../../models/rsengine';
 import { addValueElement, deleteValueElement, updateValueElement } from '../../models/rsmodel-api';
-
-export interface ValueEditorResolvedState {
-  data: Value | null;
-  typePath: TypePath;
-  currentType: Typification;
-}
 
 export function useValueEditorState(
   engine: RSEngine,
@@ -23,9 +17,9 @@ export function useValueEditorState(
   onChange?: (newValue: Value | null) => void
 ) {
   const [path, setPath] = useState<ValuePath>(makeValuePath([]));
-  const [selectedPath, setSelectedPath] = useState<ValuePath | null>(null);
+  const { data, typePath, currentType } = resolveState(value, path, type);
 
-  const { data, typePath, currentType } = resolveValueEditorState(value, path, type);
+  const [selectedPath, setSelectedPath] = useState<ValuePath | null>(null);
   const selectedValue = selectedPath !== null && data !== null ? extractValue(data, selectedPath) : null;
   const selectedCst = resolveSelectedConstituenta(engine, selectedPath, currentType);
   const selectedBasics = selectedCst ? engine.basics.get(selectedCst.id) ?? null : null;
@@ -115,11 +109,7 @@ function resolveSelectedConstituenta(
   return engine.schema?.cstByAlias.get(type.baseID) ?? null;
 }
 
-function resolveValueEditorState(
-  value: Value | null,
-  path: ValuePath,
-  type: Typification
-): ValueEditorResolvedState {
+function resolveState(value: Value | null, path: ValuePath, type: Typification) {
   const data = value === null ? null : extractValue(value, path);
   const typePath = convertPathToType(path, type)!;
   const currentType = applyPath(type, typePath)!;

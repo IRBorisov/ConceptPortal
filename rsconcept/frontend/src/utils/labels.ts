@@ -86,6 +86,7 @@ export const errorMsg = {
   invalidSetValue: 'Некорректная попытка назначения значения',
   clipboardRead: 'Не удалось прочитать из буфера обмена',
   fileRead: 'Ошибка при чтении файла',
+  valueNull: 'Значение отсутствует'
 } as const;
 
 /**

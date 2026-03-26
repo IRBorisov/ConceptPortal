@@ -19,6 +19,7 @@ import { type ModalProps } from './modal-form';
 interface ModalViewProps extends ModalProps {
   /** Float all UI elements on top of contents. */
   fullScreen?: boolean;
+  noFooterButton?: boolean;
 }
 
 /**
@@ -31,6 +32,7 @@ export function ModalView({
   overflowVisible,
   helpTopic,
   hideHelpWhen,
+  noFooterButton,
   fullScreen,
   ...restProps
 }: React.PropsWithChildren<ModalViewProps>) {
@@ -93,22 +95,23 @@ export function ModalView({
           {children}
         </div>
 
-        {!fullScreen ? (
-          <Button
-            text='Закрыть'
-            aria-label='Закрыть'
-            className={clsx(
-              'my-2 mx-auto text-sm min-w-28',
-              fullScreen && 'z-pop absolute bottom-0 right-1/2 translate-x-1/2'
-            )}
-            onClick={hideDialog}
-          />
-        ) : (
-          <div className='z-pop absolute bottom-0 right-1/2 translate-x-1/2 p-3 rounded-xl bg-background/90 backdrop-blur-xs'>
-            {' '}
-            <Button text='Закрыть' aria-label='Закрыть' className='text-sm min-w-28' onClick={hideDialog} />
-          </div>
-        )}
+        {noFooterButton ? null :
+          !fullScreen ? (
+            <Button
+              text='Закрыть'
+              aria-label='Закрыть'
+              className={clsx(
+                'my-2 mx-auto text-sm min-w-28',
+                fullScreen && 'z-pop absolute bottom-0 right-1/2 translate-x-1/2'
+              )}
+              onClick={hideDialog}
+            />
+          ) : (
+            <div className='z-pop absolute bottom-0 right-1/2 translate-x-1/2 p-3 rounded-xl bg-background/90 backdrop-blur-xs'>
+              {' '}
+              <Button text='Закрыть' aria-label='Закрыть' className='text-sm min-w-28' onClick={hideDialog} />
+            </div>
+          )}
       </div>
     </div>
   );

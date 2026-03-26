@@ -44,18 +44,18 @@ export function PickElement({ className, value, alias, isInteger, term, binding,
   const columns = [
     columnHelper.accessor(id => id, {
       id: 'elem_id',
-      header: 'ID',
+      header: () => <div className='w-4 pl-1'>ID</div>,
       size: 40,
       minSize: 40,
       maxSize: 40,
-      cell: props => props.getValue()
+      cell: props => <div className='w-full text-center'>{props.getValue()}</div>
     }),
     columnHelper.accessor(id => id, {
       id: 'elem_text',
       header: 'Текст',
-      size: 200,
-      minSize: 200,
-      maxSize: 200,
+      size: 180,
+      minSize: 180,
+      maxSize: 180,
       cell: props => <TextCell text={prepareText(props.getValue(), binding)} />
     })
   ];
@@ -114,7 +114,6 @@ export function PickElement({ className, value, alias, isInteger, term, binding,
         data={filtered}
         dense
         headPosition='0rem'
-        skipWidthCalculation
         enablePagination
         paginationPerPage={20}
         paginationOptions={[20]}
@@ -139,10 +138,11 @@ function prepareText(id: number, binding: BasicBinding | null): string {
 
 function TextCell({ text }: { text: string; }) {
   const needsTooltip = text.length > VALUE_TRUNCATE;
-  return <span
+  return <div
+    className='w-43'
     data-tooltip-content={needsTooltip ? text : undefined}
     data-tooltip-id={needsTooltip ? globalIDs.tooltip : undefined}
   >
     {truncateToLastWord(text, VALUE_TRUNCATE)}
-  </span>;
+  </div>;
 }
