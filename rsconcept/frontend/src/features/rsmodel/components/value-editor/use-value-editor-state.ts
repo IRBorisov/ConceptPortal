@@ -10,23 +10,20 @@ import { applyPath } from '@/features/rslang/semantic/typification-api';
 import { type RSEngine } from '../../models/rsengine';
 import { addValueElement, deleteValueElement, updateValueElement } from '../../models/rsmodel-api';
 
-interface UseValueEditorStateArgs {
-  engine: RSEngine;
-  value: Value | null;
-  type: Typification;
-  onChange?: (newValue: Value | null) => void;
-}
-
 export interface ValueEditorResolvedState {
   data: Value | null;
   typePath: TypePath;
   currentType: Typification;
 }
 
-export function useValueEditorState({ engine, value, type, onChange }: UseValueEditorStateArgs) {
+export function useValueEditorState(
+  engine: RSEngine,
+  value: Value | null,
+  type: Typification,
+  onChange?: (newValue: Value | null) => void
+) {
   const [path, setPath] = useState<ValuePath>(makeValuePath([]));
   const [selectedPath, setSelectedPath] = useState<ValuePath | null>(null);
-  const [filter, setFilter] = useState('');
 
   const { data, typePath, currentType } = resolveValueEditorState(value, path, type);
   const selectedValue = selectedPath !== null && data !== null ? extractValue(data, selectedPath) : null;
@@ -80,7 +77,6 @@ export function useValueEditorState({ engine, value, type, onChange }: UseValueE
   return {
     currentType,
     data,
-    filter,
     handleAddElement,
     handleChangeSelected,
     handleDeleteElement,
@@ -93,7 +89,6 @@ export function useValueEditorState({ engine, value, type, onChange }: UseValueE
     selectedCst,
     selectedPath,
     selectedValue,
-    setFilter
   };
 }
 

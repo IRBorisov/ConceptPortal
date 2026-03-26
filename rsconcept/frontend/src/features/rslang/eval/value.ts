@@ -9,6 +9,9 @@ import { printValue } from './value-api';
 /** Tuple ID for array distinction. */
 export const TUPLE_ID = -111;
 
+/** Invalid value for structured data. */
+export const INVALID_ELEMENT = -1;
+
 /** Boolean values: true. */
 export const VALUE_TRUE = 1;
 

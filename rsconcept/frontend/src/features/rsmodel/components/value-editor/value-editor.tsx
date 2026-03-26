@@ -9,9 +9,10 @@ import { DataTable } from '@/components/data-table';
 import { IconNewItem, IconReset } from '@/components/icons';
 import { SearchBar } from '@/components/input';
 import { cn } from '@/components/utils';
-import { NoData } from '@/components/view';
+import { NoData, Text } from '@/components/view';
 import { usePreferencesStore } from '@/stores/preferences';
 
+import { useValueMatcher } from '../../hooks/use-value-matcher';
 import { printTypeCrumbs } from '../../labels';
 import { type RSEngine } from '../../models/rsengine';
 import { IconShowDataText } from '../icon-show-data-text';
@@ -35,8 +36,6 @@ export function ValueEditor({ className, value, engine, getHeaderText, type, onC
     path,
     data,
     currentType,
-    filter,
-    setFilter,
     handleAddElement,
     handleChangeSelected,
     handleDeleteElement,
@@ -48,7 +47,8 @@ export function ValueEditor({ className, value, engine, getHeaderText, type, onC
     selectedCst,
     selectedPath,
     selectedValue
-  } = useValueEditorState({ engine, value, type, onChange });
+  } = useValueEditorState(engine, value, type, onChange);
+  const { filter, setFilter, matcher } = useValueMatcher(engine);
 
   const showDataText = usePreferencesStore(state => state.showDataText);
   const toggleDataText = usePreferencesStore(state => state.toggleShowDataText);
@@ -61,10 +61,26 @@ export function ValueEditor({ className, value, engine, getHeaderText, type, onC
       currentType.typeID === TypeID.collection ?
         data as Value[] :
         [data];
+  const [filteredData, indexMap] = (() => {
+    const indexMap = new Map<number, number>();
+    const filteredData: Value[] = [];
+    const testType = currentType.typeID === TypeID.collection ? currentType.base : currentType;
+    for (let i = 0; i < dataRows.length; i++) {
+      const item = dataRows[i];
+      if (!matcher || matcher.match(item, testType)) {
+        filteredData.push(item);
+        indexMap.set(filteredData.length - 1, i);
+      }
+    }
+    return [filteredData, indexMap];
+  })();
+
 
   const services: ColumnServices = {
     schema: engine.schema!,
     basics: engine.basics,
+    matcher: matcher,
+    indexMap: indexMap,
     showDataText,
     navigateValue: handleNavigate,
     getColumnText: subPath => resolveColumnText(path, subPath, type, getHeaderText),
@@ -80,7 +96,11 @@ export function ValueEditor({ className, value, engine, getHeaderText, type, onC
       <div className='flex gap-3'>
         <div className='grow min-w-0'>
           <div className='-mt-1 flex justify-between items-center'>
-            <span className='font-math mr-1'>{valueStr}</span>
+            <Text
+              className='font-math font-normal mr-1 select-none'
+              text={valueStr}
+              title='Обозначение | Мощность множества'
+            />
             <SearchBar
               id='dlg_value_search'
               noBorder
@@ -111,7 +131,7 @@ export function ValueEditor({ className, value, engine, getHeaderText, type, onC
           </div>
           <div className='w-full max-w-full overflow-x-auto'>
             <DataTable
-              data={dataRows}
+              data={filteredData}
               dense
               columns={columns}
               headPosition='0rem'
