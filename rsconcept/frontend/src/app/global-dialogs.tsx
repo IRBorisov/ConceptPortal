@@ -154,6 +154,9 @@ const DlgModelEditValue = React.lazy(() =>
 const DlgModelViewValue = React.lazy(() =>
   import('@/features/rsmodel/dialogs/dlg-view-value').then(module => ({ default: module.DlgViewValue }))
 );
+const DlgModelEditBinding = React.lazy(() =>
+  import('@/features/rsmodel/dialogs/dlg-edit-binding').then(module => ({ default: module.DlgEditBinding }))
+);
 const DlgAIPromptDialog = React.lazy(() =>
   import('@/features/ai/dialogs/dlg-ai-prompt').then(module => ({ default: module.DlgAIPromptDialog }))
 );
@@ -238,6 +241,8 @@ export const GlobalDialogs = () => {
       return <DlgModelEditValue />;
     case DialogType.MODEL_VIEW_VALUE:
       return <DlgModelViewValue />;
+    case DialogType.MODEL_EDIT_BINDING:
+      return <DlgModelEditBinding />;
     case DialogType.AI_PROMPT:
       return <DlgAIPromptDialog />;
     case DialogType.CREATE_PROMPT_TEMPLATE:

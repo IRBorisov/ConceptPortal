@@ -53,6 +53,7 @@ export function FormValue({ id, toggleReset, activeCst }: FormValueProps) {
   const showDataText = usePreferencesStore(state => state.showDataText);
   const showEditValue = useDialogsStore(state => state.showModelEditValue);
   const showViewValue = useDialogsStore(state => state.showModelViewValue);
+  const showEditBinding = useDialogsStore(state => state.showModelEditBinding);
 
   const isBase = isBaseSet(activeCst.cst_type);
   const cstInferrable = isInferrable(activeCst.cst_type);
@@ -67,10 +68,7 @@ export function FormValue({ id, toggleReset, activeCst }: FormValueProps) {
   const initialStr = prepareValueString(initialValue, typification, schema, engine.basics, showDataText);
   const [inputValue, setInputValue] = useState<string>(initialStr);
   const isTrimmed = inputValue.length > limits.len_data_str;
-  const hasValueDialog = !isBase
-    && !!typification
-    && isTypification(typification) &&
-    (cstData != null || !cstInferrable);
+  const hasValueDialog = !!typification && isTypification(typification) && (cstData != null || !cstInferrable);
 
   const isEditable = isMutable && (isBase || activeCst.cst_type === CstType.STRUCTURED);
   const isDirty = inputValue !== initialStr;
@@ -131,7 +129,14 @@ export function FormValue({ id, toggleReset, activeCst }: FormValueProps) {
     void router.changeActive(cstID);
   }
 
-  function handleEditValue() {
+  function handleValueDialog() {
+    if (isBase) {
+      showEditBinding({
+        initialValue: engine.basics.get(activeCst.id)!,
+        onChange: isMutable ? handleSetValue : undefined
+      });
+      return;
+    }
     const type = activeCst.analysis.type as Typification;
     const getHeaderText = (path: TypePath) => getStructureName(schema, activeCst, path);
     if (!cstInferrable && isMutable) {
@@ -218,7 +223,7 @@ export function FormValue({ id, toggleReset, activeCst }: FormValueProps) {
         }
         onCalculate={cstInferrable ? handleCalculate : undefined}
         onChangeStr={setInputValue}
-        onEditValue={hasValueDialog ? handleEditValue : undefined}
+        onValueDialog={hasValueDialog ? handleValueDialog : undefined}
         disabled={!isMutable || cstInferrable || !isInterpretable(activeCst.cst_type) || (showDataText && !isBase)}
       />
 

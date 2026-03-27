@@ -24,7 +24,7 @@ interface ValueInputProps {
   placeholder?: string;
   status: EvalStatus;
 
-  onEditValue?: () => void;
+  onValueDialog?: () => void;
   onChangeStr?: (newValue: string) => void;
   onCalculate?: (event: React.MouseEvent<Element>) => void;
 }
@@ -33,7 +33,7 @@ interface ValueInputProps {
 export function ValueInput({
   className, rows, placeholder, disabled,
   value, stub, valueLabel, status,
-  onChangeStr, onEditValue, onCalculate
+  onChangeStr, onValueDialog, onCalculate
 }: ValueInputProps) {
   const isTrimmed = value.length > limits.len_data_str;
   return (
@@ -93,9 +93,9 @@ export function ValueInput({
       <TextButton
         text='Значение'
         title='Просмотр значения'
-        onClick={onEditValue}
-        hideTitle={!onEditValue}
-        disabled={!onEditValue}
+        onClick={onValueDialog}
+        hideTitle={!onValueDialog}
+        disabled={!onValueDialog}
       />
       <TextArea
         value={value.slice(0, limits.len_data_str)}

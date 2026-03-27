@@ -4,12 +4,13 @@ import { type TypePath, type Typification, type Value } from '@/features/rslang'
 
 import { ModalView } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
+import { type RO } from '@/utils/meta';
 
 import { ValueViewer } from '../components/value-viewer';
 import { type RSEngine } from '../models/rsengine';
 
 export interface DlgViewValueProps {
-  value: Value | null;
+  value: RO<Value | null>;
   type: Typification;
   engine: RSEngine;
   getHeaderText?: (path: TypePath) => string;

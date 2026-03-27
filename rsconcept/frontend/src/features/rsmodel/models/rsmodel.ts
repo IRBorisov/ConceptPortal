@@ -24,6 +24,10 @@ export type BasicBinding = Record<number, string>;
 /** Represents {@link RSModel} basic sets binding. */
 export type BasicsContext = Map<number, BasicBinding>;
 
+/** Default value for structured data. */
+export const DEFAULT_VALUE_TEXT = 'N/A';
+
+/** Represents {@link RSModel} structured data. */
 export type RSModel = RO<RSModelDTO>;
 
 /** Represents {@link RSModel} statistics. */

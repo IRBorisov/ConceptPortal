@@ -91,6 +91,9 @@ export interface DataTableProps<TData extends RowData>
 
   /** Initial sorting. */
   initialSorting?: ColumnSort;
+
+  /** Auto reset page index when table state changes. */
+  autoResetPageIndex?: boolean;
 }
 
 /**

@@ -14,6 +14,7 @@ import { SearchBar } from '@/components/input';
 import { cn } from '@/components/utils';
 import { Text } from '@/components/view';
 import { usePreferencesStore } from '@/stores/preferences';
+import { type RO } from '@/utils/meta';
 
 import { useValueMatcher } from '../../hooks/use-value-matcher';
 import { describeValue, printTypeCrumbs } from '../../labels';
@@ -25,7 +26,7 @@ import { type ColumnServices, createColumnsType } from './value-columns';
 interface ValueEditorProps {
   className?: string;
   engine: RSEngine;
-  value: Value | null;
+  value: RO<Value | null>;
   type: Typification;
   rows?: number;
   getHeaderText?: (path: TypePath) => string;
@@ -150,8 +151,8 @@ function resolveColumnText(
   return getHeaderText(typePath);
 }
 
-function resolveState(value: Value | null, path: ValuePath, type: Typification) {
-  const data = value === null ? null : extractValue(value, path);
+function resolveState(value: RO<Value | null>, path: ValuePath, type: Typification) {
+  const data = value === null ? null : extractValue(value as Value, path);
   const typePath = convertPathToType(path, type)!;
   const currentType = applyPath(type, typePath)!;
   return { data, typePath, currentType };

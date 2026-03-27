@@ -11,13 +11,15 @@ import { RSInput } from '@/features/rsform/components/rs-input';
 import { RSTextWrapper } from '@/features/rsform/components/rs-input/text-editing';
 import { ViewErrors } from '@/features/rsform/components/view-errors';
 import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
-import { type AnalysisFull, type CalculatorResult, type RSErrorDescription, TokenID } from '@/features/rslang';
+import { type AnalysisFull, type CalculatorResult, type RSErrorDescription, TokenID, type Typification } from '@/features/rslang';
 import { valueStub } from '@/features/rslang/eval/value-api';
 import { labelType } from '@/features/rslang/labels';
+import { isTypification } from '@/features/rslang/semantic/typification';
 import { ValueInput } from '@/features/rsmodel/components/value-input';
 
 import { TextArea } from '@/components/input';
 import { cn } from '@/components/utils';
+import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { infoMsg } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
@@ -38,6 +40,7 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
   const { engine } = useRSModelEdit();
 
   const showDataText = usePreferencesStore(state => state.showDataText);
+  const showViewValue = useDialogsStore(state => state.showModelViewValue);
 
   const rsInput = useRef<ReactCodeMirrorRef>(null);
   const [evaluatedExpression, setEvaluatedExpression] = useState<string>('');
@@ -51,6 +54,7 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
   const isModified = evaluatedExpression !== expression;
   const status = inferStatus(localEval?.value ?? null, CstType.TERM, !isModified);
   const errors = [...(localParse?.errors ?? []), ...(localEval?.errors ?? [])];
+  const hasDialog = localParse?.type && isTypification(localParse.type) && localEval?.value !== null;
 
   function handleOpenCst(cstID: number) {
     void router.changeActive(cstID);
@@ -104,6 +108,17 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
     rsInput.current?.view?.focus();
   }
 
+  function handleValueDialog() {
+    if (!localParse?.type || !localEval?.value) {
+      return;
+    }
+    showViewValue({
+      value: localEval.value,
+      type: localParse.type as Typification,
+      engine: engine
+    });
+  }
+
   return (
     <div id={id} className={cn('cc-column mt-1 pb-1 px-6 h-fit', className)}>
       <TextArea
@@ -154,6 +169,7 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
         status={status}
         placeholder='Значение отсутствует'
         onCalculate={handleCalculate}
+        onValueDialog={hasDialog ? handleValueDialog : undefined}
         disabled
       />
     </div>

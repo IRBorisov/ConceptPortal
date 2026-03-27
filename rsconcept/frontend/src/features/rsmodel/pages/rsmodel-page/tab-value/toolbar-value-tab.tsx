@@ -10,6 +10,7 @@ import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-contex
 import { type TypePath, type Typification, type Value } from '@/features/rslang';
 import { normalizeValue } from '@/features/rslang/eval/value-api';
 import { isTypification } from '@/features/rslang/semantic/typification';
+import { type BasicBinding } from '@/features/rsmodel/models/rsmodel';
 
 import { MiniButton } from '@/components/control';
 import { IconCalculateAll, IconCalculateOne, IconDatabase, IconDestroy, IconReset } from '@/components/icons';
@@ -51,24 +52,38 @@ export function ToolbarValueTab({
 
   const showEditValue = useDialogsStore(state => state.showModelEditValue);
   const showViewValue = useDialogsStore(state => state.showModelViewValue);
+  const showEditBinding = useDialogsStore(state => state.showModelEditBinding);
   const hasValueDialog = activeCst &&
-    !isBaseSet(activeCst.cst_type) &&
     isTypification(activeCst.analysis.type) &&
     (value != null || !isInferrable(activeCst.cst_type));
 
-  function handleSetValue(newValue: Value | null) {
+  function handleSetValue(newValue: Value | BasicBinding | null) {
+    if (!activeCst) {
+      console.error('Invalid active cst');
+      return;
+    }
     if (newValue === null) {
-      void engine.resetValue(activeCst!.id);
+      void engine.resetValue(activeCst.id);
+    } else if (isBaseSet(activeCst.cst_type)) {
+      const binding = newValue as BasicBinding;
+      void engine.setBasicValue(activeCst.id, binding);
     } else {
-      normalizeValue(newValue);
-      void engine.setStructureValue(activeCst!.id, newValue);
+      normalizeValue(newValue as Value);
+      void engine.setStructureValue(activeCst.id, newValue as Value);
     }
     onReset();
   }
 
-  function handleEditValue() {
+  function handleValueDialog() {
     if (!activeCst) {
       console.error('Invalid active cst');
+      return;
+    }
+    if (isBaseSet(activeCst.cst_type)) {
+      showEditBinding({
+        initialValue: engine.basics.get(activeCst.id)!,
+        onChange: isMutable ? handleSetValue : undefined
+      });
       return;
     }
     const type = activeCst.analysis.type as Typification;
@@ -115,7 +130,7 @@ export function ToolbarValueTab({
       <MiniButton
         title='Просмотреть/Редактировать значение'
         icon={<IconDatabase size='1.25rem' className='icon-primary' />}
-        onClick={handleEditValue}
+        onClick={handleValueDialog}
         disabled={!hasValueDialog}
       />
 

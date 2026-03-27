@@ -53,6 +53,9 @@ interface UseDataTableProps<TData extends RowData>
 
   /** Initial sorting. */
   initialSorting?: ColumnSort;
+
+  /** Auto reset page index when table state changes. */
+  autoResetPageIndex?: boolean;
 }
 
 /**
@@ -73,6 +76,8 @@ export function useDataTable<TData extends RowData>({
 
   enablePagination,
   paginationPerPage = 10,
+
+  autoResetPageIndex,
 
   ...restProps
 }: UseDataTableProps<TData>) {
@@ -99,6 +104,7 @@ export function useDataTable<TData extends RowData>({
 
     getPaginationRowModel: enablePagination ? getPaginationRowModel() : undefined,
     onPaginationChange: enablePagination ? setPagination : undefined,
+    autoResetPageIndex: autoResetPageIndex,
 
     enableHiding: enableHiding,
     enableMultiRowSelection: enableRowSelection,
