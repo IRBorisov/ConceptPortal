@@ -3,6 +3,7 @@
 import clsx from 'clsx';
 
 import { urls, useConceptNavigation } from '@/app';
+import { HelpTopic } from '@/features/help';
 import { useLibrarySearchStore } from '@/features/library';
 import { useDeleteItem } from '@/features/library/backend/use-delete-item';
 import { EditorLibraryItem } from '@/features/library/components/editor-library-item';
@@ -83,6 +84,7 @@ export function TabModelCard() {
         isMutable={isMutable}
         deleteItem={handleDelete}
         isNarrow={isNarrow}
+        helpTopic={HelpTopic.UI_RSMODEL_CARD}
       />
 
       <div className='cc-column mx-0 md:mx-auto'>

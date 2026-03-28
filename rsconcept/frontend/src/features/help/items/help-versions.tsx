@@ -13,18 +13,18 @@ export function HelpVersions() {
       <h2>Действия</h2>
       <ul>
         <li>
-          <IconShare size='1.25rem' className='inline-icon' /> Поделиться включает версию в ссылку
+          <IconShare className='inline-icon' /> Поделиться включает версию в ссылку
         </li>
         <li>
-          <IconUpload size='1.25rem' className='inline-icon icon-red' /> Загрузить версию в актуальную схему
+          <IconUpload className='inline-icon icon-red' /> Загрузить версию в актуальную схему
         </li>
         <li>
-          <IconNewVersion size='1.25rem' className='inline-icon icon-green' /> Создать версию можно только из актуальной
+          <IconNewVersion className='inline-icon icon-green' /> Создать версию можно только из актуальной
           схемы
         </li>
 
         <li>
-          <IconVersions size='1.25rem' className='inline-icon' /> Редактировать атрибуты версий
+          <IconVersions className='inline-icon' /> Редактировать атрибуты версий
         </li>
       </ul>
     </div>

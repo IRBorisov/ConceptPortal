@@ -1,4 +1,5 @@
 import {
+  IconAxiomFalse,
   IconChild,
   IconConceptBlock,
   IconConsolidation,
@@ -13,16 +14,19 @@ import {
   IconCstTerm,
   IconCstTheorem,
   IconDownload,
+  IconEmptyTerm,
   IconGraphCollapse,
   IconGraphExpand,
   IconGraphInputs,
   IconGraphOutputs,
+  IconNotCalculated,
   IconOSS,
   IconPredecessor,
   IconReference,
   IconRSForm,
   IconRSFormImported,
   IconRSFormOwned,
+  IconRSModel,
   IconStatusError,
   IconStatusIncalculable,
   IconStatusOK,
@@ -47,7 +51,7 @@ export function HelpThesaurus() {
 
       <h2>Концептуальная схема</h2>
       <p>
-        <IconRSForm size='1rem' className='inline-icon' />
+        <IconRSForm className='inline-icon' />
         {'\u2009'}
         <LinkTopic text='Концептуальная схема' topic={HelpTopic.CC_SYSTEM} /> (<i>система определений, КС</i>) –
         совокупность понятий и утверждений, а также связей между ними, задаваемых определениями.
@@ -73,16 +77,16 @@ export function HelpThesaurus() {
       <ul>
         Типы КС относительно операций ОСС:
         <li>
-          <IconRSForm size='1rem' className='inline-icon' />
+          <IconRSForm className='inline-icon' />
           {'\u2009'}Свободная КС – не связана с операцией в ОСС.
         </li>
         <li>
-          <IconRSFormOwned size='1rem' className='inline-icon' />
+          <IconRSFormOwned className='inline-icon' />
           {'\u2009'}Собственная КС данной ОСС – прикреплена к операции, совпадающей по владельцу и расположению с данной
           ОСС.
         </li>
         <li>
-          <IconRSFormImported size='1rem' className='inline-icon' />
+          <IconRSFormImported className='inline-icon' />
           {'\u2009'}Внешняя КС данной ОСС – прикреплена к операции, владельцы или расположение которой отличаются от
           соответствующих атрибутов ОСС.
         </li>
@@ -96,7 +100,7 @@ export function HelpThesaurus() {
         определение, Комментарий.
       </p>
       <p>
-        <IconCrucial size='1rem' className='inline-icon' /> Ключевая конституента используется как маркер для
+        <IconCrucial className='inline-icon' /> Ключевая конституента используется как маркер для
         обозначения содержательно значимых конституент. Ключевые конституенты выделяются визуально и используются при
         фильтрации.
       </p>
@@ -120,46 +124,46 @@ export function HelpThesaurus() {
       <ul>
         <b>Типы конституент</b>
         <li>
-          <IconCstNominal size='1rem' className='inline-icon' />
+          <IconCstNominal className='inline-icon' />
           {'\u2009'}Номиноид (N#) – предметная сущность, не имеющая четкого определения, используемая для ассоциативной
           группировки конституент и предварительной фиксации содержательных отношений.
         </li>
         <li>
-          <IconCstBaseSet size='1rem' className='inline-icon' />
+          <IconCstBaseSet className='inline-icon' />
           {'\u2009'}Базисное множество (X#) – неопределяемое понятие, представленное множеством различимых элементов.
         </li>
         <li>
-          <IconCstConstSet size='1rem' className='inline-icon' />
+          <IconCstConstSet className='inline-icon' />
           {'\u2009'}Константное множество (C#) – неопределяемое понятие, моделируемое термом теории множеств, который
           поддерживает ряд формальных операций над его элементами.
         </li>
         <li>
-          <IconCstStructured size='1rem' className='inline-icon' />
+          <IconCstStructured className='inline-icon' />
           {'\u2009'}родовая структура (S#) – неопределяемое понятие, имеющее структуру, построенную на базисных
           множествах и константных множеств. Содержание родовой структуры формируется{' '}
           <LinkTopic text='отношением типизации' topic={HelpTopic.RSL_TYPIFICATION} />, аксиомами и конвенцией.
         </li>
         <li>
-          <IconCstAxiom size='1rem' className='inline-icon' />
+          <IconCstAxiom className='inline-icon' />
           {'\u2009'}аксиома (A#) – утверждение, ограничивающее неопределяемые понятия и выводимые термы. Интерпретация
           всех аксиом должна быть истинна, чтобы КС являлась теорией данной предметной области.
         </li>
         <li>
-          <IconCstTerm size='1rem' className='inline-icon' />
+          <IconCstTerm className='inline-icon' />
           {'\u2009'}терм (D#) – выводимое понятие.
         </li>
         <li>
-          <IconCstFunction size='1rem' className='inline-icon' />
+          <IconCstFunction className='inline-icon' />
           {'\u2009'}терм-функция (F#) – параметризованное выводимое понятие, имеющее характер функционального отношения
           между набором аргументов и результатом.
         </li>
         <li>
-          <IconCstPredicate size='1rem' className='inline-icon' />
+          <IconCstPredicate className='inline-icon' />
           {'\u2009'}предикат-функция (P#) – выводимое понятие, имеющее характер логического выражения, проверяющее
           заданные аргументы на соответствие некоторому условию.
         </li>
         <li>
-          <IconCstTheorem size='1rem' className='inline-icon' />
+          <IconCstTheorem className='inline-icon' />
           {'\u2009'}теорема (T#) – предметно значимое утверждение, которое может быть как истинным так и ложным.
         </li>
       </ul>
@@ -169,19 +173,19 @@ export function HelpThesaurus() {
       <ul>
         <b>Отношения по вхождению в определение</b>
         <li>
-          <IconGraphOutputs size='1rem' className='inline-icon' />
+          <IconGraphOutputs className='inline-icon' />
           {'\u2009'}Потребители – используют конституенту в своих определениях.
         </li>
         <li>
-          <IconGraphInputs size='1rem' className='inline-icon' />
+          <IconGraphInputs className='inline-icon' />
           {'\u2009'}Поставщики – упоминаются в определении данной конституенты.
         </li>
         <li>
-          <IconGraphExpand size='1rem' className='inline-icon' />
+          <IconGraphExpand className='inline-icon' />
           {'\u2009'}Зависимые – потребители, напрямую или по цепочке.
         </li>
         <li>
-          <IconGraphCollapse size='1rem' className='inline-icon' />
+          <IconGraphCollapse className='inline-icon' />
           {'\u2009'}Влияющие – поставщики, напрямую или по цепочке.
         </li>
       </ul>
@@ -203,23 +207,23 @@ export function HelpThesaurus() {
       <ul>
         <b>Статусы корректности определения конституенты</b>
         <li>
-          <IconStatusUnknown size='1rem' className='inline-icon' />
+          <IconStatusUnknown className='inline-icon' />
           {'\u2009'}не проверено – требуется проверка определения.
         </li>
         <li>
-          <IconStatusOK size='1rem' className='inline-icon' />
+          <IconStatusOK className='inline-icon' />
           {'\u2009'}корректно – определение корректно.
         </li>
         <li>
-          <IconStatusError size='1rem' className='inline-icon' />
+          <IconStatusError className='inline-icon' />
           {'\u2009'}ошибочно – обнаружена ошибка.;
         </li>
         <li>
-          <IconStatusProperty size='1rem' className='inline-icon' />
+          <IconStatusProperty className='inline-icon' />
           {'\u2009'}неразмерное – задает невычислимое множество, для которого возможна проверка принадлежности;
         </li>
         <li>
-          <IconStatusIncalculable size='1rem' className='inline-icon' />
+          <IconStatusIncalculable className='inline-icon' />
           {'\u2009'}невычислимо – определение невозможно интерпретировать напрямую;
         </li>
       </ul>
@@ -238,15 +242,15 @@ export function HelpThesaurus() {
       <ul>
         <b>Наследование конституент (в рамках ОСС)</b>
         <li>
-          <IconChild size='1rem' className='inline-icon' />
+          <IconChild className='inline-icon' />
           {'\u2009'}Наследованная конституента – получена из другой КС.
         </li>
         <li>
-          <IconPredecessor size='1rem' className='inline-icon' />
+          <IconPredecessor className='inline-icon' />
           {'\u2009'}Собственная – не является наследованной.
         </li>
         <li>
-          <IconPredecessor size='1rem' className='inline-icon' />
+          <IconPredecessor className='inline-icon' />
           {'\u2009'}Исходная – собственная конституента, прямым или опосредованным наследником которой является данная
           конституента.
         </li>
@@ -254,7 +258,7 @@ export function HelpThesaurus() {
 
       <h2>Операционная схема синтеза</h2>
       <p>
-        <IconOSS size='1rem' className='inline-icon' />
+        <IconOSS className='inline-icon' />
         {'\u2009'}
         <LinkTopic text='Операционная схема синтеза' topic={HelpTopic.CC_OSS} /> (ОСС) – система операций над
         концептуальными схемами.
@@ -282,18 +286,40 @@ export function HelpThesaurus() {
       <ul>
         <b>Типы операций в ОСС</b>
         <li>
-          <IconReference size='1rem' className='inline-icon' />
+          <IconReference className='inline-icon' />
           {'\u2009'}репликация результата другой операции.
         </li>
         <li>
-          <IconDownload size='1rem' className='inline-icon' />
+          <IconDownload className='inline-icon' />
           {'\u2009'}загрузка КС из библиотеки.
         </li>
         <li>
-          <IconSynthesis size='1rem' className='inline-icon' />
+          <IconSynthesis className='inline-icon' />
           {'\u2009'}синтез концептуальных схем.
         </li>
       </ul>
+
+
+      <h2>Концептуальная модель</h2>
+      <p>
+        <IconRSModel className='inline-icon' />
+        {'\u2009'}
+        <LinkTopic text='Концептуальная модель' topic={HelpTopic.CC_RSMODEL} /> – это интерпретация <LinkTopic text='концептуальной схемы' topic={HelpTopic.CC_SYSTEM} />, в которой интерпретируемым конституентам сопоставлены конкретные значения. Она показывает, какими данными заполнены базисные множества, как построены структурные значения и выполняются ли аксиомы.
+      </p>
+      <p>
+        Интерпретация – сопоставление конституенте её значения в модели. Для базисных и константных множеств, а также
+        родовых структур интерпретация задаётся непосредственно пользователем; для аксиом, терминов и теорем она может вычисляться по формальному определению на основе уже заданных значений.
+      </p>
+      <p>
+        <IconAxiomFalse className='inline-icon' />{'\u2009'}Нарушенная аксиома – аксиома, интерпретация которой в данной модели даёт значение ЛОЖЬ. Такая модель не удовлетворяет аксиоматике в полном объёме.
+      </p>
+      <p>
+        <IconNotCalculated className='inline-icon' />{'\u2009'}Невычислимые конституенты - конституенты, чьи выражения при вычислении приводят к экспоненциальному росту затрачиваемых на вычисление ресурсов.
+      </p>
+      <p>
+        <IconEmptyTerm className='inline-icon' />{'\u2009'}Пустые термы - термы, текущие значения которых равны пустому множеству. Термы, используемые для управления и выработки решений не должны быть пустыми.
+      </p>
+
     </div>
   );
 }

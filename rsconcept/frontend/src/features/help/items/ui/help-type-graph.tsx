@@ -36,7 +36,7 @@ export function HelpTypeGraph() {
         ступень декартова произведения
       </p>
 
-      <h2>Команды</h2>
+      <h2>Управление</h2>
       <ul>
         <li>
           <kbd>Space</kbd> – перемещение экрана

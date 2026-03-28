@@ -19,8 +19,6 @@ interface StatusBarProps {
   onCalculate?: (event: React.MouseEvent<Element>) => void;
 }
 
-// TODO: use different help ID for statuses
-
 export function StatusBar({ className, status, onCalculate }: StatusBarProps) {
   return (
     <div className={cn('pl-22 xs:pl-8 flex gap-1', className)}>
@@ -45,7 +43,7 @@ export function StatusBar({ className, status, onCalculate }: StatusBarProps) {
           <span className='font-controls pr-1 text-sm'>{labelEvalStatus(status)}</span>
         </div>
       </div>
-      <BadgeHelp className='-mt-0.5' topic={HelpTopic.UI_CST_STATUS} offset={4} />
+      <BadgeHelp className='-mt-0.5' topic={HelpTopic.UI_RSMODEL_STATUS} offset={4} />
     </div>
   );
 }

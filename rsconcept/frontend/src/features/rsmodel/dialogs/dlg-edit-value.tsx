@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 
+import { HelpTopic } from '@/features/help';
 import { type TypePath, type Typification, type Value } from '@/features/rslang';
 import { normalizeValue } from '@/features/rslang/eval/value-api';
 
@@ -41,15 +42,17 @@ export function DlgEditValue() {
 
   return (
     <ModalForm
+      helpTopic={HelpTopic.UI_RSMODEL_VALUE_DIALOG}
       header='Редактор значения'
       submitText='Сохранить'
       canSubmit={value !== initialValue && !!onChange}
       onSubmit={handleSubmit}
-      className='w-230 h-155 max-w-[calc(100dvw-3rem)] max-h-[calc(100svh-8rem)] px-6'
+      className='w-230 h-145 max-w-[calc(100dvw-3rem)] max-h-[calc(100svh-8rem)] px-6'
     >
       <ValueEditor
         type={type}
-        rows={17}
+        rows={15}
+        perPage={15}
         value={value}
         engine={engine}
         onChange={handleChange}

@@ -97,7 +97,7 @@ export interface DataTableProps<TData extends RowData>
 }
 
 /**
- * Dta representation as a table.
+ * Data representation as a table.
  *
  * @param headPosition - Top position of sticky header (0 if no other sticky elements are present).
  * No sticky header if omitted

@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 
+import { HelpTopic } from '@/features/help';
+
 import { ModalForm, ModalView } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
@@ -30,6 +32,7 @@ export function DlgEditBinding() {
   if (onChange) {
     return (
       <ModalForm
+        helpTopic={HelpTopic.UI_RSMODEL_BINDING}
         header='Редактор базового источника'
         submitText='Сохранить'
         canSubmit={value !== initialValue}
@@ -46,6 +49,7 @@ export function DlgEditBinding() {
   } else {
     return (
       <ModalView
+        helpTopic={HelpTopic.UI_RSMODEL_BINDING}
         header='Просмотр базового источника'
         noFooterButton
         className='w-200 h-152 max-w-[calc(100dvw-3rem)] max-h-[calc(100svh-8rem)] px-6'

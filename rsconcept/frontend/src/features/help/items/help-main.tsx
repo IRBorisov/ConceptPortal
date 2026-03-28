@@ -1,5 +1,4 @@
 import { TextURL } from '@/components/control';
-import { IconVideo } from '@/components/icons';
 import { external_urls, prefixes } from '@/utils/constants';
 
 import { LinkTopic } from '../components/link-topic';
@@ -11,19 +10,18 @@ export function HelpMain() {
     <div className='text-justify'>
       <h1>Портал</h1>
       <p>
-        Портал позволяет анализировать предметные области, формально записывать системы определений и синтезировать их с
-        помощью математического аппарата <LinkTopic text='Родов структур' topic={HelpTopic.RSLANG} />.
+        Портал предоставляет мощные инструменты для формального анализа и моделирования предметных областей, обеспечивая структурированное описание и глубокую проработку понятий с помощью <LinkTopic text='Родов структур' topic={HelpTopic.RSLANG} />.
       </p>
       <p>
-        Такие системы называются <LinkTopic text='Концептуальными схемами' topic={HelpTopic.CC_SYSTEM} /> и состоят из
-        отдельных <LinkTopic text='Конституент' topic={HelpTopic.CC_CONSTITUENTA} />, которым даны формальные
-        определения. Концептуальные схемы могут связываться путем синтеза в{' '}
-        <LinkTopic text='Операционной схеме синтеза' topic={HelpTopic.CC_OSS} />.
+        Создавайте <LinkTopic text='Концептуальные схемы' topic={HelpTopic.CC_SYSTEM} /> — системы определений, состоящие из отдельных <LinkTopic text='Конституент' topic={HelpTopic.CC_CONSTITUENTA} /> с четкими формальными определениями и структурой. Визуализируйте и исследуйте структуру определений и граф связей понятий.
       </p>
       <p>
-        Значок <IconVideo className='inline-icon' /> при нажатии отображает видео о различных темах и подробностях
-        работы Портала. Просмотр видео доступен на Youtube и ВКонтакте.
+        Объединяйте отдельные схемы в масштабные <LinkTopic text='Операционные схемы синтеза' topic={HelpTopic.CC_OSS} /> для работы с комплексными предметными областями.
       </p>
+      <p>
+        Интегрируйте формальные определения с данными из предметных источников, создавая <LinkTopic text='Концептуальные модели' topic={HelpTopic.CC_RSMODEL} />. Экспериментируйте с формальными определениями, автоматически формируйте их значения для любой предметной области.
+      </p>
+
 
       <details>
         <summary className='text-center font-semibold'>Разделы Справки</summary>
@@ -44,34 +42,34 @@ export function HelpMain() {
         </ul>
       </details>
 
-      <h2>Лицензирование и раскрытие информации</h2>
-      <ul>
-        <li>Пользователи Портала сохраняют авторские права на создаваемый ими контент</li>
-        <li>
-          Политика обработки данных доступна по <LinkTopic text='ссылке' topic={HelpTopic.INFO_PRIVACY} />
-        </li>
-        <li>
-          Портал является проектом с открытым исходным кодом, доступным на{' '}
-          <TextURL text='Github' href={external_urls.git_portal} />
-        </li>
-        <li>
-          Данный сайт использует доменное имя и серверные мощности{' '}
-          <TextURL text='Центра Концепт' href={external_urls.concept} />
-        </li>
-      </ul>
+      <details className='mt-2'>
+        <summary className='text-center font-semibold'>Лицензирование и раскрытие информации</summary>
+        <ul>
+          <li>Пользователи Портала сохраняют авторские права на создаваемый ими контент</li>
+          <li>
+            Политика обработки данных доступна по <LinkTopic text='ссылке' topic={HelpTopic.INFO_PRIVACY} />
+          </li>
+          <li>
+            Портал является проектом с открытым исходным кодом, доступным на{' '}
+            <TextURL text='Github' href={external_urls.git_portal} />
+          </li>
+          <li>
+            Данный сайт использует доменное имя и серверные мощности{' '}
+            <TextURL text='Центра Концепт' href={external_urls.concept} />
+          </li>
+        </ul>
+      </details>
 
-      <h2>Поддержка</h2>
+      <h2 className='mt-2'>Поддержка</h2>
       <p>
         Портал разрабатывается <TextURL text='Центром Концепт' href={external_urls.concept} /> и вобрал в себя{' '}
-        <LinkTopic text='многолетнюю работу' topic={HelpTopic.INFO_CONTRIB} /> над средствами экспликации.
+        <LinkTopic text='многолетнюю работу' topic={HelpTopic.INFO_CONTRIB} /> над средствами экспликации концептуальных схем.
       </p>
       <p>
         Портал поддерживает актуальные версии браузеров Chrome, Firefox, Safari, включая мобильные устройства.
-        Убедитесь, что используете последнюю версию браузера в случае возникновения визуальных ошибок или проблем с
-        производительностью.
       </p>
       <p>
-        Ваши пожелания по доработке, найденные ошибки и иные предложения можно направлять на email:{' '}
+        Ваши пожелания по доработке, найденные ошибки и иные предложения направляйте на email:{' '}
         <TextURL href={external_urls.mail_portal} text='portal@acconcept.ru' />
       </p>
     </div>

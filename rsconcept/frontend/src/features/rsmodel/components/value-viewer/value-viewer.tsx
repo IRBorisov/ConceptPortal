@@ -29,10 +29,11 @@ interface ValueEditorProps {
   value: RO<Value | null>;
   type: Typification;
   rows?: number;
+  perPage?: number;
   getHeaderText?: (path: TypePath) => string;
 }
 
-export function ValueViewer({ className, value, rows, engine, getHeaderText, type }: ValueEditorProps) {
+export function ValueViewer({ className, value, rows, perPage = 20, engine, getHeaderText, type }: ValueEditorProps) {
   const [path, setPath] = useState<ValuePath>(makeValuePath([]));
   const { filter, setFilter, matcher } = useValueMatcher(engine);
   const { data, typePath, currentType } = resolveState(value, path, type);
@@ -124,8 +125,8 @@ export function ValueViewer({ className, value, rows, engine, getHeaderText, typ
             contentHeight='1.29rem'
             className='cc-scroll-y text-sm select-none border'
             enablePagination
-            paginationPerPage={20}
-            paginationOptions={[20]}
+            paginationPerPage={perPage}
+            paginationOptions={[perPage]}
           />
         </div>
       </div>

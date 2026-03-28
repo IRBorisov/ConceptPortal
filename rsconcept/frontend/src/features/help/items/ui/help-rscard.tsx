@@ -1,12 +1,14 @@
 import {
   IconDestroy,
   IconEditor,
+  IconFolderEdit,
   IconImmutable,
   IconLeftOpen,
   IconOSS,
   IconOwner,
   IconPublic,
-  IconSave
+  IconSave,
+  IconShare
 } from '@/components/icons';
 import { isMac } from '@/utils/utils';
 
@@ -22,12 +24,6 @@ export function HelpRSCard() {
       <p>
         Паспорт позволяет управлять атрибутами и <LinkTopic text='версиями' topic={HelpTopic.VERSIONS} />
       </p>
-      <p>
-        Паспорт позволяет назначать <IconEditor className='inline-icon' /> Редакторов
-      </p>
-      <p>
-        Паспорт позволяет изменить <IconOwner className='inline-icon icon-green' /> Владельца
-      </p>
 
       <h2>Управление</h2>
       <ul>
@@ -38,22 +34,28 @@ export function HelpRSCard() {
           <IconSave className='inline-icon' /> сохранить изменения: <kbd>{isMac() ? 'Cmd + S' : 'Ctrl + S'}</kbd>
         </li>
         <li>
-          <IconEditor className='inline-icon' /> Редактор обладает правом редактирования
+          <IconShare className='inline-icon' /> скопировать ссылку на схему
         </li>
         <li>
-          <IconOwner className='inline-icon' /> Владелец обладает полным доступом к схеме
+          <IconEditor className='inline-icon' /> редактор обладает правом редактирования
         </li>
         <li>
-          <IconPublic className='inline-icon' /> Общедоступные схемы видны всем посетителям
+          <IconOwner className='inline-icon' /> владелец обладает полным доступом к схеме
         </li>
         <li>
-          <IconImmutable className='inline-icon' /> Неизменные схемы
+          <IconPublic className='inline-icon' /> общедоступные схемы видны всем посетителям
         </li>
         <li>
-          <IconDestroy className='inline-icon icon-red' /> Удалить – полностью удаляет схему из базы Портала
+          <IconImmutable className='inline-icon' /> неизменные схемы
         </li>
         <li>
-          <IconLeftOpen className='inline-icon' /> Отображение статистики
+          <IconDestroy className='inline-icon icon-red' /> удалить схему из базы Портала
+        </li>
+        <li>
+          <IconLeftOpen className='inline-icon' /> отображение статистики
+        </li>
+        <li>
+          <IconFolderEdit className='inline-icon' /> редактирование расположения
         </li>
       </ul>
     </div>

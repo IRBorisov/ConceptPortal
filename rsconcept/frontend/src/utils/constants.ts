@@ -137,7 +137,8 @@ export const prefixes = {
   user_subs: 'user_subs_',
   user_editors: 'user_editors_',
   wordform_list: 'wordform_list_',
-  rsedit_btn: 'rsedit_btn_'
+  rsedit_btn: 'rsedit_btn_',
+  eval_status_list: 'eval_status_list_',
 } as const;
 
 /** ReactFlow viewport class name. */

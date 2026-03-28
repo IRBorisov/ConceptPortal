@@ -6,7 +6,8 @@ import {
   IconLogin,
   IconLogout,
   IconPin,
-  IconUser2
+  IconUser2,
+  IconVideo
 } from '@/components/icons';
 import { isMac } from '@/utils/utils';
 
@@ -29,6 +30,10 @@ export function HelpInterface() {
       <p>
         <IconHelp className='inline-icon' /> Помимо данного раздела справка предоставляется контекстно через специальную
         иконку <IconHelp className='inline-icon' />
+      </p>
+      <p>
+        Значок <IconVideo className='inline-icon' /> при нажатии отображает видео о различных темах и подробностях
+        работы Портала. Просмотр видео доступен на Youtube и ВКонтакте.
       </p>
 
       <h2>Навигация и настройки</h2>

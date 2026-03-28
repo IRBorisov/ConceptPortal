@@ -24,6 +24,7 @@ import { type ColumnServices, createColumnsType } from './value-columns';
 interface ValueEditorProps {
   className?: string;
   rows?: number;
+  perPage?: number;
   engine: RSEngine;
   value: Value | null;
   type: Typification;
@@ -31,7 +32,7 @@ interface ValueEditorProps {
   onChange: (newValue: Value | null) => void;
 }
 
-export function ValueEditor({ className, rows, value, engine, getHeaderText, type, onChange }: ValueEditorProps) {
+export function ValueEditor({ className, rows, perPage = 20, value, engine, getHeaderText, type, onChange }: ValueEditorProps) {
   const {
     path,
     data,
@@ -136,11 +137,11 @@ export function ValueEditor({ className, rows, value, engine, getHeaderText, typ
               headPosition='0rem'
               skipWidthCalculation
               rows={rows}
-              contentHeight='1.29rem'
+              contentHeight='1.34rem'
               className='cc-scroll-y text-sm select-none border min-w-60'
               enablePagination
-              paginationPerPage={20}
-              paginationOptions={[20]}
+              paginationPerPage={perPage}
+              paginationOptions={[perPage]}
               noDataComponent={
                 <NoData>
                   <p>Значение отсутствует</p>

@@ -105,7 +105,7 @@ export function PickElement({ className, value, alias, isInteger, term, binding,
       <SearchBar
         id='dlg_elements_search'
         noBorder
-        className='-my-1 -ml-1 w-45'
+        className='-my-0.75 -ml-1 w-45'
         query={filter}
         onChangeQuery={setFilter}
       />
@@ -115,11 +115,10 @@ export function PickElement({ className, value, alias, isInteger, term, binding,
         dense
         headPosition='0rem'
         enablePagination
-        paginationPerPage={20}
-        paginationOptions={[20]}
-        rows={17}
+        paginationPerPage={15}
+        paginationOptions={[15]}
         noFooter
-        className='text-sm cc-scroll-y border'
+        className='text-sm cc-scroll-y border h-120'
         conditionalRowStyles={conditionalRowStyles}
         onRowClicked={(id: number) => onChange(id)}
       />

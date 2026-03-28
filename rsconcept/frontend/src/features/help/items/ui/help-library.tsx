@@ -38,7 +38,7 @@ export function HelpLibrary() {
           <span className='text-accent-green-foreground'>зеленым </span> выделены ОСС
         </li>
         <li>
-          <span className='text-accent-green-foreground'>фиолетовым </span> выделены модели
+          <span className='text-accent-orange-foreground'>оранжевым </span> выделены модели
         </li>
         <li>
           <kbd>клик</kbd> по строке - переход к редактированию схемы
@@ -47,29 +47,29 @@ export function HelpLibrary() {
           <kbd>{isMac() ? 'Cmd + клик' : 'Ctrl + клик'}</kbd> по строке откроет схему в новой вкладке
         </li>
         <li>
-          <IconLeftClose size='1rem' className='inline-icon' /> отображение Проводника
+          <IconLeftClose className='inline-icon' /> отображение Проводника
         </li>
         <li>
-          <IconShow size='1rem' className='inline-icon' /> фильтры атрибутов применяются по клику
+          <IconShow className='inline-icon' /> фильтры атрибутов применяются по клику
         </li>
         <li>
-          <IconAnimationOff size='1rem' className='inline-icon' /> фильтр по типу
+          <IconAnimationOff className='inline-icon' /> фильтр по типу
         </li>
         <li>
-          <IconUserSearch size='1rem' className='inline-icon' /> фильтр по пользователю
+          <IconUserSearch className='inline-icon' /> фильтр по пользователю
         </li>
         <li>
-          <IconSearch size='1rem' className='inline-icon' /> фильтр по названию и сокращению
+          <IconSearch className='inline-icon' /> фильтр по названию и сокращению
         </li>
         <li>
-          <IconFilterReset size='1rem' className='inline-icon' /> сбросить фильтры
+          <IconFilterReset className='inline-icon' /> сбросить фильтры
         </li>
         <li>
-          <IconSortAsc size='1rem' className='inline-icon' />
-          <IconSortDesc size='1rem' className='inline-icon' /> сортировка по клику на заголовок таблицы
+          <IconSortAsc className='inline-icon' />
+          <IconSortDesc className='inline-icon' /> сортировка по клику на заголовок таблицы
         </li>
         <li>
-          <IconDownload size='1rem' className='inline-icon' /> выгрузка таблицы в файл
+          <IconDownload className='inline-icon' /> выгрузка таблицы в файл
         </li>
       </ul>
 
@@ -92,25 +92,25 @@ export function HelpLibrary() {
           <kbd>клик</kbd> по иконке сворачивает/разворачивает вложенные
         </li>
         <li>
-          <IconFolderEdit size='1rem' className='inline-icon' /> переименовать выбранную
+          <IconFolderEdit className='inline-icon' /> переименовать выбранную
         </li>
         <li>
-          <IconSubfolders size='1rem' className='inline-icon' /> схемы во вложенных папках
+          <IconSubfolders className='inline-icon' /> схемы во вложенных папках
         </li>
         <li>
-          <IconFolderEmpty size='1rem' className='inline-icon text-foreground' /> папка без схем
+          <IconFolderEmpty className='inline-icon text-foreground' /> папка без схем
         </li>
         <li>
-          <IconFolderEmpty size='1rem' className='inline-icon' /> папка с вложенными без схем
+          <IconFolderEmpty className='inline-icon' /> папка с вложенными без схем
         </li>
         <li>
-          <IconFolder size='1rem' className='inline-icon' /> папка без вложенных
+          <IconFolder className='inline-icon' /> папка без вложенных
         </li>
         <li>
-          <IconFolderClosed size='1rem' className='inline-icon' /> папка с вложенными и схемами
+          <IconFolderClosed className='inline-icon' /> папка с вложенными и схемами
         </li>
         <li>
-          <IconFolderOpened size='1rem' className='inline-icon icon-green' /> развернутая папка
+          <IconFolderOpened className='inline-icon icon-green' /> развернутая папка
         </li>
       </ul>
     </div>

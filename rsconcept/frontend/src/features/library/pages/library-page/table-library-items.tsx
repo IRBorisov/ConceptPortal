@@ -39,7 +39,7 @@ export function TableLibraryItems({ items }: TableLibraryItemsProps) {
     },
     {
       when: (item: LibraryItem) => item.item_type === LibraryItemType.RSMODEL,
-      className: 'text-accent-purple-foreground'
+      className: 'text-accent-orange-foreground'
     }
   ];
   const tableHeight = useFitHeight('2.25rem');

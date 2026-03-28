@@ -36,7 +36,7 @@ export function HelpRSEditor() {
 
       <div className='flex flex-col sm:flex-row sm:gap-3'>
         <div>
-          <h2>Команды</h2>
+          <h2>Управление</h2>
           <ul>
             <li>
               <IconOSS className='inline-icon' /> переход к <LinkTopic text='ОСС' topic={HelpTopic.CC_OSS} />

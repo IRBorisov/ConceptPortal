@@ -17,9 +17,25 @@ const labelEvalStatusRecord: Record<EvalStatus, string> = {
   [EvalStatus.HAS_DATA]: 'ОК'
 };
 
+
+const describeEvalStatusRecord: Record<EvalStatus, string> = {
+  [EvalStatus.NO_EVAL]: 'вычисление не требуется',
+  [EvalStatus.NOT_PROCESSED]: 'вычисление не проводилось',
+  [EvalStatus.INVALID_DATA]: 'данные не соответствуют типу',
+  [EvalStatus.EVAL_FAIL]: 'ошибка при вычислении',
+  [EvalStatus.AXIOM_FALSE]: 'значение аксиомы ложно',
+  [EvalStatus.EMPTY]: 'значение равно пустому множеству',
+  [EvalStatus.HAS_DATA]: 'значение вычислено и не пусто'
+};
+
 /** Retrieves label for {@link EvalStatus}. */
 export function labelEvalStatus(status: EvalStatus): string {
   return labelEvalStatusRecord[status] ?? `UNKNOWN EVALUATION STATUS: ${status}`;
+}
+
+/** Retrieves description for {@link EvalStatus}. */
+export function describeEvalStatus(status: EvalStatus): string {
+  return describeEvalStatusRecord[status] ?? `UNKNOWN EVALUATION STATUS: ${status}`;
 }
 
 /** Generates label for {@link Value}. */

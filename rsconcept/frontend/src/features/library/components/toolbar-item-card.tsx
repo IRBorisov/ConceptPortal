@@ -1,7 +1,7 @@
 'use client';
 
 import { useConceptNavigation } from '@/app';
-import { HelpTopic } from '@/features/help';
+import { type HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 import { type RSForm } from '@/features/rsform';
 import { useRoleStore, UserRole } from '@/features/users';
@@ -28,6 +28,7 @@ interface ToolbarItemCardProps {
   isMutable: boolean;
   item: LibraryItem;
   deleteItem: () => void;
+  helpTopic?: HelpTopic;
 }
 
 export function ToolbarItemCard({
@@ -36,7 +37,8 @@ export function ToolbarItemCard({
   item,
   onSubmit,
   isMutable,
-  deleteItem
+  deleteItem,
+  helpTopic
 }: ToolbarItemCardProps) {
   const role = useRoleStore(state => state.role);
   const router = useConceptNavigation();
@@ -107,7 +109,7 @@ export function ToolbarItemCard({
         icon={<IconShowSidebar value={showValue} isBottom={isNarrow} size='1.25rem' />}
         onClick={toggleShow}
       />
-      <BadgeHelp topic={HelpTopic.UI_RS_CARD} offset={4} />
+      {helpTopic ? <BadgeHelp topic={helpTopic} offset={4} /> : null}
     </div>
   );
 }
