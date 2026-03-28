@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { type OperationSchemaDTO } from '@/features/oss';
-import { type RSForm } from '@/features/rsform';
+import { type RSForm, type RSFormDTO } from '@/features/rsform';
 import { type RSModelDTO } from '@/features/rsmodel';
 
 import { KEYS } from '@/backend/configuration';
@@ -38,8 +38,11 @@ export const useSetAccessPolicy = () => {
       }
 
       const rsKey = KEYS.composite.schema({ itemID: variables.itemID });
-      client.setQueryData(rsKey, (prev: RSForm | undefined) =>
-        !prev ? undefined : { ...prev, access_policy: variables.policy }
+      client.setQueryData(rsKey, (prev: { raw: RSFormDTO; transformed: RSForm; } | undefined) =>
+        !prev ? undefined : {
+          raw: { ...prev.raw, access_policy: variables.policy },
+          transformed: { ...prev.transformed, access_policy: variables.policy }
+        }
       );
       const modelKey = KEYS.composite.model({ itemID: variables.itemID });
       client.setQueryData(modelKey, (prev: RSModelDTO | undefined) =>

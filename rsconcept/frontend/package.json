@@ -58,13 +58,14 @@
   "devDependencies": {
     "@lezer/generator": "^1.8.0",
     "@playwright/test": "^1.58.2",
+    "@rolldown/plugin-babel": "^0.2.2",
     "@tailwindcss/vite": "^4.2.2",
     "@types/node": "^25.5.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@typescript-eslint/eslint-plugin": "^8.0.1",
     "@typescript-eslint/parser": "^8.0.1",
-    "@vitejs/plugin-react": "^5.2.0",
+    "@vitejs/plugin-react": "^6.0.1",
     "babel-plugin-react-compiler": "^1.0.0",
     "eslint": "^9.39.4",
     "eslint-plugin-import": "^2.32.0",
@@ -81,7 +82,7 @@
     "tailwindcss": "^4.0.7",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.57.2",
-    "vite": "^7.3.1",
+    "vite": "^8.0.3",
     "vitest": "^4.1.2"
   }
 }

@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { type OperationSchemaDTO } from '@/features/oss';
-import { type RSForm } from '@/features/rsform';
+import { type RSForm, type RSFormDTO } from '@/features/rsform';
 import { type RSModelDTO } from '@/features/rsmodel';
 
 import { KEYS } from '@/backend/configuration';
@@ -27,16 +27,23 @@ export const useUpdateItem = () => {
       client.setQueryData(libraryKey, (prev: RO<LibraryItem[]> | undefined) =>
         prev?.map(item => (item.id === data.id ? data : item))
       );
-      client.setQueryData(itemKey, (prev: RSForm | OperationSchemaDTO | RSModelDTO | undefined) =>
-        !prev ? undefined : { ...prev, ...data }
-      );
       if (data.item_type === LibraryItemType.RSFORM) {
-        const schema: RSForm | undefined = client.getQueryData(itemKey);
+        client.setQueryData(itemKey, (prev: { raw: RSFormDTO; transformed: RSForm; } | undefined) => {
+          if (!prev) {
+            return undefined;
+          }
+          return { raw: { ...prev.raw, ...data }, transformed: { ...prev.transformed, ...data } };
+        });
+        const schema = client.getQueryData<{ raw: RSFormDTO; transformed: RSForm; }>(itemKey)?.transformed;
         if (schema) {
           await Promise.allSettled(
             schema.oss.map(item => client.invalidateQueries({ queryKey: KEYS.composite.oss({ itemID: item.id }) }))
           );
         }
+      } else {
+        client.setQueryData(itemKey, (prev: OperationSchemaDTO | RSModelDTO | undefined) =>
+          !prev ? undefined : { ...prev, ...data }
+        );
       }
     },
     onError: () => client.invalidateQueries()

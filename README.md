@@ -70,7 +70,6 @@ This readme file is used mostly to document project dependencies and conventions
   - eslint-plugin-react-hooks
   - eslint-plugin-tsdoc
   - eslint-plugin-playwright
-  - babel-plugin-react-compiler
   - vite
   - vitest
   - shadcn
@@ -82,6 +81,7 @@ This readme file is used mostly to document project dependencies and conventions
   - @types/jest
   - @lezer/generator
   - @playwright/test
+  - @rolldown/plugin-babel
   - rollup-plugin-visualizer
   </pre>
 </details>
