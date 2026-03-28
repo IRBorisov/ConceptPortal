@@ -7,7 +7,7 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import generics
 from rest_framework import status as c
 from rest_framework import views, viewsets
-from rest_framework.decorators import action, api_view
+from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.serializers import ValidationError
@@ -644,6 +644,7 @@ class TrsImportView(views.APIView):
     }
 )
 @api_view(['POST'])
+@permission_classes([permissions.GlobalUser])
 def create_rsform(request: Request) -> HttpResponse:
     ''' Endpoint: Create RSForm from user input and/or trs file. '''
     owner = cast(User, request.user) if not request.user.is_anonymous else None
@@ -701,6 +702,7 @@ def _prepare_rsform_data(data: dict, request: Request, owner: Union[User, None])
     responses={c.HTTP_200_OK: s.RSFormParseSerializer}
 )
 @api_view(['PATCH'])
+@permission_classes([permissions.GlobalUser])
 def inline_synthesis(request: Request) -> HttpResponse:
     ''' Endpoint: Inline synthesis. '''
     serializer = s.InlineSynthesisSerializer(data=request.data, context={'user': request.user})

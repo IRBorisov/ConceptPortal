@@ -48,6 +48,18 @@ class TestRSFormViewset(EndpointTester):
         self.assertEqual(response.data['description'], data['description'])
 
 
+    @decl_endpoint('/api/rsforms/create-detailed', method='post')
+    def test_create_rsform_file_requires_auth(self):
+        work_dir = os.path.dirname(os.path.abspath(__file__))
+        self.logout()
+
+        with open(f'{work_dir}/data/sample-rsform.trs', 'rb') as file:
+            data = {'file': file}
+            response = self.client.post(self.endpoint, data, format='multipart')
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+
     @decl_endpoint('/api/rsforms', method='get')
     def test_list_rsforms(self):
         oss = LibraryItem.objects.create(
@@ -452,6 +464,17 @@ class TestInlineSynthesis(EndpointTester):
 
         data['items'] = [invalid_id]
         self.executeBadData(data)
+
+
+    def test_inline_synthesis_requires_auth(self):
+        data = {
+            'receiver': self.schema1.model.pk,
+            'source': self.schema2.model.pk,
+            'items': [],
+            'substitutions': []
+        }
+        self.logout()
+        self.executeForbidden(data)
 
 
     def test_inline_synthesis(self):
