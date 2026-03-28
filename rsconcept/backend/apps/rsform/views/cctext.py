@@ -2,9 +2,11 @@
 import cctext as ct
 from drf_spectacular.utils import extend_schema
 from rest_framework import status as c
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.request import Request
 from rest_framework.response import Response
+
+from shared import permissions
 
 from .. import serializers as s
 
@@ -17,6 +19,7 @@ from .. import serializers as s
     auth=None
 )
 @api_view(['POST'])
+@permission_classes([permissions.Anyone])
 def inflect(request: Request):
     ''' Endpoint: Generate wordform with set grammemes. '''
     serializer = s.WordFormSerializer(data=request.data)
@@ -38,6 +41,7 @@ def inflect(request: Request):
     auth=None
 )
 @api_view(['POST'])
+@permission_classes([permissions.Anyone])
 def generate_lexeme(request: Request):
     ''' Endpoint: Generate complete set of wordforms for lexeme. '''
     serializer = s.TextSerializer(data=request.data)
@@ -58,6 +62,7 @@ def generate_lexeme(request: Request):
     auth=None
 )
 @api_view(['POST'])
+@permission_classes([permissions.Anyone])
 def parse_text(request: Request):
     ''' Endpoint: Get likely vocabulary parse. '''
     serializer = s.TextSerializer(data=request.data)

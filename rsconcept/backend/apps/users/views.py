@@ -1,10 +1,15 @@
 ''' REST API: User profile and Authorization. '''
 from django.contrib.auth import login, logout
+from django_rest_passwordreset.views import ResetPasswordConfirm  # type: ignore
+from django_rest_passwordreset.views import ResetPasswordRequestToken  # type: ignore
+from django_rest_passwordreset.views import ResetPasswordValidateToken  # type: ignore
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import generics, permissions
 from rest_framework import status as c
 from rest_framework import views
 from rest_framework.response import Response
+
+from shared.throttling import LoginRateThrottle, PasswordResetRateThrottle, SignupRateThrottle
 
 from . import models as m
 from . import serializers as s
@@ -13,6 +18,7 @@ from . import serializers as s
 class LoginAPIView(views.APIView):
     ''' Endpoint: Login via username + password. '''
     permission_classes = (permissions.AllowAny,)
+    throttle_classes = (LoginRateThrottle,)
 
     @extend_schema(
         summary='login user',
@@ -54,6 +60,7 @@ class LogoutAPIView(views.APIView):
 class SignupAPIView(generics.CreateAPIView):
     ''' Endpoint: Register user. '''
     permission_classes = (permissions.AllowAny, )
+    throttle_classes = (SignupRateThrottle,)
     serializer_class = s.SignupSerializer
 
 
@@ -108,7 +115,7 @@ class UpdatePassword(views.APIView):
     )
     def patch(self, request, *args, **kwargs):
         self.object = self.get_object()
-        serializer = s.ChangePasswordSerializer(data=request.data)
+        serializer = s.ChangePasswordSerializer(data=request.data, context={'user': self.object})
         if serializer.is_valid():
             old_password = serializer.data.get("old_password")
             if not self.object.check_password(old_password):
@@ -121,3 +128,18 @@ class UpdatePassword(views.APIView):
             self.object.save()
             return Response(status=c.HTTP_204_NO_CONTENT)
         return Response(serializer.errors, status=c.HTTP_400_BAD_REQUEST)
+
+
+class PasswordResetRequestAPIView(ResetPasswordRequestToken):
+    ''' Throttled password reset request endpoint. '''
+    throttle_classes = (PasswordResetRateThrottle,)
+
+
+class PasswordResetValidateAPIView(ResetPasswordValidateToken):
+    ''' Throttled password reset token validation endpoint. '''
+    throttle_classes = (PasswordResetRateThrottle,)
+
+
+class PasswordResetConfirmAPIView(ResetPasswordConfirm):
+    ''' Throttled password reset confirm endpoint. '''
+    throttle_classes = (PasswordResetRateThrottle,)

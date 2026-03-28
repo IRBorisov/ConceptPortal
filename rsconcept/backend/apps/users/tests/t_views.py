@@ -1,7 +1,7 @@
 ''' Testing API: users. '''
-from rest_framework.test import APIClient, APITestCase
+from django.core.cache import cache
+from rest_framework import status
 
-from apps.users.models import User
 from shared.EndpointTester import EndpointTester, decl_endpoint
 
 
@@ -25,6 +25,18 @@ class TestUserAPIViews(EndpointTester):
         self.logout()
         data = {'username': self.user.email, 'password': 'password'}
         self.executeAccepted(data)
+
+
+    @decl_endpoint('/users/api/login', method='post')
+    def test_login_throttling(self):
+        cache.clear()
+        self.logout()
+
+        data = {'username': self.user.username, 'password': 'password'}
+        for _ in range(5):
+            self.executeAccepted(data)
+        response = self.execute(data)
+        self.assertEqual(response.status_code, status.HTTP_429_TOO_MANY_REQUESTS)
 
 
     @decl_endpoint('/users/api/logout', method='post')
@@ -113,19 +125,25 @@ class TestUserUserProfileAPIView(EndpointTester):
     def test_change_password(self):
         data = {
             'old_password': 'invalid',
-            'new_password': 'password2'
+            'new_password': 'StrongPass@@123'
         }
         self.executeBadData(data)
 
         data = {
             'old_password': 'password',
-            'new_password': 'password2'
+            'new_password': 'password'
+        }
+        self.executeBadData(data)
+
+        data = {
+            'old_password': 'password',
+            'new_password': 'StrongPass@@123'
         }
         oldHash = self.user.password
         response = self.executeNoContent(data)
         self.user.refresh_from_db()
         self.assertNotEqual(self.user.password, oldHash)
-        self.assertTrue(self.client.login(username=self.user.username, password='password2'))
+        self.assertTrue(self.client.login(username=self.user.username, password='StrongPass@@123'))
         self.assertFalse(self.client.login(username=self.user.username, password='password'))
 
         self.logout()
@@ -134,8 +152,18 @@ class TestUserUserProfileAPIView(EndpointTester):
 
     @decl_endpoint('/users/api/password-reset', method='post')
     def test_password_reset_request(self):
+        cache.clear()
         self.executeBadData({'email': 'invalid@mail.ru'})
         self.executeOK({'email': self.user.email})
+
+
+    @decl_endpoint('/users/api/password-reset', method='post')
+    def test_password_reset_request_throttling(self):
+        cache.clear()
+        for _ in range(5):
+            self.executeOK({'email': self.user.email})
+        response = self.execute({'email': self.user.email})
+        self.assertEqual(response.status_code, status.HTTP_429_TOO_MANY_REQUESTS)
 
 
 class TestSignupAPIView(EndpointTester):
@@ -147,6 +175,7 @@ class TestSignupAPIView(EndpointTester):
 
     @decl_endpoint('/users/api/signup', method='post')
     def test_signup(self):
+        cache.clear()
         data = {
             'username': 'NewUser',
             'email': 'newMail@mail.ru',
@@ -156,6 +185,18 @@ class TestSignupAPIView(EndpointTester):
             'last_name': 'lastName'
         }
         self.executeBadData(data)
+
+        data = {
+            'username': 'NewUser',
+            'email': 'weakMail@mail.ru',
+            'password': 'password',
+            'password2': 'password',
+            'first_name': 'firstName',
+            'last_name': 'lastName'
+        }
+        self.executeBadData(data)
+
+        cache.clear()
 
         data = {
             'username': 'NewUser',
@@ -182,12 +223,27 @@ class TestSignupAPIView(EndpointTester):
         }
         self.executeBadData(data)
 
+    @decl_endpoint('/users/api/signup', method='post')
+    def test_signup_throttling(self):
+        cache.clear()
+        for idx in range(3):
+            data = {
+                'username': f'NewUser{idx}',
+                'email': f'newMail{idx}@mail.ru',
+                'password': 'Test@@123',
+                'password2': 'Test@@123',
+                'first_name': 'firstName',
+                'last_name': 'lastName'
+            }
+            self.executeCreated(data)
+
         data = {
-            'username': 'NewUser2',
-            'email': self.user.email,
+            'username': 'AnotherUser',
+            'email': 'anotherMail@mail.ru',
             'password': 'Test@@123',
             'password2': 'Test@@123',
             'first_name': 'firstName',
             'last_name': 'lastName'
         }
-        self.executeBadData(data)
+        response = self.execute(data)
+        self.assertEqual(response.status_code, status.HTTP_429_TOO_MANY_REQUESTS)

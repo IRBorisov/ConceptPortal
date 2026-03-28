@@ -125,6 +125,10 @@ class ChangePasswordSerializer(StrictSerializer):
     old_password = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True)
 
+    def validate_new_password(self, value: str) -> str:
+        validate_password(value, self.context.get('user'))
+        return value
+
 
 class SignupSerializer(StrictModelSerializer):
     ''' Serializer: Create user profile. '''

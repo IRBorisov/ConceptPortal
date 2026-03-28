@@ -1,8 +1,5 @@
 ''' Routing: User profile and Authorization. '''
 from django.urls import path
-from django_rest_passwordreset.views import reset_password_confirm  # type: ignore
-from django_rest_passwordreset.views import reset_password_request_token  # type: ignore
-from django_rest_passwordreset.views import reset_password_validate_token  # type: ignore
 
 from . import views
 
@@ -15,7 +12,7 @@ urlpatterns = [
     path('api/logout', views.LogoutAPIView.as_view()),
     path('api/change-password', views.UpdatePassword.as_view()),
     # django_rest_passwordreset APIs see https://pypi.org/project/django-rest-passwordreset/
-    path('api/password-reset', reset_password_request_token, name='reset-password-request'),
-    path('api/password-reset/validate', reset_password_validate_token, name='reset-password-validate'),
-    path('api/password-reset/confirm', reset_password_confirm, name='reset-password-confirm')
+    path('api/password-reset', views.PasswordResetRequestAPIView.as_view(), name='reset-password-request'),
+    path('api/password-reset/validate', views.PasswordResetValidateAPIView.as_view(), name='reset-password-validate'),
+    path('api/password-reset/confirm', views.PasswordResetConfirmAPIView.as_view(), name='reset-password-confirm')
 ]

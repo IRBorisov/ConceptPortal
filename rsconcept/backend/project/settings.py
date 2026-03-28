@@ -12,8 +12,11 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 import logging
 import os
+import secrets
 import sys
 from pathlib import Path
+
+from django.core.exceptions import ImproperlyConfigured
 
 
 def _get_secret(key: str, default):
@@ -24,7 +27,35 @@ def _get_secret(key: str, default):
     return value
 
 
+def _get_bool(key: str, default: bool) -> bool:
+    return os.environ.get(key, default) in _TRUE_VARIANTS
+
+
+def _get_list(key: str, default: str) -> list[str]:
+    return [value for value in os.environ.get(key, default).split(';') if value]
+
+
 _TRUE_VARIANTS = [True, 'True', '1']
+_MANAGEMENT_COMMAND = sys.argv[1].lower() if len(sys.argv) > 1 else ''
+_SAFE_MANAGEMENT_COMMANDS = {
+    'check',
+    'test',
+    'makemigrations',
+    'migrate',
+    'showmigrations',
+    'collectstatic',
+    'flush',
+    'loaddata',
+    'createsuperuser',
+    'runserver',
+    'shell',
+    'dbshell',
+}
+IS_TESTING = _MANAGEMENT_COMMAND == 'test'
+_ARGV_TEXT = ' '.join(sys.argv).lower()
+IS_STATIC_ANALYSIS = 'mypy' in _ARGV_TEXT or 'dmypy' in _ARGV_TEXT
+IS_SAFE_MANAGEMENT_CONTEXT = _MANAGEMENT_COMMAND in _SAFE_MANAGEMENT_COMMANDS
+IS_SAFE_LOCAL_CONTEXT = IS_TESTING or IS_STATIC_ANALYSIS or IS_SAFE_MANAGEMENT_CONTEXT
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -33,13 +64,24 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = _get_secret('SECRET_KEY', 'not-a-secret')
-
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', True) in _TRUE_VARIANTS
+DEBUG = _get_bool('DEBUG', IS_SAFE_LOCAL_CONTEXT)
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(';')
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = _get_secret('SECRET_KEY', '')
+if not SECRET_KEY:
+    if DEBUG:
+        SECRET_KEY = secrets.token_urlsafe(50)
+    else:
+        raise ImproperlyConfigured('SECRET_KEY must be configured when DEBUG is disabled')
+
+ALLOWED_HOSTS = _get_list(
+    'ALLOWED_HOSTS',
+    'localhost;127.0.0.1;[::1]' if DEBUG else ''
+)
+if not DEBUG and not ALLOWED_HOSTS:
+    raise ImproperlyConfigured('ALLOWED_HOSTS must be configured when DEBUG is disabled')
+
 INTERNAL_IPS = ['127.0.0.1'] if DEBUG else []
 
 # MAIL SETUP
@@ -94,18 +136,32 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny'
+        if DEBUG else
+        'rest_framework.permissions.IsAuthenticated'
     ],
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend'
     ],
+    'DEFAULT_THROTTLE_RATES': {
+        'login': '5/minute',
+        'signup': '3/hour',
+        'password_reset': '5/hour',
+    }
 }
 
 
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', 'http://localhost:3000').split(';')
-CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', 'http://localhost:3000').split(';')
+CORS_ALLOWED_ORIGINS = _get_list('CORS_ALLOWED_ORIGINS', 'http://localhost:3000')
+CSRF_TRUSTED_ORIGINS = _get_list('CSRF_TRUSTED_ORIGINS', 'http://localhost:3000')
 CSRF_COOKIE_AGE = 365 * 24 * 60 * 60
 SESSION_COOKIE_AGE = 365 * 24 * 60 * 60 * 2
+CSRF_COOKIE_SECURE = not DEBUG
+SESSION_COOKIE_SECURE = not DEBUG
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_REFERRER_POLICY = 'same-origin'
+SECURE_HSTS_SECONDS = 3600 if not DEBUG else 0
+SECURE_HSTS_INCLUDE_SUBDOMAINS = not DEBUG
+SECURE_HSTS_PRELOAD = not DEBUG
 
 _domain = os.environ.get('CSRF_COOKIE_DOMAIN', '')
 if _domain != '':
@@ -202,20 +258,19 @@ SPECTACULAR_SETTINGS = {
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
-AUTH_PASSWORD_VALIDATORS: list[str] = [
-    # NOTE: Password validators disabled
-    # {
-    #     'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    # },
-    # {
-    #     'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    # },
-    # {
-    #     'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    # },
-    # {
-    #     'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    # },
+AUTH_PASSWORD_VALIDATORS: list[dict[str, str]] = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
 ]
 
 

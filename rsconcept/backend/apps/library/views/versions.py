@@ -64,6 +64,7 @@ class VersionViewset(
     }
 )
 @api_view(['GET'])
+@permission_classes([permissions.Anyone])
 def export_file(request: Request, pk: int) -> HttpResponse:
     ''' Endpoint: Download Exteor compatible file for versioned data. '''
     try:
@@ -131,6 +132,7 @@ def create_version(request: Request, pk_item: int) -> HttpResponse:
     }
 )
 @api_view(['GET'])
+@permission_classes([permissions.Anyone])
 def retrieve_version(request: Request, pk_item: int, pk_version: int) -> HttpResponse:
     ''' Endpoint: Retrieve version for RSForm. '''
     try:
