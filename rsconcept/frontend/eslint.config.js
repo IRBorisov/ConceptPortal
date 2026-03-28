@@ -10,6 +10,7 @@ import playwright from 'eslint-plugin-playwright';
 const basicRules = {
   'no-console': 'off',
   'require-jsdoc': 'off',
+  'linebreak-style': ['error', 'unix'],
 
   '@typescript-eslint/consistent-type-imports': [
     'warn',
@@ -63,7 +64,6 @@ export default [
   },
   {
     files: ['src/**/*.ts', 'src/**/*.tsx'],
-
     plugins: {
       'react': reactPlugin,
       'react-hooks': reactHooksPlugin,
