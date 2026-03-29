@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import {
   type Connection,
@@ -56,6 +56,7 @@ export function TGFlow() {
   const { isSmall } = useWindowSize();
   const mainHeight = useMainHeight();
   const { fitView, viewportInitialized } = useReactFlow();
+  const onFitViewEvent = useEffectEvent(fitView);
   const [isAnimating, setIsAnimating] = useState(false);
 
   const flowRef = useRef<HTMLDivElement>(null);
@@ -65,6 +66,9 @@ export function TGFlow() {
 
   const setConnectionStart = useTGConnectionStore(state => state.setStart);
   const connectionType = useTGConnectionStore(state => state.connectionType);
+  useEffect(function initConnectionStart() {
+    return setConnectionStart(null);
+  }, [setConnectionStart]);
 
   const { createAttribution } = useCreateAttribution();
   const { updateConstituenta } = useUpdateConstituenta();
@@ -115,12 +119,8 @@ export function TGFlow() {
     onChange: onSelectionChange
   });
 
-  useEffect(() => {
-    return setConnectionStart(null);
-  }, [setConnectionStart]);
-
   const prevNodesRef = useRef<TGNode[]>([]);
-  useEffect(() => {
+  useEffect(function updateGraph() {
     if (!viewportInitialized) {
       return;
     }
@@ -223,19 +223,18 @@ export function TGFlow() {
     setNodes,
     setEdges,
     filter.noText,
-    fitView,
     viewportInitialized,
     focusCst,
     filter.graphType
   ]);
 
-  useEffect(() => {
-    setTimeout(() => void fitView(flowOptions.fitViewOptions), PARAMETER.refreshTimeout);
-  }, [schema.id, filter.noText, filter.graphType, focusCst, fitView]);
+  useEffect(function resetViewOnChanges() {
+    setTimeout(() => void onFitViewEvent(flowOptions.fitViewOptions), PARAMETER.refreshTimeout);
+  }, [schema.id, filter.noText, filter.graphType, focusCst]);
 
   const readyForUpdate = nodes.length === filteredGraph.nodes.size;
   const prevSelectedNodes = useRef<number[]>([]);
-  useEffect(() => {
+  useEffect(function updateSelectedNodes() {
     if (!viewportInitialized || !readyForUpdate) {
       return;
     }
@@ -263,7 +262,7 @@ export function TGFlow() {
   }, [viewportInitialized, selectedCst, setNodes, readyForUpdate]);
 
   const prevSelectedEdges = useRef<string[]>([]);
-  useEffect(() => {
+  useEffect(function updateSelectedEdges() {
     if (!viewportInitialized || !readyForUpdate) {
       return;
     }

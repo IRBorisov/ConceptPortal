@@ -46,7 +46,7 @@ export function AIPromptTabs({ promptID, activeTab, setActiveTab }: AIPromptTabs
     return result;
   })();
 
-  useEffect(() => {
+  useEffect(function updateTextOnTemplateChange() {
     setText(promptTemplate.text);
   }, [promptTemplate]);
 

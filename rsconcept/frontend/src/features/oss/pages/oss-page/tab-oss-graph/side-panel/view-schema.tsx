@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useEffectEvent, useState } from 'react';
 
 import { useAIStore } from '@/features/ai/stores/ai-context';
 import { type Constituenta } from '@/features/rsform';
@@ -25,14 +25,15 @@ export function ViewSchema({ schemaID, isMutable }: ViewSchemaProps) {
   const activeCst = activeID ? schema.cstByID.get(activeID) ?? null : null;
   const showEditCst = useDialogsStore(state => state.showEditCst);
   const setCurrentSchema = useAIStore(state => state.setSchema);
+  const onSetSchema = useEffectEvent(setCurrentSchema);
   const stats = calculateSchemaStats(schema);
 
   const listHeight = useFitHeight('14.5rem', '10rem');
 
-  useEffect(() => {
-    setCurrentSchema(schema);
-    return () => setCurrentSchema(null);
-  }, [schema, setCurrentSchema]);
+  useEffect(function syncGlobalSchema() {
+    onSetSchema(schema);
+    return () => onSetSchema(null);
+  }, [schema]);
 
   function handleEditCst(cst: Constituenta) {
     showEditCst({ schemaID: schema.id, targetID: cst.id });

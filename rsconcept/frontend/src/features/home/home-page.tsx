@@ -11,7 +11,7 @@ export function HomePage() {
   const router = useConceptNavigation();
   const { isAnonymous } = useAuth();
 
-  useEffect(() => {
+  useEffect(function redirectToLibrary() {
     // Note: Timeout is needed to let router initialize
     const timeoutId = setTimeout(() => {
       router.replace({ path: isAnonymous ? urls.login : urls.library });

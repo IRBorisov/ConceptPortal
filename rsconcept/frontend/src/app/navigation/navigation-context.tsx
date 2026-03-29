@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, use, useEffect, useRef, useState } from 'react';
+import { createContext, use, useEffect, useEffectEvent, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { useTooltipsStore } from '@/stores/tooltips';
@@ -298,8 +298,9 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
 
 export function useBlockNavigation(isBlocked: boolean) {
   const { setRequireConfirmation } = useConceptNavigation();
-  useEffect(() => {
-    setRequireConfirmation(isBlocked);
-    return () => setRequireConfirmation(false);
-  }, [setRequireConfirmation, isBlocked]);
+  const onSetRequireConfirmation = useEffectEvent(setRequireConfirmation);
+  useEffect(function updateRequireConfirmation() {
+    onSetRequireConfirmation(isBlocked);
+    return () => onSetRequireConfirmation(false);
+  }, [isBlocked]);
 }

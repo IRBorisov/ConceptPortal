@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { PARAMETER } from '@/utils/constants';
 
 export function useResetAttribute(elementRef: React.RefObject<HTMLElement | null>, attribute: string) {
-  useEffect(() => {
+  useEffect(function forceResetAttribute() {
     // Trigger tooltip re-initialization after component mounts and tab becomes visible
     // This ensures tooltips work when loading the page directly with this tab active
     // React-tabs hides inactive panels with CSS (display: none), so react-tooltip v5

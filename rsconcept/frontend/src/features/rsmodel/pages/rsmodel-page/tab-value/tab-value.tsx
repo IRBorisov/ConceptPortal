@@ -46,7 +46,7 @@ export function TabValue() {
   const listHeight = useFitHeight(!isNarrow ? '8.2rem' : role !== UserRole.READER ? '42rem' : '35rem', '10rem');
 
   const prevActiveCstId = useRef<number | null>(null);
-  useEffect(() => {
+  useEffect(function adjustSelectionOnActiveChange() {
     if (activeCst && prevActiveCstId.current !== activeCst.id) {
       prevActiveCstId.current = activeCst.id;
       if (selectedCst.length !== 1 || selectedCst[0] !== activeCst.id) {

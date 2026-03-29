@@ -1,7 +1,7 @@
 'use no memo'; // TODO: remove when react hook forms are compliant with react compiler
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import clsx from 'clsx';
@@ -38,6 +38,7 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
   const { user } = useAuth();
   const isProcessing = useMutatingPrompts();
   const setIsModified = useModificationStore(state => state.setIsModified);
+  const onModifiedEvent = useEffectEvent(setIsModified);
   const { updatePromptTemplate } = useUpdatePromptTemplate();
   const [sampleResult, setSampleResult] = useState<string | null>(null);
   const [debouncedResult] = useDebounce(sampleResult, PARAMETER.moveDuration);
@@ -59,16 +60,17 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
     },
     mode: 'onChange'
   });
+  const onResetEvent = useEffectEvent(reset);
   const text = useWatch({ control, name: 'text' });
 
   const prevReset = useRef(toggleReset);
   const prevTemplate = useRef(promptTemplate);
 
-  useEffect(() => {
+  useEffect(function resetFormOnTemplateChange() {
     if (prevTemplate.current !== promptTemplate || prevReset.current !== toggleReset) {
       prevTemplate.current = promptTemplate;
       prevReset.current = toggleReset;
-      reset({
+      onResetEvent({
         owner: promptTemplate.owner,
         label: promptTemplate.label,
         description: promptTemplate.description,
@@ -77,11 +79,11 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
       });
       return () => setSampleResult(null);
     }
-  }, [promptTemplate, toggleReset, reset, setSampleResult]);
+  }, [promptTemplate, toggleReset]);
 
-  useEffect(() => {
-    setIsModified(isDirty);
-  }, [isDirty, setIsModified]);
+  useEffect(function synchronizeModifiedState() {
+    onModifiedEvent(isDirty);
+  }, [isDirty]);
 
   function onSubmit(data: IUpdatePromptTemplateDTO) {
     return updatePromptTemplate({ id: promptTemplate.id, data }).then(() => {

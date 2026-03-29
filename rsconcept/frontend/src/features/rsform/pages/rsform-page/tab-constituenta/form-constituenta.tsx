@@ -81,6 +81,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
       }
     }
   });
+  const onResetEvent = useEffectEvent(reset);
 
   const definition = useWatch({ control, name: 'item_data.definition_formal' });
   const [forceComment, setForceComment] = useState(false);
@@ -105,8 +106,8 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
 
   useLayoutEffect(() => onModifiedEvent(false), [activeCst.id]);
 
-  useEffect(() => {
-    reset({
+  useEffect(function resetFormOnCstChange() {
+    onResetEvent({
       target: activeCst.id,
       item_data: {
         convention: activeCst.convention,
@@ -122,11 +123,10 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
     activeCst.definition_raw,
     activeCst.definition_formal,
     toggleReset,
-    schema,
-    reset
+    schema
   ]);
 
-  useEffect(() => {
+  useEffect(function resetUIStateOnCstChange() {
     // TODO: suspect this is too complex solution
     const timeoutId = setTimeout(() => {
       setForceComment(false);
@@ -135,7 +135,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
     return () => clearTimeout(timeoutId);
   }, [activeCst.id, toggleReset, schema]);
 
-  useEffect(() => {
+  useEffect(function syncGlobalModified() {
     onModifiedEvent(isDirty);
   }, [isDirty]);
 

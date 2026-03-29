@@ -110,7 +110,7 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
     setEdges(newEdges);
   }, [schema, setNodes, setEdges, edgeAnimate, edgeStraight, isMutable]);
 
-  useEffect(() => {
+  useEffect(function reloadDataOnSchemaOrOptionsChange() {
     reloadData();
   }, [schema, edgeAnimate, edgeStraight, reloadData]);
 
@@ -125,7 +125,7 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
     setTimeout(() => void fitView(flowOptions.fitViewOptions), PARAMETER.refreshTimeout);
   }
 
-  useEffect(() => {
+  useEffect(function updateSelectedNodes() {
     if (!viewportInitialized) {
       return;
     }
@@ -152,7 +152,7 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
   }, [viewportInitialized, selectedNodes, setNodes]);
 
 
-  useEffect(() => {
+  useEffect(function updateSelectedEdges() {
     if (!viewportInitialized) {
       return;
     }

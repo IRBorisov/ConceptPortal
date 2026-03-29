@@ -10,7 +10,7 @@ export function TabTermGraph() {
   const setMode = useTermGraphStore(state => state.setMode);
   const { isContentEditable } = useRSFormEdit();
 
-  useEffect(() => {
+  useEffect(function adjustAccessMode() {
     if (!isContentEditable) {
       setMode(InteractionMode.explore);
     }

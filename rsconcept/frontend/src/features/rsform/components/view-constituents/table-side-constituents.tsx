@@ -44,7 +44,7 @@ export function TableSideConstituents({
 
   const prevActiveCstID = useRef<number | null>(null);
 
-  useEffect(() => {
+  useEffect(function autoScrollToActive() {
     if (autoScroll && prevActiveCstID.current !== activeCst?.id) {
       prevActiveCstID.current = activeCst?.id ?? null;
       if (!!activeCst) {

@@ -30,7 +30,7 @@ export function MGraphFlow({ data }: MGraphFlowProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState<MGNode>([]);
   const [edges, setEdges] = useEdgesState<MGEdge>([]);
 
-  useEffect(() => {
+  useEffect(function updateGraph() {
     const newNodes = data.nodes.map(node => ({
       id: String(node.id),
       data: node,

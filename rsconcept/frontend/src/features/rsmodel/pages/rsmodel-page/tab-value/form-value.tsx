@@ -75,15 +75,15 @@ export function FormValue({ id, toggleReset, activeCst }: FormValueProps) {
 
   useLayoutEffect(() => onModifiedEvent(false), [activeCst.id]);
 
-  useEffect(() => {
+  useEffect(function resetUIStateOnCstChange() {
     const timeoutId = setTimeout(() => {
       setInputValue(initialStr);
-      setIsModified(false);
+      onModifiedEvent(false);
     }, 0);
     return () => clearTimeout(timeoutId);
-  }, [activeCst.id, initialStr, setIsModified, toggleReset]);
+  }, [activeCst.id, initialStr, toggleReset]);
 
-  useEffect(() => {
+  useEffect(function syncGlobalModified() {
     onModifiedEvent(isDirty);
   }, [isDirty]);
 

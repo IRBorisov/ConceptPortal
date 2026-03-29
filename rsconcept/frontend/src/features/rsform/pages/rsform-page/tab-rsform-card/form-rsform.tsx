@@ -1,7 +1,7 @@
 'use no memo'; // TODO: remove when react hook forms are compliant with react compiler
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useEffectEvent } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -31,6 +31,7 @@ export function FormRSForm() {
   const router = useConceptNavigation();
   const { updateItem: updateSchema } = useUpdateItem();
   const setIsModified = useModificationStore(state => state.setIsModified);
+  const onModifiedEvent = useEffectEvent(setIsModified);
   const isProcessing = useMutatingRSForm();
   const { schema, isAttachedToOSS, isContentEditable } = useRSFormEdit();
 
@@ -56,9 +57,10 @@ export function FormRSForm() {
   });
   const visible = useWatch({ control, name: 'visible' });
   const readOnly = useWatch({ control, name: 'read_only' });
+  const onResetEvent = useEffectEvent(reset);
 
-  useEffect(() => {
-    reset({
+  useEffect(function resetFormOnSchemaChange() {
+    onResetEvent({
       id: schema.id,
       item_type: LibraryItemType.RSFORM,
       title: schema.title,
@@ -67,11 +69,11 @@ export function FormRSForm() {
       visible: schema.visible,
       read_only: schema.read_only
     });
-  }, [schema, reset]);
+  }, [schema]);
 
-  useEffect(() => {
-    setIsModified(isDirty);
-  }, [isDirty, setIsModified]);
+  useEffect(function syncGlobalModified() {
+    onModifiedEvent(isDirty);
+  }, [isDirty]);
 
   function handleSelectVersion(version: CurrentVersion) {
     router.gotoRSForm(schema.id, version === 'latest' ? undefined : version);

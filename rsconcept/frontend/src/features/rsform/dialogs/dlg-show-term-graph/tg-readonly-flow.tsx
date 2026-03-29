@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import { type Edge, MarkerType, type Node, useEdgesState, useNodesState } from '@xyflow/react';
 import clsx from 'clsx';
 
@@ -58,7 +58,7 @@ export function TGReadonlyFlow({ schema }: TGReadonlyFlowProps) {
   const [edges, setEdges] = useEdgesState<Edge>([]);
   const { fitView, viewportInitialized } = useReactFlow();
 
-  useEffect(() => {
+  useEffect(function updateGraph() {
     if (!viewportInitialized) {
       return;
     }
@@ -137,13 +137,14 @@ export function TGReadonlyFlow({ schema }: TGReadonlyFlowProps) {
     viewportInitialized,
     focusCst
   ]);
+  const onFitViewEvent = useEffectEvent(fitView);
 
-  useEffect(() => {
+  useEffect(function adjustViewOnChange() {
     setTimeout(
-      () => void fitView({ ...flowOptions.fitViewOptions, duration: PARAMETER.graphLayoutDuration }),
+      () => void onFitViewEvent({ ...flowOptions.fitViewOptions, duration: PARAMETER.graphLayoutDuration }),
       4 * PARAMETER.minimalTimeout
     );
-  }, [schema.id, filter.noText, filter.graphType, focusCst, fitView]);
+  }, [schema.id, filter.noText, filter.graphType, focusCst]);
 
   function handleNodeContextMenu(event: React.MouseEvent<Element>, node: Node) {
     event.preventDefault();

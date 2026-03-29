@@ -30,7 +30,7 @@ export function useContinuousPan(
     rafRef.current = requestAnimationFrame(() => panLoop());
   }, [options.panSpeed, getViewport, setViewport]);
 
-  useEffect(() => {
+  useEffect(function startPanning() {
     const element = ref.current;
     if (!element) {
       return;
@@ -68,7 +68,7 @@ export function useContinuousPan(
     element.addEventListener('keyup', handleKeyUp);
     element.addEventListener('blur', handleBlur);
 
-    return () => {
+    return function endPanning() {
       element.removeEventListener('keydown', handleKeyDown);
       element.removeEventListener('keyup', handleKeyUp);
       element.removeEventListener('blur', handleBlur);

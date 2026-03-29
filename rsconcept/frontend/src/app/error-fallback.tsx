@@ -26,7 +26,7 @@ export function ErrorFallback() {
   const error = useRouteError();
   const router = useNavigate();
 
-  useEffect(() => {
+  useEffect(function reloadOnStaleError() {
     if (isStaleBundleError(error)) {
       console.warn('Detected stale bundle — reloading...');
       window.location.reload();

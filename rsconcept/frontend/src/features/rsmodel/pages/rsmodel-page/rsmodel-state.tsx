@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useEffectEvent, useState } from 'react';
 
 import { urls, useConceptNavigation } from '@/app';
 import { useAIStore } from '@/features/ai/stores/ai-context';
@@ -37,11 +37,11 @@ export const RSModelState = ({ itemID, children }: React.PropsWithChildren<RSMod
     clearValues
   }));
 
-  useEffect(() => {
+  useEffect(function syncServices() {
     engine.updateServices({ setCstValue, clearValues });
   }, [engine, setCstValue, clearValues]);
 
-  useEffect(() => {
+  useEffect(function syncData() {
     engine.loadData(schema, model);
   }, [engine, schema, model]);
 
@@ -53,12 +53,13 @@ export const RSModelState = ({ itemID, children }: React.PropsWithChildren<RSMod
   const isOwned = !!user.id && user.id === model.owner;
 
   const setCurrentModel = useAIStore(state => state.setModel);
+  const onSetModel = useEffectEvent(setCurrentModel);
   const { deleteItem } = useDeleteItem();
 
-  useEffect(() => {
-    setCurrentModel(model);
-    return () => setCurrentModel(null);
-  }, [model, setCurrentModel]);
+  useEffect(function syncGlobalModel() {
+    onSetModel(model);
+    return () => onSetModel(null);
+  }, [model]);
 
   function deleteModel() {
     if (!window.confirm(promptText.deleteLibraryItem)) {

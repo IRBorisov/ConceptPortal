@@ -8,7 +8,7 @@ export function useBrowserNavigation() {
   const start = useAppTransitionStore(state => state.startNavigation);
   const end = useAppTransitionStore(state => state.endNavigation);
 
-  useEffect(() => {
+  useEffect(function listenForBrowserNavigation() {
     let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
     const onPopState = () => {

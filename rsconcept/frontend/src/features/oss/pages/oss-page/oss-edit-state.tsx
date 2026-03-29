@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useEffectEvent, useState } from 'react';
 
 import { urls, useConceptNavigation } from '@/app';
 import { useAIStore } from '@/features/ai/stores/ai-context';
@@ -31,8 +31,11 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
   const setSearchLocation = useLibrarySearchStore(state => state.setLocation);
   const searchLocation = useLibrarySearchStore(state => state.location);
   const setCurrentOSS = useAIStore(state => state.setOSS);
+  const onSetOSS = useEffectEvent(setCurrentOSS);
   const setCurrentBlock = useAIStore(state => state.setBlock);
+  const onSetBlock = useEffectEvent(setCurrentBlock);
   const setCurrentOperation = useAIStore(state => state.setOperation);
+  const onSetOperation = useEffectEvent(setCurrentOperation);
 
   const { user } = useAuth();
   const { schema } = useOss({ itemID: itemID });
@@ -72,28 +75,28 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
     return false;
   })();
 
-  useEffect(() => {
-    setCurrentOSS(schema);
-    return () => setCurrentOSS(null);
-  }, [schema, setCurrentOSS]);
+  useEffect(function syncGlobalOSS() {
+    onSetOSS(schema);
+    return () => onSetOSS(null);
+  }, [schema]);
 
-  useEffect(() => {
+  useEffect(function syncGlobalBlock() {
     const selectedBlock = selectedItems.find(item => item.nodeType === NodeType.BLOCK);
     if (selectedBlock) {
-      setCurrentBlock(selectedBlock);
-      return () => setCurrentBlock(null);
+      onSetBlock(selectedBlock);
+      return () => onSetBlock(null);
     }
-    setCurrentBlock(null);
-  }, [selectedItems, setCurrentBlock]);
+    onSetBlock(null);
+  }, [selectedItems]);
 
-  useEffect(() => {
+  useEffect(function syncGlobalOperation() {
     const selectedOperation = selectedItems.find(item => item.nodeType === NodeType.OPERATION);
     if (selectedOperation) {
-      setCurrentOperation(selectedOperation);
-      return () => setCurrentOperation(null);
+      onSetOperation(selectedOperation);
+      return () => onSetOperation(null);
     }
-    setCurrentOperation(null);
-  }, [selectedItems, setCurrentOperation]);
+    onSetOperation(null);
+  }, [selectedItems]);
 
   function deleteSchema() {
     if (!window.confirm(promptText.deleteOSS)) {

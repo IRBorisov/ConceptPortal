@@ -49,7 +49,7 @@ export function SelectTree<ItemType>({
   const defaultFolded = items.filter(item => getParent(value) !== item && getParent(getParent(value)) !== item);
   const [folded, setFolded] = useState<ItemType[]>(defaultFolded);
 
-  useEffect(() => {
+  useEffect(function synchronizeFoldedOnValueChange() {
     setFolded(defaultFolded);
   }, [defaultFolded]);
 

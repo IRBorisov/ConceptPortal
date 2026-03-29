@@ -33,7 +33,7 @@ export function ASTFlow({ data, onNodeEnter, onNodeLeave, onChangeDragging }: AS
   const [nodes, setNodes, onNodesChange] = useNodesState<ASTNode>([]);
   const [edges, setEdges] = useEdgesState<Edge>([]);
 
-  useEffect(() => {
+  useEffect(function updateGraph() {
     const newNodes = data.map(node => ({
       id: String(node.uid),
       data: node,

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useEffectEvent, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { urls, useConceptNavigation } from '@/app';
@@ -89,7 +89,9 @@ export const RSEditState = ({
   const showDeleteCst = useDialogsStore(state => state.showDeleteCst);
   const showCstTemplate = useDialogsStore(state => state.showCstTemplate);
   const setCurrentSchema = useAIStore(state => state.setSchema);
+  const onSetSchema = useEffectEvent(setCurrentSchema);
   const setCurrentConstituenta = useAIStore(state => state.setConstituenta);
+  const onSetConstituenta = useEffectEvent(setCurrentConstituenta);
 
   useAdjustRole({
     isOwner: isOwned,
@@ -98,15 +100,15 @@ export const RSEditState = ({
     adminMode: adminMode
   });
 
-  useEffect(() => {
-    setCurrentSchema(schema);
-    return () => setCurrentSchema(null);
-  }, [schema, setCurrentSchema]);
+  useEffect(function syncGlobalSchema() {
+    onSetSchema(schema);
+    return () => onSetSchema(null);
+  }, [schema]);
 
-  useEffect(() => {
-    setCurrentConstituenta(activeCst);
-    return () => setCurrentConstituenta(null);
-  }, [activeCst, setCurrentConstituenta]);
+  useEffect(function syncGlobalConstituenta() {
+    onSetConstituenta(activeCst);
+    return () => onSetConstituenta(null);
+  }, [activeCst]);
 
   function handleSetFocus(newValue: Constituenta | null) {
     setFocusCst(newValue);

@@ -76,9 +76,9 @@ export function ModalForm({
   const hideDialog = useDialogsStore(state => state.hideDialog);
 
   const previousFocusRef = useRef<HTMLElement | null>(null);
-  useEffect(() => {
+  useEffect(function manageFocus() {
     previousFocusRef.current = document.activeElement as HTMLElement | null;
-    return () => {
+    return function restoreFocus() {
       previousFocusRef.current?.focus();
     };
   }, []);

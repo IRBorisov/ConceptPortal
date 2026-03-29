@@ -1,7 +1,7 @@
 'use no memo'; // TODO: remove when react hook forms are compliant with react compiler
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useEffectEvent } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -29,6 +29,7 @@ export function FormRSModel() {
   const router = useConceptNavigation();
   const { updateItem } = useUpdateItem();
   const setIsModified = useModificationStore(state => state.setIsModified);
+  const onModifiedEvent = useEffectEvent(setIsModified);
   const isProcessing = useMutatingRSModel();
   const { model, isMutable } = useRSModelEdit();
   const { schema } = useRSFormEdit();
@@ -55,9 +56,10 @@ export function FormRSModel() {
   });
   const visible = useWatch({ control, name: 'visible' });
   const readOnly = useWatch({ control, name: 'read_only' });
+  const onResetEvent = useEffectEvent(reset);
 
-  useEffect(() => {
-    reset({
+  useEffect(function resetFormOnModelChange() {
+    onResetEvent({
       id: model.id,
       item_type: LibraryItemType.RSMODEL,
       title: model.title,
@@ -66,11 +68,11 @@ export function FormRSModel() {
       visible: model.visible,
       read_only: model.read_only
     });
-  }, [model, reset]);
+  }, [model]);
 
-  useEffect(() => {
-    setIsModified(isDirty);
-  }, [isDirty, setIsModified]);
+  useEffect(function syncGlobalModified() {
+    onModifiedEvent(isDirty);
+  }, [isDirty]);
 
   function onSubmit(data: UpdateLibraryItemDTO) {
     return updateItem(data).then(() => reset({ ...data }));

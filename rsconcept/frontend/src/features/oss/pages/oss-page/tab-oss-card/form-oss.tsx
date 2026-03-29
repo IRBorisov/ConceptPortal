@@ -1,7 +1,7 @@
 'use no memo'; // TODO: remove when react hook forms are compliant with react compiler
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useEffectEvent } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -22,6 +22,7 @@ export function FormOSS() {
   const { updateItem: updateOss } = useUpdateItem();
   const isModified = useModificationStore(state => state.isModified);
   const setIsModified = useModificationStore(state => state.setIsModified);
+  const onModifiedEvent = useEffectEvent(setIsModified);
   const isProcessing = useMutatingOss();
   const { schema, isMutable } = useOssEdit();
 
@@ -48,9 +49,9 @@ export function FormOSS() {
   const visible = useWatch({ control, name: 'visible' });
   const readOnly = useWatch({ control, name: 'read_only' });
 
-  useEffect(() => {
-    setIsModified(isDirty);
-  }, [isDirty, setIsModified]);
+  useEffect(function syncGlobalModified() {
+    onModifiedEvent(isDirty);
+  }, [isDirty]);
 
   function onSubmit(data: UpdateLibraryItemDTO) {
     return updateOss(data).then(() => reset({ ...data }));

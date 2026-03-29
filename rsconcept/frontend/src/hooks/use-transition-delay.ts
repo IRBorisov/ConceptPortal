@@ -14,7 +14,7 @@ export function useTransitionTracker(delay: number = DEFAULT_DEBOUNCE_DELAY): bo
   const navigation = useNavigation();
   const [showPending, setShowPending] = useState<boolean>(false);
 
-  useEffect(() => {
+  useEffect(function activateTransitionTracker() {
     let timeout: ReturnType<typeof setTimeout> | null = null;
 
     if (navigation.location) {
