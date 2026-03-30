@@ -6,13 +6,15 @@ import { makeValuePath, TypeID, type Typification, type Value, type ValuePath } 
 import { testInvalid, valueStub } from '@/features/rslang/eval/value-api';
 import { type EchelonCollection, IntegerT } from '@/features/rslang/semantic/typification';
 
+import { cn } from '@/components/utils';
 import { globalIDs } from '@/utils/constants';
-import { truncateToLastWord } from '@/utils/format';
+import { truncateToLastWord, truncateToSymbol } from '@/utils/format';
 
 import { type BasicsContext } from '../../models/rsmodel';
 import { prepareValueString } from '../../models/rsmodel-api';
 import { type ValueMatcher } from '../../models/value-matcher';
 
+const HEADER_TRUNCATE = 40;
 const VALUE_TRUNCATE = 50;
 const VALUE_TRUNCATE_LONG = 90;
 
@@ -105,7 +107,6 @@ function createColumnsInternal(
         header: () => <TitledHeader
           className='w-4'
           text='ℬ'
-          title={columnTitle}
         />,
         size: 60,
         minSize: 60,
@@ -119,7 +120,10 @@ function createColumnsInternal(
       }),
       columnHelper.accessor(value => state.accessor(value) as Value[], {
         id: `${pathStr}_stub`,
-        header: '',
+        header: () => <TitledHeader
+          text=''
+          title={columnTitle}
+        />,
         size: 80,
         minSize: 80,
         maxSize: 80,
@@ -153,11 +157,13 @@ function createColumnsInternal(
 function TitledHeader({ text, title, className }: { text: string, title?: string, className?: string; }) {
   return (
     <div
-      className={className}
+      className={cn('truncate', className)}
       data-tooltip-id={!!title ? globalIDs.tooltip : undefined}
       data-tooltip-content={title}
     >
-      {text}
+      {title ?
+        truncateToSymbol(text && !title.startsWith(text) ? `[${text}] - ${title}` : title, HEADER_TRUNCATE)
+        : text}
     </div>
   );
 }

@@ -10,12 +10,13 @@ import { type EchelonCollection, IntegerT } from '@/features/rslang/semantic/typ
 import { MiniButton } from '@/components/control';
 import { IconRemove } from '@/components/icons';
 import { globalIDs } from '@/utils/constants';
-import { truncateToLastWord } from '@/utils/format';
+import { truncateToLastWord, truncateToSymbol } from '@/utils/format';
 
 import { type BasicsContext } from '../../models/rsmodel';
 import { prepareValueString } from '../../models/rsmodel-api';
 import { type ValueMatcher } from '../../models/value-matcher';
 
+const HEADER_TRUNCATE = 35;
 const VALUE_TRUNCATE = 45;
 const VALUE_TRUNCATE_LONG = 80;
 
@@ -134,7 +135,6 @@ function createColumnsInternal(
         header: () => <TitledHeader
           className='w-4'
           text='ℬ'
-          title={columnTitle}
         />,
         size: 60,
         minSize: 60,
@@ -148,7 +148,10 @@ function createColumnsInternal(
       }),
       columnHelper.accessor(value => state.accessor(value) as Value[], {
         id: `${pathStr}_stub`,
-        header: '',
+        header: () => <TitledHeader
+          text=''
+          title={columnTitle}
+        />,
         size: 80,
         minSize: 80,
         maxSize: 80,
@@ -187,7 +190,9 @@ function TitledHeader({ text, title, className }: { text: string, title?: string
       data-tooltip-id={!!title ? globalIDs.tooltip : undefined}
       data-tooltip-content={title}
     >
-      {text}
+      {title ?
+        truncateToSymbol(text && !title.startsWith(text) ? `[${text}] - ${title}` : title, HEADER_TRUNCATE)
+        : text}
     </div>
   );
 }

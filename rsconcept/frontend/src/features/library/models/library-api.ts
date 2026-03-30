@@ -31,9 +31,7 @@ export function matchLibraryItemLocation(target: LibraryItem, path: string): boo
   return matcher.test(target.location);
 }
 
-/**
- * Generate title for clone {@link LibraryItem}.
- */
+/** Generate title for clone {@link LibraryItem}. */
 export function cloneTitle(target: LibraryItem): string {
   if (!target.title.includes('[клон]')) {
     return target.title + ' [клон]';
@@ -42,9 +40,7 @@ export function cloneTitle(target: LibraryItem): string {
   }
 }
 
-/**
- * Generate next version for {@link VersionInfo}.
- */
+/** Generate next version for {@link VersionInfo}. */
 export function nextVersion(version: string): string {
   const dot = version.lastIndexOf('.');
   if (!dot) {
@@ -57,16 +53,12 @@ export function nextVersion(version: string): string {
   return `${version.substring(0, dot)}.${lastNumber + 1}`;
 }
 
-/**
- * Validation location against regexp.
- */
+/** Validation location against regexp. */
 export function validateLocation(location: string): boolean {
   return location.length <= limits.len_location && LOCATION_REGEXP.test(location);
 }
 
-/**
- * Combining head and body into location.
- */
+/** Combining head and body into location. */
 export function combineLocation(head: string, body?: string): string {
   return body ? `${head}/${body}` : head;
 }

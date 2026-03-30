@@ -174,7 +174,6 @@ class LibraryViewSet(viewsets.ModelViewSet):
         serializer = s.LibraryItemCloneSerializer(data=request.data, context={'schema': item})
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data['item_data']
-
         with transaction.atomic():
             clone = deepcopy(item)
             clone.pk = None
@@ -187,13 +186,12 @@ class LibraryViewSet(viewsets.ModelViewSet):
             clone.access_policy = data.get('access_policy', m.AccessPolicy.PUBLIC)
             clone.location = data.get('location', m.LocationHead.USER)
             clone.save()
-
             RSFormCached(clone.pk).insert_from(item.pk, request.data['items'] if 'items' in request.data else None)
 
-            return Response(
-                status=c.HTTP_201_CREATED,
-                data=RSFormParseSerializer(clone).data
-            )
+        return Response(
+            status=c.HTTP_201_CREATED,
+            data=RSFormParseSerializer(clone).data
+        )
 
     @extend_schema(
         summary='set owner for item',
