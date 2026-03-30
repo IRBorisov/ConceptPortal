@@ -36,7 +36,7 @@ import {
 } from './value-api';
 
 /** Maximum iterations to prevent infinite loops (recursion, quantifiers, etc.). */
-export const MAX_ITERATIONS = 100_000;
+export const MAX_ITERATIONS = 2_000_000;
 
 /** AST context. */
 export type ASTContext = Map<string, AstNode>;
