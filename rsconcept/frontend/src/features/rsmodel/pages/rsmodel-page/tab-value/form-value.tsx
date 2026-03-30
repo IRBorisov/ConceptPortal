@@ -132,7 +132,7 @@ export function FormValue({ id, toggleReset, activeCst }: FormValueProps) {
   function handleValueDialog() {
     if (isBase) {
       showEditBinding({
-        initialValue: engine.basics.get(activeCst.id)!,
+        initialValue: engine.basics.get(activeCst.id) ?? {},
         onChange: isMutable ? handleSetValue : undefined
       });
       return;

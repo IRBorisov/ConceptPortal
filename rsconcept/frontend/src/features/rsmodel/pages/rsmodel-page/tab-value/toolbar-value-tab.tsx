@@ -81,7 +81,7 @@ export function ToolbarValueTab({
     }
     if (isBaseSet(activeCst.cst_type)) {
       showEditBinding({
-        initialValue: engine.basics.get(activeCst.id)!,
+        initialValue: engine.basics.get(activeCst.id) ?? {},
         onChange: isMutable ? handleSetValue : undefined
       });
       return;
