@@ -35,7 +35,7 @@ export function HelpRSModelList() {
           <IconReset className='inline-icon' /> снять выделение: <kbd>ESC</kbd>
         </li>
         <li>
-          <IconCalculateAll className='inline-icon icon-green' /> пересчитать модель целиком
+          <IconCalculateAll className='inline-icon icon-green' /> пересчитать модель целиком: <kbd>Alt + Q</kbd>
         </li>
         <li>
           <IconMoveUp className='inline-icon' />

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import clsx from 'clsx';
 
 import { useConceptNavigation } from '@/app';
@@ -13,6 +13,7 @@ import { useFitHeight, useMainHeight } from '@/stores/app-layout';
 import { usePreferencesStore } from '@/stores/preferences';
 import { globalIDs } from '@/utils/constants';
 
+import { isInferrable } from '../../../models/rsmodel-api';
 import { useRSModelEdit } from '../rsmodel-context';
 
 import { FormValue } from './form-value';
@@ -37,9 +38,6 @@ export function TabValue() {
   const mainHeight = useMainHeight();
 
   const showList = usePreferencesStore(state => state.showValueSideList);
-
-  const [toggleReset, setToggleReset] = useState(false);
-
   const isNarrow = !!windowSize.width && windowSize.width <= SIDELIST_LAYOUT_THRESHOLD;
 
   const role = useRoleStore(state => state.role);
@@ -62,6 +60,23 @@ export function TabValue() {
     void engine.resetValue(activeCst.id);
   }
 
+  function handleInput(event: React.KeyboardEvent<HTMLDivElement>) {
+    if (event.altKey && event.code === 'KeyQ') {
+      event.preventDefault();
+      event.stopPropagation();
+      engine.recalculateAll();
+      return;
+    }
+    if ((event.ctrlKey || event.metaKey) && event.code === 'KeyQ') {
+      event.preventDefault();
+      event.stopPropagation();
+      if (activeCst && isInferrable(activeCst.cst_type)) {
+        engine.calculateCst(activeCst.id);
+      }
+      return;
+    }
+  }
+
   return (
     <div
       tabIndex={-1}
@@ -73,6 +88,7 @@ export function TabValue() {
         isNarrow && 'flex-col md:items-center'
       )}
       style={{ maxHeight: mainHeight }}
+      onKeyDown={handleInput}
     >
       <ToolbarValueTab
         className={clsx(
@@ -81,7 +97,6 @@ export function TabValue() {
           'cc-animate-position'
         )}
         isNarrow={isNarrow}
-        onReset={() => setToggleReset(prev => !prev)}
         onClearValue={handleClearValue}
       />
 
@@ -91,7 +106,6 @@ export function TabValue() {
             key={`data-${activeCst.id}`}
             id={globalIDs.value_editor}
             activeCst={activeCst}
-            toggleReset={toggleReset}
           />
         ) : null}
       </div>

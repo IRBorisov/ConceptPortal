@@ -101,8 +101,8 @@ export function TabRSList() {
       case 'Digit2': void createCst(CstType.STRUCTURED); return true;
       case 'Digit3': void createCst(CstType.TERM); return true;
       case 'Digit4': void createCst(CstType.AXIOM); return true;
-      case 'KeyQ': void createCst(CstType.FUNCTION); return true;
-      case 'KeyW': void createCst(CstType.PREDICATE); return true;
+      case 'KeyW': void createCst(CstType.FUNCTION); return true;
+      case 'KeyE': void createCst(CstType.PREDICATE); return true;
       case 'Digit5': void createCst(CstType.CONSTANT); return true;
       case 'Digit6': void createCst(CstType.THEOREM); return true;
       case 'Digit7': void createCst(CstType.NOMINAL); return true;

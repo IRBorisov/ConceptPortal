@@ -33,6 +33,15 @@ export function TabEvaluator() {
   const isNarrow = !!windowSize.width && windowSize.width <= SIDELIST_LAYOUT_THRESHOLD;
   const listHeight = useFitHeight(!isNarrow ? '8.2rem' : '42rem', '10rem');
 
+  function handleInput(event: React.KeyboardEvent<HTMLDivElement>) {
+    if (event.altKey && event.code === 'KeyQ') {
+      event.preventDefault();
+      event.stopPropagation();
+      engine.recalculateAll();
+      return;
+    }
+  }
+
   return (
     <div
       tabIndex={-1}
@@ -44,6 +53,7 @@ export function TabEvaluator() {
         isNarrow && 'flex-col md:items-center'
       )}
       style={{ maxHeight: mainHeight }}
+      onKeyDown={handleInput}
     >
       <ToolbarEvaluator
         className={clsx(

@@ -8,6 +8,7 @@ import { MiniButton } from '@/components/control';
 import { IconCalculateAll } from '@/components/icons';
 import { cn } from '@/components/utils';
 import { usePreferencesStore } from '@/stores/preferences';
+import { prepareTooltip } from '@/utils/format';
 
 import { useRSModelEdit } from '../rsmodel-context';
 
@@ -28,10 +29,10 @@ export function ToolbarEvaluator({
   return (
     <div className={cn('px-1 rounded-b-2xl cc-icons outline-hidden', className)}>
       <MiniButton
-        titleHtml='Пересчитать модель'
+        titleHtml={prepareTooltip('Пересчитать модель', 'Alt + Q')}
         aria-label='Пересчитать все вычисления'
         icon={<IconCalculateAll size='1.25rem' className='icon-green' />}
-        onClick={() => { engine.recalculateAll(); }}
+        onClick={() => engine.recalculateAll()}
       />
 
       <MiniButton

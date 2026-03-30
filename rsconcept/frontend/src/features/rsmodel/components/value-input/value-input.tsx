@@ -19,6 +19,7 @@ interface ValueInputProps {
   disabled?: boolean;
 
   value: string;
+  initialStr?: string;
   stub?: string;
   valueLabel: string;
   placeholder?: string;
@@ -26,14 +27,15 @@ interface ValueInputProps {
 
   onValueDialog?: () => void;
   onChangeStr?: (newValue: string) => void;
+  onSubmit?: () => void;
   onCalculate?: (event: React.MouseEvent<Element>) => void;
 }
 
 /** Displays a badge with value cardinality and information tooltip. */
 export function ValueInput({
-  className, rows, placeholder, disabled,
+  className, rows, placeholder, disabled, initialStr,
   value, stub, valueLabel, status,
-  onChangeStr, onValueDialog, onCalculate
+  onChangeStr, onValueDialog, onCalculate, onSubmit
 }: ValueInputProps) {
   const isTrimmed = value.length > limits.len_data_str;
   return (
@@ -72,6 +74,9 @@ export function ValueInput({
         value={value}
         disabled={disabled}
         onChange={onChangeStr}
+        onReset={initialStr ? () => onChangeStr?.(initialStr) : undefined}
+        isModified={initialStr !== value}
+        onSubmit={onSubmit}
       />
 
       {stub ?

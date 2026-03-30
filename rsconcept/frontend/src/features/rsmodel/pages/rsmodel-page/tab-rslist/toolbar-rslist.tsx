@@ -74,10 +74,10 @@ export function ToolbarRSList({ className }: ToolbarRSListProps) {
         disabled={selectedCst.length === 0}
       />
       <MiniButton
-        titleHtml='Пересчитать модель'
+        titleHtml={prepareTooltip('Пересчитать модель', 'Alt + Q')}
         aria-label='Пересчитать все вычисления'
         icon={<IconCalculateAll size='1.25rem' className='icon-green' />}
-        onClick={() => { engine.recalculateAll(); }}
+        onClick={() => engine.recalculateAll()}
       />
       <MiniButton
         titleHtml={prepareTooltip('Переместить вверх', 'Alt + вверх')}

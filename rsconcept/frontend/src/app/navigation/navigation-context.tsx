@@ -68,6 +68,9 @@ interface INavigationContext {
   /** Navigate to edit active id. */
   gotoEditActive: (activeID: number, newTab?: boolean) => void;
 
+  /** Navigate to value of active id. */
+  gotoActiveValue: (activeID: number, newTab?: boolean) => void;
+
   /** Navigate to Library. */
   gotoLibrary: (newTab?: boolean) => void;
 
@@ -210,6 +213,13 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
     push({ path: url.pathname + url.search + url.hash, newTab: newTab });
   }
 
+  function gotoActiveValue(activeID: number, newTab?: boolean): void {
+    const url = new URL(window.location.href);
+    url.searchParams.set('tab', String(RSModelTabID.VALUE_EDIT));
+    url.searchParams.set('active', String(activeID));
+    push({ path: url.pathname + url.search + url.hash, newTab: newTab });
+  }
+
   function gotoNewItem(newTab?: boolean): void {
     push({ path: urls.create_item, newTab: newTab });
   }
@@ -281,6 +291,7 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
         gotoNewModel,
 
         gotoEditActive,
+        gotoActiveValue,
         gotoRSForm,
         gotoRSModel,
         gotoOss,

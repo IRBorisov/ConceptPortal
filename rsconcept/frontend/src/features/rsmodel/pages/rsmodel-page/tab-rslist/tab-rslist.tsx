@@ -8,13 +8,15 @@ import { CstType } from '@/features/rsform/models/rsform';
 import { matchConstituenta } from '@/features/rsform/models/rsform-api';
 import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
 import { CstMatchMode } from '@/features/rsform/stores/cst-search';
-import { useMutatingRSModel } from '@/features/rsmodel/backend/use-mutating-rsmodel';
 
 import { ExportDropdown } from '@/components/control/export-dropdown';
 import { type RowSelectionState } from '@/components/data-table';
 import { SearchBar } from '@/components/input';
 import { useFitHeight } from '@/stores/app-layout';
 import { withPreventDefault } from '@/utils/utils';
+
+import { useMutatingRSModel } from '../../../backend/use-mutating-rsmodel';
+import { useRSModelEdit } from '../rsmodel-context';
 
 import { TableRSModelList } from './table-rsmodel-list';
 import { ToolbarRSList } from './toolbar-rslist';
@@ -35,6 +37,7 @@ export function TabRSList() {
     cloneCst,
     promptDeleteSelected,
   } = useRSFormEdit();
+  const { engine } = useRSModelEdit();
 
   const [filterText, setFilterText] = useState('');
   const filtered = filterText
@@ -93,14 +96,15 @@ export function TabRSList() {
     }
     // prettier-ignore
     switch (code) {
+      case 'KeyQ': engine.recalculateAll(); return true;
       case 'Backquote': void promptCreateCst(); return true;
 
       case 'Digit1': void createCst(CstType.BASE); return true;
       case 'Digit2': void createCst(CstType.STRUCTURED); return true;
       case 'Digit3': void createCst(CstType.TERM); return true;
       case 'Digit4': void createCst(CstType.AXIOM); return true;
-      case 'KeyQ': void createCst(CstType.FUNCTION); return true;
-      case 'KeyW': void createCst(CstType.PREDICATE); return true;
+      case 'KeyW': void createCst(CstType.FUNCTION); return true;
+      case 'KeyE': void createCst(CstType.PREDICATE); return true;
       case 'Digit5': void createCst(CstType.CONSTANT); return true;
       case 'Digit6': void createCst(CstType.THEOREM); return true;
       case 'Digit7': void createCst(CstType.NOMINAL); return true;
@@ -149,7 +153,7 @@ export function TabRSList() {
         enableSelection={isContentEditable}
         selected={rowSelection}
         setSelected={handleRowSelection}
-        onEdit={cstID => router.gotoEditActive(cstID)}
+        onEdit={cstID => router.gotoActiveValue(cstID)}
         onCreateNew={() => void promptCreateCst()}
       />
     </div>

@@ -114,7 +114,12 @@ export function TabConstituenta() {
       onKeyDown={handleInput}
     >
       <ToolbarConstituenta
-        className='cc-tab-tools right-1/2 translate-x-0 xs:right-4 xs:-translate-x-1/2 md:right-1/2 md:translate-x-0 cc-animate-position'
+        className={clsx(
+          'cc-tab-tools right-1/2 translate-x-0',
+          'xs:right-4 xs:-translate-x-1/2',
+          'md:right-1/2 md:translate-x-0',
+          'cc-animate-position'
+        )}
         activeCst={activeCst}
         onSubmit={initiateSubmit}
         onReset={() => setToggleReset(prev => !prev)}

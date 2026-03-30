@@ -13,20 +13,16 @@ import { type CalculatorResult, type Value } from '@/features/rslang';
 import { normalizeValue, valueStub } from '@/features/rslang/eval/value-api';
 import { labelType } from '@/features/rslang/labels';
 import { isTypification, type TypePath, type Typification } from '@/features/rslang/semantic/typification';
-import { ValueInput } from '@/features/rsmodel/components/value-input';
-import { useCstStatus } from '@/features/rsmodel/hooks/use-cst-status';
 
-import { Button } from '@/components/control';
-import { IconSave } from '@/components/icons';
 import { TextArea } from '@/components/input';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
-import { limits } from '@/utils/constants';
 import { errorMsg } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 
-import { useMutatingRSModel } from '../../../backend/use-mutating-rsmodel';
+import { ValueInput } from '../../../components/value-input';
+import { useCstStatus } from '../../../hooks/use-cst-status';
 import { useCstValue } from '../../../hooks/use-cst-value';
 import { labelValue } from '../../../labels';
 import { type BasicBinding } from '../../../models/rsmodel';
@@ -37,14 +33,12 @@ import { ToolbarExpression } from './toolbar-expression';
 
 interface FormValueProps {
   id?: string;
-  toggleReset: boolean;
   activeCst: Constituenta;
 }
 
-export function FormValue({ id, toggleReset, activeCst }: FormValueProps) {
+export function FormValue({ id, activeCst }: FormValueProps) {
   const router = useConceptNavigation();
   const { isMutable, engine, schema } = useRSModelEdit();
-  const isProcessing = useMutatingRSModel();
   const typification = activeCst.analysis.type;
 
   const isModified = useModificationStore(state => state.isModified);
@@ -67,10 +61,8 @@ export function FormValue({ id, toggleReset, activeCst }: FormValueProps) {
 
   const initialStr = prepareValueString(initialValue, typification, schema, engine.basics, showDataText);
   const [inputValue, setInputValue] = useState<string>(initialStr);
-  const isTrimmed = inputValue.length > limits.len_data_str;
   const hasValueDialog = !!typification && isTypification(typification) && (cstData != null || !cstInferrable);
 
-  const isEditable = isMutable && (isBase || activeCst.cst_type === CstType.STRUCTURED);
   const isDirty = inputValue !== initialStr;
 
   useLayoutEffect(() => onModifiedEvent(false), [activeCst.id]);
@@ -81,7 +73,7 @@ export function FormValue({ id, toggleReset, activeCst }: FormValueProps) {
       onModifiedEvent(false);
     }, 0);
     return () => clearTimeout(timeoutId);
-  }, [activeCst.id, initialStr, toggleReset]);
+  }, [activeCst.id, initialStr]);
 
   useEffect(function syncGlobalModified() {
     onModifiedEvent(isDirty);
@@ -159,8 +151,19 @@ export function FormValue({ id, toggleReset, activeCst }: FormValueProps) {
     }
   }
 
+  function handleInput(event: React.KeyboardEvent<HTMLDivElement>) {
+    if ((event.ctrlKey || event.metaKey) && event.code === 'KeyS') {
+      event.preventDefault();
+      event.stopPropagation();
+      if (isModified && isMutable) {
+        onSaveValue();
+      }
+      return;
+    }
+  }
+
   return (
-    <div id={id} className='relative mt-1 cc-column px-6 pb-1 pt-8'>
+    <div id={id} className='relative mt-1 cc-column px-6 pb-1 pt-8' tabIndex={-1} onKeyDown={handleInput}>
       <div className='flex items-start'>
         <div className='font-math -mt-0.5 font-medium whitespace-nowrap select-text cursor-default'>
           {activeCst?.alias ?? ''}
@@ -214,6 +217,7 @@ export function FormValue({ id, toggleReset, activeCst }: FormValueProps) {
       <ValueInput
         className='max-h-120'
         rows={10}
+        initialStr={initialStr}
         value={inputValue}
         stub={isDirty ? '' : stub}
         valueLabel={labelValue(localEval ? localEval.value : cstData, typification)}
@@ -224,19 +228,9 @@ export function FormValue({ id, toggleReset, activeCst }: FormValueProps) {
         onCalculate={cstInferrable ? handleCalculate : undefined}
         onChangeStr={setInputValue}
         onValueDialog={hasValueDialog ? handleValueDialog : undefined}
+        onSubmit={onSaveValue}
         disabled={!isMutable || cstInferrable || !isInterpretable(activeCst.cst_type) || (showDataText && !isBase)}
       />
-
-      {isEditable ? (
-        <Button
-          text='Сохранить изменения'
-          className='mx-auto w-fit mt-5 xs:mt-0'
-          colorSubmit
-          icon={<IconSave size='1.25rem' />}
-          disabled={isTrimmed || isProcessing || !isModified}
-          onClick={onSaveValue}
-        />
-      ) : null}
     </div>
   );
 }

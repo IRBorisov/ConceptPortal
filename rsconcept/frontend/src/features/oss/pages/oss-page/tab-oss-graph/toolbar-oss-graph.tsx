@@ -185,7 +185,7 @@ export function ToolbarOssGraph({
         <div className='cc-icons items-start'>
           <MiniButton
             aria-label='Сохранить изменения'
-            titleHtml={prepareTooltip('Сохранить изменения', isMac() ? '⌘ + S' : 'Ctrl + S')}
+            titleHtml={prepareTooltip('Сохранить изменения', isMac() ? 'Cmd + S' : 'Ctrl + S')}
             hideTitle={isMenuOpen}
             icon={<IconSave size='1.25rem' className='icon-primary' />}
             onClick={handleSavePositions}

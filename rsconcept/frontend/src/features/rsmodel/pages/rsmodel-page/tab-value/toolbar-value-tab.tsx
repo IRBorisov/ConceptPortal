@@ -10,35 +10,30 @@ import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-contex
 import { type TypePath, type Typification, type Value } from '@/features/rslang';
 import { normalizeValue } from '@/features/rslang/eval/value-api';
 import { isTypification } from '@/features/rslang/semantic/typification';
-import { type BasicBinding } from '@/features/rsmodel/models/rsmodel';
 
 import { MiniButton } from '@/components/control';
-import { IconCalculateAll, IconCalculateOne, IconDatabase, IconDestroy, IconReset } from '@/components/icons';
+import { IconCalculateAll, IconCalculateOne, IconDatabase, IconDestroy } from '@/components/icons';
 import { cn } from '@/components/utils';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
+import { prepareTooltip } from '@/utils/format';
 import { errorMsg } from '@/utils/labels';
+import { isMac } from '@/utils/utils';
 
 import { useMutatingRSModel } from '../../../backend/use-mutating-rsmodel';
 import { useCstValue } from '../../../hooks/use-cst-value';
+import { type BasicBinding } from '../../../models/rsmodel';
 import { isInferrable } from '../../../models/rsmodel-api';
 import { useRSModelEdit } from '../rsmodel-context';
 
 interface ToolbarValueTabProps {
   className?: string;
   isNarrow: boolean;
-
   onClearValue: () => void;
-  onReset: () => void;
 }
 
-export function ToolbarValueTab({
-  className,
-  isNarrow,
-  onClearValue,
-  onReset
-}: ToolbarValueTabProps) {
+export function ToolbarValueTab({ className, isNarrow, onClearValue }: ToolbarValueTabProps) {
   const { isMutable, engine } = useRSModelEdit();
   const { activeCst, schema } = useRSFormEdit();
   const isProcessing = useMutatingRSModel();
@@ -71,7 +66,6 @@ export function ToolbarValueTab({
       normalizeValue(newValue as Value);
       void engine.setStructureValue(activeCst.id, newValue as Value);
     }
-    onReset();
   }
 
   function handleValueDialog() {
@@ -110,17 +104,8 @@ export function ToolbarValueTab({
 
   return (
     <div className={cn('px-1 rounded-b-2xl cc-icons outline-hidden', className)}>
-      {isMutable ? (
-        <MiniButton
-          title='Сбросить несохраненные изменения'
-          icon={<IconReset size='1.25rem' className='icon-primary' />}
-          onClick={onReset}
-          disabled={!isModified || isProcessing}
-        />
-      ) : null}
-
       <MiniButton
-        titleHtml='Вычислить текущую'
+        titleHtml={prepareTooltip('Вычислить текущую конституенту', isMac() ? 'Cmd + Q' : 'Ctrl + Q')}
         aria-label='Вычислить текущую конституенту'
         icon={<IconCalculateOne size='1.25rem' className='icon-green' />}
         onClick={activeCst ? () => { engine.calculateCst(activeCst.id); } : undefined}
@@ -145,7 +130,7 @@ export function ToolbarValueTab({
         titleHtml='Пересчитать модель'
         aria-label='Пересчитать все вычисления'
         icon={<IconCalculateAll size='1.25rem' className='icon-green' />}
-        onClick={() => { engine.recalculateAll(); }}
+        onClick={() => engine.recalculateAll()}
       />
 
       <MiniButton

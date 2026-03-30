@@ -6,11 +6,13 @@ import {
   IconDownload,
   IconLeftOpen,
   IconReset,
+  IconSave,
   IconText,
   IconTree,
   IconTypeGraph,
   IconUpload
 } from '@/components/icons';
+import { isMac } from '@/utils/utils';
 
 import { LinkTopic } from '../../components/link-topic';
 import { HelpTopic } from '../../models/help-topic';
@@ -29,10 +31,7 @@ export function HelpRSModelValue() {
       <h2>Управление</h2>
       <ul>
         <li>
-          <IconReset className='inline-icon' /> сброс несохраненных изменений
-        </li>
-        <li>
-          <IconCalculateOne className='inline-icon icon-green' /> вычислить значение текущей конституенты
+          <IconCalculateOne className='inline-icon icon-green' /> вычислить текущую конституенту: <kbd>{isMac() ? 'Cmd + Q' : 'Ctrl + Q'}</kbd>
         </li>
         <li>
           <IconDatabase className='inline-icon' /> диалог просмотра или редактирования значения
@@ -41,7 +40,7 @@ export function HelpRSModelValue() {
           <IconDestroy className='inline-icon icon-red' /> удалить сохраненное значение
         </li>
         <li>
-          <IconCalculateAll className='inline-icon icon-green' /> пересчитать модель целиком
+          <IconCalculateAll className='inline-icon icon-green' /> пересчитать модель целиком: <kbd>Alt + Q</kbd>
         </li>
         <li>
           <IconLeftOpen className='inline-icon' /> список конституент
@@ -53,6 +52,12 @@ export function HelpRSModelValue() {
         <li>
           <IconTree className='inline-icon' /> отображение{' '}
           <LinkTopic text='дерева разбора' topic={HelpTopic.UI_FORMULA_TREE} />
+        </li>
+        <li>
+          <IconSave className='inline-icon' /> сохранить значение: <kbd>{isMac() ? 'Cmd + S' : 'Ctrl + S'}</kbd>
+        </li>
+        <li>
+          <IconReset className='inline-icon' /> сброс изменений
         </li>
         <li>
           <IconUpload className='inline-icon' /> импорт значения из буфера обмена или файла

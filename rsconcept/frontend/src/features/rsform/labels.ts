@@ -199,8 +199,8 @@ const cstTypeShortcutKeyRecord: Record<CstType, string> = {
   [CstType.STRUCTURED]: '2',
   [CstType.TERM]: '3',
   [CstType.AXIOM]: '4',
-  [CstType.FUNCTION]: 'Q',
-  [CstType.PREDICATE]: 'W',
+  [CstType.FUNCTION]: 'W',
+  [CstType.PREDICATE]: 'E',
   [CstType.CONSTANT]: '5',
   [CstType.THEOREM]: '6',
   [CstType.NOMINAL]: '7'

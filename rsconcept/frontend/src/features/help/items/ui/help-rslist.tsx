@@ -61,7 +61,7 @@ export function HelpRSList() {
           <IconNewItem className='inline-icon icon-green' /> новая конституента: <kbd>Alt + `</kbd>
         </li>
         <li>
-          <IconOpenList className='inline-icon icon-green' /> быстрое добавление: <kbd>Alt + 1-6,Q,W</kbd>
+          <IconOpenList className='inline-icon icon-green' /> быстрое добавление: <kbd>Alt + 1-6,W,E</kbd>
         </li>
         <li>
           <IconDestroy className='inline-icon icon-red' /> удаление выделенных: <kbd>Delete</kbd>

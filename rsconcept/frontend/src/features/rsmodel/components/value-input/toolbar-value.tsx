@@ -5,21 +5,29 @@ import { toast } from 'react-toastify';
 
 import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
-import { IconClipboard, IconDownload, IconJSON, IconUpload } from '@/components/icons';
+import { IconClipboard, IconDownload, IconJSON, IconReset, IconSave, IconUpload } from '@/components/icons';
 import { cn } from '@/components/utils';
 import { usePreferencesStore } from '@/stores/preferences';
+import { prepareTooltip } from '@/utils/format';
 import { errorMsg, infoMsg } from '@/utils/labels';
+import { isMac } from '@/utils/utils';
 
 import { IconShowDataText } from '../../components/icon-show-data-text';
 
 interface ToolbarValueProps {
   className?: string;
   value: string;
+  isModified?: boolean;
   disabled?: boolean;
   onChange?: (newValue: string) => void;
+  onReset?: () => void;
+  onSubmit?: () => void;
 }
 
-export function ToolbarValue({ className, value, disabled, onChange }: ToolbarValueProps) {
+export function ToolbarValue({
+  className, value, disabled, isModified,
+  onChange, onReset, onSubmit
+}: ToolbarValueProps) {
   const showDataText = usePreferencesStore(state => state.showDataText);
   const toggleDataText = usePreferencesStore(state => state.toggleShowDataText);
 
@@ -100,6 +108,22 @@ export function ToolbarValue({ className, value, disabled, onChange }: ToolbarVa
     <div className={cn('cc-icons select-none', className)}>
       {!!value ?
         (<div ref={exportMenuRef} onBlur={handleExportBlur} className='relative'>
+          {!disabled && !!onSubmit ? (
+            <MiniButton
+              titleHtml={prepareTooltip('Сохранить изменения', isMac() ? 'Cmd + S' : 'Ctrl + S')}
+              aria-label='Сохранить изменения'
+              icon={<IconSave size='1.25rem' className='icon-primary' />}
+              onClick={onSubmit}
+              disabled={disabled || !isModified}
+            />) : null}
+          {!disabled && !!onReset ? (
+            <MiniButton
+              title='Сбросить несохраненные изменения'
+              icon={<IconReset size='1.25rem' className='icon-primary' />}
+              onClick={onReset}
+              disabled={!isModified}
+            />
+          ) : null}
 
           <MiniButton
             title='Экспортировать значение'

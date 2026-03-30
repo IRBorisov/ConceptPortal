@@ -11,19 +11,22 @@ import { RSInput } from '@/features/rsform/components/rs-input';
 import { RSTextWrapper } from '@/features/rsform/components/rs-input/text-editing';
 import { ViewErrors } from '@/features/rsform/components/view-errors';
 import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
-import { type AnalysisFull, type CalculatorResult, type RSErrorDescription, TokenID, type Typification } from '@/features/rslang';
+import {
+  type AnalysisFull, type CalculatorResult,
+  type RSErrorDescription, TokenID, type Typification
+} from '@/features/rslang';
 import { valueStub } from '@/features/rslang/eval/value-api';
 import { labelType } from '@/features/rslang/labels';
 import { isTypification } from '@/features/rslang/semantic/typification';
-import { ValueInput } from '@/features/rsmodel/components/value-input';
 
-import { TextArea } from '@/components/input';
+import { TextArea, TextInput } from '@/components/input';
 import { cn } from '@/components/utils';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { infoMsg } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 
+import { ValueInput } from '../../../components/value-input';
 import { labelValue } from '../../../labels';
 import { inferStatus, prepareValueString } from '../../../models/rsmodel-api';
 import { useRSModelEdit } from '../rsmodel-context';
@@ -119,8 +122,17 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
     });
   }
 
+  function handleInput(event: React.KeyboardEvent<HTMLDivElement>) {
+    if ((event.ctrlKey || event.metaKey) && event.code === 'KeyQ') {
+      event.preventDefault();
+      event.stopPropagation();
+      handleCalculate();
+      return;
+    }
+  }
+
   return (
-    <div id={id} className={cn('cc-column mt-1 pb-1 px-6 h-fit', className)}>
+    <div tabIndex={-1} id={id} className={cn('cc-column mt-1 pb-1 px-6 h-fit', className)} onKeyDown={handleInput}>
       <TextArea
         fitContent
         dense
@@ -172,6 +184,15 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
         onValueDialog={hasDialog ? handleValueDialog : undefined}
         disabled
       />
+      {!!localEval?.iterations ?
+        <TextInput
+          label='Количество итераций'
+          dense
+          disabled
+          noBorder
+          className='mt-6 text-muted-foreground'
+          value={String(localEval.iterations)}
+        /> : null}
     </div>
   );
 }
