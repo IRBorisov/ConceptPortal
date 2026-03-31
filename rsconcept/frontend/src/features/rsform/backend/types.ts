@@ -38,9 +38,6 @@ export interface MoveConstituentsDTO {
   move_to: number; // Note: 0-base index
 }
 
-/** Represents data response when creating producing structure of {@link Constituenta}. */
-export type ProduceStructureResponse = z.infer<typeof schemaProduceStructureResponse>;
-
 /** Represents data, used in merging single {@link Constituenta}. */
 export type CstSubstitute = z.infer<typeof schemaSubstituteConstituents>;
 
@@ -158,11 +155,6 @@ export const schemaUpdateConstituenta = z.strictObject({
 export const schemaUpdateCrucial = z.strictObject({
   target: z.array(z.number()),
   value: z.boolean()
-});
-
-export const schemaProduceStructureResponse = z.strictObject({
-  cst_list: z.array(z.number()),
-  schema: schemaRSForm
 });
 
 export const schemaSubstituteConstituents = z.strictObject({

@@ -29,6 +29,7 @@ import { type DlgShowASTProps } from '@/features/rsform/dialogs/dlg-show-ast/dlg
 import { type DlgShowQRProps } from '@/features/rsform/dialogs/dlg-show-qr';
 import { type DlgShowTermGraphProps } from '@/features/rsform/dialogs/dlg-show-term-graph/dlg-show-term-graph';
 import { type DlgShowTypeGraphProps } from '@/features/rsform/dialogs/dlg-show-type-graph/dlg-show-type-graph';
+import { type DlgStructurePlannerProps } from '@/features/rsform/dialogs/dlg-structure-planner/dlg-structure-planner';
 import { type DlgSubstituteCstProps } from '@/features/rsform/dialogs/dlg-substitute-cst';
 import { type DlgUploadRSFormProps } from '@/features/rsform/dialogs/dlg-upload-rsform';
 import { type DlgEditBindingProps } from '@/features/rsmodel/dialogs/dlg-edit-binding';
@@ -83,7 +84,8 @@ export const DialogType = {
   MODEL_VIEW_VALUE: 35,
   MODEL_EDIT_BINDING: 36,
 
-  SHOW_VIDEO: 37
+  SHOW_VIDEO: 37,
+  STRUCTURE_PLANNER: 38
 } as const;
 export type DialogType = (typeof DialogType)[keyof typeof DialogType];
 
@@ -97,6 +99,7 @@ interface DialogsStore {
   hideDialog: () => void;
 
   showVideo: (props: DlgShowVideoProps) => void;
+  showStructurePlanner: (props: DlgStructurePlannerProps) => void;
   showCstTemplate: (props: DlgCstTemplateProps) => void;
   showCreateCst: (props: DlgCreateCstProps) => void;
   showCreateBlock: (props: DlgCreateBlockProps) => void;
@@ -146,6 +149,7 @@ export const useDialogsStore = create<DialogsStore>()(set => ({
   },
 
   showVideo: props => set({ active: DialogType.SHOW_VIDEO, props: props }),
+  showStructurePlanner: props => set({ active: DialogType.STRUCTURE_PLANNER, props: props }),
   showCstTemplate: props => set({ active: DialogType.CONSTITUENTA_TEMPLATE, props: props }),
   showCreateCst: props => set({ active: DialogType.CREATE_CONSTITUENTA, props: props }),
   showCreateSynthesis: props => set({ active: DialogType.CREATE_SYNTHESIS, props: props }),

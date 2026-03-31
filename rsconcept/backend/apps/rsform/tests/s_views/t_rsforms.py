@@ -375,61 +375,6 @@ class TestRSFormViewset(EndpointTester):
         self.assertFalse(Constituenta.objects.filter(pk=x1.pk).exists())
 
 
-    @decl_endpoint('/api/rsforms/{item}/produce-structure', method='patch')
-    def test_produce_structure(self):
-        self.set_params(item=self.owned_id)
-        x1 = self.owned.insert_last('X1')
-        s1 = self.owned.insert_last(
-            alias='S1',
-            definition_formal='ℬ(X1×X1)'
-        )
-        s2 = self.owned.insert_last(
-            alias='S2',
-            definition_formal='invalid'
-        )
-        s3 = self.owned.insert_last(
-            alias='S3',
-            definition_formal='X1×(X1×ℬℬ(X1))×ℬ(X1×X1)'
-        )
-        a1 = self.owned.insert_last(
-            alias='A1',
-            definition_formal='1=1'
-        )
-        f1 = self.owned.insert_last(
-            alias='F10',
-            definition_formal='[α∈X1, β∈X1] Fi1[{α,β}](S1)'
-        )
-        invalid_id = f1.pk + 1337
-
-        self.executeBadData({'target': invalid_id})
-        self.executeBadData({'target': x1.pk})
-        self.executeBadData({'target': s2.pk})
-
-        # Testing simple structure
-        response = self.executeOK({'target': s1.pk})
-        result = response.data['schema']
-        items = [item for item in result['items'] if item['id'] in response.data['cst_list']]
-        self.assertEqual(len(items), 2)
-        self.assertEqual(items[0]['definition_formal'], 'Pr1(S1)')
-        self.assertEqual(items[1]['definition_formal'], 'Pr2(S1)')
-
-        # Testing complex structure
-        s3.refresh_from_db()
-        response = self.executeOK({'target': s3.pk})
-        result = response.data['schema']
-        items = [item for item in result['items'] if item['id'] in response.data['cst_list']]
-        self.assertEqual(len(items), 8)
-        self.assertEqual(items[0]['definition_formal'], 'pr1(S3)')
-
-        # Testing function
-        f1.refresh_from_db()
-        response = self.executeOK({'target': f1.pk})
-        result = response.data['schema']
-        items = [item for item in result['items'] if item['id'] in response.data['cst_list']]
-        self.assertEqual(len(items), 2)
-        self.assertEqual(items[0]['definition_formal'], '[α∈X1, β∈X1] Pr1(F10[α,β])')
-
-
 class TestInlineSynthesis(EndpointTester):
     ''' Testing Inline synthesis. '''
 

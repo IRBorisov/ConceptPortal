@@ -10,12 +10,6 @@ import { PARAMETER } from '@/utils/constants';
 import { type Constituenta, CstType, type RSForm } from '../../../models/rsform';
 import { type GraphFilterParams, TGEdgeType } from '../../../stores/term-graph';
 
-/** Node data after dagre layout (x, y set by layout). */
-interface DagreLayoutNode {
-  x: number;
-  y: number;
-}
-
 export interface TGNodeState extends Record<string, unknown> {
   cst: Constituenta;
   focused: boolean;
@@ -54,7 +48,7 @@ export function applyLayout(nodes: Node<TGNodeState>[], edges: Edge[], subLabels
   dagre.layout(dagreGraph);
 
   if (isolated.length > 0) {
-    const getLayout = (id: string): DagreLayoutNode => dagreGraph.node(id) as DagreLayoutNode;
+    const getLayout = (id: string) => dagreGraph.node(id) as { x: number; y: number; };
     const xs = nonIsolated.map(n => getLayout(n.id).x);
     const maxY = nonIsolated.length ? Math.min(...nonIsolated.map(node => getLayout(node.id).y)) : 0;
     const minX = nonIsolated.length ? Math.min(...xs) : 0;
@@ -67,7 +61,7 @@ export function applyLayout(nodes: Node<TGNodeState>[], edges: Edge[], subLabels
     const cols = Math.ceil(2 * Math.sqrt(isolated.length / 2));
     const width = (cols - 1) * cellWidth;
     const startY = maxY - cellHeight - rankSeparation;
-    const startX = midX - width / 2;
+    const startX = -midX + width / 2;
 
     isolated.forEach((node, index) => {
       const row = Math.floor(index / cols);
@@ -79,8 +73,8 @@ export function applyLayout(nodes: Node<TGNodeState>[], edges: Edge[], subLabels
   }
 
   nonIsolated.forEach(node => {
-    const nodeWithPosition = dagreGraph.node(node.id) as DagreLayoutNode;
-    node.position.x = nodeWithPosition.x - PARAMETER.graphNodeRadius;
+    const nodeWithPosition = dagreGraph.node(node.id) as { x: number; y: number; };
+    node.position.x = -nodeWithPosition.x + PARAMETER.graphNodeRadius;
     node.position.y = nodeWithPosition.y - PARAMETER.graphNodeRadius;
   });
 }

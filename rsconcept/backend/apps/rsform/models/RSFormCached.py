@@ -11,7 +11,7 @@ from django.db.models import QuerySet
 from apps.library.models import LibraryItem, LibraryItemType
 from shared import messages as msg
 
-from .api_RSLanguage import generate_structure, get_type_prefix, guess_type
+from .api_RSLanguage import get_type_prefix, guess_type
 from .Attribution import Attribution
 from .Constituenta import Constituenta, CstType
 from .RSForm import DELETED_ALIAS, RSForm
@@ -346,40 +346,6 @@ class RSFormCached:
             cst.definition_resolved = resolved
         Constituenta.objects.bulk_update(self.cache.constituents, ['definition_resolved'])
 
-
-    def produce_structure(self, target: Constituenta, parse: dict) -> list[Constituenta]:
-        ''' Add constituents for each structural element of the target. '''
-        expressions = generate_structure(
-            alias=target.alias,
-            expression=target.definition_formal,
-            parse=parse
-        )
-        count_new = len(expressions)
-        if count_new == 0:
-            return []
-
-        self.cache.ensure_loaded()
-        position = self.cache.constituents.index(self.cache.by_id[target.id]) + 1
-        RSForm.shift_positions(position, count_new, self.cache.constituents)
-
-        result = []
-        cst_type = CstType.TERM if len(parse['args']) == 0 else CstType.FUNCTION
-        free_index = self._get_max_index(cst_type) + 1
-        prefix = get_type_prefix(cst_type)
-        for text in expressions:
-            new_item = Constituenta.objects.create(
-                schema_id=self.pk,
-                order=position,
-                alias=f'{prefix}{free_index}',
-                definition_formal=text,
-                cst_type=cst_type
-            )
-            result.append(new_item)
-            free_index = free_index + 1
-            position = position + 1
-
-        self.cache.insert_multi(result)
-        return result
 
     def _get_max_index(self, cst_type: str) -> int:
         ''' Get maximum alias index for specific CstType. '''

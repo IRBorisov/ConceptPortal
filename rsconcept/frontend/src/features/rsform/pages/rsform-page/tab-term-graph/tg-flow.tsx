@@ -94,9 +94,9 @@ export function TGFlow() {
   const hiddenHeight = useFitHeight(isSmall ? '15rem + 2px' : '13.5rem + 2px', '4rem');
   const { handleKeyDown } = useHandleActions(filteredGraph);
 
-  const suppressRFSelection = useRef<boolean>(false);
+  const isLoadingSelection = useRef(false);
   function onSelectionChange({ nodes, edges }: { nodes: Node[]; edges: Edge[]; }) {
-    if (suppressRFSelection.current) {
+    if (isLoadingSelection.current) {
       return;
     }
     const selectedNodes = nodes.map(node => Number(node.id));
@@ -245,7 +245,7 @@ export function TGFlow() {
       return;
     }
 
-    suppressRFSelection.current = true;
+    isLoadingSelection.current = true;
 
     prevSelectedNodes.current = selectedCst;
     setNodes(prev =>
@@ -256,7 +256,7 @@ export function TGFlow() {
     );
 
     const frame = requestAnimationFrame(() => {
-      suppressRFSelection.current = false;
+      isLoadingSelection.current = false;
     });
     return () => cancelAnimationFrame(frame);
   }, [viewportInitialized, selectedCst, setNodes, readyForUpdate]);
@@ -273,7 +273,7 @@ export function TGFlow() {
       return;
     }
 
-    suppressRFSelection.current = true;
+    isLoadingSelection.current = true;
 
     prevSelectedEdges.current = selectedEdges;
     setEdges(prev =>
@@ -284,7 +284,7 @@ export function TGFlow() {
     );
 
     const frame = requestAnimationFrame(() => {
-      suppressRFSelection.current = false;
+      isLoadingSelection.current = false;
     });
     return () => cancelAnimationFrame(frame);
   }, [selectedEdges, setEdges, readyForUpdate, viewportInitialized]);

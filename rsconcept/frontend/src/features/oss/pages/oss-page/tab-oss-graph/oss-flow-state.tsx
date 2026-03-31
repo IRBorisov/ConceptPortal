@@ -31,9 +31,9 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
   const prevSelectedNodes = useRef<string[]>([]);
   const prevSelectedEdges = useRef<string[]>([]);
 
-  const suppressRFSelection = useRef<boolean>(false);
+  const isLoadingSelection = useRef(false);
   function onSelectionChange({ nodes, edges }: { nodes: OGNode[]; edges: Edge[]; }) {
-    if (suppressRFSelection.current) {
+    if (isLoadingSelection.current) {
       return;
     }
     const newNodes = nodes.map(node => node.id);
@@ -135,7 +135,7 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
       return;
     }
 
-    suppressRFSelection.current = true;
+    isLoadingSelection.current = true;
 
     prevSelectedNodes.current = selectedNodes;
     setNodes(prev =>
@@ -146,7 +146,7 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
     );
 
     const frame = requestAnimationFrame(() => {
-      suppressRFSelection.current = false;
+      isLoadingSelection.current = false;
     });
     return () => cancelAnimationFrame(frame);
   }, [viewportInitialized, selectedNodes, setNodes]);
@@ -163,7 +163,7 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
       return;
     }
 
-    suppressRFSelection.current = true;
+    isLoadingSelection.current = true;
 
     prevSelectedEdges.current = selectedEdges;
     setEdges(prev =>
@@ -174,7 +174,7 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
     );
 
     const frame = requestAnimationFrame(() => {
-      suppressRFSelection.current = false;
+      isLoadingSelection.current = false;
     });
     return () => cancelAnimationFrame(frame);
   }, [selectedEdges, setEdges, viewportInitialized]);

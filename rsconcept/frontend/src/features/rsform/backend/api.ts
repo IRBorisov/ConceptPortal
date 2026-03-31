@@ -18,11 +18,9 @@ import {
   type CreateConstituentaDTO,
   type InlineSynthesisDTO,
   type MoveConstituentsDTO,
-  type ProduceStructureResponse,
   type RSFormDTO,
   type RSFormUploadDTO,
   schemaConstituentaCreatedResponse,
-  schemaProduceStructureResponse,
   schemaRSForm,
   type SubstitutionsDTO,
   type UpdateConstituentaDTO,
@@ -137,15 +135,6 @@ export const rsformsApi = {
       request: { data: data }
     }),
 
-  produceStructure: ({ itemID, cstID }: { itemID: number; cstID: number; }) =>
-    axiosPatch<{ target: number; }, ProduceStructureResponse>({
-      schema: schemaProduceStructureResponse,
-      endpoint: `/api/rsforms/${itemID}/produce-structure`,
-      request: {
-        data: { target: cstID },
-        successMessage: response => infoMsg.addedConstituents(response.cst_list.length)
-      }
-    }),
   inlineSynthesis: (data: InlineSynthesisDTO) =>
     axiosPatch<InlineSynthesisDTO, RSFormDTO>({
       schema: schemaRSForm,

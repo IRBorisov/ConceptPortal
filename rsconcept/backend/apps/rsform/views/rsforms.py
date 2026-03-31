@@ -46,7 +46,6 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             'substitute',
             'restore_order',
             'reset_aliases',
-            'produce_structure',
             'create_attribution',
             'delete_attribution',
             'clear_attributions'
@@ -173,51 +172,6 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             data=s.RSFormParseSerializer(item).data
         )
 
-    @extend_schema(
-        summary='produce the structure of a given constituenta',
-        tags=['RSForm'],
-        request=s.CstTargetSerializer,
-        responses={
-            c.HTTP_200_OK: s.NewMultiCstResponse,
-            c.HTTP_400_BAD_REQUEST: None,
-            c.HTTP_403_FORBIDDEN: None,
-            c.HTTP_404_NOT_FOUND: None
-        }
-    )
-    @action(detail=True, methods=['patch'], url_path='produce-structure')
-    def produce_structure(self, request: Request, pk) -> HttpResponse:
-        ''' Produce a term for every element of the target constituenta typification. '''
-        item = self._get_item()
-
-        serializer = s.CstTargetSerializer(data=request.data, context={'schema': item})
-        serializer.is_valid(raise_exception=True)
-        cst = cast(m.Constituenta, serializer.validated_data['target'])
-        if cst.cst_type not in [m.CstType.FUNCTION, m.CstType.STRUCTURED, m.CstType.TERM]:
-            raise ValidationError({
-                f'{cst.pk}': msg.constituentaNoStructure()
-            })
-
-        schema_details = s.PyConceptAdapter(item.pk).parse()['items']
-        cst_parse = next(item for item in schema_details if item['id'] == cst.pk)['parse']
-        if not cst_parse['typification']:
-            return Response(
-                status=c.HTTP_400_BAD_REQUEST,
-                data={f'{cst.pk}': msg.constituentaNoStructure()}
-            )
-
-        with transaction.atomic():
-            propagation = PropagationFacade()
-            schema = propagation.get_schema(item.pk)
-            new_cst = schema.produce_structure(cst, cst_parse)
-            propagation.after_create_cst(new_cst)
-            item.save(update_fields=['time_update'])
-        return Response(
-            status=c.HTTP_200_OK,
-            data={
-                'cst_list': [cst.pk for cst in new_cst],
-                'schema': s.RSFormParseSerializer(item).data
-            }
-        )
 
     @extend_schema(
         summary='execute substitutions',

@@ -238,6 +238,7 @@ export function canProduceStructure(cst: RO<Constituenta>): boolean {
   return (
     !!cst.analysis?.success &&
     cst.analysis.type !== null &&
+    isTypification(cst.analysis.type) &&
     cst.cst_type !== CstType.BASE &&
     cst.cst_type !== CstType.CONSTANT &&
     cst.cst_type !== CstType.NOMINAL

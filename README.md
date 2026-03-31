@@ -127,7 +127,6 @@ This readme file is used mostly to document project dependencies and conventions
   - coreapi
   - psycopg2-binary
   - cctext
-  - pyconcept
   </pre>
 </details>
 <details>

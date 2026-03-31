@@ -154,10 +154,6 @@ def invalidEnum(value: str):
     return f'Неподдерживаемое значение параметра: {value}'
 
 
-def pyconceptFailure():
-    return 'Invalid data response from pyconcept'
-
-
 def typificationInvalidStr():
     return 'Invalid typification string'
 

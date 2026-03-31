@@ -36,7 +36,7 @@ import {
   labelRSExpression
 } from '../../../labels';
 import { type Constituenta, CstType, type RSForm } from '../../../models/rsform';
-import { getAnalysisFor, isBaseSet, isBasicConcept } from '../../../models/rsform-api';
+import { canProduceStructure, getAnalysisFor, isBaseSet, isBasicConcept } from '../../../models/rsform-api';
 
 interface FormConstituentaProps {
   id?: string;
@@ -62,6 +62,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
   const showTypification = useDialogsStore(state => state.showShowTypeGraph);
   const showEditTerm = useDialogsStore(state => state.showEditWordForms);
   const showRenameCst = useDialogsStore(state => state.showRenameCst);
+  const showStructurePlanner = useDialogsStore(state => state.showStructurePlanner);
 
   const {
     register,
@@ -215,6 +216,13 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
     });
   }
 
+  function handleStructurePlanner() {
+    showStructurePlanner({
+      schemaID: schema.id,
+      targetID: activeCst.id
+    });
+  }
+
   return (
     <form
       id={id}
@@ -285,19 +293,26 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
       ) : null}
 
       {activeCst.cst_type !== CstType.NOMINAL ? (
-        <TextArea
-          id='cst_typification'
-          fitContent
-          dense
-          noResize
-          noBorder
-          noOutline
-          transparent
-          readOnly
-          label='Типизация'
-          value={typification}
-          className='cursor-default'
-        />
+        <div className='flex'>
+          <TextButton
+            text='Типизация'
+            title='Управление структурой термина'
+            disabled={!canProduceStructure(activeCst)}
+            onClick={handleStructurePlanner}
+          />
+          <TextArea
+            id='cst_typification'
+            fitContent
+            dense
+            noResize
+            noBorder
+            noOutline
+            transparent
+            readOnly
+            value={typification}
+            className='cursor-default'
+          />
+        </div>
       ) : null}
 
       {!!activeCst.definition_formal || !isElementary ? (

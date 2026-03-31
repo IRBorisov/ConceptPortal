@@ -1,12 +1,7 @@
 ''' Models: Definitions and utility function for RSLanguage. '''
-import json
 import re
 from enum import IntEnum, unique
-from typing import Tuple, cast
-
-import pyconcept
-
-from shared import messages as msg
+from typing import cast
 
 from .Constituenta import CstType
 
@@ -16,7 +11,7 @@ _RE_COMPLEX_SYMBOLS = r'[∀∃×ℬ;|:]'
 
 @unique
 class TokenType(IntEnum):
-    ''' Some of grammar token types. Full list seek in frontend / pyconcept '''
+    ''' Some of grammar token types. Full list seek in frontend '''
     ID_GLOBAL = 259
     ID_RADICAL = 262
     DECART = 287
@@ -76,16 +71,6 @@ def guess_type(alias: str) -> CstType:
     return CstType.BASE
 
 
-def _get_structure_prefix(alias: str, expression: str, parse: dict) -> Tuple[str, str]:
-    ''' Generate prefix and alias for structure generation. '''
-    args = parse['args']
-    if not args:
-        return (alias, '')
-    prefix = expression[0:expression.find(']')] + '] '
-    newAlias = alias + '[' + ','.join([arg['alias'] for arg in args]) + ']'
-    return (newAlias, prefix)
-
-
 def infer_template(expression: str) -> bool:
     ''' Checks if given expression is a template. '''
     return bool(re.search(_RE_TEMPLATE, expression))
@@ -120,60 +105,3 @@ def split_template(expression: str):
         'head': '',
         'body': expression
     }
-
-
-def generate_structure(alias: str, expression: str, parse: dict) -> list:
-    ''' Generate list of expressions for target structure. '''
-    ast = json.loads(pyconcept.parse_expression(parse['typification']))['ast']
-    if len(ast) == 0:
-        raise ValueError(msg.typificationInvalidStr())
-    if len(ast) == 1:
-        return []
-    (link, prefix) = _get_structure_prefix(alias, expression, parse)
-
-    generated: list = []
-    arity: list = [1] * len(ast)
-    for (n, item) in enumerate(ast):
-        if n == 0:
-            generated.append({
-                'text': link,  # generated text
-                'operation': None,  # applied operation. None if text should be skipped
-                'is_boolean': False  # is the result of operation has an additional boolean
-            })
-            continue
-
-        parent_index = item['parent']
-        parent_type = ast[parent_index]['typeID']
-        parent_text = generated[parent_index]['text']
-        parent_is_boolean = generated[parent_index]['is_boolean']
-        assert parent_type in [TokenType.BOOLEAN, TokenType.DECART]
-
-        if parent_is_boolean:
-            if parent_type == TokenType.BOOLEAN:
-                generated.append({
-                    'text': f'red({parent_text})',
-                    'operation': TokenType.REDUCE,
-                    'is_boolean': True
-                })
-            if parent_type == TokenType.DECART:
-                generated.append({
-                    'text': f'Pr{arity[parent_index]}({parent_text})',
-                    'operation': TokenType.BIGPR,
-                    'is_boolean': True
-                })
-                arity[parent_index] = arity[parent_index] + 1
-        else:
-            if parent_type == TokenType.BOOLEAN:
-                generated.append({
-                    'text': parent_text,
-                    'operation': None,
-                    'is_boolean': True
-                })
-            if parent_type == TokenType.DECART:
-                generated.append({
-                    'text': f'pr{arity[parent_index]}({parent_text})',
-                    'operation': TokenType.SMALLPR,
-                    'is_boolean': False
-                })
-                arity[parent_index] = arity[parent_index] + 1
-    return [prefix + item['text'] for item in generated if item['operation'] is not None]

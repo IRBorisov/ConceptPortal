@@ -21,7 +21,6 @@ import { useModificationStore } from '@/stores/modification';
 import { promptUnsaved } from '@/utils/utils';
 
 import { useMutatingRSForm } from '../../backend/use-mutating-rsform';
-import { useProduceStructure } from '../../backend/use-produce-structure';
 import { useResetAliases } from '../../backend/use-reset-aliases';
 import { useRestoreOrder } from '../../backend/use-restore-order';
 import { type Constituenta } from '../../models/rsform';
@@ -43,7 +42,6 @@ export function MenuEditSchema() {
   const {
     schema,
     activeCst,
-    setSelectedCst: setSelected,
     isArchive,
     isContentEditable,
     promptTemplate,
@@ -53,9 +51,9 @@ export function MenuEditSchema() {
 
   const { resetAliases } = useResetAliases();
   const { restoreOrder } = useRestoreOrder();
-  const { produceStructure } = useProduceStructure();
 
   const showInlineSynthesis = useDialogsStore(state => state.showInlineSynthesis);
+  const showStructurePlanner = useDialogsStore(state => state.showStructurePlanner);
   const showSubstituteCst = useDialogsStore(state => state.showSubstituteCst);
 
   function handleReindex() {
@@ -75,7 +73,7 @@ export function MenuEditSchema() {
     }
     showSubstituteCst({
       schemaID: schema.id,
-      onSubstitute: data => setSelected(prev => prev.filter(id => !data.substitutions.find(sub => sub.original === id)))
+      onSubstitute: () => undefined
     });
   }
 
@@ -92,13 +90,9 @@ export function MenuEditSchema() {
     if (isModified && !promptUnsaved()) {
       return;
     }
-    void produceStructure({
-      itemID: schema.id,
-      cstID: targetCst.id
-    }).then(cstList => {
-      if (cstList.length !== 0) {
-        setSelected([...cstList]);
-      }
+    showStructurePlanner({
+      schemaID: schema.id,
+      targetID: targetCst.id
     });
   }
 
