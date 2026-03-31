@@ -3,6 +3,7 @@ import { type FlatAstNode } from '@/utils/parsing';
 
 import { TokenID } from '../rslang';
 
+import { type SPFlowNodeData } from './dialogs/dlg-structure-planner/graph/sp-models';
 import { type Constituenta, CstClass, CstStatus } from './models/rsform';
 import { type TypificationNodeData } from './models/typification-graph';
 import { TGColoring, TGEdgeType } from './stores/term-graph';
@@ -253,6 +254,7 @@ export function colorBgTMGraphNode(node: TypificationNodeData): string {
   return APP_COLORS.bgOrange;
 }
 
+/** Determines color of term graph edge. */
 export function colorGraphEdge(edgeType: TGEdgeType): string {
   switch (edgeType) {
     case TGEdgeType.full:
@@ -262,4 +264,15 @@ export function colorGraphEdge(edgeType: TGEdgeType): string {
     case TGEdgeType.attribution:
       return APP_COLORS.bgPurple;
   }
+}
+
+/** Determines m-graph color for {@link SPFlowNodeData}. */
+export function colorSPNode(data: SPFlowNodeData): string {
+  if (data.node.parent === null) {
+    return APP_COLORS.bgPurple;
+  }
+  if (data.node.existing) {
+    return APP_COLORS.bgGreen;
+  }
+  return APP_COLORS.bgOrange;
 }

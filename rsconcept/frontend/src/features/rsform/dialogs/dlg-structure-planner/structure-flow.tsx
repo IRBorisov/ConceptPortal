@@ -7,7 +7,7 @@ import { type Typification } from '@/features/rslang/semantic/typification';
 
 import { DiagramFlow } from '@/components/flow/diagram-flow';
 
-import { getStructureEdgeMeta, type SPNode } from '../../models/structure-planner';
+import { type SPNode } from '../../models/structure-planner';
 
 import { SPEdgeTypes } from './graph/sp-edge-types';
 import { applyLayout } from './graph/sp-layout';
@@ -21,7 +21,8 @@ const flowOptions = {
   nodesFocusable: false,
   nodesConnectable: false,
   maxZoom: 2,
-  minZoom: 0.5
+  minZoom: 0.5,
+  nodesDraggable: false
 } as const;
 
 interface StructureFlowProps {
@@ -52,31 +53,36 @@ export function StructureFlow({ items, rootType, selected, setSelected }: Struct
   });
 
   useEffect(function updateGraph() {
+    if (!viewportInitialized) {
+      return;
+    }
+
     const newNodes: SPFlowNode[] = items.map(node => ({
       id: node.key,
       data: { node: node },
       position: { x: 0, y: 0 },
-      type: 'step'
+      type: 'step',
+      draggable: false
     }));
 
     const newEdges: SPFlowEdge[] = items
       .filter(node => node.parent !== null)
       .map(node => {
         const parentNode = items[node.parent!];
-        const meta = getStructureEdgeMeta(parentNode.path, node.path);
         return {
           id: `${parentNode.key}-${node.key}`,
           source: parentNode.key,
           target: node.key,
           type: 'planner',
-          data: meta.projection ? { projection: meta.projection } : undefined
+          data: node.path.at(-1)! > 0 ? { projection: node.path.at(-1)! } : undefined
         };
       });
 
     applyLayout(newNodes, newEdges);
+
     setNodes(newNodes);
     setEdges(newEdges);
-  }, [items, rootType, setEdges, setNodes]);
+  }, [items, rootType, setEdges, setNodes, viewportInitialized]);
 
   const readyForUpdate = nodes.length === items.length;
   const prevSelectedNodes = useRef<string>('');

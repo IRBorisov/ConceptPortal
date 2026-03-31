@@ -82,20 +82,6 @@ export function formatPathText(path: TypePath): string {
   return path.map(step => String(step)).join('.');
 }
 
-export function getStructureEdgeMeta(parent: TypePath, child: TypePath) {
-  const suffix = child.slice(parent.length);
-  if (suffix.length === 1 && suffix[0] === 0) {
-    return { type: 'boolean' as const };
-  }
-  if (suffix.length === 1 && suffix[0] > 0) {
-    return { type: 'cartesian' as const, projection: suffix[0] };
-  }
-  if (suffix.length === 2 && suffix[0] === 0 && suffix[1] > 0) {
-    return { type: 'cartesian' as const, projection: suffix[1] };
-  }
-  return { type: 'boolean' as const };
-}
-
 // ======= Internals =======
 function produceDefinition(alias: string, rootType: Typification, path: TypePath): string {
   let current = rootType;

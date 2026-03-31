@@ -3,12 +3,12 @@
 import { Handle, type NodeProps, Position } from '@xyflow/react';
 import clsx from 'clsx';
 
+import { colorSPNode } from '@/features/rsform/colors';
 import { labelType } from '@/features/rslang/labels';
 
 import { type SPFlowNode } from './sp-models';
 
 export function SPNodeComponent(node: NodeProps<SPFlowNode>) {
-  // TODO: tooltips
   const descriptionText = node.data.node.existing?.term_raw || labelType(node.data.node.type);
   return (
     <>
@@ -17,13 +17,14 @@ export function SPNodeComponent(node: NodeProps<SPFlowNode>) {
       <div className={clsx(
         'cc-node-label',
         'w-full h-full flex items-center justify-center',
-        'cursor-default rounded-full bg-input'
+        'cursor-default rounded-full'
       )}
+        style={{ backgroundColor: colorSPNode(node.data) }}
       >
         {node.data.node.existing?.alias ?? 'N/A'}
       </div>
 
-      {node.data.displayTerm ? (
+      {descriptionText ? (
         <div
           className={clsx(
             'mt-[4px] w-[120px] px-[4px] text-center translate-x-[calc(-50%+20px)]',

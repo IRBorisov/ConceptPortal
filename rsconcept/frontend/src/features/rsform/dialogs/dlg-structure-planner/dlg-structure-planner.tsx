@@ -2,12 +2,13 @@
 
 import { useState } from 'react';
 import { ReactFlowProvider } from '@xyflow/react';
+import clsx from 'clsx';
 
 import { TypeID, type Typification } from '@/features/rslang/semantic/typification';
 
 import { MiniButton } from '@/components/control';
 import { IconNewItem, IconReset, IconSave } from '@/components/icons';
-import { TextArea, TextInput } from '@/components/input';
+import { TextInput } from '@/components/input';
 import { ModalView } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { promptUnsaved } from '@/utils/utils';
@@ -35,25 +36,24 @@ export function DlgStructurePlanner() {
   const { updateConstituenta } = useUpdateConstituenta();
 
   const target = schema.cstByID.get(targetID) ?? null;
-  const nodes = target ? buildStructurePlanner(schema, target) : [];
+  const items = target ? buildStructurePlanner(schema, target) : [];
 
-  const initialNode = nodes[0] ?? null;
-  const [selectedKey, setSelectedKey] = useState(initialNode?.key ?? '');
-  const [term, setTerm] = useState<string>(initialNode?.existing?.term_raw ?? '');
+  const [selectedKey, setSelectedKey] = useState(items[0].key ?? '');
+  const [term, setTerm] = useState<string>(items[0].existing?.term_raw ?? '');
 
-  if (!target || !canProduceStructure(target) || !target.analysis.type) {
+  if (!target || !canProduceStructure(target) || !target.analysis.type || items.length === 0) {
+    console.error('Structure planner error input', target, items);
     hideDialog();
     return null;
   }
 
-  const rootType = target.analysis.type as Typification;
-  const selected = nodes.find(node => node.key === selectedKey) ?? nodes[0];
-  const baseTerm = selected?.existing?.term_raw ?? '';
-  const isDirty = !!selected && term !== baseTerm;
+  const selectedNode = items.find(node => node.key === selectedKey) ?? items[0];
+  const selectedCst = selectedNode?.existing;
+  const isDirty = (selectedCst && term !== selectedCst?.term_raw) || (!selectedCst && term !== '');
 
   function handleSelectNode(nextKey: string) {
-    const node = nodes.find(item => item.key === nextKey);
-    if (!node || node.key === selected?.key) {
+    const node = items.find(item => item.key === nextKey);
+    if (!node || node.key === selectedNode?.key) {
       return;
     }
     if (isDirty && !promptUnsaved()) {
@@ -64,10 +64,7 @@ export function DlgStructurePlanner() {
   }
 
   function resetTerm() {
-    if (!selected) {
-      return;
-    }
-    setTerm(selected.existing?.term_raw ?? '');
+    setTerm(selectedCst?.term_raw ?? '');
   }
 
   async function saveTerm(node: SPNode): Promise<void> {
@@ -98,24 +95,15 @@ export function DlgStructurePlanner() {
   return (
     <ModalView className='w-[calc(100dvw-3rem)] h-[calc(100dvh-3rem)]' fullScreen noFooterButton>
       <div className='flex flex-col h-full'>
-        {selected ? (
+        {selectedNode ? (
           <div className='relative flex gap-3 mt-4 px-8 items-center mx-auto'>
-            <div className='font-medium whitespace-nowrap w-8'>
-              {selected.existing?.alias ?? inferAlias(selected, schema)}
+            <div className='whitespace-nowrap w-60 truncate text-right font-math mr-3'>
+              {selectedNode.definition}
             </div>
 
-            <TextArea
-              id='dlg_structure_definition'
-              className='cursor-default w-60'
-              value={selected.definition}
-              fitContent
-              dense
-              noResize
-              noBorder
-              noOutline
-              transparent
-              readOnly
-            />
+            <div className={clsx('font-medium whitespace-nowrap w-8', !selectedCst && 'text-constructive')}>
+              {selectedCst?.alias ?? inferAlias(selectedNode, schema)}
+            </div>
 
             <TextInput
               id='dlg_structure_term'
@@ -128,19 +116,19 @@ export function DlgStructurePlanner() {
 
             <div className='cc-icons'>
               <MiniButton
-                title={selected.existing ? 'Обновить термин' : 'Создать конституенту'}
-                icon={selected.existing ?
+                title={selectedCst ? 'Обновить термин' : 'Создать конституенту'}
+                icon={selectedCst ?
                   <IconSave size='1.25rem' className='icon-primary' /> :
                   <IconNewItem size='1.25rem' className='icon-green' />
                 }
-                onClick={() => void saveTerm(selected)}
-                disabled={!isDirty}
+                onClick={() => void saveTerm(selectedNode)}
+                disabled={!isDirty || term === ''}
               />
               <MiniButton
                 title='Reset term'
                 icon={<IconReset size='1.25rem' className='icon-primary' />}
                 onClick={resetTerm}
-                disabled={!isDirty}
+                disabled={!isDirty || !selectedCst}
               />
             </div>
           </div>
@@ -149,9 +137,9 @@ export function DlgStructurePlanner() {
         <div className='h-full'>
           <ReactFlowProvider>
             <StructureFlow
-              items={nodes}
-              rootType={rootType}
-              selected={selected?.key ?? ''}
+              items={items}
+              rootType={target.analysis.type as Typification}
+              selected={selectedKey}
               setSelected={handleSelectNode}
             />
           </ReactFlowProvider>
