@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { ReactFlowProvider } from '@xyflow/react';
 import clsx from 'clsx';
 
-import { TypeID, type Typification } from '@/features/rslang/semantic/typification';
+import { type ExpressionType, TypeID, type Typification } from '@/features/rslang/semantic/typification';
 
 import { MiniButton } from '@/components/control';
 import { IconNewItem, IconReset, IconSave } from '@/components/icons';
@@ -19,7 +19,7 @@ import { useRSForm } from '../../backend/use-rsform';
 import { useUpdateConstituenta } from '../../backend/use-update-constituenta';
 import { CstType, type RSForm } from '../../models/rsform';
 import { canProduceStructure, generateAlias } from '../../models/rsform-api';
-import { buildStructurePlanner, type SPNode } from '../../models/structure-planner';
+import { type SPNode, StructurePlanner } from '../../models/structure-planner';
 
 import { StructureFlow } from './structure-flow';
 
@@ -36,7 +36,7 @@ export function DlgStructurePlanner() {
   const { updateConstituenta } = useUpdateConstituenta();
 
   const target = schema.cstByID.get(targetID) ?? null;
-  const items = target ? buildStructurePlanner(schema, target) : [];
+  const items = target ? new StructurePlanner(schema, target).build() : [];
 
   const [selectedKey, setSelectedKey] = useState(items[0].key ?? '');
   const [term, setTerm] = useState<string>(items[0].existing?.term_raw ?? '');
@@ -149,14 +149,11 @@ export function DlgStructurePlanner() {
   );
 }
 
-function inferDraftType(type: Typification): CstType {
-  switch (type.typeID) {
-    case TypeID.collection:
-    case TypeID.tuple:
-      return CstType.STRUCTURED;
-    default:
-      return CstType.TERM;
+function inferDraftType(type: ExpressionType): CstType {
+  if (type.typeID === TypeID.function) {
+    return CstType.FUNCTION;
   }
+  return CstType.TERM;
 }
 
 function inferAlias(node: SPNode, schema: RSForm) {

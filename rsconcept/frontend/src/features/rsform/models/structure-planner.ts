@@ -13,44 +13,55 @@ export interface SPNode {
   existing: Constituenta | null;
 }
 
-export function buildStructurePlanner(schema: RSForm, target: Constituenta): SPNode[] {
-  if (!isTypification(target.analysis.type)) {
-    return [];
+export class StructurePlanner {
+  private items: SPNode[] = [];
+  private schema: RSForm;
+  private target: Constituenta;
+  private rootType: Typification;
+
+  constructor(schema: RSForm, target: Constituenta) {
+    if (!isTypification(target.analysis.type)) {
+      throw new Error('Invalid typification for target');
+    }
+    this.schema = schema;
+    this.target = target;
+    this.rootType = target.analysis.type as Typification;
   }
 
-  const rootType = target.analysis.type as Typification;
-  const items: SPNode[] = [
-    {
-      key: formatPathText(makeTypePath([])),
+  public build(): SPNode[] {
+    this.items.push({
+      key: 'root',
       path: makeTypePath([]),
-      type: rootType,
+      type: this.rootType,
       parent: null,
-      definition: target.definition_formal,
-      existing: target
-    }
-  ];
+      definition: this.target.definition_formal,
+      existing: this.target
+    });
+    this.visit(this.rootType, [], 0);
+    return this.items;
+  }
 
-  function visit(type: Typification, path: number[], parent: number) {
+  private visit(type: Typification, path: number[], parent: number) {
     switch (type.typeID) {
       case TypeID.collection:
         if (type.base.typeID === TypeID.tuple) {
           type.base.factors.forEach((factor, index) => {
-            const nextPath = [...path, 0, index + 1];
+            const nextPath = [...path, index + 1];
             const nextType = bool(factor);
-            const nextNode = pushNode(nextPath, nextType, parent);
-            visit(nextType, nextPath, nextNode);
+            const nextNode = this.pushNode(nextPath, nextType, parent);
+            this.visit(nextType, nextPath, nextNode);
           });
-        } else {
+        } else if (type.base.typeID === TypeID.collection) {
           const nextPath = [...path, 0];
-          const nextNode = pushNode(nextPath, type.base, parent);
-          visit(type.base, nextPath, nextNode);
+          const nextNode = this.pushNode(nextPath, type.base, parent);
+          this.visit(type.base, nextPath, nextNode);
         }
         return;
       case TypeID.tuple:
         type.factors.forEach((factor, index) => {
           const nextPath = [...path, index + 1];
-          const nextNode = pushNode(nextPath, factor, parent);
-          visit(factor, nextPath, nextNode);
+          const nextNode = this.pushNode(nextPath, factor, parent);
+          this.visit(factor, nextPath, nextNode);
         });
         return;
       default:
@@ -58,29 +69,20 @@ export function buildStructurePlanner(schema: RSForm, target: Constituenta): SPN
     }
   }
 
-  function pushNode(path: number[], type: Typification, parent: number) {
+  private pushNode(path: number[], type: Typification, parent: number) {
     const typePath = makeTypePath(path);
-    items.push({
+    this.items.push({
       key: formatPathText(typePath),
       path: typePath,
       type,
       parent,
-      definition: produceDefinition(target.alias, rootType, typePath),
-      existing: findCstByStructure(schema, target, typePath)
+      definition: produceDefinition(this.target.alias, this.rootType, typePath),
+      existing: findCstByStructure(this.schema, this.target, typePath)
     });
-    return items.length - 1;
+    return this.items.length - 1;
   }
-
-  visit(rootType, [], 0);
-  return items;
 }
 
-export function formatPathText(path: TypePath): string {
-  if (path.length === 0) {
-    return 'root';
-  }
-  return path.map(step => String(step)).join('.');
-}
 
 // ======= Internals =======
 function produceDefinition(alias: string, rootType: Typification, path: TypePath): string {
@@ -92,19 +94,15 @@ function produceDefinition(alias: string, rootType: Typification, path: TypePath
     const step = path[index];
     switch (current.typeID) {
       case TypeID.collection:
-        if (step !== 0) {
-          return expression;
+        if (current.base.typeID === TypeID.tuple) {
+          expression = `Pr${step}(${expression})`;
+          current = bool(current.base.factors[step - 1]);
+          index += 1;
+        } else {
+          expression = `red(${expression})`;
+          current = current.base;
+          index += 1;
         }
-        if (current.base.typeID === TypeID.tuple && index + 1 < path.length) {
-          const projection = path[index + 1];
-          expression = `Pr${projection}(${expression})`;
-          current = bool(current.base.factors[projection - 1]);
-          index += 2;
-          break;
-        }
-        expression = `red(${expression})`;
-        current = current.base;
-        index += 1;
         break;
       case TypeID.tuple:
         expression = `pr${step}(${expression})`;
@@ -115,6 +113,9 @@ function produceDefinition(alias: string, rootType: Typification, path: TypePath
         return expression;
     }
   }
-
   return expression;
+}
+
+function formatPathText(path: TypePath): string {
+  return path.map(step => String(step)).join('.');
 }

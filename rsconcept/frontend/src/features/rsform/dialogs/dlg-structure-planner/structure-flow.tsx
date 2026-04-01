@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { type Node, useEdgesState, useNodesState, useOnSelectionChange, useReactFlow } from '@xyflow/react';
 
-import { type Typification } from '@/features/rslang/semantic/typification';
+import { TypeID, type Typification } from '@/features/rslang/semantic/typification';
 
 import { DiagramFlow } from '@/components/flow/diagram-flow';
 
@@ -74,7 +74,7 @@ export function StructureFlow({ items, rootType, selected, setSelected }: Struct
           source: parentNode.key,
           target: node.key,
           type: 'planner',
-          data: node.path.at(-1)! > 0 ? { projection: node.path.at(-1)! } : undefined
+          label: generateEdgeLabel(node.path.at(-1), parentNode.type.typeID === TypeID.collection),
         };
       });
 
@@ -121,4 +121,15 @@ export function StructureFlow({ items, rootType, selected, setSelected }: Struct
       onNodeClick={(_event, node) => setSelected(node.id)}
     />
   );
+}
+
+// ====== Internals ======
+function generateEdgeLabel(projection: number | undefined, isCollection: boolean): string {
+  if (!projection) {
+    return 'red';
+  } else if (isCollection) {
+    return `Pr${projection}`;
+  } else {
+    return `pr${projection}`;
+  }
 }
