@@ -1,29 +1,27 @@
 'use client';
 
 import { MiniButton } from '@/components/control';
-import { IconChild, IconCrucial } from '@/components/icons';
+import { IconChild, IconCrucial, IconGraphCore } from '@/components/icons';
 import { SearchBar } from '@/components/input';
 import { tripleToggleColor } from '@/utils/utils';
 
 import { useCstSearchStore } from '../../stores/cst-search';
 
-import { SelectGraphFilter } from './select-graph-filter';
 import { SelectMatchMode } from './select-match-mode';
 
 interface ConstituentsSearchProps {
   dense?: boolean;
-  hideGraphFilter?: boolean;
 }
 
-export function ConstituentsSearch({ dense, hideGraphFilter }: ConstituentsSearchProps) {
+export function ConstituentsSearch({ dense }: ConstituentsSearchProps) {
   const query = useCstSearchStore(state => state.query);
   const filterMatch = useCstSearchStore(state => state.match);
-  const filterSource = useCstSearchStore(state => state.source);
   const showInherited = useCstSearchStore(state => state.isInherited);
   const showCrucial = useCstSearchStore(state => state.isCrucial);
+  const showKernel = useCstSearchStore(state => state.isKernel);
   const setQuery = useCstSearchStore(state => state.setQuery);
   const setMatch = useCstSearchStore(state => state.setMatch);
-  const setSource = useCstSearchStore(state => state.setSource);
+  const toggleKernel = useCstSearchStore(state => state.toggleKernel);
   const toggleInherited = useCstSearchStore(state => state.toggleInherited);
   const toggleCrucial = useCstSearchStore(state => state.toggleCrucial);
 
@@ -37,16 +35,21 @@ export function ConstituentsSearch({ dense, hideGraphFilter }: ConstituentsSearc
         onChangeQuery={setQuery}
       />
       <SelectMatchMode value={filterMatch} onChange={setMatch} dense={dense} />
-      {!hideGraphFilter ? <SelectGraphFilter value={filterSource} onChange={setSource} dense={dense} /> : null}
 
       <MiniButton
-        title='Отображение наследников'
+        title='Фильтр: неопределяемые понятия'
+        icon={<IconGraphCore size='1rem' className={showKernel ? 'text-constructive' : ''} />}
+        className='h-fit self-center'
+        onClick={toggleKernel}
+      />
+      <MiniButton
+        title='Фильтр: наследники'
         icon={<IconChild size='1rem' className={tripleToggleColor(showInherited)} />}
         className='h-fit self-center'
         onClick={toggleInherited}
       />
       <MiniButton
-        title='Отображение ключевых'
+        title='Фильтр: ключевые'
         icon={<IconCrucial size='1rem' className={tripleToggleColor(showCrucial)} />}
         className='h-fit self-center'
         onClick={toggleCrucial}

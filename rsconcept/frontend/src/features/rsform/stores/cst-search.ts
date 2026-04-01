@@ -3,16 +3,6 @@ import { persist } from 'zustand/middleware';
 
 import { toggleTristateFlag } from '@/utils/utils';
 
-/** Represents graph dependency mode. */
-export const DependencyMode = {
-  ALL: 0,
-  OUTPUTS: 1,
-  INPUTS: 2,
-  EXPAND_OUTPUTS: 3,
-  EXPAND_INPUTS: 4
-} as const;
-export type DependencyMode = (typeof DependencyMode)[keyof typeof DependencyMode];
-
 /** Represents {@link Constituenta} matching mode. */
 export const CstMatchMode = {
   ALL: 1,
@@ -30,8 +20,8 @@ interface CstSearchStore {
   match: CstMatchMode;
   setMatch: (value: CstMatchMode) => void;
 
-  source: DependencyMode;
-  setSource: (value: DependencyMode) => void;
+  isKernel: boolean;
+  toggleKernel: () => void;
 
   isInherited: boolean | null;
   toggleInherited: () => void;
@@ -47,8 +37,8 @@ export const useCstSearchStore = create<CstSearchStore>()(
       setQuery: value => set({ query: value }),
       match: CstMatchMode.ALL,
       setMatch: value => set({ match: value }),
-      source: DependencyMode.ALL,
-      setSource: value => set({ source: value }),
+      isKernel: false,
+      toggleKernel: () => set(state => ({ isKernel: !state.isKernel })),
       isInherited: null,
       toggleInherited: () => set(state => ({ isInherited: toggleTristateFlag(state.isInherited) })),
       isCrucial: null,
@@ -58,7 +48,7 @@ export const useCstSearchStore = create<CstSearchStore>()(
       version: 1,
       partialize: state => ({
         match: state.match,
-        source: state.source,
+        isKernel: state.isKernel,
         isInherited: state.isInherited,
         isCrucial: state.isCrucial
       }),

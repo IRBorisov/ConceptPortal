@@ -11,7 +11,7 @@ import { TokenID } from '../rslang';
 
 import { Grammeme, ReferenceType } from './models/language';
 import { type Constituenta, CstClass, CstStatus, CstType } from './models/rsform';
-import { CstMatchMode, DependencyMode } from './stores/cst-search';
+import { CstMatchMode } from './stores/cst-search';
 import { type InteractionMode, type TGColoring, type TGEdgeType } from './stores/term-graph';
 
 // --- Records for label/describe functions ---
@@ -80,22 +80,6 @@ const describeCstMatchModeRecord: Record<CstMatchMode, string> = {
   [CstMatchMode.TERM]: 'термин',
   [CstMatchMode.TEXT]: 'определение и конвенция',
   [CstMatchMode.NAME]: 'только имена'
-};
-
-const labelCstSourceRecord: Record<DependencyMode, string> = {
-  [DependencyMode.ALL]: 'граф',
-  [DependencyMode.OUTPUTS]: 'потребители',
-  [DependencyMode.INPUTS]: 'поставщики',
-  [DependencyMode.EXPAND_OUTPUTS]: 'зависимые',
-  [DependencyMode.EXPAND_INPUTS]: 'влияющие'
-};
-
-const describeCstSourceRecord: Record<DependencyMode, string> = {
-  [DependencyMode.ALL]: 'все конституенты',
-  [DependencyMode.OUTPUTS]: 'прямые исходящие',
-  [DependencyMode.INPUTS]: 'прямые входящие',
-  [DependencyMode.EXPAND_OUTPUTS]: 'цепочка исходящих',
-  [DependencyMode.EXPAND_INPUTS]: 'цепочка входящих'
 };
 
 const labelExpressionStatusRecord: Record<CstStatus, string> = {
@@ -323,16 +307,6 @@ export function labelCstMatchMode(mode: CstMatchMode): string {
 /** Retrieves description for {@link CstMatchMode}. */
 export function describeCstMatchMode(mode: CstMatchMode): string {
   return describeCstMatchModeRecord[mode] ?? `UNKNOWN MATCH MODE: ${mode}`;
-}
-
-/** Retrieves label for {@link DependencyMode}. */
-export function labelCstSource(mode: DependencyMode): string {
-  return labelCstSourceRecord[mode];
-}
-
-/** Retrieves description for {@link DependencyMode}. */
-export function describeCstSource(mode: DependencyMode): string {
-  return describeCstSourceRecord[mode] ?? `UNKNOWN DEPENDENCY MODE: ${mode}`;
 }
 
 /** Retrieves label for {@link TGColoring}. */

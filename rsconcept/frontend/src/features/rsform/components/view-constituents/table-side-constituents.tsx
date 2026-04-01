@@ -40,7 +40,7 @@ export function TableSideConstituents({
   maxHeight,
   autoScroll = true
 }: TableSideConstituentsProps) {
-  const items = useFilteredItems(schema, activeCst);
+  const items = useFilteredItems(schema);
 
   const prevActiveCstID = useRef<number | null>(null);
 

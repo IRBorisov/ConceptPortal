@@ -1,10 +1,10 @@
 import {
   IconChild,
   IconClone,
-  IconContextSelection,
   IconCrucial,
   IconDestroy,
   IconFilter,
+  IconGraphCore,
   IconKeyboard,
   IconLeftOpen,
   IconMoveDown,
@@ -76,7 +76,10 @@ export function HelpRSEditor() {
               <IconFilter className='inline-icon' /> фильтрация по атрибутам
             </li>
             <li>
-              <IconContextSelection className='inline-icon' /> фильтрация по графу термов
+              <IconGraphCore className='inline-icon' /> фильтрация по неопределяемым
+            </li>
+            <li>
+              <IconCrucial className='inline-icon' /> фильтрация ключевым
             </li>
             <li>
               <IconChild className='inline-icon' /> отображение наследованных

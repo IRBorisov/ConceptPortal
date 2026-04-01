@@ -40,10 +40,7 @@ export function ViewConstituents({
 }: ViewConstituentsProps) {
   return (
     <div className={cn(!noBorder && 'border', className)}>
-      <ConstituentsSearch
-        dense={dense} //
-        hideGraphFilter={!activeCst}
-      />
+      <ConstituentsSearch dense={dense} />
       <TableSideConstituents
         schema={schema}
         engine={engine}
