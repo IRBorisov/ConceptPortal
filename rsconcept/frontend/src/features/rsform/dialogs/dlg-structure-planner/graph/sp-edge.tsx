@@ -2,7 +2,7 @@ import { BaseEdge, EdgeLabelRenderer, type EdgeProps, getStraightPath } from '@x
 
 import { APP_COLORS } from '@/styling/colors';
 
-const LABEL_Y_OFFSET = 8; // px
+const LABEL_Y_OFFSET = 10; // px
 
 export function SPEdge({
   id, sourceX, sourceY, targetX, targetY, label,
@@ -33,7 +33,7 @@ export function SPEdge({
             style={{
               position: 'absolute',
               transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY}px)`,
-              padding: '2px',
+              padding: '3px',
               backgroundColor: APP_COLORS.bgDefault,
               fontSize: '10px'
             }}

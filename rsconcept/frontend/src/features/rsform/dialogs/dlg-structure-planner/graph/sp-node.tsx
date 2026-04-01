@@ -9,7 +9,7 @@ import { labelType } from '@/features/rslang/labels';
 import { type SPFlowNode } from './sp-models';
 
 export function SPNodeComponent(node: NodeProps<SPFlowNode>) {
-  const descriptionText = node.data.node.existing?.term_raw || labelType(node.data.node.type);
+  const descriptionText = node.data.node.existing?.term_resolved || labelType(node.data.node.type);
   return (
     <>
       <Handle type='target' position={Position.Top} className='opacity-0' />

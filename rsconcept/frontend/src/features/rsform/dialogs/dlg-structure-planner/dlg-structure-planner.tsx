@@ -4,32 +4,34 @@ import { useState } from 'react';
 import { ReactFlowProvider } from '@xyflow/react';
 import clsx from 'clsx';
 
-import { type ExpressionType, TypeID, type Typification } from '@/features/rslang/semantic/typification';
-
 import { MiniButton } from '@/components/control';
 import { IconNewItem, IconReset, IconSave } from '@/components/icons';
 import { TextInput } from '@/components/input';
 import { ModalView } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
+import { globalIDs } from '@/utils/constants';
 import { promptUnsaved } from '@/utils/utils';
 
 import { type CreateConstituentaDTO, type UpdateConstituentaDTO } from '../../backend/types';
 import { useCreateConstituenta } from '../../backend/use-create-constituenta';
 import { useRSForm } from '../../backend/use-rsform';
 import { useUpdateConstituenta } from '../../backend/use-update-constituenta';
-import { CstType, type RSForm } from '../../models/rsform';
-import { canProduceStructure, generateAlias } from '../../models/rsform-api';
+import { type Constituenta, CstType, type RSForm } from '../../models/rsform';
+import { generateAlias } from '../../models/rsform-api';
 import { type SPNode, StructurePlanner } from '../../models/structure-planner';
 
 import { StructureFlow } from './structure-flow';
 
+const DEFINITION_TRUNCATE = 40;
+
 export interface DlgStructurePlannerProps {
   schemaID: number;
   targetID: number;
+  isMutable: boolean;
 }
 
 export function DlgStructurePlanner() {
-  const { schemaID, targetID } = useDialogsStore(state => state.props as DlgStructurePlannerProps);
+  const { schemaID, targetID, isMutable } = useDialogsStore(state => state.props as DlgStructurePlannerProps);
   const { schema } = useRSForm({ itemID: schemaID });
   const hideDialog = useDialogsStore(state => state.hideDialog);
   const { createConstituenta } = useCreateConstituenta();
@@ -39,9 +41,11 @@ export function DlgStructurePlanner() {
   const items = target ? new StructurePlanner(schema, target).build() : [];
 
   const [selectedKey, setSelectedKey] = useState(items[0].key ?? '');
-  const [term, setTerm] = useState<string>(items[0].existing?.term_raw ?? '');
+  const [term, setTerm] = useState<string>(
+    (isMutable ? items[0].existing?.term_raw : items[0].existing?.term_resolved) ?? ''
+  );
 
-  if (!target || !canProduceStructure(target) || !target.analysis.type || items.length === 0) {
+  if (!target?.analysis.type || items.length === 0) {
     console.error('Structure planner error input', target, items);
     hideDialog();
     return null;
@@ -79,8 +83,8 @@ export function DlgStructurePlanner() {
 
     const data: CreateConstituentaDTO = {
       insert_after: target!.id,
-      cst_type: inferDraftType(node.type),
-      alias: inferAlias(node, schema),
+      cst_type: inferDraftType(target!.cst_type),
+      alias: inferAlias(node, schema, target!),
       term_raw: term,
       definition_formal: node.definition,
       definition_raw: '',
@@ -92,70 +96,75 @@ export function DlgStructurePlanner() {
     setTerm(created.term_raw);
   }
 
+  const isDefinitionTooLong = selectedNode.definition.length > DEFINITION_TRUNCATE;
+
   return (
     <ModalView className='w-[calc(100dvw-3rem)] h-[calc(100dvh-3rem)]' fullScreen noFooterButton>
       <div className='flex flex-col h-full'>
-        {selectedNode ? (
-          <div className='relative flex gap-3 mt-4 px-8 items-center mx-auto'>
-            <div className='whitespace-nowrap w-60 truncate text-right font-math mr-3'>
-              {selectedNode.definition}
-            </div>
-
-            <div className={clsx('font-medium whitespace-nowrap w-8', !selectedCst && 'text-constructive')}>
-              {selectedCst?.alias ?? inferAlias(selectedNode, schema)}
-            </div>
-
-            <TextInput
-              id='dlg_structure_term'
-              dense
-              label='Термин'
-              className='w-140'
-              value={term}
-              onChange={event => setTerm(event.target.value)}
-            />
-
-            <div className='cc-icons'>
-              <MiniButton
-                title={selectedCst ? 'Обновить термин' : 'Создать конституенту'}
-                icon={selectedCst ?
-                  <IconSave size='1.25rem' className='icon-primary' /> :
-                  <IconNewItem size='1.25rem' className='icon-green' />
-                }
-                onClick={() => void saveTerm(selectedNode)}
-                disabled={!isDirty || term === ''}
-              />
-              <MiniButton
-                title='Reset term'
-                icon={<IconReset size='1.25rem' className='icon-primary' />}
-                onClick={resetTerm}
-                disabled={!isDirty || !selectedCst}
-              />
-            </div>
+        <div className='relative flex gap-3 mt-4 px-8 items-center mx-auto'>
+          <div
+            className='whitespace-nowrap w-70 truncate text-right font-math mr-3'
+            data-tooltip-id={isDefinitionTooLong ? globalIDs.tooltip : undefined}
+            data-tooltip-content={isDefinitionTooLong ? selectedNode.definition : undefined}
+          >
+            {selectedNode.definition}
           </div>
-        ) : null}
 
-        <div className='h-full'>
-          <ReactFlowProvider>
-            <StructureFlow
-              items={items}
-              rootType={target.analysis.type as Typification}
-              selected={selectedKey}
-              setSelected={handleSelectNode}
+          <div className={clsx('font-medium whitespace-nowrap w-8', !selectedCst && 'text-constructive')}>
+            {selectedCst?.alias ?? inferAlias(selectedNode, schema, target)}
+          </div>
+
+          <TextInput
+            id='dlg_structure_term'
+            dense
+            label='Термин'
+            placeholder='Не определен'
+            noBorder={!isMutable}
+            className='w-120'
+            value={term}
+            disabled={!isMutable}
+            onChange={event => setTerm(event.target.value)}
+          />
+
+          {isMutable ? <div className='cc-icons'>
+            <MiniButton
+              title={selectedCst ? 'Обновить термин' : 'Создать конституенту'}
+              icon={selectedCst ?
+                <IconSave size='1.25rem' className='icon-primary' /> :
+                <IconNewItem size='1.25rem' className='icon-green' />
+              }
+              onClick={() => void saveTerm(selectedNode)}
+              disabled={!isDirty || term === ''}
             />
-          </ReactFlowProvider>
+            <MiniButton
+              title='Reset term'
+              icon={<IconReset size='1.25rem' className='icon-primary' />}
+              onClick={resetTerm}
+              disabled={!isDirty || !selectedCst}
+            />
+          </div> : null}
         </div>
+
+        <ReactFlowProvider>
+          <StructureFlow
+            items={items}
+            rootType={target.analysis.type}
+            selected={selectedKey}
+            setSelected={handleSelectNode}
+          />
+        </ReactFlowProvider>
       </div>
     </ModalView>
   );
 }
 
-function inferDraftType(type: ExpressionType): CstType {
-  if (type.typeID === TypeID.function) {
+function inferDraftType(type: CstType): CstType {
+  if (type === CstType.FUNCTION) {
     return CstType.FUNCTION;
   }
   return CstType.TERM;
 }
 
-function inferAlias(node: SPNode, schema: RSForm) {
-  return node.existing?.alias ?? generateAlias(inferDraftType(node.type), schema);
+function inferAlias(node: SPNode, schema: RSForm, root: Constituenta) {
+  return node.existing?.alias ?? generateAlias(inferDraftType(root.cst_type), schema);
 }

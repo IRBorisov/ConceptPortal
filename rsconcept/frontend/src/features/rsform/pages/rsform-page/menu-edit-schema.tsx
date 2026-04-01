@@ -24,7 +24,7 @@ import { useMutatingRSForm } from '../../backend/use-mutating-rsform';
 import { useResetAliases } from '../../backend/use-reset-aliases';
 import { useRestoreOrder } from '../../backend/use-restore-order';
 import { type Constituenta } from '../../models/rsform';
-import { canProduceStructure } from '../../models/rsform-api';
+import { cstCanProduceStructure } from '../../models/rsform-api';
 
 import { useRSFormEdit } from './rsedit-context';
 
@@ -92,7 +92,8 @@ export function MenuEditSchema() {
     }
     showStructurePlanner({
       schemaID: schema.id,
-      targetID: targetCst.id
+      targetID: targetCst.spawner_path ? targetCst.spawner! : targetCst.id,
+      isMutable: isContentEditable
     });
   }
 
@@ -176,7 +177,7 @@ export function MenuEditSchema() {
           aria-label='Породить внутренние понятия по структуре типизации выделенной конституенты'
           icon={<IconGenerateStructure size='1rem' className='icon-primary' />}
           onClick={() => handleProduceStructure(activeCst)}
-          disabled={!isContentEditable || isProcessing || !activeCst || !canProduceStructure(activeCst)}
+          disabled={isProcessing || !activeCst || (!activeCst.spawner_path && !cstCanProduceStructure(activeCst))}
         />
         <DropdownButton
           text='Отождествление'

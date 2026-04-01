@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { type Node, useEdgesState, useNodesState, useOnSelectionChange, useReactFlow } from '@xyflow/react';
 
-import { TypeID, type Typification } from '@/features/rslang/semantic/typification';
+import { type ExpressionType, TypeID } from '@/features/rslang/semantic/typification';
 
 import { DiagramFlow } from '@/components/flow/diagram-flow';
 
@@ -27,7 +27,7 @@ const flowOptions = {
 
 interface StructureFlowProps {
   items: SPNode[];
-  rootType: Typification;
+  rootType: ExpressionType;
   selected: string;
   setSelected: (key: string) => void;
 }

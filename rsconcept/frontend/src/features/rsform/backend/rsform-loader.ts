@@ -4,7 +4,7 @@
 
 import { type AnalysisFast, makeTypePath, RSLangAnalyzer, TokenID, TypeID, type TypePath } from '@/features/rslang';
 import { extractGlobals, isSimpleExpression, splitTemplateDefinition } from '@/features/rslang/api';
-import { isTypification } from '@/features/rslang/semantic/typification';
+import { type ExpressionType } from '@/features/rslang/semantic/typification';
 
 import { Graph } from '@/models/graph';
 import { type RO } from '@/utils/meta';
@@ -211,22 +211,20 @@ export class RSFormLoader {
       cst.status = cst.cst_type === CstType.NOMINAL
         ? CstStatus.UNKNOWN
         : inferStatus(cst.analysis.success, cst.analysis.valueClass);
-      if (cst.spawner && !!parse.ast && parse.type && isTypification(parse.type)) {
+      if (cst.spawner && !!parse.ast && parse.type) {
         const parents = this.graph.expandInputs([cstID]);
-        if (parents.length === 1) {
-          const spawner = this.cstByID.get(parents[0])!;
-          const path = extractTypePath(parse.ast, spawner.analysis.type?.typeID === TypeID.collection);
-          if (path) {
-            if (cst.spawner !== parents[0]) {
-              const parent = this.cstByID.get(parents[0])!;
-              if (parent.spawner_path) {
-                cst.spawner_path = [...parent.spawner_path, ...path] as TypePath;
-              }
-            } else {
-              cst.spawner_path = path;
+        const parent = this.cstByID.get(parents.at(-1)!)!;
+        const path = extractTypePath(parse.ast, parent.analysis.type!);
+        if (path) {
+          if (cst.spawner !== parent.id) {
+            if (parent.spawner_path) {
+              cst.spawner_path = [...parent.spawner_path, ...path] as TypePath;
             }
+          } else {
+            cst.spawner_path = path;
           }
         }
+
       }
     }
   }
@@ -253,12 +251,18 @@ function parseCst(target: Constituenta, analyzer: RSLangAnalyzer): AnalysisFast 
   }
 }
 
-function extractTypePath(node: AstNode, isSet: boolean): TypePath | null {
+function extractTypePath(node: AstNode, type: ExpressionType): TypePath | null {
   const result: number[] = [];
+  const isSet = type.typeID === TypeID.function ?
+    type.result.typeID === TypeID.collection : type.typeID === TypeID.collection;
   let current = node;
   while (true) {
     switch (current.typeID) {
       default: return null;
+      case TokenID.NT_FUNC_DEFINITION:
+        current = current.children[1];
+        break;
+      case TokenID.NT_FUNC_CALL:
       case TokenID.ID_GLOBAL:
         if (isSet) {
           result.push(0);

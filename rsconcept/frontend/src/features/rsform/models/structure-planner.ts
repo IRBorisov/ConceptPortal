@@ -1,7 +1,13 @@
 import { makeTypePath, type TypePath } from '@/features/rslang';
-import { bool, isTypification, TypeID, type Typification } from '@/features/rslang/semantic/typification';
+import { splitTemplateDefinition } from '@/features/rslang/api';
+import { labelType } from '@/features/rslang/labels';
+import {
+  bool,
+  type EchelonFunctional,
+  isTypification, TypeID, type Typification
+} from '@/features/rslang/semantic/typification';
 
-import { type Constituenta, type RSForm } from './rsform';
+import { type Constituenta, CstType, type RSForm } from './rsform';
 import { findCstByStructure } from './rsform-api';
 
 export interface SPNode {
@@ -20,12 +26,16 @@ export class StructurePlanner {
   private rootType: Typification;
 
   constructor(schema: RSForm, target: Constituenta) {
-    if (!isTypification(target.analysis.type)) {
+    if (!isTypification(target.analysis.type) && target.cst_type !== CstType.FUNCTION) {
       throw new Error('Invalid typification for target');
     }
     this.schema = schema;
     this.target = target;
-    this.rootType = target.analysis.type as Typification;
+    if (target.cst_type === CstType.FUNCTION) {
+      this.rootType = (target.analysis.type as EchelonFunctional).result;
+    } else {
+      this.rootType = target.analysis.type as Typification;
+    }
   }
 
   public build(): SPNode[] {
@@ -34,10 +44,10 @@ export class StructurePlanner {
       path: makeTypePath([]),
       type: this.rootType,
       parent: null,
-      definition: this.target.definition_formal,
+      definition: labelType(this.target.analysis.type),
       existing: this.target
     });
-    this.visit(this.rootType, [], 0);
+    this.visit(this.rootType, this.rootType.typeID === TypeID.collection ? [0] : [], 0);
     return this.items;
   }
 
@@ -74,9 +84,9 @@ export class StructurePlanner {
     this.items.push({
       key: formatPathText(typePath),
       path: typePath,
-      type,
-      parent,
-      definition: produceDefinition(this.target.alias, this.rootType, typePath),
+      type: type,
+      parent: parent,
+      definition: produceDefinition(this.target, this.rootType, typePath),
       existing: findCstByStructure(this.schema, this.target, typePath)
     });
     return this.items.length - 1;
@@ -85,10 +95,16 @@ export class StructurePlanner {
 
 
 // ======= Internals =======
-function produceDefinition(alias: string, rootType: Typification, path: TypePath): string {
+function produceDefinition(target: Constituenta, rootType: Typification, path: TypePath): string {
   let current = rootType;
-  let expression = alias;
-  let index = 0;
+  let expression = target.alias;
+  let index = rootType.typeID === TypeID.collection ? 1 : 0;
+  let prefix = '';
+  if (target.cst_type === CstType.FUNCTION) {
+    prefix = `[${splitTemplateDefinition(target.definition_formal).head}] `;
+    const args = (target.analysis.type as EchelonFunctional).args;
+    expression = `${expression}[${args.map(arg => arg.alias).join(', ')}]`;
+  }
 
   while (index < path.length) {
     const step = path[index];
@@ -110,10 +126,11 @@ function produceDefinition(alias: string, rootType: Typification, path: TypePath
         index += 1;
         break;
       default:
-        return expression;
+        return prefix + expression;
     }
   }
-  return expression;
+
+  return prefix + expression;
 }
 
 function formatPathText(path: TypePath): string {

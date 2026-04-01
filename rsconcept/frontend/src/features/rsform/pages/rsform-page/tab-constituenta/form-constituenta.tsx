@@ -36,7 +36,7 @@ import {
   labelRSExpression
 } from '../../../labels';
 import { type Constituenta, CstType, type RSForm } from '../../../models/rsform';
-import { canProduceStructure, getAnalysisFor, isBaseSet, isBasicConcept } from '../../../models/rsform-api';
+import { cstCanProduceStructure, getAnalysisFor, isBaseSet, isBasicConcept } from '../../../models/rsform-api';
 
 interface FormConstituentaProps {
   id?: string;
@@ -219,7 +219,8 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
   function handleStructurePlanner() {
     showStructurePlanner({
       schemaID: schema.id,
-      targetID: activeCst.id
+      targetID: activeCst.spawner_path ? activeCst.spawner! : activeCst.id,
+      isMutable: !disabled
     });
   }
 
@@ -297,7 +298,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
           <TextButton
             text='Типизация'
             title='Управление структурой термина'
-            disabled={!canProduceStructure(activeCst)}
+            disabled={!activeCst.spawner_path && !cstCanProduceStructure(activeCst)}
             onClick={handleStructurePlanner}
           />
           <TextArea

@@ -4,7 +4,7 @@
 
 import { BASIC_SCHEMAS, type LibraryItem } from '@/features/library';
 import { type AnalysisFull, TypeClass, type TypePath, ValueClass } from '@/features/rslang';
-import { isTypification, TypeID, type Typification } from '@/features/rslang/semantic/typification';
+import { type EchelonFunctional, isTypification, TypeID, type Typification } from '@/features/rslang/semantic/typification';
 import { applyPath } from '@/features/rslang/semantic/typification-api';
 
 import { type RO } from '@/utils/meta';
@@ -234,15 +234,43 @@ export function isLogical(type: CstType): boolean {
 }
 
 /** Evaluate if {@link Constituenta} can be used produce structure. */
-export function canProduceStructure(cst: RO<Constituenta>): boolean {
-  return (
-    !!cst.analysis?.success &&
-    cst.analysis.type !== null &&
-    isTypification(cst.analysis.type) &&
-    cst.cst_type !== CstType.BASE &&
-    cst.cst_type !== CstType.CONSTANT &&
-    cst.cst_type !== CstType.NOMINAL
-  );
+export function cstCanProduceStructure(cst: RO<Constituenta>): boolean {
+  switch (cst.cst_type) {
+    case CstType.NOMINAL:
+    case CstType.BASE:
+    case CstType.CONSTANT:
+    case CstType.AXIOM:
+    case CstType.THEOREM:
+    case CstType.PREDICATE:
+      return false;
+  }
+  if (!cst.analysis?.type) {
+    return false;
+  }
+  if (cst.cst_type === CstType.FUNCTION) {
+    const result = (cst.analysis.type as EchelonFunctional).result;
+    return typeCanProduceStructure(result);
+  }
+  if (!isTypification(cst.analysis.type)) {
+    return false;
+  }
+  return typeCanProduceStructure(cst.analysis.type as Typification);
+}
+
+/** Evaluate if {@link Typification} can be used to produce structure. */
+export function typeCanProduceStructure(type: Typification): boolean {
+  if (type.typeID === TypeID.basic ||
+    type.typeID === TypeID.integer ||
+    type.typeID === TypeID.anyTypification
+  ) {
+    return false;
+  } else if (type.typeID === TypeID.tuple) {
+    return true;
+  } else {
+    return type.base.typeID !== TypeID.basic &&
+      type.base.typeID !== TypeID.integer &&
+      type.base.typeID !== TypeID.anyTypification;
+  }
 }
 
 /** Validate new alias against {@link CstType} and {@link RSForm}. */
