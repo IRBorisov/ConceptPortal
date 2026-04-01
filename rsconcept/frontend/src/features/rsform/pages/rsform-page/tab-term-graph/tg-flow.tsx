@@ -39,6 +39,8 @@ import { InteractionMode, TGEdgeType, useTermGraphStore, useTGConnectionStore } 
 import { useRSFormEdit } from '../rsedit-context';
 
 import { ToolbarTermGraph } from './toolbar-term-graph';
+import { ToolbarTGEdit } from './toolbar-tg-edit';
+import { ToolbarTGOptions } from './toolbar-tg-options';
 import { useFilteredGraph } from './use-filtered-graph';
 import { useHandleActions } from './use-handle-actions';
 
@@ -390,23 +392,34 @@ export function TGFlow() {
     >
       <ToolbarTermGraph className='cc-tab-tools' graph={filteredGraph} />
 
-      <div className='absolute z-pop top-24 sm:top-16 left-2 sm:left-3 w-54 flex flex-col pointer-events-none'>
-        <span className='px-2 pb-1 select-none whitespace-nowrap backdrop-blur-xs rounded-xl w-fit'>
-          Выбор {selectedCst.length} из {schema.items.length}
-        </span>
-
-        <SelectColoring className='rounded-b-none' schema={schema} />
-        <SelectEdgeType className='rounded-none border-t-0' />
-
-        <ViewHidden
-          items={hidden}
-          listHeight={hiddenHeight}
-          schema={schema}
-          selected={selectedCst}
-          toggleSelect={toggleSelectCst}
-          setFocus={setFocus}
-          onActivate={cstID => router.gotoEditActive(cstID)}
+      <div className='absolute z-pop top-16 sm:top-8 left-2 sm:left-3 flex flex-col pointer-events-none'>
+        <ToolbarTGEdit
+          className='pr-1 w-fit whitespace-nowrap backdrop-blur-xs rounded-xl'
+          graph={filteredGraph}
         />
+        <div className='px-2 py-1 select-none whitespace-nowrap backdrop-blur-xs rounded-xl w-fit'>
+          Выбор {selectedCst.length} из {schema.items.length}
+        </div>
+        <div className='flex'>
+          <div className='flex flex-col w-54'>
+            <SelectColoring className='rounded-b-none' schema={schema} />
+            <SelectEdgeType className='rounded-none border-t-0' />
+
+            <ViewHidden
+              items={hidden}
+              listHeight={hiddenHeight}
+              schema={schema}
+              selected={selectedCst}
+              toggleSelect={toggleSelectCst}
+              setFocus={setFocus}
+              onActivate={cstID => router.gotoEditActive(cstID)}
+            />
+          </div>
+          <ToolbarTGOptions
+            className='px-1 whitespace-nowrap backdrop-blur-xs rounded-xl h-fit'
+            graph={filteredGraph}
+          />
+        </div>
       </div>
 
       <DiagramFlow

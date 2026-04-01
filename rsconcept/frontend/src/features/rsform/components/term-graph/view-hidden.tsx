@@ -4,6 +4,7 @@ import clsx from 'clsx';
 
 import { MiniButton } from '@/components/control';
 import { IconDropArrow, IconDropArrowUp } from '@/components/icons';
+import { cn } from '@/components/utils';
 import { globalIDs, prefixes } from '@/utils/constants';
 
 import { colorBgGraphNode } from '../../colors';
@@ -14,6 +15,7 @@ import { useTermGraphStore } from '../../stores/term-graph';
 interface ViewHiddenProps {
   items: number[];
   listHeight?: string;
+  className?: string;
 
   schema: RSForm;
   selected?: number[];
@@ -27,6 +29,7 @@ export function ViewHidden({
   listHeight,
   schema,
   selected,
+  className,
   toggleSelect,
   setFocus,
   onActivate
@@ -50,11 +53,8 @@ export function ViewHidden({
     setFocus(target);
   }
 
-  if (items.length <= 0) {
-    return null;
-  }
   return (
-    <div className='grid relative'>
+    <div className={cn('cc-view-hidden relative', className)}>
       <MiniButton
         className='absolute right-[calc(1rem-4px)] top-3 pointer-events-auto'
         noPadding
