@@ -13,7 +13,7 @@ from apps.library.serializers import (
     LibraryItemDetailsSerializer,
     LibraryItemReferenceSerializer
 )
-from apps.oss.models import Inheritance
+from apps.oss.models import Inheritance, Operation, OperationType
 from shared import messages as msg
 from shared.serializers import StrictModelSerializer, StrictSerializer
 
@@ -195,6 +195,7 @@ class RSFormSerializer(StrictModelSerializer):
     attribution = serializers.ListField(
         child=AttributionSerializer()
     )
+    is_produced = serializers.BooleanField()
     oss = serializers.ListField(
         child=LibraryItemReferenceSerializer()
     )
@@ -237,6 +238,10 @@ class RSFormSerializer(StrictModelSerializer):
                 'id': oss.pk,
                 'alias': oss.alias
             })
+        result['is_produced'] = Operation.objects \
+            .filter(result=instance) \
+            .exclude(operation_type=OperationType.INPUT) \
+            .exists()
         for model in LibraryItem.objects.filter(rsmodels__schema=instance).only('alias'):
             result['models'].append({
                 'id': model.pk,

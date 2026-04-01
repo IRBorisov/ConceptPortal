@@ -166,6 +166,7 @@ export interface InheritanceInfo {
 
 /** Represents formal explication for set of concepts. */
 export interface RSForm extends LibraryItemData {
+  is_produced: boolean;
   version: CurrentVersion;
   versions: VersionInfo[];
 

@@ -87,7 +87,7 @@ export function FormOSS() {
           readOnly={readOnly}
           toggleReadOnly={() => setValue('read_only', !readOnly, { shouldDirty: true })}
           schema={schema}
-          isAttachedToOSS={false}
+          isProduced={false}
         />
       </div>
 

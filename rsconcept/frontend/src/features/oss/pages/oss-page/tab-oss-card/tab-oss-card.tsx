@@ -60,7 +60,7 @@ export function TabOssCard() {
 
       <div className='cc-column mx-0 md:mx-auto'>
         <FormOSS key={schema.id} />
-        <EditorLibraryItem item={schema} isAttachedToOSS={false} />
+        <EditorLibraryItem item={schema} isProduced={false} />
       </div>
 
       <OssStats

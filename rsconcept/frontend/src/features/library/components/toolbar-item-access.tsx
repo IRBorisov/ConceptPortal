@@ -23,7 +23,7 @@ interface ToolbarItemAccessProps {
   readOnly: boolean;
   toggleReadOnly: () => void;
   schema: LibraryItem;
-  isAttachedToOSS: boolean;
+  isProduced: boolean;
   className?: string;
 }
 
@@ -34,7 +34,7 @@ export function ToolbarItemAccess({
   readOnly,
   toggleReadOnly,
   schema,
-  isAttachedToOSS
+  isProduced
 }: ToolbarItemAccessProps) {
   const role = useRoleStore(state => state.role);
   const isProcessing = useMutatingLibrary();
@@ -52,7 +52,7 @@ export function ToolbarItemAccess({
         <SelectAccessPolicy
           value={policy}
           onChange={handleSetAccessPolicy}
-          disabled={role <= UserRole.EDITOR || isProcessing || isAttachedToOSS}
+          disabled={role <= UserRole.EDITOR || isProcessing || isProduced}
         />
 
         <MiniButton

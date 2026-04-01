@@ -7,6 +7,7 @@ from cctext import ReferenceType
 from rest_framework import status
 
 from apps.library.models import AccessPolicy, LibraryItem, LibraryItemType, LocationHead
+from apps.oss.models import Operation, OperationType
 from apps.rsform.models import Constituenta, CstType, RSForm
 from shared.EndpointTester import EndpointTester, decl_endpoint
 from shared.testing_utils import response_contains
@@ -114,6 +115,7 @@ class TestRSFormViewset(EndpointTester):
         self.assertEqual(response.data['editors'], [])
         self.assertEqual(response.data['inheritance'], [])
         self.assertEqual(response.data['oss'], [])
+        self.assertEqual(response.data['is_produced'], False)
 
         self.executeOK(item=self.unowned_id)
         self.executeForbidden(item=self.private_id)
@@ -122,6 +124,17 @@ class TestRSFormViewset(EndpointTester):
         self.executeOK(item=self.owned_id)
         self.executeOK(item=self.unowned_id)
         self.executeForbidden(item=self.private_id)
+
+
+    @decl_endpoint('/api/rsforms/{item}/details', method='get')
+    def test_is_produced_true(self):
+        Operation.objects.create(
+            oss=self.unowned.model,
+            result=self.owned.model,
+            operation_type=OperationType.SYNTHESIS
+        )
+        response = self.executeOK(item=self.owned_id)
+        self.assertEqual(response.data['is_produced'], True)
 
 
     @decl_endpoint('/api/rsforms/{item}/resolve', method='post')

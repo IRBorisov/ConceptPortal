@@ -19,7 +19,7 @@ import { FormRSForm } from './form-rsform';
 const SIDELIST_LAYOUT_THRESHOLD = 768; // px
 
 export function TabRSFormCard() {
-  const { schema, isMutable, deleteSchema, isAttachedToOSS } = useRSFormEdit();
+  const { schema, isMutable, deleteSchema } = useRSFormEdit();
   const isModified = useModificationStore(state => state.isModified);
   const showRSFormStats = usePreferencesStore(state => state.showRSFormStats);
   const windowSize = useWindowSize();
@@ -62,7 +62,7 @@ export function TabRSFormCard() {
 
       <div className='cc-column mx-0 md:mx-auto'>
         <FormRSForm key={schema.id} />
-        <EditorLibraryItem item={schema} isAttachedToOSS={isAttachedToOSS} />
+        <EditorLibraryItem item={schema} isProduced={schema.is_produced} />
       </div>
 
       <aside

@@ -16,7 +16,6 @@ interface IRSEditContext {
   isArchive: boolean;
   isMutable: boolean;
   isContentEditable: boolean;
-  isAttachedToOSS: boolean;
   canDeleteSelected: boolean;
 
   deleteSchema: () => void;

@@ -25,6 +25,7 @@ describe('RSFormLoader', () => {
       editors: [],
       versions: [],
       attribution: [],
+      is_produced: false,
       oss: [],
       models: [],
       items: [],

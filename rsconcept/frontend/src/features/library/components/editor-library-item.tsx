@@ -35,10 +35,10 @@ import { useLibrarySearchStore } from '../stores/library-search';
 
 interface EditorLibraryItemProps {
   item: RO<LibraryItemData>;
-  isAttachedToOSS: boolean;
+  isProduced: boolean;
 }
 
-export function EditorLibraryItem({ item, isAttachedToOSS }: EditorLibraryItemProps) {
+export function EditorLibraryItem({ item, isProduced }: EditorLibraryItemProps) {
   const getUserLabel = useLabelUser();
   const role = useRoleStore(state => state.role);
   const intl = useIntl();
@@ -104,9 +104,9 @@ export function EditorLibraryItem({ item, isAttachedToOSS }: EditorLibraryItemPr
           className='text-ellipsis grow'
           icon={<IconFolderEdit size='1.25rem' className='icon-primary' />}
           value={item.location}
-          title={isAttachedToOSS ? 'Путь наследуется от ОСС' : 'Путь'}
+          title={isProduced ? 'Путь наследуется от ОСС' : 'Путь'}
           onClick={handleEditLocation}
-          disabled={isModified || isProcessing || isAttachedToOSS || role < UserRole.OWNER}
+          disabled={isModified || isProcessing || isProduced || role < UserRole.OWNER}
         />
       </div>
 
@@ -122,9 +122,9 @@ export function EditorLibraryItem({ item, isAttachedToOSS }: EditorLibraryItemPr
           className='sm:mb-1'
           icon={<IconOwner size='1.25rem' className='icon-primary' />}
           value={getUserLabel(item.owner)}
-          title={isAttachedToOSS ? 'Владелец наследуется от ОСС' : 'Владелец'}
+          title={isProduced ? 'Владелец наследуется от ОСС' : 'Владелец'}
           onClick={toggleOwner}
-          disabled={isModified || isProcessing || isAttachedToOSS || role < UserRole.OWNER}
+          disabled={isModified || isProcessing || isProduced || role < UserRole.OWNER}
         />
       </div>
 

@@ -112,7 +112,7 @@ export function FormRSModel() {
           readOnly={readOnly}
           toggleReadOnly={() => setValue('read_only', !readOnly, { shouldDirty: true })}
           schema={model}
-          isAttachedToOSS={false}
+          isProduced={false}
         />
       </div>
 

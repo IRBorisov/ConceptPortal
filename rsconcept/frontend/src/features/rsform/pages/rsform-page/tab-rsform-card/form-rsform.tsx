@@ -33,7 +33,7 @@ export function FormRSForm() {
   const setIsModified = useModificationStore(state => state.setIsModified);
   const onModifiedEvent = useEffectEvent(setIsModified);
   const isProcessing = useMutatingRSForm();
-  const { schema, isAttachedToOSS, isContentEditable } = useRSFormEdit();
+  const { schema, isContentEditable } = useRSFormEdit();
 
   const {
     register,
@@ -128,7 +128,7 @@ export function FormRSForm() {
             readOnly={readOnly}
             toggleReadOnly={() => setValue('read_only', !readOnly, { shouldDirty: true })}
             schema={schema}
-            isAttachedToOSS={isAttachedToOSS}
+            isProduced={schema.is_produced}
           />
         </div>
       </div>

@@ -87,6 +87,7 @@ export const schemaAttribution = z.strictObject({
 });
 
 export const schemaRSForm = schemaLibraryItem.extend({
+  is_produced: z.boolean(),
   editors: z.array(z.number()),
 
   version: z.number().optional(),

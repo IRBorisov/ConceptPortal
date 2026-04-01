@@ -89,7 +89,7 @@ export function TabModelCard() {
 
       <div className='cc-column mx-0 md:mx-auto'>
         <FormRSModel key={model.id} />
-        <EditorLibraryItem item={model} isAttachedToOSS={false} />
+        <EditorLibraryItem item={model} isProduced={false} />
       </div>
 
       <aside
