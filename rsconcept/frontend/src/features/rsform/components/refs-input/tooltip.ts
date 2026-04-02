@@ -29,28 +29,29 @@ const tooltipProducer = (schema: RSForm, canClick?: boolean) => {
         above: false,
         create: () => domTooltipEntityReference(parse.ref as EntityReference, cst, canClick)
       };
-    } else {
-      let masterText: string | null = null;
-      if (parse.ref.offset > 0) {
-        const entities = findContainedNodes(parse.end, view.state.doc.length, syntaxTree(view.state), [RefEntity]);
-        if (parse.ref.offset <= entities.length) {
-          const master = entities[parse.ref.offset - 1];
-          masterText = view.state.doc.sliceString(master.from, master.to);
-        }
-      } else {
-        const entities = findContainedNodes(0, parse.start, syntaxTree(view.state), [RefEntity]);
-        if (-parse.ref.offset <= entities.length) {
-          const master = entities[-parse.ref.offset - 1];
-          masterText = view.state.doc.sliceString(master.from, master.to);
-        }
-      }
-      return {
-        pos: parse.start,
-        end: parse.end,
-        above: false,
-        create: () => domTooltipSyntacticReference(parse.ref as SyntacticReference, masterText, canClick)
-      };
     }
+
+    let masterText: string | null = null;
+    if (parse.ref.offset > 0) {
+      const entities = findContainedNodes(parse.end, view.state.doc.length, syntaxTree(view.state), [RefEntity]);
+      if (parse.ref.offset <= entities.length) {
+        const master = entities[parse.ref.offset - 1];
+        masterText = view.state.doc.sliceString(master.from, master.to);
+      }
+    } else {
+      const entities = findContainedNodes(0, parse.start, syntaxTree(view.state), [RefEntity]);
+      if (-parse.ref.offset <= entities.length) {
+        const master = entities[-parse.ref.offset - 1];
+        masterText = view.state.doc.sliceString(master.from, master.to);
+      }
+    }
+
+    return {
+      pos: parse.start,
+      end: parse.end,
+      above: false,
+      create: () => domTooltipSyntacticReference(parse.ref as SyntacticReference, masterText, canClick)
+    };
   });
 };
 
@@ -58,9 +59,6 @@ export function refsHoverTooltip(schema: RSForm, canClick?: boolean): Extension 
   return [tooltipProducer(schema, canClick)];
 }
 
-/**
- * Create DOM tooltip for {@link EntityReference}.
- */
 function domTooltipEntityReference(ref: EntityReference, cst: Constituenta | null, canClick?: boolean): TooltipView {
   const dom = document.createElement('div');
   dom.className = clsx(
@@ -95,19 +93,16 @@ function domTooltipEntityReference(ref: EntityReference, cst: Constituenta | nul
 
   if (canClick) {
     const clickTip = document.createElement('p');
-    clickTip.className = 'text-center text-xs mt-1';
+    clickTip.className = 'text-left text-xs mt-1';
     clickTip.innerHTML = isMac()
-      ? '<kbd>Cmd + клик</kbd> для перехода</br><kbd>Cmd + пробел</kbd> для редактирования'
-      : '<kbd>Ctrl + клик</kbd> для перехода</br><kbd>Ctrl + пробел</kbd> для редактирования';
+      ? '<kbd>Cmd + клик</kbd> для перехода</br><kbd>Alt + 1</kbd> ссылка на конституенту</br><kbd>Alt + 2</kbd> зависимое слово'
+      : '<kbd>Ctrl + клик</kbd> для перехода</br><kbd>Alt + 1</kbd> ссылка на конституенту</br><kbd>Alt + 2</kbd> зависимое слово';
     dom.appendChild(clickTip);
   }
 
-  return { dom: dom };
+  return { dom };
 }
 
-/**
- * Create DOM tooltip for {@link SyntacticReference}.
- */
 function domTooltipSyntacticReference(
   ref: SyntacticReference,
   masterRef: string | null,
@@ -143,11 +138,9 @@ function domTooltipSyntacticReference(
   if (canClick) {
     const clickTip = document.createElement('p');
     clickTip.className = 'text-center text-xs mt-1';
-    clickTip.innerHTML = isMac()
-      ? '<kbd>Cmd + пробел</kbd> для редактирования'
-      : '<kbd>Ctrl + пробел</kbd> для редактирования';
+    clickTip.innerHTML = '<kbd>Alt + 2</kbd> для редактирования';
     dom.appendChild(clickTip);
   }
 
-  return { dom: dom };
+  return { dom };
 }

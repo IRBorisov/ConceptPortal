@@ -1,6 +1,6 @@
 'use client';
 
-import { forwardRef, useRef } from 'react';
+import { useRef } from 'react';
 import { type Extension } from '@codemirror/state';
 import { tags } from '@lezer/highlight';
 import { createTheme } from '@uiw/codemirror-themes';
@@ -69,6 +69,7 @@ interface RSInputProps
     | 'style'
     | 'className'
   > {
+  ref?: React.Ref<ReactCodeMirrorRef>;
   label?: string;
   disabled?: boolean;
   noTooltip?: boolean;
@@ -78,151 +79,145 @@ interface RSInputProps
   onOpenEdit?: (cstID: number) => void;
 }
 
-export const RSInput = forwardRef<ReactCodeMirrorRef, RSInputProps>(
-  (
-    {
-      id, //
-      label,
-      disabled,
-      noTooltip,
+export function RSInput({
+  label,
+  disabled,
+  noTooltip,
 
-      schema,
-      onOpenEdit,
+  schema,
+  onOpenEdit,
 
-      className,
-      style,
+  className,
+  style,
+  ref,
 
-      onAnalyze,
-      ...restProps
+  onAnalyze,
+  ...restProps
+}: RSInputProps) {
+  const darkMode = usePreferencesStore(state => state.darkMode);
+
+  const internalRef = useRef<ReactCodeMirrorRef>(null);
+  const thisRef = !ref || typeof ref === 'function' ? internalRef : ref;
+
+  const cursor = !disabled ? 'cursor-text' : 'cursor-default';
+  const customTheme: Extension = createTheme({
+    theme: darkMode ? 'dark' : 'light',
+    settings: {
+      fontFamily: 'inherit',
+      background: !disabled ? APP_COLORS.bgInput : APP_COLORS.bgDefault,
+      foreground: APP_COLORS.fgDefault,
+      caret: APP_COLORS.fgDefault
     },
-    ref
-  ) => {
-    const darkMode = usePreferencesStore(state => state.darkMode);
+    styles: [
+      { tag: tags.name, color: APP_COLORS.fgPurple, cursor: schema ? 'default' : cursor }, // GlobalID
+      { tag: tags.variableName, color: APP_COLORS.fgGreen, cursor: schema ? 'default' : cursor }, // LocalID
+      { tag: tags.propertyName, color: APP_COLORS.fgTeal }, // Radical
+      { tag: tags.keyword, color: APP_COLORS.fgBlue }, // keywords
+      { tag: tags.literal, color: APP_COLORS.fgBlue }, // literals
+      { tag: tags.controlKeyword, fontWeight: '400' }, // R | I | D
+      { tag: tags.unit, fontSize: '0.75rem' }, // indices
+      { tag: tags.brace, color: APP_COLORS.fgPurple, fontWeight: '600' } // braces (curly brackets)
+    ]
+  });
 
-    const internalRef = useRef<ReactCodeMirrorRef>(null);
-    const thisRef = !ref || typeof ref === 'function' ? internalRef : ref;
+  const editorExtensions = [
+    EditorView.lineWrapping,
+    RSLanguage,
+    ccBracketMatching(),
+    ...(!schema || !onOpenEdit ? [] : [rsNavigation(schema, onOpenEdit)]),
+    ...(noTooltip || !schema ? [] : [rsHoverTooltip(schema, onOpenEdit !== undefined)])
+  ];
 
-    const cursor = !disabled ? 'cursor-text' : 'cursor-default';
-    const customTheme: Extension = createTheme({
-      theme: darkMode ? 'dark' : 'light',
-      settings: {
-        fontFamily: 'inherit',
-        background: !disabled ? APP_COLORS.bgInput : APP_COLORS.bgDefault,
-        foreground: APP_COLORS.fgDefault,
-        caret: APP_COLORS.fgDefault
-      },
-      styles: [
-        { tag: tags.name, color: APP_COLORS.fgPurple, cursor: schema ? 'default' : cursor }, // GlobalID
-        { tag: tags.variableName, color: APP_COLORS.fgGreen, cursor: schema ? 'default' : cursor }, // LocalID
-        { tag: tags.propertyName, color: APP_COLORS.fgTeal }, // Radical
-        { tag: tags.keyword, color: APP_COLORS.fgBlue }, // keywords
-        { tag: tags.literal, color: APP_COLORS.fgBlue }, // literals
-        { tag: tags.controlKeyword, fontWeight: '400' }, // R | I | D
-        { tag: tags.unit, fontSize: '0.75rem' }, // indices
-        { tag: tags.brace, color: APP_COLORS.fgPurple, fontWeight: '600' } // braces (curly brackets)
-      ]
-    });
-
-    const editorExtensions = [
-      EditorView.lineWrapping,
-      RSLanguage,
-      ccBracketMatching(),
-      ...(!schema || !onOpenEdit ? [] : [rsNavigation(schema, onOpenEdit)]),
-      ...(noTooltip || !schema ? [] : [rsHoverTooltip(schema, onOpenEdit !== undefined)])
-    ];
-
-    function handleAutoComplete(text: RSTextWrapper): boolean {
-      const selection = text.getSelection();
-      if (!selection.empty || !schema) {
-        return false;
-      }
-      const wordRange = text.getWord(selection.from);
-      if (!wordRange) {
-        return false;
-      }
-      const word = text.getText(wordRange.from, wordRange.to);
-      if (word.length > 2 && (word.startsWith('Pr') || word.startsWith('pr'))) {
-        text.setSelection(wordRange.from, wordRange.from + 2);
-        if (word.startsWith('Pr')) {
-          text.replaceWith('pr');
-        } else {
-          text.replaceWith('Pr');
-        }
-        return true;
-      }
-      const hint = text.getText(selection.from - 1, selection.from);
-      const type = guessCstType(hint);
-      if (hint === getCstTypePrefix(type)) {
-        text.setSelection(selection.from - 1, selection.from);
-      }
-      const takenAliases = [...extractGlobals(thisRef.current?.view?.state.doc.toString() ?? '')];
-      const newAlias = generateAlias(type, schema, takenAliases);
-      text.replaceWith(newAlias);
-      return true;
-    }
-
-    function processInput(event: React.KeyboardEvent<HTMLDivElement>): boolean {
-      const text = new RSTextWrapper(thisRef.current as Required<ReactCodeMirrorRef>);
-      if ((event.ctrlKey || event.metaKey) && event.code === 'Space') {
-        return handleAutoComplete(text);
-      }
-
-      if (event.altKey) {
-        return text.processAltKey(event.code, event.shiftKey);
-      }
-
-      if (!(event.ctrlKey || event.metaKey)) {
-        if (isPotentialLigature(event.key)) {
-          const selection = text.getSelection();
-          const prevSymbol = text.getText(selection.from - 1, selection.from);
-          const newSymbol = getLigatureSymbol(prevSymbol, event.key);
-          if (newSymbol) {
-            text.setSelection(selection.from - 1, selection.to);
-            text.replaceWith(newSymbol);
-          }
-          return !!newSymbol;
-        } else {
-          const newSymbol = getSymbolSubstitute(event.code, event.shiftKey);
-          if (newSymbol) {
-            text.replaceWith(newSymbol);
-          }
-          return !!newSymbol;
-        }
-      }
-
-      if (event.code === 'KeyQ' && onAnalyze) {
-        onAnalyze();
-        return true;
-      }
+  function handleAutoComplete(text: RSTextWrapper): boolean {
+    const selection = text.getSelection();
+    if (!selection.empty || !schema) {
       return false;
     }
-
-    function handleInput(event: React.KeyboardEvent<HTMLDivElement>) {
-      if (!thisRef.current) {
-        return;
+    const wordRange = text.getWord(selection.from);
+    if (!wordRange) {
+      return false;
+    }
+    const word = text.getText(wordRange.from, wordRange.to);
+    if (word.length > 2 && (word.startsWith('Pr') || word.startsWith('pr'))) {
+      text.setSelection(wordRange.from, wordRange.from + 2);
+      if (word.startsWith('Pr')) {
+        text.replaceWith('pr');
+      } else {
+        text.replaceWith('Pr');
       }
-      if (processInput(event)) {
-        event.preventDefault();
-        event.stopPropagation();
+      return true;
+    }
+    const hint = text.getText(selection.from - 1, selection.from);
+    const type = guessCstType(hint);
+    if (hint === getCstTypePrefix(type)) {
+      text.setSelection(selection.from - 1, selection.from);
+    }
+    const takenAliases = [...extractGlobals(thisRef.current?.view?.state.doc.toString() ?? '')];
+    const newAlias = generateAlias(type, schema, takenAliases);
+    text.replaceWith(newAlias);
+    return true;
+  }
+
+  function processInput(event: React.KeyboardEvent<HTMLDivElement>): boolean {
+    const text = new RSTextWrapper(thisRef.current as Required<ReactCodeMirrorRef>);
+    if ((event.ctrlKey || event.metaKey) && event.code === 'Space') {
+      return handleAutoComplete(text);
+    }
+
+    if (event.altKey) {
+      return text.processAltKey(event.code, event.shiftKey);
+    }
+
+    if (!(event.ctrlKey || event.metaKey)) {
+      if (isPotentialLigature(event.key)) {
+        const selection = text.getSelection();
+        const prevSymbol = text.getText(selection.from - 1, selection.from);
+        const newSymbol = getLigatureSymbol(prevSymbol, event.key);
+        if (newSymbol) {
+          text.setSelection(selection.from - 1, selection.to);
+          text.replaceWith(newSymbol);
+        }
+        return !!newSymbol;
+      } else {
+        const newSymbol = getSymbolSubstitute(event.code, event.shiftKey);
+        if (newSymbol) {
+          text.replaceWith(newSymbol);
+        }
+        return !!newSymbol;
       }
     }
 
-    return (
-      <div className={clsx('flex flex-col gap-2', className, cursor)} style={style}>
-        <Label text={label} />
-        <CodeMirror
-          className='font-math'
-          id={id}
-          ref={thisRef}
-          basicSetup={editorSetup}
-          theme={customTheme}
-          extensions={editorExtensions}
-          indentWithTab={false}
-          editable={!disabled}
-          onKeyDown={handleInput}
-          {...restProps}
-        />
-      </div>
-    );
+    if (event.code === 'KeyQ' && onAnalyze) {
+      onAnalyze();
+      return true;
+    }
+    return false;
   }
-);
+
+  function handleInput(event: React.KeyboardEvent<HTMLDivElement>) {
+    if (!thisRef.current) {
+      return;
+    }
+    if (processInput(event)) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  }
+
+  return (
+    <div className={clsx('flex flex-col gap-2', className, cursor)} style={style}>
+      <Label text={label} />
+      <CodeMirror
+        className='font-math'
+        ref={thisRef}
+        basicSetup={editorSetup}
+        theme={customTheme}
+        extensions={editorExtensions}
+        indentWithTab={false}
+        editable={!disabled}
+        onKeyDown={handleInput}
+        {...restProps}
+      />
+    </div>
+  );
+}
