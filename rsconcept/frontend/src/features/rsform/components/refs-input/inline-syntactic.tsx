@@ -4,19 +4,20 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
 
 import { MiniButton } from '@/components/control';
-import { IconAccept, IconClose, IconMoveLeft, IconMoveRight } from '@/components/icons';
-import { TextInput } from '@/components/input';
+import { IconAccept, IconClose, IconPageLeft, IconPageRight } from '@/components/icons';
+import { Label, TextInput } from '@/components/input';
 
-import { type IReferenceInputState } from '../../dialogs/dlg-edit-reference/dlg-edit-reference';
 import { parseSyntacticReference } from '../../models/language-api';
 
-interface InlineReferenceSyntacticEditorProps {
+import { type IReferenceInputState } from './refs-input';
+
+interface InlineSyntacticEditorProps {
   initial: IReferenceInputState;
   position: {
     top: number;
     left: number;
   };
-  onSave: (value: { offset: number; nominal: string }) => void;
+  onSave: (value: { offset: number; nominal: string; }) => void;
   onCancel: () => void;
 }
 
@@ -36,12 +37,12 @@ function stepOffset(offset: number, delta: -1 | 1) {
   return next === 0 ? next + delta : next;
 }
 
-export function InlineReferenceSyntacticEditor({
+export function InlineSyntacticEditor({
   initial,
   position,
   onSave,
   onCancel
-}: InlineReferenceSyntacticEditorProps) {
+}: InlineSyntacticEditorProps) {
   const [value, setValue] = useState(() => initInlineSyntacticReference(initial));
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -106,6 +107,13 @@ export function InlineReferenceSyntacticEditor({
     };
   }, [onCancel]);
 
+  const buttonClass = clsx(
+    '-my-1',
+    'cc-hover-text cc-animate-color',
+    'focus-outline rounded-md',
+    'disabled:opacity-75 not-[:disabled]:cursor-pointer'
+  );
+
   return (
     <div
       ref={rootRef}
@@ -127,44 +135,48 @@ export function InlineReferenceSyntacticEditor({
           }
         />
 
-        <div className='mt-2 flex items-center gap-2'>
-          <MiniButton
-            icon={<IconMoveLeft size='1rem' />}
-            title='Предыдущая ссылка'
+        <div className='mt-2 flex items-center justify-between gap-1'>
+          <Label text='Опорная ссылка' />
+          <button
+            type='button'
+            aria-label='Предыдущая ссылка'
+            className={buttonClass}
             onClick={() =>
               setValue(prev => ({
                 ...prev,
                 offset: stepOffset(prev.offset, -1)
               }))
             }
-            className='h-8 w-8 rounded-md border bg-secondary text-secondary-foreground'
-          />
-          <TextInput
+          >
+            <IconPageLeft size='1.5rem' />
+          </button>
+          <input
             id='inline_reference_offset'
-            type='number'
-            dense
-            className={clsx(
+            aria-label='Смещение опорной ссылки'
+            className={clsx('w-12 text-center focus-outline rounded-md p-0 border',
               isOffsetValid ? 'border-constructive/50 bg-constructive/5' : 'border-destructive/50 bg-destructive/5'
             )}
-            value={String(value.offset)}
+            value={value.offset}
             onChange={event =>
               setValue(prev => ({
                 ...prev,
                 offset: Number(event.target.value)
-              }))
-            }
+              }))}
           />
-          <MiniButton
-            icon={<IconMoveRight size='1rem' />}
-            title='Следующая ссылка'
+          <button
+            type='button'
+            aria-label='Следующая ссылка'
+            className={buttonClass}
             onClick={() =>
               setValue(prev => ({
                 ...prev,
                 offset: stepOffset(prev.offset, 1)
               }))
             }
-            className='h-8 w-8 rounded-md border bg-secondary text-secondary-foreground'
-          />
+          >
+            <IconPageRight size='1.5rem' />
+          </button>
+
           <MiniButton
             icon={<IconAccept size='1.5rem' className='icon-green' />}
             title='Сохранить ссылку'

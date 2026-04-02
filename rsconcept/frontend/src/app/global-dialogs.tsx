@@ -66,11 +66,6 @@ const DlgEditOperation = React.lazy(() =>
     default: module.DlgEditOperation
   }))
 );
-const DlgEditReference = React.lazy(() =>
-  import('@/features/rsform/dialogs/dlg-edit-reference').then(module => ({
-    default: module.DlgEditReference
-  }))
-);
 const DlgEditVersions = React.lazy(() =>
   import('@/features/library/dialogs/dlg-edit-versions').then(module => ({
     default: module.DlgEditVersions
@@ -196,8 +191,6 @@ export const GlobalDialogs = () => {
       return <DlgEditEditors />;
     case DialogType.EDIT_OPERATION:
       return <DlgEditOperation />;
-    case DialogType.EDIT_REFERENCE:
-      return <DlgEditReference />;
     case DialogType.EDIT_VERSIONS:
       return <DlgEditVersions />;
     case DialogType.EDIT_WORD_FORMS:

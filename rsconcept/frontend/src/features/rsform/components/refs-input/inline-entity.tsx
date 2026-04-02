@@ -7,14 +7,15 @@ import { MiniButton } from '@/components/control';
 import { IconAccept, IconClose } from '@/components/icons';
 import { SearchBar } from '@/components/input';
 
-import { type IReferenceInputState } from '../../dialogs/dlg-edit-reference/dlg-edit-reference';
 import { type Grammeme, supportedGrammemes } from '../../models/language';
 import { parseEntityReference, parseGrammemes } from '../../models/language-api';
 import { type Constituenta, type RSForm } from '../../models/rsform';
 import { matchConstituenta } from '../../models/rsform-api';
 import { CstMatchMode } from '../../stores/cst-search';
 
-const DEFAULT_WORDFORMS: { text: string; grams: Grammeme[] }[] = [
+import { type IReferenceInputState } from './refs-input';
+
+const DEFAULT_WORDFORMS: { text: string; grams: Grammeme[]; }[] = [
   { text: 'ед им', grams: ['sing', 'nomn'] },
   { text: 'ед род', grams: ['sing', 'gent'] },
   { text: 'ед дат', grams: ['sing', 'datv'] },
@@ -29,24 +30,24 @@ const DEFAULT_WORDFORMS: { text: string; grams: Grammeme[] }[] = [
   { text: 'мн пред', grams: ['plur', 'loct'] }
 ];
 
-interface InlineReferenceEntityEditorProps {
+interface InlineEntityEditorProps {
   schema: RSForm;
   initial: IReferenceInputState;
   position: {
     top: number;
     left: number;
   };
-  onSave: (value: { entity: string; form: string }) => void;
+  onSave: (value: { entity: string; form: string; }) => void;
   onCancel: () => void;
 }
 
-export function InlineReferenceEntityEditor({
+export function InlineEntityEditor({
   schema,
   initial,
   position,
   onSave,
   onCancel
-}: InlineReferenceEntityEditorProps) {
+}: InlineEntityEditorProps) {
   const [value, setValue] = useState(() => initInlineEntityReference(initial));
   const [query, setQuery] = useState(() => prepareSelectionPrompt(initial.text));
   const rootRef = useRef<HTMLDivElement>(null);

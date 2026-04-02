@@ -21,7 +21,6 @@ import { type DlgCreateCstProps } from '@/features/rsform/dialogs/dlg-create-cst
 import { type DlgCstTemplateProps } from '@/features/rsform/dialogs/dlg-cst-template/dlg-cst-template';
 import { type DlgDeleteCstProps } from '@/features/rsform/dialogs/dlg-delete-cst/dlg-delete-cst';
 import { type DlgEditCstProps } from '@/features/rsform/dialogs/dlg-edit-cst/dlg-edit-cst';
-import { type DlgEditReferenceProps } from '@/features/rsform/dialogs/dlg-edit-reference/dlg-edit-reference';
 import { type DlgEditWordFormsProps } from '@/features/rsform/dialogs/dlg-edit-word-forms/dlg-edit-word-forms';
 import { type DlgInlineSynthesisProps } from '@/features/rsform/dialogs/dlg-inline-synthesis/dlg-inline-synthesis';
 import { type DlgRenameCstProps } from '@/features/rsform/dialogs/dlg-rename-cst';
@@ -65,27 +64,26 @@ export const DialogType = {
   EDIT_VERSIONS: 20,
   CHANGE_LOCATION: 21,
 
-  EDIT_REFERENCE: 22,
-  EDIT_WORD_FORMS: 23,
-  INLINE_SYNTHESIS: 24,
+  EDIT_WORD_FORMS: 22,
+  INLINE_SYNTHESIS: 23,
 
-  SHOW_QR_CODE: 25,
-  SHOW_AST: 26,
-  SHOW_TYPE_GRAPH: 27,
-  GRAPH_PARAMETERS: 28,
-  SHOW_TERM_GRAPH: 29,
-  CREATE_SCHEMA: 30,
-  IMPORT_SCHEMA: 31,
+  SHOW_QR_CODE: 24,
+  SHOW_AST: 25,
+  SHOW_TYPE_GRAPH: 26,
+  GRAPH_PARAMETERS: 27,
+  SHOW_TERM_GRAPH: 28,
+  CREATE_SCHEMA: 29,
+  IMPORT_SCHEMA: 30,
 
-  AI_PROMPT: 32,
-  CREATE_PROMPT_TEMPLATE: 33,
+  AI_PROMPT: 31,
+  CREATE_PROMPT_TEMPLATE: 32,
 
-  MODEL_EDIT_VALUE: 34,
-  MODEL_VIEW_VALUE: 35,
-  MODEL_EDIT_BINDING: 36,
+  MODEL_EDIT_VALUE: 33,
+  MODEL_VIEW_VALUE: 34,
+  MODEL_EDIT_BINDING: 35,
 
-  SHOW_VIDEO: 37,
-  STRUCTURE_PLANNER: 38
+  SHOW_VIDEO: 36,
+  STRUCTURE_PLANNER: 37
 } as const;
 export type DialogType = (typeof DialogType)[keyof typeof DialogType];
 
@@ -108,7 +106,6 @@ interface DialogsStore {
   showEditEditors: (props: DlgEditEditorsProps) => void;
   showEditOperation: (props: DlgEditOperationProps) => void;
   showEditBlock: (props: DlgEditBlockProps) => void;
-  showEditReference: (props: DlgEditReferenceProps) => void;
   showEditVersions: (props: DlgEditVersionsProps) => void;
   showEditWordForms: (props: DlgEditWordFormsProps) => void;
   showInlineSynthesis: (props: DlgInlineSynthesisProps) => void;
@@ -158,7 +155,6 @@ export const useDialogsStore = create<DialogsStore>()(set => ({
   showEditEditors: props => set({ active: DialogType.EDIT_EDITORS, props: props }),
   showEditOperation: props => set({ active: DialogType.EDIT_OPERATION, props: props }),
   showEditBlock: props => set({ active: DialogType.EDIT_BLOCK, props: props }),
-  showEditReference: props => set({ active: DialogType.EDIT_REFERENCE, props: props }),
   showEditVersions: props => set({ active: DialogType.EDIT_VERSIONS, props: props }),
   showEditWordForms: props => set({ active: DialogType.EDIT_WORD_FORMS, props: props }),
   showInlineSynthesis: props => set({ active: DialogType.INLINE_SYNTHESIS, props: props }),

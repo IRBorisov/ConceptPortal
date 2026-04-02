@@ -2,11 +2,11 @@ import { type ReactCodeMirrorRef } from '@uiw/react-codemirror';
 
 import { CodeMirrorWrapper } from '@/utils/codemirror';
 
-import { type IReferenceInputState } from '../../dialogs/dlg-edit-reference/dlg-edit-reference';
 import { ReferenceType } from '../../models/language';
 
 import { RefEntity } from './parse/parser.terms';
 import { ReferenceTokens } from './parse';
+import { type IReferenceInputState } from './refs-input';
 
 interface BuildReferenceSelectionOptions {
   targetType: ReferenceType;
