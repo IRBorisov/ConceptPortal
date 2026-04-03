@@ -102,21 +102,12 @@ export function InlineEntityEditor({
     <div
       ref={rootRef}
       tabIndex={-1}
-      className='absolute z-topmost w-120 max-w-[min(30rem,calc(100vw-4rem))] cursor-auto'
+      className='absolute z-topmost w-120 cursor-auto'
       style={{ top: position.top, left: position.left }}
       onKeyDown={handleKeyDown}
     >
-      <div className='rounded-md border bg-popover px-3 pb-2 shadow-lg'>
+      <div className='rounded-md border bg-popover px-3 pb-3 shadow-lg'>
         <div className='flex items-center gap-1'>
-          <SearchBar
-            id='inline_reference_entity_search'
-            query={query}
-            onChangeQuery={setQuery}
-            noBorder
-            placeholder='Поиск конституенты'
-            className='text-sm bg-input'
-            inputRef={searchBarRef}
-          />
           <MiniButton
             icon={<IconAccept size='1.5rem' className='icon-green' />}
             titleHtml={prepareTooltip('Сохранить ссылку', isMac() ? 'Cmd + Enter' : 'Ctrl + Enter')}
@@ -127,6 +118,15 @@ export function InlineEntityEditor({
             icon={<IconClose size='1.5rem' className='icon-primary' />}
             titleHtml={prepareTooltip('Закрыть', 'Esc')}
             onClick={onCancel}
+          />
+          <SearchBar
+            id='inline_reference_entity_search'
+            query={query}
+            onChangeQuery={setQuery}
+            noBorder
+            placeholder='Поиск конституенты'
+            className='text-sm bg-input'
+            inputRef={searchBarRef}
           />
         </div>
 

@@ -13,6 +13,7 @@ import { useClearAttributions } from '../../backend/use-clear-attributions';
 import { useCreateAttribution } from '../../backend/use-create-attribution';
 import { useDeleteAttribution } from '../../backend/use-delete-attribution';
 import { IconCrucialValue } from '../../components/icon-crucial-value';
+import { RefsInput } from '../../components/refs-input';
 import { RSInput } from '../../components/rs-input';
 import { SelectCstType } from '../../components/select-cst-type';
 import { SelectMultiConstituenta } from '../../components/select-multi-constituenta';
@@ -111,17 +112,24 @@ export function FormEditCst({ target, schema }: FormEditCstProps) {
         <BadgeHelp topic={HelpTopic.CC_CONSTITUENTA} offset={16} contentClass='sm:max-w-160' />
       </div>
 
-      <TextArea
-        id='dlg_cst_term'
-        fitContent
-        spellCheck
-        label='Термин'
-        className='max-h-15 disabled:min-h-9'
-        placeholder='Обозначение для текстовых определений'
-        {...register('item_data.term_raw')}
-        error={errors.item_data?.term_raw}
+      <Controller
+        control={control}
+        name='item_data.term_raw'
+        render={({ field }) => (
+          <RefsInput
+            id='dlg_cst_term'
+            label='Термин'
+            maxHeight='3.75rem'
+            className='disabled:min-h-9'
+            placeholder='Обозначение для текстовых определений'
+            schema={schema}
+            value={field.value ?? ''}
+            initialValue={target.term_raw}
+            resolved={target.term_raw === field.value ? target.term_resolved : field.value ?? ''}
+            onChange={newValue => field.onChange(newValue)}
+          />
+        )}
       />
-
       {target.cst_type === CstType.NOMINAL || target.attributes.length > 0 ? (
         <div className='flex flex-col gap-1'>
           <Label text='Атрибутирующие конституенты' />
@@ -162,7 +170,7 @@ export function FormEditCst({ target, schema }: FormEditCstProps) {
               noTooltip
               label={labelRSExpression(cst_type)}
               placeholder={getRSDefinitionPlaceholder(cst_type)}
-              className='max-h-15'
+              maxHeight='3.75rem'
               schema={schema}
               value={field.value}
               onChange={field.onChange}
@@ -179,16 +187,16 @@ export function FormEditCst({ target, schema }: FormEditCstProps) {
         name='item_data.definition_raw'
         render={({ field }) =>
           !!field.value || !isElementary ? (
-            <TextArea
+            <RefsInput
               id='dlg_edit_cst_definition_raw'
-              fitContent
-              spellCheck
+              schema={schema}
               label='Текстовое определение'
               placeholder='Текстовая интерпретация формального выражения'
-              className='max-h-15'
-              value={field.value}
+              maxHeight='3.75rem'
+              value={field.value ?? ''}
+              initialValue={target.definition_raw}
+              resolved={target.definition_raw === field.value ? target.definition_resolved : field.value ?? ''}
               onChange={field.onChange}
-              error={errors.item_data?.definition_raw}
             />
           ) : (
             <></>

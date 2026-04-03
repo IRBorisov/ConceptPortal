@@ -91,14 +91,15 @@ function domTooltipEntityReference(ref: EntityReference, cst: Constituenta | nul
   }
   dom.appendChild(grams);
 
+  const controlsTip = document.createElement('p');
+  controlsTip.className = 'text-left text-xs mt-1';
+  controlsTip.innerHTML = '<kbd>Alt + 1</kbd> ссылка на конституенту</br><kbd>Alt + 2</kbd> зависимое слово';
   if (canClick) {
-    const clickTip = document.createElement('p');
-    clickTip.className = 'text-left text-xs mt-1';
-    clickTip.innerHTML = isMac()
-      ? '<kbd>Cmd + клик</kbd> для перехода</br><kbd>Alt + 1</kbd> ссылка на конституенту</br><kbd>Alt + 2</kbd> зависимое слово'
-      : '<kbd>Ctrl + клик</kbd> для перехода</br><kbd>Alt + 1</kbd> ссылка на конституенту</br><kbd>Alt + 2</kbd> зависимое слово';
-    dom.appendChild(clickTip);
+    controlsTip.innerHTML =
+      (isMac() ? '<kbd>Cmd + клик</kbd> для перехода</br>' : '<kbd>Ctrl + клик</kbd> для перехода</br>')
+      + controlsTip.innerHTML;
   }
+  dom.appendChild(controlsTip);
 
   return { dom };
 }

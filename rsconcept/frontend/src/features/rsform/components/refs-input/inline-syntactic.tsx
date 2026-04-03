@@ -87,22 +87,24 @@ export function InlineSyntacticEditor({
     <div
       tabIndex={-1}
       ref={rootRef}
-      className='absolute z-topmost w-[20rem] max-w-[min(20rem,calc(100vw-4rem))]'
+      className='absolute z-topmost w-80'
       style={{ top: position.top, left: position.left }}
       onKeyDown={handleKeyDown}
     >
-      <div className='rounded-md border bg-popover p-2 shadow-lg'>
-        <TextInput
-          id='inline_reference_nominal'
-          placeholder='Начальная форма'
-          className='text-sm'
-          value={nominal}
-          ref={nominalInputRef}
-          onChange={event => setNominal(event.target.value)}
-        />
-
-        <div className='mt-2 flex items-center justify-between gap-1'>
-          <Label text='Опорная ссылка' />
+      <div className='rounded-md border bg-popover px-3 pb-3 pt-2 shadow-lg'>
+        <div className='mb-2 flex items-center justify-between gap-1'>
+          <MiniButton
+            icon={<IconAccept size='1.5rem' className='icon-green' />}
+            titleHtml={prepareTooltip('Сохранить ссылку', isMac() ? 'Cmd + Enter' : 'Ctrl + Enter')}
+            onClick={handleSave}
+            disabled={!canSubmit}
+          />
+          <MiniButton
+            icon={<IconClose size='1.5rem' className='icon-primary' />}
+            titleHtml={prepareTooltip('Закрыть', 'Esc')}
+            onClick={onCancel}
+          />
+          <Label text='Зависимое слово' />
           <button
             type='button'
             aria-label='Предыдущая ссылка'
@@ -128,19 +130,15 @@ export function InlineSyntacticEditor({
           >
             <IconPageRight size='1.5rem' />
           </button>
-
-          <MiniButton
-            icon={<IconAccept size='1.5rem' className='icon-green' />}
-            titleHtml={prepareTooltip('Сохранить ссылку', isMac() ? 'Cmd + Enter' : 'Ctrl + Enter')}
-            onClick={handleSave}
-            disabled={!canSubmit}
-          />
-          <MiniButton
-            icon={<IconClose size='1.5rem' className='icon-primary' />}
-            titleHtml={prepareTooltip('Закрыть', 'Esc')}
-            onClick={onCancel}
-          />
         </div>
+        <TextInput
+          id='inline_reference_nominal'
+          placeholder='Начальная форма'
+          className='text-sm'
+          value={nominal}
+          ref={nominalInputRef}
+          onChange={event => setNominal(event.target.value)}
+        />
       </div>
     </div>
   );

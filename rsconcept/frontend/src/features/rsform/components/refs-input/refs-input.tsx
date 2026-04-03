@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { type Extension, type SelectionRange } from '@codemirror/state';
 import { tags } from '@lezer/highlight';
 import { createTheme } from '@uiw/codemirror-themes';
@@ -59,6 +60,13 @@ const editorSetup: BasicSetupOptions = {
   completionKeymap: false,
   lintKeymap: false
 };
+
+const ENTITY_INLINE_HEIGHT = 250;
+const ENTITY_INLINE_WIDTH = 480;
+const SYNTACTIC_INLINE_HEIGHT = 80;
+const SYNTACTIC_INLINE_WIDTH = 320;
+const BOTTOM_MARGIN = 20;
+const RIGHT_MARGIN = 40;
 
 interface RefsInputInputProps
   extends Pick<
@@ -150,23 +158,31 @@ export function RefsInput({
     }, PARAMETER.minimalTimeout);
   }
 
-  function getInlineEditorPosition(selection: SelectionRange) {
+  function getInlineEditorPosition(selection: SelectionRange, height: number, width: number) {
     const cmRef = thisRef.current as Required<ReactCodeMirrorRef> | null;
-    const wrapper = wrapperRef.current;
-    if (!cmRef?.view || !wrapper) {
+    if (!cmRef?.view) {
       return null;
     }
 
     const coords = cmRef.view.coordsAtPos(selection.to) ?? cmRef.view.coordsAtPos(selection.from);
-    const wrapperRect = wrapper.getBoundingClientRect();
+    if (!coords) {
+      return null;
+    }
+
+    const baseTop = Math.max((coords.bottom ?? 0) + 4, 8);
+    const baseLeft = Math.max((coords.left ?? 0), 8);
+    const viewportHeight = window.innerHeight;
+    const viewportWidth = window.innerWidth;
+
+    const adjustedTop =
+      baseTop > viewportHeight - height - BOTTOM_MARGIN ? Math.max((coords.bottom ?? 0) - 4 - height, 8) : baseTop;
+    const adjustedLeft = Math.min(baseLeft, viewportWidth - width - RIGHT_MARGIN);
     return {
-      top: Math.max((coords?.bottom ?? wrapperRect.top) - wrapperRect.top + 8, 8),
-      left: Math.min(
-        Math.max((coords?.left ?? wrapperRect.left) - wrapperRect.left, 8),
-        Math.max(wrapperRect.width - 560, 8)
-      )
+      top: adjustedTop,
+      left: adjustedLeft
     };
   }
+
 
   function openEntityEditor() {
     const cmRef = thisRef.current as Required<ReactCodeMirrorRef> | null;
@@ -177,7 +193,7 @@ export function RefsInput({
     const wrap = new CodeMirrorWrapper(cmRef);
     wrap.fixSelection(ReferenceTokens);
     const selection = wrap.getSelection();
-    const position = getInlineEditorPosition(selection);
+    const position = getInlineEditorPosition(selection, ENTITY_INLINE_HEIGHT, ENTITY_INLINE_WIDTH);
     if (!position) {
       return;
     }
@@ -212,7 +228,7 @@ export function RefsInput({
     const wrap = new CodeMirrorWrapper(cmRef);
     wrap.fixSelection(ReferenceTokens);
     const selection = wrap.getSelection();
-    const position = getInlineEditorPosition(selection);
+    const position = getInlineEditorPosition(selection, SYNTACTIC_INLINE_HEIGHT, SYNTACTIC_INLINE_WIDTH);
     if (!position) {
       return;
     }
@@ -233,6 +249,7 @@ export function RefsInput({
       .filter(node => node.from >= selection.to || node.to <= selection.from);
 
     setEntityEditor(null);
+    setInlinePosition(position);
     setSyntacticEditor({
       nominal: nominal || text,
       offset: offset,
@@ -314,23 +331,29 @@ export function RefsInput({
         onBlur={handleFocusOut}
         {...restProps}
       />
-      {entityEditor && inlinePosition ? (
-        <InlineEntityEditor
-          schema={schema}
-          initial={entityEditor}
-          position={inlinePosition}
-          onCancel={closeInlineEditor}
-          onSave={handleSaveEntityEditor}
-        />
-      ) : null}
-      {syntacticEditor && inlinePosition ? (
-        <InlineSyntacticEditor
-          initial={syntacticEditor}
-          position={inlinePosition}
-          onCancel={closeInlineEditor}
-          onSave={handleSaveSyntacticEditor}
-        />
-      ) : null}
+      {entityEditor && inlinePosition
+        ? createPortal(
+          <InlineEntityEditor
+            schema={schema}
+            initial={entityEditor}
+            position={inlinePosition}
+            onCancel={closeInlineEditor}
+            onSave={handleSaveEntityEditor}
+          />,
+          document.body
+        )
+        : null}
+      {syntacticEditor && inlinePosition
+        ? createPortal(
+          <InlineSyntacticEditor
+            initial={syntacticEditor}
+            position={inlinePosition}
+            onCancel={closeInlineEditor}
+            onSave={handleSaveSyntacticEditor}
+          />,
+          document.body
+        )
+        : null}
     </div>
   );
 }

@@ -11,6 +11,7 @@ import { TextArea, TextInput } from '@/components/input';
 
 import { type CreateConstituentaDTO } from '../../backend/types';
 import { IconCrucialValue } from '../../components/icon-crucial-value';
+import { RefsInput } from '../../components/refs-input';
 import { RSInput } from '../../components/rs-input';
 import { SelectCstType } from '../../components/select-cst-type';
 import { getRSDefinitionPlaceholder, labelRSExpression } from '../../labels';
@@ -71,17 +72,22 @@ export function FormCreateCst({ schema }: FormCreateCstProps) {
         <BadgeHelp topic={HelpTopic.CC_CONSTITUENTA} offset={16} contentClass='sm:max-w-160' />
       </div>
 
-      <TextArea
-        id='dlg_cst_term'
-        fitContent
-        spellCheck
-        label='Термин'
-        placeholder='Обозначение для текстовых определений'
-        className='max-h-15'
-        {...register('term_raw')}
-        error={errors.term_raw}
+      <Controller
+        control={control}
+        name='term_raw'
+        render={({ field }) => (
+          <RefsInput
+            id='dlg_cst_term'
+            label='Термин'
+            maxHeight='3.75rem'
+            placeholder='Обозначение для текстовых определений'
+            schema={schema}
+            value={field.value ?? ''}
+            resolved={field.value}
+            onChange={newValue => field.onChange(newValue)}
+          />
+        )}
       />
-
       <Controller
         control={control}
         name='definition_formal'
@@ -101,19 +107,18 @@ export function FormCreateCst({ schema }: FormCreateCstProps) {
           )
         }
       />
-
       <Controller
         control={control}
         name='definition_raw'
         render={({ field }) =>
           !!field.value || !isElementary ? (
-            <TextArea
+            <RefsInput
               id='dlg_cst_definition'
-              spellCheck
-              fitContent
               label='Текстовое определение'
               placeholder='Текстовая интерпретация формального выражения'
-              className='max-h-15'
+              maxHeight='3.75rem'
+              schema={schema}
+              resolved={field.value}
               value={field.value}
               onChange={field.onChange}
             />

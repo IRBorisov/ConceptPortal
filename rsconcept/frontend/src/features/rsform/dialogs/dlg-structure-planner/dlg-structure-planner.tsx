@@ -6,7 +6,6 @@ import clsx from 'clsx';
 
 import { MiniButton } from '@/components/control';
 import { IconNewItem, IconReset, IconSave } from '@/components/icons';
-import { TextInput } from '@/components/input';
 import { ModalView } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { globalIDs } from '@/utils/constants';
@@ -16,6 +15,7 @@ import { type CreateConstituentaDTO, type UpdateConstituentaDTO } from '../../ba
 import { useCreateConstituenta } from '../../backend/use-create-constituenta';
 import { useRSForm } from '../../backend/use-rsform';
 import { useUpdateConstituenta } from '../../backend/use-update-constituenta';
+import { RefsInput } from '../../components/refs-input';
 import { type Constituenta, CstType, type RSForm } from '../../models/rsform';
 import { generateAlias } from '../../models/rsform-api';
 import { type SPNode, StructurePlanner } from '../../models/structure-planner';
@@ -23,6 +23,7 @@ import { type SPNode, StructurePlanner } from '../../models/structure-planner';
 import { StructureFlow } from './structure-flow';
 
 const DEFINITION_TRUNCATE = 40;
+const TERM_CHARS_PER_LINE = 50;
 
 export interface DlgStructurePlannerProps {
   schemaID: number;
@@ -44,6 +45,7 @@ export function DlgStructurePlanner() {
   const [term, setTerm] = useState<string>(
     (isMutable ? items[0].existing?.term_raw : items[0].existing?.term_resolved) ?? ''
   );
+  const isMultiline = term.length > TERM_CHARS_PER_LINE || term.includes('\n');
 
   if (!target?.analysis.type || items.length === 0) {
     console.error('Structure planner error input', target, items);
@@ -97,36 +99,56 @@ export function DlgStructurePlanner() {
   }
 
   const isDefinitionTooLong = selectedNode.definition.length > DEFINITION_TRUNCATE;
+  const blurClass = 'backdrop-blur-xs bg-background/90';
 
   return (
     <ModalView className='w-[calc(100dvw-3rem)] h-[calc(100dvh-3rem)]' fullScreen noFooterButton>
-      <div className='flex flex-col h-full'>
-        <div className='relative flex gap-3 mt-4 px-8 items-center mx-auto'>
+      <div className='relative flex flex-col h-full'>
+        <div className={clsx(
+          'z-modal-pop',
+          'absolute top-0 right-1/2 translate-x-1/2 mr-12',
+          'flex px-6 items-start')
+        }>
           <div
-            className='whitespace-nowrap w-70 truncate text-right font-math mr-3'
+            className='w-70 flex justify-end whitespace-nowrap truncate font-math'
             data-tooltip-id={isDefinitionTooLong ? globalIDs.tooltip : undefined}
             data-tooltip-content={isDefinitionTooLong ? selectedNode.definition : undefined}
           >
-            {selectedNode.definition}
+            <div className={clsx('w-fit pt-5.5 pr-3 pl-2 pb-3.75 rounded-bl-2xl rounded-tl-2xl', blurClass)}>
+              {selectedNode.definition}
+            </div>
           </div>
 
-          <div className={clsx('font-medium whitespace-nowrap w-8', !selectedCst && 'text-constructive')}>
+          <div className={clsx(
+            'w-8 pt-5.5 pr-3 pb-3.75',
+            'font-medium whitespace-nowrap',
+            blurClass,
+            !selectedCst && 'text-constructive'
+          )}>
             {selectedCst?.alias ?? inferAlias(selectedNode, schema, target)}
           </div>
 
-          <TextInput
-            id='dlg_structure_term'
-            dense
-            label='Термин'
-            placeholder='Не определен'
-            noBorder={!isMutable}
-            className='w-120'
-            value={term}
-            disabled={!isMutable}
-            onChange={event => setTerm(event.target.value)}
-          />
+          <div className={clsx(
+            'px-2 pb-2 pt-4',
+            blurClass,
+            !isMutable && 'rounded-br-xl',
+            isMultiline && 'rounded-b-xl'
+          )}>
+            <RefsInput
+              id='dlg_structure_term'
+              placeholder='Термин не определен'
+              className='w-120'
+              maxHeight='6.75rem'
+              schema={schema}
+              value={term}
+              initialValue={selectedCst?.term_raw}
+              resolved={selectedCst?.term_resolved ?? ''}
+              disabled={!isMutable}
+              onChange={setTerm}
+            />
+          </div>
 
-          {isMutable ? <div className='cc-icons'>
+          {isMutable ? <div className={clsx('cc-icons pt-5 pb-3.25 rounded-br-2xl rounded-tr-2xl', blurClass)}>
             <MiniButton
               title={selectedCst ? 'Обновить термин' : 'Создать конституенту'}
               icon={selectedCst ?
