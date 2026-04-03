@@ -195,7 +195,7 @@ export function TGFlow() {
       setIsAnimating(true);
     });
 
-    const stateChangeTimeout = setTimeout(() => {
+    const stateChangeTimeout = setTimeout(function syncGraphStateAfterLayout() {
       setNodes(prev =>
         !prev
           ? newNodes
@@ -208,7 +208,7 @@ export function TGFlow() {
       );
     }, PARAMETER.minimalTimeout);
 
-    const animationStopTimeout = setTimeout(() => {
+    const animationStopTimeout = setTimeout(function stopGraphLayoutAnimation() {
       setIsAnimating(false);
     }, PARAMETER.graphLayoutDuration);
 
@@ -231,7 +231,9 @@ export function TGFlow() {
   ]);
 
   useEffect(function resetViewOnChanges() {
-    setTimeout(() => void onFitViewEvent(flowOptions.fitViewOptions), PARAMETER.refreshTimeout);
+    setTimeout(function fitViewAfterGraphChange() {
+      void onFitViewEvent(flowOptions.fitViewOptions);
+    }, PARAMETER.refreshTimeout);
   }, [schema.id, filter.noText, filter.graphType, focusCst]);
 
   const readyForUpdate = nodes.length === filteredGraph.nodes.size;

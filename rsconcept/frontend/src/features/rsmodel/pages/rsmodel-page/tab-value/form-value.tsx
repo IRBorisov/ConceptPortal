@@ -68,7 +68,7 @@ export function FormValue({ id, activeCst }: FormValueProps) {
   useLayoutEffect(() => onModifiedEvent(false), [activeCst.id]);
 
   useEffect(function resetUIStateOnCstChange() {
-    const timeoutId = setTimeout(() => {
+    const timeoutId = setTimeout(function resetValueEditorState() {
       setInputValue(initialStr);
       onModifiedEvent(false);
     }, 0);

@@ -23,7 +23,9 @@ export const useAppLayoutStore = create<AppLayoutStore>()(set => ({
       if (state.noNavigation) {
         return { noNavigation: false, noNavigationAnimation: false };
       } else {
-        setTimeout(() => set({ noNavigation: true, noNavigationAnimation: true }), PARAMETER.moveDuration);
+        setTimeout(function hideNavigationAfterAnimation() {
+          set({ noNavigation: true, noNavigationAnimation: true });
+        }, PARAMETER.moveDuration);
         return { noNavigation: false, noNavigationAnimation: true };
       }
     }),

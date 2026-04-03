@@ -10,7 +10,7 @@ export function useResetAttribute(elementRef: React.RefObject<HTMLElement | null
     // This ensures tooltips work when loading the page directly with this tab active
     // React-tabs hides inactive panels with CSS (display: none), so react-tooltip v5
     // needs to re-scan the DOM when elements become visible
-    const timeoutId = setTimeout(() => {
+    const timeoutId = setTimeout(function resetVisibleAttributes() {
       if (!elementRef.current) {
         return;
       }

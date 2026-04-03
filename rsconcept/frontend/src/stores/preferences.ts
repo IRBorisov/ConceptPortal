@@ -74,7 +74,9 @@ export const usePreferencesStore = create<PreferencesStore>()(
           });
         });
 
-        setTimeout(() => document.head.removeChild(style), PARAMETER.moveDuration);
+        setTimeout(function removeTransitionDisabler() {
+          document.head.removeChild(style);
+        }, PARAMETER.moveDuration);
       },
 
       showHelp: true,

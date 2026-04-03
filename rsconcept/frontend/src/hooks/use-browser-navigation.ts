@@ -19,7 +19,7 @@ export function useBrowserNavigation() {
       }
 
       // Fallback to end the navigation in case route completes with cache
-      timeoutId = setTimeout(() => {
+      timeoutId = setTimeout(function endCachedNavigation() {
         end();
         timeoutId = null;
       }, DELAY_CACHE_CHECK);

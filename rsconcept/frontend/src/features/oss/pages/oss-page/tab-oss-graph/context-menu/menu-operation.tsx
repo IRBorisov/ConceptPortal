@@ -191,7 +191,11 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
         layout: layout,
         position: newPosition
       }
-    }).then(response => setTimeout(() => setSelectedNodes([`o${response.new_operation}`]), PARAMETER.refreshTimeout));
+    }).then(response =>
+      setTimeout(function selectCreatedReference() {
+        setSelectedNodes([`o${response.new_operation}`]);
+      }, PARAMETER.refreshTimeout)
+    );
   }
 
   function handleClone() {
@@ -211,7 +215,11 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
         layout: layout,
         position: newPosition
       }
-    }).then(response => setTimeout(() => setSelectedNodes([`o${response.new_operation}`]), PARAMETER.refreshTimeout));
+    }).then(response =>
+      setTimeout(function selectClonedSchema() {
+        setSelectedNodes([`o${response.new_operation}`]);
+      }, PARAMETER.refreshTimeout)
+    );
   }
 
   function handleSelectTarget() {

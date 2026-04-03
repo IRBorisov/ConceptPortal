@@ -13,6 +13,8 @@ import { type Operation } from '../models/oss';
 
 import { SelectOperation } from './select-operation';
 
+const SELECTION_CLEAR_TIMEOUT = 1000;
+
 interface PickMultiOperationProps extends Styling {
   value: number[];
   onChange: (newValue: number[]) => void;
@@ -35,7 +37,9 @@ export function PickMultiOperation({ rows, items, value, onChange, className, ..
     if (operation) {
       setLastSelected(operation);
       onChange([...value, operation.id]);
-      setTimeout(() => setLastSelected(null), 1000);
+      setTimeout(function clearLastSelectedOperation() {
+        setLastSelected(null);
+      }, SELECTION_CLEAR_TIMEOUT);
     }
   }
 

@@ -17,7 +17,7 @@ export default function ToolbarGraphFilter() {
   const { fitView } = useReactFlow();
 
   function handleFitView() {
-    setTimeout(() => {
+    setTimeout(function fitViewAfterToolbarAction() {
       void fitView(flowOptions.fitViewOptions);
     }, PARAMETER.minimalTimeout);
   }

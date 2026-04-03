@@ -11,7 +11,7 @@ export function useSingleAndDoubleClick<EventType extends React.SyntheticEvent, 
 
   function handleClick(event: EventType, ...args: ArgsType) {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(() => {
+    timeoutRef.current = setTimeout(function triggerSingleClick() {
       onClick(event, ...args);
       timeoutRef.current = null;
     }, delay);

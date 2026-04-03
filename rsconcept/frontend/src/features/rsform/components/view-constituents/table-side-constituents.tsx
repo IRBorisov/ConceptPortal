@@ -48,7 +48,7 @@ export function TableSideConstituents({
     if (autoScroll && prevActiveCstID.current !== activeCst?.id) {
       prevActiveCstID.current = activeCst?.id ?? null;
       if (!!activeCst) {
-        setTimeout(() => {
+        setTimeout(function scrollToActiveConstituenta() {
           const element = document.getElementById(`${prefixes.cst_side_table}${activeCst.id}`);
           if (element) {
             element.scrollIntoView({

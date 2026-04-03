@@ -104,7 +104,7 @@ export function TGReadonlyFlow({ schema }: TGReadonlyFlowProps) {
       setIsAnimating(true);
     });
 
-    const stateChangeTimeout = setTimeout(() => {
+    const stateChangeTimeout = setTimeout(function syncReadonlyGraphStateAfterLayout() {
       setNodes(prev =>
         !prev
           ? newNodes
@@ -117,7 +117,7 @@ export function TGReadonlyFlow({ schema }: TGReadonlyFlowProps) {
       );
     }, PARAMETER.minimalTimeout);
 
-    const animationStopTimeout = setTimeout(() => {
+    const animationStopTimeout = setTimeout(function stopReadonlyGraphLayoutAnimation() {
       setIsAnimating(false);
     }, PARAMETER.graphLayoutDuration);
 
@@ -141,7 +141,9 @@ export function TGReadonlyFlow({ schema }: TGReadonlyFlowProps) {
 
   useEffect(function adjustViewOnChange() {
     setTimeout(
-      () => void onFitViewEvent({ ...flowOptions.fitViewOptions, duration: PARAMETER.graphLayoutDuration }),
+      function fitViewAfterReadonlyGraphChange() {
+        void onFitViewEvent({ ...flowOptions.fitViewOptions, duration: PARAMETER.graphLayoutDuration });
+      },
       4 * PARAMETER.minimalTimeout
     );
   }, [schema.id, filter.noText, filter.graphType, focusCst]);

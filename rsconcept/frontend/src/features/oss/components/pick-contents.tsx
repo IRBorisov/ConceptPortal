@@ -50,7 +50,9 @@ export function PickContents({
     if (target) {
       setLastSelected(target);
       onChange([...value, target]);
-      setTimeout(() => setLastSelected(null), SELECTION_CLEAR_TIMEOUT);
+      setTimeout(function clearLastSelectedContent() {
+        setLastSelected(null);
+      }, SELECTION_CLEAR_TIMEOUT);
     }
   }
 

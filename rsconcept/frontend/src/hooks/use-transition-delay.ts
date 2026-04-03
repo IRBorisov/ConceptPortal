@@ -18,7 +18,9 @@ export function useTransitionTracker(delay: number = DEFAULT_DEBOUNCE_DELAY): bo
     let timeout: ReturnType<typeof setTimeout> | null = null;
 
     if (navigation.location) {
-      timeout = setTimeout(() => setShowPending(true), delay);
+      timeout = setTimeout(function showPendingAfterDelay() {
+        setShowPending(true);
+      }, delay);
     }
 
     return () => {

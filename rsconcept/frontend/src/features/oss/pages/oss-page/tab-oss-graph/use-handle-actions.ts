@@ -94,7 +94,9 @@ export function useHandleActions() {
       initialParent: extractBlockParent(selectedItems),
       onCreate: newID => {
         resetView();
-        setTimeout(() => setSelectedNodes([`o${newID}`]), PARAMETER.minimalTimeout);
+        setTimeout(function selectCreatedOperation() {
+          setSelectedNodes([`o${newID}`]);
+        }, PARAMETER.minimalTimeout);
       }
     });
   }
@@ -116,7 +118,7 @@ export function useHandleActions() {
         : selectedItems.filter(item => item.nodeType === NodeType.OPERATION).map(item => item.id),
       initialParent: parent,
       onCreate: newID => {
-        setTimeout(() => {
+        setTimeout(function resetViewAndSelectCreatedBlock() {
           resetView();
           setSelectedNodes([`b${newID}`]);
         }, PARAMETER.minimalTimeout);
@@ -134,7 +136,9 @@ export function useHandleActions() {
       initialParent: extractBlockParent(selectedItems),
       onCreate: newID => {
         resetView();
-        setTimeout(() => setSelectedNodes([`o${newID}`]), PARAMETER.minimalTimeout);
+        setTimeout(function selectCreatedSchema() {
+          setSelectedNodes([`o${newID}`]);
+        }, PARAMETER.minimalTimeout);
       }
     });
   }
@@ -149,7 +153,9 @@ export function useHandleActions() {
       initialParent: extractBlockParent(selectedItems),
       onCreate: newID => {
         resetView();
-        setTimeout(() => setSelectedNodes([`o${newID}`]), PARAMETER.minimalTimeout);
+        setTimeout(function selectImportedSchema() {
+          setSelectedNodes([`o${newID}`]);
+        }, PARAMETER.minimalTimeout);
       }
     });
   }

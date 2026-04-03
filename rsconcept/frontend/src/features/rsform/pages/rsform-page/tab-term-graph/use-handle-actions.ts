@@ -98,12 +98,13 @@ export function useHandleActions(graph: Graph<number>) {
 
   function panToCst(cstID: number) {
     setTimeout(
-      () =>
+      function panToConstituenta() {
         scrollToNode(String(cstID), {
           duration: PARAMETER.moveDuration,
           padding: fitViewOptions.padding,
           maxZoom: 1.5
-        }),
+        });
+      },
       PARAMETER.moveDuration
     );
   }

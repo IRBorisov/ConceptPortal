@@ -14,13 +14,14 @@ export const useDeleteItem = () => {
       await client.invalidateQueries({ queryKey: libraryApi.libraryListKey });
       await Promise.resolve(variables.beforeInvalidate?.());
       setTimeout(
-        () =>
+        function refreshRelatedQueries() {
           void Promise.allSettled([
             client.invalidateQueries({ queryKey: [KEYS.oss] }),
             client.resetQueries({ queryKey: KEYS.composite.model({ itemID: variables.target }) }),
             client.resetQueries({ queryKey: KEYS.composite.schema({ itemID: variables.target }) }),
             client.resetQueries({ queryKey: KEYS.composite.oss({ itemID: variables.target }) })
-          ]),
+          ]);
+        },
         PARAMETER.refreshTimeout
       );
     },

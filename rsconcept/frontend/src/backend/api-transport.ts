@@ -141,7 +141,7 @@ function notifySuccess<ResponseData>(
   if (!message) {
     return;
   }
-  setTimeout(() => {
+  setTimeout(function notifySuccessWithDelay() {
     if (typeof message === 'string') {
       toast.success(message);
     } else {

@@ -128,8 +128,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
   ]);
 
   useEffect(function resetUIStateOnCstChange() {
-    // TODO: suspect this is too complex solution
-    const timeoutId = setTimeout(() => {
+    const timeoutId = setTimeout(function resetConstituentaUIState() {
       setForceComment(false);
       setLocalParse(null);
     }, 0);

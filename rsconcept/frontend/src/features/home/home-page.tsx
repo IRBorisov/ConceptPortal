@@ -13,7 +13,7 @@ export function HomePage() {
 
   useEffect(function redirectToLibrary() {
     // Note: Timeout is needed to let router initialize
-    const timeoutId = setTimeout(() => {
+    const timeoutId = setTimeout(function navigateAfterRouterInit() {
       router.replace({ path: isAnonymous ? urls.login : urls.library });
     }, PARAMETER.minimalTimeout);
 

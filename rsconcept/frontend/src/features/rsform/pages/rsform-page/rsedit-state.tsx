@@ -124,7 +124,7 @@ export const RSEditState = ({
   function onCreateCst(newCst: RO<ConstituentaBasicsDTO>) {
     setSelectedCst([newCst.id]);
     router.changeActive(newCst.id);
-    setTimeout(() => {
+    setTimeout(function scrollToCreatedConstituenta() {
       const element = document.getElementById(`${prefixes.cst_list}${newCst.id}`);
       if (element) {
         element.scrollIntoView({

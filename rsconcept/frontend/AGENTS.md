@@ -74,3 +74,4 @@ Add new instructions here:
 
 - In useEffect hooks, always use named function expressions instead of anonymous arrow callbacks.
 - Prefer useEffectEvent over useCallback for handlers used inside useEffect.
+- In setTimeout calls, always use named function expressions instead of anonymous arrow callbacks.

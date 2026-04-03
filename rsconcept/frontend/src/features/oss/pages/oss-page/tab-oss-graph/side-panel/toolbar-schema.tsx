@@ -69,7 +69,7 @@ export function ToolbarSchema({
 
   function onCreateCst(newCst: RO<ConstituentaBasicsDTO>) {
     setActive(newCst.id);
-    setTimeout(() => {
+    setTimeout(function scrollToCreatedConstituenta() {
       const element = document.getElementById(`${prefixes.cst_list}${newCst.id}`);
       if (element) {
         element.scrollIntoView({

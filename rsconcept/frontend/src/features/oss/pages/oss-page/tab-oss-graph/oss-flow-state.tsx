@@ -115,14 +115,18 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
   }, [schema, edgeAnimate, edgeStraight, reloadData]);
 
   function resetView() {
-    setTimeout(() => void fitView(flowOptions.fitViewOptions), PARAMETER.refreshTimeout);
+    setTimeout(function fitViewAfterReset() {
+      void fitView(flowOptions.fitViewOptions);
+    }, PARAMETER.refreshTimeout);
   }
 
   function resetGraph() {
     setSelectedNodes([]);
     prevSelectedNodes.current = [];
     reloadData();
-    setTimeout(() => void fitView(flowOptions.fitViewOptions), PARAMETER.refreshTimeout);
+    setTimeout(function fitViewAfterGraphReset() {
+      void fitView(flowOptions.fitViewOptions);
+    }, PARAMETER.refreshTimeout);
   }
 
   useEffect(function updateSelectedNodes() {
