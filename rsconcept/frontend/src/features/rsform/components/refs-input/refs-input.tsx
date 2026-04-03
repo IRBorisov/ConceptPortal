@@ -3,6 +3,7 @@
 import { useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { type Extension, type SelectionRange } from '@codemirror/state';
+import { EditorView, tooltips } from '@codemirror/view';
 import { tags } from '@lezer/highlight';
 import { createTheme } from '@uiw/codemirror-themes';
 import CodeMirror, {
@@ -11,7 +12,6 @@ import CodeMirror, {
   type ReactCodeMirrorRef
 } from '@uiw/react-codemirror';
 import clsx from 'clsx';
-import { EditorView } from 'codemirror';
 import { useDebounce } from 'use-debounce';
 
 import { Label } from '@/components/input';
@@ -92,11 +92,13 @@ interface RefsInputInputProps
   label?: string;
   disabled?: boolean;
   initialValue?: string;
+  portalHoverTooltips?: boolean;
 }
 
 export function RefsInput({
   label, disabled, schema,
   initialValue, value, resolved,
+  portalHoverTooltips,
   onOpenEdit, onFocus, onBlur, onChange,
   ref, ...restProps
 }: RefsInputInputProps) {
@@ -134,6 +136,10 @@ export function RefsInput({
   const editorExtensions = [
     EditorView.lineWrapping,
     EditorView.contentAttributes.of({ spellcheck: 'true' }),
+    ...(portalHoverTooltips ? [tooltips({
+      parent: document.body,
+      position: 'fixed'
+    })] : []),
     NaturalLanguage,
     ...(!onOpenEdit ? [] : [refsNavigation(schema, onOpenEdit)]),
     refsHoverTooltip(schema, onOpenEdit !== undefined)

@@ -139,6 +139,7 @@ export function DlgStructurePlanner() {
               placeholder='Термин не определен'
               className='w-120'
               maxHeight='6.75rem'
+              portalHoverTooltips
               schema={schema}
               value={term}
               initialValue={selectedCst?.term_raw}

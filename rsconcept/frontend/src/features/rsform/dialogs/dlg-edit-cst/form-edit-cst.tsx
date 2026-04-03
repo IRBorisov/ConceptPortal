@@ -167,7 +167,7 @@ export function FormEditCst({ target, schema }: FormEditCstProps) {
           !!field.value || (!isElementary && !target.is_inherited) ? (
             <RSInput
               id='dlg_cst_expression'
-              noTooltip
+              portalHoverTooltips
               label={labelRSExpression(cst_type)}
               placeholder={getRSDefinitionPlaceholder(cst_type)}
               maxHeight='3.75rem'

@@ -95,7 +95,7 @@ export function FormCreateCst({ schema }: FormCreateCstProps) {
           !!field.value || !isElementary ? (
             <RSInput
               id='dlg_cst_expression'
-              noTooltip
+              portalHoverTooltips
               label={labelRSExpression(cst_type)}
               placeholder={getRSDefinitionPlaceholder(cst_type)}
               value={field.value}

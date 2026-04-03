@@ -2,6 +2,7 @@
 
 import { useRef } from 'react';
 import { type Extension } from '@codemirror/state';
+import { EditorView, tooltips } from '@codemirror/view';
 import { tags } from '@lezer/highlight';
 import { createTheme } from '@uiw/codemirror-themes';
 import CodeMirror, {
@@ -10,7 +11,6 @@ import CodeMirror, {
   type ReactCodeMirrorRef
 } from '@uiw/react-codemirror';
 import clsx from 'clsx';
-import { EditorView } from 'codemirror';
 
 import { extractGlobals } from '@/features/rslang/api';
 
@@ -72,7 +72,7 @@ interface RSInputProps
   ref?: React.Ref<ReactCodeMirrorRef>;
   label?: string;
   disabled?: boolean;
-  noTooltip?: boolean;
+  portalHoverTooltips?: boolean;
   onChange?: (newValue: string) => void;
   onAnalyze?: () => void;
   schema?: RSForm;
@@ -82,7 +82,7 @@ interface RSInputProps
 export function RSInput({
   label,
   disabled,
-  noTooltip,
+  portalHoverTooltips,
 
   schema,
   onOpenEdit,
@@ -123,9 +123,13 @@ export function RSInput({
   const editorExtensions = [
     EditorView.lineWrapping,
     RSLanguage,
+    ...(portalHoverTooltips ? [tooltips({
+      parent: document.body,
+      position: 'fixed'
+    })] : []),
     ccBracketMatching(),
     ...(!schema || !onOpenEdit ? [] : [rsNavigation(schema, onOpenEdit)]),
-    ...(noTooltip || !schema ? [] : [rsHoverTooltip(schema, onOpenEdit !== undefined)])
+    ...(!schema ? [] : [rsHoverTooltip(schema, onOpenEdit !== undefined)])
   ];
 
   function handleAutoComplete(text: RSTextWrapper): boolean {

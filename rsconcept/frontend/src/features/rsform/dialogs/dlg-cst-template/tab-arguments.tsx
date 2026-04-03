@@ -131,7 +131,7 @@ export function TabArguments({ schema }: TabArgumentsProps) {
 
       <RSInput
         disabled
-        noTooltip
+        portalHoverTooltips
         id='result'
         placeholder='Итоговое определение'
         className='mt-4'
