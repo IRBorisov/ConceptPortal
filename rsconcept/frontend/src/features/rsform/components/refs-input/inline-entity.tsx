@@ -6,38 +6,23 @@ import clsx from 'clsx';
 import { MiniButton } from '@/components/control';
 import { IconAccept, IconClose } from '@/components/icons';
 import { SearchBar } from '@/components/input';
+import { prepareTooltip } from '@/utils/format';
+import { isMac } from '@/utils/utils';
 
-import { type Grammeme, supportedGrammemes } from '../../models/language';
-import { parseEntityReference, parseGrammemes } from '../../models/language-api';
+import { type Grammeme } from '../../models/language';
 import { type Constituenta, type RSForm } from '../../models/rsform';
 import { matchConstituenta } from '../../models/rsform-api';
 import { CstMatchMode } from '../../stores/cst-search';
+import { SelectWordForm } from '../select-word-form';
 
-import { type IReferenceInputState } from './refs-input';
-
-const DEFAULT_WORDFORMS: { text: string; grams: Grammeme[]; }[] = [
-  { text: 'ед им', grams: ['sing', 'nomn'] },
-  { text: 'ед род', grams: ['sing', 'gent'] },
-  { text: 'ед дат', grams: ['sing', 'datv'] },
-  { text: 'ед вин', grams: ['sing', 'accs'] },
-  { text: 'ед твор', grams: ['sing', 'ablt'] },
-  { text: 'ед пред', grams: ['sing', 'loct'] },
-  { text: 'мн им', grams: ['plur', 'nomn'] },
-  { text: 'мн род', grams: ['plur', 'gent'] },
-  { text: 'мн дат', grams: ['plur', 'datv'] },
-  { text: 'мн вин', grams: ['plur', 'accs'] },
-  { text: 'мн твор', grams: ['plur', 'ablt'] },
-  { text: 'мн пред', grams: ['plur', 'loct'] }
-];
+import { type EntityRefState, type InlinePosition } from './refs-models';
 
 interface InlineEntityEditorProps {
   schema: RSForm;
-  initial: IReferenceInputState;
-  position: {
-    top: number;
-    left: number;
-  };
-  onSave: (value: { entity: string; form: string; }) => void;
+  position: InlinePosition;
+  initial: EntityRefState;
+
+  onSave: (entity: string, form: string) => void;
   onCancel: () => void;
 }
 
@@ -48,9 +33,15 @@ export function InlineEntityEditor({
   onSave,
   onCancel
 }: InlineEntityEditorProps) {
-  const [value, setValue] = useState(() => initInlineEntityReference(initial));
-  const [query, setQuery] = useState(() => prepareSelectionPrompt(initial.text));
+  const [entity, setEntity] = useState<string>(initial.entity);
+  const [grams, setGrams] = useState<Grammeme[]>(initial.grams);
+  const [query, setQuery] = useState(() => prepareSelectionPrompt(initial.query));
   const rootRef = useRef<HTMLDivElement>(null);
+
+  const searchBarRef = useRef<HTMLInputElement>(null);
+  useEffect(function focusSearchAfterMount() {
+    searchBarRef.current?.focus();
+  }, []);
 
   const filteredItems = useMemo(() => {
     const source = schema.items.filter(cst => cst.term_resolved !== '');
@@ -58,24 +49,17 @@ export function InlineEntityEditor({
       query.trim() === '' ? source : source.filter(cst => matchConstituenta(cst, query.trim(), CstMatchMode.TERM));
     return result.slice(0, 8);
   }, [query, schema.items]);
-  const canSubmit = value.entity.trim() !== '' && value.grams.length > 0;
+  const canSubmit = entity.trim() !== '' && grams.length > 0;
 
   function handleSave() {
     if (!canSubmit) {
       return;
     }
-
-    onSave({
-      entity: value.entity.trim(),
-      form: value.grams.join(',')
-    });
+    onSave(entity.trim(), grams.join(','));
   }
 
   function handleSelectConstituenta(cst: Constituenta) {
-    setValue(prev => ({
-      ...prev,
-      entity: cst.alias
-    }));
+    setEntity(cst.alias);
   }
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
@@ -96,16 +80,14 @@ export function InlineEntityEditor({
       event.preventDefault();
       event.stopPropagation();
       handleSave();
+      return;
     }
   }
 
-  useEffect(() => {
+  useEffect(function closeOnClickOutside() {
     function handlePointerDown(event: PointerEvent) {
       const target = event.target;
-      if (!(target instanceof Node)) {
-        return;
-      }
-      if (!rootRef.current?.contains(target)) {
+      if (target instanceof Node && !rootRef.current?.contains(target)) {
         onCancel();
       }
     }
@@ -119,6 +101,7 @@ export function InlineEntityEditor({
   return (
     <div
       ref={rootRef}
+      tabIndex={-1}
       className='absolute z-topmost w-120 max-w-[min(30rem,calc(100vw-4rem))] cursor-auto'
       style={{ top: position.top, left: position.left }}
       onKeyDown={handleKeyDown}
@@ -132,20 +115,25 @@ export function InlineEntityEditor({
             noBorder
             placeholder='Поиск конституенты'
             className='text-sm bg-input'
+            inputRef={searchBarRef}
           />
           <MiniButton
             icon={<IconAccept size='1.5rem' className='icon-green' />}
-            title='Сохранить ссылку'
+            titleHtml={prepareTooltip('Сохранить ссылку', isMac() ? 'Cmd + Enter' : 'Ctrl + Enter')}
             onClick={handleSave}
             disabled={!canSubmit}
           />
-          <MiniButton icon={<IconClose size='1.5rem' className='icon-primary' />} title='Закрыть' onClick={onCancel} />
+          <MiniButton
+            icon={<IconClose size='1.5rem' className='icon-primary' />}
+            titleHtml={prepareTooltip('Закрыть', 'Esc')}
+            onClick={onCancel}
+          />
         </div>
 
-        <div className='mb-2 max-h-32 overflow-y-auto rounded-md border'>
+        <div className='max-h-32 overflow-y-auto border-t border-x rounded-none'>
           {filteredItems.length > 0 ? (
             filteredItems.map(cst => {
-              const isSelected = cst.alias === value.entity;
+              const isSelected = cst.alias === entity;
               return (
                 <button
                   key={cst.id}
@@ -168,31 +156,8 @@ export function InlineEntityEditor({
             <div className='px-3 py-2 text-sm text-muted-foreground'>Ничего не найдено</div>
           )}
         </div>
+        <SelectWordForm value={grams} onChange={setGrams} />
 
-        <div className='flex flex-wrap gap-1 select-none'>
-          {DEFAULT_WORDFORMS.map(form => {
-            const isSelected = form.grams.every(gram => value.grams.includes(gram));
-            return (
-              <button
-                key={form.text}
-                type='button'
-                className={clsx(
-                  'rounded-md border w-18 py-1 text-xs leading-none cc-animate-color',
-                  'hover:bg-accent cursor-pointer',
-                  isSelected && 'bg-selected text-selected-foreground'
-                )}
-                onClick={() =>
-                  setValue(prev => ({
-                    ...prev,
-                    grams: supportedGrammemes.filter(gram => form.grams.some(item => item === gram))
-                  }))
-                }
-              >
-                {form.text}
-              </button>
-            );
-          })}
-        </div>
       </div>
     </div>
   );
@@ -213,18 +178,3 @@ function prepareSelectionPrompt(text: string | undefined): string {
   return value.substring(0, Math.max(value.length - 3, 0));
 }
 
-function initInlineEntityReference(initial: IReferenceInputState) {
-  if (!initial.refRaw) {
-    return {
-      entity: '',
-      grams: [] as Grammeme[]
-    };
-  }
-
-  const ref = parseEntityReference(initial.refRaw);
-  const grams = parseGrammemes(ref.form);
-  return {
-    entity: ref.entity,
-    grams: supportedGrammemes.filter(data => grams.includes(data))
-  };
-}

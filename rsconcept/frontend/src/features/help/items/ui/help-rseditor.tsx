@@ -28,16 +28,13 @@ export function HelpRSEditor() {
     <div className='dense'>
       <h1>Редактор конституенты</h1>
 
-      <ul>
-        <li>
-          <IconCrucial className='inline-icon' /> статус ключевой конституенты
-        </li>
-      </ul>
-
       <div className='flex flex-col sm:flex-row sm:gap-3'>
         <div>
           <h2>Управление</h2>
           <ul>
+            <li>
+              <IconCrucial className='inline-icon' /> статус ключевой
+            </li>
             <li>
               <IconOSS className='inline-icon' /> переход к <LinkTopic text='ОСС' topic={HelpTopic.CC_OSS} />
             </li>
@@ -124,11 +121,14 @@ export function HelpRSEditor() {
       <h2>Термин и Текстовое определение</h2>
       <ul>
         <li>
-          <kbd>Клик</kbd> редактирование <LinkTopic text='Имени' topic={HelpTopic.CC_CONSTITUENTA} /> /{' '}
+          Редактирование <LinkTopic text='Имени' topic={HelpTopic.CC_CONSTITUENTA} /> /{' '}
           <LinkTopic text='Термина' topic={HelpTopic.CC_CONSTITUENTA} />
         </li>
         <li>
-          <kbd>{isMac() ? 'Cmd + Пробел' : 'Ctrl + Пробел'}</kbd> открывает редактирование отсылок
+          <kbd>Alt + 1</kbd> редактирование отсылок
+        </li>
+        <li>
+          <kbd>Alt + 2</kbd> редактирование связанных слов
         </li>
       </ul>
     </div>

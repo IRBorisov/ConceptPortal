@@ -23,6 +23,9 @@ interface SearchBarProps extends Styling {
 
   /** Disable border. */
   noBorder?: boolean;
+
+  /** Input ref object. */
+  inputRef?: React.Ref<HTMLInputElement>;
 }
 
 /**
@@ -36,6 +39,7 @@ export function SearchBar({
   noBorder,
   className,
   placeholder = 'Поиск',
+  inputRef,
   ...restProps
 }: SearchBarProps) {
   return (
@@ -45,6 +49,7 @@ export function SearchBar({
       ) : null}
       <input
         id={id}
+        ref={inputRef}
         type='search'
         className={clsx(
           'min-w-0 py-2 w-full pr-2',

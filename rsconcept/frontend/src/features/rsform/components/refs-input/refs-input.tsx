@@ -1,7 +1,7 @@
 'use client';
 
-import { forwardRef, useCallback, useEffect, useRef, useState } from 'react';
-import { type Extension } from '@codemirror/state';
+import { useRef, useState } from 'react';
+import { type Extension, type SelectionRange } from '@codemirror/state';
 import { tags } from '@lezer/highlight';
 import { createTheme } from '@uiw/codemirror-themes';
 import CodeMirror, {
@@ -11,22 +11,25 @@ import CodeMirror, {
 } from '@uiw/react-codemirror';
 import clsx from 'clsx';
 import { EditorView } from 'codemirror';
+import { useDebounce } from 'use-debounce';
 
 import { Label } from '@/components/input';
 import { usePreferencesStore } from '@/stores/preferences';
 import { APP_COLORS } from '@/styling/colors';
 import { CodeMirrorWrapper } from '@/utils/codemirror';
+import { PARAMETER } from '@/utils/constants';
 import { withPreventDefault } from '@/utils/utils';
 
-import { ReferenceType } from '../../models/language';
-import { referenceToString } from '../../models/language-api';
+import { type Grammeme, ReferenceType, supportedGrammemes } from '../../models/language';
+import { parseEntityReference, parseGrammemes, parseSyntacticReference, referenceToString } from '../../models/language-api';
 import { type RSForm } from '../../models/rsform';
 
+import { RefEntity, RefSyntactic } from './parse/parser.terms';
 import { refsNavigation } from './click-navigation';
 import { InlineEntityEditor } from './inline-entity';
 import { InlineSyntacticEditor } from './inline-syntactic';
-import { NaturalLanguage } from './parse';
-import { buildReferenceSelectionContext } from './selection';
+import { NaturalLanguage, ReferenceTokens } from './parse';
+import { type EntityRefState, type InlinePosition, type SyntacticRefState } from './refs-models';
 import { refsHoverTooltip } from './tooltip';
 
 const editorSetup: BasicSetupOptions = {
@@ -57,31 +60,6 @@ const editorSetup: BasicSetupOptions = {
   lintKeymap: false
 };
 
-// HelpTopic.TERM_CONTROL
-
-// const schemaEditReferenceState = z
-//   .object({
-//     type: schemaReferenceType,
-//     entity: z.strictObject({
-//       entity: z.string(),
-//       grams: z.array(schemaGrammeme)
-//     }),
-//     syntactic: z.strictObject({ offset: z.number(), nominal: z.string() })
-//   })
-//   .refine(
-//     data =>
-//       (data.type !== ReferenceType.SYNTACTIC || (data.syntactic.offset !== 0 && data.syntactic.nominal !== '')) &&
-//       (data.type !== ReferenceType.ENTITY || (data.entity.entity !== '' && data.entity.grams.length > 0))
-//   );
-
-export interface IReferenceInputState {
-  type: ReferenceType;
-  refRaw?: string;
-  text?: string;
-  mainRefs: string[];
-  basePosition: number;
-}
-
 interface RefsInputInputProps
   extends Pick<
     ReactCodeMirrorProps,
@@ -101,256 +79,258 @@ interface RefsInputInputProps
 
   schema: RSForm;
   onOpenEdit?: (cstID: number) => void;
+  ref?: React.Ref<ReactCodeMirrorRef>;
 
   label?: string;
   disabled?: boolean;
   initialValue?: string;
 }
 
-export const RefsInput = forwardRef<ReactCodeMirrorRef, RefsInputInputProps>(
-  (
-    { label, disabled, schema, onOpenEdit, initialValue, value, resolved, onFocus, onBlur, onChange, ...restProps },
-    ref
-  ) => {
-    const darkMode = usePreferencesStore(state => state.darkMode);
+export function RefsInput({
+  label, disabled, schema,
+  initialValue, value, resolved,
+  onOpenEdit, onFocus, onBlur, onChange,
+  ref, ...restProps
+}: RefsInputInputProps) {
+  const darkMode = usePreferencesStore(state => state.darkMode);
 
-    const [isFocused, setIsFocused] = useState(false);
-    const [isEditing, setIsEditing] = useState(false);
-    const [entityEditor, setEntityEditor] = useState<{
-      initial: ReturnType<typeof buildReferenceSelectionContext>['initial'];
-      selection: {
-        from: number;
-        to: number;
-      };
-      position: {
-        top: number;
-        left: number;
-      };
-    } | null>(null);
-    const [syntacticEditor, setSyntacticEditor] = useState<{
-      initial: ReturnType<typeof buildReferenceSelectionContext>['initial'];
-      selection: {
-        from: number;
-        to: number;
-      };
-      position: {
-        top: number;
-        left: number;
-      };
-    } | null>(null);
+  const [isFocused, setIsFocused] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  // Debounce editing to avoid text flickering after closing inline editor
+  const [editingDebounce] = useDebounce(isEditing, 2 * PARAMETER.minimalTimeout);
 
-    const internalRef = useRef<ReactCodeMirrorRef>(null);
-    const wrapperRef = useRef<HTMLDivElement>(null);
-    const thisRef = !ref || typeof ref === 'function' ? internalRef : ref;
+  const [inlinePosition, setInlinePosition] = useState<InlinePosition | null>(null);
+  const [syntacticEditor, setSyntacticEditor] = useState<SyntacticRefState | null>(null);
+  const [entityEditor, setEntityEditor] = useState<EntityRefState | null>(null);
 
-    const cursor = !disabled ? 'cursor-text' : 'cursor-default';
-    const customTheme: Extension = createTheme({
-      theme: darkMode ? 'dark' : 'light',
-      settings: {
-        fontFamily: 'inherit',
-        background: !disabled ? APP_COLORS.bgInput : APP_COLORS.bgDefault,
-        foreground: APP_COLORS.fgDefault,
-        caret: APP_COLORS.fgDefault
-      },
-      styles: [
-        { tag: tags.name, color: APP_COLORS.fgPurple, cursor: 'default' },
-        { tag: tags.literal, color: APP_COLORS.fgTeal, cursor: 'default' },
-        { tag: tags.comment, color: APP_COLORS.fgRed }
-      ]
-    });
+  const internalRef = useRef<ReactCodeMirrorRef>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const thisRef = !ref || typeof ref === 'function' ? internalRef : ref;
 
-    const editorExtensions = [
-      EditorView.lineWrapping,
-      EditorView.contentAttributes.of({ spellcheck: 'true' }),
-      NaturalLanguage,
-      ...(!onOpenEdit ? [] : [refsNavigation(schema, onOpenEdit)]),
-      refsHoverTooltip(schema, onOpenEdit !== undefined)
-    ];
+  const cursor = !disabled ? 'cursor-text' : 'cursor-default';
+  const customTheme: Extension = createTheme({
+    theme: darkMode ? 'dark' : 'light',
+    settings: {
+      fontFamily: 'inherit',
+      background: !disabled ? APP_COLORS.bgInput : APP_COLORS.bgDefault,
+      foreground: APP_COLORS.fgDefault,
+      caret: APP_COLORS.fgDefault
+    },
+    styles: [
+      { tag: tags.name, color: APP_COLORS.fgPurple, cursor: 'default' },
+      { tag: tags.literal, color: APP_COLORS.fgTeal, cursor: 'default' },
+      { tag: tags.comment, color: APP_COLORS.fgRed }
+    ]
+  });
 
-    function handleFocusIn(event: React.FocusEvent<HTMLDivElement>) {
-      setIsFocused(true);
-      if (onFocus) onFocus(event);
-    }
+  const editorExtensions = [
+    EditorView.lineWrapping,
+    EditorView.contentAttributes.of({ spellcheck: 'true' }),
+    NaturalLanguage,
+    ...(!onOpenEdit ? [] : [refsNavigation(schema, onOpenEdit)]),
+    refsHoverTooltip(schema, onOpenEdit !== undefined)
+  ];
 
-    function handleFocusOut(event: React.FocusEvent<HTMLDivElement>) {
-      setIsFocused(false);
-      if (onBlur) onBlur(event);
-    }
-
-    const closeInlineEditor = useCallback(() => {
-      setEntityEditor(null);
-      setSyntacticEditor(null);
-      setIsEditing(false);
-      thisRef.current?.view?.focus();
-    }, [thisRef]);
-
-    useEffect(() => {
-      if (!entityEditor && !syntacticEditor) {
-        return;
-      }
-
-      function handleKeyDown(event: KeyboardEvent) {
-        if (event.key === 'Escape') {
-          event.preventDefault();
-          event.stopPropagation();
-          closeInlineEditor();
-        }
-      }
-
-      document.addEventListener('keydown', handleKeyDown, true);
-      return () => {
-        document.removeEventListener('keydown', handleKeyDown, true);
-      };
-    }, [closeInlineEditor, entityEditor, syntacticEditor]);
-
-    function getInlineEditorPosition(selection: { from: number; to: number; }) {
-      const cmRef = thisRef.current as Required<ReactCodeMirrorRef> | null;
-      const wrapper = wrapperRef.current;
-      if (!cmRef?.view || !wrapper) {
-        return null;
-      }
-
-      const coords = cmRef.view.coordsAtPos(selection.to) ?? cmRef.view.coordsAtPos(selection.from);
-      const wrapperRect = wrapper.getBoundingClientRect();
-
-      return {
-        top: Math.max((coords?.bottom ?? wrapperRect.top) - wrapperRect.top + 8, 8),
-        left: Math.min(
-          Math.max((coords?.left ?? wrapperRect.left) - wrapperRect.left, 8),
-          Math.max(wrapperRect.width - 560, 8)
-        )
-      };
-    }
-
-    function openEntityEditor() {
-      const cmRef = thisRef.current as Required<ReactCodeMirrorRef> | null;
-      if (!cmRef?.view) {
-        return;
-      }
-
-      const context = buildReferenceSelectionContext(cmRef, { targetType: ReferenceType.ENTITY });
-      const position = getInlineEditorPosition(context.selection);
-      if (!position) {
-        return;
-      }
-
-      setSyntacticEditor(null);
-      setEntityEditor({
-        initial: context.initial,
-        selection: context.selection,
-        position
-      });
-      setIsEditing(true);
-    }
-
-    function openSyntacticEditor() {
-      const cmRef = thisRef.current as Required<ReactCodeMirrorRef> | null;
-      if (!cmRef?.view) {
-        return;
-      }
-
-      const context = buildReferenceSelectionContext(cmRef, { targetType: ReferenceType.SYNTACTIC });
-      const position = getInlineEditorPosition(context.selection);
-      if (!position) {
-        return;
-      }
-
-      setEntityEditor(null);
-      setSyntacticEditor({
-        initial: context.initial,
-        selection: context.selection,
-        position
-      });
-      setIsEditing(true);
-    }
-
-    function handleSaveEntityEditor(payload: { entity: string; form: string; }) {
-      const cmRef = thisRef.current as Required<ReactCodeMirrorRef> | null;
-      if (!cmRef || !entityEditor) {
-        return;
-      }
-
-      const wrap = new CodeMirrorWrapper(cmRef);
-      wrap.setSelection(entityEditor.selection.from, entityEditor.selection.to);
-      wrap.replaceWith(
-        referenceToString({
-          type: ReferenceType.ENTITY,
-          data: payload
-        })
-      );
-      closeInlineEditor();
-    }
-
-    function handleSaveSyntacticEditor(payload: { offset: number; nominal: string; }) {
-      const cmRef = thisRef.current as Required<ReactCodeMirrorRef> | null;
-      if (!cmRef || !syntacticEditor) {
-        return;
-      }
-
-      const wrap = new CodeMirrorWrapper(cmRef);
-      wrap.setSelection(syntacticEditor.selection.from, syntacticEditor.selection.to);
-      wrap.replaceWith(
-        referenceToString({
-          type: ReferenceType.SYNTACTIC,
-          data: payload
-        })
-      );
-      closeInlineEditor();
-    }
-
-    function handleInput(event: React.KeyboardEvent<HTMLDivElement>) {
-      if (!thisRef.current?.view) {
-        event.preventDefault();
-        event.stopPropagation();
-        return;
-      }
-
-      if (event.altKey && event.code === 'Digit1') {
-        withPreventDefault(openEntityEditor)(event);
-        return;
-      }
-
-      if (event.altKey && event.code === 'Digit2') {
-        withPreventDefault(openSyntacticEditor)(event);
-      }
-    }
-
-
-    return (
-      <div ref={wrapperRef} className={clsx('relative flex flex-col gap-2', cursor)}>
-        <Label text={label} />
-        <CodeMirror
-          ref={thisRef}
-          basicSetup={editorSetup}
-          theme={customTheme}
-          extensions={editorExtensions}
-          value={isFocused ? value : value !== initialValue || isEditing ? value : resolved}
-          indentWithTab={false}
-          onChange={onChange}
-          editable={!disabled && !isEditing}
-          onKeyDown={handleInput}
-          onFocus={handleFocusIn}
-          onBlur={handleFocusOut}
-          {...restProps}
-        />
-        {entityEditor ? (
-          <InlineEntityEditor
-            schema={schema}
-            initial={entityEditor.initial}
-            position={entityEditor.position}
-            onCancel={closeInlineEditor}
-            onSave={handleSaveEntityEditor}
-          />
-        ) : null}
-        {syntacticEditor ? (
-          <InlineSyntacticEditor
-            initial={syntacticEditor.initial}
-            position={syntacticEditor.position}
-            onCancel={closeInlineEditor}
-            onSave={handleSaveSyntacticEditor}
-          />
-        ) : null}
-      </div>
-    );
+  function handleFocusIn(event: React.FocusEvent<HTMLDivElement>) {
+    setIsFocused(true);
+    onFocus?.(event);
   }
-);
+
+  function handleFocusOut(event: React.FocusEvent<HTMLDivElement>) {
+    setIsFocused(false);
+    onBlur?.(event);
+  }
+
+  function closeInlineEditor() {
+    setEntityEditor(null);
+    setSyntacticEditor(null);
+    setIsEditing(false);
+    setTimeout(function focusAfterEditingEnabled() {
+      thisRef.current?.view?.focus();
+    }, PARAMETER.minimalTimeout);
+  }
+
+  function getInlineEditorPosition(selection: SelectionRange) {
+    const cmRef = thisRef.current as Required<ReactCodeMirrorRef> | null;
+    const wrapper = wrapperRef.current;
+    if (!cmRef?.view || !wrapper) {
+      return null;
+    }
+
+    const coords = cmRef.view.coordsAtPos(selection.to) ?? cmRef.view.coordsAtPos(selection.from);
+    const wrapperRect = wrapper.getBoundingClientRect();
+    return {
+      top: Math.max((coords?.bottom ?? wrapperRect.top) - wrapperRect.top + 8, 8),
+      left: Math.min(
+        Math.max((coords?.left ?? wrapperRect.left) - wrapperRect.left, 8),
+        Math.max(wrapperRect.width - 560, 8)
+      )
+    };
+  }
+
+  function openEntityEditor() {
+    const cmRef = thisRef.current as Required<ReactCodeMirrorRef> | null;
+    if (!cmRef?.view) {
+      return;
+    }
+
+    const wrap = new CodeMirrorWrapper(cmRef);
+    wrap.fixSelection(ReferenceTokens);
+    const selection = wrap.getSelection();
+    const position = getInlineEditorPosition(selection);
+    if (!position) {
+      return;
+    }
+
+    const nodes = wrap.getEnvelopingNodes(ReferenceTokens);
+    const text = wrap.getSelectionText();
+    let entity = '';
+    let grams: Grammeme[] = [];
+    if (nodes.length === 1 && nodes[0].type.id === RefEntity) {
+      const refRaw = wrap.getText(nodes[0].from, nodes[0].to);
+      const ref = parseEntityReference(refRaw);
+      entity = ref.entity;
+      grams = parseGrammemes(ref.form);
+    }
+
+    setSyntacticEditor(null);
+    setInlinePosition(position);
+    setEntityEditor({
+      query: entity ? '' : text,
+      entity: entity,
+      grams: grams ? supportedGrammemes.filter(data => grams.includes(data)) : []
+    });
+    setIsEditing(true);
+  }
+
+  function openSyntacticEditor() {
+    const cmRef = thisRef.current as Required<ReactCodeMirrorRef> | null;
+    if (!cmRef?.view) {
+      return;
+    }
+
+    const wrap = new CodeMirrorWrapper(cmRef);
+    wrap.fixSelection(ReferenceTokens);
+    const selection = wrap.getSelection();
+    const position = getInlineEditorPosition(selection);
+    if (!position) {
+      return;
+    }
+
+    const nodes = wrap.getEnvelopingNodes(ReferenceTokens);
+    const text = wrap.getSelectionText();
+    let nominal = '';
+    let offset = 1;
+    if (nodes.length === 1 && nodes[0].type.id === RefSyntactic) {
+      const refRaw = wrap.getText(nodes[0].from, nodes[0].to);
+      const ref = parseSyntacticReference(refRaw);
+      nominal = ref.nominal;
+      offset = ref.offset;
+    }
+
+    const entityRefs = wrap
+      .getAllNodes([RefEntity])
+      .filter(node => node.from >= selection.to || node.to <= selection.from);
+
+    setEntityEditor(null);
+    setSyntacticEditor({
+      nominal: nominal || text,
+      offset: offset,
+      refsCount: entityRefs.length,
+      baseIndex: entityRefs.filter(node => node.to <= selection.from).length
+    });
+    setIsEditing(true);
+  }
+
+  function handleSaveEntityEditor(entity: string, form: string) {
+    const cmRef = thisRef.current as Required<ReactCodeMirrorRef> | null;
+    if (!cmRef || !entityEditor) {
+      return;
+    }
+
+    const wrap = new CodeMirrorWrapper(cmRef);
+    wrap.replaceWith(
+      referenceToString({
+        type: ReferenceType.ENTITY,
+        data: { entity, form }
+      })
+    );
+    closeInlineEditor();
+  }
+
+  function handleSaveSyntacticEditor(offset: number, nominal: string) {
+    const cmRef = thisRef.current as Required<ReactCodeMirrorRef> | null;
+    if (!cmRef || !syntacticEditor) {
+      return;
+    }
+
+    const wrap = new CodeMirrorWrapper(cmRef);
+    wrap.replaceWith(
+      referenceToString({
+        type: ReferenceType.SYNTACTIC,
+        data: { offset, nominal }
+      })
+    );
+    closeInlineEditor();
+  }
+
+  function handleInput(event: React.KeyboardEvent<HTMLDivElement>) {
+    if (!thisRef.current?.view) {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+
+    if (event.key === 'Escape') {
+      withPreventDefault(closeInlineEditor)(event);
+      return;
+    }
+
+    if (event.altKey && event.code === 'Digit1') {
+      withPreventDefault(openEntityEditor)(event);
+      return;
+    }
+
+    if (event.altKey && event.code === 'Digit2') {
+      withPreventDefault(openSyntacticEditor)(event);
+    }
+  }
+
+
+  return (
+    <div ref={wrapperRef} className={clsx('relative flex flex-col gap-2', cursor)}>
+      <Label text={label} />
+      <CodeMirror
+        ref={thisRef}
+        basicSetup={editorSetup}
+        theme={customTheme}
+        extensions={editorExtensions}
+        value={isFocused || value !== initialValue || isEditing || editingDebounce ? value : resolved}
+        indentWithTab={false}
+        onChange={onChange}
+        editable={!disabled && !isEditing}
+        onKeyDown={handleInput}
+        onFocus={handleFocusIn}
+        onBlur={handleFocusOut}
+        {...restProps}
+      />
+      {entityEditor && inlinePosition ? (
+        <InlineEntityEditor
+          schema={schema}
+          initial={entityEditor}
+          position={inlinePosition}
+          onCancel={closeInlineEditor}
+          onSave={handleSaveEntityEditor}
+        />
+      ) : null}
+      {syntacticEditor && inlinePosition ? (
+        <InlineSyntacticEditor
+          initial={syntacticEditor}
+          position={inlinePosition}
+          onCancel={closeInlineEditor}
+          onSave={handleSaveSyntacticEditor}
+        />
+      ) : null}
+    </div>
+  );
+}

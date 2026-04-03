@@ -1,5 +1,7 @@
 import clsx from 'clsx';
 
+import { globalIDs } from '@/utils/constants';
+
 import { type Grammeme } from '../models/language';
 
 interface WordformButtonProps {
@@ -17,17 +19,19 @@ export function WordformButton({ text, example, grams, onSelectGrams, isSelected
       tabIndex={-1}
       onClick={() => onSelectGrams([...grams])}
       className={clsx(
-        'min-w-15 sm:min-w-20',
+        'min-w-8 sm:min-w-12',
         'p-1',
         'border rounded-none',
         'cursor-pointer',
-        'text-muted-foreground hover:bg-accent hover:text-foreground cc-animate-color',
-        isSelected && 'cc-selected'
+        'text-sm',
+        'hover:bg-accent hover:text-foreground cc-animate-color',
+        isSelected ? 'cc-selected' : 'text-muted-foreground'
       )}
+      data-tooltip-id={example ? globalIDs.tooltip : undefined}
+      data-tooltip-content={example}
       {...restProps}
     >
-      <p className='font-medium'>{text}</p>
-      <p>{example}</p>
+      {text}
     </button>
   );
 }

@@ -8,10 +8,8 @@ import { Grammeme, supportedGrammemes } from '../models/language';
 
 import { WordformButton } from './wordform-button';
 
-/**
- * Represents recommended wordforms data.
- */
-const DefaultWordForms = [
+/** Represents recommended wordforms data. */
+export const DefaultWordForms = [
   { text: 'ед им', example: 'ручка', grams: [Grammeme.sing, Grammeme.nomn] },
   { text: 'ед род', example: 'ручки', grams: [Grammeme.sing, Grammeme.gent] },
   { text: 'ед дат', example: 'ручке', grams: [Grammeme.sing, Grammeme.datv] },
@@ -38,7 +36,7 @@ export function SelectWordForm({ value, onChange, className, ...restProps }: Sel
   }
 
   return (
-    <div className={cn('text-xs sm:text-sm grid grid-cols-6', className)} {...restProps}>
+    <div className={cn('text-xs grid grid-cols-6', className)} {...restProps}>
       {DefaultWordForms.slice(0, 12).map((data, index) => (
         <WordformButton
           key={`${prefixes.wordform_list}${index}`}
