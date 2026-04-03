@@ -105,7 +105,9 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
   const isElementary = isBaseSet(activeCst.cst_type);
   const showConvention = !!activeCst.convention || forceComment || isBasic;
 
-  useLayoutEffect(() => onModifiedEvent(false), [activeCst.id]);
+  useLayoutEffect(function resetGlobalModifiedFlagOnCstChange() {
+    onModifiedEvent(false);
+  }, [activeCst.id]);
 
   useEffect(function resetFormOnCstChange() {
     onResetEvent({

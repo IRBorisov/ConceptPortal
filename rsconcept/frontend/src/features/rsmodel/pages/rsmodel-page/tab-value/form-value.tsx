@@ -65,7 +65,9 @@ export function FormValue({ id, activeCst }: FormValueProps) {
 
   const isDirty = inputValue !== initialStr;
 
-  useLayoutEffect(() => onModifiedEvent(false), [activeCst.id]);
+  useLayoutEffect(function resetGlobalModifiedFlagOnCstChange() {
+    onModifiedEvent(false);
+  }, [activeCst.id]);
 
   useEffect(function resetUIStateOnCstChange() {
     const timeoutId = setTimeout(function resetValueEditorState() {

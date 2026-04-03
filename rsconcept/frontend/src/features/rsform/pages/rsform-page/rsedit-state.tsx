@@ -58,12 +58,13 @@ export const RSEditState = ({
 
   const [selectedCst, setSelectedCst] = useState<number[]>([]);
   const [selectedEdges, setSelectedEdges] = useState<string[]>([]);
+  const [pendingActiveID, setPendingActiveID] = useState<number | null>(null);
   const canDeleteSelected =
     (selectedCst.length > 0 && selectedCst.every(id => !schema.cstByID.get(id)?.is_inherited)) ||
     (selectedCst.length === 0 && selectedEdges.length === 1);
   const [focusCst, setFocusCst] = useState<Constituenta | null>(null);
 
-  const activeCst = selectedCst.length === 0 ? null : schema.cstByID.get(selectedCst[selectedCst.length - 1])!;
+  const activeCst = selectedCst.length === 0 ? null : (schema.cstByID.get(selectedCst[selectedCst.length - 1]) ?? null);
 
   const { createConstituenta: cstCreate } = useCreateConstituenta();
   const { moveConstituents: cstMove } = useMoveConstituents();
@@ -122,6 +123,7 @@ export const RSEditState = ({
   }
 
   function onCreateCst(newCst: RO<ConstituentaBasicsDTO>) {
+    setPendingActiveID(newCst.id);
     setSelectedCst([newCst.id]);
     router.changeActive(newCst.id);
     setTimeout(function scrollToCreatedConstituenta() {
@@ -351,6 +353,7 @@ export const RSEditState = ({
         selectedCst,
         selectedEdges,
         activeCst,
+        pendingActiveID,
         activeVersion,
 
         isOwned,
@@ -362,6 +365,7 @@ export const RSEditState = ({
         deleteSchema,
 
         setFocus: handleSetFocus,
+        clearPendingActiveID: () => setPendingActiveID(null),
         setSelectedCst: setSelectedCst,
         setSelectedEdges: setSelectedEdges,
         selectCst: (target: number) => setSelectedCst(prev => [...prev, target]),

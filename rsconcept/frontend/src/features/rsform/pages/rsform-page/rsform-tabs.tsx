@@ -1,6 +1,6 @@
 'use client';
 
-import { useLayoutEffect, useRef } from 'react';
+import { useEffect, useEffectEvent, useLayoutEffect, useRef } from 'react';
 
 import { RSTabID, useConceptNavigation } from '@/app/navigation/navigation-context';
 
@@ -25,10 +25,14 @@ export function RSFormTabs({ activeID, activeTab }: RSFormTabsProps) {
   const router = useConceptNavigation();
 
   const hideFooter = useAppLayoutStore(state => state.hideFooter);
+  const onHideFooterEvent = useEffectEvent(hideFooter);
   const setIsModified = useModificationStore(state => state.setIsModified);
-  const { schema, selectedCst, setSelectedCst, setSelectedEdges, deselectAll } = useRSFormEdit();
+  const {
+    schema, selectedCst, setSelectedCst, setSelectedEdges,
+    deselectAll, pendingActiveID, clearPendingActiveID
+  } = useRSFormEdit();
 
-  useLayoutEffect(() => {
+  useLayoutEffect(function updateWindowTitle() {
     const oldTitle = document.title;
     document.title = schema.title;
     return () => {
@@ -36,16 +40,35 @@ export function RSFormTabs({ activeID, activeTab }: RSFormTabsProps) {
     };
   }, [schema.title]);
 
-  useLayoutEffect(() => {
+  useLayoutEffect(function hideFooterOnForSomeTabs() {
     const nextNoFooter = activeTab !== RSTabID.CARD;
-    hideFooter(nextNoFooter);
+    onHideFooterEvent(nextNoFooter);
+  }, [activeTab]);
 
+  useEffect(function restoreFooterOnUnmount() {
+    return () => onHideFooterEvent(false);
+  }, []);
+
+  useLayoutEffect(function syncNavigationAndSelection() {
     if (activeTab === RSTabID.CST_EDIT) {
+      if (pendingActiveID !== null && activeID !== pendingActiveID) {
+        return;
+      }
+      if (pendingActiveID !== null && activeID === pendingActiveID) {
+        clearPendingActiveID();
+      }
+
       let nextSelected: number[] = [];
-      if (activeID && schema.cstByID.has(activeID)) {
+      const hasActiveID = activeID !== undefined;
+
+      if (hasActiveID && schema.cstByID.has(activeID)) {
         nextSelected = [activeID];
-      } else if (schema.items.length > 0) {
+      } else if (hasActiveID && selectedCst.length === 0 && schema.items.length > 0) {
         nextSelected = [schema.items[0].id];
+      } else if (!hasActiveID && schema.items.length > 0) {
+        nextSelected = [schema.items[0].id];
+      } else if (hasActiveID) {
+        return;
       }
 
       const isSameSelection =
@@ -62,11 +85,10 @@ export function RSFormTabs({ activeID, activeTab }: RSFormTabsProps) {
         }
       }
     }
-  }, [activeTab, activeID, selectedCst, schema, hideFooter, setSelectedCst, deselectAll]);
-
-  useLayoutEffect(() => {
-    return () => hideFooter(false);
-  }, [hideFooter]);
+  }, [
+    activeTab, activeID, selectedCst, schema,
+    setSelectedCst, deselectAll, pendingActiveID, clearPendingActiveID
+  ]);
 
   function onSelectTab(index: number, last: number, event: Event) {
     if (last === index) {

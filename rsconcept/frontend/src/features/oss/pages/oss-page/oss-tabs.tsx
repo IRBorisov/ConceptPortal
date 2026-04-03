@@ -1,6 +1,6 @@
 'use client';
 
-import { useLayoutEffect, useRef } from 'react';
+import { useEffect, useEffectEvent, useLayoutEffect, useRef } from 'react';
 
 import { OssTabID, useConceptNavigation } from '@/app/navigation/navigation-context';
 
@@ -22,11 +22,12 @@ export function OssTabs({ activeTab }: OssTabsProps) {
   const { schema, deselectAll } = useOssEdit();
 
   const hideFooter = useAppLayoutStore(state => state.hideFooter);
+  const onHideFooterEvent = useEffectEvent(hideFooter);
 
   const containerRef = useRef<HTMLDivElement>(null);
   useResetAttribute(containerRef, 'data-tooltip-id');
 
-  useLayoutEffect(() => {
+  useLayoutEffect(function updateWindowTitle() {
     const oldTitle = document.title;
     document.title = schema.title;
     return () => {
@@ -34,9 +35,13 @@ export function OssTabs({ activeTab }: OssTabsProps) {
     };
   }, [schema.title]);
 
-  useLayoutEffect(() => {
-    hideFooter(activeTab === OssTabID.GRAPH);
-  }, [activeTab, hideFooter]);
+  useLayoutEffect(function hideFooterForGraphTab() {
+    onHideFooterEvent(activeTab === OssTabID.GRAPH);
+  }, [activeTab]);
+
+  useEffect(function restoreFooterOnUnmount() {
+    return () => onHideFooterEvent(false);
+  }, []);
 
   function onSelectTab(index: number, last: number, event: Event) {
     if (last === index) {

@@ -10,6 +10,7 @@ interface IRSEditContext {
   selectedEdges: string[];
   focusCst: Constituenta | null;
   activeCst: Constituenta | null;
+  pendingActiveID: number | null;
   activeVersion?: number;
 
   isOwned: boolean;
@@ -21,6 +22,7 @@ interface IRSEditContext {
   deleteSchema: () => void;
 
   setFocus: (newValue: Constituenta | null) => void;
+  clearPendingActiveID: () => void;
   setSelectedCst: React.Dispatch<React.SetStateAction<number[]>>;
   setSelectedEdges: React.Dispatch<React.SetStateAction<string[]>>;
   selectCst: (target: number) => void;
