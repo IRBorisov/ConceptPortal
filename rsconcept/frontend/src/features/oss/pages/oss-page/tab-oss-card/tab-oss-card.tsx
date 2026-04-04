@@ -2,6 +2,7 @@
 
 import clsx from 'clsx';
 
+import { HelpTopic } from '@/features/help';
 import { EditorLibraryItem } from '@/features/library/components/editor-library-item';
 import { ToolbarItemCard } from '@/features/library/components/toolbar-item-card';
 
@@ -56,6 +57,7 @@ export function TabOssCard() {
         isMutable={isMutable}
         deleteItem={deleteSchema}
         isNarrow={isNarrow}
+        helpTopic={HelpTopic.UI_OSS_CARD}
       />
 
       <div className='cc-column mx-0 md:mx-auto'>

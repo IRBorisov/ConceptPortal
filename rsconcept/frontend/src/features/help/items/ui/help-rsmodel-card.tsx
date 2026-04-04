@@ -5,36 +5,36 @@ export function HelpRSModelCard() {
   return (
     <div className='dense'>
       <h1>Паспорт модели</h1>
-      <p>Паспорт содержит общую информацию и статистику</p>
+      <p>Содержит основную информацию и статистику по модели.</p>
       <p>
-        Паспорт модели не позволяет изменить свойства исходной концептуальной схемы
+        Название и атрибуты исходной концептуальной схемы здесь не редактируются.
       </p>
 
       <h2>Управление</h2>
       <ul>
         <li>
-          <IconSave className='inline-icon' /> сохранить изменения: <kbd>{isMac() ? 'Cmd + S' : 'Ctrl + S'}</kbd>
+          <IconSave className='inline-icon' /> сохранить: <kbd>{isMac() ? 'Cmd + S' : 'Ctrl + S'}</kbd>
         </li>
         <li>
-          <IconShare className='inline-icon' /> скопировать ссылку на схему
+          <IconShare className='inline-icon' /> копировать ссылку
         </li>
         <li>
-          <IconLeftOpen className='inline-icon' /> отображение статистики
+          <IconLeftOpen className='inline-icon' /> статистика модели
         </li>
         <li>
-          <IconDestroy className='inline-icon icon-red' /> удалить модель из базы Портала
+          <IconDestroy className='inline-icon icon-red' /> удалить из базы Портала
         </li>
         <li>
-          <IconFolderEdit className='inline-icon' /> редактирование расположения
+          <IconFolderEdit className='inline-icon' /> изменить расположение
         </li>
         <li>
-          <IconEditor className='inline-icon' /> определение редакторов
+          <IconEditor className='inline-icon' /> редакторы модели
         </li>
         <li>
-          <IconOwner className='inline-icon' /> изменение владельца
+          <IconOwner className='inline-icon' /> изменить владельца
         </li>
         <li>
-          <IconRSForm className='inline-icon' /> переход к связанной концептуальной схеме
+          <IconRSForm className='inline-icon' /> перейти к концептуальной схеме
         </li>
       </ul>
     </div>

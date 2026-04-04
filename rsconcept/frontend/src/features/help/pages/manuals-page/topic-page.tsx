@@ -42,6 +42,7 @@ import { HelpCstClass } from '../../items/ui/help-cst-class';
 import { HelpCstStatus } from '../../items/ui/help-cst-status';
 import { HelpFormulaTree } from '../../items/ui/help-formula-tree';
 import { HelpLibrary } from '../../items/ui/help-library';
+import { HelpOssCard } from '../../items/ui/help-oss-card';
 import { HelpOssGraph } from '../../items/ui/help-oss-graph';
 import { HelpOssSidebar } from '../../items/ui/help-oss-sidebar';
 import { HelpRelocateCst } from '../../items/ui/help-relocate-cst';
@@ -57,6 +58,7 @@ import { HelpRSModelList } from '../../items/ui/help-rsmodel-list';
 import { HelpRSModelStatus } from '../../items/ui/help-rsmodel-status';
 import { HelpRSModelValue } from '../../items/ui/help-rsmodel-value';
 import { HelpRSModelValueDialog } from '../../items/ui/help-rsmodel-value-dialog';
+import { HelpStructurePlanner } from '../../items/ui/help-structure-planner';
 import { HelpSubstitutions } from '../../items/ui/help-substitutions';
 import { HelpTypeGraph } from '../../items/ui/help-type-graph';
 import { HelpTopic } from '../../models/help-topic';
@@ -84,6 +86,7 @@ export function TopicPage({ topic }: TopicPageProps) {
   if (topic === HelpTopic.UI_RS_CARD) return <HelpRSCard />;
   if (topic === HelpTopic.UI_RS_LIST) return <HelpRSList />;
   if (topic === HelpTopic.UI_RS_EDITOR) return <HelpRSEditor />;
+  if (topic === HelpTopic.UI_STRUCTURE_PLANNER) return <HelpStructurePlanner />;
   if (topic === HelpTopic.UI_RSMODEL_CARD) return <HelpRSModelCard />;
   if (topic === HelpTopic.UI_RSMODEL_LIST) return <HelpRSModelList />;
   if (topic === HelpTopic.UI_RSMODEL_VALUE) return <HelpRSModelValue />;
@@ -98,6 +101,7 @@ export function TopicPage({ topic }: TopicPageProps) {
   if (topic === HelpTopic.UI_CST_CLASS) return <HelpCstClass />;
   if (topic === HelpTopic.UI_OSS_GRAPH) return <HelpOssGraph />;
   if (topic === HelpTopic.UI_OSS_SIDEBAR) return <HelpOssSidebar />;
+  if (topic === HelpTopic.UI_OSS_CARD) return <HelpOssCard />;
   if (topic === HelpTopic.UI_SUBSTITUTIONS) return <HelpSubstitutions />;
   if (topic === HelpTopic.UI_RELOCATE_CST) return <HelpRelocateCst />;
 

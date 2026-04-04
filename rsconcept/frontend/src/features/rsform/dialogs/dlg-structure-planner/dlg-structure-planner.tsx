@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { ReactFlowProvider } from '@xyflow/react';
 import clsx from 'clsx';
 
+import { HelpTopic } from '@/features/help';
+
 import { MiniButton } from '@/components/control';
 import { IconNewItem, IconReset, IconSave } from '@/components/icons';
 import { ModalView } from '@/components/modal';
@@ -102,7 +104,12 @@ export function DlgStructurePlanner() {
   const blurClass = 'backdrop-blur-xs bg-background/90';
 
   return (
-    <ModalView className='w-[calc(100dvw-3rem)] h-[calc(100dvh-3rem)]' fullScreen noFooterButton>
+    <ModalView
+      className='w-[calc(100dvw-3rem)] h-[calc(100dvh-3rem)]'
+      fullScreen
+      noFooterButton
+      helpTopic={HelpTopic.UI_STRUCTURE_PLANNER}
+    >
       <div className='relative flex flex-col h-full'>
         <div className={clsx(
           'z-modal-pop',

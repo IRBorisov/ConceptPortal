@@ -2,6 +2,7 @@
 
 import clsx from 'clsx';
 
+import { HelpTopic } from '@/features/help/models/help-topic';
 import { EditorLibraryItem } from '@/features/library/components/editor-library-item';
 import { ToolbarItemCard } from '@/features/library/components/toolbar-item-card';
 import { calculateSchemaStats } from '@/features/rsform/models/rsform-api';
@@ -58,6 +59,7 @@ export function TabRSFormCard() {
         isMutable={isMutable}
         deleteItem={deleteSchema}
         isNarrow={isNarrow}
+        helpTopic={HelpTopic.UI_RS_CARD}
       />
 
       <div className='cc-column mx-0 md:mx-auto'>
