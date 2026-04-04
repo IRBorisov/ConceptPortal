@@ -138,7 +138,7 @@ export function useHandleActions(graph: Graph<number>) {
     setSelectedCst([...core, ...graph.expandInputs(core)]);
   }
 
-  async function handleExportPNG() {
+  async function handleExportPNG(): Promise<void> {
     if (isExportingImage) {
       return;
     }

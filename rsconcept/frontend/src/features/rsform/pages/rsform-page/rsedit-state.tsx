@@ -216,7 +216,7 @@ export const RSEditState = ({
     });
   }
 
-  function createCst(type?: CstType, definition?: string): Promise<number> {
+  async function createCst(type?: CstType, definition?: string): Promise<number> {
     const targetType = type ?? activeCst?.cst_type ?? CstType.BASE;
     const data: CreateConstituentaDTO = {
       insert_after: activeCst?.id ?? null,
@@ -229,17 +229,16 @@ export const RSEditState = ({
       crucial: false,
       term_forms: []
     };
-    return cstCreate({ itemID: schema.id, data }).then(newCst => {
-      onCreateCst(newCst);
-      return newCst.id;
-    });
+    const newCst = await cstCreate({ itemID: schema.id, data });
+    onCreateCst(newCst);
+    return newCst.id;
   }
 
-  function cloneCst() {
+  async function cloneCst(): Promise<number> {
     if (!activeCst) {
       throw new Error('No active cst');
     }
-    return cstCreate({
+    const newCst = await cstCreate({
       itemID: schema.id,
       data: {
         insert_after: activeCst.id,
@@ -252,10 +251,9 @@ export const RSEditState = ({
         crucial: activeCst.crucial,
         term_forms: activeCst.term_forms
       }
-    }).then(newCst => {
-      onCreateCst(newCst);
-      return newCst.id;
     });
+    onCreateCst(newCst);
+    return newCst.id;
   }
 
   function promptDeleteSelected() {

@@ -17,7 +17,5 @@ export const useSetValue = () => {
     },
     onError: () => client.invalidateQueries()
   });
-  return {
-    setCstValue: mutation.mutateAsync
-  };
+  return { setCstValue: mutation.mutateAsync };
 };
