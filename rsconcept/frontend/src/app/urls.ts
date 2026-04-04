@@ -21,7 +21,8 @@ export const routes = {
   models: 'models',
   icons: 'icons',
   database_schema: 'database-schema',
-  prompt_templates: 'prompt-templates'
+  prompt_templates: 'prompt-templates',
+  sandbox: 'sandbox'
 } as const;
 
 /** Internal navigation URLs. */
@@ -30,6 +31,7 @@ export const urls = {
   admin: `${buildConstants.backend}/admin`,
   rest_api: `${buildConstants.backend}/`,
   home: '/',
+  sandbox: `/${routes.sandbox}`,
   login: `/${routes.login}`,
   login_hint: (userName: string) => `/login?username=${userName}`,
   profile: `/${routes.profile}`,

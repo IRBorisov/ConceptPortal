@@ -59,6 +59,7 @@ export const patterns = {
 export const resources = {
   privacy_policy: '/privacy.pdf',
   logo: '/logo_full.svg',
+  logo_dark: '/logo_full_dark.svg',
   db_schema: '/db_schema.svg'
 } as const;
 

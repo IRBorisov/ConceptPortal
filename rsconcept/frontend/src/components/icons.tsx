@@ -81,9 +81,10 @@ export { TbMeteorOff      as IconAdminOff }       from 'react-icons/tb';
 export { LuGlasses        as IconReader }         from 'react-icons/lu';
 
 // ===== Domain entities =======
+export { LuRocket         as IconSandbox }        from 'react-icons/lu';
 export { TbBriefcase      as IconBusiness }       from 'react-icons/tb';
-export { VscLibrary       as IconLibrary }        from 'react-icons/vsc';
-export { BiBot            as IconRobot }          from 'react-icons/bi';
+export { LuBuilding2      as IconLibrary }        from 'react-icons/lu';
+export { LuBotMessageSquare as IconRobot }        from 'react-icons/lu';
 export { TbGps            as IconCoordinates }    from 'react-icons/tb';
 export { IoLibrary        as IconLibrary2 }       from 'react-icons/io5';
 export { BiDiamond        as IconTemplates }      from 'react-icons/bi';

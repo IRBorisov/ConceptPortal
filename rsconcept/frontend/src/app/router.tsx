@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router';
+import { createBrowserRouter, Outlet } from 'react-router';
 
 import { prefetchAvailableTemplates } from '@/features/ai/backend/use-available-templates';
 import { prefetchAuth } from '@/features/auth/backend/use-auth';
@@ -17,94 +17,105 @@ import { Loader } from '@/components/loader';
 
 import { ApplicationLayout } from './application-layout';
 import { ErrorFallback } from './error-fallback';
+import { LandingLayout } from './landing-layout';
 import { routes } from './urls';
 
 export const Router = createBrowserRouter([
   {
     path: '/',
-    element: <ApplicationLayout />,
+    element: <Outlet />,
     errorElement: <ErrorFallback />,
     loader: prefetchAuth,
     hydrateFallbackElement: fallbackLoader(),
     children: [
       {
-        path: '',
-        element: <HomePage />
+        element: <LandingLayout />,
+        children: [
+          { index: true, element: <HomePage /> },
+          {
+            path: routes.sandbox,
+            lazy: () => import('@/features/sandbox/pages/sandbox-page')
+          }
+        ]
       },
       {
-        path: `${routes.not_found}`,
-        element: <NotFoundPage />
-      },
-      {
-        path: routes.login,
-        element: <LoginPage />
-      },
-      {
-        path: routes.signup,
-        lazy: () => import('@/features/users/pages/register-page')
-      },
-      {
-        path: routes.profile,
-        loader: prefetchProfile,
-        lazy: () => import('@/features/users/pages/user-profile-page')
-      },
-      {
-        path: routes.restore_password,
-        lazy: () => import('@/features/auth/pages/restore-password-page')
-      },
-      {
-        path: routes.password_change,
-        lazy: () => import('@/features/auth/pages/password-change-page')
-      },
-      {
-        path: routes.library,
-        loader: () => {
-          // start query, don't block route render
-          void prefetchLibrary();
-          void prefetchUsers();
-          return null;
-        },
-        lazy: () => import('@/features/library/pages/library-page')
-      },
-      {
-        path: routes.create_item,
-        element: <CreateItemPage />
-      },
-      {
-        path: `${routes.rsforms}/:id`,
-        loader: data => prefetchRSForm(parseRSFormURL(data.params.id, data.request.url)),
-        lazy: () => import('@/features/rsform/pages/rsform-page')
-      },
-      {
-        path: `${routes.models}/:id`,
-        loader: data => prefetchRSModel(parseRSModelURL(data.params.id)),
-        lazy: () => import('@/features/rsmodel/pages/rsmodel-page')
-      },
-      {
-        path: `${routes.oss}/:id`,
-        loader: data => prefetchOSS(parseOssURL(data.params.id)),
-        lazy: () => import('@/features/oss/pages/oss-page')
-      },
-      {
-        path: routes.manuals,
-        lazy: () => import('@/features/help/pages/manuals-page')
-      },
-      {
-        path: `${routes.icons}`,
-        lazy: () => import('@/features/home/icons-page')
-      },
-      {
-        path: `${routes.database_schema}`,
-        lazy: () => import('@/features/home/database-schema-page')
-      },
-      {
-        path: routes.prompt_templates,
-        loader: prefetchAvailableTemplates,
-        lazy: () => import('@/features/ai/pages/prompt-templates-page')
-      },
-      {
-        path: '*',
-        element: <NotFoundPage />
+        element: <ApplicationLayout />,
+        children: [
+          {
+            path: `${routes.not_found}`,
+            element: <NotFoundPage />
+          },
+          {
+            path: routes.login,
+            element: <LoginPage />
+          },
+          {
+            path: routes.signup,
+            lazy: () => import('@/features/users/pages/register-page')
+          },
+          {
+            path: routes.profile,
+            loader: prefetchProfile,
+            lazy: () => import('@/features/users/pages/user-profile-page')
+          },
+          {
+            path: routes.restore_password,
+            lazy: () => import('@/features/auth/pages/restore-password-page')
+          },
+          {
+            path: routes.password_change,
+            lazy: () => import('@/features/auth/pages/password-change-page')
+          },
+          {
+            path: routes.library,
+            loader: () => {
+              void prefetchLibrary();
+              void prefetchUsers();
+              return null;
+            },
+            lazy: () => import('@/features/library/pages/library-page')
+          },
+          {
+            path: routes.create_item,
+            element: <CreateItemPage />
+          },
+          {
+            path: `${routes.rsforms}/:id`,
+            loader: data => prefetchRSForm(parseRSFormURL(data.params.id, data.request.url)),
+            lazy: () => import('@/features/rsform/pages/rsform-page')
+          },
+          {
+            path: `${routes.models}/:id`,
+            loader: data => prefetchRSModel(parseRSModelURL(data.params.id)),
+            lazy: () => import('@/features/rsmodel/pages/rsmodel-page')
+          },
+          {
+            path: `${routes.oss}/:id`,
+            loader: data => prefetchOSS(parseOssURL(data.params.id)),
+            lazy: () => import('@/features/oss/pages/oss-page')
+          },
+          {
+            path: routes.manuals,
+            lazy: () => import('@/features/help/pages/manuals-page')
+          },
+          {
+            path: `${routes.icons}`,
+            lazy: () => import('@/features/home/icons-page')
+          },
+          {
+            path: `${routes.database_schema}`,
+            lazy: () => import('@/features/home/database-schema-page')
+          },
+          {
+            path: routes.prompt_templates,
+            loader: prefetchAvailableTemplates,
+            lazy: () => import('@/features/ai/pages/prompt-templates-page')
+          },
+          {
+            path: '*',
+            element: <NotFoundPage />
+          }
+        ]
       }
     ]
   }

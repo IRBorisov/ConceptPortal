@@ -30,6 +30,7 @@ export function useBrowserNavigation() {
       window.removeEventListener('popstate', onPopState);
       if (timeoutId) {
         clearTimeout(timeoutId);
+        end();
       }
     };
   }, [start, end]);
