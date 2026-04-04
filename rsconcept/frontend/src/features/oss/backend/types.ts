@@ -99,6 +99,7 @@ export const schemaOperation = z.strictObject({
   description: z.string(),
   parent: z.number().nullable(),
   is_import: z.boolean(),
+  has_additions: z.boolean(),
   result: z.number().nullable()
 });
 

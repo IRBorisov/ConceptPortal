@@ -88,6 +88,9 @@ class TestOssViewset(EndpointTester):
         self.assertEqual(len(response.data['operations']), 3)
         self.assertEqual(response.data['operations'][0]['id'], self.operation1.pk)
         self.assertEqual(response.data['operations'][0]['operation_type'], self.operation1.operation_type)
+        self.assertEqual(response.data['operations'][0]['has_additions'], True)
+        self.assertEqual(response.data['operations'][1]['has_additions'], True)
+        self.assertEqual(response.data['operations'][2]['has_additions'], False)
 
         self.assertEqual(len(response.data['substitutions']), 1)
         sub = response.data['substitutions'][0]

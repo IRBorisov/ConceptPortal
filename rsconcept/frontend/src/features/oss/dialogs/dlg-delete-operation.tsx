@@ -24,8 +24,12 @@ export function DlgDeleteOperation() {
   const { ossID, targetID, layout, beforeDelete } = useDialogsStore(state => state.props as DlgDeleteOperationProps);
   const { deleteOperation } = useDeleteOperation();
 
-  const { schema } = useOss({ itemID: ossID });
-  const target = schema.operationByID.get(targetID)!;
+  const { schema: oss } = useOss({ itemID: ossID });
+  const target = oss.operationByID.get(targetID)!;
+
+  const shouldDeleteSchema =
+    (target.operation_type === OperationType.INPUT && !target.is_import && !target.has_additions) ||
+    (target.operation_type === OperationType.SYNTHESIS && !target.has_additions);
 
   const { handleSubmit, control } = useForm<DeleteOperationDTO>({
     resolver: zodResolver(schemaDeleteOperation),
@@ -33,7 +37,7 @@ export function DlgDeleteOperation() {
       target: targetID,
       layout: layout,
       keep_constituents: false,
-      delete_schema: target.operation_type !== OperationType.INPUT || !target.is_import
+      delete_schema: shouldDeleteSchema
     }
   });
 

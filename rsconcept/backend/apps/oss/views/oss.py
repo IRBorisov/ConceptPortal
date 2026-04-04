@@ -611,7 +611,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
                     old_schema.delete()
                 elif old_schema.is_synced(item):
                     old_schema.visible = True
-                    old_schema.save(update_fields=['visible'])
+                    old_schema.save(update_fields=['visible', 'time_update'])
             item.save(update_fields=['time_update'])
 
         return Response(

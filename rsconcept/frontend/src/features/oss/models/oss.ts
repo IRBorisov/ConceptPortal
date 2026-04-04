@@ -35,6 +35,7 @@ export interface OperationBase
   extends OssNode,
   Pick<OperationDTO, 'alias' | 'title' | 'description' | 'id' | 'operation_type' | 'result'> {
   nodeType: typeof NodeType.OPERATION;
+  has_additions: boolean;
 }
 
 /** Represents Input Operation. */

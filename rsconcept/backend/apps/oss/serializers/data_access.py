@@ -578,6 +578,13 @@ class OperationSchemaSerializer(StrictModelSerializer):
                 operation_result is not None and \
                 (operation_result.owner_id != instance.owner_id or
                  operation_result.location != instance.location)
+            operation_data['has_additions'] = (
+                operation_result is not None
+                and Constituenta.objects
+                .filter(schema=operation_result)
+                .exclude(as_child__isnull=False)
+                .exists()
+            )
             result['operations'].append(operation_data)
         for block in Block.objects.filter(oss=instance).order_by('pk'):
             result['blocks'].append(BlockSerializer(block).data)
