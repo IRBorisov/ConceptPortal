@@ -138,6 +138,15 @@
   scroll-snap-type: y mandatory;
 }
 
+@utility cc-scroll-hidden {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 @utility cc-scroll-stable {
   scrollbar-gutter: stable;
 }

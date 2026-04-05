@@ -28,7 +28,7 @@ test('logout procedure and consequence', async ({ page }) => {
   authAdmin();
   await setupLogout(page);
 
-  await page.goto('/');
+  await page.goto('/manuals');
 
   await page.getByRole('button', { name: 'Пользователь' }).click();
   await page.getByRole('button', { name: 'Выход из приложения' }).click();

@@ -8,6 +8,8 @@ import { ThemeToggle } from '@/features/home/components/theme-toggle';
 import { Loader } from '@/components/loader';
 import { useBrowserNavigation } from '@/hooks/use-browser-navigation';
 
+import { GlobalTooltips } from './global-tooltips';
+
 /**
  * Minimal shell for the marketing landing and sandbox.
  * Wraps lazy child routes (e.g. sandbox) in {@link Suspense}.
@@ -16,9 +18,10 @@ export function LandingLayout() {
   useBrowserNavigation();
 
   return (
-    <div className='relative min-h-dvh min-w-80 bg-background antialiased'>
+    <div className='relative h-dvh min-w-80 overflow-y-auto bg-background antialiased cc-scroll-hidden'>
+      <GlobalTooltips />
       <ThemeToggle />
-      <div className='mx-auto flex min-h-dvh max-w-480 flex-col'>
+      <div className='mx-auto flex min-h-full max-w-480 flex-col'>
         <Suspense
           fallback={
             <div
