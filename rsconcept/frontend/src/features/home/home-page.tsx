@@ -1,5 +1,7 @@
 'use client';
 
+import clsx from 'clsx';
+
 import { urls } from '@/app/urls';
 import { useAuth } from '@/features/auth';
 import { HelpTopic } from '@/features/help/models/help-topic';
@@ -27,51 +29,81 @@ export function HomePage() {
   const darkMode = usePreferencesStore(state => state.darkMode);
 
   return (
-    <div
-      className='relative isolate mx-auto h-full w-full max-w-6xl px-4 pb-24 pt-4 sm:px-6 sm:pt-6'
-      role='region'
+    <main
+      className='relative isolate mx-auto h-full w-full max-w-6xl px-4 pb-24 pt-10 sm:px-6 sm:pt-16'
+      role='main'
       aria-label='Главная страница портала'
+      itemScope
+      itemType='https://schema.org/WebPage'
     >
-      <div aria-hidden className='pointer-events-none absolute inset-0 -z-10 overflow-hidden'>
-        <div className='absolute -top-24 left-1/2 h-88 w-[min(48rem,100vw)] -translate-x-1/2 rounded-full bg-accent-blue/25 blur-3xl dark:bg-accent-blue/40' />
-        <div className='absolute left-[6%] top-46 h-56 w-56 rounded-full bg-accent-purple/35 blur-3xl dark:bg-accent-purple/35' />
-        <div className='absolute bottom-24 right-[8%] h-48 w-72 rounded-full bg-accent-teal/20 blur-3xl dark:bg-accent-teal/30' />
+      {/* SEO: Decorative gradients */}
+      <div aria-hidden className='absolute pointer-events-none inset-0 z-bottom overflow-hidden'>
+        <div
+          className={clsx(
+            'absolute -top-30 left-1/2 -translate-x-1/2',
+            'h-120 w-[min(48rem,100vw)] rounded-full',
+            'blur-3xl bg-accent-blue/25 dark:bg-accent-blue/40',
+          )}
+        />
+        <div
+          className={clsx(
+            'absolute left-[6%] top-60',
+            'h-56 w-56 rounded-full',
+            'blur-3xl bg-accent-purple/35 dark:bg-accent-purple/35',
+          )}
+        />
+        <div
+          className={clsx(
+            'absolute bottom-24 right-[8%]',
+            'h-48 w-72 rounded-full',
+            'blur-3xl bg-accent-teal/20 dark:bg-accent-teal/30',
+          )}
+        />
       </div>
 
       <header className='mx-auto max-w-2xl text-center select-none'>
         <img
-          alt=''
+          alt={darkMode ? 'Логотип Концепт Портал (темный режим)' : 'Логотип Концепт Портал'}
           src={!darkMode ? resources.logo : resources.logo_dark}
           className='mx-auto mb-6 h-11 w-auto opacity-95 dark:opacity-90'
           decoding='async'
+          loading='eager'
         />
-        <p className='mx-auto max-w-xl text-pretty text-base leading-snug text-foreground sm:text-lg'>
-          Проектируем сложные системы: Анализ и Синтез<br></br>Понятия, процессы, данные, решения, документы
-        </p>
+        {/* SEO: Hero copy as h1 */}
+        <h1 className={clsx(
+          'hidden xs:block mx-auto max-w-xl',
+          'text-lg font-medium',
+          'leading-snug text-nowrap'
+        )}>
+          Проектируйте сложные системы: Анализ и Синтез<br />Понятия, процессы, данные, решения, документы
+        </h1>
 
-        <div className='mt-9 flex flex-wrap items-center justify-center gap-3 sm:gap-3.5'>
+        <nav
+          className='mt-9 flex flex-wrap items-center justify-center gap-4'
+          aria-label='Основные действия на главной странице'
+        >
           {isAnonymous ? (
             <>
               <CtaButton
                 to={urls.sandbox}
                 variant='sandbox'
                 text='Попробовать'
-                tooltip='Открыть песочницу и быстро посмотреть возможности портала'
-                icon={<IconSandbox size='1.125rem' />}
+                title='Открыть песочницу и оценить Портал'
+                icon={<IconSandbox size='1.25rem' />}
               />
               <CtaButton
                 to={urls.login}
-                variant='login'
+                variant='default'
                 text='Войти'
-                tooltip='Перейти к авторизации и открыть рабочее пространство'
-                icon={<IconLogin size='1.125rem' />}
+                title='Перейти к авторизации'
+                icon={<IconLogin size='1.25rem' />}
               />
               <CtaButton
                 to={urls.manuals}
-                variant='manuals'
+                variant='default'
                 text='Изучить'
-                tooltip='Открыть руководства, примеры и описание основных разделов'
-                icon={<IconManuals size='1.125rem' />}
+                title='Открыть руководства'
+                icon={<IconManuals size='1.25rem' />}
               />
             </>
           ) : (
@@ -80,77 +112,81 @@ export function HomePage() {
                 to={urls.sandbox}
                 variant='sandbox'
                 text='Попробовать'
-                tooltip='Открыть песочницу и протестировать идеи без лишних шагов'
-                icon={<IconSandbox size='1.125rem' />}
+                title='Открыть песочницу и оценить Портал'
+                icon={<IconSandbox size='1.25rem' />}
               />
               <CtaButton
                 to={urls.create_item}
                 variant='create'
                 text='Создать'
-                tooltip='Создать новую схему или модель в библиотеке'
-                icon={<IconNewItem2 size='1.125rem' />}
+                title='Создать новую схему или модель в библиотеке'
+                icon={<IconNewItem2 size='1.25rem' />}
               />
               <CtaButton
                 to={urls.manuals}
-                variant='manuals'
+                variant='default'
                 text='Изучить'
-                tooltip='Перейти к руководствам и справочным материалам'
-                icon={<IconManuals size='1.125rem' />}
+                title='Открыть руководства'
+                icon={<IconManuals size='1.25rem' />}
               />
             </>
           )}
-        </div>
+        </nav>
       </header>
 
-      <section className='mt-16' aria-labelledby='home-features-heading'>
-        <h2 id='home-features-heading' className='sr-only'>
-          Возможности портала
-        </h2>
+      <section
+        className='mt-16'
+        aria-labelledby='home-features-heading'
+        itemScope
+        itemType='https://schema.org/ItemList'
+      >
+        <meta itemProp='name' content='Возможности портала - Каталог моделей, анализа и проектирования систем' />
         <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
           <FeatureTile
-            to={isAnonymous ? urls.login : urls.library}
-            icon={<IconLibrary className='h-6 w-6' />}
+            to={urls.library}
+            icon={<IconLibrary size='1.5rem' />}
             title='Библиотека'
             description='Каталог понятийных схем и моделей. Редактирование, версионирование и доступы. Гибкая фильтрация и поиск'
             accentClass='bg-accent-green'
           />
           <FeatureTile
             to={urls.help_topic(HelpTopic.RSLANG)}
-            icon={<IconFormula className='h-6 w-6' />}
+            icon={<IconFormula size='1.5rem' />}
             title='Язык родов структур'
-            description='Формальная логика определений. Структурность, корректность и интерпретация определений'
+            description='Формальная логика. Структурность, корректность и вычисление значений определений понятий'
             accentClass='bg-accent-blue'
           />
           <FeatureTile
             to={urls.help_topic(HelpTopic.ASSISTANT)}
-            icon={<IconRobot className='h-6 w-6' />}
+            icon={<IconRobot size='1.5rem' />}
             title='ИИ-помощник'
-            description='Шаблоны запросов и подсказки для ускорения работы с предметной областью'
+            description='ИИ шаблоны запросов и подсказки для ускорения моделирования и анализа предметных областей'
             accentClass='bg-accent-teal/70'
           />
           <FeatureTile
             to={urls.help_topic(HelpTopic.CC_SYSTEM)}
-            icon={<IconRSForm className='h-6 w-6' />}
+            icon={<IconRSForm size='1.5rem' />}
             title='Системы определений'
-            description='Концептуальная схема, графы структуры и связей, строгий понятийный аппарат'
+            description='Концептуальная схема, граф вязей, строгий понятийный аппарат в сложных предметных областях'
             accentClass='bg-accent-purple'
           />
           <FeatureTile
             to={urls.help_topic(HelpTopic.CC_RSMODEL)}
-            icon={<IconRSModel className='h-6 w-6' />}
+            icon={<IconRSModel size='1.5rem' />}
             title='Концептуальные модели'
             description='Предметные источники данных, интерпретация определений и вычисление значений'
             accentClass='bg-accent-orange'
+
           />
           <FeatureTile
             to={urls.help_topic(HelpTopic.CC_OSS)}
-            icon={<IconOSS className='h-6 w-6' />}
+            icon={<IconOSS size='1.5rem' />}
             title='Операционные схемы'
             description='Операции над концептуальными схемами, блоки предметного содержания и сквозные изменения'
             accentClass='bg-accent-green'
           />
         </div>
       </section>
-    </div>
+    </main >
   );
 }

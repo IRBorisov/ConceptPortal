@@ -36,6 +36,8 @@ This file applies to the frontend app in this directory tree.
 - Reuse existing hooks, dialogs, and component patterns when extending behavior.
 - Keep API-facing types and hooks consistent with backend responses.
 - If you change a grammar file, regenerate parsers with the existing script.
+- Tailwind CSS utility classes and customizations are managed in the `src/styles` folder, including `tailwind.config.ts` and global stylesheets.
+- When composing more than 4 Tailwind or utility classes in a component, split them into semantic groups (layout, color, animation, etc.) using `clsx` or `cn` for readability.
 
 ## Common commands
 
