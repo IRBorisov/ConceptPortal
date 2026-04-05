@@ -38,6 +38,7 @@ This file applies to the frontend app in this directory tree.
 - If you change a grammar file, regenerate parsers with the existing script.
 - Tailwind CSS utility classes and customizations are managed in the `src/styles` folder, including `tailwind.config.ts` and global stylesheets.
 - When composing more than 4 Tailwind or utility classes in a component, split them into semantic groups (layout, color, animation, etc.) using `clsx` or `cn` for readability.
+- Prefer using `clsx` over `className` for composing classes if no props are involved.
 
 ## Common commands
 

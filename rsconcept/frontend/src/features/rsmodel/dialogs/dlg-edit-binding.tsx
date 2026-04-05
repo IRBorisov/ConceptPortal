@@ -15,6 +15,8 @@ export interface DlgEditBindingProps {
   onChange?: (newValue: BasicBinding) => void;
 }
 
+const dialogClassName = 'w-200 h-152 max-w-[calc(100dvw-3rem)] max-h-[calc(100svh-8rem)] px-6 pb-2';
+
 export function DlgEditBinding() {
   const { initialValue, onChange } = useDialogsStore(state => state.props as DlgEditBindingProps);
   const [value, setValue] = useState<BasicBinding>(initialValue);
@@ -37,12 +39,11 @@ export function DlgEditBinding() {
         submitText='Сохранить'
         canSubmit={value !== initialValue}
         onSubmit={handleSubmit}
-        className='w-200 h-152 max-w-[calc(100dvw-3rem)] max-h-[calc(100svh-8rem)] px-6'
+        className={dialogClassName}
       >
         <BindingEditor
           value={value}
           onChange={handleChange}
-          className='mb-2 h-150'
         />
       </ModalForm>
     );
@@ -52,11 +53,10 @@ export function DlgEditBinding() {
         helpTopic={HelpTopic.UI_RSMODEL_BINDING}
         header='Просмотр базового источника'
         noFooterButton
-        className='w-200 h-152 max-w-[calc(100dvw-3rem)] max-h-[calc(100svh-8rem)] px-6'
+        className={dialogClassName}
       >
         <BindingEditor
           value={value}
-          className='mb-2 h-150'
         />
       </ModalView>
     );

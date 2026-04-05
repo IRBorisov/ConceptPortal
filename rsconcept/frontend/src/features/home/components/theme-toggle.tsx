@@ -1,7 +1,8 @@
 'use client';
 
+import clsx from 'clsx';
+
 import { IconDarkTheme, IconLightTheme } from '@/components/icons';
-import { cn } from '@/components/utils';
 import { usePreferencesStore } from '@/stores/preferences';
 
 export function ThemeToggle() {
@@ -10,7 +11,7 @@ export function ThemeToggle() {
 
   return (
     <div
-      className={cn(
+      className={clsx(
         'fixed right-1 top-1 z-navigation',
         'rounded-full p-0.5 pointer-events-auto'
       )}
@@ -22,7 +23,7 @@ export function ThemeToggle() {
           tabIndex={-1}
           type='button'
           onClick={toggleDarkMode}
-          className={cn(
+          className={clsx(
             'flex items-center justify-center rounded-full p-1.5 cc-animate-color',
             !darkMode
               ? 'bg-muted/50 text-foreground'
@@ -37,7 +38,7 @@ export function ThemeToggle() {
           tabIndex={-1}
           type='button'
           onClick={toggleDarkMode}
-          className={cn(
+          className={clsx(
             'flex items-center justify-center rounded-full p-1.5 cc-animate-color',
             darkMode
               ? 'bg-muted/50 text-foreground'
