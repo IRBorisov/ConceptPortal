@@ -1,9 +1,7 @@
-'use no memo'; // TODO: remove when react hook forms are compliant with react compiler
 'use client';
 
 import { useEffect, useEffectEvent, useRef, useState } from 'react';
-import { Controller, useForm, useWatch } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm, useStore } from '@tanstack/react-form';
 import clsx from 'clsx';
 import { useDebounce } from 'use-debounce';
 
@@ -33,6 +31,16 @@ interface FormPromptTemplateProps {
   toggleReset: boolean;
 }
 
+function templateDefaults(template: IPromptTemplate): IUpdatePromptTemplateDTO {
+  return {
+    owner: template.owner,
+    label: template.label,
+    description: template.description,
+    text: template.text,
+    is_shared: template.is_shared
+  };
+}
+
 /** Form for editing a prompt template. */
 export function FormPromptTemplate({ promptTemplate, className, isMutable, toggleReset }: FormPromptTemplateProps) {
   const { user } = useAuth();
@@ -43,25 +51,24 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
   const [sampleResult, setSampleResult] = useState<string | null>(null);
   const [debouncedResult] = useDebounce(sampleResult, PARAMETER.moveDuration);
 
-  const {
-    control,
-    handleSubmit,
-    reset,
-    register,
-    formState: { isDirty, errors }
-  } = useForm<IUpdatePromptTemplateDTO>({
-    resolver: zodResolver(schemaUpdatePromptTemplate),
-    defaultValues: {
-      owner: promptTemplate.owner,
-      label: promptTemplate.label,
-      description: promptTemplate.description,
-      text: promptTemplate.text,
-      is_shared: promptTemplate.is_shared
+  const form = useForm({
+    defaultValues: templateDefaults(promptTemplate),
+    validators: {
+      onChange: schemaUpdatePromptTemplate
     },
-    mode: 'onChange'
+    onSubmit: async ({ value, formApi }) => {
+      await updatePromptTemplate({ id: promptTemplate.id, data: value });
+      setIsModified(false);
+      formApi.reset(value);
+    }
   });
-  const onResetEvent = useEffectEvent(reset);
-  const text = useWatch({ control, name: 'text' });
+
+  const onResetEvent = useEffectEvent((next: IUpdatePromptTemplateDTO) => {
+    form.reset(next);
+  });
+
+  const text = useStore(form.store, state => state.values.text);
+  const isDefaultValue = useStore(form.store, state => state.isDefaultValue);
 
   const prevReset = useRef(toggleReset);
   const prevTemplate = useRef(promptTemplate);
@@ -70,27 +77,14 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
     if (prevTemplate.current !== promptTemplate || prevReset.current !== toggleReset) {
       prevTemplate.current = promptTemplate;
       prevReset.current = toggleReset;
-      onResetEvent({
-        owner: promptTemplate.owner,
-        label: promptTemplate.label,
-        description: promptTemplate.description,
-        text: promptTemplate.text,
-        is_shared: promptTemplate.is_shared
-      });
+      onResetEvent(templateDefaults(promptTemplate));
       return () => setSampleResult(null);
     }
   }, [promptTemplate, toggleReset]);
 
   useEffect(function synchronizeModifiedState() {
-    onModifiedEvent(isDirty);
-  }, [isDirty]);
-
-  function onSubmit(data: IUpdatePromptTemplateDTO) {
-    return updatePromptTemplate({ id: promptTemplate.id, data }).then(() => {
-      setIsModified(false);
-      reset({ ...data });
-    });
-  }
+    onModifiedEvent(!isDefaultValue);
+  }, [isDefaultValue]);
 
   function handleChangeText(newValue: string, onChange: (newValue: string) => void) {
     setSampleResult(null);
@@ -101,54 +95,65 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
     <form
       id={globalIDs.prompt_editor}
       className={cn('flex flex-col gap-3 px-6 py-2', className)}
-      onSubmit={event => void handleSubmit(onSubmit)(event)}
+      onSubmit={event => {
+        event.preventDefault();
+        event.stopPropagation();
+        void form.handleSubmit();
+      }}
     >
-      <TextInput
-        id='prompt_label'
-        label='Название' //
-        {...register('label')}
-        error={errors.label}
-        disabled={isProcessing || !isMutable}
-      />
-      <TextArea
-        id='prompt_description'
-        label='Описание' //
-        {...register('description')}
-        error={errors.description}
-        disabled={isProcessing || !isMutable}
-      />
+      <form.Field name='label'>
+        {field => (
+          <TextInput
+            id='prompt_label'
+            label='Название'
+            value={field.state.value}
+            onChange={event => field.handleChange(event.target.value)}
+            onBlur={field.handleBlur}
+            error={field.state.meta.errors[0]?.message}
+            disabled={isProcessing || !isMutable}
+          />
+        )}
+      </form.Field>
+      <form.Field name='description'>
+        {field => (
+          <TextArea
+            id='prompt_description'
+            label='Описание' //
+            value={field.state.value}
+            onChange={event => field.handleChange(event.target.value)}
+            onBlur={field.handleBlur}
+            error={field.state.meta.errors[0]?.message}
+            disabled={isProcessing || !isMutable}
+          />
+        )}
+      </form.Field>
 
-      <Controller
-        control={control}
-        name='text'
-        render={({ field }) => (
+      <form.Field name='text'>
+        {field => (
           <PromptInput
             id='prompt_text'
             label='Содержание'
             placeholder='Пример: Предложи дополнение для КС {{schema}}'
             className='disabled:min-h-9 max-h-64'
-            value={field.value ?? ''}
-            onChange={newValue => handleChangeText(newValue, field.onChange)}
+            value={field.state.value ?? ''}
+            onChange={newValue => handleChangeText(newValue, field.handleChange)}
             disabled={isProcessing || !isMutable}
           />
         )}
-      />
+      </form.Field>
       <div className='flex justify-between'>
-        <Controller
-          name='is_shared'
-          control={control}
-          render={({ field }) => (
+        <form.Field name='is_shared'>
+          {field => (
             <Checkbox
               id='prompt_is_shared'
               label='Общий шаблон'
-              value={field.value ?? false}
-              onChange={field.onChange}
-              onBlur={field.onBlur}
-              ref={field.ref}
+              value={field.state.value ?? false}
+              onChange={field.handleChange}
+              onBlur={field.handleBlur}
               disabled={isProcessing || !isMutable || !user.is_staff}
             />
           )}
-        />
+        </form.Field>
         <MiniButton
           title='Сгенерировать пример запроса'
           icon={<IconSample size='1.25rem' className='icon-primary' />}

@@ -1,7 +1,7 @@
 'use client';
 
-import { Controller, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useMemo } from 'react';
+import { useForm, useStore } from '@tanstack/react-form';
 import { z } from 'zod';
 
 import { ModalForm } from '@/components/modal';
@@ -26,21 +26,21 @@ export interface DlgChangeLocationProps {
 export function DlgChangeLocation() {
   const { initial, onChangeLocation } = useDialogsStore(state => state.props as DlgChangeLocationProps);
 
-  const {
-    handleSubmit,
-    control,
-    formState: { errors, isValid, isDirty }
-  } = useForm<LocationType>({
-    resolver: zodResolver(schemaLocation),
+  const form = useForm({
     defaultValues: {
       location: initial
+    } satisfies LocationType,
+    validators: {
+      onChange: schemaLocation
     },
-    mode: 'onChange'
+    onSubmit: ({ value }) => {
+      onChangeLocation(value.location);
+    }
   });
 
-  function onSubmit(data: LocationType) {
-    onChangeLocation(data.location);
-  }
+  const values = useStore(form.store, state => state.values);
+  const isDefaultValue = useStore(form.store, state => state.isDefaultValue);
+  const isValid = useMemo(() => schemaLocation.safeParse(values).success, [values]);
 
   return (
     <ModalForm
@@ -52,22 +52,24 @@ export function DlgChangeLocation() {
           ? ''
           : `Допустимы буквы, цифры, подчерк, пробел и "!". Сегмент пути не может начинаться и заканчиваться пробелом. Общая длина (с корнем) не должна превышать ${limits.len_location}`
       }
-      canSubmit={isValid && isDirty}
-      onSubmit={event => void handleSubmit(onSubmit)(event)}
+      canSubmit={isValid && !isDefaultValue}
+      onSubmit={event => {
+        event.preventDefault();
+        event.stopPropagation();
+        void form.handleSubmit();
+      }}
       className='w-130 pb-3 px-6 h-36'
     >
-      <Controller
-        control={control}
-        name='location'
-        render={({ field }) => (
+      <form.Field name='location'>
+        {field => (
           <PickLocation
             dropdownHeight='h-38' //
-            value={field.value ?? ''}
-            onChange={field.onChange}
-            error={errors.location}
+            value={field.state.value ?? ''}
+            onChange={field.handleChange}
+            error={field.state.meta.errors[0]?.message}
           />
         )}
-      />
+      </form.Field>
     </ModalForm>
   );
 }

@@ -41,17 +41,16 @@ This readme file is used mostly to document project dependencies and conventions
   - react-error-boundary
   - react-tooltip
   - react-zoom-pan-pinch
-  - react-hook-form
   - react-scan
   - js-file-download
   - use-debounce
   - qrcode.react
   - zustand
   - zod
-  - @hookform/resolvers
   - @tanstack/react-table
   - @tanstack/react-query
   - @tanstack/react-query-devtools
+  - @tanstack/react-form
   - @uiw/react-codemirror
   - @uiw/codemirror-themes
   - @lezer/lr

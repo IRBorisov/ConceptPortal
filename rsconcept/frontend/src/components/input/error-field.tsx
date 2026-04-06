@@ -1,10 +1,8 @@
-import { type FieldError, type GlobalError } from 'react-hook-form';
-
 import { type Styling } from '../props';
 import { cn } from '../utils';
 
 interface ErrorFieldProps extends Styling {
-  error?: FieldError | GlobalError;
+  error?: string;
 }
 
 /**
@@ -16,7 +14,7 @@ export function ErrorField({ error, className, ...restProps }: ErrorFieldProps):
   }
   return (
     <div className={cn('text-sm text-destructive select-none', className)} {...restProps}>
-      {error.message}
+      {error}
     </div>
   );
 }

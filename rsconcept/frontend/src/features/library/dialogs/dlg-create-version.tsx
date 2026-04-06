@@ -1,7 +1,7 @@
 'use client';
 
-import { Controller, useForm, useWatch } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useMemo } from 'react';
+import { useForm, useStore } from '@tanstack/react-form';
 
 import { Checkbox, TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
@@ -26,34 +26,30 @@ export function DlgCreateVersion() {
   );
   const { createVersion: versionCreate } = useCreateVersion();
 
-  const {
-    register,
-    handleSubmit,
-    control,
-    formState: { errors }
-  } = useForm<CreateVersionDTO>({
-    resolver: zodResolver(schemaCreateVersion),
+  const form = useForm({
     defaultValues: {
       version: versions.length > 0 ? nextVersion(versions[versions.length - 1].version) : '1.0.0',
       description: '',
-      items: []
+      items: [] as number[]
+    } satisfies CreateVersionDTO,
+    validators: {
+      onChange: schemaCreateVersion
     },
-    mode: 'onChange'
+    onSubmit: async ({ value }) => {
+      await versionCreate({ itemID, data: value }).then(onCreate);
+    }
   });
-  const version = useWatch({ control, name: 'version' });
-  const { canSubmit, hint } = (() => {
+
+  const version = useStore(form.store, state => state.values.version);
+  const { canSubmit, hint } = useMemo(() => {
     if (!version) {
       return { canSubmit: false, hint: hintMsg.versionEmpty };
-    } else if (versions.find(ver => ver.version === version)) {
-      return { canSubmit: false, hint: hintMsg.versionTaken };
-    } else {
-      return { canSubmit: true, hint: '' };
     }
-  })();
-
-  function onSubmit(data: CreateVersionDTO) {
-    return versionCreate({ itemID, data }).then(onCreate);
-  }
+    if (versions.find(ver => ver.version === version)) {
+      return { canSubmit: false, hint: hintMsg.versionTaken };
+    }
+    return { canSubmit: true, hint: '' };
+  }, [version, versions]);
 
   return (
     <ModalForm
@@ -62,23 +58,49 @@ export function DlgCreateVersion() {
       canSubmit={canSubmit}
       validationHint={hint}
       submitText='Создать'
-      onSubmit={event => void handleSubmit(onSubmit)(event)}
+      onSubmit={event => {
+        event.preventDefault();
+        event.stopPropagation();
+        void form.handleSubmit();
+      }}
     >
-      <TextInput id='dlg_version' {...register('version')} label='Версия' className='w-64' error={errors.version} />
-      <TextArea id='dlg_description' {...register('description')} spellCheck label='Описание' rows={3} />
+      <form.Field name='version'>
+        {field => (
+          <TextInput
+            id='dlg_version'
+            label='Версия'
+            className='w-64'
+            value={field.state.value}
+            onChange={event => field.handleChange(event.target.value)}
+            onBlur={field.handleBlur}
+            error={field.state.meta.errors[0]?.message}
+          />
+        )}
+      </form.Field>
+      <form.Field name='description'>
+        {field => (
+          <TextArea
+            id='dlg_description'
+            spellCheck
+            label='Описание'
+            rows={3}
+            value={field.state.value}
+            onChange={event => field.handleChange(event.target.value)}
+            onBlur={field.handleBlur}
+          />
+        )}
+      </form.Field>
       {selected.length > 0 ? (
-        <Controller
-          control={control}
-          name='items'
-          render={({ field }) => (
+        <form.Field name='items'>
+          {field => (
             <Checkbox
               id='dlg_only_selected'
               label={`Только выбранные конституенты [${selected.length} из ${totalCount}]`}
-              value={field.value ? field.value.length > 0 : false}
-              onChange={value => field.onChange(value ? selected : [])}
+              value={field.state.value ? field.state.value.length > 0 : false}
+              onChange={value => field.handleChange(value ? selected : [])}
             />
           )}
-        />
+        </form.Field>
       ) : null}
     </ModalForm>
   );

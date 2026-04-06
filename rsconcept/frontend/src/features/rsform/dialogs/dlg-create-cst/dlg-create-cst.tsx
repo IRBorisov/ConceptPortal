@@ -1,10 +1,11 @@
 'use client';
 
-import { FormProvider, useForm, useWatch } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useMemo } from 'react';
+import { useForm, useStore } from '@tanstack/react-form';
 
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
+import { type CreateFieldProps, type FieldStateData } from '@/utils/forms';
 import { hintMsg } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 
@@ -15,9 +16,10 @@ import {
 } from '../../backend/types';
 import { useCreateConstituenta } from '../../backend/use-create-constituenta';
 import { useRSForm } from '../../backend/use-rsform';
-import { validateNewAlias } from '../../models/rsform-api';
+import { type CstType } from '../../models/rsform';
+import { generateAlias, validateNewAlias } from '../../models/rsform-api';
 
-import { FormCreateCst } from './form-create-cst';
+import { FormCreateCst, type FormCreateCstFields } from './form-create-cst';
 
 export interface DlgCreateCstProps {
   initial: CreateConstituentaDTO;
@@ -31,25 +33,64 @@ export function DlgCreateCst() {
   const { createConstituenta: cstCreate } = useCreateConstituenta();
   const { schema } = useRSForm({ itemID: schemaID });
 
-  const methods = useForm<CreateConstituentaDTO>({
-    mode: 'onChange',
-    resolver: zodResolver(schemaCreateConstituenta),
-    defaultValues: { ...initial }
+  const form = useForm({
+    defaultValues: { ...initial },
+    validators: {
+      onChange: schemaCreateConstituenta
+    },
+    onSubmit: async ({ value }) => {
+      await cstCreate({ itemID: schema.id, data: value }).then(onCreate);
+    }
   });
-  const alias = useWatch({ control: methods.control, name: 'alias' });
-  const cst_type = useWatch({ control: methods.control, name: 'cst_type' });
-  const { canSubmit, hint } = (() => {
+
+  const values = useStore(form.store, state => state.values as CreateConstituentaDTO);
+  const alias = values.alias;
+  const cst_type = values.cst_type;
+  const { canSubmit, hint } = useMemo(() => {
     if (!validateNewAlias(alias, cst_type, schema)) {
       return { canSubmit: false, hint: hintMsg.aliasInvalid };
-    } else if (!methods.formState.isValid) {
-      return { canSubmit: false, hint: hintMsg.formInvalid };
-    } else {
-      return { canSubmit: true, hint: '' };
     }
-  })();
+    if (!schemaCreateConstituenta.safeParse(values).success) {
+      return { canSubmit: false, hint: hintMsg.formInvalid };
+    }
+    return { canSubmit: true, hint: '' };
+  }, [alias, cst_type, schema, values]);
 
-  function onSubmit(data: CreateConstituentaDTO) {
-    return cstCreate({ itemID: schema.id, data }).then(onCreate);
+  function AliasField({ children }: CreateFieldProps<string>) {
+    return <form.Field name='alias'>{field => children(field as FieldStateData<string>)}</form.Field>;
+  }
+
+  function TermRawField({ children }: CreateFieldProps<string>) {
+    return <form.Field name='term_raw'>{field => children(field as FieldStateData<string>)}</form.Field>;
+  }
+
+  function DefinitionFormalField({ children }: CreateFieldProps<string>) {
+    return <form.Field name='definition_formal'>{field => children(field as FieldStateData<string>)}</form.Field>;
+  }
+
+  function DefinitionRawField({ children }: CreateFieldProps<string>) {
+    return <form.Field name='definition_raw'>{field => children(field as FieldStateData<string>)}</form.Field>;
+  }
+
+  function ConventionField({ children }: CreateFieldProps<string>) {
+    return <form.Field name='convention'>{field => children(field as FieldStateData<string>)}</form.Field>;
+  }
+
+  const cstFields: FormCreateCstFields = {
+    AliasField,
+    TermRawField,
+    DefinitionFormalField,
+    DefinitionRawField,
+    ConventionField
+  };
+
+  function handleChangeCstType(target: CstType) {
+    form.setFieldValue('cst_type', target);
+    form.setFieldValue('alias', generateAlias(target, schema));
+  }
+
+  function handleToggleCrucial() {
+    form.setFieldValue('crucial', !values.crucial);
   }
 
   return (
@@ -57,14 +98,22 @@ export function DlgCreateCst() {
       header='Создание конституенты'
       canSubmit={canSubmit}
       onCancel={onCancel}
-      onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
+      onSubmit={event => {
+        event.preventDefault();
+        event.stopPropagation();
+        void form.handleSubmit();
+      }}
       validationHint={hint}
       submitText='Создать'
       className='cc-column w-140 max-h-120 py-2 px-6'
     >
-      <FormProvider {...methods}>
-        <FormCreateCst schema={schema} />
-      </FormProvider>
+      <FormCreateCst
+        schema={schema}
+        values={values}
+        fields={cstFields}
+        onChangeCstType={handleChangeCstType}
+        onToggleCrucial={handleToggleCrucial}
+      />
     </ModalForm>
   );
 }

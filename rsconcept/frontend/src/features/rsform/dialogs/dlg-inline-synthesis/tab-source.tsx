@@ -1,37 +1,24 @@
 'use client';
 
-import { useFormContext, useWatch } from 'react-hook-form';
-
 import { LibraryItemType } from '@/features/library';
 import { useLibrary } from '@/features/library/backend/use-library';
 import { PickSchema } from '@/features/library/components/pick-schema';
 
 import { TextInput } from '@/components/input';
 
-import { type InlineSynthesisDTO } from '../../backend/types';
 import { type RSForm } from '../../models/rsform';
 import { sortItemsForInlineSynthesis } from '../../models/rsform-api';
 
 interface TabSourceProps {
   receiver: RSForm;
+  sourceID: number | null;
+  onChangeSource: (newValue: number) => void;
 }
 
-export function TabSource({ receiver }: TabSourceProps) {
+export function TabSource({ receiver, sourceID, onChangeSource }: TabSourceProps) {
   const { items: libraryItems } = useLibrary();
-  const { setValue, control } = useFormContext<InlineSynthesisDTO>();
-  const sourceID = useWatch({ control, name: 'source' });
-
   const selectedInfo = libraryItems.find(item => item.id === sourceID);
   const sortedItems = sortItemsForInlineSynthesis(receiver, libraryItems);
-
-  function handleSelectSource(newValue: number) {
-    if (newValue === sourceID) {
-      return;
-    }
-    setValue('source', newValue);
-    setValue('items', []);
-    setValue('substitutions', []);
-  }
 
   return (
     <div className='cc-fade-in flex flex-col'>
@@ -41,7 +28,7 @@ export function TabSource({ receiver }: TabSourceProps) {
         itemType={LibraryItemType.RSFORM}
         rows={14}
         value={sourceID}
-        onChange={handleSelectSource}
+        onChange={onChangeSource}
       />
 
       <div className='flex items-center gap-6 '>

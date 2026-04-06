@@ -1,15 +1,16 @@
 'use client';
 
-import { Suspense, useState } from 'react';
-import { FormProvider, useForm, useWatch } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { Suspense, useMemo, useState } from 'react';
+import { useForm, useStore } from '@tanstack/react-form';
 
 import { HelpTopic } from '@/features/help';
+import { type Substitution } from '@/features/rsform/models/rsform';
 
 import { Loader } from '@/components/loader';
 import { ModalForm } from '@/components/modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useDialogsStore } from '@/stores/dialogs';
+import { type CreateFieldProps, type FieldStateData } from '@/utils/forms';
 import { hintMsg } from '@/utils/labels';
 
 import { type CreateSynthesisDTO, type OssLayout, schemaCreateSynthesis } from '../../backend/types';
@@ -40,7 +41,7 @@ export function DlgCreateSynthesis() {
   const { createSynthesis } = useCreateSynthesis();
 
   const {
-    ossID, //
+    ossID,
     layout,
     initialInputs,
     initialParent,
@@ -51,8 +52,7 @@ export function DlgCreateSynthesis() {
   const { schema } = useOss({ itemID: ossID });
   const manager = new LayoutManager(schema, layout);
 
-  const methods = useForm<CreateSynthesisDTO>({
-    resolver: zodResolver(schemaCreateSynthesis),
+  const form = useForm({
     defaultValues: {
       item_data: {
         alias: '',
@@ -67,29 +67,74 @@ export function DlgCreateSynthesis() {
         height: OPERATION_NODE_HEIGHT
       },
       arguments: initialInputs,
-      substitutions: [],
+      substitutions: [] as Substitution[],
       layout: manager.layout
+    } satisfies CreateSynthesisDTO,
+    validators: {
+      onChange: schemaCreateSynthesis
     },
-    mode: 'onChange'
+    onSubmit: ({ value }) => {
+      const data = { ...value };
+      data.position = manager.newOperationPosition(data);
+      data.layout = manager.layout;
+      void createSynthesis({ itemID: manager.oss.id, data }).then(response => onCreate?.(response.new_operation));
+    }
   });
-  const alias = useWatch({ control: methods.control, name: 'item_data.alias' });
+
+  const values = useStore(form.store, state => state.values);
+  const alias = values.item_data.alias;
   const [activeTab, setActiveTab] = useState<TabID>(TabID.ARGUMENTS);
-  const { canSubmit, hint } = (() => {
+  const { canSubmit, hint } = useMemo(() => {
     if (!alias) {
       return { canSubmit: false, hint: hintMsg.aliasEmpty };
-    } else if (manager.oss.operations.some(operation => operation.alias === alias)) {
-      return { canSubmit: false, hint: hintMsg.schemaAliasTaken };
-    } else if (!methods.formState.isValid) {
-      return { canSubmit: false, hint: hintMsg.formInvalid };
-    } else {
-      return { canSubmit: true, hint: '' };
     }
-  })();
+    if (manager.oss.operations.some(operation => operation.alias === alias)) {
+      return { canSubmit: false, hint: hintMsg.schemaAliasTaken };
+    }
+    if (!schemaCreateSynthesis.safeParse(values).success) {
+      return { canSubmit: false, hint: hintMsg.formInvalid };
+    }
+    return { canSubmit: true, hint: '' };
+  }, [alias, values, manager.oss.operations]);
 
-  function onSubmit(data: CreateSynthesisDTO) {
-    data.position = manager.newOperationPosition(data);
-    data.layout = manager.layout;
-    void createSynthesis({ itemID: manager.oss.id, data: data }).then(response => onCreate?.(response.new_operation));
+  function TitleField({ children }: CreateFieldProps<string>) {
+    return (
+      <form.Field name='item_data.title'>{field => children(field as FieldStateData<string>)}</form.Field>
+    );
+  }
+
+  function AliasField({ children }: CreateFieldProps<string>) {
+    return (
+      <form.Field name='item_data.alias'>{field => children(field as FieldStateData<string>)}</form.Field>
+    );
+  }
+
+  function ParentField({ children }: CreateFieldProps<number | null>) {
+    return (
+      <form.Field name='item_data.parent'>
+        {field => children(field as FieldStateData<number | null>)}
+      </form.Field>
+    );
+  }
+
+  function DescriptionField({ children }: CreateFieldProps<string>) {
+    return (
+      <form.Field name='item_data.description'>
+        {field => children(field as FieldStateData<string>)}
+      </form.Field>
+    );
+  }
+
+  function ArgumentsField({ children }: CreateFieldProps<number[]>) {
+    return <form.Field name='arguments'>{field => children(field as FieldStateData<number[]>)}</form.Field>;
+  }
+
+  function SubstitutionsField({ children }: CreateFieldProps<Substitution[]>) {
+    return (
+      <form.Field name='substitutions'>
+        {field => children(field as FieldStateData<Substitution[]>)}
+      </form.Field>
+    );
   }
 
   return (
@@ -98,7 +143,11 @@ export function DlgCreateSynthesis() {
       submitText='Создать'
       canSubmit={canSubmit}
       validationHint={hint}
-      onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
+      onSubmit={event => {
+        event.preventDefault();
+        event.stopPropagation();
+        void form.handleSubmit();
+      }}
       className='w-180 px-6 h-128'
       helpTopic={HelpTopic.CC_OSS}
     >
@@ -107,16 +156,23 @@ export function DlgCreateSynthesis() {
           <TabLabel title='Выбор аргументов операции' label='Аргументы' className='w-32' />
           <TabLabel titleHtml='Таблица отождествлений' label='Отождествления' className='w-32' />
         </TabList>
-        <FormProvider {...methods}>
-          <TabPanel>
-            <TabArguments oss={schema} />
-          </TabPanel>
-          <TabPanel>
-            <Suspense fallback={<Loader />}>
-              <TabSubstitutions oss={schema} />
-            </Suspense>
-          </TabPanel>
-        </FormProvider>
+        <TabPanel>
+          <TabArguments
+            oss={schema}
+            inputs={values.arguments}
+            fields={{ TitleField, AliasField, ParentField, DescriptionField, ArgumentsField }}
+          />
+        </TabPanel>
+        <TabPanel>
+          <Suspense fallback={<Loader />}>
+            <TabSubstitutions
+              oss={schema}
+              inputs={values.arguments}
+              substitutions={values.substitutions}
+              fields={{ SubstitutionsField }}
+            />
+          </Suspense>
+        </TabPanel>
       </Tabs>
     </ModalForm>
   );

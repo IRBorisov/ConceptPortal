@@ -1,25 +1,22 @@
 'use client';
 
-import { Controller, useFormContext, useWatch } from 'react-hook-form';
-
 import { useRSForms } from '@/features/rsform/backend/use-rsforms';
 import { PickSubstitutions } from '@/features/rsform/components/pick-substitutions';
+import { type Substitution } from '@/features/rsform/models/rsform';
 
 import { TextArea } from '@/components/input';
 
-import { type UpdateOperationDTO } from '../../backend/types';
 import { type OperationSchema } from '../../models/oss';
 import { SubstitutionValidator } from '../../models/oss-api';
 
 interface TabSubstitutionsProps {
   oss: OperationSchema;
+  inputs: number[];
+  substitutions: Substitution[];
+  onChangeSubstitutions: (newValue: Substitution[]) => void;
 }
 
-export function TabSubstitutions({ oss }: TabSubstitutionsProps) {
-  const { control } = useFormContext<UpdateOperationDTO>();
-  const inputs = useWatch({ control, name: 'arguments' });
-  const substitutions = useWatch({ control, name: 'substitutions' });
-
+export function TabSubstitutions({ oss, inputs, substitutions, onChangeSubstitutions }: TabSubstitutionsProps) {
   const schemasIDs = inputs
     .map(id => oss.operationByID.get(id)!)
     .map(operation => operation.result)
@@ -31,18 +28,12 @@ export function TabSubstitutions({ oss }: TabSubstitutionsProps) {
 
   return (
     <div className='cc-fade-in cc-column mt-3'>
-      <Controller
-        name='substitutions'
-        control={control}
-        render={({ field }) => (
-          <PickSubstitutions
-            schemas={schemas}
-            rows={8}
-            value={field.value ?? []}
-            onChange={field.onChange}
-            suggestions={validator.suggestions}
-          />
-        )}
+      <PickSubstitutions
+        schemas={schemas}
+        rows={8}
+        value={substitutions}
+        onChange={onChangeSubstitutions}
+        suggestions={validator.suggestions}
       />
 
       <TextArea

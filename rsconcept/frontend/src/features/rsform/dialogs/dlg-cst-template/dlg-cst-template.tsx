@@ -1,8 +1,7 @@
 'use client';
 
-import { Suspense, useState } from 'react';
-import { FormProvider, useForm, useWatch } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { Suspense, useMemo, useState } from 'react';
+import { useForm, useStore } from '@tanstack/react-form';
 
 import { HelpTopic } from '@/features/help';
 
@@ -10,6 +9,7 @@ import { Loader } from '@/components/loader';
 import { ModalForm } from '@/components/modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useDialogsStore } from '@/stores/dialogs';
+import { type CreateFieldProps, type FieldStateData } from '@/utils/forms';
 import { hintMsg } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 
@@ -20,8 +20,9 @@ import {
 } from '../../backend/types';
 import { useCreateConstituenta } from '../../backend/use-create-constituenta';
 import { useRSForm } from '../../backend/use-rsform';
-import { validateNewAlias } from '../../models/rsform-api';
-import { FormCreateCst } from '../dlg-create-cst/form-create-cst';
+import { type CstType } from '../../models/rsform';
+import { generateAlias, validateNewAlias } from '../../models/rsform-api';
+import { FormCreateCst, type FormCreateCstFields } from '../dlg-create-cst/form-create-cst';
 
 import { TabArguments } from './tab-arguments';
 import { TabTemplate } from './tab-template';
@@ -45,9 +46,7 @@ export function DlgCstTemplate() {
   const { createConstituenta: cstCreate } = useCreateConstituenta();
   const { schema } = useRSForm({ itemID: schemaID });
 
-  const methods = useForm<CreateConstituentaDTO>({
-    mode: 'onChange',
-    resolver: zodResolver(schemaCreateConstituenta),
+  const form = useForm({
     defaultValues: {
       insert_after: insertAfter ?? null,
       crucial: false,
@@ -58,26 +57,88 @@ export function DlgCstTemplate() {
       definition_raw: '',
       term_raw: '',
       term_forms: []
+    } as unknown as CreateConstituentaDTO,
+    validators: {
+      onChange: schemaCreateConstituenta
+    },
+    onSubmit: async ({ value }) => {
+      await cstCreate({ itemID: schema.id, data: value }).then(onCreate);
     }
   });
-  const alias = useWatch({ control: methods.control, name: 'alias' });
-  const cst_type = useWatch({ control: methods.control, name: 'cst_type' });
-  const { canSubmit, hint } = (() => {
+
+  const values = useStore(form.store, state => state.values);
+  const alias = values.alias;
+  const cst_type = values.cst_type;
+  const { canSubmit, hint } = useMemo(() => {
     if (!cst_type) {
       return { canSubmit: false, hint: hintMsg.templateInvalid };
-    } else if (!validateNewAlias(alias, cst_type, schema)) {
-      return { canSubmit: false, hint: hintMsg.aliasInvalid };
-    } else if (!methods.formState.isValid) {
-      return { canSubmit: false, hint: hintMsg.formInvalid };
-    } else {
-      return { canSubmit: true, hint: '' };
     }
-  })();
+    if (!validateNewAlias(alias, cst_type, schema)) {
+      return { canSubmit: false, hint: hintMsg.aliasInvalid };
+    }
+    if (!schemaCreateConstituenta.safeParse(values).success) {
+      return { canSubmit: false, hint: hintMsg.formInvalid };
+    }
+    return { canSubmit: true, hint: '' };
+  }, [alias, cst_type, schema, values]);
 
   const [activeTab, setActiveTab] = useState<TabID>(TabID.TEMPLATE);
 
-  function onSubmit(data: CreateConstituentaDTO) {
-    return cstCreate({ itemID: schema.id, data }).then(onCreate);
+  function AliasField({ children }: CreateFieldProps<string>) {
+    return <form.Field name='alias'>{field => children(field as FieldStateData<string>)}</form.Field>;
+  }
+
+  function TermRawField({ children }: CreateFieldProps<string>) {
+    return <form.Field name='term_raw'>{field => children(field as FieldStateData<string>)}</form.Field>;
+  }
+
+  function DefinitionFormalField({ children }: CreateFieldProps<string>) {
+    return <form.Field name='definition_formal'>{field => children(field as FieldStateData<string>)}</form.Field>;
+  }
+
+  function DefinitionRawField({ children }: CreateFieldProps<string>) {
+    return <form.Field name='definition_raw'>{field => children(field as FieldStateData<string>)}</form.Field>;
+  }
+
+  function ConventionField({ children }: CreateFieldProps<string>) {
+    return <form.Field name='convention'>{field => children(field as FieldStateData<string>)}</form.Field>;
+  }
+
+  const cstFields: FormCreateCstFields = {
+    AliasField,
+    TermRawField,
+    DefinitionFormalField,
+    DefinitionRawField,
+    ConventionField
+  };
+
+  function handleChangeCstType(target: CstType) {
+    form.setFieldValue('cst_type', target);
+    form.setFieldValue('alias', generateAlias(target, schema));
+  }
+
+  function handleToggleCrucial() {
+    form.setFieldValue('crucial', !values.crucial);
+  }
+
+  function handleDefinitionFormalChange(newValue: string) {
+    form.setFieldValue('definition_formal', newValue);
+  }
+
+  function handleTemplateCstTypeChange(newValue: CstType) {
+    form.setFieldValue('cst_type', newValue);
+  }
+
+  function handleAliasChange(newValue: string) {
+    form.setFieldValue('alias', newValue);
+  }
+
+  function handleTermRawChange(newValue: string) {
+    form.setFieldValue('term_raw', newValue);
+  }
+
+  function handleDefinitionRawChange(newValue: string) {
+    form.setFieldValue('definition_raw', newValue);
   }
 
   return (
@@ -86,7 +147,11 @@ export function DlgCstTemplate() {
       submitText='Создать'
       className='w-172 h-140 px-6'
       canSubmit={canSubmit}
-      onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
+      onSubmit={event => {
+        event.preventDefault();
+        event.stopPropagation();
+        void form.handleSubmit();
+      }}
       validationHint={hint}
       helpTopic={HelpTopic.RSL_TEMPLATES}
     >
@@ -97,25 +162,35 @@ export function DlgCstTemplate() {
           <TabLabel label='Редактор' title='Редактирование конституенты' className='w-32' />
         </TabList>
 
-        <FormProvider {...methods}>
-          <TemplateState>
-            <TabPanel>
-              <Suspense fallback={<Loader />}>
-                <TabTemplate schema={schema} />
-              </Suspense>
-            </TabPanel>
+        <TemplateState
+          onDefinitionFormalChange={handleDefinitionFormalChange}
+          onCstTypeChange={handleTemplateCstTypeChange}
+          onAliasChange={handleAliasChange}
+          onTermRawChange={handleTermRawChange}
+          onDefinitionRawChange={handleDefinitionRawChange}
+        >
+          <TabPanel>
+            <Suspense fallback={<Loader />}>
+              <TabTemplate schema={schema} />
+            </Suspense>
+          </TabPanel>
 
-            <TabPanel>
-              <TabArguments schema={schema} />
-            </TabPanel>
+          <TabPanel>
+            <TabArguments schema={schema} definition={values.definition_formal} />
+          </TabPanel>
 
-            <TabPanel>
-              <div className='cc-fade-in cc-column'>
-                <FormCreateCst schema={schema} />
-              </div>
-            </TabPanel>
-          </TemplateState>
-        </FormProvider>
+          <TabPanel>
+            <div className='cc-fade-in cc-column'>
+              <FormCreateCst
+                schema={schema}
+                values={values}
+                fields={cstFields}
+                onChangeCstType={handleChangeCstType}
+                onToggleCrucial={handleToggleCrucial}
+              />
+            </div>
+          </TabPanel>
+        </TemplateState>
       </Tabs>
     </ModalForm>
   );

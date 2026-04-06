@@ -1,7 +1,7 @@
 'use client';
 
-import { Controller, useForm, useWatch } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useMemo } from 'react';
+import { useForm, useStore } from '@tanstack/react-form';
 import clsx from 'clsx';
 
 import { HelpTopic } from '@/features/help';
@@ -27,25 +27,24 @@ export function DlgSubstituteCst() {
   const { substituteConstituents: cstSubstitute } = useSubstituteConstituents();
   const { schema } = useRSForm({ itemID: schemaID });
 
-  const {
-    handleSubmit,
-    control,
-    formState: { errors, isValid }
-  } = useForm<SubstitutionsDTO>({
-    resolver: zodResolver(schemaSubstitutions),
+  const form = useForm({
     defaultValues: {
       substitutions: []
+    } as SubstitutionsDTO,
+    validators: {
+      onChange: schemaSubstitutions
     },
-    mode: 'onChange'
+    onSubmit: async ({ value }) => {
+      await cstSubstitute({ itemID: schema.id, data: value }).then(() => onSubstitute(value));
+    }
   });
-  const substitutions = useWatch({ control, name: 'substitutions' });
 
-  const validator = new SubstitutionValidator([schema], substitutions);
+  const values = useStore(form.store, state => state.values);
+  const substitutions = values.substitutions;
+  const isValid = useMemo(() => schemaSubstitutions.safeParse(values).success, [values]);
+
+  const validator = useMemo(() => new SubstitutionValidator([schema], substitutions), [schema, substitutions]);
   const isCorrect = validator.validate();
-
-  function onSubmit(data: SubstitutionsDTO) {
-    return cstSubstitute({ itemID: schema.id, data: data }).then(() => onSubstitute(data));
-  }
 
   return (
     <ModalForm
@@ -53,24 +52,28 @@ export function DlgSubstituteCst() {
       submitText='Отождествить'
       canSubmit={isValid}
       validationHint={isValid ? '' : hintMsg.substitutionsEmpty}
-      onSubmit={event => void handleSubmit(onSubmit)(event)}
+      onSubmit={event => {
+        event.preventDefault();
+        event.stopPropagation();
+        void form.handleSubmit();
+      }}
       className='w-160 px-6 pb-3'
       helpTopic={HelpTopic.UI_SUBSTITUTIONS}
     >
-      <Controller
-        control={control}
-        name='substitutions'
-        render={({ field }) => (
-          <PickSubstitutions
-            allowSelfSubstitution
-            value={field.value ?? []}
-            onChange={field.onChange}
-            rows={6}
-            schemas={[schema]}
-          />
+      <form.Field name='substitutions'>
+        {field => (
+          <>
+            <PickSubstitutions
+              allowSelfSubstitution
+              value={field.state.value ?? []}
+              onChange={field.handleChange}
+              rows={6}
+              schemas={[schema]}
+            />
+            <ErrorField className='-mt-6 px-3' error={field.state.meta.errors[0]?.message} />
+          </>
         )}
-      />
-      <ErrorField className='-mt-6 px-3' error={errors.substitutions} />
+      </form.Field>
       <TextArea
         disabled
         value={validator.msg}

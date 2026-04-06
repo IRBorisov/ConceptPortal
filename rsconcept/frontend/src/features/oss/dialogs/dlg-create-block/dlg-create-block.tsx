@@ -1,14 +1,14 @@
 'use client';
 
-import { useState } from 'react';
-import { FormProvider, useForm, useWatch } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useMemo, useState } from 'react';
+import { useForm, useStore } from '@tanstack/react-form';
 
 import { HelpTopic } from '@/features/help';
 
 import { ModalForm } from '@/components/modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useDialogsStore } from '@/stores/dialogs';
+import { type CreateFieldProps, type FieldStateData } from '@/utils/forms';
 import { hintMsg } from '@/utils/labels';
 
 import { type CreateBlockDTO, type OssLayout, schemaCreateBlock } from '../../backend/types';
@@ -17,7 +17,7 @@ import { useOss } from '../../backend/use-oss';
 import { LayoutManager } from '../../models/oss-layout-api';
 import { BLOCK_NODE_MIN_HEIGHT, BLOCK_NODE_MIN_WIDTH } from '../../pages/oss-page/tab-oss-graph/graph/block-node';
 
-import { TabBlockCard } from './tab-block-card';
+import { type DlgCreateBlockCardFields, TabBlockCard } from './tab-block-card';
 import { TabBlockChildren } from './tab-block-children';
 
 export interface DlgCreateBlockProps {
@@ -41,7 +41,7 @@ export function DlgCreateBlock() {
   const { createBlock } = useCreateBlock();
 
   const {
-    ossID, //
+    ossID,
     layout,
     childrenBlocks,
     childrenOperations,
@@ -54,8 +54,7 @@ export function DlgCreateBlock() {
   const { schema } = useOss({ itemID: ossID });
   const manager = new LayoutManager(schema, layout);
 
-  const methods = useForm<CreateBlockDTO>({
-    resolver: zodResolver(schemaCreateBlock),
+  const form = useForm({
     defaultValues: {
       item_data: {
         title: '',
@@ -71,29 +70,58 @@ export function DlgCreateBlock() {
       children_blocks: childrenBlocks,
       children_operations: childrenOperations,
       layout: manager.layout
+    } satisfies CreateBlockDTO,
+    validators: {
+      onChange: schemaCreateBlock
     },
-    mode: 'onChange'
+    onSubmit: ({ value }) => {
+      const data = { ...value };
+      data.position = manager.newBlockPosition(data);
+      data.layout = manager.layout;
+      void createBlock({ itemID: manager.oss.id, data }).then(response => onCreate?.(response.new_block));
+    }
   });
-  const title = useWatch({ control: methods.control, name: 'item_data.title' });
-  const children_blocks = useWatch({ control: methods.control, name: 'children_blocks' });
-  const children_operations = useWatch({ control: methods.control, name: 'children_operations' });
+
+  const values = useStore(form.store, state => state.values as CreateBlockDTO);
+  const title = values.item_data.title;
   const [activeTab, setActiveTab] = useState<TabID>(TabID.CARD);
-  const { canSubmit, hint } = (() => {
+  const { canSubmit, hint } = useMemo(() => {
     if (!title) {
       return { canSubmit: false, hint: hintMsg.titleEmpty };
-    } else if (manager.oss.blocks.some(block => block.title === title)) {
-      return { canSubmit: false, hint: hintMsg.blockTitleTaken };
-    } else if (!methods.formState.isValid) {
-      return { canSubmit: false, hint: hintMsg.formInvalid };
-    } else {
-      return { canSubmit: true, hint: '' };
     }
-  })();
+    if (manager.oss.blocks.some(block => block.title === title)) {
+      return { canSubmit: false, hint: hintMsg.blockTitleTaken };
+    }
+    if (!schemaCreateBlock.safeParse(values).success) {
+      return { canSubmit: false, hint: hintMsg.formInvalid };
+    }
+    return { canSubmit: true, hint: '' };
+  }, [title, values, manager.oss.blocks]);
 
-  function onSubmit(data: CreateBlockDTO) {
-    data.position = manager.newBlockPosition(data);
-    data.layout = manager.layout;
-    void createBlock({ itemID: manager.oss.id, data: data }).then(response => onCreate?.(response.new_block));
+  function TitleField({ children }: CreateFieldProps<string>) {
+    return <form.Field name='item_data.title'>{field => children(field as FieldStateData<string>)}</form.Field>;
+  }
+
+  function ParentField({ children }: CreateFieldProps<number | null>) {
+    return <form.Field name='item_data.parent'>{field => children(field as FieldStateData<number | null>)}</form.Field>;
+  }
+
+  function DescriptionField({ children }: CreateFieldProps<string>) {
+    return <form.Field name='item_data.description'>{field => children(field as FieldStateData<string>)}</form.Field>;
+  }
+
+  const cardFields: DlgCreateBlockCardFields = {
+    TitleField,
+    ParentField,
+    DescriptionField
+  };
+
+  function handleChildrenBlocksChange(childrenBlocks: number[]) {
+    form.setFieldValue('children_blocks', childrenBlocks);
+  }
+
+  function handleChildrenOperationsChange(childrenOperations: number[]) {
+    form.setFieldValue('children_operations', childrenOperations);
   }
 
   return (
@@ -102,7 +130,11 @@ export function DlgCreateBlock() {
       submitText='Создать'
       canSubmit={canSubmit}
       validationHint={hint}
-      onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
+      onSubmit={event => {
+        event.preventDefault();
+        event.stopPropagation();
+        void form.handleSubmit();
+      }}
       className='w-160 px-6 h-110'
       helpTopic={HelpTopic.CC_STRUCTURING}
     >
@@ -110,20 +142,25 @@ export function DlgCreateBlock() {
         <TabList className='z-pop mx-auto -mb-5 flex border divide-x rounded-none'>
           <TabLabel title='Основные атрибуты блока' label='Паспорт' />
           <TabLabel
-            title={`Выбор вложенных узлов: [${children_operations.length + children_blocks.length}]`}
-            label={`Содержимое${children_operations.length + children_blocks.length > 0 ? '*' : ''}`}
+            title={`Выбор вложенных узлов: [${childrenOperations.length + childrenBlocks.length}]`}
+            label={`Содержимое${childrenOperations.length + childrenBlocks.length > 0 ? '*' : ''}`}
           />
         </TabList>
 
-        <FormProvider {...methods}>
-          <TabPanel>
-            <TabBlockCard oss={schema} />
-          </TabPanel>
+        <TabPanel>
+          <TabBlockCard oss={schema} blocks={values.children_blocks} fields={cardFields} />
+        </TabPanel>
 
-          <TabPanel>
-            <TabBlockChildren oss={schema} />
-          </TabPanel>
-        </FormProvider>
+        <TabPanel>
+          <TabBlockChildren
+            oss={schema}
+            parent={values.item_data.parent}
+            blocks={values.children_blocks}
+            operations={values.children_operations}
+            onChangeBlocks={handleChildrenBlocksChange}
+            onChangeOperations={handleChildrenOperationsChange}
+          />
+        </TabPanel>
       </Tabs>
     </ModalForm>
   );

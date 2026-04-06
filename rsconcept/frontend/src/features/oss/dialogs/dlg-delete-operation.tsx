@@ -1,7 +1,6 @@
 'use client';
 
-import { Controller, useForm, useWatch } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm, useStore } from '@tanstack/react-form';
 
 import { HelpTopic } from '@/features/help';
 
@@ -9,7 +8,12 @@ import { Checkbox, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { type DeleteOperationDTO, OperationType, type OssLayout, schemaDeleteOperation } from '../backend/types';
+import {
+  type DeleteOperationDTO,
+  OperationType,
+  type OssLayout,
+  schemaDeleteOperation
+} from '../backend/types';
 import { useDeleteOperation } from '../backend/use-delete-operation';
 import { useOss } from '../backend/use-oss';
 
@@ -31,36 +35,39 @@ export function DlgDeleteOperation() {
     (target.operation_type === OperationType.INPUT && !target.is_import && !target.has_additions) ||
     (target.operation_type === OperationType.SYNTHESIS && !target.has_additions);
 
-  const { handleSubmit, control } = useForm<DeleteOperationDTO>({
-    resolver: zodResolver(schemaDeleteOperation),
+  const form = useForm({
     defaultValues: {
       target: targetID,
       layout: layout,
       keep_constituents: false,
       delete_schema: shouldDeleteSchema
+    } as DeleteOperationDTO,
+    validators: {
+      onChange: schemaDeleteOperation
+    },
+    onSubmit: async ({ value }) => {
+      await deleteOperation({ itemID: ossID, data: value, beforeUpdate: beforeDelete });
     }
   });
 
-  const deleteSchema = useWatch({ control, name: 'delete_schema' });
-
-  function onSubmit(data: DeleteOperationDTO) {
-    return deleteOperation({ itemID: ossID, data: data, beforeUpdate: beforeDelete });
-  }
+  const deleteSchema = useStore(form.store, state => state.values.delete_schema);
 
   return (
     <ModalForm
       overflowVisible
       header='Удаление операции'
       submitText='Подтвердить удаление'
-      onSubmit={event => void handleSubmit(onSubmit)(event)}
+      onSubmit={event => {
+        event.preventDefault();
+        event.stopPropagation();
+        void form.handleSubmit();
+      }}
       className='w-140 pb-3 px-6 cc-column select-none'
       helpTopic={HelpTopic.CC_PROPAGATION}
     >
       <TextInput disabled dense noBorder id='operation_alias' label='Операция' value={target.alias} />
-      <Controller
-        control={control}
-        name='delete_schema'
-        render={({ field }) => (
+      <form.Field name='delete_schema'>
+        {field => (
           <Checkbox
             label='Удалить схему'
             titleHtml={
@@ -68,25 +75,23 @@ export function DlgDeleteOperation() {
                 ? 'Привязанную схему нельзя удалить'
                 : 'Удалить схему вместе с операцией'
             }
-            value={field.value ?? false}
-            onChange={field.onChange}
+            value={field.state.value ?? false}
+            onChange={(v: boolean) => field.handleChange(v)}
             disabled={(target.operation_type === OperationType.INPUT && target.is_import) || target.result === null}
           />
         )}
-      />
-      <Controller
-        control={control}
-        name='keep_constituents'
-        render={({ field }) => (
+      </form.Field>
+      <form.Field name='keep_constituents'>
+        {field => (
           <Checkbox
             label='Сохранить наследованные конституенты'
             titleHtml='Наследованные конституенты <br/>превратятся в дописанные'
-            value={field.value ?? false}
-            onChange={field.onChange}
+            value={field.state.value ?? false}
+            onChange={(v: boolean) => field.handleChange(v)}
             disabled={target.result === null}
           />
         )}
-      />
+      </form.Field>
       {deleteSchema ? (
         <div className='text-destructive'>
           <b>Внимание!</b> Будет также удалена связанная схема

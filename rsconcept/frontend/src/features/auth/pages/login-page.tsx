@@ -1,7 +1,6 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from '@tanstack/react-form';
 
 import { urls, useConceptNavigation } from '@/app';
 
@@ -22,32 +21,27 @@ export function LoginPage() {
   const query = useQueryStrings();
   const initialName = query.get('username') ?? '';
 
-  const {
-    register,
-    handleSubmit,
-    clearErrors,
-    formState: { errors }
-  } = useForm({
-    resolver: zodResolver(schemaUserLogin),
-    defaultValues: { username: initialName, password: '' }
-  });
-
   const { isAnonymous } = useAuth();
   const { login, isPending, error: serverError, reset: clearServerError } = useLogin();
 
-  function onSubmit(data: IUserLoginDTO) {
-    return login(data).then(() => {
-      if (router.canBack()) {
-        router.back();
-      } else {
-        router.push({ path: urls.library, force: true });
-      }
-    });
-  }
+  const form = useForm({
+    defaultValues: { username: initialName, password: '' } satisfies IUserLoginDTO,
+    validators: {
+      onChange: schemaUserLogin
+    },
+    onSubmit: async ({ value }) => {
+      await login(value).then(() => {
+        if (router.canBack()) {
+          router.back();
+        } else {
+          router.push({ path: urls.library, force: true });
+        }
+      });
+    }
+  });
 
   function resetErrors() {
     clearServerError();
-    clearErrors();
   }
 
   if (!isAnonymous) {
@@ -56,30 +50,45 @@ export function LoginPage() {
   return (
     <form
       className='cc-column w-96 mx-auto pt-12 pb-6 px-6'
-      onSubmit={event => void handleSubmit(onSubmit)(event)}
+      onSubmit={event => {
+        event.preventDefault();
+        event.stopPropagation();
+        void form.handleSubmit();
+      }}
       onChange={resetErrors}
     >
       <img alt='Концепт Портал' src={resources.logo} className='max-h-10 min-w-10 mb-3' />
-      <TextInput
-        id='username'
-        autoComplete='username'
-        label='Логин или email'
-        autoFocus
-        allowEnter
-        spellCheck={false}
-        defaultValue={initialName}
-        {...register('username')}
-        error={errors.username}
-      />
-      <TextInput
-        id='password'
-        type='password'
-        autoComplete='current-password'
-        label='Пароль'
-        allowEnter
-        {...register('password')}
-        error={errors.password}
-      />
+      <form.Field name='username'>
+        {field => (
+          <TextInput
+            id='username'
+            autoComplete='username'
+            label='Логин или email'
+            autoFocus
+            allowEnter
+            spellCheck={false}
+            value={field.state.value}
+            onChange={event => field.handleChange(event.target.value)}
+            onBlur={field.handleBlur}
+            error={field.state.meta.isTouched ? field.state.meta.errors[0]?.message : undefined}
+          />
+        )}
+      </form.Field>
+      <form.Field name='password'>
+        {field => (
+          <TextInput
+            id='password'
+            type='password'
+            autoComplete='current-password'
+            label='Пароль'
+            allowEnter
+            value={field.state.value}
+            onChange={event => field.handleChange(event.target.value)}
+            onBlur={field.handleBlur}
+            error={field.state.meta.isTouched ? field.state.meta.errors[0]?.message : undefined}
+          />
+        )}
+      </form.Field>
 
       <SubmitButton text='Войти' className='self-center w-48 mt-3' loading={isPending} />
       <div className='flex flex-col text-sm'>

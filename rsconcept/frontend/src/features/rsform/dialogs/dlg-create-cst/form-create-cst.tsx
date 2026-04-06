@@ -1,13 +1,13 @@
 'use client';
 
-import { useState } from 'react';
-import { Controller, useFormContext, useWatch } from 'react-hook-form';
+import { type ReactNode, useState } from 'react';
 
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 
 import { MiniButton } from '@/components/control';
 import { TextArea, TextInput } from '@/components/input';
+import { type CreateFieldProps } from '@/utils/forms';
 
 import { type CreateConstituentaDTO } from '../../backend/types';
 import { IconCrucialValue } from '../../components/icon-crucial-value';
@@ -16,37 +16,33 @@ import { RSInput } from '../../components/rs-input';
 import { SelectCstType } from '../../components/select-cst-type';
 import { getRSDefinitionPlaceholder, labelRSExpression } from '../../labels';
 import { CstType, type RSForm } from '../../models/rsform';
-import { generateAlias, isBaseSet, isBasicConcept } from '../../models/rsform-api';
+import { isBaseSet, isBasicConcept } from '../../models/rsform-api';
+
+export interface FormCreateCstFields {
+  AliasField: (props: CreateFieldProps<string>) => ReactNode;
+  TermRawField: (props: CreateFieldProps<string>) => ReactNode;
+  DefinitionFormalField: (props: CreateFieldProps<string>) => ReactNode;
+  DefinitionRawField: (props: CreateFieldProps<string>) => ReactNode;
+  ConventionField: (props: CreateFieldProps<string>) => ReactNode;
+}
 
 interface FormCreateCstProps {
   schema: RSForm;
+  values: CreateConstituentaDTO;
+  fields: FormCreateCstFields;
+  onChangeCstType: (target: CstType) => void;
+  onToggleCrucial: () => void;
 }
 
-export function FormCreateCst({ schema }: FormCreateCstProps) {
-  const {
-    setValue,
-    register,
-    control,
-    formState: { errors }
-  } = useFormContext<CreateConstituentaDTO>();
+export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggleCrucial }: FormCreateCstProps) {
   const [forceComment, setForceComment] = useState(false);
-
-  const cst_type = useWatch({ control, name: 'cst_type' });
-  const convention = useWatch({ control, name: 'convention' });
-  const crucial = useWatch({ control, name: 'crucial' });
+  const cst_type = values.cst_type ?? CstType.BASE;
+  const convention = values.convention;
+  const crucial = values.crucial;
   const isBasic = isBasicConcept(cst_type) || cst_type === CstType.NOMINAL;
   const isElementary = isBaseSet(cst_type);
   const showConvention = !!convention || forceComment || isBasic;
-
-  function handleTypeChange(target: CstType) {
-    setValue('cst_type', target);
-    setValue('alias', generateAlias(target, schema), { shouldValidate: true });
-    setForceComment(false);
-  }
-
-  function handleToggleCrucial() {
-    setValue('crucial', !crucial);
-  }
+  const { AliasField, TermRawField, DefinitionFormalField, DefinitionRawField, ConventionField } = fields;
 
   return (
     <>
@@ -54,79 +50,79 @@ export function FormCreateCst({ schema }: FormCreateCstProps) {
         <MiniButton
           title='Ключевая конституента'
           icon={<IconCrucialValue size='1.25rem' value={crucial} />}
-          onClick={handleToggleCrucial}
+          onClick={onToggleCrucial}
         />
         <SelectCstType
           id='dlg_cst_type' //
           value={cst_type}
-          onChange={handleTypeChange}
+          onChange={onChangeCstType}
         />
-        <TextInput
-          id='dlg_cst_alias' //
-          dense
-          label='Имя'
-          className='w-28'
-          {...register('alias')}
-          error={errors.alias}
-        />
+        <AliasField>
+          {field => (
+            <TextInput
+              id='dlg_cst_alias'
+              dense
+              label='Имя'
+              className='w-28'
+              value={field.state.value}
+              onChange={event => field.handleChange(event.target.value)}
+              onBlur={field.handleBlur}
+              error={field.state.meta.errors[0]?.message}
+            />
+          )}
+        </AliasField>
         <BadgeHelp topic={HelpTopic.CC_CONSTITUENTA} offset={16} contentClass='sm:max-w-160' />
       </div>
 
-      <Controller
-        control={control}
-        name='term_raw'
-        render={({ field }) => (
+      <TermRawField>
+        {field => (
           <RefsInput
             id='dlg_cst_term'
             label='Термин'
             maxHeight='3.75rem'
             placeholder='Обозначение для текстовых определений'
             schema={schema}
-            value={field.value ?? ''}
-            resolved={field.value}
-            onChange={newValue => field.onChange(newValue)}
+            value={field.state.value ?? ''}
+            resolved={field.state.value}
+            onChange={newValue => field.handleChange(newValue)}
           />
         )}
-      />
-      <Controller
-        control={control}
-        name='definition_formal'
-        render={({ field }) =>
-          !!field.value || !isElementary ? (
+      </TermRawField>
+      <DefinitionFormalField>
+        {field =>
+          !!field.state.value || !isElementary ? (
             <RSInput
               id='dlg_cst_expression'
               portalHoverTooltips
               label={labelRSExpression(cst_type)}
               placeholder={getRSDefinitionPlaceholder(cst_type)}
-              value={field.value}
-              onChange={field.onChange}
+              value={field.state.value ?? ''}
+              onChange={field.handleChange}
               schema={schema}
             />
           ) : (
             <></>
           )
         }
-      />
-      <Controller
-        control={control}
-        name='definition_raw'
-        render={({ field }) =>
-          !!field.value || !isElementary ? (
+      </DefinitionFormalField>
+      <DefinitionRawField>
+        {field =>
+          !!field.state.value || !isElementary ? (
             <RefsInput
               id='dlg_cst_definition'
               label='Текстовое определение'
               placeholder='Текстовая интерпретация формального выражения'
               maxHeight='3.75rem'
               schema={schema}
-              resolved={field.value}
-              value={field.value}
-              onChange={field.onChange}
+              resolved={field.state.value}
+              value={field.state.value ?? ''}
+              onChange={newValue => field.handleChange(newValue)}
             />
           ) : (
             <></>
           )
         }
-      />
+      </DefinitionRawField>
 
       {!showConvention ? (
         <button
@@ -139,15 +135,21 @@ export function FormCreateCst({ schema }: FormCreateCstProps) {
           Добавить комментарий
         </button>
       ) : (
-        <TextArea
-          id='dlg_cst_convention'
-          spellCheck
-          fitContent
-          label={isBasic ? 'Конвенция' : 'Комментарий'}
-          placeholder={isBasic ? 'Договоренность об интерпретации' : 'Пояснение разработчика'}
-          className='max-h-20'
-          {...register('convention')}
-        />
+        <ConventionField>
+          {field => (
+            <TextArea
+              id='dlg_cst_convention'
+              spellCheck
+              fitContent
+              label={isBasic ? 'Конвенция' : 'Комментарий'}
+              placeholder={isBasic ? 'Договоренность об интерпретации' : 'Пояснение разработчика'}
+              className='max-h-20'
+              value={field.state.value}
+              onChange={event => field.handleChange(event.target.value)}
+              onBlur={field.handleBlur}
+            />
+          )}
+        </ConventionField>
       )}
     </>
   );

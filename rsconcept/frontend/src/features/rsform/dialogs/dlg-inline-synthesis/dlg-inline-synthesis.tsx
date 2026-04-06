@@ -1,8 +1,7 @@
 'use client';
 
-import { Suspense, useState } from 'react';
-import { FormProvider, useForm, useWatch } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { Suspense, useMemo, useState } from 'react';
+import { useForm, useStore } from '@tanstack/react-form';
 
 import { Loader } from '@/components/loader';
 import { ModalForm } from '@/components/modal';
@@ -13,6 +12,7 @@ import { hintMsg } from '@/utils/labels';
 import { type InlineSynthesisDTO, schemaInlineSynthesis } from '../../backend/types';
 import { useInlineSynthesis } from '../../backend/use-inline-synthesis';
 import { useRSForm } from '../../backend/use-rsform';
+import { type Substitution } from '../../models/rsform';
 
 import { TabConstituents } from './tab-constituents';
 import { TabSource } from './tab-source';
@@ -36,21 +36,43 @@ export function DlgInlineSynthesis() {
   const { inlineSynthesis } = useInlineSynthesis();
   const { schema: receiver } = useRSForm({ itemID: receiverID });
 
-  const methods = useForm<InlineSynthesisDTO>({
-    resolver: zodResolver(schemaInlineSynthesis),
+  const form = useForm({
     defaultValues: {
       receiver: receiver.id,
       source: null,
       items: [],
       substitutions: []
+    } as InlineSynthesisDTO,
+    validators: {
+      onChange: schemaInlineSynthesis
     },
-    mode: 'onChange'
+    onSubmit: async ({ value }) => {
+      await inlineSynthesis(value).then(onSynthesis);
+    }
   });
-  const sourceID = useWatch({ control: methods.control, name: 'source' });
-  const canSubmit = methods.formState.isValid && sourceID !== null;
 
-  function onSubmit(data: InlineSynthesisDTO) {
-    return inlineSynthesis(data).then(onSynthesis);
+  const values = useStore(form.store, state => state.values);
+  const sourceID = values.source;
+  const canSubmit = useMemo(
+    () => schemaInlineSynthesis.safeParse(values).success && sourceID !== null,
+    [values, sourceID]
+  );
+
+  function handleChangeSource(newValue: number) {
+    if (newValue === sourceID) {
+      return;
+    }
+    form.setFieldValue('source', newValue);
+    form.setFieldValue('items', []);
+    form.setFieldValue('substitutions', []);
+  }
+
+  function handleChangeItems(newValue: number[]) {
+    form.setFieldValue('items', newValue);
+  }
+
+  function handleChangeSubstitutions(newValue: Substitution[]) {
+    form.setFieldValue('substitutions', newValue);
   }
 
   return (
@@ -60,7 +82,11 @@ export function DlgInlineSynthesis() {
       className='w-160 h-132 px-6'
       canSubmit={canSubmit}
       validationHint={canSubmit ? '' : hintMsg.sourceEmpty}
-      onSubmit={event => void methods.handleSubmit(onSubmit)(event)}
+      onSubmit={event => {
+        event.preventDefault();
+        event.stopPropagation();
+        void form.handleSubmit();
+      }}
     >
       <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>
         <TabList className='mb-3 mx-auto flex border divide-x rounded-none'>
@@ -83,27 +109,37 @@ export function DlgInlineSynthesis() {
           />
         </TabList>
 
-        <FormProvider {...methods}>
-          <TabPanel>
-            <TabSource receiver={receiver} />
-          </TabPanel>
+        <TabPanel>
+          <TabSource receiver={receiver} sourceID={sourceID} onChangeSource={handleChangeSource} />
+        </TabPanel>
 
-          <TabPanel>
-            {!!sourceID ? (
-              <Suspense fallback={<Loader />}>
-                <TabConstituents />
-              </Suspense>
-            ) : null}
-          </TabPanel>
+        <TabPanel>
+          {!!sourceID ? (
+            <Suspense fallback={<Loader />}>
+              <TabConstituents
+                sourceID={sourceID}
+                selectedItems={values.items}
+                substitutions={values.substitutions}
+                onChangeItems={handleChangeItems}
+                onChangeSubstitutions={handleChangeSubstitutions}
+              />
+            </Suspense>
+          ) : null}
+        </TabPanel>
 
-          <TabPanel>
-            {!!sourceID ? (
-              <Suspense fallback={<Loader />}>
-                <TabSubstitutions receiver={receiver} />
-              </Suspense>
-            ) : null}
-          </TabPanel>
-        </FormProvider>
+        <TabPanel>
+          {!!sourceID ? (
+            <Suspense fallback={<Loader />}>
+              <TabSubstitutions
+                receiver={receiver}
+                sourceID={sourceID}
+                selected={values.items}
+                substitutions={values.substitutions}
+                onChangeSubstitutions={handleChangeSubstitutions}
+              />
+            </Suspense>
+          ) : null}
+        </TabPanel>
       </Tabs>
     </ModalForm>
   );

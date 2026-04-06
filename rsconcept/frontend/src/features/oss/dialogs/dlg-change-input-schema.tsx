@@ -1,7 +1,6 @@
 'use client';
 
-import { Controller, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from '@tanstack/react-form';
 
 import { type LibraryItem, LibraryItemType } from '@/features/library';
 import { useLibrary } from '@/features/library/backend/use-library';
@@ -28,12 +27,17 @@ export function DlgChangeInputSchema() {
   const { oss, target, layout } = useDialogsStore(state => state.props as DlgChangeInputSchemaProps);
   const { updateInput } = useUpdateInput();
 
-  const { setValue, handleSubmit, control } = useForm<UpdateInputDTO>({
-    resolver: zodResolver(schemaUpdateInput),
+  const form = useForm({
     defaultValues: {
       target: target.id,
       layout: layout,
       input: target.result
+    } satisfies UpdateInputDTO,
+    validators: {
+      onChange: schemaUpdateInput
+    },
+    onSubmit: async ({ value }) => {
+      await updateInput({ itemID: oss.id, data: value });
     }
   });
 
@@ -44,16 +48,16 @@ export function DlgChangeInputSchema() {
     return !oss.schemas.includes(item.id) || item.id === target.result;
   }
 
-  function onSubmit(data: UpdateInputDTO) {
-    return updateInput({ itemID: oss.id, data: data });
-  }
-
   return (
     <ModalForm
       overflowVisible
       header='Выбор концептуальной схемы'
       submitText='Подтвердить выбор'
-      onSubmit={event => void handleSubmit(onSubmit)(event)}
+      onSubmit={event => {
+        event.preventDefault();
+        event.stopPropagation();
+        void form.handleSubmit();
+      }}
       className='w-140 pb-3 px-6 cc-column'
     >
       <div className='flex justify-between gap-3 items-center'>
@@ -63,24 +67,22 @@ export function DlgChangeInputSchema() {
             title='Сбросить выбор схемы'
             noPadding
             icon={<IconReset size='1.25rem' className='icon-primary' />}
-            onClick={() => setValue('input', null)}
+            onClick={() => form.setFieldValue('input', null)}
           />
         </div>
       </div>
-      <Controller
-        name='input'
-        control={control}
-        render={({ field }) => (
+      <form.Field name='input'>
+        {field => (
           <PickSchema
             items={sortedItems}
             itemType={LibraryItemType.RSFORM}
-            value={field.value ?? null}
-            onChange={field.onChange}
+            value={field.state.value ?? null}
+            onChange={field.handleChange}
             rows={14}
             baseFilter={baseFilter}
           />
         )}
-      />
+      </form.Field>
     </ModalForm>
   );
 }

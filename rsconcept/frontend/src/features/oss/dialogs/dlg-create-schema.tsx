@@ -1,7 +1,7 @@
 'use client';
 
-import { Controller, useForm, useWatch } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useMemo } from 'react';
+import { useForm, useStore } from '@tanstack/react-form';
 
 import { HelpTopic } from '@/features/help';
 
@@ -40,13 +40,7 @@ export function DlgCreateSchema() {
   const { schema } = useOss({ itemID: ossID });
   const manager = new LayoutManager(schema, layout);
 
-  const {
-    control,
-    register,
-    handleSubmit,
-    formState: { errors, isValid }
-  } = useForm<CreateSchemaDTO>({
-    resolver: zodResolver(schemaCreateSchema),
+  const form = useForm({
     defaultValues: {
       item_data: {
         alias: '',
@@ -61,27 +55,32 @@ export function DlgCreateSchema() {
         height: OPERATION_NODE_HEIGHT
       },
       layout: manager.layout
+    } satisfies CreateSchemaDTO,
+    validators: {
+      onChange: schemaCreateSchema
     },
-    mode: 'onChange'
+    onSubmit: ({ value }) => {
+      const data = { ...value };
+      data.position = manager.newOperationPosition(data);
+      data.layout = manager.layout;
+      void createSchema({ itemID: manager.oss.id, data }).then(response => onCreate?.(response.new_operation));
+    }
   });
-  const alias = useWatch({ control: control, name: 'item_data.alias' });
-  const { canSubmit, hint } = (() => {
+
+  const values = useStore(form.store, state => state.values as CreateSchemaDTO);
+  const alias = values.item_data.alias;
+  const { canSubmit, hint } = useMemo(() => {
     if (!alias) {
       return { canSubmit: false, hint: hintMsg.aliasEmpty };
-    } else if (manager.oss.operations.some(operation => operation.alias === alias)) {
-      return { canSubmit: false, hint: hintMsg.schemaAliasTaken };
-    } else if (!isValid) {
-      return { canSubmit: false, hint: hintMsg.formInvalid };
-    } else {
-      return { canSubmit: true, hint: '' };
     }
-  })();
-
-  function onSubmit(data: CreateSchemaDTO) {
-    data.position = manager.newOperationPosition(data);
-    data.layout = manager.layout;
-    void createSchema({ itemID: manager.oss.id, data: data }).then(response => onCreate?.(response.new_operation));
-  }
+    if (manager.oss.operations.some(operation => operation.alias === alias)) {
+      return { canSubmit: false, hint: hintMsg.schemaAliasTaken };
+    }
+    if (!schemaCreateSchema.safeParse(values).success) {
+      return { canSubmit: false, hint: hintMsg.formInvalid };
+    }
+    return { canSubmit: true, hint: '' };
+  }, [alias, values, manager.oss.operations]);
 
   return (
     <ModalForm
@@ -89,47 +88,67 @@ export function DlgCreateSchema() {
       submitText='Создать'
       canSubmit={canSubmit}
       validationHint={hint}
-      onSubmit={event => void handleSubmit(onSubmit)(event)}
+      onSubmit={event => {
+        event.preventDefault();
+        event.stopPropagation();
+        void form.handleSubmit();
+      }}
       className='w-180 px-6 pb-3 cc-column'
       helpTopic={HelpTopic.CC_OSS}
     >
-      <TextInput
-        id='operation_title' //
-        label='Название'
-        placeholder='Введите название'
-        {...register('item_data.title')}
-        error={errors.item_data?.title}
-      />
+      <form.Field name='item_data.title'>
+        {field => (
+          <TextInput
+            id='operation_title' //
+            label='Название'
+            placeholder='Введите название'
+            value={field.state.value}
+            onChange={event => field.handleChange(event.target.value)}
+            onBlur={field.handleBlur}
+            error={field.state.meta.errors[0]?.message}
+          />
+        )}
+      </form.Field>
       <div className='flex gap-6'>
         <div className='flex flex-col justify-between gap-3'>
-          <TextInput
-            id='operation_alias' //
-            label='Сокращение'
-            className='w-80'
-            placeholder='Введите сокращение'
-            {...register('item_data.alias')}
-            error={errors.item_data?.alias}
-          />
-          <Controller
-            name='item_data.parent'
-            control={control}
-            render={({ field }) => (
-              <SelectParent
-                items={manager.oss.blocks}
-                value={field.value ? manager.oss.blockByID.get(field.value) ?? null : null}
-                placeholder='Родительский блок'
-                onChange={value => field.onChange(value ? value.id : null)}
+          <form.Field name='item_data.alias'>
+            {field => (
+              <TextInput
+                id='operation_alias' //
+                label='Сокращение'
+                className='w-80'
+                placeholder='Введите сокращение'
+                value={field.state.value}
+                onChange={event => field.handleChange(event.target.value)}
+                onBlur={field.handleBlur}
+                error={field.state.meta.errors[0]?.message}
               />
             )}
-          />
+          </form.Field>
+          <form.Field name='item_data.parent'>
+            {field => (
+              <SelectParent
+                items={manager.oss.blocks}
+                value={field.state.value ? manager.oss.blockByID.get(field.state.value) ?? null : null}
+                placeholder='Родительский блок'
+                onChange={value => field.handleChange(value ? value.id : null)}
+              />
+            )}
+          </form.Field>
         </div>
-        <TextArea
-          id='operation_comment' //
-          label='Описание'
-          noResize
-          rows={4}
-          {...register('item_data.description')}
-        />
+        <form.Field name='item_data.description'>
+          {field => (
+            <TextArea
+              id='operation_comment' //
+              label='Описание'
+              noResize
+              rows={4}
+              value={field.state.value}
+              onChange={event => field.handleChange(event.target.value)}
+              onBlur={field.handleBlur}
+            />
+          )}
+        </form.Field>
       </div>
     </ModalForm>
   );

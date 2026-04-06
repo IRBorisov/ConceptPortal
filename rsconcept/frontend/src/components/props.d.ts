@@ -1,6 +1,5 @@
 // =========== Module contains interfaces for common UI elements. ==========
 import type React from 'react';
-import { type FieldError } from 'react-hook-form';
 
 /**
  * Represents an object that can have inline styles and CSS class names for styling.
@@ -31,7 +30,7 @@ export interface Titled {
  * Represents an object that can have an error message.
  */
 export interface ErrorProcessing {
-  error?: FieldError;
+  error?: string;
 }
 
 /**

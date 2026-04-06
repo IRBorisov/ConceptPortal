@@ -1,7 +1,7 @@
 'use client';
 
-import { Controller, useForm, useWatch } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useMemo } from 'react';
+import { useForm, useStore } from '@tanstack/react-form';
 
 import { HelpTopic } from '@/features/help';
 import { type LibraryItem, LibraryItemType } from '@/features/library';
@@ -33,7 +33,7 @@ export function DlgImportSchema() {
   const { importSchema } = useImportSchema();
 
   const {
-    ossID, //
+    ossID,
     layout,
     initialParent,
     onCreate,
@@ -45,14 +45,7 @@ export function DlgImportSchema() {
   const { items: libraryItems } = useLibrary();
   const sortedItems = sortItemsForOSS(manager.oss, libraryItems);
 
-  const {
-    control,
-    register,
-    handleSubmit,
-    setValue,
-    formState: { errors, isValid }
-  } = useForm<ImportSchemaDTO>({
-    resolver: zodResolver(schemaImportSchema),
+  const form = useForm({
     defaultValues: {
       item_data: {
         alias: '',
@@ -69,42 +62,47 @@ export function DlgImportSchema() {
       layout: manager.layout,
       source: 0,
       clone_source: false
+    } as ImportSchemaDTO,
+    validators: {
+      onChange: schemaImportSchema
     },
-    mode: 'onChange'
+    onSubmit: ({ value }) => {
+      const data = { ...value };
+      data.position = manager.newOperationPosition(data);
+      data.layout = manager.layout;
+      void importSchema({ itemID: manager.oss.id, data }).then(response => onCreate?.(response.new_operation));
+    }
   });
-  const alias = useWatch({ control: control, name: 'item_data.alias' });
-  const clone_source = useWatch({ control: control, name: 'clone_source' });
-  const { canSubmit, hint } = (() => {
+
+  const values = useStore(form.store, state => state.values);
+  const alias = values.item_data.alias;
+  const clone_source = values.clone_source;
+  const { canSubmit, hint } = useMemo(() => {
     if (!alias) {
       return { canSubmit: false, hint: hintMsg.aliasEmpty };
-    } else if (manager.oss.operations.some(operation => operation.alias === alias)) {
-      return { canSubmit: false, hint: hintMsg.schemaAliasTaken };
-    } else if (!isValid) {
-      return { canSubmit: false, hint: hintMsg.formInvalid };
-    } else {
-      return { canSubmit: true, hint: '' };
     }
-  })();
-
-  function onSubmit(data: ImportSchemaDTO) {
-    data.position = manager.newOperationPosition(data);
-    data.layout = manager.layout;
-    void importSchema({ itemID: manager.oss.id, data: data }).then(response => onCreate?.(response.new_operation));
-  }
+    if (manager.oss.operations.some(operation => operation.alias === alias)) {
+      return { canSubmit: false, hint: hintMsg.schemaAliasTaken };
+    }
+    if (!schemaImportSchema.safeParse(values).success) {
+      return { canSubmit: false, hint: hintMsg.formInvalid };
+    }
+    return { canSubmit: true, hint: '' };
+  }, [alias, values, manager.oss.operations]);
 
   function baseFilter(item: LibraryItem) {
     return !manager.oss.schemas.includes(item.id);
   }
 
   function handleSetInput(inputID: number) {
-    const schema = libraryItems.find(item => item.id === inputID);
-    if (!schema) {
+    const libSchema = libraryItems.find(item => item.id === inputID);
+    if (!libSchema) {
       return;
     }
-    setValue('source', inputID);
-    setValue('item_data.alias', schema.alias);
-    setValue('item_data.title', schema.title);
-    setValue('item_data.description', schema.description, { shouldValidate: true });
+    form.setFieldValue('source', inputID);
+    form.setFieldValue('item_data.alias', libSchema.alias);
+    form.setFieldValue('item_data.title', libSchema.title);
+    form.setFieldValue('item_data.description', libSchema.description);
   }
 
   return (
@@ -113,68 +111,88 @@ export function DlgImportSchema() {
       submitText='Создать'
       canSubmit={canSubmit}
       validationHint={hint}
-      onSubmit={event => void handleSubmit(onSubmit)(event)}
+      onSubmit={event => {
+        event.preventDefault();
+        event.stopPropagation();
+        void form.handleSubmit();
+      }}
       className='w-180 px-6 pb-3 cc-column'
       helpTopic={HelpTopic.CC_OSS}
     >
-      <Controller
-        control={control}
-        name='source'
-        render={({ field }) => (
+      <form.Field name='source'>
+        {field => (
           <PickSchema
             items={sortedItems}
-            value={field.value ?? 0}
+            value={field.state.value ?? 0}
             itemType={LibraryItemType.RSFORM}
             onChange={handleSetInput}
             rows={8}
             baseFilter={baseFilter}
           />
         )}
-      />
-      <Controller
-        control={control}
-        name='clone_source'
-        render={({ field }) => (
-          <Checkbox label='Клонировать схему' value={field.value ?? false} onChange={field.onChange} />
+      </form.Field>
+      <form.Field name='clone_source'>
+        {field => (
+          <Checkbox
+            label='Клонировать схему'
+            value={field.state.value ?? false}
+            onChange={(v: boolean) => field.handleChange(v)}
+          />
         )}
-      />
-      <TextInput
-        id='operation_title' //
-        label='Название'
-        disabled={!clone_source}
-        {...register('item_data.title')}
-        error={errors.item_data?.title}
-      />
+      </form.Field>
+      <form.Field name='item_data.title'>
+        {field => (
+          <TextInput
+            id='operation_title'
+            label='Название'
+            disabled={!clone_source}
+            value={field.state.value}
+            onChange={event => field.handleChange(event.target.value)}
+            onBlur={field.handleBlur}
+            error={field.state.meta.errors[0]?.message}
+          />
+        )}
+      </form.Field>
       <div className='flex gap-6'>
         <div className='flex flex-col gap-3 justify-between'>
-          <TextInput
-            id='operation_alias' //
-            label='Сокращение'
-            className='w-80'
-            disabled={!clone_source}
-            {...register('item_data.alias')}
-            error={errors.item_data?.alias}
-          />
-          <Controller
-            name='item_data.parent'
-            control={control}
-            render={({ field }) => (
-              <SelectParent
-                items={manager.oss.blocks}
-                value={field.value ? manager.oss.blockByID.get(field.value) ?? null : null}
-                placeholder='Родительский блок'
-                onChange={value => field.onChange(value ? value.id : null)}
+          <form.Field name='item_data.alias'>
+            {field => (
+              <TextInput
+                id='operation_alias'
+                label='Сокращение'
+                className='w-80'
+                disabled={!clone_source}
+                value={field.state.value}
+                onChange={event => field.handleChange(event.target.value)}
+                onBlur={field.handleBlur}
+                error={field.state.meta.errors[0]?.message}
               />
             )}
-          />
+          </form.Field>
+          <form.Field name='item_data.parent'>
+            {field => (
+              <SelectParent
+                items={manager.oss.blocks}
+                value={field.state.value ? manager.oss.blockByID.get(field.state.value) ?? null : null}
+                placeholder='Родительский блок'
+                onChange={value => field.handleChange(value ? value.id : null)}
+              />
+            )}
+          </form.Field>
         </div>
-        <TextArea
-          id='operation_comment' //
-          label='Описание'
-          rows={4}
-          disabled={!clone_source}
-          {...register('item_data.description')}
-        />
+        <form.Field name='item_data.description'>
+          {field => (
+            <TextArea
+              id='operation_comment'
+              label='Описание'
+              rows={4}
+              disabled={!clone_source}
+              value={field.state.value}
+              onChange={event => field.handleChange(event.target.value)}
+              onBlur={field.handleBlur}
+            />
+          )}
+        </form.Field>
       </div>
     </ModalForm>
   );

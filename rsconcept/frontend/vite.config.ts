@@ -2,7 +2,7 @@ import babel from '@rolldown/plugin-babel';
 import tailwindcss from '@tailwindcss/vite';
 import react, { reactCompilerPreset } from '@vitejs/plugin-react';
 import { defineConfig, loadEnv } from 'vite';
-import { visualizer } from "rollup-plugin-visualizer";
+import { visualizer } from 'rollup-plugin-visualizer';
 import { fileURLToPath } from 'url';
 
 export default ({ mode }: { mode: string; }) => {

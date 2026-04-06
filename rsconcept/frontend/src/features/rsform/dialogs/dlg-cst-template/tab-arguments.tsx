@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useFormContext, useWatch } from 'react-hook-form';
 import { createColumnHelper } from '@tanstack/react-table';
 
 import { MiniButton } from '@/components/control';
@@ -9,7 +8,6 @@ import { DataTable, type IConditionalStyle } from '@/components/data-table';
 import { IconReset } from '@/components/icons';
 import { NoData } from '@/components/view';
 
-import { type CreateConstituentaDTO } from '../../backend/types';
 import { PickConstituenta } from '../../components/pick-constituenta';
 import { RSInput } from '../../components/rs-input';
 import { type ArgumentValue, type Constituenta, type RSForm } from '../../models/rsform';
@@ -21,12 +19,11 @@ const argumentsHelper = createColumnHelper<ArgumentValue>();
 
 interface TabArgumentsProps {
   schema: RSForm;
+  definition: string;
 }
 
-export function TabArguments({ schema }: TabArgumentsProps) {
-  const { control } = useFormContext<CreateConstituentaDTO>();
+export function TabArguments({ schema, definition }: TabArgumentsProps) {
   const { args, onChangeArguments } = useTemplateContext();
-  const definition = useWatch({ control, name: 'definition_formal' });
 
   const [selectedCst, setSelectedCst] = useState<Constituenta | null>(null);
   const [selectedArgument, setSelectedArgument] = useState<ArgumentValue | null>(args.length > 0 ? args[0] : null);

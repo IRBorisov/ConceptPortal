@@ -1,6 +1,6 @@
 'use client';
 
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from '@tanstack/react-form';
 
 import { MiniButton } from '@/components/control';
 import { Checkbox } from '@/components/input';
@@ -16,88 +16,79 @@ export function DlgGraphParams() {
   const params = useTermGraphStore(state => state.filter);
   const setParams = useTermGraphStore(state => state.setFilter);
 
-  const { handleSubmit, control } = useForm<GraphFilterParams>({
-    defaultValues: { ...params }
+  const form = useForm({
+    defaultValues: { ...params } as GraphFilterParams,
+    onSubmit: ({ value }) => setParams(value)
   });
-
-  function onSubmit(data: GraphFilterParams) {
-    setParams(data);
-  }
 
   return (
     <ModalForm
       header='Настройки графа термов'
-      onSubmit={event => void handleSubmit(onSubmit)(event)}
+      onSubmit={event => {
+        event.preventDefault();
+        event.stopPropagation();
+        void form.handleSubmit();
+      }}
       submitText='Применить'
       className='flex gap-6 justify-between px-6 pb-3 w-120'
     >
       <div className='flex flex-col gap-1'>
         <h1 className='mb-2'>Преобразования</h1>
-        <Controller
-          control={control}
-          name='noText'
-          render={({ field }) => (
+        <form.Field name='noText'>
+          {field => (
             <Checkbox
-              value={field.value ?? false}
-              onChange={field.onChange}
-              onBlur={field.onBlur}
+              value={field.state.value ?? false}
+              onChange={field.handleChange}
+              onBlur={field.handleBlur}
               label='Скрыть текст'
               titleHtml={prepareTooltip('Не отображать термины', 'T')}
             />
           )}
-        />
-        <Controller
-          control={control}
-          name='foldDerived'
-          render={({ field }) => (
+        </form.Field>
+        <form.Field name='foldDerived'>
+          {field => (
             <Checkbox
-              value={field.value ?? false}
-              onChange={field.onChange}
-              onBlur={field.onBlur}
+              value={field.state.value ?? false}
+              onChange={field.handleChange}
+              onBlur={field.handleBlur}
               label='Скрыть порожденные'
               titleHtml={prepareTooltip('Не отображать порожденные понятия', 'B')}
             />
           )}
-        />
-        <Controller
-          control={control}
-          name='noHermits'
-          render={({ field }) => (
+        </form.Field>
+        <form.Field name='noHermits'>
+          {field => (
             <Checkbox
-              value={field.value ?? false}
-              onChange={field.onChange}
-              onBlur={field.onBlur}
+              value={field.state.value ?? false}
+              onChange={field.handleChange}
+              onBlur={field.handleBlur}
               label='Скрыть свободные'
               titleHtml={prepareTooltip('Конституенты без связей', 'H')}
             />
           )}
-        />
-        <Controller
-          control={control}
-          name='noTemplates'
-          render={({ field }) => (
+        </form.Field>
+        <form.Field name='noTemplates'>
+          {field => (
             <Checkbox
-              value={field.value ?? false}
-              onChange={field.onChange}
-              onBlur={field.onBlur}
+              value={field.state.value ?? false}
+              onChange={field.handleChange}
+              onBlur={field.handleBlur}
               label='Скрыть шаблоны'
               titleHtml='Терм-функции и предикат-функции <br/>с параметризованными аргументами'
             />
           )}
-        />
-        <Controller
-          control={control}
-          name='noTransitive'
-          render={({ field }) => (
+        </form.Field>
+        <form.Field name='noTransitive'>
+          {field => (
             <Checkbox
-              value={field.value ?? false}
-              onChange={field.onChange}
-              onBlur={field.onBlur}
+              value={field.state.value ?? false}
+              onChange={field.handleChange}
+              onBlur={field.handleBlur}
               label='Транзитивная редукция'
               titleHtml='Удалить связи, образующие <br/>транзитивные пути в графе'
             />
           )}
-        />
+        </form.Field>
       </div>
       <div className='flex flex-col items-center gap-1'>
         <h1 className='mb-1'>Типы конституент</h1>
@@ -105,24 +96,21 @@ export function DlgGraphParams() {
           {Object.values(CstType).map(cstType => {
             const fieldName = cstTypeToFilterKey[cstType];
             return (
-              <Controller
-                key={fieldName}
-                control={control}
-                name={fieldName}
-                render={({ field }) => (
+              <form.Field key={fieldName} name={fieldName}>
+                {field => (
                   <MiniButton
-                    onClick={() => field.onChange(!field.value)}
+                    onClick={() => field.handleChange(!field.state.value)}
                     title={labelCstType(cstType)}
                     icon={
                       <IconCstType
                         size='2rem'
                         value={cstType}
-                        className={field.value ? 'text-constructive' : 'text-destructive'}
+                        className={field.state.value ? 'text-constructive' : 'text-destructive'}
                       />
                     }
                   />
                 )}
-              />
+              </form.Field>
             );
           })}
         </div>

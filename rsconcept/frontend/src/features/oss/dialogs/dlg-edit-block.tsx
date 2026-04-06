@@ -1,7 +1,7 @@
 'use client';
 
-import { Controller, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useMemo } from 'react';
+import { useForm, useStore } from '@tanstack/react-form';
 
 import { HelpTopic } from '@/features/help';
 
@@ -28,13 +28,7 @@ export function DlgEditBlock() {
   const manager = new LayoutManager(schema, layout);
   const target = manager.oss.blockByID.get(targetID)!;
 
-  const {
-    handleSubmit,
-    control,
-    register,
-    formState: { errors, isValid }
-  } = useForm<UpdateBlockDTO>({
-    resolver: zodResolver(schemaUpdateBlock),
+  const form = useForm({
     defaultValues: {
       target: target.id,
       item_data: {
@@ -43,58 +37,77 @@ export function DlgEditBlock() {
         parent: target.parent
       },
       layout: manager.layout
+    } satisfies UpdateBlockDTO,
+    validators: {
+      onChange: schemaUpdateBlock
     },
-    mode: 'onChange'
+    onSubmit: async ({ value }) => {
+      const data = { ...value };
+      if (data.item_data.parent !== target.parent) {
+        manager.onChangeParent(target.nodeID, data.item_data.parent === null ? null : `b${data.item_data.parent}`);
+        data.layout = manager.layout;
+      }
+      await updateBlock({ itemID: manager.oss.id, data });
+    }
   });
 
-  function onSubmit(data: UpdateBlockDTO) {
-    if (data.item_data.parent !== target.parent) {
-      manager.onChangeParent(target.nodeID, data.item_data.parent === null ? null : `b${data.item_data.parent}`);
-      data.layout = manager.layout;
-    }
-    return updateBlock({ itemID: manager.oss.id, data });
-  }
+  const values = useStore(form.store, state => state.values as UpdateBlockDTO);
+  const canSubmit = useMemo(() => schemaUpdateBlock.safeParse(values).success, [values]);
 
   return (
     <ModalForm
       header='Редактирование блока'
       submitText='Сохранить'
-      canSubmit={isValid}
-      onSubmit={event => void handleSubmit(onSubmit)(event)}
+      canSubmit={canSubmit}
+      onSubmit={event => {
+        event.preventDefault();
+        event.stopPropagation();
+        void form.handleSubmit();
+      }}
       className='w-160 px-6 pb-2 h-fit cc-column'
       helpTopic={HelpTopic.CC_STRUCTURING}
     >
-      <TextInput
-        id='operation_title' //
-        label='Название'
-        placeholder='Введите название'
-        {...register('item_data.title')}
-        error={errors.item_data?.title}
-      />
-      <Controller
-        name='item_data.parent'
-        control={control}
-        render={({ field }) => {
+      <form.Field name='item_data.title'>
+        {field => (
+          <TextInput
+            id='operation_title' //
+            label='Название'
+            placeholder='Введите название'
+            value={field.state.value}
+            onChange={event => field.handleChange(event.target.value)}
+            onBlur={field.handleBlur}
+            error={field.state.meta.errors[0]?.message}
+          />
+        )}
+      </form.Field>
+      <form.Field name='item_data.parent'>
+        {field => {
           const descendantNodeIDs = manager.oss.hierarchy.expandAllOutputs([target.nodeID]);
           descendantNodeIDs.push(target.nodeID);
           return (
             <SelectParent
               items={manager.oss.blocks.filter(block => !descendantNodeIDs.includes(block.nodeID))}
-              value={field.value ? manager.oss.blockByID.get(field.value) ?? null : null}
+              value={field.state.value ? manager.oss.blockByID.get(field.state.value) ?? null : null}
               placeholder='Родительский блок'
-              onChange={value => field.onChange(value ? value.id : null)}
+              onChange={value => field.handleChange(value ? value.id : null)}
             />
           );
         }}
-      />
+      </form.Field>
 
-      <TextArea
-        id='operation_comment' //
-        label='Описание'
-        noResize
-        rows={5}
-        {...register('item_data.description')}
-      />
+      <form.Field name='item_data.description'>
+        {field => (
+          <TextArea
+            id='operation_comment' //
+            label='Описание'
+            noResize
+            rows={5}
+            value={field.state.value}
+            onChange={event => field.handleChange(event.target.value)}
+            onBlur={field.handleBlur}
+          />
+        )}
+      </form.Field>
     </ModalForm>
   );
 }

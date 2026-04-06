@@ -1,10 +1,8 @@
-'use no memo'; // TODO: remove when react hook forms are compliant with react compiler
 'use client';
 
 import { useEffect, useEffectEvent, useLayoutEffect, useMemo, useState } from 'react';
-import { Controller, useForm, useWatch } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm, useStore } from '@tanstack/react-form';
 
 import { type AnalysisFull, TypeID } from '@/features/rslang';
 import { labelType } from '@/features/rslang/labels';
@@ -20,7 +18,10 @@ import { errorMsg, tooltipText } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 import { promptUnsaved } from '@/utils/utils';
 
-import { schemaUpdateConstituenta, type UpdateConstituentaDTO } from '../../../backend/types';
+import {
+  schemaUpdateConstituenta,
+  type UpdateConstituentaDTO
+} from '../../../backend/types';
 import { useClearAttributions } from '../../../backend/use-clear-attributions';
 import { useCreateAttribution } from '../../../backend/use-create-attribution';
 import { useDeleteAttribution } from '../../../backend/use-delete-attribution';
@@ -48,6 +49,18 @@ interface FormConstituentaProps {
   onOpenEdit: (cstID: number) => void;
 }
 
+function constituentaDefaults(activeCst: Constituenta): UpdateConstituentaDTO {
+  return {
+    target: activeCst.id,
+    item_data: {
+      convention: activeCst.convention,
+      term_raw: activeCst.term_raw,
+      definition_raw: activeCst.definition_raw,
+      definition_formal: activeCst.definition_formal
+    }
+  };
+}
+
 export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst, onOpenEdit }: FormConstituentaProps) {
   const isModified = useModificationStore(state => state.isModified);
   const setIsModified = useModificationStore(state => state.setIsModified);
@@ -64,27 +77,28 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
   const showRenameCst = useDialogsStore(state => state.showRenameCst);
   const showStructurePlanner = useDialogsStore(state => state.showStructurePlanner);
 
-  const {
-    register,
-    handleSubmit,
-    control,
-    reset,
-    formState: { isDirty }
-  } = useForm<UpdateConstituentaDTO>({
-    resolver: zodResolver(schemaUpdateConstituenta),
-    defaultValues: {
-      target: activeCst.id,
-      item_data: {
-        convention: activeCst.convention,
-        term_raw: activeCst.term_raw,
-        definition_raw: activeCst.definition_raw,
-        definition_formal: activeCst.definition_formal
-      }
+  const form = useForm({
+    defaultValues: constituentaDefaults(activeCst),
+    validators: {
+      onChange: schemaUpdateConstituenta
+    },
+    onSubmit: async ({ value, formApi }) => {
+      await updateConstituenta({ itemID: schema.id, data: value });
+      setIsModified(false);
+      formApi.reset(value);
     }
   });
-  const onResetEvent = useEffectEvent(reset);
 
-  const definition = useWatch({ control, name: 'item_data.definition_formal' });
+  const onResetEvent = useEffectEvent((next: UpdateConstituentaDTO) => {
+    form.reset(next);
+  });
+
+  const definition = useStore(
+    form.store,
+    state => state.values.item_data.definition_formal
+  );
+  const isDefaultValue = useStore(form.store, state => state.isDefaultValue);
+
   const [forceComment, setForceComment] = useState(false);
   const [localParse, setLocalParse] = useState<RO<AnalysisFull> | null>(null);
 
@@ -110,24 +124,8 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
   }, [activeCst.id]);
 
   useEffect(function resetFormOnCstChange() {
-    onResetEvent({
-      target: activeCst.id,
-      item_data: {
-        convention: activeCst.convention,
-        term_raw: activeCst.term_raw,
-        definition_raw: activeCst.definition_raw,
-        definition_formal: activeCst.definition_formal
-      }
-    });
-  }, [
-    activeCst.id,
-    activeCst.convention,
-    activeCst.term_raw,
-    activeCst.definition_raw,
-    activeCst.definition_formal,
-    toggleReset,
-    schema
-  ]);
+    onResetEvent(constituentaDefaults(activeCst));
+  }, [activeCst, toggleReset]);
 
   useEffect(function resetUIStateOnCstChange() {
     const timeoutId = setTimeout(function resetConstituentaUIState() {
@@ -138,15 +136,8 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
   }, [activeCst.id, toggleReset, schema]);
 
   useEffect(function syncGlobalModified() {
-    onModifiedEvent(isDirty);
-  }, [isDirty]);
-
-  function onSubmit(data: UpdateConstituentaDTO) {
-    void updateConstituenta({ itemID: schema.id, data }).then(() => {
-      setIsModified(false);
-      reset({ ...data });
-    });
-  }
+    onModifiedEvent(!isDefaultValue);
+  }, [isDefaultValue]);
 
   function handleTypeGraph(event: React.MouseEvent<Element>) {
     event.stopPropagation();
@@ -229,7 +220,11 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
     <form
       id={id}
       className='relative cc-column mt-1 px-6 pb-1 pt-8'
-      onSubmit={event => void handleSubmit(onSubmit)(event)}
+      onSubmit={event => {
+        event.preventDefault();
+        event.stopPropagation();
+        void form.handleSubmit();
+      }}
     >
       <div className='absolute z-pop top-0 left-6 flex select-text font-medium whitespace-nowrap pt-1'>
         <TextButton
@@ -259,10 +254,8 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
         </div>
       </div>
 
-      <Controller
-        control={control}
-        name='item_data.term_raw'
-        render={({ field }) => (
+      <form.Field name='item_data.term_raw'>
+        {field => (
           <RefsInput
             id='cst_term'
             aria-label='Термин'
@@ -270,14 +263,14 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
             placeholder={disabled ? '' : 'Обозначение для текстовых определений'}
             schema={schema}
             onOpenEdit={onOpenEdit}
-            value={field.value ?? ''}
+            value={field.state.value ?? ''}
             initialValue={activeCst.term_raw}
             resolved={activeCst.term_resolved}
-            onChange={newValue => field.onChange(newValue)}
+            onChange={newValue => field.handleChange(newValue)}
             disabled={disabled}
           />
         )}
-      />
+      </form.Field>
 
       {activeCst.cst_type === CstType.NOMINAL || activeCst.attributes.length > 0 ? (
         <div className='flex flex-col gap-1'>
@@ -318,20 +311,18 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
       ) : null}
 
       {!!activeCst.definition_formal || !isElementary ? (
-        <Controller
-          control={control}
-          name='item_data.definition_formal'
-          render={({ field }) => (
+        <form.Field name='item_data.definition_formal'>
+          {field => (
             <EditorRSExpression
               id='cst_expression'
               label={labelRSExpression(activeCst.cst_type)}
               placeholder={disabled ? '' : getRSDefinitionPlaceholder(activeCst.cst_type)}
-              value={field.value ?? ''}
+              value={field.state.value ?? ''}
               schema={schema}
               activeCst={activeCst}
               isProcessing={isProcessing}
               toggleReset={toggleReset}
-              onChange={newValue => field.onChange(newValue)}
+              onChange={newValue => field.handleChange(newValue)}
               analysis={localParse}
               onAnalysis={setLocalParse}
               onOpenEdit={onOpenEdit}
@@ -339,13 +330,11 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
               disabled={disabled || activeCst.is_inherited}
             />
           )}
-        />
+        </form.Field>
       ) : null}
       {!!activeCst.definition_raw || !isElementary ? (
-        <Controller
-          control={control}
-          name='item_data.definition_raw'
-          render={({ field }) => (
+        <form.Field name='item_data.definition_raw'>
+          {field => (
             <RefsInput
               id='cst_definition'
               label='Текстовое определение'
@@ -354,27 +343,34 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
               maxHeight='8rem'
               schema={schema}
               onOpenEdit={onOpenEdit}
-              value={field.value ?? ''}
+              value={field.state.value ?? ''}
               initialValue={activeCst.definition_raw}
               resolved={activeCst.definition_resolved}
-              onChange={newValue => field.onChange(newValue)}
+              onChange={newValue => field.handleChange(newValue)}
               disabled={disabled}
             />
           )}
-        />
+        </form.Field>
       ) : null}
 
       {showConvention ? (
-        <TextArea
-          id='cst_convention'
-          {...register('item_data.convention')}
-          fitContent
-          className='disabled:min-h-9 max-h-32'
-          spellCheck
-          label={isBasic ? 'Конвенция' : 'Комментарий'}
-          placeholder={disabled ? '' : isBasic ? 'Договоренность об интерпретации' : 'Пояснение разработчика'}
-          disabled={disabled || (isBasic && activeCst.is_inherited)}
-        />
+        <form.Field name='item_data.convention'>
+          {field => (
+            <TextArea
+              id='cst_convention'
+              fitContent
+              className='disabled:min-h-9 max-h-32'
+              spellCheck
+              label={isBasic ? 'Конвенция' : 'Комментарий'}
+              placeholder={disabled ? '' : isBasic ? 'Договоренность об интерпретации' : 'Пояснение разработчика'}
+              disabled={disabled || (isBasic && activeCst.is_inherited)}
+              value={field.state.value ?? ''}
+              onChange={event => field.handleChange(event.target.value)}
+              onBlur={field.handleBlur}
+              error={field.state.meta.errors[0]?.message}
+            />
+          )}
+        </form.Field>
       ) : null}
 
       {!showConvention && (!disabled || isProcessing) ? (

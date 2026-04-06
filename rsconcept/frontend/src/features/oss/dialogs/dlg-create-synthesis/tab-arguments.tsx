@@ -1,83 +1,101 @@
 'use client';
 
-import { Controller, useFormContext, useWatch } from 'react-hook-form';
+import { type ReactNode } from 'react';
 
 import { Label, TextArea, TextInput } from '@/components/input';
+import { type CreateFieldProps } from '@/utils/forms';
 
-import { type CreateSynthesisDTO } from '../../backend/types';
 import { PickMultiOperation } from '../../components/pick-multi-operation';
 import { SelectParent } from '../../components/select-parent';
 import { type OperationSchema } from '../../models/oss';
 
-interface TabArgumentsProps {
-  oss: OperationSchema;
+export interface DlgCreateSynthesisArgumentFields {
+  TitleField: (props: CreateFieldProps<string>) => ReactNode;
+  AliasField: (props: CreateFieldProps<string>) => ReactNode;
+  ParentField: (props: CreateFieldProps<number | null>) => ReactNode;
+  DescriptionField: (props: CreateFieldProps<string>) => ReactNode;
+  ArgumentsField: (props: CreateFieldProps<number[]>) => ReactNode;
 }
 
-export function TabArguments({ oss }: TabArgumentsProps) {
-  const {
-    register,
-    control,
-    formState: { errors }
-  } = useFormContext<CreateSynthesisDTO>();
-  const inputs = useWatch({ control, name: 'arguments' });
+interface TabArgumentsProps {
+  oss: OperationSchema;
+  inputs: number[];
+  fields: DlgCreateSynthesisArgumentFields;
+}
 
+export function TabArguments({ oss, inputs, fields }: TabArgumentsProps) {
   const replicas = oss.replicas
     .filter(item => inputs.includes(item.original))
     .map(item => item.replica)
     .concat(oss.replicas.filter(item => inputs.includes(item.replica)).map(item => item.original));
   const filtered = oss.operations.filter(item => !replicas.includes(item.id));
+  const { TitleField, AliasField, ParentField, DescriptionField, ArgumentsField } = fields;
 
   return (
     <div className='cc-fade-in cc-column'>
-      <TextInput
-        id='operation_title'
-        label='Название'
-        placeholder='Введите название'
-        {...register('item_data.title')}
-        error={errors.item_data?.title}
-      />
+      <TitleField>
+        {field => (
+          <TextInput
+            id='operation_title'
+            label='Название'
+            placeholder='Введите название'
+            value={field.state.value}
+            onChange={event => field.handleChange(event.target.value)}
+            onBlur={field.handleBlur}
+            error={field.state.meta.errors[0]?.message}
+          />
+        )}
+      </TitleField>
       <div className='flex gap-6'>
         <div className='grid gap-1'>
-          <TextInput
-            id='operation_alias' //
-            label='Сокращение'
-            placeholder='Введите сокращение'
-            className='w-80'
-            {...register('item_data.alias')}
-            error={errors.item_data?.alias}
-          />
-          <Controller
-            name='item_data.parent'
-            control={control}
-            render={({ field }) => (
-              <SelectParent
-                items={oss.blocks}
-                value={field.value ? oss.blockByID.get(field.value) ?? null : null}
-                placeholder='Родительский блок'
-                onChange={value => field.onChange(value ? value.id : null)}
+          <AliasField>
+            {field => (
+              <TextInput
+                id='operation_alias' //
+                label='Сокращение'
+                placeholder='Введите сокращение'
+                className='w-80'
+                value={field.state.value}
+                onChange={event => field.handleChange(event.target.value)}
+                onBlur={field.handleBlur}
+                error={field.state.meta.errors[0]?.message}
               />
             )}
-          />
+          </AliasField>
+          <ParentField>
+            {field => (
+              <SelectParent
+                items={oss.blocks}
+                value={field.state.value ? oss.blockByID.get(field.state.value) ?? null : null}
+                placeholder='Родительский блок'
+                onChange={value => field.handleChange(value ? value.id : null)}
+              />
+            )}
+          </ParentField>
         </div>
-        <TextArea
-          id='operation_comment'
-          label='Описание'
-          noResize
-          rows={3}
-          {...register('item_data.description')}
-          error={errors.item_data?.description}
-        />
+        <DescriptionField>
+          {field => (
+            <TextArea
+              id='operation_comment'
+              label='Описание'
+              noResize
+              rows={3}
+              value={field.state.value}
+              onChange={event => field.handleChange(event.target.value)}
+              onBlur={field.handleBlur}
+              error={field.state.meta.errors[0]?.message}
+            />
+          )}
+        </DescriptionField>
       </div>
 
       <div className='cc-column'>
         <Label text={`Выбор аргументов: [ ${inputs.length} ]`} />
-        <Controller
-          name='arguments'
-          control={control}
-          render={({ field }) => (
-            <PickMultiOperation items={filtered} value={field.value ?? []} onChange={field.onChange} rows={6} />
+        <ArgumentsField>
+          {field => (
+            <PickMultiOperation items={filtered} value={field.state.value ?? []} onChange={field.handleChange} rows={6} />
           )}
-        />
+        </ArgumentsField>
       </div>
     </div>
   );

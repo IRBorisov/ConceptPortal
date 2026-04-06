@@ -1,42 +1,45 @@
 'use client';
 
-import { Controller, useFormContext, useWatch } from 'react-hook-form';
-
-import { type InlineSynthesisDTO } from '../../backend/types';
 import { useRSForm } from '../../backend/use-rsform';
 import { PickMultiConstituenta } from '../../components/pick-multi-constituenta';
+import { type Substitution } from '../../models/rsform';
 
-export function TabConstituents() {
-  const { setValue, control } = useFormContext<InlineSynthesisDTO>();
-  const sourceID = useWatch({ control, name: 'source' });
-  const substitutions = useWatch({ control, name: 'substitutions' });
+interface TabConstituentsProps {
+  sourceID: number;
+  selectedItems: number[];
+  substitutions: Substitution[];
+  onChangeItems: (newValue: number[]) => void;
+  onChangeSubstitutions: (newValue: Substitution[]) => void;
+}
 
-  const { schema } = useRSForm({ itemID: sourceID! });
+export function TabConstituents({
+  sourceID,
+  selectedItems,
+  substitutions,
+  onChangeItems,
+  onChangeSubstitutions
+}: TabConstituentsProps) {
+  const { schema } = useRSForm({ itemID: sourceID });
 
   function handleSelectItems(newValue: number[]) {
-    setValue('items', newValue, { shouldValidate: true });
+    onChangeItems(newValue);
     const newSubstitutions = substitutions.filter(
-      sub => newValue.includes(sub.original) || newValue.includes(sub.substitution)
+      (sub: Substitution) =>
+        newValue.includes(sub.original) || newValue.includes(sub.substitution)
     );
     if (newSubstitutions.length !== substitutions.length) {
-      setValue('substitutions', newSubstitutions, { shouldValidate: true });
+      onChangeSubstitutions(newSubstitutions);
     }
   }
 
   return (
-    <Controller
-      name='items'
-      control={control}
-      render={({ field }) => (
-        <PickMultiConstituenta
-          schema={schema}
-          items={schema.items}
-          rows={13}
-          value={field.value ?? []}
-          onChange={handleSelectItems}
-          className='w-xl'
-        />
-      )}
+    <PickMultiConstituenta
+      schema={schema}
+      items={schema.items}
+      rows={13}
+      value={selectedItems}
+      onChange={handleSelectItems}
+      className='w-xl'
     />
   );
 }

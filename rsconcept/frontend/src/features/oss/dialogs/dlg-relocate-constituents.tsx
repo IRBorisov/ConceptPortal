@@ -1,8 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Controller, useForm, useWatch } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm, useStore } from '@tanstack/react-form';
 
 import { HelpTopic } from '@/features/help';
 import { type LibraryItem } from '@/features/library';
@@ -38,15 +37,30 @@ export function DlgRelocateConstituents() {
   const { schema: oss } = useOss({ itemID: ossID });
   const initialTarget = targetID ? oss.operationByID.get(targetID)! : undefined;
 
-  const { handleSubmit, control, setValue } = useForm<RelocateConstituentsDTO>({
-    resolver: zodResolver(schemaRelocateConstituents),
+  const form = useForm({
     defaultValues: {
+      destination: null,
       items: []
+    } as RelocateConstituentsDTO,
+    validators: {
+      onChange: schemaRelocateConstituents
     },
-    mode: 'onChange'
+    onSubmit: async ({ value }) => {
+      const data = { ...value, items: moveTarget };
+      if (!layout || JSON.stringify(layout) === JSON.stringify(oss.layout)) {
+        await relocateConstituents({ itemID: oss.id, data });
+      } else {
+        await updatePositions({
+          isSilent: true,
+          itemID: oss.id,
+          data: layout
+        }).then(() => relocateConstituents({ itemID: oss.id, data }));
+      }
+    }
   });
-  const selected = useWatch({ control, name: 'items' });
-  const destination = useWatch({ control, name: 'destination' });
+
+  const selected = useStore(form.store, state => state.values.items);
+  const destination = useStore(form.store, state => state.values.destination as number | null | undefined);
   const destinationItem = destination ? libraryItems.find(item => item.id === destination) ?? null : null;
 
   const [directionUp, setDirectionUp] = useState(true);
@@ -84,35 +98,22 @@ export function DlgRelocateConstituents() {
 
   function toggleDirection() {
     setDirectionUp(prev => !prev);
-    setValue('destination', null);
+    form.setFieldValue('destination', null);
   }
 
   function handleSelectSource(newValue: LibraryItem | null) {
     setSource(newValue);
-    setValue('destination', null);
-    setValue('items', []);
+    form.setFieldValue('destination', null);
+    form.setFieldValue('items', []);
   }
 
   function handleSelectDestination(newValue: LibraryItem | null) {
     if (newValue) {
-      setValue('destination', newValue.id);
+      form.setFieldValue('destination', newValue.id);
     } else {
-      setValue('destination', null);
+      form.setFieldValue('destination', null);
     }
-    setValue('items', []);
-  }
-
-  function onSubmit(data: RelocateConstituentsDTO) {
-    data.items = moveTarget;
-    if (!layout || JSON.stringify(layout) === JSON.stringify(oss.layout)) {
-      return relocateConstituents({ itemID: oss.id, data: data });
-    } else {
-      return updatePositions({
-        isSilent: true,
-        itemID: oss.id,
-        data: layout
-      }).then(() => relocateConstituents({ itemID: oss.id, data: data }));
-    }
+    form.setFieldValue('items', []);
   }
 
   return (
@@ -121,7 +122,11 @@ export function DlgRelocateConstituents() {
       submitText='Переместить'
       canSubmit={canSubmit}
       validationHint={canSubmit ? '' : hintMsg.relocateEmpty}
-      onSubmit={event => void handleSubmit(onSubmit)(event)}
+      onSubmit={event => {
+        event.preventDefault();
+        event.stopPropagation();
+        void form.handleSubmit();
+      }}
       className='w-160 h-132 py-3 px-6'
       helpTopic={HelpTopic.UI_RELOCATE_CST}
     >
@@ -149,20 +154,18 @@ export function DlgRelocateConstituents() {
             onChange={handleSelectDestination}
           />
         </div>
-        <Controller
-          name='items'
-          control={control}
-          render={({ field }) => (
+        <form.Field name='items'>
+          {field => (
             <PickMultiConstituenta
               noBorder
               schema={sourceData.schema}
               items={filteredConstituents}
               rows={12}
-              value={field.value ?? []}
-              onChange={field.onChange}
+              value={field.state.value ?? []}
+              onChange={field.handleChange}
             />
           )}
-        />
+        </form.Field>
       </div>
     </ModalForm>
   );

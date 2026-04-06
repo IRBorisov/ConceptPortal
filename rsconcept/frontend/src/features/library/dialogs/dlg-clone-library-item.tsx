@@ -1,7 +1,7 @@
 'use client';
 
-import { Controller, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useMemo } from 'react';
+import { useForm, useStore } from '@tanstack/react-form';
 
 import { urls, useConceptNavigation } from '@/app';
 
@@ -10,7 +10,12 @@ import { Checkbox, Label, TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { AccessPolicy, type CloneLibraryItemDTO, type LibraryItem, schemaCloneLibraryItem } from '../backend/types';
+import {
+  AccessPolicy,
+  type CloneLibraryItemDTO,
+  type LibraryItem,
+  schemaCloneLibraryItem
+} from '../backend/types';
 import { useCloneItem } from '../backend/use-clone-item';
 import { IconItemVisibility } from '../components/icon-item-visibility';
 import { PickLocation } from '../components/pick-location';
@@ -31,13 +36,7 @@ export function DlgCloneLibraryItem() {
   const router = useConceptNavigation();
   const { cloneItem } = useCloneItem();
 
-  const {
-    register,
-    handleSubmit,
-    control,
-    formState: { errors, isValid }
-  } = useForm<CloneLibraryItemDTO>({
-    resolver: zodResolver(schemaCloneLibraryItem),
+  const form = useForm({
     defaultValues: {
       item_data: {
         title: cloneTitle(base),
@@ -48,105 +47,122 @@ export function DlgCloneLibraryItem() {
         location: initialLocation
       },
       items: []
+    } as CloneLibraryItemDTO,
+    validators: {
+      onChange: schemaCloneLibraryItem
     },
-    mode: 'onChange',
-    reValidateMode: 'onChange'
+    onSubmit: async ({ value }) => {
+      await cloneItem({
+        itemID: base.id,
+        data: value
+      }).then(newSchema => router.pushAsync({ path: urls.schema(newSchema.id), force: true }));
+    }
   });
 
-  function onSubmit(data: CloneLibraryItemDTO) {
-    return cloneItem({
-      itemID: base.id,
-      data: data
-    }).then(newSchema => router.pushAsync({ path: urls.schema(newSchema.id), force: true }));
-  }
+  const values = useStore(form.store, state => state.values);
+  const isValid = useMemo(() => schemaCloneLibraryItem.safeParse(values).success, [values]);
 
   return (
     <ModalForm
       header='Создание копии концептуальной схемы'
       submitText='Создать'
       canSubmit={isValid}
-      onSubmit={event => void handleSubmit(onSubmit)(event)}
+      onSubmit={event => {
+        event.preventDefault();
+        event.stopPropagation();
+        void form.handleSubmit();
+      }}
       className='px-6 py-2 cc-column h-fit w-120'
     >
-      <TextInput
-        id='dlg_full_name' //
-        label='Название'
-        {...register('item_data.title')}
-        error={errors.item_data?.title}
-      />
+      <form.Field name='item_data.title'>
+        {field => (
+          <TextInput
+            id='dlg_full_name' //
+            label='Название'
+            value={field.state.value}
+            onChange={event => field.handleChange(event.target.value)}
+            onBlur={field.handleBlur}
+            error={field.state.meta.errors[0]?.message}
+          />
+        )}
+      </form.Field>
 
       <div className='flex justify-between gap-3'>
-        <TextInput
-          id='dlg_alias'
-          label='Сокращение'
-          className='w-64'
-          {...register('item_data.alias')}
-          error={errors.item_data?.alias}
-        />
+        <form.Field name='item_data.alias'>
+          {field => (
+            <TextInput
+              id='dlg_alias'
+              label='Сокращение'
+              className='w-64'
+              value={field.state.value}
+              onChange={event => field.handleChange(event.target.value)}
+              onBlur={field.handleBlur}
+              error={field.state.meta.errors[0]?.message}
+            />
+          )}
+        </form.Field>
         <div className='flex flex-col gap-2'>
           <Label text='Доступ' className='self-center select-none' />
           <div className='ml-auto cc-icons'>
-            <Controller
-              control={control}
-              name='item_data.access_policy'
-              render={({ field }) => (
+            <form.Field name='item_data.access_policy'>
+              {field => (
                 <SelectAccessPolicy
-                  value={field.value ?? 'public'} //
-                  onChange={field.onChange}
+                  value={field.state.value ?? AccessPolicy.PUBLIC} //
+                  onChange={(v: AccessPolicy) => field.handleChange(v)}
                   stretchLeft
                 />
               )}
-            />
-            <Controller
-              control={control}
-              name='item_data.visible'
-              render={({ field }) => (
+            </form.Field>
+            <form.Field name='item_data.visible'>
+              {field => (
                 <MiniButton
-                  title={field.value ? 'Библиотека: отображать' : 'Библиотека: скрывать'}
+                  title={field.state.value ? 'Библиотека: отображать' : 'Библиотека: скрывать'}
                   aria-label='Переключатель отображения библиотеки'
-                  icon={<IconItemVisibility value={field.value ?? true} />}
-                  onClick={() => field.onChange(!field.value)}
+                  icon={<IconItemVisibility value={field.state.value ?? true} />}
+                  onClick={() => field.handleChange(!(field.state.value ?? false))}
                 />
               )}
-            />
+            </form.Field>
           </div>
         </div>
       </div>
 
-      <Controller
-        control={control}
-        name='item_data.location'
-        render={({ field }) => (
+      <form.Field name='item_data.location'>
+        {field => (
           <PickLocation
-            value={field.value ?? ''} //
+            value={field.state.value ?? ''} //
             rows={2}
-            onChange={field.onChange}
-            error={errors.item_data?.location}
+            onChange={field.handleChange}
+            error={field.state.meta.errors[0]?.message}
           />
         )}
-      />
+      </form.Field>
 
-      <TextArea
-        id='dlg_comment'
-        {...register('item_data.description')}
-        label='Описание'
-        rows={4}
-        error={errors.item_data?.description}
-      />
+      <form.Field name='item_data.description'>
+        {field => (
+          <TextArea
+            id='dlg_comment'
+            label='Описание'
+            rows={4}
+            value={field.state.value}
+            onChange={event => field.handleChange(event.target.value)}
+            onBlur={field.handleBlur}
+            error={field.state.meta.errors[0]?.message}
+          />
+        )}
+      </form.Field>
 
       {selected.length > 0 ? (
-        <Controller
-          control={control}
-          name='items'
-          render={({ field }) => (
+        <form.Field name='items'>
+          {field => (
             <Checkbox
               id='dlg_only_selected'
               label={`Только выбранные конституенты [${selected.length} из ${totalCount}]`}
-              value={field.value ? field.value.length > 0 : false}
-              onChange={value => field.onChange(value ? selected : [])}
+              value={field.state.value ? field.state.value.length > 0 : false}
+              onChange={value => field.handleChange(value ? selected : [])}
             />
           )}
-        />
+        </form.Field>
       ) : null}
     </ModalForm>
   );

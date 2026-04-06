@@ -1,22 +1,19 @@
 'use client';
 
-import { Controller, useFormContext, useWatch } from 'react-hook-form';
-
 import { Label } from '@/components/input';
 
-import { type UpdateOperationDTO } from '../../backend/types';
 import { PickMultiOperation } from '../../components/pick-multi-operation';
 import { type OperationInput, type OperationSchema, type OperationSynthesis } from '../../models/oss';
 
 interface TabArgumentsProps {
   oss: OperationSchema;
   target: OperationInput | OperationSynthesis;
+  args: number[];
+  onChangeArguments: (newValue: number[]) => void;
+  onResetSubstitutions: () => void;
 }
 
-export function TabArguments({ oss, target }: TabArgumentsProps) {
-  const { control, setValue } = useFormContext<UpdateOperationDTO>();
-  const args = useWatch({ control, name: 'arguments' });
-
+export function TabArguments({ oss, target, args, onChangeArguments, onResetSubstitutions }: TabArgumentsProps) {
   const replicas = oss.replicas
     .filter(item => args.includes(item.original) || item.original === target.id)
     .map(item => item.replica)
@@ -24,30 +21,19 @@ export function TabArguments({ oss, target }: TabArgumentsProps) {
   const potentialCycle = [target.id, ...replicas, ...oss.graph.expandAllOutputs([target.id])];
   const filtered = oss.operations.filter(item => !potentialCycle.includes(item.id));
 
-  function handleChangeArguments(prev: number[], newValue: number[]) {
-    setValue('arguments', newValue, { shouldValidate: true });
-    if (prev.some(id => !newValue.includes(id))) {
-      setValue('substitutions', []);
+  function handleChangeArguments(newValue: number[]) {
+    if (args.some(id => !newValue.includes(id))) {
+      onResetSubstitutions();
     }
+    onChangeArguments(newValue);
   }
 
   return (
     <div className='cc-fade-in cc-column'>
-      <Controller
-        name='arguments'
-        control={control}
-        render={({ field }) => (
-          <>
-            <Label text={`Выбор аргументов: [ ${field.value?.length} ]`} />
-            <PickMultiOperation
-              items={filtered}
-              value={field.value ?? []}
-              onChange={newValue => handleChangeArguments(field.value ?? [], newValue)}
-              rows={8}
-            />
-          </>
-        )}
-      />
+      <>
+        <Label text={`Выбор аргументов: [ ${args.length} ]`} />
+        <PickMultiOperation items={filtered} value={args} onChange={handleChangeArguments} rows={8} />
+      </>
     </div>
   );
 }

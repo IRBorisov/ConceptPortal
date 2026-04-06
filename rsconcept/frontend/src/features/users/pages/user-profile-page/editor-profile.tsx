@@ -1,7 +1,7 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect, useEffectEvent } from 'react';
+import { useForm, useStore } from '@tanstack/react-form';
 
 import { useBlockNavigation } from '@/app';
 
@@ -18,64 +18,93 @@ export function EditorProfile() {
   const { profile } = useProfileSuspense();
   const { updateProfile, isPending, error: serverError, reset: clearServerError } = useUpdateProfile();
 
-  const {
-    register,
-    handleSubmit,
-    clearErrors,
-    reset: resetForm,
-    formState: { errors, isDirty }
-  } = useForm<UpdateProfileDTO>({
-    resolver: zodResolver(schemaUpdateProfile),
+  const form = useForm({
     defaultValues: {
       first_name: profile.first_name,
       last_name: profile.last_name,
       email: profile.email
+    } satisfies UpdateProfileDTO,
+    validators: {
+      onChange: schemaUpdateProfile
     },
-    mode: 'onChange'
+    onSubmit: async ({ value, formApi }) => {
+      await updateProfile(value);
+      formApi.reset(value);
+    }
   });
 
-  useBlockNavigation(isDirty);
+  const isDefaultValue = useStore(form.store, state => state.isDefaultValue);
+  useBlockNavigation(!isDefaultValue);
+
+  const onResetEvent = useEffectEvent((next: UpdateProfileDTO) => {
+    form.reset(next);
+  });
+
+  useEffect(function resetFormOnProfileChange() {
+    onResetEvent({
+      first_name: profile.first_name,
+      last_name: profile.last_name,
+      email: profile.email
+    });
+  }, [profile.first_name, profile.last_name, profile.email]);
 
   function resetErrors() {
     clearServerError();
-    clearErrors();
-  }
-
-  function onSubmit(data: UpdateProfileDTO) {
-    return updateProfile(data).then(() => resetForm({ ...data }));
   }
 
   return (
     <form
       className='cc-column w-72 px-6 py-2'
-      onSubmit={event => void handleSubmit(onSubmit)(event)}
+      onSubmit={event => {
+        event.preventDefault();
+        event.stopPropagation();
+        void form.handleSubmit();
+      }}
       onChange={resetErrors}
     >
       <TextInput id='username' disabled label='Логин' title='Логин изменить нельзя' value={profile.username} />
-      <TextInput
-        id='first_name'
-        {...register('first_name')}
-        autoComplete='off'
-        allowEnter
-        label='Имя'
-        error={errors.first_name}
-      />
-      <TextInput
-        id='last_name'
-        {...register('last_name')}
-        autoComplete='off'
-        allowEnter
-        label='Фамилия'
-        error={errors.last_name}
-      />
-      <TextInput
-        id='email'
-        {...register('email')}
-        autoComplete='off'
-        allowEnter
-        label='Электронная почта'
-        error={errors.email}
-      />
+      <form.Field name='first_name'>
+        {field => (
+          <TextInput
+            id='first_name'
+            autoComplete='off'
+            allowEnter
+            label='Имя'
+            value={field.state.value}
+            onChange={event => field.handleChange(event.target.value)}
+            onBlur={field.handleBlur}
+            error={field.state.meta.errors[0]?.message}
+          />
+        )}
+      </form.Field>
+      <form.Field name='last_name'>
+        {field => (
+          <TextInput
+            id='last_name'
+            autoComplete='off'
+            allowEnter
+            label='Фамилия'
+            value={field.state.value}
+            onChange={event => field.handleChange(event.target.value)}
+            onBlur={field.handleBlur}
+            error={field.state.meta.errors[0]?.message}
+          />
+        )}
+      </form.Field>
+      <form.Field name='email'>
+        {field => (
+          <TextInput
+            id='email'
+            autoComplete='off'
+            allowEnter
+            label='Электронная почта'
+            value={field.state.value}
+            onChange={event => field.handleChange(event.target.value)}
+            onBlur={field.handleBlur}
+            error={field.state.meta.errors[0]?.message}
+          />
+        )}
+      </form.Field>
       {serverError ? <ServerError error={serverError} /> : null}
       <SubmitButton className='self-center mt-6' text='Сохранить данные' loading={isPending} />
     </form>

@@ -1,23 +1,27 @@
 'use client';
 
-import { useFormContext, useWatch } from 'react-hook-form';
-
 import { Label } from '@/components/input';
 
-import { type CreateBlockDTO } from '../../backend/types';
 import { PickContents } from '../../components/pick-contents';
 import { NodeType, type OperationSchema, type OssItem } from '../../models/oss';
 
 interface TabBlockChildrenProps {
   oss: OperationSchema;
+  parent: number | null;
+  blocks: number[];
+  operations: number[];
+  onChangeBlocks: (childrenBlocks: number[]) => void;
+  onChangeOperations: (childrenOperations: number[]) => void;
 }
 
-export function TabBlockChildren({ oss }: TabBlockChildrenProps) {
-  const { setValue, control } = useFormContext<CreateBlockDTO>();
-  const parent = useWatch({ control, name: 'item_data.parent' });
-  const children_blocks = useWatch({ control, name: 'children_blocks' });
-  const children_operations = useWatch({ control, name: 'children_operations' });
-
+export function TabBlockChildren({
+  oss,
+  parent,
+  blocks,
+  operations,
+  onChangeBlocks,
+  onChangeOperations
+}: TabBlockChildrenProps) {
   const parentItem = parent ? oss.blockByID.get(parent) : null;
   const internalBlocks = parentItem
     ? oss.hierarchy
@@ -29,21 +33,13 @@ export function TabBlockChildren({ oss }: TabBlockChildrenProps) {
   const exclude = parentItem ? [parentItem, ...internalBlocks] : [];
 
   const value = [
-    ...children_blocks.map(id => oss.blockByID.get(id)!),
-    ...children_operations.map(id => oss.operationByID.get(id)!)
+    ...blocks.map(id => oss.blockByID.get(id)!),
+    ...operations.map(id => oss.operationByID.get(id)!)
   ];
 
   function handleChangeSelected(newValue: OssItem[]) {
-    setValue(
-      'children_blocks',
-      newValue.filter(item => item.nodeType === NodeType.BLOCK).map(item => item.id),
-      { shouldValidate: true }
-    );
-    setValue(
-      'children_operations',
-      newValue.filter(item => item.nodeType === NodeType.OPERATION).map(item => item.id),
-      { shouldValidate: true }
-    );
+    onChangeBlocks(newValue.filter(item => item.nodeType === NodeType.BLOCK).map(item => item.id));
+    onChangeOperations(newValue.filter(item => item.nodeType === NodeType.OPERATION).map(item => item.id));
   }
 
   return (

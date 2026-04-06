@@ -1,8 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from '@tanstack/react-form';
 
 import { urls, useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';
@@ -25,18 +24,27 @@ export function FormSignup() {
   const [acceptPrivacy, setAcceptPrivacy] = useState(false);
   const [acceptRules, setAcceptRules] = useState(false);
 
-  const {
-    register,
-    handleSubmit,
-    clearErrors,
-    formState: { errors }
-  } = useForm<UserSignupDTO>({
-    resolver: zodResolver(schemaUserSignup)
+  const form = useForm({
+    defaultValues: {
+      username: '',
+      password: '',
+      password2: '',
+      email: '',
+      first_name: '',
+      last_name: ''
+    } satisfies UserSignupDTO,
+    validators: {
+      onChange: schemaUserSignup
+    },
+    onSubmit: async ({ value }) => {
+      await signup(value).then(createdUser =>
+        router.pushAsync({ path: urls.login_hint(createdUser.username), force: true })
+      );
+    }
   });
 
   function resetErrors() {
     clearServerError();
-    clearErrors();
   }
 
   function handleCancel() {
@@ -47,16 +55,14 @@ export function FormSignup() {
     }
   }
 
-  function onSubmit(data: UserSignupDTO) {
-    return signup(data).then(createdUser =>
-      router.pushAsync({ path: urls.login_hint(createdUser.username), force: true })
-    );
-  }
-
   return (
     <form
       className='cc-column mx-auto w-xl px-6 py-3'
-      onSubmit={event => void handleSubmit(onSubmit)(event)}
+      onSubmit={event => {
+        event.preventDefault();
+        event.stopPropagation();
+        void form.handleSubmit();
+      }}
       onChange={resetErrors}
     >
       <h1>Новый пользователь</h1>
@@ -65,32 +71,50 @@ export function FormSignup() {
         <fieldset className='cc-column w-60'>
           <legend className='sr-only'>Данные для входа</legend>
 
-          <TextInput
-            id='username'
-            {...register('username')}
-            autoComplete='username'
-            label='Имя пользователя (логин)'
-            spellCheck={false}
-            pattern={patterns.login}
-            title='Минимум 3 знака. Латинские буквы и цифры. Не может начинаться с цифры'
-            error={errors.username}
-          />
-          <TextInput
-            id='password'
-            type='password'
-            {...register('password')}
-            autoComplete='new-password'
-            label='Пароль'
-            error={errors.password}
-          />
-          <TextInput
-            id='password2'
-            type='password'
-            {...register('password2')}
-            label='Повторите пароль'
-            autoComplete='new-password'
-            error={errors.password2}
-          />
+          <form.Field name='username'>
+            {field => (
+              <TextInput
+                id='username'
+                autoComplete='username'
+                label='Имя пользователя (логин)'
+                spellCheck={false}
+                pattern={patterns.login}
+                title='Минимум 3 знака. Латинские буквы и цифры. Не может начинаться с цифры'
+                value={field.state.value}
+                onChange={event => field.handleChange(event.target.value)}
+                onBlur={field.handleBlur}
+                error={field.state.meta.isTouched ? field.state.meta.errors[0]?.message : undefined}
+              />
+            )}
+          </form.Field>
+          <form.Field name='password'>
+            {field => (
+              <TextInput
+                id='password'
+                type='password'
+                autoComplete='new-password'
+                label='Пароль'
+                value={field.state.value}
+                onChange={event => field.handleChange(event.target.value)}
+                onBlur={field.handleBlur}
+                error={field.state.meta.isTouched ? field.state.meta.errors[0]?.message : undefined}
+              />
+            )}
+          </form.Field>
+          <form.Field name='password2'>
+            {field => (
+              <TextInput
+                id='password2'
+                type='password'
+                autoComplete='new-password'
+                label='Повторите пароль'
+                value={field.state.value}
+                onChange={event => field.handleChange(event.target.value)}
+                onBlur={field.handleBlur}
+                error={field.state.meta.isTouched ? field.state.meta.errors[0]?.message : undefined}
+              />
+            )}
+          </form.Field>
         </fieldset>
 
         <fieldset className='cc-column w-60 relative'>
@@ -104,30 +128,48 @@ export function FormSignup() {
           <Tooltip anchorSelect={`#${globalIDs.email_tooltip}`} offset={6}>
             электронная почта используется для восстановления пароля
           </Tooltip>
-          <TextInput
-            id='email'
-            {...register('email')}
-            autoComplete='email'
-            required
-            spellCheck={false}
-            label='Электронная почта (email)'
-            title='электронная почта в корректном формате'
-            error={errors.email}
-          />
-          <TextInput
-            id='first_name'
-            {...register('first_name')}
-            label='Отображаемое имя'
-            autoComplete='given-name'
-            error={errors.first_name}
-          />
-          <TextInput
-            id='last_name'
-            {...register('last_name')}
-            label='Отображаемая фамилия'
-            autoComplete='family-name'
-            error={errors.last_name}
-          />
+          <form.Field name='email'>
+            {field => (
+              <TextInput
+                id='email'
+                autoComplete='email'
+                required
+                spellCheck={false}
+                label='Электронная почта (email)'
+                title='электронная почта в корректном формате'
+                value={field.state.value}
+                onChange={event => field.handleChange(event.target.value)}
+                onBlur={field.handleBlur}
+                error={field.state.meta.isTouched ? field.state.meta.errors[0]?.message : undefined}
+              />
+            )}
+          </form.Field>
+          <form.Field name='first_name'>
+            {field => (
+              <TextInput
+                id='first_name'
+                autoComplete='given-name'
+                label='Отображаемое имя'
+                value={field.state.value}
+                onChange={event => field.handleChange(event.target.value)}
+                onBlur={field.handleBlur}
+                error={field.state.meta.isTouched ? field.state.meta.errors[0]?.message : undefined}
+              />
+            )}
+          </form.Field>
+          <form.Field name='last_name'>
+            {field => (
+              <TextInput
+                id='last_name'
+                autoComplete='family-name'
+                label='Отображаемая фамилия'
+                value={field.state.value}
+                onChange={event => field.handleChange(event.target.value)}
+                onBlur={field.handleBlur}
+                error={field.state.meta.isTouched ? field.state.meta.errors[0]?.message : undefined}
+              />
+            )}
+          </form.Field>
         </fieldset>
       </div>
 

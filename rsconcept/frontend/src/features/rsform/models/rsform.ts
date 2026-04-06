@@ -71,6 +71,12 @@ export const CstStatus = {
 } as const;
 export type CstStatus = (typeof CstStatus)[keyof typeof CstStatus];
 
+/** Represents substitution of {@link Constituenta}. */
+export interface Substitution {
+  original: number;
+  substitution: number;
+}
+
 /** Represents word form for natural language. */
 export interface TermForm {
   text: string;

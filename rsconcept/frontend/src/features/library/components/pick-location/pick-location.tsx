@@ -1,6 +1,5 @@
 'use client';
 
-import { type FieldError } from 'react-hook-form';
 import clsx from 'clsx';
 
 import { useAuth } from '@/features/auth';
@@ -20,7 +19,7 @@ interface PickLocationProps extends Styling {
 
   value: string;
   onChange: (newLocation: string) => void;
-  error?: FieldError;
+  error?: string;
 }
 
 export function PickLocation({

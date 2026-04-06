@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useFormContext } from 'react-hook-form';
 
 import { useTemplatesSuspense } from '@/features/library/backend/use-templates';
 import { TypeID } from '@/features/rslang';
@@ -10,7 +9,6 @@ import { labelType } from '@/features/rslang/labels';
 
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { type CreateConstituentaDTO } from '../../backend/types';
 import { useRSForm } from '../../backend/use-rsform';
 import { type ArgumentValue, type Constituenta } from '../../models/rsform';
 import { generateAlias, inferTemplatedType } from '../../models/rsform-api';
@@ -18,11 +16,25 @@ import { generateAlias, inferTemplatedType } from '../../models/rsform-api';
 import { type DlgCstTemplateProps } from './dlg-cst-template';
 import { TemplateContext } from './template-context';
 
-export const TemplateState = ({ children }: React.PropsWithChildren) => {
+interface TemplateStateProps extends React.PropsWithChildren {
+  onDefinitionFormalChange: (newValue: string) => void;
+  onCstTypeChange: (newValue: Constituenta['cst_type']) => void;
+  onAliasChange: (newValue: string) => void;
+  onTermRawChange: (newValue: string) => void;
+  onDefinitionRawChange: (newValue: string) => void;
+}
+
+export const TemplateState = ({
+  children,
+  onDefinitionFormalChange,
+  onCstTypeChange,
+  onAliasChange,
+  onTermRawChange,
+  onDefinitionRawChange
+}: TemplateStateProps) => {
   const { schemaID } = useDialogsStore(state => state.props as DlgCstTemplateProps);
   const { schema } = useRSForm({ itemID: schemaID });
   const { templates } = useTemplatesSuspense();
-  const { setValue } = useFormContext<CreateConstituentaDTO>();
 
   const [templateID, setTemplateID] = useState<number | null>(templates.length > 0 ? templates[0].id : null);
   const [args, setArguments] = useState<ArgumentValue[]>([]);
@@ -44,9 +56,9 @@ export const TemplateState = ({ children }: React.PropsWithChildren) => {
         mapping[arg.alias] = arg.value!;
       });
 
-    setValue('definition_formal', substituteTemplateArgs(prototype.definition_formal, mapping));
-    setValue('cst_type', newType, { shouldValidate: true });
-    setValue('alias', generateAlias(newType, schema), { shouldValidate: true });
+    onDefinitionFormalChange(substituteTemplateArgs(prototype.definition_formal, mapping));
+    onCstTypeChange(newType);
+    onAliasChange(generateAlias(newType, schema));
   }
 
   function onChangePrototype(newPrototype: Constituenta) {
@@ -64,11 +76,11 @@ export const TemplateState = ({ children }: React.PropsWithChildren) => {
       setArguments([]);
     }
 
-    setValue('cst_type', newPrototype.cst_type, { shouldValidate: true });
-    setValue('alias', generateAlias(newPrototype.cst_type, schema), { shouldValidate: true });
-    setValue('definition_formal', newPrototype.definition_formal);
-    setValue('term_raw', newPrototype.term_raw);
-    setValue('definition_raw', newPrototype.definition_raw);
+    onCstTypeChange(newPrototype.cst_type);
+    onAliasChange(generateAlias(newPrototype.cst_type, schema));
+    onDefinitionFormalChange(newPrototype.definition_formal);
+    onTermRawChange(newPrototype.term_raw);
+    onDefinitionRawChange(newPrototype.definition_raw);
   }
 
   function onChangeTemplateID(newTemplateID: number | null) {

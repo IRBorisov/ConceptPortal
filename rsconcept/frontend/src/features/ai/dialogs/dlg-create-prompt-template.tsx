@@ -1,7 +1,7 @@
 'use client';
 
-import { Controller, useForm, useWatch } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useMemo } from 'react';
+import { useForm, useStore } from '@tanstack/react-form';
 
 import { useAuth } from '@/features/auth';
 import { HelpTopic } from '@/features/help';
@@ -25,55 +25,76 @@ export function DlgCreatePromptTemplate() {
   const { items: templates } = useAvailableTemplatesSuspense();
   const { user } = useAuth();
 
-  const {
-    handleSubmit,
-    control,
-    register,
-    formState: { errors }
-  } = useForm<ICreatePromptTemplateDTO>({
-    resolver: zodResolver(schemaCreatePromptTemplate),
+  const form = useForm({
     defaultValues: {
       label: '',
       description: '',
       text: '',
       is_shared: false
+    } as ICreatePromptTemplateDTO,
+    validators: {
+      onChange: schemaCreatePromptTemplate
     },
-    mode: 'onChange'
-  });
-  const label = useWatch({ control, name: 'label' });
-  const canSubmit = !!label && !templates.find(template => template.label === label);
+    onSubmit: ({ value }) => void createPromptTemplate(value).then(onCreate)
 
-  function onSubmit(data: ICreatePromptTemplateDTO) {
-    void createPromptTemplate(data).then(onCreate);
-  }
+  });
+
+  const label = useStore(form.store, state => state.values.label);
+  const canSubmit = useMemo(
+    () => !!label && !templates.find(template => template.label === label),
+    [label, templates]
+  );
 
   return (
     <ModalForm
       header='Создание шаблона'
       submitText='Создать'
       canSubmit={canSubmit}
-      onSubmit={event => void handleSubmit(onSubmit)(event)}
+      onSubmit={event => {
+        event.preventDefault();
+        event.stopPropagation();
+        void form.handleSubmit();
+      }}
       validationHint={canSubmit ? '' : 'Введите уникальное название шаблона'}
       className='cc-column w-140 max-h-120 py-2 px-6'
       helpTopic={HelpTopic.ASSISTANT}
     >
-      <TextInput id='dlg_prompt_label' {...register('label')} label='Название шаблона' error={errors.label} />
-      <TextArea id='dlg_prompt_description' {...register('description')} label='Описание' error={errors.description} />
+      <form.Field name='label'>
+        {field => (
+          <TextInput
+            id='dlg_prompt_label'
+            label='Название шаблона'
+            value={field.state.value}
+            onChange={event => field.handleChange(event.target.value)}
+            onBlur={field.handleBlur}
+            error={field.state.meta.errors[0]?.message}
+          />
+        )}
+      </form.Field>
+      <form.Field name='description'>
+        {field => (
+          <TextArea
+            id='dlg_prompt_description'
+            label='Описание'
+            value={field.state.value}
+            onChange={event => field.handleChange(event.target.value)}
+            onBlur={field.handleBlur}
+            error={field.state.meta.errors[0]?.message}
+          />
+        )}
+      </form.Field>
       {user.is_staff ? (
-        <Controller
-          name='is_shared'
-          control={control}
-          render={({ field }) => (
+        <form.Field name='is_shared'>
+          {field => (
             <Checkbox
               id='dlg_prompt_is_shared'
               label='Общий шаблон'
-              value={field.value ?? false}
-              onChange={field.onChange}
-              onBlur={field.onBlur}
-              ref={field.ref}
+              value={field.state.value ?? false}
+              onChange={(v: boolean) => field.handleChange(v)}
+              onBlur={field.handleBlur}
             />
           )}
-        />
+        </form.Field>
       ) : null}
     </ModalForm>
   );

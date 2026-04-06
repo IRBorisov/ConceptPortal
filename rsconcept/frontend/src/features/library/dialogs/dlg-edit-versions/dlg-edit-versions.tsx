@@ -1,9 +1,7 @@
-'use no memo'; // TODO: remove when react hook forms are compliant with react compiler
 'use client';
 
 import { useMemo } from 'react';
-import { useForm, useWatch } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm, useStore } from '@tanstack/react-form';
 
 import { useRSForm } from '@/features/rsform/backend/use-rsform';
 
@@ -34,35 +32,48 @@ export function DlgEditVersions() {
   const { deleteVersion: versionDelete } = useDeleteVersion();
   const { updateVersion: versionUpdate } = useUpdateVersion();
 
-  const {
-    register,
-    handleSubmit,
-    control,
-    reset,
-    formState: { isDirty, errors: formErrors }
-  } = useForm<UpdateVersionDTO>({
-    resolver: zodResolver(schemaUpdateVersion),
+  const latest = schema.versions[schema.versions.length - 1];
+
+  const form = useForm({
     defaultValues: {
-      id: schema.versions[schema.versions.length - 1].id,
-      version: schema.versions[schema.versions.length - 1].version,
-      description: schema.versions[schema.versions.length - 1].description
+      id: latest.id,
+      version: latest.version,
+      description: latest.description
+    } satisfies UpdateVersionDTO,
+    validators: {
+      onChange: schemaUpdateVersion
     },
-    context: { schema: schema }
+    onSubmit: async ({ value }) => {
+      if (isProcessing || form.store.state.isDefaultValue) {
+        return;
+      }
+      const valid =
+        !!value.version &&
+        schema.versions.every(ver => ver.id === value.id || ver.version !== value.version);
+      if (!valid) {
+        return;
+      }
+      await versionUpdate({ itemID: itemID, version: value }).then(() => {
+        form.reset(value);
+      });
+    }
   });
-  const versionID = useWatch({ control, name: 'id' });
-  const versionName = useWatch({ control, name: 'version' });
+
+  const versionID = useStore(form.store, state => state.values.id);
+  const versionName = useStore(form.store, state => state.values.version);
+  const isDefaultValue = useStore(form.store, state => state.isDefaultValue);
 
   const isValid = useMemo(
-    () => !!versionName && schema.versions.every(ver => ver.id === versionID || ver.version != versionName),
+    () => !!versionName && schema.versions.every(ver => ver.id === versionID || ver.version !== versionName),
     [schema, versionID, versionName]
   );
 
   function handleSelectVersion(targetVersion: number) {
-    const ver = schema.versions.find(ver => ver.id === targetVersion);
+    const ver = schema.versions.find(v => v.id === targetVersion);
     if (!ver) {
       return;
     }
-    reset({ ...ver });
+    form.reset({ id: ver.id, version: ver.version, description: ver.description });
   }
 
   function handleDeleteVersion(targetVersion: number) {
@@ -71,61 +82,77 @@ export function DlgEditVersions() {
       if (!nextVer) {
         hideDialog();
       } else if (targetVersion === versionID) {
-        reset({ id: nextVer.id, version: nextVer.version, description: nextVer.description });
+        form.reset({ id: nextVer.id, version: nextVer.version, description: nextVer.description });
       }
       afterDelete(targetVersion);
     });
   }
 
-  function onUpdate(data: UpdateVersionDTO) {
-    if (!isDirty || isProcessing || !isValid) {
-      return;
-    }
-    void versionUpdate({ itemID: itemID, version: data }).then(() => reset({ ...data }));
+  function handleResetClick() {
+    form.reset();
   }
 
   return (
     <ModalView header='Редактирование версий' className='flex flex-col w-160 px-6 gap-3 pb-3'>
       <TableVersions
         processing={isProcessing}
-        items={schema.versions.reverse()}
+        items={schema.versions.slice().reverse()}
         onDelete={handleDeleteVersion}
         onSelect={handleSelectVersion}
         selected={versionID}
       />
 
-      <form className='flex items-center ' onSubmit={event => void handleSubmit(onUpdate)(event)}>
-        <TextInput
-          id='dlg_version'
-          {...register('version')}
-          dense
-          label='Версия'
-          className='w-64 mr-3'
-          error={formErrors.version}
-        />
+      <form
+        className='flex items-center '
+        onSubmit={event => {
+          event.preventDefault();
+          event.stopPropagation();
+          void form.handleSubmit();
+        }}
+      >
+        <form.Field name='version'>
+          {field => (
+            <TextInput
+              id='dlg_version'
+              dense
+              label='Версия'
+              className='w-64 mr-3'
+              value={field.state.value}
+              onChange={event => field.handleChange(event.target.value)}
+              onBlur={field.handleBlur}
+              error={field.state.meta.errors[0]?.message}
+            />
+          )}
+        </form.Field>
         <div className='cc-icons h-fit'>
           <MiniButton
             type='submit'
             title={isValid ? 'Сохранить изменения' : hintMsg.versionTaken}
             aria-label='Сохранить изменения'
             icon={<IconSave size='1.25rem' className='icon-primary' />}
-            disabled={!isDirty || !isValid || isProcessing}
+            disabled={isDefaultValue || !isValid || isProcessing}
           />
           <MiniButton
             title='Сбросить несохраненные изменения'
-            onClick={() => reset()}
+            onClick={handleResetClick}
             icon={<IconReset size='1.25rem' className='icon-primary' />}
-            disabled={!isDirty}
+            disabled={isDefaultValue}
           />
         </div>
       </form>
-      <TextArea
-        id='dlg_description' //
-        {...register('description')}
-        spellCheck
-        label='Описание'
-        rows={3}
-      />
+      <form.Field name='description'>
+        {field => (
+          <TextArea
+            id='dlg_description'
+            spellCheck
+            label='Описание'
+            rows={3}
+            value={field.state.value}
+            onChange={event => field.handleChange(event.target.value)}
+            onBlur={field.handleBlur}
+          />
+        )}
+      </form.Field>
     </ModalView>
   );
 }

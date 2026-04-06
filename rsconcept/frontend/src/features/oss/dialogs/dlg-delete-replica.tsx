@@ -1,7 +1,6 @@
 'use client';
 
-import { Controller, useForm, useWatch } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm, useStore } from '@tanstack/react-form';
 
 import { HelpTopic } from '@/features/help';
 
@@ -27,57 +26,59 @@ export function DlgDeleteReplica() {
   const { schema } = useOss({ itemID: ossID });
   const target = schema.operationByID.get(targetID)!;
 
-  const { handleSubmit, control } = useForm<DeleteReplicaDTO>({
-    resolver: zodResolver(schemaDeleteReplica),
+  const form = useForm({
     defaultValues: {
       target: targetID,
       layout: layout,
       keep_constituents: false,
       keep_connections: false
+    } as DeleteReplicaDTO,
+    validators: {
+      onChange: schemaDeleteReplica
+    },
+    onSubmit: async ({ value }) => {
+      await deleteReference({ itemID: ossID, data: value, beforeUpdate: beforeDelete });
     }
   });
-  const keep_connections = useWatch({ control, name: 'keep_connections' });
 
-  function onSubmit(data: DeleteReplicaDTO) {
-    return deleteReference({ itemID: ossID, data: data, beforeUpdate: beforeDelete });
-  }
+  const keep_connections = useStore(form.store, state => state.values.keep_connections);
 
   return (
     <ModalForm
       overflowVisible
       header='Удаление реплики'
       submitText='Подтвердить удаление'
-      onSubmit={event => void handleSubmit(onSubmit)(event)}
+      onSubmit={event => {
+        event.preventDefault();
+        event.stopPropagation();
+        void form.handleSubmit();
+      }}
       className='w-140 pb-3 px-6 cc-column select-none'
       helpTopic={HelpTopic.CC_PROPAGATION}
     >
       <TextInput disabled dense noBorder id='operation_alias' label='Операция' value={target.alias} />
-      <Controller
-        control={control}
-        name='keep_connections'
-        render={({ field }) => (
+      <form.Field name='keep_connections'>
+        {field => (
           <Checkbox
             label='Переадресовать связи на оригинал'
             titleHtml='Связи аргументов будут перенаправлены на оригинал реплики'
-            value={field.value ?? false}
-            onChange={field.onChange}
+            value={field.state.value ?? false}
+            onChange={(v: boolean) => field.handleChange(v)}
             disabled={target.result === null}
           />
         )}
-      />
-      <Controller
-        control={control}
-        name='keep_constituents'
-        render={({ field }) => (
+      </form.Field>
+      <form.Field name='keep_constituents'>
+        {field => (
           <Checkbox
             label='Сохранить наследованные конституенты'
             titleHtml='Наследованные конституенты <br/>превратятся в дописанные'
-            value={field.value ?? false}
-            onChange={field.onChange}
+            value={field.state.value ?? false}
+            onChange={(v: boolean) => field.handleChange(v)}
             disabled={target.result === null || keep_connections}
           />
         )}
-      />
+      </form.Field>
     </ModalForm>
   );
 }
