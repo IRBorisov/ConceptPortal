@@ -12,16 +12,12 @@ import { type ASTContext, Evaluator } from './evaluator';
 import { type Value, type ValueContext } from './value';
 import { validateValue } from './value-api';
 
-/** Maximum iterations to prevent infinite loops (recursion, quantifiers, etc.). */
-export const MAX_ITERATIONS = 100_000;
-
 /** Result of calculator evaluation. */
 export interface CalculatorResult {
   value: Value | null;
   iterations: number;
   errors: RSErrorDescription[];
 }
-
 
 type Listener = () => void;
 

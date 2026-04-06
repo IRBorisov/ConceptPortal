@@ -24,11 +24,10 @@ import { GRID_SIZE } from '../../../models/oss-layout-api';
 import { useOSSGraphStore } from '../../../stores/oss-graph';
 import { useOssEdit } from '../oss-edit-context';
 
-import { ContextMenu } from './context-menu/context-menu';
-import { useContextMenu } from './context-menu/use-context-menu';
 import { OgConnectionLine } from './graph/og-connection';
 import { type OGNode } from './graph/og-models';
 import { OssGraphNodeTypes } from './graph/og-node-types';
+import { ContextMenu, useContextMenu } from './context-menu';
 import { CoordinateDisplay } from './coordinate-display';
 import { useOssFlow } from './oss-flow-context';
 import { SidePanel } from './side-panel';
