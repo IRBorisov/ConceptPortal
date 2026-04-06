@@ -56,18 +56,6 @@ export function ValueInput({
           {formatInteger(valueLabel)}
         </span>
       </div>
-      {value.length > 0 ?
-        (<div
-          className={clsx(
-            'absolute -bottom-1 right-0 translate-y-full select-none',
-            isTrimmed && 'text-destructive'
-          )}
-          aria-label='Количество символов'
-          data-tooltip-id={globalIDs.tooltip}
-          data-tooltip-content='Отображаемое количество символов ограничено'
-        >
-          {`${formatInteger(value.length)} / ${formatInteger(limits.len_data_str)}`}
-        </div>) : null}
 
       <ToolbarValue
         className='absolute -top-1 right-0'
@@ -81,7 +69,7 @@ export function ValueInput({
 
       {stub ?
         (<div className={clsx(
-          'absolute -bottom-1 left-0 translate-y-full',
+          'absolute bottom-0 left-0',
           'select-text text-muted-foreground'
         )}>
           <span
@@ -112,6 +100,15 @@ export function ValueInput({
         placeholder={placeholder}
         disabled={isTrimmed || disabled}
       />
+      {value.length > 0 ?
+        (<div
+          className={clsx('select-none ml-auto', isTrimmed && 'text-destructive')}
+          aria-label='Количество символов'
+          data-tooltip-id={globalIDs.tooltip}
+          data-tooltip-html='Отображаемое количество</br>символов ограничено'
+        >
+          {`${formatInteger(value.length)} / ${formatInteger(limits.len_data_str)}`}
+        </div>) : null}
     </div>
   );
 }

@@ -13,7 +13,9 @@ class ConstituentDataAdmin(ExportCsvMixin, admin.ModelAdmin):
     list_display = [
         'pk',
         'constituent__alias',
+        'constituent__id',
         'model',
+        'model__id',
         'type',
         'data']
     search_fields = ['id', 'model__title', 'model__alias']
