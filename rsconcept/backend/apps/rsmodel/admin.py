@@ -24,6 +24,6 @@ class ConstituentDataAdmin(ExportCsvMixin, admin.ModelAdmin):
 class RSModelAdmin(ExportCsvMixin, admin.ModelAdmin):
     ''' Admin model: RSModel. '''
     ordering = ['model']
-    list_display = ['pk', 'model', 'schema']
-    search_fields = ['schema']
+    list_display = ['pk', 'model', 'schema', 'model__id', 'schema__id']
+    search_fields = ['model__title', 'model__alias', 'schema__title', 'schema__alias']
     actions = ['export_as_csv']

@@ -105,8 +105,8 @@ class LibraryItem(Model):
 
     class Meta:
         ''' Model metadata. '''
-        verbose_name = 'Схема'
-        verbose_name_plural = 'Схемы'
+        verbose_name = 'Элемент библиотеки'
+        verbose_name_plural = 'Элементы библиотеки'
 
     # pylint: disable=invalid-str-returned
     def __str__(self) -> str:

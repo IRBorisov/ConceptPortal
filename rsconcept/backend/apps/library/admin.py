@@ -12,13 +12,13 @@ from . import models
 class LibraryItemAdmin(ExportCsvMixin, admin.ModelAdmin):
     ''' Admin model: LibraryItem. '''
     date_hierarchy = 'time_update'
-    list_display = [
-        'alias', 'title', 'owner',
-        'visible', 'read_only', 'access_policy', 'location',
-        'time_update'
-    ]
-    list_filter = ['visible', 'read_only', 'access_policy', 'location', 'time_update']
-    search_fields = ['alias', 'title', 'location']
+    list_display = ['id', 'item_type',
+                    'alias', 'title', 'owner',
+                    'visible', 'read_only', 'access_policy', 'location',
+                    'time_update'
+                    ]
+    list_filter = ['visible', 'read_only', 'access_policy', 'location', 'time_update', 'item_type']
+    search_fields = ['alias', 'title', 'location', 'id']
     actions = ['export_as_csv']
 
 
