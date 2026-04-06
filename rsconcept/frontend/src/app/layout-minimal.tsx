@@ -6,17 +6,11 @@ import { Outlet } from 'react-router';
 import { ThemeToggle } from '@/features/home/components/theme-toggle';
 
 import { Loader } from '@/components/loader';
-import { useBrowserNavigation } from '@/hooks/use-browser-navigation';
 
 import { GlobalTooltips } from './global-tooltips';
 
-/**
- * Minimal shell for the marketing landing and sandbox.
- * Wraps lazy child routes (e.g. sandbox) in {@link Suspense}.
- */
-export function LandingLayout() {
-  useBrowserNavigation();
-
+/** Minimal shell for the marketing landing and sandbox. */
+export function LayoutMinimal() {
   return (
     <div className='relative h-dvh min-w-80 overflow-y-auto bg-background antialiased cc-scroll-hidden'>
       <GlobalTooltips />

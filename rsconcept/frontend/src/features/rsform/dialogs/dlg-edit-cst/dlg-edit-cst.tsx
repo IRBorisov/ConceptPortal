@@ -69,7 +69,7 @@ export function DlgEditCst() {
 
   function navigateToTarget() {
     hideDialog();
-    router.gotoCstEdit(schema.id, target.id);
+    router.gotoEditActive(target.id);
   }
 
   function editSource() {

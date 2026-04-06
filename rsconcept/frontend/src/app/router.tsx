@@ -1,4 +1,4 @@
-import { createBrowserRouter, Outlet } from 'react-router';
+import { createBrowserRouter } from 'react-router';
 
 import { prefetchAvailableTemplates } from '@/features/ai/backend/use-available-templates';
 import { prefetchAuth } from '@/features/auth/backend/use-auth';
@@ -15,21 +15,22 @@ import { prefetchUsers } from '@/features/users/backend/use-users';
 
 import { Loader } from '@/components/loader';
 
-import { ApplicationLayout } from './application-layout';
 import { ErrorFallback } from './error-fallback';
-import { LandingLayout } from './landing-layout';
+import { LayoutMain } from './layout-main';
+import { LayoutMinimal } from './layout-minimal';
+import { LayoutRoot } from './layout-root';
 import { routes } from './urls';
 
 export const Router = createBrowserRouter([
   {
     path: '/',
-    element: <Outlet />,
+    element: <LayoutRoot />,
     errorElement: <ErrorFallback />,
     loader: prefetchAuth,
     hydrateFallbackElement: fallbackLoader(),
     children: [
       {
-        element: <LandingLayout />,
+        element: <LayoutMinimal />,
         children: [
           { index: true, element: <HomePage /> },
           {
@@ -39,7 +40,7 @@ export const Router = createBrowserRouter([
         ]
       },
       {
-        element: <ApplicationLayout />,
+        element: <LayoutMain />,
         children: [
           {
             path: `${routes.not_found}`,
