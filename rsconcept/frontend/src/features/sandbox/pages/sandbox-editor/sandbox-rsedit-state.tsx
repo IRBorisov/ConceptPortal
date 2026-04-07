@@ -87,6 +87,11 @@ export function SandboxRSEditState({
     moveSelected(target);
   }
 
+  function stubSchemaMutation(): Promise<void> {
+    notImplemented();
+    return Promise.resolve();
+  }
+
   function moveDown() {
     if (selectedCstInSchema.length === 0) {
       return;
@@ -122,8 +127,17 @@ export function SandboxRSEditState({
         isMutable: true,
         isContentEditable: true,
         canDeleteSelected,
+        isProcessing: false,
 
         deleteSchema: notImplemented,
+
+        patchConstituenta: stubSchemaMutation,
+        openTermEditor: notImplemented,
+        promptRename: notImplemented,
+        addAttribution: notImplemented,
+        removeAttribution: notImplemented,
+        clearAttributions: notImplemented,
+        gotoPredecessor: notImplemented,
 
         setFocus: setFocusCst,
         clearPendingActiveID: function clearPendingActiveID() {
@@ -147,6 +161,7 @@ export function SandboxRSEditState({
 
         moveUp,
         moveDown,
+        toggleCrucial: notImplemented,
         createCst,
         promptCreateCst,
         cloneCst,

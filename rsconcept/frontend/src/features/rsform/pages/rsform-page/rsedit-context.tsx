@@ -2,6 +2,7 @@
 
 import { createContext, use } from 'react';
 
+import { type UpdateConstituentaDTO } from '../../backend/types';
 import { type Constituenta, type CstType, type RSForm } from '../../models/rsform';
 
 interface IRSEditContext {
@@ -18,8 +19,7 @@ interface IRSEditContext {
   isMutable: boolean;
   isContentEditable: boolean;
   canDeleteSelected: boolean;
-
-  deleteSchema: () => void;
+  isProcessing: boolean;
 
   setFocus: (newValue: Constituenta | null) => void;
   clearPendingActiveID: () => void;
@@ -30,10 +30,21 @@ interface IRSEditContext {
   toggleSelectCst: (target: number) => void;
   deselectAll: () => void;
 
+  deleteSchema: () => void;
+
+  patchConstituenta: (data: UpdateConstituentaDTO) => Promise<void>;
+  addAttribution: (attribute: Constituenta) => void;
+  removeAttribution: (attribute: Constituenta) => void;
+  clearAttributions: () => void;
+  gotoPredecessor: (target: number, newTab?: boolean) => void;
+
   moveUp: () => void;
   moveDown: () => void;
+  toggleCrucial: () => void;
   createCst: (type?: CstType, definition?: string) => Promise<number>;
+  openTermEditor: () => void;
   promptCreateCst: (type?: CstType, definition?: string) => Promise<number | null>;
+  promptRename: () => void;
   cloneCst: () => Promise<number>;
   promptDeleteSelected: () => void;
   promptTemplate: () => void;

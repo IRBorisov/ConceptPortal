@@ -14,6 +14,7 @@ import { useRoleStore, UserRole } from '@/features/users';
 import { promptText } from '@/utils/labels';
 
 import { useClearValues } from '../../backend/use-clear-values';
+import { useMutatingRSModel } from '../../backend/use-mutating-rsmodel';
 import { useRSModel } from '../../backend/use-rsmodel';
 import { useSetValue } from '../../backend/use-set-value';
 import { RSEngine } from '../../models/rsengine';
@@ -55,6 +56,7 @@ export const RSModelState = ({ itemID, children }: React.PropsWithChildren<RSMod
   const setCurrentModel = useAIStore(state => state.setModel);
   const onSetModel = useEffectEvent(setCurrentModel);
   const { deleteItem } = useDeleteItem();
+  const isProcessing = useMutatingRSModel();
 
   useEffect(function syncGlobalModel() {
     onSetModel(model);
@@ -87,7 +89,7 @@ export const RSModelState = ({ itemID, children }: React.PropsWithChildren<RSMod
         deleteModel,
       }}
     >
-      <RSEditState itemID={model.schema}>
+      <RSEditState itemID={model.schema} isProcessing={isProcessing}>
         {children}
       </RSEditState>
     </RSModelContext>

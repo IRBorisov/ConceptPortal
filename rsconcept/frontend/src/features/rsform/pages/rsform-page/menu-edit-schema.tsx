@@ -21,7 +21,6 @@ import { useModificationStore } from '@/stores/modification';
 import { promptUnsaved } from '@/utils/utils';
 
 import { useInlineSynthesis } from '../../backend/use-inline-synthesis';
-import { useMutatingRSForm } from '../../backend/use-mutating-rsform';
 import { useResetAliases } from '../../backend/use-reset-aliases';
 import { useRestoreOrder } from '../../backend/use-restore-order';
 import { useSubstituteConstituents } from '../../backend/use-substitute-constituents';
@@ -47,9 +46,9 @@ export function MenuEditSchema() {
     isArchive,
     isContentEditable,
     promptTemplate,
-    deselectAll
+    deselectAll,
+    isProcessing
   } = useRSFormEdit();
-  const isProcessing = useMutatingRSForm();
 
   const { resetAliases } = useResetAliases();
   const { restoreOrder } = useRestoreOrder();

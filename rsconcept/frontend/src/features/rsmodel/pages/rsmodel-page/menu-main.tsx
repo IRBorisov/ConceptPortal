@@ -3,6 +3,7 @@
 import { useConceptNavigation } from '@/app';
 import { useAuth } from '@/features/auth';
 import { AccessPolicy } from '@/features/library';
+import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
 import { useRoleStore, UserRole } from '@/features/users';
 
 import { Divider } from '@/components/container';
@@ -22,14 +23,12 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { tooltipText } from '@/utils/labels';
 import { generatePageQR, sharePage } from '@/utils/utils';
 
-import { useMutatingRSModel } from '../../backend/use-mutating-rsmodel';
-
 import { useRSModelEdit } from './rsmodel-context';
 
 export function MenuMain() {
   const router = useConceptNavigation();
   const { model, deleteModel, isMutable, engine } = useRSModelEdit();
-  const isProcessing = useMutatingRSModel();
+  const { isProcessing } = useRSFormEdit();
 
   const { isAnonymous } = useAuth();
 

@@ -8,6 +8,7 @@ import { useAIStore } from '@/features/ai/stores/ai-context';
 import { useAuth } from '@/features/auth';
 import { useLibrarySearchStore } from '@/features/library';
 import { useDeleteItem } from '@/features/library/backend/use-delete-item';
+import { useFindPredecessor } from '@/features/oss/backend/use-find-predecessor';
 import { useRoleStore, UserRole } from '@/features/users';
 import { useAdjustRole } from '@/features/users/stores/use-adjust-role';
 
@@ -19,13 +20,21 @@ import { errorMsg, promptText } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 import { promptUnsaved } from '@/utils/utils';
 
-import { type ConstituentaBasicsDTO, type CreateConstituentaDTO } from '../../backend/types';
+import {
+  type ConstituentaBasicsDTO,
+  type CreateConstituentaDTO,
+  type UpdateConstituentaDTO
+} from '../../backend/types';
+import { useClearAttributions } from '../../backend/use-clear-attributions';
+import { useCreateAttribution } from '../../backend/use-create-attribution';
 import { useCreateConstituenta } from '../../backend/use-create-constituenta';
 import { useDeleteAttribution } from '../../backend/use-delete-attribution';
 import { useDeleteConstituents } from '../../backend/use-delete-constituents';
 import { useMoveConstituents } from '../../backend/use-move-constituents';
+import { useMutatingRSForm } from '../../backend/use-mutating-rsform';
 import { useRSForm } from '../../backend/use-rsform';
 import { useUpdateConstituenta } from '../../backend/use-update-constituenta';
+import { useUpdateCrucial } from '../../backend/use-update-crucial';
 import { type Constituenta, CstType } from '../../models/rsform';
 import { generateAlias, removeAliasReference } from '../../models/rsform-api';
 
@@ -34,11 +43,14 @@ import { RSEditContext } from './rsedit-context';
 interface RSEditStateProps {
   itemID: number;
   activeVersion?: number;
+  /** When set (e.g. on the RSModel page), includes RSModel mutations; otherwise only RSForm mutations. */
+  isProcessing?: boolean;
 }
 
 export const RSEditState = ({
   itemID,
   activeVersion,
+  isProcessing: isProcessingProp,
   children
 }: React.PropsWithChildren<RSEditStateProps>) => {
   const router = useConceptNavigation();
@@ -49,6 +61,8 @@ export const RSEditState = ({
 
   const { user } = useAuth();
   const { schema } = useRSForm({ itemID: itemID, version: activeVersion });
+  const isMutatingForm = useMutatingRSForm();
+  const isProcessing = isProcessingProp ?? isMutatingForm;
   const isModified = useModificationStore(state => state.isModified);
 
   const isOwned = !!user.id && user.id === schema.owner;
@@ -71,12 +85,18 @@ export const RSEditState = ({
   const { deleteConstituents: cstDelete } = useDeleteConstituents();
   const { moveConstituents: cstMove } = useMoveConstituents();
   const { deleteItem } = useDeleteItem();
+  const { createAttribution } = useCreateAttribution();
   const { deleteAttribution } = useDeleteAttribution();
+  const { clearAttributions: clearCstAttributions } = useClearAttributions();
   const { updateConstituenta } = useUpdateConstituenta();
+  const { updateCrucial } = useUpdateCrucial();
+  const { findPredecessor } = useFindPredecessor();
 
   const showCreateCst = useDialogsStore(state => state.showCreateCst);
   const showDeleteCst = useDialogsStore(state => state.showDeleteCst);
   const showCstTemplate = useDialogsStore(state => state.showCstTemplate);
+  const showEditTerm = useDialogsStore(state => state.showEditWordForms);
+  const showRenameCst = useDialogsStore(state => state.showRenameCst);
   const setCurrentSchema = useAIStore(state => state.setSchema);
   const onSetSchema = useEffectEvent(setCurrentSchema);
   const setCurrentConstituenta = useAIStore(state => state.setConstituenta);
@@ -353,6 +373,91 @@ export const RSEditState = ({
     setSelectedEdges([]);
   }
 
+  function toggleCrucial() {
+    if (!activeCst) {
+      return;
+    }
+    void updateCrucial({
+      itemID: schema.id,
+      data: {
+        target: selectedCst,
+        value: !activeCst.crucial
+      }
+    });
+  }
+
+  async function patchConstituenta(data: UpdateConstituentaDTO): Promise<void> {
+    await updateConstituenta({ itemID: schema.id, data });
+  }
+
+  function openTermEditor() {
+    if (!activeCst) {
+      return;
+    }
+    if (isModified && !promptUnsaved()) {
+      return;
+    }
+    showEditTerm({
+      target: activeCst,
+      onSave: data => void updateConstituenta({ itemID: schema.id, data })
+    });
+  }
+
+  function promptRename() {
+    if (!activeCst) {
+      return;
+    }
+    showRenameCst({
+      schema,
+      target: activeCst,
+      onRename: data => void updateConstituenta({ itemID: schema.id, data })
+    });
+  }
+
+  function addAttribution(attribute: Constituenta) {
+    if (!activeCst) {
+      return;
+    }
+    void createAttribution({
+      itemID: schema.id,
+      data: {
+        container: activeCst.id,
+        attribute: attribute.id
+      }
+    });
+  }
+
+  function removeAttribution(attribute: Constituenta) {
+    if (!activeCst) {
+      return;
+    }
+    void deleteAttribution({
+      itemID: schema.id,
+      data: {
+        container: activeCst.id,
+        attribute: attribute.id
+      }
+    });
+  }
+
+  function clearAttributions() {
+    if (!activeCst) {
+      return;
+    }
+    void clearCstAttributions({
+      itemID: schema.id,
+      data: {
+        target: activeCst.id
+      }
+    });
+  }
+
+  function gotoPredecessor(target: number, newTab?: boolean) {
+    void findPredecessor(target).then(reference =>
+      router.gotoCstEdit(reference.schema, reference.id, newTab)
+    );
+  }
+
   return (
     <RSEditContext
       value={{
@@ -369,8 +474,16 @@ export const RSEditState = ({
         isMutable,
         isContentEditable,
         canDeleteSelected,
+        isProcessing,
 
         deleteSchema,
+
+        patchConstituenta,
+        openTermEditor,
+        promptRename,
+        addAttribution,
+        removeAttribution,
+        clearAttributions,
 
         setFocus: handleSetFocus,
         clearPendingActiveID: () => setPendingActiveID(null),
@@ -384,12 +497,15 @@ export const RSEditState = ({
 
         moveUp,
         moveDown,
+        toggleCrucial,
         createCst,
         promptCreateCst,
         cloneCst,
         promptDeleteSelected,
 
-        promptTemplate
+        promptTemplate,
+
+        gotoPredecessor: gotoPredecessor
       }}
     >
       {children}

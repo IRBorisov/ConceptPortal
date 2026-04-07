@@ -21,7 +21,6 @@ import { ValueIcon } from '@/components/view';
 import { useModificationStore } from '@/stores/modification';
 import { globalIDs } from '@/utils/constants';
 
-import { useMutatingRSModel } from '../../../backend/use-mutating-rsmodel';
 import { useRSModelEdit } from '../rsmodel-context';
 
 function modelDefaults(model: RSModel): UpdateLibraryItemDTO {
@@ -41,9 +40,8 @@ export function FormRSModel() {
   const { updateItem } = useUpdateItem();
   const setIsModified = useModificationStore(state => state.setIsModified);
   const onModifiedEvent = useEffectEvent(setIsModified);
-  const isProcessing = useMutatingRSModel();
   const { model, isMutable } = useRSModelEdit();
-  const { schema } = useRSFormEdit();
+  const { schema, isProcessing } = useRSFormEdit();
 
   const form = useForm({
     defaultValues: modelDefaults(model),

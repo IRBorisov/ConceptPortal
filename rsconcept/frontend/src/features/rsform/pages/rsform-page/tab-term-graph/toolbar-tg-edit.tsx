@@ -16,7 +16,6 @@ import { cn } from '@/components/utils';
 import { type Graph } from '@/models/graph';
 import { prepareTooltip } from '@/utils/format';
 
-import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { useRSFormEdit } from '../rsedit-context';
 
 import { useHandleActions } from './use-handle-actions';
@@ -28,16 +27,16 @@ interface ToolbarTGEditProps {
 
 export function ToolbarTGEdit({ className, graph }: ToolbarTGEditProps) {
   const router = useConceptNavigation();
-  const isProcessing = useMutatingRSForm();
   const {
     schema,
     selectedCst,
     isContentEditable,
-    canDeleteSelected
+    canDeleteSelected,
+    toggleCrucial,
+    isProcessing
   } = useRSFormEdit();
 
   const {
-    handleToggleCrucial,
     handleCreateCst,
     handleDeleteSelected,
     handelFastEdit,
@@ -61,7 +60,7 @@ export function ToolbarTGEdit({ className, graph }: ToolbarTGEditProps) {
           titleHtml={prepareTooltip('Ключевая конституента', 'F')}
           aria-label='Переключатель статуса ключевой конституенты'
           icon={<IconCrucial size='1.25rem' className='icon-primary' />}
-          onClick={handleToggleCrucial}
+          onClick={toggleCrucial}
           disabled={isProcessing || selectedCst.length === 0}
         />
       ) : null}

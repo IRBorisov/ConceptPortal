@@ -3,8 +3,6 @@ import { useReactFlow } from '@xyflow/react';
 import { toPng, toSvg } from 'html-to-image';
 import fileDownload from 'js-file-download';
 
-import { useConceptNavigation } from '@/app';
-import { useFindPredecessor } from '@/features/oss/backend/use-find-predecessor';
 import { CstType } from '@/features/rsform/models/rsform';
 
 import { useScrollToNode } from '@/components/flow/use-scroll-to-node';
@@ -16,9 +14,6 @@ import { EXPORTS, PARAMETER, REACTFLOW_VIEWPORT } from '@/utils/constants';
 import { cleanSvg } from '@/utils/svg';
 import { dataUrlToBlob, withPreventDefault } from '@/utils/utils';
 
-import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
-import { useUpdateConstituenta } from '../../../backend/use-update-constituenta';
-import { useUpdateCrucial } from '../../../backend/use-update-crucial';
 import { isBasicConcept } from '../../../models/rsform-api';
 import { InteractionMode, useTermGraphStore, useTGConnectionStore } from '../../../stores/term-graph';
 import { useRSFormEdit } from '../rsedit-context';
@@ -32,24 +27,24 @@ const IMAGE_PADDING_TEXT = 30;
 
 export function useHandleActions(graph: Graph<number>) {
   const darkMode = usePreferencesStore(state => state.darkMode);
-  const isProcessing = useMutatingRSForm();
   const { fitView, getNodesBounds, getNodes } = useReactFlow();
   const scrollToNode = useScrollToNode();
   const {
     schema,
     selectedCst,
     isContentEditable,
+    isProcessing,
     setSelectedCst,
     deselectAll,
     promptCreateCst,
     setFocus,
-    promptDeleteSelected
+    promptDeleteSelected,
+    toggleCrucial,
+    patchConstituenta,
+    gotoPredecessor
   } = useRSFormEdit();
-  const router = useConceptNavigation();
-  const { findPredecessor } = useFindPredecessor();
 
   const mode = useTermGraphStore(state => state.mode);
-
   const noText = useTermGraphStore(state => state.filter.noText);
   const toggleText = useTermGraphStore(state => state.toggleText);
   const toggleClustering = useTermGraphStore(state => state.toggleClustering);
@@ -57,8 +52,6 @@ export function useHandleActions(graph: Graph<number>) {
   const toggleMode = useTermGraphStore(state => state.toggleMode);
   const toggleEdgeType = useTGConnectionStore(state => state.toggleConnectionType);
 
-  const { updateCrucial } = useUpdateCrucial();
-  const { updateConstituenta } = useUpdateConstituenta();
   const showEditCst = useDialogsStore(state => state.showEditCst);
   const showTypeGraph = useDialogsStore(state => state.showShowTypeGraph);
 
@@ -86,20 +79,6 @@ export function useHandleActions(graph: Graph<number>) {
   function handleToggleMode() {
     toggleMode();
     deselectAll();
-  }
-
-  function handleToggleCrucial() {
-    if (selectedCst.length === 0) {
-      return;
-    }
-    const isCrucial = !schema.cstByID.get(selectedCst[0])!.crucial;
-    void updateCrucial({
-      itemID: schema.id,
-      data: {
-        target: selectedCst,
-        value: isCrucial
-      }
-    });
   }
 
   function panToCst(cstID: number) {
@@ -139,12 +118,8 @@ export function useHandleActions(graph: Graph<number>) {
     showEditCst({
       schema: schema,
       target: target,
-      onEdit: data => void updateConstituenta({ itemID: schema.id, data }),
-      onEditSource: () => {
-        void findPredecessor(target.id).then(reference =>
-          router.gotoCstEdit(reference.schema, reference.id)
-        );
-      }
+      onEdit: data => void patchConstituenta(data),
+      onEditSource: () => gotoPredecessor(target.id)
     });
   }
 
@@ -363,7 +338,7 @@ export function useHandleActions(graph: Graph<number>) {
 
     if (isContentEditable) {
       if (event.code === 'KeyF') {
-        withPreventDefault(handleToggleCrucial)(event);
+        withPreventDefault(toggleCrucial)(event);
         return;
       }
       if (event.code === 'KeyQ') {
@@ -406,7 +381,6 @@ export function useHandleActions(graph: Graph<number>) {
     handleSelectInherited,
     handleSelectCrucial,
     handleToggleMode,
-    handleToggleCrucial,
     handleCreateCst,
     handleDeleteSelected,
     handleToggleEdgeType: toggleEdgeType,

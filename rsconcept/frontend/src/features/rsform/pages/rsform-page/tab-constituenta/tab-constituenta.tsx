@@ -12,7 +12,6 @@ import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { globalIDs } from '@/utils/constants';
 
-import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { ViewConstituents } from '../../../components/view-constituents';
 import { useRSFormEdit } from '../rsedit-context';
 
@@ -31,6 +30,7 @@ export function TabConstituenta() {
     schema,
     activeCst,
     isContentEditable,
+    isProcessing,
     selectedCst,
     setSelectedCst,
     moveUp,
@@ -46,7 +46,6 @@ export function TabConstituenta() {
 
   const [toggleReset, setToggleReset] = useState(false);
 
-  const isProcessing = useMutatingRSForm();
   const disabled = !activeCst || !isContentEditable || isProcessing;
   const isNarrow = !!windowSize.width && windowSize.width <= SIDELIST_LAYOUT_THRESHOLD;
 

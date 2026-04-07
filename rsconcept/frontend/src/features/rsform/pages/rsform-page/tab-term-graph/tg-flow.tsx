@@ -24,7 +24,6 @@ import { PARAMETER } from '@/utils/constants';
 import { errorMsg } from '@/utils/labels';
 
 import { useCreateAttribution } from '../../../backend/use-create-attribution';
-import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { useUpdateConstituenta } from '../../../backend/use-update-constituenta';
 import { colorGraphEdge } from '../../../colors';
 import { TGConnectionLine } from '../../../components/term-graph/graph/tg-connection';
@@ -75,9 +74,9 @@ export function TGFlow() {
   const { createAttribution } = useCreateAttribution();
   const { updateConstituenta } = useUpdateConstituenta();
 
-  const isProcessing = useMutatingRSForm();
   const {
     isContentEditable,
+    isProcessing,
     schema,
     selectedCst,
     setSelectedCst,

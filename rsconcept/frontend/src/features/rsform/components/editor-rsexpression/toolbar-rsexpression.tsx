@@ -5,18 +5,23 @@ import { IconTree, IconTypeGraph } from '@/components/icons';
 import { cn } from '@/components/utils';
 import { usePreferencesStore } from '@/stores/preferences';
 
-import { useMutatingRSForm } from '../../backend/use-mutating-rsform';
 import { IconShowKeyboard } from '../icon-show-keyboard';
 
 interface ToolbarRSExpressionProps {
   className?: string;
   disabled?: boolean;
+  isProcessing?: boolean;
   showAST: (event: React.MouseEvent<Element>) => void;
   showTypeGraph: (event: React.MouseEvent<Element>) => void;
 }
 
-export function ToolbarRSExpression({ className, disabled, showTypeGraph, showAST }: ToolbarRSExpressionProps) {
-  const isProcessing = useMutatingRSForm();
+export function ToolbarRSExpression({
+  className,
+  disabled,
+  isProcessing = false,
+  showTypeGraph,
+  showAST
+}: ToolbarRSExpressionProps) {
   const showControls = usePreferencesStore(state => state.showExpressionControls);
   const toggleControls = usePreferencesStore(state => state.toggleShowExpressionControls);
 

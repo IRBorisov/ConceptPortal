@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useEffectEvent, useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useEffectEvent, useLayoutEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useForm, useStore } from '@tanstack/react-form';
 
@@ -16,18 +16,9 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { errorMsg, tooltipText } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
-import { promptUnsaved, withPreventDefault } from '@/utils/utils';
+import { withPreventDefault } from '@/utils/utils';
 
-import {
-  schemaUpdateConstituenta,
-  type UpdateConstituentaDTO
-} from '../../../backend/types';
-import { useClearAttributions } from '../../../backend/use-clear-attributions';
-import { useCreateAttribution } from '../../../backend/use-create-attribution';
-import { useDeleteAttribution } from '../../../backend/use-delete-attribution';
-import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
-import { useUpdateConstituenta } from '../../../backend/use-update-constituenta';
-import { useUpdateCrucial } from '../../../backend/use-update-crucial';
+import { schemaUpdateConstituenta, type UpdateConstituentaDTO } from '../../../backend/types';
 import { EditorRSExpression } from '../../../components/editor-rsexpression';
 import { IconCrucialValue } from '../../../components/icon-crucial-value';
 import { RefsInput } from '../../../components/refs-input';
@@ -38,6 +29,7 @@ import {
 } from '../../../labels';
 import { type Constituenta, CstType, type RSForm } from '../../../models/rsform';
 import { cstCanProduceStructure, getAnalysisFor, isBaseSet, isBasicConcept } from '../../../models/rsform-api';
+import { useRSFormEdit } from '../rsedit-context';
 
 interface FormConstituentaProps {
   id?: string;
@@ -65,16 +57,17 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
   const isModified = useModificationStore(state => state.isModified);
   const setIsModified = useModificationStore(state => state.setIsModified);
   const onModifiedEvent = useEffectEvent(setIsModified);
-  const isProcessing = useMutatingRSForm();
-
-  const { updateConstituenta } = useUpdateConstituenta();
-  const { updateCrucial } = useUpdateCrucial();
-  const { createAttribution } = useCreateAttribution();
-  const { deleteAttribution } = useDeleteAttribution();
-  const { clearAttributions } = useClearAttributions();
+  const {
+    toggleCrucial,
+    patchConstituenta,
+    openTermEditor,
+    promptRename,
+    addAttribution,
+    removeAttribution,
+    clearAttributions,
+    isProcessing
+  } = useRSFormEdit();
   const showTypification = useDialogsStore(state => state.showShowTypeGraph);
-  const showEditTerm = useDialogsStore(state => state.showEditWordForms);
-  const showRenameCst = useDialogsStore(state => state.showRenameCst);
   const showStructurePlanner = useDialogsStore(state => state.showStructurePlanner);
 
   const form = useForm({
@@ -83,7 +76,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
       onChange: schemaUpdateConstituenta
     },
     onSubmit: async ({ value, formApi }) => {
-      await updateConstituenta({ itemID: schema.id, data: value });
+      await patchConstituenta(value);
       setIsModified(false);
       formApi.reset(value);
     }
@@ -102,18 +95,9 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
   const [forceComment, setForceComment] = useState(false);
   const [localParse, setLocalParse] = useState<RO<AnalysisFull> | null>(null);
 
-  const typification = useMemo(
-    () =>
-      localParse
-        ? labelType(localParse.type)
-        : labelType(activeCst.analysis.type),
-    [localParse, activeCst]
-  );
+  const typification = localParse ? labelType(localParse.type) : labelType(activeCst.analysis.type);
 
-  const attributions = useMemo(
-    () => activeCst.attributes.map(id => schema.cstByID.get(id)!),
-    [activeCst.attributes, schema.cstByID]
-  );
+  const attributions = activeCst.attributes.map(id => schema.cstByID.get(id)!);
 
   const isBasic = isBasicConcept(activeCst.cst_type) || activeCst.cst_type === CstType.NOMINAL;
   const isElementary = isBaseSet(activeCst.cst_type);
@@ -155,67 +139,6 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
     showTypification({ items: [{ alias: activeCst.alias, type: parse.type }] });
   }
 
-  function handleEditTermForms() {
-    if (!activeCst) {
-      return;
-    }
-    if (isModified && !promptUnsaved()) {
-      return;
-    }
-    showEditTerm({
-      target: activeCst,
-      onSave: data => void updateConstituenta({ itemID: schema.id, data })
-
-    });
-  }
-
-  function handleRenameCst() {
-    showRenameCst({
-      schema: schema,
-      target: activeCst,
-      onRename: data => void updateConstituenta({ itemID: schema.id, data })
-    });
-  }
-
-  function handleToggleCrucial() {
-    void updateCrucial({
-      itemID: schema.id,
-      data: {
-        target: [activeCst.id],
-        value: !activeCst.crucial
-      }
-    });
-  }
-
-  function handleAddAttribution(item: Constituenta) {
-    void createAttribution({
-      itemID: schema.id,
-      data: {
-        container: activeCst.id,
-        attribute: item.id
-      }
-    });
-  }
-
-  function handleRemoveAttribution(item: Constituenta) {
-    void deleteAttribution({
-      itemID: schema.id,
-      data: {
-        container: activeCst.id,
-        attribute: item.id
-      }
-    });
-  }
-
-  function handleClearAttributions() {
-    void clearAttributions({
-      itemID: schema.id,
-      data: {
-        target: activeCst.id
-      }
-    });
-  }
-
   function handleStructurePlanner() {
     showStructurePlanner({
       schemaID: schema.id,
@@ -234,7 +157,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
         <TextButton
           text='Термин'
           title={disabled ? undefined : isModified ? tooltipText.unsaved : 'Редактировать словоформы термина'}
-          onClick={handleEditTermForms}
+          onClick={openTermEditor}
           disabled={isModified || disabled}
         />
 
@@ -243,14 +166,14 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
           className='ml-6 mr-1 -mt-0.75'
           aria-label='Переключатель статуса ключевой конституенты'
           icon={<IconCrucialValue size='1rem' value={activeCst.crucial} />}
-          onClick={handleToggleCrucial}
+          onClick={toggleCrucial}
           disabled={disabled || isProcessing || isModified}
         />
 
         <TextButton
           text='Имя'
           title={disabled ? undefined : isModified ? tooltipText.unsaved : 'Переименовать конституенту'}
-          onClick={handleRenameCst}
+          onClick={promptRename}
           disabled={isModified || disabled}
         />
         <div className='ml-2 text-sm font-medium whitespace-nowrap select-text cursor-default'>
@@ -282,9 +205,9 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
           <SelectMultiConstituenta
             items={schema.items.filter(item => item.id !== activeCst.id)}
             value={attributions}
-            onAdd={handleAddAttribution}
-            onClear={handleClearAttributions}
-            onRemove={handleRemoveAttribution}
+            onAdd={addAttribution}
+            onClear={clearAttributions}
+            onRemove={removeAttribution}
             disabled={disabled || isModified}
             placeholder={disabled ? '' : 'Выберите конституенты'}
           />

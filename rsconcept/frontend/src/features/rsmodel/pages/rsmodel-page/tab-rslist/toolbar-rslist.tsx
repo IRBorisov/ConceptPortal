@@ -25,7 +25,6 @@ import { cn } from '@/components/utils';
 import { prefixes } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/format';
 
-import { useMutatingRSModel } from '../../../backend/use-mutating-rsmodel';
 import { useRSModelEdit } from '../rsmodel-context';
 
 interface ToolbarRSListProps {
@@ -33,13 +32,13 @@ interface ToolbarRSListProps {
 }
 
 export function ToolbarRSList({ className }: ToolbarRSListProps) {
-  const isProcessing = useMutatingRSModel();
   const { updateCrucial } = useUpdateCrucial();
   const { elementRef: menuRef, isOpen: isMenuOpen, toggle: toggleMenu, handleBlur: handleMenuBlur } = useDropdown();
   const {
     schema,
     selectedCst,
     activeCst,
+    isProcessing,
     deselectAll,
     createCst,
     promptCreateCst,

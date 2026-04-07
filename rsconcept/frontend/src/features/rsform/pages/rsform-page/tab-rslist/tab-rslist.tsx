@@ -13,7 +13,6 @@ import { SearchBar } from '@/components/input';
 import { useFitHeight } from '@/stores/app-layout';
 import { withPreventDefault } from '@/utils/utils';
 
-import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { matchConstituenta } from '../../../models/rsform-api';
 import { CstMatchMode } from '../../../stores/cst-search';
 import { useRSFormEdit } from '../rsedit-context';
@@ -23,9 +22,9 @@ import { ToolbarRSList } from './toolbar-rslist';
 
 export function TabRSList() {
   const router = useConceptNavigation();
-  const isProcessing = useMutatingRSForm();
   const {
     isContentEditable,
+    isProcessing,
     schema,
     selectedCst,
     deselectAll,

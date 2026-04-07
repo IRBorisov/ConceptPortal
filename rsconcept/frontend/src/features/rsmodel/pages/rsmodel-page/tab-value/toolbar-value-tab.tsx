@@ -21,7 +21,6 @@ import { prepareTooltip } from '@/utils/format';
 import { errorMsg } from '@/utils/labels';
 import { isMac } from '@/utils/utils';
 
-import { useMutatingRSModel } from '../../../backend/use-mutating-rsmodel';
 import { useCstValue } from '../../../hooks/use-cst-value';
 import { type BasicBinding } from '../../../models/rsmodel';
 import { isInferrable } from '../../../models/rsmodel-api';
@@ -35,8 +34,7 @@ interface ToolbarValueTabProps {
 
 export function ToolbarValueTab({ className, isNarrow, onClearValue }: ToolbarValueTabProps) {
   const { isMutable, engine } = useRSModelEdit();
-  const { activeCst, schema } = useRSFormEdit();
-  const isProcessing = useMutatingRSModel();
+  const { activeCst, schema, isProcessing } = useRSFormEdit();
 
   const value = useCstValue(engine, activeCst ?? null);
   const hasValue = value !== null;

@@ -17,7 +17,6 @@ import { type Graph } from '@/models/graph';
 import { useDialogsStore } from '@/stores/dialogs';
 import { prepareTooltip } from '@/utils/format';
 
-import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { IconEnableClustering } from '../../../components/icon-enable-clustering';
 import { IconEnableText } from '../../../components/icon-enable-text';
 import { useRSFormEdit } from '../rsedit-context';
@@ -30,8 +29,7 @@ interface ToolbarTGOptionsProps {
 }
 
 export function ToolbarTGOptions({ className, graph }: ToolbarTGOptionsProps) {
-  const { selectedCst } = useRSFormEdit();
-  const isProcessing = useMutatingRSForm();
+  const { selectedCst, isProcessing } = useRSFormEdit();
 
   const {
     elementRef: exportRef,

@@ -15,7 +15,6 @@ import { SearchBar } from '@/components/input';
 import { useFitHeight } from '@/stores/app-layout';
 import { withPreventDefault } from '@/utils/utils';
 
-import { useMutatingRSModel } from '../../../backend/use-mutating-rsmodel';
 import { useRSModelEdit } from '../rsmodel-context';
 
 import { TableRSModelList } from './table-rsmodel-list';
@@ -23,9 +22,9 @@ import { ToolbarRSList } from './toolbar-rslist';
 
 export function TabRSList() {
   const router = useConceptNavigation();
-  const isProcessing = useMutatingRSModel();
   const {
     isContentEditable,
+    isProcessing,
     schema,
     selectedCst,
     deselectAll,

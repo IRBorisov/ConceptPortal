@@ -178,6 +178,7 @@ export function EditorRSExpression({
         showAST={handleShowAST}
         showTypeGraph={onShowTypeGraph}
         disabled={disabled}
+        isProcessing={isProcessing}
       />
 
       <StatusBar

@@ -21,7 +21,6 @@ import { Label, TextArea, TextInput } from '@/components/input';
 import { useModificationStore } from '@/stores/modification';
 import { globalIDs } from '@/utils/constants';
 
-import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { useRSFormEdit } from '../rsedit-context';
 
 import { ToolbarVersioning } from './toolbar-versioning';
@@ -43,8 +42,7 @@ export function FormRSForm() {
   const { updateItem: updateSchema } = useUpdateItem();
   const setIsModified = useModificationStore(state => state.setIsModified);
   const onModifiedEvent = useEffectEvent(setIsModified);
-  const isProcessing = useMutatingRSForm();
-  const { schema, isContentEditable } = useRSFormEdit();
+  const { schema, isContentEditable, isProcessing } = useRSFormEdit();
 
   const form = useForm({
     defaultValues: itemDefaults(schema),

@@ -33,15 +33,21 @@ import { type RO } from '@/utils/meta';
 import { generatePageQR, promptUnsaved, sharePage } from '@/utils/utils';
 
 import { useDownloadRSForm } from '../../backend/use-download-rsform';
-import { useMutatingRSForm } from '../../backend/use-mutating-rsform';
 import { useUploadTRS } from '../../backend/use-upload-trs';
 
 import { useRSFormEdit } from './rsedit-context';
 
 export function MenuMain() {
   const router = useConceptNavigation();
-  const { schema, selectedCst, deleteSchema, isArchive, isMutable, isContentEditable } = useRSFormEdit();
-  const isProcessing = useMutatingRSForm();
+  const {
+    schema,
+    selectedCst,
+    deleteSchema,
+    isArchive,
+    isMutable,
+    isContentEditable,
+    isProcessing
+  } = useRSFormEdit();
 
   const { user, isAnonymous } = useAuth();
   const hasInheritance = schema.inheritance.some(item => item.child_source === schema.id);

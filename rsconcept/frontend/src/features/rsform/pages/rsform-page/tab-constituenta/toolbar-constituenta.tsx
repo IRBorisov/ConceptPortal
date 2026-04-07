@@ -5,7 +5,6 @@ import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 import { IconShowSidebar } from '@/features/library/components/icon-show-sidebar';
 import { MiniSelectorOSS } from '@/features/library/components/mini-selector-oss';
-import { useFindPredecessor } from '@/features/oss/backend/use-find-predecessor';
 
 import { MiniButton } from '@/components/control';
 import {
@@ -25,7 +24,6 @@ import { prepareTooltip } from '@/utils/format';
 import { tooltipText } from '@/utils/labels';
 import { isMac } from '@/utils/utils';
 
-import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
 import { type Constituenta } from '../../../models/rsform';
 import { useRSFormEdit } from '../rsedit-context';
 
@@ -49,30 +47,22 @@ export function ToolbarConstituenta({
   onReset
 }: ToolbarConstituentaProps) {
   const router = useConceptNavigation();
-  const { findPredecessor } = useFindPredecessor();
   const {
     schema,
     isContentEditable,
+    isProcessing,
     promptCreateCst,
     cloneCst,
     canDeleteSelected,
     promptDeleteSelected,
     moveUp,
-    moveDown
+    moveDown,
+    gotoPredecessor: openConstituentaPredecessor
   } = useRSFormEdit();
 
   const showList = usePreferencesStore(state => state.showCstSideList);
   const toggleList = usePreferencesStore(state => state.toggleShowCstSideList);
   const isModified = useModificationStore(state => state.isModified);
-  const isProcessing = useMutatingRSForm();
-
-  function viewPredecessor(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, target: number) {
-    event.preventDefault();
-    event.stopPropagation();
-    void findPredecessor(target).then(reference =>
-      router.gotoCstEdit(reference.schema, reference.id, event.ctrlKey || event.metaKey)
-    );
-  }
 
   return (
     <div className={cn('px-1 rounded-b-2xl cc-icons outline-hidden', className)}>
@@ -85,7 +75,7 @@ export function ToolbarConstituenta({
       {activeCst ? (
         <MiniButton
           title={activeCst.is_inherited ? 'Перейти к исходной конституенте в ОСС' : 'Конституента не имеет предка'}
-          onClick={(event) => viewPredecessor(event, activeCst.id)}
+          onClick={event => openConstituentaPredecessor(activeCst.id, event.ctrlKey || event.metaKey)}
           icon={<IconPredecessor size='1.25rem' className='icon-primary' />}
           disabled={!activeCst.is_inherited}
         />) : null}
