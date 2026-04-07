@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { type SubmitEvent,useState } from 'react';
 
 import { useUsers } from '@/features/users';
 import { SelectUser } from '@/features/users/components/select-user';
@@ -27,7 +27,7 @@ export function DlgEditEditors() {
   const [selected, setSelected] = useState<number[]>([...initial]);
   const { users } = useUsers();
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     void setEditors({ itemID: itemID, editors: selected });
   }

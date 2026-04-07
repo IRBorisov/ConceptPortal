@@ -8,26 +8,22 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';
 import { hintMsg } from '@/utils/labels';
 
-import { useUploadTRS } from '../backend/use-upload-trs';
+import { type RSFormUploadDTO } from '../backend/types';
 
 export interface DlgUploadRSFormProps {
-  itemID: number;
+  onUpload: (data: RSFormUploadDTO) => void;
 }
 
 export function DlgUploadRSForm() {
-  const { itemID } = useDialogsStore(state => state.props as DlgUploadRSFormProps);
-  const { upload } = useUploadTRS();
+  const { onUpload } = useDialogsStore(state => state.props as DlgUploadRSFormProps);
   const [loadMetadata, setLoadMetadata] = useState(false);
   const [file, setFile] = useState<File | null>(null);
 
   const handleSubmit = () => {
     if (file) {
-      void upload({
-        itemID: itemID,
-        data: {
-          load_metadata: loadMetadata,
-          file: file
-        }
+      onUpload({
+        load_metadata: loadMetadata,
+        file: file
       });
     }
   };

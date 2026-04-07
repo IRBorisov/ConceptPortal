@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { type SubmitEvent, useState } from 'react';
 
 import { HelpTopic } from '@/features/help';
 
@@ -15,24 +15,21 @@ import { useGenerateLexeme } from '../../backend/cctext/use-generate-lexeme';
 import { useInflectText } from '../../backend/cctext/use-inflect-text';
 import { useIsProcessingCctext } from '../../backend/cctext/use-is-processing-cctext';
 import { useParseText } from '../../backend/cctext/use-parse-text';
-import { useRSForm } from '../../backend/use-rsform';
-import { useUpdateConstituenta } from '../../backend/use-update-constituenta';
+import { type UpdateConstituentaDTO } from '../../backend/types';
 import { SelectMultiGrammeme } from '../../components/select-multi-grammeme';
 import { type Grammeme, supportedGrammemes, type WordForm } from '../../models/language';
 import { parseGrammemes, wordFormEquals } from '../../models/language-api';
+import { type Constituenta } from '../../models/rsform';
 
 import { TableWordForms } from './table-word-forms';
 
 export interface DlgEditWordFormsProps {
-  itemID: number;
-  targetID: number;
+  target: Constituenta;
+  onSave: (data: UpdateConstituentaDTO) => void;
 }
 
 export function DlgEditWordForms() {
-  const { itemID, targetID } = useDialogsStore(state => state.props as DlgEditWordFormsProps);
-  const { schema } = useRSForm({ itemID: itemID });
-  const target = schema.cstByID.get(targetID)!;
-  const { updateConstituenta: cstUpdate } = useUpdateConstituenta();
+  const { target, onSave } = useDialogsStore(state => state.props as DlgEditWordFormsProps);
 
   const isProcessing = useIsProcessingCctext();
   const { inflectText } = useInflectText();
@@ -42,25 +39,22 @@ export function DlgEditWordForms() {
   const [inputText, setInputText] = useState(target.term_resolved);
   const [inputGrams, setInputGrams] = useState<Grammeme[]>([]);
 
-  const [forms, setForms] = useState<WordForm[]>(
+  const [wordForms, setWordForms] = useState<WordForm[]>(
     target.term_forms.map(term => ({
       text: term.text,
       grams: parseGrammemes(term.tags)
     }))
   );
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
-    void cstUpdate({
-      itemID: itemID,
-      data: {
-        target: target.id,
-        item_data: {
-          term_forms: forms.map(({ text, grams }) => ({
-            text: text,
-            tags: grams.join(',')
-          }))
-        }
+    onSave({
+      target: target.id,
+      item_data: {
+        term_forms: wordForms.map(({ text, grams }) => ({
+          text: text,
+          tags: grams.join(',')
+        }))
       }
     });
   }
@@ -70,7 +64,7 @@ export function DlgEditWordForms() {
       text: inputText,
       grams: inputGrams
     };
-    setForms(forms => [newForm, ...forms.filter(value => !wordFormEquals(value, newForm))]);
+    setWordForms(forms => [newForm, ...forms.filter(value => !wordFormEquals(value, newForm))]);
   }
 
   function handleSelectForm(form: WordForm) {
@@ -93,7 +87,7 @@ export function DlgEditWordForms() {
   }
 
   function handleGenerateLexeme() {
-    if (forms.length > 0) {
+    if (wordForms.length > 0) {
       if (!window.confirm(promptText.generateWordforms)) {
         return;
       }
@@ -110,12 +104,12 @@ export function DlgEditWordForms() {
           lexeme.push(newForm);
         }
       }
-      setForms(lexeme);
+      setWordForms(lexeme);
     });
   }
 
   function handleResetAll() {
-    setForms([]);
+    setWordForms([]);
   }
 
   return (
@@ -182,18 +176,18 @@ export function DlgEditWordForms() {
           />
         </div>
         <div className='mt-3 mb-2 mx-auto text-sm font-semibold'>
-          <span>Заданные вручную словоформы [{forms.length}]</span>
+          <span>Заданные вручную словоформы [{wordForms.length}]</span>
           <MiniButton
             title='Сбросить все словоформы'
             className='py-0 align-middle'
             icon={<IconRemove size='1.5rem' className='cc-remove' />}
             onClick={handleResetAll}
-            disabled={isProcessing || forms.length === 0}
+            disabled={isProcessing || wordForms.length === 0}
           />
         </div>
       </div>
 
-      <TableWordForms forms={forms} setForms={setForms} onFormSelect={handleSelectForm} />
+      <TableWordForms forms={wordForms} setForms={setWordForms} onFormSelect={handleSelectForm} />
     </ModalForm>
   );
 }

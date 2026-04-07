@@ -11,16 +11,13 @@ import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useDialogsStore } from '@/stores/dialogs';
 import { type CreateFieldProps, type FieldStateData } from '@/utils/forms';
 import { hintMsg } from '@/utils/labels';
-import { type RO } from '@/utils/meta';
+import { withPreventDefault } from '@/utils/utils';
 
 import {
-  type ConstituentaBasicsDTO,
   type CreateConstituentaDTO,
   schemaCreateConstituenta
 } from '../../backend/types';
-import { useCreateConstituenta } from '../../backend/use-create-constituenta';
-import { useRSForm } from '../../backend/use-rsform';
-import { type CstType } from '../../models/rsform';
+import { type CstType, type RSForm } from '../../models/rsform';
 import { generateAlias, validateNewAlias } from '../../models/rsform-api';
 import { FormCreateCst, type FormCreateCstFields } from '../dlg-create-cst/form-create-cst';
 
@@ -29,8 +26,8 @@ import { TabTemplate } from './tab-template';
 import { TemplateState } from './template-state';
 
 export interface DlgCstTemplateProps {
-  schemaID: number;
-  onCreate: (data: RO<ConstituentaBasicsDTO>) => void;
+  schema: RSForm;
+  onCreate: (data: CreateConstituentaDTO) => void;
   insertAfter?: number;
 }
 
@@ -42,9 +39,7 @@ export const TabID = {
 export type TabID = (typeof TabID)[keyof typeof TabID];
 
 export function DlgCstTemplate() {
-  const { schemaID, onCreate, insertAfter } = useDialogsStore(state => state.props as DlgCstTemplateProps);
-  const { createConstituenta: cstCreate } = useCreateConstituenta();
-  const { schema } = useRSForm({ itemID: schemaID });
+  const { schema, onCreate, insertAfter } = useDialogsStore(state => state.props as DlgCstTemplateProps);
 
   const form = useForm({
     defaultValues: {
@@ -61,9 +56,7 @@ export function DlgCstTemplate() {
     validators: {
       onChange: schemaCreateConstituenta
     },
-    onSubmit: async ({ value }) => {
-      await cstCreate({ itemID: schema.id, data: value }).then(onCreate);
-    }
+    onSubmit: ({ value }) => onCreate(value)
   });
 
   const values = useStore(form.store, state => state.values);
@@ -147,11 +140,7 @@ export function DlgCstTemplate() {
       submitText='Создать'
       className='w-172 h-140 px-6'
       canSubmit={canSubmit}
-      onSubmit={event => {
-        event.preventDefault();
-        event.stopPropagation();
-        void form.handleSubmit();
-      }}
+      onSubmit={withPreventDefault(() => void form.handleSubmit())}
       validationHint={hint}
       helpTopic={HelpTopic.RSL_TEMPLATES}
     >

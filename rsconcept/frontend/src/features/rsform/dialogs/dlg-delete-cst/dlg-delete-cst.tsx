@@ -1,28 +1,24 @@
 'use client';
 
-import { useState } from 'react';
+import { type SubmitEvent, useState } from 'react';
 
 import { Checkbox } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { prefixes } from '@/utils/constants';
 
-import { useDeleteConstituents } from '../../backend/use-delete-constituents';
-import { useRSForm } from '../../backend/use-rsform';
 import { type RSForm } from '../../models/rsform';
 
 import { ListConstituents } from './list-constituents';
 
 export interface DlgDeleteCstProps {
-  schemaID: number;
+  schema: RSForm;
   selected: number[];
-  afterDelete?: (initialSchema: RSForm, deleted: number[]) => void;
+  onDelete: (deleted: number[]) => void;
 }
 
 export function DlgDeleteCst() {
-  const { selected, schemaID, afterDelete } = useDialogsStore(state => state.props as DlgDeleteCstProps);
-  const { deleteConstituents: cstDelete } = useDeleteConstituents();
-  const { schema } = useRSForm({ itemID: schemaID });
+  const { selected, schema, onDelete } = useDialogsStore(state => state.props as DlgDeleteCstProps);
 
   const [expandOut, setExpandOut] = useState(false);
   const expansion: number[] = schema.graph.expandAllOutputs(selected);
@@ -31,10 +27,10 @@ export function DlgDeleteCst() {
     [selected, schema.inheritance]
   );
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     const deleted = expandOut ? selected.concat(expansion) : selected;
-    void cstDelete({ itemID: schemaID, data: { items: deleted } }).then(() => afterDelete?.(schema, deleted));
+    onDelete(deleted);
   }
 
   return (

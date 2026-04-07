@@ -22,6 +22,7 @@ import { promptUnsaved } from '@/utils/utils';
 import { type ConstituentaBasicsDTO, type CreateConstituentaDTO } from '../../backend/types';
 import { useCreateConstituenta } from '../../backend/use-create-constituenta';
 import { useDeleteAttribution } from '../../backend/use-delete-attribution';
+import { useDeleteConstituents } from '../../backend/use-delete-constituents';
 import { useMoveConstituents } from '../../backend/use-move-constituents';
 import { useRSForm } from '../../backend/use-rsform';
 import { useUpdateConstituenta } from '../../backend/use-update-constituenta';
@@ -67,6 +68,7 @@ export const RSEditState = ({
   const activeCst = selectedCst.length === 0 ? null : (schema.cstByID.get(selectedCst[selectedCst.length - 1]) ?? null);
 
   const { createConstituenta: cstCreate } = useCreateConstituenta();
+  const { deleteConstituents: cstDelete } = useDeleteConstituents();
   const { moveConstituents: cstMove } = useMoveConstituents();
   const { deleteItem } = useDeleteItem();
   const { deleteAttribution } = useDeleteAttribution();
@@ -201,17 +203,16 @@ export const RSEditState = ({
     };
     return new Promise(resolve => {
       showCreateCst({
-        schemaID: schema.id,
+        schema: schema,
         initial: data,
 
-        onCreate: newCst => {
-          onCreateCst(newCst);
-          resolve(newCst.id);
-        },
+        onCreate: (createData: CreateConstituentaDTO) =>
+          void cstCreate({ itemID: schema.id, data: createData }).then(newCst => {
+            onCreateCst(newCst);
+            resolve(newCst.id);
+          }),
+        onCancel: () => resolve(null)
 
-        onCancel: () => {
-          resolve(null);
-        }
       });
     });
   }
@@ -272,17 +273,22 @@ export const RSEditState = ({
       return;
     }
     showDeleteCst({
-      schemaID: schema.id,
+      schema: schema,
       selected: selectedCst,
-      afterDelete: (schema, deleted) => {
-        const isEmpty = deleted.length === schema.items.length;
-        const nextActive = isEmpty ? null : getNextActiveOnDelete(activeCst?.id ?? null, schema.items, deleted);
-        setSelectedCst(nextActive ? [nextActive] : []);
-        if (!nextActive) {
-          router.gotoCstList(schema.id);
-        } else {
-          router.changeActive(nextActive);
-        }
+      onDelete: deleted => {
+        void cstDelete({
+          itemID: schema.id,
+          data: { items: deleted }
+        }).then(updatedSchema => {
+          const isEmpty = deleted.length === schema.items.length;
+          const nextActive = isEmpty ? null : getNextActiveOnDelete(activeCst?.id ?? null, schema.items, deleted);
+          setSelectedCst(nextActive ? [nextActive] : []);
+          if (!nextActive) {
+            router.gotoCstList(updatedSchema.id);
+          } else {
+            router.changeActive(nextActive);
+          }
+        });
       }
     });
   }
@@ -335,7 +341,11 @@ export const RSEditState = ({
     if (isModified && !promptUnsaved()) {
       return;
     }
-    showCstTemplate({ schemaID: schema.id, onCreate: onCreateCst, insertAfter: activeCst?.id });
+    showCstTemplate({
+      schema: schema,
+      insertAfter: activeCst?.id,
+      onCreate: value => void cstCreate({ itemID: schema.id, data: value }).then(onCreateCst)
+    });
   }
 
   function deselectAll() {

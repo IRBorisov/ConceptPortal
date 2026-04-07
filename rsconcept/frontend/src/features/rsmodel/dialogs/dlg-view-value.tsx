@@ -23,7 +23,7 @@ export function DlgViewValue() {
     <ModalView
       helpTopic={HelpTopic.UI_RSMODEL_VALUE_DIALOG}
       noFooterButton
-      header={'Просмотр значения'}
+      header='Просмотр значения'
       className='w-230 h-180 max-w-[calc(100dvw-3rem)] max-h-[calc(100svh-8rem)] px-6 mb-3'
     >
       <ValueViewer

@@ -3,6 +3,8 @@ import { useReactFlow } from '@xyflow/react';
 import { toPng, toSvg } from 'html-to-image';
 import fileDownload from 'js-file-download';
 
+import { useConceptNavigation } from '@/app';
+import { useFindPredecessor } from '@/features/oss/backend/use-find-predecessor';
 import { CstType } from '@/features/rsform/models/rsform';
 
 import { useScrollToNode } from '@/components/flow/use-scroll-to-node';
@@ -15,6 +17,7 @@ import { cleanSvg } from '@/utils/svg';
 import { dataUrlToBlob, withPreventDefault } from '@/utils/utils';
 
 import { useMutatingRSForm } from '../../../backend/use-mutating-rsform';
+import { useUpdateConstituenta } from '../../../backend/use-update-constituenta';
 import { useUpdateCrucial } from '../../../backend/use-update-crucial';
 import { isBasicConcept } from '../../../models/rsform-api';
 import { InteractionMode, useTermGraphStore, useTGConnectionStore } from '../../../stores/term-graph';
@@ -42,6 +45,8 @@ export function useHandleActions(graph: Graph<number>) {
     setFocus,
     promptDeleteSelected
   } = useRSFormEdit();
+  const router = useConceptNavigation();
+  const { findPredecessor } = useFindPredecessor();
 
   const mode = useTermGraphStore(state => state.mode);
 
@@ -53,6 +58,7 @@ export function useHandleActions(graph: Graph<number>) {
   const toggleEdgeType = useTGConnectionStore(state => state.toggleConnectionType);
 
   const { updateCrucial } = useUpdateCrucial();
+  const { updateConstituenta } = useUpdateConstituenta();
   const showEditCst = useDialogsStore(state => state.showEditCst);
   const showTypeGraph = useDialogsStore(state => state.showShowTypeGraph);
 
@@ -126,7 +132,20 @@ export function useHandleActions(graph: Graph<number>) {
     if (selectedCst.length !== 1) {
       return;
     }
-    showEditCst({ schemaID: schema.id, targetID: selectedCst[0] });
+    const target = schema.cstByID.get(selectedCst[0]);
+    if (!target) {
+      return;
+    }
+    showEditCst({
+      schema: schema,
+      target: target,
+      onEdit: data => void updateConstituenta({ itemID: schema.id, data }),
+      onEditSource: () => {
+        void findPredecessor(target.id).then(reference =>
+          router.gotoCstEdit(reference.schema, reference.id)
+        );
+      }
+    });
   }
 
   function handleSelectCore() {

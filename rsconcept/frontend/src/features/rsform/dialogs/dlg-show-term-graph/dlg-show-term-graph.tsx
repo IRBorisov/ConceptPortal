@@ -9,17 +9,16 @@ import { IconRSForm } from '@/components/icons';
 import { ModalView } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { useRSForm } from '../../backend/use-rsform';
+import { type RSForm } from '../../models/rsform';
 
 import { TGReadonlyFlow } from './tg-readonly-flow';
 
 export interface DlgShowTermGraphProps {
-  schemaID: number;
+  schema: RSForm;
 }
 
 export function DlgShowTermGraph() {
-  const { schemaID } = useDialogsStore(state => state.props as DlgShowTermGraphProps);
-  const { schema } = useRSForm({ itemID: schemaID });
+  const { schema } = useDialogsStore(state => state.props as DlgShowTermGraphProps);
   const hideDialog = useDialogsStore(state => state.hideDialog);
   const router = useConceptNavigation();
 

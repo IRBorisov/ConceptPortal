@@ -4,7 +4,6 @@ import { useMemo } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { useConceptNavigation } from '@/app';
-import { useFindPredecessor } from '@/features/oss/backend/use-find-predecessor';
 
 import { MiniButton } from '@/components/control';
 import { IconChild, IconRSForm } from '@/components/icons';
@@ -12,28 +11,25 @@ import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { type CreateFieldProps, type FieldStateData } from '@/utils/forms';
 import { hintMsg } from '@/utils/labels';
+import { withPreventDefault } from '@/utils/utils';
 
 import { schemaUpdateConstituenta, type UpdateConstituentaDTO } from '../../backend/types';
-import { useRSForm } from '../../backend/use-rsform';
-import { useUpdateConstituenta } from '../../backend/use-update-constituenta';
-import { type CstType } from '../../models/rsform';
+import { type Constituenta, type CstType, type RSForm } from '../../models/rsform';
 import { generateAlias, validateNewAlias } from '../../models/rsform-api';
 
 import { FormEditCst, type FormEditCstFields } from './form-edit-cst';
 
 export interface DlgEditCstProps {
-  schemaID: number;
-  targetID: number;
+  schema: RSForm;
+  target: Constituenta;
+  onEdit: (data: UpdateConstituentaDTO) => void;
+  onEditSource: () => void;
 }
 
 export function DlgEditCst() {
-  const { schemaID, targetID } = useDialogsStore(state => state.props as DlgEditCstProps);
-  const { schema } = useRSForm({ itemID: schemaID });
-  const target = schema.cstByID.get(targetID)!;
+  const { schema, target, onEdit, onEditSource } = useDialogsStore(state => state.props as DlgEditCstProps);
   const hideDialog = useDialogsStore(state => state.hideDialog);
-  const { updateConstituenta } = useUpdateConstituenta();
   const router = useConceptNavigation();
-  const { findPredecessor } = useFindPredecessor();
 
   const form = useForm({
     defaultValues: {
@@ -52,9 +48,7 @@ export function DlgEditCst() {
     validators: {
       onChange: schemaUpdateConstituenta
     },
-    onSubmit: async ({ value }) => {
-      await updateConstituenta({ itemID: schema.id, data: value });
-    }
+    onSubmit: ({ value }) => onEdit(value)
   });
 
   const values = useStore(form.store, state => state.values);
@@ -74,9 +68,7 @@ export function DlgEditCst() {
 
   function editSource() {
     hideDialog();
-    void findPredecessor(target.id).then(reference =>
-      router.gotoCstEdit(reference.schema, reference.id)
-    );
+    onEditSource();
   }
 
   function AliasField({ children }: CreateFieldProps<string>) {
@@ -122,11 +114,7 @@ export function DlgEditCst() {
     <ModalForm
       header='Редактирование конституенты'
       canSubmit={canSubmit}
-      onSubmit={event => {
-        event.preventDefault();
-        event.stopPropagation();
-        void form.handleSubmit();
-      }}
+      onSubmit={withPreventDefault(() => void form.handleSubmit())}
       validationHint={canSubmit ? '' : hintMsg.aliasInvalid}
       submitText='Сохранить'
       className='cc-column w-140 max-h-120 py-2 px-6'

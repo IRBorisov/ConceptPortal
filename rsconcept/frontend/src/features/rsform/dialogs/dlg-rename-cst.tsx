@@ -9,28 +9,25 @@ import { TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { hintMsg } from '@/utils/labels';
+import { withPreventDefault } from '@/utils/utils';
 
 import { schemaUpdateConstituenta, type UpdateConstituentaDTO } from '../backend/types';
-import { useRSForm } from '../backend/use-rsform';
-import { useUpdateConstituenta } from '../backend/use-update-constituenta';
 import { SelectCstType } from '../components/select-cst-type';
-import { type CstType } from '../models/rsform';
+import { type Constituenta, type CstType, type RSForm } from '../models/rsform';
 import { generateAlias, validateNewAlias } from '../models/rsform-api';
 
 export interface DlgRenameCstProps {
-  schemaID: number;
-  targetID: number;
+  schema: RSForm;
+  target: Constituenta;
+  onRename: (data: UpdateConstituentaDTO) => void;
 }
 
 export function DlgRenameCst() {
-  const { schemaID, targetID } = useDialogsStore(state => state.props as DlgRenameCstProps);
-  const { updateConstituenta: cstUpdate } = useUpdateConstituenta();
-  const { schema } = useRSForm({ itemID: schemaID });
-  const target = schema.cstByID.get(targetID)!;
+  const { schema, target, onRename } = useDialogsStore(state => state.props as DlgRenameCstProps);
 
   const form = useForm({
     defaultValues: {
-      target: targetID,
+      target: target.id,
       item_data: {
         alias: target.alias,
         cst_type: target.cst_type
@@ -39,9 +36,7 @@ export function DlgRenameCst() {
     validators: {
       onChange: schemaUpdateConstituenta
     },
-    onSubmit: async ({ value }) => {
-      await cstUpdate({ itemID: schemaID, data: value });
-    }
+    onSubmit: ({ value }) => onRename(value)
   });
 
   const values = useStore(form.store, state => state.values);
@@ -63,11 +58,7 @@ export function DlgRenameCst() {
       submitText='Переименовать'
       canSubmit={canSubmit}
       validationHint={canSubmit ? '' : hintMsg.aliasInvalid}
-      onSubmit={event => {
-        event.preventDefault();
-        event.stopPropagation();
-        void form.handleSubmit();
-      }}
+      onSubmit={withPreventDefault(() => void form.handleSubmit())}
       className='w-120 py-6 pr-3 pl-6 flex gap-3 justify-center items-center'
       helpTopic={HelpTopic.CC_CONSTITUENTA}
     >
@@ -80,7 +71,7 @@ export function DlgRenameCst() {
       <form.Field name='item_data.alias'>
         {field => (
           <TextInput
-            id='dlg_cst_alias' //
+            id='dlg_cst_alias'
             dense
             label='Имя'
             className='w-28'

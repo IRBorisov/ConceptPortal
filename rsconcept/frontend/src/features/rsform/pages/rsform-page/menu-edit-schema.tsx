@@ -20,9 +20,11 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { promptUnsaved } from '@/utils/utils';
 
+import { useInlineSynthesis } from '../../backend/use-inline-synthesis';
 import { useMutatingRSForm } from '../../backend/use-mutating-rsform';
 import { useResetAliases } from '../../backend/use-reset-aliases';
 import { useRestoreOrder } from '../../backend/use-restore-order';
+import { useSubstituteConstituents } from '../../backend/use-substitute-constituents';
 import { type Constituenta } from '../../models/rsform';
 import { cstCanProduceStructure } from '../../models/rsform-api';
 
@@ -51,6 +53,8 @@ export function MenuEditSchema() {
 
   const { resetAliases } = useResetAliases();
   const { restoreOrder } = useRestoreOrder();
+  const { inlineSynthesis } = useInlineSynthesis();
+  const { substituteConstituents } = useSubstituteConstituents();
 
   const showInlineSynthesis = useDialogsStore(state => state.showInlineSynthesis);
   const showStructurePlanner = useDialogsStore(state => state.showStructurePlanner);
@@ -72,8 +76,10 @@ export function MenuEditSchema() {
       return;
     }
     showSubstituteCst({
-      schemaID: schema.id,
-      onSubstitute: () => undefined
+      schema: schema,
+      onSubstitute: data => {
+        void substituteConstituents({ itemID: schema.id, data });
+      }
     });
   }
 
@@ -103,8 +109,8 @@ export function MenuEditSchema() {
       return;
     }
     showInlineSynthesis({
-      receiverID: schema.id,
-      onSynthesis: () => deselectAll()
+      receiver: schema,
+      onSynthesis: data => void inlineSynthesis(data).then(() => deselectAll())
     });
   }
 

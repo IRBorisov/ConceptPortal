@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { type SubmitEvent,useState } from 'react';
 
 import { isAxiosError } from '@/backend/api-transport';
 import { SubmitButton, TextURL } from '@/components/control';
@@ -15,7 +15,7 @@ export function Component() {
   const [isCompleted, setIsCompleted] = useState(false);
   const [email, setEmail] = useState('');
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!isPending) {
       void requestPasswordReset({ email: email }).then(() => setIsCompleted(true));

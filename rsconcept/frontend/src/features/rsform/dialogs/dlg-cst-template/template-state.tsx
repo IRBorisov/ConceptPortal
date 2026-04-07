@@ -9,7 +9,6 @@ import { labelType } from '@/features/rslang/labels';
 
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { useRSForm } from '../../backend/use-rsform';
 import { type ArgumentValue, type Constituenta } from '../../models/rsform';
 import { generateAlias, inferTemplatedType } from '../../models/rsform-api';
 
@@ -32,8 +31,7 @@ export const TemplateState = ({
   onTermRawChange,
   onDefinitionRawChange
 }: TemplateStateProps) => {
-  const { schemaID } = useDialogsStore(state => state.props as DlgCstTemplateProps);
-  const { schema } = useRSForm({ itemID: schemaID });
+  const { schema } = useDialogsStore(state => state.props as DlgCstTemplateProps);
   const { templates } = useTemplatesSuspense();
 
   const [templateID, setTemplateID] = useState<number | null>(templates.length > 0 ? templates[0].id : null);

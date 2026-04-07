@@ -16,7 +16,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { errorMsg, tooltipText } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
-import { promptUnsaved } from '@/utils/utils';
+import { promptUnsaved, withPreventDefault } from '@/utils/utils';
 
 import {
   schemaUpdateConstituenta,
@@ -162,11 +162,19 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
     if (isModified && !promptUnsaved()) {
       return;
     }
-    showEditTerm({ itemID: schema.id, targetID: activeCst.id });
+    showEditTerm({
+      target: activeCst,
+      onSave: data => void updateConstituenta({ itemID: schema.id, data })
+
+    });
   }
 
   function handleRenameCst() {
-    showRenameCst({ schemaID: schema.id, targetID: activeCst.id });
+    showRenameCst({
+      schema: schema,
+      target: activeCst,
+      onRename: data => void updateConstituenta({ itemID: schema.id, data })
+    });
   }
 
   function handleToggleCrucial() {
@@ -220,15 +228,11 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
     <form
       id={id}
       className='relative cc-column mt-1 px-6 pb-1 pt-8'
-      onSubmit={event => {
-        event.preventDefault();
-        event.stopPropagation();
-        void form.handleSubmit();
-      }}
+      onSubmit={withPreventDefault(() => void form.handleSubmit())}
     >
       <div className='absolute z-pop top-0 left-6 flex select-text font-medium whitespace-nowrap pt-1'>
         <TextButton
-          text='Термин' //
+          text='Термин'
           title={disabled ? undefined : isModified ? tooltipText.unsaved : 'Редактировать словоформы термина'}
           onClick={handleEditTermForms}
           disabled={isModified || disabled}
@@ -244,7 +248,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
         />
 
         <TextButton
-          text='Имя' //
+          text='Имя'
           title={disabled ? undefined : isModified ? tooltipText.unsaved : 'Переименовать конституенту'}
           onClick={handleRenameCst}
           disabled={isModified || disabled}

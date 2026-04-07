@@ -1,5 +1,6 @@
 'use client';
 
+import type { SubmitEvent, SubmitEventHandler } from 'react';
 import { useEffect, useRef } from 'react';
 import clsx from 'clsx';
 
@@ -46,7 +47,7 @@ interface ModalFormProps extends ModalProps {
   beforeSubmit?: () => boolean;
 
   /** Callback to be called after submit. */
-  onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+  onSubmit: SubmitEventHandler<HTMLFormElement>;
 
   /** Callback to be called when modal is canceled. */
   onCancel?: () => void;
@@ -89,7 +90,7 @@ export function ModalForm({
   }
   useEscapeKey(handleCancel);
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     if (beforeSubmit && !beforeSubmit()) {
       return;
     }

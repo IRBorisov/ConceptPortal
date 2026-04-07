@@ -6,6 +6,7 @@ import { BadgeHelp } from '@/features/help/components/badge-help';
 import { type Constituenta, CstType, type RSForm } from '@/features/rsform';
 import { type ConstituentaBasicsDTO, type CreateConstituentaDTO } from '@/features/rsform/backend/types';
 import { useCreateConstituenta } from '@/features/rsform/backend/use-create-constituenta';
+import { useDeleteConstituents } from '@/features/rsform/backend/use-delete-constituents';
 import { useMoveConstituents } from '@/features/rsform/backend/use-move-constituents';
 import { useMutatingRSForm } from '@/features/rsform/backend/use-mutating-rsform';
 import { useResetAliases } from '@/features/rsform/backend/use-reset-aliases';
@@ -64,6 +65,7 @@ export function ToolbarSchema({
   const showTermGraph = useDialogsStore(state => state.showShowTermGraph);
   const { moveConstituents } = useMoveConstituents();
   const { createConstituenta } = useCreateConstituenta();
+  const { deleteConstituents } = useDeleteConstituents();
   const { resetAliases } = useResetAliases();
   const { restoreOrder } = useRestoreOrder();
 
@@ -94,7 +96,11 @@ export function ToolbarSchema({
       convention: '',
       term_forms: []
     };
-    showCreateCst({ schemaID: schema.id, onCreate: onCreateCst, initial: data });
+    showCreateCst({
+      schema: schema,
+      onCreate: value => void createConstituenta({ itemID: schema.id, data: value }).then(onCreateCst),
+      initial: data
+    });
   }
 
   function cloneCst() {
@@ -122,9 +128,14 @@ export function ToolbarSchema({
       return;
     }
     showDeleteCst({
-      schemaID: schema.id,
+      schema: schema,
       selected: [activeCst.id],
-      afterDelete: resetActive
+      onDelete: deleted => {
+        void deleteConstituents({
+          itemID: schema.id,
+          data: { items: deleted }
+        }).then(resetActive);
+      }
     });
   }
 
@@ -187,7 +198,7 @@ export function ToolbarSchema({
   }
 
   function handleShowTermGraph() {
-    showTermGraph({ schemaID: schema.id });
+    showTermGraph({ schema });
   }
 
   function handleReindex() {

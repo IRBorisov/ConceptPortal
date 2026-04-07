@@ -2,9 +2,12 @@
 
 import { useEffect, useEffectEvent, useState } from 'react';
 
+import { useConceptNavigation } from '@/app';
 import { useAIStore } from '@/features/ai/stores/ai-context';
+import { useFindPredecessor } from '@/features/oss/backend/use-find-predecessor';
 import { type Constituenta } from '@/features/rsform';
 import { useRSForm } from '@/features/rsform/backend/use-rsform';
+import { useUpdateConstituenta } from '@/features/rsform/backend/use-update-constituenta';
 import { CardRSFormStats } from '@/features/rsform/components/rsform-stats';
 import { ViewConstituents } from '@/features/rsform/components/view-constituents';
 import { calculateSchemaStats } from '@/features/rsform/models/rsform-api';
@@ -24,6 +27,9 @@ export function ViewSchema({ schemaID, isMutable }: ViewSchemaProps) {
   const [activeID, setActiveID] = useState<number | null>(null);
   const activeCst = activeID ? schema.cstByID.get(activeID) ?? null : null;
   const showEditCst = useDialogsStore(state => state.showEditCst);
+  const router = useConceptNavigation();
+  const { findPredecessor } = useFindPredecessor();
+  const { updateConstituenta } = useUpdateConstituenta();
   const setCurrentSchema = useAIStore(state => state.setSchema);
   const onSetSchema = useEffectEvent(setCurrentSchema);
   const stats = calculateSchemaStats(schema);
@@ -36,7 +42,18 @@ export function ViewSchema({ schemaID, isMutable }: ViewSchemaProps) {
   }, [schema]);
 
   function handleEditCst(cst: Constituenta) {
-    showEditCst({ schemaID: schema.id, targetID: cst.id });
+    showEditCst({
+      schema: schema,
+      target: cst,
+      onEdit: data => {
+        void updateConstituenta({ itemID: schema.id, data });
+      },
+      onEditSource: () => {
+        void findPredecessor(cst.id).then(reference =>
+          router.gotoCstEdit(reference.schema, reference.id)
+        );
+      }
+    });
   }
 
   return (

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { type SubmitEvent,useState } from 'react';
 
 import { urls, useConceptNavigation } from '@/app';
 
@@ -38,7 +38,7 @@ export function Component() {
 
   const canSubmit = !!newPassword && !!newPasswordRepeat && newPassword === newPasswordRepeat;
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!isPending) {
       void resetPassword({

@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useMemo, useState } from 'react';
+import { Suspense, useState } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { Loader } from '@/components/loader';
@@ -8,19 +8,18 @@ import { ModalForm } from '@/components/modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useDialogsStore } from '@/stores/dialogs';
 import { hintMsg } from '@/utils/labels';
+import { withPreventDefault } from '@/utils/utils';
 
 import { type InlineSynthesisDTO, schemaInlineSynthesis } from '../../backend/types';
-import { useInlineSynthesis } from '../../backend/use-inline-synthesis';
-import { useRSForm } from '../../backend/use-rsform';
-import { type Substitution } from '../../models/rsform';
+import { type RSForm, type Substitution } from '../../models/rsform';
 
 import { TabConstituents } from './tab-constituents';
 import { TabSource } from './tab-source';
 import { TabSubstitutions } from './tab-substitutions';
 
 export interface DlgInlineSynthesisProps {
-  receiverID: number;
-  onSynthesis: () => void;
+  receiver: RSForm;
+  onSynthesis: (data: InlineSynthesisDTO) => void;
 }
 
 export const TabID = {
@@ -31,10 +30,8 @@ export const TabID = {
 export type TabID = (typeof TabID)[keyof typeof TabID];
 
 export function DlgInlineSynthesis() {
-  const { receiverID, onSynthesis } = useDialogsStore(state => state.props as DlgInlineSynthesisProps);
+  const { receiver, onSynthesis } = useDialogsStore(state => state.props as DlgInlineSynthesisProps);
   const [activeTab, setActiveTab] = useState<TabID>(TabID.SCHEMA);
-  const { inlineSynthesis } = useInlineSynthesis();
-  const { schema: receiver } = useRSForm({ itemID: receiverID });
 
   const form = useForm({
     defaultValues: {
@@ -46,17 +43,12 @@ export function DlgInlineSynthesis() {
     validators: {
       onChange: schemaInlineSynthesis
     },
-    onSubmit: async ({ value }) => {
-      await inlineSynthesis(value).then(onSynthesis);
-    }
+    onSubmit: ({ value }) => onSynthesis(value)
   });
 
   const values = useStore(form.store, state => state.values);
   const sourceID = values.source;
-  const canSubmit = useMemo(
-    () => schemaInlineSynthesis.safeParse(values).success && sourceID !== null,
-    [values, sourceID]
-  );
+  const canSubmit = sourceID !== null && schemaInlineSynthesis.safeParse(values).success;
 
   function handleChangeSource(newValue: number) {
     if (newValue === sourceID) {
@@ -82,11 +74,7 @@ export function DlgInlineSynthesis() {
       className='w-160 h-132 px-6'
       canSubmit={canSubmit}
       validationHint={canSubmit ? '' : hintMsg.sourceEmpty}
-      onSubmit={event => {
-        event.preventDefault();
-        event.stopPropagation();
-        void form.handleSubmit();
-      }}
+      onSubmit={withPreventDefault(() => void form.handleSubmit())}
     >
       <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>
         <TabList className='mb-3 mx-auto flex border divide-x rounded-none'>

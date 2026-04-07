@@ -13,19 +13,16 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { hintMsg } from '@/utils/labels';
 
 import { schemaSubstitutions, type SubstitutionsDTO } from '../backend/types';
-import { useRSForm } from '../backend/use-rsform';
-import { useSubstituteConstituents } from '../backend/use-substitute-constituents';
 import { PickSubstitutions } from '../components/pick-substitutions';
+import { type RSForm } from '../models/rsform';
 
 export interface DlgSubstituteCstProps {
-  schemaID: number;
+  schema: RSForm;
   onSubstitute: (data: SubstitutionsDTO) => void;
 }
 
 export function DlgSubstituteCst() {
-  const { onSubstitute, schemaID } = useDialogsStore(state => state.props as DlgSubstituteCstProps);
-  const { substituteConstituents: cstSubstitute } = useSubstituteConstituents();
-  const { schema } = useRSForm({ itemID: schemaID });
+  const { onSubstitute, schema } = useDialogsStore(state => state.props as DlgSubstituteCstProps);
 
   const form = useForm({
     defaultValues: {
@@ -34,9 +31,7 @@ export function DlgSubstituteCst() {
     validators: {
       onChange: schemaSubstitutions
     },
-    onSubmit: async ({ value }) => {
-      await cstSubstitute({ itemID: schema.id, data: value }).then(() => onSubstitute(value));
-    }
+    onSubmit: ({ value }) => onSubstitute(value)
   });
 
   const values = useStore(form.store, state => state.values);

@@ -6,6 +6,7 @@ import { MiniButton } from '@/components/control';
 import { Checkbox } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { prepareTooltip } from '@/utils/format';
+import { withPreventDefault } from '@/utils/utils';
 
 import { IconCstType } from '../components/icon-cst-type';
 import { labelCstType } from '../labels';
@@ -24,11 +25,7 @@ export function DlgGraphParams() {
   return (
     <ModalForm
       header='Настройки графа термов'
-      onSubmit={event => {
-        event.preventDefault();
-        event.stopPropagation();
-        void form.handleSubmit();
-      }}
+      onSubmit={withPreventDefault(() => void form.handleSubmit())}
       submitText='Применить'
       className='flex gap-6 justify-between px-6 pb-3 w-120'
     >

@@ -34,6 +34,7 @@ import { generatePageQR, promptUnsaved, sharePage } from '@/utils/utils';
 
 import { useDownloadRSForm } from '../../backend/use-download-rsform';
 import { useMutatingRSForm } from '../../backend/use-mutating-rsform';
+import { useUploadTRS } from '../../backend/use-upload-trs';
 
 import { useRSFormEdit } from './rsedit-context';
 
@@ -49,6 +50,7 @@ export function MenuMain() {
   const isModified = useModificationStore(state => state.isModified);
 
   const { download } = useDownloadRSForm();
+  const { upload } = useUploadTRS();
 
   const showQR = useDialogsStore(state => state.showQR);
   const showClone = useDialogsStore(state => state.showCloneLibraryItem);
@@ -109,7 +111,12 @@ export function MenuMain() {
 
   function handleUpload() {
     hideMenu();
-    showUpload({ itemID: schema.id });
+    showUpload({
+      onUpload: data => void upload({
+        itemID: schema.id,
+        data: data
+      })
+    });
   }
 
   function handleClone() {
