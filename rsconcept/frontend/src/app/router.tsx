@@ -1,5 +1,6 @@
 import { createBrowserRouter } from 'react-router';
 
+import { LayoutSandbox } from '@/app/layout-sandbox';
 import { prefetchAvailableTemplates } from '@/features/ai/backend/use-available-templates';
 import { prefetchAuth } from '@/features/auth/backend/use-auth';
 import { LoginPage } from '@/features/auth/pages/login-page';
@@ -16,8 +17,8 @@ import { prefetchUsers } from '@/features/users/backend/use-users';
 import { Loader } from '@/components/loader';
 
 import { ErrorFallback } from './error-fallback';
+import { LayoutLanding } from './layout-landing';
 import { LayoutMain } from './layout-main';
-import { LayoutMinimal } from './layout-minimal';
 import { LayoutRoot } from './layout-root';
 import { routes } from './urls';
 
@@ -26,21 +27,28 @@ export const Router = createBrowserRouter([
     path: '/',
     element: <LayoutRoot />,
     errorElement: <ErrorFallback />,
-    loader: prefetchAuth,
     hydrateFallbackElement: fallbackLoader(),
     children: [
       {
-        element: <LayoutMinimal />,
+        element: <LayoutLanding />,
+        loader: prefetchAuth,
         children: [
-          { index: true, element: <HomePage /> },
+          { index: true, element: <HomePage /> }
+        ]
+      },
+      {
+        path: routes.sandbox,
+        element: <LayoutSandbox />,
+        children: [
           {
-            path: routes.sandbox,
+            index: true,
             lazy: () => import('@/features/sandbox/pages/sandbox-page')
           }
         ]
       },
       {
         element: <LayoutMain />,
+        loader: prefetchAuth,
         children: [
           {
             path: `${routes.not_found}`,

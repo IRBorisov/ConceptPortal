@@ -23,7 +23,7 @@ export function CtaButton({ to, text, variant = 'default', icon, title, classNam
       data-tooltip-id={title ? globalIDs.tooltip : undefined}
       data-tooltip-content={title}
       className={cn(
-        'group relative inline-flex w-44 max-w-full shrink-0 overflow-hidden',
+        'group relative inline-flex w-46 max-w-full shrink-0 overflow-hidden',
         'items-center justify-center gap-2 px-6 py-3',
         'rounded-2xl border-2',
         'font-medium tracking-tight font-ui select-none',

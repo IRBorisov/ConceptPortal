@@ -3,18 +3,15 @@
 import { Suspense } from 'react';
 import { Outlet } from 'react-router';
 
-import { ThemeToggle } from '@/features/home/components/theme-toggle';
-
 import { Loader } from '@/components/loader';
 
 import { GlobalTooltips } from './global-tooltips';
 
 /** Minimal shell for the marketing landing and sandbox. */
-export function LayoutMinimal() {
+export function LayoutLanding() {
   return (
     <div className='relative h-dvh min-w-80 overflow-y-auto bg-background antialiased cc-scroll-hidden'>
       <GlobalTooltips />
-      <ThemeToggle />
       <div className='mx-auto flex min-h-full max-w-480 flex-col'>
         <Suspense
           fallback={

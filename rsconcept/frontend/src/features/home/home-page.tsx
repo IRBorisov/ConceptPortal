@@ -23,6 +23,7 @@ import { resources } from '@/utils/constants';
 
 import { CtaButton } from './components/cta-button';
 import { FeatureTile } from './components/feature-tile';
+import { ThemeToggle } from './components/theme-toggle';
 
 export function HomePage() {
   const { isAnonymous } = useAuth();
@@ -36,6 +37,7 @@ export function HomePage() {
       itemScope
       itemType='https://schema.org/WebPage'
     >
+      <ThemeToggle />
       {/* SEO: Decorative gradients */}
       <div aria-hidden className='absolute pointer-events-none inset-0 z-bottom overflow-hidden'>
         <div

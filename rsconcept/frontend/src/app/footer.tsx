@@ -17,7 +17,6 @@ export function Footer() {
         <TextURL text='Библиотека' href='/library' color='hover:text-foreground' />
         <TextURL text='Справка' href='/manuals' color='hover:text-foreground' />
         <TextURL text='Центр Концепт' href={external_urls.concept} color='hover:text-foreground' />
-        <TextURL text='Экстеор' href='/manuals?topic=exteor' color='hover:text-foreground' />
       </nav>
 
       <p>© 2026 ЦИВТ КОНЦЕПТ</p>

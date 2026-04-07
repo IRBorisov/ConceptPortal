@@ -1,61 +1,98 @@
-'use client';
+﻿'use client';
 
-import { Link } from 'react-router';
+import { useMemo } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
+import { useLocation } from 'react-router';
+import { z } from 'zod';
 
-import { urls } from '@/app';
+import { RSModelTabID } from '@/app/navigation/navigation-context';
+import { loadRSForm } from '@/features/rsform/backend/rsform-loader';
 
-import { IconSandbox } from '@/components/icons';
+import { type ErrorData } from '@/components/info-error';
+import { Loader } from '@/components/loader';
+import { useResetModification } from '@/hooks/use-reset-modification';
 
-/**
- * Placeholder for an offline-first RSModel playground aimed at guests.
- * Future: load a bundled demo model without auth or network (service worker / static assets).
- */
+import { useSandboxBundle } from '../../backend/use-sandbox-bundle';
+import { SandboxRSEditState } from '../sandbox-editor/sandbox-rsedit-state';
+import { SandboxRSModelState } from '../sandbox-editor/sandbox-rsmodel-state';
+import { SandboxTabs } from '../sandbox-editor/sandbox-tabs';
+
+const paramsModel = z.strictObject({
+  tab: z.preprocess(v => (v ? Number(v) : undefined), z.enum(RSModelTabID).default(RSModelTabID.CARD)),
+  activeID: z.coerce
+    .number()
+    .nullish()
+    .transform(v => v ?? undefined)
+});
+
 export function SandboxPage() {
+  useResetModification();
+
+  const location = useLocation();
+  const { bundle, setBundle, isLoading, error } = useSandboxBundle();
+
+  const urlData = useMemo(function parseSandboxURL() {
+    const params = new URLSearchParams(location.search);
+    return paramsModel.parse({
+      tab: params.get('tab'),
+      activeID: params.get('active')
+    });
+  }, [location.search]);
+
+  if (isLoading) {
+    return (
+      <div className='flex min-h-[50vh] items-center justify-center'>
+        <Loader scale={4} />
+      </div>
+    );
+  }
+
+  if (error && !bundle) {
+    return <ProcessError error={error} />;
+  }
+
+  const activeBundle = bundle;
+  if (!activeBundle) {
+    return (
+      <div className='flex min-h-[50vh] items-center justify-center'>
+        <Loader scale={4} />
+      </div>
+    );
+  }
+
+  const schema = loadRSForm(activeBundle.rsform);
+
   return (
-    <div className='relative isolate flex min-h-dvh flex-col px-4 pb-12 pt-6 sm:px-6' role='region' aria-label='Песочница'>
-      <div aria-hidden className='pointer-events-none absolute inset-0 -z-10 overflow-hidden'>
-        <div className='absolute -top-20 left-1/2 h-72 w-[min(36rem,100vw)] -translate-x-1/2 rounded-full bg-accent-teal/25 blur-3xl dark:bg-accent-teal/15' />
-        <div className='absolute bottom-32 right-[10%] h-40 w-56 rounded-full bg-accent-purple/20 blur-3xl dark:bg-accent-purple/12' />
+    <ErrorBoundary FallbackComponent={({ error: boundaryError }) => (
+      <ProcessError error={boundaryError as ErrorData} />
+    )}>
+      <div className='relative min-h-full pb-6'>
+        {error ? (
+          <div className='mx-auto max-w-3xl px-4 pt-4 text-sm text-destructive'>
+            {error.message}
+          </div>
+        ) : null}
+
+        <SandboxRSModelState schema={schema} bundle={activeBundle} setBundle={setBundle}>
+          <SandboxRSEditState schema={schema} setBundle={setBundle}>
+            <SandboxTabs activeID={urlData.activeID} activeTab={urlData.tab} bundle={activeBundle} setBundle={setBundle} />
+          </SandboxRSEditState>
+        </SandboxRSModelState>
       </div>
+    </ErrorBoundary>
+  );
+}
 
-      <header className='mx-auto w-full max-w-lg text-center'>
-        <div className='mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-prim-200/80 bg-prim-100/70 text-sec-600 dark:border-prim-400/35 dark:bg-prim-200/40 dark:text-sec-400'>
-          <IconSandbox className='h-8 w-8' aria-hidden />
-        </div>
-        <h1 className='font-ui text-2xl font-semibold tracking-tight text-prim-999 dark:text-prim-0'>Песочница</h1>
-        <p className='mt-3 w-110 mx-auto text-pretty text-sm leading-relaxed text-prim-600 dark:text-prim-400'>
-          Здесь появится автономный режим: демонстрационная модель без входа в аккаунт и без
-          обращения к серверу — чтобы быстро познакомиться с функционалом Портала
-        </p>
-      </header>
+// ====== Internals =========
+function ProcessError({ error }: { error: ErrorData; }): React.ReactElement | null {
+  const message = typeof error === 'string'
+    ? error
+    : error.message;
 
-      <div className='mx-auto mt-10 w-full max-w-lg rounded-xl bg-prim-100/30 p-6 text-center dark:bg-prim-100/20'>
-        <p>Режим находится в разработке.<br />Следите за обновлениями</p>
-      </div>
-
-      <nav
-        className='mx-auto flex w-full max-w-lg flex-col gap-2 pt-3 text-center font-medium text-primary underline-offset-2 sm:flex-row sm:justify-center'
-        aria-label='Действия'
-      >
-        <Link
-          to={urls.home}
-          className='inline-flex items-center justify-center rounded-sm border border-transparent px-4 py-2 hover:underline'
-        >
-          На главную
-        </Link>
-        <Link
-          to={urls.login}
-          className='inline-flex items-center justify-center rounded-sm border border-transparent px-4 py-2 hover:underline'
-        >
-          Войти
-        </Link>
-        <Link
-          to={urls.signup}
-          className='inline-flex items-center justify-center rounded-sm border border-transparent px-4 py-2 hover:underline'
-        >
-          Регистрация
-        </Link>
-      </nav>
+  return (
+    <div className='flex flex-col items-center p-4 mx-auto max-w-3xl text-center'>
+      <p className='font-medium'>Sandbox failed to render</p>
+      <pre className='mt-3 whitespace-pre-wrap text-sm text-destructive'>{message}</pre>
     </div>
   );
 }
