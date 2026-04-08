@@ -533,26 +533,6 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             data=s.ResolverSerializer(resolver).data
         )
 
-    @extend_schema(
-        summary='export as TRS file',
-        tags=['RSForm'],
-        request=None,
-        responses={
-            (c.HTTP_200_OK, 'application/zip'): bytes,
-            c.HTTP_404_NOT_FOUND: None
-        }
-    )
-    @action(detail=True, methods=['get'], url_path='export-trs')
-    def export_trs(self, request: Request, pk) -> HttpResponse:
-        ''' Endpoint: Download Exteor compatible file. '''
-        model = self._get_item()
-        data = s.generate_trs(model)
-        file = utility.write_zipped_json(data, utils.EXTEOR_INNER_FILENAME)
-        filename = utils.filename_for_schema(model.alias)
-        response = HttpResponse(file, content_type='application/zip')
-        response['Content-Disposition'] = f'attachment; filename={filename}'
-        return response
-
 
 class TrsImportView(views.APIView):
     ''' Endpoint: Upload RS form in Exteor format. '''

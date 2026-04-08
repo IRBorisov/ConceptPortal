@@ -29,11 +29,10 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { EXTEOR_TRS_FILE, prefixes } from '@/utils/constants';
 import { errorMsg, tooltipText } from '@/utils/labels';
-import { type RO } from '@/utils/meta';
 import { generatePageQR, promptUnsaved, sharePage } from '@/utils/utils';
 
-import { useDownloadRSForm } from '../../backend/use-download-rsform';
 import { useUploadTRS } from '../../backend/use-upload-trs';
+import { prepareTRSFile } from '../../models/trs-file';
 
 import { useRSFormEdit } from './rsedit-context';
 
@@ -55,7 +54,6 @@ export function MenuMain() {
   const role = useRoleStore(state => state.role);
   const isModified = useModificationStore(state => state.isModified);
 
-  const { download } = useDownloadRSForm();
   const { upload } = useUploadTRS();
 
   const showQR = useDialogsStore(state => state.showQR);
@@ -103,16 +101,11 @@ export function MenuMain() {
       return;
     }
     const fileName = (schema.alias ?? 'Schema') + EXTEOR_TRS_FILE;
-    void download({
-      itemID: schema.id,
-      version: schema.version === 'latest' ? undefined : schema.version
-    }).then((data: RO<Blob>) => {
-      try {
-        fileDownload(data as Blob, fileName);
-      } catch (error) {
-        console.error(error);
-      }
-    });
+    try {
+      fileDownload(prepareTRSFile(schema), fileName);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   function handleUpload() {

@@ -6,7 +6,7 @@ from apps.library.models import LibraryItem
 from shared import messages as msg
 from shared.serializers import StrictSerializer
 
-from ..models import Constituenta, CstType, RSFormCached
+from ..models import Constituenta, RSFormCached
 from ..utils import fix_old_references
 
 _ENTITY_CONSTITUENTA = 'constituenta'
@@ -25,44 +25,6 @@ class RSFormUploadSerializer(StrictSerializer):
     ''' Upload data for RSForm serializer. '''
     file = serializers.FileField()
     load_metadata = serializers.BooleanField()
-
-
-def generate_trs(schema: LibraryItem) -> dict:
-    ''' Generate TRS file for RSForm. '''
-    items = []
-    for cst in Constituenta.objects.filter(schema=schema).exclude(cst_type=CstType.NOMINAL).order_by('order'):
-        items.append(
-            {
-                'entityUID': cst.pk,
-                'type': _ENTITY_CONSTITUENTA,
-                'cstType': cst.cst_type,
-                'alias': cst.alias,
-                'convention': cst.convention,
-                'term': {
-                    'raw': cst.term_raw,
-                    'resolved': cst.term_resolved,
-                    'forms': cst.term_forms
-                },
-                'definition': {
-                    'formal': cst.definition_formal,
-                    'text': {
-                        'raw': cst.definition_raw,
-                        'resolved': cst.definition_resolved
-                    },
-                },
-            }
-        )
-    return {
-        'type': _ENTITY_SCHEMA,
-        'title': schema.title,
-        'alias': schema.alias,
-        'comment': schema.description,
-        'items': items,
-        'claimed': False,
-        'selection': [],
-        'version': _TRS_VERSION,
-        'versionInfo': _TRS_HEADER
-    }
 
 
 class RSFormTRSSerializer(serializers.Serializer):

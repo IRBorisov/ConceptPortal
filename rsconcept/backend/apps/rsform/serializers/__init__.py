@@ -27,5 +27,5 @@ from .data_access import (
     RSFormSerializer,
     SubstitutionSerializerBase
 )
-from .io_files import FileSerializer, RSFormTRSSerializer, RSFormUploadSerializer, generate_trs
+from .io_files import FileSerializer, RSFormTRSSerializer, RSFormUploadSerializer
 from .responses import NewCstResponse, NewMultiCstResponse, ResultTextResponse

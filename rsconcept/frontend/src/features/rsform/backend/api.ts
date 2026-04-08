@@ -63,11 +63,6 @@ export const rsformsApi = {
     });
   },
 
-  download: ({ itemID, version }: { itemID: number; version?: number; }) =>
-    axiosGet<Blob>({
-      endpoint: version ? `/api/versions/${version}/export-file` : `/api/rsforms/${itemID}/export-trs`,
-      options: { responseType: 'blob' }
-    }),
   upload: ({ itemID, data }: { itemID: number; data: RSFormUploadDTO; }) =>
     axiosPatch<RSFormUploadDTO, RSFormDTO>({
       schema: schemaRSForm,

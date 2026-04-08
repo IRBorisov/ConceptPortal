@@ -32,6 +32,7 @@ This readme file is used mostly to document project dependencies and conventions
   - clsx
   - dompurify
   - fast-deep-equal
+  - fflate
   - html-to-image
   - react-icons
   - react-router

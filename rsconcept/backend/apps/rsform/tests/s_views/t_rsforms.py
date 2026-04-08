@@ -178,18 +178,6 @@ class TestRSFormViewset(EndpointTester):
         self.assertTrue(response.data['title'] != '')
 
 
-    @decl_endpoint('/api/rsforms/{item}/export-trs', method='get')
-    def test_export_trs(self):
-        schema = RSForm.create(title='Test')
-        schema.insert_last('X1')
-        response = self.executeOK(item=schema.model.pk)
-        self.assertEqual(response.headers['Content-Disposition'], 'attachment; filename=Schema.trs')
-        with io.BytesIO(response.content) as stream:
-            with ZipFile(stream, 'r') as zipped_file:
-                self.assertIsNone(zipped_file.testzip())
-                self.assertIn('document.json', zipped_file.namelist())
-
-
     @decl_endpoint('/api/rsforms/{item}/substitute', method='patch')
     def test_substitute_multiple(self):
         self.set_params(item=self.owned_id)
