@@ -11,6 +11,7 @@ import { CreateItemPage } from '@/features/library/pages/create-item-page';
 import { prefetchOSS } from '@/features/oss/backend/use-oss';
 import { prefetchRSForm } from '@/features/rsform/backend/use-rsform';
 import { prefetchRSModel } from '@/features/rsmodel/backend/use-rsmodel';
+import { prefetchResources } from '@/features/sandbox/pages/sandbox-page/prefetch-resources';
 import { prefetchProfile } from '@/features/users/backend/use-profile';
 import { prefetchUsers } from '@/features/users/backend/use-users';
 
@@ -39,6 +40,7 @@ export const Router = createBrowserRouter([
       {
         path: routes.sandbox,
         element: <LayoutSandbox />,
+        loader: prefetchResources,
         children: [
           {
             index: true,
