@@ -45,7 +45,9 @@ export function MenuEditSchema() {
     activeCst,
     isArchive,
     isContentEditable,
+    createCstFromData: createStructurePlannerConstituenta,
     promptTemplate,
+    patchConstituenta,
     deselectAll,
     isProcessing
   } = useRSFormEdit();
@@ -96,9 +98,11 @@ export function MenuEditSchema() {
       return;
     }
     showStructurePlanner({
-      schemaID: schema.id,
+      schema,
       targetID: targetCst.spawner_path ? targetCst.spawner! : targetCst.id,
-      isMutable: isContentEditable
+      isMutable: isContentEditable,
+      onCreate: createStructurePlannerConstituenta,
+      onUpdate: patchConstituenta
     });
   }
 

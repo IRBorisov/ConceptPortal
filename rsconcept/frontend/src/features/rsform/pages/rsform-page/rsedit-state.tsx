@@ -22,7 +22,9 @@ import { promptUnsaved } from '@/utils/utils';
 
 import {
   type ConstituentaBasicsDTO,
+  type ConstituentaCreatedResponse,
   type CreateConstituentaDTO,
+  type RSFormDTO,
   type UpdateConstituentaDTO
 } from '../../backend/types';
 import { useClearAttributions } from '../../backend/use-clear-attributions';
@@ -227,7 +229,8 @@ export const RSEditState = ({
         initial: data,
 
         onCreate: (createData: CreateConstituentaDTO) =>
-          void cstCreate({ itemID: schema.id, data: createData }).then(newCst => {
+          void cstCreate({ itemID: schema.id, data: createData }).then(response => {
+            const newCst = response.new_cst;
             onCreateCst(newCst);
             resolve(newCst.id);
           }),
@@ -250,7 +253,8 @@ export const RSEditState = ({
       crucial: false,
       term_forms: []
     };
-    const newCst = await cstCreate({ itemID: schema.id, data });
+    const response = await cstCreate({ itemID: schema.id, data });
+    const newCst = response.new_cst;
     onCreateCst(newCst);
     return newCst.id;
   }
@@ -259,7 +263,7 @@ export const RSEditState = ({
     if (!activeCst) {
       throw new Error('No active cst');
     }
-    const newCst = await cstCreate({
+    const response = await cstCreate({
       itemID: schema.id,
       data: {
         insert_after: activeCst.id,
@@ -273,6 +277,7 @@ export const RSEditState = ({
         term_forms: activeCst.term_forms
       }
     });
+    const newCst = response.new_cst;
     onCreateCst(newCst);
     return newCst.id;
   }
@@ -364,7 +369,9 @@ export const RSEditState = ({
     showCstTemplate({
       schema: schema,
       insertAfter: activeCst?.id,
-      onCreate: value => void cstCreate({ itemID: schema.id, data: value }).then(onCreateCst)
+      onCreate: value =>
+        void cstCreate({ itemID: schema.id, data: value })
+          .then(response => onCreateCst(response.new_cst))
     });
   }
 
@@ -386,8 +393,12 @@ export const RSEditState = ({
     });
   }
 
-  async function patchConstituenta(data: UpdateConstituentaDTO): Promise<void> {
-    await updateConstituenta({ itemID: schema.id, data });
+  async function createCstFromData(data: CreateConstituentaDTO): Promise<RO<ConstituentaCreatedResponse>> {
+    return cstCreate({ itemID: schema.id, data });
+  }
+
+  async function patchConstituenta(data: UpdateConstituentaDTO): Promise<RO<RSFormDTO>> {
+    return updateConstituenta({ itemID: schema.id, data });
   }
 
   function openTermEditor() {
@@ -479,6 +490,7 @@ export const RSEditState = ({
         deleteSchema,
 
         patchConstituenta,
+        createCstFromData,
         openTermEditor,
         promptRename,
         addAttribution,

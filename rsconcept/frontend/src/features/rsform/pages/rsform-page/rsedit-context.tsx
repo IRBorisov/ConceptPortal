@@ -2,7 +2,14 @@
 
 import { createContext, use } from 'react';
 
-import { type UpdateConstituentaDTO } from '../../backend/types';
+import { type RO } from '@/utils/meta';
+
+import {
+  type ConstituentaCreatedResponse,
+  type CreateConstituentaDTO,
+  type RSFormDTO,
+  type UpdateConstituentaDTO
+} from '../../backend/types';
 import { type Constituenta, type CstType, type RSForm } from '../../models/rsform';
 
 interface IRSEditContext {
@@ -32,20 +39,21 @@ interface IRSEditContext {
 
   deleteSchema: () => void;
 
-  patchConstituenta: (data: UpdateConstituentaDTO) => Promise<void>;
-  addAttribution: (attribute: Constituenta) => void;
-  removeAttribution: (attribute: Constituenta) => void;
-  clearAttributions: () => void;
-  gotoPredecessor: (target: number, newTab?: boolean) => void;
-
   moveUp: () => void;
   moveDown: () => void;
   toggleCrucial: () => void;
   createCst: (type?: CstType, definition?: string) => Promise<number>;
+  createCstFromData: (data: CreateConstituentaDTO) => Promise<RO<ConstituentaCreatedResponse>>;
+  cloneCst: () => Promise<number>;
+  patchConstituenta: (data: UpdateConstituentaDTO) => Promise<RO<RSFormDTO>>;
+  addAttribution: (attribute: Constituenta) => void;
+  removeAttribution: (attribute: Constituenta) => void;
+  clearAttributions: () => void;
+
   openTermEditor: () => void;
   promptCreateCst: (type?: CstType, definition?: string) => Promise<number | null>;
   promptRename: () => void;
-  cloneCst: () => Promise<number>;
+  gotoPredecessor: (target: number, newTab?: boolean) => void;
   promptDeleteSelected: () => void;
   promptTemplate: () => void;
 }

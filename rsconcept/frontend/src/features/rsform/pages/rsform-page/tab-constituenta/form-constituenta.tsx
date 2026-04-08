@@ -60,6 +60,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
   const {
     toggleCrucial,
     patchConstituenta,
+    createCstFromData: createStructurePlannerConstituenta,
     openTermEditor,
     promptRename,
     addAttribution,
@@ -141,9 +142,11 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
 
   function handleStructurePlanner() {
     showStructurePlanner({
-      schemaID: schema.id,
+      schema: schema,
       targetID: activeCst.spawner_path ? activeCst.spawner! : activeCst.id,
-      isMutable: !disabled
+      isMutable: !disabled,
+      onCreate: createStructurePlannerConstituenta,
+      onUpdate: patchConstituenta
     });
   }
 

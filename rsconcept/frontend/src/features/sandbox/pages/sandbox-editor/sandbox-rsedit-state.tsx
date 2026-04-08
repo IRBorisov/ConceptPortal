@@ -3,10 +3,11 @@
 import { useMemo, useState } from 'react';
 
 import { type RSForm } from '@/features/rsform';
-import { type MoveConstituentsDTO } from '@/features/rsform/backend/types';
+import { type ConstituentaCreatedResponse, type CreateConstituentaDTO, type MoveConstituentsDTO, type RSFormDTO } from '@/features/rsform/backend/types';
 import { type Constituenta } from '@/features/rsform/models/rsform';
 import { RSEditContext } from '@/features/rsform/pages/rsform-page/rsedit-context';
 
+import { type RO } from '@/utils/meta';
 import { notImplemented } from '@/utils/utils';
 
 import { offlineMoveConstituents } from '../../backend/sandbox-mutations';
@@ -87,9 +88,9 @@ export function SandboxRSEditState({
     moveSelected(target);
   }
 
-  function stubSchemaMutation(): Promise<void> {
+  function stubSchemaMutation(): Promise<RO<RSFormDTO>> {
     notImplemented();
-    return Promise.resolve();
+    return Promise.resolve({} as RO<RSFormDTO>);
   }
 
   function moveDown() {
@@ -110,6 +111,12 @@ export function SandboxRSEditState({
     }, -1);
     const target = Math.min(schema.items.length - 1, currentIndex - count + 2);
     moveSelected(target);
+  }
+
+  async function createCstFromData(data: CreateConstituentaDTO): Promise<RO<ConstituentaCreatedResponse>> {
+    console.log('createCstFromData', data);
+    notImplemented();
+    return Promise.resolve({} as RO<ConstituentaCreatedResponse>);
   }
 
   return (
@@ -163,6 +170,7 @@ export function SandboxRSEditState({
         moveDown,
         toggleCrucial: notImplemented,
         createCst,
+        createCstFromData,
         promptCreateCst,
         cloneCst,
         promptDeleteSelected: notImplemented,

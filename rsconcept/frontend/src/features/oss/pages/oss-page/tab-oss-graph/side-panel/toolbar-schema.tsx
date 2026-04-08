@@ -98,7 +98,9 @@ export function ToolbarSchema({
     };
     showCreateCst({
       schema: schema,
-      onCreate: value => void createConstituenta({ itemID: schema.id, data: value }).then(onCreateCst),
+      onCreate:
+        value => void createConstituenta({ itemID: schema.id, data: value })
+          .then(response => onCreateCst(response.new_cst)),
       initial: data
     });
   }
@@ -120,7 +122,7 @@ export function ToolbarSchema({
         convention: activeCst.convention,
         term_forms: activeCst.term_forms
       }
-    }).then(onCreateCst);
+    }).then(response => onCreateCst(response.new_cst));
   }
 
   function promptDeleteCst() {

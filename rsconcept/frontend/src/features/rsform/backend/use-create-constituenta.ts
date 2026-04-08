@@ -5,7 +5,6 @@ import { useUpdateTimestamp } from '@/features/library/backend/use-update-timest
 import { KEYS } from '@/backend/configuration';
 
 import { rsformsApi, updateRSForm } from './api';
-import { type CreateConstituentaDTO } from './types';
 
 export const useCreateConstituenta = () => {
   const client = useQueryClient();
@@ -24,7 +23,6 @@ export const useCreateConstituenta = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    createConstituenta: (data: { itemID: number; data: CreateConstituentaDTO; }) =>
-      mutation.mutateAsync(data).then(response => response.new_cst)
+    createConstituenta: mutation.mutateAsync
   };
 };

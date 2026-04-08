@@ -45,7 +45,7 @@ function libraryBase(
     description: '',
     visible: true,
     read_only: false,
-    location: 'sandbox',
+    location: 'U:\\',
     access_policy: AccessPolicy.PUBLIC,
     time_create: timestamp,
     time_update: timestamp,
@@ -57,7 +57,7 @@ function libraryBase(
 export function createStarterSandboxBundle(): SandboxBundle {
   const now = new Date().toISOString();
   const rsform: RSFormDTO = {
-    ...libraryBase(STARTER_SCHEMA_ID, LibraryItemType.RSFORM, 'demo-schema', 'Демонстрационная схема', now),
+    ...libraryBase(STARTER_SCHEMA_ID, LibraryItemType.RSFORM, 'КС Демонстрация', 'Демонстрационная схема', now),
     is_produced: false,
     editors: [],
     version: 1,
@@ -80,10 +80,10 @@ export function createStarterSandboxBundle(): SandboxBundle {
     attribution: [],
     inheritance: [],
     oss: [],
-    models: [{ id: STARTER_MODEL_ID, alias: 'demo-model' }]
+    models: [{ id: STARTER_MODEL_ID, alias: 'КМ Демонстрация' }]
   };
   const model: RSModelDTO = {
-    ...libraryBase(STARTER_MODEL_ID, LibraryItemType.RSMODEL, 'demo-model', 'Демонстрационная модель', now),
+    ...libraryBase(STARTER_MODEL_ID, LibraryItemType.RSMODEL, 'КМ Демонстрация', 'Демонстрационная модель', now),
     editors: [],
     schema: STARTER_SCHEMA_ID,
     items: []

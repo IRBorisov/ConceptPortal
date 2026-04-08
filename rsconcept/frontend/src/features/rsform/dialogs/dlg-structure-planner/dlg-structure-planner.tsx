@@ -11,12 +11,16 @@ import { IconNewItem, IconReset, IconSave } from '@/components/icons';
 import { ModalView } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { globalIDs } from '@/utils/constants';
+import { type RO } from '@/utils/meta';
 import { promptUnsaved } from '@/utils/utils';
 
-import { type CreateConstituentaDTO, type UpdateConstituentaDTO } from '../../backend/types';
-import { useCreateConstituenta } from '../../backend/use-create-constituenta';
-import { useRSForm } from '../../backend/use-rsform';
-import { useUpdateConstituenta } from '../../backend/use-update-constituenta';
+import { loadRSForm } from '../../backend/rsform-loader';
+import {
+  type ConstituentaCreatedResponse,
+  type CreateConstituentaDTO,
+  type RSFormDTO,
+  type UpdateConstituentaDTO
+} from '../../backend/types';
 import { RefsInput } from '../../components/refs-input';
 import { type Constituenta, CstType, type RSForm } from '../../models/rsform';
 import { generateAlias } from '../../models/rsform-api';
@@ -28,20 +32,20 @@ const DEFINITION_TRUNCATE = 40;
 const TERM_CHARS_PER_LINE = 50;
 
 export interface DlgStructurePlannerProps {
-  schemaID: number;
+  schema: RSForm;
   targetID: number;
   isMutable: boolean;
+  onCreate: (data: CreateConstituentaDTO) => Promise<RO<ConstituentaCreatedResponse>>;
+  onUpdate: (data: UpdateConstituentaDTO) => Promise<RO<RSFormDTO>>;
 }
 
 export function DlgStructurePlanner() {
-  const { schemaID, targetID, isMutable } = useDialogsStore(state => state.props as DlgStructurePlannerProps);
-  const { schema } = useRSForm({ itemID: schemaID });
+  const { schema, targetID, isMutable, onCreate, onUpdate } = useDialogsStore(state => state.props as DlgStructurePlannerProps);
   const hideDialog = useDialogsStore(state => state.hideDialog);
-  const { createConstituenta } = useCreateConstituenta();
-  const { updateConstituenta } = useUpdateConstituenta();
+  const [currentSchema, setCurrentSchema] = useState(schema);
 
-  const target = schema.cstByID.get(targetID) ?? null;
-  const items = target ? new StructurePlanner(schema, target).build() : [];
+  const target = currentSchema.cstByID.get(targetID) ?? null;
+  const items = target ? new StructurePlanner(currentSchema, target).build() : [];
 
   const [selectedKey, setSelectedKey] = useState(items[0].key ?? '');
   const [term, setTerm] = useState<string>(
@@ -81,23 +85,24 @@ export function DlgStructurePlanner() {
         target: node.existing.id,
         item_data: { term_raw: term }
       };
-      await updateConstituenta({ itemID: schema.id, data });
-      return;
+      const nextSchemaDTO = await onUpdate(data);
+      setCurrentSchema(loadRSForm(nextSchemaDTO));
+    } else {
+      const data: CreateConstituentaDTO = {
+        insert_after: target!.id,
+        cst_type: inferDraftType(target!.cst_type),
+        alias: inferAlias(node, currentSchema, target!),
+        term_raw: term,
+        definition_formal: node.definition,
+        definition_raw: '',
+        convention: '',
+        crucial: false,
+        term_forms: []
+      };
+      const created = await onCreate(data);
+      setCurrentSchema(loadRSForm(created.schema));
+      setTerm(data.term_raw);
     }
-
-    const data: CreateConstituentaDTO = {
-      insert_after: target!.id,
-      cst_type: inferDraftType(target!.cst_type),
-      alias: inferAlias(node, schema, target!),
-      term_raw: term,
-      definition_formal: node.definition,
-      definition_raw: '',
-      convention: '',
-      crucial: false,
-      term_forms: []
-    };
-    const created = await createConstituenta({ itemID: schema.id, data });
-    setTerm(created.term_raw);
   }
 
   const isDefinitionTooLong = selectedNode.definition.length > DEFINITION_TRUNCATE;
@@ -132,7 +137,7 @@ export function DlgStructurePlanner() {
             blurClass,
             !selectedCst && 'text-constructive'
           )}>
-            {selectedCst?.alias ?? inferAlias(selectedNode, schema, target)}
+            {selectedCst?.alias ?? inferAlias(selectedNode, currentSchema, target)}
           </div>
 
           <div className={clsx(
@@ -147,7 +152,7 @@ export function DlgStructurePlanner() {
               className='w-120'
               maxHeight='6.75rem'
               portalHoverTooltips
-              schema={schema}
+              schema={currentSchema}
               value={term}
               initialValue={selectedCst?.term_raw}
               resolved={selectedCst?.term_resolved ?? ''}
