@@ -32,11 +32,14 @@ export function NavigationSandbox() {
   }
 
   return (
-    <nav className='z-navigation sticky top-0 left-0 right-0 select-none bg-background/95 backdrop-blur-xl' inert={activeDialog !== null}>
+    <nav
+      className='z-navigation sticky top-0 left-0 right-0 select-none bg-background/95 backdrop-blur-xl'
+      inert={activeDialog !== null}
+    >
       <ToggleNavigation />
       <div
         className={clsx(
-          'relative isolate overflow-hidden',
+          'relative isolate',
           'pl-2 sm:pr-4 h-12 flex gap-2 justify-between',
           'cc-shadow-border',
           'transition-[max-height,translate] ease-bezier duration-move',
