@@ -14,11 +14,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { promptUnsaved } from '@/utils/utils';
 
-import {
-  offlineResetAliases,
-  offlineRestoreOrder,
-  offlineSubstituteConstituents,
-} from '../../backend/sandbox-mutations';
+import { sbApi } from '../../backend/sandbox-mutations';
 import { type SandboxBundle } from '../../models/bundle';
 
 interface MenuEditProps {
@@ -59,7 +55,7 @@ export function MenuEdit({ setBundle }: MenuEditProps) {
     if (!requireSavedChanges()) {
       return;
     }
-    mutateBundle(prev => offlineResetAliases(prev));
+    mutateBundle(prev => sbApi.resetAliases(prev));
   }
 
   function handleSubstitute() {
@@ -69,7 +65,7 @@ export function MenuEdit({ setBundle }: MenuEditProps) {
     }
     showSubstituteCst({
       schema,
-      onSubstitute: data => mutateBundle(prev => offlineSubstituteConstituents(prev, data.substitutions))
+      onSubstitute: data => mutateBundle(prev => sbApi.substituteConstituents(prev, data.substitutions))
     });
   }
 
@@ -78,7 +74,7 @@ export function MenuEdit({ setBundle }: MenuEditProps) {
     if (!requireSavedChanges()) {
       return;
     }
-    mutateBundle(prev => offlineRestoreOrder(prev));
+    mutateBundle(prev => sbApi.restoreOrder(prev));
   }
 
   return (

@@ -322,7 +322,7 @@ export const RSEditState = ({
     if (!selectedEdges.length) {
       return;
     }
-    const ids = selectedEdges[0].split('-');
+    const ids = selectedEdges[0].split('==');
     const sourceID = Number(ids[0]);
     const targetID = Number(ids[1]);
     const sourceCst = schema.cstByID.get(sourceID);
@@ -425,15 +425,12 @@ export const RSEditState = ({
     });
   }
 
-  function addAttribution(attribute: Constituenta) {
-    if (!activeCst) {
-      return;
-    }
+  function addAttribution(containerID: number, attributeID: number) {
     void createAttribution({
       itemID: schema.id,
       data: {
-        container: activeCst.id,
-        attribute: attribute.id
+        container: containerID,
+        attribute: attributeID
       }
     });
   }

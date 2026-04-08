@@ -46,7 +46,7 @@ interface IRSEditContext {
   createCstFromData: (data: CreateConstituentaDTO) => Promise<RO<ConstituentaCreatedResponse>>;
   cloneCst: () => Promise<number>;
   patchConstituenta: (data: UpdateConstituentaDTO) => Promise<RO<RSFormDTO>>;
-  addAttribution: (attribute: Constituenta) => void;
+  addAttribution: (containerID: number, attributeID: number) => void;
   removeAttribution: (attribute: Constituenta) => void;
   clearAttributions: () => void;
 

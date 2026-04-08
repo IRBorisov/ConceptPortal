@@ -71,6 +71,10 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
   const showTypification = useDialogsStore(state => state.showShowTypeGraph);
   const showStructurePlanner = useDialogsStore(state => state.showStructurePlanner);
 
+  function handleAddAttribution(attribute: Constituenta) {
+    addAttribution(activeCst.id, attribute.id);
+  }
+
   const form = useForm({
     defaultValues: constituentaDefaults(activeCst),
     validators: {
@@ -208,7 +212,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
           <SelectMultiConstituenta
             items={schema.items.filter(item => item.id !== activeCst.id)}
             value={attributions}
-            onAdd={addAttribution}
+            onAdd={handleAddAttribution}
             onClear={clearAttributions}
             onRemove={removeAttribution}
             disabled={disabled || isModified}

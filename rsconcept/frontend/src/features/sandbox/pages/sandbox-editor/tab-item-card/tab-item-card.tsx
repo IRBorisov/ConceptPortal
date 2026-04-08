@@ -17,7 +17,7 @@ import { useWindowSize } from '@/hooks/use-window-size';
 import { useModificationStore } from '@/stores/modification';
 import { globalIDs } from '@/utils/constants';
 
-import { offlineUpdateLibraryItem } from '../../../backend/sandbox-mutations';
+import { sbApi } from '../../../backend/sandbox-mutations';
 import { type SandboxBundle } from '../../../models/bundle';
 
 interface TabItemCardProps {
@@ -56,7 +56,7 @@ export function TabItemCard({ setBundle }: TabItemCardProps) {
         if (!prev) {
           return prev;
         }
-        return offlineUpdateLibraryItem(prev, value);
+        return sbApi.updateLibraryItem(prev, value);
       });
       formApi.reset(value);
     }

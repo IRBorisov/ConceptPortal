@@ -8,317 +8,36 @@ import {
   type UpdateConstituentaDTO,
   type UpdateCrucialDTO
 } from '@/features/rsform/backend/types';
-import { CstType } from '@/features/rsform/models/rsform';
-import { getCstTypePrefix, isBaseSet, isFunctional } from '@/features/rsform/models/rsform-api';
-import { applyAliasMapping, extractGlobals, isSimpleExpression, splitTemplateDefinition } from '@/features/rslang/api';
+import { CstType, type Substitution } from '@/features/rsform/models/rsform';
+import { getCstTypePrefix } from '@/features/rsform/models/rsform-api';
 import { type ConstituentaDataDTO, type ConstituentaValue, type RSModelDTO } from '@/features/rsmodel/backend/types';
 
-import { Graph } from '@/models/graph';
+import { nowIso } from '@/utils/format';
 
 import { assertModelSchemaInvariant, type SandboxBundle } from '../models/bundle';
+import { bumpBundle, cloneBundle } from '../models/bundle-api';
+import { applyMappingToConstituents, buildSemanticInfo, sortStable } from '../models/mutations-api';
 
-function nowIso(): string {
-  return new Date().toISOString();
-}
 
-function cloneBundle(bundle: SandboxBundle): SandboxBundle {
-  return structuredClone(bundle);
-}
+export const sbApi = {
+  moveConstituents,
+  restoreOrder,
+  resetAliases,
+  substituteConstituents,
+  createConstituenta,
+  deleteConstituents,
+  updateConstituenta,
+  updateCrucial,
+  createAttribution,
+  deleteAttribution,
+  clearAttributions,
+  updateLibraryItem,
+  setModelItems,
+  applySetCstValue,
+  clearModelValues
+};
 
-function bumpBundle(bundle: SandboxBundle): void {
-  const t = nowIso();
-  bundle.meta.updatedAt = t;
-  bundle.rsform.time_update = t;
-  bundle.model.time_update = t;
-}
-
-type SandboxConstituenta = SandboxBundle['rsform']['items'][number];
-type SandboxAttribution = SandboxBundle['rsform']['attribution'][number];
-
-function replaceEntities(text: string, mapping: Record<string, string>): string {
-  if (text === '') {
-    return text;
-  }
-
-  const pattern = /@{([^0-9\-].*?)\|.*?}/g;
-  let posInput = 0;
-  let output = '';
-  for (const segment of text.matchAll(pattern)) {
-    const entity = segment[1];
-    const start = segment.index ?? 0;
-    if (entity in mapping) {
-      output += text.substring(posInput, start + 2);
-      output += mapping[entity];
-      output += text.substring(start + 2 + entity.length, start + segment[0].length);
-      posInput = start + segment[0].length;
-    }
-  }
-  output += text.substring(posInput, text.length);
-  return output;
-}
-
-function applyMappingToConstituents(
-  items: SandboxConstituenta[],
-  mapping: Record<string, string>,
-  changeAliases: boolean
-): void {
-  for (const cst of items) {
-    if (changeAliases && cst.alias in mapping) {
-      cst.alias = mapping[cst.alias];
-    }
-    cst.definition_formal = applyAliasMapping(cst.definition_formal, mapping);
-    cst.term_raw = replaceEntities(cst.term_raw, mapping);
-    cst.definition_raw = replaceEntities(cst.definition_raw, mapping);
-  }
-}
-
-function buildFormalGraph(items: SandboxConstituenta[]): Graph<number> {
-  const graph = new Graph<number>();
-  const byAlias = new Map(items.map(cst => [cst.alias, cst]));
-  for (const cst of items) {
-    graph.addNode(cst.id);
-  }
-  for (const cst of items) {
-    for (const alias of extractGlobals(cst.definition_formal)) {
-      const child = byAlias.get(alias);
-      if (child) {
-        graph.addEdge(child.id, cst.id);
-      }
-    }
-  }
-  return graph;
-}
-
-interface SandboxSemanticInfo {
-  isSimple: boolean;
-  isTemplate: boolean;
-  parent: number;
-  children: number[];
-}
-
-function buildSemanticInfo(items: SandboxConstituenta[]): {
-  graph: Graph<number>;
-  byId: Map<number, SandboxConstituenta>;
-  byAlias: Map<string, SandboxConstituenta>;
-  info: Map<number, SandboxSemanticInfo>;
-} {
-  const graph = buildFormalGraph(items);
-  const byId = new Map(items.map(cst => [cst.id, cst]));
-  const byAlias = new Map(items.map(cst => [cst.alias, cst]));
-  const info = new Map<number, SandboxSemanticInfo>();
-
-  for (const cst of items) {
-    info.set(cst.id, {
-      isSimple: false,
-      isTemplate: false,
-      parent: cst.id,
-      children: []
-    });
-  }
-
-  for (const cstId of graph.topologicalOrder()) {
-    const cst = byId.get(cstId);
-    const current = info.get(cstId);
-    if (!cst || !current) {
-      continue;
-    }
-    current.isTemplate = /R\d+/.test(cst.definition_formal);
-    current.isSimple = inferSimpleExpression(cst, graph, info);
-    if (!current.isSimple || cst.cst_type === CstType.STRUCTURED) {
-      continue;
-    }
-    const parent = inferParent(cst, graph, info, byId, byAlias);
-    current.parent = parent;
-    if (parent !== cst.id) {
-      info.get(parent)?.children.push(cst.id);
-    }
-  }
-
-  return { graph, byId, byAlias, info };
-}
-
-function inferSimpleExpression(
-  cst: SandboxConstituenta,
-  graph: Graph<number>,
-  info: Map<number, SandboxSemanticInfo>
-): boolean {
-  if (cst.cst_type === CstType.STRUCTURED || isBaseSet(cst.cst_type)) {
-    return false;
-  }
-
-  const dependencies = graph.at(cst.id)?.inputs ?? [];
-  const hasComplexDependency = dependencies.some(depID => {
-    const depInfo = info.get(depID);
-    return !!depInfo?.isTemplate && !depInfo.isSimple;
-  });
-  if (hasComplexDependency) {
-    return false;
-  }
-
-  if (isFunctional(cst.cst_type)) {
-    return isSimpleExpression(splitTemplateDefinition(cst.definition_formal).body);
-  }
-  return isSimpleExpression(cst.definition_formal);
-}
-
-function inferParent(
-  cst: SandboxConstituenta,
-  graph: Graph<number>,
-  info: Map<number, SandboxSemanticInfo>,
-  byId: Map<number, SandboxConstituenta>,
-  byAlias: Map<string, SandboxConstituenta>
-): number {
-  const sources = extractSources(cst, graph, info, byId, byAlias);
-  if (sources.size !== 1) {
-    return cst.id;
-  }
-
-  const parentId = [...sources][0];
-  const parent = byId.get(parentId);
-  if (!parent || isBaseSet(parent.cst_type)) {
-    return cst.id;
-  }
-  return parentId;
-}
-
-function extractSources(
-  cst: SandboxConstituenta,
-  graph: Graph<number>,
-  info: Map<number, SandboxSemanticInfo>,
-  byId: Map<number, SandboxConstituenta>,
-  byAlias: Map<string, SandboxConstituenta>
-): Set<number> {
-  const sources = new Set<number>();
-  if (!isFunctional(cst.cst_type)) {
-    for (const parentId of graph.at(cst.id)?.inputs ?? []) {
-      const parentInfo = info.get(parentId);
-      if (!parentInfo?.isTemplate || !parentInfo.isSimple) {
-        sources.add(parentInfo?.parent ?? parentId);
-      }
-    }
-    return sources;
-  }
-
-  const expression = splitTemplateDefinition(cst.definition_formal);
-  const bodyDependencies = extractGlobals(expression.body);
-  for (const alias of bodyDependencies) {
-    const parent = byAlias.get(alias);
-    if (!parent) {
-      continue;
-    }
-    const parentInfo = info.get(parent.id);
-    if (!parentInfo?.isTemplate || !parentInfo.isSimple) {
-      sources.add(parentInfo?.parent ?? parent.id);
-    }
-  }
-
-  if (needCheckHead(sources, expression.head, byId)) {
-    const headDependencies = extractGlobals(expression.head);
-    for (const alias of headDependencies) {
-      const parent = byAlias.get(alias);
-      if (!parent || isBaseSet(parent.cst_type)) {
-        continue;
-      }
-      const parentInfo = info.get(parent.id);
-      if (!parentInfo?.isTemplate || !parentInfo.isSimple) {
-        sources.add(parentInfo?.parent ?? parent.id);
-      }
-    }
-  }
-
-  return sources;
-}
-
-function needCheckHead(
-  sources: Set<number>,
-  head: string,
-  byId: Map<number, SandboxConstituenta>
-): boolean {
-  if (sources.size === 0) {
-    return true;
-  }
-  if (sources.size !== 1) {
-    return false;
-  }
-
-  const base = byId.get([...sources][0]);
-  if (!base) {
-    return true;
-  }
-  return !isFunctional(base.cst_type) || splitTemplateDefinition(base.definition_formal).head !== head;
-}
-
-function buildTransitiveClosure(graph: Graph<number>): Map<number, Set<number>> {
-  const closure = new Map<number, Set<number>>();
-  for (const node of graph.nodes.values()) {
-    closure.set(node.id, new Set(node.outputs));
-  }
-
-  const order = graph.topologicalOrder();
-  for (const nodeId of [...order].reverse()) {
-    const node = graph.at(nodeId);
-    if (!node) {
-      continue;
-    }
-    const nodeClosure = closure.get(nodeId) ?? new Set<number>();
-    for (const parentId of node.inputs) {
-      const parentClosure = closure.get(parentId) ?? new Set<number>();
-      for (const childId of nodeClosure) {
-        parentClosure.add(childId);
-      }
-      closure.set(parentId, parentClosure);
-    }
-  }
-
-  return closure;
-}
-
-function sortStable(graph: Graph<number>, target: number[]): number[] {
-  if (target.length <= 1) {
-    return [...target];
-  }
-
-  const reachable = buildTransitiveClosure(graph);
-  const testSet = new Set<number>();
-  const result: number[] = [];
-
-  for (const nodeId of [...target].reverse()) {
-    const nodeReachable = reachable.get(nodeId) ?? new Set<number>();
-    const needMove = testSet.has(nodeId);
-    for (const childId of nodeReachable) {
-      testSet.add(childId);
-    }
-
-    if (!needMove) {
-      result.push(nodeId);
-      continue;
-    }
-
-    let inserted = false;
-    for (let index = 0; index < result.length; index++) {
-      const parent = result[index];
-      const parentReachable = reachable.get(parent) ?? new Set<number>();
-      if (nodeReachable.has(parent)) {
-        if (parentReachable.has(nodeId)) {
-          result.push(nodeId);
-        } else {
-          result.splice(index, 0, nodeId);
-        }
-        inserted = true;
-        break;
-      }
-    }
-    if (!inserted) {
-      result.push(nodeId);
-    }
-  }
-
-  result.reverse();
-  return result;
-}
-
-export function offlineMoveConstituents(bundle: SandboxBundle, data: MoveConstituentsDTO): SandboxBundle {
-  assertModelSchemaInvariant(bundle);
+function moveConstituents(bundle: SandboxBundle, data: MoveConstituentsDTO): SandboxBundle {
   const next = cloneBundle(bundle);
   const rsform = next.rsform;
   const ids = rsform.items.map(i => i.id);
@@ -341,8 +60,7 @@ export function offlineMoveConstituents(bundle: SandboxBundle, data: MoveConstit
   return next;
 }
 
-export function offlineRestoreOrder(bundle: SandboxBundle): SandboxBundle {
-  assertModelSchemaInvariant(bundle);
+function restoreOrder(bundle: SandboxBundle): SandboxBundle {
   const next = cloneBundle(bundle);
   const items = next.rsform.items;
   if (items.length <= 1) {
@@ -373,7 +91,7 @@ export function offlineRestoreOrder(bundle: SandboxBundle): SandboxBundle {
   ordered = ordered.concat(items.filter(cst => !ordered.includes(cst)));
   ordered = sortStable(graph, ordered.map(cst => cst.id)).map(id => byId.get(id)!).filter(Boolean);
 
-  const result: SandboxConstituenta[] = [];
+  const result: ConstituentaBasicsDTO[] = [];
   const marked = new Set<number>();
   for (const cst of ordered) {
     if (marked.has(cst.id)) {
@@ -395,7 +113,7 @@ export function offlineRestoreOrder(bundle: SandboxBundle): SandboxBundle {
   return next;
 }
 
-export function offlineResetAliases(bundle: SandboxBundle): SandboxBundle {
+function resetAliases(bundle: SandboxBundle): SandboxBundle {
   assertModelSchemaInvariant(bundle);
   const next = cloneBundle(bundle);
   const counts: Record<string, number> = {};
@@ -417,8 +135,7 @@ export function offlineResetAliases(bundle: SandboxBundle): SandboxBundle {
   return next;
 }
 
-export function offlineSubstituteConstituents(bundle: SandboxBundle, substitutions: { original: number; substitution: number; }[]): SandboxBundle {
-  assertModelSchemaInvariant(bundle);
+function substituteConstituents(bundle: SandboxBundle, substitutions: Substitution[]): SandboxBundle {
   const next = cloneBundle(bundle);
   if (substitutions.length === 0) {
     return next;
@@ -442,7 +159,7 @@ export function offlineSubstituteConstituents(bundle: SandboxBundle, substitutio
     origToSub.set(original, substitution);
   }
 
-  const updatedAttributions: SandboxAttribution[] = [];
+  const updatedAttributions = [];
   const seen = new Set<string>();
   for (const attr of next.rsform.attribution) {
     if (!origToSub.has(attr.container) && !origToSub.has(attr.attribute)) {
@@ -479,11 +196,10 @@ export function offlineSubstituteConstituents(bundle: SandboxBundle, substitutio
   return next;
 }
 
-export function offlineCreateConstituenta(
+function createConstituenta(
   bundle: SandboxBundle,
   data: CreateConstituentaDTO
 ): { bundle: SandboxBundle; newCst: ConstituentaBasicsDTO; } {
-  assertModelSchemaInvariant(bundle);
   const next = cloneBundle(bundle);
   const rsform = next.rsform;
 
@@ -516,8 +232,7 @@ export function offlineCreateConstituenta(
   return { bundle: next, newCst };
 }
 
-export function offlineDeleteConstituents(bundle: SandboxBundle, deleted: number[]): SandboxBundle {
-  assertModelSchemaInvariant(bundle);
+function deleteConstituents(bundle: SandboxBundle, deleted: number[]): SandboxBundle {
   const next = cloneBundle(bundle);
   const del = new Set(deleted);
   const rsform = next.rsform;
@@ -535,8 +250,7 @@ export function offlineDeleteConstituents(bundle: SandboxBundle, deleted: number
   return next;
 }
 
-export function offlineUpdateConstituenta(bundle: SandboxBundle, data: UpdateConstituentaDTO): SandboxBundle {
-  assertModelSchemaInvariant(bundle);
+function updateConstituenta(bundle: SandboxBundle, data: UpdateConstituentaDTO): SandboxBundle {
   const next = cloneBundle(bundle);
   const rsform = next.rsform;
   const ix = rsform.items.findIndex(i => i.id === data.target);
@@ -560,8 +274,7 @@ export function offlineUpdateConstituenta(bundle: SandboxBundle, data: UpdateCon
   return next;
 }
 
-export function offlineUpdateCrucial(bundle: SandboxBundle, data: UpdateCrucialDTO): SandboxBundle {
-  assertModelSchemaInvariant(bundle);
+function updateCrucial(bundle: SandboxBundle, data: UpdateCrucialDTO): SandboxBundle {
   const next = cloneBundle(bundle);
   const targets = new Set(data.target);
   next.rsform.items = next.rsform.items.map(row =>
@@ -571,8 +284,7 @@ export function offlineUpdateCrucial(bundle: SandboxBundle, data: UpdateCrucialD
   return next;
 }
 
-export function offlineCreateAttribution(bundle: SandboxBundle, attr: Attribution): SandboxBundle {
-  assertModelSchemaInvariant(bundle);
+function createAttribution(bundle: SandboxBundle, attr: Attribution): SandboxBundle {
   const next = cloneBundle(bundle);
   const exists = next.rsform.attribution.some(
     a => a.container === attr.container && a.attribute === attr.attribute
@@ -584,8 +296,7 @@ export function offlineCreateAttribution(bundle: SandboxBundle, attr: Attributio
   return next;
 }
 
-export function offlineDeleteAttribution(bundle: SandboxBundle, attr: Attribution): SandboxBundle {
-  assertModelSchemaInvariant(bundle);
+function deleteAttribution(bundle: SandboxBundle, attr: Attribution): SandboxBundle {
   const next = cloneBundle(bundle);
   next.rsform.attribution = next.rsform.attribution.filter(
     a => !(a.container === attr.container && a.attribute === attr.attribute)
@@ -594,8 +305,7 @@ export function offlineDeleteAttribution(bundle: SandboxBundle, attr: Attributio
   return next;
 }
 
-export function offlineClearAttributions(bundle: SandboxBundle, data: AttributionTargetDTO): SandboxBundle {
-  assertModelSchemaInvariant(bundle);
+function clearAttributions(bundle: SandboxBundle, data: AttributionTargetDTO): SandboxBundle {
   const next = cloneBundle(bundle);
   const t = data.target;
   next.rsform.attribution = next.rsform.attribution.filter(
@@ -605,8 +315,7 @@ export function offlineClearAttributions(bundle: SandboxBundle, data: Attributio
   return next;
 }
 
-export function offlineUpdateLibraryItem(bundle: SandboxBundle, data: UpdateLibraryItemDTO): SandboxBundle {
-  assertModelSchemaInvariant(bundle);
+function updateLibraryItem(bundle: SandboxBundle, data: UpdateLibraryItemDTO): SandboxBundle {
   const next = cloneBundle(bundle);
   const t = nowIso();
   if (data.id === next.rsform.id && data.item_type === LibraryItemType.RSFORM) {
@@ -638,8 +347,7 @@ export function offlineUpdateLibraryItem(bundle: SandboxBundle, data: UpdateLibr
   return next;
 }
 
-export function offlineSetModelItems(bundle: SandboxBundle, items: RSModelDTO['items']): SandboxBundle {
-  assertModelSchemaInvariant(bundle);
+function setModelItems(bundle: SandboxBundle, items: RSModelDTO['items']): SandboxBundle {
   const next = cloneBundle(bundle);
   next.model.items = structuredClone(items);
   bumpBundle(next);
@@ -647,8 +355,7 @@ export function offlineSetModelItems(bundle: SandboxBundle, items: RSModelDTO['i
 }
 
 /** Merge value writes into {@link RSModelDTO.items} (payload matches API set-value). */
-export function offlineApplySetCstValue(bundle: SandboxBundle, updates: ConstituentaDataDTO): SandboxBundle {
-  assertModelSchemaInvariant(bundle);
+function applySetCstValue(bundle: SandboxBundle, updates: ConstituentaDataDTO): SandboxBundle {
   const next = cloneBundle(bundle);
   const byId = new Map(next.model.items.map(v => [v.id, v]));
   for (const u of updates) {
@@ -673,8 +380,7 @@ export function offlineApplySetCstValue(bundle: SandboxBundle, updates: Constitu
   return next;
 }
 
-export function offlineClearModelValues(bundle: SandboxBundle, cstIDs: number[]): SandboxBundle {
-  assertModelSchemaInvariant(bundle);
+function clearModelValues(bundle: SandboxBundle, cstIDs: number[]): SandboxBundle {
   const next = cloneBundle(bundle);
   const drop = new Set(cstIDs);
   next.model.items = next.model.items.filter(v => !drop.has(v.id));

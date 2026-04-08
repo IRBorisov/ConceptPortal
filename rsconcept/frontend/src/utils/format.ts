@@ -2,6 +2,10 @@
  * Module: Formatting utilities.
  */
 
+/** Generate ISO timestamp. */
+export function nowIso(): string {
+  return new Date().toISOString();
+}
 
 /** Formats integer value to string with thousands separators. */
 export function formatInteger(value: number | string): string {

@@ -8,7 +8,7 @@ import { RSModelContext } from '@/features/rsmodel/pages/rsmodel-page/rsmodel-co
 
 import { notImplemented } from '@/utils/utils';
 
-import { offlineApplySetCstValue, offlineClearModelValues } from '../../backend/sandbox-mutations';
+import { sbApi } from '../../backend/sandbox-mutations';
 import { type SandboxBundle } from '../../models/bundle';
 
 interface SandboxRSModelStateProps {
@@ -23,15 +23,19 @@ export function SandboxRSModelState({
   setBundle,
   children
 }: React.PropsWithChildren<SandboxRSModelStateProps>) {
+  function deleteModel() {
+    notImplemented();
+  }
+
   const services = useMemo<RSEngineServices>(function createServices() {
     return {
       setCstValue: function setCstValue({ data }: Parameters<RSEngineServices['setCstValue']>[0]) {
-        const next = offlineApplySetCstValue(bundle, data);
+        const next = sbApi.applySetCstValue(bundle, data);
         setBundle(next);
         return Promise.resolve();
       },
       clearValues: function clearValues({ data }: Parameters<RSEngineServices['clearValues']>[0]) {
-        const next = offlineClearModelValues(bundle, data.items);
+        const next = sbApi.clearModelValues(bundle, data.items);
         setBundle(next);
         return Promise.resolve();
       }
@@ -59,10 +63,10 @@ export function SandboxRSModelState({
       value={{
         model: bundle.model,
         schema,
-        isMutable: false,
-        isOwned: false,
+        isMutable: true,
+        isOwned: true,
         engine,
-        deleteModel: notImplemented
+        deleteModel
       }}
     >
       {children}

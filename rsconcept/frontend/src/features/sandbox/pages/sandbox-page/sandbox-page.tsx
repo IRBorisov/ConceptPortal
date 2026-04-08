@@ -66,7 +66,7 @@ export function SandboxPage() {
     <ErrorBoundary FallbackComponent={({ error: boundaryError }) => (
       <ProcessError error={boundaryError as ErrorData} />
     )}>
-      <div className='relative min-h-full pb-6'>
+      <div className='relative min-h-full'>
         {error ? (
           <div className='mx-auto max-w-3xl px-4 pt-4 text-sm text-destructive'>
             {error.message}
@@ -91,7 +91,7 @@ function ProcessError({ error }: { error: ErrorData; }): React.ReactElement | nu
 
   return (
     <div className='flex flex-col items-center p-4 mx-auto max-w-3xl text-center'>
-      <p className='font-medium'>Sandbox failed to render</p>
+      <p className='font-medium'>Ошибка загрузки песочницы</p>
       <pre className='mt-3 whitespace-pre-wrap text-sm text-destructive'>{message}</pre>
     </div>
   );

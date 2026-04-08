@@ -23,8 +23,6 @@ import { useFitHeight, useMainHeight } from '@/stores/app-layout';
 import { PARAMETER } from '@/utils/constants';
 import { errorMsg } from '@/utils/labels';
 
-import { useCreateAttribution } from '../../../backend/use-create-attribution';
-import { useUpdateConstituenta } from '../../../backend/use-update-constituenta';
 import { colorGraphEdge } from '../../../colors';
 import { TGConnectionLine } from '../../../components/term-graph/graph/tg-connection';
 import { TGEdgeTypes } from '../../../components/term-graph/graph/tg-edge-types';
@@ -71,9 +69,6 @@ export function TGFlow() {
     return setConnectionStart(null);
   }, [setConnectionStart]);
 
-  const { createAttribution } = useCreateAttribution();
-  const { updateConstituenta } = useUpdateConstituenta();
-
   const {
     isContentEditable,
     isProcessing,
@@ -84,7 +79,9 @@ export function TGFlow() {
     setFocus,
     toggleSelectCst,
     selectedEdges,
-    setSelectedEdges
+    setSelectedEdges,
+    patchConstituenta,
+    addAttribution
   } = useRSFormEdit();
 
   const [nodes, setNodes, onNodesChange] = useNodesState<TGNode>([]);
@@ -150,7 +147,7 @@ export function TGFlow() {
         const dashes =
           edgeType === TGEdgeType.definition && !target_cst.analysis.success ? '6 4' : '';
         newEdges.push({
-          id: `${source.id}-${target}`,
+          id: `${source.id}==${target}`,
           source: String(source.id),
           target: String(target),
           type: 'termEdge',
@@ -326,12 +323,8 @@ export function TGFlow() {
 
     const sourceID = Number(connection.source);
     const targetID = Number(connection.target);
-    const sourceCst = schema.cstByID.get(sourceID);
-    const targetCst = schema.cstByID.get(targetID);
-    if (!targetCst || !sourceCst) {
-      throw new Error('Constituents not found');
-    }
-
+    const sourceCst = schema.cstByID.get(sourceID)!;
+    const targetCst = schema.cstByID.get(targetID)!;
     if (connectionType === TGEdgeType.definition) {
       if (targetCst.is_inherited) {
         toast.error(errorMsg.changeInheritedDefinition);
@@ -347,13 +340,10 @@ export function TGFlow() {
       }
 
       const newExpressions = addAliasReference(targetCst.definition_formal, sourceCst.alias);
-      void updateConstituenta({
-        itemID: schema.id,
-        data: {
-          target: targetID,
-          item_data: {
-            definition_formal: newExpressions
-          }
+      void patchConstituenta({
+        target: targetID,
+        item_data: {
+          definition_formal: newExpressions
         }
       });
     } else {
@@ -370,13 +360,7 @@ export function TGFlow() {
         return;
       }
 
-      void createAttribution({
-        itemID: schema.id,
-        data: {
-          container: sourceID,
-          attribute: targetID
-        }
-      });
+      addAttribution(sourceID, targetID);
     }
   }
 
