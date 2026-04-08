@@ -4,77 +4,75 @@ Frontend guidance for AI coding agents working in `rsconcept/frontend`.
 
 ## Scope
 
-This file applies to the frontend app in this directory tree.
+This file applies to all code under the frontend application directory.
 
 ## Stack
 
 - Vite
 - React 19
 - React Compiler
+- Tailwind CSS
 - TypeScript
 - React Router
 - TanStack Query
+- TanStack Forms
 - Zustand
 - Vitest
 - Playwright
 - ESLint + Stylelint
 
-## Frontend map
+## File structure overview
 
-- `src/app` contains app bootstrapping, layout, routing, and global providers.
-- `src/features` contains feature-level UI, data hooks, dialogs, pages, and domain logic.
-- `src/components` contains reusable UI building blocks and shared controls.
-- `src/backend` contains shared client-side API transport and query setup.
-- `src/stores` contains shared Zustand stores.
-- `src/utils` contains general utility helpers.
-- `tests` contains end-to-end and setup files.
-- `public` contains static assets.
-
-## Working style
-
-- Prefer making changes inside the relevant feature folder before adding new shared abstractions.
-- Reuse existing hooks, dialogs, and component patterns when extending behavior.
-- Keep API-facing types and hooks consistent with backend responses.
-- If you change a grammar file, regenerate parsers with the existing script.
-- Tailwind CSS utility classes and customizations are managed in the `src/styles` folder, including `tailwind.config.ts` and global stylesheets.
-- When composing more than 4 Tailwind or utility classes in a component, split them into semantic groups (layout, color, animation, etc.) using `clsx` or `cn` for readability.
-- Prefer using `clsx` over `className` for composing classes if no props are involved.
+- `src/app`: Application bootstrapping, layout, routing, and global providers
+- `src/features`: Feature-level UI, domain logic, data hooks, dialogs, pages
+- `src/components`: Reusable UI building blocks and shared controls
+- `src/backend`: Shared client-side API transport and query setup
+- `src/stores`: Shared Zustand stores
+- `src/utils`: General utility helpers
+- `tests`: End-to-end and setup files
+- `public`: Static assets
 
 ## Common commands
 
 Run from `rsconcept/frontend`:
 
-- Install deps: `npm install`
-- Start dev server - ASSUME ALREADY RUNNING: `npm run dev`
+- Install dependencies: `npm install`
+- Start dev server (**assume already running**): `npm run dev`
 - Build: `npm run build`
 - Unit tests: `npm test`
 - E2E tests: `npm run test:e2e`
-- Lint: `npm run lint`
+- Lint (runs slowly—prefer checking specific files): `npm run lint`
 - Regenerate parsers: `npm run generate`
 
 ## File hints
 
-- Routing and app shell: `src/app`
+- Routing & app shell: `src/app`
 - Auth flows: `src/features/auth`
-- AI UI and prompt templates: `src/features/ai`
+- AI UI and prompts: `src/features/ai`
 - Library flows: `src/features/library`
 - RSForm flows: `src/features/rsform`
 - RSModel flows: `src/features/rsmodel`
 - OSS flows: `src/features/oss`
 - User management: `src/features/users`
 - Help content: `src/features/help`
+- Offline sandbox mode: `src/features/sandbox`
 
 ## Edit rules
 
+- Prefer editing within relevant feature folders before adding new shared abstractions.
 - Keep components small and colocate feature-specific helpers when possible.
-- Preserve established naming and folder structure in `src/features`.
-- Update tests when behavior changes in parsing, evaluation, or critical UI workflows.
-- For API changes, verify the matching backend endpoint and types.
+- Preserve established naming and folder structure under `src/features`.
+- Update or add tests when behavior changes in parsing, evaluation, or critical UI.
+- Reuse existing hooks, dialogs, and components when extending behavior.
+- Keep API-facing types and hooks consistent with backend contract/types.
+- If you change a grammar file, regenerate parsers using the provided script.
+- Tailwind CSS customizations are under `src/styles`, including `tailwind.config.ts` and global styles.
+- When composing >4 Tailwind/utility classes, group by purpose (layout, color, animation) using `clsx` or `cn` for readability.
+- Use `clsx` for class composition when props are not involved.
 
 ## Frontend-specific rules to extend
 
 Add new instructions here:
 
-- In useEffect hooks, always use named function expressions instead of anonymous arrow callbacks.
-- Prefer useEffectEvent over useCallback for handlers used inside useEffect.
-- In setTimeout calls, always use named function expressions instead of anonymous arrow callbacks.
+- In `useEffect` hooks and `setTimeout` calls, use named function expressions instead of anonymous arrow callbacks.
+- Prefer `useEffectEvent` over `useCallback` for handlers used inside `useEffect`.
