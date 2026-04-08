@@ -2,11 +2,11 @@
 from django.db import transaction
 from rest_framework import serializers
 
-from apps.library.models import LibraryItem
+from apps.library.models import AccessPolicy, LibraryItem, LocationHead
 from shared import messages as msg
 from shared.serializers import StrictSerializer
 
-from ..models import Constituenta, RSFormCached
+from ..models import Attribution, Constituenta, CstType, RSFormCached
 from ..utils import fix_old_references
 
 _ENTITY_CONSTITUENTA = 'constituenta'
@@ -180,3 +180,116 @@ class RSFormTRSSerializer(serializers.Serializer):
         else:
             cst.term_raw = ''
             cst.term_forms = []
+
+
+class RSFormSandboxImportSerializer(StrictSerializer):
+    ''' Import data from sandbox bundle into a new RSForm. '''
+
+    class ItemDataSerializer(StrictSerializer):
+        ''' Serializer: Item data for RSForm sandbox import. '''
+        title = serializers.CharField()
+        alias = serializers.CharField()
+        description = serializers.CharField(required=False, allow_blank=True, default='')
+        visible = serializers.BooleanField(required=False, default=True)
+        read_only = serializers.BooleanField(required=False, default=False)  # type: ignore
+        access_policy = serializers.ChoiceField(
+            choices=AccessPolicy.choices,
+            required=False,
+            default=AccessPolicy.PUBLIC)
+        location = serializers.CharField(required=False, default=LocationHead.USER)
+
+    class SchemaDataSerializer(StrictSerializer):
+        ''' Serializer: Schema data for RSForm sandbox import. '''
+
+        class ItemSerializer(StrictSerializer):
+            ''' Serializer: Item data for RSForm sandbox import. '''
+            id = serializers.IntegerField()
+            alias = serializers.CharField(max_length=8)
+            convention = serializers.CharField(required=False, allow_blank=True, default='')
+            crucial = serializers.BooleanField(required=False, default=False)
+            cst_type = serializers.ChoiceField(choices=CstType.choices)
+            definition_formal = serializers.CharField(required=False, allow_blank=True, default='')
+            definition_raw = serializers.CharField(required=False, allow_blank=True, default='')
+            definition_resolved = serializers.CharField(required=False, allow_blank=True, default='')
+            term_raw = serializers.CharField(required=False, allow_blank=True, default='')
+            term_resolved = serializers.CharField(required=False, allow_blank=True, default='')
+            term_forms = serializers.ListField(required=False, default=list)
+
+        class AttributionDataSerializer(StrictSerializer):
+            ''' Serializer: Attribution data for RSForm sandbox import. '''
+            container = serializers.IntegerField()
+            attribute = serializers.IntegerField()
+
+        items = ItemSerializer(many=True)
+        attribution = AttributionDataSerializer(many=True, required=False, default=list)
+
+    item_data = ItemDataSerializer()
+    schema_data = SchemaDataSerializer()
+
+    def validate(self, attrs):
+        attrs = super().validate(attrs)
+        item_ids = [item['id'] for item in attrs['schema_data']['items']]
+        if len(item_ids) != len(set(item_ids)):
+            raise serializers.ValidationError({
+                'schema_data': 'Duplicate constituent ids are not allowed'
+            })
+
+        known_ids = set(item_ids)
+        for attr in attrs['schema_data']['attribution']:
+            if attr['container'] not in known_ids or attr['attribute'] not in known_ids:
+                raise serializers.ValidationError({
+                    'schema_data': 'Attributions must reference imported constituents'
+                })
+        return attrs
+
+    @transaction.atomic
+    def create(self, validated_data: dict) -> RSFormCached:
+        item_data = validated_data['item_data']
+        schema_data = validated_data['schema_data']
+        instance = RSFormCached.create(
+            owner=self.context.get('owner'),
+            title=item_data['title'],
+            alias=item_data['alias'],
+            description=item_data.get('description', ''),
+            visible=item_data.get('visible', True),
+            read_only=item_data.get('read_only', False),
+            access_policy=item_data.get('access_policy', AccessPolicy.PUBLIC),
+            location=item_data.get('location', LocationHead.USER)
+        )
+
+        id_map: dict[int, int] = {}
+        for order, item in enumerate(schema_data['items']):
+            cst = Constituenta.objects.create(
+                schema_id=instance.pk,
+                order=order,
+                alias=item['alias'],
+                cst_type=item['cst_type'],
+                convention=item.get('convention', ''),
+                crucial=item.get('crucial', False),
+                definition_formal=item.get('definition_formal', ''),
+                definition_raw=item.get('definition_raw', ''),
+                definition_resolved=item.get('definition_resolved', ''),
+                term_raw=item.get('term_raw', ''),
+                term_resolved=item.get('term_resolved', ''),
+                term_forms=item.get('term_forms', [])
+            )
+            id_map[item['id']] = cst.pk
+
+        seen: set[tuple[int, int]] = set()
+        created_attributions: list[Attribution] = []
+        for attr in schema_data['attribution']:
+            container_id = id_map.get(attr['container'])
+            attribute_id = id_map.get(attr['attribute'])
+            if container_id is None or attribute_id is None or container_id == attribute_id:
+                continue
+            key = (container_id, attribute_id)
+            if key in seen:
+                continue
+            seen.add(key)
+            created_attributions.append(Attribution(container_id=container_id, attribute_id=attribute_id))
+
+        if created_attributions:
+            Attribution.objects.bulk_create(created_attributions)
+
+        instance.resolve_all_text()
+        return instance

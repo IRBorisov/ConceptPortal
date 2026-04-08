@@ -41,6 +41,7 @@ export const urls = {
   library: `/${routes.library}`,
   library_filter: (strategy: string) => `/library?filter=${strategy}`,
   create_item: `/${routes.create_item}`,
+  create_item_from_sandbox: `/${routes.create_item}?fromSandbox=1`,
   create_model: (schemaID: number) => `/${routes.create_item}?modelFrom=${schemaID}`,
   prompt_templates: `/${routes.prompt_templates}`,
   prompt_template: (active: number | null, tab: number) =>

@@ -6,6 +6,8 @@ import fileDownload from 'js-file-download';
 import { useConceptNavigation } from '@/app';
 import { useAuth } from '@/features/auth';
 import { AccessPolicy, LocationHead } from '@/features/library';
+import { createSandboxBundleFromRSForm } from '@/features/sandbox/models/bundle-transfer';
+import { saveBundle } from '@/features/sandbox/stores/sandbox-repository';
 import { useRoleStore, UserRole } from '@/features/users';
 
 import { Divider } from '@/components/container';
@@ -22,15 +24,17 @@ import {
   IconPDF,
   IconQR,
   IconRSModel,
+  IconSandbox,
   IconShare,
   IconUpload
 } from '@/components/icons';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { EXTEOR_TRS_FILE, prefixes } from '@/utils/constants';
-import { errorMsg, tooltipText } from '@/utils/labels';
+import { errorMsg, infoMsg, promptText, tooltipText } from '@/utils/labels';
 import { generatePageQR, promptUnsaved, sharePage } from '@/utils/utils';
 
+import { useRSForm } from '../../backend/use-rsform';
 import { useUploadTRS } from '../../backend/use-upload-trs';
 import { prepareTRSFile } from '../../models/trs-file';
 
@@ -45,8 +49,10 @@ export function MenuMain() {
     isArchive,
     isMutable,
     isContentEditable,
-    isProcessing
+    isProcessing,
+    activeVersion
   } = useRSFormEdit();
+  const { raw: schemaData } = useRSForm({ itemID: schema.id, version: activeVersion });
 
   const { user, isAnonymous } = useAuth();
   const hasInheritance = schema.inheritance.some(item => item.child_source === schema.id);
@@ -131,6 +137,22 @@ export function MenuMain() {
     });
   }
 
+  async function handleTransferToSandbox() {
+    if (!window.confirm(promptText.resetSandbox)) {
+      return;
+    }
+    hideMenu();
+    try {
+      const nextBundle = createSandboxBundleFromRSForm(schemaData);
+      await saveBundle(nextBundle);
+      toast.success(infoMsg.sandboxImportSuccess);
+      router.gotoSandboxEditor();
+    } catch (error) {
+      console.error(error);
+      toast.error(errorMsg.sandboxImportError);
+    }
+  }
+
   function handleShare() {
     hideMenu();
     sharePage();
@@ -213,6 +235,11 @@ export function MenuMain() {
             onClick={handleCreateModel}
           />
         ) : null}
+        <DropdownButton
+          text='Открыть в песочнице'
+          icon={<IconSandbox size='1rem' className='icon-green' />}
+          onClick={() => void handleTransferToSandbox()}
+        />
         <DropdownButton
           text='Экспорт в PDF'
           icon={<IconPDF size='1rem' className='icon-primary' />}

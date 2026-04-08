@@ -3,13 +3,15 @@
 import { useRef } from 'react';
 import { toast } from 'react-toastify';
 
+import { useConceptNavigation } from '@/app';
+
 import { Divider } from '@/components/container';
 import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
-import { IconDownload, IconMenu, IconReset, IconUpload } from '@/components/icons';
+import { IconDownload, IconMenu, IconNewItem, IconReset, IconUpload } from '@/components/icons';
 
-import { createStarterSandboxBundle } from '../../backend/create-starter-bundle';
 import { type SandboxBundle } from '../../models/bundle';
+import { createStarterSandboxBundle } from '../../models/bundle-starter';
 import {
   downloadBundle,
   importBundleFromJson
@@ -21,6 +23,7 @@ interface MenuMainProps {
 }
 
 export function MenuMain({ bundle, setBundle }: MenuMainProps) {
+  const router = useConceptNavigation();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const {
     elementRef: menuRef,
@@ -46,6 +49,11 @@ export function MenuMain({ bundle, setBundle }: MenuMainProps) {
   function handleImportClick() {
     hideMenu();
     fileInputRef.current?.click();
+  }
+
+  function handleCreateRSForm() {
+    hideMenu();
+    router.gotoNewItemFromSandbox();
   }
 
   async function handleImportFile(event: React.ChangeEvent<HTMLInputElement>) {
@@ -85,6 +93,12 @@ export function MenuMain({ bundle, setBundle }: MenuMainProps) {
         onChange={event => void handleImportFile(event)}
       />
       <Dropdown isOpen={isMenuOpen} margin='mt-3'>
+        <DropdownButton
+          text='Создать RSForm'
+          title='Создать новую концептуальную схему из текущих данных песочницы'
+          icon={<IconNewItem size='1rem' className='icon-green' />}
+          onClick={handleCreateRSForm}
+        />
         <DropdownButton
           text='Сохранить в файл'
           title='Скачать текущие данные песочницы в JSON'

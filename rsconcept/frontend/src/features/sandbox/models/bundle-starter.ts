@@ -1,3 +1,4 @@
+import { LocationHead } from '@/features/library';
 import {
   AccessPolicy,
   type LibraryItem,
@@ -9,12 +10,11 @@ import { type RSModelDTO } from '@/features/rsmodel/backend/types';
 
 import {
   SANDBOX_BUNDLE_FORMAT_VERSION,
-  type SandboxBundle
-} from '../models/bundle';
-
-const STARTER_SCHEMA_ID = -1;
-const STARTER_MODEL_ID = -2;
-const STARTER_CST_ID = -10_000;
+  type SandboxBundle,
+  STARTER_CST_ID,
+  STARTER_MODEL_ID,
+  STARTER_SCHEMA_ID
+} from './bundle';
 
 function libraryBase(
   id: number,
@@ -45,7 +45,7 @@ function libraryBase(
     description: '',
     visible: true,
     read_only: false,
-    location: 'U:\\',
+    location: LocationHead.USER,
     access_policy: AccessPolicy.PUBLIC,
     time_create: timestamp,
     time_update: timestamp,
@@ -82,16 +82,18 @@ export function createStarterSandboxBundle(): SandboxBundle {
     oss: [],
     models: [{ id: STARTER_MODEL_ID, alias: 'КМ Демонстрация' }]
   };
+
   const model: RSModelDTO = {
     ...libraryBase(STARTER_MODEL_ID, LibraryItemType.RSMODEL, 'КМ Демонстрация', 'Демонстрационная модель', now),
     editors: [],
     schema: STARTER_SCHEMA_ID,
     items: []
   };
+
   return {
     formatVersion: SANDBOX_BUNDLE_FORMAT_VERSION,
     meta: {
-      nextId: 1000,
+      nextId: STARTER_CST_ID + rsform.items.length,
       updatedAt: now
     },
     rsform,

@@ -61,6 +61,72 @@ class TestRSFormViewset(EndpointTester):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 
+    @decl_endpoint('/api/rsforms/create-from-sandbox', method='post')
+    def test_create_rsform_from_sandbox(self):
+        data = {
+            'item_data': {
+                'title': 'Sandbox schema',
+                'alias': 'SB1',
+                'description': 'created from sandbox',
+                'location': LocationHead.PROJECTS,
+                'access_policy': AccessPolicy.PROTECTED,
+                'visible': False,
+                'read_only': True
+            },
+            'schema_data': {
+                'items': [
+                    {
+                        'id': 101,
+                        'alias': 'X1',
+                        'convention': '',
+                        'crucial': False,
+                        'cst_type': CstType.BASE,
+                        'definition_formal': '',
+                        'definition_raw': '',
+                        'definition_resolved': '',
+                        'term_raw': 'человек',
+                        'term_resolved': '',
+                        'term_forms': []
+                    },
+                    {
+                        'id': 102,
+                        'alias': 'D1',
+                        'convention': '',
+                        'crucial': True,
+                        'cst_type': CstType.TERM,
+                        'definition_formal': 'X1',
+                        'definition_raw': '',
+                        'definition_resolved': '',
+                        'term_raw': '',
+                        'term_resolved': '',
+                        'term_forms': []
+                    }
+                ],
+                'attribution': [{
+                    'container': 102,
+                    'attribute': 101
+                }]
+            }
+        }
+        response = self.executeCreated(data)
+        self.assertEqual(response.data['owner'], self.user.pk)
+        self.assertEqual(response.data['title'], data['item_data']['title'])
+        self.assertEqual(response.data['alias'], data['item_data']['alias'])
+        self.assertEqual(response.data['location'], data['item_data']['location'])
+
+        created = RSForm(LibraryItem.objects.get(pk=response.data['id']))
+        created_items = list(created.constituentsQ().order_by('order'))
+        self.assertEqual(len(created_items), 2)
+        self.assertEqual(created_items[0].alias, 'X1')
+        self.assertEqual(created_items[0].term_resolved, 'человек')
+        self.assertEqual(created_items[1].alias, 'D1')
+        self.assertEqual(created_items[1].definition_formal, 'X1')
+        self.assertTrue(created_items[1].crucial)
+
+        Attribution = created.constituentsQ().model._meta.apps.get_model('rsform', 'Attribution')
+        self.assertEqual(Attribution.objects.filter(container__schema_id=created.model.pk).count(), 1)
+
+
     @decl_endpoint('/api/rsforms', method='get')
     def test_list_rsforms(self):
         oss = LibraryItem.objects.create(

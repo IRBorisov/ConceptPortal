@@ -8,7 +8,10 @@ export function useRSForm({ itemID, version }: { itemID?: number; version?: numb
   const { data } = useSuspenseQuery({
     ...rsformsApi.getRSFormQueryOptions({ itemID, version })
   });
-  return { schema: data.transformed };
+  return {
+    schema: data.transformed,
+    raw: data.raw
+  };
 }
 
 export function prefetchRSForm({ itemID, version }: { itemID?: number; version?: number; }) {

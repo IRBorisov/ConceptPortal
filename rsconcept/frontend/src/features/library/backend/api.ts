@@ -26,6 +26,20 @@ import {
   type VersionExInfo
 } from './types';
 
+interface CreateRSFormFromSandboxDTO {
+  item_data: Pick<
+    CreateLibraryItemDTO,
+    | 'title'
+    | 'alias'
+    | 'description'
+    | 'visible'
+    | 'read_only'
+    | 'access_policy'
+    | 'location'
+  >;
+  schema_data: Pick<RSFormDTO, 'items' | 'attribution'>;
+}
+
 export const libraryApi = {
   baseKey: KEYS.library,
   libraryListKey: KEYS.composite.libraryList,
@@ -68,6 +82,15 @@ export const libraryApi = {
             'Content-Type': 'multipart/form-data'
           }
         }
+    }),
+  createRSFormFromSandbox: (data: CreateRSFormFromSandboxDTO) =>
+    axiosPost<CreateRSFormFromSandboxDTO, LibraryItem>({
+      schema: schemaLibraryItem,
+      endpoint: '/api/rsforms/create-from-sandbox',
+      request: {
+        data,
+        successMessage: infoMsg.newLibraryItem
+      }
     }),
   updateItem: (data: UpdateLibraryItemDTO) =>
     axiosPatch<UpdateLibraryItemDTO, LibraryItem>({

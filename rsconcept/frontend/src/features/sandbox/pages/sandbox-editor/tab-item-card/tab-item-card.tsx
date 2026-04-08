@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useEffectEvent } from 'react';
+import { useIntl } from 'react-intl';
 import { useForm, useStore } from '@tanstack/react-form';
 import clsx from 'clsx';
 
@@ -11,11 +12,13 @@ import { useRSModelEdit } from '@/features/rsmodel/pages/rsmodel-page/rsmodel-co
 import { CardRSModelStats } from '@/features/rsmodel/pages/rsmodel-page/tab-model-card/rsmodel-stats';
 
 import { SubmitButton } from '@/components/control';
-import { IconSave } from '@/components/icons';
+import { IconDateCreate, IconDateUpdate, IconSave } from '@/components/icons';
 import { TextArea, TextInput } from '@/components/input';
+import { ValueIcon } from '@/components/view';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useModificationStore } from '@/stores/modification';
 import { globalIDs } from '@/utils/constants';
+import { withPreventDefault } from '@/utils/utils';
 
 import { sbApi } from '../../../backend/sandbox-mutations';
 import { type SandboxBundle } from '../../../models/bundle';
@@ -39,6 +42,7 @@ function modelDefaults(model: RSModel): UpdateLibraryItemDTO {
 const SIDELIST_LAYOUT_THRESHOLD = 768;
 
 export function TabItemCard({ setBundle }: TabItemCardProps) {
+  const intl = useIntl();
   const { model, engine, schema } = useRSModelEdit();
   const setIsModified = useModificationStore(state => state.setIsModified);
   const onModifiedEvent = useEffectEvent(setIsModified);
@@ -73,78 +77,105 @@ export function TabItemCard({ setBundle }: TabItemCardProps) {
     onModifiedEvent(!isDefaultValue);
   }, [isDefaultValue]);
 
+  function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
+    if (event.ctrlKey || event.metaKey) {
+      if (event.code === 'KeyS') {
+        return withPreventDefault(() => void form.handleSubmit())(event);
+      }
+    }
+  }
+
   return (
     <div
+      tabIndex={-1}
+      onKeyDown={handleKeyDown}
       className={clsx(
         'relative md:w-fit md:max-w-fit max-w-136',
         'flex px-6 pt-8',
         isNarrow && 'flex-col md:items-center'
       )}
     >
-      <div className='cc-column mx-0 md:mx-auto'>
-        <form
-          id={globalIDs.library_item_editor}
-          className='mt-1 min-w-88 sm:w-120 flex flex-col pt-1'
-          onSubmit={event => {
-            event.preventDefault();
-            event.stopPropagation();
-            void form.handleSubmit();
-          }}
-        >
-          <form.Field name='title'>
-            {field => (
-              <TextInput
-                id='sandbox_model_title'
-                label='Название'
-                className='mb-3'
-                value={field.state.value}
-                onChange={event => field.handleChange(event.target.value)}
-                onBlur={field.handleBlur}
-                error={field.state.meta.errors[0]?.message}
-              />
-            )}
-          </form.Field>
+      <form
+        id={globalIDs.library_item_editor}
+        className='mt-1 min-w-88 sm:w-120 flex flex-col pt-1 mx-0 md:mx-auto'
+        onSubmit={event => {
+          event.preventDefault();
+          event.stopPropagation();
+          void form.handleSubmit();
+        }}
+      >
+        <form.Field name='title'>
+          {field => (
+            <TextInput
+              id='sandbox_model_title'
+              label='Название'
+              className='mb-3'
+              value={field.state.value}
+              onChange={event => field.handleChange(event.target.value)}
+              onBlur={field.handleBlur}
+              error={field.state.meta.errors[0]?.message}
+            />
+          )}
+        </form.Field>
 
-          <div className='flex justify-between gap-3 mb-3'>
-            <form.Field name='alias'>
-              {field => (
-                <TextInput
-                  dense
-                  id='sandbox_model_alias'
-                  label='Сокращение'
-                  className='w-full'
-                  value={field.state.value}
-                  onChange={event => field.handleChange(event.target.value)}
-                  onBlur={field.handleBlur}
-                  error={field.state.meta.errors[0]?.message}
-                />
-              )}
-            </form.Field>
-          </div>
+        <form.Field name='alias'>
+          {field => (
+            <TextInput
+              dense
+              id='sandbox_model_alias'
+              label='Сокращение'
+              className='w-full mb-3'
+              value={field.state.value}
+              onChange={event => field.handleChange(event.target.value)}
+              onBlur={field.handleBlur}
+              error={field.state.meta.errors[0]?.message}
+            />
+          )}
+        </form.Field>
 
-          <form.Field name='description'>
-            {field => (
-              <TextArea
-                id='sandbox_model_description'
-                label='Описание'
-                rows={3}
-                value={field.state.value}
-                onChange={event => field.handleChange(event.target.value)}
-                onBlur={field.handleBlur}
-                error={field.state.meta.errors[0]?.message}
-              />
-            )}
-          </form.Field>
+        <form.Field name='description'>
+          {field => (
+            <TextArea
+              id='sandbox_model_description'
+              label='Описание'
+              rows={3}
+              value={field.state.value}
+              onChange={event => field.handleChange(event.target.value)}
+              onBlur={field.handleBlur}
+              error={field.state.meta.errors[0]?.message}
+            />
+          )}
+        </form.Field>
+
+        <div className='mt-3 sm:mb-1 flex justify-between items-center'>
+          <ValueIcon
+            title='Дата обновления'
+            dense
+            icon={<IconDateUpdate size='1.25rem' />}
+            value={new Date(model.time_update).toLocaleString(intl.locale)}
+          />
 
           <SubmitButton
             text='Сохранить'
-            className='self-center mt-4'
+            className='self-center'
             loading={false}
             icon={<IconSave size='1.25rem' />}
             disabled={isDefaultValue}
           />
-        </form>
-      </div>
+
+          <ValueIcon
+            title='Дата создания'
+            dense
+            icon={<IconDateCreate size='1.25rem' />}
+            value={new Date(model.time_create).toLocaleString(intl.locale, {
+              year: '2-digit',
+              month: '2-digit',
+              day: '2-digit'
+            })}
+          />
+        </div>
+      </form>
+
 
       <aside className='w-80 md:w-56 mt-3 mx-auto md:ml-5 md:mr-0 max-w-full'      >
         <CardRSModelStats stats={stats} />

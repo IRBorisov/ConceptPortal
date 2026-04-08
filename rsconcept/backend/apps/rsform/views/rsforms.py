@@ -604,6 +604,30 @@ def create_rsform(request: Request) -> HttpResponse:
     )
 
 
+@extend_schema(
+    summary='create RSForm from sandbox schema data',
+    tags=['RSForm'],
+    request=s.RSFormSandboxImportSerializer,
+    responses={
+        c.HTTP_201_CREATED: LibraryItemSerializer,
+        c.HTTP_400_BAD_REQUEST: None,
+        c.HTTP_403_FORBIDDEN: None
+    }
+)
+@api_view(['POST'])
+@permission_classes([permissions.GlobalUser])
+def create_rsform_from_sandbox(request: Request) -> HttpResponse:
+    ''' Endpoint: Create RSForm from current sandbox schema data. '''
+    owner = cast(User, request.user) if not request.user.is_anonymous else None
+    serializer = s.RSFormSandboxImportSerializer(data=request.data, context={'owner': owner})
+    serializer.is_valid(raise_exception=True)
+    schema = serializer.save()
+    return Response(
+        status=c.HTTP_201_CREATED,
+        data=LibraryItemSerializer(LibraryItem.objects.get(pk=schema.pk)).data
+    )
+
+
 def _prepare_rsform_data(data: dict, request: Request, owner: Union[User, None]):
     data['owner'] = owner
     if 'title' in request.data and request.data['title'] != '':

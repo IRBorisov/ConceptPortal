@@ -1,9 +1,12 @@
 'use client';
 
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { toast } from 'react-toastify';
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { urls, useConceptNavigation } from '@/app';
+import { libraryApi } from '@/features/library/backend/api';
+import { loadBundle } from '@/features/sandbox/stores/sandbox-repository';
 
 import { Button, MiniButton, SubmitButton } from '@/components/control';
 import { IconDownload } from '@/components/icons';
@@ -28,13 +31,15 @@ import { useLibrarySearchStore } from '../../stores/library-search';
 
 interface FormCreateItemProps {
   modelFrom?: number;
+  fromSandbox?: boolean;
 }
 
-export function FormCreateItem({ modelFrom }: FormCreateItemProps) {
+export function FormCreateItem({ modelFrom, fromSandbox = false }: FormCreateItemProps) {
   const router = useConceptNavigation();
   const { createItem, isPending, reset: clearServerError } = useCreateItem();
   const { items } = useLibrary();
   const schemaItem = modelFrom ? items.find(item => item.id === modelFrom) : null;
+  const [isCreatingFromSandbox, setIsCreatingFromSandbox] = useState(false);
 
   const searchLocation = useLibrarySearchStore(state => state.location);
   const setSearchLocation = useLibrarySearchStore(state => state.setLocation);
@@ -60,26 +65,83 @@ export function FormCreateItem({ modelFrom }: FormCreateItemProps) {
       onChange: schemaCreateLibraryItem
     },
     onSubmit: async ({ value }) => {
-      await createItem(value).then(newItem => {
-        setSearchLocation(value.location);
-        switch (newItem.item_type) {
-          case LibraryItemType.RSFORM:
-            router.push({ path: urls.schema(newItem.id), force: true });
-            break;
-          case LibraryItemType.OSS:
-            router.push({ path: urls.oss(newItem.id), force: true });
-            break;
-          case LibraryItemType.RSMODEL:
-            router.push({ path: urls.model(newItem.id), force: true });
-            break;
-        }
-      });
+      const newItem = fromSandbox && value.item_type === LibraryItemType.RSFORM ?
+        await createFromSandbox(value) :
+        await createItem(value);
+      setSearchLocation(value.location);
+      switch (newItem.item_type) {
+        case LibraryItemType.RSFORM:
+          router.push({ path: urls.schema(newItem.id), force: true });
+          break;
+        case LibraryItemType.OSS:
+          router.push({ path: urls.oss(newItem.id), force: true });
+          break;
+        case LibraryItemType.RSMODEL:
+          router.push({ path: urls.model(newItem.id), force: true });
+          break;
+      }
     }
   });
 
   const itemType = useStore(form.store, state => state.values.item_type);
   const file = useStore(form.store, state => state.values.file);
   const inputRef = useRef<HTMLInputElement | null>(null);
+
+  async function createFromSandbox(value: CreateLibraryItemDTO) {
+    const bundle = await loadBundle();
+    if (!bundle) {
+      toast.error('Песочница пуста');
+      throw new Error('Sandbox bundle is not available');
+    }
+    setIsCreatingFromSandbox(true);
+    try {
+      return await libraryApi.createRSFormFromSandbox({
+        item_data: {
+          title: value.title ?? bundle.rsform.title,
+          alias: value.alias ?? bundle.rsform.alias,
+          description: value.description ?? bundle.rsform.description,
+          visible: value.visible,
+          read_only: value.read_only,
+          access_policy: value.access_policy,
+          location: value.location
+        },
+        schema_data: {
+          items: structuredClone(bundle.rsform.items),
+          attribution: structuredClone(bundle.rsform.attribution)
+        }
+      });
+    } finally {
+      setIsCreatingFromSandbox(false);
+    }
+  }
+
+  useEffect(function preloadSandboxMetadata() {
+    if (!fromSandbox || modelFrom) {
+      return;
+    }
+    let isActive = true;
+    void loadBundle()
+      .then(function applySandboxDefaults(bundle) {
+        if (!isActive || !bundle) {
+          return;
+        }
+        if (!form.getFieldValue('title')) {
+          form.setFieldValue('title', bundle.rsform.title);
+        }
+        if (!form.getFieldValue('alias')) {
+          form.setFieldValue('alias', bundle.rsform.alias);
+        }
+        if (!form.getFieldValue('description')) {
+          form.setFieldValue('description', bundle.rsform.description);
+        }
+      })
+      .catch(function handleSandboxLoadError(error: unknown) {
+        console.error(error);
+      });
+    return function cleanupSandboxMetadata() {
+      isActive = false;
+    };
+  }, [form, fromSandbox, modelFrom]);
 
   function resetErrors() {
     clearServerError();
@@ -126,7 +188,7 @@ export function FormCreateItem({ modelFrom }: FormCreateItemProps) {
       onChange={resetErrors}
     >
       <h1 className='select-none relative'>
-        {itemType == LibraryItemType.RSFORM ? (
+        {itemType == LibraryItemType.RSFORM && !fromSandbox ? (
           <>
             <input
               id='schema_file'
@@ -145,7 +207,9 @@ export function FormCreateItem({ modelFrom }: FormCreateItemProps) {
             />
           </>
         ) : null}
-        {itemType === LibraryItemType.RSMODEL ? 'Создание модели' : 'Создание схемы'}
+        {itemType === LibraryItemType.RSMODEL ?
+          'Создание модели' :
+          fromSandbox ? 'Создание схемы из песочницы' : 'Создание схемы'}
       </h1>
 
       {file ? <Label className='text-wrap' text={`Загружен файл: ${file.name}`} /> : null}
@@ -264,7 +328,7 @@ export function FormCreateItem({ modelFrom }: FormCreateItemProps) {
       <div className='flex justify-around gap-6 py-3'>
         <SubmitButton
           text={itemType === LibraryItemType.RSMODEL ? 'Создать модель' : 'Создать схему'}
-          loading={isPending} className='min-w-40'
+          loading={isPending || isCreatingFromSandbox} className='min-w-40'
         />
         <Button text='Отмена' className='min-w-40' onClick={handleCancel} />
       </div>

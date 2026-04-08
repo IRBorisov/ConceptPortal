@@ -1,9 +1,14 @@
 'use client';
 
+import { toast } from 'react-toastify';
+
 import { useConceptNavigation } from '@/app';
 import { useAuth } from '@/features/auth';
 import { AccessPolicy } from '@/features/library';
+import { useRSForm } from '@/features/rsform/backend/use-rsform';
 import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
+import { createSandboxBundleFromRSModel } from '@/features/sandbox/models/bundle-transfer';
+import { saveBundle } from '@/features/sandbox/stores/sandbox-repository';
 import { useRoleStore, UserRole } from '@/features/users';
 
 import { Divider } from '@/components/container';
@@ -17,10 +22,11 @@ import {
   IconNewItem,
   IconQR,
   IconRSForm,
+  IconSandbox,
   IconShare
 } from '@/components/icons';
 import { useDialogsStore } from '@/stores/dialogs';
-import { tooltipText } from '@/utils/labels';
+import { errorMsg, infoMsg, tooltipText } from '@/utils/labels';
 import { generatePageQR, sharePage } from '@/utils/utils';
 
 import { useRSModelEdit } from './rsmodel-context';
@@ -29,6 +35,7 @@ export function MenuMain() {
   const router = useConceptNavigation();
   const { model, deleteModel, isMutable, engine } = useRSModelEdit();
   const { isProcessing } = useRSFormEdit();
+  const { raw: schemaData } = useRSForm({ itemID: model.schema });
 
   const { isAnonymous } = useAuth();
 
@@ -69,6 +76,19 @@ export function MenuMain() {
     event.preventDefault();
     event.stopPropagation();
     router.gotoRSForm(model.schema, undefined, event.ctrlKey || event.metaKey);
+  }
+
+  async function handleTransferToSandbox() {
+    hideMenu();
+    try {
+      const nextBundle = createSandboxBundleFromRSModel(schemaData, model);
+      await saveBundle(nextBundle);
+      toast.success(infoMsg.sandboxImportSuccess);
+      router.gotoSandboxEditor();
+    } catch (error) {
+      console.error(error);
+      toast.error(errorMsg.sandboxImportError);
+    }
   }
 
   return (
@@ -131,6 +151,13 @@ export function MenuMain() {
           icon={<IconLibrary size='1rem' className='icon-primary' />}
           onClick={() => router.gotoLibrary()}
         />
+        {!isAnonymous ? (
+          <DropdownButton
+            text='Перенести в песочницу'
+            icon={<IconSandbox size='1rem' className='icon-green' />}
+            onClick={() => void handleTransferToSandbox()}
+          />
+        ) : null}
       </Dropdown>
     </div>
   );

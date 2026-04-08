@@ -1,11 +1,12 @@
 import fileDownload from 'js-file-download';
 
-import { createStarterSandboxBundle } from '../backend/create-starter-bundle';
 import { assertModelSchemaInvariant, type SandboxBundle, schemaSandboxBundle } from '../models/bundle';
+import { createStarterSandboxBundle } from '../models/bundle-starter';
 
 import { sandboxDB } from './sandbox-db';
 
 const ROW_ID = 'current' as const;
+const DEFAULT_BUNDLE_FILE = 'sandbox-bundle.json' as const;
 
 export async function loadBundle(): Promise<SandboxBundle | null> {
   const row = await sandboxDB.bundle.get(ROW_ID);
@@ -44,7 +45,7 @@ export async function importBundleFromJson(raw: unknown): Promise<SandboxBundle>
   return bundle;
 }
 
-export function downloadBundle(bundle: SandboxBundle, filename = 'sandbox-bundle.json'): void {
+export function downloadBundle(bundle: SandboxBundle, filename: string = DEFAULT_BUNDLE_FILE): void {
   const parsed = schemaSandboxBundle.parse(bundle);
   const text = JSON.stringify(parsed, null, 2);
   fileDownload(text, filename);

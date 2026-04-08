@@ -11,6 +11,7 @@ library_router.register('rsforms', views.RSFormViewSet, 'RSForm')
 urlpatterns = [
     path('rsforms/import-trs', views.TrsImportView.as_view()),
     path('rsforms/create-detailed', views.create_rsform),
+    path('rsforms/create-from-sandbox', views.create_rsform_from_sandbox),
     path('rsforms/inline-synthesis', views.inline_synthesis),
 
     path('cctext/inflect', views.inflect),

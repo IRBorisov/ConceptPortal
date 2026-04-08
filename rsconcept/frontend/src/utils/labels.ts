@@ -29,6 +29,7 @@ export const infoMsg = {
   uploadSuccess: 'Схема загружена из файла',
   inlineSynthesisComplete: 'Встраивание завершено',
   moveSuccess: 'Перемещение завершено',
+  sandboxImportSuccess: 'Песочница обновлена успешно',
 
   newLibraryItem: 'Схема успешно создана',
   addedConstituents: (count: number) => `Добавлены конституенты: ${count}`,
@@ -86,7 +87,8 @@ export const errorMsg = {
   invalidSetValue: 'Некорректная попытка назначения значения',
   clipboardRead: 'Не удалось прочитать из буфера обмена',
   fileRead: 'Ошибка при чтении файла',
-  valueNull: 'Значение отсутствует'
+  valueNull: 'Значение отсутствует',
+  sandboxImportError: 'Не удалось перенести схему в песочницу'
 } as const;
 
 /**
@@ -122,6 +124,7 @@ export const tooltipText = {
  */
 export const promptText = {
   promptUnsaved: 'Присутствуют несохраненные изменения. Продолжить без их учета?',
+  resetSandbox: 'Данное действие приведет к сбросу состояния песочницы. Продолжить?',
   deleteLibraryItem: 'Подтвердите удаление элемента библиотеки',
   deleteBlock: 'Подтвердите удаление блока',
   deleteArgument: 'Подтвердите удаление аргументов операции',

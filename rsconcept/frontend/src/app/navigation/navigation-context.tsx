@@ -65,6 +65,9 @@ interface INavigationContext {
   /** Change active id. */
   changeActive: (activeID: number) => void;
 
+  /** Navigate to Sandbox Editor. */
+  gotoSandboxEditor: (newTab?: boolean) => void;
+
   /** Navigate to edit active id. */
   gotoEditActive: (activeID: number, newTab?: boolean) => void;
 
@@ -76,6 +79,9 @@ interface INavigationContext {
 
   /** Navigate to New Item. */
   gotoNewItem: (newTab?: boolean) => void;
+
+  /** Navigate to New Item with sandbox import flag. */
+  gotoNewItemFromSandbox: (newTab?: boolean) => void;
 
   /** Navigate to New Model. */
   gotoNewModel: (schemaID: number, newTab?: boolean) => void;
@@ -220,8 +226,16 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
     push({ path: url.pathname + url.search + url.hash, newTab: newTab });
   }
 
+  function gotoSandboxEditor(newTab?: boolean): void {
+    push({ path: urls.sandbox, newTab: newTab });
+  }
+
   function gotoNewItem(newTab?: boolean): void {
     push({ path: urls.create_item, newTab: newTab });
+  }
+
+  function gotoNewItemFromSandbox(newTab?: boolean): void {
+    push({ path: urls.create_item_from_sandbox, newTab: newTab });
   }
 
   function gotoNewModel(schemaID: number, newTab?: boolean): void {
@@ -288,6 +302,7 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
 
         gotoLibrary,
         gotoNewItem,
+        gotoNewItemFromSandbox,
         gotoNewModel,
 
         gotoEditActive,
@@ -299,7 +314,8 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
         gotoCstList,
         gotoTermGraph,
         gotoPromptEdit,
-        gotoPromptList
+        gotoPromptList,
+        gotoSandboxEditor
       }}
     >
       {children}
