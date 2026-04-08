@@ -64,24 +64,26 @@ export function Navigation() {
           noNavigationAnimation ? '-translate-y-6 max-h-0' : 'max-h-12'
         )}
       >
-        <div
-          aria-hidden
-          className={clsx(
-            'absolute -left-8 -top-10 h-24 w-40',
-            'rounded-full blur-3xl',
-            'bg-accent-green/20 dark:bg-accent-green/60',
-            'pointer-events-none '
-          )}
-        />
-        <div
-          aria-hidden
-          className={clsx(
-            'absolute right-8 -top-8 h-20 w-32',
-            'rounded-full blur-3xl',
-            'bg-accent-teal/15 dark:bg-accent-teal/60',
-            'pointer-events-none '
-          )}
-        />
+        <div className='absolute top-0 w-full h-full overflow-hidden'>
+          <div
+            aria-hidden
+            className={clsx(
+              'absolute -left-8 -top-10 h-24 w-40',
+              'rounded-full blur-3xl',
+              'bg-accent-green/20 dark:bg-accent-green/60',
+              'pointer-events-none '
+            )}
+          />
+          <div
+            aria-hidden
+            className={clsx(
+              'absolute right-8 -top-8 h-20 w-32',
+              'rounded-full blur-3xl',
+              'bg-accent-teal/15 dark:bg-accent-teal/60',
+              'pointer-events-none '
+            )}
+          />
+        </div>
 
         <div
           className='cc-fade-in relative z-10 flex items-center shrink-0'
