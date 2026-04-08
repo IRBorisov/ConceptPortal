@@ -2,7 +2,6 @@
 
 import { useMemo } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
-import clsx from 'clsx';
 
 import { HelpTopic } from '@/features/help';
 import { SubstitutionValidator } from '@/features/oss/models/oss-api';
@@ -73,7 +72,8 @@ export function DlgSubstituteCst() {
         disabled
         value={validator.msg}
         rows={4}
-        className={clsx('mt-3', isCorrect ? '' : 'border-accent-red-foreground border-2')}
+        className='mt-3'
+        areaClassName={isCorrect ? '' : 'border-accent-red-foreground border-2'}
       />
     </ModalForm>
   );

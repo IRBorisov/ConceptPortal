@@ -191,7 +191,7 @@ export function FormValue({ id, activeCst }: FormValueProps) {
         readOnly
         label='Типизация'
         value={labelType(typification)}
-        className='cursor-default'
+        areaClassName='cursor-default'
       />
       {cstInferrable || (activeCst.definition_formal && activeCst.cst_type !== CstType.STRUCTURED) ? (
         <div className='relative'>

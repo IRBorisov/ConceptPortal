@@ -16,6 +16,9 @@ interface TextAreaProps extends Editor, ErrorProcessing, Titled, React.Component
 
   /** Disable resize to fit content. */
   fitContent?: boolean;
+
+  /** Class name for underlying textarea element. */
+  areaClassName?: string;
 }
 
 /**
@@ -30,40 +33,62 @@ export function TextArea({
   noOutline,
   noResize,
   className,
+  areaClassName,
   fitContent,
   disabled,
   error,
   ...restProps
 }: TextAreaProps) {
-  return (
-    <div
-      className={cn(
-        'w-full', //
-        dense ? 'flex grow items-center gap-3' : 'flex flex-col',
-        dense && className
-      )}
-    >
-      <Label text={label} htmlFor={id} />
-      <textarea
-        id={id}
-        className={cn(
-          'min-h-0',
-          'px-3',
-          'leading-tight',
-          'overflow-x-hidden overflow-y-auto',
-          !noBorder && 'border py-2',
-          fitContent && 'field-sizing-content',
-          noResize && 'resize-none',
-          transparent || disabled ? 'bg-transparent' : 'bg-input',
-          !noOutline && 'focus-outline',
-          dense && 'grow max-w-full',
-          !dense && !!label && 'mt-2',
-          !dense && className
-        )}
-        disabled={disabled}
-        {...restProps}
-      />
-      <ErrorField className='mt-1' error={error} />
-    </div>
-  );
+  if (dense) {
+    return (
+      <div className={cn('flex flex-col', className)}>
+        <div className='flex items-center gap-3'>
+          <Label text={label} htmlFor={id} />
+          <textarea
+            id={id}
+            className={cn(
+              'min-h-0 grow max-w-full',
+              'px-3',
+              'leading-tight',
+              'overflow-x-hidden overflow-y-auto',
+              !noBorder && 'border py-2',
+              fitContent && 'field-sizing-content',
+              noResize && 'resize-none',
+              transparent || disabled ? 'bg-transparent' : 'bg-input',
+              !noOutline && 'focus-outline',
+              areaClassName
+            )}
+            disabled={disabled}
+            {...restProps}
+          />
+        </div>
+        <ErrorField className='mt-1' error={error} />
+      </div>
+    );
+  } else {
+    return (
+      <div className={cn('flex flex-col', className)}      >
+        <Label text={label} htmlFor={id} />
+        <textarea
+          id={id}
+          className={cn(
+            'min-h-0',
+            'px-3',
+            'leading-tight',
+            'overflow-x-hidden overflow-y-auto',
+            !noBorder && 'border py-2',
+            fitContent && 'field-sizing-content',
+            noResize && 'resize-none',
+            transparent || disabled ? 'bg-transparent' : 'bg-input',
+            !noOutline && 'focus-outline',
+            !!label && 'mt-2',
+            areaClassName
+          )}
+          disabled={disabled}
+          {...restProps}
+        />
+        <ErrorField className='mt-1' error={error} />
+      </div>
+    );
+  }
 }

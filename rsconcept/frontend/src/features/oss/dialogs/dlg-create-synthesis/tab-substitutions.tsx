@@ -52,7 +52,7 @@ export function TabSubstitutions({ oss, inputs, substitutions, fields }: TabSubs
         disabled
         value={validator.msg}
         rows={4}
-        className={isCorrect ? '' : 'border-accent-red-foreground border-2'}
+        areaClassName={isCorrect ? '' : 'border-accent-red-foreground border-2'}
       />
     </div>
   );

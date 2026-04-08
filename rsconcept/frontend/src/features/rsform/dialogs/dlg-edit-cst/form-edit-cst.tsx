@@ -102,7 +102,7 @@ export function FormEditCst({
           onClick={onToggleCrucial}
         />
         <SelectCstType
-          id='dlg_cst_type' //
+          id='dlg_cst_type'
           value={cst_type}
           onChange={handleTypeChange}
           disabled={target.is_inherited}
@@ -156,7 +156,7 @@ export function FormEditCst({
 
       {cst_type !== CstType.NOMINAL ? (
         <TextArea
-          id='cst_typification'
+          id='dlg_cst_typification'
           fitContent
           dense
           noResize
@@ -231,7 +231,7 @@ export function FormEditCst({
               spellCheck
               label={isBasic ? 'Конвенция' : 'Комментарий'}
               placeholder={isBasic ? 'Договоренность об интерпретации' : 'Пояснение разработчика'}
-              className='max-h-20 disabled:min-h-9'
+              areaClassName='max-h-20 disabled:min-h-9'
               value={field.state.value ?? ''}
               onChange={event => field.handleChange(event.target.value)}
               onBlur={field.handleBlur}

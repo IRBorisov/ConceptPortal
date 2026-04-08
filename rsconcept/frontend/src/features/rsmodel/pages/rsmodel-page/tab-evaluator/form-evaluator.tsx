@@ -143,7 +143,7 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
         readOnly
         label='Типизация'
         value={labelType(localParse?.type ?? null)}
-        className='cursor-default'
+        areaClassName='cursor-default'
       />
 
       <div className='relative'>

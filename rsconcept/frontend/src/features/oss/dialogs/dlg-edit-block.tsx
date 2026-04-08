@@ -70,7 +70,7 @@ export function DlgEditBlock() {
       <form.Field name='item_data.title'>
         {field => (
           <TextInput
-            id='operation_title' //
+            id='operation_title'
             label='Название'
             placeholder='Введите название'
             value={field.state.value}
@@ -98,7 +98,7 @@ export function DlgEditBlock() {
       <form.Field name='item_data.description'>
         {field => (
           <TextArea
-            id='operation_comment' //
+            id='operation_comment'
             label='Описание'
             noResize
             rows={5}

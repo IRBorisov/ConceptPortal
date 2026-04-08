@@ -19,15 +19,23 @@ export function TabPromptEdit({ label, description, text, setText }: TabPromptEd
       <div className='flex flex-col gap-2'>
         <TextArea
           id='prompt-label'
-          label='Название' //
+          label='Название'
           value={label}
           disabled
           noResize
           rows={1}
         />
-        <TextArea id='prompt-description' label='Описание' value={description} disabled noResize rows={3} />
+        <TextArea
+          id='prompt-description'
+          label='Описание'
+          value={description}
+          disabled
+          noResize
+          rows={3}
+          areaClassName='h-12'
+        />
         <PromptInput
-          id='prompt-text' //
+          id='prompt-text'
           label='Текст шаблона'
           value={text}
           onChange={setText}

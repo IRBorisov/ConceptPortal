@@ -40,7 +40,7 @@ export function TabOperation({ oss, fields }: TabOperationProps) {
       <AliasField>
         {field => (
           <TextInput
-            id='operation_alias' //
+            id='operation_alias'
             label='Сокращение'
             placeholder='Введите сокращение'
             className='w-80'

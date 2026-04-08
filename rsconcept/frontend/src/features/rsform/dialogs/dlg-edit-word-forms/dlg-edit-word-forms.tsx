@@ -133,7 +133,7 @@ export function DlgEditWordForms() {
       <div className='flex'>
         <TextArea
           placeholder='Введите текст'
-          className='min-w-80'
+          areaClassName='min-w-80'
           rows={3}
           value={inputText}
           onChange={event => setInputText(event.target.value)}

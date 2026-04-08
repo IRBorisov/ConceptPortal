@@ -118,7 +118,7 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
         {field => (
           <TextArea
             id='prompt_description'
-            label='Описание' //
+            label='Описание'
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
@@ -165,7 +165,8 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
       <div className={clsx('cc-prompt-result overflow-y-hidden', sampleResult !== null && 'open')}>
         <TextArea
           fitContent
-          className='mt-3 max-h-64 min-h-12'
+          className='mt-3'
+          areaClassName='max-h-64 min-h-12'
           label='Пример запроса'
           value={sampleResult ?? debouncedResult ?? ''}
           disabled

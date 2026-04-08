@@ -53,7 +53,7 @@ export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggl
           onClick={onToggleCrucial}
         />
         <SelectCstType
-          id='dlg_cst_type' //
+          id='dlg_cst_type'
           value={cst_type}
           onChange={onChangeCstType}
         />
@@ -143,7 +143,7 @@ export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggl
               fitContent
               label={isBasic ? 'Конвенция' : 'Комментарий'}
               placeholder={isBasic ? 'Договоренность об интерпретации' : 'Пояснение разработчика'}
-              className='max-h-20'
+              areaClassName='max-h-20'
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
               onBlur={field.handleBlur}

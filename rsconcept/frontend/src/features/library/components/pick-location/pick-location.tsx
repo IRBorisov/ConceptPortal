@@ -44,7 +44,7 @@ export function PickLocation({
 
       <SelectLocationContext
         className='absolute left-28 -top-1'
-        dropdownHeight={dropdownHeight} //
+        dropdownHeight={dropdownHeight}
         value={value}
         onChange={onChange}
       />
@@ -54,6 +54,7 @@ export function PickLocation({
         label='Расположение'
         rows={rows}
         value={value.substring(3)}
+        className='w-full'
         onChange={event => onChange(combineLocation(value.substring(0, 2), event.target.value))}
       />
       <ErrorField className='absolute bottom-1 right-4' error={error} />

@@ -293,7 +293,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
             <TextArea
               id='cst_convention'
               fitContent
-              className='disabled:min-h-9 max-h-32'
+              areaClassName='disabled:min-h-9 max-h-32'
               spellCheck
               label={isBasic ? 'Конвенция' : 'Комментарий'}
               placeholder={disabled ? '' : isBasic ? 'Договоренность об интерпретации' : 'Пояснение разработчика'}
@@ -309,7 +309,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
 
       {!showConvention && (!disabled || isProcessing) ? (
         <TextButton
-          text='Добавить комментарий' //
+          text='Добавить комментарий'
           onClick={() => setForceComment(true)}
         />
       ) : null}

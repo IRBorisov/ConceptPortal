@@ -8,7 +8,8 @@ import { useConceptNavigation } from '@/app';
 import { Divider } from '@/components/container';
 import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
-import { IconDownload, IconMenu, IconNewItem, IconReset, IconUpload } from '@/components/icons';
+import { IconDownload, IconMenu, IconReset, IconRSForm, IconUpload } from '@/components/icons';
+import { errorMsg, infoMsg, promptText } from '@/utils/labels';
 
 import { type SandboxBundle } from '../../models/bundle';
 import { createStarterSandboxBundle } from '../../models/bundle-starter';
@@ -40,7 +41,7 @@ export function MenuMain({ bundle, setBundle }: MenuMainProps) {
 
   function handleReset() {
     hideMenu();
-    if (!window.confirm('Reset the sandbox bundle to the starter state?')) {
+    if (!window.confirm(promptText.resetSandbox)) {
       return;
     }
     setBundle(createStarterSandboxBundle());
@@ -67,10 +68,10 @@ export function MenuMain({ bundle, setBundle }: MenuMainProps) {
       const raw = JSON.parse(await file.text()) as unknown;
       const next = await importBundleFromJson(raw);
       setBundle(next);
-      toast.success('Sandbox bundle imported');
+      toast.success(infoMsg.sandboxImportSuccess);
     } catch (error) {
       console.error(error);
-      toast.error(error instanceof Error ? error.message : 'Failed to import sandbox bundle');
+      toast.error(errorMsg.sandboxImportError);
     }
   }
 
@@ -94,22 +95,22 @@ export function MenuMain({ bundle, setBundle }: MenuMainProps) {
       />
       <Dropdown isOpen={isMenuOpen} margin='mt-3'>
         <DropdownButton
-          text='Создать RSForm'
-          title='Создать новую концептуальную схему из текущих данных песочницы'
-          icon={<IconNewItem size='1rem' className='icon-green' />}
-          onClick={handleCreateRSForm}
-        />
-        <DropdownButton
           text='Сохранить в файл'
           title='Скачать текущие данные песочницы в JSON'
           icon={<IconDownload size='1rem' className='icon-primary' />}
           onClick={handleExport}
         />
         <DropdownButton
-          text='Импортировать из файла'
+          text='Загрузить из файла'
           title='Загрузить данные песочницы из JSON'
           icon={<IconUpload size='1rem' className='icon-primary' />}
           onClick={handleImportClick}
+        />
+        <DropdownButton
+          text='Создать КС'
+          title='Создать новую концептуальную схему из текущих данных песочницы'
+          icon={<IconRSForm size='1rem' className='icon-green' />}
+          onClick={handleCreateRSForm}
         />
         <Divider margins='mx-3 my-1' />
         <DropdownButton

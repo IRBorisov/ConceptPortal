@@ -29,7 +29,7 @@ export function DlgCreateSchema() {
   const { createSchema } = useCreateSchema();
 
   const {
-    ossID, //
+    ossID,
     layout,
     initialParent,
     onCreate,
@@ -99,7 +99,7 @@ export function DlgCreateSchema() {
       <form.Field name='item_data.title'>
         {field => (
           <TextInput
-            id='operation_title' //
+            id='operation_title'
             label='Название'
             placeholder='Введите название'
             value={field.state.value}
@@ -114,7 +114,7 @@ export function DlgCreateSchema() {
           <form.Field name='item_data.alias'>
             {field => (
               <TextInput
-                id='operation_alias' //
+                id='operation_alias'
                 label='Сокращение'
                 className='w-80'
                 placeholder='Введите сокращение'
@@ -139,7 +139,7 @@ export function DlgCreateSchema() {
         <form.Field name='item_data.description'>
           {field => (
             <TextArea
-              id='operation_comment' //
+              id='operation_comment'
               label='Описание'
               noResize
               rows={4}

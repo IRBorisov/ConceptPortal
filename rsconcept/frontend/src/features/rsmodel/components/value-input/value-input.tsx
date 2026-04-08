@@ -94,7 +94,7 @@ export function ValueInput({
         value={value.slice(0, limits.len_data_str)}
         onChange={event => onChangeStr?.(event.target.value)}
         fitContent
-        className={cn(value ? 'font-math text-sm' : '', className)}
+        areaClassName={cn(value ? 'font-math text-sm' : '', className)}
         rows={rows}
         spellCheck
         placeholder={placeholder}

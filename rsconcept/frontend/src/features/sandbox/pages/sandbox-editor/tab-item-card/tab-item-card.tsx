@@ -68,6 +68,7 @@ export function TabItemCard({ setBundle }: TabItemCardProps) {
 
   const isDefaultValue = useStore(form.store, state => state.isDefaultValue);
   const onResetEvent = useEffectEvent((next: UpdateLibraryItemDTO) => form.reset(next));
+  const canSubmit = useStore(form.store, state => state.isValid);
 
   useEffect(function resetFormOnModelChange() {
     onResetEvent(modelDefaults(model));
@@ -97,7 +98,7 @@ export function TabItemCard({ setBundle }: TabItemCardProps) {
     >
       <form
         id={globalIDs.library_item_editor}
-        className='mt-1 min-w-88 sm:w-120 flex flex-col pt-1 mx-0 md:mx-auto'
+        className='mt-2 min-w-88 sm:w-120 flex flex-col mx-0 md:mx-auto'
         onSubmit={event => {
           event.preventDefault();
           event.stopPropagation();
@@ -160,7 +161,7 @@ export function TabItemCard({ setBundle }: TabItemCardProps) {
             className='self-center'
             loading={false}
             icon={<IconSave size='1.25rem' />}
-            disabled={isDefaultValue}
+            disabled={isDefaultValue || !canSubmit}
           />
 
           <ValueIcon

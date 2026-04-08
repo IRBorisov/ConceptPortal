@@ -5,13 +5,13 @@ import { toast } from 'react-toastify';
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { urls, useConceptNavigation } from '@/app';
-import { libraryApi } from '@/features/library/backend/api';
 import { loadBundle } from '@/features/sandbox/stores/sandbox-repository';
 
 import { Button, MiniButton, SubmitButton } from '@/components/control';
-import { IconDownload } from '@/components/icons';
+import { IconDownload, IconSandbox } from '@/components/icons';
 import { Label, TextArea, TextInput } from '@/components/input';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';
+import { errorMsg } from '@/utils/labels';
 
 import {
   AccessPolicy,
@@ -19,6 +19,7 @@ import {
   LibraryItemType,
   schemaCreateLibraryItem
 } from '../../backend/types';
+import { useCreateFromSandbox } from '../../backend/use-create-from-sandbox';
 import { useCreateItem } from '../../backend/use-create-item';
 import { useLibrary } from '../../backend/use-library';
 import { IconItemVisibility } from '../../components/icon-item-visibility';
@@ -38,8 +39,9 @@ export function FormCreateItem({ modelFrom, fromSandbox = false }: FormCreateIte
   const router = useConceptNavigation();
   const { createItem, isPending, reset: clearServerError } = useCreateItem();
   const { items } = useLibrary();
+  const { createFromSandbox: createFromSandboxAsync } = useCreateFromSandbox();
   const schemaItem = modelFrom ? items.find(item => item.id === modelFrom) : null;
-  const [isCreatingFromSandbox, setIsCreatingFromSandbox] = useState(false);
+  const [loadSandboxData, setLoadSandboxData] = useState(fromSandbox);
 
   const searchLocation = useLibrarySearchStore(state => state.location);
   const setSearchLocation = useLibrarySearchStore(state => state.setLocation);
@@ -90,38 +92,33 @@ export function FormCreateItem({ modelFrom, fromSandbox = false }: FormCreateIte
   async function createFromSandbox(value: CreateLibraryItemDTO) {
     const bundle = await loadBundle();
     if (!bundle) {
-      toast.error('Песочница пуста');
-      throw new Error('Sandbox bundle is not available');
+      toast.error(errorMsg.sandboxBundleNotAvailable);
+      throw new Error(errorMsg.sandboxBundleNotAvailable);
     }
-    setIsCreatingFromSandbox(true);
-    try {
-      return await libraryApi.createRSFormFromSandbox({
-        item_data: {
-          title: value.title ?? bundle.rsform.title,
-          alias: value.alias ?? bundle.rsform.alias,
-          description: value.description ?? bundle.rsform.description,
-          visible: value.visible,
-          read_only: value.read_only,
-          access_policy: value.access_policy,
-          location: value.location
-        },
-        schema_data: {
-          items: structuredClone(bundle.rsform.items),
-          attribution: structuredClone(bundle.rsform.attribution)
-        }
-      });
-    } finally {
-      setIsCreatingFromSandbox(false);
-    }
+    return createFromSandboxAsync({
+      item_data: {
+        title: value.title ?? bundle.rsform.title,
+        alias: value.alias ?? bundle.rsform.alias,
+        description: value.description ?? bundle.rsform.description,
+        visible: value.visible,
+        read_only: value.read_only,
+        access_policy: value.access_policy,
+        location: value.location
+      },
+      schema_data: {
+        items: bundle.rsform.items,
+        attribution: bundle.rsform.attribution
+      }
+    });
   }
 
   useEffect(function preloadSandboxMetadata() {
-    if (!fromSandbox || modelFrom) {
+    if (!loadSandboxData || modelFrom) {
       return;
     }
     let isActive = true;
     void loadBundle()
-      .then(function applySandboxDefaults(bundle) {
+      .then(bundle => {
         if (!isActive || !bundle) {
           return;
         }
@@ -135,13 +132,13 @@ export function FormCreateItem({ modelFrom, fromSandbox = false }: FormCreateIte
           form.setFieldValue('description', bundle.rsform.description);
         }
       })
-      .catch(function handleSandboxLoadError(error: unknown) {
+      .catch((error: unknown) => {
         console.error(error);
       });
     return function cleanupSandboxMetadata() {
       isActive = false;
     };
-  }, [form, fromSandbox, modelFrom]);
+  }, [form, loadSandboxData, modelFrom]);
 
   function resetErrors() {
     clearServerError();
@@ -188,7 +185,14 @@ export function FormCreateItem({ modelFrom, fromSandbox = false }: FormCreateIte
       onChange={resetErrors}
     >
       <h1 className='select-none relative'>
-        {itemType == LibraryItemType.RSFORM && !fromSandbox ? (
+        {itemType === LibraryItemType.RSFORM && fromSandbox ?
+          <MiniButton
+            title='Загрузка данных из песочницы'
+            className='absolute top-1 left-0'
+            icon={<IconSandbox size='1.25rem' className={loadSandboxData ? 'icon-primary' : ''} />}
+            onClick={() => setLoadSandboxData(prev => !prev)}
+          /> : null}
+        {itemType == LibraryItemType.RSFORM && !loadSandboxData ? (
           <>
             <input
               id='schema_file'
@@ -207,9 +211,7 @@ export function FormCreateItem({ modelFrom, fromSandbox = false }: FormCreateIte
             />
           </>
         ) : null}
-        {itemType === LibraryItemType.RSMODEL ?
-          'Создание модели' :
-          fromSandbox ? 'Создание схемы из песочницы' : 'Создание схемы'}
+        {itemType === LibraryItemType.RSMODEL ? 'Создание модели' : 'Создание схемы'}
       </h1>
 
       {file ? <Label className='text-wrap' text={`Загружен файл: ${file.name}`} /> : null}
@@ -248,7 +250,7 @@ export function FormCreateItem({ modelFrom, fromSandbox = false }: FormCreateIte
           <form.Field name='item_type'>
             {field => (
               <SelectItemType
-                value={field.state.value ?? LibraryItemType.RSFORM} //
+                value={field.state.value ?? LibraryItemType.RSFORM}
                 onChange={handleItemTypeChange}
               />
             )}
@@ -261,7 +263,7 @@ export function FormCreateItem({ modelFrom, fromSandbox = false }: FormCreateIte
             <form.Field name='access_policy'>
               {field => (
                 <SelectAccessPolicy
-                  value={field.state.value ?? AccessPolicy.PUBLIC} //
+                  value={field.state.value ?? AccessPolicy.PUBLIC}
                   onChange={field.handleChange}
                   stretchLeft
                 />
@@ -303,7 +305,7 @@ export function FormCreateItem({ modelFrom, fromSandbox = false }: FormCreateIte
       <form.Field name='location'>
         {field => (
           <PickLocation
-            value={field.state.value ?? ''} //
+            value={field.state.value ?? ''}
             rows={2}
             onChange={field.handleChange}
             error={field.state.meta.errors[0]?.message}
@@ -328,7 +330,7 @@ export function FormCreateItem({ modelFrom, fromSandbox = false }: FormCreateIte
       <div className='flex justify-around gap-6 py-3'>
         <SubmitButton
           text={itemType === LibraryItemType.RSMODEL ? 'Создать модель' : 'Создать схему'}
-          loading={isPending || isCreatingFromSandbox} className='min-w-40'
+          loading={isPending} className='min-w-40'
         />
         <Button text='Отмена' className='min-w-40' onClick={handleCancel} />
       </div>

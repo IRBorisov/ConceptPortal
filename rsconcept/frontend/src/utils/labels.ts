@@ -88,7 +88,8 @@ export const errorMsg = {
   clipboardRead: 'Не удалось прочитать из буфера обмена',
   fileRead: 'Ошибка при чтении файла',
   valueNull: 'Значение отсутствует',
-  sandboxImportError: 'Не удалось перенести схему в песочницу'
+  sandboxImportError: 'Не удалось перенести схему в песочницу',
+  sandboxBundleNotAvailable: 'Песочница пуста'
 } as const;
 
 /**

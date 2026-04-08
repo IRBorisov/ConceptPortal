@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+
 import { type Editor, type ErrorProcessing, type Titled } from '../props';
 import { cn } from '../utils';
 
@@ -38,32 +40,50 @@ export function TextInput({
   error,
   ...restProps
 }: TextInputProps) {
-  return (
-    <div
-      className={cn(
-        dense ? 'flex items-center gap-3' : 'flex flex-col', //
-        dense && className
-      )}
-    >
-      <Label text={label} htmlFor={id} />
-      <input
-        id={id}
-        className={cn(
-          'min-w-0',
-          'leading-tight truncate hover:text-clip',
-          transparent || disabled ? 'bg-transparent' : 'bg-input',
-          !noBorder && 'border py-2',
-          !noOutline && 'focus-outline',
-          (!noBorder || !disabled) && 'px-3',
-          dense && 'grow max-w-full',
-          !dense && !!label && 'mt-2',
-          !dense && className
-        )}
-        onKeyDown={!allowEnter && !onKeyDown ? preventEnterCapture : onKeyDown}
-        disabled={disabled}
-        {...restProps}
-      />
-      <ErrorField className='mt-1' error={error} />
-    </div>
-  );
+  if (dense) {
+    return (
+      <div className={cn('flex flex-col', className)}>
+        <div className='flex items-center gap-3'>
+          <Label text={label} htmlFor={id} />
+          <input
+            id={id}
+            className={clsx(
+              'min-w-0 grow max-w-full',
+              'leading-tight truncate hover:text-clip',
+              transparent || disabled ? 'bg-transparent' : 'bg-input',
+              !noBorder && 'border py-2',
+              !noOutline && 'focus-outline',
+              (!noBorder || !disabled) && 'px-3',
+            )}
+            onKeyDown={!allowEnter && !onKeyDown ? preventEnterCapture : onKeyDown}
+            disabled={disabled}
+            {...restProps}
+          />
+        </div>
+        <ErrorField className='mt-1' error={error} />
+      </div>
+    );
+  } else {
+    return (
+      <div className={cn('flex flex-col', className)} >
+        <Label text={label} htmlFor={id} />
+        <input
+          id={id}
+          className={clsx(
+            'min-w-0',
+            'leading-tight truncate hover:text-clip',
+            transparent || disabled ? 'bg-transparent' : 'bg-input',
+            !noBorder && 'border py-2',
+            !noOutline && 'focus-outline',
+            (!noBorder || !disabled) && 'px-3',
+            !!label && 'mt-2',
+          )}
+          onKeyDown={!allowEnter && !onKeyDown ? preventEnterCapture : onKeyDown}
+          disabled={disabled}
+          {...restProps}
+        />
+        <ErrorField className='mt-1' error={error} />
+      </div>
+    );
+  }
 }
