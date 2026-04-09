@@ -142,8 +142,8 @@ export const libraryApi = {
       }
     }),
   cloneItem: ({ itemID, data }: { itemID: number; data: CloneLibraryItemDTO; }) =>
-    axiosPost<CloneLibraryItemDTO, RSFormDTO>({
-      schema: schemaRSForm,
+    axiosPost<CloneLibraryItemDTO, LibraryItem>({
+      schema: schemaLibraryItem,
       endpoint: `/api/library/${itemID}/clone`,
       request: {
         data: data,

@@ -43,7 +43,7 @@ export function StatusBar({ className, status, onCalculate }: StatusBarProps) {
           <span className='font-controls pr-1 text-sm'>{labelEvalStatus(status)}</span>
         </div>
       </div>
-      <BadgeHelp className='-mt-0.5' topic={HelpTopic.UI_RSMODEL_STATUS} offset={4} />
+      <BadgeHelp className='-mt-0.5' topic={HelpTopic.UI_EVAL_STATUS} offset={4} />
     </div>
   );
 }

@@ -8,8 +8,8 @@ from apps.library.models import (
     LibraryTemplate,
     LocationHead
 )
-from apps.rsform.models import Attribution, RSForm
-from apps.rsmodel.models import RSModel
+from apps.rsform.models import Attribution, Constituenta, RSForm
+from apps.rsmodel.models import ConstituentData, RSModel
 from shared.EndpointTester import EndpointTester, decl_endpoint
 from shared.testing_utils import response_contains
 
@@ -387,28 +387,37 @@ class TestLibraryViewset(EndpointTester):
 
         response = self.executeCreated(data, item=self.owned.pk)
         self.assertEqual(response.data['title'], data['item_data']['title'])
-        self.assertEqual(len(response.data['items']), 2)
-        self.assertEqual(len(response.data['attribution']), 1)
-        self.assertEqual(response.data['items'][0]['alias'], x12.alias)
-        self.assertEqual(response.data['items'][0]['term_raw'], x12.term_raw)
-        self.assertEqual(response.data['items'][0]['term_resolved'], x12.term_resolved)
-        self.assertEqual(response.data['items'][1]['term_raw'], d2.term_raw)
-        self.assertEqual(response.data['items'][1]['term_resolved'], d2.term_resolved)
-        self.assertEqual(response.data['attribution'][0]['attribute'], response.data['items'][0]['id'])
-        self.assertEqual(response.data['attribution'][0]['container'], response.data['items'][1]['id'])
+
+        db_items = list(Constituenta.objects.filter(schema_id=response.data['id']))
+        self.assertEqual(len(db_items), 2)
+        self.assertEqual(db_items[0].alias, x12.alias)
+        self.assertEqual(db_items[0].term_raw, x12.term_raw)
+        self.assertEqual(db_items[0].term_resolved, x12.term_resolved)
+        self.assertEqual(db_items[1].term_raw, d2.term_raw)
+        self.assertEqual(db_items[1].term_resolved, d2.term_resolved)
+
+        db_attributions = list(Attribution.objects.filter(
+            container__schema_id=response.data['id']
+        ))
+        self.assertEqual(len(db_attributions), 1)
+        self.assertEqual(db_attributions[0].container.pk, db_items[1].pk)
+        self.assertEqual(db_attributions[0].attribute.pk, db_items[0].pk)
 
         data = {'item_data': {'title': 'Title1340'}, 'items': []}
         response = self.executeCreated(data, item=self.owned.pk)
+        db_items = list(Constituenta.objects.filter(schema_id=response.data['id']))
         self.assertEqual(response.data['title'], data['item_data']['title'])
-        self.assertEqual(len(response.data['items']), 2)
+        self.assertEqual(len(db_items), 2)
 
         data = {'item_data': {'title': 'Title1341'}, 'items': [x12.pk]}
         response = self.executeCreated(data, item=self.owned.pk)
         self.assertEqual(response.data['title'], data['item_data']['title'])
-        self.assertEqual(len(response.data['items']), 1)
-        self.assertEqual(response.data['items'][0]['alias'], x12.alias)
-        self.assertEqual(response.data['items'][0]['term_raw'], x12.term_raw)
-        self.assertEqual(response.data['items'][0]['term_resolved'], x12.term_resolved)
+
+        db_items = list(Constituenta.objects.filter(schema_id=response.data['id']))
+        self.assertEqual(len(db_items), 1)
+        self.assertEqual(db_items[0].alias, x12.alias)
+        self.assertEqual(db_items[0].term_raw, x12.term_raw)
+        self.assertEqual(db_items[0].term_resolved, x12.term_resolved)
 
 
     @decl_endpoint('/api/library/{item}/clone', method='post')
@@ -425,11 +434,40 @@ class TestLibraryViewset(EndpointTester):
         data = {'item_data': {'title': 'Cloned'}, 'items': [x2.pk, d1.pk]}
         response = self.executeCreated(data, item=self.owned.pk)
         self.assertEqual(response.data['title'], data['item_data']['title'])
-        self.assertEqual(len(response.data['items']), 2)
+        db_items = list(Constituenta.objects.filter(schema_id=response.data['id']))
+        self.assertEqual(len(db_items), 2)
 
-        aliases = set[Any](item['alias'] for item in response.data['items'])
+        aliases = set[Any](item.alias for item in db_items)
         self.assertIn(x2.alias, aliases)
         self.assertIn(d1.alias, aliases)
-        self.assertEqual(len(response.data['attribution']), 1)
-        self.assertEqual(response.data['attribution'][0]['container'], response.data['items'][1]['id'])
-        self.assertEqual(response.data['attribution'][0]['attribute'], response.data['items'][0]['id'])
+
+        db_attributions = list(Attribution.objects.filter(
+            container__schema_id=response.data['id']
+        ))
+        self.assertEqual(len(db_attributions), 1)
+        self.assertEqual(db_attributions[0].container.pk, db_items[1].pk)
+        self.assertEqual(db_attributions[0].attribute.pk, db_items[0].pk)
+
+    @decl_endpoint('/api/library/{item}/clone', method='post')
+    def test_clone_rsmodel(self):
+        schema = RSForm(self.owned)
+        x1 = schema.insert_last(alias='X1')
+        x2 = schema.insert_last(alias='X2')
+        model = RSModel.create(
+            self.owned,
+            title='Model',
+            alias='M1',
+            owner=self.user
+        )
+        ConstituentData.objects.create(model=model.model, constituent=x1, type='basic', data=1)
+        ConstituentData.objects.create(model=model.model, constituent=x2, type='basic', data=2)
+
+        data = {'item_data': {'title': 'Model Copy'}, 'items': []}
+        response = self.executeCreated(data, item=model.pk)
+        self.assertEqual(response.data['title'], data['item_data']['title'])
+        self.assertEqual(response.data['item_type'], LibraryItemType.RSMODEL)
+
+
+        clone_model = RSModel.objects.get(model_id=response.data['id'])
+        self.assertEqual(clone_model.schema_id, self.owned.pk)
+        self.assertEqual(ConstituentData.objects.filter(model_id=response.data['id']).count(), 2)

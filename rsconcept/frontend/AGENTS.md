@@ -76,3 +76,4 @@ Add new instructions here:
 
 - In `useEffect` hooks and `setTimeout` calls, use named function expressions instead of anonymous arrow callbacks.
 - Prefer `useEffectEvent` over `useCallback` for handlers used inside `useEffect`.
+- When adding or renaming Help manuals topics/pages under `src/features/help`, always update the help repository index wiring in the same change: `src/features/help/pages/manuals-page/topic-page.tsx` (topic -> component mapping)

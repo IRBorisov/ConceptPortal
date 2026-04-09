@@ -19,7 +19,6 @@ import {
   IconDownload,
   IconLibrary,
   IconMenu,
-  IconNewItem,
   IconOSS,
   IconPDF,
   IconQR,
@@ -269,13 +268,6 @@ export function MenuMain() {
 
         <Divider margins='mx-3 my-1' />
 
-        {!isAnonymous ? (
-          <DropdownButton
-            text='Создать новую схему'
-            icon={<IconNewItem size='1rem' className='icon-primary' />}
-            onClick={() => router.gotoNewItem()}
-          />
-        ) : null}
         {schema.oss.length > 0 ? (
           <div ref={ossRef} onBlur={handleOssBlur} className='relative w-full'>
             <DropdownButton

@@ -15,7 +15,7 @@ export function HelpRSModelEvaluator() {
       <ul>
         <li>в верхнем поле задается родоструктурное выражение</li>
         <li>ниже отображаются типизация, ошибки разбора и вычисленное значение</li>
-        <li>для запуска вычисления нажмите на кнопку со  <LinkTopic text='статусом' topic={HelpTopic.UI_RSMODEL_STATUS} /> по центру</li>
+        <li>для запуска вычисления нажмите на кнопку со  <LinkTopic text='статусом' topic={HelpTopic.UI_EVAL_STATUS} /> по центру</li>
         <li>
           <IconStatusOK className='inline-icon' /> результат можно открыть в диалоге просмотра значения
         </li>

@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 
 import { useConceptNavigation } from '@/app';
 import { useAuth } from '@/features/auth';
-import { AccessPolicy } from '@/features/library';
+import { AccessPolicy, LocationHead } from '@/features/library';
 import { useRSForm } from '@/features/rsform/backend/use-rsform';
 import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
 import { createSandboxBundleFromRSModel } from '@/features/sandbox/models/bundle-transfer';
@@ -16,6 +16,7 @@ import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import {
   IconCalculateAll,
+  IconClone,
   IconDestroy,
   IconLibrary,
   IconMenu,
@@ -42,6 +43,7 @@ export function MenuMain() {
   const role = useRoleStore(state => state.role);
 
   const showQR = useDialogsStore(state => state.showQR);
+  const showClone = useDialogsStore(state => state.showCloneLibraryItem);
 
   const {
     elementRef: menuRef,
@@ -54,6 +56,15 @@ export function MenuMain() {
   function handleDelete() {
     hideMenu();
     deleteModel();
+  }
+
+  function calculateCloneLocation() {
+    const location = model.location;
+    const head = location.substring(0, 2) as LocationHead;
+    if (head === LocationHead.LIBRARY) {
+      return LocationHead.USER;
+    }
+    return head === LocationHead.USER ? LocationHead.USER : location;
   }
 
   function handleShare() {
@@ -69,6 +80,16 @@ export function MenuMain() {
   function handleShowQR() {
     hideMenu();
     showQR({ target: generatePageQR() });
+  }
+
+  function handleClone() {
+    hideMenu();
+    showClone({
+      base: model,
+      initialLocation: calculateCloneLocation(),
+      selected: [],
+      totalCount: schemaData.items.length
+    });
   }
 
   function handleNavigateSchema(event: React.MouseEvent<HTMLButtonElement>) {
@@ -123,6 +144,13 @@ export function MenuMain() {
           icon={<IconQR size='1rem' className='icon-primary' />}
           onClick={handleShowQR}
         />
+        {!isAnonymous ? (
+          <DropdownButton
+            text='Клонировать'
+            icon={<IconClone size='1rem' className='icon-green' />}
+            onClick={handleClone}
+          />
+        ) : null}
         {isMutable ? (
           <DropdownButton
             text='Удалить модель'

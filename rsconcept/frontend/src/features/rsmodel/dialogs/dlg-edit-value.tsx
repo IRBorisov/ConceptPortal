@@ -42,7 +42,7 @@ export function DlgEditValue() {
 
   return (
     <ModalForm
-      helpTopic={HelpTopic.UI_RSMODEL_VALUE_DIALOG}
+      helpTopic={HelpTopic.UI_MODEL_VALUE_EDIT}
       header='Редактор значения'
       submitText='Сохранить'
       canSubmit={value !== initialValue && !!onChange}

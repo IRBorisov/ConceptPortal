@@ -16,8 +16,7 @@ from rest_framework.response import Response
 
 from apps.oss.models import Layout, Operation, OperationSchema, PropagationFacade
 from apps.rsform.models import RSFormCached
-from apps.rsform.serializers import RSFormParseSerializer
-from apps.rsmodel.models import RSModel
+from apps.rsmodel.models import ConstituentData, RSModel
 from apps.users.models import User
 from shared import permissions
 
@@ -158,7 +157,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
         tags=['Library'],
         request=s.LibraryItemCloneSerializer,
         responses={
-            c.HTTP_201_CREATED: RSFormParseSerializer,
+            c.HTTP_201_CREATED: None,
             c.HTTP_400_BAD_REQUEST: None,
             c.HTTP_403_FORBIDDEN: None,
             c.HTTP_404_NOT_FOUND: None
@@ -168,10 +167,10 @@ class LibraryViewSet(viewsets.ModelViewSet):
     def clone(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Create deep copy of library item. '''
         item = self._get_item()
-        if item.item_type != m.LibraryItemType.RSFORM:
+        if item.item_type not in [m.LibraryItemType.RSFORM, m.LibraryItemType.RSMODEL]:
             return Response(status=c.HTTP_400_BAD_REQUEST)
 
-        serializer = s.LibraryItemCloneSerializer(data=request.data, context={'schema': item})
+        serializer = s.LibraryItemCloneSerializer(data=request.data, context={'target': item})
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data['item_data']
         with transaction.atomic():
@@ -186,12 +185,25 @@ class LibraryViewSet(viewsets.ModelViewSet):
             clone.access_policy = data.get('access_policy', m.AccessPolicy.PUBLIC)
             clone.location = data.get('location', m.LocationHead.USER)
             clone.save()
-            RSFormCached(clone.pk).insert_from(item.pk, request.data['items'] if 'items' in request.data else None)
+            if item.item_type == m.LibraryItemType.RSFORM:
+                RSFormCached(clone.pk).insert_from(item.pk, request.data['items'] if 'items' in request.data else None)
+            else:
+                model_binding = RSModel.objects.get(model=item)
+                RSModel.objects.create(model=clone, schema=model_binding.schema)
+                value_bindings = ConstituentData.objects.filter(model=item)
+                ConstituentData.objects.bulk_create([
+                    ConstituentData(
+                        model=clone,
+                        constituent_id=binding_item.constituent_id,
+                        type=binding_item.type,
+                        data=binding_item.data
+                    )
+                    for binding_item in value_bindings
+                ])
 
-        return Response(
-            status=c.HTTP_201_CREATED,
-            data=RSFormParseSerializer(clone).data
-        )
+        return Response(status=c.HTTP_201_CREATED, data=(
+            s.LibraryItemSerializer(clone).data
+        ))
 
     @extend_schema(
         summary='set owner for item',

@@ -27,7 +27,7 @@ export function HelpOssSidebar() {
       </p>
       <p className='mt-1'>
         Верхняя часть панели позволяет фильтровать список конституент аналогично{' '}
-        <LinkTopic text='редактору конституенты' topic={HelpTopic.UI_RS_EDITOR} />.
+        <LinkTopic text='редактору конституенты' topic={HelpTopic.UI_SCHEMA_EDITOR} />.
       </p>
       <ul>
         <li>

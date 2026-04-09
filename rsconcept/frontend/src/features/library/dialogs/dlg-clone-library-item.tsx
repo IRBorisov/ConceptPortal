@@ -1,6 +1,5 @@
 'use client';
 
-import { useMemo } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { urls, useConceptNavigation } from '@/app';
@@ -14,6 +13,7 @@ import {
   AccessPolicy,
   type CloneLibraryItemDTO,
   type LibraryItem,
+  LibraryItemType,
   schemaCloneLibraryItem
 } from '../backend/types';
 import { useCloneItem } from '../backend/use-clone-item';
@@ -55,12 +55,17 @@ export function DlgCloneLibraryItem() {
       await cloneItem({
         itemID: base.id,
         data: value
-      }).then(newSchema => router.pushAsync({ path: urls.schema(newSchema.id), force: true }));
+      }).then(newItem => {
+        const path = 'item_type' in newItem && newItem.item_type === LibraryItemType.RSMODEL
+          ? urls.model(newItem.id)
+          : urls.schema(newItem.id);
+        return router.pushAsync({ path, force: true });
+      });
     }
   });
 
   const values = useStore(form.store, state => state.values);
-  const isValid = useMemo(() => schemaCloneLibraryItem.safeParse(values).success, [values]);
+  const isValid = schemaCloneLibraryItem.safeParse(values).success;
 
   return (
     <ModalForm
@@ -130,7 +135,7 @@ export function DlgCloneLibraryItem() {
       <form.Field name='item_data.location'>
         {field => (
           <PickLocation
-            value={field.state.value ?? ''} //
+            value={field.state.value ?? ''}
             rows={2}
             onChange={field.handleChange}
             error={field.state.meta.errors[0]?.message}
@@ -152,7 +157,7 @@ export function DlgCloneLibraryItem() {
         )}
       </form.Field>
 
-      {selected.length > 0 ? (
+      {selected.length > 0 && base.item_type === LibraryItemType.RSFORM ? (
         <form.Field name='items'>
           {field => (
             <Checkbox

@@ -22,11 +22,11 @@ export function HelpRSModelList() {
       </p>
       <p>
         Для редактирования определений и терминов переходите к{' '}
-        <LinkTopic text='редактору конституенты' topic={HelpTopic.UI_RS_EDITOR} />.
+        <LinkTopic text='редактору конституенты' topic={HelpTopic.UI_SCHEMA_EDITOR} />.
       </p>
       <p>
         Для работы со значениями используйте{' '}
-        <LinkTopic text='вкладку данных модели' topic={HelpTopic.UI_RSMODEL_VALUE} />.
+        <LinkTopic text='вкладку данных модели' topic={HelpTopic.UI_MODEL_VALUE} />.
       </p>
 
       <h2>Управление</h2>

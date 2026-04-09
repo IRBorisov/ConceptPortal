@@ -34,7 +34,7 @@ export function DlgEditBinding() {
   if (onChange) {
     return (
       <ModalForm
-        helpTopic={HelpTopic.UI_RSMODEL_BINDING}
+        helpTopic={HelpTopic.UI_MODEL_BINDING}
         header='Редактор базового источника'
         submitText='Сохранить'
         canSubmit={value !== initialValue}
@@ -50,7 +50,7 @@ export function DlgEditBinding() {
   } else {
     return (
       <ModalView
-        helpTopic={HelpTopic.UI_RSMODEL_BINDING}
+        helpTopic={HelpTopic.UI_MODEL_BINDING}
         header='Просмотр базового источника'
         noFooterButton
         className={dialogClassName}

@@ -84,7 +84,7 @@ export function TabModelCard() {
         isMutable={isMutable}
         deleteItem={handleDelete}
         isNarrow={isNarrow}
-        helpTopic={HelpTopic.UI_RSMODEL_CARD}
+        helpTopic={HelpTopic.UI_MODEL_CARD}
       />
 
       <div className='cc-column mx-0 md:mx-auto'>

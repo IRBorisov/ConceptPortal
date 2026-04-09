@@ -69,7 +69,7 @@ const topicSearchOverrides: Record<HelpTopicValue, HelpSearchOverride> = {
     searchText:
       'Библиотека схем. Поиск по названию и сокращению, фильтры, сортировка, проводник папок, просмотр концептуальных схем, OSS и моделей.'
   },
-  [HelpTopic.UI_RS_MENU]: {
+  [HelpTopic.UI_SCHEMA_MENU]: {
     keywords: [
       'меню схемы',
       'редактирование схемы',
@@ -80,7 +80,18 @@ const topicSearchOverrides: Record<HelpTopicValue, HelpSearchOverride> = {
     searchText:
       'Редактирование схемы. Вкладки, меню схемы, действия со схемой, переходы между режимами, команды редактирования.'
   },
-  [HelpTopic.UI_RS_CARD]: {
+  [HelpTopic.UI_MODEL_MENU]: {
+    keywords: [
+      'меню модели',
+      'редактирование модели',
+      'вкладки модели',
+      'действия модели',
+      'команды модели'
+    ],
+    searchText:
+      'Редактирование модели. Вкладки модели, меню модели, пересчет, клонирование, переход к схеме и перенос модели в песочницу.'
+  },
+  [HelpTopic.UI_SCHEMA_CARD]: {
     keywords: [
       'паспорт схемы',
       'карточка схемы',
@@ -91,7 +102,7 @@ const topicSearchOverrides: Record<HelpTopicValue, HelpSearchOverride> = {
     searchText:
       'Паспорт схемы. Основные атрибуты схемы, управление, свойства, описание, статус и другие метаданные.'
   },
-  [HelpTopic.UI_RS_LIST]: {
+  [HelpTopic.UI_SCHEMA_LIST]: {
     keywords: [
       'список конституент',
       'таблица',
@@ -102,7 +113,7 @@ const topicSearchOverrides: Record<HelpTopicValue, HelpSearchOverride> = {
     searchText:
       'Список конституент схемы. Табличный просмотр, управление списком, выбор строк, просмотр и навигация по конституентам.'
   },
-  [HelpTopic.UI_RS_EDITOR]: {
+  [HelpTopic.UI_SCHEMA_EDITOR]: {
     keywords: [
       'редактор конституенты',
       'редактор',
@@ -113,7 +124,7 @@ const topicSearchOverrides: Record<HelpTopicValue, HelpSearchOverride> = {
     searchText:
       'Редактор конституенты. Изменение атрибутов, работа со списком конституент, команды управления, редактирование понятий и свойств.'
   },
-  [HelpTopic.UI_RSMODEL_CARD]: {
+  [HelpTopic.UI_MODEL_CARD]: {
     keywords: [
       'паспорт модели',
       'карточка модели',
@@ -123,7 +134,7 @@ const topicSearchOverrides: Record<HelpTopicValue, HelpSearchOverride> = {
     searchText:
       'Паспорт модели. Основные свойства и атрибуты модели, связь со схемой, управление моделью.'
   },
-  [HelpTopic.UI_RSMODEL_LIST]: {
+  [HelpTopic.UI_MODEL_LIST]: {
     keywords: [
       'список модели',
       'конституенты модели',
@@ -133,7 +144,7 @@ const topicSearchOverrides: Record<HelpTopicValue, HelpSearchOverride> = {
     searchText:
       'Список конституент модели. Табличная работа с составом модели, управление строками, просмотр данных модели.'
   },
-  [HelpTopic.UI_RSMODEL_VALUE]: {
+  [HelpTopic.UI_MODEL_VALUE]: {
     keywords: [
       'данные модели',
       'значения',
@@ -144,7 +155,7 @@ const topicSearchOverrides: Record<HelpTopicValue, HelpSearchOverride> = {
     searchText:
       'Данные модели. Ввод, просмотр и редактирование значений, работа с данными модели, таблица значений и вычислений.'
   },
-  [HelpTopic.UI_RSMODEL_VALUE_DIALOG]: {
+  [HelpTopic.UI_MODEL_VALUE_EDIT]: {
     keywords: [
       'диалог значения',
       'значение',
@@ -155,7 +166,7 @@ const topicSearchOverrides: Record<HelpTopicValue, HelpSearchOverride> = {
     searchText:
       'Диалог значения. Структурный просмотр и редактирование отдельного значения, детальная работа с элементом данных.'
   },
-  [HelpTopic.UI_RSMODEL_EVALUATOR]: {
+  [HelpTopic.UI_MODEL_EVALUATOR]: {
     keywords: [
       'расчет выражения',
       'вычисление',
@@ -166,7 +177,7 @@ const topicSearchOverrides: Record<HelpTopicValue, HelpSearchOverride> = {
     searchText:
       'Расчет выражения. Проверка и вычисление произвольных выражений, запуск расчета, просмотр результатов и статусов.'
   },
-  [HelpTopic.UI_RSMODEL_STATUS]: {
+  [HelpTopic.UI_EVAL_STATUS]: {
     keywords: [
       'статусы вычисления',
       'статус',
@@ -177,7 +188,7 @@ const topicSearchOverrides: Record<HelpTopicValue, HelpSearchOverride> = {
     searchText:
       'Статусы вычисления. Обозначения состояний расчета, ошибки, успешные вычисления и служебные статусы.'
   },
-  [HelpTopic.UI_RSMODEL_BINDING]: {
+  [HelpTopic.UI_MODEL_BINDING]: {
     keywords: [
       'базовый источник',
       'редактор базового источника',

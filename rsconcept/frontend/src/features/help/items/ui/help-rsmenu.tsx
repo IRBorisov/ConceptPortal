@@ -14,6 +14,7 @@ import {
   IconQR,
   IconReader,
   IconRSModel,
+  IconSandbox,
   IconShare,
   IconUpload
 } from '@/components/icons';
@@ -21,7 +22,7 @@ import {
 import { LinkTopic } from '../../components/link-topic';
 import { HelpTopic } from '../../models/help-topic';
 
-export function HelpRSMenu() {
+export function HelpSchemaMenu() {
   return (
     <div>
       <h1>Редактирование схемы</h1>
@@ -33,13 +34,13 @@ export function HelpRSMenu() {
       <h2>Вкладки</h2>
       <ul>
         <li>
-          <LinkTopic text='Паспорт' topic={HelpTopic.UI_RS_CARD} /> – редактирование атрибутов схемы и версии
+          <LinkTopic text='Паспорт' topic={HelpTopic.UI_SCHEMA_CARD} /> – редактирование атрибутов схемы и версии
         </li>
         <li>
-          <LinkTopic text='Список' topic={HelpTopic.UI_RS_LIST} /> – работа со списком конституент в табличной форме
+          <LinkTopic text='Список' topic={HelpTopic.UI_SCHEMA_LIST} /> – работа со списком конституент в табличной форме
         </li>
         <li>
-          <LinkTopic text='Понятие' topic={HelpTopic.UI_RS_EDITOR} /> – редактирование отдельной{' '}
+          <LinkTopic text='Понятие' topic={HelpTopic.UI_SCHEMA_EDITOR} /> – редактирование отдельной{' '}
           <LinkTopic text='Конституенты' topic={HelpTopic.CC_CONSTITUENTA} />
         </li>
         <li>
@@ -67,6 +68,9 @@ export function HelpRSMenu() {
               <IconRSModel className='inline-icon icon-green' /> Создать модель – создать модель на основе схемы
             </li>
             <li>
+              <IconSandbox className='inline-icon icon-green' /> Открыть в песочнице – открыть схему в редакторе песочницы для локальных экспериментов
+            </li>
+            <li>
               <IconPDF className='inline-icon' /> Экспортировать в PDF – сохранить в файле формата PDF
             </li>
             <li>
@@ -76,7 +80,7 @@ export function HelpRSMenu() {
               <IconUpload className='inline-icon icon-red' /> Загрузить – заменить схему на содержимое файла Экстеор
             </li>
             <li>
-              <IconDestroy className='inline-icon icon-red' /> Удалить – полностью удаляет схему из базы Портала
+              <IconDestroy className='inline-icon icon-red' /> Удалить – удаляет схему из базы Портала
             </li>
           </ul>
         </div>

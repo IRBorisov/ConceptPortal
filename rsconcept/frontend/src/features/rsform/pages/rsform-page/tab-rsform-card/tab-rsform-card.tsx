@@ -59,7 +59,7 @@ export function TabRSFormCard() {
         isMutable={isMutable}
         deleteItem={deleteSchema}
         isNarrow={isNarrow}
-        helpTopic={HelpTopic.UI_RS_CARD}
+        helpTopic={HelpTopic.UI_SCHEMA_CARD}
       />
 
       <div className='cc-column mx-0 md:mx-auto'>

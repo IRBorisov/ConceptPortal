@@ -1,6 +1,6 @@
 import { IconNewItem, IconRemove, IconReset, IconText } from '@/components/icons';
 
-export function HelpRSModelValueDialog() {
+export function HelpRSModelValueEdit() {
   return (
     <div className='dense'>
       <h1>Диалог значения</h1>

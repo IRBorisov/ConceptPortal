@@ -7,7 +7,7 @@ from apps.rsform.models import Constituenta
 from shared import messages
 from shared.serializers import StrictModelSerializer, StrictSerializer
 
-from ..models import LibraryItem, Version
+from ..models import LibraryItem, LibraryItemType, Version
 
 
 class LibraryItemBaseSerializer(StrictModelSerializer):
@@ -80,10 +80,11 @@ class LibraryItemCloneSerializer(StrictSerializer):
     item_data = ItemCloneData()
 
     def validate_items(self, value):
-        schema = self.context.get('schema')
-        invalid = [item.pk for item in value if item.schema_id != schema.id]
-        if invalid:
-            raise serializers.ValidationError(messages.constituentsInvalid(invalid))
+        target = self.context.get('target')
+        if target.item_type == LibraryItemType.RSFORM:
+            invalid = [item.pk for item in value if item.schema_id != target.pk]
+            if invalid:
+                raise serializers.ValidationError(messages.constituentsInvalid(invalid))
         return value
 
 

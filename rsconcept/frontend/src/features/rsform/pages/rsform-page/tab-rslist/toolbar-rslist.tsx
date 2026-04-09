@@ -125,7 +125,7 @@ export function ToolbarRSList({ className }: ToolbarRSListProps) {
         onClick={promptDeleteCst}
         disabled={isProcessing || !canDeleteSelected}
       />
-      <BadgeHelp topic={HelpTopic.UI_RS_LIST} offset={5} />
+      <BadgeHelp topic={HelpTopic.UI_SCHEMA_LIST} offset={5} />
     </div>
   );
 }

@@ -25,7 +25,7 @@ export function HelpRSModelValue() {
         Здесь можно просмотреть и изменить значение конституенты
       </p>
       <p>
-        Чтобы вычислить значение, нажмите на <LinkTopic text='статус' topic={HelpTopic.UI_RSMODEL_STATUS} />
+        Чтобы вычислить значение, нажмите на <LinkTopic text='статус' topic={HelpTopic.UI_EVAL_STATUS} />
       </p>
 
       <h2>Управление</h2>

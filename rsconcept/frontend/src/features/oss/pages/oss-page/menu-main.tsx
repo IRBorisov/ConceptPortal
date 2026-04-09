@@ -1,13 +1,12 @@
 'use client';
 
 import { useConceptNavigation } from '@/app';
-import { useAuth } from '@/features/auth';
 import { useRoleStore, UserRole } from '@/features/users';
 
 import { Divider } from '@/components/container';
 import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
-import { IconDestroy, IconLibrary, IconMenu, IconNewItem, IconQR, IconShare } from '@/components/icons';
+import { IconDestroy, IconLibrary, IconMenu, IconQR, IconShare } from '@/components/icons';
 import { useDialogsStore } from '@/stores/dialogs';
 import { generatePageQR, sharePage } from '@/utils/utils';
 
@@ -19,8 +18,6 @@ export function MenuMain() {
   const router = useConceptNavigation();
   const { isMutable, deleteSchema } = useOssEdit();
   const isProcessing = useMutatingOss();
-
-  const { isAnonymous } = useAuth();
 
   const role = useRoleStore(state => state.role);
 
@@ -42,10 +39,6 @@ export function MenuMain() {
   function handleShare() {
     hideMenu();
     sharePage();
-  }
-
-  function handleCreateNew() {
-    router.gotoNewItem();
   }
 
   function handleOpenLibrary() {
@@ -92,13 +85,6 @@ export function MenuMain() {
 
         <Divider margins='mx-3 my-1' />
 
-        {!isAnonymous ? (
-          <DropdownButton
-            text='Создать новую схему'
-            icon={<IconNewItem size='1rem' className='icon-primary' />}
-            onClick={handleCreateNew}
-          />
-        ) : null}
         <DropdownButton
           text='Библиотека'
           icon={<IconLibrary size='1rem' className='icon-primary' />}

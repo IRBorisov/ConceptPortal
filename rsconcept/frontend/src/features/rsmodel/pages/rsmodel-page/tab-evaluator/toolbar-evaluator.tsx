@@ -40,7 +40,7 @@ export function ToolbarEvaluator({
         icon={<IconShowSidebar size='1.25rem' value={showList} isBottom={isNarrow} />}
         onClick={toggleList}
       />
-      <BadgeHelp topic={HelpTopic.UI_RSMODEL_EVALUATOR} offset={4} contentClass='sm:max-w-160' />
+      <BadgeHelp topic={HelpTopic.UI_MODEL_EVALUATOR} offset={4} contentClass='sm:max-w-160' />
     </div>
   );
 }
