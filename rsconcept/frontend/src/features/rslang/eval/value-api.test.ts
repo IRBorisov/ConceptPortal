@@ -3,8 +3,8 @@ import { describe, expect, it } from 'vitest';
 import { TypeID } from '../index';
 import { basic, IntegerT, LogicT, tuple as makeTuple } from '../semantic/typification';
 
-import { TUPLE_ID, VALUE_FALSE, VALUE_TRUE } from './value';
-import { validateValue } from './value-api';
+import { TUPLE_ID, type Value, VALUE_FALSE, VALUE_TRUE } from './value';
+import { normalizeValue, validateValue } from './value-api';
 
 describe('validateValue', () => {
   const basics = new Map([
@@ -71,5 +71,35 @@ describe('validateValue', () => {
     expect(validateValue(1, { typeID: TypeID.anyTypification }, basics)).toBe(false);
     expect(validateValue(1, { typeID: TypeID.predicate, result: LogicT, args: [] }, basics)).toBe(false);
     expect(validateValue(1, { typeID: TypeID.function, result: basic('X1'), args: [] }, basics)).toBe(false);
+  });
+
+  it('normalizes data values correctly', () => {
+    const arr = [3, 1, 2, 2, 3, 4];
+    normalizeValue(arr);
+    expect(arr).toEqual([1, 2, 3, 4]);
+
+    const arr2: Value = [
+      [TUPLE_ID, 3, 1],
+      [TUPLE_ID, 1, 2],
+      [TUPLE_ID, 1, 2], // duplicate tuple
+      [TUPLE_ID, 2, 3]
+    ];
+    normalizeValue(arr2);
+    expect(arr2.length).toBe(3);
+    expect(arr2[0]).toEqual([TUPLE_ID, 1, 2]);
+    expect(arr2[1]).toEqual([TUPLE_ID, 2, 3]);
+    expect(arr2[2]).toEqual([TUPLE_ID, 3, 1]);
+
+    const num = 42;
+    normalizeValue(num as Value);
+    expect(num).toBe(42);
+
+    const empty: Value[] = [];
+    normalizeValue(empty);
+    expect(empty).toEqual([]);
+
+    const val: Value = [TUPLE_ID, [3, 2, 1, 1], 1];
+    normalizeValue(val);
+    expect(val[1]).toEqual([1, 2, 3]);
   });
 });

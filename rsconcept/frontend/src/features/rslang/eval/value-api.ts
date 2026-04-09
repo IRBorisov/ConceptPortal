@@ -253,8 +253,19 @@ export function valueStub(value: RO<Value> | null): string {
 
 /** Normalize unsorted array of values. */
 export function normalizeValue(data: Value): void {
-  if (!Array.isArray(data) || data.length < 2 || data[0] === TUPLE_ID) {
+  if (!Array.isArray(data) || data.length === 0) {
     return;
+  }
+
+  if (data[0] === TUPLE_ID) {
+    for (let i = 1; i < data.length; i++) {
+      normalizeValue(data[i]);
+    }
+    return;
+  }
+
+  for (const item of data) {
+    normalizeValue(item);
   }
 
   data.sort((a, b) => compare(a, b));
