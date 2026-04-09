@@ -244,52 +244,65 @@ class RSFormSandboxImportSerializer(StrictSerializer):
 
     @transaction.atomic
     def create(self, validated_data: dict) -> RSFormCached:
-        item_data = validated_data['item_data']
-        schema_data = validated_data['schema_data']
-        instance = RSFormCached.create(
-            owner=self.context.get('owner'),
-            title=item_data['title'],
-            alias=item_data['alias'],
-            description=item_data.get('description', ''),
-            visible=item_data.get('visible', True),
-            read_only=item_data.get('read_only', False),
-            access_policy=item_data.get('access_policy', AccessPolicy.PUBLIC),
-            location=item_data.get('location', LocationHead.USER)
+        instance, _ = create_rsform_from_sandbox_data(
+            item_data=validated_data['item_data'],
+            schema_data=validated_data['schema_data'],
+            owner=self.context.get('owner')
         )
-
-        id_map: dict[int, int] = {}
-        for order, item in enumerate(schema_data['items']):
-            cst = Constituenta.objects.create(
-                schema_id=instance.pk,
-                order=order,
-                alias=item['alias'],
-                cst_type=item['cst_type'],
-                convention=item.get('convention', ''),
-                crucial=item.get('crucial', False),
-                definition_formal=item.get('definition_formal', ''),
-                definition_raw=item.get('definition_raw', ''),
-                definition_resolved=item.get('definition_resolved', ''),
-                term_raw=item.get('term_raw', ''),
-                term_resolved=item.get('term_resolved', ''),
-                term_forms=item.get('term_forms', [])
-            )
-            id_map[item['id']] = cst.pk
-
-        seen: set[tuple[int, int]] = set()
-        created_attributions: list[Attribution] = []
-        for attr in schema_data['attribution']:
-            container_id = id_map.get(attr['container'])
-            attribute_id = id_map.get(attr['attribute'])
-            if container_id is None or attribute_id is None or container_id == attribute_id:
-                continue
-            key = (container_id, attribute_id)
-            if key in seen:
-                continue
-            seen.add(key)
-            created_attributions.append(Attribution(container_id=container_id, attribute_id=attribute_id))
-
-        if created_attributions:
-            Attribution.objects.bulk_create(created_attributions)
-
-        instance.resolve_all_text()
         return instance
+
+
+def create_rsform_from_sandbox_data(
+    *,
+    item_data: dict,
+    schema_data: dict,
+    owner=None
+) -> tuple[RSFormCached, dict[int, int]]:
+    ''' Create a new RSForm from sandbox payload and return imported id mapping. '''
+    instance = RSFormCached.create(
+        owner=owner,
+        title=item_data['title'],
+        alias=item_data['alias'],
+        description=item_data.get('description', ''),
+        visible=item_data.get('visible', True),
+        read_only=item_data.get('read_only', False),
+        access_policy=item_data.get('access_policy', AccessPolicy.PUBLIC),
+        location=item_data.get('location', LocationHead.USER)
+    )
+
+    id_map: dict[int, int] = {}
+    for order, item in enumerate(schema_data['items']):
+        cst = Constituenta.objects.create(
+            schema_id=instance.pk,
+            order=order,
+            alias=item['alias'],
+            cst_type=item['cst_type'],
+            convention=item.get('convention', ''),
+            crucial=item.get('crucial', False),
+            definition_formal=item.get('definition_formal', ''),
+            definition_raw=item.get('definition_raw', ''),
+            definition_resolved=item.get('definition_resolved', ''),
+            term_raw=item.get('term_raw', ''),
+            term_resolved=item.get('term_resolved', ''),
+            term_forms=item.get('term_forms', [])
+        )
+        id_map[item['id']] = cst.pk
+
+    seen: set[tuple[int, int]] = set()
+    created_attributions: list[Attribution] = []
+    for attr in schema_data.get('attribution', []):
+        container_id = id_map.get(attr['container'])
+        attribute_id = id_map.get(attr['attribute'])
+        if container_id is None or attribute_id is None or container_id == attribute_id:
+            continue
+        key = (container_id, attribute_id)
+        if key in seen:
+            continue
+        seen.add(key)
+        created_attributions.append(Attribution(container_id=container_id, attribute_id=attribute_id))
+
+    if created_attributions:
+        Attribution.objects.bulk_create(created_attributions)
+
+    instance.resolve_all_text()
+    return instance, id_map

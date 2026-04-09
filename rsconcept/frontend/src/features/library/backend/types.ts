@@ -46,6 +46,8 @@ export type CloneLibraryItemDTO = z.infer<typeof schemaCloneLibraryItem>;
 
 /** Represents data, used for creating {@link RSForm}. */
 export type CreateLibraryItemDTO = z.infer<typeof schemaCreateLibraryItem>;
+export type CreateRSFormFromSandboxDTO = z.infer<typeof schemaCreateRSFormFromSandbox>;
+export type CreateRSModelFromSandboxDTO = z.infer<typeof schemaCreateRSModelFromSandbox>;
 
 /** Represents update data for editing {@link LibraryItem}. */
 export type UpdateLibraryItemDTO = z.infer<typeof schemaUpdateLibraryItem>;
@@ -97,6 +99,28 @@ const schemaInputLibraryItem = schemaLibraryItem
 export const schemaCloneLibraryItem = z.strictObject({
   items: z.array(z.number()),
   item_data: schemaInputLibraryItem.omit({ item_type: true, read_only: true })
+});
+
+export const schemaSandboxItemData = schemaInputLibraryItem.omit({ item_type: true });
+
+export const schemaSandboxRSFormData = z.strictObject({
+  items: z.array(z.any()),
+  attribution: z.array(z.any()).optional()
+});
+
+export const schemaSandboxRSModelData = z.strictObject({
+  items: z.array(z.any())
+});
+
+export const schemaCreateRSFormFromSandbox = z.strictObject({
+  item_data: schemaSandboxItemData,
+  schema_data: schemaSandboxRSFormData
+});
+
+export const schemaCreateRSModelFromSandbox = z.strictObject({
+  item_data: schemaSandboxItemData,
+  schema_data: schemaSandboxRSFormData,
+  model_data: schemaSandboxRSModelData
 });
 
 export const schemaCreateLibraryItem = schemaInputLibraryItem

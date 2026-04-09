@@ -1,5 +1,5 @@
 ''' REST API: Views. '''
 
-from .rsmodels import RSModelViewSet
+from .rsmodels import RSModelViewSet, create_rsmodel_from_sandbox
 
-__all__ = ['RSModelViewSet']
+__all__ = ['RSModelViewSet', 'create_rsmodel_from_sandbox']

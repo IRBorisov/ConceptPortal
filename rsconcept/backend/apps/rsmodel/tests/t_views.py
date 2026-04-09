@@ -1,5 +1,6 @@
 ''' Testing API: RSModels. '''
-from apps.rsform.models import RSForm
+from apps.library.models import AccessPolicy, LibraryItem, LocationHead
+from apps.rsform.models import CstType, RSForm
 from apps.rsmodel.models import ConstituentData, RSModel
 from shared.EndpointTester import EndpointTester, decl_endpoint
 
@@ -202,3 +203,125 @@ class TestRSModelViewset(EndpointTester):
 
         self.login2()
         self.executeForbidden(item=self.model_id)
+
+    @decl_endpoint('/api/models/create-from-sandbox', method='post')
+    def test_create_model_from_sandbox(self):
+        data = {
+            'item_data': {
+                'title': 'Sandbox model',
+                'alias': 'SM1',
+                'description': 'created from sandbox',
+                'location': LocationHead.PROJECTS,
+                'access_policy': AccessPolicy.PROTECTED,
+                'visible': False,
+                'read_only': True
+            },
+            'schema_data': {
+                'items': [
+                    {
+                        'id': 101,
+                        'alias': 'X1',
+                        'convention': '',
+                        'crucial': False,
+                        'cst_type': CstType.BASE,
+                        'definition_formal': '',
+                        'definition_raw': '',
+                        'definition_resolved': '',
+                        'term_raw': 'человек',
+                        'term_resolved': '',
+                        'term_forms': []
+                    },
+                    {
+                        'id': 102,
+                        'alias': 'S1',
+                        'convention': '',
+                        'crucial': False,
+                        'cst_type': CstType.TERM,
+                        'definition_formal': 'X1',
+                        'definition_raw': '',
+                        'definition_resolved': '',
+                        'term_raw': '',
+                        'term_resolved': '',
+                        'term_forms': []
+                    }
+                ],
+                'attribution': [{
+                    'container': 102,
+                    'attribute': 101
+                }]
+            },
+            'model_data': {
+                'items': [
+                    {
+                        'id': 101,
+                        'type': 'basic',
+                        'value': {'1': 'Петя'}
+                    },
+                    {
+                        'id': 102,
+                        'type': 'X1',
+                        'value': 1
+                    }
+                ]
+            }
+        }
+
+        response = self.executeCreated(data)
+        self.assertEqual(response.data['owner'], self.user.pk)
+        self.assertEqual(response.data['title'], data['item_data']['title'])
+        self.assertEqual(response.data['alias'], data['item_data']['alias'])
+        self.assertEqual(response.data['location'], data['item_data']['location'])
+        self.assertEqual(response.data['access_policy'], data['item_data']['access_policy'])
+        self.assertEqual(response.data['visible'], data['item_data']['visible'])
+        self.assertEqual(response.data['read_only'], data['item_data']['read_only'])
+
+        model_item = LibraryItem.objects.get(pk=response.data['id'])
+        rsmodel = RSModel.objects.get(model=model_item)
+        self.assertIsNotNone(rsmodel.schema_id)
+
+        schema = RSForm(model=rsmodel.schema)
+        schema_items = list(schema.constituentsQ().order_by('order'))
+        self.assertEqual(len(schema_items), 2)
+        self.assertEqual(schema_items[0].alias, 'X1')
+        self.assertEqual(schema_items[1].alias, 'S1')
+
+        bindings = list(ConstituentData.objects.filter(model=model_item).select_related('constituent'))
+        self.assertEqual(len(bindings), 2)
+        by_alias = {binding.constituent.alias: binding for binding in bindings}
+        self.assertEqual(by_alias['X1'].type, 'basic')
+        self.assertEqual(by_alias['X1'].data, {'1': 'Петя'})
+        self.assertEqual(by_alias['S1'].type, 'X1')
+        self.assertEqual(by_alias['S1'].data, 1)
+
+    @decl_endpoint('/api/models/create-from-sandbox', method='post')
+    def test_create_model_from_sandbox_validation(self):
+        data = {
+            'item_data': {
+                'title': 'Sandbox model',
+                'alias': 'SM1',
+                'description': '',
+                'location': LocationHead.USER,
+                'access_policy': AccessPolicy.PUBLIC,
+                'visible': True,
+                'read_only': False
+            },
+            'schema_data': {
+                'items': [{
+                    'id': 1,
+                    'alias': 'X1',
+                    'cst_type': CstType.BASE
+                }],
+                'attribution': []
+            },
+            'model_data': {
+                'items': [{
+                    'id': 999,
+                    'type': 'basic',
+                    'value': {'1': 'bad'}
+                }]
+            }
+        }
+        self.executeBadData(data)
+
+        self.logout()
+        self.executeForbidden(data)

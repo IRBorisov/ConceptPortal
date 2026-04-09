@@ -8,7 +8,7 @@ import { useConceptNavigation } from '@/app';
 import { Divider } from '@/components/container';
 import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
-import { IconDownload, IconMenu, IconReset, IconRSForm, IconUpload } from '@/components/icons';
+import { IconDownload, IconMenu, IconReset, IconRSForm, IconRSModel, IconUpload } from '@/components/icons';
 import { errorMsg, infoMsg, promptText } from '@/utils/labels';
 
 import { type SandboxBundle } from '../../models/bundle';
@@ -54,7 +54,12 @@ export function MenuMain({ bundle, setBundle }: MenuMainProps) {
 
   function handleCreateRSForm() {
     hideMenu();
-    router.gotoNewItemFromSandbox();
+    router.gotoNewItemFromSandbox('rsform');
+  }
+
+  function handleCreateRSModel() {
+    hideMenu();
+    router.gotoNewItemFromSandbox('rsmodel');
   }
 
   async function handleImportFile(event: React.ChangeEvent<HTMLInputElement>) {
@@ -107,10 +112,16 @@ export function MenuMain({ bundle, setBundle }: MenuMainProps) {
           onClick={handleImportClick}
         />
         <DropdownButton
-          text='Создать КС'
+          text='Создать схему'
           title='Создать новую концептуальную схему из текущих данных песочницы'
           icon={<IconRSForm size='1rem' className='icon-green' />}
           onClick={handleCreateRSForm}
+        />
+        <DropdownButton
+          text='Создать модель'
+          title='Создать новую концептуальную схему и модель из текущих данных песочницы'
+          icon={<IconRSModel size='1rem' className='text-accent-orange' />}
+          onClick={handleCreateRSModel}
         />
         <Divider margins='mx-3 my-1' />
         <DropdownButton

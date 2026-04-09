@@ -33,13 +33,18 @@ import { useLibrarySearchStore } from '../../stores/library-search';
 interface FormCreateItemProps {
   modelFrom?: number;
   fromSandbox?: boolean;
+  initialType?: Extract<LibraryItemType, 'rsform' | 'rsmodel'>;
 }
 
-export function FormCreateItem({ modelFrom, fromSandbox = false }: FormCreateItemProps) {
+export function FormCreateItem({
+  modelFrom,
+  fromSandbox = false,
+  initialType = LibraryItemType.RSFORM
+}: FormCreateItemProps) {
   const router = useConceptNavigation();
   const { createItem, isPending, reset: clearServerError } = useCreateItem();
   const { items } = useLibrary();
-  const { createFromSandbox: createFromSandboxAsync } = useCreateFromSandbox();
+  const { createRSFormFromSandbox, createRSModelFromSandbox } = useCreateFromSandbox();
   const schemaItem = modelFrom ? items.find(item => item.id === modelFrom) : null;
   const [loadSandboxData, setLoadSandboxData] = useState(fromSandbox);
 
@@ -48,11 +53,11 @@ export function FormCreateItem({ modelFrom, fromSandbox = false }: FormCreateIte
 
   const form = useForm({
     defaultValues: {
-      item_type: modelFrom ? LibraryItemType.RSMODEL : LibraryItemType.RSFORM,
+      item_type: modelFrom ? LibraryItemType.RSMODEL : initialType,
       access_policy: AccessPolicy.PUBLIC,
       visible: true,
       read_only: false,
-      schema: modelFrom,
+      schema: modelFrom ?? (fromSandbox && initialType === LibraryItemType.RSMODEL ? -1 : undefined),
       title: schemaItem ? `Модель ${schemaItem.title}` : undefined,
       alias: schemaItem ? `M${schemaItem.alias}` : undefined,
       location:
@@ -67,9 +72,7 @@ export function FormCreateItem({ modelFrom, fromSandbox = false }: FormCreateIte
       onChange: schemaCreateLibraryItem
     },
     onSubmit: async ({ value }) => {
-      const newItem = fromSandbox && value.item_type === LibraryItemType.RSFORM ?
-        await createFromSandbox(value) :
-        await createItem(value);
+      const newItem = fromSandbox ? await createFromSandbox(value) : await createItem(value);
       setSearchLocation(value.location);
       switch (newItem.item_type) {
         case LibraryItemType.RSFORM:
@@ -95,21 +98,37 @@ export function FormCreateItem({ modelFrom, fromSandbox = false }: FormCreateIte
       toast.error(errorMsg.sandboxBundleNotAvailable);
       throw new Error(errorMsg.sandboxBundleNotAvailable);
     }
-    return createFromSandboxAsync({
-      item_data: {
-        title: value.title ?? bundle.rsform.title,
-        alias: value.alias ?? bundle.rsform.alias,
-        description: value.description ?? bundle.rsform.description,
-        visible: value.visible,
-        read_only: value.read_only,
-        access_policy: value.access_policy,
-        location: value.location
-      },
-      schema_data: {
-        items: bundle.rsform.items,
-        attribution: bundle.rsform.attribution
-      }
-    });
+    const sourceItem = value.item_type === LibraryItemType.RSMODEL ? bundle.model : bundle.rsform;
+    const itemData = {
+      title: value.title ?? sourceItem.title,
+      alias: value.alias ?? sourceItem.alias,
+      description: value.description ?? sourceItem.description,
+      visible: value.visible,
+      read_only: value.read_only,
+      access_policy: value.access_policy,
+      location: value.location
+    };
+
+    if (value.item_type === LibraryItemType.RSMODEL) {
+      return createRSModelFromSandbox({
+        item_data: itemData,
+        schema_data: {
+          items: bundle.rsform.items,
+          attribution: bundle.rsform.attribution
+        },
+        model_data: {
+          items: bundle.model.items
+        }
+      });
+    } else {
+      return createRSFormFromSandbox({
+        item_data: itemData,
+        schema_data: {
+          items: bundle.rsform.items,
+          attribution: bundle.rsform.attribution
+        }
+      });
+    }
   }
 
   useEffect(function preloadSandboxMetadata() {
@@ -122,14 +141,15 @@ export function FormCreateItem({ modelFrom, fromSandbox = false }: FormCreateIte
         if (!isActive || !bundle) {
           return;
         }
+        const sourceItem = itemType === LibraryItemType.RSMODEL ? bundle.model : bundle.rsform;
         if (!form.getFieldValue('title')) {
-          form.setFieldValue('title', bundle.rsform.title);
+          form.setFieldValue('title', sourceItem.title);
         }
         if (!form.getFieldValue('alias')) {
-          form.setFieldValue('alias', bundle.rsform.alias);
+          form.setFieldValue('alias', sourceItem.alias);
         }
         if (!form.getFieldValue('description')) {
-          form.setFieldValue('description', bundle.rsform.description);
+          form.setFieldValue('description', sourceItem.description);
         }
       })
       .catch((error: unknown) => {
@@ -138,7 +158,7 @@ export function FormCreateItem({ modelFrom, fromSandbox = false }: FormCreateIte
     return function cleanupSandboxMetadata() {
       isActive = false;
     };
-  }, [form, loadSandboxData, modelFrom]);
+  }, [form, itemType, loadSandboxData, modelFrom]);
 
   function resetErrors() {
     clearServerError();
@@ -170,6 +190,8 @@ export function FormCreateItem({ modelFrom, fromSandbox = false }: FormCreateIte
     }
     if (value !== LibraryItemType.RSMODEL) {
       form.setFieldValue('schema', undefined);
+    } else if (fromSandbox) {
+      form.setFieldValue('schema', -1);
     }
     form.setFieldValue('item_type', value);
   }
@@ -185,7 +207,7 @@ export function FormCreateItem({ modelFrom, fromSandbox = false }: FormCreateIte
       onChange={resetErrors}
     >
       <h1 className='select-none relative'>
-        {itemType === LibraryItemType.RSFORM && fromSandbox ?
+        {fromSandbox ?
           <MiniButton
             title='Загрузка данных из песочницы'
             className='absolute top-1 left-0'
@@ -283,7 +305,7 @@ export function FormCreateItem({ modelFrom, fromSandbox = false }: FormCreateIte
         </div>
       </div>
 
-      {itemType === LibraryItemType.RSMODEL ? (
+      {itemType === LibraryItemType.RSMODEL && !fromSandbox ? (
         <div>
           <Label text='Концептуальная схема' />
           <form.Field name='schema'>

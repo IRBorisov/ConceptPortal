@@ -81,7 +81,7 @@ interface INavigationContext {
   gotoNewItem: (newTab?: boolean) => void;
 
   /** Navigate to New Item with sandbox import flag. */
-  gotoNewItemFromSandbox: (newTab?: boolean) => void;
+  gotoNewItemFromSandbox: (itemType?: 'rsform' | 'rsmodel', newTab?: boolean) => void;
 
   /** Navigate to New Model. */
   gotoNewModel: (schemaID: number, newTab?: boolean) => void;
@@ -234,8 +234,8 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
     push({ path: urls.create_item, newTab: newTab });
   }
 
-  function gotoNewItemFromSandbox(newTab?: boolean): void {
-    push({ path: urls.create_item_from_sandbox, newTab: newTab });
+  function gotoNewItemFromSandbox(itemType?: 'rsform' | 'rsmodel', newTab?: boolean): void {
+    push({ path: urls.create_item_from_sandbox(itemType), newTab: newTab });
   }
 
   function gotoNewModel(schemaID: number, newTab?: boolean): void {

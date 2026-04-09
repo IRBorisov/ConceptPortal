@@ -15,6 +15,8 @@ import {
   type AccessPolicy,
   type CloneLibraryItemDTO,
   type CreateLibraryItemDTO,
+  type CreateRSFormFromSandboxDTO,
+  type CreateRSModelFromSandboxDTO,
   type CreateVersionDTO,
   type LibraryItem,
   type RenameLocationDTO,
@@ -25,20 +27,6 @@ import {
   type UpdateVersionDTO,
   type VersionExInfo
 } from './types';
-
-interface CreateRSFormFromSandboxDTO {
-  item_data: Pick<
-    CreateLibraryItemDTO,
-    | 'title'
-    | 'alias'
-    | 'description'
-    | 'visible'
-    | 'read_only'
-    | 'access_policy'
-    | 'location'
-  >;
-  schema_data: Pick<RSFormDTO, 'items' | 'attribution'>;
-}
 
 export const libraryApi = {
   baseKey: KEYS.library,
@@ -87,6 +75,15 @@ export const libraryApi = {
     axiosPost<CreateRSFormFromSandboxDTO, LibraryItem>({
       schema: schemaLibraryItem,
       endpoint: '/api/rsforms/create-from-sandbox',
+      request: {
+        data,
+        successMessage: infoMsg.newLibraryItem
+      }
+    }),
+  createRSModelFromSandbox: (data: CreateRSModelFromSandboxDTO) =>
+    axiosPost<CreateRSModelFromSandboxDTO, LibraryItem>({
+      schema: schemaLibraryItem,
+      endpoint: '/api/models/create-from-sandbox',
       request: {
         data,
         successMessage: infoMsg.newLibraryItem

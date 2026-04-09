@@ -229,7 +229,7 @@ export function MenuMain() {
         {!isAnonymous ? (
           <DropdownButton
             text='Создать модель'
-            icon={<IconRSModel size='1rem' className='icon-green' />}
+            icon={<IconRSModel size='1rem' className={isArchive ? '' : 'text-accent-orange'} />}
             disabled={isArchive}
             onClick={handleCreateModel}
           />

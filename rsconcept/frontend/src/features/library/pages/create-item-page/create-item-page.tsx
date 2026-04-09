@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import { RequireAuth } from '@/features/auth/components/require-auth';
+import { LibraryItemType } from '@/features/library/backend/types';
 
 import { useQueryStrings } from '@/hooks/use-query-strings';
 
@@ -14,7 +15,11 @@ const paramsSchema = z.strictObject({
   fromSandbox: z
     .string()
     .nullish()
-    .transform(v => v === '1' || v === 'true')
+    .transform(v => v === '1' || v === 'true'),
+  itemType: z
+    .enum([LibraryItemType.RSFORM, LibraryItemType.RSMODEL])
+    .nullish()
+    .transform(v => v ?? undefined)
 });
 
 export function CreateItemPage() {
@@ -22,12 +27,17 @@ export function CreateItemPage() {
 
   const urlData = paramsSchema.parse({
     modelFrom: query.get('modelFrom'),
-    fromSandbox: query.get('fromSandbox')
+    fromSandbox: query.get('fromSandbox'),
+    itemType: query.get('itemType')
   });
 
   return (
     <RequireAuth>
-      <FormCreateItem modelFrom={urlData.modelFrom} fromSandbox={urlData.fromSandbox} />
+      <FormCreateItem
+        modelFrom={urlData.modelFrom}
+        fromSandbox={urlData.fromSandbox}
+        initialType={urlData.itemType}
+      />
     </RequireAuth>
   );
 }

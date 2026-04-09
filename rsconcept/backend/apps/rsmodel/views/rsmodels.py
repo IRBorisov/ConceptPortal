@@ -6,7 +6,7 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import generics
 from rest_framework import status as c
 from rest_framework import viewsets
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.request import Request
 from rest_framework.response import Response
 
@@ -14,6 +14,7 @@ from apps.library.models import LibraryItem, LibraryItemType
 from apps.library.serializers import LibraryItemSerializer
 from apps.rsform.models import Constituenta
 from apps.rsform.serializers import CstListSerializer
+from apps.users.models import User
 from shared import permissions
 
 from .. import models as m
@@ -138,3 +139,27 @@ class RSModelViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Ret
             m.ConstituentData.objects.filter(model=item).delete()
             item.save(update_fields=['time_update'])
         return Response(status=c.HTTP_200_OK)
+
+
+@extend_schema(
+    summary='create RSModel from sandbox model+schema data',
+    tags=['RSModel'],
+    request=s.RSModelSandboxImportSerializer,
+    responses={
+        c.HTTP_201_CREATED: LibraryItemSerializer,
+        c.HTTP_400_BAD_REQUEST: None,
+        c.HTTP_403_FORBIDDEN: None
+    }
+)
+@api_view(['POST'])
+@permission_classes([permissions.GlobalUser])
+def create_rsmodel_from_sandbox(request: Request) -> Response:
+    ''' Endpoint: Create RSModel from current sandbox schema and model data. '''
+    owner = cast(User, request.user) if not request.user.is_anonymous else None
+    serializer = s.RSModelSandboxImportSerializer(data=request.data, context={'owner': owner})
+    serializer.is_valid(raise_exception=True)
+    model = serializer.save()
+    return Response(
+        status=c.HTTP_201_CREATED,
+        data=LibraryItemSerializer(LibraryItem.objects.get(pk=model.pk)).data
+    )
