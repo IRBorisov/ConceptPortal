@@ -6,6 +6,9 @@ import { useConceptNavigation } from '@/app';
 import { useAIStore } from '@/features/ai/stores/ai-context';
 import { useFindPredecessor } from '@/features/oss/backend/use-find-predecessor';
 import { type Constituenta } from '@/features/rsform';
+import { useClearAttributions } from '@/features/rsform/backend/use-clear-attributions';
+import { useCreateAttribution } from '@/features/rsform/backend/use-create-attribution';
+import { useDeleteAttribution } from '@/features/rsform/backend/use-delete-attribution';
 import { useRSForm } from '@/features/rsform/backend/use-rsform';
 import { useUpdateConstituenta } from '@/features/rsform/backend/use-update-constituenta';
 import { CardRSFormStats } from '@/features/rsform/components/rsform-stats';
@@ -30,6 +33,9 @@ export function ViewSchema({ schemaID, isMutable }: ViewSchemaProps) {
   const router = useConceptNavigation();
   const { findPredecessor } = useFindPredecessor();
   const { updateConstituenta } = useUpdateConstituenta();
+  const { createAttribution } = useCreateAttribution();
+  const { deleteAttribution } = useDeleteAttribution();
+  const { clearAttributions } = useClearAttributions();
   const setCurrentSchema = useAIStore(state => state.setSchema);
   const onSetSchema = useEffectEvent(setCurrentSchema);
   const stats = calculateSchemaStats(schema);
@@ -52,7 +58,22 @@ export function ViewSchema({ schemaID, isMutable }: ViewSchemaProps) {
         void findPredecessor(cst.id).then(reference =>
           router.gotoCstEdit(reference.schema, reference.id)
         );
-      }
+      },
+      onAddAttribution: item =>
+        void createAttribution({
+          itemID: schema.id,
+          data: { container: cst.id, attribute: item.id }
+        }),
+      onRemoveAttribution: item =>
+        void deleteAttribution({
+          itemID: schema.id,
+          data: { container: cst.id, attribute: item.id }
+        }),
+      onClearAttributions: () =>
+        void clearAttributions({
+          itemID: schema.id,
+          data: { target: cst.id }
+        })
     });
   }
 

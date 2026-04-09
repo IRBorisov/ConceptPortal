@@ -1,6 +1,5 @@
 'use client';
 
-import { useMemo } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { HelpTopic } from '@/features/help';
@@ -35,9 +34,9 @@ export function DlgSubstituteCst() {
 
   const values = useStore(form.store, state => state.values);
   const substitutions = values.substitutions;
-  const isValid = useMemo(() => schemaSubstitutions.safeParse(values).success, [values]);
+  const isValid = schemaSubstitutions.safeParse(values).success;
 
-  const validator = useMemo(() => new SubstitutionValidator([schema], substitutions), [schema, substitutions]);
+  const validator = new SubstitutionValidator([schema], substitutions);
   const isCorrect = validator.validate();
 
   return (

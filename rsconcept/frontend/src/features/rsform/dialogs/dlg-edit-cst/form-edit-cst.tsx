@@ -9,9 +9,6 @@ import { Label, TextArea, TextInput } from '@/components/input';
 import { type CreateFieldProps } from '@/utils/forms';
 
 import { type UpdateConstituentaDTO } from '../../backend/types';
-import { useClearAttributions } from '../../backend/use-clear-attributions';
-import { useCreateAttribution } from '../../backend/use-create-attribution';
-import { useDeleteAttribution } from '../../backend/use-delete-attribution';
 import { IconCrucialValue } from '../../components/icon-crucial-value';
 import { RefsInput } from '../../components/refs-input';
 import { RSInput } from '../../components/rs-input';
@@ -27,6 +24,9 @@ interface FormEditCstProps {
   itemData: UpdateConstituentaDTO['item_data'];
   onChangeCstType: (newValue: CstType) => void;
   onToggleCrucial: () => void;
+  onAddAttribution: (item: Constituenta) => void;
+  onRemoveAttribution: (item: Constituenta) => void;
+  onClearAttributions: () => void;
   fields: FormEditCstFields;
 }
 
@@ -44,11 +44,11 @@ export function FormEditCst({
   itemData,
   onChangeCstType,
   onToggleCrucial,
+  onAddAttribution,
+  onRemoveAttribution,
+  onClearAttributions,
   fields
 }: FormEditCstProps) {
-  const { createAttribution } = useCreateAttribution();
-  const { deleteAttribution } = useDeleteAttribution();
-  const { clearAttributions } = useClearAttributions();
   const [forceComment, setForceComment] = useState(false);
   const { AliasField, TermRawField, DefinitionFormalField, DefinitionRawField, ConventionField } = fields;
   const cst_type = itemData.cst_type ?? CstType.BASE;
@@ -62,35 +62,6 @@ export function FormEditCst({
   function handleTypeChange(newValue: CstType) {
     onChangeCstType(newValue);
     setForceComment(false);
-  }
-
-  function handleAddAttribution(item: Constituenta) {
-    void createAttribution({
-      itemID: schema.id,
-      data: {
-        container: target.id,
-        attribute: item.id
-      }
-    });
-  }
-
-  function handleRemoveAttribution(item: Constituenta) {
-    void deleteAttribution({
-      itemID: schema.id,
-      data: {
-        container: target.id,
-        attribute: item.id
-      }
-    });
-  }
-
-  function handleClearAttributions() {
-    void clearAttributions({
-      itemID: schema.id,
-      data: {
-        target: target.id
-      }
-    });
   }
 
   return (
@@ -146,9 +117,9 @@ export function FormEditCst({
           <SelectMultiConstituenta
             items={schema.items.filter(item => item.id !== target.id)}
             value={attributions}
-            onAdd={handleAddAttribution}
-            onClear={handleClearAttributions}
-            onRemove={handleRemoveAttribution}
+            onAdd={onAddAttribution}
+            onClear={onClearAttributions}
+            onRemove={onRemoveAttribution}
             placeholder={'Выберите конституенты'}
           />
         </div>

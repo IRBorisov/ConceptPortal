@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useMemo, useState } from 'react';
+import { Suspense, useState } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { HelpTopic } from '@/features/help';
@@ -62,7 +62,7 @@ export function DlgCstTemplate() {
   const values = useStore(form.store, state => state.values);
   const alias = values.alias;
   const cst_type = values.cst_type;
-  const { canSubmit, hint } = useMemo(() => {
+  const { canSubmit, hint } = (() => {
     if (!cst_type) {
       return { canSubmit: false, hint: hintMsg.templateInvalid };
     }
@@ -73,7 +73,7 @@ export function DlgCstTemplate() {
       return { canSubmit: false, hint: hintMsg.formInvalid };
     }
     return { canSubmit: true, hint: '' };
-  }, [alias, cst_type, schema, values]);
+  })();
 
   const [activeTab, setActiveTab] = useState<TabID>(TabID.TEMPLATE);
 

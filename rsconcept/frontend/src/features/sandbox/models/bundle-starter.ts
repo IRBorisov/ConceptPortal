@@ -60,7 +60,7 @@ export function createStarterSandboxBundle(): SandboxBundle {
     ...libraryBase(STARTER_SCHEMA_ID, LibraryItemType.RSFORM, 'КС Демонстрация', 'Демонстрационная схема', now),
     is_produced: false,
     editors: [],
-    version: 1,
+    version: SANDBOX_BUNDLE_FORMAT_VERSION,
     versions: [],
     items: [
       {

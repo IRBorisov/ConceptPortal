@@ -41,7 +41,10 @@ export function useHandleActions(graph: Graph<number>) {
     promptDeleteSelected,
     toggleCrucial,
     patchConstituenta,
-    gotoPredecessor
+    gotoPredecessor,
+    addAttribution,
+    removeAttribution,
+    clearAttributions
   } = useRSFormEdit();
 
   const mode = useTermGraphStore(state => state.mode);
@@ -119,7 +122,10 @@ export function useHandleActions(graph: Graph<number>) {
       schema: schema,
       target: target,
       onEdit: data => void patchConstituenta(data),
-      onEditSource: () => gotoPredecessor(target.id)
+      onEditSource: () => gotoPredecessor(target.id),
+      onAddAttribution: item => addAttribution(target.id, item.id),
+      onRemoveAttribution: removeAttribution,
+      onClearAttributions: clearAttributions
     });
   }
 

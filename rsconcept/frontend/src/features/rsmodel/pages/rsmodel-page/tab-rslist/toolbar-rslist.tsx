@@ -3,7 +3,6 @@
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 import { CstType } from '@/features/rsform';
-import { useUpdateCrucial } from '@/features/rsform/backend/use-update-crucial';
 import { IconCstType } from '@/features/rsform/components/icon-cst-type';
 import { getCstTypeShortcut, labelCstType } from '@/features/rsform/labels';
 import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
@@ -32,12 +31,10 @@ interface ToolbarRSListProps {
 }
 
 export function ToolbarRSList({ className }: ToolbarRSListProps) {
-  const { updateCrucial } = useUpdateCrucial();
   const { elementRef: menuRef, isOpen: isMenuOpen, toggle: toggleMenu, handleBlur: handleMenuBlur } = useDropdown();
   const {
     schema,
     selectedCst,
-    activeCst,
     isProcessing,
     deselectAll,
     createCst,
@@ -46,22 +43,10 @@ export function ToolbarRSList({ className }: ToolbarRSListProps) {
     canDeleteSelected,
     promptDeleteSelected: promptDeleteCst,
     moveUp,
-    moveDown
+    moveDown,
+    toggleCrucial
   } = useRSFormEdit();
   const { engine } = useRSModelEdit();
-
-  function handleToggleCrucial() {
-    if (!activeCst) {
-      return;
-    }
-    void updateCrucial({
-      itemID: schema.id,
-      data: {
-        target: selectedCst,
-        value: !activeCst.crucial
-      }
-    });
-  }
 
   return (
     <div className={cn('cc-icons items-start outline-hidden', className)}>
@@ -96,7 +81,7 @@ export function ToolbarRSList({ className }: ToolbarRSListProps) {
         title='Ключевая конституента'
         aria-label='Переключатель статуса ключевой конституенты'
         icon={<IconCrucial size='1.25rem' className='icon-primary' />}
-        onClick={handleToggleCrucial}
+        onClick={toggleCrucial}
         disabled={isProcessing || selectedCst.length === 0}
       />
       <div ref={menuRef} onBlur={handleMenuBlur} className='relative'>

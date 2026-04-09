@@ -1,6 +1,5 @@
 'use client';
 
-import { useMemo } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { useConceptNavigation } from '@/app';
@@ -24,10 +23,21 @@ export interface DlgEditCstProps {
   target: Constituenta;
   onEdit: (data: UpdateConstituentaDTO) => void;
   onEditSource: () => void;
+  onAddAttribution: (item: Constituenta) => void;
+  onRemoveAttribution: (item: Constituenta) => void;
+  onClearAttributions: () => void;
 }
 
 export function DlgEditCst() {
-  const { schema, target, onEdit, onEditSource } = useDialogsStore(state => state.props as DlgEditCstProps);
+  const {
+    schema,
+    target,
+    onEdit,
+    onEditSource,
+    onAddAttribution,
+    onRemoveAttribution,
+    onClearAttributions
+  } = useDialogsStore(state => state.props as DlgEditCstProps);
   const hideDialog = useDialogsStore(state => state.hideDialog);
   const router = useConceptNavigation();
 
@@ -54,12 +64,12 @@ export function DlgEditCst() {
   const values = useStore(form.store, state => state.values);
   const alias = values.item_data.alias!;
   const cst_type = values.item_data.cst_type!;
-  const canSubmit = useMemo(() => {
+  const canSubmit = (() => {
     const parsed = schemaUpdateConstituenta.safeParse(values).success;
     return (
       (parsed && alias === target.alias && cst_type === target.cst_type) || validateNewAlias(alias, cst_type, schema)
     );
-  }, [values, alias, cst_type, target.alias, target.cst_type, schema]);
+  })();
 
   function navigateToTarget() {
     hideDialog();
@@ -141,6 +151,9 @@ export function DlgEditCst() {
         itemData={values.item_data}
         onChangeCstType={handleChangeCstType}
         onToggleCrucial={handleToggleCrucial}
+        onAddAttribution={onAddAttribution}
+        onRemoveAttribution={onRemoveAttribution}
+        onClearAttributions={onClearAttributions}
         fields={editFields}
       />
     </ModalForm>
