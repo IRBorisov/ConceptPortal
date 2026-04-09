@@ -259,7 +259,7 @@ function updateConstituenta(bundle: SandboxBundle, data: UpdateConstituentaDTO):
   }
   const row = rsform.items[ix];
   const patch = data.item_data;
-  rsform.items[ix] = {
+  const updated = {
     ...row,
     ...(patch.alias !== undefined ? { alias: patch.alias } : {}),
     ...(patch.cst_type !== undefined ? { cst_type: patch.cst_type } : {}),
@@ -268,8 +268,19 @@ function updateConstituenta(bundle: SandboxBundle, data: UpdateConstituentaDTO):
     ...(patch.definition_formal !== undefined ? { definition_formal: patch.definition_formal } : {}),
     ...(patch.definition_raw !== undefined ? { definition_raw: patch.definition_raw } : {}),
     ...(patch.term_raw !== undefined ? { term_raw: patch.term_raw } : {}),
-    ...(patch.term_forms !== undefined ? { term_forms: structuredClone(patch.term_forms) } : {})
+    ...(patch.term_forms !== undefined ? { term_forms: patch.term_forms } : {})
   };
+
+  if ('definition_raw' in patch && typeof patch.definition_raw === 'string') {
+    updated.definition_resolved = patch.definition_raw.trim();
+  }
+
+  if ('term_raw' in patch && typeof patch.term_raw === 'string') {
+    updated.term_resolved = patch.term_raw.trim();
+    updated.term_forms = [];
+  }
+
+  rsform.items[ix] = updated;
   bumpBundle(next);
   return next;
 }

@@ -27,7 +27,7 @@ import {
   IconShare
 } from '@/components/icons';
 import { useDialogsStore } from '@/stores/dialogs';
-import { errorMsg, infoMsg, tooltipText } from '@/utils/labels';
+import { errorMsg, infoMsg, promptText, tooltipText } from '@/utils/labels';
 import { generatePageQR, sharePage } from '@/utils/utils';
 
 import { useRSModelEdit } from './rsmodel-context';
@@ -100,6 +100,9 @@ export function MenuMain() {
   }
 
   async function handleTransferToSandbox() {
+    if (!window.confirm(promptText.resetSandbox)) {
+      return;
+    }
     hideMenu();
     try {
       const nextBundle = createSandboxBundleFromRSModel(schemaData, model);
@@ -181,7 +184,7 @@ export function MenuMain() {
         />
         {!isAnonymous ? (
           <DropdownButton
-            text='Перенести в песочницу'
+            text='Открыть в песочнице'
             icon={<IconSandbox size='1rem' className='icon-green' />}
             onClick={() => void handleTransferToSandbox()}
           />

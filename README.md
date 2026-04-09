@@ -113,7 +113,6 @@ This readme file is used mostly to document project dependencies and conventions
 
 ## 🗃️ Backend [Django + PostgreSQL/SQLite]
 
-- [ConceptCore](https://github.com/IRBorisov/ConceptCore)
 <details>
   <summary>requirements</summary>
   <pre>
@@ -173,10 +172,9 @@ This readme file is used mostly to document project dependencies and conventions
 This is the build for local Development
 
 - Install Docker Desktop, Python 3.12, NodeJS, VSCode or other compatible IDE
-- copy import wheels from ConceptCore to rsconcept/backend/import
 - run scripts/dev/LocalEnvSetup.ps1
 - use VSCode configs in root folder to start development
-- use 'npm run prepare' to regenerate frontend parsers (if you change grammar files)
+- use 'npm run generate' to regenerate frontend parsers (if you change grammar files)
 
 ## 🔭 Local docker build
 

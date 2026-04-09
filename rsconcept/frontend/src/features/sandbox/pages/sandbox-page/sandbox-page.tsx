@@ -7,6 +7,7 @@ import { z } from 'zod';
 
 import { RSModelTabID } from '@/app/navigation/navigation-context';
 import { loadRSForm } from '@/features/rsform/backend/rsform-loader';
+import { ConstituentaTooltip } from '@/features/rsform/components/constituenta-tooltip';
 
 import { type ErrorData } from '@/components/info-error';
 import { Loader } from '@/components/loader';
@@ -66,6 +67,7 @@ export function SandboxPage() {
     <ErrorBoundary FallbackComponent={({ error: boundaryError }) => (
       <ProcessError error={boundaryError as ErrorData} />
     )}>
+      <ConstituentaTooltip />
       <div className='relative min-h-full'>
         {error ? (
           <div className='mx-auto max-w-3xl px-4 pt-4 text-sm text-destructive'>
