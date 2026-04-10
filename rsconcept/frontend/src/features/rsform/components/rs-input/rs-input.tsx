@@ -12,6 +12,7 @@ import CodeMirror, {
 } from '@uiw/react-codemirror';
 import clsx from 'clsx';
 
+import { type RSErrorDescription } from '@/features/rslang';
 import { extractGlobals } from '@/features/rslang/api';
 
 import { Label } from '@/components/input';
@@ -23,6 +24,7 @@ import { generateAlias, getCstTypePrefix, guessCstType } from '../../models/rsfo
 
 import { ccBracketMatching } from './bracket-matching';
 import { rsNavigation } from './click-navigation';
+import { rsErrorRanges } from './error-ranges';
 import { RSLanguage } from './parse';
 import { getLigatureSymbol, getSymbolSubstitute, isPotentialLigature, RSTextWrapper } from './text-editing';
 import { rsHoverTooltip } from './tooltip';
@@ -77,6 +79,7 @@ interface RSInputProps
   onAnalyze?: () => void;
   schema?: RSForm;
   onOpenEdit?: (cstID: number) => void;
+  errors?: readonly RSErrorDescription[] | null;
 }
 
 export function RSInput({
@@ -86,6 +89,7 @@ export function RSInput({
 
   schema,
   onOpenEdit,
+  errors,
 
   className,
   style,
@@ -123,6 +127,7 @@ export function RSInput({
   const editorExtensions = [
     EditorView.lineWrapping,
     RSLanguage,
+    ...(errors && errors.length > 0 ? rsErrorRanges(errors) : []),
     ...(portalHoverTooltips ? [tooltips({
       parent: document.body,
       position: 'fixed'

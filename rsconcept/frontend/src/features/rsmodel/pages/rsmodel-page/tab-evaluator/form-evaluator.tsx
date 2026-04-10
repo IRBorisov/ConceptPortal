@@ -155,6 +155,7 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
           ref={rsInput}
           placeholder='Выражение отсутствует'
           schema={schema}
+          errors={errors}
           value={expression}
           onChange={setExpression}
           onOpenEdit={handleOpenCst}

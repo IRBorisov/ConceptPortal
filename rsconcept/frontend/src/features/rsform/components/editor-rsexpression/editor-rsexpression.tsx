@@ -190,6 +190,7 @@ export function EditorRSExpression({
         ref={rsInput}
         value={value}
         schema={schema}
+        errors={analysis?.errors ?? null}
         minHeight='3.75rem'
         maxHeight='8rem'
         onChange={handleChange}
