@@ -6,6 +6,7 @@ import clsx from 'clsx';
 import { useDebounce } from 'use-debounce';
 
 import { HelpTopic } from '@/features/help';
+import { type RSForm } from '@/features/rsform/models/rsform';
 
 import { ModalView } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
@@ -13,16 +14,18 @@ import { type RO } from '@/utils/meta';
 import { type FlatAST } from '@/utils/parsing';
 
 import { ASTFlow } from './ast-flow';
+import { ShowAstSchemaProvider } from './show-ast-schema-context';
 
 const NODE_POPUP_DELAY = 100;
 
 export interface DlgShowASTProps {
   syntaxTree: RO<FlatAST>;
   expression: string;
+  schema: RSForm;
 }
 
 export function DlgShowAST() {
-  const { syntaxTree, expression } = useDialogsStore(state => state.props as DlgShowASTProps);
+  const { syntaxTree, expression, schema } = useDialogsStore(state => state.props as DlgShowASTProps);
   const [hoverID, setHoverID] = useState<number | null>(null);
   const hoverNode = syntaxTree.find(node => node.uid === hoverID);
   const [hoverNodeDebounced] = useDebounce(hoverNode, NODE_POPUP_DELAY);
@@ -56,12 +59,14 @@ export function DlgShowAST() {
       </div>
       <div className='cc-mask-sides h-full w-full'>
         <ReactFlowProvider>
-          <ASTFlow
-            data={syntaxTree}
-            onNodeEnter={node => setHoverID(Number(node.id))}
-            onNodeLeave={() => setHoverID(null)}
-            onChangeDragging={setIsDragging}
-          />
+          <ShowAstSchemaProvider schema={schema}>
+            <ASTFlow
+              data={syntaxTree}
+              onNodeEnter={node => setHoverID(Number(node.id))}
+              onNodeLeave={() => setHoverID(null)}
+              onChangeDragging={setIsDragging}
+            />
+          </ShowAstSchemaProvider>
         </ReactFlowProvider>
       </div>
     </ModalView>

@@ -158,7 +158,7 @@ export function EditorRSExpression({
       const tree = rslangParser.parse(value);
       const ast = buildTree(tree.cursor());
       const flatAst = flattenAst(ast);
-      showAST({ syntaxTree: flatAst, expression: value });
+      showAST({ syntaxTree: flatAst, expression: value, schema });
     } else {
       const parse = schema.analyzer.checkFull(value, { annotateTypes: true });
       if (!parse.ast) {
@@ -166,7 +166,7 @@ export function EditorRSExpression({
         return;
       }
       const flatAst = flattenAst(parse.ast);
-      showAST({ syntaxTree: flatAst, expression: value });
+      showAST({ syntaxTree: flatAst, expression: value, schema });
     }
   }
 

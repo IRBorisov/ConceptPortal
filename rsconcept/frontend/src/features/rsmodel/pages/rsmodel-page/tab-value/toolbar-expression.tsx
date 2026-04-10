@@ -31,7 +31,7 @@ export function ToolbarExpression({ className, expression, type }: ToolbarExpres
       return;
     }
     const flatAst = flattenAst(parse.ast);
-    showAST({ syntaxTree: flatAst, expression: expression });
+    showAST({ syntaxTree: flatAst, expression, schema });
   }
 
   function handleTypeGraph() {
