@@ -71,13 +71,12 @@ export class TypeAuditor {
   }
 
   private declareLocal(node: AstNode, domain: Typification): boolean {
-    const localName = getNodeText(node);
-    return this.locals.pushLocal(localName, domain, node.from);
+    return this.locals.pushLocal(node, domain);
   }
 
   private declareTuple(node: AstNode, domain: Typification): boolean {
     if (domain.typeID !== TypeID.tuple || domain.factors.length !== node.children.length) {
-      this.onError(RSErrorCode.invalidCortegeDeclare, node.children[0].from);
+      this.onError(RSErrorCode.invalidCortegeDeclare, node.children[0]);
       return false;
     }
     for (let child = 0; child < node.children.length; child++) {
@@ -199,8 +198,8 @@ export class TypeAuditor {
     return null;
   }
 
-  private onError(code: RSErrorCode, position: number, params?: string[]): null {
-    this.reporter?.({ code, position, params });
+  private onError(code: RSErrorCode, node: AstNode, params?: string[]): null {
+    this.reporter?.({ code, from: node.from, to: node.to, params });
     return null;
   }
 
@@ -248,22 +247,21 @@ export class TypeAuditor {
       return result;
     }
     if (result.typeID !== TypeID.collection) {
-      this.onError(errorCode, node.children[index].from, [labelType(result)]);
+      this.onError(errorCode, node.children[index], [labelType(result)]);
       return null;
     }
     return debool(result);
   }
 
   private visitLocal(node: AstNode): ExpressionType | null {
-    const localName = getNodeText(node);
-    return this.locals.getLocalType(localName, node.from);
+    return this.locals.getLocalType(node);
   }
 
   private visitGlobal(node: AstNode): ExpressionType | null {
     const alias = getNodeText(node);
     const type = this.context.get(alias);
     if (!type) {
-      return this.onError(RSErrorCode.globalNotTyped, node.from, [alias]);
+      return this.onError(RSErrorCode.globalNotTyped, node, [alias]);
     }
     return type;
   }
@@ -285,7 +283,7 @@ export class TypeAuditor {
     if (result === null || result.typeID === TypeID.function || result.typeID === TypeID.predicate) {
       return null;
     }
-    this.locals.endScope(node.from);
+    this.locals.endScope(node.children[1]);
     if (result.typeID === TypeID.logic) {
       return {
         typeID: TypeID.predicate,
@@ -305,7 +303,7 @@ export class TypeAuditor {
     const funcName = getNodeText(node.children[0]);
     const funcType = this.context.get(funcName);
     if (funcType?.typeID !== TypeID.function && funcType?.typeID !== TypeID.predicate) {
-      return this.onError(RSErrorCode.globalNotTyped, node.from, [funcName]);
+      return this.onError(RSErrorCode.globalNotTyped, node, [funcName]);
     }
     if (this.annotate) {
       node.children[0].annotation = {
@@ -332,7 +330,7 @@ export class TypeAuditor {
   private visitRadical(node: AstNode): ExpressionType | null {
     const alias = getNodeText(node);
     if (!this.isInsideFuncArgument(node)) {
-      return this.onError(RSErrorCode.radicalUsage, node.from, [alias]);
+      return this.onError(RSErrorCode.radicalUsage, node, [alias]);
     }
     return bool({ typeID: TypeID.basic, baseID: alias });
   }
@@ -350,7 +348,7 @@ export class TypeAuditor {
       TokenID.SMALLPR
     ];
     if (invalidParents.includes(node.parent?.typeID as TokenID)) {
-      return this.onError(RSErrorCode.invalidEmptySetUsage, node.from);
+      return this.onError(RSErrorCode.invalidEmptySetUsage, node);
     }
     return EmptySetT;
   }
@@ -379,7 +377,7 @@ export class TypeAuditor {
       return null;
     }
     if (!('isArithmetic' in type1 && type1.isArithmetic)) {
-      return this.onError(RSErrorCode.arithmeticNotSupported, node.children[0].from, [labelType(type1)]);
+      return this.onError(RSErrorCode.arithmeticNotSupported, node.children[0], [labelType(type1)]);
     }
 
     const type2 = this.childTypification(node, 1);
@@ -387,16 +385,12 @@ export class TypeAuditor {
       return null;
     }
     if (!('isArithmetic' in type2 && type2.isArithmetic)) {
-      return this.onError(RSErrorCode.arithmeticNotSupported, node.children[1].from, [labelType(type2)]);
+      return this.onError(RSErrorCode.arithmeticNotSupported, node.children[1], [labelType(type2)]);
     }
 
     const result = mergeTypifications(type1, type2);
     if (result === null) {
-      return this.onError(
-        RSErrorCode.typesNotCompatible,
-        node.children[1].from,
-        [labelType(type1), labelType(type2)]
-      );
+      return this.onError(RSErrorCode.typesNotCompatible, node, [labelType(type1), labelType(type2)]);
     }
     return result;
   }
@@ -407,11 +401,7 @@ export class TypeAuditor {
       return null;
     }
     if (!('isOrdered' in type1 && type1.isOrdered)) {
-      return this.onError(
-        RSErrorCode.orderingNotSupported,
-        node.children[0].from,
-        [labelType(type1)]
-      );
+      return this.onError(RSErrorCode.orderingNotSupported, node.children[0], [labelType(type1)]);
     }
 
     const type2 = this.childTypification(node, 1);
@@ -419,19 +409,11 @@ export class TypeAuditor {
       return null;
     }
     if (!('isOrdered' in type2 && type2.isOrdered)) {
-      return this.onError(
-        RSErrorCode.orderingNotSupported,
-        node.children[1].from,
-        [labelType(type2)]
-      );
+      return this.onError(RSErrorCode.orderingNotSupported, node.children[1], [labelType(type2)]);
     }
 
     if (!checkCompatibility(type1, type2)) {
-      return this.onError(
-        RSErrorCode.typesNotCompatible,
-        node.children[1].from,
-        [labelType(type1), labelType(type2)]
-      );
+      return this.onError(RSErrorCode.typesNotCompatible, node, [labelType(type1), labelType(type2)]);
     }
     return LogicT;
   }
@@ -448,7 +430,7 @@ export class TypeAuditor {
       return null;
     }
 
-    this.locals.endScope(node.from);
+    this.locals.endScope(node.children[2]);
     return LogicT;
   }
 
@@ -472,11 +454,7 @@ export class TypeAuditor {
 
     }
     if (!checkCompatibility(type1, type2)) {
-      return this.onError(
-        RSErrorCode.typesNotCompatible,
-        node.children[1].from,
-        [labelType(type1), labelType(type2)]
-      );
+      return this.onError(RSErrorCode.typesNotCompatible, node, [labelType(type1), labelType(type2)]);
     }
     return LogicT;
   }
@@ -497,16 +475,9 @@ export class TypeAuditor {
 
     if (!checkCompatibility(type1, type2)) {
       if (isSubset) {
-        return this.onError(
-          RSErrorCode.typesNotEqual,
-          node.children[1].from,
-          [labelType(type1), labelType(type2)]
-        );
+        return this.onError(RSErrorCode.typesNotEqual, node, [labelType(type1), labelType(type2)]);
       } else {
-        return this.onError(
-          RSErrorCode.invalidElementPredicate,
-          node.children[1].from,
-          [labelType(type1), labelToken(node.typeID as TokenID), labelType(bool(type2))]
+        return this.onError(RSErrorCode.invalidElementPredicate, node, [labelType(type1), labelToken(node.typeID as TokenID), labelType(bool(type2))]
         );
       }
     }
@@ -561,8 +532,9 @@ export class TypeAuditor {
       if (merge === null) {
         return this.onError(
           RSErrorCode.invalidEnumeration,
-          node.children[child].from,
-          [labelType(type), labelType(childType)]);
+          node.children[child],
+          [labelType(type), labelType(childType)]
+        );
       }
       type = merge;
     }
@@ -590,10 +562,7 @@ export class TypeAuditor {
 
     const result = mergeTypifications(type1, type2);
     if (result === null) {
-      return this.onError(
-        RSErrorCode.typesNotEqual,
-        node.children[1].from,
-        [labelType(bool(type1)), labelType(bool(type2))]);
+      return this.onError(RSErrorCode.typesNotEqual, node, [labelType(bool(type1)), labelType(bool(type2))]);
     }
     return bool(result);
   }
@@ -609,7 +578,7 @@ export class TypeAuditor {
     if (argument.typeID !== TypeID.tuple) {
       return this.onError(
         RSErrorCode.invalidProjectionSet,
-        node.children[0].from,
+        node.children[0],
         [labelRSLangNode(node), labelType(bool(argument))]
       );
     }
@@ -619,8 +588,9 @@ export class TypeAuditor {
     for (const index of indices) {
       const newComponent = component(argument, index);
       if (newComponent === null) {
-        return this.onError(RSErrorCode.invalidProjectionSet,
-          node.children[0].from,
+        return this.onError(
+          RSErrorCode.invalidProjectionSet,
+          node.children[0],
           [labelRSLangNode(node), labelType(bool(argument))]
         );
       } else {
@@ -645,7 +615,7 @@ export class TypeAuditor {
     if (argument.typeID !== TypeID.tuple) {
       return this.onError(
         RSErrorCode.invalidProjectionTuple,
-        node.children[0].from,
+        node.children[0],
         [labelRSLangNode(node), labelType(argument)]
       );
     }
@@ -657,8 +627,9 @@ export class TypeAuditor {
       if (newComponent === null) {
         return this.onError(
           RSErrorCode.invalidProjectionTuple,
-          node.children[0].from,
-          [labelRSLangNode(node), labelType(argument)]);
+          node.children[0],
+          [labelRSLangNode(node), labelType(argument)]
+        );
       } else {
         components.push(newComponent);
       }
@@ -674,7 +645,7 @@ export class TypeAuditor {
     const indices = getNodeIndices(node);
     const tupleParam = indices.length === node.children.length - 1;
     if (!tupleParam && node.children.length > 2) {
-      return this.onError(RSErrorCode.invalidFilterArity, node.from);
+      return this.onError(RSErrorCode.invalidFilterArity, node);
     }
 
     const argument = this.childTypification(node, node.children.length - 1);
@@ -689,7 +660,7 @@ export class TypeAuditor {
     if (argument.typeID !== TypeID.collection || argument.base.typeID !== TypeID.tuple) {
       return this.onError(
         RSErrorCode.invalidFilterArgumentType,
-        node.children[node.children.length - 1].from,
+        node.children[node.children.length - 1],
         [labelRSLangNode(node), labelType(argument)]
       );
     }
@@ -701,7 +672,7 @@ export class TypeAuditor {
       if (newBase === null) {
         return this.onError(
           RSErrorCode.invalidFilterArgumentType,
-          node.children[node.children.length - 1].from,
+          node.children[node.children.length - 1],
           [labelRSLangNode(node), labelType(argument)]
         );
       }
@@ -717,7 +688,7 @@ export class TypeAuditor {
         if (param.typeID !== TypeID.collection || !checkCompatibility(bases[child], debool(param))) {
           return this.onError(
             RSErrorCode.typesNotEqual,
-            node.children[child].from,
+            node.children[child],
             [labelType(param), labelType(bool(bases[child]))]
           );
         }
@@ -732,7 +703,7 @@ export class TypeAuditor {
       if (paramType.typeID !== TypeID.collection || !checkCompatibility(expected, paramType)) {
         return this.onError(
           RSErrorCode.typesNotEqual,
-          node.children[0].from,
+          node.children[0],
           [labelType(paramType), labelType(expected)]
         );
       }
@@ -751,11 +722,7 @@ export class TypeAuditor {
       return EmptySetT;
     }
     if (argument.typeID !== TypeID.collection || argument.base.typeID !== TypeID.collection) {
-      return this.onError(
-        RSErrorCode.invalidReduce,
-        node.children[0].from,
-        [labelType(argument)]
-      );
+      return this.onError(RSErrorCode.invalidReduce, node.children[0], [labelType(argument)]);
     }
     return debool(argument);
   }
@@ -776,7 +743,7 @@ export class TypeAuditor {
       return null;
     }
 
-    this.locals.endScope(node.from);
+    this.locals.endScope(node.children[2]);
     return bool(domain);
   }
 
@@ -794,7 +761,7 @@ export class TypeAuditor {
       return null;
     }
 
-    this.locals.endScope(node.from);
+    this.locals.endScope(node);
     return bool(type);
   }
 
@@ -839,16 +806,12 @@ export class TypeAuditor {
       return null;
     }
     if (!checkCompatibility(iterationValue, initType)) {
-      return this.onError(
-        RSErrorCode.typesNotEqual,
-        node.children[iterationIndex].from,
-        [labelType(iterationValue), labelType(initType)]
-      );
+      return this.onError(RSErrorCode.typesNotEqual, node.children[iterationIndex], [labelType(iterationValue), labelType(initType)]);
     }
 
     if (hasGenerics(iterationValue)) {
       for (let retries = TypeAuditor.TYPE_DEDUCTION_DEPTH; retries > 0; retries--) {
-        this.locals.endScope(node.from);
+        this.locals.endScope(node);
         this.locals.clearUnused();
         this.locals.startScope();
         if (!this.visitChildDeclaration(node, 0, iterationValue)) {
@@ -871,7 +834,7 @@ export class TypeAuditor {
       }
     }
 
-    this.locals.endScope(node.from);
+    this.locals.endScope(node);
     return iterationValue;
   }
 
@@ -889,12 +852,11 @@ export class TypeAuditor {
 
   private checkFuncArguments(node: AstNode, alias: string, type: Parametrized): Map<string, Typification> | null {
     if (node.children.length - 1 !== type.args.length) {
-      this.onError(
+      return this.onError(
         RSErrorCode.invalidArgsArity,
-        node.children[1].from, [String(type.args.length),
-        String(node.children.length - 1)]
+        node.children[1],
+        [String(type.args.length), String(node.children.length - 1)]
       );
-      return null;
     }
 
     const substitutes = new Map<string, Typification>();
@@ -907,7 +869,7 @@ export class TypeAuditor {
       if (!compareTemplated(substitutes, argType, childType)) {
         this.onError(
           RSErrorCode.invalidArgumentType,
-          node.children[child].from,
+          node.children[child],
           [`${type.args[child - 1].alias}∈${labelType(argType)}`, labelType(childType)]
         );
         return null;
@@ -962,11 +924,11 @@ interface LocalData {
 
 /** Local variables context. */
 class LocalContext {
-  private onError: (code: RSErrorCode, position: number, params: string[]) => null;
+  private onError: (code: RSErrorCode, node: AstNode, params: string[]) => null;
 
   public data: LocalData[] = [];
 
-  constructor(onError: (code: RSErrorCode, position: number, params: string[]) => null) {
+  constructor(onError: (code: RSErrorCode, node: AstNode, params: string[]) => null) {
     this.onError = onError;
   }
 
@@ -978,11 +940,11 @@ class LocalContext {
     }
   }
 
-  endScope(pos: number, skipUnused: boolean = false): void {
+  endScope(node: AstNode, skipUnused: boolean = false): void {
     for (const local of this.data) {
       local.level--;
       if (!skipUnused && local.level === 0 && local.useCount === 0) {
-        this.onError(RSErrorCode.localNotUsed, pos, [local.alias]);
+        this.onError(RSErrorCode.localNotUsed, node, [local.alias]);
       }
     }
   }
@@ -991,14 +953,15 @@ class LocalContext {
     this.data = this.data.filter(data => data.level > 0);
   };
 
-  pushLocal(alias: string, type: Typification, pos: number): boolean {
+  pushLocal(node: AstNode, type: Typification): boolean {
+    const alias = getNodeText(node);
     const existing = this.data.find(data => data.alias === alias);
     if (existing) {
       if (existing.level > 0) {
-        this.onError(RSErrorCode.localShadowing, pos, [alias]);
+        this.onError(RSErrorCode.localShadowing, node, [alias]);
         return false;
       } else {
-        this.onError(RSErrorCode.localDoubleDeclare, pos, [alias]);
+        this.onError(RSErrorCode.localDoubleDeclare, node, [alias]);
         const index = this.data.indexOf(existing);
         if (index !== -1) {
           this.data.splice(index, 1);
@@ -1009,13 +972,14 @@ class LocalContext {
     return true;
   }
 
-  getLocalType(alias: string, pos: number): Typification | null {
+  getLocalType(node: AstNode): Typification | null {
+    const alias = getNodeText(node);
     const local = this.data.find(data => data.alias === alias);
     if (local === undefined) {
-      this.onError(RSErrorCode.localUndeclared, pos, [alias]);
+      this.onError(RSErrorCode.localUndeclared, node, [alias]);
       return null;
     } else if (local.level < 1) {
-      this.onError(RSErrorCode.localOutOfScope, pos, [alias]);
+      this.onError(RSErrorCode.localOutOfScope, node, [alias]);
       return null;
     } else {
       local.useCount++;

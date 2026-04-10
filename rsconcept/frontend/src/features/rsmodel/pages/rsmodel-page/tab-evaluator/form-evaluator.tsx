@@ -13,7 +13,7 @@ import { ViewErrors } from '@/features/rsform/components/view-errors';
 import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
 import {
   type AnalysisFull, type CalculatorResult,
-  type RSErrorDescription, TokenID, type Typification
+  getRSErrorRange, type RSErrorDescription, TokenID, type Typification
 } from '@/features/rslang';
 import { valueStub } from '@/features/rslang/eval/value-api';
 import { labelType } from '@/features/rslang/labels';
@@ -100,12 +100,11 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
     if (!rsInput.current) {
       return;
     }
-    let errorPosition = error.position;
-    if (errorPosition < 0) errorPosition = 0;
+    const range = getRSErrorRange(error);
     rsInput.current?.view?.dispatch({
       selection: {
-        anchor: errorPosition,
-        head: errorPosition
+        anchor: range.from,
+        head: range.to
       }
     });
     rsInput.current?.view?.focus();

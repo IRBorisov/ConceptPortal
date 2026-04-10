@@ -4,7 +4,7 @@ import { useCallback, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { type ReactCodeMirrorRef } from '@uiw/react-codemirror';
 
-import { type AnalysisFull, type RSErrorDescription, TokenID } from '@/features/rslang';
+import { type AnalysisFull, getRSErrorRange, type RSErrorDescription, TokenID } from '@/features/rslang';
 
 import { useResetOnChange } from '@/hooks/use-reset-on-change';
 import { useDialogsStore } from '@/stores/dialogs';
@@ -129,12 +129,11 @@ export function EditorRSExpression({
     if (!rsInput.current) {
       return;
     }
-    let errorPosition = error.position;
-    if (errorPosition < 0) errorPosition = 0;
+    const range = getRSErrorRange(error);
     rsInput.current?.view?.dispatch({
       selection: {
-        anchor: errorPosition,
-        head: errorPosition
+        anchor: range.from,
+        head: range.to
       }
     });
     rsInput.current?.view?.focus();

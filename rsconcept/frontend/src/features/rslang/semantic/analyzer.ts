@@ -103,39 +103,38 @@ export class RSLangAnalyzer {
       errors.push(error);
     };
     if (expression.length === 0) {
-      reporter({ code: RSErrorCode.cstEmptyDerived, position: 0 });
+      reporter({ code: RSErrorCode.cstEmptyDerived, from: 0, to: 0 });
       return { success: false, type: null, valueClass: null, errors: errors, ast: null };
     }
     const ast = this.parse(expression);
     if (ast.hasError) {
       extractSyntaxErrors(ast, reporter);
-      return { success: false, type: null, valueClass: null, errors: errors, ast: ast };
+      return { success: false, type: null, valueClass: null, errors, ast };
     }
 
     const type = this.typeAuditor.run(ast, options?.annotateTypes ?? false, reporter);
     if (type === null) {
-      return { success: false, type: null, valueClass: null, errors: errors, ast: ast };
+      return { success: false, type: null, valueClass: null, errors, ast };
     }
 
     if (options?.isDomain) {
       if (!isStructureDomain(ast) || type.typeID !== TypeID.collection) {
-        reporter({ code: RSErrorCode.globalStructure, position: ast.from });
-        return { success: false, type: null, valueClass: null, errors: errors, ast: ast };
+        reporter({ code: RSErrorCode.globalStructure, from: ast.from, to: ast.to });
+        return { success: false, type: null, valueClass: null, errors, ast };
       }
-      return { success: true, type: debool(type), valueClass: ValueClass.VALUE, errors: errors, ast: ast };
+      return { success: true, type: debool(type), valueClass: ValueClass.VALUE, errors, ast };
     }
     if (options?.expected && getTypeClass(type.typeID) !== options.expected) {
-      reporter({ code: RSErrorCode.expectedType, position: ast.from, params: [labelTypeClass(options.expected)] });
-      return { success: false, type: null, valueClass: null, errors: errors, ast: ast };
+      reporter({
+        code: RSErrorCode.expectedType,
+        from: ast.from,
+        to: ast.to,
+        params: [labelTypeClass(options.expected)]
+      });
+      return { success: false, type: null, valueClass: null, errors, ast };
     }
-
-    return {
-      success: true,
-      type: type,
-      valueClass: options?.isDomain ? ValueClass.VALUE : this.valueAuditor.run(ast, reporter),
-      errors: errors,
-      ast: ast
-    };
+    const valueClass = options?.isDomain ? ValueClass.VALUE : this.valueAuditor.run(ast, reporter);
+    return { success: true, type, valueClass, errors, ast };
   }
 
   private parse(expression: string): AstNode {

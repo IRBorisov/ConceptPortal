@@ -14,7 +14,7 @@ describe('RSLang analyzer', () => {
     const result = analyzer.checkFull(input, options);
     expect(result.success).toBe(false);
     expect(result.errors.length).toBe(1);
-    expect(result.errors[0]).toEqual(expectedError);
+    expect(result.errors[0]).toMatchObject(expectedError);
   }
 
   beforeEach(() => {
@@ -31,7 +31,7 @@ describe('RSLang analyzer', () => {
     expect(result.type).toBe(null);
     expect(result.valueClass).toBe(null);
     expect(result.errors.length).toBe(1);
-    expect(result.errors[0]).toEqual({ code: RSErrorCode.cstEmptyDerived, position: 0 });
+    expect(result.errors[0]).toMatchObject({ code: RSErrorCode.cstEmptyDerived, from: 0, to: 0 });
   });
 
   it('Domain', () => {
@@ -41,29 +41,34 @@ describe('RSLang analyzer', () => {
     expect(result.valueClass).toBe(ValueClass.VALUE);
     expect(result.errors.length).toBe(0);
 
-    expectError('X1∩X1', { isDomain: true }, { code: RSErrorCode.globalStructure, position: 0 });
+    expectError('X1∩X1', { isDomain: true }, { code: RSErrorCode.globalStructure, from: 0, to: 5 });
   });
 
   it('Expected type', () => {
     expectError('X1',
       { expected: TypeClass.logic },
-      { code: RSErrorCode.expectedType, position: 0, params: [labelTypeClass(TypeClass.logic)] }
+      { code: RSErrorCode.expectedType, from: 0, to: 2, params: [labelTypeClass(TypeClass.logic)] }
     );
     expectError('1=1',
       { expected: TypeClass.typification },
-      { code: RSErrorCode.expectedType, position: 0, params: [labelTypeClass(TypeClass.typification)] }
+      { code: RSErrorCode.expectedType, from: 0, to: 3, params: [labelTypeClass(TypeClass.typification)] }
     );
     expectError('1=1',
       { expected: TypeClass.function },
-      { code: RSErrorCode.expectedType, position: 0, params: [labelTypeClass(TypeClass.function)] }
+      { code: RSErrorCode.expectedType, from: 0, to: 3, params: [labelTypeClass(TypeClass.function)] }
     );
     expectError('[a ∈ X1] a=a',
       { expected: TypeClass.function },
-      { code: RSErrorCode.expectedType, position: 0, params: [labelTypeClass(TypeClass.function)] }
+      { code: RSErrorCode.expectedType, from: 0, to: 12, params: [labelTypeClass(TypeClass.function)] }
     );
     expectError('[a ∈ X1] a',
       { expected: TypeClass.predicate },
-      { code: RSErrorCode.expectedType, position: 0, params: [labelTypeClass(TypeClass.predicate)] }
+      { code: RSErrorCode.expectedType, from: 0, to: 10, params: [labelTypeClass(TypeClass.predicate)] }
     );
+  });
+
+  it('Reports analyzer-level ranges for whole-expression errors', () => {
+    const result = analyzer.checkFull('X1', { expected: TypeClass.logic });
+    expect(result.errors[0]).toMatchObject({ code: RSErrorCode.expectedType, from: 0, to: 2 });
   });
 });

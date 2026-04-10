@@ -69,14 +69,14 @@ export class Evaluator {
     this.iterationCounter = 0;
   }
 
-  private onError(code: RSErrorCode, position: number, params?: string[]): null {
-    this.reporter?.({ code, position, params });
+  private onError(code: RSErrorCode, node: AstNode, params?: string[]): null {
+    this.reporter?.({ code, from: node.from, to: node.to, params });
     return null;
   }
 
   private tick(node: AstNode): boolean {
     if (++this.iterationCounter > MAX_ITERATIONS) {
-      this.onError(RSErrorCode.iterationsLimit, node.from, [String(MAX_ITERATIONS)]);
+      this.onError(RSErrorCode.iterationsLimit, node, [String(MAX_ITERATIONS)]);
       return false;
     }
     return true;
@@ -120,7 +120,7 @@ export class Evaluator {
         return this.visitInteger(node);
 
       case TokenID.LIT_WHOLE_NUMBERS:
-        return this.onError(RSErrorCode.iterateInfinity, node.from);
+        return this.onError(RSErrorCode.iterateInfinity, node);
 
       case TokenID.LIT_EMPTYSET:
         return EmptySetV;
@@ -213,7 +213,7 @@ export class Evaluator {
         return this.visitRecursion(node);
 
       case TokenID.NT_FUNC_DEFINITION:
-        return this.onError(RSErrorCode.calculationNotSupported, node.from);
+        return this.onError(RSErrorCode.calculationNotSupported, node);
     }
     return null;
   }
@@ -226,7 +226,7 @@ export class Evaluator {
     const alias = getNodeText(node);
     const value = this.context.get(alias);
     if (!value) {
-      return this.onError(RSErrorCode.calcGlobalMissing, node.from, [alias]);
+      return this.onError(RSErrorCode.calcGlobalMissing, node, [alias]);
     }
     return value;
   }
@@ -240,7 +240,7 @@ export class Evaluator {
     const funcName = getNodeText(node.children[0]);
     const ast = this.treeContext.get(funcName);
     if (!ast) {
-      return this.onError(RSErrorCode.calcGlobalMissing, node.from, [funcName]);
+      return this.onError(RSErrorCode.calcGlobalMissing, node.children[0], [funcName]);
     }
 
     const args: Value[] = [];
@@ -465,7 +465,7 @@ export class Evaluator {
     }
     const result = decartian(args as Value[][]);
     if (result === null) {
-      this.onError(RSErrorCode.setOverflow, node.from, [String(SET_INFINITY)]);
+      this.onError(RSErrorCode.setOverflow, node, [String(SET_INFINITY)]);
       return null;
     }
     return result;
@@ -478,7 +478,7 @@ export class Evaluator {
     }
     const result = boolean(base);
     if (result === null) {
-      this.onError(RSErrorCode.booleanBaseLimit, node.from, [String(BOOL_INFINITY)]);
+      this.onError(RSErrorCode.booleanBaseLimit, node.children[0], [String(BOOL_INFINITY)]);
       return null;
     }
     return result;
@@ -522,7 +522,7 @@ export class Evaluator {
       return null;
     }
     if (target.length !== 1) {
-      return this.onError(RSErrorCode.calcInvalidDebool, node.from);
+      return this.onError(RSErrorCode.calcInvalidDebool, node.children[0]);
     }
     return target[0];
   }

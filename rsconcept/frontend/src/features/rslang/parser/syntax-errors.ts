@@ -21,33 +21,38 @@ function extractInternal(node: AstNode, reporter: ErrorReporter) {
   if (node.parent === null) {
     return reporter({
       code: RSErrorCode.syntax,
-      position: node.from
+      from: node.from,
+      to: node.to
     });
   }
 
   if (node.parent.children[node.parent.children.length - 1] === node && node.parent.children[0].data.value === '(') {
     return reporter({
       code: RSErrorCode.missingParenthesis,
-      position: node.from
+      from: node.from,
+      to: node.to
     });
   }
 
   if (node.parent.children[node.parent.children.length - 1] === node && node.parent.children[0].data.value === '{') {
     return reporter({
       code: RSErrorCode.missingCurlyBrace,
-      position: node.from
+      from: node.from,
+      to: node.to
     });
   }
 
   if (node.parent.typeID === Variable) {
     return reporter({
       code: RSErrorCode.expectedLocal,
-      position: node.parent.from
+      from: node.parent.from,
+      to: node.parent.to
     });
   }
 
   reporter({
     code: RSErrorCode.syntax,
-    position: node.from
+    from: node.from,
+    to: node.to
   });
 }

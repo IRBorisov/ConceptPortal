@@ -13,8 +13,9 @@ export type RSErrorClass = (typeof RSErrorClass)[keyof typeof RSErrorClass];
 /** Represents RSLang expression error description. */
 export interface RSErrorDescription {
   code: RSErrorCode;
-  position: number;
-  params?: string[];
+  from: number;
+  to: number;
+  params?: readonly string[];
 }
 
 /** Error reporter function type. */
@@ -114,4 +115,16 @@ export function getRSErrorPrefix(code: RSErrorCode): string {
 export function isCritical(code: RSErrorCode): boolean {
   return code !== RSErrorCode.localDoubleDeclare &&
     code !== RSErrorCode.localNotUsed;
+}
+
+/** Returns a normalized editor range for an error. */
+export function getRSErrorRange(error: RSErrorDescription): { from: number; to: number; } {
+  const from = Math.max(error.from, 0);
+  const to = typeof error.to === 'number'
+    ? Math.max(error.to, from)
+    : from;
+  return {
+    from,
+    to: to > from ? to : from + 1
+  };
 }

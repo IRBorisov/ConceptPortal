@@ -137,8 +137,8 @@ export class ValueAuditor {
     return null;
   }
 
-  private onError(code: RSErrorCode, position: number, params?: string[]): null {
-    this.reporter?.({ code, position, params });
+  private onError(code: RSErrorCode, node: AstNode, params?: string[]): null {
+    this.reporter?.({ code, from: node.from, to: node.to, params });
     return null;
   }
 
@@ -162,7 +162,7 @@ export class ValueAuditor {
     }
     if (result !== ValueClass.VALUE) {
       const child = node.children[index];
-      return this.onError(RSErrorCode.invalidPropertyUsage, child?.from ?? node.from);
+      return this.onError(RSErrorCode.invalidPropertyUsage, child ?? node);
     }
     return ValueClass.VALUE;
   }
@@ -200,7 +200,7 @@ export class ValueAuditor {
     const alias = getNodeText(node);
     const result = this.context.get(alias);
     if (!result) {
-      return this.onError(RSErrorCode.globalNoValue, node.from, [alias]);
+      return this.onError(RSErrorCode.globalNoValue, node, [alias]);
     }
     return result;
   }

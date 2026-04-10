@@ -91,7 +91,7 @@ export class RSCalculator {
 
     const value = this.evaluator.run(ast, reporter);
     if (value === null && errors.length === 0) {
-      errors.push({ code: RSErrorCode.calcUnknownError, position: 0 });
+      errors.push({ code: RSErrorCode.calcUnknownError, from: 0, to: 0 });
     }
     return {
       value,

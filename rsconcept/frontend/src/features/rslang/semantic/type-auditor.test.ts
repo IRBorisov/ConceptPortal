@@ -153,84 +153,84 @@ const correctTypesData = [
 
 const errorData = [
   // Identifiers
-  ['X42', { code: RSErrorCode.globalNotTyped, position: 0, params: ['X42'] }],
+  ['X42', { code: RSErrorCode.globalNotTyped, from: 0, to: 3, params: ['X42'] }],
   // Radicals
-  ['R1', { code: RSErrorCode.radicalUsage, position: 0, params: ['R1'] }],
-  ['[a∈ℬ(R1)] R1\\a', { code: RSErrorCode.radicalUsage, position: 10, params: ['R1'] }],
+  ['R1', { code: RSErrorCode.radicalUsage, from: 0, to: 2, params: ['R1'] }],
+  ['[a∈ℬ(R1)] R1\\a', { code: RSErrorCode.radicalUsage, from: 10, to: 12, params: ['R1'] }],
   // Functions
-  ['F1[X1]', { code: RSErrorCode.invalidArgsArity, position: 3, params: ['2', '1'] }],
-  ['F1[X1, X1, X1]', { code: RSErrorCode.invalidArgsArity, position: 3, params: ['2', '3'] }],
-  ['F1[X1, S1]', { code: RSErrorCode.invalidArgumentType, position: 7, params: ['b∈ℬ(X1)', 'ℬ(X1×X1)'] }],
-  ['F1[S1, X1]', { code: RSErrorCode.invalidArgumentType, position: 3, params: ['a∈ℬ(X1)', 'ℬ(X1×X1)'] }],
-  ['P1[X1]', { code: RSErrorCode.invalidArgsArity, position: 3, params: ['2', '1'] }],
-  ['P1[X1, X1, X1]', { code: RSErrorCode.invalidArgsArity, position: 3, params: ['2', '3'] }],
-  ['P1[X1, S1]', { code: RSErrorCode.invalidArgumentType, position: 7, params: ['b∈ℬ(X1)', 'ℬ(X1×X1)'] }],
-  ['P1[S1, X1]', { code: RSErrorCode.invalidArgumentType, position: 3, params: ['a∈ℬ(X1)', 'ℬ(X1×X1)'] }],
+  ['F1[X1]', { code: RSErrorCode.invalidArgsArity, from: 3, to: 5, params: ['2', '1'] }],
+  ['F1[X1, X1, X1]', { code: RSErrorCode.invalidArgsArity, from: 3, to: 5, params: ['2', '3'] }],
+  ['F1[X1, S1]', { code: RSErrorCode.invalidArgumentType, from: 7, to: 9, params: ['b∈ℬ(X1)', 'ℬ(X1×X1)'] }],
+  ['F1[S1, X1]', { code: RSErrorCode.invalidArgumentType, from: 3, to: 5, params: ['a∈ℬ(X1)', 'ℬ(X1×X1)'] }],
+  ['P1[X1]', { code: RSErrorCode.invalidArgsArity, from: 3, to: 5, params: ['2', '1'] }],
+  ['P1[X1, X1, X1]', { code: RSErrorCode.invalidArgsArity, from: 3, to: 5, params: ['2', '3'] }],
+  ['P1[X1, S1]', { code: RSErrorCode.invalidArgumentType, from: 7, to: 9, params: ['b∈ℬ(X1)', 'ℬ(X1×X1)'] }],
+  ['P1[S1, X1]', { code: RSErrorCode.invalidArgumentType, from: 3, to: 5, params: ['a∈ℬ(X1)', 'ℬ(X1×X1)'] }],
   // Integral
-  ['card(debool(X1))', { code: RSErrorCode.invalidCard, position: 5, params: ['X1'] }],
-  ['card(S3)', { code: RSErrorCode.invalidCard, position: 5, params: ['C1'] }],
-  ['card(1)', { code: RSErrorCode.invalidCard, position: 5, params: ['Z'] }],
-  ['card((1,2))', { code: RSErrorCode.invalidCard, position: 5, params: ['Z×Z'] }],
-  ['debool(X1)+1', { code: RSErrorCode.arithmeticNotSupported, position: 0, params: ['X1'] }],
-  ['1+debool(X1)', { code: RSErrorCode.arithmeticNotSupported, position: 2, params: ['X1'] }],
+  ['card(debool(X1))', { code: RSErrorCode.invalidCard, from: 5, to: 15, params: ['X1'] }],
+  ['card(S3)', { code: RSErrorCode.invalidCard, from: 5, to: 7, params: ['C1'] }],
+  ['card(1)', { code: RSErrorCode.invalidCard, from: 5, to: 6, params: ['Z'] }],
+  ['card((1,2))', { code: RSErrorCode.invalidCard, from: 5, to: 10, params: ['Z×Z'] }],
+  ['debool(X1)+1', { code: RSErrorCode.arithmeticNotSupported, from: 0, to: 10, params: ['X1'] }],
+  ['1+debool(X1)', { code: RSErrorCode.arithmeticNotSupported, from: 2, to: 12, params: ['X1'] }],
   // Logical
-  ['debool(X1)<1', { code: RSErrorCode.orderingNotSupported, position: 0, params: ['X1'] }],
-  ['1<debool(X1)', { code: RSErrorCode.orderingNotSupported, position: 2, params: ['X1'] }],
-  ['debool(X1)=1', { code: RSErrorCode.typesNotCompatible, position: 11, params: ['X1', 'Z'] }],
-  ['1=debool(X1)', { code: RSErrorCode.typesNotCompatible, position: 2, params: ['Z', 'X1'] }],
-  ['S1=S2', { code: RSErrorCode.typesNotCompatible, position: 3, params: ['ℬ(X1×X1)', 'ℬℬ(X1)'] }],
-  ['∀a,a∈X1 a=a', { code: RSErrorCode.localShadowing, position: 3, params: ['a'] }],
-  ['∀(a,a)∈S1 a=a', { code: RSErrorCode.localShadowing, position: 4, params: ['a'] }],
-  ['∀(a,b)∈X1 a=b', { code: RSErrorCode.invalidCortegeDeclare, position: 2 }],
-  ['∀a∈X1 D{a∈S1| 1=1}=S1', { code: RSErrorCode.localShadowing, position: 8, params: ['a'] }],
-  ['∀a∈X1 a=a & a=a', { code: RSErrorCode.localOutOfScope, position: 12, params: ['a'] }],
-  ['∀a∈X1 a=a & debool(X1)=a', { code: RSErrorCode.localOutOfScope, position: 23, params: ['a'] }],
+  ['debool(X1)<1', { code: RSErrorCode.orderingNotSupported, from: 0, to: 10, params: ['X1'] }],
+  ['1<debool(X1)', { code: RSErrorCode.orderingNotSupported, from: 2, to: 12, params: ['X1'] }],
+  ['debool(X1)=1', { code: RSErrorCode.typesNotCompatible, from: 0, to: 12, params: ['X1', 'Z'] }],
+  ['1=debool(X1)', { code: RSErrorCode.typesNotCompatible, from: 0, to: 12, params: ['Z', 'X1'] }],
+  ['S1=S2', { code: RSErrorCode.typesNotCompatible, from: 0, to: 5, params: ['ℬ(X1×X1)', 'ℬℬ(X1)'] }],
+  ['∀a,a∈X1 a=a', { code: RSErrorCode.localShadowing, from: 3, to: 4, params: ['a'] }],
+  ['∀(a,a)∈S1 a=a', { code: RSErrorCode.localShadowing, from: 4, to: 5, params: ['a'] }],
+  ['∀(a,b)∈X1 a=b', { code: RSErrorCode.invalidCortegeDeclare, from: 2, to: 3 }],
+  ['∀a∈X1 D{a∈S1| 1=1}=S1', { code: RSErrorCode.localShadowing, from: 8, to: 9, params: ['a'] }],
+  ['∀a∈X1 a=a & a=a', { code: RSErrorCode.localOutOfScope, from: 12, to: 13, params: ['a'] }],
+  ['∀a∈X1 a=a & debool(X1)=a', { code: RSErrorCode.localOutOfScope, from: 23, to: 24, params: ['a'] }],
   // Set predicates
-  ['X1∈X1', { code: RSErrorCode.invalidElementPredicate, position: 3, params: ['ℬ(X1)', '∈', 'ℬ(X1)'] }],
-  ['(1,2)∈X1', { code: RSErrorCode.invalidElementPredicate, position: 6, params: ['Z×Z', '∈', 'ℬ(X1)'] }],
-  ['(1,2)∈Z', { code: RSErrorCode.invalidElementPredicate, position: 6, params: ['Z×Z', '∈', 'ℬ(Z)'] }],
-  ['{1}∈Z', { code: RSErrorCode.invalidElementPredicate, position: 4, params: ['ℬ(Z)', '∈', 'ℬ(Z)'] }],
-  ['{1}∉Z', { code: RSErrorCode.invalidElementPredicate, position: 4, params: ['ℬ(Z)', '∉', 'ℬ(Z)'] }],
-  ['X1⊆S2', { code: RSErrorCode.typesNotEqual, position: 3, params: ['ℬ(X1)', 'ℬℬ(X1)'] }],
-  ['X1⊄S2', { code: RSErrorCode.typesNotEqual, position: 3, params: ['ℬ(X1)', 'ℬℬ(X1)'] }],
-  ['X1⊂S2', { code: RSErrorCode.typesNotEqual, position: 3, params: ['ℬ(X1)', 'ℬℬ(X1)'] }],
+  ['X1∈X1', { code: RSErrorCode.invalidElementPredicate, from: 0, to: 5, params: ['ℬ(X1)', '∈', 'ℬ(X1)'] }],
+  ['(1,2)∈X1', { code: RSErrorCode.invalidElementPredicate, from: 0, to: 8, params: ['Z×Z', '∈', 'ℬ(X1)'] }],
+  ['(1,2)∈Z', { code: RSErrorCode.invalidElementPredicate, from: 0, to: 7, params: ['Z×Z', '∈', 'ℬ(Z)'] }],
+  ['{1}∈Z', { code: RSErrorCode.invalidElementPredicate, from: 0, to: 5, params: ['ℬ(Z)', '∈', 'ℬ(Z)'] }],
+  ['{1}∉Z', { code: RSErrorCode.invalidElementPredicate, from: 0, to: 5, params: ['ℬ(Z)', '∉', 'ℬ(Z)'] }],
+  ['X1⊆S2', { code: RSErrorCode.typesNotEqual, from: 0, to: 5, params: ['ℬ(X1)', 'ℬℬ(X1)'] }],
+  ['X1⊄S2', { code: RSErrorCode.typesNotEqual, from: 0, to: 5, params: ['ℬ(X1)', 'ℬℬ(X1)'] }],
+  ['X1⊂S2', { code: RSErrorCode.typesNotEqual, from: 0, to: 5, params: ['ℬ(X1)', 'ℬℬ(X1)'] }],
   // Constructors
-  ['ℬ(S3)', { code: RSErrorCode.invalidBoolean, position: 2, params: ['C1'] }],
-  ['ℬ((1,2))', { code: RSErrorCode.invalidBoolean, position: 2, params: ['Z×Z'] }],
-  ['S3×Z', { code: RSErrorCode.invalidDecart, position: 0, params: ['C1'] }],
-  ['{X1, S1}', { code: RSErrorCode.invalidEnumeration, position: 5, params: ['ℬ(X1)', 'ℬ(X1×X1)'] }],
-  ['{S1, X1}', { code: RSErrorCode.invalidEnumeration, position: 5, params: ['ℬ(X1×X1)', 'ℬ(X1)'] }],
-  ['{1, X1}', { code: RSErrorCode.invalidEnumeration, position: 4, params: ['Z', 'ℬ(X1)'] }],
-  ['{X1, 1}', { code: RSErrorCode.invalidEnumeration, position: 5, params: ['ℬ(X1)', 'Z'] }],
-  ['{(1,2), (X1,X1)}', { code: RSErrorCode.invalidEnumeration, position: 8, params: ['Z×Z', 'ℬ(X1)×ℬ(X1)'] }],
-  ['R{a := S1 | {a}}', { code: RSErrorCode.typesNotEqual, position: 12, params: ['ℬℬ(X1×X1)', 'ℬ(X1×X1)'] }],
-  ['I{(a, b) | a:∈X1; b:={a}; a≠b}', { code: RSErrorCode.typesNotCompatible, position: 28, params: ['X1', 'ℬ(X1)'] }],
+  ['ℬ(S3)', { code: RSErrorCode.invalidBoolean, from: 2, to: 4, params: ['C1'] }],
+  ['ℬ((1,2))', { code: RSErrorCode.invalidBoolean, from: 2, to: 7, params: ['Z×Z'] }],
+  ['S3×Z', { code: RSErrorCode.invalidDecart, from: 0, to: 2, params: ['C1'] }],
+  ['{X1, S1}', { code: RSErrorCode.invalidEnumeration, from: 5, to: 7, params: ['ℬ(X1)', 'ℬ(X1×X1)'] }],
+  ['{S1, X1}', { code: RSErrorCode.invalidEnumeration, from: 5, to: 7, params: ['ℬ(X1×X1)', 'ℬ(X1)'] }],
+  ['{1, X1}', { code: RSErrorCode.invalidEnumeration, from: 4, to: 6, params: ['Z', 'ℬ(X1)'] }],
+  ['{X1, 1}', { code: RSErrorCode.invalidEnumeration, from: 5, to: 6, params: ['ℬ(X1)', 'Z'] }],
+  ['{(1,2), (X1,X1)}', { code: RSErrorCode.invalidEnumeration, from: 8, to: 15, params: ['Z×Z', 'ℬ(X1)×ℬ(X1)'] }],
+  ['R{a := S1 | {a}}', { code: RSErrorCode.typesNotEqual, from: 12, to: 15, params: ['ℬℬ(X1×X1)', 'ℬ(X1×X1)'] }],
+  ['I{(a, b) | a:∈X1; b:={a}; a≠b}', { code: RSErrorCode.typesNotCompatible, from: 26, to: 29, params: ['X1', 'ℬ(X1)'] }],
   // Set operations
-  ['X1 ∪ ∅', { code: RSErrorCode.invalidEmptySetUsage, position: 5 }],
-  ['X1 ∪ S1', { code: RSErrorCode.typesNotEqual, position: 5, params: ['ℬ(X1)', 'ℬ(X1×X1)'] }],
-  ['S1 ∪ X1', { code: RSErrorCode.typesNotEqual, position: 5, params: ['ℬ(X1×X1)', 'ℬ(X1)'] }],
-  ['Pr1(X1)', { code: RSErrorCode.invalidProjectionSet, position: 4, params: ['Pr1', 'ℬ(X1)'] }],
-  ['Pr3(S1)', { code: RSErrorCode.invalidProjectionSet, position: 4, params: ['Pr3', 'ℬ(X1×X1)'] }],
-  ['Pr1,3(S1)', { code: RSErrorCode.invalidProjectionSet, position: 6, params: ['Pr1,3', 'ℬ(X1×X1)'] }],
-  ['Pr1((1,2))', { code: RSErrorCode.invalidProjectionSet, position: 4, params: ['Z×Z'] }],
-  ['pr1(X1)', { code: RSErrorCode.invalidProjectionTuple, position: 4, params: ['pr1', 'ℬ(X1)'] }],
-  ['pr1(debool(X1))', { code: RSErrorCode.invalidProjectionTuple, position: 4, params: ['pr1', 'X1'] }],
-  ['pr3(debool(S1))', { code: RSErrorCode.invalidProjectionTuple, position: 4, params: ['pr3', 'X1×X1'] }],
-  ['Fi1[X1](ℬ(X1))', { code: RSErrorCode.invalidFilterArgumentType, position: 8, params: ['Fi1', 'ℬℬ(X1)'] }],
-  ['Fi1[1](S1)', { code: RSErrorCode.typesNotEqual, position: 4, params: ['Z', 'ℬ(X1)'] }],
-  ['Fi1[X1](ℬ(X1)×X1)', { code: RSErrorCode.typesNotEqual, position: 4, params: ['ℬ(X1)', 'ℬℬ(X1)'] }],
-  ['Fi3[X1](S1)', { code: RSErrorCode.invalidFilterArgumentType, position: 8, params: ['Fi3', 'ℬ(X1×X1)'] }],
-  ['Fi1[X1,X1](S1)', { code: RSErrorCode.invalidFilterArity, position: 0 }],
-  ['Fi1,2[X1](S1)', { code: RSErrorCode.typesNotEqual, position: 6, params: ['ℬ(X1)', 'ℬ(X1×X1)'] }],
-  ['red(X1)', { code: RSErrorCode.invalidReduce, position: 4, params: ['ℬ(X1)'] }],
-  ['debool(S3)', { code: RSErrorCode.invalidDebool, position: 7, params: ['C1'] }],
+  ['X1 ∪ ∅', { code: RSErrorCode.invalidEmptySetUsage, from: 5, to: 6 }],
+  ['X1 ∪ S1', { code: RSErrorCode.typesNotEqual, from: 0, to: 7, params: ['ℬ(X1)', 'ℬ(X1×X1)'] }],
+  ['S1 ∪ X1', { code: RSErrorCode.typesNotEqual, from: 0, to: 7, params: ['ℬ(X1×X1)', 'ℬ(X1)'] }],
+  ['Pr1(X1)', { code: RSErrorCode.invalidProjectionSet, from: 4, to: 6, params: ['Pr1', 'ℬ(X1)'] }],
+  ['Pr3(S1)', { code: RSErrorCode.invalidProjectionSet, from: 4, to: 6, params: ['Pr3', 'ℬ(X1×X1)'] }],
+  ['Pr1,3(S1)', { code: RSErrorCode.invalidProjectionSet, from: 6, to: 8, params: ['Pr1,3', 'ℬ(X1×X1)'] }],
+  ['Pr1((1,2))', { code: RSErrorCode.invalidProjectionSet, from: 4, to: 9, params: ['Z×Z'] }],
+  ['pr1(X1)', { code: RSErrorCode.invalidProjectionTuple, from: 4, to: 6, params: ['pr1', 'ℬ(X1)'] }],
+  ['pr1(debool(X1))', { code: RSErrorCode.invalidProjectionTuple, from: 4, to: 14, params: ['pr1', 'X1'] }],
+  ['pr3(debool(S1))', { code: RSErrorCode.invalidProjectionTuple, from: 4, to: 14, params: ['pr3', 'X1×X1'] }],
+  ['Fi1[X1](ℬ(X1))', { code: RSErrorCode.invalidFilterArgumentType, from: 8, to: 13, params: ['Fi1', 'ℬℬ(X1)'] }],
+  ['Fi1[1](S1)', { code: RSErrorCode.typesNotEqual, from: 4, to: 5, params: ['Z', 'ℬ(X1)'] }],
+  ['Fi1[X1](ℬ(X1)×X1)', { code: RSErrorCode.typesNotEqual, from: 4, to: 6, params: ['ℬ(X1)', 'ℬℬ(X1)'] }],
+  ['Fi3[X1](S1)', { code: RSErrorCode.invalidFilterArgumentType, from: 8, to: 10, params: ['Fi3', 'ℬ(X1×X1)'] }],
+  ['Fi1[X1,X1](S1)', { code: RSErrorCode.invalidFilterArity, from: 0, to: 14 }],
+  ['Fi1,2[X1](S1)', { code: RSErrorCode.typesNotEqual, from: 6, to: 8, params: ['ℬ(X1)', 'ℬ(X1×X1)'] }],
+  ['red(X1)', { code: RSErrorCode.invalidReduce, from: 4, to: 6, params: ['ℬ(X1)'] }],
+  ['debool(S3)', { code: RSErrorCode.invalidDebool, from: 7, to: 9, params: ['C1'] }],
   // Locals
-  ['D{t ∈ X1 | 1=1}', { code: RSErrorCode.localNotUsed, position: 0, params: ['t'] }],
-  ['D{t ∈ X1 | t=t} ∪ D{t∈X1 | t=t}', { code: RSErrorCode.localDoubleDeclare, position: 20, params: ['t'] }],
-  ['D{t ∈ X1 | ∀t∈X1 t=t}', { code: RSErrorCode.localShadowing, position: 12, params: ['t'] }],
+  ['D{t ∈ X1 | 1=1}', { code: RSErrorCode.localNotUsed, from: 11, to: 14, params: ['t'] }],
+  ['D{t ∈ X1 | t=t} ∪ D{t∈X1 | t=t}', { code: RSErrorCode.localDoubleDeclare, from: 20, to: 21, params: ['t'] }],
+  ['D{t ∈ X1 | ∀t∈X1 t=t}', { code: RSErrorCode.localShadowing, from: 12, to: 13, params: ['t'] }],
   // Error popup
-  ['1<card(X42)', { code: RSErrorCode.globalNotTyped, position: 7, params: ['X42'] }],
-  ['X42=X1', { code: RSErrorCode.globalNotTyped, position: 0, params: ['X42'] }],
+  ['1<card(X42)', { code: RSErrorCode.globalNotTyped, from: 7, to: 10, params: ['X42'] }],
+  ['X42=X1', { code: RSErrorCode.globalNotTyped, from: 0, to: 3, params: ['X42'] }],
 ];
 
 describe('TypeAuditor', () => {
@@ -256,7 +256,7 @@ describe('TypeAuditor', () => {
     expect(ast.hasError).toBe(false);
     auditor.run(ast, false, error => (errors.push(error)));
     expect(errors.length).toBe(1);
-    expect(errors[0]).toEqual(expectedError);
+    expect(errors[0]).toMatchObject(expectedError);
   }
 
   // .filter(([input]) => input === '[σ∈ℬ(Z×Z), π∈Z] I{(α, μ+π) | (α,μ):∈σ}')
@@ -281,7 +281,11 @@ describe('TypeAuditor', () => {
     expectType('F2[Z, 1]', 'ℬ(Z)');
     expectType('F2[Z, S3]', 'ℬ(C1)');
     expectType('F2[{∅}, ∅]', 'ℬℬ(R0)');
-    expectError('F2[X1, ℬ(X1)]', { code: RSErrorCode.invalidArgumentType, position: 7, params: ['b∈R1F2', 'ℬℬ(X1)'] });
+    expectError('F2[X1, ℬ(X1)]', {
+      code: RSErrorCode.invalidArgumentType,
+      from: 7, to: 12,
+      params: ['b∈R1F2', 'ℬℬ(X1)']
+    });
   });
 
   it('Templated nesting', () => {
@@ -301,5 +305,11 @@ describe('TypeAuditor', () => {
     });
     expectType('[a∈R2, b∈R2×R1] F2[a, b]', '[R2, R2×R1] → ℬ(R2)');
     expectType('[a∈R3, b∈R3×R4] F2[a, b]', '[R3, R3×R4] → ℬ(R3)');
+  });
+
+  it('Reports token end positions for semantic errors', () => {
+    const ast = buildAST('X42');
+    auditor.run(ast, false, error => (errors.push(error)));
+    expect(errors[0]).toMatchObject({ code: RSErrorCode.globalNotTyped, from: 0, to: 3 });
   });
 });
