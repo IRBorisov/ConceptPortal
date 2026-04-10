@@ -116,11 +116,11 @@ export function FormRSForm() {
         </form.Field>
         <div className='relative flex flex-col gap-2'>
           <ToolbarVersioning
-            className='absolute -top-2 right-2' //
+            className='absolute -top-1 right-2'
             blockReload={schema.oss.length > 0}
           />
 
-          <Label text='Версия' className='select-none w-fit -mt-1' />
+          <Label text='Версия' className='select-none w-fit' />
           <SelectVersion
             id='schema_version'
             className='select-none'

@@ -9,9 +9,26 @@ export function addSpaces(text: string): string {
 }
 
 /**
- * Allows @react-pdf to break long Cyrillic words by returning one-char chunks.
- * Falls back to the default behavior for non-Cyrillic words.
+ * Allows @react-pdf to properly break long Cyrillic words using hyphenation points.
+ * For non-Cyrillic words, returns the word as a whole.
+ * This implementation breaks Cyrillic after vowels or soft/hard sign followed by a consonant,
+ * which is a crude but improved approach over one-char splits.
  */
 export function hyphenateCyrillic(word: string): string[] {
-  return /[А-Яа-яЁё]/.test(word) ? word.split('') : [word];
+  // Only hyphenate if word contains Cyrillic
+  if (!/[А-Яа-яЁё]/.test(word)) {
+    return [word];
+  }
+  // Simple heuristic: break after vowels, soft sign, or hard sign when followed by consonant
+  const cyrillicVowel = "[аеёиоуыэюяАЕЁИОУЫЭЮЯ]";
+  const cyrillicConsonant = "[бвгджзйклмнпрстфхцчшщБВГДЖЗЙКЛМНПРСТФХЦЧШЩ]";
+  // Break after vowels or (soft/hard sign) if followed by a consonant
+  const re = new RegExp(
+    `((?:${cyrillicVowel}|[ьЬъЪ])(?=${cyrillicConsonant}))`,
+    "gu"
+  );
+  // Insert hyphens (split points) using a zero-width placeholder, then split there.
+  const PLACEHOLDER = "\u200B";
+  const res = word.replace(re, "$1" + PLACEHOLDER).split(PLACEHOLDER);
+  return res;
 }

@@ -48,10 +48,10 @@ export function TextInput({
           <input
             id={id}
             className={clsx(
-              'min-w-0 grow max-w-full',
+              'h-9 min-w-0 grow max-w-full',
               'leading-tight truncate hover:text-clip',
               transparent || disabled ? 'bg-transparent' : 'bg-input',
-              !noBorder && 'border py-2',
+              !noBorder && 'border',
               !noOutline && 'focus-outline',
               (!noBorder || !disabled) && 'px-3',
             )}
@@ -70,7 +70,7 @@ export function TextInput({
         <input
           id={id}
           className={clsx(
-            'min-w-0',
+            'h-9 min-w-0',
             'leading-tight truncate hover:text-clip',
             transparent || disabled ? 'bg-transparent' : 'bg-input',
             !noBorder && 'border py-2',
