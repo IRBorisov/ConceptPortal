@@ -57,20 +57,19 @@ const editorSetup: BasicSetupOptions = {
   lintKeymap: false
 };
 
-interface RSInputProps
-  extends Pick<
-    ReactCodeMirrorProps,
-    | 'id' //
-    | 'height'
-    | 'minHeight'
-    | 'maxHeight'
-    | 'value'
-    | 'onFocus'
-    | 'onBlur'
-    | 'placeholder'
-    | 'style'
-    | 'className'
-  > {
+interface RSInputProps extends Pick<
+  ReactCodeMirrorProps,
+  | 'id' //
+  | 'height'
+  | 'minHeight'
+  | 'maxHeight'
+  | 'value'
+  | 'onFocus'
+  | 'onBlur'
+  | 'placeholder'
+  | 'style'
+  | 'className'
+> {
   ref?: React.Ref<ReactCodeMirrorRef>;
   label?: string;
   disabled?: boolean;
@@ -128,10 +127,14 @@ export function RSInput({
     EditorView.lineWrapping,
     RSLanguage,
     ...(errors && errors.length > 0 ? rsErrorRanges(errors) : []),
-    ...(portalHoverTooltips ? [tooltips({
-      parent: document.body,
-      position: 'fixed'
-    })] : []),
+    ...(portalHoverTooltips
+      ? [
+          tooltips({
+            parent: document.body,
+            position: 'fixed'
+          })
+        ]
+      : []),
     ccBracketMatching(),
     ...(!schema || !onOpenEdit ? [] : [rsNavigation(schema, onOpenEdit)]),
     ...(!schema ? [] : [rsHoverTooltip(schema, onOpenEdit !== undefined)])

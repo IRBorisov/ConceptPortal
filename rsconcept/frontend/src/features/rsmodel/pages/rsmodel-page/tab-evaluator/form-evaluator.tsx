@@ -12,8 +12,12 @@ import { RSTextWrapper } from '@/features/rsform/components/rs-input/text-editin
 import { ViewErrors } from '@/features/rsform/components/view-errors';
 import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
 import {
-  type AnalysisFull, type CalculatorResult,
-  getRSErrorRange, type RSErrorDescription, TokenID, type Typification
+  type AnalysisFull,
+  type CalculatorResult,
+  getRSErrorRange,
+  type RSErrorDescription,
+  TokenID,
+  type Typification
 } from '@/features/rslang';
 import { valueStub } from '@/features/rslang/eval/value-api';
 import { labelType } from '@/features/rslang/labels';
@@ -51,7 +55,11 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
   const [localEval, setLocalEval] = useState<RO<CalculatorResult> | null>(null);
   const [localParse, setLocalParse] = useState<RO<AnalysisFull> | null>(null);
   const valueStr = prepareValueString(
-    localEval?.value ?? null, localParse?.type ?? null, schema, engine.basics, showDataText
+    localEval?.value ?? null,
+    localParse?.type ?? null,
+    schema,
+    engine.basics,
+    showDataText
   );
   const stub = localEval?.value ? valueStub(localEval?.value) : '';
   const isModified = evaluatedExpression !== expression;
@@ -160,17 +168,9 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
           onChange={setExpression}
           onOpenEdit={handleOpenCst}
         />
-        <RSEditorControls
-          isOpen={true}
-          onEdit={handleEdit}
-        />
+        <RSEditorControls isOpen={true} onEdit={handleEdit} />
       </div>
-      <ViewErrors
-        className='-mt-3'
-        onShowError={handleShowError}
-        isOpen={errors.length > 0}
-        errors={errors}
-      />
+      <ViewErrors className='-mt-3' onShowError={handleShowError} isOpen={errors.length > 0} errors={errors} />
 
       <ValueInput
         className='max-h-100'
@@ -184,7 +184,7 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
         onValueDialog={hasDialog ? handleValueDialog : undefined}
         disabled
       />
-      {!!localEval?.iterations ?
+      {!!localEval?.iterations ? (
         <TextInput
           label='Количество итераций'
           dense
@@ -192,7 +192,8 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
           noBorder
           className='mt-6 text-muted-foreground'
           value={String(localEval.iterations)}
-        /> : null}
+        />
+      ) : null}
     </div>
   );
 }

@@ -1,11 +1,5 @@
 import { RangeSetBuilder } from '@codemirror/state';
-import {
-  Decoration,
-  type DecorationSet,
-  EditorView,
-  ViewPlugin,
-  type ViewUpdate
-} from '@codemirror/view';
+import { Decoration, type DecorationSet, EditorView, ViewPlugin, type ViewUpdate } from '@codemirror/view';
 
 import { getRSErrorRange, type RSErrorDescription } from '@/features/rslang';
 
@@ -107,10 +101,7 @@ export function rsErrorRanges(errors: readonly RSErrorDescription[]) {
   ];
 }
 
-function getSafeErrorRange(
-  error: RSErrorDescription,
-  docLength: number
-): { from: number; to: number; } | null {
+function getSafeErrorRange(error: RSErrorDescription, docLength: number): { from: number; to: number } | null {
   if (docLength <= 0) {
     return null;
   }

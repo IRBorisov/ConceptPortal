@@ -53,7 +53,7 @@ export function TextInput({
               transparent || disabled ? 'bg-transparent' : 'bg-input',
               !noBorder && 'border',
               !noOutline && 'focus-outline',
-              (!noBorder || !disabled) && 'px-3',
+              (!noBorder || !disabled) && 'px-3'
             )}
             onKeyDown={!allowEnter && !onKeyDown ? preventEnterCapture : onKeyDown}
             disabled={disabled}
@@ -65,7 +65,7 @@ export function TextInput({
     );
   } else {
     return (
-      <div className={cn('flex flex-col', className)} >
+      <div className={cn('flex flex-col', className)}>
         <Label text={label} htmlFor={id} />
         <input
           id={id}
@@ -76,7 +76,7 @@ export function TextInput({
             !noBorder && 'border py-2',
             !noOutline && 'focus-outline',
             (!noBorder || !disabled) && 'px-3',
-            !!label && 'mt-2',
+            !!label && 'mt-2'
           )}
           onKeyDown={!allowEnter && !onKeyDown ? preventEnterCapture : onKeyDown}
           disabled={disabled}

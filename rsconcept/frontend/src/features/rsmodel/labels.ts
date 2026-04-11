@@ -17,7 +17,6 @@ const labelEvalStatusRecord: Record<EvalStatus, string> = {
   [EvalStatus.HAS_DATA]: 'ОК'
 };
 
-
 const describeEvalStatusRecord: Record<EvalStatus, string> = {
   [EvalStatus.NO_EVAL]: 'вычисление не требуется',
   [EvalStatus.NOT_PROCESSED]: 'вычисление не проводилось',

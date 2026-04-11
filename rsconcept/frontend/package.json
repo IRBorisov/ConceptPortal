@@ -11,6 +11,8 @@
     "build": "tsc && vite build",
     "lint": "stylelint \"src/**/*.css\" && eslint . --report-unused-disable-directives --max-warnings 0",
     "lintFix": "eslint . --report-unused-disable-directives --max-warnings 0 --fix",
+    "format": "prettier --write \"src/**/*.{ts,tsx}\" \"tests/**/*.{ts,tsx}\" \"*.{ts,tsx}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx}\" \"tests/**/*.{ts,tsx}\" \"*.{ts,tsx}\"",
     "preview": "vite preview --port 3000"
   },
   "dependencies": {
@@ -57,6 +59,7 @@
   "devDependencies": {
     "@lezer/generator": "^1.8.0",
     "@playwright/test": "^1.59.1",
+    "prettier": "^3.8.2",
     "@rolldown/plugin-babel": "^0.2.2",
     "@tailwindcss/vite": "^4.2.2",
     "@types/node": "^25.5.2",

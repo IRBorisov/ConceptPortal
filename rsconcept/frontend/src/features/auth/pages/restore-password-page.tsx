@@ -1,6 +1,6 @@
 'use client';
 
-import { type SubmitEvent,useState } from 'react';
+import { type SubmitEvent, useState } from 'react';
 
 import { isAxiosError } from '@/backend/api-transport';
 import { SubmitButton, TextURL } from '@/components/control';

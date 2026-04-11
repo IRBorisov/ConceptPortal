@@ -44,7 +44,7 @@ export function PromptTemplatesPage() {
 }
 
 // ====== Internals =========
-function ProcessError({ error, itemID }: { error: ErrorData; itemID?: number | null; }): React.ReactElement | null {
+function ProcessError({ error, itemID }: { error: ErrorData; itemID?: number | null }): React.ReactElement | null {
   if (isAxiosError(error) && error.response) {
     if (error.response.status === 404) {
       return (

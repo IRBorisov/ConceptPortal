@@ -1,6 +1,6 @@
 'use client';
 
-import { type SubmitEvent,useState } from 'react';
+import { type SubmitEvent, useState } from 'react';
 
 import { useUsers } from '@/features/users';
 import { SelectUser } from '@/features/users/components/select-user';

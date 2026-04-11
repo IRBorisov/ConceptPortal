@@ -40,10 +40,13 @@ export function SidePanel({ isMounted, className }: SidePanelProps) {
   const showPanel = usePreferencesStore(state => state.showOssSidePanel);
   const sidePanelHeight = useMainHeight();
 
-  useEffect(function setToastPositionForSidePanel() {
-    onSetToastBottom(showPanel);
-    return () => onSetToastBottom(false);
-  }, [showPanel]);
+  useEffect(
+    function setToastPositionForSidePanel() {
+      onSetToastBottom(showPanel);
+      return () => onSetToastBottom(false);
+    },
+    [showPanel]
+  );
 
   return (
     <aside

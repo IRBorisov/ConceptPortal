@@ -44,11 +44,7 @@ export function ValueViewer({ className, value, rows, perPage = 20, engine, getH
   const typeStr = printTypeCrumbs(type, typePath);
   const valueStr = describeValue(data, currentType);
 
-  const dataRows =
-    data === null ? [] :
-      currentType.typeID === TypeID.collection ?
-        data as Value[] :
-        [data];
+  const dataRows = data === null ? [] : currentType.typeID === TypeID.collection ? (data as Value[]) : [data];
   const [filteredData, indexMap] = (() => {
     const indexMap = new Map<number, number>();
     const filteredData: Value[] = [];
@@ -94,12 +90,7 @@ export function ValueViewer({ className, value, rows, perPage = 20, engine, getH
             text={valueStr}
             title='Обозначение | Мощность множества'
           />
-          <SearchBar
-            id='dlg_value_search'
-            noBorder
-            query={filter}
-            onChangeQuery={setFilter}
-          />
+          <SearchBar id='dlg_value_search' noBorder query={filter} onChangeQuery={setFilter} />
           <div className='cc-icons'>
             <MiniButton
               title='Значение целиком'

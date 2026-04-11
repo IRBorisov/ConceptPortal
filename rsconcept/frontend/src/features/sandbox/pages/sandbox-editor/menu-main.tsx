@@ -9,7 +9,15 @@ import { LibraryItemType } from '@/features/library';
 import { Divider } from '@/components/container';
 import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
-import { IconCalculateAll, IconDownload, IconMenu, IconReset, IconRSForm, IconRSModel, IconUpload } from '@/components/icons';
+import {
+  IconCalculateAll,
+  IconDownload,
+  IconMenu,
+  IconReset,
+  IconRSForm,
+  IconRSModel,
+  IconUpload
+} from '@/components/icons';
 import { errorMsg, infoMsg, promptText } from '@/utils/labels';
 
 import { useSandboxBundle } from '../../context/bundle-context';

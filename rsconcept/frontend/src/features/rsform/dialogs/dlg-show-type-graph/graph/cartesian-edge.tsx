@@ -6,7 +6,7 @@ import { APP_COLORS } from '@/styling/colors';
  * Represents graph TMGraph edge internal data.
  */
 export interface MGraphEdgeProps extends EdgeProps {
-  data?: { indices: number[]; };
+  data?: { indices: number[] };
 }
 
 export function CartesianEdge({ data, ...restProps }: MGraphEdgeProps) {

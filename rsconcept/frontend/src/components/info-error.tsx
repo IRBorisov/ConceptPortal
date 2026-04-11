@@ -13,7 +13,7 @@ interface InfoErrorProps {
   error: ErrorData;
 }
 
-export function DescribeError({ error }: { error: ErrorData; }) {
+export function DescribeError({ error }: { error: ErrorData }) {
   if (!error) {
     return <p>Ошибки отсутствуют</p>;
   } else if (typeof error === 'string') {
@@ -83,12 +83,10 @@ export function DescribeError({ error }: { error: ErrorData; }) {
           <p className='mt-2 underline'>Описание</p>
           {isHtml && sanitizedHtml ? (
             <div dangerouslySetInnerHTML={{ __html: sanitizedHtml }} />
+          ) : typeof error.response.data === 'string' ? (
+            <pre className='whitespace-pre-wrap p-2 overflow-x-auto wrap-break-words'>{error.response.data}</pre>
           ) : (
-            typeof error.response.data === 'string' ? (
-              <pre className="whitespace-pre-wrap p-2 overflow-x-auto wrap-break-words">{error.response.data}</pre>
-            ) : (
-              <PrettyJson data={error.response.data as object} />
-            )
+            <PrettyJson data={error.response.data as object} />
           )}
         </>
       )}

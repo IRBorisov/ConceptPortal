@@ -67,7 +67,7 @@ export function TextArea({
     );
   } else {
     return (
-      <div className={cn('flex flex-col', className)}      >
+      <div className={cn('flex flex-col', className)}>
         <Label text={label} htmlFor={id} />
         <textarea
           id={id}

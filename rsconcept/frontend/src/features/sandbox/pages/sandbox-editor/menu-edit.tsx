@@ -4,12 +4,7 @@ import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-contex
 
 import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
-import {
-  IconEdit2,
-  IconGenerateNames,
-  IconReplace,
-  IconSortList
-} from '@/components/icons';
+import { IconEdit2, IconGenerateNames, IconReplace, IconSortList } from '@/components/icons';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { promptUnsaved } from '@/utils/utils';

@@ -93,29 +93,18 @@ export function Navigation() {
         </div>
         {currentItem ? <CurrentTitle itemType={currentItem.item_type} title={currentItem.title} /> : null}
         <div className='relative z-10 flex gap-2 items-center pr-2 shrink-0'>
-          {isAnonymous ?
+          {isAnonymous ? (
             <NavigationButton
               text='Песочница'
               title='Демонстрационная среда для незарегистрированных пользователей'
               icon={<IconSandbox size='1.5rem' />}
               onClick={navigateSandbox}
-            /> :
-            <NavigationButton
-              text='Создать'
-              icon={<IconNewItem2 size='1.5rem' />}
-              onClick={navigateCreateNew}
             />
-          }
-          <NavigationButton
-            text='Библиотека'
-            icon={<IconLibrary2 size='1.5rem' />}
-            onClick={navigateLibrary}
-          />
-          <NavigationButton
-            text='Справка'
-            icon={<IconManuals size='1.5rem' />}
-            onClick={navigateHelp}
-          />
+          ) : (
+            <NavigationButton text='Создать' icon={<IconNewItem2 size='1.5rem' />} onClick={navigateCreateNew} />
+          )}
+          <NavigationButton text='Библиотека' icon={<IconLibrary2 size='1.5rem' />} onClick={navigateLibrary} />
+          <NavigationButton text='Справка' icon={<IconManuals size='1.5rem' />} onClick={navigateHelp} />
 
           <MenuAI />
           <MenuUser />

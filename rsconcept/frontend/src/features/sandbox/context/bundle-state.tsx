@@ -6,7 +6,8 @@ import { toast } from 'react-toastify';
 import { type UpdateLibraryItemDTO } from '@/features/library';
 import { loadRSForm } from '@/features/rsform/backend/rsform-loader';
 import {
-  type Attribution, type AttributionTargetDTO,
+  type Attribution,
+  type AttributionTargetDTO,
   type ConstituentaCreatedResponse,
   type CreateConstituentaDTO,
   type MoveConstituentsDTO,
@@ -22,12 +23,7 @@ import { errorMsg } from '@/utils/labels';
 import { type SandboxBundle } from '../models/bundle';
 import { createStarterSandboxBundle } from '../models/bundle-starter';
 import { sbApi } from '../stores/sandbox-mutations';
-import {
-  downloadBundle,
-  ensureBundleLoaded,
-  importBundleFromJson,
-  saveBundle
-} from '../stores/sandbox-repository';
+import { downloadBundle, ensureBundleLoaded, importBundleFromJson, saveBundle } from '../stores/sandbox-repository';
 
 import { BundleContext } from './bundle-context';
 
@@ -44,62 +40,72 @@ export function SandboxState({ children }: React.PropsWithChildren) {
 
   const commitBundle = useCallback(function commitBundle(next: BundleUpdater) {
     setBundleState(prev => {
-      const resolved = typeof next === 'function'
-        ? next(prev)
-        : next;
+      const resolved = typeof next === 'function' ? next(prev) : next;
       syncBundleResource(resolved);
       return resolved;
     });
   }, []);
 
   const schema = loadRSForm(bundle.rsform);
-  const services = useMemo<RSEngineServices>(function createServices() {
-    return {
-      setCstValue: function setCstValue({ data }) {
-        commitBundle(prev => sbApi.applySetCstValue(prev, data));
-        return Promise.resolve();
-      },
-      clearValues: function clearValues({ data }) {
-        commitBundle(prev => sbApi.clearModelValues(prev, data.items));
-        return Promise.resolve();
-      }
-    };
-  }, [commitBundle]);
+  const services = useMemo<RSEngineServices>(
+    function createServices() {
+      return {
+        setCstValue: function setCstValue({ data }) {
+          commitBundle(prev => sbApi.applySetCstValue(prev, data));
+          return Promise.resolve();
+        },
+        clearValues: function clearValues({ data }) {
+          commitBundle(prev => sbApi.clearModelValues(prev, data.items));
+          return Promise.resolve();
+        }
+      };
+    },
+    [commitBundle]
+  );
 
   const [engine] = useState(function createEngine() {
     return new RSEngine(model.id, services);
   });
 
-  useEffect(function syncEngineModelID() {
-    // Sandbox imports can replace the backing model id without recreating the editor runtime.
-    // eslint-disable-next-line react-hooks/immutability
-    engine.modelID = model.id;
-    engine.updateServices(services);
-  }, [model.id, engine, services]);
+  useEffect(
+    function syncEngineModelID() {
+      // Sandbox imports can replace the backing model id without recreating the editor runtime.
+      // eslint-disable-next-line react-hooks/immutability
+      engine.modelID = model.id;
+      engine.updateServices(services);
+    },
+    [model.id, engine, services]
+  );
 
-  useEffect(function syncEngineData() {
-    engine.loadData(schema, model);
-  }, [model, engine, schema]);
+  useEffect(
+    function syncEngineData() {
+      engine.loadData(schema, model);
+    },
+    [model, engine, schema]
+  );
 
-  useEffect(function persistSandboxBundle() {
-    if (!hasMountedRef.current) {
-      hasMountedRef.current = true;
-      return;
-    }
-
-    let isActive = true;
-    void saveBundle(bundle).catch(err => {
-      if (!isActive) {
+  useEffect(
+    function persistSandboxBundle() {
+      if (!hasMountedRef.current) {
+        hasMountedRef.current = true;
         return;
       }
-      console.error(err);
-      toast.error(errorMsg.failedToPersistSandbox);
-    });
 
-    return function cancelPersist() {
-      isActive = false;
-    };
-  }, [bundle]);
+      let isActive = true;
+      void saveBundle(bundle).catch(err => {
+        if (!isActive) {
+          return;
+        }
+        console.error(err);
+        toast.error(errorMsg.failedToPersistSandbox);
+      });
+
+      return function cancelPersist() {
+        isActive = false;
+      };
+    },
+    [bundle]
+  );
 
   async function importBundle(raw: unknown) {
     const next = await importBundleFromJson(raw);
@@ -176,30 +182,32 @@ export function SandboxState({ children }: React.PropsWithChildren) {
   }
 
   return (
-    <BundleContext value={{
-      bundle,
-      schema,
-      model,
-      engine,
-      resetBundle: function resetBundle() {
-        commitBundle(createStarterSandboxBundle());
-      },
-      importBundle,
-      exportBundle: () => downloadBundle(bundle),
-      updateLibraryItem,
+    <BundleContext
+      value={{
+        bundle,
+        schema,
+        model,
+        engine,
+        resetBundle: function resetBundle() {
+          commitBundle(createStarterSandboxBundle());
+        },
+        importBundle,
+        exportBundle: () => downloadBundle(bundle),
+        updateLibraryItem,
 
-      moveConstituents,
-      updateCrucial,
-      patchConstituenta,
-      createConstituenta,
-      createAttribution,
-      deleteAttribution,
-      clearAttributions,
-      deleteConstituents,
-      restoreOrder,
-      resetAliases,
-      substituteConstituents,
-    }}>
+        moveConstituents,
+        updateCrucial,
+        patchConstituenta,
+        createConstituenta,
+        createAttribution,
+        deleteAttribution,
+        clearAttributions,
+        deleteConstituents,
+        restoreOrder,
+        resetAliases,
+        substituteConstituents
+      }}
+    >
       {children}
     </BundleContext>
   );

@@ -26,12 +26,15 @@ export function ErrorFallback() {
   const error = useRouteError();
   const router = useNavigate();
 
-  useEffect(function reloadOnStaleError() {
-    if (isStaleBundleError(error)) {
-      console.warn('Detected stale bundle — reloading...');
-      window.location.reload();
-    }
-  }, [error]);
+  useEffect(
+    function reloadOnStaleError() {
+      if (isStaleBundleError(error)) {
+        console.warn('Detected stale bundle — reloading...');
+        window.location.reload();
+      }
+    },
+    [error]
+  );
 
   function resetErrorBoundary() {
     Promise.resolve(router('/')).catch(console.error);

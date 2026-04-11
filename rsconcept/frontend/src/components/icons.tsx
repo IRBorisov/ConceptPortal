@@ -2,6 +2,7 @@
 // Note: save this file using Ctrl + K, Ctrl + Shift + S to disable autoformat
 // Note: For Cursor hotkeys are Ctrl + M, Ctrl + Shift + S
 
+// prettier-ignore
 /* eslint-disable simple-import-sort/exports */
 // ==== General actions =======
 export { BiMenu           as IconMenu }           from 'react-icons/bi';

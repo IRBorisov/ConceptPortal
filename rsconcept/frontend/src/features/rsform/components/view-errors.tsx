@@ -17,10 +17,19 @@ export function ViewErrors({ isOpen, errors, disabled, className, onShowError }:
   const warningsCount = errors ? errors.length - errorCount : 0;
 
   return (
-    <div tabIndex={-1} className={cn('cc-parsing-result text-sm border dense cc-scroll-y', isOpen && 'open', className)}>
+    <div
+      tabIndex={-1}
+      className={cn('cc-parsing-result text-sm border dense cc-scroll-y', isOpen && 'open', className)}
+    >
       <p>
-        <span>Ошибок: <b>{errorCount}</b> </span>
-        {warningsCount > 0 ? <span>| Предупреждений: <b>{warningsCount}</b></span> : null}
+        <span>
+          Ошибок: <b>{errorCount}</b>{' '}
+        </span>
+        {warningsCount > 0 ? (
+          <span>
+            | Предупреждений: <b>{warningsCount}</b>
+          </span>
+        ) : null}
       </p>
       {errors?.map((error, index) => {
         return (

@@ -54,11 +54,17 @@ export function ToolbarItemCard({
   const toggleShowOSSStats = usePreferencesStore(state => state.toggleShowOSSStats);
 
   const showValue =
-    item.item_type === LibraryItemType.RSFORM ? showRSFormStats :
-      item.item_type === LibraryItemType.RSMODEL ? showRSModelStats : showOSSStats;
+    item.item_type === LibraryItemType.RSFORM
+      ? showRSFormStats
+      : item.item_type === LibraryItemType.RSMODEL
+        ? showRSModelStats
+        : showOSSStats;
   const toggleShow =
-    item.item_type === LibraryItemType.RSFORM ? toggleShowRSFormStats :
-      item.item_type === LibraryItemType.RSMODEL ? toggleShowRSModelStats : toggleShowOSSStats;
+    item.item_type === LibraryItemType.RSFORM
+      ? toggleShowRSFormStats
+      : item.item_type === LibraryItemType.RSMODEL
+        ? toggleShowRSModelStats
+        : toggleShowOSSStats;
 
   const ossSelector = (() => {
     if (item.item_type !== LibraryItemType.RSFORM) {

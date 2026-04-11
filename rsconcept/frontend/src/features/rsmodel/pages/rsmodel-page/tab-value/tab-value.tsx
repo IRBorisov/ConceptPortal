@@ -27,12 +27,7 @@ const COLUMN_DENSE_SEARCH_THRESHOLD = 1100;
 
 export function TabValue() {
   const router = useConceptNavigation();
-  const {
-    schema,
-    activeCst,
-    selectedCst,
-    setSelectedCst
-  } = useRSFormEdit();
+  const { schema, activeCst, selectedCst, setSelectedCst } = useRSFormEdit();
   const { engine } = useRSModelEdit();
   const windowSize = useWindowSize();
   const mainHeight = useMainHeight();
@@ -44,14 +39,17 @@ export function TabValue() {
   const listHeight = useFitHeight(!isNarrow ? '8.2rem' : role !== UserRole.READER ? '42rem' : '35rem', '10rem');
 
   const prevActiveCstId = useRef<number | null>(null);
-  useEffect(function adjustSelectionOnActiveChange() {
-    if (activeCst && prevActiveCstId.current !== activeCst.id) {
-      prevActiveCstId.current = activeCst.id;
-      if (selectedCst.length !== 1 || selectedCst[0] !== activeCst.id) {
-        setSelectedCst([activeCst.id]);
+  useEffect(
+    function adjustSelectionOnActiveChange() {
+      if (activeCst && prevActiveCstId.current !== activeCst.id) {
+        prevActiveCstId.current = activeCst.id;
+        if (selectedCst.length !== 1 || selectedCst[0] !== activeCst.id) {
+          setSelectedCst([activeCst.id]);
+        }
       }
-    }
-  }, [activeCst, selectedCst, setSelectedCst]);
+    },
+    [activeCst, selectedCst, setSelectedCst]
+  );
 
   function handleClearValue() {
     if (!activeCst) {
@@ -102,11 +100,7 @@ export function TabValue() {
 
       <div className='mx-0 min-w-120 md:mx-auto pt-8 md:w-195 shrink-0 xs:pt-0 min-h-6'>
         {activeCst ? (
-          <FormValue
-            key={`data-${activeCst.id}`}
-            id={globalIDs.value_editor}
-            activeCst={activeCst}
-          />
+          <FormValue key={`data-${activeCst.id}`} id={globalIDs.value_editor} activeCst={activeCst} />
         ) : null}
       </div>
       <ViewConstituents

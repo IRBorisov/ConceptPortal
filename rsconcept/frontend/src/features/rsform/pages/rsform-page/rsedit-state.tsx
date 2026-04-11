@@ -111,15 +111,21 @@ export const RSEditState = ({
     adminMode: adminMode
   });
 
-  useEffect(function syncGlobalSchema() {
-    onSetSchema(schema);
-    return () => onSetSchema(null);
-  }, [schema]);
+  useEffect(
+    function syncGlobalSchema() {
+      onSetSchema(schema);
+      return () => onSetSchema(null);
+    },
+    [schema]
+  );
 
-  useEffect(function syncGlobalConstituenta() {
-    onSetConstituenta(activeCst);
-    return () => onSetConstituenta(null);
-  }, [activeCst]);
+  useEffect(
+    function syncGlobalConstituenta() {
+      onSetConstituenta(activeCst);
+      return () => onSetConstituenta(null);
+    },
+    [activeCst]
+  );
 
   function handleSetFocus(newValue: Constituenta | null) {
     setFocusCst(newValue);
@@ -235,7 +241,6 @@ export const RSEditState = ({
             resolve(newCst.id);
           }),
         onCancel: () => resolve(null)
-
       });
     });
   }
@@ -370,8 +375,7 @@ export const RSEditState = ({
       schema: schema,
       insertAfter: activeCst?.id,
       onCreate: value =>
-        void cstCreate({ itemID: schema.id, data: value })
-          .then(response => onCreateCst(response.new_cst))
+        void cstCreate({ itemID: schema.id, data: value }).then(response => onCreateCst(response.new_cst))
     });
   }
 
@@ -461,9 +465,7 @@ export const RSEditState = ({
   }
 
   function gotoPredecessor(target: number, newTab?: boolean) {
-    void findPredecessor(target).then(reference =>
-      router.gotoCstEdit(reference.schema, reference.id, newTab)
-    );
+    void findPredecessor(target).then(reference => router.gotoCstEdit(reference.schema, reference.id, newTab));
   }
 
   return (

@@ -10,8 +10,14 @@ import { TokenID } from '../parser/token';
 
 import { TypeAuditor } from './type-auditor';
 import {
-  basic, bool, constant, debool,
-  type ExpressionType, type TypeClass, type TypeContext, TypeID
+  basic,
+  bool,
+  constant,
+  debool,
+  type ExpressionType,
+  type TypeClass,
+  type TypeContext,
+  TypeID
 } from './typification';
 import { getTypeClass } from './typification-api';
 import { ValueAuditor } from './value-auditor';
@@ -114,12 +120,7 @@ export class RSLangAnalyzer {
       return { success: false, type: null, valueClass: null, errors, ast };
     }
 
-    const type = this.typeAuditor.run(
-      ast,
-      options?.annotateTypes ?? false,
-      reporter,
-      options?.annotateErrors ?? false
-    );
+    const type = this.typeAuditor.run(ast, options?.annotateTypes ?? false, reporter, options?.annotateErrors ?? false);
     if (type === null) {
       return { success: false, type: null, valueClass: null, errors, ast };
     }
@@ -147,9 +148,9 @@ export class RSLangAnalyzer {
       }
       return { success: false, type: null, valueClass: null, errors, ast };
     }
-    const valueClass = options?.isDomain ?
-      ValueClass.VALUE :
-      this.valueAuditor.run(ast, reporter, options?.annotateErrors ?? false);
+    const valueClass = options?.isDomain
+      ? ValueClass.VALUE
+      : this.valueAuditor.run(ast, reporter, options?.annotateErrors ?? false);
     return { success: true, type, valueClass, errors, ast };
   }
 
@@ -159,7 +160,7 @@ export class RSLangAnalyzer {
     normalizeAST(ast, expression);
     return ast;
   }
-};
+}
 
 // ======= Internals ========
 function isStructureDomain(node: AstNode): boolean {

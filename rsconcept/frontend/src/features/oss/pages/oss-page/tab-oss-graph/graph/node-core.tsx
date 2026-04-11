@@ -18,7 +18,7 @@ import { type OGOperationNode } from './og-models';
 // characters - threshold for long labels - small font
 const LONG_LABEL_CHARS = 14;
 
-export function NodeCoreComponent({ node }: { node: NodeProps<OGOperationNode>; }) {
+export function NodeCoreComponent({ node }: { node: NodeProps<OGOperationNode> }) {
   const { selectedItems, schema } = useOssEdit();
   const opType = node.data.operation.operation_type;
 

@@ -24,10 +24,7 @@ import { EditorRSExpression } from '../../../components/editor-rsexpression';
 import { IconCrucialValue } from '../../../components/icon-crucial-value';
 import { RefsInput } from '../../../components/refs-input';
 import { SelectMultiConstituenta } from '../../../components/select-multi-constituenta';
-import {
-  getRSDefinitionPlaceholder,
-  labelRSExpression
-} from '../../../labels';
+import { getRSDefinitionPlaceholder, labelRSExpression } from '../../../labels';
 import { type Constituenta, CstType, type RSForm } from '../../../models/rsform';
 import { cstCanProduceStructure, getAnalysisFor, isBaseSet, isBasicConcept } from '../../../models/rsform-api';
 import { useRSFormEdit } from '../rsedit-context';
@@ -92,10 +89,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
     form.reset(next);
   });
 
-  const definition = useStore(
-    form.store,
-    state => state.values.item_data.definition_formal
-  );
+  const definition = useStore(form.store, state => state.values.item_data.definition_formal);
   const isDefaultValue = useStore(form.store, state => state.isDefaultValue);
 
   const [forceComment, setForceComment] = useState(false);
@@ -109,25 +103,37 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
   const isElementary = isBaseSet(activeCst.cst_type);
   const showConvention = !!activeCst.convention || forceComment || isBasic;
 
-  useLayoutEffect(function resetGlobalModifiedFlagOnCstChange() {
-    onModifiedEvent(false);
-  }, [activeCst.id]);
+  useLayoutEffect(
+    function resetGlobalModifiedFlagOnCstChange() {
+      onModifiedEvent(false);
+    },
+    [activeCst.id]
+  );
 
-  useEffect(function resetFormOnCstChange() {
-    onResetEvent(constituentaDefaults(activeCst));
-  }, [activeCst, toggleReset]);
+  useEffect(
+    function resetFormOnCstChange() {
+      onResetEvent(constituentaDefaults(activeCst));
+    },
+    [activeCst, toggleReset]
+  );
 
-  useEffect(function resetUIStateOnCstChange() {
-    const timeoutId = setTimeout(function resetConstituentaUIState() {
-      setForceComment(false);
-      setLocalParse(null);
-    }, 0);
-    return () => clearTimeout(timeoutId);
-  }, [activeCst.id, toggleReset, schema]);
+  useEffect(
+    function resetUIStateOnCstChange() {
+      const timeoutId = setTimeout(function resetConstituentaUIState() {
+        setForceComment(false);
+        setLocalParse(null);
+      }, 0);
+      return () => clearTimeout(timeoutId);
+    },
+    [activeCst.id, toggleReset, schema]
+  );
 
-  useEffect(function syncGlobalModified() {
-    onModifiedEvent(!isDefaultValue);
-  }, [isDefaultValue]);
+  useEffect(
+    function syncGlobalModified() {
+      onModifiedEvent(!isDefaultValue);
+    },
+    [isDefaultValue]
+  );
 
   function handleTypeGraph(event: React.MouseEvent<Element>) {
     event.stopPropagation();
@@ -300,23 +306,24 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
               )}
               spellCheck
               label={isBasic ? 'Конвенция' : 'Комментарий'}
-              placeholder={disabled ? '' : isBasic ? 'Договоренность об интерпретации базового понятия' : 'Пояснение разработчика'}
+              placeholder={
+                disabled ? '' : isBasic ? 'Договоренность об интерпретации базового понятия' : 'Пояснение разработчика'
+              }
               disabled={disabled || (isBasic && activeCst.is_inherited)}
               value={field.state.value ?? ''}
               onChange={event => field.handleChange(event.target.value)}
               onBlur={field.handleBlur}
-              error={field.state.meta.errors[0]?.message ??
-                (isBasic && !field.state.value ? 'Заполните конвенцию' : undefined)}
+              error={
+                field.state.meta.errors[0]?.message ??
+                (isBasic && !field.state.value ? 'Заполните конвенцию' : undefined)
+              }
             />
           )}
         </form.Field>
       ) : null}
 
       {!showConvention && (!disabled || isProcessing) ? (
-        <TextButton
-          text='Добавить комментарий'
-          onClick={() => setForceComment(true)}
-        />
+        <TextButton text='Добавить комментарий' onClick={() => setForceComment(true)} />
       ) : null}
 
       {!disabled || isProcessing ? (

@@ -65,38 +65,53 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
   }
 
   const canDeleteSelected = (() => {
-    if (!isMutable) { return false; }
+    if (!isMutable) {
+      return false;
+    }
     if (selectedNodes.length === 1) {
       const item = schema.itemByNodeID.get(selectedNodes[0]);
-      if (item?.nodeType === NodeType.OPERATION) { return canDeleteOperation(item); }
+      if (item?.nodeType === NodeType.OPERATION) {
+        return canDeleteOperation(item);
+      }
       return true;
     }
-    if (selectedEdges.length === 1) { return true; }
+    if (selectedEdges.length === 1) {
+      return true;
+    }
     return false;
   })();
 
-  useEffect(function syncGlobalOSS() {
-    onSetOSS(schema);
-    return () => onSetOSS(null);
-  }, [schema]);
+  useEffect(
+    function syncGlobalOSS() {
+      onSetOSS(schema);
+      return () => onSetOSS(null);
+    },
+    [schema]
+  );
 
-  useEffect(function syncGlobalBlock() {
-    const selectedBlock = selectedItems.find(item => item.nodeType === NodeType.BLOCK);
-    if (selectedBlock) {
-      onSetBlock(selectedBlock);
-      return () => onSetBlock(null);
-    }
-    onSetBlock(null);
-  }, [selectedItems]);
+  useEffect(
+    function syncGlobalBlock() {
+      const selectedBlock = selectedItems.find(item => item.nodeType === NodeType.BLOCK);
+      if (selectedBlock) {
+        onSetBlock(selectedBlock);
+        return () => onSetBlock(null);
+      }
+      onSetBlock(null);
+    },
+    [selectedItems]
+  );
 
-  useEffect(function syncGlobalOperation() {
-    const selectedOperation = selectedItems.find(item => item.nodeType === NodeType.OPERATION);
-    if (selectedOperation) {
-      onSetOperation(selectedOperation);
-      return () => onSetOperation(null);
-    }
-    onSetOperation(null);
-  }, [selectedItems]);
+  useEffect(
+    function syncGlobalOperation() {
+      const selectedOperation = selectedItems.find(item => item.nodeType === NodeType.OPERATION);
+      if (selectedOperation) {
+        onSetOperation(selectedOperation);
+        return () => onSetOperation(null);
+      }
+      onSetOperation(null);
+    },
+    [selectedItems]
+  );
 
   function deleteSchema() {
     if (!window.confirm(promptText.deleteOSS)) {

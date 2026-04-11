@@ -49,8 +49,10 @@ export class TypificationGraph {
       case TypeID.basic:
         return this.addBaseNode(type);
 
-      case TypeID.collection: return this.addBooleanNode(type);
-      case TypeID.tuple: return this.addCartesianNode(type);
+      case TypeID.collection:
+        return this.addBooleanNode(type);
+      case TypeID.tuple:
+        return this.addCartesianNode(type);
 
       case TypeID.function:
       case TypeID.predicate:

@@ -33,4 +33,3 @@ export interface SandboxMutationSinkOptions {
   setBundle: (next: SandboxBundle) => void;
   persist: (next: SandboxBundle) => void | Promise<void>;
 }
-

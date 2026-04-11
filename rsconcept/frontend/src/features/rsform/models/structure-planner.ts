@@ -4,7 +4,9 @@ import { labelType } from '@/features/rslang/labels';
 import {
   bool,
   type EchelonFunctional,
-  isTypification, TypeID, type Typification
+  isTypification,
+  TypeID,
+  type Typification
 } from '@/features/rslang/semantic/typification';
 
 import { type Constituenta, CstType, type RSForm } from './rsform';
@@ -92,7 +94,6 @@ export class StructurePlanner {
     return this.items.length - 1;
   }
 }
-
 
 // ======= Internals =======
 function produceDefinition(target: Constituenta, rootType: Typification, path: TypePath): string {

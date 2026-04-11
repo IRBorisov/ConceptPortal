@@ -53,14 +53,17 @@ export function TabConstituenta() {
   const listHeight = useFitHeight(!isNarrow ? '8.2rem' : role !== UserRole.READER ? '42rem' : '35rem', '10rem');
 
   const prevActiveCstId = useRef<number | null>(null);
-  useEffect(function adjustSelectionOnActiveChange() {
-    if (activeCst && prevActiveCstId.current !== activeCst.id) {
-      prevActiveCstId.current = activeCst.id;
-      if (selectedCst.length !== 1 || selectedCst[0] !== activeCst.id) {
-        onSelectCst([activeCst.id]);
+  useEffect(
+    function adjustSelectionOnActiveChange() {
+      if (activeCst && prevActiveCstId.current !== activeCst.id) {
+        prevActiveCstId.current = activeCst.id;
+        if (selectedCst.length !== 1 || selectedCst[0] !== activeCst.id) {
+          onSelectCst([activeCst.id]);
+        }
       }
-    }
-  }, [activeCst, selectedCst]);
+    },
+    [activeCst, selectedCst]
+  );
 
   function handleInput(event: React.KeyboardEvent<HTMLDivElement>) {
     if (disabled) {
@@ -134,7 +137,7 @@ export function TabConstituenta() {
             toggleReset={toggleReset}
             activeCst={activeCst}
             schema={schema}
-            onOpenEdit={(cstID) => router.changeActive(cstID)}
+            onOpenEdit={cstID => router.changeActive(cstID)}
             disabled={disabled}
           />
         ) : null}

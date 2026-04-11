@@ -27,13 +27,16 @@ export function SandboxPage() {
 
   const location = useLocation();
 
-  const urlData = useMemo(function parseSandboxURL() {
-    const params = new URLSearchParams(location.search);
-    return paramsModel.parse({
-      tab: params.get('tab'),
-      activeID: params.get('active')
-    });
-  }, [location.search]);
+  const urlData = useMemo(
+    function parseSandboxURL() {
+      const params = new URLSearchParams(location.search);
+      return paramsModel.parse({
+        tab: params.get('tab'),
+        activeID: params.get('active')
+      });
+    },
+    [location.search]
+  );
 
   return (
     <SandboxState>
@@ -45,6 +48,6 @@ export function SandboxPage() {
           </SandboxSchemaState>
         </SandboxModelState>
       </div>
-    </SandboxState >
+    </SandboxState>
   );
 }

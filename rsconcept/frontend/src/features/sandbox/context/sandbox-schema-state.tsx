@@ -4,10 +4,7 @@ import { useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { useConceptNavigation } from '@/app';
-import {
-  type ConstituentaCreatedResponse,
-  type CreateConstituentaDTO
-} from '@/features/rsform/backend/types';
+import { type ConstituentaCreatedResponse, type CreateConstituentaDTO } from '@/features/rsform/backend/types';
 import { type Constituenta, CstType } from '@/features/rsform/models/rsform';
 import { generateAlias, removeAliasReference } from '@/features/rsform/models/rsform-api';
 import { RSEditContext } from '@/features/rsform/pages/rsform-page/rsedit-context';
@@ -47,10 +44,7 @@ export function SandboxSchemaState({ children }: React.PropsWithChildren) {
   const [pendingActiveID, setPendingActiveID] = useState<number | null>(null);
   const [focusCst, setFocusCst] = useState<Constituenta | null>(null);
 
-  const selectedCstInSchema = useMemo(
-    () => selectedCst.filter(id => schema.cstByID.has(id)),
-    [schema, selectedCst]
-  );
+  const selectedCstInSchema = useMemo(() => selectedCst.filter(id => schema.cstByID.has(id)), [schema, selectedCst]);
 
   const activeCst = useMemo(() => {
     if (selectedCstInSchema.length === 0) {
@@ -64,11 +58,14 @@ export function SandboxSchemaState({ children }: React.PropsWithChildren) {
     (selectedCstInSchema.length > 0 && selectedCstInSchema.every(id => !schema.cstByID.get(id)?.is_inherited)) ||
     (selectedCstInSchema.length === 0 && selectedEdges.length === 1);
 
-  function buildCreateCstData(source?: Constituenta | null, options?: {
-    type?: CstType;
-    definition?: string;
-    insertAfter?: number | null;
-  }): CreateConstituentaDTO {
+  function buildCreateCstData(
+    source?: Constituenta | null,
+    options?: {
+      type?: CstType;
+      definition?: string;
+      insertAfter?: number | null;
+    }
+  ): CreateConstituentaDTO {
     const targetType = options?.type ?? source?.cst_type ?? activeCst?.cst_type ?? CstType.BASE;
     return {
       insert_after: options?.insertAfter ?? source?.id ?? activeCst?.id ?? null,
@@ -133,9 +130,11 @@ export function SandboxSchemaState({ children }: React.PropsWithChildren) {
     if (!activeCst) {
       throw new Error('No active cst');
     }
-    const response = await createConstituenta(buildCreateCstData(activeCst, {
-      insertAfter: activeCst.id
-    }));
+    const response = await createConstituenta(
+      buildCreateCstData(activeCst, {
+        insertAfter: activeCst.id
+      })
+    );
     onCreateCst(response.new_cst);
     return response.new_cst.id;
   }

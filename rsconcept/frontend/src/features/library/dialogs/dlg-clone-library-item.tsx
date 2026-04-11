@@ -56,9 +56,10 @@ export function DlgCloneLibraryItem() {
         itemID: base.id,
         data: value
       }).then(newItem => {
-        const path = 'item_type' in newItem && newItem.item_type === LibraryItemType.RSMODEL
-          ? urls.model(newItem.id)
-          : urls.schema(newItem.id);
+        const path =
+          'item_type' in newItem && newItem.item_type === LibraryItemType.RSMODEL
+            ? urls.model(newItem.id)
+            : urls.schema(newItem.id);
         return router.pushAsync({ path, force: true });
       });
     }

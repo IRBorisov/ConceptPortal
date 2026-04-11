@@ -6,14 +6,43 @@ import { type AstNode, visitAstDFS } from '@/utils/parsing';
 
 import {
   Arguments,
-  BigPr, Bool, Boolean, Card, Debool, Declaration, Declarative,
-  EmptySet, Enumeration, Expression,
-  Filter, Filter_expression, Function, Function_decl,
-  Global, Imp_blocks, Imperative, Integer, IntegerSet,
-  Local, Logic, Logic_binary, Logic_predicates,
-  Logic_quantor, Logic_unary, Predicate, PrefixD, Radical, Recursion, Red,
-  Setexpr, Setexpr_binary, Setexpr_enum_min2,
-  SmallPr, Tuple, Variable, Variable_pack
+  BigPr,
+  Bool,
+  Boolean,
+  Card,
+  Debool,
+  Declaration,
+  Declarative,
+  EmptySet,
+  Enumeration,
+  Expression,
+  Filter,
+  Filter_expression,
+  Function,
+  Function_decl,
+  Global,
+  Imp_blocks,
+  Imperative,
+  Integer,
+  IntegerSet,
+  Local,
+  Logic,
+  Logic_binary,
+  Logic_predicates,
+  Logic_quantor,
+  Logic_unary,
+  Predicate,
+  PrefixD,
+  Radical,
+  Recursion,
+  Red,
+  Setexpr,
+  Setexpr_binary,
+  Setexpr_enum_min2,
+  SmallPr,
+  Tuple,
+  Variable,
+  Variable_pack
 } from './parser.terms';
 import { TokenID } from './token';
 
@@ -292,42 +321,70 @@ function parseIndex(text: string): string[] {
 
 function symbolToToken(symbol: string): TokenID {
   switch (symbol) {
-    case '+': return TokenID.PLUS;
-    case '-': return TokenID.MINUS;
-    case '*': return TokenID.MULTIPLY;
+    case '+':
+      return TokenID.PLUS;
+    case '-':
+      return TokenID.MINUS;
+    case '*':
+      return TokenID.MULTIPLY;
 
-    case '∪': return TokenID.SET_UNION;
-    case '\\': return TokenID.SET_MINUS;
-    case '∆': return TokenID.SET_SYMMETRIC_MINUS;
-    case '∩': return TokenID.SET_INTERSECTION;
-    case '×': return TokenID.DECART;
+    case '∪':
+      return TokenID.SET_UNION;
+    case '\\':
+      return TokenID.SET_MINUS;
+    case '∆':
+      return TokenID.SET_SYMMETRIC_MINUS;
+    case '∩':
+      return TokenID.SET_INTERSECTION;
+    case '×':
+      return TokenID.DECART;
 
-    case '∈': return TokenID.SET_IN;
-    case '∉': return TokenID.SET_NOT_IN;
-    case '⊆': return TokenID.SUBSET_OR_EQ;
-    case '⊄': return TokenID.NOT_SUBSET;
-    case '⊂': return TokenID.SUBSET;
+    case '∈':
+      return TokenID.SET_IN;
+    case '∉':
+      return TokenID.SET_NOT_IN;
+    case '⊆':
+      return TokenID.SUBSET_OR_EQ;
+    case '⊄':
+      return TokenID.NOT_SUBSET;
+    case '⊂':
+      return TokenID.SUBSET;
 
-    case '>': return TokenID.GREATER;
-    case '≥': return TokenID.GREATER_OR_EQ;
-    case '<': return TokenID.LESSER;
-    case '≤': return TokenID.LESSER_OR_EQ;
+    case '>':
+      return TokenID.GREATER;
+    case '≥':
+      return TokenID.GREATER_OR_EQ;
+    case '<':
+      return TokenID.LESSER;
+    case '≤':
+      return TokenID.LESSER_OR_EQ;
 
-    case '≠': return TokenID.NOTEQUAL;
-    case '=': return TokenID.EQUAL;
+    case '≠':
+      return TokenID.NOTEQUAL;
+    case '=':
+      return TokenID.EQUAL;
 
-    case ':∈': return TokenID.ITERATE;
-    case ':=': return TokenID.ASSIGN;
+    case ':∈':
+      return TokenID.ITERATE;
+    case ':=':
+      return TokenID.ASSIGN;
 
-    case '¬': return TokenID.LOGIC_NOT;
+    case '¬':
+      return TokenID.LOGIC_NOT;
 
-    case '⇔': return TokenID.LOGIC_EQUIVALENT;
-    case '⇒': return TokenID.LOGIC_IMPLICATION;
-    case '∨': return TokenID.LOGIC_OR;
-    case '&': return TokenID.LOGIC_AND;
+    case '⇔':
+      return TokenID.LOGIC_EQUIVALENT;
+    case '⇒':
+      return TokenID.LOGIC_IMPLICATION;
+    case '∨':
+      return TokenID.LOGIC_OR;
+    case '&':
+      return TokenID.LOGIC_AND;
 
-    case '∀': return TokenID.QUANTOR_UNIVERSAL;
-    case '∃': return TokenID.QUANTOR_EXISTS;
+    case '∀':
+      return TokenID.QUANTOR_UNIVERSAL;
+    case '∃':
+      return TokenID.QUANTOR_EXISTS;
   }
   return TokenID.ERROR;
 }

@@ -26,13 +26,7 @@ interface InlineEntityEditorProps {
   onCancel: () => void;
 }
 
-export function InlineEntityEditor({
-  schema,
-  initial,
-  position,
-  onSave,
-  onCancel
-}: InlineEntityEditorProps) {
+export function InlineEntityEditor({ schema, initial, position, onSave, onCancel }: InlineEntityEditorProps) {
   const [entity, setEntity] = useState<string>(initial.entity);
   const [grams, setGrams] = useState<Grammeme[]>(initial.grams);
   const [query, setQuery] = useState(() => prepareSelectionPrompt(initial.query));
@@ -84,19 +78,22 @@ export function InlineEntityEditor({
     }
   }
 
-  useEffect(function closeOnClickOutside() {
-    function handlePointerDown(event: PointerEvent) {
-      const target = event.target;
-      if (target instanceof Node && !rootRef.current?.contains(target)) {
-        onCancel();
+  useEffect(
+    function closeOnClickOutside() {
+      function handlePointerDown(event: PointerEvent) {
+        const target = event.target;
+        if (target instanceof Node && !rootRef.current?.contains(target)) {
+          onCancel();
+        }
       }
-    }
 
-    document.addEventListener('pointerdown', handlePointerDown, true);
-    return () => {
-      document.removeEventListener('pointerdown', handlePointerDown, true);
-    };
-  }, [onCancel]);
+      document.addEventListener('pointerdown', handlePointerDown, true);
+      return () => {
+        document.removeEventListener('pointerdown', handlePointerDown, true);
+      };
+    },
+    [onCancel]
+  );
 
   return (
     <div
@@ -157,7 +154,6 @@ export function InlineEntityEditor({
           )}
         </div>
         <SelectWordForm value={grams} onChange={setGrams} />
-
       </div>
     </div>
   );
@@ -177,4 +173,3 @@ function prepareSelectionPrompt(text: string | undefined): string {
 
   return value.substring(0, Math.max(value.length - 3, 0));
 }
-

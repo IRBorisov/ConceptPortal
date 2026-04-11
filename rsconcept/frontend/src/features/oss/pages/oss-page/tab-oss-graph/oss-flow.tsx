@@ -120,9 +120,7 @@ export function OssFlow() {
 
     const source = schema.itemByNodeID.get(connection.source);
     const target = schema.itemByNodeID.get(connection.target);
-    if (!source || target?.nodeType !== NodeType.OPERATION
-      || target.operation_type !== OperationType.SYNTHESIS
-    ) {
+    if (!source || target?.nodeType !== NodeType.OPERATION || target.operation_type !== OperationType.SYNTHESIS) {
       throw new Error('Item not found');
     }
     if (schema.extendedGraph.expandAllOutputs([target.id]).includes(source.id)) {
@@ -188,7 +186,6 @@ export function OssFlow() {
         onNodeDragStart={handleDragStart}
         onNodeDrag={handleDrag}
         onNodeDragStop={handleDragStop}
-
         connectionLineComponent={OgConnectionLine}
         // onConnectStart={handleConnectStart}
         // onConnectEnd={handleConnectEnd}

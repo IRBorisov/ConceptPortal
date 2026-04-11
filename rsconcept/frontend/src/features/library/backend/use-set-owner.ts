@@ -37,11 +37,13 @@ export const useSetOwner = () => {
       }
 
       const rsKey = KEYS.composite.schema({ itemID: variables.itemID });
-      client.setQueryData(rsKey, (prev: { raw: RSFormDTO; transformed: RSForm; } | undefined) =>
-        !prev ? undefined : {
-          raw: { ...prev.raw, owner: variables.owner },
-          transformed: { ...prev.transformed, owner: variables.owner }
-        }
+      client.setQueryData(rsKey, (prev: { raw: RSFormDTO; transformed: RSForm } | undefined) =>
+        !prev
+          ? undefined
+          : {
+              raw: { ...prev.raw, owner: variables.owner },
+              transformed: { ...prev.transformed, owner: variables.owner }
+            }
       );
       const modelKey = KEYS.composite.model({ itemID: variables.itemID });
       client.setQueryData(modelKey, (prev: RSModelDTO | undefined) =>

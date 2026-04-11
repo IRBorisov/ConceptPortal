@@ -65,20 +65,20 @@ export function PickSubstitutions({
   const leftItems = !leftArgument
     ? []
     : (leftArgument as RSForm).items.filter(
-      cst =>
-        cst.id !== rightCst?.id && //
-        !value.find(item => item.original === cst.id) &&
-        (!filterCst || filterCst(cst))
-    );
+        cst =>
+          cst.id !== rightCst?.id && //
+          !value.find(item => item.original === cst.id) &&
+          (!filterCst || filterCst(cst))
+      );
 
   const rightItems = !rightArgument
     ? []
     : (rightArgument as RSForm).items.filter(
-      cst =>
-        cst.id !== leftCst?.id && //
-        !value.find(item => item.original === cst.id) &&
-        (!filterCst || filterCst(cst))
-    );
+        cst =>
+          cst.id !== leftCst?.id && //
+          !value.find(item => item.original === cst.id) &&
+          (!filterCst || filterCst(cst))
+      );
 
   const [deleteRight, setDeleteRight] = useState(true);
   const toggleDelete = () => setDeleteRight(prev => !prev);

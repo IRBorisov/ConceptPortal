@@ -24,8 +24,7 @@ export function TabConstituents({
   function handleSelectItems(newValue: number[]) {
     onChangeItems(newValue);
     const newSubstitutions = substitutions.filter(
-      (sub: Substitution) =>
-        newValue.includes(sub.original) || newValue.includes(sub.substitution)
+      (sub: Substitution) => newValue.includes(sub.original) || newValue.includes(sub.substitution)
     );
     if (newSubstitutions.length !== substitutions.length) {
       onChangeSubstitutions(newSubstitutions);

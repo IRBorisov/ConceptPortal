@@ -40,13 +40,7 @@ export function TopicsStatic({ activeTopic, onChangeTopic }: TopicsStaticProps) 
       )}
       style={{ maxHeight: topicsHeight }}
     >
-      <SearchBar
-        id='help_topics_search'
-        query={query}
-        onChangeQuery={setQuery}
-        noBorder
-        className='border-b px-1'
-      />
+      <SearchBar id='help_topics_search' query={query} onChangeQuery={setQuery} noBorder className='border-b px-1' />
       {query.trim() ? (
         <TopicSearchResults
           activeTopic={activeTopic}

@@ -84,7 +84,7 @@ const testData = [
   [
     '[σ∈ℬ((R1×R1)×R1)] ∀((α1,α2),γ)∈σ ((α2,α1),γ)∈σ',
     '[FUNCTION_DEFINE[ARGS[ARG[σ][ℬ[×[×[R1][R1]][R1]]]]][∀[TUPLE_DECLARE[TUPLE_DECLARE[α1][α2]][γ]][σ][∈[TUPLE[TUPLE[α2][α1]][γ]][σ]]]]'
-  ],
+  ]
 ];
 
 // .filter(([input]) => input === 'I{(a, b) | (a,b):∈Z×Z}')

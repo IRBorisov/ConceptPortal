@@ -5,7 +5,7 @@ import { defineConfig, loadEnv } from 'vite';
 import { visualizer } from 'rollup-plugin-visualizer';
 import { fileURLToPath } from 'url';
 
-export default ({ mode }: { mode: string; }) => {
+export default ({ mode }: { mode: string }) => {
   const env = loadEnv(mode, process.cwd(), '');
   return defineConfig({
     appType: 'spa',
@@ -17,10 +17,11 @@ export default ({ mode }: { mode: string; }) => {
         presets: [reactCompilerPreset()]
       }),
 
-      mode === 'analyze' && visualizer({
-        filename: 'stats.html',
-        template: 'treemap'
-      })
+      mode === 'analyze' &&
+        visualizer({
+          filename: 'stats.html',
+          template: 'treemap'
+        })
     ],
     server: {
       port: Number(env.VITE_PORTAL_FRONT_PORT),

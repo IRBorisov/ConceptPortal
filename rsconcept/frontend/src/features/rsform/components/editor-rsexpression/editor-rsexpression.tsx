@@ -122,7 +122,6 @@ export function EditorRSExpression({
       toast.error(message);
       console.error(err);
     }
-
   }
 
   function handleShowError(error: RO<RSErrorDescription>) {
@@ -183,7 +182,7 @@ export function EditorRSExpression({
       <StatusBar
         className='absolute -top-2 right-1/2 translate-x-1/2'
         status={status}
-        onAnalyze={(event) => handleCheckExpression(event)}
+        onAnalyze={event => handleCheckExpression(event)}
       />
 
       <RSInput

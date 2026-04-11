@@ -48,8 +48,7 @@ export function DlgEditVersions() {
         return;
       }
       const valid =
-        !!value.version &&
-        schema.versions.every(ver => ver.id === value.id || ver.version !== value.version);
+        !!value.version && schema.versions.every(ver => ver.id === value.id || ver.version !== value.version);
       if (!valid) {
         return;
       }

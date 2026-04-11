@@ -32,7 +32,7 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
   const prevSelectedEdges = useRef<string[]>([]);
 
   const isLoadingSelection = useRef(false);
-  function onSelectionChange({ nodes, edges }: { nodes: OGNode[]; edges: Edge[]; }) {
+  function onSelectionChange({ nodes, edges }: { nodes: OGNode[]; edges: Edge[] }) {
     if (isLoadingSelection.current) {
       return;
     }
@@ -110,9 +110,12 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
     setEdges(newEdges);
   }, [schema, setNodes, setEdges, edgeAnimate, edgeStraight, isMutable]);
 
-  useEffect(function reloadDataOnSchemaOrOptionsChange() {
-    reloadData();
-  }, [schema, edgeAnimate, edgeStraight, reloadData]);
+  useEffect(
+    function reloadDataOnSchemaOrOptionsChange() {
+      reloadData();
+    },
+    [schema, edgeAnimate, edgeStraight, reloadData]
+  );
 
   function resetView() {
     setTimeout(function fitViewAfterReset() {
@@ -129,59 +132,65 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
     }, PARAMETER.refreshTimeout);
   }
 
-  useEffect(function updateSelectedNodes() {
-    if (!viewportInitialized) {
-      return;
-    }
-    const hasChanged =
-      prevSelectedNodes.current.length !== selectedNodes.length || prevSelectedNodes.current.some((id, i) => id !== selectedNodes[i]);
-    if (!hasChanged) {
-      return;
-    }
+  useEffect(
+    function updateSelectedNodes() {
+      if (!viewportInitialized) {
+        return;
+      }
+      const hasChanged =
+        prevSelectedNodes.current.length !== selectedNodes.length ||
+        prevSelectedNodes.current.some((id, i) => id !== selectedNodes[i]);
+      if (!hasChanged) {
+        return;
+      }
 
-    isLoadingSelection.current = true;
+      isLoadingSelection.current = true;
 
-    prevSelectedNodes.current = selectedNodes;
-    setNodes(prev =>
-      prev.map(node => ({
-        ...node,
-        selected: selectedNodes.includes(node.id)
-      }))
-    );
+      prevSelectedNodes.current = selectedNodes;
+      setNodes(prev =>
+        prev.map(node => ({
+          ...node,
+          selected: selectedNodes.includes(node.id)
+        }))
+      );
 
-    const frame = requestAnimationFrame(() => {
-      isLoadingSelection.current = false;
-    });
-    return () => cancelAnimationFrame(frame);
-  }, [viewportInitialized, selectedNodes, setNodes]);
+      const frame = requestAnimationFrame(() => {
+        isLoadingSelection.current = false;
+      });
+      return () => cancelAnimationFrame(frame);
+    },
+    [viewportInitialized, selectedNodes, setNodes]
+  );
 
+  useEffect(
+    function updateSelectedEdges() {
+      if (!viewportInitialized) {
+        return;
+      }
+      const hasChanged =
+        prevSelectedEdges.current.length !== selectedEdges.length ||
+        prevSelectedEdges.current.some((id, i) => id !== selectedEdges[i]);
+      if (!hasChanged) {
+        return;
+      }
 
-  useEffect(function updateSelectedEdges() {
-    if (!viewportInitialized) {
-      return;
-    }
-    const hasChanged =
-      prevSelectedEdges.current.length !== selectedEdges.length ||
-      prevSelectedEdges.current.some((id, i) => id !== selectedEdges[i]);
-    if (!hasChanged) {
-      return;
-    }
+      isLoadingSelection.current = true;
 
-    isLoadingSelection.current = true;
+      prevSelectedEdges.current = selectedEdges;
+      setEdges(prev =>
+        prev.map(edge => ({
+          ...edge,
+          selected: selectedEdges.includes(edge.id)
+        }))
+      );
 
-    prevSelectedEdges.current = selectedEdges;
-    setEdges(prev =>
-      prev.map(edge => ({
-        ...edge,
-        selected: selectedEdges.includes(edge.id)
-      }))
-    );
-
-    const frame = requestAnimationFrame(() => {
-      isLoadingSelection.current = false;
-    });
-    return () => cancelAnimationFrame(frame);
-  }, [selectedEdges, setEdges, viewportInitialized]);
+      const frame = requestAnimationFrame(() => {
+        isLoadingSelection.current = false;
+      });
+      return () => cancelAnimationFrame(frame);
+    },
+    [selectedEdges, setEdges, viewportInitialized]
+  );
 
   return (
     <OssFlowContext

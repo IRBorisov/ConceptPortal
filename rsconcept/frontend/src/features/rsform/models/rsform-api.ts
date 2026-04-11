@@ -4,7 +4,12 @@
 
 import { BASIC_SCHEMAS, type LibraryItem } from '@/features/library';
 import { type AnalysisFull, TypeClass, type TypePath, ValueClass } from '@/features/rslang';
-import { type EchelonFunctional, isTypification, TypeID, type Typification } from '@/features/rslang/semantic/typification';
+import {
+  type EchelonFunctional,
+  isTypification,
+  TypeID,
+  type Typification
+} from '@/features/rslang/semantic/typification';
 import { applyPath } from '@/features/rslang/semantic/typification-api';
 
 import { type RO } from '@/utils/meta';
@@ -13,9 +18,13 @@ import { TextMatcher } from '@/utils/utils';
 import { CstMatchMode } from '../stores/cst-search';
 
 import {
-  type ArgumentValue, CATEGORY_CST_TYPE,
-  type Constituenta, CstClass, CstStatus,
-  CstType, type RSForm,
+  type ArgumentValue,
+  CATEGORY_CST_TYPE,
+  type Constituenta,
+  CstClass,
+  CstStatus,
+  CstType,
+  type RSForm,
   type RSFormStats
 } from './rsform';
 
@@ -259,17 +268,16 @@ export function cstCanProduceStructure(cst: RO<Constituenta>): boolean {
 
 /** Evaluate if {@link Typification} can be used to produce structure. */
 export function typeCanProduceStructure(type: Typification): boolean {
-  if (type.typeID === TypeID.basic ||
-    type.typeID === TypeID.integer ||
-    type.typeID === TypeID.anyTypification
-  ) {
+  if (type.typeID === TypeID.basic || type.typeID === TypeID.integer || type.typeID === TypeID.anyTypification) {
     return false;
   } else if (type.typeID === TypeID.tuple) {
     return true;
   } else {
-    return type.base.typeID !== TypeID.basic &&
+    return (
+      type.base.typeID !== TypeID.basic &&
       type.base.typeID !== TypeID.integer &&
-      type.base.typeID !== TypeID.anyTypification;
+      type.base.typeID !== TypeID.anyTypification
+    );
   }
 }
 
@@ -394,8 +402,7 @@ export function calculateSchemaStats(target: RSForm): RSFormStats {
     count_errors: items.reduce((sum, cst) => sum + (!cst.analysis?.success ? 1 : 0), 0),
     count_property: items.reduce((sum, cst) => sum + (cst.analysis?.valueClass === ValueClass.PROPERTY ? 1 : 0), 0),
     count_incalculable: items.reduce(
-      (sum, cst) =>
-        sum + (cst.analysis?.success && cst.analysis.valueClass === null ? 1 : 0),
+      (sum, cst) => sum + (cst.analysis?.success && cst.analysis.valueClass === null ? 1 : 0),
       0
     ),
     count_inherited: items.reduce((sum, cst) => sum + (cst.is_inherited ? 1 : 0), 0),
@@ -420,10 +427,7 @@ export function calculateSchemaStats(target: RSForm): RSFormStats {
 export function findCstByStructure(schema: RSForm, target: Constituenta, path: TypePath): Constituenta | null {
   for (const cst of schema.items) {
     if (cst.spawner === target.id && cst.spawner_path) {
-      if (
-        cst.spawner_path.length === path.length &&
-        cst.spawner_path.every((v, i) => v === path[i])
-      ) {
+      if (cst.spawner_path.length === path.length && cst.spawner_path.every((v, i) => v === path[i])) {
         return cst;
       }
     }

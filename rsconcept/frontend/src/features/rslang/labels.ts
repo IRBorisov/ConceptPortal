@@ -253,9 +253,9 @@ export function labelType(type: RO<ExpressionType> | null): string {
     case TypeID.basic:
       return type.baseID;
     case TypeID.tuple:
-      return type.factors.map(
-        factor => factor.typeID === TypeID.tuple ? `(${labelType(factor)})` : labelType(factor)
-      ).join('×');
+      return type.factors
+        .map(factor => (factor.typeID === TypeID.tuple ? `(${labelType(factor)})` : labelType(factor)))
+        .join('×');
     case TypeID.collection:
       return type.base.typeID === TypeID.collection ? `ℬ${labelType(type.base)}` : `ℬ(${labelType(type.base)})`;
     case TypeID.logic:
@@ -279,9 +279,9 @@ export function normalizeType(type: RO<ExpressionType> | null): string {
     case TypeID.basic:
       return 'X1';
     case TypeID.tuple:
-      return type.factors.map(
-        factor => factor.typeID === TypeID.tuple ? `(${normalizeType(factor)})` : normalizeType(factor)
-      ).join('×');
+      return type.factors
+        .map(factor => (factor.typeID === TypeID.tuple ? `(${normalizeType(factor)})` : normalizeType(factor)))
+        .join('×');
     case TypeID.collection:
       return type.base.typeID === TypeID.collection ? `ℬ${normalizeType(type.base)}` : `ℬ(${normalizeType(type.base)})`;
     case TypeID.logic:

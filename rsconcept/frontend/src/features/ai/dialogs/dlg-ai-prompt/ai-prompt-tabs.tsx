@@ -46,9 +46,12 @@ export function AIPromptTabs({ promptID, activeTab, setActiveTab }: AIPromptTabs
     return result;
   })();
 
-  useEffect(function updateTextOnTemplateChange() {
-    setText(promptTemplate.text);
-  }, [promptTemplate]);
+  useEffect(
+    function updateTextOnTemplateChange() {
+      setText(promptTemplate.text);
+    },
+    [promptTemplate]
+  );
 
   return (
     <Tabs selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>

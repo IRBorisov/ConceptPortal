@@ -17,10 +17,7 @@ interface TopicSearchResultsProps extends Styling {
 
 export function TopicSearchResults({ activeTopic, query, onSelectTopic, className, style }: TopicSearchResultsProps) {
   const deferredQuery = useDeferredValue(query);
-  const results = useMemo(
-    () => searchHelpTopics(deferredQuery, activeTopic),
-    [activeTopic, deferredQuery]
-  );
+  const results = useMemo(() => searchHelpTopics(deferredQuery, activeTopic), [activeTopic, deferredQuery]);
 
   if (!query.trim()) {
     return null;

@@ -40,13 +40,16 @@ export function EditorProfile() {
     form.reset(next);
   });
 
-  useEffect(function resetFormOnProfileChange() {
-    onResetEvent({
-      first_name: profile.first_name,
-      last_name: profile.last_name,
-      email: profile.email
-    });
-  }, [profile.first_name, profile.last_name, profile.email]);
+  useEffect(
+    function resetFormOnProfileChange() {
+      onResetEvent({
+        first_name: profile.first_name,
+        last_name: profile.last_name,
+        email: profile.email
+      });
+    },
+    [profile.first_name, profile.last_name, profile.email]
+  );
 
   function resetErrors() {
     clearServerError();
@@ -112,7 +115,7 @@ export function EditorProfile() {
 }
 
 // ====== Internals =========
-function ServerError({ error }: { error: ErrorData; }): React.ReactElement {
+function ServerError({ error }: { error: ErrorData }): React.ReactElement {
   if (isAxiosError(error) && error.response?.status === 400) {
     if ('email' in error.response.data) {
       return (

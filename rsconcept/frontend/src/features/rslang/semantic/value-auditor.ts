@@ -13,7 +13,6 @@ import { TokenID } from '../parser/token';
 
 import { ValueClass, type ValueClassContext } from './value-class';
 
-
 /** Value auditor for AST value class checking. */
 export class ValueAuditor {
   private context: ValueClassContext;

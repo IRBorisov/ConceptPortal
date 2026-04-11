@@ -14,22 +14,25 @@ export function useTransitionTracker(delay: number = DEFAULT_DEBOUNCE_DELAY): bo
   const navigation = useNavigation();
   const [showPending, setShowPending] = useState<boolean>(false);
 
-  useEffect(function activateTransitionTracker() {
-    let timeout: ReturnType<typeof setTimeout> | null = null;
+  useEffect(
+    function activateTransitionTracker() {
+      let timeout: ReturnType<typeof setTimeout> | null = null;
 
-    if (navigation.location) {
-      timeout = setTimeout(function showPendingAfterDelay() {
-        setShowPending(true);
-      }, delay);
-    }
-
-    return () => {
-      if (timeout) {
-        clearTimeout(timeout);
+      if (navigation.location) {
+        timeout = setTimeout(function showPendingAfterDelay() {
+          setShowPending(true);
+        }, delay);
       }
-      setShowPending(false);
-    };
-  }, [navigation.location, delay]);
+
+      return () => {
+        if (timeout) {
+          clearTimeout(timeout);
+        }
+        setShowPending(false);
+      };
+    },
+    [navigation.location, delay]
+  );
 
   return showPending;
 }

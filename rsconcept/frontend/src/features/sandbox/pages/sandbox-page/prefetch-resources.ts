@@ -3,9 +3,11 @@
  * GlobalDialogs entries reachable from the sandbox editor. Best-effort; does not block UI.
  */
 export function prefetchResources(): null {
-  void Promise.allSettled(SANDBOX_PREFETCH_MODULES.map(function loadModule(load) {
-    return load();
-  }));
+  void Promise.allSettled(
+    SANDBOX_PREFETCH_MODULES.map(function loadModule(load) {
+      return load();
+    })
+  );
   return null;
 }
 

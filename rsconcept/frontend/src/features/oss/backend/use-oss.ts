@@ -9,7 +9,7 @@ import { type OperationSchemaDTO } from './types';
 
 const selectOSS = (data: RO<OperationSchemaDTO>) => new OssLoader(data).produceOSS();
 
-export function useOss({ itemID }: { itemID: number; }) {
+export function useOss({ itemID }: { itemID: number }) {
   const { data: schema } = useSuspenseQuery({
     ...ossApi.getOssQueryOptions({ itemID }),
     select: selectOSS
@@ -17,7 +17,7 @@ export function useOss({ itemID }: { itemID: number; }) {
   return { schema };
 }
 
-export function prefetchOSS({ itemID }: { itemID?: number; }) {
+export function prefetchOSS({ itemID }: { itemID?: number }) {
   if (!itemID) {
     return null;
   }

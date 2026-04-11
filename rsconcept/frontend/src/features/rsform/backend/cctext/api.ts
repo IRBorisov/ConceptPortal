@@ -18,14 +18,14 @@ export const cctextApi = {
       endpoint: '/api/cctext/inflect',
       request: { data: data }
     }),
-  parseText: (data: { text: string; }) =>
-    axiosPost<{ text: string; }, TextResult>({
+  parseText: (data: { text: string }) =>
+    axiosPost<{ text: string }, TextResult>({
       schema: schemaTextResult,
       endpoint: '/api/cctext/parse',
       request: { data: data }
     }),
-  generateLexeme: (data: { text: string; }) =>
-    axiosPost<{ text: string; }, LexemeResponse>({
+  generateLexeme: (data: { text: string }) =>
+    axiosPost<{ text: string }, LexemeResponse>({
       schema: schemaLexemeResponse,
       endpoint: '/api/cctext/generate-lexeme',
       request: { data: data }

@@ -59,4 +59,4 @@ export function SchemasGuide({ schema }: SchemasGuideProps) {
       </Tooltip>
     </div>
   );
-};
+}

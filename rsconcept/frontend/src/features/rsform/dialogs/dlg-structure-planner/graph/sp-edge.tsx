@@ -5,8 +5,16 @@ import { APP_COLORS } from '@/styling/colors';
 const LABEL_Y_OFFSET = 10; // px
 
 export function SPEdge({
-  id, sourceX, sourceY, targetX, targetY, label,
-  markerEnd, markerStart, style, interactionWidth
+  id,
+  sourceX,
+  sourceY,
+  targetX,
+  targetY,
+  label,
+  markerEnd,
+  markerStart,
+  style,
+  interactionWidth
 }: EdgeProps) {
   // Destructure only the specific props needed for edge drawing
   const [edgePath] = getStraightPath({ sourceX, sourceY, targetX, targetY });
@@ -27,7 +35,7 @@ export function SPEdge({
         labelBgStyle={{ fill: APP_COLORS.bgDefault }}
         labelStyle={{ fill: APP_COLORS.fgDefault }}
       />
-      {label ?
+      {label ? (
         <EdgeLabelRenderer>
           <div
             style={{
@@ -41,7 +49,8 @@ export function SPEdge({
           >
             {label}
           </div>
-        </EdgeLabelRenderer> : null}
+        </EdgeLabelRenderer>
+      ) : null}
     </>
   );
 }

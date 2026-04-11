@@ -24,8 +24,7 @@ import { type IConditionalStyle, useDataTable } from './use-data-table';
 export { createColumnHelper, type RowSelectionState, type VisibilityState };
 
 export interface DataTableProps<TData extends RowData>
-  extends Styling,
-  Pick<TableOptions<TData>, 'data' | 'columns' | 'onRowSelectionChange' | 'onColumnVisibilityChange'> {
+  extends Styling, Pick<TableOptions<TData>, 'data' | 'columns' | 'onRowSelectionChange' | 'onColumnVisibilityChange'> {
   /** Id of the component. */
   id?: string;
 
@@ -194,7 +193,7 @@ export function DataTable<TData extends RowData>({
           paginationOptions={paginationOptions}
         />
       ) : null}
-      {isEmpty ? noDataComponent ?? <DefaultNoData /> : null}
+      {isEmpty ? (noDataComponent ?? <DefaultNoData />) : null}
     </div>
   );
 }

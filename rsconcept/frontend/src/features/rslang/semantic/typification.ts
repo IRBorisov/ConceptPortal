@@ -1,9 +1,8 @@
-/* 
+/*
  * Module: Typification for RSLang.
  */
 
 import { type Branded } from '@/utils/meta';
-
 
 /** Typification structure enumeration. */
 export const TypeID = {
@@ -57,10 +56,14 @@ export type Parametrized = EchelonFunctional | EchelonPredicate;
 
 /** General expression types. */
 export type ExpressionType =
-  EchelonLogic | EchelonBase |
-  EchelonTuple | EchelonCollection |
-  EchelonFunctional | EchelonPredicate |
-  EchelonAnyTyped | EchelonInteger;
+  | EchelonLogic
+  | EchelonBase
+  | EchelonTuple
+  | EchelonCollection
+  | EchelonFunctional
+  | EchelonPredicate
+  | EchelonAnyTyped
+  | EchelonInteger;
 
 /** Setexpr type. */
 export type Typification = EchelonBase | EchelonAnyTyped | EchelonInteger | EchelonCollection | EchelonTuple;

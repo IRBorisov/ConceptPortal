@@ -33,37 +33,40 @@ export function ASTFlow({ data, onNodeEnter, onNodeLeave, onChangeDragging }: AS
   const [nodes, setNodes, onNodesChange] = useNodesState<ASTNode>([]);
   const [edges, setEdges] = useEdgesState<Edge>([]);
 
-  useEffect(function updateGraph() {
-    const newNodes = data.map(node => ({
-      id: String(node.uid),
-      data: node,
-      position: { x: 0, y: 0 },
-      type: 'token'
-    }));
+  useEffect(
+    function updateGraph() {
+      const newNodes = data.map(node => ({
+        id: String(node.uid),
+        data: node,
+        position: { x: 0, y: 0 },
+        type: 'token'
+      }));
 
-    const newEdges: Edge[] = [];
-    for (const node of data) {
-      if (node.parent !== node.uid) {
-        newEdges.push({
-          id: String(node.uid),
-          source: String(node.parent),
-          target: String(node.uid),
-          type: 'dynamic',
-          focusable: false,
-          markerEnd: {
-            type: MarkerType.ArrowClosed,
-            width: 20,
-            height: 20
-          }
-        });
+      const newEdges: Edge[] = [];
+      for (const node of data) {
+        if (node.parent !== node.uid) {
+          newEdges.push({
+            id: String(node.uid),
+            source: String(node.parent),
+            target: String(node.uid),
+            type: 'dynamic',
+            focusable: false,
+            markerEnd: {
+              type: MarkerType.ArrowClosed,
+              width: 20,
+              height: 20
+            }
+          });
+        }
       }
-    }
 
-    applyLayout(newNodes, newEdges);
+      applyLayout(newNodes, newEdges);
 
-    setNodes(newNodes);
-    setEdges(newEdges);
-  }, [data, setNodes, setEdges]);
+      setNodes(newNodes);
+      setEdges(newEdges);
+    },
+    [data, setNodes, setEdges]
+  );
 
   return (
     <DiagramFlow

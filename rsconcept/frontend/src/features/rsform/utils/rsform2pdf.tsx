@@ -26,7 +26,7 @@ export function createSchemaFile(data: RSForm): Promise<Blob> {
   return pdf(<SchemaDocument data={data} />).toBlob();
 }
 
-function CstListDocument({ data }: { data: RO<Constituenta[]>; }) {
+function CstListDocument({ data }: { data: RO<Constituenta[]> }) {
   return (
     <CDocument>
       <CstTable data={data} />
@@ -39,7 +39,7 @@ function CstListDocument({ data }: { data: RO<Constituenta[]>; }) {
   );
 }
 
-function SchemaDocument({ data }: { data: RSForm; }) {
+function SchemaDocument({ data }: { data: RSForm }) {
   return (
     <CDocument>
       <SchemaTitle schema={data} />
@@ -50,7 +50,7 @@ function SchemaDocument({ data }: { data: RSForm; }) {
 }
 
 // ======== Internal components ========
-function SchemaTitle({ schema }: { schema: RSForm; }) {
+function SchemaTitle({ schema }: { schema: RSForm }) {
   const url = `${external_urls.portal}${urls.schema(schema.id)}`;
   return (
     <View style={{ marginBottom: 10 }}>
@@ -66,7 +66,7 @@ function SchemaTitle({ schema }: { schema: RSForm; }) {
   );
 }
 
-function SchemaFooter({ schema }: { schema: RSForm; }) {
+function SchemaFooter({ schema }: { schema: RSForm }) {
   return (
     <View fixed style={pdfs.footer}>
       <Text>КС {schema.alias}</Text>
@@ -75,7 +75,7 @@ function SchemaFooter({ schema }: { schema: RSForm; }) {
   );
 }
 
-function CstTable({ data }: { data: RO<Constituenta[]>; }) {
+function CstTable({ data }: { data: RO<Constituenta[]> }) {
   return (
     <>
       <View style={{ flex: 1 }}>

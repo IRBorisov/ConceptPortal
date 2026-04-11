@@ -75,16 +75,8 @@ export function NavigationSandbox() {
         </div>
 
         <div className='relative z-10 flex gap-2 items-center pr-2 shrink-0'>
-          <NavigationButton
-            text='Библиотека'
-            icon={<IconLibrary2 size='1.5rem' />}
-            onClick={navigateLibrary}
-          />
-          <NavigationButton
-            text='Справка'
-            icon={<IconManuals size='1.5rem' />}
-            onClick={navigateHelp}
-          />
+          <NavigationButton text='Библиотека' icon={<IconLibrary2 size='1.5rem' />} onClick={navigateLibrary} />
+          <NavigationButton text='Справка' icon={<IconManuals size='1.5rem' />} onClick={navigateHelp} />
         </div>
       </div>
     </nav>

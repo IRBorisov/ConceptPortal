@@ -94,13 +94,12 @@ export function evaluatePromptVariable(variableType: PromptVariableType, context
     case PromptVariableType.SCHEMA_TYPE_GRAPH:
       return context.schema ? varSchemaTypeGraph(context.schema) : `!${variableType}!`;
     case PromptVariableType.BLOCK:
-      return context.block && context.oss
-        ? varBlock(context.block, context.oss)
-        : `!${variableType}!`;
+      return context.block && context.oss ? varBlock(context.block, context.oss) : `!${variableType}!`;
     case PromptVariableType.CONSTITUENTA:
       return context.constituenta ? varConstituenta(context.constituenta) : `!${variableType}!`;
     case PromptVariableType.CONSTITUENTA_SYNTAX_TREE:
-      return context.constituenta && context.schema ?
-        varSyntaxTree(context.constituenta, context.schema) : `!${variableType}!`;
+      return context.constituenta && context.schema
+        ? varSyntaxTree(context.constituenta, context.schema)
+        : `!${variableType}!`;
   }
 }

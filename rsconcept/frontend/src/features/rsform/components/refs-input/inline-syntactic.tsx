@@ -19,20 +19,14 @@ interface InlineSyntacticEditorProps {
   onCancel: () => void;
 }
 
-export function InlineSyntacticEditor({
-  position,
-  initial,
-  onSave,
-  onCancel
-}: InlineSyntacticEditorProps) {
+export function InlineSyntacticEditor({ position, initial, onSave, onCancel }: InlineSyntacticEditorProps) {
   const [offset, setOffset] = useState(initial.offset ?? 1);
   const [nominal, setNominal] = useState(initial.nominal ?? '');
   const rootRef = useRef<HTMLDivElement>(null);
   const nominalInputRef = useRef<HTMLInputElement>(null);
 
   const canSubmit = offset !== 0 && nominal.trim() !== '';
-  const positionIndex =
-    offset > 0 ? initial.baseIndex + (offset - 1) : initial.baseIndex + offset;
+  const positionIndex = offset > 0 ? initial.baseIndex + (offset - 1) : initial.baseIndex + offset;
   const isOffsetValid = offset !== 0 && positionIndex >= 0 && positionIndex < initial.refsCount;
 
   function handleSave() {
@@ -58,19 +52,22 @@ export function InlineSyntacticEditor({
     }
   }
 
-  useEffect(function closeOnClickOutside() {
-    function handlePointerDown(event: PointerEvent) {
-      const target = event.target;
-      if (target instanceof Node && !rootRef.current?.contains(target)) {
-        onCancel();
+  useEffect(
+    function closeOnClickOutside() {
+      function handlePointerDown(event: PointerEvent) {
+        const target = event.target;
+        if (target instanceof Node && !rootRef.current?.contains(target)) {
+          onCancel();
+        }
       }
-    }
 
-    document.addEventListener('pointerdown', handlePointerDown, true);
-    return () => {
-      document.removeEventListener('pointerdown', handlePointerDown, true);
-    };
-  }, [onCancel]);
+      document.addEventListener('pointerdown', handlePointerDown, true);
+      return () => {
+        document.removeEventListener('pointerdown', handlePointerDown, true);
+      };
+    },
+    [onCancel]
+  );
 
   useEffect(function focusInputOnMount() {
     nominalInputRef.current?.focus();
@@ -116,7 +113,8 @@ export function InlineSyntacticEditor({
           <input
             id='inline_reference_offset'
             aria-label='Смещение опорной ссылки'
-            className={clsx('w-12 text-center focus-outline rounded-md p-0 border',
+            className={clsx(
+              'w-12 text-center focus-outline rounded-md p-0 border',
               isOffsetValid ? 'border-constructive/50 bg-constructive/5' : 'border-destructive/50 bg-destructive/5'
             )}
             value={offset}

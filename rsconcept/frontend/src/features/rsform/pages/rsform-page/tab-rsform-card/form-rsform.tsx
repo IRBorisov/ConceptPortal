@@ -63,13 +63,19 @@ export function FormRSForm() {
     form.reset(next);
   });
 
-  useEffect(function resetFormOnSchemaChange() {
-    onResetEvent(itemDefaults(schema));
-  }, [schema]);
+  useEffect(
+    function resetFormOnSchemaChange() {
+      onResetEvent(itemDefaults(schema));
+    },
+    [schema]
+  );
 
-  useEffect(function syncGlobalModified() {
-    onModifiedEvent(!isDefaultValue);
-  }, [isDefaultValue]);
+  useEffect(
+    function syncGlobalModified() {
+      onModifiedEvent(!isDefaultValue);
+    },
+    [isDefaultValue]
+  );
 
   function handleSelectVersion(version: CurrentVersion) {
     router.gotoRSForm(schema.id, version === 'latest' ? undefined : version);
@@ -115,10 +121,7 @@ export function FormRSForm() {
           )}
         </form.Field>
         <div className='relative flex flex-col gap-2'>
-          <ToolbarVersioning
-            className='absolute -top-1 right-2'
-            blockReload={schema.oss.length > 0}
-          />
+          <ToolbarVersioning className='absolute -top-1 right-2' blockReload={schema.oss.length > 0} />
 
           <Label text='Версия' className='select-none w-fit' />
           <SelectVersion

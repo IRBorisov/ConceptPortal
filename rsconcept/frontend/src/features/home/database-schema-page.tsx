@@ -19,10 +19,7 @@ export function Component() {
   return (
     <div className='relative w-full' style={{ height: panelHeight }}>
       <TransformWrapper>
-        <TransformComponent
-          wrapperClass='!w-full !h-full'
-          contentClass='flex justify-center items-center'
-        >
+        <TransformComponent wrapperClass='!w-full !h-full' contentClass='flex justify-center items-center'>
           <img alt='Схема базы данных' src={resources.db_schema} className='w-fit h-fit' />
         </TransformComponent>
       </TransformWrapper>

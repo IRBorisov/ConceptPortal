@@ -58,95 +58,88 @@ export function TGReadonlyFlow({ schema }: TGReadonlyFlowProps) {
   const [edges, setEdges] = useEdgesState<Edge>([]);
   const { fitView, viewportInitialized } = useReactFlow();
 
-  useEffect(function updateGraph() {
-    if (!viewportInitialized) {
-      return;
-    }
-    const nodeIDs = Array.from(filteredGraph.nodes.keys());
-    const newNodes: TGNode[] = nodeIDs.map(nodeID => {
-      const cst = schema.cstByID.get(nodeID);
-      if (!cst) {
-        throw new Error(`Node not found ${nodeID}`);
+  useEffect(
+    function updateGraph() {
+      if (!viewportInitialized) {
+        return;
       }
-      return {
-        id: String(nodeID),
-        type: 'concept',
-        position: { x: 0, y: 0 },
-        data: { cst: cst, focused: focusCst?.id === cst.id }
+      const nodeIDs = Array.from(filteredGraph.nodes.keys());
+      const newNodes: TGNode[] = nodeIDs.map(nodeID => {
+        const cst = schema.cstByID.get(nodeID);
+        if (!cst) {
+          throw new Error(`Node not found ${nodeID}`);
+        }
+        return {
+          id: String(nodeID),
+          type: 'concept',
+          position: { x: 0, y: 0 },
+          data: { cst: cst, focused: focusCst?.id === cst.id }
+        };
+      });
+
+      const newEdges: Edge[] = [];
+      for (const source of filteredGraph.nodes.values()) {
+        for (const target of source.outputs) {
+          const edgeType = inferEdgeType(schema, source.id, target);
+          const color = filter.graphType === 'full' ? colorGraphEdge(edgeType) : colorGraphEdge(filter.graphType);
+          newEdges.push({
+            id: String(newEdges.length + 1),
+            source: String(source.id),
+            target: String(target),
+            type: 'termEdge',
+            style: { stroke: color },
+            focusable: false,
+            markerEnd: {
+              type: MarkerType.ArrowClosed,
+              width: 20,
+              height: 20,
+              color: color
+            }
+          });
+        }
+      }
+
+      applyLayout(newNodes, newEdges, !filter.noText);
+
+      const startAnimationFrame = requestAnimationFrame(() => {
+        setIsAnimating(true);
+      });
+
+      const stateChangeTimeout = setTimeout(function syncReadonlyGraphStateAfterLayout() {
+        setNodes(prev =>
+          !prev
+            ? newNodes
+            : newNodes.map(node => ({ ...node, selected: prev.find(item => item.id === node.id)?.selected ?? false }))
+        );
+        setEdges(prev =>
+          !prev
+            ? newEdges
+            : newEdges.map(edge => ({ ...edge, selected: prev.find(item => item.id === edge.id)?.selected ?? false }))
+        );
+      }, PARAMETER.minimalTimeout);
+
+      const animationStopTimeout = setTimeout(function stopReadonlyGraphLayoutAnimation() {
+        setIsAnimating(false);
+      }, PARAMETER.graphLayoutDuration);
+
+      return () => {
+        cancelAnimationFrame(startAnimationFrame);
+        clearTimeout(animationStopTimeout);
+        clearTimeout(stateChangeTimeout);
       };
-    });
-
-    const newEdges: Edge[] = [];
-    for (const source of filteredGraph.nodes.values()) {
-      for (const target of source.outputs) {
-        const edgeType = inferEdgeType(schema, source.id, target);
-        const color = filter.graphType === 'full' ? colorGraphEdge(edgeType) : colorGraphEdge(filter.graphType);
-        newEdges.push({
-          id: String(newEdges.length + 1),
-          source: String(source.id),
-          target: String(target),
-          type: 'termEdge',
-          style: { stroke: color },
-          focusable: false,
-          markerEnd: {
-            type: MarkerType.ArrowClosed,
-            width: 20,
-            height: 20,
-            color: color
-          }
-        });
-      }
-    }
-
-    applyLayout(newNodes, newEdges, !filter.noText);
-
-    const startAnimationFrame = requestAnimationFrame(() => {
-      setIsAnimating(true);
-    });
-
-    const stateChangeTimeout = setTimeout(function syncReadonlyGraphStateAfterLayout() {
-      setNodes(prev =>
-        !prev
-          ? newNodes
-          : newNodes.map(node => ({ ...node, selected: prev.find(item => item.id === node.id)?.selected ?? false }))
-      );
-      setEdges(prev =>
-        !prev
-          ? newEdges
-          : newEdges.map(edge => ({ ...edge, selected: prev.find(item => item.id === edge.id)?.selected ?? false }))
-      );
-    }, PARAMETER.minimalTimeout);
-
-    const animationStopTimeout = setTimeout(function stopReadonlyGraphLayoutAnimation() {
-      setIsAnimating(false);
-    }, PARAMETER.graphLayoutDuration);
-
-    return () => {
-      cancelAnimationFrame(startAnimationFrame);
-      clearTimeout(animationStopTimeout);
-      clearTimeout(stateChangeTimeout);
-    };
-  }, [
-    schema,
-    filteredGraph,
-    setNodes,
-    setEdges,
-    filter.noText,
-    filter.graphType,
-    fitView,
-    viewportInitialized,
-    focusCst
-  ]);
+    },
+    [schema, filteredGraph, setNodes, setEdges, filter.noText, filter.graphType, fitView, viewportInitialized, focusCst]
+  );
   const onFitViewEvent = useEffectEvent(fitView);
 
-  useEffect(function adjustViewOnChange() {
-    setTimeout(
-      function fitViewAfterReadonlyGraphChange() {
+  useEffect(
+    function adjustViewOnChange() {
+      setTimeout(function fitViewAfterReadonlyGraphChange() {
         void onFitViewEvent({ ...flowOptions.fitViewOptions, duration: PARAMETER.graphLayoutDuration });
-      },
-      4 * PARAMETER.minimalTimeout
-    );
-  }, [schema.id, filter.noText, filter.graphType, focusCst]);
+      }, 4 * PARAMETER.minimalTimeout);
+    },
+    [schema.id, filter.noText, filter.graphType, focusCst]
+  );
 
   function handleNodeContextMenu(event: React.MouseEvent<Element>, node: Node) {
     event.preventDefault();

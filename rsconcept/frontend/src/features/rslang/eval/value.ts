@@ -91,7 +91,7 @@ export function tuple(components: Value[]): Value {
 /** Set from elements (unique). Value[] - materialized. */
 export function set(elements: Value[]): Value[] {
   const sorted = [...elements].sort(compare);
-  for (let i = 1; i < sorted.length;) {
+  for (let i = 1; i < sorted.length; ) {
     if (compare(sorted[i - 1], sorted[i]) === 0) {
       sorted.splice(i, 1);
     } else {

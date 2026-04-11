@@ -33,18 +33,24 @@ interface ValueInputProps {
 
 /** Displays a badge with value cardinality and information tooltip. */
 export function ValueInput({
-  className, rows, placeholder, disabled, initialStr,
-  value, stub, valueLabel, status,
-  onChangeStr, onValueDialog, onCalculate, onSubmit
+  className,
+  rows,
+  placeholder,
+  disabled,
+  initialStr,
+  value,
+  stub,
+  valueLabel,
+  status,
+  onChangeStr,
+  onValueDialog,
+  onCalculate,
+  onSubmit
 }: ValueInputProps) {
   const isTrimmed = value.length > limits.len_data_str;
   return (
     <div className='relative flex flex-col gap-2'>
-      <StatusBar
-        className='absolute -top-0.5 right-1/2 translate-x-1/2'
-        status={status}
-        onCalculate={onCalculate}
-      />
+      <StatusBar className='absolute -top-0.5 right-1/2 translate-x-1/2' status={status} onCalculate={onCalculate} />
       <div className='absolute -top-0.5 left-24 select-none'>
         <span
           tabIndex={-1}
@@ -67,11 +73,8 @@ export function ValueInput({
         onSubmit={onSubmit}
       />
 
-      {stub ?
-        (<div className={clsx(
-          'absolute bottom-0 left-0',
-          'select-text text-muted-foreground'
-        )}>
+      {stub ? (
+        <div className={clsx('absolute bottom-0 left-0', 'select-text text-muted-foreground')}>
           <span
             tabIndex={-1}
             className='font-math'
@@ -81,7 +84,8 @@ export function ValueInput({
           >
             {stub}
           </span>
-        </div>) : null}
+        </div>
+      ) : null}
 
       <TextButton
         text='Значение'
@@ -100,15 +104,16 @@ export function ValueInput({
         placeholder={placeholder}
         disabled={isTrimmed || disabled}
       />
-      {value.length > 0 ?
-        (<div
+      {value.length > 0 ? (
+        <div
           className={clsx('select-none ml-auto', isTrimmed && 'text-destructive')}
           aria-label='Количество символов'
           data-tooltip-id={globalIDs.tooltip}
           data-tooltip-html='Отображаемое количество</br>символов ограничено'
         >
           {`${formatInteger(value.length)} / ${formatInteger(limits.len_data_str)}`}
-        </div>) : null}
+        </div>
+      ) : null}
     </div>
   );
 }

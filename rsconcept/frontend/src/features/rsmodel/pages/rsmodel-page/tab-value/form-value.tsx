@@ -57,7 +57,7 @@ export function FormValue({ id, activeCst }: FormValueProps) {
   const cstData = useCstValue(engine, activeCst);
   const stub = valueStub(cstData);
 
-  const initialValue = isBase ? engine.basics.get(activeCst.id) ?? ({} as BasicBinding) : cstData;
+  const initialValue = isBase ? (engine.basics.get(activeCst.id) ?? ({} as BasicBinding)) : cstData;
 
   const initialStr = prepareValueString(initialValue, typification, schema, engine.basics, showDataText);
   const [inputValue, setInputValue] = useState<string>(initialStr);
@@ -65,21 +65,30 @@ export function FormValue({ id, activeCst }: FormValueProps) {
 
   const isDirty = inputValue !== initialStr;
 
-  useLayoutEffect(function resetGlobalModifiedFlagOnCstChange() {
-    onModifiedEvent(false);
-  }, [activeCst.id]);
-
-  useEffect(function resetUIStateOnCstChange() {
-    const timeoutId = setTimeout(function resetValueEditorState() {
-      setInputValue(initialStr);
+  useLayoutEffect(
+    function resetGlobalModifiedFlagOnCstChange() {
       onModifiedEvent(false);
-    }, 0);
-    return () => clearTimeout(timeoutId);
-  }, [activeCst.id, initialStr]);
+    },
+    [activeCst.id]
+  );
 
-  useEffect(function syncGlobalModified() {
-    onModifiedEvent(isDirty);
-  }, [isDirty]);
+  useEffect(
+    function resetUIStateOnCstChange() {
+      const timeoutId = setTimeout(function resetValueEditorState() {
+        setInputValue(initialStr);
+        onModifiedEvent(false);
+      }, 0);
+      return () => clearTimeout(timeoutId);
+    },
+    [activeCst.id, initialStr]
+  );
+
+  useEffect(
+    function syncGlobalModified() {
+      onModifiedEvent(isDirty);
+    },
+    [isDirty]
+  );
 
   function handleSetValue(newValue: Value | BasicBinding | null) {
     if (newValue === null) {

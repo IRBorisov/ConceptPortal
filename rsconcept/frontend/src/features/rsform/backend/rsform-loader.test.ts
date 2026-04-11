@@ -30,11 +30,17 @@ describe('RSFormLoader', () => {
       models: [],
       items: [],
       inheritance: [],
-      ...overrides,
+      ...overrides
     };
   }
 
-  function createCst(id: number, alias: string, type: CstType, definition: string, term: string = ''): ConstituentaBasicsDTO {
+  function createCst(
+    id: number,
+    alias: string,
+    type: CstType,
+    definition: string,
+    term: string = ''
+  ): ConstituentaBasicsDTO {
     return {
       id: id,
       alias: alias,
@@ -76,7 +82,7 @@ describe('RSFormLoader', () => {
       term_forms: [],
       term_resolved: 't4',
       definition_resolved: 't5',
-      crucial: true,
+      crucial: true
     };
     const dto = createMinimalDTO({ items: [item] });
     const loader = new RSFormLoader(dto);

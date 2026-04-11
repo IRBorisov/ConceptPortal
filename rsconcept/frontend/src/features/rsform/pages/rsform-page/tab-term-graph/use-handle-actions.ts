@@ -61,13 +61,13 @@ export function useHandleActions(graph: Graph<number>) {
   const [isExportingImage, setIsExportingImage] = useState(false);
 
   function handleShowTypeGraph() {
-    const items = selectedCst.length === 0 ? schema.items
-      : schema.items.filter(item => selectedCst.find(id => id === item.id));
+    const items =
+      selectedCst.length === 0 ? schema.items : schema.items.filter(item => selectedCst.find(id => id === item.id));
     const typeInfo = items
       .filter(item => !!item.analysis?.type)
       .map(item => ({
         alias: item.alias,
-        type: item.analysis.type!,
+        type: item.analysis.type!
       }));
     showTypeGraph({ items: typeInfo });
   }
@@ -85,16 +85,13 @@ export function useHandleActions(graph: Graph<number>) {
   }
 
   function panToCst(cstID: number) {
-    setTimeout(
-      function panToConstituenta() {
-        scrollToNode(String(cstID), {
-          duration: PARAMETER.moveDuration,
-          padding: fitViewOptions.padding,
-          maxZoom: 1.5
-        });
-      },
-      PARAMETER.moveDuration
-    );
+    setTimeout(function panToConstituenta() {
+      scrollToNode(String(cstID), {
+        duration: PARAMETER.moveDuration,
+        padding: fitViewOptions.padding,
+        maxZoom: 1.5
+      });
+    }, PARAMETER.moveDuration);
   }
 
   function handleCreateCst() {

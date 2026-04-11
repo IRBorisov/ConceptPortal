@@ -32,14 +32,9 @@ export interface DlgImportSchemaProps {
 export function DlgImportSchema() {
   const { importSchema } = useImportSchema();
 
-  const {
-    ossID,
-    layout,
-    initialParent,
-    onCreate,
-    defaultX,
-    defaultY
-  } = useDialogsStore(state => state.props as DlgImportSchemaProps);
+  const { ossID, layout, initialParent, onCreate, defaultX, defaultY } = useDialogsStore(
+    state => state.props as DlgImportSchemaProps
+  );
   const { schema } = useOss({ itemID: ossID });
   const manager = new LayoutManager(schema, layout);
   const { items: libraryItems } = useLibrary();
@@ -173,7 +168,7 @@ export function DlgImportSchema() {
             {field => (
               <SelectParent
                 items={manager.oss.blocks}
-                value={field.state.value ? manager.oss.blockByID.get(field.state.value) ?? null : null}
+                value={field.state.value ? (manager.oss.blockByID.get(field.state.value) ?? null) : null}
                 placeholder='Родительский блок'
                 onChange={value => field.handleChange(value ? value.id : null)}
               />

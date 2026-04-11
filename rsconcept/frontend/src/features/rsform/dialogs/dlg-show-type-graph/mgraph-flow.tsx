@@ -30,40 +30,43 @@ export function MGraphFlow({ data }: MGraphFlowProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState<MGNode>([]);
   const [edges, setEdges] = useEdgesState<MGEdge>([]);
 
-  useEffect(function updateGraph() {
-    const newNodes = data.nodes.map(node => ({
-      id: String(node.id),
-      data: node,
-      position: { x: 0, y: 0 },
-      type: 'step'
-    }));
+  useEffect(
+    function updateGraph() {
+      const newNodes = data.nodes.map(node => ({
+        id: String(node.id),
+        data: node,
+        position: { x: 0, y: 0 },
+        type: 'step'
+      }));
 
-    const newEdges: MGEdge[] = [];
-    data.nodes.forEach(node => {
-      const visited = new Set<number>();
-      const edges = new Map<number, number>();
-      node.parents.forEach((parent, index) => {
-        if (visited.has(parent)) {
-          newEdges.at(edges.get(parent)!)!.data!.indices.push(index + 1);
-        } else {
-          newEdges.push({
-            id: String(newEdges.length),
-            data: node.parents.length > 1 ? { indices: [index + 1] } : undefined,
-            source: String(parent),
-            target: String(node.id),
-            type: node.parents.length > 1 ? 'cartesian' : 'boolean'
-          });
-          edges.set(parent, newEdges.length - 1);
-          visited.add(parent);
-        }
+      const newEdges: MGEdge[] = [];
+      data.nodes.forEach(node => {
+        const visited = new Set<number>();
+        const edges = new Map<number, number>();
+        node.parents.forEach((parent, index) => {
+          if (visited.has(parent)) {
+            newEdges.at(edges.get(parent)!)!.data!.indices.push(index + 1);
+          } else {
+            newEdges.push({
+              id: String(newEdges.length),
+              data: node.parents.length > 1 ? { indices: [index + 1] } : undefined,
+              source: String(parent),
+              target: String(node.id),
+              type: node.parents.length > 1 ? 'cartesian' : 'boolean'
+            });
+            edges.set(parent, newEdges.length - 1);
+            visited.add(parent);
+          }
+        });
       });
-    });
 
-    applyLayout(newNodes, newEdges);
+      applyLayout(newNodes, newEdges);
 
-    setNodes(newNodes);
-    setEdges(newEdges);
-  }, [data, setNodes, setEdges]);
+      setNodes(newNodes);
+      setEdges(newEdges);
+    },
+    [data, setNodes, setEdges]
+  );
 
   return (
     <DiagramFlow

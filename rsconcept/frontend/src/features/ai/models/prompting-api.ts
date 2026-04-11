@@ -44,8 +44,9 @@ export function varSchema(schema: RSForm): string {
   let result = stringifySchemaIntro(schema);
   result += '\n\nКонституенты:';
   for (const item of schema.items) {
-    result += `\n${item.alias} - "${labelType(item.analysis.type)}" - "${item.term_resolved}" - "${item.definition_formal
-      }" - "${item.definition_resolved}" - "${item.convention}"`;
+    result += `\n${item.alias} - "${labelType(item.analysis.type)}" - "${item.term_resolved}" - "${
+      item.definition_formal
+    }" - "${item.definition_resolved}" - "${item.convention}"`;
   }
 
   const crucial = schema.items.filter(cst => cst.crucial);

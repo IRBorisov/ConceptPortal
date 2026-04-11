@@ -46,9 +46,8 @@ export function ToolbarValueTab({ className, isNarrow, onClearValue }: ToolbarVa
   const showEditValue = useDialogsStore(state => state.showModelEditValue);
   const showViewValue = useDialogsStore(state => state.showModelViewValue);
   const showEditBinding = useDialogsStore(state => state.showModelEditBinding);
-  const hasValueDialog = activeCst &&
-    isTypification(activeCst.analysis.type) &&
-    (value != null || !isInferrable(activeCst.cst_type));
+  const hasValueDialog =
+    activeCst && isTypification(activeCst.analysis.type) && (value != null || !isInferrable(activeCst.cst_type));
 
   function handleSetValue(newValue: Value | BasicBinding | null) {
     if (!activeCst) {
@@ -106,7 +105,13 @@ export function ToolbarValueTab({ className, isNarrow, onClearValue }: ToolbarVa
         titleHtml={prepareTooltip('Вычислить текущую конституенту', isMac() ? 'Cmd + Q' : 'Ctrl + Q')}
         aria-label='Вычислить текущую конституенту'
         icon={<IconCalculateOne size='1.25rem' className='icon-green' />}
-        onClick={activeCst ? () => { engine.calculateCst(activeCst.id); } : undefined}
+        onClick={
+          activeCst
+            ? () => {
+                engine.calculateCst(activeCst.id);
+              }
+            : undefined
+        }
         disabled={isProcessing || !activeCst || isModified || !isInferrable(activeCst.cst_type)}
       />
 
@@ -117,12 +122,14 @@ export function ToolbarValueTab({ className, isNarrow, onClearValue }: ToolbarVa
         disabled={!hasValueDialog}
       />
 
-      {isMutable ? <MiniButton
-        title='Удалить значение текущей конституенты'
-        icon={<IconDestroy size='1.25rem' className='icon-red' />}
-        onClick={onClearValue}
-        disabled={isProcessing || !activeCst || !hasValue || isInferrable(activeCst.cst_type)}
-      /> : null}
+      {isMutable ? (
+        <MiniButton
+          title='Удалить значение текущей конституенты'
+          icon={<IconDestroy size='1.25rem' className='icon-red' />}
+          onClick={onClearValue}
+          disabled={isProcessing || !activeCst || !hasValue || isInferrable(activeCst.cst_type)}
+        />
+      ) : null}
 
       <MiniButton
         titleHtml='Пересчитать модель'

@@ -8,30 +8,33 @@ export function useBrowserNavigation() {
   const start = useAppTransitionStore(state => state.startNavigation);
   const end = useAppTransitionStore(state => state.endNavigation);
 
-  useEffect(function listenForBrowserNavigation() {
-    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+  useEffect(
+    function listenForBrowserNavigation() {
+      let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
-    const onPopState = () => {
-      start();
+      const onPopState = () => {
+        start();
 
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+        }
 
-      // Fallback to end the navigation in case route completes with cache
-      timeoutId = setTimeout(function endCachedNavigation() {
-        end();
-        timeoutId = null;
-      }, DELAY_CACHE_CHECK);
-    };
+        // Fallback to end the navigation in case route completes with cache
+        timeoutId = setTimeout(function endCachedNavigation() {
+          end();
+          timeoutId = null;
+        }, DELAY_CACHE_CHECK);
+      };
 
-    window.addEventListener('popstate', onPopState);
-    return () => {
-      window.removeEventListener('popstate', onPopState);
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-        end();
-      }
-    };
-  }, [start, end]);
+      window.addEventListener('popstate', onPopState);
+      return () => {
+        window.removeEventListener('popstate', onPopState);
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+          end();
+        }
+      };
+    },
+    [start, end]
+  );
 }

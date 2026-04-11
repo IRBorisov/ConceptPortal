@@ -13,8 +13,6 @@ export function useRSForms(itemIDs: number[]) {
     }))
   });
 
-  const schemas = results
-    .map(result => result.data.transformed)
-    .filter(data => data !== undefined);
+  const schemas = results.map(result => result.data.transformed).filter(data => data !== undefined);
   return schemas;
 }

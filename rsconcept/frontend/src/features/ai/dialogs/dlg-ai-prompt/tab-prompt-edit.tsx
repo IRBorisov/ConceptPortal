@@ -17,14 +17,7 @@ export function TabPromptEdit({ label, description, text, setText }: TabPromptEd
   return (
     <div className='cc-column'>
       <div className='flex flex-col gap-2'>
-        <TextArea
-          id='prompt-label'
-          label='Название'
-          value={label}
-          disabled
-          noResize
-          rows={1}
-        />
+        <TextArea id='prompt-label' label='Название' value={label} disabled noResize rows={1} />
         <TextArea
           id='prompt-description'
           label='Описание'

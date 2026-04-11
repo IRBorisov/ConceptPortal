@@ -101,7 +101,7 @@ export function LoginPage() {
 }
 
 // ====== Internals =========
-function ServerError({ error }: { error: ErrorData; }): React.ReactElement | null {
+function ServerError({ error }: { error: ErrorData }): React.ReactElement | null {
   if (isAxiosError(error) && error.response?.status === 400) {
     return (
       <div className='text-sm select-text text-destructive'>

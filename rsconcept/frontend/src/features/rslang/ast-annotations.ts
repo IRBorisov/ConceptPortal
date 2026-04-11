@@ -9,10 +9,7 @@ const AST_ERRORS_KEY = 'rsErrors' as const;
 const AST_TYPES_KEY = 'rsTypes' as const;
 
 /** Appends {@link ExpressionType} onto the node's `annotation.rsTypes`. */
-export function annotateType(
-  node: AstNode,
-  type: ExpressionType,
-): void {
+export function annotateType(node: AstNode, type: ExpressionType): void {
   node.annotation = {
     ...(typeof node.annotation === 'object' && node.annotation !== null ? node.annotation : {}),
     [AST_TYPES_KEY]: type
@@ -29,11 +26,7 @@ export function readTypeAnnotation(annotation: AstNode['annotation']): Expressio
 }
 
 /** Appends {@link RSErrorInfo} onto the node's `annotation.rsErrors` if not already set. */
-export function annotateError(
-  node: AstNode,
-  code: RSErrorCode,
-  params?: readonly string[]
-): void {
+export function annotateError(node: AstNode, code: RSErrorCode, params?: readonly string[]): void {
   if (
     typeof node.annotation === 'object' &&
     node.annotation !== null &&
@@ -42,8 +35,7 @@ export function annotateError(
   ) {
     return;
   }
-  const entry: RSErrorInfo =
-    params !== undefined && params.length > 0 ? { code, params: [...params] } : { code };
+  const entry: RSErrorInfo = params !== undefined && params.length > 0 ? { code, params: [...params] } : { code };
   node.annotation = {
     ...(typeof node.annotation === 'object' && node.annotation !== null ? node.annotation : {}),
     [AST_ERRORS_KEY]: entry
@@ -64,14 +56,14 @@ function isAstNodeErrorRef(x: unknown): x is RSErrorInfo {
   if (typeof x !== 'object' || x === null || !('code' in x)) {
     return false;
   }
-  const code = (x as { code: unknown; }).code;
+  const code = (x as { code: unknown }).code;
   if (typeof code !== 'number') {
     return false;
   }
   if (!('params' in x)) {
     return true;
   }
-  const p = (x as { params: unknown; }).params;
+  const p = (x as { params: unknown }).params;
   if (p === undefined) {
     return true;
   }

@@ -32,7 +32,16 @@ interface ValueEditorProps {
   onChange: (newValue: Value | null) => void;
 }
 
-export function ValueEditor({ className, rows, perPage = 20, value, engine, getHeaderText, type, onChange }: ValueEditorProps) {
+export function ValueEditor({
+  className,
+  rows,
+  perPage = 20,
+  value,
+  engine,
+  getHeaderText,
+  type,
+  onChange
+}: ValueEditorProps) {
   const {
     path,
     data,
@@ -57,11 +66,7 @@ export function ValueEditor({ className, rows, perPage = 20, value, engine, getH
   const typeStr = printTypeCrumbs(type, typePath);
   const valueStr = describeValue(data, currentType);
 
-  const dataRows =
-    data === null ? [] :
-      currentType.typeID === TypeID.collection ?
-        data as Value[] :
-        [data];
+  const dataRows = data === null ? [] : currentType.typeID === TypeID.collection ? (data as Value[]) : [data];
   const [filteredData, indexMap] = (() => {
     const indexMap = new Map<number, number>();
     const filteredData: Value[] = [];
@@ -75,7 +80,6 @@ export function ValueEditor({ className, rows, perPage = 20, value, engine, getH
     }
     return [filteredData, indexMap];
   })();
-
 
   const services: ColumnServices = {
     schema: engine.schema!,
@@ -103,12 +107,7 @@ export function ValueEditor({ className, rows, perPage = 20, value, engine, getH
               text={valueStr}
               title='Обозначение | Мощность множества'
             />
-            <SearchBar
-              id='dlg_value_search'
-              noBorder
-              query={filter}
-              onChangeQuery={setFilter}
-            />
+            <SearchBar id='dlg_value_search' noBorder query={filter} onChangeQuery={setFilter} />
             <div className='cc-icons'>
               <MiniButton
                 title='Значение целиком'

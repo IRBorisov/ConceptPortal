@@ -41,10 +41,7 @@ export function DlgEditBinding() {
         onSubmit={handleSubmit}
         className={dialogClassName}
       >
-        <BindingEditor
-          value={value}
-          onChange={handleChange}
-        />
+        <BindingEditor value={value} onChange={handleChange} />
       </ModalForm>
     );
   } else {
@@ -55,9 +52,7 @@ export function DlgEditBinding() {
         noFooterButton
         className={dialogClassName}
       >
-        <BindingEditor
-          value={value}
-        />
+        <BindingEditor value={value} />
       </ModalView>
     );
   }

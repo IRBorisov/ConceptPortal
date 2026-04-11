@@ -358,4 +358,3 @@ export function describeCstClass(target: CstClass): string {
 export function labelGrammeme(gram: Grammeme): string {
   return labelGrammemeRecord[gram] ?? `Неизв: ${gram as string}`;
 }
-

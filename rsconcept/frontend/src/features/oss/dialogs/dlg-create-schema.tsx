@@ -28,14 +28,9 @@ export interface DlgCreateSchemaProps {
 export function DlgCreateSchema() {
   const { createSchema } = useCreateSchema();
 
-  const {
-    ossID,
-    layout,
-    initialParent,
-    onCreate,
-    defaultX,
-    defaultY
-  } = useDialogsStore(state => state.props as DlgCreateSchemaProps);
+  const { ossID, layout, initialParent, onCreate, defaultX, defaultY } = useDialogsStore(
+    state => state.props as DlgCreateSchemaProps
+  );
 
   const { schema } = useOss({ itemID: ossID });
   const manager = new LayoutManager(schema, layout);
@@ -129,7 +124,7 @@ export function DlgCreateSchema() {
             {field => (
               <SelectParent
                 items={manager.oss.blocks}
-                value={field.state.value ? manager.oss.blockByID.get(field.state.value) ?? null : null}
+                value={field.state.value ? (manager.oss.blockByID.get(field.state.value) ?? null) : null}
                 placeholder='Родительский блок'
                 onChange={value => field.handleChange(value ? value.id : null)}
               />

@@ -38,11 +38,13 @@ export const useSetLocation = () => {
       }
 
       const rsKey = KEYS.composite.schema({ itemID: variables.itemID });
-      client.setQueryData(rsKey, (prev: { raw: RSFormDTO; transformed: RSForm; } | undefined) =>
-        !prev ? undefined : {
-          raw: { ...prev.raw, location: variables.location },
-          transformed: { ...prev.transformed, location: variables.location }
-        }
+      client.setQueryData(rsKey, (prev: { raw: RSFormDTO; transformed: RSForm } | undefined) =>
+        !prev
+          ? undefined
+          : {
+              raw: { ...prev.raw, location: variables.location },
+              transformed: { ...prev.transformed, location: variables.location }
+            }
       );
       const modelKey = KEYS.composite.model({ itemID: variables.itemID });
       client.setQueryData(modelKey, (prev: RSModelDTO | undefined) =>

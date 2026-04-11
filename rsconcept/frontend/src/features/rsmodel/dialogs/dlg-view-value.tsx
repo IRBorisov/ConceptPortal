@@ -26,13 +26,7 @@ export function DlgViewValue() {
       header='Просмотр значения'
       className='w-230 h-180 max-w-[calc(100dvw-3rem)] max-h-[calc(100svh-8rem)] px-6 mb-3'
     >
-      <ValueViewer
-        rows={20}
-        type={type}
-        value={value}
-        engine={engine}
-        getHeaderText={getHeaderText}
-      />
+      <ValueViewer rows={20} type={type} value={value} engine={engine} getHeaderText={getHeaderText} />
     </ModalView>
   );
 }

@@ -15,33 +15,19 @@ export type ConstituentaDataDTO = z.infer<typeof schemaUpdateValues>;
 
 type RecursiveArray = (number | RecursiveArray)[];
 const RecursiveArraySchema: z.ZodType<RecursiveArray> = z.lazy(() =>
-  z.array(
-    z.union([
-      z.number(),
-      RecursiveArraySchema
-    ])
-  )
+  z.array(z.union([z.number(), RecursiveArraySchema]))
 );
 
 export const schemaConstituentaValue = z.strictObject({
   id: z.number(),
   type: z.string(),
-  value: z.union([
-    z.record(z.number(), z.string()),
-    z.number(),
-    RecursiveArraySchema
-  ])
+  value: z.union([z.record(z.number(), z.string()), z.number(), RecursiveArraySchema])
 });
-
 
 export const schemaConstituentaData = z.strictObject({
   target: z.number(),
   type: z.string(),
-  data: z.union([
-    z.record(z.number(), z.string()),
-    z.number(),
-    RecursiveArraySchema
-  ])
+  data: z.union([z.record(z.number(), z.string()), z.number(), RecursiveArraySchema])
 });
 
 export const schemaUpdateValues = z.array(schemaConstituentaData);

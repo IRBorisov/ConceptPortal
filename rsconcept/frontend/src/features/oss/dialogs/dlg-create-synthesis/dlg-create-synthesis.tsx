@@ -40,15 +40,9 @@ export type TabID = (typeof TabID)[keyof typeof TabID];
 export function DlgCreateSynthesis() {
   const { createSynthesis } = useCreateSynthesis();
 
-  const {
-    ossID,
-    layout,
-    initialInputs,
-    initialParent,
-    onCreate,
-    defaultX,
-    defaultY
-  } = useDialogsStore(state => state.props as DlgCreateSynthesisProps);
+  const { ossID, layout, initialInputs, initialParent, onCreate, defaultX, defaultY } = useDialogsStore(
+    state => state.props as DlgCreateSynthesisProps
+  );
   const { schema } = useOss({ itemID: ossID });
   const manager = new LayoutManager(schema, layout);
 
@@ -98,31 +92,19 @@ export function DlgCreateSynthesis() {
   }, [alias, values, manager.oss.operations]);
 
   function TitleField({ children }: CreateFieldProps<string>) {
-    return (
-      <form.Field name='item_data.title'>{field => children(field as FieldStateData<string>)}</form.Field>
-    );
+    return <form.Field name='item_data.title'>{field => children(field as FieldStateData<string>)}</form.Field>;
   }
 
   function AliasField({ children }: CreateFieldProps<string>) {
-    return (
-      <form.Field name='item_data.alias'>{field => children(field as FieldStateData<string>)}</form.Field>
-    );
+    return <form.Field name='item_data.alias'>{field => children(field as FieldStateData<string>)}</form.Field>;
   }
 
   function ParentField({ children }: CreateFieldProps<number | null>) {
-    return (
-      <form.Field name='item_data.parent'>
-        {field => children(field as FieldStateData<number | null>)}
-      </form.Field>
-    );
+    return <form.Field name='item_data.parent'>{field => children(field as FieldStateData<number | null>)}</form.Field>;
   }
 
   function DescriptionField({ children }: CreateFieldProps<string>) {
-    return (
-      <form.Field name='item_data.description'>
-        {field => children(field as FieldStateData<string>)}
-      </form.Field>
-    );
+    return <form.Field name='item_data.description'>{field => children(field as FieldStateData<string>)}</form.Field>;
   }
 
   function ArgumentsField({ children }: CreateFieldProps<number[]>) {
@@ -130,11 +112,7 @@ export function DlgCreateSynthesis() {
   }
 
   function SubstitutionsField({ children }: CreateFieldProps<Substitution[]>) {
-    return (
-      <form.Field name='substitutions'>
-        {field => children(field as FieldStateData<Substitution[]>)}
-      </form.Field>
-    );
+    return <form.Field name='substitutions'>{field => children(field as FieldStateData<Substitution[]>)}</form.Field>;
   }
 
   return (

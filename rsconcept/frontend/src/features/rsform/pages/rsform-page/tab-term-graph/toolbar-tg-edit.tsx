@@ -5,13 +5,7 @@ import { type LibraryItemReference } from '@/features/library';
 import { MiniSelectorOSS } from '@/features/library/components/mini-selector-oss';
 
 import { MiniButton } from '@/components/control';
-import {
-  IconCrucial,
-  IconDestroy,
-  IconEdit2,
-  IconNewItem,
-  IconTypeGraph
-} from '@/components/icons';
+import { IconCrucial, IconDestroy, IconEdit2, IconNewItem, IconTypeGraph } from '@/components/icons';
 import { cn } from '@/components/utils';
 import { type Graph } from '@/models/graph';
 import { prepareTooltip } from '@/utils/format';
@@ -27,21 +21,9 @@ interface ToolbarTGEditProps {
 
 export function ToolbarTGEdit({ className, graph }: ToolbarTGEditProps) {
   const router = useConceptNavigation();
-  const {
-    schema,
-    selectedCst,
-    isContentEditable,
-    canDeleteSelected,
-    toggleCrucial,
-    isProcessing
-  } = useRSFormEdit();
+  const { schema, selectedCst, isContentEditable, canDeleteSelected, toggleCrucial, isProcessing } = useRSFormEdit();
 
-  const {
-    handleCreateCst,
-    handleDeleteSelected,
-    handelFastEdit,
-    handleShowTypeGraph
-  } = useHandleActions(graph);
+  const { handleCreateCst, handleDeleteSelected, handelFastEdit, handleShowTypeGraph } = useHandleActions(graph);
 
   function handleSelectOss(event: React.MouseEvent<HTMLElement>, newValue: LibraryItemReference) {
     router.gotoOss(newValue.id, event.ctrlKey || event.metaKey);

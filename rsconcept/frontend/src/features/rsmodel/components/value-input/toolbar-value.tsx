@@ -25,8 +25,13 @@ interface ToolbarValueProps {
 }
 
 export function ToolbarValue({
-  className, value, disabled, isModified,
-  onChange, onReset, onSubmit
+  className,
+  value,
+  disabled,
+  isModified,
+  onChange,
+  onReset,
+  onSubmit
 }: ToolbarValueProps) {
   const showDataText = usePreferencesStore(state => state.showDataText);
   const toggleDataText = usePreferencesStore(state => state.toggleShowDataText);
@@ -71,11 +76,14 @@ export function ToolbarValue({
     if (!onChange || disabled) {
       return;
     }
-    navigator.clipboard.readText().then(text => {
-      onChange(text);
-    }).catch(() => {
-      toast.error(errorMsg.clipboardRead);
-    });
+    navigator.clipboard
+      .readText()
+      .then(text => {
+        onChange(text);
+      })
+      .catch(() => {
+        toast.error(errorMsg.clipboardRead);
+      });
   }
 
   function handleOpenFile() {
@@ -106,8 +114,8 @@ export function ToolbarValue({
 
   return (
     <div className={cn('cc-icons select-none', className)}>
-      {!!value ?
-        (<div ref={exportMenuRef} onBlur={handleExportBlur} className='relative'>
+      {!!value ? (
+        <div ref={exportMenuRef} onBlur={handleExportBlur} className='relative'>
           {!disabled && !!onSubmit ? (
             <MiniButton
               titleHtml={prepareTooltip('Сохранить изменения', isMac() ? 'Cmd + S' : 'Ctrl + S')}
@@ -115,7 +123,8 @@ export function ToolbarValue({
               icon={<IconSave size='1.25rem' className='icon-primary' />}
               onClick={onSubmit}
               disabled={disabled || !isModified}
-            />) : null}
+            />
+          ) : null}
           {!disabled && !!onReset ? (
             <MiniButton
               title='Сбросить несохраненные изменения'
@@ -143,10 +152,11 @@ export function ToolbarValue({
               onClick={handleJSONExport}
             />
           </Dropdown>
-        </div>) : null}
+        </div>
+      ) : null}
 
-      {!disabled && !!onChange ?
-        (<div ref={importMenuRef} onBlur={handleImportBlur} className='relative'>
+      {!disabled && !!onChange ? (
+        <div ref={importMenuRef} onBlur={handleImportBlur} className='relative'>
           <MiniButton
             title='Импортировать значение'
             hideTitle={isImportOpen}
@@ -165,7 +175,8 @@ export function ToolbarValue({
               onClick={handleOpenFile}
             />
           </Dropdown>
-        </div>) : null}
+        </div>
+      ) : null}
 
       <input
         type='file'

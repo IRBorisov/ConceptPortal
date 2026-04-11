@@ -72,11 +72,11 @@ export const urls = {
     return `/rsforms/${id}?${versionStr}tab=${tab}${activeStr}`;
   },
 
-  oss_props: ({ id, tab }: { id: number | string; tab: number; }) => {
+  oss_props: ({ id, tab }: { id: number | string; tab: number }) => {
     return `/oss/${id}?tab=${tab}`;
   },
 
-  model_props: ({ id, tab, active }: { id: number | string; tab: number; active?: number | string; }) => {
+  model_props: ({ id, tab, active }: { id: number | string; tab: number; active?: number | string }) => {
     const activeStr = active !== undefined ? `&active=${active}` : '';
     return `/models/${id}?tab=${tab}${activeStr}`;
   }

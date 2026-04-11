@@ -53,20 +53,19 @@ const EDITOR_OPTIONS: BasicSetupOptions = {
   lintKeymap: false
 };
 
-interface PromptInputProps
-  extends Pick<
-    ReactCodeMirrorProps,
-    | 'id' //
-    | 'height'
-    | 'minHeight'
-    | 'maxHeight'
-    | 'value'
-    | 'onFocus'
-    | 'onBlur'
-    | 'placeholder'
-    | 'style'
-    | 'className'
-  > {
+interface PromptInputProps extends Pick<
+  ReactCodeMirrorProps,
+  | 'id' //
+  | 'height'
+  | 'minHeight'
+  | 'maxHeight'
+  | 'value'
+  | 'onFocus'
+  | 'onBlur'
+  | 'placeholder'
+  | 'style'
+  | 'className'
+> {
   value: string;
   onChange: (newValue: string) => void;
   availableVariables?: string[];

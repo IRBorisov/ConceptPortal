@@ -98,9 +98,8 @@ export function ToolbarSchema({
     };
     showCreateCst({
       schema: schema,
-      onCreate:
-        value => void createConstituenta({ itemID: schema.id, data: value })
-          .then(response => onCreateCst(response.new_cst)),
+      onCreate: value =>
+        void createConstituenta({ itemID: schema.id, data: value }).then(response => onCreateCst(response.new_cst)),
       initial: data
     });
   }
@@ -194,7 +193,7 @@ export function ToolbarSchema({
       .filter(item => item.analysis.type !== null)
       .map(item => ({
         alias: item.alias,
-        type: item.analysis.type!,
+        type: item.analysis.type!
       }));
     showTypeGraph({ items: typeInfo });
   }

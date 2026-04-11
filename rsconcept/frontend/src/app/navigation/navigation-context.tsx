@@ -202,7 +202,7 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
     }
     url.searchParams.set('tab', String(tabID));
     push({ path: url.pathname + url.search + url.hash });
-  };
+  }
 
   function changeActive(activeID: number): void {
     const url = new URL(window.location.href);
@@ -212,7 +212,7 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
     }
     url.searchParams.set('active', String(activeID));
     push({ path: url.pathname + url.search + url.hash });
-  };
+  }
 
   function gotoEditActive(activeID: number, newTab?: boolean): void {
     const url = new URL(window.location.href);
@@ -328,8 +328,11 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
 export function useBlockNavigation(isBlocked: boolean) {
   const { setRequireConfirmation } = useConceptNavigation();
   const onSetRequireConfirmation = useEffectEvent(setRequireConfirmation);
-  useEffect(function updateRequireConfirmation() {
-    onSetRequireConfirmation(isBlocked);
-    return () => onSetRequireConfirmation(false);
-  }, [isBlocked]);
+  useEffect(
+    function updateRequireConfirmation() {
+      onSetRequireConfirmation(isBlocked);
+      return () => onSetRequireConfirmation(false);
+    },
+    [isBlocked]
+  );
 }

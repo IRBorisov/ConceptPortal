@@ -18,7 +18,6 @@ import { assertModelSchemaInvariant, type SandboxBundle } from '../models/bundle
 import { bumpBundle, cloneBundle } from '../models/bundle-api';
 import { applyMappingToConstituents, buildSemanticInfo, sortStable } from '../models/mutations-api';
 
-
 export const sbApi = {
   moveConstituents,
   restoreOrder,
@@ -71,15 +70,14 @@ function restoreOrder(bundle: SandboxBundle): SandboxBundle {
   const { graph, byId, info } = buildSemanticInfo(items);
   let ordered = items.filter(cst => cst.cst_type === CstType.BASE);
   ordered = ordered.concat(items.filter(cst => cst.cst_type === CstType.CONSTANT));
-  ordered = ordered.concat(
-    items.filter(cst => !ordered.includes(cst) && (graph.at(cst.id)?.inputs.length ?? 0) === 0)
-  );
+  ordered = ordered.concat(items.filter(cst => !ordered.includes(cst) && (graph.at(cst.id)?.inputs.length ?? 0) === 0));
 
   const kernelIds = items
-    .filter(cst =>
-      cst.cst_type === CstType.STRUCTURED ||
-      cst.cst_type === CstType.AXIOM ||
-      byId.get(info.get(cst.id)?.parent ?? cst.id)?.cst_type === CstType.STRUCTURED
+    .filter(
+      cst =>
+        cst.cst_type === CstType.STRUCTURED ||
+        cst.cst_type === CstType.AXIOM ||
+        byId.get(info.get(cst.id)?.parent ?? cst.id)?.cst_type === CstType.STRUCTURED
     )
     .map(cst => cst.id);
   const kernel = new Set<number>(kernelIds);
@@ -89,7 +87,12 @@ function restoreOrder(bundle: SandboxBundle): SandboxBundle {
 
   ordered = ordered.concat(items.filter(cst => !ordered.includes(cst) && kernel.has(cst.id)));
   ordered = ordered.concat(items.filter(cst => !ordered.includes(cst)));
-  ordered = sortStable(graph, ordered.map(cst => cst.id)).map(id => byId.get(id)!).filter(Boolean);
+  ordered = sortStable(
+    graph,
+    ordered.map(cst => cst.id)
+  )
+    .map(id => byId.get(id)!)
+    .filter(Boolean);
 
   const result: ConstituentaBasicsDTO[] = [];
   const marked = new Set<number>();
@@ -199,7 +202,7 @@ function substituteConstituents(bundle: SandboxBundle, substitutions: Substituti
 function createConstituenta(
   bundle: SandboxBundle,
   data: CreateConstituentaDTO
-): { bundle: SandboxBundle; newCst: ConstituentaBasicsDTO; } {
+): { bundle: SandboxBundle; newCst: ConstituentaBasicsDTO } {
   const next = cloneBundle(bundle);
   const rsform = next.rsform;
 
@@ -240,9 +243,7 @@ function deleteConstituents(bundle: SandboxBundle, deleted: number[]): SandboxBu
 
   rsform.items = rsform.items.filter(i => !del.has(i.id));
   rsform.attribution = rsform.attribution.filter(a => !del.has(a.container) && !del.has(a.attribute));
-  rsform.inheritance = rsform.inheritance.filter(
-    row => !del.has(row.child) && !del.has(row.parent)
-  );
+  rsform.inheritance = rsform.inheritance.filter(row => !del.has(row.child) && !del.has(row.parent));
 
   model.items = model.items.filter(v => !del.has(v.id));
 
@@ -288,18 +289,14 @@ function updateConstituenta(bundle: SandboxBundle, data: UpdateConstituentaDTO):
 function updateCrucial(bundle: SandboxBundle, data: UpdateCrucialDTO): SandboxBundle {
   const next = cloneBundle(bundle);
   const targets = new Set(data.target);
-  next.rsform.items = next.rsform.items.map(row =>
-    targets.has(row.id) ? { ...row, crucial: data.value } : row
-  );
+  next.rsform.items = next.rsform.items.map(row => (targets.has(row.id) ? { ...row, crucial: data.value } : row));
   bumpBundle(next);
   return next;
 }
 
 function createAttribution(bundle: SandboxBundle, attr: Attribution): SandboxBundle {
   const next = cloneBundle(bundle);
-  const exists = next.rsform.attribution.some(
-    a => a.container === attr.container && a.attribute === attr.attribute
-  );
+  const exists = next.rsform.attribution.some(a => a.container === attr.container && a.attribute === attr.attribute);
   if (!exists) {
     next.rsform.attribution.push({ ...attr });
   }
@@ -319,9 +316,7 @@ function deleteAttribution(bundle: SandboxBundle, attr: Attribution): SandboxBun
 function clearAttributions(bundle: SandboxBundle, data: AttributionTargetDTO): SandboxBundle {
   const next = cloneBundle(bundle);
   const t = data.target;
-  next.rsform.attribution = next.rsform.attribution.filter(
-    a => a.container !== t && a.attribute !== t
-  );
+  next.rsform.attribution = next.rsform.attribution.filter(a => a.container !== t && a.attribute !== t);
   bumpBundle(next);
   return next;
 }

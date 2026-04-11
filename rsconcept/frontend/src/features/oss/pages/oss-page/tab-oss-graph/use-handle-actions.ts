@@ -199,10 +199,11 @@ export function useHandleActions() {
   function deleteEdge(edgeID: string) {
     const source = schema.itemByNodeID.get(edgeID.split('-')[0]);
     const target = schema.itemByNodeID.get(edgeID.split('-')[1]);
-    if (!source
-      || target?.nodeType !== NodeType.OPERATION
-      || target.operation_type !== OperationType.SYNTHESIS
-      || source.nodeType !== NodeType.OPERATION
+    if (
+      !source ||
+      target?.nodeType !== NodeType.OPERATION ||
+      target.operation_type !== OperationType.SYNTHESIS ||
+      source.nodeType !== NodeType.OPERATION
     ) {
       return;
     }

@@ -40,7 +40,9 @@ export interface DlgStructurePlannerProps {
 }
 
 export function DlgStructurePlanner() {
-  const { schema, targetID, isMutable, onCreate, onUpdate } = useDialogsStore(state => state.props as DlgStructurePlannerProps);
+  const { schema, targetID, isMutable, onCreate, onUpdate } = useDialogsStore(
+    state => state.props as DlgStructurePlannerProps
+  );
   const hideDialog = useDialogsStore(state => state.hideDialog);
   const [currentSchema, setCurrentSchema] = useState(schema);
 
@@ -116,11 +118,7 @@ export function DlgStructurePlanner() {
       helpTopic={HelpTopic.UI_STRUCTURE_PLANNER}
     >
       <div className='relative flex flex-col h-full'>
-        <div className={clsx(
-          'z-modal-pop',
-          'absolute top-0 right-1/2 translate-x-1/2 mr-12',
-          'flex px-6 items-start')
-        }>
+        <div className={clsx('z-modal-pop', 'absolute top-0 right-1/2 translate-x-1/2 mr-12', 'flex px-6 items-start')}>
           <div
             className='w-70 flex justify-end whitespace-nowrap truncate font-math'
             data-tooltip-id={isDefinitionTooLong ? globalIDs.tooltip : undefined}
@@ -131,21 +129,20 @@ export function DlgStructurePlanner() {
             </div>
           </div>
 
-          <div className={clsx(
-            'w-8 pt-5.5 pr-3 pb-3.75',
-            'font-medium whitespace-nowrap',
-            blurClass,
-            !selectedCst && 'text-constructive'
-          )}>
+          <div
+            className={clsx(
+              'w-8 pt-5.5 pr-3 pb-3.75',
+              'font-medium whitespace-nowrap',
+              blurClass,
+              !selectedCst && 'text-constructive'
+            )}
+          >
             {selectedCst?.alias ?? inferAlias(selectedNode, currentSchema, target)}
           </div>
 
-          <div className={clsx(
-            'px-2 pb-2 pt-4',
-            blurClass,
-            !isMutable && 'rounded-br-xl',
-            isMultiline && 'rounded-b-xl'
-          )}>
+          <div
+            className={clsx('px-2 pb-2 pt-4', blurClass, !isMutable && 'rounded-br-xl', isMultiline && 'rounded-b-xl')}
+          >
             <RefsInput
               id='dlg_structure_term'
               placeholder='Термин не определен'
@@ -161,23 +158,28 @@ export function DlgStructurePlanner() {
             />
           </div>
 
-          {isMutable ? <div className={clsx('cc-icons pt-5 pb-3.25 rounded-br-2xl rounded-tr-2xl', blurClass)}>
-            <MiniButton
-              title={selectedCst ? 'Обновить термин' : 'Создать конституенту'}
-              icon={selectedCst ?
-                <IconSave size='1.25rem' className='icon-primary' /> :
-                <IconNewItem size='1.25rem' className='icon-green' />
-              }
-              onClick={() => void saveTerm(selectedNode)}
-              disabled={!isDirty || term === ''}
-            />
-            <MiniButton
-              title='Reset term'
-              icon={<IconReset size='1.25rem' className='icon-primary' />}
-              onClick={resetTerm}
-              disabled={!isDirty || !selectedCst}
-            />
-          </div> : null}
+          {isMutable ? (
+            <div className={clsx('cc-icons pt-5 pb-3.25 rounded-br-2xl rounded-tr-2xl', blurClass)}>
+              <MiniButton
+                title={selectedCst ? 'Обновить термин' : 'Создать конституенту'}
+                icon={
+                  selectedCst ? (
+                    <IconSave size='1.25rem' className='icon-primary' />
+                  ) : (
+                    <IconNewItem size='1.25rem' className='icon-green' />
+                  )
+                }
+                onClick={() => void saveTerm(selectedNode)}
+                disabled={!isDirty || term === ''}
+              />
+              <MiniButton
+                title='Reset term'
+                icon={<IconReset size='1.25rem' className='icon-primary' />}
+                onClick={resetTerm}
+                disabled={!isDirty || !selectedCst}
+              />
+            </div>
+          ) : null}
         </div>
 
         <ReactFlowProvider>

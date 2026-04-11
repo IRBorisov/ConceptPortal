@@ -30,50 +30,53 @@ export function useContinuousPan(
     rafRef.current = requestAnimationFrame(() => panLoop());
   }, [options.panSpeed, getViewport, setViewport]);
 
-  useEffect(function startPanning() {
-    const element = ref.current;
-    if (!element) {
-      return;
-    }
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.shiftKey || event.metaKey || event.ctrlKey || event.altKey) return;
-      if (!['KeyW', 'KeyA', 'KeyS', 'KeyD'].includes(event.code)) return;
-
-      event.preventDefault();
-      event.stopPropagation();
-      keysPressed.current.add(event.code);
-      if (rafRef.current === null) {
-        rafRef.current = requestAnimationFrame(panLoop);
+  useEffect(
+    function startPanning() {
+      const element = ref.current;
+      if (!element) {
+        return;
       }
-    };
 
-    const handleKeyUp = (event: KeyboardEvent) => {
-      keysPressed.current.delete(event.code);
-      if (keysPressed.current.size === 0 && rafRef.current !== null) {
-        cancelAnimationFrame(rafRef.current);
-        rafRef.current = null;
-      }
-    };
+      const handleKeyDown = (event: KeyboardEvent) => {
+        if (event.shiftKey || event.metaKey || event.ctrlKey || event.altKey) return;
+        if (!['KeyW', 'KeyA', 'KeyS', 'KeyD'].includes(event.code)) return;
 
-    const handleBlur = () => {
-      keysPressed.current.clear();
-      if (rafRef.current !== null) {
-        cancelAnimationFrame(rafRef.current);
-        rafRef.current = null;
-      }
-    };
+        event.preventDefault();
+        event.stopPropagation();
+        keysPressed.current.add(event.code);
+        if (rafRef.current === null) {
+          rafRef.current = requestAnimationFrame(panLoop);
+        }
+      };
 
-    element.addEventListener('keydown', handleKeyDown, { passive: false });
-    element.addEventListener('keyup', handleKeyUp);
-    element.addEventListener('blur', handleBlur);
+      const handleKeyUp = (event: KeyboardEvent) => {
+        keysPressed.current.delete(event.code);
+        if (keysPressed.current.size === 0 && rafRef.current !== null) {
+          cancelAnimationFrame(rafRef.current);
+          rafRef.current = null;
+        }
+      };
 
-    return function endPanning() {
-      element.removeEventListener('keydown', handleKeyDown);
-      element.removeEventListener('keyup', handleKeyUp);
-      element.removeEventListener('blur', handleBlur);
+      const handleBlur = () => {
+        keysPressed.current.clear();
+        if (rafRef.current !== null) {
+          cancelAnimationFrame(rafRef.current);
+          rafRef.current = null;
+        }
+      };
 
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    };
-  }, [ref, panLoop]);
+      element.addEventListener('keydown', handleKeyDown, { passive: false });
+      element.addEventListener('keyup', handleKeyUp);
+      element.addEventListener('blur', handleBlur);
+
+      return function endPanning() {
+        element.removeEventListener('keydown', handleKeyDown);
+        element.removeEventListener('keyup', handleKeyUp);
+        element.removeEventListener('blur', handleBlur);
+
+        if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      };
+    },
+    [ref, panLoop]
+  );
 }

@@ -52,11 +52,7 @@ export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggl
           icon={<IconCrucialValue size='1.25rem' value={crucial} />}
           onClick={onToggleCrucial}
         />
-        <SelectCstType
-          id='dlg_cst_type'
-          value={cst_type}
-          onChange={onChangeCstType}
-        />
+        <SelectCstType id='dlg_cst_type' value={cst_type} onChange={onChangeCstType} />
         <AliasField>
           {field => (
             <TextInput

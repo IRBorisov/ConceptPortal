@@ -35,10 +35,12 @@ export function PickElement({ className, value, alias, isInteger, term, binding,
   const labelText = term ? `${alias}: ${term}` : alias || 'N/A';
   const matcher = new TextMatcher(filterDebounced);
 
-  const filteredIDs = !binding ? [] : Object
-    .entries(binding)
-    .filter(entry => matcher.test(entry[1]))
-    .map(entry => Number(entry[0])).filter(id => id !== value);
+  const filteredIDs = !binding
+    ? []
+    : Object.entries(binding)
+        .filter(entry => matcher.test(entry[1]))
+        .map(entry => Number(entry[0]))
+        .filter(id => id !== value);
   const filtered = [...(value === null ? [] : [value]), ...filteredIDs];
 
   const columns = [
@@ -88,18 +90,12 @@ export function PickElement({ className, value, alias, isInteger, term, binding,
   }
 
   if (!binding) {
-    return (<div className={cn('text-muted-foreground', className)}>
-      Выберите элемент для редактирования
-    </div>);
+    return <div className={cn('text-muted-foreground', className)}>Выберите элемент для редактирования</div>;
   }
 
   return (
     <div className={cn('flex flex-col h-fit', className)}>
-      <div
-        className='truncate select-none mb-2'
-        data-tooltip-id={globalIDs.tooltip}
-        data-tooltip-content={labelText}
-      >
+      <div className='truncate select-none mb-2' data-tooltip-id={globalIDs.tooltip} data-tooltip-content={labelText}>
         {labelText}
       </div>
       <SearchBar
@@ -135,13 +131,15 @@ function prepareText(id: number, binding: BasicBinding | null): string {
   }
 }
 
-function TextCell({ text }: { text: string; }) {
+function TextCell({ text }: { text: string }) {
   const needsTooltip = text.length > VALUE_TRUNCATE;
-  return <div
-    className='w-43'
-    data-tooltip-content={needsTooltip ? text : undefined}
-    data-tooltip-id={needsTooltip ? globalIDs.tooltip : undefined}
-  >
-    {truncateToLastWord(text, VALUE_TRUNCATE)}
-  </div>;
+  return (
+    <div
+      className='w-43'
+      data-tooltip-content={needsTooltip ? text : undefined}
+      data-tooltip-id={needsTooltip ? globalIDs.tooltip : undefined}
+    >
+      {truncateToLastWord(text, VALUE_TRUNCATE)}
+    </div>
+  );
 }

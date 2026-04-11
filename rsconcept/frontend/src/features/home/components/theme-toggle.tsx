@@ -11,10 +11,7 @@ export function ThemeToggle() {
 
   return (
     <div
-      className={clsx(
-        'fixed right-1 top-1 z-navigation',
-        'rounded-full p-0.5 pointer-events-auto'
-      )}
+      className={clsx('fixed right-1 top-1 z-navigation', 'rounded-full p-0.5 pointer-events-auto')}
       role='group'
       aria-label='Тема оформления'
     >
@@ -25,9 +22,7 @@ export function ThemeToggle() {
           onClick={toggleDarkMode}
           className={clsx(
             'flex items-center justify-center rounded-full p-1.5 cc-animate-color',
-            !darkMode
-              ? 'bg-muted/50 text-foreground'
-              : 'text-muted-foreground hover:text-foreground'
+            !darkMode ? 'bg-muted/50 text-foreground' : 'text-muted-foreground hover:text-foreground'
           )}
           aria-pressed={!darkMode}
           aria-label='Светлая тема'
@@ -40,9 +35,7 @@ export function ThemeToggle() {
           onClick={toggleDarkMode}
           className={clsx(
             'flex items-center justify-center rounded-full p-1.5 cc-animate-color',
-            darkMode
-              ? 'bg-muted/50 text-foreground'
-              : 'text-muted-foreground hover:text-foreground'
+            darkMode ? 'bg-muted/50 text-foreground' : 'text-muted-foreground hover:text-foreground'
           )}
           aria-pressed={darkMode}
           aria-label='Тёмная тема'

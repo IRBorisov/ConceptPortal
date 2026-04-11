@@ -40,6 +40,6 @@ export function HelpRSModelStatus() {
           </p>
         ))}
       </div>
-    </div >
+    </div>
   );
 }

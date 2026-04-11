@@ -38,7 +38,7 @@ export function StructureFlow({ items, rootType, selected, setSelected }: Struct
   const { viewportInitialized } = useReactFlow();
 
   const isLoadingSelection = useRef(false);
-  function onSelectionChange({ nodes }: { nodes: Node[]; }) {
+  function onSelectionChange({ nodes }: { nodes: Node[] }) {
     if (isLoadingSelection.current) {
       return;
     }
@@ -52,62 +52,68 @@ export function StructureFlow({ items, rootType, selected, setSelected }: Struct
     onChange: onSelectionChange
   });
 
-  useEffect(function updateGraph() {
-    if (!viewportInitialized) {
-      return;
-    }
+  useEffect(
+    function updateGraph() {
+      if (!viewportInitialized) {
+        return;
+      }
 
-    const newNodes: SPFlowNode[] = items.map(node => ({
-      id: node.key,
-      data: { node: node },
-      position: { x: 0, y: 0 },
-      type: 'step',
-      draggable: false
-    }));
+      const newNodes: SPFlowNode[] = items.map(node => ({
+        id: node.key,
+        data: { node: node },
+        position: { x: 0, y: 0 },
+        type: 'step',
+        draggable: false
+      }));
 
-    const newEdges: SPFlowEdge[] = items
-      .filter(node => node.parent !== null)
-      .map(node => {
-        const parentNode = items[node.parent!];
-        return {
-          id: `${parentNode.key}-${node.key}`,
-          source: parentNode.key,
-          target: node.key,
-          type: 'planner',
-          label: generateEdgeLabel(node.path.at(-1), parentNode.type.typeID === TypeID.collection),
-        };
-      });
+      const newEdges: SPFlowEdge[] = items
+        .filter(node => node.parent !== null)
+        .map(node => {
+          const parentNode = items[node.parent!];
+          return {
+            id: `${parentNode.key}-${node.key}`,
+            source: parentNode.key,
+            target: node.key,
+            type: 'planner',
+            label: generateEdgeLabel(node.path.at(-1), parentNode.type.typeID === TypeID.collection)
+          };
+        });
 
-    applyLayout(newNodes, newEdges);
+      applyLayout(newNodes, newEdges);
 
-    setNodes(newNodes);
-    setEdges(newEdges);
-  }, [items, rootType, setEdges, setNodes, viewportInitialized]);
+      setNodes(newNodes);
+      setEdges(newEdges);
+    },
+    [items, rootType, setEdges, setNodes, viewportInitialized]
+  );
 
   const readyForUpdate = nodes.length === items.length;
   const prevSelectedNodes = useRef<string>('');
-  useEffect(function updateSelectedNodes() {
-    if (!viewportInitialized || !readyForUpdate) {
-      return;
-    }
-    if (prevSelectedNodes.current === selected) {
-      return;
-    }
+  useEffect(
+    function updateSelectedNodes() {
+      if (!viewportInitialized || !readyForUpdate) {
+        return;
+      }
+      if (prevSelectedNodes.current === selected) {
+        return;
+      }
 
-    isLoadingSelection.current = true;
-    prevSelectedNodes.current = selected;
-    setNodes(prev =>
-      prev.map(node => ({
-        ...node,
-        selected: selected === node.id
-      }))
-    );
+      isLoadingSelection.current = true;
+      prevSelectedNodes.current = selected;
+      setNodes(prev =>
+        prev.map(node => ({
+          ...node,
+          selected: selected === node.id
+        }))
+      );
 
-    const frame = requestAnimationFrame(() => {
-      isLoadingSelection.current = false;
-    });
-    return () => cancelAnimationFrame(frame);
-  }, [viewportInitialized, selected, setNodes, readyForUpdate]);
+      const frame = requestAnimationFrame(() => {
+        isLoadingSelection.current = false;
+      });
+      return () => cancelAnimationFrame(frame);
+    },
+    [viewportInitialized, selected, setNodes, readyForUpdate]
+  );
 
   return (
     <DiagramFlow

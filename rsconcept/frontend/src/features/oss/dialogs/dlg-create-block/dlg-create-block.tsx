@@ -40,16 +40,8 @@ export type TabID = (typeof TabID)[keyof typeof TabID];
 export function DlgCreateBlock() {
   const { createBlock } = useCreateBlock();
 
-  const {
-    ossID,
-    layout,
-    childrenBlocks,
-    childrenOperations,
-    initialParent,
-    onCreate,
-    defaultX,
-    defaultY
-  } = useDialogsStore(state => state.props as DlgCreateBlockProps);
+  const { ossID, layout, childrenBlocks, childrenOperations, initialParent, onCreate, defaultX, defaultY } =
+    useDialogsStore(state => state.props as DlgCreateBlockProps);
 
   const { schema } = useOss({ itemID: ossID });
   const manager = new LayoutManager(schema, layout);

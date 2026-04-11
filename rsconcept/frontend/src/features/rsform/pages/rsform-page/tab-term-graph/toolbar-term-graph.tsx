@@ -28,14 +28,7 @@ interface ToolbarTermGraphProps {
 }
 
 export function ToolbarTermGraph({ className, graph }: ToolbarTermGraphProps) {
-  const {
-    schema,
-    selectedCst,
-    setSelectedCst,
-    setFocus,
-    isContentEditable,
-    focusCst
-  } = useRSFormEdit();
+  const { schema, selectedCst, setSelectedCst, setFocus, isContentEditable, focusCst } = useRSFormEdit();
 
   const { handleToggleMode, handleToggleEdgeType } = useHandleActions(graph);
 

@@ -12,18 +12,18 @@ export function useAvailableVariables(): PromptVariableType[] {
     ...(hasCurrentOSS ? [PromptVariableType.OSS] : []),
     ...(hasCurrentSchema
       ? [
-        PromptVariableType.SCHEMA, //
-        PromptVariableType.SCHEMA_THESAURUS,
-        PromptVariableType.SCHEMA_GRAPH,
-        PromptVariableType.SCHEMA_TYPE_GRAPH
-      ]
+          PromptVariableType.SCHEMA, //
+          PromptVariableType.SCHEMA_THESAURUS,
+          PromptVariableType.SCHEMA_GRAPH,
+          PromptVariableType.SCHEMA_TYPE_GRAPH
+        ]
       : []),
     ...(hasCurrentBlock ? [PromptVariableType.BLOCK] : []),
     ...(hasCurrentConstituenta
       ? [
-        PromptVariableType.CONSTITUENTA, //
-        PromptVariableType.CONSTITUENTA_SYNTAX_TREE
-      ]
+          PromptVariableType.CONSTITUENTA, //
+          PromptVariableType.CONSTITUENTA_SYNTAX_TREE
+        ]
       : [])
   ];
 }

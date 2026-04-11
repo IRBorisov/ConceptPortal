@@ -78,7 +78,8 @@ export function ToolbarConstituenta({
           onClick={event => openConstituentaPredecessor(activeCst.id, event.ctrlKey || event.metaKey)}
           icon={<IconPredecessor size='1.25rem' className='icon-primary' />}
           disabled={!activeCst.is_inherited}
-        />) : null}
+        />
+      ) : null}
       {isContentEditable && activeCst ? (
         <>
           <MiniButton

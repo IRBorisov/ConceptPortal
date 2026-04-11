@@ -1,4 +1,3 @@
-
 import { CstType, type RSForm } from '@/features/rsform';
 import { calculateSchemaStats, isBaseSet, isBasicConcept } from '@/features/rsform/models/rsform-api';
 import { type ExpressionType, TypeID, type Typification, type Value } from '@/features/rslang';
@@ -23,51 +22,73 @@ export function calculateModelStats(schema: RSForm, engine: RSEngine): RSModelSt
   return {
     ...calculateSchemaStats(schema),
     count_missing_base: items.reduce(
-      (sum, cst) => sum +
-        (statusByID.get(cst.id) === EvalStatus.EMPTY && isBasicConcept(cst.cst_type) ? 1 : 0),
-      0),
+      (sum, cst) => sum + (statusByID.get(cst.id) === EvalStatus.EMPTY && isBasicConcept(cst.cst_type) ? 1 : 0),
+      0
+    ),
     count_false_axioms: items.reduce(
-      (sum, cst) => sum +
-        (statusByID.get(cst.id) === EvalStatus.AXIOM_FALSE ? 1 : 0),
-      0),
+      (sum, cst) => sum + (statusByID.get(cst.id) === EvalStatus.AXIOM_FALSE ? 1 : 0),
+      0
+    ),
     count_invalid_calculations: items.reduce(
-      (sum, cst) => sum +
-        (statusByID.get(cst.id) === EvalStatus.EVAL_FAIL || statusByID.get(cst.id) === EvalStatus.NOT_PROCESSED ? 1 : 0),
-      0),
+      (sum, cst) =>
+        sum +
+        (statusByID.get(cst.id) === EvalStatus.EVAL_FAIL || statusByID.get(cst.id) === EvalStatus.NOT_PROCESSED
+          ? 1
+          : 0),
+      0
+    ),
     count_empty_terms: items.reduce(
-      (sum, cst) => sum +
-        (statusByID.get(cst.id) === EvalStatus.EMPTY && cst.cst_type === CstType.TERM ? 1 : 0),
-      0),
+      (sum, cst) => sum + (statusByID.get(cst.id) === EvalStatus.EMPTY && cst.cst_type === CstType.TERM ? 1 : 0),
+      0
+    )
   };
 }
 
 /** Evaluate if {@link CstType} is interpretable. */
 export function isInterpretable(type: CstType): boolean {
   switch (type) {
-    case CstType.NOMINAL: return false;
-    case CstType.BASE: return true;
-    case CstType.CONSTANT: return true;
-    case CstType.STRUCTURED: return true;
-    case CstType.AXIOM: return true;
-    case CstType.TERM: return true;
-    case CstType.FUNCTION: return false;
-    case CstType.PREDICATE: return false;
-    case CstType.THEOREM: return true;
+    case CstType.NOMINAL:
+      return false;
+    case CstType.BASE:
+      return true;
+    case CstType.CONSTANT:
+      return true;
+    case CstType.STRUCTURED:
+      return true;
+    case CstType.AXIOM:
+      return true;
+    case CstType.TERM:
+      return true;
+    case CstType.FUNCTION:
+      return false;
+    case CstType.PREDICATE:
+      return false;
+    case CstType.THEOREM:
+      return true;
   }
 }
 
 /** Evaluate if {@link CstType} is inferrable. */
 export function isInferrable(type: CstType): boolean {
   switch (type) {
-    case CstType.NOMINAL: return false;
-    case CstType.BASE: return false;
-    case CstType.CONSTANT: return false;
-    case CstType.STRUCTURED: return false;
-    case CstType.AXIOM: return true;
-    case CstType.TERM: return true;
-    case CstType.FUNCTION: return false;
-    case CstType.PREDICATE: return false;
-    case CstType.THEOREM: return true;
+    case CstType.NOMINAL:
+      return false;
+    case CstType.BASE:
+      return false;
+    case CstType.CONSTANT:
+      return false;
+    case CstType.STRUCTURED:
+      return false;
+    case CstType.AXIOM:
+      return true;
+    case CstType.TERM:
+      return true;
+    case CstType.FUNCTION:
+      return false;
+    case CstType.PREDICATE:
+      return false;
+    case CstType.THEOREM:
+      return true;
   }
 }
 
@@ -82,7 +103,7 @@ export function inferStatus(
     if (isInvalid) {
       return EvalStatus.INVALID_DATA;
     }
-    if (value === null || Array.isArray(value) && value.length === 0) {
+    if (value === null || (Array.isArray(value) && value.length === 0)) {
       return EvalStatus.EMPTY;
     }
     return EvalStatus.HAS_DATA;
@@ -208,11 +229,7 @@ export function prepareValueString(
   return render(prepareValueInternal(value as Value, type, schema, dataContext), limits.data_line_width);
 }
 
-export function updateValueElement(
-  value: Value | null,
-  path: ValuePath,
-  newValue: number
-): Value | null {
+export function updateValueElement(value: Value | null, path: ValuePath, newValue: number): Value | null {
   return setNestedValue(value, path, newValue);
 }
 
@@ -246,7 +263,6 @@ export function addValueElement(
   const updatedArray = [newElem, ...arrayValue];
   return setNestedValue(value, path, updatedArray);
 }
-
 
 // ========= Internal functions ==========
 function prepareValueInternal(value: Value, type: ExpressionType, schema: RSForm, dataContext: BasicsContext): Doc {
@@ -303,26 +319,12 @@ function prepareValueInternal(value: Value, type: ExpressionType, schema: RSForm
 }
 
 function tupleDoc(elements: Doc[]): Doc {
-  return group(
-    concat(
-      text("("),
-      indent(concat(line, join(concat(text(","), line), elements))),
-      line,
-      text(")")
-    )
-  );
+  return group(concat(text('('), indent(concat(line, join(concat(text(','), line), elements))), line, text(')')));
 }
 
 function collectionDoc(elements: Doc[]): Doc {
   if (elements.length === 0) {
-    return text("{}");
-  };
-  return group(
-    concat(
-      text("{"),
-      indent(concat(line, join(concat(text(","), line), elements))),
-      line,
-      text("}")
-    )
-  );
+    return text('{}');
+  }
+  return group(concat(text('{'), indent(concat(line, join(concat(text(','), line), elements))), line, text('}')));
 }

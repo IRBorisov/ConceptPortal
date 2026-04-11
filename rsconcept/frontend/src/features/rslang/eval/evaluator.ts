@@ -5,10 +5,7 @@
 import { type AstNode, getNodeIndices, getNodeText } from '@/utils/parsing';
 
 import { annotateError } from '../ast-annotations';
-import {
-  type ErrorReporter,
-  RSErrorCode
-} from '../error';
+import { type ErrorReporter, RSErrorCode } from '../error';
 import { TokenID } from '../parser/token';
 
 import {
@@ -21,7 +18,7 @@ import {
   type Value,
   VALUE_FALSE,
   VALUE_TRUE,
-  type ValueContext,
+  type ValueContext
 } from './value';
 import {
   boolean,
@@ -33,7 +30,7 @@ import {
   setDiff,
   setIntersection,
   setSymDiff,
-  setUnion,
+  setUnion
 } from './value-api';
 
 /** Maximum iterations to prevent infinite loops (recursion, quantifiers, etc.). */
@@ -278,12 +275,15 @@ export class Evaluator {
     if (v1 === null || v2 === null) {
       return null;
     }
-    const a = (v1 as number);
-    const b = (v2 as number);
+    const a = v1 as number;
+    const b = v2 as number;
     switch (node.typeID) {
-      case TokenID.PLUS: return a + b;
-      case TokenID.MINUS: return a - b;
-      case TokenID.MULTIPLY: return a * b;
+      case TokenID.PLUS:
+        return a + b;
+      case TokenID.MINUS:
+        return a - b;
+      case TokenID.MULTIPLY:
+        return a * b;
     }
     return null;
   }
@@ -381,11 +381,20 @@ export class Evaluator {
     const b2 = v2 === VALUE_TRUE;
     let result: boolean;
     switch (node.typeID) {
-      case TokenID.LOGIC_AND: result = b1 && b2; break;
-      case TokenID.LOGIC_OR: result = b1 || b2; break;
-      case TokenID.LOGIC_IMPLICATION: result = !b1 || b2; break;
-      case TokenID.LOGIC_EQUIVALENT: result = b1 === b2; break;
-      default: return null;
+      case TokenID.LOGIC_AND:
+        result = b1 && b2;
+        break;
+      case TokenID.LOGIC_OR:
+        result = b1 || b2;
+        break;
+      case TokenID.LOGIC_IMPLICATION:
+        result = !b1 || b2;
+        break;
+      case TokenID.LOGIC_EQUIVALENT:
+        result = b1 === b2;
+        break;
+      default:
+        return null;
     }
     return result ? VALUE_TRUE : VALUE_FALSE;
   }
@@ -416,11 +425,20 @@ export class Evaluator {
     const b = v2 as number;
     let result: boolean;
     switch (node.typeID) {
-      case TokenID.GREATER: result = a > b; break;
-      case TokenID.LESSER: result = a < b; break;
-      case TokenID.GREATER_OR_EQ: result = a >= b; break;
-      case TokenID.LESSER_OR_EQ: result = a <= b; break;
-      default: return null;
+      case TokenID.GREATER:
+        result = a > b;
+        break;
+      case TokenID.LESSER:
+        result = a < b;
+        break;
+      case TokenID.GREATER_OR_EQ:
+        result = a >= b;
+        break;
+      case TokenID.LESSER_OR_EQ:
+        result = a <= b;
+        break;
+      default:
+        return null;
     }
     return result ? VALUE_TRUE : VALUE_FALSE;
   }
@@ -602,7 +620,7 @@ export class Evaluator {
       for (const element of argVal) {
         let valid = true;
         for (let j = 0; j < indices.length; j++) {
-          const comp = (element)[indices[j]];
+          const comp = element[indices[j]];
           const paramSet = params[j] as Value[];
           if (!contains(paramSet, comp)) {
             valid = false;
@@ -680,10 +698,7 @@ export class Evaluator {
           if (!this.tick(node.children[top.childID])) {
             return false;
           }
-          this.dispatchDeclare(
-            node.children[top.childID].children[0],
-            nextValue
-          );
+          this.dispatchDeclare(node.children[top.childID].children[0], nextValue);
           currentChild = top.childID + 1;
           return true;
         }

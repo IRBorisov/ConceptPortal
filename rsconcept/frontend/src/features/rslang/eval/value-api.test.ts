@@ -9,7 +9,7 @@ import { normalizeValue, validateValue } from './value-api';
 describe('validateValue', () => {
   const basics = new Map([
     ['X1', [1, 2, 3]],
-    ['X2', [7, 8, 42]],
+    ['X2', [7, 8, 42]]
   ]);
 
   it('validates integers', () => {

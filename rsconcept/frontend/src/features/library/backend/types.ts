@@ -140,7 +140,8 @@ export const schemaCreateLibraryItem = schemaInputLibraryItem
   .refine(data => !!data.file || !!data.title, {
     path: ['title'],
     message: errorMsg.requiredField
-  }).refine(data => data.item_type !== LibraryItemType.RSMODEL || !!data.schema, {
+  })
+  .refine(data => data.item_type !== LibraryItemType.RSMODEL || !!data.schema, {
     path: ['schema'],
     message: errorMsg.requiredField
   });

@@ -27,7 +27,7 @@ export function applyLayout(nodes: SPFlowNode[], edges: SPFlowEdge[]) {
   dagre.layout(dagreGraph);
 
   nodes.forEach(node => {
-    const nodeWithPosition = dagreGraph.node(node.id) as { x: number; y: number; };
+    const nodeWithPosition = dagreGraph.node(node.id) as { x: number; y: number };
     node.position.x = -nodeWithPosition.x + NODE_WIDTH / 2;
     node.position.y = nodeWithPosition.y - NODE_HEIGHT / 2;
   });

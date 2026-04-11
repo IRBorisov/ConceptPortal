@@ -32,7 +32,7 @@ export const libraryApi = {
   baseKey: KEYS.library,
   libraryListKey: KEYS.composite.libraryList,
 
-  getLibraryQueryOptions: ({ isAdmin }: { isAdmin: boolean; }) =>
+  getLibraryQueryOptions: ({ isAdmin }: { isAdmin: boolean }) =>
     queryOptions({
       queryKey: [...libraryApi.libraryListKey, isAdmin ? 'admin' : 'user'],
       staleTime: DELAYS.staleMedium,
@@ -66,10 +66,10 @@ export const libraryApi = {
       options: !data.file
         ? undefined
         : {
-          headers: {
-            'Content-Type': 'multipart/form-data'
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
           }
-        }
     }),
   createRSFormFromSandbox: (data: CreateRSFormFromSandboxDTO) =>
     axiosPost<CreateRSFormFromSandboxDTO, LibraryItem>({
@@ -98,7 +98,7 @@ export const libraryApi = {
         successMessage: infoMsg.changesSaved
       }
     }),
-  setOwner: ({ itemID, owner }: { itemID: number; owner: number; }) =>
+  setOwner: ({ itemID, owner }: { itemID: number; owner: number }) =>
     axiosPatch({
       endpoint: `/api/library/${itemID}/set-owner`,
       request: {
@@ -106,7 +106,7 @@ export const libraryApi = {
         successMessage: infoMsg.changesSaved
       }
     }),
-  setLocation: ({ itemID, location }: { itemID: number; location: string; }) =>
+  setLocation: ({ itemID, location }: { itemID: number; location: string }) =>
     axiosPatch({
       endpoint: `/api/library/${itemID}/set-location`,
       request: {
@@ -114,7 +114,7 @@ export const libraryApi = {
         successMessage: infoMsg.moveComplete
       }
     }),
-  setAccessPolicy: ({ itemID, policy }: { itemID: number; policy: AccessPolicy; }) =>
+  setAccessPolicy: ({ itemID, policy }: { itemID: number; policy: AccessPolicy }) =>
     axiosPatch({
       endpoint: `/api/library/${itemID}/set-access-policy`,
       request: {
@@ -122,7 +122,7 @@ export const libraryApi = {
         successMessage: infoMsg.changesSaved
       }
     }),
-  setEditors: ({ itemID, editors }: { itemID: number; editors: number[]; }) =>
+  setEditors: ({ itemID, editors }: { itemID: number; editors: number[] }) =>
     axiosPatch({
       endpoint: `/api/library/${itemID}/set-editors`,
       request: {
@@ -131,14 +131,14 @@ export const libraryApi = {
       }
     }),
 
-  deleteItem: (data: { target: number; beforeInvalidate?: () => void | Promise<void>; }) =>
+  deleteItem: (data: { target: number; beforeInvalidate?: () => void | Promise<void> }) =>
     axiosDelete({
       endpoint: `/api/library/${data.target}`,
       request: {
         successMessage: infoMsg.itemDestroyed
       }
     }),
-  cloneItem: ({ itemID, data }: { itemID: number; data: CloneLibraryItemDTO; }) =>
+  cloneItem: ({ itemID, data }: { itemID: number; data: CloneLibraryItemDTO }) =>
     axiosPost<CloneLibraryItemDTO, LibraryItem>({
       schema: schemaLibraryItem,
       endpoint: `/api/library/${itemID}/clone`,
@@ -156,7 +156,7 @@ export const libraryApi = {
       }
     }),
 
-  createVersion: ({ itemID, data }: { itemID: number; data: CreateVersionDTO; }) =>
+  createVersion: ({ itemID, data }: { itemID: number; data: CreateVersionDTO }) =>
     axiosPost<CreateVersionDTO, VersionCreatedResponse>({
       schema: schemaVersionCreatedResponse,
       endpoint: `/api/library/${itemID}/create-version`,
@@ -165,7 +165,7 @@ export const libraryApi = {
         successMessage: infoMsg.newVersion(data.version)
       }
     }),
-  restoreVersion: ({ versionID }: { versionID: number; }) =>
+  restoreVersion: ({ versionID }: { versionID: number }) =>
     axiosPatch<undefined, RSFormDTO>({
       schema: schemaRSForm,
       endpoint: `/api/versions/${versionID}/restore`,
@@ -173,7 +173,7 @@ export const libraryApi = {
         successMessage: infoMsg.versionRestored
       }
     }),
-  updateVersion: (data: { itemID: number; version: UpdateVersionDTO; }) =>
+  updateVersion: (data: { itemID: number; version: UpdateVersionDTO }) =>
     axiosPatch<UpdateVersionDTO, VersionExInfo>({
       schema: schemaVersionExInfo,
       endpoint: `/api/versions/${data.version.id}`,
@@ -182,7 +182,7 @@ export const libraryApi = {
         successMessage: infoMsg.changesSaved
       }
     }),
-  deleteVersion: (data: { itemID: number; versionID: number; }) =>
+  deleteVersion: (data: { itemID: number; versionID: number }) =>
     axiosDelete({
       endpoint: `/api/versions/${data.versionID}`,
       request: {

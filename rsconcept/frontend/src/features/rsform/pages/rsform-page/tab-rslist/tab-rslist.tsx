@@ -34,7 +34,7 @@ export function TabRSList() {
     moveUp,
     moveDown,
     cloneCst,
-    promptDeleteSelected,
+    promptDeleteSelected
   } = useRSFormEdit();
 
   const [filterText, setFilterText] = useState('');

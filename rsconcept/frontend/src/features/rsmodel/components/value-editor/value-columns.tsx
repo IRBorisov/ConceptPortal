@@ -51,7 +51,9 @@ export function createColumnsType(
   };
   const columns = createColumnsInternal(
     services.isSingleton ? type : (type as EchelonCollection).base,
-    selectedPath, services, state
+    selectedPath,
+    services,
+    state
   );
   if (services.deleteElement) {
     columns.push(
@@ -84,98 +86,84 @@ function createColumnsInternal(
   const headerPath = services.isSingleton ? state.path : makeValuePath([0, ...state.path]);
   const columnTitle = services.getColumnText(headerPath);
   const elementPath = (rowIndex: number) =>
-    services.isSingleton ? state.path :
-      makeValuePath([services.indexMap.get(rowIndex) ?? rowIndex, ...state.path]);
+    services.isSingleton ? state.path : makeValuePath([services.indexMap.get(rowIndex) ?? rowIndex, ...state.path]);
   switch (type.typeID) {
-    case TypeID.integer: return [
-      columnHelper.accessor(value => state.accessor(value) as number, {
-        id: `B${pathStr}_Z`,
-        header: () => <TitledHeader
-          className='min-w-2 px-1'
-          text='Z'
-          title={columnTitle}
-        />,
-        size: 60,
-        minSize: 60,
-        maxSize: 60,
-        cell: props =>
-          <IntegerCell
-            value={props.getValue()}
-            services={services}
-            isSelected={equal(elementPath(props.row.index), selectedPath)}
-            path={elementPath(props.row.index)}
-          />
-      })
-    ];
-    case TypeID.basic: return [
-      columnHelper.accessor(value => state.accessor(value) as number, {
-        id: `${pathStr}_${type.baseID}`,
-        header: () => <TitledHeader
-          className='min-w-2 px-1'
-          text={type.baseID}
-          title={columnTitle}
-        />,
-        size: services.showDataText ? 250 : 60,
-        minSize: services.showDataText ? 250 : 60,
-        maxSize: services.showDataText ? 250 : 60,
-        cell: props =>
-          <BasicCell
-            value={props.getValue()}
-            services={services}
-            isSelected={equal(elementPath(props.row.index), selectedPath)}
-            isInvalid={testInvalid(props.getValue())}
-            type={type}
-            path={elementPath(props.row.index)}
-          />
-      })
-    ];
-    case TypeID.collection: return [
-      columnHelper.accessor(value => state.accessor(value) as Value[], {
-        id: `${pathStr}_card`,
-        header: () => <TitledHeader
-          className='w-4'
-          text='ℬ'
-        />,
-        size: 60,
-        minSize: 60,
-        maxSize: 60,
-        cell: props => <div
-          className='font-math cursor-pointer'
-          onClick={() => services.navigateValue(elementPath(props.row.index))}
-        >
-          {props.getValue().length}
-        </div>
-      }),
-      columnHelper.accessor(value => state.accessor(value) as Value[], {
-        id: `${pathStr}_stub`,
-        header: () => <TitledHeader
-          text=''
-          title={columnTitle}
-        />,
-        size: 80,
-        minSize: 80,
-        maxSize: 80,
-        cell: props => <StubCell
-          value={props.getValue()}
-          services={services}
-          path={elementPath(props.row.index)}
-          type={type}
-        />
-      })
-    ];
+    case TypeID.integer:
+      return [
+        columnHelper.accessor(value => state.accessor(value) as number, {
+          id: `B${pathStr}_Z`,
+          header: () => <TitledHeader className='min-w-2 px-1' text='Z' title={columnTitle} />,
+          size: 60,
+          minSize: 60,
+          maxSize: 60,
+          cell: props => (
+            <IntegerCell
+              value={props.getValue()}
+              services={services}
+              isSelected={equal(elementPath(props.row.index), selectedPath)}
+              path={elementPath(props.row.index)}
+            />
+          )
+        })
+      ];
+    case TypeID.basic:
+      return [
+        columnHelper.accessor(value => state.accessor(value) as number, {
+          id: `${pathStr}_${type.baseID}`,
+          header: () => <TitledHeader className='min-w-2 px-1' text={type.baseID} title={columnTitle} />,
+          size: services.showDataText ? 250 : 60,
+          minSize: services.showDataText ? 250 : 60,
+          maxSize: services.showDataText ? 250 : 60,
+          cell: props => (
+            <BasicCell
+              value={props.getValue()}
+              services={services}
+              isSelected={equal(elementPath(props.row.index), selectedPath)}
+              isInvalid={testInvalid(props.getValue())}
+              type={type}
+              path={elementPath(props.row.index)}
+            />
+          )
+        })
+      ];
+    case TypeID.collection:
+      return [
+        columnHelper.accessor(value => state.accessor(value) as Value[], {
+          id: `${pathStr}_card`,
+          header: () => <TitledHeader className='w-4' text='ℬ' />,
+          size: 60,
+          minSize: 60,
+          maxSize: 60,
+          cell: props => (
+            <div
+              className='font-math cursor-pointer'
+              onClick={() => services.navigateValue(elementPath(props.row.index))}
+            >
+              {props.getValue().length}
+            </div>
+          )
+        }),
+        columnHelper.accessor(value => state.accessor(value) as Value[], {
+          id: `${pathStr}_stub`,
+          header: () => <TitledHeader text='' title={columnTitle} />,
+          size: 80,
+          minSize: 80,
+          maxSize: 80,
+          cell: props => (
+            <StubCell value={props.getValue()} services={services} path={elementPath(props.row.index)} type={type} />
+          )
+        })
+      ];
     case TypeID.tuple: {
       const components: ColumnDef<Value, unknown>[] = [];
       for (let i = 0; i < type.factors.length; i++) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        components.push(...createColumnsInternal(
-          type.factors[i],
-          selectedPath,
-          services,
-          {
+        components.push(
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+          ...createColumnsInternal(type.factors[i], selectedPath, services, {
             path: makeValuePath([...state.path, i + 1]),
-            accessor: value => ((state.accessor(value) as Value[])[i + 1])
-          }
-        ));
+            accessor: value => (state.accessor(value) as Value[])[i + 1]
+          })
+        );
       }
       return components;
     }
@@ -183,91 +171,108 @@ function createColumnsInternal(
   return [];
 }
 
-function TitledHeader({ text, title, className }: { text: string, title?: string, className?: string; }) {
+function TitledHeader({ text, title, className }: { text: string; title?: string; className?: string }) {
   return (
-    <div
-      className={className}
-      data-tooltip-id={!!title ? globalIDs.tooltip : undefined}
-      data-tooltip-content={title}
-    >
-      {title ?
-        truncateToSymbol(text && !title.startsWith(text) ? `[${text}] - ${title}` : title, HEADER_TRUNCATE)
+    <div className={className} data-tooltip-id={!!title ? globalIDs.tooltip : undefined} data-tooltip-content={title}>
+      {title
+        ? truncateToSymbol(text && !title.startsWith(text) ? `[${text}] - ${title}` : title, HEADER_TRUNCATE)
         : text}
     </div>
   );
 }
 
-function IntegerCell({ value, services, isSelected, isInvalid, path }: {
-  value: number,
-  services: ColumnServices,
-  isSelected: boolean,
-  isInvalid?: boolean,
+function IntegerCell({
+  value,
+  services,
+  isSelected,
+  isInvalid,
+  path
+}: {
+  value: number;
+  services: ColumnServices;
+  isSelected: boolean;
+  isInvalid?: boolean;
   path: ValuePath;
 }) {
   const isMatch = services.matcher?.match(value, IntegerT) ?? false;
-  return <div
-    className={clsx(
-      'px-1 w-fit',
-      services.selectElement && 'cursor-pointer',
-      isSelected && 'bg-selected outline-2 outline-primary-border',
-      !isSelected && isInvalid && 'bg-accent-orange50 outline-2 outline-accent-orange',
-      !isSelected && isMatch && 'bg-accent-green50 outline-2 outline-accent-green'
-    )}
-    onClick={services.selectElement ? () => services.selectElement!(isSelected ? null : path) : undefined}
-  >
-    {value}
-  </div>;
+  return (
+    <div
+      className={clsx(
+        'px-1 w-fit',
+        services.selectElement && 'cursor-pointer',
+        isSelected && 'bg-selected outline-2 outline-primary-border',
+        !isSelected && isInvalid && 'bg-accent-orange50 outline-2 outline-accent-orange',
+        !isSelected && isMatch && 'bg-accent-green50 outline-2 outline-accent-green'
+      )}
+      onClick={services.selectElement ? () => services.selectElement!(isSelected ? null : path) : undefined}
+    >
+      {value}
+    </div>
+  );
 }
 
-function BasicCell({ value, type, services, isSelected, isInvalid, path }: {
-  value: number,
-  type: Typification,
-  services: ColumnServices,
-  isSelected: boolean,
-  isInvalid?: boolean,
+function BasicCell({
+  value,
+  type,
+  services,
+  isSelected,
+  isInvalid,
+  path
+}: {
+  value: number;
+  type: Typification;
+  services: ColumnServices;
+  isSelected: boolean;
+  isInvalid?: boolean;
   path: ValuePath;
 }) {
-  const text = prepareValueString(
-    value, type,
-    services.schema, services.basics, services.showDataText
-  );
+  const text = prepareValueString(value, type, services.schema, services.basics, services.showDataText);
   const isSingleColumn = path.length === 0 || (path.length === 1 && !services.isSingleton);
   const needsTooltip = text.length > (isSingleColumn ? VALUE_TRUNCATE_LONG : VALUE_TRUNCATE);
   const isMatch = services.matcher?.match(value, type) ?? false;
-  return <div
-    className={clsx(
-      'px-1 w-fit truncate',
-      isSingleColumn ? 'max-w-150' : 'max-w-68',
-      services.selectElement && 'cursor-pointer',
-      isSelected && 'bg-selected outline-2 outline-primary-border',
-      !isSelected && isInvalid && 'bg-accent-orange50 outline-2 outline-accent-orange',
-      !isSelected && isMatch && 'bg-accent-green50 outline-2 outline-accent-green'
-    )}
-    onClick={services.selectElement ? () => services.selectElement!(isSelected ? null : path) : undefined}
-    data-tooltip-content={needsTooltip ? text : undefined}
-    data-tooltip-id={needsTooltip ? globalIDs.tooltip : undefined}
-  >
-    {truncateToLastWord(text, isSingleColumn ? VALUE_TRUNCATE_LONG : VALUE_TRUNCATE)}
-  </div>;
+  return (
+    <div
+      className={clsx(
+        'px-1 w-fit truncate',
+        isSingleColumn ? 'max-w-150' : 'max-w-68',
+        services.selectElement && 'cursor-pointer',
+        isSelected && 'bg-selected outline-2 outline-primary-border',
+        !isSelected && isInvalid && 'bg-accent-orange50 outline-2 outline-accent-orange',
+        !isSelected && isMatch && 'bg-accent-green50 outline-2 outline-accent-green'
+      )}
+      onClick={services.selectElement ? () => services.selectElement!(isSelected ? null : path) : undefined}
+      data-tooltip-content={needsTooltip ? text : undefined}
+      data-tooltip-id={needsTooltip ? globalIDs.tooltip : undefined}
+    >
+      {truncateToLastWord(text, isSingleColumn ? VALUE_TRUNCATE_LONG : VALUE_TRUNCATE)}
+    </div>
+  );
 }
 
-function StubCell({ value, services, path, type }: {
-  value: Value,
-  services: ColumnServices,
-  type: Typification,
+function StubCell({
+  value,
+  services,
+  path,
+  type
+}: {
+  value: Value;
+  services: ColumnServices;
+  type: Typification;
   path: ValuePath;
 }) {
   const isInvalid = testInvalid(value);
   const isMatch = services.matcher?.match(value, type) ?? false;
   const text = valueStub(value);
-  return <div
-    className={clsx(
-      'w-18 font-math cursor-pointer',
-      isInvalid && 'bg-accent-orange50 outline-2 outline-accent-orange',
-      isMatch && 'bg-accent-green50 outline-2 outline-accent-green'
-    )}
-    onClick={() => services.navigateValue(path)}
-  >
-    {text}
-  </div>;
+  return (
+    <div
+      className={clsx(
+        'w-18 font-math cursor-pointer',
+        isInvalid && 'bg-accent-orange50 outline-2 outline-accent-orange',
+        isMatch && 'bg-accent-green50 outline-2 outline-accent-green'
+      )}
+      onClick={() => services.navigateValue(path)}
+    >
+      {text}
+    </div>
+  );
 }

@@ -65,9 +65,12 @@ export function TGFlow() {
 
   const setConnectionStart = useTGConnectionStore(state => state.setStart);
   const connectionType = useTGConnectionStore(state => state.connectionType);
-  useEffect(function initConnectionStart() {
-    return setConnectionStart(null);
-  }, [setConnectionStart]);
+  useEffect(
+    function initConnectionStart() {
+      return setConnectionStart(null);
+    },
+    [setConnectionStart]
+  );
 
   const {
     isContentEditable,
@@ -93,7 +96,7 @@ export function TGFlow() {
   const { handleKeyDown } = useHandleActions(filteredGraph);
 
   const isLoadingSelection = useRef(false);
-  function onSelectionChange({ nodes, edges }: { nodes: Node[]; edges: Edge[]; }) {
+  function onSelectionChange({ nodes, edges }: { nodes: Node[]; edges: Edge[] }) {
     if (isLoadingSelection.current) {
       return;
     }
@@ -118,176 +121,178 @@ export function TGFlow() {
   });
 
   const prevNodesRef = useRef<TGNode[]>([]);
-  useEffect(function updateGraph() {
-    if (!viewportInitialized) {
-      return;
-    }
-    const nodeIDs = Array.from(filteredGraph.nodes.keys());
-    const newNodes: TGNode[] = nodeIDs.map(nodeID => {
-      const cst = schema.cstByID.get(nodeID);
-      if (!cst) {
-        throw new Error(`Node not found ${nodeID}`);
+  useEffect(
+    function updateGraph() {
+      if (!viewportInitialized) {
+        return;
+      }
+      const nodeIDs = Array.from(filteredGraph.nodes.keys());
+      const newNodes: TGNode[] = nodeIDs.map(nodeID => {
+        const cst = schema.cstByID.get(nodeID);
+        if (!cst) {
+          throw new Error(`Node not found ${nodeID}`);
+        }
+
+        return {
+          id: String(nodeID),
+          type: 'concept',
+          position: { x: 0, y: 0 },
+          data: { cst: cst, focused: focusCst?.id === cst.id }
+        };
+      });
+
+      const newEdges: Edge[] = [];
+      for (const source of filteredGraph.nodes.values()) {
+        for (const target of source.outputs) {
+          const edgeType = inferEdgeType(schema, source.id, target);
+          const target_cst = schema.cstByID.get(target)!;
+          const color =
+            filter.graphType === TGEdgeType.full ? colorGraphEdge(edgeType) : colorGraphEdge(filter.graphType);
+          const dashes = edgeType === TGEdgeType.definition && !target_cst.analysis.success ? '6 4' : '';
+          newEdges.push({
+            id: `${source.id}==${target}`,
+            source: String(source.id),
+            target: String(target),
+            type: 'termEdge',
+            style: { stroke: color, strokeDasharray: dashes },
+            focusable: false,
+            markerEnd: {
+              type: MarkerType.ArrowClosed,
+              width: 20,
+              height: 20,
+              color: color
+            }
+          });
+        }
       }
 
-      return {
-        id: String(nodeID),
-        type: 'concept',
-        position: { x: 0, y: 0 },
-        data: { cst: cst, focused: focusCst?.id === cst.id }
+      applyLayout(newNodes, newEdges, !filter.noText);
+
+      const positionsChanged =
+        prevNodesRef.current.some(prevNode => {
+          const newNode = newNodes.find(n => n.id === prevNode.id);
+          return newNode?.position.x !== prevNode.position.x || newNode?.position.y !== prevNode.position.y;
+        }) || newNodes.some(node => !prevNodesRef.current.find(prevNode => prevNode.id === node.id));
+
+      if (!positionsChanged) {
+        setNodes(prev =>
+          newNodes.map(node => ({
+            ...node,
+            selected: prev.find(item => item.id === node.id)?.selected ?? false
+          }))
+        );
+        setEdges(prev =>
+          newEdges.map(edge => ({
+            ...edge,
+            selected: prev.find(item => item.id === edge.id)?.selected ?? false
+          }))
+        );
+        return;
+      }
+
+      const startAnimationFrame = requestAnimationFrame(() => {
+        setIsAnimating(true);
+      });
+
+      const stateChangeTimeout = setTimeout(function syncGraphStateAfterLayout() {
+        setNodes(prev =>
+          !prev
+            ? newNodes
+            : newNodes.map(node => ({ ...node, selected: prev.find(item => item.id === node.id)?.selected ?? false }))
+        );
+        setEdges(prev =>
+          !prev
+            ? newEdges
+            : newEdges.map(edge => ({ ...edge, selected: prev.find(item => item.id === edge.id)?.selected ?? false }))
+        );
+      }, PARAMETER.minimalTimeout);
+
+      const animationStopTimeout = setTimeout(function stopGraphLayoutAnimation() {
+        setIsAnimating(false);
+      }, PARAMETER.graphLayoutDuration);
+
+      prevNodesRef.current = newNodes;
+
+      return () => {
+        cancelAnimationFrame(startAnimationFrame);
+        clearTimeout(animationStopTimeout);
+        clearTimeout(stateChangeTimeout);
       };
-    });
+    },
+    [schema, filteredGraph, setNodes, setEdges, filter.noText, viewportInitialized, focusCst, filter.graphType]
+  );
 
-    const newEdges: Edge[] = [];
-    for (const source of filteredGraph.nodes.values()) {
-      for (const target of source.outputs) {
-        const edgeType = inferEdgeType(schema, source.id, target);
-        const target_cst = schema.cstByID.get(target)!;
-        const color =
-          filter.graphType === TGEdgeType.full ? colorGraphEdge(edgeType) : colorGraphEdge(filter.graphType);
-        const dashes =
-          edgeType === TGEdgeType.definition && !target_cst.analysis.success ? '6 4' : '';
-        newEdges.push({
-          id: `${source.id}==${target}`,
-          source: String(source.id),
-          target: String(target),
-          type: 'termEdge',
-          style: { stroke: color, strokeDasharray: dashes },
-          focusable: false,
-          markerEnd: {
-            type: MarkerType.ArrowClosed,
-            width: 20,
-            height: 20,
-            color: color
-          }
-        });
-      }
-    }
-
-    applyLayout(newNodes, newEdges, !filter.noText);
-
-    const positionsChanged =
-      prevNodesRef.current.some(prevNode => {
-        const newNode = newNodes.find(n => n.id === prevNode.id);
-        return newNode?.position.x !== prevNode.position.x || newNode?.position.y !== prevNode.position.y;
-      }) || newNodes.some(node => !prevNodesRef.current.find(prevNode => prevNode.id === node.id));
-
-    if (!positionsChanged) {
-      setNodes(prev =>
-        newNodes.map(node => ({
-          ...node,
-          selected: prev.find(item => item.id === node.id)?.selected ?? false
-        }))
-      );
-      setEdges(prev =>
-        newEdges.map(edge => ({
-          ...edge,
-          selected: prev.find(item => item.id === edge.id)?.selected ?? false
-        }))
-      );
-      return;
-    }
-
-    const startAnimationFrame = requestAnimationFrame(() => {
-      setIsAnimating(true);
-    });
-
-    const stateChangeTimeout = setTimeout(function syncGraphStateAfterLayout() {
-      setNodes(prev =>
-        !prev
-          ? newNodes
-          : newNodes.map(node => ({ ...node, selected: prev.find(item => item.id === node.id)?.selected ?? false }))
-      );
-      setEdges(prev =>
-        !prev
-          ? newEdges
-          : newEdges.map(edge => ({ ...edge, selected: prev.find(item => item.id === edge.id)?.selected ?? false }))
-      );
-    }, PARAMETER.minimalTimeout);
-
-    const animationStopTimeout = setTimeout(function stopGraphLayoutAnimation() {
-      setIsAnimating(false);
-    }, PARAMETER.graphLayoutDuration);
-
-    prevNodesRef.current = newNodes;
-
-    return () => {
-      cancelAnimationFrame(startAnimationFrame);
-      clearTimeout(animationStopTimeout);
-      clearTimeout(stateChangeTimeout);
-    };
-  }, [
-    schema,
-    filteredGraph,
-    setNodes,
-    setEdges,
-    filter.noText,
-    viewportInitialized,
-    focusCst,
-    filter.graphType
-  ]);
-
-  useEffect(function resetViewOnChanges() {
-    setTimeout(function fitViewAfterGraphChange() {
-      void onFitViewEvent(flowOptions.fitViewOptions);
-    }, PARAMETER.refreshTimeout);
-  }, [schema.id, filter.noText, filter.graphType, focusCst]);
+  useEffect(
+    function resetViewOnChanges() {
+      setTimeout(function fitViewAfterGraphChange() {
+        void onFitViewEvent(flowOptions.fitViewOptions);
+      }, PARAMETER.refreshTimeout);
+    },
+    [schema.id, filter.noText, filter.graphType, focusCst]
+  );
 
   const readyForUpdate = nodes.length === filteredGraph.nodes.size;
   const prevSelectedNodes = useRef<number[]>([]);
-  useEffect(function updateSelectedNodes() {
-    if (!viewportInitialized || !readyForUpdate) {
-      return;
-    }
-    const hasChanged =
-      prevSelectedNodes.current.length !== selectedCst.length ||
-      prevSelectedNodes.current.some((id, i) => id !== selectedCst[i]);
-    if (!hasChanged) {
-      return;
-    }
+  useEffect(
+    function updateSelectedNodes() {
+      if (!viewportInitialized || !readyForUpdate) {
+        return;
+      }
+      const hasChanged =
+        prevSelectedNodes.current.length !== selectedCst.length ||
+        prevSelectedNodes.current.some((id, i) => id !== selectedCst[i]);
+      if (!hasChanged) {
+        return;
+      }
 
-    isLoadingSelection.current = true;
+      isLoadingSelection.current = true;
 
-    prevSelectedNodes.current = selectedCst;
-    setNodes(prev =>
-      prev.map(node => ({
-        ...node,
-        selected: selectedCst.includes(Number(node.id))
-      }))
-    );
+      prevSelectedNodes.current = selectedCst;
+      setNodes(prev =>
+        prev.map(node => ({
+          ...node,
+          selected: selectedCst.includes(Number(node.id))
+        }))
+      );
 
-    const frame = requestAnimationFrame(() => {
-      isLoadingSelection.current = false;
-    });
-    return () => cancelAnimationFrame(frame);
-  }, [viewportInitialized, selectedCst, setNodes, readyForUpdate]);
+      const frame = requestAnimationFrame(() => {
+        isLoadingSelection.current = false;
+      });
+      return () => cancelAnimationFrame(frame);
+    },
+    [viewportInitialized, selectedCst, setNodes, readyForUpdate]
+  );
 
   const prevSelectedEdges = useRef<string[]>([]);
-  useEffect(function updateSelectedEdges() {
-    if (!viewportInitialized || !readyForUpdate) {
-      return;
-    }
-    const hasChanged =
-      prevSelectedEdges.current.length !== selectedEdges.length ||
-      prevSelectedEdges.current.some((id, i) => id !== selectedEdges[i]);
-    if (!hasChanged) {
-      return;
-    }
+  useEffect(
+    function updateSelectedEdges() {
+      if (!viewportInitialized || !readyForUpdate) {
+        return;
+      }
+      const hasChanged =
+        prevSelectedEdges.current.length !== selectedEdges.length ||
+        prevSelectedEdges.current.some((id, i) => id !== selectedEdges[i]);
+      if (!hasChanged) {
+        return;
+      }
 
-    isLoadingSelection.current = true;
+      isLoadingSelection.current = true;
 
-    prevSelectedEdges.current = selectedEdges;
-    setEdges(prev =>
-      prev.map(edge => ({
-        ...edge,
-        selected: selectedEdges.includes(edge.id)
-      }))
-    );
+      prevSelectedEdges.current = selectedEdges;
+      setEdges(prev =>
+        prev.map(edge => ({
+          ...edge,
+          selected: selectedEdges.includes(edge.id)
+        }))
+      );
 
-    const frame = requestAnimationFrame(() => {
-      isLoadingSelection.current = false;
-    });
-    return () => cancelAnimationFrame(frame);
-  }, [selectedEdges, setEdges, readyForUpdate, viewportInitialized]);
+      const frame = requestAnimationFrame(() => {
+        isLoadingSelection.current = false;
+      });
+      return () => cancelAnimationFrame(frame);
+    },
+    [selectedEdges, setEdges, readyForUpdate, viewportInitialized]
+  );
 
   function handleNodeContextMenu(event: React.MouseEvent<Element>, node: TGNode) {
     event.preventDefault();
@@ -378,10 +383,7 @@ export function TGFlow() {
       <ToolbarTermGraph className='cc-tab-tools' graph={filteredGraph} />
 
       <div className='absolute z-pop top-16 sm:top-8 left-2 sm:left-3 flex flex-col pointer-events-none'>
-        <ToolbarTGEdit
-          className='pr-1 w-fit whitespace-nowrap backdrop-blur-xs rounded-xl'
-          graph={filteredGraph}
-        />
+        <ToolbarTGEdit className='pr-1 w-fit whitespace-nowrap backdrop-blur-xs rounded-xl' graph={filteredGraph} />
         <div className='px-2 py-1 select-none whitespace-nowrap backdrop-blur-xs rounded-xl w-fit'>
           Выбор {selectedCst.length} из {schema.items.length}
         </div>

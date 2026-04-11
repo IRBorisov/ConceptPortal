@@ -6,16 +6,12 @@ import { axiosGet, axiosPost } from '@/backend/api-transport';
 import { DELAYS, KEYS } from '@/backend/configuration';
 import { infoMsg } from '@/utils/labels';
 
-import {
-  type ConstituentaDataDTO,
-  type RSModelDTO,
-  schemaRSModel,
-} from './types';
+import { type ConstituentaDataDTO, type RSModelDTO, schemaRSModel } from './types';
 
 export const rsmodelApi = {
   baseKey: KEYS.rsmodel,
 
-  getRSModelQueryOptions: ({ itemID }: { itemID?: number | null; }) => {
+  getRSModelQueryOptions: ({ itemID }: { itemID?: number | null }) => {
     return queryOptions({
       queryKey: KEYS.composite.model({ itemID }),
       staleTime: DELAYS.staleShort,
@@ -29,7 +25,7 @@ export const rsmodelApi = {
     });
   },
 
-  setValue: ({ itemID, data }: { itemID: number; data: ConstituentaDataDTO; }) =>
+  setValue: ({ itemID, data }: { itemID: number; data: ConstituentaDataDTO }) =>
     axiosPost<ConstituentaDataDTO>({
       endpoint: `/api/models/${itemID}/set-value`,
       request: {
@@ -37,7 +33,7 @@ export const rsmodelApi = {
         successMessage: infoMsg.changesSaved
       }
     }),
-  clearValues: ({ itemID, data }: { itemID: number; data: ConstituentaList; }) =>
+  clearValues: ({ itemID, data }: { itemID: number; data: ConstituentaList }) =>
     axiosPost<ConstituentaList>({
       endpoint: `/api/models/${itemID}/clear-values`,
       request: {
@@ -45,9 +41,9 @@ export const rsmodelApi = {
         successMessage: infoMsg.dataCleared(data.items.length)
       }
     }),
-  resetModel: ({ itemID }: { itemID: number; }) =>
+  resetModel: ({ itemID }: { itemID: number }) =>
     axiosPost<undefined>({
       endpoint: `/api/models/${itemID}/reset-all`,
       request: { successMessage: infoMsg.modelCleared }
-    }),
+    })
 } as const;

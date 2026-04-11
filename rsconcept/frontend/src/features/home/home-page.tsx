@@ -44,21 +44,21 @@ export function HomePage() {
           className={clsx(
             'absolute -top-30 left-1/2 -translate-x-1/2',
             'h-120 w-[min(48rem,100vw)] rounded-full',
-            'blur-3xl bg-accent-blue/25 dark:bg-accent-blue/40',
+            'blur-3xl bg-accent-blue/25 dark:bg-accent-blue/40'
           )}
         />
         <div
           className={clsx(
             'absolute left-[6%] top-60',
             'h-56 w-56 rounded-full',
-            'blur-3xl bg-accent-purple/35 dark:bg-accent-purple/35',
+            'blur-3xl bg-accent-purple/35 dark:bg-accent-purple/35'
           )}
         />
         <div
           className={clsx(
             'absolute bottom-24 right-[8%]',
             'h-48 w-72 rounded-full',
-            'blur-3xl bg-accent-teal/20 dark:bg-accent-teal/30',
+            'blur-3xl bg-accent-teal/20 dark:bg-accent-teal/30'
           )}
         />
       </div>
@@ -72,12 +72,10 @@ export function HomePage() {
           loading='eager'
         />
         {/* SEO: Hero copy as h1 */}
-        <h1 className={clsx(
-          'hidden xs:block mx-auto max-w-xl',
-          'text-lg font-medium',
-          'leading-snug text-nowrap'
-        )}>
-          Проектируйте сложные системы: Анализ и Синтез<br />Понятия, процессы, данные, решения, документы
+        <h1 className={clsx('hidden xs:block mx-auto max-w-xl', 'text-lg font-medium', 'leading-snug text-nowrap')}>
+          Проектируйте сложные системы: Анализ и Синтез
+          <br />
+          Понятия, процессы, данные, решения, документы
         </h1>
 
         <nav
@@ -178,7 +176,6 @@ export function HomePage() {
             title='Концептуальные модели'
             description='Предметные источники данных, интерпретация определений и вычисление значений'
             accentClass='bg-accent-orange'
-
           />
           <FeatureTile
             to={urls.help_topic(HelpTopic.CC_OSS)}
@@ -189,6 +186,6 @@ export function HomePage() {
           />
         </div>
       </section>
-    </main >
+    </main>
   );
 }

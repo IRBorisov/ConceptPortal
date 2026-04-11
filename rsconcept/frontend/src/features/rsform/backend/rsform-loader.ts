@@ -206,11 +206,12 @@ export class RSFormLoader {
       cst.analysis = {
         success: parse.success,
         type: parse.type,
-        valueClass: parse.valueClass,
+        valueClass: parse.valueClass
       };
-      cst.status = cst.cst_type === CstType.NOMINAL
-        ? CstStatus.UNKNOWN
-        : inferStatus(cst.analysis.success, cst.analysis.valueClass);
+      cst.status =
+        cst.cst_type === CstType.NOMINAL
+          ? CstStatus.UNKNOWN
+          : inferStatus(cst.analysis.success, cst.analysis.valueClass);
       if (cst.spawner && !!parse.ast && parse.type) {
         const parents = this.graph.expandInputs([cstID]);
         const parent = this.cstByID.get(parents.at(-1)!)!;
@@ -224,7 +225,6 @@ export class RSFormLoader {
             cst.spawner_path = path;
           }
         }
-
       }
     }
   }
@@ -253,12 +253,13 @@ function parseCst(target: Constituenta, analyzer: RSLangAnalyzer): AnalysisFast 
 
 function extractTypePath(node: AstNode, type: ExpressionType): TypePath | null {
   const result: number[] = [];
-  const isSet = type.typeID === TypeID.function ?
-    type.result.typeID === TypeID.collection : type.typeID === TypeID.collection;
+  const isSet =
+    type.typeID === TypeID.function ? type.result.typeID === TypeID.collection : type.typeID === TypeID.collection;
   let current = node;
   while (true) {
     switch (current.typeID) {
-      default: return null;
+      default:
+        return null;
       case TokenID.NT_FUNC_DEFINITION:
         current = current.children[1];
         break;

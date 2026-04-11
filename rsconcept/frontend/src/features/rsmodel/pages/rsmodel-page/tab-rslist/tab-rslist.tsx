@@ -34,7 +34,7 @@ export function TabRSList() {
     moveUp,
     moveDown,
     cloneCst,
-    promptDeleteSelected,
+    promptDeleteSelected
   } = useRSFormEdit();
   const { engine } = useRSModelEdit();
 
@@ -116,11 +116,13 @@ export function TabRSList() {
   return (
     <div tabIndex={-1} onKeyDown={handleKeyDown} className='relative pt-8'>
       {isContentEditable ? (
-        <ToolbarRSList className={clsx(
-          'cc-tab-tools',
-          'right-4 md:right-1/2 -translate-x-1/2 md:translate-x-0',
-          'cc-animate-position'
-        )} />
+        <ToolbarRSList
+          className={clsx(
+            'cc-tab-tools',
+            'right-4 md:right-1/2 -translate-x-1/2 md:translate-x-0',
+            'cc-animate-position'
+          )}
+        />
       ) : null}
 
       <div className={clsx('flex items-center border-b', !isContentEditable && 'justify-center pl-10')}>

@@ -20,7 +20,7 @@ export const useCreateInput = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    createInput: (data: { itemID: number; data: TargetOperation; }) =>
+    createInput: (data: { itemID: number; data: TargetOperation }) =>
       mutation.mutateAsync(data).then(response => response.new_schema)
   };
 };

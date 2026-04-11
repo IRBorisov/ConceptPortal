@@ -29,15 +29,8 @@ export interface DlgEditCstProps {
 }
 
 export function DlgEditCst() {
-  const {
-    schema,
-    target,
-    onEdit,
-    onEditSource,
-    onAddAttribution,
-    onRemoveAttribution,
-    onClearAttributions
-  } = useDialogsStore(state => state.props as DlgEditCstProps);
+  const { schema, target, onEdit, onEditSource, onAddAttribution, onRemoveAttribution, onClearAttributions } =
+    useDialogsStore(state => state.props as DlgEditCstProps);
   const hideDialog = useDialogsStore(state => state.hideDialog);
   const router = useConceptNavigation();
 
@@ -96,7 +89,9 @@ export function DlgEditCst() {
   }
 
   function DefinitionRawField({ children }: CreateFieldProps<string>) {
-    return <form.Field name='item_data.definition_raw'>{field => children(field as FieldStateData<string>)}</form.Field>;
+    return (
+      <form.Field name='item_data.definition_raw'>{field => children(field as FieldStateData<string>)}</form.Field>
+    );
   }
 
   function ConventionField({ children }: CreateFieldProps<string>) {

@@ -68,7 +68,10 @@ export const useLibrarySearchStore = create<LibrarySearchStore>()(
       toggleItemType: () =>
         set(state => {
           const order: (LibraryItemType | null)[] = [
-            null, LibraryItemType.RSFORM, LibraryItemType.OSS, LibraryItemType.RSMODEL
+            null,
+            LibraryItemType.RSFORM,
+            LibraryItemType.OSS,
+            LibraryItemType.RSMODEL
           ];
           const currentIndex = order.indexOf(state.itemType);
           const nextIndex = (currentIndex + 1) % order.length;

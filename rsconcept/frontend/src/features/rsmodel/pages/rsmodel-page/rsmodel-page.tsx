@@ -48,11 +48,9 @@ export function RSModelPage() {
     return null;
   }
   return (
-    <ErrorBoundary FallbackComponent={({ error }) => (
-      <ProcessError error={error as ErrorData} />
-    )}>
+    <ErrorBoundary FallbackComponent={({ error }) => <ProcessError error={error as ErrorData} />}>
       <ConstituentaTooltip />
-      <RSModelState itemID={urlData.id} >
+      <RSModelState itemID={urlData.id}>
         <RSModelTabs activeID={urlData.activeID} activeTab={urlData.tab} />
       </RSModelState>
     </ErrorBoundary>
@@ -60,7 +58,7 @@ export function RSModelPage() {
 }
 
 // ====== Internals =========
-function ProcessError({ error }: { error: ErrorData; }): React.ReactElement | null {
+function ProcessError({ error }: { error: ErrorData }): React.ReactElement | null {
   if (isAxiosError(error) && error.response) {
     if (error.response.status === 404) {
       return (

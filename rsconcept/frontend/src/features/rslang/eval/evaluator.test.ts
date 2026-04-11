@@ -10,7 +10,6 @@ import { type ASTContext, Evaluator } from './evaluator';
 import { BOOL_INFINITY, TUPLE_ID, type ValueContext } from './value';
 import { printValue } from './value-api';
 
-
 // Helper to build AST
 function buildAST(expression: string) {
   const tree = rslangParser.parse(expression);
@@ -172,7 +171,7 @@ const correctValuesData = [
   ['Fi1[X1](S3)', '{(1, 1)}'],
   ['Fi2,1[X2,X1](S3)', '{(1, 1)}'],
   ['Fi1[(X1\\X1)](S3)', '{}'],
-  ['Fi1[X1](S3\\S3)', '{}'],
+  ['Fi1[X1](S3\\S3)', '{}']
 ];
 
 const errorData = [
@@ -213,7 +212,7 @@ const errorData = [
   ['R{a:=X1 | D1=D1 | a∪X1}', { code: RSErrorCode.calcGlobalMissing, from: 10, to: 12, params: ['D1'] }],
   ['I{(a,b) | a:∈D1; b:=a; b≠a}', { code: RSErrorCode.calcGlobalMissing, from: 13, to: 15, params: ['D1'] }],
   ['I{(a,b) | a:∈X1; b:=a; b≠D1}', { code: RSErrorCode.calcGlobalMissing, from: 25, to: 27, params: ['D1'] }],
-  ['I{(a,b) | a:∈X1; b:=D1; b≠a}', { code: RSErrorCode.calcGlobalMissing, from: 20, to: 22, params: ['D1'] }],
+  ['I{(a,b) | a:∈X1; b:=D1; b≠a}', { code: RSErrorCode.calcGlobalMissing, from: 20, to: 22, params: ['D1'] }]
 ];
 
 describe('Calculator', () => {
@@ -232,7 +231,7 @@ describe('Calculator', () => {
   function expectValue(input: string, expectedValue: string) {
     const ast = buildAST(input);
     expect(ast.hasError).toBe(false);
-    const result = calculator.run(ast, error => (errors.push(error)));
+    const result = calculator.run(ast, error => errors.push(error));
     expect(printValue(result)).toBe(expectedValue);
   }
 
@@ -241,7 +240,7 @@ describe('Calculator', () => {
     expect(ast.hasError).toBe(false);
     expect(errors.length).toBe(0);
 
-    calculator.run(ast, error => (errors.push(error)));
+    calculator.run(ast, error => errors.push(error));
     expect(errors.length).toBe(1);
     expect(errors[0]).toMatchObject(expectedError);
   }

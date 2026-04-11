@@ -6,7 +6,6 @@ import { notImplemented } from '@/utils/utils';
 
 import { useSandboxBundle } from './bundle-context';
 
-
 export function SandboxModelState({ children }: React.PropsWithChildren) {
   const { model, schema, engine } = useSandboxBundle();
 

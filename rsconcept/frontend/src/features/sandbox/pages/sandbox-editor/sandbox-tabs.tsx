@@ -30,28 +30,27 @@ export function SandboxTabs({ activeID, activeTab }: SandboxTabsProps) {
   const hideFooter = useAppLayoutStore(state => state.hideFooter);
   const onHideFooterEvent = useEffectEvent(hideFooter);
   const setIsModified = useModificationStore(state => state.setIsModified);
-  const {
-    schema,
-    selectedCst,
-    setSelectedCst,
-    setSelectedEdges,
-    deselectAll,
-    pendingActiveID,
-    clearPendingActiveID
-  } = useRSFormEdit();
+  const { schema, selectedCst, setSelectedCst, setSelectedEdges, deselectAll, pendingActiveID, clearPendingActiveID } =
+    useRSFormEdit();
 
-  useLayoutEffect(function updateWindowTitle() {
-    const oldTitle = document.title;
-    document.title = `${schema.title} - Песочница`;
-    return function restoreWindowTitle() {
-      document.title = oldTitle;
-    };
-  }, [schema.title]);
+  useLayoutEffect(
+    function updateWindowTitle() {
+      const oldTitle = document.title;
+      document.title = `${schema.title} - Песочница`;
+      return function restoreWindowTitle() {
+        document.title = oldTitle;
+      };
+    },
+    [schema.title]
+  );
 
-  useLayoutEffect(function hideFooterOnForSomeTabs() {
-    const nextNoFooter = activeTab !== RSModelTabID.CARD;
-    onHideFooterEvent(nextNoFooter);
-  }, [activeTab]);
+  useLayoutEffect(
+    function hideFooterOnForSomeTabs() {
+      const nextNoFooter = activeTab !== RSModelTabID.CARD;
+      onHideFooterEvent(nextNoFooter);
+    },
+    [activeTab]
+  );
 
   useEffect(function restoreFooterOnUnmount() {
     return function restoreFooter() {
@@ -59,56 +58,50 @@ export function SandboxTabs({ activeID, activeTab }: SandboxTabsProps) {
     };
   }, []);
 
-  useLayoutEffect(function syncNavigationAndSelection() {
-    if (
-      activeTab === RSModelTabID.CST_EDIT ||
-      activeTab === RSModelTabID.VALUE_EDIT ||
-      activeTab === RSModelTabID.EVALUATOR
-    ) {
-      if (pendingActiveID !== null && activeID !== pendingActiveID) {
-        return;
-      }
-      if (pendingActiveID !== null && activeID === pendingActiveID) {
-        clearPendingActiveID();
-      }
+  useLayoutEffect(
+    function syncNavigationAndSelection() {
+      if (
+        activeTab === RSModelTabID.CST_EDIT ||
+        activeTab === RSModelTabID.VALUE_EDIT ||
+        activeTab === RSModelTabID.EVALUATOR
+      ) {
+        if (pendingActiveID !== null && activeID !== pendingActiveID) {
+          return;
+        }
+        if (pendingActiveID !== null && activeID === pendingActiveID) {
+          clearPendingActiveID();
+        }
 
-      let nextSelected: number[] = [];
-      const hasActiveID = activeID !== undefined;
+        let nextSelected: number[] = [];
+        const hasActiveID = activeID !== undefined;
 
-      if (hasActiveID && schema.cstByID.has(activeID)) {
-        nextSelected = [activeID];
-      } else if (hasActiveID && selectedCst.length === 0 && schema.items.length > 0) {
-        nextSelected = [schema.items[0].id];
-      } else if (!hasActiveID && schema.items.length > 0) {
-        nextSelected = [schema.items[0].id];
-      } else if (hasActiveID) {
-        return;
-      }
+        if (hasActiveID && schema.cstByID.has(activeID)) {
+          nextSelected = [activeID];
+        } else if (hasActiveID && selectedCst.length === 0 && schema.items.length > 0) {
+          nextSelected = [schema.items[0].id];
+        } else if (!hasActiveID && schema.items.length > 0) {
+          nextSelected = [schema.items[0].id];
+        } else if (hasActiveID) {
+          return;
+        }
 
-      const isSameSelection =
-        nextSelected.length === selectedCst.length &&
-        nextSelected.every((value, index) => value === selectedCst[index]);
+        const isSameSelection =
+          nextSelected.length === selectedCst.length &&
+          nextSelected.every((value, index) => value === selectedCst[index]);
 
-      if (!isSameSelection) {
-        if (nextSelected.length === 0) {
-          if (selectedCst.length !== 0) {
-            deselectAll();
+        if (!isSameSelection) {
+          if (nextSelected.length === 0) {
+            if (selectedCst.length !== 0) {
+              deselectAll();
+            }
+          } else {
+            setSelectedCst(nextSelected);
           }
-        } else {
-          setSelectedCst(nextSelected);
         }
       }
-    }
-  }, [
-    activeTab,
-    activeID,
-    selectedCst,
-    schema,
-    setSelectedCst,
-    deselectAll,
-    pendingActiveID,
-    clearPendingActiveID
-  ]);
+    },
+    [activeTab, activeID, selectedCst, schema, setSelectedCst, deselectAll, pendingActiveID, clearPendingActiveID]
+  );
 
   function onSelectTab(index: number, last: number, event: Event) {
     if (last === index) {
@@ -141,7 +134,7 @@ export function SandboxTabs({ activeID, activeTab }: SandboxTabsProps) {
       defaultFocus
       className='relative flex flex-col min-w-fit items-center'
     >
-      <TabList className='absolute z-sticky flex border-b-2 border-x-2 divide-x-2 bg-background' >
+      <TabList className='absolute z-sticky flex border-b-2 border-x-2 divide-x-2 bg-background'>
         <div className='flex border-r-2'>
           <MenuMain />
           <MenuEdit />

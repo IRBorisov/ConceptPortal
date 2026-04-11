@@ -42,12 +42,16 @@ export function BindingEditor({ className, rows, value, onChange }: BindingEdito
     .map(entry => ({ id: Number(entry[0]), text: entry[1] }))
     .reverse();
 
-
   function handleAddElement() {
     if (!onChange) {
       return;
     }
-    const newID = 1 + (Object.keys(value).map(id => Number(id)).sort((a, b) => a - b).pop() ?? 0);
+    const newID =
+      1 +
+      (Object.keys(value)
+        .map(id => Number(id))
+        .sort((a, b) => a - b)
+        .pop() ?? 0);
     const newValue = { ...value, [newID]: DEFAULT_VALUE_TEXT };
     onChange(newValue);
     setSelected(newID);
@@ -75,7 +79,7 @@ export function BindingEditor({ className, rows, value, onChange }: BindingEdito
   }
 
   function handleRowClick(target: BindingValue) {
-    setSelected(prev => prev === target.id ? null : target.id);
+    setSelected(prev => (prev === target.id ? null : target.id));
   }
 
   const columns = [
@@ -95,20 +99,23 @@ export function BindingEditor({ className, rows, value, onChange }: BindingEdito
       maxSize: 200,
       cell: props => props.getValue()
     }),
-    ...(onChange ?
-      [columnHelper.display({
-        id: 'actions',
-        size: 0,
-        cell: props => (
-          <MiniButton
-            title='Удалить элемент'
-            className='align-middle w-fit'
-            noPadding
-            icon={<IconRemove size='1.25rem' className='cc-remove' />}
-            onClick={(event) => handleDeleteElement(event, props.row.original)}
-          />
-        )
-      })] : [])
+    ...(onChange
+      ? [
+          columnHelper.display({
+            id: 'actions',
+            size: 0,
+            cell: props => (
+              <MiniButton
+                title='Удалить элемент'
+                className='align-middle w-fit'
+                noPadding
+                icon={<IconRemove size='1.25rem' className='cc-remove' />}
+                onClick={event => handleDeleteElement(event, props.row.original)}
+              />
+            )
+          })
+        ]
+      : [])
   ];
 
   const conditionalRowStyles: IConditionalStyle<BindingValue>[] = [
@@ -125,12 +132,7 @@ export function BindingEditor({ className, rows, value, onChange }: BindingEdito
           <span>Всего </span>
           <span className='font-math'>{Object.keys(value).length}</span>
         </div>
-        <SearchBar
-          id='dlg_value_search'
-          noBorder
-          query={filter}
-          onChangeQuery={setFilter}
-        />
+        <SearchBar id='dlg_value_search' noBorder query={filter} onChangeQuery={setFilter} />
       </div>
       <TextInput
         label='Значение'
@@ -142,13 +144,14 @@ export function BindingEditor({ className, rows, value, onChange }: BindingEdito
         disabled={selected === null || !isMutable}
       />
       <div className='relative w-full max-w-full overflow-x-auto'>
-        {isMutable ?
+        {isMutable ? (
           <MiniButton
             title='Добавить элемент'
             className='absolute top-1 z-pop right-2.5'
             icon={<IconNewItem size='1.25rem' className='icon-green' />}
             onClick={handleAddElement}
-          /> : null}
+          />
+        ) : null}
         <DataTable
           data={dataRows}
           dense

@@ -1,5 +1,5 @@
 import { type QueryClient, queryOptions } from '@tanstack/react-query';
-import equal from "fast-deep-equal";
+import equal from 'fast-deep-equal';
 
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';
 import { DELAYS, KEYS } from '@/backend/configuration';
@@ -29,7 +29,7 @@ import {
 
 export function updateRSForm(data: RO<RSFormDTO>, client: QueryClient) {
   const queryKey = rsformsApi.getRSFormQueryOptions({ itemID: data.id }).queryKey;
-  client.setQueryData(queryKey, (old) => {
+  client.setQueryData(queryKey, old => {
     if (!old || equal(old.raw, data)) {
       return old;
     }
@@ -40,20 +40,18 @@ export function updateRSForm(data: RO<RSFormDTO>, client: QueryClient) {
 export const rsformsApi = {
   baseKey: KEYS.rsform,
 
-  getRSFormQueryOptions: ({ itemID, version }: { itemID?: number | null; version?: number; }) => {
+  getRSFormQueryOptions: ({ itemID, version }: { itemID?: number | null; version?: number }) => {
     const queryKey = KEYS.composite.schema({ itemID, version });
     return queryOptions({
       queryKey: queryKey,
       staleTime: DELAYS.staleShort,
-      queryFn: async (meta) => {
+      queryFn: async meta => {
         const raw = await axiosGet<RSFormDTO>({
           schema: schemaRSForm,
-          endpoint: version
-            ? `/api/library/${itemID}/versions/${version}`
-            : `/api/rsforms/${itemID}/details`,
+          endpoint: version ? `/api/library/${itemID}/versions/${version}` : `/api/rsforms/${itemID}/details`,
           options: { signal: meta.signal }
         });
-        const previous = queryClient.getQueryData<{ raw: RSFormDTO; transformed: RSForm; }>(queryKey);
+        const previous = queryClient.getQueryData<{ raw: RSFormDTO; transformed: RSForm }>(queryKey);
         if (previous && equal(previous.raw, raw)) {
           return previous;
         }
@@ -63,7 +61,7 @@ export const rsformsApi = {
     });
   },
 
-  upload: ({ itemID, data }: { itemID: number; data: RSFormUploadDTO; }) =>
+  upload: ({ itemID, data }: { itemID: number; data: RSFormUploadDTO }) =>
     axiosPatch<RSFormUploadDTO, RSFormDTO>({
       schema: schemaRSForm,
       endpoint: `/api/rsforms/${itemID}/load-trs`,
@@ -78,7 +76,7 @@ export const rsformsApi = {
       }
     }),
 
-  createConstituenta: ({ itemID, data }: { itemID: number; data: CreateConstituentaDTO; }) =>
+  createConstituenta: ({ itemID, data }: { itemID: number; data: CreateConstituentaDTO }) =>
     axiosPost<CreateConstituentaDTO, ConstituentaCreatedResponse>({
       schema: schemaConstituentaCreatedResponse,
       endpoint: `/api/rsforms/${itemID}/create-cst`,
@@ -87,7 +85,7 @@ export const rsformsApi = {
         successMessage: response => infoMsg.newConstituent(response.new_cst.alias)
       }
     }),
-  updateConstituenta: ({ itemID, data }: { itemID: number; data: UpdateConstituentaDTO; }) =>
+  updateConstituenta: ({ itemID, data }: { itemID: number; data: UpdateConstituentaDTO }) =>
     axiosPatch<UpdateConstituentaDTO, RSFormDTO>({
       schema: schemaRSForm,
       endpoint: `/api/rsforms/${itemID}/update-cst`,
@@ -96,7 +94,7 @@ export const rsformsApi = {
         successMessage: infoMsg.changesSaved
       }
     }),
-  updateCrucial: ({ itemID, data }: { itemID: number; data: UpdateCrucialDTO; }) =>
+  updateCrucial: ({ itemID, data }: { itemID: number; data: UpdateCrucialDTO }) =>
     axiosPatch<UpdateCrucialDTO, RSFormDTO>({
       schema: schemaRSForm,
       endpoint: `/api/rsforms/${itemID}/update-crucial`,
@@ -105,7 +103,7 @@ export const rsformsApi = {
         successMessage: infoMsg.changesSaved
       }
     }),
-  deleteConstituents: ({ itemID, data }: { itemID: number; data: ConstituentaList; }) =>
+  deleteConstituents: ({ itemID, data }: { itemID: number; data: ConstituentaList }) =>
     axiosPatch<ConstituentaList, RSFormDTO>({
       schema: schemaRSForm,
       endpoint: `/api/rsforms/${itemID}/delete-multiple-cst`,
@@ -114,7 +112,7 @@ export const rsformsApi = {
         successMessage: infoMsg.constituentsDestroyed(data.items.length)
       }
     }),
-  substituteConstituents: ({ itemID, data }: { itemID: number; data: SubstitutionsDTO; }) =>
+  substituteConstituents: ({ itemID, data }: { itemID: number; data: SubstitutionsDTO }) =>
     axiosPatch<SubstitutionsDTO, RSFormDTO>({
       schema: schemaRSForm,
       endpoint: `/api/rsforms/${itemID}/substitute`,
@@ -123,7 +121,7 @@ export const rsformsApi = {
         successMessage: infoMsg.substituteSingle
       }
     }),
-  moveConstituents: ({ itemID, data }: { itemID: number; data: MoveConstituentsDTO; }) =>
+  moveConstituents: ({ itemID, data }: { itemID: number; data: MoveConstituentsDTO }) =>
     axiosPatch<MoveConstituentsDTO, RSFormDTO>({
       schema: schemaRSForm,
       endpoint: `/api/rsforms/${itemID}/move-cst`,
@@ -139,20 +137,20 @@ export const rsformsApi = {
         successMessage: infoMsg.inlineSynthesisComplete
       }
     }),
-  restoreOrder: ({ itemID }: { itemID: number; }) =>
+  restoreOrder: ({ itemID }: { itemID: number }) =>
     axiosPatch<undefined, RSFormDTO>({
       schema: schemaRSForm,
       endpoint: `/api/rsforms/${itemID}/restore-order`,
       request: { successMessage: infoMsg.reorderComplete }
     }),
-  resetAliases: ({ itemID }: { itemID: number; }) =>
+  resetAliases: ({ itemID }: { itemID: number }) =>
     axiosPatch<undefined, RSFormDTO>({
       schema: schemaRSForm,
       endpoint: `/api/rsforms/${itemID}/reset-aliases`,
       request: { successMessage: infoMsg.reindexComplete }
     }),
 
-  createAttribution: ({ itemID, data }: { itemID: number; data: Attribution; }) =>
+  createAttribution: ({ itemID, data }: { itemID: number; data: Attribution }) =>
     axiosPost<Attribution, RSFormDTO>({
       schema: schemaRSForm,
       endpoint: `/api/rsforms/${itemID}/create-attribution`,
@@ -161,7 +159,7 @@ export const rsformsApi = {
         successMessage: infoMsg.changesSaved
       }
     }),
-  deleteAttribution: ({ itemID, data }: { itemID: number; data: Attribution; }) =>
+  deleteAttribution: ({ itemID, data }: { itemID: number; data: Attribution }) =>
     axiosPatch<Attribution, RSFormDTO>({
       schema: schemaRSForm,
       endpoint: `/api/rsforms/${itemID}/delete-attribution`,
@@ -170,7 +168,7 @@ export const rsformsApi = {
         successMessage: infoMsg.changesSaved
       }
     }),
-  clearAttributions: ({ itemID, data }: { itemID: number; data: AttributionTargetDTO; }) =>
+  clearAttributions: ({ itemID, data }: { itemID: number; data: AttributionTargetDTO }) =>
     axiosPatch<AttributionTargetDTO, RSFormDTO>({
       schema: schemaRSForm,
       endpoint: `/api/rsforms/${itemID}/clear-attributions`,

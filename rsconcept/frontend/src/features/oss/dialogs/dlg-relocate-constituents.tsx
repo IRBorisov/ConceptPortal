@@ -61,7 +61,7 @@ export function DlgRelocateConstituents() {
 
   const selected = useStore(form.store, state => state.values.items);
   const destination = useStore(form.store, state => state.values.destination as number | null | undefined);
-  const destinationItem = destination ? libraryItems.find(item => item.id === destination) ?? null : null;
+  const destinationItem = destination ? (libraryItems.find(item => item.id === destination) ?? null) : null;
 
   const [directionUp, setDirectionUp] = useState(true);
   const [source, setSource] = useState<LibraryItem | null>(

@@ -48,7 +48,7 @@ export function Button({
         !colorSubmit ? 'disabled:opacity-75' : 'disabled:opacity-50',
         dense ? 'px-1' : 'px-3 py-1',
         loading ? 'cursor-progress' : 'cursor-pointer',
-        !colorSubmit ? noOutline ? 'outline-hidden focus-visible:bg-selected' : 'focus-outline' : '',
+        !colorSubmit ? (noOutline ? 'outline-hidden focus-visible:bg-selected' : 'focus-outline') : '',
         !noBorder && 'border rounded-sm',
         className
       )}

@@ -24,7 +24,7 @@ export function applyLayout(nodes: Node<FlatAstNode>[], edges: Edge[]) {
   dagre.layout(dagreGraph);
 
   for (const node of nodes) {
-    const nodeWithPosition = dagreGraph.node(node.id) as { x: number; y: number; };
+    const nodeWithPosition = dagreGraph.node(node.id) as { x: number; y: number };
     node.position.x = -nodeWithPosition.x + PARAMETER.graphNodeRadius;
     node.position.y = nodeWithPosition.y - PARAMETER.graphNodeRadius;
   }

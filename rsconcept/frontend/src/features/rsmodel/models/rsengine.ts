@@ -4,8 +4,11 @@ import { type RSForm } from '@/features/rsform';
 import { CstType } from '@/features/rsform';
 import { getAnalysisFor, isBaseSet, isBasicConcept, isFunctional } from '@/features/rsform/models/rsform-api';
 import {
-  type CalculatorEvaluateOptions, type CalculatorResult,
-  RSCalculator, TypeID, type Value
+  type CalculatorEvaluateOptions,
+  type CalculatorResult,
+  RSCalculator,
+  TypeID,
+  type Value
 } from '@/features/rslang';
 import { compare } from '@/features/rslang/eval/value';
 import { normalizeType } from '@/features/rslang/labels';
@@ -24,12 +27,9 @@ const INVALID_TYPE_MARKER = 'INVALID';
 export interface RSEngineServices {
   setCstValue: (args: {
     itemID: number;
-    data: { target: number; type: string; data: Value | BasicBinding; }[];
+    data: { target: number; type: string; data: Value | BasicBinding }[];
   }) => Promise<unknown>;
-  clearValues: (args: {
-    itemID: number;
-    data: { items: number[]; };
-  }) => Promise<unknown>;
+  clearValues: (args: { itemID: number; data: { items: number[] } }) => Promise<unknown>;
 }
 
 /** Calculation engine for {@link RSModel}. */
@@ -162,8 +162,9 @@ export class RSEngine {
     const oldValue = this.calculator.getValue(cst.alias);
     const newValue = Object.keys(data).map(Number);
 
-    const updateList: Parameters<RSEngineServices['setCstValue']>[0]['data']
-      = [{ target: cstID, type: TYPE_BASIC, data }];
+    const updateList: Parameters<RSEngineServices['setCstValue']>[0]['data'] = [
+      { target: cstID, type: TYPE_BASIC, data }
+    ];
     const resetList: number[] = [];
 
     if (oldValue !== null && compare(newValue, oldValue) !== 0) {
@@ -178,7 +179,7 @@ export class RSEngine {
               resetList.push(childID);
             } else if (fix === true) {
               const typeStr = normalizeType(child.analysis.type);
-              updateList.push({ target: childID, type: typeStr, data: [...value as Value[]] });
+              updateList.push({ target: childID, type: typeStr, data: [...(value as Value[])] });
             }
           }
         }
@@ -188,7 +189,7 @@ export class RSEngine {
     if (resetList.length > 0) {
       await Promise.all([
         this.services.setCstValue({ itemID: this.modelID, data: updateList }),
-        this.services.clearValues({ itemID: this.modelID, data: { items: resetList } }),
+        this.services.clearValues({ itemID: this.modelID, data: { items: resetList } })
       ]);
     } else {
       await this.services.setCstValue({ itemID: this.modelID, data: updateList });
@@ -205,7 +206,8 @@ export class RSEngine {
     for (const updateData of updateList) {
       if (updateData.target !== cstID) {
         this.calculator.setValue(
-          this.schema.cstByID.get(updateData.target)!.alias, updateData.data as unknown as Value
+          this.schema.cstByID.get(updateData.target)!.alias,
+          updateData.data as unknown as Value
         );
         this.notifyCst(updateData.target);
       }
@@ -429,7 +431,10 @@ export class RSEngine {
 
 /** Evaluates expression for {@link Constituenta}, including error handling. */
 function getEvaluationFor(
-  expression: string, cstType: CstType, schema: RSForm, calculator: RSCalculator
+  expression: string,
+  cstType: CstType,
+  schema: RSForm,
+  calculator: RSCalculator
 ): CalculatorResult {
   const parse = getAnalysisFor(expression, cstType, schema);
   if (!parse.success || !parse.ast) {
@@ -459,9 +464,7 @@ function getEvaluationFor(
 }
 
 /** Evaluates expression for {@link RSModel}. */
-function fastEvaluation(
-  expression: string, cstType: CstType, schema: RSForm, calculator: RSCalculator
-): Value | null {
+function fastEvaluation(expression: string, cstType: CstType, schema: RSForm, calculator: RSCalculator): Value | null {
   const parse = getAnalysisFor(expression, cstType, schema);
   if (!parse.success || !parse.ast) {
     return null;

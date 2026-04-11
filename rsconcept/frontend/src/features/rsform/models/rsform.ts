@@ -29,7 +29,6 @@ export const CstType = {
 } as const;
 export type CstType = (typeof CstType)[keyof typeof CstType];
 
-
 /** Represents function argument definition. */
 export interface ArgumentInfo {
   alias: string;

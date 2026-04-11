@@ -10,7 +10,6 @@ import { parser as rslangParser } from '../parser/parser';
 import { TypeAuditor } from './type-auditor';
 import { basic, bool, constant, LogicT, tuple, type TypeContext, TypeID } from './typification';
 
-
 // Helper to build AST
 function buildAST(expression: string) {
   const tree = rslangParser.parse(expression);
@@ -148,7 +147,7 @@ const correctTypesData = [
   ['debool({X1})', 'ℬ(X1)'],
   ['red(S2)', 'ℬ(X1)'],
   // Recursion with empty set
-  ['R{a:=∅ | a∪X1}', 'ℬ(X1)'],
+  ['R{a:=∅ | a∪X1}', 'ℬ(X1)']
 ];
 
 const errorData = [
@@ -204,7 +203,10 @@ const errorData = [
   ['{X1, 1}', { code: RSErrorCode.invalidEnumeration, from: 5, to: 6, params: ['ℬ(X1)', 'Z'] }],
   ['{(1,2), (X1,X1)}', { code: RSErrorCode.invalidEnumeration, from: 8, to: 15, params: ['Z×Z', 'ℬ(X1)×ℬ(X1)'] }],
   ['R{a := S1 | {a}}', { code: RSErrorCode.typesNotEqual, from: 12, to: 15, params: ['ℬℬ(X1×X1)', 'ℬ(X1×X1)'] }],
-  ['I{(a, b) | a:∈X1; b:={a}; a≠b}', { code: RSErrorCode.typesNotCompatible, from: 26, to: 29, params: ['X1', 'ℬ(X1)'] }],
+  [
+    'I{(a, b) | a:∈X1; b:={a}; a≠b}',
+    { code: RSErrorCode.typesNotCompatible, from: 26, to: 29, params: ['X1', 'ℬ(X1)'] }
+  ],
   // Set operations
   ['X1 ∪ ∅', { code: RSErrorCode.invalidEmptySetUsage, from: 5, to: 6 }],
   ['X1 ∪ S1', { code: RSErrorCode.typesNotEqual, from: 0, to: 7, params: ['ℬ(X1)', 'ℬ(X1×X1)'] }],
@@ -230,7 +232,7 @@ const errorData = [
   ['D{t ∈ X1 | ∀t∈X1 t=t}', { code: RSErrorCode.localShadowing, from: 12, to: 13, params: ['t'] }],
   // Error popup
   ['1<card(X42)', { code: RSErrorCode.globalNotTyped, from: 7, to: 10, params: ['X42'] }],
-  ['X42=X1', { code: RSErrorCode.globalNotTyped, from: 0, to: 3, params: ['X42'] }],
+  ['X42=X1', { code: RSErrorCode.globalNotTyped, from: 0, to: 3, params: ['X42'] }]
 ];
 
 describe('TypeAuditor', () => {
@@ -247,14 +249,14 @@ describe('TypeAuditor', () => {
   function expectType(input: string, expectedType: string) {
     const ast = buildAST(input);
     expect(ast.hasError).toBe(false);
-    const result = auditor.run(ast, false, error => (errors.push(error)));
+    const result = auditor.run(ast, false, error => errors.push(error));
     expect(labelType(result)).toBe(expectedType);
   }
 
   function expectError(input: string, expectedError: RSErrorDescription) {
     const ast = buildAST(input);
     expect(ast.hasError).toBe(false);
-    auditor.run(ast, false, error => (errors.push(error)));
+    auditor.run(ast, false, error => errors.push(error));
     expect(errors.length).toBe(1);
     expect(errors[0]).toMatchObject(expectedError);
   }
@@ -283,7 +285,8 @@ describe('TypeAuditor', () => {
     expectType('F2[{∅}, ∅]', 'ℬℬ(R0)');
     expectError('F2[X1, ℬ(X1)]', {
       code: RSErrorCode.invalidArgumentType,
-      from: 7, to: 12,
+      from: 7,
+      to: 12,
       params: ['b∈R1F2', 'ℬℬ(X1)']
     });
   });
@@ -309,7 +312,7 @@ describe('TypeAuditor', () => {
 
   it('Reports token end positions for semantic errors', () => {
     const ast = buildAST('X42');
-    auditor.run(ast, false, error => (errors.push(error)));
+    auditor.run(ast, false, error => errors.push(error));
     expect(errors[0]).toMatchObject({ code: RSErrorCode.globalNotTyped, from: 0, to: 3 });
   });
 });

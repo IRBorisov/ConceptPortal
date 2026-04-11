@@ -3,7 +3,22 @@ import { applyHash_fnv1a } from '@/utils/utils';
 
 import { type ExpressionType, TypeID, type TypePath, type Typification } from '../semantic/typification';
 
-import { BOOL_INFINITY, compare, EmptySetV, INVALID_ELEMENT, makeValuePath, set, SET_INFINITY, tuple, TUPLE_ID, type Value, VALUE_FALSE, VALUE_TRUE, type ValueContext, type ValuePath } from './value';
+import {
+  BOOL_INFINITY,
+  compare,
+  EmptySetV,
+  INVALID_ELEMENT,
+  makeValuePath,
+  set,
+  SET_INFINITY,
+  tuple,
+  TUPLE_ID,
+  type Value,
+  VALUE_FALSE,
+  VALUE_TRUE,
+  type ValueContext,
+  type ValuePath
+} from './value';
 
 /** Cartesian product of factor sets. */
 export function decartian(factors: Value[][]): Value[] | null {
@@ -142,7 +157,7 @@ export function setUnion(set1: Value[], set2: Value[]): Value[] {
 /** Intersection A ∩ B. */
 export function setIntersection(set1: Value[], set2: Value[]): Value[] {
   const result: Value[] = [];
-  for (let i = 0, j = 0; i < set1.length && j < set2.length;) {
+  for (let i = 0, j = 0; i < set1.length && j < set2.length; ) {
     const cmp = compare(set1[i], set2[j]);
     if (cmp < 0) {
       i++;

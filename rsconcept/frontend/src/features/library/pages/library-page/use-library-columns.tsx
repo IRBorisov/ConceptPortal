@@ -25,17 +25,17 @@ export function useLibraryColumns() {
     ...(folderMode
       ? []
       : [
-        columnHelper.accessor('location', {
-          id: 'location',
-          header: 'Путь',
-          size: 50,
-          minSize: 50,
-          maxSize: 50,
-          enableSorting: true,
-          cell: props => <BadgeLocation location={props.getValue()} />,
-          sortingFn: 'text'
-        })
-      ]),
+          columnHelper.accessor('location', {
+            id: 'location',
+            header: 'Путь',
+            size: 50,
+            minSize: 50,
+            maxSize: 50,
+            enableSorting: true,
+            cell: props => <BadgeLocation location={props.getValue()} />,
+            sortingFn: 'text'
+          })
+        ]),
     columnHelper.accessor('alias', {
       id: 'alias',
       header: 'Сокращение',

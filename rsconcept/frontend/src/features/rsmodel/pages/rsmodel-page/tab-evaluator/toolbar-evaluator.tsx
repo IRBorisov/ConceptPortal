@@ -17,10 +17,7 @@ interface ToolbarEvaluatorProps {
   isNarrow: boolean;
 }
 
-export function ToolbarEvaluator({
-  className,
-  isNarrow,
-}: ToolbarEvaluatorProps) {
+export function ToolbarEvaluator({ className, isNarrow }: ToolbarEvaluatorProps) {
   const { engine } = useRSModelEdit();
 
   const showList = usePreferencesStore(state => state.showValueSideList);

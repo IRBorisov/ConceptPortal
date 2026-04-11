@@ -43,7 +43,6 @@ export function truncateToSymbol(text: string, maxSymbols: number): string {
   return trimmedText + '...';
 }
 
-
 /** Truncate text to last word up to max symbols. Add ellipsis if truncated. */
 export function truncateToLastWord(text: string, maxSymbols: number): string {
   if (text.length <= maxSymbols) {
@@ -56,4 +55,3 @@ export function truncateToLastWord(text: string, maxSymbols: number): string {
   }
   return trimmedText.slice(0, lastSpaceIndex) + '...';
 }
-

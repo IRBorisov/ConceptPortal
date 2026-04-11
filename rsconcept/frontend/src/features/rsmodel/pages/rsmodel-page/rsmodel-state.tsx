@@ -33,18 +33,27 @@ export const RSModelState = ({ itemID, children }: React.PropsWithChildren<RSMod
   const { setCstValue } = useSetValue();
   const { clearValues } = useClearValues();
 
-  const [engine] = useState<RSEngine>(() => new RSEngine(model.id, {
-    setCstValue,
-    clearValues
-  }));
+  const [engine] = useState<RSEngine>(
+    () =>
+      new RSEngine(model.id, {
+        setCstValue,
+        clearValues
+      })
+  );
 
-  useEffect(function syncServices() {
-    engine.updateServices({ setCstValue, clearValues });
-  }, [engine, setCstValue, clearValues]);
+  useEffect(
+    function syncServices() {
+      engine.updateServices({ setCstValue, clearValues });
+    },
+    [engine, setCstValue, clearValues]
+  );
 
-  useEffect(function syncData() {
-    engine.loadData(schema, model);
-  }, [engine, schema, model]);
+  useEffect(
+    function syncData() {
+      engine.loadData(schema, model);
+    },
+    [engine, schema, model]
+  );
 
   const role = useRoleStore(state => state.role);
   const setSearchLocation = useLibrarySearchStore(state => state.setLocation);
@@ -58,10 +67,13 @@ export const RSModelState = ({ itemID, children }: React.PropsWithChildren<RSMod
   const { deleteItem } = useDeleteItem();
   const isProcessing = useMutatingRSModel();
 
-  useEffect(function syncGlobalModel() {
-    onSetModel(model);
-    return () => onSetModel(null);
-  }, [model]);
+  useEffect(
+    function syncGlobalModel() {
+      onSetModel(model);
+      return () => onSetModel(null);
+    },
+    [model]
+  );
 
   function deleteModel() {
     if (!window.confirm(promptText.deleteLibraryItem)) {
@@ -86,7 +98,7 @@ export const RSModelState = ({ itemID, children }: React.PropsWithChildren<RSMod
         isMutable,
         isOwned,
         engine,
-        deleteModel,
+        deleteModel
       }}
     >
       <RSEditState itemID={model.schema} isProcessing={isProcessing}>

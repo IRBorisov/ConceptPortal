@@ -19,8 +19,7 @@ export function HelpVersions() {
           <IconUpload className='inline-icon icon-red' /> Загрузить версию в актуальную схему
         </li>
         <li>
-          <IconNewVersion className='inline-icon icon-green' /> Создать версию можно только из актуальной
-          схемы
+          <IconNewVersion className='inline-icon icon-green' /> Создать версию можно только из актуальной схемы
         </li>
 
         <li>

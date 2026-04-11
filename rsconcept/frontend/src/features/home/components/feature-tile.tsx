@@ -44,7 +44,7 @@ export function FeatureTile({ to, icon, title, description, accentClass }: Featu
         )}
       />
 
-      <div className='relative flex items-start gap-4' >
+      <div className='relative flex items-start gap-4'>
         <span
           className={clsx(
             'h-11 w-11 shrink-0',

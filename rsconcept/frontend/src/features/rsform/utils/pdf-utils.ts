@@ -20,15 +20,12 @@ export function hyphenateCyrillic(word: string): string[] {
     return [word];
   }
   // Simple heuristic: break after vowels, soft sign, or hard sign when followed by consonant
-  const cyrillicVowel = "[аеёиоуыэюяАЕЁИОУЫЭЮЯ]";
-  const cyrillicConsonant = "[бвгджзйклмнпрстфхцчшщБВГДЖЗЙКЛМНПРСТФХЦЧШЩ]";
+  const cyrillicVowel = '[аеёиоуыэюяАЕЁИОУЫЭЮЯ]';
+  const cyrillicConsonant = '[бвгджзйклмнпрстфхцчшщБВГДЖЗЙКЛМНПРСТФХЦЧШЩ]';
   // Break after vowels or (soft/hard sign) if followed by a consonant
-  const re = new RegExp(
-    `((?:${cyrillicVowel}|[ьЬъЪ])(?=${cyrillicConsonant}))`,
-    "gu"
-  );
+  const re = new RegExp(`((?:${cyrillicVowel}|[ьЬъЪ])(?=${cyrillicConsonant}))`, 'gu');
   // Insert hyphens (split points) using a zero-width placeholder, then split there.
-  const PLACEHOLDER = "\u200B";
-  const res = word.replace(re, "$1" + PLACEHOLDER).split(PLACEHOLDER);
+  const PLACEHOLDER = '\u200B';
+  const res = word.replace(re, '$1' + PLACEHOLDER).split(PLACEHOLDER);
   return res;
 }

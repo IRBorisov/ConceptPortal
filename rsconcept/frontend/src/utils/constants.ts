@@ -44,7 +44,7 @@ export const limits = {
   len_description: 10000,
   len_text: 20000,
   len_data_str: 50000,
-  data_line_width: 80,
+  data_line_width: 80
 } as const;
 
 /** Exteor file extension for RSForm. */
@@ -139,7 +139,7 @@ export const prefixes = {
   user_editors: 'user_editors_',
   wordform_list: 'wordform_list_',
   rsedit_btn: 'rsedit_btn_',
-  eval_status_list: 'eval_status_list_',
+  eval_status_list: 'eval_status_list_'
 } as const;
 
 /** ReactFlow viewport class name. */

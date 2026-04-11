@@ -22,7 +22,7 @@ export function useValueEditorState(
   const [selectedPath, setSelectedPath] = useState<ValuePath | null>(null);
   const selectedValue = selectedPath !== null && data !== null ? extractValue(data, selectedPath) : null;
   const selectedCst = resolveSelectedConstituenta(engine, selectedPath, currentType);
-  const selectedBasics = selectedCst ? engine.basics.get(selectedCst.id) ?? null : null;
+  const selectedBasics = selectedCst ? (engine.basics.get(selectedCst.id) ?? null) : null;
 
   function handleNavigate(subPath: ValuePath) {
     setPath(prev => makeValuePath([...prev, ...subPath]));
@@ -82,7 +82,7 @@ export function useValueEditorState(
     selectedBasics,
     selectedCst,
     selectedPath,
-    selectedValue,
+    selectedValue
   };
 }
 

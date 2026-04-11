@@ -16,9 +16,9 @@ export const useDeleteVersion = () => {
         !prev
           ? undefined
           : {
-            ...prev,
-            versions: prev.versions.filter(version => version.id !== variables.versionID)
-          }
+              ...prev,
+              versions: prev.versions.filter(version => version.id !== variables.versionID)
+            }
       );
     },
     onError: () => client.invalidateQueries()

@@ -45,8 +45,12 @@ export function InfoOperation({ operation }: InfoOperationProps) {
     <>
       <h2>{operation.alias}</h2>
       <p className='flex justify-between gap-3'>
-        <span><b>Тип:</b> {labelOperationType(operation.operation_type)}</span>
-        <span><b>Собственные:</b> {operation.has_additions ? 'Да' : 'Нет'}</span>
+        <span>
+          <b>Тип:</b> {labelOperationType(operation.operation_type)}
+        </span>
+        <span>
+          <b>Собственные:</b> {operation.has_additions ? 'Да' : 'Нет'}
+        </span>
       </p>
       {operation.operation_type === OperationType.INPUT && operation.is_import ? (
         <p>

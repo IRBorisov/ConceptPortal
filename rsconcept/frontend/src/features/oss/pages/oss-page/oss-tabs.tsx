@@ -27,17 +27,23 @@ export function OssTabs({ activeTab }: OssTabsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   useResetAttribute(containerRef, 'data-tooltip-id');
 
-  useLayoutEffect(function updateWindowTitle() {
-    const oldTitle = document.title;
-    document.title = schema.title;
-    return () => {
-      document.title = oldTitle;
-    };
-  }, [schema.title]);
+  useLayoutEffect(
+    function updateWindowTitle() {
+      const oldTitle = document.title;
+      document.title = schema.title;
+      return () => {
+        document.title = oldTitle;
+      };
+    },
+    [schema.title]
+  );
 
-  useLayoutEffect(function hideFooterForGraphTab() {
-    onHideFooterEvent(activeTab === OssTabID.GRAPH);
-  }, [activeTab]);
+  useLayoutEffect(
+    function hideFooterForGraphTab() {
+      onHideFooterEvent(activeTab === OssTabID.GRAPH);
+    },
+    [activeTab]
+  );
 
   useEffect(function restoreFooterOnUnmount() {
     return () => onHideFooterEvent(false);

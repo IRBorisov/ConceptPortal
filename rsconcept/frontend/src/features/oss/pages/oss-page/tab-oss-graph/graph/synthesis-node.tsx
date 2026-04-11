@@ -9,7 +9,13 @@ export function SynthesisNode(node: NodeProps<OGOperationNode>) {
   return (
     <>
       <Handle type='target' position={Position.Top} id='left' style={{ left: 40 }} isConnectableStart={false} />
-      <Handle type='target' position={Position.Top} id='right' style={{ right: 40, left: 'auto' }} isConnectableStart={false} />
+      <Handle
+        type='target'
+        position={Position.Top}
+        id='right'
+        style={{ right: 40, left: 'auto' }}
+        isConnectableStart={false}
+      />
       <NodeCoreComponent node={node} />
       <Handle type='source' position={Position.Bottom} isConnectableStart />
     </>

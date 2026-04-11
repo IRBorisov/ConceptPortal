@@ -2,7 +2,7 @@
  * Module: TRS file preparation.
  */
 
-import { strToU8, zipSync } from "fflate";
+import { strToU8, zipSync } from 'fflate';
 
 import { CstType, type RSForm } from './rsform';
 
@@ -11,7 +11,6 @@ const TRS_ENTITY_SCHEMA = 'rsform';
 const TRS_HEADER = 'Exteor 4.8.13.1000 - 30/05/2022';
 const TRS_INNER_FILENAME = 'document.json';
 const TRS_VERSION = 16;
-
 
 /** Create TRS-compatible JSON payload from {@link RSForm}. */
 export function prepareTRSData(schema: RSForm) {

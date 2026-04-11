@@ -32,9 +32,9 @@ export function PaginationTools<TData>({
         {`${table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1}
       -
       ${Math.min(
-          table.getFilteredRowModel().rows.length,
-          (table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize
-        )}
+        table.getFilteredRowModel().rows.length,
+        (table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize
+      )}
       из
       ${table.getFilteredRowModel().rows.length}`}
       </div>
@@ -89,14 +89,16 @@ export function PaginationTools<TData>({
           >
             <IconPageLast size='1.5rem' />
           </button>
-        </div>) : null}
-      {paginationOptions.length > 1 ?
-        (<SelectPagination
+        </div>
+      ) : null}
+      {paginationOptions.length > 1 ? (
+        <SelectPagination
           id={id ? `${id}__per_page` : undefined}
           table={table}
           paginationOptions={paginationOptions}
           onChange={onChangePaginationOption}
-        />) : null}
+        />
+      ) : null}
     </div>
   );
 }

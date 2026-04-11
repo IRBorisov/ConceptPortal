@@ -14,11 +14,14 @@ export function useAdjustRole(input: AdjustRoleProps) {
   const onAdjustRoleEvent = useEffectEvent(adjustRole);
   const lastInput = useRef<string | null>(null);
 
-  useEffect(function adjustRoleOnInputChange() {
-    const serializedInput = JSON.stringify(input);
-    if (lastInput.current !== serializedInput) {
-      lastInput.current = serializedInput;
-      onAdjustRoleEvent(input);
-    }
-  }, [input]);
+  useEffect(
+    function adjustRoleOnInputChange() {
+      const serializedInput = JSON.stringify(input);
+      if (lastInput.current !== serializedInput) {
+        lastInput.current = serializedInput;
+        onAdjustRoleEvent(input);
+      }
+    },
+    [input]
+  );
 }

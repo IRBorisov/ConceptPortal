@@ -77,10 +77,7 @@ export function TableRSModelList({
       size: 60,
       minSize: 60,
       maxSize: 60,
-      cell: props => <BadgeEvaluation
-        cst={props.row.original}
-        engine={engine}
-      />
+      cell: props => <BadgeEvaluation cst={props.row.original} engine={engine} />
     }),
     columnHelper.accessor(cst => labelType(cst.analysis.type), {
       id: 'type',

@@ -28,7 +28,7 @@ interface ViewSchemaProps {
 export function ViewSchema({ schemaID, isMutable }: ViewSchemaProps) {
   const { schema } = useRSForm({ itemID: schemaID });
   const [activeID, setActiveID] = useState<number | null>(null);
-  const activeCst = activeID ? schema.cstByID.get(activeID) ?? null : null;
+  const activeCst = activeID ? (schema.cstByID.get(activeID) ?? null) : null;
   const showEditCst = useDialogsStore(state => state.showEditCst);
   const router = useConceptNavigation();
   const { findPredecessor } = useFindPredecessor();
@@ -42,10 +42,13 @@ export function ViewSchema({ schemaID, isMutable }: ViewSchemaProps) {
 
   const listHeight = useFitHeight('14.5rem', '10rem');
 
-  useEffect(function syncGlobalSchema() {
-    onSetSchema(schema);
-    return () => onSetSchema(null);
-  }, [schema]);
+  useEffect(
+    function syncGlobalSchema() {
+      onSetSchema(schema);
+      return () => onSetSchema(null);
+    },
+    [schema]
+  );
 
   function handleEditCst(cst: Constituenta) {
     showEditCst({
@@ -55,9 +58,7 @@ export function ViewSchema({ schemaID, isMutable }: ViewSchemaProps) {
         void updateConstituenta({ itemID: schema.id, data });
       },
       onEditSource: () => {
-        void findPredecessor(cst.id).then(reference =>
-          router.gotoCstEdit(reference.schema, reference.id)
-        );
+        void findPredecessor(cst.id).then(reference => router.gotoCstEdit(reference.schema, reference.id));
       },
       onAddAttribution: item =>
         void createAttribution({

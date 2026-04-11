@@ -33,11 +33,13 @@ export const useSetEditors = () => {
       }
 
       const rsKey = KEYS.composite.schema({ itemID: variables.itemID });
-      client.setQueryData(rsKey, (prev: { raw: RSFormDTO; transformed: RSForm; } | undefined) =>
-        !prev ? undefined : {
-          raw: { ...prev.raw, editors: variables.editors },
-          transformed: { ...prev.transformed, editors: variables.editors }
-        }
+      client.setQueryData(rsKey, (prev: { raw: RSFormDTO; transformed: RSForm } | undefined) =>
+        !prev
+          ? undefined
+          : {
+              raw: { ...prev.raw, editors: variables.editors },
+              transformed: { ...prev.transformed, editors: variables.editors }
+            }
       );
       const modelKey = KEYS.composite.model({ itemID: variables.itemID });
       client.setQueryData(modelKey, (prev: RSModelDTO | undefined) =>

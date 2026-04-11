@@ -4,14 +4,7 @@ import { useTermGraphStore } from '@/features/rsform/stores/term-graph';
 
 import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
-import {
-  IconFilter,
-  IconFitImage,
-  IconFocus,
-  IconImage,
-  IconPNG,
-  IconSVG
-} from '@/components/icons';
+import { IconFilter, IconFitImage, IconFocus, IconImage, IconPNG, IconSVG } from '@/components/icons';
 import { cn } from '@/components/utils';
 import { type Graph } from '@/models/graph';
 import { useDialogsStore } from '@/stores/dialogs';
@@ -68,7 +61,6 @@ export function ToolbarTGOptions({ className, graph }: ToolbarTGOptionsProps) {
         icon={<IconFitImage size='1.25rem' className='icon-primary' />}
         onClick={handleFitView}
       />
-
 
       <MiniButton
         title='Настройки фильтрации узлов и связей'

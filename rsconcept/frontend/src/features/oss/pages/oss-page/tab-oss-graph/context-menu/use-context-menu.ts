@@ -22,7 +22,7 @@ export function useContextMenu() {
   function openContextMenu(node: OGNode, clientX: number, clientY: number) {
     addSelectedNodes([node.id]);
     setMenuProps({
-      item: node.type === 'block' ? node.data.block ?? null : node.data.operation ?? null,
+      item: node.type === 'block' ? (node.data.block ?? null) : (node.data.operation ?? null),
       cursorX: clientX,
       cursorY: clientY
     });

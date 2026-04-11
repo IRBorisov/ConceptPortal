@@ -18,20 +18,23 @@ export function useWindowSize() {
 
   const [windowSize, setWindowSize] = useState(getSize);
 
-  useEffect(function listenForWindowSizeChanges() {
-    if (!isClient) {
-      return;
-    }
-    function handleResize() {
-      setWindowSize({
-        width: window.innerWidth,
-        height: window.innerHeight,
-        isSmall: window.innerWidth < PARAMETER.smallScreen
-      });
-    }
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [isClient]);
+  useEffect(
+    function listenForWindowSizeChanges() {
+      if (!isClient) {
+        return;
+      }
+      function handleResize() {
+        setWindowSize({
+          width: window.innerWidth,
+          height: window.innerHeight,
+          isSmall: window.innerWidth < PARAMETER.smallScreen
+        });
+      }
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
+    },
+    [isClient]
+  );
 
   return windowSize;
 }

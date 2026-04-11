@@ -6,11 +6,15 @@ export { normalizeAST } from './parser/normalize';
 export { parser as rslangParser } from './parser/parser';
 export { TokenID } from './parser/token';
 export {
-  type AnalysisBase, type AnalysisFast,
-  type AnalysisFull, type AnalysisOptions, RSLangAnalyzer
+  type AnalysisBase,
+  type AnalysisFast,
+  type AnalysisFull,
+  type AnalysisOptions,
+  RSLangAnalyzer
 } from './semantic/analyzer';
 export {
-  AnyTypificationT, EmptySetT,
+  AnyTypificationT,
+  EmptySetT,
   type ExpressionType,
   LogicT,
   makeTypePath,

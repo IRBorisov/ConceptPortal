@@ -36,14 +36,10 @@ export function DlgCreatePromptTemplate() {
       onChange: schemaCreatePromptTemplate
     },
     onSubmit: ({ value }) => void createPromptTemplate(value).then(onCreate)
-
   });
 
   const label = useStore(form.store, state => state.values.label);
-  const canSubmit = useMemo(
-    () => !!label && !templates.find(template => template.label === label),
-    [label, templates]
-  );
+  const canSubmit = useMemo(() => !!label && !templates.find(template => template.label === label), [label, templates]);
 
   return (
     <ModalForm

@@ -56,9 +56,9 @@ export function DlgEditOperation() {
       substitutions:
         target.operation_type === OperationType.SYNTHESIS
           ? target.substitutions.map(sub => ({
-            original: sub.original,
-            substitution: sub.substitution
-          }))
+              original: sub.original,
+              substitution: sub.substitution
+            }))
           : [],
       layout: manager.layout
     } satisfies UpdateOperationDTO,

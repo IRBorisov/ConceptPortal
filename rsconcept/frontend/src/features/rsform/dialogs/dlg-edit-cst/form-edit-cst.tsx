@@ -72,12 +72,7 @@ export function FormEditCst({
           icon={<IconCrucialValue size='1.25rem' value={crucial} />}
           onClick={onToggleCrucial}
         />
-        <SelectCstType
-          id='dlg_cst_type'
-          value={cst_type}
-          onChange={handleTypeChange}
-          disabled={target.is_inherited}
-        />
+        <SelectCstType id='dlg_cst_type' value={cst_type} onChange={handleTypeChange} disabled={target.is_inherited} />
         <AliasField>
           {field => (
             <TextInput
@@ -106,7 +101,7 @@ export function FormEditCst({
             schema={schema}
             value={field.state.value ?? ''}
             initialValue={target.term_raw}
-            resolved={target.term_raw === field.state.value ? target.term_resolved : field.state.value ?? ''}
+            resolved={target.term_raw === field.state.value ? target.term_resolved : (field.state.value ?? '')}
             onChange={newValue => field.handleChange(newValue)}
           />
         )}
@@ -173,7 +168,7 @@ export function FormEditCst({
               value={field.state.value ?? ''}
               initialValue={target.definition_raw}
               resolved={
-                target.definition_raw === field.state.value ? target.definition_resolved : field.state.value ?? ''
+                target.definition_raw === field.state.value ? target.definition_resolved : (field.state.value ?? '')
               }
               onChange={field.handleChange}
             />

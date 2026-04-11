@@ -7,4 +7,4 @@ export interface SPFlowNodeData extends Record<string, unknown> {
 }
 
 export type SPFlowNode = Node<SPFlowNodeData>;
-export type SPFlowEdge = Edge<{ projection?: number; }>;
+export type SPFlowEdge = Edge<{ projection?: number }>;

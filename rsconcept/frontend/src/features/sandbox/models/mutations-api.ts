@@ -216,11 +216,7 @@ function extractSources(
   return sources;
 }
 
-function needCheckHead(
-  sources: Set<number>,
-  head: string,
-  byId: Map<number, ConstituentaBasicsDTO>
-): boolean {
+function needCheckHead(sources: Set<number>, head: string, byId: Map<number, ConstituentaBasicsDTO>): boolean {
   if (sources.size === 0) {
     return true;
   }

@@ -7,7 +7,7 @@ export interface FieldStateData<TValue> {
   state: {
     value: TValue;
     meta: {
-      errors: { message?: string; }[];
+      errors: { message?: string }[];
     };
   };
   handleChange: (value: TValue) => void;

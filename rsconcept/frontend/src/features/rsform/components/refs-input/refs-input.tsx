@@ -22,7 +22,12 @@ import { PARAMETER } from '@/utils/constants';
 import { withPreventDefault } from '@/utils/utils';
 
 import { type Grammeme, ReferenceType, supportedGrammemes } from '../../models/language';
-import { parseEntityReference, parseGrammemes, parseSyntacticReference, referenceToString } from '../../models/language-api';
+import {
+  parseEntityReference,
+  parseGrammemes,
+  parseSyntacticReference,
+  referenceToString
+} from '../../models/language-api';
 import { type RSForm } from '../../models/rsform';
 
 import { RefEntity, RefSyntactic } from './parse/parser.terms';
@@ -68,19 +73,10 @@ const SYNTACTIC_INLINE_WIDTH = 320;
 const BOTTOM_MARGIN = 20;
 const RIGHT_MARGIN = 40;
 
-interface RefsInputInputProps
-  extends Pick<
-    ReactCodeMirrorProps,
-    | 'id'
-    | 'height'
-    | 'minHeight'
-    | 'maxHeight'
-    | 'value'
-    | 'className'
-    | 'onFocus'
-    | 'onBlur'
-    | 'placeholder'
-  > {
+interface RefsInputInputProps extends Pick<
+  ReactCodeMirrorProps,
+  'id' | 'height' | 'minHeight' | 'maxHeight' | 'value' | 'className' | 'onFocus' | 'onBlur' | 'placeholder'
+> {
   value: string;
   resolved: string;
   onChange: (newValue: string) => void;
@@ -96,11 +92,19 @@ interface RefsInputInputProps
 }
 
 export function RefsInput({
-  label, disabled, schema,
-  initialValue, value, resolved,
+  label,
+  disabled,
+  schema,
+  initialValue,
+  value,
+  resolved,
   portalHoverTooltips,
-  onOpenEdit, onFocus, onBlur, onChange,
-  ref, ...restProps
+  onOpenEdit,
+  onFocus,
+  onBlur,
+  onChange,
+  ref,
+  ...restProps
 }: RefsInputInputProps) {
   const darkMode = usePreferencesStore(state => state.darkMode);
 
@@ -136,10 +140,14 @@ export function RefsInput({
   const editorExtensions = [
     EditorView.lineWrapping,
     EditorView.contentAttributes.of({ spellcheck: 'true' }),
-    ...(portalHoverTooltips ? [tooltips({
-      parent: document.body,
-      position: 'fixed'
-    })] : []),
+    ...(portalHoverTooltips
+      ? [
+          tooltips({
+            parent: document.body,
+            position: 'fixed'
+          })
+        ]
+      : []),
     NaturalLanguage,
     ...(!onOpenEdit ? [] : [refsNavigation(schema, onOpenEdit)]),
     refsHoverTooltip(schema, onOpenEdit !== undefined)
@@ -176,7 +184,7 @@ export function RefsInput({
     }
 
     const baseTop = Math.max((coords.bottom ?? 0) + 4, 8);
-    const baseLeft = Math.max((coords.left ?? 0), 8);
+    const baseLeft = Math.max(coords.left ?? 0, 8);
     const viewportHeight = window.innerHeight;
     const viewportWidth = window.innerWidth;
 
@@ -188,7 +196,6 @@ export function RefsInput({
       left: adjustedLeft
     };
   }
-
 
   function openEntityEditor() {
     const cmRef = thisRef.current as Required<ReactCodeMirrorRef> | null;
@@ -319,7 +326,6 @@ export function RefsInput({
     }
   }
 
-
   return (
     <div ref={wrapperRef} className={clsx('relative flex flex-col gap-2', cursor)}>
       <Label text={label} />
@@ -339,26 +345,26 @@ export function RefsInput({
       />
       {entityEditor && inlinePosition
         ? createPortal(
-          <InlineEntityEditor
-            schema={schema}
-            initial={entityEditor}
-            position={inlinePosition}
-            onCancel={closeInlineEditor}
-            onSave={handleSaveEntityEditor}
-          />,
-          document.body
-        )
+            <InlineEntityEditor
+              schema={schema}
+              initial={entityEditor}
+              position={inlinePosition}
+              onCancel={closeInlineEditor}
+              onSave={handleSaveEntityEditor}
+            />,
+            document.body
+          )
         : null}
       {syntacticEditor && inlinePosition
         ? createPortal(
-          <InlineSyntacticEditor
-            initial={syntacticEditor}
-            position={inlinePosition}
-            onCancel={closeInlineEditor}
-            onSave={handleSaveSyntacticEditor}
-          />,
-          document.body
-        )
+            <InlineSyntacticEditor
+              initial={syntacticEditor}
+              position={inlinePosition}
+              onCancel={closeInlineEditor}
+              onSave={handleSaveSyntacticEditor}
+            />,
+            document.body
+          )
         : null}
     </div>
   );

@@ -49,9 +49,7 @@ export function buildTree(cursor: TreeCursor, parent: AstNode | null = null): As
     from: node.from,
     to: node.to,
     hasError: node.type.isError,
-    data: node.type.isError ?
-      { dataType: 'null', value: null } :
-      { dataType: 'string', value: node.type.name },
+    data: node.type.isError ? { dataType: 'null', value: null } : { dataType: 'string', value: node.type.name },
     parent,
     children: []
   };
@@ -85,7 +83,7 @@ export function flattenAst(node: AstNode, parent = TOKEN_ERROR, out: FlatAST = [
     flattenAst(child, uid, out);
   }
   return out;
-};
+}
 
 /** Visits AST tree in depth-first order. */
 export function visitAstDFS(node: AstNode, callback: (node: AstNode) => void) {

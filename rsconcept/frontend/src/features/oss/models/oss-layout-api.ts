@@ -322,7 +322,7 @@ function rectanglesStrictOverlap(a: Rectangle2D, b: Rectangle2D): boolean {
 function preventOverlap(
   target: Rectangle2D,
   fixedRectangles: Rectangle2D[],
-  options: { moveX?: boolean; moveY?: boolean; } = { moveX: true, moveY: true }
+  options: { moveX?: boolean; moveY?: boolean } = { moveX: true, moveY: true }
 ) {
   if ((!options.moveX && !options.moveY) || fixedRectangles.length === 0) {
     return;

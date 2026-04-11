@@ -8,12 +8,7 @@ import { Checkbox, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import {
-  type DeleteOperationDTO,
-  OperationType,
-  type OssLayout,
-  schemaDeleteOperation
-} from '../backend/types';
+import { type DeleteOperationDTO, OperationType, type OssLayout, schemaDeleteOperation } from '../backend/types';
 import { useDeleteOperation } from '../backend/use-delete-operation';
 import { useOss } from '../backend/use-oss';
 

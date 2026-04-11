@@ -25,17 +25,14 @@ export function TabBlockChildren({
   const parentItem = parent ? oss.blockByID.get(parent) : null;
   const internalBlocks = parentItem
     ? oss.hierarchy
-      .expandAllInputs([parentItem.nodeID])
-      .map(id => oss.itemByNodeID.get(id))
-      .filter(item => item !== null && item?.nodeType === NodeType.BLOCK)
+        .expandAllInputs([parentItem.nodeID])
+        .map(id => oss.itemByNodeID.get(id))
+        .filter(item => item !== null && item?.nodeType === NodeType.BLOCK)
     : [];
 
   const exclude = parentItem ? [parentItem, ...internalBlocks] : [];
 
-  const value = [
-    ...blocks.map(id => oss.blockByID.get(id)!),
-    ...operations.map(id => oss.operationByID.get(id)!)
-  ];
+  const value = [...blocks.map(id => oss.blockByID.get(id)!), ...operations.map(id => oss.operationByID.get(id)!)];
 
   function handleChangeSelected(newValue: OssItem[]) {
     onChangeBlocks(newValue.filter(item => item.nodeType === NodeType.BLOCK).map(item => item.id));

@@ -16,11 +16,11 @@ export const useUpdateVersion = () => {
         !prev
           ? undefined
           : {
-            ...prev,
-            versions: prev.versions.map(version =>
-              version.id === data.id ? { ...version, description: data.description, version: data.version } : version
-            )
-          }
+              ...prev,
+              versions: prev.versions.map(version =>
+                version.id === data.id ? { ...version, description: data.description, version: data.version } : version
+              )
+            }
       );
       client.setQueryData(
         KEYS.composite.schema({ itemID: variables.itemID, version: variables.version.id }),
@@ -28,13 +28,13 @@ export const useUpdateVersion = () => {
           !prev
             ? undefined
             : {
-              ...prev,
-              versions: prev.versions.map(version =>
-                version.id === data.id
-                  ? { ...version, description: data.description, version: data.version }
-                  : version
-              )
-            }
+                ...prev,
+                versions: prev.versions.map(version =>
+                  version.id === data.id
+                    ? { ...version, description: data.description, version: data.version }
+                    : version
+                )
+              }
       );
     },
     onError: () => client.invalidateQueries()

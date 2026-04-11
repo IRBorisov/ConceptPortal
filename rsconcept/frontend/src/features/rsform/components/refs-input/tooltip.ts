@@ -96,8 +96,8 @@ function domTooltipEntityReference(ref: EntityReference, cst: Constituenta | nul
   controlsTip.innerHTML = '<kbd>Alt + 1</kbd> ссылка на конституенту</br><kbd>Alt + 2</kbd> зависимое слово';
   if (canClick) {
     controlsTip.innerHTML =
-      (isMac() ? '<kbd>Cmd + клик</kbd> для перехода</br>' : '<kbd>Ctrl + клик</kbd> для перехода</br>')
-      + controlsTip.innerHTML;
+      (isMac() ? '<kbd>Cmd + клик</kbd> для перехода</br>' : '<kbd>Ctrl + клик</kbd> для перехода</br>') +
+      controlsTip.innerHTML;
   }
   dom.appendChild(controlsTip);
 

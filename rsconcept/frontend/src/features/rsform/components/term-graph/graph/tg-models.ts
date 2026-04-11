@@ -48,7 +48,7 @@ export function applyLayout(nodes: Node<TGNodeState>[], edges: Edge[], subLabels
   dagre.layout(dagreGraph);
 
   if (isolated.length > 0) {
-    const getLayout = (id: string) => dagreGraph.node(id) as { x: number; y: number; };
+    const getLayout = (id: string) => dagreGraph.node(id) as { x: number; y: number };
     const xs = nonIsolated.map(n => getLayout(n.id).x);
     const maxY = nonIsolated.length ? Math.min(...nonIsolated.map(node => getLayout(node.id).y)) : 0;
     const minX = nonIsolated.length ? Math.min(...xs) : 0;
@@ -73,7 +73,7 @@ export function applyLayout(nodes: Node<TGNodeState>[], edges: Edge[], subLabels
   }
 
   nonIsolated.forEach(node => {
-    const nodeWithPosition = dagreGraph.node(node.id) as { x: number; y: number; };
+    const nodeWithPosition = dagreGraph.node(node.id) as { x: number; y: number };
     node.position.x = -nodeWithPosition.x + PARAMETER.graphNodeRadius;
     node.position.y = nodeWithPosition.y - PARAMETER.graphNodeRadius;
   });

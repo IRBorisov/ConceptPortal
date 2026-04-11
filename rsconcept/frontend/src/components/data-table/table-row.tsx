@@ -100,7 +100,10 @@ export function TableRow<TData>({
             onRowClicked || onRowDoubleClicked ? 'cursor-pointer' : 'cursor-auto'
           )}
           style={{
-            width: noHeader && row.index === 0 && !skipWidthCalculation ? `calc(var(--col-${cell.column.id}-size) * 1px)` : undefined
+            width:
+              noHeader && row.index === 0 && !skipWidthCalculation
+                ? `calc(var(--col-${cell.column.id}-size) * 1px)`
+                : undefined
           }}
         >
           {flexRender(cell.column.columnDef.cell, cell.getContext())}

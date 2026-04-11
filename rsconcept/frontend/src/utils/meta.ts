@@ -30,33 +30,34 @@ type HasDisallowedProps<T> = {
 
 // Detects if T is a class instance (has constructor)
 type IsClassInstance<T> = T extends object
-  ? T extends { constructor: new (...args: unknown[]) => unknown; }
-  ? true
-  : false
+  ? T extends { constructor: new (...args: unknown[]) => unknown }
+    ? true
+    : false
   : false;
 
 // The final check — should the object be rejected?
 type IsInvalid<T> = T extends object
   ? HasFunctionProps<T> extends true
-  ? true
-  : HasDisallowedProps<T> extends true
-  ? true
-  : IsClassInstance<T> extends true
-  ? true
-  : false
+    ? true
+    : HasDisallowedProps<T> extends true
+      ? true
+      : IsClassInstance<T> extends true
+        ? true
+        : false
   : false;
 
 /**
  * Apply readonly modifier to all properties of a SIMPLE object recursively.
  * only works for arrays, dictionaries and primitives.
  */
-export type RO<T> = IsInvalid<T> extends true
-  ? never
-  : T extends readonly unknown[]
-  ? readonly RO<T[number]>[]
-  : T extends object
-  ? { readonly [K in keyof T]: RO<T[K]> }
-  : T;
+export type RO<T> =
+  IsInvalid<T> extends true
+    ? never
+    : T extends readonly unknown[]
+      ? readonly RO<T[number]>[]
+      : T extends object
+        ? { readonly [K in keyof T]: RO<T[K]> }
+        : T;
 
 /**
  * Freeze an object.

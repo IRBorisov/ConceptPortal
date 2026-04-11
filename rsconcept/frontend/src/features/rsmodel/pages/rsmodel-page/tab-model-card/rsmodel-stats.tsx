@@ -152,22 +152,27 @@ export function CardRSModelStats({ className, stats }: CardRSModelStatsProps) {
         id='count_missing_base'
         title='Отсутствующие базовые интерпретации'
         icon={
-          <IconMissingBase
-            size='1.25rem'
-            className={stats.count_missing_base > 0 ? 'text-destructive' : undefined} />
+          <IconMissingBase size='1.25rem' className={stats.count_missing_base > 0 ? 'text-destructive' : undefined} />
         }
         value={stats.count_missing_base}
       />
       <ValueStats
         id='count_false_axioms'
         title='Невыполненные аксиомы'
-        icon={<IconAxiomFalse size='1.25rem' className={stats.count_false_axioms > 0 ? 'text-destructive' : undefined} />}
+        icon={
+          <IconAxiomFalse size='1.25rem' className={stats.count_false_axioms > 0 ? 'text-destructive' : undefined} />
+        }
         value={stats.count_false_axioms}
       />
       <ValueStats
         id='count_invalid_calculations'
         title='Невычислимые конституенты'
-        icon={<IconNotCalculated size='1.25rem' className={stats.count_invalid_calculations > 0 ? 'text-destructive' : undefined} />}
+        icon={
+          <IconNotCalculated
+            size='1.25rem'
+            className={stats.count_invalid_calculations > 0 ? 'text-destructive' : undefined}
+          />
+        }
         value={stats.count_invalid_calculations}
       />
       <ValueStats

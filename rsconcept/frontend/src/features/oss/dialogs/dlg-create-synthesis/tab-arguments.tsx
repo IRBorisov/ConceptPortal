@@ -66,7 +66,7 @@ export function TabArguments({ oss, inputs, fields }: TabArgumentsProps) {
             {field => (
               <SelectParent
                 items={oss.blocks}
-                value={field.state.value ? oss.blockByID.get(field.state.value) ?? null : null}
+                value={field.state.value ? (oss.blockByID.get(field.state.value) ?? null) : null}
                 placeholder='Родительский блок'
                 onChange={value => field.handleChange(value ? value.id : null)}
               />
@@ -93,7 +93,12 @@ export function TabArguments({ oss, inputs, fields }: TabArgumentsProps) {
         <Label text={`Выбор аргументов: [ ${inputs.length} ]`} />
         <ArgumentsField>
           {field => (
-            <PickMultiOperation items={filtered} value={field.state.value ?? []} onChange={field.handleChange} rows={6} />
+            <PickMultiOperation
+              items={filtered}
+              value={field.state.value ?? []}
+              onChange={field.handleChange}
+              rows={6}
+            />
           )}
         </ArgumentsField>
       </div>

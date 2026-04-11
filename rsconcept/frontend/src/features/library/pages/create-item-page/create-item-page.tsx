@@ -33,11 +33,7 @@ export function CreateItemPage() {
 
   return (
     <RequireAuth>
-      <FormCreateItem
-        modelFrom={urlData.modelFrom}
-        fromSandbox={urlData.fromSandbox}
-        initialType={urlData.itemType}
-      />
+      <FormCreateItem modelFrom={urlData.modelFrom} fromSandbox={urlData.fromSandbox} initialType={urlData.itemType} />
     </RequireAuth>
   );
 }

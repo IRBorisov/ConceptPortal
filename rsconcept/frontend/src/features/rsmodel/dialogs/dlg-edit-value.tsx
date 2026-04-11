@@ -21,10 +21,9 @@ export interface DlgEditValueProps {
 }
 
 export function DlgEditValue() {
-  const {
-    initialValue, type, engine,
-    onChange, getHeaderText
-  } = useDialogsStore(state => state.props as DlgEditValueProps);
+  const { initialValue, type, engine, onChange, getHeaderText } = useDialogsStore(
+    state => state.props as DlgEditValueProps
+  );
   const [value, setValue] = useState<Value | null>(initialValue);
 
   function handleChange(newValue: Value | null) {

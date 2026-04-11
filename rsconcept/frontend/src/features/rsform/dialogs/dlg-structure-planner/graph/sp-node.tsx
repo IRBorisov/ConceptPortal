@@ -14,11 +14,12 @@ export function SPNodeComponent(node: NodeProps<SPFlowNode>) {
     <>
       <Handle type='target' position={Position.Top} className='opacity-0' />
 
-      <div className={clsx(
-        'cc-node-label',
-        'w-full h-full flex items-center justify-center',
-        'cursor-default rounded-full'
-      )}
+      <div
+        className={clsx(
+          'cc-node-label',
+          'w-full h-full flex items-center justify-center',
+          'cursor-default rounded-full'
+        )}
         style={{ backgroundColor: colorSPNode(node.data) }}
       >
         {node.data.node.existing?.alias ?? 'N/A'}

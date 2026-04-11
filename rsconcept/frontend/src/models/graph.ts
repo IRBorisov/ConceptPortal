@@ -286,7 +286,7 @@ export class Graph<NodeID = number> {
       if (marked.get(nodeID)) {
         return;
       }
-      const stack: { id: NodeID; parents: NodeID[]; }[] = [];
+      const stack: { id: NodeID; parents: NodeID[] }[] = [];
       stack.push({ id: nodeID, parents: [] });
       while (stack.length > 0) {
         const item = stack.splice(0, 1)[0];
@@ -318,7 +318,7 @@ export class Graph<NodeID = number> {
         continue;
       }
 
-      const callStack: { nodeId: NodeID; parentId: NodeID | null; }[] = [];
+      const callStack: { nodeId: NodeID; parentId: NodeID | null }[] = [];
       callStack.push({ nodeId: nodeId, parentId: null });
       while (callStack.length > 0) {
         const { nodeId, parentId } = callStack[callStack.length - 1];

@@ -4,11 +4,7 @@ import { useEffect, useEffectEvent } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { useConceptNavigation } from '@/app';
-import {
-  LibraryItemType,
-  schemaUpdateLibraryItem,
-  type UpdateLibraryItemDTO
-} from '@/features/library';
+import { LibraryItemType, schemaUpdateLibraryItem, type UpdateLibraryItemDTO } from '@/features/library';
 import { useUpdateItem } from '@/features/library/backend/use-update-item';
 import { ToolbarItemAccess } from '@/features/library/components/toolbar-item-access';
 import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
@@ -62,13 +58,19 @@ export function FormRSModel() {
     form.reset(next);
   });
 
-  useEffect(function resetFormOnModelChange() {
-    onResetEvent(modelDefaults(model));
-  }, [model]);
+  useEffect(
+    function resetFormOnModelChange() {
+      onResetEvent(modelDefaults(model));
+    },
+    [model]
+  );
 
-  useEffect(function syncGlobalModified() {
-    onModifiedEvent(!isDefaultValue);
-  }, [isDefaultValue]);
+  useEffect(
+    function syncGlobalModified() {
+      onModifiedEvent(!isDefaultValue);
+    },
+    [isDefaultValue]
+  );
 
   function handleNavigateSchema() {
     router.gotoRSForm(model.schema);

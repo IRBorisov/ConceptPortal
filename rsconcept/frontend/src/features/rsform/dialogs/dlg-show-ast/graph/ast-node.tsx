@@ -62,9 +62,7 @@ function buildTooltip(data: FlatAstNode, schema: RSForm | null, errorMessages: s
   const typeLine = rsType ? `Тип: <span class="font-math">${labelType(rsType)}</span>` : '';
   const errorBlock = errorMessages ? `<span class="text-destructive">${errorMessages}</span>` : '';
   const isGlobalId =
-    data.typeID === TokenID.ID_GLOBAL ||
-    data.typeID === TokenID.ID_FUNCTION ||
-    data.typeID === TokenID.ID_PREDICATE;
+    data.typeID === TokenID.ID_GLOBAL || data.typeID === TokenID.ID_FUNCTION || data.typeID === TokenID.ID_PREDICATE;
   let extra = '';
   if (isGlobalId && schema) {
     const alias = typeof data.data.value === 'string' ? data.data.value : '';

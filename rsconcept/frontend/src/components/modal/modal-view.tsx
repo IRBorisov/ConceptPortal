@@ -74,7 +74,7 @@ export function ModalView({
             className={clsx(
               'px-12 py-2 select-none',
               fullScreen &&
-              'z-pop absolute top-0 right-1/2 translate-x-1/2 backdrop-blur-xs bg-background/90 rounded-2xl'
+                'z-pop absolute top-0 right-1/2 translate-x-1/2 backdrop-blur-xs bg-background/90 rounded-2xl'
             )}
           >
             {header}
@@ -95,23 +95,22 @@ export function ModalView({
           {children}
         </div>
 
-        {noFooterButton ? null :
-          !fullScreen ? (
-            <Button
-              text='Закрыть'
-              aria-label='Закрыть'
-              className={clsx(
-                'my-2 mx-auto text-sm min-w-28',
-                fullScreen && 'z-pop absolute bottom-0 right-1/2 translate-x-1/2'
-              )}
-              onClick={hideDialog}
-            />
-          ) : (
-            <div className='z-pop absolute bottom-0 right-1/2 translate-x-1/2 p-3 rounded-xl bg-background/90 backdrop-blur-xs'>
-              {' '}
-              <Button text='Закрыть' aria-label='Закрыть' className='text-sm min-w-28' onClick={hideDialog} />
-            </div>
-          )}
+        {noFooterButton ? null : !fullScreen ? (
+          <Button
+            text='Закрыть'
+            aria-label='Закрыть'
+            className={clsx(
+              'my-2 mx-auto text-sm min-w-28',
+              fullScreen && 'z-pop absolute bottom-0 right-1/2 translate-x-1/2'
+            )}
+            onClick={hideDialog}
+          />
+        ) : (
+          <div className='z-pop absolute bottom-0 right-1/2 translate-x-1/2 p-3 rounded-xl bg-background/90 backdrop-blur-xs'>
+            {' '}
+            <Button text='Закрыть' aria-label='Закрыть' className='text-sm min-w-28' onClick={hideDialog} />
+          </div>
+        )}
       </div>
     </div>
   );

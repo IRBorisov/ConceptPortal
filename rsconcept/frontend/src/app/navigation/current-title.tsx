@@ -10,7 +10,7 @@ interface SchemaTitleProps {
   title: string;
 }
 
-function ItemIcon({ itemType }: { itemType: LibraryItemType; }) {
+function ItemIcon({ itemType }: { itemType: LibraryItemType }) {
   switch (itemType) {
     case LibraryItemType.RSFORM:
       return <IconRSForm size='1.5rem' />;

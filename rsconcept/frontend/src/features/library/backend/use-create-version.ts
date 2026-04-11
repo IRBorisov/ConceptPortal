@@ -18,7 +18,7 @@ export const useCreateVersion = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    createVersion: (data: { itemID: number; data: CreateVersionDTO; }) =>
+    createVersion: (data: { itemID: number; data: CreateVersionDTO }) =>
       mutation.mutateAsync(data).then(response => response.version)
   };
 };

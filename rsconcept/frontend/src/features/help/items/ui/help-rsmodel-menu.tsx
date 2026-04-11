@@ -24,15 +24,13 @@ export function HelpRSModelMenu() {
       <h1>Редактирование модели</h1>
       <p>
         При переходе к отдельной концептуальной модели сверху отображается меню модели и набор вкладок для просмотра
-        атрибутов, состава и данных. Доступные команды зависят от прав пользователя, режима доступа и состояния
-        модели.
+        атрибутов, состава и данных. Доступные команды зависят от прав пользователя, режима доступа и состояния модели.
       </p>
 
       <h2>Вкладки</h2>
       <ul>
         <li>
-          <LinkTopic text='Паспорт' topic={HelpTopic.UI_MODEL_CARD} /> - атрибуты модели и связь с концептуальной
-          схемой
+          <LinkTopic text='Паспорт' topic={HelpTopic.UI_MODEL_CARD} /> - атрибуты модели и связь с концептуальной схемой
         </li>
         <li>
           <LinkTopic text='Список' topic={HelpTopic.UI_MODEL_LIST} /> - табличная работа с конституентами модели
@@ -45,11 +43,11 @@ export function HelpRSModelMenu() {
           <LinkTopic text='Граф' topic={HelpTopic.UI_GRAPH_TERM} /> – графическое представление связей конституент
         </li>
         <li>
-          <LinkTopic text='Данные' topic={HelpTopic.UI_MODEL_VALUE} /> - ввод, просмотр и редактирование значений
-          модели
+          <LinkTopic text='Данные' topic={HelpTopic.UI_MODEL_VALUE} /> - ввод, просмотр и редактирование значений модели
         </li>
         <li>
-          <LinkTopic text='Расчет' topic={HelpTopic.UI_MODEL_EVALUATOR} /> - проверка и вычисление произвольных выражений
+          <LinkTopic text='Расчет' topic={HelpTopic.UI_MODEL_EVALUATOR} /> - проверка и вычисление произвольных
+          выражений
         </li>
       </ul>
 

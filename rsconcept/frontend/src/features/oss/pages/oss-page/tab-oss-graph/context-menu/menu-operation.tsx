@@ -278,9 +278,9 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
         />
       ) : null}
       {isMutable &&
-        !operation.result &&
-        operation.operation_type === OperationType.SYNTHESIS &&
-        operation.arguments.length > 0 ? (
+      !operation.result &&
+      operation.operation_type === OperationType.SYNTHESIS &&
+      operation.arguments.length > 0 ? (
         <DropdownButton
           text='Активировать синтез'
           titleHtml={

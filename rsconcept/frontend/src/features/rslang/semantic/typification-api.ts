@@ -1,13 +1,22 @@
-/** 
+/**
  * Module: Typification API for RSLang.
  */
 
 import {
   bool,
   component,
-  type EchelonBase, type EchelonCollection,
-  type EchelonTuple, type ExpressionType, IntegerT, isRadical, isTypification,
-  tuple, TypeClass, TypeID, type TypePath, type Typification
+  type EchelonBase,
+  type EchelonCollection,
+  type EchelonTuple,
+  type ExpressionType,
+  IntegerT,
+  isRadical,
+  isTypification,
+  tuple,
+  TypeClass,
+  TypeID,
+  type TypePath,
+  type Typification
 } from './typification';
 
 /** Record map from typeID to typeClass. */
@@ -109,7 +118,7 @@ export function mergeTypifications(type1: Typification, type2: Typification): Ty
       }
       const components: Typification[] = [];
       for (let index = 0; index < type1.factors.length; ++index) {
-        const component = mergeTypifications(type1.factors[index], (type2).factors[index]);
+        const component = mergeTypifications(type1.factors[index], type2.factors[index]);
         if (component === null) {
           return null;
         }
@@ -133,8 +142,11 @@ export function checkCompatibility(type1: ExpressionType, type2: ExpressionType)
   if (isTypification(type1) !== isTypification(type2)) {
     return false;
   }
-  if (type1.typeID === TypeID.integer || type1.typeID === TypeID.basic ||
-    type2.typeID === TypeID.integer || type2.typeID === TypeID.basic
+  if (
+    type1.typeID === TypeID.integer ||
+    type1.typeID === TypeID.basic ||
+    type2.typeID === TypeID.integer ||
+    type2.typeID === TypeID.basic
   ) {
     return commonType(type1 as Typification, type2 as Typification) !== null;
   }
@@ -187,8 +199,11 @@ export function compareTemplated(
   if (value.typeID === TypeID.anyTypification) {
     return true;
   }
-  if (arg.typeID === TypeID.integer || arg.typeID === TypeID.basic ||
-    value.typeID === TypeID.integer || value.typeID === TypeID.basic
+  if (
+    arg.typeID === TypeID.integer ||
+    arg.typeID === TypeID.basic ||
+    value.typeID === TypeID.integer ||
+    value.typeID === TypeID.basic
   ) {
     return commonType(arg, value) !== null;
   }

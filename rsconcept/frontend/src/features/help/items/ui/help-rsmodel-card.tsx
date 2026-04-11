@@ -1,4 +1,13 @@
-import { IconDestroy, IconEditor, IconFolderEdit, IconLeftOpen, IconOwner, IconRSForm, IconSave, IconShare } from '@/components/icons';
+import {
+  IconDestroy,
+  IconEditor,
+  IconFolderEdit,
+  IconLeftOpen,
+  IconOwner,
+  IconRSForm,
+  IconSave,
+  IconShare
+} from '@/components/icons';
 import { isMac } from '@/utils/utils';
 
 export function HelpRSModelCard() {
@@ -6,9 +15,7 @@ export function HelpRSModelCard() {
     <div className='dense'>
       <h1>Паспорт модели</h1>
       <p>Содержит основную информацию и статистику по модели.</p>
-      <p>
-        Название и атрибуты исходной концептуальной схемы здесь не редактируются.
-      </p>
+      <p>Название и атрибуты исходной концептуальной схемы здесь не редактируются.</p>
 
       <h2>Управление</h2>
       <ul>

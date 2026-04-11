@@ -44,23 +44,26 @@ export function TableSideConstituents({
 
   const prevActiveCstID = useRef<number | null>(null);
 
-  useEffect(function autoScrollToActive() {
-    if (autoScroll && prevActiveCstID.current !== activeCst?.id) {
-      prevActiveCstID.current = activeCst?.id ?? null;
-      if (!!activeCst) {
-        setTimeout(function scrollToActiveConstituenta() {
-          const element = document.getElementById(`${prefixes.cst_side_table}${activeCst.id}`);
-          if (element) {
-            element.scrollIntoView({
-              behavior: 'smooth',
-              block: 'center',
-              inline: 'end'
-            });
-          }
-        }, PARAMETER.refreshTimeout);
+  useEffect(
+    function autoScrollToActive() {
+      if (autoScroll && prevActiveCstID.current !== activeCst?.id) {
+        prevActiveCstID.current = activeCst?.id ?? null;
+        if (!!activeCst) {
+          setTimeout(function scrollToActiveConstituenta() {
+            const element = document.getElementById(`${prefixes.cst_side_table}${activeCst.id}`);
+            if (element) {
+              element.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+                inline: 'end'
+              });
+            }
+          }, PARAMETER.refreshTimeout);
+        }
       }
-    }
-  }, [autoScroll, activeCst]);
+    },
+    [autoScroll, activeCst]
+  );
 
   const columns = [
     columnHelper.accessor('alias', {
@@ -68,25 +71,19 @@ export function TableSideConstituents({
       header: () => <span className='pl-3'>Имя</span>,
       size: 65,
       minSize: 65,
-      cell: props => <BadgeConstituenta
-        value={props.row.original}
-        prefixID={prefixes.cst_side_table}
-      />
+      cell: props => <BadgeConstituenta value={props.row.original} prefixID={prefixes.cst_side_table} />
     }),
     ...(engine
       ? [
-        columnHelper.accessor(cst => cst, {
-          id: 'value',
-          header: 'Значение',
-          size: 60,
-          minSize: 60,
-          maxSize: 60,
-          cell: props => <BadgeEvaluation
-            cst={props.row.original}
-            engine={engine}
-          />
-        })
-      ]
+          columnHelper.accessor(cst => cst, {
+            id: 'value',
+            header: 'Значение',
+            size: 60,
+            minSize: 60,
+            maxSize: 60,
+            cell: props => <BadgeEvaluation cst={props.row.original} engine={engine} />
+          })
+        ]
       : []),
     columnHelper.accessor(cst => describeConstituenta(cst), {
       id: 'description',

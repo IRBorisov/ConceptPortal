@@ -68,7 +68,8 @@ export function HelpSchemaMenu() {
               <IconRSModel className='inline-icon icon-green' /> Создать модель – создать модель на основе схемы
             </li>
             <li>
-              <IconSandbox className='inline-icon icon-green' /> Открыть в песочнице – открыть схему в редакторе песочницы для локальных экспериментов
+              <IconSandbox className='inline-icon icon-green' /> Открыть в песочнице – открыть схему в редакторе
+              песочницы для локальных экспериментов
             </li>
             <li>
               <IconPDF className='inline-icon' /> Экспортировать в PDF – сохранить в файле формата PDF

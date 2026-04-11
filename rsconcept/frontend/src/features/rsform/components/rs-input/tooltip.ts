@@ -47,12 +47,11 @@ export function rsHoverTooltip(schema: RSForm, canClick?: boolean): Extension {
   return [tooltipProducer(schema, canClick)];
 }
 
-
 // ========= Internal =========
 
 function findLocalType(ast: AstNode, alias: string, pos: number): ExpressionType | null {
   if (ast.from === pos && ast.typeID === TokenID.ID_LOCAL) {
-    return ast.annotation ? ast.annotation.rsType as ExpressionType : null;
+    return ast.annotation ? (ast.annotation.rsType as ExpressionType) : null;
   }
   for (const child of ast.children) {
     if (child.from <= pos) {

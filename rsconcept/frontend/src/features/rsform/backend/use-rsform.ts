@@ -4,7 +4,7 @@ import { queryClient } from '@/backend/query-client';
 
 import { rsformsApi } from './api';
 
-export function useRSForm({ itemID, version }: { itemID?: number; version?: number; }) {
+export function useRSForm({ itemID, version }: { itemID?: number; version?: number }) {
   const { data } = useSuspenseQuery({
     ...rsformsApi.getRSFormQueryOptions({ itemID, version })
   });
@@ -14,7 +14,7 @@ export function useRSForm({ itemID, version }: { itemID?: number; version?: numb
   };
 }
 
-export function prefetchRSForm({ itemID, version }: { itemID?: number; version?: number; }) {
+export function prefetchRSForm({ itemID, version }: { itemID?: number; version?: number }) {
   if (!itemID) {
     return null;
   }

@@ -14,7 +14,10 @@ interface TableHeaderProps<TData> {
 }
 
 export function TableHeader<TData>({
-  table, headPosition, skipWidthCalculation, resetLastSelected
+  table,
+  headPosition,
+  skipWidthCalculation,
+  resetLastSelected
 }: TableHeaderProps<TData>) {
   return (
     <thead className='sticky bg-background cc-shadow-border' style={{ top: headPosition }}>

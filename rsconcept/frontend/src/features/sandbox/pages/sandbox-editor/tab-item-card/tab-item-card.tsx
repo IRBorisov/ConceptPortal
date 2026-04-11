@@ -60,13 +60,19 @@ export function TabItemCard() {
   const onResetEvent = useEffectEvent((next: UpdateLibraryItemDTO) => form.reset(next));
   const canSubmit = useStore(form.store, state => state.isValid);
 
-  useEffect(function resetFormOnModelChange() {
-    onResetEvent(modelDefaults(model));
-  }, [model]);
+  useEffect(
+    function resetFormOnModelChange() {
+      onResetEvent(modelDefaults(model));
+    },
+    [model]
+  );
 
-  useEffect(function syncGlobalModified() {
-    onModifiedEvent(!isDefaultValue);
-  }, [isDefaultValue]);
+  useEffect(
+    function syncGlobalModified() {
+      onModifiedEvent(!isDefaultValue);
+    },
+    [isDefaultValue]
+  );
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     if (event.ctrlKey || event.metaKey) {
@@ -167,8 +173,7 @@ export function TabItemCard() {
         </div>
       </form>
 
-
-      <aside className='w-80 md:w-56 mt-3 mx-auto md:ml-5 md:mr-0 max-w-full'      >
+      <aside className='w-80 md:w-56 mt-3 mx-auto md:ml-5 md:mr-0 max-w-full'>
         <CardRSModelStats stats={stats} />
       </aside>
     </div>

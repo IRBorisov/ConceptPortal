@@ -13,12 +13,7 @@ import { Label, TextArea, TextInput } from '@/components/input';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';
 import { errorMsg } from '@/utils/labels';
 
-import {
-  AccessPolicy,
-  type CreateLibraryItemDTO,
-  LibraryItemType,
-  schemaCreateLibraryItem
-} from '../../backend/types';
+import { AccessPolicy, type CreateLibraryItemDTO, LibraryItemType, schemaCreateLibraryItem } from '../../backend/types';
 import { useCreateFromSandbox } from '../../backend/use-create-from-sandbox';
 import { useCreateItem } from '../../backend/use-create-item';
 import { useLibrary } from '../../backend/use-library';
@@ -60,10 +55,11 @@ export function FormCreateItem({
       schema: modelFrom ?? (fromSandbox && initialType === LibraryItemType.RSMODEL ? -1 : undefined),
       title: schemaItem ? `Модель ${schemaItem.title}` : undefined,
       alias: schemaItem ? `M${schemaItem.alias}` : undefined,
-      location:
-        schemaItem ? schemaItem.location :
-          !!searchLocation && !searchLocation.startsWith(LocationHead.LIBRARY) ?
-            searchLocation : LocationHead.USER,
+      location: schemaItem
+        ? schemaItem.location
+        : !!searchLocation && !searchLocation.startsWith(LocationHead.LIBRARY)
+          ? searchLocation
+          : LocationHead.USER,
       description: '',
       file: undefined,
       fileName: undefined
@@ -131,34 +127,37 @@ export function FormCreateItem({
     }
   }
 
-  useEffect(function preloadSandboxMetadata() {
-    if (!loadSandboxData || modelFrom) {
-      return;
-    }
-    let isActive = true;
-    void loadBundle()
-      .then(bundle => {
-        if (!isActive || !bundle) {
-          return;
-        }
-        const sourceItem = itemType === LibraryItemType.RSMODEL ? bundle.model : bundle.rsform;
-        if (!form.getFieldValue('title')) {
-          form.setFieldValue('title', sourceItem.title);
-        }
-        if (!form.getFieldValue('alias')) {
-          form.setFieldValue('alias', sourceItem.alias);
-        }
-        if (!form.getFieldValue('description')) {
-          form.setFieldValue('description', sourceItem.description);
-        }
-      })
-      .catch((error: unknown) => {
-        console.error(error);
-      });
-    return function cleanupSandboxMetadata() {
-      isActive = false;
-    };
-  }, [form, itemType, loadSandboxData, modelFrom]);
+  useEffect(
+    function preloadSandboxMetadata() {
+      if (!loadSandboxData || modelFrom) {
+        return;
+      }
+      let isActive = true;
+      void loadBundle()
+        .then(bundle => {
+          if (!isActive || !bundle) {
+            return;
+          }
+          const sourceItem = itemType === LibraryItemType.RSMODEL ? bundle.model : bundle.rsform;
+          if (!form.getFieldValue('title')) {
+            form.setFieldValue('title', sourceItem.title);
+          }
+          if (!form.getFieldValue('alias')) {
+            form.setFieldValue('alias', sourceItem.alias);
+          }
+          if (!form.getFieldValue('description')) {
+            form.setFieldValue('description', sourceItem.description);
+          }
+        })
+        .catch((error: unknown) => {
+          console.error(error);
+        });
+      return function cleanupSandboxMetadata() {
+        isActive = false;
+      };
+    },
+    [form, itemType, loadSandboxData, modelFrom]
+  );
 
   function resetErrors() {
     clearServerError();
@@ -207,13 +206,14 @@ export function FormCreateItem({
       onChange={resetErrors}
     >
       <h1 className='select-none relative'>
-        {fromSandbox ?
+        {fromSandbox ? (
           <MiniButton
             title='Загрузка данных из песочницы'
             className='absolute top-1 left-0'
             icon={<IconSandbox size='1.25rem' className={loadSandboxData ? 'icon-primary' : ''} />}
             onClick={() => setLoadSandboxData(prev => !prev)}
-          /> : null}
+          />
+        ) : null}
         {itemType == LibraryItemType.RSFORM && !loadSandboxData ? (
           <>
             <input
@@ -271,10 +271,7 @@ export function FormCreateItem({
           <Label text='Что создать' className='self-center select-none' />
           <form.Field name='item_type'>
             {field => (
-              <SelectItemType
-                value={field.state.value ?? LibraryItemType.RSFORM}
-                onChange={handleItemTypeChange}
-              />
+              <SelectItemType value={field.state.value ?? LibraryItemType.RSFORM} onChange={handleItemTypeChange} />
             )}
           </form.Field>
         </div>
@@ -352,7 +349,8 @@ export function FormCreateItem({
       <div className='flex justify-around gap-6 py-3'>
         <SubmitButton
           text={itemType === LibraryItemType.RSMODEL ? 'Создать модель' : 'Создать схему'}
-          loading={isPending} className='min-w-40'
+          loading={isPending}
+          className='min-w-40'
         />
         <Button text='Отмена' className='min-w-40' onClick={handleCancel} />
       </div>

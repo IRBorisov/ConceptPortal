@@ -3,13 +3,7 @@
  */
 
 import { type LibraryItem } from '@/features/library';
-import {
-  type Constituenta,
-  CstClass,
-  type CstSubstitute,
-  CstType,
-  type RSForm,
-} from '@/features/rsform';
+import { type Constituenta, CstClass, type CstSubstitute, CstType, type RSForm } from '@/features/rsform';
 import {
   type AliasMapping,
   applyAliasMapping,
@@ -376,10 +370,7 @@ export class SubstitutionValidator {
         substitutionText = applyAliasMapping(typeText, baseMappings.get(substitution.schema)!);
         substitutionText = applyTypificationMapping(substitutionText, result);
         if (!isSetTypification(substitutionText)) {
-          this.reportError(
-            SubstitutionErrorType.baseSubstitutionNotSet,
-            [substitution.alias, typeText]
-          );
+          this.reportError(SubstitutionErrorType.baseSubstitutionNotSet, [substitution.alias, typeText]);
           return null;
         }
         if (substitutionText.includes('×') || substitutionText.startsWith('ℬℬ')) {

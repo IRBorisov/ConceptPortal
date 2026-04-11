@@ -10,7 +10,7 @@ export const test = base.extend({
     await setupAuth(page);
     await setupUsers(page);
     await setupLibrary(page);
-    
+
     // eslint-disable-next-line react-hooks/rules-of-hooks
     await use(page);
   }

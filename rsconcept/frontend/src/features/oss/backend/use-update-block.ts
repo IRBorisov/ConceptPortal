@@ -24,8 +24,8 @@ export const useUpdateBlock = () => {
         !prev
           ? undefined
           : prev.map(item =>
-            item.id === schemaID ? { ...item, ...variables.data.item_data, time_update: Date() } : item
-          )
+              item.id === schemaID ? { ...item, ...variables.data.item_data, time_update: Date() } : item
+            )
       );
       return client.invalidateQueries({
         queryKey: KEYS.composite.schema({ itemID: schemaID })

@@ -13,10 +13,7 @@ import { type CreateFieldProps, type FieldStateData } from '@/utils/forms';
 import { hintMsg } from '@/utils/labels';
 import { withPreventDefault } from '@/utils/utils';
 
-import {
-  type CreateConstituentaDTO,
-  schemaCreateConstituenta
-} from '../../backend/types';
+import { type CreateConstituentaDTO, schemaCreateConstituenta } from '../../backend/types';
 import { type CstType, type RSForm } from '../../models/rsform';
 import { generateAlias, validateNewAlias } from '../../models/rsform-api';
 import { FormCreateCst, type FormCreateCstFields } from '../dlg-create-cst/form-create-cst';

@@ -33,9 +33,7 @@ export const Router = createBrowserRouter([
       {
         element: <LayoutLanding />,
         loader: prefetchAuth,
-        children: [
-          { index: true, element: <HomePage /> }
-        ]
+        children: [{ index: true, element: <HomePage /> }]
       },
       {
         path: routes.sandbox,

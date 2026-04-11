@@ -31,12 +31,7 @@ export function printTree(tree: Tree): string {
 }
 
 /** Retrieves a list of all nodes, containing given range and corresponding to a filter. */
-export function findEnvelopingNodes(
-  from: number,
-  to: number,
-  tree: Tree,
-  filter?: readonly number[]
-): CMSyntaxNode[] {
+export function findEnvelopingNodes(from: number, to: number, tree: Tree, filter?: readonly number[]): CMSyntaxNode[] {
   const result: CMSyntaxNode[] = [];
   tree.cursor().iterate(node => {
     if ((!filter || filter.includes(node.type.id)) && node.to >= from && node.from <= to) {
@@ -121,12 +116,12 @@ export class CodeMirrorWrapper {
     const selection = this.getSelection();
     const newSelection = !selection.empty
       ? {
-        anchor: selection.from,
-        head: selection.to + left.length + right.length
-      }
+          anchor: selection.from,
+          head: selection.to + left.length + right.length
+        }
       : {
-        anchor: selection.to + left.length + right.length - 1
-      };
+          anchor: selection.to + left.length + right.length - 1
+        };
     this.ref.view.dispatch({
       changes: [
         { from: selection.from, insert: left },
@@ -201,7 +196,7 @@ interface TreeTraversalOptions {
 /** Implements depth-first traversal. */
 function traverseTree(tree: Tree, { beforeEnter, onEnter, onLeave }: TreeTraversalOptions) {
   const cursor = tree.cursor();
-  for (; ;) {
+  for (;;) {
     let node = cursorNode(cursor);
     let leave = false;
     const enter = !node.type.isAnonymous;
@@ -212,7 +207,7 @@ function traverseTree(tree: Tree, { beforeEnter, onEnter, onLeave }: TreeTravers
       if (onEnter(node) === false) return;
     }
     if (!node.isLeaf) continue;
-    for (; ;) {
+    for (;;) {
       node = cursorNode(cursor, node.isLeaf);
       if (leave && onLeave) if (onLeave(node) === false) return;
       leave = cursor.type.isAnonymous;

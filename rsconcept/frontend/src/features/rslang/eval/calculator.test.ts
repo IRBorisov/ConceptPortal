@@ -34,7 +34,7 @@ describe('RSCalculator', () => {
     expect(printValue(value)).toBe(expected);
   }
 
-  function expectCalcFull(expr: string, options?: { expectValue?: string; expectErrorCode?: RSErrorCode; }) {
+  function expectCalcFull(expr: string, options?: { expectValue?: string; expectErrorCode?: RSErrorCode }) {
     const ast = buildAST(expr);
     expect(ast.hasError).toBe(false);
     const result: CalculatorResult = calculator.evaluateFull(ast);
@@ -107,7 +107,9 @@ describe('RSCalculator', () => {
 
   it('listeners removed when no more subscribers', () => {
     let calls = 0;
-    const unsubscribe = calculator.subscribe('X1', () => { calls++; });
+    const unsubscribe = calculator.subscribe('X1', () => {
+      calls++;
+    });
     calculator.setValue('X1', [8, 9]);
     expect(calls).toBe(1);
     unsubscribe();

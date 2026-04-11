@@ -28,13 +28,13 @@ export const useUpdateItem = () => {
         prev?.map(item => (item.id === data.id ? data : item))
       );
       if (data.item_type === LibraryItemType.RSFORM) {
-        client.setQueryData(itemKey, (prev: { raw: RSFormDTO; transformed: RSForm; } | undefined) => {
+        client.setQueryData(itemKey, (prev: { raw: RSFormDTO; transformed: RSForm } | undefined) => {
           if (!prev) {
             return undefined;
           }
           return { raw: { ...prev.raw, ...data }, transformed: { ...prev.transformed, ...data } };
         });
-        const schema = client.getQueryData<{ raw: RSFormDTO; transformed: RSForm; }>(itemKey)?.transformed;
+        const schema = client.getQueryData<{ raw: RSFormDTO; transformed: RSForm }>(itemKey)?.transformed;
         if (schema) {
           await Promise.allSettled(
             schema.oss.map(item => client.invalidateQueries({ queryKey: KEYS.composite.oss({ itemID: item.id }) }))

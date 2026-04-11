@@ -41,16 +41,8 @@ import { useRSFormEdit } from './rsedit-context';
 
 export function MenuMain() {
   const router = useConceptNavigation();
-  const {
-    schema,
-    selectedCst,
-    deleteSchema,
-    isArchive,
-    isMutable,
-    isContentEditable,
-    isProcessing,
-    activeVersion
-  } = useRSFormEdit();
+  const { schema, selectedCst, deleteSchema, isArchive, isMutable, isContentEditable, isProcessing, activeVersion } =
+    useRSFormEdit();
   const { raw: schemaData } = useRSForm({ itemID: schema.id, version: activeVersion });
 
   const { user, isAnonymous } = useAuth();
@@ -116,10 +108,11 @@ export function MenuMain() {
   function handleUpload() {
     hideMenu();
     showUpload({
-      onUpload: data => void upload({
-        itemID: schema.id,
-        data: data
-      })
+      onUpload: data =>
+        void upload({
+          itemID: schema.id,
+          data: data
+        })
     });
   }
 

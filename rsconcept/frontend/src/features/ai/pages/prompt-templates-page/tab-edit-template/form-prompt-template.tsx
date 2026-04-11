@@ -73,18 +73,24 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
   const prevReset = useRef(toggleReset);
   const prevTemplate = useRef(promptTemplate);
 
-  useEffect(function resetFormOnTemplateChange() {
-    if (prevTemplate.current !== promptTemplate || prevReset.current !== toggleReset) {
-      prevTemplate.current = promptTemplate;
-      prevReset.current = toggleReset;
-      onResetEvent(templateDefaults(promptTemplate));
-      return () => setSampleResult(null);
-    }
-  }, [promptTemplate, toggleReset]);
+  useEffect(
+    function resetFormOnTemplateChange() {
+      if (prevTemplate.current !== promptTemplate || prevReset.current !== toggleReset) {
+        prevTemplate.current = promptTemplate;
+        prevReset.current = toggleReset;
+        onResetEvent(templateDefaults(promptTemplate));
+        return () => setSampleResult(null);
+      }
+    },
+    [promptTemplate, toggleReset]
+  );
 
-  useEffect(function synchronizeModifiedState() {
-    onModifiedEvent(!isDefaultValue);
-  }, [isDefaultValue]);
+  useEffect(
+    function synchronizeModifiedState() {
+      onModifiedEvent(!isDefaultValue);
+    },
+    [isDefaultValue]
+  );
 
   function handleChangeText(newValue: string, onChange: (newValue: string) => void) {
     setSampleResult(null);

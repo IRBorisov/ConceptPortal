@@ -45,23 +45,28 @@ describe('RSLang analyzer', () => {
   });
 
   it('Expected type', () => {
-    expectError('X1',
+    expectError(
+      'X1',
       { expected: TypeClass.logic },
       { code: RSErrorCode.expectedType, from: 0, to: 2, params: [labelTypeClass(TypeClass.logic)] }
     );
-    expectError('1=1',
+    expectError(
+      '1=1',
       { expected: TypeClass.typification },
       { code: RSErrorCode.expectedType, from: 0, to: 3, params: [labelTypeClass(TypeClass.typification)] }
     );
-    expectError('1=1',
+    expectError(
+      '1=1',
       { expected: TypeClass.function },
       { code: RSErrorCode.expectedType, from: 0, to: 3, params: [labelTypeClass(TypeClass.function)] }
     );
-    expectError('[a ∈ X1] a=a',
+    expectError(
+      '[a ∈ X1] a=a',
       { expected: TypeClass.function },
       { code: RSErrorCode.expectedType, from: 0, to: 12, params: [labelTypeClass(TypeClass.function)] }
     );
-    expectError('[a ∈ X1] a',
+    expectError(
+      '[a ∈ X1] a',
       { expected: TypeClass.predicate },
       { code: RSErrorCode.expectedType, from: 0, to: 10, params: [labelTypeClass(TypeClass.predicate)] }
     );

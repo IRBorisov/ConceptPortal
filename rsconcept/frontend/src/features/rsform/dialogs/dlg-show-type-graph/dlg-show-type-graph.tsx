@@ -47,4 +47,4 @@ export function DlgShowTypeGraph() {
       </ReactFlowProvider>
     </ModalView>
   );
-};
+}

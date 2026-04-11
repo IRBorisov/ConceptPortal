@@ -56,13 +56,19 @@ export function FormOSS() {
   const readOnly = useStore(form.store, state => state.values.read_only);
   const isDefaultValue = useStore(form.store, state => state.isDefaultValue);
 
-  useEffect(function resetFormOnSchemaChange() {
-    onResetEvent(ossDefaults(schema));
-  }, [schema]);
+  useEffect(
+    function resetFormOnSchemaChange() {
+      onResetEvent(ossDefaults(schema));
+    },
+    [schema]
+  );
 
-  useEffect(function syncGlobalModified() {
-    onModifiedEvent(!isDefaultValue);
-  }, [isDefaultValue]);
+  useEffect(
+    function syncGlobalModified() {
+      onModifiedEvent(!isDefaultValue);
+    },
+    [isDefaultValue]
+  );
 
   return (
     <form

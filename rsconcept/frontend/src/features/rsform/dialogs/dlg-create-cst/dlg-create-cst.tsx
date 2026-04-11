@@ -100,6 +100,6 @@ export function DlgCreateCst() {
         onChangeCstType={handleChangeCstType}
         onToggleCrucial={handleToggleCrucial}
       />
-    </ModalForm >
+    </ModalForm>
   );
 }

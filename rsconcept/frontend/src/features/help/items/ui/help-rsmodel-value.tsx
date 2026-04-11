@@ -21,9 +21,7 @@ export function HelpRSModelValue() {
   return (
     <div className='dense'>
       <h1>Данные модели</h1>
-      <p>
-        Здесь можно просмотреть и изменить значение конституенты
-      </p>
+      <p>Здесь можно просмотреть и изменить значение конституенты</p>
       <p>
         Чтобы вычислить значение, нажмите на <LinkTopic text='статус' topic={HelpTopic.UI_EVAL_STATUS} />
       </p>
@@ -31,7 +29,8 @@ export function HelpRSModelValue() {
       <h2>Управление</h2>
       <ul>
         <li>
-          <IconCalculateOne className='inline-icon icon-green' /> вычислить текущую конституенту: <kbd>{isMac() ? 'Cmd + Q' : 'Ctrl + Q'}</kbd>
+          <IconCalculateOne className='inline-icon icon-green' /> вычислить текущую конституенту:{' '}
+          <kbd>{isMac() ? 'Cmd + Q' : 'Ctrl + Q'}</kbd>
         </li>
         <li>
           <IconDatabase className='inline-icon' /> диалог просмотра или редактирования значения

@@ -1,8 +1,5 @@
 import { LocationHead } from '@/features/library';
-import {
-  AccessPolicy,
-  LibraryItemType
-} from '@/features/library/backend/types';
+import { AccessPolicy, LibraryItemType } from '@/features/library/backend/types';
 import { type RSFormDTO } from '@/features/rsform/backend/types';
 import { type RSModelDTO } from '@/features/rsmodel/backend/types';
 
@@ -24,10 +21,7 @@ export function createSandboxBundleFromRSForm(schema: RO<RSFormDTO>): SandboxBun
   };
 }
 
-export function createSandboxBundleFromRSModel(
-  schema: RO<RSFormDTO>,
-  model: RO<RSModelDTO>
-): SandboxBundle {
+export function createSandboxBundleFromRSModel(schema: RO<RSFormDTO>, model: RO<RSModelDTO>): SandboxBundle {
   return {
     formatVersion: SANDBOX_BUNDLE_FORMAT_VERSION,
     meta: {
@@ -67,9 +61,11 @@ function createEmptyModel(schema: RO<RSFormDTO>): RSModelDTO {
 
 function prepareRSForm(schema: RO<RSFormDTO>, model: RO<RSModelDTO>): RSFormDTO {
   const nextSchema = structuredClone(schema) as RSFormDTO;
-  nextSchema.models = [{
-    id: model.id,
-    alias: model.alias
-  }];
+  nextSchema.models = [
+    {
+      id: model.id,
+      alias: model.alias
+    }
+  ];
   return nextSchema;
 }

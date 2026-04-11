@@ -184,4 +184,3 @@ export const schemaRSErrorDescription = z.strictObject({
   isCritical: z.boolean(),
   params: z.array(z.string())
 });
-
