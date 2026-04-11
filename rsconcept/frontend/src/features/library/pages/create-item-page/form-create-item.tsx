@@ -94,7 +94,7 @@ export function FormCreateItem({
       toast.error(errorMsg.sandboxBundleNotAvailable);
       throw new Error(errorMsg.sandboxBundleNotAvailable);
     }
-    const sourceItem = value.item_type === LibraryItemType.RSMODEL ? bundle.model : bundle.rsform;
+    const sourceItem = value.item_type === LibraryItemType.RSMODEL ? bundle.model : bundle.schema;
     const itemData = {
       title: value.title ?? sourceItem.title,
       alias: value.alias ?? sourceItem.alias,
@@ -109,8 +109,8 @@ export function FormCreateItem({
       return createRSModelFromSandbox({
         item_data: itemData,
         schema_data: {
-          items: bundle.rsform.items,
-          attribution: bundle.rsform.attribution
+          items: bundle.schema.items,
+          attribution: bundle.schema.attribution
         },
         model_data: {
           items: bundle.model.items
@@ -120,8 +120,8 @@ export function FormCreateItem({
       return createRSFormFromSandbox({
         item_data: itemData,
         schema_data: {
-          items: bundle.rsform.items,
-          attribution: bundle.rsform.attribution
+          items: bundle.schema.items,
+          attribution: bundle.schema.attribution
         }
       });
     }
@@ -138,7 +138,7 @@ export function FormCreateItem({
           if (!isActive || !bundle) {
             return;
           }
-          const sourceItem = itemType === LibraryItemType.RSMODEL ? bundle.model : bundle.rsform;
+          const sourceItem = itemType === LibraryItemType.RSMODEL ? bundle.model : bundle.schema;
           if (!form.getFieldValue('title')) {
             form.setFieldValue('title', sourceItem.title);
           }

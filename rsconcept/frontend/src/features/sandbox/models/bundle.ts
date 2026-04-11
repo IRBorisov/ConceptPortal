@@ -7,7 +7,7 @@ export const STARTER_SCHEMA_ID = 1;
 export const STARTER_MODEL_ID = 2;
 export const STARTER_CST_ID = 1;
 
-export const SANDBOX_BUNDLE_FORMAT_VERSION = 1 as const;
+export const SANDBOX_BUNDLE_FORMAT_VERSION = 2 as const;
 
 export const schemaSandboxBundle = z.strictObject({
   formatVersion: z.literal(SANDBOX_BUNDLE_FORMAT_VERSION),
@@ -15,14 +15,14 @@ export const schemaSandboxBundle = z.strictObject({
     nextId: z.number().int().positive(),
     updatedAt: z.string()
   }),
-  rsform: schemaRSForm,
+  schema: schemaRSForm,
   model: schemaRSModel
 });
 
 export type SandboxBundle = z.infer<typeof schemaSandboxBundle>;
 
 export function assertModelSchemaInvariant(bundle: SandboxBundle): void {
-  if (bundle.model.schema !== bundle.rsform.id) {
+  if (bundle.model.schema !== bundle.schema.id) {
     throw new Error('Sandbox bundle invariant: model.schema must equal rsform.id');
   }
 }

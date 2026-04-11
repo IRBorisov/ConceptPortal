@@ -279,6 +279,79 @@ export class Graph<NodeID = number> {
     return result.reverse();
   }
 
+  /**
+   * Stably reorders the given node ids so that, for this DAG, no node appears before a transitive
+   * successor (edges: source → dependent; {@link GraphNode.outputs} lists dependents).
+   */
+  sortStable(target: NodeID[]): NodeID[] {
+    if (target.length <= 1) {
+      return [...target];
+    }
+
+    const reachable = this.buildTransitiveClosureForSort();
+    const testSet = new Set<NodeID>();
+    const result: NodeID[] = [];
+
+    for (const nodeId of [...target].reverse()) {
+      const nodeReachable = reachable.get(nodeId) ?? new Set<NodeID>();
+      const needMove = testSet.has(nodeId);
+      for (const childId of nodeReachable) {
+        testSet.add(childId);
+      }
+
+      if (!needMove) {
+        result.push(nodeId);
+        continue;
+      }
+
+      let inserted = false;
+      for (let index = 0; index < result.length; index++) {
+        const parent = result[index];
+        const parentReachable = reachable.get(parent) ?? new Set<NodeID>();
+        if (nodeReachable.has(parent)) {
+          if (parentReachable.has(nodeId)) {
+            result.push(nodeId);
+          } else {
+            result.splice(index, 0, nodeId);
+          }
+          inserted = true;
+          break;
+        }
+      }
+      if (!inserted) {
+        result.push(nodeId);
+      }
+    }
+
+    result.reverse();
+    return result;
+  }
+
+  private buildTransitiveClosureForSort(): Map<NodeID, Set<NodeID>> {
+    const closure = new Map<NodeID, Set<NodeID>>();
+    for (const node of this.nodes.values()) {
+      closure.set(node.id, new Set(node.outputs));
+    }
+
+    const order = this.topologicalOrder();
+    for (const nodeId of [...order].reverse()) {
+      const node = this.at(nodeId);
+      if (!node) {
+        continue;
+      }
+      const nodeClosure = closure.get(nodeId) ?? new Set<NodeID>();
+      for (const parentId of node.inputs) {
+        const parentClosure = closure.get(parentId) ?? new Set<NodeID>();
+        for (const childId of nodeClosure) {
+          parentClosure.add(childId);
+        }
+        closure.set(parentId, parentClosure);
+      }
+    }
+
+    return closure;
+  }
+
   transitiveReduction() {
     const order = this.topologicalOrder();
     const marked = new Map<NodeID, boolean>();

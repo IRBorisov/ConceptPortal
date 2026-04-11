@@ -8,7 +8,7 @@ import {
   type UpdateConstituentaDTO,
   type UpdateCrucialDTO
 } from '@/features/rsform/backend/types';
-import { CstType, type Substitution } from '@/features/rsform/models/rsform';
+import { CstType, type RSForm, type Substitution } from '@/features/rsform/models/rsform';
 import { getCstTypePrefix } from '@/features/rsform/models/rsform-api';
 import { type ConstituentaDataDTO, type ConstituentaValue, type RSModelDTO } from '@/features/rsmodel/backend/types';
 
@@ -16,7 +16,7 @@ import { nowIso } from '@/utils/format';
 
 import { assertModelSchemaInvariant, type SandboxBundle } from '../models/bundle';
 import { bumpBundle, cloneBundle } from '../models/bundle-api';
-import { applyMappingToConstituents, buildSemanticInfo, sortStable } from '../models/mutations-api';
+import { applyMappingToConstituents } from '../models/mutations-api';
 
 export const sbApi = {
   moveConstituents,
@@ -38,18 +38,15 @@ export const sbApi = {
 
 function moveConstituents(bundle: SandboxBundle, data: MoveConstituentsDTO): SandboxBundle {
   const next = cloneBundle(bundle);
-  const rsform = next.rsform;
-  const ids = rsform.items.map(i => i.id);
-  const movingSet = new Set(data.items);
-  const rest = ids.filter(id => !movingSet.has(id));
-  const block = ids.filter(id => movingSet.has(id));
+  const ids = next.schema.items.map(cst => cst.id);
+  const movingIDs = new Set(data.items);
+  const rest = ids.filter(id => !movingIDs.has(id));
+  const movingItems = ids.filter(id => movingIDs.has(id));
   const moveTo = Math.max(0, Math.min(data.move_to, rest.length));
-  const before = rest.slice(0, moveTo);
-  const after = rest.slice(moveTo);
-  const newOrder = [...before, ...block, ...after];
-  const rowById = new Map(rsform.items.map(i => [i.id, i]));
-  rsform.items = newOrder.map(id => {
-    const row = rowById.get(id);
+  const newOrder = [...rest.slice(0, moveTo), ...movingItems, ...rest.slice(moveTo)];
+  const cstById = new Map(next.schema.items.map(i => [i.id, i]));
+  next.schema.items = newOrder.map(id => {
+    const row = cstById.get(id);
     if (!row) {
       throw new Error(`moveConstituents: missing id ${id}`);
     }
@@ -59,26 +56,30 @@ function moveConstituents(bundle: SandboxBundle, data: MoveConstituentsDTO): San
   return next;
 }
 
-function restoreOrder(bundle: SandboxBundle): SandboxBundle {
+function restoreOrder(bundle: SandboxBundle, schema: RSForm): SandboxBundle {
   const next = cloneBundle(bundle);
-  const items = next.rsform.items;
+  const items = next.schema.items;
   if (items.length <= 1) {
     bumpBundle(next);
     return next;
   }
 
-  const { graph, byId, info } = buildSemanticInfo(items);
+  const graph = schema.graph;
+  const itemById = new Map(items.map(cst => [cst.id, cst]));
+
   let ordered = items.filter(cst => cst.cst_type === CstType.BASE);
   ordered = ordered.concat(items.filter(cst => cst.cst_type === CstType.CONSTANT));
   ordered = ordered.concat(items.filter(cst => !ordered.includes(cst) && (graph.at(cst.id)?.inputs.length ?? 0) === 0));
 
   const kernelIds = items
-    .filter(
-      cst =>
-        cst.cst_type === CstType.STRUCTURED ||
-        cst.cst_type === CstType.AXIOM ||
-        byId.get(info.get(cst.id)?.parent ?? cst.id)?.cst_type === CstType.STRUCTURED
-    )
+    .filter(cst => {
+      const meta = schema.cstByID.get(cst.id);
+      const parentId = meta?.spawner ?? cst.id;
+      const parent = schema.cstByID.get(parentId);
+      return (
+        cst.cst_type === CstType.STRUCTURED || cst.cst_type === CstType.AXIOM || parent?.cst_type === CstType.STRUCTURED
+      );
+    })
     .map(cst => cst.id);
   const kernel = new Set<number>(kernelIds);
   for (const id of graph.expandAllInputs(kernelIds)) {
@@ -87,11 +88,9 @@ function restoreOrder(bundle: SandboxBundle): SandboxBundle {
 
   ordered = ordered.concat(items.filter(cst => !ordered.includes(cst) && kernel.has(cst.id)));
   ordered = ordered.concat(items.filter(cst => !ordered.includes(cst)));
-  ordered = sortStable(
-    graph,
-    ordered.map(cst => cst.id)
-  )
-    .map(id => byId.get(id)!)
+  ordered = graph
+    .sortStable(ordered.map(cst => cst.id))
+    .map(id => itemById.get(id)!)
     .filter(Boolean);
 
   const result: ConstituentaBasicsDTO[] = [];
@@ -102,7 +101,7 @@ function restoreOrder(bundle: SandboxBundle): SandboxBundle {
     }
     result.push(cst);
     marked.add(cst.id);
-    for (const childId of info.get(cst.id)?.children ?? []) {
+    for (const childId of schema.cstByID.get(cst.id)?.spawn ?? []) {
       const child = ordered.find(item => item.id === childId);
       if (child && !marked.has(child.id)) {
         marked.add(child.id);
@@ -111,7 +110,7 @@ function restoreOrder(bundle: SandboxBundle): SandboxBundle {
     }
   }
 
-  next.rsform.items = result;
+  next.schema.items = result;
   bumpBundle(next);
   return next;
 }
@@ -125,7 +124,7 @@ function resetAliases(bundle: SandboxBundle): SandboxBundle {
     counts[value] = 1;
   }
 
-  for (const cst of next.rsform.items) {
+  for (const cst of next.schema.items) {
     const alias = `${getCstTypePrefix(cst.cst_type)}${counts[cst.cst_type]}`;
     counts[cst.cst_type] += 1;
     if (cst.alias !== alias) {
@@ -133,7 +132,7 @@ function resetAliases(bundle: SandboxBundle): SandboxBundle {
     }
   }
 
-  applyMappingToConstituents(next.rsform.items, mapping, true);
+  applyMappingToConstituents(next.schema.items, mapping, true);
   bumpBundle(next);
   return next;
 }
@@ -144,7 +143,7 @@ function substituteConstituents(bundle: SandboxBundle, substitutions: Substituti
     return next;
   }
 
-  const byId = new Map(next.rsform.items.map(cst => [cst.id, cst]));
+  const byId = new Map(next.schema.items.map(cst => [cst.id, cst]));
   const mapping: Record<string, string> = {};
   const deleted = new Set<number>();
   for (const { original, substitution } of substitutions) {
@@ -164,7 +163,7 @@ function substituteConstituents(bundle: SandboxBundle, substitutions: Substituti
 
   const updatedAttributions = [];
   const seen = new Set<string>();
-  for (const attr of next.rsform.attribution) {
+  for (const attr of next.schema.attribution) {
     if (!origToSub.has(attr.container) && !origToSub.has(attr.attribute)) {
       const key = `${attr.container}:${attr.attribute}`;
       if (!seen.has(key)) {
@@ -189,12 +188,12 @@ function substituteConstituents(bundle: SandboxBundle, substitutions: Substituti
       attribute: attributeID
     });
   }
-  next.rsform.attribution = updatedAttributions;
+  next.schema.attribution = updatedAttributions;
 
-  next.rsform.items = next.rsform.items.filter(cst => !deleted.has(cst.id));
+  next.schema.items = next.schema.items.filter(cst => !deleted.has(cst.id));
   next.model.items = next.model.items.filter(value => !deleted.has(value.id));
 
-  applyMappingToConstituents(next.rsform.items, mapping, false);
+  applyMappingToConstituents(next.schema.items, mapping, false);
   bumpBundle(next);
   return next;
 }
@@ -204,7 +203,7 @@ function createConstituenta(
   data: CreateConstituentaDTO
 ): { bundle: SandboxBundle; newCst: ConstituentaBasicsDTO } {
   const next = cloneBundle(bundle);
-  const rsform = next.rsform;
+  const rsform = next.schema;
 
   const newId = next.meta.nextId;
   next.meta.nextId += 1;
@@ -238,7 +237,7 @@ function createConstituenta(
 function deleteConstituents(bundle: SandboxBundle, deleted: number[]): SandboxBundle {
   const next = cloneBundle(bundle);
   const del = new Set(deleted);
-  const rsform = next.rsform;
+  const rsform = next.schema;
   const model = next.model;
 
   rsform.items = rsform.items.filter(i => !del.has(i.id));
@@ -253,7 +252,7 @@ function deleteConstituents(bundle: SandboxBundle, deleted: number[]): SandboxBu
 
 function updateConstituenta(bundle: SandboxBundle, data: UpdateConstituentaDTO): SandboxBundle {
   const next = cloneBundle(bundle);
-  const rsform = next.rsform;
+  const rsform = next.schema;
   const ix = rsform.items.findIndex(i => i.id === data.target);
   if (ix === -1) {
     throw new Error(`updateConstituenta: unknown target ${data.target}`);
@@ -289,16 +288,16 @@ function updateConstituenta(bundle: SandboxBundle, data: UpdateConstituentaDTO):
 function updateCrucial(bundle: SandboxBundle, data: UpdateCrucialDTO): SandboxBundle {
   const next = cloneBundle(bundle);
   const targets = new Set(data.target);
-  next.rsform.items = next.rsform.items.map(row => (targets.has(row.id) ? { ...row, crucial: data.value } : row));
+  next.schema.items = next.schema.items.map(row => (targets.has(row.id) ? { ...row, crucial: data.value } : row));
   bumpBundle(next);
   return next;
 }
 
 function createAttribution(bundle: SandboxBundle, attr: Attribution): SandboxBundle {
   const next = cloneBundle(bundle);
-  const exists = next.rsform.attribution.some(a => a.container === attr.container && a.attribute === attr.attribute);
+  const exists = next.schema.attribution.some(a => a.container === attr.container && a.attribute === attr.attribute);
   if (!exists) {
-    next.rsform.attribution.push({ ...attr });
+    next.schema.attribution.push({ ...attr });
   }
   bumpBundle(next);
   return next;
@@ -306,7 +305,7 @@ function createAttribution(bundle: SandboxBundle, attr: Attribution): SandboxBun
 
 function deleteAttribution(bundle: SandboxBundle, attr: Attribution): SandboxBundle {
   const next = cloneBundle(bundle);
-  next.rsform.attribution = next.rsform.attribution.filter(
+  next.schema.attribution = next.schema.attribution.filter(
     a => !(a.container === attr.container && a.attribute === attr.attribute)
   );
   bumpBundle(next);
@@ -316,7 +315,7 @@ function deleteAttribution(bundle: SandboxBundle, attr: Attribution): SandboxBun
 function clearAttributions(bundle: SandboxBundle, data: AttributionTargetDTO): SandboxBundle {
   const next = cloneBundle(bundle);
   const t = data.target;
-  next.rsform.attribution = next.rsform.attribution.filter(a => a.container !== t && a.attribute !== t);
+  next.schema.attribution = next.schema.attribution.filter(a => a.container !== t && a.attribute !== t);
   bumpBundle(next);
   return next;
 }
@@ -324,8 +323,8 @@ function clearAttributions(bundle: SandboxBundle, data: AttributionTargetDTO): S
 function updateLibraryItem(bundle: SandboxBundle, data: UpdateLibraryItemDTO): SandboxBundle {
   const next = cloneBundle(bundle);
   const t = nowIso();
-  if (data.id === next.rsform.id && data.item_type === LibraryItemType.RSFORM) {
-    Object.assign(next.rsform, {
+  if (data.id === next.schema.id && data.item_type === LibraryItemType.RSFORM) {
+    Object.assign(next.schema, {
       title: data.title,
       alias: data.alias,
       description: data.description,
@@ -342,7 +341,7 @@ function updateLibraryItem(bundle: SandboxBundle, data: UpdateLibraryItemDTO): S
       read_only: data.read_only,
       time_update: t
     });
-    const modelEntry = next.rsform.models.find(m => m.id === next.model.id);
+    const modelEntry = next.schema.models.find(m => m.id === next.model.id);
     if (modelEntry) {
       modelEntry.alias = data.alias;
     }

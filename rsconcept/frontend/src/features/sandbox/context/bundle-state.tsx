@@ -46,7 +46,7 @@ export function SandboxState({ children }: React.PropsWithChildren) {
     });
   }, []);
 
-  const schema = loadRSForm(bundle.rsform);
+  const schema = loadRSForm(bundle.schema);
   const services = useMemo<RSEngineServices>(
     function createServices() {
       return {
@@ -128,7 +128,7 @@ export function SandboxState({ children }: React.PropsWithChildren) {
     let nextSchema: RSFormDTO | null = null;
     commitBundle(prev => {
       const next = sbApi.updateConstituenta(prev, data);
-      nextSchema = next.rsform;
+      nextSchema = next.schema;
       return next;
     });
     if (!nextSchema) {
@@ -143,7 +143,7 @@ export function SandboxState({ children }: React.PropsWithChildren) {
       const result = sbApi.createConstituenta(prev, data);
       response = {
         new_cst: result.newCst,
-        schema: result.bundle.rsform
+        schema: result.bundle.schema
       };
       return result.bundle;
     });
@@ -170,7 +170,7 @@ export function SandboxState({ children }: React.PropsWithChildren) {
   }
 
   function restoreOrder() {
-    commitBundle(prev => sbApi.restoreOrder(prev));
+    commitBundle(prev => sbApi.restoreOrder(prev, schema));
   }
 
   function resetAliases() {

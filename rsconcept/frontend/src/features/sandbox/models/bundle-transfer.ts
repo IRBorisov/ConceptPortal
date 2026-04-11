@@ -16,7 +16,7 @@ export function createSandboxBundleFromRSForm(schema: RO<RSFormDTO>): SandboxBun
       nextId: getNextConstituentaId(schema),
       updatedAt: nowIso()
     },
-    rsform: prepareRSForm(schema, model),
+    schema: prepareRSForm(schema, model),
     model
   };
 }
@@ -28,7 +28,7 @@ export function createSandboxBundleFromRSModel(schema: RO<RSFormDTO>, model: RO<
       nextId: getNextConstituentaId(schema),
       updatedAt: nowIso()
     },
-    rsform: prepareRSForm(schema, model),
+    schema: prepareRSForm(schema, model),
     model: structuredClone(model) as RSModelDTO
   };
 }

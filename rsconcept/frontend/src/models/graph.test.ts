@@ -373,4 +373,20 @@ describe('Testing Graph queries', () => {
     ]);
     expect(graph.findCycle()).toStrictEqual(null);
   });
+
+  it('sortStable should stably reorder node ids according to topological order', () => {
+    const graph = new Graph([
+      [1, 2],
+      [2, 3],
+      [1, 4],
+      [4, 3],
+      [3, 5]
+    ]);
+    expect(graph.sortStable([5, 4, 3, 2, 1])).toStrictEqual([5, 3, 4, 2, 1]);
+    expect(graph.sortStable([1, 2, 4, 3, 5])).toStrictEqual([1, 2, 4, 3, 5]);
+    expect(graph.sortStable([4, 3, 5])).toStrictEqual([4, 3, 5]);
+    expect(graph.sortStable([2, 3])).toStrictEqual([2, 3]);
+    expect(graph.sortStable([3])).toStrictEqual([3]);
+    expect(graph.sortStable([])).toStrictEqual([]);
+  });
 });

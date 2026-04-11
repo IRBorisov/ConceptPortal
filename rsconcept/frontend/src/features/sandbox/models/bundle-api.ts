@@ -9,6 +9,6 @@ export function cloneBundle(bundle: SandboxBundle): SandboxBundle {
 export function bumpBundle(bundle: SandboxBundle): void {
   const timestamp = nowIso();
   bundle.meta.updatedAt = timestamp;
-  bundle.rsform.time_update = timestamp;
+  bundle.schema.time_update = timestamp;
   bundle.model.time_update = timestamp;
 }

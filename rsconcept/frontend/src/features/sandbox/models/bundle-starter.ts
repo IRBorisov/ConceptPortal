@@ -92,7 +92,7 @@ export function createStarterSandboxBundle(): SandboxBundle {
       nextId: STARTER_CST_ID + rsform.items.length,
       updatedAt: now
     },
-    rsform,
+    schema: rsform,
     model
   };
 }
