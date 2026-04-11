@@ -14,15 +14,11 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { promptUnsaved } from '@/utils/utils';
 
-import { sbApi } from '../../backend/sandbox-mutations';
-import { type SandboxBundle } from '../../models/bundle';
+import { useSandboxBundle } from '../../context/bundle-context';
 
-interface MenuEditProps {
-  setBundle: React.Dispatch<React.SetStateAction<SandboxBundle | null>>;
-}
-
-export function MenuEdit({ setBundle }: MenuEditProps) {
+export function MenuEdit() {
   const isModified = useModificationStore(state => state.isModified);
+  const { resetAliases, restoreOrder, substituteConstituents } = useSandboxBundle();
   const { schema } = useRSFormEdit();
   const {
     elementRef: menuRef,
@@ -33,15 +29,6 @@ export function MenuEdit({ setBundle }: MenuEditProps) {
   } = useDropdown();
 
   const showSubstituteCst = useDialogsStore(state => state.showSubstituteCst);
-
-  function mutateBundle(next: (prev: SandboxBundle) => SandboxBundle) {
-    setBundle(prev => {
-      if (!prev) {
-        return prev;
-      }
-      return next(prev);
-    });
-  }
 
   function requireSavedChanges(): boolean {
     if (!isModified) {
@@ -55,7 +42,7 @@ export function MenuEdit({ setBundle }: MenuEditProps) {
     if (!requireSavedChanges()) {
       return;
     }
-    mutateBundle(prev => sbApi.resetAliases(prev));
+    resetAliases();
   }
 
   function handleSubstitute() {
@@ -65,7 +52,7 @@ export function MenuEdit({ setBundle }: MenuEditProps) {
     }
     showSubstituteCst({
       schema,
-      onSubstitute: data => mutateBundle(prev => sbApi.substituteConstituents(prev, data.substitutions))
+      onSubstitute: data => substituteConstituents(data.substitutions)
     });
   }
 
@@ -74,7 +61,7 @@ export function MenuEdit({ setBundle }: MenuEditProps) {
     if (!requireSavedChanges()) {
       return;
     }
-    mutateBundle(prev => sbApi.restoreOrder(prev));
+    restoreOrder();
   }
 
   return (

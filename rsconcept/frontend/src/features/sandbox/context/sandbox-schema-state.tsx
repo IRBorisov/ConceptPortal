@@ -4,13 +4,9 @@ import { useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { useConceptNavigation } from '@/app';
-import { type RSForm } from '@/features/rsform';
 import {
   type ConstituentaCreatedResponse,
-  type CreateConstituentaDTO,
-  type MoveConstituentsDTO,
-  type RSFormDTO,
-  type UpdateConstituentaDTO
+  type CreateConstituentaDTO
 } from '@/features/rsform/backend/types';
 import { type Constituenta, CstType } from '@/features/rsform/models/rsform';
 import { generateAlias, removeAliasReference } from '@/features/rsform/models/rsform-api';
@@ -23,20 +19,22 @@ import { errorMsg } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 import { notImplemented, promptUnsaved } from '@/utils/utils';
 
-import { sbApi } from '../../backend/sandbox-mutations';
-import { type SandboxBundle } from '../../models/bundle';
+import { useSandboxBundle } from './bundle-context';
 
-interface SandboxRSEditStateProps {
-  schema: RSForm;
-  setBundle: React.Dispatch<React.SetStateAction<SandboxBundle | null>>;
-}
-
-export function SandboxRSEditState({
-  schema,
-  setBundle,
-  children
-}: React.PropsWithChildren<SandboxRSEditStateProps>) {
+export function SandboxSchemaState({ children }: React.PropsWithChildren) {
   const router = useConceptNavigation();
+  const {
+    schema,
+    moveConstituents,
+    updateCrucial,
+    patchConstituenta,
+    createConstituenta,
+    createAttribution,
+    deleteAttribution,
+    clearAttributions,
+    deleteConstituents
+  } = useSandboxBundle();
+
   const isModified = useModificationStore(state => state.isModified);
   const showCreateCst = useDialogsStore(state => state.showCreateCst);
   const showDeleteCst = useDialogsStore(state => state.showDeleteCst);
@@ -66,6 +64,25 @@ export function SandboxRSEditState({
     (selectedCstInSchema.length > 0 && selectedCstInSchema.every(id => !schema.cstByID.get(id)?.is_inherited)) ||
     (selectedCstInSchema.length === 0 && selectedEdges.length === 1);
 
+  function buildCreateCstData(source?: Constituenta | null, options?: {
+    type?: CstType;
+    definition?: string;
+    insertAfter?: number | null;
+  }): CreateConstituentaDTO {
+    const targetType = options?.type ?? source?.cst_type ?? activeCst?.cst_type ?? CstType.BASE;
+    return {
+      insert_after: options?.insertAfter ?? source?.id ?? activeCst?.id ?? null,
+      cst_type: targetType,
+      alias: generateAlias(targetType, schema),
+      term_raw: source?.term_raw ?? '',
+      definition_formal: options?.definition ?? source?.definition_formal ?? '',
+      definition_raw: source?.definition_raw ?? '',
+      convention: source?.convention ?? '',
+      crucial: source?.crucial ?? false,
+      term_forms: source?.term_forms ?? []
+    };
+  }
+
   function onCreateCst(newCst: RO<ConstituentaCreatedResponse['new_cst']>) {
     setPendingActiveID(newCst.id);
     setSelectedCst([newCst.id]);
@@ -88,24 +105,13 @@ export function SandboxRSEditState({
   }
 
   function promptCreateCst(type?: CstType, definition?: string): Promise<number | null> {
-    const targetType = type ?? activeCst?.cst_type ?? CstType.BASE;
-    const data: CreateConstituentaDTO = {
-      insert_after: activeCst?.id ?? null,
-      cst_type: targetType,
-      alias: generateAlias(targetType, schema),
-      term_raw: '',
-      definition_formal: definition ?? '',
-      definition_raw: '',
-      convention: '',
-      crucial: false,
-      term_forms: []
-    };
+    const data = buildCreateCstData(null, { type, definition });
     return new Promise(resolve => {
       showCreateCst({
         schema,
         initial: data,
         onCreate: createData => {
-          void createCstFromData(createData).then(response => {
+          void createConstituenta(createData).then(response => {
             onCreateCst(response.new_cst);
             resolve(response.new_cst.id);
           });
@@ -118,18 +124,7 @@ export function SandboxRSEditState({
   }
 
   async function createCst(type?: CstType, definition?: string): Promise<number> {
-    const targetType = type ?? activeCst?.cst_type ?? CstType.BASE;
-    const response = await createCstFromData({
-      insert_after: activeCst?.id ?? null,
-      cst_type: targetType,
-      alias: generateAlias(targetType, schema),
-      term_raw: '',
-      definition_formal: definition ?? '',
-      definition_raw: '',
-      convention: '',
-      crucial: false,
-      term_forms: []
-    });
+    const response = await createConstituenta(buildCreateCstData(null, { type, definition }));
     onCreateCst(response.new_cst);
     return response.new_cst.id;
   }
@@ -138,17 +133,9 @@ export function SandboxRSEditState({
     if (!activeCst) {
       throw new Error('No active cst');
     }
-    const response = await createCstFromData({
-      insert_after: activeCst.id,
-      cst_type: activeCst.cst_type,
-      alias: generateAlias(activeCst.cst_type, schema),
-      term_raw: activeCst.term_raw,
-      definition_formal: activeCst.definition_formal,
-      definition_raw: activeCst.definition_raw,
-      convention: activeCst.convention,
-      crucial: activeCst.crucial,
-      term_forms: activeCst.term_forms
-    });
+    const response = await createConstituenta(buildCreateCstData(activeCst, {
+      insertAfter: activeCst.id
+    }));
     onCreateCst(response.new_cst);
     return response.new_cst.id;
   }
@@ -157,10 +144,10 @@ export function SandboxRSEditState({
     if (selectedCstInSchema.length === 0) {
       return;
     }
-    setBundle(prev => sbApi.moveConstituents(prev!, {
+    moveConstituents({
       items: selectedCstInSchema,
       move_to: target
-    } satisfies MoveConstituentsDTO));
+    });
   }
 
   function moveUp() {
@@ -203,65 +190,36 @@ export function SandboxRSEditState({
     if (!activeCst || selectedCstInSchema.length === 0) {
       return;
     }
-    setBundle(prev => sbApi.updateCrucial(prev!, {
+    updateCrucial({
       target: selectedCstInSchema,
       value: !activeCst.crucial
-    }));
-  }
-
-  function patchConstituenta(data: UpdateConstituentaDTO): Promise<RO<RSFormDTO>> {
-    let nextSchema: RO<RSFormDTO> | null = null;
-    setBundle(prev => {
-      const next = sbApi.updateConstituenta(prev!, data);
-      nextSchema = next.rsform;
-      return next;
     });
-    if (!nextSchema) {
-      throw new Error('Sandbox bundle is not available');
-    }
-    return Promise.resolve(nextSchema);
-  }
-
-  function createCstFromData(data: CreateConstituentaDTO): Promise<RO<ConstituentaCreatedResponse>> {
-    let response: RO<ConstituentaCreatedResponse> | null = null;
-    setBundle(prev => {
-      const result = sbApi.createConstituenta(prev!, data);
-      response = {
-        new_cst: result.newCst,
-        schema: result.bundle.rsform
-      };
-      return result.bundle;
-    });
-    if (!response) {
-      throw new Error('Sandbox bundle is not available');
-    }
-    return Promise.resolve(response);
   }
 
   function addAttribution(containerID: number, attributeID: number) {
-    setBundle(prev => sbApi.createAttribution(prev!, {
+    createAttribution({
       container: containerID,
       attribute: attributeID
-    }));
+    });
   }
 
   function removeAttribution(attribute: Constituenta) {
     if (!activeCst) {
       return;
     }
-    setBundle(prev => sbApi.deleteAttribution(prev!, {
+    deleteAttribution({
       container: activeCst.id,
       attribute: attribute.id
-    }));
+    });
   }
 
-  function clearAttributions() {
+  function clearAttributionsForActive() {
     if (!activeCst) {
       return;
     }
-    setBundle(prev => sbApi.clearAttributions(prev!, {
+    clearAttributions({
       target: activeCst.id
-    }));
+    });
   }
 
   function openTermEditor() {
@@ -300,7 +258,7 @@ export function SandboxRSEditState({
       schema,
       selected: selectedCstInSchema,
       onDelete: deleted => {
-        setBundle(prev => sbApi.deleteConstituents(prev!, deleted));
+        deleteConstituents(deleted);
         const nextActive = getNextActiveOnDelete(activeCst?.id ?? null, schema.items, deleted);
         setSelectedEdges([]);
         setSelectedCst(nextActive ? [nextActive] : []);
@@ -328,10 +286,10 @@ export function SandboxRSEditState({
         toast.error(errorMsg.deleteInheritedEdge);
         return;
       }
-      setBundle(prev => sbApi.deleteAttribution(prev!, {
+      deleteAttribution({
         container: sourceID,
         attribute: targetID
-      }));
+      });
       setSelectedEdges([]);
       return;
     }
@@ -371,7 +329,7 @@ export function SandboxRSEditState({
       schema,
       insertAfter: activeCst?.id,
       onCreate: value => {
-        void createCstFromData(value).then(response => onCreateCst(response.new_cst));
+        void createConstituenta(value).then(response => onCreateCst(response.new_cst));
       }
     });
   }
@@ -412,7 +370,7 @@ export function SandboxRSEditState({
         promptRename,
         addAttribution,
         removeAttribution,
-        clearAttributions,
+        clearAttributions: clearAttributionsForActive,
         gotoPredecessor,
 
         setFocus: handleSetFocus,
@@ -436,7 +394,7 @@ export function SandboxRSEditState({
         moveDown,
         toggleCrucial,
         createCst,
-        createCstFromData,
+        createCstFromData: createConstituenta,
         promptCreateCst,
         cloneCst,
         promptDeleteSelected,

@@ -4,27 +4,20 @@ import { useRef } from 'react';
 import { toast } from 'react-toastify';
 
 import { useConceptNavigation } from '@/app';
+import { LibraryItemType } from '@/features/library';
 
 import { Divider } from '@/components/container';
 import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
-import { IconDownload, IconMenu, IconReset, IconRSForm, IconRSModel, IconUpload } from '@/components/icons';
+import { IconCalculateAll, IconDownload, IconMenu, IconReset, IconRSForm, IconRSModel, IconUpload } from '@/components/icons';
 import { errorMsg, infoMsg, promptText } from '@/utils/labels';
 
-import { type SandboxBundle } from '../../models/bundle';
-import { createStarterSandboxBundle } from '../../models/bundle-starter';
-import {
-  downloadBundle,
-  importBundleFromJson
-} from '../../stores/sandbox-repository';
+import { useSandboxBundle } from '../../context/bundle-context';
 
-interface MenuMainProps {
-  bundle: SandboxBundle;
-  setBundle: React.Dispatch<React.SetStateAction<SandboxBundle | null>>;
-}
-
-export function MenuMain({ bundle, setBundle }: MenuMainProps) {
+export function MenuMain() {
   const router = useConceptNavigation();
+  const { resetBundle, importBundle, exportBundle } = useSandboxBundle();
+  const { engine } = useSandboxBundle();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const {
     elementRef: menuRef,
@@ -36,7 +29,7 @@ export function MenuMain({ bundle, setBundle }: MenuMainProps) {
 
   function handleExport() {
     hideMenu();
-    downloadBundle(bundle);
+    exportBundle();
   }
 
   function handleReset() {
@@ -44,7 +37,7 @@ export function MenuMain({ bundle, setBundle }: MenuMainProps) {
     if (!window.confirm(promptText.resetSandbox)) {
       return;
     }
-    setBundle(createStarterSandboxBundle());
+    resetBundle();
   }
 
   function handleImportClick() {
@@ -54,12 +47,17 @@ export function MenuMain({ bundle, setBundle }: MenuMainProps) {
 
   function handleCreateRSForm() {
     hideMenu();
-    router.gotoNewItemFromSandbox('rsform');
+    router.gotoNewItemFromSandbox(LibraryItemType.RSFORM);
   }
 
   function handleCreateRSModel() {
     hideMenu();
-    router.gotoNewItemFromSandbox('rsmodel');
+    router.gotoNewItemFromSandbox(LibraryItemType.RSMODEL);
+  }
+
+  function handleRecalculate() {
+    hideMenu();
+    engine.recalculateAll();
   }
 
   async function handleImportFile(event: React.ChangeEvent<HTMLInputElement>) {
@@ -71,8 +69,7 @@ export function MenuMain({ bundle, setBundle }: MenuMainProps) {
 
     try {
       const raw = JSON.parse(await file.text()) as unknown;
-      const next = await importBundleFromJson(raw);
-      setBundle(next);
+      await importBundle(raw);
       toast.success(infoMsg.sandboxImportSuccess);
     } catch (error) {
       console.error(error);
@@ -99,6 +96,12 @@ export function MenuMain({ bundle, setBundle }: MenuMainProps) {
         onChange={event => void handleImportFile(event)}
       />
       <Dropdown isOpen={isMenuOpen} margin='mt-3'>
+        <DropdownButton
+          text='Пересчитать модель'
+          aria-label='Пересчитать все вычисления'
+          icon={<IconCalculateAll size='1rem' className='icon-green' />}
+          onClick={handleRecalculate}
+        />
         <DropdownButton
           text='Сохранить в файл'
           title='Скачать текущие данные песочницы в JSON'

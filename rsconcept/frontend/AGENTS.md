@@ -62,6 +62,7 @@ Run from `rsconcept/frontend`:
 - Prefer editing within relevant feature folders before adding new shared abstractions.
 - Keep components small and colocate feature-specific helpers when possible.
 - Preserve established naming and folder structure under `src/features`.
+- Avoid using useMemo and useCallback - we compile with React 19 Compiler.
 - Update or add tests when behavior changes in parsing, evaluation, or critical UI.
 - Reuse existing hooks, dialogs, and components when extending behavior.
 - Keep API-facing types and hooks consistent with backend contract/types.

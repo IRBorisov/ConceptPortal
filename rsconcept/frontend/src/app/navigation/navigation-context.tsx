@@ -3,6 +3,8 @@
 import { createContext, use, useEffect, useEffectEvent, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 
+import { type LibraryItemType } from '@/features/library';
+
 import { useTooltipsStore } from '@/stores/tooltips';
 
 import { urls } from '../urls';
@@ -81,7 +83,7 @@ interface INavigationContext {
   gotoNewItem: (newTab?: boolean) => void;
 
   /** Navigate to New Item with sandbox import flag. */
-  gotoNewItemFromSandbox: (itemType?: 'rsform' | 'rsmodel', newTab?: boolean) => void;
+  gotoNewItemFromSandbox: (itemType?: LibraryItemType, newTab?: boolean) => void;
 
   /** Navigate to New Model. */
   gotoNewModel: (schemaID: number, newTab?: boolean) => void;
@@ -234,7 +236,7 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
     push({ path: urls.create_item, newTab: newTab });
   }
 
-  function gotoNewItemFromSandbox(itemType?: 'rsform' | 'rsmodel', newTab?: boolean): void {
+  function gotoNewItemFromSandbox(itemType?: LibraryItemType, newTab?: boolean): void {
     push({ path: urls.create_item_from_sandbox(itemType), newTab: newTab });
   }
 

@@ -10,6 +10,7 @@ import { type RSModel } from '@/features/rsmodel/models/rsmodel';
 import { calculateModelStats } from '@/features/rsmodel/models/rsmodel-api';
 import { useRSModelEdit } from '@/features/rsmodel/pages/rsmodel-page/rsmodel-context';
 import { CardRSModelStats } from '@/features/rsmodel/pages/rsmodel-page/tab-model-card/rsmodel-stats';
+import { useSandboxBundle } from '@/features/sandbox/context/bundle-context';
 
 import { SubmitButton } from '@/components/control';
 import { IconDateCreate, IconDateUpdate, IconSave } from '@/components/icons';
@@ -19,13 +20,6 @@ import { useWindowSize } from '@/hooks/use-window-size';
 import { useModificationStore } from '@/stores/modification';
 import { globalIDs } from '@/utils/constants';
 import { withPreventDefault } from '@/utils/utils';
-
-import { sbApi } from '../../../backend/sandbox-mutations';
-import { type SandboxBundle } from '../../../models/bundle';
-
-interface TabItemCardProps {
-  setBundle: React.Dispatch<React.SetStateAction<SandboxBundle | null>>;
-}
 
 function modelDefaults(model: RSModel): UpdateLibraryItemDTO {
   return {
@@ -41,9 +35,10 @@ function modelDefaults(model: RSModel): UpdateLibraryItemDTO {
 
 const SIDELIST_LAYOUT_THRESHOLD = 768;
 
-export function TabItemCard({ setBundle }: TabItemCardProps) {
+export function TabItemCard() {
   const intl = useIntl();
   const { model, engine, schema } = useRSModelEdit();
+  const { updateLibraryItem } = useSandboxBundle();
   const setIsModified = useModificationStore(state => state.setIsModified);
   const onModifiedEvent = useEffectEvent(setIsModified);
   const windowSize = useWindowSize();
@@ -56,12 +51,7 @@ export function TabItemCard({ setBundle }: TabItemCardProps) {
       onChange: schemaUpdateLibraryItem
     },
     onSubmit: ({ value, formApi }) => {
-      setBundle(prev => {
-        if (!prev) {
-          return prev;
-        }
-        return sbApi.updateLibraryItem(prev, value);
-      });
+      updateLibraryItem(value);
       formApi.reset(value);
     }
   });

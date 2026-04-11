@@ -15,8 +15,6 @@ import { useResetAttribute } from '@/hooks/use-reset-attribute';
 import { useAppLayoutStore } from '@/stores/app-layout';
 import { useModificationStore } from '@/stores/modification';
 
-import { type SandboxBundle } from '../../models/bundle';
-
 import { MenuEdit } from './menu-edit';
 import { MenuMain } from './menu-main';
 import { TabItemCard } from './tab-item-card';
@@ -24,11 +22,9 @@ import { TabItemCard } from './tab-item-card';
 interface SandboxTabsProps {
   activeID?: number;
   activeTab: RSModelTabID;
-  bundle: SandboxBundle;
-  setBundle: React.Dispatch<React.SetStateAction<SandboxBundle | null>>;
 }
 
-export function SandboxTabs({ activeID, activeTab, bundle, setBundle }: SandboxTabsProps) {
+export function SandboxTabs({ activeID, activeTab }: SandboxTabsProps) {
   const router = useConceptNavigation();
 
   const hideFooter = useAppLayoutStore(state => state.hideFooter);
@@ -147,8 +143,8 @@ export function SandboxTabs({ activeID, activeTab, bundle, setBundle }: SandboxT
     >
       <TabList className='absolute z-sticky flex border-b-2 border-x-2 divide-x-2 bg-background' >
         <div className='flex border-r-2'>
-          <MenuMain bundle={bundle} setBundle={setBundle} />
-          <MenuEdit setBundle={setBundle} />
+          <MenuMain />
+          <MenuEdit />
         </div>
 
         <TabLabel label='Паспорт' />
@@ -161,7 +157,7 @@ export function SandboxTabs({ activeID, activeTab, bundle, setBundle }: SandboxT
 
       <div ref={containerRef} className='overflow-x-hidden'>
         <TabPanel>
-          <TabItemCard setBundle={setBundle} />
+          <TabItemCard />
         </TabPanel>
 
         <TabPanel>

@@ -40,6 +40,7 @@ export const Router = createBrowserRouter([
       {
         path: routes.sandbox,
         element: <LayoutSandbox />,
+        errorElement: <ErrorFallback />,
         loader: prefetchResources,
         children: [
           {
