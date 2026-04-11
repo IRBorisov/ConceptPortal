@@ -67,14 +67,23 @@ class ErrorRangesPlugin {
       return left.to - right.to;
     });
 
+    const nonOverlappingErrors: RSErrorDescription[] = [];
+    let lastTo = -1;
     for (const error of sortedErrors) {
+      if (error.from >= lastTo) {
+        nonOverlappingErrors.push(error);
+        lastTo = error.to;
+      }
+    }
+
+    for (const error of nonOverlappingErrors) {
       const range = getSafeErrorRange(error, docLength);
       if (!range) {
         continue;
       }
 
-      builder.add(range.from, range.to, errorRangeMark);
       builder.add(range.from, Math.min(range.from + 1, range.to), errorStartMark);
+      builder.add(range.from, range.to, errorRangeMark);
       builder.add(Math.max(range.to - 1, range.from), range.to, errorEndMark);
     }
 

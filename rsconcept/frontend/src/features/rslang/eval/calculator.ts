@@ -5,6 +5,7 @@
 import { type RO } from '@/utils/meta';
 import { type AstNode } from '@/utils/parsing';
 
+import { annotateError } from '../ast-annotations';
 import { RSErrorCode, type RSErrorDescription } from '../error';
 import { type ExpressionType } from '../semantic/typification';
 
@@ -17,6 +18,11 @@ export interface CalculatorResult {
   value: Value | null;
   iterations: number;
   errors: RSErrorDescription[];
+}
+
+/** Options for {@link RSCalculator.evaluateFull}. */
+export interface CalculatorEvaluateOptions {
+  annotateErrors?: boolean;
 }
 
 type Listener = () => void;
@@ -79,7 +85,7 @@ export class RSCalculator {
     return this.evaluator.run(ast);
   }
 
-  public evaluateFull(ast: AstNode): CalculatorResult {
+  public evaluateFull(ast: AstNode, options?: CalculatorEvaluateOptions): CalculatorResult {
     const errors: RSErrorDescription[] = [];
     const reporter = (error: RSErrorDescription) => {
       errors.push(error);
@@ -89,9 +95,12 @@ export class RSCalculator {
       return { value: null, iterations: 0, errors };
     }
 
-    const value = this.evaluator.run(ast, reporter);
+    const value = this.evaluator.run(ast, reporter, options?.annotateErrors ?? false);
     if (value === null && errors.length === 0) {
       errors.push({ code: RSErrorCode.calcUnknownError, from: 0, to: 0 });
+      if (options?.annotateErrors) {
+        annotateError(ast, RSErrorCode.calcUnknownError);
+      }
     }
     return {
       value,

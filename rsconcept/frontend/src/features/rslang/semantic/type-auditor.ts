@@ -4,6 +4,7 @@
 
 import { type AstNode, getNodeIndices, getNodeText } from '@/utils/parsing';
 
+import { annotateError } from '../ast-annotations';
 import { type ErrorReporter, RSErrorCode } from '../error';
 import { labelRSLangNode, labelToken, labelType } from '../labels';
 import { TokenID } from '../parser/token';
@@ -25,19 +26,27 @@ export class TypeAuditor {
   private context: TypeContext;
   private reporter?: ErrorReporter;
   private locals: LocalContext;
-  private annotate: boolean;
+  private annotateTypes: boolean;
+  private annotateErrors: boolean;
 
   constructor(context: TypeContext) {
-    this.annotate = false;
+    this.annotateTypes = false;
+    this.annotateErrors = false;
     this.context = context;
     this.locals = new LocalContext(this.onError.bind(this));
   }
 
-  public run(ast: AstNode, annotateTypes: boolean, reporter?: ErrorReporter): ExpressionType | null {
+  public run(
+    ast: AstNode,
+    annotateTypes: boolean,
+    reporter?: ErrorReporter,
+    annotateErrors: boolean = false
+  ): ExpressionType | null {
     if (ast.hasError) {
       return null;
     }
-    this.annotate = annotateTypes;
+    this.annotateTypes = annotateTypes;
+    this.annotateErrors = annotateErrors;
     this.reporter = reporter;
     this.clear();
     return this.dispatchVisit(ast);
@@ -49,7 +58,7 @@ export class TypeAuditor {
 
   private dispatchDeclare(node: AstNode, domain: Typification): boolean {
     const result = this.processDeclare(node, domain);
-    if (result === true && this.annotate) {
+    if (result === true && this.annotateTypes) {
       node.annotation = {
         ...(typeof node.annotation === 'object' && node.annotation !== null ? node.annotation : {}),
         rsType: domain
@@ -98,7 +107,7 @@ export class TypeAuditor {
 
   private dispatchVisit(node: AstNode): ExpressionType | null {
     const result = this.processVisit(node);
-    if (result !== null && this.annotate) {
+    if (result !== null && this.annotateTypes) {
       node.annotation = {
         ...(node.annotation ? node.annotation : {}),
         rsType: result
@@ -200,6 +209,9 @@ export class TypeAuditor {
 
   private onError(code: RSErrorCode, node: AstNode, params?: string[]): null {
     this.reporter?.({ code, from: node.from, to: node.to, params });
+    if (this.annotateErrors) {
+      annotateError(node, code, params);
+    }
     return null;
   }
 
@@ -305,7 +317,7 @@ export class TypeAuditor {
     if (funcType?.typeID !== TypeID.function && funcType?.typeID !== TypeID.predicate) {
       return this.onError(RSErrorCode.globalNotTyped, node, [funcName]);
     }
-    if (this.annotate) {
+    if (this.annotateTypes) {
       node.children[0].annotation = {
         ...(node.annotation ? node.annotation : {}),
         rsType: funcType

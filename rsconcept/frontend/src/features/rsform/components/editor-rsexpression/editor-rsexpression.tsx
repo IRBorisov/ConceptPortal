@@ -160,7 +160,7 @@ export function EditorRSExpression({
       const flatAst = flattenAst(ast);
       showAST({ syntaxTree: flatAst, expression: value, schema });
     } else {
-      const parse = schema.analyzer.checkFull(value, { annotateTypes: true });
+      const parse = schema.analyzer.checkFull(value, { annotateTypes: true, annotateErrors: true });
       if (!parse.ast) {
         toast.error(errorMsg.invalidParse);
         return;

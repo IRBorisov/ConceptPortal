@@ -25,7 +25,7 @@ export function ToolbarExpression({ className, expression, type }: ToolbarExpres
   const showTypification = useDialogsStore(state => state.showShowTypeGraph);
 
   function handleShowAST() {
-    const parse = schema.analyzer.checkFull(expression, { annotateTypes: true });
+    const parse = schema.analyzer.checkFull(expression, { annotateTypes: true, annotateErrors: true });
     if (!parse.ast) {
       toast.error(errorMsg.invalidParse);
       return;
@@ -37,7 +37,7 @@ export function ToolbarExpression({ className, expression, type }: ToolbarExpres
   function handleTypeGraph() {
     let targetType = type;
     if (!targetType) {
-      const parse = schema.analyzer.checkFull(expression, { annotateTypes: true });
+      const parse = schema.analyzer.checkFast(expression);
       targetType = parse.type;
     }
     if (!targetType) {

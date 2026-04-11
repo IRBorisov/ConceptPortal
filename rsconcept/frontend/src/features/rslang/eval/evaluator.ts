@@ -4,6 +4,7 @@
 
 import { type AstNode, getNodeIndices, getNodeText } from '@/utils/parsing';
 
+import { annotateError } from '../ast-annotations';
 import {
   type ErrorReporter,
   RSErrorCode
@@ -44,6 +45,7 @@ export type ASTContext = Map<string, AstNode>;
 /** AST calculator - evaluates RS expressions via visitor pattern and provides updates via listeners. */
 export class Evaluator {
   private reporter?: ErrorReporter;
+  private annotateErrors = false;
   private locals: LocalContext = new LocalContext();
   private context: ValueContext;
   private treeContext: ASTContext;
@@ -55,11 +57,12 @@ export class Evaluator {
     this.context = context;
   }
 
-  public run(ast: AstNode, reporter?: ErrorReporter): Value | null {
+  public run(ast: AstNode, reporter?: ErrorReporter, annotateErrors: boolean = false): Value | null {
     if (ast.hasError) {
       return null;
     }
     this.reporter = reporter;
+    this.annotateErrors = annotateErrors;
     this.clear();
     return this.dispatchVisit(ast);
   }
@@ -71,6 +74,9 @@ export class Evaluator {
 
   private onError(code: RSErrorCode, node: AstNode, params?: string[]): null {
     this.reporter?.({ code, from: node.from, to: node.to, params });
+    if (this.annotateErrors) {
+      annotateError(node, code, params);
+    }
     return null;
   }
 

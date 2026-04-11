@@ -81,14 +81,14 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
     setLocalParse(null);
     setEvaluatedExpression(expression);
 
-    const parse = schema.analyzer.checkFull(expression);
+    const parse = schema.analyzer.checkFull(expression, { annotateTypes: true, annotateErrors: true });
     setLocalParse(parse);
     if (!parse.success || !parse.ast) {
       return;
     }
 
     const startTime = performance.now();
-    const evaluation = engine.evaluateAst(parse.ast);
+    const evaluation = engine.evaluateAst(parse.ast, { annotateErrors: true });
     setLocalEval(evaluation);
 
     const endTime = performance.now();

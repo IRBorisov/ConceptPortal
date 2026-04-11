@@ -3,7 +3,10 @@ import { toast } from 'react-toastify';
 import { type RSForm } from '@/features/rsform';
 import { CstType } from '@/features/rsform';
 import { getAnalysisFor, isBaseSet, isBasicConcept, isFunctional } from '@/features/rsform/models/rsform-api';
-import { type CalculatorResult, RSCalculator, TypeID, type Value } from '@/features/rslang';
+import {
+  type CalculatorEvaluateOptions, type CalculatorResult,
+  RSCalculator, TypeID, type Value
+} from '@/features/rslang';
 import { compare } from '@/features/rslang/eval/value';
 import { normalizeType } from '@/features/rslang/labels';
 
@@ -55,7 +58,6 @@ export class RSEngine {
     if (newSchema) {
       this.prepareAst();
       this.setupEmptySets();
-      // TODO: reset some values?
     }
     if (this.data !== dto) {
       this.data = dto;
@@ -228,13 +230,15 @@ export class RSEngine {
     this.notifyCst(cstID);
   }
 
+  /** Evaluates expression for {@link RSEngine}. */
   public evaluateExpression(expression: string, cstType: CstType): CalculatorResult {
     return getEvaluationFor(expression, cstType, this.schema!, this.calculator);
   }
 
-  public evaluateAst(ast: AstNode): CalculatorResult {
+  /** Evaluates AST for {@link RSEngine}. */
+  public evaluateAst(ast: AstNode, options?: CalculatorEvaluateOptions): CalculatorResult {
     try {
-      const evaluation = this.calculator.evaluateFull(ast);
+      const evaluation = this.calculator.evaluateFull(ast, options);
       return evaluation;
     } catch (error) {
       toast.error((error as Error).message);
@@ -283,6 +287,7 @@ export class RSEngine {
     toast.success(infoMsg.calculationSuccess(timeSpent));
   }
 
+  /** Notify subscribers about value and status change of {@link Constituenta}. */
   private notifyCst(cstID: number) {
     this.notifyStatus(cstID);
     this.notifyValue(cstID);
@@ -304,6 +309,7 @@ export class RSEngine {
     }
   }
 
+  /** Notify all subscribers about value and status change. */
   private notifyAll(): void {
     for (const subs of this.valueSubscribers.values()) {
       for (const cb of subs) cb();

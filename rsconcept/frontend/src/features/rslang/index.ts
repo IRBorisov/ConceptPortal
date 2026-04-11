@@ -1,5 +1,6 @@
+export { readErrorAnnotation, readTypeAnnotation } from './ast-annotations';
 export { getRSErrorRange, RSErrorCode, type RSErrorDescription } from './error';
-export { type CalculatorResult, RSCalculator } from './eval/calculator';
+export { type CalculatorEvaluateOptions, type CalculatorResult, RSCalculator } from './eval/calculator';
 export { makeValuePath, type Value, type ValuePath } from './eval/value';
 export { normalizeAST } from './parser/normalize';
 export { parser as rslangParser } from './parser/parser';

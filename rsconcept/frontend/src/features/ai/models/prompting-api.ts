@@ -170,7 +170,7 @@ export function varConstituenta(cst: Constituenta): string {
 
 /** Generates a prompt for a constituenta syntax tree variable. */
 export function varSyntaxTree(cst: Constituenta, schema: RSForm): string {
-  const ast = schema.analyzer.checkFull(cst.definition_formal).ast;
+  const ast = schema.analyzer.checkFull(cst.definition_formal, { annotateTypes: true, annotateErrors: true }).ast;
   let result = `Конституента: ${cst.alias}`;
   result += `\nФормальное выражение: ${cst.definition_formal}`;
   result += `\nДерево синтаксического разбора:\n`;

@@ -38,6 +38,7 @@
 - Keep frontend and backend changes in sync if API contracts change.
 - Prefer focused, localized changes; avoid broad refactors unless directed.
 - Preserve code and work outside your current task scope.
+- When changing arguments of function consider their order. After changing the order check for function calls and update them.
 
 ---
 

@@ -7,6 +7,7 @@
 
 import { type AstNode, getNodeText } from '@/utils/parsing';
 
+import { annotateError } from '../ast-annotations';
 import { type ErrorReporter, RSErrorCode } from '../error';
 import { TokenID } from '../parser/token';
 
@@ -16,20 +17,23 @@ import { ValueClass, type ValueClassContext } from './value-class';
 /** Value auditor for AST value class checking. */
 export class ValueAuditor {
   private context: ValueClassContext;
+  private annotateErrors: boolean;
   private reporter?: ErrorReporter;
 
   constructor(context: ValueClassContext) {
     this.context = context;
+    this.annotateErrors = false;
   }
 
   /**
    * Runs value audit on the AST. Returns the value class on success, null on failure.
    */
-  run(ast: AstNode, reporter?: ErrorReporter): ValueClass | null {
+  run(ast: AstNode, reporter?: ErrorReporter, annotateErrors: boolean = false): ValueClass | null {
     if (ast.hasError) {
       return null;
     }
     this.reporter = reporter;
+    this.annotateErrors = annotateErrors;
     return this.dispatchVisit(ast);
   }
 
@@ -139,6 +143,9 @@ export class ValueAuditor {
 
   private onError(code: RSErrorCode, node: AstNode, params?: string[]): null {
     this.reporter?.({ code, from: node.from, to: node.to, params });
+    if (this.annotateErrors) {
+      annotateError(node, code, params);
+    }
     return null;
   }
 

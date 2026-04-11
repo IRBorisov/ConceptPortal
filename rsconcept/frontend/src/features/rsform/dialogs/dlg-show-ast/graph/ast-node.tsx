@@ -4,8 +4,8 @@ import { Handle, type NodeProps, Position } from '@xyflow/react';
 import clsx from 'clsx';
 
 import { type RSForm } from '@/features/rsform/models/rsform';
-import { type ExpressionType } from '@/features/rslang';
-import { labelRSLangNode, labelType } from '@/features/rslang/labels';
+import { type ExpressionType, readErrorAnnotation } from '@/features/rslang';
+import { describeRSError, labelRSLangNode, labelType } from '@/features/rslang/labels';
 import { TokenID } from '@/features/rslang/parser/token';
 
 import { globalIDs } from '@/utils/constants';
@@ -21,13 +21,18 @@ const LABEL_THRESHOLD = 3;
 export function ASTNodeComponent(node: NodeProps<ASTNode>) {
   const schema = useShowAstSchema();
   const label = labelRSLangNode(node.data);
-  const tooltipText = buildTooltip(node.data, schema);
+  const errorData = readErrorAnnotation(node.data.annotation);
+  const errorMessage = errorData ? describeRSError(errorData.code, errorData.params ?? []) : '';
+  const tooltipText = buildTooltip(node.data, schema, errorMessage);
 
   return (
     <>
       <Handle type='target' position={Position.Top} className='opacity-0' />
       <div
-        className='w-full h-full cursor-default flex items-center justify-center rounded-full'
+        className={clsx(
+          'w-full h-full cursor-default flex items-center justify-center rounded-full',
+          errorMessage && 'ring-2 ring-destructive ring-offset-2 ring-offset-background'
+        )}
         style={{ backgroundColor: colorBgSyntaxTree(node.data) }}
         data-tooltip-id={tooltipText ? globalIDs.tooltip : undefined}
         data-tooltip-html={tooltipText ?? undefined}
@@ -52,26 +57,26 @@ export function ASTNodeComponent(node: NodeProps<ASTNode>) {
 }
 
 // ====== Internal ======
-function buildTooltip(data: FlatAstNode, schema: RSForm | null): string {
+function buildTooltip(data: FlatAstNode, schema: RSForm | null, errorMessages: string): string {
   const rsType = data.annotation?.rsType as ExpressionType | undefined;
   const typeLine = rsType ? `Тип: <span class="font-math">${labelType(rsType)}</span>` : '';
+  const errorBlock = errorMessages ? `<span class="text-destructive">${errorMessages}</span>` : '';
   const isGlobalId =
     data.typeID === TokenID.ID_GLOBAL ||
     data.typeID === TokenID.ID_FUNCTION ||
     data.typeID === TokenID.ID_PREDICATE;
-  if (!isGlobalId || !schema) {
-    return typeLine;
+  let extra = '';
+  if (isGlobalId && schema) {
+    const alias = typeof data.data.value === 'string' ? data.data.value : '';
+    if (alias) {
+      const cst = schema.cstByAlias.get(alias);
+      const termText = cst ? (cst.term_resolved || cst.term_raw).trim() : '';
+      if (termText) {
+        extra = `<span>Термин: ${termText}</span>`;
+      }
+    }
   }
 
-  const alias = typeof data.data.value === 'string' ? data.data.value : '';
-  if (!alias) {
-    return typeLine;
-  }
-  const cst = schema.cstByAlias.get(alias);
-  const termText = cst ? (cst.term_resolved || cst.term_raw).trim() : '';
-  if (!termText) {
-    return typeLine;
-  }
-  const term = `<span>Термин: ${termText}</span>`;
-  return `${typeLine}<br/>${term}`;
+  const parts = [typeLine, errorBlock, extra].filter(Boolean);
+  return parts.join(parts.length > 0 ? '<br/>' : '');
 }

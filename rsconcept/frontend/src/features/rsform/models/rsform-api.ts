@@ -381,7 +381,7 @@ export function typeClassForCstType(cstType: CstType): TypeClass {
 export function getAnalysisFor(expression: string, cstType: CstType, schema: RSForm): AnalysisFull {
   return schema.analyzer.checkFull(expression, {
     expected: typeClassForCstType(cstType),
-    isDomain: cstType === CstType.STRUCTURED,
+    isDomain: cstType === CstType.STRUCTURED
   });
 }
 

@@ -1,5 +1,6 @@
 import { type AstNode, buildTree } from '@/utils/parsing';
 
+import { annotateError } from '../ast-annotations';
 import { RSErrorCode, type RSErrorDescription } from '../error';
 import { labelTypeClass } from '../labels';
 import { normalizeAST } from '../parser/normalize';
@@ -35,6 +36,7 @@ export interface AnalysisOptions {
   expected?: TypeClass;
   isDomain?: boolean;
   annotateTypes?: boolean;
+  annotateErrors?: boolean;
 }
 
 export class RSLangAnalyzer {
@@ -108,11 +110,16 @@ export class RSLangAnalyzer {
     }
     const ast = this.parse(expression);
     if (ast.hasError) {
-      extractSyntaxErrors(ast, reporter);
+      extractSyntaxErrors(ast, reporter, options?.annotateErrors ?? false);
       return { success: false, type: null, valueClass: null, errors, ast };
     }
 
-    const type = this.typeAuditor.run(ast, options?.annotateTypes ?? false, reporter);
+    const type = this.typeAuditor.run(
+      ast,
+      options?.annotateTypes ?? false,
+      reporter,
+      options?.annotateErrors ?? false
+    );
     if (type === null) {
       return { success: false, type: null, valueClass: null, errors, ast };
     }
@@ -120,20 +127,29 @@ export class RSLangAnalyzer {
     if (options?.isDomain) {
       if (!isStructureDomain(ast) || type.typeID !== TypeID.collection) {
         reporter({ code: RSErrorCode.globalStructure, from: ast.from, to: ast.to });
+        if (options?.annotateErrors) {
+          annotateError(ast, RSErrorCode.globalStructure);
+        }
         return { success: false, type: null, valueClass: null, errors, ast };
       }
       return { success: true, type: debool(type), valueClass: ValueClass.VALUE, errors, ast };
     }
     if (options?.expected && getTypeClass(type.typeID) !== options.expected) {
+      const params = [labelTypeClass(options.expected)] as const;
       reporter({
         code: RSErrorCode.expectedType,
         from: ast.from,
         to: ast.to,
-        params: [labelTypeClass(options.expected)]
+        params: [...params]
       });
+      if (options?.annotateErrors) {
+        annotateError(ast, RSErrorCode.expectedType, params);
+      }
       return { success: false, type: null, valueClass: null, errors, ast };
     }
-    const valueClass = options?.isDomain ? ValueClass.VALUE : this.valueAuditor.run(ast, reporter);
+    const valueClass = options?.isDomain ?
+      ValueClass.VALUE :
+      this.valueAuditor.run(ast, reporter, options?.annotateErrors ?? false);
     return { success: true, type, valueClass, errors, ast };
   }
 

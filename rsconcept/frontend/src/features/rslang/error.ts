@@ -10,12 +10,16 @@ export const RSErrorClass = {
 } as const;
 export type RSErrorClass = (typeof RSErrorClass)[keyof typeof RSErrorClass];
 
-/** Represents RSLang expression error description. */
-export interface RSErrorDescription {
+/** Represents RSLang expression error information. */
+export interface RSErrorInfo {
   code: RSErrorCode;
+  params?: readonly string[];
+}
+
+/** Represents RSLang expression error description. */
+export interface RSErrorDescription extends RSErrorInfo {
   from: number;
   to: number;
-  params?: readonly string[];
 }
 
 /** Error reporter function type. */
