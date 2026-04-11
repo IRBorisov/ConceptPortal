@@ -3,6 +3,7 @@
 import { useEffect, useEffectEvent, useLayoutEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useForm, useStore } from '@tanstack/react-form';
+import clsx from 'clsx';
 
 import { type AnalysisFull, TypeID } from '@/features/rslang';
 import { labelType } from '@/features/rslang/labels';
@@ -104,7 +105,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
 
   const attributions = activeCst.attributes.map(id => schema.cstByID.get(id)!);
 
-  const isBasic = isBasicConcept(activeCst.cst_type) || activeCst.cst_type === CstType.NOMINAL;
+  const isBasic = isBasicConcept(activeCst.cst_type);
   const isElementary = isBaseSet(activeCst.cst_type);
   const showConvention = !!activeCst.convention || forceComment || isBasic;
 
@@ -293,15 +294,19 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
             <TextArea
               id='cst_convention'
               fitContent
-              areaClassName='disabled:min-h-9 max-h-32'
+              areaClassName={clsx(
+                'disabled:min-h-9 max-h-32',
+                isBasic && !field.state.value && 'border-destructive! outline-destructive!'
+              )}
               spellCheck
               label={isBasic ? 'Конвенция' : 'Комментарий'}
-              placeholder={disabled ? '' : isBasic ? 'Договоренность об интерпретации' : 'Пояснение разработчика'}
+              placeholder={disabled ? '' : isBasic ? 'Договоренность об интерпретации базового понятия' : 'Пояснение разработчика'}
               disabled={disabled || (isBasic && activeCst.is_inherited)}
               value={field.state.value ?? ''}
               onChange={event => field.handleChange(event.target.value)}
               onBlur={field.handleBlur}
-              error={field.state.meta.errors[0]?.message}
+              error={field.state.meta.errors[0]?.message ??
+                (isBasic && !field.state.value ? 'Заполните конвенцию' : undefined)}
             />
           )}
         </form.Field>

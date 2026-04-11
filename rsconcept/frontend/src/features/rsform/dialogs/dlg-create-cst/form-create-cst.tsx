@@ -142,7 +142,7 @@ export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggl
               spellCheck
               fitContent
               label={isBasic ? 'Конвенция' : 'Комментарий'}
-              placeholder={isBasic ? 'Договоренность об интерпретации' : 'Пояснение разработчика'}
+              placeholder={isBasic ? 'Договоренность об интерпретации базового понятия' : 'Пояснение разработчика'}
               areaClassName='max-h-20'
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
