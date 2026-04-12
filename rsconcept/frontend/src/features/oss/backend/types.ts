@@ -3,19 +3,9 @@ import { z } from 'zod';
 import { schemaLibraryItem } from '@/features/library/backend/types';
 import { schemaSubstituteConstituents } from '@/features/rsform/backend/types';
 
+import { OperationType, type OssLayout } from '@/domain/library';
 import { limits } from '@/utils/constants';
 import { errorMsg } from '@/utils/labels';
-
-/** Represents {@link Operation} type. */
-export const OperationType = {
-  INPUT: 'input',
-  SYNTHESIS: 'synthesis',
-  REPLICA: 'replica'
-} as const;
-export type OperationType = (typeof OperationType)[keyof typeof OperationType];
-
-/** Represents {@link CstSubstitute} extended data. */
-export type CstSubstituteInfo = z.infer<typeof schemaCstSubstituteInfo>;
 
 /** Represents {@link Operation} data from server. */
 export type OperationDTO = z.infer<typeof schemaOperation>;
@@ -25,9 +15,6 @@ export type BlockDTO = z.infer<typeof schemaBlock>;
 
 /** Represents backend data for {@link OperationSchema}. */
 export type OperationSchemaDTO = z.infer<typeof schemaOperationSchema>;
-
-/** Represents {@link OperationSchema} layout. */
-export type OssLayout = z.infer<typeof schemaOssLayout>;
 
 /** Represents {@link OperationSchema} layout for data transfer. */
 export type IOssLayoutDTO = z.infer<typeof schemaOssLayoutData>;
@@ -83,9 +70,6 @@ export type RelocateConstituentsDTO = z.infer<typeof schemaRelocateConstituents>
 
 /** Represents {@link Constituenta} reference. */
 export type ConstituentaReference = z.infer<typeof schemaConstituentaReference>;
-
-/** Represents {@link OperationSchema} node position. */
-export type NodePosition = z.infer<typeof schemaNodePosition>;
 
 // ====== Schemas ======
 export const schemaOperationType = z.enum(Object.values(OperationType) as [OperationType, ...OperationType[]]);

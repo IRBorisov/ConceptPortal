@@ -2,11 +2,10 @@ import { z } from 'zod';
 
 import { schemaLibraryItem, schemaVersionInfo } from '@/features/library/backend/types';
 
+import { CstType } from '@/domain/library';
 import { RSErrorCode, TokenID, ValueClass } from '@/domain/rslang';
 import { limits } from '@/utils/constants';
 import { errorMsg } from '@/utils/labels';
-
-import { CstType } from '../models/rsform';
 
 /** Represents Constituenta basic persistent data. */
 export type ConstituentaBasicsDTO = z.infer<typeof schemaConstituentaBasics>;
@@ -37,9 +36,6 @@ export interface MoveConstituentsDTO {
   items: number[];
   move_to: number; // Note: 0-base index
 }
-
-/** Represents data, used in merging single {@link Constituenta}. */
-export type CstSubstitute = z.infer<typeof schemaSubstituteConstituents>;
 
 /** Represents input data for inline synthesis. */
 export type InlineSynthesisDTO = z.infer<typeof schemaInlineSynthesis>;

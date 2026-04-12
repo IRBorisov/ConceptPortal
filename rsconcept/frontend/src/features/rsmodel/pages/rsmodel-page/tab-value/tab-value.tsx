@@ -8,12 +8,12 @@ import { ViewConstituents } from '@/features/rsform/components/view-constituents
 import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
 import { useRoleStore, UserRole } from '@/features/users';
 
+import { isInferrable } from '@/domain/library/rsmodel-api';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight, useMainHeight } from '@/stores/app-layout';
 import { usePreferencesStore } from '@/stores/preferences';
 import { globalIDs } from '@/utils/constants';
 
-import { isInferrable } from '../../../models/rsmodel-api';
 import { useRSModelEdit } from '../rsmodel-context';
 
 import { FormValue } from './form-value';

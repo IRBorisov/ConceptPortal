@@ -2,11 +2,11 @@
 
 import { DropdownButton } from '@/components/dropdown';
 import { IconDestroy, IconEdit } from '@/components/icons';
+import { type Block } from '@/domain/library';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { useDeleteBlock } from '../../../../backend/use-delete-block';
 import { useMutatingOss } from '../../../../backend/use-mutating-oss';
-import { type Block } from '../../../../models/oss';
 import { useOssEdit } from '../../oss-edit-context';
 import { useGetLayout } from '../use-get-layout';
 

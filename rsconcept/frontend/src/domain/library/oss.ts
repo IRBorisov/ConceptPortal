@@ -2,15 +2,10 @@
  * Module: Schema of Synthesis Operations.
  */
 
-import { type Graph } from '@/domain/graph/graph';
+import { type Graph } from '../graph';
 
-import {
-  type BlockDTO,
-  type CstSubstituteInfo,
-  type OperationDTO,
-  type OperationSchemaDTO,
-  type OperationType
-} from '../backend/types';
+import { type LibraryItem } from './library';
+import { type NodePosition, type OssLayout } from './oss-layout';
 
 /** Represents OSS node type. */
 export const NodeType = {
@@ -20,19 +15,40 @@ export const NodeType = {
 export type NodeType = (typeof NodeType)[keyof typeof NodeType];
 
 /** Represents OSS graph node. */
-export interface OssNode {
-  nodeID: string;
+export interface OssNode extends NodePosition {
   nodeType: NodeType;
   parent: number | null;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
+}
+
+/** Represents {@link Operation} type. */
+export const OperationType = {
+  INPUT: 'input',
+  SYNTHESIS: 'synthesis',
+  REPLICA: 'replica'
+} as const;
+export type OperationType = (typeof OperationType)[keyof typeof OperationType];
+
+/** Represents {@link Substitution} extended data. */
+export interface CstSubstituteInfo {
+  original: number;
+  substitution: number;
+  operation: number;
+  original_schema: number;
+  original_alias: string;
+  original_term: string;
+  substitution_schema: number;
+  substitution_alias: string;
+  substitution_term: string;
 }
 
 /** Represents Operation common attributes. */
-export interface OperationBase
-  extends OssNode, Pick<OperationDTO, 'alias' | 'title' | 'description' | 'id' | 'operation_type' | 'result'> {
+export interface OperationBase extends OssNode {
+  id: number;
+  alias: string;
+  title: string;
+  description: string;
+  operation_type: OperationType;
+  result: number | null;
   nodeType: typeof NodeType.OPERATION;
   has_additions: boolean;
 }
@@ -61,7 +77,12 @@ export interface OperationSynthesis extends OperationBase {
 export type Operation = OperationInput | OperationReplica | OperationSynthesis;
 
 /** Represents Block. */
-export interface Block extends OssNode, BlockDTO {
+export interface Block extends OssNode {
+  id: number;
+  oss: number;
+  title: string;
+  description: string;
+  parent: number | null;
   nodeType: typeof NodeType.BLOCK;
 }
 
@@ -80,9 +101,20 @@ export interface OperationSchemaStats {
 }
 
 /** Represents OperationSchema. */
-export interface OperationSchema extends Omit<OperationSchemaDTO, 'operations'> {
+export interface OperationSchema extends LibraryItem {
+  editors: number[];
   operations: Operation[];
   blocks: Block[];
+  replicas: {
+    original: number;
+    replica: number;
+  }[];
+  layout: OssLayout;
+  arguments: {
+    operation: number;
+    argument: number;
+  }[];
+  substitutions: CstSubstituteInfo[];
 
   graph: Graph;
   extendedGraph: Graph;
@@ -115,5 +147,4 @@ export const SubstitutionErrorType = {
   unequalArgs: 10,
   invalidNominal: 11
 } as const;
-
 export type SubstitutionErrorType = (typeof SubstitutionErrorType)[keyof typeof SubstitutionErrorType];

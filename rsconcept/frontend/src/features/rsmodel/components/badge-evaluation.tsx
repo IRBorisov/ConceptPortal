@@ -1,14 +1,12 @@
 'use client';
 
-import { type Constituenta } from '@/features/rsform';
-
+import { type Constituenta, type RSEngine } from '@/domain/library';
 import { globalIDs } from '@/utils/constants';
 
 import { colorFgEvalStatus } from '../colors';
 import { useCstStatus } from '../hooks/use-cst-status';
 import { useCstValue } from '../hooks/use-cst-value';
 import { labelEvalStatus, labelValue } from '../labels';
-import { type RSEngine } from '../models/rsengine';
 
 interface BadgeEvaluationProps {
   engine: RSEngine;

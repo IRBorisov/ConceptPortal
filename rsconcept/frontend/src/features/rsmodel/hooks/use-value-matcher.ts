@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useDebounce } from 'use-debounce';
 
+import { type RSEngine } from '@/domain/library';
 import { PARAMETER } from '@/utils/constants';
 
-import { type RSEngine } from '../models/rsengine';
 import { ValueMatcher } from '../models/value-matcher';
 
 /** Returns filter utility for Values. */

@@ -3,11 +3,11 @@
 import { type ReactNode } from 'react';
 
 import { Label, TextArea, TextInput } from '@/components/input';
+import { type OperationSchema } from '@/domain/library';
 import { type CreateFieldProps } from '@/utils/forms';
 
 import { PickMultiOperation } from '../../components/pick-multi-operation';
 import { SelectParent } from '../../components/select-parent';
-import { type OperationSchema } from '../../models/oss';
 
 export interface DlgCreateSynthesisArgumentFields {
   TitleField: (props: CreateFieldProps<string>) => ReactNode;

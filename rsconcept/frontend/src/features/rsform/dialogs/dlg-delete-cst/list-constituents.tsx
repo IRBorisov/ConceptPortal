@@ -1,5 +1,6 @@
+import { type RSForm } from '@/domain/library';
+
 import { labelConstituenta } from '../../labels';
-import { type RSForm } from '../../models/rsform';
 
 interface ListConstituentsProps {
   list: number[];

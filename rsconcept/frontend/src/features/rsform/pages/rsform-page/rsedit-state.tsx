@@ -12,6 +12,8 @@ import { useFindPredecessor } from '@/features/oss/backend/use-find-predecessor'
 import { useRoleStore, UserRole } from '@/features/users';
 import { useAdjustRole } from '@/features/users/stores/use-adjust-role';
 
+import { type Constituenta, CstType } from '@/domain/library';
+import { generateAlias, removeAliasReference } from '@/domain/library/rsform-api';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
@@ -37,8 +39,6 @@ import { useMutatingRSForm } from '../../backend/use-mutating-rsform';
 import { useRSForm } from '../../backend/use-rsform';
 import { useUpdateConstituenta } from '../../backend/use-update-constituenta';
 import { useUpdateCrucial } from '../../backend/use-update-crucial';
-import { type Constituenta, CstType } from '../../models/rsform';
-import { generateAlias, removeAliasReference } from '../../models/rsform-api';
 
 import { RSEditContext } from './rsedit-context';
 

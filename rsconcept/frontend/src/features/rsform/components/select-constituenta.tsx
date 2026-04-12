@@ -1,7 +1,7 @@
 import { ComboBox } from '@/components/input/combo-box';
+import { type Constituenta } from '@/domain/library';
 
 import { describeConstituenta, describeConstituentaTerm } from '../labels';
-import { type Constituenta } from '../models/rsform';
 
 interface SelectConstituentaProps {
   id?: string;

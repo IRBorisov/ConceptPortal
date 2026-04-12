@@ -1,8 +1,9 @@
-import { type RSFormStats } from '@/features/rsform';
-
 import { type RO } from '@/utils/meta';
 
-import { type RSModelDTO } from '../backend/types';
+import { type Value } from '../rslang';
+
+import { type LibraryItem } from './library';
+import { type RSFormStats } from './rsform';
 
 export const TYPE_BASIC = 'basic';
 
@@ -27,8 +28,18 @@ export type BasicsContext = Map<number, BasicBinding>;
 /** Default value for structured data. */
 export const DEFAULT_VALUE_TEXT = 'N/A';
 
+interface RSModelData extends LibraryItem {
+  editors: number[];
+  schema: number;
+  items: {
+    id: number;
+    type: string;
+    value: Value | BasicBinding;
+  }[];
+}
+
 /** Represents {@link RSModel} structured data. */
-export type RSModel = RO<RSModelDTO>;
+export type RSModel = RO<RSModelData>;
 
 /** Represents {@link RSModel} statistics. */
 export interface RSModelStats extends RSFormStats {

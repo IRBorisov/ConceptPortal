@@ -4,19 +4,20 @@ import { Suspense, useMemo, useState } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { HelpTopic } from '@/features/help';
-import { type Substitution } from '@/features/rsform/models/rsform';
 
 import { Loader } from '@/components/loader';
 import { ModalForm } from '@/components/modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
+import { type OssLayout } from '@/domain/library';
+import { LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '@/domain/library/oss-layout-api';
+import { type Substitution } from '@/domain/library/rsform';
 import { useDialogsStore } from '@/stores/dialogs';
 import { type CreateFieldProps, type FieldStateData } from '@/utils/forms';
 import { hintMsg } from '@/utils/labels';
 
-import { type CreateSynthesisDTO, type OssLayout, schemaCreateSynthesis } from '../../backend/types';
+import { type CreateSynthesisDTO, schemaCreateSynthesis } from '../../backend/types';
 import { useCreateSynthesis } from '../../backend/use-create-synthesis';
 import { useOss } from '../../backend/use-oss';
-import { LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '../../models/oss-layout-api';
 
 import { TabArguments } from './tab-arguments';
 import { TabSubstitutions } from './tab-substitutions';

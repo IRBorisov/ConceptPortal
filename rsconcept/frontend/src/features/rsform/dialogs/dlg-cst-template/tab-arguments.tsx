@@ -7,11 +7,11 @@ import { MiniButton } from '@/components/control';
 import { DataTable, type IConditionalStyle } from '@/components/data-table';
 import { IconReset } from '@/components/icons';
 import { NoData } from '@/components/view';
+import { type ArgumentValue, type Constituenta, type RSForm } from '@/domain/library';
+import { isFunctional, isLogical } from '@/domain/library/rsform-api';
 
 import { PickConstituenta } from '../../components/pick-constituenta';
 import { RSInput } from '../../components/rs-input';
-import { type ArgumentValue, type Constituenta, type RSForm } from '../../models/rsform';
-import { isFunctional, isLogical } from '../../models/rsform-api';
 
 import { useTemplateContext } from './template-context';
 
@@ -33,8 +33,11 @@ export function TabArguments({ schema, definition }: TabArgumentsProps) {
   }
 
   function handleSelectConstituenta(cst: Constituenta) {
+    if (!selectedArgument) {
+      return;
+    }
     setSelectedCst(cst);
-    handleAssignArgument(selectedArgument!, cst.alias);
+    handleAssignArgument(selectedArgument, cst.alias);
   }
 
   function handleClearArgument(target: ArgumentValue) {

@@ -2,6 +2,7 @@
 
 import { createContext, use } from 'react';
 
+import { type Constituenta, type CstType, type RSForm } from '@/domain/library';
 import { type RO } from '@/utils/meta';
 
 import {
@@ -10,7 +11,6 @@ import {
   type RSFormDTO,
   type UpdateConstituentaDTO
 } from '../../backend/types';
-import { type Constituenta, type CstType, type RSForm } from '../../models/rsform';
 
 interface IRSEditContext {
   schema: RSForm;

@@ -18,6 +18,7 @@ import { useConceptNavigation } from '@/app';
 
 import { DiagramFlow, useReactFlow } from '@/components/flow/diagram-flow';
 import { useContinuousPan } from '@/components/flow/use-continuous-panning';
+import { addAliasReference } from '@/domain/library/rsform-api';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight, useMainHeight } from '@/stores/app-layout';
 import { PARAMETER } from '@/utils/constants';
@@ -31,7 +32,6 @@ import { TGNodeTypes } from '../../../components/term-graph/graph/tg-node-types'
 import { SelectColoring } from '../../../components/term-graph/select-coloring';
 import { SelectEdgeType } from '../../../components/term-graph/select-edge-type';
 import { ViewHidden } from '../../../components/term-graph/view-hidden';
-import { addAliasReference } from '../../../models/rsform-api';
 import { InteractionMode, TGEdgeType, useTermGraphStore, useTGConnectionStore } from '../../../stores/term-graph';
 import { useRSFormEdit } from '../rsedit-context';
 

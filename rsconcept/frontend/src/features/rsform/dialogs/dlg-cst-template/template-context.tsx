@@ -2,7 +2,7 @@
 
 import { createContext, use } from 'react';
 
-import { type ArgumentValue, type Constituenta } from '../../models/rsform';
+import { type ArgumentValue, type Constituenta } from '@/domain/library';
 
 interface ITemplateContext {
   args: ArgumentValue[];

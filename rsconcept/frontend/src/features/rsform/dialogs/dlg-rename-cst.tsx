@@ -7,14 +7,14 @@ import { HelpTopic } from '@/features/help';
 
 import { TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
+import { type Constituenta, type CstType, type RSForm } from '@/domain/library';
+import { generateAlias, validateNewAlias } from '@/domain/library/rsform-api';
 import { useDialogsStore } from '@/stores/dialogs';
 import { hintMsg } from '@/utils/labels';
 import { withPreventDefault } from '@/utils/utils';
 
 import { schemaUpdateConstituenta, type UpdateConstituentaDTO } from '../backend/types';
 import { SelectCstType } from '../components/select-cst-type';
-import { type Constituenta, type CstType, type RSForm } from '../models/rsform';
-import { generateAlias, validateNewAlias } from '../models/rsform-api';
 
 export interface DlgRenameCstProps {
   schema: RSForm;

@@ -7,14 +7,15 @@ import { HelpTopic } from '@/features/help';
 
 import { ModalForm } from '@/components/modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
+import { type OssLayout } from '@/domain/library';
+import { LayoutManager } from '@/domain/library/oss-layout-api';
 import { useDialogsStore } from '@/stores/dialogs';
 import { type CreateFieldProps, type FieldStateData } from '@/utils/forms';
 import { hintMsg } from '@/utils/labels';
 
-import { type CreateBlockDTO, type OssLayout, schemaCreateBlock } from '../../backend/types';
+import { type CreateBlockDTO, schemaCreateBlock } from '../../backend/types';
 import { useCreateBlock } from '../../backend/use-create-block';
 import { useOss } from '../../backend/use-oss';
-import { LayoutManager } from '../../models/oss-layout-api';
 import { BLOCK_NODE_MIN_HEIGHT, BLOCK_NODE_MIN_WIDTH } from '../../pages/oss-page/tab-oss-graph/graph/block-node';
 
 import { type DlgCreateBlockCardFields, TabBlockCard } from './tab-block-card';

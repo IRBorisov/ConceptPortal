@@ -2,7 +2,6 @@
 
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
-import { CstType } from '@/features/rsform';
 import { IconCstType } from '@/features/rsform/components/icon-cst-type';
 import { getCstTypeShortcut, labelCstType } from '@/features/rsform/labels';
 import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
@@ -21,6 +20,7 @@ import {
   IconReset
 } from '@/components/icons';
 import { cn } from '@/components/utils';
+import { CstType } from '@/domain/library';
 import { prefixes } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/format';
 

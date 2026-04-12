@@ -1,26 +1,19 @@
 import { toast } from 'react-toastify';
 
-import { type RSForm } from '@/features/rsform';
-import { CstType } from '@/features/rsform';
-import { getAnalysisFor, isBaseSet, isBasicConcept, isFunctional } from '@/features/rsform/models/rsform-api';
+import { type RSModelDTO } from '@/features/rsmodel';
 
-import {
-  type CalculatorEvaluateOptions,
-  type CalculatorResult,
-  RSCalculator,
-  TypeID,
-  type Value
-} from '@/domain/rslang';
-import { compare } from '@/domain/rslang/eval/value';
-import { normalizeType } from '@/domain/rslang/labels';
 import { errorMsg, infoMsg } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 import { type AstNode } from '@/utils/parsing';
 
-import { type RSModelDTO } from '../backend/types';
+import { type CalculatorEvaluateOptions, type CalculatorResult, RSCalculator, TypeID, type Value } from '../rslang';
+import { compare } from '../rslang/eval/value';
+import { normalizeType } from '../rslang/labels';
 
+import { CstType, type RSForm } from './rsform';
+import { getAnalysisFor, isBaseSet, isBasicConcept, isFunctional } from './rsform-api';
 import { type BasicBinding, type BasicsContext, type EvalStatus, TYPE_BASIC } from './rsmodel';
-import { inferStatus, isInferrable, tryFixValue } from './rsmodel-api';
+import { inferEvalStatus, isInferrable, tryFixValue } from './rsmodel-api';
 
 const INVALID_TYPE_MARKER = 'INVALID';
 
@@ -84,10 +77,10 @@ export class RSEngine {
   public getCstStatus(cstID: number): EvalStatus {
     const cst = this.schema?.cstByID.get(cstID);
     if (!cst) {
-      return inferStatus(null, CstType.NOMINAL, false);
+      return inferEvalStatus(null, CstType.NOMINAL, false);
     }
     const value = this.calculator.getValue(cst.alias);
-    return inferStatus(value, cst.cst_type, this.calculatedSet.has(cstID), this.invalidData.has(cstID));
+    return inferEvalStatus(value, cst.cst_type, this.calculatedSet.has(cstID), this.invalidData.has(cstID));
   }
 
   /** Subscribe to value change of {@link Constituenta}. */

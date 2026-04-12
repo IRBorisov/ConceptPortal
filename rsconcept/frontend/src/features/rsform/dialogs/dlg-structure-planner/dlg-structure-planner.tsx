@@ -9,6 +9,9 @@ import { HelpTopic } from '@/features/help';
 import { MiniButton } from '@/components/control';
 import { IconNewItem, IconReset, IconSave } from '@/components/icons';
 import { ModalView } from '@/components/modal';
+import { type Constituenta, CstType, type RSForm } from '@/domain/library';
+import { generateAlias } from '@/domain/library/rsform-api';
+import { type SPNode, StructurePlanner } from '@/domain/library/structure-planner';
 import { useDialogsStore } from '@/stores/dialogs';
 import { globalIDs } from '@/utils/constants';
 import { type RO } from '@/utils/meta';
@@ -22,9 +25,6 @@ import {
   type UpdateConstituentaDTO
 } from '../../backend/types';
 import { RefsInput } from '../../components/refs-input';
-import { type Constituenta, CstType, type RSForm } from '../../models/rsform';
-import { generateAlias } from '../../models/rsform-api';
-import { type SPNode, StructurePlanner } from '../../models/structure-planner';
 
 import { StructureFlow } from './structure-flow';
 

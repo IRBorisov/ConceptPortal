@@ -1,6 +1,6 @@
-import { OperationType } from '../../../../backend/types';
-import { OssStats } from '../../../../components/oss-stats';
-import { type Block, NodeType, type OperationSchema } from '../../../../models/oss';
+import { OssStats } from '@/features/oss/components/oss-stats';
+
+import { type Block, NodeType, type OperationSchema, OperationType } from '@/domain/library';
 
 interface BlockStatsProps {
   target: Block;

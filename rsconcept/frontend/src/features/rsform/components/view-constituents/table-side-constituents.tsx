@@ -2,15 +2,14 @@
 
 import { useEffect, useRef } from 'react';
 
-import { type RSEngine } from '@/features/rsmodel';
 import { BadgeEvaluation } from '@/features/rsmodel/components/badge-evaluation';
 
 import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/data-table';
 import { NoData, TextContent } from '@/components/view';
+import { type Constituenta, type RSEngine, type RSForm } from '@/domain/library';
 import { PARAMETER, prefixes } from '@/utils/constants';
 
 import { describeConstituenta } from '../../labels';
-import { type Constituenta, type RSForm } from '../../models/rsform';
 import { BadgeConstituenta } from '../badge-constituenta';
 
 import { useFilteredItems } from './use-filtered-items';

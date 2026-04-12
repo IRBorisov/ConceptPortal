@@ -1,6 +1,4 @@
-import { CstType, type RSForm } from '@/features/rsform';
-import { calculateSchemaStats, isBaseSet, isBasicConcept } from '@/features/rsform/models/rsform-api';
-
+import { calculateSchemaStats, isBaseSet, isBasicConcept } from '@/domain/library/rsform-api';
 import { type ExpressionType, TypeID, type Typification, type Value } from '@/domain/rslang';
 import { compare, TUPLE_ID, VALUE_TRUE, type ValuePath } from '@/domain/rslang/eval/value';
 import { extractValue, makeDefaultValue, printValue, setNestedValue } from '@/domain/rslang/eval/value-api';
@@ -10,6 +8,7 @@ import { type RO } from '@/utils/meta';
 import { concat, type Doc, group, indent, join, line, render, text } from '@/utils/text-printer';
 
 import { type RSEngine } from './rsengine';
+import { CstType, type RSForm } from './rsform';
 import { type BasicBinding, type BasicsContext, EvalStatus, type RSModelStats } from './rsmodel';
 
 /** Calculate statistics for {@link RSModel}. */
@@ -93,7 +92,7 @@ export function isInferrable(type: CstType): boolean {
 }
 
 /** Infers status of a given {@link Value} and {@link CstType}. */
-export function inferStatus(
+export function inferEvalStatus(
   value: RO<Value | null>,
   cstType: CstType,
   wasCalculated: boolean = true,

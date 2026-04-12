@@ -1,7 +1,6 @@
 import { createContext, use } from 'react';
 
 import { type UpdateLibraryItemDTO } from '@/features/library';
-import { type RSForm } from '@/features/rsform';
 import {
   type AttributionTargetDTO,
   type ConstituentaCreatedResponse,
@@ -11,9 +10,8 @@ import {
   type UpdateConstituentaDTO,
   type UpdateCrucialDTO
 } from '@/features/rsform/backend/types';
-import { type Attribution, type Substitution } from '@/features/rsform/models/rsform';
-import { type RSEngine, type RSModelDTO } from '@/features/rsmodel';
 
+import { type Attribution, type RSEngine, type RSForm, type RSModel, type Substitution } from '@/domain/library';
 import { type RO } from '@/utils/meta';
 
 import { type SandboxBundle } from '../models/bundle';
@@ -21,7 +19,7 @@ import { type SandboxBundle } from '../models/bundle';
 interface IBundleContext {
   bundle: SandboxBundle;
   schema: RSForm;
-  model: RSModelDTO;
+  model: RSModel;
   engine: RSEngine;
   resetBundle: () => void;
   importBundle: (raw: unknown) => Promise<void>;

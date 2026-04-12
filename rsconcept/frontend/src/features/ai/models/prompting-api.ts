@@ -1,9 +1,6 @@
-import { type Block, NodeType, type OperationSchema } from '@/features/oss/models/oss';
-import { type Constituenta, type RSForm } from '@/features/rsform';
-import { CstType } from '@/features/rsform/models/rsform';
-import { isBasicConcept } from '@/features/rsform/models/rsform-api';
-
-import { type Graph } from '@/domain/graph/graph';
+import { type Graph } from '@/domain/graph';
+import { type Block, type Constituenta, CstType, NodeType, type OperationSchema, type RSForm } from '@/domain/library';
+import { isBasicConcept } from '@/domain/library/rsform-api';
 import { TypificationGraph } from '@/domain/rslang';
 import { labelType } from '@/domain/rslang/labels';
 import { isTypification } from '@/domain/rslang/semantic/typification';

@@ -2,14 +2,11 @@ import {
   type CreateBlockDTO,
   type CreateSchemaDTO,
   type CreateSynthesisDTO,
-  type ImportSchemaDTO,
-  type NodePosition,
-  OperationType,
-  type OssLayout
-} from '../backend/types';
+  type ImportSchemaDTO
+} from '../../features/oss/backend/types';
 
-import { NodeType, type OperationSchema } from './oss';
-import { type Position2D, type Rectangle2D } from './oss-layout';
+import { NodeType, type OperationSchema, OperationType } from './oss';
+import { type NodePosition, type OssLayout, type Position2D, type Rectangle2D } from './oss-layout';
 
 export const GRID_SIZE = 10; // pixels - size of OSS grid
 const MIN_DISTANCE = 2 * GRID_SIZE; // pixels - minimum distance between nodes

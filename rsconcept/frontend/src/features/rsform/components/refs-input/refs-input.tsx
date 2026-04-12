@@ -16,22 +16,23 @@ import { useDebounce } from 'use-debounce';
 
 import { Label } from '@/components/input';
 import {
+  type EntityRefState,
   type Grammeme,
+  type InlinePosition,
   parseEntityReference,
   parseGrammemes,
   parseSyntacticReference,
   referenceToString,
   ReferenceType,
-  supportedGrammemes
+  supportedGrammemes,
+  type SyntacticRefState
 } from '@/domain/cctext';
+import { type RSForm } from '@/domain/library';
 import { usePreferencesStore } from '@/stores/preferences';
 import { APP_COLORS } from '@/styling/colors';
 import { CodeMirrorWrapper } from '@/utils/codemirror';
 import { PARAMETER } from '@/utils/constants';
 import { withPreventDefault } from '@/utils/utils';
-
-import { type EntityRefState, type InlinePosition, type SyntacticRefState } from '../../../../domain/cctext/reference';
-import { type RSForm } from '../../models/rsform';
 
 import { RefEntity, RefSyntactic } from './parse/parser.terms';
 import { refsNavigation } from './click-navigation';

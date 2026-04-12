@@ -4,10 +4,9 @@ import { createColumnHelper } from '@tanstack/react-table';
 
 import { DataTable } from '@/components/data-table';
 import { IconPageRight } from '@/components/icons';
+import { type CstSubstituteInfo, type Operation, OperationType } from '@/domain/library';
 
-import { type CstSubstituteInfo, OperationType } from '../backend/types';
 import { labelOperationType } from '../labels';
-import { type Operation } from '../models/oss';
 
 interface InfoOperationProps {
   operation: Operation;

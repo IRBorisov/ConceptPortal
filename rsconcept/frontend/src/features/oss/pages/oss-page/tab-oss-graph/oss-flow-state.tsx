@@ -3,12 +3,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { type Edge, useEdgesState, useNodesState, useOnSelectionChange, useReactFlow } from '@xyflow/react';
 
+import { NodeType, type OperationSchema, type Position2D } from '@/domain/library';
+import { constructNodeID } from '@/domain/library/oss-api';
 import { APP_COLORS } from '@/styling/colors';
 import { PARAMETER } from '@/utils/constants';
 
-import { NodeType, type OperationSchema } from '../../../models/oss';
-import { constructNodeID } from '../../../models/oss-api';
-import { type Position2D } from '../../../models/oss-layout';
 import { useOSSGraphStore } from '../../../stores/oss-graph';
 import { useOssEdit } from '../oss-edit-context';
 

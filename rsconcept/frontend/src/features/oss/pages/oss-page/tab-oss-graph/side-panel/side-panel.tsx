@@ -8,12 +8,11 @@ import { MiniButton } from '@/components/control';
 import { IconClose } from '@/components/icons';
 import { Loader } from '@/components/loader';
 import { cn } from '@/components/utils';
+import { NodeType, OperationType } from '@/domain/library';
 import { useAppLayoutStore, useMainHeight } from '@/stores/app-layout';
 import { usePreferencesStore } from '@/stores/preferences';
 import { PARAMETER } from '@/utils/constants';
 
-import { OperationType } from '../../../../backend/types';
-import { NodeType } from '../../../../models/oss';
 import { useOssEdit } from '../../oss-edit-context';
 
 import { BlockStats } from './block-stats';

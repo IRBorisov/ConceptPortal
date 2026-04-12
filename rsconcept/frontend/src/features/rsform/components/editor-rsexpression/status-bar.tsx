@@ -6,13 +6,13 @@ import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 
 import { cn } from '@/components/utils';
+import { type CstStatus } from '@/domain/library';
 import { globalIDs } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/format';
 import { isMac } from '@/utils/utils';
 
 import { colorStatusBar } from '../../colors';
 import { labelExpressionStatus } from '../../labels';
-import { type CstStatus } from '../../models/rsform';
 import { IconExpressionStatus } from '../icon-expression-status';
 
 interface StatusBarProps {

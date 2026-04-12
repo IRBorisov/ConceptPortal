@@ -11,13 +11,13 @@ import { useRSForm } from '@/features/rsform/backend/use-rsform';
 import { RSEditState } from '@/features/rsform/pages/rsform-page/rsedit-state';
 import { useRoleStore, UserRole } from '@/features/users';
 
+import { RSEngine } from '@/domain/library';
 import { promptText } from '@/utils/labels';
 
 import { useClearValues } from '../../backend/use-clear-values';
 import { useMutatingRSModel } from '../../backend/use-mutating-rsmodel';
 import { useRSModel } from '../../backend/use-rsmodel';
 import { useSetValue } from '../../backend/use-set-value';
-import { RSEngine } from '../../models/rsengine';
 
 import { RSModelContext } from './rsmodel-context';
 

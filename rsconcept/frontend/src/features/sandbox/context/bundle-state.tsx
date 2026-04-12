@@ -14,9 +14,9 @@ import {
   type UpdateConstituentaDTO,
   type UpdateCrucialDTO
 } from '@/features/rsform/backend/types';
-import { type Attribution, type Substitution } from '@/features/rsform/models/rsform';
-import { RSEngine, type RSEngineServices } from '@/features/rsmodel/models/rsengine';
 
+import { RSEngine, type RSEngineServices } from '@/domain/library/rsengine';
+import { type Attribution, type Substitution } from '@/domain/library/rsform';
 import { errorMsg } from '@/utils/labels';
 
 import { type SandboxBundle } from '../models/bundle';

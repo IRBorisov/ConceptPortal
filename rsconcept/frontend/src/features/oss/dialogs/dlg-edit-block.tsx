@@ -7,13 +7,14 @@ import { HelpTopic } from '@/features/help';
 
 import { TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
+import { type OssLayout } from '@/domain/library';
+import { LayoutManager } from '@/domain/library/oss-layout-api';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { type OssLayout, schemaUpdateBlock, type UpdateBlockDTO } from '../backend/types';
+import { schemaUpdateBlock, type UpdateBlockDTO } from '../backend/types';
 import { useOss } from '../backend/use-oss';
 import { useUpdateBlock } from '../backend/use-update-block';
 import { SelectParent } from '../components/select-parent';
-import { LayoutManager } from '../models/oss-layout-api';
 
 export interface DlgEditBlockProps {
   ossID: number;
@@ -51,7 +52,7 @@ export function DlgEditBlock() {
     }
   });
 
-  const values = useStore(form.store, state => state.values as UpdateBlockDTO);
+  const values = useStore(form.store, state => state.values);
   const canSubmit = useMemo(() => schemaUpdateBlock.safeParse(values).success, [values]);
 
   return (

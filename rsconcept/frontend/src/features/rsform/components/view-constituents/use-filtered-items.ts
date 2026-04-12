@@ -1,5 +1,6 @@
-import { type Constituenta, type RSForm } from '../../models/rsform';
-import { isBasicConcept, matchConstituenta } from '../../models/rsform-api';
+import { type Constituenta, type RSForm } from '@/domain/library';
+import { isBasicConcept, matchConstituenta } from '@/domain/library/rsform-api';
+
 import { useCstSearchStore } from '../../stores/cst-search';
 
 export function useFilteredItems(schema: RSForm): Constituenta[] {

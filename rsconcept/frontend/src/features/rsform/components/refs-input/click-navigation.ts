@@ -1,7 +1,7 @@
 import { type Extension } from '@codemirror/state';
 import { EditorView } from '@uiw/react-codemirror';
 
-import { type RSForm } from '../../models/rsform';
+import { type RSForm } from '@/domain/library';
 
 import { findReferenceAt } from './utils';
 

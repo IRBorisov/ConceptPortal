@@ -4,7 +4,6 @@ import { useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 import { MiniSelectorOSS } from '@/features/library/components/mini-selector-oss';
-import { CstType } from '@/features/rsform/models/rsform';
 
 import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
@@ -19,6 +18,7 @@ import {
   IconReset
 } from '@/components/icons';
 import { cn } from '@/components/utils';
+import { CstType } from '@/domain/library/rsform';
 import { prefixes } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/format';
 

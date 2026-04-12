@@ -16,6 +16,8 @@ import {
   IconSortList,
   IconTemplates
 } from '@/components/icons';
+import { type Constituenta } from '@/domain/library';
+import { cstCanProduceStructure } from '@/domain/library/rsform-api';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { promptUnsaved } from '@/utils/utils';
@@ -24,8 +26,6 @@ import { useInlineSynthesis } from '../../backend/use-inline-synthesis';
 import { useResetAliases } from '../../backend/use-reset-aliases';
 import { useRestoreOrder } from '../../backend/use-restore-order';
 import { useSubstituteConstituents } from '../../backend/use-substitute-constituents';
-import { type Constituenta } from '../../models/rsform';
-import { cstCanProduceStructure } from '../../models/rsform-api';
 
 import { useRSFormEdit } from './rsedit-context';
 

@@ -2,10 +2,10 @@
 
 import clsx from 'clsx';
 
+import { type Constituenta } from '@/domain/library';
 import { globalIDs } from '@/utils/constants';
 
 import { colorBgBadge, colorFgCstStatus } from '../colors';
-import { type Constituenta } from '../models/rsform';
 import { useCstTooltipStore } from '../stores/cst-tooltip';
 
 interface BadgeConstituentaProps {

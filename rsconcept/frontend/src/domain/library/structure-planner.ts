@@ -12,6 +12,7 @@ import {
 import { type Constituenta, CstType, type RSForm } from './rsform';
 import { findCstByStructure } from './rsform-api';
 
+/** Represents a node in the structure planner. */
 export interface SPNode {
   key: string;
   path: TypePath;
@@ -21,6 +22,7 @@ export interface SPNode {
   existing: Constituenta | null;
 }
 
+/** Structure planner for {@link Constituenta}. */
 export class StructurePlanner {
   private items: SPNode[] = [];
   private schema: RSForm;

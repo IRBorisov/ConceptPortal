@@ -4,13 +4,13 @@ import { useState } from 'react';
 import clsx from 'clsx';
 
 import { useConceptNavigation } from '@/app';
-import { CstType } from '@/features/rsform/models/rsform';
-import { matchConstituenta } from '@/features/rsform/models/rsform-api';
 import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
 
 import { ExportDropdown } from '@/components/control/export-dropdown';
 import { type RowSelectionState } from '@/components/data-table';
 import { SearchBar } from '@/components/input';
+import { CstType } from '@/domain/library/rsform';
+import { matchConstituenta } from '@/domain/library/rsform-api';
 import { useFitHeight } from '@/stores/app-layout';
 import { withPreventDefault } from '@/utils/utils';
 

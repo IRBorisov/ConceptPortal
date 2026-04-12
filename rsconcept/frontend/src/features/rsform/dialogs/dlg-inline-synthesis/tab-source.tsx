@@ -5,9 +5,8 @@ import { PickSchema } from '@/features/library/components/pick-schema';
 
 import { TextInput } from '@/components/input';
 import { LibraryItemType } from '@/domain/library';
-
-import { type RSForm } from '../../models/rsform';
-import { sortItemsForInlineSynthesis } from '../../models/rsform-api';
+import { type RSForm } from '@/domain/library';
+import { sortItemsForInlineSynthesis } from '@/domain/library/rsform-api';
 
 interface TabSourceProps {
   receiver: RSForm;

@@ -3,11 +3,12 @@
 import { type ReactNode } from 'react';
 
 import { TextArea, TextInput } from '@/components/input';
+import { type OperationSchema } from '@/domain/library';
+import { NodeType } from '@/domain/library';
+import { constructNodeID } from '@/domain/library/oss-api';
 import { type CreateFieldProps } from '@/utils/forms';
 
 import { SelectParent } from '../../components/select-parent';
-import { NodeType, type OperationSchema } from '../../models/oss';
-import { constructNodeID } from '../../models/oss-api';
 
 export interface DlgCreateBlockCardFields {
   TitleField: (props: CreateFieldProps<string>) => ReactNode;

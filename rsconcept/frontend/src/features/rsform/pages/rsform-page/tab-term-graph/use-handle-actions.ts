@@ -3,10 +3,10 @@ import { useReactFlow } from '@xyflow/react';
 import { toPng, toSvg } from 'html-to-image';
 import fileDownload from 'js-file-download';
 
-import { CstType } from '@/features/rsform/models/rsform';
-
 import { useScrollToNode } from '@/components/flow/use-scroll-to-node';
 import { type Graph } from '@/domain/graph/graph';
+import { CstType } from '@/domain/library/rsform';
+import { isBasicConcept } from '@/domain/library/rsform-api';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { APP_COLOR_CODES } from '@/styling/colors';
@@ -14,7 +14,6 @@ import { EXPORTS, PARAMETER, REACTFLOW_VIEWPORT } from '@/utils/constants';
 import { cleanSvg } from '@/utils/svg';
 import { dataUrlToBlob, withPreventDefault } from '@/utils/utils';
 
-import { isBasicConcept } from '../../../models/rsform-api';
 import { InteractionMode, useTermGraphStore, useTGConnectionStore } from '../../../stores/term-graph';
 import { useRSFormEdit } from '../rsedit-context';
 

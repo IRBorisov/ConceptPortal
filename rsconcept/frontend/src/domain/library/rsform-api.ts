@@ -2,16 +2,15 @@
  * Module: API for formal representation for systems of concepts.
  */
 
-import { BASIC_SCHEMAS, type LibraryItem } from '@/domain/library';
 import { type AnalysisFull, TypeClass, TypeID, type TypePath, type Typification, ValueClass } from '@/domain/rslang';
 import { type EchelonFunctional, isTypification } from '@/domain/rslang/semantic/typification';
 import { applyPath } from '@/domain/rslang/semantic/typification-api';
 import { type RO } from '@/utils/meta';
 import { TextMatcher } from '@/utils/utils';
 
+import { BASIC_SCHEMAS, type LibraryItem } from './library';
 import {
   type ArgumentValue,
-  CATEGORY_CST_TYPE,
   type Constituenta,
   CstClass,
   CstStatus,
@@ -116,7 +115,7 @@ export function applyFilterCategory(start: Constituenta, items: Constituenta[]):
   if (startIndex === -1) {
     return [];
   }
-  const nextCategoryIndex = items.findIndex((cst, index) => index > startIndex && cst.cst_type === CATEGORY_CST_TYPE);
+  const nextCategoryIndex = items.findIndex((cst, index) => index > startIndex && cst.cst_type === CstType.THEOREM);
 
   return items.filter((_, index) => index >= startIndex && (nextCategoryIndex === -1 || index < nextCategoryIndex));
 }

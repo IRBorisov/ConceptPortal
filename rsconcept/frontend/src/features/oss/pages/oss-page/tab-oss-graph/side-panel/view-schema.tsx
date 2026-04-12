@@ -5,7 +5,6 @@ import { useEffect, useEffectEvent, useState } from 'react';
 import { useConceptNavigation } from '@/app';
 import { useAIStore } from '@/features/ai/stores/ai-context';
 import { useFindPredecessor } from '@/features/oss/backend/use-find-predecessor';
-import { type Constituenta } from '@/features/rsform';
 import { useClearAttributions } from '@/features/rsform/backend/use-clear-attributions';
 import { useCreateAttribution } from '@/features/rsform/backend/use-create-attribution';
 import { useDeleteAttribution } from '@/features/rsform/backend/use-delete-attribution';
@@ -13,8 +12,9 @@ import { useRSForm } from '@/features/rsform/backend/use-rsform';
 import { useUpdateConstituenta } from '@/features/rsform/backend/use-update-constituenta';
 import { CardRSFormStats } from '@/features/rsform/components/rsform-stats';
 import { ViewConstituents } from '@/features/rsform/components/view-constituents';
-import { calculateSchemaStats } from '@/features/rsform/models/rsform-api';
 
+import { type Constituenta } from '@/domain/library';
+import { calculateSchemaStats } from '@/domain/library/rsform-api';
 import { useFitHeight } from '@/stores/app-layout';
 import { useDialogsStore } from '@/stores/dialogs';
 

@@ -9,10 +9,9 @@ import { IconNewItem, IconRemove } from '@/components/icons';
 import { SearchBar, TextInput } from '@/components/input';
 import { cn } from '@/components/utils';
 import { NoData } from '@/components/view';
+import { type BasicBinding, DEFAULT_VALUE_TEXT } from '@/domain/library';
 import { PARAMETER } from '@/utils/constants';
 import { TextMatcher } from '@/utils/utils';
-
-import { type BasicBinding, DEFAULT_VALUE_TEXT } from '../../models/rsmodel';
 
 interface BindingEditorProps {
   className?: string;

@@ -5,10 +5,10 @@ import { useState } from 'react';
 import { HelpTopic } from '@/features/help';
 
 import { ModalForm, ModalView } from '@/components/modal';
+import { type BasicBinding } from '@/domain/library';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { BindingEditor } from '../components/binding-editor.tsx';
-import { type BasicBinding } from '../models/rsmodel';
 
 export interface DlgEditBindingProps {
   initialValue: BasicBinding;

@@ -1,10 +1,10 @@
 import { type ReactNode } from 'react';
 
 import { TextArea, TextInput } from '@/components/input';
+import { type OperationSchema } from '@/domain/library';
 import { type CreateFieldProps } from '@/utils/forms';
 
 import { SelectParent } from '../../components/select-parent';
-import { type OperationSchema } from '../../models/oss';
 
 export interface DlgEditOperationCardFields {
   TitleField: (props: CreateFieldProps<string>) => ReactNode;

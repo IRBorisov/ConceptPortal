@@ -2,8 +2,7 @@
 
 import { createContext, use } from 'react';
 
-import { type Operation, type OperationSchema, type OssItem } from '../../models/oss';
-
+import { type Operation, type OperationSchema, type OssItem } from '@/domain/library';
 interface IOssEditContext {
   schema: OperationSchema;
   selectedNodes: string[];

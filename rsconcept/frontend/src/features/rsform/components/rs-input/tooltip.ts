@@ -2,12 +2,11 @@ import { type Extension } from '@codemirror/state';
 import { hoverTooltip, type TooltipView } from '@codemirror/view';
 import clsx from 'clsx';
 
+import { type Constituenta, type RSForm } from '@/domain/library';
+import { isBasicConcept } from '@/domain/library/rsform-api';
 import { type ExpressionType, TokenID } from '@/domain/rslang';
 import { labelType } from '@/domain/rslang/labels';
 import { type AstNode } from '@/utils/parsing';
-
-import { type Constituenta, type RSForm } from '../../models/rsform';
-import { isBasicConcept } from '../../models/rsform-api';
 
 import { Local } from './parse/parser.terms';
 import { findAliasAt } from './utils';

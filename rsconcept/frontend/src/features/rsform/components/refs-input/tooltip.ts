@@ -6,11 +6,11 @@ import clsx from 'clsx';
 import { parseGrammemes } from '@/domain/cctext';
 import { type EntityReference, type SyntacticReference } from '@/domain/cctext';
 import { labelGrammeme } from '@/domain/cctext/labels';
+import { type Constituenta, type RSForm } from '@/domain/library';
 import { findContainedNodes } from '@/utils/codemirror';
 import { isMac } from '@/utils/utils';
 
 import { describeConstituentaTerm } from '../../labels';
-import { type Constituenta, type RSForm } from '../../models/rsform';
 
 import { RefEntity } from './parse/parser.terms';
 import { findReferenceAt } from './utils';

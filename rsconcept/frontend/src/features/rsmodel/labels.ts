@@ -1,11 +1,9 @@
+import { EvalStatus } from '@/domain/library';
+import { type ExpressionType, TypeID, type TypePath, type Typification } from '@/domain/rslang';
+import { TUPLE_ID, type Value, VALUE_FALSE, VALUE_TRUE } from '@/domain/rslang/eval/value';
+import { valueStub } from '@/domain/rslang/eval/value-api';
+import { labelType } from '@/domain/rslang/labels';
 import { type RO } from '@/utils/meta';
-
-import { type ExpressionType, TypeID, type TypePath, type Typification } from '../../domain/rslang';
-import { TUPLE_ID, type Value, VALUE_FALSE, VALUE_TRUE } from '../../domain/rslang/eval/value';
-import { valueStub } from '../../domain/rslang/eval/value-api';
-import { labelType } from '../../domain/rslang/labels';
-
-import { EvalStatus } from './models/rsmodel';
 
 const labelEvalStatusRecord: Record<EvalStatus, string> = {
   [EvalStatus.NO_EVAL]: 'Без вычисления',

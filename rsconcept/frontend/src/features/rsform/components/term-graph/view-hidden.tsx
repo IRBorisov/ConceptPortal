@@ -5,10 +5,10 @@ import clsx from 'clsx';
 import { MiniButton } from '@/components/control';
 import { IconDropArrow, IconDropArrowUp } from '@/components/icons';
 import { cn } from '@/components/utils';
+import { type Constituenta, type RSForm } from '@/domain/library';
 import { globalIDs, prefixes } from '@/utils/constants';
 
 import { colorBgGraphNode } from '../../colors';
-import { type Constituenta, type RSForm } from '../../models/rsform';
 import { useCstTooltipStore } from '../../stores/cst-tooltip';
 import { useTermGraphStore } from '../../stores/term-graph';
 

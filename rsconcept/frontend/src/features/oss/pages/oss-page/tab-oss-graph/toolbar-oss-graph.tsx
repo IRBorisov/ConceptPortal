@@ -28,12 +28,12 @@ import {
 } from '@/components/icons';
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
+import { NodeType } from '@/domain/library';
 import { usePreferencesStore } from '@/stores/preferences';
 import { prepareTooltip } from '@/utils/format';
 import { isIOS, isMac, notImplemented } from '@/utils/utils';
 
 import { useMutatingOss } from '../../../backend/use-mutating-oss';
-import { NodeType } from '../../../models/oss';
 import { useOssEdit } from '../oss-edit-context';
 
 import { type OGNode } from './graph/og-models';

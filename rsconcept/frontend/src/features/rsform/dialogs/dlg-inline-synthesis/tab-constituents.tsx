@@ -1,8 +1,9 @@
 'use client';
 
+import { type Substitution } from '@/domain/library';
+
 import { useRSForm } from '../../backend/use-rsform';
 import { PickMultiConstituenta } from '../../components/pick-multi-constituenta';
-import { type Substitution } from '../../models/rsform';
 
 interface TabConstituentsProps {
   sourceID: number;

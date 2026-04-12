@@ -5,7 +5,6 @@ import { toast } from 'react-toastify';
 import { type ReactCodeMirrorRef } from '@uiw/react-codemirror';
 
 import { useConceptNavigation } from '@/app';
-import { CstType } from '@/features/rsform';
 import { RSEditorControls } from '@/features/rsform/components/editor-rsexpression/rs-edit-controls';
 import { RSInput } from '@/features/rsform/components/rs-input';
 import { RSTextWrapper } from '@/features/rsform/components/rs-input/text-editing';
@@ -14,6 +13,8 @@ import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-contex
 
 import { TextArea, TextInput } from '@/components/input';
 import { cn } from '@/components/utils';
+import { CstType } from '@/domain/library';
+import { inferEvalStatus, prepareValueString } from '@/domain/library/rsmodel-api';
 import {
   type AnalysisFull,
   type CalculatorResult,
@@ -32,7 +33,6 @@ import { type RO } from '@/utils/meta';
 
 import { ValueInput } from '../../../components/value-input';
 import { labelValue } from '../../../labels';
-import { inferStatus, prepareValueString } from '../../../models/rsmodel-api';
 import { useRSModelEdit } from '../rsmodel-context';
 import { ToolbarExpression } from '../tab-value/toolbar-expression';
 
@@ -63,7 +63,7 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
   );
   const stub = localEval?.value ? valueStub(localEval?.value) : '';
   const isModified = evaluatedExpression !== expression;
-  const status = inferStatus(localEval?.value ?? null, CstType.TERM, !isModified);
+  const status = inferEvalStatus(localEval?.value ?? null, CstType.TERM, !isModified);
   const errors = [...(localParse?.errors ?? []), ...(localEval?.errors ?? [])];
   const hasDialog = localParse?.type && isTypification(localParse.type) && localEval?.value !== null;
 

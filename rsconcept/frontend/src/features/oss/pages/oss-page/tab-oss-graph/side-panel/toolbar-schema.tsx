@@ -3,7 +3,6 @@
 import { useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
-import { type Constituenta, CstType, type RSForm } from '@/features/rsform';
 import { type ConstituentaBasicsDTO, type CreateConstituentaDTO } from '@/features/rsform/backend/types';
 import { useCreateConstituenta } from '@/features/rsform/backend/use-create-constituenta';
 import { useDeleteConstituents } from '@/features/rsform/backend/use-delete-constituents';
@@ -11,7 +10,6 @@ import { useMoveConstituents } from '@/features/rsform/backend/use-move-constitu
 import { useMutatingRSForm } from '@/features/rsform/backend/use-mutating-rsform';
 import { useResetAliases } from '@/features/rsform/backend/use-reset-aliases';
 import { useRestoreOrder } from '@/features/rsform/backend/use-restore-order';
-import { generateAlias } from '@/features/rsform/models/rsform-api';
 import { useCstSearchStore } from '@/features/rsform/stores/cst-search';
 
 import { MiniButton } from '@/components/control';
@@ -30,6 +28,8 @@ import {
   IconTypeGraph
 } from '@/components/icons';
 import { cn } from '@/components/utils';
+import { type Constituenta, CstType, type RSForm } from '@/domain/library';
+import { generateAlias } from '@/domain/library/rsform-api';
 import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER, prefixes } from '@/utils/constants';
 import { type RO } from '@/utils/meta';

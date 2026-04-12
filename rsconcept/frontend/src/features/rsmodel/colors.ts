@@ -1,6 +1,5 @@
+import { EvalStatus } from '@/domain/library';
 import { APP_COLORS } from '@/styling/colors';
-
-import { EvalStatus } from './models/rsmodel';
 
 /** Determines statusbar color for {@link EvalStatus}. */
 export function colorStatusBar(status: EvalStatus): string {

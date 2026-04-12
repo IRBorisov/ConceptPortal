@@ -5,12 +5,12 @@ import { useForm } from '@tanstack/react-form';
 import { MiniButton } from '@/components/control';
 import { Checkbox } from '@/components/input';
 import { ModalForm } from '@/components/modal';
+import { CstType } from '@/domain/library';
 import { prepareTooltip } from '@/utils/format';
 import { withPreventDefault } from '@/utils/utils';
 
 import { IconCstType } from '../components/icon-cst-type';
 import { labelCstType } from '../labels';
-import { CstType } from '../models/rsform';
 import { cstTypeToFilterKey, type GraphFilterParams, useTermGraphStore } from '../stores/term-graph';
 
 export function DlgGraphParams() {

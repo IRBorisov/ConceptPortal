@@ -3,13 +3,7 @@
  */
 
 import { Graph } from '@/domain/graph/graph';
-import { type AnalysisFast, makeTypePath, RSLangAnalyzer, TokenID, TypeID, type TypePath } from '@/domain/rslang';
-import { extractGlobals, isSimpleExpression, splitTemplateDefinition } from '@/domain/rslang/api';
-import { type ExpressionType } from '@/domain/rslang/semantic/typification';
-import { type RO } from '@/utils/meta';
-import { type AstNode, getNodeIndices } from '@/utils/parsing';
-
-import { type Constituenta, CstStatus, CstType, type RSForm } from '../models/rsform';
+import { type Constituenta, CstStatus, CstType, type RSForm } from '@/domain/library';
 import {
   inferClass,
   inferStatus,
@@ -17,7 +11,12 @@ import {
   isBaseSet,
   isFunctional,
   typeClassForCstType
-} from '../models/rsform-api';
+} from '@/domain/library/rsform-api';
+import { type AnalysisFast, makeTypePath, RSLangAnalyzer, TokenID, TypeID, type TypePath } from '@/domain/rslang';
+import { extractGlobals, isSimpleExpression, splitTemplateDefinition } from '@/domain/rslang/api';
+import { type ExpressionType } from '@/domain/rslang/semantic/typification';
+import { type RO } from '@/utils/meta';
+import { type AstNode, getNodeIndices } from '@/utils/parsing';
 
 import { type RSFormDTO } from './types';
 

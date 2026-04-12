@@ -7,14 +7,15 @@ import { HelpTopic } from '@/features/help';
 
 import { TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
+import { type OssLayout } from '@/domain/library';
+import { LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '@/domain/library/oss-layout-api';
 import { useDialogsStore } from '@/stores/dialogs';
 import { hintMsg } from '@/utils/labels';
 
-import { type CreateSchemaDTO, type OssLayout, schemaCreateSchema } from '../backend/types';
+import { type CreateSchemaDTO, schemaCreateSchema } from '../backend/types';
 import { useCreateSchema } from '../backend/use-create-schema';
 import { useOss } from '../backend/use-oss';
 import { SelectParent } from '../components/select-parent';
-import { LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '../models/oss-layout-api';
 
 export interface DlgCreateSchemaProps {
   ossID: number;

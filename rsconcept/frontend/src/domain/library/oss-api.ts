@@ -2,18 +2,18 @@
  * Module: API for OperationSystem.
  */
 
-import { type Constituenta, CstClass, type CstSubstitute, CstType, type RSForm } from '@/features/rsform';
+import { describeSubstitutionError } from '@/features/oss/labels';
 
-import { type LibraryItem } from '@/domain/library';
-import { type AliasMapping, applyAliasMapping, applyTypificationMapping, isSetTypification } from '@/domain/rslang/api';
-import { labelType } from '@/domain/rslang/labels';
-import { extractBases } from '@/domain/rslang/semantic/typification-api';
 import { infoMsg } from '@/utils/labels';
 
-import { Graph } from '../../../domain/graph/graph';
-import { describeSubstitutionError } from '../labels';
+import { Graph } from '../graph';
+import { type AliasMapping, applyAliasMapping, applyTypificationMapping, isSetTypification } from '../rslang/api';
+import { labelType } from '../rslang/labels';
+import { extractBases } from '../rslang/semantic/typification-api';
 
+import { type LibraryItem } from './library';
 import { NodeType, type OperationSchema, SubstitutionErrorType } from './oss';
+import { type Constituenta, CstClass, CstType, type RSForm,type Substitution } from './rsform';
 
 const STARTING_SUB_INDEX = 900; // max semantic index for starting substitution
 
@@ -47,10 +47,10 @@ type CrossMapping = Map<number, AliasMapping>;
 /** Validator for Substitution table. */
 export class SubstitutionValidator {
   public msg: string = '';
-  public suggestions: CstSubstitute[] = [];
+  public suggestions: Substitution[] = [];
 
   private schemas: RSForm[];
-  private substitutions: CstSubstitute[];
+  private substitutions: Substitution[];
   private constituents = new Set<number>();
   private originals = new Set<number>();
   private mapping: CrossMapping = new Map();
@@ -59,7 +59,7 @@ export class SubstitutionValidator {
   private schemaByID = new Map<number, RSForm>();
   private schemaByCst = new Map<number, RSForm>();
 
-  constructor(schemas: RSForm[], substitutions: CstSubstitute[]) {
+  constructor(schemas: RSForm[], substitutions: Substitution[]) {
     this.schemas = schemas;
     this.substitutions = substitutions;
     if (schemas.length === 0 || substitutions.length === 0) {
@@ -419,9 +419,7 @@ export class SubstitutionValidator {
   }
 }
 
-/**
- * Filter relocate candidates from gives schema.
- */
+/** Filter relocate candidates from gives schema. */
 export function getRelocateCandidates(
   source: number,
   destination: number,

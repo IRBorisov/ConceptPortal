@@ -1,13 +1,12 @@
-import { type RO } from '@/utils/meta';
-
-import { OperationType } from './backend/types';
 import {
   NodeType,
   type Operation,
+  OperationType,
   type OssItem,
   type SubstitutionErrorDescription,
   SubstitutionErrorType
-} from './models/oss';
+} from '@/domain/library';
+import { type RO } from '@/utils/meta';
 
 const labelOperationTypeRecord: Record<OperationType, string> = {
   [OperationType.INPUT]: 'Загрузка',

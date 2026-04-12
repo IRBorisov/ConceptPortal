@@ -8,6 +8,7 @@ import { IconReset } from '@/components/icons';
 import { SearchBar } from '@/components/input';
 import { cn } from '@/components/utils';
 import { Text } from '@/components/view';
+import { type RSEngine } from '@/domain/library';
 import { makeValuePath, TypeID, type Typification, type Value, type ValuePath } from '@/domain/rslang';
 import { convertPathToType, extractValue } from '@/domain/rslang/eval/value-api';
 import { type TypePath } from '@/domain/rslang/semantic/typification';
@@ -17,7 +18,6 @@ import { type RO } from '@/utils/meta';
 
 import { useValueMatcher } from '../../hooks/use-value-matcher';
 import { describeValue, printTypeCrumbs } from '../../labels';
-import { type RSEngine } from '../../models/rsengine';
 import { IconShowDataText } from '../icon-show-data-text';
 
 import { type ColumnServices, createColumnsType } from './value-columns';

@@ -8,14 +8,14 @@ import { HelpTopic } from '@/features/help';
 import { Loader } from '@/components/loader';
 import { ModalForm } from '@/components/modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
+import { type CstType, type RSForm } from '@/domain/library';
+import { generateAlias, validateNewAlias } from '@/domain/library/rsform-api';
 import { useDialogsStore } from '@/stores/dialogs';
 import { type CreateFieldProps, type FieldStateData } from '@/utils/forms';
 import { hintMsg } from '@/utils/labels';
 import { withPreventDefault } from '@/utils/utils';
 
 import { type CreateConstituentaDTO, schemaCreateConstituenta } from '../../backend/types';
-import { type CstType, type RSForm } from '../../models/rsform';
-import { generateAlias, validateNewAlias } from '../../models/rsform-api';
 import { FormCreateCst, type FormCreateCstFields } from '../dlg-create-cst/form-create-cst';
 
 import { TabArguments } from './tab-arguments';

@@ -8,13 +8,12 @@ import { schemaUpdateLibraryItem, type UpdateLibraryItemDTO } from '@/features/l
 import { useUpdateItem } from '@/features/library/backend/use-update-item';
 import { ToolbarItemAccess } from '@/features/library/components/toolbar-item-access';
 import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
-import { type RSModel } from '@/features/rsmodel/models/rsmodel';
 
 import { SubmitButton } from '@/components/control';
 import { IconRSForm, IconSave } from '@/components/icons';
 import { TextArea, TextInput } from '@/components/input';
 import { ValueIcon } from '@/components/view';
-import { LibraryItemType } from '@/domain/library';
+import { LibraryItemType, type RSModel } from '@/domain/library';
 import { useModificationStore } from '@/stores/modification';
 import { globalIDs } from '@/utils/constants';
 

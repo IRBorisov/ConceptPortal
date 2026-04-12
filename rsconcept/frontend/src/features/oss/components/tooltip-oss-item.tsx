@@ -1,9 +1,9 @@
 'use client';
 
 import { Tooltip } from '@/components/container';
+import { NodeType } from '@/domain/library';
 import { globalIDs } from '@/utils/constants';
 
-import { NodeType } from '../models/oss';
 import { useOperationTooltipStore } from '../stores/operation-tooltip';
 
 import { InfoBlock } from './info-block';

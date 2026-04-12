@@ -5,10 +5,10 @@ import { toast } from 'react-toastify';
 
 import { useConceptNavigation } from '@/app';
 import { type ConstituentaCreatedResponse, type CreateConstituentaDTO } from '@/features/rsform/backend/types';
-import { type Constituenta, CstType } from '@/features/rsform/models/rsform';
-import { generateAlias, removeAliasReference } from '@/features/rsform/models/rsform-api';
 import { RSEditContext } from '@/features/rsform/pages/rsform-page/rsedit-context';
 
+import { type Constituenta, CstType } from '@/domain/library/rsform';
+import { generateAlias, removeAliasReference } from '@/domain/library/rsform-api';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { PARAMETER, prefixes } from '@/utils/constants';

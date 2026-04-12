@@ -3,9 +3,9 @@ import { BadgeHelp } from '@/features/help/components/badge-help';
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/input/select';
 import { cn } from '@/components/utils';
+import { type RSForm } from '@/domain/library';
 
 import { labelColoring } from '../../labels';
-import { type RSForm } from '../../models/rsform';
 import { TGColoring, useTermGraphStore } from '../../stores/term-graph';
 
 import { SchemasGuide } from './schemas-guide';

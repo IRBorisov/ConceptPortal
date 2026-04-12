@@ -10,6 +10,8 @@ import { TextButton } from '@/components/control/text-button';
 import { IconChild, IconPredecessor, IconSave } from '@/components/icons';
 import { Label, TextArea } from '@/components/input';
 import { Indicator } from '@/components/view';
+import { type Constituenta, CstType, type RSForm } from '@/domain/library';
+import { cstCanProduceStructure, getAnalysisFor, isBaseSet, isBasicConcept } from '@/domain/library/rsform-api';
 import { type AnalysisFull, TypeID } from '@/domain/rslang';
 import { labelType } from '@/domain/rslang/labels';
 import { useDialogsStore } from '@/stores/dialogs';
@@ -24,8 +26,6 @@ import { IconCrucialValue } from '../../../components/icon-crucial-value';
 import { RefsInput } from '../../../components/refs-input';
 import { SelectMultiConstituenta } from '../../../components/select-multi-constituenta';
 import { getRSDefinitionPlaceholder, labelRSExpression } from '../../../labels';
-import { type Constituenta, CstType, type RSForm } from '../../../models/rsform';
-import { cstCanProduceStructure, getAnalysisFor, isBaseSet, isBasicConcept } from '../../../models/rsform-api';
 import { useRSFormEdit } from '../rsedit-context';
 
 interface FormConstituentaProps {

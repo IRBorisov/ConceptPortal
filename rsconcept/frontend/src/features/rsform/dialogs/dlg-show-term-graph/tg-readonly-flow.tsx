@@ -6,6 +6,7 @@ import clsx from 'clsx';
 
 import { DiagramFlow, useReactFlow } from '@/components/flow/diagram-flow';
 import { useContinuousPan } from '@/components/flow/use-continuous-panning';
+import { type Constituenta, type RSForm } from '@/domain/library';
 import { useFitHeight } from '@/stores/app-layout';
 import { PARAMETER } from '@/utils/constants';
 
@@ -23,7 +24,6 @@ import { SelectColoring } from '../../components/term-graph/select-coloring';
 import { SelectEdgeType } from '../../components/term-graph/select-edge-type';
 import { ToolbarFocusedCst } from '../../components/term-graph/toolbar-focused-cst';
 import { ViewHidden } from '../../components/term-graph/view-hidden';
-import { type Constituenta, type RSForm } from '../../models/rsform';
 import { useTermGraphStore } from '../../stores/term-graph';
 
 import ToolbarGraphFilter from './toolbar-graph-filter';

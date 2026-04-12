@@ -3,20 +3,21 @@
  */
 
 import { Graph } from '@/domain/graph/graph';
-import { type RO } from '@/utils/meta';
-
 import {
   type Block,
   NodeType,
   type Operation,
   type OperationSchema,
   type OperationSchemaStats,
+  OperationType,
   type OssItem
-} from '../models/oss';
-import { constructNodeID } from '../models/oss-api';
+} from '@/domain/library';
+import { constructNodeID } from '@/domain/library/oss-api';
+import { type RO } from '@/utils/meta';
+
 import { BLOCK_NODE_MIN_HEIGHT, BLOCK_NODE_MIN_WIDTH } from '../pages/oss-page/tab-oss-graph/graph/block-node';
 
-import { type OperationSchemaDTO, OperationType } from './types';
+import { type OperationSchemaDTO } from './types';
 
 /** Loads data into an {@link OperationSchema} based on {@link OperationSchemaDTO}. */
 export class OssLoader {

@@ -1,9 +1,9 @@
 import { type RSFormDTO } from '@/features/rsform/backend/types';
-import { CstType } from '@/features/rsform/models/rsform';
 import { type RSModelDTO } from '@/features/rsmodel/backend/types';
 
 import { LocationHead } from '@/domain/library';
 import { AccessPolicy, type LibraryItem, LibraryItemType } from '@/domain/library';
+import { CstType } from '@/domain/library/rsform';
 
 import {
   SANDBOX_BUNDLE_FORMAT_VERSION,

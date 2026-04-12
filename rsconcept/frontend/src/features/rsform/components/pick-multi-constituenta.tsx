@@ -8,10 +8,10 @@ import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
 import { NoData } from '@/components/view';
 import { Graph } from '@/domain/graph/graph';
+import { type Constituenta, type RSForm } from '@/domain/library';
+import { isBasicConcept, matchConstituenta } from '@/domain/library/rsform-api';
 
 import { describeConstituenta } from '../labels';
-import { type Constituenta, type RSForm } from '../models/rsform';
-import { isBasicConcept, matchConstituenta } from '../models/rsform-api';
 
 import { BadgeConstituenta } from './badge-constituenta';
 import { ToolbarGraphSelection } from './toolbar-graph-selection';

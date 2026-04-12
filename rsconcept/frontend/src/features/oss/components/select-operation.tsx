@@ -1,7 +1,6 @@
 import { ComboBox } from '@/components/input/combo-box';
 import { type Styling } from '@/components/props';
-
-import { type Operation } from '../models/oss';
+import { type Operation } from '@/domain/library';
 
 interface SelectOperationProps extends Styling {
   id?: string;

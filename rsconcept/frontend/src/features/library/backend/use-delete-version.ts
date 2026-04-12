@@ -1,8 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { type RSForm } from '@/features/rsform';
-
 import { KEYS } from '@/backend/configuration';
+import { type RSForm } from '@/domain/library';
 
 import { libraryApi } from './api';
 

@@ -6,9 +6,9 @@ import clsx from 'clsx';
 import { IconConsolidation, IconRSForm } from '@/components/icons';
 import { cn } from '@/components/utils';
 import { Indicator } from '@/components/view';
+import { OperationType } from '@/domain/library';
 import { globalIDs } from '@/utils/constants';
 
-import { OperationType } from '../../../../backend/types';
 import { useOperationTooltipStore } from '../../../../stores/operation-tooltip';
 import { useOSSGraphStore } from '../../../../stores/oss-graph';
 import { useOssEdit } from '../../oss-edit-context';

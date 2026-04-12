@@ -9,13 +9,13 @@ import { useDeleteItem } from '@/features/library/backend/use-delete-item';
 import { EditorLibraryItem } from '@/features/library/components/editor-library-item';
 import { ToolbarItemCard } from '@/features/library/components/toolbar-item-card';
 
+import { calculateModelStats } from '@/domain/library/rsmodel-api';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { globalIDs } from '@/utils/constants';
 import { promptText } from '@/utils/labels';
 
-import { calculateModelStats } from '../../../models/rsmodel-api';
 import { useRSModelEdit } from '../rsmodel-context';
 
 import { FormRSModel } from './form-rsmodel';

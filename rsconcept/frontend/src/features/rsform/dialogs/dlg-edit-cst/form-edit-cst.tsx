@@ -5,6 +5,8 @@ import { BadgeHelp } from '@/features/help/components/badge-help';
 
 import { MiniButton } from '@/components/control';
 import { Label, TextArea, TextInput } from '@/components/input';
+import { type Constituenta, CstType, type RSForm } from '@/domain/library';
+import { isBaseSet, isBasicConcept } from '@/domain/library/rsform-api';
 import { labelType } from '@/domain/rslang/labels';
 import { type CreateFieldProps } from '@/utils/forms';
 
@@ -15,8 +17,6 @@ import { RSInput } from '../../components/rs-input';
 import { SelectCstType } from '../../components/select-cst-type';
 import { SelectMultiConstituenta } from '../../components/select-multi-constituenta';
 import { getRSDefinitionPlaceholder, labelRSExpression } from '../../labels';
-import { type Constituenta, CstType, type RSForm } from '../../models/rsform';
-import { isBaseSet, isBasicConcept } from '../../models/rsform-api';
 
 interface FormEditCstProps {
   schema: RSForm;

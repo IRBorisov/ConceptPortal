@@ -7,14 +7,14 @@ import { useConceptNavigation } from '@/app';
 import { MiniButton } from '@/components/control';
 import { IconChild, IconRSForm } from '@/components/icons';
 import { ModalForm } from '@/components/modal';
+import { type Constituenta, type CstType, type RSForm } from '@/domain/library';
+import { generateAlias, validateNewAlias } from '@/domain/library/rsform-api';
 import { useDialogsStore } from '@/stores/dialogs';
 import { type CreateFieldProps, type FieldStateData } from '@/utils/forms';
 import { hintMsg } from '@/utils/labels';
 import { withPreventDefault } from '@/utils/utils';
 
 import { schemaUpdateConstituenta, type UpdateConstituentaDTO } from '../../backend/types';
-import { type Constituenta, type CstType, type RSForm } from '../../models/rsform';
-import { generateAlias, validateNewAlias } from '../../models/rsform-api';
 
 import { FormEditCst, type FormEditCstFields } from './form-edit-cst';
 

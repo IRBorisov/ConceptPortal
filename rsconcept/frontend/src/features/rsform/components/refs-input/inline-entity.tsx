@@ -6,13 +6,12 @@ import clsx from 'clsx';
 import { MiniButton } from '@/components/control';
 import { IconAccept, IconClose } from '@/components/icons';
 import { SearchBar } from '@/components/input';
-import { type Grammeme } from '@/domain/cctext';
+import { type EntityRefState, type Grammeme, type InlinePosition } from '@/domain/cctext';
+import { type Constituenta, type RSForm } from '@/domain/library';
+import { matchConstituenta } from '@/domain/library/rsform-api';
 import { prepareTooltip } from '@/utils/format';
 import { isMac } from '@/utils/utils';
 
-import { type EntityRefState, type InlinePosition } from '../../../../domain/cctext/reference';
-import { type Constituenta, type RSForm } from '../../models/rsform';
-import { matchConstituenta } from '../../models/rsform-api';
 import { SelectWordForm } from '../select-word-form';
 
 interface InlineEntityEditorProps {

@@ -11,11 +11,8 @@ import { IconAccept, IconPageLeft, IconPageRight, IconRemove, IconReplace } from
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
 import { NoData } from '@/components/view';
-import { type LibraryItem } from '@/domain/library';
+import { type Constituenta, type LibraryItem, type RSForm, type Substitution } from '@/domain/library';
 import { errorMsg } from '@/utils/labels';
-
-import { type CstSubstitute } from '../backend/types';
-import { type Constituenta, type RSForm } from '../models/rsform';
 
 import { BadgeConstituenta } from './badge-constituenta';
 import { SelectConstituenta } from './select-constituenta';
@@ -29,10 +26,10 @@ interface IMultiSubstitution {
 }
 
 interface PickSubstitutionsProps extends Styling {
-  value: CstSubstitute[];
-  onChange: (newValue: CstSubstitute[]) => void;
+  value: Substitution[];
+  onChange: (newValue: Substitution[]) => void;
 
-  suggestions?: CstSubstitute[];
+  suggestions?: Substitution[];
 
   rows?: number;
   allowSelfSubstitution?: boolean;
@@ -83,7 +80,7 @@ export function PickSubstitutions({
   const [deleteRight, setDeleteRight] = useState(true);
   const toggleDelete = () => setDeleteRight(prev => !prev);
 
-  const [ignores, setIgnores] = useState<CstSubstitute[]>([]);
+  const [ignores, setIgnores] = useState<Substitution[]>([]);
   const filteredSuggestions =
     suggestions?.filter(
       item =>
@@ -145,7 +142,7 @@ export function PickSubstitutions({
     if (!leftCst || !rightCst) {
       return;
     }
-    const newSubstitution: CstSubstitute = {
+    const newSubstitution: Substitution = {
       original: deleteRight ? rightCst.id : leftCst.id,
       substitution: deleteRight ? leftCst.id : rightCst.id
     };

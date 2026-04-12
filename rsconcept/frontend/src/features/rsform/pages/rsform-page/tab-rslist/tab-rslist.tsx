@@ -5,15 +5,15 @@ import clsx from 'clsx';
 
 import { useConceptNavigation } from '@/app';
 import { MiniSelectorOSS } from '@/features/library/components/mini-selector-oss';
-import { CstType } from '@/features/rsform/models/rsform';
 
 import { ExportDropdown } from '@/components/control/export-dropdown';
 import { type RowSelectionState } from '@/components/data-table';
 import { SearchBar } from '@/components/input';
+import { CstType } from '@/domain/library/rsform';
+import { matchConstituenta } from '@/domain/library/rsform-api';
 import { useFitHeight } from '@/stores/app-layout';
 import { withPreventDefault } from '@/utils/utils';
 
-import { matchConstituenta } from '../../../models/rsform-api';
 import { useRSFormEdit } from '../rsedit-context';
 
 import { TableRSFormList } from './table-rsform-list';

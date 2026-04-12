@@ -6,12 +6,12 @@ import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 
 import { cn } from '@/components/utils';
+import { type EvalStatus } from '@/domain/library';
 import { globalIDs } from '@/utils/constants';
 
 import { colorStatusBar } from '../../colors';
 import { IconEvalStatus } from '../../components/icon-eval-status';
 import { labelEvalStatus } from '../../labels';
-import { type EvalStatus } from '../../models/rsmodel';
 
 interface StatusBarProps {
   className?: string;

@@ -2,12 +2,10 @@
 
 import { useRSForms } from '@/features/rsform/backend/use-rsforms';
 import { PickSubstitutions } from '@/features/rsform/components/pick-substitutions';
-import { type Substitution } from '@/features/rsform/models/rsform';
 
 import { TextArea } from '@/components/input';
-
-import { type OperationSchema } from '../../models/oss';
-import { SubstitutionValidator } from '../../models/oss-api';
+import { type OperationSchema, type Substitution } from '@/domain/library';
+import { SubstitutionValidator } from '@/domain/library/oss-api';
 
 interface TabSubstitutionsProps {
   oss: OperationSchema;

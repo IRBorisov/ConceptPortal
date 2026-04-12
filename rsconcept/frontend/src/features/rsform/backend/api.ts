@@ -4,10 +4,9 @@ import equal from 'fast-deep-equal';
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';
 import { DELAYS, KEYS } from '@/backend/configuration';
 import { queryClient } from '@/backend/query-client';
+import { type Attribution, type RSForm } from '@/domain/library';
 import { infoMsg } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
-
-import { type Attribution, type RSForm } from '../models/rsform';
 
 import { loadRSForm } from './rsform-loader';
 import {

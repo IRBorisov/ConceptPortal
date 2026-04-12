@@ -4,7 +4,7 @@
 
 import { strToU8, zipSync } from 'fflate';
 
-import { CstType, type RSForm } from './rsform';
+import { CstType, type RSForm } from '@/domain/library';
 
 const TRS_ENTITY_CONSTITUENTA = 'constituenta';
 const TRS_ENTITY_SCHEMA = 'rsform';

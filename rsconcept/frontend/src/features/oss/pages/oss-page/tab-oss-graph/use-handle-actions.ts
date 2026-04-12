@@ -3,6 +3,10 @@ import { useReactFlow, useStoreApi } from '@xyflow/react';
 import { toPng, toSvg } from 'html-to-image';
 import fileDownload from 'js-file-download';
 
+import { type UpdateOperationDTO } from '@/features/oss/backend/types';
+
+import { NodeType, OperationType, type OssItem } from '@/domain/library';
+import { LayoutManager } from '@/domain/library/oss-layout-api';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { APP_COLOR_CODES } from '@/styling/colors';
@@ -11,13 +15,10 @@ import { promptText } from '@/utils/labels';
 import { cleanSvg } from '@/utils/svg';
 import { dataUrlToBlob, withPreventDefault } from '@/utils/utils';
 
-import { OperationType, type UpdateOperationDTO } from '../../../backend/types';
 import { useDeleteBlock } from '../../../backend/use-delete-block';
 import { useMutatingOss } from '../../../backend/use-mutating-oss';
 import { useUpdateLayout } from '../../../backend/use-update-layout';
 import { useUpdateOperation } from '../../../backend/use-update-operation';
-import { NodeType, type OssItem } from '../../../models/oss';
-import { LayoutManager } from '../../../models/oss-layout-api';
 import { useOSSGraphStore } from '../../../stores/oss-graph';
 import { useOssEdit } from '../oss-edit-context';
 

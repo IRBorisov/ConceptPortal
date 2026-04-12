@@ -10,12 +10,11 @@ import { useDeleteItem } from '@/features/library/backend/use-delete-item';
 import { useRoleStore, UserRole } from '@/features/users';
 import { useAdjustRole } from '@/features/users/stores/use-adjust-role';
 
+import { NodeType, type Operation, OperationType } from '@/domain/library';
 import { usePreferencesStore } from '@/stores/preferences';
 import { promptText } from '@/utils/labels';
 
-import { OperationType } from '../../backend/types';
 import { useOss } from '../../backend/use-oss';
-import { NodeType, type Operation } from '../../models/oss';
 
 import { OssEditContext } from './oss-edit-context';
 

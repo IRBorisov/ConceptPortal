@@ -1,8 +1,8 @@
 import { ComboMulti } from '@/components/input/combo-multi';
 import { type Styling } from '@/components/props';
+import { type Constituenta } from '@/domain/library';
 
 import { labelConstituenta } from '../labels';
-import { type Constituenta } from '../models/rsform';
 
 interface SelectMultiCstProps extends Styling {
   id?: string;

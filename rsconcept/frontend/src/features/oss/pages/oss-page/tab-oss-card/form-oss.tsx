@@ -11,11 +11,11 @@ import { SubmitButton } from '@/components/control';
 import { IconSave } from '@/components/icons';
 import { TextArea, TextInput } from '@/components/input';
 import { LibraryItemType } from '@/domain/library';
+import { type OperationSchema } from '@/domain/library';
 import { useModificationStore } from '@/stores/modification';
 import { globalIDs } from '@/utils/constants';
 
 import { useMutatingOss } from '../../../backend/use-mutating-oss';
-import { type OperationSchema } from '../../../models/oss';
 import { useOssEdit } from '../oss-edit-context';
 
 function ossDefaults(schema: OperationSchema): UpdateLibraryItemDTO {

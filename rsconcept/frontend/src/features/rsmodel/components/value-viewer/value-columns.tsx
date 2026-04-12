@@ -1,17 +1,15 @@
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table';
 import clsx from 'clsx';
 
-import { type RSForm } from '@/features/rsform';
-
 import { cn } from '@/components/utils';
+import { type BasicsContext, type RSForm } from '@/domain/library';
+import { prepareValueString } from '@/domain/library/rsmodel-api';
 import { makeValuePath, TypeID, type Typification, type Value, type ValuePath } from '@/domain/rslang';
 import { testInvalid, valueStub } from '@/domain/rslang/eval/value-api';
 import { type EchelonCollection, IntegerT } from '@/domain/rslang/semantic/typification';
 import { globalIDs } from '@/utils/constants';
 import { truncateToLastWord, truncateToSymbol } from '@/utils/format';
 
-import { type BasicsContext } from '../../models/rsmodel';
-import { prepareValueString } from '../../models/rsmodel-api';
 import { type ValueMatcher } from '../../models/value-matcher';
 
 const HEADER_TRUNCATE = 40;

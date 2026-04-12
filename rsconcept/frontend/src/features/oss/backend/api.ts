@@ -2,6 +2,7 @@ import { queryOptions } from '@tanstack/react-query';
 
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';
 import { DELAYS, KEYS } from '@/backend/configuration';
+import { type OssLayout } from '@/domain/library';
 import { infoMsg } from '@/utils/labels';
 
 import {
@@ -21,7 +22,6 @@ import {
   type MoveItemsDTO,
   type OperationCreatedResponse,
   type OperationSchemaDTO,
-  type OssLayout,
   type RelocateConstituentsDTO,
   schemaBlockCreatedResponse,
   schemaConstituentaReference,

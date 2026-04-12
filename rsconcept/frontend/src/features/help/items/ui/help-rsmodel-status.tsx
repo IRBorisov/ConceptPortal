@@ -2,8 +2,8 @@ import clsx from 'clsx';
 
 import { colorStatusBar } from '@/features/rsmodel/colors';
 import { describeEvalStatus, labelEvalStatus } from '@/features/rsmodel/labels';
-import { EvalStatus } from '@/features/rsmodel/models/rsmodel';
 
+import { EvalStatus } from '@/domain/library';
 import { prefixes } from '@/utils/constants';
 
 const statusOrder = [

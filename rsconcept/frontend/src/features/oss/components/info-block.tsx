@@ -1,6 +1,6 @@
 'use client';
 
-import { type Block } from '../models/oss';
+import { type Block } from '@/domain/library';
 
 interface InfoOperationProps {
   block: Block;

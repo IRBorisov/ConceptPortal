@@ -4,12 +4,12 @@ import { useTemplatesSuspense } from '@/features/library/backend/use-templates';
 
 import { TextArea } from '@/components/input';
 import { ComboBox } from '@/components/input/combo-box';
+import { CstType, type RSForm } from '@/domain/library';
+import { applyFilterCategory, isTemplateCst } from '@/domain/library/rsform-api';
 
 import { useRSForm } from '../../backend/use-rsform';
 import { PickConstituenta } from '../../components/pick-constituenta';
 import { RSInput } from '../../components/rs-input';
-import { CATEGORY_CST_TYPE, type RSForm } from '../../models/rsform';
-import { applyFilterCategory, isTemplateCst } from '../../models/rsform-api';
 
 import { useTemplateContext } from './template-context';
 
@@ -40,9 +40,7 @@ export function TabTemplate({ schema }: TabTemplateProps) {
     ? ''
     : `${prototype?.term_raw}${prototype?.definition_raw ? ` — ${prototype?.definition_raw}` : ''}`;
 
-  const categorySelector = !templateSchema
-    ? []
-    : templateSchema.items.filter(cst => cst.cst_type === CATEGORY_CST_TYPE);
+  const categorySelector = !templateSchema ? [] : templateSchema.items.filter(cst => cst.cst_type === CstType.THEOREM);
 
   return (
     <div className='cc-fade-in'>

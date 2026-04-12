@@ -6,9 +6,9 @@ import clsx from 'clsx';
 import { useDebounce } from 'use-debounce';
 
 import { HelpTopic } from '@/features/help';
-import { type RSForm } from '@/features/rsform/models/rsform';
 
 import { ModalView } from '@/components/modal';
+import { type RSForm } from '@/domain/library/rsform';
 import { useDialogsStore } from '@/stores/dialogs';
 import { type RO } from '@/utils/meta';
 import { type FlatAST } from '@/utils/parsing';

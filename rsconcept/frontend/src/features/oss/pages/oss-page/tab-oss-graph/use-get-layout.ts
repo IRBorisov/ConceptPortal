@@ -1,9 +1,8 @@
 import { type Node, useReactFlow } from '@xyflow/react';
 
-import { type OssLayout } from '../../../backend/types';
-import { type OperationSchema } from '../../../models/oss';
-import { type Position2D } from '../../../models/oss-layout';
-import { OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '../../../models/oss-layout-api';
+import { type OperationSchema, type OssLayout, type Position2D } from '@/domain/library';
+import { OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '@/domain/library/oss-layout-api';
+
 import { useOssEdit } from '../oss-edit-context';
 
 import { BLOCK_NODE_MIN_HEIGHT, BLOCK_NODE_MIN_WIDTH } from './graph/block-node';

@@ -3,16 +3,16 @@
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { HelpTopic } from '@/features/help';
-import { SubstitutionValidator } from '@/features/oss/models/oss-api';
 
 import { ErrorField, TextArea } from '@/components/input';
 import { ModalForm } from '@/components/modal';
+import { type RSForm } from '@/domain/library';
+import { SubstitutionValidator } from '@/domain/library/oss-api';
 import { useDialogsStore } from '@/stores/dialogs';
 import { hintMsg } from '@/utils/labels';
 
 import { schemaSubstitutions, type SubstitutionsDTO } from '../backend/types';
 import { PickSubstitutions } from '../components/pick-substitutions';
-import { type RSForm } from '../models/rsform';
 
 export interface DlgSubstituteCstProps {
   schema: RSForm;

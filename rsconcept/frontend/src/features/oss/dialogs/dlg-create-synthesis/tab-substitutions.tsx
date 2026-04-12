@@ -4,13 +4,12 @@ import { type ReactNode } from 'react';
 
 import { useRSForms } from '@/features/rsform/backend/use-rsforms';
 import { PickSubstitutions } from '@/features/rsform/components/pick-substitutions';
-import { type Substitution } from '@/features/rsform/models/rsform';
 
 import { TextArea } from '@/components/input';
+import { type OperationSchema } from '@/domain/library';
+import { SubstitutionValidator } from '@/domain/library/oss-api';
+import { type Substitution } from '@/domain/library/rsform';
 import { type CreateFieldProps } from '@/utils/forms';
-
-import { type OperationSchema } from '../../models/oss';
-import { SubstitutionValidator } from '../../models/oss-api';
 
 export interface DlgCreateSynthesisSubstitutionFields {
   SubstitutionsField: (props: CreateFieldProps<Substitution[]>) => ReactNode;

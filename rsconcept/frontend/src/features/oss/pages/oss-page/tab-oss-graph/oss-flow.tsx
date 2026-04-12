@@ -9,18 +9,18 @@ import { useConceptNavigation } from '@/app';
 
 import { DiagramFlow, useReactFlow } from '@/components/flow/diagram-flow';
 import { useContinuousPan } from '@/components/flow/use-continuous-panning';
+import { NodeType, OperationType } from '@/domain/library';
+import { type Position2D } from '@/domain/library';
+import { GRID_SIZE } from '@/domain/library/oss-layout-api';
 import { useMainHeight } from '@/stores/app-layout';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { PARAMETER } from '@/utils/constants';
 import { errorMsg } from '@/utils/labels';
 
-import { OperationType, type UpdateOperationDTO } from '../../../backend/types';
+import { type UpdateOperationDTO } from '../../../backend/types';
 import { useMutatingOss } from '../../../backend/use-mutating-oss';
 import { useUpdateOperation } from '../../../backend/use-update-operation';
-import { NodeType } from '../../../models/oss';
-import { type Position2D } from '../../../models/oss-layout';
-import { GRID_SIZE } from '../../../models/oss-layout-api';
 import { useOSSGraphStore } from '../../../stores/oss-graph';
 import { useOssEdit } from '../oss-edit-context';
 

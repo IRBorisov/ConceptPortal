@@ -5,8 +5,7 @@ import {
   IconStatusOK,
   IconStatusUnknown
 } from '@/components/icons';
-
-import { CstStatus } from '../models/rsform';
+import { CstStatus } from '@/domain/library';
 
 export function IconExpressionStatus({ value, size = '1.25rem', className }: DomIconProps<CstStatus>) {
   switch (value) {

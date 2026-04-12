@@ -11,16 +11,16 @@ import { PickMultiConstituenta } from '@/features/rsform/components/pick-multi-c
 
 import { MiniButton } from '@/components/control';
 import { ModalForm } from '@/components/modal';
-import { type LibraryItem } from '@/domain/library';
+import { type LibraryItem, type OssLayout } from '@/domain/library';
+import { getRelocateCandidates } from '@/domain/library/oss-api';
 import { useDialogsStore } from '@/stores/dialogs';
 import { hintMsg } from '@/utils/labels';
 
-import { type OssLayout, type RelocateConstituentsDTO, schemaRelocateConstituents } from '../backend/types';
+import { type RelocateConstituentsDTO, schemaRelocateConstituents } from '../backend/types';
 import { useOss } from '../backend/use-oss';
 import { useRelocateConstituents } from '../backend/use-relocate-constituents';
 import { useUpdateLayout } from '../backend/use-update-layout';
 import { IconRelocationUp } from '../components/icon-relocation-up';
-import { getRelocateCandidates } from '../models/oss-api';
 
 export interface DlgRelocateConstituentsProps {
   ossID: number;

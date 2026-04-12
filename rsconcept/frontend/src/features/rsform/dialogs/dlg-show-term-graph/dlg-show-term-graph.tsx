@@ -7,9 +7,8 @@ import { useConceptNavigation } from '@/app';
 import { MiniButton } from '@/components/control';
 import { IconRSForm } from '@/components/icons';
 import { ModalView } from '@/components/modal';
+import { type RSForm } from '@/domain/library';
 import { useDialogsStore } from '@/stores/dialogs';
-
-import { type RSForm } from '../../models/rsform';
 
 import { TGReadonlyFlow } from './tg-readonly-flow';
 

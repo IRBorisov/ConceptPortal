@@ -9,16 +9,16 @@ import { PickSchema } from '@/features/library/components/pick-schema';
 
 import { Checkbox, TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
-import { type LibraryItem, LibraryItemType } from '@/domain/library';
+import { type LibraryItem, LibraryItemType, type OssLayout } from '@/domain/library';
+import { sortItemsForOSS } from '@/domain/library/oss-api';
+import { LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '@/domain/library/oss-layout-api';
 import { useDialogsStore } from '@/stores/dialogs';
 import { hintMsg } from '@/utils/labels';
 
-import { type ImportSchemaDTO, type OssLayout, schemaImportSchema } from '../backend/types';
+import { type ImportSchemaDTO, schemaImportSchema } from '../backend/types';
 import { useImportSchema } from '../backend/use-import-schema';
 import { useOss } from '../backend/use-oss';
 import { SelectParent } from '../components/select-parent';
-import { sortItemsForOSS } from '../models/oss-api';
-import { LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '../models/oss-layout-api';
 
 export interface DlgImportSchemaProps {
   ossID: number;

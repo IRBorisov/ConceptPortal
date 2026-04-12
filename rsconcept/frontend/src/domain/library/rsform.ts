@@ -45,9 +45,6 @@ export interface ArgumentValue extends ArgumentInfo {
   value?: string;
 }
 
-// CstType constant for category dividers in TemplateSchemas
-export const CATEGORY_CST_TYPE = CstType.THEOREM;
-
 /** Represents Constituenta classification in terms of system of concepts. */
 export const CstClass = {
   NOMINAL: 'nominal',

@@ -6,6 +6,7 @@ import { IconNewItem, IconReset } from '@/components/icons';
 import { SearchBar } from '@/components/input';
 import { cn } from '@/components/utils';
 import { NoData, Text } from '@/components/view';
+import { type RSEngine } from '@/domain/library';
 import { makeValuePath, TypeID, type Typification, type Value, type ValuePath } from '@/domain/rslang';
 import { convertPathToType } from '@/domain/rslang/eval/value-api';
 import { type TypePath } from '@/domain/rslang/semantic/typification';
@@ -13,7 +14,6 @@ import { usePreferencesStore } from '@/stores/preferences';
 
 import { useValueMatcher } from '../../hooks/use-value-matcher';
 import { describeValue, printTypeCrumbs } from '../../labels';
-import { type RSEngine } from '../../models/rsengine';
 import { IconShowDataText } from '../icon-show-data-text';
 
 import { PickElement } from './pick-element';

@@ -5,12 +5,12 @@ import { useState } from 'react';
 import { HelpTopic } from '@/features/help';
 
 import { ModalForm } from '@/components/modal';
+import { type RSEngine } from '@/domain/library';
 import { type TypePath, type Typification, type Value } from '@/domain/rslang';
 import { normalizeValue } from '@/domain/rslang/eval/value-api';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { ValueEditor } from '../components/value-editor';
-import { type RSEngine } from '../models/rsengine';
 
 export interface DlgEditValueProps {
   initialValue: Value | null;

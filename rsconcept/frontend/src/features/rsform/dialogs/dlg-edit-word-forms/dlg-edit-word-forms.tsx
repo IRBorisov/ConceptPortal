@@ -9,6 +9,7 @@ import { IconAccept, IconMoveDown, IconMoveLeft, IconMoveRight, IconRemove } fro
 import { Label, TextArea } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { type Grammeme, parseGrammemes, supportedGrammemes, type WordForm, wordFormEquals } from '@/domain/cctext';
+import { type Constituenta } from '@/domain/library';
 import { useDialogsStore } from '@/stores/dialogs';
 import { promptText } from '@/utils/labels';
 
@@ -18,7 +19,6 @@ import { useIsProcessingCctext } from '../../backend/cctext/use-is-processing-cc
 import { useParseText } from '../../backend/cctext/use-parse-text';
 import { type UpdateConstituentaDTO } from '../../backend/types';
 import { SelectMultiGrammeme } from '../../components/select-multi-grammeme';
-import { type Constituenta } from '../../models/rsform';
 
 import { TableWordForms } from './table-word-forms';
 

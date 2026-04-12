@@ -4,10 +4,9 @@ import { type SubmitEvent, useState } from 'react';
 
 import { Checkbox } from '@/components/input';
 import { ModalForm } from '@/components/modal';
+import { type RSForm } from '@/domain/library';
 import { useDialogsStore } from '@/stores/dialogs';
 import { prefixes } from '@/utils/constants';
-
-import { type RSForm } from '../../models/rsform';
 
 import { ListConstituents } from './list-constituents';
 

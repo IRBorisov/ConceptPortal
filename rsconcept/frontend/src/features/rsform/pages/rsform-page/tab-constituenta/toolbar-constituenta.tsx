@@ -18,13 +18,13 @@ import {
   IconSave
 } from '@/components/icons';
 import { cn } from '@/components/utils';
+import { type Constituenta } from '@/domain/library';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { prepareTooltip } from '@/utils/format';
 import { tooltipText } from '@/utils/labels';
 import { isMac } from '@/utils/utils';
 
-import { type Constituenta } from '../../../models/rsform';
 import { useRSFormEdit } from '../rsedit-context';
 
 interface ToolbarConstituentaProps {

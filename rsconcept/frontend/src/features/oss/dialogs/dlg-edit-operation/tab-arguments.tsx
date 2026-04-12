@@ -1,9 +1,9 @@
 'use client';
 
 import { Label } from '@/components/input';
+import { type OperationInput, type OperationSchema, type OperationSynthesis } from '@/domain/library';
 
 import { PickMultiOperation } from '../../components/pick-multi-operation';
-import { type OperationInput, type OperationSchema, type OperationSynthesis } from '../../models/oss';
 
 interface TabArgumentsProps {
   oss: OperationSchema;

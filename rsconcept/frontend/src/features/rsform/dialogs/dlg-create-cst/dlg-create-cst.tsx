@@ -4,14 +4,14 @@ import { useMemo } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { ModalForm } from '@/components/modal';
+import { type CstType, type RSForm } from '@/domain/library';
+import { generateAlias, validateNewAlias } from '@/domain/library/rsform-api';
 import { useDialogsStore } from '@/stores/dialogs';
 import { type CreateFieldProps, type FieldStateData } from '@/utils/forms';
 import { hintMsg } from '@/utils/labels';
 import { withPreventDefault } from '@/utils/utils';
 
 import { type CreateConstituentaDTO, schemaCreateConstituenta } from '../../backend/types';
-import { type CstType, type RSForm } from '../../models/rsform';
-import { generateAlias, validateNewAlias } from '../../models/rsform-api';
 
 import { FormCreateCst, type FormCreateCstFields } from './form-create-cst';
 

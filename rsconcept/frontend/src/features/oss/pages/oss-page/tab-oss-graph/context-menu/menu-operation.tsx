@@ -17,19 +17,18 @@ import {
   IconReference,
   IconRSForm
 } from '@/components/icons';
+import { type Operation, OperationType } from '@/domain/library';
+import { LayoutManager } from '@/domain/library/oss-layout-api';
 import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/format';
 import { errorMsg } from '@/utils/labels';
 
-import { OperationType } from '../../../../backend/types';
 import { useCloneSchema } from '../../../../backend/use-clone-schema';
 import { useCreateInput } from '../../../../backend/use-create-input';
 import { useCreateReference } from '../../../../backend/use-create-replica';
 import { useExecuteOperation } from '../../../../backend/use-execute-operation';
 import { useMutatingOss } from '../../../../backend/use-mutating-oss';
-import { type Operation } from '../../../../models/oss';
-import { LayoutManager } from '../../../../models/oss-layout-api';
 import { useOssEdit } from '../../oss-edit-context';
 import { useGetLayout } from '../use-get-layout';
 

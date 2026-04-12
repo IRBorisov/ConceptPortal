@@ -8,8 +8,7 @@ import { IconMoveDown, IconMoveUp, IconRemove } from '@/components/icons';
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
 import { NoData } from '@/components/view';
-
-import { type Operation } from '../models/oss';
+import { type Operation } from '@/domain/library';
 
 import { SelectOperation } from './select-operation';
 

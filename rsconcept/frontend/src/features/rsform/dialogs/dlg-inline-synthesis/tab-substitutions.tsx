@@ -1,8 +1,9 @@
 'use client';
 
+import { type RSForm, type Substitution } from '@/domain/library';
+
 import { useRSForm } from '../../backend/use-rsform';
 import { PickSubstitutions } from '../../components/pick-substitutions';
-import { type RSForm, type Substitution } from '../../models/rsform';
 
 interface TabSubstitutionsProps {
   receiver: RSForm;

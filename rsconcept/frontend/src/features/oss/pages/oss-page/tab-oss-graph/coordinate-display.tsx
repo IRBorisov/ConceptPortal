@@ -1,6 +1,5 @@
-import { type Position2D } from '@/features/oss/models/oss-layout';
-
 import { cn } from '@/components/utils';
+import { type Position2D } from '@/domain/library/oss-layout';
 
 interface CoordinateDisplayProps {
   mouseCoords: Position2D;

@@ -9,13 +9,18 @@ import { MiniButton } from '@/components/control';
 import { IconReset } from '@/components/icons';
 import { Label } from '@/components/input';
 import { ModalForm } from '@/components/modal';
-import { type LibraryItem, LibraryItemType } from '@/domain/library';
+import {
+  type LibraryItem,
+  LibraryItemType,
+  type Operation,
+  type OperationSchema,
+  type OssLayout
+} from '@/domain/library';
+import { sortItemsForOSS } from '@/domain/library/oss-api';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { type OssLayout, schemaUpdateInput, type UpdateInputDTO } from '../backend/types';
+import { schemaUpdateInput, type UpdateInputDTO } from '../backend/types';
 import { useUpdateInput } from '../backend/use-update-input';
-import { type Operation, type OperationSchema } from '../models/oss';
-import { sortItemsForOSS } from '../models/oss-api';
 
 export interface DlgChangeInputSchemaProps {
   oss: OperationSchema;

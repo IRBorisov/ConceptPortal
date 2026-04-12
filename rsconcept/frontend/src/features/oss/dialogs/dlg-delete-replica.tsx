@@ -6,9 +6,10 @@ import { HelpTopic } from '@/features/help';
 
 import { Checkbox, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
+import { type OssLayout } from '@/domain/library';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { type DeleteReplicaDTO, type OssLayout, schemaDeleteReplica } from '../backend/types';
+import { type DeleteReplicaDTO, schemaDeleteReplica } from '../backend/types';
 import { useDeleteReplica } from '../backend/use-delete-replica';
 import { useOss } from '../backend/use-oss';
 

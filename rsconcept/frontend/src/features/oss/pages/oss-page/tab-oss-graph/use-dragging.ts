@@ -1,10 +1,10 @@
 import { type Node } from '@xyflow/react';
 
+import { NodeType } from '@/domain/library';
 import { useThrottleCallback } from '@/hooks/use-throttle-callback';
 import { useDraggingStore } from '@/stores/dragging';
 
 import { useMoveItems } from '../../../backend/use-move-items';
-import { NodeType } from '../../../models/oss';
 import { useOssEdit } from '../oss-edit-context';
 
 import { useOssFlow } from './oss-flow-context';

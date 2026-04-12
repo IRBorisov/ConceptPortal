@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-import { type Constituenta } from '../models/rsform';
+import { type Constituenta } from '@/domain/library';
 
 interface CstTooltipStore {
   activeCst: Constituenta | null;

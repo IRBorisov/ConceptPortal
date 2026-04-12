@@ -5,12 +5,14 @@ import { toast } from 'react-toastify';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 import { IconShowSidebar } from '@/features/library/components/icon-show-sidebar';
-import { getStructureName, isBaseSet } from '@/features/rsform/models/rsform-api';
 import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
 
 import { MiniButton } from '@/components/control';
 import { IconCalculateAll, IconCalculateOne, IconDatabase, IconDestroy } from '@/components/icons';
 import { cn } from '@/components/utils';
+import { type BasicBinding } from '@/domain/library';
+import { getStructureName, isBaseSet } from '@/domain/library/rsform-api';
+import { isInferrable } from '@/domain/library/rsmodel-api';
 import { type TypePath, type Typification, type Value } from '@/domain/rslang';
 import { normalizeValue } from '@/domain/rslang/eval/value-api';
 import { isTypification } from '@/domain/rslang/semantic/typification';
@@ -22,8 +24,6 @@ import { errorMsg } from '@/utils/labels';
 import { isMac } from '@/utils/utils';
 
 import { useCstValue } from '../../../hooks/use-cst-value';
-import { type BasicBinding } from '../../../models/rsmodel';
-import { isInferrable } from '../../../models/rsmodel-api';
 import { useRSModelEdit } from '../rsmodel-context';
 
 interface ToolbarValueTabProps {

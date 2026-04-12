@@ -7,6 +7,8 @@ import { BadgeHelp } from '@/features/help/components/badge-help';
 
 import { MiniButton } from '@/components/control';
 import { TextArea, TextInput } from '@/components/input';
+import { CstType, type RSForm } from '@/domain/library';
+import { isBaseSet, isBasicConcept } from '@/domain/library/rsform-api';
 import { type CreateFieldProps } from '@/utils/forms';
 
 import { type CreateConstituentaDTO } from '../../backend/types';
@@ -15,8 +17,6 @@ import { RefsInput } from '../../components/refs-input';
 import { RSInput } from '../../components/rs-input';
 import { SelectCstType } from '../../components/select-cst-type';
 import { getRSDefinitionPlaceholder, labelRSExpression } from '../../labels';
-import { CstType, type RSForm } from '../../models/rsform';
-import { isBaseSet, isBasicConcept } from '../../models/rsform-api';
 
 export interface FormCreateCstFields {
   AliasField: (props: CreateFieldProps<string>) => ReactNode;

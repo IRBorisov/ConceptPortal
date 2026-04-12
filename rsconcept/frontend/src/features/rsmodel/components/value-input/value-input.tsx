@@ -5,10 +5,9 @@ import clsx from 'clsx';
 import { TextButton } from '@/components/control/text-button';
 import { TextArea } from '@/components/input';
 import { cn } from '@/components/utils';
+import { type EvalStatus } from '@/domain/library';
 import { globalIDs, limits } from '@/utils/constants';
 import { formatInteger } from '@/utils/format';
-
-import { type EvalStatus } from '../../models/rsmodel';
 
 import { StatusBar } from './status-bar';
 import { ToolbarValue } from './toolbar-value';

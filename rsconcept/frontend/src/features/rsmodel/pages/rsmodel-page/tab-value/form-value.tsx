@@ -4,13 +4,14 @@ import { useEffect, useEffectEvent, useLayoutEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { useConceptNavigation } from '@/app';
-import { type Constituenta, CstType } from '@/features/rsform';
 import { RSInput } from '@/features/rsform/components/rs-input';
 import { ViewErrors } from '@/features/rsform/components/view-errors';
 import { labelRSExpression } from '@/features/rsform/labels';
-import { getStructureName, isBaseSet } from '@/features/rsform/models/rsform-api';
 
 import { TextArea } from '@/components/input';
+import { type BasicBinding, type Constituenta, CstType } from '@/domain/library';
+import { getStructureName, isBaseSet } from '@/domain/library/rsform-api';
+import { isInferrable, isInterpretable, prepareValueString } from '@/domain/library/rsmodel-api';
 import { type CalculatorResult, type Value } from '@/domain/rslang';
 import { normalizeValue, valueStub } from '@/domain/rslang/eval/value-api';
 import { labelType } from '@/domain/rslang/labels';
@@ -25,8 +26,6 @@ import { ValueInput } from '../../../components/value-input';
 import { useCstStatus } from '../../../hooks/use-cst-status';
 import { useCstValue } from '../../../hooks/use-cst-value';
 import { labelValue } from '../../../labels';
-import { type BasicBinding } from '../../../models/rsmodel';
-import { isInferrable, isInterpretable, prepareValueString } from '../../../models/rsmodel-api';
 import { useRSModelEdit } from '../rsmodel-context';
 
 import { ToolbarExpression } from './toolbar-expression';

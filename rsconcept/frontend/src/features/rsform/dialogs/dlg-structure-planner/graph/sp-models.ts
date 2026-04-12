@@ -1,6 +1,6 @@
 import { type Edge, type Node } from '@xyflow/react';
 
-import { type SPNode } from '../../../models/structure-planner';
+import { type SPNode } from '@/domain/library/structure-planner';
 
 export interface SPFlowNodeData extends Record<string, unknown> {
   node: SPNode;

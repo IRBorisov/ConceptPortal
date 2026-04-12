@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-import { CstType } from '../models/rsform';
+import { CstType } from '@/domain/library';
 
 /** Represents graph editing mode mode. */
 export const InteractionMode = {

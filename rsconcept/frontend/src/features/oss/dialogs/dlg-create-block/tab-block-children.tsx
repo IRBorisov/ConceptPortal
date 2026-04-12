@@ -1,9 +1,9 @@
 'use client';
 
 import { Label } from '@/components/input';
+import { NodeType, type OperationSchema, type OssItem } from '@/domain/library';
 
 import { PickContents } from '../../components/pick-contents';
-import { NodeType, type OperationSchema, type OssItem } from '../../models/oss';
 
 interface TabBlockChildrenProps {
   oss: OperationSchema;

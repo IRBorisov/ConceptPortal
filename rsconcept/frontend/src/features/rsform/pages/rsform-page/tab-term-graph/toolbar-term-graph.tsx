@@ -8,6 +8,7 @@ import { BadgeHelp } from '@/features/help/components/badge-help';
 import { MiniButton } from '@/components/control';
 import { cn } from '@/components/utils';
 import { type Graph } from '@/domain/graph/graph';
+import { isBasicConcept } from '@/domain/library/rsform-api';
 import { prepareTooltip } from '@/utils/format';
 
 import { IconEdgeType } from '../../../components/icon-edge-type';
@@ -16,7 +17,6 @@ import { FocusLabel } from '../../../components/term-graph/focus-label';
 import { ToolbarFocusedCst } from '../../../components/term-graph/toolbar-focused-cst';
 import { ToolbarGraphSelection } from '../../../components/toolbar-graph-selection';
 import { labelEdgeType, labelGraphMode } from '../../../labels';
-import { isBasicConcept } from '../../../models/rsform-api';
 import { InteractionMode, useTermGraphStore, useTGConnectionStore } from '../../../stores/term-graph';
 import { useRSFormEdit } from '../rsedit-context';
 

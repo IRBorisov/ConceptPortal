@@ -13,13 +13,12 @@ import CodeMirror, {
 import clsx from 'clsx';
 
 import { Label } from '@/components/input';
+import { type RSForm } from '@/domain/library';
+import { generateAlias, getCstTypePrefix, guessCstType } from '@/domain/library/rsform-api';
 import { type RSErrorDescription } from '@/domain/rslang';
 import { extractGlobals } from '@/domain/rslang/api';
 import { usePreferencesStore } from '@/stores/preferences';
 import { APP_COLORS } from '@/styling/colors';
-
-import { type RSForm } from '../../models/rsform';
-import { generateAlias, getCstTypePrefix, guessCstType } from '../../models/rsform-api';
 
 import { ccBracketMatching } from './bracket-matching';
 import { rsNavigation } from './click-navigation';

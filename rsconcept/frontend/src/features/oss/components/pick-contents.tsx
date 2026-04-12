@@ -9,9 +9,9 @@ import { ComboBox } from '@/components/input/combo-box';
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
 import { NoData } from '@/components/view';
+import { NodeType, type OperationSchema, type OssItem } from '@/domain/library';
 
 import { labelOssItem } from '../labels';
-import { NodeType, type OperationSchema, type OssItem } from '../models/oss';
 
 const SELECTION_CLEAR_TIMEOUT = 1000;
 

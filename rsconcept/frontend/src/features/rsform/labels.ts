@@ -2,11 +2,11 @@
  * Generates description for {@link Constituenta}.
  */
 
+import { type Constituenta, CstClass, CstStatus, CstType } from '@/domain/library';
 import { TokenID } from '@/domain/rslang';
 import { prepareTooltip } from '@/utils/format';
 import { type RO } from '@/utils/meta';
 
-import { type Constituenta, CstClass, CstStatus, CstType } from './models/rsform';
 import { type InteractionMode, type TGColoring, type TGEdgeType } from './stores/term-graph';
 
 // --- Records for label/describe functions ---

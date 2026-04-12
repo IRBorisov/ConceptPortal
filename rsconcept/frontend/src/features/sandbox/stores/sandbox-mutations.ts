@@ -7,11 +7,11 @@ import {
   type UpdateConstituentaDTO,
   type UpdateCrucialDTO
 } from '@/features/rsform/backend/types';
-import { type Attribution, CstType, type RSForm, type Substitution } from '@/features/rsform/models/rsform';
-import { getCstTypePrefix } from '@/features/rsform/models/rsform-api';
 import { type ConstituentaDataDTO, type ConstituentaValue, type RSModelDTO } from '@/features/rsmodel/backend/types';
 
 import { LibraryItemType } from '@/domain/library';
+import { type Attribution, CstType, type RSForm, type Substitution } from '@/domain/library/rsform';
+import { getCstTypePrefix } from '@/domain/library/rsform-api';
 import { nowIso } from '@/utils/format';
 
 import { assertModelSchemaInvariant, type SandboxBundle } from '../models/bundle';

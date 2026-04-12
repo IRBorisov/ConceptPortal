@@ -6,12 +6,12 @@ import { useForm, useStore } from '@tanstack/react-form';
 import { Loader } from '@/components/loader';
 import { ModalForm } from '@/components/modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
+import { type RSForm, type Substitution } from '@/domain/library';
 import { useDialogsStore } from '@/stores/dialogs';
 import { hintMsg } from '@/utils/labels';
 import { withPreventDefault } from '@/utils/utils';
 
 import { type InlineSynthesisDTO, schemaInlineSynthesis } from '../../backend/types';
-import { type RSForm, type Substitution } from '../../models/rsform';
 
 import { TabConstituents } from './tab-constituents';
 import { TabSource } from './tab-source';

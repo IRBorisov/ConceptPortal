@@ -2,15 +2,10 @@
 
 import { createContext, use } from 'react';
 
-import { type RSForm } from '@/features/rsform';
-
-import { type RO } from '@/utils/meta';
-
-import { type RSModelDTO } from '../../backend/types';
-import { type RSEngine } from '../../models/rsengine';
+import { type RSEngine, type RSForm, type RSModel } from '@/domain/library';
 
 interface IRSModelContext {
-  model: RO<RSModelDTO>;
+  model: RSModel;
   engine: RSEngine;
   schema: RSForm;
   isMutable: boolean;
