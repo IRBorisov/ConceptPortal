@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { HelpTopic } from '@/features/help';
-import { type LibraryItem } from '@/features/library';
 import { useLibrary } from '@/features/library/backend/use-library';
 import { SelectLibraryItem } from '@/features/library/components/select-library-item';
 import { useRSForm } from '@/features/rsform/backend/use-rsform';
@@ -12,6 +11,7 @@ import { PickMultiConstituenta } from '@/features/rsform/components/pick-multi-c
 
 import { MiniButton } from '@/components/control';
 import { ModalForm } from '@/components/modal';
+import { type LibraryItem } from '@/domain/library';
 import { useDialogsStore } from '@/stores/dialogs';
 import { hintMsg } from '@/utils/labels';
 

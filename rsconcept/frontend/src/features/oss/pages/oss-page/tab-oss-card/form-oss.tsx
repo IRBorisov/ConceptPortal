@@ -3,13 +3,14 @@
 import { useEffect, useEffectEvent } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
-import { LibraryItemType, schemaUpdateLibraryItem, type UpdateLibraryItemDTO } from '@/features/library';
+import { schemaUpdateLibraryItem, type UpdateLibraryItemDTO } from '@/features/library';
 import { useUpdateItem } from '@/features/library/backend/use-update-item';
 import { ToolbarItemAccess } from '@/features/library/components/toolbar-item-access';
 
 import { SubmitButton } from '@/components/control';
 import { IconSave } from '@/components/icons';
 import { TextArea, TextInput } from '@/components/input';
+import { LibraryItemType } from '@/domain/library';
 import { useModificationStore } from '@/stores/modification';
 import { globalIDs } from '@/utils/constants';
 

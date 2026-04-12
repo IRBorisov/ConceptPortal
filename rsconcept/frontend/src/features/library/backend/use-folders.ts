@@ -1,5 +1,4 @@
-import { FolderTree } from '../models/folder-tree';
-import { LocationHead } from '../models/library';
+import { FolderTree, LocationHead } from '@/domain/library';
 
 import { useLibrary } from './use-library';
 

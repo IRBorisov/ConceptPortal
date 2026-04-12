@@ -1,10 +1,10 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+import { LibraryItemType, type LocationHead } from '@/domain/library';
 import { toggleTristateFlag } from '@/utils/utils';
 
-import { LibraryItemType } from '../backend/types';
-import { type LibraryFilter, type LocationHead } from '../models/library';
+import { type LibraryFilter } from '../models/library-filter';
 
 interface LibrarySearchStore {
   folderMode: boolean;

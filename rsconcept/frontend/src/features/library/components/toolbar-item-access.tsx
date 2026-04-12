@@ -9,8 +9,8 @@ import { useRoleStore, UserRole } from '@/features/users';
 import { MiniButton } from '@/components/control';
 import { IconImmutable, IconMutable } from '@/components/icons';
 import { Label } from '@/components/input';
+import { type AccessPolicy, type LibraryItem } from '@/domain/library';
 
-import { type AccessPolicy, type LibraryItem } from '../backend/types';
 import { useMutatingLibrary } from '../backend/use-mutating-library';
 import { useSetAccessPolicy } from '../backend/use-set-access-policy';
 

@@ -4,9 +4,9 @@ import { SelectorButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
+import { LibraryItemType } from '@/domain/library';
 import { prefixes } from '@/utils/constants';
 
-import { LibraryItemType } from '../backend/types';
 import { describeLibraryItemType, labelLibraryItemType } from '../labels';
 
 import { IconLibraryItemType } from './icon-library-item-type';

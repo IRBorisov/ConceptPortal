@@ -9,23 +9,22 @@ import {
 
 import { axiosDelete, axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';
 import { DELAYS, KEYS } from '@/backend/configuration';
+import { type AccessPolicy, type LibraryItem } from '@/domain/library';
 import { infoMsg } from '@/utils/labels';
 
 import {
-  type AccessPolicy,
   type CloneLibraryItemDTO,
   type CreateLibraryItemDTO,
   type CreateRSFormFromSandboxDTO,
   type CreateRSModelFromSandboxDTO,
   type CreateVersionDTO,
-  type LibraryItem,
   type RenameLocationDTO,
   schemaLibraryItem,
   schemaLibraryItemArray,
   schemaVersionExInfo,
   type UpdateLibraryItemDTO,
   type UpdateVersionDTO,
-  type VersionExInfo
+  type VersionInfoDTO
 } from './types';
 
 export const libraryApi = {
@@ -174,7 +173,7 @@ export const libraryApi = {
       }
     }),
   updateVersion: (data: { itemID: number; version: UpdateVersionDTO }) =>
-    axiosPatch<UpdateVersionDTO, VersionExInfo>({
+    axiosPatch<UpdateVersionDTO, VersionInfoDTO>({
       schema: schemaVersionExInfo,
       endpoint: `/api/versions/${data.version.id}`,
       request: {

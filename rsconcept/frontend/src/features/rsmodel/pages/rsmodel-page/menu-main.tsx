@@ -4,7 +4,6 @@ import { toast } from 'react-toastify';
 
 import { useConceptNavigation } from '@/app';
 import { useAuth } from '@/features/auth';
-import { AccessPolicy, LocationHead } from '@/features/library';
 import { useRSForm } from '@/features/rsform/backend/use-rsform';
 import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
 import { createSandboxBundleFromRSModel } from '@/features/sandbox/models/bundle-transfer';
@@ -26,6 +25,7 @@ import {
   IconSandbox,
   IconShare
 } from '@/components/icons';
+import { AccessPolicy, LocationHead } from '@/domain/library';
 import { useDialogsStore } from '@/stores/dialogs';
 import { errorMsg, infoMsg, promptText, tooltipText } from '@/utils/labels';
 import { generatePageQR, sharePage } from '@/utils/utils';

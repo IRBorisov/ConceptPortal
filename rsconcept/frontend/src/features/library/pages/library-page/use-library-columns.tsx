@@ -5,10 +5,10 @@ import { useIntl } from 'react-intl';
 import { useLabelUser } from '@/features/users';
 
 import { createColumnHelper } from '@/components/data-table';
+import { type LibraryItem } from '@/domain/library';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { type RO } from '@/utils/meta';
 
-import { type LibraryItem } from '../../backend/types';
 import { BadgeLocation } from '../../components/badge-location';
 import { useLibrarySearchStore } from '../../stores/library-search';
 

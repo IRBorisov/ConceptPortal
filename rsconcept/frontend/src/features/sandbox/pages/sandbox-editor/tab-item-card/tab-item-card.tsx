@@ -5,7 +5,7 @@ import { useIntl } from 'react-intl';
 import { useForm, useStore } from '@tanstack/react-form';
 import clsx from 'clsx';
 
-import { LibraryItemType, schemaUpdateLibraryItem, type UpdateLibraryItemDTO } from '@/features/library';
+import { schemaUpdateLibraryItem, type UpdateLibraryItemDTO } from '@/features/library';
 import { type RSModel } from '@/features/rsmodel/models/rsmodel';
 import { calculateModelStats } from '@/features/rsmodel/models/rsmodel-api';
 import { useRSModelEdit } from '@/features/rsmodel/pages/rsmodel-page/rsmodel-context';
@@ -16,6 +16,7 @@ import { SubmitButton } from '@/components/control';
 import { IconDateCreate, IconDateUpdate, IconSave } from '@/components/icons';
 import { TextArea, TextInput } from '@/components/input';
 import { ValueIcon } from '@/components/view';
+import { LibraryItemType } from '@/domain/library';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useModificationStore } from '@/stores/modification';
 import { globalIDs } from '@/utils/constants';

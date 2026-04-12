@@ -5,12 +5,13 @@ import { useForm, useStore } from '@tanstack/react-form';
 
 import { Checkbox, TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
+import { type VersionInfo } from '@/domain/library';
 import { useDialogsStore } from '@/stores/dialogs';
 import { hintMsg } from '@/utils/labels';
 
-import { type CreateVersionDTO, schemaCreateVersion, type VersionInfo } from '../backend/types';
+import { type CreateVersionDTO, schemaCreateVersion } from '../backend/types';
 import { useCreateVersion } from '../backend/use-create-version';
-import { nextVersion } from '../models/library-api';
+import { nextVersion } from '../models/utils';
 
 export interface DlgCreateVersionProps {
   itemID: number;

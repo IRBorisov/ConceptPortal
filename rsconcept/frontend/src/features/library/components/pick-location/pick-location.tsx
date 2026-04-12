@@ -6,9 +6,9 @@ import { useAuth } from '@/features/auth';
 
 import { ErrorField, TextArea } from '@/components/input';
 import { type Styling } from '@/components/props';
+import { LocationHead } from '@/domain/library';
+import { combineLocation } from '@/domain/library/library-api';
 
-import { LocationHead } from '../../models/library';
-import { combineLocation } from '../../models/library-api';
 import { SelectLocationHead } from '../select-location-head';
 
 import { SelectLocationContext } from './select-location-context';

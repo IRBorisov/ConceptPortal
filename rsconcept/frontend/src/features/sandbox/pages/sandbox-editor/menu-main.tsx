@@ -4,7 +4,6 @@ import { useRef } from 'react';
 import { toast } from 'react-toastify';
 
 import { useConceptNavigation } from '@/app';
-import { LibraryItemType } from '@/features/library';
 
 import { Divider } from '@/components/container';
 import { MiniButton } from '@/components/control';
@@ -18,6 +17,7 @@ import {
   IconRSModel,
   IconUpload
 } from '@/components/icons';
+import { LibraryItemType } from '@/domain/library';
 import { errorMsg, infoMsg, promptText } from '@/utils/labels';
 
 import { useSandboxBundle } from '../../context/bundle-context';

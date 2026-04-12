@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
 import { RequireAuth } from '@/features/auth/components/require-auth';
-import { LibraryItemType } from '@/features/library/backend/types';
 
+import { LibraryItemType } from '@/domain/library';
 import { useQueryStrings } from '@/hooks/use-query-strings';
 
 import { FormCreateItem } from './form-create-item';

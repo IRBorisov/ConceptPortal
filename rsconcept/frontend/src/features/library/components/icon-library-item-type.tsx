@@ -1,6 +1,5 @@
 import { type DomIconProps, IconOSS, IconRSForm, IconRSModel } from '@/components/icons';
-
-import { LibraryItemType } from '../backend/types';
+import { LibraryItemType } from '@/domain/library';
 
 /** Icon for library item type. */
 export function IconLibraryItemType({ value, size = '1.25rem', className }: DomIconProps<LibraryItemType>) {

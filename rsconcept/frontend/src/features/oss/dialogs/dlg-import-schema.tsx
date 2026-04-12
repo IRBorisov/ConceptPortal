@@ -4,12 +4,12 @@ import { useMemo } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { HelpTopic } from '@/features/help';
-import { type LibraryItem, LibraryItemType } from '@/features/library';
 import { useLibrary } from '@/features/library/backend/use-library';
 import { PickSchema } from '@/features/library/components/pick-schema';
 
 import { Checkbox, TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
+import { type LibraryItem, LibraryItemType } from '@/domain/library';
 import { useDialogsStore } from '@/stores/dialogs';
 import { hintMsg } from '@/utils/labels';
 

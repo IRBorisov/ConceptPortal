@@ -1,10 +1,10 @@
 'use client';
 
-import { LibraryItemType } from '@/features/library';
 import { useLibrary } from '@/features/library/backend/use-library';
 import { PickSchema } from '@/features/library/components/pick-schema';
 
 import { TextInput } from '@/components/input';
+import { LibraryItemType } from '@/domain/library';
 
 import { type RSForm } from '../../models/rsform';
 import { sortItemsForInlineSynthesis } from '../../models/rsform-api';

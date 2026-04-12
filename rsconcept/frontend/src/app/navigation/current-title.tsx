@@ -1,8 +1,7 @@
 import clsx from 'clsx';
 
-import { LibraryItemType } from '@/features/library';
-
 import { IconOSS, IconRSForm, IconRSModel } from '@/components/icons';
+import { LibraryItemType } from '@/domain/library';
 import { globalIDs } from '@/utils/constants';
 
 interface SchemaTitleProps {

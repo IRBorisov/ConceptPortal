@@ -10,10 +10,11 @@ import { loadBundle } from '@/features/sandbox/stores/sandbox-repository';
 import { Button, MiniButton, SubmitButton } from '@/components/control';
 import { IconDownload, IconSandbox } from '@/components/icons';
 import { Label, TextArea, TextInput } from '@/components/input';
+import { AccessPolicy, LibraryItemType, LocationHead } from '@/domain/library';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';
 import { errorMsg } from '@/utils/labels';
 
-import { AccessPolicy, type CreateLibraryItemDTO, LibraryItemType, schemaCreateLibraryItem } from '../../backend/types';
+import { type CreateLibraryItemDTO, schemaCreateLibraryItem } from '../../backend/types';
 import { useCreateFromSandbox } from '../../backend/use-create-from-sandbox';
 import { useCreateItem } from '../../backend/use-create-item';
 import { useLibrary } from '../../backend/use-library';
@@ -22,7 +23,6 @@ import { PickLocation } from '../../components/pick-location';
 import { PickSchema } from '../../components/pick-schema';
 import { SelectAccessPolicy } from '../../components/select-access-policy';
 import { SelectItemType } from '../../components/select-item-type';
-import { LocationHead } from '../../models/library';
 import { useLibrarySearchStore } from '../../stores/library-search';
 
 interface FormCreateItemProps {

@@ -1,6 +1,5 @@
 import { type DomIconProps, IconBusiness, IconPublic, IconTemplates, IconUser } from '@/components/icons';
-
-import { LocationHead } from '../models/library';
+import { LocationHead } from '@/domain/library';
 
 /** Icon for location. */
 export function IconLocationHead({ value, size = '1.25rem', className }: DomIconProps<string>) {

@@ -10,11 +10,10 @@ import { IconClose, IconFolderTree } from '@/components/icons';
 import { ErrorField, SearchBar } from '@/components/input';
 import { type ErrorProcessing, type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
+import { type LibraryItem, type LibraryItemType } from '@/domain/library';
+import { matchLibraryItem } from '@/domain/library/library-api';
 import { prefixes } from '@/utils/constants';
 import { type RO } from '@/utils/meta';
-
-import { type LibraryItem, type LibraryItemType } from '../backend/types';
-import { matchLibraryItem } from '../models/library-api';
 
 import { SelectLocation } from './select-location';
 

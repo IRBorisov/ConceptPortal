@@ -1,8 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { AccessPolicy, type LibraryItem, LibraryItemType } from '../backend/types';
-
-import { LocationHead } from './library';
+import { AccessPolicy, type LibraryItem, LibraryItemType, LocationHead } from './library';
 import { matchLibraryItem, validateLocation } from './library-api';
 
 describe('Testing matching LibraryItem', () => {

@@ -5,7 +5,6 @@ import fileDownload from 'js-file-download';
 
 import { useConceptNavigation } from '@/app';
 import { useAuth } from '@/features/auth';
-import { AccessPolicy, LocationHead } from '@/features/library';
 import { createSandboxBundleFromRSForm } from '@/features/sandbox/models/bundle-transfer';
 import { saveBundle } from '@/features/sandbox/stores/sandbox-repository';
 import { useRoleStore, UserRole } from '@/features/users';
@@ -27,6 +26,7 @@ import {
   IconShare,
   IconUpload
 } from '@/components/icons';
+import { AccessPolicy, LocationHead } from '@/domain/library';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { EXTEOR_TRS_FILE, prefixes } from '@/utils/constants';

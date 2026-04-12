@@ -2,12 +2,9 @@
  * Generates description for {@link Constituenta}.
  */
 
+import { TokenID } from '@/domain/rslang';
 import { prepareTooltip } from '@/utils/format';
 import { type RO } from '@/utils/meta';
-
-import { TokenID } from '../../domain/rslang';
-import { type VersionInfo } from '../library/backend/types';
-import { type CurrentVersion } from '../library/models/library';
 
 import { type Constituenta, CstClass, CstStatus, CstType } from './models/rsform';
 import { type InteractionMode, type TGColoring, type TGEdgeType } from './stores/term-graph';
@@ -193,12 +190,6 @@ export function describeConstituentaTerm(cst: RO<Constituenta> | null): string {
 /** Generates label for {@link Constituenta}. */
 export function labelConstituenta(cst: RO<Constituenta>) {
   return `${cst.alias}: ${describeConstituenta(cst)}`;
-}
-
-/** Generates label for {@link VersionInfo} of {@link RSForm}. */
-export function labelVersion(value: CurrentVersion, items: RO<VersionInfo[]>) {
-  const version = items.find(ver => ver.id === value);
-  return version ? version.version : 'актуальная';
 }
 
 /** Return shortcut description for {@link CstType}. */

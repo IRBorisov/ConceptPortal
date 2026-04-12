@@ -7,11 +7,11 @@ import { MiniButton } from '@/components/control';
 import { IconFolder, IconFolderClosed, IconFolderEmpty, IconFolderOpened } from '@/components/icons';
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
+import { type FolderNode } from '@/domain/library';
 import { useSingleAndDoubleClick } from '@/hooks/use-discriminate-clicks';
 
 import { useFolders } from '../backend/use-folders';
 import { labelFolderNode } from '../labels';
-import { type FolderNode } from '../models/folder-tree';
 
 interface SelectLocationProps extends Styling {
   value: string;

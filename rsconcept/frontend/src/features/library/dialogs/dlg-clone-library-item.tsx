@@ -7,20 +7,15 @@ import { urls, useConceptNavigation } from '@/app';
 import { MiniButton } from '@/components/control';
 import { Checkbox, Label, TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
+import { AccessPolicy, type LibraryItem, LibraryItemType } from '@/domain/library';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import {
-  AccessPolicy,
-  type CloneLibraryItemDTO,
-  type LibraryItem,
-  LibraryItemType,
-  schemaCloneLibraryItem
-} from '../backend/types';
+import { type CloneLibraryItemDTO, schemaCloneLibraryItem } from '../backend/types';
 import { useCloneItem } from '../backend/use-clone-item';
 import { IconItemVisibility } from '../components/icon-item-visibility';
 import { PickLocation } from '../components/pick-location';
 import { SelectAccessPolicy } from '../components/select-access-policy';
-import { cloneTitle } from '../models/library-api';
+import { cloneTitle } from '../models/utils';
 
 export interface DlgCloneLibraryItemProps {
   base: LibraryItem;

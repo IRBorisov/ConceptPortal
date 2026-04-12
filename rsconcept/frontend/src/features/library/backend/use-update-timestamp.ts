@@ -1,8 +1,8 @@
 import { useQueryClient } from '@tanstack/react-query';
 
+import { type LibraryItem } from '@/domain/library';
 import { type RO } from '@/utils/meta';
 
-import { type LibraryItem } from './types';
 import { useLibraryListKey } from './use-library';
 
 export function useUpdateTimestamp() {

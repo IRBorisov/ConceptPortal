@@ -6,12 +6,13 @@ import { useConceptNavigation } from '@/app';
 
 import { TextURL } from '@/components/control';
 import { DataTable, type IConditionalStyle, type VisibilityState } from '@/components/data-table';
+import { type LibraryItem } from '@/domain/library';
+import { LibraryItemType } from '@/domain/library';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight } from '@/stores/app-layout';
 import { usePreferencesStore } from '@/stores/preferences';
 import { type RO } from '@/utils/meta';
 
-import { type LibraryItem, LibraryItemType } from '../../backend/types';
 import { useLibrarySearchStore } from '../../stores/library-search';
 
 import { useLibraryColumns } from './use-library-columns';

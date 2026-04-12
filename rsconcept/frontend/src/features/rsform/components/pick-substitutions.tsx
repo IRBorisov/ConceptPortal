@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 
-import { type LibraryItem } from '@/features/library';
 import { SelectLibraryItem } from '@/features/library/components/select-library-item';
 
 import { MiniButton } from '@/components/control';
@@ -12,6 +11,7 @@ import { IconAccept, IconPageLeft, IconPageRight, IconRemove, IconReplace } from
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
 import { NoData } from '@/components/view';
+import { type LibraryItem } from '@/domain/library';
 import { errorMsg } from '@/utils/labels';
 
 import { type CstSubstitute } from '../backend/types';

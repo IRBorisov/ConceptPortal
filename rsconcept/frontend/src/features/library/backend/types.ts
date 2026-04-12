@@ -1,28 +1,9 @@
 import { z } from 'zod';
 
+import { AccessPolicy, type LibraryItem, LibraryItemType } from '@/domain/library';
+import { validateLocation } from '@/domain/library/library-api';
 import { limits } from '@/utils/constants';
 import { errorMsg } from '@/utils/labels';
-
-import { validateLocation } from '../models/library-api';
-
-/** Represents type of library items. */
-export const LibraryItemType = {
-  RSFORM: 'rsform',
-  OSS: 'oss',
-  RSMODEL: 'rsmodel'
-} as const;
-export type LibraryItemType = (typeof LibraryItemType)[keyof typeof LibraryItemType];
-
-/** Represents Access policy for library items.*/
-export const AccessPolicy = {
-  PUBLIC: 'public',
-  PROTECTED: 'protected',
-  PRIVATE: 'private'
-} as const;
-export type AccessPolicy = (typeof AccessPolicy)[keyof typeof AccessPolicy];
-
-/** Represents library item common data typical for all item types. */
-export type LibraryItem = z.infer<typeof schemaLibraryItem>;
 
 /** Represents {@link LibraryItem} data loaded for both OSS and RSForm. */
 export interface LibraryItemData extends LibraryItem {
@@ -35,11 +16,8 @@ export interface RenameLocationDTO {
   new_location: string;
 }
 
-/** Represents library item version information. */
-export type VersionInfo = z.infer<typeof schemaVersionInfo>;
-
 /** Represents library item version extended information. */
-export type VersionExInfo = z.infer<typeof schemaVersionExInfo>;
+export type VersionInfoDTO = z.infer<typeof schemaVersionExInfo>;
 
 /** Represents data, used for cloning {@link RSForm}. */
 export type CloneLibraryItemDTO = z.infer<typeof schemaCloneLibraryItem>;

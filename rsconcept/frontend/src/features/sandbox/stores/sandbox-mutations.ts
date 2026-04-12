@@ -1,4 +1,4 @@
-import { LibraryItemType, type UpdateLibraryItemDTO } from '@/features/library/backend/types';
+import { type UpdateLibraryItemDTO } from '@/features/library/backend/types';
 import {
   type AttributionTargetDTO,
   type ConstituentaBasicsDTO,
@@ -11,6 +11,7 @@ import { type Attribution, CstType, type RSForm, type Substitution } from '@/fea
 import { getCstTypePrefix } from '@/features/rsform/models/rsform-api';
 import { type ConstituentaDataDTO, type ConstituentaValue, type RSModelDTO } from '@/features/rsmodel/backend/types';
 
+import { LibraryItemType } from '@/domain/library';
 import { nowIso } from '@/utils/format';
 
 import { assertModelSchemaInvariant, type SandboxBundle } from '../models/bundle';

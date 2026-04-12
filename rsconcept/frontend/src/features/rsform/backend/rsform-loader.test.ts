@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { AccessPolicy, LibraryItemType } from '@/features/library';
+import { AccessPolicy, LibraryItemType } from '@/domain/library';
 
 import { CstStatus, CstType } from '../models/rsform';
 

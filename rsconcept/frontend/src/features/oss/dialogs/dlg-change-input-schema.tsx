@@ -2,7 +2,6 @@
 
 import { useForm } from '@tanstack/react-form';
 
-import { type LibraryItem, LibraryItemType } from '@/features/library';
 import { useLibrary } from '@/features/library/backend/use-library';
 import { PickSchema } from '@/features/library/components/pick-schema';
 
@@ -10,6 +9,7 @@ import { MiniButton } from '@/components/control';
 import { IconReset } from '@/components/icons';
 import { Label } from '@/components/input';
 import { ModalForm } from '@/components/modal';
+import { type LibraryItem, LibraryItemType } from '@/domain/library';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { type OssLayout, schemaUpdateInput, type UpdateInputDTO } from '../backend/types';

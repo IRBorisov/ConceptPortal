@@ -5,10 +5,10 @@ import { type RSForm, type RSFormDTO } from '@/features/rsform';
 import { type RSModelDTO } from '@/features/rsmodel';
 
 import { KEYS } from '@/backend/configuration';
+import { type LibraryItem } from '@/domain/library';
 import { type RO } from '@/utils/meta';
 
 import { libraryApi } from './api';
-import { type LibraryItem } from './types';
 import { useLibraryListKey } from './use-library';
 
 export const useSetLocation = () => {

@@ -5,12 +5,12 @@ import { useForm, useStore } from '@tanstack/react-form';
 import { z } from 'zod';
 
 import { ModalForm } from '@/components/modal';
+import { validateLocation } from '@/domain/library/library-api';
 import { useDialogsStore } from '@/stores/dialogs';
 import { limits } from '@/utils/constants';
 import { errorMsg } from '@/utils/labels';
 
 import { PickLocation } from '../components/pick-location';
-import { validateLocation } from '../models/library-api';
 
 const schemaLocation = z.strictObject({
   location: z.string().refine(data => validateLocation(data), { message: errorMsg.invalidLocation })

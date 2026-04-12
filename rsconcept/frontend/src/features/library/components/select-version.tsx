@@ -3,10 +3,9 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/input/select';
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
+import { type CurrentVersion, type VersionInfo } from '@/domain/library';
 
-import { labelVersion } from '../../rsform/labels';
-import { type VersionInfo } from '../backend/types';
-import { type CurrentVersion } from '../models/library';
+import { labelVersion } from '../labels';
 
 interface SelectVersionProps extends Styling {
   id?: string;

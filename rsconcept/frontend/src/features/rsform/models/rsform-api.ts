@@ -2,8 +2,7 @@
  * Module: API for formal representation for systems of concepts.
  */
 
-import { BASIC_SCHEMAS, type LibraryItem } from '@/features/library';
-
+import { BASIC_SCHEMAS, type LibraryItem } from '@/domain/library';
 import { type AnalysisFull, TypeClass, TypeID, type TypePath, type Typification, ValueClass } from '@/domain/rslang';
 import { type EchelonFunctional, isTypification } from '@/domain/rslang/semantic/typification';
 import { applyPath } from '@/domain/rslang/semantic/typification-api';

@@ -2,14 +2,9 @@
  * Module: Models for formal representation for systems of concepts.
  */
 
-import {
-  type CurrentVersion,
-  type LibraryItemData,
-  type LibraryItemReference,
-  type VersionInfo
-} from '@/features/library';
-
 import { type Graph } from '@/domain/graph';
+import { type CurrentVersion, type LibraryItem, type VersionInfo } from '@/domain/library';
+import { type LibraryItemReference } from '@/domain/library/library';
 import { type AnalysisBase, type ExpressionType, type RSLangAnalyzer, type TypePath } from '@/domain/rslang';
 import { type RO } from '@/utils/meta';
 
@@ -174,8 +169,9 @@ export interface InheritanceInfo {
 }
 
 /** Represents formal explication for set of concepts. */
-export interface RSForm extends LibraryItemData {
+export interface RSForm extends LibraryItem {
   is_produced: boolean;
+  editors: number[];
   version: CurrentVersion;
   versions: VersionInfo[];
 

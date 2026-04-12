@@ -9,13 +9,13 @@ import { useRoleStore, UserRole } from '@/features/users';
 import { MiniButton } from '@/components/control';
 import { IconDestroy, IconSave, IconShare } from '@/components/icons';
 import { cn } from '@/components/utils';
+import { AccessPolicy, type LibraryItem, LibraryItemType } from '@/domain/library';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { prepareTooltip } from '@/utils/format';
 import { tooltipText } from '@/utils/labels';
 import { isMac, sharePage } from '@/utils/utils';
 
-import { AccessPolicy, type LibraryItem, LibraryItemType } from '../backend/types';
 import { useMutatingLibrary } from '../backend/use-mutating-library';
 
 import { IconShowSidebar } from './icon-show-sidebar';

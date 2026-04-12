@@ -2,8 +2,7 @@
  * Module: Internal navigation constants.
  */
 
-import { type LibraryItemType } from '@/features/library';
-
+import { type LibraryItemType } from '@/domain/library';
 import { buildConstants } from '@/utils/build-constants';
 
 /** Routes. */

@@ -1,8 +1,7 @@
-import { LocationHead } from '@/features/library';
-import { AccessPolicy, LibraryItemType } from '@/features/library/backend/types';
 import { type RSFormDTO } from '@/features/rsform/backend/types';
 import { type RSModelDTO } from '@/features/rsmodel/backend/types';
 
+import { AccessPolicy, LibraryItemType, LocationHead } from '@/domain/library';
 import { nowIso } from '@/utils/format';
 import { type RO } from '@/utils/meta';
 

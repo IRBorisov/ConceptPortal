@@ -7,9 +7,8 @@ import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import { IconOSS } from '@/components/icons';
 import { Label } from '@/components/input';
 import { type Styling } from '@/components/props';
+import { type LibraryItemReference } from '@/domain/library';
 import { prefixes } from '@/utils/constants';
-
-import { type LibraryItemReference } from '../models/library';
 
 interface MiniSelectorOSSProps extends Styling {
   items: LibraryItemReference[];

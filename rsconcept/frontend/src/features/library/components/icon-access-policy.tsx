@@ -1,6 +1,5 @@
 import { type DomIconProps, IconPrivate, IconProtected, IconPublic } from '@/components/icons';
-
-import { AccessPolicy } from '../backend/types';
+import { AccessPolicy } from '@/domain/library';
 
 /** Icon for access policy. */
 export function IconAccessPolicy({ value, size = '1.25rem', className }: DomIconProps<AccessPolicy>) {

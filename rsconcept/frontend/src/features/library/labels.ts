@@ -1,11 +1,9 @@
-import { AccessPolicy, LibraryItemType } from './backend/types';
-import { type FolderNode } from './models/folder-tree';
-import { LocationHead } from './models/library';
-import { validateLocation } from './models/library-api';
+import { AccessPolicy, type CurrentVersion, LibraryItemType, LocationHead, type VersionInfo } from '@/domain/library';
+import { type FolderNode } from '@/domain/library/folder-tree';
+import { validateLocation } from '@/domain/library/library-api';
+import { type RO } from '@/utils/meta';
 
-/**
- * Retrieves label for {@link LocationHead}.
- */
+/** Retrieves label for {@link LocationHead}. */
 export function labelLocationHead(head: LocationHead): string {
   // prettier-ignore
   switch (head) {
@@ -16,9 +14,7 @@ export function labelLocationHead(head: LocationHead): string {
   }
 }
 
-/**
- * Retrieves description for {@link LocationHead}.
- */
+/** Retrieves description for {@link LocationHead}. */
 export function describeLocationHead(head: LocationHead): string {
   // prettier-ignore
   switch (head) {
@@ -29,9 +25,7 @@ export function describeLocationHead(head: LocationHead): string {
   }
 }
 
-/**
- * Retrieves label for {@link FolderNode}.
- */
+/** Retrieves label for {@link FolderNode}. */
 export function labelFolderNode(node: FolderNode): string {
   if (node.parent || !validateLocation('/' + node.text)) {
     return node.text;
@@ -40,9 +34,7 @@ export function labelFolderNode(node: FolderNode): string {
   }
 }
 
-/**
- * Retrieves label for {@link AccessPolicy}.
- */
+/** Retrieves label for {@link AccessPolicy}. */
 export function labelAccessPolicy(policy: AccessPolicy): string {
   // prettier-ignore
   switch (policy) {
@@ -52,9 +44,7 @@ export function labelAccessPolicy(policy: AccessPolicy): string {
   }
 }
 
-/**
- * Retrieves description for {@link AccessPolicy}.
- */
+/** Retrieves description for {@link AccessPolicy}. */
 export function describeAccessPolicy(policy: AccessPolicy): string {
   // prettier-ignore
   switch (policy) {
@@ -67,9 +57,7 @@ export function describeAccessPolicy(policy: AccessPolicy): string {
   }
 }
 
-/**
- * Retrieves label for {@link LibraryItemType}.
- */
+/** Retrieves label for {@link LibraryItemType}. */
 export function labelLibraryItemType(itemType: LibraryItemType): string {
   // prettier-ignore
   switch (itemType) {
@@ -79,9 +67,7 @@ export function labelLibraryItemType(itemType: LibraryItemType): string {
   }
 }
 
-/**
- * Retrieves description for {@link LibraryItemType}.
- */
+/** Retrieves description for {@link LibraryItemType}. */
 export function describeLibraryItemType(itemType: LibraryItemType): string {
   // prettier-ignore
   switch (itemType) {
@@ -89,4 +75,10 @@ export function describeLibraryItemType(itemType: LibraryItemType): string {
     case LibraryItemType.OSS: return 'Операционная схема синтеза';
     case LibraryItemType.RSMODEL: return 'Концептуальная модель';
   }
+}
+
+/** Generates label for {@link VersionInfo} of {@link RSForm}. */
+export function labelVersion(value: CurrentVersion, items: RO<VersionInfo[]>) {
+  const version = items.find(ver => ver.id === value);
+  return version ? version.version : 'актуальная';
 }

@@ -2,9 +2,9 @@
  * Module: API for OperationSystem.
  */
 
-import { type LibraryItem } from '@/features/library';
 import { type Constituenta, CstClass, type CstSubstitute, CstType, type RSForm } from '@/features/rsform';
 
+import { type LibraryItem } from '@/domain/library';
 import { type AliasMapping, applyAliasMapping, applyTypificationMapping, isSetTypification } from '@/domain/rslang/api';
 import { labelType } from '@/domain/rslang/labels';
 import { extractBases } from '@/domain/rslang/semantic/typification-api';

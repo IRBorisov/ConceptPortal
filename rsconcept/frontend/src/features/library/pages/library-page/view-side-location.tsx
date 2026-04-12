@@ -9,6 +9,7 @@ import { BadgeHelp } from '@/features/help/components/badge-help';
 
 import { MiniButton } from '@/components/control';
 import { IconFolderEdit } from '@/components/icons';
+import { type FolderNode } from '@/domain/library';
 import { useFitHeight } from '@/stores/app-layout';
 import { prefixes } from '@/utils/constants';
 import { infoMsg } from '@/utils/labels';
@@ -16,7 +17,6 @@ import { infoMsg } from '@/utils/labels';
 import { useLibrary } from '../../backend/use-library';
 import { IconShowSubfolders } from '../../components/icon-show-subfolders';
 import { SelectLocation } from '../../components/select-location';
-import { type FolderNode } from '../../models/folder-tree';
 import { useLibrarySearchStore } from '../../stores/library-search';
 
 interface ViewSideLocationProps {

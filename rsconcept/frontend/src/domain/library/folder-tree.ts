@@ -67,10 +67,7 @@ export class FolderNode {
   }
 }
 
-/**
- * Represents a FolderTree.
- *
- */
+/** Represents a FolderTree. */
 export class FolderTree {
   roots = new Map<string, FolderNode>();
 

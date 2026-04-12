@@ -4,10 +4,10 @@ import { SelectorButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
+import { LocationHead } from '@/domain/library';
 import { prefixes } from '@/utils/constants';
 
 import { describeLocationHead, labelLocationHead } from '../labels';
-import { LocationHead } from '../models/library';
 
 import { IconLocationHead } from './icon-location-head';
 

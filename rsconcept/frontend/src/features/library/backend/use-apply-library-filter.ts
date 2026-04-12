@@ -1,7 +1,8 @@
 import { useAuth } from '@/features/auth';
 
-import { type LibraryFilter } from '../models/library';
-import { matchLibraryItem, matchLibraryItemLocation } from '../models/library-api';
+import { matchLibraryItem, matchLibraryItemLocation } from '@/domain/library/library-api';
+
+import { type LibraryFilter } from '../models/library-filter';
 
 import { useLibrary } from './use-library';
 
