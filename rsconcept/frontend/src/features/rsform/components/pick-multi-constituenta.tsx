@@ -7,7 +7,7 @@ import { SearchBar } from '@/components/input';
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
 import { NoData } from '@/components/view';
-import { Graph } from '@/models/graph';
+import { Graph } from '@/domain/graph/graph';
 
 import { describeConstituenta } from '../labels';
 import { type Constituenta, type RSForm } from '../models/rsform';

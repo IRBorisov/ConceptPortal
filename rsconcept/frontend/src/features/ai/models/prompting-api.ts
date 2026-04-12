@@ -2,11 +2,11 @@ import { type Block, NodeType, type OperationSchema } from '@/features/oss/model
 import { type Constituenta, type RSForm } from '@/features/rsform';
 import { CstType } from '@/features/rsform/models/rsform';
 import { isBasicConcept } from '@/features/rsform/models/rsform-api';
-import { TypificationGraph } from '@/features/rsform/models/typification-graph';
-import { labelType } from '@/features/rslang/labels';
-import { isTypification } from '@/features/rslang/semantic/typification';
 
-import { type Graph } from '@/models/graph';
+import { type Graph } from '@/domain/graph/graph';
+import { TypificationGraph } from '@/domain/rslang';
+import { labelType } from '@/domain/rslang/labels';
+import { isTypification } from '@/domain/rslang/semantic/typification';
 import { PARAMETER } from '@/utils/constants';
 
 import { mockPromptVariable } from '../labels';

@@ -1,9 +1,7 @@
 import { ComboMulti } from '@/components/input/combo-multi';
 import { type Styling } from '@/components/props';
-
-import { labelGrammeme } from '../labels';
-import { type Grammeme, supportedGrammemes } from '../models/language';
-import { getCompatibleGrams } from '../models/language-api';
+import { getCompatibleGrams, type Grammeme, supportedGrammemes } from '@/domain/cctext';
+import { labelGrammeme } from '@/domain/cctext/labels';
 
 interface SelectMultiGrammemeProps extends Styling {
   id?: string;

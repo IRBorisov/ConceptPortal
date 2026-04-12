@@ -2,8 +2,7 @@
 
 import { type ReactCodeMirrorRef, type SelectionRange } from '@uiw/react-codemirror';
 
-import { TokenID } from '@/features/rslang';
-
+import { TokenID } from '@/domain/rslang';
 import { CodeMirrorWrapper } from '@/utils/codemirror';
 
 /* Determines whether an input key is a potential ligature. */

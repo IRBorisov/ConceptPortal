@@ -4,10 +4,10 @@ import { Handle, type NodeProps, Position } from '@xyflow/react';
 import clsx from 'clsx';
 
 import { type RSForm } from '@/features/rsform/models/rsform';
-import { type ExpressionType, readErrorAnnotation } from '@/features/rslang';
-import { describeRSError, labelRSLangNode, labelType } from '@/features/rslang/labels';
-import { TokenID } from '@/features/rslang/parser/token';
 
+import { type ExpressionType, readErrorAnnotation } from '@/domain/rslang';
+import { describeRSError, labelRSLangNode, labelType } from '@/domain/rslang/labels';
+import { TokenID } from '@/domain/rslang/parser/token';
 import { globalIDs } from '@/utils/constants';
 import { type FlatAstNode } from '@/utils/parsing';
 

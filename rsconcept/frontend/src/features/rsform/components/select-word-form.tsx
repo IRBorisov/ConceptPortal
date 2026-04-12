@@ -2,9 +2,8 @@
 
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
+import { Grammeme, supportedGrammemes } from '@/domain/cctext';
 import { prefixes } from '@/utils/constants';
-
-import { Grammeme, supportedGrammemes } from '../models/language';
 
 import { WordformButton } from './wordform-button';
 

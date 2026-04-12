@@ -1,9 +1,9 @@
 import { type RO } from '@/utils/meta';
 
-import { type ExpressionType, TypeID, type TypePath, type Typification } from '../rslang';
-import { TUPLE_ID, type Value, VALUE_FALSE, VALUE_TRUE } from '../rslang/eval/value';
-import { valueStub } from '../rslang/eval/value-api';
-import { labelType } from '../rslang/labels';
+import { type ExpressionType, TypeID, type TypePath, type Typification } from '../../domain/rslang';
+import { TUPLE_ID, type Value, VALUE_FALSE, VALUE_TRUE } from '../../domain/rslang/eval/value';
+import { valueStub } from '../../domain/rslang/eval/value-api';
+import { labelType } from '../../domain/rslang/labels';
 
 import { EvalStatus } from './models/rsmodel';
 

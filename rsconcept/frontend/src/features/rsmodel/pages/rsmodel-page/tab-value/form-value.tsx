@@ -9,12 +9,12 @@ import { RSInput } from '@/features/rsform/components/rs-input';
 import { ViewErrors } from '@/features/rsform/components/view-errors';
 import { labelRSExpression } from '@/features/rsform/labels';
 import { getStructureName, isBaseSet } from '@/features/rsform/models/rsform-api';
-import { type CalculatorResult, type Value } from '@/features/rslang';
-import { normalizeValue, valueStub } from '@/features/rslang/eval/value-api';
-import { labelType } from '@/features/rslang/labels';
-import { isTypification, type TypePath, type Typification } from '@/features/rslang/semantic/typification';
 
 import { TextArea } from '@/components/input';
+import { type CalculatorResult, type Value } from '@/domain/rslang';
+import { normalizeValue, valueStub } from '@/domain/rslang/eval/value-api';
+import { labelType } from '@/domain/rslang/labels';
+import { isTypification, type TypePath, type Typification } from '@/domain/rslang/semantic/typification';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';

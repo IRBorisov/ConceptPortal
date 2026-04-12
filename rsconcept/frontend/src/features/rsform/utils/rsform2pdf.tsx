@@ -1,9 +1,9 @@
 import { Link, pdf, Text, View } from '@react-pdf/renderer';
 
 import { urls } from '@/app';
-import { labelType } from '@/features/rslang/labels';
 
 import { CDocument } from '@/components/pdf/CDocument';
+import { labelType } from '@/domain/rslang/labels';
 import { external_urls } from '@/utils/constants';
 import { type RO } from '@/utils/meta';
 

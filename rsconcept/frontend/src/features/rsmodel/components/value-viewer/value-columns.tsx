@@ -2,11 +2,11 @@ import { type ColumnDef, createColumnHelper } from '@tanstack/react-table';
 import clsx from 'clsx';
 
 import { type RSForm } from '@/features/rsform';
-import { makeValuePath, TypeID, type Typification, type Value, type ValuePath } from '@/features/rslang';
-import { testInvalid, valueStub } from '@/features/rslang/eval/value-api';
-import { type EchelonCollection, IntegerT } from '@/features/rslang/semantic/typification';
 
 import { cn } from '@/components/utils';
+import { makeValuePath, TypeID, type Typification, type Value, type ValuePath } from '@/domain/rslang';
+import { testInvalid, valueStub } from '@/domain/rslang/eval/value-api';
+import { type EchelonCollection, IntegerT } from '@/domain/rslang/semantic/typification';
 import { globalIDs } from '@/utils/constants';
 import { truncateToLastWord, truncateToSymbol } from '@/utils/format';
 

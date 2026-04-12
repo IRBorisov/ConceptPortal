@@ -2,11 +2,10 @@
  * Module: RSForm data loading and processing.
  */
 
-import { type AnalysisFast, makeTypePath, RSLangAnalyzer, TokenID, TypeID, type TypePath } from '@/features/rslang';
-import { extractGlobals, isSimpleExpression, splitTemplateDefinition } from '@/features/rslang/api';
-import { type ExpressionType } from '@/features/rslang/semantic/typification';
-
-import { Graph } from '@/models/graph';
+import { Graph } from '@/domain/graph/graph';
+import { type AnalysisFast, makeTypePath, RSLangAnalyzer, TokenID, TypeID, type TypePath } from '@/domain/rslang';
+import { extractGlobals, isSimpleExpression, splitTemplateDefinition } from '@/domain/rslang/api';
+import { type ExpressionType } from '@/domain/rslang/semantic/typification';
 import { type RO } from '@/utils/meta';
 import { type AstNode, getNodeIndices } from '@/utils/parsing';
 

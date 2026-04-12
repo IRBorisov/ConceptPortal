@@ -9,7 +9,7 @@ import { Label, TextInput } from '@/components/input';
 import { prepareTooltip } from '@/utils/format';
 import { isMac } from '@/utils/utils';
 
-import { type InlinePosition, type SyntacticRefState } from './refs-models';
+import { type InlinePosition, type SyntacticRefState } from '../../../../domain/cctext/reference';
 
 interface InlineSyntacticEditorProps {
   position: InlinePosition;

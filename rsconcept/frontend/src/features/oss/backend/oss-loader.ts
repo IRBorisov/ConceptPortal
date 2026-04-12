@@ -2,7 +2,7 @@
  * Module: OSS data loading and processing.
  */
 
-import { Graph } from '@/models/graph';
+import { Graph } from '@/domain/graph/graph';
 import { type RO } from '@/utils/meta';
 
 import {

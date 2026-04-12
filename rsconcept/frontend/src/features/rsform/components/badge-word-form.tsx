@@ -1,4 +1,4 @@
-import { type WordForm } from '../models/language';
+import { type WordForm } from '@/domain/cctext';
 
 import { BadgeGrammeme } from './badge-grammeme';
 

@@ -6,7 +6,7 @@ import fileDownload from 'js-file-download';
 import { CstType } from '@/features/rsform/models/rsform';
 
 import { useScrollToNode } from '@/components/flow/use-scroll-to-node';
-import { type Graph } from '@/models/graph';
+import { type Graph } from '@/domain/graph/graph';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { APP_COLOR_CODES } from '@/styling/colors';

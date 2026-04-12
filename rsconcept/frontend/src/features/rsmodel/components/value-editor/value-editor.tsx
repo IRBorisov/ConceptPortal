@@ -1,15 +1,14 @@
 'use client';
 
-import { makeValuePath, TypeID, type Typification, type Value, type ValuePath } from '@/features/rslang';
-import { convertPathToType } from '@/features/rslang/eval/value-api';
-import { type TypePath } from '@/features/rslang/semantic/typification';
-
 import { MiniButton } from '@/components/control';
 import { DataTable } from '@/components/data-table';
 import { IconNewItem, IconReset } from '@/components/icons';
 import { SearchBar } from '@/components/input';
 import { cn } from '@/components/utils';
 import { NoData, Text } from '@/components/view';
+import { makeValuePath, TypeID, type Typification, type Value, type ValuePath } from '@/domain/rslang';
+import { convertPathToType } from '@/domain/rslang/eval/value-api';
+import { type TypePath } from '@/domain/rslang/semantic/typification';
 import { usePreferencesStore } from '@/stores/preferences';
 
 import { useValueMatcher } from '../../hooks/use-value-matcher';

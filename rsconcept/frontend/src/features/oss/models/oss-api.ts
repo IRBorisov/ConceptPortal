@@ -4,18 +4,13 @@
 
 import { type LibraryItem } from '@/features/library';
 import { type Constituenta, CstClass, type CstSubstitute, CstType, type RSForm } from '@/features/rsform';
-import {
-  type AliasMapping,
-  applyAliasMapping,
-  applyTypificationMapping,
-  isSetTypification
-} from '@/features/rslang/api';
-import { labelType } from '@/features/rslang/labels';
-import { extractBases } from '@/features/rslang/semantic/typification-api';
 
+import { type AliasMapping, applyAliasMapping, applyTypificationMapping, isSetTypification } from '@/domain/rslang/api';
+import { labelType } from '@/domain/rslang/labels';
+import { extractBases } from '@/domain/rslang/semantic/typification-api';
 import { infoMsg } from '@/utils/labels';
 
-import { Graph } from '../../../models/graph';
+import { Graph } from '../../../domain/graph/graph';
 import { describeSubstitutionError } from '../labels';
 
 import { NodeType, type OperationSchema, SubstitutionErrorType } from './oss';

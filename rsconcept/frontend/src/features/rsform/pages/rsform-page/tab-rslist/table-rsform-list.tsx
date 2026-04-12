@@ -1,10 +1,9 @@
 'use client';
 
-import { labelType } from '@/features/rslang/labels';
-
 import { TextURL } from '@/components/control';
 import { createColumnHelper, DataTable, type RowSelectionState, type VisibilityState } from '@/components/data-table';
 import { NoData, TextContent } from '@/components/view';
+import { labelType } from '@/domain/rslang/labels';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { prefixes } from '@/utils/constants';
 import { truncateToSymbol } from '@/utils/format';

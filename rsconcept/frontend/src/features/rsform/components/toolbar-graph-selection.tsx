@@ -17,7 +17,7 @@ import {
 } from '@/components/icons';
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
-import { type Graph } from '@/models/graph';
+import { type Graph } from '@/domain/graph/graph';
 import { prepareTooltip } from '@/utils/format';
 
 interface ToolbarGraphSelectionProps extends Styling {

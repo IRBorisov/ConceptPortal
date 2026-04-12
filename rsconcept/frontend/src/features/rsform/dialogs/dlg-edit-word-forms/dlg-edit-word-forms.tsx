@@ -8,6 +8,7 @@ import { MiniButton } from '@/components/control';
 import { IconAccept, IconMoveDown, IconMoveLeft, IconMoveRight, IconRemove } from '@/components/icons';
 import { Label, TextArea } from '@/components/input';
 import { ModalForm } from '@/components/modal';
+import { type Grammeme, parseGrammemes, supportedGrammemes, type WordForm, wordFormEquals } from '@/domain/cctext';
 import { useDialogsStore } from '@/stores/dialogs';
 import { promptText } from '@/utils/labels';
 
@@ -17,8 +18,6 @@ import { useIsProcessingCctext } from '../../backend/cctext/use-is-processing-cc
 import { useParseText } from '../../backend/cctext/use-parse-text';
 import { type UpdateConstituentaDTO } from '../../backend/types';
 import { SelectMultiGrammeme } from '../../components/select-multi-grammeme';
-import { type Grammeme, supportedGrammemes, type WordForm } from '../../models/language';
-import { parseGrammemes, wordFormEquals } from '../../models/language-api';
 import { type Constituenta } from '../../models/rsform';
 
 import { TableWordForms } from './table-word-forms';

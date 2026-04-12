@@ -2,10 +2,10 @@ import { type ReactNode, useState } from 'react';
 
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
-import { labelType } from '@/features/rslang/labels';
 
 import { MiniButton } from '@/components/control';
 import { Label, TextArea, TextInput } from '@/components/input';
+import { labelType } from '@/domain/rslang/labels';
 import { type CreateFieldProps } from '@/utils/forms';
 
 import { type UpdateConstituentaDTO } from '../../backend/types';

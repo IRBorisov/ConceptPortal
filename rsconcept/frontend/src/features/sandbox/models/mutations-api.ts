@@ -1,5 +1,6 @@
 import { type ConstituentaBasicsDTO } from '@/features/rsform/backend/types';
-import { applyAliasMapping } from '@/features/rslang/api';
+
+import { applyAliasMapping } from '@/domain/rslang/api';
 
 export function applyMappingToConstituents(
   items: ConstituentaBasicsDTO[],

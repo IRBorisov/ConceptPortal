@@ -1,0 +1,61 @@
+import { Grammeme } from './language';
+
+// --- Records for label/describe functions ---
+const labelGrammemeRecord: Partial<Record<Grammeme, string>> = {
+  [Grammeme.NOUN]: 'ЧР: сущ',
+  [Grammeme.VERB]: 'ЧР: глагол',
+  [Grammeme.INFN]: 'ЧР: глагол инф',
+  [Grammeme.ADJF]: 'ЧР: прил',
+  [Grammeme.PRTF]: 'ЧР: прич',
+  [Grammeme.ADJS]: 'ЧР: кр прил',
+  [Grammeme.PRTS]: 'ЧР: кр прич',
+  [Grammeme.COMP]: 'ЧР: компаратив',
+  [Grammeme.GRND]: 'ЧР: деепричастие',
+  [Grammeme.NUMR]: 'ЧР: число',
+  [Grammeme.ADVB]: 'ЧР: наречие',
+  [Grammeme.NPRO]: 'ЧР: местоимение',
+  [Grammeme.PRED]: 'ЧР: предикатив',
+  [Grammeme.PREP]: 'ЧР: предлог',
+  [Grammeme.CONJ]: 'ЧР: союз',
+  [Grammeme.PRCL]: 'ЧР: частица',
+  [Grammeme.INTJ]: 'ЧР: междометие',
+  [Grammeme.Abbr]: 'ЧР: аббревиатура',
+  [Grammeme.sing]: 'Число: един',
+  [Grammeme.plur]: 'Число: множ',
+  [Grammeme.nomn]: 'Падеж: имен',
+  [Grammeme.gent]: 'Падеж: род',
+  [Grammeme.datv]: 'Падеж: дат',
+  [Grammeme.accs]: 'Падеж: вин',
+  [Grammeme.ablt]: 'Падеж: твор',
+  [Grammeme.loct]: 'Падеж: пред',
+  [Grammeme.masc]: 'Род: муж',
+  [Grammeme.femn]: 'Род: жен',
+  [Grammeme.neut]: 'Род: ср',
+  [Grammeme.perf]: 'Совершенный: да',
+  [Grammeme.impf]: 'Совершенный: нет',
+  [Grammeme.tran]: 'Переходный: да',
+  [Grammeme.intr]: 'Переходный: нет',
+  [Grammeme.pres]: 'Время: настоящее',
+  [Grammeme.past]: 'Время: прошедшее',
+  [Grammeme.futr]: 'Время: будущее',
+  [Grammeme.per1]: 'Лицо: 1',
+  [Grammeme.per2]: 'Лицо: 2',
+  [Grammeme.per3]: 'Лицо: 3',
+  [Grammeme.impr]: 'Повелительный: да',
+  [Grammeme.indc]: 'Повелительный: нет',
+  [Grammeme.incl]: 'Включающий: да',
+  [Grammeme.excl]: 'Включающий: нет',
+  [Grammeme.pssv]: 'Страдательный: да',
+  [Grammeme.actv]: 'Страдательный: нет',
+  [Grammeme.anim]: 'Одушевленный: да',
+  [Grammeme.inan]: 'Одушевленный: нет',
+  [Grammeme.Infr]: 'Стиль: неформальный',
+  [Grammeme.Slng]: 'Стиль: жаргон',
+  [Grammeme.Arch]: 'Стиль: устаревший',
+  [Grammeme.Litr]: 'Стиль: литературный'
+};
+
+/** Generates label for grammeme. */
+export function labelGrammeme(gram: Grammeme): string {
+  return labelGrammemeRecord[gram] ?? `Неизв: ${gram as string}`;
+}

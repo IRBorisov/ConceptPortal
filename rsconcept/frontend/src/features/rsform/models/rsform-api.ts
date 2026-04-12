@@ -3,15 +3,15 @@
  */
 
 import { BASIC_SCHEMAS, type LibraryItem } from '@/features/library';
-import { type AnalysisFull, TypeClass, type TypePath, ValueClass } from '@/features/rslang';
+
+import { type AnalysisFull, TypeClass, type TypePath, ValueClass } from '@/domain/rslang';
 import {
   type EchelonFunctional,
   isTypification,
   TypeID,
   type Typification
-} from '@/features/rslang/semantic/typification';
-import { applyPath } from '@/features/rslang/semantic/typification-api';
-
+} from '@/domain/rslang/semantic/typification';
+import { applyPath } from '@/domain/rslang/semantic/typification-api';
 import { type RO } from '@/utils/meta';
 import { TextMatcher } from '@/utils/utils';
 

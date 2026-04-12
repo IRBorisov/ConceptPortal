@@ -4,8 +4,8 @@ import { Handle, type NodeProps, Position } from '@xyflow/react';
 
 import { globalIDs } from '@/utils/constants';
 
+import { type TypificationNodeData } from '../../../../../domain/rslang/typification-graph';
 import { colorBgTMGraphNode } from '../../../colors';
-import { type TypificationNodeData } from '../../../models/typification-graph';
 
 import { type MGNode } from './mgraph-models';
 

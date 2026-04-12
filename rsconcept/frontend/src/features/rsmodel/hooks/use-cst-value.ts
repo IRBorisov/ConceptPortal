@@ -1,7 +1,8 @@
 import { useSyncExternalStore } from 'react';
 
 import { type Constituenta } from '@/features/rsform';
-import { type Value } from '@/features/rslang';
+
+import { type Value } from '@/domain/rslang';
 
 import { type RSEngine } from '../models/rsengine';
 

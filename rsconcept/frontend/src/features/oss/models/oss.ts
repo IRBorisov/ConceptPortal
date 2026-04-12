@@ -2,7 +2,7 @@
  * Module: Schema of Synthesis Operations.
  */
 
-import { type Graph } from '@/models/graph';
+import { type Graph } from '@/domain/graph/graph';
 
 import {
   type BlockDTO,

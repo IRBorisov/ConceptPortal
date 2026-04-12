@@ -12,10 +12,9 @@ import CodeMirror, {
 } from '@uiw/react-codemirror';
 import clsx from 'clsx';
 
-import { type RSErrorDescription } from '@/features/rslang';
-import { extractGlobals } from '@/features/rslang/api';
-
 import { Label } from '@/components/input';
+import { type RSErrorDescription } from '@/domain/rslang';
+import { extractGlobals } from '@/domain/rslang/api';
 import { usePreferencesStore } from '@/stores/preferences';
 import { APP_COLORS } from '@/styling/colors';
 

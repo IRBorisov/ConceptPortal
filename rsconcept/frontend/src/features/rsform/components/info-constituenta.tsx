@@ -1,7 +1,6 @@
-import { labelType } from '@/features/rslang/labels';
-
 import { IconChild, IconCrucial } from '@/components/icons';
 import { cn } from '@/components/utils';
+import { labelType } from '@/domain/rslang/labels';
 
 import { type Constituenta } from '../models/rsform';
 import { isBasicConcept } from '../models/rsform-api';

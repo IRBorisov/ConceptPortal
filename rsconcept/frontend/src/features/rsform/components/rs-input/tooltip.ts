@@ -2,9 +2,8 @@ import { type Extension } from '@codemirror/state';
 import { hoverTooltip, type TooltipView } from '@codemirror/view';
 import clsx from 'clsx';
 
-import { type ExpressionType, TokenID } from '@/features/rslang';
-import { labelType } from '@/features/rslang/labels';
-
+import { type ExpressionType, TokenID } from '@/domain/rslang';
+import { labelType } from '@/domain/rslang/labels';
 import { type AstNode } from '@/utils/parsing';
 
 import { type Constituenta, type RSForm } from '../../models/rsform';

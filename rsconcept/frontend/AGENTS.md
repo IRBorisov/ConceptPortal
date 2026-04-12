@@ -24,7 +24,8 @@ This file applies to all code under the frontend application directory.
 ## File structure overview
 
 - `src/app`: Application bootstrapping, layout, routing, and global providers
-- `src/features`: Feature-level UI, domain logic, data hooks, dialogs, pages
+- `src/domain`: Shared domain abstractions
+- `src/features`: Feature-level UI, data hooks, dialogs, pages
 - `src/components`: Reusable UI building blocks and shared controls
 - `src/backend`: Shared client-side API transport and query setup
 - `src/stores`: Shared Zustand stores

@@ -6,7 +6,7 @@ import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import { IconFilter, IconFitImage, IconFocus, IconImage, IconPNG, IconSVG } from '@/components/icons';
 import { cn } from '@/components/utils';
-import { type Graph } from '@/models/graph';
+import { type Graph } from '@/domain/graph/graph';
 import { useDialogsStore } from '@/stores/dialogs';
 import { prepareTooltip } from '@/utils/format';
 

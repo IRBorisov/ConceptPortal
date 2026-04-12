@@ -24,3 +24,4 @@ export {
   type Typification
 } from './semantic/typification';
 export { ValueClass } from './semantic/value-class';
+export { TypificationGraph } from './typification-graph';

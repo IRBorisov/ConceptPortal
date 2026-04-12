@@ -1,6 +1,6 @@
 import { type Edge, type Node } from '@xyflow/react';
 
-import { type TypificationNodeData } from '../../../models/typification-graph';
+import { type TypificationNodeData } from '../../../../../domain/rslang/typification-graph';
 
 /** Represents a single node of a {@link TypificationGraph}. */
 export type MGNode = Node<TypificationNodeData>;

@@ -2,15 +2,16 @@
  * Module: Multi-graph for typifications.
  */
 
-import { TypeID, type Typification } from '@/features/rslang';
-import { labelType } from '@/features/rslang/labels';
 import {
   bool,
   type EchelonCollection,
   type EchelonTuple,
   type ExpressionType,
-  tuple
-} from '@/features/rslang/semantic/typification';
+  tuple,
+  TypeID,
+  type Typification
+} from './semantic/typification';
+import { labelType } from './labels';
 
 /** Represents a single node of a {@link TypificationGraph}. */
 export interface TypificationNodeData extends Record<string, unknown> {

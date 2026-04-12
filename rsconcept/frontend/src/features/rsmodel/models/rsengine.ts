@@ -3,16 +3,16 @@ import { toast } from 'react-toastify';
 import { type RSForm } from '@/features/rsform';
 import { CstType } from '@/features/rsform';
 import { getAnalysisFor, isBaseSet, isBasicConcept, isFunctional } from '@/features/rsform/models/rsform-api';
+
 import {
   type CalculatorEvaluateOptions,
   type CalculatorResult,
   RSCalculator,
   TypeID,
   type Value
-} from '@/features/rslang';
-import { compare } from '@/features/rslang/eval/value';
-import { normalizeType } from '@/features/rslang/labels';
-
+} from '@/domain/rslang';
+import { compare } from '@/domain/rslang/eval/value';
+import { normalizeType } from '@/domain/rslang/labels';
 import { errorMsg, infoMsg } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 import { type AstNode } from '@/utils/parsing';

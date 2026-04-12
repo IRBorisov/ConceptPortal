@@ -1,4 +1,4 @@
-import { type Grammeme } from '../../models/language';
+import { type Grammeme } from './language';
 
 /** Represents inline position. */
 export interface InlinePosition {

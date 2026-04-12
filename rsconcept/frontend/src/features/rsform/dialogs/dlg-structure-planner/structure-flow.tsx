@@ -3,9 +3,8 @@
 import { useEffect, useRef } from 'react';
 import { type Node, useEdgesState, useNodesState, useOnSelectionChange, useReactFlow } from '@xyflow/react';
 
-import { type ExpressionType, TypeID } from '@/features/rslang/semantic/typification';
-
 import { DiagramFlow } from '@/components/flow/diagram-flow';
+import { type ExpressionType, TypeID } from '@/domain/rslang/semantic/typification';
 
 import { type SPNode } from '../../models/structure-planner';
 

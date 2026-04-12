@@ -3,8 +3,7 @@
 import { Handle, type NodeProps, Position } from '@xyflow/react';
 import clsx from 'clsx';
 
-import { labelType } from '@/features/rslang/labels';
-
+import { labelType } from '@/domain/rslang/labels';
 import { APP_COLORS } from '@/styling/colors';
 import { globalIDs } from '@/utils/constants';
 

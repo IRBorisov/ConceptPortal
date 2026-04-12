@@ -1,9 +1,9 @@
 'use client';
 
 import { HelpTopic } from '@/features/help';
-import { type TypePath, type Typification, type Value } from '@/features/rslang';
 
 import { ModalView } from '@/components/modal';
+import { type TypePath, type Typification, type Value } from '@/domain/rslang';
 import { useDialogsStore } from '@/stores/dialogs';
 import { type RO } from '@/utils/meta';
 

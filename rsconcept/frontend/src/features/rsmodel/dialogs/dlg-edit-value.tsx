@@ -3,10 +3,10 @@
 import { useState } from 'react';
 
 import { HelpTopic } from '@/features/help';
-import { type TypePath, type Typification, type Value } from '@/features/rslang';
-import { normalizeValue } from '@/features/rslang/eval/value-api';
 
 import { ModalForm } from '@/components/modal';
+import { type TypePath, type Typification, type Value } from '@/domain/rslang';
+import { normalizeValue } from '@/domain/rslang/eval/value-api';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { ValueEditor } from '../components/value-editor';

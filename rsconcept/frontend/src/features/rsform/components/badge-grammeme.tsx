@@ -1,5 +1,5 @@
-import { labelGrammeme } from '../labels';
-import { type Grammeme } from '../models/language';
+import { type Grammeme } from '@/domain/cctext';
+import { labelGrammeme } from '@/domain/cctext/labels';
 
 interface BadgeGrammemeProps {
   /** Grammeme to display. */

@@ -5,14 +5,13 @@ import { toast } from 'react-toastify';
 import { useForm, useStore } from '@tanstack/react-form';
 import clsx from 'clsx';
 
-import { type AnalysisFull, TypeID } from '@/features/rslang';
-import { labelType } from '@/features/rslang/labels';
-
 import { MiniButton, SubmitButton } from '@/components/control';
 import { TextButton } from '@/components/control/text-button';
 import { IconChild, IconPredecessor, IconSave } from '@/components/icons';
 import { Label, TextArea } from '@/components/input';
 import { Indicator } from '@/components/view';
+import { type AnalysisFull, TypeID } from '@/domain/rslang';
+import { labelType } from '@/domain/rslang/labels';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { errorMsg, tooltipText } from '@/utils/labels';

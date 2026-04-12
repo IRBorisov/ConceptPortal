@@ -3,10 +3,10 @@
 import { useState } from 'react';
 
 import { useTemplatesSuspense } from '@/features/library/backend/use-templates';
-import { TypeID } from '@/features/rslang';
-import { type AliasMapping, substituteTemplateArgs } from '@/features/rslang/api';
-import { labelType } from '@/features/rslang/labels';
 
+import { TypeID } from '@/domain/rslang';
+import { type AliasMapping, substituteTemplateArgs } from '@/domain/rslang/api';
+import { labelType } from '@/domain/rslang/labels';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { type ArgumentValue, type Constituenta } from '../../models/rsform';

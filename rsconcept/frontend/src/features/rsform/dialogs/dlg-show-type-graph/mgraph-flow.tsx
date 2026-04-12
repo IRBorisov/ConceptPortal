@@ -5,7 +5,7 @@ import { useEdgesState, useNodesState } from '@xyflow/react';
 
 import { DiagramFlow } from '@/components/flow/diagram-flow';
 
-import { type TypificationGraph } from '../../models/typification-graph';
+import { type TypificationGraph } from '../../../../domain/rslang/typification-graph';
 
 import { MGraphEdgeTypes } from './graph/mgraph-edge-types';
 import { applyLayout } from './graph/mgraph-layout';

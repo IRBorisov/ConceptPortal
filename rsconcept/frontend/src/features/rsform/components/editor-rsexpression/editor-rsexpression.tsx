@@ -4,8 +4,7 @@ import { useCallback, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { type ReactCodeMirrorRef } from '@uiw/react-codemirror';
 
-import { type AnalysisFull, getRSErrorRange, type RSErrorDescription, TokenID } from '@/features/rslang';
-
+import { type AnalysisFull, getRSErrorRange, type RSErrorDescription, TokenID } from '@/domain/rslang';
 import { useResetOnChange } from '@/hooks/use-reset-on-change';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
@@ -13,7 +12,7 @@ import { errorMsg } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 import { buildTree, flattenAst } from '@/utils/parsing';
 
-import { rslangParser } from '../../../rslang';
+import { rslangParser } from '../../../../domain/rslang';
 import { type Constituenta, CstStatus, type RSForm } from '../../models/rsform';
 import { getAnalysisFor, inferStatus } from '../../models/rsform-api';
 import { RSInput } from '../rs-input';

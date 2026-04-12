@@ -11,6 +11,9 @@ import { RSInput } from '@/features/rsform/components/rs-input';
 import { RSTextWrapper } from '@/features/rsform/components/rs-input/text-editing';
 import { ViewErrors } from '@/features/rsform/components/view-errors';
 import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
+
+import { TextArea, TextInput } from '@/components/input';
+import { cn } from '@/components/utils';
 import {
   type AnalysisFull,
   type CalculatorResult,
@@ -18,13 +21,10 @@ import {
   type RSErrorDescription,
   TokenID,
   type Typification
-} from '@/features/rslang';
-import { valueStub } from '@/features/rslang/eval/value-api';
-import { labelType } from '@/features/rslang/labels';
-import { isTypification } from '@/features/rslang/semantic/typification';
-
-import { TextArea, TextInput } from '@/components/input';
-import { cn } from '@/components/utils';
+} from '@/domain/rslang';
+import { valueStub } from '@/domain/rslang/eval/value-api';
+import { labelType } from '@/domain/rslang/labels';
+import { isTypification } from '@/domain/rslang/semantic/typification';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { infoMsg } from '@/utils/labels';

@@ -7,13 +7,13 @@ import { BadgeHelp } from '@/features/help/components/badge-help';
 import { IconShowSidebar } from '@/features/library/components/icon-show-sidebar';
 import { getStructureName, isBaseSet } from '@/features/rsform/models/rsform-api';
 import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
-import { type TypePath, type Typification, type Value } from '@/features/rslang';
-import { normalizeValue } from '@/features/rslang/eval/value-api';
-import { isTypification } from '@/features/rslang/semantic/typification';
 
 import { MiniButton } from '@/components/control';
 import { IconCalculateAll, IconCalculateOne, IconDatabase, IconDestroy } from '@/components/icons';
 import { cn } from '@/components/utils';
+import { type TypePath, type Typification, type Value } from '@/domain/rslang';
+import { normalizeValue } from '@/domain/rslang/eval/value-api';
+import { isTypification } from '@/domain/rslang/semantic/typification';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';

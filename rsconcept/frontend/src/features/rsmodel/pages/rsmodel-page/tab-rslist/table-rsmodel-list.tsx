@@ -2,12 +2,12 @@
 
 import { type Constituenta } from '@/features/rsform';
 import { BadgeConstituenta } from '@/features/rsform/components/badge-constituenta';
-import { labelType } from '@/features/rslang/labels';
 import { BadgeEvaluation } from '@/features/rsmodel/components/badge-evaluation';
 
 import { TextURL } from '@/components/control';
 import { createColumnHelper, DataTable, type RowSelectionState, type VisibilityState } from '@/components/data-table';
 import { NoData, TextContent } from '@/components/view';
+import { labelType } from '@/domain/rslang/labels';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { prefixes } from '@/utils/constants';
 import { truncateToSymbol } from '@/utils/format';

@@ -6,11 +6,11 @@ import { ReactFlowProvider } from '@xyflow/react';
 import { HelpTopic } from '@/features/help';
 
 import { ModalView } from '@/components/modal';
+import { TypificationGraph } from '@/domain/rslang';
 import { useDialogsStore } from '@/stores/dialogs';
 import { errorMsg } from '@/utils/labels';
 
 import { type TypeInfo } from '../../models/rsform';
-import { TypificationGraph } from '../../models/typification-graph';
 
 import { MGraphFlow } from './mgraph-flow';
 

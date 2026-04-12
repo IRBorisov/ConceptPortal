@@ -8,9 +8,9 @@ import {
   type LibraryItemReference,
   type VersionInfo
 } from '@/features/library';
-import { type AnalysisBase, type ExpressionType, type RSLangAnalyzer, type TypePath } from '@/features/rslang';
 
-import { type Graph } from '@/models/graph';
+import { type Graph } from '@/domain/graph/graph';
+import { type AnalysisBase, type ExpressionType, type RSLangAnalyzer, type TypePath } from '@/domain/rslang';
 import { type RO } from '@/utils/meta';
 
 import { type Attribution } from '../backend/types';

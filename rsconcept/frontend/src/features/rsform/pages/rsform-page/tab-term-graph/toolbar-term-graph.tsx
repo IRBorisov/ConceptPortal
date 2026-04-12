@@ -7,7 +7,7 @@ import { BadgeHelp } from '@/features/help/components/badge-help';
 
 import { MiniButton } from '@/components/control';
 import { cn } from '@/components/utils';
-import { type Graph } from '@/models/graph';
+import { type Graph } from '@/domain/graph/graph';
 import { prepareTooltip } from '@/utils/format';
 
 import { IconEdgeType } from '../../../components/icon-edge-type';

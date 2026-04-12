@@ -1,11 +1,11 @@
 import { APP_COLORS } from '@/styling/colors';
 import { type FlatAstNode } from '@/utils/parsing';
 
-import { TokenID } from '../rslang';
+import { TokenID } from '../../domain/rslang';
+import { type TypificationNodeData } from '../../domain/rslang/typification-graph';
 
 import { type SPFlowNodeData } from './dialogs/dlg-structure-planner/graph/sp-models';
 import { type Constituenta, CstClass, CstStatus } from './models/rsform';
-import { type TypificationNodeData } from './models/typification-graph';
 import { TGColoring, TGEdgeType } from './stores/term-graph';
 
 /** Represents Brackets highlights theme. */

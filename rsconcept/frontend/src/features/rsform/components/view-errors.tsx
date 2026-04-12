@@ -1,7 +1,6 @@
-import { getRSErrorPrefix, isCritical, type RSErrorDescription } from '@/features/rslang/error';
-import { describeRSError } from '@/features/rslang/labels';
-
 import { cn } from '@/components/utils';
+import { getRSErrorPrefix, isCritical, type RSErrorDescription } from '@/domain/rslang/error';
+import { describeRSError } from '@/domain/rslang/labels';
 import { type RO } from '@/utils/meta';
 
 interface ViewErrorsProps {

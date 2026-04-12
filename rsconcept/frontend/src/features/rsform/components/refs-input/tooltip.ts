@@ -3,12 +3,13 @@ import { type Extension } from '@codemirror/state';
 import { hoverTooltip, type TooltipView } from '@codemirror/view';
 import clsx from 'clsx';
 
+import { parseGrammemes } from '@/domain/cctext';
+import { type EntityReference, type SyntacticReference } from '@/domain/cctext';
+import { labelGrammeme } from '@/domain/cctext/labels';
 import { findContainedNodes } from '@/utils/codemirror';
 import { isMac } from '@/utils/utils';
 
-import { describeConstituentaTerm, labelGrammeme } from '../../labels';
-import { type EntityReference, type SyntacticReference } from '../../models/language';
-import { parseGrammemes } from '../../models/language-api';
+import { describeConstituentaTerm } from '../../labels';
 import { type Constituenta, type RSForm } from '../../models/rsform';
 
 import { RefEntity } from './parse/parser.terms';

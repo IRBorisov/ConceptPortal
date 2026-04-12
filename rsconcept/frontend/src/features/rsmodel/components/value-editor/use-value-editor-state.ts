@@ -3,9 +3,10 @@
 import { useState } from 'react';
 
 import { type Constituenta } from '@/features/rsform';
-import { makeValuePath, TypeID, type Typification, type Value, type ValuePath } from '@/features/rslang';
-import { convertPathToType, extractValue } from '@/features/rslang/eval/value-api';
-import { applyPath } from '@/features/rslang/semantic/typification-api';
+
+import { makeValuePath, TypeID, type Typification, type Value, type ValuePath } from '@/domain/rslang';
+import { convertPathToType, extractValue } from '@/domain/rslang/eval/value-api';
+import { applyPath } from '@/domain/rslang/semantic/typification-api';
 
 import { type RSEngine } from '../../models/rsengine';
 import { addValueElement, deleteValueElement, updateValueElement } from '../../models/rsmodel-api';

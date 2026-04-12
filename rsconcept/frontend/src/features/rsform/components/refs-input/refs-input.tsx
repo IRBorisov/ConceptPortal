@@ -15,19 +15,22 @@ import clsx from 'clsx';
 import { useDebounce } from 'use-debounce';
 
 import { Label } from '@/components/input';
+import {
+  type Grammeme,
+  parseEntityReference,
+  parseGrammemes,
+  parseSyntacticReference,
+  referenceToString,
+  ReferenceType,
+  supportedGrammemes
+} from '@/domain/cctext';
 import { usePreferencesStore } from '@/stores/preferences';
 import { APP_COLORS } from '@/styling/colors';
 import { CodeMirrorWrapper } from '@/utils/codemirror';
 import { PARAMETER } from '@/utils/constants';
 import { withPreventDefault } from '@/utils/utils';
 
-import { type Grammeme, ReferenceType, supportedGrammemes } from '../../models/language';
-import {
-  parseEntityReference,
-  parseGrammemes,
-  parseSyntacticReference,
-  referenceToString
-} from '../../models/language-api';
+import { type EntityRefState, type InlinePosition, type SyntacticRefState } from '../../../../domain/cctext/reference';
 import { type RSForm } from '../../models/rsform';
 
 import { RefEntity, RefSyntactic } from './parse/parser.terms';
@@ -35,7 +38,6 @@ import { refsNavigation } from './click-navigation';
 import { InlineEntityEditor } from './inline-entity';
 import { InlineSyntacticEditor } from './inline-syntactic';
 import { NaturalLanguage, ReferenceTokens } from './parse';
-import { type EntityRefState, type InlinePosition, type SyntacticRefState } from './refs-models';
 import { refsHoverTooltip } from './tooltip';
 
 const editorSetup: BasicSetupOptions = {
