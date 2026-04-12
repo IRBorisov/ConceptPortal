@@ -100,6 +100,27 @@ describe('RSFormLoader', () => {
     expect(cst!.term_resolved).toBe(item.term_resolved);
     expect(cst!.definition_resolved).toBe(item.definition_resolved);
     expect(cst!.crucial).toBe(item.crucial);
+    expect(cst!.isHomonym).toBe(false);
+  });
+
+  it('should set isHomonym when multiple constituents share a non-empty term_resolved', () => {
+    const a = createCst(1, 'X1', CstType.BASE, '', 'same');
+    const b = createCst(2, 'X2', CstType.BASE, '', 'same');
+    const c = createCst(3, 'X3', CstType.BASE, '', 'other');
+    const dto = createMinimalDTO({ items: [a, b, c] });
+    const rsform = new RSFormLoader(dto).produceRSForm();
+    expect(rsform.cstByID.get(1)!.isHomonym).toBe(true);
+    expect(rsform.cstByID.get(2)!.isHomonym).toBe(true);
+    expect(rsform.cstByID.get(3)!.isHomonym).toBe(false);
+  });
+
+  it('should not mark homonyms for empty or whitespace-only term_resolved', () => {
+    const a = createCst(1, 'X1', CstType.BASE, '', '');
+    const b = createCst(2, 'X2', CstType.BASE, '', '   ');
+    const dto = createMinimalDTO({ items: [a, b] });
+    const rsform = new RSFormLoader(dto).produceRSForm();
+    expect(rsform.cstByID.get(1)!.isHomonym).toBe(false);
+    expect(rsform.cstByID.get(2)!.isHomonym).toBe(false);
   });
 
   it('should create analysis on parsed item', () => {

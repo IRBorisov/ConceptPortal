@@ -44,6 +44,7 @@ export class RSFormLoader {
     this.createGraph();
     this.inferCstAttributes();
     this.parseItems();
+    this.markHomonyms();
 
     const result = this.schema;
     result.analyzer = this.analyzer;
@@ -118,6 +119,32 @@ export class RSFormLoader {
       const container = this.cstByID.get(attrib.container)!;
       container.attributes.push(attrib.attribute);
       this.association_graph.addEdge(attrib.container, attrib.attribute);
+    }
+  }
+
+  private markHomonyms(): void {
+    const byTerm = new Map<string, Constituenta[]>();
+    for (const cst of this.schema.items) {
+      const key = cst.term_resolved.trim().toLocaleLowerCase();
+      if (key === '') {
+        continue;
+      }
+      let group = byTerm.get(key);
+      if (!group) {
+        group = [];
+        byTerm.set(key, group);
+      }
+      group.push(cst);
+    }
+    for (const cst of this.schema.items) {
+      cst.isHomonym = false;
+    }
+    for (const group of byTerm.values()) {
+      if (group.length > 1) {
+        for (const cst of group) {
+          cst.isHomonym = true;
+        }
+      }
     }
   }
 

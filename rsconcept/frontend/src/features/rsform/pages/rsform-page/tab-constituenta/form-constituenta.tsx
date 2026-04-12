@@ -208,7 +208,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
             id='cst_term'
             aria-label='Термин'
             maxHeight='8rem'
-            areaClassName={needsInterpretation && !field.state.value ? 'cm-error' : ''}
+            areaClassName={(needsInterpretation && !field.state.value) || activeCst.isHomonym ? 'cm-error' : ''}
             placeholder={disabled ? '' : 'Обозначение для текстовых определений'}
             schema={schema}
             onOpenEdit={onOpenEdit}
@@ -219,7 +219,11 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
             disabled={disabled}
             error={
               field.state.meta.errors[0]?.message ??
-              (needsInterpretation && !field.state.value ? 'Заполните термин' : undefined)
+              (needsInterpretation && !field.state.value
+                ? 'Заполните термин'
+                : activeCst.isHomonym
+                  ? 'Термин совпадает с другим понятием'
+                  : undefined)
             }
           />
         )}

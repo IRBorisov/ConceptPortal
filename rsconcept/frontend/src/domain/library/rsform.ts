@@ -93,6 +93,7 @@ export interface Constituenta {
   term_forms: TermForm[];
   attributes: number[];
 
+  isHomonym: boolean;
   analysis: RO<AnalysisBase>;
 
   /** Identifier of {@link LibraryItem} containing this {@link Constituenta}. */
