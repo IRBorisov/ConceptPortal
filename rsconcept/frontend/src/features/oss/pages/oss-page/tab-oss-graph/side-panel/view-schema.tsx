@@ -91,7 +91,6 @@ export function ViewSchema({ schemaID, isMutable }: ViewSchemaProps) {
       />
 
       <ViewConstituents
-        dense
         noBorder
         className='border-y rounded-none'
         schema={schema}

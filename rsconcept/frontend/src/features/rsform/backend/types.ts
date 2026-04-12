@@ -47,9 +47,6 @@ export type InlineSynthesisDTO = z.infer<typeof schemaInlineSynthesis>;
 /** Represents data, used in merging multiple {@link Constituenta}. */
 export type SubstitutionsDTO = z.infer<typeof schemaSubstitutions>;
 
-/** Represents data for creating or deleting an Attribution. */
-export type Attribution = z.infer<typeof schemaAttribution>;
-
 /** Represents data for clearing all attributions for a target constituenta. */
 export type AttributionTargetDTO = z.infer<typeof schemaAttributionTarget>;
 

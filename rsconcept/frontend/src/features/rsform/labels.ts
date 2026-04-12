@@ -10,7 +10,6 @@ import { type VersionInfo } from '../library/backend/types';
 import { type CurrentVersion } from '../library/models/library';
 
 import { type Constituenta, CstClass, CstStatus, CstType } from './models/rsform';
-import { CstMatchMode } from './stores/cst-search';
 import { type InteractionMode, type TGColoring, type TGEdgeType } from './stores/term-graph';
 
 // --- Records for label/describe functions ---
@@ -58,22 +57,6 @@ const labelGraphTypeRecord: Record<TGEdgeType, string> = {
   full: 'Связь: Все',
   definition: 'Связь: Определение',
   attribution: 'Связь: Атрибутирование'
-};
-
-const labelCstMatchModeRecord: Record<CstMatchMode, string> = {
-  [CstMatchMode.ALL]: 'фильтр',
-  [CstMatchMode.EXPR]: 'выражение',
-  [CstMatchMode.TERM]: 'термин',
-  [CstMatchMode.TEXT]: 'текст',
-  [CstMatchMode.NAME]: 'имя'
-};
-
-const describeCstMatchModeRecord: Record<CstMatchMode, string> = {
-  [CstMatchMode.ALL]: 'все атрибуты',
-  [CstMatchMode.EXPR]: 'формальное определение',
-  [CstMatchMode.TERM]: 'термин',
-  [CstMatchMode.TEXT]: 'определение и конвенция',
-  [CstMatchMode.NAME]: 'только имена'
 };
 
 const labelExpressionStatusRecord: Record<CstStatus, string> = {
@@ -237,16 +220,6 @@ export function getRSDefinitionPlaceholder(type: CstType): string {
 /** Generates description for {@link TokenID}. */
 export function describeToken(id: TokenID): string {
   return describeTokenRecord[id] ?? `no description: ${id}`;
-}
-
-/** Retrieves label for {@link CstMatchMode}. */
-export function labelCstMatchMode(mode: CstMatchMode): string {
-  return labelCstMatchModeRecord[mode] ?? `UNKNOWN MATCH MODE: ${mode}`;
-}
-
-/** Retrieves description for {@link CstMatchMode}. */
-export function describeCstMatchMode(mode: CstMatchMode): string {
-  return describeCstMatchModeRecord[mode] ?? `UNKNOWN MATCH MODE: ${mode}`;
 }
 
 /** Retrieves label for {@link TGColoring}. */

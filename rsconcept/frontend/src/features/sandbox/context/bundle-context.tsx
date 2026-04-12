@@ -3,7 +3,6 @@ import { createContext, use } from 'react';
 import { type UpdateLibraryItemDTO } from '@/features/library';
 import { type RSForm } from '@/features/rsform';
 import {
-  type Attribution,
   type AttributionTargetDTO,
   type ConstituentaCreatedResponse,
   type CreateConstituentaDTO,
@@ -12,7 +11,7 @@ import {
   type UpdateConstituentaDTO,
   type UpdateCrucialDTO
 } from '@/features/rsform/backend/types';
-import { type Substitution } from '@/features/rsform/models/rsform';
+import { type Attribution, type Substitution } from '@/features/rsform/models/rsform';
 import { type RSEngine, type RSModelDTO } from '@/features/rsmodel';
 
 import { type RO } from '@/utils/meta';

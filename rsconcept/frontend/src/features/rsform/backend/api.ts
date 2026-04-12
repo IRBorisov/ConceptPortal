@@ -7,11 +7,10 @@ import { queryClient } from '@/backend/query-client';
 import { infoMsg } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 
-import { type RSForm } from '../models/rsform';
+import { type Attribution, type RSForm } from '../models/rsform';
 
 import { loadRSForm } from './rsform-loader';
 import {
-  type Attribution,
   type AttributionTargetDTO,
   type ConstituentaCreatedResponse,
   type ConstituentaList,

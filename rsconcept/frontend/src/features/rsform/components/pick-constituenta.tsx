@@ -11,7 +11,6 @@ import { NoData } from '@/components/view';
 import { describeConstituenta } from '../labels';
 import { type Constituenta } from '../models/rsform';
 import { matchConstituenta } from '../models/rsform-api';
-import { CstMatchMode } from '../stores/cst-search';
 
 import { BadgeConstituenta } from './badge-constituenta';
 
@@ -38,7 +37,7 @@ export function PickConstituenta({
   initialFilter = '',
   rows = 4,
   describeFunc = describeConstituenta,
-  matchFunc = (cst, filter) => matchConstituenta(cst, filter, CstMatchMode.ALL),
+  matchFunc = (cst, filter) => matchConstituenta(cst, filter),
   onBeginFilter,
   onChange,
   className,

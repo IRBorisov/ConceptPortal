@@ -3,22 +3,9 @@ import { persist } from 'zustand/middleware';
 
 import { toggleTristateFlag } from '@/utils/utils';
 
-/** Represents {@link Constituenta} matching mode. */
-export const CstMatchMode = {
-  ALL: 1,
-  EXPR: 2,
-  TERM: 3,
-  TEXT: 4,
-  NAME: 5
-} as const;
-export type CstMatchMode = (typeof CstMatchMode)[keyof typeof CstMatchMode];
-
 interface CstSearchStore {
   query: string;
   setQuery: (value: string) => void;
-
-  match: CstMatchMode;
-  setMatch: (value: CstMatchMode) => void;
 
   isKernel: boolean;
   toggleKernel: () => void;
@@ -35,8 +22,6 @@ export const useCstSearchStore = create<CstSearchStore>()(
     set => ({
       query: '',
       setQuery: value => set({ query: value }),
-      match: CstMatchMode.ALL,
-      setMatch: value => set({ match: value }),
       isKernel: false,
       toggleKernel: () => set(state => ({ isKernel: !state.isKernel })),
       isInherited: null,
@@ -45,9 +30,8 @@ export const useCstSearchStore = create<CstSearchStore>()(
       toggleCrucial: () => set(state => ({ isCrucial: toggleTristateFlag(state.isCrucial) }))
     }),
     {
-      version: 1,
+      version: 2,
       partialize: state => ({
-        match: state.match,
         isKernel: state.isKernel,
         isInherited: state.isInherited,
         isCrucial: state.isCrucial

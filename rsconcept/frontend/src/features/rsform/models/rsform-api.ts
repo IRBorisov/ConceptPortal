@@ -4,18 +4,11 @@
 
 import { BASIC_SCHEMAS, type LibraryItem } from '@/features/library';
 
-import { type AnalysisFull, TypeClass, type TypePath, ValueClass } from '@/domain/rslang';
-import {
-  type EchelonFunctional,
-  isTypification,
-  TypeID,
-  type Typification
-} from '@/domain/rslang/semantic/typification';
+import { type AnalysisFull, TypeClass, TypeID, type TypePath, type Typification, ValueClass } from '@/domain/rslang';
+import { type EchelonFunctional, isTypification } from '@/domain/rslang/semantic/typification';
 import { applyPath } from '@/domain/rslang/semantic/typification-api';
 import { type RO } from '@/utils/meta';
 import { TextMatcher } from '@/utils/utils';
-
-import { CstMatchMode } from '../stores/cst-search';
 
 import {
   type ArgumentValue,
@@ -28,28 +21,16 @@ import {
   type RSFormStats
 } from './rsform';
 
-/**
- * Checks if a given target {@link Constituenta} matches the specified query using the provided matching mode.
- *
- * @param target - The target object to be matched.
- * @param query - The query string used for matching.
- * @param mode - The matching mode to determine which properties to include in the matching process.
- */
-export function matchConstituenta(target: RO<Constituenta>, query: string, mode: CstMatchMode): boolean {
+/** Checks if a given target {@link Constituenta} matches the specified query. */
+export function matchConstituenta(target: RO<Constituenta>, query: string): boolean {
   const matcher = new TextMatcher(query);
-  if ((mode === CstMatchMode.ALL || mode === CstMatchMode.NAME) && matcher.test(target.alias)) {
-    return true;
-  }
-  if ((mode === CstMatchMode.ALL || mode === CstMatchMode.TERM) && matcher.test(target.term_resolved)) {
-    return true;
-  }
-  if ((mode === CstMatchMode.ALL || mode === CstMatchMode.EXPR) && matcher.test(target.definition_formal)) {
-    return true;
-  }
-  if (mode === CstMatchMode.ALL || mode === CstMatchMode.TEXT) {
-    return matcher.test(target.definition_resolved) || matcher.test(target.convention);
-  }
-  return false;
+  return (
+    matcher.test(target.alias) ||
+    matcher.test(target.term_resolved) ||
+    matcher.test(target.definition_formal) ||
+    matcher.test(target.definition_resolved) ||
+    matcher.test(target.convention)
+  );
 }
 
 /**

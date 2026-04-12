@@ -21,9 +21,6 @@ import { ToolbarConstituenta } from './toolbar-constituenta';
 // Threshold window width to switch layout.
 const SIDELIST_LAYOUT_THRESHOLD = 1000; // px
 
-// Window width cutoff for dense search bar
-const COLUMN_DENSE_SEARCH_THRESHOLD = 1100;
-
 export function TabConstituenta() {
   const router = useConceptNavigation();
   const {
@@ -151,7 +148,6 @@ export function TabConstituenta() {
         schema={schema}
         activeCst={activeCst}
         onActivate={cst => router.changeActive(cst.id)}
-        dense={!!windowSize.width && windowSize.width < COLUMN_DENSE_SEARCH_THRESHOLD}
         maxListHeight={listHeight}
         autoScroll={!isNarrow}
       />

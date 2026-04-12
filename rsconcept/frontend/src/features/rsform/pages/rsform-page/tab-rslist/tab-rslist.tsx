@@ -14,7 +14,6 @@ import { useFitHeight } from '@/stores/app-layout';
 import { withPreventDefault } from '@/utils/utils';
 
 import { matchConstituenta } from '../../../models/rsform-api';
-import { CstMatchMode } from '../../../stores/cst-search';
 import { useRSFormEdit } from '../rsedit-context';
 
 import { TableRSFormList } from './table-rsform-list';
@@ -38,9 +37,7 @@ export function TabRSList() {
   } = useRSFormEdit();
 
   const [filterText, setFilterText] = useState('');
-  const filtered = filterText
-    ? schema.items.filter(cst => matchConstituenta(cst, filterText, CstMatchMode.ALL))
-    : schema.items;
+  const filtered = filterText ? schema.items.filter(cst => matchConstituenta(cst, filterText)) : schema.items;
 
   const rowSelection: RowSelectionState = Object.fromEntries(
     filtered.map((cst, index) => [String(index), selectedCst.includes(cst.id)])

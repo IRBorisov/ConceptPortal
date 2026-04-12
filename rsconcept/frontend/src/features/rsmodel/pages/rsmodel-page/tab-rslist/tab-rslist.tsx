@@ -7,7 +7,6 @@ import { useConceptNavigation } from '@/app';
 import { CstType } from '@/features/rsform/models/rsform';
 import { matchConstituenta } from '@/features/rsform/models/rsform-api';
 import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
-import { CstMatchMode } from '@/features/rsform/stores/cst-search';
 
 import { ExportDropdown } from '@/components/control/export-dropdown';
 import { type RowSelectionState } from '@/components/data-table';
@@ -39,9 +38,7 @@ export function TabRSList() {
   const { engine } = useRSModelEdit();
 
   const [filterText, setFilterText] = useState('');
-  const filtered = filterText
-    ? schema.items.filter(cst => matchConstituenta(cst, filterText, CstMatchMode.ALL))
-    : schema.items;
+  const filtered = filterText ? schema.items.filter(cst => matchConstituenta(cst, filterText)) : schema.items;
 
   const rowSelection: RowSelectionState = Object.fromEntries(
     filtered.map((cst, index) => [String(index), selectedCst.includes(cst.id)])

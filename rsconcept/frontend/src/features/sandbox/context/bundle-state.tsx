@@ -6,7 +6,6 @@ import { toast } from 'react-toastify';
 import { type UpdateLibraryItemDTO } from '@/features/library';
 import { loadRSForm } from '@/features/rsform/backend/rsform-loader';
 import {
-  type Attribution,
   type AttributionTargetDTO,
   type ConstituentaCreatedResponse,
   type CreateConstituentaDTO,
@@ -15,7 +14,7 @@ import {
   type UpdateConstituentaDTO,
   type UpdateCrucialDTO
 } from '@/features/rsform/backend/types';
-import { type Substitution } from '@/features/rsform/models/rsform';
+import { type Attribution, type Substitution } from '@/features/rsform/models/rsform';
 import { RSEngine, type RSEngineServices } from '@/features/rsmodel/models/rsengine';
 
 import { errorMsg } from '@/utils/labels';

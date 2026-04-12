@@ -20,7 +20,6 @@ interface ViewConstituentsProps {
   className?: string;
   maxListHeight?: string;
   noBorder?: boolean;
-  dense?: boolean;
   autoScroll?: boolean;
 }
 
@@ -34,13 +33,12 @@ export function ViewConstituents({
 
   className,
   maxListHeight,
-  dense,
   noBorder,
   autoScroll
 }: ViewConstituentsProps) {
   return (
     <div className={cn(!noBorder && 'border', className)}>
-      <ConstituentsSearch dense={dense} />
+      <ConstituentsSearch />
       <TableSideConstituents
         schema={schema}
         engine={engine}

@@ -9,11 +9,9 @@ import {
   type VersionInfo
 } from '@/features/library';
 
-import { type Graph } from '@/domain/graph/graph';
+import { type Graph } from '@/domain/graph';
 import { type AnalysisBase, type ExpressionType, type RSLangAnalyzer, type TypePath } from '@/domain/rslang';
 import { type RO } from '@/utils/meta';
-
-import { type Attribution } from '../backend/types';
 
 /** Represents {@link Constituenta} type. */
 export const CstType = {
@@ -28,6 +26,12 @@ export const CstType = {
   THEOREM: 'theorem'
 } as const;
 export type CstType = (typeof CstType)[keyof typeof CstType];
+
+/** Represents attribution of a {@link Constituenta} to another {@link Constituenta}. */
+export interface Attribution {
+  container: number;
+  attribute: number;
+}
 
 /** Represents function argument definition. */
 export interface ArgumentInfo {

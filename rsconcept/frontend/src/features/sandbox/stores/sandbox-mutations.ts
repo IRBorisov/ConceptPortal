@@ -1,6 +1,5 @@
 import { LibraryItemType, type UpdateLibraryItemDTO } from '@/features/library/backend/types';
 import {
-  type Attribution,
   type AttributionTargetDTO,
   type ConstituentaBasicsDTO,
   type CreateConstituentaDTO,
@@ -8,7 +7,7 @@ import {
   type UpdateConstituentaDTO,
   type UpdateCrucialDTO
 } from '@/features/rsform/backend/types';
-import { CstType, type RSForm, type Substitution } from '@/features/rsform/models/rsform';
+import { type Attribution, CstType, type RSForm, type Substitution } from '@/features/rsform/models/rsform';
 import { getCstTypePrefix } from '@/features/rsform/models/rsform-api';
 import { type ConstituentaDataDTO, type ConstituentaValue, type RSModelDTO } from '@/features/rsmodel/backend/types';
 

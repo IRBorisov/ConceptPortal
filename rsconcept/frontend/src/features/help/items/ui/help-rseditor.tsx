@@ -3,7 +3,6 @@ import {
   IconClone,
   IconCrucial,
   IconDestroy,
-  IconFilter,
   IconGraphCore,
   IconKeyboard,
   IconLeftOpen,
@@ -14,6 +13,7 @@ import {
   IconPredecessor,
   IconReset,
   IconSave,
+  IconSearch,
   IconStatusOK,
   IconTree,
   IconTypeGraph
@@ -70,7 +70,7 @@ export function HelpRSEditor() {
               <IconMoveUp className='inline-icon' /> <kbd>Alt + вверх/вниз</kbd>
             </li>
             <li>
-              <IconFilter className='inline-icon' /> фильтрация по атрибутам
+              <IconSearch className='inline-icon' /> фильтрация по атрибутам
             </li>
             <li>
               <IconGraphCore className='inline-icon' /> фильтрация по неопределяемым

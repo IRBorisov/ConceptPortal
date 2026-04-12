@@ -12,7 +12,6 @@ import { Graph } from '@/domain/graph/graph';
 import { describeConstituenta } from '../labels';
 import { type Constituenta, type RSForm } from '../models/rsform';
 import { isBasicConcept, matchConstituenta } from '../models/rsform-api';
-import { CstMatchMode } from '../stores/cst-search';
 
 import { BadgeConstituenta } from './badge-constituenta';
 import { ToolbarGraphSelection } from './toolbar-graph-selection';
@@ -44,7 +43,7 @@ export function PickMultiConstituenta({
 }: PickMultiConstituentaProps) {
   const [filterText, setFilterText] = useState('');
 
-  const filtered = filterText ? items.filter(cst => matchConstituenta(cst, filterText, CstMatchMode.ALL)) : items;
+  const filtered = filterText ? items.filter(cst => matchConstituenta(cst, filterText)) : items;
   const rowSelection: RowSelectionState = Object.fromEntries(
     filtered.map((cst, index) => [String(index), value.includes(cst.id)])
   );

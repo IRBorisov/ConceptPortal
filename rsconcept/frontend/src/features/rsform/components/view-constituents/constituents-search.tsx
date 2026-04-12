@@ -7,20 +7,12 @@ import { tripleToggleColor } from '@/utils/utils';
 
 import { useCstSearchStore } from '../../stores/cst-search';
 
-import { SelectMatchMode } from './select-match-mode';
-
-interface ConstituentsSearchProps {
-  dense?: boolean;
-}
-
-export function ConstituentsSearch({ dense }: ConstituentsSearchProps) {
+export function ConstituentsSearch() {
   const query = useCstSearchStore(state => state.query);
-  const filterMatch = useCstSearchStore(state => state.match);
   const showInherited = useCstSearchStore(state => state.isInherited);
   const showCrucial = useCstSearchStore(state => state.isCrucial);
   const showKernel = useCstSearchStore(state => state.isKernel);
   const setQuery = useCstSearchStore(state => state.setQuery);
-  const setMatch = useCstSearchStore(state => state.setMatch);
   const toggleKernel = useCstSearchStore(state => state.toggleKernel);
   const toggleInherited = useCstSearchStore(state => state.toggleInherited);
   const toggleCrucial = useCstSearchStore(state => state.toggleCrucial);
@@ -34,7 +26,6 @@ export function ConstituentsSearch({ dense }: ConstituentsSearchProps) {
         query={query}
         onChangeQuery={setQuery}
       />
-      <SelectMatchMode value={filterMatch} onChange={setMatch} dense={dense} />
 
       <MiniButton
         title='Фильтр: неопределяемые понятия'

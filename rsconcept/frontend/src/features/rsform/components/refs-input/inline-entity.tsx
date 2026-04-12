@@ -13,7 +13,6 @@ import { isMac } from '@/utils/utils';
 import { type EntityRefState, type InlinePosition } from '../../../../domain/cctext/reference';
 import { type Constituenta, type RSForm } from '../../models/rsform';
 import { matchConstituenta } from '../../models/rsform-api';
-import { CstMatchMode } from '../../stores/cst-search';
 import { SelectWordForm } from '../select-word-form';
 
 interface InlineEntityEditorProps {
@@ -38,8 +37,7 @@ export function InlineEntityEditor({ schema, initial, position, onSave, onCancel
 
   const filteredItems = useMemo(() => {
     const source = schema.items.filter(cst => cst.term_resolved !== '');
-    const result =
-      query.trim() === '' ? source : source.filter(cst => matchConstituenta(cst, query.trim(), CstMatchMode.TERM));
+    const result = query.trim() === '' ? source : source.filter(cst => matchConstituenta(cst, query.trim()));
     return result.slice(0, 8);
   }, [query, schema.items]);
   const canSubmit = entity.trim() !== '' && grams.length > 0;
