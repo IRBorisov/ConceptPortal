@@ -96,7 +96,7 @@ export function FormEditCst({
             id='dlg_cst_term'
             label='Термин'
             maxHeight='3.75rem'
-            className='disabled:min-h-9'
+            areaClassName='disabled:min-h-9'
             placeholder='Обозначение для текстовых определений'
             schema={schema}
             value={field.state.value ?? ''}

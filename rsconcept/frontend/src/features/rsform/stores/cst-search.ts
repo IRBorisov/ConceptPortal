@@ -10,6 +10,10 @@ interface CstSearchStore {
   isKernel: boolean;
   toggleKernel: () => void;
 
+  isProblematic: boolean;
+  toggleProblematic: () => void;
+  focusProblematic: () => void;
+
   isInherited: boolean | null;
   toggleInherited: () => void;
 
@@ -17,22 +21,29 @@ interface CstSearchStore {
   toggleCrucial: () => void;
 }
 
+type PersistedCstSearchStore = Pick<CstSearchStore, 'isKernel' | 'isProblematic' | 'isInherited' | 'isCrucial'>;
+
 export const useCstSearchStore = create<CstSearchStore>()(
-  persist(
+  persist<CstSearchStore, [], [], PersistedCstSearchStore>(
     set => ({
       query: '',
       setQuery: value => set({ query: value }),
       isKernel: false,
       toggleKernel: () => set(state => ({ isKernel: !state.isKernel })),
+      isProblematic: false,
+      toggleProblematic: () => set(state => ({ isProblematic: !state.isProblematic })),
+      focusProblematic: () =>
+        set(() => ({ isProblematic: true, query: '', isKernel: false, isInherited: null, isCrucial: null })),
       isInherited: null,
       toggleInherited: () => set(state => ({ isInherited: toggleTristateFlag(state.isInherited) })),
       isCrucial: null,
       toggleCrucial: () => set(state => ({ isCrucial: toggleTristateFlag(state.isCrucial) }))
     }),
     {
-      version: 2,
+      version: 3,
       partialize: state => ({
         isKernel: state.isKernel,
+        isProblematic: state.isProblematic,
         isInherited: state.isInherited,
         isCrucial: state.isCrucial
       }),

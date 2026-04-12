@@ -11,10 +11,11 @@ import CodeMirror, {
   type ReactCodeMirrorProps,
   type ReactCodeMirrorRef
 } from '@uiw/react-codemirror';
-import clsx from 'clsx';
 import { useDebounce } from 'use-debounce';
 
-import { Label } from '@/components/input';
+import { ErrorField, Label } from '@/components/input';
+import { type ErrorProcessing } from '@/components/props';
+import { cn } from '@/components/utils';
 import {
   type EntityRefState,
   type Grammeme,
@@ -76,10 +77,13 @@ const SYNTACTIC_INLINE_WIDTH = 320;
 const BOTTOM_MARGIN = 20;
 const RIGHT_MARGIN = 40;
 
-interface RefsInputInputProps extends Pick<
-  ReactCodeMirrorProps,
-  'id' | 'height' | 'minHeight' | 'maxHeight' | 'value' | 'className' | 'onFocus' | 'onBlur' | 'placeholder'
-> {
+interface RefsInputInputProps
+  extends
+    ErrorProcessing,
+    Pick<
+      ReactCodeMirrorProps,
+      'id' | 'height' | 'minHeight' | 'maxHeight' | 'value' | 'className' | 'onFocus' | 'onBlur' | 'placeholder'
+    > {
   value: string;
   resolved: string;
   onChange: (newValue: string) => void;
@@ -92,6 +96,7 @@ interface RefsInputInputProps extends Pick<
   disabled?: boolean;
   initialValue?: string;
   portalHoverTooltips?: boolean;
+  areaClassName?: string;
 }
 
 export function RefsInput({
@@ -106,6 +111,9 @@ export function RefsInput({
   onFocus,
   onBlur,
   onChange,
+  className,
+  areaClassName,
+  error,
   ref,
   ...restProps
 }: RefsInputInputProps) {
@@ -330,10 +338,11 @@ export function RefsInput({
   }
 
   return (
-    <div ref={wrapperRef} className={clsx('relative flex flex-col gap-2', cursor)}>
-      <Label text={label} />
+    <div ref={wrapperRef} className={cn('relative flex flex-col', cursor, className)}>
+      <Label text={label} className='mb-2' />
       <CodeMirror
         ref={thisRef}
+        className={areaClassName}
         basicSetup={editorSetup}
         theme={customTheme}
         extensions={editorExtensions}
@@ -369,6 +378,7 @@ export function RefsInput({
             document.body
           )
         : null}
+      <ErrorField className='mt-1' error={error} />
     </div>
   );
 }

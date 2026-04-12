@@ -146,7 +146,7 @@ export function DlgStructurePlanner() {
             <RefsInput
               id='dlg_structure_term'
               placeholder='Термин не определен'
-              className='w-120'
+              areaClassName='w-120'
               maxHeight='6.75rem'
               portalHoverTooltips
               schema={currentSchema}

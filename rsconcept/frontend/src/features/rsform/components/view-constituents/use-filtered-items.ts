@@ -3,15 +3,17 @@ import { isBasicConcept, matchConstituenta } from '@/domain/library/rsform-api';
 
 import { useCstSearchStore } from '../../stores/cst-search';
 
-export function useFilteredItems(schema: RSForm): Constituenta[] {
+export function useFilteredItems(schema: RSForm, isProblematic?: (cst: Constituenta) => boolean): Constituenta[] {
   const query = useCstSearchStore(state => state.query);
   const showInherited = useCstSearchStore(state => state.isInherited);
   const showCrucial = useCstSearchStore(state => state.isCrucial);
   const showKernel = useCstSearchStore(state => state.isKernel);
+  const showProblematic = useCstSearchStore(state => state.isProblematic);
 
   const kernel = showKernel ? schema.items.filter(cst => isBasicConcept(cst.cst_type)) : schema.items;
   const filtered = query ? kernel.filter(cst => matchConstituenta(cst, query)) : kernel;
   let items = showInherited !== null ? filtered.filter(cst => cst.is_inherited === showInherited) : filtered;
+  items = showProblematic && isProblematic ? items.filter(cst => isProblematic(cst)) : items;
   items = showCrucial !== null ? items.filter(cst => cst.crucial === showCrucial) : items;
   return items;
 }

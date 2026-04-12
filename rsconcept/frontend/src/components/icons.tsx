@@ -137,7 +137,7 @@ export { RiLockUnlockLine as IconMutable }        from 'react-icons/ri';
 export { RiOpenSourceLine as IconPublic }         from 'react-icons/ri';
 export { RiShieldLine     as IconProtected }      from 'react-icons/ri';
 export { RiShieldKeyholeLine as IconPrivate }     from 'react-icons/ri';
-export { BiBug            as IconStatusError }    from 'react-icons/bi';
+export { AiOutlineBug     as IconStatusError }    from 'react-icons/ai';
 export { LuThumbsUp       as IconStatusOK }       from 'react-icons/lu';
 export { BiHelpCircle     as IconStatusUnknown }  from 'react-icons/bi';
 export { BiStopCircle     as IconStatusIncalculable } from 'react-icons/bi';

@@ -6,6 +6,7 @@ import { useConceptNavigation } from '@/app';
 import { ViewConstituents } from '@/features/rsform/components/view-constituents';
 import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
 
+import { isProblematic } from '@/domain/library/rsform-api';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight, useMainHeight } from '@/stores/app-layout';
 import { usePreferencesStore } from '@/stores/preferences';
@@ -76,6 +77,7 @@ export function TabEvaluator() {
         schema={schema}
         engine={engine}
         activeCst={activeCst}
+        isProblematic={isProblematic}
         onActivate={cst => router.changeActive(cst.id)}
         maxListHeight={listHeight}
         autoScroll={!isNarrow}

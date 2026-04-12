@@ -22,14 +22,15 @@ export function TabLabel({
   className,
   disabled,
   role = 'tab',
+  children,
   selectedClassName = 'text-foreground! bg-secondary',
   ...otherProps
-}: TabLabelProps) {
+}: React.PropsWithChildren<TabLabelProps>) {
   return (
     <TabImpl
       className={clsx(
         'min-w-20 h-full',
-        'px-2 py-1 flex justify-center',
+        'px-2 py-1 flex items-center justify-center gap-1',
         'cc-animate-color duration-select text-muted-foreground',
         'text-sm whitespace-nowrap font-controls',
         'select-none',
@@ -49,6 +50,7 @@ export function TabLabel({
       {...otherProps}
     >
       {label}
+      {children}
     </TabImpl>
   );
 }

@@ -8,6 +8,7 @@ import { ViewConstituents } from '@/features/rsform/components/view-constituents
 import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
 import { useRoleStore, UserRole } from '@/features/users';
 
+import { isProblematic } from '@/domain/library/rsform-api';
 import { isInferrable } from '@/domain/library/rsmodel-api';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight, useMainHeight } from '@/stores/app-layout';
@@ -109,6 +110,7 @@ export function TabValue() {
         schema={schema}
         engine={engine}
         activeCst={activeCst}
+        isProblematic={isProblematic}
         onActivate={cst => router.changeActive(cst.id)}
         maxListHeight={listHeight}
         autoScroll={!isNarrow}

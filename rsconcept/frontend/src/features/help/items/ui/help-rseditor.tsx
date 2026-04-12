@@ -14,6 +14,7 @@ import {
   IconReset,
   IconSave,
   IconSearch,
+  IconStatusError,
   IconStatusOK,
   IconTree,
   IconTypeGraph
@@ -73,13 +74,16 @@ export function HelpRSEditor() {
               <IconSearch className='inline-icon' /> фильтрация по атрибутам
             </li>
             <li>
-              <IconGraphCore className='inline-icon' /> фильтрация по неопределяемым
+              <IconStatusError className='inline-icon' /> проблемные понятия
             </li>
             <li>
-              <IconCrucial className='inline-icon' /> фильтрация ключевым
+              <IconGraphCore className='inline-icon' /> неопределяемые
             </li>
             <li>
-              <IconChild className='inline-icon' /> отображение наследованных
+              <IconCrucial className='inline-icon' /> ключевые
+            </li>
+            <li>
+              <IconChild className='inline-icon' /> наследники / собственные
             </li>
             <li>
               <span className='cc-sample-color bg-selected' />

@@ -14,7 +14,7 @@ import { CardRSFormStats } from '@/features/rsform/components/rsform-stats';
 import { ViewConstituents } from '@/features/rsform/components/view-constituents';
 
 import { type Constituenta } from '@/domain/library';
-import { calculateSchemaStats } from '@/domain/library/rsform-api';
+import { calculateSchemaStats, isProblematic } from '@/domain/library/rsform-api';
 import { useFitHeight } from '@/stores/app-layout';
 import { useDialogsStore } from '@/stores/dialogs';
 
@@ -95,6 +95,7 @@ export function ViewSchema({ schemaID, isMutable }: ViewSchemaProps) {
         className='border-y rounded-none'
         schema={schema}
         activeCst={activeCst}
+        isProblematic={isProblematic}
         onActivate={cst => setActiveID(cst.id)}
         maxListHeight={listHeight}
         onDoubleClick={isMutable ? handleEditCst : undefined}

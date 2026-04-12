@@ -6,11 +6,15 @@ import { RSModelTabID, useConceptNavigation } from '@/app/navigation/navigation-
 import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
 import { TabConstituenta } from '@/features/rsform/pages/rsform-page/tab-constituenta';
 import { TabTermGraph } from '@/features/rsform/pages/rsform-page/tab-term-graph';
+import { useCstSearchStore } from '@/features/rsform/stores/cst-search';
 import { TabEvaluator } from '@/features/rsmodel/pages/rsmodel-page/tab-evaluator';
 import { TabRSList } from '@/features/rsmodel/pages/rsmodel-page/tab-rslist';
 import { TabValue } from '@/features/rsmodel/pages/rsmodel-page/tab-value';
 
+import { IconStatusError } from '@/components/icons';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
+import { IndicatorPill } from '@/components/view/indicator-pill';
+import { isProblematic } from '@/domain/library/rsform-api';
 import { useResetAttribute } from '@/hooks/use-reset-attribute';
 import { useAppLayoutStore } from '@/stores/app-layout';
 import { useModificationStore } from '@/stores/modification';
@@ -29,9 +33,14 @@ export function SandboxTabs({ activeID, activeTab }: SandboxTabsProps) {
 
   const hideFooter = useAppLayoutStore(state => state.hideFooter);
   const onHideFooterEvent = useEffectEvent(hideFooter);
+
+  const focusProblematic = useCstSearchStore(state => state.focusProblematic);
   const setIsModified = useModificationStore(state => state.setIsModified);
   const { schema, selectedCst, setSelectedCst, setSelectedEdges, deselectAll, pendingActiveID, clearPendingActiveID } =
     useRSFormEdit();
+
+  const problemItems = schema.items.filter(cst => isProblematic(cst));
+  const countProblematic = problemItems.length;
 
   useLayoutEffect(
     function updateWindowTitle() {
@@ -124,6 +133,15 @@ export function SandboxTabs({ activeID, activeTab }: SandboxTabsProps) {
     router.changeTab(index);
   }
 
+  function onFocusProblematic(event: React.MouseEvent<HTMLDivElement>) {
+    focusProblematic();
+    if (event.ctrlKey || event.metaKey) {
+      setSelectedCst(problemItems.map(cst => cst.id));
+    } else {
+      router.gotoEditActive(problemItems[0].id);
+    }
+  }
+
   const containerRef = useRef<HTMLDivElement>(null);
   useResetAttribute(containerRef, 'data-tooltip-id');
 
@@ -135,6 +153,17 @@ export function SandboxTabs({ activeID, activeTab }: SandboxTabsProps) {
       className='relative flex flex-col min-w-fit items-center'
     >
       <TabList className='absolute z-sticky flex border-b-2 border-x-2 divide-x-2 bg-background'>
+        {countProblematic > 0 ? (
+          <IndicatorPill
+            className='absolute top-1.5 -left-1.5 -translate-x-full hidden xs:inline-flex'
+            icon={<IconStatusError size='0.8rem' />}
+            value={countProblematic}
+            color='destructive'
+            title={`Проблемных понятий: ${countProblematic}`}
+            onClick={onFocusProblematic}
+          />
+        ) : null}
+
         <div className='flex border-r-2'>
           <MenuMain />
           <MenuEdit />

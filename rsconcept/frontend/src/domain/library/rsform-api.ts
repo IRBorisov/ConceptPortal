@@ -31,6 +31,19 @@ export function matchConstituenta(target: RO<Constituenta>, query: string): bool
   );
 }
 
+/** Checks if {@link Constituenta} is problematic. */
+export function isProblematic(cst: Constituenta): boolean {
+  if (cst.status === CstStatus.INCORRECT || cst.status === CstStatus.INCALCULABLE) {
+    return true;
+  }
+  if (isBasicConcept(cst.cst_type) && !isLogical(cst.cst_type)) {
+    if (!cst.convention || !cst.term_resolved) {
+      return true;
+    }
+  }
+  return false;
+}
+
 /**
  * Infers the status of an expression based on parsing and value information.
  *

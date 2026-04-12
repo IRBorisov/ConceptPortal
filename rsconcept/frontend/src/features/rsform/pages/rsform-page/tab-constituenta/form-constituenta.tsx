@@ -11,7 +11,13 @@ import { IconChild, IconPredecessor, IconSave } from '@/components/icons';
 import { Label, TextArea } from '@/components/input';
 import { Indicator } from '@/components/view';
 import { type Constituenta, CstType, type RSForm } from '@/domain/library';
-import { cstCanProduceStructure, getAnalysisFor, isBaseSet, isBasicConcept } from '@/domain/library/rsform-api';
+import {
+  cstCanProduceStructure,
+  getAnalysisFor,
+  isBaseSet,
+  isBasicConcept,
+  isLogical
+} from '@/domain/library/rsform-api';
 import { type AnalysisFull, TypeID } from '@/domain/rslang';
 import { labelType } from '@/domain/rslang/labels';
 import { useDialogsStore } from '@/stores/dialogs';
@@ -101,6 +107,8 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
   const isBasic = isBasicConcept(activeCst.cst_type);
   const isElementary = isBaseSet(activeCst.cst_type);
   const showConvention = !!activeCst.convention || forceComment || isBasic;
+
+  const needsInterpretation = isBasic && !isLogical(activeCst.cst_type);
 
   useLayoutEffect(
     function resetGlobalModifiedFlagOnCstChange() {
@@ -200,6 +208,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
             id='cst_term'
             aria-label='Термин'
             maxHeight='8rem'
+            areaClassName={needsInterpretation && !field.state.value ? 'cm-error' : ''}
             placeholder={disabled ? '' : 'Обозначение для текстовых определений'}
             schema={schema}
             onOpenEdit={onOpenEdit}
@@ -208,6 +217,10 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
             resolved={activeCst.term_resolved}
             onChange={newValue => field.handleChange(newValue)}
             disabled={disabled}
+            error={
+              field.state.meta.errors[0]?.message ??
+              (needsInterpretation && !field.state.value ? 'Заполните термин' : undefined)
+            }
           />
         )}
       </form.Field>
@@ -301,7 +314,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
               fitContent
               areaClassName={clsx(
                 'disabled:min-h-9 max-h-32',
-                isBasic && !field.state.value && 'border-destructive! outline-destructive!'
+                needsInterpretation && !field.state.value && 'border-destructive! outline-destructive!'
               )}
               spellCheck
               label={isBasic ? 'Конвенция' : 'Комментарий'}
@@ -314,7 +327,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
               onBlur={field.handleBlur}
               error={
                 field.state.meta.errors[0]?.message ??
-                (isBasic && !field.state.value ? 'Заполните конвенцию' : undefined)
+                (needsInterpretation && !field.state.value ? 'Заполните конвенцию' : undefined)
               }
             />
           )}
