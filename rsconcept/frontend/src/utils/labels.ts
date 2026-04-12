@@ -30,6 +30,7 @@ export const infoMsg = {
   inlineSynthesisComplete: 'Встраивание завершено',
   moveSuccess: 'Перемещение завершено',
   sandboxImportSuccess: 'Песочница обновлена успешно',
+  sandboxFailedToLoad: 'Не удалось загрузить песочницу. Загружен начальный набор.',
 
   newLibraryItem: 'Схема успешно создана',
   addedConstituents: (count: number) => `Добавлены конституенты: ${count}`,

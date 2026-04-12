@@ -1,6 +1,9 @@
+import { toast } from 'react-toastify';
 import fileDownload from 'js-file-download';
 
-import { assertModelSchemaInvariant, type SandboxBundle, schemaSandboxBundle } from '../models/bundle';
+import { infoMsg } from '@/utils/labels';
+
+import { type SandboxBundle, schemaSandboxBundle } from '../models/bundle';
 import { createStarterSandboxBundle } from '../models/bundle-starter';
 
 import { sandboxDB } from './sandbox-db';
@@ -14,16 +17,20 @@ export async function loadBundle(): Promise<SandboxBundle | null> {
 }
 
 export async function saveBundle(bundle: SandboxBundle): Promise<void> {
-  assertModelSchemaInvariant(bundle);
   const parsed = schemaSandboxBundle.parse(bundle);
   await sandboxDB.bundle.put({ id: ROW_ID, bundle: parsed });
 }
 
-/** Ensure Dexie has a document; seed from code when empty. */
+/** Ensure Dexie has a document; seed from code when empty or stored data is invalid. */
 export async function ensureBundleLoaded(): Promise<SandboxBundle> {
   const existing = await loadBundle();
   if (existing) {
-    return schemaSandboxBundle.parse(existing);
+    const parsed = schemaSandboxBundle.safeParse(existing);
+    if (parsed.success) {
+      return parsed.data;
+    } else {
+      toast.info(infoMsg.sandboxFailedToLoad);
+    }
   }
   const starter = createStarterSandboxBundle();
   await saveBundle(starter);
@@ -35,7 +42,6 @@ export function parseBundleJson(raw: unknown): SandboxBundle {
   if (!parsed.success) {
     throw new Error('Неверный файл песочницы');
   }
-  assertModelSchemaInvariant(parsed.data);
   return parsed.data;
 }
 

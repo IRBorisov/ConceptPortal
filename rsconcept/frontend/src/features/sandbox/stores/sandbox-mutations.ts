@@ -14,7 +14,7 @@ import { type Attribution, CstType, type RSForm, type Substitution } from '@/dom
 import { getCstTypePrefix } from '@/domain/library/rsform-api';
 import { nowIso } from '@/utils/format';
 
-import { assertModelSchemaInvariant, type SandboxBundle } from '../models/bundle';
+import { type SandboxBundle } from '../models/bundle';
 import { bumpBundle, cloneBundle } from '../models/bundle-api';
 import { applyMappingToConstituents } from '../models/mutations-api';
 
@@ -116,7 +116,6 @@ function restoreOrder(bundle: SandboxBundle, schema: RSForm): SandboxBundle {
 }
 
 function resetAliases(bundle: SandboxBundle): SandboxBundle {
-  assertModelSchemaInvariant(bundle);
   const next = cloneBundle(bundle);
   const counts: Record<string, number> = {};
   const mapping: Record<string, string> = {};

@@ -21,12 +21,6 @@ export const schemaSandboxBundle = z.strictObject({
 
 export type SandboxBundle = z.infer<typeof schemaSandboxBundle>;
 
-export function assertModelSchemaInvariant(bundle: SandboxBundle): void {
-  if (bundle.model.schema !== bundle.schema.id) {
-    throw new Error('Sandbox bundle invariant: model.schema must equal rsform.id');
-  }
-}
-
 /** Read/write hook for the active sandbox bundle (React state + Dexie persist). */
 export interface SandboxMutationSinkOptions {
   getBundle: () => SandboxBundle;
