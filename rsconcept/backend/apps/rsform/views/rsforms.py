@@ -136,7 +136,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
                 schema.apply_mapping(mapping=mapping, change_aliases=False)
                 if changed_type:
                     propagation.after_change_cst_type(item.pk, cst.pk, cast(m.CstType, cst.cst_type))
-                item.save(update_fields=['time_update'])
+            item.save(update_fields=['time_update'])
         return Response(
             status=c.HTTP_200_OK,
             data=s.RSFormParseSerializer(item).data
