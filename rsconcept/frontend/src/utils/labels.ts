@@ -91,7 +91,8 @@ export const errorMsg = {
   valueNull: 'Значение отсутствует',
   sandboxImportError: 'Не удалось перенести схему в песочницу',
   sandboxBundleNotAvailable: 'Песочница пуста',
-  failedToPersistSandbox: 'Не удалось сохранить песочницу'
+  failedToPersistSandbox: 'Не удалось сохранить песочницу',
+  cannotExtractNode: 'Невозможно вынести выбранный узел'
 } as const;
 
 /**

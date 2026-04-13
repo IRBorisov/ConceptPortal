@@ -64,7 +64,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
   const {
     toggleCrucial,
     patchConstituenta,
-    createCstFromData: createStructurePlannerConstituenta,
+    createCstFromData,
     openTermEditor,
     promptRename,
     addAttribution,
@@ -164,7 +164,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
       schema: schema,
       targetID: activeCst.spawner_path ? activeCst.spawner! : activeCst.id,
       isMutable: !disabled,
-      onCreate: createStructurePlannerConstituenta,
+      onCreate: createCstFromData,
       onUpdate: patchConstituenta
     });
   }
@@ -285,6 +285,8 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
               onAnalysis={setLocalParse}
               onOpenEdit={onOpenEdit}
               onShowTypeGraph={handleTypeGraph}
+              onAstCreate={createCstFromData}
+              onAstUpdate={patchConstituenta}
               disabled={disabled || activeCst.is_inherited}
             />
           )}

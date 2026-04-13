@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect } from 'react';
-import { type Edge, MarkerType, useEdgesState, useNodesState } from '@xyflow/react';
+import { useEffect, useRef } from 'react';
+import { type Edge, MarkerType, type Node, useEdgesState, useNodesState, useOnSelectionChange } from '@xyflow/react';
 
 import { DiagramFlow } from '@/components/flow/diagram-flow';
 import { type RO } from '@/utils/meta';
@@ -24,14 +24,36 @@ const flowOptions = {
 
 interface ASTFlowProps {
   data: RO<FlatAST>;
+  selectedIds: number[];
+  onSelectedIdsChange: (ids: number[]) => void;
   onNodeEnter: (node: ASTNode) => void;
   onNodeLeave: (node: ASTNode) => void;
   onChangeDragging: (value: boolean) => void;
 }
 
-export function ASTFlow({ data, onNodeEnter, onNodeLeave, onChangeDragging }: ASTFlowProps) {
+export function ASTFlow({
+  data,
+  selectedIds,
+  onSelectedIdsChange,
+  onNodeEnter,
+  onNodeLeave,
+  onChangeDragging
+}: ASTFlowProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState<ASTNode>([]);
   const [edges, setEdges] = useEdgesState<Edge>([]);
+
+  const isLoadingSelection = useRef(false);
+
+  function handleSelectionChange({ nodes: selectedNodes }: { nodes: Node[] }) {
+    if (isLoadingSelection.current) {
+      return;
+    }
+    onSelectedIdsChange(selectedNodes.map(node => Number(node.id)));
+  }
+
+  useOnSelectionChange({
+    onChange: handleSelectionChange
+  });
 
   useEffect(
     function updateGraph() {
@@ -62,10 +84,41 @@ export function ASTFlow({ data, onNodeEnter, onNodeLeave, onChangeDragging }: AS
 
       applyLayout(newNodes, newEdges);
 
-      setNodes(newNodes);
+      setNodes(prev =>
+        newNodes.map(node => ({
+          ...node,
+          selected: prev.find(item => item.id === node.id)?.selected ?? false
+        }))
+      );
       setEdges(newEdges);
     },
     [data, setNodes, setEdges]
+  );
+
+  const prevSelectedIdsRef = useRef<number[]>([]);
+  useEffect(
+    function syncSelectionToNodes() {
+      const prev = prevSelectedIdsRef.current;
+      const same = prev.length === selectedIds.length && prev.every((id, index) => id === selectedIds[index]);
+      if (same) {
+        return;
+      }
+      prevSelectedIdsRef.current = selectedIds;
+
+      isLoadingSelection.current = true;
+      setNodes(prevNodes =>
+        prevNodes.map(node => ({
+          ...node,
+          selected: selectedIds.includes(Number(node.id))
+        }))
+      );
+
+      const frame = requestAnimationFrame(function clearLoadingSelection() {
+        isLoadingSelection.current = false;
+      });
+      return () => cancelAnimationFrame(frame);
+    },
+    [selectedIds, setNodes]
   );
 
   return (

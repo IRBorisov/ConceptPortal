@@ -187,6 +187,18 @@
   transition-duration: var(--duration-move);
 }
 
+@utility cc-popover-extract {
+  transition-property: translate, opacity;
+  transition-timing-function: var(--ease-bezier);
+  transition-duration: var(--duration-move);
+  opacity: 1;
+
+  @starting-style {
+    translate: -50% 0;
+    opacity: 0;
+  }
+}
+
 @utility cc-animate-position {
   transition-property: transform top left bottom right margin padding;
   transition-timing-function: var(--ease-bezier);
