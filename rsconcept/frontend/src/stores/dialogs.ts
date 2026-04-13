@@ -24,7 +24,8 @@ import { type DlgEditCstProps } from '@/features/rsform/dialogs/dlg-edit-cst/dlg
 import { type DlgEditWordFormsProps } from '@/features/rsform/dialogs/dlg-edit-word-forms/dlg-edit-word-forms';
 import { type DlgInlineSynthesisProps } from '@/features/rsform/dialogs/dlg-inline-synthesis/dlg-inline-synthesis';
 import { type DlgRenameCstProps } from '@/features/rsform/dialogs/dlg-rename-cst';
-import { type DlgShowASTProps } from '@/features/rsform/dialogs/dlg-show-ast/dlg-show-ast';
+import { type DlgShowFlatAstProps } from '@/features/rsform/dialogs/dlg-show-ast';
+import { type DlgShowAstExtractProps } from '@/features/rsform/dialogs/dlg-show-ast-extract';
 import { type DlgShowQRProps } from '@/features/rsform/dialogs/dlg-show-qr';
 import { type DlgShowTermGraphProps } from '@/features/rsform/dialogs/dlg-show-term-graph/dlg-show-term-graph';
 import { type DlgShowTypeGraphProps } from '@/features/rsform/dialogs/dlg-show-type-graph/dlg-show-type-graph';
@@ -68,7 +69,7 @@ export const DialogType = {
   INLINE_SYNTHESIS: 23,
 
   SHOW_QR_CODE: 24,
-  SHOW_AST: 25,
+  SHOW_FLAT_AST: 25,
   SHOW_TYPE_GRAPH: 26,
   GRAPH_PARAMETERS: 27,
   SHOW_TERM_GRAPH: 28,
@@ -83,7 +84,9 @@ export const DialogType = {
   MODEL_EDIT_BINDING: 35,
 
   SHOW_VIDEO: 36,
-  STRUCTURE_PLANNER: 37
+  STRUCTURE_PLANNER: 37,
+
+  AST_EXTRACT_SUBTREE: 38
 } as const;
 export type DialogType = (typeof DialogType)[keyof typeof DialogType];
 
@@ -109,7 +112,8 @@ interface DialogsStore {
   showEditVersions: (props: DlgEditVersionsProps) => void;
   showEditWordForms: (props: DlgEditWordFormsProps) => void;
   showInlineSynthesis: (props: DlgInlineSynthesisProps) => void;
-  showShowAST: (props: DlgShowASTProps) => void;
+  showShowFlatAst: (props: DlgShowFlatAstProps) => void;
+  showShowAstExtract: (props: DlgShowAstExtractProps) => void;
   showShowTypeGraph: (props: DlgShowTypeGraphProps) => void;
   showShowTermGraph: (props: DlgShowTermGraphProps) => void;
   showChangeInputSchema: (props: DlgChangeInputSchemaProps) => void;
@@ -158,7 +162,8 @@ export const useDialogsStore = create<DialogsStore>()(set => ({
   showEditVersions: props => set({ active: DialogType.EDIT_VERSIONS, props: props }),
   showEditWordForms: props => set({ active: DialogType.EDIT_WORD_FORMS, props: props }),
   showInlineSynthesis: props => set({ active: DialogType.INLINE_SYNTHESIS, props: props }),
-  showShowAST: props => set({ active: DialogType.SHOW_AST, props: props }),
+  showShowFlatAst: props => set({ active: DialogType.SHOW_FLAT_AST, props: props }),
+  showShowAstExtract: props => set({ active: DialogType.AST_EXTRACT_SUBTREE, props: props }),
   showShowTypeGraph: props => set({ active: DialogType.SHOW_TYPE_GRAPH, props: props }),
   showShowTermGraph: props => set({ active: DialogType.SHOW_TERM_GRAPH, props: props }),
   showChangeInputSchema: props => set({ active: DialogType.CHANGE_INPUT_SCHEMA, props: props }),

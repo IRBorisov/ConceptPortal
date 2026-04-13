@@ -6,21 +6,20 @@ import { type ExpressionType } from './semantic/typification';
 import { type RSErrorCode, type RSErrorInfo } from './error';
 
 const AST_ERRORS_KEY = 'rsErrors' as const;
-const AST_TYPES_KEY = 'rsTypes' as const;
+const AST_TYPE_KEY = 'rsType' as const;
 
-/** Appends {@link ExpressionType} onto the node's `annotation.rsTypes`. */
+/** Appends {@link ExpressionType} onto the node's `annotation.rsType`. */
 export function annotateType(node: AstNode, type: ExpressionType): void {
   node.annotation = {
     ...(typeof node.annotation === 'object' && node.annotation !== null ? node.annotation : {}),
-    [AST_TYPES_KEY]: type
+    [AST_TYPE_KEY]: type
   };
 }
 
-/** Reads {@link ExpressionType} from a flat/tree node's `annotation`. */
-export function readTypeAnnotation(annotation: AstNode['annotation']): ExpressionType | null {
-  const raw = annotation?.[AST_TYPES_KEY];
-  if (raw) {
-    return raw as ExpressionType;
+/** Reads {@link ExpressionType} from node's `annotation`. */
+export function readTypeAnnotation(node: AstNode): ExpressionType | null {
+  if (node.annotation && AST_TYPE_KEY in node.annotation) {
+    return node.annotation[AST_TYPE_KEY] as ExpressionType;
   }
   return null;
 }
@@ -42,9 +41,9 @@ export function annotateError(node: AstNode, code: RSErrorCode, params?: readonl
   };
 }
 
-/** Reads validated {@link RSErrorInfo} entry from a flat/tree node's `annotation`. */
-export function readErrorAnnotation(annotation: AstNode['annotation']): RSErrorInfo | null {
-  const raw = annotation?.[AST_ERRORS_KEY];
+/** Reads validated {@link RSErrorInfo} entry from node's `annotation`. */
+export function readErrorAnnotation(node: AstNode): RSErrorInfo | null {
+  const raw = node.annotation?.[AST_ERRORS_KEY];
   if (isAstNodeErrorRef(raw)) {
     return raw;
   }

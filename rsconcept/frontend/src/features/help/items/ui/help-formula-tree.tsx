@@ -1,3 +1,5 @@
+import { IconNewItem } from '@/components/icons';
+
 export function HelpFormulaTree() {
   return (
     <div>
@@ -9,6 +11,9 @@ export function HelpFormulaTree() {
         <li>При наведении на узел выделяется фрагмент выражения и отображается типизация</li>
         <li>
           <kbd>Пробел</kbd> – перемещение экрана без наведения на узлы
+        </li>
+        <li>
+          <IconNewItem className='inline-icon' size='1rem' /> извлечение выделенного узла в новую конституенту
         </li>
       </ul>
 

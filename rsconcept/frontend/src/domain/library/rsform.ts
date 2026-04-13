@@ -28,12 +28,6 @@ export interface Attribution {
   attribute: number;
 }
 
-/** Represents function argument definition. */
-export interface ArgumentInfo {
-  alias: string;
-  typification: string;
-}
-
 /** Represents global identifier type info. */
 export interface TypeInfo {
   alias: string;
@@ -41,7 +35,9 @@ export interface TypeInfo {
 }
 
 /** Represents function argument value. */
-export interface ArgumentValue extends ArgumentInfo {
+export interface ArgumentValue {
+  alias: string;
+  typification: string;
   value?: string;
 }
 

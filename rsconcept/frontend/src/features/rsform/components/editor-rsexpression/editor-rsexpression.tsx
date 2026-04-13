@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { type ReactCodeMirrorRef } from '@uiw/react-codemirror';
 
@@ -48,8 +48,8 @@ interface EditorRSExpressionProps {
   onAnalysis: (typification: RO<AnalysisFull> | null) => void;
   onOpenEdit: (cstID: number) => void;
   onShowTypeGraph: (event: React.MouseEvent<Element>) => void;
-  onAstCreate?: (data: CreateConstituentaDTO) => Promise<RO<ConstituentaCreatedResponse>>;
-  onAstUpdate?: (data: UpdateConstituentaDTO) => Promise<RO<RSFormDTO>>;
+  onCreateCst?: (data: CreateConstituentaDTO) => Promise<RO<ConstituentaCreatedResponse>>;
+  onUpdateCst?: (data: UpdateConstituentaDTO) => Promise<RO<RSFormDTO>>;
 }
 
 function extractCstData(cst: Constituenta) {
@@ -78,20 +78,30 @@ export function EditorRSExpression({
   onAnalysis,
   onOpenEdit,
   onShowTypeGraph,
-  onAstCreate,
-  onAstUpdate,
+  onCreateCst,
+  onUpdateCst,
   ...restProps
 }: EditorRSExpressionProps) {
   const [isModified, setIsModified] = useState(false);
   const rsInput = useRef<ReactCodeMirrorRef>(null);
 
   const showControls = usePreferencesStore(state => state.showExpressionControls);
-  const showAST = useDialogsStore(state => state.showShowAST);
+  const showFlatAst = useDialogsStore(state => state.showShowFlatAst);
+  const showAstExtract = useDialogsStore(state => state.showShowAstExtract);
+  const [errors, setErrors] = useState<RO<RSErrorDescription[]>>(analysis?.errors ?? []);
 
   const resetHandler = useCallback(() => {
     setIsModified(false);
     onAnalysis(null);
   }, [onAnalysis]);
+
+  useEffect(
+    function syncErrors() {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setErrors(analysis?.errors ?? []);
+    },
+    [analysis]
+  );
 
   const cstHash = extractCstData(activeCst);
   useResetOnChange([cstHash, toggleReset], resetHandler);
@@ -110,16 +120,7 @@ export function EditorRSExpression({
   function handleChange(newValue: string) {
     onChange(newValue);
     setIsModified(newValue !== activeCst.definition_formal);
-  }
-
-  async function handleUpdateFromAstDialog(data: UpdateConstituentaDTO): Promise<RO<RSFormDTO>> {
-    if (!onAstUpdate) {
-      throw new Error('onAstUpdate callback is required');
-    }
-    if (data.target === activeCst.id && data.item_data.definition_formal !== undefined) {
-      handleChange(data.item_data.definition_formal);
-    }
-    return onAstUpdate(data);
+    setErrors([]);
   }
 
   function handleCheckExpression(
@@ -178,13 +179,10 @@ export function EditorRSExpression({
       const tree = rslangParser.parse(value);
       const ast = buildTree(tree.cursor());
       const flatAst = flattenAst(ast);
-      showAST({
-        syntaxTree: flatAst,
+      showFlatAst({
+        ast: flatAst,
         expression: value,
-        schema,
-        targetID: activeCst.id,
-        onCreate: onAstCreate,
-        onUpdate: onAstUpdate ? handleUpdateFromAstDialog : undefined
+        schema
       });
     } else {
       const parse = schema.analyzer.checkFull(value, { annotateTypes: true, annotateErrors: true });
@@ -192,15 +190,24 @@ export function EditorRSExpression({
         toast.error(errorMsg.invalidParse);
         return;
       }
-      const flatAst = flattenAst(parse.ast);
-      showAST({
-        syntaxTree: flatAst,
-        expression: value,
-        schema,
-        targetID: activeCst.id,
-        onCreate: onAstCreate,
-        onUpdate: onAstUpdate ? handleUpdateFromAstDialog : undefined
-      });
+      if (!disabled && onCreateCst && onUpdateCst) {
+        showAstExtract({
+          initial: {
+            ast: parse.ast,
+            expression: value,
+            schema
+          },
+          targetID: activeCst.id,
+          onCreate: onCreateCst,
+          onUpdate: onUpdateCst
+        });
+      } else {
+        showFlatAst({
+          ast: flattenAst(parse.ast),
+          expression: value,
+          schema
+        });
+      }
     }
   }
 
@@ -224,7 +231,7 @@ export function EditorRSExpression({
         ref={rsInput}
         value={value}
         schema={schema}
-        errors={analysis?.errors ?? null}
+        errors={errors}
         minHeight='3.75rem'
         maxHeight='8rem'
         onChange={handleChange}

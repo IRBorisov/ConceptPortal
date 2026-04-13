@@ -4,7 +4,7 @@ import clsx from 'clsx';
 
 import { type Constituenta, type RSForm } from '@/domain/library';
 import { isBasicConcept } from '@/domain/library/rsform-api';
-import { type ExpressionType, TokenID } from '@/domain/rslang';
+import { type ExpressionType, readTypeAnnotation, TokenID } from '@/domain/rslang';
 import { labelType } from '@/domain/rslang/labels';
 
 import { type AstNode } from '@/utils/parsing';
@@ -50,7 +50,7 @@ export function rsHoverTooltip(schema: RSForm, canClick?: boolean): Extension {
 
 function findLocalType(ast: AstNode, alias: string, pos: number): ExpressionType | null {
   if (ast.from === pos && ast.typeID === TokenID.ID_LOCAL) {
-    return ast.annotation ? (ast.annotation.rsType as ExpressionType) : null;
+    return readTypeAnnotation(ast);
   }
   for (const child of ast.children) {
     if (child.from <= pos) {
