@@ -3,12 +3,13 @@
 import { useState } from 'react';
 import { createColumnHelper } from '@tanstack/react-table';
 
+import { type ArgumentValue, type Constituenta, type RSForm } from '@/domain/library';
+import { isFunctional, isLogical } from '@/domain/library/rsform-api';
+
 import { MiniButton } from '@/components/control';
 import { DataTable, type IConditionalStyle } from '@/components/data-table';
 import { IconReset } from '@/components/icons';
 import { NoData } from '@/components/view';
-import { type ArgumentValue, type Constituenta, type RSForm } from '@/domain/library';
-import { isFunctional, isLogical } from '@/domain/library/rsform-api';
 
 import { PickConstituenta } from '../../components/pick-constituenta';
 import { RSInput } from '../../components/rs-input';

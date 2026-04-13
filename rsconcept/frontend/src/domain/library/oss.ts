@@ -2,7 +2,7 @@
  * Module: Schema of Synthesis Operations.
  */
 
-import { type Graph } from '../graph';
+import { type Graph } from '@/domain/graph';
 
 import { type LibraryItem } from './library';
 import { type NodePosition, type OssLayout } from './oss-layout';

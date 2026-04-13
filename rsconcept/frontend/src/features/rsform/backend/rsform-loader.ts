@@ -15,6 +15,7 @@ import {
 import { type AnalysisFast, makeTypePath, RSLangAnalyzer, TokenID, TypeID, type TypePath } from '@/domain/rslang';
 import { extractGlobals, isSimpleExpression, splitTemplateDefinition } from '@/domain/rslang/api';
 import { type ExpressionType } from '@/domain/rslang/semantic/typification';
+
 import { type RO } from '@/utils/meta';
 import { type AstNode, getNodeIndices } from '@/utils/parsing';
 

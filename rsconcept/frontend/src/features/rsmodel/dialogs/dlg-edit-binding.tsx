@@ -2,10 +2,11 @@
 
 import { useState } from 'react';
 
+import { type BasicBinding } from '@/domain/library';
+
 import { HelpTopic } from '@/features/help';
 
 import { ModalForm, ModalView } from '@/components/modal';
-import { type BasicBinding } from '@/domain/library';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { BindingEditor } from '../components/binding-editor.tsx';

@@ -4,11 +4,12 @@ import { Suspense, useEffect, useEffectEvent } from 'react';
 import clsx from 'clsx';
 import { useDebounce } from 'use-debounce';
 
+import { NodeType, OperationType } from '@/domain/library';
+
 import { MiniButton } from '@/components/control';
 import { IconClose } from '@/components/icons';
 import { Loader } from '@/components/loader';
 import { cn } from '@/components/utils';
-import { NodeType, OperationType } from '@/domain/library';
 import { useAppLayoutStore, useMainHeight } from '@/stores/app-layout';
 import { usePreferencesStore } from '@/stores/preferences';
 import { PARAMETER } from '@/utils/constants';

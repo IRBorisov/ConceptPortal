@@ -1,8 +1,9 @@
+import { type RSForm } from '@/domain/library';
+
 import { useLibrary } from '@/features/library/backend/use-library';
 
 import { Tooltip } from '@/components/container';
 import { IconHelp } from '@/components/icons';
-import { type RSForm } from '@/domain/library';
 import { globalIDs, prefixes } from '@/utils/constants';
 
 import { colorBgSchemas } from '../../colors';

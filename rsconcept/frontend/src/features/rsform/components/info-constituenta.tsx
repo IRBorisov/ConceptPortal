@@ -1,8 +1,9 @@
-import { IconChild, IconCrucial } from '@/components/icons';
-import { cn } from '@/components/utils';
 import { type Constituenta } from '@/domain/library';
 import { isBasicConcept } from '@/domain/library/rsform-api';
 import { labelType } from '@/domain/rslang/labels';
+
+import { IconChild, IconCrucial } from '@/components/icons';
+import { cn } from '@/components/utils';
 
 interface InfoConstituentaProps extends React.ComponentProps<'div'> {
   data: Constituenta;

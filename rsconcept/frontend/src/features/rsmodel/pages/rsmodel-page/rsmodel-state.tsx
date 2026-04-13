@@ -1,6 +1,9 @@
 'use client';
 
 import { useEffect, useEffectEvent, useState } from 'react';
+import { toast } from 'react-toastify';
+
+import { RSEngine } from '@/domain/library';
 
 import { urls, useConceptNavigation } from '@/app';
 import { useAIStore } from '@/features/ai/stores/ai-context';
@@ -11,8 +14,7 @@ import { useRSForm } from '@/features/rsform/backend/use-rsform';
 import { RSEditState } from '@/features/rsform/pages/rsform-page/rsedit-state';
 import { useRoleStore, UserRole } from '@/features/users';
 
-import { RSEngine } from '@/domain/library';
-import { promptText } from '@/utils/labels';
+import { errorMsg, infoMsg, promptText } from '@/utils/labels';
 
 import { useClearValues } from '../../backend/use-clear-values';
 import { useMutatingRSModel } from '../../backend/use-mutating-rsmodel';
@@ -35,15 +37,28 @@ export const RSModelState = ({ itemID, children }: React.PropsWithChildren<RSMod
 
   const [engine] = useState<RSEngine>(
     () =>
-      new RSEngine(model.id, {
-        setCstValue,
-        clearValues
-      })
+      new RSEngine(
+        model.id,
+        {
+          setCstValue,
+          clearValues
+        },
+        {
+          onInvalidSetValue: () => toast.error(errorMsg.invalidSetValue),
+          onCalculationSuccess: timeSpent => toast.success(infoMsg.calculationSuccess(timeSpent)),
+          onEvaluationError: message => toast.error(message)
+        }
+      )
   );
 
   useEffect(
     function syncServices() {
       engine.updateServices({ setCstValue, clearValues });
+      engine.updateNotifications({
+        onInvalidSetValue: () => toast.error(errorMsg.invalidSetValue),
+        onCalculationSuccess: timeSpent => toast.success(infoMsg.calculationSuccess(timeSpent)),
+        onEvaluationError: message => toast.error(message)
+      });
     },
     [engine, setCstValue, clearValues]
   );

@@ -3,14 +3,15 @@
 import { Suspense, useMemo, useState } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
+import { type OssLayout } from '@/domain/library';
+import { LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '@/domain/library/oss-layout-api';
+import { type Substitution } from '@/domain/library/rsform';
+
 import { HelpTopic } from '@/features/help';
 
 import { Loader } from '@/components/loader';
 import { ModalForm } from '@/components/modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
-import { type OssLayout } from '@/domain/library';
-import { LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '@/domain/library/oss-layout-api';
-import { type Substitution } from '@/domain/library/rsform';
 import { useDialogsStore } from '@/stores/dialogs';
 import { type CreateFieldProps, type FieldStateData } from '@/utils/forms';
 import { hintMsg } from '@/utils/labels';
@@ -70,7 +71,7 @@ export function DlgCreateSynthesis() {
     },
     onSubmit: ({ value }) => {
       const data = { ...value };
-      data.position = manager.newOperationPosition(data);
+      data.position = manager.newOperationPosition(data.position, data.item_data.parent, data.arguments);
       data.layout = manager.layout;
       void createSynthesis({ itemID: manager.oss.id, data }).then(response => onCreate?.(response.new_operation));
     }

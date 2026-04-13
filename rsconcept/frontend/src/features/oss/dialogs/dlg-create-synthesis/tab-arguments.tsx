@@ -2,8 +2,9 @@
 
 import { type ReactNode } from 'react';
 
-import { Label, TextArea, TextInput } from '@/components/input';
 import { type OperationSchema } from '@/domain/library';
+
+import { Label, TextArea, TextInput } from '@/components/input';
 import { type CreateFieldProps } from '@/utils/forms';
 
 import { PickMultiOperation } from '../../components/pick-multi-operation';

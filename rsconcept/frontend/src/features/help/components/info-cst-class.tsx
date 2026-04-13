@@ -1,7 +1,8 @@
+import { CstClass } from '@/domain/library';
+
 import { colorBgCstClass } from '@/features/rsform/colors';
 import { describeCstClass, labelCstClass } from '@/features/rsform/labels';
 
-import { CstClass } from '@/domain/library';
 import { prefixes } from '@/utils/constants';
 
 interface InfoCstClassProps {

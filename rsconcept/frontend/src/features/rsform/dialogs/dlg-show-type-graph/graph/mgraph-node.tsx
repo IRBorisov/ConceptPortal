@@ -3,6 +3,7 @@
 import { Handle, type NodeProps, Position } from '@xyflow/react';
 
 import { type TypificationNodeData } from '@/domain/rslang';
+
 import { globalIDs } from '@/utils/constants';
 
 import { colorBgTMGraphNode } from '../../../colors';

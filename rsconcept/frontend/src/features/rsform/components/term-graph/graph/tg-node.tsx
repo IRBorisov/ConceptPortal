@@ -6,6 +6,7 @@ import clsx from 'clsx';
 import { type Constituenta } from '@/domain/library';
 import { isBasicConcept } from '@/domain/library/rsform-api';
 import { labelType } from '@/domain/rslang/labels';
+
 import { APP_COLORS } from '@/styling/colors';
 import { globalIDs } from '@/utils/constants';
 

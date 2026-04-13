@@ -1,5 +1,7 @@
 'use client';
 
+import { AccessPolicy, type LibraryItem, LibraryItemType, type RSForm } from '@/domain/library';
+
 import { useConceptNavigation } from '@/app';
 import { type HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
@@ -8,7 +10,6 @@ import { useRoleStore, UserRole } from '@/features/users';
 import { MiniButton } from '@/components/control';
 import { IconDestroy, IconSave, IconShare } from '@/components/icons';
 import { cn } from '@/components/utils';
-import { AccessPolicy, type LibraryItem, LibraryItemType, type RSForm } from '@/domain/library';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { prepareTooltip } from '@/utils/format';

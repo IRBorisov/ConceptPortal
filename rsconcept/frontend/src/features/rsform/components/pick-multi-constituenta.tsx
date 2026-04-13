@@ -2,14 +2,15 @@
 
 import { useState } from 'react';
 
+import { Graph } from '@/domain/graph/graph';
+import { type Constituenta, type RSForm } from '@/domain/library';
+import { isBasicConcept, matchConstituenta } from '@/domain/library/rsform-api';
+
 import { createColumnHelper, DataTable, type RowSelectionState } from '@/components/data-table';
 import { SearchBar } from '@/components/input';
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
 import { NoData } from '@/components/view';
-import { Graph } from '@/domain/graph/graph';
-import { type Constituenta, type RSForm } from '@/domain/library';
-import { isBasicConcept, matchConstituenta } from '@/domain/library/rsform-api';
 
 import { describeConstituenta } from '../labels';
 

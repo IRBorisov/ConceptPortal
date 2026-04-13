@@ -6,6 +6,7 @@ import {
   type SubstitutionErrorDescription,
   SubstitutionErrorType
 } from '@/domain/library';
+
 import { type RO } from '@/utils/meta';
 
 const labelOperationTypeRecord: Record<OperationType, string> = {

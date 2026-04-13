@@ -2,10 +2,11 @@
 
 import { useIntl } from 'react-intl';
 
+import { type VersionInfo } from '@/domain/library';
+
 import { MiniButton } from '@/components/control';
 import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/data-table';
 import { IconRemove } from '@/components/icons';
-import { type VersionInfo } from '@/domain/library';
 
 interface TableVersionsProps {
   processing: boolean;

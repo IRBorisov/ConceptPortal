@@ -3,10 +3,11 @@
 import { Suspense, useState } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
+import { type RSForm, type Substitution } from '@/domain/library';
+
 import { Loader } from '@/components/loader';
 import { ModalForm } from '@/components/modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
-import { type RSForm, type Substitution } from '@/domain/library';
 import { useDialogsStore } from '@/stores/dialogs';
 import { hintMsg } from '@/utils/labels';
 import { withPreventDefault } from '@/utils/utils';

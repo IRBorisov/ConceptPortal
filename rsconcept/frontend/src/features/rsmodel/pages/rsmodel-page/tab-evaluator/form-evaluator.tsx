@@ -4,15 +4,6 @@ import { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { type ReactCodeMirrorRef } from '@uiw/react-codemirror';
 
-import { useConceptNavigation } from '@/app';
-import { RSEditorControls } from '@/features/rsform/components/editor-rsexpression/rs-edit-controls';
-import { RSInput } from '@/features/rsform/components/rs-input';
-import { RSTextWrapper } from '@/features/rsform/components/rs-input/text-editing';
-import { ViewErrors } from '@/features/rsform/components/view-errors';
-import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
-
-import { TextArea, TextInput } from '@/components/input';
-import { cn } from '@/components/utils';
 import { CstType } from '@/domain/library';
 import { inferEvalStatus, prepareValueString } from '@/domain/library/rsmodel-api';
 import {
@@ -26,6 +17,16 @@ import {
 import { valueStub } from '@/domain/rslang/eval/value-api';
 import { labelType } from '@/domain/rslang/labels';
 import { isTypification } from '@/domain/rslang/semantic/typification';
+
+import { useConceptNavigation } from '@/app';
+import { RSEditorControls } from '@/features/rsform/components/editor-rsexpression/rs-edit-controls';
+import { RSInput } from '@/features/rsform/components/rs-input';
+import { RSTextWrapper } from '@/features/rsform/components/rs-input/text-editing';
+import { ViewErrors } from '@/features/rsform/components/view-errors';
+import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
+
+import { TextArea, TextInput } from '@/components/input';
+import { cn } from '@/components/utils';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { infoMsg } from '@/utils/labels';

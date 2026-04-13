@@ -1,7 +1,8 @@
+import { CstType } from '@/domain/library';
+
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/input/select';
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
-import { CstType } from '@/domain/library';
 
 import { labelCstType } from '../labels';
 

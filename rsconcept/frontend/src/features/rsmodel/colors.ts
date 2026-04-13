@@ -1,4 +1,5 @@
 import { EvalStatus } from '@/domain/library';
+
 import { APP_COLORS } from '@/styling/colors';
 
 /** Determines statusbar color for {@link EvalStatus}. */

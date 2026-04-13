@@ -2,14 +2,17 @@
 
 import { type ReactNode } from 'react';
 
+import { type OperationSchema } from '@/domain/library';
+import { SubstitutionValidator } from '@/domain/library/oss-api';
+import { type Substitution } from '@/domain/library/rsform';
+
+import { describeSubstitutionError } from '@/features/oss/labels';
 import { useRSForms } from '@/features/rsform/backend/use-rsforms';
 import { PickSubstitutions } from '@/features/rsform/components/pick-substitutions';
 
 import { TextArea } from '@/components/input';
-import { type OperationSchema } from '@/domain/library';
-import { SubstitutionValidator } from '@/domain/library/oss-api';
-import { type Substitution } from '@/domain/library/rsform';
 import { type CreateFieldProps } from '@/utils/forms';
+import { infoMsg } from '@/utils/labels';
 
 export interface DlgCreateSynthesisSubstitutionFields {
   SubstitutionsField: (props: CreateFieldProps<Substitution[]>) => ReactNode;
@@ -31,6 +34,9 @@ export function TabSubstitutions({ oss, inputs, substitutions, fields }: TabSubs
 
   const validator = new SubstitutionValidator(schemas, substitutions);
   const isCorrect = validator.validate();
+  const validationMessages = isCorrect
+    ? [infoMsg.substitutionsCorrect]
+    : validator.errors.map(error => describeSubstitutionError(error));
   const { SubstitutionsField } = fields;
 
   return (
@@ -49,7 +55,7 @@ export function TabSubstitutions({ oss, inputs, substitutions, fields }: TabSubs
 
       <TextArea
         disabled
-        value={validator.msg}
+        value={validationMessages.join('\n')}
         rows={4}
         areaClassName={isCorrect ? '' : 'border-accent-red-foreground border-2'}
       />

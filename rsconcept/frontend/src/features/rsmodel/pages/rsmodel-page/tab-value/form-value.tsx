@@ -3,12 +3,6 @@
 import { useEffect, useEffectEvent, useLayoutEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import { useConceptNavigation } from '@/app';
-import { RSInput } from '@/features/rsform/components/rs-input';
-import { ViewErrors } from '@/features/rsform/components/view-errors';
-import { labelRSExpression } from '@/features/rsform/labels';
-
-import { TextArea } from '@/components/input';
 import { type BasicBinding, type Constituenta, CstType } from '@/domain/library';
 import { getStructureName, isBaseSet } from '@/domain/library/rsform-api';
 import { isInferrable, isInterpretable, prepareValueString } from '@/domain/library/rsmodel-api';
@@ -16,6 +10,13 @@ import { type CalculatorResult, type Value } from '@/domain/rslang';
 import { normalizeValue, valueStub } from '@/domain/rslang/eval/value-api';
 import { labelType } from '@/domain/rslang/labels';
 import { isTypification, type TypePath, type Typification } from '@/domain/rslang/semantic/typification';
+
+import { useConceptNavigation } from '@/app';
+import { RSInput } from '@/features/rsform/components/rs-input';
+import { ViewErrors } from '@/features/rsform/components/view-errors';
+import { labelRSExpression } from '@/features/rsform/labels';
+
+import { TextArea } from '@/components/input';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';

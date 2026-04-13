@@ -2,6 +2,8 @@
 
 import React from 'react';
 
+import { NodeType } from '@/domain/library';
+
 import { useAuth } from '@/features/auth/backend/use-auth';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
@@ -28,7 +30,6 @@ import {
 } from '@/components/icons';
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
-import { NodeType } from '@/domain/library';
 import { usePreferencesStore } from '@/stores/preferences';
 import { prepareTooltip } from '@/utils/format';
 import { isIOS, isMac, notImplemented } from '@/utils/utils';

@@ -2,17 +2,18 @@
 
 import { useState } from 'react';
 
+import { type RSEngine } from '@/domain/library';
+import { makeValuePath, TypeID, type Typification, type Value, type ValuePath } from '@/domain/rslang';
+import { convertPathToType, extractValue } from '@/domain/rslang/eval/value-api';
+import { type TypePath } from '@/domain/rslang/semantic/typification';
+import { applyPath } from '@/domain/rslang/semantic/typification-api';
+
 import { MiniButton } from '@/components/control';
 import { DataTable } from '@/components/data-table';
 import { IconReset } from '@/components/icons';
 import { SearchBar } from '@/components/input';
 import { cn } from '@/components/utils';
 import { Text } from '@/components/view';
-import { type RSEngine } from '@/domain/library';
-import { makeValuePath, TypeID, type Typification, type Value, type ValuePath } from '@/domain/rslang';
-import { convertPathToType, extractValue } from '@/domain/rslang/eval/value-api';
-import { type TypePath } from '@/domain/rslang/semantic/typification';
-import { applyPath } from '@/domain/rslang/semantic/typification-api';
 import { usePreferencesStore } from '@/stores/preferences';
 import { type RO } from '@/utils/meta';
 

@@ -2,10 +2,11 @@
 
 import clsx from 'clsx';
 
+import { type EvalStatus } from '@/domain/library';
+
 import { TextButton } from '@/components/control/text-button';
 import { TextArea } from '@/components/input';
 import { cn } from '@/components/utils';
-import { type EvalStatus } from '@/domain/library';
 import { globalIDs, limits } from '@/utils/constants';
 import { formatInteger } from '@/utils/format';
 

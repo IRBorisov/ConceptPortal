@@ -2,10 +2,11 @@
 
 import { useIntl } from 'react-intl';
 
+import { type LibraryItem } from '@/domain/library';
+
 import { useLabelUser } from '@/features/users';
 
 import { createColumnHelper } from '@/components/data-table';
-import { type LibraryItem } from '@/domain/library';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { type RO } from '@/utils/meta';
 

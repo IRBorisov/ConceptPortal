@@ -1,7 +1,8 @@
 import { type ReactNode } from 'react';
 
-import { TextArea, TextInput } from '@/components/input';
 import { type OperationSchema } from '@/domain/library';
+
+import { TextArea, TextInput } from '@/components/input';
 import { type CreateFieldProps } from '@/utils/forms';
 
 import { SelectParent } from '../../components/select-parent';

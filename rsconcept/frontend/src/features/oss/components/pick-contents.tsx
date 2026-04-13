@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 
+import { NodeType, type OperationSchema, type OssItem } from '@/domain/library';
+
 import { MiniButton } from '@/components/control';
 import { createColumnHelper, DataTable } from '@/components/data-table';
 import { IconMoveDown, IconMoveUp, IconRemove } from '@/components/icons';
@@ -9,7 +11,6 @@ import { ComboBox } from '@/components/input/combo-box';
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
 import { NoData } from '@/components/view';
-import { NodeType, type OperationSchema, type OssItem } from '@/domain/library';
 
 import { labelOssItem } from '../labels';
 

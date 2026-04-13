@@ -2,10 +2,11 @@
 
 import clsx from 'clsx';
 
+import { AccessPolicy } from '@/domain/library';
+
 import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import { type Styling } from '@/components/props';
-import { AccessPolicy } from '@/domain/library';
 import { prefixes } from '@/utils/constants';
 
 import { describeAccessPolicy, labelAccessPolicy } from '../labels';

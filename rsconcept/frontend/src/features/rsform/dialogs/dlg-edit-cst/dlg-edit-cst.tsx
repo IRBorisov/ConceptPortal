@@ -2,13 +2,14 @@
 
 import { useForm, useStore } from '@tanstack/react-form';
 
+import { type Constituenta, type CstType, type RSForm } from '@/domain/library';
+import { generateAlias, validateNewAlias } from '@/domain/library/rsform-api';
+
 import { useConceptNavigation } from '@/app';
 
 import { MiniButton } from '@/components/control';
 import { IconChild, IconRSForm } from '@/components/icons';
 import { ModalForm } from '@/components/modal';
-import { type Constituenta, type CstType, type RSForm } from '@/domain/library';
-import { generateAlias, validateNewAlias } from '@/domain/library/rsform-api';
 import { useDialogsStore } from '@/stores/dialogs';
 import { type CreateFieldProps, type FieldStateData } from '@/utils/forms';
 import { hintMsg } from '@/utils/labels';

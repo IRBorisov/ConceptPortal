@@ -1,6 +1,6 @@
-import { type RO } from '@/utils/meta';
+import { type Value } from '@/domain/rslang';
 
-import { type Value } from '../rslang';
+import { type RO } from '@/utils/meta';
 
 import { type LibraryItem } from './library';
 import { type RSFormStats } from './rsform';

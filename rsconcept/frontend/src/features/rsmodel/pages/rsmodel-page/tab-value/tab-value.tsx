@@ -3,13 +3,14 @@
 import { useEffect, useRef } from 'react';
 import clsx from 'clsx';
 
+import { isProblematic } from '@/domain/library/rsform-api';
+import { isInferrable } from '@/domain/library/rsmodel-api';
+
 import { useConceptNavigation } from '@/app';
 import { ViewConstituents } from '@/features/rsform/components/view-constituents';
 import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
 import { useRoleStore, UserRole } from '@/features/users';
 
-import { isProblematic } from '@/domain/library/rsform-api';
-import { isInferrable } from '@/domain/library/rsmodel-api';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight, useMainHeight } from '@/stores/app-layout';
 import { usePreferencesStore } from '@/stores/preferences';

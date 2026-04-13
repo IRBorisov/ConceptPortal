@@ -3,6 +3,9 @@
 import { use, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
+import { RSEngine, type RSEngineServices } from '@/domain/library/rsengine';
+import { type Attribution, type Substitution } from '@/domain/library/rsform';
+
 import { type UpdateLibraryItemDTO } from '@/features/library';
 import { loadRSForm } from '@/features/rsform/backend/rsform-loader';
 import {
@@ -15,9 +18,7 @@ import {
   type UpdateCrucialDTO
 } from '@/features/rsform/backend/types';
 
-import { RSEngine, type RSEngineServices } from '@/domain/library/rsengine';
-import { type Attribution, type Substitution } from '@/domain/library/rsform';
-import { errorMsg } from '@/utils/labels';
+import { errorMsg, infoMsg } from '@/utils/labels';
 
 import { type SandboxBundle } from '../models/bundle';
 import { createStarterSandboxBundle } from '../models/bundle-starter';
@@ -63,7 +64,11 @@ export function SandboxState({ children }: React.PropsWithChildren) {
   );
 
   const [engine] = useState(function createEngine() {
-    return new RSEngine(model.id, services);
+    return new RSEngine(model.id, services, {
+      onInvalidSetValue: () => toast.error(errorMsg.invalidSetValue),
+      onCalculationSuccess: timeSpent => toast.success(infoMsg.calculationSuccess(timeSpent)),
+      onEvaluationError: message => toast.error(message)
+    });
   });
 
   useEffect(
@@ -72,6 +77,11 @@ export function SandboxState({ children }: React.PropsWithChildren) {
       // eslint-disable-next-line react-hooks/immutability
       engine.modelID = model.id;
       engine.updateServices(services);
+      engine.updateNotifications({
+        onInvalidSetValue: () => toast.error(errorMsg.invalidSetValue),
+        onCalculationSuccess: timeSpent => toast.success(infoMsg.calculationSuccess(timeSpent)),
+        onEvaluationError: message => toast.error(message)
+      });
     },
     [model.id, engine, services]
   );

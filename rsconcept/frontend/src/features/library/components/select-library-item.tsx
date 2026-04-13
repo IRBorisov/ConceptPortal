@@ -1,6 +1,7 @@
+import { type LibraryItem } from '@/domain/library';
+
 import { ComboBox } from '@/components/input/combo-box';
 import { type Styling } from '@/components/props';
-import { type LibraryItem } from '@/domain/library';
 
 interface SelectLibraryItemProps extends Styling {
   id?: string;

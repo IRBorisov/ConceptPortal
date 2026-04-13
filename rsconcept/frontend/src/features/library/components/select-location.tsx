@@ -3,11 +3,12 @@
 import { useMemo, useState } from 'react';
 import clsx from 'clsx';
 
+import { type FolderNode } from '@/domain/library';
+
 import { MiniButton } from '@/components/control';
 import { IconFolder, IconFolderClosed, IconFolderEmpty, IconFolderOpened } from '@/components/icons';
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
-import { type FolderNode } from '@/domain/library';
 import { useSingleAndDoubleClick } from '@/hooks/use-discriminate-clicks';
 
 import { useFolders } from '../backend/use-folders';

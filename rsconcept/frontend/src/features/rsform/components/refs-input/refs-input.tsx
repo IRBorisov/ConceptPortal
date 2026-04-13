@@ -13,9 +13,6 @@ import CodeMirror, {
 } from '@uiw/react-codemirror';
 import { useDebounce } from 'use-debounce';
 
-import { ErrorField, Label } from '@/components/input';
-import { type ErrorProcessing } from '@/components/props';
-import { cn } from '@/components/utils';
 import {
   type EntityRefState,
   type Grammeme,
@@ -29,6 +26,10 @@ import {
   type SyntacticRefState
 } from '@/domain/cctext';
 import { type RSForm } from '@/domain/library';
+
+import { ErrorField, Label } from '@/components/input';
+import { type ErrorProcessing } from '@/components/props';
+import { cn } from '@/components/utils';
 import { usePreferencesStore } from '@/stores/preferences';
 import { APP_COLORS } from '@/styling/colors';
 import { CodeMirrorWrapper } from '@/utils/codemirror';

@@ -1,5 +1,6 @@
-import { ComboBox } from '@/components/input/combo-box';
 import { type Constituenta } from '@/domain/library';
+
+import { ComboBox } from '@/components/input/combo-box';
 
 import { describeConstituenta, describeConstituentaTerm } from '../labels';
 

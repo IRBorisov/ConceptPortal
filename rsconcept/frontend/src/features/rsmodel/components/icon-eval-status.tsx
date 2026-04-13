@@ -1,3 +1,5 @@
+import { EvalStatus } from '@/domain/library';
+
 import {
   type DomIconProps,
   IconMissingBase,
@@ -6,7 +8,6 @@ import {
   IconStatusOK,
   IconStatusUnknown
 } from '@/components/icons';
-import { EvalStatus } from '@/domain/library';
 
 export function IconEvalStatus({ value, size = '1.25rem', className }: DomIconProps<EvalStatus>) {
   switch (value) {

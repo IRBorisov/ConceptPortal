@@ -3,12 +3,13 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
 
-import { MiniButton } from '@/components/control';
-import { IconAccept, IconClose } from '@/components/icons';
-import { SearchBar } from '@/components/input';
 import { type EntityRefState, type Grammeme, type InlinePosition } from '@/domain/cctext';
 import { type Constituenta, type RSForm } from '@/domain/library';
 import { matchConstituenta } from '@/domain/library/rsform-api';
+
+import { MiniButton } from '@/components/control';
+import { IconAccept, IconClose } from '@/components/icons';
+import { SearchBar } from '@/components/input';
 import { prepareTooltip } from '@/utils/format';
 import { isMac } from '@/utils/utils';
 

@@ -3,6 +3,9 @@
 import { useEffect, useEffectEvent, useState } from 'react';
 import { toast } from 'react-toastify';
 
+import { type Constituenta, CstType } from '@/domain/library';
+import { generateAlias, removeAliasReference } from '@/domain/library/rsform-api';
+
 import { urls, useConceptNavigation } from '@/app';
 import { useAIStore } from '@/features/ai/stores/ai-context';
 import { useAuth } from '@/features/auth';
@@ -12,8 +15,6 @@ import { useFindPredecessor } from '@/features/oss/backend/use-find-predecessor'
 import { useRoleStore, UserRole } from '@/features/users';
 import { useAdjustRole } from '@/features/users/stores/use-adjust-role';
 
-import { type Constituenta, CstType } from '@/domain/library';
-import { generateAlias, removeAliasReference } from '@/domain/library/rsform-api';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';

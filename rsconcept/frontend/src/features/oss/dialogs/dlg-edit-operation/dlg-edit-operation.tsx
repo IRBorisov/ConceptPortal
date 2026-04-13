@@ -3,14 +3,15 @@
 import { Suspense, useMemo, useState } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
+import { OperationType, type OssLayout } from '@/domain/library';
+import { LayoutManager } from '@/domain/library/oss-layout-api';
+import { type Substitution } from '@/domain/library/rsform';
+
 import { HelpTopic } from '@/features/help';
 
 import { Loader } from '@/components/loader';
 import { ModalForm } from '@/components/modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
-import { OperationType, type OssLayout } from '@/domain/library';
-import { LayoutManager } from '@/domain/library/oss-layout-api';
-import { type Substitution } from '@/domain/library/rsform';
 import { useDialogsStore } from '@/stores/dialogs';
 import { type CreateFieldProps, type FieldStateData } from '@/utils/forms';
 import { hintMsg } from '@/utils/labels';

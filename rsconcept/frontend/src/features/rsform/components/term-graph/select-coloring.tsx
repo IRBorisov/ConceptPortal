@@ -1,9 +1,10 @@
+import { type RSForm } from '@/domain/library';
+
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/input/select';
 import { cn } from '@/components/utils';
-import { type RSForm } from '@/domain/library';
 
 import { labelColoring } from '../../labels';
 import { TGColoring, useTermGraphStore } from '../../stores/term-graph';

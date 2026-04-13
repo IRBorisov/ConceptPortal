@@ -3,9 +3,10 @@
 import { useEffect, useRef } from 'react';
 import { type Node, useEdgesState, useNodesState, useOnSelectionChange, useReactFlow } from '@xyflow/react';
 
-import { DiagramFlow } from '@/components/flow/diagram-flow';
 import { type SPNode } from '@/domain/library/structure-planner';
 import { type ExpressionType, TypeID } from '@/domain/rslang/semantic/typification';
+
+import { DiagramFlow } from '@/components/flow/diagram-flow';
 
 import { SPEdgeTypes } from './graph/sp-edge-types';
 import { applyLayout } from './graph/sp-layout';

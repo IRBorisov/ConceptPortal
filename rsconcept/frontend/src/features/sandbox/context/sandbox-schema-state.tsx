@@ -3,12 +3,13 @@
 import { useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
+import { type Constituenta, CstType } from '@/domain/library/rsform';
+import { generateAlias, removeAliasReference } from '@/domain/library/rsform-api';
+
 import { useConceptNavigation } from '@/app';
 import { type ConstituentaCreatedResponse, type CreateConstituentaDTO } from '@/features/rsform/backend/types';
 import { RSEditContext } from '@/features/rsform/pages/rsform-page/rsedit-context';
 
-import { type Constituenta, CstType } from '@/domain/library/rsform';
-import { generateAlias, removeAliasReference } from '@/domain/library/rsform-api';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { PARAMETER, prefixes } from '@/utils/constants';

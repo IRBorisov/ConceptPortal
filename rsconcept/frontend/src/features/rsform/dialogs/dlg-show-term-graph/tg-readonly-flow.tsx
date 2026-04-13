@@ -4,9 +4,10 @@ import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import { type Edge, MarkerType, type Node, useEdgesState, useNodesState } from '@xyflow/react';
 import clsx from 'clsx';
 
+import { type Constituenta, type RSForm } from '@/domain/library';
+
 import { DiagramFlow, useReactFlow } from '@/components/flow/diagram-flow';
 import { useContinuousPan } from '@/components/flow/use-continuous-panning';
-import { type Constituenta, type RSForm } from '@/domain/library';
 import { useFitHeight } from '@/stores/app-layout';
 import { PARAMETER } from '@/utils/constants';
 

@@ -2,8 +2,9 @@
 
 import { useRef } from 'react';
 
-import { Dropdown } from '@/components/dropdown';
 import { NodeType, type OssItem } from '@/domain/library';
+
+import { Dropdown } from '@/components/dropdown';
 
 import { MenuBlock } from './menu-block';
 import { MenuOperation } from './menu-operation';

@@ -1,5 +1,8 @@
 'use client';
 
+import { type Constituenta } from '@/domain/library';
+import { cstCanProduceStructure } from '@/domain/library/rsform-api';
+
 import { useConceptNavigation } from '@/app';
 import { useAuth } from '@/features/auth';
 
@@ -16,8 +19,6 @@ import {
   IconSortList,
   IconTemplates
 } from '@/components/icons';
-import { type Constituenta } from '@/domain/library';
-import { cstCanProduceStructure } from '@/domain/library/rsform-api';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { promptUnsaved } from '@/utils/utils';

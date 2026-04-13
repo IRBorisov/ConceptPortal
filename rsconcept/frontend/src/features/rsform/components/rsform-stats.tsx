@@ -1,3 +1,5 @@
+import { type RSFormStats } from '@/domain/library';
+
 import {
   IconChild,
   IconConvention,
@@ -20,7 +22,6 @@ import {
 } from '@/components/icons';
 import { cn } from '@/components/utils';
 import { ValueStats } from '@/components/view';
-import { type RSFormStats } from '@/domain/library';
 
 interface CardRSFormStatsProps {
   className?: string;

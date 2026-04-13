@@ -2,6 +2,8 @@
 
 import { toast } from 'react-toastify';
 
+import { AccessPolicy, LocationHead } from '@/domain/library';
+
 import { useConceptNavigation } from '@/app';
 import { useAuth } from '@/features/auth';
 import { useRSForm } from '@/features/rsform/backend/use-rsform';
@@ -25,7 +27,6 @@ import {
   IconSandbox,
   IconShare
 } from '@/components/icons';
-import { AccessPolicy, LocationHead } from '@/domain/library';
 import { useDialogsStore } from '@/stores/dialogs';
 import { errorMsg, infoMsg, promptText, tooltipText } from '@/utils/labels';
 import { generatePageQR, sharePage } from '@/utils/utils';

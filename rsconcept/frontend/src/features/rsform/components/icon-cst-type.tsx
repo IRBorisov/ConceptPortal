@@ -1,3 +1,5 @@
+import { CstType } from '@/domain/library';
+
 import { type DomIconProps, IconCstNominal } from '@/components/icons';
 import {
   IconCstAxiom,
@@ -9,7 +11,6 @@ import {
   IconCstTerm,
   IconCstTheorem
 } from '@/components/icons';
-import { CstType } from '@/domain/library';
 
 /** Icon for constituenta type. */
 export function IconCstType({ value, size = '1.25rem', className }: DomIconProps<CstType>) {

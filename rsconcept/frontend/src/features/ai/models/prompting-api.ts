@@ -4,6 +4,7 @@ import { isBasicConcept } from '@/domain/library/rsform-api';
 import { TypificationGraph } from '@/domain/rslang';
 import { labelType } from '@/domain/rslang/labels';
 import { isTypification } from '@/domain/rslang/semantic/typification';
+
 import { PARAMETER } from '@/utils/constants';
 
 import { mockPromptVariable } from '../labels';

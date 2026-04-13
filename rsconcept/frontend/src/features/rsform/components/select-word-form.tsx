@@ -1,8 +1,9 @@
 'use client';
 
+import { Grammeme, supportedGrammemes } from '@/domain/cctext';
+
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
-import { Grammeme, supportedGrammemes } from '@/domain/cctext';
 import { prefixes } from '@/utils/constants';
 
 import { WordformButton } from './wordform-button';

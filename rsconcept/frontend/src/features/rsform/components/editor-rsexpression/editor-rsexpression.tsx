@@ -8,6 +8,7 @@ import { type Constituenta, CstStatus, type RSForm } from '@/domain/library';
 import { getAnalysisFor, inferStatus } from '@/domain/library/rsform-api';
 import { type AnalysisFull, getRSErrorRange, type RSErrorDescription, TokenID } from '@/domain/rslang';
 import { rslangParser } from '@/domain/rslang';
+
 import { useResetOnChange } from '@/hooks/use-reset-on-change';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';

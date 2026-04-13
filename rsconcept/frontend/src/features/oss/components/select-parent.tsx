@@ -1,7 +1,8 @@
 import clsx from 'clsx';
 
-import { IconConceptBlock } from '@/components/icons';
 import { type Block } from '@/domain/library';
+
+import { IconConceptBlock } from '@/components/icons';
 import { globalIDs } from '@/utils/constants';
 
 import { SelectBlock } from './select-block';

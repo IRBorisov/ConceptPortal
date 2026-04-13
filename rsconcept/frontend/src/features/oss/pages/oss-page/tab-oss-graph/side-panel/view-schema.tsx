@@ -2,6 +2,9 @@
 
 import { useEffect, useEffectEvent, useState } from 'react';
 
+import { type Constituenta } from '@/domain/library';
+import { calculateSchemaStats, isProblematic } from '@/domain/library/rsform-api';
+
 import { useConceptNavigation } from '@/app';
 import { useAIStore } from '@/features/ai/stores/ai-context';
 import { useFindPredecessor } from '@/features/oss/backend/use-find-predecessor';
@@ -13,8 +16,6 @@ import { useUpdateConstituenta } from '@/features/rsform/backend/use-update-cons
 import { CardRSFormStats } from '@/features/rsform/components/rsform-stats';
 import { ViewConstituents } from '@/features/rsform/components/view-constituents';
 
-import { type Constituenta } from '@/domain/library';
-import { calculateSchemaStats, isProblematic } from '@/domain/library/rsform-api';
 import { useFitHeight } from '@/stores/app-layout';
 import { useDialogsStore } from '@/stores/dialogs';
 

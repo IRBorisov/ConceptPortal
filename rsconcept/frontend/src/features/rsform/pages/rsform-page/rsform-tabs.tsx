@@ -2,12 +2,13 @@
 
 import { useEffect, useEffectEvent, useLayoutEffect, useRef } from 'react';
 
+import { isProblematic } from '@/domain/library/rsform-api';
+
 import { RSTabID, useConceptNavigation } from '@/app/navigation/navigation-context';
 
 import { IconStatusError } from '@/components/icons';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { IndicatorPill } from '@/components/view/indicator-pill';
-import { isProblematic } from '@/domain/library/rsform-api';
 import { useResetAttribute } from '@/hooks/use-reset-attribute';
 import { useAppLayoutStore } from '@/stores/app-layout';
 import { useModificationStore } from '@/stores/modification';

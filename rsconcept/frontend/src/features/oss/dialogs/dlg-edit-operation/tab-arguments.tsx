@@ -1,7 +1,8 @@
 'use client';
 
-import { Label } from '@/components/input';
 import { type OperationInput, type OperationSchema, type OperationSynthesis } from '@/domain/library';
+
+import { Label } from '@/components/input';
 
 import { PickMultiOperation } from '../../components/pick-multi-operation';
 

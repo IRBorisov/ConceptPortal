@@ -1,6 +1,7 @@
 'use client';
 
 import { type Constituenta, type RSEngine } from '@/domain/library';
+
 import { globalIDs } from '@/utils/constants';
 
 import { colorFgEvalStatus } from '../colors';

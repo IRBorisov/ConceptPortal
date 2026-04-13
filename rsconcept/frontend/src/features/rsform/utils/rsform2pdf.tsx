@@ -1,10 +1,11 @@
 import { Link, pdf, Text, View } from '@react-pdf/renderer';
 
+import { type Constituenta, type RSForm } from '@/domain/library';
+import { labelType } from '@/domain/rslang/labels';
+
 import { urls } from '@/app';
 
 import { CDocument } from '@/components/pdf/CDocument';
-import { type Constituenta, type RSForm } from '@/domain/library';
-import { labelType } from '@/domain/rslang/labels';
 import { external_urls } from '@/utils/constants';
 import { type RO } from '@/utils/meta';
 

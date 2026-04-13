@@ -3,9 +3,10 @@
 import { useMemo } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
+import { type VersionInfo } from '@/domain/library';
+
 import { Checkbox, TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
-import { type VersionInfo } from '@/domain/library';
 import { useDialogsStore } from '@/stores/dialogs';
 import { hintMsg } from '@/utils/labels';
 

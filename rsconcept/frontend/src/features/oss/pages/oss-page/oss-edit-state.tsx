@@ -2,6 +2,8 @@
 
 import { useEffect, useEffectEvent, useState } from 'react';
 
+import { NodeType, type Operation, OperationType } from '@/domain/library';
+
 import { urls, useConceptNavigation } from '@/app';
 import { useAIStore } from '@/features/ai/stores/ai-context';
 import { useAuth } from '@/features/auth';
@@ -10,7 +12,6 @@ import { useDeleteItem } from '@/features/library/backend/use-delete-item';
 import { useRoleStore, UserRole } from '@/features/users';
 import { useAdjustRole } from '@/features/users/stores/use-adjust-role';
 
-import { NodeType, type Operation, OperationType } from '@/domain/library';
 import { usePreferencesStore } from '@/stores/preferences';
 import { promptText } from '@/utils/labels';
 

@@ -3,6 +3,7 @@
 import clsx from 'clsx';
 
 import { type Constituenta } from '@/domain/library';
+
 import { globalIDs } from '@/utils/constants';
 
 import { colorBgBadge, colorFgCstStatus } from '../colors';

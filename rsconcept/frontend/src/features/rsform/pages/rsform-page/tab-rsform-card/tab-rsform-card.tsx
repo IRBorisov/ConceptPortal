@@ -2,11 +2,12 @@
 
 import clsx from 'clsx';
 
+import { calculateSchemaStats } from '@/domain/library/rsform-api';
+
 import { HelpTopic } from '@/features/help/models/help-topic';
 import { EditorLibraryItem } from '@/features/library/components/editor-library-item';
 import { ToolbarItemCard } from '@/features/library/components/toolbar-item-card';
 
-import { calculateSchemaStats } from '@/domain/library/rsform-api';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';

@@ -5,6 +5,7 @@
 import { type AnalysisFull, TypeClass, TypeID, type TypePath, type Typification, ValueClass } from '@/domain/rslang';
 import { type EchelonFunctional, isTypification } from '@/domain/rslang/semantic/typification';
 import { applyPath } from '@/domain/rslang/semantic/typification-api';
+
 import { type RO } from '@/utils/meta';
 import { TextMatcher } from '@/utils/utils';
 

@@ -3,6 +3,9 @@
 import { useEffect, useEffectEvent } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
+import { type CurrentVersion, LibraryItemType } from '@/domain/library';
+import { type RSForm } from '@/domain/library/rsform';
+
 import { useConceptNavigation } from '@/app';
 import { schemaUpdateLibraryItem, type UpdateLibraryItemDTO } from '@/features/library';
 import { useUpdateItem } from '@/features/library/backend/use-update-item';
@@ -12,8 +15,6 @@ import { ToolbarItemAccess } from '@/features/library/components/toolbar-item-ac
 import { SubmitButton } from '@/components/control';
 import { IconSave } from '@/components/icons';
 import { Label, TextArea, TextInput } from '@/components/input';
-import { type CurrentVersion, LibraryItemType } from '@/domain/library';
-import { type RSForm } from '@/domain/library/rsform';
 import { useModificationStore } from '@/stores/modification';
 import { globalIDs } from '@/utils/constants';
 

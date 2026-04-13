@@ -2,13 +2,14 @@
 
 import { useState } from 'react';
 
-import { useTemplatesSuspense } from '@/features/library/backend/use-templates';
-
 import { type ArgumentValue, type Constituenta } from '@/domain/library';
 import { generateAlias, inferTemplatedType } from '@/domain/library/rsform-api';
 import { TypeID } from '@/domain/rslang';
 import { type AliasMapping, substituteTemplateArgs } from '@/domain/rslang/api';
 import { labelType } from '@/domain/rslang/labels';
+
+import { useTemplatesSuspense } from '@/features/library/backend/use-templates';
+
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { type DlgCstTemplateProps } from './dlg-cst-template';

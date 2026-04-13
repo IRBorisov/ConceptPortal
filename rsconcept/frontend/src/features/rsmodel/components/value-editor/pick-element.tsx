@@ -4,10 +4,11 @@ import { useState } from 'react';
 import { createColumnHelper } from '@tanstack/react-table';
 import { useDebounce } from 'use-debounce';
 
+import { type BasicBinding } from '@/domain/library';
+
 import { DataTable, type IConditionalStyle } from '@/components/data-table';
 import { SearchBar, TextInput } from '@/components/input';
 import { cn } from '@/components/utils';
-import { type BasicBinding } from '@/domain/library';
 import { globalIDs, PARAMETER } from '@/utils/constants';
 import { truncateToLastWord } from '@/utils/format';
 import { TextMatcher } from '@/utils/utils';

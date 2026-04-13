@@ -1,5 +1,7 @@
 'use client';
 
+import { CstType } from '@/domain/library';
+
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 import { IconCstType } from '@/features/rsform/components/icon-cst-type';
@@ -20,7 +22,6 @@ import {
   IconReset
 } from '@/components/icons';
 import { cn } from '@/components/utils';
-import { CstType } from '@/domain/library';
 import { prefixes } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/format';
 

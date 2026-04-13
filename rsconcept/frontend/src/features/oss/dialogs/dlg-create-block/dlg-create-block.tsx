@@ -3,12 +3,13 @@
 import { useMemo, useState } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
+import { type OssLayout } from '@/domain/library';
+import { LayoutManager } from '@/domain/library/oss-layout-api';
+
 import { HelpTopic } from '@/features/help';
 
 import { ModalForm } from '@/components/modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
-import { type OssLayout } from '@/domain/library';
-import { LayoutManager } from '@/domain/library/oss-layout-api';
 import { useDialogsStore } from '@/stores/dialogs';
 import { type CreateFieldProps, type FieldStateData } from '@/utils/forms';
 import { hintMsg } from '@/utils/labels';
@@ -69,7 +70,12 @@ export function DlgCreateBlock() {
     },
     onSubmit: ({ value }) => {
       const data = { ...value };
-      data.position = manager.newBlockPosition(data);
+      data.position = manager.newBlockPosition(
+        data.position,
+        data.item_data.parent,
+        data.children_blocks,
+        data.children_operations
+      );
       data.layout = manager.layout;
       void createBlock({ itemID: manager.oss.id, data }).then(response => onCreate?.(response.new_block));
     }

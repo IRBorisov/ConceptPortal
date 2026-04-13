@@ -3,13 +3,14 @@
 import { Suspense, useState } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
+import { type CstType, type RSForm } from '@/domain/library';
+import { generateAlias, validateNewAlias } from '@/domain/library/rsform-api';
+
 import { HelpTopic } from '@/features/help';
 
 import { Loader } from '@/components/loader';
 import { ModalForm } from '@/components/modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
-import { type CstType, type RSForm } from '@/domain/library';
-import { generateAlias, validateNewAlias } from '@/domain/library/rsform-api';
 import { useDialogsStore } from '@/stores/dialogs';
 import { type CreateFieldProps, type FieldStateData } from '@/utils/forms';
 import { hintMsg } from '@/utils/labels';

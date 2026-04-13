@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 
 import { TokenID } from '@/domain/rslang';
+
 import { prefixes } from '@/utils/constants';
 
 import { RSLocalButton } from './rs-local-button';

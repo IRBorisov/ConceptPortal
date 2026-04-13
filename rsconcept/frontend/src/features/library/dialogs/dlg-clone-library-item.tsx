@@ -2,12 +2,13 @@
 
 import { useForm, useStore } from '@tanstack/react-form';
 
+import { AccessPolicy, type LibraryItem, LibraryItemType } from '@/domain/library';
+
 import { urls, useConceptNavigation } from '@/app';
 
 import { MiniButton } from '@/components/control';
 import { Checkbox, Label, TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
-import { AccessPolicy, type LibraryItem, LibraryItemType } from '@/domain/library';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { type CloneLibraryItemDTO, schemaCloneLibraryItem } from '../backend/types';

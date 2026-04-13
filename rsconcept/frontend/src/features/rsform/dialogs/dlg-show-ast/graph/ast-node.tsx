@@ -7,6 +7,7 @@ import { type RSForm } from '@/domain/library/rsform';
 import { type ExpressionType, readErrorAnnotation } from '@/domain/rslang';
 import { describeRSError, labelRSLangNode, labelType } from '@/domain/rslang/labels';
 import { TokenID } from '@/domain/rslang/parser/token';
+
 import { globalIDs } from '@/utils/constants';
 import { type FlatAstNode } from '@/utils/parsing';
 

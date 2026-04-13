@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 
 import { type Grammeme } from '@/domain/cctext';
+
 import { globalIDs } from '@/utils/constants';
 
 interface WordformButtonProps {

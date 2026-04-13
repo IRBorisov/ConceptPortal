@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 
+import { type Constituenta, type LibraryItem, type RSForm, type Substitution } from '@/domain/library';
+
 import { SelectLibraryItem } from '@/features/library/components/select-library-item';
 
 import { MiniButton } from '@/components/control';
@@ -11,7 +13,6 @@ import { IconAccept, IconPageLeft, IconPageRight, IconRemove, IconReplace } from
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
 import { NoData } from '@/components/view';
-import { type Constituenta, type LibraryItem, type RSForm, type Substitution } from '@/domain/library';
 import { errorMsg } from '@/utils/labels';
 
 import { BadgeConstituenta } from './badge-constituenta';

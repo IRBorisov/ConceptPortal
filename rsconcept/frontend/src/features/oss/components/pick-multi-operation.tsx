@@ -2,13 +2,14 @@
 
 import { useState } from 'react';
 
+import { type Operation } from '@/domain/library';
+
 import { MiniButton } from '@/components/control';
 import { createColumnHelper, DataTable } from '@/components/data-table';
 import { IconMoveDown, IconMoveUp, IconRemove } from '@/components/icons';
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
 import { NoData } from '@/components/view';
-import { type Operation } from '@/domain/library';
 
 import { SelectOperation } from './select-operation';
 

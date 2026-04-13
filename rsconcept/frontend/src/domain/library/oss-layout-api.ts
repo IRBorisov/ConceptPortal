@@ -1,10 +1,3 @@
-import {
-  type CreateBlockDTO,
-  type CreateSchemaDTO,
-  type CreateSynthesisDTO,
-  type ImportSchemaDTO
-} from '../../features/oss/backend/types';
-
 import { NodeType, type OperationSchema, OperationType } from './oss';
 import { type NodePosition, type OssLayout, type Position2D, type Rectangle2D } from './oss-layout';
 
@@ -29,16 +22,13 @@ export class LayoutManager {
   }
 
   /** Calculate insert position for a new {@link Operation} */
-  newOperationPosition(data: CreateSchemaDTO | CreateSynthesisDTO | ImportSchemaDTO): Rectangle2D {
-    const result = { ...data.position };
-    const parentNode = this.layout.find(pos => pos.nodeID === `b${data.item_data.parent}`) ?? null;
-    const parentID = parentNode ? data.item_data.parent : null;
+  newOperationPosition(position: Rectangle2D, parent: number | null, args: number[] = []): Rectangle2D {
+    const result = { ...position };
+    const parentNode = this.layout.find(pos => pos.nodeID === `b${parent}`) ?? null;
     const operations = this.layout.filter(pos => pos.nodeID.startsWith('o'));
-    const hasArguments = 'arguments' in data && data.arguments.length !== 0;
+    const hasArguments = args.length !== 0;
     if (hasArguments) {
-      const pos = calculatePositionFromArgs(
-        operations.filter(node => data.arguments.includes(Number(node.nodeID.slice(1))))
-      );
+      const pos = calculatePositionFromArgs(operations.filter(node => args.includes(Number(node.nodeID.slice(1)))));
       result.x = pos.x;
       result.y = pos.y;
     } else if (parentNode) {
@@ -50,7 +40,7 @@ export class LayoutManager {
       result.y = pos.y;
     }
 
-    const siblingBlocks = this.oss.blocks.filter(block => block.parent === parentID).map(block => block.nodeID);
+    const siblingBlocks = this.oss.blocks.filter(block => block.parent === parent).map(block => block.nodeID);
     preventOverlap(
       result,
       this.layout.filter(node => siblingBlocks.includes(node.nodeID)),
@@ -67,32 +57,30 @@ export class LayoutManager {
   }
 
   /** Calculate insert position for a new {@link Block} */
-  newBlockPosition(data: CreateBlockDTO): Rectangle2D {
-    const block_nodes = data.children_blocks
-      .map(id => this.layout.find(block => block.nodeID === `b${id}`))
-      .filter(node => !!node);
-    const operation_nodes = data.children_operations
+  newBlockPosition(position: Rectangle2D, parent: number | null, blocks: number[], operations: number[]): Rectangle2D {
+    const blockNodes = blocks.map(id => this.layout.find(block => block.nodeID === `b${id}`)).filter(node => !!node);
+    const operationNodes = operations
       .map(id => this.layout.find(operation => operation.nodeID === `o${id}`))
       .filter(node => !!node);
-    const parentNode = this.layout.find(pos => pos.nodeID === `b${data.item_data.parent}`) ?? null;
-    const parentID = parentNode ? data.item_data.parent : null;
+    const parentNode = this.layout.find(pos => pos.nodeID === `b${parent}`) ?? null;
+    const parentID = parentNode ? parent : null;
 
-    let result: Rectangle2D = { ...data.position };
+    let result: Rectangle2D = { ...position };
 
-    if (block_nodes.length !== 0 || operation_nodes.length !== 0) {
-      result = calculatePositionFromChildren(data.position, operation_nodes, block_nodes);
+    if (blockNodes.length !== 0 || operationNodes.length !== 0) {
+      result = calculatePositionFromChildren(position, operationNodes, blockNodes);
     } else if (parentNode) {
       result = {
         x: parentNode.x + MIN_DISTANCE,
         y: parentNode.y + MIN_DISTANCE,
-        width: data.position.width,
-        height: data.position.height
+        width: position.width,
+        height: position.height
       };
     } else {
       result = this.calculatePositionForFreeBlock(result);
     }
 
-    if (block_nodes.length === 0 && operation_nodes.length === 0) {
+    if (blockNodes.length === 0 && operationNodes.length === 0) {
       const siblings = this.oss.blocks.filter(block => block.parent === parentID).map(block => block.nodeID);
       preventOverlap(
         result,

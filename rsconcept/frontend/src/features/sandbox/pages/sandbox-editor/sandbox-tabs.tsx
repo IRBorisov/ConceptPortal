@@ -2,6 +2,8 @@
 
 import { useEffect, useEffectEvent, useLayoutEffect, useRef } from 'react';
 
+import { isProblematic } from '@/domain/library/rsform-api';
+
 import { RSModelTabID, useConceptNavigation } from '@/app/navigation/navigation-context';
 import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
 import { TabConstituenta } from '@/features/rsform/pages/rsform-page/tab-constituenta';
@@ -14,7 +16,6 @@ import { TabValue } from '@/features/rsmodel/pages/rsmodel-page/tab-value';
 import { IconStatusError } from '@/components/icons';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { IndicatorPill } from '@/components/view/indicator-pill';
-import { isProblematic } from '@/domain/library/rsform-api';
 import { useResetAttribute } from '@/hooks/use-reset-attribute';
 import { useAppLayoutStore } from '@/stores/app-layout';
 import { useModificationStore } from '@/stores/modification';

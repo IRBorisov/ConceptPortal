@@ -3,9 +3,9 @@
  */
 
 import { type Graph } from '@/domain/graph';
-import { type CurrentVersion, type LibraryItem, type VersionInfo } from '@/domain/library';
-import { type LibraryItemReference } from '@/domain/library/library';
+import { type CurrentVersion, type LibraryItem, type LibraryItemReference, type VersionInfo } from '@/domain/library';
 import { type AnalysisBase, type ExpressionType, type RSLangAnalyzer, type TypePath } from '@/domain/rslang';
+
 import { type RO } from '@/utils/meta';
 
 /** Represents {@link Constituenta} type. */

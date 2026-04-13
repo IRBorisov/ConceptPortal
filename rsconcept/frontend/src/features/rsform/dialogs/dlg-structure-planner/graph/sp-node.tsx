@@ -3,9 +3,9 @@
 import { Handle, type NodeProps, Position } from '@xyflow/react';
 import clsx from 'clsx';
 
-import { colorSPNode } from '@/features/rsform/colors';
-
 import { labelType } from '@/domain/rslang/labels';
+
+import { colorSPNode } from '@/features/rsform/colors';
 
 import { type SPFlowNode } from './sp-models';
 

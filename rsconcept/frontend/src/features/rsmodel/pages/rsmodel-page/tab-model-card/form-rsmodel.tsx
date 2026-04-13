@@ -3,6 +3,8 @@
 import { useEffect, useEffectEvent } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
+import { LibraryItemType, type RSModel } from '@/domain/library';
+
 import { useConceptNavigation } from '@/app';
 import { schemaUpdateLibraryItem, type UpdateLibraryItemDTO } from '@/features/library';
 import { useUpdateItem } from '@/features/library/backend/use-update-item';
@@ -13,7 +15,6 @@ import { SubmitButton } from '@/components/control';
 import { IconRSForm, IconSave } from '@/components/icons';
 import { TextArea, TextInput } from '@/components/input';
 import { ValueIcon } from '@/components/view';
-import { LibraryItemType, type RSModel } from '@/domain/library';
 import { useModificationStore } from '@/stores/modification';
 import { globalIDs } from '@/utils/constants';
 

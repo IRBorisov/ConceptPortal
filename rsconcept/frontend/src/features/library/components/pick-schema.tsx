@@ -3,6 +3,9 @@
 import { useState } from 'react';
 import { useIntl } from 'react-intl';
 
+import { type LibraryItem, type LibraryItemType } from '@/domain/library';
+import { matchLibraryItem } from '@/domain/library/library-api';
+
 import { MiniButton } from '@/components/control';
 import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/data-table';
 import { Dropdown, useDropdown } from '@/components/dropdown';
@@ -10,8 +13,6 @@ import { IconClose, IconFolderTree } from '@/components/icons';
 import { ErrorField, SearchBar } from '@/components/input';
 import { type ErrorProcessing, type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
-import { type LibraryItem, type LibraryItemType } from '@/domain/library';
-import { matchLibraryItem } from '@/domain/library/library-api';
 import { prefixes } from '@/utils/constants';
 import { type RO } from '@/utils/meta';
 

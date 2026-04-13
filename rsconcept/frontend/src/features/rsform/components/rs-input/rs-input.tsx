@@ -12,11 +12,12 @@ import CodeMirror, {
 } from '@uiw/react-codemirror';
 import clsx from 'clsx';
 
-import { Label } from '@/components/input';
 import { type RSForm } from '@/domain/library';
 import { generateAlias, getCstTypePrefix, guessCstType } from '@/domain/library/rsform-api';
 import { type RSErrorDescription } from '@/domain/rslang';
 import { extractGlobals } from '@/domain/rslang/api';
+
+import { Label } from '@/components/input';
 import { usePreferencesStore } from '@/stores/preferences';
 import { APP_COLORS } from '@/styling/colors';
 

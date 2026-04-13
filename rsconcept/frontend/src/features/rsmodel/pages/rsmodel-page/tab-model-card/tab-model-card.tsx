@@ -2,6 +2,8 @@
 
 import clsx from 'clsx';
 
+import { calculateModelStats } from '@/domain/library/rsmodel-api';
+
 import { urls, useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';
 import { useLibrarySearchStore } from '@/features/library';
@@ -9,7 +11,6 @@ import { useDeleteItem } from '@/features/library/backend/use-delete-item';
 import { EditorLibraryItem } from '@/features/library/components/editor-library-item';
 import { ToolbarItemCard } from '@/features/library/components/toolbar-item-card';
 
-import { calculateModelStats } from '@/domain/library/rsmodel-api';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';

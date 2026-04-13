@@ -3,13 +3,14 @@
 import { toast } from 'react-toastify';
 import clsx from 'clsx';
 
+import { type FolderNode } from '@/domain/library';
+
 import { useAuth } from '@/features/auth';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 
 import { MiniButton } from '@/components/control';
 import { IconFolderEdit } from '@/components/icons';
-import { type FolderNode } from '@/domain/library';
 import { useFitHeight } from '@/stores/app-layout';
 import { prefixes } from '@/utils/constants';
 import { infoMsg } from '@/utils/labels';

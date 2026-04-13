@@ -2,6 +2,13 @@
 
 import { toast } from 'react-toastify';
 
+import { type BasicBinding } from '@/domain/library';
+import { getStructureName, isBaseSet } from '@/domain/library/rsform-api';
+import { isInferrable } from '@/domain/library/rsmodel-api';
+import { type TypePath, type Typification, type Value } from '@/domain/rslang';
+import { normalizeValue } from '@/domain/rslang/eval/value-api';
+import { isTypification } from '@/domain/rslang/semantic/typification';
+
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 import { IconShowSidebar } from '@/features/library/components/icon-show-sidebar';
@@ -10,12 +17,6 @@ import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-contex
 import { MiniButton } from '@/components/control';
 import { IconCalculateAll, IconCalculateOne, IconDatabase, IconDestroy } from '@/components/icons';
 import { cn } from '@/components/utils';
-import { type BasicBinding } from '@/domain/library';
-import { getStructureName, isBaseSet } from '@/domain/library/rsform-api';
-import { isInferrable } from '@/domain/library/rsmodel-api';
-import { type TypePath, type Typification, type Value } from '@/domain/rslang';
-import { normalizeValue } from '@/domain/rslang/eval/value-api';
-import { isTypification } from '@/domain/rslang/semantic/typification';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';

@@ -2,6 +2,7 @@ import { RangeSetBuilder } from '@codemirror/state';
 import { Decoration, type DecorationSet, EditorView, ViewPlugin, type ViewUpdate } from '@codemirror/view';
 
 import { getRSErrorRange, type RSErrorDescription } from '@/domain/rslang';
+
 import { APP_COLORS } from '@/styling/colors';
 
 const errorRangesTheme = EditorView.baseTheme({

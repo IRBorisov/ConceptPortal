@@ -3,9 +3,10 @@
 import { useMemo } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
-import { ModalForm } from '@/components/modal';
 import { type CstType, type RSForm } from '@/domain/library';
 import { generateAlias, validateNewAlias } from '@/domain/library/rsform-api';
+
+import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { type CreateFieldProps, type FieldStateData } from '@/utils/forms';
 import { hintMsg } from '@/utils/labels';

@@ -1,10 +1,11 @@
 'use client';
 
+import { type WordForm } from '@/domain/cctext';
+
 import { MiniButton } from '@/components/control';
 import { createColumnHelper, DataTable } from '@/components/data-table';
 import { IconRemove } from '@/components/icons';
 import { NoData } from '@/components/view';
-import { type WordForm } from '@/domain/cctext';
 
 import { BadgeWordForm } from '../../components/badge-word-form';
 

@@ -1,13 +1,14 @@
 'use client';
 
+import { type Graph } from '@/domain/graph/graph';
+import { type LibraryItemReference } from '@/domain/library';
+
 import { useConceptNavigation } from '@/app';
 import { MiniSelectorOSS } from '@/features/library/components/mini-selector-oss';
 
 import { MiniButton } from '@/components/control';
 import { IconCrucial, IconDestroy, IconEdit2, IconNewItem, IconTypeGraph } from '@/components/icons';
 import { cn } from '@/components/utils';
-import { type Graph } from '@/domain/graph/graph';
-import { type LibraryItemReference } from '@/domain/library';
 import { prepareTooltip } from '@/utils/format';
 
 import { useRSFormEdit } from '../rsedit-context';

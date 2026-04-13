@@ -2,13 +2,6 @@
 
 import { useForm } from '@tanstack/react-form';
 
-import { useLibrary } from '@/features/library/backend/use-library';
-import { PickSchema } from '@/features/library/components/pick-schema';
-
-import { MiniButton } from '@/components/control';
-import { IconReset } from '@/components/icons';
-import { Label } from '@/components/input';
-import { ModalForm } from '@/components/modal';
 import {
   type LibraryItem,
   LibraryItemType,
@@ -17,6 +10,14 @@ import {
   type OssLayout
 } from '@/domain/library';
 import { sortItemsForOSS } from '@/domain/library/oss-api';
+
+import { useLibrary } from '@/features/library/backend/use-library';
+import { PickSchema } from '@/features/library/components/pick-schema';
+
+import { MiniButton } from '@/components/control';
+import { IconReset } from '@/components/icons';
+import { Label } from '@/components/input';
+import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { schemaUpdateInput, type UpdateInputDTO } from '../backend/types';

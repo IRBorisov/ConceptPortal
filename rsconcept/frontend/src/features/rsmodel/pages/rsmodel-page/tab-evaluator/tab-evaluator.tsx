@@ -2,11 +2,12 @@
 
 import clsx from 'clsx';
 
+import { isProblematic } from '@/domain/library/rsform-api';
+
 import { useConceptNavigation } from '@/app';
 import { ViewConstituents } from '@/features/rsform/components/view-constituents';
 import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
 
-import { isProblematic } from '@/domain/library/rsform-api';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight, useMainHeight } from '@/stores/app-layout';
 import { usePreferencesStore } from '@/stores/preferences';

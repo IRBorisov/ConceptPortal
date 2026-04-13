@@ -1,6 +1,7 @@
 import { AccessPolicy, type CurrentVersion, LibraryItemType, LocationHead, type VersionInfo } from '@/domain/library';
 import { type FolderNode } from '@/domain/library/folder-tree';
 import { validateLocation } from '@/domain/library/library-api';
+
 import { type RO } from '@/utils/meta';
 
 /** Retrieves label for {@link LocationHead}. */

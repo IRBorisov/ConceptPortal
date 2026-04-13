@@ -5,13 +5,14 @@ import { toast } from 'react-toastify';
 import { type Connection } from '@xyflow/react';
 import clsx from 'clsx';
 
+import { NodeType, OperationType } from '@/domain/library';
+import { type Position2D } from '@/domain/library';
+import { GRID_SIZE } from '@/domain/library/oss-layout-api';
+
 import { useConceptNavigation } from '@/app';
 
 import { DiagramFlow, useReactFlow } from '@/components/flow/diagram-flow';
 import { useContinuousPan } from '@/components/flow/use-continuous-panning';
-import { NodeType, OperationType } from '@/domain/library';
-import { type Position2D } from '@/domain/library';
-import { GRID_SIZE } from '@/domain/library/oss-layout-api';
 import { useMainHeight } from '@/stores/app-layout';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';

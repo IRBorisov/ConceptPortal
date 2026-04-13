@@ -2,11 +2,12 @@
 
 import clsx from 'clsx';
 
+import { type CstStatus } from '@/domain/library';
+
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 
 import { cn } from '@/components/utils';
-import { type CstStatus } from '@/domain/library';
 import { globalIDs } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/format';
 import { isMac } from '@/utils/utils';

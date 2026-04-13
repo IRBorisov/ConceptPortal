@@ -3,6 +3,8 @@
 import { toast } from 'react-toastify';
 import fileDownload from 'js-file-download';
 
+import { AccessPolicy, LocationHead } from '@/domain/library';
+
 import { useConceptNavigation } from '@/app';
 import { useAuth } from '@/features/auth';
 import { createSandboxBundleFromRSForm } from '@/features/sandbox/models/bundle-transfer';
@@ -26,7 +28,6 @@ import {
   IconShare,
   IconUpload
 } from '@/components/icons';
-import { AccessPolicy, LocationHead } from '@/domain/library';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { EXTEOR_TRS_FILE, prefixes } from '@/utils/constants';

@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 import { LibraryItemType, type LocationHead } from '@/domain/library';
+
 import { toggleTristateFlag } from '@/utils/utils';
 
 import { type LibraryFilter } from '../models/library-filter';

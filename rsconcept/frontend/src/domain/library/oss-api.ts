@@ -2,18 +2,14 @@
  * Module: API for OperationSystem.
  */
 
-import { describeSubstitutionError } from '@/features/oss/labels';
-
-import { infoMsg } from '@/utils/labels';
-
-import { Graph } from '../graph';
-import { type AliasMapping, applyAliasMapping, applyTypificationMapping, isSetTypification } from '../rslang/api';
-import { labelType } from '../rslang/labels';
-import { extractBases } from '../rslang/semantic/typification-api';
+import { Graph } from '@/domain/graph';
+import { type AliasMapping, applyAliasMapping, applyTypificationMapping, isSetTypification } from '@/domain/rslang/api';
+import { labelType } from '@/domain/rslang/labels';
+import { extractBases } from '@/domain/rslang/semantic/typification-api';
 
 import { type LibraryItem } from './library';
-import { NodeType, type OperationSchema, SubstitutionErrorType } from './oss';
-import { type Constituenta, CstClass, CstType, type RSForm,type Substitution } from './rsform';
+import { NodeType, type OperationSchema, type SubstitutionErrorDescription, SubstitutionErrorType } from './oss';
+import { type Constituenta, CstClass, CstType, type RSForm, type Substitution } from './rsform';
 
 const STARTING_SUB_INDEX = 900; // max semantic index for starting substitution
 
@@ -46,7 +42,7 @@ type CrossMapping = Map<number, AliasMapping>;
 
 /** Validator for Substitution table. */
 export class SubstitutionValidator {
-  public msg: string = '';
+  public errors: SubstitutionErrorDescription[] = [];
   public suggestions: Substitution[] = [];
 
   private schemas: RSForm[];
@@ -92,9 +88,11 @@ export class SubstitutionValidator {
   }
 
   public validate(): boolean {
+    this.errors = [];
+    this.suggestions = [];
     this.calculateSuggestions();
     if (this.substitutions.length === 0) {
-      return this.setValid();
+      return true;
     }
     if (!this.checkTypes()) {
       return false;
@@ -105,7 +103,7 @@ export class SubstitutionValidator {
     if (!this.checkSubstitutions()) {
       return false;
     }
-    return this.setValid();
+    return true;
   }
 
   private calculateSuggestions(): void {
@@ -399,19 +397,8 @@ export class SubstitutionValidator {
     return expression1.replace(' ', '') === expression2.replace(' ', '');
   }
 
-  private setValid(): boolean {
-    if (this.msg.length > 0) {
-      this.msg += '\n';
-    }
-    this.msg += infoMsg.substitutionsCorrect;
-    return true;
-  }
-
   private reportError(errorType: SubstitutionErrorType, params: string[]): boolean {
-    if (this.msg.length > 0) {
-      this.msg += '\n';
-    }
-    this.msg += describeSubstitutionError({
+    this.errors.push({
       errorType: errorType,
       params: params
     });

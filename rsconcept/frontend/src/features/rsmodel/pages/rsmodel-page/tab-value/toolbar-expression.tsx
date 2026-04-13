@@ -2,12 +2,13 @@
 
 import { toast } from 'react-toastify';
 
+import { type ExpressionType } from '@/domain/rslang';
+
 import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
 
 import { MiniButton } from '@/components/control';
 import { IconTree, IconTypeGraph } from '@/components/icons';
 import { cn } from '@/components/utils';
-import { type ExpressionType } from '@/domain/rslang';
 import { useDialogsStore } from '@/stores/dialogs';
 import { errorMsg } from '@/utils/labels';
 import { flattenAst } from '@/utils/parsing';

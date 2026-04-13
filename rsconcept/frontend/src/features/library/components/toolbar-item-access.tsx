@@ -2,6 +2,8 @@
 
 import clsx from 'clsx';
 
+import { type AccessPolicy, type LibraryItem } from '@/domain/library';
+
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 import { useRoleStore, UserRole } from '@/features/users';
@@ -9,7 +11,6 @@ import { useRoleStore, UserRole } from '@/features/users';
 import { MiniButton } from '@/components/control';
 import { IconImmutable, IconMutable } from '@/components/icons';
 import { Label } from '@/components/input';
-import { type AccessPolicy, type LibraryItem } from '@/domain/library';
 
 import { useMutatingLibrary } from '../backend/use-mutating-library';
 import { useSetAccessPolicy } from '../backend/use-set-access-policy';

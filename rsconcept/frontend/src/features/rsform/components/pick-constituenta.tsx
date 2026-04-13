@@ -2,13 +2,14 @@
 
 import { useState } from 'react';
 
+import { type Constituenta } from '@/domain/library';
+import { matchConstituenta } from '@/domain/library/rsform-api';
+
 import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/data-table';
 import { SearchBar } from '@/components/input';
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
 import { NoData } from '@/components/view';
-import { type Constituenta } from '@/domain/library';
-import { matchConstituenta } from '@/domain/library/rsform-api';
 
 import { describeConstituenta } from '../labels';
 

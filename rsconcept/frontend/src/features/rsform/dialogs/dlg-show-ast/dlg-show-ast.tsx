@@ -5,10 +5,11 @@ import { ReactFlowProvider } from '@xyflow/react';
 import clsx from 'clsx';
 import { useDebounce } from 'use-debounce';
 
+import { type RSForm } from '@/domain/library/rsform';
+
 import { HelpTopic } from '@/features/help';
 
 import { ModalView } from '@/components/modal';
-import { type RSForm } from '@/domain/library/rsform';
 import { useDialogsStore } from '@/stores/dialogs';
 import { type RO } from '@/utils/meta';
 import { type FlatAST } from '@/utils/parsing';

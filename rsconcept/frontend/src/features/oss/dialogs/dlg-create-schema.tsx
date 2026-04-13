@@ -3,12 +3,13 @@
 import { useMemo } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
+import { type OssLayout } from '@/domain/library';
+import { LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '@/domain/library/oss-layout-api';
+
 import { HelpTopic } from '@/features/help';
 
 import { TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
-import { type OssLayout } from '@/domain/library';
-import { LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '@/domain/library/oss-layout-api';
 import { useDialogsStore } from '@/stores/dialogs';
 import { hintMsg } from '@/utils/labels';
 
@@ -57,7 +58,7 @@ export function DlgCreateSchema() {
     },
     onSubmit: ({ value }) => {
       const data = { ...value };
-      data.position = manager.newOperationPosition(data);
+      data.position = manager.newOperationPosition(data.position, data.item_data.parent);
       data.layout = manager.layout;
       void createSchema({ itemID: manager.oss.id, data }).then(response => onCreate?.(response.new_operation));
     }

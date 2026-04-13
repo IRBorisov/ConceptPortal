@@ -1,8 +1,9 @@
 'use client';
 
+import { type Block } from '@/domain/library';
+
 import { DropdownButton } from '@/components/dropdown';
 import { IconDestroy, IconEdit } from '@/components/icons';
-import { type Block } from '@/domain/library';
 import { useDialogsStore } from '@/stores/dialogs';
 
 import { useDeleteBlock } from '../../../../backend/use-delete-block';

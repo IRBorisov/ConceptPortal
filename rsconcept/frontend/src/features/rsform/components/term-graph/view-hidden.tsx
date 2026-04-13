@@ -2,10 +2,11 @@
 
 import clsx from 'clsx';
 
+import { type Constituenta, type RSForm } from '@/domain/library';
+
 import { MiniButton } from '@/components/control';
 import { IconDropArrow, IconDropArrowUp } from '@/components/icons';
 import { cn } from '@/components/utils';
-import { type Constituenta, type RSForm } from '@/domain/library';
 import { globalIDs, prefixes } from '@/utils/constants';
 
 import { colorBgGraphNode } from '../../colors';

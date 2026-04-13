@@ -14,11 +14,12 @@ import {
 } from '@xyflow/react';
 import clsx from 'clsx';
 
+import { addAliasReference } from '@/domain/library/rsform-api';
+
 import { useConceptNavigation } from '@/app';
 
 import { DiagramFlow, useReactFlow } from '@/components/flow/diagram-flow';
 import { useContinuousPan } from '@/components/flow/use-continuous-panning';
-import { addAliasReference } from '@/domain/library/rsform-api';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight, useMainHeight } from '@/stores/app-layout';
 import { PARAMETER } from '@/utils/constants';

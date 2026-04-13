@@ -2,10 +2,11 @@
 
 import { useForm } from '@tanstack/react-form';
 
+import { CstType } from '@/domain/library';
+
 import { MiniButton } from '@/components/control';
 import { Checkbox } from '@/components/input';
 import { ModalForm } from '@/components/modal';
-import { CstType } from '@/domain/library';
 import { prepareTooltip } from '@/utils/format';
 import { withPreventDefault } from '@/utils/utils';
 

@@ -2,6 +2,7 @@ import clsx from 'clsx';
 
 import { type TokenID } from '@/domain/rslang';
 import { labelToken } from '@/domain/rslang/labels';
+
 import { globalIDs } from '@/utils/constants';
 
 import { describeToken } from '../../labels';

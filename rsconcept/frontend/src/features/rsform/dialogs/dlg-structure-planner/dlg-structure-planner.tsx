@@ -4,14 +4,15 @@ import { useState } from 'react';
 import { ReactFlowProvider } from '@xyflow/react';
 import clsx from 'clsx';
 
+import { type Constituenta, CstType, type RSForm } from '@/domain/library';
+import { generateAlias } from '@/domain/library/rsform-api';
+import { type SPNode, StructurePlanner } from '@/domain/library/structure-planner';
+
 import { HelpTopic } from '@/features/help';
 
 import { MiniButton } from '@/components/control';
 import { IconNewItem, IconReset, IconSave } from '@/components/icons';
 import { ModalView } from '@/components/modal';
-import { type Constituenta, CstType, type RSForm } from '@/domain/library';
-import { generateAlias } from '@/domain/library/rsform-api';
-import { type SPNode, StructurePlanner } from '@/domain/library/structure-planner';
 import { useDialogsStore } from '@/stores/dialogs';
 import { globalIDs } from '@/utils/constants';
 import { type RO } from '@/utils/meta';

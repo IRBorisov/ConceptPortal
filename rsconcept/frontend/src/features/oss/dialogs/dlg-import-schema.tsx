@@ -3,15 +3,16 @@
 import { useMemo } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
+import { type LibraryItem, LibraryItemType, type OssLayout } from '@/domain/library';
+import { sortItemsForOSS } from '@/domain/library/oss-api';
+import { LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '@/domain/library/oss-layout-api';
+
 import { HelpTopic } from '@/features/help';
 import { useLibrary } from '@/features/library/backend/use-library';
 import { PickSchema } from '@/features/library/components/pick-schema';
 
 import { Checkbox, TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
-import { type LibraryItem, LibraryItemType, type OssLayout } from '@/domain/library';
-import { sortItemsForOSS } from '@/domain/library/oss-api';
-import { LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '@/domain/library/oss-layout-api';
 import { useDialogsStore } from '@/stores/dialogs';
 import { hintMsg } from '@/utils/labels';
 
@@ -63,7 +64,7 @@ export function DlgImportSchema() {
     },
     onSubmit: ({ value }) => {
       const data = { ...value };
-      data.position = manager.newOperationPosition(data);
+      data.position = manager.newOperationPosition(data.position, data.item_data.parent);
       data.layout = manager.layout;
       void importSchema({ itemID: manager.oss.id, data }).then(response => onCreate?.(response.new_operation));
     }

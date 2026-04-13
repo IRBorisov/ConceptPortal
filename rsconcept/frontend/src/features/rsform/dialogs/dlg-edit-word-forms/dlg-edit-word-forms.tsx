@@ -2,14 +2,15 @@
 
 import { type SubmitEvent, useState } from 'react';
 
+import { type Grammeme, parseGrammemes, supportedGrammemes, type WordForm, wordFormEquals } from '@/domain/cctext';
+import { type Constituenta } from '@/domain/library';
+
 import { HelpTopic } from '@/features/help';
 
 import { MiniButton } from '@/components/control';
 import { IconAccept, IconMoveDown, IconMoveLeft, IconMoveRight, IconRemove } from '@/components/icons';
 import { Label, TextArea } from '@/components/input';
 import { ModalForm } from '@/components/modal';
-import { type Grammeme, parseGrammemes, supportedGrammemes, type WordForm, wordFormEquals } from '@/domain/cctext';
-import { type Constituenta } from '@/domain/library';
 import { useDialogsStore } from '@/stores/dialogs';
 import { promptText } from '@/utils/labels';
 

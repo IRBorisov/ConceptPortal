@@ -1,6 +1,7 @@
+import { type Constituenta } from '@/domain/library';
+
 import { ComboMulti } from '@/components/input/combo-multi';
 import { type Styling } from '@/components/props';
-import { type Constituenta } from '@/domain/library';
 
 import { labelConstituenta } from '../labels';
 

@@ -3,10 +3,11 @@
 import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import clsx from 'clsx';
 
+import { isProblematic } from '@/domain/library/rsform-api';
+
 import { useConceptNavigation } from '@/app';
 import { useRoleStore, UserRole } from '@/features/users';
 
-import { isProblematic } from '@/domain/library/rsform-api';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight, useMainHeight } from '@/stores/app-layout';
 import { useModificationStore } from '@/stores/modification';

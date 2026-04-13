@@ -3,11 +3,12 @@
 import { toast } from 'react-toastify';
 import { ReactFlowProvider } from '@xyflow/react';
 
+import { type TypeInfo } from '@/domain/library';
+import { TypificationGraph } from '@/domain/rslang';
+
 import { HelpTopic } from '@/features/help';
 
 import { ModalView } from '@/components/modal';
-import { type TypeInfo } from '@/domain/library';
-import { TypificationGraph } from '@/domain/rslang';
 import { useDialogsStore } from '@/stores/dialogs';
 import { errorMsg } from '@/utils/labels';
 

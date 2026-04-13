@@ -2,11 +2,12 @@
 
 import clsx from 'clsx';
 
+import { type EvalStatus } from '@/domain/library';
+
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 
 import { cn } from '@/components/utils';
-import { type EvalStatus } from '@/domain/library';
 import { globalIDs } from '@/utils/constants';
 
 import { colorStatusBar } from '../../colors';

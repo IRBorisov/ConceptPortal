@@ -3,10 +3,11 @@
 import { useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 
+import { type InlinePosition, type SyntacticRefState } from '@/domain/cctext';
+
 import { MiniButton } from '@/components/control';
 import { IconAccept, IconClose, IconPageLeft, IconPageRight } from '@/components/icons';
 import { Label, TextInput } from '@/components/input';
-import { type InlinePosition, type SyntacticRefState } from '@/domain/cctext';
 import { prepareTooltip } from '@/utils/format';
 import { isMac } from '@/utils/utils';
 

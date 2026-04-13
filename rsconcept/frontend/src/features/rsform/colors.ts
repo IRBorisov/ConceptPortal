@@ -1,6 +1,7 @@
 import { type Constituenta, CstClass, CstStatus } from '@/domain/library';
 import { TokenID } from '@/domain/rslang';
 import { type TypificationNodeData } from '@/domain/rslang/typification-graph';
+
 import { APP_COLORS } from '@/styling/colors';
 import { type FlatAstNode } from '@/utils/parsing';
 

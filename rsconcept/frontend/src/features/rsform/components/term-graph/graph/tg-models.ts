@@ -6,6 +6,7 @@ import { type Edge, type Node } from '@xyflow/react';
 
 import { type Graph } from '@/domain/graph/graph';
 import { type Constituenta, CstType, type RSForm } from '@/domain/library';
+
 import { PARAMETER } from '@/utils/constants';
 
 import { type GraphFilterParams, TGEdgeType } from '../../../stores/term-graph';

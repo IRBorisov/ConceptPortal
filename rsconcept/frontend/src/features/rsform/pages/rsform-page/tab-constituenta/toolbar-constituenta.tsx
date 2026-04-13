@@ -1,5 +1,7 @@
 'use client';
 
+import { type Constituenta } from '@/domain/library';
+
 import { useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
@@ -18,7 +20,6 @@ import {
   IconSave
 } from '@/components/icons';
 import { cn } from '@/components/utils';
-import { type Constituenta } from '@/domain/library';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { prepareTooltip } from '@/utils/format';

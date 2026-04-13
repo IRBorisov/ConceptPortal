@@ -1,22 +1,23 @@
-import { toast } from 'react-toastify';
+import {
+  type CalculatorEvaluateOptions,
+  type CalculatorResult,
+  RSCalculator,
+  TypeID,
+  type Value
+} from '@/domain/rslang';
+import { compare } from '@/domain/rslang/eval/value';
+import { normalizeType } from '@/domain/rslang/labels';
 
-import { type RSModelDTO } from '@/features/rsmodel';
-
-import { errorMsg, infoMsg } from '@/utils/labels';
-import { type RO } from '@/utils/meta';
 import { type AstNode } from '@/utils/parsing';
-
-import { type CalculatorEvaluateOptions, type CalculatorResult, RSCalculator, TypeID, type Value } from '../rslang';
-import { compare } from '../rslang/eval/value';
-import { normalizeType } from '../rslang/labels';
 
 import { CstType, type RSForm } from './rsform';
 import { getAnalysisFor, isBaseSet, isBasicConcept, isFunctional } from './rsform-api';
-import { type BasicBinding, type BasicsContext, type EvalStatus, TYPE_BASIC } from './rsmodel';
+import { type BasicBinding, type BasicsContext, type EvalStatus, type RSModel, TYPE_BASIC } from './rsmodel';
 import { inferEvalStatus, isInferrable, tryFixValue } from './rsmodel-api';
 
 const INVALID_TYPE_MARKER = 'INVALID';
 
+/** Services for {@link RSEngine}. */
 export interface RSEngineServices {
   setCstValue: (args: {
     itemID: number;
@@ -25,35 +26,44 @@ export interface RSEngineServices {
   clearValues: (args: { itemID: number; data: { items: number[] } }) => Promise<unknown>;
 }
 
+/** Notifications for {@link RSEngine}. */
+export interface RSEngineNotifications {
+  onInvalidSetValue: () => void;
+  onCalculationSuccess: (timeSpent: string) => void;
+  onEvaluationError: (message: string) => void;
+}
+
 /** Calculation engine for {@link RSModel}. */
 export class RSEngine {
   public modelID: number;
   public schema: RSForm | null = null;
-  public data: RO<RSModelDTO> | null = null;
+  public data: RSModel | null = null;
   public calculator = new RSCalculator();
   public basics: BasicsContext = new Map<number, BasicBinding>();
 
   private services: RSEngineServices;
+  private notifications: RSEngineNotifications | null;
   private invalidData = new Set<number>();
   private calculatedSet = new Set<number>();
   private valueSubscribers = new Map<number, Set<() => void>>();
   private statusSubscribers = new Map<number, Set<() => void>>();
 
-  constructor(modelID: number, services: RSEngineServices) {
+  constructor(modelID: number, services: RSEngineServices, notifications: RSEngineNotifications | null = null) {
     this.services = services;
+    this.notifications = notifications;
     this.modelID = modelID;
   }
 
   /** Updates data for {@link RSEngine}. */
-  public loadData(schema: RSForm, dto: RO<RSModelDTO>): void {
+  public loadData(schema: RSForm, model: RSModel): void {
     const newSchema = this.schema !== schema;
     this.schema = schema;
     if (newSchema) {
       this.prepareAst();
       this.setupEmptySets();
     }
-    if (this.data !== dto) {
-      this.data = dto;
+    if (this.data !== model) {
+      this.data = model;
       this.prepareValues();
     }
     this.notifyAll();
@@ -62,6 +72,11 @@ export class RSEngine {
   /** Updates services for {@link RSEngine}. */
   public updateServices(services: RSEngineServices): void {
     this.services = services;
+  }
+
+  /** Updates notifications for {@link RSEngine}. */
+  public updateNotifications(notifications: RSEngineNotifications | null): void {
+    this.notifications = notifications;
   }
 
   /** Gets value of {@link Constituenta}. */
@@ -127,7 +142,7 @@ export class RSEngine {
   public async setStructureValue(cstID: number, data: Value): Promise<void> {
     const cst = this.schema?.cstByID.get(cstID);
     if (!this.schema || !cst || isInferrable(cst.cst_type)) {
-      toast.error(errorMsg.invalidSetValue);
+      this.notifications?.onInvalidSetValue();
       return;
     }
 
@@ -149,7 +164,7 @@ export class RSEngine {
   public async setBasicValue(cstID: number, data: BasicBinding): Promise<void> {
     const cst = this.schema?.cstByID.get(cstID);
     if (!this.schema || !cst || !isBaseSet(cst.cst_type)) {
-      toast.error(errorMsg.invalidSetValue);
+      this.notifications?.onInvalidSetValue();
       return;
     }
     const oldValue = this.calculator.getValue(cst.alias);
@@ -227,7 +242,9 @@ export class RSEngine {
 
   /** Evaluates expression for {@link RSEngine}. */
   public evaluateExpression(expression: string, cstType: CstType): CalculatorResult {
-    return getEvaluationFor(expression, cstType, this.schema!, this.calculator);
+    return getEvaluationFor(expression, cstType, this.schema!, this.calculator, message =>
+      this.notifications?.onEvaluationError(message)
+    );
   }
 
   /** Evaluates AST for {@link RSEngine}. */
@@ -236,7 +253,7 @@ export class RSEngine {
       const evaluation = this.calculator.evaluateFull(ast, options);
       return evaluation;
     } catch (error) {
-      toast.error((error as Error).message);
+      this.notifications?.onEvaluationError((error as Error).message);
       console.error(error);
       return {
         value: null,
@@ -257,7 +274,9 @@ export class RSEngine {
       const predecessors = this.schema.graph.expandAllInputs([cstID]);
       this.prepareEvaluation(predecessors);
     }
-    const result = getEvaluationFor(cst.definition_formal, cst.cst_type, this.schema, this.calculator);
+    const result = getEvaluationFor(cst.definition_formal, cst.cst_type, this.schema, this.calculator, message =>
+      this.notifications?.onEvaluationError(message)
+    );
 
     if (result.value === null) {
       this.calculator.resetValue(cst.alias);
@@ -279,7 +298,7 @@ export class RSEngine {
     this.recalculateInternal();
     const end = performance.now();
     const timeSpent = ((end - start) / 1000).toFixed(2);
-    toast.success(infoMsg.calculationSuccess(timeSpent));
+    this.notifications?.onCalculationSuccess(timeSpent);
   }
 
   /** Notify subscribers about value and status change of {@link Constituenta}. */
@@ -384,7 +403,9 @@ export class RSEngine {
       if (dependencies.includes(cstID)) {
         const cst = this.schema!.cstByID.get(cstID)!;
         if (isInferrable(cst.cst_type)) {
-          const value = fastEvaluation(cst.definition_formal, cst.cst_type, this.schema!, this.calculator);
+          const value = fastEvaluation(cst.definition_formal, cst.cst_type, this.schema!, this.calculator, message =>
+            this.notifications?.onEvaluationError(message)
+          );
           if (value !== null) {
             this.calculator.setValue(cst.alias, value);
           } else {
@@ -427,7 +448,8 @@ function getEvaluationFor(
   expression: string,
   cstType: CstType,
   schema: RSForm,
-  calculator: RSCalculator
+  calculator: RSCalculator,
+  onEvaluationError?: (message: string) => void
 ): CalculatorResult {
   const parse = getAnalysisFor(expression, cstType, schema);
   if (!parse.success || !parse.ast) {
@@ -445,7 +467,7 @@ function getEvaluationFor(
         errors: [...parse.errors, ...result.errors]
       };
     } catch (error) {
-      toast.error((error as Error).message);
+      onEvaluationError?.((error as Error).message);
       console.error(expression, error);
       return {
         value: null,
@@ -457,7 +479,13 @@ function getEvaluationFor(
 }
 
 /** Evaluates expression for {@link RSModel}. */
-function fastEvaluation(expression: string, cstType: CstType, schema: RSForm, calculator: RSCalculator): Value | null {
+function fastEvaluation(
+  expression: string,
+  cstType: CstType,
+  schema: RSForm,
+  calculator: RSCalculator,
+  onEvaluationError?: (message: string) => void
+): Value | null {
   const parse = getAnalysisFor(expression, cstType, schema);
   if (!parse.success || !parse.ast) {
     return null;
@@ -465,7 +493,7 @@ function fastEvaluation(expression: string, cstType: CstType, schema: RSForm, ca
     try {
       return calculator.evaluateFast(parse.ast);
     } catch (error) {
-      toast.error((error as Error).message);
+      onEvaluationError?.((error as Error).message);
       console.error(expression, error);
       return null;
     }

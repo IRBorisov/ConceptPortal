@@ -1,3 +1,5 @@
+import { type Graph } from '@/domain/graph/graph';
+
 import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import {
@@ -17,7 +19,6 @@ import {
 } from '@/components/icons';
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
-import { type Graph } from '@/domain/graph/graph';
 import { prepareTooltip } from '@/utils/format';
 
 interface ToolbarGraphSelectionProps extends Styling {

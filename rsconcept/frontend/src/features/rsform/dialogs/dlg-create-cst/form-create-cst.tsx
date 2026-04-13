@@ -2,13 +2,14 @@
 
 import { type ReactNode, useState } from 'react';
 
+import { CstType, type RSForm } from '@/domain/library';
+import { isBaseSet, isBasicConcept } from '@/domain/library/rsform-api';
+
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 
 import { MiniButton } from '@/components/control';
 import { TextArea, TextInput } from '@/components/input';
-import { CstType, type RSForm } from '@/domain/library';
-import { isBaseSet, isBasicConcept } from '@/domain/library/rsform-api';
 import { type CreateFieldProps } from '@/utils/forms';
 
 import { type CreateConstituentaDTO } from '../../backend/types';

@@ -3,6 +3,8 @@
 import { useRef } from 'react';
 import { toast } from 'react-toastify';
 
+import { LibraryItemType } from '@/domain/library';
+
 import { useConceptNavigation } from '@/app';
 
 import { Divider } from '@/components/container';
@@ -17,7 +19,6 @@ import {
   IconRSModel,
   IconUpload
 } from '@/components/icons';
-import { LibraryItemType } from '@/domain/library';
 import { errorMsg, infoMsg, promptText } from '@/utils/labels';
 
 import { useSandboxBundle } from '../../context/bundle-context';

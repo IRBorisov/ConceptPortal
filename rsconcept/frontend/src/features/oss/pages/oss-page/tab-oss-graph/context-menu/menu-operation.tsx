@@ -2,6 +2,9 @@
 
 import { toast } from 'react-toastify';
 
+import { type Operation, OperationType } from '@/domain/library';
+import { LayoutManager } from '@/domain/library/oss-layout-api';
+
 import { useConceptNavigation } from '@/app';
 import { useLibrary } from '@/features/library/backend/use-library';
 
@@ -17,8 +20,6 @@ import {
   IconReference,
   IconRSForm
 } from '@/components/icons';
-import { type Operation, OperationType } from '@/domain/library';
-import { LayoutManager } from '@/domain/library/oss-layout-api';
 import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/format';

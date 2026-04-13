@@ -1,13 +1,7 @@
-import { makeTypePath, type TypePath } from '@/domain/rslang';
+import { makeTypePath, TypeID, type TypePath, type Typification } from '@/domain/rslang';
 import { splitTemplateDefinition } from '@/domain/rslang/api';
 import { labelType } from '@/domain/rslang/labels';
-import {
-  bool,
-  type EchelonFunctional,
-  isTypification,
-  TypeID,
-  type Typification
-} from '@/domain/rslang/semantic/typification';
+import { bool, type EchelonFunctional, isTypification } from '@/domain/rslang/semantic/typification';
 
 import { type Constituenta, CstType, type RSForm } from './rsform';
 import { findCstByStructure } from './rsform-api';

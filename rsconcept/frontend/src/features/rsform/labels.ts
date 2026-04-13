@@ -4,6 +4,7 @@
 
 import { type Constituenta, CstClass, CstStatus, CstType } from '@/domain/library';
 import { TokenID } from '@/domain/rslang';
+
 import { prepareTooltip } from '@/utils/format';
 import { type RO } from '@/utils/meta';
 

@@ -1,3 +1,5 @@
+import { type OperationSchemaStats } from '@/domain/library';
+
 import {
   IconConceptBlock,
   IconDownload,
@@ -9,7 +11,6 @@ import {
 } from '@/components/icons';
 import { cn } from '@/components/utils';
 import { ValueStats } from '@/components/view';
-import { type OperationSchemaStats } from '@/domain/library';
 
 interface OssStatsProps {
   className?: string;

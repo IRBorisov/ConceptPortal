@@ -1,7 +1,8 @@
 'use client';
 
-import { cn } from '@/components/utils';
 import { type Constituenta, type RSEngine, type RSForm } from '@/domain/library';
+
+import { cn } from '@/components/utils';
 
 import { ConstituentsSearch } from './constituents-search';
 import { TableSideConstituents } from './table-side-constituents';

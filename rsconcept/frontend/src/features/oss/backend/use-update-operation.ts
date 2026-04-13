@@ -1,9 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { type LibraryItem } from '@/domain/library';
+
 import { useUpdateTimestamp } from '@/features/library/backend/use-update-timestamp';
 
 import { KEYS } from '@/backend/configuration';
-import { type LibraryItem } from '@/domain/library';
 
 import { ossApi } from './api';
 

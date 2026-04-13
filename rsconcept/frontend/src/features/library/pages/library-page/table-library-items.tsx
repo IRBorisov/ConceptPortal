@@ -2,12 +2,13 @@
 
 import clsx from 'clsx';
 
+import { type LibraryItem } from '@/domain/library';
+import { LibraryItemType } from '@/domain/library';
+
 import { useConceptNavigation } from '@/app';
 
 import { TextURL } from '@/components/control';
 import { DataTable, type IConditionalStyle, type VisibilityState } from '@/components/data-table';
-import { type LibraryItem } from '@/domain/library';
-import { LibraryItemType } from '@/domain/library';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight } from '@/stores/app-layout';
 import { usePreferencesStore } from '@/stores/preferences';

@@ -2,14 +2,16 @@
 
 import { useForm, useStore } from '@tanstack/react-form';
 
+import { type RSForm } from '@/domain/library';
+import { SubstitutionValidator } from '@/domain/library/oss-api';
+
 import { HelpTopic } from '@/features/help';
+import { describeSubstitutionError } from '@/features/oss/labels';
 
 import { ErrorField, TextArea } from '@/components/input';
 import { ModalForm } from '@/components/modal';
-import { type RSForm } from '@/domain/library';
-import { SubstitutionValidator } from '@/domain/library/oss-api';
 import { useDialogsStore } from '@/stores/dialogs';
-import { hintMsg } from '@/utils/labels';
+import { hintMsg, infoMsg } from '@/utils/labels';
 
 import { schemaSubstitutions, type SubstitutionsDTO } from '../backend/types';
 import { PickSubstitutions } from '../components/pick-substitutions';
@@ -38,6 +40,9 @@ export function DlgSubstituteCst() {
 
   const validator = new SubstitutionValidator([schema], substitutions);
   const isCorrect = validator.validate();
+  const validationMessages = isCorrect
+    ? [infoMsg.substitutionsCorrect]
+    : validator.errors.map(error => describeSubstitutionError(error));
 
   return (
     <ModalForm
@@ -69,7 +74,7 @@ export function DlgSubstituteCst() {
       </form.Field>
       <TextArea
         disabled
-        value={validator.msg}
+        value={validationMessages.join('\n')}
         rows={4}
         className='mt-3'
         areaClassName={isCorrect ? '' : 'border-accent-red-foreground border-2'}
