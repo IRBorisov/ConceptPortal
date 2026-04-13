@@ -9,6 +9,13 @@ import { getAnalysisFor, inferStatus } from '@/domain/library/rsform-api';
 import { type AnalysisFull, getRSErrorRange, type RSErrorDescription, TokenID } from '@/domain/rslang';
 import { rslangParser } from '@/domain/rslang';
 
+import {
+  type ConstituentaCreatedResponse,
+  type CreateConstituentaDTO,
+  type RSFormDTO,
+  type UpdateConstituentaDTO
+} from '@/features/rsform/backend/types';
+
 import { useResetOnChange } from '@/hooks/use-reset-on-change';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
@@ -41,6 +48,8 @@ interface EditorRSExpressionProps {
   onAnalysis: (typification: RO<AnalysisFull> | null) => void;
   onOpenEdit: (cstID: number) => void;
   onShowTypeGraph: (event: React.MouseEvent<Element>) => void;
+  onAstCreate?: (data: CreateConstituentaDTO) => Promise<RO<ConstituentaCreatedResponse>>;
+  onAstUpdate?: (data: UpdateConstituentaDTO) => Promise<RO<RSFormDTO>>;
 }
 
 function extractCstData(cst: Constituenta) {
@@ -69,6 +78,8 @@ export function EditorRSExpression({
   onAnalysis,
   onOpenEdit,
   onShowTypeGraph,
+  onAstCreate,
+  onAstUpdate,
   ...restProps
 }: EditorRSExpressionProps) {
   const [isModified, setIsModified] = useState(false);
@@ -99,6 +110,16 @@ export function EditorRSExpression({
   function handleChange(newValue: string) {
     onChange(newValue);
     setIsModified(newValue !== activeCst.definition_formal);
+  }
+
+  async function handleUpdateFromAstDialog(data: UpdateConstituentaDTO): Promise<RO<RSFormDTO>> {
+    if (!onAstUpdate) {
+      throw new Error('onAstUpdate callback is required');
+    }
+    if (data.target === activeCst.id && data.item_data.definition_formal !== undefined) {
+      handleChange(data.item_data.definition_formal);
+    }
+    return onAstUpdate(data);
   }
 
   function handleCheckExpression(
@@ -157,7 +178,14 @@ export function EditorRSExpression({
       const tree = rslangParser.parse(value);
       const ast = buildTree(tree.cursor());
       const flatAst = flattenAst(ast);
-      showAST({ syntaxTree: flatAst, expression: value, schema });
+      showAST({
+        syntaxTree: flatAst,
+        expression: value,
+        schema,
+        targetID: activeCst.id,
+        onCreate: onAstCreate,
+        onUpdate: onAstUpdate ? handleUpdateFromAstDialog : undefined
+      });
     } else {
       const parse = schema.analyzer.checkFull(value, { annotateTypes: true, annotateErrors: true });
       if (!parse.ast) {
@@ -165,7 +193,14 @@ export function EditorRSExpression({
         return;
       }
       const flatAst = flattenAst(parse.ast);
-      showAST({ syntaxTree: flatAst, expression: value, schema });
+      showAST({
+        syntaxTree: flatAst,
+        expression: value,
+        schema,
+        targetID: activeCst.id,
+        onCreate: onAstCreate,
+        onUpdate: onAstUpdate ? handleUpdateFromAstDialog : undefined
+      });
     }
   }
 
