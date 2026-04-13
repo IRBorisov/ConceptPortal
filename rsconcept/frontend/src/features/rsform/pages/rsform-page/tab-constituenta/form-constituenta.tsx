@@ -285,8 +285,8 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
               onAnalysis={setLocalParse}
               onOpenEdit={onOpenEdit}
               onShowTypeGraph={handleTypeGraph}
-              onAstCreate={createCstFromData}
-              onAstUpdate={patchConstituenta}
+              onCreateCst={createCstFromData}
+              onUpdateCst={patchConstituenta}
               disabled={disabled || activeCst.is_inherited}
             />
           )}

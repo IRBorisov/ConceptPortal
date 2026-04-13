@@ -91,9 +91,14 @@ const DlgRenameCst = React.lazy(() =>
     default: module.DlgRenameCst
   }))
 );
-const DlgShowAST = React.lazy(() =>
+const DlgShowFlatAst = React.lazy(() =>
   import('@/features/rsform/dialogs/dlg-show-ast').then(module => ({
-    default: module.DlgShowAST
+    default: module.DlgShowFlatAst
+  }))
+);
+const DlgShowAstExtract = React.lazy(() =>
+  import('@/features/rsform/dialogs/dlg-show-ast-extract').then(module => ({
+    default: module.DlgShowAstExtract
   }))
 );
 const DlgShowQR = React.lazy(() =>
@@ -199,8 +204,10 @@ export const GlobalDialogs = () => {
       return <DlgInlineSynthesis />;
     case DialogType.OSS_SETTINGS:
       return <DlgOssSettings />;
-    case DialogType.SHOW_AST:
-      return <DlgShowAST />;
+    case DialogType.SHOW_FLAT_AST:
+      return <DlgShowFlatAst />;
+    case DialogType.AST_EXTRACT_SUBTREE:
+      return <DlgShowAstExtract />;
     case DialogType.SHOW_TYPE_GRAPH:
       return <DlgShowTypeGraph />;
     case DialogType.CHANGE_INPUT_SCHEMA:

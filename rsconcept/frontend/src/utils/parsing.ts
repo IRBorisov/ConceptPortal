@@ -21,6 +21,7 @@ export interface AstNodeBase {
 
 /** Represents AST structured node. */
 export interface AstNode extends Record<string, unknown>, AstNodeBase {
+  uid: number;
   from: number;
   to: number;
   hasError: boolean;
@@ -32,7 +33,7 @@ export interface AstNode extends Record<string, unknown>, AstNodeBase {
 /** Represents AST node. */
 export interface FlatAstNode extends Record<string, unknown>, AstNodeBase {
   uid: number;
-  parent: number;
+  parent: number | null;
   from: number;
   to: number;
 }
@@ -40,38 +41,19 @@ export interface FlatAstNode extends Record<string, unknown>, AstNodeBase {
 /** Represents Syntax tree flat representation. */
 export type FlatAST = FlatAstNode[];
 
-/** Builds AST tree from a given tree cursor. */
-export function buildTree(cursor: TreeCursor, parent: AstNode | null = null): AstNode {
-  const node = cursor.node;
-
-  const result: AstNode = {
-    typeID: node.type.isError ? 0 : node.type.id,
-    from: node.from,
-    to: node.to,
-    hasError: node.type.isError,
-    data: node.type.isError ? { dataType: 'null', value: null } : { dataType: 'string', value: node.type.name },
-    parent,
-    children: []
-  };
-
-  if (cursor.firstChild()) {
-    do {
-      const child = buildTree(cursor, result);
-      if (child.hasError) {
-        result.hasError = true;
-      }
-      result.children.push(child);
-    } while (cursor.nextSibling());
-    cursor.parent();
+/** Builds AST tree from a given tree cursor, generating unique uids for each node. */
+export function buildTree(cursor: TreeCursor): AstNode {
+  let nextUid = 1;
+  function genUid() {
+    return nextUid++;
   }
-  return result;
+  return buildTreeInternal(cursor, null, genUid);
 }
 
 /** Flattens AST tree to a array form. */
-export function flattenAst(node: AstNode, parent = TOKEN_ERROR, out: FlatAST = []): FlatAST {
-  const uid = out.length;
+export function flattenAst(node: AstNode, parent: number | null = null, out: FlatAST = []): FlatAST {
   out.push({
-    uid: uid,
+    uid: node.uid,
     parent: parent,
     typeID: node.typeID,
     from: node.from,
@@ -80,7 +62,7 @@ export function flattenAst(node: AstNode, parent = TOKEN_ERROR, out: FlatAST = [
     annotation: node.annotation
   });
   for (const child of node.children) {
-    flattenAst(child, uid, out);
+    flattenAst(child, node.uid, out);
   }
   return out;
 }
@@ -91,6 +73,17 @@ export function visitAstDFS(node: AstNode, callback: (node: AstNode) => void) {
     visitAstDFS(child, callback);
   }
   callback(node);
+}
+
+/** Finds and returns the AstNode with the given ui. */
+export function findByUid(root: AstNode, uid: number): AstNode | null {
+  let found: AstNode | null = null;
+  visitAstDFS(root, node => {
+    if (node.uid === uid && !found) {
+      found = node;
+    }
+  });
+  return found;
 }
 
 /** Prints AST tree. */
@@ -116,4 +109,32 @@ export function getNodeIndices(node: AstNode): number[] {
     return (node.data.value as string[]).map(s => parseInt(s, 10)).filter(n => !isNaN(n));
   }
   return [];
+}
+
+// ======== Internals ========
+function buildTreeInternal(cursor: TreeCursor, parent: AstNode | null = null, genUid: () => number): AstNode {
+  const node = cursor.node;
+
+  const result: AstNode = {
+    uid: genUid(),
+    typeID: node.type.isError ? 0 : node.type.id,
+    from: node.from,
+    to: node.to,
+    hasError: node.type.isError,
+    data: node.type.isError ? { dataType: 'null', value: null } : { dataType: 'string', value: node.type.name },
+    parent,
+    children: []
+  };
+
+  if (cursor.firstChild()) {
+    do {
+      const child = buildTreeInternal(cursor, result, genUid);
+      if (child.hasError) {
+        result.hasError = true;
+      }
+      result.children.push(child);
+    } while (cursor.nextSibling());
+    cursor.parent();
+  }
+  return result;
 }

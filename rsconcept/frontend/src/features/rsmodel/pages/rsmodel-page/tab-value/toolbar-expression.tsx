@@ -22,7 +22,7 @@ interface ToolbarExpressionProps {
 export function ToolbarExpression({ className, expression, type }: ToolbarExpressionProps) {
   const { schema } = useRSFormEdit();
 
-  const showAST = useDialogsStore(state => state.showShowAST);
+  const showFlatAst = useDialogsStore(state => state.showShowFlatAst);
   const showTypification = useDialogsStore(state => state.showShowTypeGraph);
 
   function handleShowAST() {
@@ -32,7 +32,11 @@ export function ToolbarExpression({ className, expression, type }: ToolbarExpres
       return;
     }
     const flatAst = flattenAst(parse.ast);
-    showAST({ syntaxTree: flatAst, expression, schema });
+    showFlatAst({
+      ast: flatAst,
+      expression,
+      schema
+    });
   }
 
   function handleTypeGraph() {

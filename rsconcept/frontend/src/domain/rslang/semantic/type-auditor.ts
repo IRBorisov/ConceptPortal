@@ -4,7 +4,7 @@
 
 import { type AstNode, getNodeIndices, getNodeText } from '@/utils/parsing';
 
-import { annotateError } from '../ast-annotations';
+import { annotateError, annotateType } from '../ast-annotations';
 import { type ErrorReporter, RSErrorCode } from '../error';
 import { labelRSLangNode, labelToken, labelType } from '../labels';
 import { TokenID } from '../parser/token';
@@ -76,10 +76,7 @@ export class TypeAuditor {
   private dispatchDeclare(node: AstNode, domain: Typification): boolean {
     const result = this.processDeclare(node, domain);
     if (result === true && this.annotateTypes) {
-      node.annotation = {
-        ...(typeof node.annotation === 'object' && node.annotation !== null ? node.annotation : {}),
-        rsType: domain
-      };
+      annotateType(node, domain);
     }
     return result;
   }
@@ -125,10 +122,7 @@ export class TypeAuditor {
   private dispatchVisit(node: AstNode): ExpressionType | null {
     const result = this.processVisit(node);
     if (result !== null && this.annotateTypes) {
-      node.annotation = {
-        ...(node.annotation ? node.annotation : {}),
-        rsType: result
-      };
+      annotateType(node, result);
     }
     return result;
   }
@@ -358,10 +352,7 @@ export class TypeAuditor {
       return this.onError(RSErrorCode.globalNotTyped, node, [funcName]);
     }
     if (this.annotateTypes) {
-      node.children[0].annotation = {
-        ...(node.annotation ? node.annotation : {}),
-        rsType: funcType
-      };
+      annotateType(node.children[0], funcType);
     }
 
     const substitutes = this.checkFuncArguments(node, funcName, funcType);

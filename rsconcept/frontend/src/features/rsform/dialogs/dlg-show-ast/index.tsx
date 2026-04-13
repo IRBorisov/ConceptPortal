@@ -1,1 +1,1 @@
-export { DlgShowAST } from './dlg-show-ast';
+export { DlgShowFlatAst, type DlgShowFlatAstProps } from './dlg-show-flat-ast';

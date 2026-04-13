@@ -12,6 +12,7 @@ export {
   type AnalysisOptions,
   RSLangAnalyzer
 } from './semantic/analyzer';
+export { type ArgumentsType } from './semantic/arguments-extractor';
 export {
   AnyTypificationT,
   EmptySetT,

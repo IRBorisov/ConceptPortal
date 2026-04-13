@@ -4,24 +4,24 @@ import { Handle, type NodeProps, Position } from '@xyflow/react';
 import clsx from 'clsx';
 
 import { type RSForm } from '@/domain/library/rsform';
-import { type ExpressionType, readErrorAnnotation } from '@/domain/rslang';
+import { readErrorAnnotation, readTypeAnnotation } from '@/domain/rslang';
 import { describeRSError, labelRSLangNode, labelType } from '@/domain/rslang/labels';
 import { TokenID } from '@/domain/rslang/parser/token';
 
 import { globalIDs } from '@/utils/constants';
-import { type FlatAstNode } from '@/utils/parsing';
+import { type AstNode, type FlatAstNode } from '@/utils/parsing';
 
 import { colorBgSyntaxTree } from '../../../colors';
 import { useShowAstSchema } from '../show-ast-schema-context';
 
-import { type ASTNode } from './ast-models';
+import { type AstGraphNode } from './ast-models';
 
 const LABEL_THRESHOLD = 3;
 
-export function ASTNodeComponent(node: NodeProps<ASTNode>) {
+export function ASTNodeComponent(node: NodeProps<AstGraphNode>) {
   const schema = useShowAstSchema();
   const label = labelRSLangNode(node.data);
-  const errorData = readErrorAnnotation(node.data.annotation);
+  const errorData = readErrorAnnotation(node.data as AstNode);
   const errorMessage = errorData ? describeRSError(errorData.code, errorData.params ?? []) : '';
   const tooltipText = buildTooltip(node.data, schema, errorMessage);
 
@@ -58,8 +58,8 @@ export function ASTNodeComponent(node: NodeProps<ASTNode>) {
 
 // ====== Internal ======
 function buildTooltip(data: FlatAstNode, schema: RSForm | null, errorMessages: string): string {
-  const rsType = data.annotation?.rsType as ExpressionType | undefined;
-  const typeLine = rsType ? `Тип: <span class="font-math">${labelType(rsType)}</span>` : '';
+  const type = readTypeAnnotation(data as AstNode);
+  const typeLine = type ? `Тип: <span class="font-math">${labelType(type)}</span>` : '';
   const errorBlock = errorMessages ? `<span class="text-destructive">${errorMessages}</span>` : '';
   const isGlobalId =
     data.typeID === TokenID.ID_GLOBAL || data.typeID === TokenID.ID_FUNCTION || data.typeID === TokenID.ID_PREDICATE;

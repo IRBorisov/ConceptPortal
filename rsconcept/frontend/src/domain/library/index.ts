@@ -1,4 +1,3 @@
-export { type SubtreeExtractionPlan } from './ast-subtree-extraction';
 export { FolderNode, FolderTree } from './folder-tree';
 export {
   AccessPolicy,
