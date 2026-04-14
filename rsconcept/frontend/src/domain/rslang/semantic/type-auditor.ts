@@ -349,7 +349,7 @@ export class TypeAuditor {
     const funcName = getNodeText(node.children[0]);
     const funcType = this.context.get(funcName);
     if (funcType?.typeID !== TypeID.function && funcType?.typeID !== TypeID.predicate) {
-      return this.onError(RSErrorCode.globalNotTyped, node, [funcName]);
+      return this.onError(RSErrorCode.globalNotTyped, node.children[0], [funcName]);
     }
     if (this.annotateTypes) {
       annotateType(node.children[0], funcType);

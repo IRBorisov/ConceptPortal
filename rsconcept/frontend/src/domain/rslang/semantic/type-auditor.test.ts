@@ -153,6 +153,7 @@ const correctTypesData = [
 const errorData = [
   // Identifiers
   ['X42', { code: RSErrorCode.globalNotTyped, from: 0, to: 3, params: ['X42'] }],
+  ['F42[X1]', { code: RSErrorCode.globalNotTyped, from: 0, to: 3, params: ['F42'] }],
   // Radicals
   ['R1', { code: RSErrorCode.radicalUsage, from: 0, to: 2, params: ['R1'] }],
   ['[a∈ℬ(R1)] R1\\a', { code: RSErrorCode.radicalUsage, from: 10, to: 12, params: ['R1'] }],

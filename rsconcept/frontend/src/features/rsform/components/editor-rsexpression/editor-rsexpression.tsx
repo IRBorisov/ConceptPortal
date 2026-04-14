@@ -6,7 +6,7 @@ import { type ReactCodeMirrorRef } from '@uiw/react-codemirror';
 
 import { type Constituenta, CstStatus, type RSForm } from '@/domain/library';
 import { getAnalysisFor, inferStatus } from '@/domain/library/rsform-api';
-import { type AnalysisFull, getRSErrorRange, type RSErrorDescription, TokenID } from '@/domain/rslang';
+import { type AnalysisFull, type RSErrorDescription, TokenID } from '@/domain/rslang';
 import { rslangParser } from '@/domain/rslang';
 
 import {
@@ -150,11 +150,10 @@ export function EditorRSExpression({
     if (!rsInput.current) {
       return;
     }
-    const range = getRSErrorRange(error);
     rsInput.current?.view?.dispatch({
       selection: {
-        anchor: range.from,
-        head: range.to
+        anchor: error.from,
+        head: error.to
       }
     });
     rsInput.current?.view?.focus();
