@@ -11,6 +11,7 @@ export const PARAMETER = {
   notificationDelay: 300, // Duration to display notifications (in milliseconds)
   zoomDuration: 500, // Duration of zoom animations (in milliseconds)
   navigationPopupDelay: 300, // Delay before showing navigation popups (in milliseconds)
+  rsInputAutoCheckDelay: 3000, // Delay before local expression auto-check in RSInput (in milliseconds)
 
   moveDuration: 500, // Duration of move animations (in milliseconds)
   graphLayoutDuration: 1000, // Duration of graph layout animations (in milliseconds)

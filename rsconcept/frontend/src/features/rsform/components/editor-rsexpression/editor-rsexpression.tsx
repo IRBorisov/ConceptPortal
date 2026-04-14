@@ -88,7 +88,7 @@ export function EditorRSExpression({
   const showControls = usePreferencesStore(state => state.showExpressionControls);
   const showFlatAst = useDialogsStore(state => state.showShowFlatAst);
   const showAstExtract = useDialogsStore(state => state.showShowAstExtract);
-  const [errors, setErrors] = useState<RO<RSErrorDescription[]>>(analysis?.errors ?? []);
+  const [errors, setErrors] = useState<RO<RSErrorDescription[] | null>>(analysis?.errors ?? null);
 
   const resetHandler = useCallback(() => {
     setIsModified(false);
@@ -98,7 +98,7 @@ export function EditorRSExpression({
   useEffect(
     function syncErrors() {
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setErrors(analysis?.errors ?? []);
+      setErrors(analysis?.errors ?? null);
     },
     [analysis]
   );
@@ -120,7 +120,7 @@ export function EditorRSExpression({
   function handleChange(newValue: string) {
     onChange(newValue);
     setIsModified(newValue !== activeCst.definition_formal);
-    setErrors([]);
+    setErrors(null);
   }
 
   function handleCheckExpression(
