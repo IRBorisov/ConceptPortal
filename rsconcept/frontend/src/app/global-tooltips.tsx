@@ -9,7 +9,7 @@ export const GlobalTooltips = () => {
         id={globalIDs.tooltip}
         layer='z-topmost'
         place='bottom-start'
-        offset={24}
+        offset={16}
         className='max-w-80 wrap-break-word rounded-lg! select-none'
       />
       <Tooltip

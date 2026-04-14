@@ -6,7 +6,6 @@ import { AccessPolicy, LocationHead } from '@/domain/library';
 
 import { useConceptNavigation } from '@/app';
 import { useAuth } from '@/features/auth';
-import { useRSForm } from '@/features/rsform/backend/use-rsform';
 import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
 import { createSandboxBundleFromRSModel } from '@/features/sandbox/models/bundle-transfer';
 import { saveBundle } from '@/features/sandbox/stores/sandbox-repository';
@@ -28,16 +27,17 @@ import {
   IconShare
 } from '@/components/icons';
 import { useDialogsStore } from '@/stores/dialogs';
+import { useModificationStore } from '@/stores/modification';
 import { errorMsg, infoMsg, promptText, tooltipText } from '@/utils/labels';
-import { generatePageQR, sharePage } from '@/utils/utils';
+import { generatePageQR, promptUnsaved, sharePage } from '@/utils/utils';
 
 import { useRSModelEdit } from './rsmodel-context';
 
 export function MenuMain() {
   const router = useConceptNavigation();
   const { model, deleteModel, isMutable, engine } = useRSModelEdit();
-  const { isProcessing } = useRSFormEdit();
-  const { raw: schemaData } = useRSForm({ itemID: model.schema });
+  const { schema, isProcessing } = useRSFormEdit();
+  const isModified = useModificationStore(state => state.isModified);
 
   const { isAnonymous } = useAuth();
 
@@ -89,7 +89,7 @@ export function MenuMain() {
       base: model,
       initialLocation: calculateCloneLocation(),
       selected: [],
-      totalCount: schemaData.items.length
+      totalCount: schema.items.length
     });
   }
 
@@ -101,12 +101,15 @@ export function MenuMain() {
   }
 
   async function handleTransferToSandbox() {
+    if (isModified && !promptUnsaved()) {
+      return;
+    }
     if (!window.confirm(promptText.resetSandbox)) {
       return;
     }
     hideMenu();
     try {
-      const nextBundle = createSandboxBundleFromRSModel(schemaData, model);
+      const nextBundle = createSandboxBundleFromRSModel(schema, model);
       await saveBundle(nextBundle);
       toast.success(infoMsg.sandboxImportSuccess);
       router.gotoSandboxEditor();
@@ -155,6 +158,11 @@ export function MenuMain() {
             onClick={handleClone}
           />
         ) : null}
+        <DropdownButton
+          text='Открыть в песочнице'
+          icon={<IconSandbox size='1rem' className='icon-green' />}
+          onClick={() => void handleTransferToSandbox()}
+        />
         {isMutable ? (
           <DropdownButton
             text='Удалить модель'
@@ -183,13 +191,6 @@ export function MenuMain() {
           icon={<IconLibrary size='1rem' className='icon-primary' />}
           onClick={() => router.gotoLibrary()}
         />
-        {!isAnonymous ? (
-          <DropdownButton
-            text='Открыть в песочнице'
-            icon={<IconSandbox size='1rem' className='icon-green' />}
-            onClick={() => void handleTransferToSandbox()}
-          />
-        ) : null}
       </Dropdown>
     </div>
   );

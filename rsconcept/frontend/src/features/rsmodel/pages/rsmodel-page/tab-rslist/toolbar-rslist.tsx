@@ -85,7 +85,7 @@ export function ToolbarRSList({ className }: ToolbarRSListProps) {
         onClick={toggleCrucial}
         disabled={isProcessing || selectedCst.length === 0}
       />
-      <div ref={menuRef} onBlur={handleMenuBlur} className='relative'>
+      <div ref={menuRef} onBlur={handleMenuBlur} className='relative hidden xs:block'>
         <MiniButton
           title='Добавить пустую конституенту'
           hideTitle={isMenuOpen}
@@ -110,6 +110,7 @@ export function ToolbarRSList({ className }: ToolbarRSListProps) {
         aria-label='Добавить новую конституенту'
         icon={<IconNewItem size='1.25rem' className='icon-green' />}
         onClick={() => void promptCreateCst()}
+        className='hidden xs:block'
         disabled={isProcessing}
       />
       <MiniButton

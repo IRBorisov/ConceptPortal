@@ -27,7 +27,7 @@ export function PaginationTools<TData>({
     'disabled:opacity-75 not-[:disabled]:cursor-pointer'
   );
   return (
-    <div className='mr-3 pl-3 flex justify-end flex-wrap items-center my-2 text-muted-foreground text-sm select-none'>
+    <div className='pl-3 flex justify-end flex-wrap items-center my-1 text-muted-foreground text-sm select-none'>
       <div>
         {`${table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1}
       -
@@ -95,6 +95,7 @@ export function PaginationTools<TData>({
         <SelectPagination
           id={id ? `${id}__per_page` : undefined}
           table={table}
+          className='w-28 max-h-6 ml-2 mr-1'
           paginationOptions={paginationOptions}
           onChange={onChangePaginationOption}
         />

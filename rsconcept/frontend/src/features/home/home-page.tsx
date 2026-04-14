@@ -9,14 +9,14 @@ import { HelpTopic } from '@/features/help/models/help-topic';
 import {
   IconFormula,
   IconLibrary,
-  IconLogin,
   IconManuals,
   IconNewItem2,
   IconOSS,
   IconRobot,
   IconRSForm,
   IconRSModel,
-  IconSandbox
+  IconSandbox2,
+  IconUser2
 } from '@/components/icons';
 import { usePreferencesStore } from '@/stores/preferences';
 import { resources } from '@/utils/constants';
@@ -89,14 +89,14 @@ export function HomePage() {
                 variant='primary'
                 text='Попробовать'
                 title='Открыть песочницу и оценить Портал'
-                icon={<IconSandbox size='1.25rem' />}
+                icon={<IconSandbox2 size='1.25rem' />}
               />
               <CtaButton
                 to={urls.login}
                 variant='default'
                 text='Войти'
                 title='Перейти к авторизации'
-                icon={<IconLogin size='1.25rem' />}
+                icon={<IconUser2 size='1.25rem' />}
               />
               <CtaButton
                 to={urls.manuals}
@@ -113,7 +113,7 @@ export function HomePage() {
                 variant='default'
                 text='Попробовать'
                 title='Открыть песочницу и оценить Портал'
-                icon={<IconSandbox size='1.25rem' />}
+                icon={<IconSandbox2 size='1.25rem' />}
               />
               <CtaButton
                 to={urls.create_item}
