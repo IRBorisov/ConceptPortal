@@ -4,7 +4,7 @@ import clsx from 'clsx';
 
 import { type Constituenta, type RSForm } from '@/domain/library';
 import { isBasicConcept } from '@/domain/library/rsform-api';
-import { type ExpressionType, readTypeAnnotation, TokenID } from '@/domain/rslang';
+import { type AnalysisFull, type ExpressionType, readTypeAnnotation, TokenID } from '@/domain/rslang';
 import { isCritical, type RSErrorDescription } from '@/domain/rslang/error';
 import { describeRSError, labelType } from '@/domain/rslang/labels';
 
@@ -13,10 +13,17 @@ import { type AstNode } from '@/utils/parsing';
 import { Local } from './parse/parser.terms';
 import { findAliasAt } from './utils';
 
-const tooltipProducer = (schema: RSForm, errors?: readonly RSErrorDescription[] | null, canClick?: boolean) => {
+const tooltipProducer = (
+  schema: RSForm,
+  prepareParse: (value: string) => AnalysisFull | null,
+  parse?: AnalysisFull | null,
+  errors?: readonly RSErrorDescription[] | null,
+  canClick?: boolean
+) => {
   return hoverTooltip((view, pos) => {
     const aliasData = findAliasAt(pos, view.state);
-    const rangedErrors = errors?.filter(error => pos >= error.from && pos < error.to) ?? null;
+    const effectiveErrors = errors ?? null;
+    const rangedErrors = effectiveErrors?.filter(error => pos >= error.from && pos < error.to) ?? null;
     if (!aliasData) {
       if (!rangedErrors || rangedErrors.length === 0) {
         return null;
@@ -39,9 +46,11 @@ const tooltipProducer = (schema: RSForm, errors?: readonly RSErrorDescription[] 
         create: () => domTooltipConstituenta(cst ?? null, rangedErrors ?? null, canClick)
       };
     } else {
-      const parse = schema.analyzer.checkFull(view.state.doc.toString(), { annotateTypes: true });
       let type: ExpressionType | null = null;
-      if (parse.ast) {
+      if (!parse) {
+        parse = prepareParse(view.state.doc.toString());
+      }
+      if (parse?.ast) {
         type = findLocalType(parse.ast, aliasData.alias, aliasData.node.from);
       }
       return {
@@ -56,10 +65,12 @@ const tooltipProducer = (schema: RSForm, errors?: readonly RSErrorDescription[] 
 
 export function rsHoverTooltip(
   schema: RSForm,
+  prepareParse: (value: string) => AnalysisFull | null,
+  parse?: AnalysisFull | null,
   errors?: readonly RSErrorDescription[] | null,
   canClick?: boolean
 ): Extension {
-  return [tooltipProducer(schema, errors, canClick)];
+  return [tooltipProducer(schema, prepareParse, parse, errors, canClick)];
 }
 
 // ========= Internal =========

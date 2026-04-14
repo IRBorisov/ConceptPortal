@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { type Extension } from '@codemirror/state';
 import { EditorView, tooltips } from '@codemirror/view';
 import { tags } from '@lezer/highlight';
@@ -14,12 +14,13 @@ import clsx from 'clsx';
 
 import { type RSForm } from '@/domain/library';
 import { generateAlias, getCstTypePrefix, guessCstType } from '@/domain/library/rsform-api';
-import { type RSErrorDescription } from '@/domain/rslang';
+import { type AnalysisFull, type RSErrorDescription } from '@/domain/rslang';
 import { extractGlobals } from '@/domain/rslang/api';
 
-import { Label } from '@/components/input';
+import { ErrorField, Label } from '@/components/input';
 import { usePreferencesStore } from '@/stores/preferences';
 import { APP_COLORS } from '@/styling/colors';
+import { PARAMETER } from '@/utils/constants';
 
 import { ccBracketMatching } from './bracket-matching';
 import { rsNavigation } from './click-navigation';
@@ -71,7 +72,9 @@ interface RSInputProps extends Pick<
 > {
   schema?: RSForm;
   errors?: readonly RSErrorDescription[] | null;
+  noAutoCheck?: boolean;
 
+  errorMessage?: string;
   ref?: React.Ref<ReactCodeMirrorRef>;
   label?: string;
   disabled?: boolean;
@@ -87,13 +90,17 @@ export function RSInput({
   errors,
 
   label,
+  errorMessage,
   disabled,
   portalHoverTooltips,
+  noAutoCheck,
 
   ref,
   className,
   style,
+  value,
 
+  onChange,
   onOpenEdit,
   onAnalyze,
   ...restProps
@@ -102,6 +109,56 @@ export function RSInput({
 
   const internalRef = useRef<ReactCodeMirrorRef>(null);
   const thisRef = !ref || typeof ref === 'function' ? internalRef : ref;
+  const isFirstParse = useRef(true);
+  const [localParse, setLocalParse] = useState<AnalysisFull | null>(null);
+
+  const effectiveErrors = errors == null ? (localParse?.errors ?? null) : errors;
+
+  useEffect(
+    function scheduleLocalParse() {
+      if (noAutoCheck || !schema) {
+        return;
+      }
+
+      const currentSchema = schema;
+      const text = value ?? '';
+
+      function runLocalParse() {
+        const nextParse = currentSchema.analyzer.checkFull(text, {
+          annotateTypes: true,
+          annotateErrors: true
+        });
+        setLocalParse(nextParse);
+      }
+
+      let timerID: number | undefined;
+      if (isFirstParse.current) {
+        isFirstParse.current = false;
+        runLocalParse();
+      } else {
+        timerID = window.setTimeout(runLocalParse, PARAMETER.rsInputAutoCheckDelay);
+      }
+
+      return function clearScheduledParse() {
+        if (timerID !== undefined) {
+          window.clearTimeout(timerID);
+        }
+      };
+    },
+    [noAutoCheck, value, schema]
+  );
+
+  function prepareParse(value: string): AnalysisFull | null {
+    if (!schema) {
+      return null;
+    }
+    const result = schema.analyzer.checkFull(value, {
+      annotateTypes: true,
+      annotateErrors: true
+    });
+    setLocalParse(result);
+    return result;
+  }
 
   const cursor = !disabled ? 'cursor-text' : 'cursor-default';
   const customTheme: Extension = createTheme({
@@ -127,7 +184,7 @@ export function RSInput({
   const editorExtensions = [
     EditorView.lineWrapping,
     RSLanguage,
-    ...(errors && errors.length > 0 ? rsErrorRanges(errors) : []),
+    ...(effectiveErrors && effectiveErrors.length > 0 ? rsErrorRanges(effectiveErrors) : []),
     ...(portalHoverTooltips
       ? [
           tooltips({
@@ -138,7 +195,7 @@ export function RSInput({
       : []),
     ccBracketMatching(),
     ...(!schema || !onOpenEdit ? [] : [rsNavigation(schema, onOpenEdit)]),
-    ...(!schema ? [] : [rsHoverTooltip(schema, errors, onOpenEdit !== undefined)])
+    ...(!schema ? [] : [rsHoverTooltip(schema, prepareParse, localParse, effectiveErrors, onOpenEdit !== undefined)])
   ];
 
   function handleAutoComplete(text: RSTextWrapper): boolean {
@@ -217,11 +274,18 @@ export function RSInput({
     }
   }
 
+  function handleChange(value: string) {
+    setLocalParse(null);
+    if (onChange) {
+      onChange(value);
+    }
+  }
+
   return (
     <div className={clsx('flex flex-col gap-2', className, cursor)} style={style}>
       <Label text={label} />
       <CodeMirror
-        className='font-math'
+        className={clsx('font-math', errorMessage && 'cm-error')}
         ref={thisRef}
         basicSetup={editorSetup}
         theme={customTheme}
@@ -229,8 +293,11 @@ export function RSInput({
         indentWithTab={false}
         editable={!disabled}
         onKeyDown={handleInput}
+        value={value}
+        onChange={handleChange}
         {...restProps}
       />
+      <ErrorField className='-mt-1' error={errorMessage} />
     </div>
   );
 }

@@ -64,7 +64,7 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
   const stub = localEval?.value ? valueStub(localEval?.value) : '';
   const isModified = evaluatedExpression !== expression;
   const status = inferEvalStatus(localEval?.value ?? null, CstType.TERM, !isModified);
-  const errors = [...(localParse?.errors ?? []), ...(localEval?.errors ?? [])];
+  const errors = !localParse ? null : [...localParse.errors, ...(localEval?.errors ?? [])];
   const hasDialog = localParse?.type && isTypification(localParse.type) && localEval?.value !== null;
 
   function handleOpenCst(cstID: number) {
@@ -169,7 +169,12 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
         />
         <RSEditorControls isOpen={true} onEdit={handleEdit} />
       </div>
-      <ViewErrors className='-mt-3' onShowError={handleShowError} isOpen={errors.length > 0} errors={errors} />
+      <ViewErrors
+        className='-mt-3'
+        onShowError={handleShowError}
+        isOpen={!!errors && errors.length > 0}
+        errors={errors}
+      />
 
       <ValueInput
         className='max-h-100'
