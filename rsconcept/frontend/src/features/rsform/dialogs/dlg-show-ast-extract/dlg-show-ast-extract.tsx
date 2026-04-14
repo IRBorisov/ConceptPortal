@@ -1,7 +1,8 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
+import { type ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import { ReactFlowProvider } from '@xyflow/react';
 import clsx from 'clsx';
 import { useDebounce } from 'use-debounce';
@@ -25,6 +26,7 @@ import { ShowAstSchemaProvider } from '@/features/rsform/dialogs/dlg-show-ast/sh
 
 import { ModalView } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
+import { PARAMETER } from '@/utils/constants';
 import { errorMsg } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 import { type AstNode, findByUid, flattenAst } from '@/utils/parsing';
@@ -62,14 +64,31 @@ export function DlgShowAstExtract() {
   const selectedNode = selected.length === 1 ? (findByUid(ast, selected[0]) ?? null) : null;
   const [hoverNodeDebounced] = useDebounce(hoverNode, NODE_POPUP_DELAY);
 
+  const extractPopoverFocus = useRef<ReactCodeMirrorRef | null>(null);
+  const astInteractionRef = useRef<HTMLDivElement | null>(null);
+  const wasPopoverOpenRef = useRef(false);
+  const [popoverOpen, setPopoverOpen] = useState(false);
+
   const [isDragging, setIsDragging] = useState(false);
   const canExtract = !!selectedNode?.parent && selectedNode.children.length > 0;
+
+  useEffect(
+    function restoreAstFocusAfterPopoverClose() {
+      if (wasPopoverOpenRef.current && !popoverOpen) {
+        setTimeout(function focusAstInteraction() {
+          astInteractionRef.current?.focus();
+        }, PARAMETER.minimalTimeout);
+      }
+      wasPopoverOpenRef.current = popoverOpen;
+    },
+    [popoverOpen]
+  );
 
   function handleSelectedIdsChange(ids: number[]) {
     setSelected(ids);
   }
 
-  async function handleConfirmExtract(newText: string) {
+  async function handleConfirmExtract(term: string, definitionText: string) {
     if (!selectedNode) {
       return;
     }
@@ -84,9 +103,9 @@ export function DlgShowAstExtract() {
         ? CstType.FUNCTION
         : CstType.TERM;
     const alias = generateAlias(cstType, schema);
-    let definition = expression.slice(selectedNode.from, selectedNode.to).trim();
+    let definitionFormal = expression.slice(selectedNode.from, selectedNode.to).trim();
     if (args.length > 0) {
-      definition = `[${args.map(arg => `${arg.alias}∈${labelType(arg.type)}`).join(',')}] ${definition}`;
+      definitionFormal = `[${args.map(arg => `${arg.alias}∈${labelType(arg.type)}`).join(',')}] ${definitionFormal}`;
     }
 
     const targetIndex = schema.items.findIndex(item => item.id === targetID);
@@ -95,9 +114,9 @@ export function DlgShowAstExtract() {
     const response = await onCreate({
       alias: alias,
       cst_type: cstType,
-      definition_formal: definition,
-      definition_raw: '',
-      term_raw: newText.trim(),
+      definition_formal: definitionFormal,
+      definition_raw: definitionText.trim(),
+      term_raw: term.trim(),
       term_forms: [],
       convention: '',
       crucial: false,
@@ -140,6 +159,19 @@ export function DlgShowAstExtract() {
     setHoverID(null);
   }
 
+  function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
+    if (event.code === 'KeyQ' && canExtract) {
+      event.preventDefault();
+      event.stopPropagation();
+      setPopoverOpen(prev => !prev);
+      if (!popoverOpen) {
+        setTimeout(function focusExtractPopover() {
+          extractPopoverFocus.current?.view?.focus();
+        }, PARAMETER.minimalTimeout);
+      }
+    }
+  }
+
   return (
     <ModalView
       className='relative w-[calc(100dvw-3rem)] h-[calc(100dvh-3rem)]'
@@ -169,10 +201,14 @@ export function DlgShowAstExtract() {
       <PopoverExtraction
         className='absolute z-pop left-1/2 -translate-x-1/2 top-12'
         disabled={!canExtract}
-        onSubmit={text => void handleConfirmExtract(text)}
+        schema={schema}
+        open={popoverOpen}
+        setOpen={setPopoverOpen}
+        focusRef={extractPopoverFocus}
+        onSubmit={(term, definitionText) => void handleConfirmExtract(term, definitionText)}
       />
 
-      <div className='cc-mask-sides h-full w-full'>
+      <div ref={astInteractionRef} tabIndex={-1} className='cc-mask-sides h-full w-full' onKeyDown={handleKeyDown}>
         <ReactFlowProvider>
           <ShowAstSchemaProvider schema={schema}>
             <ASTFlow

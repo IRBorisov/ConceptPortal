@@ -1,12 +1,16 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { type ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import clsx from 'clsx';
 import { useDebounce } from 'use-debounce';
 
+import { type RSForm } from '@/domain/library/rsform';
+
+import { RefsInput } from '@/features/rsform/components/refs-input/refs-input';
+
 import { Button, MiniButton } from '@/components/control';
 import { IconAccept, IconClose, IconNewItem } from '@/components/icons';
-import { Label, TextInput } from '@/components/input';
 import { cn } from '@/components/utils';
 import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/format';
@@ -15,18 +19,30 @@ import { isMac } from '@/utils/utils';
 interface PopoverExtractionProps {
   className?: string;
   disabled: boolean;
-  onSubmit: (newText: string) => void;
+  schema: RSForm;
+  onSubmit: (term: string, definitionText: string) => void;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  focusRef: React.RefObject<ReactCodeMirrorRef | null>;
 }
 
-export function PopoverExtraction({ disabled, className, onSubmit }: PopoverExtractionProps) {
+export function PopoverExtraction({
+  disabled,
+  className,
+  schema,
+  open,
+  focusRef,
+  setOpen,
+  onSubmit
+}: PopoverExtractionProps) {
   const extractPopoverRef = useRef<HTMLDivElement>(null);
 
-  const [panelOpen, setPanelOpen] = useState(false);
-  const intentOpen = panelOpen && !disabled;
+  const intentOpen = open && !disabled;
   const [debouncedOpen] = useDebounce(intentOpen, PARAMETER.moveDuration);
   const popoverInDom = intentOpen || debouncedOpen;
 
-  const [termInput, setTermInput] = useState('');
+  const [termText, setTermText] = useState('');
+  const [definition, setDefinition] = useState('');
 
   useEffect(
     function resetPanelWhenDisabled() {
@@ -34,68 +50,44 @@ export function PopoverExtraction({ disabled, className, onSubmit }: PopoverExtr
         return;
       }
       const id = requestAnimationFrame(function deferPanelClose() {
-        setPanelOpen(false);
+        setOpen(false);
       });
       return () => cancelAnimationFrame(id);
     },
-    [disabled]
-  );
-
-  useEffect(
-    function closeExtractOnClickOutside() {
-      if (!popoverInDom) {
-        return;
-      }
-      function handlePointerDown(event: PointerEvent) {
-        const target = event.target;
-        if (target instanceof Node && !extractPopoverRef.current?.contains(target)) {
-          setPanelOpen(false);
-        }
-      }
-      document.addEventListener('pointerdown', handlePointerDown, true);
-      return () => {
-        document.removeEventListener('pointerdown', handlePointerDown, true);
-      };
-    },
-    [popoverInDom]
-  );
-
-  useEffect(
-    function focusTermWhenPopoverOpened() {
-      if (popoverInDom && intentOpen) {
-        document.getElementById('dlg_show_ast_extract_term')?.focus();
-      }
-    },
-    [popoverInDom, intentOpen]
+    [disabled, setOpen]
   );
 
   function handleOpenPopover(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
     event.stopPropagation();
-    setTermInput('');
-    setPanelOpen(true);
+    setTermText('');
+    setDefinition('');
+    setOpen(true);
+    setTimeout(function focusTermInput() {
+      focusRef.current?.view?.focus();
+    }, PARAMETER.minimalTimeout);
   }
 
   function handleSubmit(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
     event.stopPropagation();
-    setPanelOpen(false);
-    onSubmit(termInput);
+    setOpen(false);
+    onSubmit(termText, definition);
   }
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     if (event.key === 'Escape') {
       event.preventDefault();
       event.stopPropagation();
-      setPanelOpen(false);
+      setOpen(false);
       return;
     }
 
     if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
       event.preventDefault();
       event.stopPropagation();
-      setPanelOpen(false);
-      onSubmit(termInput);
+      setOpen(false);
+      onSubmit(termText, definition);
     }
   }
 
@@ -119,14 +111,15 @@ export function PopoverExtraction({ disabled, className, onSubmit }: PopoverExtr
         <div
           tabIndex={-1}
           className={cn(
-            'rounded-md border bg-popover px-3 pb-3 pt-1 shadow-lg outline-hidden',
+            'rounded-md border bg-popover px-3 py-3 shadow-lg outline-hidden',
+            'flex flex-col gap-2',
             'cc-popover-extract',
             intentOpen ? 'translate-x-0' : 'pointer-events-none -translate-x-1/2 opacity-0'
           )}
           onKeyDown={handleKeyDown}
         >
-          <div className='flex flex-wrap items-center gap-2'>
-            <div className='cc-icons'>
+          <div className='flex items-start gap-2'>
+            <div className='cc-icons mt-1'>
               <MiniButton
                 icon={<IconAccept size='1.25rem' className='icon-green' />}
                 titleHtml={prepareTooltip(
@@ -139,17 +132,36 @@ export function PopoverExtraction({ disabled, className, onSubmit }: PopoverExtr
               <MiniButton
                 icon={<IconClose size='1.25rem' className='icon-primary' />}
                 titleHtml={prepareTooltip('Закрыть', 'Esc')}
-                onClick={() => setPanelOpen(false)}
+                onClick={() => setOpen(false)}
               />
             </div>
-            <Label text='Термин' />
+            <RefsInput
+              ref={focusRef}
+              id='dlg_show_ast_extract_term'
+              className='w-full'
+              areaClassName='text-sm'
+              placeholder='Новый термин'
+              value={termText}
+              resolved={termText}
+              onChange={setTermText}
+              schema={schema}
+              portalHoverTooltips
+              maxHeight='5rem'
+              disabled={disabled}
+            />
           </div>
-          <TextInput
-            id='dlg_show_ast_extract_term'
-            dense
-            className='text-sm w-80'
-            value={termInput}
-            onChange={event => setTermInput(event.target.value)}
+
+          <RefsInput
+            id='dlg_show_ast_extract_definition'
+            className='w-96'
+            areaClassName='text-sm'
+            placeholder='Определение обособленного выражения'
+            value={definition}
+            resolved={definition}
+            onChange={setDefinition}
+            schema={schema}
+            portalHoverTooltips
+            maxHeight='7rem'
             disabled={disabled}
           />
         </div>

@@ -13,7 +13,8 @@ export function HelpFormulaTree() {
           <kbd>Пробел</kbd> – перемещение экрана без наведения на узлы
         </li>
         <li>
-          <IconNewItem className='inline-icon' size='1rem' /> извлечение выделенного узла в новую конституенту
+          <IconNewItem className='inline-icon' size='1rem' /> <kbd>Q</kbd> - обособление выделенного подвыражения в
+          новую конституенту
         </li>
       </ul>
 

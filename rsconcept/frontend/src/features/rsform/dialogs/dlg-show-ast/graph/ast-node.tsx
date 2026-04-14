@@ -64,8 +64,8 @@ function buildTooltip(data: FlatAstNode, schema: RSForm | null, errorMessages: s
   const isGlobalId =
     data.typeID === TokenID.ID_GLOBAL || data.typeID === TokenID.ID_FUNCTION || data.typeID === TokenID.ID_PREDICATE;
   let extra = '';
+  const alias = typeof data.data.value === 'string' ? data.data.value : '';
   if (isGlobalId && schema) {
-    const alias = typeof data.data.value === 'string' ? data.data.value : '';
     if (alias) {
       const cst = schema.cstByAlias.get(alias);
       const termText = cst ? (cst.term_resolved || cst.term_raw).trim() : '';
@@ -73,6 +73,8 @@ function buildTooltip(data: FlatAstNode, schema: RSForm | null, errorMessages: s
         extra = `<span>Термин: ${termText}</span>`;
       }
     }
+  } else if (data.typeID === TokenID.ID_RADICAL && schema) {
+    extra = `Шаблонный параметр: <span class="font-math">${alias}</span>`;
   }
 
   const parts = [typeLine, errorBlock, extra].filter(Boolean);

@@ -323,7 +323,7 @@ export function RefsInput({
       return;
     }
 
-    if (event.key === 'Escape') {
+    if (event.key === 'Escape' && isEditing) {
       withPreventDefault(closeInlineEditor)(event);
       return;
     }
