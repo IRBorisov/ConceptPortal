@@ -174,7 +174,7 @@ export function DlgStructurePlanner() {
                 disabled={!isDirty || term === ''}
               />
               <MiniButton
-                title='Reset term'
+                title='Сбросить термин'
                 icon={<IconReset size='1.25rem' className='icon-primary' />}
                 onClick={resetTerm}
                 disabled={!isDirty || !selectedCst}

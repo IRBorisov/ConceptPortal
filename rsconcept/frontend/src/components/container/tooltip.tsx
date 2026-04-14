@@ -42,7 +42,6 @@ export function Tooltip({
       opacity={1}
       className={cn(
         'relative',
-        'py-0.5! px-2!',
         'max-h-[calc(100svh-6rem)]',
         'overflow-y-auto overflow-x-hidden sm:overflow-hidden overscroll-contain',
         'border shadow-md',

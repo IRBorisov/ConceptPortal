@@ -167,7 +167,7 @@ export function DlgShowAstExtract() {
       </div>
 
       <PopoverExtraction
-        className='absolute z-pop left-3 top-10'
+        className='absolute z-pop left-1/2 -translate-x-1/2 top-12'
         disabled={!canExtract}
         onSubmit={text => void handleConfirmExtract(text)}
       />

@@ -34,7 +34,6 @@ import { EXTEOR_TRS_FILE, prefixes } from '@/utils/constants';
 import { errorMsg, infoMsg, promptText, tooltipText } from '@/utils/labels';
 import { generatePageQR, promptUnsaved, sharePage } from '@/utils/utils';
 
-import { useRSForm } from '../../backend/use-rsform';
 import { useUploadTRS } from '../../backend/use-upload-trs';
 import { prepareTRSFile } from '../../models/trs-file';
 
@@ -42,9 +41,7 @@ import { useRSFormEdit } from './rsedit-context';
 
 export function MenuMain() {
   const router = useConceptNavigation();
-  const { schema, selectedCst, deleteSchema, isArchive, isMutable, isContentEditable, isProcessing, activeVersion } =
-    useRSFormEdit();
-  const { raw: schemaData } = useRSForm({ itemID: schema.id, version: activeVersion });
+  const { schema, selectedCst, deleteSchema, isArchive, isMutable, isContentEditable, isProcessing } = useRSFormEdit();
 
   const { user, isAnonymous } = useAuth();
   const hasInheritance = schema.inheritance.some(item => item.child_source === schema.id);
@@ -136,7 +133,7 @@ export function MenuMain() {
     }
     hideMenu();
     try {
-      const nextBundle = createSandboxBundleFromRSForm(schemaData);
+      const nextBundle = createSandboxBundleFromRSForm(schema);
       await saveBundle(nextBundle);
       toast.success(infoMsg.sandboxImportSuccess);
       router.gotoSandboxEditor();

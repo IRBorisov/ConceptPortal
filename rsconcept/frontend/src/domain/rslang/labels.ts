@@ -189,7 +189,7 @@ export function describeRSError(code: RSErrorCode, params: readonly string[] = [
     case RSErrorCode.invalidCortegeDeclare:
       return `Количество переменных в кортеже не соответствует размерности декартова произведения`;
     case RSErrorCode.localOutOfScope:
-      return `Использование переменной вне области видимости: ${params[0]}`;
+      return `Переменная _${params[0]}_ вне границ своего определения`;
     case RSErrorCode.invalidElementPredicate:
       return `Несоответствие типизаций: ${params[0]}${params[1]}${params[2]}`;
     case RSErrorCode.invalidEmptySetUsage:

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import clsx from 'clsx';
 import { useDebounce } from 'use-debounce';
 
 import { Button, MiniButton } from '@/components/control';
@@ -103,9 +104,13 @@ export function PopoverExtraction({ disabled, className, onSubmit }: PopoverExtr
       {!popoverInDom ? (
         <Button
           icon={<IconNewItem size='1.1rem' className='icon-primary' />}
-          text='Извлечь поддерево'
-          titleHtml='Вынести выделенное поддерево<br/>в новую конституенту'
-          className='text-primary/75 bg-background/90 rounded-full text-sm backdrop-blur-3xl cc-fade-in'
+          text='Обособить'
+          titleHtml='Вынести выбранное подвыражение в новую конституенту'
+          className={clsx(
+            'font-controls font-bold text-sm text-primary/75',
+            'bg-background/90 backdrop-blur-3xl cc-fade-in',
+            'rounded-full gap-1'
+          )}
           onClick={handleOpenPopover}
           disabled={disabled}
         />
@@ -125,7 +130,7 @@ export function PopoverExtraction({ disabled, className, onSubmit }: PopoverExtr
               <MiniButton
                 icon={<IconAccept size='1.25rem' className='icon-green' />}
                 titleHtml={prepareTooltip(
-                  'Создать конституенту и заменить поддерево',
+                  'Подтвердить обособление выбранного подвыражения',
                   isMac() ? 'Cmd + Enter' : 'Ctrl + Enter'
                 )}
                 onClick={handleSubmit}

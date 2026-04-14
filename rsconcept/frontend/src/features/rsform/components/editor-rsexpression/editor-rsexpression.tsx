@@ -190,7 +190,7 @@ export function EditorRSExpression({
         toast.error(errorMsg.invalidParse);
         return;
       }
-      if (!disabled && onCreateCst && onUpdateCst) {
+      if (!parse.ast.hasError && !disabled && onCreateCst && onUpdateCst) {
         showAstExtract({
           initial: {
             ast: parse.ast,

@@ -219,7 +219,7 @@ function createConstituenta(
     definition_resolved: '',
     term_raw: data.term_raw,
     term_resolved: '',
-    term_forms: structuredClone(data.term_forms)
+    term_forms: data.term_forms
   };
 
   if (data.insert_after === null || data.insert_after === undefined) {
