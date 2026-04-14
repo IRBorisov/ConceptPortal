@@ -2,6 +2,9 @@
  * Module: API for RSLanguage.
  */
 import { type RO } from '@/utils/meta';
+import { type AstNode } from '@/utils/parsing';
+
+import { ArgumentsExtractor, type ArgumentsType } from './semantic/arguments-extractor';
 
 /** Represents alias mapping. */
 export type AliasMapping = Record<string, string>;
@@ -12,6 +15,11 @@ const GLOBALS_REGEXP = /[XCSADFPTN]\d+/g;
 const COMPLEX_SYMBOLS_REGEXP = /[∀∃×ℬ;|:]/g;
 const TYPIFICATION_SET = /^ℬ+\([ℬ\(X\d+\)×]*\)$/g;
 // cspell:enable
+
+/** Extract arguments from AST. */
+export function extractArguments(ast: AstNode): ArgumentsType[] {
+  return new ArgumentsExtractor().run(ast);
+}
 
 /** Extracts global variable names from a given expression. */
 export function extractGlobals(expression: string): Set<string> {

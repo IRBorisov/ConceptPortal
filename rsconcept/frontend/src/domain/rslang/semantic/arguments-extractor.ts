@@ -172,8 +172,9 @@ export class ArgumentsExtractor {
   }
 
   private visitLocal(node: AstNode): boolean {
-    if (!this.locals.checkLocal(node)) {
-      this.result.push({ alias: getNodeText(node), type: readTypeAnnotation(node) });
+    const alias = getNodeText(node);
+    if (!this.locals.checkLocal(node) && this.result.find(arg => arg.alias === alias) === undefined) {
+      this.result.push({ alias, type: readTypeAnnotation(node) });
     }
     return true;
   }

@@ -8,7 +8,8 @@ import { useDebounce } from 'use-debounce';
 
 import { CstType, type RSForm } from '@/domain/library/rsform';
 import { generateAlias } from '@/domain/library/rsform-api';
-import { ArgumentsExtractor, readTypeAnnotation, TypeID } from '@/domain/rslang';
+import { readTypeAnnotation, TypeID } from '@/domain/rslang';
+import { extractArguments } from '@/domain/rslang/api';
 import { labelType } from '@/domain/rslang/labels';
 
 import { HelpTopic } from '@/features/help';
@@ -73,7 +74,7 @@ export function DlgShowAstExtract() {
       return;
     }
 
-    const args = new ArgumentsExtractor().run(selectedNode);
+    const args = extractArguments(selectedNode);
     const isLogic = readTypeAnnotation(selectedNode)?.typeID === TypeID.logic;
     const cstType = isLogic
       ? args.length > 0
