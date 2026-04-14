@@ -93,38 +93,21 @@ export function DlgShowAstExtract() {
       return;
     }
 
-    const args = extractArguments(selectedNode);
-    const isLogic = readTypeAnnotation(selectedNode)?.typeID === TypeID.logic;
-    const cstType = isLogic
-      ? args.length > 0
-        ? CstType.PREDICATE
-        : CstType.THEOREM
-      : args.length > 0
-        ? CstType.FUNCTION
-        : CstType.TERM;
-    const alias = generateAlias(cstType, schema);
-    let definitionFormal = expression.slice(selectedNode.from, selectedNode.to).trim();
-    if (args.length > 0) {
-      definitionFormal = `[${args.map(arg => `${arg.alias}∈${labelType(arg.type)}`).join(',')}] ${definitionFormal}`;
-    }
-
-    const targetIndex = schema.items.findIndex(item => item.id === targetID);
-    const insertAfter = targetIndex < 1 ? null : schema.items[targetIndex - 1].id;
-
+    const data = prepareExtraction(selectedNode, schema, expression, targetID);
     const response = await onCreate({
-      alias: alias,
-      cst_type: cstType,
-      definition_formal: definitionFormal,
+      alias: data.alias,
+      cst_type: data.cstType,
+      definition_formal: data.definition,
       definition_raw: definitionText.trim(),
       term_raw: term.trim(),
       term_forms: [],
       convention: '',
       crucial: false,
-      insert_after: insertAfter
+      insert_after: data.position
     });
     let callText = response.new_cst.alias;
-    if (args.length > 0) {
-      callText = `${callText}[${args.map(arg => arg.alias).join(',')}]`;
+    if (data.args.length > 0) {
+      callText = `${callText}[${data.args.map(arg => arg.alias).join(', ')}]`;
     }
     if (selectedNode.from > 0 && expression[selectedNode.from - 1] === 'ℬ') {
       callText = `(${callText})`;
@@ -223,4 +206,25 @@ export function DlgShowAstExtract() {
       </div>
     </ModalView>
   );
+}
+
+// =========== Internal ==========
+function prepareExtraction(selectedNode: AstNode, schema: RSForm, expression: string, targetID: number) {
+  const args = extractArguments(selectedNode);
+  const isLogic = readTypeAnnotation(selectedNode)?.typeID === TypeID.logic;
+  const cstType = isLogic
+    ? args.length > 0
+      ? CstType.PREDICATE
+      : CstType.THEOREM
+    : args.length > 0
+      ? CstType.FUNCTION
+      : CstType.TERM;
+  const alias = generateAlias(cstType, schema);
+  let definition = expression.slice(selectedNode.from, selectedNode.to).trim();
+  if (args.length > 0) {
+    definition = `[${args.map(arg => `${arg.alias}∈${labelType(arg.type)}`).join(', ')}] ${definition}`;
+  }
+  const targetIndex = schema.items.findIndex(item => item.id === targetID);
+  const position = targetIndex < 1 ? null : schema.items[targetIndex - 1].id;
+  return { cstType, args, alias, definition, position };
 }
