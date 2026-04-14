@@ -5,45 +5,61 @@ import clsx from 'clsx';
 import { type Constituenta, type RSForm } from '@/domain/library';
 import { isBasicConcept } from '@/domain/library/rsform-api';
 import { type ExpressionType, readTypeAnnotation, TokenID } from '@/domain/rslang';
-import { labelType } from '@/domain/rslang/labels';
+import { isCritical, type RSErrorDescription } from '@/domain/rslang/error';
+import { describeRSError, labelType } from '@/domain/rslang/labels';
 
 import { type AstNode } from '@/utils/parsing';
 
 import { Local } from './parse/parser.terms';
 import { findAliasAt } from './utils';
 
-const tooltipProducer = (schema: RSForm, canClick?: boolean) => {
+const tooltipProducer = (schema: RSForm, errors?: readonly RSErrorDescription[] | null, canClick?: boolean) => {
   return hoverTooltip((view, pos) => {
-    const data = findAliasAt(pos, view.state);
-    if (!data) {
-      return null;
-    }
-    if (data.node.type.id !== Local) {
-      const cst = schema.cstByAlias.get(data.alias);
+    const aliasData = findAliasAt(pos, view.state);
+    const rangedErrors = errors?.filter(error => pos >= error.from && pos < error.to) ?? null;
+    if (!aliasData) {
+      if (!rangedErrors || rangedErrors.length === 0) {
+        return null;
+      }
+      const [current] = rangedErrors;
       return {
-        pos: data.node.from,
-        end: data.node.to,
+        pos: current.from,
+        end: current.to,
         above: false,
-        create: () => domTooltipConstituenta(cst, canClick)
+        create: () => domTooltipErrors(rangedErrors)
+      };
+    }
+
+    if (aliasData.node.type.id !== Local) {
+      const cst = schema.cstByAlias.get(aliasData.alias);
+      return {
+        pos: aliasData.node.from,
+        end: aliasData.node.to,
+        above: false,
+        create: () => domTooltipConstituenta(cst ?? null, rangedErrors ?? null, canClick)
       };
     } else {
       const parse = schema.analyzer.checkFull(view.state.doc.toString(), { annotateTypes: true });
       let type: ExpressionType | null = null;
       if (parse.ast) {
-        type = findLocalType(parse.ast, data.alias, data.node.from);
+        type = findLocalType(parse.ast, aliasData.alias, aliasData.node.from);
       }
       return {
-        pos: data.node.from,
-        end: data.node.to,
+        pos: aliasData.node.from,
+        end: aliasData.node.to,
         above: false,
-        create: () => domTooltipLocal(data.alias, type)
+        create: () => domTooltipLocal(aliasData.alias, type, rangedErrors ?? null)
       };
     }
   });
 };
 
-export function rsHoverTooltip(schema: RSForm, canClick?: boolean): Extension {
-  return [tooltipProducer(schema, canClick)];
+export function rsHoverTooltip(
+  schema: RSForm,
+  errors?: readonly RSErrorDescription[] | null,
+  canClick?: boolean
+): Extension {
+  return [tooltipProducer(schema, errors, canClick)];
 }
 
 // ========= Internal =========
@@ -63,7 +79,7 @@ function findLocalType(ast: AstNode, alias: string, pos: number): ExpressionType
   return null;
 }
 
-function domTooltipLocal(aliasText: string, type: ExpressionType | null): TooltipView {
+function createTooltipContainer(): HTMLDivElement {
   const dom = document.createElement('div');
   dom.className = clsx(
     'max-h-100 max-w-100 min-w-40',
@@ -74,6 +90,31 @@ function domTooltipLocal(aliasText: string, type: ExpressionType | null): Toolti
     'text-sm font-main bg-card',
     'select-none cursor-auto'
   );
+  return dom;
+}
+
+function appendErrorRows(dom: HTMLDivElement, errors: readonly RSErrorDescription[]) {
+  for (const error of errors) {
+    const row = document.createElement('p');
+    row.className = 'text-destructive';
+    const title = isCritical(error.code) ? 'Ошибка' : 'Предупреждение';
+    row.innerText = `${title}: ${describeRSError(error.code, error.params)}`;
+    dom.appendChild(row);
+  }
+}
+
+function domTooltipErrors(errors: readonly RSErrorDescription[]): TooltipView {
+  const dom = createTooltipContainer();
+  appendErrorRows(dom, errors);
+  return { dom };
+}
+
+function domTooltipLocal(
+  aliasText: string,
+  type: ExpressionType | null,
+  errors: readonly RSErrorDescription[] | null
+): TooltipView {
+  const dom = createTooltipContainer();
 
   const alias = document.createElement('p');
   alias.className = 'font-math';
@@ -81,20 +122,22 @@ function domTooltipLocal(aliasText: string, type: ExpressionType | null): Toolti
   alias.innerHTML = `<b>${aliasText}:</b> ${labelType(type)}`;
   dom.appendChild(alias);
 
+  if (errors && errors.length > 0) {
+    const divider = document.createElement('p');
+    divider.className = 'my-1 border-t';
+    dom.appendChild(divider);
+    appendErrorRows(dom, errors);
+  }
+
   return { dom: dom };
 }
 
-function domTooltipConstituenta(cst?: Constituenta, canClick?: boolean): TooltipView {
-  const dom = document.createElement('div');
-  dom.className = clsx(
-    'max-h-100 max-w-100 min-w-40',
-    'dense',
-    'p-2',
-    'rounded-md shadow-md',
-    'cc-scroll-y',
-    'text-sm font-main bg-card',
-    'select-none cursor-auto'
-  );
+function domTooltipConstituenta(
+  cst: Constituenta | null,
+  errors: readonly RSErrorDescription[] | null,
+  canClick?: boolean
+): TooltipView {
+  const dom = createTooltipContainer();
 
   if (!cst) {
     const text = document.createElement('p');
@@ -154,5 +197,13 @@ function domTooltipConstituenta(cst?: Constituenta, canClick?: boolean): Tooltip
       dom.appendChild(clickTip);
     }
   }
+
+  if (errors && errors.length > 0) {
+    const divider = document.createElement('p');
+    divider.className = 'my-1 border-t';
+    dom.appendChild(divider);
+    appendErrorRows(dom, errors);
+  }
+
   return { dom: dom };
 }

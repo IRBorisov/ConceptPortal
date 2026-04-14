@@ -119,13 +119,3 @@ export function getRSErrorPrefix(code: RSErrorCode): string {
 export function isCritical(code: RSErrorCode): boolean {
   return code !== RSErrorCode.localDoubleDeclare && code !== RSErrorCode.localNotUsed;
 }
-
-/** Returns a normalized editor range for an error. */
-export function getRSErrorRange(error: RSErrorDescription): { from: number; to: number } {
-  const from = Math.max(error.from, 0);
-  const to = typeof error.to === 'number' ? Math.max(error.to, from) : from;
-  return {
-    from,
-    to: to > from ? to : from + 1
-  };
-}

@@ -9,7 +9,6 @@ import { inferEvalStatus, prepareValueString } from '@/domain/library/rsmodel-ap
 import {
   type AnalysisFull,
   type CalculatorResult,
-  getRSErrorRange,
   type RSErrorDescription,
   TokenID,
   type Typification
@@ -109,11 +108,10 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
     if (!rsInput.current) {
       return;
     }
-    const range = getRSErrorRange(error);
     rsInput.current?.view?.dispatch({
       selection: {
-        anchor: range.from,
-        head: range.to
+        anchor: error.from,
+        head: error.to
       }
     });
     rsInput.current?.view?.focus();

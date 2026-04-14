@@ -69,30 +69,32 @@ interface RSInputProps extends Pick<
   | 'style'
   | 'className'
 > {
+  schema?: RSForm;
+  errors?: readonly RSErrorDescription[] | null;
+
   ref?: React.Ref<ReactCodeMirrorRef>;
   label?: string;
   disabled?: boolean;
   portalHoverTooltips?: boolean;
+
   onChange?: (newValue: string) => void;
   onAnalyze?: () => void;
-  schema?: RSForm;
   onOpenEdit?: (cstID: number) => void;
-  errors?: readonly RSErrorDescription[] | null;
 }
 
 export function RSInput({
+  schema,
+  errors,
+
   label,
   disabled,
   portalHoverTooltips,
 
-  schema,
-  onOpenEdit,
-  errors,
-
+  ref,
   className,
   style,
-  ref,
 
+  onOpenEdit,
   onAnalyze,
   ...restProps
 }: RSInputProps) {
@@ -136,7 +138,7 @@ export function RSInput({
       : []),
     ccBracketMatching(),
     ...(!schema || !onOpenEdit ? [] : [rsNavigation(schema, onOpenEdit)]),
-    ...(!schema ? [] : [rsHoverTooltip(schema, onOpenEdit !== undefined)])
+    ...(!schema ? [] : [rsHoverTooltip(schema, errors, onOpenEdit !== undefined)])
   ];
 
   function handleAutoComplete(text: RSTextWrapper): boolean {
