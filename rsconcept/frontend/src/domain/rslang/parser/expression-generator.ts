@@ -17,6 +17,7 @@ interface VisitContext {
 
 type ScopeFrame = Map<string, string>;
 
+/** Generates Math-syntax RS expression from AST, with optional identifier normalization. */
 class ExpressionGenerator {
   private readonly options: ExpressionGeneratorOptions;
   private readonly freeLocals = new Map<string, string>();
@@ -29,9 +30,10 @@ class ExpressionGenerator {
     this.options = options;
   }
 
+  /** Run generator. Requires that the AST has no syntax errors. */
   run(ast: AstNode): string {
     if (ast.hasError) {
-      return '';
+      throw new Error('Cannot generate expression: AST has error');
     }
     return this.visit(ast, { localDeclaration: false });
   }
@@ -214,27 +216,110 @@ class ExpressionGenerator {
   }
 
   private shouldWrapQuantifierBody(node: AstNode): boolean {
-    if (node.parenthesis) {
-      return true;
+    const quantifierPrecedence = this.getPrecedence(TokenID.QUANTOR_UNIVERSAL);
+    const bodyPrecedence = this.getPrecedence(node.typeID);
+    if (quantifierPrecedence === null || bodyPrecedence === null) {
+      return false;
     }
-    return (
-      node.typeID === TokenID.LOGIC_AND ||
-      node.typeID === TokenID.LOGIC_OR ||
-      node.typeID === TokenID.LOGIC_IMPLICATION ||
-      node.typeID === TokenID.LOGIC_EQUIVALENT
-    );
+    return bodyPrecedence < quantifierPrecedence;
   }
 
   private renderInfix(symbol: string, node: AstNode, context: VisitContext): string {
     if (this.isLogicBinary(node.typeID)) {
-      const parts = node.children.map(child => {
+      const parts = node.children.map((child, index) => {
         const text = this.visit(child, context);
-        return child.parenthesis ? `(${text})` : text;
+        return this.needParen(node, child, index) ? `(${text})` : text;
       });
       return parts.join(` ${symbol} `);
     }
     const parts = node.children.map(child => this.wrapIfNeeded(this.visit(child, context), child));
     return parts.join(symbol);
+  }
+
+  private needParen(parent: AstNode, child: AstNode, childIndex: number): boolean {
+    if (this.isAtomic(child.typeID)) {
+      return false;
+    }
+    const parentPrecedence = this.getPrecedence(parent.typeID);
+    const childPrecedence = this.getPrecedence(child.typeID);
+    if (parentPrecedence === null || childPrecedence === null) {
+      return true;
+    }
+    if (childPrecedence > parentPrecedence) {
+      return false;
+    }
+    if (childPrecedence < parentPrecedence) {
+      return true;
+    }
+    if (this.isAssociative(parent.typeID) && child.typeID === parent.typeID) {
+      return false;
+    }
+    if (this.isLeftAssociative(parent.typeID)) {
+      return childIndex > 0;
+    }
+    return true;
+  }
+
+  private getPrecedence(typeID: number): number | null {
+    switch (typeID) {
+      case TokenID.LOGIC_EQUIVALENT:
+        return 1;
+      case TokenID.LOGIC_IMPLICATION:
+        return 2;
+      case TokenID.LOGIC_OR:
+        return 3;
+      case TokenID.LOGIC_AND:
+        return 4;
+      case TokenID.QUANTOR_UNIVERSAL:
+      case TokenID.QUANTOR_EXISTS:
+        return 5;
+      case TokenID.EQUAL:
+      case TokenID.NOTEQUAL:
+      case TokenID.GREATER:
+      case TokenID.LESSER:
+      case TokenID.GREATER_OR_EQ:
+      case TokenID.LESSER_OR_EQ:
+      case TokenID.SET_IN:
+      case TokenID.SET_NOT_IN:
+      case TokenID.SUBSET:
+      case TokenID.SUBSET_OR_EQ:
+      case TokenID.NOT_SUBSET:
+        return 6;
+      case TokenID.PLUS:
+      case TokenID.MINUS:
+      case TokenID.SET_UNION:
+      case TokenID.SET_SYMMETRIC_MINUS:
+        return 7;
+      case TokenID.MULTIPLY:
+      case TokenID.DECART:
+      case TokenID.SET_INTERSECTION:
+      case TokenID.SET_MINUS:
+        return 8;
+      default:
+        return null;
+    }
+  }
+
+  private isAssociative(typeID: number): boolean {
+    return (
+      typeID === TokenID.PLUS ||
+      typeID === TokenID.MULTIPLY ||
+      typeID === TokenID.LOGIC_AND ||
+      typeID === TokenID.LOGIC_OR ||
+      typeID === TokenID.LOGIC_EQUIVALENT ||
+      typeID === TokenID.SET_UNION ||
+      typeID === TokenID.SET_INTERSECTION ||
+      typeID === TokenID.DECART
+    );
+  }
+
+  private isLeftAssociative(typeID: number): boolean {
+    return (
+      typeID === TokenID.LOGIC_IMPLICATION ||
+      typeID === TokenID.MINUS ||
+      typeID === TokenID.SET_MINUS ||
+      typeID === TokenID.SET_SYMMETRIC_MINUS
+    );
   }
 
   private renderBoolean(node: AstNode, context: VisitContext): string {
