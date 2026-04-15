@@ -52,20 +52,6 @@ interface EditorRSExpressionProps {
   onUpdateCst?: (data: UpdateConstituentaDTO) => Promise<RO<RSFormDTO>>;
 }
 
-function extractCstData(cst: Constituenta) {
-  return {
-    id: cst.id,
-    alias: cst.alias,
-    type: cst.cst_type,
-    definition_formal: cst.definition_formal,
-    definition_raw: cst.definition_raw,
-    term_raw: cst.term_raw,
-    term_resolved: cst.term_resolved,
-    term_forms: cst.term_forms,
-    convention: cst.convention
-  };
-}
-
 export function EditorRSExpression({
   activeCst,
   disabled,
@@ -237,6 +223,11 @@ export function EditorRSExpression({
         onAnalyze={() => handleCheckExpression(null)}
         onOpenEdit={onOpenEdit}
         disabled={disabled}
+        errorMessage={
+          !isModified && activeCst.formalDuplicates.length > 0
+            ? `Формальное выражение совпадает с конституентами: ${formatAliasList(activeCst.formalDuplicates, schema)}`
+            : undefined
+        }
         {...restProps}
       />
 
@@ -254,4 +245,25 @@ export function EditorRSExpression({
       />
     </div>
   );
+}
+
+function extractCstData(cst: Constituenta) {
+  return {
+    id: cst.id,
+    alias: cst.alias,
+    type: cst.cst_type,
+    definition_formal: cst.definition_formal,
+    definition_raw: cst.definition_raw,
+    term_raw: cst.term_raw,
+    term_resolved: cst.term_resolved,
+    term_forms: cst.term_forms,
+    convention: cst.convention
+  };
+}
+
+function formatAliasList(items: readonly number[], schema: RSForm) {
+  if (items.length === 0) {
+    return '';
+  }
+  return items.map(item => schema.cstByID.get(item)!.alias).join(', ');
 }

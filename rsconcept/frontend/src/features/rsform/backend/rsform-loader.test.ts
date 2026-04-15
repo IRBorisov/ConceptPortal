@@ -100,7 +100,7 @@ describe('RSFormLoader', () => {
     expect(cst!.term_resolved).toBe(item.term_resolved);
     expect(cst!.definition_resolved).toBe(item.definition_resolved);
     expect(cst!.crucial).toBe(item.crucial);
-    expect(cst!.isHomonym).toBe(false);
+    expect(cst!.homonyms).toEqual([]);
   });
 
   it('should set isHomonym when multiple constituents share a non-empty term_resolved', () => {
@@ -109,9 +109,9 @@ describe('RSFormLoader', () => {
     const c = createCst(3, 'X3', CstType.BASE, '', 'other');
     const dto = createMinimalDTO({ items: [a, b, c] });
     const rsform = new RSFormLoader(dto).produceRSForm();
-    expect(rsform.cstByID.get(1)!.isHomonym).toBe(true);
-    expect(rsform.cstByID.get(2)!.isHomonym).toBe(true);
-    expect(rsform.cstByID.get(3)!.isHomonym).toBe(false);
+    expect(rsform.cstByID.get(1)!.homonyms.map(item => rsform.cstByID.get(item)!.alias)).toEqual(['X2']);
+    expect(rsform.cstByID.get(2)!.homonyms.map(item => rsform.cstByID.get(item)!.alias)).toEqual(['X1']);
+    expect(rsform.cstByID.get(3)!.homonyms).toEqual([]);
   });
 
   it('should not mark homonyms for empty or whitespace-only term_resolved', () => {
@@ -119,8 +119,8 @@ describe('RSFormLoader', () => {
     const b = createCst(2, 'X2', CstType.BASE, '', '   ');
     const dto = createMinimalDTO({ items: [a, b] });
     const rsform = new RSFormLoader(dto).produceRSForm();
-    expect(rsform.cstByID.get(1)!.isHomonym).toBe(false);
-    expect(rsform.cstByID.get(2)!.isHomonym).toBe(false);
+    expect(rsform.cstByID.get(1)!.homonyms).toEqual([]);
+    expect(rsform.cstByID.get(2)!.homonyms).toEqual([]);
   });
 
   it('should create analysis on parsed item', () => {
@@ -159,5 +159,18 @@ describe('RSFormLoader', () => {
     expect(f2!.spawner).toBe(f1!.id);
     expect(f2!.spawner_alias).toBe('F1');
     expect(f2!.spawner_path).toEqual([0, 1]);
+  });
+
+  it('should mark formal duplicates using normalized definitions', () => {
+    const x1 = createCst(1, 'X1', CstType.BASE, '', 'Base');
+    const p1 = createCst(2, 'P1', CstType.PREDICATE, '[a∈X1, b∈X1] a=b', 'Predicate 1');
+    const p2 = createCst(3, 'P2', CstType.PREDICATE, '[b∈X1, a∈X1] b=a', 'Predicate 2');
+    const p3 = createCst(4, 'P3', CstType.PREDICATE, '[a∈X1, b∈X1] a=a', 'Predicate 3');
+
+    const rsform = new RSFormLoader(createMinimalDTO({ items: [x1, p1, p2, p3] })).produceRSForm();
+
+    expect(rsform.cstByID.get(2)!.formalDuplicates.map(item => rsform.cstByID.get(item)!.alias)).toEqual(['P2']);
+    expect(rsform.cstByID.get(3)!.formalDuplicates.map(item => rsform.cstByID.get(item)!.alias)).toEqual(['P1']);
+    expect(rsform.cstByID.get(4)!.formalDuplicates).toEqual([]);
   });
 });

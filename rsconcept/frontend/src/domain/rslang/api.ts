@@ -5,6 +5,7 @@ import { type RO } from '@/utils/meta';
 import { type AstNode } from '@/utils/parsing';
 
 import { ArgumentsExtractor, type ArgumentsType } from './semantic/arguments-extractor';
+export { type ExpressionGeneratorOptions, generateExpressionFromAst } from './parser/expression-generator';
 
 /** Represents alias mapping. */
 export type AliasMapping = Record<string, string>;
