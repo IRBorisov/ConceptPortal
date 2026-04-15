@@ -110,9 +110,58 @@ export class RSFormLoader {
       cst.parent_schema_index = cst.parent_schema ? parents.indexOf(cst.parent_schema) + 1 : 0;
       cst.is_inherited = inherit_children.has(cst.id);
       cst.has_inherited_children = inherit_parents.has(cst.id);
+    }
+    for (const attrib of this.schema.attribution) {
+      const container = this.cstByID.get(attrib.container)!;
+      container.attributes.push(attrib.attribute);
+      this.association_graph.addEdge(attrib.container, attrib.attribute);
+    }
+  }
+
+  private parseItems(): void {
+    this.normalizedDefinitions.clear();
+    const order = this.graph.topologicalOrder();
+    for (const cstID of order) {
+      const cst = this.cstByID.get(cstID)!;
       cst.is_simple_expression = this.inferSimpleExpression(cst);
-      if (cst.is_simple_expression && cst.cst_type !== CstType.STRUCTURED) {
-        cst.spawner = this.inferParent(cst);
+      const parse = parseCst(cst, this.analyzer);
+      cst.analysis = {
+        success: parse.success,
+        type: parse.type,
+        valueClass: parse.valueClass
+      };
+      if (!isBasicConcept(cst.cst_type) || cst.cst_type === CstType.AXIOM) {
+        let normalized = '';
+        if (parse.ast && !parse.ast.hasError) {
+          normalized = generateExpressionFromAst(parse.ast, { normalize: true });
+        } else {
+          normalized = cst.definition_formal;
+        }
+        normalized = normalized.replace(/\s+/g, '');
+        if (normalized !== '') {
+          this.normalizedDefinitions.set(cst.id, normalized);
+        }
+      }
+      cst.status =
+        cst.cst_type === CstType.NOMINAL
+          ? CstStatus.UNKNOWN
+          : inferStatus(cst.analysis.success, cst.analysis.valueClass);
+
+      if (cst.is_simple_expression && cst.cst_type !== CstType.STRUCTURED && !!parse.ast && parse.type) {
+        const spawner = this.inferParent(cst);
+        const parents = this.graph.expandInputs([cstID]);
+        const parent = this.cstByID.get(parents.at(-1)!);
+        const path = parent ? extractTypePath(parse.ast, parent.analysis.type!) : null;
+        if (path && parent) {
+          cst.spawner = spawner;
+          if (spawner !== parent.id) {
+            if (parent.spawner_path) {
+              cst.spawner_path = [...parent.spawner_path, ...path] as TypePath;
+            }
+          } else {
+            cst.spawner_path = path;
+          }
+        }
       }
     }
     for (const cstID of order) {
@@ -123,11 +172,6 @@ export class RSFormLoader {
         parent.spawn.push(cst.id);
         parent.spawn_alias.push(cst.alias);
       }
-    }
-    for (const attrib of this.schema.attribution) {
-      const container = this.cstByID.get(attrib.container)!;
-      container.attributes.push(attrib.attribute);
-      this.association_graph.addEdge(attrib.container, attrib.attribute);
     }
   }
 
@@ -257,51 +301,6 @@ export class RSFormLoader {
       }
     }
     return sources;
-  }
-
-  private parseItems(): void {
-    this.normalizedDefinitions.clear();
-    const order = this.graph.topologicalOrder();
-    for (const cstID of order) {
-      const cst = this.cstByID.get(cstID)!;
-      const parse = parseCst(cst, this.analyzer);
-      cst.analysis = {
-        success: parse.success,
-        type: parse.type,
-        valueClass: parse.valueClass
-      };
-      if (!isBasicConcept(cst.cst_type) || cst.cst_type === CstType.AXIOM) {
-        let normalized = '';
-        if (parse.ast && !parse.ast.hasError) {
-          normalized = generateExpressionFromAst(parse.ast, { normalize: true });
-        } else {
-          normalized = cst.definition_formal;
-        }
-        normalized = normalized.replace(/\s+/g, '');
-        if (normalized !== '') {
-          this.normalizedDefinitions.set(cst.id, normalized);
-        }
-      }
-      cst.status =
-        cst.cst_type === CstType.NOMINAL
-          ? CstStatus.UNKNOWN
-          : inferStatus(cst.analysis.success, cst.analysis.valueClass);
-
-      if (cst.spawner && !!parse.ast && parse.type) {
-        const parents = this.graph.expandInputs([cstID]);
-        const parent = this.cstByID.get(parents.at(-1)!)!;
-        const path = extractTypePath(parse.ast, parent.analysis.type!);
-        if (path) {
-          if (cst.spawner !== parent.id) {
-            if (parent.spawner_path) {
-              cst.spawner_path = [...parent.spawner_path, ...path] as TypePath;
-            }
-          } else {
-            cst.spawner_path = path;
-          }
-        }
-      }
-    }
   }
 }
 
