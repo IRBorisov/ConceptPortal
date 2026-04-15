@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { type Constituenta, type RSForm } from '@/domain/library';
 import { isBasicConcept } from '@/domain/library/rsform-api';
 import { type AnalysisFull, type ExpressionType, readTypeAnnotation, TokenID } from '@/domain/rslang';
-import { isCritical, type RSErrorDescription } from '@/domain/rslang/error';
+import { type RSErrorDescription } from '@/domain/rslang/error';
 import { describeRSError, labelType } from '@/domain/rslang/labels';
 
 import { type AstNode } from '@/utils/parsing';
@@ -108,8 +108,7 @@ function appendErrorRows(dom: HTMLDivElement, errors: readonly RSErrorDescriptio
   for (const error of errors) {
     const row = document.createElement('p');
     row.className = 'text-destructive';
-    const title = isCritical(error.code) ? 'Ошибка' : 'Предупреждение';
-    row.innerText = `${title}: ${describeRSError(error.code, error.params)}`;
+    row.innerText = `${describeRSError(error.code, error.params)}`;
     dom.appendChild(row);
   }
 }

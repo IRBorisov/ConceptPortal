@@ -148,6 +148,10 @@ export function describeRSError(code: RSErrorCode, params: readonly string[] = [
       return "Пропущена ')'";
     case RSErrorCode.missingCurlyBrace:
       return "Пропущена '}'";
+    case RSErrorCode.missingSquareBracket:
+      return "Пропущена ']'";
+    case RSErrorCode.bracketMismatch:
+      return `Несогласованные скобки: '${params[0]}' вместо '${params[1]}'`;
     case RSErrorCode.expectedLocal:
       return 'Ожидалось имя переменной';
     case RSErrorCode.expectedType:

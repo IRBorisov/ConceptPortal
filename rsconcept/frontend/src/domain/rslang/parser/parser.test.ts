@@ -73,7 +73,9 @@ const testErrorData = [
   ['(', { code: RSErrorCode.missingParenthesis, from: 1, to: 1 }],
   ['{X1', { code: RSErrorCode.missingCurlyBrace, from: 3, to: 3 }],
   ['∀∈X1 (1=1)', { code: RSErrorCode.expectedLocal, from: 1, to: 1 }],
-  ['∀σ∈S2 ∀(ξ,δ,π)∈σ (ξ∈δ & δ∈{pr1(π), pr2(π)}', { code: RSErrorCode.missingParenthesis, from: 42, to: 42 }]
+  ['∀σ∈S2 ∀(ξ,δ,π)∈σ (ξ∈δ & δ∈{pr1(π), pr2(π)}', { code: RSErrorCode.missingParenthesis, from: 42, to: 42 }],
+  ['Fi1[X1) (X1)', { code: RSErrorCode.bracketMismatch, from: 6, to: 7, params: [']', ')'] }],
+  ['Fi1[X1(X1)', { code: RSErrorCode.missingSquareBracket, from: 10, to: 10 }]
 ];
 
 describe('Testing RSParser correct inputs', () => {
@@ -101,26 +103,28 @@ describe('Testing RSParser error data', () => {
       const ast = buildTree(tree.cursor());
       expect(ast.hasError).toBe(true);
       const errors: RSErrorDescription[] = [];
-      extractSyntaxErrors(ast, error => errors.push(error));
+      extractSyntaxErrors(ast, input as string, error => errors.push(error));
       expect(errors.length).toBe(1);
       expect(errors[0]).toMatchObject(expectedError as RSErrorDescription);
     });
   });
 
   it('Quantor expressions', () => {
-    const tree = parser.parse('∀X1∈X1 (1=1)');
+    const input = '∀X1∈X1 (1=1)';
+    const tree = parser.parse(input);
     const ast = buildTree(tree.cursor());
     const errors: RSErrorDescription[] = [];
-    extractSyntaxErrors(ast, error => errors.push(error));
+    extractSyntaxErrors(ast, input, error => errors.push(error));
     expect(errors.length).toBe(2);
     expect(errors[1]).toMatchObject({ code: RSErrorCode.expectedLocal, from: 3, to: 3 });
   });
 
   it('Includes end position for ranged syntax errors', () => {
-    const tree = parser.parse('∀∈X1 (1=1)');
+    const input = '∀∈X1 (1=1)';
+    const tree = parser.parse(input);
     const ast = buildTree(tree.cursor());
     const errors: RSErrorDescription[] = [];
-    extractSyntaxErrors(ast, error => errors.push(error));
+    extractSyntaxErrors(ast, input, error => errors.push(error));
     expect(errors[0]).toMatchObject({
       code: RSErrorCode.expectedLocal,
       from: 1,

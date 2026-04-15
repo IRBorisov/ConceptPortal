@@ -30,6 +30,8 @@ export const RSErrorCode = {
   syntax: 0x8400, // 33792
   missingParenthesis: 0x8406, // 33798
   missingCurlyBrace: 0x8407, // 33799
+  missingSquareBracket: 0x8408, // 33800
+  bracketMismatch: 0x8409, // 33801
   expectedLocal: 0x8415, // 33813
   expectedType: 0x8416, // 33814
 

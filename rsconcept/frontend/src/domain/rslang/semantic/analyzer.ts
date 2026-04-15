@@ -116,7 +116,7 @@ export class RSLangAnalyzer {
     }
     const ast = this.parse(expression);
     if (ast.hasError) {
-      extractSyntaxErrors(ast, reporter, options?.annotateErrors ?? false);
+      extractSyntaxErrors(ast, expression, reporter, options?.annotateErrors ?? false);
       return { success: false, type: null, valueClass: null, errors, ast };
     }
 
