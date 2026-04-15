@@ -44,7 +44,7 @@ export function useLibraryColumns() {
       minSize: 80,
       maxSize: 150,
       enableSorting: true,
-      cell: props => <span className='min-w-20'>{props.getValue()}</span>,
+      cell: props => <span className='min-w-20 line-clamp-2 hover:line-clamp-none'>{props.getValue()}</span>,
       sortingFn: 'text'
     }),
     columnHelper.accessor('title', {
@@ -54,7 +54,8 @@ export function useLibraryColumns() {
       minSize: 200,
       maxSize: 1200,
       enableSorting: true,
-      sortingFn: 'text'
+      sortingFn: 'text',
+      cell: props => <span className='line-clamp-2 hover:line-clamp-none'>{props.getValue()}</span>
     }),
     columnHelper.accessor('owner', {
       id: 'owner',
