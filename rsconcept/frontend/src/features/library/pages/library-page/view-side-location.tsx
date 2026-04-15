@@ -62,27 +62,26 @@ export function ViewSideLocation({ isVisible, onRenameLocation }: ViewSideLocati
   return (
     <div
       className={clsx(
-        'max-w-40 sm:max-w-60 flex flex-col text:xs sm:text-sm select-none cc-side-location',
-        isVisible && 'open min-w-40 sm:min-w-60'
+        'relative max-w-40 sm:max-w-60',
+        isVisible && 'open min-w-40 sm:min-w-60',
+        'flex flex-col text:xs sm:text-sm select-none cc-side-location'
       )}
     >
-      <div className='h-8 flex justify-between items-center pr-1 pl-0.5'>
+      <div className='absolute top-0 right-0 h-8 flex gap-1 justify-end items-center pr-1 pl-0.5'>
+        <MiniButton
+          titleHtml='<b>Редактирование пути</b><br/>Перемещаются только Ваши схемы<br/>в указанной папке (и подпапках)'
+          aria-label='Редактирование расположения'
+          icon={<IconFolderEdit size='1.25rem' className='icon-primary' />}
+          onClick={onRenameLocation}
+          disabled={!canRename}
+        />
+        <MiniButton
+          title={subfolders ? 'Вложенные папки: Вкл' : 'Вложенные папки: Выкл'}
+          aria-label='Переключатель отображения вложенных папок'
+          icon={<IconShowSubfolders value={subfolders} />}
+          onClick={toggleSubfolders}
+        />
         <BadgeHelp topic={HelpTopic.UI_LIBRARY} contentClass='text-sm' offset={5} place='right-start' />
-        <div className='cc-icons'>
-          <MiniButton
-            titleHtml='<b>Редактирование пути</b><br/>Перемещаются только Ваши схемы<br/>в указанной папке (и подпапках)'
-            aria-label='Редактирование расположения'
-            icon={<IconFolderEdit size='1.25rem' className='icon-primary' />}
-            onClick={onRenameLocation}
-            disabled={!canRename}
-          />
-          <MiniButton
-            title={subfolders ? 'Вложенные папки: Вкл' : 'Вложенные папки: Выкл'}
-            aria-label='Переключатель отображения вложенных папок'
-            icon={<IconShowSubfolders value={subfolders} />}
-            onClick={toggleSubfolders}
-          />
-        </div>
       </div>
       <SelectLocation
         className='cc-scroll-left cc-scroll-stable'
