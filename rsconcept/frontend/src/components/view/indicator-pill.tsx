@@ -42,11 +42,9 @@ export function IndicatorPill({
         'inline-flex items-center justify-center gap-0.5 pl-1 pr-1.5',
         'border rounded-full select-none',
         onClick && 'cursor-pointer',
-        color === 'destructive' &&
-          'border-destructive/45 bg-destructive/10 text-destructive dark:bg-destructive/20 dark:border-destructive/60',
-        color === 'success' &&
-          'border-constructive/45 bg-constructive/10 text-constructive dark:bg-constructive/20 dark:border-constructive/60',
-        color === 'info' && 'border-primary/45 bg-primary/10 text-primary dark:bg-primary/20 dark:border-primary/60',
+        color === 'destructive' && 'pill-red',
+        color === 'success' && 'pill-green',
+        color === 'info' && 'pill-primary',
         className
       )}
       data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}

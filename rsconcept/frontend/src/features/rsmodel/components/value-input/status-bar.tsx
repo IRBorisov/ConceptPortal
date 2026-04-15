@@ -2,15 +2,11 @@
 
 import clsx from 'clsx';
 
-import { type EvalStatus } from '@/domain/library';
-
-import { HelpTopic } from '@/features/help';
-import { BadgeHelp } from '@/features/help/components/badge-help';
+import { EvalStatus } from '@/domain/library';
 
 import { cn } from '@/components/utils';
 import { globalIDs } from '@/utils/constants';
 
-import { colorStatusBar } from '../../colors';
 import { IconEvalStatus } from '../../components/icon-eval-status';
 import { labelEvalStatus } from '../../labels';
 
@@ -26,15 +22,18 @@ export function StatusBar({ className, status, onCalculate }: StatusBarProps) {
       <div
         tabIndex={0}
         className={clsx(
-          'w-42 h-6',
+          'w-42 h-7',
           'px-2 flex items-center justify-center',
-          'border',
+          'border rounded-full',
           'select-none',
           onCalculate && 'cursor-pointer',
           'focus-frame outline-none',
-          'transition-colors duration-fade'
+          'transition-colors duration-fade',
+          'shadow-[8px_6px_16px_-12px]',
+          'hover:shadow-none dark:shadow-none',
+          'hover:translate-y-px',
+          colorStatusBar(status)
         )}
-        style={{ backgroundColor: colorStatusBar(status) }}
         data-tooltip-id={onCalculate ? globalIDs.tooltip : undefined}
         data-tooltip-content='Вычислить значение'
         onClick={onCalculate}
@@ -44,7 +43,20 @@ export function StatusBar({ className, status, onCalculate }: StatusBarProps) {
           <span className='font-controls pr-1 text-sm'>{labelEvalStatus(status)}</span>
         </div>
       </div>
-      <BadgeHelp className='-mt-0.5' topic={HelpTopic.UI_EVAL_STATUS} offset={4} />
     </div>
   );
+}
+
+/** Determines statusbar color for {@link EvalStatus}. */
+function colorStatusBar(status: EvalStatus): string {
+  // prettier-ignore
+  switch (status) {
+    case EvalStatus.NO_EVAL: return 'bg-input';
+    case EvalStatus.NOT_PROCESSED: return 'pill-blue';
+    case EvalStatus.EVAL_FAIL: return 'pill-red';
+    case EvalStatus.INVALID_DATA: return 'pill-purple';
+    case EvalStatus.AXIOM_FALSE: return 'pill-orange';
+    case EvalStatus.EMPTY: return 'pill-teal';
+    case EvalStatus.HAS_DATA: return 'pill-green';
+  }
 }

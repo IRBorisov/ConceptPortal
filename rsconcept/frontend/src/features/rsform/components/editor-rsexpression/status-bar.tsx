@@ -2,17 +2,13 @@
 
 import clsx from 'clsx';
 
-import { type CstStatus } from '@/domain/library';
-
-import { HelpTopic } from '@/features/help';
-import { BadgeHelp } from '@/features/help/components/badge-help';
+import { CstStatus } from '@/domain/library';
 
 import { cn } from '@/components/utils';
 import { globalIDs } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/format';
 import { isMac } from '@/utils/utils';
 
-import { colorStatusBar } from '../../colors';
 import { labelExpressionStatus } from '../../labels';
 import { IconExpressionStatus } from '../icon-expression-status';
 
@@ -30,13 +26,16 @@ export function StatusBar({ className, status, onAnalyze }: StatusBarProps) {
         className={clsx(
           'w-32 h-7',
           'px-2 flex items-center justify-center',
-          'border',
+          'border rounded-full',
           'select-none',
           'cursor-pointer',
           'focus-frame outline-none',
-          'transition-colors duration-fade'
+          'transition-colors duration-fade',
+          'shadow-[8px_6px_16px_-12px]',
+          'hover:shadow-none dark:shadow-none',
+          'hover:translate-y-px',
+          colorStatusBar(status)
         )}
-        style={{ backgroundColor: colorStatusBar(status) }}
         data-tooltip-id={globalIDs.tooltip}
         data-tooltip-html={prepareTooltip('Проверить определение', isMac() ? 'Cmd + Q' : 'Ctrl + Q')}
         onClick={onAnalyze}
@@ -46,7 +45,19 @@ export function StatusBar({ className, status, onAnalyze }: StatusBarProps) {
           <span className='font-controls pr-1 text-sm'>{labelExpressionStatus(status)}</span>
         </div>
       </div>
-      <BadgeHelp topic={HelpTopic.UI_CST_STATUS} offset={4} />
     </div>
   );
+}
+
+/** Determines statusbar color for {@link CstStatus}. */
+function colorStatusBar(status: CstStatus): string {
+  // prettier-ignore
+  switch (status) {
+    case CstStatus.VERIFIED: return 'pill-green';
+    case CstStatus.INCORRECT: return 'pill-red';
+    case CstStatus.INCALCULABLE: return 'pill-orange';
+    case CstStatus.PROPERTY: return 'pill-teal';
+    case CstStatus.UNKNOWN: return 'pill-blue';
+    case CstStatus.UNDEFINED: return 'pill-info';
+  }
 }

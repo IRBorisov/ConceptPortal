@@ -1,5 +1,8 @@
 'use client';
 
+import { HelpTopic } from '@/features/help';
+import { BadgeHelp } from '@/features/help/components/badge-help';
+
 import { MiniButton } from '@/components/control';
 import { IconTree, IconTypeGraph } from '@/components/icons';
 import { cn } from '@/components/utils';
@@ -27,6 +30,7 @@ export function ToolbarRSExpression({
 
   return (
     <div className={cn('cc-icons', className)}>
+      <BadgeHelp topic={HelpTopic.UI_CST_STATUS} offset={4} />
       {!disabled || isProcessing ? (
         <MiniButton
           title='Символьная клавиатура'
