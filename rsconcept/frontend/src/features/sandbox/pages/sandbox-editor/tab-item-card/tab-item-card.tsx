@@ -150,7 +150,11 @@ export function TabItemCard() {
             title='Дата обновления'
             dense
             icon={<IconDateUpdate size='1.25rem' />}
-            value={new Date(model.time_update).toLocaleString(intl.locale)}
+            value={new Date(model.time_update).toLocaleString(intl.locale, {
+              year: '2-digit',
+              month: '2-digit',
+              day: '2-digit'
+            })}
           />
 
           <SubmitButton

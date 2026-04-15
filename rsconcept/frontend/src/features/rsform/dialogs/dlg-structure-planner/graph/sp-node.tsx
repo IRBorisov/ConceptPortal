@@ -29,16 +29,22 @@ export function SPNodeComponent(node: NodeProps<SPFlowNode>) {
       {descriptionText ? (
         <div
           className={clsx(
-            'mt-[4px] w-[120px] px-[4px] text-center translate-x-[calc(-50%+20px)]',
+            'mt-[4px] w-[120px] px-[4px] translate-x-[calc(-50%+20px)]',
             'pointer-events-none',
             'cc-fade-in duration-transform delay-move',
-            'text-[10px]/[12px]'
+            'text-center text-[10px]/[12px]'
           )}
         >
-          <div className='absolute top-0 px-[4px] left-0 text-center w-full line-clamp-3 hover:line-clamp-none'>
+          <div
+            className={clsx(
+              'absolute top-0 left-0 w-full',
+              'px-[4px]',
+              'wrap-anywhere line-clamp-3 hover:line-clamp-none'
+            )}
+          >
             {descriptionText}
           </div>
-          <div aria-hidden className='line-clamp-3 hover:line-clamp-none cc-text-outline'>
+          <div aria-hidden className='wrap-anywhere line-clamp-3 hover:line-clamp-none cc-text-outline'>
             {descriptionText}
           </div>
         </div>

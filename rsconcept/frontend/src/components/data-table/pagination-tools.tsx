@@ -26,9 +26,10 @@ export function PaginationTools<TData>({
     'focus-outline rounded-md',
     'disabled:opacity-75 not-[:disabled]:cursor-pointer'
   );
+  const multiPage = table.getPageCount() > 1;
   return (
     <div className='pl-3 flex justify-end flex-wrap items-center my-1 text-muted-foreground text-sm select-none'>
-      <div>
+      <div className={clsx(multiPage ? 'mr-2' : paginationOptions.length > 1 ? 'mr-1' : 'mr-3')}>
         {`${table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1}
       -
       ${Math.min(
@@ -38,7 +39,7 @@ export function PaginationTools<TData>({
       из
       ${table.getFilteredRowModel().rows.length}`}
       </div>
-      {table.getPageCount() > 1 ? (
+      {multiPage ? (
         <div className='flex'>
           <button
             type='button'
@@ -95,7 +96,7 @@ export function PaginationTools<TData>({
         <SelectPagination
           id={id ? `${id}__per_page` : undefined}
           table={table}
-          className='w-28 max-h-6 ml-2 mr-1'
+          className='max-h-6 mr-1'
           paginationOptions={paginationOptions}
           onChange={onChangePaginationOption}
         />

@@ -29,7 +29,7 @@ import { RefsInput } from '../../components/refs-input';
 
 import { StructureFlow } from './structure-flow';
 
-const DEFINITION_TRUNCATE = 40;
+const DEFINITION_TRUNCATE = 35;
 const TERM_CHARS_PER_LINE = 50;
 
 export interface DlgStructurePlannerProps {
@@ -121,13 +121,16 @@ export function DlgStructurePlanner() {
       <div className='relative flex flex-col h-full'>
         <div className={clsx('z-modal-pop', 'absolute top-0 right-1/2 translate-x-1/2 mr-12', 'flex px-6 items-start')}>
           <div
-            className='w-70 flex justify-end whitespace-nowrap truncate font-math'
+            className={clsx(
+              'w-70 pt-5.5 pr-3 pl-2 pb-3.75',
+              'rounded-bl-2xl rounded-tl-2xl truncate whitespace-nowrap',
+              'font-math text-right select-none',
+              blurClass
+            )}
             data-tooltip-id={isDefinitionTooLong ? globalIDs.tooltip : undefined}
             data-tooltip-content={isDefinitionTooLong ? selectedNode.definition : undefined}
           >
-            <div className={clsx('w-fit pt-5.5 pr-3 pl-2 pb-3.75 rounded-bl-2xl rounded-tl-2xl', blurClass)}>
-              {selectedNode.definition}
-            </div>
+            {selectedNode.definition}
           </div>
 
           <div

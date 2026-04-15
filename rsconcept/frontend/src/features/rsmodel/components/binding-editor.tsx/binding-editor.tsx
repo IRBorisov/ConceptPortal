@@ -97,7 +97,7 @@ export function BindingEditor({ className, rows, value, onChange }: BindingEdito
       size: 200,
       minSize: 200,
       maxSize: 200,
-      cell: props => props.getValue()
+      cell: props => <div className='w-166'>{props.getValue()}</div>
     }),
     ...(onChange
       ? [
@@ -107,7 +107,7 @@ export function BindingEditor({ className, rows, value, onChange }: BindingEdito
             cell: props => (
               <MiniButton
                 title='Удалить элемент'
-                className='align-middle w-fit'
+                className='align-middle w-fit -mr-1'
                 noPadding
                 icon={<IconRemove size='1.25rem' className='cc-remove' />}
                 onClick={event => handleDeleteElement(event, props.row.original)}
@@ -127,31 +127,32 @@ export function BindingEditor({ className, rows, value, onChange }: BindingEdito
 
   return (
     <div className={cn('relative w-full flex flex-col', className)}>
-      <div className='-mt-1 flex items-center'>
-        <div>
+      <div className='-mt-1 flex items-center mb-1'>
+        <div className='w-26'>
           <span>Всего </span>
           <span className='font-math'>{Object.keys(value).length}</span>
         </div>
-        <SearchBar id='dlg_value_search' noBorder query={filter} onChangeQuery={setFilter} />
+        <SearchBar id='dlg_value_search' noBorder query={filter} onChangeQuery={setFilter} className='-mb-0.5' />
       </div>
-      <TextInput
-        label='Значение'
-        dense
-        placeholder='Выделите строку'
-        className='mb-3'
-        value={selectedValue}
-        onChange={event => handleChangeSelected(event.target.value)}
-        disabled={selected === null || !isMutable}
-      />
+      <div className='flex items-center gap-2 mb-3'>
+        <MiniButton
+          title='Добавить элемент'
+          className=''
+          icon={<IconNewItem size='1.25rem' className='icon-green' />}
+          onClick={handleAddElement}
+          disabled={!isMutable}
+        />
+        <TextInput
+          label='Значение'
+          dense
+          placeholder='Выделите строку'
+          className='w-full'
+          value={selectedValue}
+          onChange={event => handleChangeSelected(event.target.value)}
+          disabled={selected === null || !isMutable}
+        />
+      </div>
       <div className='relative w-full max-w-full overflow-x-auto'>
-        {isMutable ? (
-          <MiniButton
-            title='Добавить элемент'
-            className='absolute top-1 z-pop right-2.5'
-            icon={<IconNewItem size='1.25rem' className='icon-green' />}
-            onClick={handleAddElement}
-          />
-        ) : null}
         <DataTable
           data={dataRows}
           dense
