@@ -89,7 +89,8 @@ export interface Constituenta {
   term_forms: TermForm[];
   attributes: number[];
 
-  isHomonym: boolean;
+  homonyms: number[];
+  formalDuplicates: number[];
   analysis: RO<AnalysisBase>;
 
   /** Identifier of {@link LibraryItem} containing this {@link Constituenta}. */

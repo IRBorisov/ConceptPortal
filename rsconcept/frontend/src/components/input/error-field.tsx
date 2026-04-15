@@ -13,7 +13,7 @@ export function ErrorField({ error, className, ...restProps }: ErrorFieldProps):
     return null;
   }
   return (
-    <div className={cn('text-sm text-destructive select-none', className)} {...restProps}>
+    <div className={cn('text-sm text-destructive select-none cursor-auto', className)} {...restProps}>
       {error}
     </div>
   );

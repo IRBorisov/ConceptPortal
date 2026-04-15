@@ -9,11 +9,17 @@ import {
   inferStatus,
   inferTemplate,
   isBaseSet,
+  isBasicConcept,
   isFunctional,
   typeClassForCstType
 } from '@/domain/library/rsform-api';
 import { type AnalysisFast, makeTypePath, RSLangAnalyzer, TokenID, TypeID, type TypePath } from '@/domain/rslang';
-import { extractGlobals, isSimpleExpression, splitTemplateDefinition } from '@/domain/rslang/api';
+import {
+  extractGlobals,
+  generateExpressionFromAst,
+  isSimpleExpression,
+  splitTemplateDefinition
+} from '@/domain/rslang/api';
 import { type ExpressionType } from '@/domain/rslang/semantic/typification';
 
 import { type RO } from '@/utils/meta';
@@ -33,6 +39,7 @@ export class RSFormLoader {
   private association_graph: Graph = new Graph();
   private cstByAlias = new Map<string, Constituenta>();
   private cstByID = new Map<number, Constituenta>();
+  private normalizedDefinitions = new Map<number, string>();
   private analyzer = new RSLangAnalyzer();
 
   constructor(input: RO<RSFormDTO>) {
@@ -45,6 +52,7 @@ export class RSFormLoader {
     this.createGraph();
     this.inferCstAttributes();
     this.parseItems();
+    this.markFormalDuplicates();
     this.markHomonyms();
 
     const result = this.schema;
@@ -138,12 +146,39 @@ export class RSFormLoader {
       group.push(cst);
     }
     for (const cst of this.schema.items) {
-      cst.isHomonym = false;
+      cst.homonyms = [];
     }
     for (const group of byTerm.values()) {
       if (group.length > 1) {
         for (const cst of group) {
-          cst.isHomonym = true;
+          cst.homonyms = group.filter(groupItem => groupItem.id !== cst.id).map(item => item.id);
+        }
+      }
+    }
+  }
+
+  private markFormalDuplicates(): void {
+    const byDefinition = new Map<string, Constituenta[]>();
+    for (const cst of this.schema.items) {
+      cst.formalDuplicates = [];
+
+      const key = this.normalizedDefinitions.get(cst.id);
+      if (!key) {
+        continue;
+      }
+
+      let group = byDefinition.get(key);
+      if (!group) {
+        group = [];
+        byDefinition.set(key, group);
+      }
+      group.push(cst);
+    }
+
+    for (const group of byDefinition.values()) {
+      if (group.length > 1) {
+        for (const cst of group) {
+          cst.formalDuplicates = group.filter(groupItem => groupItem.id !== cst.id).map(item => item.id);
         }
       }
     }
@@ -225,6 +260,7 @@ export class RSFormLoader {
   }
 
   private parseItems(): void {
+    this.normalizedDefinitions.clear();
     const order = this.graph.topologicalOrder();
     for (const cstID of order) {
       const cst = this.cstByID.get(cstID)!;
@@ -234,10 +270,23 @@ export class RSFormLoader {
         type: parse.type,
         valueClass: parse.valueClass
       };
+      if (!isBasicConcept(cst.cst_type) || cst.cst_type === CstType.AXIOM) {
+        let normalized = '';
+        if (parse.ast && !parse.ast.hasError) {
+          normalized = generateExpressionFromAst(parse.ast, { normalize: true });
+        } else {
+          normalized = cst.definition_formal;
+        }
+        normalized = normalized.replace(/\s+/g, '');
+        if (normalized !== '') {
+          this.normalizedDefinitions.set(cst.id, normalized);
+        }
+      }
       cst.status =
         cst.cst_type === CstType.NOMINAL
           ? CstStatus.UNKNOWN
           : inferStatus(cst.analysis.success, cst.analysis.valueClass);
+
       if (cst.spawner && !!parse.ast && parse.type) {
         const parents = this.graph.expandInputs([cstID]);
         const parent = this.cstByID.get(parents.at(-1)!)!;

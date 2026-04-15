@@ -209,7 +209,9 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
             id='cst_term'
             aria-label='Термин'
             maxHeight='8rem'
-            areaClassName={(needsInterpretation && !field.state.value) || activeCst.isHomonym ? 'cm-error' : ''}
+            areaClassName={
+              (needsInterpretation && !field.state.value) || activeCst.homonyms.length > 0 ? 'cm-error' : ''
+            }
             placeholder={disabled ? '' : 'Обозначение для текстовых определений'}
             schema={schema}
             onOpenEdit={onOpenEdit}
@@ -222,8 +224,8 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
               field.state.meta.errors[0]?.message ??
               (needsInterpretation && !field.state.value
                 ? 'Заполните термин'
-                : activeCst.isHomonym
-                  ? 'Термин совпадает с другим понятием'
+                : activeCst.homonyms.length > 0
+                  ? `Термин совпадает с конституентами: ${formatAliasList(activeCst.homonyms, schema)}`
                   : undefined)
             }
           />
@@ -370,4 +372,11 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
       ) : null}
     </form>
   );
+}
+
+function formatAliasList(items: readonly number[], schema: RSForm) {
+  if (items.length === 0) {
+    return '';
+  }
+  return items.map(item => schema.cstByID.get(item)!.alias).join(', ');
 }
