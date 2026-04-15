@@ -10,9 +10,18 @@ interface WordformButtonProps {
   grams: readonly Grammeme[];
   isSelected?: boolean;
   onSelectGrams: (grams: Grammeme[]) => void;
+  onDoubleClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-export function WordformButton({ text, example, grams, onSelectGrams, isSelected, ...restProps }: WordformButtonProps) {
+export function WordformButton({
+  text,
+  example,
+  grams,
+  onSelectGrams,
+  isSelected,
+  onDoubleClick,
+  ...restProps
+}: WordformButtonProps) {
   return (
     <button
       type='button'
@@ -28,7 +37,8 @@ export function WordformButton({ text, example, grams, onSelectGrams, isSelected
         isSelected ? 'cc-selected' : 'text-muted-foreground'
       )}
       data-tooltip-id={example ? globalIDs.tooltip : undefined}
-      data-tooltip-content={example}
+      data-tooltip-html={example}
+      onDoubleClick={onDoubleClick}
       {...restProps}
     >
       {text}

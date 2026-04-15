@@ -75,6 +75,12 @@ export function InlineEntityEditor({ schema, initial, position, onSave, onCancel
     }
   }
 
+  function handleDoubleClick(event: React.MouseEvent<HTMLButtonElement>) {
+    event.preventDefault();
+    event.stopPropagation();
+    handleSave();
+  }
+
   useEffect(
     function closeOnClickOutside() {
       function handlePointerDown(event: PointerEvent) {
@@ -138,6 +144,7 @@ export function InlineEntityEditor({ schema, initial, position, onSave, onCancel
                     isSelected && 'bg-selected text-selected-foreground'
                   )}
                   onClick={() => handleSelectConstituenta(cst)}
+                  onDoubleClick={handleDoubleClick}
                 >
                   <span className='min-w-8 rounded-sm bg-secondary px-2 py-0.5 text-xs font-medium text-center'>
                     {cst.alias}
@@ -150,7 +157,7 @@ export function InlineEntityEditor({ schema, initial, position, onSave, onCancel
             <div className='px-3 py-2 text-sm text-muted-foreground'>Ничего не найдено</div>
           )}
         </div>
-        <SelectWordForm value={grams} onChange={setGrams} />
+        <SelectWordForm value={grams} onChange={setGrams} onDoubleClick={handleDoubleClick} />
       </div>
     </div>
   );

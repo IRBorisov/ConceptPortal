@@ -8,29 +8,38 @@ import { prefixes } from '@/utils/constants';
 
 import { WordformButton } from './wordform-button';
 
+function prepareExample(question: string, answer: string) {
+  return `${question}<br/><div class="text-center"><b>${answer}</b></div>`;
+}
+
 /** Represents recommended wordforms data. */
 export const DefaultWordForms = [
-  { text: 'ед им', example: 'ручка', grams: [Grammeme.sing, Grammeme.nomn] },
-  { text: 'ед род', example: 'ручки', grams: [Grammeme.sing, Grammeme.gent] },
-  { text: 'ед дат', example: 'ручке', grams: [Grammeme.sing, Grammeme.datv] },
-  { text: 'ед вин', example: 'ручку', grams: [Grammeme.sing, Grammeme.accs] },
-  { text: 'ед твор', example: 'ручкой', grams: [Grammeme.sing, Grammeme.ablt] },
-  { text: 'ед пред', example: 'ручке', grams: [Grammeme.sing, Grammeme.loct] },
+  {
+    text: 'ед им',
+    example: prepareExample('Кто? Что?', 'ручка'),
+    grams: [Grammeme.sing, Grammeme.nomn]
+  },
+  { text: 'ед род', example: prepareExample('Кого? Чего?', 'ручки'), grams: [Grammeme.sing, Grammeme.gent] },
+  { text: 'ед дат', example: prepareExample('Кому? Чему?', 'ручке'), grams: [Grammeme.sing, Grammeme.datv] },
+  { text: 'ед вин', example: prepareExample('Кого? Что?', 'ручку'), grams: [Grammeme.sing, Grammeme.accs] },
+  { text: 'ед твор', example: prepareExample('Кем? Чем?', 'ручкой'), grams: [Grammeme.sing, Grammeme.ablt] },
+  { text: 'ед пред', example: prepareExample('О ком? О чём?', 'о ручке'), grams: [Grammeme.sing, Grammeme.loct] },
 
-  { text: 'мн им', example: 'ручки', grams: [Grammeme.plur, Grammeme.nomn] },
-  { text: 'мн род', example: 'ручек', grams: [Grammeme.plur, Grammeme.gent] },
-  { text: 'мн дат', example: 'ручкам', grams: [Grammeme.plur, Grammeme.datv] },
-  { text: 'мн вин', example: 'ручки', grams: [Grammeme.plur, Grammeme.accs] },
-  { text: 'мн твор', example: 'ручками', grams: [Grammeme.plur, Grammeme.ablt] },
-  { text: 'мн пред', example: 'ручках', grams: [Grammeme.plur, Grammeme.loct] }
+  { text: 'мн им', example: prepareExample('Кто? Что?', 'ручки'), grams: [Grammeme.plur, Grammeme.nomn] },
+  { text: 'мн род', example: prepareExample('Кого? Чего?', 'ручек'), grams: [Grammeme.plur, Grammeme.gent] },
+  { text: 'мн дат', example: prepareExample('Кому? Чему?', 'ручкам'), grams: [Grammeme.plur, Grammeme.datv] },
+  { text: 'мн вин', example: prepareExample('Кого? Что?', 'ручки'), grams: [Grammeme.plur, Grammeme.accs] },
+  { text: 'мн твор', example: prepareExample('Кем? Чем?', 'ручками'), grams: [Grammeme.plur, Grammeme.ablt] },
+  { text: 'мн пред', example: prepareExample('О ком? О чём?', 'о ручках'), grams: [Grammeme.plur, Grammeme.loct] }
 ] as const;
 
 interface SelectWordFormProps extends Styling {
   value: Grammeme[];
   onChange: React.Dispatch<React.SetStateAction<Grammeme[]>>;
+  onDoubleClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-export function SelectWordForm({ value, onChange, className, ...restProps }: SelectWordFormProps) {
+export function SelectWordForm({ value, onChange, className, onDoubleClick, ...restProps }: SelectWordFormProps) {
   function handleSelect(grams: Grammeme[]) {
     onChange(supportedGrammemes.filter(value => grams.includes(value)));
   }
@@ -45,6 +54,7 @@ export function SelectWordForm({ value, onChange, className, ...restProps }: Sel
           grams={data.grams}
           isSelected={data.grams.every(gram => value.find(item => item === gram))}
           onSelectGrams={handleSelect}
+          onDoubleClick={onDoubleClick}
         />
       ))}
     </div>
