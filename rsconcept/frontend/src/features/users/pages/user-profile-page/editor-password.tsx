@@ -10,6 +10,7 @@ import { isAxiosError } from '@/backend/api-transport';
 import { SubmitButton } from '@/components/control';
 import { type ErrorData } from '@/components/info-error';
 import { TextInput } from '@/components/input';
+import { rethrowIfStaleBundleError } from '@/utils/stale-bundle-error';
 
 export function EditorPassword() {
   const router = useConceptNavigation();
@@ -98,6 +99,8 @@ export function EditorPassword() {
 
 // ====== Internals =========
 function ServerError({ error }: { error: ErrorData }): React.ReactElement {
+  rethrowIfStaleBundleError(error);
+
   if (isAxiosError(error) && error.response?.status === 400) {
     return <div className='text-sm select-text text-destructive'>Неверно введен старый пароль</div>;
   }

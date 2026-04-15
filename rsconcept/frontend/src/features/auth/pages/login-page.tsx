@@ -10,6 +10,7 @@ import { type ErrorData } from '@/components/info-error';
 import { TextInput } from '@/components/input';
 import { useQueryStrings } from '@/hooks/use-query-strings';
 import { resources } from '@/utils/constants';
+import { rethrowIfStaleBundleError } from '@/utils/stale-bundle-error';
 
 import { type IUserLoginDTO, schemaUserLogin } from '../backend/types';
 import { useAuth } from '../backend/use-auth';
@@ -102,6 +103,8 @@ export function LoginPage() {
 
 // ====== Internals =========
 function ServerError({ error }: { error: ErrorData }): React.ReactElement | null {
+  rethrowIfStaleBundleError(error);
+
   if (isAxiosError(error) && error.response?.status === 400) {
     return (
       <div className='text-sm select-text text-destructive'>

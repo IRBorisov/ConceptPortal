@@ -10,6 +10,7 @@ import { type ErrorData, InfoError } from '@/components/info-error';
 import { TextInput } from '@/components/input';
 import { Loader } from '@/components/loader';
 import { useQueryStrings } from '@/hooks/use-query-strings';
+import { rethrowIfStaleBundleError } from '@/utils/stale-bundle-error';
 
 import { useResetPassword } from '../backend/use-reset-password';
 
@@ -97,6 +98,8 @@ export function Component() {
 
 // ====== Internals =========
 function ServerError({ error }: { error: ErrorData }): React.ReactElement {
+  rethrowIfStaleBundleError(error);
+
   if (isAxiosError(error) && error.response?.status === 404) {
     return <div className='mx-auto mt-6 text-sm select-text text-destructive'>Данная ссылка не действительна</div>;
   }

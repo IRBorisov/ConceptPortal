@@ -10,14 +10,14 @@ interface SchemaTitleProps {
   title: string;
 }
 
-function ItemIcon({ itemType }: { itemType: LibraryItemType }) {
+function ItemIcon({ itemType, className }: { itemType: LibraryItemType; className?: string }) {
   switch (itemType) {
     case LibraryItemType.RSFORM:
-      return <IconRSForm size='1.5rem' />;
+      return <IconRSForm size='1.5rem' className={className} />;
     case LibraryItemType.OSS:
-      return <IconOSS size='1.5rem' />;
+      return <IconOSS size='1.5rem' className={className} />;
     case LibraryItemType.RSMODEL:
-      return <IconRSModel size='1.5rem' />;
+      return <IconRSModel size='1.5rem' className={className} />;
   }
 }
 
@@ -34,7 +34,7 @@ export function CurrentTitle({ itemType, title }: SchemaTitleProps) {
       data-tooltip-id={globalIDs.tooltip}
       data-tooltip-content={title}
     >
-      <ItemIcon itemType={itemType} />
+      <ItemIcon itemType={itemType} className='shrink-0' />
       <span className='pt-0.5 font-medium truncate'>{title}</span>
     </div>
   );

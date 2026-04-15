@@ -14,6 +14,7 @@ import { type ErrorData } from '@/components/info-error';
 import { useQueryStrings } from '@/hooks/use-query-strings';
 import { useResetModification } from '@/hooks/use-reset-modification';
 import { useModificationStore } from '@/stores/modification';
+import { rethrowIfStaleBundleError } from '@/utils/stale-bundle-error';
 
 import { RSModelState } from './rsmodel-state';
 import { RSModelTabs } from './rsmodel-tabs';
@@ -59,6 +60,8 @@ export function RSModelPage() {
 
 // ====== Internals =========
 function ProcessError({ error }: { error: ErrorData }): React.ReactElement | null {
+  rethrowIfStaleBundleError(error);
+
   if (isAxiosError(error) && error.response) {
     if (error.response.status === 404) {
       return (

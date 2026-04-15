@@ -6,6 +6,7 @@ import { isAxiosError } from '@/backend/api-transport';
 import { SubmitButton, TextURL } from '@/components/control';
 import { type ErrorData } from '@/components/info-error';
 import { TextInput } from '@/components/input';
+import { rethrowIfStaleBundleError } from '@/utils/stale-bundle-error';
 
 import { useRequestPasswordReset } from '../backend/use-request-password-reset';
 
@@ -53,6 +54,8 @@ export function Component() {
 
 // ====== Internals =========
 function ServerError({ error }: { error: ErrorData }): React.ReactElement {
+  rethrowIfStaleBundleError(error);
+
   if (isAxiosError(error) && error.response?.status === 400) {
     return (
       <div className='mx-auto mt-6 text-sm select-text text-destructive'>Данный email не используется на Портале.</div>

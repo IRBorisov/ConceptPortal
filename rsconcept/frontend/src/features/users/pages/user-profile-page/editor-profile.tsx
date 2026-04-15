@@ -9,6 +9,7 @@ import { isAxiosError } from '@/backend/api-transport';
 import { SubmitButton } from '@/components/control';
 import { type ErrorData } from '@/components/info-error';
 import { TextInput } from '@/components/input';
+import { rethrowIfStaleBundleError } from '@/utils/stale-bundle-error';
 
 import { schemaUpdateProfile, type UpdateProfileDTO } from '../../backend/types';
 import { useProfileSuspense } from '../../backend/use-profile';
@@ -116,6 +117,8 @@ export function EditorProfile() {
 
 // ====== Internals =========
 function ServerError({ error }: { error: ErrorData }): React.ReactElement {
+  rethrowIfStaleBundleError(error);
+
   if (isAxiosError(error) && error.response?.status === 400) {
     if ('email' in error.response.data) {
       return (

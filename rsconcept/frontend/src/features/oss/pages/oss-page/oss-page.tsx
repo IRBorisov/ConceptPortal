@@ -13,6 +13,7 @@ import { TextURL } from '@/components/control';
 import { useQueryStrings } from '@/hooks/use-query-strings';
 import { useResetModification } from '@/hooks/use-reset-modification';
 import { useModificationStore } from '@/stores/modification';
+import { rethrowIfStaleBundleError } from '@/utils/stale-bundle-error';
 
 import { OperationTooltip } from '../../components/tooltip-oss-item';
 
@@ -57,6 +58,8 @@ export function OssPage() {
 
 // ====== Internals =========
 function ProcessError({ error }: FallbackProps): React.ReactElement {
+  rethrowIfStaleBundleError(error);
+
   if (isAxiosError(error) && error.response) {
     if (error.response.status === 404) {
       return (

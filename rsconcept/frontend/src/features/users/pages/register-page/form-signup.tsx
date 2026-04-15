@@ -14,6 +14,7 @@ import { type ErrorData } from '@/components/info-error';
 import { Checkbox, TextInput } from '@/components/input';
 import { PrettyJson } from '@/components/view';
 import { globalIDs, patterns } from '@/utils/constants';
+import { rethrowIfStaleBundleError } from '@/utils/stale-bundle-error';
 
 import { schemaUserSignup, type UserSignupDTO } from '../../backend/types';
 import { useSignup } from '../../backend/use-signup';
@@ -198,6 +199,8 @@ export function FormSignup() {
 
 // ====== Internals =========
 function ServerError({ error }: { error: ErrorData }): React.ReactElement {
+  rethrowIfStaleBundleError(error);
+
   if (isAxiosError(error) && error.response?.status === 400) {
     if ('email' in error.response.data) {
       return (

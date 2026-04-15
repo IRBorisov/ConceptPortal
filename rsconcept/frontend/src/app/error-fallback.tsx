@@ -5,22 +5,7 @@ import { useNavigate, useRouteError } from 'react-router';
 
 import { Button } from '@/components/control';
 import { InfoError } from '@/components/info-error';
-
-/**
- * Check if error is stale bundle error.
- */
-export function isStaleBundleError(error: unknown): boolean {
-  if (import.meta.env.DEV) {
-    return false;
-  }
-  if (error instanceof Error) {
-    return error.message.includes('Failed to fetch dynamically imported module');
-  }
-  if (typeof error === 'string') {
-    return error.includes('Failed to fetch dynamically imported module');
-  }
-  return false;
-}
+import { handleStaleBundleError, isStaleBundleError } from '@/utils/stale-bundle-error';
 
 export function ErrorFallback() {
   const error = useRouteError();
@@ -28,10 +13,7 @@ export function ErrorFallback() {
 
   useEffect(
     function reloadOnStaleError() {
-      if (isStaleBundleError(error)) {
-        console.warn('Detected stale bundle — reloading...');
-        window.location.reload();
-      }
+      handleStaleBundleError(error);
     },
     [error]
   );

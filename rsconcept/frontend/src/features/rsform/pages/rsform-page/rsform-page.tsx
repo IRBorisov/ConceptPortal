@@ -14,6 +14,7 @@ import { type ErrorData } from '@/components/info-error';
 import { useQueryStrings } from '@/hooks/use-query-strings';
 import { useResetModification } from '@/hooks/use-reset-modification';
 import { useModificationStore } from '@/stores/modification';
+import { rethrowIfStaleBundleError } from '@/utils/stale-bundle-error';
 
 import { ConstituentaTooltip } from '../../components/constituenta-tooltip';
 
@@ -78,6 +79,8 @@ function ProcessError({
   isArchive: boolean;
   itemID?: number;
 }): React.ReactElement | null {
+  rethrowIfStaleBundleError(error);
+
   if (isAxiosError(error) && error.response) {
     if (error.response.status === 404) {
       return (

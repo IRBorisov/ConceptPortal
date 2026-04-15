@@ -13,6 +13,7 @@ import { TextURL } from '@/components/control';
 import { type ErrorData } from '@/components/info-error';
 import { useQueryStrings } from '@/hooks/use-query-strings';
 import { useModificationStore } from '@/stores/modification';
+import { rethrowIfStaleBundleError } from '@/utils/stale-bundle-error';
 
 import { TemplatesTabs } from './templates-tabs';
 
@@ -45,6 +46,8 @@ export function PromptTemplatesPage() {
 
 // ====== Internals =========
 function ProcessError({ error, itemID }: { error: ErrorData; itemID?: number | null }): React.ReactElement | null {
+  rethrowIfStaleBundleError(error);
+
   if (isAxiosError(error) && error.response) {
     if (error.response.status === 404) {
       return (

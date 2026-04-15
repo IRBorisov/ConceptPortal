@@ -1,6 +1,7 @@
 import { createRoot } from 'react-dom/client';
 
 import { GlobalProviders } from './app/global-providers';
+import { handleStaleBundleError } from './utils/stale-bundle-error';
 import { App } from './app';
 
 import './index.css';
@@ -14,20 +15,6 @@ if (typeof window !== 'undefined' && import.meta.env.DEV) {
 }
 
 if (typeof window !== 'undefined') {
-  function handleStaleBundleError(error: unknown): boolean {
-    if (error instanceof Error && error.message.includes('Failed to fetch dynamically imported module')) {
-      console.warn('Detected stale bundle — reloading...');
-      window.location.reload();
-      return true;
-    }
-    if (typeof error === 'string' && error.includes('Failed to fetch dynamically imported module')) {
-      console.warn('Detected stale bundle — reloading...');
-      window.location.reload();
-      return true;
-    }
-    return false;
-  }
-
   window.addEventListener('error', (event: ErrorEvent) => {
     handleStaleBundleError(event.error);
   });

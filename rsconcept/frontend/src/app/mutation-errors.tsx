@@ -6,6 +6,7 @@ import { DescribeError } from '@/components/info-error';
 import { ModalBackdrop } from '@/components/modal/modal-backdrop';
 import { useEscapeKey } from '@/hooks/use-escape-key';
 import { useDialogsStore } from '@/stores/dialogs';
+import { rethrowIfStaleBundleError } from '@/utils/stale-bundle-error';
 
 export function MutationErrors() {
   const { mutationErrors, resetErrors } = useMutationErrors();
@@ -16,6 +17,7 @@ export function MutationErrors() {
   if (mutationErrors.length === 0) {
     return null;
   }
+  rethrowIfStaleBundleError(mutationErrors[0]);
 
   hideDialog();
 
