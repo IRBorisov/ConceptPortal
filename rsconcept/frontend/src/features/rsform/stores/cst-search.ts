@@ -1,51 +1,34 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-import { toggleTristateFlag } from '@/utils/utils';
+export type CstFilterOption = 'all' | 'problematic' | 'crucial' | 'kernel' | 'derived' | 'owned' | 'inherited';
 
 interface CstSearchStore {
   query: string;
   setQuery: (value: string) => void;
+  reset: () => void;
 
-  isKernel: boolean;
-  toggleKernel: () => void;
-
-  isProblematic: boolean;
-  toggleProblematic: () => void;
+  filter: CstFilterOption;
+  setFilter: (value: CstFilterOption) => void;
   focusProblematic: () => void;
-
-  isInherited: boolean | null;
-  toggleInherited: () => void;
-
-  isCrucial: boolean | null;
-  toggleCrucial: () => void;
 }
 
-type PersistedCstSearchStore = Pick<CstSearchStore, 'isKernel' | 'isProblematic' | 'isInherited' | 'isCrucial'>;
+type PersistedCstSearchStore = Pick<CstSearchStore, 'filter'>;
 
 export const useCstSearchStore = create<CstSearchStore>()(
   persist<CstSearchStore, [], [], PersistedCstSearchStore>(
     set => ({
       query: '',
       setQuery: value => set({ query: value }),
-      isKernel: false,
-      toggleKernel: () => set(state => ({ isKernel: !state.isKernel })),
-      isProblematic: false,
-      toggleProblematic: () => set(state => ({ isProblematic: !state.isProblematic })),
-      focusProblematic: () =>
-        set(() => ({ isProblematic: true, query: '', isKernel: false, isInherited: null, isCrucial: null })),
-      isInherited: null,
-      toggleInherited: () => set(state => ({ isInherited: toggleTristateFlag(state.isInherited) })),
-      isCrucial: null,
-      toggleCrucial: () => set(state => ({ isCrucial: toggleTristateFlag(state.isCrucial) }))
+      reset: () => set(() => ({ query: '', filter: 'all' })),
+      filter: 'all',
+      setFilter: value => set({ filter: value }),
+      focusProblematic: () => set(() => ({ filter: 'problematic', query: '' }))
     }),
     {
-      version: 3,
+      version: 5,
       partialize: state => ({
-        isKernel: state.isKernel,
-        isProblematic: state.isProblematic,
-        isInherited: state.isInherited,
-        isCrucial: state.isCrucial
+        filter: state.filter
       }),
       name: 'portal.constituenta.search'
     }

@@ -1,64 +1,34 @@
 'use client';
 
 import { MiniButton } from '@/components/control';
-import { IconChild, IconCrucial, IconGraphCore, IconStatusError } from '@/components/icons';
+import { IconFilterReset } from '@/components/icons';
 import { SearchBar } from '@/components/input';
-import { tripleToggleColor } from '@/utils/utils';
 
 import { useCstSearchStore } from '../../stores/cst-search';
 
-interface ConstituentsSearchProps {
-  hasProblematicFilter?: boolean;
-}
+import { SelectorCstFilter } from './selector-cst-filter';
 
-export function ConstituentsSearch({ hasProblematicFilter = false }: ConstituentsSearchProps) {
+export function ConstituentsSearch() {
   const query = useCstSearchStore(state => state.query);
-  const showInherited = useCstSearchStore(state => state.isInherited);
-  const showCrucial = useCstSearchStore(state => state.isCrucial);
-  const showKernel = useCstSearchStore(state => state.isKernel);
-  const showProblematic = useCstSearchStore(state => state.isProblematic);
   const setQuery = useCstSearchStore(state => state.setQuery);
-  const toggleKernel = useCstSearchStore(state => state.toggleKernel);
-  const toggleProblematic = useCstSearchStore(state => state.toggleProblematic);
-  const toggleInherited = useCstSearchStore(state => state.toggleInherited);
-  const toggleCrucial = useCstSearchStore(state => state.toggleCrucial);
+  const filter = useCstSearchStore(state => state.filter);
+
+  const hasActiveFilter = filter !== 'all' || query !== '';
+
+  function handleReset() {
+    useCstSearchStore.getState().reset();
+  }
 
   return (
-    <div className='flex border-b bg-input rounded-t-md pr-1'>
-      <SearchBar
-        id='constituents_search'
-        noBorder
-        className='min-w-24 mr-2 grow'
-        query={query}
-        onChangeQuery={setQuery}
-      />
-
-      {hasProblematicFilter ? (
-        <MiniButton
-          title='Фильтр: проблемные понятия'
-          icon={<IconStatusError size='1rem' className={showProblematic ? 'text-destructive' : ''} />}
-          className='h-fit self-center'
-          onClick={toggleProblematic}
-        />
-      ) : null}
+    <div className='flex items-center border-b bg-input rounded-t-md pl-2 pr-1'>
       <MiniButton
-        title='Фильтр: неопределяемые понятия'
-        icon={<IconGraphCore size='1rem' className={showKernel ? 'text-constructive' : ''} />}
-        className='h-fit self-center'
-        onClick={toggleKernel}
+        title='Сбросить фильтры'
+        icon={<IconFilterReset size='1.25rem' className='icon-primary -mr-1' />}
+        onClick={handleReset}
+        disabled={!hasActiveFilter}
       />
-      <MiniButton
-        title='Фильтр: наследники'
-        icon={<IconChild size='1rem' className={tripleToggleColor(showInherited)} />}
-        className='h-fit self-center'
-        onClick={toggleInherited}
-      />
-      <MiniButton
-        title='Фильтр: ключевые'
-        icon={<IconCrucial size='1rem' className={tripleToggleColor(showCrucial)} />}
-        className='h-fit self-center'
-        onClick={toggleCrucial}
-      />
+      <SearchBar id='constituents_search' noBorder className='min-w-24 grow' query={query} onChangeQuery={setQuery} />
+      <SelectorCstFilter />
     </div>
   );
 }

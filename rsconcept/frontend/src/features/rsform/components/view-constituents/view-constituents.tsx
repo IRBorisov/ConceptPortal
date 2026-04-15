@@ -38,7 +38,7 @@ export function ViewConstituents({
 }: ViewConstituentsProps) {
   return (
     <div className={cn(!noBorder && 'border', className)}>
-      <ConstituentsSearch hasProblematicFilter={!!isProblematic} />
+      <ConstituentsSearch />
       <TableSideConstituents
         schema={schema}
         engine={engine}
