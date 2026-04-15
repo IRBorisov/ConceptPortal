@@ -62,8 +62,7 @@ const labelExpressionStatusRecord: Record<CstStatus, string> = {
   [CstStatus.INCORRECT]: 'ошибка',
   [CstStatus.INCALCULABLE]: 'невычислимо',
   [CstStatus.PROPERTY]: 'неразмерное',
-  [CstStatus.UNKNOWN]: 'не проверено',
-  [CstStatus.UNDEFINED]: 'N/A'
+  [CstStatus.UNKNOWN]: 'не проверено'
 };
 
 const describeExpressionStatusRecord: Record<CstStatus, string> = {
@@ -71,8 +70,7 @@ const describeExpressionStatusRecord: Record<CstStatus, string> = {
   [CstStatus.INCORRECT]: 'обнаружена ошибка',
   [CstStatus.INCALCULABLE]: 'интерпретация не вычисляется',
   [CstStatus.PROPERTY]: 'только проверка принадлежности',
-  [CstStatus.UNKNOWN]: 'требуется проверка',
-  [CstStatus.UNDEFINED]: 'ошибка при проверке'
+  [CstStatus.UNKNOWN]: 'требуется проверка'
 };
 
 const labelRSExpressionsRecord: Record<CstType, string> = {

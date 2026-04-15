@@ -81,7 +81,7 @@
 
   border-width: 1px;
   border-style: solid;
-  border-radius: calc(infinity * 1px);
+  border-radius: calc(infinity* 1px);
 }
 
 @utility cc-badge-constituenta {
@@ -357,5 +357,106 @@
 
   .cursor-relocate .dragging & {
     cursor: move;
+  }
+}
+
+@utility pill-primary {
+  border-color: color-mix(in oklab, var(--clr-sec-600) 45%, transparent);
+  background-color: color-mix(in oklab, var(--clr-sec-600) 15%, transparent);
+  color: var(--clr-sec-600);
+
+  &:is(.dark *) {
+    border-color: color-mix(in oklab, var(--clr-sec-600) 60%, transparent);
+    background-color: color-mix(in oklab, var(--clr-sec-600) 20%, transparent);
+  }
+}
+
+@utility pill-red {
+  --pill-back: var(--acc-bg-red);
+  --pill-fore: var(--acc-fg-red);
+
+  border-color: color-mix(in oklab, var(--pill-fore) 50%, transparent);
+  background-color: color-mix(in oklab, var(--pill-back) 25%, transparent);
+  color: var(--pill-fore);
+
+  &:is(.dark *) {
+    border-color: color-mix(in oklab, var(--pill-fore) 40%, transparent);
+    background-color: color-mix(in oklab, var(--pill-back) 25%, transparent);
+    color: var(--pill-fore);
+  }
+}
+
+@utility pill-green {
+  --pill-back: var(--acc-bg-green);
+  --pill-fore: var(--acc-fg-green);
+
+  border-color: color-mix(in oklab, var(--pill-fore) 60%, transparent);
+  background-color: color-mix(in oklab, var(--pill-back) 25%, transparent);
+  color: color-mix(in oklab, var(--pill-fore) 80%, black);
+
+  &:is(.dark *) {
+    border-color: color-mix(in oklab, var(--pill-fore) 45%, transparent);
+    background-color: color-mix(in oklab, var(--pill-back) 30%, transparent);
+    color: var(--pill-fore);
+  }
+}
+
+@utility pill-orange {
+  --pill-back: var(--acc-bg-orange);
+  --pill-fore: var(--acc-fg-orange);
+
+  border-color: color-mix(in oklab, var(--pill-fore) 80%, transparent);
+  background-color: color-mix(in oklab, var(--pill-back) 25%, transparent);
+  color: color-mix(in oklab, var(--pill-fore) 85%, black);
+
+  &:is(.dark *) {
+    border-color: color-mix(in oklab, var(--pill-fore) 50%, transparent);
+    background-color: color-mix(in oklab, var(--pill-back) 10%, transparent);
+    color: var(--pill-fore);
+  }
+}
+
+@utility pill-blue {
+  --pill-back: var(--acc-bg-blue);
+  --pill-fore: var(--acc-fg-blue);
+
+  border-color: color-mix(in oklab, var(--pill-fore) 60%, transparent);
+  background-color: color-mix(in oklab, var(--pill-back) 25%, transparent);
+  color: color-mix(in oklab, var(--pill-fore) 85%, black);
+
+  &:is(.dark *) {
+    border-color: color-mix(in oklab, var(--pill-fore) 40%, transparent);
+    background-color: color-mix(in oklab, var(--pill-back) 20%, transparent);
+    color: var(--pill-fore);
+  }
+}
+
+@utility pill-teal {
+  --pill-back: var(--acc-bg-teal);
+  --pill-fore: var(--acc-fg-teal);
+
+  border-color: color-mix(in oklab, var(--pill-fore) 60%, transparent);
+  background-color: color-mix(in oklab, var(--pill-back) 20%, transparent);
+  color: color-mix(in oklab, var(--pill-fore) 75%, black);
+
+  &:is(.dark *) {
+    border-color: color-mix(in oklab, var(--pill-fore) 30%, transparent);
+    background-color: color-mix(in oklab, var(--pill-back) 15%, transparent);
+    color: color-mix(in oklab, var(--pill-fore) 90%, black);
+  }
+}
+
+@utility pill-purple {
+  --pill-back: var(--acc-bg-purple);
+  --pill-fore: var(--acc-fg-purple);
+
+  border-color: color-mix(in oklab, var(--pill-fore) 60%, transparent);
+  background-color: color-mix(in oklab, var(--pill-back) 20%, transparent);
+  color: color-mix(in oklab, var(--pill-fore) 80%, black);
+
+  &:is(.dark *) {
+    border-color: color-mix(in oklab, var(--pill-fore) 50%, transparent);
+    background-color: color-mix(in oklab, var(--pill-back) 15%, transparent);
+    color: color-mix(in oklab, var(--pill-fore) 95%, black);
   }
 }

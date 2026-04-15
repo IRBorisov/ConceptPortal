@@ -2,8 +2,8 @@ import { EvalStatus } from '@/domain/library';
 
 import { APP_COLORS } from '@/styling/colors';
 
-/** Determines statusbar color for {@link EvalStatus}. */
-export function colorStatusBar(status: EvalStatus): string {
+/** Determines background color for {@link EvalStatus}. */
+export function colorBgEvalStatus(status: EvalStatus): string {
   // prettier-ignore
   switch (status) {
     case EvalStatus.NO_EVAL: return APP_COLORS.bgInput;

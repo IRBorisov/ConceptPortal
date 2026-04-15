@@ -3,6 +3,9 @@
 import { useRef } from 'react';
 import { toast } from 'react-toastify';
 
+import { HelpTopic } from '@/features/help';
+import { BadgeHelp } from '@/features/help/components/badge-help';
+
 import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import { IconClipboard, IconDownload, IconJSON, IconReset, IconSave, IconUpload } from '@/components/icons';
@@ -113,7 +116,8 @@ export function ToolbarValue({
   }
 
   return (
-    <div className={cn('cc-icons select-none', className)}>
+    <div className={cn('cc-icons select-none items-start', className)}>
+      <BadgeHelp topic={HelpTopic.UI_EVAL_STATUS} offset={4} />
       {!!value ? (
         <div ref={exportMenuRef} onBlur={handleExportBlur} className='relative'>
           {!disabled && !!onSubmit ? (

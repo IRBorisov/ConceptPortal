@@ -199,7 +199,7 @@ export function EditorRSExpression({
   return (
     <div className='relative'>
       <ToolbarRSExpression
-        className='absolute -top-2 right-0'
+        className='absolute -top-1 right-0'
         showAST={handleShowAST}
         showTypeGraph={onShowTypeGraph}
         disabled={disabled}
@@ -207,7 +207,7 @@ export function EditorRSExpression({
       />
 
       <StatusBar
-        className='absolute -top-2 right-1/2 translate-x-1/2'
+        className='absolute -top-1 right-1/2 translate-x-1/2'
         status={status}
         onAnalyze={event => handleCheckExpression(event)}
       />

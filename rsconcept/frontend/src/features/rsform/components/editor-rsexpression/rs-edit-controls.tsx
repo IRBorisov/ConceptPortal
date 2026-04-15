@@ -92,7 +92,7 @@ export function RSEditorControls({ isOpen, disabled, onEdit }: RSEditorControlsP
     <div
       className={clsx(
         'cc-rs-edit-controls',
-        'max-w-md min-w-md xs:max-w-154 xs:min-w-154 sm:max-w-160 sm:min-w-160 md:max-w-fit mx-1 sm:mx-0',
+        'max-w-md min-w-md xs:max-w-154 xs:min-w-154 sm:max-w-160 sm:min-w-160 md:max-w-fit mx-1 sm:mx-0 -mb-1.5',
         'flex flex-wrap',
         'text-xs md:text-sm',
         'select-none',

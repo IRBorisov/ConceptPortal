@@ -163,20 +163,6 @@ export function colorBgCstStatus(status: CstStatus): string {
     case CstStatus.INCALCULABLE: return APP_COLORS.bgOrange;
     case CstStatus.PROPERTY: return APP_COLORS.bgTeal;
     case CstStatus.UNKNOWN: return APP_COLORS.bgSelected;
-    case CstStatus.UNDEFINED: return APP_COLORS.bgBlue;
-  }
-}
-
-/** Determines statusbar color for {@link CstStatus}. */
-export function colorStatusBar(status: CstStatus): string {
-  // prettier-ignore
-  switch (status) {
-    case CstStatus.VERIFIED: return APP_COLORS.bgGreen50;
-    case CstStatus.INCORRECT: return APP_COLORS.bgRed;
-    case CstStatus.INCALCULABLE: return APP_COLORS.bgOrange;
-    case CstStatus.PROPERTY: return APP_COLORS.bgTeal;
-    case CstStatus.UNKNOWN: return APP_COLORS.bgSelected;
-    case CstStatus.UNDEFINED: return APP_COLORS.bgBlue;
   }
 }
 
@@ -189,7 +175,6 @@ export function colorFgCstStatus(status: CstStatus): string {
     case CstStatus.INCALCULABLE: return APP_COLORS.fgOrange;
     case CstStatus.PROPERTY: return APP_COLORS.fgTeal;
     case CstStatus.UNKNOWN: return APP_COLORS.fgBlue;
-    case CstStatus.UNDEFINED: return APP_COLORS.fgBlue;
   }
 }
 

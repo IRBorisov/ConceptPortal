@@ -2,7 +2,7 @@ import clsx from 'clsx';
 
 import { EvalStatus } from '@/domain/library';
 
-import { colorStatusBar } from '@/features/rsmodel/colors';
+import { colorBgEvalStatus } from '@/features/rsmodel/colors';
 import { describeEvalStatus, labelEvalStatus } from '@/features/rsmodel/labels';
 
 import { prefixes } from '@/utils/constants';
@@ -32,7 +32,7 @@ export function HelpRSModelStatus() {
                 'border',
                 'text-center text-sm font-controls'
               )}
-              style={{ backgroundColor: colorStatusBar(status) }}
+              style={{ backgroundColor: colorBgEvalStatus(status) }}
             >
               {labelEvalStatus(status)}
             </span>

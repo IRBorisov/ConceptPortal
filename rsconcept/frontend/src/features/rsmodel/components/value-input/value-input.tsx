@@ -50,7 +50,7 @@ export function ValueInput({
   const isTrimmed = value.length > limits.len_data_str;
   return (
     <div className='relative flex flex-col gap-2'>
-      <StatusBar className='absolute -top-0.5 right-1/2 translate-x-1/2' status={status} onCalculate={onCalculate} />
+      <StatusBar className='absolute -top-1 right-1/2 translate-x-1/2' status={status} onCalculate={onCalculate} />
       <div className='absolute -top-0.5 left-24 select-none'>
         <span
           tabIndex={-1}

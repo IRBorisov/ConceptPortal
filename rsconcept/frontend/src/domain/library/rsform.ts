@@ -57,7 +57,6 @@ export const CstStatus = {
   INCORRECT: 'incorrect',
   INCALCULABLE: 'incalculable',
   PROPERTY: 'property',
-  UNDEFINED: 'undefined',
   UNKNOWN: 'unknown'
 } as const;
 export type CstStatus = (typeof CstStatus)[keyof typeof CstStatus];

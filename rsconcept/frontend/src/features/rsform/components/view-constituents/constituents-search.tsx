@@ -22,7 +22,7 @@ export function ConstituentsSearch() {
   return (
     <div className='flex items-center border-b bg-input rounded-t-md pl-2 pr-1'>
       <MiniButton
-        title='Сбросить фильтры'
+        title='Сбросить фильтр'
         icon={<IconFilterReset size='1.25rem' className='icon-primary -mr-1' />}
         onClick={handleReset}
         disabled={!hasActiveFilter}

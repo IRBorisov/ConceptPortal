@@ -20,7 +20,6 @@ export function IconExpressionStatus({ value, size = '1.25rem', className }: Dom
       return <IconStatusIncalculable size={size} className={className} />;
 
     case CstStatus.INCORRECT:
-    case CstStatus.UNDEFINED:
       return <IconStatusError size={size} className={className} />;
   }
 }

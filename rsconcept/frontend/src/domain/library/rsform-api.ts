@@ -57,7 +57,6 @@ export function isProblematic(cst: Constituenta): boolean {
  * @param value - value class of the expression.
  *
  * @returns The inferred expression status:
- * - `ExpressionStatus.UNDEFINED` if either parsing or value is not provided.
  * - `ExpressionStatus.INCORRECT` if parsing failed.
  * - `ExpressionStatus.INCALCULABLE` if value is `ValueClass.INVALID`.
  * - `ExpressionStatus.PROPERTY` if value is `ValueClass.PROPERTY`.
