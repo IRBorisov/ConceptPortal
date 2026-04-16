@@ -40,11 +40,11 @@ export function StatsCategory({
   }
 
   return (
-    <section id={id} className={cn('min-h-27', 'rounded-md border bg-card px-3 py-2', 'grid gap-2', className)}>
-      {label ? <h3 className='text-sm font-medium leading-none my-1'>{label}</h3> : null}
+    <section id={id} className={cn('min-h-28', 'rounded-md border bg-card px-3 py-2', 'grid gap-2', className)}>
+      {label ? <h3 className='text-sm font-medium leading-none mt-1'>{label}</h3> : null}
 
       {!isDetailsOpen && !isOpenDebounced ? (
-        <div className={clsx('grid gap-2 cc-fade-in', hasSecondary ? 'grid-cols-2' : 'grid-cols-1')}>
+        <div className={clsx('grid gap-3 cc-fade-in', hasSecondary ? 'grid-cols-2' : 'grid-cols-1')}>
           <ValueCard label={primaryLabel} title={primaryTitle} value={primaryValue} />
           {hasSecondary ? <ValueCard label={secondaryLabel} title={secondaryTitle} value={secondaryValue} /> : null}
         </div>
@@ -74,8 +74,8 @@ function ValueCard({ label, title, value }: { label: string; title?: string; val
       data-tooltip-id={!!title ? globalIDs.tooltip : undefined}
       data-tooltip-html={title}
     >
-      <p className='text-muted-foreground text-[11px] mb-1'>{label}</p>
-      <p className='font-math text-base leading-none'>{value}</p>
+      <p className='text-muted-foreground text-xs'>{label}</p>
+      <p className='font-math text-base leading-none py-1'>{value}</p>
     </div>
   );
 }

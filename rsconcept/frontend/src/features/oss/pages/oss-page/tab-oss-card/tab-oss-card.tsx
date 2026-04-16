@@ -67,7 +67,7 @@ export function TabOssCard() {
 
       <OssStats
         className={clsx(
-          'w-80 md:w-56 mt-3 md:mt-8 mx-auto md:ml-5 md:mr-0',
+          'w-80 md:w-56 mt-3 md:mt-9 mx-auto md:ml-5 md:mr-0',
           'cc-animate-sidebar',
           showOSSStats ? 'max-w-full' : 'opacity-0 max-w-0'
         )}

@@ -15,7 +15,7 @@ export function ViewRSFormStats({ className, stats }: ViewRSFormStatsProps) {
   const countDerived = stats.count_all - stats.count_base - stats.count_nominal;
 
   return (
-    <div className={cn('select-none', 'grid grid-cols-2 sm:grid-cols-1 gap-2', className)}>
+    <div className={cn('select-none', 'flex flex-col gap-2', className)}>
       <StatsCategory
         id='stats-overview'
         label='Общий состав'

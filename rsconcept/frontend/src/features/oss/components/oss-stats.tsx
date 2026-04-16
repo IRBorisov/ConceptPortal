@@ -1,16 +1,7 @@
 import { type OperationSchemaStats } from '@/domain/library';
 
-import {
-  IconConceptBlock,
-  IconDownload,
-  IconReference,
-  IconRSForm,
-  IconRSFormImported,
-  IconRSFormOwned,
-  IconSynthesis
-} from '@/components/icons';
 import { cn } from '@/components/utils';
-import { ValueStats } from '@/components/view';
+import { StatsCategory } from '@/components/view/stats-category';
 
 interface OssStatsProps {
   className?: string;
@@ -18,57 +9,43 @@ interface OssStatsProps {
 }
 
 export function OssStats({ className, stats }: OssStatsProps) {
+  const countImported = stats.count_schemas - stats.count_owned;
+
   return (
-    <aside className={cn('grid grid-cols-3 gap-1 justify-items-end h-min select-none', className)}>
-      <div id='count_operations' className='w-fit flex gap-3 hover:cursor-default col-span-2'>
-        <span>Всего</span>
-        <span className='font-math'>{stats.count_all}</span>
-      </div>
-      <ValueStats
-        id='count_block' //
-        title='Блоки'
-        icon={<IconConceptBlock size='1.25rem' />}
-        value={stats.count_block}
+    <div className={cn('select-none', 'flex flex-col gap-2', className)}>
+      <StatsCategory
+        id='oss-stats-composition'
+        label='Общий состав'
+        primaryLabel='Всего'
+        primaryValue={stats.count_all}
+        primaryTitle='Общее количество элементов в составе операционной схемы'
+        secondaryLabel={stats.count_block > 0 ? 'Блоки' : undefined}
+        secondaryValue={stats.count_block > 0 ? stats.count_block : undefined}
+        secondaryTitle='Количество вложенных блоков'
+        details={[
+          { label: 'Всего', value: stats.count_all },
+          { label: 'Блоки', value: stats.count_block },
+          { label: 'Загрузка', value: stats.count_inputs },
+          { label: 'Синтез', value: stats.count_synthesis },
+          { label: 'Реплика', value: stats.count_references }
+        ]}
       />
 
-      <ValueStats
-        id='count_inputs'
-        className='col-start-1'
-        title='Загрузка'
-        icon={<IconDownload size='1.25rem' />}
-        value={stats.count_inputs}
+      <StatsCategory
+        id='oss-stats-schemas'
+        label='Прикреплённые схемы'
+        primaryLabel='Всего'
+        primaryValue={stats.count_schemas}
+        primaryTitle='Количество операций с прикреплённой схемой RSForm'
+        secondaryLabel={stats.count_schemas > 0 ? 'Собственные' : undefined}
+        secondaryValue={stats.count_schemas > 0 ? stats.count_owned : undefined}
+        secondaryTitle='Количество собственных (не импортированных) схем'
+        details={[
+          { label: 'Прикрепленные схемы', value: stats.count_schemas },
+          { label: 'Собственные', value: stats.count_owned },
+          { label: 'Внешние', value: countImported }
+        ]}
       />
-      <ValueStats
-        id='count_synthesis'
-        title='Синтез'
-        icon={<IconSynthesis size='1.25rem' />}
-        value={stats.count_synthesis}
-      />
-      <ValueStats
-        id='count_references'
-        title='Реплика'
-        icon={<IconReference size='1.25rem' />}
-        value={stats.count_references}
-      />
-
-      <ValueStats
-        id='count_schemas'
-        title='Прикрепленные схемы'
-        icon={<IconRSForm size='1.25rem' />}
-        value={stats.count_schemas}
-      />
-      <ValueStats
-        id='count_owned'
-        title='Собственные'
-        icon={<IconRSFormOwned size='1.25rem' />}
-        value={stats.count_owned}
-      />
-      <ValueStats
-        id='count_imported'
-        title='Внешние'
-        icon={<IconRSFormImported size='1.25rem' />}
-        value={stats.count_schemas - stats.count_owned}
-      />
-    </aside>
+    </div>
   );
 }
