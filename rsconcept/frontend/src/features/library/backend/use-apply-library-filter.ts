@@ -11,9 +11,6 @@ export function useApplyLibraryFilter(filter: LibraryFilter) {
   const { user } = useAuth();
 
   let result = items;
-  if (!filter.folderMode && filter.head) {
-    result = result.filter(item => item.location.startsWith(filter.head!));
-  }
   if (filter.folderMode && filter.location) {
     if (filter.subfolders) {
       result = result.filter(

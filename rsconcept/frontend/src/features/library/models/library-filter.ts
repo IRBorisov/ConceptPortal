@@ -2,7 +2,7 @@
  * Module: Models for LibraryItem.
  */
 
-import { type LibraryItemType, type LocationHead } from '@/domain/library';
+import { type LibraryItemType } from '@/domain/library';
 
 /** Represents Library filter parameters. */
 export interface LibraryFilter {
@@ -11,7 +11,6 @@ export interface LibraryFilter {
   folderMode: boolean;
   subfolders: boolean;
   path: string;
-  head: LocationHead | null;
   location: string;
 
   itemType: LibraryItemType | null;

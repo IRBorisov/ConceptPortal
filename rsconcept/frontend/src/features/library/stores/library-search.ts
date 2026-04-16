@@ -1,11 +1,18 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-import { LibraryItemType, type LocationHead } from '@/domain/library';
-
-import { toggleTristateFlag } from '@/utils/utils';
+import { LibraryItemType } from '@/domain/library';
 
 import { type LibraryFilter } from '../models/library-filter';
+
+export type LibrarySearchSelectorFilter =
+  | 'all'
+  | 'hidden'
+  | 'owner_me'
+  | 'editor_me'
+  | 'type_rsform'
+  | 'type_oss'
+  | 'type_rsmodel';
 
 interface LibrarySearchStore {
   folderMode: boolean;
@@ -23,20 +30,8 @@ interface LibrarySearchStore {
   location: string;
   setLocation: (value: string) => void;
 
-  head: LocationHead | null;
-  setHead: (value: LocationHead | null) => void;
-
-  itemType: LibraryItemType | null;
-  toggleItemType: () => void;
-
-  isVisible: boolean | null;
-  toggleVisible: () => void;
-
-  isOwned: boolean | null;
-  toggleOwned: () => void;
-
-  isEditor: boolean | null;
-  toggleEditor: () => void;
+  selectorFilter: LibrarySearchSelectorFilter;
+  setSelectorFilter: (value: LibrarySearchSelectorFilter) => void;
 
   filterUser: number | null;
   setFilterUser: (value: number | null) => void;
@@ -62,31 +57,8 @@ export const useLibrarySearchStore = create<LibrarySearchStore>()(
       location: '',
       setLocation: value => set(!!value ? { location: value, folderMode: true } : { location: '' }),
 
-      head: null,
-      setHead: value => set({ head: value }),
-
-      itemType: null,
-      toggleItemType: () =>
-        set(state => {
-          const order: (LibraryItemType | null)[] = [
-            null,
-            LibraryItemType.RSFORM,
-            LibraryItemType.OSS,
-            LibraryItemType.RSMODEL
-          ];
-          const currentIndex = order.indexOf(state.itemType);
-          const nextIndex = (currentIndex + 1) % order.length;
-          return { itemType: order[nextIndex] };
-        }),
-
-      isVisible: true,
-      toggleVisible: () => set(state => ({ isVisible: toggleTristateFlag(state.isVisible) })),
-
-      isOwned: null,
-      toggleOwned: () => set(state => ({ isOwned: toggleTristateFlag(state.isOwned) })),
-
-      isEditor: null,
-      toggleEditor: () => set(state => ({ isEditor: toggleTristateFlag(state.isEditor) })),
+      selectorFilter: 'all',
+      setSelectorFilter: value => set({ selectorFilter: value }),
 
       filterUser: null,
       setFilterUser: value => set({ filterUser: value }),
@@ -96,26 +68,18 @@ export const useLibrarySearchStore = create<LibrarySearchStore>()(
           query: '',
           path: '',
           location: '',
-          head: null,
-          itemType: null,
-          isVisible: true,
-          isOwned: null,
-          isEditor: null,
+          selectorFilter: 'all',
           filterUser: null
         }))
     }),
     {
-      version: 1,
+      version: 2,
       partialize: state => ({
         folderMode: state.folderMode,
         subfolders: state.subfolders,
 
         location: state.location,
-        head: state.head,
-        itemType: state.itemType,
-        isVisible: state.isVisible,
-        isOwned: state.isOwned,
-        isEditor: state.isEditor,
+        selectorFilter: state.selectorFilter,
         filterUser: state.filterUser
       }),
       name: 'portal.library.search'
@@ -127,41 +91,42 @@ export const useLibrarySearchStore = create<LibrarySearchStore>()(
 export function useHasCustomFilter(): boolean {
   const path = useLibrarySearchStore(state => state.path);
   const query = useLibrarySearchStore(state => state.query);
-  const head = useLibrarySearchStore(state => state.head);
-  const itemType = useLibrarySearchStore(state => state.itemType);
-  const isEditor = useLibrarySearchStore(state => state.isEditor);
-  const isOwned = useLibrarySearchStore(state => state.isOwned);
-  const isVisible = useLibrarySearchStore(state => state.isVisible);
+  const selectorFilter = useLibrarySearchStore(state => state.selectorFilter);
   const filterUser = useLibrarySearchStore(state => state.filterUser);
   const location = useLibrarySearchStore(state => state.location);
-  return (
-    !!path ||
-    !!query ||
-    !!location ||
-    head !== null ||
-    itemType !== null ||
-    isEditor !== null ||
-    isOwned !== null ||
-    isVisible !== true ||
-    filterUser !== null
-  );
+  return !!path || !!query || !!location || selectorFilter !== 'all' || filterUser !== null;
 }
 
 /** Utility function that returns the current library filter. */
 export function useCreateLibraryFilter(): LibraryFilter {
-  const head = useLibrarySearchStore(state => state.head);
   const path = useLibrarySearchStore(state => state.path);
   const query = useLibrarySearchStore(state => state.query);
-  const itemType = useLibrarySearchStore(state => state.itemType);
-  const isEditor = useLibrarySearchStore(state => state.isEditor);
-  const isOwned = useLibrarySearchStore(state => state.isOwned);
-  const isVisible = useLibrarySearchStore(state => state.isVisible);
+  const selectorFilter = useLibrarySearchStore(state => state.selectorFilter);
   const folderMode = useLibrarySearchStore(state => state.folderMode);
   const subfolders = useLibrarySearchStore(state => state.subfolders);
   const location = useLibrarySearchStore(state => state.location);
   const filterUser = useLibrarySearchStore(state => state.filterUser);
+
+  let itemType: LibraryItemType | null = null;
+  let isVisible: boolean | null = true;
+  let isOwned: boolean | null = null;
+  let isEditor: boolean | null = null;
+
+  if (selectorFilter === 'hidden') {
+    isVisible = false;
+  } else if (selectorFilter === 'owner_me') {
+    isOwned = true;
+  } else if (selectorFilter === 'editor_me') {
+    isEditor = true;
+  } else if (selectorFilter === 'type_rsform') {
+    itemType = LibraryItemType.RSFORM;
+  } else if (selectorFilter === 'type_oss') {
+    itemType = LibraryItemType.OSS;
+  } else if (selectorFilter === 'type_rsmodel') {
+    itemType = LibraryItemType.RSMODEL;
+  }
+
   return {
-    head: head,
     path: path,
     query: query,
     itemType: itemType,

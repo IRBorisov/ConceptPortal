@@ -75,7 +75,7 @@ export function ComboBox<Option>({
           role='combobox'
           aria-expanded={open}
           className={cn(
-            'relative h-9',
+            'relative',
             'flex gap-2 px-3 py-2 items-center justify-between',
             'bg-input disabled:opacity-50',
             'cursor-pointer disabled:cursor-auto',
