@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useEffectEvent } from 'react';
+import { useEffect, useEffectEvent, useSyncExternalStore } from 'react';
 import { useIntl } from 'react-intl';
 import { useForm, useStore } from '@tanstack/react-form';
 import clsx from 'clsx';
@@ -44,7 +44,11 @@ export function TabItemCard() {
   const onModifiedEvent = useEffectEvent(setIsModified);
   const windowSize = useWindowSize();
   const isNarrow = !!windowSize.width && windowSize.width <= SIDELIST_LAYOUT_THRESHOLD;
-  const stats = calculateModelStats(schema, engine);
+  const engineGeneration = useSyncExternalStore(
+    onStoreChange => engine.subscribeChanges(onStoreChange),
+    () => engine.getChangeGeneration()
+  );
+  const stats = calculateModelStats(schema, engine, engineGeneration);
 
   const form = useForm({
     defaultValues: modelDefaults(model),
@@ -178,7 +182,7 @@ export function TabItemCard() {
         </div>
       </form>
 
-      <aside className='w-80 md:w-56 mt-3 mx-auto md:ml-5 md:mr-0 max-w-full'>
+      <aside className='w-80 md:w-56 mt-4 mx-auto md:ml-5 md:mr-0 max-w-full'>
         <CardRSModelStats stats={stats} />
       </aside>
     </div>

@@ -15,7 +15,7 @@ interface StatsCategoryProps {
   secondaryLabel?: string;
   secondaryValue?: number;
   secondaryTitle?: string;
-  details: { label: string; value: number; danger?: boolean }[];
+  details: { label: string; value: number }[];
 }
 
 /** Displays a category of statistics. */
@@ -57,8 +57,8 @@ export function StatsCategory({
         <div className='grid gap-1 pt-1 text-xs'>
           {details.map(detail => (
             <div key={detail.label} className='flex items-center justify-between gap-2'>
-              <span className={detail.danger ? 'text-destructive' : undefined}>{detail.label}</span>
-              <span className={clsx('font-math', detail.danger && 'text-destructive')}>{detail.value}</span>
+              <span>{detail.label}</span>
+              <span className='font-math'>{detail.value}</span>
             </div>
           ))}
         </div>

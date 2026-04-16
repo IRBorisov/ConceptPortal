@@ -1,5 +1,6 @@
 'use client';
 
+import { useSyncExternalStore } from 'react';
 import clsx from 'clsx';
 
 import { calculateModelStats } from '@/domain/library/rsmodel-api';
@@ -31,7 +32,12 @@ export function TabModelCard() {
   const windowSize = useWindowSize();
   const isNarrow = !!windowSize.width && windowSize.width <= SIDELIST_LAYOUT_THRESHOLD;
   const showStats = usePreferencesStore(state => state.showRSModelStats);
-  const stats = calculateModelStats(schema, engine);
+
+  const engineGeneration = useSyncExternalStore(
+    onStoreChange => engine.subscribeChanges(onStoreChange),
+    () => engine.getChangeGeneration()
+  );
+  const stats = calculateModelStats(schema, engine, engineGeneration);
 
   const setSearchLocation = useLibrarySearchStore(state => state.setLocation);
   const searchLocation = useLibrarySearchStore(state => state.location);

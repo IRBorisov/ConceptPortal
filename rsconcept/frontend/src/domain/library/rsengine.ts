@@ -47,6 +47,8 @@ export class RSEngine {
   private calculatedSet = new Set<number>();
   private valueSubscribers = new Map<number, Set<() => void>>();
   private statusSubscribers = new Map<number, Set<() => void>>();
+  private changeSubscribers = new Set<() => void>();
+  private changeGeneration = 0;
 
   constructor(modelID: number, services: RSEngineServices, notifications: RSEngineNotifications | null = null) {
     this.services = services;
@@ -136,6 +138,21 @@ export class RSEngine {
         this.statusSubscribers.delete(cstID);
       }
     };
+  }
+
+  /**
+   * Subscribe to any engine change that can affect evaluation (values, status, or loaded data).
+   */
+  public subscribeChanges(callbackFn: () => void): () => void {
+    this.changeSubscribers.add(callbackFn);
+    return () => {
+      this.changeSubscribers.delete(callbackFn);
+    };
+  }
+
+  /** Monotonic counter bumped whenever the engine emits a change to {@link RSEngine.subscribeChanges} listeners. */
+  public getChangeGeneration(): number {
+    return this.changeGeneration;
   }
 
   /** Sets value for {@link Constituenta} from {@link Value}. */
@@ -285,8 +302,7 @@ export class RSEngine {
     }
 
     this.calculatedSet.add(cstID);
-    this.notifyValue(cstID);
-    this.notifyStatus(cstID);
+    this.notifyCst(cstID);
 
     return result;
   }
@@ -305,6 +321,7 @@ export class RSEngine {
   private notifyCst(cstID: number) {
     this.notifyStatus(cstID);
     this.notifyValue(cstID);
+    this.emitChange();
   }
 
   /** Notify all subscribers about value change. */
@@ -330,6 +347,14 @@ export class RSEngine {
     }
     for (const subs of this.statusSubscribers.values()) {
       for (const cb of subs) cb();
+    }
+    this.emitChange();
+  }
+
+  private emitChange(): void {
+    this.changeGeneration += 1;
+    for (const cb of this.changeSubscribers) {
+      cb();
     }
   }
 

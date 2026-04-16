@@ -47,4 +47,5 @@ export interface RSModelStats extends RSFormStats {
   count_false_axioms: number;
   count_invalid_calculations: number;
   count_empty_terms: number;
+  base_elements: number;
 }
