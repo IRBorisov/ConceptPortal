@@ -27,8 +27,7 @@ function countBaseElements(cst: Constituenta, engine: RSEngine): number {
 }
 
 /** Calculate statistics for {@link RSModel}. */
-export function calculateModelStats(schema: RSForm, engine: RSEngine, engineGeneration?: number): RSModelStats {
-  void engineGeneration;
+export function calculateModelStats(schema: RSForm, engine: RSEngine, _engineGeneration?: number): RSModelStats {
   const items = schema.items;
   const statusByID = new Map<number, EvalStatus>();
   for (const cst of items) {
