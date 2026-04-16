@@ -23,6 +23,7 @@ import { errorMsg, promptText } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 import { promptUnsaved } from '@/utils/utils';
 
+import { useGenerateLexeme } from '../../backend/cctext/use-generate-lexeme';
 import {
   type ConstituentaBasicsDTO,
   type ConstituentaCreatedResponse,
@@ -94,6 +95,7 @@ export const RSEditState = ({
   const { updateConstituenta } = useUpdateConstituenta();
   const { updateCrucial } = useUpdateCrucial();
   const { findPredecessor } = useFindPredecessor();
+  const { generateLexeme } = useGenerateLexeme();
 
   const showCreateCst = useDialogsStore(state => state.showCreateCst);
   const showDeleteCst = useDialogsStore(state => state.showDeleteCst);
@@ -414,8 +416,10 @@ export const RSEditState = ({
       return;
     }
     showEditTerm({
+      schema: schema,
       target: activeCst,
-      onSave: data => void updateConstituenta({ itemID: schema.id, data })
+      onSave: data => void updateConstituenta({ itemID: schema.id, data }),
+      generateLexeme: generateLexeme
     });
   }
 

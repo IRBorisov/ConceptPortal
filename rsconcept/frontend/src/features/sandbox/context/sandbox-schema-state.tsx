@@ -230,6 +230,7 @@ export function SandboxSchemaState({ children }: React.PropsWithChildren) {
       return;
     }
     showEditTerm({
+      schema: schema,
       target: activeCst,
       onSave: data => {
         void patchConstituenta(data);
