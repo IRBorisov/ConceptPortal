@@ -2,55 +2,91 @@
 
 import { type SubmitEvent, useState } from 'react';
 
-import { type Grammeme, parseGrammemes, supportedGrammemes, type WordForm, wordFormEquals } from '@/domain/cctext';
-import { type Constituenta } from '@/domain/library';
+import { Grammeme, parseGrammemes, type WordForm } from '@/domain/cctext';
+import { Case } from '@/domain/cctext/language';
+import { type Constituenta, type RSForm } from '@/domain/library';
 
 import { HelpTopic } from '@/features/help';
 
 import { MiniButton } from '@/components/control';
-import { IconAccept, IconMoveDown, IconMoveLeft, IconMoveRight, IconRemove } from '@/components/icons';
-import { Label, TextArea } from '@/components/input';
+import { IconMoveDown } from '@/components/icons';
+import { TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { promptText } from '@/utils/labels';
+import { type RO } from '@/utils/meta';
 
-import { useGenerateLexeme } from '../../backend/cctext/use-generate-lexeme';
-import { useInflectText } from '../../backend/cctext/use-inflect-text';
+import { type LexemeResponse } from '../../backend/cctext/types';
 import { useIsProcessingCctext } from '../../backend/cctext/use-is-processing-cctext';
-import { useParseText } from '../../backend/cctext/use-parse-text';
 import { type UpdateConstituentaDTO } from '../../backend/types';
-import { SelectMultiGrammeme } from '../../components/select-multi-grammeme';
-
-import { TableWordForms } from './table-word-forms';
+import { RefsInput } from '../../components/refs-input/refs-input';
+import { DefaultWordForms } from '../../components/select-word-form';
 
 export interface DlgEditWordFormsProps {
+  schema: RSForm;
   target: Constituenta;
   onSave: (data: UpdateConstituentaDTO) => void;
+  generateLexeme?: (data: { text: string }) => Promise<RO<LexemeResponse>>;
 }
 
+const FORM_FIELDS = DefaultWordForms.slice(0, 12).map(data => ({
+  key: `${data.grams[0]}_${data.grams[1]}`,
+  grams: [...data.grams]
+}));
+
+const CASE_ROWS = [
+  {
+    singularKey: 'sing_nomn',
+    pluralKey: 'plur_nomn',
+    placeholder: 'Именительный: Кто? Что?'
+  },
+  {
+    singularKey: 'sing_gent',
+    pluralKey: 'plur_gent',
+    placeholder: 'Родительный: Кого? Чего?'
+  },
+  {
+    singularKey: 'sing_datv',
+    pluralKey: 'plur_datv',
+    placeholder: 'Дательный: Кому? Чему?'
+  },
+  {
+    singularKey: 'sing_accs',
+    pluralKey: 'plur_accs',
+    placeholder: 'Винительный: Кого? Что?'
+  },
+  {
+    singularKey: 'sing_ablt',
+    pluralKey: 'plur_ablt',
+    placeholder: 'Творительный: Кем? Чем?'
+  },
+  {
+    singularKey: 'sing_loct',
+    pluralKey: 'plur_loct',
+    placeholder: 'Предложный: О ком? О чём?'
+  }
+] as const;
+
 export function DlgEditWordForms() {
-  const { target, onSave } = useDialogsStore(state => state.props as DlgEditWordFormsProps);
+  const { schema, target, onSave, generateLexeme } = useDialogsStore(state => state.props as DlgEditWordFormsProps);
 
   const isProcessing = useIsProcessingCctext();
-  const { inflectText } = useInflectText();
-  const { parseText } = useParseText();
-  const { generateLexeme } = useGenerateLexeme();
 
-  const [inputText, setInputText] = useState(target.term_resolved);
-  const [inputGrams, setInputGrams] = useState<Grammeme[]>([]);
-
-  const [wordForms, setWordForms] = useState<WordForm[]>(
-    target.term_forms.map(term => ({
-      text: term.text,
-      grams: parseGrammemes(term.tags)
-    }))
-  );
+  const [nominalRaw, setNominalRaw] = useState(target.term_raw);
+  const [formValues, setFormValues] = useState<Record<string, string>>(() => prepareInitialFormValues(target));
+  const nominalResolved = target.term_raw === nominalRaw ? target.term_resolved : nominalRaw;
 
   function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
+    const wordForms: WordForm[] = FORM_FIELDS.map(field => ({
+      text: (formValues[field.key] ?? '').trim(),
+      grams: field.grams
+    })).filter(form => form.text !== '');
+
     onSave({
       target: target.id,
       item_data: {
+        term_raw: target.term_raw === nominalRaw ? undefined : nominalRaw,
         term_forms: wordForms.map(({ text, grams }) => ({
           text: text,
           tags: grams.join(',')
@@ -59,57 +95,32 @@ export function DlgEditWordForms() {
     });
   }
 
-  function handleAddForm() {
-    const newForm: WordForm = {
-      text: inputText,
-      grams: inputGrams
-    };
-    setWordForms(forms => [newForm, ...forms.filter(value => !wordFormEquals(value, newForm))]);
-  }
-
-  function handleSelectForm(form: WordForm) {
-    setInputText(form.text);
-    setInputGrams(supportedGrammemes.filter(gram => form.grams.find(test => test === gram)));
-  }
-
-  function handleInflect() {
-    void inflectText({
-      text: target.term_resolved,
-      grams: inputGrams.join(',')
-    }).then(response => setInputText(response.result));
-  }
-
-  function handleParse() {
-    void parseText({ text: inputText }).then(response => {
-      const grams = parseGrammemes(response.result);
-      setInputGrams(supportedGrammemes.filter(gram => grams.find(test => test === gram)));
-    });
-  }
-
   function handleGenerateLexeme() {
-    if (wordForms.length > 0) {
+    if (!generateLexeme) {
+      return;
+    }
+
+    if (Object.values(formValues).some(value => value.trim() !== '')) {
       if (!window.confirm(promptText.generateWordforms)) {
         return;
       }
     }
-    void generateLexeme({ text: inputText }).then(response => {
-      const lexeme: WordForm[] = [];
-      for (const form of response.items) {
-        const grams = parseGrammemes(form.grams).filter(gram => supportedGrammemes.find(item => item === gram));
-        const newForm: WordForm = {
-          text: form.text,
-          grams: grams
-        };
-        if (grams.length === 2 && !lexeme.some(test => wordFormEquals(test, newForm))) {
-          lexeme.push(newForm);
-        }
-      }
-      setWordForms(lexeme);
+    void generateLexeme({ text: nominalResolved }).then(response => {
+      const generated: WordForm[] = response.items.map(form => ({
+        text: form.text,
+        grams: parseGrammemes(form.grams)
+      }));
+      setFormValues(prepareFormValues(generated));
     });
   }
 
-  function handleResetAll() {
-    setWordForms([]);
+  function handleFormChange(key: string, text: string) {
+    setFormValues(prev => ({ ...prev, [key]: text }));
+  }
+
+  function handleNominalChange(newValue: string) {
+    setNominalRaw(newValue);
+    setFormValues({});
   }
 
   return (
@@ -117,77 +128,94 @@ export function DlgEditWordForms() {
       header='Редактирование словоформ'
       submitText='Сохранить'
       onSubmit={handleSubmit}
-      className='flex flex-col w-160 px-6'
+      className='flex flex-col w-180 px-6'
       helpTopic={HelpTopic.TERM_CONTROL}
     >
-      <TextArea
-        disabled
-        spellCheck
-        label='Начальная форма'
-        placeholder='Термин в начальной форме'
-        rows={1}
-        value={target.term_resolved}
-      />
-
-      <Label className='mt-3 mb-2' text='Параметры словоформы' />
-      <div className='flex'>
-        <TextArea
-          placeholder='Введите текст'
-          areaClassName='min-w-80'
-          rows={3}
-          value={inputText}
-          onChange={event => setInputText(event.target.value)}
-        />
-        <div className='flex flex-col self-center gap-1'>
+      <div className='flex items-center gap-2 justify-between pt-1'>
+        {generateLexeme ? (
           <MiniButton
-            title='Определить граммемы'
-            icon={<IconMoveRight size='1.25rem' className='icon-primary' />}
-            onClick={handleParse}
-            disabled={isProcessing || !inputText}
-          />
-          <MiniButton
-            title='Генерировать словоформу'
-            icon={<IconMoveLeft size='1.25rem' className='icon-primary' />}
-            onClick={handleInflect}
-            disabled={isProcessing || inputGrams.length == 0}
-          />
-        </div>
-        <SelectMultiGrammeme
-          placeholder='Выберите граммемы'
-          className='w-60 h-fit'
-          value={inputGrams}
-          onChange={setInputGrams}
-        />
-      </div>
-
-      <div className='flex justify-between'>
-        <div className='cc-icons'>
-          <MiniButton
-            title='Внести словоформу'
-            icon={<IconAccept size='1.5rem' className='icon-green' />}
-            onClick={handleAddForm}
-            disabled={isProcessing || !inputText || inputGrams.length == 0}
-          />
-          <MiniButton
-            title='Генерировать стандартные словоформы'
+            title='Заполнить словоформы'
             icon={<IconMoveDown size='1.5rem' className='icon-primary' />}
             onClick={handleGenerateLexeme}
-            disabled={isProcessing || !inputText}
+            disabled={isProcessing || nominalResolved.trim() === ''}
           />
-        </div>
-        <div className='mt-3 mb-2 mx-auto text-sm font-semibold'>
-          <span>Заданные вручную словоформы [{wordForms.length}]</span>
-          <MiniButton
-            title='Сбросить все словоформы'
-            className='py-0 align-middle'
-            icon={<IconRemove size='1.5rem' className='cc-remove' />}
-            onClick={handleResetAll}
-            disabled={isProcessing || wordForms.length === 0}
-          />
-        </div>
+        ) : null}
+        <RefsInput
+          id='dlg_edit_wordforms_nominal'
+          areaClassName='disabled:min-h-9'
+          placeholder='Начальная форма'
+          schema={schema}
+          value={nominalRaw}
+          initialValue={target.term_raw}
+          resolved={nominalResolved}
+          onChange={handleNominalChange}
+          className='w-full'
+          maxHeight='3.75rem'
+        />
       </div>
 
-      <TableWordForms forms={wordForms} setForms={setWordForms} onFormSelect={handleSelectForm} />
+      <div className='mt-2 grid grid-cols-2 gap-4 pb-2'>
+        <div className='space-y-2'>
+          <div className='text-center text-sm font-controls text-muted-foreground select-none'>Единственное число</div>
+          {CASE_ROWS.map(row => (
+            <TextInput
+              key={row.singularKey}
+              value={formValues[row.singularKey] ?? ''}
+              onChange={event => handleFormChange(row.singularKey, event.target.value)}
+              placeholder={row.placeholder}
+              dense
+              noBorder={false}
+              disabled={isProcessing}
+            />
+          ))}
+        </div>
+        <div className='space-y-2'>
+          <div className='text-center text-sm font-controls text-muted-foreground select-none'>Множественное число</div>
+          {CASE_ROWS.map(row => (
+            <TextInput
+              key={row.pluralKey}
+              value={formValues[row.pluralKey] ?? ''}
+              onChange={event => handleFormChange(row.pluralKey, event.target.value)}
+              placeholder={row.placeholder}
+              dense
+              noBorder={false}
+              disabled={isProcessing}
+            />
+          ))}
+        </div>
+      </div>
     </ModalForm>
   );
+}
+
+function prepareInitialFormValues(target: Constituenta): Record<string, string> {
+  const forms: WordForm[] = target.term_forms.map(term => ({
+    text: term.text,
+    grams: parseGrammemes(term.tags)
+  }));
+  return prepareFormValues(forms);
+}
+
+function prepareFormValues(forms: WordForm[]): Record<string, string> {
+  const result: Record<string, string> = {};
+  for (const form of forms) {
+    const key = resolveFormKey(form.grams);
+    if (!result[key]) {
+      result[key] = form.text;
+    }
+  }
+  return result;
+}
+
+function resolveFormKey(grams: readonly string[]): string {
+  const plurality = grams.includes(Grammeme.plur)
+    ? Grammeme.plur
+    : grams.includes(Grammeme.sing)
+      ? Grammeme.sing
+      : null;
+  const gramCase = Case.find(gram => grams.includes(gram)) ?? null;
+  if (!plurality || !gramCase) {
+    return '';
+  }
+  return `${plurality}_${gramCase}`;
 }
