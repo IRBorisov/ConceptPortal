@@ -150,6 +150,7 @@ export interface RSFormStats {
   count_text_term: number;
   count_definition: number;
   count_convention: number;
+  count_comment: number;
 
   count_base: number;
   count_constant: number;

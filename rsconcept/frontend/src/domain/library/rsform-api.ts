@@ -415,7 +415,8 @@ export function calculateSchemaStats(target: RSForm): RSFormStats {
 
     count_text_term: items.reduce((sum, cst) => sum + (cst.term_raw ? 1 : 0), 0),
     count_definition: items.reduce((sum, cst) => sum + (cst.definition_raw ? 1 : 0), 0),
-    count_convention: items.reduce((sum, cst) => sum + (cst.convention ? 1 : 0), 0),
+    count_convention: items.reduce((sum, cst) => sum + (isBasicConcept(cst.cst_type) && cst.convention ? 1 : 0), 0),
+    count_comment: items.reduce((sum, cst) => sum + (!isBasicConcept(cst.cst_type) && !cst.convention ? 1 : 0), 0),
 
     count_base: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.BASE ? 1 : 0), 0),
     count_constant: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.CONSTANT ? 1 : 0), 0),

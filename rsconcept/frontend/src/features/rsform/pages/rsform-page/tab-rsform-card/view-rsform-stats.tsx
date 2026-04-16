@@ -32,7 +32,8 @@ export function ViewRSFormStats({ className, stats }: ViewRSFormStatsProps) {
           { label: 'Ключевые', value: stats.count_crucial },
           { label: 'Термины', value: stats.count_term },
           { label: 'Определения', value: stats.count_definition },
-          { label: 'Конвенции', value: stats.count_convention }
+          { label: 'Конвенции', value: stats.count_convention },
+          { label: 'Комментарии', value: stats.count_comment }
         ]}
       />
 

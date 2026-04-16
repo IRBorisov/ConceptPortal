@@ -161,35 +161,35 @@ export function DlgShowAstExtract() {
       helpTopic={HelpTopic.UI_FORMULA_TREE}
       fullScreen
     >
-      <div
-        className={clsx(
-          'absolute z-pop top-2 right-1/2 translate-x-1/2 max-w-[60ch]',
-          'px-2 rounded-2xl',
-          'backdrop-blur-xs bg-background/90',
-          'font-math text-md text-center'
-        )}
-      >
-        {!hoverNodeDebounced || isDragging ? expression : null}
-        {!isDragging && hoverNodeDebounced ? (
-          <div key={hoverNodeDebounced.uid}>
-            <span>{expression.slice(0, hoverNodeDebounced.from)}</span>
-            <span className='bg-selected cc-animate-background starting:bg-background duration-move'>
-              {expression.slice(hoverNodeDebounced.from, hoverNodeDebounced.to)}
-            </span>
-            <span>{expression.slice(hoverNodeDebounced.to)}</span>
-          </div>
-        ) : null}
+      <div className='absolute z-pop top-2 right-1/2 translate-x-1/2 flex flex-col items-center w-full gap-1'>
+        <div
+          className={clsx(
+            'max-w-[60ch]',
+            'px-2 rounded-2xl',
+            'backdrop-blur-xs bg-background/90',
+            'font-math text-md text-center wrap-anywhere'
+          )}
+        >
+          {!hoverNodeDebounced || isDragging ? expression : null}
+          {!isDragging && hoverNodeDebounced ? (
+            <div key={hoverNodeDebounced.uid}>
+              <span>{expression.slice(0, hoverNodeDebounced.from)}</span>
+              <span className='bg-selected cc-animate-background starting:bg-background duration-move'>
+                {expression.slice(hoverNodeDebounced.from, hoverNodeDebounced.to)}
+              </span>
+              <span>{expression.slice(hoverNodeDebounced.to)}</span>
+            </div>
+          ) : null}
+        </div>
+        <PopoverExtraction
+          disabled={!canExtract}
+          schema={schema}
+          open={popoverOpen}
+          setOpen={setPopoverOpen}
+          focusRef={extractPopoverFocus}
+          onSubmit={(term, definitionText) => void handleConfirmExtract(term, definitionText)}
+        />
       </div>
-
-      <PopoverExtraction
-        className='absolute z-pop left-1/2 -translate-x-1/2 top-12'
-        disabled={!canExtract}
-        schema={schema}
-        open={popoverOpen}
-        setOpen={setPopoverOpen}
-        focusRef={extractPopoverFocus}
-        onSubmit={(term, definitionText) => void handleConfirmExtract(term, definitionText)}
-      />
 
       <div ref={astInteractionRef} tabIndex={-1} className='cc-mask-sides h-full w-full' onKeyDown={handleKeyDown}>
         <ReactFlowProvider>

@@ -8,12 +8,26 @@ import { type RO } from '@/utils/meta';
 import { concat, type Doc, group, indent, join, line, render, text } from '@/utils/text-printer';
 
 import { type RSEngine } from './rsengine';
-import { CstType, type RSForm } from './rsform';
+import { type Constituenta, CstType, type RSForm } from './rsform';
 import { calculateSchemaStats, isBaseSet, isBasicConcept } from './rsform-api';
 import { type BasicBinding, type BasicsContext, EvalStatus, type RSModelStats } from './rsmodel';
 
+function countBaseElements(cst: Constituenta, engine: RSEngine): number {
+  if (!isBasicConcept(cst.cst_type)) {
+    return 0;
+  }
+  const value = engine.getCstValue(cst.id);
+  if (value === null) {
+    return 0;
+  }
+  if (!Array.isArray(value) || value[0] === TUPLE_ID) {
+    return 1;
+  }
+  return value.length;
+}
+
 /** Calculate statistics for {@link RSModel}. */
-export function calculateModelStats(schema: RSForm, engine: RSEngine): RSModelStats {
+export function calculateModelStats(schema: RSForm, engine: RSEngine, _engineGeneration?: number): RSModelStats {
   const items = schema.items;
   const statusByID = new Map<number, EvalStatus>();
   for (const cst of items) {
@@ -21,6 +35,7 @@ export function calculateModelStats(schema: RSForm, engine: RSEngine): RSModelSt
   }
   return {
     ...calculateSchemaStats(schema),
+    base_elements: items.reduce((sum, cst) => sum + countBaseElements(cst, engine), 0),
     count_missing_base: items.reduce(
       (sum, cst) => sum + (statusByID.get(cst.id) === EvalStatus.EMPTY && isBasicConcept(cst.cst_type) ? 1 : 0),
       0

@@ -47,6 +47,10 @@ export class RSEngine {
   private calculatedSet = new Set<number>();
   private valueSubscribers = new Map<number, Set<() => void>>();
   private statusSubscribers = new Map<number, Set<() => void>>();
+  private changeSubscribers = new Set<() => void>();
+  private changeGeneration = 0;
+  private pendingChange = false;
+  private coalescedEmitTimeout: ReturnType<typeof setTimeout> | null = null;
 
   constructor(modelID: number, services: RSEngineServices, notifications: RSEngineNotifications | null = null) {
     this.services = services;
@@ -136,6 +140,38 @@ export class RSEngine {
         this.statusSubscribers.delete(cstID);
       }
     };
+  }
+
+  /**
+   * Subscribe to any engine change that can affect evaluation (values, status, or loaded data).
+   */
+  public subscribeChanges(callbackFn: () => void): () => void {
+    this.changeSubscribers.add(callbackFn);
+    return () => {
+      this.changeSubscribers.delete(callbackFn);
+    };
+  }
+
+  /** Monotonic counter bumped whenever the engine emits a change to {@link RSEngine.subscribeChanges} listeners. */
+  public getChangeGeneration(): number {
+    return this.changeGeneration;
+  }
+
+  /**
+   * Runs pending {@link RSEngine.subscribeChanges} notifications immediately and clears the coalescing queue.
+   * Use after a synchronous batch of engine updates when listeners must observe a bumped {@link getChangeGeneration}
+   * in the same turn.
+   */
+  public flushPendingChanges(): void {
+    if (this.coalescedEmitTimeout !== null) {
+      clearTimeout(this.coalescedEmitTimeout);
+      this.coalescedEmitTimeout = null;
+    }
+    if (!this.pendingChange) {
+      return;
+    }
+    this.pendingChange = false;
+    this.emitChange();
   }
 
   /** Sets value for {@link Constituenta} from {@link Value}. */
@@ -285,8 +321,7 @@ export class RSEngine {
     }
 
     this.calculatedSet.add(cstID);
-    this.notifyValue(cstID);
-    this.notifyStatus(cstID);
+    this.notifyCst(cstID);
 
     return result;
   }
@@ -305,6 +340,7 @@ export class RSEngine {
   private notifyCst(cstID: number) {
     this.notifyStatus(cstID);
     this.notifyValue(cstID);
+    this.scheduleCoalescedEmitChange();
   }
 
   /** Notify all subscribers about value change. */
@@ -330,6 +366,32 @@ export class RSEngine {
     }
     for (const subs of this.statusSubscribers.values()) {
       for (const cb of subs) cb();
+    }
+    this.scheduleCoalescedEmitChange();
+  }
+
+  private scheduleCoalescedEmitChange(): void {
+    this.pendingChange = true;
+    if (this.coalescedEmitTimeout !== null) {
+      return;
+    }
+    this.coalescedEmitTimeout = setTimeout(
+      function runCoalescedEmitChange(this: RSEngine) {
+        this.coalescedEmitTimeout = null;
+        if (!this.pendingChange) {
+          return;
+        }
+        this.pendingChange = false;
+        this.emitChange();
+      }.bind(this),
+      0
+    );
+  }
+
+  private emitChange(): void {
+    this.changeGeneration += 1;
+    for (const cb of this.changeSubscribers) {
+      cb();
     }
   }
 
