@@ -105,10 +105,12 @@ export function CardRSModelStats({ className, stats }: CardRSModelStatsProps) {
         value={stats.count_incalculable}
       />
       <ValueStats
-        id='count_errors'
+        id='count_failed_parse '
         title='Некорректные'
-        icon={<IconStatusError size='1.25rem' className={stats.count_errors > 0 ? 'text-destructive' : undefined} />}
-        value={stats.count_errors}
+        icon={
+          <IconStatusError size='1.25rem' className={stats.count_failed_parse > 0 ? 'text-destructive' : undefined} />
+        }
+        value={stats.count_failed_parse}
       />
       <ValueStats
         id='count_nominal'

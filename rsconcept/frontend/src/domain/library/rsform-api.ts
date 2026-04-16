@@ -396,7 +396,16 @@ export function calculateSchemaStats(target: RSForm): RSFormStats {
   return {
     count_all: items.length,
     count_crucial: items.reduce((sum, cst) => sum + (cst.crucial ? 1 : 0), 0),
-    count_errors: items.reduce((sum, cst) => sum + (!cst.analysis?.success ? 1 : 0), 0),
+
+    step_complexity: items.reduce((sum, cst) => sum + calculateStepComplexity(cst), 0),
+
+    count_problematic: items.reduce((sum, cst) => sum + (isProblematic(cst) ? 1 : 0), 0),
+    count_homonyms: items.reduce((sum, cst) => sum + (cst.homonyms.length > 0 ? 1 : 0), 0),
+    count_formal_duplicates: items.reduce((sum, cst) => sum + (cst.formalDuplicates.length > 0 ? 1 : 0), 0),
+    count_missing_convention: items.reduce((sum, cst) => sum + (isMissingConvention(cst) ? 1 : 0), 0),
+
+    count_incorrect: items.reduce((sum, cst) => sum + (cst.status === CstStatus.INCORRECT ? 1 : 0), 0),
+    count_failed_parse: items.reduce((sum, cst) => sum + (!cst.analysis?.success ? 1 : 0), 0),
     count_property: items.reduce((sum, cst) => sum + (cst.analysis?.valueClass === ValueClass.PROPERTY ? 1 : 0), 0),
     count_incalculable: items.reduce(
       (sum, cst) => sum + (cst.analysis?.success && cst.analysis.valueClass === null ? 1 : 0),
@@ -449,4 +458,48 @@ export function getStructureName(schema: RSForm, target: Constituenta, path: Typ
     }
   }
   return '';
+}
+
+// ========= Internals =====
+function calculateStepComplexity(cst: Constituenta): number {
+  if (cst.cst_type === CstType.AXIOM || cst.cst_type === CstType.NOMINAL || !isBasicConcept(cst.cst_type)) {
+    return 0;
+  }
+  if (cst.cst_type === CstType.BASE || cst.cst_type === CstType.CONSTANT || !cst.analysis?.type) {
+    return 1;
+  }
+
+  const type = cst.analysis.type as Typification;
+  return calculateTypificationComplexity(type) + 1;
+}
+
+function calculateTypificationComplexity(type: Typification): number {
+  switch (type.typeID) {
+    case TypeID.basic:
+    case TypeID.integer:
+    case TypeID.anyTypification:
+      return 1;
+    case TypeID.tuple:
+      return type.factors.reduce((sum, factor) => sum + calculateTypificationComplexity(factor), 0);
+    case TypeID.collection:
+      if (type.base.typeID === TypeID.tuple) {
+        let sum = 0;
+        type.base.factors.forEach(factor => {
+          sum += calculateTypificationComplexity(factor);
+        });
+        return sum;
+      } else if (type.base.typeID === TypeID.collection) {
+        return calculateTypificationComplexity(type.base) + 1;
+      }
+      return 0;
+  }
+}
+
+function isMissingConvention(cst: Constituenta): boolean {
+  if (isBasicConcept(cst.cst_type) && !isLogical(cst.cst_type)) {
+    if (!cst.convention || !cst.term_resolved) {
+      return true;
+    }
+  }
+  return false;
 }

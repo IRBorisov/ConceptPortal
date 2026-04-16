@@ -131,10 +131,18 @@ export interface Constituenta {
 
 /** Represents {@link RSForm} statistics. */
 export interface RSFormStats {
+  step_complexity: number;
+
   count_all: number;
   count_crucial: number;
 
-  count_errors: number;
+  count_problematic: number;
+  count_homonyms: number;
+  count_formal_duplicates: number;
+  count_missing_convention: number;
+
+  count_incorrect: number;
+  count_failed_parse: number;
   count_property: number;
   count_incalculable: number;
   count_inherited: number;

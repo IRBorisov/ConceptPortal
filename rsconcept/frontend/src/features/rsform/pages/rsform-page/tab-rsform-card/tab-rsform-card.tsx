@@ -9,14 +9,15 @@ import { EditorLibraryItem } from '@/features/library/components/editor-library-
 import { ToolbarItemCard } from '@/features/library/components/toolbar-item-card';
 
 import { useWindowSize } from '@/hooks/use-window-size';
+import { useFitHeight } from '@/stores/app-layout';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { globalIDs } from '@/utils/constants';
 
-import { CardRSFormStats } from '../../../components/rsform-stats';
 import { useRSFormEdit } from '../rsedit-context';
 
 import { FormRSForm } from './form-rsform';
+import { ViewRSFormStats } from './view-rsform-stats';
 
 const SIDELIST_LAYOUT_THRESHOLD = 768; // px
 
@@ -44,6 +45,8 @@ export function TabRSFormCard() {
     }
   }
 
+  const sideBarHeight = useFitHeight('5rem');
+
   return (
     <div
       onKeyDown={handleInput}
@@ -70,12 +73,13 @@ export function TabRSFormCard() {
 
       <aside
         className={clsx(
-          'w-80 md:w-56 mt-3 md:mt-8 mx-auto md:ml-5 md:mr-0',
+          'w-80 md:w-56 mt-3 md:mt-9 mx-auto md:ml-5 md:mr-0 overflow-y-auto',
           'cc-animate-sidebar',
           showRSFormStats ? 'max-w-full' : 'opacity-0 max-w-0'
         )}
+        style={{ maxHeight: sideBarHeight }}
       >
-        <CardRSFormStats stats={stats} />
+        <ViewRSFormStats stats={stats} className='h-min' />
       </aside>
     </div>
   );

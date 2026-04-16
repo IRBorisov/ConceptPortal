@@ -23,12 +23,12 @@ import {
 import { cn } from '@/components/utils';
 import { ValueStats } from '@/components/view';
 
-interface CardRSFormStatsProps {
+interface MiniRSFormStatsProps {
   className?: string;
   stats: RSFormStats;
 }
 
-export function CardRSFormStats({ className, stats }: CardRSFormStatsProps) {
+export function MiniRSFormStats({ className, stats }: MiniRSFormStatsProps) {
   return (
     <div className={cn('h-min', 'grid grid-cols-4 gap-1 justify-items-end select-none', className)}>
       <div id='count_all' className='col-span-2 w-fit flex gap-3 hover:cursor-default'>
@@ -101,10 +101,12 @@ export function CardRSFormStats({ className, stats }: CardRSFormStatsProps) {
         value={stats.count_incalculable}
       />
       <ValueStats
-        id='count_errors'
+        id='count_failed_parse '
         title='Некорректные'
-        icon={<IconStatusError size='1.25rem' className={stats.count_errors > 0 ? 'text-destructive' : undefined} />}
-        value={stats.count_errors}
+        icon={
+          <IconStatusError size='1.25rem' className={stats.count_failed_parse > 0 ? 'text-destructive' : undefined} />
+        }
+        value={stats.count_failed_parse}
       />
       <ValueStats
         id='count_nominal'
