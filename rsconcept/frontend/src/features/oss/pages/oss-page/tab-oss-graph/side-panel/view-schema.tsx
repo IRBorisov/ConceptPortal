@@ -13,7 +13,7 @@ import { useCreateAttribution } from '@/features/rsform/backend/use-create-attri
 import { useDeleteAttribution } from '@/features/rsform/backend/use-delete-attribution';
 import { useRSForm } from '@/features/rsform/backend/use-rsform';
 import { useUpdateConstituenta } from '@/features/rsform/backend/use-update-constituenta';
-import { CardRSFormStats } from '@/features/rsform/components/rsform-stats';
+import { MiniRSFormStats } from '@/features/rsform/components/mini-rsform-stats';
 import { ViewConstituents } from '@/features/rsform/components/view-constituents';
 
 import { useFitHeight } from '@/stores/app-layout';
@@ -102,7 +102,7 @@ export function ViewSchema({ schemaID, isMutable }: ViewSchemaProps) {
         onDoubleClick={isMutable ? handleEditCst : undefined}
       />
 
-      <CardRSFormStats className='pr-4 py-2 -ml-4' stats={stats} />
+      <MiniRSFormStats className='pr-4 py-2 -ml-4' stats={stats} />
     </div>
   );
 }

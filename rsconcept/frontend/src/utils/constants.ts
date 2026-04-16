@@ -8,6 +8,7 @@ export const PARAMETER = {
 
   minimalTimeout: 10, // Minimum delay for rapid UI updates (in milliseconds)
   refreshTimeout: 100, // Delay after refresh actions to allow UI to settle (in milliseconds)
+  summaryDuration: 200, // Summary details animation duration (in milliseconds)
   notificationDelay: 300, // Duration to display notifications (in milliseconds)
   zoomDuration: 500, // Duration of zoom animations (in milliseconds)
   navigationPopupDelay: 300, // Delay before showing navigation popups (in milliseconds)
