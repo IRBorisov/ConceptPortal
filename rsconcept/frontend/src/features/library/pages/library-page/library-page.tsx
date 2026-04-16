@@ -39,7 +39,7 @@ export function LibraryPage() {
         <ExportDropdown
           data={filtered}
           filename='library'
-          className='absolute z-tooltip -top-8 right-6 hidden sm:block'
+          className='absolute z-tooltip -top-8 right-5 hidden sm:block'
         />
 
         <ViewSideLocation

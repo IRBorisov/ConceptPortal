@@ -62,8 +62,8 @@ export function ViewSideLocation({ isVisible, onRenameLocation }: ViewSideLocati
   return (
     <div
       className={clsx(
-        'relative max-w-40 sm:max-w-60',
-        isVisible && 'open min-w-40 sm:min-w-60',
+        'relative max-w-42 sm:max-w-60',
+        isVisible && 'open min-w-42 sm:min-w-60',
         'flex flex-col text:xs sm:text-sm select-none cc-side-location'
       )}
     >
@@ -84,7 +84,7 @@ export function ViewSideLocation({ isVisible, onRenameLocation }: ViewSideLocati
         <BadgeHelp topic={HelpTopic.UI_LIBRARY} contentClass='text-sm' offset={5} place='right-start' />
       </div>
       <SelectLocation
-        className='cc-scroll-left cc-scroll-stable'
+        className='cc-scroll-left cc-scroll-stable max-sm:mt-8 '
         value={location}
         prefix={prefixes.folders_list}
         onSelect={handleSelectFolder}
