@@ -478,16 +478,18 @@ function calculateTypificationComplexity(type: Typification): number {
     case TypeID.basic:
     case TypeID.integer:
     case TypeID.anyTypification:
-      return 1;
+      return 0;
     case TypeID.tuple:
-      return type.factors.reduce((sum, factor) => sum + calculateTypificationComplexity(factor), 0);
+      return (
+        type.factors.length + type.factors.reduce((sum, factor) => sum + calculateTypificationComplexity(factor), 0)
+      );
     case TypeID.collection:
       if (type.base.typeID === TypeID.tuple) {
         let sum = 0;
         type.base.factors.forEach(factor => {
           sum += calculateTypificationComplexity(factor);
         });
-        return sum;
+        return sum + type.base.factors.length;
       } else if (type.base.typeID === TypeID.collection) {
         return calculateTypificationComplexity(type.base) + 1;
       }

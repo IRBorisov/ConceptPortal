@@ -41,7 +41,7 @@ export function StatsCategory({
 
   return (
     <section id={id} className={cn('min-h-27', 'rounded-md border bg-card px-3 py-2', 'grid gap-2', className)}>
-      {label ? <h3 className='text-sm font-medium leading-none'>{label}</h3> : null}
+      {label ? <h3 className='text-sm font-medium leading-none my-1'>{label}</h3> : null}
 
       {!isDetailsOpen && !isOpenDebounced ? (
         <div className={clsx('grid gap-2 cc-fade-in', hasSecondary ? 'grid-cols-2' : 'grid-cols-1')}>
