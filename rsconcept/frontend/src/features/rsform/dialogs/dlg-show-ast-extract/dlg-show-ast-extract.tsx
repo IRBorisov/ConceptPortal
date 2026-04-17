@@ -161,7 +161,12 @@ export function DlgShowAstExtract() {
       helpTopic={HelpTopic.UI_FORMULA_TREE}
       fullScreen
     >
-      <div className='absolute z-pop top-2 right-1/2 translate-x-1/2 flex flex-col items-center w-full gap-1'>
+      <div
+        className={clsx(
+          'absolute z-pop top-2 right-1/2 translate-x-1/2',
+          'flex flex-col items-center w-full pointer-events-none gap-1'
+        )}
+      >
         <div
           className={clsx(
             'max-w-[60ch]',
@@ -182,6 +187,7 @@ export function DlgShowAstExtract() {
           ) : null}
         </div>
         <PopoverExtraction
+          className='pointer-events-auto'
           disabled={!canExtract}
           schema={schema}
           open={popoverOpen}

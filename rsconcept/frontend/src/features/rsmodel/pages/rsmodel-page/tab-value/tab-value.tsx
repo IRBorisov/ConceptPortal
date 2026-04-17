@@ -74,6 +74,10 @@ export function TabValue() {
     }
   }
 
+  function handleOpenEdit(cstID: number) {
+    router.changeActive(cstID);
+  }
+
   return (
     <div
       tabIndex={-1}
@@ -99,7 +103,12 @@ export function TabValue() {
 
       <div className='mx-0 min-w-120 md:mx-auto pt-8 md:w-195 shrink-0 xs:pt-0 min-h-6'>
         {activeCst ? (
-          <FormValue key={`data-${activeCst.id}`} id={globalIDs.value_editor} activeCst={activeCst} />
+          <FormValue
+            key={`data-${activeCst.id}`}
+            id={globalIDs.value_editor}
+            activeCst={activeCst}
+            onOpenEdit={handleOpenEdit}
+          />
         ) : null}
       </div>
       <ViewConstituents
