@@ -1,14 +1,15 @@
 import { type RSModelStats } from '@/domain/library';
 
+import { Divider } from '@/components/container';
 import { cn } from '@/components/utils';
 import { StatsCategory } from '@/components/view/stats-category';
 
-interface CardRSModelStatsProps {
+interface ViewModelStatsProps {
   className?: string;
   stats: RSModelStats;
 }
 
-export function CardRSModelStats({ className, stats }: CardRSModelStatsProps) {
+export function ViewModelStats({ className, stats }: ViewModelStatsProps) {
   const countOwned = stats.count_all - stats.count_inherited;
   const countBase = stats.count_structured + stats.count_base;
   const countErrors = stats.count_incorrect + stats.count_incalculable;
@@ -17,9 +18,10 @@ export function CardRSModelStats({ className, stats }: CardRSModelStatsProps) {
     stats.count_missing_base + stats.count_false_axioms + stats.count_invalid_calculations + stats.count_empty_terms;
 
   return (
-    <div className={cn('select-none', 'grid grid-cols-2 sm:grid-cols-1 gap-2', className)}>
+    <div className={cn('h-fit flex flex-col border select-none', className)}>
       <StatsCategory
         id='rsmodel-stats-overview'
+        className='rounded-t-md'
         label='Общий состав'
         primaryLabel='Конституенты'
         primaryValue={stats.count_all}
@@ -39,6 +41,8 @@ export function CardRSModelStats({ className, stats }: CardRSModelStatsProps) {
           { label: 'Комментарии', value: stats.count_comment }
         ]}
       />
+
+      <Divider margins='mx-3' />
 
       <StatsCategory
         id='rsmodel-stats-structures'
@@ -64,6 +68,8 @@ export function CardRSModelStats({ className, stats }: CardRSModelStatsProps) {
         ]}
       />
 
+      <Divider margins='mx-3' />
+
       <StatsCategory
         id='rsmodel-stats-quality'
         label='Корректность'
@@ -84,8 +90,11 @@ export function CardRSModelStats({ className, stats }: CardRSModelStatsProps) {
         ]}
       />
 
+      <Divider margins='mx-3' />
+
       <StatsCategory
         id='rsmodel-stats-model'
+        className='rounded-b-md'
         label='Характеристика модели'
         primaryLabel='Замечания'
         primaryValue={countModelNotes}

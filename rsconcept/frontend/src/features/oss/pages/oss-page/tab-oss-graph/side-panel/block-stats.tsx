@@ -1,6 +1,6 @@
 import { type Block, NodeType, type OperationSchema, OperationType } from '@/domain/library';
 
-import { OssStats } from '@/features/oss/components/oss-stats';
+import { ViewOssStats } from '@/features/oss/components/view-oss-stats';
 
 interface BlockStatsProps {
   target: Block;
@@ -23,5 +23,5 @@ export function BlockStats({ target, oss }: BlockStatsProps) {
     count_references: operations.filter(item => item.operation_type === OperationType.REPLICA).length
   };
 
-  return <OssStats stats={blockStats} className='pr-6 py-2 -ml-4' />;
+  return <ViewOssStats stats={blockStats} className='pr-6 py-2 -ml-4' />;
 }

@@ -71,11 +71,7 @@ Run from `rsconcept/frontend`:
 - Tailwind CSS customizations are under `src/styles`, including `tailwind.config.ts` and global styles.
 - When composing >4 Tailwind/utility classes, group by purpose (layout, color, animation) using `clsx` or `cn` for readability.
 - Use `clsx` for class composition when props are not involved.
-
-## Frontend-specific rules to extend
-
-Add new instructions here:
-
 - In `useEffect` hooks and `setTimeout` calls, use named function expressions instead of anonymous arrow callbacks.
 - Prefer `useEffectEvent` over `useCallback` for handlers used inside `useEffect`.
 - When adding or renaming Help manuals topics/pages under `src/features/help`, always update the help repository index wiring in the same change: `src/features/help/pages/manuals-page/topic-page.tsx` (topic -> component mapping)
+- In extracted/reusable components, keep positioning/layout classes (for example `absolute`, `relative`, `top-*`, `left-*`, `right-*`, `bottom-*`, margins) out of the component itself. Pass these via `className` from the parent context where the component is placed.

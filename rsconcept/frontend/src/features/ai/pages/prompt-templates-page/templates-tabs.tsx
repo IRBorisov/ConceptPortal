@@ -55,9 +55,7 @@ export function TemplatesTabs({ activeID, tab }: TemplatesTabsProps) {
         <TabLabel label='Список' />
         <TabLabel label='Шаблон' />
         <TabLabel label='Переменные' />
-        <div className='flex px-1'>
-          <BadgeHelp topic={HelpTopic.ASSISTANT} offset={5} />
-        </div>
+        <BadgeHelp topic={HelpTopic.ASSISTANT} offset={5} padding='px-2' />
       </TabList>
       <div className='overflow-x-hidden'>
         <TabPanel>

@@ -7,9 +7,7 @@
 
 import { limits } from './constants';
 
-/**
- * UI info descriptors.
- */
+/** UI info descriptors. */
 export const infoMsg = {
   changesSaved: 'Изменения сохранены',
 
@@ -51,9 +49,7 @@ export const infoMsg = {
   calculationSuccess: (timeSpent: string) => `Вычисления завершены за ${timeSpent} секунд`
 } as const;
 
-/**
- * UI error descriptors.
- */
+/** UI error descriptors. */
 export const errorMsg = {
   astFailed: 'Невозможно построить дерево разбора',
   aliasLength: `до ${limits.len_alias} символов`,
@@ -95,9 +91,7 @@ export const errorMsg = {
   cannotExtractNode: 'Невозможно вынести выбранный узел'
 } as const;
 
-/**
- * UI hint descriptors.
- */
+/** UI hint descriptors. */
 export const hintMsg = {
   templateInvalid: 'Выберите шаблон конституенты',
   formInvalid: 'Форма заполнена некорректно',
@@ -115,17 +109,13 @@ export const hintMsg = {
   fileEmpty: 'Выберите файл для загрузки'
 };
 
-/**
- * UI tooltip descriptors.
- */
+/** UI tooltip descriptors. */
 export const tooltipText = {
   unsaved: 'Сохраните или отмените изменения',
   shareItem: (isPublic: boolean) => (isPublic ? 'Поделиться схемой' : 'Поделиться можно только <br/>открытой схемой')
 } as const;
 
-/**
- * UI prompt messages.
- */
+/** UI prompt messages. */
 export const promptText = {
   promptUnsaved: 'Присутствуют несохраненные изменения. Продолжить без их учета?',
   resetSandbox: 'Данное действие приведет к сбросу состояния песочницы. Продолжить?',
@@ -139,4 +129,8 @@ export const promptText = {
   restoreArchive: 'При восстановлении архивной версии актуальная схему будет заменена. Продолжить?',
   ownerChange:
     'Вы уверены, что хотите изменить владельца? Вы потеряете право управления данной схемой. Данное действие отменить нельзя'
+} as const;
+
+export const placeholderMsg = {
+  itemDescription: 'Предметные источники, пояснения, примечания, комментарии разработчика'
 } as const;

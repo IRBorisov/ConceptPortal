@@ -1,23 +1,25 @@
 import { type RSFormStats } from '@/domain/library';
 
+import { Divider } from '@/components/container';
 import { cn } from '@/components/utils';
 import { StatsCategory } from '@/components/view/stats-category';
 
-interface ViewRSFormStatsProps {
+interface ViewSchemaStatsProps {
   className?: string;
   stats: RSFormStats;
 }
 
-export function ViewRSFormStats({ className, stats }: ViewRSFormStatsProps) {
+export function ViewSchemaStats({ className, stats }: ViewSchemaStatsProps) {
   const countOwned = stats.count_all - stats.count_inherited;
   const countBase = stats.count_structured + stats.count_base;
   const countErrors = stats.count_incorrect + stats.count_incalculable;
   const countDerived = stats.count_all - stats.count_base - stats.count_nominal;
 
   return (
-    <div className={cn('select-none', 'flex flex-col gap-2', className)}>
+    <div className={cn('h-fit flex flex-col border select-none', className)}>
       <StatsCategory
         id='stats-overview'
+        className='rounded-t-md'
         label='Общий состав'
         primaryLabel='Конституенты'
         primaryValue={stats.count_all}
@@ -37,6 +39,8 @@ export function ViewRSFormStats({ className, stats }: ViewRSFormStatsProps) {
         ]}
       />
 
+      <Divider margins='mx-3' />
+
       <StatsCategory
         id='stats-structures'
         label='Характеристика ядра'
@@ -55,6 +59,8 @@ export function ViewRSFormStats({ className, stats }: ViewRSFormStatsProps) {
         ]}
       />
 
+      <Divider margins='mx-3' />
+
       <StatsCategory
         id='stats-logics'
         label='Характеристика тела'
@@ -72,8 +78,11 @@ export function ViewRSFormStats({ className, stats }: ViewRSFormStatsProps) {
         ]}
       />
 
+      <Divider margins='mx-3' />
+
       <StatsCategory
         id='stats-quality'
+        className='rounded-b-md'
         label='Корректность'
         primaryLabel='Проблемы'
         primaryValue={stats.count_problematic}

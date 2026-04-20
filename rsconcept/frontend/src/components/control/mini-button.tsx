@@ -42,7 +42,7 @@ export function MiniButton({
         'cursor-pointer disabled:cursor-auto disabled:opacity-75',
         (!tabIndex || tabIndex === -1) && 'outline-hidden',
         !noHover && 'cc-hover-pulse',
-        !noPadding && 'px-1 py-1',
+        !noPadding && 'p-1',
         className
       )}
       data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}

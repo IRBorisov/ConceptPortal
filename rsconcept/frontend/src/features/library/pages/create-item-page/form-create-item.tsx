@@ -13,7 +13,7 @@ import { Button, MiniButton, SubmitButton } from '@/components/control';
 import { IconDownload, IconSandbox } from '@/components/icons';
 import { Label, TextArea, TextInput } from '@/components/input';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';
-import { errorMsg } from '@/utils/labels';
+import { errorMsg, placeholderMsg } from '@/utils/labels';
 
 import { type CreateLibraryItemDTO, schemaCreateLibraryItem } from '../../backend/types';
 import { useCreateFromSandbox } from '../../backend/use-create-from-sandbox';
@@ -243,8 +243,7 @@ export function FormCreateItem({
         {field => (
           <TextInput
             id='schema_title'
-            label='Название'
-            placeholder={file ? 'Загрузить из файла' : undefined}
+            placeholder={file ? 'Загрузить название из файла' : 'Название'}
             value={field.state.value ?? ''}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
@@ -338,9 +337,10 @@ export function FormCreateItem({
           <TextArea
             id='schema_comment'
             label='Описание'
-            placeholder={file ? 'Загрузить из файла' : undefined}
+            placeholder={file ? 'Загрузить из файла' : placeholderMsg.itemDescription}
             value={field.state.value ?? ''}
             onChange={event => field.handleChange(event.target.value)}
+            rows={5}
             onBlur={field.handleBlur}
             error={field.state.meta.errors[0]?.message}
           />
