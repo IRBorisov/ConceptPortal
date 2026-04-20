@@ -21,7 +21,7 @@ import { type DlgCreateCstProps } from '@/features/rsform/dialogs/dlg-create-cst
 import { type DlgCstTemplateProps } from '@/features/rsform/dialogs/dlg-cst-template/dlg-cst-template';
 import { type DlgDeleteCstProps } from '@/features/rsform/dialogs/dlg-delete-cst/dlg-delete-cst';
 import { type DlgEditCstProps } from '@/features/rsform/dialogs/dlg-edit-cst/dlg-edit-cst';
-import { type DlgEditWordFormsProps } from '@/features/rsform/dialogs/dlg-edit-word-forms/dlg-edit-word-forms';
+import { type DlgEditWordFormsProps } from '@/features/rsform/dialogs/dlg-edit-word-forms';
 import { type DlgInlineSynthesisProps } from '@/features/rsform/dialogs/dlg-inline-synthesis/dlg-inline-synthesis';
 import { type DlgRenameCstProps } from '@/features/rsform/dialogs/dlg-rename-cst';
 import { type DlgShowFlatAstProps } from '@/features/rsform/dialogs/dlg-show-ast';

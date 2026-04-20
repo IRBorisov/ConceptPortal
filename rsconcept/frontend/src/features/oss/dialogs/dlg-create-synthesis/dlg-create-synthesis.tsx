@@ -33,11 +33,11 @@ export interface DlgCreateSynthesisProps {
   onCreate?: (newID: number) => void;
 }
 
-export const TabID = {
+const TabID = {
   ARGUMENTS: 0,
   SUBSTITUTIONS: 1
 } as const;
-export type TabID = (typeof TabID)[keyof typeof TabID];
+type TabID = (typeof TabID)[keyof typeof TabID];
 
 export function DlgCreateSynthesis() {
   const { createSynthesis } = useCreateSynthesis();

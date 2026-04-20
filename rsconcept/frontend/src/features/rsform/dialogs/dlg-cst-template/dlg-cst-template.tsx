@@ -29,12 +29,12 @@ export interface DlgCstTemplateProps {
   insertAfter?: number;
 }
 
-export const TabID = {
+const TabID = {
   TEMPLATE: 0,
   ARGUMENTS: 1,
   CONSTITUENTA: 2
 } as const;
-export type TabID = (typeof TabID)[keyof typeof TabID];
+type TabID = (typeof TabID)[keyof typeof TabID];
 
 export function DlgCstTemplate() {
   const { schema, onCreate, insertAfter } = useDialogsStore(state => state.props as DlgCstTemplateProps);

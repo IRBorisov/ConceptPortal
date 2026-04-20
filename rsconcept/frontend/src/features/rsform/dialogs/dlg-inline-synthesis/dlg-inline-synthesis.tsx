@@ -23,12 +23,12 @@ export interface DlgInlineSynthesisProps {
   onSynthesis: (data: InlineSynthesisDTO) => void;
 }
 
-export const TabID = {
+const TabID = {
   SCHEMA: 0,
   SELECTIONS: 1,
   SUBSTITUTIONS: 2
 } as const;
-export type TabID = (typeof TabID)[keyof typeof TabID];
+type TabID = (typeof TabID)[keyof typeof TabID];
 
 export function DlgInlineSynthesis() {
   const { receiver, onSynthesis } = useDialogsStore(state => state.props as DlgInlineSynthesisProps);

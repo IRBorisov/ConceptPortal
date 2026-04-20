@@ -296,16 +296,7 @@ export function validateNewAlias(alias: string, type: CstType, schema: RSForm): 
   return true;
 }
 
-/**
- * Definition prefix for {@link Constituenta}.
- */
-export function getDefinitionPrefix(cst: Constituenta): string {
-  return cst.alias + (cst.cst_type === CstType.STRUCTURED ? '::=' : ':==');
-}
-
-/**
- * Generate alias for new {@link Constituenta} of a given {@link CstType} for current {@link RSForm}.
- */
+/** Generate alias for new {@link Constituenta} of a given {@link CstType} for current {@link RSForm}. */
 export function generateAlias(type: CstType, schema: RSForm, takenAliases: string[] = []): string {
   const prefix = getCstTypePrefix(type);
   if (schema.items.length <= 0) {

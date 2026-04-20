@@ -2,8 +2,9 @@
 
 import { type SubmitEvent, useState } from 'react';
 
-import { Grammeme, parseGrammemes, type WordForm } from '@/domain/cctext';
+import { Grammeme, type WordForm } from '@/domain/cctext';
 import { Case } from '@/domain/cctext/language';
+import { parseGrammemes } from '@/domain/cctext/language-api';
 import { type Constituenta, type RSForm } from '@/domain/library';
 
 import { HelpTopic } from '@/features/help';
@@ -16,11 +17,11 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { promptText } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 
-import { type LexemeResponse } from '../../backend/cctext/types';
-import { useIsProcessingCctext } from '../../backend/cctext/use-is-processing-cctext';
-import { type UpdateConstituentaDTO } from '../../backend/types';
-import { RefsInput } from '../../components/refs-input/refs-input';
-import { DefaultWordForms } from '../../components/select-word-form';
+import { type LexemeResponse } from '../backend/cctext/types';
+import { useIsProcessingCctext } from '../backend/cctext/use-is-processing-cctext';
+import { type UpdateConstituentaDTO } from '../backend/types';
+import { RefsInput } from '../components/refs-input/refs-input';
+import { DefaultWordForms } from '../components/select-word-form';
 
 export interface DlgEditWordFormsProps {
   schema: RSForm;

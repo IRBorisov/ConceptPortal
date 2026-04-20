@@ -33,11 +33,11 @@ export interface DlgCreateBlockProps {
   onCreate?: (newID: number) => void;
 }
 
-export const TabID = {
+const TabID = {
   CARD: 0,
   CHILDREN: 1
 } as const;
-export type TabID = (typeof TabID)[keyof typeof TabID];
+type TabID = (typeof TabID)[keyof typeof TabID];
 
 export function DlgCreateBlock() {
   const { createBlock } = useCreateBlock();

@@ -30,12 +30,12 @@ export interface DlgEditOperationProps {
   targetID: number;
 }
 
-export const TabID = {
+const TabID = {
   CARD: 0,
   ARGUMENTS: 1,
   SUBSTITUTIONS: 2
 } as const;
-export type TabID = (typeof TabID)[keyof typeof TabID];
+type TabID = (typeof TabID)[keyof typeof TabID];
 
 export function DlgEditOperation() {
   const { ossID, layout, targetID } = useDialogsStore(state => state.props as DlgEditOperationProps);

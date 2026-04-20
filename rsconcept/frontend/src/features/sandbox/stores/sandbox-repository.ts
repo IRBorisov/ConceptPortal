@@ -11,11 +11,13 @@ import { sandboxDB } from './sandbox-db';
 const ROW_ID = 'current' as const;
 const DEFAULT_BUNDLE_FILE = 'sandbox-bundle.json' as const;
 
+/** Load the sandbox bundle from the database. */
 export async function loadBundle(): Promise<SandboxBundle | null> {
   const row = await sandboxDB.bundle.get(ROW_ID);
   return row?.bundle ?? null;
 }
 
+/** Save the sandbox bundle to the database. */
 export async function saveBundle(bundle: SandboxBundle): Promise<void> {
   const parsed = schemaSandboxBundle.parse(bundle);
   await sandboxDB.bundle.put({ id: ROW_ID, bundle: parsed });
@@ -37,22 +39,26 @@ export async function ensureBundleLoaded(): Promise<SandboxBundle> {
   return starter;
 }
 
-export function parseBundleJson(raw: unknown): SandboxBundle {
-  const parsed = schemaSandboxBundle.safeParse(raw);
-  if (!parsed.success) {
-    throw new Error('Неверный файл песочницы');
-  }
-  return parsed.data;
-}
-
+/** Import a sandbox bundle from a JSON file. */
 export async function importBundleFromJson(raw: unknown): Promise<SandboxBundle> {
   const bundle = parseBundleJson(raw);
   await saveBundle(bundle);
   return bundle;
 }
 
+/** Download the sandbox bundle to a JSON file. */
 export function downloadBundle(bundle: SandboxBundle, filename: string = DEFAULT_BUNDLE_FILE): void {
   const parsed = schemaSandboxBundle.parse(bundle);
   const text = JSON.stringify(parsed, null, 2);
   fileDownload(text, filename);
+}
+
+// ===== Internals =====
+
+function parseBundleJson(raw: unknown): SandboxBundle {
+  const parsed = schemaSandboxBundle.safeParse(raw);
+  if (!parsed.success) {
+    throw new Error('Неверный файл песочницы');
+  }
+  return parsed.data;
 }

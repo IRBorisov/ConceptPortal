@@ -12,11 +12,11 @@ import { TextInput } from '@/components/input';
 import { rethrowIfStaleBundleError } from '@/utils/stale-bundle-error';
 
 import { schemaUpdateProfile, type UpdateProfileDTO } from '../../backend/types';
-import { useProfileSuspense } from '../../backend/use-profile';
+import { useProfile } from '../../backend/use-profile';
 import { useUpdateProfile } from '../../backend/use-update-profile';
 
 export function EditorProfile() {
-  const { profile } = useProfileSuspense();
+  const { profile } = useProfile();
   const { updateProfile, isPending, error: serverError, reset: clearServerError } = useUpdateProfile();
 
   const form = useForm({

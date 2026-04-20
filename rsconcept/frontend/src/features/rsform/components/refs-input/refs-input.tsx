@@ -17,14 +17,16 @@ import {
   type EntityRefState,
   type Grammeme,
   type InlinePosition,
-  parseEntityReference,
-  parseGrammemes,
-  parseSyntacticReference,
-  referenceToString,
   ReferenceType,
   supportedGrammemes,
   type SyntacticRefState
 } from '@/domain/cctext';
+import {
+  parseEntityReference,
+  parseGrammemes,
+  parseSyntacticReference,
+  referenceToString
+} from '@/domain/cctext/language-api';
 import { type RSForm } from '@/domain/library';
 
 import { ErrorField, Label } from '@/components/input';

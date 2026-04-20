@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 
-import { usePromptTemplateSuspense } from '../../backend/use-prompt-template';
+import { usePromptTemplate } from '../../backend/use-prompt-template';
 import { PromptVariableType } from '../../models/prompting';
 import { extractPromptVariables } from '../../models/prompting-api';
 import { evaluatePromptVariable, useAIStore } from '../../stores/ai-context';
@@ -29,7 +29,7 @@ type TabID = (typeof TabID)[keyof typeof TabID];
 
 export function AIPromptTabs({ promptID, activeTab, setActiveTab }: AIPromptTabsProps) {
   const context = useAIStore();
-  const { promptTemplate } = usePromptTemplateSuspense(promptID);
+  const { promptTemplate } = usePromptTemplate(promptID);
   const [text, setText] = useState(promptTemplate.text);
   const variables = extractPromptVariables(text);
 

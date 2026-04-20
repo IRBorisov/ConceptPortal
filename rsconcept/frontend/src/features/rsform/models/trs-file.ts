@@ -12,8 +12,21 @@ const TRS_HEADER = 'Exteor 4.8.13.1000 - 30/05/2022';
 const TRS_INNER_FILENAME = 'document.json';
 const TRS_VERSION = 16;
 
+/** Create `.trs` archive blob from {@link RSForm}. */
+export function prepareTRSFile(schema: RSForm): Blob {
+  const json = JSON.stringify(prepareTRSData(schema), null, 4);
+
+  const zipped = zipSync({
+    [TRS_INNER_FILENAME]: strToU8(json)
+  });
+
+  return new Blob([new Uint8Array(zipped)], { type: 'application/zip' });
+}
+
+// ====== Internals ======
+
 /** Create TRS-compatible JSON payload from {@link RSForm}. */
-export function prepareTRSData(schema: RSForm) {
+function prepareTRSData(schema: RSForm) {
   return {
     type: TRS_ENTITY_SCHEMA,
     title: schema.title,
@@ -45,15 +58,4 @@ export function prepareTRSData(schema: RSForm) {
     version: TRS_VERSION,
     versionInfo: TRS_HEADER
   };
-}
-
-/** Create `.trs` archive blob from {@link RSForm}. */
-export function prepareTRSFile(schema: RSForm): Blob {
-  const json = JSON.stringify(prepareTRSData(schema), null, 4);
-
-  const zipped = zipSync({
-    [TRS_INNER_FILENAME]: strToU8(json)
-  });
-
-  return new Blob([new Uint8Array(zipped)], { type: 'application/zip' });
 }

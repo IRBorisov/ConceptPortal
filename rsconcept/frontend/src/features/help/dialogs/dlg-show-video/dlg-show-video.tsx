@@ -12,11 +12,11 @@ import { type IVideo } from '@/utils/constants';
 import { TabVK } from './tab-vk';
 import { TabYoutube } from './tab-youtube';
 
-export const TabID = {
+const TabID = {
   VK: 0,
   YOUTUBE: 1
 } as const;
-export type TabID = (typeof TabID)[keyof typeof TabID];
+type TabID = (typeof TabID)[keyof typeof TabID];
 
 export interface DlgShowVideoProps {
   video: IVideo;

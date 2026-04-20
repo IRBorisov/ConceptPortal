@@ -8,7 +8,7 @@ import { useAuth } from '@/features/auth';
 import { useModificationStore } from '@/stores/modification';
 import { globalIDs } from '@/utils/constants';
 
-import { usePromptTemplateSuspense } from '../../../backend/use-prompt-template';
+import { usePromptTemplate } from '../../../backend/use-prompt-template';
 
 import { FormPromptTemplate } from './form-prompt-template';
 import { ToolbarTemplate } from './toolbar-template';
@@ -18,7 +18,7 @@ interface TabEditTemplateProps {
 }
 
 export function TabEditTemplate({ activeID }: TabEditTemplateProps) {
-  const { promptTemplate } = usePromptTemplateSuspense(activeID);
+  const { promptTemplate } = usePromptTemplate(activeID);
   const isModified = useModificationStore(state => state.isModified);
   const setIsModified = useModificationStore(state => state.setIsModified);
   const { user } = useAuth();
