@@ -67,6 +67,8 @@ export function RSFormTabs({ activeID, activeTab }: RSFormTabsProps) {
   useLayoutEffect(
     function syncNavigationAndSelection() {
       if (activeTab === RSTabID.CST_EDIT) {
+        // After create, URL can lag; skip syncing from stale `active` until it matches `pendingActiveID`.
+        // User-driven `changeActive` / `gotoEditActive` must call `clearPendingActiveID()` so this gate does not block.
         if (pendingActiveID !== null && activeID !== pendingActiveID) {
           return;
         }
@@ -131,6 +133,7 @@ export function RSFormTabs({ activeID, activeTab }: RSFormTabsProps) {
     if (event.ctrlKey || event.metaKey) {
       setSelectedCst(problemItems.map(cst => cst.id));
     } else {
+      clearPendingActiveID();
       router.gotoEditActive(problemItems[0].id);
     }
   }

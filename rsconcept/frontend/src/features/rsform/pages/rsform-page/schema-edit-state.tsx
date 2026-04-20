@@ -319,6 +319,7 @@ export const SchemaEditState = ({
           if (!nextActive) {
             router.gotoCstList(updatedSchema.id);
           } else {
+            setPendingActiveID(null);
             router.changeActive(nextActive);
           }
         });
