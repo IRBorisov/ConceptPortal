@@ -4,7 +4,6 @@ import {
   IconDatabase,
   IconDestroy,
   IconDownload,
-  IconLeftOpen,
   IconReset,
   IconSave,
   IconText,
@@ -40,9 +39,6 @@ export function HelpRSModelValue() {
         </li>
         <li>
           <IconCalculateAll className='inline-icon icon-green' /> пересчитать модель целиком: <kbd>Alt + Q</kbd>
-        </li>
-        <li>
-          <IconLeftOpen className='inline-icon' /> список конституент
         </li>
         <li>
           <IconTypeGraph className='inline-icon' /> отображение{' '}

@@ -97,6 +97,7 @@ export function DlgCreateSchema() {
         {field => (
           <TextInput
             id='operation_title'
+            aria-label='Название новой схемы'
             placeholder='Название новой схемы'
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}

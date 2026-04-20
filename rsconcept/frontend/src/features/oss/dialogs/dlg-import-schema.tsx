@@ -180,6 +180,8 @@ export function DlgImportSchema() {
           {field => (
             <TextArea
               id='operation_comment'
+              className='w-full'
+              aria-label='Описание'
               placeholder={placeholderMsg.itemDescription}
               rows={5}
               disabled={!clone_source}

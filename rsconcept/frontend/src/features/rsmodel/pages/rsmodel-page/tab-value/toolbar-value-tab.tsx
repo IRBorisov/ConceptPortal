@@ -11,7 +11,6 @@ import { isTypification } from '@/domain/rslang/semantic/typification';
 
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
-import { IconShowSidebar } from '@/features/library/components/icon-show-sidebar';
 import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
 
 import { MiniButton } from '@/components/control';
@@ -19,7 +18,6 @@ import { IconCalculateAll, IconCalculateOne, IconDatabase, IconDestroy } from '@
 import { cn } from '@/components/utils';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
-import { usePreferencesStore } from '@/stores/preferences';
 import { prepareTooltip } from '@/utils/format';
 import { errorMsg } from '@/utils/labels';
 import { isMac } from '@/utils/utils';
@@ -29,19 +27,16 @@ import { useRSModelEdit } from '../rsmodel-context';
 
 interface ToolbarValueTabProps {
   className?: string;
-  isNarrow: boolean;
   onClearValue: () => void;
 }
 
-export function ToolbarValueTab({ className, isNarrow, onClearValue }: ToolbarValueTabProps) {
+export function ToolbarValueTab({ className, onClearValue }: ToolbarValueTabProps) {
   const { isMutable, engine } = useRSModelEdit();
   const { activeCst, schema, isProcessing } = useRSFormEdit();
 
   const value = useCstValue(engine, activeCst ?? null);
   const hasValue = value !== null;
 
-  const showList = usePreferencesStore(state => state.showValueSideList);
-  const toggleList = usePreferencesStore(state => state.toggleShowValueSideList);
   const isModified = useModificationStore(state => state.isModified);
 
   const showEditValue = useDialogsStore(state => state.showModelEditValue);
@@ -139,11 +134,6 @@ export function ToolbarValueTab({ className, isNarrow, onClearValue }: ToolbarVa
         onClick={() => engine.recalculateAll()}
       />
 
-      <MiniButton
-        title='Отображение списка конституент'
-        icon={<IconShowSidebar size='1.25rem' value={showList} isBottom={isNarrow} />}
-        onClick={toggleList}
-      />
       <BadgeHelp topic={HelpTopic.UI_MODEL_VALUE} offset={4} contentClass='sm:max-w-160' />
     </div>
   );

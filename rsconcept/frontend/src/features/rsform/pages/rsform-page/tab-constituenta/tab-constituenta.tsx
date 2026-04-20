@@ -11,7 +11,6 @@ import { useRoleStore, UserRole } from '@/features/users';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight, useMainHeight } from '@/stores/app-layout';
 import { useModificationStore } from '@/stores/modification';
-import { usePreferencesStore } from '@/stores/preferences';
 import { globalIDs } from '@/utils/constants';
 
 import { ViewConstituents } from '../../../components/view-constituents';
@@ -40,7 +39,6 @@ export function TabConstituenta() {
   const mainHeight = useMainHeight();
   const onSelectCst = useEffectEvent(setSelectedCst);
 
-  const showList = usePreferencesStore(state => state.showCstSideList);
   const { isModified } = useModificationStore();
 
   const [toggleReset, setToggleReset] = useState(false);
@@ -125,7 +123,6 @@ export function TabConstituenta() {
         onSubmit={initiateSubmit}
         onReset={() => setToggleReset(prev => !prev)}
         disabled={disabled}
-        isNarrow={isNarrow}
       />
 
       <div className='mx-0 min-w-120 md:mx-auto pt-8 md:w-195 shrink-0 xs:pt-0 min-h-6'>
@@ -144,8 +141,7 @@ export function TabConstituenta() {
       <ViewConstituents
         className={clsx(
           'cc-animate-sidebar min-h-55',
-          isNarrow ? 'mt-3 mx-6 rounded-md overflow-hidden' : 'mt-9 rounded-l-md rounded-r-none overflow-visible',
-          showList ? 'max-w-full' : 'opacity-0 max-w-0'
+          isNarrow ? 'mt-3 mx-6 rounded-md overflow-hidden' : 'mt-9 rounded-l-md rounded-r-none overflow-visible'
         )}
         schema={schema}
         activeCst={activeCst}

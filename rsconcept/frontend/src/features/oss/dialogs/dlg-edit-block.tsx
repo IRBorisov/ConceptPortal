@@ -74,6 +74,7 @@ export function DlgEditBlock() {
         {field => (
           <TextInput
             id='operation_title'
+            aria-label='Название блока'
             placeholder='Название блока'
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
