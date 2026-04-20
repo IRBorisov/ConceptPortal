@@ -74,7 +74,7 @@ export function HelpRSModelMenu() {
               <IconClone className='inline-icon icon-green' /> Клонировать - создать копию модели
             </li>
             <li>
-              <IconSandbox className='inline-icon icon-green' /> Перенести в песочницу - дублировать модель в песочницу
+              <IconSandbox className='inline-icon icon-green' /> Открыть в песочнице - дублировать модель в песочницу
             </li>
             <li>
               <IconDestroy className='inline-icon icon-red' /> Удалить модель - удаление модели из библиотеки

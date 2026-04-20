@@ -6,14 +6,15 @@ import { ButtonSidebar } from '@/features/library/components/button-sidebar';
 import { EditorLibraryItem } from '@/features/library/components/editor-library-item';
 
 import { useWindowSize } from '@/hooks/use-window-size';
+import { useFitHeight } from '@/stores/app-layout';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { globalIDs } from '@/utils/constants';
 
-import { ViewOssStats } from '../../../components/view-oss-stats';
 import { useOssEdit } from '../oss-edit-context';
 
 import { FormOSS } from './form-oss';
+import { ViewOssStats } from './view-oss-stats';
 
 const SIDELIST_LAYOUT_THRESHOLD = 768; // px
 
@@ -40,6 +41,8 @@ export function TabOssCard() {
       event.preventDefault();
     }
   }
+
+  const sideBarHeight = useFitHeight('5.2rem');
 
   return (
     <div
@@ -69,6 +72,7 @@ export function TabOssCard() {
           'cc-animate-sidebar',
           showOSSStats ? 'max-w-full' : 'opacity-0 max-w-0'
         )}
+        style={{ maxHeight: sideBarHeight }}
         stats={schema.stats}
       />
     </div>

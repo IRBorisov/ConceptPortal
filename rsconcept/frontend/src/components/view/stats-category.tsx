@@ -40,7 +40,7 @@ export function StatsCategory({
   }
 
   return (
-    <section id={id} className={cn('min-h-28', 'bg-card px-3 py-2', 'grid gap-2', className)}>
+    <section id={id} className={cn('min-h-28', 'bg-card px-3 py-2', 'grid gap-2 shrink-0', className)}>
       {label ? <h3 className='text-sm font-medium leading-none mt-1'>{label}</h3> : null}
 
       {!isDetailsOpen && !isOpenDebounced ? (

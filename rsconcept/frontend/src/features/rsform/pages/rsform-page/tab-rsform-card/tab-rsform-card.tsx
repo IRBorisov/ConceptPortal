@@ -45,7 +45,7 @@ export function TabRSFormCard() {
     }
   }
 
-  const sideBarHeight = useFitHeight('5rem');
+  const sideBarHeight = useFitHeight('5.2rem');
 
   return (
     <div
@@ -69,16 +69,15 @@ export function TabRSFormCard() {
         <EditorLibraryItem item={schema} isProduced={schema.is_produced} />
       </div>
 
-      <aside
+      <ViewSchemaStats
+        stats={stats}
         className={clsx(
-          'w-80 md:w-56 md:mt-9 mx-auto overflow-y-auto',
+          'h-min w-80 md:w-56 md:mt-9 mx-auto overflow-y-auto',
           'cc-animate-sidebar',
           showRSFormStats ? 'max-w-full' : 'opacity-0 max-w-0'
         )}
         style={{ maxHeight: sideBarHeight }}
-      >
-        <ViewSchemaStats stats={stats} className='h-min' />
-      </aside>
+      />
     </div>
   );
 }

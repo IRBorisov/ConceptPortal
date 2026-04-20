@@ -40,7 +40,7 @@ export function TabSubstitutions({ oss, inputs, substitutions, fields }: TabSubs
   const { SubstitutionsField } = fields;
 
   return (
-    <div className='cc-fade-in cc-column mt-9'>
+    <div className='cc-fade-in cc-column mt-4'>
       <SubstitutionsField>
         {field => (
           <PickSubstitutions

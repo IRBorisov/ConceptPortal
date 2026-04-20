@@ -11,6 +11,7 @@ import { HelpTopic } from '@/features/help';
 import { TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
+import { placeholderMsg } from '@/utils/labels';
 
 import { schemaUpdateBlock, type UpdateBlockDTO } from '../backend/types';
 import { useOss } from '../backend/use-oss';
@@ -73,8 +74,7 @@ export function DlgEditBlock() {
         {field => (
           <TextInput
             id='operation_title'
-            label='Название'
-            placeholder='Введите название'
+            placeholder='Название блока'
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
@@ -102,6 +102,7 @@ export function DlgEditBlock() {
           <TextArea
             id='operation_comment'
             label='Описание'
+            placeholder={placeholderMsg.itemDescription}
             noResize
             rows={5}
             value={field.state.value}

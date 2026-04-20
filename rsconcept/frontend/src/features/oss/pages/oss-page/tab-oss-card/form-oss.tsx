@@ -17,6 +17,7 @@ import { cn } from '@/components/utils';
 import { useModificationStore } from '@/stores/modification';
 import { globalIDs } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/format';
+import { placeholderMsg } from '@/utils/labels';
 import { isMac } from '@/utils/utils';
 
 import { useMutatingOss } from '../../../backend/use-mutating-oss';
@@ -94,6 +95,7 @@ export function FormOSS({ className }: FormOSSProps) {
         {field => (
           <TextInput
             id='schema_title'
+            aria-label='Название операционной системы'
             placeholder='Название операционной системы'
             className='mb-3'
             value={field.state.value}
@@ -135,7 +137,8 @@ export function FormOSS({ className }: FormOSSProps) {
           <TextArea
             id='schema_comment'
             label='Описание'
-            rows={3}
+            placeholder={placeholderMsg.itemDescription}
+            rows={5}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}

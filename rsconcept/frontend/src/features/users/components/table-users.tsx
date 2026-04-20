@@ -49,7 +49,6 @@ export function TableUsers({ items, onDelete, onReset, className, style }: Table
           className='absolute z-pop top-2 right-1 py-0 align-middle'
           icon={<IconReset size='1.25rem' className='cc-remove' />}
           onClick={onReset}
-          disabled={items.length === 0}
         />
       ) : null}
       <DataTable

@@ -132,9 +132,9 @@ export function DlgCreateSynthesis() {
       helpTopic={HelpTopic.CC_OSS}
     >
       <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>
-        <TabList className='z-pop mx-auto -mb-5 flex border divide-x rounded-none'>
-          <TabLabel title='Выбор аргументов операции' label='Аргументы' className='w-32' />
-          <TabLabel titleHtml='Таблица отождествлений' label='Отождествления' className='w-32' />
+        <TabList className='z-pop mx-auto flex border divide-x rounded-none'>
+          <TabLabel title='Выбор аргументов операции' label='Аргументы' />
+          <TabLabel titleHtml='Таблица отождествлений' label='Отождествления' />
         </TabList>
         <TabPanel>
           <TabArguments

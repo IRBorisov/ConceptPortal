@@ -131,6 +131,7 @@ export function InlineSyntacticEditor({ position, initial, onSave, onCancel }: I
         </div>
         <TextInput
           id='inline_reference_nominal'
+          aria-label='Начальная форма'
           placeholder='Начальная форма'
           className='text-sm'
           value={nominal}

@@ -17,6 +17,7 @@ import { cn } from '@/components/utils';
 import { ValueIcon } from '@/components/view';
 import { useModificationStore } from '@/stores/modification';
 import { globalIDs } from '@/utils/constants';
+import { placeholderMsg } from '@/utils/labels';
 
 interface FormSandboxItemProps {
   className?: string;
@@ -85,6 +86,7 @@ export function FormSandboxItem({ className }: FormSandboxItemProps) {
         {field => (
           <TextInput
             id='sandbox_model_title'
+            aria-label='Название модели'
             placeholder='Название модели'
             className='mb-3'
             value={field.state.value}
@@ -115,6 +117,7 @@ export function FormSandboxItem({ className }: FormSandboxItemProps) {
           <TextArea
             id='sandbox_model_description'
             label='Описание'
+            placeholder={placeholderMsg.itemDescription}
             rows={5}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}

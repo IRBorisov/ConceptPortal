@@ -11,7 +11,7 @@ import { HelpTopic } from '@/features/help';
 import { TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
-import { hintMsg } from '@/utils/labels';
+import { hintMsg, placeholderMsg } from '@/utils/labels';
 
 import { type CreateSchemaDTO, schemaCreateSchema } from '../backend/types';
 import { useCreateSchema } from '../backend/use-create-schema';
@@ -97,8 +97,7 @@ export function DlgCreateSchema() {
         {field => (
           <TextInput
             id='operation_title'
-            label='Название'
-            placeholder='Введите название'
+            placeholder='Название новой схемы'
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
@@ -107,7 +106,7 @@ export function DlgCreateSchema() {
         )}
       </form.Field>
       <div className='flex gap-6'>
-        <div className='flex flex-col justify-between gap-3'>
+        <div className='flex flex-col gap-3'>
           <form.Field name='item_data.alias'>
             {field => (
               <TextInput
@@ -138,8 +137,10 @@ export function DlgCreateSchema() {
             <TextArea
               id='operation_comment'
               label='Описание'
+              placeholder={placeholderMsg.itemDescription}
+              className='w-full'
               noResize
-              rows={4}
+              rows={5}
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
               onBlur={field.handleBlur}

@@ -31,7 +31,7 @@ function SelectTrigger({
       className={cn(
         'h-9',
         'flex gap-2 px-3 items-center justify-between',
-        'bg-input disabled:opacity-50',
+        'bg-input disabled:bg-transparent',
         'cursor-pointer disabled:cursor-auto',
         'whitespace-nowrap',
         'focus-outline',

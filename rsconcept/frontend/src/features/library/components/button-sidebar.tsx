@@ -4,11 +4,11 @@ import { cn } from '@/components/utils';
 import { IconShowSidebar } from './icon-show-sidebar';
 
 interface ButtonSidebarProps {
+  title: string;
   show: boolean;
   isNarrow: boolean;
   onClick: () => void;
   className?: string;
-  title?: string;
 }
 
 export function ButtonSidebar({ show, title, isNarrow, onClick, className }: ButtonSidebarProps) {
@@ -19,7 +19,7 @@ export function ButtonSidebar({ show, title, isNarrow, onClick, className }: But
       onClick={onClick}
       className={cn(
         'z-10',
-        'opacity-0 hover:opacity-100 focus-visible:opacity-100',
+        'opacity-100 md:opacity-0 md:hover:opacity-100 md:focus-visible:opacity-100',
         'transition-opacity duration-fade',
         className
       )}

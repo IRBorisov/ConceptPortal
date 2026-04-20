@@ -9,6 +9,7 @@ import { ButtonSidebar } from '@/features/library/components/button-sidebar';
 import { EditorLibraryItem } from '@/features/library/components/editor-library-item';
 
 import { useWindowSize } from '@/hooks/use-window-size';
+import { useFitHeight } from '@/stores/app-layout';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { globalIDs } from '@/utils/constants';
@@ -50,6 +51,8 @@ export function TabModelCard() {
     }
   }
 
+  const sideBarHeight = useFitHeight('5.2rem');
+
   return (
     <div
       onKeyDown={handleInput}
@@ -72,15 +75,15 @@ export function TabModelCard() {
         <EditorLibraryItem item={model} isProduced={false} />
       </div>
 
-      <aside
+      <ViewModelStats
+        stats={stats}
         className={clsx(
           'w-80 md:w-56 md:mt-9 mx-auto',
           'cc-animate-sidebar',
           showStats ? 'max-w-full' : 'opacity-0 max-w-0'
         )}
-      >
-        <ViewModelStats stats={stats} />
-      </aside>
+        style={{ maxHeight: sideBarHeight }}
+      />
     </div>
   );
 }

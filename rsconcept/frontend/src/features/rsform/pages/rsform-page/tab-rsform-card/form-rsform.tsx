@@ -101,6 +101,7 @@ export function FormRSForm({ className }: FormRSFormProps) {
         {field => (
           <TextInput
             id='schema_title'
+            aria-label='Название схемы'
             placeholder='Название схемы'
             className='mb-3'
             value={field.state.value}
@@ -131,9 +132,10 @@ export function FormRSForm({ className }: FormRSFormProps) {
 
           <Label text='Версия' className='select-none w-fit' />
           <SelectVersion
+            disabled={!isContentEditable && schema.versions.length === 0}
             id='schema_version'
             className='select-none'
-            value={schema.version} //
+            value={schema.version}
             items={schema.versions}
             onChange={handleSelectVersion}
           />
@@ -154,8 +156,8 @@ export function FormRSForm({ className }: FormRSFormProps) {
           {field => (
             <TextArea
               id='schema_comment'
-              placeholder={placeholderMsg.itemDescription}
               label='Описание'
+              placeholder={placeholderMsg.itemDescription}
               rows={5}
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}

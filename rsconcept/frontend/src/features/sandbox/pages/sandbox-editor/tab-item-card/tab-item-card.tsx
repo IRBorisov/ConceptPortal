@@ -9,6 +9,7 @@ import { useRSModelEdit } from '@/features/rsmodel/pages/rsmodel-page/rsmodel-co
 import { ViewModelStats } from '@/features/rsmodel/pages/rsmodel-page/tab-model-card/view-model-stats';
 
 import { useWindowSize } from '@/hooks/use-window-size';
+import { useFitHeight } from '@/stores/app-layout';
 import { useModificationStore } from '@/stores/modification';
 import { globalIDs } from '@/utils/constants';
 
@@ -43,6 +44,8 @@ export function TabItemCard() {
     }
   }
 
+  const sideBarHeight = useFitHeight('5.2rem');
+
   return (
     <div
       tabIndex={-1}
@@ -55,9 +58,11 @@ export function TabItemCard() {
     >
       <FormSandboxItem key={schema.id} className='min-w-88 sm:w-120 mx-0 md:mx-auto' />
 
-      <aside className='w-80 md:w-56 md:mt-9 mx-auto max-w-full'>
-        <ViewModelStats stats={stats} />
-      </aside>
+      <ViewModelStats
+        stats={stats}
+        className='w-80 md:w-56 md:mt-9 mx-auto max-w-full'
+        style={{ maxHeight: sideBarHeight }}
+      />
     </div>
   );
 }

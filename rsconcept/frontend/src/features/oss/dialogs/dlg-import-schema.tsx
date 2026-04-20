@@ -14,7 +14,7 @@ import { PickSchema } from '@/features/library/components/pick-schema';
 import { Checkbox, TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
-import { hintMsg } from '@/utils/labels';
+import { hintMsg, placeholderMsg } from '@/utils/labels';
 
 import { type ImportSchemaDTO, schemaImportSchema } from '../backend/types';
 import { useImportSchema } from '../backend/use-import-schema';
@@ -150,7 +150,7 @@ export function DlgImportSchema() {
         )}
       </form.Field>
       <div className='flex gap-6'>
-        <div className='flex flex-col gap-3 justify-between'>
+        <div className='flex flex-col gap-3'>
           <form.Field name='item_data.alias'>
             {field => (
               <TextInput
@@ -180,8 +180,8 @@ export function DlgImportSchema() {
           {field => (
             <TextArea
               id='operation_comment'
-              label='Описание'
-              rows={4}
+              placeholder={placeholderMsg.itemDescription}
+              rows={5}
               disabled={!clone_source}
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}

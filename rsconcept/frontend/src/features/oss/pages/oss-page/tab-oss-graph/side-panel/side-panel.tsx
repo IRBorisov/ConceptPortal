@@ -16,7 +16,6 @@ import { PARAMETER } from '@/utils/constants';
 
 import { useOssEdit } from '../../oss-edit-context';
 
-import { BlockStats } from './block-stats';
 import { ViewSchema } from './view-schema';
 
 interface SidePanelProps {
@@ -28,11 +27,9 @@ export function SidePanel({ isMounted, className }: SidePanelProps) {
   const noNavigationAnimation = useAppLayoutStore(state => state.noNavigationAnimation);
   const setToastBottom = useAppLayoutStore(state => state.setToastBottom);
   const onSetToastBottom = useEffectEvent(setToastBottom);
-  const { schema, isMutable, selectedItems } = useOssEdit();
+  const { isMutable, selectedItems } = useOssEdit();
   const selectedOperation =
     selectedItems.length === 1 && selectedItems[0].nodeType === NodeType.OPERATION ? selectedItems[0] : null;
-  const selectedBlock =
-    selectedItems.length === 1 && selectedItems[0].nodeType === NodeType.BLOCK ? selectedItems[0] : null;
   const selectedSchema = selectedOperation?.result ?? null;
 
   const [debouncedMounted] = useDebounce(isMounted, PARAMETER.moveDuration);
@@ -80,8 +77,8 @@ export function SidePanel({ isMounted, className }: SidePanelProps) {
         </div>
       ) : null}
 
-      {!selectedOperation && !selectedBlock ? (
-        <div className='text-center text-sm cc-fade-in'>Выделите операцию или блок для просмотра</div>
+      {!selectedOperation ? (
+        <div className='text-center text-sm cc-fade-in'>Выделите операцию для просмотра</div>
       ) : null}
       {selectedOperation && !selectedSchema ? (
         <div className='text-center text-sm cc-fade-in'>Отсутствует концептуальная схема для выбранной операции</div>
@@ -95,7 +92,6 @@ export function SidePanel({ isMounted, className }: SidePanelProps) {
           />
         </Suspense>
       ) : null}
-      {selectedBlock ? <BlockStats target={selectedBlock} oss={schema} /> : null}
     </aside>
   );
 }

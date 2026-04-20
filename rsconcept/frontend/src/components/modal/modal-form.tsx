@@ -108,7 +108,7 @@ export function ModalForm({
         aria-labelledby='modal-title'
       >
         {helpTopic && !hideHelpWhen?.() ? (
-          <BadgeHelp topic={helpTopic} className='absolute z-top top-1 left-1' contentClass='sm:max-w-160' />
+          <BadgeHelp topic={helpTopic} className='absolute z-pop top-1 left-1' contentClass='sm:max-w-160' />
         ) : null}
 
         <MiniButton

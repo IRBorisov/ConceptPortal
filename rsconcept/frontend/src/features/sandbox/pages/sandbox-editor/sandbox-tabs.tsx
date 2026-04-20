@@ -171,11 +171,11 @@ export function SandboxTabs({ activeID, activeTab }: SandboxTabsProps) {
         </div>
 
         <TabLabel label='Паспорт' />
-        <TabLabel label='Список' className='w-16' />
+        <TabLabel label='Список' />
         <TabLabel label='Понятие' />
-        <TabLabel label='Граф' className='w-16' />
-        <TabLabel label='Данные' className='w-20' />
-        <TabLabel label='Расчет' className='w-16' />
+        <TabLabel label='Граф' />
+        <TabLabel label='Данные' />
+        <TabLabel label='Расчет' />
       </TabList>
 
       <div ref={containerRef} className='overflow-x-hidden'>

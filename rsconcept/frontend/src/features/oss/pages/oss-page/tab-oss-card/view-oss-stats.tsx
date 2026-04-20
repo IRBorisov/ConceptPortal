@@ -1,19 +1,19 @@
 import { type OperationSchemaStats } from '@/domain/library';
 
 import { Divider } from '@/components/container';
+import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
 import { StatsCategory } from '@/components/view/stats-category';
 
-interface ViewOssStatsProps {
-  className?: string;
+interface ViewOssStatsProps extends Styling {
   stats: OperationSchemaStats;
 }
 
-export function ViewOssStats({ className, stats }: ViewOssStatsProps) {
+export function ViewOssStats({ className, stats, ...restProps }: ViewOssStatsProps) {
   const countImported = stats.count_schemas - stats.count_owned;
 
   return (
-    <div className={cn('h-fit flex flex-col border select-none', className)}>
+    <aside className={cn('h-fit flex flex-col border select-none', className)} {...restProps}>
       <StatsCategory
         id='oss-stats-composition'
         className='rounded-t-md'
@@ -51,6 +51,6 @@ export function ViewOssStats({ className, stats }: ViewOssStatsProps) {
           { label: 'Внешние', value: countImported }
         ]}
       />
-    </div>
+    </aside>
   );
 }

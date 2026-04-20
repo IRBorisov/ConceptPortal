@@ -29,8 +29,8 @@ export function TabLabel({
   return (
     <TabImpl
       className={cn(
-        'w-20 h-full',
-        'px-2 py-1 flex items-center justify-center gap-1',
+        'h-full',
+        'px-3 py-1 flex items-center justify-center gap-1',
         'cc-animate-color duration-select text-muted-foreground',
         'text-sm whitespace-nowrap font-controls',
         'select-none',

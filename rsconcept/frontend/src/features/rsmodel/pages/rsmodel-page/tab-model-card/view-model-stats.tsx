@@ -1,15 +1,15 @@
 import { type RSModelStats } from '@/domain/library';
 
 import { Divider } from '@/components/container';
+import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
 import { StatsCategory } from '@/components/view/stats-category';
 
-interface ViewModelStatsProps {
-  className?: string;
+interface ViewModelStatsProps extends Styling {
   stats: RSModelStats;
 }
 
-export function ViewModelStats({ className, stats }: ViewModelStatsProps) {
+export function ViewModelStats({ className, stats, ...restProps }: ViewModelStatsProps) {
   const countOwned = stats.count_all - stats.count_inherited;
   const countBase = stats.count_structured + stats.count_base;
   const countErrors = stats.count_incorrect + stats.count_incalculable;
@@ -18,7 +18,7 @@ export function ViewModelStats({ className, stats }: ViewModelStatsProps) {
     stats.count_missing_base + stats.count_false_axioms + stats.count_invalid_calculations + stats.count_empty_terms;
 
   return (
-    <div className={cn('h-fit flex flex-col border select-none', className)}>
+    <aside className={cn('h-fit flex flex-col border select-none', className)} {...restProps}>
       <StatsCategory
         id='rsmodel-stats-overview'
         className='rounded-t-md'
@@ -110,6 +110,6 @@ export function ViewModelStats({ className, stats }: ViewModelStatsProps) {
           { label: 'Пустые термы', value: stats.count_empty_terms }
         ]}
       />
-    </div>
+    </aside>
   );
 }

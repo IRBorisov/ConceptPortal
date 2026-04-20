@@ -100,6 +100,7 @@ export function FormRSModel({ className }: FormRSModelProps) {
         {field => (
           <TextInput
             id='schema_title'
+            aria-label='Название модели'
             placeholder='Название модели'
             className='mb-3'
             value={field.state.value}

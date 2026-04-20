@@ -143,6 +143,7 @@ export function DlgEditWordForms() {
         <RefsInput
           id='dlg_edit_wordforms_nominal'
           areaClassName='disabled:min-h-9'
+          aria-label='Начальная форма'
           placeholder='Начальная форма'
           schema={schema}
           value={nominalRaw}
@@ -162,6 +163,7 @@ export function DlgEditWordForms() {
               key={row.singularKey}
               value={formValues[row.singularKey] ?? ''}
               onChange={event => handleFormChange(row.singularKey, event.target.value)}
+              aria-label={`Единственное число: ${row.placeholder}`}
               placeholder={row.placeholder}
               dense
               noBorder={false}
@@ -176,6 +178,7 @@ export function DlgEditWordForms() {
               key={row.pluralKey}
               value={formValues[row.pluralKey] ?? ''}
               onChange={event => handleFormChange(row.pluralKey, event.target.value)}
+              aria-label={`Множественное число: ${row.placeholder}`}
               placeholder={row.placeholder}
               dense
               noBorder={false}

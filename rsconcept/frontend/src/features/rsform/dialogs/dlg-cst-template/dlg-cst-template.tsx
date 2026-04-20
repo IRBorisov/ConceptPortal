@@ -144,9 +144,9 @@ export function DlgCstTemplate() {
     >
       <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>
         <TabList className='mb-3 mx-auto flex border divide-x rounded-none'>
-          <TabLabel label='Шаблон' title='Выбор шаблона выражения' className='w-32' />
-          <TabLabel label='Аргументы' title='Подстановка аргументов шаблона' className='w-32' />
-          <TabLabel label='Редактор' title='Редактирование конституенты' className='w-32' />
+          <TabLabel label='Шаблон' title='Выбор шаблона выражения' />
+          <TabLabel label='Аргументы' title='Подстановка аргументов шаблона' />
+          <TabLabel label='Редактор' title='Редактирование конституенты' />
         </TabList>
 
         <TemplateState

@@ -6,6 +6,7 @@ import { type OperationSchema } from '@/domain/library';
 
 import { Label, TextArea, TextInput } from '@/components/input';
 import { type CreateFieldProps } from '@/utils/forms';
+import { placeholderMsg } from '@/utils/labels';
 
 import { PickMultiOperation } from '../../components/pick-multi-operation';
 import { SelectParent } from '../../components/select-parent';
@@ -33,13 +34,13 @@ export function TabArguments({ oss, inputs, fields }: TabArgumentsProps) {
   const { TitleField, AliasField, ParentField, DescriptionField, ArgumentsField } = fields;
 
   return (
-    <div className='cc-fade-in cc-column'>
+    <div className='cc-fade-in cc-column pt-4'>
       <TitleField>
         {field => (
           <TextInput
             id='operation_title'
-            label='Название'
-            placeholder='Введите название'
+            aria-label='Название новой схемы'
+            placeholder='Название новой схемы'
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
@@ -79,6 +80,8 @@ export function TabArguments({ oss, inputs, fields }: TabArgumentsProps) {
             <TextArea
               id='operation_comment'
               label='Описание'
+              placeholder={placeholderMsg.itemDescription}
+              className='w-full'
               noResize
               rows={3}
               value={field.state.value}

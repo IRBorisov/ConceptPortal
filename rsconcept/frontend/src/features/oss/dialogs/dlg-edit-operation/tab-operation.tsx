@@ -4,6 +4,7 @@ import { type OperationSchema } from '@/domain/library';
 
 import { TextArea, TextInput } from '@/components/input';
 import { type CreateFieldProps } from '@/utils/forms';
+import { placeholderMsg } from '@/utils/labels';
 
 import { SelectParent } from '../../components/select-parent';
 
@@ -23,13 +24,13 @@ export function TabOperation({ oss, fields }: TabOperationProps) {
   const { TitleField, AliasField, ParentField, DescriptionField } = fields;
 
   return (
-    <div className='cc-fade-in cc-column'>
+    <div className='pt-3 cc-fade-in cc-column'>
       <TitleField>
         {field => (
           <TextInput
             id='operation_title'
-            label='Название'
-            placeholder='Введите название'
+            aria-label='Название операции'
+            placeholder='Название операции'
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
@@ -42,9 +43,10 @@ export function TabOperation({ oss, fields }: TabOperationProps) {
         {field => (
           <TextInput
             id='operation_alias'
+            dense
             label='Сокращение'
             placeholder='Введите сокращение'
-            className='w-80'
+            className='w-full'
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
@@ -68,6 +70,7 @@ export function TabOperation({ oss, fields }: TabOperationProps) {
           <TextArea
             id='operation_comment'
             label='Описание'
+            placeholder={placeholderMsg.itemDescription}
             noResize
             rows={5}
             value={field.state.value}
