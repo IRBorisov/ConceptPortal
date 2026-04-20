@@ -51,7 +51,7 @@ interface FormValueProps {
 export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueProps) {
   const router = useConceptNavigation();
   const { isMutable, engine, schema } = useModelEdit();
-  const { patchConstituenta, openTermEditor, isContentEditable, isProcessing } = useSchemaEdit();
+  const { patchConstituenta, createCstFromData, openTermEditor, isContentEditable, isProcessing } = useSchemaEdit();
   const typification = activeCst.analysis.type;
 
   const isModified = useModificationStore(state => state.isModified);
@@ -65,6 +65,8 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
 
   const isBase = isBaseSet(activeCst.cst_type);
   const cstInferrable = isInferrable(activeCst.cst_type);
+  const isImportDisabled =
+    !isMutable || cstInferrable || !isInterpretable(activeCst.cst_type) || (showDataText && !isBase);
   const status = useCstStatus(engine, activeCst);
   const [localEval, setLocalEval] = useState<RO<CalculatorResult> | null>(null);
 
@@ -90,7 +92,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
 
   const metaFieldsDisabled = !isContentEditable || isProcessing;
   const formalFieldDisabled = metaFieldsDisabled || activeCst.is_inherited;
-  const hasPrimaryActions = hasValueDialog || !!inputValue;
+  const hasPrimaryActions = hasValueDialog || !!inputValue || (isMutable && !cstInferrable);
 
   const rsInput = useRef<ReactCodeMirrorRef>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -219,6 +221,10 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
     void router.changeActive(cstID);
   }
 
+  function handleClearValue() {
+    void engine.resetValue(activeCst.id);
+  }
+
   function handleValueDialog() {
     if (isBase) {
       showEditBinding({
@@ -251,8 +257,9 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
 
   function handleClipboardExport() {
     hideExport();
-    void navigator.clipboard.writeText(inputValue);
-    toast.success(infoMsg.valueReady);
+    void navigator.clipboard.writeText(inputValue).then(() => {
+      toast.success(infoMsg.valueReady);
+    });
   }
 
   function handleJSONExport() {
@@ -268,7 +275,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
 
   function handleClipboardImport() {
     hideImport();
-    if (!isMutable || cstInferrable || !isInterpretable(activeCst.cst_type) || (showDataText && !isBase)) {
+    if (isImportDisabled) {
       return;
     }
     navigator.clipboard
@@ -290,7 +297,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
   }
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
-    if (!isMutable || cstInferrable || !isInterpretable(activeCst.cst_type) || (showDataText && !isBase)) {
+    if (isImportDisabled) {
       return;
     }
     const file = event.target.files?.[0];
@@ -361,11 +368,12 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
           {hasValueDialog ? (
             <TextButton
               text={!cstInferrable && isMutable ? 'Изменить значение' : 'Смотреть значение'}
-              title='Просмотр или редактирование значения'
+              titleHtml='Просмотр или<br/>редактирование значения'
               onClick={handleValueDialog}
               className='text-sm'
             />
           ) : null}
+
           {!!inputValue ? (
             <div ref={exportMenuRef} onBlur={handleExportBlur} className='relative'>
               <TextButton
@@ -381,7 +389,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
               </Dropdown>
             </div>
           ) : null}
-          {!(!isMutable || cstInferrable || !isInterpretable(activeCst.cst_type) || (showDataText && !isBase)) ? (
+          {!isImportDisabled ? (
             <div ref={importMenuRef} onBlur={handleImportBlur} className='relative'>
               <TextButton
                 text='Импорт'
@@ -395,6 +403,15 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
                 <DropdownButton text='Загрузить из JSON' onClick={handleOpenFile} />
               </Dropdown>
             </div>
+          ) : null}
+          {isMutable && !cstInferrable && cstData !== null ? (
+            <TextButton
+              text='Очистить значение'
+              title='Сбросить вычисленное значение текущей конституенты'
+              onClick={handleClearValue}
+              disabled={isProcessing}
+              className='text-sm'
+            />
           ) : null}
         </div>
       ) : null}
@@ -416,8 +433,12 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
         <div className='relative'>
           <ToolbarExpression
             className='absolute -top-1 right-0'
-            expression={activeCst.definition_formal}
+            expression={formalDraft}
             type={activeCst.analysis.type}
+            activeCstId={activeCst.id}
+            extractionDisabled={formalFieldDisabled || !isContentEditable}
+            onCreateCst={isContentEditable ? createCstFromData : undefined}
+            onUpdateCst={isContentEditable ? patchConstituenta : undefined}
           />
           <RSInput
             ref={rsInput}
@@ -452,7 +473,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
         onCalculate={cstInferrable ? handleCalculate : undefined}
         onChangeStr={setInputValue}
         onToggleDataText={toggleDataText}
-        disabled={!isMutable || cstInferrable || !isInterpretable(activeCst.cst_type) || (showDataText && !isBase)}
+        disabled={isImportDisabled}
       />
 
       <ViewErrors

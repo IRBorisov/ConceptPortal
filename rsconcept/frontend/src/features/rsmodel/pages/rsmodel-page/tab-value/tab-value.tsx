@@ -11,9 +11,13 @@ import { ViewConstituents } from '@/features/rsform/components/view-constituents
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 import { useRoleStore, UserRole } from '@/features/users';
 
+import { MiniButton } from '@/components/control';
+import { IconMoveDown, IconMoveUp } from '@/components/icons';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight, useMainHeight } from '@/stores/app-layout';
+import { useModificationStore } from '@/stores/modification';
 import { globalIDs } from '@/utils/constants';
+import { prepareTooltip } from '@/utils/format';
 
 import { useModelEdit } from '../model-edit-context';
 
@@ -25,11 +29,27 @@ const SIDELIST_LAYOUT_THRESHOLD = 1000; // px
 
 export function TabValue() {
   const router = useConceptNavigation();
-  const { schema, activeCst, selectedCst, setSelectedCst, clearPendingActiveID } = useSchemaEdit();
+  const {
+    schema,
+    activeCst,
+    selectedCst,
+    setSelectedCst,
+    clearPendingActiveID,
+    isContentEditable,
+    isProcessing,
+    moveUp,
+    moveDown,
+    cloneCst
+  } = useSchemaEdit();
   const { engine } = useModelEdit();
+  const isModified = useModificationStore(state => state.isModified);
   const windowSize = useWindowSize();
   const mainHeight = useMainHeight();
   const [toggleReset, setToggleReset] = useState(false);
+
+  const reorderDisabled = !activeCst || !isContentEditable || isProcessing || isModified || schema.items.length < 2;
+
+  const cloneDisabled = !activeCst || !isContentEditable || isProcessing || isModified;
 
   const isNarrow = !!windowSize.width && windowSize.width <= SIDELIST_LAYOUT_THRESHOLD;
 
@@ -50,13 +70,6 @@ export function TabValue() {
     [activeCst, selectedCst, setSelectedCst]
   );
 
-  function handleClearValue() {
-    if (!activeCst) {
-      return;
-    }
-    void engine.resetValue(activeCst.id);
-  }
-
   function initiateSubmit() {
     const element = document.getElementById(globalIDs.value_editor) as HTMLFormElement;
     if (element) {
@@ -65,6 +78,26 @@ export function TabValue() {
   }
 
   function handleInput(event: React.KeyboardEvent<HTMLDivElement>) {
+    if (event.altKey && !event.shiftKey && (event.code === 'ArrowUp' || event.code === 'ArrowDown')) {
+      if (!reorderDisabled) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (event.code === 'ArrowUp') {
+          moveUp();
+        } else {
+          moveDown();
+        }
+      }
+      return;
+    }
+    if (event.altKey && !event.shiftKey && event.code === 'KeyV') {
+      if (!cloneDisabled) {
+        event.preventDefault();
+        event.stopPropagation();
+        void cloneCst();
+      }
+      return;
+    }
     if (event.altKey && event.code === 'KeyQ') {
       event.preventDefault();
       event.stopPropagation();
@@ -105,7 +138,6 @@ export function TabValue() {
           'right-1/2 translate-x-0 xs:right-4 xs:-translate-x-1/2 md:right-1/2 md:translate-x-0',
           'cc-animate-position'
         )}
-        onClearValue={handleClearValue}
         onSubmit={initiateSubmit}
         onReset={() => setToggleReset(prev => !prev)}
       />
@@ -136,6 +168,28 @@ export function TabValue() {
         }}
         maxListHeight={listHeight}
         autoScroll={!isNarrow}
+        sidebarActions={
+          isContentEditable ? (
+            <div className='flex pl-1'>
+              <MiniButton
+                titleHtml={prepareTooltip('Переместить вверх', 'Alt + вверх')}
+                aria-label='Переместить вверх'
+                className='px-0'
+                icon={<IconMoveUp size='1.1rem' className='hover:icon-primary text-muted-foreground' />}
+                onClick={moveUp}
+                disabled={reorderDisabled}
+              />
+              <MiniButton
+                titleHtml={prepareTooltip('Переместить вниз', 'Alt + вниз')}
+                aria-label='Переместить вниз'
+                className='px-0'
+                icon={<IconMoveDown size='1.1rem' className='hover:icon-primary text-muted-foreground' />}
+                onClick={moveDown}
+                disabled={reorderDisabled}
+              />
+            </div>
+          ) : null
+        }
       />
     </div>
   );

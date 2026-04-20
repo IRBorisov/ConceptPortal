@@ -28,7 +28,6 @@ interface ValueInputProps {
   status: EvalStatus;
   showDataText?: boolean;
 
-  onValueDialog?: () => void;
   onChangeStr?: (newValue: string) => void;
   onCalculate?: (event: React.MouseEvent<Element>) => void;
   onToggleDataText?: () => void;
@@ -47,7 +46,6 @@ export function ValueInput({
   status,
   showDataText,
   isBinding,
-  onValueDialog: _onValueDialog,
   onChangeStr,
   onCalculate,
   onToggleDataText

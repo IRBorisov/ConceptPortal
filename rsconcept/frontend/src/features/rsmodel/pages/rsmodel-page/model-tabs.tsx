@@ -131,6 +131,7 @@ export function ModelTabs({ activeID, activeTab }: ModelTabsProps) {
         }
       }
     }
+    clearPendingActiveID();
     router.changeTab(index);
   }
 
