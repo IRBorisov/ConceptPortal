@@ -1,5 +1,7 @@
 'use client';
 
+import { type ReactNode } from 'react';
+
 import { type Constituenta, type RSEngine, type RSForm } from '@/domain/library';
 
 import { cn } from '@/components/utils';
@@ -20,6 +22,7 @@ interface ViewConstituentsProps {
   maxListHeight?: string;
   noBorder?: boolean;
   autoScroll?: boolean;
+  sidebarActions?: ReactNode;
 }
 
 export function ViewConstituents({
@@ -34,11 +37,12 @@ export function ViewConstituents({
   className,
   maxListHeight,
   noBorder,
-  autoScroll
+  autoScroll,
+  sidebarActions
 }: ViewConstituentsProps) {
   return (
     <div className={cn(!noBorder && 'border', className)}>
-      <ConstituentsSearch />
+      <ConstituentsSearch actions={sidebarActions} />
       <TableSideConstituents
         schema={schema}
         engine={engine}

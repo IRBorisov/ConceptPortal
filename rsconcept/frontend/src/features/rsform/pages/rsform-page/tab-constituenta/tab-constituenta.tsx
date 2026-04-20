@@ -8,10 +8,13 @@ import { isProblematic } from '@/domain/library/rsform-api';
 import { useConceptNavigation } from '@/app';
 import { useRoleStore, UserRole } from '@/features/users';
 
+import { MiniButton } from '@/components/control';
+import { IconMoveDown, IconMoveUp } from '@/components/icons';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight, useMainHeight } from '@/stores/app-layout';
 import { useModificationStore } from '@/stores/modification';
 import { globalIDs } from '@/utils/constants';
+import { prepareTooltip } from '@/utils/format';
 
 import { ViewConstituents } from '../../../components/view-constituents';
 import { useSchemaEdit } from '../schema-edit-context';
@@ -119,6 +122,7 @@ export function TabConstituenta() {
           'md:right-1/2 md:translate-x-0',
           'cc-animate-position'
         )}
+        hasInheritance={schema.inheritance.length > 0}
         activeCst={activeCst}
         onSubmit={initiateSubmit}
         onReset={() => setToggleReset(prev => !prev)}
@@ -134,7 +138,6 @@ export function TabConstituenta() {
             activeCst={activeCst}
             schema={schema}
             onOpenEdit={cstID => router.changeActive(cstID)}
-            disabled={disabled}
           />
         ) : null}
       </div>
@@ -149,6 +152,28 @@ export function TabConstituenta() {
         onActivate={cst => router.changeActive(cst.id)}
         maxListHeight={listHeight}
         autoScroll={!isNarrow}
+        sidebarActions={
+          isContentEditable ? (
+            <div className='flex pl-1'>
+              <MiniButton
+                titleHtml={prepareTooltip('Переместить вверх', 'Alt + вверх')}
+                aria-label='Переместить вверх'
+                className='px-0'
+                icon={<IconMoveUp size='1.1rem' className='hover:icon-primary text-muted-foreground' />}
+                onClick={moveUp}
+                disabled={disabled || isModified || schema.items.length < 2}
+              />
+              <MiniButton
+                titleHtml={prepareTooltip('Переместить вниз', 'Alt + вниз')}
+                aria-label='Переместить вниз'
+                className='px-0'
+                icon={<IconMoveDown size='1.1rem' className='hover:icon-primary text-muted-foreground' />}
+                onClick={moveDown}
+                disabled={disabled || isModified || schema.items.length < 2}
+              />
+            </div>
+          ) : null
+        }
       />
     </div>
   );
