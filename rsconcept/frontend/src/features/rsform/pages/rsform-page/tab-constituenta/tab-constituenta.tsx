@@ -34,6 +34,7 @@ export function TabConstituenta() {
     isProcessing,
     selectedCst,
     setSelectedCst,
+    clearPendingActiveID,
     moveUp,
     moveDown,
     cloneCst
@@ -57,7 +58,8 @@ export function TabConstituenta() {
     function adjustSelectionOnActiveChange() {
       if (activeCst && prevActiveCstId.current !== activeCst.id) {
         prevActiveCstId.current = activeCst.id;
-        if (selectedCst.length !== 1 || selectedCst[0] !== activeCst.id) {
+        const primarySelected = selectedCst.length === 0 ? undefined : selectedCst[selectedCst.length - 1];
+        if (selectedCst.length !== 1 || primarySelected !== activeCst.id) {
           onSelectCst([activeCst.id]);
         }
       }
@@ -137,7 +139,10 @@ export function TabConstituenta() {
             toggleReset={toggleReset}
             activeCst={activeCst}
             schema={schema}
-            onOpenEdit={cstID => router.changeActive(cstID)}
+            onOpenEdit={cstID => {
+              clearPendingActiveID();
+              router.changeActive(cstID);
+            }}
           />
         ) : null}
       </div>
@@ -149,7 +154,10 @@ export function TabConstituenta() {
         schema={schema}
         activeCst={activeCst}
         isProblematic={isProblematic}
-        onActivate={cst => router.changeActive(cst.id)}
+        onActivate={cst => {
+          clearPendingActiveID();
+          router.changeActive(cst.id);
+        }}
         maxListHeight={listHeight}
         autoScroll={!isNarrow}
         sidebarActions={

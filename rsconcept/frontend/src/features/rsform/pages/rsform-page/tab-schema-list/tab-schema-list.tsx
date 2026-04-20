@@ -29,6 +29,7 @@ export function TabSchemaList() {
     selectedCst,
     deselectAll,
     setSelectedCst,
+    clearPendingActiveID,
     createCst,
     promptCreateCst,
     moveUp,
@@ -150,7 +151,10 @@ export function TabSchemaList() {
         enableSelection={isContentEditable}
         selected={rowSelection}
         setSelected={handleRowSelection}
-        onEdit={cstID => router.gotoEditActive(cstID)}
+        onEdit={cstID => {
+          clearPendingActiveID();
+          router.gotoEditActive(cstID);
+        }}
         onCreateNew={() => void promptCreateCst()}
       />
     </div>

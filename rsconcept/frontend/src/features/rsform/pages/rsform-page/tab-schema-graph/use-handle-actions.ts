@@ -73,7 +73,11 @@ export function useHandleActions(graph: Graph<number>) {
   }
 
   function handleSetFocus() {
-    const target = schema.cstByID.get(selectedCst[0]);
+    if (selectedCst.length === 0) {
+      return;
+    }
+    const primaryId = selectedCst[selectedCst.length - 1];
+    const target = schema.cstByID.get(primaryId);
     if (target) {
       setFocus(target);
     }
@@ -111,7 +115,7 @@ export function useHandleActions(graph: Graph<number>) {
     if (selectedCst.length !== 1) {
       return;
     }
-    const target = schema.cstByID.get(selectedCst[0]);
+    const target = schema.cstByID.get(selectedCst[selectedCst.length - 1]);
     if (!target) {
       return;
     }
