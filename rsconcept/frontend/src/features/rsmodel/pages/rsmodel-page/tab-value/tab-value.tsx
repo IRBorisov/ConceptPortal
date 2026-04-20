@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 
 import { isProblematic } from '@/domain/library/rsform-api';
@@ -25,10 +25,11 @@ const SIDELIST_LAYOUT_THRESHOLD = 1000; // px
 
 export function TabValue() {
   const router = useConceptNavigation();
-  const { schema, activeCst, selectedCst, setSelectedCst } = useSchemaEdit();
+  const { schema, activeCst, selectedCst, setSelectedCst, clearPendingActiveID } = useSchemaEdit();
   const { engine } = useModelEdit();
   const windowSize = useWindowSize();
   const mainHeight = useMainHeight();
+  const [toggleReset, setToggleReset] = useState(false);
 
   const isNarrow = !!windowSize.width && windowSize.width <= SIDELIST_LAYOUT_THRESHOLD;
 
@@ -40,7 +41,8 @@ export function TabValue() {
     function adjustSelectionOnActiveChange() {
       if (activeCst && prevActiveCstId.current !== activeCst.id) {
         prevActiveCstId.current = activeCst.id;
-        if (selectedCst.length !== 1 || selectedCst[0] !== activeCst.id) {
+        const primarySelected = selectedCst.length === 0 ? undefined : selectedCst[selectedCst.length - 1];
+        if (selectedCst.length !== 1 || primarySelected !== activeCst.id) {
           setSelectedCst([activeCst.id]);
         }
       }
@@ -53,6 +55,13 @@ export function TabValue() {
       return;
     }
     void engine.resetValue(activeCst.id);
+  }
+
+  function initiateSubmit() {
+    const element = document.getElementById(globalIDs.value_editor) as HTMLFormElement;
+    if (element) {
+      element.requestSubmit();
+    }
   }
 
   function handleInput(event: React.KeyboardEvent<HTMLDivElement>) {
@@ -73,6 +82,7 @@ export function TabValue() {
   }
 
   function handleOpenEdit(cstID: number) {
+    clearPendingActiveID();
     router.changeActive(cstID);
   }
 
@@ -96,6 +106,8 @@ export function TabValue() {
           'cc-animate-position'
         )}
         onClearValue={handleClearValue}
+        onSubmit={initiateSubmit}
+        onReset={() => setToggleReset(prev => !prev)}
       />
 
       <div className='mx-0 min-w-120 md:mx-auto pt-8 md:w-195 shrink-0 xs:pt-0 min-h-6'>
@@ -105,6 +117,7 @@ export function TabValue() {
             id={globalIDs.value_editor}
             activeCst={activeCst}
             onOpenEdit={handleOpenEdit}
+            toggleReset={toggleReset}
           />
         ) : null}
       </div>
@@ -117,7 +130,10 @@ export function TabValue() {
         engine={engine}
         activeCst={activeCst}
         isProblematic={isProblematic}
-        onActivate={cst => router.changeActive(cst.id)}
+        onActivate={cst => {
+          clearPendingActiveID();
+          router.changeActive(cst.id);
+        }}
         maxListHeight={listHeight}
         autoScroll={!isNarrow}
       />

@@ -14,7 +14,7 @@ import { BadgeHelp } from '@/features/help/components/badge-help';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 
 import { MiniButton } from '@/components/control';
-import { IconCalculateAll, IconCalculateOne, IconDatabase, IconDestroy } from '@/components/icons';
+import { IconCalculateAll, IconCalculateOne, IconDatabase, IconDestroy, IconReset, IconSave } from '@/components/icons';
 import { cn } from '@/components/utils';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
@@ -28,9 +28,11 @@ import { useModelEdit } from '../model-edit-context';
 interface ToolbarValueTabProps {
   className?: string;
   onClearValue: () => void;
+  onSubmit: () => void;
+  onReset: () => void;
 }
 
-export function ToolbarValueTab({ className, onClearValue }: ToolbarValueTabProps) {
+export function ToolbarValueTab({ className, onClearValue, onSubmit, onReset }: ToolbarValueTabProps) {
   const { isMutable, engine } = useModelEdit();
   const { activeCst, schema, isProcessing } = useSchemaEdit();
 
@@ -97,6 +99,19 @@ export function ToolbarValueTab({ className, onClearValue }: ToolbarValueTabProp
 
   return (
     <div className={cn('px-1 rounded-b-2xl cc-icons outline-hidden', className)}>
+      <MiniButton
+        titleHtml={prepareTooltip('Сохранить изменения', isMac() ? 'Cmd + S' : 'Ctrl + S')}
+        aria-label='Сохранить изменения'
+        icon={<IconSave size='1.25rem' className='icon-primary' />}
+        onClick={onSubmit}
+        disabled={isProcessing || !activeCst || !isModified}
+      />
+      <MiniButton
+        title='Сбросить несохраненные изменения'
+        icon={<IconReset size='1.25rem' className='icon-primary' />}
+        onClick={onReset}
+        disabled={isProcessing || !activeCst || !isModified}
+      />
       <MiniButton
         titleHtml={prepareTooltip('Вычислить текущую конституенту', isMac() ? 'Cmd + Q' : 'Ctrl + Q')}
         aria-label='Вычислить текущую конституенту'

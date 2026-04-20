@@ -177,7 +177,7 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
       />
 
       <ValueInput
-        className='max-h-100'
+        areaClassname='max-h-100'
         rows={8}
         value={valueStr}
         stub={stub}

@@ -3,11 +3,12 @@
 import { useEffect, useEffectEvent, useLayoutEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { type ReactCodeMirrorRef } from '@uiw/react-codemirror';
+import clsx from 'clsx';
 
 import { type BasicBinding, type Constituenta, CstType } from '@/domain/library';
 import { getStructureName, isBaseSet } from '@/domain/library/rsform-api';
 import { isInferrable, isInterpretable, prepareValueString } from '@/domain/library/rsmodel-api';
-import { type CalculatorResult, TokenID, type Value } from '@/domain/rslang';
+import { type CalculatorResult, type RSErrorDescription, TokenID, type Value } from '@/domain/rslang';
 import { normalizeValue, valueStub } from '@/domain/rslang/eval/value-api';
 import { labelType } from '@/domain/rslang/labels';
 import { isTypification, type TypePath, type Typification } from '@/domain/rslang/semantic/typification';
@@ -22,14 +23,15 @@ import { ViewErrors } from '@/features/rsform/components/view-errors';
 import { labelRSExpression } from '@/features/rsform/labels';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 
-import { Button } from '@/components/control';
-import { IconSave } from '@/components/icons';
+import { TextButton } from '@/components/control/text-button';
+import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import { TextArea } from '@/components/input';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
-import { errorMsg } from '@/utils/labels';
+import { errorMsg, infoMsg, tooltipText } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
+import { withPreventDefault } from '@/utils/utils';
 
 import { ValueInput } from '../../../components/value-input';
 import { useCstStatus } from '../../../hooks/use-cst-status';
@@ -43,18 +45,20 @@ interface FormValueProps {
   id?: string;
   activeCst: Constituenta;
   onOpenEdit: (cstID: number) => void;
+  toggleReset: boolean;
 }
 
-export function FormValue({ id, activeCst, onOpenEdit }: FormValueProps) {
+export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueProps) {
   const router = useConceptNavigation();
   const { isMutable, engine, schema } = useModelEdit();
-  const { patchConstituenta, isContentEditable, isProcessing } = useSchemaEdit();
+  const { patchConstituenta, openTermEditor, isContentEditable, isProcessing } = useSchemaEdit();
   const typification = activeCst.analysis.type;
 
   const isModified = useModificationStore(state => state.isModified);
   const setIsModified = useModificationStore(state => state.setIsModified);
   const onModifiedEvent = useEffectEvent(setIsModified);
   const showDataText = usePreferencesStore(state => state.showDataText);
+  const toggleDataText = usePreferencesStore(state => state.toggleShowDataText);
   const showEditValue = useDialogsStore(state => state.showModelEditValue);
   const showViewValue = useDialogsStore(state => state.showModelViewValue);
   const showEditBinding = useDialogsStore(state => state.showModelEditBinding);
@@ -86,8 +90,24 @@ export function FormValue({ id, activeCst, onOpenEdit }: FormValueProps) {
 
   const metaFieldsDisabled = !isContentEditable || isProcessing;
   const formalFieldDisabled = metaFieldsDisabled || activeCst.is_inherited;
+  const hasPrimaryActions = hasValueDialog || !!inputValue;
 
   const rsInput = useRef<ReactCodeMirrorRef>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const {
+    elementRef: exportMenuRef,
+    isOpen: isExportOpen,
+    toggle: toggleExport,
+    handleBlur: handleExportBlur,
+    hide: hideExport
+  } = useDropdown();
+  const {
+    elementRef: importMenuRef,
+    isOpen: isImportOpen,
+    toggle: toggleImport,
+    handleBlur: handleImportBlur,
+    hide: hideImport
+  } = useDropdown();
 
   useLayoutEffect(
     function resetGlobalModifiedFlagOnCstChange() {
@@ -100,11 +120,12 @@ export function FormValue({ id, activeCst, onOpenEdit }: FormValueProps) {
     function resetUIStateOnCstChange() {
       const timeoutId = setTimeout(function resetValueEditorState() {
         setInputValue(initialStr);
+        setLocalEval(null);
         onModifiedEvent(false);
       }, 0);
       return () => clearTimeout(timeoutId);
     },
-    [activeCst.id, initialStr]
+    [activeCst.id, initialStr, toggleReset]
   );
 
   useEffect(
@@ -116,7 +137,7 @@ export function FormValue({ id, activeCst, onOpenEdit }: FormValueProps) {
       }, 0);
       return () => clearTimeout(timeoutId);
     },
-    [activeCst.id, activeCst.term_raw, activeCst.definition_formal, activeCst.definition_raw]
+    [activeCst.id, activeCst.term_raw, activeCst.definition_formal, activeCst.definition_raw, toggleReset]
   );
 
   useEffect(
@@ -177,6 +198,15 @@ export function FormValue({ id, activeCst, onOpenEdit }: FormValueProps) {
     await patchConstituenta(dto);
   }
 
+  async function handleSubmitAll() {
+    if (metaDirty && isContentEditable) {
+      await onSaveMetaFields();
+    }
+    if (valueDirty && isMutable) {
+      onSaveValue();
+    }
+  }
+
   function handleCalculate(event: React.MouseEvent<Element>) {
     event.preventDefault();
     event.stopPropagation();
@@ -219,17 +249,70 @@ export function FormValue({ id, activeCst, onOpenEdit }: FormValueProps) {
     }
   }
 
-  function handleInput(event: React.KeyboardEvent<HTMLDivElement>) {
+  function handleClipboardExport() {
+    hideExport();
+    void navigator.clipboard.writeText(inputValue);
+    toast.success(infoMsg.valueReady);
+  }
+
+  function handleJSONExport() {
+    hideExport();
+    const blob = new Blob([inputValue], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = 'value.json';
+    anchor.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function handleClipboardImport() {
+    hideImport();
+    if (!isMutable || cstInferrable || !isInterpretable(activeCst.cst_type) || (showDataText && !isBase)) {
+      return;
+    }
+    navigator.clipboard
+      .readText()
+      .then(text => {
+        setInputValue(text);
+      })
+      .catch(() => {
+        toast.error(errorMsg.clipboardRead);
+      });
+  }
+
+  function handleOpenFile() {
+    hideImport();
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+    fileInputRef.current?.click();
+  }
+
+  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    if (!isMutable || cstInferrable || !isInterpretable(activeCst.cst_type) || (showDataText && !isBase)) {
+      return;
+    }
+    const file = event.target.files?.[0];
+    if (!file) {
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      setInputValue(result);
+      toast.success('Значение загружено из JSON-файла');
+    };
+    reader.onerror = () => toast.error(errorMsg.fileRead);
+    reader.readAsText(file);
+  }
+
+  function handleInput(event: React.KeyboardEvent<HTMLFormElement>) {
     if ((event.ctrlKey || event.metaKey) && event.code === 'KeyS') {
       event.preventDefault();
       event.stopPropagation();
       if (isModified) {
-        if (metaDirty && isContentEditable) {
-          void onSaveMetaFields();
-        }
-        if (valueDirty && isMutable) {
-          onSaveValue();
-        }
+        void handleSubmitAll();
       }
       return;
     }
@@ -248,26 +331,74 @@ export function FormValue({ id, activeCst, onOpenEdit }: FormValueProps) {
     rsInput.current?.view?.focus();
   }
 
+  function handleShowError(error: RO<RSErrorDescription>) {
+    if (!rsInput.current) {
+      return;
+    }
+    rsInput.current.view?.dispatch({
+      selection: {
+        anchor: error.from,
+        head: error.to
+      }
+    });
+    rsInput.current.view?.focus();
+  }
+
   return (
-    <div id={id} className='relative mt-1 cc-column px-6 pb-1 pt-8' tabIndex={-1} onKeyDown={handleInput}>
-      <div className='flex items-center gap-3'>
-        <div className='font-math -mt-0.5 font-medium whitespace-nowrap select-text cursor-default'>
-          {activeCst?.alias ?? ''}
-        </div>
-        <RefsInput
-          id='cst_term'
-          aria-label='Термин'
-          placeholder='Термин отсутствует'
-          className='grow'
-          schema={schema}
-          onOpenEdit={onOpenEdit}
-          value={termDraft}
-          initialValue={activeCst.term_raw}
-          resolved={activeCst.term_resolved}
-          onChange={setTermDraft}
-          disabled={metaFieldsDisabled}
-        />
+    <form
+      id={id}
+      className='relative mt-1 cc-column gap-3 px-6 pb-3'
+      tabIndex={-1}
+      onKeyDown={handleInput}
+      onSubmit={withPreventDefault(() => void handleSubmitAll())}
+    >
+      <div className='flex items-center gap-2 mr-2 font-math font-semibold select-text'>
+        <span>Конституента {activeCst.alias}</span>
       </div>
+
+      {hasPrimaryActions ? (
+        <div className='flex items-center gap-6'>
+          {hasValueDialog ? (
+            <TextButton
+              text={!cstInferrable && isMutable ? 'Изменить значение' : 'Смотреть значение'}
+              title='Просмотр или редактирование значения'
+              onClick={handleValueDialog}
+              className='text-sm'
+            />
+          ) : null}
+          {!!inputValue ? (
+            <div ref={exportMenuRef} onBlur={handleExportBlur} className='relative'>
+              <TextButton
+                text='Экспорт'
+                title='Экспортировать значение'
+                hideTitle={isExportOpen}
+                onClick={toggleExport}
+                className='text-sm'
+              />
+              <Dropdown isOpen={isExportOpen} margin='mt-1'>
+                <DropdownButton text='Скопировать в буфер' onClick={handleClipboardExport} />
+                <DropdownButton text='Сохранить как JSON' onClick={handleJSONExport} />
+              </Dropdown>
+            </div>
+          ) : null}
+          {!(!isMutable || cstInferrable || !isInterpretable(activeCst.cst_type) || (showDataText && !isBase)) ? (
+            <div ref={importMenuRef} onBlur={handleImportBlur} className='relative'>
+              <TextButton
+                text='Импорт'
+                title='Импортировать значение'
+                hideTitle={isImportOpen}
+                onClick={toggleImport}
+                className='text-sm'
+              />
+              <Dropdown isOpen={isImportOpen} margin='mt-1'>
+                <DropdownButton text='Загрузить из буфера' onClick={handleClipboardImport} />
+                <DropdownButton text='Загрузить из JSON' onClick={handleOpenFile} />
+              </Dropdown>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+
       <TextArea
         fitContent
         dense
@@ -281,26 +412,8 @@ export function FormValue({ id, activeCst, onOpenEdit }: FormValueProps) {
         areaClassName='cursor-default'
       />
 
-      <ValueInput
-        className='max-h-60'
-        rows={8}
-        initialStr={initialStr}
-        value={inputValue}
-        stub={isDirty ? '' : stub}
-        valueLabel={labelValue(localEval ? localEval.value : cstData, typification)}
-        status={status}
-        placeholder={
-          !isInterpretable(activeCst.cst_type) ? 'Значение для данного типа не предусмотрено' : 'Значение отсутствует'
-        }
-        onCalculate={cstInferrable ? handleCalculate : undefined}
-        onChangeStr={setInputValue}
-        onValueDialog={hasValueDialog ? handleValueDialog : undefined}
-        onSubmit={onSaveValue}
-        disabled={!isMutable || cstInferrable || !isInterpretable(activeCst.cst_type) || (showDataText && !isBase)}
-      />
-
       {cstInferrable || (activeCst.definition_formal && activeCst.cst_type !== CstType.STRUCTURED) ? (
-        <div className='relative -mb-2'>
+        <div className='relative'>
           <ToolbarExpression
             className='absolute -top-1 right-0'
             expression={activeCst.definition_formal}
@@ -323,10 +436,59 @@ export function FormValue({ id, activeCst, onOpenEdit }: FormValueProps) {
         </div>
       ) : null}
 
-      <ViewErrors isOpen={!!localEval && localEval.errors.length > 0} errors={localEval?.errors ?? null} />
+      <ValueInput
+        areaClassname='max-h-60'
+        className={clsx(!!localEval && localEval.errors.length > 0 && '-mb-4')}
+        rows={8}
+        value={inputValue}
+        stub={valueDirty ? '' : stub}
+        valueLabel={labelValue(localEval ? localEval.value : cstData, typification)}
+        status={status}
+        showDataText={showDataText}
+        isBinding={isBase}
+        placeholder={
+          !isInterpretable(activeCst.cst_type) ? 'Значение для данного типа не предусмотрено' : 'Значение отсутствует'
+        }
+        onCalculate={cstInferrable ? handleCalculate : undefined}
+        onChangeStr={setInputValue}
+        onToggleDataText={toggleDataText}
+        disabled={!isMutable || cstInferrable || !isInterpretable(activeCst.cst_type) || (showDataText && !isBase)}
+      />
+
+      <ViewErrors
+        isOpen={!!localEval && localEval.errors.length > 0}
+        errors={localEval?.errors ?? null}
+        className='-mt-3'
+        onShowError={handleShowError}
+      />
+
+      <div className='relative'>
+        {!metaFieldsDisabled ? (
+          <TextButton
+            text='Словоформы'
+            className='z-pop text-sm absolute top-0 left-19'
+            title={isModified ? tooltipText.unsaved : 'Редактировать словоформы термина'}
+            onClick={openTermEditor}
+            disabled={isModified}
+          />
+        ) : null}
+        <RefsInput
+          id='cst_term'
+          label='Термин'
+          placeholder='Термин отсутствует'
+          schema={schema}
+          onOpenEdit={onOpenEdit}
+          value={termDraft}
+          initialValue={activeCst.term_raw}
+          resolved={activeCst.term_resolved}
+          onChange={setTermDraft}
+          disabled={metaFieldsDisabled}
+        />
+      </div>
 
       <RefsInput
         id='cst_definition'
+        label='Текстовое определение'
         placeholder={formalFieldDisabled ? 'Определение отсутствует' : 'Текстовая интерпретация формального выражения'}
         maxHeight='6rem'
         schema={schema}
@@ -337,15 +499,14 @@ export function FormValue({ id, activeCst, onOpenEdit }: FormValueProps) {
         onChange={setRawDraft}
         disabled={formalFieldDisabled}
       />
-
-      <Button
-        colorSubmit
-        className='mx-auto'
-        text='Сохранить изменения'
-        icon={<IconSave size='1.25rem' />}
-        disabled={metaFieldsDisabled || !isModified}
-        onClick={() => void onSaveMetaFields()}
+      <input
+        type='file'
+        accept='.json,application/json'
+        className='hidden'
+        ref={fileInputRef}
+        onChange={handleFileChange}
+        tabIndex={-1}
       />
-    </div>
+    </form>
   );
 }

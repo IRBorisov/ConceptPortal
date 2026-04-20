@@ -74,6 +74,7 @@ export function ModelTabs({ activeID, activeTab }: ModelTabsProps) {
         activeTab === RSModelTabID.VALUE_EDIT ||
         activeTab === RSModelTabID.EVALUATOR
       ) {
+        // Same contract as RSForm `RSFormTabs`: user navigations must call `clearPendingActiveID()` at the source.
         if (pendingActiveID !== null && activeID !== pendingActiveID) {
           return;
         }
@@ -138,6 +139,7 @@ export function ModelTabs({ activeID, activeTab }: ModelTabsProps) {
     if (event.ctrlKey || event.metaKey) {
       setSelectedCst(problemItems.map(cst => cst.id));
     } else {
+      clearPendingActiveID();
       router.gotoEditActive(problemItems[0].id);
     }
   }
