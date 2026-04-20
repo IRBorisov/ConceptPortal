@@ -11,6 +11,7 @@ import {
   IconOwner,
   IconQR,
   IconReader,
+  IconRSForm,
   IconSandbox,
   IconShare
 } from '@/components/icons';
@@ -26,6 +27,8 @@ export function HelpRSModelMenu() {
         При переходе к отдельной концептуальной модели сверху отображается меню модели и набор вкладок для просмотра
         атрибутов, состава и данных. Доступные команды зависят от прав пользователя, режима доступа и состояния модели.
       </p>
+
+      <p>Некоторые действия могут быть недоступны в анонимном режиме или при отсутствии прав на редактирование.</p>
 
       <h2>Вкладки</h2>
       <ul>
@@ -71,11 +74,13 @@ export function HelpRSModelMenu() {
               <IconClone className='inline-icon icon-green' /> Клонировать - создать копию модели
             </li>
             <li>
-              <IconSandbox className='inline-icon icon-green' /> Перенести в песочницу - открыть модель в редакторе
-              песочницы для локальных экспериментов
+              <IconSandbox className='inline-icon icon-green' /> Открыть в песочнице - дублировать модель в песочницу
             </li>
             <li>
               <IconDestroy className='inline-icon icon-red' /> Удалить модель - удаление модели из библиотеки
+            </li>
+            <li>
+              <IconRSForm className='inline-icon icon-primary' /> Перейти к схеме - переход к концептуальной схеме
             </li>
             <li>
               <IconLibrary className='inline-icon icon-primary' /> Библиотека - переход в библиотеку
@@ -107,8 +112,6 @@ export function HelpRSModelMenu() {
           </ul>
         </div>
       </div>
-
-      <p>Некоторые действия могут быть недоступны в анонимном режиме или при отсутствии прав на редактирование.</p>
     </div>
   );
 }

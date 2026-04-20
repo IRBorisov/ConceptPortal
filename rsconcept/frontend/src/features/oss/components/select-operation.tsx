@@ -7,6 +7,7 @@ interface SelectOperationProps extends Styling {
   id?: string;
   value: Operation | null;
   onChange: (newValue: Operation | null) => void;
+  className?: string;
 
   items?: Operation[];
   placeholder?: string;

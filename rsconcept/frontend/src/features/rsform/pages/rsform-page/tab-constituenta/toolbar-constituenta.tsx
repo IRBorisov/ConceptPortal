@@ -5,7 +5,6 @@ import { type Constituenta } from '@/domain/library';
 import { useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
-import { IconShowSidebar } from '@/features/library/components/icon-show-sidebar';
 import { MiniSelectorOSS } from '@/features/library/components/mini-selector-oss';
 
 import { MiniButton } from '@/components/control';
@@ -21,7 +20,6 @@ import {
 } from '@/components/icons';
 import { cn } from '@/components/utils';
 import { useModificationStore } from '@/stores/modification';
-import { usePreferencesStore } from '@/stores/preferences';
 import { prepareTooltip } from '@/utils/format';
 import { tooltipText } from '@/utils/labels';
 import { isMac } from '@/utils/utils';
@@ -32,7 +30,6 @@ interface ToolbarConstituentaProps {
   className?: string;
   activeCst: Constituenta | null;
   disabled: boolean;
-  isNarrow: boolean;
 
   onSubmit: () => void;
   onReset: () => void;
@@ -42,7 +39,6 @@ export function ToolbarConstituenta({
   className,
   activeCst,
   disabled,
-  isNarrow,
 
   onSubmit,
   onReset
@@ -61,8 +57,6 @@ export function ToolbarConstituenta({
     gotoPredecessor: openConstituentaPredecessor
   } = useRSFormEdit();
 
-  const showList = usePreferencesStore(state => state.showCstSideList);
-  const toggleList = usePreferencesStore(state => state.toggleShowCstSideList);
   const isModified = useModificationStore(state => state.isModified);
 
   return (
@@ -97,7 +91,7 @@ export function ToolbarConstituenta({
             disabled={disabled || !isModified}
           />
           <MiniButton
-            title='Создать конституенту после данной'
+            title='Создать конституенту'
             icon={<IconNewItem size='1.25rem' className='icon-green' />}
             onClick={() => void promptCreateCst(activeCst.cst_type)}
             disabled={!isContentEditable || isProcessing}
@@ -137,11 +131,6 @@ export function ToolbarConstituenta({
         </>
       ) : null}
 
-      <MiniButton
-        title='Отображение списка конституент'
-        icon={<IconShowSidebar size='1.25rem' value={showList} isBottom={isNarrow} />}
-        onClick={toggleList}
-      />
       <BadgeHelp topic={HelpTopic.UI_SCHEMA_EDITOR} offset={4} contentClass='sm:max-w-160' />
     </div>
   );

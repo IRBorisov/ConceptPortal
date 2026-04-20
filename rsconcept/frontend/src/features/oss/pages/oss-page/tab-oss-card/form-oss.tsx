@@ -13,11 +13,19 @@ import { ToolbarItemAccess } from '@/features/library/components/toolbar-item-ac
 import { SubmitButton } from '@/components/control';
 import { IconSave } from '@/components/icons';
 import { TextArea, TextInput } from '@/components/input';
+import { cn } from '@/components/utils';
 import { useModificationStore } from '@/stores/modification';
 import { globalIDs } from '@/utils/constants';
+import { prepareTooltip } from '@/utils/format';
+import { placeholderMsg } from '@/utils/labels';
+import { isMac } from '@/utils/utils';
 
 import { useMutatingOss } from '../../../backend/use-mutating-oss';
 import { useOssEdit } from '../oss-edit-context';
+
+interface FormOSSProps {
+  className?: string;
+}
 
 function ossDefaults(schema: OperationSchema): UpdateLibraryItemDTO {
   return {
@@ -31,7 +39,7 @@ function ossDefaults(schema: OperationSchema): UpdateLibraryItemDTO {
   };
 }
 
-export function FormOSS() {
+export function FormOSS({ className }: FormOSSProps) {
   const { updateItem: updateOss } = useUpdateItem();
   const isModified = useModificationStore(state => state.isModified);
   const setIsModified = useModificationStore(state => state.setIsModified);
@@ -75,18 +83,20 @@ export function FormOSS() {
   return (
     <form
       id={globalIDs.library_item_editor}
-      className='mt-1 min-w-88 sm:w-120 flex flex-col pt-1'
+      className={cn('flex flex-col pt-1', className)}
       onSubmit={event => {
         event.preventDefault();
         event.stopPropagation();
         void form.handleSubmit();
       }}
     >
+      <h2 className='mb-2 select-none'>Операционная система</h2>
       <form.Field name='title'>
         {field => (
           <TextInput
             id='schema_title'
-            label='Название'
+            aria-label='Название операционной системы'
+            placeholder='Название операционной системы'
             className='mb-3'
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
@@ -96,7 +106,7 @@ export function FormOSS() {
           />
         )}
       </form.Field>
-      <div className='relative flex justify-between gap-3 mb-3'>
+      <div className='relative flex justify-between gap-3 mb-3 items-center'>
         <form.Field name='alias'>
           {field => (
             <TextInput
@@ -112,8 +122,8 @@ export function FormOSS() {
           )}
         </form.Field>
         <ToolbarItemAccess
-          className='absolute top-18 right-2'
           visible={visible}
+          className='mt-6'
           toggleVisible={() => form.setFieldValue('visible', !visible)}
           readOnly={readOnly}
           toggleReadOnly={() => form.setFieldValue('read_only', !readOnly)}
@@ -127,7 +137,8 @@ export function FormOSS() {
           <TextArea
             id='schema_comment'
             label='Описание'
-            rows={3}
+            placeholder={placeholderMsg.itemDescription}
+            rows={5}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
@@ -139,6 +150,7 @@ export function FormOSS() {
       {isMutable || isModified ? (
         <SubmitButton
           text='Сохранить изменения'
+          titleHtml={prepareTooltip('Сохранить изменения', isMac() ? 'Cmd + S' : 'Ctrl + S')}
           className='self-center mt-4'
           loading={isProcessing}
           icon={<IconSave size='1.25rem' />}

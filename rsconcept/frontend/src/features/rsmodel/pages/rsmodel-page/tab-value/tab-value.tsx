@@ -13,7 +13,6 @@ import { useRoleStore, UserRole } from '@/features/users';
 
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight, useMainHeight } from '@/stores/app-layout';
-import { usePreferencesStore } from '@/stores/preferences';
 import { globalIDs } from '@/utils/constants';
 
 import { useRSModelEdit } from '../rsmodel-context';
@@ -31,7 +30,6 @@ export function TabValue() {
   const windowSize = useWindowSize();
   const mainHeight = useMainHeight();
 
-  const showList = usePreferencesStore(state => state.showValueSideList);
   const isNarrow = !!windowSize.width && windowSize.width <= SIDELIST_LAYOUT_THRESHOLD;
 
   const role = useRoleStore(state => state.role);
@@ -97,7 +95,6 @@ export function TabValue() {
           'right-1/2 translate-x-0 xs:right-4 xs:-translate-x-1/2 md:right-1/2 md:translate-x-0',
           'cc-animate-position'
         )}
-        isNarrow={isNarrow}
         onClearValue={handleClearValue}
       />
 
@@ -114,8 +111,7 @@ export function TabValue() {
       <ViewConstituents
         className={clsx(
           'cc-animate-sidebar min-h-55',
-          isNarrow ? 'mt-3 mx-6 rounded-md overflow-hidden' : 'mt-9 rounded-l-md rounded-r-none overflow-visible',
-          showList ? 'max-w-full' : 'opacity-0 max-w-0'
+          isNarrow ? 'mt-3 mx-6 rounded-md overflow-hidden' : 'mt-9 rounded-l-md rounded-r-none overflow-visible'
         )}
         schema={schema}
         engine={engine}

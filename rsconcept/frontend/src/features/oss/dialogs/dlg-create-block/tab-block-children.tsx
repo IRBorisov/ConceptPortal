@@ -41,7 +41,7 @@ export function TabBlockChildren({
   }
 
   return (
-    <div className='cc-fade-in cc-column'>
+    <div className='cc-fade-in cc-column -mt-5'>
       <Label text={`Выбор содержания: [ ${value.length} ]`} />
       <PickContents
         schema={oss}

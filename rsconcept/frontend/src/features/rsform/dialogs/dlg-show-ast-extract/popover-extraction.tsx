@@ -140,6 +140,7 @@ export function PopoverExtraction({
               id='dlg_show_ast_extract_term'
               className='w-full'
               areaClassName='text-sm'
+              aria-label='Термин новой конституенты'
               placeholder='Новый термин'
               value={termText}
               resolved={termText}
@@ -155,6 +156,7 @@ export function PopoverExtraction({
             id='dlg_show_ast_extract_definition'
             className='w-96'
             areaClassName='text-sm'
+            aria-label='Определение новой конституенты'
             placeholder='Определение обособленного выражения'
             value={definition}
             resolved={definition}

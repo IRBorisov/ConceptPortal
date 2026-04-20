@@ -20,7 +20,6 @@ import {
   IconDestroy,
   IconLibrary,
   IconMenu,
-  IconNewItem,
   IconQR,
   IconRSForm,
   IconSandbox,
@@ -179,13 +178,6 @@ export function MenuMain() {
           icon={<IconRSForm size='1rem' className='icon-primary' />}
           onClick={handleNavigateSchema}
         />
-        {!isAnonymous ? (
-          <DropdownButton
-            text='Создать новую схему'
-            icon={<IconNewItem size='1rem' className='icon-primary' />}
-            onClick={() => router.gotoNewItem()}
-          />
-        ) : null}
         <DropdownButton
           text='Библиотека'
           icon={<IconLibrary size='1rem' className='icon-primary' />}

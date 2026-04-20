@@ -1,4 +1,4 @@
-import { IconCalculateAll, IconLeftOpen, IconStatusOK, IconText, IconTree, IconTypeGraph } from '@/components/icons';
+import { IconCalculateAll, IconStatusOK, IconText, IconTree, IconTypeGraph } from '@/components/icons';
 
 import { LinkTopic } from '../../components/link-topic';
 import { HelpTopic } from '../../models/help-topic';
@@ -26,9 +26,6 @@ export function HelpRSModelEvaluator() {
         </li>
         <li>
           <IconCalculateAll className='inline-icon icon-green' /> кнопка на панели пересчитывает модель целиком
-        </li>
-        <li>
-          <IconLeftOpen className='inline-icon' /> список конституент
         </li>
         <li>
           <IconTypeGraph className='inline-icon' /> отображение{' '}

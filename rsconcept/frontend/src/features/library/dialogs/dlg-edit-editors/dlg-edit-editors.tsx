@@ -6,9 +6,6 @@ import { useUsers } from '@/features/users';
 import { SelectUser } from '@/features/users/components/select-user';
 import { TableUsers } from '@/features/users/components/table-users';
 
-import { MiniButton } from '@/components/control';
-import { IconRemove } from '@/components/icons';
-import { Label } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { type RO } from '@/utils/meta';
@@ -42,34 +39,25 @@ export function DlgEditEditors() {
 
   return (
     <ModalForm
-      header='Список редакторов'
+      header={`Список редакторов — ${selected.length}`}
       submitText='Сохранить список'
-      className='flex flex-col w-140 px-6 gap-3 pb-6'
+      className='flex flex-col w-140 px-6 pb-3'
       onSubmit={handleSubmit}
     >
-      <div className='self-center text-sm font-semibold'>
-        <span>Всего редакторов [{selected.length}]</span>
-        <MiniButton
-          title='Очистить список'
-          className='py-0 align-middle'
-          icon={<IconRemove size='1.25rem' className='cc-remove' />}
-          onClick={() => setSelected([])}
-          disabled={selected.length === 0}
-        />
-      </div>
-
-      <TableUsers items={users.filter(user => selected.includes(user.id))} onDelete={onDeleteEditor} />
-
-      <div className='flex items-center gap-3'>
-        <Label text='Добавить' />
-        <SelectUser
-          filter={id => !selected.includes(id)} //
-          value={null}
-          noAnonymous
-          onChange={user => user && onAddEditor(user)}
-          className='w-100'
-        />
-      </div>
+      <TableUsers
+        items={users.filter(user => selected.includes(user.id))}
+        onDelete={onDeleteEditor}
+        onReset={() => setSelected([])}
+        className='rounded-b-none border-b-0'
+      />
+      <SelectUser
+        placeholder='Добавить редактора'
+        filter={id => !selected.includes(id)} //
+        value={null}
+        noAnonymous
+        className='text-sm rounded-t-none'
+        onChange={user => user && onAddEditor(user)}
+      />
     </ModalForm>
   );
 }

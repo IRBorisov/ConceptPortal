@@ -47,8 +47,8 @@ export function ToolbarItemAccess({
   }
 
   return (
-    <div className={clsx('w-46 flex h-fit', className)}>
-      <Label text='Доступ' className='self-center select-none' />
+    <div className={clsx('w-46 flex items-center h-8 select-none', className)}>
+      <Label text='Доступ' />
       <div className='ml-auto cc-icons'>
         <SelectAccessPolicy
           value={policy}
@@ -77,7 +77,7 @@ export function ToolbarItemAccess({
           onClick={toggleReadOnly}
           disabled={role === UserRole.READER || isProcessing}
         />
-        <BadgeHelp topic={HelpTopic.ACCESS} className='mt-0.5' offset={4} />
+        <BadgeHelp topic={HelpTopic.ACCESS} offset={4} />
       </div>
     </div>
   );

@@ -14,11 +14,19 @@ import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-contex
 import { SubmitButton } from '@/components/control';
 import { IconRSForm, IconSave } from '@/components/icons';
 import { TextArea, TextInput } from '@/components/input';
+import { cn } from '@/components/utils';
 import { ValueIcon } from '@/components/view';
 import { useModificationStore } from '@/stores/modification';
 import { globalIDs } from '@/utils/constants';
+import { prepareTooltip } from '@/utils/format';
+import { placeholderMsg } from '@/utils/labels';
+import { isMac } from '@/utils/utils';
 
 import { useRSModelEdit } from '../rsmodel-context';
+
+interface FormRSModelProps {
+  className?: string;
+}
 
 function modelDefaults(model: RSModel): UpdateLibraryItemDTO {
   return {
@@ -32,7 +40,7 @@ function modelDefaults(model: RSModel): UpdateLibraryItemDTO {
   };
 }
 
-export function FormRSModel() {
+export function FormRSModel({ className }: FormRSModelProps) {
   const router = useConceptNavigation();
   const { updateItem } = useUpdateItem();
   const setIsModified = useModificationStore(state => state.setIsModified);
@@ -80,18 +88,20 @@ export function FormRSModel() {
   return (
     <form
       id={globalIDs.library_item_editor}
-      className='mt-1 min-w-88 sm:w-120 flex flex-col pt-1'
+      className={cn('flex flex-col pt-1', className)}
       onSubmit={event => {
         event.preventDefault();
         event.stopPropagation();
         void form.handleSubmit();
       }}
     >
+      <h2 className='mb-2 select-none'>Концептуальная модель</h2>
       <form.Field name='title'>
         {field => (
           <TextInput
             id='schema_title'
-            label='Название'
+            aria-label='Название модели'
+            placeholder='Название модели'
             className='mb-3'
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
@@ -132,7 +142,8 @@ export function FormRSModel() {
           <TextArea
             id='schema_comment'
             label='Описание'
-            rows={3}
+            placeholder={placeholderMsg.itemDescription}
+            rows={5}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
@@ -144,6 +155,7 @@ export function FormRSModel() {
       {isMutable || !isDefaultValue ? (
         <SubmitButton
           text='Сохранить изменения'
+          titleHtml={prepareTooltip('Сохранить изменения', isMac() ? 'Cmd + S' : 'Ctrl + S')}
           className='self-center mt-4'
           loading={isProcessing}
           icon={<IconSave size='1.25rem' />}
@@ -152,7 +164,7 @@ export function FormRSModel() {
       ) : null}
 
       <ValueIcon
-        className='mt-3'
+        className='mt-3 -mb-1'
         icon={<IconRSForm size='1.25rem' className='icon-primary' />}
         value={schema.alias}
         title='Концептуальная схема'

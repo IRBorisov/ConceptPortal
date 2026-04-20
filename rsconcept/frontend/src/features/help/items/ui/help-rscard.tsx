@@ -2,11 +2,9 @@ import {
   IconDestroy,
   IconEditor,
   IconFolderEdit,
-  IconImmutable,
   IconLeftOpen,
   IconOSS,
   IconOwner,
-  IconPublic,
   IconSave,
   IconShare
 } from '@/components/icons';
@@ -41,12 +39,6 @@ export function HelpRSCard() {
         </li>
         <li>
           <IconOwner className='inline-icon' /> владелец — полный доступ
-        </li>
-        <li>
-          <IconPublic className='inline-icon' /> общедоступные — видны всем
-        </li>
-        <li>
-          <IconImmutable className='inline-icon' /> неизменяемые схемы
         </li>
         <li>
           <IconDestroy className='inline-icon icon-red' /> удалить схему

@@ -123,8 +123,9 @@ export function PickContents({
   ];
 
   return (
-    <div className={cn('flex flex-col gap-1 border-t border-x rounded-md bg-input', className)} {...restProps}>
+    <div className={cn('flex flex-col border-t border-x rounded-md bg-input', className)} {...restProps}>
       <ComboBox
+        className='text-sm z-pop'
         noBorder
         items={items}
         value={lastSelected}

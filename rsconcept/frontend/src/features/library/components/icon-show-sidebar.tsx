@@ -8,13 +8,13 @@ export function IconShowSidebar({
   isBottom
 }: DomIconProps<boolean> & { isBottom?: boolean }) {
   if (isBottom) {
-    if (value) {
+    if (!value) {
       return <IconBottomClose size={size} className={className ?? 'icon-primary'} />;
     } else {
       return <IconBottomOpen size={size} className={className ?? 'icon-primary'} />;
     }
   } else {
-    if (value) {
+    if (!value) {
       return <IconLeftOpen size={size} className={className ?? 'icon-primary'} />;
     } else {
       return <IconLeftClose size={size} className={className ?? 'icon-primary'} />;

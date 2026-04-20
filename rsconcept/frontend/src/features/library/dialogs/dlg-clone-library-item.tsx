@@ -10,6 +10,7 @@ import { MiniButton } from '@/components/control';
 import { Checkbox, Label, TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
+import { placeholderMsg } from '@/utils/labels';
 
 import { type CloneLibraryItemDTO, schemaCloneLibraryItem } from '../backend/types';
 import { useCloneItem } from '../backend/use-clone-item';
@@ -66,7 +67,7 @@ export function DlgCloneLibraryItem() {
 
   return (
     <ModalForm
-      header='Создание копии концептуальной схемы'
+      header={`Создание копии ${base.item_type === LibraryItemType.RSFORM ? 'концептуальной схемы' : 'концептуальной модели'}`}
       submitText='Создать'
       canSubmit={isValid}
       onSubmit={event => {
@@ -145,7 +146,8 @@ export function DlgCloneLibraryItem() {
           <TextArea
             id='dlg_comment'
             label='Описание'
-            rows={4}
+            placeholder={placeholderMsg.itemDescription}
+            rows={5}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}

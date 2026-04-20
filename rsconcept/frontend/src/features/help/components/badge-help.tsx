@@ -54,7 +54,12 @@ export function BadgeHelp({
     return null;
   }
   return (
-    <div tabIndex={-1} id={`help-${topic}`} className={cn(padding, className)} style={style}>
+    <div
+      tabIndex={-1}
+      id={`help-${topic}`}
+      className={cn('inline-flex items-center justify-center leading-none', padding, className)}
+      style={style}
+    >
       <IconHelp size={size} className='text-muted-foreground hover:text-primary cc-animate-color' />
       <Tooltip
         clickable

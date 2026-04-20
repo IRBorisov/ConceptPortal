@@ -138,7 +138,7 @@ export function DlgCreateBlock() {
       helpTopic={HelpTopic.CC_STRUCTURING}
     >
       <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>
-        <TabList className='z-pop mx-auto -mb-5 flex border divide-x rounded-none'>
+        <TabList className='z-pop mx-auto flex border divide-x rounded-none'>
           <TabLabel title='Основные атрибуты блока' label='Паспорт' />
           <TabLabel
             title={`Выбор вложенных узлов: [${childrenOperations.length + childrenBlocks.length}]`}

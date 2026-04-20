@@ -2,10 +2,8 @@ import {
   IconDestroy,
   IconEditor,
   IconFolderEdit,
-  IconImmutable,
   IconLeftOpen,
   IconOwner,
-  IconPublic,
   IconSave,
   IconShare
 } from '@/components/icons';
@@ -55,12 +53,6 @@ export function HelpOssCard() {
         </li>
         <li>
           <IconOwner className='inline-icon' /> владелец — полный доступ
-        </li>
-        <li>
-          <IconPublic className='inline-icon' /> общедоступные — видны всем
-        </li>
-        <li>
-          <IconImmutable className='inline-icon' /> неизменяемые ОСС
         </li>
         <li>
           <IconDestroy className='inline-icon icon-red' /> удалить из базы Портала

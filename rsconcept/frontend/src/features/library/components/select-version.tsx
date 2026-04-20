@@ -13,6 +13,7 @@ interface SelectVersionProps extends Styling {
   value: CurrentVersion;
   onChange: (newValue: CurrentVersion) => void;
 
+  disabled?: boolean;
   items: VersionInfo[];
   placeholder?: string;
   noBorder?: boolean;
@@ -21,6 +22,7 @@ interface SelectVersionProps extends Styling {
 export function SelectVersion({
   id,
   className,
+  disabled,
   items,
   value,
   placeholder,
@@ -35,7 +37,7 @@ export function SelectVersion({
     }
   }
   return (
-    <Select onValueChange={handleSelect} value={String(value)}>
+    <Select onValueChange={handleSelect} value={String(value)} disabled={disabled}>
       <SelectTrigger id={id} className={cn('min-w-48', className)} {...restProps}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>

@@ -1,20 +1,22 @@
 import { type OperationSchemaStats } from '@/domain/library';
 
+import { Divider } from '@/components/container';
+import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
 import { StatsCategory } from '@/components/view/stats-category';
 
-interface OssStatsProps {
-  className?: string;
+interface ViewOssStatsProps extends Styling {
   stats: OperationSchemaStats;
 }
 
-export function OssStats({ className, stats }: OssStatsProps) {
+export function ViewOssStats({ className, stats, ...restProps }: ViewOssStatsProps) {
   const countImported = stats.count_schemas - stats.count_owned;
 
   return (
-    <div className={cn('select-none', 'flex flex-col gap-2', className)}>
+    <aside className={cn('h-fit flex flex-col border select-none', className)} {...restProps}>
       <StatsCategory
         id='oss-stats-composition'
+        className='rounded-t-md'
         label='Общий состав'
         primaryLabel='Всего'
         primaryValue={stats.count_all}
@@ -31,8 +33,11 @@ export function OssStats({ className, stats }: OssStatsProps) {
         ]}
       />
 
+      <Divider margins='mx-3' />
+
       <StatsCategory
         id='oss-stats-schemas'
+        className='rounded-b-md'
         label='Прикреплённые схемы'
         primaryLabel='Всего'
         primaryValue={stats.count_schemas}
@@ -46,6 +51,6 @@ export function OssStats({ className, stats }: OssStatsProps) {
           { label: 'Внешние', value: countImported }
         ]}
       />
-    </div>
+    </aside>
   );
 }

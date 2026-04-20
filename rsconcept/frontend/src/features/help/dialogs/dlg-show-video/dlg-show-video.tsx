@@ -48,8 +48,8 @@ export function DlgShowVideo() {
         onSelect={index => setActiveTab(index as TabID)}
       >
         <TabList className='mx-auto flex border divide-x rounded-none'>
-          <TabLabel label='ВК Видео' className='w-32' />
-          <TabLabel label='Youtube' className='w-32' />
+          <TabLabel label='ВК Видео' />
+          <TabLabel label='Youtube' />
         </TabList>
 
         <TabPanel>

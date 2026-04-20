@@ -4,9 +4,8 @@ import clsx from 'clsx';
 
 import { calculateSchemaStats } from '@/domain/library/rsform-api';
 
-import { HelpTopic } from '@/features/help/models/help-topic';
+import { ButtonSidebar } from '@/features/library/components/button-sidebar';
 import { EditorLibraryItem } from '@/features/library/components/editor-library-item';
-import { ToolbarItemCard } from '@/features/library/components/toolbar-item-card';
 
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight } from '@/stores/app-layout';
@@ -17,14 +16,15 @@ import { globalIDs } from '@/utils/constants';
 import { useRSFormEdit } from '../rsedit-context';
 
 import { FormRSForm } from './form-rsform';
-import { ViewRSFormStats } from './view-rsform-stats';
+import { ViewSchemaStats } from './view-schema-stats';
 
 const SIDELIST_LAYOUT_THRESHOLD = 768; // px
 
 export function TabRSFormCard() {
-  const { schema, isMutable, deleteSchema } = useRSFormEdit();
+  const { schema } = useRSFormEdit();
   const isModified = useModificationStore(state => state.isModified);
   const showRSFormStats = usePreferencesStore(state => state.showRSFormStats);
+  const toggleShowRSFormStats = usePreferencesStore(state => state.toggleShowRSFormStats);
   const windowSize = useWindowSize();
   const isNarrow = !!windowSize.width && windowSize.width <= SIDELIST_LAYOUT_THRESHOLD;
   const stats = calculateSchemaStats(schema);
@@ -45,7 +45,7 @@ export function TabRSFormCard() {
     }
   }
 
-  const sideBarHeight = useFitHeight('5rem');
+  const sideBarHeight = useFitHeight('5.2rem');
 
   return (
     <div
@@ -53,34 +53,31 @@ export function TabRSFormCard() {
       className={clsx(
         'relative md:w-fit md:max-w-fit max-w-136',
         'flex px-6 pt-8',
-        isNarrow && 'flex-col md:items-center'
+        isNarrow ? 'flex-col gap-3 md:items-center' : 'gap-6'
       )}
     >
-      <ToolbarItemCard
-        className='cc-tab-tools'
-        onSubmit={initiateSubmit}
-        item={schema}
-        isMutable={isMutable}
-        deleteItem={deleteSchema}
-        isNarrow={isNarrow}
-        helpTopic={HelpTopic.UI_SCHEMA_CARD}
-      />
+      <div className='relative cc-column mx-0 md:mx-auto'>
+        <ButtonSidebar
+          title='Отображение статистики'
+          show={showRSFormStats}
+          isNarrow={isNarrow}
+          onClick={toggleShowRSFormStats}
+          className='absolute top-0.5 -right-2'
+        />
 
-      <div className='cc-column mx-0 md:mx-auto'>
-        <FormRSForm key={schema.id} />
+        <FormRSForm key={schema.id} className='min-w-88 sm:w-120' />
         <EditorLibraryItem item={schema} isProduced={schema.is_produced} />
       </div>
 
-      <aside
+      <ViewSchemaStats
+        stats={stats}
         className={clsx(
-          'w-80 md:w-56 mt-3 md:mt-9 mx-auto md:ml-5 md:mr-0 overflow-y-auto',
+          'h-min w-80 md:w-56 md:mt-9 mx-auto overflow-y-auto',
           'cc-animate-sidebar',
           showRSFormStats ? 'max-w-full' : 'opacity-0 max-w-0'
         )}
         style={{ maxHeight: sideBarHeight }}
-      >
-        <ViewRSFormStats stats={stats} className='h-min' />
-      </aside>
+      />
     </div>
   );
 }

@@ -79,21 +79,15 @@ export function DlgInlineSynthesis() {
     >
       <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>
         <TabList className='mb-3 mx-auto flex border divide-x rounded-none'>
-          <TabLabel
-            label='Схема' //
-            title='Источник конституент'
-            className='w-32'
-          />
+          <TabLabel label='Схема' title='Источник конституент' />
           <TabLabel
             label='Конституенты'
             title={!sourceID ? 'Выберите схему' : 'Перечень конституент'}
-            className='w-32'
             disabled={!sourceID}
           />
           <TabLabel
             label='Отождествления'
             title={!sourceID ? 'Выберите схему' : 'Таблица отождествлений'}
-            className='w-32'
             disabled={!sourceID}
           />
         </TabList>

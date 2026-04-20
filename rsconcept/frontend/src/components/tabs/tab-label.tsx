@@ -1,10 +1,10 @@
 import type { TabProps as TabPropsImpl } from 'react-tabs';
 import { Tab as TabImpl } from 'react-tabs';
-import clsx from 'clsx';
 
 import { globalIDs } from '@/utils/constants';
 
 import { type Titled } from '../props';
+import { cn } from '../utils';
 
 interface TabLabelProps extends Omit<TabPropsImpl, 'children'>, Titled {
   /** Label to display in the tab. */
@@ -28,9 +28,9 @@ export function TabLabel({
 }: React.PropsWithChildren<TabLabelProps>) {
   return (
     <TabImpl
-      className={clsx(
-        'min-w-20 h-full',
-        'px-2 py-1 flex items-center justify-center gap-1',
+      className={cn(
+        'h-full',
+        'px-3 py-1 flex items-center justify-center gap-1',
         'cc-animate-color duration-select text-muted-foreground',
         'text-sm whitespace-nowrap font-controls',
         'select-none',

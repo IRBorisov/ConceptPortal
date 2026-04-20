@@ -6,7 +6,6 @@ import {
   IconFilterReset,
   IconGraphCore,
   IconKeyboard,
-  IconLeftOpen,
   IconMoveDown,
   IconMoveUp,
   IconNewItem,
@@ -42,9 +41,6 @@ export function HelpRSEditor() {
             </li>
             <li>
               <IconPredecessor className='inline-icon' /> переход к исходной
-            </li>
-            <li>
-              <IconLeftOpen className='inline-icon' /> список конституент
             </li>
             <li>
               <IconSave className='inline-icon' /> сохранить: <kbd>{isMac() ? 'Cmd + S' : 'Ctrl + S'}</kbd>

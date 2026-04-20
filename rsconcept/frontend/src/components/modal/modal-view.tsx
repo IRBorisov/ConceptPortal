@@ -52,12 +52,7 @@ export function ModalView({
       <ModalBackdrop onHide={hideDialog} />
       <div className='cc-animate-modal relative grid border-2 px-1 pb-1 rounded-xl bg-background' role='dialog'>
         {helpTopic && !hideHelpWhen?.() ? (
-          <BadgeHelp
-            topic={helpTopic}
-            className='absolute z-pop top-2 left-2'
-            padding='p-0'
-            contentClass='sm:max-w-160'
-          />
+          <BadgeHelp topic={helpTopic} className='absolute z-pop top-1 left-1' contentClass='sm:max-w-160' />
         ) : null}
 
         <MiniButton
