@@ -5,17 +5,12 @@ import { toast } from 'react-toastify';
 import { type ReactCodeMirrorRef } from '@uiw/react-codemirror';
 
 import { CstType } from '@/domain/library';
+import { getStructureName } from '@/domain/library/rsform-api';
 import { inferEvalStatus, prepareValueString } from '@/domain/library/rsmodel-api';
-import {
-  type AnalysisFull,
-  type CalculatorResult,
-  type RSErrorDescription,
-  TokenID,
-  type Typification
-} from '@/domain/rslang';
+import { type AnalysisFull, type CalculatorResult, type RSErrorDescription, TokenID } from '@/domain/rslang';
 import { valueStub } from '@/domain/rslang/eval/value-api';
 import { labelType } from '@/domain/rslang/labels';
-import { isTypification } from '@/domain/rslang/semantic/typification';
+import { isTypification, type TypePath, type Typification } from '@/domain/rslang/semantic/typification';
 
 import { useConceptNavigation } from '@/app';
 import { RSEditorControls } from '@/features/rsform/components/editor-rsexpression/rs-edit-controls';
@@ -24,11 +19,12 @@ import { RSTextWrapper } from '@/features/rsform/components/rs-input/text-editin
 import { ViewErrors } from '@/features/rsform/components/view-errors';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 
+import { TextButton } from '@/components/control/text-button';
 import { TextArea, TextInput } from '@/components/input';
 import { cn } from '@/components/utils';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
-import { infoMsg } from '@/utils/labels';
+import { errorMsg, infoMsg } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 
 import { ValueInput } from '../../../components/value-input';
@@ -47,6 +43,7 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
   const { engine } = useModelEdit();
 
   const showDataText = usePreferencesStore(state => state.showDataText);
+  const toggleShowDataText = usePreferencesStore(state => state.toggleShowDataText);
   const showViewValue = useDialogsStore(state => state.showModelViewValue);
 
   const rsInput = useRef<ReactCodeMirrorRef>(null);
@@ -65,7 +62,9 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
   const isModified = evaluatedExpression !== expression;
   const status = inferEvalStatus(localEval?.value ?? null, CstType.TERM, !isModified);
   const errors = !localParse ? null : [...localParse.errors, ...(localEval?.errors ?? [])];
-  const hasDialog = localParse?.type && isTypification(localParse.type) && localEval?.value !== null;
+  const dialogValue = localEval?.value ?? null;
+  const dialogType = localParse?.type ?? null;
+  const canOpenValueDialog = dialogValue != null && dialogType != null && isTypification(dialogType);
 
   function handleOpenCst(cstID: number) {
     void router.changeActive(cstID);
@@ -104,6 +103,22 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
     toast.success(infoMsg.calculationSuccess(timeSpent));
   }
 
+  function handleViewValue() {
+    if (dialogValue == null) {
+      toast.error(errorMsg.valueNull);
+      return;
+    }
+    if (!dialogType || !isTypification(dialogType)) {
+      return;
+    }
+    showViewValue({
+      value: dialogValue,
+      type: dialogType as Typification,
+      engine,
+      getHeaderText: activeCst ? (path: TypePath) => getStructureName(schema, activeCst, path) : undefined
+    });
+  }
+
   function handleShowError(error: RO<RSErrorDescription>) {
     if (!rsInput.current) {
       return;
@@ -115,17 +130,6 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
       }
     });
     rsInput.current?.view?.focus();
-  }
-
-  function handleValueDialog() {
-    if (!localParse?.type || !localEval?.value) {
-      return;
-    }
-    showViewValue({
-      value: localEval.value,
-      type: localParse.type as Typification,
-      engine: engine
-    });
   }
 
   function handleInput(event: React.KeyboardEvent<HTMLDivElement>) {
@@ -176,8 +180,21 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
         errors={errors}
       />
 
+      {dialogValue != null ? (
+        <TextButton
+          text='Смотреть значение'
+          titleHtml={
+            canOpenValueDialog
+              ? 'Просмотр значения'
+              : 'Просмотр структурированного значения<br/>недоступен для этого типа'
+          }
+          disabled={!canOpenValueDialog}
+          onClick={handleViewValue}
+          className='text-sm mx-auto pl-6'
+        />
+      ) : null}
       <ValueInput
-        className='max-h-100'
+        areaClassname='max-h-100'
         rows={8}
         value={valueStr}
         stub={stub}
@@ -185,7 +202,7 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
         status={status}
         placeholder='Значение отсутствует'
         onCalculate={handleCalculate}
-        onValueDialog={hasDialog ? handleValueDialog : undefined}
+        onToggleDataText={toggleShowDataText}
         disabled
       />
       {!!localEval?.iterations ? (

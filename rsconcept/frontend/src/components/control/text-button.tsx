@@ -17,11 +17,10 @@ export function TextButton({ text, title, titleHtml, hideTitle, className, ...re
       tabIndex={-1}
       type='button'
       className={cn(
-        'self-start cc-label cc-hover-underline',
+        'cc-label cc-hover-underline',
         'font-medium text-primary select-none disabled:text-foreground',
         'cursor-pointer disabled:cursor-default',
         'outline-hidden',
-        'select-text',
         className
       )}
       data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}
