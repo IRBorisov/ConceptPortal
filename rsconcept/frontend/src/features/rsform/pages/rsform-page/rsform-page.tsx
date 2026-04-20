@@ -18,8 +18,8 @@ import { rethrowIfStaleBundleError } from '@/utils/stale-bundle-error';
 
 import { ConstituentaTooltip } from '../../components/constituenta-tooltip';
 
-import { RSEditState } from './rsedit-state';
 import { RSFormTabs } from './rsform-tabs';
+import { SchemaEditState } from './schema-edit-state';
 
 const paramsSchema = z.strictObject({
   id: z.coerce.number(),
@@ -62,9 +62,9 @@ export function RSFormPage() {
       )}
     >
       <ConstituentaTooltip />
-      <RSEditState itemID={urlData.id} activeVersion={urlData.version}>
+      <SchemaEditState itemID={urlData.id} activeVersion={urlData.version}>
         <RSFormTabs activeID={urlData.activeID} activeTab={urlData.tab} />
-      </RSEditState>
+      </SchemaEditState>
     </ErrorBoundary>
   );
 }

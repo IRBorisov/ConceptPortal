@@ -14,7 +14,7 @@ import { useModificationStore } from '@/stores/modification';
 import { globalIDs } from '@/utils/constants';
 
 import { ViewConstituents } from '../../../components/view-constituents';
-import { useRSFormEdit } from '../rsedit-context';
+import { useSchemaEdit } from '../schema-edit-context';
 
 import { FormConstituenta } from './form-constituenta';
 import { ToolbarConstituenta } from './toolbar-constituenta';
@@ -34,7 +34,7 @@ export function TabConstituenta() {
     moveUp,
     moveDown,
     cloneCst
-  } = useRSFormEdit();
+  } = useSchemaEdit();
   const windowSize = useWindowSize();
   const mainHeight = useMainHeight();
   const onSelectCst = useEffectEvent(setSelectedCst);

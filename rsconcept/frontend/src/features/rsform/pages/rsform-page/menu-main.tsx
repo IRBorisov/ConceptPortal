@@ -37,11 +37,11 @@ import { generatePageQR, promptUnsaved, sharePage } from '@/utils/utils';
 import { useUploadTRS } from '../../backend/use-upload-trs';
 import { prepareTRSFile } from '../../models/trs-file';
 
-import { useRSFormEdit } from './rsedit-context';
+import { useSchemaEdit } from './schema-edit-context';
 
 export function MenuMain() {
   const router = useConceptNavigation();
-  const { schema, selectedCst, deleteSchema, isArchive, isMutable, isContentEditable, isProcessing } = useRSFormEdit();
+  const { schema, selectedCst, deleteSchema, isArchive, isMutable, isContentEditable, isProcessing } = useSchemaEdit();
 
   const { user, isAnonymous } = useAuth();
   const hasInheritance = schema.inheritance.some(item => item.child_source === schema.id);

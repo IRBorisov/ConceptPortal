@@ -6,7 +6,7 @@ import { AccessPolicy, LocationHead } from '@/domain/library';
 
 import { useConceptNavigation } from '@/app';
 import { useAuth } from '@/features/auth';
-import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
+import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 import { createSandboxBundleFromRSModel } from '@/features/sandbox/models/bundle-transfer';
 import { saveBundle } from '@/features/sandbox/stores/sandbox-repository';
 import { useRoleStore, UserRole } from '@/features/users';
@@ -30,12 +30,12 @@ import { useModificationStore } from '@/stores/modification';
 import { errorMsg, infoMsg, promptText, tooltipText } from '@/utils/labels';
 import { generatePageQR, promptUnsaved, sharePage } from '@/utils/utils';
 
-import { useRSModelEdit } from './rsmodel-context';
+import { useModelEdit } from './model-edit-context';
 
 export function MenuMain() {
   const router = useConceptNavigation();
-  const { model, deleteModel, isMutable, engine } = useRSModelEdit();
-  const { schema, isProcessing } = useRSFormEdit();
+  const { model, deleteModel, isMutable, engine } = useModelEdit();
+  const { schema, isProcessing } = useSchemaEdit();
   const isModified = useModificationStore(state => state.isModified);
 
   const { isAnonymous } = useAuth();

@@ -1,6 +1,6 @@
 'use client';
 
-import { RSModelContext } from '@/features/rsmodel/pages/rsmodel-page/rsmodel-context';
+import { ModelEditContext } from '@/features/rsmodel/pages/rsmodel-page/model-edit-context';
 
 import { notImplemented } from '@/utils/utils';
 
@@ -10,7 +10,7 @@ export function SandboxModelState({ children }: React.PropsWithChildren) {
   const { model, schema, engine } = useSandboxBundle();
 
   return (
-    <RSModelContext
+    <ModelEditContext
       value={{
         model,
         schema,
@@ -21,6 +21,6 @@ export function SandboxModelState({ children }: React.PropsWithChildren) {
       }}
     >
       {children}
-    </RSModelContext>
+    </ModelEditContext>
   );
 }

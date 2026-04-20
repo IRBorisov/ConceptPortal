@@ -22,7 +22,7 @@ import { RSEditorControls } from '@/features/rsform/components/editor-rsexpressi
 import { RSInput } from '@/features/rsform/components/rs-input';
 import { RSTextWrapper } from '@/features/rsform/components/rs-input/text-editing';
 import { ViewErrors } from '@/features/rsform/components/view-errors';
-import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
+import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 
 import { TextArea, TextInput } from '@/components/input';
 import { cn } from '@/components/utils';
@@ -33,7 +33,7 @@ import { type RO } from '@/utils/meta';
 
 import { ValueInput } from '../../../components/value-input';
 import { labelValue } from '../../../labels';
-import { useRSModelEdit } from '../rsmodel-context';
+import { useModelEdit } from '../model-edit-context';
 import { ToolbarExpression } from '../tab-value/toolbar-expression';
 
 interface FormEvaluatorProps {
@@ -43,8 +43,8 @@ interface FormEvaluatorProps {
 
 export function FormEvaluator({ id, className }: FormEvaluatorProps) {
   const router = useConceptNavigation();
-  const { schema, activeCst } = useRSFormEdit();
-  const { engine } = useRSModelEdit();
+  const { schema, activeCst } = useSchemaEdit();
+  const { engine } = useModelEdit();
 
   const showDataText = usePreferencesStore(state => state.showDataText);
   const showViewValue = useDialogsStore(state => state.showModelViewValue);

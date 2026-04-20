@@ -15,12 +15,12 @@ import { useModificationStore } from '@/stores/modification';
 
 import { useCstSearchStore } from '../../stores/cst-search';
 
-import { MenuRSForm } from './menu-rsform';
-import { useRSFormEdit } from './rsedit-context';
+import { MenuGroupSchema } from './menu-group-schema';
+import { useSchemaEdit } from './schema-edit-context';
 import { TabConstituenta } from './tab-constituenta';
-import { TabRSFormCard } from './tab-rsform-card';
-import { TabRSList } from './tab-rslist';
-import { TabTermGraph } from './tab-term-graph';
+import { TabSchemaCard } from './tab-schema-card';
+import { TabSchemaGraph } from './tab-schema-graph';
+import { TabSchemaList } from './tab-schema-list';
 
 interface RSFormTabsProps {
   activeID?: number;
@@ -36,7 +36,7 @@ export function RSFormTabs({ activeID, activeTab }: RSFormTabsProps) {
   const setIsModified = useModificationStore(state => state.setIsModified);
   const focusProblematic = useCstSearchStore(state => state.focusProblematic);
   const { schema, selectedCst, setSelectedCst, setSelectedEdges, deselectAll, pendingActiveID, clearPendingActiveID } =
-    useRSFormEdit();
+    useSchemaEdit();
 
   const problemItems = schema.items.filter(cst => isProblematic(cst));
   const countProblematic = problemItems.length;
@@ -156,7 +156,7 @@ export function RSFormTabs({ activeID, activeTab }: RSFormTabsProps) {
             onClick={onFocusProblematic}
           />
         ) : null}
-        <MenuRSForm />
+        <MenuGroupSchema />
 
         <TabLabel label='Паспорт' />
         <TabLabel label='Список' />
@@ -166,11 +166,11 @@ export function RSFormTabs({ activeID, activeTab }: RSFormTabsProps) {
 
       <div ref={containerRef} className='overflow-x-hidden'>
         <TabPanel>
-          <TabRSFormCard />
+          <TabSchemaCard />
         </TabPanel>
 
         <TabPanel>
-          <TabRSList />
+          <TabSchemaList />
         </TabPanel>
 
         <TabPanel>
@@ -178,7 +178,7 @@ export function RSFormTabs({ activeID, activeTab }: RSFormTabsProps) {
         </TabPanel>
 
         <TabPanel>
-          <TabTermGraph />
+          <TabSchemaGraph />
         </TabPanel>
       </div>
     </Tabs>

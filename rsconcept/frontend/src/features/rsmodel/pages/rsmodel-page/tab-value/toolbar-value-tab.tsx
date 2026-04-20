@@ -11,7 +11,7 @@ import { isTypification } from '@/domain/rslang/semantic/typification';
 
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
-import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
+import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 
 import { MiniButton } from '@/components/control';
 import { IconCalculateAll, IconCalculateOne, IconDatabase, IconDestroy } from '@/components/icons';
@@ -23,7 +23,7 @@ import { errorMsg } from '@/utils/labels';
 import { isMac } from '@/utils/utils';
 
 import { useCstValue } from '../../../hooks/use-cst-value';
-import { useRSModelEdit } from '../rsmodel-context';
+import { useModelEdit } from '../model-edit-context';
 
 interface ToolbarValueTabProps {
   className?: string;
@@ -31,8 +31,8 @@ interface ToolbarValueTabProps {
 }
 
 export function ToolbarValueTab({ className, onClearValue }: ToolbarValueTabProps) {
-  const { isMutable, engine } = useRSModelEdit();
-  const { activeCst, schema, isProcessing } = useRSFormEdit();
+  const { isMutable, engine } = useModelEdit();
+  const { activeCst, schema, isProcessing } = useSchemaEdit();
 
   const value = useCstValue(engine, activeCst ?? null);
   const hasValue = value !== null;

@@ -6,13 +6,13 @@ import { isProblematic } from '@/domain/library/rsform-api';
 
 import { useConceptNavigation } from '@/app';
 import { ViewConstituents } from '@/features/rsform/components/view-constituents';
-import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
+import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight, useMainHeight } from '@/stores/app-layout';
 import { globalIDs } from '@/utils/constants';
 
-import { useRSModelEdit } from '../rsmodel-context';
+import { useModelEdit } from '../model-edit-context';
 
 import { FormEvaluator } from './form-evaluator';
 import { ToolbarEvaluator } from './toolbar-evaluator';
@@ -22,8 +22,8 @@ const SIDELIST_LAYOUT_THRESHOLD = 1000; // px
 
 export function TabEvaluator() {
   const router = useConceptNavigation();
-  const { schema, activeCst } = useRSFormEdit();
-  const { engine } = useRSModelEdit();
+  const { schema, activeCst } = useSchemaEdit();
+  const { engine } = useModelEdit();
   const windowSize = useWindowSize();
   const mainHeight = useMainHeight();
 

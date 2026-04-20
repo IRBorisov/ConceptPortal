@@ -8,14 +8,14 @@ import { isInferrable } from '@/domain/library/rsmodel-api';
 
 import { useConceptNavigation } from '@/app';
 import { ViewConstituents } from '@/features/rsform/components/view-constituents';
-import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
+import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 import { useRoleStore, UserRole } from '@/features/users';
 
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight, useMainHeight } from '@/stores/app-layout';
 import { globalIDs } from '@/utils/constants';
 
-import { useRSModelEdit } from '../rsmodel-context';
+import { useModelEdit } from '../model-edit-context';
 
 import { FormValue } from './form-value';
 import { ToolbarValueTab } from './toolbar-value-tab';
@@ -25,8 +25,8 @@ const SIDELIST_LAYOUT_THRESHOLD = 1000; // px
 
 export function TabValue() {
   const router = useConceptNavigation();
-  const { schema, activeCst, selectedCst, setSelectedCst } = useRSFormEdit();
-  const { engine } = useRSModelEdit();
+  const { schema, activeCst, selectedCst, setSelectedCst } = useSchemaEdit();
+  const { engine } = useModelEdit();
   const windowSize = useWindowSize();
   const mainHeight = useMainHeight();
 

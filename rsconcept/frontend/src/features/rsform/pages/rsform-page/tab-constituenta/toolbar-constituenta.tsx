@@ -24,7 +24,7 @@ import { prepareTooltip } from '@/utils/format';
 import { tooltipText } from '@/utils/labels';
 import { isMac } from '@/utils/utils';
 
-import { useRSFormEdit } from '../rsedit-context';
+import { useSchemaEdit } from '../schema-edit-context';
 
 interface ToolbarConstituentaProps {
   className?: string;
@@ -55,7 +55,7 @@ export function ToolbarConstituenta({
     moveUp,
     moveDown,
     gotoPredecessor: openConstituentaPredecessor
-  } = useRSFormEdit();
+  } = useSchemaEdit();
 
   const isModified = useModificationStore(state => state.isModified);
 

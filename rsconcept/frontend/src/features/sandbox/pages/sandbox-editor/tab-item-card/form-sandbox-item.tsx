@@ -7,7 +7,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 import { LibraryItemType, type RSModel } from '@/domain/library';
 
 import { schemaUpdateLibraryItem, type UpdateLibraryItemDTO } from '@/features/library';
-import { useRSModelEdit } from '@/features/rsmodel/pages/rsmodel-page/rsmodel-context';
+import { useModelEdit } from '@/features/rsmodel/pages/rsmodel-page/model-edit-context';
 import { useSandboxBundle } from '@/features/sandbox/context/bundle-context';
 
 import { SubmitButton } from '@/components/control';
@@ -37,7 +37,7 @@ function modelDefaults(model: RSModel): UpdateLibraryItemDTO {
 
 export function FormSandboxItem({ className }: FormSandboxItemProps) {
   const intl = useIntl();
-  const { model } = useRSModelEdit();
+  const { model } = useModelEdit();
   const { updateLibraryItem } = useSandboxBundle();
   const setIsModified = useModificationStore(state => state.setIsModified);
   const onModifiedEvent = useEffectEvent(setIsModified);

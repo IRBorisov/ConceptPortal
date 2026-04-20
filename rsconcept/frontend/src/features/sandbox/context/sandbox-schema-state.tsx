@@ -8,7 +8,7 @@ import { generateAlias, removeAliasReference } from '@/domain/library/rsform-api
 
 import { useConceptNavigation } from '@/app';
 import { type ConstituentaCreatedResponse, type CreateConstituentaDTO } from '@/features/rsform/backend/types';
-import { RSEditContext } from '@/features/rsform/pages/rsform-page/rsedit-context';
+import { SchemaEditContext } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
@@ -348,7 +348,7 @@ export function SandboxSchemaState({ children }: React.PropsWithChildren) {
   }
 
   return (
-    <RSEditContext
+    <SchemaEditContext
       value={{
         schema,
         focusCst,
@@ -403,7 +403,7 @@ export function SandboxSchemaState({ children }: React.PropsWithChildren) {
       }}
     >
       {children}
-    </RSEditContext>
+    </SchemaEditContext>
   );
 }
 

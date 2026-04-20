@@ -16,8 +16,8 @@ import { useResetModification } from '@/hooks/use-reset-modification';
 import { useModificationStore } from '@/stores/modification';
 import { rethrowIfStaleBundleError } from '@/utils/stale-bundle-error';
 
-import { RSModelState } from './rsmodel-state';
-import { RSModelTabs } from './rsmodel-tabs';
+import { ModelEditState } from './model-edit-state';
+import { ModelTabs } from './model-tabs';
 
 const paramsModel = z.strictObject({
   id: z.coerce.number(),
@@ -51,9 +51,9 @@ export function RSModelPage() {
   return (
     <ErrorBoundary FallbackComponent={({ error }) => <ProcessError error={error as ErrorData} />}>
       <ConstituentaTooltip />
-      <RSModelState itemID={urlData.id}>
-        <RSModelTabs activeID={urlData.activeID} activeTab={urlData.tab} />
-      </RSModelState>
+      <ModelEditState itemID={urlData.id}>
+        <ModelTabs activeID={urlData.activeID} activeTab={urlData.tab} />
+      </ModelEditState>
     </ErrorBoundary>
   );
 }

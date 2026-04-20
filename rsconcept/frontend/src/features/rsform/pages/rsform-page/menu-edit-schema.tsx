@@ -28,7 +28,7 @@ import { useResetAliases } from '../../backend/use-reset-aliases';
 import { useRestoreOrder } from '../../backend/use-restore-order';
 import { useSubstituteConstituents } from '../../backend/use-substitute-constituents';
 
-import { useRSFormEdit } from './rsedit-context';
+import { useSchemaEdit } from './schema-edit-context';
 
 export function MenuEditSchema() {
   const { isAnonymous } = useAuth();
@@ -51,7 +51,7 @@ export function MenuEditSchema() {
     patchConstituenta,
     deselectAll,
     isProcessing
-  } = useRSFormEdit();
+  } = useSchemaEdit();
 
   const { resetAliases } = useResetAliases();
   const { restoreOrder } = useRestoreOrder();

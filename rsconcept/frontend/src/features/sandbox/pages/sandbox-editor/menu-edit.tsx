@@ -1,6 +1,6 @@
 'use client';
 
-import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
+import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 
 import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
@@ -14,7 +14,7 @@ import { useSandboxBundle } from '../../context/bundle-context';
 export function MenuEdit() {
   const isModified = useModificationStore(state => state.isModified);
   const { resetAliases, restoreOrder, substituteConstituents } = useSandboxBundle();
-  const { schema } = useRSFormEdit();
+  const { schema } = useSchemaEdit();
   const {
     elementRef: menuRef,
     isOpen: isMenuOpen,

@@ -8,14 +8,14 @@ import { IconCalculateAll } from '@/components/icons';
 import { cn } from '@/components/utils';
 import { prepareTooltip } from '@/utils/format';
 
-import { useRSModelEdit } from '../rsmodel-context';
+import { useModelEdit } from '../model-edit-context';
 
 interface ToolbarEvaluatorProps {
   className?: string;
 }
 
 export function ToolbarEvaluator({ className }: ToolbarEvaluatorProps) {
-  const { engine } = useRSModelEdit();
+  const { engine } = useModelEdit();
 
   return (
     <div className={cn('px-1 rounded-b-2xl cc-icons outline-hidden', className)}>

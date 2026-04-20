@@ -5,7 +5,7 @@ import clsx from 'clsx';
 
 import { calculateModelStats } from '@/domain/library/rsmodel-api';
 
-import { useRSModelEdit } from '@/features/rsmodel/pages/rsmodel-page/rsmodel-context';
+import { useModelEdit } from '@/features/rsmodel/pages/rsmodel-page/model-edit-context';
 import { ViewModelStats } from '@/features/rsmodel/pages/rsmodel-page/tab-model-card/view-model-stats';
 
 import { useWindowSize } from '@/hooks/use-window-size';
@@ -18,7 +18,7 @@ import { FormSandboxItem } from './form-sandbox-item';
 const SIDELIST_LAYOUT_THRESHOLD = 768;
 
 export function TabItemCard() {
-  const { engine, schema } = useRSModelEdit();
+  const { engine, schema } = useModelEdit();
   const isModified = useModificationStore(state => state.isModified);
   const windowSize = useWindowSize();
   const isNarrow = !!windowSize.width && windowSize.width <= SIDELIST_LAYOUT_THRESHOLD;

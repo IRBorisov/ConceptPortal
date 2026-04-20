@@ -3,58 +3,59 @@
 import { useEffect, useEffectEvent } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
-import { LibraryItemType, type RSModel } from '@/domain/library';
+import { type CurrentVersion, LibraryItemType } from '@/domain/library';
+import { type RSForm } from '@/domain/library/rsform';
 
 import { useConceptNavigation } from '@/app';
 import { schemaUpdateLibraryItem, type UpdateLibraryItemDTO } from '@/features/library';
 import { useUpdateItem } from '@/features/library/backend/use-update-item';
+import { SelectVersion } from '@/features/library/components/select-version';
 import { ToolbarItemAccess } from '@/features/library/components/toolbar-item-access';
-import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 
 import { SubmitButton } from '@/components/control';
-import { IconRSForm, IconSave } from '@/components/icons';
-import { TextArea, TextInput } from '@/components/input';
+import { IconSave } from '@/components/icons';
+import { Label, TextArea, TextInput } from '@/components/input';
 import { cn } from '@/components/utils';
-import { ValueIcon } from '@/components/view';
 import { useModificationStore } from '@/stores/modification';
 import { globalIDs } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/format';
 import { placeholderMsg } from '@/utils/labels';
 import { isMac } from '@/utils/utils';
 
-import { useModelEdit } from '../model-edit-context';
+import { useSchemaEdit } from '../schema-edit-context';
 
-interface FormRSModelProps {
+import { ToolbarVersioning } from './toolbar-versioning';
+
+interface FormSchemaProps {
   className?: string;
 }
 
-function modelDefaults(model: RSModel): UpdateLibraryItemDTO {
+function itemDefaults(schema: RSForm): UpdateLibraryItemDTO {
   return {
-    id: model.id,
-    item_type: LibraryItemType.RSMODEL,
-    title: model.title,
-    alias: model.alias,
-    description: model.description,
-    visible: model.visible,
-    read_only: model.read_only
+    id: schema.id,
+    item_type: LibraryItemType.RSFORM,
+    title: schema.title,
+    alias: schema.alias,
+    description: schema.description,
+    visible: schema.visible,
+    read_only: schema.read_only
   };
 }
 
-export function FormRSModel({ className }: FormRSModelProps) {
+export function FormSchema({ className }: FormSchemaProps) {
   const router = useConceptNavigation();
-  const { updateItem } = useUpdateItem();
+  const { updateItem: updateSchema } = useUpdateItem();
   const setIsModified = useModificationStore(state => state.setIsModified);
   const onModifiedEvent = useEffectEvent(setIsModified);
-  const { model, isMutable } = useModelEdit();
-  const { schema, isProcessing } = useSchemaEdit();
+  const { schema, isContentEditable, isProcessing } = useSchemaEdit();
 
   const form = useForm({
-    defaultValues: modelDefaults(model),
+    defaultValues: itemDefaults(schema),
     validators: {
       onChange: schemaUpdateLibraryItem
     },
     onSubmit: async ({ value, formApi }) => {
-      await updateItem(value);
+      await updateSchema(value);
       formApi.reset(value);
     }
   });
@@ -68,10 +69,10 @@ export function FormRSModel({ className }: FormRSModelProps) {
   });
 
   useEffect(
-    function resetFormOnModelChange() {
-      onResetEvent(modelDefaults(model));
+    function resetFormOnSchemaChange() {
+      onResetEvent(itemDefaults(schema));
     },
-    [model]
+    [schema]
   );
 
   useEffect(
@@ -81,8 +82,8 @@ export function FormRSModel({ className }: FormRSModelProps) {
     [isDefaultValue]
   );
 
-  function handleNavigateSchema() {
-    router.gotoRSForm(model.schema);
+  function handleSelectVersion(version: CurrentVersion) {
+    router.gotoRSForm(schema.id, version === 'latest' ? undefined : version);
   }
 
   return (
@@ -95,23 +96,23 @@ export function FormRSModel({ className }: FormRSModelProps) {
         void form.handleSubmit();
       }}
     >
-      <h2 className='mb-2 select-none'>Концептуальная модель</h2>
+      <h2 className='mb-2 select-none'>Концептуальная схема</h2>
       <form.Field name='title'>
         {field => (
           <TextInput
             id='schema_title'
-            aria-label='Название модели'
-            placeholder='Название модели'
+            aria-label='Название схемы'
+            placeholder='Название схемы'
             className='mb-3'
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
             error={field.state.meta.errors[0]?.message}
-            disabled={!isMutable}
+            disabled={!isContentEditable}
           />
         )}
       </form.Field>
-      <div className='flex justify-between gap-3 mb-3 items-center'>
+      <div className='flex justify-between gap-3 mb-3'>
         <form.Field name='alias'>
           {field => (
             <TextInput
@@ -122,37 +123,52 @@ export function FormRSModel({ className }: FormRSModelProps) {
               onChange={event => field.handleChange(event.target.value)}
               onBlur={field.handleBlur}
               error={field.state.meta.errors[0]?.message}
-              disabled={!isMutable}
+              disabled={!isContentEditable}
             />
           )}
         </form.Field>
+        <div className='relative flex flex-col gap-2'>
+          <ToolbarVersioning className='absolute -top-1 right-2' blockReload={schema.oss.length > 0} />
+
+          <Label text='Версия' className='select-none w-fit' />
+          <SelectVersion
+            disabled={!isContentEditable && schema.versions.length === 0}
+            id='schema_version'
+            className='select-none'
+            value={schema.version}
+            items={schema.versions}
+            onChange={handleSelectVersion}
+          />
+        </div>
+      </div>
+
+      <div className='relative'>
         <ToolbarItemAccess
-          className='mt-6 mr-2'
+          className='absolute -top-1.5 right-2'
           visible={visible}
           toggleVisible={() => form.setFieldValue('visible', !visible)}
           readOnly={readOnly}
           toggleReadOnly={() => form.setFieldValue('read_only', !readOnly)}
-          schema={model}
-          isProduced={false}
+          schema={schema}
+          isProduced={schema.is_produced}
         />
+        <form.Field name='description'>
+          {field => (
+            <TextArea
+              id='schema_comment'
+              label='Описание'
+              placeholder={placeholderMsg.itemDescription}
+              rows={5}
+              value={field.state.value}
+              onChange={event => field.handleChange(event.target.value)}
+              onBlur={field.handleBlur}
+              error={field.state.meta.errors[0]?.message}
+              disabled={!isContentEditable || isProcessing}
+            />
+          )}
+        </form.Field>
       </div>
-
-      <form.Field name='description'>
-        {field => (
-          <TextArea
-            id='schema_comment'
-            label='Описание'
-            placeholder={placeholderMsg.itemDescription}
-            rows={5}
-            value={field.state.value}
-            onChange={event => field.handleChange(event.target.value)}
-            onBlur={field.handleBlur}
-            error={field.state.meta.errors[0]?.message}
-            disabled={!isMutable || isProcessing}
-          />
-        )}
-      </form.Field>
-      {isMutable || !isDefaultValue ? (
+      {isContentEditable || !isDefaultValue ? (
         <SubmitButton
           text='Сохранить изменения'
           titleHtml={prepareTooltip('Сохранить изменения', isMac() ? 'Cmd + S' : 'Ctrl + S')}
@@ -162,15 +178,6 @@ export function FormRSModel({ className }: FormRSModelProps) {
           disabled={isDefaultValue}
         />
       ) : null}
-
-      <ValueIcon
-        className='mt-3 -mb-1'
-        icon={<IconRSForm size='1.25rem' className='icon-primary' />}
-        value={schema.alias}
-        title='Концептуальная схема'
-        onClick={handleNavigateSchema}
-        disabled={false}
-      />
     </form>
   );
 }

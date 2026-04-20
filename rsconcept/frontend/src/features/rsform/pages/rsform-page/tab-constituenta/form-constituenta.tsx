@@ -33,7 +33,7 @@ import { IconCrucialValue } from '../../../components/icon-crucial-value';
 import { RefsInput } from '../../../components/refs-input';
 import { SelectMultiConstituenta } from '../../../components/select-multi-constituenta';
 import { getRSDefinitionPlaceholder, labelRSExpression } from '../../../labels';
-import { useRSFormEdit } from '../rsedit-context';
+import { useSchemaEdit } from '../schema-edit-context';
 
 interface FormConstituentaProps {
   id?: string;
@@ -71,7 +71,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
     removeAttribution,
     clearAttributions,
     isProcessing
-  } = useRSFormEdit();
+  } = useSchemaEdit();
   const showTypification = useDialogsStore(state => state.showShowTypeGraph);
   const showStructurePlanner = useDialogsStore(state => state.showStructurePlanner);
 

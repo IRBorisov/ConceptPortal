@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 
 import { type ExpressionType } from '@/domain/rslang';
 
-import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
+import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 
 import { MiniButton } from '@/components/control';
 import { IconTree, IconTypeGraph } from '@/components/icons';
@@ -20,7 +20,7 @@ interface ToolbarExpressionProps {
 }
 
 export function ToolbarExpression({ className, expression, type }: ToolbarExpressionProps) {
-  const { schema } = useRSFormEdit();
+  const { schema } = useSchemaEdit();
 
   const showFlatAst = useDialogsStore(state => state.showShowFlatAst);
   const showTypification = useDialogsStore(state => state.showShowTypeGraph);

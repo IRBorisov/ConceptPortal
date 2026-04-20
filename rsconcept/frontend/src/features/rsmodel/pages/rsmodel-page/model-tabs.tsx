@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useEffectEvent, useLayoutEffect, useRef } from 'react';
+import clsx from 'clsx';
 
 import { isProblematic } from '@/domain/library/rsform-api';
 
@@ -9,9 +10,6 @@ import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-c
 import { TabConstituenta } from '@/features/rsform/pages/rsform-page/tab-constituenta';
 import { TabSchemaGraph } from '@/features/rsform/pages/rsform-page/tab-schema-graph';
 import { useCstSearchStore } from '@/features/rsform/stores/cst-search';
-import { TabEvaluator } from '@/features/rsmodel/pages/rsmodel-page/tab-evaluator';
-import { TabModelList } from '@/features/rsmodel/pages/rsmodel-page/tab-model-list';
-import { TabValue } from '@/features/rsmodel/pages/rsmodel-page/tab-value';
 
 import { IconStatusError } from '@/components/icons';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
@@ -20,25 +18,28 @@ import { useResetAttribute } from '@/hooks/use-reset-attribute';
 import { useAppLayoutStore } from '@/stores/app-layout';
 import { useModificationStore } from '@/stores/modification';
 
-import { MenuEdit } from './menu-edit';
-import { MenuMain } from './menu-main';
-import { TabItemCard } from './tab-item-card';
+import { MenuModel } from './menu-model';
+import { useModelEdit } from './model-edit-context';
+import { TabEvaluator } from './tab-evaluator';
+import { TabModelCard } from './tab-model-card';
+import { TabModelList } from './tab-model-list';
+import { TabValue } from './tab-value';
 
-interface SandboxTabsProps {
+interface ModelTabsProps {
   activeID?: number;
   activeTab: RSModelTabID;
 }
 
-export function SandboxTabs({ activeID, activeTab }: SandboxTabsProps) {
+export function ModelTabs({ activeID, activeTab }: ModelTabsProps) {
   const router = useConceptNavigation();
 
   const hideFooter = useAppLayoutStore(state => state.hideFooter);
   const onHideFooterEvent = useEffectEvent(hideFooter);
-
   const focusProblematic = useCstSearchStore(state => state.focusProblematic);
   const setIsModified = useModificationStore(state => state.setIsModified);
   const { schema, selectedCst, setSelectedCst, setSelectedEdges, deselectAll, pendingActiveID, clearPendingActiveID } =
     useSchemaEdit();
+  const { model } = useModelEdit();
 
   const problemItems = schema.items.filter(cst => isProblematic(cst));
   const countProblematic = problemItems.length;
@@ -46,12 +47,12 @@ export function SandboxTabs({ activeID, activeTab }: SandboxTabsProps) {
   useLayoutEffect(
     function updateWindowTitle() {
       const oldTitle = document.title;
-      document.title = `Песочница - ${schema.title}`;
-      return function restoreWindowTitle() {
+      document.title = model.title;
+      return () => {
         document.title = oldTitle;
       };
     },
-    [schema.title]
+    [model.title]
   );
 
   useLayoutEffect(
@@ -63,9 +64,7 @@ export function SandboxTabs({ activeID, activeTab }: SandboxTabsProps) {
   );
 
   useEffect(function restoreFooterOnUnmount() {
-    return function restoreFooter() {
-      onHideFooterEvent(false);
-    };
+    return () => onHideFooterEvent(false);
   }, []);
 
   useLayoutEffect(
@@ -153,7 +152,14 @@ export function SandboxTabs({ activeID, activeTab }: SandboxTabsProps) {
       defaultFocus
       className='relative flex flex-col min-w-fit items-center'
     >
-      <TabList className='absolute z-sticky flex border-b-2 border-x-2 divide-x-2 bg-background'>
+      <TabList
+        className={clsx(
+          'absolute z-sticky',
+          'flex self-start xs:self-auto',
+          'border-b-2 border-x-2 divide-x-2',
+          'bg-background'
+        )}
+      >
         {countProblematic > 0 ? (
           <IndicatorPill
             className='absolute top-1.5 -left-1.5 -translate-x-full hidden xs:inline-flex'
@@ -164,11 +170,7 @@ export function SandboxTabs({ activeID, activeTab }: SandboxTabsProps) {
             onClick={onFocusProblematic}
           />
         ) : null}
-
-        <div className='flex border-r-2'>
-          <MenuMain />
-          <MenuEdit />
-        </div>
+        <MenuModel />
 
         <TabLabel label='Паспорт' />
         <TabLabel label='Список' />
@@ -180,7 +182,7 @@ export function SandboxTabs({ activeID, activeTab }: SandboxTabsProps) {
 
       <div ref={containerRef} className='overflow-x-hidden'>
         <TabPanel>
-          <TabItemCard />
+          <TabModelCard />
         </TabPanel>
 
         <TabPanel>

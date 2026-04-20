@@ -20,7 +20,7 @@ import { RSInput } from '@/features/rsform/components/rs-input';
 import { RSTextWrapper } from '@/features/rsform/components/rs-input/text-editing';
 import { ViewErrors } from '@/features/rsform/components/view-errors';
 import { labelRSExpression } from '@/features/rsform/labels';
-import { useRSFormEdit } from '@/features/rsform/pages/rsform-page/rsedit-context';
+import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 
 import { Button } from '@/components/control';
 import { IconSave } from '@/components/icons';
@@ -35,7 +35,7 @@ import { ValueInput } from '../../../components/value-input';
 import { useCstStatus } from '../../../hooks/use-cst-status';
 import { useCstValue } from '../../../hooks/use-cst-value';
 import { labelValue } from '../../../labels';
-import { useRSModelEdit } from '../rsmodel-context';
+import { useModelEdit } from '../model-edit-context';
 
 import { ToolbarExpression } from './toolbar-expression';
 
@@ -47,8 +47,8 @@ interface FormValueProps {
 
 export function FormValue({ id, activeCst, onOpenEdit }: FormValueProps) {
   const router = useConceptNavigation();
-  const { isMutable, engine, schema } = useRSModelEdit();
-  const { patchConstituenta, isContentEditable, isProcessing } = useRSFormEdit();
+  const { isMutable, engine, schema } = useModelEdit();
+  const { patchConstituenta, isContentEditable, isProcessing } = useSchemaEdit();
   const typification = activeCst.analysis.type;
 
   const isModified = useModificationStore(state => state.isModified);

@@ -1,9 +1,8 @@
 'use client';
 
-import { useSyncExternalStore } from 'react';
 import clsx from 'clsx';
 
-import { calculateModelStats } from '@/domain/library/rsmodel-api';
+import { calculateSchemaStats } from '@/domain/library/rsform-api';
 
 import { ButtonSidebar } from '@/features/library/components/button-sidebar';
 import { EditorLibraryItem } from '@/features/library/components/editor-library-item';
@@ -14,26 +13,21 @@ import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { globalIDs } from '@/utils/constants';
 
-import { useModelEdit } from '../model-edit-context';
+import { useSchemaEdit } from '../schema-edit-context';
 
-import { FormRSModel } from './form-rsmodel';
-import { ViewModelStats } from './view-model-stats';
+import { FormSchema } from './form-schema';
+import { ViewSchemaStats } from './view-schema-stats';
 
 const SIDELIST_LAYOUT_THRESHOLD = 768; // px
 
-export function TabModelCard() {
-  const { model, engine, schema } = useModelEdit();
+export function TabSchemaCard() {
+  const { schema } = useSchemaEdit();
   const isModified = useModificationStore(state => state.isModified);
+  const showRSFormStats = usePreferencesStore(state => state.showRSFormStats);
+  const toggleShowRSFormStats = usePreferencesStore(state => state.toggleShowRSFormStats);
   const windowSize = useWindowSize();
   const isNarrow = !!windowSize.width && windowSize.width <= SIDELIST_LAYOUT_THRESHOLD;
-  const showStats = usePreferencesStore(state => state.showRSModelStats);
-  const toggleShowStats = usePreferencesStore(state => state.toggleShowRSModelStats);
-
-  const engineGeneration = useSyncExternalStore(
-    onStoreChange => engine.subscribeChanges(onStoreChange),
-    () => engine.getChangeGeneration()
-  );
-  const stats = calculateModelStats(schema, engine, engineGeneration);
+  const stats = calculateSchemaStats(schema);
 
   function initiateSubmit() {
     const element = document.getElementById(globalIDs.library_item_editor) as HTMLFormElement;
@@ -65,22 +59,22 @@ export function TabModelCard() {
       <div className='relative cc-column mx-0 md:mx-auto'>
         <ButtonSidebar
           title='Отображение статистики'
-          show={showStats}
+          show={showRSFormStats}
           isNarrow={isNarrow}
-          onClick={toggleShowStats}
+          onClick={toggleShowRSFormStats}
           className='absolute top-0.5 -right-2'
         />
 
-        <FormRSModel key={model.id} className='min-w-88 sm:w-120' />
-        <EditorLibraryItem item={model} isProduced={false} />
+        <FormSchema key={schema.id} className='min-w-88 sm:w-120' />
+        <EditorLibraryItem item={schema} isProduced={schema.is_produced} />
       </div>
 
-      <ViewModelStats
+      <ViewSchemaStats
         stats={stats}
         className={clsx(
-          'w-80 md:w-56 md:mt-9 mx-auto',
+          'h-min w-80 md:w-56 md:mt-9 mx-auto overflow-y-auto',
           'cc-animate-sidebar',
-          showStats ? 'max-w-full' : 'opacity-0 max-w-0'
+          showRSFormStats ? 'max-w-full' : 'opacity-0 max-w-0'
         )}
         style={{ maxHeight: sideBarHeight }}
       />
