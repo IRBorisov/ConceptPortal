@@ -16,11 +16,10 @@ import {
 import { type AnalysisFull, TypeID } from '@/domain/rslang';
 import { labelType } from '@/domain/rslang/labels';
 
-import { MiniButton, SubmitButton } from '@/components/control';
 import { TextButton } from '@/components/control/text-button';
-import { IconChild, IconPredecessor, IconSave } from '@/components/icons';
+import { IconCrucial } from '@/components/icons';
 import { Label, TextArea } from '@/components/input';
-import { Indicator } from '@/components/view';
+import { IndicatorPill } from '@/components/view/indicator-pill';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { errorMsg, tooltipText } from '@/utils/labels';
@@ -29,7 +28,6 @@ import { withPreventDefault } from '@/utils/utils';
 
 import { schemaUpdateConstituenta, type UpdateConstituentaDTO } from '../../../backend/types';
 import { EditorRSExpression } from '../../../components/editor-rsexpression';
-import { IconCrucialValue } from '../../../components/icon-crucial-value';
 import { RefsInput } from '../../../components/refs-input';
 import { SelectMultiConstituenta } from '../../../components/select-multi-constituenta';
 import { getRSDefinitionPlaceholder, labelRSExpression } from '../../../labels';
@@ -37,7 +35,6 @@ import { useSchemaEdit } from '../schema-edit-context';
 
 interface FormConstituentaProps {
   id?: string;
-  disabled: boolean;
   toggleReset: boolean;
 
   activeCst: Constituenta;
@@ -57,7 +54,7 @@ function constituentaDefaults(activeCst: Constituenta): UpdateConstituentaDTO {
   };
 }
 
-export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst, onOpenEdit }: FormConstituentaProps) {
+export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdit }: FormConstituentaProps) {
   const isModified = useModificationStore(state => state.isModified);
   const setIsModified = useModificationStore(state => state.setIsModified);
   const onModifiedEvent = useEffectEvent(setIsModified);
@@ -70,10 +67,12 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
     addAttribution,
     removeAttribution,
     clearAttributions,
-    isProcessing
+    isProcessing,
+    isContentEditable
   } = useSchemaEdit();
   const showTypification = useDialogsStore(state => state.showShowTypeGraph);
   const showStructurePlanner = useDialogsStore(state => state.showStructurePlanner);
+  const disabled = !activeCst || !isContentEditable;
 
   function handleAddAttribution(attribute: Constituenta) {
     addAttribution(activeCst.id, attribute.id);
@@ -108,8 +107,10 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
   const isBasic = isBasicConcept(activeCst.cst_type);
   const isElementary = isBaseSet(activeCst.cst_type);
   const showConvention = !!activeCst.convention || forceComment || isBasic;
+  const canOpenStructure = !!activeCst.spawner_path || cstCanProduceStructure(activeCst);
 
   const needsInterpretation = isBasic && !isLogical(activeCst.cst_type);
+  const hasPrimaryActions = !disabled || activeCst.crucial || canOpenStructure;
 
   useLayoutEffect(
     function resetGlobalModifiedFlagOnCstChange() {
@@ -172,63 +173,84 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
   return (
     <form
       id={id}
-      className='relative cc-column mt-1 px-6 pb-1 pt-8'
+      className='cc-column mt-1 gap-3 px-6 pb-3'
       onSubmit={withPreventDefault(() => void form.handleSubmit())}
     >
-      <div className='absolute z-pop top-0 left-6 flex select-text font-medium whitespace-nowrap pt-1'>
-        <TextButton
-          text='Термин'
-          title={disabled ? undefined : isModified ? tooltipText.unsaved : 'Редактировать словоформы термина'}
-          onClick={openTermEditor}
-          disabled={isModified || disabled}
-        />
-
-        <MiniButton
-          title={activeCst.crucial ? 'Ключевая: да' : 'Ключевая: нет'}
-          className='ml-6 mr-1 -mt-0.75'
-          aria-label='Переключатель статуса ключевой конституенты'
-          icon={<IconCrucialValue size='1rem' value={activeCst.crucial} />}
-          onClick={toggleCrucial}
-          disabled={disabled || isProcessing || isModified}
-        />
-
-        <TextButton
-          text='Имя'
-          title={disabled ? undefined : isModified ? tooltipText.unsaved : 'Переименовать конституенту'}
-          onClick={promptRename}
-          disabled={isModified || disabled}
-        />
-        <div className='ml-2 text-sm font-medium whitespace-nowrap select-text cursor-default'>
-          {activeCst?.alias ?? ''}
-        </div>
+      <div className='flex items-center gap-2 mr-2 font-math font-semibold select-text'>
+        <span>Конституента {activeCst.alias}</span>
       </div>
+      {hasPrimaryActions ? (
+        <div className='flex flex-wrap items-center gap-6 -mt-1'>
+          {!disabled || activeCst.crucial ? (
+            <IndicatorPill
+              className='text-sm font-controls py-0.5 gap-1 -mt-0.5'
+              title={activeCst.crucial ? 'Снять статус ключевой' : 'Добавить статус ключевой'}
+              value={activeCst.crucial ? 'ключевая' : 'обычная'}
+              icon={<IconCrucial size='1rem' />}
+              color={activeCst.crucial ? 'teal' : 'muted'}
+              onClick={toggleCrucial}
+              disabled={disabled || isProcessing || isModified}
+            />
+          ) : null}
+          {!disabled ? (
+            <TextButton
+              text='Переименовать'
+              title={isModified ? tooltipText.unsaved : 'Переименовать конституенту'}
+              onClick={promptRename}
+              disabled={isModified}
+              className='text-sm'
+            />
+          ) : null}
+          {canOpenStructure ? (
+            <TextButton
+              text='Раскрыть структуру'
+              title='Управление структурой понятия'
+              onClick={handleStructurePlanner}
+              className='text-sm'
+            />
+          ) : null}
+        </div>
+      ) : null}
 
       <form.Field name='item_data.term_raw'>
         {field => (
-          <RefsInput
-            id='cst_term'
-            aria-label='Термин'
-            maxHeight='8rem'
-            areaClassName={
-              (needsInterpretation && !field.state.value) || activeCst.homonyms.length > 0 ? 'cm-error' : ''
-            }
-            placeholder={disabled ? '' : 'Обозначение для текстовых определений'}
-            schema={schema}
-            onOpenEdit={onOpenEdit}
-            value={field.state.value ?? ''}
-            initialValue={activeCst.term_raw}
-            resolved={activeCst.term_resolved}
-            onChange={newValue => field.handleChange(newValue)}
-            disabled={disabled}
-            error={
-              field.state.meta.errors[0]?.message ??
-              (needsInterpretation && !field.state.value
-                ? 'Заполните термин'
-                : activeCst.homonyms.length > 0
-                  ? `Термин совпадает с конституентами: ${formatAliasList(activeCst.homonyms, schema)}`
-                  : undefined)
-            }
-          />
+          <div className='relative'>
+            {!disabled ? (
+              <TextButton
+                text='Словоформы'
+                className='z-pop text-sm absolute top-0 left-19'
+                title={disabled ? undefined : isModified ? tooltipText.unsaved : 'Редактировать словоформы термина'}
+                onClick={openTermEditor}
+                disabled={isModified}
+              />
+            ) : null}
+
+            <RefsInput
+              id='cst_term'
+              label='Термин'
+              aria-label='Термин'
+              maxHeight='8rem'
+              areaClassName={
+                (needsInterpretation && !field.state.value) || activeCst.homonyms.length > 0 ? 'cm-error' : ''
+              }
+              placeholder={disabled ? '' : 'Обозначение для текстовых определений'}
+              schema={schema}
+              onOpenEdit={onOpenEdit}
+              value={field.state.value ?? ''}
+              initialValue={activeCst.term_raw}
+              resolved={activeCst.term_resolved}
+              onChange={newValue => field.handleChange(newValue)}
+              disabled={disabled}
+              error={
+                field.state.meta.errors[0]?.message ??
+                (needsInterpretation && !field.state.value
+                  ? 'Пустой термин'
+                  : activeCst.homonyms.length > 0
+                    ? `Термин совпадает с конституентами: ${formatAliasList(activeCst.homonyms, schema)}`
+                    : undefined)
+              }
+            />
+          </div>
         )}
       </form.Field>
 
@@ -248,26 +270,19 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
       ) : null}
 
       {activeCst.cst_type !== CstType.NOMINAL ? (
-        <div className='flex'>
-          <TextButton
-            text='Типизация'
-            title='Управление структурой термина'
-            disabled={!activeCst.spawner_path && !cstCanProduceStructure(activeCst)}
-            onClick={handleStructurePlanner}
-          />
-          <TextArea
-            id='cst_typification'
-            fitContent
-            dense
-            noResize
-            noBorder
-            noOutline
-            transparent
-            readOnly
-            value={typification}
-            className='cursor-default'
-          />
-        </div>
+        <TextArea
+          id='cst_typification'
+          label='Типизация'
+          fitContent
+          dense
+          noResize
+          noBorder
+          noOutline
+          transparent
+          readOnly
+          value={typification}
+          className='cursor-default'
+        />
       ) : null}
 
       {!!activeCst.definition_formal || !isElementary ? (
@@ -336,7 +351,7 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
               onBlur={field.handleBlur}
               error={
                 field.state.meta.errors[0]?.message ??
-                (needsInterpretation && !field.state.value ? 'Заполните конвенцию' : undefined)
+                (needsInterpretation && !field.state.value ? 'Пустая конвенция' : undefined)
               }
             />
           )}
@@ -345,30 +360,6 @@ export function FormConstituenta({ disabled, id, toggleReset, schema, activeCst,
 
       {!showConvention && (!disabled || isProcessing) ? (
         <TextButton text='Добавить комментарий' onClick={() => setForceComment(true)} />
-      ) : null}
-
-      {!disabled || isProcessing ? (
-        <div className='relative mx-auto flex'>
-          <SubmitButton
-            text='Сохранить изменения'
-            icon={<IconSave size='1.25rem' />}
-            disabled={disabled || !isModified}
-          />
-          <div className='absolute z-pop top-1/2 -translate-y-1/2 left-full cc-icons'>
-            {activeCst.has_inherited_children && !activeCst.is_inherited ? (
-              <Indicator
-                icon={<IconPredecessor size='1.25rem' className='text-primary' />}
-                titleHtml='Внимание!</br> Конституента имеет потомков<br/> в операционной схеме синтеза'
-              />
-            ) : null}
-            {activeCst.is_inherited ? (
-              <Indicator
-                icon={<IconChild size='1.25rem' className='text-primary' />}
-                titleHtml='Внимание!</br> Конституента является наследником<br/>'
-              />
-            ) : null}
-          </div>
-        </div>
       ) : null}
     </form>
   );

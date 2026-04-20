@@ -8,16 +8,7 @@ import { BadgeHelp } from '@/features/help/components/badge-help';
 import { MiniSelectorOSS } from '@/features/library/components/mini-selector-oss';
 
 import { MiniButton } from '@/components/control';
-import {
-  IconClone,
-  IconDestroy,
-  IconMoveDown,
-  IconMoveUp,
-  IconNewItem,
-  IconPredecessor,
-  IconReset,
-  IconSave
-} from '@/components/icons';
+import { IconClone, IconDestroy, IconNewItem, IconPredecessor, IconReset, IconSave } from '@/components/icons';
 import { cn } from '@/components/utils';
 import { useModificationStore } from '@/stores/modification';
 import { prepareTooltip } from '@/utils/format';
@@ -28,6 +19,7 @@ import { useSchemaEdit } from '../schema-edit-context';
 
 interface ToolbarConstituentaProps {
   className?: string;
+  hasInheritance: boolean;
   activeCst: Constituenta | null;
   disabled: boolean;
 
@@ -39,6 +31,7 @@ export function ToolbarConstituenta({
   className,
   activeCst,
   disabled,
+  hasInheritance,
 
   onSubmit,
   onReset
@@ -52,8 +45,6 @@ export function ToolbarConstituenta({
     cloneCst,
     canDeleteSelected,
     promptDeleteSelected,
-    moveUp,
-    moveDown,
     gotoPredecessor: openConstituentaPredecessor
   } = useSchemaEdit();
 
@@ -67,7 +58,7 @@ export function ToolbarConstituenta({
           onSelect={(event, value) => router.gotoOss(value.id, event.ctrlKey || event.metaKey)}
         />
       ) : null}
-      {activeCst ? (
+      {activeCst && hasInheritance ? (
         <MiniButton
           title={activeCst.is_inherited ? 'Перейти к исходной конституенте в ОСС' : 'Конституента не имеет предка'}
           onClick={event => openConstituentaPredecessor(activeCst.id, event.ctrlKey || event.metaKey)}
@@ -104,29 +95,10 @@ export function ToolbarConstituenta({
             disabled={disabled || isModified}
           />
           <MiniButton
-            title='Удалить редактируемую конституенту'
-            onClick={promptDeleteSelected}
+            title='Удалить конституенту'
             icon={<IconDestroy size='1.25rem' className='icon-red' />}
+            onClick={promptDeleteSelected}
             disabled={disabled || !canDeleteSelected}
-          />
-        </>
-      ) : null}
-
-      {isContentEditable ? (
-        <>
-          <MiniButton
-            titleHtml={prepareTooltip('Переместить вверх', 'Alt + вверх')}
-            aria-label='Переместить вверх'
-            icon={<IconMoveUp size='1.25rem' className='icon-primary' />}
-            onClick={moveUp}
-            disabled={disabled || isModified || schema.items.length < 2}
-          />
-          <MiniButton
-            titleHtml={prepareTooltip('Переместить вниз', 'Alt + вниз')}
-            aria-label='Переместить вниз'
-            icon={<IconMoveDown size='1.25rem' className='icon-primary' />}
-            onClick={moveDown}
-            disabled={disabled || isModified || schema.items.length < 2}
           />
         </>
       ) : null}

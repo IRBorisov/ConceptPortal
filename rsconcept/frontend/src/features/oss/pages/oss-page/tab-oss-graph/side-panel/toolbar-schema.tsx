@@ -9,11 +9,9 @@ import { BadgeHelp } from '@/features/help/components/badge-help';
 import { type ConstituentaBasicsDTO, type CreateConstituentaDTO } from '@/features/rsform/backend/types';
 import { useCreateConstituenta } from '@/features/rsform/backend/use-create-constituenta';
 import { useDeleteConstituents } from '@/features/rsform/backend/use-delete-constituents';
-import { useMoveConstituents } from '@/features/rsform/backend/use-move-constituents';
 import { useMutatingRSForm } from '@/features/rsform/backend/use-mutating-rsform';
 import { useResetAliases } from '@/features/rsform/backend/use-reset-aliases';
 import { useRestoreOrder } from '@/features/rsform/backend/use-restore-order';
-import { useCstSearchStore } from '@/features/rsform/stores/cst-search';
 
 import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
@@ -22,8 +20,6 @@ import {
   IconDestroy,
   IconEdit,
   IconGenerateNames,
-  IconMoveDown,
-  IconMoveUp,
   IconNewItem,
   IconRSForm,
   IconSortList,
@@ -57,14 +53,11 @@ export function ToolbarSchema({
   const { elementRef, isOpen, handleBlur, toggle, hide } = useDropdown();
   const router = useConceptNavigation();
   const isProcessing = useMutatingRSForm();
-  const searchText = useCstSearchStore(state => state.query);
-  const hasSearch = searchText.length > 0;
 
   const showCreateCst = useDialogsStore(state => state.showCreateCst);
   const showDeleteCst = useDialogsStore(state => state.showDeleteCst);
   const showTypeGraph = useDialogsStore(state => state.showShowTypeGraph);
   const showTermGraph = useDialogsStore(state => state.showShowTermGraph);
-  const { moveConstituents } = useMoveConstituents();
   const { createConstituenta } = useCreateConstituenta();
   const { deleteConstituents } = useDeleteConstituents();
   const { resetAliases } = useResetAliases();
@@ -137,54 +130,6 @@ export function ToolbarSchema({
           itemID: schema.id,
           data: { items: deleted }
         }).then(resetActive);
-      }
-    });
-  }
-
-  function moveUp() {
-    if (!activeCst) {
-      return;
-    }
-    const currentIndex = schema.items.reduce((prev, cst, index) => {
-      if (activeCst.id !== cst.id) {
-        return prev;
-      } else if (prev === -1) {
-        return index;
-      }
-      return Math.min(prev, index);
-    }, -1);
-    const target = Math.max(0, currentIndex - 1);
-    void moveConstituents({
-      itemID: schema.id,
-      data: {
-        items: [activeCst.id],
-        move_to: target
-      }
-    });
-  }
-
-  function moveDown() {
-    if (!activeCst) {
-      return;
-    }
-    let count = 0;
-    const currentIndex = schema.items.reduce((prev, cst, index) => {
-      if (activeCst.id !== cst.id) {
-        return prev;
-      } else {
-        count += 1;
-        if (prev === -1) {
-          return index;
-        }
-        return Math.max(prev, index);
-      }
-    }, -1);
-    const target = Math.min(schema.items.length - 1, currentIndex - count + 2);
-    void moveConstituents({
-      itemID: schema.id,
-      data: {
-        items: [activeCst.id],
-        move_to: target
       }
     });
   }
@@ -277,19 +222,6 @@ export function ToolbarSchema({
         onClick={promptDeleteCst}
         icon={<IconDestroy size='1rem' className='icon-red' />}
         disabled={!isMutable || !activeCst || isProcessing || activeCst?.is_inherited}
-      />
-
-      <MiniButton
-        title='Переместить вверх'
-        icon={<IconMoveUp size='1rem' className='icon-primary' />}
-        onClick={moveUp}
-        disabled={!isMutable || !activeCst || isProcessing || schema.items.length < 2 || hasSearch}
-      />
-      <MiniButton
-        title='Переместить вниз'
-        icon={<IconMoveDown size='1rem' className='icon-primary' />}
-        onClick={moveDown}
-        disabled={!isMutable || !activeCst || isProcessing || schema.items.length < 2 || hasSearch}
       />
 
       <MiniButton

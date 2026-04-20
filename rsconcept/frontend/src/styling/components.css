@@ -462,3 +462,18 @@
     color: color-mix(in oklab, var(--pill-fore) 95%, black);
   }
 }
+
+@utility pill-muted {
+  --pill-back: var(--clr-prim-200);
+  --pill-fore: var(--clr-prim-600);
+
+  border-color: color-mix(in oklab, var(--pill-fore) 60%, transparent);
+  background-color: color-mix(in oklab, var(--pill-back) 20%, transparent);
+  color: color-mix(in oklab, var(--pill-fore) 80%, black);
+
+  &:is(.dark *) {
+    border-color: color-mix(in oklab, var(--pill-fore) 50%, transparent);
+    background-color: color-mix(in oklab, var(--pill-back) 15%, transparent);
+    color: color-mix(in oklab, var(--pill-fore) 95%, black);
+  }
+}

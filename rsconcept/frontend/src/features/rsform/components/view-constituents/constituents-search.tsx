@@ -1,5 +1,7 @@
 'use client';
 
+import { type ReactNode } from 'react';
+
 import { MiniButton } from '@/components/control';
 import { IconFilterReset } from '@/components/icons';
 import { SearchBar } from '@/components/input';
@@ -8,7 +10,11 @@ import { useCstSearchStore } from '../../stores/cst-search';
 
 import { SelectorCstFilter } from './selector-cst-filter';
 
-export function ConstituentsSearch() {
+interface ConstituentsSearchProps {
+  actions?: ReactNode;
+}
+
+export function ConstituentsSearch({ actions }: ConstituentsSearchProps) {
   const query = useCstSearchStore(state => state.query);
   const setQuery = useCstSearchStore(state => state.setQuery);
   const filter = useCstSearchStore(state => state.filter);
@@ -29,6 +35,7 @@ export function ConstituentsSearch() {
       />
       <SearchBar id='constituents_search' noBorder className='min-w-24 grow' query={query} onChangeQuery={setQuery} />
       <SelectorCstFilter />
+      {actions ? actions : null}
     </div>
   );
 }
