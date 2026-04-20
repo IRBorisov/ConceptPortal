@@ -83,7 +83,7 @@ export const usePreferencesStore = create<PreferencesStore>()(
       setLibraryPagination: value =>
         set(state => (state.libraryPagination === value ? state : { libraryPagination: value })),
 
-      showDataText: false,
+      showDataText: true,
       toggleShowDataText: () => set(state => ({ showDataText: !state.showDataText })),
 
       showRSFormStats: true,
@@ -98,14 +98,14 @@ export const usePreferencesStore = create<PreferencesStore>()(
       showExpressionControls: true,
       toggleShowExpressionControls: () => set(state => ({ showExpressionControls: !state.showExpressionControls })),
 
-      showOssSidePanel: false,
+      showOssSidePanel: true,
       toggleShowOssSidePanel: () => set(state => ({ showOssSidePanel: !state.showOssSidePanel })),
 
       preferredPlayer: 'vk',
       setPreferredPlayer: value => set(state => (state.preferredPlayer === value ? state : { preferredPlayer: value }))
     }),
     {
-      version: 3,
+      version: 4,
       name: 'portal.preferences'
     }
   )
