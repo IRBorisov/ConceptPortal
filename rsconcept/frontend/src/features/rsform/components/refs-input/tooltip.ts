@@ -95,10 +95,10 @@ function domTooltipEntityReference(ref: EntityReference, cst: Constituenta | nul
 
   const controlsTip = document.createElement('p');
   controlsTip.className = 'text-left text-xs mt-1';
-  controlsTip.innerHTML = '<kbd>Alt + 1</kbd> ссылка на конституенту</br><kbd>Alt + 2</kbd> зависимое слово';
+  controlsTip.innerHTML = '<kbd>Alt + 1</kbd> ссылка на конституенту<br/><kbd>Alt + 2</kbd> зависимое слово';
   if (canClick) {
     controlsTip.innerHTML =
-      (isMac() ? '<kbd>Cmd + клик</kbd> для перехода</br>' : '<kbd>Ctrl + клик</kbd> для перехода</br>') +
+      (isMac() ? '<kbd>Cmd + клик</kbd> для перехода<br/>' : '<kbd>Ctrl + клик</kbd> для перехода<br/>') +
       controlsTip.innerHTML;
   }
   dom.appendChild(controlsTip);

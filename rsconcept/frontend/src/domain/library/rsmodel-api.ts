@@ -319,6 +319,8 @@ function jsonTreeExceedsPrepareLimits(root: unknown): boolean {
         const el = v[i] as unknown;
         if (el !== null && typeof el === 'object') {
           stack.push({ v: el, depth: depth + 1 });
+        } else if (depth + 1 > maxDepth || ++nodes > maxNodes) {
+          return true;
         }
       }
     } else {
@@ -326,6 +328,8 @@ function jsonTreeExceedsPrepareLimits(root: unknown): boolean {
         const el = (v as Record<string, unknown>)[key];
         if (el !== null && typeof el === 'object') {
           stack.push({ v: el, depth: depth + 1 });
+        } else if (depth + 1 > maxDepth || ++nodes > maxNodes) {
+          return true;
         }
       }
     }

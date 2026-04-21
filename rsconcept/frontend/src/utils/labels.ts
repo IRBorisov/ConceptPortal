@@ -83,6 +83,7 @@ export const errorMsg = {
   ossCycle: 'Нельзя создавать цикл в ОСС',
   invalidSetValue: 'Некорректная попытка назначения значения',
   clipboardRead: 'Не удалось прочитать из буфера обмена',
+  clipboardWrite: 'Не удалось записать в буфер обмена',
   fileRead: 'Ошибка при чтении файла',
   valueNull: 'Значение отсутствует',
   sandboxImportError: 'Не удалось перенести схему в песочницу',

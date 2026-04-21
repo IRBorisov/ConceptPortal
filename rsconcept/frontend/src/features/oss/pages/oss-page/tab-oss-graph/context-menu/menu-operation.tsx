@@ -298,7 +298,7 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
       {isMutable && operation.result && operation.operation_type !== OperationType.REPLICA ? (
         <DropdownButton
           text='Конституенты'
-          titleHtml='Перенос конституент</br>между схемами'
+          titleHtml='Перенос конституент<br/>между схемами'
           aria-label='Перенос конституент между схемами'
           icon={<IconChild size='1rem' className='icon-green' />}
           onClick={handleRelocateConstituents}

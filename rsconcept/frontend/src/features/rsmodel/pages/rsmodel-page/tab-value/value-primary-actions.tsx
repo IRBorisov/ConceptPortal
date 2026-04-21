@@ -16,6 +16,7 @@ import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import { useDialogsStore } from '@/stores/dialogs';
 import { errorMsg, infoMsg } from '@/utils/labels';
 
+import { copyJsonToClipboard, downloadJsonFile, getExportJsonText } from '../export-helpers';
 import { useModelEdit } from '../model-edit-context';
 
 const VALUE_FILENAME = 'value.json';
@@ -43,6 +44,8 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
 
   const hasValueDialog = !!typification && isTypification(typification) && (cstData != null || !cstInferrable);
 
+  const valuePayload = isBase ? (engine.basics.get(activeCst.id) ?? ({} as BasicBinding)) : cstData;
+
   const {
     elementRef: exportMenuRef,
     isOpen: isExportOpen,
@@ -59,10 +62,13 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
   } = useDropdown();
 
   const showValueButton = hasValueDialog;
-  const showExportMenu = Boolean(cstData);
+  const showExportMenu = valuePayload != null;
   const showImportMenu = !isImportDisabled;
   const showClearButton =
-    isMutable && !cstInferrable && cstData !== null && !(Array.isArray(cstData) && cstData.length === 0);
+    isMutable &&
+    !cstInferrable &&
+    valuePayload !== null &&
+    !(Array.isArray(valuePayload) && valuePayload.length === 0);
 
   const hasPrimaryActions = showValueButton || showExportMenu || showImportMenu || showClearButton;
   if (!hasPrimaryActions) {
@@ -103,9 +109,8 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
     void engine.resetValue(activeCst.id);
   }
 
-  function getExportJsonText(): string {
-    const payload: Value | BasicBinding = isBase ? (engine.basics.get(activeCst.id) ?? {}) : cstData!;
-    return JSON.stringify(payload, null, 2);
+  function getExportPayload(): Value | BasicBinding {
+    return isBase ? (engine.basics.get(activeCst.id) ?? {}) : cstData!;
   }
 
   function applyImportedJsonText(text: string) {
@@ -126,20 +131,12 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
 
   function handleClipboardExport() {
     hideExport();
-    void navigator.clipboard.writeText(getExportJsonText()).then(() => {
-      toast.success(infoMsg.valueReady);
-    });
+    copyJsonToClipboard(getExportJsonText(getExportPayload()), () => toast.success(infoMsg.valueReady));
   }
 
   function handleJSONExport() {
     hideExport();
-    const blob = new Blob([getExportJsonText()], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const anchor = document.createElement('a');
-    anchor.href = url;
-    anchor.download = `${activeCst.alias}_${VALUE_FILENAME}`;
-    anchor.click();
-    URL.revokeObjectURL(url);
+    downloadJsonFile(getExportJsonText(getExportPayload()), `${activeCst.alias}_${VALUE_FILENAME}`);
   }
 
   function handleClipboardImport() {

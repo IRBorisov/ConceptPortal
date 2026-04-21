@@ -30,6 +30,7 @@ import { type RO } from '@/utils/meta';
 
 import { ValueInput } from '../../../components/value-input';
 import { labelValue } from '../../../labels';
+import { copyJsonToClipboard, downloadJsonFile, getExportJsonText } from '../export-helpers';
 import { useModelEdit } from '../model-edit-context';
 import { ToolbarExpression } from '../tab-value/toolbar-expression';
 
@@ -126,26 +127,14 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
     });
   }
 
-  function getExportJsonText(): string {
-    return JSON.stringify(dialogValue, null, 2);
-  }
-
   function handleClipboardExport() {
     hideExport();
-    void navigator.clipboard.writeText(getExportJsonText()).then(() => {
-      toast.success(infoMsg.valueReady);
-    });
+    copyJsonToClipboard(getExportJsonText(dialogValue), () => toast.success(infoMsg.valueReady));
   }
 
   function handleJSONExport() {
     hideExport();
-    const blob = new Blob([getExportJsonText()], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const anchor = document.createElement('a');
-    anchor.href = url;
-    anchor.download = VALUE_FILENAME;
-    anchor.click();
-    URL.revokeObjectURL(url);
+    downloadJsonFile(getExportJsonText(dialogValue), VALUE_FILENAME);
   }
 
   function handleShowError(error: RO<RSErrorDescription>) {
