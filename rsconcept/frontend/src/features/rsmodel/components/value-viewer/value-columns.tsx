@@ -10,6 +10,7 @@ import { type EchelonCollection, IntegerT } from '@/domain/rslang/semantic/typif
 import { cn } from '@/components/utils';
 import { globalIDs } from '@/utils/constants';
 import { truncateToLastWord, truncateToSymbol } from '@/utils/format';
+import { placeholderMsg } from '@/utils/labels';
 
 import { type ValueMatcher } from '../../models/value-matcher';
 
@@ -175,7 +176,9 @@ function BasicCell({
   path: ValuePath;
   isInvalid?: boolean;
 }) {
-  const text = prepareValueString(value, type, services.schema, services.basics, services.showDataText);
+  const text =
+    prepareValueString(value, type, services.schema, services.basics, services.showDataText) ??
+    placeholderMsg.valueTooLarge;
   const isSingleColumn = path.length === 0 || (path.length === 1 && !services.isSingleton);
   const needsTooltip = text.length > (isSingleColumn ? VALUE_TRUNCATE_LONG : VALUE_TRUNCATE);
   const isMatch = services.matcher?.match(value, type) ?? false;

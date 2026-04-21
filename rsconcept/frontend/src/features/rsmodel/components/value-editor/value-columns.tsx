@@ -12,6 +12,7 @@ import { MiniButton } from '@/components/control';
 import { IconRemove } from '@/components/icons';
 import { globalIDs } from '@/utils/constants';
 import { truncateToLastWord, truncateToSymbol } from '@/utils/format';
+import { placeholderMsg } from '@/utils/labels';
 
 import { type ValueMatcher } from '../../models/value-matcher';
 
@@ -225,7 +226,9 @@ function BasicCell({
   isInvalid?: boolean;
   path: ValuePath;
 }) {
-  const text = prepareValueString(value, type, services.schema, services.basics, services.showDataText);
+  const text =
+    prepareValueString(value, type, services.schema, services.basics, services.showDataText) ??
+    placeholderMsg.valueTooLarge;
   const isSingleColumn = path.length === 0 || (path.length === 1 && !services.isSingleton);
   const needsTooltip = text.length > (isSingleColumn ? VALUE_TRUNCATE_LONG : VALUE_TRUNCATE);
   const isMatch = services.matcher?.match(value, type) ?? false;

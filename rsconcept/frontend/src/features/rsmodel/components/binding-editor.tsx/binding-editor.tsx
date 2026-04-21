@@ -97,13 +97,15 @@ export function BindingEditor({ className, rows, value, onChange }: BindingEdito
       size: 200,
       minSize: 200,
       maxSize: 200,
-      cell: props => <div className='w-166'>{props.getValue()}</div>
+      cell: props => <div className='w-120'>{props.getValue()}</div>
     }),
     ...(onChange
       ? [
           columnHelper.display({
             id: 'actions',
-            size: 0,
+            size: 40,
+            minSize: 40,
+            maxSize: 40,
             cell: props => (
               <MiniButton
                 title='Удалить элемент'
@@ -130,7 +132,7 @@ export function BindingEditor({ className, rows, value, onChange }: BindingEdito
       <div className='-mt-1 flex items-center mb-1'>
         <div className='w-26'>
           <span>Всего </span>
-          <span className='font-math'>{Object.keys(value).length}</span>
+          <span className='font-math ml-2'>{Object.keys(value).length}</span>
         </div>
         <SearchBar id='dlg_value_search' noBorder query={filter} onChangeQuery={setFilter} className='-mb-0.5' />
       </div>

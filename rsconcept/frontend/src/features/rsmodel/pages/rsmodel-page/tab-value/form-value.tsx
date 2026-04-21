@@ -3,15 +3,13 @@
 import { useEffect, useEffectEvent, useLayoutEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { type ReactCodeMirrorRef } from '@uiw/react-codemirror';
-import clsx from 'clsx';
 
 import { type BasicBinding, type Constituenta, CstType } from '@/domain/library';
-import { getStructureName, isBaseSet } from '@/domain/library/rsform-api';
+import { isBaseSet } from '@/domain/library/rsform-api';
 import { isInferrable, isInterpretable, prepareValueString } from '@/domain/library/rsmodel-api';
 import { type CalculatorResult, type RSErrorDescription, TokenID, type Value } from '@/domain/rslang';
 import { normalizeValue, valueStub } from '@/domain/rslang/eval/value-api';
 import { labelType } from '@/domain/rslang/labels';
-import { isTypification, type TypePath, type Typification } from '@/domain/rslang/semantic/typification';
 
 import { useConceptNavigation } from '@/app';
 import { type UpdateConstituentaDTO } from '@/features/rsform/backend/types';
@@ -24,12 +22,10 @@ import { labelRSExpression } from '@/features/rsform/labels';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 
 import { TextButton } from '@/components/control/text-button';
-import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import { TextArea } from '@/components/input';
-import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
-import { errorMsg, infoMsg, tooltipText } from '@/utils/labels';
+import { placeholderMsg, tooltipText } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 import { withPreventDefault } from '@/utils/utils';
 
@@ -40,6 +36,7 @@ import { labelValue } from '../../../labels';
 import { useModelEdit } from '../model-edit-context';
 
 import { ToolbarExpression } from './toolbar-expression';
+import { ValuePrimaryActions } from './value-primary-actions';
 
 interface FormValueProps {
   id?: string;
@@ -59,13 +56,10 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
   const onModifiedEvent = useEffectEvent(setIsModified);
   const showDataText = usePreferencesStore(state => state.showDataText);
   const toggleDataText = usePreferencesStore(state => state.toggleShowDataText);
-  const showEditValue = useDialogsStore(state => state.showModelEditValue);
-  const showViewValue = useDialogsStore(state => state.showModelViewValue);
-  const showEditBinding = useDialogsStore(state => state.showModelEditBinding);
 
   const isBase = isBaseSet(activeCst.cst_type);
   const cstInferrable = isInferrable(activeCst.cst_type);
-  const isImportDisabled =
+  const isValueEditable =
     !isMutable || cstInferrable || !isInterpretable(activeCst.cst_type) || (showDataText && !isBase);
   const status = useCstStatus(engine, activeCst);
   const [localEval, setLocalEval] = useState<RO<CalculatorResult> | null>(null);
@@ -75,15 +69,22 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
 
   const initialValue = isBase ? (engine.basics.get(activeCst.id) ?? ({} as BasicBinding)) : cstData;
 
-  const initialStr = prepareValueString(initialValue, typification, schema, engine.basics, showDataText);
-  const [inputValue, setInputValue] = useState<string>(initialStr);
-  const hasValueDialog = !!typification && isTypification(typification) && (cstData != null || !cstInferrable);
+  const initialStr =
+    prepareValueString(initialValue, typification, schema, engine.basics, showDataText) ?? placeholderMsg.valueTooLarge;
+  const valueResetKey = `${activeCst.id}:${toggleReset ? '1' : '0'}`;
+  const [valueDraft, setValueDraft] = useState(() => ({
+    resetKey: valueResetKey,
+    source: initialStr,
+    draft: initialStr
+  }));
 
   const [termDraft, setTermDraft] = useState(activeCst.term_raw);
   const [formalDraft, setFormalDraft] = useState(activeCst.definition_formal);
   const [rawDraft, setRawDraft] = useState(activeCst.definition_raw);
 
-  const valueDirty = inputValue !== initialStr;
+  const hasFreshValueDraft = valueDraft.resetKey === valueResetKey && valueDraft.source === initialStr;
+  const inputValue = hasFreshValueDraft ? valueDraft.draft : initialStr;
+  const valueDirty = hasFreshValueDraft && valueDraft.draft !== initialStr;
   const metaDirty =
     termDraft !== activeCst.term_raw ||
     formalDraft !== activeCst.definition_formal ||
@@ -92,42 +93,14 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
 
   const metaFieldsDisabled = !isContentEditable || isProcessing;
   const formalFieldDisabled = metaFieldsDisabled || activeCst.is_inherited;
-  const hasPrimaryActions = hasValueDialog || !!inputValue || (isMutable && !cstInferrable);
 
   const rsInput = useRef<ReactCodeMirrorRef>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const {
-    elementRef: exportMenuRef,
-    isOpen: isExportOpen,
-    toggle: toggleExport,
-    handleBlur: handleExportBlur,
-    hide: hideExport
-  } = useDropdown();
-  const {
-    elementRef: importMenuRef,
-    isOpen: isImportOpen,
-    toggle: toggleImport,
-    handleBlur: handleImportBlur,
-    hide: hideImport
-  } = useDropdown();
 
   useLayoutEffect(
     function resetGlobalModifiedFlagOnCstChange() {
       onModifiedEvent(false);
     },
     [activeCst.id]
-  );
-
-  useEffect(
-    function resetUIStateOnCstChange() {
-      const timeoutId = setTimeout(function resetValueEditorState() {
-        setInputValue(initialStr);
-        setLocalEval(null);
-        onModifiedEvent(false);
-      }, 0);
-      return () => clearTimeout(timeoutId);
-    },
-    [activeCst.id, initialStr, toggleReset]
   );
 
   useEffect(
@@ -155,14 +128,25 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
     } else if (isBase) {
       const binding = newValue as BasicBinding;
       void engine.setBasicValue(activeCst.id, binding);
-      const value = prepareValueString(binding, typification, schema, engine.basics, showDataText);
-      setInputValue(value);
+      const value =
+        prepareValueString(binding, typification, schema, engine.basics, showDataText) ?? placeholderMsg.valueTooLarge;
+      setValueDraft({
+        resetKey: valueResetKey,
+        source: value,
+        draft: value
+      });
     } else {
       const parsedValue = newValue as Value;
       normalizeValue(parsedValue);
       void engine.setStructureValue(activeCst.id, parsedValue);
-      const value = prepareValueString(parsedValue, typification, schema, engine.basics, showDataText);
-      setInputValue(value);
+      const value =
+        prepareValueString(parsedValue, typification, schema, engine.basics, showDataText) ??
+        placeholderMsg.valueTooLarge;
+      setValueDraft({
+        resetKey: valueResetKey,
+        source: value,
+        draft: value
+      });
     }
   }
 
@@ -221,99 +205,6 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
     void router.changeActive(cstID);
   }
 
-  function handleClearValue() {
-    void engine.resetValue(activeCst.id);
-  }
-
-  function handleValueDialog() {
-    if (isBase) {
-      showEditBinding({
-        initialValue: engine.basics.get(activeCst.id) ?? {},
-        onChange: isMutable ? handleSetValue : undefined
-      });
-      return;
-    }
-    const type = activeCst.analysis.type as Typification;
-    const getHeaderText = (path: TypePath) => getStructureName(schema, activeCst, path);
-    if (!cstInferrable && isMutable) {
-      showEditValue({
-        initialValue: cstData,
-        type: type,
-        engine: engine,
-        onChange: handleSetValue,
-        getHeaderText: getHeaderText
-      });
-    } else if (!cstData) {
-      toast.error(errorMsg.valueNull);
-    } else {
-      showViewValue({
-        value: cstData,
-        type: type,
-        engine: engine,
-        getHeaderText: getHeaderText
-      });
-    }
-  }
-
-  function handleClipboardExport() {
-    hideExport();
-    void navigator.clipboard.writeText(inputValue).then(() => {
-      toast.success(infoMsg.valueReady);
-    });
-  }
-
-  function handleJSONExport() {
-    hideExport();
-    const blob = new Blob([inputValue], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const anchor = document.createElement('a');
-    anchor.href = url;
-    anchor.download = 'value.json';
-    anchor.click();
-    URL.revokeObjectURL(url);
-  }
-
-  function handleClipboardImport() {
-    hideImport();
-    if (isImportDisabled) {
-      return;
-    }
-    navigator.clipboard
-      .readText()
-      .then(text => {
-        setInputValue(text);
-      })
-      .catch(() => {
-        toast.error(errorMsg.clipboardRead);
-      });
-  }
-
-  function handleOpenFile() {
-    hideImport();
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-    fileInputRef.current?.click();
-  }
-
-  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
-    if (isImportDisabled) {
-      return;
-    }
-    const file = event.target.files?.[0];
-    if (!file) {
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = reader.result as string;
-      setInputValue(result);
-      toast.success('Значение загружено из JSON-файла');
-    };
-    reader.onerror = () => toast.error(errorMsg.fileRead);
-    reader.readAsText(file);
-  }
-
   function handleInput(event: React.KeyboardEvent<HTMLFormElement>) {
     if ((event.ctrlKey || event.metaKey) && event.code === 'KeyS') {
       event.preventDefault();
@@ -363,58 +254,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
         <span>Конституента {activeCst.alias}</span>
       </div>
 
-      {hasPrimaryActions ? (
-        <div className='flex items-center gap-6'>
-          {hasValueDialog ? (
-            <TextButton
-              text={!cstInferrable && isMutable ? 'Изменить значение' : 'Смотреть значение'}
-              titleHtml='Просмотр или<br/>редактирование значения'
-              onClick={handleValueDialog}
-              className='text-sm'
-            />
-          ) : null}
-
-          {!!inputValue ? (
-            <div ref={exportMenuRef} onBlur={handleExportBlur} className='relative'>
-              <TextButton
-                text='Экспорт'
-                title='Экспортировать значение'
-                hideTitle={isExportOpen}
-                onClick={toggleExport}
-                className='text-sm'
-              />
-              <Dropdown isOpen={isExportOpen} margin='mt-1'>
-                <DropdownButton text='Скопировать в буфер' onClick={handleClipboardExport} />
-                <DropdownButton text='Сохранить как JSON' onClick={handleJSONExport} />
-              </Dropdown>
-            </div>
-          ) : null}
-          {!isImportDisabled ? (
-            <div ref={importMenuRef} onBlur={handleImportBlur} className='relative'>
-              <TextButton
-                text='Импорт'
-                title='Импортировать значение'
-                hideTitle={isImportOpen}
-                onClick={toggleImport}
-                className='text-sm'
-              />
-              <Dropdown isOpen={isImportOpen} margin='mt-1'>
-                <DropdownButton text='Загрузить из буфера' onClick={handleClipboardImport} />
-                <DropdownButton text='Загрузить из JSON' onClick={handleOpenFile} />
-              </Dropdown>
-            </div>
-          ) : null}
-          {isMutable && !cstInferrable && cstData !== null ? (
-            <TextButton
-              text='Очистить значение'
-              title='Сбросить вычисленное значение текущей конституенты'
-              onClick={handleClearValue}
-              disabled={isProcessing}
-              className='text-sm'
-            />
-          ) : null}
-        </div>
-      ) : null}
+      <ValuePrimaryActions activeCst={activeCst} cstData={cstData} onChangeValue={handleSetValue} />
 
       <TextArea
         fitContent
@@ -459,7 +299,6 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
 
       <ValueInput
         areaClassname='max-h-60'
-        className={clsx(!!localEval && localEval.errors.length > 0 && '-mb-4')}
         rows={8}
         value={inputValue}
         stub={valueDirty ? '' : stub}
@@ -471,22 +310,29 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
           !isInterpretable(activeCst.cst_type) ? 'Значение для данного типа не предусмотрено' : 'Значение отсутствует'
         }
         onCalculate={cstInferrable ? handleCalculate : undefined}
-        onChangeStr={setInputValue}
+        onChange={newValue =>
+          setValueDraft({
+            resetKey: valueResetKey,
+            source: initialStr,
+            draft: newValue
+          })
+        }
         onToggleDataText={toggleDataText}
-        disabled={isImportDisabled}
+        disabled={isValueEditable}
       />
 
-      <ViewErrors
-        isOpen={!!localEval && localEval.errors.length > 0}
-        errors={localEval?.errors ?? null}
-        className='-mt-3'
-        onShowError={handleShowError}
-      />
+      <div className='-mt-3'>
+        <ViewErrors
+          isOpen={!!localEval && localEval.errors.length > 0}
+          errors={localEval?.errors ?? null}
+          onShowError={handleShowError}
+        />
+      </div>
 
       <div className='relative'>
         {!metaFieldsDisabled ? (
           <TextButton
-            text='Словоформы'
+            text='Изменить словоформы'
             className='z-pop text-sm absolute top-0 left-19'
             title={isModified ? tooltipText.unsaved : 'Редактировать словоформы термина'}
             onClick={openTermEditor}
@@ -519,14 +365,6 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
         resolved={activeCst.definition_resolved}
         onChange={setRawDraft}
         disabled={formalFieldDisabled}
-      />
-      <input
-        type='file'
-        accept='.json,application/json'
-        className='hidden'
-        ref={fileInputRef}
-        onChange={handleFileChange}
-        tabIndex={-1}
       />
     </form>
   );

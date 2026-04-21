@@ -6,20 +6,12 @@ import { useForm, useStore } from '@tanstack/react-form';
 import clsx from 'clsx';
 
 import { type Constituenta, CstType, type RSForm } from '@/domain/library';
-import {
-  cstCanProduceStructure,
-  getAnalysisFor,
-  isBaseSet,
-  isBasicConcept,
-  isLogical
-} from '@/domain/library/rsform-api';
+import { getAnalysisFor, isBaseSet, isBasicConcept, isLogical } from '@/domain/library/rsform-api';
 import { type AnalysisFull, TypeID } from '@/domain/rslang';
 import { labelType } from '@/domain/rslang/labels';
 
 import { TextButton } from '@/components/control/text-button';
-import { IconCrucial } from '@/components/icons';
 import { Label, TextArea } from '@/components/input';
-import { IndicatorPill } from '@/components/view/indicator-pill';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { errorMsg, tooltipText } from '@/utils/labels';
@@ -32,6 +24,8 @@ import { RefsInput } from '../../../components/refs-input';
 import { SelectMultiConstituenta } from '../../../components/select-multi-constituenta';
 import { getRSDefinitionPlaceholder, labelRSExpression } from '../../../labels';
 import { useSchemaEdit } from '../schema-edit-context';
+
+import { ConstituentaPrimaryActions, isConstituentaEditorDisabled } from './cst-primary-actions';
 
 interface FormConstituentaProps {
   id?: string;
@@ -59,11 +53,9 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
   const setIsModified = useModificationStore(state => state.setIsModified);
   const onModifiedEvent = useEffectEvent(setIsModified);
   const {
-    toggleCrucial,
     patchConstituenta,
     createCstFromData,
     openTermEditor,
-    promptRename,
     addAttribution,
     removeAttribution,
     clearAttributions,
@@ -71,8 +63,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
     isContentEditable
   } = useSchemaEdit();
   const showTypification = useDialogsStore(state => state.showShowTypeGraph);
-  const showStructurePlanner = useDialogsStore(state => state.showStructurePlanner);
-  const disabled = !activeCst || !isContentEditable;
+  const disabled = isConstituentaEditorDisabled(activeCst, isContentEditable);
 
   function handleAddAttribution(attribute: Constituenta) {
     addAttribution(activeCst.id, attribute.id);
@@ -107,10 +98,8 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
   const isBasic = isBasicConcept(activeCst.cst_type);
   const isElementary = isBaseSet(activeCst.cst_type);
   const showConvention = !!activeCst.convention || forceComment || isBasic;
-  const canOpenStructure = !!activeCst.spawner_path || cstCanProduceStructure(activeCst);
 
   const needsInterpretation = isBasic && !isLogical(activeCst.cst_type);
-  const hasPrimaryActions = !disabled || activeCst.crucial || canOpenStructure;
 
   useLayoutEffect(
     function resetGlobalModifiedFlagOnCstChange() {
@@ -160,16 +149,6 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
     showTypification({ items: [{ alias: activeCst.alias, type: parse.type }] });
   }
 
-  function handleStructurePlanner() {
-    showStructurePlanner({
-      schema: schema,
-      targetID: activeCst.spawner_path ? activeCst.spawner! : activeCst.id,
-      isMutable: !disabled,
-      onCreate: createCstFromData,
-      onUpdate: patchConstituenta
-    });
-  }
-
   return (
     <form
       id={id}
@@ -179,45 +158,14 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
       <div className='flex items-center gap-2 mr-2 font-math font-semibold select-text'>
         <span>Конституента {activeCst.alias}</span>
       </div>
-      {hasPrimaryActions ? (
-        <div className='flex flex-wrap items-center gap-6 -mt-1'>
-          {!disabled || activeCst.crucial ? (
-            <IndicatorPill
-              className='text-sm font-controls py-0.5 gap-1 -mt-0.5'
-              title={activeCst.crucial ? 'Снять статус ключевой' : 'Добавить статус ключевой'}
-              value={activeCst.crucial ? 'ключевая' : 'обычная'}
-              icon={<IconCrucial size='1rem' />}
-              color={activeCst.crucial ? 'teal' : 'muted'}
-              onClick={toggleCrucial}
-              disabled={disabled || isProcessing || isModified}
-            />
-          ) : null}
-          {!disabled ? (
-            <TextButton
-              text='Переименовать'
-              title={isModified ? tooltipText.unsaved : 'Переименовать конституенту'}
-              onClick={promptRename}
-              disabled={isModified}
-              className='text-sm'
-            />
-          ) : null}
-          {canOpenStructure ? (
-            <TextButton
-              text='Раскрыть структуру'
-              title='Управление структурой понятия'
-              onClick={handleStructurePlanner}
-              className='text-sm'
-            />
-          ) : null}
-        </div>
-      ) : null}
+      <ConstituentaPrimaryActions className='-mt-1' activeCst={activeCst} schema={schema} />
 
       <form.Field name='item_data.term_raw'>
         {field => (
           <div className='relative'>
             {!disabled ? (
               <TextButton
-                text='Словоформы'
+                text='Изменить словоформы'
                 className='z-pop text-sm absolute top-0 left-19'
                 title={disabled ? undefined : isModified ? tooltipText.unsaved : 'Редактировать словоформы термина'}
                 onClick={openTermEditor}
