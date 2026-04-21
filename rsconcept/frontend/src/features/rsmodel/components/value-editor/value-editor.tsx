@@ -98,35 +98,31 @@ export function ValueEditor({
 
   return (
     <div className={cn('relative w-full flex flex-col', className)}>
-      <div className='font-math select-none'>{typeStr}</div>
+      <div className='flex items-center gap-3'>
+        <MiniButton
+          title='Значение целиком'
+          icon={<IconReset size='1.25rem' className='icon-primary' />}
+          onClick={handleResetView}
+          disabled={path.length === 0}
+        />
+        <div className='font-math select-none'>{typeStr}</div>
+      </div>
       <div className='flex gap-3'>
         <div className='grow min-w-0'>
           <div className='-mt-1 flex justify-between items-center'>
-            <Text
-              className='font-math font-normal mr-1 select-none'
-              text={valueStr}
-              title='Обозначение | Мощность множества'
+            <MiniButton
+              title='Добавить элемент'
+              icon={<IconNewItem size='1.25rem' className='icon-green' />}
+              onClick={handleAddElement}
+              disabled={currentType.typeID !== TypeID.collection && value !== null}
             />
             <SearchBar id='dlg_value_search' noBorder query={filter} onChangeQuery={setFilter} />
-            <div className='cc-icons'>
-              <MiniButton
-                title='Значение целиком'
-                icon={<IconReset size='1.25rem' className='icon-primary' />}
-                onClick={handleResetView}
-                disabled={path.length === 0}
-              />
-              <MiniButton
-                title='Добавить элемент'
-                icon={<IconNewItem size='1.25rem' className='icon-green' />}
-                onClick={handleAddElement}
-                disabled={currentType.typeID !== TypeID.collection && value !== null}
-              />
-              <MiniButton
-                title='Отображение данных в тексте'
-                icon={<IconShowDataText size='1.25rem' className='hover:text-primary' value={showDataText} />}
-                onClick={toggleDataText}
-              />
-            </div>
+            <Text className='font-math font-normal mr-3 select-none' text={valueStr} />
+            <MiniButton
+              title='Отображение данных в тексте'
+              icon={<IconShowDataText size='1.25rem' className='hover:text-primary' value={showDataText} />}
+              onClick={toggleDataText}
+            />
           </div>
           <div className='w-full max-w-full overflow-x-auto'>
             <DataTable

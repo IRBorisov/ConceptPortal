@@ -28,7 +28,7 @@ interface ValueInputProps {
   status: EvalStatus;
   showDataText?: boolean;
 
-  onChangeStr?: (newValue: string) => void;
+  onChange?: (newValue: string) => void;
   onCalculate?: (event: React.MouseEvent<Element>) => void;
   onToggleDataText?: () => void;
 }
@@ -46,14 +46,14 @@ export function ValueInput({
   status,
   showDataText,
   isBinding,
-  onChangeStr,
+  onChange,
   onCalculate,
   onToggleDataText
 }: ValueInputProps) {
   const isTrimmed = value.length > limits.len_data_str;
   return (
     <div className={cn('relative flex flex-col gap-2', className)}>
-      <StatusBar className='absolute top-0 right-1/2 translate-x-1/2' status={status} onCalculate={onCalculate} />
+      <StatusBar className='absolute -top-1 right-1/2 translate-x-1/2' status={status} onCalculate={onCalculate} />
       {onToggleDataText && !isBinding ? (
         <MiniButton
           title='Отображение данных в тексте'
@@ -63,35 +63,11 @@ export function ValueInput({
         />
       ) : null}
 
-      <div className='flex items-center gap-3'>
-        <Label text='Значение' />
-        <span
-          tabIndex={-1}
-          className='font-math select-none'
-          aria-label='Мощность / значение выражения'
-          data-tooltip-id={globalIDs.tooltip}
-          data-tooltip-content='Значение выражения'
-        >
-          {formatInteger(valueLabel)}
-        </span>
-      </div>
+      <Label text='Значение' />
 
-      {stub ? (
-        <div className={clsx('absolute bottom-0 left-0', 'select-text text-muted-foreground')}>
-          <span
-            tabIndex={-1}
-            className='font-math'
-            aria-label='Сокращенное обозначение выражения'
-            data-tooltip-id={globalIDs.tooltip}
-            data-tooltip-content='Сокращение выражения'
-          >
-            {stub}
-          </span>
-        </div>
-      ) : null}
       <TextArea
         value={value.slice(0, limits.len_data_str)}
-        onChange={event => onChangeStr?.(event.target.value)}
+        onChange={event => onChange?.(event.target.value)}
         fitContent
         areaClassName={cn(value ? 'font-math text-sm' : '', areaClassname)}
         rows={rows}
@@ -99,14 +75,40 @@ export function ValueInput({
         placeholder={placeholder}
         disabled={isTrimmed || disabled}
       />
-      {value.length > 0 ? (
-        <div
-          className={clsx('select-none ml-auto', isTrimmed && 'text-destructive')}
-          aria-label='Количество символов'
-          data-tooltip-id={globalIDs.tooltip}
-          data-tooltip-html='Отображаемое количество</br>символов ограничено'
-        >
-          {`${formatInteger(value.length)} / ${formatInteger(limits.len_data_str)}`}
+      {stub || (value.length > 0 && !disabled) ? (
+        <div className='flex'>
+          {stub ? (
+            <div className='flex gap-2 text-muted-foreground'>
+              <span
+                tabIndex={-1}
+                className='font-math select-none'
+                aria-label='Мощность / значение выражения'
+                data-tooltip-id={globalIDs.tooltip}
+                data-tooltip-content='Значение выражения'
+              >
+                Мощность: {formatInteger(valueLabel)} |
+              </span>
+              <span
+                tabIndex={-1}
+                className='font-math select-text'
+                aria-label='Сокращенное обозначение выражения'
+                data-tooltip-id={globalIDs.tooltip}
+                data-tooltip-content='Сокращение выражения'
+              >
+                {stub}
+              </span>
+            </div>
+          ) : null}
+          {value.length > 0 && !disabled ? (
+            <div
+              className={clsx('ml-auto select-none', isTrimmed && 'text-destructive')}
+              aria-label='Количество символов'
+              data-tooltip-id={globalIDs.tooltip}
+              data-tooltip-html='Отображаемое количество<br/>символов ограничено'
+            >
+              {`${formatInteger(value.length)} / ${formatInteger(limits.len_data_str)}`}
+            </div>
+          ) : null}
         </div>
       ) : null}
     </div>

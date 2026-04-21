@@ -95,7 +95,7 @@ function describeCstNode(cst: Constituenta) {
     ? cst.convention
     : cst.definition_resolved || cst.definition_formal || cst.convention;
   const typification = labelType(cst.analysis?.type ?? null);
-  return `${cst.alias}: ${cst.term_resolved}</br>${
-    cst.analysis ? `<b>Типизация:</b> ${typification}</br>` : ''
+  return `${cst.alias}: ${cst.term_resolved}<br/>${
+    cst.analysis ? `<b>Типизация:</b> ${typification}<br/>` : ''
   }<b>Содержание:</b> ${contents ? contents : 'отсутствует'}`;
 }

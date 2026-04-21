@@ -123,13 +123,11 @@ export function DataTable<TData extends RowData>({
 
   ...restProps
 }: DataTableProps<TData>) {
+  const table = useDataTable({ paginationPerPage, ...restProps });
   const [lastSelected, setLastSelected] = useState<string | null>(null);
 
-  const table = useDataTable({ paginationPerPage, ...restProps });
-
   const isEmpty = table.getRowModel().rows.length === 0;
-
-  const fixedSize = useMemo(() => {
+  const fixedHeight = useMemo(() => {
     if (!rows) {
       return undefined;
     }
@@ -158,7 +156,7 @@ export function DataTable<TData extends RowData>({
       tabIndex={-1}
       id={id}
       className={cn('table-auto', className)}
-      style={{ minHeight: fixedSize, maxHeight: fixedSize, ...style }}
+      style={{ minHeight: fixedHeight, maxHeight: fixedHeight, ...style }}
     >
       <table className='w-full' style={{ ...columnSizeVars }}>
         {!noHeader ? (

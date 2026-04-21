@@ -28,7 +28,7 @@ export const infoMsg = {
   inlineSynthesisComplete: 'Встраивание завершено',
   moveSuccess: 'Перемещение завершено',
   sandboxImportSuccess: 'Песочница обновлена успешно',
-  sandboxFailedToLoad: 'Не удалось загрузить песочницу. Загружен начальный набор.',
+  valueLoadedJson: 'Значение загружено из JSON-файла',
 
   newLibraryItem: 'Схема успешно создана',
   addedConstituents: (count: number) => `Добавлены конституенты: ${count}`,
@@ -83,12 +83,14 @@ export const errorMsg = {
   ossCycle: 'Нельзя создавать цикл в ОСС',
   invalidSetValue: 'Некорректная попытка назначения значения',
   clipboardRead: 'Не удалось прочитать из буфера обмена',
+  clipboardWrite: 'Не удалось записать в буфер обмена',
   fileRead: 'Ошибка при чтении файла',
   valueNull: 'Значение отсутствует',
   sandboxImportError: 'Не удалось перенести схему в песочницу',
   sandboxBundleNotAvailable: 'Песочница пуста',
   failedToPersistSandbox: 'Не удалось сохранить песочницу',
-  cannotExtractNode: 'Невозможно вынести выбранный узел'
+  cannotExtractNode: 'Невозможно вынести выбранный узел',
+  sandboxFailedToLoad: 'Не удалось загрузить песочницу. Загружен начальный набор.'
 } as const;
 
 /** UI hint descriptors. */
@@ -132,5 +134,6 @@ export const promptText = {
 } as const;
 
 export const placeholderMsg = {
-  itemDescription: 'Предметные источники, пояснения, примечания, комментарии разработчика'
+  itemDescription: 'Предметные источники, пояснения, примечания, комментарии разработчика',
+  valueTooLarge: 'Слишком объёмное значение — откройте «Просмотр значения»'
 } as const;

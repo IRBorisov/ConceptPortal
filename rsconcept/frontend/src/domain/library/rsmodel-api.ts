@@ -224,16 +224,24 @@ export function tryFixValue(
   }
 }
 
-/** Prepares string representation for {@link Value}. */
+/**
+ * Prepares string representation for {@link Value}.
+ *
+ * @returns `null` when the value structure exceeds size limits (caller should show a short UI hint instead
+ *   of calling {@link JSON.stringify} / pretty-print, which can overflow the stack).
+ */
 export function prepareValueString(
   value: RO<Value | null | BasicBinding>,
   type: ExpressionType | null,
   schema: RSForm,
   dataContext: BasicsContext,
   dataText: boolean
-): string {
+): string | null {
   if (value === null) {
     return '';
+  }
+  if (valuePrepareExceedsLimits(value, type, dataText)) {
+    return null;
   }
   if (!dataText || type === null || (value !== null && typeof value === 'object' && !Array.isArray(value))) {
     return JSON.stringify(value, null, 2).replace(
@@ -280,6 +288,102 @@ export function addValueElement(
 }
 
 // ========= Internal functions ==========
+
+/** Iterative walk: same branching as {@link prepareValueInternal} without building docs (avoids stack overflow). */
+function valuePrepareExceedsLimits(
+  value: RO<Value | null | BasicBinding>,
+  type: ExpressionType | null,
+  dataText: boolean
+): boolean {
+  if (!dataText || type === null || (value !== null && typeof value === 'object' && !Array.isArray(value))) {
+    return jsonTreeExceedsPrepareLimits(value);
+  }
+  return typedValuePrepareExceedsLimits(value as Value, type);
+}
+
+function jsonTreeExceedsPrepareLimits(root: unknown): boolean {
+  const maxDepth = limits.value_render_max_depth;
+  const maxNodes = limits.value_render_max_nodes;
+  if (root === null || typeof root !== 'object') {
+    return false;
+  }
+  const stack: { v: unknown; depth: number }[] = [{ v: root, depth: 0 }];
+  let nodes = 0;
+  while (stack.length > 0) {
+    const { v, depth } = stack.pop()!;
+    if (++nodes > maxNodes || depth > maxDepth) {
+      return true;
+    }
+    if (Array.isArray(v)) {
+      for (let i = v.length - 1; i >= 0; i--) {
+        const el = v[i] as unknown;
+        if (el !== null && typeof el === 'object') {
+          stack.push({ v: el, depth: depth + 1 });
+        } else if (depth + 1 > maxDepth || ++nodes > maxNodes) {
+          return true;
+        }
+      }
+    } else {
+      for (const key of Object.keys(v as object)) {
+        const el = (v as Record<string, unknown>)[key];
+        if (el !== null && typeof el === 'object') {
+          stack.push({ v: el, depth: depth + 1 });
+        } else if (depth + 1 > maxDepth || ++nodes > maxNodes) {
+          return true;
+        }
+      }
+    }
+  }
+  return false;
+}
+
+function typedValuePrepareExceedsLimits(root: Value, rootType: ExpressionType): boolean {
+  const maxDepth = limits.value_render_max_depth;
+  const maxNodes = limits.value_render_max_nodes;
+  const stack: { value: Value; type: ExpressionType; depth: number }[] = [{ value: root, type: rootType, depth: 0 }];
+  let nodes = 0;
+  while (stack.length > 0) {
+    const frame = stack.pop()!;
+    if (++nodes > maxNodes || frame.depth > maxDepth) {
+      return true;
+    }
+    const { value, type, depth } = frame;
+    switch (type.typeID) {
+      case TypeID.integer:
+      case TypeID.basic:
+      case TypeID.logic:
+        break;
+      case TypeID.tuple: {
+        if (!Array.isArray(value) || value.length !== type.factors.length + 1 || value[0] !== TUPLE_ID) {
+          break;
+        }
+        const nextDepth = depth + 1;
+        for (let i = type.factors.length - 1; i >= 0; i--) {
+          stack.push({ value: value[i + 1], type: type.factors[i], depth: nextDepth });
+        }
+        break;
+      }
+      case TypeID.collection: {
+        if (!Array.isArray(value) || (value.length > 1 && value[0] === TUPLE_ID)) {
+          break;
+        }
+        const nextDepth = depth + 1;
+        for (let i = value.length - 1; i >= 0; i--) {
+          stack.push({ value: value[i], type: type.base, depth: nextDepth });
+        }
+        break;
+      }
+      case TypeID.anyTypification:
+      case TypeID.predicate:
+      case TypeID.function:
+        break;
+      default:
+        break;
+    }
+  }
+  return false;
+}
+
 function prepareValueInternal(value: Value, type: ExpressionType, schema: RSForm, dataContext: BasicsContext): Doc {
   switch (type.typeID) {
     case TypeID.integer:

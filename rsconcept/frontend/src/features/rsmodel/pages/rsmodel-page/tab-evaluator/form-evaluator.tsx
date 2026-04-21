@@ -20,17 +20,21 @@ import { ViewErrors } from '@/features/rsform/components/view-errors';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 
 import { TextButton } from '@/components/control/text-button';
+import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import { TextArea, TextInput } from '@/components/input';
 import { cn } from '@/components/utils';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
-import { errorMsg, infoMsg } from '@/utils/labels';
+import { errorMsg, infoMsg, placeholderMsg } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 
 import { ValueInput } from '../../../components/value-input';
 import { labelValue } from '../../../labels';
+import { copyJsonToClipboard, downloadJsonFile, getExportJsonText } from '../export-helpers';
 import { useModelEdit } from '../model-edit-context';
 import { ToolbarExpression } from '../tab-value/toolbar-expression';
+
+const VALUE_FILENAME = 'eval_value.json';
 
 interface FormEvaluatorProps {
   id?: string;
@@ -51,13 +55,9 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
   const [expression, setExpression] = useState<string>(activeCst?.definition_formal ?? '');
   const [localEval, setLocalEval] = useState<RO<CalculatorResult> | null>(null);
   const [localParse, setLocalParse] = useState<RO<AnalysisFull> | null>(null);
-  const valueStr = prepareValueString(
-    localEval?.value ?? null,
-    localParse?.type ?? null,
-    schema,
-    engine.basics,
-    showDataText
-  );
+  const valueStr =
+    prepareValueString(localEval?.value ?? null, localParse?.type ?? null, schema, engine.basics, showDataText) ??
+    placeholderMsg.valueTooLarge;
   const stub = localEval?.value ? valueStub(localEval?.value) : '';
   const isModified = evaluatedExpression !== expression;
   const status = inferEvalStatus(localEval?.value ?? null, CstType.TERM, !isModified);
@@ -65,6 +65,14 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
   const dialogValue = localEval?.value ?? null;
   const dialogType = localParse?.type ?? null;
   const canOpenValueDialog = dialogValue != null && dialogType != null && isTypification(dialogType);
+
+  const {
+    elementRef: exportMenuRef,
+    isOpen: isExportOpen,
+    toggle: toggleExport,
+    handleBlur: handleExportBlur,
+    hide: hideExport
+  } = useDropdown();
 
   function handleOpenCst(cstID: number) {
     void router.changeActive(cstID);
@@ -117,6 +125,16 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
       engine,
       getHeaderText: activeCst ? (path: TypePath) => getStructureName(schema, activeCst, path) : undefined
     });
+  }
+
+  function handleClipboardExport() {
+    hideExport();
+    copyJsonToClipboard(getExportJsonText(dialogValue), () => toast.success(infoMsg.valueReady));
+  }
+
+  function handleJSONExport() {
+    hideExport();
+    downloadJsonFile(getExportJsonText(dialogValue), VALUE_FILENAME);
   }
 
   function handleShowError(error: RO<RSErrorDescription>) {
@@ -181,17 +199,31 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
       />
 
       {dialogValue != null ? (
-        <TextButton
-          text='Смотреть значение'
-          titleHtml={
-            canOpenValueDialog
-              ? 'Просмотр значения'
-              : 'Просмотр структурированного значения<br/>недоступен для этого типа'
-          }
-          disabled={!canOpenValueDialog}
-          onClick={handleViewValue}
-          className='text-sm mx-auto pl-6'
-        />
+        <div className='flex items-center justify-center gap-6 text-sm pl-6 flex-wrap'>
+          <TextButton
+            text='Смотреть значение'
+            titleHtml={
+              canOpenValueDialog
+                ? 'Просмотр значения'
+                : 'Просмотр структурированного значения<br/>недоступен для этого типа'
+            }
+            disabled={!canOpenValueDialog}
+            onClick={handleViewValue}
+            className='text-sm'
+          />
+          <div ref={exportMenuRef} onBlur={handleExportBlur} className='relative'>
+            <TextButton
+              text='Экспорт'
+              title='Экспортировать значение'
+              hideTitle={isExportOpen}
+              onClick={toggleExport}
+            />
+            <Dropdown isOpen={isExportOpen} margin='mt-1'>
+              <DropdownButton text='Скопировать в буфер' onClick={handleClipboardExport} />
+              <DropdownButton text='Сохранить как JSON' onClick={handleJSONExport} />
+            </Dropdown>
+          </div>
+        </div>
       ) : null}
       <ValueInput
         areaClassname='max-h-100'

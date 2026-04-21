@@ -1,7 +1,7 @@
 import { toast } from 'react-toastify';
 import fileDownload from 'js-file-download';
 
-import { infoMsg } from '@/utils/labels';
+import { errorMsg } from '@/utils/labels';
 
 import { type SandboxBundle, schemaSandboxBundle } from '../models/bundle';
 import { createStarterSandboxBundle } from '../models/bundle-starter';
@@ -31,7 +31,7 @@ export async function ensureBundleLoaded(): Promise<SandboxBundle> {
     if (parsed.success) {
       return parsed.data;
     } else {
-      toast.info(infoMsg.sandboxFailedToLoad);
+      toast.error(errorMsg.sandboxFailedToLoad);
     }
   }
   const starter = createStarterSandboxBundle();

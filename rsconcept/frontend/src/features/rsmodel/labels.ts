@@ -65,7 +65,7 @@ export function describeValue(data: Value | null, currentType: Typification): st
   if (currentType.typeID !== TypeID.collection) {
     return stub;
   }
-  return `${stub} | ${(data as Value[]).length}`;
+  return `Мощность: ${(data as Value[]).length} | ${stub}`;
 }
 
 /** Prints type with selected path. */

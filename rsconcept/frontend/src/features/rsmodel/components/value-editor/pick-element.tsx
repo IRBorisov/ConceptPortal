@@ -95,7 +95,7 @@ export function PickElement({ className, value, alias, isInteger, term, binding,
 
   return (
     <div className={cn('flex flex-col h-fit', className)}>
-      <div className='truncate select-none mb-2' data-tooltip-id={globalIDs.tooltip} data-tooltip-content={labelText}>
+      <div className='truncate select-none mb-3' data-tooltip-id={globalIDs.tooltip} data-tooltip-content={labelText}>
         {labelText}
       </div>
       <SearchBar
