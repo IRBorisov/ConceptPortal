@@ -11,7 +11,7 @@ import { type RO } from '@/utils/meta';
 
 import { pdfs } from '../../../components/pdf/pdf-styles';
 
-import { addSpaces, addSpacesTypification, hyphenateCyrillic } from './pdf-utils';
+import { addSpaces, addSpacesTypification, hyphenateCyrillic, protectShortRussianWords } from './pdf-utils';
 
 /** Renders a PDF file with a list of Constituenta.
  * WARNING! Large library load, use lazy loading.
@@ -102,10 +102,10 @@ function CstTable({ data }: { data: RO<Constituenta[]> }) {
               {addSpacesTypification(labelType(cst.analysis.type))}
             </Text>
             <Text style={{ ...pdfs.cell, width: '40mm' }} hyphenationCallback={hyphenateCyrillic}>
-              {cst.term_resolved}
+              {protectShortRussianWords(cst.term_resolved)}
             </Text>
             <Text style={{ ...pdfs.cell, width: '82mm', borderRightWidth: 0 }} hyphenationCallback={hyphenateCyrillic}>
-              {getCommentColumnText(cst)}
+              {protectShortRussianWords(getCommentColumnText(cst))}
             </Text>
           </View>
         ))}
