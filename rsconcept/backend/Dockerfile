@@ -16,41 +16,46 @@ RUN apt-get update -qq && \
     apt-get install -y --no-install-recommends \
         python3.12 \
         libstdc++6 && \
-    curl -sS https://bootstrap.pypa.io/get-pip.py | python3.12 && \
-    python3.12 -m pip install --upgrade pip && \
-    python3.12 -m pip install --upgrade setuptools wheel && \
     rm -rf /usr/lib/python3/dist-packages/pkg_resources* /usr/lib/python3.12/pkgutil.pyc && \
     apt-get autoclean -y && \
     apt-get autoremove -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
-    
+
 # ========= Builder ==============
 FROM python-base AS builder
 
-# Set env variables
+COPY --from=ghcr.io/astral-sh/uv:0.11.7 /uv /uvx /bin/
+
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+ENV UV_LINK_MODE=copy
+ENV UV_COMPILE_BYTECODE=1
+ENV UV_PROJECT_ENVIRONMENT=/opt/venv
 
-COPY ./requirements.txt ./
-RUN python3.12 -m pip wheel \
-        --no-cache-dir --no-deps \
-        --wheel-dir=/wheels -r requirements.txt
+WORKDIR /tmp/backend
+
+COPY .python-version pyproject.toml uv.lock ./
+RUN uv sync --frozen --no-dev
 
 
 # ======== Application ============
 FROM python-base
 
-# Install security updates and system packages
 RUN apt-get update -qq && \
     apt-get upgrade -y && \
-    apt-get install -y \ 
+    apt-get install -y --no-install-recommends \
         netcat && \
     rm -rf /var/lib/apt/lists/*
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
 # Setup the app user
 ENV USER_HOME=/home/app
 ENV APP_HOME=/home/app/web
+ENV VIRTUAL_ENV=/opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
 
 RUN mkdir -p $USER_HOME && \
     mkdir -p $APP_HOME && \
@@ -59,26 +64,22 @@ RUN mkdir -p $USER_HOME && \
     mkdir -p $APP_HOME/backup && \
     adduser --system --group app
 
-# Install python dependencies
-WORKDIR $APP_HOME
-COPY --from=builder /wheels /wheels
-RUN pip install --no-cache /wheels/* && \
-    rm -rf /wheels
+# Install Python dependencies from the locked uv environment.
+COPY --from=builder /opt/venv $VIRTUAL_ENV
 
 # Copy application sources and setup permissions
+WORKDIR $APP_HOME
 COPY project/ ./project
 COPY shared/ ./shared
 COPY fixtures/ ./fixtures
 COPY apps/ ./apps
 COPY manage.py entrypoint.sh ./
-RUN sed -i 's/\r$//g'  $APP_HOME/entrypoint.sh && \
+RUN sed -i 's/\r$//g' $APP_HOME/entrypoint.sh && \
     chmod +x $APP_HOME/entrypoint.sh && \
     chown -R app:app $APP_HOME && \
     chmod -R a+rwx $APP_HOME/static && \
     chmod -R a+rwx $APP_HOME/media && \
     chmod -R a+rwx $APP_HOME/backup
-
-RUN 
 
 USER app
 WORKDIR $APP_HOME

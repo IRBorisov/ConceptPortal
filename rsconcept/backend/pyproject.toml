@@ -1,0 +1,32 @@
+[project]
+name = "rsconcept-backend"
+version = "0.1.0"
+description = "Django backend for the Portal application."
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "cctext==0.1.5",
+    "coreapi==2.3.3",
+    "django==6.0.4",
+    "django-cors-headers==4.9.0",
+    "django-filter==25.2",
+    "django-rest-passwordreset==1.5.0",
+    "djangorestframework==3.17.1",
+    "drf-spectacular==0.29.0",
+    "drf-spectacular-sidecar==2026.4.1",
+    "gunicorn==25.3.0",
+    "psycopg2-binary==2.9.11",
+    "tzdata==2026.1",
+]
+
+[tool.uv]
+package = false
+
+[dependency-groups]
+dev = [
+    "coverage==7.13.5",
+    "django-extensions==4.1",
+    "django-stubs==6.0.2",
+    "djangorestframework-stubs[compatible-mypy]==3.16.9",
+    "mypy==1.20.1",
+    "pylint==4.0.5",
+]

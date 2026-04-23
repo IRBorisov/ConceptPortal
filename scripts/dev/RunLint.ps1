@@ -9,13 +9,10 @@ function RunLinters() {
 }
 
 function LintBackend() {
-  $pylint = "$backend\venv\Scripts\pylint.exe"
-  $mypy = "$backend\venv\Scripts\mypy.exe"
-
   Set-Location $backend
   $env:DJANGO_SETTINGS_MODULE = "project.settings"
-  & $pylint project apps
-  & $mypy project apps --show-traceback
+  & uv run pylint project apps
+  & uv run mypy project apps --show-traceback
 }
 
 function LintFrontend() {

@@ -113,6 +113,8 @@ This readme file is used mostly to document project dependencies and conventions
 
 ## 🗃️ Backend [Django + PostgreSQL/SQLite]
 
+Python dependencies are managed with `uv` in `rsconcept/backend/pyproject.toml` and `rsconcept/backend/uv.lock`.
+
 <details>
   <summary>requirements</summary>
   <pre>
@@ -171,8 +173,8 @@ This readme file is used mostly to document project dependencies and conventions
 
 This is the build for local Development
 
-- Install Docker Desktop, Python 3.12, NodeJS, VSCode or other compatible IDE
-- run scripts/dev/LocalEnvSetup.ps1
+- Install Docker Desktop, Python 3.12, `uv`, NodeJS, VSCode or other compatible IDE
+- run `scripts/dev/LocalDevSetup.ps1`
 - use VSCode configs in root folder to start development
 - use 'npm run generate' to regenerate frontend parsers (if you change grammar files)
 

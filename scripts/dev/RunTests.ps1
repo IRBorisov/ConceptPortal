@@ -9,12 +9,11 @@ function RunTests() {
 }
 
 function TestBackend() {
-  $pyExec = "$backend\venv\Scripts\python.exe"
   $djangoSrc = "$backend\manage.py"
 
   Set-Location $backend
-  & $pyExec $djangoSrc check
-  & $pyExec $djangoSrc test
+  & uv run python $djangoSrc check
+  & uv run python $djangoSrc test
 }
 
 function TestFrontend() {

@@ -6,7 +6,6 @@ Param(
 $backend = Resolve-Path -Path "$PSScriptRoot\..\..\rsconcept\backend"
 $frontend = Resolve-Path -Path "$PSScriptRoot\..\..\rsconcept\frontend"
 
-$pyExec = "$backend\venv\Scripts\python.exe"
 $djangoSrc = "$backend\manage.py"
 $initialData = "fixtures/InitialData.json"
 
@@ -29,7 +28,7 @@ function BackendRun() {
         DoMigrations
         PrepareStatic
     }
-    Invoke-Expression "cmd /c start powershell -Command { `$Host.UI.RawUI.WindowTitle = 'django'; & $pyExec $djangoSrc runserver }"
+    Invoke-Expression "cmd /c start powershell -Command { `$Host.UI.RawUI.WindowTitle = 'django'; Set-Location '$backend'; uv run python manage.py runserver }"
 }
 
 function FrontendRun() {
@@ -39,7 +38,7 @@ function FrontendRun() {
 }
 
 function FlushData {
-    & $pyExec $djangoSrc flush --noinput
+    & uv run python $djangoSrc flush --noinput
     $dbPath = "$backend\db.sqlite3"
     if (Test-Path -Path $dbPath -PathType Leaf) {
 	    Remove-Item $dbPath
@@ -48,26 +47,26 @@ function FlushData {
 
 function AddInitialData {
     if (Test-Path -Path $initialData -PathType Leaf) {
-        & $pyExec $djangoSrc flush --noinput
-        & $pyExec $djangoSrc loaddata $initialData
+        & uv run python $djangoSrc flush --noinput
+        & uv run python $djangoSrc loaddata $initialData
     } else {
         $env:DJANGO_SUPERUSER_USERNAME = 'admin'
         $env:DJANGO_SUPERUSER_PASSWORD = '1234'
         $env:DJANGO_SUPERUSER_EMAIL = 'admin@admin.com'
-        & $pyExec $djangoSrc createsuperuser --noinput
+        & uv run python $djangoSrc createsuperuser --noinput
     }
 }
 
 function DoMigrations {
-    & $pyExec $djangoSrc makemigrations
-    & $pyExec $djangoSrc migrate
+    & uv run python $djangoSrc makemigrations
+    & uv run python $djangoSrc migrate
 }
 
 function PrepareStatic([switch]$clearPrevious) {
     if ($clearPrevious) {
-        & $pyExec $djangoSrc collectstatic --noinput --clear
+        & uv run python $djangoSrc collectstatic --noinput --clear
     } else {
-        & $pyExec $djangoSrc collectstatic --noinput
+        & uv run python $djangoSrc collectstatic --noinput
     }
 }
 

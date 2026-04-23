@@ -41,11 +41,13 @@ This file applies to the Django backend in this directory tree.
 
 Run from `rsconcept/backend`:
 
-- Django checks: `venv\Scripts\python.exe manage.py check`
-- Run tests: `venv\Scripts\python.exe manage.py test`
-- Run server: `venv\Scripts\python.exe manage.py runserver`
-- Pylint: `venv\Scripts\pylint.exe project apps`
-- MyPy: `venv\Scripts\mypy.exe project apps --show-traceback`
+- Sync dependencies: `uv sync --frozen`
+- Update packages: `uv lock --upgrade && uv sync`
+- Django checks: `uv run python manage.py check`
+- Run tests: `uv run python manage.py test`
+- Run server: `uv run python manage.py runserver`
+- Pylint: `uv run pylint project apps`
+- MyPy: `uv run mypy project apps --show-traceback`
 
 From repository root you can also use:
 

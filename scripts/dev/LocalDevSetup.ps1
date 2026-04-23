@@ -2,8 +2,7 @@
 
 $backend = Resolve-Path -Path "$PSScriptRoot\..\..\rsconcept\backend"
 $frontend = Resolve-Path -Path "$PSScriptRoot\..\..\rsconcept\frontend"
-$envPath = "$backend\venv"
-$python = "$envPath\Scripts\python.exe"
+$envPath = "$backend\.venv"
 
 function LocalDevelopmentSetup() {
     FrontendSetup
@@ -19,8 +18,7 @@ function BackendSetup() {
     Set-Location $backend
 
     ClearPrevious
-    CreateEnv
-    InstallPips
+    SyncBackendDeps
 }
 
 function ClearPrevious() {
@@ -30,14 +28,9 @@ function ClearPrevious() {
     }
 }
 
-function CreateEnv() {
-    Write-Host "Creating python env: $envPath`n" -ForegroundColor DarkGreen
-    & 'python' -m venv $envPath
-}
-
-function InstallPips() {
-    & $python -m pip install --upgrade pip
-    & $python -m pip install -r requirements-dev.txt --no-warn-script-location
+function SyncBackendDeps() {
+    Write-Host "Syncing backend env with uv lockfile`n" -ForegroundColor DarkGreen
+    & uv sync --frozen
 }
 
 LocalDevelopmentSetup

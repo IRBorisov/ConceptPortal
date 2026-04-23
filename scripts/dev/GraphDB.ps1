@@ -4,10 +4,9 @@ $backend = Resolve-Path -Path "${PSScriptRoot}\..\..\rsconcept\backend"
 function GenerateDOT() {
   Set-Location $backend
 
-  $python = "${backend}\venv\Scripts\python.exe"
   $djangoSrc = "${backend}\manage.py"
 
-  & $python $djangoSrc graph_models -o visualizeDB.dot
+  & uv run python $djangoSrc graph_models -o visualizeDB.dot
 
   notepad.exe "${backend}\visualizeDB.dot"
   Start-Process "https://dreampuf.github.io/GraphvizOnline"
