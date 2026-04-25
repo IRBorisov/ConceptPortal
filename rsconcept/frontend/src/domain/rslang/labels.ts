@@ -142,7 +142,7 @@ export function labelRSLangNode(node: RO<AstNodeBase>): string {
 export function describeRSError(code: RSErrorCode, params: readonly string[] = []): string {
   // prettier-ignore
   switch (code) {
-    case RSErrorCode.syntax:
+    case RSErrorCode.unknownSyntax:
       return 'Неопределенная синтаксическая ошибка';
     case RSErrorCode.missingParenthesis:
       return "Пропущена ')'";
@@ -152,6 +152,8 @@ export function describeRSError(code: RSErrorCode, params: readonly string[] = [
       return "Пропущена ']'";
     case RSErrorCode.bracketMismatch:
       return `Несогласованные скобки: '${params[0]}' вместо '${params[1]}'`;
+    case RSErrorCode.doubleParenthesis:
+      return "Двойные обрамляющие скобки '((' и '))' не допускаются";
     case RSErrorCode.expectedLocal:
       return 'Ожидалось имя переменной';
     case RSErrorCode.expectedType:

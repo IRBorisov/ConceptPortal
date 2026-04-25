@@ -28,40 +28,37 @@ export function extractSyntaxErrors(
 }
 
 // ====== Internals =========
-function extractInternal(node: AstNode, reporter: ErrorReporter, annotateErrors: boolean, hasBracketErrors: boolean) {
+function extractInternal(
+  node: AstNode,
+  reporter: ErrorReporter,
+  annotateErrors: boolean,
+  ignoreUnknownErrors: boolean
+) {
   if (node.typeID !== TokenID.ERROR) {
     return;
   }
 
-  function emit(target: AstNode, code: RSErrorCode, from: number, to: number) {
-    reporter({ code, from, to });
+  function emit(target: AstNode, code: RSErrorCode) {
+    reporter({ code: code, from: target.from, to: target.to });
     if (annotateErrors) {
       annotateError(target, code);
     }
   }
 
-  if (node.parent === null) {
-    if (!hasBracketErrors) {
-      return emit(node, RSErrorCode.syntax, node.from, node.to);
+  const parent = node.parent;
+  if (parent === null) {
+    if (!ignoreUnknownErrors) {
+      return emit(node, RSErrorCode.unknownSyntax);
     }
     return;
   }
 
-  if (node.parent.typeID === Variable) {
-    const parent = node.parent;
-    reporter({
-      code: RSErrorCode.expectedLocal,
-      from: parent.from,
-      to: parent.to
-    });
-    if (annotateErrors) {
-      annotateError(parent, RSErrorCode.expectedLocal);
-    }
-    return;
+  if (parent.typeID === Variable) {
+    return emit(parent, RSErrorCode.expectedLocal);
   }
 
-  if (!hasBracketErrors) {
-    emit(node, RSErrorCode.syntax, node.from, node.to);
+  if (!ignoreUnknownErrors) {
+    emit(node.from === node.to ? parent : node, RSErrorCode.unknownSyntax);
   }
 }
 
@@ -79,6 +76,13 @@ function extractBracketErrors(expression: string): RSErrorDescription | null {
   for (let pos = 0; pos < expression.length; pos++) {
     const symbol = expression[pos];
     if (isOpenBracket(symbol)) {
+      if (isDoubleParenthesis(expression, pos)) {
+        return {
+          code: RSErrorCode.doubleParenthesis,
+          from: pos,
+          to: pos + 2
+        };
+      }
       stack.push({ bracket: symbol, index: pos });
       continue;
     }
@@ -131,7 +135,6 @@ function missingBracketCode(bracket: OpenBracket): RSErrorCode {
     case '{':
       return RSErrorCode.missingCurlyBrace;
   }
-  return RSErrorCode.syntax;
 }
 
 function isOpenBracket(symbol: string): symbol is OpenBracket {
@@ -162,4 +165,19 @@ function closeToOpen(symbol: CloseBracket): OpenBracket {
     case '}':
       return '{';
   }
+}
+
+function isDoubleParenthesis(expression: string, pos: number): boolean {
+  const isOpenDoubleParenthesis = expression[pos] === '(' && expression[pos + 1] === '(';
+  if (!isOpenDoubleParenthesis) {
+    return false;
+  }
+
+  for (let index = expression.length - 2; index > pos; index--) {
+    if (expression[index] === ')' && expression[index + 1] === ')') {
+      return true;
+    }
+  }
+
+  return false;
 }
