@@ -117,7 +117,9 @@ export function ValueEditor({
               disabled={currentType.typeID !== TypeID.collection && value !== null}
             />
             <SearchBar id='dlg_value_search' noBorder query={filter} onChangeQuery={setFilter} />
-            <Text className='font-math font-normal mr-3 select-none' text={valueStr} />
+            {currentType.typeID === TypeID.collection ? (
+              <Text className='font-math font-normal mr-3 select-none' text={valueStr} />
+            ) : null}
             <MiniButton
               title='Отображение данных в тексте'
               icon={<IconShowDataText size='1.25rem' className='hover:text-primary' value={showDataText} />}

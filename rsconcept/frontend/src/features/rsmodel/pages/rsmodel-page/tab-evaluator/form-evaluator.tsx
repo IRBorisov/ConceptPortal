@@ -10,7 +10,7 @@ import { inferEvalStatus, prepareValueString } from '@/domain/library/rsmodel-ap
 import { type AnalysisFull, type CalculatorResult, type RSErrorDescription, TokenID } from '@/domain/rslang';
 import { valueStub } from '@/domain/rslang/eval/value-api';
 import { labelType } from '@/domain/rslang/labels';
-import { isTypification, type TypePath, type Typification } from '@/domain/rslang/semantic/typification';
+import { isTypification, TypeID, type TypePath, type Typification } from '@/domain/rslang/semantic/typification';
 
 import { useConceptNavigation } from '@/app';
 import { RSEditorControls } from '@/features/rsform/components/editor-rsexpression/rs-edit-controls';
@@ -58,7 +58,7 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
   const valueStr =
     prepareValueString(localEval?.value ?? null, localParse?.type ?? null, schema, engine.basics, showDataText) ??
     placeholderMsg.valueTooLarge;
-  const stub = localEval?.value ? valueStub(localEval?.value) : '';
+  const stub = localEval?.value && localParse?.type?.typeID === TypeID.collection ? valueStub(localEval?.value) : '';
   const isModified = evaluatedExpression !== expression;
   const status = inferEvalStatus(localEval?.value ?? null, CstType.TERM, !isModified);
   const errors = !localParse ? null : [...localParse.errors, ...(localEval?.errors ?? [])];

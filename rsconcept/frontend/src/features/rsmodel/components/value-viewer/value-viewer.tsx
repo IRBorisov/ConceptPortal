@@ -85,11 +85,13 @@ export function ValueViewer({ className, value, rows, perPage = 20, engine, getH
       <div className='font-math select-none'>{typeStr}</div>
       <div className='grow min-w-0'>
         <div className='-mt-1 flex justify-between items-center'>
-          <Text
-            className='font-math font-normal mr-1 select-none'
-            text={valueStr}
-            title='Обозначение | Мощность множества'
-          />
+          {currentType.typeID === TypeID.collection ? (
+            <Text
+              className='font-math font-normal mr-1 select-none'
+              text={valueStr}
+              title='Обозначение | Мощность множества'
+            />
+          ) : null}
           <SearchBar id='dlg_value_search' noBorder query={filter} onChangeQuery={setFilter} />
           <div className='cc-icons'>
             <MiniButton

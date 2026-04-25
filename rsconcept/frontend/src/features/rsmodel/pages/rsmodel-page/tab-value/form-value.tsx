@@ -7,7 +7,7 @@ import { type ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import { type BasicBinding, type Constituenta, CstType } from '@/domain/library';
 import { isBaseSet } from '@/domain/library/rsform-api';
 import { isInferrable, isInterpretable, prepareValueString } from '@/domain/library/rsmodel-api';
-import { type CalculatorResult, type RSErrorDescription, TokenID, type Value } from '@/domain/rslang';
+import { type CalculatorResult, type RSErrorDescription, TokenID, TypeID, type Value } from '@/domain/rslang';
 import { normalizeValue, valueStub } from '@/domain/rslang/eval/value-api';
 import { labelType } from '@/domain/rslang/labels';
 
@@ -65,7 +65,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
   const [localEval, setLocalEval] = useState<RO<CalculatorResult> | null>(null);
 
   const cstData = useCstValue(engine, activeCst);
-  const stub = valueStub(cstData);
+  const stub = cstData && typification?.typeID === TypeID.collection ? valueStub(cstData) : '';
 
   const initialValue = isBase ? (engine.basics.get(activeCst.id) ?? ({} as BasicBinding)) : cstData;
 
