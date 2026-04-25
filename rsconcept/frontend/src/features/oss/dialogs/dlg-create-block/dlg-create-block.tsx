@@ -81,7 +81,7 @@ export function DlgCreateBlock() {
     }
   });
 
-  const values = useStore(form.store, state => state.values as CreateBlockDTO);
+  const values = useStore(form.store, state => state.values);
   const title = values.item_data.title;
   const [activeTab, setActiveTab] = useState<TabID>(TabID.CARD);
   const { canSubmit, hint } = useMemo(() => {

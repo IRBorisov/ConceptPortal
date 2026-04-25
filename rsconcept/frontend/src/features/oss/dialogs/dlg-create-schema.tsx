@@ -64,7 +64,7 @@ export function DlgCreateSchema() {
     }
   });
 
-  const values = useStore(form.store, state => state.values as CreateSchemaDTO);
+  const values = useStore(form.store, state => state.values);
   const alias = values.item_data.alias;
   const { canSubmit, hint } = useMemo(() => {
     if (!alias) {

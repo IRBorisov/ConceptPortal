@@ -32,13 +32,14 @@ export function DlgDeleteOperation() {
     (target.operation_type === OperationType.INPUT && !target.is_import && !target.has_additions) ||
     (target.operation_type === OperationType.SYNTHESIS && !target.has_additions);
 
+  const defaultValues: DeleteOperationDTO = {
+    target: targetID,
+    layout: layout,
+    keep_constituents: false,
+    delete_schema: shouldDeleteSchema
+  };
   const form = useForm({
-    defaultValues: {
-      target: targetID,
-      layout: layout,
-      keep_constituents: false,
-      delete_schema: shouldDeleteSchema
-    } as DeleteOperationDTO,
+    defaultValues,
     validators: {
       onChange: schemaDeleteOperation
     },

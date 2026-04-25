@@ -47,24 +47,25 @@ export function FormCreateItem({
   const searchLocation = useLibrarySearchStore(state => state.location);
   const setSearchLocation = useLibrarySearchStore(state => state.setLocation);
 
+  const defaultValues: CreateLibraryItemDTO = {
+    item_type: modelFrom ? LibraryItemType.RSMODEL : initialType,
+    access_policy: AccessPolicy.PUBLIC,
+    visible: true,
+    read_only: false,
+    schema: modelFrom ?? (fromSandbox && initialType === LibraryItemType.RSMODEL ? -1 : undefined),
+    title: schemaItem ? `Модель ${schemaItem.title}` : undefined,
+    alias: schemaItem ? `M${schemaItem.alias}` : undefined,
+    location: schemaItem
+      ? schemaItem.location
+      : !!searchLocation && !searchLocation.startsWith(LocationHead.LIBRARY)
+        ? searchLocation
+        : LocationHead.USER,
+    description: '',
+    file: undefined,
+    fileName: undefined
+  };
   const form = useForm({
-    defaultValues: {
-      item_type: modelFrom ? LibraryItemType.RSMODEL : initialType,
-      access_policy: AccessPolicy.PUBLIC,
-      visible: true,
-      read_only: false,
-      schema: modelFrom ?? (fromSandbox && initialType === LibraryItemType.RSMODEL ? -1 : undefined),
-      title: schemaItem ? `Модель ${schemaItem.title}` : undefined,
-      alias: schemaItem ? `M${schemaItem.alias}` : undefined,
-      location: schemaItem
-        ? schemaItem.location
-        : !!searchLocation && !searchLocation.startsWith(LocationHead.LIBRARY)
-          ? searchLocation
-          : LocationHead.USER,
-      description: '',
-      file: undefined,
-      fileName: undefined
-    } as CreateLibraryItemDTO,
+    defaultValues,
     validators: {
       onChange: schemaCreateLibraryItem
     },

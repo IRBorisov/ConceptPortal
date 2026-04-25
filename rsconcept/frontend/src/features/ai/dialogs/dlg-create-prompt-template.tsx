@@ -25,13 +25,14 @@ export function DlgCreatePromptTemplate() {
   const { items: templates } = useAvailableTemplatesSuspense();
   const { user } = useAuth();
 
+  const defaultValues: ICreatePromptTemplateDTO = {
+    label: '',
+    description: '',
+    text: '',
+    is_shared: false
+  };
   const form = useForm({
-    defaultValues: {
-      label: '',
-      description: '',
-      text: '',
-      is_shared: false
-    } as ICreatePromptTemplateDTO,
+    defaultValues,
     validators: {
       onChange: schemaCreatePromptTemplate
     },

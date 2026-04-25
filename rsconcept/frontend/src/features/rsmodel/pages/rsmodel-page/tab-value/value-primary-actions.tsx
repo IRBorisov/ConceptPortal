@@ -44,7 +44,7 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
 
   const hasValueDialog = !!typification && isTypification(typification) && (cstData != null || !cstInferrable);
 
-  const valuePayload = isBase ? (engine.basics.get(activeCst.id) ?? ({} as BasicBinding)) : cstData;
+  const valuePayload = isBase ? (engine.basics.get(activeCst.id) ?? {}) : cstData;
 
   const {
     elementRef: exportMenuRef,
@@ -65,10 +65,7 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
   const showExportMenu = valuePayload != null;
   const showImportMenu = !isImportDisabled;
   const showClearButton =
-    isMutable &&
-    !cstInferrable &&
-    valuePayload !== null &&
-    !(Array.isArray(valuePayload) && valuePayload.length === 0);
+    isMutable && !cstInferrable && valuePayload !== null && !(Array.isArray(valuePayload) && valuePayload.length === 0);
 
   const hasPrimaryActions = showValueButton || showExportMenu || showImportMenu || showClearButton;
   if (!hasPrimaryActions) {

@@ -91,7 +91,7 @@ describe('validateValue', () => {
     expect(arr2[2]).toEqual([TUPLE_ID, 3, 1]);
 
     const num = 42;
-    normalizeValue(num as Value);
+    normalizeValue(num);
     expect(num).toBe(42);
 
     const empty: Value[] = [];

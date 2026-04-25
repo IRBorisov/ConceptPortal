@@ -24,10 +24,12 @@ export interface DlgSubstituteCstProps {
 export function DlgSubstituteCst() {
   const { onSubstitute, schema } = useDialogsStore(state => state.props as DlgSubstituteCstProps);
 
+  const defaultValues: SubstitutionsDTO = {
+    substitutions: []
+  };
+
   const form = useForm({
-    defaultValues: {
-      substitutions: []
-    } as SubstitutionsDTO,
+    defaultValues,
     validators: {
       onChange: schemaSubstitutions
     },

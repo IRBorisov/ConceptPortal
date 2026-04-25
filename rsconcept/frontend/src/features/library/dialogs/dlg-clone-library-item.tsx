@@ -33,18 +33,19 @@ export function DlgCloneLibraryItem() {
   const router = useConceptNavigation();
   const { cloneItem } = useCloneItem();
 
+  const defaultValues: CloneLibraryItemDTO = {
+    item_data: {
+      title: cloneTitle(base),
+      alias: base.alias,
+      description: base.description,
+      visible: true,
+      access_policy: AccessPolicy.PUBLIC,
+      location: initialLocation
+    },
+    items: []
+  };
   const form = useForm({
-    defaultValues: {
-      item_data: {
-        title: cloneTitle(base),
-        alias: base.alias,
-        description: base.description,
-        visible: true,
-        access_policy: AccessPolicy.PUBLIC,
-        location: initialLocation
-      },
-      items: []
-    } as CloneLibraryItemDTO,
+    defaultValues,
     validators: {
       onChange: schemaCloneLibraryItem
     },

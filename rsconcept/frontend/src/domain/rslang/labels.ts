@@ -68,7 +68,7 @@ export function labelRSLangNode(node: RO<AstNodeBase>): string {
     case TokenID.ID_RADICAL:
       return node.data.value as string;
 
-    case TokenID.LIT_INTEGER: return String(node.data.value as number);
+    case TokenID.LIT_INTEGER: return String(node.data.value);
 
     case TokenID.BIGPR: return 'Pr' + (node.data.value as string[]).toString();
     case TokenID.SMALLPR: return 'pr' + (node.data.value as string[]).toString();

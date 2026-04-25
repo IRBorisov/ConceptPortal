@@ -28,13 +28,14 @@ export function DlgDeleteReplica() {
   const { schema } = useOss({ itemID: ossID });
   const target = schema.operationByID.get(targetID)!;
 
+  const defaultValues: DeleteReplicaDTO = {
+    target: targetID,
+    layout: layout,
+    keep_constituents: false,
+    keep_connections: false
+  };
   const form = useForm({
-    defaultValues: {
-      target: targetID,
-      layout: layout,
-      keep_constituents: false,
-      keep_connections: false
-    } as DeleteReplicaDTO,
+    defaultValues,
     validators: {
       onChange: schemaDeleteReplica
     },

@@ -77,7 +77,7 @@ export function DlgEditOperation() {
     }
   });
 
-  const values = useStore(form.store, state => state.values as UpdateOperationDTO);
+  const values = useStore(form.store, state => state.values);
   const canSubmit = useMemo(() => schemaUpdateOperation.safeParse(values).success, [values]);
 
   const [activeTab, setActiveTab] = useState<TabID>(TabID.CARD);

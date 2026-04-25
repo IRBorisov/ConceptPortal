@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import clsx from 'clsx';
 
 import { globalIDs } from '@/utils/constants';
@@ -47,28 +47,26 @@ export function SelectTree<ItemType>({
 }: SelectTreeProps<ItemType>) {
   const foldable = new Set(items.filter(item => getParent(item) !== item).map(item => getParent(item)));
   const defaultFolded = items.filter(item => getParent(value) !== item && getParent(getParent(value)) !== item);
-  const [folded, setFolded] = useState<ItemType[]>(defaultFolded);
-
-  useEffect(
-    function synchronizeFoldedOnValueChange() {
-      setFolded(defaultFolded);
-    },
-    [defaultFolded]
-  );
+  const [foldedByValue, setFoldedByValue] = useState<{ value: ItemType; folded: ItemType[] }[]>([]);
+  const folded = foldedByValue.find(entry => entry.value === value)?.folded ?? defaultFolded;
 
   function onFoldItem(target: ItemType) {
-    setFolded(prev =>
-      items.filter(item => {
+    setFoldedByValue(prevState => {
+      const currentFolded = prevState.find(entry => entry.value === value)?.folded ?? defaultFolded;
+      const updatedFolded = items.filter(item => {
         if (item === target) {
-          return !prev.includes(target);
+          return !currentFolded.includes(target);
         }
-        if (!prev.includes(target) && (getParent(item) === target || getParent(getParent(item)) === target)) {
+        if (!currentFolded.includes(target) && (getParent(item) === target || getParent(getParent(item)) === target)) {
           return true;
         } else {
-          return prev.includes(item);
+          return currentFolded.includes(item);
         }
-      })
-    );
+      });
+      const nextState = prevState.filter(entry => entry.value !== value);
+      nextState.push({ value, folded: updatedFolded });
+      return nextState;
+    });
   }
 
   function handleClickFold(event: React.MouseEvent<Element>, target: ItemType) {

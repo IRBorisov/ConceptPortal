@@ -25,15 +25,16 @@ export interface DlgRenameCstProps {
 
 export function DlgRenameCst() {
   const { schema, target, onRename } = useDialogsStore(state => state.props as DlgRenameCstProps);
+  const defaultValues: UpdateConstituentaDTO = {
+    target: target.id,
+    item_data: {
+      alias: target.alias,
+      cst_type: target.cst_type
+    }
+  };
 
   const form = useForm({
-    defaultValues: {
-      target: target.id,
-      item_data: {
-        alias: target.alias,
-        cst_type: target.cst_type
-      }
-    } as UpdateConstituentaDTO,
+    defaultValues,
     validators: {
       onChange: schemaUpdateConstituenta
     },

@@ -97,10 +97,10 @@ export function ToolbarModelList({ className }: ToolbarModelListProps) {
           {Object.values(CstType).map(typeStr => (
             <DropdownButton
               key={`${prefixes.csttype_list}${typeStr}`}
-              text={labelCstType(typeStr as CstType)}
-              icon={<IconCstType value={typeStr as CstType} size='1.25rem' />}
-              onClick={() => void createCst(typeStr as CstType)}
-              titleHtml={getCstTypeShortcut(typeStr as CstType)}
+              text={labelCstType(typeStr)}
+              icon={<IconCstType value={typeStr} size='1.25rem' />}
+              onClick={() => void createCst(typeStr)}
+              titleHtml={getCstTypeShortcut(typeStr)}
             />
           ))}
         </Dropdown>

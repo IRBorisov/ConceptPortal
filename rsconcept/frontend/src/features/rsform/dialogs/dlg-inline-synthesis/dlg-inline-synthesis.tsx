@@ -34,13 +34,14 @@ export function DlgInlineSynthesis() {
   const { receiver, onSynthesis } = useDialogsStore(state => state.props as DlgInlineSynthesisProps);
   const [activeTab, setActiveTab] = useState<TabID>(TabID.SCHEMA);
 
+  const defaultValues: InlineSynthesisDTO = {
+    receiver: receiver.id,
+    source: null,
+    items: [],
+    substitutions: []
+  };
   const form = useForm({
-    defaultValues: {
-      receiver: receiver.id,
-      source: null,
-      items: [],
-      substitutions: []
-    } as InlineSynthesisDTO,
+    defaultValues,
     validators: {
       onChange: schemaInlineSynthesis
     },

@@ -12,14 +12,14 @@ import { withPreventDefault } from '@/utils/utils';
 
 import { IconCstType } from '../components/icon-cst-type';
 import { labelCstType } from '../labels';
-import { cstTypeToFilterKey, type GraphFilterParams, useTermGraphStore } from '../stores/term-graph';
+import { cstTypeToFilterKey, useTermGraphStore } from '../stores/term-graph';
 
 export function DlgGraphParams() {
   const params = useTermGraphStore(state => state.filter);
   const setParams = useTermGraphStore(state => state.setFilter);
 
   const form = useForm({
-    defaultValues: { ...params } as GraphFilterParams,
+    defaultValues: { ...params },
     onSubmit: ({ value }) => setParams(value)
   });
 

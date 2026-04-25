@@ -34,7 +34,7 @@ export function DlgCreateCst() {
     onSubmit: ({ value }) => onCreate(value)
   });
 
-  const values = useStore(form.store, state => state.values as CreateConstituentaDTO);
+  const values = useStore(form.store, state => state.values);
   const alias = values.alias;
   const cst_type = values.cst_type;
   const { canSubmit, hint } = useMemo(() => {

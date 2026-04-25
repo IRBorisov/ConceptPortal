@@ -35,20 +35,21 @@ export function DlgEditCst() {
   const hideDialog = useDialogsStore(state => state.hideDialog);
   const router = useConceptNavigation();
 
+  const defaultValues: UpdateConstituentaDTO = {
+    target: target.id,
+    item_data: {
+      alias: target.alias,
+      crucial: target.crucial,
+      cst_type: target.cst_type,
+      convention: target.convention,
+      definition_formal: target.definition_formal,
+      definition_raw: target.definition_raw,
+      term_raw: target.term_raw,
+      term_forms: target.term_forms
+    }
+  };
   const form = useForm({
-    defaultValues: {
-      target: target.id,
-      item_data: {
-        alias: target.alias,
-        crucial: target.crucial,
-        cst_type: target.cst_type,
-        convention: target.convention,
-        definition_formal: target.definition_formal,
-        definition_raw: target.definition_raw,
-        term_raw: target.term_raw,
-        term_forms: target.term_forms
-      }
-    } as UpdateConstituentaDTO,
+    defaultValues,
     validators: {
       onChange: schemaUpdateConstituenta
     },

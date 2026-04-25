@@ -50,7 +50,7 @@ export function TopicsStatic({ activeTopic, onChangeTopic }: TopicsStaticProps) 
         />
       ) : (
         <SelectTree
-          items={Object.values(HelpTopic).map(item => item as HelpTopic)}
+          items={Object.values(HelpTopic)}
           value={activeTopic}
           onChange={handleSelectTopic}
           prefix={prefixes.topic_list}

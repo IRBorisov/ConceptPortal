@@ -24,8 +24,8 @@ export function SelectCstType({ id, value, onChange, className, disabled = false
       <SelectContent>
         {Object.values(CstType).map(typeStr => (
           <SelectItem key={`csttype-${typeStr}`} value={typeStr}>
-            <IconCstType value={typeStr as CstType} />
-            <span>{labelCstType(typeStr as CstType)}</span>
+            <IconCstType value={typeStr} />
+            <span>{labelCstType(typeStr)}</span>
           </SelectItem>
         ))}
       </SelectContent>

@@ -40,25 +40,26 @@ export function DlgImportSchema() {
   const manager = new LayoutManager(schema, layout);
   const { items: libraryItems } = useLibrary();
   const sortedItems = sortItemsForOSS(manager.oss, libraryItems);
-
+  
+  const defaultValues: ImportSchemaDTO = {
+    item_data: {
+      alias: '',
+      title: '',
+      description: '',
+      parent: initialParent
+    },
+    position: {
+      x: defaultX,
+      y: defaultY,
+      width: OPERATION_NODE_WIDTH,
+      height: OPERATION_NODE_HEIGHT
+    },
+    layout: manager.layout,
+    source: 0,
+    clone_source: false
+  };
   const form = useForm({
-    defaultValues: {
-      item_data: {
-        alias: '',
-        title: '',
-        description: '',
-        parent: initialParent
-      },
-      position: {
-        x: defaultX,
-        y: defaultY,
-        width: OPERATION_NODE_WIDTH,
-        height: OPERATION_NODE_HEIGHT
-      },
-      layout: manager.layout,
-      source: 0,
-      clone_source: false
-    } as ImportSchemaDTO,
+    defaultValues,
     validators: {
       onChange: schemaImportSchema
     },

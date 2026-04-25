@@ -55,7 +55,7 @@ function isAstNodeErrorRef(x: unknown): x is RSErrorInfo {
   if (typeof x !== 'object' || x === null || !('code' in x)) {
     return false;
   }
-  const code = (x as { code: unknown }).code;
+  const code = x.code;
   if (typeof code !== 'number') {
     return false;
   }

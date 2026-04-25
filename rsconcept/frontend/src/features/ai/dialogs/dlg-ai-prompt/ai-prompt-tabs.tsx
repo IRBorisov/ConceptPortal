@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 
@@ -30,7 +30,11 @@ type TabID = (typeof TabID)[keyof typeof TabID];
 export function AIPromptTabs({ promptID, activeTab, setActiveTab }: AIPromptTabsProps) {
   const context = useAIStore();
   const { promptTemplate } = usePromptTemplate(promptID);
-  const [text, setText] = useState(promptTemplate.text);
+  const [promptDraft, setPromptDraft] = useState<{ promptID: number; text: string } | null>(null);
+  const text = promptDraft?.promptID === promptID ? promptDraft.text : promptTemplate.text;
+  function setText(nextText: string) {
+    setPromptDraft({ promptID, text: nextText });
+  }
   const variables = extractPromptVariables(text);
 
   const generatedPrompt = (() => {
@@ -45,13 +49,6 @@ export function AIPromptTabs({ promptID, activeTab, setActiveTab }: AIPromptTabs
     }
     return result;
   })();
-
-  useEffect(
-    function updateTextOnTemplateChange() {
-      setText(promptTemplate.text);
-    },
-    [promptTemplate]
-  );
 
   return (
     <Tabs selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>

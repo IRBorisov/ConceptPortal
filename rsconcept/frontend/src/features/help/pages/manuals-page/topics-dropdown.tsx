@@ -77,7 +77,7 @@ export function TopicsDropdown({ activeTopic, onChangeTopic }: TopicsDropdownPro
           />
         ) : (
           <SelectTree
-            items={Object.values(HelpTopic).map(item => item as HelpTopic)}
+            items={Object.values(HelpTopic)}
             value={activeTopic}
             onChange={handleSelectTopic}
             prefix={prefixes.topic_list}

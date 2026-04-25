@@ -67,8 +67,8 @@ export function compare(v1: Value, v2: Value): number {
       throw new Error(`Cannot compare different types ${printValue(el1!)} and ${printValue(el2!)}`);
     }
 
-    const arr1 = el1 as Value[];
-    const arr2 = el2 as Value[];
+    const arr1 = el1;
+    const arr2 = el2;
     const len1 = arr1.length;
     const len2 = arr2.length;
     if (len1 !== len2) {

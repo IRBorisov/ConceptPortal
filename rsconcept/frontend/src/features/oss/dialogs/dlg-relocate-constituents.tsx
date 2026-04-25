@@ -38,11 +38,12 @@ export function DlgRelocateConstituents() {
   const { schema: oss } = useOss({ itemID: ossID });
   const initialTarget = targetID ? oss.operationByID.get(targetID)! : undefined;
 
+  const defaultValues: RelocateConstituentsDTO = {
+    destination: null,
+    items: []
+  };
   const form = useForm({
-    defaultValues: {
-      destination: null,
-      items: []
-    } as RelocateConstituentsDTO,
+    defaultValues,
     validators: {
       onChange: schemaRelocateConstituents
     },

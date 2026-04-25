@@ -34,7 +34,7 @@ export class ValueMatcher {
   public match(value: Value, type: Typification): boolean {
     switch (type.typeID) {
       case TypeID.integer:
-        return this.matcher.test(String(value as number));
+        return this.matcher.test(String(value));
       case TypeID.anyTypification:
         return false;
       case TypeID.basic:

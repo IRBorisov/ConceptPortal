@@ -28,7 +28,7 @@ export function ContextMenu({ isOpen, item, cursorX, cursorY, onHide }: ContextM
   const ref = useRef<HTMLDivElement>(null);
 
   function handleBlur(event: React.FocusEvent<HTMLDivElement>) {
-    if (!ref.current?.contains(event.relatedTarget as Node)) {
+    if (!ref.current?.contains(event.relatedTarget)) {
       onHide();
     }
   }

@@ -67,7 +67,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
   const cstData = useCstValue(engine, activeCst);
   const stub = cstData && typification?.typeID === TypeID.collection ? valueStub(cstData) : '';
 
-  const initialValue = isBase ? (engine.basics.get(activeCst.id) ?? ({} as BasicBinding)) : cstData;
+  const initialValue = isBase ? (engine.basics.get(activeCst.id) ?? {}) : cstData;
 
   const initialStr =
     prepareValueString(initialValue, typification, schema, engine.basics, showDataText) ?? placeholderMsg.valueTooLarge;
