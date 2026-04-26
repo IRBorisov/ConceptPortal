@@ -34,7 +34,13 @@ import {
 } from './value-api';
 
 /** Maximum iterations to prevent infinite loops (recursion, quantifiers, etc.). */
-export const MAX_ITERATIONS = 2_000_000;
+export const MAX_ITERATIONS = 1_000_000;
+
+const TICK_PER_FUNCTION = 10;
+const TICK_PER_RECURSION = 5;
+const TICK_PER_IMPERATIVE = 1;
+const TICK_PER_DECLARATIVE = 1;
+const TICK_PER_QUANTIFIER = 1;
 
 /** AST context. */
 export type ASTContext = Map<string, AstNode>;
@@ -77,8 +83,9 @@ export class Evaluator {
     return null;
   }
 
-  private tick(node: AstNode): boolean {
-    if (++this.iterationCounter > MAX_ITERATIONS) {
+  private tick(node: AstNode, counter: number = 1): boolean {
+    this.iterationCounter += counter;
+    if (this.iterationCounter > MAX_ITERATIONS) {
       this.onError(RSErrorCode.iterationsLimit, node, [String(MAX_ITERATIONS)]);
       return false;
     }
@@ -245,6 +252,9 @@ export class Evaluator {
     if (!ast) {
       return this.onError(RSErrorCode.calcGlobalMissing, node.children[0], [funcName]);
     }
+    if (!this.tick(node, TICK_PER_FUNCTION)) {
+      return null;
+    }
 
     const args: Value[] = [];
     for (let i = 1; i < node.children.length; i++) {
@@ -326,7 +336,7 @@ export class Evaluator {
       while (true) {
         if (iterators[incrementIndex] < count - 1) {
           iterators[incrementIndex]++;
-          if (!this.tick(node)) {
+          if (!this.tick(node, TICK_PER_QUANTIFIER)) {
             return null;
           }
           this.dispatchDeclare(varNodes[incrementIndex], domain[iterators[incrementIndex]]);
@@ -667,7 +677,7 @@ export class Evaluator {
 
     const elements = [];
     for (const element of domain as Value[]) {
-      if (!this.tick(node)) {
+      if (!this.tick(node, TICK_PER_DECLARATIVE)) {
         return null;
       }
       this.dispatchDeclare(node.children[0], element);
@@ -695,7 +705,7 @@ export class Evaluator {
         if (top.valueID < top.domain.length - 1) {
           top.valueID++;
           const nextValue = top.domain[top.valueID];
-          if (!this.tick(node.children[top.childID])) {
+          if (!this.tick(node.children[top.childID], TICK_PER_IMPERATIVE)) {
             return false;
           }
           this.dispatchDeclare(node.children[top.childID].children[0], nextValue);
@@ -734,7 +744,7 @@ export class Evaluator {
           }
           continue;
         }
-        if (!this.tick(child)) {
+        if (!this.tick(child, TICK_PER_IMPERATIVE)) {
           return null;
         }
         frames.push({
@@ -780,7 +790,7 @@ export class Evaluator {
     const bodyIndex = node.typeID === TokenID.NT_RECURSIVE_FULL ? 3 : 2;
     let current: Value = initialValue;
     while (true) {
-      if (!this.tick(node)) {
+      if (!this.tick(node, TICK_PER_RECURSION)) {
         return null;
       }
 
