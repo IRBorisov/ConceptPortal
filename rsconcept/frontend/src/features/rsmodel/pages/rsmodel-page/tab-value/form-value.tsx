@@ -324,7 +324,9 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
         showDataText={showDataText}
         isBinding={isBase}
         placeholder={
-          !isInterpretable(activeCst.cst_type) ? 'Значение для данного типа не предусмотрено' : 'Значение отсутствует'
+          !isInterpretable(activeCst.cst_type)
+            ? 'Значение для данного типа не предусмотрено'
+            : 'Значение отсутствует. Используйте "Случайное значение" для генерации примера'
         }
         onCalculate={cstInferrable ? handleCalculate : undefined}
         onChange={newValue =>

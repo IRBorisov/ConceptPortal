@@ -1,6 +1,12 @@
 import { type ExpressionType, TypeID, type Typification, type Value } from '@/domain/rslang';
-import { compare, TUPLE_ID, VALUE_TRUE, type ValuePath } from '@/domain/rslang/eval/value';
-import { extractValue, makeDefaultValue, printValue, setNestedValue } from '@/domain/rslang/eval/value-api';
+import { compare, tuple, TUPLE_ID, VALUE_TRUE, type ValuePath } from '@/domain/rslang/eval/value';
+import {
+  extractValue,
+  isTupleValue,
+  makeDefaultValue,
+  printValue,
+  setNestedValue
+} from '@/domain/rslang/eval/value-api';
 import { type EchelonCollection } from '@/domain/rslang/semantic/typification';
 
 import { limits } from '@/utils/constants';
@@ -11,6 +17,10 @@ import { type RSEngine } from './rsengine';
 import { type Constituenta, CstType, type RSForm } from './rsform';
 import { calculateSchemaStats, isBaseSet, isBasicConcept } from './rsform-api';
 import { type BasicBinding, type BasicsContext, EvalStatus, type RSModelStats } from './rsmodel';
+
+const RANDOM_INTEGER_MIN = -100;
+const RANDOM_INTEGER_MAX = 100;
+const DEFAULT_RANDOM_SET_ELEMENTS_COUNT = 5;
 
 /** Evaluate if parsed data is a basic binding data. */
 export function validateBasicBindingData(data: unknown): data is Record<string, string> {
@@ -38,6 +48,52 @@ export function validateValueData(data: unknown): data is Value {
     return false;
   }
   return data.every(item => validateValueData(item));
+}
+
+export function generateRandomValue(
+  type: Typification,
+  basics: Map<number, BasicBinding>,
+  cstByAlias: Map<string, Constituenta>,
+  setElementsCount: number = DEFAULT_RANDOM_SET_ELEMENTS_COUNT
+): Value | null {
+  switch (type.typeID) {
+    case TypeID.integer:
+      return Math.floor(Math.random() * (RANDOM_INTEGER_MAX - RANDOM_INTEGER_MIN + 1)) + RANDOM_INTEGER_MIN;
+    case TypeID.basic: {
+      const cst = cstByAlias.get(type.baseID);
+      const binding = cst ? basics.get(cst.id) : undefined;
+      const ids = Object.keys(binding ?? {}).map(Number);
+      if (ids.length === 0) {
+        return null;
+      }
+      return ids[Math.floor(Math.random() * ids.length)];
+    }
+    case TypeID.tuple: {
+      const factors: Value[] = [];
+      for (const factor of type.factors) {
+        const sample = generateRandomValue(factor, basics, cstByAlias, setElementsCount);
+        if (sample === null) {
+          return null;
+        }
+        factors.push(sample);
+      }
+      return tuple(factors);
+    }
+    case TypeID.collection: {
+      const result: Value[] = [];
+      const randomElementsCount = Math.floor(Math.random() * (setElementsCount + 1));
+      for (let i = 0; i < randomElementsCount; i++) {
+        const sample = generateRandomValue(type.base, basics, cstByAlias, setElementsCount);
+        if (sample === null) {
+          return null;
+        }
+        result.push(sample);
+      }
+      return result;
+    }
+    case TypeID.anyTypification:
+      return null;
+  }
 }
 
 /** Calculate statistics for {@link RSModel}. */
@@ -181,7 +237,7 @@ export function tryFixValue(
       }
       return false;
     case TypeID.tuple: {
-      if (!Array.isArray(value) || value.length !== type.factors.length + 1 || value[0] !== TUPLE_ID) {
+      if (!isTupleValue(value)) {
         return null;
       }
       let wasChanged = false;

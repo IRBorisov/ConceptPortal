@@ -5,9 +5,10 @@ import { toast } from 'react-toastify';
 
 import { type BasicBinding, type Constituenta } from '@/domain/library';
 import { getStructureName, isBaseSet } from '@/domain/library/rsform-api';
-import { isInferrable, isInterpretable } from '@/domain/library/rsmodel-api';
+import { generateRandomValue, isInferrable, isInterpretable } from '@/domain/library/rsmodel-api';
 import { type Value } from '@/domain/rslang';
-import { isTypification, type TypePath, type Typification } from '@/domain/rslang/semantic/typification';
+import { isSetValue, normalizeValue } from '@/domain/rslang/eval/value-api';
+import { isTypification, TypeID, type TypePath, type Typification } from '@/domain/rslang/semantic/typification';
 
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 import { processBindingData, processValueData } from '@/features/rsmodel/models/data-loading';
@@ -22,6 +23,8 @@ import { copyJsonToClipboard, downloadJsonFile, getExportJsonText } from '../exp
 import { useModelEdit } from '../model-edit-context';
 
 const VALUE_FILENAME = 'value.json';
+const BASIC_BINDING_APPEND_COUNT = 10;
+const RANDOM_SET_APPEND_COUNT = 10;
 
 export interface ValuePrimaryActionsProps {
   activeCst: Constituenta;
@@ -66,10 +69,11 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
   const showValueButton = hasValueDialog;
   const showExportMenu = valuePayload != null;
   const showImportMenu = !isImportDisabled;
+  const showRandomButton = isMutable && !cstInferrable && !!typification && isTypification(typification);
   const showClearButton =
     isMutable && !cstInferrable && valuePayload !== null && !(Array.isArray(valuePayload) && valuePayload.length === 0);
 
-  const hasPrimaryActions = showValueButton || showExportMenu || showImportMenu || showClearButton;
+  const hasPrimaryActions = showValueButton || showExportMenu || showImportMenu || showRandomButton || showClearButton;
   if (!hasPrimaryActions) {
     return null;
   }
@@ -106,6 +110,39 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
 
   function handleClearValue() {
     void engine.resetValue(activeCst.id);
+  }
+
+  function handleAddRandomValues() {
+    if (!typification || !isTypification(typification)) {
+      return;
+    }
+    const type = typification as Typification;
+
+    if (isBase) {
+      const currentBinding = engine.basics.get(activeCst.id) ?? {};
+      const existingIDs = Object.keys(currentBinding).map(Number);
+      const maxID = existingIDs.length > 0 ? Math.max(...existingIDs) : 0;
+      const nextBinding: BasicBinding = { ...currentBinding };
+      for (let i = 1; i <= BASIC_BINDING_APPEND_COUNT; i++) {
+        const id = maxID + i;
+        nextBinding[id] = `${activeCst.alias}_${id}`;
+      }
+      onChangeValue(nextBinding);
+    } else {
+      const randomData = generateRandomValue(type, engine.basics, schema.cstByAlias, RANDOM_SET_APPEND_COUNT);
+      if (!randomData) {
+        toast.error(errorMsg.generationMissingBasic);
+        return;
+      }
+      if (type.typeID === TypeID.collection && Array.isArray(randomData)) {
+        const existingSet: Value[] = isSetValue(cstData) ? [...cstData] : [];
+        const nextSet: Value[] = [...existingSet, ...randomData];
+        normalizeValue(nextSet);
+        onChangeValue(nextSet);
+        return;
+      }
+      onChangeValue(randomData);
+    }
   }
 
   function getExportPayload(): Value | BasicBinding {
@@ -192,6 +229,15 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
         />
       ) : null}
 
+      {showClearButton ? (
+        <TextButton
+          text='Очистить значение'
+          title='Сбросить вычисленное значение текущей конституенты'
+          onClick={handleClearValue}
+          disabled={isProcessing}
+        />
+      ) : null}
+
       {showExportMenu ? (
         <div ref={exportMenuRef} onBlur={handleExportBlur} className='relative'>
           <TextButton text='Экспорт' title='Экспортировать значение' hideTitle={isExportOpen} onClick={toggleExport} />
@@ -212,11 +258,11 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
         </div>
       ) : null}
 
-      {showClearButton ? (
+      {showRandomButton ? (
         <TextButton
-          text='Очистить значение'
-          title='Сбросить вычисленное значение текущей конституенты'
-          onClick={handleClearValue}
+          text={typification.typeID === TypeID.collection ? 'Добавить случайные' : 'Случайное значение'}
+          title='Сгенерировать случайные значения для текущей конституенты'
+          onClick={handleAddRandomValues}
           disabled={isProcessing}
         />
       ) : null}

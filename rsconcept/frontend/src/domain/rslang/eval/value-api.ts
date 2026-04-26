@@ -266,6 +266,16 @@ export function valueStub(value: RO<Value> | null): string {
   return hash.toString(16).padStart(8, '0').slice(0, 8);
 }
 
+/** Checks if value is a set representation, not a tuple representation. */
+export function isSetValue(data: RO<Value> | null): data is Value[] {
+  return Array.isArray(data) && (data.length === 0 || data[0] !== TUPLE_ID);
+}
+
+/** Checks if value is a tuple representation. */
+export function isTupleValue(data: RO<Value> | null): data is Value[] {
+  return Array.isArray(data) && data.length > 1 && data[0] === TUPLE_ID;
+}
+
 /** Normalize unsorted array of values. */
 export function normalizeValue(data: Value): void {
   if (!Array.isArray(data) || data.length === 0) {
@@ -326,9 +336,11 @@ export function validateValue(value: RO<Value>, type: RO<ExpressionType>, basics
     }
 
     case TypeID.collection: {
-      if (!Array.isArray(value) || (value.length > 1 && value[0] === TUPLE_ID)) return false;
+      if (!isSetValue(value)) {
+        return false;
+      }
       for (const item of value) {
-        if (!validateValue(item as RO<Value>, type.base, basics)) {
+        if (!validateValue(item, type.base, basics)) {
           return false;
         }
       }
