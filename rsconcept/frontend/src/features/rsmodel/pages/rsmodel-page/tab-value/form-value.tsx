@@ -82,9 +82,9 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
   const [formalDraft, setFormalDraft] = useState(activeCst.definition_formal);
   const [rawDraft, setRawDraft] = useState(activeCst.definition_raw);
 
-  const hasFreshValueDraft = valueDraft.resetKey === valueResetKey && valueDraft.source === initialStr;
-  const inputValue = hasFreshValueDraft ? valueDraft.draft : initialStr;
-  const valueDirty = hasFreshValueDraft && valueDraft.draft !== initialStr;
+  const hasDraftForCurrentCst = valueDraft.resetKey === valueResetKey;
+  const inputValue = hasDraftForCurrentCst ? valueDraft.draft : initialStr;
+  const valueDirty = hasDraftForCurrentCst && valueDraft.draft !== valueDraft.source;
   const metaDirty =
     termDraft !== activeCst.term_raw ||
     formalDraft !== activeCst.definition_formal ||
@@ -120,6 +120,36 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
       onModifiedEvent(isDirty);
     },
     [isDirty]
+  );
+
+  useEffect(
+    function syncValueDraftFromServer() {
+      const timeoutId = setTimeout(function applyServerValueDraft() {
+        setValueDraft(prevDraft => {
+          if (prevDraft.resetKey !== valueResetKey) {
+            return {
+              resetKey: valueResetKey,
+              source: initialStr,
+              draft: initialStr
+            };
+          }
+          if (prevDraft.source === initialStr) {
+            return prevDraft;
+          }
+          const hasUnsavedChanges = prevDraft.draft !== prevDraft.source;
+          if (hasUnsavedChanges) {
+            return prevDraft;
+          }
+          return {
+            resetKey: valueResetKey,
+            source: initialStr,
+            draft: initialStr
+          };
+        });
+      }, 0);
+      return () => clearTimeout(timeoutId);
+    },
+    [valueResetKey, initialStr]
   );
 
   function handleSetValue(newValue: Value | BasicBinding | null) {
@@ -298,11 +328,11 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
         }
         onCalculate={cstInferrable ? handleCalculate : undefined}
         onChange={newValue =>
-          setValueDraft({
+          setValueDraft(prevDraft => ({
             resetKey: valueResetKey,
-            source: initialStr,
+            source: prevDraft.resetKey === valueResetKey ? prevDraft.source : initialStr,
             draft: newValue
-          })
+          }))
         }
         onToggleDataText={toggleDataText}
         disabled={isValueEditable}
