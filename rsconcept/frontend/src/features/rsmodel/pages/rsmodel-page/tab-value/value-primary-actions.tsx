@@ -10,10 +10,12 @@ import { type Value } from '@/domain/rslang';
 import { isTypification, type TypePath, type Typification } from '@/domain/rslang/semantic/typification';
 
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
+import { processBindingData, processValueData } from '@/features/rsmodel/models/data-loading';
 
 import { TextButton } from '@/components/control/text-button';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import { useDialogsStore } from '@/stores/dialogs';
+import { limits } from '@/utils/constants';
 import { errorMsg, infoMsg } from '@/utils/labels';
 
 import { copyJsonToClipboard, downloadJsonFile, getExportJsonText } from '../export-helpers';
@@ -116,14 +118,13 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
       toast.error(errorMsg.valueNull);
       return;
     }
-    try {
-      const parsed = JSON.parse(trimmed) as Value | BasicBinding;
-      onChangeValue(parsed);
-      toast.success(infoMsg.valueLoadedJson);
-    } catch (error) {
-      toast.error((error as Error).message);
-      console.error(error);
+
+    const processed = isBase ? processBindingData(trimmed) : processValueData(trimmed);
+    if (!processed) {
+      return;
     }
+    onChangeValue(processed);
+    toast.success(infoMsg.valueLoadedJson);
   }
 
   function handleClipboardExport() {
@@ -166,6 +167,10 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
     }
     const file = event.target.files?.[0];
     if (!file) {
+      return;
+    }
+    if (file.size > limits.max_json_import_file_size_bytes) {
+      toast.error(errorMsg.fileTooLarge(limits.max_json_import_file_size_mb));
       return;
     }
     const reader = new FileReader();

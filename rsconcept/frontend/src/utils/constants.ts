@@ -39,6 +39,9 @@ export const EXPORTS = {
 
 /** Numeric limitations. */
 export const limits = {
+  max_json_import_file_size_bytes: 1024 * 1024 * 2,
+  max_json_import_file_size_mb: 2,
+
   len_alias: 255,
   len_email: 320,
   len_title: 500,

@@ -12,18 +12,32 @@ import { type Constituenta, CstType, type RSForm } from './rsform';
 import { calculateSchemaStats, isBaseSet, isBasicConcept } from './rsform-api';
 import { type BasicBinding, type BasicsContext, EvalStatus, type RSModelStats } from './rsmodel';
 
-function countBaseElements(cst: Constituenta, engine: RSEngine): number {
-  if (!isBasicConcept(cst.cst_type)) {
-    return 0;
+/** Evaluate if parsed data is a basic binding data. */
+export function validateBasicBindingData(data: unknown): data is Record<string, string> {
+  if (!data || typeof data !== 'object' || Array.isArray(data)) {
+    return false;
   }
-  const value = engine.getCstValue(cst.id);
-  if (value === null) {
-    return 0;
+  return Object.entries(data).every(([key, value]) => typeof value === 'string' && Number.isInteger(Number(key)));
+}
+
+/** Convert parsed data to a basic binding. */
+export function toBasicBinding(data: Record<string | number, string>): BasicBinding {
+  const result: BasicBinding = {};
+  for (const [k, v] of Object.entries(data)) {
+    result[Number(k)] = v;
   }
-  if (!Array.isArray(value) || value[0] === TUPLE_ID) {
-    return 1;
+  return result;
+}
+
+/** Evaluate if parsed data is a {@link Value} data. */
+export function validateValueData(data: unknown): data is Value {
+  if (typeof data === 'number') {
+    return Number.isFinite(data);
   }
-  return value.length;
+  if (!Array.isArray(data)) {
+    return false;
+  }
+  return data.every(item => validateValueData(item));
 }
 
 /** Calculate statistics for {@link RSModel}. */
@@ -288,6 +302,20 @@ export function addValueElement(
 }
 
 // ========= Internal functions ==========
+
+function countBaseElements(cst: Constituenta, engine: RSEngine): number {
+  if (!isBasicConcept(cst.cst_type)) {
+    return 0;
+  }
+  const value = engine.getCstValue(cst.id);
+  if (value === null) {
+    return 0;
+  }
+  if (!Array.isArray(value) || value[0] === TUPLE_ID) {
+    return 1;
+  }
+  return value.length;
+}
 
 /** Iterative walk: same branching as {@link prepareValueInternal} without building docs (avoids stack overflow). */
 function valuePrepareExceedsLimits(

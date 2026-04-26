@@ -85,12 +85,15 @@ export const errorMsg = {
   clipboardRead: 'Не удалось прочитать из буфера обмена',
   clipboardWrite: 'Не удалось записать в буфер обмена',
   fileRead: 'Ошибка при чтении файла',
+  fileTooLarge: (maxMb: number) => `Размер файла превышает ${maxMb} МБ`,
   valueNull: 'Значение отсутствует',
   sandboxImportError: 'Не удалось перенести схему в песочницу',
   sandboxBundleNotAvailable: 'Песочница пуста',
   failedToPersistSandbox: 'Не удалось сохранить песочницу',
   cannotExtractNode: 'Невозможно вынести выбранный узел',
-  sandboxFailedToLoad: 'Не удалось загрузить песочницу. Загружен начальный набор.'
+  sandboxFailedToLoad: 'Не удалось загрузить песочницу. Загружен начальный набор.',
+  bindingInvalid: 'Некорректный формат данных. Используйте JSON вида { "1": "value1", "2": "value2", ... }',
+  valueInvalid: 'Некорректный формат данных. Используйте JSON, содержащий только числа и массивы'
 } as const;
 
 /** UI hint descriptors. */

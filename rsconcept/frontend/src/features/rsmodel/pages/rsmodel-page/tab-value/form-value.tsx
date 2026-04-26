@@ -1,14 +1,13 @@
 'use client';
 
 import { useEffect, useEffectEvent, useLayoutEffect, useRef, useState } from 'react';
-import { toast } from 'react-toastify';
 import { type ReactCodeMirrorRef } from '@uiw/react-codemirror';
 
 import { type BasicBinding, type Constituenta, CstType } from '@/domain/library';
 import { isBaseSet } from '@/domain/library/rsform-api';
 import { isInferrable, isInterpretable, prepareValueString } from '@/domain/library/rsmodel-api';
 import { type CalculatorResult, type RSErrorDescription, TokenID, TypeID, type Value } from '@/domain/rslang';
-import { normalizeValue, valueStub } from '@/domain/rslang/eval/value-api';
+import { valueStub } from '@/domain/rslang/eval/value-api';
 import { labelType } from '@/domain/rslang/labels';
 
 import { useConceptNavigation } from '@/app';
@@ -33,6 +32,7 @@ import { ValueInput } from '../../../components/value-input';
 import { useCstStatus } from '../../../hooks/use-cst-status';
 import { useCstValue } from '../../../hooks/use-cst-value';
 import { labelValue } from '../../../labels';
+import { processBindingData, processValueData } from '../../../models/data-loading';
 import { useModelEdit } from '../model-edit-context';
 
 import { ToolbarExpression } from './toolbar-expression';
@@ -125,41 +125,28 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
   function handleSetValue(newValue: Value | BasicBinding | null) {
     if (newValue === null) {
       void engine.resetValue(activeCst.id);
-    } else if (isBase) {
-      const binding = newValue as BasicBinding;
-      void engine.setBasicValue(activeCst.id, binding);
-      const value =
-        prepareValueString(binding, typification, schema, engine.basics, showDataText) ?? placeholderMsg.valueTooLarge;
-      setValueDraft({
-        resetKey: valueResetKey,
-        source: value,
-        draft: value
-      });
-    } else {
-      const parsedValue = newValue as Value;
-      normalizeValue(parsedValue);
-      void engine.setStructureValue(activeCst.id, parsedValue);
-      const value =
-        prepareValueString(parsedValue, typification, schema, engine.basics, showDataText) ??
-        placeholderMsg.valueTooLarge;
-      setValueDraft({
-        resetKey: valueResetKey,
-        source: value,
-        draft: value
-      });
     }
+    const valueStr =
+      prepareValueString(newValue, typification, schema, engine.basics, showDataText) ?? placeholderMsg.valueTooLarge;
+    if (isBase) {
+      void engine.setBasicValue(activeCst.id, newValue as BasicBinding);
+    } else {
+      void engine.setStructureValue(activeCst.id, newValue as Value);
+    }
+    setValueDraft({
+      resetKey: valueResetKey,
+      source: valueStr,
+      draft: valueStr
+    });
   }
 
   function onSaveValue() {
     if (!inputValue) {
       return;
     }
-    try {
-      const value = JSON.parse(inputValue) as Value | BasicBinding;
-      handleSetValue(value);
-    } catch (error) {
-      toast.error((error as Error).message);
-      console.error(error);
+    const processed = isBase ? processBindingData(inputValue) : processValueData(inputValue);
+    if (processed) {
+      handleSetValue(processed);
     }
   }
 
