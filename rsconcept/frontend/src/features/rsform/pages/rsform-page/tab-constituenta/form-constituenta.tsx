@@ -179,7 +179,10 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
               aria-label='Термин'
               maxHeight='8rem'
               areaClassName={
-                (needsInterpretation && !field.state.value) || activeCst.homonyms.length > 0 ? 'cm-error' : ''
+                (needsInterpretation && !field.state.value) ||
+                (activeCst.homonyms.length > 0 && !field.state.meta.isDirty)
+                  ? 'cm-error'
+                  : ''
               }
               placeholder={disabled ? '' : 'Обозначение для текстовых определений'}
               schema={schema}
@@ -193,7 +196,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
                 field.state.meta.errors[0]?.message ??
                 (needsInterpretation && !field.state.value
                   ? 'Пустой термин'
-                  : activeCst.homonyms.length > 0
+                  : activeCst.homonyms.length > 0 && !field.state.meta.isDirty
                     ? `Термин совпадает с конституентами: ${formatAliasList(activeCst.homonyms, schema)}`
                     : undefined)
               }

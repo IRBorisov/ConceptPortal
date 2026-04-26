@@ -68,7 +68,7 @@ export function EditorRSExpression({
   onUpdateCst,
   ...restProps
 }: EditorRSExpressionProps) {
-  const [isModified, setIsModified] = useState(false);
+  const [needsAnalyze, setNeedsAnalyze] = useState(false);
   const rsInput = useRef<ReactCodeMirrorRef>(null);
 
   const showControls = usePreferencesStore(state => state.showExpressionControls);
@@ -77,7 +77,7 @@ export function EditorRSExpression({
   const [errors, setErrors] = useState<RO<RSErrorDescription[] | null>>(analysis?.errors ?? null);
 
   const resetHandler = useCallback(() => {
-    setIsModified(false);
+    setNeedsAnalyze(false);
     onAnalysis(null);
   }, [onAnalysis]);
 
@@ -93,7 +93,7 @@ export function EditorRSExpression({
   useResetOnChange([cstHash, toggleReset], resetHandler);
 
   const status = (() => {
-    if (isModified) {
+    if (needsAnalyze) {
       return CstStatus.UNKNOWN;
     }
     if (analysis) {
@@ -105,7 +105,7 @@ export function EditorRSExpression({
 
   function handleChange(newValue: string) {
     onChange(newValue);
-    setIsModified(newValue !== activeCst.definition_formal);
+    setNeedsAnalyze(newValue !== activeCst.definition_formal);
     setErrors(null);
   }
 
@@ -123,7 +123,7 @@ export function EditorRSExpression({
       } else {
         rsInput.current?.view?.focus();
       }
-      setIsModified(false);
+      setNeedsAnalyze(false);
       callback?.(parse);
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
@@ -156,7 +156,7 @@ export function EditorRSExpression({
       text.insertToken(id);
     }
     rsInput.current?.view?.focus();
-    setIsModified(true);
+    setNeedsAnalyze(true);
   }
 
   function handleShowAST(event: React.MouseEvent<Element>) {
@@ -224,8 +224,8 @@ export function EditorRSExpression({
         onOpenEdit={onOpenEdit}
         disabled={disabled}
         errorMessage={
-          !isModified && activeCst.formalDuplicates.length > 0
-            ? `Формальное выражение совпадает с конституентами: ${formatAliasList(activeCst.formalDuplicates, schema)}`
+          activeCst.formalDuplicates.length > 0 && activeCst.definition_formal === value
+            ? errorMsg.formalDuplicates(formatAliasList(activeCst.formalDuplicates, schema))
             : undefined
         }
         {...restProps}

@@ -91,6 +91,7 @@ export const errorMsg = {
   sandboxBundleNotAvailable: 'Песочница пуста',
   failedToPersistSandbox: 'Не удалось сохранить песочницу',
   cannotExtractNode: 'Невозможно вынести выбранный узел',
+  formalDuplicates: (aliases: string) => `Формальное выражение совпадает с конституентами: ${aliases}`,
   sandboxFailedToLoad: 'Не удалось загрузить песочницу. Загружен начальный набор.',
   bindingInvalid: 'Некорректный формат данных. Используйте JSON вида { "1": "value1", "2": "value2", ... }',
   valueInvalid: 'Некорректный формат данных. Используйте JSON, содержащий только числа и массивы'
