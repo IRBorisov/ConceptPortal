@@ -2,11 +2,15 @@ import { describe, expect, it } from 'vitest';
 
 import { Case, Grammeme, NounGrams, Plurality, VerbGrams } from './language';
 import {
+  extractEntities,
+  generateNominalLexeme,
   getCompatibleGrams,
   grammemeCompare,
   parseEntityReference,
   parseGrammemes,
+  parseReference,
   parseSyntacticReference,
+  resolveTextReferences,
   wordFormEquals
 } from './language-api';
 
@@ -95,11 +99,32 @@ describe('Testing grammeme compatibility', () => {
   });
 });
 
+describe('Testing nominal lexeme generation', () => {
+  it('generates every supported noun form with nominal text', () => {
+    const response = generateNominalLexeme({ text: 'nominal concept' });
+
+    expect(response.items).toStrictEqual([
+      { text: 'nominal concept', grams: 'sing,nomn' },
+      { text: 'nominal concept', grams: 'sing,gent' },
+      { text: 'nominal concept', grams: 'sing,datv' },
+      { text: 'nominal concept', grams: 'sing,accs' },
+      { text: 'nominal concept', grams: 'sing,ablt' },
+      { text: 'nominal concept', grams: 'sing,loct' },
+      { text: 'nominal concept', grams: 'plur,nomn' },
+      { text: 'nominal concept', grams: 'plur,gent' },
+      { text: 'nominal concept', grams: 'plur,datv' },
+      { text: 'nominal concept', grams: 'plur,accs' },
+      { text: 'nominal concept', grams: 'plur,ablt' },
+      { text: 'nominal concept', grams: 'plur,loct' }
+    ]);
+  });
+});
+
 describe('Testing reference parsing', () => {
   it('entity reference', () => {
-    expect(parseEntityReference('@{ X1 | NOUN,sing }')).toStrictEqual({ entity: 'X1', form: 'NOUN,sing' });
-    expect(parseEntityReference('@{X1|NOUN,sing}')).toStrictEqual({ entity: 'X1', form: 'NOUN,sing' });
-    expect(parseEntityReference('@{X111|NOUN,sing}')).toStrictEqual({ entity: 'X111', form: 'NOUN,sing' });
+    expect(parseEntityReference('@{ X1 | NOUN,sing }')).toStrictEqual({ entity: 'X1', tags: ['NOUN', 'sing'] });
+    expect(parseEntityReference('@{X1|NOUN,sing}')).toStrictEqual({ entity: 'X1', tags: ['NOUN', 'sing'] });
+    expect(parseEntityReference('@{X111|NOUN,sing}')).toStrictEqual({ entity: 'X111', tags: ['NOUN', 'sing'] });
   });
 
   it('syntactic reference', () => {
@@ -107,5 +132,53 @@ describe('Testing reference parsing', () => {
     expect(parseSyntacticReference('@{101|test test}')).toStrictEqual({ offset: 101, nominal: 'test test' });
     expect(parseSyntacticReference('@{-1|test test}')).toStrictEqual({ offset: -1, nominal: 'test test' });
     expect(parseSyntacticReference('@{-99|test test}')).toStrictEqual({ offset: -99, nominal: 'test test' });
+  });
+
+  it('validated reference', () => {
+    expect(parseReference('@{X1|NOUN, sing}')).toStrictEqual({
+      type: 'entity',
+      data: { entity: 'X1', tags: ['NOUN', 'sing'] }
+    });
+    expect(parseReference('@{-1|derived term}')).toStrictEqual({
+      type: 'syntax',
+      data: { offset: -1, nominal: 'derived term' }
+    });
+    expect(parseReference('@{0|derived term}')).toBeNull();
+    expect(parseReference('@{-0|derived term}')).toBeNull();
+    expect(parseReference('@{1|}')).toBeNull();
+  });
+});
+
+describe('Testing reference resolution', () => {
+  it('extracts entity references', () => {
+    expect(extractEntities('@{X1|} and @{1|nominal} and @{X2|sing,gent} and @{X1|plur,nomn}')).toStrictEqual([
+      'X1',
+      'X2'
+    ]);
+  });
+
+  it('resolves entity references using nominal and manual forms', () => {
+    const context = {
+      X1: {
+        nominal: 'base term',
+        forms: [{ text: 'manual plural', grams: [Grammeme.plur, Grammeme.nomn] }]
+      }
+    };
+
+    expect(resolveTextReferences('Use @{X1|nomn,sing}.', context)).toBe('Use base term.');
+    expect(resolveTextReferences('Use @{X1|plur,nomn}.', context)).toBe('Use manual plural.');
+    expect(resolveTextReferences('Use @{X1|sing,gent}.', context)).toBe('Use base term.');
+  });
+
+  it('resolves syntactic references to nominal text without inflection', () => {
+    const context = {
+      X1: {
+        nominal: 'base term'
+      }
+    };
+
+    expect(resolveTextReferences('@{X1|nomn,sing} @{-1|derived term}', context)).toBe('base term derived term');
+    expect(resolveTextReferences('@{1|derived term} @{X1|nomn,sing}', context)).toBe('derived term base term');
+    expect(resolveTextReferences('@{-1|derived term}', context)).toBe('!Некорректное смещение: -1!');
   });
 });

@@ -4,6 +4,7 @@ export {
   ReferenceType,
   supportedGrammemes,
   type SyntacticReference,
+  type TermContext,
+  type TermContextItem,
   type WordForm
 } from './language';
-export { type EntityRefState, type InlinePosition, type SyntacticRefState } from './reference';

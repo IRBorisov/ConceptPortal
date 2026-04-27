@@ -18,7 +18,9 @@ import { nowIso } from '@/utils/format';
 import { type SandboxBundle } from '../models/bundle';
 import { bumpBundle, cloneBundle } from '../models/bundle-api';
 import { applyMappingToConstituents } from '../models/mutations-api';
+import { resolveAllConstituentTexts, resolveConstituentTextChange } from '../models/text-resolution';
 
+/** Sandbox mutations API. */
 export const sbApi = {
   moveConstituents,
   restoreOrder,
@@ -39,19 +41,19 @@ export const sbApi = {
 
 function moveConstituents(bundle: SandboxBundle, data: MoveConstituentsDTO): SandboxBundle {
   const next = cloneBundle(bundle);
-  const ids = next.schema.items.map(cst => cst.id);
+  const cstIDs = next.schema.items.map(cst => cst.id);
   const movingIDs = new Set(data.items);
-  const rest = ids.filter(id => !movingIDs.has(id));
-  const movingItems = ids.filter(id => movingIDs.has(id));
+  const rest = cstIDs.filter(id => !movingIDs.has(id));
+  const movingItems = cstIDs.filter(id => movingIDs.has(id));
   const moveTo = Math.max(0, Math.min(data.move_to, rest.length));
   const newOrder = [...rest.slice(0, moveTo), ...movingItems, ...rest.slice(moveTo)];
-  const cstById = new Map(next.schema.items.map(i => [i.id, i]));
+  const cstById = new Map(next.schema.items.map(cst => [cst.id, cst]));
   next.schema.items = newOrder.map(id => {
-    const row = cstById.get(id);
-    if (!row) {
+    const cst = cstById.get(id);
+    if (!cst) {
       throw new Error(`moveConstituents: missing id ${id}`);
     }
-    return row;
+    return cst;
   });
   bumpBundle(next);
   return next;
@@ -133,6 +135,7 @@ function resetAliases(bundle: SandboxBundle): SandboxBundle {
   }
 
   applyMappingToConstituents(next.schema.items, mapping, true);
+  resolveAllConstituentTexts(next.schema.items);
   bumpBundle(next);
   return next;
 }
@@ -194,6 +197,7 @@ function substituteConstituents(bundle: SandboxBundle, substitutions: Substituti
   next.model.items = next.model.items.filter(value => !deleted.has(value.id));
 
   applyMappingToConstituents(next.schema.items, mapping, false);
+  resolveAllConstituentTexts(next.schema.items);
   bumpBundle(next);
   return next;
 }
@@ -230,6 +234,12 @@ function createConstituenta(
     rsform.items.splice(insertAt, 0, newCst);
   }
 
+  resolveConstituentTextChange(rsform.items, newId, {
+    termChanged: true,
+    termRawChanged: true,
+    definitionRawChanged: true,
+    clearTargetForms: false
+  });
   bumpBundle(next);
   return { bundle: next, newCst };
 }
@@ -253,12 +263,14 @@ function deleteConstituents(bundle: SandboxBundle, deleted: number[]): SandboxBu
 function updateConstituenta(bundle: SandboxBundle, data: UpdateConstituentaDTO): SandboxBundle {
   const next = cloneBundle(bundle);
   const rsform = next.schema;
-  const ix = rsform.items.findIndex(i => i.id === data.target);
-  if (ix === -1) {
+  const index = rsform.items.findIndex(i => i.id === data.target);
+  if (index === -1) {
     throw new Error(`updateConstituenta: unknown target ${data.target}`);
   }
-  const row = rsform.items[ix];
+  const row = rsform.items[index];
   const patch = data.item_data;
+  const termRawChanged = typeof patch.term_raw === 'string' && patch.term_raw !== row.term_raw;
+  const termFormsChanged = 'term_forms' in patch;
   const updated = {
     ...row,
     ...(patch.alias !== undefined ? { alias: patch.alias } : {}),
@@ -271,16 +283,13 @@ function updateConstituenta(bundle: SandboxBundle, data: UpdateConstituentaDTO):
     ...(patch.term_forms !== undefined ? { term_forms: patch.term_forms } : {})
   };
 
-  if ('definition_raw' in patch && typeof patch.definition_raw === 'string') {
-    updated.definition_resolved = patch.definition_raw.trim();
-  }
-
-  if ('term_raw' in patch && typeof patch.term_raw === 'string') {
-    updated.term_resolved = patch.term_raw.trim();
-    updated.term_forms = [];
-  }
-
-  rsform.items[ix] = updated;
+  rsform.items[index] = updated;
+  resolveConstituentTextChange(rsform.items, data.target, {
+    termChanged: termRawChanged || termFormsChanged,
+    termRawChanged,
+    definitionRawChanged: typeof patch.definition_raw === 'string',
+    clearTargetForms: termRawChanged && !termFormsChanged
+  });
   bumpBundle(next);
   return next;
 }
@@ -314,15 +323,15 @@ function deleteAttribution(bundle: SandboxBundle, attr: Attribution): SandboxBun
 
 function clearAttributions(bundle: SandboxBundle, data: AttributionTargetDTO): SandboxBundle {
   const next = cloneBundle(bundle);
-  const t = data.target;
-  next.schema.attribution = next.schema.attribution.filter(a => a.container !== t && a.attribute !== t);
+  const targetID = data.target;
+  next.schema.attribution = next.schema.attribution.filter(a => a.container !== targetID && a.attribute !== targetID);
   bumpBundle(next);
   return next;
 }
 
 function updateLibraryItem(bundle: SandboxBundle, data: UpdateLibraryItemDTO): SandboxBundle {
   const next = cloneBundle(bundle);
-  const t = nowIso();
+  const timestamp = nowIso();
   if (data.id === next.schema.id && data.item_type === LibraryItemType.RSFORM) {
     Object.assign(next.schema, {
       title: data.title,
@@ -330,7 +339,7 @@ function updateLibraryItem(bundle: SandboxBundle, data: UpdateLibraryItemDTO): S
       description: data.description,
       visible: data.visible,
       read_only: data.read_only,
-      time_update: t
+      time_update: timestamp
     });
   } else if (data.id === next.model.id && data.item_type === LibraryItemType.RSMODEL) {
     Object.assign(next.model, {
@@ -339,7 +348,7 @@ function updateLibraryItem(bundle: SandboxBundle, data: UpdateLibraryItemDTO): S
       description: data.description,
       visible: data.visible,
       read_only: data.read_only,
-      time_update: t
+      time_update: timestamp
     });
     const modelEntry = next.schema.models.find(m => m.id === next.model.id);
     if (modelEntry) {
@@ -348,7 +357,7 @@ function updateLibraryItem(bundle: SandboxBundle, data: UpdateLibraryItemDTO): S
   } else {
     throw new Error('updateLibraryItem: id does not match sandbox rsform or model');
   }
-  next.meta.updatedAt = t;
+  next.meta.updatedAt = timestamp;
   return next;
 }
 
