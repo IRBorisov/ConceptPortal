@@ -112,7 +112,6 @@ export function ValueViewer({ className, value, rows, perPage = 20, engine, getH
             data={filteredData}
             dense
             columns={columns}
-            headPosition='0rem'
             skipWidthCalculation
             rows={rows}
             contentHeight='1.29rem'

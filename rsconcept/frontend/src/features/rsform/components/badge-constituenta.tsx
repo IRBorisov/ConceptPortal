@@ -27,9 +27,11 @@ export function BadgeConstituenta({ value, prefixID }: BadgeConstituentaProps) {
     <div
       id={prefixID ? `${prefixID}${value.id}` : undefined}
       className={clsx(
-        'cc-badge-constituenta',
+        'w-12',
+        'px-1 text-center border rounded-lg',
+        'font-medium whitespace-nowrap',
         value.is_inherited && 'border-dashed',
-        value.crucial && 'cc-badge-inner-shadow',
+        value.crucial && 'shadow-[inset_0_1px_3px_0,inset_0_-1px_3px_0]',
         colorBgBadge(value)
       )}
       style={{

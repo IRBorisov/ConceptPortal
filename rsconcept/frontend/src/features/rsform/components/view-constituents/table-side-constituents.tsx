@@ -122,12 +122,11 @@ export function TableSideConstituents({
     <DataTable
       dense
       noFooter
-      className='text-sm select-none cc-scroll-y'
+      className='text-sm select-none cc-scroll-y [&_thead_th]:py-1'
       style={maxHeight ? { maxHeight: maxHeight } : {}}
       data={items}
       columns={columns}
       conditionalRowStyles={conditionalRowStyles}
-      headPosition='0'
       enableHiding
       noDataComponent={
         <NoData className='min-h-20'>

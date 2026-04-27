@@ -109,7 +109,6 @@ export function PickElement({ className, value, alias, isInteger, term, binding,
         columns={columns}
         data={filtered}
         dense
-        headPosition='0rem'
         enablePagination
         paginationPerPage={15}
         paginationOptions={[15]}

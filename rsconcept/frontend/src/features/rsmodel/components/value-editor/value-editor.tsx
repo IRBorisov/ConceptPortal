@@ -131,7 +131,6 @@ export function ValueEditor({
               data={filteredData}
               dense
               columns={columns}
-              headPosition='0rem'
               skipWidthCalculation
               rows={rows}
               contentHeight='1.34rem'

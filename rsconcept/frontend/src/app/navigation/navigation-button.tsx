@@ -20,7 +20,14 @@ export function NavigationButton({ icon, title, hideTitle, className, style, onC
       data-tooltip-hidden={hideTitle}
       data-tooltip-content={title}
       onClick={onClick}
-      className={cn('p-2 flex items-center gap-1', 'cc-btn-nav', 'font-controls focus-outline', className)}
+      className={cn(
+        'p-2 flex items-center gap-1 rounded-xl',
+        'cursor-pointer whitespace-nowrap',
+        'text-muted-foreground hover:text-foreground',
+        'transition-colors duration-move ease-(--ease-bezier)',
+        'font-controls focus-outline',
+        className
+      )}
       style={style}
     >
       {icon ? icon : null}

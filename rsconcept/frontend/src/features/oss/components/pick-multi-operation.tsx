@@ -124,7 +124,6 @@ export function PickMultiOperation({ rows, items, value, onChange, className, ..
         className='cc-scroll-y text-sm select-none border-y rounded-b-md'
         data={selectedItems}
         columns={columns}
-        headPosition='0rem'
         noDataComponent={
           <NoData>
             <p>Список пуст</p>

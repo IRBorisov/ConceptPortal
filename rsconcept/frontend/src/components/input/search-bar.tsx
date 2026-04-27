@@ -43,9 +43,17 @@ export function SearchBar({
   ...restProps
 }: SearchBarProps) {
   return (
-    <div className={cn('relative flex items-center grow', className)} {...restProps}>
+    <div className={cn('group relative flex items-center grow', className)} {...restProps}>
       {!noIcon ? (
-        <IconSearch className='absolute -top-0.5 left-2 translate-y-1/2 cc-search-icon' size='1.25rem' />
+        <IconSearch
+          className={clsx(
+            'absolute -top-0.5 left-2 translate-y-1/2',
+            'pointer-events-none ',
+            'bg-transparent text-muted-foreground',
+            'group-focus-within:text-primary'
+          )}
+          size='1.25rem'
+        />
       ) : null}
       <input
         id={id}

@@ -143,7 +143,6 @@ export function PickContents({
         className='cc-scroll-y text-sm select-none border-y rounded-b-md'
         data={value}
         columns={columns}
-        headPosition='0rem'
         noDataComponent={
           <NoData>
             <p>Список пуст</p>

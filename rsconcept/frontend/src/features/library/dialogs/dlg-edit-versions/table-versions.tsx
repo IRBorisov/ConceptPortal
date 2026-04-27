@@ -83,7 +83,6 @@ export function TableVersions({ processing, items, onDelete, selected, onSelect 
     <DataTable
       dense
       noFooter
-      headPosition='0'
       className='mb-2 h-70 border cc-scroll-y'
       data={items}
       columns={columns}

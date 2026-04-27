@@ -2,22 +2,6 @@
  * Module: Utility classes for specific react components.
  */
 
-@utility cc-btn-nav {
-  color: var(--color-muted-foreground);
-  border-radius: 0.75rem;
-
-  cursor: pointer;
-  white-space: nowrap;
-
-  transition-property: background-color, color;
-  transition-timing-function: var(--ease-bezier);
-  transition-duration: 500ms;
-
-  &:hover {
-    color: var(--color-foreground);
-  }
-}
-
 @utility cc-btn-primary {
   color: var(--color-foreground);
   background-color: var(--color-selected);
@@ -28,16 +12,6 @@
     color: var(--color-primary-foreground);
     background-color: var(--color-primary);
     border-color: var(--color-primary);
-  }
-}
-
-@utility cc-search-icon {
-  pointer-events: none;
-  color: var(--color-muted-foreground);
-  background-color: transparent;
-
-  :focus-within > & {
-    color: var(--color-primary);
   }
 }
 
@@ -84,32 +58,6 @@
   border-radius: calc(infinity* 1px);
 }
 
-@utility cc-badge-constituenta {
-  width: 3rem;
-  padding-inline: 0.25rem;
-
-  border-width: 1px;
-  border-radius: 0.5rem;
-
-  text-align: center;
-  font-weight: 500;
-  white-space: nowrap;
-}
-
-@utility cc-table-header {
-  text-align: start;
-  padding: 0.5rem;
-
-  font-size: var(--text-xs);
-
-  /* stylelint-disable-next-line custom-property-pattern */
-  line-height: var(--tw-leading, var(--text-xs--line-height));
-  font-weight: 500;
-  white-space: nowrap;
-
-  user-select: none;
-}
-
 @utility cc-modal-wrapper {
   --cc-modal-top-offset-ratio: 0.16;
   --cc-modal-top-offset-limit: 10rem;
@@ -127,8 +75,7 @@
 
 @utility cc-modal-wrapper-top {
   align-items: flex-start;
-  padding-block:
-    min(calc(var(--cc-modal-top-offset-ratio) * 100svh), var(--cc-modal-top-offset-limit))
+  padding-block: min(calc(var(--cc-modal-top-offset-ratio) * 100svh), var(--cc-modal-top-offset-limit))
     var(--cc-modal-bottom-margin);
 }
 

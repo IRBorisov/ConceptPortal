@@ -40,9 +40,6 @@ export interface DataTableProps<TData extends RowData>
   /** Height of the content. */
   contentHeight?: string;
 
-  /** Top position of sticky header (0 if no other sticky elements are present). */
-  headPosition?: string;
-
   /** Disable header. */
   noHeader?: boolean;
 
@@ -95,12 +92,7 @@ export interface DataTableProps<TData extends RowData>
   autoResetPageIndex?: boolean;
 }
 
-/**
- * Data representation as a table.
- *
- * @param headPosition - Top position of sticky header (0 if no other sticky elements are present).
- * No sticky header if omitted
- */
+/** Data representation as a table. */
 export function DataTable<TData extends RowData>({
   id,
   style,
@@ -108,7 +100,6 @@ export function DataTable<TData extends RowData>({
   dense,
   rows,
   contentHeight = '1.1875rem',
-  headPosition,
   conditionalRowStyles,
   skipWidthCalculation,
   noFooter,
@@ -162,7 +153,6 @@ export function DataTable<TData extends RowData>({
         {!noHeader ? (
           <TableHeader
             table={table}
-            headPosition={headPosition}
             resetLastSelected={() => setLastSelected(null)}
             skipWidthCalculation={skipWidthCalculation}
           />

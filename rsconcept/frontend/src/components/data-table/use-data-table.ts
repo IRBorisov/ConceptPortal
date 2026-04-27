@@ -60,12 +60,7 @@ interface UseDataTableProps<TData extends RowData> extends Pick<
   autoResetPageIndex?: boolean;
 }
 
-/**
- * Dta representation as a table.
- *
- * @param headPosition - Top position of sticky header (0 if no other sticky elements are present).
- * No sticky header if omitted
- */
+/** Data representation as a table. */
 export function useDataTable<TData extends RowData>({
   enableRowSelection,
   rowSelection,

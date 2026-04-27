@@ -130,10 +130,9 @@ export function PickMultiConstituenta({
         noFooter
         rows={rows}
         contentHeight='1.3rem'
-        className='cc-scroll-y text-sm select-none rounded-b-md'
+        className='cc-scroll-y text-sm select-none rounded-b-md [&_thead_th]:py-1'
         data={filtered}
         columns={columns}
-        headPosition='0rem'
         enableRowSelection
         rowSelection={rowSelection}
         onRowSelectionChange={handleRowSelection}

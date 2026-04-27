@@ -54,7 +54,6 @@ export function TableUsers({ items, onDelete, onReset, className, style }: Table
       <DataTable
         dense
         noFooter
-        headPosition='0'
         className={cn('border cc-scroll-y', className)}
         style={style}
         rows={8}

@@ -97,7 +97,7 @@ export function TabListTemplates({ activeID }: TabListTemplatesProps) {
         enableSorting
         data={items as IPromptTemplate[]}
         columns={columns}
-        className='w-full h-full border-x border-b'
+        className='w-full h-full border'
         onRowClicked={handleRowClicked}
         onRowDoubleClicked={handleRowDoubleClicked}
         conditionalRowStyles={conditionalRowStyles}

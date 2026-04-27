@@ -3,24 +3,27 @@
 import { flexRender, type Header, type HeaderGroup, type Table } from '@tanstack/react-table';
 import clsx from 'clsx';
 
+import { usePreferencesStore } from '@/stores/preferences';
+
 import { SelectAll } from './select-all';
 import { SortingIcon } from './sorting-icon';
 
 interface TableHeaderProps<TData> {
   table: Table<TData>;
-  headPosition?: string;
   skipWidthCalculation?: boolean;
   resetLastSelected: () => void;
 }
 
-export function TableHeader<TData>({
-  table,
-  headPosition,
-  skipWidthCalculation,
-  resetLastSelected
-}: TableHeaderProps<TData>) {
+export function TableHeader<TData>({ table, skipWidthCalculation, resetLastSelected }: TableHeaderProps<TData>) {
+  const { darkMode } = usePreferencesStore();
+  const backgroundColor = darkMode
+    ? 'color-mix(in oklab,  var(--clr-prim-100), var(--clr-sec-600) 15%)'
+    : 'color-mix(in oklab,  var(--clr-prim-100), var(--clr-sec-600) 4%)';
   return (
-    <thead className='sticky bg-background cc-shadow-border' style={{ top: headPosition }}>
+    <thead
+      className='sticky top-0 border-b border-primary/20 bg-background cc-shadow-border'
+      style={{ backgroundColor: backgroundColor }}
+    >
       {table.getHeaderGroups().map((headerGroup: HeaderGroup<TData>) => (
         <tr key={headerGroup.id}>
           {table.options.enableRowSelection ? (
@@ -34,7 +37,10 @@ export function TableHeader<TData>({
               colSpan={header.colSpan}
               scope='col'
               className={clsx(
-                'cc-table-header group',
+                'group',
+                'p-2 text-start',
+                'text-xs font-medium',
+                'select-none whitespace-nowrap',
                 table.options.enableSorting && header.column.getCanSort() ? 'cursor-pointer' : 'cursor-auto'
               )}
               style={skipWidthCalculation ? undefined : { width: `calc(var(--header-${header?.id}-size) * 1px)` }}

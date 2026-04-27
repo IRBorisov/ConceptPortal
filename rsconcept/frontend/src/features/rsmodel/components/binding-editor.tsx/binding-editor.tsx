@@ -159,7 +159,6 @@ export function BindingEditor({ className, rows, value, onChange }: BindingEdito
           data={dataRows}
           dense
           columns={columns}
-          headPosition='0rem'
           skipWidthCalculation
           rows={rows}
           contentHeight='1.29rem'

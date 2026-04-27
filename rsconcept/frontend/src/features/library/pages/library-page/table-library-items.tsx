@@ -69,7 +69,6 @@ export function TableLibraryItems({ items }: TableLibraryItemsProps) {
       id='library_data'
       columns={columns}
       data={items as LibraryItem[]}
-      headPosition='0'
       className={clsx('cc-scroll-y h-fit text-xs sm:text-sm border-b', folderMode && 'border-l')}
       style={{ maxHeight: tableHeight }}
       noDataComponent={

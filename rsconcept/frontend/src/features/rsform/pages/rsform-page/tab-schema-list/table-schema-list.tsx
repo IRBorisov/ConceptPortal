@@ -127,7 +127,6 @@ export function TableSchemaList({
       style={{ maxHeight: maxHeight }}
       data={items ?? []}
       columns={columns}
-      headPosition='0rem'
       onRowDoubleClicked={handleRowDoubleClicked}
       onRowClicked={handleRowClicked}
       enableHiding

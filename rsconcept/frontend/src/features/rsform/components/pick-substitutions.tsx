@@ -302,7 +302,6 @@ export function PickSubstitutions({
         contentHeight='1.3rem'
         data={substitutionData}
         columns={columns}
-        headPosition='0'
         noDataComponent={
           <NoData className='min-h-8'>
             <p>Список пуст</p>

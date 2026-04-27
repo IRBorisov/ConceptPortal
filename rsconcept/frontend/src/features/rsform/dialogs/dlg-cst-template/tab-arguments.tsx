@@ -112,7 +112,7 @@ export function TabArguments({ schema, definition }: TabArgumentsProps) {
       <DataTable
         dense
         noFooter
-        className='h-31 cc-scroll-y text-sm border select-none'
+        className='h-31 [&_thead_th]:py-1 cc-scroll-y text-sm border select-none'
         data={args}
         columns={columns}
         conditionalRowStyles={conditionalRowStyles}
