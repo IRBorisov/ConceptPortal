@@ -15,11 +15,14 @@ import { cn } from '../utils';
 
 import { ModalBackdrop } from './modal-backdrop';
 import { type ModalProps } from './modal-form';
+import { useModalPlacement } from './use-modal-placement';
 
 interface ModalViewProps extends ModalProps {
   /** Float all UI elements on top of contents. */
   fullScreen?: boolean;
   noFooterButton?: boolean;
+  /** Callback to close the modal. Defaults to the global dialog store. */
+  onHide?: () => void;
 }
 
 /**
@@ -34,10 +37,13 @@ export function ModalView({
   hideHelpWhen,
   noFooterButton,
   fullScreen,
+  onHide,
   ...restProps
 }: React.PropsWithChildren<ModalViewProps>) {
   const hideDialog = useDialogsStore(state => state.hideDialog);
-  useEscapeKey(hideDialog);
+  const handleHide = onHide ?? hideDialog;
+  useEscapeKey(handleHide);
+  const { isTopPlaced, setElement } = useModalPlacement<HTMLDivElement>(!fullScreen);
 
   const previousFocusRef = useRef<HTMLElement | null>(null);
   useEffect(function manageFocus() {
@@ -48,9 +54,13 @@ export function ModalView({
   }, []);
 
   return (
-    <div className='cc-modal-wrapper'>
-      <ModalBackdrop onHide={hideDialog} />
-      <div className='cc-animate-modal relative grid border-2 px-1 pb-1 rounded-xl bg-background' role='dialog'>
+    <div className={cn('cc-modal-wrapper', isTopPlaced && 'cc-modal-wrapper-top')}>
+      <ModalBackdrop onHide={handleHide} />
+      <div
+        ref={setElement}
+        className='cc-animate-modal relative grid border-2 px-1 pb-1 rounded-xl bg-background'
+        role='dialog'
+      >
         {helpTopic && !hideHelpWhen?.() ? (
           <BadgeHelp topic={helpTopic} className='absolute z-pop top-1 left-1' contentClass='sm:max-w-160' />
         ) : null}
@@ -61,7 +71,7 @@ export function ModalView({
           noPadding
           icon={<IconClose size='1.25rem' />}
           className='absolute z-pop top-2 right-2'
-          onClick={hideDialog}
+          onClick={handleHide}
         />
 
         {header ? (
@@ -98,12 +108,12 @@ export function ModalView({
               'my-2 mx-auto text-sm min-w-28',
               fullScreen && 'z-pop absolute bottom-0 right-1/2 translate-x-1/2'
             )}
-            onClick={hideDialog}
+            onClick={handleHide}
           />
         ) : (
           <div className='z-pop absolute bottom-0 right-1/2 translate-x-1/2 p-3 rounded-xl bg-background/90 backdrop-blur-xs'>
             {' '}
-            <Button text='Закрыть' aria-label='Закрыть' className='text-sm min-w-28' onClick={hideDialog} />
+            <Button text='Закрыть' aria-label='Закрыть' className='text-sm min-w-28' onClick={handleHide} />
           </div>
         )}
       </div>

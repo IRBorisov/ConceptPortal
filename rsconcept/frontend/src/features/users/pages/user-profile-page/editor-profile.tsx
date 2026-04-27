@@ -3,7 +3,7 @@
 import { useEffect, useEffectEvent } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
-import { useBlockNavigation } from '@/app';
+import { useRegisterNavigationSave } from '@/app';
 
 import { isAxiosError } from '@/backend/api-transport';
 import { SubmitButton } from '@/components/control';
@@ -35,7 +35,7 @@ export function EditorProfile() {
   });
 
   const isDefaultValue = useStore(form.store, state => state.isDefaultValue);
-  useBlockNavigation(!isDefaultValue);
+  useRegisterNavigationSave(() => form.handleSubmit(), !isDefaultValue);
 
   const onResetEvent = useEffectEvent((next: UpdateProfileDTO) => {
     form.reset(next);

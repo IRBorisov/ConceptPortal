@@ -6,7 +6,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 import { type CurrentVersion, LibraryItemType } from '@/domain/library';
 import { type RSForm } from '@/domain/library/rsform';
 
-import { useConceptNavigation } from '@/app';
+import { useConceptNavigation, useRegisterNavigationSave } from '@/app';
 import { schemaUpdateLibraryItem, type UpdateLibraryItemDTO } from '@/features/library';
 import { useUpdateItem } from '@/features/library/backend/use-update-item';
 import { SelectVersion } from '@/features/library/components/select-version';
@@ -63,6 +63,7 @@ export function FormSchema({ className }: FormSchemaProps) {
   const visible = useStore(form.store, state => state.values.visible);
   const readOnly = useStore(form.store, state => state.values.read_only);
   const isDefaultValue = useStore(form.store, state => state.isDefaultValue);
+  useRegisterNavigationSave(() => form.handleSubmit(), !isDefaultValue);
 
   const onResetEvent = useEffectEvent((next: UpdateLibraryItemDTO) => {
     form.reset(next);

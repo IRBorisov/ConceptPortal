@@ -111,6 +111,10 @@
 }
 
 @utility cc-modal-wrapper {
+  --cc-modal-top-offset-ratio: 0.16;
+  --cc-modal-top-offset-limit: 10rem;
+  --cc-modal-bottom-margin: 1rem;
+
   isolation: isolate;
   z-index: var(--z-index-modal);
   position: fixed;
@@ -119,6 +123,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+@utility cc-modal-wrapper-top {
+  align-items: flex-start;
+  padding-block:
+    min(calc(var(--cc-modal-top-offset-ratio) * 100svh), var(--cc-modal-top-offset-limit))
+    var(--cc-modal-bottom-margin);
 }
 
 @utility cc-node-label {

@@ -9,10 +9,18 @@ import { useTooltipsStore } from '@/stores/tooltips';
 
 import { urls } from '../urls';
 
+import { DlgUnsavedNavigation } from './dlg-unsaved-navigation';
+
 export interface NavigationProps {
   path: string;
   newTab?: boolean;
   force?: boolean;
+}
+
+type NavigationSaveHandler = () => void | Promise<void>;
+
+interface PendingNavigation {
+  action: () => void | Promise<void>;
 }
 
 /** RSForm Tabs IDs. */
@@ -106,8 +114,8 @@ interface INavigationContext {
   /** Navigate to Term Graph. */
   gotoTermGraph: (schemaID: number, newTab?: boolean) => void;
 
-  /** Set require confirmation flag before navigating. */
-  setRequireConfirmation: (value: boolean) => void;
+  /** Register a handler that saves current unsaved edits before navigating. */
+  registerNavigationSaveHandler: (handler: NavigationSaveHandler) => () => void;
 
   /** Navigate to Edit Prompt. */
   gotoPromptEdit: (promptID: number, newTab?: boolean) => void;
@@ -128,12 +136,57 @@ export const useConceptNavigation = () => {
 export const NavigationState = ({ children }: React.PropsWithChildren) => {
   const router = useNavigate();
 
-  const isBlocked = useRef(false);
+  const saveHandler = useRef<{ id: symbol; handler: NavigationSaveHandler } | null>(null);
+  const [hasSaveHandler, setHasSaveHandler] = useState(false);
+  const [pendingNavigation, setPendingNavigation] = useState<PendingNavigation | null>(null);
+  const [isSavingBeforeNavigation, setIsSavingBeforeNavigation] = useState(false);
   const [internalNavigation, setInternalNavigation] = useState(false);
   const enableTooltips = useTooltipsStore(state => state.showTooltips);
 
-  function validate(): boolean {
-    return !isBlocked.current || confirm('Изменения не сохранены. Вы уверены что хотите совершить переход?');
+  function runConfirmedNavigation(action: () => void | Promise<void>): void {
+    Promise.resolve(action()).then(enableTooltips).catch(console.error);
+  }
+
+  function requestNavigation(action: () => void | Promise<void>, force?: boolean): void {
+    if (force || !saveHandler.current) {
+      runConfirmedNavigation(action);
+      return;
+    }
+    setPendingNavigation({ action });
+  }
+
+  function handleCancelNavigation(): void {
+    if (isSavingBeforeNavigation) {
+      return;
+    }
+    setPendingNavigation(null);
+  }
+
+  function handleContinueWithoutSaving(): void {
+    const nextNavigation = pendingNavigation;
+    if (!nextNavigation) {
+      return;
+    }
+    setPendingNavigation(null);
+    runConfirmedNavigation(nextNavigation.action);
+  }
+
+  async function handleSaveAndContinue(): Promise<void> {
+    const nextNavigation = pendingNavigation;
+    const onSave = saveHandler.current?.handler;
+    if (!nextNavigation || !onSave) {
+      return;
+    }
+    setIsSavingBeforeNavigation(true);
+    try {
+      await onSave();
+      setPendingNavigation(null);
+      runConfirmedNavigation(nextNavigation.action);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsSavingBeforeNavigation(false);
+    }
   }
 
   function canBack(): boolean {
@@ -143,55 +196,52 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
   function push(props: NavigationProps): void {
     if (props.newTab) {
       window.open(`${props.path}`, '_blank');
-    } else if (props.force || validate()) {
-      isBlocked.current = false;
-      setInternalNavigation(true);
-      Promise.resolve(router(props.path, { viewTransition: true }))
-        .then(enableTooltips)
-        .catch(console.error);
+    } else {
+      requestNavigation(() => {
+        setInternalNavigation(true);
+        return router(props.path, { viewTransition: true });
+      }, props.force);
     }
   }
 
   function pushAsync(props: NavigationProps): void | Promise<void> {
     if (props.newTab) {
       window.open(`${props.path}`, '_blank');
-    } else if (props.force || validate()) {
-      isBlocked.current = false;
+    } else if (props.force || !saveHandler.current) {
       setInternalNavigation(true);
       enableTooltips();
       return router(props.path, { viewTransition: true });
+    } else {
+      setPendingNavigation({
+        action: () => {
+          setInternalNavigation(true);
+          return router(props.path, { viewTransition: true });
+        }
+      });
     }
   }
 
   function replace(props: Omit<NavigationProps, 'newTab'>): void {
-    if (props.force || validate()) {
-      isBlocked.current = false;
-      Promise.resolve(router(props.path, { replace: true, viewTransition: true }))
-        .then(enableTooltips)
-        .catch(console.error);
-    }
+    requestNavigation(() => router(props.path, { replace: true, viewTransition: true }), props.force);
   }
 
   function replaceAsync(props: Omit<NavigationProps, 'newTab'>): void | Promise<void> {
-    if (props.force || validate()) {
-      isBlocked.current = false;
+    if (props.force || !saveHandler.current) {
       enableTooltips();
       return router(props.path, { replace: true, viewTransition: true });
+    } else {
+      setPendingNavigation({
+        action: () => router(props.path, { replace: true, viewTransition: true })
+      });
     }
   }
 
   function back(force?: boolean): void {
-    if (force || validate()) {
-      Promise.resolve(router(-1)).then(enableTooltips).catch(console.error);
-      isBlocked.current = false;
-    }
+    requestNavigation(() => router(-1), force);
   }
 
   function forward(force?: boolean): void {
-    if (force || validate()) {
-      Promise.resolve(router(1)).then(enableTooltips).catch(console.error);
-      isBlocked.current = false;
-    }
+    requestNavigation(() => router(1), force);
   }
 
   function changeTab(tabID: number): void {
@@ -287,6 +337,19 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
     push({ path: urls.prompt_template(promptID, PromptTabID.LIST), newTab: newTab });
   }
 
+  function registerNavigationSaveHandler(handler: NavigationSaveHandler): () => void {
+    const id = Symbol('navigation-save-handler');
+    saveHandler.current = { id, handler };
+    setHasSaveHandler(true);
+    return () => {
+      if (saveHandler.current?.id !== id) {
+        return;
+      }
+      saveHandler.current = null;
+      setHasSaveHandler(false);
+    };
+  }
+
   return (
     <NavigationContext
       value={{
@@ -297,7 +360,7 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
         back,
         forward,
         canBack,
-        setRequireConfirmation: (value: boolean) => (isBlocked.current = value),
+        registerNavigationSaveHandler,
 
         changeTab,
         changeActive,
@@ -321,18 +384,30 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
       }}
     >
       {children}
+      <DlgUnsavedNavigation
+        open={!!pendingNavigation}
+        canSave={hasSaveHandler}
+        isSaving={isSavingBeforeNavigation}
+        onCancel={handleCancelNavigation}
+        onContinue={handleContinueWithoutSaving}
+        onSaveAndContinue={() => void handleSaveAndContinue()}
+      />
     </NavigationContext>
   );
 };
 
-export function useBlockNavigation(isBlocked: boolean) {
-  const { setRequireConfirmation } = useConceptNavigation();
-  const onSetRequireConfirmation = useEffectEvent(setRequireConfirmation);
+export function useRegisterNavigationSave(savePendingChanges: NavigationSaveHandler, isActive = true) {
+  const { registerNavigationSaveHandler } = useConceptNavigation();
+  const onRegisterNavigationSaveHandler = useEffectEvent(registerNavigationSaveHandler);
+  const onSavePendingChanges = useEffectEvent(savePendingChanges);
+
   useEffect(
-    function updateRequireConfirmation() {
-      onSetRequireConfirmation(isBlocked);
-      return () => onSetRequireConfirmation(false);
+    function registerNavigationSaveEffect() {
+      if (!isActive) {
+        return;
+      }
+      return onRegisterNavigationSaveHandler(onSavePendingChanges);
     },
-    [isBlocked]
+    [isActive]
   );
 }

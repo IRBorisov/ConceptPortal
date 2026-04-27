@@ -6,6 +6,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 import { LibraryItemType } from '@/domain/library';
 import { type OperationSchema } from '@/domain/library';
 
+import { useRegisterNavigationSave } from '@/app';
 import { schemaUpdateLibraryItem, type UpdateLibraryItemDTO } from '@/features/library';
 import { useUpdateItem } from '@/features/library/backend/use-update-item';
 import { ToolbarItemAccess } from '@/features/library/components/toolbar-item-access';
@@ -65,6 +66,7 @@ export function FormOSS({ className }: FormOSSProps) {
   const visible = useStore(form.store, state => state.values.visible);
   const readOnly = useStore(form.store, state => state.values.read_only);
   const isDefaultValue = useStore(form.store, state => state.isDefaultValue);
+  useRegisterNavigationSave(() => form.handleSubmit(), !isDefaultValue);
 
   useEffect(
     function resetFormOnSchemaChange() {
