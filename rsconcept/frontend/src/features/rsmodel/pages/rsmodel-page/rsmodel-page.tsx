@@ -4,7 +4,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { useParams } from 'react-router';
 import { z } from 'zod';
 
-import { urls, useBlockNavigation, useConceptNavigation } from '@/app';
+import { urls, useConceptNavigation } from '@/app';
 import { RSModelTabID } from '@/app/navigation/navigation-context';
 import { ConstituentaTooltip } from '@/features/rsform/components/constituenta-tooltip';
 
@@ -13,7 +13,6 @@ import { TextURL } from '@/components/control';
 import { type ErrorData } from '@/components/info-error';
 import { useQueryStrings } from '@/hooks/use-query-strings';
 import { useResetModification } from '@/hooks/use-reset-modification';
-import { useModificationStore } from '@/stores/modification';
 import { rethrowIfStaleBundleError } from '@/utils/stale-bundle-error';
 
 import { ModelEditState } from './model-edit-state';
@@ -40,9 +39,6 @@ export function RSModelPage() {
     tab: query.get('tab'),
     activeID: query.get('active')
   });
-
-  const isModified = useModificationStore(state => state.isModified);
-  useBlockNavigation(isModified);
 
   if (!urlData.id) {
     router.replace({ path: urls.page404, force: true });

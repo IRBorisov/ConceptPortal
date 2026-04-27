@@ -4,7 +4,7 @@ import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
 import { useParams } from 'react-router';
 import { z } from 'zod';
 
-import { urls, useBlockNavigation, useConceptNavigation } from '@/app';
+import { urls, useConceptNavigation } from '@/app';
 import { OssTabID } from '@/app/navigation/navigation-context';
 import { ConstituentaTooltip } from '@/features/rsform/components/constituenta-tooltip';
 
@@ -12,7 +12,6 @@ import { isAxiosError } from '@/backend/api-transport';
 import { TextURL } from '@/components/control';
 import { useQueryStrings } from '@/hooks/use-query-strings';
 import { useResetModification } from '@/hooks/use-reset-modification';
-import { useModificationStore } from '@/stores/modification';
 import { rethrowIfStaleBundleError } from '@/utils/stale-bundle-error';
 
 import { OperationTooltip } from '../../components/tooltip-oss-item';
@@ -36,9 +35,6 @@ export function OssPage() {
     id: params.id,
     tab: query.get('tab')
   });
-
-  const isModified = useModificationStore(state => state.isModified);
-  useBlockNavigation(isModified);
 
   if (!urlData.id) {
     router.replace({ path: urls.page404, force: true });

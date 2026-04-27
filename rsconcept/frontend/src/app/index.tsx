@@ -1,5 +1,5 @@
 export { useConceptNavigation } from './navigation/navigation-context';
-export { useBlockNavigation } from './navigation/navigation-context';
+export { useRegisterNavigationSave } from './navigation/navigation-context';
 export { urls } from './urls';
 import { RouterProvider } from 'react-router';
 

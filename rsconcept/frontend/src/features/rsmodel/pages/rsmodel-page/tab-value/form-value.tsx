@@ -10,7 +10,7 @@ import { type CalculatorResult, type RSErrorDescription, TokenID, TypeID, type V
 import { valueStub } from '@/domain/rslang/eval/value-api';
 import { labelType } from '@/domain/rslang/labels';
 
-import { useConceptNavigation } from '@/app';
+import { useConceptNavigation, useRegisterNavigationSave } from '@/app';
 import { type UpdateConstituentaDTO } from '@/features/rsform/backend/types';
 import { RSEditorControls } from '@/features/rsform/components/editor-rsexpression/rs-edit-controls';
 import { RefsInput } from '@/features/rsform/components/refs-input';
@@ -209,6 +209,8 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
       onSaveValue();
     }
   }
+
+  useRegisterNavigationSave(handleSubmitAll, isDirty);
 
   function handleCalculate(event: React.MouseEvent<Element>) {
     event.preventDefault();

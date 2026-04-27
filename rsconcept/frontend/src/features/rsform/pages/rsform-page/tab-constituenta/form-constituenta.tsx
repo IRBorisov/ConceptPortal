@@ -10,6 +10,8 @@ import { getAnalysisFor, isBaseSet, isBasicConcept, isLogical } from '@/domain/l
 import { type AnalysisFull, TypeID } from '@/domain/rslang';
 import { labelType } from '@/domain/rslang/labels';
 
+import { useRegisterNavigationSave } from '@/app';
+
 import { TextButton } from '@/components/control/text-button';
 import { Label, TextArea } from '@/components/input';
 import { useDialogsStore } from '@/stores/dialogs';
@@ -87,6 +89,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
 
   const definition = useStore(form.store, state => state.values.item_data.definition_formal);
   const isDefaultValue = useStore(form.store, state => state.isDefaultValue);
+  useRegisterNavigationSave(() => form.handleSubmit(), !isDefaultValue);
 
   const [forceComment, setForceComment] = useState(false);
   const [localParse, setLocalParse] = useState<RO<AnalysisFull> | null>(null);

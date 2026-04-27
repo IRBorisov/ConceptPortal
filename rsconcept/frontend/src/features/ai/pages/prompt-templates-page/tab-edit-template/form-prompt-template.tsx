@@ -5,6 +5,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 import clsx from 'clsx';
 import { useDebounce } from 'use-debounce';
 
+import { useRegisterNavigationSave } from '@/app';
 import { PromptInput } from '@/features/ai/components/prompt-input';
 import { useAuth } from '@/features/auth';
 
@@ -69,6 +70,7 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
 
   const text = useStore(form.store, state => state.values.text);
   const isDefaultValue = useStore(form.store, state => state.isDefaultValue);
+  useRegisterNavigationSave(() => form.handleSubmit(), !isDefaultValue);
 
   const prevReset = useRef(toggleReset);
   const prevTemplate = useRef(promptTemplate);

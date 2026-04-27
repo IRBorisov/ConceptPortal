@@ -18,6 +18,7 @@ import { type Styling } from '../props';
 import { cn } from '../utils';
 
 import { ModalBackdrop } from './modal-backdrop';
+import { useModalPlacement } from './use-modal-placement';
 
 export interface ModalProps extends Styling {
   /** Title of the modal window. */
@@ -75,6 +76,7 @@ export function ModalForm({
   ...restProps
 }: React.PropsWithChildren<ModalFormProps>) {
   const hideDialog = useDialogsStore(state => state.hideDialog);
+  const { isTopPlaced, setElement } = useModalPlacement<HTMLFormElement>();
 
   const previousFocusRef = useRef<HTMLElement | null>(null);
   useEffect(function manageFocus() {
@@ -99,9 +101,10 @@ export function ModalForm({
   }
 
   return (
-    <div className='cc-modal-wrapper'>
+    <div className={cn('cc-modal-wrapper', isTopPlaced && 'cc-modal-wrapper-top')}>
       <ModalBackdrop onHide={handleCancel} />
       <form
+        ref={setElement}
         className='cc-animate-modal relative grid border-2 px-1 pb-1 rounded-xl bg-background'
         role='dialog'
         onSubmit={handleSubmit}
