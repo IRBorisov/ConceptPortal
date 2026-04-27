@@ -220,6 +220,15 @@ export interface WordForm {
   grams: Grammeme[];
 }
 
+/** Represents a term available for text reference resolution. */
+export interface TermContextItem {
+  nominal: string;
+  forms?: WordForm[];
+}
+
+/** Represents term lookup context keyed by entity alias. */
+export type TermContext = Record<string, TermContextItem>;
+
 /**
  * Represents list of {@link Grammeme}s available in reference construction.
  */
@@ -242,7 +251,7 @@ export type ReferenceType = (typeof ReferenceType)[keyof typeof ReferenceType];
 /** Represents entity reference payload. */
 export interface EntityReference {
   entity: string;
-  form: string;
+  tags: Grammeme[];
 }
 
 /** Represents syntactic reference payload. */
@@ -256,7 +265,7 @@ export const schemaReferenceType = z.enum(Object.values(ReferenceType) as [Refer
 export const schemaReference = z.strictObject({
   type: schemaReferenceType,
   data: z.union([
-    z.strictObject({ entity: z.string(), form: z.string() }),
+    z.strictObject({ entity: z.string(), tags: z.array(schemaGrammeme) }),
     z.strictObject({ offset: z.number(), nominal: z.string() })
   ])
 });

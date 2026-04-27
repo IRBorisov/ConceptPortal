@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
 
-import { type EntityRefState, type Grammeme, type InlinePosition } from '@/domain/cctext';
+import { type Grammeme } from '@/domain/cctext';
 import { type Constituenta, type RSForm } from '@/domain/library';
 import { matchConstituenta } from '@/domain/library/rsform-api';
 
@@ -15,18 +15,20 @@ import { isMac } from '@/utils/utils';
 
 import { SelectWordForm } from '../select-word-form';
 
+import { type EntityRefState, type InlinePosition } from './types';
+
 interface InlineEntityEditorProps {
   schema: RSForm;
   position: InlinePosition;
   initial: EntityRefState;
 
-  onSave: (entity: string, form: string) => void;
+  onSave: (entity: string, tags: Grammeme[]) => void;
   onCancel: () => void;
 }
 
 export function InlineEntityEditor({ schema, initial, position, onSave, onCancel }: InlineEntityEditorProps) {
   const [entity, setEntity] = useState<string>(initial.entity);
-  const [grams, setGrams] = useState<Grammeme[]>(initial.grams);
+  const [grams, setGrams] = useState<Grammeme[]>(initial.tags);
   const [query, setQuery] = useState(() => prepareSelectionPrompt(initial.query));
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -46,7 +48,7 @@ export function InlineEntityEditor({ schema, initial, position, onSave, onCancel
     if (!canSubmit) {
       return;
     }
-    onSave(entity.trim(), grams.join(','));
+    onSave(entity.trim(), grams);
   }
 
   function handleSelectConstituenta(cst: Constituenta) {

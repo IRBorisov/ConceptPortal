@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
+import { generateNominalLexeme } from '@/domain/cctext/language-api';
 import { type Constituenta, CstType } from '@/domain/library/rsform';
 import { generateAlias, removeAliasReference } from '@/domain/library/rsform-api';
 
@@ -234,7 +235,8 @@ export function SandboxSchemaState({ children }: React.PropsWithChildren) {
       target: activeCst,
       onSave: data => {
         void patchConstituenta(data);
-      }
+      },
+      generateLexeme: data => Promise.resolve(generateNominalLexeme(data))
     });
   }
 

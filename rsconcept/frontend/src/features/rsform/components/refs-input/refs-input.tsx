@@ -13,20 +13,8 @@ import CodeMirror, {
 } from '@uiw/react-codemirror';
 import { useDebounce } from 'use-debounce';
 
-import {
-  type EntityRefState,
-  type Grammeme,
-  type InlinePosition,
-  ReferenceType,
-  supportedGrammemes,
-  type SyntacticRefState
-} from '@/domain/cctext';
-import {
-  parseEntityReference,
-  parseGrammemes,
-  parseSyntacticReference,
-  referenceToString
-} from '@/domain/cctext/language-api';
+import { type Grammeme, ReferenceType, supportedGrammemes } from '@/domain/cctext';
+import { parseEntityReference, parseSyntacticReference, referenceToString } from '@/domain/cctext/language-api';
 import { type RSForm } from '@/domain/library';
 
 import { ErrorField, Label } from '@/components/input';
@@ -44,6 +32,7 @@ import { InlineEntityEditor } from './inline-entity';
 import { InlineSyntacticEditor } from './inline-syntactic';
 import { NaturalLanguage, ReferenceTokens } from './parse';
 import { refsHoverTooltip } from './tooltip';
+import { type EntityRefState, type InlinePosition, type SyntacticRefState } from './types';
 
 const editorSetup: BasicSetupOptions = {
   highlightSpecialChars: false,
@@ -233,7 +222,7 @@ export function RefsInput({
       const refRaw = wrap.getText(nodes[0].from, nodes[0].to);
       const ref = parseEntityReference(refRaw);
       entity = ref.entity;
-      grams = parseGrammemes(ref.form);
+      grams = ref.tags;
     }
 
     setSyntacticEditor(null);
@@ -241,7 +230,7 @@ export function RefsInput({
     setEntityEditor({
       query: entity ? '' : text,
       entity: entity,
-      grams: grams ? supportedGrammemes.filter(data => grams.includes(data)) : []
+      tags: supportedGrammemes.filter(data => grams.includes(data))
     });
     setIsEditing(true);
   }
@@ -286,7 +275,7 @@ export function RefsInput({
     setIsEditing(true);
   }
 
-  function handleSaveEntityEditor(entity: string, form: string) {
+  function handleSaveEntityEditor(entity: string, tags: Grammeme[]) {
     const cmRef = thisRef.current as Required<ReactCodeMirrorRef> | null;
     if (!cmRef || !entityEditor) {
       return;
@@ -296,7 +285,7 @@ export function RefsInput({
     wrap.replaceWith(
       referenceToString({
         type: ReferenceType.ENTITY,
-        data: { entity, form }
+        data: { entity, tags }
       })
     );
     closeInlineEditor();

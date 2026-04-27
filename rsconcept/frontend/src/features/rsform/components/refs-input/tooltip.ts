@@ -5,7 +5,6 @@ import clsx from 'clsx';
 
 import { type EntityReference, type SyntacticReference } from '@/domain/cctext';
 import { labelGrammeme } from '@/domain/cctext/labels';
-import { parseGrammemes } from '@/domain/cctext/language-api';
 import { type Constituenta, type RSForm } from '@/domain/library';
 
 import { findContainedNodes } from '@/utils/codemirror';
@@ -83,7 +82,7 @@ function domTooltipEntityReference(ref: EntityReference, cst: Constituenta | nul
 
   const grams = document.createElement('div');
   grams.className = 'flex flex-wrap gap-1 mt-1';
-  for (const gramStr of parseGrammemes(ref.form)) {
+  for (const gramStr of ref.tags) {
     const gram = document.createElement('div');
     gram.id = `tooltip-${gramStr}`;
     gram.className = 'min-w-12 px-1 border rounded-lg text-sm text-center whitespace-nowrap bg-accent';
