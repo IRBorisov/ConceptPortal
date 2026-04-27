@@ -1,14 +1,15 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { type ReactCodeMirrorRef } from '@uiw/react-codemirror';
 
 import { type Constituenta, CstStatus, type RSForm } from '@/domain/library';
 import { getAnalysisFor, inferStatus } from '@/domain/library/rsform-api';
-import { type AnalysisFull, type RSErrorDescription, TokenID } from '@/domain/rslang';
+import { type AnalysisFull, type ExpressionType, type RSErrorDescription, TokenID } from '@/domain/rslang';
 import { rslangParser } from '@/domain/rslang';
 
+import { type HelpTopic } from '@/features/help';
 import {
   type ConstituentaCreatedResponse,
   type CreateConstituentaDTO,
@@ -16,6 +17,7 @@ import {
   type UpdateConstituentaDTO
 } from '@/features/rsform/backend/types';
 
+import { cn } from '@/components/utils';
 import { useResetOnChange } from '@/hooks/use-reset-on-change';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
@@ -33,34 +35,50 @@ import { ToolbarRSExpression } from './toolbar-rsexpression';
 
 interface EditorRSExpressionProps {
   id?: string;
+  className?: string;
   value: string;
   onChange: (newValue: string) => void;
-  analysis: RO<AnalysisFull> | null;
   schema: RSForm;
-  activeCst: Constituenta;
+  activeCst?: Constituenta;
 
   label: string;
   placeholder?: string;
   disabled?: boolean;
   isProcessing?: boolean;
   toggleReset?: boolean;
+  errors?: RO<RSErrorDescription[] | null>;
+  analysis?: RO<AnalysisFull> | null;
+  status?: CstStatus;
+  showStatus?: boolean;
+  helpTopic?: HelpTopic;
+  expressionType?: ExpressionType | null;
+  extractionDisabled?: boolean;
 
-  onAnalysis: (typification: RO<AnalysisFull> | null) => void;
+  onAnalyze?: (event: React.MouseEvent<Element> | null) => void;
+  onAnalysis?: (typification: RO<AnalysisFull> | null) => void;
   onOpenEdit: (cstID: number) => void;
-  onShowTypeGraph: (event: React.MouseEvent<Element>) => void;
+  onShowTypeGraph?: (event: React.MouseEvent<Element>) => void;
   onCreateCst?: (data: CreateConstituentaDTO) => Promise<RO<ConstituentaCreatedResponse>>;
   onUpdateCst?: (data: UpdateConstituentaDTO) => Promise<RO<RSFormDTO>>;
 }
 
 export function EditorRSExpression({
   activeCst,
+  className,
   disabled,
+  errors: externalErrors,
   analysis,
   value,
   toggleReset,
   schema,
   isProcessing,
+  status: statusProp,
+  showStatus,
+  helpTopic,
+  expressionType,
+  extractionDisabled,
   onChange,
+  onAnalyze,
   onAnalysis,
   onOpenEdit,
   onShowTypeGraph,
@@ -74,12 +92,13 @@ export function EditorRSExpression({
   const showControls = usePreferencesStore(state => state.showExpressionControls);
   const showFlatAst = useDialogsStore(state => state.showShowFlatAst);
   const showAstExtract = useDialogsStore(state => state.showShowAstExtract);
+  const showTypification = useDialogsStore(state => state.showShowTypeGraph);
   const [errors, setErrors] = useState<RO<RSErrorDescription[] | null>>(analysis?.errors ?? null);
 
-  const resetHandler = useCallback(() => {
+  function resetHandler() {
     setNeedsAnalyze(false);
-    onAnalysis(null);
-  }, [onAnalysis]);
+    onAnalysis?.(null);
+  }
 
   useEffect(
     function syncErrors() {
@@ -89,23 +108,29 @@ export function EditorRSExpression({
     [analysis]
   );
 
-  const cstHash = extractCstData(activeCst);
+  const cstHash = activeCst ? extractCstData(activeCst) : null;
   useResetOnChange([cstHash, toggleReset], resetHandler);
 
-  const status = (() => {
+  const status = statusProp ?? getStatus();
+  const displayedErrors = externalErrors === undefined ? errors : externalErrors;
+
+  function getStatus() {
     if (needsAnalyze) {
       return CstStatus.UNKNOWN;
     }
     if (analysis) {
       return inferStatus(analysis.success, analysis.valueClass);
-    } else {
+    } else if (activeCst) {
       return inferStatus(activeCst.analysis.success, activeCst.analysis.valueClass);
     }
-  })();
+    return CstStatus.UNKNOWN;
+  }
 
   function handleChange(newValue: string) {
     onChange(newValue);
-    setNeedsAnalyze(newValue !== activeCst.definition_formal);
+    if (activeCst) {
+      setNeedsAnalyze(newValue !== activeCst.definition_formal);
+    }
     setErrors(null);
   }
 
@@ -115,6 +140,13 @@ export function EditorRSExpression({
   ) {
     event?.preventDefault();
     event?.stopPropagation();
+    if (onAnalyze) {
+      onAnalyze(event);
+      return;
+    }
+    if (!activeCst || !onAnalysis) {
+      return;
+    }
     try {
       const parse = getAnalysisFor(value, activeCst.cst_type, schema);
       onAnalysis(parse);
@@ -175,7 +207,7 @@ export function EditorRSExpression({
         toast.error(errorMsg.invalidParse);
         return;
       }
-      if (!parse.ast.hasError && !disabled && onCreateCst && onUpdateCst) {
+      if (!parse.ast.hasError && !extractionDisabled && !disabled && activeCst && onCreateCst && onUpdateCst) {
         showAstExtract({
           initial: {
             ast: parse.ast,
@@ -196,27 +228,50 @@ export function EditorRSExpression({
     }
   }
 
+  function handleShowTypeGraph(event: React.MouseEvent<Element>) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (onShowTypeGraph) {
+      onShowTypeGraph(event);
+      return;
+    }
+
+    let targetType = expressionType;
+    if (!targetType) {
+      const parse = schema.analyzer.checkFast(value);
+      targetType = parse.type;
+    }
+    if (!targetType) {
+      toast.error(errorMsg.typeStructureFailed);
+      return;
+    }
+    showTypification({ items: [{ alias: activeCst?.alias ?? 'TARGET', type: targetType }] });
+  }
+
   return (
-    <div className='relative'>
+    <div className={cn('relative', className)}>
       <ToolbarRSExpression
         className='absolute -top-1 right-0'
         showAST={handleShowAST}
-        showTypeGraph={onShowTypeGraph}
+        showTypeGraph={handleShowTypeGraph}
         disabled={disabled}
         isProcessing={isProcessing}
+        helpTopic={helpTopic}
       />
 
-      <StatusBar
-        className='absolute -top-1 right-1/2 translate-x-1/2'
-        status={status}
-        onAnalyze={event => handleCheckExpression(event)}
-      />
+      {showStatus ? (
+        <StatusBar
+          className='absolute -top-1 right-1/2 translate-x-1/2'
+          status={status}
+          onAnalyze={event => handleCheckExpression(event)}
+        />
+      ) : null}
 
       <RSInput
         ref={rsInput}
         value={value}
         schema={schema}
-        errors={errors}
+        errors={displayedErrors}
         minHeight='3.75rem'
         maxHeight='8rem'
         onChange={handleChange}
@@ -224,7 +279,7 @@ export function EditorRSExpression({
         onOpenEdit={onOpenEdit}
         disabled={disabled}
         errorMessage={
-          activeCst.formalDuplicates.length > 0 && activeCst.definition_formal === value
+          activeCst && activeCst.formalDuplicates.length > 0 && activeCst.definition_formal === value
             ? errorMsg.formalDuplicates(formatAliasList(activeCst.formalDuplicates, schema))
             : undefined
         }
@@ -232,14 +287,14 @@ export function EditorRSExpression({
       />
 
       <RSEditorControls
-        isOpen={showControls && (!disabled || (!!isProcessing && !activeCst.is_inherited))}
+        isOpen={showControls && (!disabled || (!!isProcessing && !activeCst?.is_inherited))}
         onEdit={handleEdit}
         disabled={disabled}
       />
 
       <ViewErrors
-        isOpen={!!analysis && analysis.errors.length > 0}
-        errors={analysis?.errors ?? null}
+        isOpen={!!displayedErrors && displayedErrors.length > 0}
+        errors={displayedErrors ?? null}
         onShowError={error => handleShowError(error)}
         disabled={disabled}
       />

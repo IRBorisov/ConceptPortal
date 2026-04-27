@@ -1,6 +1,6 @@
 'use client';
 
-import { HelpTopic } from '@/features/help';
+import { type HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 
 import { MiniButton } from '@/components/control';
@@ -14,6 +14,7 @@ interface ToolbarRSExpressionProps {
   className?: string;
   disabled?: boolean;
   isProcessing?: boolean;
+  helpTopic?: HelpTopic;
   showAST: (event: React.MouseEvent<Element>) => void;
   showTypeGraph: (event: React.MouseEvent<Element>) => void;
 }
@@ -21,7 +22,8 @@ interface ToolbarRSExpressionProps {
 export function ToolbarRSExpression({
   className,
   disabled,
-  isProcessing = false,
+  isProcessing,
+  helpTopic,
   showTypeGraph,
   showAST
 }: ToolbarRSExpressionProps) {
@@ -30,7 +32,7 @@ export function ToolbarRSExpression({
 
   return (
     <div className={cn('cc-icons', className)}>
-      <BadgeHelp topic={HelpTopic.UI_CST_STATUS} offset={4} />
+      {helpTopic ? <BadgeHelp topic={helpTopic} offset={4} /> : null}
       {!disabled || isProcessing ? (
         <MiniButton
           title='Символьная клавиатура'

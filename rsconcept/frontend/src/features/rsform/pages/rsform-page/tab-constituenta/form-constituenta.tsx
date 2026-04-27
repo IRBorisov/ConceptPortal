@@ -11,6 +11,7 @@ import { type AnalysisFull, TypeID } from '@/domain/rslang';
 import { labelType } from '@/domain/rslang/labels';
 
 import { useRegisterNavigationSave } from '@/app';
+import { HelpTopic } from '@/features/help';
 
 import { TextButton } from '@/components/control/text-button';
 import { Label, TextArea } from '@/components/input';
@@ -251,6 +252,8 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
               activeCst={activeCst}
               isProcessing={isProcessing}
               toggleReset={toggleReset}
+              helpTopic={HelpTopic.UI_CST_STATUS}
+              showStatus
               onChange={newValue => field.handleChange(newValue)}
               analysis={localParse}
               onAnalysis={setLocalParse}

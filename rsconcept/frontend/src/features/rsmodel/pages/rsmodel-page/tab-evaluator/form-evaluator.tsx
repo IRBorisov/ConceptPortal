@@ -1,22 +1,19 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { type ReactCodeMirrorRef } from '@uiw/react-codemirror';
 
 import { CstType } from '@/domain/library';
 import { getStructureName } from '@/domain/library/rsform-api';
 import { inferEvalStatus, prepareValueString } from '@/domain/library/rsmodel-api';
-import { type AnalysisFull, type CalculatorResult, type RSErrorDescription, TokenID } from '@/domain/rslang';
+import { type AnalysisFull, type CalculatorResult } from '@/domain/rslang';
 import { valueStub } from '@/domain/rslang/eval/value-api';
 import { labelType } from '@/domain/rslang/labels';
 import { isTypification, TypeID, type TypePath, type Typification } from '@/domain/rslang/semantic/typification';
 
 import { useConceptNavigation } from '@/app';
-import { RSEditorControls } from '@/features/rsform/components/editor-rsexpression/rs-edit-controls';
-import { RSInput } from '@/features/rsform/components/rs-input';
-import { RSTextWrapper } from '@/features/rsform/components/rs-input/text-editing';
-import { ViewErrors } from '@/features/rsform/components/view-errors';
+import { HelpTopic } from '@/features/help';
+import { EditorRSExpression } from '@/features/rsform/components/editor-rsexpression/editor-rsexpression';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 
 import { TextButton } from '@/components/control/text-button';
@@ -32,7 +29,6 @@ import { ValueInput } from '../../../components/value-input';
 import { labelValue } from '../../../labels';
 import { copyJsonToClipboard, downloadJsonFile, getExportJsonText } from '../export-helpers';
 import { useModelEdit } from '../model-edit-context';
-import { ToolbarExpression } from '../tab-value/toolbar-expression';
 
 const VALUE_FILENAME = 'eval_value.json';
 
@@ -50,7 +46,6 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
   const toggleShowDataText = usePreferencesStore(state => state.toggleShowDataText);
   const showViewValue = useDialogsStore(state => state.showModelViewValue);
 
-  const rsInput = useRef<ReactCodeMirrorRef>(null);
   const [evaluatedExpression, setEvaluatedExpression] = useState<string>('');
   const [expression, setExpression] = useState<string>(activeCst?.definition_formal ?? '');
   const [localEval, setLocalEval] = useState<RO<CalculatorResult> | null>(null);
@@ -76,19 +71,6 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
 
   function handleOpenCst(cstID: number) {
     void router.changeActive(cstID);
-  }
-
-  function handleEdit(id: TokenID, key?: string) {
-    if (!rsInput.current?.editor || !rsInput.current.state || !rsInput.current.view) {
-      return;
-    }
-    const text = new RSTextWrapper(rsInput.current as Required<ReactCodeMirrorRef>);
-    if (id === TokenID.ID_LOCAL) {
-      text.replaceWith(key ?? 'unknown_local');
-    } else {
-      text.insertToken(id);
-    }
-    rsInput.current?.view?.focus();
   }
 
   function handleCalculate() {
@@ -137,19 +119,6 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
     downloadJsonFile(getExportJsonText(dialogValue), VALUE_FILENAME);
   }
 
-  function handleShowError(error: RO<RSErrorDescription>) {
-    if (!rsInput.current) {
-      return;
-    }
-    rsInput.current?.view?.dispatch({
-      selection: {
-        anchor: error.from,
-        head: error.to
-      }
-    });
-    rsInput.current?.view?.focus();
-  }
-
   function handleInput(event: React.KeyboardEvent<HTMLDivElement>) {
     if ((event.ctrlKey || event.metaKey) && event.code === 'KeyQ') {
       event.preventDefault();
@@ -174,28 +143,17 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
         areaClassName='cursor-default'
       />
 
-      <div className='relative'>
-        <ToolbarExpression
-          className='absolute -top-1 right-0 -translate-y-full'
-          expression={expression}
-          type={localParse?.type ?? null}
-        />
-        <RSInput
-          ref={rsInput}
-          placeholder='Выражение отсутствует'
-          schema={schema}
-          errors={errors}
-          value={expression}
-          onChange={setExpression}
-          onOpenEdit={handleOpenCst}
-        />
-        <RSEditorControls isOpen={true} onEdit={handleEdit} />
-      </div>
-      <ViewErrors
-        className='-mt-3'
-        onShowError={handleShowError}
-        isOpen={!!errors && errors.length > 0}
+      <EditorRSExpression
+        label='Выражение'
+        placeholder='Выражение отсутствует'
+        schema={schema}
         errors={errors}
+        value={expression}
+        expressionType={localParse?.type ?? null}
+        helpTopic={HelpTopic.UI_EVAL_STATUS}
+        onAnalyze={handleCalculate}
+        onChange={setExpression}
+        onOpenEdit={handleOpenCst}
       />
 
       {dialogValue != null ? (

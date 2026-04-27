@@ -1,22 +1,19 @@
 'use client';
 
-import { useEffect, useEffectEvent, useLayoutEffect, useRef, useState } from 'react';
-import { type ReactCodeMirrorRef } from '@uiw/react-codemirror';
+import { useEffect, useEffectEvent, useLayoutEffect, useState } from 'react';
 
 import { type BasicBinding, type Constituenta, CstType } from '@/domain/library';
 import { isBaseSet } from '@/domain/library/rsform-api';
 import { isInferrable, isInterpretable, prepareValueString } from '@/domain/library/rsmodel-api';
-import { type CalculatorResult, type RSErrorDescription, TokenID, TypeID, type Value } from '@/domain/rslang';
+import { type CalculatorResult, TypeID, type Value } from '@/domain/rslang';
 import { valueStub } from '@/domain/rslang/eval/value-api';
 import { labelType } from '@/domain/rslang/labels';
 
 import { useConceptNavigation, useRegisterNavigationSave } from '@/app';
+import { HelpTopic } from '@/features/help';
 import { type UpdateConstituentaDTO } from '@/features/rsform/backend/types';
-import { RSEditorControls } from '@/features/rsform/components/editor-rsexpression/rs-edit-controls';
+import { EditorRSExpression } from '@/features/rsform/components/editor-rsexpression/editor-rsexpression';
 import { RefsInput } from '@/features/rsform/components/refs-input';
-import { RSInput } from '@/features/rsform/components/rs-input';
-import { RSTextWrapper } from '@/features/rsform/components/rs-input/text-editing';
-import { ViewErrors } from '@/features/rsform/components/view-errors';
 import { labelRSExpression } from '@/features/rsform/labels';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 
@@ -35,7 +32,6 @@ import { labelValue } from '../../../labels';
 import { processBindingData, processValueData } from '../../../models/data-loading';
 import { useModelEdit } from '../model-edit-context';
 
-import { ToolbarExpression } from './toolbar-expression';
 import { ValuePrimaryActions } from './value-primary-actions';
 
 interface FormValueProps {
@@ -93,8 +89,6 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
 
   const metaFieldsDisabled = !isContentEditable || isProcessing;
   const formalFieldDisabled = metaFieldsDisabled || activeCst.is_inherited;
-
-  const rsInput = useRef<ReactCodeMirrorRef>(null);
 
   useLayoutEffect(
     function resetGlobalModifiedFlagOnCstChange() {
@@ -235,32 +229,6 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
     }
   }
 
-  function handleEditFormal(id: TokenID, key?: string) {
-    if (!rsInput.current?.editor || !rsInput.current.state || !rsInput.current.view) {
-      return;
-    }
-    const text = new RSTextWrapper(rsInput.current as Required<ReactCodeMirrorRef>);
-    if (id === TokenID.ID_LOCAL) {
-      text.replaceWith(key ?? 'unknown_local');
-    } else {
-      text.insertToken(id);
-    }
-    rsInput.current?.view?.focus();
-  }
-
-  function handleShowError(error: RO<RSErrorDescription>) {
-    if (!rsInput.current) {
-      return;
-    }
-    rsInput.current.view?.dispatch({
-      selection: {
-        anchor: error.from,
-        head: error.to
-      }
-    });
-    rsInput.current.view?.focus();
-  }
-
   return (
     <form
       id={id}
@@ -289,31 +257,23 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
       />
 
       {cstInferrable || (activeCst.definition_formal && activeCst.cst_type !== CstType.STRUCTURED) ? (
-        <div className='relative'>
-          <ToolbarExpression
-            className='absolute -top-1 right-0'
-            expression={formalDraft}
-            type={activeCst.analysis.type}
-            activeCstId={activeCst.id}
-            extractionDisabled={formalFieldDisabled || !isContentEditable}
-            onCreateCst={isContentEditable ? createCstFromData : undefined}
-            onUpdateCst={isContentEditable ? patchConstituenta : undefined}
-          />
-          <RSInput
-            ref={rsInput}
-            label={labelRSExpression(activeCst.cst_type)}
-            placeholder='Выражение отсутствует'
-            schema={schema}
-            value={formalDraft}
-            onChange={setFormalDraft}
-            disabled={formalFieldDisabled}
-            onOpenEdit={handleNavigateCst}
-          />
-          <RSEditorControls
-            isOpen={isContentEditable && (isProcessing || !activeCst.is_inherited)}
-            onEdit={handleEditFormal}
-          />
-        </div>
+        <EditorRSExpression
+          label={labelRSExpression(activeCst.cst_type)}
+          placeholder='Выражение отсутствует'
+          value={formalDraft}
+          schema={schema}
+          activeCst={activeCst}
+          expressionType={activeCst.analysis.type}
+          errors={localEval?.errors ?? null}
+          helpTopic={HelpTopic.UI_EVAL_STATUS}
+          isProcessing={isProcessing}
+          extractionDisabled={formalFieldDisabled || !isContentEditable}
+          onCreateCst={isContentEditable ? createCstFromData : undefined}
+          onUpdateCst={isContentEditable ? patchConstituenta : undefined}
+          onChange={setFormalDraft}
+          disabled={formalFieldDisabled}
+          onOpenEdit={handleNavigateCst}
+        />
       ) : null}
 
       <ValueInput
@@ -341,14 +301,6 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
         onToggleDataText={toggleDataText}
         disabled={isValueEditable}
       />
-
-      <div className='-mt-3'>
-        <ViewErrors
-          isOpen={!!localEval && localEval.errors.length > 0}
-          errors={localEval?.errors ?? null}
-          onShowError={handleShowError}
-        />
-      </div>
 
       <div className='relative'>
         {!metaFieldsDisabled ? (
