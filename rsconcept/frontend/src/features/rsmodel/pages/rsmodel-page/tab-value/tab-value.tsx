@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 
 import { isProblematic } from '@/domain/library/rsform-api';
-import { isInferrable } from '@/domain/library/rsmodel-api';
+import { isEvalIssue, isInferrable } from '@/domain/library/rsmodel-api';
 
 import { useConceptNavigation } from '@/app';
 import { ViewConstituents } from '@/features/rsform/components/view-constituents';
@@ -162,6 +162,7 @@ export function TabValue() {
         engine={engine}
         activeCst={activeCst}
         isProblematic={isProblematic}
+        isEvalIssue={cst => isEvalIssue(engine, cst)}
         onActivate={cst => {
           clearPendingActiveID();
           router.changeActive(cst.id);

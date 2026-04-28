@@ -1,12 +1,15 @@
 'use client';
 
+import { useEffect } from 'react';
+
 import {
   IconChild,
   IconCrucial,
   IconFilter,
   IconGraphCore,
   IconPredecessor,
-  IconStatusError
+  IconStatusError,
+  IconStatusIncalculable
 } from '@/components/icons';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/input/select';
 import { cn } from '@/components/utils';
@@ -15,11 +18,21 @@ import { useCstSearchStore } from '../../stores/cst-search';
 
 interface SelectorCstFilterProps {
   className?: string;
+  showModelFilter?: boolean;
 }
 
-export function SelectorCstFilter({ className }: SelectorCstFilterProps) {
+export function SelectorCstFilter({ className, showModelFilter }: SelectorCstFilterProps) {
   const setFilter = useCstSearchStore(state => state.setFilter);
   const filter = useCstSearchStore(state => state.filter);
+
+  useEffect(
+    function resetUninterpretableFilterWhenHidden() {
+      if (!showModelFilter && filter === 'uninterpretable') {
+        setFilter('all');
+      }
+    },
+    [filter, setFilter, showModelFilter]
+  );
 
   return (
     <div className={cn('font-controls text-sm opacity-50 hover:opacity-100 transition-opacity select-none', className)}>
@@ -36,6 +49,12 @@ export function SelectorCstFilter({ className }: SelectorCstFilterProps) {
             <IconStatusError size='1rem' className='text-destructive -mt-0.5 -mr-0.75' />
             Проблемные
           </SelectItem>
+          {showModelFilter ? (
+            <SelectItem value='uninterpretable'>
+              <IconStatusIncalculable size='1rem' className='text-destructive -mt-0.5 -mr-0.75' />
+              Неинтерпретируемые
+            </SelectItem>
+          ) : null}
           <SelectItem value='crucial'>
             <IconCrucial size='1rem' className='text-constructive -mt-0.5 -mr-0.75' />
             Ключевые

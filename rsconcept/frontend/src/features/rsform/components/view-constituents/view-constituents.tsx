@@ -14,6 +14,7 @@ interface ViewConstituentsProps {
   engine?: RSEngine;
   activeCst?: Constituenta | null;
   isProblematic?: (cst: Constituenta) => boolean;
+  isEvalIssue?: (cst: Constituenta) => boolean;
 
   onActivate?: (cst: Constituenta) => void;
   onDoubleClick?: (cst: Constituenta) => void;
@@ -30,6 +31,7 @@ export function ViewConstituents({
   engine,
   activeCst,
   isProblematic,
+  isEvalIssue,
 
   onActivate,
   onDoubleClick,
@@ -42,12 +44,13 @@ export function ViewConstituents({
 }: ViewConstituentsProps) {
   return (
     <div className={cn(!noBorder && 'border', className)}>
-      <ConstituentsSearch actions={sidebarActions} />
+      <ConstituentsSearch actions={sidebarActions} showModelFilter={!!isEvalIssue} />
       <TableSideConstituents
         schema={schema}
         engine={engine}
         activeCst={activeCst}
         isProblematic={isProblematic}
+        isEvalIssue={isEvalIssue}
         onActivate={onActivate}
         maxHeight={maxListHeight}
         autoScroll={autoScroll}

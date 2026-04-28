@@ -15,7 +15,11 @@ export function ViewModelStats({ className, stats, ...restProps }: ViewModelStat
   const countErrors = stats.count_incorrect + stats.count_incalculable;
   const countDerived = stats.count_all - stats.count_base - stats.count_nominal;
   const countModelNotes =
-    stats.count_missing_base + stats.count_false_axioms + stats.count_invalid_calculations + stats.count_empty_terms;
+    stats.count_missing_base +
+    stats.count_false_axioms +
+    stats.count_invalid_data +
+    stats.count_invalid_calculations +
+    stats.count_empty_terms;
 
   return (
     <aside className={cn('h-fit flex flex-col border select-none', className)} {...restProps}>
@@ -31,8 +35,12 @@ export function ViewModelStats({ className, stats, ...restProps }: ViewModelStat
         secondaryTitle='Количество собственных конституент'
         details={[
           { label: 'Всего конституент', value: stats.count_all },
-          { label: 'Наследованные', value: stats.count_inherited },
-          { label: 'Собственные', value: countOwned },
+          ...(stats.count_inherited > 0
+            ? [
+                { label: 'Наследованные', value: stats.count_inherited },
+                { label: 'Собственные', value: countOwned }
+              ]
+            : []),
           { label: 'Ключевые', value: stats.count_crucial },
           { label: 'Термины', value: stats.count_term },
           { label: 'Текстовые термины', value: stats.count_text_term },
@@ -98,12 +106,13 @@ export function ViewModelStats({ className, stats, ...restProps }: ViewModelStat
         label='Характеристика модели'
         primaryLabel='Замечания'
         primaryValue={countModelNotes}
-        primaryTitle='Сумма замечаний по текущим данным модели:<br/>отсутствующие базовые интерпретации, невыполненные аксиомы, ошибки вычисления и пустые термы'
+        primaryTitle='Сумма замечаний по текущим данным модели:<br/>отсутствующие базовые интерпретации, неверные данные, невыполненные аксиомы, ошибки вычисления и пустые термы'
         secondaryLabel='База'
         secondaryValue={stats.base_elements}
         secondaryTitle='Суммарная мощность интерпретаций базовых понятий'
         details={[
           { label: 'Мощность базы', value: stats.base_elements },
+          { label: 'Неверные данные', value: stats.count_invalid_data },
           { label: 'Базовые без интерпретации', value: stats.count_missing_base },
           { label: 'Нарушенные аксиомы', value: stats.count_false_axioms },
           { label: 'Невычислимые выражения', value: stats.count_invalid_calculations },
