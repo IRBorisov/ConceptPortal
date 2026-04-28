@@ -2,7 +2,7 @@
  * Module: Internal navigation constants.
  */
 
-import { type LibraryItemType } from '@/domain/library';
+import { LibraryItemType } from '@/domain/library';
 
 import { buildConstants } from '@/utils/build-constants';
 
@@ -43,9 +43,9 @@ export const urls = {
   library: `/${routes.library}`,
   library_filter: (strategy: string) => `/library?filter=${strategy}`,
   create_item: `/${routes.create_item}`,
-  create_item_from_sandbox: (itemType?: LibraryItemType) =>
-    `/${routes.create_item}?fromSandbox=1${itemType ? `&itemType=${itemType}` : ''}`,
-  create_model: (schemaID: number) => `/${routes.create_item}?modelFrom=${schemaID}`,
+  create_item_by_type: (itemType: LibraryItemType) => `/${routes.create_item}?itemType=${itemType}`,
+  create_model: (schemaID: number) =>
+    `/${routes.create_item}?itemType=${LibraryItemType.RSMODEL}&modelFrom=${schemaID}`,
   prompt_templates: `/${routes.prompt_templates}`,
   prompt_template: (active: number | null, tab: number) =>
     `/prompt-templates?tab=${tab}${active ? `&active=${active}` : ''}`,

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 
 import { isSchemaIssue } from '@/domain/library/rsform-api';
-import { isModelIssue, isInferrable } from '@/domain/library/rsmodel-api';
+import { isInferrable,isModelIssue } from '@/domain/library/rsmodel-api';
 
 import { useConceptNavigation } from '@/app';
 import { ViewConstituents } from '@/features/rsform/components/view-constituents';

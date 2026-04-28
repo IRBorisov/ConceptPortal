@@ -1,48 +1,34 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { toast } from 'react-toastify';
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { AccessPolicy, LibraryItemType, LocationHead } from '@/domain/library';
 
 import { urls, useConceptNavigation } from '@/app';
-import { loadBundle } from '@/features/sandbox/stores/sandbox-repository';
 
 import { Button, MiniButton, SubmitButton } from '@/components/control';
-import { IconDownload, IconSandbox } from '@/components/icons';
 import { Label, TextArea, TextInput } from '@/components/input';
-import { EXTEOR_TRS_FILE } from '@/utils/constants';
-import { errorMsg, placeholderMsg } from '@/utils/labels';
+import { placeholderMsg } from '@/utils/labels';
 
 import { type CreateLibraryItemDTO, schemaCreateLibraryItem } from '../../backend/types';
-import { useCreateFromSandbox } from '../../backend/use-create-from-sandbox';
 import { useCreateItem } from '../../backend/use-create-item';
 import { useLibrary } from '../../backend/use-library';
 import { IconItemVisibility } from '../../components/icon-item-visibility';
 import { PickLocation } from '../../components/pick-location';
 import { PickSchema } from '../../components/pick-schema';
 import { SelectAccessPolicy } from '../../components/select-access-policy';
-import { SelectItemType } from '../../components/select-item-type';
 import { useLibrarySearchStore } from '../../stores/library-search';
 
 interface FormCreateItemProps {
   modelFrom?: number;
-  fromSandbox?: boolean;
-  initialType?: Extract<LibraryItemType, 'rsform' | 'rsmodel'>;
+  initialType?: Extract<LibraryItemType, 'rsform' | 'rsmodel' | 'oss'>;
 }
 
-export function FormCreateItem({
-  modelFrom,
-  fromSandbox = false,
-  initialType = LibraryItemType.RSFORM
-}: FormCreateItemProps) {
+export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM }: FormCreateItemProps) {
   const router = useConceptNavigation();
   const { createItem, isPending, reset: clearServerError } = useCreateItem();
   const { items } = useLibrary();
-  const { createRSFormFromSandbox, createRSModelFromSandbox } = useCreateFromSandbox();
   const schemaItem = modelFrom ? items.find(item => item.id === modelFrom) : null;
-  const [loadSandboxData, setLoadSandboxData] = useState(fromSandbox);
 
   const searchLocation = useLibrarySearchStore(state => state.location);
   const setSearchLocation = useLibrarySearchStore(state => state.setLocation);
@@ -52,7 +38,7 @@ export function FormCreateItem({
     access_policy: AccessPolicy.PUBLIC,
     visible: true,
     read_only: false,
-    schema: modelFrom ?? (fromSandbox && initialType === LibraryItemType.RSMODEL ? -1 : undefined),
+    schema: modelFrom,
     title: schemaItem ? `Модель ${schemaItem.title}` : undefined,
     alias: schemaItem ? `M${schemaItem.alias}` : undefined,
     location: schemaItem
@@ -60,9 +46,7 @@ export function FormCreateItem({
       : !!searchLocation && !searchLocation.startsWith(LocationHead.LIBRARY)
         ? searchLocation
         : LocationHead.USER,
-    description: '',
-    file: undefined,
-    fileName: undefined
+    description: ''
   };
   const form = useForm({
     defaultValues,
@@ -70,7 +54,7 @@ export function FormCreateItem({
       onChange: schemaCreateLibraryItem
     },
     onSubmit: async ({ value }) => {
-      const newItem = fromSandbox ? await createFromSandbox(value) : await createItem(value);
+      const newItem = await createItem(value);
       setSearchLocation(value.location);
       switch (newItem.item_type) {
         case LibraryItemType.RSFORM:
@@ -87,79 +71,6 @@ export function FormCreateItem({
   });
 
   const itemType = useStore(form.store, state => state.values.item_type);
-  const file = useStore(form.store, state => state.values.file);
-  const inputRef = useRef<HTMLInputElement | null>(null);
-
-  async function createFromSandbox(value: CreateLibraryItemDTO) {
-    const bundle = await loadBundle();
-    if (!bundle) {
-      toast.error(errorMsg.sandboxBundleNotAvailable);
-      throw new Error(errorMsg.sandboxBundleNotAvailable);
-    }
-    const sourceItem = value.item_type === LibraryItemType.RSMODEL ? bundle.model : bundle.schema;
-    const itemData = {
-      title: value.title ?? sourceItem.title,
-      alias: value.alias ?? sourceItem.alias,
-      description: value.description ?? sourceItem.description,
-      visible: value.visible,
-      read_only: value.read_only,
-      access_policy: value.access_policy,
-      location: value.location
-    };
-
-    if (value.item_type === LibraryItemType.RSMODEL) {
-      return createRSModelFromSandbox({
-        item_data: itemData,
-        schema_data: {
-          items: bundle.schema.items,
-          attribution: bundle.schema.attribution
-        },
-        model_data: {
-          items: bundle.model.items
-        }
-      });
-    } else {
-      return createRSFormFromSandbox({
-        item_data: itemData,
-        schema_data: {
-          items: bundle.schema.items,
-          attribution: bundle.schema.attribution
-        }
-      });
-    }
-  }
-
-  useEffect(
-    function preloadSandboxMetadata() {
-      if (!loadSandboxData || modelFrom) {
-        return;
-      }
-      let isActive = true;
-      void loadBundle()
-        .then(bundle => {
-          if (!isActive || !bundle) {
-            return;
-          }
-          const sourceItem = itemType === LibraryItemType.RSMODEL ? bundle.model : bundle.schema;
-          if (!form.getFieldValue('title')) {
-            form.setFieldValue('title', sourceItem.title);
-          }
-          if (!form.getFieldValue('alias')) {
-            form.setFieldValue('alias', sourceItem.alias);
-          }
-          if (!form.getFieldValue('description')) {
-            form.setFieldValue('description', sourceItem.description);
-          }
-        })
-        .catch((error: unknown) => {
-          console.error(error);
-        });
-      return function cleanupSandboxMetadata() {
-        isActive = false;
-      };
-    },
-    [form, itemType, loadSandboxData, modelFrom]
-  );
 
   function resetErrors() {
     clearServerError();
@@ -173,30 +84,6 @@ export function FormCreateItem({
     }
   }
 
-  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
-    if (event.target.files && event.target.files.length > 0) {
-      const f = event.target.files[0];
-      form.setFieldValue('file', f);
-      form.setFieldValue('fileName', f.name);
-    } else {
-      form.setFieldValue('file', undefined);
-      form.setFieldValue('fileName', undefined);
-    }
-  }
-
-  function handleItemTypeChange(value: LibraryItemType) {
-    if (value !== LibraryItemType.RSFORM) {
-      form.setFieldValue('file', undefined);
-      form.setFieldValue('fileName', undefined);
-    }
-    if (value !== LibraryItemType.RSMODEL) {
-      form.setFieldValue('schema', undefined);
-    } else if (fromSandbox) {
-      form.setFieldValue('schema', -1);
-    }
-    form.setFieldValue('item_type', value);
-  }
-
   return (
     <form
       className='cc-column w-140 mx-auto px-6 py-3'
@@ -208,43 +95,18 @@ export function FormCreateItem({
       onChange={resetErrors}
     >
       <h1 className='select-none relative'>
-        {fromSandbox ? (
-          <MiniButton
-            title='Загрузка данных из песочницы'
-            className='absolute top-1 left-0'
-            icon={<IconSandbox size='1.25rem' className={loadSandboxData ? 'icon-primary' : ''} />}
-            onClick={() => setLoadSandboxData(prev => !prev)}
-          />
-        ) : null}
-        {itemType == LibraryItemType.RSFORM && !loadSandboxData ? (
-          <>
-            <input
-              id='schema_file'
-              ref={inputRef}
-              type='file'
-              aria-hidden
-              className='hidden'
-              accept={EXTEOR_TRS_FILE}
-              onChange={handleFileChange}
-            />
-            <MiniButton
-              title='Загрузить из Экстеор'
-              className='absolute top-0 right-0'
-              icon={<IconDownload size='1.25rem' className='icon-primary' />}
-              onClick={() => inputRef.current?.click()}
-            />
-          </>
-        ) : null}
-        {itemType === LibraryItemType.RSMODEL ? 'Создание модели' : 'Создание схемы'}
+        {itemType === LibraryItemType.RSMODEL
+          ? 'Новая концептуальная модель'
+          : itemType === LibraryItemType.OSS
+            ? 'Новая операционная схема'
+            : 'Новая концептуальная схема'}
       </h1>
-
-      {file ? <Label className='text-wrap' text={`Загружен файл: ${file.name}`} /> : null}
 
       <form.Field name='title'>
         {field => (
           <TextInput
             id='schema_title'
-            placeholder={file ? 'Загрузить название из файла' : 'Название'}
+            placeholder='Название'
             value={field.state.value ?? ''}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
@@ -259,7 +121,6 @@ export function FormCreateItem({
             <TextInput
               id='schema_alias'
               label='Сокращение'
-              placeholder={file ? 'Загрузить из файла' : undefined}
               className='w-84'
               value={field.state.value ?? ''}
               onChange={event => field.handleChange(event.target.value)}
@@ -268,14 +129,6 @@ export function FormCreateItem({
             />
           )}
         </form.Field>
-        <div className='flex flex-col items-center gap-2'>
-          <Label text='Что создать' className='self-center select-none' />
-          <form.Field name='item_type'>
-            {field => (
-              <SelectItemType value={field.state.value ?? LibraryItemType.RSFORM} onChange={handleItemTypeChange} />
-            )}
-          </form.Field>
-        </div>
 
         <div className='flex flex-col gap-2'>
           <Label text='Доступ' className='self-center select-none' />
@@ -303,7 +156,7 @@ export function FormCreateItem({
         </div>
       </div>
 
-      {itemType === LibraryItemType.RSMODEL && !fromSandbox ? (
+      {itemType === LibraryItemType.RSMODEL ? (
         <div>
           <Label text='Концептуальная схема' />
           <form.Field name='schema'>
@@ -338,7 +191,7 @@ export function FormCreateItem({
           <TextArea
             id='schema_comment'
             label='Описание'
-            placeholder={file ? 'Загрузить из файла' : placeholderMsg.itemDescription}
+            placeholder={placeholderMsg.itemDescription}
             value={field.state.value ?? ''}
             onChange={event => field.handleChange(event.target.value)}
             rows={5}

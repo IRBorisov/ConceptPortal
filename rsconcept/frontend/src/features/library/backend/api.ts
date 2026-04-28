@@ -58,18 +58,11 @@ export const libraryApi = {
   createItem: (data: CreateLibraryItemDTO) =>
     axiosPost<CreateLibraryItemDTO, LibraryItem>({
       schema: schemaLibraryItem,
-      endpoint: !data.file ? '/api/library' : '/api/rsforms/create-detailed',
+      endpoint: '/api/library',
       request: {
         data: data,
         successMessage: infoMsg.newLibraryItem
-      },
-      options: !data.file
-        ? undefined
-        : {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          }
+      }
     }),
   createRSFormFromSandbox: (data: CreateRSFormFromSandboxDTO) =>
     axiosPost<CreateRSFormFromSandboxDTO, LibraryItem>({
