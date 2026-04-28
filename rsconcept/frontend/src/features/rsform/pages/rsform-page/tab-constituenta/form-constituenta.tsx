@@ -316,7 +316,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
       ) : null}
 
       {!showConvention && (!disabled || isProcessing) ? (
-        <TextButton text='Добавить комментарий' onClick={() => setForceComment(true)} />
+        <TextButton text='Добавить комментарий' className='self-start' onClick={() => setForceComment(true)} />
       ) : null}
     </form>
   );

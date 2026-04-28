@@ -81,7 +81,8 @@ export const RSErrorCode = {
   iterateInfinity: 0x8106, // 35334
   calculationNotSupported: 0x8107, // 35335
 
-  cstEmptyDerived: 0x8861 // 34913
+  cstEmptyDerived: 0x8861, // 34913
+  definitionNotAllowed: 0x8862 // 34914
 } as const;
 export type RSErrorCode = (typeof RSErrorCode)[keyof typeof RSErrorCode];
 

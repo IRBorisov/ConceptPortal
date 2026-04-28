@@ -3,7 +3,7 @@
 import { useEffect, useEffectEvent, useState } from 'react';
 
 import { type Constituenta } from '@/domain/library';
-import { calculateSchemaStats, isProblematic } from '@/domain/library/rsform-api';
+import { calculateSchemaStats, isSchemaIssue } from '@/domain/library/rsform-api';
 
 import { useConceptNavigation } from '@/app';
 import { useAIStore } from '@/features/ai/stores/ai-context';
@@ -153,7 +153,7 @@ export function ViewSchema({ schemaID, isMutable }: ViewSchemaProps) {
         className='border-y rounded-none'
         schema={schema}
         activeCst={activeCst}
-        isProblematic={isProblematic}
+        isSchemaIssue={isSchemaIssue}
         onActivate={cst => setActiveID(cst.id)}
         maxListHeight={listHeight}
         onDoubleClick={isMutable ? handleEditCst : undefined}

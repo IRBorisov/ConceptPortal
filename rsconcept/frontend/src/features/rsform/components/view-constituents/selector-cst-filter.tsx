@@ -26,8 +26,8 @@ export function SelectorCstFilter({ className, showModelFilter }: SelectorCstFil
   const filter = useCstSearchStore(state => state.filter);
 
   useEffect(
-    function resetUninterpretableFilterWhenHidden() {
-      if (!showModelFilter && filter === 'uninterpretable') {
+    function resetModelIssuesFilterWhenHidden() {
+      if (!showModelFilter && filter === 'model_issues') {
         setFilter('all');
       }
     },
@@ -45,14 +45,14 @@ export function SelectorCstFilter({ className, showModelFilter }: SelectorCstFil
             <IconFilter size='1rem' className='text-muted-foreground -mt-0.5 -mr-0.75' />
             Фильтр
           </SelectItem>
-          <SelectItem value='problematic'>
+          <SelectItem value='schema_issues' title='Схемные ошибки'>
             <IconStatusError size='1rem' className='text-destructive -mt-0.5 -mr-0.75' />
-            Проблемные
+            СхемОшибки
           </SelectItem>
           {showModelFilter ? (
-            <SelectItem value='uninterpretable'>
+            <SelectItem value='model_issues' title='Модельные ошибки'>
               <IconStatusIncalculable size='1rem' className='text-destructive -mt-0.5 -mr-0.75' />
-              Неинтерпретируемые
+              МодОшибки
             </SelectItem>
           ) : null}
           <SelectItem value='crucial'>

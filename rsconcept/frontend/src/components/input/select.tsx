@@ -3,6 +3,8 @@
 import * as SelectPrimitive from '@radix-ui/react-select';
 import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
 
+import { globalIDs } from '@/utils/constants';
+
 import { cn } from '../utils';
 
 function Select({ ...props }: React.ComponentProps<typeof SelectPrimitive.Root>) {
@@ -37,7 +39,6 @@ function SelectTrigger({
         'focus-outline',
         'data-placeholder:text-muted-foreground',
         '*:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2',
-        "[&_svg:not([class*='text-'])]:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         !noBorder && 'border',
         noBorder && 'rounded-md',
         className
@@ -101,20 +102,21 @@ function SelectLabel({ className, ...props }: React.ComponentProps<typeof Select
   );
 }
 
-function SelectItem({ className, children, ...props }: React.ComponentProps<typeof SelectPrimitive.Item>) {
+function SelectItem({ className, children, title, ...props }: React.ComponentProps<typeof SelectPrimitive.Item>) {
   return (
     <SelectPrimitive.Item
       data-slot='select-item'
       className={cn(
         'relative',
-        'flex py-1 pr-8 pl-2 items-center gap-2',
+        'flex py-1 px-2 items-center gap-2',
         'cursor-default rounded-sm select-none data-disabled:pointer-events-none data-disabled:opacity-50',
         'outline-none focus:bg-accent focus:text-accent-foreground',
         '*:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2',
-        "[&_svg:not([class*='text-'])]:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         "data-[state='checked']:not-[:hover]:bg-selected data-[state='checked']:not-[:hover]:text-selected-foreground",
         className
       )}
+      data-tooltip-id={title ? globalIDs.tooltip : undefined}
+      data-tooltip-content={title}
       {...props}
     >
       <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>

@@ -4,8 +4,8 @@ import { useEffect, useEffectEvent, useLayoutEffect, useRef, useSyncExternalStor
 import clsx from 'clsx';
 
 import { type Constituenta, type RSEngine } from '@/domain/library';
-import { isProblematic } from '@/domain/library/rsform-api';
-import { isEvalIssue } from '@/domain/library/rsmodel-api';
+import { isSchemaIssue } from '@/domain/library/rsform-api';
+import { isModelIssue } from '@/domain/library/rsmodel-api';
 
 import { RSModelTabID, useConceptNavigation } from '@/app/navigation/navigation-context';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
@@ -37,8 +37,8 @@ export function ModelTabs({ activeID, activeTab }: ModelTabsProps) {
 
   const hideFooter = useAppLayoutStore(state => state.hideFooter);
   const onHideFooterEvent = useEffectEvent(hideFooter);
-  const focusProblematic = useCstSearchStore(state => state.focusProblematic);
-  const focusModelStatus = useCstSearchStore(state => state.focusModelStatus);
+  const focusSchemaIssues = useCstSearchStore(state => state.focusSchemaIssues);
+  const focusModelIssues = useCstSearchStore(state => state.focusModelIssues);
   const setIsModified = useModificationStore(state => state.setIsModified);
   const { schema, selectedCst, setSelectedCst, setSelectedEdges, deselectAll, pendingActiveID, clearPendingActiveID } =
     useSchemaEdit();
@@ -48,10 +48,10 @@ export function ModelTabs({ activeID, activeTab }: ModelTabsProps) {
     () => engine.getChangeGeneration()
   );
 
-  const problemItems = schema.items.filter(cst => isProblematic(cst));
-  const countProblematic = problemItems.length;
-  const uninterpretableItems = getEvalIssueItems(schema.items, engine, engineGeneration);
-  const countUninterpretable = uninterpretableItems.length;
+  const schemaIssues = schema.items.filter(cst => isSchemaIssue(cst));
+  const countSchemaIssues = schemaIssues.length;
+  const modelIssues = getEvalIssueItems(schema.items, engine, engineGeneration);
+  const countModelIssues = modelIssues.length;
 
   useLayoutEffect(
     function updateWindowTitle() {
@@ -144,26 +144,26 @@ export function ModelTabs({ activeID, activeTab }: ModelTabsProps) {
     router.changeTab(index);
   }
 
-  function onFocusProblematic(event: React.MouseEvent<HTMLDivElement>) {
-    focusProblematic();
+  function onFocusSchemaIssues(event: React.MouseEvent<HTMLDivElement>) {
+    focusSchemaIssues();
     if (event.ctrlKey || event.metaKey) {
-      setSelectedCst(problemItems.map(cst => cst.id));
+      setSelectedCst(schemaIssues.map(cst => cst.id));
     } else {
       clearPendingActiveID();
-      router.gotoEditActive(problemItems[0].id);
+      router.gotoEditActive(schemaIssues[0].id);
     }
   }
 
-  function onFocusModelStatus(event: React.MouseEvent<HTMLDivElement>) {
-    focusModelStatus();
-    if (uninterpretableItems.length === 0) {
+  function onFocusModelIssues(event: React.MouseEvent<HTMLDivElement>) {
+    focusModelIssues();
+    if (modelIssues.length === 0) {
       return;
     }
     if (event.ctrlKey || event.metaKey) {
-      setSelectedCst(uninterpretableItems.map(cst => cst.id));
+      setSelectedCst(modelIssues.map(cst => cst.id));
     } else {
       clearPendingActiveID();
-      router.gotoEditActive(uninterpretableItems[0].id);
+      router.gotoActiveValue(modelIssues[0].id);
     }
   }
 
@@ -185,24 +185,24 @@ export function ModelTabs({ activeID, activeTab }: ModelTabsProps) {
           'bg-background'
         )}
       >
-        {countProblematic > 0 ? (
+        {countSchemaIssues > 0 ? (
           <IndicatorPill
             className='absolute top-1.5 -left-1.5 -translate-x-full hidden xs:inline-flex'
             icon={<IconStatusError size='0.8rem' />}
-            value={countProblematic}
+            value={countSchemaIssues}
             color='destructive'
-            title={`Проблемных понятий: ${countProblematic}`}
-            onClick={onFocusProblematic}
+            title={`Схемные ошибки: ${countSchemaIssues}`}
+            onClick={onFocusSchemaIssues}
           />
         ) : null}
-        {countUninterpretable > 0 ? (
+        {countModelIssues > 0 ? (
           <IndicatorPill
             className='absolute top-1.5 -right-1.5 translate-x-full hidden xs:inline-flex'
             icon={<IconStatusIncalculable size='0.8rem' />}
-            value={countUninterpretable}
+            value={countModelIssues}
             color='orange'
-            title={`Ошибки модели: ${countUninterpretable}`}
-            onClick={onFocusModelStatus}
+            title={`Модельные ошибки: ${countModelIssues}`}
+            onClick={onFocusModelIssues}
           />
         ) : null}
         <MenuModel />
@@ -245,5 +245,5 @@ export function ModelTabs({ activeID, activeTab }: ModelTabsProps) {
 }
 
 function getEvalIssueItems(items: Constituenta[], engine: RSEngine, _engineGeneration: number) {
-  return items.filter(cst => isEvalIssue(engine, cst));
+  return items.filter(cst => isModelIssue(engine, cst));
 }

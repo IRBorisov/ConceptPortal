@@ -4,8 +4,8 @@ import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import clsx from 'clsx';
 
 import { type RSEngine } from '@/domain/library';
-import { isProblematic } from '@/domain/library/rsform-api';
-import { isEvalIssue } from '@/domain/library/rsmodel-api';
+import { isSchemaIssue } from '@/domain/library/rsform-api';
+import { isModelIssue } from '@/domain/library/rsmodel-api';
 
 import { useConceptNavigation } from '@/app';
 import { useRoleStore, UserRole } from '@/features/users';
@@ -160,8 +160,8 @@ export function TabConstituenta({ engine }: TabConstituentaProps) {
         schema={schema}
         engine={engine}
         activeCst={activeCst}
-        isProblematic={isProblematic}
-        isEvalIssue={engine ? cst => isEvalIssue(engine, cst) : undefined}
+        isSchemaIssue={isSchemaIssue}
+        isModelIssue={engine ? cst => isModelIssue(engine, cst) : undefined}
         onActivate={cst => {
           clearPendingActiveID();
           router.changeActive(cst.id);

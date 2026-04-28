@@ -3,8 +3,8 @@ import { persist } from 'zustand/middleware';
 
 export type CstFilterOption =
   | 'all'
-  | 'problematic'
-  | 'uninterpretable'
+  | 'schema_issues'
+  | 'model_issues'
   | 'crucial'
   | 'kernel'
   | 'derived'
@@ -18,8 +18,8 @@ interface CstSearchStore {
 
   filter: CstFilterOption;
   setFilter: (value: CstFilterOption) => void;
-  focusProblematic: () => void;
-  focusModelStatus: () => void;
+  focusSchemaIssues: () => void;
+  focusModelIssues: () => void;
 }
 
 type PersistedCstSearchStore = Pick<CstSearchStore, 'filter'>;
@@ -32,11 +32,11 @@ export const useCstSearchStore = create<CstSearchStore>()(
       reset: () => set(() => ({ query: '', filter: 'all' })),
       filter: 'all',
       setFilter: value => set({ filter: value }),
-      focusProblematic: () => set(() => ({ filter: 'problematic', query: '' })),
-      focusModelStatus: () => set(() => ({ filter: 'uninterpretable', query: '' }))
+      focusSchemaIssues: () => set(() => ({ filter: 'schema_issues', query: '' })),
+      focusModelIssues: () => set(() => ({ filter: 'model_issues', query: '' }))
     }),
     {
-      version: 6,
+      version: 7,
       partialize: state => ({
         filter: state.filter
       }),

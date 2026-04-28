@@ -5,8 +5,8 @@ import { useCstSearchStore } from '../../stores/cst-search';
 
 export function useFilteredItems(
   schema: RSForm,
-  isProblematic?: (cst: Constituenta) => boolean,
-  isEvalIssue?: (cst: Constituenta) => boolean
+  isSchemaIssue?: (cst: Constituenta) => boolean,
+  isModelIssue?: (cst: Constituenta) => boolean
 ): Constituenta[] {
   const query = useCstSearchStore(state => state.query);
   const filter = useCstSearchStore(state => state.filter);
@@ -14,10 +14,10 @@ export function useFilteredItems(
   const filteredByQuery = query ? schema.items.filter(cst => matchConstituenta(cst, query)) : schema.items;
 
   switch (filter) {
-    case 'problematic':
-      return isProblematic ? filteredByQuery.filter(cst => isProblematic(cst)) : filteredByQuery;
-    case 'uninterpretable':
-      return isEvalIssue ? filteredByQuery.filter(cst => isEvalIssue(cst)) : filteredByQuery;
+    case 'schema_issues':
+      return isSchemaIssue ? filteredByQuery.filter(cst => isSchemaIssue(cst)) : filteredByQuery;
+    case 'model_issues':
+      return isModelIssue ? filteredByQuery.filter(cst => isModelIssue(cst)) : filteredByQuery;
     case 'crucial':
       return filteredByQuery.filter(cst => cst.crucial);
     case 'kernel':

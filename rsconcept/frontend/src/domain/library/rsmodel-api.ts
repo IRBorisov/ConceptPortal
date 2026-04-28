@@ -134,14 +134,14 @@ export function calculateModelStats(schema: RSForm, engine: RSEngine, _engineGen
 }
 
 /** Checks whether evaluation status contributes to model status issues. */
-export function isEvalIssue(engine: RSEngine, cst: Constituenta): boolean {
+export function isModelIssue(engine: RSEngine, cst: Constituenta): boolean {
   const status = engine.getCstStatus(cst.id);
   const isBasic = isBasicConcept(cst.cst_type);
   return (
     status === EvalStatus.EVAL_FAIL ||
     status === EvalStatus.AXIOM_FALSE ||
     status === EvalStatus.INVALID_DATA ||
-    (isBasic && status === EvalStatus.NOT_PROCESSED)
+    (isBasic && status === EvalStatus.EMPTY)
   );
 }
 

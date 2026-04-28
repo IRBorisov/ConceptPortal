@@ -21,8 +21,8 @@ interface TableSideConstituentsProps {
   schema: RSForm;
   engine?: RSEngine;
   activeCst?: Constituenta | null;
-  isProblematic?: (cst: Constituenta) => boolean;
-  isEvalIssue?: (cst: Constituenta) => boolean;
+  isSchemaIssue?: (cst: Constituenta) => boolean;
+  isModelIssue?: (cst: Constituenta) => boolean;
 
   onActivate?: (cst: Constituenta) => void;
   onDoubleClick?: (cst: Constituenta) => void;
@@ -37,14 +37,14 @@ export function TableSideConstituents({
   schema,
   engine,
   activeCst,
-  isProblematic,
-  isEvalIssue,
+  isSchemaIssue,
+  isModelIssue,
   onActivate,
   onDoubleClick,
   maxHeight,
   autoScroll = true
 }: TableSideConstituentsProps) {
-  const items = useFilteredItems(schema, isProblematic, isEvalIssue);
+  const items = useFilteredItems(schema, isSchemaIssue, isModelIssue);
   const prevActiveCstID = useRef<number | null>(null);
 
   useEffect(

@@ -2,7 +2,7 @@
 
 import { useEffect, useEffectEvent, useLayoutEffect, useRef } from 'react';
 
-import { isProblematic } from '@/domain/library/rsform-api';
+import { isSchemaIssue } from '@/domain/library/rsform-api';
 
 import { RSTabID, useConceptNavigation } from '@/app/navigation/navigation-context';
 
@@ -34,11 +34,11 @@ export function RSFormTabs({ activeID, activeTab }: RSFormTabsProps) {
   const onHideFooterEvent = useEffectEvent(hideFooter);
 
   const setIsModified = useModificationStore(state => state.setIsModified);
-  const focusProblematic = useCstSearchStore(state => state.focusProblematic);
+  const focusSchemaIssues = useCstSearchStore(state => state.focusSchemaIssues);
   const { schema, selectedCst, setSelectedCst, setSelectedEdges, deselectAll, pendingActiveID, clearPendingActiveID } =
     useSchemaEdit();
 
-  const problemItems = schema.items.filter(cst => isProblematic(cst));
+  const problemItems = schema.items.filter(cst => isSchemaIssue(cst));
   const countProblematic = problemItems.length;
 
   useLayoutEffect(
@@ -128,8 +128,8 @@ export function RSFormTabs({ activeID, activeTab }: RSFormTabsProps) {
     router.changeTab(index);
   }
 
-  function onFocusProblematic(event: React.MouseEvent<HTMLDivElement>) {
-    focusProblematic();
+  function onFocusSchemaIssues(event: React.MouseEvent<HTMLDivElement>) {
+    focusSchemaIssues();
     if (event.ctrlKey || event.metaKey) {
       setSelectedCst(problemItems.map(cst => cst.id));
     } else {
@@ -156,7 +156,7 @@ export function RSFormTabs({ activeID, activeTab }: RSFormTabsProps) {
             value={countProblematic}
             color='destructive'
             title={`Проблемных понятий: ${countProblematic}`}
-            onClick={onFocusProblematic}
+            onClick={onFocusSchemaIssues}
           />
         ) : null}
         <MenuGroupSchema />

@@ -9,6 +9,7 @@ import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 
 import { MiniButton } from '@/components/control';
+import { TextButton } from '@/components/control/text-button';
 import { TextArea, TextInput } from '@/components/input';
 import { type CreateFieldProps } from '@/utils/forms';
 
@@ -122,15 +123,7 @@ export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggl
       </DefinitionRawField>
 
       {!showConvention ? (
-        <button
-          id='dlg_cst_show_comment'
-          tabIndex={-1}
-          type='button'
-          className='self-start cc-label text-primary hover:underline select-none'
-          onClick={() => setForceComment(true)}
-        >
-          Добавить комментарий
-        </button>
+        <TextButton text='Добавить комментарий' className='self-start' onClick={() => setForceComment(true)} />
       ) : (
         <ConventionField>
           {field => (

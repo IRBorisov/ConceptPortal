@@ -2,8 +2,16 @@
  * Module: API for formal representation for systems of concepts.
  */
 
-import { type AnalysisFull, TypeClass, TypeID, type TypePath, type Typification, ValueClass } from '@/domain/rslang';
-import { type EchelonFunctional, isTypification } from '@/domain/rslang/semantic/typification';
+import {
+  type AnalysisFull,
+  RSErrorCode,
+  TypeClass,
+  TypeID,
+  type TypePath,
+  type Typification,
+  ValueClass
+} from '@/domain/rslang';
+import { basic, bool, constant, type EchelonFunctional, isTypification } from '@/domain/rslang/semantic/typification';
 import { applyPath } from '@/domain/rslang/semantic/typification-api';
 
 import { type RO } from '@/utils/meta';
@@ -32,8 +40,8 @@ export function matchConstituenta(target: RO<Constituenta>, query: string): bool
   );
 }
 
-/** Checks if {@link Constituenta} is problematic. */
-export function isProblematic(cst: Constituenta): boolean {
+/** Checks if {@link Constituenta} is a schema issue. */
+export function isSchemaIssue(cst: Constituenta): boolean {
   if (
     cst.homonyms.length > 0 ||
     cst.formalDuplicates.length > 0 ||
@@ -373,8 +381,39 @@ export function typeClassForCstType(cstType: CstType): TypeClass {
   }
 }
 
+/** Checks whether a constituenta type supports formal definitions. */
+export function canHaveFormalDefinition(cstType: CstType): boolean {
+  return cstType !== CstType.BASE && cstType !== CstType.CONSTANT;
+}
+
 /** Analyze expression for {@link RSForm}. */
-export function getAnalysisFor(expression: string, cstType: CstType, schema: RSForm): AnalysisFull {
+export function getAnalysisFor(expression: string, cstType: CstType, schema: RSForm, alias?: string): AnalysisFull {
+  if (!canHaveFormalDefinition(cstType)) {
+    if (expression.trim().length === 0) {
+      const fallbackAlias = alias && alias.length > 0 ? alias : 'X0';
+      const type = cstType === CstType.BASE ? bool(basic(fallbackAlias)) : bool(constant(fallbackAlias));
+      return {
+        success: true,
+        type,
+        valueClass: ValueClass.VALUE,
+        errors: [],
+        ast: null
+      };
+    }
+    return {
+      success: false,
+      type: null,
+      valueClass: null,
+      errors: [
+        {
+          code: RSErrorCode.definitionNotAllowed,
+          from: 0,
+          to: Math.max(0, expression.length - 1)
+        }
+      ],
+      ast: null
+    };
+  }
   return schema.analyzer.checkFull(expression, {
     expected: typeClassForCstType(cstType),
     isDomain: cstType === CstType.STRUCTURED
@@ -390,7 +429,7 @@ export function calculateSchemaStats(target: RSForm): RSFormStats {
 
     step_complexity: items.reduce((sum, cst) => sum + calculateStepComplexity(cst), 0),
 
-    count_problematic: items.reduce((sum, cst) => sum + (isProblematic(cst) ? 1 : 0), 0),
+    count_problematic: items.reduce((sum, cst) => sum + (isSchemaIssue(cst) ? 1 : 0), 0),
     count_homonyms: items.reduce((sum, cst) => sum + (cst.homonyms.length > 0 ? 1 : 0), 0),
     count_formal_duplicates: items.reduce((sum, cst) => sum + (cst.formalDuplicates.length > 0 ? 1 : 0), 0),
     count_missing_convention: items.reduce((sum, cst) => sum + (isMissingConvention(cst) ? 1 : 0), 0),

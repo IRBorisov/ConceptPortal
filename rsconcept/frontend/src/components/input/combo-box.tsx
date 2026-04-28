@@ -81,7 +81,6 @@ export function ComboBox<Option>({
             'cursor-pointer disabled:cursor-auto',
             'whitespace-nowrap',
             'focus-outline',
-            "[&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0",
             open && 'cursor-auto',
             !noBorder && 'border',
             noBorder && 'rounded-md',

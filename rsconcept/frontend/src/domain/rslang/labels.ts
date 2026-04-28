@@ -225,6 +225,8 @@ export function describeRSError(code: RSErrorCode, params: readonly string[] = [
 
     case RSErrorCode.cstEmptyDerived:
       return 'Пустое выражение для сложного понятия или утверждения';
+    case RSErrorCode.definitionNotAllowed:
+      return 'Определение не допускается для выбранного типа';
 
     case RSErrorCode.calcUnknownError:
       return 'Неизвестная ошибка вычисления';
