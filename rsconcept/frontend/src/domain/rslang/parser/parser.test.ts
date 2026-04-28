@@ -131,4 +131,24 @@ describe('Testing RSParser error data', () => {
       to: 1
     });
   });
+
+  it('Reports true double parentheses only', () => {
+    const withDoubleParentheses = 'R{ξ:=S1 | 1=1 | ξ∪((S2))}';
+    const treeDouble = parser.parse(withDoubleParentheses);
+    const astDouble = buildTree(treeDouble.cursor());
+    const errorsDouble: RSErrorDescription[] = [];
+    extractSyntaxErrors(astDouble, withDoubleParentheses, error => errorsDouble.push(error));
+
+    expect(errorsDouble.some(error => error.code === RSErrorCode.doubleParenthesis)).toBe(true);
+  });
+
+  it('Does not report tuple as double parentheses', () => {
+    const withTuple = 'R{ξ:={((S3, ∅),0)}| pr1(F8[ξ])∩S2=∅  | ξ∪((),card(ξ))}';
+    const treeTuple = parser.parse(withTuple);
+    const astTuple = buildTree(treeTuple.cursor());
+    const errorsTuple: RSErrorDescription[] = [];
+    extractSyntaxErrors(astTuple, withTuple, error => errorsTuple.push(error));
+
+    expect(errorsTuple.some(error => error.code === RSErrorCode.doubleParenthesis)).toBe(false);
+  });
 });

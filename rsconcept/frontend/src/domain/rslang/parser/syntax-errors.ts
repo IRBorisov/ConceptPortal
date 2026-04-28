@@ -173,11 +173,38 @@ function isDoubleParenthesis(expression: string, pos: number): boolean {
     return false;
   }
 
-  for (let index = expression.length - 2; index > pos; index--) {
-    if (expression[index] === ')' && expression[index + 1] === ')') {
-      return true;
+  const outerClose = findMatchingCloseBracket(expression, pos);
+  const innerClose = findMatchingCloseBracket(expression, pos + 1);
+  if (outerClose < 0 || innerClose < 0) {
+    return false;
+  }
+
+  return outerClose === innerClose + 1;
+}
+
+function findMatchingCloseBracket(expression: string, openPos: number): number {
+  if (expression[openPos] !== '(') {
+    return -1;
+  }
+
+  const stack: OpenBracket[] = [];
+  for (let index = openPos; index < expression.length; index++) {
+    const symbol = expression[index];
+    if (isOpenBracket(symbol)) {
+      stack.push(symbol);
+      continue;
+    }
+    if (!isCloseBracket(symbol)) {
+      continue;
+    }
+    const top = stack.pop();
+    if (top === undefined || top !== closeToOpen(symbol)) {
+      return -1;
+    }
+    if (stack.length === 0) {
+      return index;
     }
   }
 
-  return false;
+  return -1;
 }
