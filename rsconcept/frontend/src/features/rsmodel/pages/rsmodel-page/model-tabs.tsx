@@ -1,9 +1,11 @@
 'use client';
 
-import { useEffect, useEffectEvent, useLayoutEffect, useRef } from 'react';
+import { useEffect, useEffectEvent, useLayoutEffect, useRef, useSyncExternalStore } from 'react';
 import clsx from 'clsx';
 
+import { type Constituenta, type RSEngine } from '@/domain/library';
 import { isProblematic } from '@/domain/library/rsform-api';
+import { isEvalIssue } from '@/domain/library/rsmodel-api';
 
 import { RSModelTabID, useConceptNavigation } from '@/app/navigation/navigation-context';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
@@ -11,7 +13,7 @@ import { TabConstituenta } from '@/features/rsform/pages/rsform-page/tab-constit
 import { TabSchemaGraph } from '@/features/rsform/pages/rsform-page/tab-schema-graph';
 import { useCstSearchStore } from '@/features/rsform/stores/cst-search';
 
-import { IconStatusError } from '@/components/icons';
+import { IconStatusError, IconStatusIncalculable } from '@/components/icons';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { IndicatorPill } from '@/components/view/indicator-pill';
 import { useResetAttribute } from '@/hooks/use-reset-attribute';
@@ -36,13 +38,20 @@ export function ModelTabs({ activeID, activeTab }: ModelTabsProps) {
   const hideFooter = useAppLayoutStore(state => state.hideFooter);
   const onHideFooterEvent = useEffectEvent(hideFooter);
   const focusProblematic = useCstSearchStore(state => state.focusProblematic);
+  const focusModelStatus = useCstSearchStore(state => state.focusModelStatus);
   const setIsModified = useModificationStore(state => state.setIsModified);
   const { schema, selectedCst, setSelectedCst, setSelectedEdges, deselectAll, pendingActiveID, clearPendingActiveID } =
     useSchemaEdit();
-  const { model } = useModelEdit();
+  const { model, engine } = useModelEdit();
+  const engineGeneration = useSyncExternalStore(
+    onStoreChange => engine.subscribeChanges(onStoreChange),
+    () => engine.getChangeGeneration()
+  );
 
   const problemItems = schema.items.filter(cst => isProblematic(cst));
   const countProblematic = problemItems.length;
+  const uninterpretableItems = getEvalIssueItems(schema.items, engine, engineGeneration);
+  const countUninterpretable = uninterpretableItems.length;
 
   useLayoutEffect(
     function updateWindowTitle() {
@@ -145,6 +154,19 @@ export function ModelTabs({ activeID, activeTab }: ModelTabsProps) {
     }
   }
 
+  function onFocusModelStatus(event: React.MouseEvent<HTMLDivElement>) {
+    focusModelStatus();
+    if (uninterpretableItems.length === 0) {
+      return;
+    }
+    if (event.ctrlKey || event.metaKey) {
+      setSelectedCst(uninterpretableItems.map(cst => cst.id));
+    } else {
+      clearPendingActiveID();
+      router.gotoEditActive(uninterpretableItems[0].id);
+    }
+  }
+
   const containerRef = useRef<HTMLDivElement>(null);
   useResetAttribute(containerRef, 'data-tooltip-id');
 
@@ -173,6 +195,16 @@ export function ModelTabs({ activeID, activeTab }: ModelTabsProps) {
             onClick={onFocusProblematic}
           />
         ) : null}
+        {countUninterpretable > 0 ? (
+          <IndicatorPill
+            className='absolute top-1.5 -right-1.5 translate-x-full hidden xs:inline-flex'
+            icon={<IconStatusIncalculable size='0.8rem' />}
+            value={countUninterpretable}
+            color='orange'
+            title={`Ошибки модели: ${countUninterpretable}`}
+            onClick={onFocusModelStatus}
+          />
+        ) : null}
         <MenuModel />
 
         <TabLabel label='Паспорт' />
@@ -193,7 +225,7 @@ export function ModelTabs({ activeID, activeTab }: ModelTabsProps) {
         </TabPanel>
 
         <TabPanel>
-          <TabConstituenta />
+          <TabConstituenta engine={engine} />
         </TabPanel>
 
         <TabPanel>
@@ -210,4 +242,8 @@ export function ModelTabs({ activeID, activeTab }: ModelTabsProps) {
       </div>
     </Tabs>
   );
+}
+
+function getEvalIssueItems(items: Constituenta[], engine: RSEngine, _engineGeneration: number) {
+  return items.filter(cst => isEvalIssue(engine, cst));
 }

@@ -3,7 +3,11 @@ import { isBasicConcept, matchConstituenta } from '@/domain/library/rsform-api';
 
 import { useCstSearchStore } from '../../stores/cst-search';
 
-export function useFilteredItems(schema: RSForm, isProblematic?: (cst: Constituenta) => boolean): Constituenta[] {
+export function useFilteredItems(
+  schema: RSForm,
+  isProblematic?: (cst: Constituenta) => boolean,
+  isEvalIssue?: (cst: Constituenta) => boolean
+): Constituenta[] {
   const query = useCstSearchStore(state => state.query);
   const filter = useCstSearchStore(state => state.filter);
 
@@ -12,6 +16,8 @@ export function useFilteredItems(schema: RSForm, isProblematic?: (cst: Constitue
   switch (filter) {
     case 'problematic':
       return isProblematic ? filteredByQuery.filter(cst => isProblematic(cst)) : filteredByQuery;
+    case 'uninterpretable':
+      return isEvalIssue ? filteredByQuery.filter(cst => isEvalIssue(cst)) : filteredByQuery;
     case 'crucial':
       return filteredByQuery.filter(cst => cst.crucial);
     case 'kernel':

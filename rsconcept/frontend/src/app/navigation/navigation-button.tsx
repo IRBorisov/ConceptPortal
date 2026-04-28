@@ -25,7 +25,7 @@ export function NavigationButton({ icon, title, hideTitle, className, style, onC
         'cursor-pointer whitespace-nowrap',
         'text-muted-foreground hover:text-foreground',
         'transition-colors duration-move ease-(--ease-bezier)',
-        'font-controls focus-outline',
+        'font-controls outline-hidden focus-outline',
         className
       )}
       style={style}

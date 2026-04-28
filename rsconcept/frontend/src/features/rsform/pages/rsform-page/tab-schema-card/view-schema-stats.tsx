@@ -29,8 +29,12 @@ export function ViewSchemaStats({ className, stats, ...restProps }: ViewSchemaSt
         secondaryTitle='Количество собственных конституент'
         details={[
           { label: 'Всего конституент', value: stats.count_all },
-          { label: 'Наследованные', value: stats.count_inherited },
-          { label: 'Собственные', value: countOwned },
+          ...(stats.count_inherited > 0
+            ? [
+                { label: 'Наследованные', value: stats.count_inherited },
+                { label: 'Собственные', value: countOwned }
+              ]
+            : []),
           { label: 'Ключевые', value: stats.count_crucial },
           { label: 'Термины', value: stats.count_term },
           { label: 'Определения', value: stats.count_definition },

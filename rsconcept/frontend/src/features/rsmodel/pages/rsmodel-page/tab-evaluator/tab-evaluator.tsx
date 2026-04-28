@@ -3,6 +3,7 @@
 import clsx from 'clsx';
 
 import { isProblematic } from '@/domain/library/rsform-api';
+import { isEvalIssue } from '@/domain/library/rsmodel-api';
 
 import { useConceptNavigation } from '@/app';
 import { ViewConstituents } from '@/features/rsform/components/view-constituents';
@@ -75,6 +76,7 @@ export function TabEvaluator() {
         engine={engine}
         activeCst={activeCst}
         isProblematic={isProblematic}
+        isEvalIssue={cst => isEvalIssue(engine, cst)}
         onActivate={cst => router.changeActive(cst.id)}
         maxListHeight={listHeight}
         autoScroll={!isNarrow}

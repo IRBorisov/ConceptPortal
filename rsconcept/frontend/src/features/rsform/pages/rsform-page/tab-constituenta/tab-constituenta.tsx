@@ -3,7 +3,9 @@
 import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import clsx from 'clsx';
 
+import { type RSEngine } from '@/domain/library';
 import { isProblematic } from '@/domain/library/rsform-api';
+import { isEvalIssue } from '@/domain/library/rsmodel-api';
 
 import { useConceptNavigation } from '@/app';
 import { useRoleStore, UserRole } from '@/features/users';
@@ -25,7 +27,11 @@ import { ToolbarConstituenta } from './toolbar-constituenta';
 // Threshold window width to switch layout.
 const SIDELIST_LAYOUT_THRESHOLD = 1000; // px
 
-export function TabConstituenta() {
+interface TabConstituentaProps {
+  engine?: RSEngine;
+}
+
+export function TabConstituenta({ engine }: TabConstituentaProps) {
   const router = useConceptNavigation();
   const {
     schema,
@@ -152,8 +158,10 @@ export function TabConstituenta() {
           isNarrow ? 'mt-3 mx-6 rounded-md overflow-hidden' : 'mt-9 rounded-l-md rounded-r-none overflow-visible'
         )}
         schema={schema}
+        engine={engine}
         activeCst={activeCst}
         isProblematic={isProblematic}
+        isEvalIssue={engine ? cst => isEvalIssue(engine, cst) : undefined}
         onActivate={cst => {
           clearPendingActiveID();
           router.changeActive(cst.id);

@@ -114,6 +114,10 @@ export function calculateModelStats(schema: RSForm, engine: RSEngine, _engineGen
       (sum, cst) => sum + (statusByID.get(cst.id) === EvalStatus.AXIOM_FALSE ? 1 : 0),
       0
     ),
+    count_invalid_data: items.reduce(
+      (sum, cst) => sum + (statusByID.get(cst.id) === EvalStatus.INVALID_DATA ? 1 : 0),
+      0
+    ),
     count_invalid_calculations: items.reduce(
       (sum, cst) =>
         sum +
@@ -127,6 +131,18 @@ export function calculateModelStats(schema: RSForm, engine: RSEngine, _engineGen
       0
     )
   };
+}
+
+/** Checks whether evaluation status contributes to model status issues. */
+export function isEvalIssue(engine: RSEngine, cst: Constituenta): boolean {
+  const status = engine.getCstStatus(cst.id);
+  const isBasic = isBasicConcept(cst.cst_type);
+  return (
+    status === EvalStatus.EVAL_FAIL ||
+    status === EvalStatus.AXIOM_FALSE ||
+    status === EvalStatus.INVALID_DATA ||
+    (isBasic && status === EvalStatus.NOT_PROCESSED)
+  );
 }
 
 /** Evaluate if {@link CstType} is interpretable. */
