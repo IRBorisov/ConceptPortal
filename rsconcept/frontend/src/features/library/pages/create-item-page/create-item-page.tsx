@@ -13,12 +13,8 @@ const paramsSchema = z.strictObject({
     .number()
     .nullish()
     .transform(v => v ?? undefined),
-  fromSandbox: z
-    .string()
-    .nullish()
-    .transform(v => v === '1' || v === 'true'),
   itemType: z
-    .enum([LibraryItemType.RSFORM, LibraryItemType.RSMODEL])
+    .enum([LibraryItemType.RSFORM, LibraryItemType.RSMODEL, LibraryItemType.OSS])
     .nullish()
     .transform(v => v ?? undefined)
 });
@@ -28,13 +24,12 @@ export function CreateItemPage() {
 
   const urlData = paramsSchema.parse({
     modelFrom: query.get('modelFrom'),
-    fromSandbox: query.get('fromSandbox'),
     itemType: query.get('itemType')
   });
 
   return (
     <RequireAuth>
-      <FormCreateItem modelFrom={urlData.modelFrom} fromSandbox={urlData.fromSandbox} initialType={urlData.itemType} />
+      <FormCreateItem modelFrom={urlData.modelFrom} initialType={urlData.itemType} />
     </RequireAuth>
   );
 }

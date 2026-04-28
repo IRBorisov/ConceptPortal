@@ -2,10 +2,21 @@
 
 import clsx from 'clsx';
 
+import { LibraryItemType } from '@/domain/library';
+
 import { useAIStore } from '@/features/ai/stores/ai-context';
 import { useAuth } from '@/features/auth';
 
-import { IconLibrary2, IconManuals, IconNewItem2, IconSandbox } from '@/components/icons';
+import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
+import {
+  IconLibrary2,
+  IconManuals,
+  IconNewItem2,
+  IconOSS,
+  IconRSForm,
+  IconRSModel,
+  IconSandbox
+} from '@/components/icons';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useAppLayoutStore } from '@/stores/app-layout';
 import { useDialogsStore } from '@/stores/dialogs';
@@ -31,6 +42,13 @@ export function Navigation() {
   const currentModel = useAIStore(state => state.model);
   const currentSchema = useAIStore(state => state.schema);
   const currentItem = currentOSS || currentModel || currentSchema;
+  const {
+    elementRef: createRef,
+    isOpen: isCreateOpen,
+    toggle: toggleCreate,
+    hide: hideCreate,
+    handleBlur: handleCreateBlur
+  } = useDropdown();
 
   function navigateHome(event: React.MouseEvent<Element>) {
     push({ path: urls.home, newTab: event.ctrlKey || event.metaKey });
@@ -41,8 +59,28 @@ export function Navigation() {
   function navigateHelp(event: React.MouseEvent<Element>) {
     push({ path: urls.manuals, newTab: event.ctrlKey || event.metaKey });
   }
-  function navigateCreateNew(event: React.MouseEvent<Element>) {
-    push({ path: urls.create_item, newTab: event.ctrlKey || event.metaKey });
+  function navigateCreateSchema(event: React.MouseEvent<Element>) {
+    hideCreate();
+    push({
+      path: urls.create_item_by_type(LibraryItemType.RSFORM),
+      newTab: event.ctrlKey || event.metaKey
+    });
+  }
+
+  function navigateCreateModel(event: React.MouseEvent<Element>) {
+    hideCreate();
+    push({
+      path: urls.create_item_by_type(LibraryItemType.RSMODEL),
+      newTab: event.ctrlKey || event.metaKey
+    });
+  }
+
+  function navigateCreateOSS(event: React.MouseEvent<Element>) {
+    hideCreate();
+    push({
+      path: urls.create_item_by_type(LibraryItemType.OSS),
+      newTab: event.ctrlKey || event.metaKey
+    });
   }
 
   function navigateSandbox(event: React.MouseEvent<Element>) {
@@ -101,7 +139,26 @@ export function Navigation() {
               onClick={navigateSandbox}
             />
           ) : (
-            <NavigationButton text='Создать' icon={<IconNewItem2 size='1.5rem' />} onClick={navigateCreateNew} />
+            <div ref={createRef} onBlur={handleCreateBlur} className='relative'>
+              <NavigationButton text='Создать' icon={<IconNewItem2 size='1.5rem' />} onClick={toggleCreate} />
+              <Dropdown isOpen={isCreateOpen} margin='mt-2'>
+                <DropdownButton
+                  text='Создать концептуальную схему'
+                  icon={<IconRSForm size='1rem' className='icon-green' />}
+                  onClick={navigateCreateSchema}
+                />
+                <DropdownButton
+                  text='Создать концептуальную модель'
+                  icon={<IconRSModel size='1rem' className='text-accent-orange' />}
+                  onClick={navigateCreateModel}
+                />
+                <DropdownButton
+                  text='Создать операционную схему'
+                  icon={<IconOSS size='1rem' className='icon-primary' />}
+                  onClick={navigateCreateOSS}
+                />
+              </Dropdown>
+            </div>
           )}
           <NavigationButton text='Библиотека' icon={<IconLibrary2 size='1.5rem' />} onClick={navigateLibrary} />
           <NavigationButton text='Справка' icon={<IconManuals size='1.5rem' />} onClick={navigateHelp} />

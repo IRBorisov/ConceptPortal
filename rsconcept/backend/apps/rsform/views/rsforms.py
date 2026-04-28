@@ -1,18 +1,18 @@
 ''' Endpoints for RSForm. '''
-from typing import Union, cast
+from typing import cast
 
 from django.db import transaction
 from django.http import HttpResponse
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import generics
 from rest_framework import status as c
-from rest_framework import views, viewsets
+from rest_framework import viewsets
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.serializers import ValidationError
 
-from apps.library.models import AccessPolicy, LibraryItem, LibraryItemType, LocationHead
+from apps.library.models import LibraryItem, LibraryItemType
 from apps.library.serializers import LibraryItemSerializer
 from apps.oss.models import Inheritance, PropagationFacade
 from apps.users.models import User
@@ -534,76 +534,6 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         )
 
 
-class TrsImportView(views.APIView):
-    ''' Endpoint: Upload RS form in Exteor format. '''
-    serializer_class = s.FileSerializer
-    permission_classes = [permissions.GlobalUser]
-
-    @extend_schema(
-        summary='import TRS file into RSForm',
-        tags=['RSForm'],
-        request=s.FileSerializer,
-        responses={
-            c.HTTP_201_CREATED: LibraryItemSerializer,
-            c.HTTP_400_BAD_REQUEST: None,
-            c.HTTP_403_FORBIDDEN: None
-        }
-    )
-    def post(self, request: Request) -> HttpResponse:
-        data = utility.read_zipped_json(request.FILES['file'].file, utils.EXTEOR_INNER_FILENAME)
-        if data is None:
-            return Response(
-                status=c.HTTP_400_BAD_REQUEST,
-                data={'file': msg.exteorFileCorrupted()}
-            )
-        owner = cast(User, self.request.user)
-        _prepare_rsform_data(data, request, owner)
-        serializer = s.RSFormTRSSerializer(data=data, context={'load_meta': True})
-        serializer.is_valid(raise_exception=True)
-        schema: m.RSFormCached = serializer.save()
-        return Response(
-            status=c.HTTP_201_CREATED,
-            data=LibraryItemSerializer(LibraryItem.objects.get(pk=schema.pk)).data
-        )
-
-
-@extend_schema(
-    summary='create RSForm empty or from file',
-    tags=['RSForm'],
-    request=LibraryItemSerializer,
-    responses={
-        c.HTTP_201_CREATED: LibraryItemSerializer,
-        c.HTTP_400_BAD_REQUEST: None,
-        c.HTTP_403_FORBIDDEN: None
-    }
-)
-@api_view(['POST'])
-@permission_classes([permissions.GlobalUser])
-def create_rsform(request: Request) -> HttpResponse:
-    ''' Endpoint: Create RSForm from user input and/or trs file. '''
-    owner = cast(User, request.user) if not request.user.is_anonymous else None
-    if 'file' not in request.FILES:
-        return Response(
-            status=c.HTTP_400_BAD_REQUEST,
-            data={'file': msg.missingFile()}
-        )
-
-    data = utility.read_zipped_json(request.FILES['file'].file, utils.EXTEOR_INNER_FILENAME)
-    if data is None:
-        return Response(
-            status=c.HTTP_400_BAD_REQUEST,
-            data={'file': msg.exteorFileCorrupted()}
-        )
-    _prepare_rsform_data(data, request, owner)
-    serializer_rsform = s.RSFormTRSSerializer(data=data, context={'load_meta': True})
-    serializer_rsform.is_valid(raise_exception=True)
-    schema: m.RSFormCached = serializer_rsform.save()
-    return Response(
-        status=c.HTTP_201_CREATED,
-        data=LibraryItemSerializer(LibraryItem.objects.get(pk=schema.pk)).data
-    )
-
-
 @extend_schema(
     summary='create RSForm from sandbox schema data',
     tags=['RSForm'],
@@ -626,31 +556,6 @@ def create_rsform_from_sandbox(request: Request) -> HttpResponse:
         status=c.HTTP_201_CREATED,
         data=LibraryItemSerializer(LibraryItem.objects.get(pk=schema.pk)).data
     )
-
-
-def _prepare_rsform_data(data: dict, request: Request, owner: Union[User, None]):
-    data['owner'] = owner
-    if 'title' in request.data and request.data['title'] != '':
-        data['title'] = request.data['title']
-    if data['title'] == '':
-        data['title'] = 'Без названия ' + request.FILES['file'].fileName
-    if 'alias' in request.data and request.data['alias'] != '':
-        data['alias'] = request.data['alias']
-    if 'description' in request.data and request.data['description'] != '':
-        data['description'] = request.data['description']
-
-    visible = True
-    if 'visible' in request.data:
-        visible = request.data['visible'] == 'true'
-    data['visible'] = visible
-
-    read_only = False
-    if 'read_only' in request.data:
-        read_only = request.data['read_only'] == 'true'
-    data['read_only'] = read_only
-
-    data['access_policy'] = request.data.get('access_policy', AccessPolicy.PUBLIC)
-    data['location'] = request.data.get('location', LocationHead.USER)
 
 
 @extend_schema(

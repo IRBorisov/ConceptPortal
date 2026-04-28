@@ -3,9 +3,10 @@
 import { useRef } from 'react';
 import { toast } from 'react-toastify';
 
-import { LibraryItemType } from '@/domain/library';
+import { LocationHead } from '@/domain/library';
 
 import { useConceptNavigation } from '@/app';
+import { useCreateFromSandbox } from '@/features/library/backend/use-create-from-sandbox';
 
 import { Divider } from '@/components/container';
 import { MiniButton } from '@/components/control';
@@ -25,8 +26,8 @@ import { useSandboxBundle } from '../../context/bundle-context';
 
 export function MenuMain() {
   const router = useConceptNavigation();
-  const { resetBundle, importBundle, exportBundle } = useSandboxBundle();
-  const { engine } = useSandboxBundle();
+  const { resetBundle, importBundle, exportBundle, engine, bundle } = useSandboxBundle();
+  const { createRSFormFromSandbox, createRSModelFromSandbox } = useCreateFromSandbox();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const {
     elementRef: menuRef,
@@ -54,14 +55,57 @@ export function MenuMain() {
     fileInputRef.current?.click();
   }
 
-  function handleCreateRSForm() {
+  async function handleCreateRSForm() {
     hideMenu();
-    router.gotoNewItemFromSandbox(LibraryItemType.RSFORM);
+    try {
+      const created = await createRSFormFromSandbox({
+        item_data: {
+          title: bundle.schema.title,
+          alias: bundle.schema.alias,
+          description: bundle.schema.description,
+          visible: bundle.schema.visible,
+          read_only: bundle.schema.read_only,
+          access_policy: bundle.schema.access_policy,
+          location: LocationHead.USER
+        },
+        schema_data: {
+          items: bundle.schema.items,
+          attribution: bundle.schema.attribution
+        }
+      });
+      router.gotoRSForm(created.id);
+    } catch (error) {
+      console.error(error);
+      toast.error(errorMsg.sandboxBundleNotAvailable);
+    }
   }
 
-  function handleCreateRSModel() {
+  async function handleCreateRSModel() {
     hideMenu();
-    router.gotoNewItemFromSandbox(LibraryItemType.RSMODEL);
+    try {
+      const created = await createRSModelFromSandbox({
+        item_data: {
+          title: bundle.model.title,
+          alias: bundle.model.alias,
+          description: bundle.model.description,
+          visible: bundle.model.visible,
+          read_only: bundle.model.read_only,
+          access_policy: bundle.model.access_policy,
+          location: LocationHead.USER
+        },
+        schema_data: {
+          items: bundle.schema.items,
+          attribution: bundle.schema.attribution
+        },
+        model_data: {
+          items: bundle.model.items
+        }
+      });
+      router.gotoRSModel(created.id);
+    } catch (error) {
+      console.error(error);
+      toast.error(errorMsg.sandboxBundleNotAvailable);
+    }
   }
 
   function handleRecalculate() {
@@ -127,13 +171,13 @@ export function MenuMain() {
           text='Создать схему'
           title='Создать новую концептуальную схему из текущих данных песочницы'
           icon={<IconRSForm size='1rem' className='icon-green' />}
-          onClick={handleCreateRSForm}
+          onClick={() => void handleCreateRSForm()}
         />
         <DropdownButton
           text='Создать модель'
           title='Создать новую концептуальную схему и модель из текущих данных песочницы'
           icon={<IconRSModel size='1rem' className='text-accent-orange' />}
-          onClick={handleCreateRSModel}
+          onClick={() => void handleCreateRSModel()}
         />
         <Divider margins='mx-3 my-1' />
         <DropdownButton

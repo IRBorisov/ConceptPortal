@@ -88,10 +88,7 @@ interface INavigationContext {
   gotoLibrary: (newTab?: boolean) => void;
 
   /** Navigate to New Item. */
-  gotoNewItem: (newTab?: boolean) => void;
-
-  /** Navigate to New Item with sandbox import flag. */
-  gotoNewItemFromSandbox: (itemType?: LibraryItemType, newTab?: boolean) => void;
+  gotoNewItem: (itemType?: LibraryItemType, newTab?: boolean) => void;
 
   /** Navigate to New Model. */
   gotoNewModel: (schemaID: number, newTab?: boolean) => void;
@@ -282,12 +279,11 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
     push({ path: urls.sandbox, newTab: newTab });
   }
 
-  function gotoNewItem(newTab?: boolean): void {
-    push({ path: urls.create_item, newTab: newTab });
-  }
-
-  function gotoNewItemFromSandbox(itemType?: LibraryItemType, newTab?: boolean): void {
-    push({ path: urls.create_item_from_sandbox(itemType), newTab: newTab });
+  function gotoNewItem(itemType?: LibraryItemType, newTab?: boolean): void {
+    push({
+      path: itemType ? urls.create_item_by_type(itemType) : urls.create_item,
+      newTab: newTab
+    });
   }
 
   function gotoNewModel(schemaID: number, newTab?: boolean): void {
@@ -367,7 +363,6 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
 
         gotoLibrary,
         gotoNewItem,
-        gotoNewItemFromSandbox,
         gotoNewModel,
 
         gotoEditActive,

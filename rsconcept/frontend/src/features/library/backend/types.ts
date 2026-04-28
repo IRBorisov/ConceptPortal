@@ -107,16 +107,13 @@ export const schemaCreateLibraryItem = schemaInputLibraryItem
     alias: z.string().max(limits.len_alias, errorMsg.aliasLength).optional(),
     title: z.string().max(limits.len_title, errorMsg.titleLength).optional(),
     description: z.string().max(limits.len_description, errorMsg.descriptionLength).optional(),
-
-    schema: z.number().optional(),
-    file: z.instanceof(File).optional(),
-    fileName: z.string().optional()
+    schema: z.number().optional()
   })
-  .refine(data => !!data.file || !!data.alias, {
+  .refine(data => !!data.alias, {
     path: ['alias'],
     message: errorMsg.requiredField
   })
-  .refine(data => !!data.file || !!data.title, {
+  .refine(data => !!data.title, {
     path: ['title'],
     message: errorMsg.requiredField
   })

@@ -1,7 +1,5 @@
 ''' Testing API: RSForms. '''
-import io
 import os
-from zipfile import ZipFile
 
 from cctext import ReferenceType
 from rest_framework import status
@@ -24,41 +22,6 @@ class TestRSFormViewset(EndpointTester):
         self.unowned_id = self.unowned.model.pk
         self.private = RSForm.create(title='Test2', alias='T2', access_policy=AccessPolicy.PRIVATE)
         self.private_id = self.private.model.pk
-
-
-    @decl_endpoint('/api/rsforms/create-detailed', method='post')
-    def test_create_rsform_file(self):
-        work_dir = os.path.dirname(os.path.abspath(__file__))
-        data = {
-            'title': 'Test123',
-            'description': '123',
-            'alias': 'ks1',
-            'location': LocationHead.PROJECTS,
-            'access_policy': AccessPolicy.PROTECTED,
-            'visible': False
-        }
-        self.executeBadData(data)
-
-        with open(f'{work_dir}/data/sample-rsform.trs', 'rb') as file:
-            data['file'] = file
-            response = self.client.post(self.endpoint, data, format='multipart')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data['owner'], self.user.pk)
-        self.assertEqual(response.data['title'], data['title'])
-        self.assertEqual(response.data['alias'], data['alias'])
-        self.assertEqual(response.data['description'], data['description'])
-
-
-    @decl_endpoint('/api/rsforms/create-detailed', method='post')
-    def test_create_rsform_file_requires_auth(self):
-        work_dir = os.path.dirname(os.path.abspath(__file__))
-        self.logout()
-
-        with open(f'{work_dir}/data/sample-rsform.trs', 'rb') as file:
-            data = {'file': file}
-            response = self.client.post(self.endpoint, data, format='multipart')
-
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 
     @decl_endpoint('/api/rsforms/create-from-sandbox', method='post')
@@ -231,17 +194,6 @@ class TestRSFormViewset(EndpointTester):
         self.assertEqual(response.data['refs'][1]['pos_input']['finish'], 27)
         self.assertEqual(response.data['refs'][1]['pos_output']['start'], 7)
         self.assertEqual(response.data['refs'][1]['pos_output']['finish'], 19)
-
-
-    @decl_endpoint('/api/rsforms/import-trs', method='post')
-    def test_import_trs(self):
-        work_dir = os.path.dirname(os.path.abspath(__file__))
-        with open(f'{work_dir}/data/sample-rsform.trs', 'rb') as file:
-            data = {'file': file}
-            response = self.client.post(self.endpoint, data, format='multipart')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data['owner'], self.user.pk)
-        self.assertTrue(response.data['title'] != '')
 
 
     @decl_endpoint('/api/rsforms/{item}/substitute', method='patch')
