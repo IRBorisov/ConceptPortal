@@ -39,7 +39,8 @@ export function MenuRole({ isOwned, isEditor }: MenuRoleProps) {
     return (
       <MiniButton
         noPadding
-        titleHtml='<b>Анонимный режим</b><br />Войти в Портал'
+        title='Анонимный режим
+Войти в Портал'
         hideTitle={isAccessOpen}
         className='h-full pr-2 pl-3 bg-transparent'
         icon={<IconAlert size='1.25rem' className='icon-red' />}

@@ -21,9 +21,9 @@ export function formatInteger(value: number | string): string {
   return value.replace(/\B(?=(\d{3})+(?!\d))/g, '\u202F');
 }
 
-/** Generate HTML wrapper for control description including hotkey. */
+/** Generate tooltip description including hotkey. */
 export function prepareTooltip(text: string, hotkey?: string) {
-  return hotkey ? `<kbd>[${hotkey}]</kbd><br/>${text}` : text;
+  return hotkey ? `[${hotkey}]\n${text}` : text;
 }
 
 /** Remove HTML tags from target string. */
@@ -54,4 +54,28 @@ export function truncateToLastWord(text: string, maxSymbols: number): string {
     return trimmedText + '...';
   }
   return trimmedText.slice(0, lastSpaceIndex) + '...';
+}
+
+/** Appends a paragraph with bold label and optional plain-text value (text nodes only; no innerHTML). */
+export function appendBoldTextRow(container: HTMLElement, label: string, value?: string | number | null): void {
+  const row = document.createElement('p');
+  const bold = document.createElement('b');
+  bold.textContent = label;
+  row.appendChild(bold);
+  if (value !== undefined && value !== null) {
+    row.appendChild(document.createTextNode(` ${value}`));
+  }
+  container.appendChild(row);
+}
+
+/** Appends font-math paragraph with bold label and plain-text rest (same pattern as appendBoldTextRow). */
+export function appendMathBoldLabelParagraph(container: HTMLElement, label: string, rest: string): void {
+  const row = document.createElement('p');
+  row.className = 'font-math';
+  row.style.overflowWrap = 'anywhere';
+  const bold = document.createElement('b');
+  bold.textContent = label;
+  row.appendChild(bold);
+  row.appendChild(document.createTextNode(` ${rest}`));
+  container.appendChild(row);
 }

@@ -172,7 +172,7 @@ export function TabConstituenta({ engine }: TabConstituentaProps) {
           isContentEditable ? (
             <div className='flex pl-1'>
               <MiniButton
-                titleHtml={prepareTooltip('Переместить вверх', 'Alt + вверх')}
+                title={prepareTooltip('Переместить вверх', 'Alt + вверх')}
                 aria-label='Переместить вверх'
                 className='px-0'
                 icon={<IconMoveUp size='1.1rem' className='hover:icon-primary text-muted-foreground' />}
@@ -180,7 +180,7 @@ export function TabConstituenta({ engine }: TabConstituentaProps) {
                 disabled={disabled || isModified || schema.items.length < 2}
               />
               <MiniButton
-                titleHtml={prepareTooltip('Переместить вниз', 'Alt + вниз')}
+                title={prepareTooltip('Переместить вниз', 'Alt + вниз')}
                 aria-label='Переместить вниз'
                 className='px-0'
                 icon={<IconMoveDown size='1.1rem' className='hover:icon-primary text-muted-foreground' />}

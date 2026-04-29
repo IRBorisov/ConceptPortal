@@ -31,7 +31,7 @@ export function IndicatorPill({
   icon,
   value,
   title,
-  titleHtml,
+
   hideTitle,
   className,
   disabled,
@@ -50,8 +50,7 @@ export function IndicatorPill({
         getPillColor(color),
         className
       )}
-      data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}
-      data-tooltip-html={titleHtml}
+      data-tooltip-id={!!title ? globalIDs.tooltip : undefined}
       data-tooltip-content={title}
       data-tooltip-hidden={hideTitle}
       aria-label={title}

@@ -63,12 +63,12 @@ export function ToolbarVersioning({ blockReload, className }: ToolbarVersioningP
       {isMutable ? (
         <>
           <MiniButton
-            titleHtml={
+            title={
               blockReload
-                ? 'Невозможно откатить КС, <br>прикрепленную к операционной схеме'
+                ? 'Невозможно откатить КС,\nприкрепленную к операционной схеме'
                 : !isContentEditable
                   ? 'Откатить к версии'
-                  : 'Переключитесь на <br/>неактуальную версию'
+                  : 'Переключитесь на\nнеактуальную версию'
             }
             aria-label='Откатить к выбранной версии'
             onClick={handleRestoreVersion}
@@ -76,7 +76,7 @@ export function ToolbarVersioning({ blockReload, className }: ToolbarVersioningP
             disabled={isContentEditable || blockReload}
           />
           <MiniButton
-            titleHtml={isContentEditable ? 'Создать версию' : 'Переключитесь <br/>на актуальную версию'}
+            title={isContentEditable ? 'Создать версию' : 'Переключитесь\nна актуальную версию'}
             aria-label={isContentEditable ? 'Создать версию' : 'Переключить на актуальную версию'}
             onClick={handleCreateVersion}
             icon={<IconNewVersion size='1.25rem' className='icon-green' />}

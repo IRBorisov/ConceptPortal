@@ -112,13 +112,13 @@ export function InlineEntityEditor({ schema, initial, position, onSave, onCancel
         <div className='flex items-center gap-1'>
           <MiniButton
             icon={<IconAccept size='1.5rem' className='icon-green' />}
-            titleHtml={prepareTooltip('Сохранить ссылку', isMac() ? 'Cmd + Enter' : 'Ctrl + Enter')}
+            title={prepareTooltip('Сохранить ссылку', isMac() ? 'Cmd + Enter' : 'Ctrl + Enter')}
             onClick={handleSave}
             disabled={!canSubmit}
           />
           <MiniButton
             icon={<IconClose size='1.5rem' className='icon-primary' />}
-            titleHtml={prepareTooltip('Закрыть', 'Esc')}
+            title={prepareTooltip('Закрыть', 'Esc')}
             onClick={onCancel}
           />
           <SearchBar

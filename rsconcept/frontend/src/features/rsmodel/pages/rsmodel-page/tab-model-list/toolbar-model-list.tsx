@@ -52,27 +52,27 @@ export function ToolbarModelList({ className }: ToolbarModelListProps) {
   return (
     <div className={cn('cc-icons items-start outline-hidden', className)}>
       <MiniButton
-        titleHtml={prepareTooltip('Сбросить выделение', 'ESC')}
+        title={prepareTooltip('Сбросить выделение', 'ESC')}
         aria-label='Сбросить выделение'
         icon={<IconReset size='1.25rem' className='icon-primary' />}
         onClick={deselectAll}
         disabled={selectedCst.length === 0}
       />
       <MiniButton
-        titleHtml={prepareTooltip('Пересчитать модель', 'Alt + Q')}
+        title={prepareTooltip('Пересчитать модель', 'Alt + Q')}
         aria-label='Пересчитать все вычисления'
         icon={<IconCalculateAll size='1.25rem' className='icon-green' />}
         onClick={() => engine.recalculateAll()}
       />
       <MiniButton
-        titleHtml={prepareTooltip('Переместить вверх', 'Alt + вверх')}
+        title={prepareTooltip('Переместить вверх', 'Alt + вверх')}
         aria-label='Переместить вверх'
         icon={<IconMoveUp size='1.25rem' className='icon-primary' />}
         onClick={moveUp}
         disabled={isProcessing || selectedCst.length === 0 || selectedCst.length === schema.items.length}
       />
       <MiniButton
-        titleHtml={prepareTooltip('Переместить вниз', 'Alt + вниз')}
+        title={prepareTooltip('Переместить вниз', 'Alt + вниз')}
         aria-label='Переместить вниз'
         icon={<IconMoveDown size='1.25rem' className='icon-primary' />}
         onClick={moveDown}
@@ -100,13 +100,13 @@ export function ToolbarModelList({ className }: ToolbarModelListProps) {
               text={labelCstType(typeStr)}
               icon={<IconCstType value={typeStr} size='1.25rem' />}
               onClick={() => void createCst(typeStr)}
-              titleHtml={getCstTypeShortcut(typeStr)}
+              title={getCstTypeShortcut(typeStr)}
             />
           ))}
         </Dropdown>
       </div>
       <MiniButton
-        titleHtml={prepareTooltip('Добавить новую конституенту...', 'Alt + `')}
+        title={prepareTooltip('Добавить новую конституенту...', 'Alt + `')}
         aria-label='Добавить новую конституенту'
         icon={<IconNewItem size='1.25rem' className='icon-green' />}
         onClick={() => void promptCreateCst()}
@@ -114,14 +114,14 @@ export function ToolbarModelList({ className }: ToolbarModelListProps) {
         disabled={isProcessing}
       />
       <MiniButton
-        titleHtml={prepareTooltip('Клонировать конституенту', 'Alt + V')}
+        title={prepareTooltip('Клонировать конституенту', 'Alt + V')}
         aria-label='Клонировать конституенту'
         icon={<IconClone size='1.25rem' className='icon-green' />}
         onClick={() => void cloneCst()}
         disabled={isProcessing || selectedCst.length !== 1}
       />
       <MiniButton
-        titleHtml={prepareTooltip('Удалить выбранные', 'Delete')}
+        title={prepareTooltip('Удалить выбранные', 'Delete')}
         aria-label='Удалить выбранные'
         icon={<IconDestroy size='1.25rem' className='icon-red' />}
         onClick={promptDeleteCst}

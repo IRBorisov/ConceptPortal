@@ -38,7 +38,7 @@ export function ToolbarTemplate({ activeID, onSave, onReset, className }: Toolba
   return (
     <div className={cn('cc-icons items-start outline-hidden', className)}>
       <MiniButton
-        titleHtml={prepareTooltip('Сохранить изменения', isMac() ? 'Cmd + S' : 'Ctrl + S')}
+        title={prepareTooltip('Сохранить изменения', isMac() ? 'Cmd + S' : 'Ctrl + S')}
         aria-label='Сохранить изменения'
         icon={<IconSave size='1.25rem' className='icon-primary' />}
         onClick={onSave}

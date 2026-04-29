@@ -37,7 +37,7 @@ export function StatusBar({ className, status, onAnalyze }: StatusBarProps) {
           colorStatusBar(status)
         )}
         data-tooltip-id={globalIDs.tooltip}
-        data-tooltip-html={prepareTooltip('Проверить определение', isMac() ? 'Cmd + Q' : 'Ctrl + Q')}
+        data-tooltip-content={prepareTooltip('Проверить определение', isMac() ? 'Cmd + Q' : 'Ctrl + Q')}
         onClick={onAnalyze}
       >
         <div className='cc-fade-in flex items-center gap-1'>

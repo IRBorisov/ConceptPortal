@@ -10,6 +10,7 @@ import { type EchelonCollection, IntegerT } from '@/domain/rslang/semantic/typif
 
 import { MiniButton } from '@/components/control';
 import { IconRemove } from '@/components/icons';
+import { useValueTooltipStore } from '@/stores/value-tooltip';
 import { globalIDs } from '@/utils/constants';
 import { truncateToLastWord, truncateToSymbol } from '@/utils/format';
 import { placeholderMsg } from '@/utils/labels';
@@ -172,8 +173,13 @@ function createColumnsInternal(
 }
 
 function TitledHeader({ text, title, className }: { text: string; title?: string; className?: string }) {
+  const setActiveTooltipText = useValueTooltipStore(state => state.setActiveText);
   return (
-    <div className={className} data-tooltip-id={!!title ? globalIDs.tooltip : undefined} data-tooltip-content={title}>
+    <div
+      className={className}
+      data-tooltip-id={!!title ? globalIDs.value_tooltip : undefined}
+      onPointerEnter={title ? () => setActiveTooltipText(title) : undefined}
+    >
       {title
         ? truncateToSymbol(text && !title.startsWith(text) ? `[${text}] - ${title}` : title, HEADER_TRUNCATE)
         : text}
@@ -226,6 +232,7 @@ function BasicCell({
   isInvalid?: boolean;
   path: ValuePath;
 }) {
+  const setActiveTooltipText = useValueTooltipStore(state => state.setActiveText);
   const text =
     prepareValueString(value, type, services.schema, services.basics, services.showDataText) ??
     placeholderMsg.valueTooLarge;
@@ -243,8 +250,8 @@ function BasicCell({
         !isSelected && isMatch && 'bg-accent-green50 outline-2 outline-accent-green'
       )}
       onClick={services.selectElement ? () => services.selectElement!(isSelected ? null : path) : undefined}
-      data-tooltip-content={needsTooltip ? text : undefined}
-      data-tooltip-id={needsTooltip ? globalIDs.tooltip : undefined}
+      data-tooltip-id={needsTooltip ? globalIDs.value_tooltip : undefined}
+      onPointerEnter={needsTooltip ? () => setActiveTooltipText(text) : undefined}
     >
       {truncateToLastWord(text, isSingleColumn ? VALUE_TRUNCATE_LONG : VALUE_TRUNCATE)}
     </div>

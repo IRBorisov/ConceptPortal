@@ -58,7 +58,7 @@ export function ToolbarTGOptions({ className, graph }: ToolbarTGOptionsProps) {
   return (
     <div className={cn('grid grid-cols-2 gap-1 pointer-events-auto', className)}>
       <MiniButton
-        titleHtml={prepareTooltip('Граф целиком', 'G')}
+        title={prepareTooltip('Граф целиком', 'G')}
         icon={<IconFitImage size='1.25rem' className='icon-primary' />}
         onClick={handleFitView}
       />
@@ -75,7 +75,7 @@ export function ToolbarTGOptions({ className, graph }: ToolbarTGOptionsProps) {
         onClick={handleSetFocus}
       />
       <MiniButton
-        titleHtml={prepareTooltip(!filter.noText ? 'Скрыть текст' : 'Отобразить текст', 'T')}
+        title={prepareTooltip(!filter.noText ? 'Скрыть текст' : 'Отобразить текст', 'T')}
         icon={<IconEnableText value={!filter.noText} size='1.25rem' />}
         onClick={handleToggleText}
       />
@@ -103,7 +103,7 @@ export function ToolbarTGOptions({ className, graph }: ToolbarTGOptionsProps) {
         </Dropdown>
       </div>
       <MiniButton
-        titleHtml={prepareTooltip(!filter.foldDerived ? 'Скрыть порожденные' : 'Отобразить порожденные', 'V')}
+        title={prepareTooltip(!filter.foldDerived ? 'Скрыть порожденные' : 'Отобразить порожденные', 'V')}
         icon={<IconEnableClustering value={!filter.foldDerived} size='1.25rem' />}
         onClick={handleToggleClustering}
       />

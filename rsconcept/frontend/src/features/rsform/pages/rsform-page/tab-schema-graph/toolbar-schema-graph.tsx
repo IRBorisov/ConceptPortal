@@ -55,7 +55,7 @@ export function ToolbarSchemaGraph({ className, graph }: ToolbarSchemaGraphProps
       <div className='cc-icons'>
         {isContentEditable ? (
           <MiniButton
-            titleHtml={prepareTooltip(labelGraphMode(mode), 'Q')}
+            title={prepareTooltip(labelGraphMode(mode), 'Q')}
             onClick={handleToggleMode}
             icon={
               <IconGraphMode value={mode} size='1.25rem' className={mode === 'edit' ? 'icon-green' : 'icon-primary'} />
@@ -64,7 +64,7 @@ export function ToolbarSchemaGraph({ className, graph }: ToolbarSchemaGraphProps
         ) : null}
         {isContentEditable ? (
           <MiniButton
-            titleHtml={prepareTooltip(labelEdgeType(edgeType), 'E')}
+            title={prepareTooltip(labelEdgeType(edgeType), 'E')}
             onClick={handleToggleEdgeType}
             icon={<IconEdgeType value={edgeType} size='1.25rem' className='icon-primary' />}
             disabled={mode !== InteractionMode.edit}

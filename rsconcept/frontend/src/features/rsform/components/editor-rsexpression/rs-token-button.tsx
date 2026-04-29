@@ -30,7 +30,7 @@ export function RSTokenButton({ token, disabled, onInsert }: RSTokenButtonProps)
         label.length > 3 ? 'w-14.5 md:w-18' : 'w-7.25 md:w-9'
       )}
       data-tooltip-id={globalIDs.tooltip}
-      data-tooltip-html={describeToken(token)}
+      data-tooltip-content={describeToken(token)}
       disabled={disabled}
     >
       {label ? <span className='whitespace-nowrap'>{label}</span> : null}

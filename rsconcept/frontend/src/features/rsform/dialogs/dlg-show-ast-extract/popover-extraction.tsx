@@ -97,7 +97,7 @@ export function PopoverExtraction({
         <Button
           icon={<IconNewItem size='1.1rem' className='icon-primary' />}
           text='Обособить'
-          titleHtml='Вынести выбранное подвыражение в новую конституенту'
+          title='Вынести выбранное подвыражение в новую конституенту'
           className={clsx(
             'font-controls font-bold text-sm text-primary/75',
             'bg-background/90 backdrop-blur-3xl cc-fade-in',
@@ -122,7 +122,7 @@ export function PopoverExtraction({
             <div className='cc-icons mt-1'>
               <MiniButton
                 icon={<IconAccept size='1.25rem' className='icon-green' />}
-                titleHtml={prepareTooltip(
+                title={prepareTooltip(
                   'Подтвердить обособление выбранного подвыражения',
                   isMac() ? 'Cmd + Enter' : 'Ctrl + Enter'
                 )}
@@ -131,7 +131,7 @@ export function PopoverExtraction({
               />
               <MiniButton
                 icon={<IconClose size='1.25rem' className='icon-primary' />}
-                titleHtml={prepareTooltip('Закрыть', 'Esc')}
+                title={prepareTooltip('Закрыть', 'Esc')}
                 onClick={() => setOpen(false)}
               />
             </div>

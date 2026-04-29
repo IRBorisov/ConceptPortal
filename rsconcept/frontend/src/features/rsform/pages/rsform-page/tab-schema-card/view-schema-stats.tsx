@@ -50,10 +50,10 @@ export function ViewSchemaStats({ className, stats, ...restProps }: ViewSchemaSt
         label='Характеристика ядра'
         primaryLabel='Базовые'
         primaryValue={countBase}
-        primaryTitle='Количество<br/>неопределяемых понятий'
+        primaryTitle='Количество\nнеопределяемых понятий'
         secondaryLabel='Сложность'
         secondaryValue={stats.step_complexity}
-        secondaryTitle='Количество терминов,<br/>характеризующих базовые понятия'
+        secondaryTitle='Количество терминов,\nхарактеризующих базовые понятия'
         details={[
           { label: 'Номиноиды', value: stats.count_nominal },
           { label: 'Базисные множества', value: stats.count_base },
@@ -70,10 +70,10 @@ export function ViewSchemaStats({ className, stats, ...restProps }: ViewSchemaSt
         label='Характеристика тела'
         primaryLabel='Производные'
         primaryValue={countDerived}
-        primaryTitle='Количество выводимых<br/>понятий и утверждений'
+        primaryTitle='Количество выводимых\nпонятий и утверждений'
         secondaryLabel='Функции'
         secondaryValue={stats.count_function + stats.count_predicate}
-        secondaryTitle='Количество терм-функций<br/>и предикат-функций'
+        secondaryTitle='Количество терм-функций\nи предикат-функций'
         details={[
           { label: 'Термы', value: stats.count_term },
           { label: 'Терм-функции', value: stats.count_function },

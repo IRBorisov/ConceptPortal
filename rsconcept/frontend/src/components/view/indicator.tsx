@@ -14,7 +14,7 @@ interface IndicatorProps extends Titled, Styling {
 /**
  * Displays a status `icon` with a tooltip.
  */
-export function Indicator({ icon, title, titleHtml, hideTitle, noPadding, className, ...restProps }: IndicatorProps) {
+export function Indicator({ icon, title, hideTitle, noPadding, className, ...restProps }: IndicatorProps) {
   return (
     <div
       className={cn(
@@ -23,8 +23,7 @@ export function Indicator({ icon, title, titleHtml, hideTitle, noPadding, classN
         !noPadding && 'px-1 py-1',
         className
       )}
-      data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}
-      data-tooltip-html={titleHtml}
+      data-tooltip-id={!!title ? globalIDs.tooltip : undefined}
       data-tooltip-content={title}
       data-tooltip-hidden={hideTitle}
       {...restProps}

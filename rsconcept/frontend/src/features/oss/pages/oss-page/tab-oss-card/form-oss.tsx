@@ -152,7 +152,7 @@ export function FormOSS({ className }: FormOSSProps) {
       {isMutable || isModified ? (
         <SubmitButton
           text='Сохранить изменения'
-          titleHtml={prepareTooltip('Сохранить изменения', isMac() ? 'Cmd + S' : 'Ctrl + S')}
+          title={prepareTooltip('Сохранить изменения', isMac() ? 'Cmd + S' : 'Ctrl + S')}
           className='self-center mt-4'
           loading={isProcessing}
           icon={<IconSave size='1.25rem' />}

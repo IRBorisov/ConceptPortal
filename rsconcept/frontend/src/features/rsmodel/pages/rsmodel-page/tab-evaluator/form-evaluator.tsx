@@ -160,10 +160,10 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
         <div className='flex items-center justify-center gap-6 text-sm pl-6 flex-wrap'>
           <TextButton
             text='Смотреть значение'
-            titleHtml={
+            title={
               canOpenValueDialog
                 ? 'Просмотр значения'
-                : 'Просмотр структурированного значения<br/>недоступен для этого типа'
+                : 'Просмотр структурированного значения\nнедоступен для этого типа'
             }
             disabled={!canOpenValueDialog}
             onClick={handleViewValue}

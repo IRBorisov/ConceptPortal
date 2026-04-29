@@ -57,10 +57,10 @@ export function ViewModelStats({ className, stats, ...restProps }: ViewModelStat
         label='Характеристика схемы'
         primaryLabel='Базовые'
         primaryValue={countBase}
-        primaryTitle='Количество<br/>неопределяемых понятий'
+        primaryTitle='Количество\nнеопределяемых понятий'
         secondaryLabel='Сложность'
         secondaryValue={stats.step_complexity}
-        secondaryTitle='Количество терминов,<br/>характеризующих базовые понятия'
+        secondaryTitle='Количество терминов,\nхарактеризующих базовые понятия'
         details={[
           { label: 'Базовые', value: countBase },
           { label: 'Выводимые', value: countDerived },
@@ -106,7 +106,7 @@ export function ViewModelStats({ className, stats, ...restProps }: ViewModelStat
         label='Характеристика модели'
         primaryLabel='Замечания'
         primaryValue={countModelNotes}
-        primaryTitle='Сумма замечаний по текущим данным модели:<br/>отсутствующие базовые интерпретации, неверные данные, невыполненные аксиомы, ошибки вычисления и пустые термы'
+        primaryTitle='Сумма замечаний по текущим данным модели:\nотсутствующие базовые интерпретации, неверные данные, невыполненные аксиомы, ошибки вычисления и пустые термы'
         secondaryLabel='База'
         secondaryValue={stats.base_elements}
         secondaryTitle='Суммарная мощность интерпретаций базовых понятий'

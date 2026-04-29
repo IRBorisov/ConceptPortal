@@ -20,7 +20,7 @@ export function ToolbarEvaluator({ className }: ToolbarEvaluatorProps) {
   return (
     <div className={cn('px-1 rounded-b-2xl cc-icons outline-hidden', className)}>
       <MiniButton
-        titleHtml={prepareTooltip('Пересчитать модель', 'Alt + Q')}
+        title={prepareTooltip('Пересчитать модель', 'Alt + Q')}
         aria-label='Пересчитать все вычисления'
         icon={<IconCalculateAll size='1.25rem' className='icon-green' />}
         onClick={() => engine.recalculateAll()}

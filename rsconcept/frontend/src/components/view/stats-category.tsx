@@ -72,7 +72,7 @@ function ValueCard({ label, title, value }: { label: string; title?: string; val
     <div
       className='rounded-sm bg-muted px-2 py-1 dense text-center'
       data-tooltip-id={!!title ? globalIDs.tooltip : undefined}
-      data-tooltip-html={title}
+      data-tooltip-content={title}
     >
       <p className='text-muted-foreground text-xs'>{label}</p>
       <p className='font-math text-base leading-none py-1'>{value}</p>

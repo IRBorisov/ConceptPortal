@@ -8,6 +8,7 @@ import { type AnalysisFull, type ExpressionType, readTypeAnnotation, TokenID } f
 import { type RSErrorDescription } from '@/domain/rslang/error';
 import { describeRSError, labelType } from '@/domain/rslang/labels';
 
+import { appendBoldTextRow, appendMathBoldLabelParagraph } from '@/utils/format';
 import { type AstNode } from '@/utils/parsing';
 
 import { Local } from './parse/parser.terms';
@@ -126,11 +127,7 @@ function domTooltipLocal(
 ): TooltipView {
   const dom = createTooltipContainer();
 
-  const alias = document.createElement('p');
-  alias.className = 'font-math';
-  alias.style.overflowWrap = 'anywhere';
-  alias.innerHTML = `<b>${aliasText}:</b> ${labelType(type)}`;
-  dom.appendChild(alias);
+  appendMathBoldLabelParagraph(dom, `${aliasText}:`, labelType(type));
 
   if (errors && errors.length > 0) {
     const divider = document.createElement('p');
@@ -154,50 +151,34 @@ function domTooltipConstituenta(
     text.innerText = 'Конституента не определена';
     dom.appendChild(text);
   } else {
-    const alias = document.createElement('p');
-    alias.className = 'font-math';
-    alias.style.overflowWrap = 'anywhere';
-    alias.innerHTML = `<b>${cst.alias}:</b> ${labelType(cst.analysis.type)}`;
-    dom.appendChild(alias);
+    appendMathBoldLabelParagraph(dom, `${cst.alias}:`, labelType(cst.analysis.type));
 
     if (cst.term_resolved) {
-      const term = document.createElement('p');
-      term.innerHTML = `<b>Термин:</b> ${cst.term_resolved}`;
-      dom.appendChild(term);
+      appendBoldTextRow(dom, 'Термин:', cst.term_resolved);
     }
 
     if (cst.definition_formal) {
-      const expression = document.createElement('p');
-      expression.innerHTML = `<b>Выражение:</b> ${cst.definition_formal}`;
-      dom.appendChild(expression);
+      appendBoldTextRow(dom, 'Выражение:', cst.definition_formal);
     }
 
     if (cst.definition_resolved) {
-      const definition = document.createElement('p');
-      definition.innerHTML = `<b>Определение:</b> ${cst.definition_resolved}`;
-      dom.appendChild(definition);
+      appendBoldTextRow(dom, 'Определение:', cst.definition_resolved);
     }
 
     if (cst.convention) {
-      const convention = document.createElement('p');
       if (isBasicConcept(cst.cst_type)) {
-        convention.innerHTML = `<b>Конвенция:</b> ${cst.convention}`;
+        appendBoldTextRow(dom, 'Конвенция:', cst.convention);
       } else {
-        convention.innerHTML = `<b>Комментарий:</b> ${cst.convention}`;
+        appendBoldTextRow(dom, 'Комментарий:', cst.convention);
       }
-      dom.appendChild(convention);
     }
 
     if (cst.spawner_alias) {
-      const derived = document.createElement('p');
-      derived.innerHTML = `<b>Основание:</b> ${cst.spawner_alias}`;
-      dom.appendChild(derived);
+      appendBoldTextRow(dom, 'Основание:', cst.spawner_alias);
     }
 
     if (cst.spawn_alias.length > 0) {
-      const children = document.createElement('p');
-      children.innerHTML = `<b>Порождает:</b> ${cst.spawn_alias.join(', ')}`;
-      dom.appendChild(children);
+      appendBoldTextRow(dom, 'Порождает:', cst.spawn_alias.join(', '));
     }
 
     if (canClick) {

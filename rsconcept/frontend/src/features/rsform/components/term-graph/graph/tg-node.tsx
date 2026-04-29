@@ -7,6 +7,7 @@ import { type Constituenta } from '@/domain/library';
 import { isBasicConcept } from '@/domain/library/rsform-api';
 import { labelType } from '@/domain/rslang/labels';
 
+import { useValueTooltipStore } from '@/stores/value-tooltip';
 import { APP_COLORS } from '@/styling/colors';
 import { globalIDs } from '@/utils/constants';
 
@@ -22,17 +23,19 @@ export function TGNodeComponent(node: NodeProps<TGNode>) {
   const filter = useTermGraphStore(state => state.filter);
   const coloring = useTermGraphStore(state => state.coloring);
   const connectionStart = useTGConnectionStore(state => state.start);
+  const setActiveTooltipText = useValueTooltipStore(state => state.setActiveText);
   const isConnecting = connectionStart !== null;
 
   const label = node.data.cst.alias;
   const description = filter.noText ? '' : node.data.cst.term_resolved || node.data.cst.definition_resolved;
+  const tooltipText = describeCstNode(node.data.cst);
 
   return (
     <>
       <div
         className='relative h-full w-full pointer-events-auto! border rounded-full cc-fade-in duration-transform delay-move'
-        data-tooltip-id={globalIDs.tooltip}
-        data-tooltip-html={describeCstNode(node.data.cst)}
+        data-tooltip-id={globalIDs.value_tooltip}
+        onPointerEnter={() => setActiveTooltipText(tooltipText)}
       >
         {connectionStart !== node.id ? (
           <Handle
@@ -95,7 +98,7 @@ function describeCstNode(cst: Constituenta) {
     ? cst.convention
     : cst.definition_resolved || cst.definition_formal || cst.convention;
   const typification = labelType(cst.analysis?.type ?? null);
-  return `${cst.alias}: ${cst.term_resolved}<br/>${
-    cst.analysis ? `<b>Типизация:</b> ${typification}<br/>` : ''
-  }<b>Содержание:</b> ${contents ? contents : 'отсутствует'}`;
+  return `${cst.alias}: ${cst.term_resolved}\n${
+    cst.analysis ? `Типизация: ${typification}\n` : ''
+  }Содержание: ${contents ? contents : 'отсутствует'}`;
 }

@@ -4,6 +4,7 @@ import { hoverTooltip, type TooltipView } from '@codemirror/view';
 import clsx from 'clsx';
 
 import { findEnvelopingNodes } from '@/utils/codemirror';
+import { appendBoldTextRow } from '@/utils/format';
 
 import { describePromptVariable } from '../../labels';
 import { type PromptVariableType } from '../../models/prompting';
@@ -69,9 +70,7 @@ function domTooltipVariable(varName: string, isAvailable: boolean): TooltipView 
     'select-none cursor-auto'
   );
 
-  const header = document.createElement('p');
-  header.innerHTML = `<b>Переменная ${varName}</b>`;
-  dom.appendChild(header);
+  appendBoldTextRow(dom, `Переменная ${varName}`);
 
   const status = document.createElement('p');
   status.className = isAvailable ? 'text-green-700' : 'text-red-700';

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import clsx from 'clsx';
 
+import { useValueTooltipStore } from '@/stores/value-tooltip';
 import { globalIDs } from '@/utils/constants';
 
 import { MiniButton } from '../control';
@@ -45,6 +46,7 @@ export function SelectTree<ItemType>({
   prefix,
   ...restProps
 }: SelectTreeProps<ItemType>) {
+  const setActiveTooltipText = useValueTooltipStore(state => state.setActiveText);
   const foldable = new Set(items.filter(item => getParent(item) !== item).map(item => getParent(item)));
   const defaultFolded = items.filter(item => getParent(value) !== item && getParent(getParent(value)) !== item);
   const [foldedByValue, setFoldedByValue] = useState<{ value: ItemType; folded: ItemType[] }[]>([]);
@@ -89,6 +91,7 @@ export function SelectTree<ItemType>({
     <div tabIndex={-1} {...restProps}>
       {items.map((item, index) => {
         const isActive = getParent(item) === item || !folded.includes(getParent(item));
+        const description = getDescription(item);
         return (
           <div
             key={`${prefix}${index}`}
@@ -97,8 +100,8 @@ export function SelectTree<ItemType>({
               isActive ? 'max-h-7 py-1 border-b' : 'max-h-0 opacity-0 pointer-events-none',
               value === item && 'cc-selected'
             )}
-            data-tooltip-id={globalIDs.tooltip}
-            data-tooltip-html={getDescription(item)}
+            data-tooltip-id={description ? globalIDs.value_tooltip : undefined}
+            onPointerEnter={description ? () => setActiveTooltipText(description) : undefined}
             onClick={event => handleClickItem(event, item)}
           >
             {foldable.has(item) ? (

@@ -224,7 +224,8 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
       {showValueButton ? (
         <TextButton
           text={!cstInferrable && isMutable ? 'Изменить значение' : 'Смотреть значение'}
-          titleHtml='Просмотр или<br/>редактирование значения'
+          title='Просмотр или
+редактирование значения'
           onClick={handleValueDialog}
         />
       ) : null}

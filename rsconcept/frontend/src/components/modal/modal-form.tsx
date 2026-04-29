@@ -9,6 +9,7 @@ import { BadgeHelp } from '@/features/help/components/badge-help';
 
 import { useEscapeKey } from '@/hooks/use-escape-key';
 import { useDialogsStore } from '@/stores/dialogs';
+import { useValueTooltipStore } from '@/stores/value-tooltip';
 import { globalIDs } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/format';
 
@@ -76,6 +77,7 @@ export function ModalForm({
   ...restProps
 }: React.PropsWithChildren<ModalFormProps>) {
   const hideDialog = useDialogsStore(state => state.hideDialog);
+  const setActiveTooltipText = useValueTooltipStore(state => state.setActiveText);
   const { isTopPlaced, setElement } = useModalPlacement<HTMLFormElement>();
 
   const previousFocusRef = useRef<HTMLElement | null>(null);
@@ -115,7 +117,7 @@ export function ModalForm({
         ) : null}
 
         <MiniButton
-          titleHtml={prepareTooltip('Закрыть диалоговое окно', 'ESC')}
+          title={prepareTooltip('Закрыть диалоговое окно', 'ESC')}
           aria-label='Закрыть'
           noPadding
           icon={<IconClose size='1.25rem' />}
@@ -155,8 +157,8 @@ export function ModalForm({
               <IconAlert
                 size='1.5rem'
                 className='mx-auto'
-                data-tooltip-id={globalIDs.tooltip}
-                data-tooltip-html={validationHint}
+                data-tooltip-id={globalIDs.value_tooltip}
+                onPointerEnter={() => setActiveTooltipText(validationHint)}
               />
             </div>
           ) : null}

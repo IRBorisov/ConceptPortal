@@ -17,7 +17,7 @@ interface TabLabelProps extends Omit<TabPropsImpl, 'children'>, Titled {
 export function TabLabel({
   label,
   title,
-  titleHtml,
+
   hideTitle,
   className,
   disabled,
@@ -40,8 +40,7 @@ export function TabLabel({
         className
       )}
       tabIndex='-1'
-      data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}
-      data-tooltip-html={titleHtml}
+      data-tooltip-id={!!title ? globalIDs.tooltip : undefined}
       data-tooltip-content={title}
       data-tooltip-hidden={hideTitle}
       role={role}

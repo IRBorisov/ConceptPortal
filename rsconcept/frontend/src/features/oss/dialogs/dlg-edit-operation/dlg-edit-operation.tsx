@@ -141,7 +141,7 @@ export function DlgEditOperation() {
             disabled={target.operation_type !== OperationType.SYNTHESIS}
           />
           <TabLabel
-            titleHtml='Таблица отождествлений'
+            title='Таблица отождествлений'
             label='Отождествления'
             disabled={target.operation_type !== OperationType.SYNTHESIS}
           />

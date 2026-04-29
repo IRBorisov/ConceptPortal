@@ -40,7 +40,7 @@ export function ToolbarTGEdit({ className, graph }: ToolbarTGEditProps) {
       />
       {isContentEditable ? (
         <MiniButton
-          titleHtml={prepareTooltip('Ключевая конституента', 'F')}
+          title={prepareTooltip('Ключевая конституента', 'F')}
           aria-label='Переключатель статуса ключевой конституенты'
           icon={<IconCrucial size='1.25rem' className='icon-primary' />}
           onClick={toggleCrucial}
@@ -49,7 +49,7 @@ export function ToolbarTGEdit({ className, graph }: ToolbarTGEditProps) {
       ) : null}
       {isContentEditable ? (
         <MiniButton
-          titleHtml={prepareTooltip('Удалить выбранные', 'Delete, `')}
+          title={prepareTooltip('Удалить выбранные', 'Delete, `')}
           icon={<IconDestroy size='1.25rem' className='icon-red' />}
           onClick={handleDeleteSelected}
           disabled={!canDeleteSelected || isProcessing}
@@ -57,7 +57,7 @@ export function ToolbarTGEdit({ className, graph }: ToolbarTGEditProps) {
       ) : null}
       {isContentEditable ? (
         <MiniButton
-          titleHtml={prepareTooltip('Новая конституента', 'R')}
+          title={prepareTooltip('Новая конституента', 'R')}
           icon={<IconNewItem size='1.25rem' className='icon-green' />}
           onClick={handleCreateCst}
           disabled={isProcessing}
@@ -65,7 +65,7 @@ export function ToolbarTGEdit({ className, graph }: ToolbarTGEditProps) {
       ) : null}
       {isContentEditable ? (
         <MiniButton
-          titleHtml={prepareTooltip('Редактировать конституенту', 'V')}
+          title={prepareTooltip('Редактировать конституенту', 'V')}
           icon={<IconEdit2 size='1.25rem' className='icon-primary' />}
           onClick={handelFastEdit}
           disabled={isProcessing || selectedCst.length !== 1}

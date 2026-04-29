@@ -23,7 +23,7 @@ export function DropdownButton({
   text,
   className,
   title,
-  titleHtml,
+
   hideTitle,
   onClick,
   children,
@@ -41,8 +41,7 @@ export function DropdownButton({
         !!onClick ? 'cc-hover-bg cursor-pointer disabled:cursor-auto' : 'bg-secondary text-secondary-foreground',
         className
       )}
-      data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}
-      data-tooltip-html={titleHtml}
+      data-tooltip-id={!!title ? globalIDs.tooltip : undefined}
       data-tooltip-content={title}
       data-tooltip-hidden={hideTitle}
       aria-label={title}

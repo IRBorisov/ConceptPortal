@@ -13,14 +13,11 @@ export interface Styling {
 }
 
 /**
- * Represents an object that can have a title with optional HTML rendering and a flag to hide the title.
+ * Represents an object that can have a title and a flag to hide the title.
  */
 export interface Titled {
   /** Tooltip: `plain text`. */
   title?: string;
-
-  /** Tooltip: `HTML formatted`. */
-  titleHtml?: string;
 
   /** Indicates whether the `title` should be hidden. */
   hideTitle?: boolean;

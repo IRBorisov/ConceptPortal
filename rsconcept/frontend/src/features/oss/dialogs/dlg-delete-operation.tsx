@@ -68,7 +68,7 @@ export function DlgDeleteOperation() {
         {field => (
           <Checkbox
             label='Удалить схему'
-            titleHtml={
+            title={
               (target.operation_type === OperationType.INPUT && target.is_import) || target.result === null
                 ? 'Привязанную схему нельзя удалить'
                 : 'Удалить схему вместе с операцией'
@@ -83,7 +83,8 @@ export function DlgDeleteOperation() {
         {field => (
           <Checkbox
             label='Сохранить наследованные конституенты'
-            titleHtml='Наследованные конституенты <br/>превратятся в дописанные'
+            title='Наследованные конституенты
+превратятся в дописанные'
             value={field.state.value ?? false}
             onChange={(v: boolean) => field.handleChange(v)}
             disabled={target.result === null}

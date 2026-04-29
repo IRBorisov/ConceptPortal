@@ -37,7 +37,9 @@ export function LocationBreadcrumb({ canRename, className, onRenameLocation }: L
       <div className='cc-icons'>
         <BadgeHelp topic={HelpTopic.UI_LIBRARY} contentClass='text-sm' offset={5} place='bottom-start' />
         <MiniButton
-          titleHtml='<b>Редактирование пути</b><br/>Перемещаются только Ваши схемы<br/>в указанной папке (и подпапках)'
+          title='Редактирование пути
+Перемещаются только Ваши схемы
+в указанной папке (и подпапках)'
           aria-label='Редактирование расположения'
           icon={<IconFolderEdit size='1.25rem' className='icon-primary' />}
           onClick={onRenameLocation}

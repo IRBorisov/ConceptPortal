@@ -200,7 +200,7 @@ export function MenuMain() {
       <Dropdown isOpen={isMenuOpen} margin='mt-3'>
         <DropdownButton
           text='Поделиться'
-          titleHtml={tooltipText.shareItem(schema.access_policy === AccessPolicy.PUBLIC)}
+          title={tooltipText.shareItem(schema.access_policy === AccessPolicy.PUBLIC)}
           aria-label='Скопировать ссылку в буфер обмена'
           icon={<IconShare size='1rem' className='icon-primary' />}
           onClick={handleShare}

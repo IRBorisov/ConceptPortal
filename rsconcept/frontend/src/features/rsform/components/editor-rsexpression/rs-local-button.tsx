@@ -14,7 +14,7 @@ interface RSLocalButtonProps extends Titled, Styling {
 export function RSLocalButton({
   text,
   title,
-  titleHtml,
+
   hideTitle,
   disabled,
   className,
@@ -26,8 +26,7 @@ export function RSLocalButton({
       type='button'
       tabIndex={-1}
       disabled={disabled}
-      data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}
-      data-tooltip-html={titleHtml}
+      data-tooltip-id={!!title ? globalIDs.tooltip : undefined}
       data-tooltip-content={title}
       data-tooltip-hidden={hideTitle}
       className={clsx(

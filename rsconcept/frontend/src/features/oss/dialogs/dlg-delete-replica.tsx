@@ -64,7 +64,7 @@ export function DlgDeleteReplica() {
         {field => (
           <Checkbox
             label='Переадресовать связи на оригинал'
-            titleHtml='Связи аргументов будут перенаправлены на оригинал реплики'
+            title='Связи аргументов будут перенаправлены на оригинал реплики'
             value={field.state.value ?? false}
             onChange={(v: boolean) => field.handleChange(v)}
             disabled={target.result === null}
@@ -75,7 +75,8 @@ export function DlgDeleteReplica() {
         {field => (
           <Checkbox
             label='Сохранить наследованные конституенты'
-            titleHtml='Наследованные конституенты <br/>превратятся в дописанные'
+            title='Наследованные конституенты
+превратятся в дописанные'
             value={field.state.value ?? false}
             onChange={(v: boolean) => field.handleChange(v)}
             disabled={target.result === null || keep_connections}

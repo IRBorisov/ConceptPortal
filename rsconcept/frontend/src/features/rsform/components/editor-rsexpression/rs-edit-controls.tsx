@@ -107,7 +107,7 @@ export function RSEditorControls({ isOpen, disabled, onEdit }: RSEditorControlsP
         <RSLocalButton
           key={`${prefixes.rsedit_btn}${hotkey}`}
           text={text}
-          titleHtml={`<kbd>[${hotkey}]</kbd>`}
+          title={`[${hotkey}]`}
           className='hidden xs:inline'
           onInsert={onEdit}
           disabled={disabled}
@@ -122,7 +122,7 @@ export function RSEditorControls({ isOpen, disabled, onEdit }: RSEditorControlsP
           key={`${prefixes.rsedit_btn}${hotkey}`}
           className='hidden xs:inline'
           text={text}
-          titleHtml={`<kbd>[${hotkey}]</kbd>`}
+          title={`[${hotkey}]`}
           onInsert={onEdit}
           disabled={disabled}
         />
@@ -136,7 +136,7 @@ export function RSEditorControls({ isOpen, disabled, onEdit }: RSEditorControlsP
           key={`${prefixes.rsedit_btn}${hotkey}`}
           className='hidden xs:inline'
           text={text}
-          titleHtml={`<kbd>[${hotkey}]</kbd>`}
+          title={`[${hotkey}]`}
           onInsert={onEdit}
           disabled={disabled}
         />

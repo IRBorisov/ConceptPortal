@@ -126,7 +126,8 @@ export function MenuEditSchema() {
     return (
       <MiniButton
         noPadding
-        titleHtml='<b>Архив</b>: Редактирование запрещено<br />Перейти к актуальной версии'
+        title='Архив: Редактирование запрещено
+Перейти к актуальной версии'
         hideTitle={isMenuOpen}
         className='h-full px-3 bg-transparent'
         icon={<IconArchive size='1.25rem' className='icon-primary' />}
@@ -156,7 +157,8 @@ export function MenuEditSchema() {
         />
         <DropdownButton
           text='Встраивание'
-          titleHtml='Импортировать совокупность <br/>конституент из другой схемы'
+          title='Импортировать совокупность
+конституент из другой схемы'
           aria-label='Импортировать совокупность конституент из другой схемы'
           icon={<IconInlineSynthesis size='1rem' className='icon-green' />}
           onClick={handleInlineSynthesis}
@@ -167,7 +169,8 @@ export function MenuEditSchema() {
 
         <DropdownButton
           text='Упорядочить список'
-          titleHtml='Упорядочить список, исходя из <br/>логики типов и связей конституент'
+          title='Упорядочить список, исходя из
+логики типов и связей конституент'
           aria-label='Упорядочить список, исходя из логики типов и связей конституент'
           icon={<IconSortList size='1rem' className='icon-primary' />}
           onClick={handleRestoreOrder}
@@ -175,7 +178,8 @@ export function MenuEditSchema() {
         />
         <DropdownButton
           text='Порядковые имена'
-          titleHtml='Присвоить порядковые имена <br/>и обновить выражения'
+          title='Присвоить порядковые имена
+и обновить выражения'
           aria-label='Присвоить порядковые имена и обновить выражения'
           icon={<IconGenerateNames size='1rem' className='icon-primary' />}
           onClick={handleReindex}
@@ -183,7 +187,9 @@ export function MenuEditSchema() {
         />
         <DropdownButton
           text='Раскрытие структуры'
-          titleHtml='Породить внутренние понятия<br/> по структуре типизации<br/> выделенной конституенты'
+          title='Породить внутренние понятия
+по структуре типизации
+выделенной конституенты'
           aria-label='Породить внутренние понятия по структуре типизации выделенной конституенты'
           icon={<IconGenerateStructure size='1rem' className='icon-primary' />}
           onClick={() => handleProduceStructure(activeCst)}
@@ -191,7 +197,8 @@ export function MenuEditSchema() {
         />
         <DropdownButton
           text='Отождествление'
-          titleHtml='Заменить вхождения <br/>одной конституенты на другую'
+          title='Заменить вхождения
+одной конституенты на другую'
           aria-label='Заменить вхождения одной конституенты на другую'
           icon={<IconReplace size='1rem' className='icon-red' />}
           onClick={handleSubstituteCst}

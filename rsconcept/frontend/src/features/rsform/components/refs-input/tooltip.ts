@@ -8,6 +8,7 @@ import { labelGrammeme } from '@/domain/cctext/labels';
 import { type Constituenta, type RSForm } from '@/domain/library';
 
 import { findContainedNodes } from '@/utils/codemirror';
+import { appendBoldTextRow } from '@/utils/format';
 import { isMac } from '@/utils/utils';
 
 import { describeConstituentaTerm } from '../../labels';
@@ -72,13 +73,9 @@ function domTooltipEntityReference(ref: EntityReference, cst: Constituenta | nul
     'select-none cursor-auto'
   );
 
-  const header = document.createElement('p');
-  header.innerHTML = '<b>Ссылка на конституенту</b>';
-  dom.appendChild(header);
+  appendBoldTextRow(dom, 'Ссылка на конституенту');
 
-  const term = document.createElement('p');
-  term.innerHTML = `<b>${ref.entity}:</b> ${describeConstituentaTerm(cst)}`;
-  dom.appendChild(term);
+  appendBoldTextRow(dom, `${ref.entity}:`, describeConstituentaTerm(cst));
 
   const grams = document.createElement('div');
   grams.className = 'flex flex-wrap gap-1 mt-1';
@@ -94,11 +91,10 @@ function domTooltipEntityReference(ref: EntityReference, cst: Constituenta | nul
 
   const controlsTip = document.createElement('p');
   controlsTip.className = 'text-left text-xs mt-1';
-  controlsTip.innerHTML = '<kbd>Alt + 1</kbd> ссылка на конституенту<br/><kbd>Alt + 2</kbd> зависимое слово';
+  controlsTip.textContent = 'Alt + 1: ссылка на конституенту\nAlt + 2: зависимое слово';
   if (canClick) {
-    controlsTip.innerHTML =
-      (isMac() ? '<kbd>Cmd + клик</kbd> для перехода<br/>' : '<kbd>Ctrl + клик</kbd> для перехода<br/>') +
-      controlsTip.innerHTML;
+    controlsTip.textContent =
+      `${isMac() ? 'Cmd + клик' : 'Ctrl + клик'}: для перехода\n` + (controlsTip.textContent ?? '');
   }
   dom.appendChild(controlsTip);
 
@@ -121,26 +117,15 @@ function domTooltipSyntacticReference(
     'select-none cursor-auto'
   );
 
-  const header = document.createElement('p');
-  header.innerHTML = '<b>Связывание слов</b>';
-  dom.appendChild(header);
-
-  const offset = document.createElement('p');
-  offset.innerHTML = `<b>Смещение:</b> ${ref.offset}`;
-  dom.appendChild(offset);
-
-  const master = document.createElement('p');
-  master.innerHTML = `<b>Основная ссылка: </b> ${masterRef ?? 'не определена'}`;
-  dom.appendChild(master);
-
-  const nominal = document.createElement('p');
-  nominal.innerHTML = `<b>Начальная форма:</b> ${ref.nominal}`;
-  dom.appendChild(nominal);
+  appendBoldTextRow(dom, 'Связывание слов');
+  appendBoldTextRow(dom, 'Смещение:', ref.offset);
+  appendBoldTextRow(dom, 'Основная ссылка:', masterRef ?? 'не определена');
+  appendBoldTextRow(dom, 'Начальная форма:', ref.nominal);
 
   if (canClick) {
     const clickTip = document.createElement('p');
     clickTip.className = 'text-center text-xs mt-1';
-    clickTip.innerHTML = '<kbd>Alt + 2</kbd> для редактирования';
+    clickTip.textContent = 'Alt + 2: для редактирования';
     dom.appendChild(clickTip);
   }
 

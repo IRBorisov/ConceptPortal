@@ -134,7 +134,7 @@ export function DlgCreateSynthesis() {
       <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>
         <TabList className='z-pop mx-auto flex border divide-x rounded-none'>
           <TabLabel title='Выбор аргументов операции' label='Аргументы' />
-          <TabLabel titleHtml='Таблица отождествлений' label='Отождествления' />
+          <TabLabel title='Таблица отождествлений' label='Отождествления' />
         </TabList>
         <TabPanel>
           <TabArguments

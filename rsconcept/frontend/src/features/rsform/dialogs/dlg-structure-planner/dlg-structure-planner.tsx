@@ -14,6 +14,7 @@ import { MiniButton } from '@/components/control';
 import { IconNewItem, IconReset, IconSave } from '@/components/icons';
 import { ModalView } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
+import { useValueTooltipStore } from '@/stores/value-tooltip';
 import { globalIDs } from '@/utils/constants';
 import { type RO } from '@/utils/meta';
 import { promptUnsaved } from '@/utils/utils';
@@ -45,6 +46,7 @@ export function DlgStructurePlanner() {
     state => state.props as DlgStructurePlannerProps
   );
   const hideDialog = useDialogsStore(state => state.hideDialog);
+  const setActiveTooltipText = useValueTooltipStore(state => state.setActiveText);
   const [currentSchema, setCurrentSchema] = useState(schema);
 
   const target = currentSchema.cstByID.get(targetID) ?? null;
@@ -127,8 +129,8 @@ export function DlgStructurePlanner() {
               'font-math text-right select-none',
               blurClass
             )}
-            data-tooltip-id={isDefinitionTooLong ? globalIDs.tooltip : undefined}
-            data-tooltip-content={isDefinitionTooLong ? selectedNode.definition : undefined}
+            data-tooltip-id={isDefinitionTooLong ? globalIDs.value_tooltip : undefined}
+            onPointerEnter={isDefinitionTooLong ? () => setActiveTooltipText(selectedNode.definition) : undefined}
           >
             {selectedNode.definition}
           </div>

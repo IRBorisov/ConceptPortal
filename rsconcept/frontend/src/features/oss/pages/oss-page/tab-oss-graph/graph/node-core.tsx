@@ -50,7 +50,9 @@ export function NodeCoreComponent({ node }: { node: NodeProps<OGOperationNode> }
         {opType === OperationType.SYNTHESIS && node.data.operation.is_consolidation ? (
           <Indicator
             noPadding
-            titleHtml='<b>Внимание!</b><br />Ромбовидный синтез</br/>Возможны дубликаты конституент'
+            title='Внимание!
+Ромбовидный синтез
+Возможны дубликаты конституент'
             icon={<IconConsolidation className='text-primary' size='12px' />}
           />
         ) : null}

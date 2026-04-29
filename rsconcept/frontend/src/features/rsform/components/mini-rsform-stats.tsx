@@ -45,7 +45,7 @@ export function MiniRSFormStats({ className, stats }: MiniRSFormStatsProps) {
         id='count_inherited'
         icon={<IconChild size='1.25rem' />}
         value={stats.count_inherited}
-        titleHtml='Наследованные'
+        title='Наследованные'
       />
 
       <ValueStats

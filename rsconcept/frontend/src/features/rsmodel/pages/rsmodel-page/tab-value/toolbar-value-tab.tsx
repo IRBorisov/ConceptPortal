@@ -49,7 +49,7 @@ export function ToolbarValueTab({ className, onSubmit, onReset }: ToolbarValueTa
   return (
     <div className={cn('px-1 rounded-b-2xl cc-icons outline-hidden', className)}>
       <MiniButton
-        titleHtml={prepareTooltip('Сохранить изменения', isMac() ? 'Cmd + S' : 'Ctrl + S')}
+        title={prepareTooltip('Сохранить изменения', isMac() ? 'Cmd + S' : 'Ctrl + S')}
         aria-label='Сохранить изменения'
         icon={<IconSave size='1.25rem' className='icon-primary' />}
         onClick={onSubmit}
@@ -63,13 +63,13 @@ export function ToolbarValueTab({ className, onSubmit, onReset }: ToolbarValueTa
       />
 
       <MiniButton
-        titleHtml='Пересчитать модель'
+        title='Пересчитать модель'
         aria-label='Пересчитать все вычисления'
         icon={<IconCalculateAll size='1.25rem' className='icon-green' />}
         onClick={() => engine.recalculateAll()}
       />
       <MiniButton
-        titleHtml={prepareTooltip('Вычислить текущую конституенту', isMac() ? 'Cmd + Q' : 'Ctrl + Q')}
+        title={prepareTooltip('Вычислить текущую конституенту', isMac() ? 'Cmd + Q' : 'Ctrl + Q')}
         aria-label='Вычислить текущую конституенту'
         icon={<IconCalculateOne size='1.25rem' className='icon-green' />}
         onClick={
@@ -90,7 +90,7 @@ export function ToolbarValueTab({ className, onSubmit, onReset }: ToolbarValueTa
             disabled={formDisabled}
           />
           <MiniButton
-            titleHtml={isModified ? tooltipText.unsaved : prepareTooltip('Клонировать конституенту', 'Alt + V')}
+            title={isModified ? tooltipText.unsaved : prepareTooltip('Клонировать конституенту', 'Alt + V')}
             aria-label='Клонировать конституенту'
             icon={<IconClone size='1.25rem' className='icon-green' />}
             onClick={() => void cloneCst()}

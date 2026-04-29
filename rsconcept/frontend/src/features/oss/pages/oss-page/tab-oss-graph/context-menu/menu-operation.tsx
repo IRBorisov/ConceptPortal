@@ -252,7 +252,7 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
       {operation.result ? (
         <DropdownButton
           text='Открыть схему'
-          titleHtml={prepareTooltip('Открыть привязанную КС', 'Двойной клик')}
+          title={prepareTooltip('Открыть привязанную КС', 'Двойной клик')}
           aria-label='Открыть привязанную КС'
           icon={<IconRSForm size='1rem' className='icon-primary' />}
           onClick={handleOpenSchema}
@@ -283,9 +283,9 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
       operation.arguments.length > 0 ? (
         <DropdownButton
           text='Активировать синтез'
-          titleHtml={
+          title={
             readyForSynthesis
-              ? 'Активировать операцию<br/>и получить синтезированную КС'
+              ? 'Активировать операцию\nи получить синтезированную КС'
               : 'Необходимо предоставить все аргументы'
           }
           aria-label='Активировать операцию и получить синтезированную КС'
@@ -298,7 +298,8 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
       {isMutable && operation.result && operation.operation_type !== OperationType.REPLICA ? (
         <DropdownButton
           text='Конституенты'
-          titleHtml='Перенос конституент<br/>между схемами'
+          title='Перенос конституент
+между схемами'
           aria-label='Перенос конституент между схемами'
           icon={<IconChild size='1rem' className='icon-green' />}
           onClick={handleRelocateConstituents}

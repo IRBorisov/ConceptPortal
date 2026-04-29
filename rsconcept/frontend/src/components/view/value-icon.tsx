@@ -35,7 +35,7 @@ export function ValueIcon({
   value,
   disabled = true,
   title,
-  titleHtml,
+
   hideTitle,
   className,
   onClick,
@@ -51,8 +51,7 @@ export function ValueIcon({
         className
       )}
       {...restProps}
-      data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}
-      data-tooltip-html={titleHtml}
+      data-tooltip-id={!!title ? globalIDs.tooltip : undefined}
       data-tooltip-content={title}
       data-tooltip-hidden={hideTitle}
       aria-label={title}

@@ -39,7 +39,7 @@ export function DlgGraphParams() {
               onChange={field.handleChange}
               onBlur={field.handleBlur}
               label='Скрыть текст'
-              titleHtml={prepareTooltip('Не отображать термины', 'T')}
+              title={prepareTooltip('Не отображать термины', 'T')}
             />
           )}
         </form.Field>
@@ -50,7 +50,7 @@ export function DlgGraphParams() {
               onChange={field.handleChange}
               onBlur={field.handleBlur}
               label='Скрыть порожденные'
-              titleHtml={prepareTooltip('Не отображать порожденные понятия', 'B')}
+              title={prepareTooltip('Не отображать порожденные понятия', 'B')}
             />
           )}
         </form.Field>
@@ -61,7 +61,7 @@ export function DlgGraphParams() {
               onChange={field.handleChange}
               onBlur={field.handleBlur}
               label='Скрыть свободные'
-              titleHtml={prepareTooltip('Конституенты без связей', 'H')}
+              title={prepareTooltip('Конституенты без связей', 'H')}
             />
           )}
         </form.Field>
@@ -72,7 +72,8 @@ export function DlgGraphParams() {
               onChange={field.handleChange}
               onBlur={field.handleBlur}
               label='Скрыть шаблоны'
-              titleHtml='Терм-функции и предикат-функции <br/>с параметризованными аргументами'
+              title='Терм-функции и предикат-функции
+с параметризованными аргументами'
             />
           )}
         </form.Field>
@@ -83,7 +84,8 @@ export function DlgGraphParams() {
               onChange={field.handleChange}
               onBlur={field.handleBlur}
               label='Транзитивная редукция'
-              titleHtml='Удалить связи, образующие <br/>транзитивные пути в графе'
+              title='Удалить связи, образующие
+транзитивные пути в графе'
             />
           )}
         </form.Field>

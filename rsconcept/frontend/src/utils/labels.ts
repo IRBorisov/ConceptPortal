@@ -102,7 +102,7 @@ export const errorMsg = {
 export const hintMsg = {
   templateInvalid: 'Выберите шаблон конституенты',
   formInvalid: 'Форма заполнена некорректно',
-  aliasInvalid: 'Введите незанятое имя,<br />соответствующее типу',
+  aliasInvalid: 'Введите незанятое имя,\nсоответствующее типу',
   aliasEmpty: 'Введите сокращение',
   titleEmpty: 'Введите название',
   blockTitleTaken: 'Блок с таким названием уже существует',
@@ -119,7 +119,7 @@ export const hintMsg = {
 /** UI tooltip descriptors. */
 export const tooltipText = {
   unsaved: 'Сохраните или отмените изменения',
-  shareItem: (isPublic: boolean) => (isPublic ? 'Поделиться схемой' : 'Поделиться можно только <br/>открытой схемой')
+  shareItem: (isPublic: boolean) => (isPublic ? 'Поделиться схемой' : 'Поделиться можно только \nоткрытой схемой')
 } as const;
 
 /** UI prompt messages. */

@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import { LibraryItemType } from '@/domain/library';
 
 import { IconOSS, IconRSForm, IconRSModel } from '@/components/icons';
+import { useValueTooltipStore } from '@/stores/value-tooltip';
 import { globalIDs } from '@/utils/constants';
 
 interface SchemaTitleProps {
@@ -22,6 +23,8 @@ function ItemIcon({ itemType, className }: { itemType: LibraryItemType; classNam
 }
 
 export function CurrentTitle({ itemType, title }: SchemaTitleProps) {
+  const setActiveTooltipText = useValueTooltipStore(state => state.setActiveText);
+
   return (
     <div
       tabIndex={-1}
@@ -31,8 +34,8 @@ export function CurrentTitle({ itemType, title }: SchemaTitleProps) {
         'text-md text-muted-foreground pointer-events-auto'
       )}
       aria-label='Название схемы'
-      data-tooltip-id={globalIDs.tooltip}
-      data-tooltip-content={title}
+      data-tooltip-id={globalIDs.value_tooltip}
+      onPointerEnter={() => setActiveTooltipText(title)}
     >
       <ItemIcon itemType={itemType} className='shrink-0' />
       <span className='pt-0.5 font-medium truncate'>{title}</span>

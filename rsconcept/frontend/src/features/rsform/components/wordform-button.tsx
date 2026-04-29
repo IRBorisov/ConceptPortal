@@ -2,6 +2,7 @@ import clsx from 'clsx';
 
 import { type Grammeme } from '@/domain/cctext';
 
+import { useValueTooltipStore } from '@/stores/value-tooltip';
 import { globalIDs } from '@/utils/constants';
 
 interface WordformButtonProps {
@@ -22,6 +23,8 @@ export function WordformButton({
   onDoubleClick,
   ...restProps
 }: WordformButtonProps) {
+  const setActiveTooltipText = useValueTooltipStore(state => state.setActiveText);
+
   return (
     <button
       type='button'
@@ -36,8 +39,8 @@ export function WordformButton({
         'hover:bg-accent hover:text-foreground cc-animate-color',
         isSelected ? 'cc-selected' : 'text-muted-foreground'
       )}
-      data-tooltip-id={example ? globalIDs.tooltip : undefined}
-      data-tooltip-html={example}
+      data-tooltip-id={example ? globalIDs.value_tooltip : undefined}
+      onPointerEnter={example ? () => setActiveTooltipText(example) : undefined}
       onDoubleClick={onDoubleClick}
       {...restProps}
     >

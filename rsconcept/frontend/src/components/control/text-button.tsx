@@ -11,7 +11,7 @@ interface TextButtonProps extends ButtonStyle {
 /**
  * Customizable `button` with text, transparent background and no additional styling.
  */
-export function TextButton({ text, title, titleHtml, hideTitle, className, ...restProps }: TextButtonProps) {
+export function TextButton({ text, title, hideTitle, className, ...restProps }: TextButtonProps) {
   return (
     <button
       tabIndex={-1}
@@ -23,8 +23,7 @@ export function TextButton({ text, title, titleHtml, hideTitle, className, ...re
         'outline-hidden',
         className
       )}
-      data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}
-      data-tooltip-html={titleHtml}
+      data-tooltip-id={!!title ? globalIDs.tooltip : undefined}
       data-tooltip-content={title}
       data-tooltip-hidden={hideTitle}
       aria-label={!text ? title : undefined}

@@ -4,6 +4,7 @@ import { Handle, type NodeProps, Position } from '@xyflow/react';
 
 import { type TypificationNodeData } from '@/domain/rslang';
 
+import { useValueTooltipStore } from '@/stores/value-tooltip';
 import { globalIDs } from '@/utils/constants';
 
 import { colorBgTMGraphNode } from '../../../colors';
@@ -21,10 +22,11 @@ function getNodeLabel(data: TypificationNodeData) {
 }
 
 export function MGraphNodeComponent(node: NodeProps<MGNode>) {
+  const setActiveTooltipText = useValueTooltipStore(state => state.setActiveText);
   const tooltipText =
-    `<span class="font-math">${node.data.text}</span>` +
-    '<br/>' +
-    (node.data.annotations.length === 0 ? '' : `<b>Конституенты</b> ${node.data.annotations.join(' ')}`);
+    `${node.data.text}` +
+    '\n' +
+    (node.data.annotations.length === 0 ? '' : `Конституенты ${node.data.annotations.join(' ')}`);
   const nodeLabel = getNodeLabel(node.data);
 
   return (
@@ -32,8 +34,8 @@ export function MGraphNodeComponent(node: NodeProps<MGNode>) {
       <Handle type='source' position={Position.Top} className='opacity-0' />
       <div
         className='cc-node-label w-full h-full cursor-default flex items-center justify-center rounded-full'
-        data-tooltip-id={globalIDs.tooltip}
-        data-tooltip-html={tooltipText}
+        data-tooltip-id={globalIDs.value_tooltip}
+        onPointerEnter={() => setActiveTooltipText(tooltipText)}
         style={{ backgroundColor: colorBgTMGraphNode(node.data) }}
       >
         {nodeLabel}

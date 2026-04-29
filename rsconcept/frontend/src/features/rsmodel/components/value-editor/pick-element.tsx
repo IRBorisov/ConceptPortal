@@ -9,6 +9,7 @@ import { type BasicBinding } from '@/domain/library';
 import { DataTable, type IConditionalStyle } from '@/components/data-table';
 import { SearchBar, TextInput } from '@/components/input';
 import { cn } from '@/components/utils';
+import { useValueTooltipStore } from '@/stores/value-tooltip';
 import { globalIDs, PARAMETER } from '@/utils/constants';
 import { truncateToLastWord } from '@/utils/format';
 import { TextMatcher } from '@/utils/utils';
@@ -30,6 +31,7 @@ interface PickElementProps {
 const columnHelper = createColumnHelper<number>();
 
 export function PickElement({ className, value, alias, isInteger, term, binding, onChange }: PickElementProps) {
+  const setActiveTooltipText = useValueTooltipStore(state => state.setActiveText);
   const [filter, setFilter] = useState('');
   const [filterDebounced] = useDebounce(filter, PARAMETER.searchDebounce);
   const labelText = term ? `${alias}: ${term}` : alias || 'N/A';
@@ -95,7 +97,11 @@ export function PickElement({ className, value, alias, isInteger, term, binding,
 
   return (
     <div className={cn('flex flex-col h-fit', className)}>
-      <div className='truncate select-none mb-3' data-tooltip-id={globalIDs.tooltip} data-tooltip-content={labelText}>
+      <div
+        className='truncate select-none mb-3'
+        data-tooltip-id={globalIDs.value_tooltip}
+        onPointerEnter={() => setActiveTooltipText(labelText)}
+      >
         {labelText}
       </div>
       <SearchBar
@@ -131,12 +137,13 @@ function prepareText(id: number, binding: BasicBinding | null): string {
 }
 
 function TextCell({ text }: { text: string }) {
+  const setActiveTooltipText = useValueTooltipStore(state => state.setActiveText);
   const needsTooltip = text.length > VALUE_TRUNCATE;
   return (
     <div
       className='w-43'
-      data-tooltip-content={needsTooltip ? text : undefined}
-      data-tooltip-id={needsTooltip ? globalIDs.tooltip : undefined}
+      data-tooltip-id={needsTooltip ? globalIDs.value_tooltip : undefined}
+      onPointerEnter={needsTooltip ? () => setActiveTooltipText(text) : undefined}
     >
       {truncateToLastWord(text, VALUE_TRUNCATE)}
     </div>

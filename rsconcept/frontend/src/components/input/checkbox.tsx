@@ -30,7 +30,7 @@ export function Checkbox({
   disabled,
   label,
   title,
-  titleHtml,
+
   hideTitle,
   className,
   value,
@@ -60,8 +60,7 @@ export function Checkbox({
         className
       )}
       onClick={handleClick}
-      data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}
-      data-tooltip-html={titleHtml}
+      data-tooltip-id={!!title ? globalIDs.tooltip : undefined}
       data-tooltip-content={title}
       data-tooltip-hidden={hideTitle}
       disabled={disabled}

@@ -176,7 +176,8 @@ export function ToolbarSchema({
         <Dropdown isOpen={isOpen} margin='mt-0.5'>
           <DropdownButton
             text='Упорядочить список'
-            titleHtml='Упорядочить список, исходя из <br/>логики типов и связей конституент'
+            title='Упорядочить список, исходя из
+логики типов и связей конституент'
             aria-label='Упорядочить список, исходя из логики типов и связей конституент'
             icon={<IconSortList size='1rem' className='icon-primary' />}
             onClick={handleRestoreOrder}
@@ -184,7 +185,8 @@ export function ToolbarSchema({
           />
           <DropdownButton
             text='Порядковые имена'
-            titleHtml='Присвоить порядковые имена <br/>и обновить выражения'
+            title='Присвоить порядковые имена
+и обновить выражения'
             aria-label='Присвоить порядковые имена и обновить выражения'
             icon={<IconGenerateNames size='1rem' className='icon-primary' />}
             onClick={handleReindex}

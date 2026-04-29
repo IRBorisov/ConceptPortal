@@ -18,7 +18,7 @@ export function SelectorButton({
   text,
   icon,
   title,
-  titleHtml,
+
   className,
   hideTitle,
   ...restProps
@@ -35,8 +35,7 @@ export function SelectorButton({
         'cc-hover-pulse cc-animate-color ',
         className
       )}
-      data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}
-      data-tooltip-html={titleHtml}
+      data-tooltip-id={!!title ? globalIDs.tooltip : undefined}
       data-tooltip-content={title}
       data-tooltip-hidden={hideTitle}
       {...restProps}

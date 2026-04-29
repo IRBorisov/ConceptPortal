@@ -137,17 +137,17 @@ export function ToolbarOssGraph({
     >
       <div className='cc-icons'>
         <MiniButton
-          titleHtml={prepareTooltip('Сбросить изменения', 'Z')}
+          title={prepareTooltip('Сбросить изменения', 'Z')}
           icon={<IconReset size='1.25rem' className='icon-primary' />}
           onClick={handleResetPositions}
         />
         <MiniButton
-          titleHtml={prepareTooltip('Сбросить вид', 'G')}
+          title={prepareTooltip('Сбросить вид', 'G')}
           icon={<IconFitImage size='1.25rem' className='icon-primary' />}
           onClick={handleFitView}
         />
         <MiniButton
-          titleHtml={prepareTooltip('Панель содержания', 'V')}
+          title={prepareTooltip('Панель содержания', 'V')}
           icon={<IconShowSidebar value={showSidePanel} isBottom={false} size='1.25rem' />}
           onClick={handleShowSidePanel}
         />
@@ -186,7 +186,7 @@ export function ToolbarOssGraph({
         <div className='cc-icons items-start'>
           <MiniButton
             aria-label='Сохранить изменения'
-            titleHtml={prepareTooltip('Сохранить изменения', isMac() ? 'Cmd + S' : 'Ctrl + S')}
+            title={prepareTooltip('Сохранить изменения', isMac() ? 'Cmd + S' : 'Ctrl + S')}
             hideTitle={isMenuOpen}
             icon={<IconSave size='1.25rem' className='icon-primary' />}
             onClick={handleSavePositions}
@@ -194,7 +194,7 @@ export function ToolbarOssGraph({
           />
           <MiniButton
             aria-label='Редактировать выбранную'
-            titleHtml={prepareTooltip('Редактировать выбранную', isIOS() ? '' : 'Правый клик')}
+            title={prepareTooltip('Редактировать выбранную', isIOS() ? '' : 'Правый клик')}
             hideTitle={isContextMenuOpen || isMenuOpen}
             icon={<IconEdit2 size='1.25rem' className='icon-primary' />}
             onClick={handleEditItem}
@@ -211,25 +211,25 @@ export function ToolbarOssGraph({
             <Dropdown isOpen={isMenuOpen} className='-translate-x-1/2'>
               <DropdownButton
                 text='Новый блок'
-                titleHtml={prepareTooltip('Новый блок', '1')}
+                title={prepareTooltip('Новый блок', '1')}
                 icon={<IconConceptBlock size='1.25rem' className='text-constructive' />}
                 onClick={handleCreateBlock}
               />
               <DropdownButton
                 text='Новая КС'
-                titleHtml={prepareTooltip('Новая концептуальная схема', '2')}
+                title={prepareTooltip('Новая концептуальная схема', '2')}
                 icon={<IconNewItem size='1.25rem' className='text-constructive' />}
                 onClick={handleCreateSchema}
               />
               <DropdownButton
                 text='Импорт КС'
-                titleHtml={prepareTooltip('Импорт концептуальной схемы', '3')}
+                title={prepareTooltip('Импорт концептуальной схемы', '3')}
                 icon={<IconDownload size='1.25rem' className='text-primary' />}
                 onClick={handleImportSchema}
               />
               <DropdownButton
                 text='Синтез'
-                titleHtml={prepareTooltip('Синтез концептуальных схем', '4')}
+                title={prepareTooltip('Синтез концептуальных схем', '4')}
                 icon={<IconSynthesis size='1.25rem' className='text-primary' />}
                 onClick={handleCreateSynthesis}
               />
@@ -237,7 +237,7 @@ export function ToolbarOssGraph({
                 <DropdownButton
                   disabled
                   text='Фильтр'
-                  titleHtml={prepareTooltip('Фильтрация конституент', '5')}
+                  title={prepareTooltip('Фильтрация конституент', '5')}
                   icon={<IconFilter size='1.25rem' className='icon-primary' />}
                   onClick={notImplemented}
                 />
@@ -246,7 +246,7 @@ export function ToolbarOssGraph({
                 <DropdownButton
                   disabled
                   text='Релятивизация'
-                  titleHtml={prepareTooltip('Релятивизация концептуальных схем', '6')}
+                  title={prepareTooltip('Релятивизация концептуальных схем', '6')}
                   icon={<IconClustering size='1.25rem' className='icon-primary' />}
                   onClick={notImplemented}
                 />
@@ -255,7 +255,7 @@ export function ToolbarOssGraph({
           </div>
           <MiniButton
             aria-label='Удалить выбранную'
-            titleHtml={prepareTooltip('Удалить выбранную', 'Delete, `')}
+            title={prepareTooltip('Удалить выбранную', 'Delete, `')}
             hideTitle={isMenuOpen}
             icon={<IconDestroy size='1.25rem' className='icon-red' />}
             onClick={handleDeleteSelected}

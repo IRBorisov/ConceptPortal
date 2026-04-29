@@ -26,7 +26,7 @@ export function MiniButton({
   noPadding,
   tabIndex,
   title,
-  titleHtml,
+
   hideTitle,
   type = 'button',
   className,
@@ -45,8 +45,7 @@ export function MiniButton({
         !noPadding && 'p-1',
         className
       )}
-      data-tooltip-id={!!title || !!titleHtml ? globalIDs.tooltip : undefined}
-      data-tooltip-html={titleHtml}
+      data-tooltip-id={!!title ? globalIDs.tooltip : undefined}
       data-tooltip-content={title}
       data-tooltip-hidden={hideTitle}
       aria-label={title}

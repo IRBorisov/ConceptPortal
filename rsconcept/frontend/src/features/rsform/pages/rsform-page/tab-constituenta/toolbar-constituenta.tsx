@@ -69,7 +69,7 @@ export function ToolbarConstituenta({
       {isContentEditable && activeCst ? (
         <>
           <MiniButton
-            titleHtml={prepareTooltip('Сохранить изменения', isMac() ? 'Cmd + S' : 'Ctrl + S')}
+            title={prepareTooltip('Сохранить изменения', isMac() ? 'Cmd + S' : 'Ctrl + S')}
             aria-label='Сохранить изменения'
             icon={<IconSave size='1.25rem' className='icon-primary' />}
             onClick={onSubmit}
@@ -88,7 +88,7 @@ export function ToolbarConstituenta({
             disabled={!isContentEditable || isProcessing}
           />
           <MiniButton
-            titleHtml={isModified ? tooltipText.unsaved : prepareTooltip('Клонировать конституенту', 'Alt + V')}
+            title={isModified ? tooltipText.unsaved : prepareTooltip('Клонировать конституенту', 'Alt + V')}
             aria-label='Клонировать конституенту'
             icon={<IconClone size='1.25rem' className='icon-green' />}
             onClick={() => void cloneCst()}
