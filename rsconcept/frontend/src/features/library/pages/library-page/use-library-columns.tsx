@@ -10,9 +10,6 @@ import { createColumnHelper } from '@/components/data-table';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { type RO } from '@/utils/meta';
 
-import { BadgeLocation } from '../../components/badge-location';
-import { useLibrarySearchStore } from '../../stores/library-search';
-
 const columnHelper = createColumnHelper<RO<LibraryItem>>();
 
 export function useLibraryColumns() {
@@ -20,23 +17,8 @@ export function useLibraryColumns() {
   const intl = useIntl();
 
   const getUserLabel = useLabelUser();
-  const folderMode = useLibrarySearchStore(state => state.folderMode);
 
   return [
-    ...(folderMode
-      ? []
-      : [
-          columnHelper.accessor('location', {
-            id: 'location',
-            header: 'Путь',
-            size: 50,
-            minSize: 50,
-            maxSize: 50,
-            enableSorting: true,
-            cell: props => <BadgeLocation location={props.getValue()} />,
-            sortingFn: 'text'
-          })
-        ]),
     columnHelper.accessor('alias', {
       id: 'alias',
       header: 'Сокращение',

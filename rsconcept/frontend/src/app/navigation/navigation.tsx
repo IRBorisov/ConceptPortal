@@ -135,33 +135,33 @@ export function Navigation() {
             <NavigationButton
               text='Песочница'
               title='Демонстрационная среда для незарегистрированных пользователей'
-              icon={<IconSandbox size='1.5rem' />}
+              icon={<IconSandbox size='1.25rem' />}
               onClick={navigateSandbox}
             />
           ) : (
             <div ref={createRef} onBlur={handleCreateBlur} className='relative'>
-              <NavigationButton text='Создать' icon={<IconNewItem2 size='1.5rem' />} onClick={toggleCreate} />
+              <NavigationButton text='Создать' icon={<IconNewItem2 size='1.25rem' />} onClick={toggleCreate} />
               <Dropdown isOpen={isCreateOpen} margin='mt-2'>
                 <DropdownButton
-                  text='Создать концептуальную схему'
+                  text='Концептуальную схему'
                   icon={<IconRSForm size='1rem' className='icon-green' />}
                   onClick={navigateCreateSchema}
                 />
                 <DropdownButton
-                  text='Создать концептуальную модель'
+                  text='Концептуальную модель'
                   icon={<IconRSModel size='1rem' className='text-accent-orange' />}
                   onClick={navigateCreateModel}
                 />
                 <DropdownButton
-                  text='Создать операционную схему'
+                  text='Операционную схему'
                   icon={<IconOSS size='1rem' className='icon-primary' />}
                   onClick={navigateCreateOSS}
                 />
               </Dropdown>
             </div>
           )}
-          <NavigationButton text='Библиотека' icon={<IconLibrary2 size='1.5rem' />} onClick={navigateLibrary} />
-          <NavigationButton text='Справка' icon={<IconManuals size='1.5rem' />} onClick={navigateHelp} />
+          <NavigationButton text='Библиотека' icon={<IconLibrary2 size='1.25rem' />} onClick={navigateLibrary} />
+          <NavigationButton text='Справка' icon={<IconManuals size='1.25rem' />} onClick={navigateHelp} />
 
           <MenuAI />
           <MenuUser />

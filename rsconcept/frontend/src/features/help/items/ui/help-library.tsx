@@ -7,9 +7,8 @@ import {
   IconFolderEdit,
   IconFolderEmpty,
   IconFolderOpened,
-  IconLeftClose,
   IconOSS,
-  IconRSForm,
+  IconRSModel,
   IconSearch,
   IconShow,
   IconSortAsc,
@@ -25,29 +24,23 @@ import { HelpTopic } from '../../models/help-topic';
 export function HelpLibrary() {
   return (
     <div>
-      <h1>Библиотека схем</h1>
-      <p className='m-0'>
-        В библиотеке собраны <IconRSForm size='1rem' className='inline-icon' />{' '}
-        <LinkTopic text='концептуальные схемы' topic={HelpTopic.CC_SYSTEM} /> (КС) <br />и
-        <IconOSS size='1rem' className='inline-icon' />{' '}
-        <LinkTopic text='операционные схемы синтеза' topic={HelpTopic.CC_OSS} /> (ОСС).
-      </p>
-
+      <h1>Библиотека</h1>
       <ul>
         <li>
-          <span className='text-accent-green-foreground'>зеленым </span> выделены ОСС
+          <span className='text-accent-green-foreground'>зеленым </span> выделены{' '}
+          <IconOSS size='1rem' className='inline-icon' />{' '}
+          <LinkTopic text='операционные схемы' topic={HelpTopic.CC_OSS} />
         </li>
         <li>
-          <span className='text-accent-orange-foreground'>оранжевым </span> выделены модели
+          <span className='text-accent-orange-foreground'>оранжевым </span> выделены{' '}
+          <IconRSModel size='1rem' className='inline-icon' />{' '}
+          <LinkTopic text='концептуальные модели' topic={HelpTopic.CC_RSMODEL} />
         </li>
         <li>
           <kbd>клик</kbd> по строке - переход к редактированию схемы
         </li>
         <li>
           <kbd>{isMac() ? 'Cmd + клик' : 'Ctrl + клик'}</kbd> по строке откроет схему в новой вкладке
-        </li>
-        <li>
-          <IconLeftClose className='inline-icon' /> отображение Проводника
         </li>
         <li>
           <IconShow className='inline-icon' /> фильтры атрибутов применяются по клику
@@ -76,10 +69,10 @@ export function HelpLibrary() {
       <h2>Проводник</h2>
       <ul>
         <li>
-          <kbd>клик</kbd> разворачивает дерево проводника
+          <kbd>клик</kbd> по папке разворачивает дерево проводника
         </li>
         <li>
-          <kbd>двойной клик</kbd> по папке отображает справа схемы в ней
+          <kbd>клик</kbd> по строке отображает справа схемы в ней
         </li>
         <li>
           <kbd>

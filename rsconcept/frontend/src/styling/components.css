@@ -109,21 +109,6 @@
   }
 }
 
-@utility cc-side-location {
-  transition-property: width, min-width, opacity;
-  transition-duration: var(--duration-move);
-  transition-timing-function: var(--ease-bezier);
-
-  opacity: 0;
-  width: 0;
-  min-width: 0;
-
-  &.open {
-    opacity: 1;
-    width: 100%;
-  }
-}
-
 @utility cc-view-hidden-header {
   transition-property: transform;
   transition-duration: var(--duration-dropdown);

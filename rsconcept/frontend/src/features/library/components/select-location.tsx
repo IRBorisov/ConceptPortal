@@ -9,7 +9,6 @@ import { MiniButton } from '@/components/control';
 import { IconFolder, IconFolderClosed, IconFolderEmpty, IconFolderOpened } from '@/components/icons';
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
-import { useSingleAndDoubleClick } from '@/hooks/use-discriminate-clicks';
 
 import { useFolders } from '../backend/use-folders';
 import { labelFolderNode } from '../labels';
@@ -77,28 +76,17 @@ export function SelectLocation({
   function onClickFold(event: React.MouseEvent<Element>, target: FolderNode) {
     event.preventDefault();
     event.stopPropagation();
-    if (onControlClick && (event.ctrlKey || event.metaKey)) {
-      onControlClick(target);
-      return;
-    }
-    if (target.filesInside === target.filesTotal) {
-      onSelect(target);
-    } else {
-      onFoldItem(target, folded.includes(target));
-    }
+    onFoldItem(target, folded.includes(target));
   }
 
-  function onDoubleClick(event: React.MouseEvent<Element>, target: FolderNode) {
+  function onClickRow(event: React.MouseEvent<Element>, target: FolderNode) {
     event.preventDefault();
-    event.stopPropagation();
     if (onControlClick && (event.ctrlKey || event.metaKey)) {
       onControlClick(target);
       return;
     }
     onSelect(target);
   }
-
-  const { handleClick, handleDoubleClick } = useSingleAndDoubleClick(onClickFold, onDoubleClick);
 
   return (
     <div className={cn('flex flex-col cc-scroll-y', className)} style={style}>
@@ -108,18 +96,19 @@ export function SelectLocation({
             tabIndex={-1}
             key={`${prefix}${index}`}
             className={clsx(
-              !dense && 'min-h-7 sm:min-h-8',
-              'pr-3 py-1 flex items-center gap-2',
+              !dense && (item.parent ? 'min-h-7 sm:min-h-8' : 'min-h-9 sm:min-h-10'),
+              item.parent ? 'pr-3 py-1' : 'px-3 py-2',
+              'flex items-center gap-2',
               'cc-scroll-row',
               'cc-hover-bg cc-animate-color duration-fade',
               'cursor-pointer',
               'leading-3 sm:leading-4',
               'shrink-0',
+              !item.parent && 'font-controls text-muted-foreground',
               activeNode === item && 'cc-selected'
             )}
             style={{ paddingLeft: `${(item.rank > 5 ? 5 : item.rank) * 0.5 + 0.5}rem` }}
-            onClick={event => handleClick(event, item)}
-            onDoubleClick={event => handleDoubleClick(event, item)}
+            onClick={event => onClickRow(event, item)}
           >
             {item.children.size > 0 ? (
               <MiniButton
