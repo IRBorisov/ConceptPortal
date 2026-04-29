@@ -47,3 +47,19 @@
 _Add team or project-specific guidance below as needed for AI agents._
 
 ---
+
+## Agent skills
+
+### Issue tracker
+
+Issues and PRDs live as markdown under `.scratch/<feature>/`. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Canonical triage role strings match the skill defaults (see mapping table). See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: root `CONTEXT.md` and `docs/adr/`. See `docs/agents/domain.md`.
+
+---
