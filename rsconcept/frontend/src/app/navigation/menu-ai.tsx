@@ -43,7 +43,7 @@ export function MenuAI() {
         hideTitle={isMenuOpen}
         aria-expanded={isMenuOpen}
         aria-controls={globalIDs.ai_dropdown}
-        icon={<IconAssistant size='1.5rem' />}
+        icon={<IconAssistant size='1.25rem' />}
         onClick={toggleMenu}
       />
 

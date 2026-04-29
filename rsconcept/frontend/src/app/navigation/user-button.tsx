@@ -21,7 +21,7 @@ export function UserButton({ onLogin, onClickUser, isOpen }: UserButtonProps) {
     return (
       <NavigationButton
         title='Перейти на страницу логина'
-        icon={<IconLogin size='1.5rem' className='icon-primary' />}
+        icon={<IconLogin size='1.25rem' className='icon-primary' />}
         onClick={onLogin}
       />
     );
@@ -33,7 +33,7 @@ export function UserButton({ onLogin, onClickUser, isOpen }: UserButtonProps) {
         aria-haspopup='true'
         aria-expanded={isOpen}
         aria-controls={globalIDs.user_dropdown}
-        icon={<IconUser2 size='1.5rem' className={adminMode && user.is_staff ? 'icon-primary' : ''} />}
+        icon={<IconUser2 size='1.25rem' className={adminMode && user.is_staff ? 'icon-primary' : ''} />}
         onClick={onClickUser}
       />
     );

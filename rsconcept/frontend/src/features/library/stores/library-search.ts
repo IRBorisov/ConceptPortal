@@ -15,9 +15,6 @@ export type LibrarySearchSelectorFilter =
   | 'type_rsmodel';
 
 interface LibrarySearchStore {
-  folderMode: boolean;
-  toggleFolderMode: () => void;
-
   subfolders: boolean;
   toggleSubfolders: () => void;
 
@@ -42,9 +39,6 @@ interface LibrarySearchStore {
 export const useLibrarySearchStore = create<LibrarySearchStore>()(
   persist(
     set => ({
-      folderMode: true,
-      toggleFolderMode: () => set(state => ({ folderMode: !state.folderMode })),
-
       subfolders: false,
       toggleSubfolders: () => set(state => ({ subfolders: !state.subfolders })),
 
@@ -55,7 +49,7 @@ export const useLibrarySearchStore = create<LibrarySearchStore>()(
       setPath: value => set({ path: value }),
 
       location: '',
-      setLocation: value => set(!!value ? { location: value, folderMode: true } : { location: '' }),
+      setLocation: value => set(!!value ? { location: value } : { location: '' }),
 
       selectorFilter: 'all',
       setSelectorFilter: value => set({ selectorFilter: value }),
@@ -75,7 +69,6 @@ export const useLibrarySearchStore = create<LibrarySearchStore>()(
     {
       version: 2,
       partialize: state => ({
-        folderMode: state.folderMode,
         subfolders: state.subfolders,
 
         location: state.location,
@@ -99,10 +92,8 @@ export function useHasCustomFilter(): boolean {
 
 /** Utility function that returns the current library filter. */
 export function useCreateLibraryFilter(): LibraryFilter {
-  const path = useLibrarySearchStore(state => state.path);
   const query = useLibrarySearchStore(state => state.query);
   const selectorFilter = useLibrarySearchStore(state => state.selectorFilter);
-  const folderMode = useLibrarySearchStore(state => state.folderMode);
   const subfolders = useLibrarySearchStore(state => state.subfolders);
   const location = useLibrarySearchStore(state => state.location);
   const filterUser = useLibrarySearchStore(state => state.filterUser);
@@ -127,15 +118,15 @@ export function useCreateLibraryFilter(): LibraryFilter {
   }
 
   return {
-    path: path,
     query: query,
     itemType: itemType,
     isEditor: isEditor,
     isOwned: isOwned,
     isVisible: isVisible,
-    folderMode: folderMode,
+    folderMode: true,
     subfolders: subfolders,
     location: location,
+    path: '',
     filterUser: filterUser
   };
 }

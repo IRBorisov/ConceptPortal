@@ -1,7 +1,5 @@
 'use client';
 
-import clsx from 'clsx';
-
 import { type LibraryItem } from '@/domain/library';
 import { LibraryItemType } from '@/domain/library';
 
@@ -25,8 +23,6 @@ interface TableLibraryItemsProps {
 export function TableLibraryItems({ items }: TableLibraryItemsProps) {
   const router = useConceptNavigation();
   const { isSmall } = useWindowSize();
-
-  const folderMode = useLibrarySearchStore(state => state.folderMode);
   const resetFilter = useLibrarySearchStore(state => state.resetFilter);
 
   const itemsPerPage = usePreferencesStore(state => state.libraryPagination);
@@ -44,7 +40,7 @@ export function TableLibraryItems({ items }: TableLibraryItemsProps) {
       className: 'text-accent-orange-foreground'
     }
   ];
-  const tableHeight = useFitHeight('2.25rem');
+  const tableHeight = useFitHeight('5rem');
 
   function handleOpenItem(item: LibraryItem, event: React.MouseEvent<Element>) {
     const selection = window.getSelection();
@@ -69,7 +65,7 @@ export function TableLibraryItems({ items }: TableLibraryItemsProps) {
       id='library_data'
       columns={columns}
       data={items as LibraryItem[]}
-      className={clsx('cc-scroll-y h-fit text-xs sm:text-sm border-b', folderMode && 'border-l')}
+      className='cc-scroll-y h-fit text-xs sm:text-sm'
       style={{ maxHeight: tableHeight }}
       noDataComponent={
         <div className='cc-column dense p-3 items-center min-h-24'>
