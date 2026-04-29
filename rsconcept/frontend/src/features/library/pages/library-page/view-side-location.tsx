@@ -5,48 +5,22 @@ import clsx from 'clsx';
 
 import { type FolderNode } from '@/domain/library';
 
-import { useAuth } from '@/features/auth';
-import { HelpTopic } from '@/features/help';
-import { BadgeHelp } from '@/features/help/components/badge-help';
-
-import { MiniButton } from '@/components/control';
-import { IconFolderEdit } from '@/components/icons';
-import { useFitHeight } from '@/stores/app-layout';
+import { useMainHeight } from '@/stores/app-layout';
 import { prefixes } from '@/utils/constants';
 import { infoMsg } from '@/utils/labels';
 
-import { useLibrary } from '../../backend/use-library';
-import { IconShowSubfolders } from '../../components/icon-show-subfolders';
 import { SelectLocation } from '../../components/select-location';
 import { useLibrarySearchStore } from '../../stores/library-search';
 
 interface ViewSideLocationProps {
-  isVisible: boolean;
-  onRenameLocation: () => void;
+  className?: string;
 }
 
-export function ViewSideLocation({ isVisible, onRenameLocation }: ViewSideLocationProps) {
-  const { user, isAnonymous } = useAuth();
-  const { items } = useLibrary();
-
+export function ViewSideLocation({ className }: ViewSideLocationProps) {
   const location = useLibrarySearchStore(state => state.location);
   const setLocation = useLibrarySearchStore(state => state.setLocation);
-  const subfolders = useLibrarySearchStore(state => state.subfolders);
-  const toggleSubfolders = useLibrarySearchStore(state => state.toggleSubfolders);
 
-  const canRename = (() => {
-    if (location.length <= 3 || isAnonymous) {
-      return false;
-    }
-    if (user.is_staff) {
-      return true;
-    }
-    const owned = items.filter(item => item.owner == user.id);
-    const located = owned.filter(item => item.location == location || item.location.startsWith(`${location}/`));
-    return located.length !== 0;
-  })();
-
-  const maxHeight = useFitHeight('4.5rem');
+  const maxHeight = useMainHeight();
 
   function handleSelectFolder(target: FolderNode) {
     setLocation(target.getPath());
@@ -62,29 +36,14 @@ export function ViewSideLocation({ isVisible, onRenameLocation }: ViewSideLocati
   return (
     <div
       className={clsx(
-        'relative max-w-42 sm:max-w-60',
-        isVisible && 'open min-w-42 sm:min-w-60',
-        'flex flex-col text:xs sm:text-sm select-none cc-side-location'
+        'relative',
+        'border-r border-b bg-input',
+        'flex flex-col text:xs sm:text-sm select-none',
+        className
       )}
     >
-      <div className='absolute top-0 right-0 h-8 flex gap-1 justify-end items-center pr-1 pl-0.5'>
-        <MiniButton
-          titleHtml='<b>Редактирование пути</b><br/>Перемещаются только Ваши схемы<br/>в указанной папке (и подпапках)'
-          aria-label='Редактирование расположения'
-          icon={<IconFolderEdit size='1.25rem' className='icon-primary' />}
-          onClick={onRenameLocation}
-          disabled={!canRename}
-        />
-        <MiniButton
-          title={subfolders ? 'Вложенные папки: Вкл' : 'Вложенные папки: Выкл'}
-          aria-label='Переключатель отображения вложенных папок'
-          icon={<IconShowSubfolders value={subfolders} />}
-          onClick={toggleSubfolders}
-        />
-        <BadgeHelp topic={HelpTopic.UI_LIBRARY} contentClass='text-sm' offset={5} place='right-start' />
-      </div>
       <SelectLocation
-        className='cc-scroll-left cc-scroll-stable max-sm:mt-8 '
+        className='cc-scroll-left cc-scroll-stable'
         value={location}
         prefix={prefixes.folders_list}
         onSelect={handleSelectFolder}

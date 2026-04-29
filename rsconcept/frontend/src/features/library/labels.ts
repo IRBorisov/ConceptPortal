@@ -15,6 +15,17 @@ export function labelLocationHead(head: LocationHead): string {
   }
 }
 
+/** Retrieves compact breadcrumb label for {@link LocationHead}. */
+export function labelLocationHeadShort(head: LocationHead): string {
+  // prettier-ignore
+  switch (head) {
+    case LocationHead.USER: return 'Личные';
+    case LocationHead.COMMON: return 'Общие';
+    case LocationHead.LIBRARY: return 'Примеры';
+    case LocationHead.PROJECTS: return 'Проекты';
+  }
+}
+
 /** Retrieves description for {@link LocationHead}. */
 export function describeLocationHead(head: LocationHead): string {
   // prettier-ignore
@@ -31,7 +42,7 @@ export function labelFolderNode(node: FolderNode): string {
   if (node.parent || !validateLocation('/' + node.text)) {
     return node.text;
   } else {
-    return labelLocationHead(('/' + node.text) as LocationHead);
+    return labelLocationHeadShort(('/' + node.text) as LocationHead);
   }
 }
 

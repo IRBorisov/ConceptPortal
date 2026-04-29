@@ -21,11 +21,12 @@ export function NavigationButton({ icon, title, hideTitle, className, style, onC
       data-tooltip-content={title}
       onClick={onClick}
       className={cn(
-        'p-2 flex items-center gap-1 rounded-xl',
+        'p-2 flex items-center gap-2 rounded-xl',
         'cursor-pointer whitespace-nowrap',
+        'font-math font-semibold text-sm',
         'text-muted-foreground hover:text-foreground',
         'transition-colors duration-move ease-(--ease-bezier)',
-        'font-controls outline-hidden focus-outline',
+        'outline-hidden focus-outline',
         className
       )}
       style={style}
