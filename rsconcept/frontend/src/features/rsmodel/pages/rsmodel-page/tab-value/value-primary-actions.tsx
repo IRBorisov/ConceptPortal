@@ -3,7 +3,7 @@
 import { useRef } from 'react';
 import { toast } from 'react-toastify';
 
-import { type BasicBinding, type Constituenta } from '@/domain/library';
+import { type BasicBinding, type Constituenta, EvalStatus } from '@/domain/library';
 import { getStructureName, isBaseSet } from '@/domain/library/rsform-api';
 import { generateRandomValue, isInferrable, isInterpretable } from '@/domain/library/rsmodel-api';
 import { type Value } from '@/domain/rslang';
@@ -11,6 +11,7 @@ import { isSetValue, normalizeValue } from '@/domain/rslang/eval/value-api';
 import { isTypification, TypeID, type TypePath, type Typification } from '@/domain/rslang/semantic/typification';
 
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
+import { useCstStatus } from '@/features/rsmodel/hooks/use-cst-status';
 import { processBindingData, processValueData } from '@/features/rsmodel/models/data-loading';
 
 import { TextButton } from '@/components/control/text-button';
@@ -37,6 +38,7 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
 
   const { engine, isMutable } = useModelEdit();
   const { schema, isProcessing } = useSchemaEdit();
+  const cstStatus = useCstStatus(engine, activeCst);
 
   const showEditValue = useDialogsStore(state => state.showModelEditValue);
   const showViewValue = useDialogsStore(state => state.showModelViewValue);
@@ -69,7 +71,12 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
   const showValueButton = hasValueDialog;
   const showExportMenu = valuePayload != null;
   const showImportMenu = !isImportDisabled;
-  const showRandomButton = isMutable && !cstInferrable && !!typification && isTypification(typification);
+  const showRandomButton =
+    isMutable &&
+    !cstInferrable &&
+    !!typification &&
+    isTypification(typification) &&
+    cstStatus !== EvalStatus.INVALID_DATA;
   const showClearButton =
     isMutable && !cstInferrable && valuePayload !== null && !(Array.isArray(valuePayload) && valuePayload.length === 0);
 

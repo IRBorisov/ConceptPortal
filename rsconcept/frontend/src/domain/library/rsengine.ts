@@ -60,11 +60,14 @@ export class RSEngine {
 
   /** Updates data for {@link RSEngine}. */
   public loadData(schema: RSForm, model: RSModel): void {
-    const newSchema = this.schema !== schema;
+    const oldSchema = this.schema;
+    const newSchema = oldSchema !== schema;
     this.schema = schema;
     if (newSchema) {
+      const changedCst = this.collectChanged(oldSchema, schema);
       this.prepareAst();
       this.setupEmptySets();
+      this.onChangeDefinitions(changedCst);
     }
     if (this.data !== model) {
       this.data = model;
@@ -442,6 +445,36 @@ export class RSEngine {
         }
       }
     }
+  }
+
+  private collectChanged(previousSchema: RSForm | null, nextSchema: RSForm): number[] {
+    if (!previousSchema) {
+      return [];
+    }
+    const changedIDs: number[] = [];
+    for (const cst of nextSchema.items) {
+      const prev = previousSchema.cstByID.get(cst.id);
+      if (prev && prev.definition_formal !== cst.definition_formal) {
+        changedIDs.push(cst.id);
+      }
+    }
+    return changedIDs;
+  }
+
+  private onChangeDefinitions(cstIDs: number[]): void {
+    if (!this.schema || cstIDs.length === 0) {
+      return;
+    }
+    for (const cstID of cstIDs) {
+      const cst = this.schema.cstByID.get(cstID);
+      if (!cst || !isInferrable(cst.cst_type)) {
+        continue;
+      }
+      this.calculatedSet.delete(cstID);
+      this.calculator.resetValue(cst.alias);
+      this.notifyCst(cstID);
+    }
+    this.cascadeReset(cstIDs);
   }
 
   private cascadeReset(cstIDs: number[]): void {
