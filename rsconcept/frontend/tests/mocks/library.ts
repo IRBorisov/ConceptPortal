@@ -1,6 +1,6 @@
 import { type Page } from '@playwright/test';
 
-import { type LibraryItem } from '../../src/features/library/backend/types';
+import { type LibraryItem } from '../../src/domain/library';
 import { BACKEND_URL } from './constants';
 
 export const dataLibraryItems: LibraryItem[] = [];

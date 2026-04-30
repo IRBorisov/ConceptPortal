@@ -42,7 +42,7 @@ jobs:
         run: |
           npm run lint
           npm test
-          npm run test:e2e
+          npm run test:e2e:ci
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
