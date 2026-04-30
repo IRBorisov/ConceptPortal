@@ -154,6 +154,8 @@ export function describeRSError(code: RSErrorCode, params: readonly string[] = [
       return `Несогласованные скобки: '${params[0]}' вместо '${params[1]}'`;
     case RSErrorCode.doubleParenthesis:
       return "Двойные обрамляющие скобки '((' и '))' не допускаются";
+    case RSErrorCode.missingOpenBracket:
+      return `Пропущена открывающая скобка '${params[0]}'`;
     case RSErrorCode.expectedLocal:
       return 'Ожидалось имя переменной';
     case RSErrorCode.expectedType:

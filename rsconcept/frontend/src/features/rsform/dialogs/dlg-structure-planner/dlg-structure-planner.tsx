@@ -16,8 +16,9 @@ import { ModalView } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useValueTooltipStore } from '@/stores/value-tooltip';
 import { globalIDs } from '@/utils/constants';
+import { prepareTooltip } from '@/utils/format';
 import { type RO } from '@/utils/meta';
-import { promptUnsaved } from '@/utils/utils';
+import { isMac, promptUnsaved } from '@/utils/utils';
 
 import { loadRSForm } from '../../backend/rsform-loader';
 import {
@@ -82,6 +83,13 @@ export function DlgStructurePlanner() {
 
   function resetTerm() {
     setTerm(selectedCst?.term_raw ?? '');
+  }
+
+  function submitSelectedNode() {
+    if (!isMutable || !isDirty || term === '') {
+      return;
+    }
+    void saveTerm(selectedNode);
   }
 
   async function saveTerm(node: SPNode): Promise<void> {
@@ -161,13 +169,17 @@ export function DlgStructurePlanner() {
               resolved={selectedCst?.term_resolved ?? ''}
               disabled={!isMutable}
               onChange={setTerm}
+              onModEnter={submitSelectedNode}
             />
           </div>
 
           {isMutable ? (
             <div className={clsx('cc-icons pt-5 pb-3.25 rounded-br-2xl rounded-tr-2xl', blurClass)}>
               <MiniButton
-                title={selectedCst ? 'Обновить термин' : 'Создать конституенту'}
+                title={prepareTooltip(
+                  selectedCst ? 'Обновить термин' : 'Создать конституенту',
+                  isMac() ? 'Cmd + Enter' : 'Ctrl + Enter'
+                )}
                 icon={
                   selectedCst ? (
                     <IconSave size='1.25rem' className='icon-primary' />
@@ -175,7 +187,7 @@ export function DlgStructurePlanner() {
                     <IconNewItem size='1.25rem' className='icon-green' />
                   )
                 }
-                onClick={() => void saveTerm(selectedNode)}
+                onClick={submitSelectedNode}
                 disabled={!isDirty || term === ''}
               />
               <MiniButton

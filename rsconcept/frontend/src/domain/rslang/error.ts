@@ -33,6 +33,7 @@ export const RSErrorCode = {
   missingSquareBracket: 0x8408, // 33800
   bracketMismatch: 0x8409, // 33801
   doubleParenthesis: 0x840a, // 33802
+  missingOpenBracket: 0x840b, // 33803
   expectedLocal: 0x8415, // 33813
   expectedType: 0x8416, // 33814
 

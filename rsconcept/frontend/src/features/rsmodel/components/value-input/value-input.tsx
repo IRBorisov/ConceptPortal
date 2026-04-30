@@ -104,7 +104,7 @@ export function ValueInput({
               className={clsx('ml-auto select-none', isTrimmed && 'text-destructive')}
               aria-label='Количество символов'
               data-tooltip-id={globalIDs.tooltip}
-              data-tooltip-content={'Отображаемое количество\nсимволов ограничено'}
+              data-tooltip-content='Отображаемое количество\nсимволов ограничено'
             >
               {`${formatInteger(value.length)} / ${formatInteger(limits.len_data_str)}`}
             </div>

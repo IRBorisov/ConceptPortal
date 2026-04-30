@@ -92,7 +92,7 @@ export function FormOSS({ className }: FormOSSProps) {
         void form.handleSubmit();
       }}
     >
-      <h2 className='mb-2 select-none'>Операционная система</h2>
+      <h2 className='mb-2 select-none font-math'>Операционная система</h2>
       <form.Field name='title'>
         {field => (
           <TextInput

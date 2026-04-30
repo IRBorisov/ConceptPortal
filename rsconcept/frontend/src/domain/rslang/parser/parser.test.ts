@@ -75,6 +75,7 @@ const testErrorData = [
   ['∀∈X1 (1=1)', { code: RSErrorCode.expectedLocal, from: 1, to: 1 }],
   ['∀σ∈S2 ∀(ξ,δ,π)∈σ (ξ∈δ & δ∈{pr1(π), pr2(π)}', { code: RSErrorCode.missingParenthesis, from: 42, to: 42 }],
   ['Fi1[X1) (X1)', { code: RSErrorCode.bracketMismatch, from: 6, to: 7, params: [']', ')'] }],
+  [')X1', { code: RSErrorCode.missingOpenBracket, from: 0, to: 1, params: ['('] }],
   ['Fi1[X1(X1)', { code: RSErrorCode.missingSquareBracket, from: 10, to: 10 }]
 ];
 

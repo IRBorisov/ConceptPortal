@@ -96,7 +96,7 @@ export function FormRSModel({ className }: FormRSModelProps) {
         void form.handleSubmit();
       }}
     >
-      <h2 className='mb-2 select-none'>Концептуальная модель</h2>
+      <h2 className='mb-2 select-none font-math'>Концептуальная модель</h2>
       <form.Field name='title'>
         {field => (
           <TextInput

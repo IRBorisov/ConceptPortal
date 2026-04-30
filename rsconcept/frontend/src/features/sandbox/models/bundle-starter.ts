@@ -5,13 +5,7 @@ import { CstType } from '@/domain/library/rsform';
 import { type RSFormDTO } from '@/features/rsform/backend/types';
 import { type RSModelDTO } from '@/features/rsmodel/backend/types';
 
-import {
-  SANDBOX_BUNDLE_FORMAT_VERSION,
-  type SandboxBundle,
-  STARTER_CST_ID,
-  STARTER_MODEL_ID,
-  STARTER_SCHEMA_ID
-} from './bundle';
+import { SANDBOX_BUNDLE_FORMAT_VERSION, type SandboxBundle, STARTER_MODEL_ID, STARTER_SCHEMA_ID } from './bundle';
 
 function libraryBase(
   id: number,
@@ -54,43 +48,426 @@ function libraryBase(
 export function createStarterSandboxBundle(): SandboxBundle {
   const now = new Date().toISOString();
   const rsform: RSFormDTO = {
-    ...libraryBase(STARTER_SCHEMA_ID, LibraryItemType.RSFORM, 'КС Демонстрация', 'Демонстрационная схема', now),
+    ...libraryBase(STARTER_SCHEMA_ID, LibraryItemType.RSFORM, 'Демо', 'Демонстрационная схема', now),
     is_produced: false,
     editors: [],
     version: SANDBOX_BUNDLE_FORMAT_VERSION,
     versions: [],
     items: [
       {
-        id: STARTER_CST_ID,
+        id: 27848,
         alias: 'X1',
-        convention: '',
+        convention: 'Сотрудники некоторой организации в рассматриваемую дату',
         crucial: false,
         cst_type: CstType.BASE,
         definition_formal: '',
         definition_raw: '',
         definition_resolved: '',
-        term_raw: '',
-        term_resolved: '',
+        term_raw: 'сотрудники',
+        term_resolved: 'сотрудники',
+        term_forms: []
+      },
+      {
+        id: 27849,
+        alias: 'X2',
+        convention: 'Профессиональные навыки, которые возможно объективно подтвердить',
+        crucial: false,
+        cst_type: CstType.BASE,
+        definition_formal: '',
+        definition_raw: '',
+        definition_resolved: '',
+        term_raw: 'компетенции',
+        term_resolved: 'компетенции',
+        term_forms: []
+      },
+      {
+        id: 27850,
+        alias: 'S1',
+        convention: 'Иерархия подчинения в организации согласно утвержденному внутреннему нормативному документу',
+        crucial: false,
+        cst_type: CstType.STRUCTURED,
+        definition_formal: 'ℬ(X1×X1)',
+        definition_raw: 'множество пар начальник - подчиненный',
+        definition_resolved: 'множество пар начальник - подчиненный',
+        term_raw: 'подчинения',
+        term_resolved: 'подчинения',
+        term_forms: []
+      },
+      {
+        id: 27852,
+        alias: 'D1',
+        convention: '',
+        crucial: false,
+        cst_type: CstType.TERM,
+        definition_formal: 'Pr1(S1)',
+        definition_raw: '',
+        definition_resolved: '',
+        term_raw: 'начальники',
+        term_resolved: 'начальники',
+        term_forms: []
+      },
+      {
+        id: 27853,
+        alias: 'D2',
+        convention: '',
+        crucial: false,
+        cst_type: CstType.TERM,
+        definition_formal: 'Pr2(S1)',
+        definition_raw: '',
+        definition_resolved: '',
+        term_raw: 'подчиненные',
+        term_resolved: 'подчиненные',
+        term_forms: []
+      },
+      {
+        id: 27920,
+        alias: 'D3',
+        convention: '',
+        crucial: false,
+        cst_type: CstType.TERM,
+        definition_formal: 'D1\\D2',
+        definition_raw: '',
+        definition_resolved: '',
+        term_raw: 'начальники верхнего уровня',
+        term_resolved: 'начальники верхнего уровня',
+        term_forms: []
+      },
+      {
+        id: 27917,
+        alias: 'F1',
+        convention: '',
+        crucial: false,
+        cst_type: CstType.FUNCTION,
+        definition_formal: '[α∈ℬ(X1)] Pr2(Fi1[α](S1))',
+        definition_raw: '',
+        definition_resolved: '',
+        term_raw: 'прямые подчиненные данного набора @{X1|plur,gent}',
+        term_resolved: 'прямые подчиненные данного набора сотрудников',
+        term_forms: []
+      },
+      {
+        id: 27918,
+        alias: 'F2',
+        convention: '',
+        crucial: false,
+        cst_type: CstType.FUNCTION,
+        definition_formal: '[α∈ℬ(X1)] R{ξ:=α | ξ∪F1[ξ]}\\α',
+        definition_raw: '',
+        definition_resolved: '',
+        term_raw: 'все подчиненные данного набора @{X1|plur,gent}',
+        term_resolved: 'все подчиненные данного набора сотрудников',
+        term_forms: []
+      },
+      {
+        id: 27921,
+        alias: 'A1',
+        convention: '',
+        crucial: false,
+        cst_type: CstType.AXIOM,
+        definition_formal: 'card(Pr1(S1))=card(D2)',
+        definition_raw: '',
+        definition_resolved: '',
+        term_raw: 'принцип единоначалия',
+        term_resolved: 'принцип единоначалия',
+        term_forms: []
+      },
+      {
+        id: 27851,
+        alias: 'S2',
+        convention:
+          'Данные из карточек сотрудников подтвержденные установленными способами в зависимости от конкретной компетенции',
+        crucial: false,
+        cst_type: CstType.STRUCTURED,
+        definition_formal: 'ℬ(X1×X2)',
+        definition_raw: '',
+        definition_resolved: '',
+        term_raw: 'сотрудник обладает компетенцией',
+        term_resolved: 'сотрудник обладает компетенцией',
+        term_forms: []
+      },
+      {
+        id: 27855,
+        alias: 'D4',
+        convention: '',
+        crucial: false,
+        cst_type: CstType.TERM,
+        definition_formal: 'Pr2(S2)',
+        definition_raw: '',
+        definition_resolved: '',
+        term_raw: 'доступные компетенции',
+        term_resolved: 'доступные компетенции',
+        term_forms: []
+      },
+      {
+        id: 27854,
+        alias: 'D5',
+        convention: '',
+        crucial: false,
+        cst_type: CstType.TERM,
+        definition_formal: 'Pr1(S2)',
+        definition_raw: '',
+        definition_resolved: '',
+        term_raw: 'сотрудники, обладающие компетенциями',
+        term_resolved: 'сотрудники, обладающие компетенциями',
+        term_forms: []
+      },
+      {
+        id: 27922,
+        alias: 'D6',
+        convention: '',
+        crucial: false,
+        cst_type: CstType.TERM,
+        definition_formal: 'X1\\D5',
+        definition_raw: '',
+        definition_resolved: '',
+        term_raw: '@{X1|plur,nomn}, не обладающие @{X2|plur,gent}',
+        term_resolved: 'сотрудники, не обладающие компетенций',
+        term_forms: []
+      },
+      {
+        id: 27919,
+        alias: 'F3',
+        convention: '',
+        crucial: false,
+        cst_type: CstType.FUNCTION,
+        definition_formal: '[α∈ℬ(X1)] Pr2(Fi1[α](S2))',
+        definition_raw: '',
+        definition_resolved: '',
+        term_raw: 'персональные компетенции данного набора @{X1|plur,gent}',
+        term_resolved: 'персональные компетенции данного набора сотрудников',
+        term_forms: []
+      },
+      {
+        id: 27928,
+        alias: 'F5',
+        convention: '',
+        crucial: false,
+        cst_type: CstType.FUNCTION,
+        definition_formal: '[α∈X1] Pr2(Fi1[{α}](S2))',
+        definition_raw: '',
+        definition_resolved: '',
+        term_raw: 'персональные компетенции данного @{X1|sing,gent}',
+        term_resolved: 'персональные компетенции данного сотрудника',
+        term_forms: []
+      },
+      {
+        id: 27923,
+        alias: 'F4',
+        convention: '',
+        crucial: false,
+        cst_type: CstType.FUNCTION,
+        definition_formal: '[α∈X1] F3[{α}∪F2[{α}]]',
+        definition_raw: 'компетенции человека и его прямых подчиненных',
+        definition_resolved: 'компетенции человека и его прямых подчиненных',
+        term_raw: 'прямые компетенции данного человека',
+        term_resolved: 'прямые компетенции данного человека',
+        term_forms: []
+      },
+      {
+        id: 27925,
+        alias: 'D8',
+        convention: '',
+        crucial: false,
+        cst_type: CstType.TERM,
+        definition_formal: 'D{(ξ1,ξ2)∈X1×X1 | F5[ξ2]⊆F5[ξ1]}',
+        definition_raw:
+          'отношение частичного нестрогого порядка персональных компетенций, построенное по принципу один сотрудник имеет все компетенции другого сотрудника',
+        definition_resolved:
+          'отношение частичного нестрогого порядка персональных компетенций, построенное по принципу один сотрудник имеет все компетенции другого сотрудника',
+        term_raw: 'доминирование сотрудников по компетенциям',
+        term_resolved: 'доминирование сотрудников по компетенциям',
+        term_forms: []
+      },
+      {
+        id: 27929,
+        alias: 'D9',
+        convention: '',
+        crucial: false,
+        cst_type: CstType.TERM,
+        definition_formal: 'S1∩D8',
+        definition_raw: 'подчинения, в которых начальных обладает всеми компетенциями подчиненного',
+        definition_resolved: 'подчинения, в которых начальных обладает всеми компетенциями подчиненного',
+        term_raw: 'доминирующие подчинения по компетенциям',
+        term_resolved: 'доминирующие подчинения по компетенциям',
+        term_forms: []
+      },
+      {
+        id: 27931,
+        alias: 'D11',
+        convention: '',
+        crucial: false,
+        cst_type: CstType.TERM,
+        definition_formal: 'S1∩Pr2,1(D8)',
+        definition_raw: 'подчинения, в которых подчиненных обладает всеми компетенциями начальника',
+        definition_resolved: 'подчинения, в которых подчиненных обладает всеми компетенциями начальника',
+        term_raw: 'доминированные подчинения по компетенциям',
+        term_resolved: 'доминированные подчинения по компетенциям',
+        term_forms: []
+      },
+      {
+        id: 27930,
+        alias: 'D10',
+        convention: '',
+        crucial: false,
+        cst_type: CstType.TERM,
+        definition_formal: 'D{(ξ1,ξ2)∈S1 | F5[ξ1]∩F5[ξ2]=∅}',
+        definition_raw: '',
+        definition_resolved: '',
+        term_raw: 'подчинения, разобщенные по компетонтностям',
+        term_resolved: 'подчинения, разобщенные по компетонтностям',
+        term_forms: []
+      },
+      {
+        id: 27932,
+        alias: 'S3',
+        convention:
+          'количество сотрудников, которыми данная компетенция позволяет эффективно руководить согласно статистическим данным',
+        crucial: false,
+        cst_type: CstType.STRUCTURED,
+        definition_formal: 'ℬ(X2×Z)',
+        definition_raw: '',
+        definition_resolved: '',
+        term_raw: 'мощность руководящих компетенций',
+        term_resolved: 'мощность руководящих компетенций',
+        term_forms: []
+      },
+      {
+        id: 27933,
+        alias: 'D12',
+        convention: '',
+        crucial: false,
+        cst_type: CstType.TERM,
+        definition_formal: 'Pr1(S3)',
+        definition_raw: '',
+        definition_resolved: '',
+        term_raw: 'руководящие компетенции',
+        term_resolved: 'руководящие компетенции',
+        term_forms: []
+      },
+      {
+        id: 27936,
+        alias: 'F6',
+        convention: '',
+        crucial: false,
+        cst_type: CstType.FUNCTION,
+        definition_formal: '[σ∈ℬ(Z)] debool(D{ξ∈σ | ∀α∈σ α ≥ ξ} ∪ I{0 | σ=∅})',
+        definition_raw: '',
+        definition_resolved: '',
+        term_raw: 'минимум набора чисел',
+        term_resolved: 'минимум набора чисел',
+        term_forms: []
+      },
+      {
+        id: 27935,
+        alias: 'F7',
+        convention: '',
+        crucial: false,
+        cst_type: CstType.FUNCTION,
+        definition_formal: '[α∈X1] debool(I{γ | ω:=F5[α]; σ:=Fi1[ω](S3); γ:=F6[Pr2(σ)]})',
+        definition_raw: 'минимум из мощностей персональных руководящих компетенций данного сотрудника',
+        definition_resolved: 'минимум из мощностей персональных руководящих компетенций данного сотрудника',
+        term_raw: 'потенциал данного @{X1|sing,gent} как руководителя',
+        term_resolved: 'потенциал данного сотрудника как руководителя',
+        term_forms: []
+      },
+      {
+        id: 27937,
+        alias: 'D13',
+        convention: '',
+        crucial: false,
+        cst_type: CstType.TERM,
+        definition_formal: 'I{(σ, F7[σ]) | σ:∈X1}',
+        definition_raw: '',
+        definition_resolved: '',
+        term_raw: 'потенциалы руководства сотрудников',
+        term_resolved: 'потенциалы руководства сотрудников',
         term_forms: []
       }
     ],
     attribution: [],
     inheritance: [],
     oss: [],
-    models: [{ id: STARTER_MODEL_ID, alias: 'КМ Демонстрация' }]
+    models: [{ id: STARTER_MODEL_ID, alias: 'MДемо' }]
   };
 
   const model: RSModelDTO = {
-    ...libraryBase(STARTER_MODEL_ID, LibraryItemType.RSMODEL, 'КМ Демонстрация', 'Демонстрационная модель', now),
+    ...libraryBase(STARTER_MODEL_ID, LibraryItemType.RSMODEL, 'MДемо', 'Демонстрационная модель', now),
+    owner: 2,
     editors: [],
     schema: STARTER_SCHEMA_ID,
-    items: []
+    items: [
+      {
+        id: 27932,
+        type: 'ℬ(X1×X1)',
+        value: [
+          [-111, 1, 3],
+          [-111, 2, 5]
+        ]
+      },
+      {
+        id: 27848,
+        type: 'basic',
+        value: {
+          1: 'Василий',
+          2: 'Петр',
+          3: 'Светлана',
+          4: 'Ольга',
+          5: 'Иван',
+          6: 'Пафнутий',
+          7: 'Дмитрий',
+          8: 'Ирина'
+        }
+      },
+      {
+        id: 27851,
+        type: 'ℬ(X1×X1)',
+        value: [
+          [-111, 1, 1],
+          [-111, 1, 4],
+          [-111, 2, 3],
+          [-111, 2, 4],
+          [-111, 3, 1],
+          [-111, 3, 5],
+          [-111, 5, 2],
+          [-111, 5, 4],
+          [-111, 6, 2],
+          [-111, 7, 1],
+          [-111, 7, 2],
+          [-111, 8, 1],
+          [-111, 8, 6]
+        ]
+      },
+      {
+        id: 27849,
+        type: 'basic',
+        value: {
+          1: 'Формулировать задачи',
+          2: 'Вести подзадачи',
+          3: 'Крутить',
+          4: 'Катать',
+          5: 'Таскать',
+          6: 'Собирать',
+          7: 'Разбирать'
+        }
+      },
+      {
+        id: 27850,
+        type: 'ℬ(X1×X1)',
+        value: [
+          [-111, 1, 7],
+          [-111, 6, 4],
+          [-111, 7, 1],
+          [-111, 7, 3],
+          [-111, 8, 7]
+        ]
+      }
+    ]
   };
 
   return {
     formatVersion: SANDBOX_BUNDLE_FORMAT_VERSION,
     meta: {
-      nextId: STARTER_CST_ID + rsform.items.length,
+      nextId: 27938,
       updatedAt: now
     },
     schema: rsform,

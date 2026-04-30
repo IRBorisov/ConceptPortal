@@ -81,7 +81,7 @@ export function FormSandboxItem({ className }: FormSandboxItemProps) {
         void form.handleSubmit();
       }}
     >
-      <h2 className='mb-2 select-none'>Песочница</h2>
+      <h2 className='mb-2 select-none font-math'>Песочница</h2>
       <form.Field name='title'>
         {field => (
           <TextInput

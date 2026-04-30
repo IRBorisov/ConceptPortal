@@ -2,8 +2,8 @@
 
 import { useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { type Extension, type SelectionRange } from '@codemirror/state';
-import { EditorView, tooltips } from '@codemirror/view';
+import { type Extension, Prec, type SelectionRange } from '@codemirror/state';
+import { EditorView, keymap, tooltips } from '@codemirror/view';
 import { tags } from '@lezer/highlight';
 import { createTheme } from '@uiw/codemirror-themes';
 import CodeMirror, {
@@ -89,6 +89,8 @@ interface RefsInputInputProps
   initialValue?: string;
   portalHoverTooltips?: boolean;
   areaClassName?: string;
+  onInputKeyDown?: (event: React.KeyboardEvent<HTMLDivElement>) => void;
+  onModEnter?: () => void;
 }
 
 export function RefsInput({
@@ -105,6 +107,8 @@ export function RefsInput({
   onChange,
   className,
   areaClassName,
+  onInputKeyDown,
+  onModEnter,
   error,
   ref,
   ...restProps
@@ -141,6 +145,21 @@ export function RefsInput({
   });
 
   const editorExtensions = [
+    ...(onModEnter
+      ? [
+          Prec.highest(
+            keymap.of([
+              {
+                key: 'Mod-Enter',
+                run() {
+                  onModEnter();
+                  return true;
+                }
+              }
+            ])
+          )
+        ]
+      : []),
     EditorView.lineWrapping,
     EditorView.contentAttributes.of({ spellcheck: 'true' }),
     ...(portalHoverTooltips
@@ -308,6 +327,11 @@ export function RefsInput({
   }
 
   function handleInput(event: React.KeyboardEvent<HTMLDivElement>) {
+    onInputKeyDown?.(event);
+    if (event.defaultPrevented) {
+      return;
+    }
+
     if (!thisRef.current?.view) {
       event.preventDefault();
       event.stopPropagation();

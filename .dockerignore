@@ -17,6 +17,7 @@ TODO.txt
 
 
 # Local build/utility folders
+.agents/
 **/venv
 **/build
 

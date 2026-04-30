@@ -94,10 +94,10 @@ function extractBracketErrors(expression: string): RSErrorDescription | null {
     const top = stack[stack.length - 1];
     if (top === undefined) {
       return {
-        code: RSErrorCode.bracketMismatch,
+        code: RSErrorCode.missingOpenBracket,
         from: pos,
         to: pos + 1,
-        params: [expectedOpen, symbol]
+        params: [expectedOpen]
       };
     }
 
