@@ -235,7 +235,7 @@ export class Evaluator {
   private visitGlobal(node: AstNode): Value | null {
     const alias = getNodeText(node);
     const value = this.context.get(alias);
-    if (!value) {
+    if (value === undefined) {
       return this.onError(RSErrorCode.calcGlobalMissing, node, [alias]);
     }
     return value;
@@ -300,7 +300,7 @@ export class Evaluator {
 
   private visitCard(node: AstNode): Value | null {
     const base = this.visitChild(node, 0);
-    if (!base || !Array.isArray(base)) {
+    if (base === null || !Array.isArray(base)) {
       return null;
     }
     return base.length;
@@ -671,7 +671,7 @@ export class Evaluator {
 
   private visitDeclarative(node: AstNode): Value | null {
     const domain = this.visitChild(node, 1);
-    if (!domain) {
+    if (domain === null) {
       return null;
     }
 
@@ -806,7 +806,7 @@ export class Evaluator {
       }
 
       const next = this.visitChild(node, bodyIndex);
-      if (!next) {
+      if (next === null) {
         return null;
       }
       if (compare(current, next) === 0) {
