@@ -16,9 +16,6 @@ export interface BlockNodeData extends Record<string, unknown> {
   block: Block;
 }
 
-/** Represents graph OSS node data. */
-export type OGNodeData = OperationNodeData | BlockNodeData;
-
 /** Represents graph OSS node. */
 export type OGNode = OGOperationNode | OGBlockNode;
 export type OGOperationNode = Omit<Node<OperationNodeData>, 'type'> & {
