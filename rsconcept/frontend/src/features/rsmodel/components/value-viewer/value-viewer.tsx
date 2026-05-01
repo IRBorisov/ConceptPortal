@@ -7,8 +7,7 @@ import { makeValuePath, TypeID, type Typification, type Value, type ValuePath } 
 import { convertPathToType, extractValue } from '@/domain/rslang/eval/value-api';
 import { type TypePath } from '@/domain/rslang/semantic/typification';
 import { applyPath } from '@/domain/rslang/semantic/typification-api';
-
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
 
 import { MiniButton } from '@/components/control';
 import { DataTable } from '@/components/data-table';

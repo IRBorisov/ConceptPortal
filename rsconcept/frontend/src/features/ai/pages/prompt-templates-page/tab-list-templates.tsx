@@ -1,7 +1,8 @@
 'use client';
 
+import { useTx } from '@/i18n/use-tx';
+
 import { useConceptNavigation } from '@/app';
-import { useTx } from '@/app/i18n/use-tx';
 import { type IPromptTemplate } from '@/features/ai/backend/types';
 import { useLabelUser } from '@/features/users';
 
@@ -107,7 +108,10 @@ export function TabListTemplates({ activeID }: TabListTemplatesProps) {
           <NoData>
             <p>{tx('ui.table.emptyList', 'List is empty')}</p>
             <p>
-              <TextURL text={tx('ui.link.createPromptTemplate', 'Create a prompt template...')} onClick={handleCreateNew} />
+              <TextURL
+                text={tx('ui.link.createPromptTemplate', 'Create a prompt template...')}
+                onClick={handleCreateNew}
+              />
             </p>
           </NoData>
         }

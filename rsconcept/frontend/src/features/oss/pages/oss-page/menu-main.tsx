@@ -1,7 +1,8 @@
 'use client';
 
+import { useTx } from '@/i18n/use-tx';
+
 import { useConceptNavigation } from '@/app';
-import { useTx } from '@/app/i18n/use-tx';
 import { useRoleStore, UserRole } from '@/features/users';
 
 import { Divider } from '@/components/container';

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import clsx from 'clsx';
 
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
 
 import { useValueTooltipStore } from '@/stores/value-tooltip';
 import { globalIDs } from '@/utils/constants';

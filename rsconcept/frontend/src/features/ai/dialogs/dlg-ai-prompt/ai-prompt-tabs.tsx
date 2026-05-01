@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
 
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 

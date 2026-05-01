@@ -1,9 +1,10 @@
+import { type ReactNode } from 'react';
 import { create } from 'zustand';
 
 interface ValueTooltipStore {
-  /** Full plain-text payload for the global value tooltip (last hovered cell). */
-  activeText: string | null;
-  setActiveText: (text: string | null) => void;
+  /** Full payload for the global value tooltip (last hovered cell). */
+  activeText: ReactNode | null;
+  setActiveText: (text: ReactNode | null) => void;
 }
 
 export const useValueTooltipStore = create<ValueTooltipStore>()(set => ({

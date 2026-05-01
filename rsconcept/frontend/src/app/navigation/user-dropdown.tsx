@@ -1,6 +1,7 @@
 'use client';
 
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
+
 import { useAuth } from '@/features/auth';
 import { useLogout } from '@/features/auth/backend/use-logout';
 
@@ -115,7 +116,9 @@ export function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
           onClick={toggleAdminMode}
         />
       ) : null}
-      <div className='px-3 py-1 text-muted-foreground border-t'>{tx('nav.language.label', 'Interface language')}</div>
+      <div className='px-3 py-1 text-muted-foreground border-t text-nowrap'>
+        {tx('nav.language.label', 'Interface language')}
+      </div>
       <DropdownButton
         text={tx('nav.locale.en', 'English')}
         title={tx('nav.locale.en', 'English')}

@@ -3,7 +3,7 @@
 
 import { type Table } from '@tanstack/react-table';
 
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
 
 import { CheckboxTristate } from '../input';
 

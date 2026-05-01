@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { type Constituenta, type LibraryItem, type RSForm, type Substitution } from '@/domain/library';
+import { useTx } from '@/i18n/use-tx';
 
-import { useTx } from '@/app/i18n/use-tx';
 import { SelectLibraryItem } from '@/features/library/components/select-library-item';
 
 import { MiniButton } from '@/components/control';

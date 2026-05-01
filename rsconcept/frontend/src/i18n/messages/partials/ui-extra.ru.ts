@@ -45,7 +45,8 @@ export const uiExtraRu: Record<string, string> = {
   'ui.stats.primary.problems': 'Проблемы',
   'ui.stats.title.problemsCount': 'Количество проблем, включая ошибки, омонимы и дубликаты',
   'ui.stats.secondary.errors': 'Ошибки',
-  'ui.stats.title.errorDefinitions': 'Ошибочные определения, включая синтаксические, семантические и интерпретационные ошибки',
+  'ui.stats.title.errorDefinitions':
+    'Ошибочные определения, включая синтаксические, семантические и интерпретационные ошибки',
   'ui.stats.row.homonyms': 'Омонимы',
   'ui.stats.row.duplicates': 'Дубликаты',
   'ui.stats.row.missingConventionOrTerm': 'Без конвенции или термина',
@@ -114,8 +115,10 @@ export const uiExtraRu: Record<string, string> = {
   'ui.graphSelection.maximize': 'Максимизация',
   'ui.graphSelection.maximizeHintMultiline':
     'Максимизация \nдополнение выделения конституентами, \nзависимыми только от выделенных',
-  'ui.graphSelection.maximizeHintLine': 'Максимизация - дополнение выделения конституентами, зависимыми только от выделенных',
-  'ui.graphSelection.maximizeAria': 'Максимизация - дополнение выделения конституентами, зависимыми только от выделенных',
+  'ui.graphSelection.maximizeHintLine':
+    'Максимизация - дополнение выделения конституентами, зависимыми только от выделенных',
+  'ui.graphSelection.maximizeAria':
+    'Максимизация - дополнение выделения конституентами, зависимыми только от выделенных',
   'ui.graphSelection.invert': 'Инвертировать',
   'ui.graphSelection.pickGroup': 'Выделить группу...',
   'ui.graphSelection.core': 'ядро',
@@ -193,8 +196,7 @@ export const uiExtraRu: Record<string, string> = {
   'ui.stats.mini.total': 'Всего',
   'ui.stats.row.incorrect': 'Некорректные',
 
-  'ui.rsform.menu.archiveNoEdit':
-    'Архив: Редактирование запрещено\nПерейти к актуальной версии',
+  'ui.rsform.menu.archiveNoEdit': 'Архив: Редактирование запрещено\nПерейти к актуальной версии',
   'ui.rsform.menu.editing': 'Редактирование',
   'ui.rsform.menu.templates': 'Шаблоны',
   'ui.rsform.menu.templatesTitle': 'Создать конституенту из шаблона',
@@ -210,8 +212,7 @@ export const uiExtraRu: Record<string, string> = {
   'ui.rsform.menu.structureExpansion': 'Раскрытие структуры',
   'ui.rsform.menu.structureExpansionTitle':
     'Породить внутренние понятия\nпо структуре типизации\nвыделенной конституенты',
-  'ui.rsform.menu.structureExpansionAria':
-    'Породить внутренние понятия по структуре типизации выделенной конституенты',
+  'ui.rsform.menu.structureExpansionAria': 'Породить внутренние понятия по структуре типизации выделенной конституенты',
   'ui.rsform.menu.substitution': 'Отождествление',
   'ui.rsform.menu.substitutionTitle': 'Заменить вхождения\nодной конституенты на другую',
   'ui.rsform.menu.substitutionAria': 'Заменить вхождения одной конституенты на другую',
@@ -235,8 +236,7 @@ export const uiExtraRu: Record<string, string> = {
   'ui.termGraph.filter.hideFree': 'Скрыть свободные',
   'ui.termGraph.filter.hideFreeHint': 'Конституенты без связей',
   'ui.termGraph.filter.hideTemplates': 'Скрыть шаблоны',
-  'ui.termGraph.filter.hideTemplatesHint':
-    'Терм-функции и предикат-функции\nс параметризованными аргументами',
+  'ui.termGraph.filter.hideTemplatesHint': 'Терм-функции и предикат-функции\nс параметризованными аргументами',
   'ui.termGraph.filter.transitiveReduction': 'Транзитивная редукция',
   'ui.termGraph.filter.transitiveReductionHint': 'Удалить связи, образующие\nтранзитивные пути в графе',
 
@@ -290,8 +290,7 @@ export const uiExtraRu: Record<string, string> = {
 
   'ui.oss.node.linkedCs': 'Связанная КС',
   'ui.oss.node.noLinkedCs': 'Нет связанной КС',
-  'ui.oss.node.rhombusSynthesisWarn':
-    'Внимание!\nРомбовидный синтез\nВозможны дубликаты конституент',
+  'ui.oss.node.rhombusSynthesisWarn': 'Внимание!\nРомбовидный синтез\nВозможны дубликаты конституент',
 
   'ui.oss.settings.header': 'Настройки отображения',
   'ui.oss.settings.coordsToggleAria': 'Переключатель отображения координат',
@@ -510,6 +509,10 @@ export const uiExtraRu: Record<string, string> = {
   'ui.aiPrompt.variables.unknown': 'Неизвестная переменная',
   'ui.aiPrompt.variables.availableSuffix': '(доступна)',
   'ui.aiPrompt.variables.unavailableSuffix': '(нет в контексте)',
+  'ui.ai.promptInput.variableTitle': 'Переменная {name}',
+  'ui.ai.promptInput.available': 'Доступна для использования',
+  'ui.ai.promptInput.unavailable': 'Недоступна для использования',
+  'ui.ai.promptInput.descriptionPrefix': 'Описание: {description}',
 
   'ui.library.toolbar.editForbiddenTitle': 'Изменение: запрещено',
   'ui.library.toolbar.editAllowedTitle': 'Изменение: разрешено',
@@ -575,6 +578,17 @@ export const uiExtraRu: Record<string, string> = {
   'ui.rsform.cstInfo.generatesLabel': 'Порождает: ',
   'ui.rsform.cstInfo.conventionLabel': 'Конвенция: ',
   'ui.rsform.cstInfo.commentLabel': 'Комментарий: ',
+  'ui.rsform.rsInput.undefinedConstituent': 'Конституента не определена',
+  'ui.rsform.rsInput.ctrlClickToOpen': 'Ctrl + клик для перехода',
+  'ui.rsform.refsTooltip.referenceToConstituent': 'Ссылка на конституенту',
+  'ui.rsform.refsTooltip.controls': 'Alt + 1: ссылка на конституенту\nAlt + 2: зависимое слово',
+  'ui.rsform.refsTooltip.toOpen': 'для перехода',
+  'ui.rsform.refsTooltip.linkWordBinding': 'Связывание слов',
+  'ui.rsform.refsTooltip.offset': 'Смещение:',
+  'ui.rsform.refsTooltip.masterReference': 'Основная ссылка:',
+  'ui.rsform.refsTooltip.notDefined': 'не определена',
+  'ui.rsform.refsTooltip.nominalForm': 'Начальная форма:',
+  'ui.rsform.refsTooltip.editHotkey': 'Alt + 2: для редактирования',
   'ui.rsform.termGraph.toolbar.fullGraphTitle': 'Граф целиком',
   'ui.rsform.termGraph.toolbar.hideTextTitle': 'Скрыть текст',
   'ui.rsform.termGraph.toolbar.showTextTitle': 'Отобразить текст',
@@ -597,36 +611,13 @@ export const uiExtraRu: Record<string, string> = {
   'ui.rsform.pdf.colSchemaInterpretation': 'Схемная интерпретация / Термин',
   'ui.rsform.pdf.conventionPrefix': 'Конвенция: ',
 
-  'ui.wordForms.abbr.singNomn': 'ед им',
-  'ui.wordForms.abbr.singGent': 'ед род',
-  'ui.wordForms.abbr.singDatv': 'ед дат',
-  'ui.wordForms.abbr.singAccs': 'ед вин',
-  'ui.wordForms.abbr.singAblt': 'ед твор',
-  'ui.wordForms.abbr.singLoct': 'ед пред',
-  'ui.wordForms.abbr.plurNomn': 'мн им',
-  'ui.wordForms.abbr.plurGent': 'мн род',
-  'ui.wordForms.abbr.plurDatv': 'мн дат',
-  'ui.wordForms.abbr.plurAccs': 'мн вин',
-  'ui.wordForms.abbr.plurAblt': 'мн твор',
-  'ui.wordForms.abbr.plurLoct': 'мн пред',
-  'ui.wordForms.example.singNomn': 'Кто? Что?<br/><div class="text-center"><b>ручка</b></div>',
-  'ui.wordForms.example.singGent': 'Кого? Чего?<br/><div class="text-center"><b>ручки</b></div>',
-  'ui.wordForms.example.singDatv': 'Кому? Чему?<br/><div class="text-center"><b>ручке</b></div>',
-  'ui.wordForms.example.singAccs': 'Кого? Что?<br/><div class="text-center"><b>ручку</b></div>',
-  'ui.wordForms.example.singAblt': 'Кем? Чем?<br/><div class="text-center"><b>ручкой</b></div>',
-  'ui.wordForms.example.singLoct': 'О ком? О чём?<br/><div class="text-center"><b>о ручке</b></div>',
-  'ui.wordForms.example.plurNomn': 'Кто? Что?<br/><div class="text-center"><b>ручки</b></div>',
-  'ui.wordForms.example.plurGent': 'Кого? Чего?<br/><div class="text-center"><b>ручек</b></div>',
-  'ui.wordForms.example.plurDatv': 'Кому? Чему?<br/><div class="text-center"><b>ручкам</b></div>',
-  'ui.wordForms.example.plurAccs': 'Кого? Что?<br/><div class="text-center"><b>ручки</b></div>',
-  'ui.wordForms.example.plurAblt': 'Кем? Чем?<br/><div class="text-center"><b>ручками</b></div>',
-  'ui.wordForms.example.plurLoct': 'О ком? О чём?<br/><div class="text-center"><b>о ручках</b></div>',
-
   'ui.oss.menu.editBlockTitle': 'Редактировать блок',
   'ui.oss.menu.deleteBlock': 'Удалить блок',
 
   'ui.users.profile.title': 'Учетные данные пользователя',
   'ui.users.select.placeholder': 'Выбор пользователя',
+  'ui.users.absent': 'Отсутствует',
+  'ui.users.anonymousWithId': 'Аноним {id}',
   'ui.users.info.noneSelected': 'Пользователи не выбраны',
   'ui.users.password.oldLabel': 'Старый пароль',
   'ui.users.password.newLabel': 'Новый пароль',
@@ -636,6 +627,8 @@ export const uiExtraRu: Record<string, string> = {
 
   'ui.embed.youtubeTitle': 'Встроенное видео Youtube',
   'ui.embed.vkTitle': 'Встроенное видео ВКонтакте',
+  'ui.common.notImplemented': 'Функционал в разработке',
+  'ui.sandbox.invalidBundleFile': 'Неверный файл песочницы',
 
   'ui.ai.badge.templateShared': 'Общий',
   'ui.ai.badge.templatePersonal': 'Личный'

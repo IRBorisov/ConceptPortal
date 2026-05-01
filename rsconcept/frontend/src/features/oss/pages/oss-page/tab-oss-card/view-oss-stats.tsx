@@ -1,8 +1,7 @@
 'use client';
 
 import { type OperationSchemaStats } from '@/domain/library';
-
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
 
 import { Divider } from '@/components/container';
 import { type Styling } from '@/components/props';
@@ -25,10 +24,7 @@ export function ViewOssStats({ className, stats, ...restProps }: ViewOssStatsPro
         label={tx('ui.stats.section.overview', 'Overview')}
         primaryLabel={tx('ui.stats.caption.total', 'Total')}
         primaryValue={stats.count_all}
-        primaryTitle={tx(
-          'ui.stats.oss.compositionPrimaryTitle',
-          'Total number of items in the operational schema'
-        )}
+        primaryTitle={tx('ui.stats.oss.compositionPrimaryTitle', 'Total number of items in the operational schema')}
         secondaryLabel={stats.count_block > 0 ? tx('ui.stats.oss.blocks', 'Blocks') : undefined}
         secondaryValue={stats.count_block > 0 ? stats.count_block : undefined}
         secondaryTitle={tx('ui.stats.oss.blocksSecondaryTitle', 'Number of nested blocks')}
@@ -49,10 +45,7 @@ export function ViewOssStats({ className, stats, ...restProps }: ViewOssStatsPro
         label={tx('ui.stats.oss.attachedSection', 'Attached schemas')}
         primaryLabel={tx('ui.stats.caption.total', 'Total')}
         primaryValue={stats.count_schemas}
-        primaryTitle={tx(
-          'ui.stats.oss.attachedPrimaryTitle',
-          'Number of operations with an attached RSForm schema'
-        )}
+        primaryTitle={tx('ui.stats.oss.attachedPrimaryTitle', 'Number of operations with an attached RSForm schema')}
         secondaryLabel={stats.count_schemas > 0 ? tx('ui.stats.secondary.owned', 'Owned') : undefined}
         secondaryValue={stats.count_schemas > 0 ? stats.count_owned : undefined}
         secondaryTitle={tx('ui.stats.oss.ownedSecondaryTitle', 'Number of owned (non-imported) schemas')}

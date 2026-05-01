@@ -4,9 +4,9 @@ import { useForm, useStore } from '@tanstack/react-form';
 
 import { type Constituenta, type CstType, type RSForm } from '@/domain/library';
 import { generateAlias, validateNewAlias } from '@/domain/library/rsform-api';
+import { useTx } from '@/i18n/use-tx';
 
 import { useConceptNavigation } from '@/app';
-import { useTx } from '@/app/i18n/use-tx';
 
 import { MiniButton } from '@/components/control';
 import { IconChild, IconRSForm } from '@/components/icons';

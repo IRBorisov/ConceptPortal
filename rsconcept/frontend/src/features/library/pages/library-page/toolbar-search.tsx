@@ -1,6 +1,7 @@
 'use client';
 
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
+
 import { SelectUser } from '@/features/users/components/select-user';
 
 import { MiniButton } from '@/components/control';

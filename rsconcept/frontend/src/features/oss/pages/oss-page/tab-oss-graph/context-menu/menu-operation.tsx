@@ -4,9 +4,9 @@ import { toast } from 'react-toastify';
 
 import { type Operation, OperationType } from '@/domain/library';
 import { LayoutManager } from '@/domain/library/oss-layout-api';
+import { useTx } from '@/i18n/use-tx';
 
 import { useConceptNavigation } from '@/app';
-import { useTx } from '@/app/i18n/use-tx';
 import { useLibrary } from '@/features/library/backend/use-library';
 
 import { DropdownButton } from '@/components/dropdown';
@@ -254,7 +254,10 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
       {operation.result ? (
         <DropdownButton
           text={tx('ui.oss.menu.openSchema', 'Open schema')}
-          title={prepareTooltip(tx('ui.oss.menu.openLinkedRsform', 'Open linked conceptual schema'), tx('ui.hint.doubleClick', 'Double-click'))}
+          title={prepareTooltip(
+            tx('ui.oss.menu.openLinkedRsform', 'Open linked conceptual schema'),
+            tx('ui.hint.doubleClick', 'Double-click')
+          )}
           aria-label={tx('ui.oss.menu.openLinkedRsform', 'Open linked conceptual schema')}
           icon={<IconRSForm size='1rem' className='icon-primary' />}
           onClick={handleOpenSchema}
@@ -272,7 +275,11 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
       ) : null}
       {isMutable && operation?.operation_type === OperationType.INPUT ? (
         <DropdownButton
-          text={!operation?.result ? tx('ui.oss.menu.loadSchema', 'Load schema') : tx('ui.oss.menu.changeSchema', 'Change schema')}
+          text={
+            !operation?.result
+              ? tx('ui.oss.menu.loadSchema', 'Load schema')
+              : tx('ui.oss.menu.changeSchema', 'Change schema')
+          }
           title={tx('ui.oss.menu.pickSchemaTitle', 'Choose a schema to load')}
           icon={<IconConnect size='1rem' className='icon-primary' />}
           onClick={handleEditSchema}
@@ -287,7 +294,10 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
           text={tx('ui.oss.menu.activateSynthesis', 'Activate synthesis')}
           title={
             readyForSynthesis
-              ? tx('ui.oss.menu.activateSynthesisReadyTitle', 'Activate the operation\nand obtain the synthesized schema')
+              ? tx(
+                  'ui.oss.menu.activateSynthesisReadyTitle',
+                  'Activate the operation\nand obtain the synthesized schema'
+                )
               : tx('ui.oss.menu.activateSynthesisNeedArgs', 'All arguments must be provided')
           }
           aria-label={tx(

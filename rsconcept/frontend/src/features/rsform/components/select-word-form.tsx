@@ -2,17 +2,11 @@
 
 import { Grammeme, supportedGrammemes } from '@/domain/cctext';
 
-import { useTx } from '@/app/i18n/use-tx';
-
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
 import { prefixes } from '@/utils/constants';
 
-import { WordformButton } from './wordform-button';
-
-function prepareExample(question: string, answer: string) {
-  return `${question}<br/><div class="text-center"><b>${answer}</b></div>`;
-}
+import { WordformButton, type WordformExample } from './wordform-button';
 
 /** Grammatical word-form rows (singular/plural × six cases) for pickers and word-form dialog keys. */
 export const WORD_FORM_ROW_DEFS = [
@@ -32,34 +26,48 @@ export const WORD_FORM_ROW_DEFS = [
 
 type WordFormRowKey = (typeof WORD_FORM_ROW_DEFS)[number]['rowKey'];
 
-const EN_ABBR: Record<WordFormRowKey, string> = {
-  singNomn: 'Sg nom',
-  singGent: 'Sg gen',
-  singDatv: 'Sg dat',
-  singAccs: 'Sg acc',
-  singAblt: 'Sg ins',
-  singLoct: 'Sg loc',
-  plurNomn: 'Pl nom',
-  plurGent: 'Pl gen',
-  plurDatv: 'Pl dat',
-  plurAccs: 'Pl acc',
-  plurAblt: 'Pl ins',
-  plurLoct: 'Pl loc'
+export const RUSSIAN_WORD_FORM_CASE_HINTS = {
+  nomn: 'Именительный: Кто? Что?',
+  gent: 'Родительный: Кого? Чего?',
+  datv: 'Дательный: Кому? Чему?',
+  accs: 'Винительный: Кого? Что?',
+  ablt: 'Творительный: Кем? Чем?',
+  loct: 'Предложный: О ком? О чём?'
+} as const;
+
+export const RUSSIAN_WORD_FORM_NUMBER_LABELS = {
+  singular: 'Единственное число',
+  plural: 'Множественное число'
+} as const;
+
+const RUSSIAN_WORD_FORM_ABBR: Record<WordFormRowKey, string> = {
+  singNomn: 'ед им',
+  singGent: 'ед род',
+  singDatv: 'ед дат',
+  singAccs: 'ед вин',
+  singAblt: 'ед твор',
+  singLoct: 'ед пред',
+  plurNomn: 'мн им',
+  plurGent: 'мн род',
+  plurDatv: 'мн дат',
+  plurAccs: 'мн вин',
+  plurAblt: 'мн твор',
+  plurLoct: 'мн пред'
 };
 
-const EN_EXAMPLE: Record<WordFormRowKey, string> = {
-  singNomn: prepareExample('Who? What?', 'pen'),
-  singGent: prepareExample('Of whom? Of what?', 'pen'),
-  singDatv: prepareExample('To whom? To what?', 'pen'),
-  singAccs: prepareExample('Whom? What?', 'pen'),
-  singAblt: prepareExample('By whom? With what?', 'pen'),
-  singLoct: prepareExample('About whom? About what?', 'pen'),
-  plurNomn: prepareExample('Who? What?', 'pens'),
-  plurGent: prepareExample('Of whom? Of what?', 'pens'),
-  plurDatv: prepareExample('To whom? To what?', 'pens'),
-  plurAccs: prepareExample('Whom? What?', 'pens'),
-  plurAblt: prepareExample('By whom? With what?', 'pens'),
-  plurLoct: prepareExample('About whom? About what?', 'pens')
+const RUSSIAN_WORD_FORM_EXAMPLE: Record<WordFormRowKey, WordformExample> = {
+  singNomn: { question: 'Кто? Что?', answer: 'ручка' },
+  singGent: { question: 'Кого? Чего?', answer: 'ручки' },
+  singDatv: { question: 'Кому? Чему?', answer: 'ручке' },
+  singAccs: { question: 'Кого? Что?', answer: 'ручку' },
+  singAblt: { question: 'Кем? Чем?', answer: 'ручкой' },
+  singLoct: { question: 'О ком? О чём?', answer: 'о ручке' },
+  plurNomn: { question: 'Кто? Что?', answer: 'ручки' },
+  plurGent: { question: 'Кого? Чего?', answer: 'ручек' },
+  plurDatv: { question: 'Кому? Чему?', answer: 'ручкам' },
+  plurAccs: { question: 'Кого? Что?', answer: 'ручки' },
+  plurAblt: { question: 'Кем? Чем?', answer: 'ручками' },
+  plurLoct: { question: 'О ком? О чём?', answer: 'о ручках' }
 };
 
 interface SelectWordFormProps extends Styling {
@@ -69,8 +77,6 @@ interface SelectWordFormProps extends Styling {
 }
 
 export function SelectWordForm({ value, onChange, className, onDoubleClick, ...restProps }: SelectWordFormProps) {
-  const tx = useTx();
-
   function handleSelect(grams: Grammeme[]) {
     onChange(supportedGrammemes.filter(value => grams.includes(value)));
   }
@@ -80,8 +86,8 @@ export function SelectWordForm({ value, onChange, className, onDoubleClick, ...r
       {WORD_FORM_ROW_DEFS.map((row, index) => (
         <WordformButton
           key={`${prefixes.wordform_list}${index}`}
-          text={tx(`ui.wordForms.abbr.${row.rowKey}`, EN_ABBR[row.rowKey])}
-          example={tx(`ui.wordForms.example.${row.rowKey}`, EN_EXAMPLE[row.rowKey])}
+          text={RUSSIAN_WORD_FORM_ABBR[row.rowKey]}
+          example={RUSSIAN_WORD_FORM_EXAMPLE[row.rowKey]}
           grams={row.grams}
           isSelected={row.grams.every(gram => value.find(item => item === gram))}
           onSelectGrams={handleSelect}

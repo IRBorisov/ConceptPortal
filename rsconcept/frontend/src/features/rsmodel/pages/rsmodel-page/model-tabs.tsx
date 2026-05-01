@@ -6,8 +6,8 @@ import clsx from 'clsx';
 import { type Constituenta, type RSEngine } from '@/domain/library';
 import { isSchemaIssue } from '@/domain/library/rsform-api';
 import { isModelIssue } from '@/domain/library/rsmodel-api';
+import { useTx } from '@/i18n/use-tx';
 
-import { useTx } from '@/app/i18n/use-tx';
 import { RSModelTabID, useConceptNavigation } from '@/app/navigation/navigation-context';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 import { TabConstituenta } from '@/features/rsform/pages/rsform-page/tab-constituenta';

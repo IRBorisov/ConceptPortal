@@ -1,8 +1,8 @@
 'use client';
 
 import { type RSForm } from '@/domain/library';
+import { useTx } from '@/i18n/use-tx';
 
-import { useTx } from '@/app/i18n/use-tx';
 import { useLibrary } from '@/features/library/backend/use-library';
 
 import { Tooltip } from '@/components/container';

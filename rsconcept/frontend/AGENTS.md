@@ -60,7 +60,7 @@ Run from `rsconcept/frontend`:
 
 ## Internationalization (user-visible UI copy)
 
-- **Do not** introduce or leave user-facing copy as hardcoded Russian (or any single locale) in `.tsx` / `.ts` UI code. Use the compact hook: `useTx` from `@/app/i18n/use-tx` with an **English** `defaultMessage` in the call site, for example: `tx('ui.some.key', 'Human readable English', optionalValues)`.
+- **Do not** introduce or leave user-facing copy as hardcoded Russian (or any single locale) in `.tsx` / `.ts` UI code. Use the compact hook: `useTx` from `@/i18n/use-tx` with an **English** `defaultMessage` in the call site, for example: `tx('ui.some.key', 'Human readable English', optionalValues)`.
 - **When you add, change, or remove** any such string (labels, buttons, placeholders, `title` / `aria-label`, dialog headers, empty states, etc.):
   1. Use a stable message **id** (prefer the existing `ui.*` namespace for shared chrome, e.g. `ui.action.save`, `ui.nav.library`, or add a new dotted key under `ui.` when it is reusable).
   2. **Update every locale catalog** that the app ships for those ids. Today that means editing **both**:

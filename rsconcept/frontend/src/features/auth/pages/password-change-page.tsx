@@ -2,8 +2,9 @@
 
 import { type SubmitEvent, useState } from 'react';
 
+import { useTx } from '@/i18n/use-tx';
+
 import { urls, useConceptNavigation } from '@/app';
-import { useTx } from '@/app/i18n/use-tx';
 
 import { isAxiosError } from '@/backend/api-transport';
 import { SubmitButton } from '@/components/control';

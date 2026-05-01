@@ -2,7 +2,8 @@
 
 import { type SubmitEvent, useState } from 'react';
 
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
+
 import { useUsers } from '@/features/users';
 import { SelectUser } from '@/features/users/components/select-user';
 import { TableUsers } from '@/features/users/components/table-users';

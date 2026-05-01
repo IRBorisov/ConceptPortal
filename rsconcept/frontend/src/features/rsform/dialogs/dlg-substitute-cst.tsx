@@ -4,8 +4,8 @@ import { useForm, useStore } from '@tanstack/react-form';
 
 import { type RSForm } from '@/domain/library';
 import { SubstitutionValidator } from '@/domain/library/oss-api';
+import { useTx } from '@/i18n/use-tx';
 
-import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 import { describeSubstitutionError } from '@/features/oss/labels';
 

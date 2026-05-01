@@ -15,9 +15,9 @@ import {
 import clsx from 'clsx';
 
 import { addAliasReference } from '@/domain/library/rsform-api';
+import { useTx } from '@/i18n/use-tx';
 
 import { useConceptNavigation } from '@/app';
-import { useTx } from '@/app/i18n/use-tx';
 
 import { DiagramFlow, useReactFlow } from '@/components/flow/diagram-flow';
 import { useContinuousPan } from '@/components/flow/use-continuous-panning';

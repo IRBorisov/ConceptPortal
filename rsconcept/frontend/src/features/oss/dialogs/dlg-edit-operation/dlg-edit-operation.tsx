@@ -6,8 +6,8 @@ import { useForm, useStore } from '@tanstack/react-form';
 import { OperationType, type OssLayout } from '@/domain/library';
 import { LayoutManager } from '@/domain/library/oss-layout-api';
 import { type Substitution } from '@/domain/library/rsform';
+import { useTx } from '@/i18n/use-tx';
 
-import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 
 import { Loader } from '@/components/loader';

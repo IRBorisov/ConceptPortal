@@ -2,9 +2,9 @@
 
 import { type Constituenta, CstType, type RSForm } from '@/domain/library';
 import { generateAlias } from '@/domain/library/rsform-api';
+import { useTx } from '@/i18n/use-tx';
 
 import { useConceptNavigation } from '@/app';
-import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 import { type ConstituentaBasicsDTO, type CreateConstituentaDTO } from '@/features/rsform/backend/types';
@@ -192,14 +192,8 @@ export function ToolbarSchema({
           />
           <DropdownButton
             text={tx('ui.rsform.menu.ordinalNames', 'Ordinal names')}
-            title={tx(
-              'ui.rsform.menu.ordinalNamesTitle',
-              'Assign ordinal names\nand refresh expressions'
-            )}
-            aria-label={tx(
-              'ui.rsform.menu.ordinalNamesAria',
-              'Assign ordinal names and refresh expressions'
-            )}
+            title={tx('ui.rsform.menu.ordinalNamesTitle', 'Assign ordinal names\nand refresh expressions')}
+            aria-label={tx('ui.rsform.menu.ordinalNamesAria', 'Assign ordinal names and refresh expressions')}
             icon={<IconGenerateNames size='1rem' className='icon-primary' />}
             onClick={handleReindex}
             disabled={!isMutable || isProcessing}

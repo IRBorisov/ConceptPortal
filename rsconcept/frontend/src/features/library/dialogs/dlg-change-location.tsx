@@ -5,8 +5,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 import { z } from 'zod';
 
 import { validateLocation } from '@/domain/library/library-api';
-
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
 
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';

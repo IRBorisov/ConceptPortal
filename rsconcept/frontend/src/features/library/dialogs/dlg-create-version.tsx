@@ -4,8 +4,7 @@ import { useMemo } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { type VersionInfo } from '@/domain/library';
-
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
 
 import { Checkbox, TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';

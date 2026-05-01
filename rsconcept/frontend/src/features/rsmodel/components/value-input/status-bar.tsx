@@ -3,8 +3,7 @@
 import clsx from 'clsx';
 
 import { EvalStatus } from '@/domain/library';
-
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
 
 import { cn } from '@/components/utils';
 import { globalIDs } from '@/utils/constants';

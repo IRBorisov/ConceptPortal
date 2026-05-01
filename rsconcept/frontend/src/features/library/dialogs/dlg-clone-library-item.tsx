@@ -3,9 +3,9 @@
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { AccessPolicy, type LibraryItem, LibraryItemType } from '@/domain/library';
+import { useTx } from '@/i18n/use-tx';
 
 import { urls, useConceptNavigation } from '@/app';
-import { useTx } from '@/app/i18n/use-tx';
 
 import { MiniButton } from '@/components/control';
 import { Checkbox, Label, TextArea, TextInput } from '@/components/input';

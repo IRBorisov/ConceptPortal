@@ -5,9 +5,9 @@ import clsx from 'clsx';
 
 import { CstType } from '@/domain/library/rsform';
 import { matchConstituenta } from '@/domain/library/rsform-api';
+import { useTx } from '@/i18n/use-tx';
 
 import { useConceptNavigation } from '@/app';
-import { useTx } from '@/app/i18n/use-tx';
 import { MiniSelectorOSS } from '@/features/library/components/mini-selector-oss';
 
 import { ExportDropdown } from '@/components/control/export-dropdown';

@@ -3,7 +3,8 @@
 import { useEffect, useRef } from 'react';
 import clsx from 'clsx';
 
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
+
 import { BadgeHelp } from '@/features/help/components/badge-help';
 
 import { useEscapeKey } from '@/hooks/use-escape-key';
@@ -115,7 +116,12 @@ export function ModalView({
         ) : (
           <div className='z-pop absolute bottom-0 right-1/2 translate-x-1/2 p-3 rounded-xl bg-background/90 backdrop-blur-xs'>
             {' '}
-            <Button text={tx('modal.close', 'Close')} aria-label={tx('modal.close', 'Close')} className='text-sm min-w-28' onClick={handleHide} />
+            <Button
+              text={tx('modal.close', 'Close')}
+              aria-label={tx('modal.close', 'Close')}
+              className='text-sm min-w-28'
+              onClick={handleHide}
+            />
           </div>
         )}
       </div>

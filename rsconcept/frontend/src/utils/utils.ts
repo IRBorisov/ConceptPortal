@@ -5,6 +5,8 @@
 import { toast } from 'react-toastify';
 import { type AxiosError, type AxiosHeaderValue, type AxiosResponse, isAxiosError } from 'axios';
 
+import { formatAppMessage } from '@/i18n/format-app-message';
+
 import { PARAMETER } from './constants';
 import { formatLabel, lid } from './labels';
 
@@ -143,7 +145,7 @@ export function sharePage() {
 
 /** Show error message about not implemented function. */
 export function notImplemented() {
-  toast.error('Функционал в разработке');
+  toast.error(formatAppMessage('ui.common.notImplemented', 'Feature is under development'));
   console.error('Not implemented');
 }
 

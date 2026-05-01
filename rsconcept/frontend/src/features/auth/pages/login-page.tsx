@@ -2,8 +2,9 @@
 
 import { useForm } from '@tanstack/react-form';
 
+import { useTx } from '@/i18n/use-tx';
+
 import { urls, useConceptNavigation } from '@/app';
-import { useTx } from '@/app/i18n/use-tx';
 
 import { isAxiosError } from '@/backend/api-transport';
 import { SubmitButton, TextURL } from '@/components/control';
@@ -111,10 +112,7 @@ function ServerError({ error }: { error: ErrorData }): React.ReactElement | null
   if (isAxiosError(error) && error.response?.status === 400) {
     return (
       <div className='text-sm select-text text-destructive'>
-        {tx(
-          'auth.login.badCredentials',
-          'No account on the portal matches this username and password combination.'
-        )}
+        {tx('auth.login.badCredentials', 'No account on the portal matches this username and password combination.')}
       </div>
     );
   }

@@ -4,9 +4,8 @@
 
 import { type Constituenta, CstClass, CstStatus, CstType } from '@/domain/library';
 import { TokenID } from '@/domain/rslang';
-
-import { formatLabel } from '@/app/i18n/format-app-message';
-import { rsformLid } from '@/app/i18n/labels/rsform-ui';
+import { formatLabel } from '@/i18n/format-app-message';
+import { rsformLid } from '@/i18n/labels/rsform-ui';
 
 import { prepareTooltip } from '@/utils/format';
 import { type RO } from '@/utils/meta';

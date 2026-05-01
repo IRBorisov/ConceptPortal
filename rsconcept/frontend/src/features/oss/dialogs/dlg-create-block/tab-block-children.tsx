@@ -1,8 +1,7 @@
 'use client';
 
 import { NodeType, type OperationSchema, type OssItem } from '@/domain/library';
-
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
 
 import { Label } from '@/components/input';
 
@@ -45,7 +44,9 @@ export function TabBlockChildren({
 
   return (
     <div className='cc-fade-in cc-column -mt-5'>
-      <Label text={tx('ui.oss.dlg.block.contentPickLabel', 'Content selection: [ {count} ]', { count: value.length })} />
+      <Label
+        text={tx('ui.oss.dlg.block.contentPickLabel', 'Content selection: [ {count} ]', { count: value.length })}
+      />
       <PickContents
         schema={oss}
         exclude={exclude}

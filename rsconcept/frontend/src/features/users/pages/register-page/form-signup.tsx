@@ -3,8 +3,9 @@
 import { useState } from 'react';
 import { useForm } from '@tanstack/react-form';
 
+import { useTx } from '@/i18n/use-tx';
+
 import { urls, useConceptNavigation } from '@/app';
-import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 
 import { isAxiosError } from '@/backend/api-transport';
@@ -186,11 +187,22 @@ export function FormSignup() {
           value={acceptPrivacy}
           onChange={setAcceptPrivacy}
         />
-        <TextURL text={tx('auth.register.linkPrivacy', 'personal data processing…')} href={urls.help_topic(HelpTopic.INFO_PRIVACY)} />
+        <TextURL
+          text={tx('auth.register.linkPrivacy', 'personal data processing…')}
+          href={urls.help_topic(HelpTopic.INFO_PRIVACY)}
+        />
       </div>
       <div className='flex gap-1 text-sm'>
-        <Checkbox id='accept_rules' label={tx('auth.register.acceptRules', 'I accept ')} value={acceptRules} onChange={setAcceptRules} />
-        <TextURL text={tx('auth.register.linkRules', 'the portal rules…')} href={urls.help_topic(HelpTopic.INFO_RULES)} />
+        <Checkbox
+          id='accept_rules'
+          label={tx('auth.register.acceptRules', 'I accept ')}
+          value={acceptRules}
+          onChange={setAcceptRules}
+        />
+        <TextURL
+          text={tx('auth.register.linkRules', 'the portal rules…')}
+          href={urls.help_topic(HelpTopic.INFO_RULES)}
+        />
       </div>
 
       <div className='flex justify-around mt-3'>

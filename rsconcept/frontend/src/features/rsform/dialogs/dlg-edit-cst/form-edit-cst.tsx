@@ -3,8 +3,8 @@ import { type ReactNode, useState } from 'react';
 import { type Constituenta, CstType, type RSForm } from '@/domain/library';
 import { isBaseSet, isBasicConcept } from '@/domain/library/rsform-api';
 import { labelType } from '@/domain/rslang/labels';
+import { useTx } from '@/i18n/use-tx';
 
-import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 
@@ -166,10 +166,7 @@ export function FormEditCst({
               id='dlg_edit_cst_definition_raw'
               schema={schema}
               label={tx('ui.label.textDefinition', 'Text definition')}
-              placeholder={tx(
-                'ui.placeholder.textDefinitionHint',
-                'Text interpretation of the formal expression'
-              )}
+              placeholder={tx('ui.placeholder.textDefinitionHint', 'Text interpretation of the formal expression')}
               maxHeight='3.75rem'
               value={field.state.value ?? ''}
               initialValue={target.definition_raw}
@@ -201,15 +198,10 @@ export function FormEditCst({
               id='dlg_edit_cst_convention'
               fitContent
               spellCheck
-              label={
-                isBasic ? tx('ui.label.convention', 'Convention') : tx('ui.label.developerComment', 'Comment')
-              }
+              label={isBasic ? tx('ui.label.convention', 'Convention') : tx('ui.label.developerComment', 'Comment')}
               placeholder={
                 isBasic
-                  ? tx(
-                      'ui.placeholder.conventionBasic',
-                      'Agreement on interpreting the base concept'
-                    )
+                  ? tx('ui.placeholder.conventionBasic', 'Agreement on interpreting the base concept')
                   : tx('ui.placeholder.developerComment', 'Developer note')
               }
               areaClassName='max-h-20 disabled:min-h-9'

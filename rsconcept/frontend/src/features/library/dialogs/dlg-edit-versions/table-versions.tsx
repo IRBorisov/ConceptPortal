@@ -3,8 +3,7 @@
 import { useIntl } from 'react-intl';
 
 import { type VersionInfo } from '@/domain/library';
-
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
 
 import { MiniButton } from '@/components/control';
 import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/data-table';

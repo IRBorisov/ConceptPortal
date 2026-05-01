@@ -2,8 +2,9 @@
 
 import { useForm } from '@tanstack/react-form';
 
+import { useTx } from '@/i18n/use-tx';
+
 import { urls, useConceptNavigation } from '@/app';
-import { useTx } from '@/app/i18n/use-tx';
 import { type IChangePasswordDTO, schemaChangePassword } from '@/features/auth';
 import { useChangePassword } from '@/features/auth/backend/use-change-password';
 
@@ -92,15 +93,30 @@ export function EditorPassword() {
             />
           )}
         </form.Field>
-        {serverError ? <ServerError error={serverError} wrongOldPasswordLabel={tx('ui.users.password.oldWrong', 'Current password is incorrect')} /> : null}
+        {serverError ? (
+          <ServerError
+            error={serverError}
+            wrongOldPasswordLabel={tx('ui.users.password.oldWrong', 'Current password is incorrect')}
+          />
+        ) : null}
       </div>
-      <SubmitButton text={tx('ui.users.password.submit', 'Change password')} className='self-center' loading={isPending} />
+      <SubmitButton
+        text={tx('ui.users.password.submit', 'Change password')}
+        className='self-center'
+        loading={isPending}
+      />
     </form>
   );
 }
 
 // ====== Internals =========
-function ServerError({ error, wrongOldPasswordLabel }: { error: ErrorData; wrongOldPasswordLabel: string }): React.ReactElement {
+function ServerError({
+  error,
+  wrongOldPasswordLabel
+}: {
+  error: ErrorData;
+  wrongOldPasswordLabel: string;
+}): React.ReactElement {
   rethrowIfStaleBundleError(error);
 
   if (isAxiosError(error) && error.response?.status === 400) {

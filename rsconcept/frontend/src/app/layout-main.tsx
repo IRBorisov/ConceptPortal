@@ -4,7 +4,7 @@ import { Suspense } from 'react';
 import { Outlet } from 'react-router';
 import clsx from 'clsx';
 
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
 
 import { ModalLoader } from '@/components/modal';
 import { useAppLayoutStore, useMainHeight, useViewportHeight } from '@/stores/app-layout';

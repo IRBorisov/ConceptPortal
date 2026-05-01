@@ -7,8 +7,7 @@ import { type RSForm } from '@/domain/library/rsform';
 import { readErrorAnnotation, readTypeAnnotation } from '@/domain/rslang';
 import { describeRSError, labelRSLangNode, labelType } from '@/domain/rslang/labels';
 import { TokenID } from '@/domain/rslang/parser/token';
-
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
 
 import { useValueTooltipStore } from '@/stores/value-tooltip';
 import { globalIDs } from '@/utils/constants';
@@ -66,7 +65,11 @@ function buildTooltip(
   data: FlatAstNode,
   schema: RSForm | null,
   errorMessages: string,
-  tx: (id: string, defaultMessage: string, values?: Record<string, string | number | boolean | null | undefined>) => string
+  tx: (
+    id: string,
+    defaultMessage: string,
+    values?: Record<string, string | number | boolean | null | undefined>
+  ) => string
 ): string {
   const type = readTypeAnnotation(data as AstNode);
   const typeLine = type ? `${tx('ui.node.ast.typePrefix', 'Type:')} ${labelType(type)}` : '';

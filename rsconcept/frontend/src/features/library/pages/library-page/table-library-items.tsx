@@ -2,9 +2,9 @@
 
 import { type LibraryItem } from '@/domain/library';
 import { LibraryItemType } from '@/domain/library';
+import { useTx } from '@/i18n/use-tx';
 
 import { useConceptNavigation } from '@/app';
-import { useTx } from '@/app/i18n/use-tx';
 
 import { TextURL } from '@/components/control';
 import { DataTable, type IConditionalStyle, type VisibilityState } from '@/components/data-table';

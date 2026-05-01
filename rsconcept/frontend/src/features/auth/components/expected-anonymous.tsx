@@ -1,7 +1,8 @@
 'use client';
 
+import { useTx } from '@/i18n/use-tx';
+
 import { urls, useConceptNavigation } from '@/app';
-import { useTx } from '@/app/i18n/use-tx';
 
 import { TextURL } from '@/components/control';
 
@@ -20,7 +21,9 @@ export function ExpectedAnonymous() {
 
   return (
     <div className='flex flex-col items-center gap-3 py-6'>
-      <p className='font-semibold'>{tx('auth.anonymous.signedInAs', 'You are signed in as {username}', { username: user.username })}</p>
+      <p className='font-semibold'>
+        {tx('auth.anonymous.signedInAs', 'You are signed in as {username}', { username: user.username })}
+      </p>
       <div className='flex gap-3'>
         <TextURL text={tx('auth.anonymous.create', 'Create')} href='/library/create' />
         <span> | </span>

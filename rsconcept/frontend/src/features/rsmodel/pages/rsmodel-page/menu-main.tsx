@@ -3,9 +3,9 @@
 import { toast } from 'react-toastify';
 
 import { AccessPolicy, LocationHead } from '@/domain/library';
+import { useTx } from '@/i18n/use-tx';
 
 import { useConceptNavigation } from '@/app';
-import { useTx } from '@/app/i18n/use-tx';
 import { useAuth } from '@/features/auth';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 import { createSandboxBundleFromRSModel } from '@/features/sandbox/models/bundle-transfer';

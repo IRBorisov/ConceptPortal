@@ -1,6 +1,6 @@
 'use client';
 
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
 
 import { ComboBox } from '@/components/input/combo-box';
 import { type Styling } from '@/components/props';

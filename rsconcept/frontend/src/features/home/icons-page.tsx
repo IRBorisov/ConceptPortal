@@ -3,7 +3,7 @@
 // @ts-nocheck
 'use client';
 
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
 
 import * as icons from '@/components/icons';
 

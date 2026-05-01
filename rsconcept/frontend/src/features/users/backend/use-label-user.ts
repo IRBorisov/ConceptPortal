@@ -1,3 +1,5 @@
+import { formatAppMessage } from '@/i18n/format-app-message';
+
 import { useUsers } from './use-users';
 
 export function useLabelUser() {
@@ -6,7 +8,9 @@ export function useLabelUser() {
   function getUserLabel(userID: number | null): string {
     const user = users.find(({ id }) => id === userID);
     if (!user || userID === null) {
-      return userID ? `Аноним ${userID.toString()}` : 'Отсутствует';
+      return userID
+        ? formatAppMessage('ui.users.anonymousWithId', 'Anonymous {id}', { id: userID.toString() })
+        : formatAppMessage('ui.users.absent', 'Absent');
     }
     const hasFirstName = user.first_name !== '';
     const hasLastName = user.last_name !== '';
@@ -19,7 +23,7 @@ export function useLabelUser() {
       }
       return user.last_name + ' ' + user.first_name;
     }
-    return `Аноним ${userID.toString()}`;
+    return formatAppMessage('ui.users.anonymousWithId', 'Anonymous {id}', { id: userID.toString() });
   }
   return getUserLabel;
 }

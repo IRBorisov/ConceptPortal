@@ -1,9 +1,9 @@
 'use client';
 
 import { CstType } from '@/domain/library/rsform';
+import { useTx } from '@/i18n/use-tx';
 
 import { useConceptNavigation } from '@/app';
-import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 import { MiniSelectorOSS } from '@/features/library/components/mini-selector-oss';
@@ -108,7 +108,10 @@ export function ToolbarSchemaList({ className }: ToolbarSchemaListProps) {
         </Dropdown>
       </div>
       <MiniButton
-        title={prepareTooltip(tx('ui.toolbar.addNewConstituenta', 'Add new constituent…'), tx('ui.hotkey.altGrave', 'Alt + `'))}
+        title={prepareTooltip(
+          tx('ui.toolbar.addNewConstituenta', 'Add new constituent…'),
+          tx('ui.hotkey.altGrave', 'Alt + `')
+        )}
         aria-label={tx('ui.aria.addNewConstituenta', 'Add new constituent')}
         icon={<IconNewItem size='1.25rem' className='icon-green' />}
         onClick={() => void promptCreateCst()}

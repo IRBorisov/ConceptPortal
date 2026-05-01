@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
 
 import { MiniButton } from '@/components/control';
 import { IconAccept, IconClose, IconPageLeft, IconPageRight } from '@/components/icons';
@@ -95,7 +95,10 @@ export function InlineSyntacticEditor({ position, initial, onSave, onCancel }: I
         <div className='mb-2 flex items-center justify-between gap-1'>
           <MiniButton
             icon={<IconAccept size='1.5rem' className='icon-green' />}
-            title={prepareTooltip(tx('ui.refs.inline.saveLink', 'Save reference'), isMac() ? 'Cmd + Enter' : 'Ctrl + Enter')}
+            title={prepareTooltip(
+              tx('ui.refs.inline.saveLink', 'Save reference'),
+              isMac() ? 'Cmd + Enter' : 'Ctrl + Enter'
+            )}
             onClick={handleSave}
             disabled={!canSubmit}
           />

@@ -1,7 +1,8 @@
 'use client';
 
+import { useTx } from '@/i18n/use-tx';
+
 import { urls, useConceptNavigation } from '@/app';
-import { useTx } from '@/app/i18n/use-tx';
 import { useAuth } from '@/features/auth';
 import { useRoleStore, UserRole } from '@/features/users';
 import { describeUserRole, labelUserRole } from '@/features/users/labels';

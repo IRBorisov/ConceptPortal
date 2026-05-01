@@ -2,8 +2,8 @@
 
 import { type Constituenta, type RSForm } from '@/domain/library';
 import { cstCanProduceStructure } from '@/domain/library/rsform-api';
+import { useTx } from '@/i18n/use-tx';
 
-import { useTx } from '@/app/i18n/use-tx';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 
 import { TextButton } from '@/components/control/text-button';

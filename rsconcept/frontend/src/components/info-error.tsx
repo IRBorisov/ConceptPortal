@@ -2,8 +2,8 @@ import clsx from 'clsx';
 import DOMPurify from 'dompurify';
 import { ZodError } from 'zod';
 
-import { lid } from '@/app/i18n/labels/catalog';
-import { formatZodIssueMessage } from '@/app/i18n/labels/zod-issue-message';
+import { lid } from '@/i18n/labels/catalog';
+import { formatZodIssueMessage } from '@/i18n/labels/zod-issue-message';
 
 import { type AxiosError, isAxiosError } from '@/backend/api-transport';
 import { formatLabel } from '@/utils/labels';

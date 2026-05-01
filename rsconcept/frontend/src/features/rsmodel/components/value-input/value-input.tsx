@@ -3,8 +3,8 @@
 import clsx from 'clsx';
 
 import { type EvalStatus } from '@/domain/library';
+import { useTx } from '@/i18n/use-tx';
 
-import { useTx } from '@/app/i18n/use-tx';
 import { IconShowDataText } from '@/features/rsmodel/components/icon-show-data-text';
 
 import { MiniButton } from '@/components/control';

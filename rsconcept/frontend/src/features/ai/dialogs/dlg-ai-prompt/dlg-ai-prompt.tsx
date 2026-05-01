@@ -2,7 +2,8 @@
 
 import { Suspense, useState } from 'react';
 
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
+
 import { HelpTopic } from '@/features/help';
 
 import { ComboBox } from '@/components/input/combo-box';

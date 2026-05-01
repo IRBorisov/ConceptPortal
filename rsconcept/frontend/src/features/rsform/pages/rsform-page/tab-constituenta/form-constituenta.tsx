@@ -9,9 +9,9 @@ import { type Constituenta, CstType, type RSForm } from '@/domain/library';
 import { getAnalysisFor, isBaseSet, isBasicConcept, isLogical } from '@/domain/library/rsform-api';
 import { type AnalysisFull, TypeID } from '@/domain/rslang';
 import { labelType } from '@/domain/rslang/labels';
+import { useTx } from '@/i18n/use-tx';
 
 import { useRegisterNavigationSave } from '@/app';
-import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 
 import { TextButton } from '@/components/control/text-button';
@@ -282,7 +282,9 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
             <RefsInput
               id='cst_definition'
               label={tx('ui.label.textDefinition', 'Text definition')}
-              placeholder={disabled ? '' : tx('ui.placeholder.textDefinitionHint', 'Text interpretation of the formal expression')}
+              placeholder={
+                disabled ? '' : tx('ui.placeholder.textDefinitionHint', 'Text interpretation of the formal expression')
+              }
               minHeight='3.75rem'
               maxHeight='8rem'
               schema={schema}
@@ -308,17 +310,12 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
                 needsInterpretation && !field.state.value && 'border-destructive! outline-destructive!'
               )}
               spellCheck
-              label={
-                isBasic ? tx('ui.label.convention', 'Convention') : tx('ui.label.developerComment', 'Comment')
-              }
+              label={isBasic ? tx('ui.label.convention', 'Convention') : tx('ui.label.developerComment', 'Comment')}
               placeholder={
                 disabled
                   ? ''
                   : isBasic
-                    ? tx(
-                        'ui.placeholder.conventionBasic',
-                        'Agreement on interpreting the base concept'
-                      )
+                    ? tx('ui.placeholder.conventionBasic', 'Agreement on interpreting the base concept')
                     : tx('ui.placeholder.developerComment', 'Developer note')
               }
               disabled={disabled || (isBasic && activeCst.is_inherited)}
@@ -327,7 +324,9 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
               onBlur={field.handleBlur}
               error={
                 field.state.meta.errors[0]?.message ??
-                (needsInterpretation && !field.state.value ? tx('ui.validation.conventionEmpty', 'Empty convention') : undefined)
+                (needsInterpretation && !field.state.value
+                  ? tx('ui.validation.conventionEmpty', 'Empty convention')
+                  : undefined)
               }
             />
           )}

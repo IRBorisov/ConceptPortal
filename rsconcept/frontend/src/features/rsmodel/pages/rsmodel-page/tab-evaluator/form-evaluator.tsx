@@ -10,9 +10,9 @@ import { type AnalysisFull, type CalculatorResult } from '@/domain/rslang';
 import { valueStub } from '@/domain/rslang/eval/value-api';
 import { labelType } from '@/domain/rslang/labels';
 import { isTypification, TypeID, type TypePath, type Typification } from '@/domain/rslang/semantic/typification';
+import { useTx } from '@/i18n/use-tx';
 
 import { useConceptNavigation } from '@/app';
-import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 import { EditorRSExpression } from '@/features/rsform/components/editor-rsexpression/editor-rsexpression';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
@@ -179,7 +179,10 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
               onClick={toggleExport}
             />
             <Dropdown isOpen={isExportOpen} margin='mt-1'>
-              <DropdownButton text={tx('ui.eval.copyToClipboard', 'Copy to clipboard')} onClick={handleClipboardExport} />
+              <DropdownButton
+                text={tx('ui.eval.copyToClipboard', 'Copy to clipboard')}
+                onClick={handleClipboardExport}
+              />
               <DropdownButton text={tx('ui.eval.saveAsJson', 'Save as JSON')} onClick={handleJSONExport} />
             </Dropdown>
           </div>

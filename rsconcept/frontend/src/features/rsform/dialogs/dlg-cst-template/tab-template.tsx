@@ -2,8 +2,8 @@
 
 import { CstType, type RSForm } from '@/domain/library';
 import { applyFilterCategory, isTemplateCst } from '@/domain/library/rsform-api';
+import { useTx } from '@/i18n/use-tx';
 
-import { useTx } from '@/app/i18n/use-tx';
 import { useTemplatesSuspense } from '@/features/library/backend/use-templates';
 
 import { TextArea } from '@/components/input';
@@ -31,7 +31,10 @@ export function TabTemplate({ schema }: TabTemplateProps) {
   } = useTemplateContext();
 
   const { templates } = useTemplatesSuspense();
-  const templateOptions = [{ ...schema, title: tx('ui.rsform.template.currentSchema', 'Current schema') }, ...templates];
+  const templateOptions = [
+    { ...schema, title: tx('ui.rsform.template.currentSchema', 'Current schema') },
+    ...templates
+  ];
   const { schema: templateSchema } = useRSForm({ itemID: templateID ?? undefined });
   const selectedTemplate = templateOptions.find(item => item.id === templateID);
 

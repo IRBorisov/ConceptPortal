@@ -1,6 +1,6 @@
 'use client';
 
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
 
 import { Button } from '@/components/control';
 import { ModalView } from '@/components/modal';
@@ -37,11 +37,7 @@ export function DlgUnsavedNavigation({
       <p>{tx('dlg.unsaved.body', 'Continue navigating without saving your changes?')}</p>
       <div className='flex flex-wrap gap-3 justify-center'>
         <Button text={tx('dlg.unsaved.cancel', 'Cancel')} className='w-40' onClick={onCancel} disabled={isSaving} />
-        <Button
-          text={tx('dlg.unsaved.continue', 'Continue without saving')}
-          onClick={onContinue}
-          disabled={isSaving}
-        />
+        <Button text={tx('dlg.unsaved.continue', 'Continue without saving')} onClick={onContinue} disabled={isSaving} />
         <Button
           text={tx('dlg.unsaved.saveContinue', 'Save and continue')}
           colorSubmit

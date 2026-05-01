@@ -3,8 +3,8 @@
 import { useEffect, useEffectEvent, useLayoutEffect, useRef } from 'react';
 
 import { isSchemaIssue } from '@/domain/library/rsform-api';
+import { useTx } from '@/i18n/use-tx';
 
-import { useTx } from '@/app/i18n/use-tx';
 import { RSTabID, useConceptNavigation } from '@/app/navigation/navigation-context';
 
 import { IconStatusError } from '@/components/icons';

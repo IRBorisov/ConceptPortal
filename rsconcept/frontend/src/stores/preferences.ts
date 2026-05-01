@@ -7,7 +7,7 @@ import {
   parsePersistedLocale,
   pickSupportedLocaleFromNavigator,
   resolveInitialLocale
-} from '@/app/i18n/locales';
+} from '@/i18n/locales';
 
 import { PARAMETER } from '@/utils/constants';
 
@@ -16,7 +16,7 @@ export const videoPlayerTypes = ['vk', 'youtube'] as const;
 /** Represents video player type. */
 export type VideoPlayerType = (typeof videoPlayerTypes)[number];
 
-export type { AppLocale } from '@/app/i18n/locales';
+export type { AppLocale } from '@/i18n/locales';
 
 interface PreferencesStore {
   locale: AppLocale;

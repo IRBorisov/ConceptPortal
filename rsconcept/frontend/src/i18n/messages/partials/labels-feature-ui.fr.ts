@@ -1,13 +1,12 @@
 import { Grammeme } from '@/domain/cctext/language';
 import { RSErrorCode } from '@/domain/rslang/error';
-
-import { aiLid } from '@/app/i18n/labels/ai-ui';
-import { cctextLid, labelGrammemeMessageId } from '@/app/i18n/labels/cctext-ui';
-import { libraryLid } from '@/app/i18n/labels/library-ui';
-import { ossLid } from '@/app/i18n/labels/oss-ui';
-import { rslangLid } from '@/app/i18n/labels/rslang-ui';
-import { rsmodelLid } from '@/app/i18n/labels/rsmodel-ui';
-import { usersLid } from '@/app/i18n/labels/users-ui';
+import { aiLid } from '@/i18n/labels/ai-ui';
+import { cctextLid, labelGrammemeMessageId } from '@/i18n/labels/cctext-ui';
+import { libraryLid } from '@/i18n/labels/library-ui';
+import { ossLid } from '@/i18n/labels/oss-ui';
+import { rslangLid } from '@/i18n/labels/rslang-ui';
+import { rsmodelLid } from '@/i18n/labels/rsmodel-ui';
+import { usersLid } from '@/i18n/labels/users-ui';
 
 const GRAMMEME_FR: Record<Grammeme, string> = {
   [Grammeme.NOUN]: 'POS : nom',
@@ -63,7 +62,9 @@ const GRAMMEME_FR: Record<Grammeme, string> = {
   [Grammeme.Litr]: 'Style : littér.'
 };
 
-const grammemeFrEntries = (Object.keys(GRAMMEME_FR) as Grammeme[]).map(g => [labelGrammemeMessageId(g), GRAMMEME_FR[g]] as const);
+const grammemeFrEntries = (Object.keys(GRAMMEME_FR) as Grammeme[]).map(
+  g => [labelGrammemeMessageId(g), GRAMMEME_FR[g]] as const
+);
 
 /** French overrides for feature UI bundles. */
 export const labelsFeatureUiFr: Record<string, string> = {
@@ -101,24 +102,19 @@ export const labelsFeatureUiFr: Record<string, string> = {
   [ossLid.operationDesc.replica]: 'Créer un lien vers le résultat de l’opération',
   [ossLid.item.blockTitle]: 'Bloc : {title}',
   [ossLid.substitution.invalidIDs]: 'Erreur d’identifiants de schémas',
-  [ossLid.substitution.incorrectCst]:
-    'Erreur {from} → {to} : expression de constituante non valide',
-  [ossLid.substitution.invalidBasic]:
-    'Erreur {from} → {to} : remplacer une notion générique par un ensemble de base',
+  [ossLid.substitution.incorrectCst]: 'Erreur {from} → {to} : expression de constituante non valide',
+  [ossLid.substitution.invalidBasic]: 'Erreur {from} → {to} : remplacer une notion générique par un ensemble de base',
   [ossLid.substitution.invalidConstant]:
     'Erreur {from} → {to} : un ensemble constant ne peut remplacer qu’un autre ensemble constant',
-  [ossLid.substitution.invalidNominal]:
-    'Erreur {from} → {to} : un nominal ne peut remplacer qu’un autre nominal',
+  [ossLid.substitution.invalidNominal]: 'Erreur {from} → {to} : un nominal ne peut remplacer qu’un autre nominal',
   [ossLid.substitution.invalidClasses]: 'Erreur {from} → {to} : classes de constituantes différentes',
   [ossLid.substitution.typificationCycle]: 'Erreur : cycle de substitutions dans les typifications {detail}',
-  [ossLid.substitution.baseSubstitutionNotSet]:
-    'Erreur : la typification ne fixe pas l’ensemble {from} ∈ {to}',
+  [ossLid.substitution.baseSubstitutionNotSet]: 'Erreur : la typification ne fixe pas l’ensemble {from} ∈ {to}',
   [ossLid.substitution.unequalTypification]:
     'Erreur {from} → {to} : typifications des opérandes structurels différentes',
   [ossLid.substitution.unequalArgsCount]: 'Erreur {from} → {to} : nombre d’arguments différent',
   [ossLid.substitution.unequalArgs]: 'Erreur {from} → {to} : typifications des arguments différentes',
-  [ossLid.substitution.unequalExpressions]:
-    'Avertissement {from} → {to} : définitions des notions différentes',
+  [ossLid.substitution.unequalExpressions]: 'Avertissement {from} → {to} : définitions des notions différentes',
   [ossLid.fallback.unknownOperationType]: 'TYPE D’OPÉRATION INCONNU : {type}',
   [ossLid.fallback.unknownSubstitutionError]: 'ERREUR INCONNUE',
 
@@ -190,10 +186,8 @@ export const labelsFeatureUiFr: Record<string, string> = {
   [rslangLid.error[RSErrorCode.missingParenthesis]]: "')' manquante",
   [rslangLid.error[RSErrorCode.missingCurlyBrace]]: "'}' manquant",
   [rslangLid.error[RSErrorCode.missingSquareBracket]]: "']' manquante",
-  [rslangLid.error[RSErrorCode.bracketMismatch]]:
-    'Parenthèses incohérentes : « {open} » au lieu de « {close} »',
-  [rslangLid.error[RSErrorCode.doubleParenthesis]]:
-    'Les doubles parenthèses externes (( et )) sont interdites',
+  [rslangLid.error[RSErrorCode.bracketMismatch]]: 'Parenthèses incohérentes : « {open} » au lieu de « {close} »',
+  [rslangLid.error[RSErrorCode.doubleParenthesis]]: 'Les doubles parenthèses externes (( et )) sont interdites',
   [rslangLid.error[RSErrorCode.missingOpenBracket]]: 'Parenthèse ouvrante « {bracket} » manquante',
   [rslangLid.error[RSErrorCode.expectedLocal]]: 'Nom de variable attendu',
   [rslangLid.error[RSErrorCode.expectedType]]: 'Type attendu : {type}',
@@ -203,53 +197,39 @@ export const labelsFeatureUiFr: Record<string, string> = {
   [rslangLid.error[RSErrorCode.localShadowing]]: 'Masquage de variable : {name}',
   [rslangLid.error[RSErrorCode.typesNotEqual]]: 'Typifications différentes : {a} ≠ {b}',
   [rslangLid.error[RSErrorCode.globalNotTyped]]: 'Pas de typification : {name}',
-  [rslangLid.error[RSErrorCode.invalidDecart]]:
-    'τ(α×b) = 𝔅(𝔇τ(α)×𝔇τ(b)). Argument non valide : {arg}',
-  [rslangLid.error[RSErrorCode.invalidBoolean]]:
-    'τ(ℬ(a)) = 𝔅𝔅𝔇τ(a). Argument non valide : {arg}',
+  [rslangLid.error[RSErrorCode.invalidDecart]]: 'τ(α×b) = 𝔅(𝔇τ(α)×𝔇τ(b)). Argument non valide : {arg}',
+  [rslangLid.error[RSErrorCode.invalidBoolean]]: 'τ(ℬ(a)) = 𝔅𝔅𝔇τ(a). Argument non valide : {arg}',
   [rslangLid.error[RSErrorCode.invalidTypeOperation]]: 'L’argument de l’opération doit être un ensemble : {arg}',
   [rslangLid.error[RSErrorCode.invalidCard]]: 'Cardinalité réservée aux ensembles : {arg}',
-  [rslangLid.error[RSErrorCode.invalidDebool]]:
-    'τ(debool(a)) = 𝔇τ(a). Argument non valide : {arg}',
+  [rslangLid.error[RSErrorCode.invalidDebool]]: 'τ(debool(a)) = 𝔇τ(a). Argument non valide : {arg}',
   [rslangLid.error[RSErrorCode.globalFuncWithoutArgs]]: 'Fonction sans arguments : {name}',
-  [rslangLid.error[RSErrorCode.invalidReduce]]:
-    'τ(red(a)) = 𝔅𝔇𝔇τ(a). Argument non valide : {arg}',
-  [rslangLid.error[RSErrorCode.invalidProjectionTuple]]:
-    'Projection réservée au n-uplet : {from} → {to}',
-  [rslangLid.error[RSErrorCode.invalidProjectionSet]]:
-    'τ(Pri(a)) = 𝔅𝒞i𝔇τ(a). Argument non valide : {from} → {to}',
-  [rslangLid.error[RSErrorCode.invalidEnumeration]]:
-    'Typifications des éléments différentes : {a} ≠ {b}',
+  [rslangLid.error[RSErrorCode.invalidReduce]]: 'τ(red(a)) = 𝔅𝔇𝔇τ(a). Argument non valide : {arg}',
+  [rslangLid.error[RSErrorCode.invalidProjectionTuple]]: 'Projection réservée au n-uplet : {from} → {to}',
+  [rslangLid.error[RSErrorCode.invalidProjectionSet]]: 'τ(Pri(a)) = 𝔅𝒞i𝔇τ(a). Argument non valide : {from} → {to}',
+  [rslangLid.error[RSErrorCode.invalidEnumeration]]: 'Typifications des éléments différentes : {a} ≠ {b}',
   [rslangLid.error[RSErrorCode.invalidCortegeDeclare]]:
     'Le nombre de variables du n-uplet ne correspond pas à la dimension du produit cartésien',
-  [rslangLid.error[RSErrorCode.localOutOfScope]]:
-    'La variable _{name}_ est hors de la portée de sa définition',
-  [rslangLid.error[RSErrorCode.invalidElementPredicate]]:
-    'Typifications incohérentes : {a}{b}{c}',
+  [rslangLid.error[RSErrorCode.localOutOfScope]]: 'La variable _{name}_ est hors de la portée de sa définition',
+  [rslangLid.error[RSErrorCode.invalidElementPredicate]]: 'Typifications incohérentes : {a}{b}{c}',
   [rslangLid.error[RSErrorCode.invalidEmptySetUsage]]: 'Usage dénué de sens de l’ensemble vide',
   [rslangLid.error[RSErrorCode.invalidArgsArity]]: 'Nombre d’arguments incorrect : {a} ≠ {b}',
   [rslangLid.error[RSErrorCode.invalidArgumentType]]:
     'Typification de l’argument différente de la déclaration : {expected} != {actual}',
-  [rslangLid.error[RSErrorCode.globalStructure]]:
-    'Domaine de définition de la structure générique non valide',
+  [rslangLid.error[RSErrorCode.globalStructure]]: 'Domaine de définition de la structure générique non valide',
   [rslangLid.error[RSErrorCode.radicalUsage]]: 'Radicaux interdits hors déclarations : {name}',
   [rslangLid.error[RSErrorCode.invalidFilterArgumentType]]:
     'Typification de l’argument du filtre non valide : {a}({b})',
   [rslangLid.error[RSErrorCode.invalidFilterArity]]:
     'Le nombre de paramètres du filtre ne correspond pas au nombre d’indices',
   [rslangLid.error[RSErrorCode.arithmeticNotSupported]]: 'Type sans arithmétique : {type}',
-  [rslangLid.error[RSErrorCode.typesNotCompatible]]:
-    'Types incompatibles pour l’opération choisie : {a} et {b}',
-  [rslangLid.error[RSErrorCode.orderingNotSupported]]:
-    'Type sans prédicats d’ordre : {type}',
+  [rslangLid.error[RSErrorCode.typesNotCompatible]]: 'Types incompatibles pour l’opération choisie : {a} et {b}',
+  [rslangLid.error[RSErrorCode.orderingNotSupported]]: 'Type sans prédicats d’ordre : {type}',
   [rslangLid.error[RSErrorCode.globalNoValue]]: 'Identifiant non calculable : {name}',
   [rslangLid.error[RSErrorCode.invalidPropertyUsage]]: 'Ensemble non itérable utilisé comme valeur',
-  [rslangLid.error[RSErrorCode.cstEmptyDerived]]:
-    'Expression vide pour une notion complexe ou un énoncé',
+  [rslangLid.error[RSErrorCode.cstEmptyDerived]]: 'Expression vide pour une notion complexe ou un énoncé',
   [rslangLid.error[RSErrorCode.definitionNotAllowed]]: 'Définition interdite pour le type choisi',
   [rslangLid.error[RSErrorCode.calcUnknownError]]: 'Erreur d’évaluation inconnue',
-  [rslangLid.error[RSErrorCode.calculationNotSupported]]:
-    'La déclaration de fonction n’implique pas d’évaluation',
+  [rslangLid.error[RSErrorCode.calculationNotSupported]]: 'La déclaration de fonction n’implique pas d’évaluation',
   [rslangLid.error[RSErrorCode.setOverflow]]: 'Limite du nombre d’éléments dépassée : {limit}',
   [rslangLid.error[RSErrorCode.booleanBaseLimit]]: 'Limite de la base de l’ensemble des parties dépassée : {limit}',
   [rslangLid.error[RSErrorCode.calcGlobalMissing]]: 'Pas de valeur : {name}',

@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useIntl } from 'react-intl';
 
-import { setAppIntl } from '@/app/i18n/format-app-message';
+import { setAppIntl } from '@/i18n/format-app-message';
 
 /** Keeps `formatAppMessage` / `formatLabel` in sync with the active UI locale. */
 export function AppIntlBridge() {

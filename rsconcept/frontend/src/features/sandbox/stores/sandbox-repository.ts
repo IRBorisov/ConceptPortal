@@ -1,6 +1,8 @@
 import { toast } from 'react-toastify';
 import fileDownload from 'js-file-download';
 
+import { formatAppMessage } from '@/i18n/format-app-message';
+
 import { formatLabel, lid } from '@/utils/labels';
 
 import { type SandboxBundle, schemaSandboxBundle } from '../models/bundle';
@@ -58,7 +60,7 @@ export function downloadBundle(bundle: SandboxBundle, filename: string = DEFAULT
 function parseBundleJson(raw: unknown): SandboxBundle {
   const parsed = schemaSandboxBundle.safeParse(raw);
   if (!parsed.success) {
-    throw new Error('Неверный файл песочницы');
+    throw new Error(formatAppMessage('ui.sandbox.invalidBundleFile', 'Invalid sandbox file'));
   }
   return parsed.data;
 }
