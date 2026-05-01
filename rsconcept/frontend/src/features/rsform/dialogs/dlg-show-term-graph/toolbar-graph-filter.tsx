@@ -2,6 +2,8 @@
 
 import { useReactFlow } from '@xyflow/react';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { MiniButton } from '@/components/control';
 import { IconClustering, IconClusteringOff, IconFitImage, IconText, IconTextOff } from '@/components/icons';
 import { PARAMETER } from '@/utils/constants';
@@ -11,6 +13,7 @@ import { useTermGraphStore } from '../../stores/term-graph';
 import { flowOptions } from './tg-readonly-flow';
 
 export default function ToolbarGraphFilter() {
+  const tx = useTx();
   const filter = useTermGraphStore(state => state.filter);
   const toggleText = useTermGraphStore(state => state.toggleText);
   const toggleClustering = useTermGraphStore(state => state.toggleClustering);
@@ -30,7 +33,11 @@ export default function ToolbarGraphFilter() {
         onClick={handleFitView}
       />
       <MiniButton
-        title={!filter.noText ? 'Скрыть текст' : 'Отобразить текст'}
+        title={
+          !filter.noText
+            ? tx('ui.rsform.termGraph.toolbar.hideTextTitle', 'Hide text')
+            : tx('ui.rsform.termGraph.toolbar.showTextTitle', 'Show text')
+        }
         icon={
           !filter.noText ? (
             <IconText size='1.25rem' className='icon-green' />
@@ -41,7 +48,11 @@ export default function ToolbarGraphFilter() {
         onClick={toggleText}
       />
       <MiniButton
-        title={!filter.foldDerived ? 'Скрыть порожденные' : 'Отобразить порожденные'}
+        title={
+          !filter.foldDerived
+            ? tx('ui.rsform.termGraph.toolbar.hideDerivedTitle', 'Hide derived')
+            : tx('ui.rsform.termGraph.toolbar.showDerivedTitle', 'Show derived')
+        }
         icon={
           !filter.foldDerived ? (
             <IconClustering size='1.25rem' className='icon-green' />

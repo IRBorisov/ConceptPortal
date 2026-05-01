@@ -1,6 +1,9 @@
+'use client';
+
 import { Suspense } from 'react';
 
 import { useConceptNavigation } from '@/app';
+import { useTx } from '@/app/i18n/use-tx';
 import { type PromptTabID } from '@/app/navigation/navigation-context';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
@@ -27,6 +30,7 @@ function TabLoader() {
 }
 
 export function TemplatesTabs({ activeID, tab }: TemplatesTabsProps) {
+  const tx = useTx();
   const router = useConceptNavigation();
 
   function onSelectTab(index: number, last: number, event: Event) {
@@ -52,9 +56,9 @@ export function TemplatesTabs({ activeID, tab }: TemplatesTabsProps) {
     <Tabs selectedIndex={tab} onSelect={onSelectTab} className='relative flex flex-col min-w-fit items-center'>
       <TabList className='absolute z-sticky flex border-b-2 border-x-2 divide-x-2 bg-background'>
         <MenuTemplates />
-        <TabLabel label='Список' />
-        <TabLabel label='Шаблон' />
-        <TabLabel label='Переменные' />
+        <TabLabel label={tx('ui.promptTemplates.tab.list', 'List')} />
+        <TabLabel label={tx('ui.aiPrompt.tab.template', 'Template')} />
+        <TabLabel label={tx('ui.aiPrompt.tab.variables', 'Variables')} />
         <BadgeHelp topic={HelpTopic.ASSISTANT} offset={5} padding='px-2' />
       </TabList>
       <div className='overflow-x-hidden'>

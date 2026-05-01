@@ -2,6 +2,8 @@
 
 import clsx from 'clsx';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { MiniButton } from '@/components/control';
 import { Dropdown, useDropdown } from '@/components/dropdown';
 import { IconFolderTree } from '@/components/icons';
@@ -19,13 +21,15 @@ interface SelectLocationContextProps extends Styling {
 
 export function SelectLocationContext({
   value,
-  title = 'Проводник...',
+  title,
   onChange,
   className,
   dropdownHeight = 'h-50',
   ...restProps
 }: SelectLocationContextProps) {
+  const tx = useTx();
   const { elementRef, handleBlur, isOpen, toggle, hide } = useDropdown();
+  const explorerTitle = title ?? tx('ui.library.pickLocation.explorerTitle', 'Explorer...');
 
   function handleClick(newValue: string) {
     hide();
@@ -40,7 +44,7 @@ export function SelectLocationContext({
       {...restProps}
     >
       <MiniButton
-        title={title}
+        title={explorerTitle}
         hideTitle={isOpen}
         icon={<IconFolderTree size='1.25rem' className='icon-primary' />}
         onClick={toggle}

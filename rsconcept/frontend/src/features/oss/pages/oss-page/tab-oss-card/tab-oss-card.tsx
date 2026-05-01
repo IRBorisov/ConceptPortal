@@ -2,6 +2,7 @@
 
 import clsx from 'clsx';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { ButtonSidebar } from '@/features/library/components/button-sidebar';
 import { EditorLibraryItem } from '@/features/library/components/editor-library-item';
 
@@ -19,6 +20,7 @@ import { ViewOssStats } from './view-oss-stats';
 const SIDELIST_LAYOUT_THRESHOLD = 768; // px
 
 export function TabOssCard() {
+  const tx = useTx();
   const { schema } = useOssEdit();
   const isModified = useModificationStore(state => state.isModified);
   const showOSSStats = usePreferencesStore(state => state.showOSSStats);
@@ -55,7 +57,7 @@ export function TabOssCard() {
     >
       <div className='relative cc-column mx-0 md:mx-auto'>
         <ButtonSidebar
-          title='Отображение статистики'
+          title={tx('ui.schemaCard.toggleStatsTitle', 'Show statistics')}
           show={showOSSStats}
           isNarrow={isNarrow}
           onClick={toggleShowOSSStats}

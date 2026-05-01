@@ -5,6 +5,7 @@ import { ReactFlowProvider } from '@xyflow/react';
 import { type RSForm } from '@/domain/library';
 
 import { useConceptNavigation } from '@/app';
+import { useTx } from '@/app/i18n/use-tx';
 
 import { MiniButton } from '@/components/control';
 import { IconRSForm } from '@/components/icons';
@@ -18,6 +19,7 @@ export interface DlgShowTermGraphProps {
 }
 
 export function DlgShowTermGraph() {
+  const tx = useTx();
   const { schema } = useDialogsStore(state => state.props as DlgShowTermGraphProps);
   const hideDialog = useDialogsStore(state => state.hideDialog);
   const router = useConceptNavigation();
@@ -30,9 +32,13 @@ export function DlgShowTermGraph() {
   }
 
   return (
-    <ModalView className='relative w-[calc(100dvw-3rem)] h-[calc(100dvh-3rem)]' fullScreen header='Граф термов'>
+    <ModalView
+      className='relative w-[calc(100dvw-3rem)] h-[calc(100dvh-3rem)]'
+      fullScreen
+      header={tx('ui.rsform.termGraph.dlg.header', 'Term graph')}
+    >
       <MiniButton
-        title='Открыть концептуальную схему'
+        title={tx('ui.rsform.termGraph.openSchemaTitle', 'Open conceptual schema')}
         noPadding
         className='absolute z-pop top-2 left-2'
         icon={<IconRSForm size='1.25rem' className='text-primary' />}

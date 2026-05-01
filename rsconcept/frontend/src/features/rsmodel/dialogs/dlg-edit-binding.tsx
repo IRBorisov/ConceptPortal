@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import { type BasicBinding } from '@/domain/library';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 
 import { ModalForm, ModalView } from '@/components/modal';
@@ -19,6 +20,7 @@ export interface DlgEditBindingProps {
 const dialogClassName = 'w-200 h-152 max-w-[calc(100dvw-3rem)] max-h-[calc(100svh-8rem)] px-6 pb-2';
 
 export function DlgEditBinding() {
+  const tx = useTx();
   const { initialValue, onChange } = useDialogsStore(state => state.props as DlgEditBindingProps);
   const [value, setValue] = useState<BasicBinding>(initialValue);
 
@@ -49,7 +51,7 @@ export function DlgEditBinding() {
     return (
       <ModalView
         helpTopic={HelpTopic.UI_MODEL_BINDING}
-        header='Просмотр базового источника'
+        header={tx('ui.rsmodel.dlg.viewBinding.header', 'View base source')}
         noFooterButton
         className={dialogClassName}
       >

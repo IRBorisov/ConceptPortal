@@ -1,5 +1,8 @@
+'use client';
+
 import { type RSForm } from '@/domain/library';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { useLibrary } from '@/features/library/backend/use-library';
 
 import { Tooltip } from '@/components/container';
@@ -13,6 +16,7 @@ interface SchemasGuideProps {
 }
 
 export function SchemasGuide({ schema }: SchemasGuideProps) {
+  const tx = useTx();
   const libraryItems = useLibrary().items;
 
   const schemas = (() => {
@@ -25,7 +29,7 @@ export function SchemasGuide({ schema }: SchemasGuideProps) {
         if (item) {
           aliases.push(item.alias);
         } else {
-          aliases.push(`Схема ${cst.parent_schema_index}`);
+          aliases.push(tx('ui.rsform.termGraph.schemaAlias', 'Schema {index}', { index: cst.parent_schema_index }));
         }
         processed.add(cst.parent_schema);
         indexes.push(cst.parent_schema_index);
@@ -49,7 +53,7 @@ export function SchemasGuide({ schema }: SchemasGuideProps) {
       >
         <div className='inline-flex items-center gap-2'>
           <span className='w-3 h-3 border rounded-full' style={{ backgroundColor: colorBgSchemas(0) }} />
-          <span>Текущая схема</span>
+          <span>{tx('ui.rsform.termGraph.currentSchemaBadge', 'Current schema')}</span>
         </div>
         {schemas.map((alias, index) => (
           <div key={`${prefixes.schemas_list}${index}`} className='inline-flex items-center gap-2'>

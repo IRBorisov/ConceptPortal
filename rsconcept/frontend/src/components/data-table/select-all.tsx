@@ -1,6 +1,9 @@
 'use no memo';
+'use client';
 
 import { type Table } from '@tanstack/react-table';
+
+import { useTx } from '@/app/i18n/use-tx';
 
 import { CheckboxTristate } from '../input';
 
@@ -10,6 +13,7 @@ interface SelectAllProps<TData> {
 }
 
 export function SelectAll<TData>({ table, resetLastSelected }: SelectAllProps<TData>) {
+  const tx = useTx();
   function handleChange(value: boolean | null) {
     resetLastSelected();
     table.toggleAllPageRowsSelected(value !== false);
@@ -18,7 +22,7 @@ export function SelectAll<TData>({ table, resetLastSelected }: SelectAllProps<TD
   return (
     <CheckboxTristate
       tabIndex={-1}
-      title='Выделить все'
+      title={tx('ui.dataTable.selectAllTitle', 'Select all')}
       value={
         !table.getIsAllPageRowsSelected() && table.getIsSomePageRowsSelected() ? null : table.getIsAllPageRowsSelected()
       }

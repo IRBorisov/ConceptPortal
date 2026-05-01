@@ -4,6 +4,8 @@
 import { useCallback } from 'react';
 import { type Table } from '@tanstack/react-table';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { prefixes } from '@/utils/constants';
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../input/select';
@@ -24,6 +26,7 @@ export function SelectPagination<TData>({
   onChange,
   className
 }: SelectPaginationProps<TData>) {
+  const tx = useTx();
   const handlePaginationOptionsChange = useCallback(
     (newValue: string) => {
       const perPage = Number(newValue);
@@ -37,7 +40,7 @@ export function SelectPagination<TData>({
     <Select onValueChange={handlePaginationOptionsChange} value={String(table.getState().pagination.pageSize)}>
       <SelectTrigger
         id={id}
-        aria-label='Выбор количества строк на страницу'
+        aria-label={tx('ui.pagination.rowsPerPageAria', 'Choose rows per page')}
         className={cn(
           'px-2 justify-end',
           'bg-transparent cc-hover-text cc-animate-color focus-outline border-0 rounded-md',
@@ -50,7 +53,7 @@ export function SelectPagination<TData>({
       <SelectContent>
         {paginationOptions?.map(option => (
           <SelectItem key={`${prefixes.page_size}${option}`} value={String(option)}>
-            {option} на стр
+            {option} {tx('ui.pagination.perPageSuffix', 'per page')}
           </SelectItem>
         ))}
       </SelectContent>

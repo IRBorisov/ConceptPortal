@@ -4,6 +4,8 @@ import { type SubmitEvent, useState } from 'react';
 
 import { type RSForm } from '@/domain/library';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { Checkbox } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
@@ -18,6 +20,7 @@ export interface DlgDeleteCstProps {
 }
 
 export function DlgDeleteCst() {
+  const tx = useTx();
   const { selected, schema, onDelete } = useDialogsStore(state => state.props as DlgDeleteCstProps);
 
   const [expandOut, setExpandOut] = useState(false);
@@ -35,8 +38,12 @@ export function DlgDeleteCst() {
 
   return (
     <ModalForm
-      header='Удаление конституент'
-      submitText={expandOut ? 'Удалить с зависимыми' : 'Удалить'}
+      header={tx('ui.rsform.dlg.deleteCst.header', 'Delete constituents')}
+      submitText={
+        expandOut
+          ? tx('ui.rsform.dlg.deleteCst.submitWithDeps', 'Delete with dependents')
+          : tx('ui.rsform.dlg.deleteCst.submit', 'Delete')
+      }
       onSubmit={handleSubmit}
       className='cc-column max-w-[60vw] min-w-120 px-6'
     >
@@ -48,12 +55,16 @@ export function DlgDeleteCst() {
         prefix={prefixes.cst_dependant_list}
       />
       <Checkbox
-        label='Удалить зависимые конституенты'
+        label={tx('ui.rsform.dlg.deleteCst.expandDepsLabel', 'Delete dependent constituents')}
         className='mb-2'
         value={expandOut}
         onChange={value => setExpandOut(value)}
       />
-      {hasInherited ? <p className='text-sm clr-text-red'>Внимание! Конституенты имеют наследников в ОСС</p> : null}
+      {hasInherited ? (
+        <p className='text-sm clr-text-red'>
+          {tx('ui.rsform.dlg.deleteCst.inheritedWarn', 'Warning: constituents have heirs in the OSS')}
+        </p>
+      ) : null}
     </ModalForm>
   );
 }

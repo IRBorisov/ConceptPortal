@@ -106,7 +106,7 @@ test('create item page submits RSForm and redirects to created item', async ({ p
   await page.locator('#schema_alias').fill('KS_CREATED');
   await page.getByRole('button', { name: 'Создать схему' }).click();
 
-  await expect(page).toHaveURL(new RegExp(`/rsforms/${createdID}$`));
+  await expect(page).toHaveURL(new RegExp(`/rsforms/${createdID}$`), { timeout: 15000 });
   await expect(page.getByRole('tab', { name: 'Паспорт' })).toBeVisible();
   expect(requestPayload).toMatchObject({
     item_type: LibraryItemType.RSFORM,

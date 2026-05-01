@@ -4,6 +4,7 @@ import clsx from 'clsx';
 
 import { type AccessPolicy, type LibraryItem } from '@/domain/library';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 import { useRoleStore, UserRole } from '@/features/users';
@@ -37,6 +38,7 @@ export function ToolbarItemAccess({
   schema,
   isProduced
 }: ToolbarItemAccessProps) {
+  const tx = useTx();
   const role = useRoleStore(state => state.role);
   const isProcessing = useMutatingLibrary();
   const policy = schema.access_policy;
@@ -48,7 +50,7 @@ export function ToolbarItemAccess({
 
   return (
     <div className={clsx('w-46 flex items-center h-8 select-none', className)}>
-      <Label text='Доступ' />
+      <Label text={tx('ui.label.access', 'Access')} />
       <div className='ml-auto cc-icons'>
         <SelectAccessPolicy
           value={policy}
@@ -57,16 +59,20 @@ export function ToolbarItemAccess({
         />
 
         <MiniButton
-          title={visible ? 'Библиотека: отображать' : 'Библиотека: скрывать'}
-          aria-label='Переключатель отображения библиотеки'
+          title={visible ? tx('ui.dlg.clone.libraryShow', 'Library: show') : tx('ui.dlg.clone.libraryHide', 'Library: hide')}
+          aria-label={tx('ui.dlg.clone.libraryToggleAria', 'Toggle library visibility')}
           icon={<IconItemVisibility value={visible} />}
           onClick={toggleVisible}
           disabled={role === UserRole.READER || isProcessing}
         />
 
         <MiniButton
-          title={readOnly ? 'Изменение: запрещено' : 'Изменение: разрешено'}
-          aria-label='Переключатель режима изменения'
+          title={
+            readOnly
+              ? tx('ui.library.toolbar.editForbiddenTitle', 'Editing: forbidden')
+              : tx('ui.library.toolbar.editAllowedTitle', 'Editing: allowed')
+          }
+          aria-label={tx('ui.library.toolbar.editModeToggleAria', 'Toggle edit mode')}
           icon={
             readOnly ? (
               <IconImmutable size='1.25rem' className='text-primary' />

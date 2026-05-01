@@ -1,5 +1,9 @@
+'use client';
+
 import { getRSErrorPrefix, isCritical, type RSErrorDescription } from '@/domain/rslang/error';
 import { describeRSError } from '@/domain/rslang/labels';
+
+import { useTx } from '@/app/i18n/use-tx';
 
 import { cn } from '@/components/utils';
 import { type RO } from '@/utils/meta';
@@ -13,6 +17,7 @@ interface ViewErrorsProps {
 }
 
 export function ViewErrors({ isOpen, errors, disabled, className, onShowError }: ViewErrorsProps) {
+  const tx = useTx();
   const errorCount = errors ? errors.reduce((total, error) => (isCritical(error.code) ? total + 1 : total), 0) : 0;
   const warningsCount = errors ? errors.length - errorCount : 0;
 
@@ -23,11 +28,11 @@ export function ViewErrors({ isOpen, errors, disabled, className, onShowError }:
     >
       <p>
         <span>
-          Ошибок: <b>{errorCount}</b>{' '}
+          {tx('ui.rsform.errors.count', 'Errors: {count}', { count: errorCount })}{' '}
         </span>
         {warningsCount > 0 ? (
           <span>
-            | Предупреждений: <b>{warningsCount}</b>
+            | {tx('ui.rsform.errors.warnings', 'Warnings: {count}', { count: warningsCount })}
           </span>
         ) : null}
       </p>
@@ -40,7 +45,10 @@ export function ViewErrors({ isOpen, errors, disabled, className, onShowError }:
             onClick={disabled || !onShowError ? undefined : () => onShowError(error)}
           >
             <span className='mr-1 font-semibold underline'>
-              {isCritical(error.code) ? 'Ошибка' : 'Предупреждение'} {`${getRSErrorPrefix(error.code)}:`}
+              {isCritical(error.code)
+                ? tx('ui.rsform.errors.kindError', 'Error')
+                : tx('ui.rsform.errors.kindWarning', 'Warning')}{' '}
+              {`${getRSErrorPrefix(error.code)}:`}
             </span>
             <span>{` ${describeRSError(error.code, error.params)}`}</span>
           </p>

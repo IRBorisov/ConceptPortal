@@ -1,4 +1,8 @@
+'use client';
+
 import { type Operation } from '@/domain/library';
+
+import { useTx } from '@/app/i18n/use-tx';
 
 import { ComboBox } from '@/components/input/combo-box';
 import { type Styling } from '@/components/props';
@@ -15,11 +19,13 @@ interface SelectOperationProps extends Styling {
   popoverClassname?: string;
 }
 
-export function SelectOperation({ items, placeholder = 'Выбор операции', ...restProps }: SelectOperationProps) {
+export function SelectOperation({ items, placeholder, ...restProps }: SelectOperationProps) {
+  const tx = useTx();
+  const resolvedPlaceholder = placeholder ?? tx('ui.oss.selectOperation.placeholder', 'Select operation');
   return (
     <ComboBox
       items={items}
-      placeholder={placeholder}
+      placeholder={resolvedPlaceholder}
       idFunc={operation => String(operation.id)}
       labelValueFunc={operation => `${operation.alias}: ${operation.title}`}
       labelOptionFunc={operation => `${operation.alias}: ${operation.title}`}

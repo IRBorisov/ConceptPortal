@@ -2,6 +2,8 @@
 
 import { NodeType, type OperationSchema, type OssItem } from '@/domain/library';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { Label } from '@/components/input';
 
 import { PickContents } from '../../components/pick-contents';
@@ -23,6 +25,7 @@ export function TabBlockChildren({
   onChangeBlocks,
   onChangeOperations
 }: TabBlockChildrenProps) {
+  const tx = useTx();
   const parentItem = parent ? oss.blockByID.get(parent) : null;
   const internalBlocks = parentItem
     ? oss.hierarchy
@@ -42,7 +45,7 @@ export function TabBlockChildren({
 
   return (
     <div className='cc-fade-in cc-column -mt-5'>
-      <Label text={`Выбор содержания: [ ${value.length} ]`} />
+      <Label text={tx('ui.oss.dlg.block.contentPickLabel', 'Content selection: [ {count} ]', { count: value.length })} />
       <PickContents
         schema={oss}
         exclude={exclude}

@@ -2,6 +2,8 @@
 
 import { type OperationInput, type OperationSchema, type OperationSynthesis } from '@/domain/library';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { Label } from '@/components/input';
 
 import { PickMultiOperation } from '../../components/pick-multi-operation';
@@ -15,6 +17,7 @@ interface TabArgumentsProps {
 }
 
 export function TabArguments({ oss, target, args, onChangeArguments, onResetSubstitutions }: TabArgumentsProps) {
+  const tx = useTx();
   const replicas = oss.replicas
     .filter(item => args.includes(item.original) || item.original === target.id)
     .map(item => item.replica)
@@ -32,7 +35,9 @@ export function TabArguments({ oss, target, args, onChangeArguments, onResetSubs
   return (
     <div className='cc-fade-in cc-column'>
       <>
-        <Label text={`Выбор аргументов: [ ${args.length} ]`} />
+        <Label
+          text={tx('ui.oss.dlg.operation.argsPickLabel', 'Argument selection: [ {count} ]', { count: args.length })}
+        />
         <PickMultiOperation items={filtered} value={args} onChange={handleChangeArguments} rows={8} />
       </>
     </div>

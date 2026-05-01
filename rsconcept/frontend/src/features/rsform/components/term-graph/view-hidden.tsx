@@ -4,6 +4,8 @@ import clsx from 'clsx';
 
 import { type Constituenta, type RSForm } from '@/domain/library';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { MiniButton } from '@/components/control';
 import { IconDropArrow, IconDropArrowUp } from '@/components/icons';
 import { cn } from '@/components/utils';
@@ -35,6 +37,7 @@ export function ViewHidden({
   setFocus,
   onActivate
 }: ViewHiddenProps) {
+  const tx = useTx();
   const coloring = useTermGraphStore(state => state.coloring);
 
   const localSelected = selected ? items.filter(id => selected.includes(id)) : [];
@@ -66,7 +69,12 @@ export function ViewHidden({
 
       <div className={clsx('py-2 bg-input border-x', isFolded && 'border-b rounded-b-md')}>
         <div className={clsx('w-fit select-none cc-view-hidden-header', !isFolded && 'open')}>
-          {localSelected ? `Скрытые [${localSelected.length} | ${items.length}]` : 'Скрытые'}
+          {localSelected
+            ? tx('ui.rsform.termGraph.hiddenWithCount', 'Hidden [{selected} | {total}]', {
+                selected: localSelected.length,
+                total: items.length
+              })
+            : tx('ui.rsform.termGraph.hidden', 'Hidden')}
         </div>
       </div>
 

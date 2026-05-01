@@ -3,6 +3,7 @@
 import { CstType, type RSForm } from '@/domain/library';
 import { applyFilterCategory, isTemplateCst } from '@/domain/library/rsform-api';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { useTemplatesSuspense } from '@/features/library/backend/use-templates';
 
 import { TextArea } from '@/components/input';
@@ -19,6 +20,7 @@ interface TabTemplateProps {
 }
 
 export function TabTemplate({ schema }: TabTemplateProps) {
+  const tx = useTx();
   const {
     templateID, //
     filterCategory,
@@ -51,7 +53,7 @@ export function TabTemplate({ schema }: TabTemplateProps) {
           items={templateOptions}
           noBorder
           noSearch
-          placeholder='Источник'
+          placeholder={tx('ui.rsform.template.sourcePlaceholder', 'Source')}
           className='w-48'
           idFunc={item => String(item.id)}
           labelValueFunc={item => item.title}
@@ -64,7 +66,7 @@ export function TabTemplate({ schema }: TabTemplateProps) {
           noBorder
           noSearch
           clearable
-          placeholder='Категория'
+          placeholder={tx('ui.rsform.template.categoryPlaceholder', 'Category')}
           className='grow'
           idFunc={cst => String(cst.id)}
           labelValueFunc={cst => cst.term_raw}
@@ -93,7 +95,7 @@ export function TabTemplate({ schema }: TabTemplateProps) {
       <RSInput
         id='dlg_template_expression'
         disabled
-        placeholder='Выберите шаблон из списка'
+        placeholder={tx('ui.rsform.template.pickFromListPlaceholder', 'Pick a template from the list')}
         height='5.1rem'
         value={prototype?.definition_formal}
       />

@@ -3,6 +3,7 @@
 import { useMemo } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { useAuth } from '@/features/auth';
 import { HelpTopic } from '@/features/help';
 
@@ -20,6 +21,7 @@ export interface DlgCreatePromptTemplateProps {
 }
 
 export function DlgCreatePromptTemplate() {
+  const tx = useTx();
   const { onCreate } = useDialogsStore(state => state.props as DlgCreatePromptTemplateProps);
   const { createPromptTemplate } = useCreatePromptTemplate();
   const { items: templates } = useAvailableTemplatesSuspense();
@@ -44,15 +46,15 @@ export function DlgCreatePromptTemplate() {
 
   return (
     <ModalForm
-      header='Создание шаблона'
-      submitText='Создать'
+      header={tx('ui.promptTemplates.dlg.createHeader', 'Create template')}
+      submitText={tx('ui.action.create', 'Create')}
       canSubmit={canSubmit}
       onSubmit={event => {
         event.preventDefault();
         event.stopPropagation();
         void form.handleSubmit();
       }}
-      validationHint={canSubmit ? '' : 'Введите уникальное название шаблона'}
+      validationHint={canSubmit ? '' : tx('ui.promptTemplates.dlg.uniqueLabelHint', 'Enter a unique template title')}
       className='cc-column w-140 max-h-120 py-2 px-6'
       helpTopic={HelpTopic.ASSISTANT}
     >
@@ -60,7 +62,7 @@ export function DlgCreatePromptTemplate() {
         {field => (
           <TextInput
             id='dlg_prompt_label'
-            label='Название шаблона'
+            label={tx('ui.promptTemplates.dlg.labelField', 'Template title')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
@@ -72,7 +74,7 @@ export function DlgCreatePromptTemplate() {
         {field => (
           <TextArea
             id='dlg_prompt_description'
-            label='Описание'
+            label={tx('ui.label.description', 'Description')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
@@ -85,7 +87,7 @@ export function DlgCreatePromptTemplate() {
           {field => (
             <Checkbox
               id='dlg_prompt_is_shared'
-              label='Общий шаблон'
+              label={tx('ui.promptTemplates.form.sharedCheckbox', 'Shared template')}
               value={field.state.value ?? false}
               onChange={(v: boolean) => field.handleChange(v)}
               onBlur={field.handleBlur}

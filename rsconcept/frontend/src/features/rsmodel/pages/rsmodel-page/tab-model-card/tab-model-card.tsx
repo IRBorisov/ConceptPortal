@@ -5,6 +5,7 @@ import clsx from 'clsx';
 
 import { calculateModelStats } from '@/domain/library/rsmodel-api';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { ButtonSidebar } from '@/features/library/components/button-sidebar';
 import { EditorLibraryItem } from '@/features/library/components/editor-library-item';
 
@@ -22,6 +23,7 @@ import { ViewModelStats } from './view-model-stats';
 const SIDELIST_LAYOUT_THRESHOLD = 768; // px
 
 export function TabModelCard() {
+  const tx = useTx();
   const { model, engine, schema } = useModelEdit();
   const isModified = useModificationStore(state => state.isModified);
   const windowSize = useWindowSize();
@@ -64,7 +66,7 @@ export function TabModelCard() {
     >
       <div className='relative cc-column mx-0 md:mx-auto'>
         <ButtonSidebar
-          title='Отображение статистики'
+          title={tx('ui.schemaCard.toggleStatsTitle', 'Show statistics')}
           show={showStats}
           isNarrow={isNarrow}
           onClick={toggleShowStats}

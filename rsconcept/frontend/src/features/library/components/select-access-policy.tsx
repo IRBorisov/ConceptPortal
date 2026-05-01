@@ -4,6 +4,8 @@ import clsx from 'clsx';
 
 import { AccessPolicy } from '@/domain/library';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import { type Styling } from '@/components/props';
@@ -29,6 +31,7 @@ export function SelectAccessPolicy({
   onChange,
   ...restProps
 }: SelectAccessPolicyProps) {
+  const tx = useTx();
   const { elementRef, handleBlur, isOpen, toggle, hide } = useDropdown();
 
   function handleChange(newValue: AccessPolicy) {
@@ -41,7 +44,7 @@ export function SelectAccessPolicy({
   return (
     <div ref={elementRef} onBlur={handleBlur} className={clsx('relative', className)} {...restProps}>
       <MiniButton
-        title={`Доступ: ${labelAccessPolicy(value)}`}
+        title={`${tx('ui.library.accessTitlePrefix', 'Access:')} ${labelAccessPolicy(value)}`}
         hideTitle={isOpen}
         className='h-full'
         icon={<IconAccessPolicy value={value} size='1.25rem' />}

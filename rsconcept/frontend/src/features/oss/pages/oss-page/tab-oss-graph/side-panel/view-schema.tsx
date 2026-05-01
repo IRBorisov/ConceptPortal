@@ -6,6 +6,7 @@ import { type Constituenta } from '@/domain/library';
 import { calculateSchemaStats, isSchemaIssue } from '@/domain/library/rsform-api';
 
 import { useConceptNavigation } from '@/app';
+import { useTx } from '@/app/i18n/use-tx';
 import { useAIStore } from '@/features/ai/stores/ai-context';
 import { useFindPredecessor } from '@/features/oss/backend/use-find-predecessor';
 import { useClearAttributions } from '@/features/rsform/backend/use-clear-attributions';
@@ -32,6 +33,7 @@ interface ViewSchemaProps {
 }
 
 export function ViewSchema({ schemaID, isMutable }: ViewSchemaProps) {
+  const tx = useTx();
   const { schema } = useRSForm({ itemID: schemaID });
   const [activeID, setActiveID] = useState<number | null>(null);
   const activeCst = activeID ? (schema.cstByID.get(activeID) ?? null) : null;
@@ -161,14 +163,14 @@ export function ViewSchema({ schemaID, isMutable }: ViewSchemaProps) {
           isMutable ? (
             <div className='flex pl-1'>
               <MiniButton
-                title='Переместить вверх'
+                title={tx('ui.toolbar.moveUp', 'Move up')}
                 className='px-0'
                 icon={<IconMoveUp size='1.1rem' className='hover:icon-primary text-muted-foreground' />}
                 onClick={handleMoveUp}
                 disabled={!activeCst || isProcessing || schema.items.length < 2 || hasSearch}
               />
               <MiniButton
-                title='Переместить вниз'
+                title={tx('ui.toolbar.moveDown', 'Move down')}
                 className='px-0'
                 icon={<IconMoveDown size='1.1rem' className='hover:icon-primary text-muted-foreground' />}
                 onClick={handleMoveDown}

@@ -6,6 +6,8 @@ import { useDebounce } from 'use-debounce';
 
 import { NodeType, OperationType } from '@/domain/library';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { MiniButton } from '@/components/control';
 import { IconClose } from '@/components/icons';
 import { Loader } from '@/components/loader';
@@ -24,6 +26,7 @@ interface SidePanelProps {
 }
 
 export function SidePanel({ isMounted, className }: SidePanelProps) {
+  const tx = useTx();
   const noNavigationAnimation = useAppLayoutStore(state => state.noNavigationAnimation);
   const setToastBottom = useAppLayoutStore(state => state.setToastBottom);
   const onSetToastBottom = useEffectEvent(setToastBottom);
@@ -55,7 +58,7 @@ export function SidePanel({ isMounted, className }: SidePanelProps) {
       style={{ height: sidePanelHeight }}
     >
       <MiniButton
-        title='Закрыть панель'
+        title={tx('ui.oss.sidePanel.closeTitle', 'Close panel')}
         noPadding
         icon={<IconClose size='1.25rem' />}
         className={clsx(
@@ -73,15 +76,19 @@ export function SidePanel({ isMounted, className }: SidePanelProps) {
             selectedSchema && 'translate-x-20'
           )}
         >
-          Содержание
+          {tx('ui.oss.sidePanel.contentsHeading', 'Contents')}
         </div>
       ) : null}
 
       {!selectedOperation ? (
-        <div className='text-center text-sm cc-fade-in'>Выделите операцию для просмотра</div>
+        <div className='text-center text-sm cc-fade-in'>
+          {tx('ui.oss.sidePanel.selectOperationHint', 'Select an operation to inspect')}
+        </div>
       ) : null}
       {selectedOperation && !selectedSchema ? (
-        <div className='text-center text-sm cc-fade-in'>Отсутствует концептуальная схема для выбранной операции</div>
+        <div className='text-center text-sm cc-fade-in'>
+          {tx('ui.oss.sidePanel.noCsForOperation', 'No conceptual schema for the selected operation')}
+        </div>
       ) : selectedOperation && selectedSchema && debouncedMounted ? (
         <Suspense fallback={<Loader />}>
           <ViewSchema

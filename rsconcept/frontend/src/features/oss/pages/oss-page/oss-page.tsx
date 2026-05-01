@@ -5,6 +5,7 @@ import { useParams } from 'react-router';
 import { z } from 'zod';
 
 import { urls, useConceptNavigation } from '@/app';
+import { useTx } from '@/app/i18n/use-tx';
 import { OssTabID } from '@/app/navigation/navigation-context';
 import { ConstituentaTooltip } from '@/features/rsform/components/constituenta-tooltip';
 
@@ -54,23 +55,24 @@ export function OssPage() {
 
 // ====== Internals =========
 function ProcessError({ error }: FallbackProps): React.ReactElement {
+  const tx = useTx();
   rethrowIfStaleBundleError(error);
 
   if (isAxiosError(error) && error.response) {
     if (error.response.status === 404) {
       return (
         <div className='flex flex-col items-center p-2 mx-auto'>
-          <p>{`Операционная схема с указанным идентификатором отсутствует`}</p>
+          <p>{tx('ui.oss.error.notFound', 'No operational synthesis schema exists with the given identifier')}</p>
           <div className='flex justify-center'>
-            <TextURL text='Библиотека' href='/library' />
+            <TextURL text={tx('ui.nav.library', 'Library')} href='/library' />
           </div>
         </div>
       );
     } else if (error.response.status === 403) {
       return (
         <div className='flex flex-col items-center p-2 mx-auto'>
-          <p>Владелец ограничил доступ к данной схеме</p>
-          <TextURL text='Библиотека' href='/library' />
+          <p>{tx('ui.rsform.error.forbidden', 'The owner has restricted access to this schema')}</p>
+          <TextURL text={tx('ui.nav.library', 'Library')} href='/library' />
         </div>
       );
     }

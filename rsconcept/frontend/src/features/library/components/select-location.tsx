@@ -5,6 +5,8 @@ import clsx from 'clsx';
 
 import { type FolderNode } from '@/domain/library';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { MiniButton } from '@/components/control';
 import { IconFolder, IconFolderClosed, IconFolderEmpty, IconFolderOpened } from '@/components/icons';
 import { type Styling } from '@/components/props';
@@ -31,6 +33,7 @@ export function SelectLocation({
   className,
   style
 }: SelectLocationProps) {
+  const tx = useTx();
   const { folders } = useFolders();
   const activeNode = folders.at(value);
   const items = folders.getTree();
@@ -124,7 +127,7 @@ export function SelectLocation({
                     <IconFolderOpened size='1rem' className='icon-green' />
                   )
                 }
-                aria-label='Отображение вложенных папок'
+                aria-label={tx('ui.library.showNestedFoldersAria', 'Show nested folders')}
                 onClick={event => onClickFold(event, item)}
               />
             ) : (

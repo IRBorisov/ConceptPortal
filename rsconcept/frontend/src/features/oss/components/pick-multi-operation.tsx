@@ -4,6 +4,8 @@ import { useState } from 'react';
 
 import { type Operation } from '@/domain/library';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { MiniButton } from '@/components/control';
 import { createColumnHelper, DataTable } from '@/components/data-table';
 import { IconMoveDown, IconMoveUp, IconRemove } from '@/components/icons';
@@ -25,6 +27,7 @@ interface PickMultiOperationProps extends Styling {
 const columnHelper = createColumnHelper<Operation>();
 
 export function PickMultiOperation({ rows, items, value, onChange, className, ...restProps }: PickMultiOperationProps) {
+  const tx = useTx();
   const selectedItems = value.map(itemID => items.find(item => item.id === itemID)!);
   const nonSelectedItems = items.filter(item => !value.includes(item.id));
   const [lastSelected, setLastSelected] = useState<Operation | null>(null);
@@ -66,14 +69,14 @@ export function PickMultiOperation({ rows, items, value, onChange, className, ..
   const columns = [
     columnHelper.accessor('alias', {
       id: 'alias',
-      header: 'Сокращение',
+      header: tx('ui.label.alias', 'Abbreviation'),
       size: 300,
       minSize: 150,
       maxSize: 300
     }),
     columnHelper.accessor('title', {
       id: 'title',
-      header: 'Название',
+      header: tx('ui.label.title', 'Title'),
       size: 1200,
       minSize: 300,
       maxSize: 1200,
@@ -85,19 +88,19 @@ export function PickMultiOperation({ rows, items, value, onChange, className, ..
       cell: props => (
         <div className='flex gap-1 w-fit'>
           <MiniButton
-            title='Удалить'
+            title={tx('ui.action.delete', 'Delete')}
             className='px-0'
             icon={<IconRemove size='1rem' className='icon-red' />}
             onClick={() => handleDelete(props.row.original.id)}
           />
           <MiniButton
-            title='Переместить выше'
+            title={tx('ui.list.reorder.moveHigher', 'Move up in list')}
             className='px-0'
             icon={<IconMoveUp size='1rem' className='icon-primary' />}
             onClick={() => handleMoveUp(props.row.original.id)}
           />
           <MiniButton
-            title='Переместить ниже'
+            title={tx('ui.list.reorder.moveLower', 'Move down in list')}
             className='px-0'
             icon={<IconMoveDown size='1rem' className='icon-primary' />}
             onClick={() => handleMoveDown(props.row.original.id)}
@@ -126,7 +129,7 @@ export function PickMultiOperation({ rows, items, value, onChange, className, ..
         columns={columns}
         noDataComponent={
           <NoData>
-            <p>Список пуст</p>
+            <p>{tx('ui.table.emptyList', 'List is empty')}</p>
           </NoData>
         }
       />

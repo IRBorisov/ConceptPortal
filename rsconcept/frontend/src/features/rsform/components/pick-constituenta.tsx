@@ -5,6 +5,8 @@ import { useState } from 'react';
 import { type Constituenta } from '@/domain/library';
 import { matchConstituenta } from '@/domain/library/rsform-api';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/data-table';
 import { SearchBar } from '@/components/input';
 import { type Styling } from '@/components/props';
@@ -44,6 +46,7 @@ export function PickConstituenta({
   className,
   ...restProps
 }: PickConstituentaProps) {
+  const tx = useTx();
   const [filterText, setFilterText] = useState(initialFilter);
 
   const initialData = onBeginFilter ? items.filter(onBeginFilter) : items;
@@ -93,8 +96,8 @@ export function PickConstituenta({
         conditionalRowStyles={conditionalRowStyles}
         noDataComponent={
           <NoData className='min-h-24'>
-            <p>Список конституент пуст</p>
-            <p>Измените параметры фильтра</p>
+            <p>{tx('ui.table.cstSide.emptyTitle', 'No constituents in the list')}</p>
+            <p>{tx('ui.table.cstSide.emptyHint', 'Change the filter or create a constituenta')}</p>
           </NoData>
         }
         onRowClicked={onChange}

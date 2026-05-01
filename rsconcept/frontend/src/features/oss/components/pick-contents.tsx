@@ -4,6 +4,8 @@ import { useState } from 'react';
 
 import { NodeType, type OperationSchema, type OssItem } from '@/domain/library';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { MiniButton } from '@/components/control';
 import { createColumnHelper, DataTable } from '@/components/data-table';
 import { IconMoveDown, IconMoveUp, IconRemove } from '@/components/icons';
@@ -37,6 +39,7 @@ export function PickContents({
   className,
   ...restProps
 }: PickContentsProps) {
+  const tx = useTx();
   const [lastSelected, setLastSelected] = useState<OssItem | null>(null);
   const items: OssItem[] = [
     ...(disallowBlocks ? [] : schema.blocks.filter(item => !value.includes(item) && !exclude?.includes(item))),
@@ -80,15 +83,17 @@ export function PickContents({
   const columns = [
     columnHelper.accessor(item => item.nodeType === NodeType.OPERATION, {
       id: 'type',
-      header: 'Тип',
+      header: tx('ui.oss.pickContents.column.kind', 'Kind'),
       size: 150,
       minSize: 150,
       maxSize: 150,
-      cell: props => <div>{props.getValue() ? 'Операция' : 'Блок'}</div>
+      cell: props => (
+        <div>{props.getValue() ? tx('ui.oss.pickContents.kindOperation', 'Operation') : tx('ui.oss.pickContents.kindBlock', 'Block')}</div>
+      )
     }),
     columnHelper.accessor('title', {
       id: 'title',
-      header: 'Название',
+      header: tx('ui.label.title', 'Title'),
       size: 1200,
       minSize: 300,
       maxSize: 1200,
@@ -100,19 +105,19 @@ export function PickContents({
       cell: props => (
         <div className='flex w-fit'>
           <MiniButton
-            title='Удалить'
+            title={tx('ui.action.delete', 'Delete')}
             className='px-0'
             icon={<IconRemove size='1rem' className='icon-red' />}
             onClick={() => handleDelete(props.row.original)}
           />
           <MiniButton
-            title='Переместить выше'
+            title={tx('ui.list.reorder.moveHigher', 'Move up in list')}
             className='px-0'
             icon={<IconMoveUp size='1rem' className='icon-primary' />}
             onClick={() => handleMoveUp(props.row.original)}
           />
           <MiniButton
-            title='Переместить ниже'
+            title={tx('ui.list.reorder.moveLower', 'Move down in list')}
             className='px-0'
             icon={<IconMoveDown size='1rem' className='icon-primary' />}
             onClick={() => handleMoveDown(props.row.original)}
@@ -129,7 +134,7 @@ export function PickContents({
         noBorder
         items={items}
         value={lastSelected}
-        placeholder='Выберите операцию или блок'
+        placeholder={tx('ui.oss.pickContents.comboPlaceholder', 'Select an operation or block')}
         idFunc={item => item.nodeID}
         labelValueFunc={item => labelOssItem(item)}
         labelOptionFunc={item => labelOssItem(item)}
@@ -145,7 +150,7 @@ export function PickContents({
         columns={columns}
         noDataComponent={
           <NoData>
-            <p>Список пуст</p>
+            <p>{tx('ui.table.emptyList', 'List is empty')}</p>
           </NoData>
         }
       />

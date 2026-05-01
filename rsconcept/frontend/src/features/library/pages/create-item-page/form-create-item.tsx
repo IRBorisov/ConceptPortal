@@ -114,7 +114,7 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
             value={field.state.value ?? ''}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={field.state.meta.errors[0]?.message}
+            error={field.state.meta.errors[0] ? formatLabel(field.state.meta.errors[0].message) : undefined}
           />
         )}
       </form.Field>
@@ -129,7 +129,7 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
               value={field.state.value ?? ''}
               onChange={event => field.handleChange(event.target.value)}
               onBlur={field.handleBlur}
-              error={field.state.meta.errors[0]?.message}
+              error={field.state.meta.errors[0] ? formatLabel(field.state.meta.errors[0].message) : undefined}
             />
           )}
         </form.Field>
@@ -176,7 +176,7 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
                 onChange={field.handleChange}
                 rows={6}
                 className='mt-2'
-                error={field.state.meta.errors[0]?.message}
+                error={field.state.meta.errors[0] ? formatLabel(field.state.meta.errors[0].message) : undefined}
               />
             )}
           </form.Field>
@@ -189,7 +189,7 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
             value={field.state.value ?? ''}
             rows={2}
             onChange={field.handleChange}
-            error={field.state.meta.errors[0]?.message}
+            error={field.state.meta.errors[0] ? formatLabel(field.state.meta.errors[0].message) : undefined}
           />
         )}
       </form.Field>
@@ -204,7 +204,7 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
             onChange={event => field.handleChange(event.target.value)}
             rows={5}
             onBlur={field.handleBlur}
-            error={field.state.meta.errors[0]?.message}
+            error={field.state.meta.errors[0] ? formatLabel(field.state.meta.errors[0].message) : undefined}
           />
         )}
       </form.Field>

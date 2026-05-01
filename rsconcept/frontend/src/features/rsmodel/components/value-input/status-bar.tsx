@@ -4,6 +4,8 @@ import clsx from 'clsx';
 
 import { EvalStatus } from '@/domain/library';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { cn } from '@/components/utils';
 import { globalIDs } from '@/utils/constants';
 
@@ -17,6 +19,7 @@ interface StatusBarProps {
 }
 
 export function StatusBar({ className, status, onCalculate }: StatusBarProps) {
+  const tx = useTx();
   return (
     <div className={cn('pl-22 xs:pl-8 flex gap-1', className)}>
       <div
@@ -35,7 +38,7 @@ export function StatusBar({ className, status, onCalculate }: StatusBarProps) {
           colorStatusBar(status)
         )}
         data-tooltip-id={onCalculate ? globalIDs.tooltip : undefined}
-        data-tooltip-content='Вычислить значение'
+        data-tooltip-content={tx('ui.rsmodel.value.calculateTooltip', 'Calculate value')}
         onClick={onCalculate}
       >
         <div className='cc-fade-in flex items-center gap-1'>

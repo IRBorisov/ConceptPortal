@@ -7,6 +7,7 @@ import { CstType } from '@/domain/library/rsform';
 import { matchConstituenta } from '@/domain/library/rsform-api';
 
 import { useConceptNavigation } from '@/app';
+import { useTx } from '@/app/i18n/use-tx';
 import { MiniSelectorOSS } from '@/features/library/components/mini-selector-oss';
 
 import { ExportDropdown } from '@/components/control/export-dropdown';
@@ -21,6 +22,7 @@ import { TableSchemaList } from './table-schema-list';
 import { ToolbarSchemaList } from './toolbar-schema-list';
 
 export function TabSchemaList() {
+  const tx = useTx();
   const router = useConceptNavigation();
   const {
     isContentEditable,
@@ -119,7 +121,10 @@ export function TabSchemaList() {
       <div className={clsx('flex items-center border-b', !isContentEditable && 'justify-center pl-10')}>
         {isContentEditable ? (
           <div className='px-2'>
-            Выбор {selectedCst.length} из {schema.items.length}
+            {tx('ui.table.pickMulti.selected', 'Selected {selected} of {total}', {
+              selected: selectedCst.length,
+              total: schema.items.length
+            })}
           </div>
         ) : null}
         {!isContentEditable && schema.oss.length > 0 ? (

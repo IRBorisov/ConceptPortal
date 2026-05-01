@@ -164,7 +164,6 @@ export function MenuMain() {
     try {
       const { createSchemaFile } = await import('../../utils/rsform2pdf');
       const blob = await createSchemaFile(schema);
-      void createSchemaFile(schema);
       fileDownload(blob, `${filename}.pdf`, 'application/pdf;charset=utf-8;');
     } catch (error) {
       toast.error(formatLabel(lid.error.pdfError));

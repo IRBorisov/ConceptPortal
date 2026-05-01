@@ -6,6 +6,7 @@ import { type RSEngine } from '@/domain/library';
 import { type TypePath, type Typification, type Value } from '@/domain/rslang';
 import { normalizeValue } from '@/domain/rslang/eval/value-api';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 
 import { ModalForm } from '@/components/modal';
@@ -22,6 +23,7 @@ export interface DlgEditValueProps {
 }
 
 export function DlgEditValue() {
+  const tx = useTx();
   const { initialValue, type, engine, onChange, getHeaderText } = useDialogsStore(
     state => state.props as DlgEditValueProps
   );
@@ -43,8 +45,8 @@ export function DlgEditValue() {
   return (
     <ModalForm
       helpTopic={HelpTopic.UI_MODEL_VALUE_EDIT}
-      header='Редактор значения'
-      submitText='Сохранить'
+      header={tx('ui.rsmodel.dlg.editValue.header', 'Value editor')}
+      submitText={tx('ui.action.save', 'Save')}
       canSubmit={value !== initialValue && !!onChange}
       onSubmit={handleSubmit}
       className='w-230 h-145 max-w-[calc(100dvw-3rem)] max-h-[calc(100svh-8rem)] px-6'
