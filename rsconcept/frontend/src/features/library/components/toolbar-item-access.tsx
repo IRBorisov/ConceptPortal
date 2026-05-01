@@ -3,8 +3,8 @@
 import clsx from 'clsx';
 
 import { type AccessPolicy, type LibraryItem } from '@/domain/library';
+import { useTx } from '@/i18n/use-tx';
 
-import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 import { useRoleStore, UserRole } from '@/features/users';
@@ -59,7 +59,9 @@ export function ToolbarItemAccess({
         />
 
         <MiniButton
-          title={visible ? tx('ui.dlg.clone.libraryShow', 'Library: show') : tx('ui.dlg.clone.libraryHide', 'Library: hide')}
+          title={
+            visible ? tx('ui.dlg.clone.libraryShow', 'Library: show') : tx('ui.dlg.clone.libraryHide', 'Library: hide')
+          }
           aria-label={tx('ui.dlg.clone.libraryToggleAria', 'Toggle library visibility')}
           icon={<IconItemVisibility value={visible} />}
           onClick={toggleVisible}

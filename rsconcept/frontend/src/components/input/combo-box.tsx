@@ -3,7 +3,7 @@
 import { useRef, useState } from 'react';
 import { ChevronDownIcon } from 'lucide-react';
 
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
 
 import { IconRemove } from '@/components/icons';
 
@@ -113,7 +113,9 @@ export function ComboBox<Option>({
       </PopoverTrigger>
       <PopoverContent sideOffset={-1} className='p-0' style={{ width: popoverWidth }}>
         <Command>
-          {!noSearch ? <CommandInput placeholder={tx('ui.combo.searchPlaceholder', 'Search…')} className='h-9' /> : null}
+          {!noSearch ? (
+            <CommandInput placeholder={tx('ui.combo.searchPlaceholder', 'Search…')} className='h-9' />
+          ) : null}
           <CommandList>
             <CommandEmpty>{tx('ui.combo.emptyList', 'No items')}</CommandEmpty>
             <CommandGroup>

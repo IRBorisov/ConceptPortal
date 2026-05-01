@@ -3,8 +3,8 @@
 import { useIntl } from 'react-intl';
 
 import { type LibraryItem } from '@/domain/library';
+import { useTx } from '@/i18n/use-tx';
 
-import { useTx } from '@/app/i18n/use-tx';
 import { useLabelUser } from '@/features/users';
 
 import { createColumnHelper } from '@/components/data-table';

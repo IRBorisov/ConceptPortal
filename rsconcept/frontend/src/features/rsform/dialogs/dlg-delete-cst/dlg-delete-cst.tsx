@@ -3,8 +3,7 @@
 import { type SubmitEvent, useState } from 'react';
 
 import { type RSForm } from '@/domain/library';
-
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
 
 import { Checkbox } from '@/components/input';
 import { ModalForm } from '@/components/modal';

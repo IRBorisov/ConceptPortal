@@ -3,8 +3,7 @@
 import { useForm } from '@tanstack/react-form';
 
 import { CstType } from '@/domain/library';
-
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
 
 import { MiniButton } from '@/components/control';
 import { Checkbox } from '@/components/input';

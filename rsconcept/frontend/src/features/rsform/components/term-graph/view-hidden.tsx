@@ -3,8 +3,7 @@
 import clsx from 'clsx';
 
 import { type Constituenta, type RSForm } from '@/domain/library';
-
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
 
 import { MiniButton } from '@/components/control';
 import { IconDropArrow, IconDropArrowUp } from '@/components/icons';
@@ -62,11 +61,7 @@ export function ViewHidden({
       <MiniButton
         className='absolute right-[calc(1rem-4px)] top-3 pointer-events-auto'
         noPadding
-        title={
-          !isFolded
-            ? tx('ui.rsform.termGraph.fold', 'Collapse')
-            : tx('ui.rsform.termGraph.unfold', 'Expand')
-        }
+        title={!isFolded ? tx('ui.rsform.termGraph.fold', 'Collapse') : tx('ui.rsform.termGraph.unfold', 'Expand')}
         icon={!isFolded ? <IconDropArrowUp size='1rem' /> : <IconDropArrow size='1rem' />}
         onClick={toggleFolded}
       />

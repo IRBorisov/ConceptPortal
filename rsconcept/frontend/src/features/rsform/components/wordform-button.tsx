@@ -5,9 +5,14 @@ import { type Grammeme } from '@/domain/cctext';
 import { useValueTooltipStore } from '@/stores/value-tooltip';
 import { globalIDs } from '@/utils/constants';
 
+export interface WordformExample {
+  question: string;
+  answer: string;
+}
+
 interface WordformButtonProps {
   text: string;
-  example: string;
+  example: WordformExample;
   grams: readonly Grammeme[];
   isSelected?: boolean;
   onSelectGrams: (grams: Grammeme[]) => void;
@@ -39,12 +44,21 @@ export function WordformButton({
         'hover:bg-accent hover:text-foreground cc-animate-color',
         isSelected ? 'cc-selected' : 'text-muted-foreground'
       )}
-      data-tooltip-id={example ? globalIDs.value_tooltip : undefined}
-      onPointerEnter={example ? () => setActiveTooltipText(example) : undefined}
+      data-tooltip-id={globalIDs.value_tooltip}
+      onPointerEnter={() => setActiveTooltipText(<WordformExampleTooltip example={example} />)}
       onDoubleClick={onDoubleClick}
       {...restProps}
     >
       {text}
     </button>
+  );
+}
+
+function WordformExampleTooltip({ example }: { example: WordformExample }) {
+  return (
+    <div>
+      <div>{example.question}</div>
+      <div className='text-center font-bold'>{example.answer}</div>
+    </div>
   );
 }

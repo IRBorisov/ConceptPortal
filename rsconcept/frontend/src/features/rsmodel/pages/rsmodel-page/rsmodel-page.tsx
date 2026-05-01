@@ -4,8 +4,9 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { useParams } from 'react-router';
 import { z } from 'zod';
 
+import { useTx } from '@/i18n/use-tx';
+
 import { urls, useConceptNavigation } from '@/app';
-import { useTx } from '@/app/i18n/use-tx';
 import { RSModelTabID } from '@/app/navigation/navigation-context';
 import { ConstituentaTooltip } from '@/features/rsform/components/constituenta-tooltip';
 

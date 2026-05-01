@@ -3,8 +3,8 @@
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { type OssLayout } from '@/domain/library';
+import { useTx } from '@/i18n/use-tx';
 
-import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 
 import { Checkbox, TextInput } from '@/components/input';
@@ -87,10 +87,7 @@ export function DlgDeleteReplica() {
         {field => (
           <Checkbox
             label={tx('ui.oss.deleteReplica.keepInherited', 'Keep inherited constituents')}
-            title={tx(
-              'ui.oss.deleteReplica.keepInheritedHint',
-              'Inherited constituents\nwill become appended ones'
-            )}
+            title={tx('ui.oss.deleteReplica.keepInheritedHint', 'Inherited constituents\nwill become appended ones')}
             value={field.state.value ?? false}
             onChange={(v: boolean) => field.handleChange(v)}
             disabled={target.result === null || keep_connections}

@@ -4,8 +4,7 @@ import { useState } from 'react';
 
 import { type Constituenta } from '@/domain/library';
 import { matchConstituenta } from '@/domain/library/rsform-api';
-
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
 
 import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/data-table';
 import { SearchBar } from '@/components/input';

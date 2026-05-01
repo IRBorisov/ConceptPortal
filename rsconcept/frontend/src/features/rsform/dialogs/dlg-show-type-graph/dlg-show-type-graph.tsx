@@ -5,8 +5,8 @@ import { ReactFlowProvider } from '@xyflow/react';
 
 import { type TypeInfo } from '@/domain/library';
 import { TypificationGraph } from '@/domain/rslang';
+import { useTx } from '@/i18n/use-tx';
 
-import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 
 import { ModalView } from '@/components/modal';

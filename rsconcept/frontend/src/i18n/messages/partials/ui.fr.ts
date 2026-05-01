@@ -73,16 +73,6 @@ export const uiFr: Record<string, string> = {
   'ui.wordForms.fillFromLexeme': 'Remplir les formes du mot',
   'ui.wordForms.nominalAria': 'Forme initiale',
   'ui.wordForms.nominalPlaceholder': 'Forme initiale',
-  'ui.wordForms.singularHeader': 'Singulier',
-  'ui.wordForms.pluralHeader': 'Pluriel',
-  'ui.wordForms.singularAria': 'Singulier : {hint}',
-  'ui.wordForms.pluralAria': 'Pluriel : {hint}',
-  'ui.wordForms.case.nomn': 'Nominatif : qui ? quoi ?',
-  'ui.wordForms.case.gent': 'Génitif : de qui ? de quoi ?',
-  'ui.wordForms.case.datv': 'Datif : à qui ? à quoi ?',
-  'ui.wordForms.case.accs': 'Accusatif : qui ? quoi ?',
-  'ui.wordForms.case.ablt': 'Instrumental : par qui ? par quoi ?',
-  'ui.wordForms.case.loct': 'Locatif : sur qui ? sur quoi ?',
 
   'ui.tg.selectionCount': 'Sélection {n} sur {total}',
 

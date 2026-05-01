@@ -4,7 +4,8 @@ import type { SubmitEvent, SubmitEventHandler } from 'react';
 import { useEffect, useRef } from 'react';
 import clsx from 'clsx';
 
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
+
 import { type HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 
@@ -165,7 +166,12 @@ export function ModalForm({
               />
             </div>
           ) : null}
-          <Button text={tx('modal.cancel', 'Cancel')} aria-label={tx('modal.close', 'Close')} className='min-w-28' onClick={handleCancel} />
+          <Button
+            text={tx('modal.cancel', 'Cancel')}
+            aria-label={tx('modal.close', 'Close')}
+            className='min-w-28'
+            onClick={handleCancel}
+          />
         </div>
       </form>
     </div>

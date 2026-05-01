@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
 
 interface FocusLabelProps {
   label: string;

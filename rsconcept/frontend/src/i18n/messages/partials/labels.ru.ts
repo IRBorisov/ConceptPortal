@@ -1,5 +1,5 @@
-import { lid } from '@/app/i18n/labels/catalog';
-import { rsformLid } from '@/app/i18n/labels/rsform-ui';
+import { lid } from '@/i18n/labels/catalog';
+import { rsformLid } from '@/i18n/labels/rsform-ui';
 
 import { labelsFeatureUiRu } from './labels-feature-ui.ru';
 
@@ -47,8 +47,7 @@ export const labelsRu: Record<string, string> = {
   [lid.error.cannotExtractNode]: 'Невозможно вынести выбранный узел',
   [lid.error.formalDuplicates]: 'Формальное выражение совпадает с конституентами: {aliases}',
   [lid.error.sandboxFailedToLoad]: 'Не удалось загрузить песочницу. Загружен начальный набор.',
-  [lid.error.bindingInvalid]:
-    'Некорректный формат данных. Используйте JSON вида { "1": "value1", "2": "value2", ... }',
+  [lid.error.bindingInvalid]: 'Некорректный формат данных. Используйте JSON вида { "1": "value1", "2": "value2", ... }',
   [lid.error.valueInvalid]: 'Некорректный формат данных. Используйте JSON, содержащий только числа и массивы',
   [lid.error.generationMissingBasic]: 'Невозможно сгенерировать: в базовом множестве отсутствуют элементы',
 

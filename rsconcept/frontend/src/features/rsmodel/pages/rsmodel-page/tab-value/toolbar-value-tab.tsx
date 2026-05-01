@@ -1,8 +1,8 @@
 'use client';
 
 import { isInferrable } from '@/domain/library/rsmodel-api';
+import { useTx } from '@/i18n/use-tx';
 
-import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
@@ -71,7 +71,10 @@ export function ToolbarValueTab({ className, onSubmit, onReset }: ToolbarValueTa
         onClick={() => engine.recalculateAll()}
       />
       <MiniButton
-        title={prepareTooltip(tx('ui.rsmodel.calculateCurrentCst', 'Calculate current constituent'), isMac() ? 'Cmd + Q' : 'Ctrl + Q')}
+        title={prepareTooltip(
+          tx('ui.rsmodel.calculateCurrentCst', 'Calculate current constituent'),
+          isMac() ? 'Cmd + Q' : 'Ctrl + Q'
+        )}
         aria-label={tx('ui.aria.calculateCurrentCst', 'Calculate current constituent')}
         icon={<IconCalculateOne size='1.25rem' className='icon-green' />}
         onClick={

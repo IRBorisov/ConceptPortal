@@ -1,7 +1,8 @@
 'use client';
 
+import { useTx } from '@/i18n/use-tx';
+
 import { useConceptNavigation } from '@/app';
-import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 import { useRestoreVersion } from '@/features/library/backend/use-restore-version';

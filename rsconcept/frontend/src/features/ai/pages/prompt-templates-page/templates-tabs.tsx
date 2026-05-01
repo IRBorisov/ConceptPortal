@@ -2,8 +2,9 @@
 
 import { Suspense } from 'react';
 
+import { useTx } from '@/i18n/use-tx';
+
 import { useConceptNavigation } from '@/app';
-import { useTx } from '@/app/i18n/use-tx';
 import { type PromptTabID } from '@/app/navigation/navigation-context';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';

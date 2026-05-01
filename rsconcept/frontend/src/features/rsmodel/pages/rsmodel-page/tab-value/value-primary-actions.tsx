@@ -9,8 +9,8 @@ import { generateRandomValue, isInferrable, isInterpretable } from '@/domain/lib
 import { type Value } from '@/domain/rslang';
 import { isSetValue, normalizeValue } from '@/domain/rslang/eval/value-api';
 import { isTypification, TypeID, type TypePath, type Typification } from '@/domain/rslang/semantic/typification';
+import { useTx } from '@/i18n/use-tx';
 
-import { useTx } from '@/app/i18n/use-tx';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 import { useCstStatus } from '@/features/rsmodel/hooks/use-cst-status';
 import { processBindingData, processValueData } from '@/features/rsmodel/models/data-loading';
@@ -233,9 +233,7 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
       {showValueButton ? (
         <TextButton
           text={
-            !cstInferrable && isMutable
-              ? tx('ui.value.editValue', 'Edit value')
-              : tx('ui.eval.viewValue', 'View value')
+            !cstInferrable && isMutable ? tx('ui.value.editValue', 'Edit value') : tx('ui.eval.viewValue', 'View value')
           }
           title={tx('ui.value.viewOrEditTitle', 'View or edit value')}
           onClick={handleValueDialog}
@@ -275,7 +273,10 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
             onClick={toggleImport}
           />
           <Dropdown isOpen={isImportOpen} margin='mt-1'>
-            <DropdownButton text={tx('ui.value.loadFromClipboard', 'Load from clipboard')} onClick={handleClipboardImport} />
+            <DropdownButton
+              text={tx('ui.value.loadFromClipboard', 'Load from clipboard')}
+              onClick={handleClipboardImport}
+            />
             <DropdownButton text={tx('ui.value.loadFromJson', 'Load from JSON')} onClick={handleJSONImport} />
           </Dropdown>
         </div>

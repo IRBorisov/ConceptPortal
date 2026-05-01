@@ -4,9 +4,9 @@ import { useRef } from 'react';
 import { toast } from 'react-toastify';
 
 import { LocationHead } from '@/domain/library';
+import { useTx } from '@/i18n/use-tx';
 
 import { useConceptNavigation } from '@/app';
-import { useTx } from '@/app/i18n/use-tx';
 import { useCreateFromSandbox } from '@/features/library/backend/use-create-from-sandbox';
 
 import { Divider } from '@/components/container';

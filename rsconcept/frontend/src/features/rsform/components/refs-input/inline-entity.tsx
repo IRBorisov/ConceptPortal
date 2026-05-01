@@ -6,8 +6,7 @@ import clsx from 'clsx';
 import { type Grammeme } from '@/domain/cctext';
 import { type Constituenta, type RSForm } from '@/domain/library';
 import { matchConstituenta } from '@/domain/library/rsform-api';
-
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
 
 import { MiniButton } from '@/components/control';
 import { IconAccept, IconClose } from '@/components/icons';
@@ -115,7 +114,10 @@ export function InlineEntityEditor({ schema, initial, position, onSave, onCancel
         <div className='flex items-center gap-1'>
           <MiniButton
             icon={<IconAccept size='1.5rem' className='icon-green' />}
-            title={prepareTooltip(tx('ui.refs.inline.saveLink', 'Save reference'), isMac() ? 'Cmd + Enter' : 'Ctrl + Enter')}
+            title={prepareTooltip(
+              tx('ui.refs.inline.saveLink', 'Save reference'),
+              isMac() ? 'Cmd + Enter' : 'Ctrl + Enter'
+            )}
             onClick={handleSave}
             disabled={!canSubmit}
           />

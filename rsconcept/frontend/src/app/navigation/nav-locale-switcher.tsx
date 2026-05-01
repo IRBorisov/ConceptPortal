@@ -2,8 +2,8 @@
 
 import clsx from 'clsx';
 
-import { APP_LOCALE_OPTIONS, localeLabel } from '@/app/i18n/locale-ui';
-import { useTx } from '@/app/i18n/use-tx';
+import { APP_LOCALE_OPTIONS, localeLabel } from '@/i18n/locale-ui';
+import { useTx } from '@/i18n/use-tx';
 
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import { IconLanguage } from '@/components/icons';
@@ -34,7 +34,9 @@ export function NavLocaleSwitcher() {
         className='text-xs'
       />
       <Dropdown isOpen={isOpen} stretchLeft margin='mt-1' className='min-w-40'>
-        <div className='px-3 py-1 text-muted-foreground border-b'>{tx('nav.language.label', 'Interface language')}</div>
+        <div className='px-3 py-1 text-muted-foreground border-b text-nowrap'>
+          {tx('nav.language.label', 'Interface language')}
+        </div>
         {APP_LOCALE_OPTIONS.map(option => (
           <DropdownButton
             key={option}

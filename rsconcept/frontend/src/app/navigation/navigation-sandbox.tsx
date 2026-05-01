@@ -2,7 +2,8 @@
 
 import clsx from 'clsx';
 
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
+
 import { Logo } from '@/app/navigation/logo';
 import { NavLocaleSwitcher } from '@/app/navigation/nav-locale-switcher';
 import { NavigationButton } from '@/app/navigation/navigation-button';

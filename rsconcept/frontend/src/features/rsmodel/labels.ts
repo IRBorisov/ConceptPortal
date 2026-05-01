@@ -3,9 +3,8 @@ import { type ExpressionType, TypeID, type TypePath, type Typification } from '@
 import { TUPLE_ID, type Value, VALUE_FALSE, VALUE_TRUE } from '@/domain/rslang/eval/value';
 import { valueStub } from '@/domain/rslang/eval/value-api';
 import { labelType } from '@/domain/rslang/labels';
-
-import { formatLabel } from '@/app/i18n/format-app-message';
-import { rsmodelLid } from '@/app/i18n/labels/rsmodel-ui';
+import { formatLabel } from '@/i18n/format-app-message';
+import { rsmodelLid } from '@/i18n/labels/rsmodel-ui';
 
 import { type RO } from '@/utils/meta';
 

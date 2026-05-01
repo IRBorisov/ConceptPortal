@@ -6,8 +6,8 @@ import { Grammeme, type WordForm } from '@/domain/cctext';
 import { Case } from '@/domain/cctext/language';
 import { parseGrammemes } from '@/domain/cctext/language-api';
 import { type Constituenta, type RSForm } from '@/domain/library';
+import { useTx } from '@/i18n/use-tx';
 
-import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 
 import { MiniButton } from '@/components/control';
@@ -22,7 +22,11 @@ import { type LexemeResponse } from '../backend/cctext/types';
 import { useIsProcessingCctext } from '../backend/cctext/use-is-processing-cctext';
 import { type UpdateConstituentaDTO } from '../backend/types';
 import { RefsInput } from '../components/refs-input/refs-input';
-import { WORD_FORM_ROW_DEFS } from '../components/select-word-form';
+import {
+  RUSSIAN_WORD_FORM_CASE_HINTS,
+  RUSSIAN_WORD_FORM_NUMBER_LABELS,
+  WORD_FORM_ROW_DEFS
+} from '../components/select-word-form';
 
 export interface DlgEditWordFormsProps {
   schema: RSForm;
@@ -43,15 +47,6 @@ const CASE_ROW_KEYS = CASE_KEYS.map(key => ({
   singularKey: `sing_${key}`,
   pluralKey: `plur_${key}`
 }));
-
-const CASE_PLACEHOLDER_DEFAULTS: Record<(typeof CASE_KEYS)[number], string> = {
-  nomn: 'Nominative: Who? What?',
-  gent: 'Genitive: Of whom? Of what?',
-  datv: 'Dative: To whom? To what?',
-  accs: 'Accusative: Whom? What?',
-  ablt: 'Instrumental: By whom? With what?',
-  loct: 'Locative: About whom? About what?'
-};
 
 export function DlgEditWordForms() {
   const tx = useTx();
@@ -145,16 +140,16 @@ export function DlgEditWordForms() {
       <div className='mt-2 grid grid-cols-2 gap-4 pb-2'>
         <div className='space-y-2'>
           <div className='text-center text-sm font-controls text-muted-foreground select-none'>
-            {tx('ui.wordForms.singularHeader', 'Singular')}
+            {RUSSIAN_WORD_FORM_NUMBER_LABELS.singular}
           </div>
           {CASE_ROW_KEYS.map(row => {
-            const hint = tx(`ui.wordForms.case.${row.key}`, CASE_PLACEHOLDER_DEFAULTS[row.key]);
+            const hint = RUSSIAN_WORD_FORM_CASE_HINTS[row.key];
             return (
               <TextInput
                 key={row.singularKey}
                 value={formValues[row.singularKey] ?? ''}
                 onChange={event => handleFormChange(row.singularKey, event.target.value)}
-                aria-label={tx('ui.wordForms.singularAria', 'Singular: {hint}', { hint })}
+                aria-label={`${RUSSIAN_WORD_FORM_NUMBER_LABELS.singular}: ${hint}`}
                 placeholder={hint}
                 dense
                 noBorder={false}
@@ -165,16 +160,16 @@ export function DlgEditWordForms() {
         </div>
         <div className='space-y-2'>
           <div className='text-center text-sm font-controls text-muted-foreground select-none'>
-            {tx('ui.wordForms.pluralHeader', 'Plural')}
+            {RUSSIAN_WORD_FORM_NUMBER_LABELS.plural}
           </div>
           {CASE_ROW_KEYS.map(row => {
-            const hint = tx(`ui.wordForms.case.${row.key}`, CASE_PLACEHOLDER_DEFAULTS[row.key]);
+            const hint = RUSSIAN_WORD_FORM_CASE_HINTS[row.key];
             return (
               <TextInput
                 key={row.pluralKey}
                 value={formValues[row.pluralKey] ?? ''}
                 onChange={event => handleFormChange(row.pluralKey, event.target.value)}
-                aria-label={tx('ui.wordForms.pluralAria', 'Plural: {hint}', { hint })}
+                aria-label={`${RUSSIAN_WORD_FORM_NUMBER_LABELS.plural}: ${hint}`}
                 placeholder={hint}
                 dense
                 noBorder={false}

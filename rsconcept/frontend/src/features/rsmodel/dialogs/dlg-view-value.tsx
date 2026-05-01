@@ -2,8 +2,8 @@
 
 import { type RSEngine } from '@/domain/library';
 import { type TypePath, type Typification, type Value } from '@/domain/rslang';
+import { useTx } from '@/i18n/use-tx';
 
-import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 
 import { ModalView } from '@/components/modal';

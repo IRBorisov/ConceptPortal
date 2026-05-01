@@ -1,13 +1,12 @@
 import { Grammeme } from '@/domain/cctext/language';
 import { RSErrorCode } from '@/domain/rslang/error';
-
-import { aiLid } from '@/app/i18n/labels/ai-ui';
-import { cctextLid, labelGrammemeMessageId } from '@/app/i18n/labels/cctext-ui';
-import { libraryLid } from '@/app/i18n/labels/library-ui';
-import { ossLid } from '@/app/i18n/labels/oss-ui';
-import { rslangLid } from '@/app/i18n/labels/rslang-ui';
-import { rsmodelLid } from '@/app/i18n/labels/rsmodel-ui';
-import { usersLid } from '@/app/i18n/labels/users-ui';
+import { aiLid } from '@/i18n/labels/ai-ui';
+import { cctextLid, labelGrammemeMessageId } from '@/i18n/labels/cctext-ui';
+import { libraryLid } from '@/i18n/labels/library-ui';
+import { ossLid } from '@/i18n/labels/oss-ui';
+import { rslangLid } from '@/i18n/labels/rslang-ui';
+import { rsmodelLid } from '@/i18n/labels/rsmodel-ui';
+import { usersLid } from '@/i18n/labels/users-ui';
 
 const GRAMMEME_RU: Record<Grammeme, string> = {
   [Grammeme.NOUN]: 'ЧР: сущ',
@@ -63,7 +62,9 @@ const GRAMMEME_RU: Record<Grammeme, string> = {
   [Grammeme.Litr]: 'Стиль: литературный'
 };
 
-const grammemeRuEntries = (Object.keys(GRAMMEME_RU) as Grammeme[]).map(g => [labelGrammemeMessageId(g), GRAMMEME_RU[g]] as const);
+const grammemeRuEntries = (Object.keys(GRAMMEME_RU) as Grammeme[]).map(
+  g => [labelGrammemeMessageId(g), GRAMMEME_RU[g]] as const
+);
 
 /** Russian overrides for feature UI bundles (library, OSS, RS model, users, AI, cctext, RSLang). */
 export const labelsFeatureUiRu: Record<string, string> = {
@@ -101,24 +102,19 @@ export const labelsFeatureUiRu: Record<string, string> = {
   [ossLid.operationDesc.replica]: 'Создание ссылки на результат операции',
   [ossLid.item.blockTitle]: 'Блок: {title}',
   [ossLid.substitution.invalidIDs]: 'Ошибка в идентификаторах схем',
-  [ossLid.substitution.incorrectCst]:
-    'Ошибка {from} -> {to}: некорректное выражение конституенты',
-  [ossLid.substitution.invalidBasic]:
-    'Ошибка {from} -> {to}: замена структурного понятия базисным множеством',
+  [ossLid.substitution.incorrectCst]: 'Ошибка {from} -> {to}: некорректное выражение конституенты',
+  [ossLid.substitution.invalidBasic]: 'Ошибка {from} -> {to}: замена структурного понятия базисным множеством',
   [ossLid.substitution.invalidConstant]:
     'Ошибка {from} -> {to}: подстановка константного множества возможна только вместо другого константного',
   [ossLid.substitution.invalidNominal]:
     'Ошибка {from} -> {to}: подстановка номиноида возможна только вместо другого номиноида',
   [ossLid.substitution.invalidClasses]: 'Ошибка {from} -> {to}: классы конституент не совпадают',
   [ossLid.substitution.typificationCycle]: 'Ошибка: цикл подстановок в типизациях {detail}',
-  [ossLid.substitution.baseSubstitutionNotSet]:
-    'Ошибка: типизация не задает множество {from} ∈ {to}',
-  [ossLid.substitution.unequalTypification]:
-    'Ошибка {from} -> {to}: типизация структурных операндов не совпадает',
+  [ossLid.substitution.baseSubstitutionNotSet]: 'Ошибка: типизация не задает множество {from} ∈ {to}',
+  [ossLid.substitution.unequalTypification]: 'Ошибка {from} -> {to}: типизация структурных операндов не совпадает',
   [ossLid.substitution.unequalArgsCount]: 'Ошибка {from} -> {to}: количество аргументов не совпадает',
   [ossLid.substitution.unequalArgs]: 'Ошибка {from} -> {to}: типизация аргументов не совпадает',
-  [ossLid.substitution.unequalExpressions]:
-    'Предупреждение {from} -> {to}: определения понятий не совпадают',
+  [ossLid.substitution.unequalExpressions]: 'Предупреждение {from} -> {to}: определения понятий не совпадают',
   [ossLid.fallback.unknownOperationType]: 'UNKNOWN OPERATION TYPE: {type}',
   [ossLid.fallback.unknownSubstitutionError]: 'UNKNOWN ERROR',
 
@@ -165,8 +161,7 @@ export const labelsFeatureUiRu: Record<string, string> = {
   [aiLid.variableMock.block]: 'Пример: Текущий блок операционной схемы',
   [aiLid.variableMock.oss]: 'Пример: Текущая операционная схема',
   [aiLid.variableMock.schema]: 'Пример: Текущая концептуальная схема',
-  [aiLid.variableMock.schemaThesaurus]:
-    'Пример\nТермин1 - Определение1\nТермин2 - Определение2',
+  [aiLid.variableMock.schemaThesaurus]: 'Пример\nТермин1 - Определение1\nТермин2 - Определение2',
   [aiLid.variableMock.schemaGraph]: 'Пример: Граф связей определений конституент',
   [aiLid.variableMock.schemaTypeGraph]: 'Пример: Граф ступеней концептуальной схемы',
   [aiLid.variableMock.constituenta]: 'Пример: Текущая конституента',
@@ -191,10 +186,8 @@ export const labelsFeatureUiRu: Record<string, string> = {
   [rslangLid.error[RSErrorCode.missingParenthesis]]: "Пропущена ')'",
   [rslangLid.error[RSErrorCode.missingCurlyBrace]]: "Пропущена '}'",
   [rslangLid.error[RSErrorCode.missingSquareBracket]]: "Пропущена ']'",
-  [rslangLid.error[RSErrorCode.bracketMismatch]]:
-    "Несогласованные скобки: '{open}' вместо '{close}'",
-  [rslangLid.error[RSErrorCode.doubleParenthesis]]:
-    "Двойные обрамляющие скобки '((' и '))' не допускаются",
+  [rslangLid.error[RSErrorCode.bracketMismatch]]: "Несогласованные скобки: '{open}' вместо '{close}'",
+  [rslangLid.error[RSErrorCode.doubleParenthesis]]: "Двойные обрамляющие скобки '((' и '))' не допускаются",
   [rslangLid.error[RSErrorCode.missingOpenBracket]]: "Пропущена открывающая скобка '{bracket}'",
   [rslangLid.error[RSErrorCode.expectedLocal]]: 'Ожидалось имя переменной',
   [rslangLid.error[RSErrorCode.expectedType]]: 'Ожидался тип: {type}',
@@ -204,53 +197,38 @@ export const labelsFeatureUiRu: Record<string, string> = {
   [rslangLid.error[RSErrorCode.localShadowing]]: 'Повторное объявление переменной: {name}',
   [rslangLid.error[RSErrorCode.typesNotEqual]]: 'Типизации не совпадают: {a} ≠ {b}',
   [rslangLid.error[RSErrorCode.globalNotTyped]]: 'Нет типизации: {name}',
-  [rslangLid.error[RSErrorCode.invalidDecart]]:
-    'τ(α×b) = 𝔅(𝔇τ(α)×𝔇τ(b)). Некорректный аргумент: {arg}',
-  [rslangLid.error[RSErrorCode.invalidBoolean]]:
-    'τ(ℬ(a)) = 𝔅𝔅𝔇τ(a). Некорректный аргумент: {arg}',
+  [rslangLid.error[RSErrorCode.invalidDecart]]: 'τ(α×b) = 𝔅(𝔇τ(α)×𝔇τ(b)). Некорректный аргумент: {arg}',
+  [rslangLid.error[RSErrorCode.invalidBoolean]]: 'τ(ℬ(a)) = 𝔅𝔅𝔇τ(a). Некорректный аргумент: {arg}',
   [rslangLid.error[RSErrorCode.invalidTypeOperation]]: 'Аргумент операции должен быть множеством: {arg}',
   [rslangLid.error[RSErrorCode.invalidCard]]: 'Мощность только для множеств: {arg}',
-  [rslangLid.error[RSErrorCode.invalidDebool]]:
-    'τ(debool(a)) = 𝔇τ(a). Некорректный аргумент: {arg}',
+  [rslangLid.error[RSErrorCode.invalidDebool]]: 'τ(debool(a)) = 𝔇τ(a). Некорректный аргумент: {arg}',
   [rslangLid.error[RSErrorCode.globalFuncWithoutArgs]]: 'Функция без аргументов: {name}',
-  [rslangLid.error[RSErrorCode.invalidReduce]]:
-    'τ(red(a)) = 𝔅𝔇𝔇τ(a). Некорректный аргумент: {arg}',
-  [rslangLid.error[RSErrorCode.invalidProjectionTuple]]:
-    'Проекция только для кортежа: {from} -> {to}',
-  [rslangLid.error[RSErrorCode.invalidProjectionSet]]:
-    'τ(Pri(a)) = 𝔅𝒞i𝔇τ(a). Некорректный аргумент: {from} -> {to}',
-  [rslangLid.error[RSErrorCode.invalidEnumeration]]:
-    'Типизация элементов не совпадает: {a} ≠ {b}',
+  [rslangLid.error[RSErrorCode.invalidReduce]]: 'τ(red(a)) = 𝔅𝔇𝔇τ(a). Некорректный аргумент: {arg}',
+  [rslangLid.error[RSErrorCode.invalidProjectionTuple]]: 'Проекция только для кортежа: {from} -> {to}',
+  [rslangLid.error[RSErrorCode.invalidProjectionSet]]: 'τ(Pri(a)) = 𝔅𝒞i𝔇τ(a). Некорректный аргумент: {from} -> {to}',
+  [rslangLid.error[RSErrorCode.invalidEnumeration]]: 'Типизация элементов не совпадает: {a} ≠ {b}',
   [rslangLid.error[RSErrorCode.invalidCortegeDeclare]]:
     'Количество переменных в кортеже не соответствует размерности декартова произведения',
-  [rslangLid.error[RSErrorCode.localOutOfScope]]:
-    'Переменная _{name}_ вне границ своего определения',
-  [rslangLid.error[RSErrorCode.invalidElementPredicate]]:
-    'Несоответствие типизаций: {a}{b}{c}',
+  [rslangLid.error[RSErrorCode.localOutOfScope]]: 'Переменная _{name}_ вне границ своего определения',
+  [rslangLid.error[RSErrorCode.invalidElementPredicate]]: 'Несоответствие типизаций: {a}{b}{c}',
   [rslangLid.error[RSErrorCode.invalidEmptySetUsage]]: 'Бессмысленное использование пустого множества',
   [rslangLid.error[RSErrorCode.invalidArgsArity]]: 'Неверное число аргументов: {a} ≠ {b}',
   [rslangLid.error[RSErrorCode.invalidArgumentType]]:
     'Типизация аргумента не соответствует объявленной: {expected} != {actual}',
-  [rslangLid.error[RSErrorCode.globalStructure]]:
-    'Область определения родовой структуры не корректна',
+  [rslangLid.error[RSErrorCode.globalStructure]]: 'Область определения родовой структуры не корректна',
   [rslangLid.error[RSErrorCode.radicalUsage]]: 'Радикалы запрещены вне деклараций: {name}',
-  [rslangLid.error[RSErrorCode.invalidFilterArgumentType]]:
-    'Типизация аргумента фильтра не корректна: {a}({b})',
+  [rslangLid.error[RSErrorCode.invalidFilterArgumentType]]: 'Типизация аргумента фильтра не корректна: {a}({b})',
   [rslangLid.error[RSErrorCode.invalidFilterArity]]:
     'Количество параметров фильтра не соответствует количеству индексов',
   [rslangLid.error[RSErrorCode.arithmeticNotSupported]]: 'Тип не поддерживает арифметику: {type}',
-  [rslangLid.error[RSErrorCode.typesNotCompatible]]:
-    'Типы не совместимы для выбранной операции: {a} и {b}',
-  [rslangLid.error[RSErrorCode.orderingNotSupported]]:
-    'Тип не поддерживает предикаты порядка: {type}',
+  [rslangLid.error[RSErrorCode.typesNotCompatible]]: 'Типы не совместимы для выбранной операции: {a} и {b}',
+  [rslangLid.error[RSErrorCode.orderingNotSupported]]: 'Тип не поддерживает предикаты порядка: {type}',
   [rslangLid.error[RSErrorCode.globalNoValue]]: 'Невычислимый идентификатор: {name}',
   [rslangLid.error[RSErrorCode.invalidPropertyUsage]]: 'Неитерируемое множество в качестве значения',
-  [rslangLid.error[RSErrorCode.cstEmptyDerived]]:
-    'Пустое выражение для сложного понятия или утверждения',
+  [rslangLid.error[RSErrorCode.cstEmptyDerived]]: 'Пустое выражение для сложного понятия или утверждения',
   [rslangLid.error[RSErrorCode.definitionNotAllowed]]: 'Определение не допускается для выбранного типа',
   [rslangLid.error[RSErrorCode.calcUnknownError]]: 'Неизвестная ошибка вычисления',
-  [rslangLid.error[RSErrorCode.calculationNotSupported]]:
-    'Объявление функции не предполагает вычисления',
+  [rslangLid.error[RSErrorCode.calculationNotSupported]]: 'Объявление функции не предполагает вычисления',
   [rslangLid.error[RSErrorCode.setOverflow]]: 'Превышен лимит количества элементов: {limit}',
   [rslangLid.error[RSErrorCode.booleanBaseLimit]]: 'Превышен лимит для основания булеана: {limit}',
   [rslangLid.error[RSErrorCode.calcGlobalMissing]]: 'Нет значения: {name}',

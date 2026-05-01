@@ -1,6 +1,7 @@
 'use client';
 
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
+
 import { RequireAuth } from '@/features/auth/components/require-auth';
 
 import { EditorPassword } from './editor-password';

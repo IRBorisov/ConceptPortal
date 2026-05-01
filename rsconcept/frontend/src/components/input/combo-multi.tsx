@@ -3,7 +3,7 @@
 import { useRef, useState } from 'react';
 import { ChevronDownIcon } from 'lucide-react';
 
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
 
 import { IconRemove } from '../icons';
 import { type Styling } from '../props';

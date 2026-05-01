@@ -4,7 +4,8 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { isAxiosError } from 'axios';
 import { z } from 'zod';
 
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
+
 import { PromptTabID } from '@/app/navigation/navigation-context';
 import { routes } from '@/app/urls';
 import { RequireAuth } from '@/features/auth/components/require-auth';
@@ -55,7 +56,10 @@ function ProcessError({ error, itemID }: { error: ErrorData; itemID?: number | n
             })}
           </p>
           <div className='flex justify-center'>
-            <TextURL text={tx('ui.promptTemplates.link.templateList', 'Template list')} href={`/${routes.prompt_templates}`} />
+            <TextURL
+              text={tx('ui.promptTemplates.link.templateList', 'Template list')}
+              href={`/${routes.prompt_templates}`}
+            />
           </div>
         </div>
       );

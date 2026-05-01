@@ -3,8 +3,8 @@
 import { LibraryItemType } from '@/domain/library';
 import { type RSForm } from '@/domain/library';
 import { sortItemsForInlineSynthesis } from '@/domain/library/rsform-api';
+import { useTx } from '@/i18n/use-tx';
 
-import { useTx } from '@/app/i18n/use-tx';
 import { useLibrary } from '@/features/library/backend/use-library';
 import { PickSchema } from '@/features/library/components/pick-schema';
 

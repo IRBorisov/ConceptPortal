@@ -4,9 +4,9 @@ import { toast } from 'react-toastify';
 import fileDownload from 'js-file-download';
 
 import { AccessPolicy, LocationHead } from '@/domain/library';
+import { useTx } from '@/i18n/use-tx';
 
 import { useConceptNavigation } from '@/app';
-import { useTx } from '@/app/i18n/use-tx';
 import { useAuth } from '@/features/auth';
 import { createSandboxBundleFromRSForm } from '@/features/sandbox/models/bundle-transfer';
 import { saveBundle } from '@/features/sandbox/stores/sandbox-repository';

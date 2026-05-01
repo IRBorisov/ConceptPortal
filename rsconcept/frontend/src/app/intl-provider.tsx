@@ -1,9 +1,9 @@
 import { useEffect, useMemo } from 'react';
 import { IntlProvider } from 'react-intl';
 
-import { AppIntlBridge } from '@/app/i18n/app-intl-bridge';
-import { DEFAULT_LOCALE } from '@/app/i18n/locales';
-import { getMessagesForLocale } from '@/app/i18n/messages';
+import { AppIntlBridge } from '@/i18n/app-intl-bridge';
+import { DEFAULT_LOCALE } from '@/i18n/locales';
+import { getMessagesForLocale } from '@/i18n/messages';
 
 import { usePreferencesStore } from '@/stores/preferences';
 

@@ -1,5 +1,5 @@
-import { lid } from '@/app/i18n/labels/catalog';
-import { rsformLid } from '@/app/i18n/labels/rsform-ui';
+import { lid } from '@/i18n/labels/catalog';
+import { rsformLid } from '@/i18n/labels/rsform-ui';
 
 import { labelsFeatureUiFr } from './labels-feature-ui.fr';
 
@@ -49,7 +49,8 @@ export const labelsFr: Record<string, string> = {
   [lid.error.sandboxFailedToLoad]: 'Échec du chargement du bac à sable. Jeu initial chargé.',
   [lid.error.bindingInvalid]:
     'Format de données non valide. Utilisez du JSON du type { "1": "valeur1", "2": "valeur2", ... }',
-  [lid.error.valueInvalid]: 'Format de données non valide. Utilisez du JSON ne contenant que des nombres et des tableaux',
+  [lid.error.valueInvalid]:
+    'Format de données non valide. Utilisez du JSON ne contenant que des nombres et des tableaux',
   [lid.error.generationMissingBasic]: 'Impossible de générer : l’ensemble de base est vide',
 
   [lid.info.changesSaved]: 'Modifications enregistrées',
@@ -199,8 +200,7 @@ export const labelsFr: Record<string, string> = {
   [rsformLid.rsPlaceholder.term]: 'Ex. : D{ξ∈S1 | Pr1(ξ)∩Pr2(ξ)=∅}',
   [rsformLid.rsPlaceholder.theorem]: 'Ex. : D11=∅',
   [rsformLid.rsPlaceholder.axiom]: 'Ex. : D11=∅',
-  [rsformLid.rsPlaceholder.function]:
-    'Ex. : [α∈X1, β∈ℬ(X1×X2)] Pr2(Fi1[{α}](β))',
+  [rsformLid.rsPlaceholder.function]: 'Ex. : [α∈X1, β∈ℬ(X1×X2)] Pr2(Fi1[{α}](β))',
   [rsformLid.rsPlaceholder.predicate]: 'Ex. : [α∈X1, β∈ℬ(X1)] α∈β & card(β)>1',
 
   [rsformLid.token.boolean]: 'Ensemble des parties',

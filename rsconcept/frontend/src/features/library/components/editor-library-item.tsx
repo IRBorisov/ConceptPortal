@@ -3,8 +3,9 @@
 import { Suspense } from 'react';
 import { useIntl } from 'react-intl';
 
+import { useTx } from '@/i18n/use-tx';
+
 import { useConceptNavigation } from '@/app';
-import { useTx } from '@/app/i18n/use-tx';
 import { useLabelUser, useRoleStore, UserRole } from '@/features/users';
 import { InfoUsers } from '@/features/users/components/info-users';
 import { SelectUser } from '@/features/users/components/select-user';

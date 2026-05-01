@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
 
 import { Checkbox, FileInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';

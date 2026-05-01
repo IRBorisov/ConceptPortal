@@ -3,8 +3,8 @@
 import React from 'react';
 
 import { NodeType } from '@/domain/library';
+import { useTx } from '@/i18n/use-tx';
 
-import { useTx } from '@/app/i18n/use-tx';
 import { useAuth } from '@/features/auth/backend/use-auth';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';

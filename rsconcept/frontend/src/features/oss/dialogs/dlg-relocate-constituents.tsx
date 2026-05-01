@@ -5,8 +5,8 @@ import { useForm, useStore } from '@tanstack/react-form';
 
 import { type LibraryItem, type OssLayout } from '@/domain/library';
 import { getRelocateCandidates } from '@/domain/library/oss-api';
+import { useTx } from '@/i18n/use-tx';
 
-import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 import { useLibrary } from '@/features/library/backend/use-library';
 import { SelectLibraryItem } from '@/features/library/components/select-library-item';

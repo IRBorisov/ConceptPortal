@@ -8,9 +8,9 @@ import { isInferrable, isInterpretable, prepareValueString } from '@/domain/libr
 import { type CalculatorResult, TypeID, type Value } from '@/domain/rslang';
 import { valueStub } from '@/domain/rslang/eval/value-api';
 import { labelType } from '@/domain/rslang/labels';
+import { useTx } from '@/i18n/use-tx';
 
 import { useConceptNavigation, useRegisterNavigationSave } from '@/app';
-import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 import { type UpdateConstituentaDTO } from '@/features/rsform/backend/types';
 import { EditorRSExpression } from '@/features/rsform/components/editor-rsexpression/editor-rsexpression';
@@ -68,7 +68,8 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
   const initialValue = isBase ? (engine.basics.get(activeCst.id) ?? {}) : cstData;
 
   const initialStr =
-    prepareValueString(initialValue, typification, schema, engine.basics, showDataText) ?? formatLabel(lid.placeholder.valueTooLarge);
+    prepareValueString(initialValue, typification, schema, engine.basics, showDataText) ??
+    formatLabel(lid.placeholder.valueTooLarge);
   const valueResetKey = `${activeCst.id}:${toggleReset ? '1' : '0'}`;
   const [valueDraft, setValueDraft] = useState(() => ({
     resetKey: valueResetKey,
@@ -153,7 +154,8 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
       void engine.resetValue(activeCst.id);
     }
     const valueStr =
-      prepareValueString(newValue, typification, schema, engine.basics, showDataText) ?? formatLabel(lid.placeholder.valueTooLarge);
+      prepareValueString(newValue, typification, schema, engine.basics, showDataText) ??
+      formatLabel(lid.placeholder.valueTooLarge);
     if (isBase) {
       void engine.setBasicValue(activeCst.id, newValue as BasicBinding);
     } else {
@@ -290,10 +292,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
         placeholder={
           !isInterpretable(activeCst.cst_type)
             ? tx('ui.value.stub.unsupportedType', 'No value for this type')
-            : tx(
-                'ui.value.stub.missingHint',
-                'No value. Use "Random value" to generate an example'
-              )
+            : tx('ui.value.stub.missingHint', 'No value. Use "Random value" to generate an example')
         }
         onCalculate={cstInferrable ? handleCalculate : undefined}
         onChange={newValue =>
@@ -313,7 +312,9 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
             text={tx('ui.rsform.action.editWordForms', 'Edit word forms')}
             className='z-pop text-sm absolute top-0 left-19'
             title={
-              isModified ? formatLabel(lid.tooltip.unsaved) : tx('ui.rsform.hint.editTermWordForms', 'Edit term word forms')
+              isModified
+                ? formatLabel(lid.tooltip.unsaved)
+                : tx('ui.rsform.hint.editTermWordForms', 'Edit term word forms')
             }
             onClick={openTermEditor}
             disabled={isModified}

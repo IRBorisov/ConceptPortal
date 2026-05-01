@@ -3,8 +3,7 @@
 import { useState } from 'react';
 
 import { NodeType, type OperationSchema, type OssItem } from '@/domain/library';
-
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
 
 import { MiniButton } from '@/components/control';
 import { createColumnHelper, DataTable } from '@/components/data-table';
@@ -88,7 +87,11 @@ export function PickContents({
       minSize: 150,
       maxSize: 150,
       cell: props => (
-        <div>{props.getValue() ? tx('ui.oss.pickContents.kindOperation', 'Operation') : tx('ui.oss.pickContents.kindBlock', 'Block')}</div>
+        <div>
+          {props.getValue()
+            ? tx('ui.oss.pickContents.kindOperation', 'Operation')
+            : tx('ui.oss.pickContents.kindBlock', 'Block')}
+        </div>
       )
     }),
     columnHelper.accessor('title', {

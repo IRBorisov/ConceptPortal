@@ -1,5 +1,5 @@
-import { formatLabel } from '@/app/i18n/format-app-message';
-import { rslangLid } from '@/app/i18n/labels/rslang-ui';
+import { formatLabel } from '@/i18n/format-app-message';
+import { rslangLid } from '@/i18n/labels/rslang-ui';
 
 import { type RO } from '@/utils/meta';
 import { type AstNodeBase } from '@/utils/parsing';

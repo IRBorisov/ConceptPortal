@@ -1,14 +1,13 @@
 import type { ReactNode } from 'react';
-
+import { IntlProvider, type IntlShape,useIntl } from 'react-intl';
 import { Link, pdf, Text, View } from '@react-pdf/renderer';
-import { IntlProvider, useIntl, type IntlShape } from 'react-intl';
 
 import { type Constituenta, type RSForm } from '@/domain/library';
 import { labelType } from '@/domain/rslang/labels';
+import { DEFAULT_LOCALE } from '@/i18n/locales';
+import { getMessagesForLocale } from '@/i18n/messages';
 
 import { urls } from '@/app';
-import { DEFAULT_LOCALE } from '@/app/i18n/locales';
-import { getMessagesForLocale } from '@/app/i18n/messages';
 
 import { CDocument } from '@/components/pdf/CDocument';
 import { usePreferencesStore } from '@/stores/preferences';

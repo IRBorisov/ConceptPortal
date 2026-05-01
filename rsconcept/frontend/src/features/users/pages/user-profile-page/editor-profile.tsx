@@ -3,8 +3,9 @@
 import { useEffect, useEffectEvent } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
+import { useTx } from '@/i18n/use-tx';
+
 import { useRegisterNavigationSave } from '@/app';
-import { useTx } from '@/app/i18n/use-tx';
 
 import { isAxiosError } from '@/backend/api-transport';
 import { SubmitButton } from '@/components/control';
@@ -118,7 +119,11 @@ export function EditorProfile() {
         )}
       </form.Field>
       {serverError ? <ServerError error={serverError} /> : null}
-      <SubmitButton className='self-center mt-6' text={tx('ui.profile.submit.saveData', 'Save profile')} loading={isPending} />
+      <SubmitButton
+        className='self-center mt-6'
+        text={tx('ui.profile.submit.saveData', 'Save profile')}
+        loading={isPending}
+      />
     </form>
   );
 }

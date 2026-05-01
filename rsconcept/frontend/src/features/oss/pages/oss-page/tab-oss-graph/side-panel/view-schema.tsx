@@ -4,9 +4,9 @@ import { useEffect, useEffectEvent, useState } from 'react';
 
 import { type Constituenta } from '@/domain/library';
 import { calculateSchemaStats, isSchemaIssue } from '@/domain/library/rsform-api';
+import { useTx } from '@/i18n/use-tx';
 
 import { useConceptNavigation } from '@/app';
-import { useTx } from '@/app/i18n/use-tx';
 import { useAIStore } from '@/features/ai/stores/ai-context';
 import { useFindPredecessor } from '@/features/oss/backend/use-find-predecessor';
 import { useClearAttributions } from '@/features/rsform/backend/use-clear-attributions';

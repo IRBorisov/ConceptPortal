@@ -4,8 +4,8 @@ import clsx from 'clsx';
 
 import { LocationHead } from '@/domain/library';
 import { combineLocation } from '@/domain/library/library-api';
+import { useTx } from '@/i18n/use-tx';
 
-import { useTx } from '@/app/i18n/use-tx';
 import { useAuth } from '@/features/auth';
 
 import { ErrorField, TextArea } from '@/components/input';

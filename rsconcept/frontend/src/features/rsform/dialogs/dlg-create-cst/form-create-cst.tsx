@@ -4,8 +4,8 @@ import { type ReactNode, useState } from 'react';
 
 import { CstType, type RSForm } from '@/domain/library';
 import { isBaseSet, isBasicConcept } from '@/domain/library/rsform-api';
+import { useTx } from '@/i18n/use-tx';
 
-import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 
@@ -80,10 +80,7 @@ export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggl
             id='dlg_cst_term'
             label={tx('ui.form.createCst.termLabel', 'Term')}
             maxHeight='3.75rem'
-            placeholder={tx(
-              'ui.form.createCst.termPlaceholder',
-              'Notation for textual definitions'
-            )}
+            placeholder={tx('ui.form.createCst.termPlaceholder', 'Notation for textual definitions')}
             schema={schema}
             value={field.state.value ?? ''}
             resolved={field.state.value}
@@ -150,10 +147,7 @@ export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggl
               }
               placeholder={
                 isBasic
-                  ? tx(
-                      'ui.form.createCst.conventionPlaceholder',
-                      'Agreement on interpreting the base notion'
-                    )
+                  ? tx('ui.form.createCst.conventionPlaceholder', 'Agreement on interpreting the base notion')
                   : tx('ui.form.createCst.commentPlaceholder', 'Developer note')
               }
               areaClassName='max-h-20'

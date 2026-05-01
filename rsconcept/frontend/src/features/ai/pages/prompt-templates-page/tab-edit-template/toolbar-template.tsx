@@ -1,7 +1,8 @@
 'use client';
 
+import { useTx } from '@/i18n/use-tx';
+
 import { urls, useConceptNavigation } from '@/app';
-import { useTx } from '@/app/i18n/use-tx';
 import { PromptTabID } from '@/app/navigation/navigation-context';
 import { useDeletePromptTemplate } from '@/features/ai/backend/use-delete-prompt-template';
 import { useMutatingPrompts } from '@/features/ai/backend/use-mutating-prompts';

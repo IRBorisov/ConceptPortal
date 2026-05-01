@@ -1,5 +1,5 @@
-import { formatLabel } from '@/app/i18n/format-app-message';
-import { usersLid } from '@/app/i18n/labels/users-ui';
+import { formatLabel } from '@/i18n/format-app-message';
+import { usersLid } from '@/i18n/labels/users-ui';
 
 import { UserRole } from './stores/role';
 

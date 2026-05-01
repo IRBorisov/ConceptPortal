@@ -1,8 +1,8 @@
 'use client';
 
 import { CstType } from '@/domain/library';
+import { useTx } from '@/i18n/use-tx';
 
-import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 import { IconCstType } from '@/features/rsform/components/icon-cst-type';
@@ -108,7 +108,10 @@ export function ToolbarModelList({ className }: ToolbarModelListProps) {
         </Dropdown>
       </div>
       <MiniButton
-        title={prepareTooltip(tx('ui.toolbar.addNewConstituenta', 'Add new constituent…'), tx('ui.hotkey.altGrave', 'Alt + `'))}
+        title={prepareTooltip(
+          tx('ui.toolbar.addNewConstituenta', 'Add new constituent…'),
+          tx('ui.hotkey.altGrave', 'Alt + `')
+        )}
         aria-label={tx('ui.aria.addNewConstituenta', 'Add new constituent')}
         icon={<IconNewItem size='1.25rem' className='icon-green' />}
         onClick={() => void promptCreateCst()}

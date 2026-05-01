@@ -3,8 +3,8 @@
 import { useState } from 'react';
 
 import { type BasicBinding } from '@/domain/library';
+import { useTx } from '@/i18n/use-tx';
 
-import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 
 import { ModalForm, ModalView } from '@/components/modal';

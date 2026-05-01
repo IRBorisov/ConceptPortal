@@ -4,9 +4,9 @@ import { useEffect, useEffectEvent } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { LibraryItemType, type RSModel } from '@/domain/library';
+import { useTx } from '@/i18n/use-tx';
 
 import { useConceptNavigation, useRegisterNavigationSave } from '@/app';
-import { useTx } from '@/app/i18n/use-tx';
 import { schemaUpdateLibraryItem, type UpdateLibraryItemDTO } from '@/features/library';
 import { useUpdateItem } from '@/features/library/backend/use-update-item';
 import { ToolbarItemAccess } from '@/features/library/components/toolbar-item-access';

@@ -5,8 +5,7 @@ import { createColumnHelper } from '@tanstack/react-table';
 import { useDebounce } from 'use-debounce';
 
 import { type BasicBinding } from '@/domain/library';
-
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
 
 import { DataTable, type IConditionalStyle } from '@/components/data-table';
 import { SearchBar, TextInput } from '@/components/input';
@@ -96,7 +95,9 @@ export function PickElement({ className, value, alias, isInteger, term, binding,
 
   if (!binding) {
     return (
-      <div className={cn('text-muted-foreground', className)}>{tx('ui.pickElement.selectPrompt', 'Select an element to edit')}</div>
+      <div className={cn('text-muted-foreground', className)}>
+        {tx('ui.pickElement.selectPrompt', 'Select an element to edit')}
+      </div>
     );
   }
 

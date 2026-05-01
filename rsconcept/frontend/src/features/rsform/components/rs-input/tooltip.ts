@@ -7,6 +7,7 @@ import { isBasicConcept } from '@/domain/library/rsform-api';
 import { type AnalysisFull, type ExpressionType, readTypeAnnotation, TokenID } from '@/domain/rslang';
 import { type RSErrorDescription } from '@/domain/rslang/error';
 import { describeRSError, labelType } from '@/domain/rslang/labels';
+import { formatAppMessage } from '@/i18n/format-app-message';
 
 import { appendBoldTextRow, appendMathBoldLabelParagraph } from '@/utils/format';
 import { type AstNode } from '@/utils/parsing';
@@ -148,43 +149,55 @@ function domTooltipConstituenta(
 
   if (!cst) {
     const text = document.createElement('p');
-    text.innerText = 'Конституента не определена';
+    text.innerText = formatAppMessage('ui.rsform.rsInput.undefinedConstituent', 'Constituent is not defined');
     dom.appendChild(text);
   } else {
     appendMathBoldLabelParagraph(dom, `${cst.alias}:`, labelType(cst.analysis.type));
 
     if (cst.term_resolved) {
-      appendBoldTextRow(dom, 'Термин:', cst.term_resolved);
+      appendBoldTextRow(dom, formatAppMessage('ui.rsform.cstInfo.termLabel', 'Term: '), cst.term_resolved);
     }
 
     if (cst.definition_formal) {
-      appendBoldTextRow(dom, 'Выражение:', cst.definition_formal);
+      appendBoldTextRow(
+        dom,
+        formatAppMessage('ui.rsform.cstInfo.expressionLabel', 'Expression: '),
+        cst.definition_formal
+      );
     }
 
     if (cst.definition_resolved) {
-      appendBoldTextRow(dom, 'Определение:', cst.definition_resolved);
+      appendBoldTextRow(
+        dom,
+        formatAppMessage('ui.rsform.cstInfo.definitionLabel', 'Definition: '),
+        cst.definition_resolved
+      );
     }
 
     if (cst.convention) {
       if (isBasicConcept(cst.cst_type)) {
-        appendBoldTextRow(dom, 'Конвенция:', cst.convention);
+        appendBoldTextRow(dom, formatAppMessage('ui.rsform.cstInfo.conventionLabel', 'Convention: '), cst.convention);
       } else {
-        appendBoldTextRow(dom, 'Комментарий:', cst.convention);
+        appendBoldTextRow(dom, formatAppMessage('ui.rsform.cstInfo.commentLabel', 'Comment: '), cst.convention);
       }
     }
 
     if (cst.spawner_alias) {
-      appendBoldTextRow(dom, 'Основание:', cst.spawner_alias);
+      appendBoldTextRow(dom, formatAppMessage('ui.rsform.cstInfo.baseLabel', 'Base: '), cst.spawner_alias);
     }
 
     if (cst.spawn_alias.length > 0) {
-      appendBoldTextRow(dom, 'Порождает:', cst.spawn_alias.join(', '));
+      appendBoldTextRow(
+        dom,
+        formatAppMessage('ui.rsform.cstInfo.generatesLabel', 'Generates: '),
+        cst.spawn_alias.join(', ')
+      );
     }
 
     if (canClick) {
       const clickTip = document.createElement('p');
       clickTip.className = 'text-center text-xs mt-1';
-      clickTip.innerText = 'Ctrl + клик для перехода';
+      clickTip.innerText = formatAppMessage('ui.rsform.rsInput.ctrlClickToOpen', 'Ctrl + click to open');
       dom.appendChild(clickTip);
     }
   }

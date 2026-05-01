@@ -1,6 +1,6 @@
 'use client';
 
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
 
 export function DefaultNoData() {
   const tx = useTx();

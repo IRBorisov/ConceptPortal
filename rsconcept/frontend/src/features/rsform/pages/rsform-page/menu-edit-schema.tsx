@@ -2,9 +2,9 @@
 
 import { type Constituenta } from '@/domain/library';
 import { cstCanProduceStructure } from '@/domain/library/rsform-api';
+import { useTx } from '@/i18n/use-tx';
 
 import { useConceptNavigation } from '@/app';
-import { useTx } from '@/app/i18n/use-tx';
 import { useAuth } from '@/features/auth';
 
 import { Divider } from '@/components/container';
@@ -128,10 +128,7 @@ export function MenuEditSchema() {
     return (
       <MiniButton
         noPadding
-        title={tx(
-          'ui.rsform.menu.archiveNoEdit',
-          'Archive: editing disabled\nGo to the current version'
-        )}
+        title={tx('ui.rsform.menu.archiveNoEdit', 'Archive: editing disabled\nGo to the current version')}
         hideTitle={isMenuOpen}
         className='h-full px-3 bg-transparent'
         icon={<IconArchive size='1.25rem' className='icon-primary' />}
@@ -161,14 +158,8 @@ export function MenuEditSchema() {
         />
         <DropdownButton
           text={tx('ui.rsform.menu.embedding', 'Embedding')}
-          title={tx(
-            'ui.rsform.menu.embeddingTitle',
-            'Import a set of\nconstituents from another schema'
-          )}
-          aria-label={tx(
-            'ui.rsform.menu.embeddingAria',
-            'Import a set of constituents from another schema'
-          )}
+          title={tx('ui.rsform.menu.embeddingTitle', 'Import a set of\nconstituents from another schema')}
+          aria-label={tx('ui.rsform.menu.embeddingAria', 'Import a set of constituents from another schema')}
           icon={<IconInlineSynthesis size='1rem' className='icon-green' />}
           onClick={handleInlineSynthesis}
           disabled={!isContentEditable || isProcessing}
@@ -192,14 +183,8 @@ export function MenuEditSchema() {
         />
         <DropdownButton
           text={tx('ui.rsform.menu.ordinalNames', 'Ordinal names')}
-          title={tx(
-            'ui.rsform.menu.ordinalNamesTitle',
-            'Assign ordinal names\nand refresh expressions'
-          )}
-          aria-label={tx(
-            'ui.rsform.menu.ordinalNamesAria',
-            'Assign ordinal names and refresh expressions'
-          )}
+          title={tx('ui.rsform.menu.ordinalNamesTitle', 'Assign ordinal names\nand refresh expressions')}
+          aria-label={tx('ui.rsform.menu.ordinalNamesAria', 'Assign ordinal names and refresh expressions')}
           icon={<IconGenerateNames size='1rem' className='icon-primary' />}
           onClick={handleReindex}
           disabled={!isContentEditable || isProcessing}
@@ -220,14 +205,8 @@ export function MenuEditSchema() {
         />
         <DropdownButton
           text={tx('ui.rsform.menu.substitution', 'Identification')}
-          title={tx(
-            'ui.rsform.menu.substitutionTitle',
-            'Replace occurrences\nof one constituent with another'
-          )}
-          aria-label={tx(
-            'ui.rsform.menu.substitutionAria',
-            'Replace occurrences of one constituent with another'
-          )}
+          title={tx('ui.rsform.menu.substitutionTitle', 'Replace occurrences\nof one constituent with another')}
+          aria-label={tx('ui.rsform.menu.substitutionAria', 'Replace occurrences of one constituent with another')}
           icon={<IconReplace size='1rem' className='icon-red' />}
           onClick={handleSubstituteCst}
           disabled={!isContentEditable || isProcessing}

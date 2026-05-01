@@ -6,6 +6,7 @@ import clsx from 'clsx';
 import { type EntityReference, type SyntacticReference } from '@/domain/cctext';
 import { labelGrammeme } from '@/domain/cctext/labels';
 import { type Constituenta, type RSForm } from '@/domain/library';
+import { formatAppMessage } from '@/i18n/format-app-message';
 
 import { findContainedNodes } from '@/utils/codemirror';
 import { appendBoldTextRow } from '@/utils/format';
@@ -73,7 +74,7 @@ function domTooltipEntityReference(ref: EntityReference, cst: Constituenta | nul
     'select-none cursor-auto'
   );
 
-  appendBoldTextRow(dom, 'Ссылка на конституенту');
+  appendBoldTextRow(dom, formatAppMessage('ui.rsform.refsTooltip.referenceToConstituent', 'Reference to constituent'));
 
   appendBoldTextRow(dom, `${ref.entity}:`, describeConstituentaTerm(cst));
 
@@ -91,10 +92,14 @@ function domTooltipEntityReference(ref: EntityReference, cst: Constituenta | nul
 
   const controlsTip = document.createElement('p');
   controlsTip.className = 'text-left text-xs mt-1';
-  controlsTip.textContent = 'Alt + 1: ссылка на конституенту\nAlt + 2: зависимое слово';
+  controlsTip.textContent = formatAppMessage(
+    'ui.rsform.refsTooltip.controls',
+    'Alt + 1: reference to constituent\nAlt + 2: dependent word'
+  );
   if (canClick) {
     controlsTip.textContent =
-      `${isMac() ? 'Cmd + клик' : 'Ctrl + клик'}: для перехода\n` + (controlsTip.textContent ?? '');
+      `${isMac() ? 'Cmd + click' : 'Ctrl + click'}: ${formatAppMessage('ui.rsform.refsTooltip.toOpen', 'to open')}\n` +
+      (controlsTip.textContent ?? '');
   }
   dom.appendChild(controlsTip);
 
@@ -117,15 +122,19 @@ function domTooltipSyntacticReference(
     'select-none cursor-auto'
   );
 
-  appendBoldTextRow(dom, 'Связывание слов');
-  appendBoldTextRow(dom, 'Смещение:', ref.offset);
-  appendBoldTextRow(dom, 'Основная ссылка:', masterRef ?? 'не определена');
-  appendBoldTextRow(dom, 'Начальная форма:', ref.nominal);
+  appendBoldTextRow(dom, formatAppMessage('ui.rsform.refsTooltip.linkWordBinding', 'Word binding'));
+  appendBoldTextRow(dom, formatAppMessage('ui.rsform.refsTooltip.offset', 'Offset:'), ref.offset);
+  appendBoldTextRow(
+    dom,
+    formatAppMessage('ui.rsform.refsTooltip.masterReference', 'Master reference:'),
+    masterRef ?? formatAppMessage('ui.rsform.refsTooltip.notDefined', 'not defined')
+  );
+  appendBoldTextRow(dom, formatAppMessage('ui.rsform.refsTooltip.nominalForm', 'Lemma form:'), ref.nominal);
 
   if (canClick) {
     const clickTip = document.createElement('p');
     clickTip.className = 'text-center text-xs mt-1';
-    clickTip.textContent = 'Alt + 2: для редактирования';
+    clickTip.textContent = formatAppMessage('ui.rsform.refsTooltip.editHotkey', 'Alt + 2: edit');
     dom.appendChild(clickTip);
   }
 

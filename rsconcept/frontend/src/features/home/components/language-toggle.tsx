@@ -2,8 +2,8 @@
 
 import clsx from 'clsx';
 
-import { APP_LOCALE_OPTIONS, localeLabel } from '@/app/i18n/locale-ui';
-import { useTx } from '@/app/i18n/use-tx';
+import { APP_LOCALE_OPTIONS, localeLabel } from '@/i18n/locale-ui';
+import { useTx } from '@/i18n/use-tx';
 
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import { IconLanguage } from '@/components/icons';

@@ -3,8 +3,8 @@
 import { useEffect, useRef } from 'react';
 
 import { type Constituenta, type RSEngine, type RSForm } from '@/domain/library';
+import { useTx } from '@/i18n/use-tx';
 
-import { useTx } from '@/app/i18n/use-tx';
 import { BadgeEvaluation } from '@/features/rsmodel/components/badge-evaluation';
 
 import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/data-table';

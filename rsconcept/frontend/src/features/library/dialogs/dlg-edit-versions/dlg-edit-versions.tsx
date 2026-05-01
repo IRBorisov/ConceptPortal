@@ -3,7 +3,8 @@
 import { useMemo } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
+
 import { useRSForm } from '@/features/rsform/backend/use-rsform';
 
 import { MiniButton } from '@/components/control';
@@ -131,11 +132,7 @@ export function DlgEditVersions() {
         <div className='cc-icons h-fit'>
           <MiniButton
             type='submit'
-            title={
-              isValid
-                ? tx('ui.dlg.editVersions.saveChanges', 'Save changes')
-                : formatLabel(lid.hint.versionTaken)
-            }
+            title={isValid ? tx('ui.dlg.editVersions.saveChanges', 'Save changes') : formatLabel(lid.hint.versionTaken)}
             aria-label={tx('ui.dlg.editVersions.saveChanges', 'Save changes')}
             icon={<IconSave size='1.25rem' className='icon-primary' />}
             disabled={isDefaultValue || !isValid || isProcessing}

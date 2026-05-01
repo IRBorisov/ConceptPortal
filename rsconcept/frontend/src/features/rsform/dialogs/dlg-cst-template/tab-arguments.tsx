@@ -5,8 +5,7 @@ import { createColumnHelper } from '@tanstack/react-table';
 
 import { type ArgumentValue, type Constituenta, type RSForm } from '@/domain/library';
 import { isFunctional, isLogical } from '@/domain/library/rsform-api';
-
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
 
 import { MiniButton } from '@/components/control';
 import { DataTable, type IConditionalStyle } from '@/components/data-table';
@@ -119,9 +118,7 @@ export function TabArguments({ schema, definition }: TabArgumentsProps) {
         data={args}
         columns={columns}
         conditionalRowStyles={conditionalRowStyles}
-        noDataComponent={
-          <NoData className='min-h-14'>{tx('ui.template.arguments.empty', 'No arguments')}</NoData>
-        }
+        noDataComponent={<NoData className='min-h-14'>{tx('ui.template.arguments.empty', 'No arguments')}</NoData>}
         onRowClicked={handleSelectArgument}
       />
 

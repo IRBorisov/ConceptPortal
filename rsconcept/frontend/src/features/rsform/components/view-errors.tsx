@@ -2,8 +2,7 @@
 
 import { getRSErrorPrefix, isCritical, type RSErrorDescription } from '@/domain/rslang/error';
 import { describeRSError } from '@/domain/rslang/labels';
-
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
 
 import { cn } from '@/components/utils';
 import { type RO } from '@/utils/meta';
@@ -27,13 +26,9 @@ export function ViewErrors({ isOpen, errors, disabled, className, onShowError }:
       className={cn('cc-parsing-result text-sm border dense cc-scroll-y', isOpen && 'open', className)}
     >
       <p>
-        <span>
-          {tx('ui.rsform.errors.count', 'Errors: {count}', { count: errorCount })}{' '}
-        </span>
+        <span>{tx('ui.rsform.errors.count', 'Errors: {count}', { count: errorCount })} </span>
         {warningsCount > 0 ? (
-          <span>
-            | {tx('ui.rsform.errors.warnings', 'Warnings: {count}', { count: warningsCount })}
-          </span>
+          <span>| {tx('ui.rsform.errors.warnings', 'Warnings: {count}', { count: warningsCount })}</span>
         ) : null}
       </p>
       {errors?.map((error, index) => {

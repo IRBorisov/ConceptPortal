@@ -3,7 +3,8 @@
 import { useMemo } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
+
 import { useAuth } from '@/features/auth';
 import { HelpTopic } from '@/features/help';
 

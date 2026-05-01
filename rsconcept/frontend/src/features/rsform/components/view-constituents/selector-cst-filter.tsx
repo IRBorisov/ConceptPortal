@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
 
 import {
   IconChild,

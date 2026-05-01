@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
 
 import { MiniButton } from '@/components/control';
 import { Dropdown, useDropdown } from '@/components/dropdown';

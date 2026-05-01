@@ -4,8 +4,7 @@ import { Suspense, useState } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { type RSForm, type Substitution } from '@/domain/library';
-
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
 
 import { Loader } from '@/components/loader';
 import { ModalForm } from '@/components/modal';

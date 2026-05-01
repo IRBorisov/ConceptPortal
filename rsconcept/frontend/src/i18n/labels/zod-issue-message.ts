@@ -1,7 +1,7 @@
 import { type z } from 'zod';
 
-import { formatAppMessage } from '@/app/i18n/format-app-message';
-import { LABEL_DEFAULTS, lid } from '@/app/i18n/labels/catalog';
+import { formatAppMessage } from '@/i18n/format-app-message';
+import { LABEL_DEFAULTS, lid } from '@/i18n/labels/catalog';
 
 import { limits } from '@/utils/constants';
 

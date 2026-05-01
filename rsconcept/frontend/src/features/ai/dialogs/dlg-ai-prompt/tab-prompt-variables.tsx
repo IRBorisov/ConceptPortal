@@ -1,6 +1,6 @@
 'use client';
 
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
 
 import { describePromptVariable } from '../../labels';
 import { PromptVariableType } from '../../models/prompting';

@@ -6,8 +6,8 @@ import { useForm, useStore } from '@tanstack/react-form';
 import { type LibraryItem, LibraryItemType, type OssLayout } from '@/domain/library';
 import { sortItemsForOSS } from '@/domain/library/oss-api';
 import { LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '@/domain/library/oss-layout-api';
+import { useTx } from '@/i18n/use-tx';
 
-import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 import { useLibrary } from '@/features/library/backend/use-library';
 import { PickSchema } from '@/features/library/components/pick-schema';
@@ -42,7 +42,7 @@ export function DlgImportSchema() {
   const manager = new LayoutManager(schema, layout);
   const { items: libraryItems } = useLibrary();
   const sortedItems = sortItemsForOSS(manager.oss, libraryItems);
-  
+
   const defaultValues: ImportSchemaDTO = {
     item_data: {
       alias: '',

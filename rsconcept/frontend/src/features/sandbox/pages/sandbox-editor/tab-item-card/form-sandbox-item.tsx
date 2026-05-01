@@ -5,8 +5,8 @@ import { useIntl } from 'react-intl';
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { LibraryItemType, type RSModel } from '@/domain/library';
+import { useTx } from '@/i18n/use-tx';
 
-import { useTx } from '@/app/i18n/use-tx';
 import { schemaUpdateLibraryItem, type UpdateLibraryItemDTO } from '@/features/library';
 import { useModelEdit } from '@/features/rsmodel/pages/rsmodel-page/model-edit-context';
 import { useSandboxBundle } from '@/features/sandbox/context/bundle-context';

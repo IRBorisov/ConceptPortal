@@ -4,10 +4,10 @@ import { useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 
 import { isSchemaIssue } from '@/domain/library/rsform-api';
-import { isInferrable,isModelIssue } from '@/domain/library/rsmodel-api';
+import { isInferrable, isModelIssue } from '@/domain/library/rsmodel-api';
+import { useTx } from '@/i18n/use-tx';
 
 import { useConceptNavigation } from '@/app';
-import { useTx } from '@/app/i18n/use-tx';
 import { ViewConstituents } from '@/features/rsform/components/view-constituents';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 import { useRoleStore, UserRole } from '@/features/users';

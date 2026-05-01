@@ -1,6 +1,6 @@
 import { type IntlShape } from 'react-intl';
 
-import { LABEL_DEFAULTS } from '@/app/i18n/labels/catalog';
+import { LABEL_DEFAULTS } from '@/i18n/labels/catalog';
 
 type MessageValues = Record<string, string | number | boolean | Date | null | undefined>;
 

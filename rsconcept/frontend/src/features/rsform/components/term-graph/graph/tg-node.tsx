@@ -6,8 +6,7 @@ import clsx from 'clsx';
 import { type Constituenta } from '@/domain/library';
 import { isBasicConcept } from '@/domain/library/rsform-api';
 import { labelType } from '@/domain/rslang/labels';
-
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
 
 import { useValueTooltipStore } from '@/stores/value-tooltip';
 import { APP_COLORS } from '@/styling/colors';
@@ -98,7 +97,11 @@ export function TGNodeComponent(node: NodeProps<TGNode>) {
 // ====== INTERNAL ======
 function describeCstNode(
   cst: Constituenta,
-  tx: (id: string, defaultMessage: string, values?: Record<string, string | number | boolean | null | undefined>) => string
+  tx: (
+    id: string,
+    defaultMessage: string,
+    values?: Record<string, string | number | boolean | null | undefined>
+  ) => string
 ) {
   const contents = isBasicConcept(cst.cst_type)
     ? cst.convention

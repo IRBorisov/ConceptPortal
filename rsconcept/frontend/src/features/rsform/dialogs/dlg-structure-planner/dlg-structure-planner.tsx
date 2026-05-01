@@ -7,8 +7,8 @@ import clsx from 'clsx';
 import { type Constituenta, CstType, type RSForm } from '@/domain/library';
 import { generateAlias } from '@/domain/library/rsform-api';
 import { type SPNode, StructurePlanner } from '@/domain/library/structure-planner';
+import { useTx } from '@/i18n/use-tx';
 
-import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 
 import { MiniButton } from '@/components/control';

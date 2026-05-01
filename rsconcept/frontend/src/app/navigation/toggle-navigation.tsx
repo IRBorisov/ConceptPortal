@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 
-import { useTx } from '@/app/i18n/use-tx';
+import { useTx } from '@/i18n/use-tx';
 
 import { IconDarkTheme, IconLightTheme, IconPin, IconUnpin } from '@/components/icons';
 import { useAppLayoutStore } from '@/stores/app-layout';

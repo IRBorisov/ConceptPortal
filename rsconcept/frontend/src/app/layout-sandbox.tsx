@@ -4,9 +4,10 @@ import { Suspense } from 'react';
 import { Outlet } from 'react-router';
 import clsx from 'clsx';
 
+import { useTx } from '@/i18n/use-tx';
+
 import { Footer } from '@/app/footer';
 import { ToasterThemed } from '@/app/global-toaster';
-import { useTx } from '@/app/i18n/use-tx';
 
 import { ModalLoader } from '@/components/modal';
 import { useAppLayoutStore, useMainHeight, useViewportHeight } from '@/stores/app-layout';

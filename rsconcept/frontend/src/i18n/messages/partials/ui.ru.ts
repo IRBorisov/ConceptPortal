@@ -73,16 +73,6 @@ export const uiRu: Record<string, string> = {
   'ui.wordForms.fillFromLexeme': 'Заполнить словоформы',
   'ui.wordForms.nominalAria': 'Начальная форма',
   'ui.wordForms.nominalPlaceholder': 'Начальная форма',
-  'ui.wordForms.singularHeader': 'Единственное число',
-  'ui.wordForms.pluralHeader': 'Множественное число',
-  'ui.wordForms.singularAria': 'Единственное число: {hint}',
-  'ui.wordForms.pluralAria': 'Множественное число: {hint}',
-  'ui.wordForms.case.nomn': 'Именительный: Кто? Что?',
-  'ui.wordForms.case.gent': 'Родительный: Кого? Чего?',
-  'ui.wordForms.case.datv': 'Дательный: Кому? Чему?',
-  'ui.wordForms.case.accs': 'Винительный: Кого? Что?',
-  'ui.wordForms.case.ablt': 'Творительный: Кем? Чем?',
-  'ui.wordForms.case.loct': 'Предложный: О ком? О чём?',
 
   'ui.tg.selectionCount': 'Выбор {n} из {total}',
 

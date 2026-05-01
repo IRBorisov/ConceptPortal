@@ -3,9 +3,9 @@
 import { ReactFlowProvider } from '@xyflow/react';
 
 import { type RSForm } from '@/domain/library';
+import { useTx } from '@/i18n/use-tx';
 
 import { useConceptNavigation } from '@/app';
-import { useTx } from '@/app/i18n/use-tx';
 
 import { MiniButton } from '@/components/control';
 import { IconRSForm } from '@/components/icons';

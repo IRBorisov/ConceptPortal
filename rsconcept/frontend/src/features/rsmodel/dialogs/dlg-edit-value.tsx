@@ -5,8 +5,8 @@ import { useState } from 'react';
 import { type RSEngine } from '@/domain/library';
 import { type TypePath, type Typification, type Value } from '@/domain/rslang';
 import { normalizeValue } from '@/domain/rslang/eval/value-api';
+import { useTx } from '@/i18n/use-tx';
 
-import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 
 import { ModalForm } from '@/components/modal';
