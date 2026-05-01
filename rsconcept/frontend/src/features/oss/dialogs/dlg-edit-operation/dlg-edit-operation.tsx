@@ -7,6 +7,7 @@ import { OperationType, type OssLayout } from '@/domain/library';
 import { LayoutManager } from '@/domain/library/oss-layout-api';
 import { type Substitution } from '@/domain/library/rsform';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 
 import { Loader } from '@/components/loader';
@@ -14,7 +15,7 @@ import { ModalForm } from '@/components/modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useDialogsStore } from '@/stores/dialogs';
 import { type CreateFieldProps, type FieldStateData } from '@/utils/forms';
-import { hintMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 
 import { schemaUpdateOperation, type UpdateOperationDTO } from '../../backend/types';
 import { useOss } from '../../backend/use-oss';
@@ -38,6 +39,7 @@ const TabID = {
 type TabID = (typeof TabID)[keyof typeof TabID];
 
 export function DlgEditOperation() {
+  const tx = useTx();
   const { ossID, layout, targetID } = useDialogsStore(state => state.props as DlgEditOperationProps);
   const { updateOperation } = useUpdateOperation();
 
@@ -119,10 +121,10 @@ export function DlgEditOperation() {
 
   return (
     <ModalForm
-      header='Редактирование операции'
-      submitText='Сохранить'
+      header={tx('ui.dlg.editOperation.header', 'Edit operation')}
+      submitText={tx('ui.action.save', 'Save')}
       canSubmit={canSubmit}
-      validationHint={canSubmit ? '' : hintMsg.formInvalid}
+      validationHint={canSubmit ? '' : formatLabel(lid.hint.formInvalid)}
       onSubmit={event => {
         event.preventDefault();
         event.stopPropagation();
@@ -134,15 +136,18 @@ export function DlgEditOperation() {
     >
       <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>
         <TabList className='mb-3 mx-auto w-fit flex border divide-x rounded-none'>
-          <TabLabel title='Текстовые поля' label='Паспорт' />
           <TabLabel
-            title='Выбор аргументов операции'
-            label='Аргументы'
+            title={tx('ui.tab.oss.passportTitle', 'Text fields')}
+            label={tx('ui.tab.oss.passport', 'Passport')}
+          />
+          <TabLabel
+            title={tx('ui.tab.oss.operationArgumentsTitle', 'Select operation arguments')}
+            label={tx('ui.tab.oss.arguments', 'Arguments')}
             disabled={target.operation_type !== OperationType.SYNTHESIS}
           />
           <TabLabel
-            title='Таблица отождествлений'
-            label='Отождествления'
+            title={tx('ui.tab.inlineSynthesis.substitutionsTitle', 'Substitution table')}
+            label={tx('ui.tab.inlineSynthesis.substitutions', 'Substitutions')}
             disabled={target.operation_type !== OperationType.SYNTHESIS}
           />
         </TabList>

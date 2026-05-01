@@ -6,6 +6,8 @@ import { useDebounce } from 'use-debounce';
 
 import { type BasicBinding } from '@/domain/library';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { DataTable, type IConditionalStyle } from '@/components/data-table';
 import { SearchBar, TextInput } from '@/components/input';
 import { cn } from '@/components/utils';
@@ -31,6 +33,7 @@ interface PickElementProps {
 const columnHelper = createColumnHelper<number>();
 
 export function PickElement({ className, value, alias, isInteger, term, binding, onChange }: PickElementProps) {
+  const tx = useTx();
   const setActiveTooltipText = useValueTooltipStore(state => state.setActiveText);
   const [filter, setFilter] = useState('');
   const [filterDebounced] = useDebounce(filter, PARAMETER.searchDebounce);
@@ -56,7 +59,7 @@ export function PickElement({ className, value, alias, isInteger, term, binding,
     }),
     columnHelper.accessor(id => id, {
       id: 'elem_text',
-      header: 'Текст',
+      header: tx('ui.pickElement.headerText', 'Text'),
       size: 180,
       minSize: 180,
       maxSize: 180,
@@ -74,7 +77,7 @@ export function PickElement({ className, value, alias, isInteger, term, binding,
   if (isInteger) {
     return (
       <TextInput
-        label='Укажите значение'
+        label={tx('ui.pickElement.valueLabel', 'Enter value')}
         type='number'
         inputMode='numeric'
         step='1'
@@ -92,7 +95,9 @@ export function PickElement({ className, value, alias, isInteger, term, binding,
   }
 
   if (!binding) {
-    return <div className={cn('text-muted-foreground', className)}>Выберите элемент для редактирования</div>;
+    return (
+      <div className={cn('text-muted-foreground', className)}>{tx('ui.pickElement.selectPrompt', 'Select an element to edit')}</div>
+    );
   }
 
   return (

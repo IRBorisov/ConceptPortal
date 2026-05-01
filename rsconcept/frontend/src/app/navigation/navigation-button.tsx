@@ -10,12 +10,31 @@ interface NavigationButtonProps extends Styling {
   onClick?: (event: React.MouseEvent<Element>) => void;
 }
 
-export function NavigationButton({ icon, title, hideTitle, className, style, onClick, text }: NavigationButtonProps) {
+type NavigationButtonDomProps = Pick<
+  React.ComponentProps<'button'>,
+  'aria-controls' | 'aria-expanded' | 'aria-haspopup'
+>;
+
+export function NavigationButton({
+  icon,
+  title,
+  hideTitle,
+  className,
+  style,
+  onClick,
+  text,
+  'aria-controls': ariaControls,
+  'aria-expanded': ariaExpanded,
+  'aria-haspopup': ariaHasPopup
+}: NavigationButtonProps & NavigationButtonDomProps) {
   return (
     <button
       type='button'
       tabIndex={0}
       aria-label={title}
+      aria-controls={ariaControls}
+      aria-expanded={ariaExpanded}
+      aria-haspopup={ariaHasPopup}
       data-tooltip-id={!!title ? globalIDs.tooltip : undefined}
       data-tooltip-hidden={hideTitle}
       data-tooltip-content={title}

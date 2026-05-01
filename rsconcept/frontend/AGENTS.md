@@ -58,6 +58,19 @@ Run from `rsconcept/frontend`:
 - Help content: `src/features/help`
 - Offline sandbox mode: `src/features/sandbox`
 
+## Internationalization (user-visible UI copy)
+
+- **Do not** introduce or leave user-facing copy as hardcoded Russian (or any single locale) in `.tsx` / `.ts` UI code. Use the compact hook: `useTx` from `@/app/i18n/use-tx` with an **English** `defaultMessage` in the call site, for example: `tx('ui.some.key', 'Human readable English', optionalValues)`.
+- **When you add, change, or remove** any such string (labels, buttons, placeholders, `title` / `aria-label`, dialog headers, empty states, etc.):
+  1. Use a stable message **id** (prefer the existing `ui.*` namespace for shared chrome, e.g. `ui.action.save`, `ui.nav.library`, or add a new dotted key under `ui.` when it is reusable).
+  2. **Update every locale catalog** that the app ships for those ids. Today that means editing **both**:
+     - `src/app/i18n/messages/partials/ui.ru.ts`
+     - `src/app/i18n/messages/partials/ui.fr.ts`
+       with the **same keys** and appropriate Russian and French values (keep keys alphabetically or grouped consistently with neighboring keys).
+  3. If the English default meaning changes, update `defaultMessage` in code **and** adjust `ui.ru.ts` / `ui.fr.ts` so all three stay aligned.
+- Message bundles are merged in `src/app/i18n/messages/ru.ts` and `fr.ts` from `partials/`; new partial files must be imported there—**`ui.ru` / `ui.fr` are already wired**; prefer adding keys there unless you are intentionally starting a new partial.
+- **Domain / feature wording** that already goes through `formatLabel` / `labels-*` and backend-driven catalogs: follow the same rule—**any new or changed `lid` / label id** must have matching entries in the relevant label partials for each supported locale (see `src/utils/labels` and `src/**/labels-feature-ui.*`).
+
 ## Edit rules
 
 - Prefer editing within relevant feature folders before adding new shared abstractions.

@@ -3,12 +3,15 @@
 import { Suspense } from 'react';
 import { Outlet } from 'react-router';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { Loader } from '@/components/loader';
 
 import { GlobalTooltips } from './global-tooltips';
 
 /** Minimal shell for the marketing landing and sandbox. */
 export function LayoutLanding() {
+  const tx = useTx();
   return (
     <div className='relative h-dvh min-w-80 overflow-y-auto bg-background antialiased cc-scroll-hidden'>
       <GlobalTooltips />
@@ -18,7 +21,7 @@ export function LayoutLanding() {
             <div
               className='flex flex-1 flex-col items-center justify-center gap-2 pt-20'
               aria-busy='true'
-              aria-label='Загрузка'
+              aria-label={tx('layout.loading.aria', 'Loading')}
             >
               <Loader scale={3} />
             </div>

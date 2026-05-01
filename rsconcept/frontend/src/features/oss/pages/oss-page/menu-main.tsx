@@ -1,6 +1,7 @@
 'use client';
 
 import { useConceptNavigation } from '@/app';
+import { useTx } from '@/app/i18n/use-tx';
 import { useRoleStore, UserRole } from '@/features/users';
 
 import { Divider } from '@/components/container';
@@ -15,6 +16,7 @@ import { useMutatingOss } from '../../backend/use-mutating-oss';
 import { useOssEdit } from './oss-edit-context';
 
 export function MenuMain() {
+  const tx = useTx();
   const router = useConceptNavigation();
   const { isMutable, deleteSchema } = useOssEdit();
   const isProcessing = useMutatingOss();
@@ -55,7 +57,7 @@ export function MenuMain() {
       <MiniButton
         noHover
         noPadding
-        title='Меню'
+        title={tx('ui.nav.menu', 'Menu')}
         hideTitle={isMenuOpen}
         icon={<IconMenu size='1.25rem' />}
         className='h-full px-2 text-muted-foreground hover:text-primary cc-animate-color'
@@ -63,20 +65,20 @@ export function MenuMain() {
       />
       <Dropdown isOpen={isMenuOpen} margin='mt-3'>
         <DropdownButton
-          text='Поделиться'
-          title='Скопировать ссылку в буфер обмена'
+          text={tx('ui.action.share', 'Share')}
+          title={tx('ui.aria.copyLinkToClipboard', 'Copy link to clipboard')}
           icon={<IconShare size='1rem' className='icon-primary' />}
           onClick={handleShare}
         />
         <DropdownButton
-          text='QR-код'
-          title='Показать QR-код схемы'
+          text={tx('ui.action.qrCode', 'QR code')}
+          title={tx('ui.hint.qrSchemaPage', 'Show schema QR code')}
           icon={<IconQR size='1rem' className='icon-primary' />}
           onClick={handleShowQR}
         />
         {isMutable ? (
           <DropdownButton
-            text='Удалить схему'
+            text={tx('ui.action.deleteSchema', 'Delete schema')}
             icon={<IconDestroy size='1rem' className='icon-red' />}
             onClick={handleDelete}
             disabled={isProcessing || role < UserRole.OWNER}
@@ -86,7 +88,7 @@ export function MenuMain() {
         <Divider margins='mx-3 my-1' />
 
         <DropdownButton
-          text='Библиотека'
+          text={tx('ui.nav.library', 'Library')}
           icon={<IconLibrary size='1rem' className='icon-primary' />}
           onClick={handleOpenLibrary}
         />

@@ -7,6 +7,7 @@ import { type CurrentVersion, LibraryItemType } from '@/domain/library';
 import { type RSForm } from '@/domain/library/rsform';
 
 import { useConceptNavigation, useRegisterNavigationSave } from '@/app';
+import { useTx } from '@/app/i18n/use-tx';
 import { schemaUpdateLibraryItem, type UpdateLibraryItemDTO } from '@/features/library';
 import { useUpdateItem } from '@/features/library/backend/use-update-item';
 import { SelectVersion } from '@/features/library/components/select-version';
@@ -19,7 +20,7 @@ import { cn } from '@/components/utils';
 import { useModificationStore } from '@/stores/modification';
 import { globalIDs } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/format';
-import { placeholderMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 import { isMac } from '@/utils/utils';
 
 import { useSchemaEdit } from '../schema-edit-context';
@@ -43,6 +44,7 @@ function itemDefaults(schema: RSForm): UpdateLibraryItemDTO {
 }
 
 export function FormSchema({ className }: FormSchemaProps) {
+  const tx = useTx();
   const router = useConceptNavigation();
   const { updateItem: updateSchema } = useUpdateItem();
   const setIsModified = useModificationStore(state => state.setIsModified);
@@ -97,13 +99,13 @@ export function FormSchema({ className }: FormSchemaProps) {
         void form.handleSubmit();
       }}
     >
-      <h2 className='mb-2 select-none font-math'>Концептуальная схема</h2>
+      <h2 className='mb-2 select-none font-math'>{tx('ui.page.rsform', 'Conceptual schema')}</h2>
       <form.Field name='title'>
         {field => (
           <TextInput
             id='schema_title'
-            aria-label='Название схемы'
-            placeholder='Название схемы'
+            aria-label={tx('ui.field.rsformTitle', 'Schema title')}
+            placeholder={tx('ui.field.rsformTitle', 'Schema title')}
             className='mb-3'
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
@@ -118,7 +120,7 @@ export function FormSchema({ className }: FormSchemaProps) {
           {field => (
             <TextInput
               id='schema_alias'
-              label='Сокращение'
+              label={tx('ui.label.alias', 'Abbreviation')}
               className='w-64'
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
@@ -131,7 +133,7 @@ export function FormSchema({ className }: FormSchemaProps) {
         <div className='relative flex flex-col gap-2'>
           <ToolbarVersioning className='absolute -top-1 right-2' blockReload={schema.oss.length > 0} />
 
-          <Label text='Версия' className='select-none w-fit' />
+          <Label text={tx('ui.label.version', 'Version')} className='select-none w-fit' />
           <SelectVersion
             disabled={!isContentEditable && schema.versions.length === 0}
             id='schema_version'
@@ -157,8 +159,8 @@ export function FormSchema({ className }: FormSchemaProps) {
           {field => (
             <TextArea
               id='schema_comment'
-              label='Описание'
-              placeholder={placeholderMsg.itemDescription}
+              label={tx('ui.label.description', 'Description')}
+              placeholder={formatLabel(lid.placeholder.itemDescription)}
               rows={5}
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
@@ -171,8 +173,8 @@ export function FormSchema({ className }: FormSchemaProps) {
       </div>
       {isContentEditable || !isDefaultValue ? (
         <SubmitButton
-          text='Сохранить изменения'
-          title={prepareTooltip('Сохранить изменения', isMac() ? 'Cmd + S' : 'Ctrl + S')}
+          text={tx('ui.action.saveChanges', 'Save changes')}
+          title={prepareTooltip(tx('ui.action.saveChanges', 'Save changes'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
           className='self-center mt-4'
           loading={isProcessing}
           icon={<IconSave size='1.25rem' />}

@@ -2,6 +2,8 @@
 
 import { type ReactNode } from 'react';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { MiniButton } from '@/components/control';
 import { IconFilterReset } from '@/components/icons';
 import { SearchBar } from '@/components/input';
@@ -16,6 +18,7 @@ interface ConstituentsSearchProps {
 }
 
 export function ConstituentsSearch({ actions, showModelFilter }: ConstituentsSearchProps) {
+  const tx = useTx();
   const query = useCstSearchStore(state => state.query);
   const setQuery = useCstSearchStore(state => state.setQuery);
   const filter = useCstSearchStore(state => state.filter);
@@ -29,7 +32,7 @@ export function ConstituentsSearch({ actions, showModelFilter }: ConstituentsSea
   return (
     <div className='flex items-center border-b bg-input rounded-t-md pl-2 pr-1'>
       <MiniButton
-        title='Сбросить фильтр'
+        title={tx('ui.constituents.search.resetFilterTitle', 'Reset filter')}
         icon={<IconFilterReset size='1.25rem' className='icon-primary -mr-1' />}
         onClick={handleReset}
         disabled={!hasActiveFilter}

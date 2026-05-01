@@ -6,6 +6,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 import { type CstType, type RSForm } from '@/domain/library';
 import { generateAlias, validateNewAlias } from '@/domain/library/rsform-api';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 
 import { Loader } from '@/components/loader';
@@ -13,7 +14,7 @@ import { ModalForm } from '@/components/modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useDialogsStore } from '@/stores/dialogs';
 import { type CreateFieldProps, type FieldStateData } from '@/utils/forms';
-import { hintMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 import { withPreventDefault } from '@/utils/utils';
 
 import { type CreateConstituentaDTO, schemaCreateConstituenta } from '../../backend/types';
@@ -37,6 +38,7 @@ const TabID = {
 type TabID = (typeof TabID)[keyof typeof TabID];
 
 export function DlgCstTemplate() {
+  const tx = useTx();
   const { schema, onCreate, insertAfter } = useDialogsStore(state => state.props as DlgCstTemplateProps);
 
   const form = useForm({
@@ -62,13 +64,13 @@ export function DlgCstTemplate() {
   const cst_type = values.cst_type;
   const { canSubmit, hint } = (() => {
     if (!cst_type) {
-      return { canSubmit: false, hint: hintMsg.templateInvalid };
+      return { canSubmit: false, hint: formatLabel(lid.hint.templateInvalid) };
     }
     if (!validateNewAlias(alias, cst_type, schema)) {
-      return { canSubmit: false, hint: hintMsg.aliasInvalid };
+      return { canSubmit: false, hint: formatLabel(lid.hint.aliasInvalid) };
     }
     if (!schemaCreateConstituenta.safeParse(values).success) {
-      return { canSubmit: false, hint: hintMsg.formInvalid };
+      return { canSubmit: false, hint: formatLabel(lid.hint.formInvalid) };
     }
     return { canSubmit: true, hint: '' };
   })();
@@ -134,8 +136,8 @@ export function DlgCstTemplate() {
 
   return (
     <ModalForm
-      header='Создание конституенты из шаблона'
-      submitText='Создать'
+      header={tx('ui.dlg.cstTemplate.header', 'Create constituenta from template')}
+      submitText={tx('ui.action.create', 'Create')}
       className='w-172 h-140 px-6'
       canSubmit={canSubmit}
       onSubmit={withPreventDefault(() => void form.handleSubmit())}
@@ -144,9 +146,18 @@ export function DlgCstTemplate() {
     >
       <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>
         <TabList className='mb-3 mx-auto flex border divide-x rounded-none'>
-          <TabLabel label='Шаблон' title='Выбор шаблона выражения' />
-          <TabLabel label='Аргументы' title='Подстановка аргументов шаблона' />
-          <TabLabel label='Редактор' title='Редактирование конституенты' />
+          <TabLabel
+            label={tx('ui.dlg.cstTemplate.tabTemplate.label', 'Template')}
+            title={tx('ui.dlg.cstTemplate.tabTemplate.title', 'Choose expression template')}
+          />
+          <TabLabel
+            label={tx('ui.dlg.cstTemplate.tabArgs.label', 'Arguments')}
+            title={tx('ui.dlg.cstTemplate.tabArgs.title', 'Template argument substitution')}
+          />
+          <TabLabel
+            label={tx('ui.dlg.cstTemplate.tabEditor.label', 'Editor')}
+            title={tx('ui.dlg.cstTemplate.tabEditor.title', 'Edit constituenta')}
+          />
         </TabList>
 
         <TemplateState

@@ -12,7 +12,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { APP_COLOR_CODES } from '@/styling/colors';
 import { EXPORTS, PARAMETER, REACTFLOW_VIEWPORT } from '@/utils/constants';
-import { promptText } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 import { cleanSvg } from '@/utils/svg';
 import { dataUrlToBlob, withPreventDefault } from '@/utils/utils';
 
@@ -187,7 +187,7 @@ export function useHandleActions() {
           });
       }
     } else {
-      if (!window.confirm(promptText.deleteBlock)) {
+      if (!window.confirm(formatLabel(lid.prompt.deleteBlock))) {
         return;
       }
       void deleteBlock({
@@ -209,7 +209,7 @@ export function useHandleActions() {
     ) {
       return;
     }
-    if (!window.confirm(promptText.deleteArgument)) {
+    if (!window.confirm(formatLabel(lid.prompt.deleteArgument))) {
       return;
     }
 

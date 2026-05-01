@@ -6,10 +6,12 @@ import { useForm, useStore } from '@tanstack/react-form';
 import { type CstType, type RSForm } from '@/domain/library';
 import { generateAlias, validateNewAlias } from '@/domain/library/rsform-api';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { type CreateFieldProps, type FieldStateData } from '@/utils/forms';
-import { hintMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 import { withPreventDefault } from '@/utils/utils';
 
 import { type CreateConstituentaDTO, schemaCreateConstituenta } from '../../backend/types';
@@ -24,6 +26,7 @@ export interface DlgCreateCstProps {
 }
 
 export function DlgCreateCst() {
+  const tx = useTx();
   const { initial, schema, onCreate, onCancel } = useDialogsStore(state => state.props as DlgCreateCstProps);
 
   const form = useForm({
@@ -39,10 +42,10 @@ export function DlgCreateCst() {
   const cst_type = values.cst_type;
   const { canSubmit, hint } = useMemo(() => {
     if (!validateNewAlias(alias, cst_type, schema)) {
-      return { canSubmit: false, hint: hintMsg.aliasInvalid };
+      return { canSubmit: false, hint: formatLabel(lid.hint.aliasInvalid) };
     }
     if (!schemaCreateConstituenta.safeParse(values).success) {
-      return { canSubmit: false, hint: hintMsg.formInvalid };
+      return { canSubmit: false, hint: formatLabel(lid.hint.formInvalid) };
     }
     return { canSubmit: true, hint: '' };
   }, [alias, cst_type, schema, values]);
@@ -86,12 +89,12 @@ export function DlgCreateCst() {
 
   return (
     <ModalForm
-      header='Создание конституенты'
+      header={tx('ui.dlg.createCst.header', 'Create constituenta')}
       canSubmit={canSubmit}
       onCancel={onCancel}
       onSubmit={withPreventDefault(() => void form.handleSubmit())}
       validationHint={hint}
-      submitText='Создать'
+      submitText={tx('ui.action.create', 'Create')}
       className='cc-column w-140 max-h-120 py-2 px-6'
     >
       <FormCreateCst

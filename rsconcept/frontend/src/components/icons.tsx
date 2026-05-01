@@ -32,6 +32,7 @@ export { LuPanelLeftClose as IconLeftClose }      from 'react-icons/lu';
 export { LuPanelBottomOpen as IconBottomOpen }    from 'react-icons/lu';
 export { LuPanelBottomClose as IconBottomClose }  from 'react-icons/lu';
 export { LuClipboard      as IconClipboard }      from 'react-icons/lu';
+export { LuLanguages      as IconLanguage }       from 'react-icons/lu';
 
 // ===== UI elements =======
 export { BiX              as IconClose }          from 'react-icons/bi';

@@ -12,6 +12,7 @@ import { labelType } from '@/domain/rslang/labels';
 import { isTypification, TypeID, type TypePath, type Typification } from '@/domain/rslang/semantic/typification';
 
 import { useConceptNavigation } from '@/app';
+import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 import { EditorRSExpression } from '@/features/rsform/components/editor-rsexpression/editor-rsexpression';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
@@ -22,7 +23,7 @@ import { TextArea, TextInput } from '@/components/input';
 import { cn } from '@/components/utils';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
-import { errorMsg, infoMsg, placeholderMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 
 import { ValueInput } from '../../../components/value-input';
@@ -38,6 +39,7 @@ interface FormEvaluatorProps {
 }
 
 export function FormEvaluator({ id, className }: FormEvaluatorProps) {
+  const tx = useTx();
   const router = useConceptNavigation();
   const { schema, activeCst } = useSchemaEdit();
   const { engine } = useModelEdit();
@@ -52,7 +54,7 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
   const [localParse, setLocalParse] = useState<RO<AnalysisFull> | null>(null);
   const valueStr =
     prepareValueString(localEval?.value ?? null, localParse?.type ?? null, schema, engine.basics, showDataText) ??
-    placeholderMsg.valueTooLarge;
+    formatLabel(lid.placeholder.valueTooLarge);
   const stub = localEval?.value && localParse?.type?.typeID === TypeID.collection ? valueStub(localEval?.value) : '';
   const isModified = evaluatedExpression !== expression;
   const status = inferEvalStatus(localEval?.value ?? null, CstType.TERM, !isModified);
@@ -90,12 +92,12 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
 
     const endTime = performance.now();
     const timeSpent = ((endTime - startTime) / 1000).toFixed(2);
-    toast.success(infoMsg.calculationSuccess(timeSpent));
+    toast.success(formatLabel(lid.info.calculationSuccess, { timeSpent }));
   }
 
   function handleViewValue() {
     if (dialogValue == null) {
-      toast.error(errorMsg.valueNull);
+      toast.error(formatLabel(lid.error.valueNull));
       return;
     }
     if (!dialogType || !isTypification(dialogType)) {
@@ -111,7 +113,7 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
 
   function handleClipboardExport() {
     hideExport();
-    copyJsonToClipboard(getExportJsonText(dialogValue), () => toast.success(infoMsg.valueReady));
+    copyJsonToClipboard(getExportJsonText(dialogValue), () => toast.success(formatLabel(lid.info.valueReady)));
   }
 
   function handleJSONExport() {
@@ -138,14 +140,14 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
         noOutline
         transparent
         readOnly
-        label='Типизация'
+        label={tx('ui.label.typification', 'Typification')}
         value={labelType(localParse?.type ?? null)}
         areaClassName='cursor-default'
       />
 
       <EditorRSExpression
-        label='Выражение'
-        placeholder='Выражение отсутствует'
+        label={tx('ui.label.expression', 'Expression')}
+        placeholder={tx('ui.placeholder.expressionMissing', 'No expression')}
         schema={schema}
         errors={errors}
         value={expression}
@@ -159,11 +161,11 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
       {dialogValue != null ? (
         <div className='flex items-center justify-center gap-6 text-sm pl-6 flex-wrap'>
           <TextButton
-            text='Смотреть значение'
+            text={tx('ui.eval.viewValue', 'View value')}
             title={
               canOpenValueDialog
-                ? 'Просмотр значения'
-                : 'Просмотр структурированного значения\nнедоступен для этого типа'
+                ? tx('ui.eval.viewValueHint', 'View value')
+                : tx('ui.eval.viewStructuredUnavailable', 'Structured value view is not available for this type')
             }
             disabled={!canOpenValueDialog}
             onClick={handleViewValue}
@@ -171,14 +173,14 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
           />
           <div ref={exportMenuRef} onBlur={handleExportBlur} className='relative'>
             <TextButton
-              text='Экспорт'
-              title='Экспортировать значение'
+              text={tx('ui.action.exportShort', 'Export')}
+              title={tx('ui.value.exportValueTitle', 'Export value')}
               hideTitle={isExportOpen}
               onClick={toggleExport}
             />
             <Dropdown isOpen={isExportOpen} margin='mt-1'>
-              <DropdownButton text='Скопировать в буфер' onClick={handleClipboardExport} />
-              <DropdownButton text='Сохранить как JSON' onClick={handleJSONExport} />
+              <DropdownButton text={tx('ui.eval.copyToClipboard', 'Copy to clipboard')} onClick={handleClipboardExport} />
+              <DropdownButton text={tx('ui.eval.saveAsJson', 'Save as JSON')} onClick={handleJSONExport} />
             </Dropdown>
           </div>
         </div>
@@ -190,14 +192,14 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
         stub={stub}
         valueLabel={labelValue(localEval?.value ?? null, localParse?.type ?? null)}
         status={status}
-        placeholder='Значение отсутствует'
+        placeholder={tx('ui.placeholder.valueMissing', 'No value')}
         onCalculate={handleCalculate}
         onToggleDataText={toggleShowDataText}
         disabled
       />
       {!!localEval?.iterations ? (
         <TextInput
-          label='Количество итераций'
+          label={tx('ui.label.iterationCount', 'Iteration count')}
           dense
           disabled
           noBorder

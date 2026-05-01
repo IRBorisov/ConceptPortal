@@ -4,6 +4,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 
 import { type OssLayout } from '@/domain/library';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 
 import { Checkbox, TextInput } from '@/components/input';
@@ -22,6 +23,7 @@ export interface DlgDeleteReplicaProps {
 }
 
 export function DlgDeleteReplica() {
+  const tx = useTx();
   const { ossID, targetID, layout, beforeDelete } = useDialogsStore(state => state.props as DlgDeleteReplicaProps);
   const { deleteReplica: deleteReference } = useDeleteReplica();
 
@@ -49,8 +51,8 @@ export function DlgDeleteReplica() {
   return (
     <ModalForm
       overflowVisible
-      header='Удаление реплики'
-      submitText='Подтвердить удаление'
+      header={tx('ui.oss.deleteReplica.header', 'Delete replica')}
+      submitText={tx('ui.oss.deleteReplica.submit', 'Confirm deletion')}
       onSubmit={event => {
         event.preventDefault();
         event.stopPropagation();
@@ -59,12 +61,22 @@ export function DlgDeleteReplica() {
       className='w-140 pb-3 px-6 cc-column select-none'
       helpTopic={HelpTopic.CC_PROPAGATION}
     >
-      <TextInput disabled dense noBorder id='operation_alias' label='Операция' value={target.alias} />
+      <TextInput
+        disabled
+        dense
+        noBorder
+        id='operation_alias'
+        label={tx('ui.oss.deleteReplica.operationLabel', 'Operation')}
+        value={target.alias}
+      />
       <form.Field name='keep_connections'>
         {field => (
           <Checkbox
-            label='Переадресовать связи на оригинал'
-            title='Связи аргументов будут перенаправлены на оригинал реплики'
+            label={tx('ui.oss.deleteReplica.relinkArgs', 'Reroute links to the original')}
+            title={tx(
+              'ui.oss.deleteReplica.relinkArgsHint',
+              'Argument links will be redirected to the replica original'
+            )}
             value={field.state.value ?? false}
             onChange={(v: boolean) => field.handleChange(v)}
             disabled={target.result === null}
@@ -74,9 +86,11 @@ export function DlgDeleteReplica() {
       <form.Field name='keep_constituents'>
         {field => (
           <Checkbox
-            label='Сохранить наследованные конституенты'
-            title='Наследованные конституенты
-превратятся в дописанные'
+            label={tx('ui.oss.deleteReplica.keepInherited', 'Keep inherited constituents')}
+            title={tx(
+              'ui.oss.deleteReplica.keepInheritedHint',
+              'Inherited constituents\nwill become appended ones'
+            )}
             value={field.state.value ?? false}
             onChange={(v: boolean) => field.handleChange(v)}
             disabled={target.result === null || keep_connections}

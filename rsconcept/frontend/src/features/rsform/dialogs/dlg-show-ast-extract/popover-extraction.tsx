@@ -7,6 +7,7 @@ import { useDebounce } from 'use-debounce';
 
 import { type RSForm } from '@/domain/library/rsform';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { RefsInput } from '@/features/rsform/components/refs-input/refs-input';
 
 import { Button, MiniButton } from '@/components/control';
@@ -35,6 +36,7 @@ export function PopoverExtraction({
   setOpen,
   onSubmit
 }: PopoverExtractionProps) {
+  const tx = useTx();
   const extractPopoverRef = useRef<HTMLDivElement>(null);
 
   const intentOpen = open && !disabled;
@@ -96,8 +98,8 @@ export function PopoverExtraction({
       {!popoverInDom ? (
         <Button
           icon={<IconNewItem size='1.1rem' className='icon-primary' />}
-          text='Обособить'
-          title='Вынести выбранное подвыражение в новую конституенту'
+          text={tx('ui.ast.extract.extract', 'Extract')}
+          title={tx('ui.ast.extract.title', 'Move the selected subexpression into a new constituent')}
           className={clsx(
             'font-controls font-bold text-sm text-primary/75',
             'bg-background/90 backdrop-blur-3xl cc-fade-in',
@@ -123,7 +125,7 @@ export function PopoverExtraction({
               <MiniButton
                 icon={<IconAccept size='1.25rem' className='icon-green' />}
                 title={prepareTooltip(
-                  'Подтвердить обособление выбранного подвыражения',
+                  tx('ui.ast.extract.confirm', 'Confirm extracting the selected subexpression'),
                   isMac() ? 'Cmd + Enter' : 'Ctrl + Enter'
                 )}
                 onClick={handleSubmit}
@@ -131,7 +133,7 @@ export function PopoverExtraction({
               />
               <MiniButton
                 icon={<IconClose size='1.25rem' className='icon-primary' />}
-                title={prepareTooltip('Закрыть', 'Esc')}
+                title={prepareTooltip(tx('modal.close', 'Close'), 'Esc')}
                 onClick={() => setOpen(false)}
               />
             </div>
@@ -140,8 +142,8 @@ export function PopoverExtraction({
               id='dlg_show_ast_extract_term'
               className='w-full'
               areaClassName='text-sm'
-              aria-label='Термин новой конституенты'
-              placeholder='Новый термин'
+              aria-label={tx('ui.ast.extract.termAria', 'New constituent term')}
+              placeholder={tx('ui.ast.extract.termPlaceholder', 'New term')}
               value={termText}
               resolved={termText}
               onChange={setTermText}
@@ -156,8 +158,8 @@ export function PopoverExtraction({
             id='dlg_show_ast_extract_definition'
             className='w-96'
             areaClassName='text-sm'
-            aria-label='Определение новой конституенты'
-            placeholder='Определение обособленного выражения'
+            aria-label={tx('ui.ast.extract.definitionAria', 'New constituent definition')}
+            placeholder={tx('ui.ast.extract.definitionPlaceholder', 'Definition of the extracted expression')}
             value={definition}
             resolved={definition}
             onChange={setDefinition}

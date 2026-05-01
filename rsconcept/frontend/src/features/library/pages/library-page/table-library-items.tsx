@@ -4,6 +4,7 @@ import { type LibraryItem } from '@/domain/library';
 import { LibraryItemType } from '@/domain/library';
 
 import { useConceptNavigation } from '@/app';
+import { useTx } from '@/app/i18n/use-tx';
 
 import { TextURL } from '@/components/control';
 import { DataTable, type IConditionalStyle, type VisibilityState } from '@/components/data-table';
@@ -21,6 +22,7 @@ interface TableLibraryItemsProps {
 }
 
 export function TableLibraryItems({ items }: TableLibraryItemsProps) {
+  const tx = useTx();
   const router = useConceptNavigation();
   const { isSmall } = useWindowSize();
   const resetFilter = useLibrarySearchStore(state => state.resetFilter);
@@ -69,10 +71,10 @@ export function TableLibraryItems({ items }: TableLibraryItemsProps) {
       style={{ maxHeight: tableHeight }}
       noDataComponent={
         <div className='cc-column dense p-3 items-center min-h-24'>
-          <p>Список схем пуст</p>
+          <p>{tx('lib.table.empty', 'No schemas in the list')}</p>
           <p className='flex gap-6'>
-            <TextURL text='Создать схему' href='/library/create' />
-            <TextURL text='Очистить фильтр' onClick={resetFilter} />
+            <TextURL text={tx('lib.table.createLink', 'Create schema')} href='/library/create' />
+            <TextURL text={tx('lib.table.clearFilter', 'Clear filter')} onClick={resetFilter} />
           </p>
         </div>
       }

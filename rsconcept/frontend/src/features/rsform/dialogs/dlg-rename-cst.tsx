@@ -6,12 +6,13 @@ import { useForm, useStore } from '@tanstack/react-form';
 import { type Constituenta, type CstType, type RSForm } from '@/domain/library';
 import { generateAlias, validateNewAlias } from '@/domain/library/rsform-api';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 
 import { TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
-import { hintMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 import { withPreventDefault } from '@/utils/utils';
 
 import { schemaUpdateConstituenta, type UpdateConstituentaDTO } from '../backend/types';
@@ -24,6 +25,7 @@ export interface DlgRenameCstProps {
 }
 
 export function DlgRenameCst() {
+  const tx = useTx();
   const { schema, target, onRename } = useDialogsStore(state => state.props as DlgRenameCstProps);
   const defaultValues: UpdateConstituentaDTO = {
     target: target.id,
@@ -56,10 +58,10 @@ export function DlgRenameCst() {
 
   return (
     <ModalForm
-      header='Переименование конституенты'
-      submitText='Переименовать'
+      header={tx('ui.dlg.renameCst.header', 'Rename constituent')}
+      submitText={tx('ui.action.rename', 'Rename')}
       canSubmit={canSubmit}
-      validationHint={canSubmit ? '' : hintMsg.aliasInvalid}
+      validationHint={canSubmit ? '' : formatLabel(lid.hint.aliasInvalid)}
       onSubmit={withPreventDefault(() => void form.handleSubmit())}
       className='w-120 py-6 pr-3 pl-6 flex gap-3 justify-center items-center'
       helpTopic={HelpTopic.CC_CONSTITUENTA}
@@ -75,7 +77,7 @@ export function DlgRenameCst() {
           <TextInput
             id='dlg_cst_alias'
             dense
-            label='Имя'
+            label={tx('ui.label.name', 'Name')}
             className='w-28'
             value={field.state.value ?? ''}
             onChange={event => field.handleChange(event.target.value)}

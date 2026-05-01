@@ -7,59 +7,67 @@ import {
   SubstitutionErrorType
 } from '@/domain/library';
 
+import { formatLabel } from '@/app/i18n/labels/format-label';
+import { ossLid } from '@/app/i18n/labels/oss-ui';
+
 import { type RO } from '@/utils/meta';
 
-const labelOperationTypeRecord: Record<OperationType, string> = {
-  [OperationType.INPUT]: 'Загрузка',
-  [OperationType.SYNTHESIS]: 'Синтез',
-  [OperationType.REPLICA]: 'Репликация'
+const OPERATION_LABEL_LID: Record<OperationType, string> = {
+  [OperationType.INPUT]: ossLid.operation.input,
+  [OperationType.SYNTHESIS]: ossLid.operation.synthesis,
+  [OperationType.REPLICA]: ossLid.operation.replica
 };
 
-const describeOperationTypeRecord: Record<OperationType, string> = {
-  [OperationType.INPUT]: 'Загрузка концептуальной схемы в ОСС',
-  [OperationType.SYNTHESIS]: 'Синтез концептуальных схем',
-  [OperationType.REPLICA]: 'Создание ссылки на результат операции'
+const OPERATION_DESC_LID: Record<OperationType, string> = {
+  [OperationType.INPUT]: ossLid.operationDesc.input,
+  [OperationType.SYNTHESIS]: ossLid.operationDesc.synthesis,
+  [OperationType.REPLICA]: ossLid.operationDesc.replica
 };
 
 /** Retrieves label for {@link OperationType}. */
 export function labelOperationType(itemType: OperationType): string {
-  return labelOperationTypeRecord[itemType] ?? `UNKNOWN OPERATION TYPE: ${itemType}`;
+  const id = OPERATION_LABEL_LID[itemType];
+  return id ? formatLabel(id) : formatLabel(ossLid.fallback.unknownOperationType, { type: String(itemType) });
 }
 
 /** Retrieves description for {@link OperationType}. */
 export function describeOperationType(itemType: OperationType): string {
-  return describeOperationTypeRecord[itemType] ?? `UNKNOWN OPERATION TYPE: ${itemType}`;
+  const id = OPERATION_DESC_LID[itemType];
+  return id ? formatLabel(id) : formatLabel(ossLid.fallback.unknownOperationType, { type: String(itemType) });
 }
 
 /** Generates error description for {@link SubstitutionErrorDescription}. */
 export function describeSubstitutionError(error: RO<SubstitutionErrorDescription>): string {
+  const from = error.params[0] ?? '';
+  const to = error.params[1] ?? '';
   switch (error.errorType) {
     case SubstitutionErrorType.invalidIDs:
-      return 'Ошибка в идентификаторах схем';
+      return formatLabel(ossLid.substitution.invalidIDs);
     case SubstitutionErrorType.incorrectCst:
-      return `Ошибка ${error.params[0]} -> ${error.params[1]}: некорректное выражение конституенты`;
+      return formatLabel(ossLid.substitution.incorrectCst, { from, to });
     case SubstitutionErrorType.invalidBasic:
-      return `Ошибка ${error.params[0]} -> ${error.params[1]}: замена структурного понятия базисным множеством`;
+      return formatLabel(ossLid.substitution.invalidBasic, { from, to });
     case SubstitutionErrorType.invalidConstant:
-      return `Ошибка ${error.params[0]} -> ${error.params[1]}: подстановка константного множества возможна только вместо другого константного`;
+      return formatLabel(ossLid.substitution.invalidConstant, { from, to });
     case SubstitutionErrorType.invalidNominal:
-      return `Ошибка ${error.params[0]} -> ${error.params[1]}: подстановка номиноида возможна только вместо другого номиноида`;
+      return formatLabel(ossLid.substitution.invalidNominal, { from, to });
     case SubstitutionErrorType.invalidClasses:
-      return `Ошибка ${error.params[0]} -> ${error.params[1]}: классы конституент не совпадают`;
+      return formatLabel(ossLid.substitution.invalidClasses, { from, to });
     case SubstitutionErrorType.typificationCycle:
-      return `Ошибка: цикл подстановок в типизациях ${error.params[0]}`;
+      return formatLabel(ossLid.substitution.typificationCycle, { detail: error.params[0] ?? '' });
     case SubstitutionErrorType.baseSubstitutionNotSet:
-      return `Ошибка: типизация не задает множество ${error.params[0]} ∈ ${error.params[1]}`;
+      return formatLabel(ossLid.substitution.baseSubstitutionNotSet, { from, to: error.params[1] ?? '' });
     case SubstitutionErrorType.unequalTypification:
-      return `Ошибка ${error.params[0]} -> ${error.params[1]}: типизация структурных операндов не совпадает`;
+      return formatLabel(ossLid.substitution.unequalTypification, { from, to });
     case SubstitutionErrorType.unequalArgsCount:
-      return `Ошибка ${error.params[0]} -> ${error.params[1]}: количество аргументов не совпадает`;
+      return formatLabel(ossLid.substitution.unequalArgsCount, { from, to });
     case SubstitutionErrorType.unequalArgs:
-      return `Ошибка ${error.params[0]} -> ${error.params[1]}: типизация аргументов не совпадает`;
+      return formatLabel(ossLid.substitution.unequalArgs, { from, to });
     case SubstitutionErrorType.unequalExpressions:
-      return `Предупреждение ${error.params[0]} -> ${error.params[1]}: определения понятий не совпадают`;
+      return formatLabel(ossLid.substitution.unequalExpressions, { from, to });
+    default:
+      return formatLabel(ossLid.fallback.unknownSubstitutionError);
   }
-  return 'UNKNOWN ERROR';
 }
 
 /** Retrieves label for {@link OssItem}. */
@@ -67,6 +75,6 @@ export function labelOssItem(item: RO<OssItem>): string {
   if (item.nodeType === NodeType.OPERATION) {
     return `${(item as Operation).alias}: ${item.title}`;
   } else {
-    return `Блок: ${item.title}`;
+    return formatLabel(ossLid.item.blockTitle, { title: item.title });
   }
 }

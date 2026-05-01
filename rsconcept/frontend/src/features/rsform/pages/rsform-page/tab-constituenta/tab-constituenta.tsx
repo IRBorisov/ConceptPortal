@@ -8,6 +8,7 @@ import { isSchemaIssue } from '@/domain/library/rsform-api';
 import { isModelIssue } from '@/domain/library/rsmodel-api';
 
 import { useConceptNavigation } from '@/app';
+import { useTx } from '@/app/i18n/use-tx';
 import { useRoleStore, UserRole } from '@/features/users';
 
 import { MiniButton } from '@/components/control';
@@ -32,6 +33,7 @@ interface TabConstituentaProps {
 }
 
 export function TabConstituenta({ engine }: TabConstituentaProps) {
+  const tx = useTx();
   const router = useConceptNavigation();
   const {
     schema,
@@ -172,16 +174,16 @@ export function TabConstituenta({ engine }: TabConstituentaProps) {
           isContentEditable ? (
             <div className='flex pl-1'>
               <MiniButton
-                title={prepareTooltip('Переместить вверх', 'Alt + вверх')}
-                aria-label='Переместить вверх'
+                title={prepareTooltip(tx('ui.toolbar.moveUp', 'Move up'), tx('ui.hotkey.altUp', 'Alt + Up'))}
+                aria-label={tx('ui.toolbar.moveUp', 'Move up')}
                 className='px-0'
                 icon={<IconMoveUp size='1.1rem' className='hover:icon-primary text-muted-foreground' />}
                 onClick={moveUp}
                 disabled={disabled || isModified || schema.items.length < 2}
               />
               <MiniButton
-                title={prepareTooltip('Переместить вниз', 'Alt + вниз')}
-                aria-label='Переместить вниз'
+                title={prepareTooltip(tx('ui.toolbar.moveDown', 'Move down'), tx('ui.hotkey.altDown', 'Alt + Down'))}
+                aria-label={tx('ui.toolbar.moveDown', 'Move down')}
                 className='px-0'
                 icon={<IconMoveDown size='1.1rem' className='hover:icon-primary text-muted-foreground' />}
                 onClick={moveDown}

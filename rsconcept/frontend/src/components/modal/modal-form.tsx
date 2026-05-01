@@ -4,6 +4,7 @@ import type { SubmitEvent, SubmitEventHandler } from 'react';
 import { useEffect, useRef } from 'react';
 import clsx from 'clsx';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { type HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 
@@ -66,7 +67,7 @@ export function ModalForm({
   overflowVisible,
 
   canSubmit = true,
-  submitText = 'Продолжить',
+  submitText,
   validationHint,
   beforeSubmit,
   onSubmit,
@@ -76,8 +77,10 @@ export function ModalForm({
   hideHelpWhen,
   ...restProps
 }: React.PropsWithChildren<ModalFormProps>) {
+  const tx = useTx();
   const hideDialog = useDialogsStore(state => state.hideDialog);
   const setActiveTooltipText = useValueTooltipStore(state => state.setActiveText);
+  const resolvedSubmitText = submitText ?? tx('modal.submitContinue', 'Continue');
   const { isTopPlaced, setElement } = useModalPlacement<HTMLFormElement>();
 
   const previousFocusRef = useRef<HTMLElement | null>(null);
@@ -117,8 +120,8 @@ export function ModalForm({
         ) : null}
 
         <MiniButton
-          title={prepareTooltip('Закрыть диалоговое окно', 'ESC')}
-          aria-label='Закрыть'
+          title={prepareTooltip(tx('modal.closeDialogTooltip', 'Close dialog'), 'ESC')}
+          aria-label={tx('modal.close', 'Close')}
           noPadding
           icon={<IconClose size='1.25rem' />}
           className='absolute z-pop top-2 right-2'
@@ -145,7 +148,7 @@ export function ModalForm({
         </div>
 
         <div className={clsx('z-pop relative', 'my-2', 'flex justify-center', 'text-sm', !validationHint && 'gap-12')}>
-          <SubmitButton autoFocus text={submitText} className='min-w-28' disabled={!canSubmit} />
+          <SubmitButton autoFocus text={resolvedSubmitText} className='min-w-28' disabled={!canSubmit} />
           {validationHint ? (
             <div
               className={clsx(
@@ -162,7 +165,7 @@ export function ModalForm({
               />
             </div>
           ) : null}
-          <Button text='Отмена' aria-label='Закрыть' className='min-w-28' onClick={handleCancel} />
+          <Button text={tx('modal.cancel', 'Cancel')} aria-label={tx('modal.close', 'Close')} className='min-w-28' onClick={handleCancel} />
         </div>
       </form>
     </div>

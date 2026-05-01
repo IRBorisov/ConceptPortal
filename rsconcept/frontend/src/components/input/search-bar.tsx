@@ -1,4 +1,8 @@
+'use client';
+
 import clsx from 'clsx';
+
+import { useTx } from '@/app/i18n/use-tx';
 
 import { IconSearch } from '@/components/icons';
 import { type Styling } from '@/components/props';
@@ -38,10 +42,13 @@ export function SearchBar({
   onChangeQuery,
   noBorder,
   className,
-  placeholder = 'Поиск',
+  placeholder,
   inputRef,
   ...restProps
 }: SearchBarProps) {
+  const tx = useTx();
+  const resolvedPlaceholder = placeholder ?? tx('ui.search.placeholderDefault', 'Search');
+
   return (
     <div className={cn('group relative flex items-center grow', className)} {...restProps}>
       {!noIcon ? (
@@ -68,7 +75,7 @@ export function SearchBar({
         )}
         value={query}
         onChange={event => onChangeQuery?.(event.target.value)}
-        placeholder={placeholder}
+        placeholder={resolvedPlaceholder}
       />
     </div>
   );

@@ -6,6 +6,7 @@ import fileDownload from 'js-file-download';
 import { AccessPolicy, LocationHead } from '@/domain/library';
 
 import { useConceptNavigation } from '@/app';
+import { useTx } from '@/app/i18n/use-tx';
 import { useAuth } from '@/features/auth';
 import { createSandboxBundleFromRSForm } from '@/features/sandbox/models/bundle-transfer';
 import { saveBundle } from '@/features/sandbox/stores/sandbox-repository';
@@ -31,7 +32,7 @@ import {
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { EXTEOR_TRS_FILE, prefixes } from '@/utils/constants';
-import { errorMsg, infoMsg, promptText, tooltipText } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 import { generatePageQR, promptUnsaved, sharePage } from '@/utils/utils';
 
 import { useUploadTRS } from '../../backend/use-upload-trs';
@@ -40,6 +41,7 @@ import { prepareTRSFile } from '../../models/trs-file';
 import { useSchemaEdit } from './schema-edit-context';
 
 export function MenuMain() {
+  const tx = useTx();
   const router = useConceptNavigation();
   const { schema, selectedCst, deleteSchema, isArchive, isMutable, isContentEditable, isProcessing } = useSchemaEdit();
 
@@ -131,18 +133,18 @@ export function MenuMain() {
     if (isModified && !promptUnsaved()) {
       return;
     }
-    if (!window.confirm(promptText.resetSandbox)) {
+    if (!window.confirm(formatLabel(lid.prompt.resetSandbox))) {
       return;
     }
     hideMenu();
     try {
       const nextBundle = createSandboxBundleFromRSForm(schema);
       await saveBundle(nextBundle);
-      toast.success(infoMsg.sandboxImportSuccess);
+      toast.success(formatLabel(lid.info.sandboxImportSuccess));
       router.gotoSandboxEditor();
     } catch (error) {
       console.error(error);
-      toast.error(errorMsg.sandboxImportError);
+      toast.error(formatLabel(lid.error.sandboxImportError));
     }
   }
 
@@ -165,7 +167,7 @@ export function MenuMain() {
       void createSchemaFile(schema);
       fileDownload(blob, `${filename}.pdf`, 'application/pdf;charset=utf-8;');
     } catch (error) {
-      toast.error(errorMsg.pdfError);
+      toast.error(formatLabel(lid.error.pdfError));
       throw error;
     }
   }
@@ -191,7 +193,7 @@ export function MenuMain() {
       <MiniButton
         noHover
         noPadding
-        title='Меню'
+        title={tx('ui.nav.menu', 'Menu')}
         hideTitle={isMenuOpen}
         icon={<IconMenu size='1.25rem' />}
         className='h-full pl-2 text-muted-foreground hover:text-primary cc-animate-color bg-transparent'
@@ -199,22 +201,24 @@ export function MenuMain() {
       />
       <Dropdown isOpen={isMenuOpen} margin='mt-3'>
         <DropdownButton
-          text='Поделиться'
-          title={tooltipText.shareItem(schema.access_policy === AccessPolicy.PUBLIC)}
-          aria-label='Скопировать ссылку в буфер обмена'
+          text={tx('ui.action.share', 'Share')}
+          title={formatLabel(
+            schema.access_policy === AccessPolicy.PUBLIC ? lid.tooltip.shareItemPublic : lid.tooltip.shareItemPrivate
+          )}
+          aria-label={tx('ui.aria.copyLinkToClipboard', 'Copy link to clipboard')}
           icon={<IconShare size='1rem' className='icon-primary' />}
           onClick={handleShare}
           disabled={schema.access_policy !== AccessPolicy.PUBLIC}
         />
         <DropdownButton
-          text='QR-код'
-          title='Показать QR-код схемы'
+          text={tx('ui.action.qrCode', 'QR code')}
+          title={tx('ui.hint.qrSchemaPage', 'Show schema QR code')}
           icon={<IconQR size='1rem' className='icon-primary' />}
           onClick={handleShowQR}
         />
         {!isAnonymous ? (
           <DropdownButton
-            text='Клонировать'
+            text={tx('ui.action.clone', 'Clone')}
             icon={<IconClone size='1rem' className='icon-green' />}
             disabled={isArchive}
             onClick={handleClone}
@@ -222,30 +226,30 @@ export function MenuMain() {
         ) : null}
         {!isAnonymous ? (
           <DropdownButton
-            text='Создать модель'
+            text={tx('ui.action.createModel', 'Create model')}
             icon={<IconRSModel size='1rem' className={isArchive ? '' : 'text-accent-orange'} />}
             disabled={isArchive}
             onClick={handleCreateModel}
           />
         ) : null}
         <DropdownButton
-          text='Открыть в песочнице'
+          text={tx('ui.action.openInSandbox', 'Open in sandbox')}
           icon={<IconSandbox size='1rem' className='icon-green' />}
           onClick={() => void handleTransferToSandbox()}
         />
         <DropdownButton
-          text='Экспорт в PDF'
+          text={tx('ui.action.exportPdf', 'Export to PDF')}
           icon={<IconPDF size='1rem' className='icon-primary' />}
           onClick={() => void handleSavePDF()}
         />
         <DropdownButton
-          text='Выгрузить в Экстеор'
+          text={tx('ui.action.exportToExteor', 'Export to Exteor')}
           icon={<IconDownload size='1rem' className='icon-primary' />}
           onClick={handleDownload}
         />
         {isContentEditable ? (
           <DropdownButton
-            text='Загрузить из Экстеор'
+            text={tx('ui.action.importFromExteor', 'Import from Exteor')}
             icon={<IconUpload size='1rem' className='icon-red' />}
             disabled={isProcessing || hasInheritance}
             onClick={handleUpload}
@@ -253,7 +257,7 @@ export function MenuMain() {
         ) : null}
         {isMutable ? (
           <DropdownButton
-            text='Удалить схему'
+            text={tx('ui.action.deleteSchema', 'Delete schema')}
             icon={<IconDestroy size='1rem' className='icon-red' />}
             disabled={isProcessing || role < UserRole.OWNER}
             onClick={handleDelete}
@@ -265,7 +269,7 @@ export function MenuMain() {
         {schema.oss.length > 0 ? (
           <div ref={ossRef} onBlur={handleOssBlur} className='relative w-full'>
             <DropdownButton
-              text='Перейти к ОСС'
+              text={tx('ui.nav.gotoOss', 'Go to OSS')}
               className='w-full'
               icon={<IconOSS size='1rem' className='icon-primary' />}
               onClick={onOssToggle}
@@ -285,7 +289,7 @@ export function MenuMain() {
         {schema.models.length > 0 ? (
           <div ref={modelRef} onBlur={handleModelBlur} className='relative w-full'>
             <DropdownButton
-              text='Перейти к модели'
+              text={tx('ui.nav.gotoModel', 'Go to model')}
               className='w-full'
               icon={<IconRSModel size='1rem' className='icon-primary' />}
               onClick={onModelToggle}
@@ -303,7 +307,7 @@ export function MenuMain() {
           </div>
         ) : null}
         <DropdownButton
-          text='Библиотека'
+          text={tx('ui.nav.library', 'Library')}
           icon={<IconLibrary size='1rem' className='icon-primary' />}
           onClick={() => router.gotoLibrary()}
         />

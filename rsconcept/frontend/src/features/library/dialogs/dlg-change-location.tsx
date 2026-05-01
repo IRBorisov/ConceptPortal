@@ -6,15 +6,17 @@ import { z } from 'zod';
 
 import { validateLocation } from '@/domain/library/library-api';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { limits } from '@/utils/constants';
-import { errorMsg } from '@/utils/labels';
+import { lid } from '@/utils/labels';
 
 import { PickLocation } from '../components/pick-location';
 
 const schemaLocation = z.strictObject({
-  location: z.string().refine(data => validateLocation(data), { message: errorMsg.invalidLocation })
+  location: z.string().refine(data => validateLocation(data), { message: lid.error.invalidLocation })
 });
 
 type LocationType = z.infer<typeof schemaLocation>;
@@ -25,6 +27,7 @@ export interface DlgChangeLocationProps {
 }
 
 export function DlgChangeLocation() {
+  const tx = useTx();
   const { initial, onChangeLocation } = useDialogsStore(state => state.props as DlgChangeLocationProps);
 
   const form = useForm({
@@ -46,12 +49,16 @@ export function DlgChangeLocation() {
   return (
     <ModalForm
       overflowVisible
-      header='Изменение расположения'
-      submitText='Переместить'
+      header={tx('ui.dlg.changeLocation.header', 'Change location')}
+      submitText={tx('ui.action.move', 'Move')}
       validationHint={
         isValid
           ? ''
-          : `Допустимы буквы, цифры, подчерк, пробел и "!". Сегмент пути не может начинаться и заканчиваться пробелом. Общая длина (с корнем) не должна превышать ${limits.len_location}`
+          : tx(
+              'ui.dlg.changeLocation.invalidHint',
+              'Letters, digits, underscore, space and "!" allowed. A path segment cannot start or end with a space. Total length (including root) must not exceed {maxLen}',
+              { maxLen: limits.len_location }
+            )
       }
       canSubmit={isValid && !isDefaultValue}
       onSubmit={event => {

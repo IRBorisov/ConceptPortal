@@ -5,12 +5,13 @@ import { useForm, useStore } from '@tanstack/react-form';
 import { AccessPolicy, type LibraryItem, LibraryItemType } from '@/domain/library';
 
 import { urls, useConceptNavigation } from '@/app';
+import { useTx } from '@/app/i18n/use-tx';
 
 import { MiniButton } from '@/components/control';
 import { Checkbox, Label, TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
-import { placeholderMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 
 import { type CloneLibraryItemDTO, schemaCloneLibraryItem } from '../backend/types';
 import { useCloneItem } from '../backend/use-clone-item';
@@ -27,6 +28,7 @@ export interface DlgCloneLibraryItemProps {
 }
 
 export function DlgCloneLibraryItem() {
+  const tx = useTx();
   const { base, initialLocation, selected, totalCount } = useDialogsStore(
     state => state.props as DlgCloneLibraryItemProps
   );
@@ -68,8 +70,12 @@ export function DlgCloneLibraryItem() {
 
   return (
     <ModalForm
-      header={`Создание копии ${base.item_type === LibraryItemType.RSFORM ? 'концептуальной схемы' : 'концептуальной модели'}`}
-      submitText='Создать'
+      header={
+        base.item_type === LibraryItemType.RSFORM
+          ? tx('ui.dlg.clone.headerRsform', 'Create copy of conceptual schema')
+          : tx('ui.dlg.clone.headerRsmodel', 'Create copy of conceptual model')
+      }
+      submitText={tx('ui.action.create', 'Create')}
       canSubmit={isValid}
       onSubmit={event => {
         event.preventDefault();
@@ -82,7 +88,7 @@ export function DlgCloneLibraryItem() {
         {field => (
           <TextInput
             id='dlg_full_name' //
-            label='Название'
+            label={tx('ui.label.title', 'Title')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
@@ -96,7 +102,7 @@ export function DlgCloneLibraryItem() {
           {field => (
             <TextInput
               id='dlg_alias'
-              label='Сокращение'
+              label={tx('ui.label.alias', 'Abbreviation')}
               className='w-64'
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
@@ -106,7 +112,7 @@ export function DlgCloneLibraryItem() {
           )}
         </form.Field>
         <div className='flex flex-col gap-2'>
-          <Label text='Доступ' className='self-center select-none' />
+          <Label text={tx('ui.label.access', 'Access')} className='self-center select-none' />
           <div className='ml-auto cc-icons'>
             <form.Field name='item_data.access_policy'>
               {field => (
@@ -120,8 +126,12 @@ export function DlgCloneLibraryItem() {
             <form.Field name='item_data.visible'>
               {field => (
                 <MiniButton
-                  title={field.state.value ? 'Библиотека: отображать' : 'Библиотека: скрывать'}
-                  aria-label='Переключатель отображения библиотеки'
+                  title={
+                    field.state.value
+                      ? tx('ui.dlg.clone.libraryShow', 'Library: show')
+                      : tx('ui.dlg.clone.libraryHide', 'Library: hide')
+                  }
+                  aria-label={tx('ui.dlg.clone.libraryToggleAria', 'Toggle library visibility')}
                   icon={<IconItemVisibility value={field.state.value ?? true} />}
                   onClick={() => field.handleChange(!(field.state.value ?? false))}
                 />
@@ -146,8 +156,8 @@ export function DlgCloneLibraryItem() {
         {field => (
           <TextArea
             id='dlg_comment'
-            label='Описание'
-            placeholder={placeholderMsg.itemDescription}
+            label={tx('ui.label.description', 'Description')}
+            placeholder={formatLabel(lid.placeholder.itemDescription)}
             rows={5}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
@@ -162,7 +172,10 @@ export function DlgCloneLibraryItem() {
           {field => (
             <Checkbox
               id='dlg_only_selected'
-              label={`Только выбранные конституенты [${selected.length} из ${totalCount}]`}
+              label={tx('ui.dlg.createVersion.onlySelected', 'Only selected constituents [{n} of {total}]', {
+                n: selected.length,
+                total: totalCount
+              })}
               value={field.state.value ? field.state.value.length > 0 : false}
               onChange={value => field.handleChange(value ? selected : [])}
             />

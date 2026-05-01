@@ -1,5 +1,6 @@
 'use client';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { SelectUser } from '@/features/users/components/select-user';
 
 import { MiniButton } from '@/components/control';
@@ -17,6 +18,7 @@ interface ToolbarSearchProps {
 }
 
 export function ToolbarSearch({ className }: ToolbarSearchProps) {
+  const tx = useTx();
   const { items } = useLibrary();
 
   const query = useLibrarySearchStore(state => state.query);
@@ -40,7 +42,7 @@ export function ToolbarSearch({ className }: ToolbarSearchProps) {
       <SelectorLibraryFilter className='mr-1' />
 
       <MiniButton
-        title='Сбросить фильтры'
+        title={tx('lib.search.resetTitle', 'Reset filters')}
         icon={<IconFilterReset size='1.25rem' className='icon-primary' />}
         onClick={resetFilter}
         disabled={!hasCustomFilter}
@@ -48,15 +50,15 @@ export function ToolbarSearch({ className }: ToolbarSearchProps) {
 
       <SearchBar
         id='library_search'
-        placeholder='Поиск'
+        placeholder={tx('lib.search.placeholder', 'Search')}
         noBorder
         className='min-w-28 sm:min-w-40 max-w-80 grow'
         query={query}
         onChangeQuery={setQuery}
       />
       <SelectUser
-        aria-label='Поиск по владельцу'
-        placeholder='Поиск по владельцу'
+        aria-label={tx('lib.search.ownerAria', 'Search by owner')}
+        placeholder={tx('lib.search.ownerPlaceholder', 'Search by owner')}
         noBorder
         className='h-7 pr-0 pl-2 max-sm:hidden ml-auto'
         filter={filterNonEmptyUsers}

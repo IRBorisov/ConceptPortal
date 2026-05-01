@@ -6,6 +6,7 @@ import { type Operation, OperationType } from '@/domain/library';
 import { LayoutManager } from '@/domain/library/oss-layout-api';
 
 import { useConceptNavigation } from '@/app';
+import { useTx } from '@/app/i18n/use-tx';
 import { useLibrary } from '@/features/library/backend/use-library';
 
 import { DropdownButton } from '@/components/dropdown';
@@ -23,7 +24,7 @@ import {
 import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/format';
-import { errorMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 
 import { useCloneSchema } from '../../../../backend/use-clone-schema';
 import { useCreateInput } from '../../../../backend/use-create-input';
@@ -39,6 +40,7 @@ interface MenuOperationProps {
 }
 
 export function MenuOperation({ operation, onHide }: MenuOperationProps) {
+  const tx = useTx();
   const router = useConceptNavigation();
   const { items: libraryItems } = useLibrary();
   const { schema, setSelectedNodes, isMutable, canDeleteOperation, deselectAll } = useOssEdit();
@@ -152,7 +154,7 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
       return;
     }
     if (libraryItems.find(item => item.alias === operation.alias && item.location === schema.location)) {
-      toast.error(errorMsg.inputAlreadyExists);
+      toast.error(formatLabel(lid.error.inputAlreadyExists));
       return;
     }
     onHide();
@@ -234,16 +236,16 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
     <>
       {operation.operation_type !== OperationType.REPLICA ? (
         <DropdownButton
-          text='Редактировать'
-          title='Редактировать операцию'
+          text={tx('ui.oss.menu.edit', 'Edit')}
+          title={tx('ui.oss.menu.editOperation', 'Edit operation')}
           icon={<IconEdit size='1rem' className='icon-primary' />}
           onClick={handleEditOperation}
           disabled={!isMutable || isProcessing}
         />
       ) : (
         <DropdownButton
-          text='Оригинал'
-          title='Выделить оригинал'
+          text={tx('ui.oss.menu.original', 'Original')}
+          title={tx('ui.oss.menu.selectOriginal', 'Select original')}
           icon={<IconReference size='1rem' className='icon-primary' />}
           onClick={handleSelectTarget}
         />
@@ -251,9 +253,9 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
 
       {operation.result ? (
         <DropdownButton
-          text='Открыть схему'
-          title={prepareTooltip('Открыть привязанную КС', 'Двойной клик')}
-          aria-label='Открыть привязанную КС'
+          text={tx('ui.oss.menu.openSchema', 'Open schema')}
+          title={prepareTooltip(tx('ui.oss.menu.openLinkedRsform', 'Open linked conceptual schema'), tx('ui.hint.doubleClick', 'Double-click'))}
+          aria-label={tx('ui.oss.menu.openLinkedRsform', 'Open linked conceptual schema')}
           icon={<IconRSForm size='1rem' className='icon-primary' />}
           onClick={handleOpenSchema}
           disabled={isProcessing}
@@ -261,8 +263,8 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
       ) : null}
       {isMutable && !operation.result && operation.operation_type === OperationType.INPUT ? (
         <DropdownButton
-          text='Создать схему'
-          title='Создать пустую схему'
+          text={tx('ui.oss.menu.createEmptySchema', 'Create schema')}
+          title={tx('ui.oss.menu.createEmptySchemaTitle', 'Create an empty schema')}
           icon={<IconNewRSForm size='1rem' className='icon-green' />}
           onClick={handleInputCreate}
           disabled={isProcessing}
@@ -270,8 +272,8 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
       ) : null}
       {isMutable && operation?.operation_type === OperationType.INPUT ? (
         <DropdownButton
-          text={!operation?.result ? 'Загрузить схему' : 'Изменить схему'}
-          title='Выбрать схему для загрузки'
+          text={!operation?.result ? tx('ui.oss.menu.loadSchema', 'Load schema') : tx('ui.oss.menu.changeSchema', 'Change schema')}
+          title={tx('ui.oss.menu.pickSchemaTitle', 'Choose a schema to load')}
           icon={<IconConnect size='1rem' className='icon-primary' />}
           onClick={handleEditSchema}
           disabled={isProcessing}
@@ -282,13 +284,16 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
       operation.operation_type === OperationType.SYNTHESIS &&
       operation.arguments.length > 0 ? (
         <DropdownButton
-          text='Активировать синтез'
+          text={tx('ui.oss.menu.activateSynthesis', 'Activate synthesis')}
           title={
             readyForSynthesis
-              ? 'Активировать операцию\nи получить синтезированную КС'
-              : 'Необходимо предоставить все аргументы'
+              ? tx('ui.oss.menu.activateSynthesisReadyTitle', 'Activate the operation\nand obtain the synthesized schema')
+              : tx('ui.oss.menu.activateSynthesisNeedArgs', 'All arguments must be provided')
           }
-          aria-label='Активировать операцию и получить синтезированную КС'
+          aria-label={tx(
+            'ui.oss.menu.activateSynthesisAria',
+            'Activate the operation and obtain the synthesized schema'
+          )}
           icon={<IconExecute size='1rem' className='icon-green' />}
           onClick={handleOperationExecute}
           disabled={isProcessing || !readyForSynthesis}
@@ -297,10 +302,9 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
 
       {isMutable && operation.result && operation.operation_type !== OperationType.REPLICA ? (
         <DropdownButton
-          text='Конституенты'
-          title='Перенос конституент
-между схемами'
-          aria-label='Перенос конституент между схемами'
+          text={tx('ui.tab.inlineSynthesis.constituents', 'Constituents')}
+          title={tx('ui.oss.menu.relocateConstituentsTitle', 'Relocate constituents between schemas')}
+          aria-label={tx('ui.oss.menu.relocateConstituentsAria', 'Relocate constituents between schemas')}
           icon={<IconChild size='1rem' className='icon-green' />}
           onClick={handleRelocateConstituents}
           disabled={isProcessing}
@@ -309,8 +313,8 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
 
       {isMutable && operation.operation_type !== OperationType.REPLICA ? (
         <DropdownButton
-          text='Создать реплику'
-          title='Создать реплику результата операции'
+          text={tx('ui.oss.menu.createReplica', 'Create replica')}
+          title={tx('ui.oss.menu.createReplicaTitle', 'Create a replica of the operation result')}
           icon={<IconReference size='1rem' className='icon-green' />}
           onClick={handleCreateReference}
           disabled={isProcessing}
@@ -319,8 +323,8 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
 
       {isMutable && operation.operation_type !== OperationType.REPLICA ? (
         <DropdownButton
-          text='Клонировать'
-          title='Создать и загрузить копию концептуальной схемы'
+          text={tx('ui.action.clone', 'Clone')}
+          title={tx('ui.oss.menu.cloneResultSchemaTitle', 'Create and load a copy of the conceptual schema')}
           icon={<IconClone size='1rem' className='icon-green' />}
           onClick={handleClone}
           disabled={isProcessing || !operation?.result}
@@ -328,7 +332,7 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
       ) : null}
 
       <DropdownButton
-        text='Удалить операцию'
+        text={tx('ui.oss.menu.deleteOperation', 'Delete operation')}
         icon={<IconDestroy size='1rem' className='icon-red' />}
         onClick={handleDeleteOperation}
         disabled={!isMutable || isProcessing || !operation || !canDeleteOperation(operation)}

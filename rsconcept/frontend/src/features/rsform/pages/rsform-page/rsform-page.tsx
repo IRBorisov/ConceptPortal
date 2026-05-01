@@ -5,6 +5,7 @@ import { useParams } from 'react-router';
 import { z } from 'zod';
 
 import { urls, useConceptNavigation } from '@/app';
+import { useTx } from '@/app/i18n/use-tx';
 import { RSTabID } from '@/app/navigation/navigation-context';
 
 import { isAxiosError } from '@/backend/api-transport';
@@ -75,25 +76,32 @@ function ProcessError({
   isArchive: boolean;
   itemID?: number;
 }): React.ReactElement | null {
+  const tx = useTx();
   rethrowIfStaleBundleError(error);
 
   if (isAxiosError(error) && error.response) {
     if (error.response.status === 404) {
       return (
         <div className='flex flex-col items-center p-2 mx-auto'>
-          <p>{`Концептуальная схема с указанным идентификатором ${isArchive ? 'и версией ' : ''}отсутствует`}</p>
+          <p>
+            {isArchive
+              ? tx('ui.rsform.error.notFoundVersion', 'Conceptual schema with this id and version was not found.')
+              : tx('ui.rsform.error.notFound', 'Conceptual schema with this id was not found.')}
+          </p>
           <div className='flex justify-center'>
-            <TextURL text='Библиотека' href='/library' />
+            <TextURL text={tx('ui.nav.library', 'Library')} href='/library' />
             {isArchive ? <Divider vertical margins='mx-3' /> : null}
-            {isArchive ? <TextURL text='Актуальная версия' href={`/rsforms/${itemID}`} /> : null}
+            {isArchive ? (
+              <TextURL text={tx('ui.rsform.link.currentVersion', 'Current version')} href={`/rsforms/${itemID}`} />
+            ) : null}
           </div>
         </div>
       );
     } else if (error.response.status === 403) {
       return (
         <div className='flex flex-col items-center p-2 mx-auto'>
-          <p>Владелец ограничил доступ к данной схеме</p>
-          <TextURL text='Библиотека' href='/library' />
+          <p>{tx('ui.rsform.error.forbidden', 'The owner has restricted access to this schema.')}</p>
+          <TextURL text={tx('ui.nav.library', 'Library')} href='/library' />
         </div>
       );
     }

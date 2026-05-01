@@ -1,6 +1,10 @@
+'use client';
+
 import clsx from 'clsx';
 
 import { LibraryItemType } from '@/domain/library';
+
+import { useTx } from '@/app/i18n/use-tx';
 
 import { IconOSS, IconRSForm, IconRSModel } from '@/components/icons';
 import { useValueTooltipStore } from '@/stores/value-tooltip';
@@ -23,6 +27,7 @@ function ItemIcon({ itemType, className }: { itemType: LibraryItemType; classNam
 }
 
 export function CurrentTitle({ itemType, title }: SchemaTitleProps) {
+  const tx = useTx();
   const setActiveTooltipText = useValueTooltipStore(state => state.setActiveText);
 
   return (
@@ -33,7 +38,7 @@ export function CurrentTitle({ itemType, title }: SchemaTitleProps) {
         'flex flex-1 items-center gap-2',
         'text-md text-muted-foreground pointer-events-auto'
       )}
-      aria-label='Название схемы'
+      aria-label={tx('nav.currentItem.titleAria', 'Item title')}
       data-tooltip-id={globalIDs.value_tooltip}
       onPointerEnter={() => setActiveTooltipText(title)}
     >

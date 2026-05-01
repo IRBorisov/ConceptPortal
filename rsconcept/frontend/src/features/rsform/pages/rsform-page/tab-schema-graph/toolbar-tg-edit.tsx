@@ -4,6 +4,7 @@ import { type Graph } from '@/domain/graph/graph';
 import { type LibraryItemReference } from '@/domain/library';
 
 import { useConceptNavigation } from '@/app';
+import { useTx } from '@/app/i18n/use-tx';
 import { MiniSelectorOSS } from '@/features/library/components/mini-selector-oss';
 
 import { MiniButton } from '@/components/control';
@@ -21,6 +22,7 @@ interface ToolbarTGEditProps {
 }
 
 export function ToolbarTGEdit({ className, graph }: ToolbarTGEditProps) {
+  const tx = useTx();
   const router = useConceptNavigation();
   const { schema, selectedCst, isContentEditable, canDeleteSelected, toggleCrucial, isProcessing } = useSchemaEdit();
 
@@ -35,13 +37,13 @@ export function ToolbarTGEdit({ className, graph }: ToolbarTGEditProps) {
       {schema.oss.length > 0 ? <MiniSelectorOSS items={schema.oss} onSelect={handleSelectOss} /> : null}
       <MiniButton
         icon={<IconTypeGraph size='1.25rem' className='icon-primary' />}
-        title='Граф ступеней выделенных конституент'
+        title={tx('ui.tg.toolbar.echelonGraphTitle', 'Echelon graph of selected constituents')}
         onClick={handleShowTypeGraph}
       />
       {isContentEditable ? (
         <MiniButton
-          title={prepareTooltip('Ключевая конституента', 'F')}
-          aria-label='Переключатель статуса ключевой конституенты'
+          title={prepareTooltip(tx('ui.rsform.formEdit.crucialTitle', 'Crucial constituent'), tx('ui.hotkey.f', 'F'))}
+          aria-label={tx('ui.cst.crucialToggleAria', 'Toggle crucial constituent status')}
           icon={<IconCrucial size='1.25rem' className='icon-primary' />}
           onClick={toggleCrucial}
           disabled={isProcessing || selectedCst.length === 0}
@@ -49,7 +51,7 @@ export function ToolbarTGEdit({ className, graph }: ToolbarTGEditProps) {
       ) : null}
       {isContentEditable ? (
         <MiniButton
-          title={prepareTooltip('Удалить выбранные', 'Delete, `')}
+          title={prepareTooltip(tx('ui.toolbar.deleteSelected', 'Delete selected'), tx('ui.hotkey.deleteBacktick', 'Delete, `'))}
           icon={<IconDestroy size='1.25rem' className='icon-red' />}
           onClick={handleDeleteSelected}
           disabled={!canDeleteSelected || isProcessing}
@@ -57,7 +59,7 @@ export function ToolbarTGEdit({ className, graph }: ToolbarTGEditProps) {
       ) : null}
       {isContentEditable ? (
         <MiniButton
-          title={prepareTooltip('Новая конституента', 'R')}
+          title={prepareTooltip(tx('ui.toolbar.newConstituenta', 'New constituent'), tx('ui.hotkey.r', 'R'))}
           icon={<IconNewItem size='1.25rem' className='icon-green' />}
           onClick={handleCreateCst}
           disabled={isProcessing}
@@ -65,7 +67,7 @@ export function ToolbarTGEdit({ className, graph }: ToolbarTGEditProps) {
       ) : null}
       {isContentEditable ? (
         <MiniButton
-          title={prepareTooltip('Редактировать конституенту', 'V')}
+          title={prepareTooltip(tx('ui.toolbar.editConstituenta', 'Edit constituent'), tx('ui.hotkey.altV', 'Alt + V'))}
           icon={<IconEdit2 size='1.25rem' className='icon-primary' />}
           onClick={handelFastEdit}
           disabled={isProcessing || selectedCst.length !== 1}

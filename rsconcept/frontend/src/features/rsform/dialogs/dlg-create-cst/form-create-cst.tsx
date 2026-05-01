@@ -5,6 +5,7 @@ import { type ReactNode, useState } from 'react';
 import { CstType, type RSForm } from '@/domain/library';
 import { isBaseSet, isBasicConcept } from '@/domain/library/rsform-api';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 
@@ -37,6 +38,7 @@ interface FormCreateCstProps {
 }
 
 export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggleCrucial }: FormCreateCstProps) {
+  const tx = useTx();
   const [forceComment, setForceComment] = useState(false);
   const cst_type = values.cst_type ?? CstType.BASE;
   const convention = values.convention;
@@ -50,7 +52,7 @@ export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggl
     <>
       <div className='flex items-center self-center gap-3'>
         <MiniButton
-          title='Ключевая конституента'
+          title={tx('ui.form.createCst.crucialTitle', 'Crucial constituent')}
           icon={<IconCrucialValue size='1.25rem' value={crucial} />}
           onClick={onToggleCrucial}
         />
@@ -60,7 +62,7 @@ export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggl
             <TextInput
               id='dlg_cst_alias'
               dense
-              label='Имя'
+              label={tx('ui.form.createCst.aliasLabel', 'Alias')}
               className='w-28'
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
@@ -76,9 +78,12 @@ export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggl
         {field => (
           <RefsInput
             id='dlg_cst_term'
-            label='Термин'
+            label={tx('ui.form.createCst.termLabel', 'Term')}
             maxHeight='3.75rem'
-            placeholder='Обозначение для текстовых определений'
+            placeholder={tx(
+              'ui.form.createCst.termPlaceholder',
+              'Notation for textual definitions'
+            )}
             schema={schema}
             value={field.state.value ?? ''}
             resolved={field.state.value}
@@ -108,8 +113,11 @@ export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggl
           !!field.state.value || !isElementary ? (
             <RefsInput
               id='dlg_cst_definition'
-              label='Текстовое определение'
-              placeholder='Текстовая интерпретация формального выражения'
+              label={tx('ui.form.createCst.textDefinitionLabel', 'Textual definition')}
+              placeholder={tx(
+                'ui.form.createCst.textDefinitionPlaceholder',
+                'Textual interpretation of the formal expression'
+              )}
               maxHeight='3.75rem'
               schema={schema}
               resolved={field.state.value}
@@ -123,7 +131,11 @@ export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggl
       </DefinitionRawField>
 
       {!showConvention ? (
-        <TextButton text='Добавить комментарий' className='self-start' onClick={() => setForceComment(true)} />
+        <TextButton
+          text={tx('ui.form.createCst.addComment', 'Add comment')}
+          className='self-start'
+          onClick={() => setForceComment(true)}
+        />
       ) : (
         <ConventionField>
           {field => (
@@ -131,8 +143,19 @@ export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggl
               id='dlg_cst_convention'
               spellCheck
               fitContent
-              label={isBasic ? 'Конвенция' : 'Комментарий'}
-              placeholder={isBasic ? 'Договоренность об интерпретации базового понятия' : 'Пояснение разработчика'}
+              label={
+                isBasic
+                  ? tx('ui.form.createCst.conventionLabel', 'Convention')
+                  : tx('ui.form.createCst.commentLabel', 'Comment')
+              }
+              placeholder={
+                isBasic
+                  ? tx(
+                      'ui.form.createCst.conventionPlaceholder',
+                      'Agreement on interpreting the base notion'
+                    )
+                  : tx('ui.form.createCst.commentPlaceholder', 'Developer note')
+              }
               areaClassName='max-h-20'
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}

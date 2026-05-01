@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { type AxiosError, type AxiosHeaderValue, type AxiosResponse, isAxiosError } from 'axios';
 
 import { PARAMETER } from './constants';
-import { infoMsg, promptText } from './labels';
+import { formatLabel, lid } from './labels';
 
 /**
  * Wrapper class for generalized text matching.
@@ -54,7 +54,7 @@ export function isResponseHtml(response?: AxiosResponse) {
 
 /** Prompt user of confirming discarding changes before continue. */
 export function promptUnsaved(): boolean {
-  return window.confirm(promptText.promptUnsaved);
+  return window.confirm(formatLabel(lid.prompt.promptUnsaved));
 }
 
 /** Toggle tristate flag: null - true - false. */
@@ -137,7 +137,7 @@ export function sharePage() {
   const url = currentRef.includes('?') ? currentRef + '&share' : currentRef + '?share';
   navigator.clipboard
     .writeText(url)
-    .then(() => toast.success(infoMsg.linkReady))
+    .then(() => toast.success(formatLabel(lid.info.linkReady)))
     .catch(console.error);
 }
 

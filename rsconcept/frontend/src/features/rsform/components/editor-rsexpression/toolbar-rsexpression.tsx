@@ -1,5 +1,6 @@
 'use client';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { type HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 
@@ -27,6 +28,7 @@ export function ToolbarRSExpression({
   showTypeGraph,
   showAST
 }: ToolbarRSExpressionProps) {
+  const tx = useTx();
   const showControls = usePreferencesStore(state => state.showExpressionControls);
   const toggleControls = usePreferencesStore(state => state.toggleShowExpressionControls);
 
@@ -35,18 +37,18 @@ export function ToolbarRSExpression({
       {helpTopic ? <BadgeHelp topic={helpTopic} offset={4} /> : null}
       {!disabled || isProcessing ? (
         <MiniButton
-          title='Символьная клавиатура'
+          title={tx('ui.rsexpr.toolbar.symbolKeyboardTitle', 'Symbol keyboard')}
           icon={<IconShowKeyboard value={showControls} size='1.25rem' className='hover:text-primary' />}
           onClick={toggleControls}
         />
       ) : null}
       <MiniButton
-        title='Структура типизации'
+        title={tx('ui.rsexpr.toolbar.typificationStructureTitle', 'Typing structure')}
         icon={<IconTypeGraph size='1.25rem' className='hover:text-primary' />}
         onClick={showTypeGraph}
       />
       <MiniButton
-        title='Структура выражения'
+        title={tx('ui.rsexpr.toolbar.expressionStructureTitle', 'Expression structure')}
         onClick={showAST}
         icon={<IconTree size='1.25rem' className='hover:text-primary' />}
       />

@@ -7,7 +7,7 @@ import { type FolderNode } from '@/domain/library';
 
 import { useMainHeight } from '@/stores/app-layout';
 import { prefixes } from '@/utils/constants';
-import { infoMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 
 import { SelectLocation } from '../../components/select-location';
 import { useLibrarySearchStore } from '../../stores/library-search';
@@ -29,7 +29,7 @@ export function ViewSideLocation({ className }: ViewSideLocationProps) {
   function handleCopyPath(target: FolderNode) {
     navigator.clipboard
       .writeText(target.getPath())
-      .then(() => toast.success(infoMsg.pathReady))
+      .then(() => toast.success(formatLabel(lid.info.pathReady)))
       .catch(console.error);
   }
 

@@ -7,6 +7,8 @@ import { type Constituenta } from '@/domain/library';
 import { isBasicConcept } from '@/domain/library/rsform-api';
 import { labelType } from '@/domain/rslang/labels';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { useValueTooltipStore } from '@/stores/value-tooltip';
 import { APP_COLORS } from '@/styling/colors';
 import { globalIDs } from '@/utils/constants';
@@ -20,6 +22,7 @@ const DESCRIPTION_THRESHOLD = 15;
 const LABEL_THRESHOLD = 3;
 
 export function TGNodeComponent(node: NodeProps<TGNode>) {
+  const tx = useTx();
   const filter = useTermGraphStore(state => state.filter);
   const coloring = useTermGraphStore(state => state.coloring);
   const connectionStart = useTGConnectionStore(state => state.start);
@@ -28,7 +31,7 @@ export function TGNodeComponent(node: NodeProps<TGNode>) {
 
   const label = node.data.cst.alias;
   const description = filter.noText ? '' : node.data.cst.term_resolved || node.data.cst.definition_resolved;
-  const tooltipText = describeCstNode(node.data.cst);
+  const tooltipText = describeCstNode(node.data.cst, tx);
 
   return (
     <>
@@ -93,12 +96,15 @@ export function TGNodeComponent(node: NodeProps<TGNode>) {
 }
 
 // ====== INTERNAL ======
-function describeCstNode(cst: Constituenta) {
+function describeCstNode(
+  cst: Constituenta,
+  tx: (id: string, defaultMessage: string, values?: Record<string, string | number | boolean | null | undefined>) => string
+) {
   const contents = isBasicConcept(cst.cst_type)
     ? cst.convention
     : cst.definition_resolved || cst.definition_formal || cst.convention;
   const typification = labelType(cst.analysis?.type ?? null);
   return `${cst.alias}: ${cst.term_resolved}\n${
-    cst.analysis ? `Типизация: ${typification}\n` : ''
-  }Содержание: ${contents ? contents : 'отсутствует'}`;
+    cst.analysis ? `${tx('ui.node.tg.typificationPrefix', 'Typification:')} ${typification}\n` : ''
+  }${tx('ui.node.tg.contentsPrefix', 'Content:')} ${contents ? contents : tx('ui.node.tg.contentsMissing', 'missing')}`;
 }

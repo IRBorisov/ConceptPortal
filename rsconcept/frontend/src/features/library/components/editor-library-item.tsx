@@ -4,6 +4,7 @@ import { Suspense } from 'react';
 import { useIntl } from 'react-intl';
 
 import { useConceptNavigation } from '@/app';
+import { useTx } from '@/app/i18n/use-tx';
 import { useLabelUser, useRoleStore, UserRole } from '@/features/users';
 import { InfoUsers } from '@/features/users/components/info-users';
 import { SelectUser } from '@/features/users/components/select-user';
@@ -24,7 +25,7 @@ import { ValueIcon } from '@/components/view';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { prefixes } from '@/utils/constants';
-import { promptText } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 
 import { type LibraryItemData } from '../backend/types';
@@ -42,6 +43,7 @@ export function EditorLibraryItem({ item, isProduced }: EditorLibraryItemProps) 
   const getUserLabel = useLabelUser();
   const role = useRoleStore(state => state.role);
   const intl = useIntl();
+  const tx = useTx();
   const router = useConceptNavigation();
   const setGlobalLocation = useLibrarySearchStore(state => state.setLocation);
 
@@ -66,7 +68,7 @@ export function EditorLibraryItem({ item, isProduced }: EditorLibraryItemProps) 
     if (newValue === item.owner) {
       return;
     }
-    if (!window.confirm(promptText.ownerChange)) {
+    if (!window.confirm(formatLabel(lid.prompt.ownerChange))) {
       return;
     }
     void setOwner({ itemID: item.id, owner: newValue });
@@ -95,7 +97,7 @@ export function EditorLibraryItem({ item, isProduced }: EditorLibraryItemProps) 
     <div className='flex flex-col'>
       <div className='relative flex justify-stretch sm:mb-1 max-w-120 gap-3'>
         <MiniButton
-          title='Открыть в библиотеке'
+          title={tx('ui.library.editor.openInLibrary', 'Open in library')}
           noPadding
           icon={<IconFolderOpened size='1.25rem' className='icon-primary' />}
           onClick={handleOpenLibrary}
@@ -104,7 +106,11 @@ export function EditorLibraryItem({ item, isProduced }: EditorLibraryItemProps) 
           className='text-ellipsis grow'
           icon={<IconFolderEdit size='1.25rem' className='icon-primary' />}
           value={item.location}
-          title={isProduced ? 'Путь наследуется от ОСС' : 'Путь'}
+          title={
+            isProduced
+              ? tx('ui.library.editor.pathInheritedOss', 'Path inherited from OSS')
+              : tx('ui.library.editor.path', 'Path')
+          }
           onClick={handleEditLocation}
           disabled={isModified || isProcessing || isProduced || role < UserRole.OWNER}
         />
@@ -122,7 +128,11 @@ export function EditorLibraryItem({ item, isProduced }: EditorLibraryItemProps) 
           className='sm:mb-1'
           icon={<IconOwner size='1.25rem' className='icon-primary' />}
           value={getUserLabel(item.owner)}
-          title={isProduced ? 'Владелец наследуется от ОСС' : 'Владелец'}
+          title={
+            isProduced
+              ? tx('ui.library.editor.ownerInheritedOss', 'Owner inherited from OSS')
+              : tx('ui.library.editor.owner', 'Owner')
+          }
           onClick={toggleOwner}
           disabled={isModified || isProcessing || isProduced || role < UserRole.OWNER}
         />
@@ -139,19 +149,23 @@ export function EditorLibraryItem({ item, isProduced }: EditorLibraryItemProps) 
         />
         <Tooltip anchorSelect='#editor_stats'>
           <Suspense fallback={<Loader scale={2} />}>
-            <InfoUsers items={item.editors} prefix={prefixes.user_editors} header='Редакторы' />
+            <InfoUsers
+              items={item.editors}
+              prefix={prefixes.user_editors}
+              header={tx('ui.library.editor.editorsHeader', 'Editors')}
+            />
           </Suspense>
         </Tooltip>
 
         <ValueIcon
-          title='Дата обновления'
+          title={tx('ui.library.editor.dateUpdated', 'Updated')}
           dense
           icon={<IconDateUpdate size='1.25rem' />}
           value={new Date(item.time_update).toLocaleString(intl.locale)}
         />
 
         <ValueIcon
-          title='Дата создания'
+          title={tx('ui.library.editor.dateCreated', 'Created')}
           dense
           icon={<IconDateCreate size='1.25rem' />}
           value={new Date(item.time_create).toLocaleString(intl.locale, {

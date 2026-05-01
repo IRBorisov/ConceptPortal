@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { LocationHead } from '@/domain/library';
 
 import { useConceptNavigation } from '@/app';
+import { useTx } from '@/app/i18n/use-tx';
 import { useCreateFromSandbox } from '@/features/library/backend/use-create-from-sandbox';
 
 import { Divider } from '@/components/container';
@@ -20,11 +21,12 @@ import {
   IconRSModel,
   IconUpload
 } from '@/components/icons';
-import { errorMsg, infoMsg, promptText } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 
 import { useSandboxBundle } from '../../context/bundle-context';
 
 export function MenuMain() {
+  const tx = useTx();
   const router = useConceptNavigation();
   const { resetBundle, importBundle, exportBundle, engine, bundle } = useSandboxBundle();
   const { createRSFormFromSandbox, createRSModelFromSandbox } = useCreateFromSandbox();
@@ -44,7 +46,7 @@ export function MenuMain() {
 
   function handleReset() {
     hideMenu();
-    if (!window.confirm(promptText.resetSandbox)) {
+    if (!window.confirm(formatLabel(lid.prompt.resetSandbox))) {
       return;
     }
     resetBundle();
@@ -76,7 +78,7 @@ export function MenuMain() {
       router.gotoRSForm(created.id);
     } catch (error) {
       console.error(error);
-      toast.error(errorMsg.sandboxBundleNotAvailable);
+      toast.error(formatLabel(lid.error.sandboxBundleNotAvailable));
     }
   }
 
@@ -104,7 +106,7 @@ export function MenuMain() {
       router.gotoRSModel(created.id);
     } catch (error) {
       console.error(error);
-      toast.error(errorMsg.sandboxBundleNotAvailable);
+      toast.error(formatLabel(lid.error.sandboxBundleNotAvailable));
     }
   }
 
@@ -123,10 +125,10 @@ export function MenuMain() {
     try {
       const raw = JSON.parse(await file.text()) as unknown;
       await importBundle(raw);
-      toast.success(infoMsg.sandboxImportSuccess);
+      toast.success(formatLabel(lid.info.sandboxImportSuccess));
     } catch (error) {
       console.error(error);
-      toast.error(errorMsg.sandboxImportError);
+      toast.error(formatLabel(lid.error.sandboxImportError));
     }
   }
 
@@ -135,7 +137,7 @@ export function MenuMain() {
       <MiniButton
         noHover
         noPadding
-        title='Меню песочницы'
+        title={tx('ui.nav.sandboxMenu', 'Sandbox menu')}
         hideTitle={isMenuOpen}
         className='h-full pl-2 text-muted-foreground hover:text-primary cc-animate-color bg-transparent'
         icon={<IconMenu size='1.25rem' />}
@@ -150,39 +152,39 @@ export function MenuMain() {
       />
       <Dropdown isOpen={isMenuOpen} margin='mt-3'>
         <DropdownButton
-          text='Пересчитать модель'
-          aria-label='Пересчитать все вычисления'
+          text={tx('ui.action.recalculateModel', 'Recalculate model')}
+          aria-label={tx('ui.aria.recalculateAll', 'Recalculate all results')}
           icon={<IconCalculateAll size='1rem' className='icon-green' />}
           onClick={handleRecalculate}
         />
         <DropdownButton
-          text='Сохранить в файл'
-          title='Скачать текущие данные песочницы в JSON'
+          text={tx('ui.sandbox.saveToFile', 'Save to file')}
+          title={tx('ui.sandbox.saveToFileHint', 'Download sandbox data as JSON')}
           icon={<IconDownload size='1rem' className='icon-primary' />}
           onClick={handleExport}
         />
         <DropdownButton
-          text='Загрузить из файла'
-          title='Загрузить данные песочницы из JSON'
+          text={tx('ui.sandbox.loadFromFile', 'Load from file')}
+          title={tx('ui.sandbox.loadFromFileHint', 'Load sandbox data from JSON')}
           icon={<IconUpload size='1rem' className='icon-primary' />}
           onClick={handleImportClick}
         />
         <DropdownButton
-          text='Создать схему'
-          title='Создать новую концептуальную схему из текущих данных песочницы'
+          text={tx('ui.sandbox.createSchema', 'Create schema')}
+          title={tx('ui.sandbox.createSchemaHint', 'Create a new conceptual schema from sandbox data')}
           icon={<IconRSForm size='1rem' className='icon-green' />}
           onClick={() => void handleCreateRSForm()}
         />
         <DropdownButton
-          text='Создать модель'
-          title='Создать новую концептуальную схему и модель из текущих данных песочницы'
+          text={tx('ui.action.createModel', 'Create model')}
+          title={tx('ui.sandbox.createModelHint', 'Create a new conceptual schema and model from sandbox data')}
           icon={<IconRSModel size='1rem' className='text-accent-orange' />}
           onClick={() => void handleCreateRSModel()}
         />
         <Divider margins='mx-3 my-1' />
         <DropdownButton
-          text='Сбросить состояние'
-          title='Восстановить стартовые данные песочницы'
+          text={tx('ui.sandbox.resetState', 'Reset state')}
+          title={tx('ui.sandbox.resetStateHint', 'Restore initial sandbox data')}
           icon={<IconReset size='1rem' className='icon-red' />}
           onClick={handleReset}
         />

@@ -2,6 +2,7 @@
 
 import clsx from 'clsx';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { urls } from '@/app/urls';
 import { useAuth } from '@/features/auth';
 import { HelpTopic } from '@/features/help/models/help-topic';
@@ -26,6 +27,7 @@ import { FeatureTile } from './components/feature-tile';
 import { ThemeToggle } from './components/theme-toggle';
 
 export function HomePage() {
+  const tx = useTx();
   const { isAnonymous } = useAuth();
   const darkMode = usePreferencesStore(state => state.darkMode);
 
@@ -33,7 +35,7 @@ export function HomePage() {
     <main
       className='relative isolate mx-auto h-full w-full max-w-6xl px-4 pb-24 pt-10 sm:px-6 sm:pt-16'
       role='main'
-      aria-label='Главная страница портала'
+      aria-label={tx('home.mainAria', 'Portal home page')}
       itemScope
       itemType='https://schema.org/WebPage'
     >
@@ -65,7 +67,11 @@ export function HomePage() {
 
       <header className='mx-auto max-w-2xl text-center select-none'>
         <img
-          alt={darkMode ? 'Логотип Концепт Портал (темный режим)' : 'Логотип Концепт Портал'}
+          alt={
+            darkMode
+              ? tx('home.heroLogoAltDark', 'Concept Portal logo (dark mode)')
+              : tx('home.heroLogoAltLight', 'Concept Portal logo')
+          }
           src={!darkMode ? resources.logo : resources.logo_dark}
           className='mx-auto mb-8 h-11 w-auto opacity-95 dark:opacity-90'
           decoding='async'
@@ -73,36 +79,36 @@ export function HomePage() {
         />
         {/* SEO: Hero copy as h1 */}
         <h1 className={clsx('hidden xs:block mx-auto max-w-xl', 'text-lg font-medium', 'leading-snug text-nowrap')}>
-          Проектируйте сложные системы: Анализ и Синтез
+          {tx('home.heroLine1', 'Design complex systems: analysis and synthesis')}
           <br />
-          Понятия, процессы, данные, решения, документы
+          {tx('home.heroLine2', 'Concepts, processes, data, decisions, documents')}
         </h1>
 
         <nav
           className='mt-12 flex flex-wrap items-center justify-center gap-4 sm:gap-6'
-          aria-label='Основные действия на главной странице'
+          aria-label={tx('home.ctaNavAria', 'Primary actions on the home page')}
         >
           {isAnonymous ? (
             <>
               <CtaButton
                 to={urls.sandbox}
                 variant='primary'
-                text='Попробовать'
-                title='Открыть песочницу и оценить Портал'
+                text={tx('home.try', 'Try it')}
+                title={tx('home.tryTitle', 'Open the sandbox and explore the portal')}
                 icon={<IconSandbox2 size='1.25rem' />}
               />
               <CtaButton
                 to={urls.login}
                 variant='default'
-                text='Войти'
-                title='Перейти к авторизации'
+                text={tx('home.login', 'Sign in')}
+                title={tx('home.loginTitle', 'Go to sign-in')}
                 icon={<IconUser2 size='1.25rem' />}
               />
               <CtaButton
                 to={urls.manuals}
                 variant='default'
-                text='Изучить'
-                title='Открыть руководства'
+                text={tx('home.study', 'Learn')}
+                title={tx('home.studyTitle', 'Open the manuals')}
                 icon={<IconManuals size='1.25rem' />}
               />
             </>
@@ -111,22 +117,22 @@ export function HomePage() {
               <CtaButton
                 to={urls.sandbox}
                 variant='default'
-                text='Попробовать'
-                title='Открыть песочницу и оценить Портал'
+                text={tx('home.try', 'Try it')}
+                title={tx('home.tryTitle', 'Open the sandbox and explore the portal')}
                 icon={<IconSandbox2 size='1.25rem' />}
               />
               <CtaButton
                 to={urls.create_item}
                 variant='primary'
-                text='Создать'
-                title='Создать новую схему или модель в библиотеке'
+                text={tx('home.create', 'Create')}
+                title={tx('home.createTitle', 'Create a new schema or model in the library')}
                 icon={<IconNewItem2 size='1.25rem' />}
               />
               <CtaButton
                 to={urls.manuals}
                 variant='default'
-                text='Изучить'
-                title='Открыть руководства'
+                text={tx('home.study', 'Learn')}
+                title={tx('home.studyTitle', 'Open the manuals')}
                 icon={<IconManuals size='1.25rem' />}
               />
             </>
@@ -140,48 +146,69 @@ export function HomePage() {
         itemScope
         itemType='https://schema.org/ItemList'
       >
-        <meta itemProp='name' content='Возможности портала - Каталог моделей, анализа и проектирования систем' />
+        <h2 id='home-features-heading' className='sr-only'>
+          {tx('home.featuresHeading', 'Portal features')}
+        </h2>
+        <meta itemProp='name' content={tx('home.featuresMetaName', 'Portal features — model catalog and system design')} />
         <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
           <FeatureTile
             to={urls.library}
             icon={<IconLibrary size='1.5rem' />}
-            title='Библиотека'
-            description='Каталог понятийных схем и моделей. Редактирование, версионирование и доступы. Гибкая фильтрация и поиск'
+            title={tx('home.feature.library.title', 'Library')}
+            description={tx(
+              'home.feature.library.desc',
+              'Catalog of conceptual schemas and models. Editing, versioning, and access control. Flexible filtering and search'
+            )}
             accentClass='bg-accent-green'
           />
           <FeatureTile
             to={urls.help_topic(HelpTopic.RSLANG)}
             icon={<IconFormula size='1.5rem' />}
-            title='Язык родов структур'
-            description='Формальная логика. Структурность, корректность и вычисление значений определений понятий'
+            title={tx('home.feature.rslang.title', 'Structure genus language')}
+            description={tx(
+              'home.feature.rslang.desc',
+              'Formal logic. Structuring, correctness, and evaluation of concept definitions'
+            )}
             accentClass='bg-accent-blue'
           />
           <FeatureTile
             to={urls.help_topic(HelpTopic.ASSISTANT)}
             icon={<IconRobot size='1.5rem' />}
-            title='ИИ-помощник'
-            description='ИИ шаблоны запросов и подсказки для ускорения моделирования и анализа предметных областей'
+            title={tx('home.feature.assistant.title', 'AI assistant')}
+            description={tx(
+              'home.feature.assistant.desc',
+              'AI prompt templates and hints to speed up modeling and domain analysis'
+            )}
             accentClass='bg-accent-teal/70'
           />
           <FeatureTile
             to={urls.help_topic(HelpTopic.CC_SYSTEM)}
             icon={<IconRSForm size='1.5rem' />}
-            title='Системы определений'
-            description='Концептуальная схема, граф вязей, строгий понятийный аппарат в сложных предметных областях'
+            title={tx('home.feature.rsform.title', 'Definition systems')}
+            description={tx(
+              'home.feature.rsform.desc',
+              'Conceptual schema, linkage graph, and rigorous conceptual apparatus in complex domains'
+            )}
             accentClass='bg-accent-purple'
           />
           <FeatureTile
             to={urls.help_topic(HelpTopic.CC_RSMODEL)}
             icon={<IconRSModel size='1.5rem' />}
-            title='Концептуальные модели'
-            description='Предметные источники данных, интерпретация определений и вычисление значений'
+            title={tx('home.feature.rsmodel.title', 'Conceptual models')}
+            description={tx(
+              'home.feature.rsmodel.desc',
+              'Domain data sources, interpretation of definitions, and value computation'
+            )}
             accentClass='bg-accent-orange'
           />
           <FeatureTile
             to={urls.help_topic(HelpTopic.CC_OSS)}
             icon={<IconOSS size='1.5rem' />}
-            title='Операционные схемы'
-            description='Операции над концептуальными схемами, блоки предметного содержания и сквозные изменения'
+            title={tx('home.feature.oss.title', 'Operational schemas')}
+            description={tx(
+              'home.feature.oss.desc',
+              'Operations on conceptual schemas, subject-matter blocks, and cross-cutting changes'
+            )}
             accentClass='bg-accent-green'
           />
         </div>

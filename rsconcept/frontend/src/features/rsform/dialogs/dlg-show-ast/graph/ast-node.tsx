@@ -8,6 +8,8 @@ import { readErrorAnnotation, readTypeAnnotation } from '@/domain/rslang';
 import { describeRSError, labelRSLangNode, labelType } from '@/domain/rslang/labels';
 import { TokenID } from '@/domain/rslang/parser/token';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { useValueTooltipStore } from '@/stores/value-tooltip';
 import { globalIDs } from '@/utils/constants';
 import { type AstNode, type FlatAstNode } from '@/utils/parsing';
@@ -20,12 +22,13 @@ import { type AstGraphNode } from './ast-models';
 const LABEL_THRESHOLD = 3;
 
 export function ASTNodeComponent(node: NodeProps<AstGraphNode>) {
+  const tx = useTx();
   const schema = useShowAstSchema();
   const setActiveTooltipText = useValueTooltipStore(state => state.setActiveText);
   const label = labelRSLangNode(node.data);
   const errorData = readErrorAnnotation(node.data as AstNode);
   const errorMessage = errorData ? describeRSError(errorData.code, errorData.params ?? []) : '';
-  const tooltipText = buildTooltip(node.data, schema, errorMessage);
+  const tooltipText = buildTooltip(node.data, schema, errorMessage, tx);
 
   return (
     <>
@@ -59,9 +62,14 @@ export function ASTNodeComponent(node: NodeProps<AstGraphNode>) {
 }
 
 // ====== Internal ======
-function buildTooltip(data: FlatAstNode, schema: RSForm | null, errorMessages: string): string {
+function buildTooltip(
+  data: FlatAstNode,
+  schema: RSForm | null,
+  errorMessages: string,
+  tx: (id: string, defaultMessage: string, values?: Record<string, string | number | boolean | null | undefined>) => string
+): string {
   const type = readTypeAnnotation(data as AstNode);
-  const typeLine = type ? `Тип: ${labelType(type)}` : '';
+  const typeLine = type ? `${tx('ui.node.ast.typePrefix', 'Type:')} ${labelType(type)}` : '';
   const errorBlock = errorMessages ? `${errorMessages}` : '';
   const isGlobalId =
     data.typeID === TokenID.ID_GLOBAL || data.typeID === TokenID.ID_FUNCTION || data.typeID === TokenID.ID_PREDICATE;
@@ -72,11 +80,11 @@ function buildTooltip(data: FlatAstNode, schema: RSForm | null, errorMessages: s
       const cst = schema.cstByAlias.get(alias);
       const termText = cst ? (cst.term_resolved || cst.term_raw).trim() : '';
       if (termText) {
-        extra = `Термин: ${termText}`;
+        extra = `${tx('ui.node.ast.termPrefix', 'Term:')} ${termText}`;
       }
     }
   } else if (data.typeID === TokenID.ID_RADICAL && schema) {
-    extra = `Шаблонный параметр: ${alias}`;
+    extra = `${tx('ui.node.ast.templateParam', 'Template parameter:')} ${alias}`;
   }
 
   const parts = [typeLine, errorBlock, extra].filter(Boolean);

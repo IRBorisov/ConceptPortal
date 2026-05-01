@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { MiniButton } from '@/components/control';
 import { IconAccept, IconClose, IconPageLeft, IconPageRight } from '@/components/icons';
 import { Label, TextInput } from '@/components/input';
@@ -20,6 +22,7 @@ interface InlineSyntacticEditorProps {
 }
 
 export function InlineSyntacticEditor({ position, initial, onSave, onCancel }: InlineSyntacticEditorProps) {
+  const tx = useTx();
   const [offset, setOffset] = useState(initial.offset ?? 1);
   const [nominal, setNominal] = useState(initial.nominal ?? '');
   const rootRef = useRef<HTMLDivElement>(null);
@@ -92,19 +95,19 @@ export function InlineSyntacticEditor({ position, initial, onSave, onCancel }: I
         <div className='mb-2 flex items-center justify-between gap-1'>
           <MiniButton
             icon={<IconAccept size='1.5rem' className='icon-green' />}
-            title={prepareTooltip('Сохранить ссылку', isMac() ? 'Cmd + Enter' : 'Ctrl + Enter')}
+            title={prepareTooltip(tx('ui.refs.inline.saveLink', 'Save reference'), isMac() ? 'Cmd + Enter' : 'Ctrl + Enter')}
             onClick={handleSave}
             disabled={!canSubmit}
           />
           <MiniButton
             icon={<IconClose size='1.5rem' className='icon-primary' />}
-            title={prepareTooltip('Закрыть', 'Esc')}
+            title={prepareTooltip(tx('modal.close', 'Close'), 'Esc')}
             onClick={onCancel}
           />
-          <Label text='Зависимое слово' />
+          <Label text={tx('ui.refs.inline.dependentWord', 'Dependent word')} />
           <button
             type='button'
-            aria-label='Предыдущая ссылка'
+            aria-label={tx('ui.refs.inline.prevRefAria', 'Previous reference')}
             className={buttonClass}
             onClick={() => setOffset(prev => stepOffset(prev, -1))}
           >
@@ -112,7 +115,7 @@ export function InlineSyntacticEditor({ position, initial, onSave, onCancel }: I
           </button>
           <input
             id='inline_reference_offset'
-            aria-label='Смещение опорной ссылки'
+            aria-label={tx('ui.refs.inline.offsetAria', 'Base reference offset')}
             className={clsx(
               'w-12 text-center focus-outline rounded-md p-0 border',
               isOffsetValid ? 'border-constructive/50 bg-constructive/5' : 'border-destructive/50 bg-destructive/5'
@@ -122,7 +125,7 @@ export function InlineSyntacticEditor({ position, initial, onSave, onCancel }: I
           />
           <button
             type='button'
-            aria-label='Следующая ссылка'
+            aria-label={tx('ui.refs.inline.nextRefAria', 'Next reference')}
             className={buttonClass}
             onClick={() => setOffset(prev => stepOffset(prev, 1))}
           >
@@ -131,8 +134,8 @@ export function InlineSyntacticEditor({ position, initial, onSave, onCancel }: I
         </div>
         <TextInput
           id='inline_reference_nominal'
-          aria-label='Начальная форма'
-          placeholder='Начальная форма'
+          aria-label={tx('ui.refs.inline.lemmaAria', 'Lemma')}
+          placeholder={tx('ui.refs.inline.lemmaPlaceholder', 'Lemma')}
           className='text-sm'
           value={nominal}
           ref={nominalInputRef}

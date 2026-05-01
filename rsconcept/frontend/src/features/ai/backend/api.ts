@@ -2,7 +2,7 @@ import { queryOptions } from '@tanstack/react-query';
 
 import { axiosDelete, axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';
 import { DELAYS, KEYS } from '@/backend/configuration';
-import { infoMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 
 import {
   type ICreatePromptTemplateDTO,
@@ -46,7 +46,7 @@ export const promptsApi = {
       endpoint: '/api/prompts/',
       request: {
         data: data,
-        successMessage: infoMsg.changesSaved
+        successMessage: formatLabel(lid.info.changesSaved)
       }
     }),
 
@@ -56,7 +56,7 @@ export const promptsApi = {
       endpoint: `/api/prompts/${id}/`,
       request: {
         data: data,
-        successMessage: infoMsg.changesSaved
+        successMessage: formatLabel(lid.info.changesSaved)
       }
     }),
 
@@ -64,7 +64,7 @@ export const promptsApi = {
     axiosDelete({
       endpoint: `/api/prompts/${id}/`,
       request: {
-        successMessage: infoMsg.changesSaved
+        successMessage: formatLabel(lid.info.changesSaved)
       }
     })
 } as const;

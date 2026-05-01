@@ -8,6 +8,7 @@ import { type Constituenta, CstType, type RSForm } from '@/domain/library';
 import { generateAlias } from '@/domain/library/rsform-api';
 import { type SPNode, StructurePlanner } from '@/domain/library/structure-planner';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 
 import { MiniButton } from '@/components/control';
@@ -43,6 +44,7 @@ export interface DlgStructurePlannerProps {
 }
 
 export function DlgStructurePlanner() {
+  const tx = useTx();
   const { schema, targetID, isMutable, onCreate, onUpdate } = useDialogsStore(
     state => state.props as DlgStructurePlannerProps
   );
@@ -159,7 +161,7 @@ export function DlgStructurePlanner() {
           >
             <RefsInput
               id='dlg_structure_term'
-              placeholder='Термин не определен'
+              placeholder={tx('ui.structurePlanner.termPlaceholder', 'Term not defined')}
               areaClassName='w-120'
               maxHeight='6.75rem'
               portalHoverTooltips
@@ -177,7 +179,9 @@ export function DlgStructurePlanner() {
             <div className={clsx('cc-icons pt-5 pb-3.25 rounded-br-2xl rounded-tr-2xl', blurClass)}>
               <MiniButton
                 title={prepareTooltip(
-                  selectedCst ? 'Обновить термин' : 'Создать конституенту',
+                  selectedCst
+                    ? tx('ui.structurePlanner.submitUpdate', 'Update term')
+                    : tx('ui.structurePlanner.submitCreate', 'Create constituent'),
                   isMac() ? 'Cmd + Enter' : 'Ctrl + Enter'
                 )}
                 icon={
@@ -191,7 +195,7 @@ export function DlgStructurePlanner() {
                 disabled={!isDirty || term === ''}
               />
               <MiniButton
-                title='Сбросить термин'
+                title={tx('ui.structurePlanner.resetTerm', 'Reset term')}
                 icon={<IconReset size='1.25rem' className='icon-primary' />}
                 onClick={resetTerm}
                 disabled={!isDirty || !selectedCst}

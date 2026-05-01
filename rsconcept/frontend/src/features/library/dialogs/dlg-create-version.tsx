@@ -5,10 +5,12 @@ import { useForm, useStore } from '@tanstack/react-form';
 
 import { type VersionInfo } from '@/domain/library';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { Checkbox, TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
-import { hintMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 
 import { type CreateVersionDTO, schemaCreateVersion } from '../backend/types';
 import { useCreateVersion } from '../backend/use-create-version';
@@ -23,6 +25,7 @@ export interface DlgCreateVersionProps {
 }
 
 export function DlgCreateVersion() {
+  const tx = useTx();
   const { itemID, versions, selected, totalCount, onCreate } = useDialogsStore(
     state => state.props as DlgCreateVersionProps
   );
@@ -45,21 +48,21 @@ export function DlgCreateVersion() {
   const version = useStore(form.store, state => state.values.version);
   const { canSubmit, hint } = useMemo(() => {
     if (!version) {
-      return { canSubmit: false, hint: hintMsg.versionEmpty };
+      return { canSubmit: false, hint: formatLabel(lid.hint.versionEmpty) };
     }
     if (versions.find(ver => ver.version === version)) {
-      return { canSubmit: false, hint: hintMsg.versionTaken };
+      return { canSubmit: false, hint: formatLabel(lid.hint.versionTaken) };
     }
     return { canSubmit: true, hint: '' };
   }, [version, versions]);
 
   return (
     <ModalForm
-      header='Создание версии'
+      header={tx('ui.dlg.createVersion.header', 'Create version')}
       className='cc-column w-120 py-2 px-6'
       canSubmit={canSubmit}
       validationHint={hint}
-      submitText='Создать'
+      submitText={tx('ui.action.create', 'Create')}
       onSubmit={event => {
         event.preventDefault();
         event.stopPropagation();
@@ -70,7 +73,7 @@ export function DlgCreateVersion() {
         {field => (
           <TextInput
             id='dlg_version'
-            label='Версия'
+            label={tx('ui.label.version', 'Version')}
             className='w-64'
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
@@ -84,7 +87,7 @@ export function DlgCreateVersion() {
           <TextArea
             id='dlg_description'
             spellCheck
-            label='Описание'
+            label={tx('ui.label.description', 'Description')}
             rows={3}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
@@ -97,7 +100,10 @@ export function DlgCreateVersion() {
           {field => (
             <Checkbox
               id='dlg_only_selected'
-              label={`Только выбранные конституенты [${selected.length} из ${totalCount}]`}
+              label={tx('ui.dlg.createVersion.onlySelected', 'Only selected constituents [{n} of {total}]', {
+                n: selected.length,
+                total: totalCount
+              })}
               value={field.state.value ? field.state.value.length > 0 : false}
               onChange={value => field.handleChange(value ? selected : [])}
             />

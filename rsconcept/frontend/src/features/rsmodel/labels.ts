@@ -4,56 +4,61 @@ import { TUPLE_ID, type Value, VALUE_FALSE, VALUE_TRUE } from '@/domain/rslang/e
 import { valueStub } from '@/domain/rslang/eval/value-api';
 import { labelType } from '@/domain/rslang/labels';
 
+import { formatLabel } from '@/app/i18n/labels/format-label';
+import { rsmodelLid } from '@/app/i18n/labels/rsmodel-ui';
+
 import { type RO } from '@/utils/meta';
 
-const labelEvalStatusRecord: Record<EvalStatus, string> = {
-  [EvalStatus.NO_EVAL]: 'Без вычисления',
-  [EvalStatus.NOT_PROCESSED]: 'Не вычислено',
-  [EvalStatus.INVALID_DATA]: 'Неверные данные',
-  [EvalStatus.EVAL_FAIL]: 'Ошибка',
-  [EvalStatus.AXIOM_FALSE]: 'Нарушена аксиома',
-  [EvalStatus.EMPTY]: 'Пустое значение',
-  [EvalStatus.HAS_DATA]: 'ОК'
+const EVAL_LABEL_LID: Record<EvalStatus, string> = {
+  [EvalStatus.NO_EVAL]: rsmodelLid.eval.noEval,
+  [EvalStatus.NOT_PROCESSED]: rsmodelLid.eval.notProcessed,
+  [EvalStatus.INVALID_DATA]: rsmodelLid.eval.invalidData,
+  [EvalStatus.EVAL_FAIL]: rsmodelLid.eval.evalFail,
+  [EvalStatus.AXIOM_FALSE]: rsmodelLid.eval.axiomFalse,
+  [EvalStatus.EMPTY]: rsmodelLid.eval.empty,
+  [EvalStatus.HAS_DATA]: rsmodelLid.eval.hasData
 };
 
-const describeEvalStatusRecord: Record<EvalStatus, string> = {
-  [EvalStatus.NO_EVAL]: 'вычисление не требуется',
-  [EvalStatus.NOT_PROCESSED]: 'вычисление не проводилось',
-  [EvalStatus.INVALID_DATA]: 'данные не соответствуют типу',
-  [EvalStatus.EVAL_FAIL]: 'ошибка при вычислении',
-  [EvalStatus.AXIOM_FALSE]: 'значение аксиомы ложно',
-  [EvalStatus.EMPTY]: 'значение равно пустому множеству',
-  [EvalStatus.HAS_DATA]: 'значение вычислено и не пусто'
+const EVAL_DESC_LID: Record<EvalStatus, string> = {
+  [EvalStatus.NO_EVAL]: rsmodelLid.evalDesc.noEval,
+  [EvalStatus.NOT_PROCESSED]: rsmodelLid.evalDesc.notProcessed,
+  [EvalStatus.INVALID_DATA]: rsmodelLid.evalDesc.invalidData,
+  [EvalStatus.EVAL_FAIL]: rsmodelLid.evalDesc.evalFail,
+  [EvalStatus.AXIOM_FALSE]: rsmodelLid.evalDesc.axiomFalse,
+  [EvalStatus.EMPTY]: rsmodelLid.evalDesc.empty,
+  [EvalStatus.HAS_DATA]: rsmodelLid.evalDesc.hasData
 };
 
 /** Retrieves label for {@link EvalStatus}. */
 export function labelEvalStatus(status: EvalStatus): string {
-  return labelEvalStatusRecord[status] ?? `UNKNOWN EVALUATION STATUS: ${status}`;
+  const id = EVAL_LABEL_LID[status];
+  return id ? formatLabel(id) : formatLabel(rsmodelLid.fallback.unknownEvalStatus, { status: String(status) });
 }
 
 /** Retrieves description for {@link EvalStatus}. */
 export function describeEvalStatus(status: EvalStatus): string {
-  return describeEvalStatusRecord[status] ?? `UNKNOWN EVALUATION STATUS: ${status}`;
+  const id = EVAL_DESC_LID[status];
+  return id ? formatLabel(id) : formatLabel(rsmodelLid.fallback.unknownEvalStatus, { status: String(status) });
 }
 
 /** Generates label for {@link Value}. */
 export function labelValue(value: RO<Value | null>, type: ExpressionType | null): string {
   if (value === null || type === null) {
-    return 'N/A';
+    return formatLabel(rsmodelLid.value.na);
   }
   if (type.typeID === TypeID.logic) {
     if (value === VALUE_TRUE) {
-      return 'Истина';
+      return formatLabel(rsmodelLid.value.logicTrue);
     } else if (value === VALUE_FALSE) {
-      return 'Ложь';
+      return formatLabel(rsmodelLid.value.logicFalse);
     }
   }
   if (!Array.isArray(value)) {
-    return '1';
+    return formatLabel(rsmodelLid.value.singleton);
   } else if (value.length === 0) {
     return '∅';
   } else if (value[0] === TUPLE_ID) {
-    return 'C';
+    return formatLabel(rsmodelLid.value.tupleMarker);
   } else {
     return value.length.toString();
   }
@@ -65,7 +70,10 @@ export function describeValue(data: Value | null, currentType: Typification): st
   if (currentType.typeID !== TypeID.collection) {
     return stub;
   }
-  return `Мощность: ${(data as Value[]).length} | ${stub}`;
+  return formatLabel(rsmodelLid.valueDesc.cardinalityPrefix, {
+    n: String((data as Value[]).length),
+    stub
+  });
 }
 
 /** Prints type with selected path. */
@@ -76,7 +84,7 @@ export function printTypeCrumbs(type: RO<Typification>, path: TypePath, index: n
     case TypeID.basic:
       return labelType(type);
 
-    case TypeID.tuple:
+    case TypeID.tuple: {
       const componentIndex = index < path.length ? path[index] : null;
       let result = '';
       for (let i = 0; i < type.factors.length; i++) {
@@ -100,6 +108,7 @@ export function printTypeCrumbs(type: RO<Typification>, path: TypePath, index: n
         }
       }
       return result;
+    }
 
     case TypeID.collection:
       if ((path.length === 0 && index === 0) || path.length === index) {

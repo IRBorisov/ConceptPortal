@@ -2,39 +2,72 @@ import { AccessPolicy, type CurrentVersion, LibraryItemType, LocationHead, type 
 import { type FolderNode } from '@/domain/library/folder-tree';
 import { validateLocation } from '@/domain/library/library-api';
 
+import { formatLabel } from '@/app/i18n/labels/format-label';
+import { libraryLid } from '@/app/i18n/labels/library-ui';
+
 import { type RO } from '@/utils/meta';
+
+const LOCATION_LID: Record<LocationHead, string> = {
+  [LocationHead.USER]: libraryLid.location.user,
+  [LocationHead.COMMON]: libraryLid.location.common,
+  [LocationHead.LIBRARY]: libraryLid.location.library,
+  [LocationHead.PROJECTS]: libraryLid.location.projects
+};
+
+const LOCATION_SHORT_LID: Record<LocationHead, string> = {
+  [LocationHead.USER]: libraryLid.locationShort.user,
+  [LocationHead.COMMON]: libraryLid.locationShort.common,
+  [LocationHead.LIBRARY]: libraryLid.locationShort.library,
+  [LocationHead.PROJECTS]: libraryLid.locationShort.projects
+};
+
+const LOCATION_DESC_LID: Record<LocationHead, string> = {
+  [LocationHead.USER]: libraryLid.locationDesc.user,
+  [LocationHead.COMMON]: libraryLid.locationDesc.common,
+  [LocationHead.LIBRARY]: libraryLid.locationDesc.library,
+  [LocationHead.PROJECTS]: libraryLid.locationDesc.projects
+};
+
+const ACCESS_LID: Record<AccessPolicy, string> = {
+  [AccessPolicy.PRIVATE]: libraryLid.access.private,
+  [AccessPolicy.PROTECTED]: libraryLid.access.protected,
+  [AccessPolicy.PUBLIC]: libraryLid.access.public
+};
+
+const ACCESS_DESC_LID: Record<AccessPolicy, string> = {
+  [AccessPolicy.PRIVATE]: libraryLid.accessDesc.private,
+  [AccessPolicy.PROTECTED]: libraryLid.accessDesc.protected,
+  [AccessPolicy.PUBLIC]: libraryLid.accessDesc.public
+};
+
+const ITEM_TYPE_LID: Record<LibraryItemType, string> = {
+  [LibraryItemType.RSFORM]: libraryLid.itemType.rsform,
+  [LibraryItemType.OSS]: libraryLid.itemType.oss,
+  [LibraryItemType.RSMODEL]: libraryLid.itemType.rsmodel
+};
+
+const ITEM_TYPE_DESC_LID: Record<LibraryItemType, string> = {
+  [LibraryItemType.RSFORM]: libraryLid.itemTypeDesc.rsform,
+  [LibraryItemType.OSS]: libraryLid.itemTypeDesc.oss,
+  [LibraryItemType.RSMODEL]: libraryLid.itemTypeDesc.rsmodel
+};
 
 /** Retrieves label for {@link LocationHead}. */
 export function labelLocationHead(head: LocationHead): string {
-  // prettier-ignore
-  switch (head) {
-    case LocationHead.USER: return '/U : личные';
-    case LocationHead.COMMON: return '/S : общие';
-    case LocationHead.LIBRARY: return '/L : примеры';
-    case LocationHead.PROJECTS: return '/P : проекты';
-  }
+  const id = LOCATION_LID[head];
+  return id ? formatLabel(id) : String(head);
 }
 
 /** Retrieves compact breadcrumb label for {@link LocationHead}. */
 export function labelLocationHeadShort(head: LocationHead): string {
-  // prettier-ignore
-  switch (head) {
-    case LocationHead.USER: return 'Личные';
-    case LocationHead.COMMON: return 'Общие';
-    case LocationHead.LIBRARY: return 'Примеры';
-    case LocationHead.PROJECTS: return 'Проекты';
-  }
+  const id = LOCATION_SHORT_LID[head];
+  return id ? formatLabel(id) : String(head);
 }
 
 /** Retrieves description for {@link LocationHead}. */
 export function describeLocationHead(head: LocationHead): string {
-  // prettier-ignore
-  switch (head) {
-    case LocationHead.USER: return 'Личные схемы пользователя';
-    case LocationHead.COMMON: return 'Рабочий каталог публичных схем';
-    case LocationHead.LIBRARY: return 'Каталог неизменных схем-примеров';
-    case LocationHead.PROJECTS: return 'Рабочий каталог проектных схем';
-  }
+  const id = LOCATION_DESC_LID[head];
+  return id ? formatLabel(id) : String(head);
 }
 
 /** Retrieves label for {@link FolderNode}. */
@@ -48,49 +81,30 @@ export function labelFolderNode(node: FolderNode): string {
 
 /** Retrieves label for {@link AccessPolicy}. */
 export function labelAccessPolicy(policy: AccessPolicy): string {
-  // prettier-ignore
-  switch (policy) {
-    case AccessPolicy.PRIVATE: return 'Личный';
-    case AccessPolicy.PROTECTED: return 'Защищенный';
-    case AccessPolicy.PUBLIC: return 'Открытый';
-  }
+  const id = ACCESS_LID[policy];
+  return id ? formatLabel(id) : String(policy);
 }
 
 /** Retrieves description for {@link AccessPolicy}. */
 export function describeAccessPolicy(policy: AccessPolicy): string {
-  // prettier-ignore
-  switch (policy) {
-    case AccessPolicy.PRIVATE:
-      return 'Доступ только для владельца';
-    case AccessPolicy.PROTECTED:
-      return 'Доступ для владельца и редакторов';
-    case AccessPolicy.PUBLIC:
-      return 'Открытый доступ';
-  }
+  const id = ACCESS_DESC_LID[policy];
+  return id ? formatLabel(id) : String(policy);
 }
 
 /** Retrieves label for {@link LibraryItemType}. */
 export function labelLibraryItemType(itemType: LibraryItemType): string {
-  // prettier-ignore
-  switch (itemType) {
-    case LibraryItemType.RSFORM: return 'КС';
-    case LibraryItemType.OSS: return 'ОСС';
-    case LibraryItemType.RSMODEL: return 'Модель';
-  }
+  const id = ITEM_TYPE_LID[itemType];
+  return id ? formatLabel(id) : String(itemType);
 }
 
 /** Retrieves description for {@link LibraryItemType}. */
 export function describeLibraryItemType(itemType: LibraryItemType): string {
-  // prettier-ignore
-  switch (itemType) {
-    case LibraryItemType.RSFORM: return 'Концептуальная схема';
-    case LibraryItemType.OSS: return 'Операционная схема синтеза';
-    case LibraryItemType.RSMODEL: return 'Концептуальная модель';
-  }
+  const id = ITEM_TYPE_DESC_LID[itemType];
+  return id ? formatLabel(id) : String(itemType);
 }
 
 /** Generates label for {@link VersionInfo} of {@link RSForm}. */
 export function labelVersion(value: CurrentVersion, items: RO<VersionInfo[]>) {
   const version = items.find(ver => ver.id === value);
-  return version ? version.version : 'актуальная';
+  return version ? version.version : formatLabel(libraryLid.version.current);
 }

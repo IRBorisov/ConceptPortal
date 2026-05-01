@@ -4,6 +4,8 @@ import { useForm } from '@tanstack/react-form';
 
 import { CstType } from '@/domain/library';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { MiniButton } from '@/components/control';
 import { Checkbox } from '@/components/input';
 import { ModalForm } from '@/components/modal';
@@ -15,6 +17,7 @@ import { labelCstType } from '../labels';
 import { cstTypeToFilterKey, useTermGraphStore } from '../stores/term-graph';
 
 export function DlgGraphParams() {
+  const tx = useTx();
   const params = useTermGraphStore(state => state.filter);
   const setParams = useTermGraphStore(state => state.setFilter);
 
@@ -25,21 +28,21 @@ export function DlgGraphParams() {
 
   return (
     <ModalForm
-      header='Настройки графа термов'
+      header={tx('ui.termGraph.dialog.title', 'Term graph settings')}
       onSubmit={withPreventDefault(() => void form.handleSubmit())}
-      submitText='Применить'
+      submitText={tx('ui.termGraph.dialog.apply', 'Apply')}
       className='flex gap-6 justify-between px-6 pb-3 w-120'
     >
       <div className='flex flex-col gap-1'>
-        <h1 className='mb-2'>Преобразования</h1>
+        <h1 className='mb-2'>{tx('ui.termGraph.dialog.transforms', 'Transforms')}</h1>
         <form.Field name='noText'>
           {field => (
             <Checkbox
               value={field.state.value ?? false}
               onChange={field.handleChange}
               onBlur={field.handleBlur}
-              label='Скрыть текст'
-              title={prepareTooltip('Не отображать термины', 'T')}
+              label={tx('ui.termGraph.filter.hideText', 'Hide text')}
+              title={prepareTooltip(tx('ui.termGraph.filter.hideTextHint', 'Do not show terms'), 'T')}
             />
           )}
         </form.Field>
@@ -49,8 +52,8 @@ export function DlgGraphParams() {
               value={field.state.value ?? false}
               onChange={field.handleChange}
               onBlur={field.handleBlur}
-              label='Скрыть порожденные'
-              title={prepareTooltip('Не отображать порожденные понятия', 'B')}
+              label={tx('ui.termGraph.filter.hideDerived', 'Hide derived')}
+              title={prepareTooltip(tx('ui.termGraph.filter.hideDerivedHint', 'Do not show derived notions'), 'B')}
             />
           )}
         </form.Field>
@@ -60,8 +63,8 @@ export function DlgGraphParams() {
               value={field.state.value ?? false}
               onChange={field.handleChange}
               onBlur={field.handleBlur}
-              label='Скрыть свободные'
-              title={prepareTooltip('Конституенты без связей', 'H')}
+              label={tx('ui.termGraph.filter.hideFree', 'Hide isolated')}
+              title={prepareTooltip(tx('ui.termGraph.filter.hideFreeHint', 'Constituents without links'), 'H')}
             />
           )}
         </form.Field>
@@ -71,9 +74,11 @@ export function DlgGraphParams() {
               value={field.state.value ?? false}
               onChange={field.handleChange}
               onBlur={field.handleBlur}
-              label='Скрыть шаблоны'
-              title='Терм-функции и предикат-функции
-с параметризованными аргументами'
+              label={tx('ui.termGraph.filter.hideTemplates', 'Hide templates')}
+              title={tx(
+                'ui.termGraph.filter.hideTemplatesHint',
+                'Term functions and predicate functions\nwith parameterized arguments'
+              )}
             />
           )}
         </form.Field>
@@ -83,15 +88,17 @@ export function DlgGraphParams() {
               value={field.state.value ?? false}
               onChange={field.handleChange}
               onBlur={field.handleBlur}
-              label='Транзитивная редукция'
-              title='Удалить связи, образующие
-транзитивные пути в графе'
+              label={tx('ui.termGraph.filter.transitiveReduction', 'Transitive reduction')}
+              title={tx(
+                'ui.termGraph.filter.transitiveReductionHint',
+                'Remove edges that form\ntransitive paths in the graph'
+              )}
             />
           )}
         </form.Field>
       </div>
       <div className='flex flex-col items-center gap-1'>
-        <h1 className='mb-1'>Типы конституент</h1>
+        <h1 className='mb-1'>{tx('ui.termGraph.dialog.cstTypes', 'Constituent types')}</h1>
         <div className='grid grid-cols-3'>
           {Object.values(CstType).map(cstType => {
             const fieldName = cstTypeToFilterKey[cstType];

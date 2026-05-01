@@ -6,12 +6,13 @@ import { useForm, useStore } from '@tanstack/react-form';
 import { type OssLayout } from '@/domain/library';
 import { LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '@/domain/library/oss-layout-api';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 
 import { TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
-import { hintMsg, placeholderMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 
 import { type CreateSchemaDTO, schemaCreateSchema } from '../backend/types';
 import { useCreateSchema } from '../backend/use-create-schema';
@@ -28,6 +29,7 @@ export interface DlgCreateSchemaProps {
 }
 
 export function DlgCreateSchema() {
+  const tx = useTx();
   const { createSchema } = useCreateSchema();
 
   const { ossID, layout, initialParent, onCreate, defaultX, defaultY } = useDialogsStore(
@@ -68,21 +70,21 @@ export function DlgCreateSchema() {
   const alias = values.item_data.alias;
   const { canSubmit, hint } = useMemo(() => {
     if (!alias) {
-      return { canSubmit: false, hint: hintMsg.aliasEmpty };
+      return { canSubmit: false, hint: formatLabel(lid.hint.aliasEmpty) };
     }
     if (manager.oss.operations.some(operation => operation.alias === alias)) {
-      return { canSubmit: false, hint: hintMsg.schemaAliasTaken };
+      return { canSubmit: false, hint: formatLabel(lid.hint.schemaAliasTaken) };
     }
     if (!schemaCreateSchema.safeParse(values).success) {
-      return { canSubmit: false, hint: hintMsg.formInvalid };
+      return { canSubmit: false, hint: formatLabel(lid.hint.formInvalid) };
     }
     return { canSubmit: true, hint: '' };
   }, [alias, values, manager.oss.operations]);
 
   return (
     <ModalForm
-      header='Создание операции: Новая схема'
-      submitText='Создать'
+      header={tx('ui.dlg.ossOp.newSchemaHeader', 'Create operation: new schema')}
+      submitText={tx('ui.action.create', 'Create')}
       canSubmit={canSubmit}
       validationHint={hint}
       onSubmit={event => {
@@ -97,8 +99,8 @@ export function DlgCreateSchema() {
         {field => (
           <TextInput
             id='operation_title'
-            aria-label='Название новой схемы'
-            placeholder='Название новой схемы'
+            aria-label={tx('ui.oss.newSchemaTitle', 'New schema title')}
+            placeholder={tx('ui.oss.newSchemaTitle', 'New schema title')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
@@ -112,9 +114,9 @@ export function DlgCreateSchema() {
             {field => (
               <TextInput
                 id='operation_alias'
-                label='Сокращение'
+                label={tx('ui.label.alias', 'Abbreviation')}
                 className='w-80'
-                placeholder='Введите сокращение'
+                placeholder={tx('ui.oss.enterAlias', 'Enter abbreviation')}
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}
                 onBlur={field.handleBlur}
@@ -127,7 +129,7 @@ export function DlgCreateSchema() {
               <SelectParent
                 items={manager.oss.blocks}
                 value={field.state.value ? (manager.oss.blockByID.get(field.state.value) ?? null) : null}
-                placeholder='Родительский блок'
+                placeholder={tx('ui.oss.parentBlock', 'Parent block')}
                 onChange={value => field.handleChange(value ? value.id : null)}
               />
             )}
@@ -137,8 +139,8 @@ export function DlgCreateSchema() {
           {field => (
             <TextArea
               id='operation_comment'
-              label='Описание'
-              placeholder={placeholderMsg.itemDescription}
+              label={tx('ui.label.description', 'Description')}
+              placeholder={formatLabel(lid.placeholder.itemDescription)}
               className='w-full'
               noResize
               rows={5}

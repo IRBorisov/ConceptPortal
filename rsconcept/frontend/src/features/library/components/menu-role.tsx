@@ -1,6 +1,7 @@
 'use client';
 
 import { urls, useConceptNavigation } from '@/app';
+import { useTx } from '@/app/i18n/use-tx';
 import { useAuth } from '@/features/auth';
 import { useRoleStore, UserRole } from '@/features/users';
 import { describeUserRole, labelUserRole } from '@/features/users/labels';
@@ -17,6 +18,7 @@ interface MenuRoleProps {
 }
 
 export function MenuRole({ isOwned, isEditor }: MenuRoleProps) {
+  const tx = useTx();
   const { user, isAnonymous } = useAuth();
   const router = useConceptNavigation();
   const {
@@ -39,8 +41,7 @@ export function MenuRole({ isOwned, isEditor }: MenuRoleProps) {
     return (
       <MiniButton
         noPadding
-        title='Анонимный режим
-Войти в Портал'
+        title={tx('nav.anonymousLoginTitle', 'Anonymous mode\nSign in to the Portal')}
         hideTitle={isAccessOpen}
         className='h-full pr-2 pl-3 bg-transparent'
         icon={<IconAlert size='1.25rem' className='icon-red' />}
@@ -54,7 +55,7 @@ export function MenuRole({ isOwned, isEditor }: MenuRoleProps) {
       <MiniButton
         noHover
         noPadding
-        title={`Режим ${labelUserRole(role)}`}
+        title={tx('nav.userRoleMode', 'Role: {role}', { role: labelUserRole(role) })}
         hideTitle={isAccessOpen}
         className='h-full pr-2 text-muted-foreground hover:text-primary cc-animate-color'
         icon={<IconRole value={role} size='1.25rem' className='' />}

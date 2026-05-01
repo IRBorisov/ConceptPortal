@@ -2,6 +2,10 @@ import clsx from 'clsx';
 import DOMPurify from 'dompurify';
 import { ZodError } from 'zod';
 
+import { formatAppMessage } from '@/app/i18n/format-app-message';
+import { LABEL_DEFAULTS, lid } from '@/app/i18n/labels/catalog';
+import { formatZodIssueMessage } from '@/app/i18n/labels/zod-issue-message';
+
 import { type AxiosError, isAxiosError } from '@/backend/api-transport';
 import { isResponseHtml } from '@/utils/utils';
 
@@ -13,44 +17,47 @@ interface InfoErrorProps {
   error: ErrorData;
 }
 
+function T(id: string): string {
+  return formatAppMessage(id, LABEL_DEFAULTS[id] ?? id);
+}
+
 export function DescribeError({ error }: { error: ErrorData }) {
   if (!error) {
-    return <p>Ошибки отсутствуют</p>;
+    return <p>{T(lid.errorDetail.noErrors)}</p>;
   } else if (typeof error === 'string') {
     return <p>{error}</p>;
   } else if (error instanceof ZodError) {
-    let errorData: unknown;
-    try {
-      errorData = JSON.parse(error.toString());
-    } catch {
-      errorData = { message: error.message, issues: error.issues };
-    }
+    const lines = error.issues.map(issue => formatZodIssueMessage(issue));
     return (
       <div>
-        <p>Ошибка валидации данных</p>
-        <PrettyJson data={errorData} />
+        <p>{T(lid.errorDetail.validationTitle)}</p>
+        <ul className='list-disc pl-5 mt-2 space-y-1'>
+          {lines.map(function lineItem(text, i) {
+            return <li key={i}>{text}</li>;
+          })}
+        </ul>
       </div>
     );
   } else if (!isAxiosError(error)) {
     return (
       <div>
         <p>
-          <b>Ошибка:</b> {error.name}
+          <b>{T(lid.errorDetail.genericTitle)}:</b> {error.name}
         </p>
         <p>
-          <b>Описание:</b> {error.message}
+          <b>{T(lid.errorDetail.genericDescription)}:</b> {error.message}
         </p>
         {error.stack && <pre className='whitespace-pre-wrap p-2 overflow-x-auto wrap-break-word'>{error.stack}</pre>}
       </div>
     );
   }
   if (!error?.response) {
-    return <p>Нет ответа от сервера</p>;
+    return <p>{T(lid.errorDetail.noServerResponse)}</p>;
   }
   if (error.response.status === 404) {
     return (
       <div>
-        <p>{'Обращение к несуществующему API'}</p>
+        <p>{T(lid.errorDetail.api404)}</p>
         <PrettyJson data={error} />
       </div>
     );
@@ -58,7 +65,7 @@ export function DescribeError({ error }: { error: ErrorData }) {
   if (error.response.status === 403 && error.message.includes('CSRF')) {
     return (
       <div>
-        <p>{'Соединение с сервером потеряно. Перезагрузите страницу'}</p>
+        <p>{T(lid.errorDetail.csrfLost)}</p>
         <PrettyJson data={error} />
       </div>
     );
@@ -76,11 +83,11 @@ export function DescribeError({ error }: { error: ErrorData }) {
   }
   return (
     <div>
-      <p className='underline'>Ошибка</p>
+      <p className='underline'>{T(lid.errorDetail.responseTitle)}</p>
       <p>{error.message}</p>
       {error.response.data && (
         <>
-          <p className='mt-2 underline'>Описание</p>
+          <p className='mt-2 underline'>{T(lid.errorDetail.responseDescription)}</p>
           {isHtml && sanitizedHtml ? (
             <div dangerouslySetInnerHTML={{ __html: sanitizedHtml }} />
           ) : typeof error.response.data === 'string' ? (
@@ -105,9 +112,9 @@ export function InfoError({ error }: InfoErrorProps) {
       )}
     >
       <div className='font-normal text-foreground mb-6'>
-        <p>Пожалуйста сделайте скриншот и отправьте вместе с описанием ситуации на почту portal@acconcept.ru</p>
+        <p>{T(lid.errorDetail.contactIntro)}</p>
         <br />
-        <p>Для продолжения работы перезагрузите страницу</p>
+        <p>{T(lid.errorDetail.reloadHint)}</p>
       </div>
 
       <DescribeError error={error} />

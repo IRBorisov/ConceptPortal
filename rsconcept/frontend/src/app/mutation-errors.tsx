@@ -1,4 +1,8 @@
+'use client';
+
 import clsx from 'clsx';
+
+import { useTx } from '@/app/i18n/use-tx';
 
 import { useMutationErrors } from '@/backend/use-mutation-errors';
 import { Button } from '@/components/control';
@@ -9,6 +13,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { rethrowIfStaleBundleError } from '@/utils/stale-bundle-error';
 
 export function MutationErrors() {
+  const tx = useTx();
   const { mutationErrors, resetErrors } = useMutationErrors();
   const hideDialog = useDialogsStore(state => state.hideDialog);
 
@@ -32,7 +37,7 @@ export function MutationErrors() {
         )}
         role='alertdialog'
       >
-        <h1 className='py-2 select-none'>Ошибка при обработке</h1>
+        <h1 className='py-2 select-none'>{tx('error.mutation.title', 'Processing error')}</h1>
         <div
           className={clsx(
             'max-h-full max-w-full',
@@ -43,7 +48,7 @@ export function MutationErrors() {
         >
           <DescribeError error={mutationErrors[0]} />
         </div>
-        <Button onClick={resetErrors} className='w-fit mt-3' text='Закрыть' />
+        <Button onClick={resetErrors} className='w-fit mt-3' text={tx('error.mutation.close', 'Close')} />
       </div>
     </div>
   );

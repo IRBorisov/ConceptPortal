@@ -3,6 +3,7 @@
 import { useForm } from '@tanstack/react-form';
 
 import { urls, useConceptNavigation } from '@/app';
+import { useTx } from '@/app/i18n/use-tx';
 
 import { isAxiosError } from '@/backend/api-transport';
 import { SubmitButton, TextURL } from '@/components/control';
@@ -18,6 +19,7 @@ import { useLogin } from '../backend/use-login';
 import { ExpectedAnonymous } from '../components/expected-anonymous';
 
 export function LoginPage() {
+  const tx = useTx();
   const router = useConceptNavigation();
   const query = useQueryStrings();
   const initialName = query.get('username') ?? '';
@@ -58,13 +60,13 @@ export function LoginPage() {
       }}
       onChange={resetErrors}
     >
-      <img alt='Концепт Портал' src={resources.logo} className='max-h-10 min-w-10 mb-3' />
+      <img alt={tx('auth.login.logoAlt', 'Concept Portal')} src={resources.logo} className='max-h-10 min-w-10 mb-3' />
       <form.Field name='username'>
         {field => (
           <TextInput
             id='username'
             autoComplete='username'
-            label='Логин или email'
+            label={tx('auth.login.username', 'Username or email')}
             autoFocus
             allowEnter
             spellCheck={false}
@@ -81,7 +83,7 @@ export function LoginPage() {
             id='password'
             type='password'
             autoComplete='current-password'
-            label='Пароль'
+            label={tx('auth.login.password', 'Password')}
             allowEnter
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
@@ -91,10 +93,10 @@ export function LoginPage() {
         )}
       </form.Field>
 
-      <SubmitButton text='Войти' className='self-center w-48 mt-3' loading={isPending} />
+      <SubmitButton text={tx('auth.login.submit', 'Sign in')} className='self-center w-48 mt-3' loading={isPending} />
       <div className='flex flex-col text-sm'>
-        <TextURL text='Восстановить пароль...' href='/restore-password' />
-        <TextURL text='Нет аккаунта? Зарегистрируйтесь...' href='/signup' />
+        <TextURL text={tx('auth.login.linkRestore', 'Reset password…')} href='/restore-password' />
+        <TextURL text={tx('auth.login.linkSignup', 'No account? Sign up…')} href='/signup' />
       </div>
       {serverError ? <ServerError error={serverError} /> : null}
     </form>
@@ -103,12 +105,16 @@ export function LoginPage() {
 
 // ====== Internals =========
 function ServerError({ error }: { error: ErrorData }): React.ReactElement | null {
+  const tx = useTx();
   rethrowIfStaleBundleError(error);
 
   if (isAxiosError(error) && error.response?.status === 400) {
     return (
       <div className='text-sm select-text text-destructive'>
-        На Портале отсутствует такое сочетание имени пользователя и пароля
+        {tx(
+          'auth.login.badCredentials',
+          'No account on the portal matches this username and password combination.'
+        )}
       </div>
     );
   }

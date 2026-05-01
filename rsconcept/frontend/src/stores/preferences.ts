@@ -2,6 +2,13 @@ import { flushSync } from 'react-dom';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+import {
+  type AppLocale,
+  parsePersistedLocale,
+  pickSupportedLocaleFromNavigator,
+  resolveInitialLocale
+} from '@/app/i18n/locales';
+
 import { PARAMETER } from '@/utils/constants';
 
 export const videoPlayerTypes = ['vk', 'youtube'] as const;
@@ -9,7 +16,12 @@ export const videoPlayerTypes = ['vk', 'youtube'] as const;
 /** Represents video player type. */
 export type VideoPlayerType = (typeof videoPlayerTypes)[number];
 
+export type { AppLocale } from '@/app/i18n/locales';
+
 interface PreferencesStore {
+  locale: AppLocale;
+  setLocale: (value: AppLocale) => void;
+
   darkMode: boolean;
   toggleDarkMode: () => void;
 
@@ -47,6 +59,9 @@ interface PreferencesStore {
 export const usePreferencesStore = create<PreferencesStore>()(
   persist(
     set => ({
+      locale: initializeLocale(),
+      setLocale: value => set(state => (state.locale === value ? state : { locale: value })),
+
       darkMode: initializeDarkMode(),
       toggleDarkMode: () => {
         if (!document.startViewTransition) {
@@ -105,11 +120,27 @@ export const usePreferencesStore = create<PreferencesStore>()(
       setPreferredPlayer: value => set(state => (state.preferredPlayer === value ? state : { preferredPlayer: value }))
     }),
     {
-      version: 4,
-      name: 'portal.preferences'
+      version: 5,
+      name: 'portal.preferences',
+      migrate: (persistedState, _version) => {
+        const partial = { ...(persistedState as Partial<PreferencesStore>) };
+        const locale = parsePersistedLocale(partial.locale) ?? pickSupportedLocaleFromNavigator();
+        return { ...partial, locale };
+      }
     }
   )
 );
+
+function readPortalPreferencesJson(): string | null {
+  if (typeof localStorage === 'undefined') {
+    return null;
+  }
+  return localStorage.getItem('portal.preferences');
+}
+
+function initializeLocale(): AppLocale {
+  return resolveInitialLocale(readPortalPreferencesJson());
+}
 
 function initializeDarkMode(): boolean {
   let isDark = false;

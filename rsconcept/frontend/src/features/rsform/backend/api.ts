@@ -6,7 +6,7 @@ import { type Attribution, type RSForm } from '@/domain/library';
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';
 import { DELAYS, KEYS } from '@/backend/configuration';
 import { queryClient } from '@/backend/query-client';
-import { infoMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 
 import { loadRSForm } from './rsform-loader';
@@ -66,7 +66,7 @@ export const rsformsApi = {
       endpoint: `/api/rsforms/${itemID}/load-trs`,
       request: {
         data: data,
-        successMessage: infoMsg.uploadSuccess
+        successMessage: formatLabel(lid.info.uploadSuccess)
       },
       options: {
         headers: {
@@ -81,7 +81,7 @@ export const rsformsApi = {
       endpoint: `/api/rsforms/${itemID}/create-cst`,
       request: {
         data: data,
-        successMessage: response => infoMsg.newConstituent(response.new_cst.alias)
+        successMessage: response => formatLabel(lid.info.newConstituent, { alias: response.new_cst.alias })
       }
     }),
   updateConstituenta: ({ itemID, data }: { itemID: number; data: UpdateConstituentaDTO }) =>
@@ -90,7 +90,7 @@ export const rsformsApi = {
       endpoint: `/api/rsforms/${itemID}/update-cst`,
       request: {
         data: data,
-        successMessage: infoMsg.changesSaved
+        successMessage: formatLabel(lid.info.changesSaved)
       }
     }),
   updateCrucial: ({ itemID, data }: { itemID: number; data: UpdateCrucialDTO }) =>
@@ -99,7 +99,7 @@ export const rsformsApi = {
       endpoint: `/api/rsforms/${itemID}/update-crucial`,
       request: {
         data: data,
-        successMessage: infoMsg.changesSaved
+        successMessage: formatLabel(lid.info.changesSaved)
       }
     }),
   deleteConstituents: ({ itemID, data }: { itemID: number; data: ConstituentaList }) =>
@@ -108,7 +108,7 @@ export const rsformsApi = {
       endpoint: `/api/rsforms/${itemID}/delete-multiple-cst`,
       request: {
         data: data,
-        successMessage: infoMsg.constituentsDestroyed(data.items.length)
+        successMessage: formatLabel(lid.info.constituentsDestroyed, { count: data.items.length })
       }
     }),
   substituteConstituents: ({ itemID, data }: { itemID: number; data: SubstitutionsDTO }) =>
@@ -117,7 +117,7 @@ export const rsformsApi = {
       endpoint: `/api/rsforms/${itemID}/substitute`,
       request: {
         data: data,
-        successMessage: infoMsg.substituteSingle
+        successMessage: formatLabel(lid.info.substituteSingle)
       }
     }),
   moveConstituents: ({ itemID, data }: { itemID: number; data: MoveConstituentsDTO }) =>
@@ -133,20 +133,20 @@ export const rsformsApi = {
       endpoint: `/api/rsforms/inline-synthesis`,
       request: {
         data: data,
-        successMessage: infoMsg.inlineSynthesisComplete
+        successMessage: formatLabel(lid.info.inlineSynthesisComplete)
       }
     }),
   restoreOrder: ({ itemID }: { itemID: number }) =>
     axiosPatch<undefined, RSFormDTO>({
       schema: schemaRSForm,
       endpoint: `/api/rsforms/${itemID}/restore-order`,
-      request: { successMessage: infoMsg.reorderComplete }
+      request: { successMessage: formatLabel(lid.info.reorderComplete) }
     }),
   resetAliases: ({ itemID }: { itemID: number }) =>
     axiosPatch<undefined, RSFormDTO>({
       schema: schemaRSForm,
       endpoint: `/api/rsforms/${itemID}/reset-aliases`,
-      request: { successMessage: infoMsg.reindexComplete }
+      request: { successMessage: formatLabel(lid.info.reindexComplete) }
     }),
 
   createAttribution: ({ itemID, data }: { itemID: number; data: Attribution }) =>
@@ -155,7 +155,7 @@ export const rsformsApi = {
       endpoint: `/api/rsforms/${itemID}/create-attribution`,
       request: {
         data: data,
-        successMessage: infoMsg.changesSaved
+        successMessage: formatLabel(lid.info.changesSaved)
       }
     }),
   deleteAttribution: ({ itemID, data }: { itemID: number; data: Attribution }) =>
@@ -164,7 +164,7 @@ export const rsformsApi = {
       endpoint: `/api/rsforms/${itemID}/delete-attribution`,
       request: {
         data: data,
-        successMessage: infoMsg.changesSaved
+        successMessage: formatLabel(lid.info.changesSaved)
       }
     }),
   clearAttributions: ({ itemID, data }: { itemID: number; data: AttributionTargetDTO }) =>
@@ -173,7 +173,7 @@ export const rsformsApi = {
       endpoint: `/api/rsforms/${itemID}/clear-attributions`,
       request: {
         data: data,
-        successMessage: infoMsg.changesSaved
+        successMessage: formatLabel(lid.info.changesSaved)
       }
     })
 } as const;

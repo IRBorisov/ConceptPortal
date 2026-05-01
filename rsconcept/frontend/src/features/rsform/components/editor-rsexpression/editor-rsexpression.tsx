@@ -21,7 +21,7 @@ import { cn } from '@/components/utils';
 import { useResetOnChange } from '@/hooks/use-reset-on-change';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
-import { errorMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 import { buildTree, flattenAst } from '@/utils/parsing';
 
@@ -204,7 +204,7 @@ export function EditorRSExpression({
     } else {
       const parse = schema.analyzer.checkFull(value, { annotateTypes: true, annotateErrors: true });
       if (!parse.ast) {
-        toast.error(errorMsg.invalidParse);
+        toast.error(formatLabel(lid.error.invalidParse));
         return;
       }
       if (!parse.ast.hasError && !extractionDisabled && !disabled && activeCst && onCreateCst && onUpdateCst) {
@@ -242,7 +242,7 @@ export function EditorRSExpression({
       targetType = parse.type;
     }
     if (!targetType) {
-      toast.error(errorMsg.typeStructureFailed);
+      toast.error(formatLabel(lid.error.typeStructureFailed));
       return;
     }
     showTypification({ items: [{ alias: activeCst?.alias ?? 'TARGET', type: targetType }] });
@@ -280,7 +280,7 @@ export function EditorRSExpression({
         disabled={disabled}
         errorMessage={
           activeCst && activeCst.formalDuplicates.length > 0 && activeCst.definition_formal === value
-            ? errorMsg.formalDuplicates(formatAliasList(activeCst.formalDuplicates, schema))
+            ? formatLabel(lid.error.formalDuplicates, { aliases: formatAliasList(activeCst.formalDuplicates, schema) })
             : undefined
         }
         {...restProps}

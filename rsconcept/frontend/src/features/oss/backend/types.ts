@@ -6,7 +6,7 @@ import { schemaLibraryItem } from '@/features/library/backend/types';
 import { schemaSubstituteConstituents } from '@/features/rsform/backend/types';
 
 import { limits } from '@/utils/constants';
-import { errorMsg } from '@/utils/labels';
+import { lid } from '@/utils/labels';
 
 /** Represents {@link Operation} data from server. */
 export type OperationDTO = z.infer<typeof schemaOperation>;
@@ -93,13 +93,13 @@ const schemaOperationData = schemaOperation
     parent: true
   })
   .extend({
-    alias: z.string().max(limits.len_alias, errorMsg.aliasLength).nonempty(errorMsg.requiredField),
-    title: z.string().max(limits.len_title, errorMsg.titleLength),
-    description: z.string().max(limits.len_description, errorMsg.descriptionLength)
+    alias: z.string().max(limits.len_alias, lid.error.aliasLength).nonempty(lid.error.requiredField),
+    title: z.string().max(limits.len_title, lid.error.titleLength),
+    description: z.string().max(limits.len_description, lid.error.descriptionLength)
   });
 
 const schemaBlockData = schemaOperationData.omit({ alias: true }).extend({
-  title: z.string().max(limits.len_alias, errorMsg.aliasLength).nonempty(errorMsg.requiredField)
+  title: z.string().max(limits.len_alias, lid.error.aliasLength).nonempty(lid.error.requiredField)
 });
 
 export const schemaBlock = z.strictObject({

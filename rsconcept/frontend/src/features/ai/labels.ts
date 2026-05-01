@@ -1,30 +1,34 @@
+import { aiLid } from '@/app/i18n/labels/ai-ui';
+import { formatLabel } from '@/app/i18n/labels/format-label';
+
 import { PromptVariableType } from './models/prompting';
 
-const describePromptVariableRecord: Record<PromptVariableType, string> = {
-  [PromptVariableType.BLOCK]: 'Текущий блок операционной схемы',
-  [PromptVariableType.OSS]: 'Текущая операционная схема',
-  [PromptVariableType.SCHEMA]: 'Текущая концептуальная схема',
-  [PromptVariableType.SCHEMA_THESAURUS]: 'Термины и определения текущей концептуальной схемы',
-  [PromptVariableType.SCHEMA_GRAPH]: 'Граф связей определений конституент',
-  [PromptVariableType.SCHEMA_TYPE_GRAPH]: 'Граф ступеней концептуальной схемы',
-  [PromptVariableType.CONSTITUENTA]: 'Текущая конституента',
-  [PromptVariableType.CONSTITUENTA_SYNTAX_TREE]: 'Синтаксическое дерево конституенты'
+const DESCRIBE_VAR_LID: Record<PromptVariableType, string> = {
+  [PromptVariableType.BLOCK]: aiLid.variable.block,
+  [PromptVariableType.OSS]: aiLid.variable.oss,
+  [PromptVariableType.SCHEMA]: aiLid.variable.schema,
+  [PromptVariableType.SCHEMA_THESAURUS]: aiLid.variable.schemaThesaurus,
+  [PromptVariableType.SCHEMA_GRAPH]: aiLid.variable.schemaGraph,
+  [PromptVariableType.SCHEMA_TYPE_GRAPH]: aiLid.variable.schemaTypeGraph,
+  [PromptVariableType.CONSTITUENTA]: aiLid.variable.constituenta,
+  [PromptVariableType.CONSTITUENTA_SYNTAX_TREE]: aiLid.variable.constituentaSyntaxTree
 };
 
-const mockPromptVariableRecord: Record<PromptVariableType, string> = {
-  [PromptVariableType.BLOCK]: 'Пример: Текущий блок операционной схемы',
-  [PromptVariableType.OSS]: 'Пример: Текущая операционная схема',
-  [PromptVariableType.SCHEMA]: 'Пример: Текущая концептуальная схема',
-  [PromptVariableType.SCHEMA_THESAURUS]: 'Пример\nТермин1 - Определение1\nТермин2 - Определение2',
-  [PromptVariableType.SCHEMA_GRAPH]: 'Пример: Граф связей определений конституент',
-  [PromptVariableType.SCHEMA_TYPE_GRAPH]: 'Пример: Граф ступеней концептуальной схемы',
-  [PromptVariableType.CONSTITUENTA]: 'Пример: Текущая конституента',
-  [PromptVariableType.CONSTITUENTA_SYNTAX_TREE]: 'Пример синтаксического дерева конституенты'
+const MOCK_VAR_LID: Record<PromptVariableType, string> = {
+  [PromptVariableType.BLOCK]: aiLid.variableMock.block,
+  [PromptVariableType.OSS]: aiLid.variableMock.oss,
+  [PromptVariableType.SCHEMA]: aiLid.variableMock.schema,
+  [PromptVariableType.SCHEMA_THESAURUS]: aiLid.variableMock.schemaThesaurus,
+  [PromptVariableType.SCHEMA_GRAPH]: aiLid.variableMock.schemaGraph,
+  [PromptVariableType.SCHEMA_TYPE_GRAPH]: aiLid.variableMock.schemaTypeGraph,
+  [PromptVariableType.CONSTITUENTA]: aiLid.variableMock.constituenta,
+  [PromptVariableType.CONSTITUENTA_SYNTAX_TREE]: aiLid.variableMock.constituentaSyntaxTree
 };
 
 /** Retrieves description for {@link PromptVariableType}. */
 export function describePromptVariable(itemType: PromptVariableType): string {
-  return describePromptVariableRecord[itemType] ?? `UNKNOWN VARIABLE TYPE: ${itemType}`;
+  const id = DESCRIBE_VAR_LID[itemType];
+  return id ? formatLabel(id) : formatLabel(aiLid.fallback.unknownVariableType, { type: String(itemType) });
 }
 
 /** Retrieves mock text for {@link PromptVariableType}. */
@@ -32,5 +36,6 @@ export function mockPromptVariable(variable: string): string {
   if (!Object.values(PromptVariableType).includes(variable as PromptVariableType)) {
     return variable;
   }
-  return mockPromptVariableRecord[variable as PromptVariableType] ?? `UNKNOWN VARIABLE: ${variable}`;
+  const id = MOCK_VAR_LID[variable as PromptVariableType];
+  return id ? formatLabel(id) : formatLabel(aiLid.fallback.unknownVariable, { name: variable });
 }

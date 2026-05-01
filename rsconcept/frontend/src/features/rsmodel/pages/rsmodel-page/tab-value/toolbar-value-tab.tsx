@@ -2,6 +2,7 @@
 
 import { isInferrable } from '@/domain/library/rsmodel-api';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
@@ -19,7 +20,7 @@ import {
 import { cn } from '@/components/utils';
 import { useModificationStore } from '@/stores/modification';
 import { prepareTooltip } from '@/utils/format';
-import { tooltipText } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 import { isMac } from '@/utils/utils';
 
 import { useModelEdit } from '../model-edit-context';
@@ -31,6 +32,7 @@ interface ToolbarValueTabProps {
 }
 
 export function ToolbarValueTab({ className, onSubmit, onReset }: ToolbarValueTabProps) {
+  const tx = useTx();
   const { engine } = useModelEdit();
   const {
     activeCst,
@@ -49,28 +51,28 @@ export function ToolbarValueTab({ className, onSubmit, onReset }: ToolbarValueTa
   return (
     <div className={cn('px-1 rounded-b-2xl cc-icons outline-hidden', className)}>
       <MiniButton
-        title={prepareTooltip('Сохранить изменения', isMac() ? 'Cmd + S' : 'Ctrl + S')}
-        aria-label='Сохранить изменения'
+        title={prepareTooltip(tx('ui.action.saveChanges', 'Save changes'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
+        aria-label={tx('ui.action.saveChanges', 'Save changes')}
         icon={<IconSave size='1.25rem' className='icon-primary' />}
         onClick={onSubmit}
         disabled={isProcessing || !activeCst || !isModified}
       />
       <MiniButton
-        title='Сбросить несохраненные изменения'
+        title={tx('ui.hint.resetUnsavedConstituenta', 'Discard unsaved changes')}
         icon={<IconReset size='1.25rem' className='icon-primary' />}
         onClick={onReset}
         disabled={isProcessing || !activeCst || !isModified}
       />
 
       <MiniButton
-        title='Пересчитать модель'
-        aria-label='Пересчитать все вычисления'
+        title={tx('ui.action.recalculateModel', 'Recalculate model')}
+        aria-label={tx('ui.aria.recalculateAll', 'Recalculate all results')}
         icon={<IconCalculateAll size='1.25rem' className='icon-green' />}
         onClick={() => engine.recalculateAll()}
       />
       <MiniButton
-        title={prepareTooltip('Вычислить текущую конституенту', isMac() ? 'Cmd + Q' : 'Ctrl + Q')}
-        aria-label='Вычислить текущую конституенту'
+        title={prepareTooltip(tx('ui.rsmodel.calculateCurrentCst', 'Calculate current constituent'), isMac() ? 'Cmd + Q' : 'Ctrl + Q')}
+        aria-label={tx('ui.aria.calculateCurrentCst', 'Calculate current constituent')}
         icon={<IconCalculateOne size='1.25rem' className='icon-green' />}
         onClick={
           activeCst
@@ -84,14 +86,18 @@ export function ToolbarValueTab({ className, onSubmit, onReset }: ToolbarValueTa
       {isContentEditable && activeCst ? (
         <>
           <MiniButton
-            title='Создать конституенту'
+            title={tx('ui.action.createConstituenta', 'Create constituent')}
             icon={<IconNewItem size='1.25rem' className='icon-green' />}
             onClick={() => void promptCreateCst(activeCst.cst_type)}
             disabled={formDisabled}
           />
           <MiniButton
-            title={isModified ? tooltipText.unsaved : prepareTooltip('Клонировать конституенту', 'Alt + V')}
-            aria-label='Клонировать конституенту'
+            title={
+              isModified
+                ? formatLabel(lid.tooltip.unsaved)
+                : prepareTooltip(tx('ui.hint.cloneConstituenta', 'Clone constituent'), 'Alt + V')
+            }
+            aria-label={tx('ui.aria.cloneConstituenta', 'Clone constituent')}
             icon={<IconClone size='1.25rem' className='icon-green' />}
             onClick={() => void cloneCst()}
             disabled={formDisabled || isModified}
@@ -101,7 +107,7 @@ export function ToolbarValueTab({ className, onSubmit, onReset }: ToolbarValueTa
 
       {isContentEditable && activeCst ? (
         <MiniButton
-          title='Удалить конституенту'
+          title={tx('ui.action.deleteConstituenta', 'Delete constituent')}
           icon={<IconDestroy size='1.25rem' className='icon-red' />}
           onClick={promptDeleteSelected}
           disabled={formDisabled || !canDeleteSelected}

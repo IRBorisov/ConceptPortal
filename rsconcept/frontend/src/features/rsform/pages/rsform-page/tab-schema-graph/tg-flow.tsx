@@ -17,13 +17,14 @@ import clsx from 'clsx';
 import { addAliasReference } from '@/domain/library/rsform-api';
 
 import { useConceptNavigation } from '@/app';
+import { useTx } from '@/app/i18n/use-tx';
 
 import { DiagramFlow, useReactFlow } from '@/components/flow/diagram-flow';
 import { useContinuousPan } from '@/components/flow/use-continuous-panning';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight, useMainHeight } from '@/stores/app-layout';
 import { PARAMETER } from '@/utils/constants';
-import { errorMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 
 import { colorGraphEdge } from '../../../colors';
 import { TGConnectionLine } from '../../../components/term-graph/graph/tg-connection';
@@ -52,6 +53,7 @@ const flowOptions = {
 } as const;
 
 export function TGFlow() {
+  const tx = useTx();
   const router = useConceptNavigation();
   const { isSmall } = useWindowSize();
   const mainHeight = useMainHeight();
@@ -333,15 +335,15 @@ export function TGFlow() {
     const targetCst = schema.cstByID.get(targetID)!;
     if (connectionType === TGEdgeType.definition) {
       if (targetCst.is_inherited) {
-        toast.error(errorMsg.changeInheritedDefinition);
+        toast.error(formatLabel(lid.error.changeInheritedDefinition));
         return;
       }
       if (schema.graph.hasEdge(sourceID, targetID)) {
-        toast.error(errorMsg.connectionExists);
+        toast.error(formatLabel(lid.error.connectionExists));
         return;
       }
       if (schema.graph.isReachable(targetID, sourceID)) {
-        toast.error(errorMsg.cyclingEdge);
+        toast.error(formatLabel(lid.error.cyclingEdge));
         return;
       }
 
@@ -354,15 +356,15 @@ export function TGFlow() {
       });
     } else {
       if (schema.attribution_graph.hasEdge(sourceID, targetID)) {
-        toast.error(errorMsg.connectionExists);
+        toast.error(formatLabel(lid.error.connectionExists));
         return;
       }
       if (schema.attribution_graph.isReachable(targetID, sourceID)) {
-        toast.error(errorMsg.cyclingEdge);
+        toast.error(formatLabel(lid.error.cyclingEdge));
         return;
       }
       if (targetCst.parent_schema !== null && targetCst.parent_schema === sourceCst.parent_schema) {
-        toast.error(errorMsg.addInheritedEdge);
+        toast.error(formatLabel(lid.error.addInheritedEdge));
         return;
       }
 
@@ -386,7 +388,10 @@ export function TGFlow() {
       <div className='absolute z-pop top-16 sm:top-8 left-2 sm:left-3 flex flex-col pointer-events-none'>
         <ToolbarTGEdit className='pr-1 w-fit whitespace-nowrap backdrop-blur-xs rounded-xl' graph={filteredGraph} />
         <div className='px-2 py-1 select-none whitespace-nowrap backdrop-blur-xs rounded-xl w-fit'>
-          Выбор {selectedCst.length} из {schema.items.length}
+          {tx('ui.tg.selectionCount', 'Selected {n} of {total}', {
+            n: selectedCst.length,
+            total: schema.items.length
+          })}
         </div>
         <div className='flex'>
           <div className='flex flex-col w-54'>

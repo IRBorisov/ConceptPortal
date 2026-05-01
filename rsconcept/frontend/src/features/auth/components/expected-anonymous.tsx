@@ -1,6 +1,7 @@
 'use client';
 
 import { urls, useConceptNavigation } from '@/app';
+import { useTx } from '@/app/i18n/use-tx';
 
 import { TextURL } from '@/components/control';
 
@@ -8,6 +9,7 @@ import { useAuth } from '../backend/use-auth';
 import { useLogout } from '../backend/use-logout';
 
 export function ExpectedAnonymous() {
+  const tx = useTx();
   const { user } = useAuth();
   const { logout } = useLogout();
   const router = useConceptNavigation();
@@ -18,16 +20,20 @@ export function ExpectedAnonymous() {
 
   return (
     <div className='flex flex-col items-center gap-3 py-6'>
-      <p className='font-semibold'>{`Вы вошли в систему как ${user.username}`}</p>
+      <p className='font-semibold'>{tx('auth.anonymous.signedInAs', 'You are signed in as {username}', { username: user.username })}</p>
       <div className='flex gap-3'>
-        <TextURL text='Создать' href='/library/create' />
+        <TextURL text={tx('auth.anonymous.create', 'Create')} href='/library/create' />
         <span> | </span>
-        <TextURL text='Библиотека' href='/library' />
+        <TextURL text={tx('ui.nav.library', 'Library')} href='/library' />
         <span> | </span>
-        <TextURL text='Справка' href='/manuals' />
+        <TextURL text={tx('auth.anonymous.manuals', 'Manuals')} href='/manuals' />
         <span> | </span>
-        <span className='cursor-pointer hover:underline text-primary' aria-label='Выйти' onClick={logoutAndRedirect}>
-          Выйти
+        <span
+          className='cursor-pointer hover:underline text-primary'
+          aria-label={tx('auth.anonymous.logoutAria', 'Log out')}
+          onClick={logoutAndRedirect}
+        >
+          {tx('auth.anonymous.logout', 'Log out')}
         </span>
       </div>
     </div>

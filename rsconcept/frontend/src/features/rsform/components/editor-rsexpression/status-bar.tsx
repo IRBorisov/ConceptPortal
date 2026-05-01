@@ -4,6 +4,8 @@ import clsx from 'clsx';
 
 import { CstStatus } from '@/domain/library';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { cn } from '@/components/utils';
 import { globalIDs } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/format';
@@ -19,6 +21,7 @@ interface StatusBarProps {
 }
 
 export function StatusBar({ className, status, onAnalyze }: StatusBarProps) {
+  const tx = useTx();
   return (
     <div className={cn('pl-22 xs:pl-8 flex gap-1', className)}>
       <div
@@ -37,7 +40,10 @@ export function StatusBar({ className, status, onAnalyze }: StatusBarProps) {
           colorStatusBar(status)
         )}
         data-tooltip-id={globalIDs.tooltip}
-        data-tooltip-content={prepareTooltip('Проверить определение', isMac() ? 'Cmd + Q' : 'Ctrl + Q')}
+        data-tooltip-content={prepareTooltip(
+          tx('ui.rsexpr.status.checkDefinition', 'Check definition'),
+          isMac() ? 'Cmd + Q' : 'Ctrl + Q'
+        )}
         onClick={onAnalyze}
       >
         <div className='cc-fade-in flex items-center gap-1'>

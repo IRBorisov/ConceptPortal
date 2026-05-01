@@ -3,6 +3,7 @@
 import { useMemo } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { useRSForm } from '@/features/rsform/backend/use-rsform';
 
 import { MiniButton } from '@/components/control';
@@ -10,7 +11,7 @@ import { IconReset, IconSave } from '@/components/icons';
 import { TextArea, TextInput } from '@/components/input';
 import { ModalView } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
-import { hintMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 
 import { schemaUpdateVersion, type UpdateVersionDTO } from '../../backend/types';
 import { useDeleteVersion } from '../../backend/use-delete-version';
@@ -25,6 +26,7 @@ export interface DlgEditVersionsProps {
 }
 
 export function DlgEditVersions() {
+  const tx = useTx();
   const { itemID, afterDelete } = useDialogsStore(state => state.props as DlgEditVersionsProps);
   const hideDialog = useDialogsStore(state => state.hideDialog);
   const { schema } = useRSForm({ itemID });
@@ -92,7 +94,10 @@ export function DlgEditVersions() {
   }
 
   return (
-    <ModalView header='Редактирование версий' className='flex flex-col w-160 px-6 gap-3 pb-3'>
+    <ModalView
+      header={tx('ui.dlg.editVersions.header', 'Edit versions')}
+      className='flex flex-col w-160 px-6 gap-3 pb-3'
+    >
       <TableVersions
         processing={isProcessing}
         items={schema.versions.slice().reverse()}
@@ -114,7 +119,7 @@ export function DlgEditVersions() {
             <TextInput
               id='dlg_version'
               dense
-              label='Версия'
+              label={tx('ui.label.version', 'Version')}
               className='w-64 mr-3'
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
@@ -126,13 +131,17 @@ export function DlgEditVersions() {
         <div className='cc-icons h-fit'>
           <MiniButton
             type='submit'
-            title={isValid ? 'Сохранить изменения' : hintMsg.versionTaken}
-            aria-label='Сохранить изменения'
+            title={
+              isValid
+                ? tx('ui.dlg.editVersions.saveChanges', 'Save changes')
+                : formatLabel(lid.hint.versionTaken)
+            }
+            aria-label={tx('ui.dlg.editVersions.saveChanges', 'Save changes')}
             icon={<IconSave size='1.25rem' className='icon-primary' />}
             disabled={isDefaultValue || !isValid || isProcessing}
           />
           <MiniButton
-            title='Сбросить несохраненные изменения'
+            title={tx('ui.dlg.editVersions.resetChanges', 'Discard unsaved changes')}
             onClick={handleResetClick}
             icon={<IconReset size='1.25rem' className='icon-primary' />}
             disabled={isDefaultValue}
@@ -144,7 +153,7 @@ export function DlgEditVersions() {
           <TextArea
             id='dlg_description'
             spellCheck
-            label='Описание'
+            label={tx('ui.label.description', 'Description')}
             rows={3}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}

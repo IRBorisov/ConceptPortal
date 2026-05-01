@@ -2,6 +2,7 @@
 
 import { useEffect, useEffectEvent, useLayoutEffect, useRef } from 'react';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { OssTabID, useConceptNavigation } from '@/app/navigation/navigation-context';
 
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
@@ -18,6 +19,7 @@ interface OssTabsProps {
 }
 
 export function OssTabs({ activeTab }: OssTabsProps) {
+  const tx = useTx();
   const router = useConceptNavigation();
   const { schema, deselectAll } = useOssEdit();
 
@@ -79,8 +81,8 @@ export function OssTabs({ activeTab }: OssTabsProps) {
       <TabList className='absolute z-sticky flex border-b-2 border-x-2 divide-x-2 bg-background'>
         <MenuOssTabs />
 
-        <TabLabel label='Паспорт' />
-        <TabLabel label='Граф' />
+        <TabLabel label={tx('ui.tabs.passport', 'Passport')} />
+        <TabLabel label={tx('ui.tabs.graph', 'Graph')} />
       </TabList>
 
       <div ref={containerRef} className='overflow-x-hidden'>

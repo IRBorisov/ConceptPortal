@@ -2,6 +2,7 @@
 
 import clsx from 'clsx';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { Logo } from '@/app/navigation/logo';
 import { NavigationButton } from '@/app/navigation/navigation-button';
 import { useConceptNavigation } from '@/app/navigation/navigation-context';
@@ -14,6 +15,7 @@ import { useAppLayoutStore } from '@/stores/app-layout';
 import { useDialogsStore } from '@/stores/dialogs';
 
 export function NavigationSandbox() {
+  const tx = useTx();
   const { push } = useConceptNavigation();
   const size = useWindowSize();
   const noNavigationAnimation = useAppLayoutStore(state => state.noNavigationAnimation);
@@ -75,8 +77,16 @@ export function NavigationSandbox() {
         </div>
 
         <div className='relative z-10 flex gap-2 items-center pr-2 shrink-0'>
-          <NavigationButton text='Библиотека' icon={<IconLibrary2 size='1.5rem' />} onClick={navigateLibrary} />
-          <NavigationButton text='Справка' icon={<IconManuals size='1.5rem' />} onClick={navigateHelp} />
+          <NavigationButton
+            text={tx('nav.bar.library', 'Library')}
+            icon={<IconLibrary2 size='1.5rem' />}
+            onClick={navigateLibrary}
+          />
+          <NavigationButton
+            text={tx('nav.bar.help', 'Help')}
+            icon={<IconManuals size='1.5rem' />}
+            onClick={navigateHelp}
+          />
         </div>
       </div>
     </nav>

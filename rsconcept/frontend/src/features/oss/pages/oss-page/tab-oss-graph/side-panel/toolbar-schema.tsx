@@ -4,6 +4,7 @@ import { type Constituenta, CstType, type RSForm } from '@/domain/library';
 import { generateAlias } from '@/domain/library/rsform-api';
 
 import { useConceptNavigation } from '@/app';
+import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 import { type ConstituentaBasicsDTO, type CreateConstituentaDTO } from '@/features/rsform/backend/types';
@@ -50,6 +51,7 @@ export function ToolbarSchema({
   isMutable,
   className
 }: ToolbarSchemaProps) {
+  const tx = useTx();
   const { elementRef, isOpen, handleBlur, toggle, hide } = useDropdown();
   const router = useConceptNavigation();
   const isProcessing = useMutatingRSForm();
@@ -168,59 +170,69 @@ export function ToolbarSchema({
     <div className={cn('flex gap-0.5', className)}>
       <div ref={elementRef} onBlur={handleBlur} className='flex relative items-center'>
         <MiniButton
-          title='Редактирование концептуальной схемы'
+          title={tx('ui.oss.sideToolbar.editSchemaTitle', 'Edit conceptual schema')}
           hideTitle={isOpen}
           icon={<IconRSForm size='1rem' className='icon-primary' />}
           onClick={toggle}
         />
         <Dropdown isOpen={isOpen} margin='mt-0.5'>
           <DropdownButton
-            text='Упорядочить список'
-            title='Упорядочить список, исходя из
-логики типов и связей конституент'
-            aria-label='Упорядочить список, исходя из логики типов и связей конституент'
+            text={tx('ui.rsform.menu.restoreOrder', 'Reorder list')}
+            title={tx(
+              'ui.rsform.menu.restoreOrderTitle',
+              'Reorder the list according to\ntypes logic and constituent links'
+            )}
+            aria-label={tx(
+              'ui.rsform.menu.restoreOrderAria',
+              'Reorder the list according to types logic and constituent links'
+            )}
             icon={<IconSortList size='1rem' className='icon-primary' />}
             onClick={handleRestoreOrder}
             disabled={!isMutable || isProcessing}
           />
           <DropdownButton
-            text='Порядковые имена'
-            title='Присвоить порядковые имена
-и обновить выражения'
-            aria-label='Присвоить порядковые имена и обновить выражения'
+            text={tx('ui.rsform.menu.ordinalNames', 'Ordinal names')}
+            title={tx(
+              'ui.rsform.menu.ordinalNamesTitle',
+              'Assign ordinal names\nand refresh expressions'
+            )}
+            aria-label={tx(
+              'ui.rsform.menu.ordinalNamesAria',
+              'Assign ordinal names and refresh expressions'
+            )}
             icon={<IconGenerateNames size='1rem' className='icon-primary' />}
             onClick={handleReindex}
             disabled={!isMutable || isProcessing}
           />
           <DropdownButton
-            title='Перейти к концептуальной схеме'
-            text='Открыть КС'
+            title={tx('ui.oss.sideToolbar.openSchemaTitle', 'Go to conceptual schema')}
+            text={tx('ui.oss.sideToolbar.openSchema', 'Open CS')}
             icon={<IconRSForm size='1rem' className='icon-primary' />}
             onClick={handleOpenSchema}
           />
         </Dropdown>
       </div>
       <MiniButton
-        title='Редактировать конституенту'
+        title={tx('ui.toolbar.editConstituenta', 'Edit constituent')}
         icon={<IconEdit size='1rem' className='icon-primary' />}
         onClick={onEditActive}
         disabled={!isMutable || isProcessing || !activeCst}
       />
       <MiniButton
-        title='Создать конституенту'
+        title={tx('ui.toolbar.createConstituenta', 'Create constituent')}
         icon={<IconNewItem size='1rem' className='icon-green' />}
         onClick={createCst}
         disabled={!isMutable || isProcessing}
       />
       <MiniButton
-        title='Клонировать конституенту'
+        title={tx('ui.toolbar.cloneConstituenta', 'Clone constituent')}
         icon={<IconClone size='1rem' className='icon-green' />}
         onClick={cloneCst}
         disabled={!isMutable || !activeCst || isProcessing}
       />
 
       <MiniButton
-        title='Удалить выделенную конституенту'
+        title={tx('ui.toolbar.deleteHighlightedConstituenta', 'Delete selected constituent')}
         onClick={promptDeleteCst}
         icon={<IconDestroy size='1rem' className='icon-red' />}
         disabled={!isMutable || !activeCst || isProcessing || activeCst?.is_inherited}
@@ -228,12 +240,12 @@ export function ToolbarSchema({
 
       <MiniButton
         icon={<IconTree size='1rem' className='hover:text-primary' />}
-        title='Граф термов'
+        title={tx('ui.oss.sideToolbar.termGraph', 'Term graph')}
         onClick={handleShowTermGraph}
       />
       <MiniButton
         icon={<IconTypeGraph size='1rem' className='hover:text-primary' />}
-        title='Граф ступеней'
+        title={tx('ui.oss.sideToolbar.typeGraph', 'Typing graph')}
         onClick={handleShowTypeGraph}
       />
 
