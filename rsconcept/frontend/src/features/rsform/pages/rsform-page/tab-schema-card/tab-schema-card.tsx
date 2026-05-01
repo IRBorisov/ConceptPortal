@@ -4,6 +4,7 @@ import clsx from 'clsx';
 
 import { calculateSchemaStats } from '@/domain/library/rsform-api';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { ButtonSidebar } from '@/features/library/components/button-sidebar';
 import { EditorLibraryItem } from '@/features/library/components/editor-library-item';
 
@@ -21,6 +22,7 @@ import { ViewSchemaStats } from './view-schema-stats';
 const SIDELIST_LAYOUT_THRESHOLD = 768; // px
 
 export function TabSchemaCard() {
+  const tx = useTx();
   const { schema } = useSchemaEdit();
   const isModified = useModificationStore(state => state.isModified);
   const showRSFormStats = usePreferencesStore(state => state.showRSFormStats);
@@ -58,7 +60,7 @@ export function TabSchemaCard() {
     >
       <div className='relative cc-column mx-0 md:mx-auto'>
         <ButtonSidebar
-          title='Отображение статистики'
+          title={tx('ui.schemaCard.toggleStatsTitle', 'Show statistics')}
           show={showRSFormStats}
           isNarrow={isNarrow}
           onClick={toggleShowRSFormStats}

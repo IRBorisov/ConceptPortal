@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import { LocationHead } from '@/domain/library';
 import { combineLocation } from '@/domain/library/library-api';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { useAuth } from '@/features/auth';
 
 import { ErrorField, TextArea } from '@/components/input';
@@ -32,6 +33,7 @@ export function PickLocation({
   className,
   ...restProps
 }: PickLocationProps) {
+  const tx = useTx();
   const { user } = useAuth();
 
   return (
@@ -52,7 +54,7 @@ export function PickLocation({
 
       <TextArea
         id='dlg_location'
-        label='Расположение'
+        label={tx('ui.library.pickLocation.label', 'Location')}
         rows={rows}
         value={value.substring(3)}
         className='w-full'

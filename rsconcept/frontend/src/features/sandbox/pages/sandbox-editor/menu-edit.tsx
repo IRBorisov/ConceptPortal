@@ -1,5 +1,6 @@
 'use client';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 
 import { MiniButton } from '@/components/control';
@@ -12,6 +13,7 @@ import { promptUnsaved } from '@/utils/utils';
 import { useSandboxBundle } from '../../context/bundle-context';
 
 export function MenuEdit() {
+  const tx = useTx();
   const isModified = useModificationStore(state => state.isModified);
   const { resetAliases, restoreOrder, substituteConstituents } = useSandboxBundle();
   const { schema } = useSchemaEdit();
@@ -64,7 +66,7 @@ export function MenuEdit() {
       <MiniButton
         noHover
         noPadding
-        title='Редактирование'
+        title={tx('ui.sandbox.editMenu.buttonTitle', 'Editing')}
         hideTitle={isMenuOpen}
         className='h-full px-3 text-muted-foreground hover:text-primary cc-animate-color'
         icon={<IconEdit2 size='1.25rem' />}
@@ -72,20 +74,20 @@ export function MenuEdit() {
       />
       <Dropdown isOpen={isMenuOpen} margin='mt-3'>
         <DropdownButton
-          text='Упорядочить список'
-          title='Восстановить порядок по типам и связям'
+          text={tx('ui.sandbox.editMenu.restoreOrder', 'Reorder list')}
+          title={tx('ui.sandbox.editMenu.restoreOrderHint', 'Restore order by types and links')}
           icon={<IconSortList size='1rem' className='icon-primary' />}
           onClick={handleRestoreOrder}
         />
         <DropdownButton
-          text='Порядковые имена'
-          title='Присвоить имена по порядку и обновить выражения'
+          text={tx('ui.sandbox.editMenu.ordinalNames', 'Ordinal names')}
+          title={tx('ui.sandbox.editMenu.ordinalNamesHint', 'Assign names in order and refresh expressions')}
           icon={<IconGenerateNames size='1rem' className='icon-primary' />}
           onClick={handleResetAliases}
         />
         <DropdownButton
-          text='Отождествление'
-          title='Заменить одни конституенты другими'
+          text={tx('ui.sandbox.editMenu.substitution', 'Substitution')}
+          title={tx('ui.sandbox.editMenu.substitutionHint', 'Replace some constituents with others')}
           icon={<IconReplace size='1rem' className='icon-red' />}
           onClick={handleSubstitute}
         />

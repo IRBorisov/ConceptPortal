@@ -175,7 +175,7 @@ export function ToolbarOssGraph({
             />
             <DropdownButton
               icon={<IconSVG size='1.25rem' className='icon-primary' />}
-              text='Сохранить SVG'
+              text={tx('ui.oss.toolbar.saveSvg', 'Save SVG')}
               onClick={handleExportSvgBtn}
               disabled={isProcessing || isExportingImage}
             />

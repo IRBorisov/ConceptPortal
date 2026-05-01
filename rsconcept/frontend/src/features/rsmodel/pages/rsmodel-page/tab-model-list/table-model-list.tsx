@@ -3,6 +3,7 @@
 import { type Constituenta } from '@/domain/library';
 import { labelType } from '@/domain/rslang/labels';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { BadgeConstituenta } from '@/features/rsform/components/badge-constituenta';
 import { BadgeEvaluation } from '@/features/rsmodel/components/badge-evaluation';
 
@@ -48,6 +49,7 @@ export function TableModelList({
   onEdit,
   onCreateNew
 }: TableModelListProps) {
+  const tx = useTx();
   const { engine } = useModelEdit();
   const windowSize = useWindowSize();
 
@@ -66,7 +68,7 @@ export function TableModelList({
   const columns = [
     columnHelper.accessor('alias', {
       id: 'alias',
-      header: () => <span className='pl-3 min-w-12'>Имя</span>,
+      header: () => <span className='pl-3 min-w-12'>{tx('ui.table.header.alias', 'Name')}</span>,
       size: 65,
       minSize: 65,
       maxSize: 65,
@@ -74,7 +76,7 @@ export function TableModelList({
     }),
     columnHelper.accessor(cst => cst, {
       id: 'value',
-      header: 'Значение',
+      header: tx('ui.table.header.value', 'Value'),
       size: 60,
       minSize: 60,
       maxSize: 60,
@@ -82,7 +84,7 @@ export function TableModelList({
     }),
     columnHelper.accessor(cst => labelType(cst.analysis.type), {
       id: 'type',
-      header: () => <span className='min-w-40'>Типизация</span>,
+      header: () => <span className='min-w-40'>{tx('ui.table.header.typification', 'Typification')}</span>,
       enableHiding: true,
       size: 150,
       minSize: 150,
@@ -93,14 +95,14 @@ export function TableModelList({
     }),
     columnHelper.accessor(cst => cst.term_resolved || cst.term_raw || '', {
       id: 'term',
-      header: () => <span className='min-w-30'>Термин</span>,
+      header: () => <span className='min-w-30'>{tx('ui.table.header.term', 'Term')}</span>,
       size: 500,
       minSize: 150,
       maxSize: 500
     }),
     columnHelper.accessor('definition_formal', {
       id: 'expression',
-      header: 'Формальное определение',
+      header: tx('ui.table.header.formalDefinition', 'Formal definition'),
       size: 1000,
       minSize: 300,
       maxSize: 1000,
@@ -108,7 +110,7 @@ export function TableModelList({
     }),
     columnHelper.accessor(cst => cst.definition_resolved || cst.definition_raw || '', {
       id: 'definition',
-      header: 'Текстовое определение',
+      header: tx('ui.table.header.textDefinition', 'Text definition'),
       size: 1000,
       minSize: 200,
       maxSize: 1000,
@@ -116,7 +118,7 @@ export function TableModelList({
     }),
     columnHelper.accessor('convention', {
       id: 'convention',
-      header: 'Конвенция / Комментарий',
+      header: tx('ui.table.header.conventionComment', 'Convention / Comment'),
       size: 500,
       minSize: 100,
       maxSize: 500,
@@ -148,9 +150,9 @@ export function TableModelList({
       onRowSelectionChange={setSelected}
       noDataComponent={
         <NoData>
-          <p>Список пуст</p>
+          <p>{tx('ui.table.emptyList', 'List is empty')}</p>
           <p>
-            <TextURL text='Создать конституенту...' onClick={onCreateNew} />
+            <TextURL text={tx('ui.link.createConstituenta', 'Create a constituenta...')} onClick={onCreateNew} />
           </p>
         </NoData>
       }

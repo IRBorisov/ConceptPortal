@@ -6,6 +6,7 @@ import clsx from 'clsx';
 import { useDebounce } from 'use-debounce';
 
 import { useRegisterNavigationSave } from '@/app';
+import { useTx } from '@/app/i18n/use-tx';
 import { PromptInput } from '@/features/ai/components/prompt-input';
 import { useAuth } from '@/features/auth';
 
@@ -44,6 +45,7 @@ function templateDefaults(template: IPromptTemplate): IUpdatePromptTemplateDTO {
 
 /** Form for editing a prompt template. */
 export function FormPromptTemplate({ promptTemplate, className, isMutable, toggleReset }: FormPromptTemplateProps) {
+  const tx = useTx();
   const { user } = useAuth();
   const isProcessing = useMutatingPrompts();
   const setIsModified = useModificationStore(state => state.setIsModified);
@@ -113,7 +115,7 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
         {field => (
           <TextInput
             id='prompt_label'
-            label='Название'
+            label={tx('ui.label.title', 'Title')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
@@ -126,7 +128,7 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
         {field => (
           <TextArea
             id='prompt_description'
-            label='Описание'
+            label={tx('ui.label.description', 'Description')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
@@ -140,8 +142,11 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
         {field => (
           <PromptInput
             id='prompt_text'
-            label='Содержание'
-            placeholder='Пример: Предложи дополнение для КС {{schema}}'
+            label={tx('ui.promptTemplates.form.content', 'Content')}
+            placeholder={tx(
+              'ui.promptTemplates.form.contentPlaceholder',
+              'Example: Suggest a completion for CS {{schema}}'
+            )}
             className='disabled:min-h-9 max-h-64'
             value={field.state.value ?? ''}
             onChange={newValue => handleChangeText(newValue, field.handleChange)}
@@ -154,7 +159,7 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
           {field => (
             <Checkbox
               id='prompt_is_shared'
-              label='Общий шаблон'
+              label={tx('ui.promptTemplates.form.sharedCheckbox', 'Shared template')}
               value={field.state.value ?? false}
               onChange={field.handleChange}
               onBlur={field.handleBlur}
@@ -163,7 +168,7 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
           )}
         </form.Field>
         <MiniButton
-          title='Сгенерировать пример запроса'
+          title={tx('ui.promptTemplates.form.generateSampleTitle', 'Generate sample prompt')}
           icon={<IconSample size='1.25rem' className='icon-primary' />}
           onClick={() => setSampleResult(!!sampleResult ? null : generateSample(text))}
           disabled={!text}
@@ -175,7 +180,7 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
           fitContent
           className='mt-3'
           areaClassName='max-h-64 min-h-12'
-          label='Пример запроса'
+          label={tx('ui.promptTemplates.form.sampleLabel', 'Sample prompt')}
           value={sampleResult ?? debouncedResult ?? ''}
           disabled
         />

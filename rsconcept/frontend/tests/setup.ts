@@ -6,8 +6,16 @@ import { setupLibrary } from './mocks/library';
 import { setupUsers } from './mocks/users';
 export { expect } from '@playwright/test';
 
+function seedDefaultLocale() {
+  if (localStorage.getItem('portal.preferences')) {
+    return;
+  }
+  localStorage.setItem('portal.preferences', JSON.stringify({ state: { locale: 'ru' }, version: 5 }));
+}
+
 export const test = base.extend({
   page: async ({ page }, use) => {
+    await page.addInitScript(seedDefaultLocale);
     await setupAuth(page);
     await setupUsers(page);
     await setupLibrary(page);

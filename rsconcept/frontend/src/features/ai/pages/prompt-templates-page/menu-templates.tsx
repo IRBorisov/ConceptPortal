@@ -1,12 +1,14 @@
 'use client';
 
 import { useConceptNavigation } from '@/app';
+import { useTx } from '@/app/i18n/use-tx';
 
 import { MiniButton } from '@/components/control';
 import { IconNewItem } from '@/components/icons';
 import { useDialogsStore } from '@/stores/dialogs';
 
 export function MenuTemplates() {
+  const tx = useTx();
   const router = useConceptNavigation();
   const showCreatePromptTemplate = useDialogsStore(state => state.showCreatePromptTemplate);
 
@@ -21,7 +23,7 @@ export function MenuTemplates() {
       <MiniButton
         noHover
         noPadding
-        title='Новый шаблон'
+        title={tx('ui.promptTemplates.menu.newTemplate', 'New template')}
         icon={<IconNewItem size='1.25rem' />}
         className='h-full text-muted-foreground hover:text-constructive cc-animate-color bg-transparent'
         onClick={handleNewTemplate}

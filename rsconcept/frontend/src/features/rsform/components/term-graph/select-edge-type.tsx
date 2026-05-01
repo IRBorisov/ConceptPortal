@@ -1,3 +1,7 @@
+'use client';
+
+import { useTx } from '@/app/i18n/use-tx';
+
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/input/select';
 import { cn } from '@/components/utils';
 
@@ -9,6 +13,7 @@ interface SelectEdgeTypeProps {
 }
 
 export function SelectEdgeType({ className }: SelectEdgeTypeProps) {
+  const tx = useTx();
   const graphType = useTermGraphStore(state => state.filter.graphType);
   const setGraphType = useTermGraphStore(state => state.setGraphType);
 
@@ -16,7 +21,7 @@ export function SelectEdgeType({ className }: SelectEdgeTypeProps) {
     <div className={cn('relative border select-none bg-input pointer-events-auto', className)}>
       <Select onValueChange={setGraphType} value={graphType}>
         <SelectTrigger noBorder className='w-full'>
-          <SelectValue placeholder='Цветовая схема' />
+          <SelectValue placeholder={tx('ui.rsform.termGraph.colorSchemePlaceholder', 'Color scheme')} />
         </SelectTrigger>
         <SelectContent alignOffset={-1} sideOffset={-4}>
           {Object.values(TGEdgeType).map(value => (

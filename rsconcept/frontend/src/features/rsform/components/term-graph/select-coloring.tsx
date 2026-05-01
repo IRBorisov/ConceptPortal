@@ -1,5 +1,8 @@
+'use client';
+
 import { type RSForm } from '@/domain/library';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 
@@ -17,6 +20,7 @@ interface SelectColoringProps {
 }
 
 export function SelectColoring({ className, schema }: SelectColoringProps) {
+  const tx = useTx();
   const coloring = useTermGraphStore(state => state.coloring);
   const setColoring = useTermGraphStore(state => state.setColoring);
 
@@ -30,7 +34,7 @@ export function SelectColoring({ className, schema }: SelectColoringProps) {
 
       <Select onValueChange={setColoring} value={coloring}>
         <SelectTrigger noBorder className='w-full'>
-          <SelectValue placeholder='Цветовая схема' />
+          <SelectValue placeholder={tx('ui.rsform.termGraph.colorSchemePlaceholder', 'Color scheme')} />
         </SelectTrigger>
         <SelectContent alignOffset={-1} sideOffset={-4}>
           {Object.values(TGColoring).map(value => (

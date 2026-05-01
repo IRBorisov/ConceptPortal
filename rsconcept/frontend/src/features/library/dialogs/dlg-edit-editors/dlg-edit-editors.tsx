@@ -2,6 +2,7 @@
 
 import { type SubmitEvent, useState } from 'react';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { useUsers } from '@/features/users';
 import { SelectUser } from '@/features/users/components/select-user';
 import { TableUsers } from '@/features/users/components/table-users';
@@ -18,6 +19,7 @@ export interface DlgEditEditorsProps {
 }
 
 export function DlgEditEditors() {
+  const tx = useTx();
   const { initialEditors: initial, itemID } = useDialogsStore(state => state.props as DlgEditEditorsProps);
   const { setEditors } = useSetEditors();
 
@@ -51,7 +53,7 @@ export function DlgEditEditors() {
         className='rounded-b-none border-b-0'
       />
       <SelectUser
-        placeholder='Добавить редактора'
+        placeholder={tx('ui.library.editors.addPlaceholder', 'Add editor')}
         filter={id => !selected.includes(id)} //
         value={null}
         noAnonymous

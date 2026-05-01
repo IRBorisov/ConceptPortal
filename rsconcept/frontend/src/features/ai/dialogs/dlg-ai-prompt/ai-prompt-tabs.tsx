@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 
 import { usePromptTemplate } from '../../backend/use-prompt-template';
@@ -28,6 +30,7 @@ export const TabID = {
 type TabID = (typeof TabID)[keyof typeof TabID];
 
 export function AIPromptTabs({ promptID, activeTab, setActiveTab }: AIPromptTabsProps) {
+  const tx = useTx();
   const context = useAIStore();
   const { promptTemplate } = usePromptTemplate(promptID);
   const [promptDraft, setPromptDraft] = useState<{ promptID: number; text: string } | null>(null);
@@ -55,9 +58,9 @@ export function AIPromptTabs({ promptID, activeTab, setActiveTab }: AIPromptTabs
       <TabList className='mx-auto w-fit flex border-x border-b divide-x rounded-none'>
         <MenuAIPrompt promptID={promptID} generatedPrompt={generatedPrompt} />
 
-        <TabLabel label='Шаблон' />
-        <TabLabel label='Результат' />
-        <TabLabel label='Переменные' />
+        <TabLabel label={tx('ui.aiPrompt.tab.template', 'Template')} />
+        <TabLabel label={tx('ui.aiPrompt.tab.result', 'Result')} />
+        <TabLabel label={tx('ui.aiPrompt.tab.variables', 'Variables')} />
       </TabList>
 
       <div className='h-80 flex flex-col gap-2'>

@@ -1,4 +1,8 @@
+'use client';
+
 import { type Constituenta } from '@/domain/library';
+
+import { useTx } from '@/app/i18n/use-tx';
 
 import { ComboBox } from '@/components/input/combo-box';
 
@@ -15,15 +19,13 @@ interface SelectConstituentaProps {
   noBorder?: boolean;
 }
 
-export function SelectConstituenta({
-  items,
-  placeholder = 'Выбор конституенты',
-  ...restProps
-}: SelectConstituentaProps) {
+export function SelectConstituenta({ items, placeholder, ...restProps }: SelectConstituentaProps) {
+  const tx = useTx();
+  const resolvedPlaceholder = placeholder ?? tx('ui.rsform.selectConstituenta.placeholder', 'Select constituenta');
   return (
     <ComboBox
       items={items}
-      placeholder={placeholder}
+      placeholder={resolvedPlaceholder}
       idFunc={cst => String(cst.id)}
       labelValueFunc={cst => `${cst.alias}: ${describeConstituentaTerm(cst)}`}
       labelOptionFunc={cst => `${cst.alias}${cst.is_inherited ? '*' : ''}: ${describeConstituenta(cst)}`}

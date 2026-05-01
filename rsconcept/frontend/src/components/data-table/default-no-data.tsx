@@ -1,3 +1,8 @@
+'use client';
+
+import { useTx } from '@/app/i18n/use-tx';
+
 export function DefaultNoData() {
-  return <div className='p-2 text-center'>Данные отсутствуют</div>;
+  const tx = useTx();
+  return <div className='p-2 text-center'>{tx('ui.dataTable.noData', 'No data')}</div>;
 }

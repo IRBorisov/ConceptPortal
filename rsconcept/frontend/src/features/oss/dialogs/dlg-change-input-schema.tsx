@@ -11,6 +11,7 @@ import {
 } from '@/domain/library';
 import { sortItemsForOSS } from '@/domain/library/oss-api';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { useLibrary } from '@/features/library/backend/use-library';
 import { PickSchema } from '@/features/library/components/pick-schema';
 
@@ -30,6 +31,7 @@ export interface DlgChangeInputSchemaProps {
 }
 
 export function DlgChangeInputSchema() {
+  const tx = useTx();
   const { oss, target, layout } = useDialogsStore(state => state.props as DlgChangeInputSchemaProps);
   const { updateInput } = useUpdateInput();
 
@@ -57,8 +59,8 @@ export function DlgChangeInputSchema() {
   return (
     <ModalForm
       overflowVisible
-      header='Выбор концептуальной схемы'
-      submitText='Подтвердить выбор'
+      header={tx('ui.oss.dlg.inputSchema.header', 'Select conceptual schema')}
+      submitText={tx('ui.oss.dlg.inputSchema.submit', 'Confirm selection')}
       onSubmit={event => {
         event.preventDefault();
         event.stopPropagation();
@@ -68,9 +70,9 @@ export function DlgChangeInputSchema() {
     >
       <div className='flex justify-between gap-3 items-center'>
         <div className='flex gap-3'>
-          <Label text='Загружаемая концептуальная схема' />
+          <Label text={tx('ui.oss.dlg.inputSchema.loadingLabel', 'Conceptual schema to load')} />
           <MiniButton
-            title='Сбросить выбор схемы'
+            title={tx('ui.oss.dlg.inputSchema.resetTitle', 'Reset schema selection')}
             noPadding
             icon={<IconReset size='1.25rem' className='icon-primary' />}
             onClick={() => form.setFieldValue('input', null)}

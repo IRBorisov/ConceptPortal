@@ -1,4 +1,8 @@
+'use client';
+
 import { type OperationSchemaStats } from '@/domain/library';
+
+import { useTx } from '@/app/i18n/use-tx';
 
 import { Divider } from '@/components/container';
 import { type Styling } from '@/components/props';
@@ -10,6 +14,7 @@ interface ViewOssStatsProps extends Styling {
 }
 
 export function ViewOssStats({ className, stats, ...restProps }: ViewOssStatsProps) {
+  const tx = useTx();
   const countImported = stats.count_schemas - stats.count_owned;
 
   return (
@@ -17,19 +22,22 @@ export function ViewOssStats({ className, stats, ...restProps }: ViewOssStatsPro
       <StatsCategory
         id='oss-stats-composition'
         className='rounded-t-md'
-        label='Общий состав'
-        primaryLabel='Всего'
+        label={tx('ui.stats.section.overview', 'Overview')}
+        primaryLabel={tx('ui.stats.caption.total', 'Total')}
         primaryValue={stats.count_all}
-        primaryTitle='Общее количество элементов в составе операционной схемы'
-        secondaryLabel={stats.count_block > 0 ? 'Блоки' : undefined}
+        primaryTitle={tx(
+          'ui.stats.oss.compositionPrimaryTitle',
+          'Total number of items in the operational schema'
+        )}
+        secondaryLabel={stats.count_block > 0 ? tx('ui.stats.oss.blocks', 'Blocks') : undefined}
         secondaryValue={stats.count_block > 0 ? stats.count_block : undefined}
-        secondaryTitle='Количество вложенных блоков'
+        secondaryTitle={tx('ui.stats.oss.blocksSecondaryTitle', 'Number of nested blocks')}
         details={[
-          { label: 'Всего', value: stats.count_all },
-          { label: 'Блоки', value: stats.count_block },
-          { label: 'Загрузка', value: stats.count_inputs },
-          { label: 'Синтез', value: stats.count_synthesis },
-          { label: 'Реплика', value: stats.count_references }
+          { label: tx('ui.stats.caption.total', 'Total'), value: stats.count_all },
+          { label: tx('ui.stats.oss.blocks', 'Blocks'), value: stats.count_block },
+          { label: tx('ui.stats.oss.detail.inputs', 'Input'), value: stats.count_inputs },
+          { label: tx('ui.stats.oss.detail.synthesis', 'Synthesis'), value: stats.count_synthesis },
+          { label: tx('ui.stats.oss.detail.replica', 'Replica'), value: stats.count_references }
         ]}
       />
 
@@ -38,17 +46,20 @@ export function ViewOssStats({ className, stats, ...restProps }: ViewOssStatsPro
       <StatsCategory
         id='oss-stats-schemas'
         className='rounded-b-md'
-        label='Прикреплённые схемы'
-        primaryLabel='Всего'
+        label={tx('ui.stats.oss.attachedSection', 'Attached schemas')}
+        primaryLabel={tx('ui.stats.caption.total', 'Total')}
         primaryValue={stats.count_schemas}
-        primaryTitle='Количество операций с прикреплённой схемой RSForm'
-        secondaryLabel={stats.count_schemas > 0 ? 'Собственные' : undefined}
+        primaryTitle={tx(
+          'ui.stats.oss.attachedPrimaryTitle',
+          'Number of operations with an attached RSForm schema'
+        )}
+        secondaryLabel={stats.count_schemas > 0 ? tx('ui.stats.secondary.owned', 'Owned') : undefined}
         secondaryValue={stats.count_schemas > 0 ? stats.count_owned : undefined}
-        secondaryTitle='Количество собственных (не импортированных) схем'
+        secondaryTitle={tx('ui.stats.oss.ownedSecondaryTitle', 'Number of owned (non-imported) schemas')}
         details={[
-          { label: 'Прикрепленные схемы', value: stats.count_schemas },
-          { label: 'Собственные', value: stats.count_owned },
-          { label: 'Внешние', value: countImported }
+          { label: tx('ui.stats.oss.detail.attachedSchemas', 'Attached schemas'), value: stats.count_schemas },
+          { label: tx('ui.stats.secondary.owned', 'Owned'), value: stats.count_owned },
+          { label: tx('ui.stats.oss.detail.external', 'External'), value: countImported }
         ]}
       />
     </aside>

@@ -4,6 +4,7 @@ import { useEffect, useEffectEvent } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { useRegisterNavigationSave } from '@/app';
+import { useTx } from '@/app/i18n/use-tx';
 
 import { isAxiosError } from '@/backend/api-transport';
 import { SubmitButton } from '@/components/control';
@@ -16,6 +17,7 @@ import { useProfile } from '../../backend/use-profile';
 import { useUpdateProfile } from '../../backend/use-update-profile';
 
 export function EditorProfile() {
+  const tx = useTx();
   const { profile } = useProfile();
   const { updateProfile, isPending, error: serverError, reset: clearServerError } = useUpdateProfile();
 
@@ -66,14 +68,20 @@ export function EditorProfile() {
       }}
       onChange={resetErrors}
     >
-      <TextInput id='username' disabled label='Логин' title='Логин изменить нельзя' value={profile.username} />
+      <TextInput
+        id='username'
+        disabled
+        label={tx('ui.profile.field.username', 'Username')}
+        title={tx('ui.profile.field.usernameReadonlyTitle', 'Username cannot be changed')}
+        value={profile.username}
+      />
       <form.Field name='first_name'>
         {field => (
           <TextInput
             id='first_name'
             autoComplete='off'
             allowEnter
-            label='Имя'
+            label={tx('ui.users.column.firstName', 'First name')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
@@ -87,7 +95,7 @@ export function EditorProfile() {
             id='last_name'
             autoComplete='off'
             allowEnter
-            label='Фамилия'
+            label={tx('ui.users.column.lastName', 'Last name')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
@@ -101,7 +109,7 @@ export function EditorProfile() {
             id='email'
             autoComplete='off'
             allowEnter
-            label='Электронная почта'
+            label={tx('ui.profile.field.email', 'Email')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
@@ -110,7 +118,7 @@ export function EditorProfile() {
         )}
       </form.Field>
       {serverError ? <ServerError error={serverError} /> : null}
-      <SubmitButton className='self-center mt-6' text='Сохранить данные' loading={isPending} />
+      <SubmitButton className='self-center mt-6' text={tx('ui.profile.submit.saveData', 'Save profile')} loading={isPending} />
     </form>
   );
 }

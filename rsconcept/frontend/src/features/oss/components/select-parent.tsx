@@ -1,6 +1,10 @@
+'use client';
+
 import clsx from 'clsx';
 
 import { type Block } from '@/domain/library';
+
+import { useTx } from '@/app/i18n/use-tx';
 
 import { IconConceptBlock } from '@/components/icons';
 import { globalIDs } from '@/utils/constants';
@@ -20,6 +24,7 @@ interface SelectParentProps {
 }
 
 export function SelectParent({ fullWidth, ...restProps }: SelectParentProps) {
+  const tx = useTx();
   return (
     <div className={clsx('flex gap-2 items-center', !fullWidth ? 'w-80' : 'w-full')}>
       <IconConceptBlock
@@ -27,7 +32,7 @@ export function SelectParent({ fullWidth, ...restProps }: SelectParentProps) {
         size='2rem'
         className='text-primary min-w-8'
         data-tooltip-id={globalIDs.tooltip}
-        data-tooltip-content='Родительский блок'
+        data-tooltip-content={tx('ui.oss.selectParent.tooltip', 'Parent block')}
       />
       <SelectBlock className={fullWidth ? 'grow' : 'w-70'} {...restProps} />
     </div>

@@ -4,6 +4,8 @@ import { useIntl } from 'react-intl';
 
 import { type VersionInfo } from '@/domain/library';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { MiniButton } from '@/components/control';
 import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/data-table';
 import { IconRemove } from '@/components/icons';
@@ -19,6 +21,7 @@ interface TableVersionsProps {
 const columnHelper = createColumnHelper<VersionInfo>();
 
 export function TableVersions({ processing, items, onDelete, selected, onSelect }: TableVersionsProps) {
+  const tx = useTx();
   const intl = useIntl();
 
   function handleDeleteVersion(event: React.MouseEvent, targetVersion: number) {
@@ -30,12 +33,12 @@ export function TableVersions({ processing, items, onDelete, selected, onSelect 
   const columns = [
     columnHelper.accessor('version', {
       id: 'version',
-      header: () => <span className='min-w-24'>Версия</span>,
+      header: () => <span className='min-w-24'>{tx('ui.label.version', 'Version')}</span>,
       cell: props => <div className='text-ellipsis'>{props.getValue()}</div>
     }),
     columnHelper.accessor('description', {
       id: 'description',
-      header: 'Описание',
+      header: tx('ui.label.description', 'Description'),
       size: 800,
       minSize: 800,
       maxSize: 800,
@@ -43,7 +46,7 @@ export function TableVersions({ processing, items, onDelete, selected, onSelect 
     }),
     columnHelper.accessor('time_create', {
       id: 'time_create',
-      header: () => <span className='min-w-26'>Дата создания</span>,
+      header: () => <span className='min-w-26'>{tx('ui.library.editor.dateCreated', 'Date created')}</span>,
       cell: props => (
         <div className='whitespace-nowrap'>
           {new Date(props.getValue()).toLocaleString(intl.locale, {
@@ -61,7 +64,7 @@ export function TableVersions({ processing, items, onDelete, selected, onSelect 
       size: 0,
       cell: props => (
         <MiniButton
-          title='Удалить версию'
+          title={tx('ui.versions.deleteVersionTitle', 'Delete version')}
           className='align-middle'
           noPadding
           icon={<IconRemove size='1.25rem' className='cc-remove' />}

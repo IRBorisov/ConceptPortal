@@ -1,7 +1,10 @@
 'use no memo';
+'use client';
 
 import { type Table } from '@tanstack/react-table';
 import clsx from 'clsx';
+
+import { useTx } from '@/app/i18n/use-tx';
 
 import { IconPageFirst, IconPageLast, IconPageLeft, IconPageRight } from '../icons';
 
@@ -20,6 +23,14 @@ export function PaginationTools<TData>({
   onChangePaginationOption,
   paginationOptions
 }: PaginationToolsProps<TData>) {
+  const tx = useTx();
+  const pageIndex = table.getState().pagination.pageIndex;
+  const pageSize = table.getState().pagination.pageSize;
+  const rowCount = table.getFilteredRowModel().rows.length;
+  const start = rowCount === 0 ? 0 : pageIndex * pageSize + 1;
+  const end = Math.min(rowCount, (pageIndex + 1) * pageSize);
+  const rangeLabel = tx('ui.pagination.shownRange', '{start}–{end} of {total}', { start, end, total: rowCount });
+
   const buttonClass = clsx(
     '-my-1',
     'cc-hover-text cc-animate-color',
@@ -29,21 +40,12 @@ export function PaginationTools<TData>({
   const multiPage = table.getPageCount() > 1;
   return (
     <div className='pl-3 flex justify-end flex-wrap items-center my-1 text-muted-foreground text-sm select-none'>
-      <div className={clsx(multiPage ? 'mr-2' : paginationOptions.length > 1 ? 'mr-1' : 'mr-3')}>
-        {`${table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1}
-      -
-      ${Math.min(
-        table.getFilteredRowModel().rows.length,
-        (table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize
-      )}
-      из
-      ${table.getFilteredRowModel().rows.length}`}
-      </div>
+      <div className={clsx(multiPage ? 'mr-2' : paginationOptions.length > 1 ? 'mr-1' : 'mr-3')}>{rangeLabel}</div>
       {multiPage ? (
         <div className='flex'>
           <button
             type='button'
-            aria-label='Первая страница'
+            aria-label={tx('ui.pagination.firstPageAria', 'First page')}
             className={buttonClass}
             onClick={() => table.setPageIndex(0)}
             disabled={!table.getCanPreviousPage()}
@@ -52,7 +54,7 @@ export function PaginationTools<TData>({
           </button>
           <button
             type='button'
-            aria-label='Предыдущая страница'
+            aria-label={tx('ui.pagination.prevPageAria', 'Previous page')}
             className={buttonClass}
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
@@ -61,8 +63,8 @@ export function PaginationTools<TData>({
           </button>
           <input
             id={id ? `${id}__page` : undefined}
-            title='Номер страницы. Выделите для ручного ввода'
-            aria-label='Номер страницы'
+            title={tx('ui.pagination.pageInputTitle', 'Page number. Select to type manually')}
+            aria-label={tx('ui.pagination.pageInputAria', 'Page number')}
             className='w-6 text-center bg-transparent focus-outline rounded-md p-0'
             value={table.getState().pagination.pageIndex + 1}
             onChange={event => {
@@ -74,7 +76,7 @@ export function PaginationTools<TData>({
           />
           <button
             type='button'
-            aria-label='Следующая страница'
+            aria-label={tx('ui.pagination.nextPageAria', 'Next page')}
             className={buttonClass}
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
@@ -83,7 +85,7 @@ export function PaginationTools<TData>({
           </button>
           <button
             type='button'
-            aria-label='Последняя страница'
+            aria-label={tx('ui.pagination.lastPageAria', 'Last page')}
             className={buttonClass}
             onClick={() => table.setPageIndex(table.getPageCount() - 1)}
             disabled={!table.getCanNextPage()}

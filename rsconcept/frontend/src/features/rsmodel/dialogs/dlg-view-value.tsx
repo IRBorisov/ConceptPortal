@@ -3,6 +3,7 @@
 import { type RSEngine } from '@/domain/library';
 import { type TypePath, type Typification, type Value } from '@/domain/rslang';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 
 import { ModalView } from '@/components/modal';
@@ -19,12 +20,13 @@ export interface DlgViewValueProps {
 }
 
 export function DlgViewValue() {
+  const tx = useTx();
   const { value, type, engine, getHeaderText } = useDialogsStore(state => state.props as DlgViewValueProps);
   return (
     <ModalView
       helpTopic={HelpTopic.UI_MODEL_VALUE_EDIT}
       noFooterButton
-      header='Просмотр значения'
+      header={tx('ui.rsmodel.dlg.viewValue.header', 'View value')}
       className='w-230 h-180 max-w-[calc(100dvw-3rem)] max-h-[calc(100svh-8rem)] px-6 mb-3'
     >
       <ValueViewer rows={20} type={type} value={value} engine={engine} getHeaderText={getHeaderText} />

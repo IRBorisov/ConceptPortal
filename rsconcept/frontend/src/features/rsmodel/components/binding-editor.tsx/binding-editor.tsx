@@ -5,6 +5,8 @@ import { useDebounce } from 'use-debounce';
 
 import { type BasicBinding, DEFAULT_VALUE_TEXT } from '@/domain/library';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { MiniButton } from '@/components/control';
 import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/data-table';
 import { IconNewItem, IconRemove } from '@/components/icons';
@@ -30,6 +32,7 @@ const ITEMS_PER_PAGE = 15;
 const columnHelper = createColumnHelper<BindingValue>();
 
 export function BindingEditor({ className, rows, value, onChange }: BindingEditorProps) {
+  const tx = useTx();
   const [filter, setFilter] = useState('');
   const [selected, setSelected] = useState<number | null>(null);
   const selectedValue = selected === null ? '' : value[selected];
@@ -93,7 +96,7 @@ export function BindingEditor({ className, rows, value, onChange }: BindingEdito
     }),
     columnHelper.accessor('text', {
       id: 'text',
-      header: 'Текст',
+      header: tx('ui.bindingEditor.column.text', 'Text'),
       size: 200,
       minSize: 200,
       maxSize: 200,
@@ -108,7 +111,7 @@ export function BindingEditor({ className, rows, value, onChange }: BindingEdito
             maxSize: 40,
             cell: props => (
               <MiniButton
-                title='Удалить элемент'
+                title={tx('ui.bindingEditor.deleteRowTitle', 'Remove item')}
                 className='align-middle w-fit -mr-1'
                 noPadding
                 icon={<IconRemove size='1.25rem' className='cc-remove' />}
@@ -131,23 +134,23 @@ export function BindingEditor({ className, rows, value, onChange }: BindingEdito
     <div className={cn('relative w-full flex flex-col', className)}>
       <div className='-mt-1 flex items-center mb-1'>
         <div className='w-26'>
-          <span>Всего </span>
+          <span>{tx('ui.bindingEditor.totalPrefix', 'Total ')}</span>
           <span className='font-math ml-2'>{Object.keys(value).length}</span>
         </div>
         <SearchBar id='dlg_value_search' noBorder query={filter} onChangeQuery={setFilter} className='-mb-0.5' />
       </div>
       <div className='flex items-center gap-2 mb-3'>
         <MiniButton
-          title='Добавить элемент'
+          title={tx('ui.bindingEditor.addElementTitle', 'Add item')}
           className=''
           icon={<IconNewItem size='1.25rem' className='icon-green' />}
           onClick={handleAddElement}
           disabled={!isMutable}
         />
         <TextInput
-          label='Значение'
+          label={tx('ui.bindingEditor.valueLabel', 'Value')}
           dense
-          placeholder='Выделите строку'
+          placeholder={tx('ui.bindingEditor.selectRowPlaceholder', 'Select a row')}
           className='w-full'
           value={selectedValue}
           onChange={event => handleChangeSelected(event.target.value)}
@@ -171,7 +174,7 @@ export function BindingEditor({ className, rows, value, onChange }: BindingEdito
           conditionalRowStyles={conditionalRowStyles}
           noDataComponent={
             <NoData>
-              <p>Значения отсутствуют</p>
+              <p>{tx('ui.bindingEditor.noValues', 'No values')}</p>
             </NoData>
           }
         />

@@ -1,6 +1,7 @@
 'use client';
 
 import { useConceptNavigation } from '@/app';
+import { useTx } from '@/app/i18n/use-tx';
 import { type IPromptTemplate } from '@/features/ai/backend/types';
 import { useLabelUser } from '@/features/users';
 
@@ -19,6 +20,7 @@ interface TabListTemplatesProps {
 }
 
 export function TabListTemplates({ activeID }: TabListTemplatesProps) {
+  const tx = useTx();
   const router = useConceptNavigation();
   const { items } = useAvailableTemplatesSuspense();
   const showCreatePromptTemplate = useDialogsStore(state => state.showCreatePromptTemplate);
@@ -54,7 +56,7 @@ export function TabListTemplates({ activeID }: TabListTemplatesProps) {
     }),
     columnHelper.accessor('label', {
       id: 'label',
-      header: 'Название',
+      header: tx('ui.promptTemplates.column.title', 'Title'),
       size: 200,
       minSize: 200,
       maxSize: 200,
@@ -64,7 +66,7 @@ export function TabListTemplates({ activeID }: TabListTemplatesProps) {
     }),
     columnHelper.accessor('description', {
       id: 'description',
-      header: 'Описание',
+      header: tx('ui.promptTemplates.column.description', 'Description'),
       size: 1200,
       minSize: 200,
       maxSize: 1200,
@@ -73,7 +75,7 @@ export function TabListTemplates({ activeID }: TabListTemplatesProps) {
     }),
     columnHelper.accessor('owner', {
       id: 'owner',
-      header: 'Владелец',
+      header: tx('ui.promptTemplates.column.owner', 'Owner'),
       size: 400,
       minSize: 100,
       maxSize: 400,
@@ -103,9 +105,9 @@ export function TabListTemplates({ activeID }: TabListTemplatesProps) {
         conditionalRowStyles={conditionalRowStyles}
         noDataComponent={
           <NoData>
-            <p>Список пуст</p>
+            <p>{tx('ui.table.emptyList', 'List is empty')}</p>
             <p>
-              <TextURL text='Создать шаблон запроса...' onClick={handleCreateNew} />
+              <TextURL text={tx('ui.link.createPromptTemplate', 'Create a prompt template...')} onClick={handleCreateNew} />
             </p>
           </NoData>
         }

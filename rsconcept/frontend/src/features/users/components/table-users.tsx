@@ -1,3 +1,7 @@
+'use client';
+
+import { useTx } from '@/app/i18n/use-tx';
+
 import { MiniButton } from '@/components/control';
 import { createColumnHelper, DataTable } from '@/components/data-table';
 import { IconRemove, IconReset } from '@/components/icons';
@@ -15,23 +19,24 @@ interface TableUsersProps extends Styling {
 const columnHelper = createColumnHelper<UserInfo>();
 
 export function TableUsers({ items, onDelete, onReset, className, style }: TableUsersProps) {
+  const tx = useTx();
   const columns = [
     columnHelper.accessor('last_name', {
       id: 'last_name',
       size: 400,
-      header: 'Фамилия'
+      header: tx('ui.users.column.lastName', 'Last name')
     }),
     columnHelper.accessor('first_name', {
       id: 'first_name',
       size: 400,
-      header: 'Имя'
+      header: tx('ui.users.column.firstName', 'First name')
     }),
     columnHelper.display({
       id: 'actions',
       size: 0,
       cell: props => (
         <MiniButton
-          title='Удалить из списка'
+          title={tx('ui.users.action.removeFromListTitle', 'Remove from list')}
           className='align-middle'
           noPadding
           icon={<IconRemove size='1.25rem' className='cc-remove' />}
@@ -45,7 +50,7 @@ export function TableUsers({ items, onDelete, onReset, className, style }: Table
     <div className='relative'>
       {items.length > 0 ? (
         <MiniButton
-          title='Очистить список'
+          title={tx('ui.users.action.clearListTitle', 'Clear list')}
           className='absolute z-pop top-2 right-1 py-0 align-middle'
           icon={<IconReset size='1.25rem' className='cc-remove' />}
           onClick={onReset}
