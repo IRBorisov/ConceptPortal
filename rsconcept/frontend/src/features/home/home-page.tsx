@@ -24,6 +24,7 @@ import { resources } from '@/utils/constants';
 
 import { CtaButton } from './components/cta-button';
 import { FeatureTile } from './components/feature-tile';
+import { LanguageToggle } from './components/language-toggle';
 import { ThemeToggle } from './components/theme-toggle';
 
 export function HomePage() {
@@ -39,7 +40,10 @@ export function HomePage() {
       itemScope
       itemType='https://schema.org/WebPage'
     >
-      <ThemeToggle />
+      <div className='fixed right-1 top-1 z-navigation flex gap-3'>
+        <LanguageToggle />
+        <ThemeToggle />
+      </div>
       {/* SEO: Decorative gradients */}
       <div aria-hidden className='absolute pointer-events-none inset-0 z-bottom overflow-hidden'>
         <div
@@ -149,7 +153,10 @@ export function HomePage() {
         <h2 id='home-features-heading' className='sr-only'>
           {tx('home.featuresHeading', 'Portal features')}
         </h2>
-        <meta itemProp='name' content={tx('home.featuresMetaName', 'Portal features — model catalog and system design')} />
+        <meta
+          itemProp='name'
+          content={tx('home.featuresMetaName', 'Portal features — model catalog and system design')}
+        />
         <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
           <FeatureTile
             to={urls.library}

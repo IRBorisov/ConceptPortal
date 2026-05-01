@@ -115,9 +115,7 @@ export function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
           onClick={toggleAdminMode}
         />
       ) : null}
-      <div className='px-3 py-1 text-xs text-muted-foreground border-t'>
-        {tx('nav.language.label', 'Interface language')}
-      </div>
+      <div className='px-3 py-1 text-muted-foreground border-t'>{tx('nav.language.label', 'Interface language')}</div>
       <DropdownButton
         text={tx('nav.locale.en', 'English')}
         title={tx('nav.locale.en', 'English')}

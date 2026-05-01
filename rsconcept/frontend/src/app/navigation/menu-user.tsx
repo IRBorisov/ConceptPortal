@@ -22,7 +22,7 @@ export function MenuUser() {
   } = useDropdown();
   return (
     <div ref={menuRef} onBlur={handleMenuBlur} className='flex items-center justify-start relative h-full'>
-      <Suspense fallback={<Loader circular scale={1.5} />}>
+      <Suspense fallback={<Loader circular scale={1.25} />}>
         <UserButton
           onLogin={() => router.push({ path: urls.login, force: true })}
           onClickUser={toggleMenu}

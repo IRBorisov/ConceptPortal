@@ -72,6 +72,8 @@ export const shellRu: Record<string, string> = {
   'home.theme.groupAria': 'Тема оформления',
   'home.theme.lightAria': 'Светлая тема',
   'home.theme.darkAria': 'Тёмная тема',
+  'home.language.groupAria': 'Язык интерфейса',
+  'home.language.toggleAria': 'Изменить язык интерфейса',
   'auth.login.logoAlt': 'Концепт Портал',
   'auth.login.username': 'Логин или email',
   'auth.login.password': 'Пароль',
