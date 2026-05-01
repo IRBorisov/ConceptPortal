@@ -165,7 +165,7 @@ export function HomePage() {
             title={tx('home.feature.library.title', 'Library')}
             description={tx(
               'home.feature.library.desc',
-              'Catalog of conceptual schemas and models. Editing, versioning, and access control. Flexible filtering and search'
+              'Catalog of conceptual schemas and models. Editing, versioning and access control. Flexible filtering and search'
             )}
             accentClass='bg-accent-green'
           />
@@ -195,7 +195,7 @@ export function HomePage() {
             title={tx('home.feature.rsform.title', 'Definition systems')}
             description={tx(
               'home.feature.rsform.desc',
-              'Conceptual schema, linkage graph, and rigorous conceptual apparatus in complex domains'
+              'Conceptual schema, linkage graph and rigorous conceptual apparatus in complex domains'
             )}
             accentClass='bg-accent-purple'
           />
@@ -205,7 +205,7 @@ export function HomePage() {
             title={tx('home.feature.rsmodel.title', 'Conceptual models')}
             description={tx(
               'home.feature.rsmodel.desc',
-              'Domain data sources, interpretation of definitions, and value computation'
+              'Domain data sources, interpretation of definitions and value computation'
             )}
             accentClass='bg-accent-orange'
           />
@@ -215,7 +215,7 @@ export function HomePage() {
             title={tx('home.feature.oss.title', 'Operational schemas')}
             description={tx(
               'home.feature.oss.desc',
-              'Operations on conceptual schemas, subject-matter blocks, and cross-cutting changes'
+              'Operations on conceptual schemas, subject-matter blocks and cross-cutting changes'
             )}
             accentClass='bg-accent-green'
           />

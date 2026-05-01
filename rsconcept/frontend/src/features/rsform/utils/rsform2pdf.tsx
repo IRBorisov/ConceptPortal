@@ -4,7 +4,7 @@ import { Link, pdf, Text, View } from '@react-pdf/renderer';
 
 import { type Constituenta, type RSForm } from '@/domain/library';
 import { labelType } from '@/domain/rslang/labels';
-import { DEFAULT_LOCALE } from '@/i18n/locales';
+import { type AppLocale, DEFAULT_LOCALE } from '@/i18n';
 import { getMessagesForLocale } from '@/i18n/messages';
 
 import { urls } from '@/app';
@@ -17,11 +17,26 @@ import { type RO } from '@/utils/meta';
 
 import { addSpaces, addSpacesTypification, hyphenateCyrillic, protectShortRussianWords } from './pdf-utils';
 
+function handleIntlError(locale: AppLocale, error: unknown) {
+  if (locale === 'en' && typeof error === 'object' && error && 'code' in error) {
+    const code = (error as { code?: string }).code;
+    if (code === 'MISSING_TRANSLATION') {
+      return;
+    }
+  }
+  console.error(error);
+}
+
 function PdfIntlRoot({ children }: { children: ReactNode }) {
   const locale = usePreferencesStore.getState().locale;
   const messages = getMessagesForLocale(locale);
   return (
-    <IntlProvider locale={locale} defaultLocale={DEFAULT_LOCALE} messages={messages}>
+    <IntlProvider
+      locale={locale}
+      defaultLocale={DEFAULT_LOCALE}
+      messages={messages}
+      onError={error => handleIntlError(locale, error)}
+    >
       {children}
     </IntlProvider>
   );

@@ -2,7 +2,7 @@ import { flushSync } from 'react-dom';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-import { type AppLocale, parsePersistedLocale, pickSupportedLocaleFromNavigator, resolveInitialLocale } from '@/i18n';
+import { type AppLocale, pickSupportedLocaleFromNavigator } from '@/i18n';
 
 import { PARAMETER } from '@/utils/constants';
 
@@ -54,8 +54,17 @@ interface PreferencesStore {
 export const usePreferencesStore = create<PreferencesStore>()(
   persist(
     set => ({
-      locale: initializeLocale(),
-      setLocale: value => set(state => (state.locale === value ? state : { locale: value })),
+      locale: pickSupportedLocaleFromNavigator(),
+      setLocale: value =>
+        set(state => {
+          if (state.locale === value) {
+            return state;
+          }
+          setTimeout(function reloadAfterLocaleChange() {
+            window.location.reload();
+          }, 0);
+          return { locale: value };
+        }),
 
       darkMode: initializeDarkMode(),
       toggleDarkMode: () => {
@@ -115,27 +124,11 @@ export const usePreferencesStore = create<PreferencesStore>()(
       setPreferredPlayer: value => set(state => (state.preferredPlayer === value ? state : { preferredPlayer: value }))
     }),
     {
-      version: 5,
-      name: 'portal.preferences',
-      migrate: (persistedState, _version) => {
-        const partial = { ...(persistedState as Partial<PreferencesStore>) };
-        const locale = parsePersistedLocale(partial.locale) ?? pickSupportedLocaleFromNavigator();
-        return { ...partial, locale };
-      }
+      version: 6,
+      name: 'portal.preferences'
     }
   )
 );
-
-function readPortalPreferencesJson(): string | null {
-  if (typeof localStorage === 'undefined') {
-    return null;
-  }
-  return localStorage.getItem('portal.preferences');
-}
-
-function initializeLocale(): AppLocale {
-  return resolveInitialLocale(readPortalPreferencesJson());
-}
 
 function initializeDarkMode(): boolean {
   let isDark = false;
