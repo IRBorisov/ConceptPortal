@@ -5,7 +5,7 @@ import { useIntl } from 'react-intl';
 
 import { setAppIntl } from '@/app/i18n/format-app-message';
 
-/** Keeps `formatAppMessage` in sync with the active UI locale. */
+/** Keeps `formatAppMessage` / `formatLabel` in sync with the active UI locale. */
 export function AppIntlBridge() {
   const intl = useIntl();
   useEffect(

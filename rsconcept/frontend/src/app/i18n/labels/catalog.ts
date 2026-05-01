@@ -148,7 +148,7 @@ export const lid = {
   }
 } as const;
 
-/** English defaults keyed by message id (for Zod + `formatAppMessage` fallback). */
+/** English defaults keyed by message id (for Zod and `format-app-message` helpers). */
 export const LABEL_DEFAULTS: Record<string, string> = {
   [lid.error.astFailed]: 'Unable to build parse tree',
   [lid.error.aliasLength]: 'Up to {n} characters',

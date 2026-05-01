@@ -1,4 +1,4 @@
-import { formatLabel } from '@/app/i18n/labels/format-label';
+import { formatLabel } from '@/app/i18n/format-app-message';
 import { rslangLid } from '@/app/i18n/labels/rslang-ui';
 
 import { type RO } from '@/utils/meta';

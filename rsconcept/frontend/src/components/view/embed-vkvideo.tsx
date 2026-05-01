@@ -1,3 +1,7 @@
+'use client';
+
+import { useTx } from '@/app/i18n/use-tx';
+
 interface EmbedVKVideoProps {
   /** Video ID to embed. */
   videoID: string;
@@ -10,30 +14,29 @@ interface EmbedVKVideoProps {
 }
 
 /**
- * Embeds a YouTube video into the page using the given video ID and dimensions.
+ * Embeds a VK video into the page using the given video ID and dimensions.
  */
 export function EmbedVKVideo({ videoID, pxHeight, pxWidth }: EmbedVKVideoProps) {
-  if (!pxWidth) {
-    pxWidth = (pxHeight * 16) / 9;
-  }
+  const tx = useTx();
+  const width = pxWidth ?? (pxHeight * 16) / 9;
   return (
     <div
       className='relative h-0 mt-1'
       style={{
         paddingBottom: `${pxHeight}px`,
-        paddingLeft: `${pxWidth}px`
+        paddingLeft: `${width}px`
       }}
     >
       <iframe
         allowFullScreen
-        title='Встроенное видео ВКонтакте'
+        title={tx('ui.embed.vkTitle', 'Embedded VK video')}
         allow='autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock;'
         className='absolute top-0 left-0 border'
         style={{
           minHeight: `${pxHeight}px`,
-          minWidth: `${pxWidth}px`
+          minWidth: `${width}px`
         }}
-        width={`${pxWidth}px`}
+        width={`${width}px`}
         height={`${pxHeight}px`}
         src={`https://vk.com/video_ext.php?${videoID}&hd=1`}
       />

@@ -38,8 +38,8 @@ export function DlgEditBinding() {
     return (
       <ModalForm
         helpTopic={HelpTopic.UI_MODEL_BINDING}
-        header='Редактор базового источника'
-        submitText='Сохранить'
+        header={tx('ui.rsmodel.dlg.editBinding.header', 'Base source editor')}
+        submitText={tx('ui.action.save', 'Save')}
         canSubmit={value !== initialValue}
         onSubmit={handleSubmit}
         className={dialogClassName}

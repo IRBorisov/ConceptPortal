@@ -47,9 +47,14 @@ export function DlgDeleteCst() {
       onSubmit={handleSubmit}
       className='cc-column max-w-[60vw] min-w-120 px-6'
     >
-      <ListConstituents title='Выбраны к удалению' list={selected} schema={schema} prefix={prefixes.cst_delete_list} />
       <ListConstituents
-        title='Зависимые конституенты'
+        title={tx('ui.rsform.dlg.deleteCst.selectedTitle', 'Marked for deletion')}
+        list={selected}
+        schema={schema}
+        prefix={prefixes.cst_delete_list}
+      />
+      <ListConstituents
+        title={tx('ui.rsform.dlg.deleteCst.dependentsTitle', 'Dependent constituents')}
         list={expansion}
         schema={schema}
         prefix={prefixes.cst_dependant_list}

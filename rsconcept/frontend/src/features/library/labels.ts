@@ -2,7 +2,7 @@ import { AccessPolicy, type CurrentVersion, LibraryItemType, LocationHead, type 
 import { type FolderNode } from '@/domain/library/folder-tree';
 import { validateLocation } from '@/domain/library/library-api';
 
-import { formatLabel } from '@/app/i18n/labels/format-label';
+import { formatLabel } from '@/app/i18n/format-app-message';
 import { libraryLid } from '@/app/i18n/labels/library-ui';
 
 import { type RO } from '@/utils/meta';

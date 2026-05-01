@@ -41,8 +41,8 @@ export function DlgEditEditors() {
 
   return (
     <ModalForm
-      header={`Список редакторов — ${selected.length}`}
-      submitText='Сохранить список'
+      header={tx('ui.library.editors.dlgHeader', 'Editors — {count}', { count: selected.length })}
+      submitText={tx('ui.library.editors.saveList', 'Save list')}
       className='flex flex-col w-140 px-6 pb-3'
       onSubmit={handleSubmit}
     >

@@ -1,5 +1,5 @@
 import { aiLid } from '@/app/i18n/labels/ai-ui';
-import { formatLabel } from '@/app/i18n/labels/format-label';
+import { formatLabel } from '@/app/i18n/format-app-message';
 
 import { PromptVariableType } from './models/prompting';
 

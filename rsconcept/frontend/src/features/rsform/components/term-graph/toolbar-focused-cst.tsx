@@ -28,7 +28,11 @@ export function ToolbarFocusedCst({ resetFocus, className }: ToolbarFocusedCstPr
           onClick={resetFocus}
         />
         <MiniButton
-          title={filter.focusShowInputs ? 'Скрыть поставщиков' : 'Отобразить поставщиков'}
+          title={
+            filter.focusShowInputs
+              ? tx('ui.rsform.termGraph.focus.hideSuppliersTitle', 'Hide suppliers')
+              : tx('ui.rsform.termGraph.focus.showSuppliersTitle', 'Show suppliers')
+          }
           icon={<IconGraphInputs size='1.25rem' className={filter.focusShowInputs ? 'icon-green' : 'icon-primary'} />}
           onClick={toggleFocusInputs}
         />

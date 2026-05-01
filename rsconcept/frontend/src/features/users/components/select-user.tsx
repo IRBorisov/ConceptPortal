@@ -1,3 +1,7 @@
+'use client';
+
+import { useTx } from '@/app/i18n/use-tx';
+
 import { ComboBox } from '@/components/input/combo-box';
 import { type Styling } from '@/components/props';
 
@@ -29,9 +33,11 @@ function compareUsers(a: UserInfo, b: UserInfo) {
   return a.id - b.id;
 }
 
-export function SelectUser({ filter, noAnonymous, placeholder = 'Выбор пользователя', ...restProps }: SelectUserProps) {
+export function SelectUser({ filter, noAnonymous, placeholder, ...restProps }: SelectUserProps) {
+  const tx = useTx();
   const { users } = useUsers();
   const getUserLabel = useLabelUser();
+  const resolvedPlaceholder = placeholder ?? tx('ui.users.select.placeholder', 'Select user');
 
   const items = filter ? users.filter(user => filter(user.id)) : users;
   const sorted = [
@@ -42,7 +48,7 @@ export function SelectUser({ filter, noAnonymous, placeholder = 'Выбор по
   return (
     <ComboBox
       items={sorted}
-      placeholder={placeholder}
+      placeholder={resolvedPlaceholder}
       clearable={true}
       idFunc={user => String(user)}
       labelValueFunc={user => getUserLabel(user)}

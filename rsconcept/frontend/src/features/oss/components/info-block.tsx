@@ -14,7 +14,7 @@ export function InfoBlock({ block }: InfoOperationProps) {
     <>
       {block.title ? (
         <p>
-          <b>Название: </b>
+          <b>{tx('ui.oss.infoOperation.titleWithColon', 'Title: ')}</b>
           {block.title}
         </p>
       ) : null}
