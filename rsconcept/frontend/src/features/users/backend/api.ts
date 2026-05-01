@@ -1,9 +1,10 @@
 import { queryOptions } from '@tanstack/react-query';
 import { z } from 'zod';
 
+import { formatLabel, lid } from '@/i18n';
+
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';
 import { DELAYS, KEYS } from '@/backend/configuration';
-import { formatLabel, lid } from '@/utils/labels';
 
 import {
   schemaUserInfo,

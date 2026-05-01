@@ -4,7 +4,7 @@ import type { SubmitEvent, SubmitEventHandler } from 'react';
 import { useEffect, useRef } from 'react';
 import clsx from 'clsx';
 
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { type HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';

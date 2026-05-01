@@ -2,7 +2,7 @@
 
 import { CstType, type RSForm } from '@/domain/library';
 import { applyFilterCategory, isTemplateCst } from '@/domain/library/rsform-api';
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { useTemplatesSuspense } from '@/features/library/backend/use-templates';
 

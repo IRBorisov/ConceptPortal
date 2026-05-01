@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { Logo } from '@/app/navigation/logo';
 import { NavLocaleSwitcher } from '@/app/navigation/nav-locale-switcher';

@@ -3,9 +3,8 @@
 import { toast } from 'react-toastify';
 import fileDownload from 'js-file-download';
 
-import { useTx } from '@/i18n/use-tx';
+import { formatLabel, lid,useTx  } from '@/i18n';
 
-import { formatLabel, lid } from '@/utils/labels';
 import { convertToCSV, convertToJSON } from '@/utils/utils';
 
 import { Dropdown, DropdownButton, useDropdown } from '../dropdown';

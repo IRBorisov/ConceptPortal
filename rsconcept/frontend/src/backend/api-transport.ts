@@ -5,8 +5,7 @@ import { toast } from 'react-toastify';
 import axios, { type AxiosError, type AxiosRequestConfig } from 'axios';
 import { type z, ZodError } from 'zod';
 
-import { formatAppMessage } from '@/i18n/format-app-message';
-import { LABEL_DEFAULTS, lid } from '@/i18n/labels/catalog';
+import { formatAppMessage , LABEL_DEFAULTS, lid } from '@/i18n';
 
 import { buildConstants } from '@/utils/build-constants';
 import { PARAMETER } from '@/utils/constants';

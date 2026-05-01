@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
 
-import { formatLabel, lid } from '@/utils/labels';
+import { formatLabel, lid } from '@/i18n';
 
 /** Serialize a value for JSON export (clipboard / file). */
 export function getExportJsonText(value: unknown): string {

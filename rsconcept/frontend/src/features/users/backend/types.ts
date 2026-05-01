@@ -1,7 +1,8 @@
 import { z } from 'zod';
 
+import { lid } from '@/i18n';
+
 import { limits, patterns } from '@/utils/constants';
-import { lid } from '@/utils/labels';
 
 /** Represents user profile for viewing and editing. */
 export type UserProfile = z.infer<typeof schemaUserProfile>;

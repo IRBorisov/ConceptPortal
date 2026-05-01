@@ -3,7 +3,7 @@
 import clsx from 'clsx';
 
 import { calculateSchemaStats } from '@/domain/library/rsform-api';
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { ButtonSidebar } from '@/features/library/components/button-sidebar';
 import { EditorLibraryItem } from '@/features/library/components/editor-library-item';

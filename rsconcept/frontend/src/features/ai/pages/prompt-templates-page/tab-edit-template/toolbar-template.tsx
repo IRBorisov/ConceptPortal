@@ -1,6 +1,6 @@
 'use client';
 
-import { useTx } from '@/i18n/use-tx';
+import { formatLabel, lid,useTx  } from '@/i18n';
 
 import { urls, useConceptNavigation } from '@/app';
 import { PromptTabID } from '@/app/navigation/navigation-context';
@@ -12,7 +12,6 @@ import { IconDestroy, IconReset, IconSave } from '@/components/icons';
 import { cn } from '@/components/utils';
 import { useModificationStore } from '@/stores/modification';
 import { prepareTooltip } from '@/utils/format';
-import { formatLabel, lid } from '@/utils/labels';
 import { isMac } from '@/utils/utils';
 
 interface ToolbarTemplateProps {

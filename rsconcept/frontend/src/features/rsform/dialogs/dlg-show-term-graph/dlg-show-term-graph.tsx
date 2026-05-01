@@ -3,7 +3,7 @@
 import { ReactFlowProvider } from '@xyflow/react';
 
 import { type RSForm } from '@/domain/library';
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 

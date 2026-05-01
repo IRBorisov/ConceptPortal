@@ -5,12 +5,11 @@ import { useForm, useStore } from '@tanstack/react-form';
 import { z } from 'zod';
 
 import { validateLocation } from '@/domain/library/library-api';
-import { useTx } from '@/i18n/use-tx';
+import { lid,useTx  } from '@/i18n';
 
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { limits } from '@/utils/constants';
-import { lid } from '@/utils/labels';
 
 import { PickLocation } from '../components/pick-location';
 

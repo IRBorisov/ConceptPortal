@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 
 import { RSEngine, type RSEngineServices } from '@/domain/library/rsengine';
 import { type Attribution, type Substitution } from '@/domain/library/rsform';
+import { formatLabel, lid } from '@/i18n';
 
 import { type UpdateLibraryItemDTO } from '@/features/library';
 import { loadRSForm } from '@/features/rsform/backend/rsform-loader';
@@ -17,8 +18,6 @@ import {
   type UpdateConstituentaDTO,
   type UpdateCrucialDTO
 } from '@/features/rsform/backend/types';
-
-import { formatLabel, lid } from '@/utils/labels';
 
 import { type SandboxBundle } from '../models/bundle';
 import { createStarterSandboxBundle } from '../models/bundle-starter';

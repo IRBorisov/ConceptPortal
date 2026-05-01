@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react';
 import clsx from 'clsx';
 
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { BadgeHelp } from '@/features/help/components/badge-help';
 

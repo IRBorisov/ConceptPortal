@@ -2,13 +2,12 @@
 
 import { useState } from 'react';
 
-import { useTx } from '@/i18n/use-tx';
+import { formatLabel, lid,useTx  } from '@/i18n';
 
 import { Checkbox, FileInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';
-import { formatLabel, lid } from '@/utils/labels';
 
 import { type RSFormUploadDTO } from '../backend/types';
 

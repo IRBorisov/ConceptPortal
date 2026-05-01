@@ -1,6 +1,6 @@
 'use client';
 
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';

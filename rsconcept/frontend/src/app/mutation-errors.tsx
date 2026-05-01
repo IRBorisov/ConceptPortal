@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { useMutationErrors } from '@/backend/use-mutation-errors';
 import { Button } from '@/components/control';

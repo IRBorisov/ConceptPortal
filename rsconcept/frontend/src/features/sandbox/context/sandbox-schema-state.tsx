@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { generateNominalLexeme } from '@/domain/cctext/language-api';
 import { type Constituenta, CstType } from '@/domain/library/rsform';
 import { generateAlias, removeAliasReference } from '@/domain/library/rsform-api';
+import { formatLabel, lid } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 import { type ConstituentaCreatedResponse, type CreateConstituentaDTO } from '@/features/rsform/backend/types';
@@ -14,7 +15,6 @@ import { SchemaEditContext } from '@/features/rsform/pages/rsform-page/schema-ed
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { PARAMETER, prefixes } from '@/utils/constants';
-import { formatLabel, lid } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 import { notImplemented, promptUnsaved } from '@/utils/utils';
 

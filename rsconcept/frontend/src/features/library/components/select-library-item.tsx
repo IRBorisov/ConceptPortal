@@ -1,7 +1,7 @@
 'use client';
 
 import { type LibraryItem } from '@/domain/library';
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { ComboBox } from '@/components/input/combo-box';
 import { type Styling } from '@/components/props';

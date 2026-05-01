@@ -6,7 +6,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 import { type OssLayout } from '@/domain/library';
 import { LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '@/domain/library/oss-layout-api';
 import { type Substitution } from '@/domain/library/rsform';
-import { useTx } from '@/i18n/use-tx';
+import { formatLabel, lid,useTx  } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 
@@ -15,7 +15,6 @@ import { ModalForm } from '@/components/modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useDialogsStore } from '@/stores/dialogs';
 import { type CreateFieldProps, type FieldStateData } from '@/utils/forms';
-import { formatLabel, lid } from '@/utils/labels';
 
 import { type CreateSynthesisDTO, schemaCreateSynthesis } from '../../backend/types';
 import { useCreateSynthesis } from '../../backend/use-create-synthesis';

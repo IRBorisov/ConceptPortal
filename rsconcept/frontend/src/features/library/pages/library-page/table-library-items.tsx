@@ -2,7 +2,7 @@
 
 import { type LibraryItem } from '@/domain/library';
 import { LibraryItemType } from '@/domain/library';
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 

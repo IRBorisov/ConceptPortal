@@ -6,7 +6,7 @@ import { Grammeme, type WordForm } from '@/domain/cctext';
 import { Case } from '@/domain/cctext/language';
 import { parseGrammemes } from '@/domain/cctext/language-api';
 import { type Constituenta, type RSForm } from '@/domain/library';
-import { useTx } from '@/i18n/use-tx';
+import { formatLabel, lid,useTx  } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 
@@ -15,7 +15,6 @@ import { IconMoveDown } from '@/components/icons';
 import { TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
-import { formatLabel, lid } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 
 import { type LexemeResponse } from '../backend/cctext/types';

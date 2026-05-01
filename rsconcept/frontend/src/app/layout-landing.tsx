@@ -3,7 +3,7 @@
 import { Suspense } from 'react';
 import { Outlet } from 'react-router';
 
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { Loader } from '@/components/loader';
 

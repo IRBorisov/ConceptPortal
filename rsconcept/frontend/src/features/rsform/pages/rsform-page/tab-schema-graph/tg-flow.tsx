@@ -15,7 +15,7 @@ import {
 import clsx from 'clsx';
 
 import { addAliasReference } from '@/domain/library/rsform-api';
-import { useTx } from '@/i18n/use-tx';
+import { formatLabel, lid,useTx  } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 
@@ -24,7 +24,6 @@ import { useContinuousPan } from '@/components/flow/use-continuous-panning';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight, useMainHeight } from '@/stores/app-layout';
 import { PARAMETER } from '@/utils/constants';
-import { formatLabel, lid } from '@/utils/labels';
 
 import { colorGraphEdge } from '../../../colors';
 import { TGConnectionLine } from '../../../components/term-graph/graph/tg-connection';

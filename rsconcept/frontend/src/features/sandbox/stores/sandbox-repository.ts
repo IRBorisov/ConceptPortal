@@ -1,9 +1,7 @@
 import { toast } from 'react-toastify';
 import fileDownload from 'js-file-download';
 
-import { formatAppMessage } from '@/i18n/format-app-message';
-
-import { formatLabel, lid } from '@/utils/labels';
+import { formatAppMessage , formatLabel, lid } from '@/i18n';
 
 import { type SandboxBundle, schemaSandboxBundle } from '../models/bundle';
 import { createStarterSandboxBundle } from '../models/bundle-starter';

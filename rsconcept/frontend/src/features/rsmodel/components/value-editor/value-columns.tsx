@@ -7,13 +7,13 @@ import { prepareValueString } from '@/domain/library/rsmodel-api';
 import { makeValuePath, TypeID, type Typification, type Value, type ValuePath } from '@/domain/rslang';
 import { testInvalid, valueStub } from '@/domain/rslang/eval/value-api';
 import { type EchelonCollection, IntegerT } from '@/domain/rslang/semantic/typification';
+import { formatLabel, lid } from '@/i18n';
 
 import { MiniButton } from '@/components/control';
 import { IconRemove } from '@/components/icons';
 import { useValueTooltipStore } from '@/stores/value-tooltip';
 import { globalIDs } from '@/utils/constants';
 import { truncateToLastWord, truncateToSymbol } from '@/utils/format';
-import { formatLabel, lid } from '@/utils/labels';
 
 import { type ValueMatcher } from '../../models/value-matcher';
 

@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { IconSearch } from '@/components/icons';
 import { type Styling } from '@/components/props';

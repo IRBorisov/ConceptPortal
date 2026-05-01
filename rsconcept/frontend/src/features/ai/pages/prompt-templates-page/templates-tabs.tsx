@@ -2,7 +2,7 @@
 
 import { Suspense } from 'react';
 
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 import { type PromptTabID } from '@/app/navigation/navigation-context';

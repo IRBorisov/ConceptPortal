@@ -2,7 +2,7 @@
 
 import { getRSErrorPrefix, isCritical, type RSErrorDescription } from '@/domain/rslang/error';
 import { describeRSError } from '@/domain/rslang/labels';
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { cn } from '@/components/utils';
 import { type RO } from '@/utils/meta';

@@ -2,7 +2,7 @@
 
 import { type Graph } from '@/domain/graph/graph';
 import { type LibraryItemReference } from '@/domain/library';
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 import { MiniSelectorOSS } from '@/features/library/components/mini-selector-oss';

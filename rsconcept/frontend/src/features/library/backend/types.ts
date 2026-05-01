@@ -2,9 +2,9 @@ import { z } from 'zod';
 
 import { AccessPolicy, type LibraryItem, LibraryItemType } from '@/domain/library';
 import { validateLocation } from '@/domain/library/library-api';
+import { lid } from '@/i18n';
 
 import { limits } from '@/utils/constants';
-import { lid } from '@/utils/labels';
 
 /** Represents {@link LibraryItem} data loaded for both OSS and RSForm. */
 export interface LibraryItemData extends LibraryItem {

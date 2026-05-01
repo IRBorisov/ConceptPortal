@@ -3,11 +3,10 @@
 import { type ReactNode } from 'react';
 
 import { type OperationSchema } from '@/domain/library';
-import { useTx } from '@/i18n/use-tx';
+import { formatLabel, lid,useTx  } from '@/i18n';
 
 import { TextArea, TextInput } from '@/components/input';
 import { type CreateFieldProps } from '@/utils/forms';
-import { formatLabel, lid } from '@/utils/labels';
 
 import { SelectParent } from '../../components/select-parent';
 

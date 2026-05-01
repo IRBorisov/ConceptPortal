@@ -1,7 +1,7 @@
 'use client';
 
 import { type Graph } from '@/domain/graph/graph';
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { useTermGraphStore } from '@/features/rsform/stores/term-graph';
 

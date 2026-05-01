@@ -4,7 +4,7 @@ import { useState } from 'react';
 import clsx from 'clsx';
 import { useDebounce } from 'use-debounce';
 
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { cn } from '@/components/utils';
 import { globalIDs, PARAMETER } from '@/utils/constants';

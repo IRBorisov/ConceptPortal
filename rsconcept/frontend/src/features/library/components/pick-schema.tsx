@@ -5,7 +5,7 @@ import { useIntl } from 'react-intl';
 
 import { type LibraryItem, type LibraryItemType } from '@/domain/library';
 import { matchLibraryItem } from '@/domain/library/library-api';
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { MiniButton } from '@/components/control';
 import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/data-table';

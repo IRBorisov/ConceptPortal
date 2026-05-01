@@ -8,7 +8,7 @@ import { isInferrable, isInterpretable, prepareValueString } from '@/domain/libr
 import { type CalculatorResult, TypeID, type Value } from '@/domain/rslang';
 import { valueStub } from '@/domain/rslang/eval/value-api';
 import { labelType } from '@/domain/rslang/labels';
-import { useTx } from '@/i18n/use-tx';
+import { formatLabel, lid,useTx  } from '@/i18n';
 
 import { useConceptNavigation, useRegisterNavigationSave } from '@/app';
 import { HelpTopic } from '@/features/help';
@@ -22,7 +22,6 @@ import { TextButton } from '@/components/control/text-button';
 import { TextArea } from '@/components/input';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
-import { formatLabel, lid } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 import { withPreventDefault } from '@/utils/utils';
 

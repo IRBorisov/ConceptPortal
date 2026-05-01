@@ -5,7 +5,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 
 import { type LibraryItem, type OssLayout } from '@/domain/library';
 import { getRelocateCandidates } from '@/domain/library/oss-api';
-import { useTx } from '@/i18n/use-tx';
+import { formatLabel, lid,useTx  } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 import { useLibrary } from '@/features/library/backend/use-library';
@@ -16,7 +16,6 @@ import { PickMultiConstituenta } from '@/features/rsform/components/pick-multi-c
 import { MiniButton } from '@/components/control';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
-import { formatLabel, lid } from '@/utils/labels';
 
 import { type RelocateConstituentsDTO, schemaRelocateConstituents } from '../backend/types';
 import { useOss } from '../backend/use-oss';

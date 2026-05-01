@@ -3,7 +3,7 @@
 import clsx from 'clsx';
 
 import { LibraryItemType } from '@/domain/library';
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { useAIStore } from '@/features/ai/stores/ai-context';
 import { useAuth } from '@/features/auth';

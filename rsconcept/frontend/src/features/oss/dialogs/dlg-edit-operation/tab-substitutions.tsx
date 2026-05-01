@@ -2,13 +2,13 @@
 
 import { type OperationSchema, type Substitution } from '@/domain/library';
 import { SubstitutionValidator } from '@/domain/library/oss-api';
+import { formatLabel, lid } from '@/i18n';
 
 import { describeSubstitutionError } from '@/features/oss/labels';
 import { useRSForms } from '@/features/rsform/backend/use-rsforms';
 import { PickSubstitutions } from '@/features/rsform/components/pick-substitutions';
 
 import { TextArea } from '@/components/input';
-import { formatLabel, lid } from '@/utils/labels';
 
 interface TabSubstitutionsProps {
   oss: OperationSchema;

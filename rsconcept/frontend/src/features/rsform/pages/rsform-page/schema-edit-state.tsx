@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 
 import { type Constituenta, CstType } from '@/domain/library';
 import { generateAlias, removeAliasReference } from '@/domain/library/rsform-api';
+import { formatLabel, lid } from '@/i18n';
 
 import { urls, useConceptNavigation } from '@/app';
 import { useAIStore } from '@/features/ai/stores/ai-context';
@@ -19,7 +20,6 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { PARAMETER, prefixes } from '@/utils/constants';
-import { formatLabel, lid } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 import { promptUnsaved } from '@/utils/utils';
 

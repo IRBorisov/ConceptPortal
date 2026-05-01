@@ -2,11 +2,11 @@ import { type QueryClient, queryOptions } from '@tanstack/react-query';
 import equal from 'fast-deep-equal';
 
 import { type Attribution, type RSForm } from '@/domain/library';
+import { formatLabel, lid } from '@/i18n';
 
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';
 import { DELAYS, KEYS } from '@/backend/configuration';
 import { queryClient } from '@/backend/query-client';
-import { formatLabel, lid } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 
 import { loadRSForm } from './rsform-loader';

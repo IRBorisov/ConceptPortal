@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import fileDownload from 'js-file-download';
 
 import { AccessPolicy, LocationHead } from '@/domain/library';
-import { useTx } from '@/i18n/use-tx';
+import { formatLabel, lid,useTx  } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 import { useAuth } from '@/features/auth';
@@ -32,7 +32,6 @@ import {
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { EXTEOR_TRS_FILE, prefixes } from '@/utils/constants';
-import { formatLabel, lid } from '@/utils/labels';
 import { generatePageQR, promptUnsaved, sharePage } from '@/utils/utils';
 
 import { useUploadTRS } from '../../backend/use-upload-trs';

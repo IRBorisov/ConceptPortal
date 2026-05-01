@@ -4,7 +4,7 @@ import { Suspense } from 'react';
 import { Outlet } from 'react-router';
 import clsx from 'clsx';
 
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { Footer } from '@/app/footer';
 import { ToasterThemed } from '@/app/global-toaster';

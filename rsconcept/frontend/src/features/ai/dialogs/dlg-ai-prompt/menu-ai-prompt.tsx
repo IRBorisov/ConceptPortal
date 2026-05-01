@@ -2,14 +2,13 @@
 
 import { toast } from 'react-toastify';
 
-import { useTx } from '@/i18n/use-tx';
+import { formatLabel, lid,useTx  } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 
 import { MiniButton } from '@/components/control';
 import { IconClipboard, IconEdit } from '@/components/icons';
 import { useDialogsStore } from '@/stores/dialogs';
-import { formatLabel, lid } from '@/utils/labels';
 
 interface MenuAIPromptProps {
   promptID: number;

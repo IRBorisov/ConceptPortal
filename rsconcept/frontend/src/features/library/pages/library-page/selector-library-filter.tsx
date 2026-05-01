@@ -1,6 +1,6 @@
 'use client';
 
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { IconEditor, IconFilter, IconHide, IconOSS, IconOwner, IconRSForm, IconRSModel } from '@/components/icons';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/input/select';

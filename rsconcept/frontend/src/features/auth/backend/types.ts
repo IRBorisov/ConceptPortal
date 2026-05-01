@@ -1,7 +1,8 @@
 import { z } from 'zod';
 
+import { lid } from '@/i18n';
+
 import { limits } from '@/utils/constants';
-import { lid } from '@/utils/labels';
 
 /** Represents CurrentUser information. */
 export interface ICurrentUser {

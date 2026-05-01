@@ -2,11 +2,11 @@ import { z } from 'zod';
 
 import { CstType } from '@/domain/library';
 import { RSErrorCode, TokenID, ValueClass } from '@/domain/rslang';
+import { lid } from '@/i18n';
 
 import { schemaLibraryItem, schemaVersionInfo } from '@/features/library/backend/types';
 
 import { limits } from '@/utils/constants';
-import { lid } from '@/utils/labels';
 
 /** Represents Constituenta basic persistent data. */
 export type ConstituentaBasicsDTO = z.infer<typeof schemaConstituentaBasics>;

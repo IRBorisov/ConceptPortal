@@ -1,7 +1,7 @@
 'use client';
 
 import { type Block } from '@/domain/library';
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 interface InfoOperationProps {
   block: Block;

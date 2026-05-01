@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { type Constituenta, type LibraryItem, type RSForm, type Substitution } from '@/domain/library';
-import { useTx } from '@/i18n/use-tx';
+import { formatLabel, lid,useTx  } from '@/i18n';
 
 import { SelectLibraryItem } from '@/features/library/components/select-library-item';
 
@@ -14,7 +14,6 @@ import { IconAccept, IconPageLeft, IconPageRight, IconRemove, IconReplace } from
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
 import { NoData } from '@/components/view';
-import { formatLabel, lid } from '@/utils/labels';
 
 import { BadgeConstituenta } from './badge-constituenta';
 import { SelectConstituenta } from './select-constituenta';

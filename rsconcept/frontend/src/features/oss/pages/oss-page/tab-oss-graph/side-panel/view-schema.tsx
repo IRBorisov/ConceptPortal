@@ -4,7 +4,7 @@ import { useEffect, useEffectEvent, useState } from 'react';
 
 import { type Constituenta } from '@/domain/library';
 import { calculateSchemaStats, isSchemaIssue } from '@/domain/library/rsform-api';
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 import { useAIStore } from '@/features/ai/stores/ai-context';

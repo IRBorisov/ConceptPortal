@@ -12,6 +12,7 @@ import { generateAlias } from '@/domain/library/rsform-api';
 import { readTypeAnnotation, TypeID } from '@/domain/rslang';
 import { extractArguments } from '@/domain/rslang/api';
 import { labelType } from '@/domain/rslang/labels';
+import { formatLabel, lid } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 import { loadRSForm } from '@/features/rsform/backend/rsform-loader';
@@ -27,7 +28,6 @@ import { ShowAstSchemaProvider } from '@/features/rsform/dialogs/dlg-show-ast/sh
 import { ModalView } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER } from '@/utils/constants';
-import { formatLabel, lid } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 import { type AstNode, findByUid, flattenAst } from '@/utils/parsing';
 

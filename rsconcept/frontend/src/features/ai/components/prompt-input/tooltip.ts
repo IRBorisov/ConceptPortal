@@ -3,7 +3,7 @@ import { type EditorState, type Extension } from '@codemirror/state';
 import { hoverTooltip, type TooltipView } from '@codemirror/view';
 import clsx from 'clsx';
 
-import { formatAppMessage } from '@/i18n/format-app-message';
+import { formatAppMessage } from '@/i18n';
 
 import { findEnvelopingNodes } from '@/utils/codemirror';
 import { appendBoldTextRow } from '@/utils/format';

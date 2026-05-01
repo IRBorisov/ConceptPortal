@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import { type EntityReference, type SyntacticReference } from '@/domain/cctext';
 import { labelGrammeme } from '@/domain/cctext/labels';
 import { type Constituenta, type RSForm } from '@/domain/library';
-import { formatAppMessage } from '@/i18n/format-app-message';
+import { formatAppMessage } from '@/i18n';
 
 import { findContainedNodes } from '@/utils/codemirror';
 import { appendBoldTextRow } from '@/utils/format';

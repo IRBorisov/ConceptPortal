@@ -3,7 +3,7 @@
 import clsx from 'clsx';
 
 import { LibraryItemType } from '@/domain/library';
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { IconOSS, IconRSForm, IconRSModel } from '@/components/icons';
 import { useValueTooltipStore } from '@/stores/value-tooltip';

@@ -2,11 +2,9 @@ import clsx from 'clsx';
 import DOMPurify from 'dompurify';
 import { ZodError } from 'zod';
 
-import { lid } from '@/i18n/labels/catalog';
-import { formatZodIssueMessage } from '@/i18n/labels/zod-issue-message';
+import { formatLabel, formatZodIssueMessage, lid } from '@/i18n';
 
 import { type AxiosError, isAxiosError } from '@/backend/api-transport';
-import { formatLabel } from '@/utils/labels';
 import { isResponseHtml } from '@/utils/utils';
 
 import { PrettyJson } from './view';

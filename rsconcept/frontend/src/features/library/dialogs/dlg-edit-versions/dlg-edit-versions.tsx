@@ -3,7 +3,7 @@
 import { useMemo } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
-import { useTx } from '@/i18n/use-tx';
+import { formatLabel, lid,useTx  } from '@/i18n';
 
 import { useRSForm } from '@/features/rsform/backend/use-rsform';
 
@@ -12,7 +12,6 @@ import { IconReset, IconSave } from '@/components/icons';
 import { TextArea, TextInput } from '@/components/input';
 import { ModalView } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
-import { formatLabel, lid } from '@/utils/labels';
 
 import { schemaUpdateVersion, type UpdateVersionDTO } from '../../backend/types';
 import { useDeleteVersion } from '../../backend/use-delete-version';

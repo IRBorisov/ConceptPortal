@@ -2,12 +2,7 @@ import { flushSync } from 'react-dom';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-import {
-  type AppLocale,
-  parsePersistedLocale,
-  pickSupportedLocaleFromNavigator,
-  resolveInitialLocale
-} from '@/i18n/locales';
+import { type AppLocale, parsePersistedLocale, pickSupportedLocaleFromNavigator, resolveInitialLocale } from '@/i18n';
 
 import { PARAMETER } from '@/utils/constants';
 
@@ -16,7 +11,7 @@ export const videoPlayerTypes = ['vk', 'youtube'] as const;
 /** Represents video player type. */
 export type VideoPlayerType = (typeof videoPlayerTypes)[number];
 
-export type { AppLocale } from '@/i18n/locales';
+export type { AppLocale } from '@/i18n';
 
 interface PreferencesStore {
   locale: AppLocale;
