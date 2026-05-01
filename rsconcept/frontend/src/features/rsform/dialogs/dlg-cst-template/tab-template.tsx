@@ -31,7 +31,7 @@ export function TabTemplate({ schema }: TabTemplateProps) {
   } = useTemplateContext();
 
   const { templates } = useTemplatesSuspense();
-  const templateOptions = [{ ...schema, title: 'Текущая схема' }, ...templates];
+  const templateOptions = [{ ...schema, title: tx('ui.rsform.template.currentSchema', 'Current schema') }, ...templates];
   const { schema: templateSchema } = useRSForm({ itemID: templateID ?? undefined });
   const selectedTemplate = templateOptions.find(item => item.id === templateID);
 
@@ -87,7 +87,7 @@ export function TabTemplate({ schema }: TabTemplateProps) {
         id='dlg_template_term'
         disabled
         spellCheck
-        placeholder='Шаблон конституенты не выбран'
+        placeholder={tx('ui.rsform.template.notSelectedPlaceholder', 'No constituent template selected')}
         className='my-3'
         rows={2}
         value={prototypeInfo}

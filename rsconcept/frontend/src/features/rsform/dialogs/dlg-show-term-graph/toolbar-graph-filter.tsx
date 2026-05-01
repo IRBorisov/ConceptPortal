@@ -28,7 +28,7 @@ export default function ToolbarGraphFilter() {
   return (
     <div className='flex flex-row gap-2'>
       <MiniButton
-        title='Граф целиком'
+        title={tx('ui.rsform.termGraph.toolbar.fullGraphTitle', 'Entire graph')}
         icon={<IconFitImage size='1.25rem' className='icon-primary' />}
         onClick={handleFitView}
       />

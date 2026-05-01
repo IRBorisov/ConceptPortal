@@ -3,6 +3,7 @@
 import { useForm } from '@tanstack/react-form';
 
 import { urls, useConceptNavigation } from '@/app';
+import { useTx } from '@/app/i18n/use-tx';
 import { type IChangePasswordDTO, schemaChangePassword } from '@/features/auth';
 import { useChangePassword } from '@/features/auth/backend/use-change-password';
 
@@ -13,6 +14,7 @@ import { TextInput } from '@/components/input';
 import { rethrowIfStaleBundleError } from '@/utils/stale-bundle-error';
 
 export function EditorPassword() {
+  const tx = useTx();
   const router = useConceptNavigation();
   const { changePassword, isPending, error: serverError, reset: clearServerError } = useChangePassword();
 
@@ -51,7 +53,7 @@ export function EditorPassword() {
               id='old_password'
               type='password'
               autoComplete='current-password'
-              label='Старый пароль'
+              label={tx('ui.users.password.oldLabel', 'Current password')}
               allowEnter
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
@@ -66,7 +68,7 @@ export function EditorPassword() {
               id='new_password'
               type='password'
               autoComplete='new-password'
-              label='Новый пароль'
+              label={tx('ui.users.password.newLabel', 'New password')}
               allowEnter
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
@@ -81,7 +83,7 @@ export function EditorPassword() {
               id='new_password2'
               type='password'
               autoComplete='new-password'
-              label='Повторите новый'
+              label={tx('ui.users.password.repeatLabel', 'Repeat new password')}
               allowEnter
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
@@ -90,19 +92,19 @@ export function EditorPassword() {
             />
           )}
         </form.Field>
-        {serverError ? <ServerError error={serverError} /> : null}
+        {serverError ? <ServerError error={serverError} wrongOldPasswordLabel={tx('ui.users.password.oldWrong', 'Current password is incorrect')} /> : null}
       </div>
-      <SubmitButton text='Сменить пароль' className='self-center' loading={isPending} />
+      <SubmitButton text={tx('ui.users.password.submit', 'Change password')} className='self-center' loading={isPending} />
     </form>
   );
 }
 
 // ====== Internals =========
-function ServerError({ error }: { error: ErrorData }): React.ReactElement {
+function ServerError({ error, wrongOldPasswordLabel }: { error: ErrorData; wrongOldPasswordLabel: string }): React.ReactElement {
   rethrowIfStaleBundleError(error);
 
   if (isAxiosError(error) && error.response?.status === 400) {
-    return <div className='text-sm select-text text-destructive'>Неверно введен старый пароль</div>;
+    return <div className='text-sm select-text text-destructive'>{wrongOldPasswordLabel}</div>;
   }
   throw error as Error;
 }

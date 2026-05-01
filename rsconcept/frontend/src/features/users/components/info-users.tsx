@@ -1,3 +1,7 @@
+'use client';
+
+import { useTx } from '@/app/i18n/use-tx';
+
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
 import { type RO } from '@/utils/meta';
@@ -11,6 +15,7 @@ interface InfoUsersProps extends Styling {
 }
 
 export function InfoUsers({ items, className, prefix, header, ...restProps }: InfoUsersProps) {
+  const tx = useTx();
   const getUserLabel = useLabelUser();
   return (
     <div className={cn('flex flex-col dense', className)} {...restProps}>
@@ -18,7 +23,9 @@ export function InfoUsers({ items, className, prefix, header, ...restProps }: In
       {items.map((user, index) => (
         <div key={`${prefix}${index}`}>{getUserLabel(user)}</div>
       ))}
-      {items.length === 0 ? <div className='text-center'>Пользователи не выбраны</div> : null}
+      {items.length === 0 ? (
+        <div className='text-center'>{tx('ui.users.info.noneSelected', 'No users selected')}</div>
+      ) : null}
     </div>
   );
 }

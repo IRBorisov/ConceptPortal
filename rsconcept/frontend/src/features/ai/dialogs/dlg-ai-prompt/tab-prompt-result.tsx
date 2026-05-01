@@ -1,3 +1,7 @@
+'use client';
+
+import { useTx } from '@/app/i18n/use-tx';
+
 import { TextArea } from '@/components/input';
 
 interface TabPromptResultProps {
@@ -5,11 +9,12 @@ interface TabPromptResultProps {
 }
 
 export function TabPromptResult({ prompt }: TabPromptResultProps) {
+  const tx = useTx();
   return (
     <TextArea
-      aria-label='Сгенерированное сообщение'
+      aria-label={tx('ui.aiPrompt.result.ariaLabel', 'Generated message')}
       value={prompt}
-      placeholder='Текст шаблона пуст'
+      placeholder={tx('ui.aiPrompt.result.emptyPlaceholder', 'Template text is empty')}
       disabled
       areaClassName='w-full h-88'
     />

@@ -22,7 +22,7 @@ import { type LexemeResponse } from '../backend/cctext/types';
 import { useIsProcessingCctext } from '../backend/cctext/use-is-processing-cctext';
 import { type UpdateConstituentaDTO } from '../backend/types';
 import { RefsInput } from '../components/refs-input/refs-input';
-import { DefaultWordForms } from '../components/select-word-form';
+import { WORD_FORM_ROW_DEFS } from '../components/select-word-form';
 
 export interface DlgEditWordFormsProps {
   schema: RSForm;
@@ -31,9 +31,9 @@ export interface DlgEditWordFormsProps {
   generateLexeme?: (data: { text: string }) => Promise<RO<LexemeResponse>>;
 }
 
-const FORM_FIELDS = DefaultWordForms.slice(0, 12).map(data => ({
-  key: `${data.grams[0]}_${data.grams[1]}`,
-  grams: [...data.grams]
+const FORM_FIELDS = WORD_FORM_ROW_DEFS.map(row => ({
+  key: `${row.grams[0]}_${row.grams[1]}`,
+  grams: [...row.grams]
 }));
 
 const CASE_KEYS = ['nomn', 'gent', 'datv', 'accs', 'ablt', 'loct'] as const;

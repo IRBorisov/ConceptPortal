@@ -2,6 +2,7 @@
 
 import { Suspense, useState } from 'react';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 
 import { ComboBox } from '@/components/input/combo-box';
@@ -13,13 +14,14 @@ import { useAvailableTemplatesSuspense } from '../../backend/use-available-templ
 import { AIPromptTabs, TabID } from './ai-prompt-tabs';
 
 export function DlgAIPromptDialog() {
+  const tx = useTx();
   const [activeTab, setActiveTab] = useState<number>(TabID.TEMPLATE);
   const [selected, setSelected] = useState<number | null>(null);
   const { items: prompts } = useAvailableTemplatesSuspense();
 
   return (
     <ModalView
-      header='Генератор запросом LLM'
+      header={tx('ui.aiPrompt.dlg.header', 'LLM prompt generator')}
       className='w-100 sm:w-160 px-6 flex flex-col h-110'
       helpTopic={HelpTopic.ASSISTANT}
     >
@@ -31,7 +33,7 @@ export function DlgAIPromptDialog() {
         idFunc={item => String(item.id)}
         labelValueFunc={item => item.label}
         labelOptionFunc={item => item.label}
-        placeholder='Выберите шаблон'
+        placeholder={tx('ui.aiPrompt.dlg.selectTemplatePlaceholder', 'Select a template')}
         className='w-full'
       />
       <Suspense fallback={<Loader />}>

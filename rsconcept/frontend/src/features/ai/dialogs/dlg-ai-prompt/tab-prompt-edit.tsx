@@ -1,5 +1,7 @@
 'use client';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { TextArea } from '@/components/input';
 
 import { PromptInput } from '../../components/prompt-input';
@@ -13,14 +15,15 @@ interface TabPromptEditProps {
 }
 
 export function TabPromptEdit({ label, description, text, setText }: TabPromptEditProps) {
+  const tx = useTx();
   const availableVariables = useAvailableVariables();
   return (
     <div className='cc-column'>
       <div className='flex flex-col gap-2'>
-        <TextArea id='prompt-label' label='Название' value={label} disabled noResize rows={1} />
+        <TextArea id='prompt-label' label={tx('ui.label.title', 'Title')} value={label} disabled noResize rows={1} />
         <TextArea
           id='prompt-description'
-          label='Описание'
+          label={tx('ui.label.description', 'Description')}
           value={description}
           disabled
           noResize
@@ -29,7 +32,7 @@ export function TabPromptEdit({ label, description, text, setText }: TabPromptEd
         />
         <PromptInput
           id='prompt-text'
-          label='Текст шаблона'
+          label={tx('ui.aiPrompt.edit.templateTextLabel', 'Template text')}
           value={text}
           onChange={setText}
           maxHeight='9.5rem'

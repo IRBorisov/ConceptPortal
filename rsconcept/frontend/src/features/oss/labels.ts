@@ -7,7 +7,7 @@ import {
   SubstitutionErrorType
 } from '@/domain/library';
 
-import { formatLabel } from '@/app/i18n/labels/format-label';
+import { formatLabel } from '@/app/i18n/format-app-message';
 import { ossLid } from '@/app/i18n/labels/oss-ui';
 
 import { type RO } from '@/utils/meta';

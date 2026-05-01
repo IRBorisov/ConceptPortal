@@ -2,6 +2,8 @@
 
 import { type Block } from '@/domain/library';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { DropdownButton } from '@/components/dropdown';
 import { IconDestroy, IconEdit } from '@/components/icons';
 import { useDialogsStore } from '@/stores/dialogs';
@@ -17,6 +19,7 @@ interface MenuBlockProps {
 }
 
 export function MenuBlock({ block, onHide }: MenuBlockProps) {
+  const tx = useTx();
   const { schema, isMutable } = useOssEdit();
   const isProcessing = useMutatingOss();
   const getLayout = useGetLayout();
@@ -44,14 +47,14 @@ export function MenuBlock({ block, onHide }: MenuBlockProps) {
   return (
     <>
       <DropdownButton
-        text='Редактировать'
-        title='Редактировать блок'
+        text={tx('ui.oss.menu.edit', 'Edit')}
+        title={tx('ui.oss.menu.editBlockTitle', 'Edit block')}
         icon={<IconEdit size='1rem' className='icon-primary' />}
         onClick={handleEditBlock}
         disabled={!isMutable || isProcessing}
       />
       <DropdownButton
-        text='Удалить блок'
+        text={tx('ui.oss.menu.deleteBlock', 'Delete block')}
         icon={<IconDestroy size='1rem' className='icon-red' />}
         onClick={handleDeleteBlock}
         disabled={!isMutable || isProcessing}

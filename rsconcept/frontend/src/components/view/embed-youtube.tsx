@@ -1,3 +1,7 @@
+'use client';
+
+import { useTx } from '@/app/i18n/use-tx';
+
 interface EmbedYoutubeProps {
   /** Video ID to embed. */
   videoID: string;
@@ -13,27 +17,26 @@ interface EmbedYoutubeProps {
  * Embeds a YouTube video into the page using the given video ID and dimensions.
  */
 export function EmbedYoutube({ videoID, pxHeight, pxWidth }: EmbedYoutubeProps) {
-  if (!pxWidth) {
-    pxWidth = (pxHeight * 16) / 9;
-  }
+  const tx = useTx();
+  const width = pxWidth ?? (pxHeight * 16) / 9;
   return (
     <div
       className='relative h-0'
       style={{
         paddingBottom: `${pxHeight}px`,
-        paddingLeft: `${pxWidth}px`
+        paddingLeft: `${width}px`
       }}
     >
       <iframe
         allowFullScreen
-        title='Встроенное видео Youtube'
+        title={tx('ui.embed.youtubeTitle', 'Embedded YouTube video')}
         allow='accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
         className='absolute top-0 left-0 border'
         style={{
           minHeight: `${pxHeight}px`,
-          minWidth: `${pxWidth}px`
+          minWidth: `${width}px`
         }}
-        width={`${pxWidth}px`}
+        width={`${width}px`}
         height={`${pxHeight}px`}
         src={`https://www.youtube.com/embed/${videoID}`}
       />
