@@ -6,7 +6,7 @@ interface NavigationButtonProps extends Styling {
   text?: string;
   title?: string;
   hideTitle?: boolean;
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
   onClick?: (event: React.MouseEvent<Element>) => void;
 }
 

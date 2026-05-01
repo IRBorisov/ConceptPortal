@@ -28,6 +28,7 @@ import { CurrentTitle } from './current-title';
 import { Logo } from './logo';
 import { MenuAI } from './menu-ai';
 import { MenuUser } from './menu-user';
+import { NavLocaleSwitcher } from './nav-locale-switcher';
 import { NavigationButton } from './navigation-button';
 import { useConceptNavigation } from './navigation-context';
 import { ToggleNavigation } from './toggle-navigation';
@@ -132,7 +133,7 @@ export function Navigation() {
           <Logo />
         </div>
         {currentItem ? <CurrentTitle itemType={currentItem.item_type} title={currentItem.title} /> : null}
-        <div className='relative z-10 flex gap-2 items-center pr-2 shrink-0'>
+        <div className='relative z-10 flex gap-2 items-center shrink-0'>
           {isAnonymous ? (
             <NavigationButton
               text={tx('nav.bar.sandbox', 'Sandbox')}
@@ -179,6 +180,7 @@ export function Navigation() {
 
           <MenuAI />
           <MenuUser />
+          <NavLocaleSwitcher />
         </div>
       </div>
     </nav>

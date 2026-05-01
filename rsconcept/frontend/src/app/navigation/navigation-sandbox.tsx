@@ -4,6 +4,7 @@ import clsx from 'clsx';
 
 import { useTx } from '@/app/i18n/use-tx';
 import { Logo } from '@/app/navigation/logo';
+import { NavLocaleSwitcher } from '@/app/navigation/nav-locale-switcher';
 import { NavigationButton } from '@/app/navigation/navigation-button';
 import { useConceptNavigation } from '@/app/navigation/navigation-context';
 import { ToggleNavigation } from '@/app/navigation/toggle-navigation';
@@ -76,7 +77,7 @@ export function NavigationSandbox() {
           <Logo />
         </div>
 
-        <div className='relative z-10 flex gap-2 items-center pr-2 shrink-0'>
+        <div className='relative z-10 flex gap-2 items-center shrink-0'>
           <NavigationButton
             text={tx('nav.bar.library', 'Library')}
             icon={<IconLibrary2 size='1.5rem' />}
@@ -86,7 +87,9 @@ export function NavigationSandbox() {
             text={tx('nav.bar.help', 'Help')}
             icon={<IconManuals size='1.5rem' />}
             onClick={navigateHelp}
+            className='mr-2'
           />
+          <NavLocaleSwitcher />
         </div>
       </div>
     </nav>

@@ -70,6 +70,8 @@ export const shellFr: Record<string, string> = {
   'home.theme.groupAria': 'Thème d’affichage',
   'home.theme.lightAria': 'Thème clair',
   'home.theme.darkAria': 'Thème sombre',
+  'home.language.groupAria': 'Langue de l’interface',
+  'home.language.toggleAria': 'Changer la langue de l’interface',
   'auth.login.logoAlt': 'Concept Portal',
   'auth.login.username': 'Identifiant ou e-mail',
   'auth.login.password': 'Mot de passe',

@@ -5,16 +5,21 @@ import clsx from 'clsx';
 import { useTx } from '@/app/i18n/use-tx';
 
 import { IconDarkTheme, IconLightTheme } from '@/components/icons';
+import { cn } from '@/components/utils';
 import { usePreferencesStore } from '@/stores/preferences';
 
-export function ThemeToggle() {
+interface ThemeToggleProps {
+  className?: string;
+}
+
+export function ThemeToggle({ className }: ThemeToggleProps) {
   const tx = useTx();
   const darkMode = usePreferencesStore(state => state.darkMode);
   const toggleDarkMode = usePreferencesStore(state => state.toggleDarkMode);
 
   return (
     <div
-      className={clsx('fixed right-1 top-1 z-navigation', 'rounded-full p-0.5 pointer-events-auto')}
+      className={cn('rounded-full p-0.5 pointer-events-auto', className)}
       role='group'
       aria-label={tx('home.theme.groupAria', 'Color theme')}
     >
